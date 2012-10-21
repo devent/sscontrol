@@ -17,4 +17,46 @@
 	<description>Manages dependencies versions.</description>
 	<inceptionYear>2012</inceptionYear>
 
+    <developers>
+        <developer>
+            <id>EM</id>
+            <name>Erwin Müller</name>
+            <organization>Advanced Natural Research Insitute GmbH</organization>
+            <email>erwin.mueller@deventm.org</email>
+            <roles>
+                <role>Owner</role>
+                <role>Developer</role>
+            </roles>
+        </developer>
+    </developers>
+
+    <licenses>
+        <license>
+            <name>AGPLv3</name>
+            <url>http://www.gnu.org/licenses/agpl-3.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>com.anrisoftware.globalpom</groupId>
+				<artifactId>globalpom-groovytestutils</artifactId>
+				<version>1.9</version>
+			</dependency>
+			<dependency>
+				<groupId>com.anrisoftware.globalpom</groupId>
+				<artifactId>globalpom-log</artifactId>
+				<version>1.5</version>
+			</dependency>
+			<dependency>
+				<!-- Apache License 2.0 -->
+				<groupId>org.mangosdk</groupId>
+				<artifactId>spi</artifactId>
+				<version>0.2.1</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
 </project>

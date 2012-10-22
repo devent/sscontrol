@@ -44,6 +44,8 @@ class ProfileServiceImpl extends GroovyObjectSupport implements ProfileService {
 	 */
 	private static final long serialVersionUID = -969170415901859029L;
 
+	private final ProfileServiceImplLogger log;
+
 	private String profileName;
 
 	private final Map<String, ProfileProperties> entries;
@@ -52,7 +54,9 @@ class ProfileServiceImpl extends GroovyObjectSupport implements ProfileService {
 
 	@Inject
 	@SuppressWarnings("unchecked")
-	ProfileServiceImpl(ProfilePropertiesFactory propertiesFactory) {
+	ProfileServiceImpl(ProfileServiceImplLogger logger,
+			ProfilePropertiesFactory propertiesFactory) {
+		this.log = logger;
 		this.propertiesFactory = propertiesFactory;
 		this.entries = decorate(new HashMap<String, ProfileProperties>(),
 				NotNullPredicate.INSTANCE, NotNullPredicate.INSTANCE);
@@ -84,6 +88,7 @@ class ProfileServiceImpl extends GroovyObjectSupport implements ProfileService {
 	@Override
 	public void addEntry(String name, ProfileProperties properties) {
 		entries.put(name, properties);
+		log.entryAdded(this, name);
 	}
 
 	@Override

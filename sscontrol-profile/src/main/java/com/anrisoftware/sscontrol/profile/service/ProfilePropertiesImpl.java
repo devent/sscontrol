@@ -27,6 +27,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.inject.Inject;
+
 import org.apache.commons.collections.functors.NotNullPredicate;
 import org.apache.commons.collections.set.UnmodifiableSet;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -42,40 +44,50 @@ class ProfilePropertiesImpl extends GroovyObjectSupport implements
 	 */
 	private static final long serialVersionUID = 7518166865917131502L;
 
+	private final ProfilePropertiesImplLogger log;
+
 	private final Map<String, Object> properties;
 
 	@SuppressWarnings("unchecked")
-	public ProfilePropertiesImpl() {
-		properties = decorate(new HashMap<String, Object>(),
+	@Inject
+	ProfilePropertiesImpl(ProfilePropertiesImplLogger logger) {
+		this.log = logger;
+		this.properties = decorate(new HashMap<String, Object>(),
 				NotNullPredicate.INSTANCE, NotNullPredicate.INSTANCE);
 	}
 
 	public Object propertyMissing(String name) {
 		if (properties.containsKey(name)) {
 			return properties.get(name);
+		} else {
+			putProperty(name, true);
+			return true;
 		}
-		properties.put(name, true);
-		return true;
 	}
 
 	public Object methodMissing(String name, Object args) {
 		@SuppressWarnings("unchecked")
 		List<Object> argsList = InvokerHelper.asList(args);
 		if (argsList.size() == 0) {
-			properties.put(name, true);
+			putProperty(name, true);
 		} else if (argsList.size() == 1 && argsList.get(0) instanceof GString) {
-			properties.put(name, argsList.get(0).toString());
+			putProperty(name, argsList.get(0).toString());
 		} else if (argsList.size() == 1) {
-			properties.put(name, argsList.get(0));
+			putProperty(name, argsList.get(0));
 		} else {
-			properties.put(name, argsList);
+			putProperty(name, argsList);
 		}
 		return this;
 	}
 
 	@Override
 	public void setProperty(String key, Object property) {
-		properties.put(key, property);
+		putProperty(key, property);
+	}
+
+	private void putProperty(String name, Object value) {
+		properties.put(name, value);
+		log.propertyAdded(this, name, value);
 	}
 
 	@SuppressWarnings("unchecked")

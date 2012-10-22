@@ -42,5 +42,6 @@ class HostnameServiceTest extends TestUtils {
 		loader.loadService(ubuntu1004Profile, variables, registry, null)
 		def profile = registry.getService("profile")[0]
 		loader.loadService(hostnameService, variables, registry, profile)
+		registry.allServices.each { it.call() }
 	}
 }

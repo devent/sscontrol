@@ -21,6 +21,9 @@ package com.anrisoftware.sscontrol.hostname.service;
 import static com.google.inject.multibindings.MapBinder.newMapBinder;
 import groovy.lang.Script;
 
+import com.anrisoftware.resources.st.StResourcesModule;
+import com.anrisoftware.resources.st.maps.TemplatesDefaultMapsModule;
+import com.anrisoftware.resources.st.worker.STTemplateDefaultPropertiesModule;
 import com.anrisoftware.sscontrol.hostname.ubuntu.Ubuntu_10_04Worker;
 import com.google.inject.AbstractModule;
 import com.google.inject.multibindings.MapBinder;
@@ -32,6 +35,9 @@ class HostnameModule extends AbstractModule {
 		MapBinder<String, Script> binder;
 		binder = newMapBinder(binder(), String.class, Script.class);
 		binder.addBinding("ubuntu_10.04").to(Ubuntu_10_04Worker.class);
+		install(new StResourcesModule());
+		install(new TemplatesDefaultMapsModule());
+		install(new STTemplateDefaultPropertiesModule());
 	}
 
 }

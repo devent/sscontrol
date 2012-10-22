@@ -27,6 +27,7 @@ import javax.inject.Inject;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import com.anrisoftware.resources.api.TemplatesFactory;
 import com.anrisoftware.sscontrol.core.api.ProfileService;
 import com.anrisoftware.sscontrol.core.api.Service;
 import com.anrisoftware.sscontrol.core.api.ServiceException;
@@ -47,11 +48,14 @@ class HostnameServiceImpl extends GroovyObjectSupport implements Service {
 
 	private String hostname;
 
+	private final TemplatesFactory templates;
+
 	@Inject
 	HostnameServiceImpl(HostnameServiceImplLogger logger,
-			Map<String, Provider<Script>> workers) {
+			Map<String, Provider<Script>> workers, TemplatesFactory templates) {
 		this.log = logger;
 		this.workers = workers;
+		this.templates = templates;
 	}
 
 	public Object hostname(String name) {
@@ -82,6 +86,10 @@ class HostnameServiceImpl extends GroovyObjectSupport implements Service {
 	public Service call() throws ServiceException {
 		String name = profile.getProfileName();
 		Script worker = workers.get(name).get();
+		worker.setProperty("templates", templates);
+		worker.setProperty("system", profile.getEntry("system"));
+		System.out.println(profile.getEntry("hostname"));
+		worker.setProperty("properties", profile.getEntry("hostname"));
 		worker.run();
 		return this;
 	}

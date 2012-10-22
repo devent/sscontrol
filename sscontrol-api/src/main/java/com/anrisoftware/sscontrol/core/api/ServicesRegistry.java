@@ -19,6 +19,7 @@
 package com.anrisoftware.sscontrol.core.api;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -59,4 +60,11 @@ public interface ServicesRegistry extends Serializable {
 	 * @return an unmodifiable {@link Set} of the names of the services.
 	 */
 	Set<String> getServiceNames();
+
+	/**
+	 * Returns all services in this registry.
+	 * 
+	 * @return an unmodifiable {@link Collection} of all {@link Service}s.
+	 */
+	Collection<Service> getAllServices();
 }

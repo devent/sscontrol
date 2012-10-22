@@ -19,9 +19,11 @@
 package com.anrisoftware.sscontrol.core.registry;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.collections.collection.UnmodifiableCollection;
 import org.apache.commons.collections.list.UnmodifiableList;
 import org.apache.commons.collections.map.MultiValueMap;
 import org.apache.commons.collections.set.UnmodifiableSet;
@@ -60,6 +62,16 @@ class ServicesRegistryImpl implements ServicesRegistry {
 	public List<Service> getService(String name) {
 		return UnmodifiableList.decorate(new ArrayList<Object>(services
 				.getCollection(name)));
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public Collection<Service> getAllServices() {
+		List<Service> services = new ArrayList<Service>();
+		for (String name : getServiceNames()) {
+			services.addAll(getService(name));
+		}
+		return UnmodifiableCollection.decorate(services);
 	}
 
 	@SuppressWarnings("unchecked")

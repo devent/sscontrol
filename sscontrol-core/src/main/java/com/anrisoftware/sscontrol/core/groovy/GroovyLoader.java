@@ -31,6 +31,7 @@ import javax.inject.Inject;
 
 import org.codehaus.groovy.control.CompilerConfiguration;
 
+import com.anrisoftware.sscontrol.core.api.ProfileService;
 import com.anrisoftware.sscontrol.core.api.Service;
 import com.anrisoftware.sscontrol.core.api.ServiceException;
 import com.anrisoftware.sscontrol.core.api.ServiceLoader;
@@ -57,10 +58,11 @@ class GroovyLoader implements ServiceLoader {
 
 	@Override
 	public ServicesRegistry loadService(URL url, Map<String, Object> variables,
-			ServicesRegistry registry) throws ServiceException {
+			ServicesRegistry registry, ProfileService profile)
+			throws ServiceException {
 		log.checkUrl(url);
 		log.checkRegistry(registry);
-		GroovyShell shell = createShell(variables);
+		GroovyShell shell = createShell(variables, profile);
 		Reader reader = openScript(url);
 		Service service = evaluateScript(reader, shell, url);
 		log.loadedServiceScript(url);
@@ -68,17 +70,20 @@ class GroovyLoader implements ServiceLoader {
 		return registry;
 	}
 
-	private GroovyShell createShell(Map<String, Object> variables) {
+	private GroovyShell createShell(Map<String, Object> variables,
+			ProfileService profile) {
 		CompilerConfiguration compiler = new CompilerConfiguration();
 		compiler.setScriptBaseClass(ScriptBuilder.class.getName());
 		ClassLoader classLoader = getClass().getClassLoader();
-		Binding binding = createBinding(variables);
+		Binding binding = createBinding(variables, profile);
 		return new GroovyShell(classLoader, binding, compiler);
 	}
 
-	private Binding createBinding(Map<String, Object> variables) {
+	private Binding createBinding(Map<String, Object> variables,
+			ProfileService profile) {
 		Binding binding = new Binding();
 		binding.setProperty("logger", scriptBuilderLogger);
+		binding.setProperty("profile", profile);
 		for (Map.Entry<String, Object> entry : variables.entrySet()) {
 			binding.setProperty(entry.getKey(), entry.getValue());
 		}

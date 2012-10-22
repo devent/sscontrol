@@ -20,9 +20,10 @@ package com.anrisoftware.sscontrol.core.api;
 
 public interface ServiceFactory {
 
-	Service create();
+	Service create(ProfileService profile);
 
 	void setParentInjector(Object injector);
 
 	String getName();
+
 }

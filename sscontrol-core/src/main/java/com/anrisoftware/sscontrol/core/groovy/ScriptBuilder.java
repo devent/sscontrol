@@ -26,6 +26,7 @@ import java.util.ServiceLoader;
 
 import org.codehaus.groovy.runtime.InvokerHelper;
 
+import com.anrisoftware.sscontrol.core.api.ProfileService;
 import com.anrisoftware.sscontrol.core.api.Service;
 import com.anrisoftware.sscontrol.core.api.ServiceException;
 import com.anrisoftware.sscontrol.core.api.ServiceFactory;
@@ -40,7 +41,7 @@ public abstract class ScriptBuilder extends Script {
 			throws ServiceException {
 		if (delegate == null) {
 			ServiceFactory serviceFactory = loadService(name);
-			service = serviceFactory.create();
+			service = serviceFactory.create(getProfile());
 			delegate = new groovy.util.Proxy().wrap(service);
 		}
 		delegate = (GroovyObject) delegate.invokeMethod(name, args);
@@ -53,6 +54,10 @@ public abstract class ScriptBuilder extends Script {
 			}
 		}
 		return service;
+	}
+
+	private ProfileService getProfile() {
+		return (ProfileService) getProperty("profile");
 	}
 
 	private ServiceFactory loadService(String name) throws ServiceException {

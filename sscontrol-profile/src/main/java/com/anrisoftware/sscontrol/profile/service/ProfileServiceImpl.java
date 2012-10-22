@@ -109,7 +109,7 @@ class ProfileServiceImpl extends GroovyObjectSupport implements ProfileService {
 
 	@Override
 	public String toString() {
-		return new ToStringBuilder(this).append("entries", entries.keySet())
-				.toString();
+		return new ToStringBuilder(this).append(profileName)
+				.append("entries", entries.keySet()).toString();
 	}
 }

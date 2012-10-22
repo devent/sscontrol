@@ -21,6 +21,7 @@ package com.anrisoftware.sscontrol.profile.service;
 import org.apache.commons.lang3.concurrent.ConcurrentException;
 import org.mangosdk.spi.ProviderFor;
 
+import com.anrisoftware.sscontrol.core.api.ProfileService;
 import com.anrisoftware.sscontrol.core.api.Service;
 import com.anrisoftware.sscontrol.core.api.ServiceFactory;
 import com.google.inject.Injector;
@@ -42,7 +43,7 @@ public class ProfileFactory implements ServiceFactory {
 	}
 
 	@Override
-	public Service create() {
+	public Service create(ProfileService profile) {
 		try {
 			return lazyInjector.get().getInstance(Service.class);
 		} catch (ConcurrentException e) {

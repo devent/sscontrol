@@ -56,7 +56,7 @@ class LoadServiceTest extends TestUtils {
 		def variables = [one: "one", two: "two", three: "three"]
 		ServicesRegistry registry = injector.getInstance ServicesRegistry
 		SscontrolServiceLoader loader = injector.getInstance SscontrolServiceLoader
-		loader.loadService(ubuntu1004Profile, variables, registry)
+		loader.loadService(ubuntu1004Profile, variables, registry, null)
 		assert registry.serviceNames.toString() == "[profile]"
 		assert registry.getService("profile").size() == 1
 		ProfileService profile = registry.getService("profile")[0]

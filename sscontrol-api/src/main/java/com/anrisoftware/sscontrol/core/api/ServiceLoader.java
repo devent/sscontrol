@@ -45,6 +45,10 @@ public interface ServiceLoader {
 	 * @param registry
 	 *            the {@link ServicesRegistry} to which to add the service.
 	 * 
+	 * @param profile
+	 *            the {@link ProfileService} or {@code null} if no profile is
+	 *            set.
+	 * 
 	 * @return the {@link ServiceRegistry} that contains the service.
 	 * 
 	 * @throws NullPointerException
@@ -55,5 +59,6 @@ public interface ServiceLoader {
 	 *             if there was an error loading the script file.
 	 */
 	ServicesRegistry loadService(URL url, Map<String, Object> variables,
-			ServicesRegistry registry) throws ServiceException;
+			ServicesRegistry registry, ProfileService profile)
+			throws ServiceException;
 }

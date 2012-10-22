@@ -22,7 +22,7 @@ class ProfilePropertiesImplLogger extends AbstractSerializedLogger {
 		if (!log.isTraceEnabled()) {
 			return;
 		}
-		log.trace("Added property ``{}''=``{}'' to {}.", new Object[] { name,
+		log.trace("Added property '{}'='{}' to {}.", new Object[] { name,
 				value, properties });
 	}
 

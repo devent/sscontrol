@@ -18,6 +18,6 @@ class ProfileServiceImplLogger extends AbstractSerializedLogger {
 	}
 
 	void entryAdded(ProfileServiceImpl profile, String name) {
-		log.trace("Added entry ``{}'' to {}.", name, profile);
+		log.trace("Added entry '{}' to {}.", name, profile);
 	}
 }

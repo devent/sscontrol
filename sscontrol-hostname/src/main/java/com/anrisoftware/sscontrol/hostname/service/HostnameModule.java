@@ -18,12 +18,20 @@
  */
 package com.anrisoftware.sscontrol.hostname.service;
 
+import static com.google.inject.multibindings.MapBinder.newMapBinder;
+import groovy.lang.Script;
+
+import com.anrisoftware.sscontrol.hostname.ubuntu.Ubuntu_10_04Worker;
 import com.google.inject.AbstractModule;
+import com.google.inject.multibindings.MapBinder;
 
 class HostnameModule extends AbstractModule {
 
 	@Override
 	protected void configure() {
+		MapBinder<String, Script> binder;
+		binder = newMapBinder(binder(), String.class, Script.class);
+		binder.addBinding("ubuntu_10.04").to(Ubuntu_10_04Worker.class);
 	}
 
 }

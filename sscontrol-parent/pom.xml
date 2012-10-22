@@ -17,26 +17,26 @@
 	<description>Manages dependencies versions.</description>
 	<inceptionYear>2012</inceptionYear>
 
-    <developers>
-        <developer>
-            <id>EM</id>
-            <name>Erwin Müller</name>
-            <organization>Advanced Natural Research Insitute GmbH</organization>
-            <email>erwin.mueller@deventm.org</email>
-            <roles>
-                <role>Owner</role>
-                <role>Developer</role>
-            </roles>
-        </developer>
-    </developers>
+	<developers>
+		<developer>
+			<id>EM</id>
+			<name>Erwin Müller</name>
+			<organization>Advanced Natural Research Insitute GmbH</organization>
+			<email>erwin.mueller@deventm.org</email>
+			<roles>
+				<role>Owner</role>
+				<role>Developer</role>
+			</roles>
+		</developer>
+	</developers>
 
-    <licenses>
-        <license>
-            <name>AGPLv3</name>
-            <url>http://www.gnu.org/licenses/agpl-3.0.txt</url>
-            <distribution>repo</distribution>
-        </license>
-    </licenses>
+	<licenses>
+		<license>
+			<name>AGPLv3</name>
+			<url>http://www.gnu.org/licenses/agpl-3.0.txt</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
 
 	<dependencyManagement>
 		<dependencies>
@@ -55,6 +55,12 @@
 				<groupId>org.mangosdk</groupId>
 				<artifactId>spi</artifactId>
 				<version>0.2.1</version>
+			</dependency>
+			<dependency>
+				<!-- LGPL -->
+				<groupId>com.anrisoftware.resources</groupId>
+				<artifactId>resources-st</artifactId>
+				<version>1.1</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>

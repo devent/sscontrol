@@ -48,6 +48,14 @@
 			<artifactId>spi</artifactId>
 			<optional>true</optional>
 		</dependency>
+		<dependency>
+			<groupId>com.anrisoftware.resources</groupId>
+			<artifactId>resources-st</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.google.inject.extensions</groupId>
+			<artifactId>guice-multibindings</artifactId>
+		</dependency>
 	</dependencies>
 
 </project>

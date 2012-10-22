@@ -23,4 +23,8 @@ profile "ubuntu_10.04", {
 		install_command "${tmp}/aptitude update && ${tmp}/aptitude install {}"
 		cat_command "${tmp}/cat"
 	}
+	hostname {
+		configuration_file "${tmp}/etc/hostname"
+		command "${tmp}/bin/hostname"
+	}
 }

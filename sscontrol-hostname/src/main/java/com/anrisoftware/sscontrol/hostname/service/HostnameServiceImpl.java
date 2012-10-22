@@ -19,6 +19,9 @@
 package com.anrisoftware.sscontrol.hostname.service;
 
 import groovy.lang.GroovyObjectSupport;
+import groovy.lang.Script;
+
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -27,6 +30,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import com.anrisoftware.sscontrol.core.api.ProfileService;
 import com.anrisoftware.sscontrol.core.api.Service;
 import com.anrisoftware.sscontrol.core.api.ServiceException;
+import com.google.inject.Provider;
 
 class HostnameServiceImpl extends GroovyObjectSupport implements Service {
 
@@ -37,13 +41,17 @@ class HostnameServiceImpl extends GroovyObjectSupport implements Service {
 
 	private final HostnameServiceImplLogger log;
 
+	private final Map<String, Provider<Script>> workers;
+
 	private ProfileService profile;
 
 	private String hostname;
 
 	@Inject
-	HostnameServiceImpl(HostnameServiceImplLogger logger) {
+	HostnameServiceImpl(HostnameServiceImplLogger logger,
+			Map<String, Provider<Script>> workers) {
 		this.log = logger;
+		this.workers = workers;
 	}
 
 	public Object hostname(String name) {
@@ -72,6 +80,9 @@ class HostnameServiceImpl extends GroovyObjectSupport implements Service {
 
 	@Override
 	public Service call() throws ServiceException {
+		String name = profile.getProfileName();
+		Script worker = workers.get(name).get();
+		worker.run();
 		return this;
 	}
 

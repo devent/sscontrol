@@ -18,14 +18,12 @@
  */
 package com.anrisoftware.sscontrol.hostname.service;
 
-import com.anrisoftware.sscontrol.core.api.Service;
 import com.google.inject.AbstractModule;
 
 class HostnameModule extends AbstractModule {
 
 	@Override
 	protected void configure() {
-		bind(Service.class).to(HostnameServiceImpl.class);
 	}
 
 }

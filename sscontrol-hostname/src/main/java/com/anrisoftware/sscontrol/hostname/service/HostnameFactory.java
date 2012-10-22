@@ -21,6 +21,7 @@ package com.anrisoftware.sscontrol.hostname.service;
 import org.apache.commons.lang3.concurrent.ConcurrentException;
 import org.mangosdk.spi.ProviderFor;
 
+import com.anrisoftware.sscontrol.core.api.ProfileService;
 import com.anrisoftware.sscontrol.core.api.Service;
 import com.anrisoftware.sscontrol.core.api.ServiceFactory;
 import com.google.inject.Injector;
@@ -28,7 +29,7 @@ import com.google.inject.Injector;
 @ProviderFor(ServiceFactory.class)
 public class HostnameFactory implements ServiceFactory {
 
-	public static final String NAME = "profile";
+	public static final String NAME = "hostname";
 
 	private final LazyInjector lazyInjector;
 
@@ -42,9 +43,12 @@ public class HostnameFactory implements ServiceFactory {
 	}
 
 	@Override
-	public Service create() {
+	public Service create(ProfileService profile) {
 		try {
-			return lazyInjector.get().getInstance(Service.class);
+			HostnameServiceImpl service;
+			service = lazyInjector.get().getInstance(HostnameServiceImpl.class);
+			service.setProfile(profile);
+			return service;
 		} catch (ConcurrentException e) {
 			throw new RuntimeException(e);
 		}

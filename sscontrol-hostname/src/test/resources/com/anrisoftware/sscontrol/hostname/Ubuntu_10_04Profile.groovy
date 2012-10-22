@@ -18,16 +18,9 @@
  */
 package com.anrisoftware.sscontrol.hostname
 
-foo = "test"
-
 profile "ubuntu_10.04", {
 	system {
-		install_command "aptitude update && aptitude install {}"
-		echo_command "echo"
-		set_enabled
-		set_gstring "gstring $foo"
-		set_multiple "aaa", "bbb"
-		set_number 11
-		set_method_enabled()
+		install_command "${tmp}/aptitude update && ${tmp}/aptitude install {}"
+		cat_command "${tmp}/cat"
 	}
 }

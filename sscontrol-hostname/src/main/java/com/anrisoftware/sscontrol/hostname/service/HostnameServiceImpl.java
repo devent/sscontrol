@@ -24,6 +24,7 @@ import javax.inject.Inject;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import com.anrisoftware.sscontrol.core.api.ProfileService;
 import com.anrisoftware.sscontrol.core.api.Service;
 import com.anrisoftware.sscontrol.core.api.ServiceException;
 
@@ -34,17 +35,39 @@ class HostnameServiceImpl extends GroovyObjectSupport implements Service {
 	 */
 	private static final long serialVersionUID = 8026832603525631371L;
 
+	private final HostnameServiceImplLogger log;
+
+	private ProfileService profile;
+
+	private String hostname;
+
 	@Inject
-	HostnameServiceImpl() {
+	HostnameServiceImpl(HostnameServiceImplLogger logger) {
+		this.log = logger;
 	}
 
-	public Object methodMissing(String name, Object args) {
+	public Object hostname(String name) {
+		hostname = name;
+		log.hostnameSet(this, name);
 		return this;
+	}
+
+	public String getHostname() {
+		return hostname;
 	}
 
 	@Override
 	public String getName() {
 		return HostnameFactory.NAME;
+	}
+
+	public void setProfile(ProfileService newProfile) {
+		profile = newProfile;
+		log.profileSet(this, newProfile);
+	}
+
+	public ProfileService getProfile() {
+		return profile;
 	}
 
 	@Override
@@ -56,4 +79,5 @@ class HostnameServiceImpl extends GroovyObjectSupport implements Service {
 	public String toString() {
 		return new ToStringBuilder(this).toString();
 	}
+
 }

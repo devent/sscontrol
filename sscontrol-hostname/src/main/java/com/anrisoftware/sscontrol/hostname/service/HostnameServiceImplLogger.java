@@ -19,6 +19,19 @@ class HostnameServiceImplLogger extends AbstractLogger {
 	}
 
 	void profileSet(HostnameServiceImpl service, ProfileService profile) {
-		log.trace("Set profile {} for {}.", profile, service);
+		if (log.isTraceEnabled()) {
+			log.trace("Set profile {} for {}.", profile, service);
+		} else {
+			log.info("Set profile {} for hostname service.",
+					profile.getProfileName());
+		}
+	}
+
+	void hostnameSet(HostnameServiceImpl service, String name) {
+		if (log.isTraceEnabled()) {
+			log.trace("Hostname '{}' set for {}.", name, service);
+		} else {
+			log.info("Hostname '{}' set.", name);
+		}
 	}
 }

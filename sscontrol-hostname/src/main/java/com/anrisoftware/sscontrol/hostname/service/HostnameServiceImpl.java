@@ -88,8 +88,8 @@ class HostnameServiceImpl extends GroovyObjectSupport implements Service {
 		Script worker = workers.get(name).get();
 		worker.setProperty("templates", templates);
 		worker.setProperty("system", profile.getEntry("system"));
-		System.out.println(profile.getEntry("hostname"));
 		worker.setProperty("properties", profile.getEntry("hostname"));
+		worker.setProperty("service", this);
 		worker.run();
 		return this;
 	}

@@ -31,4 +31,8 @@ profile "ubuntu_10.04", {
 		set_method_enabled()
 		property_with_variables "$one $two $three"
 	}
+	hostname {
+		install_command "aptitude update && aptitude install {}"
+		echo_command "echo"
+	}
 }

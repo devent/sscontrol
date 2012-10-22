@@ -60,7 +60,8 @@ class LoadServiceTest extends TestUtils {
 		assert registry.serviceNames.toString() == "[profile]"
 		assert registry.getService("profile").size() == 1
 		ProfileService profile = registry.getService("profile")[0]
-		assert profile.entryNames.toString() == "[system]"
+		assert profile.entryNames.toString() == "[system, hostname]"
+		
 		ProfileProperties system = profile.getEntry("system")
 		system.propertyKeys.size() == 8
 		assert system.getProperty("echo_command") == "echo"
@@ -71,6 +72,11 @@ class LoadServiceTest extends TestUtils {
 		assert system.getProperty("set_number") == 11
 		assert system.getProperty("set_method_enabled") == true
 		assert system.getProperty("property_with_variables") == "one two three"
+		
+		ProfileProperties hostname = profile.getEntry("hostname")
+		system.propertyKeys.size() == 2
+		assert system.getProperty("echo_command") == "echo"
+		assert system.getProperty("install_command") == "aptitude update && aptitude install {}"
 	}
 
 }

@@ -21,8 +21,10 @@ package com.anrisoftware.sscontrol.core.groovy;
 import groovy.lang.Closure;
 import groovy.lang.GroovyObject;
 import groovy.lang.Script;
+import groovy.util.Proxy;
 
 import java.util.ServiceLoader;
+import java.util.Stack;
 
 import org.codehaus.groovy.runtime.InvokerHelper;
 
@@ -33,26 +35,33 @@ import com.anrisoftware.sscontrol.core.api.ServiceFactory;
 
 public abstract class ScriptBuilder extends Script {
 
-	private GroovyObject delegate;
+	private final Stack<GroovyObject> delegate;
 
 	private Service service;
 
+	public ScriptBuilder() {
+		this.delegate = new Stack<GroovyObject>();
+	}
+
 	public Object methodMissing(String name, Object args)
 			throws ServiceException {
-		if (delegate == null) {
+		if (delegate.empty()) {
 			ServiceFactory serviceFactory = loadService(name);
 			service = serviceFactory.create(getProfile());
-			delegate = new groovy.util.Proxy().wrap(service);
+			delegate.push(new Proxy().wrap(service));
 		}
-		delegate = (GroovyObject) delegate.invokeMethod(name, args);
+		GroovyObject result;
+		result = (GroovyObject) delegate.peek().invokeMethod(name, args);
+		delegate.push(result);
 		Object[] argsArray = InvokerHelper.asArray(args);
 		if (argsArray.length > 0) {
 			if (argsArray[0] instanceof Closure) {
 				Closure<?> closure = (Closure<?>) argsArray[0];
-				closure.setDelegate(delegate);
+				closure.setDelegate(delegate.peek());
 				closure.call();
 			}
 		}
+		delegate.pop();
 		return service;
 	}
 

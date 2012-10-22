@@ -19,6 +19,7 @@
 package com.anrisoftware.sscontrol.core.api;
 
 import java.net.URL;
+import java.util.Map;
 
 import javax.imageio.spi.ServiceRegistry;
 
@@ -36,6 +37,11 @@ public interface ServiceLoader {
 	 * @param url
 	 *            the {@link URL} of the script file.
 	 * 
+	 * @param variables
+	 *            a {@link Map} of variables that should be injected in the
+	 *            script. The map should contain entries
+	 *            {@code [<variable name>=<value>, ...]}.
+	 * 
 	 * @param registry
 	 *            the {@link ServicesRegistry} to which to add the service.
 	 * 
@@ -48,6 +54,6 @@ public interface ServiceLoader {
 	 * @throws ServiceException
 	 *             if there was an error loading the script file.
 	 */
-	ServicesRegistry loadService(URL url, ServicesRegistry registry)
-			throws ServiceException;
+	ServicesRegistry loadService(URL url, Map<String, Object> variables,
+			ServicesRegistry registry) throws ServiceException;
 }

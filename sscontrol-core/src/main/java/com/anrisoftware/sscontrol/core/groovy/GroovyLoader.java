@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.URL;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -55,24 +56,33 @@ class GroovyLoader implements ServiceLoader {
 	}
 
 	@Override
-	public ServicesRegistry loadService(URL url, ServicesRegistry registry)
-			throws ServiceException {
+	public ServicesRegistry loadService(URL url, Map<String, Object> variables,
+			ServicesRegistry registry) throws ServiceException {
 		log.checkUrl(url);
 		log.checkRegistry(registry);
-		GroovyShell shell = createShell();
+		GroovyShell shell = createShell(variables);
 		Reader reader = openScript(url);
 		Service service = evaluateScript(reader, shell, url);
+		log.loadedServiceScript(url);
 		registry.addService(service);
 		return registry;
 	}
 
-	private GroovyShell createShell() {
+	private GroovyShell createShell(Map<String, Object> variables) {
 		CompilerConfiguration compiler = new CompilerConfiguration();
 		compiler.setScriptBaseClass(ScriptBuilder.class.getName());
 		ClassLoader classLoader = getClass().getClassLoader();
+		Binding binding = createBinding(variables);
+		return new GroovyShell(classLoader, binding, compiler);
+	}
+
+	private Binding createBinding(Map<String, Object> variables) {
 		Binding binding = new Binding();
 		binding.setProperty("logger", scriptBuilderLogger);
-		return new GroovyShell(classLoader, binding, compiler);
+		for (Map.Entry<String, Object> entry : variables.entrySet()) {
+			binding.setProperty(entry.getKey(), entry.getValue());
+		}
+		return binding;
 	}
 
 	private Service evaluateScript(Reader reader, GroovyShell shell, URL url)

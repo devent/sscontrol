@@ -53,15 +53,16 @@ class LoadServiceTest extends TestUtils {
 
 	@Test
 	void "load profile script"() {
+		def variables = [one: "one", two: "two", three: "three"]
 		ServicesRegistry registry = injector.getInstance ServicesRegistry
 		SscontrolServiceLoader loader = injector.getInstance SscontrolServiceLoader
-		loader.loadService(ubuntu1004Profile, registry)
+		loader.loadService(ubuntu1004Profile, variables, registry)
 		assert registry.serviceNames.toString() == "[profile]"
 		assert registry.getService("profile").size() == 1
 		ProfileService profile = registry.getService("profile")[0]
 		assert profile.entryNames.toString() == "[system]"
 		ProfileProperties system = profile.getEntry("system")
-		system.propertyKeys.size() == 7
+		system.propertyKeys.size() == 8
 		assert system.getProperty("echo_command") == "echo"
 		assert system.getProperty("install_command") == "aptitude update && aptitude install {}"
 		assert system.getProperty("set_enabled") == true
@@ -69,5 +70,7 @@ class LoadServiceTest extends TestUtils {
 		assert system.getProperty("set_multiple") == ["aaa", "bbb"]
 		assert system.getProperty("set_number") == 11
 		assert system.getProperty("set_method_enabled") == true
+		assert system.getProperty("property_with_variables") == "one two three"
 	}
+
 }

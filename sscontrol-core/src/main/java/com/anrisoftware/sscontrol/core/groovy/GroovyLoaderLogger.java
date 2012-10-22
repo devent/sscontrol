@@ -65,4 +65,8 @@ class GroovyLoaderLogger extends AbstractLogger {
 		log.error(ex.getLocalizedMessage());
 		return ex;
 	}
+
+	void loadedServiceScript(URL url) {
+		log.trace("Loaded the script file URL {}.", url);
+	}
 }

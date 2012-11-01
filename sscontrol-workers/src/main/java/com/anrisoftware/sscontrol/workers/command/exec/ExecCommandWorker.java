@@ -1,4 +1,4 @@
-package com.anrisoftware.sscontrol.workers.command;
+package com.anrisoftware.sscontrol.workers.command.exec;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

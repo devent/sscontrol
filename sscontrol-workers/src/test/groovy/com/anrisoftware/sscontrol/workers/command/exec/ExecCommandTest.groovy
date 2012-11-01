@@ -1,10 +1,12 @@
-package com.anrisoftware.sscontrol.workers.command
+package com.anrisoftware.sscontrol.workers.command.exec
 
 import org.junit.Before
 import org.junit.BeforeClass
 import org.junit.Test
 
 import com.anrisoftware.globalpom.utils.TestUtils
+import com.anrisoftware.sscontrol.workers.command.exec.ExecCommandWorkerFactory;
+import com.anrisoftware.sscontrol.workers.command.exec.ExecCommandWorkerModule;
 import com.google.inject.Guice
 import com.google.inject.Injector
 

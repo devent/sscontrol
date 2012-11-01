@@ -1,4 +1,4 @@
-package com.anrisoftware.sscontrol.workers.command;
+package com.anrisoftware.sscontrol.workers.command.exec;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;

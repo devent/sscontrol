@@ -3,7 +3,7 @@
  *
  * This file is part of noisedriver-crbsnoise. All rights reserved.
  */
-package com.anrisoftware.sscontrol.template.st;
+package com.anrisoftware.sscontrol.template.service;
 
 import org.apache.commons.lang3.concurrent.ConcurrentException;
 import org.mangosdk.spi.ProviderFor;

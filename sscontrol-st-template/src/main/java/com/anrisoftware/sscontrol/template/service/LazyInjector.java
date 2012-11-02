@@ -3,13 +3,14 @@
  *
  * This file is part of noisedriver-crbsnoise. All rights reserved.
  */
-package com.anrisoftware.sscontrol.template.st;
+package com.anrisoftware.sscontrol.template.service;
 
 import static com.google.inject.Guice.createInjector;
 
 import org.apache.commons.lang3.concurrent.ConcurrentException;
 import org.apache.commons.lang3.concurrent.LazyInitializer;
 
+import com.anrisoftware.sscontrol.template.st.StTemplateModule;
 import com.google.inject.Injector;
 import com.google.inject.Module;
 

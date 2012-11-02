@@ -1,12 +1,14 @@
 package com.anrisoftware.sscontrol.template.api;
 
+import java.io.Serializable;
+
 /**
  * Process a template with attributes.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 0.1
  */
-public interface Template {
+public interface Template extends Serializable {
 
 	/**
 	 * Process the template with the specified name and the attributes.

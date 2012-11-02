@@ -12,7 +12,7 @@ import java.util.Properties;
 public interface TemplateFactory {
 
 	/**
-	 * Creates a new template from the specified resource URL.
+	 * Creates a new template from the specified resource URL and properties.
 	 * 
 	 * @param resource
 	 *            the {@link URL} of the template file.
@@ -25,4 +25,16 @@ public interface TemplateFactory {
 	 */
 	Template create(URL resource, Properties properties)
 			throws TemplateException;
+
+	/**
+	 * Creates a new template from the specified resource URL using the default
+	 * properties.
+	 * 
+	 * @param resource
+	 *            the {@link URL} of the template file.
+	 * 
+	 * @return the {@link TemplateWorker}. if there was an error creating the
+	 *         template.
+	 */
+	Template create(URL resource) throws TemplateException;
 }

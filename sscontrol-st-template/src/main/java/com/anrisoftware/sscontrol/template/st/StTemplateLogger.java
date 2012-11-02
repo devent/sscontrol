@@ -18,7 +18,7 @@ class StTemplateLogger extends AbstractSerializedLogger {
 	/**
 	 * Create logger for {@link StTemplate}.
 	 */
-	StTemplateLogger() {
+	public StTemplateLogger() {
 		super(StTemplate.class);
 	}
 

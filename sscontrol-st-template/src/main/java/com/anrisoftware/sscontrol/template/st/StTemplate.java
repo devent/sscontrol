@@ -3,7 +3,7 @@ package com.anrisoftware.sscontrol.template.st;
 import java.net.URL;
 import java.util.Properties;
 
-import javax.inject.Inject;
+import javax.inject.Named;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.stringtemplate.v4.ST;
@@ -16,6 +16,7 @@ import com.anrisoftware.propertiesutils.ContextProperties;
 import com.anrisoftware.sscontrol.template.api.Template;
 import com.anrisoftware.sscontrol.template.api.TemplateException;
 import com.google.inject.assistedinject.Assisted;
+import com.google.inject.assistedinject.AssistedInject;
 
 /**
  * Template that is using a <a
@@ -26,6 +27,11 @@ import com.google.inject.assistedinject.Assisted;
  * @since 0.1
  */
 class StTemplate implements Template {
+
+	/**
+	 * @version 0.1
+	 */
+	private static final long serialVersionUID = 9004376597114715535L;
 
 	static final String DELIMITER_STOP_CHAR_PROPERTY = "template_delimiter_stop_character";
 
@@ -39,14 +45,44 @@ class StTemplate implements Template {
 
 	private final ContextProperties properties;
 
-	private STGroupFile groupFile;
+	private transient STGroupFile groupFile;
 
-	protected TemplateException error;
+	private transient TemplateException error;
 
 	/**
+	 * Opens the ST template group file with default properties.
 	 * 
 	 * @param logger
+	 *            the {@link StTemplateLogger} for logging messages.
+	 * 
 	 * @param resource
+	 *            the {@link URL} of the template file.
+	 * 
+	 * @param defaultProperties
+	 *            the default properties.
+	 * 
+	 * @throws TemplateException
+	 *             if there was an error creating the template.
+	 */
+	@AssistedInject
+	StTemplate(StTemplateLogger logger,
+			@Named("st-template-properties") Properties defaultProperties,
+			@Assisted URL resource) throws TemplateException {
+		this(logger, defaultProperties, resource, new Properties());
+	}
+
+	/**
+	 * Opens the ST template group file.
+	 * 
+	 * @param logger
+	 *            the {@link StTemplateLogger} for logging messages.
+	 * 
+	 * @param resource
+	 *            the {@link URL} of the template file.
+	 * 
+	 * @param defaultProperties
+	 *            the default properties.
+	 * 
 	 * @param properties
 	 *            {@link Properties} for the template group file. Have the
 	 *            properties:
@@ -69,12 +105,15 @@ class StTemplate implements Template {
 	 * @throws TemplateException
 	 *             if there was an error creating the template.
 	 */
-	@Inject
-	StTemplate(StTemplateLogger logger, @Assisted URL resource,
-			@Assisted Properties properties) throws TemplateException {
+	@AssistedInject
+	StTemplate(StTemplateLogger logger,
+			@Named("st-template-properties") Properties defaultProperties,
+			@Assisted URL resource, @Assisted Properties properties)
+			throws TemplateException {
 		this.log = logger;
 		this.resource = resource;
-		this.properties = new ContextProperties(this, properties);
+		defaultProperties.putAll(properties);
+		this.properties = new ContextProperties(this, defaultProperties);
 		readResolve();
 	}
 

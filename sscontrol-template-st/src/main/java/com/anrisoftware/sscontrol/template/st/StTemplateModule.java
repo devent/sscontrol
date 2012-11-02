@@ -25,7 +25,7 @@ import com.google.inject.assistedinject.FactoryModuleBuilder;
 public class StTemplateModule extends AbstractModule {
 
 	private static final URL defaultProperties = StTemplateModule.class
-			.getResource("/com/anrisoftware/sscontrol/template/st/template.properties");
+			.getResource("template.properties");
 
 	@Override
 	protected void configure() {

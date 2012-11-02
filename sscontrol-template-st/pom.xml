@@ -9,7 +9,7 @@
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 
-	<artifactId>sscontrol-st-template</artifactId>
+	<artifactId>sscontrol-template-st</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>ST Template</name>
 	<inceptionYear>2012</inceptionYear>

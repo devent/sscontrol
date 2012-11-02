@@ -17,6 +17,15 @@
 	<inceptionYear>2012</inceptionYear>
 
 	<dependencies>
+
+		<!-- test dependencies -->
+		<dependency>
+			<groupId>com.anrisoftware.globalpom</groupId>
+			<artifactId>globalpom-groovytestutils</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- compile dependencies -->
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
@@ -24,7 +33,6 @@
 		<dependency>
 			<groupId>org.antlr</groupId>
 			<artifactId>stringtemplate</artifactId>
-			<version>4.0.2</version>
 		</dependency>
 		<dependency>
 			<groupId>com.google.inject.extensions</groupId>
@@ -37,12 +45,10 @@
 		<dependency>
 			<groupId>com.anrisoftware.propertiesutils</groupId>
 			<artifactId>propertiesutils-contextproperties</artifactId>
-			<version>1.2</version>
 		</dependency>
 		<dependency>
-			<groupId>com.anrisoftware.globalpom</groupId>
-			<artifactId>globalpom-groovytestutils</artifactId>
-			<scope>test</scope>
+			<groupId>org.mangosdk</groupId>
+			<artifactId>spi</artifactId>
 		</dependency>
 	</dependencies>
 </project>

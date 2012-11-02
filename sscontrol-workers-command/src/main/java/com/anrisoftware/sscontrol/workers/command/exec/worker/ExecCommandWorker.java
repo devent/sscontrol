@@ -1,4 +1,4 @@
-package com.anrisoftware.sscontrol.workers.command.exec;
+package com.anrisoftware.sscontrol.workers.command.exec.worker;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -46,9 +46,9 @@ public class ExecCommandWorker implements Worker {
 
 	private int exitCode;
 
-	private transient final ByteArrayOutputStream out;
+	private transient ByteArrayOutputStream out;
 
-	private transient final ByteArrayOutputStream err;
+	private transient ByteArrayOutputStream err;
 
 	private long timeoutMs;
 
@@ -75,8 +75,13 @@ public class ExecCommandWorker implements Worker {
 		this.command = command;
 		this.exitValue = 0;
 		this.timeoutMs = timeoutMs;
+		readResolve();
+	}
+
+	private Object readResolve() {
 		this.out = new ByteArrayOutputStream();
 		this.err = new ByteArrayOutputStream();
+		return this;
 	}
 
 	@Override

@@ -1,6 +1,8 @@
-package com.anrisoftware.sscontrol.workers.command.exec;
+package com.anrisoftware.sscontrol.workers.command.exec.worker;
 
 import java.util.Map;
+
+import com.anrisoftware.sscontrol.workers.api.WorkerFactory;
 
 /**
  * Factory to create a new worker that executes an external process.
@@ -8,7 +10,7 @@ import java.util.Map;
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 0.1
  */
-public interface ExecCommandWorkerFactory {
+public interface ExecCommandWorkerFactory extends WorkerFactory {
 
 	/**
 	 * Creates a new worker that executes an external process from the specified

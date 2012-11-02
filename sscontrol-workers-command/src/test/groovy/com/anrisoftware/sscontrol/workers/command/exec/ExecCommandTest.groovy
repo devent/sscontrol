@@ -5,11 +5,17 @@ import org.junit.BeforeClass
 import org.junit.Test
 
 import com.anrisoftware.globalpom.utils.TestUtils
-import com.anrisoftware.sscontrol.workers.command.exec.ExecCommandWorkerFactory;
-import com.anrisoftware.sscontrol.workers.command.exec.ExecCommandWorkerModule;
+import com.anrisoftware.sscontrol.workers.command.exec.worker.ExecCommandWorkerFactory
+import com.anrisoftware.sscontrol.workers.command.exec.worker.ExecCommandWorkerModule
 import com.google.inject.Guice
 import com.google.inject.Injector
 
+/**
+ * Test execute command worker.
+ *
+ * @author Erwin Mueller, erwin.mueller@deventm.org
+ * @since 0.1
+ */
 class ExecCommandTest extends TestUtils {
 
 	static echoCommand
@@ -24,6 +30,15 @@ class ExecCommandTest extends TestUtils {
 		def worker = factory.create(String.format(echoCommand, string))
 		worker()
 		assertStringContent worker.out, string
+	}
+
+	@Test
+	void "serialize and execute echo command"() {
+		def string = "Test"
+		def worker = factory.create(String.format(echoCommand, string))
+		def workerB = reserialize worker
+		workerB()
+		assertStringContent workerB.out, string
 	}
 
 	@BeforeClass

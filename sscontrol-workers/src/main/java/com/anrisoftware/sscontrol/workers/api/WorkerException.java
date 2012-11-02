@@ -2,6 +2,12 @@ package com.anrisoftware.sscontrol.workers.api;
 
 import org.apache.commons.lang3.exception.ContextedException;
 
+/**
+ * Indicate that some error occured while executing a worker.
+ * 
+ * @author Erwin Mueller, erwin.mueller@deventm.org
+ * @since 0.1
+ */
 public class WorkerException extends ContextedException {
 
 	/**

@@ -1,21 +1,21 @@
-package com.anrisoftware.sscontrol.workers.command;
+package com.anrisoftware.sscontrol.workers.command.exec.worker;
 
-import com.anrisoftware.sscontrol.workers.command.exec.ExecCommandWorker;
-import com.anrisoftware.sscontrol.workers.command.exec.ExecCommandWorkerFactory;
+import com.anrisoftware.sscontrol.workers.api.WorkerFactory;
 import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 
 /**
- * Binds the command worker classes.
+ * Installs the execute command worker factory.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 0.1
  */
-class CommandWorkersModule extends AbstractModule {
+public class ExecCommandWorkerModule extends AbstractModule {
 
 	@Override
 	protected void configure() {
 		install(new FactoryModuleBuilder().implement(ExecCommandWorker.class,
 				ExecCommandWorker.class).build(ExecCommandWorkerFactory.class));
+		bind(WorkerFactory.class).to(ExecCommandWorkerFactory.class);
 	}
 }

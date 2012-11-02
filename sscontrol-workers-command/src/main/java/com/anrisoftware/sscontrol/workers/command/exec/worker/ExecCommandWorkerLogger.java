@@ -1,4 +1,4 @@
-package com.anrisoftware.sscontrol.workers.command.exec;
+package com.anrisoftware.sscontrol.workers.command.exec.worker;
 
 import java.io.IOException;
 
@@ -16,7 +16,7 @@ class ExecCommandWorkerLogger extends AbstractSerializedLogger {
 	/**
 	 * Create logger for {@link ExecCommandWorker}.
 	 */
-	ExecCommandWorkerLogger() {
+	public ExecCommandWorkerLogger() {
 		super(ExecCommandWorker.class);
 	}
 

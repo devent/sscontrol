@@ -10,8 +10,13 @@
     <modules>
         <module>sscontrol-api</module>
         <module>sscontrol-core</module>
+        <module>sscontrol-hostname</module>
         <module>sscontrol-parent</module>
         <module>sscontrol-profile</module>
+        <module>sscontrol-template</module>
+        <module>sscontrol-template-st</module>
+        <module>sscontrol-workers</module>
+        <module>sscontrol-workers-command</module>
     </modules>
 
 </project>

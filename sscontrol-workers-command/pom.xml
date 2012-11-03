@@ -55,6 +55,17 @@
             <groupId>org.mangosdk</groupId>
             <artifactId>spi</artifactId>
         </dependency>
+        <dependency>
+        	<groupId>com.anrisoftware.sscontrol</groupId>
+        	<artifactId>sscontrol-template</artifactId>
+        	<version>0.0.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+        	<groupId>com.anrisoftware.sscontrol</groupId>
+        	<artifactId>sscontrol-template-st</artifactId>
+        	<version>0.0.1-SNAPSHOT</version>
+        	<scope>test</scope>
+        </dependency>
 	</dependencies>
 
 </project>

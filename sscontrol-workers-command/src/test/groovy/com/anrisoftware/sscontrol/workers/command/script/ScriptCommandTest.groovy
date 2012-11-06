@@ -45,6 +45,8 @@ class ScriptCommandTest {
 
 	static chmodTemplate = resourceURL("chmod.stg", ScriptCommandWorker)
 
+	static mklnTemplate = resourceURL("mkln.stg", ScriptCommandWorker)
+
 	Injector injector
 
 	ScriptCommandWorkerFactory factory
@@ -58,6 +60,20 @@ class ScriptCommandTest {
 			worker()
 			assert it.files[0].canWrite() == false
 			assert it.files[1].canWrite() == false
+		}
+	}
+
+	@Test
+	void "ln files"() {
+		withFiles 2, "ln", {
+			def targets = it.files.inject([]) { list, value ->
+				list << new File("${value.absolutePath}_target")
+			}
+			def mod = "-w"
+			def worker = factory.create mklnTemplate, system,
+							[lnCommand: "ln", files: it.files, targets: targets]
+			worker()
+			targets.each { assert it.isFile() }
 		}
 	}
 

@@ -18,6 +18,7 @@
  */
 package com.anrisoftware.sscontrol.hostname.service;
 
+import groovy.lang.Closure;
 import groovy.lang.GroovyObjectSupport;
 import groovy.lang.Script;
 
@@ -58,7 +59,12 @@ class HostnameServiceImpl extends GroovyObjectSupport implements Service {
 		this.templates = templates;
 	}
 
-	public Object hostname(String name) {
+	public Object hostname(Closure<?> closure) {
+		return this;
+	}
+
+	public Object set_hostname(String name) {
+		log.checkHostname(this, name);
 		hostname = name;
 		log.hostnameSet(this, name);
 		return this;

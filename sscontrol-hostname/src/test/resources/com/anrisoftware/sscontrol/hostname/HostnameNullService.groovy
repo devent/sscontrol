@@ -18,4 +18,4 @@
  */
 package com.anrisoftware.sscontrol.hostname
 
-hostname { set_hostname "test" }
+hostname { set_hostname "" }

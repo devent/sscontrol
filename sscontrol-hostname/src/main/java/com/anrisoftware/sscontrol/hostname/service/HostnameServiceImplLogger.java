@@ -18,6 +18,8 @@
  */
 package com.anrisoftware.sscontrol.hostname.service;
 
+import static org.apache.commons.lang3.Validate.notEmpty;
+
 import com.anrisoftware.globalpom.log.AbstractLogger;
 import com.anrisoftware.sscontrol.core.api.ProfileService;
 
@@ -51,5 +53,10 @@ class HostnameServiceImplLogger extends AbstractLogger {
 		} else {
 			log.info("Hostname '{}' set.", name);
 		}
+	}
+
+	void checkHostname(HostnameServiceImpl service, String name) {
+		notEmpty(name, "The hostname must not be empty or null for %s.",
+				service);
 	}
 }

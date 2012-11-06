@@ -23,6 +23,7 @@ import org.junit.Test
 
 import com.anrisoftware.globalpom.utils.TestUtils
 import com.anrisoftware.sscontrol.core.activator.CoreModule
+import com.anrisoftware.sscontrol.core.api.ServiceException
 import com.anrisoftware.sscontrol.core.api.ServiceLoader as SscontrolServiceLoader
 import com.anrisoftware.sscontrol.core.api.ServicesRegistry
 import com.google.inject.Guice
@@ -34,6 +35,8 @@ class HostnameServiceTest extends TestUtils {
 
 	static hostnameService = TestUtils.resourceURL("HostnameService.groovy", HostnameServiceTest)
 
+	static hostnameNullService = TestUtils.resourceURL("HostnameNullService.groovy", HostnameServiceTest)
+
 	Injector injector
 
 	Ubuntu_10_04Profile ubuntu_10_04Profile
@@ -41,6 +44,27 @@ class HostnameServiceTest extends TestUtils {
 	File tmp
 
 	Map variables
+
+	@Test
+	void "load hostname service"() {
+		ServicesRegistry registry = injector.getInstance ServicesRegistry
+		SscontrolServiceLoader loader = injector.getInstance SscontrolServiceLoader
+		loader.loadService(ubuntu1004Profile, variables, registry, null)
+		def profile = registry.getService("profile")[0]
+		loader.loadService(hostnameService, variables, registry, profile)
+		registry.allServices.each { it.call() }
+	}
+
+	@Test
+	void "load hostname service with null value"() {
+		ServicesRegistry registry = injector.getInstance ServicesRegistry
+		SscontrolServiceLoader loader = injector.getInstance SscontrolServiceLoader
+		loader.loadService(ubuntu1004Profile, variables, registry, null)
+		def profile = registry.getService("profile")[0]
+		shouldFailWith ServiceException, {
+			loader.loadService(hostnameNullService, variables, registry, profile)
+		}
+	}
 
 	@Before
 	void setupInjector() {
@@ -51,15 +75,5 @@ class HostnameServiceTest extends TestUtils {
 
 	def createInjector() {
 		Guice.createInjector(new CoreModule())
-	}
-
-	@Test
-	void "load hostname service"() {
-		ServicesRegistry registry = injector.getInstance ServicesRegistry
-		SscontrolServiceLoader loader = injector.getInstance SscontrolServiceLoader
-		loader.loadService(ubuntu1004Profile, variables, registry, null)
-		def profile = registry.getService("profile")[0]
-		loader.loadService(hostnameService, variables, registry, profile)
-		registry.allServices.each { it.call() }
 	}
 }

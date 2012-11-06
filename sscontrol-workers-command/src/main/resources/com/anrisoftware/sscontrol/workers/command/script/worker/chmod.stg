@@ -1,0 +1,5 @@
+unix(chmodCommand, mod, files) ::= <<
+#!/bin/sh
+<files:{file|<chmodCommand> <mod> <file><\n>}>
+
+>>

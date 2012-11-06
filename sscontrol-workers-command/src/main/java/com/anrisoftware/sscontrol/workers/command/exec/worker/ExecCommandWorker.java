@@ -74,6 +74,8 @@ public class ExecCommandWorker implements Worker {
 
 	private String error;
 
+	private boolean quatation;
+
 	@AssistedInject
 	ExecCommandWorker(ExecCommandWorkerLogger logger, @Assisted String command) {
 		this(logger, command, new HashMap<String, String>(), DEFAULT_TIMEOUT_MS);
@@ -93,6 +95,7 @@ public class ExecCommandWorker implements Worker {
 		this.command = command;
 		this.exitValue = 0;
 		this.timeoutMs = timeoutMs;
+		this.quatation = true;
 		readResolve();
 	}
 
@@ -105,6 +108,7 @@ public class ExecCommandWorker implements Worker {
 	@Override
 	public ExecCommandWorker call() throws WorkerException {
 		CommandLine cmdline = CommandLine.parse(command);
+		cmdline = quatation ? cmdline : new CommandLineWithoutQuote(cmdline);
 		ExecuteStreamHandler streamHandler = new PumpStreamHandler(out, err);
 		DefaultExecutor executor = new DefaultExecutor();
 		executor.setExitValue(exitValue);
@@ -119,10 +123,22 @@ public class ExecCommandWorker implements Worker {
 	private void startProcess(DefaultExecutor executor, CommandLine cmdline)
 			throws WorkerException {
 		try {
+			log.startProcess(cmdline);
 			exitCode = executor.execute(cmdline, environment);
 		} catch (IOException e) {
 			throw log.errorExecuteCommand(this, e);
 		}
+	}
+
+	/**
+	 * Sets if the parameter should be quoted in double quotes or not.
+	 * 
+	 * @param haveQuotation
+	 *            set to {@code true} to automatically quote arguments in double
+	 *            quotes or to {@code false} if not.
+	 */
+	public void setQuotation(boolean haveQuotation) {
+		quatation = haveQuotation;
 	}
 
 	public Map<String, String> getEnvironment() {

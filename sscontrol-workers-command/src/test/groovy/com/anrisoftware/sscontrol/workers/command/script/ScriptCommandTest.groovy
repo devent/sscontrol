@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-workers-command. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.workers.command.template
+package com.anrisoftware.sscontrol.workers.command.script
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 
@@ -25,8 +25,9 @@ import org.junit.Test
 
 import com.anrisoftware.sscontrol.template.api.TemplateServiceInfo
 import com.anrisoftware.sscontrol.template.service.StTemplateService
-import com.anrisoftware.sscontrol.workers.command.template.worker.TemplateCommandWorkerFactory
-import com.anrisoftware.sscontrol.workers.command.template.worker.TemplateCommandWorkerModule
+import com.anrisoftware.sscontrol.workers.command.script.worker.ScriptCommandWorker
+import com.anrisoftware.sscontrol.workers.command.script.worker.ScriptCommandWorkerFactory
+import com.anrisoftware.sscontrol.workers.command.script.worker.ScriptCommandWorkerModule
 import com.anrisoftware.sscontrol.workers.command.template.worker.TemplateCommandWorkerTemplateServiceModule
 import com.anrisoftware.sscontrol.workers.command.utils.SystemSelector
 import com.google.inject.Guice
@@ -38,64 +39,37 @@ import com.google.inject.Injector
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 0.1
  */
-class TemplateCommandTest {
+class ScriptCommandTest {
 
 	static system = SystemSelector.system.name
 
-	static commandTemplate = resourceURL("template_command.stg", TemplateCommandTest)
-
-	static echo_unix = resourceURL("echo_unix.txt", TemplateCommandTest)
-
-	static chmodTemplate = resourceURL("chmod.stg", TemplateCommandTest)
-
-	URL echoCommand
+	static chmodTemplate = resourceURL("chmod.stg", ScriptCommandWorker)
 
 	Injector injector
 
-	TemplateCommandWorkerFactory factory
-
-	@Test
-	void "execute command"() {
-		def string = "Test"
-		def worker = factory.create commandTemplate, system, [arg1: string]
-		worker()
-		assertStringContent worker.out, string
-	}
-
-	@Test
-	void "serialize and execute command"() {
-		def string = "Test"
-		def worker = factory.create commandTemplate, system, [arg1: string]
-		def workerB = reserialize worker
-		workerB()
-		assertStringContent workerB.out, string
-	}
+	ScriptCommandWorkerFactory factory
 
 	@Test
 	void "chmod files"() {
 		withFiles 2, "chmod", {
-			def mod = "+rw"
+			def mod = "-w"
 			def worker = factory.create chmodTemplate, system,
-							[prefix: "", mod: mod, files: it.files]
-			try {
-				worker()
-			} finally {
-				println worker.out
-				println worker.err
-			}
+							[chmodCommand: "chmod", mod: mod, files: it.files]
+			worker()
+			assert it.files[0].canWrite() == false
+			assert it.files[1].canWrite() == false
 		}
 	}
 
 	@Before
 	void createFactories() {
 		injector = createInjector()
-		factory = injector.getInstance TemplateCommandWorkerFactory
-		echoCommand = this."echo_$system"
+		factory = injector.getInstance ScriptCommandWorkerFactory
 	}
 
 	Injector createInjector() {
 		Guice.createInjector(
-						new TemplateCommandWorkerModule(),
+						new ScriptCommandWorkerModule(),
 						templateModule
 						)
 	}

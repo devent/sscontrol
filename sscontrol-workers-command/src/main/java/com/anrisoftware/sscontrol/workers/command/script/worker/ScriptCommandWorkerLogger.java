@@ -16,44 +16,32 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-workers-command. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.workers.command.exec.worker;
-
-import java.io.IOException;
-
-import org.apache.commons.exec.CommandLine;
+package com.anrisoftware.sscontrol.workers.command.script.worker;
 
 import com.anrisoftware.globalpom.log.AbstractSerializedLogger;
+import com.anrisoftware.sscontrol.template.api.TemplateException;
 import com.anrisoftware.sscontrol.workers.api.WorkerException;
 
 /**
- * Logging messages for {@link ExecCommandWorker}.
+ * Logging messages for {@link ScriptCommandWorkerLogger}.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 0.1
  */
-class ExecCommandWorkerLogger extends AbstractSerializedLogger {
+class ScriptCommandWorkerLogger extends AbstractSerializedLogger {
 
 	/**
-	 * Create logger for {@link ExecCommandWorker}.
+	 * Create logger for {@link ScriptCommandWorker}.
 	 */
-	public ExecCommandWorkerLogger() {
-		super(ExecCommandWorker.class);
+	public ScriptCommandWorkerLogger() {
+		super(ScriptCommandWorker.class);
 	}
 
-	WorkerException errorExecuteCommand(ExecCommandWorker worker, IOException e) {
-		WorkerException ex = new WorkerException(
-				"Error execute command in worker", e);
+	WorkerException errorProcessTemplate(ScriptCommandWorker worker,
+			TemplateException e) {
+		WorkerException ex = new WorkerException("Error processing template", e);
 		ex.addContextValue("worker", worker);
 		log.error(ex.getLocalizedMessage());
 		return ex;
-	}
-
-	void finishedProcess(ExecCommandWorker worker) {
-		log.trace("Finished worker {}.", worker);
-	}
-
-	void startProcess(CommandLine cmdline) {
-		log.trace("Start the process '{}' '{}'.", cmdline.getExecutable(),
-				cmdline.getArguments());
 	}
 }

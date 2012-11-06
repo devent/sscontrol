@@ -16,6 +16,6 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-core. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.core
+package com.anrisoftware.sscontrol.profile
 
 hostname "test"

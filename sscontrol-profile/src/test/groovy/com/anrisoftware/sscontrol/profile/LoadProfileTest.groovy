@@ -16,12 +16,13 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-core. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.core
+package com.anrisoftware.sscontrol.profile
+
+import static com.anrisoftware.globalpom.utils.TestUtils.*
 
 import org.junit.Before
 import org.junit.Test
 
-import com.anrisoftware.globalpom.utils.TestUtils
 import com.anrisoftware.sscontrol.core.activator.CoreModule
 import com.anrisoftware.sscontrol.core.api.ProfileProperties
 import com.anrisoftware.sscontrol.core.api.ProfileService
@@ -31,25 +32,16 @@ import com.google.inject.Guice
 import com.google.inject.Injector
 
 /**
- * Load a service from a groovy script.
+ * Load a profile from a groovy script.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 0.1
  */
-class LoadServiceTest extends TestUtils {
+class LoadProfileTest {
 
-	static ubuntu1004Profile = TestUtils.resourceURL("Ubuntu_10_04Profile.groovy", LoadServiceTest)
+	static ubuntu1004Profile = resourceURL("Ubuntu_10_04Profile.groovy", LoadProfileTest)
 
 	Injector injector
-
-	@Before
-	void setupInjector() {
-		injector = createInjector()
-	}
-
-	def createInjector() {
-		Guice.createInjector(new CoreModule())
-	}
 
 	@Test
 	void "load profile script"() {
@@ -61,7 +53,7 @@ class LoadServiceTest extends TestUtils {
 		assert registry.getService("profile").size() == 1
 		ProfileService profile = registry.getService("profile")[0]
 		assert profile.entryNames.toString() == "[system, hostname]"
-		
+
 		ProfileProperties system = profile.getEntry("system")
 		system.propertyKeys.size() == 8
 		assert system.getProperty("echo_command") == "echo"
@@ -72,11 +64,19 @@ class LoadServiceTest extends TestUtils {
 		assert system.getProperty("set_number") == 11
 		assert system.getProperty("set_method_enabled") == true
 		assert system.getProperty("property_with_variables") == "one two three"
-		
+
 		ProfileProperties hostname = profile.getEntry("hostname")
 		system.propertyKeys.size() == 2
 		assert system.getProperty("echo_command") == "echo"
 		assert system.getProperty("install_command") == "aptitude update && aptitude install {}"
 	}
 
+	@Before
+	void setupInjector() {
+		injector = createInjector()
+	}
+
+	def createInjector() {
+		Guice.createInjector(new CoreModule())
+	}
 }

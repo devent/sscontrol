@@ -66,6 +66,19 @@ class ScriptCommandTest {
 	}
 
 	@Test
+	void "serialize and chmod files"() {
+		withFiles 2, "chmod", {
+			def mod = "-w"
+			def worker = factory.create chmodTemplate, system,
+							[chmodCommand: "chmod", mod: mod, files: it.files]
+			def workerB = reserialize worker
+			workerB()
+			assert it.files[0].canWrite() == false
+			assert it.files[1].canWrite() == false
+		}
+	}
+
+	@Test
 	void "chown files"() {
 		withFiles 2, "chown", {
 			def owner = System.getProperty("user.name")

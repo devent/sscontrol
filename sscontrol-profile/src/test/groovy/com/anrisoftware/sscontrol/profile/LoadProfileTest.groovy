@@ -55,20 +55,21 @@ class LoadProfileTest {
 		assert profile.entryNames.toString() == "[system, hostname]"
 
 		ProfileProperties system = profile.getEntry("system")
-		system.propertyKeys.size() == 8
-		assert system.getProperty("echo_command") == "echo"
-		assert system.getProperty("install_command") == "aptitude update && aptitude install {}"
-		assert system.getProperty("set_enabled") == true
-		assert system.getProperty("set_gstring") == "gstring test"
-		assert system.getProperty("set_multiple") == ["aaa", "bbb"]
-		assert system.getProperty("set_number") == 11
-		assert system.getProperty("set_method_enabled") == true
-		assert system.getProperty("property_with_variables") == "one two three"
+		system.profilePropertyKeys.size() == 8
+		assert system.getProfileProperty("echo_command") == "echo"
+		assert system.getProfileProperty("install_command") == "aptitude update && aptitude install {}"
+		assert system.getProfileProperty("install_command", "aaa") == "aptitude update && aptitude install aaa"
+		assert system.getProfileProperty("set_enabled") == true
+		assert system.getProfileProperty("set_gstring") == "gstring test"
+		assert system.getProfileProperty("set_multiple") == ["aaa", "bbb"]
+		assert system.getProfileProperty("set_number") == 11
+		assert system.getProfileProperty("set_method_enabled") == true
+		assert system.getProfileProperty("property_with_variables") == "one two three"
 
 		ProfileProperties hostname = profile.getEntry("hostname")
-		system.propertyKeys.size() == 2
-		assert system.getProperty("echo_command") == "echo"
-		assert system.getProperty("install_command") == "aptitude update && aptitude install {}"
+		system.profilePropertyKeys.size() == 2
+		assert system.getProfileProperty("echo_command") == "echo"
+		assert system.getProfileProperty("install_command") == "aptitude update && aptitude install {}"
 	}
 
 	@Before

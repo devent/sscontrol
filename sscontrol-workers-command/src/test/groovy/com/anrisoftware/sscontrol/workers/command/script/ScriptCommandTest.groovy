@@ -45,6 +45,8 @@ class ScriptCommandTest {
 
 	static chmodTemplate = resourceURL("chmod.stg", ScriptCommandWorker)
 
+	static chownTemplate = resourceURL("chown.stg", ScriptCommandWorker)
+
 	static mklnTemplate = resourceURL("mkln.stg", ScriptCommandWorker)
 
 	Injector injector
@@ -60,6 +62,17 @@ class ScriptCommandTest {
 			worker()
 			assert it.files[0].canWrite() == false
 			assert it.files[1].canWrite() == false
+		}
+	}
+
+	@Test
+	void "chown files"() {
+		withFiles 2, "chown", {
+			def owner = System.getProperty("user.name")
+			def group = System.getProperty("user.name")
+			def worker = factory.create chownTemplate, system,
+							[chownCommand: "chown", owner: owner, ownerGroup: group, files: it.files]
+			worker()
 		}
 	}
 

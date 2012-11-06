@@ -29,6 +29,8 @@ import java.util.Properties;
 
 import javax.inject.Named;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
 import com.anrisoftware.propertiesutils.ContextProperties;
 import com.anrisoftware.sscontrol.template.api.Template;
 import com.anrisoftware.sscontrol.template.api.TemplateException;
@@ -256,7 +258,8 @@ public class ScriptCommandWorker implements Worker {
 
 	@Override
 	public String toString() {
-		return commandWorker.toString();
+		return commandWorker != null ? commandWorker.toString()
+				: new ToStringBuilder(this).toString();
 	}
 
 }

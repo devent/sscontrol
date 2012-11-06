@@ -22,7 +22,7 @@ public interface ServiceFactory {
 
 	Service create(ProfileService profile);
 
-	void setParentInjector(Object injector);
+	void setParent(Object injector);
 
 	String getName();
 

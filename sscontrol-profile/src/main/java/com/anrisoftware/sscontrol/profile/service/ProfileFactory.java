@@ -52,7 +52,7 @@ public class ProfileFactory implements ServiceFactory {
 	}
 
 	@Override
-	public void setParentInjector(Object injector) {
+	public void setParent(Object injector) {
 		lazyInjector.setParentInjector((Injector) injector);
 	}
 }

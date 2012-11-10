@@ -40,12 +40,12 @@ import com.google.inject.assistedinject.AssistedInject;
  * Compare the content of a text file to a given pattern.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
- * @since 0.1
+ * @since 1.0
  */
 public class MatchTextWorker implements Worker {
 
 	/**
-	 * @since 0.1
+	 * @since 1.0
 	 */
 	private static final long serialVersionUID = 3064256627303024488L;
 
@@ -57,7 +57,7 @@ public class MatchTextWorker implements Worker {
 
 	private final SerializableCharset charset;
 
-	private boolean matches;
+	private transient boolean matches;
 
 	/**
 	 * Sets the file, the comparison text and the character set.

@@ -11,25 +11,36 @@
 	</parent>
 
 	<artifactId>sscontrol-workers-text</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0-SNAPSHOT</version>
 	<name>Sscontrol :: Workers Text</name>
 	<description>Workers for text file manipulations.</description>
 	<inceptionYear>2012</inceptionYear>
 
 	<dependencies>
+
+		<!-- test dependencies -->
+		<dependency>
+			<groupId>com.anrisoftware.globalpom</groupId>
+			<artifactId>globalpom-groovytestutils</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- own modules dependencies -->
 		<dependency>
 			<groupId>com.anrisoftware.sscontrol</groupId>
 			<artifactId>sscontrol-workers</artifactId>
 			<version>0.1-SNAPSHOT</version>
 		</dependency>
+
+		<!-- compile dependencies -->
 		<dependency>
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>com.anrisoftware.globalpom</groupId>
-			<artifactId>globalpom-groovytestutils</artifactId>
-			<scope>test</scope>
+			<groupId>org.mangosdk</groupId>
+			<artifactId>spi</artifactId>
+			<optional>true</optional>
 		</dependency>
 	</dependencies>
 

@@ -23,10 +23,10 @@ import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 
 /**
- * Installs the execute command worker factory.
+ * Installs the match text worker factory.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
- * @since 0.1
+ * @since 1.0
  */
 public class MatchTextWorkerModule extends AbstractModule {
 

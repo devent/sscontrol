@@ -7,14 +7,21 @@ import java.io.ObjectOutput;
 import java.nio.charset.Charset;
 
 /**
- * Serializable wrapper for {@link Charset}.
+ * Serializable wrapper for a character set.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
- * @since 0.1
+ * @since 1.0
  */
 public class SerializableCharset implements Externalizable, Comparable<Charset> {
 
 	private Charset charset;
+
+	/**
+	 * @deprecated for serialization.
+	 */
+	@Deprecated
+	public SerializableCharset() {
+	}
 
 	/**
 	 * Sets the character set.

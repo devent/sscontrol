@@ -32,7 +32,7 @@ import com.anrisoftware.sscontrol.workers.api.WorkerFactory;
  * resource to a given pattern.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
- * @since 0.1
+ * @since 1.0
  */
 public interface MatchTextWorkerFactory extends WorkerFactory {
 

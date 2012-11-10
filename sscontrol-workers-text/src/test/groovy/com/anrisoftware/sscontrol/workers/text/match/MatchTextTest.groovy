@@ -36,7 +36,7 @@ import com.google.inject.Injector
  * Test compare text files and resources.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
- * @since 0.1
+ * @since 1.0
  */
 class MatchTextTest {
 
@@ -70,6 +70,23 @@ class MatchTextTest {
 			worker = factory.create file, pattern, charset
 			worker()
 			assert worker.matches == false
+		}, {
+			file = new File(it.dir, "file_a")
+			FileUtils.write file, text
+		}
+	}
+
+	@Test
+	void "serialize and compare text files matching"() {
+		MatchTextWorker worker
+		def text = "aaa"
+		def pattern = Pattern.compile(/aaa/)
+		def file
+		withFiles "match", {
+			worker = factory.create file, pattern, charset
+			def workerB = reserialize worker
+			workerB()
+			assert workerB.matches == true
 		}, {
 			file = new File(it.dir, "file_a")
 			FileUtils.write file, text

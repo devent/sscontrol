@@ -18,26 +18,53 @@
  */
 package com.anrisoftware.sscontrol.hostname.ubuntu
 
-def getHostnameConfiguration() {
-	def temp = templates.create "Hostname"
-	def res = temp.getResource("configuration_ubuntu_10_04")
-	def text = res.getText("hostname", service.hostname)
+import org.apache.commons.io.FileUtils
+
+import com.anrisoftware.sscontrol.workers.text.tokentemplate.service.TokensTemplateWorkerService
+import com.anrisoftware.sscontrol.workers.text.tokentemplate.worker.TokenMarker
+import com.anrisoftware.sscontrol.workers.text.tokentemplate.worker.TokenTemplate
+
+File getConfigurationFile() {
+	properties.configuration_file as File
 }
 
-def getHostnameSet() {
-	getHostnameConfiguration()
-	return true
+def getConfiguration() {
+	def temp = templates.create "Hostname"
+	def res = temp.getResource("configuration_ubuntu_10_04")
+	res.getText("hostname", service.hostname)
+}
+
+def getText() {
+	if (configurationFile.isFile()) {
+		def config = configuration
+		FileUtils.readFileToString(configurationFile, properties.charset)
+	} else {
+		log.info "No file {} found in {}.", configurationFile, this
+		""
+	}
+}
+
+def getTokens() {
+	new TokenMarker("#SSCONTROL-$name", "#SSCONTROL-$name-END\n")
+}
+
+def getTemplate() {
+	new TokenTemplate(".*", configuration)
 }
 
 def deployHostnameConfiguration() {
+	def workerService = workers.find { it.info == TokensTemplateWorkerService.NAME }
+	def worker = workerService.worker.create(tokens, template, text)()
+	FileUtils.write(configurationFile, worker.text, properties.charset)
+	log.info "Deploy hostname configuration '$worker.text' to {} in {}.", configurationFile, this
 }
 
-def checkHostnameConfiguration() {
+def restartHostnameService() {
 }
 
-if (hostnameSet) {
-	return
+String toString() {
+	"${service.toString()}: $name"
 }
 
 deployHostnameConfiguration()
-checkHostnameConfiguration()
+restartHostnameService()

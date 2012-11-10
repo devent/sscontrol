@@ -18,11 +18,14 @@
  */
 package com.anrisoftware.sscontrol.hostname.service;
 
+import static java.lang.String.format;
+import static org.slf4j.LoggerFactory.getLogger;
 import groovy.lang.Closure;
 import groovy.lang.GroovyObjectSupport;
 import groovy.lang.Script;
 
 import java.util.Map;
+import java.util.ServiceLoader;
 
 import javax.inject.Inject;
 
@@ -32,9 +35,12 @@ import com.anrisoftware.resources.api.TemplatesFactory;
 import com.anrisoftware.sscontrol.core.api.ProfileService;
 import com.anrisoftware.sscontrol.core.api.Service;
 import com.anrisoftware.sscontrol.core.api.ServiceException;
+import com.anrisoftware.sscontrol.workers.api.WorkerService;
 import com.google.inject.Provider;
 
 class HostnameServiceImpl extends GroovyObjectSupport implements Service {
+
+	private static final String WORKER_LOGGING_NAME = "com.anrisoftware.sscontrol.hostname.service.%s";
 
 	/**
 	 * @version 0.1
@@ -43,7 +49,7 @@ class HostnameServiceImpl extends GroovyObjectSupport implements Service {
 
 	private final HostnameServiceImplLogger log;
 
-	private final Map<String, Provider<Script>> workers;
+	private final Map<String, Provider<Script>> scripts;
 
 	private ProfileService profile;
 
@@ -51,10 +57,14 @@ class HostnameServiceImpl extends GroovyObjectSupport implements Service {
 
 	private final TemplatesFactory templates;
 
+	private final ServiceLoader<WorkerService> workers;
+
 	@Inject
 	HostnameServiceImpl(HostnameServiceImplLogger logger,
-			Map<String, Provider<Script>> workers, TemplatesFactory templates) {
+			Map<String, Provider<Script>> scripts,
+			ServiceLoader<WorkerService> workers, TemplatesFactory templates) {
 		this.log = logger;
+		this.scripts = scripts;
 		this.workers = workers;
 		this.templates = templates;
 	}
@@ -91,11 +101,14 @@ class HostnameServiceImpl extends GroovyObjectSupport implements Service {
 	@Override
 	public Service call() throws ServiceException {
 		String name = profile.getProfileName();
-		Script worker = workers.get(name).get();
+		Script worker = scripts.get(name).get();
+		worker.setProperty("workers", workers);
 		worker.setProperty("templates", templates);
 		worker.setProperty("system", profile.getEntry("system"));
 		worker.setProperty("properties", profile.getEntry("hostname"));
 		worker.setProperty("service", this);
+		worker.setProperty("name", name);
+		worker.setProperty("log", getLogger(format(WORKER_LOGGING_NAME, name)));
 		worker.run();
 		return this;
 	}

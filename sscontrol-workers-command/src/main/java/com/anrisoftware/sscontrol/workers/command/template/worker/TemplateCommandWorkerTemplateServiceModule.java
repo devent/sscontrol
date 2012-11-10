@@ -33,7 +33,7 @@ import com.google.inject.Provides;
  * Provides the template service for the template command worker.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
- * @since 0.1
+ * @since 1.0
  */
 public class TemplateCommandWorkerTemplateServiceModule extends AbstractModule {
 

@@ -32,7 +32,7 @@ import com.google.inject.Module;
  * service.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
- * @since 0.1
+ * @since 1.0
  */
 class LazyInjector extends LazyInitializer<Injector> {
 

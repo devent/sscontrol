@@ -31,7 +31,7 @@ import com.google.inject.assistedinject.Assisted;
  * is created from a template.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
- * @since 0.1
+ * @since 1.0
  */
 public interface ScriptCommandWorkerFactory extends WorkerFactory {
 

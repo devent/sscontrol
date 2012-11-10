@@ -4,7 +4,7 @@ package com.anrisoftware.sscontrol.workers.command.utils;
  * Selects the operating system based on the system property.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
- * @since 0.1
+ * @since 1.0
  */
 public enum SystemSelector {
 

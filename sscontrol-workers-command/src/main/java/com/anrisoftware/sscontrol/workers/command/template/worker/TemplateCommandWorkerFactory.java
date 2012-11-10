@@ -30,7 +30,7 @@ import com.google.inject.assistedinject.Assisted;
  * Factory to create a new worker that executes an external process.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
- * @since 0.1
+ * @since 1.0
  */
 public interface TemplateCommandWorkerFactory extends WorkerFactory {
 

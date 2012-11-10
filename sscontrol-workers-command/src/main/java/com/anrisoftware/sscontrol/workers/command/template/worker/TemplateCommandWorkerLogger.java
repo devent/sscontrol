@@ -26,7 +26,7 @@ import com.anrisoftware.sscontrol.workers.api.WorkerException;
  * Logging messages for {@link TemplateCommandWorkerLogger}.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
- * @since 0.1
+ * @since 1.0
  */
 class TemplateCommandWorkerLogger extends AbstractSerializedLogger {
 

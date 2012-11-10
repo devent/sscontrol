@@ -31,7 +31,7 @@ import com.google.inject.Injector;
  * from a template.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
- * @since 0.1
+ * @since 1.0
  */
 @ProviderFor(WorkerService.class)
 public class ScriptCommandWorkerService implements WorkerService {

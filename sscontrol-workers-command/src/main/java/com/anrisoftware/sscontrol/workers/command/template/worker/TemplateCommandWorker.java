@@ -36,12 +36,12 @@ import com.google.inject.assistedinject.AssistedInject;
  * Execute a command that was created from a template.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
- * @since 0.1
+ * @since 1.0
  */
 public class TemplateCommandWorker implements Worker {
 
 	/**
-	 * @version 0.1
+	 * @since 1.0
 	 */
 	private static final long serialVersionUID = 635097928700653033L;
 

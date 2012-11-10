@@ -26,7 +26,7 @@ import com.anrisoftware.sscontrol.workers.api.WorkerFactory;
  * Factory to create a new worker that executes an external process.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
- * @since 0.1
+ * @since 1.0
  */
 public interface ExecCommandWorkerFactory extends WorkerFactory {
 

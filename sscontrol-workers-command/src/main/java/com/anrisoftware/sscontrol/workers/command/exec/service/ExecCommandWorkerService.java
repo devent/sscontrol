@@ -30,7 +30,7 @@ import com.google.inject.Injector;
  * Provides the worker that execute a shell command as a service.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
- * @since 0.1
+ * @since 1.0
  */
 @ProviderFor(WorkerService.class)
 public class ExecCommandWorkerService implements WorkerService {

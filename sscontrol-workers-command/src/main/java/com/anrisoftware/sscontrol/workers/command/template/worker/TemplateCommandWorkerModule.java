@@ -35,7 +35,7 @@ import com.google.inject.assistedinject.FactoryModuleBuilder;
  * Installs the template command worker factory.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
- * @since 0.1
+ * @since 1.0
  */
 public class TemplateCommandWorkerModule extends AbstractModule {
 

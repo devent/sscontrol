@@ -6,7 +6,7 @@ import org.apache.commons.exec.CommandLine;
  * Removes the double quotes around an argument.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
- * @since 0.1
+ * @since 1.0
  */
 class CommandLineWithoutQuote extends CommandLine {
 

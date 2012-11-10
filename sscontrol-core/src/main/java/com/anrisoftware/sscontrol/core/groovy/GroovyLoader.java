@@ -51,7 +51,8 @@ class GroovyLoader implements ServiceLoader {
 
 	@Inject
 	GroovyLoader(GroovyLoaderLogger logger,
-			ScriptBuilderLogger scriptBuilderLogger) {
+			ScriptBuilderLogger scriptBuilderLogger,
+			ScriptUtilities scriptUtilities) {
 		this.log = logger;
 		this.scriptBuilderLogger = scriptBuilderLogger;
 	}

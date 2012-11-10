@@ -44,12 +44,6 @@ class TemplateCommandTest {
 
 	static commandTemplate = resourceURL("template_command.stg", TemplateCommandTest)
 
-	static echo_unix = resourceURL("echo_unix.txt", TemplateCommandTest)
-
-	static chmodTemplate = resourceURL("chmod.stg", TemplateCommandTest)
-
-	URL echoCommand
-
 	Injector injector
 
 	TemplateCommandWorkerFactory factory
@@ -71,26 +65,10 @@ class TemplateCommandTest {
 		assertStringContent workerB.out, string
 	}
 
-	@Test
-	void "chmod files"() {
-		withFiles 2, "chmod", {
-			def mod = "+rw"
-			def worker = factory.create chmodTemplate, system,
-							[prefix: "", mod: mod, files: it.files]
-			try {
-				worker()
-			} finally {
-				println worker.out
-				println worker.err
-			}
-		}
-	}
-
 	@Before
 	void createFactories() {
 		injector = createInjector()
 		factory = injector.getInstance TemplateCommandWorkerFactory
-		echoCommand = this."echo_$system"
 	}
 
 	Injector createInjector() {

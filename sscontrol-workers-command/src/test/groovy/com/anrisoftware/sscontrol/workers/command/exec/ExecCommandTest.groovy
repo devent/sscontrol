@@ -18,11 +18,12 @@
  */
 package com.anrisoftware.sscontrol.workers.command.exec
 
+import static com.anrisoftware.globalpom.utils.TestUtils.*
+
 import org.junit.Before
 import org.junit.BeforeClass
 import org.junit.Test
 
-import com.anrisoftware.globalpom.utils.TestUtils
 import com.anrisoftware.sscontrol.workers.command.exec.worker.ExecCommandWorkerFactory
 import com.anrisoftware.sscontrol.workers.command.exec.worker.ExecCommandWorkerModule
 import com.google.inject.Guice
@@ -34,7 +35,7 @@ import com.google.inject.Injector
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 0.1
  */
-class ExecCommandTest extends TestUtils {
+class ExecCommandTest {
 
 	static echoCommand
 

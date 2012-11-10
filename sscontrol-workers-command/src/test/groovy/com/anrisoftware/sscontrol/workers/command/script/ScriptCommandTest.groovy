@@ -55,19 +55,19 @@ class ScriptCommandTest {
 
 	@Test
 	void "chmod files"() {
-		withFiles 2, "chmod", {
+		withFiles "chmod", {
 			def mod = "-w"
 			def worker = factory.create chmodTemplate, system,
 							[chmodCommand: "chmod", mod: mod, files: it.files]
 			worker()
 			assert it.files[0].canWrite() == false
 			assert it.files[1].canWrite() == false
-		}
+		}, { }, 2
 	}
 
 	@Test
 	void "serialize and chmod files"() {
-		withFiles 2, "chmod", {
+		withFiles "chmod", {
 			def mod = "-w"
 			def worker = factory.create chmodTemplate, system,
 							[chmodCommand: "chmod", mod: mod, files: it.files]
@@ -75,23 +75,23 @@ class ScriptCommandTest {
 			workerB()
 			assert it.files[0].canWrite() == false
 			assert it.files[1].canWrite() == false
-		}
+		}, { }, 2
 	}
 
 	@Test
 	void "chown files"() {
-		withFiles 2, "chown", {
+		withFiles "chown", {
 			def owner = System.getProperty("user.name")
 			def group = System.getProperty("user.name")
 			def worker = factory.create chownTemplate, system,
 							[chownCommand: "chown", owner: owner, ownerGroup: group, files: it.files]
 			worker()
-		}
+		}, { }, 2
 	}
 
 	@Test
 	void "ln files"() {
-		withFiles 2, "ln", {
+		withFiles "ln", {
 			def targets = it.files.inject([]) { list, value ->
 				list << new File("${value.absolutePath}_target")
 			}
@@ -100,7 +100,7 @@ class ScriptCommandTest {
 							[lnCommand: "ln", files: it.files, targets: targets]
 			worker()
 			targets.each { assert it.isFile() }
-		}
+		}, { }, 2
 	}
 
 	@Before

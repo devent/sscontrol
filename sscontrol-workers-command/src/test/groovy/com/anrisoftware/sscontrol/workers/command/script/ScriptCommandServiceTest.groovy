@@ -1,7 +1,3 @@
-
-
-
-
 /*
  * Copyright 2012 Erwin Müller <erwin.mueller@deventm.org>
  *

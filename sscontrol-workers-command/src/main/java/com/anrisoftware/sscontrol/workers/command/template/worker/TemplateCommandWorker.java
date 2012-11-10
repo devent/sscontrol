@@ -22,6 +22,8 @@ import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.util.Map;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
 import com.anrisoftware.sscontrol.template.api.Template;
 import com.anrisoftware.sscontrol.template.api.TemplateException;
 import com.anrisoftware.sscontrol.template.api.TemplateFactory;
@@ -236,7 +238,9 @@ public class TemplateCommandWorker implements Worker {
 
 	@Override
 	public String toString() {
-		return executeWorker.toString();
+		if (executeWorker != null) {
+			return new ToStringBuilder(this).append(executeWorker).toString();
+		}
+		return new ToStringBuilder(this).toString();
 	}
-
 }

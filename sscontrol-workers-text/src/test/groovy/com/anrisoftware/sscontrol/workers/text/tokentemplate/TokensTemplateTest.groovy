@@ -143,6 +143,10 @@ $replace
 		toStringStyle
 		injector = createInjector()
 		factory = injector.getInstance TokensTemplateWorkerFactory
+	}
+
+	@Before
+	void createTokens() {
 		replace = "bar"
 		tokens = new TokenMarker("#BEGIN", "#END\n")
 	}

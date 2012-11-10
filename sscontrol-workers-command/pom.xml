@@ -7,6 +7,7 @@
 		<groupId>com.anrisoftware.sscontrol</groupId>
 		<artifactId>sscontrol-parent</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
+		<relativePath>../sscontrol-parent</relativePath>
 	</parent>
 
 	<artifactId>sscontrol-workers-command</artifactId>

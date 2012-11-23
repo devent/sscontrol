@@ -1,3 +1,0 @@
-unix(arg1) ::= <<
-echo -n <arg1>
->>

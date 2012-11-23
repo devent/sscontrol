@@ -23,6 +23,11 @@
 			<artifactId>globalpom-groovytestutils</artifactId>
 			<scope>test</scope>
 		</dependency>
+        <dependency>
+            <groupId>com.anrisoftware.resources</groupId>
+            <artifactId>resources-st</artifactId>
+            <scope>test</scope>
+        </dependency>
 
 		<!-- own module dependencies -->
         <dependency>
@@ -58,15 +63,12 @@
             <optional>true</optional>
         </dependency>
         <dependency>
-        	<groupId>com.anrisoftware.sscontrol</groupId>
-        	<artifactId>sscontrol-template</artifactId>
-        	<version>0.0.1-SNAPSHOT</version>
+        	<groupId>com.anrisoftware.resources</groupId>
+        	<artifactId>resources-api</artifactId>
         </dependency>
         <dependency>
-        	<groupId>com.anrisoftware.sscontrol</groupId>
-        	<artifactId>sscontrol-template-st</artifactId>
-        	<version>0.0.1-SNAPSHOT</version>
-        	<scope>test</scope>
+        	<groupId>com.anrisoftware.propertiesutils</groupId>
+        	<artifactId>propertiesutils-contextproperties</artifactId>
         </dependency>
 	</dependencies>
 

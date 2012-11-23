@@ -18,13 +18,12 @@
  */
 package com.anrisoftware.sscontrol.workers.command.script.worker;
 
-import java.net.URL;
 import java.util.Map;
 
+import com.anrisoftware.resources.templates.api.TemplateResource;
 import com.anrisoftware.sscontrol.workers.api.WorkerException;
 import com.anrisoftware.sscontrol.workers.api.WorkerFactory;
 import com.anrisoftware.sscontrol.workers.command.exec.worker.ExecCommandWorker;
-import com.google.inject.assistedinject.Assisted;
 
 /**
  * Factory to create a new worker that execute a shell script. The shell script
@@ -40,22 +39,19 @@ public interface ScriptCommandWorkerFactory extends WorkerFactory {
 	 * created from a template. The process will be terminated after
 	 * {@link ExecCommandWorker#DEFAULT_TIMEOUT_MS}.
 	 * 
-	 * @param templateResource
-	 *            the {@link URL} of the template.
-	 * 
-	 * @param templateName
-	 *            the template name.
+	 * @param template
+	 *            the {@link TemplateResource} template resource.
 	 * 
 	 * @param attributes
-	 *            a {@link Map} of the template attributes.
+	 *            the template attributes.
 	 * 
 	 * @return the {@link ScriptCommandWorker}.
 	 * 
 	 * @throws WorkerException
 	 *             if there was an error processing the template.
 	 */
-	ScriptCommandWorker create(URL templateResource, String templateName,
-			Map<String, Object> attributes) throws WorkerException;
+	ScriptCommandWorker create(TemplateResource template, Object... attributes)
+			throws WorkerException;
 
 	/**
 	 * Creates a new worker that executes a shell script. The shell script is
@@ -63,27 +59,23 @@ public interface ScriptCommandWorkerFactory extends WorkerFactory {
 	 * variables. The process will be terminated after
 	 * {@link ExecCommandWorker#DEFAULT_TIMEOUT_MS}.
 	 * 
-	 * @param templateResource
-	 *            the {@link URL} of the template.
-	 * 
-	 * @param templateName
-	 *            the template name.
-	 * 
-	 * @param attributes
-	 *            a {@link Map} of the template attributes.
+	 * @param template
+	 *            the {@link TemplateResource} template resource.
 	 * 
 	 * @param environment
 	 *            a {@link Map} of the environment variables as
 	 *            {@code [<name>=<value>]}.
+	 * 
+	 * @param attributes
+	 *            the template attributes.
 	 * 
 	 * @return the {@link ScriptCommandWorker}.
 	 * 
 	 * @throws WorkerException
 	 *             if there was an error processing the template.
 	 */
-	ScriptCommandWorker create(URL templateResource, String templateName,
-			Map<String, Object> attributes,
-			@Assisted("environment") Map<String, String> environment)
+	ScriptCommandWorker create(TemplateResource template,
+			Map<String, String> environment, Object... attributes)
 			throws WorkerException;
 
 	/**
@@ -91,14 +83,8 @@ public interface ScriptCommandWorkerFactory extends WorkerFactory {
 	 * created from a template and is executed with the specified environment
 	 * variables. The process will be terminated after the specified timeout.
 	 * 
-	 * @param templateResource
-	 *            the {@link URL} of the template.
-	 * 
-	 * @param templateName
-	 *            the template name.
-	 * 
-	 * @param attributes
-	 *            a {@link Map} of the template attributes.
+	 * @param template
+	 *            the {@link TemplateResource} that returns the template.
 	 * 
 	 * @param environment
 	 *            a {@link Map} of the environment variables as
@@ -107,13 +93,15 @@ public interface ScriptCommandWorkerFactory extends WorkerFactory {
 	 * @param timeoutMs
 	 *            the timeout in milliseconds.
 	 * 
+	 * @param attributes
+	 *            the template attributes.
+	 * 
 	 * @return the {@link ScriptCommandWorker}.
 	 * 
 	 * @throws WorkerException
 	 *             if there was an error processing the template.
 	 */
-	ScriptCommandWorker create(URL templateResource, String templateName,
-			Map<String, Object> attributes,
-			@Assisted("environment") Map<String, String> environment,
-			long timeoutMs) throws WorkerException;
+	ScriptCommandWorker create(TemplateResource template,
+			Map<String, String> environment, long timeoutMs,
+			Object... attributes) throws WorkerException;
 }

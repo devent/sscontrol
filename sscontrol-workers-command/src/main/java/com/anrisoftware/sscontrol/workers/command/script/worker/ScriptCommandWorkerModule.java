@@ -18,15 +18,18 @@
  */
 package com.anrisoftware.sscontrol.workers.command.script.worker;
 
+import static java.lang.System.getProperties;
+import static java.util.ServiceLoader.load;
+
 import java.io.IOException;
 import java.net.URL;
 import java.util.Properties;
-import java.util.ServiceLoader;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
 
 import com.anrisoftware.propertiesutils.ContextPropertiesFactory;
+import com.anrisoftware.resources.templates.templates.TemplatesResourcesModule;
 import com.anrisoftware.sscontrol.workers.api.WorkerException;
 import com.anrisoftware.sscontrol.workers.api.WorkerFactory;
 import com.anrisoftware.sscontrol.workers.api.WorkerService;
@@ -37,7 +40,7 @@ import com.google.inject.Provides;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 
 /**
- * Installs the template command worker factory.
+ * Installs the script command worker factory.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
@@ -53,6 +56,7 @@ public class ScriptCommandWorkerModule extends AbstractModule {
 				ScriptCommandWorker.class).build(
 				ScriptCommandWorkerFactory.class));
 		bind(WorkerFactory.class).to(ScriptCommandWorkerFactory.class);
+		install(new TemplatesResourcesModule());
 	}
 
 	@Provides
@@ -65,7 +69,7 @@ public class ScriptCommandWorkerModule extends AbstractModule {
 
 	private WorkerService getExecCommandWorkerService() throws WorkerException {
 		String name = ExecCommandWorkerService.NAME;
-		for (WorkerService service : ServiceLoader.load(WorkerService.class)) {
+		for (WorkerService service : load(WorkerService.class)) {
 			if (service.getInfo().equals(name)) {
 				return service;
 			}
@@ -78,8 +82,8 @@ public class ScriptCommandWorkerModule extends AbstractModule {
 	@Provides
 	@Singleton
 	@Named("script-command-worker-properties")
-	Properties getProperties() throws IOException {
+	Properties getScriptCommandWorkerProperties() throws IOException {
 		return new ContextPropertiesFactory(ScriptCommandWorker.class)
-				.withProperties(System.getProperties()).fromResource(resource);
+				.withProperties(getProperties()).fromResource(resource);
 	}
 }

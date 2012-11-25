@@ -16,31 +16,25 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-workers-text. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.workers.text.tokentemplate.worker;
+package com.anrisoftware.sscontrol.workers.text.tokentemplate;
 
-import com.anrisoftware.globalpom.log.AbstractSerializedLogger;
+import com.anrisoftware.sscontrol.workers.api.WorkerFactory;
+import com.google.inject.AbstractModule;
+import com.google.inject.assistedinject.FactoryModuleBuilder;
 
 /**
- * Logging messages for {@link TokensTemplateWorker}.
+ * Installs the tokens template worker factory.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class TokensTemplateWorkerLogger extends AbstractSerializedLogger {
+public class TokensTemplateWorkerModule extends AbstractModule {
 
-	/**
-	 * Create logger for {@link TokensTemplateWorker}.
-	 */
-	public TokensTemplateWorkerLogger() {
-		super(TokensTemplateWorker.class);
+	@Override
+	protected void configure() {
+		install(new FactoryModuleBuilder().implement(
+				TokensTemplateWorker.class, TokensTemplateWorker.class).build(
+				TokensTemplateWorkerFactory.class));
+		bind(WorkerFactory.class).to(TokensTemplateWorkerFactory.class);
 	}
-
-	void replacedArgument(TokensTemplateWorker worker) {
-		log.trace("Replaced argument in {}.", worker);
-	}
-
-	void appendArgument(TokensTemplateWorker worker) {
-		log.trace("Append argument in {}.", worker);
-	}
-
 }

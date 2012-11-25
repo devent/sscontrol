@@ -28,8 +28,7 @@ import com.anrisoftware.resources.templates.api.TemplatesFactory
 import com.anrisoftware.resources.templates.maps.TemplatesDefaultMapsModule
 import com.anrisoftware.resources.templates.worker.STDefaultPropertiesModule
 import com.anrisoftware.resources.templates.worker.STWorkerModule
-import com.anrisoftware.sscontrol.workers.command.script.worker.ScriptCommandWorkerFactory
-import com.anrisoftware.sscontrol.workers.command.script.worker.ScriptCommandWorkerModule
+import com.anrisoftware.sscontrol.workers.command.exec.ExecCommandWorkerModule
 import com.anrisoftware.sscontrol.workers.command.utils.SystemSelector
 import com.google.inject.Guice
 import com.google.inject.Injector
@@ -130,6 +129,7 @@ class ScriptCommandTest {
 
 	Injector createInjector() {
 		Guice.createInjector(new ScriptCommandWorkerModule(),
+						new ExecCommandWorkerModule(),
 						templateWorkerModule, templatesMapModule,
 						templatesPropertiesModule)
 	}

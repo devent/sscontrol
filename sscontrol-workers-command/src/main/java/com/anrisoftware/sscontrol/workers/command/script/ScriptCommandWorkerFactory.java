@@ -16,14 +16,14 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-workers-command. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.workers.command.script.worker;
+package com.anrisoftware.sscontrol.workers.command.script;
 
 import java.util.Map;
 
 import com.anrisoftware.resources.templates.api.TemplateResource;
 import com.anrisoftware.sscontrol.workers.api.WorkerException;
 import com.anrisoftware.sscontrol.workers.api.WorkerFactory;
-import com.anrisoftware.sscontrol.workers.command.exec.worker.ExecCommandWorker;
+import com.anrisoftware.sscontrol.workers.command.exec.ExecCommandWorker;
 
 /**
  * Factory to create a new worker that execute a shell script. The shell script

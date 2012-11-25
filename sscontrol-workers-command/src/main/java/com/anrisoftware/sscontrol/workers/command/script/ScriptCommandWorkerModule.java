@@ -16,10 +16,10 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-workers-command. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.workers.command.script.worker;
+package com.anrisoftware.sscontrol.workers.command.script;
 
+import static com.google.inject.multibindings.MapBinder.newMapBinder;
 import static java.lang.System.getProperties;
-import static java.util.ServiceLoader.load;
 
 import java.io.IOException;
 import java.net.URL;
@@ -30,14 +30,11 @@ import javax.inject.Singleton;
 
 import com.anrisoftware.propertiesutils.ContextPropertiesFactory;
 import com.anrisoftware.resources.templates.templates.TemplatesResourcesModule;
-import com.anrisoftware.sscontrol.workers.api.WorkerException;
 import com.anrisoftware.sscontrol.workers.api.WorkerFactory;
-import com.anrisoftware.sscontrol.workers.api.WorkerService;
-import com.anrisoftware.sscontrol.workers.command.exec.service.ExecCommandWorkerService;
-import com.anrisoftware.sscontrol.workers.command.exec.worker.ExecCommandWorkerFactory;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
+import com.google.inject.multibindings.MapBinder;
 
 /**
  * Installs the script command worker factory.
@@ -47,6 +44,11 @@ import com.google.inject.assistedinject.FactoryModuleBuilder;
  */
 public class ScriptCommandWorkerModule extends AbstractModule {
 
+	/**
+	 * The name of the script command worker binding.
+	 */
+	public static final String NAME = "exec_command_worker";
+
 	private static final URL resource = ScriptCommandWorkerModule.class
 			.getResource("script_command_worker.properties");
 
@@ -55,28 +57,14 @@ public class ScriptCommandWorkerModule extends AbstractModule {
 		install(new FactoryModuleBuilder().implement(ScriptCommandWorker.class,
 				ScriptCommandWorker.class).build(
 				ScriptCommandWorkerFactory.class));
-		bind(WorkerFactory.class).to(ScriptCommandWorkerFactory.class);
 		install(new TemplatesResourcesModule());
+		bindWorkerFactory();
 	}
 
-	@Provides
-	@Singleton
-	ExecCommandWorkerFactory getExecCommandWorkerFactory()
-			throws WorkerException {
-		WorkerService service = getExecCommandWorkerService();
-		return service.getWorker();
-	}
-
-	private WorkerService getExecCommandWorkerService() throws WorkerException {
-		String name = ExecCommandWorkerService.NAME;
-		for (WorkerService service : load(WorkerService.class)) {
-			if (service.getInfo().equals(name)) {
-				return service;
-			}
-		}
-		throw new WorkerException(
-				"Could not find the execute command worker service")
-				.addContextValue("name", name);
+	private void bindWorkerFactory() {
+		MapBinder<String, WorkerFactory> binder;
+		binder = newMapBinder(binder(), String.class, WorkerFactory.class);
+		binder.addBinding(NAME).to(ScriptCommandWorkerFactory.class);
 	}
 
 	@Provides

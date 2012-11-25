@@ -16,32 +16,39 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-workers-command. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.workers.command.script.worker;
+package com.anrisoftware.sscontrol.workers.command.exec;
 
-import com.anrisoftware.globalpom.log.AbstractSerializedLogger;
-import com.anrisoftware.resources.api.ResourcesException;
-import com.anrisoftware.sscontrol.workers.api.WorkerException;
+import org.apache.commons.exec.CommandLine;
 
 /**
- * Logging messages for {@link ScriptCommandWorkerLogger}.
+ * Removes the double quotes around an argument.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class ScriptCommandWorkerLogger extends AbstractSerializedLogger {
+class CommandLineWithoutQuote extends CommandLine {
 
 	/**
-	 * Create logger for {@link ScriptCommandWorker}.
+	 * Copy constructor.
+	 * 
+	 * @param other
+	 *            the instance to copy
 	 */
-	public ScriptCommandWorkerLogger() {
-		super(ScriptCommandWorker.class);
+	public CommandLineWithoutQuote(CommandLine other) {
+		super(other);
 	}
 
-	WorkerException errorProcessTemplate(ScriptCommandWorker worker,
-			ResourcesException e) {
-		WorkerException ex = new WorkerException("Error processing template", e);
-		ex.addContextValue("worker", worker);
-		log.error(ex.getLocalizedMessage());
-		return ex;
+	@Override
+	public String[] getArguments() {
+		String[] args = super.getArguments();
+		for (int i = 0; i < args.length; i++) {
+			if (args[i].startsWith("\"")) {
+				args[i] = args[i].substring(1);
+			}
+			if (args[i].endsWith("\"")) {
+				args[i] = args[i].substring(0, args[i].length() - 1);
+			}
+		}
+		return args;
 	}
 }

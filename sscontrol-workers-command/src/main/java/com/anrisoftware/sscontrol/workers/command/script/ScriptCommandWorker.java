@@ -16,9 +16,9 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-workers-command. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.workers.command.script.worker;
+package com.anrisoftware.sscontrol.workers.command.script;
 
-import static com.anrisoftware.sscontrol.workers.command.exec.worker.ExecCommandWorker.DEFAULT_TIMEOUT_MS;
+import static com.anrisoftware.sscontrol.workers.command.exec.ExecCommandWorker.DEFAULT_TIMEOUT_MS;
 import static java.lang.String.format;
 
 import java.io.UnsupportedEncodingException;
@@ -36,8 +36,8 @@ import com.anrisoftware.resources.api.ResourcesException;
 import com.anrisoftware.resources.templates.api.TemplateResource;
 import com.anrisoftware.sscontrol.workers.api.Worker;
 import com.anrisoftware.sscontrol.workers.api.WorkerException;
-import com.anrisoftware.sscontrol.workers.command.exec.worker.ExecCommandWorker;
-import com.anrisoftware.sscontrol.workers.command.exec.worker.ExecCommandWorkerFactory;
+import com.anrisoftware.sscontrol.workers.command.exec.ExecCommandWorker;
+import com.anrisoftware.sscontrol.workers.command.exec.ExecCommandWorkerFactory;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 
@@ -48,6 +48,8 @@ import com.google.inject.assistedinject.AssistedInject;
  * @since 1.0
  */
 public class ScriptCommandWorker implements Worker {
+
+	private static final String EXEC_COMMAND_WORKER_NAME = "exec_command_worker";
 
 	/**
 	 * @since 1.0

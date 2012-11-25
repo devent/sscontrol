@@ -24,8 +24,6 @@ import org.junit.Before
 import org.junit.BeforeClass
 import org.junit.Test
 
-import com.anrisoftware.sscontrol.workers.command.exec.worker.ExecCommandWorkerFactory
-import com.anrisoftware.sscontrol.workers.command.exec.worker.ExecCommandWorkerModule
 import com.google.inject.Guice
 import com.google.inject.Injector
 
@@ -33,7 +31,7 @@ import com.google.inject.Injector
  * Test execute command worker.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
- * @since 0.1
+ * @since 1.0
  */
 class ExecCommandTest {
 

@@ -16,34 +16,35 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-workers-text. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.workers.text.tokentemplate
+package com.anrisoftware.sscontrol.workers.text.tokentemplate;
 
-import org.junit.Before
-
-import com.anrisoftware.sscontrol.workers.api.WorkerService
-import com.anrisoftware.sscontrol.workers.text.tokentemplate.service.TokensTemplateWorkerService
-import com.google.inject.Guice
-import com.google.inject.Injector
+import com.anrisoftware.sscontrol.workers.api.WorkerFactory;
 
 /**
- * Test the tokens template worker as a service.
- *
+ * Factory to create a new worker that replace search text with a replacement.
+ * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class TokensTemplateServiceTest extends TokensTemplateTest {
+public interface TokensTemplateWorkerFactory extends WorkerFactory {
 
-	@Before
-	void createFactories() {
-		injector = createInjector()
-		WorkerService service = ServiceLoader.load(WorkerService).find {
-			it.info == TokensTemplateWorkerService.NAME
-		}
-		service.parent = injector
-		factory = service.getWorker()
-	}
+	/**
+	 * Creates a new worker that replace the specified search text with a
+	 * replacement.
+	 * 
+	 * @param tokenMarker
+	 *            the {@link TokenMarker} holding the begin and end tokens.
+	 * 
+	 * @param template
+	 *            the {@link TokenTemplate} containing the search text and the
+	 *            replacement.
+	 * 
+	 * @param text
+	 *            the text in which to replace.
+	 * 
+	 * @return the {@link TokensTemplateWorker}.
+	 */
+	TokensTemplateWorker create(TokenMarker tokenMarker,
+			TokenTemplate template, String text);
 
-	Injector createInjector() {
-		Guice.createInjector()
-	}
 }

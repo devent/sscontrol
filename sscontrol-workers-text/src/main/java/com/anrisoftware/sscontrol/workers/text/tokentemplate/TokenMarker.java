@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-workers-text. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.workers.text.tokentemplate.worker;
+package com.anrisoftware.sscontrol.workers.text.tokentemplate;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 

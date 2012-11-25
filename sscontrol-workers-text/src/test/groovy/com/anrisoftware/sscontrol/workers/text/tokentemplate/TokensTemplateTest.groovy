@@ -23,10 +23,6 @@ import static com.anrisoftware.globalpom.utils.TestUtils.*
 import org.junit.Before
 import org.junit.Test
 
-import com.anrisoftware.sscontrol.workers.text.tokentemplate.worker.TokenMarker
-import com.anrisoftware.sscontrol.workers.text.tokentemplate.worker.TokenTemplate
-import com.anrisoftware.sscontrol.workers.text.tokentemplate.worker.TokensTemplateWorkerFactory
-import com.anrisoftware.sscontrol.workers.text.tokentemplate.worker.TokensTemplateWorkerModule
 import com.google.inject.Guice
 import com.google.inject.Injector
 

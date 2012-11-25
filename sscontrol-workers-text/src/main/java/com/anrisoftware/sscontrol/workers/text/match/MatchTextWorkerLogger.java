@@ -16,34 +16,40 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-workers-text. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.workers.text.match
+package com.anrisoftware.sscontrol.workers.text.match;
 
-import org.junit.Before
+import java.io.IOException;
 
-import com.anrisoftware.sscontrol.workers.api.WorkerService
-import com.anrisoftware.sscontrol.workers.text.match.service.MatchTextWorkerService
-import com.google.inject.Guice
-import com.google.inject.Injector
+import com.anrisoftware.globalpom.log.AbstractSerializedLogger;
+import com.anrisoftware.sscontrol.workers.api.WorkerException;
 
 /**
- * Test compare text files and resources as a service.
- *
+ * Logging messages for {@link MatchTextWorker}.
+ * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class MatchTextServiceTest extends MatchTextTest {
+class MatchTextWorkerLogger extends AbstractSerializedLogger {
 
-	@Before
-	void createFactories() {
-		injector = createInjector()
-		WorkerService service = ServiceLoader.load(WorkerService).find {
-			it.info == MatchTextWorkerService.NAME
-		}
-		service.parent = injector
-		factory = service.getWorker()
+	/**
+	 * Create logger for {@link MatchTextWorker}.
+	 */
+	public MatchTextWorkerLogger() {
+		super(MatchTextWorker.class);
 	}
 
-	Injector createInjector() {
-		Guice.createInjector()
+	WorkerException readFileError(MatchTextWorker worker, IOException e) {
+		WorkerException ex = new WorkerException("Read file error", e);
+		ex.addContextValue("worker", worker);
+		log.error(ex.getLocalizedMessage());
+		return ex;
+	}
+
+	void textWasFound(MatchTextWorker worker) {
+		log.debug("Search text was found in {}.", worker);
+	}
+
+	void textWasNotFound(MatchTextWorker worker) {
+		log.debug("Search text was not found in {}.", worker);
 	}
 }

@@ -26,9 +26,6 @@ import org.apache.commons.io.FileUtils
 import org.junit.Before
 import org.junit.Test
 
-import com.anrisoftware.sscontrol.workers.text.match.worker.MatchTextWorker
-import com.anrisoftware.sscontrol.workers.text.match.worker.MatchTextWorkerFactory
-import com.anrisoftware.sscontrol.workers.text.match.worker.MatchTextWorkerModule
 import com.google.inject.Guice
 import com.google.inject.Injector
 

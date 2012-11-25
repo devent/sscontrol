@@ -26,6 +26,7 @@ import org.junit.Test
 import com.anrisoftware.resources.templates.api.Templates
 import com.anrisoftware.resources.templates.api.TemplatesFactory
 import com.anrisoftware.resources.templates.maps.TemplatesDefaultMapsModule
+import com.anrisoftware.resources.templates.templates.TemplatesResourcesModule
 import com.anrisoftware.resources.templates.worker.STDefaultPropertiesModule
 import com.anrisoftware.resources.templates.worker.STWorkerModule
 import com.anrisoftware.sscontrol.workers.command.exec.ExecCommandWorkerModule
@@ -130,6 +131,7 @@ class ScriptCommandTest {
 	Injector createInjector() {
 		Guice.createInjector(new ScriptCommandWorkerModule(),
 						new ExecCommandWorkerModule(),
+						new TemplatesResourcesModule(),
 						templateWorkerModule, templatesMapModule,
 						templatesPropertiesModule)
 	}

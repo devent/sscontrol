@@ -29,7 +29,6 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 
 import com.anrisoftware.propertiesutils.ContextPropertiesFactory;
-import com.anrisoftware.resources.templates.templates.TemplatesResourcesModule;
 import com.anrisoftware.sscontrol.workers.api.WorkerFactory;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
@@ -57,7 +56,6 @@ public class ScriptCommandWorkerModule extends AbstractModule {
 		install(new FactoryModuleBuilder().implement(ScriptCommandWorker.class,
 				ScriptCommandWorker.class).build(
 				ScriptCommandWorkerFactory.class));
-		install(new TemplatesResourcesModule());
 		bindWorkerFactory();
 	}
 

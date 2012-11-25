@@ -19,6 +19,7 @@
 package com.anrisoftware.sscontrol.hostname
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
+import groovy.util.logging.Slf4j
 
 import org.junit.Before
 import org.junit.Test
@@ -30,6 +31,7 @@ import com.anrisoftware.sscontrol.core.api.ServicesRegistry
 import com.google.inject.Guice
 import com.google.inject.Injector
 
+@Slf4j
 class HostnameServiceTest {
 
 	static ubuntu1004Profile = resourceURL("Ubuntu_10_04Profile.groovy", HostnameServiceTest)
@@ -40,6 +42,10 @@ class HostnameServiceTest {
 
 	static restartHostnameCommand = resourceURL("restart_hostname.txt", HostnameServiceTest)
 
+	static localhostHostnameFile = resourceURL("localhost_hostname.txt", HostnameServiceTest)
+
+	static hostnameExpected = resourceURL("hostname_expected.txt", HostnameServiceTest)
+
 	Injector injector
 
 	Ubuntu_10_04Profile ubuntu_10_04Profile
@@ -49,7 +55,7 @@ class HostnameServiceTest {
 	Map variables
 
 	@Test
-	void "load hostname service"() {
+	void "hostname service with empty hostname"() {
 		ServicesRegistry registry = injector.getInstance ServicesRegistry
 		SscontrolServiceLoader loader = injector.getInstance SscontrolServiceLoader
 		loader.loadService(ubuntu1004Profile, variables, registry, null)
@@ -57,8 +63,29 @@ class HostnameServiceTest {
 		loader.loadService(hostnameService, variables, registry, profile)
 		withFiles "hostname", {
 			registry.allServices.each { it.call() }
+			log.info "Run service again to ensure that configuration is not set double."
+			registry.allServices.each { it.call() }
+			assertFileContent(new File(it, "/etc/hostname"), hostnameExpected, true)
 		}, {
 			copyResourceToCommand(restartHostnameCommand, new File(it, "/etc/init.d/hostname"))
+		}, tmp
+	}
+
+	@Test
+	void "hostname service with hostname already set"() {
+		ServicesRegistry registry = injector.getInstance ServicesRegistry
+		SscontrolServiceLoader loader = injector.getInstance SscontrolServiceLoader
+		loader.loadService(ubuntu1004Profile, variables, registry, null)
+		def profile = registry.getService("profile")[0]
+		loader.loadService(hostnameService, variables, registry, profile)
+		withFiles "hostname", {
+			registry.allServices.each { it.call() }
+			log.info "Run service again to ensure that configuration is not set double."
+			registry.allServices.each { it.call() }
+			assertFileContent(new File(it, "/etc/hostname"), hostnameExpected, true)
+		}, {
+			copyResourceToCommand(restartHostnameCommand, new File(it, "/etc/init.d/hostname"))
+			copyResourceToFile(localhostHostnameFile, new File(it, "/etc/hostname"))
 		}, tmp
 	}
 

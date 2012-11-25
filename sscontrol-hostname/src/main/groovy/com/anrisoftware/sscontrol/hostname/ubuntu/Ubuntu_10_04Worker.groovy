@@ -28,16 +28,25 @@ import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokensTemplateWorke
 
 template = templates.create "Hostname_$name"
 
+/**
+ * Returns the hostname configuration file.
+ */
 File getConfigurationFile() {
 	profile.configuration_file as File
 }
 
-def getConfiguration() {
+/**
+ * Returns the hostname configuration.
+ */
+String getConfiguration() {
 	def res = template.getResource("hostname_configuration")
 	res.getText("hostname", service.hostname)
 }
 
-def getText() {
+/**
+ * Returns the current hostname configuration.
+ */
+String getText() {
 	if (configurationFile.isFile()) {
 		def config = configuration
 		FileUtils.readFileToString(configurationFile, system.charset)
@@ -47,20 +56,32 @@ def getText() {
 	}
 }
 
-def getTokens() {
+/**
+ * Returns the template tokens for the hostname configuration.
+ */
+TokenMarker getTokens() {
 	new TokenMarker("# SSCONTROL-$name", "# SSCONTROL-$name-END\n")
 }
 
-def getTokenTemplate() {
+/**
+ * Returns the token template for the hostname configuration.
+ */
+TokenTemplate getTokenTemplate() {
 	new TokenTemplate(".*", configuration)
 }
 
+/**
+ * Deploys the hostname configuration to the hostname configuration file.
+ */
 def deployHostnameConfiguration() {
 	def worker = workers[TokensTemplateWorkerFactory].create(tokens, tokenTemplate, text)()
 	FileUtils.write(configurationFile, worker.text, system.charset)
 	log.info "Deploy hostname configuration '$worker.text' to {} in {}.", configurationFile, this
 }
 
+/**
+ * Restarts the hostname service.
+ */
 def restartHostnameService() {
 	def template = template.getResource("restart_hostname_command")
 	def worker = workers[ScriptCommandWorkerFactory].create(template, "prefix", system.prefix)()

@@ -81,13 +81,13 @@ class ProfilePropertiesImpl extends GroovyObjectSupport implements
 	}
 
 	@Override
-	public Object getProfileProperty(String key) {
+	public Object get(String key) {
 		return properties.get(key);
 	}
 
 	@Override
-	public Object getProfileProperty(String key, Object... args) {
-		String value = (String) getProfileProperty(key);
+	public Object get(String key, Object... args) {
+		String value = (String) get(key);
 		for (int i = 0; i < args.length; i++) {
 			value = value.replaceFirst("\\{\\}", args[i].toString());
 		}
@@ -95,7 +95,7 @@ class ProfilePropertiesImpl extends GroovyObjectSupport implements
 	}
 
 	@Override
-	public void setProfileProperty(String key, Object property) {
+	public void put(String key, Object property) {
 		putProperty(key, property);
 	}
 
@@ -106,7 +106,7 @@ class ProfilePropertiesImpl extends GroovyObjectSupport implements
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public Set<String> getProfilePropertyKeys() {
+	public Set<String> getKeys() {
 		return UnmodifiableSet.decorate(properties.keySet());
 	}
 

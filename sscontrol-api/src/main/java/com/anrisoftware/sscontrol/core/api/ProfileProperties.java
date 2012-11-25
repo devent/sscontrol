@@ -23,11 +23,11 @@ import java.util.Set;
 
 public interface ProfileProperties extends Serializable {
 
-	void setProfileProperty(String key, Object property);
+	void put(String key, Object property);
 
-	Object getProfileProperty(String key);
+	Object get(String key);
 
-	Object getProfileProperty(String key, Object... args);
+	Object get(String key, Object... args);
 
-	Set<String> getProfilePropertyKeys();
+	Set<String> getKeys();
 }

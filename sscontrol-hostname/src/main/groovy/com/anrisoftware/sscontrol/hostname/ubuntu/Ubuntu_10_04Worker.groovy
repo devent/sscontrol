@@ -20,24 +20,27 @@ package com.anrisoftware.sscontrol.hostname.ubuntu
 
 import org.apache.commons.io.FileUtils
 
-import com.anrisoftware.sscontrol.workers.text.tokentemplate.service.TokensTemplateWorkerService
-import com.anrisoftware.sscontrol.workers.text.tokentemplate.worker.TokenMarker
-import com.anrisoftware.sscontrol.workers.text.tokentemplate.worker.TokenTemplate
+import com.anrisoftware.sscontrol.workers.command.script.ScriptCommandWorkerFactory
+import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokenMarker
+import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokenTemplate
+import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokensTemplateWorkerFactory
+
+
+template = templates.create "Hostname_$name"
 
 File getConfigurationFile() {
-	properties.configuration_file as File
+	profile.configuration_file as File
 }
 
 def getConfiguration() {
-	def temp = templates.create "Hostname"
-	def res = temp.getResource("configuration_ubuntu_10_04")
+	def res = template.getResource("hostname_configuration")
 	res.getText("hostname", service.hostname)
 }
 
 def getText() {
 	if (configurationFile.isFile()) {
 		def config = configuration
-		FileUtils.readFileToString(configurationFile, properties.charset)
+		FileUtils.readFileToString(configurationFile, system.charset)
 	} else {
 		log.info "No file {} found in {}.", configurationFile, this
 		""
@@ -45,21 +48,23 @@ def getText() {
 }
 
 def getTokens() {
-	new TokenMarker("#SSCONTROL-$name", "#SSCONTROL-$name-END\n")
+	new TokenMarker("# SSCONTROL-$name", "# SSCONTROL-$name-END\n")
 }
 
-def getTemplate() {
+def getTokenTemplate() {
 	new TokenTemplate(".*", configuration)
 }
 
 def deployHostnameConfiguration() {
-	def workerService = workers.find { it.info == TokensTemplateWorkerService.NAME }
-	def worker = workerService.worker.create(tokens, template, text)()
-	FileUtils.write(configurationFile, worker.text, properties.charset)
+	def worker = workers[TokensTemplateWorkerFactory].create(tokens, tokenTemplate, text)()
+	FileUtils.write(configurationFile, worker.text, system.charset)
 	log.info "Deploy hostname configuration '$worker.text' to {} in {}.", configurationFile, this
 }
 
 def restartHostnameService() {
+	def template = template.getResource("restart_hostname_command")
+	def worker = workers[ScriptCommandWorkerFactory].create(template, "prefix", system.prefix)()
+	log.info "Restart done with output '{}'.", worker.out
 }
 
 String toString() {

@@ -1,3 +1,0 @@
-configuration_ubuntu_10_04(hostname) ::= <<
-<hostname>
->>

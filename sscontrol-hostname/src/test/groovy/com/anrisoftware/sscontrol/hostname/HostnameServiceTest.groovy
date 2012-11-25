@@ -18,10 +18,11 @@
  */
 package com.anrisoftware.sscontrol.hostname
 
+import static com.anrisoftware.globalpom.utils.TestUtils.*
+
 import org.junit.Before
 import org.junit.Test
 
-import com.anrisoftware.globalpom.utils.TestUtils
 import com.anrisoftware.sscontrol.core.activator.CoreModule
 import com.anrisoftware.sscontrol.core.api.ServiceException
 import com.anrisoftware.sscontrol.core.api.ServiceLoader as SscontrolServiceLoader
@@ -29,13 +30,15 @@ import com.anrisoftware.sscontrol.core.api.ServicesRegistry
 import com.google.inject.Guice
 import com.google.inject.Injector
 
-class HostnameServiceTest extends TestUtils {
+class HostnameServiceTest {
 
-	static ubuntu1004Profile = TestUtils.resourceURL("Ubuntu_10_04Profile.groovy", HostnameServiceTest)
+	static ubuntu1004Profile = resourceURL("Ubuntu_10_04Profile.groovy", HostnameServiceTest)
 
-	static hostnameService = TestUtils.resourceURL("HostnameService.groovy", HostnameServiceTest)
+	static hostnameService = resourceURL("HostnameService.groovy", HostnameServiceTest)
 
-	static hostnameNullService = TestUtils.resourceURL("HostnameNullService.groovy", HostnameServiceTest)
+	static hostnameNullService = resourceURL("HostnameNullService.groovy", HostnameServiceTest)
+
+	static restartHostnameCommand = resourceURL("restart_hostname.txt", HostnameServiceTest)
 
 	Injector injector
 
@@ -54,7 +57,9 @@ class HostnameServiceTest extends TestUtils {
 		loader.loadService(hostnameService, variables, registry, profile)
 		withFiles "hostname", {
 			registry.allServices.each { it.call() }
-		}
+		}, {
+			copyResourceToCommand(restartHostnameCommand, new File(it, "/etc/init.d/hostname"))
+		}, tmp
 	}
 
 	@Test

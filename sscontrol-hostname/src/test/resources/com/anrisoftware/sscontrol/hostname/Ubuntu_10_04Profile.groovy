@@ -18,10 +18,11 @@
  */
 package com.anrisoftware.sscontrol.hostname
 
-profile "ubuntu_10.04", {
+profile "ubuntu_10_04", {
 	system {
 		install_command "${tmp}/aptitude update && ${tmp}/aptitude install {}"
 		cat_command "${tmp}/cat"
+		prefix tmp
 	}
 	hostname {
 		configuration_file "${tmp}/etc/hostname"

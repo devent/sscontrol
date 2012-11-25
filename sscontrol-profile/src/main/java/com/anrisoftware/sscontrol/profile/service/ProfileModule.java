@@ -18,12 +18,24 @@
  */
 package com.anrisoftware.sscontrol.profile.service;
 
+import java.io.IOException;
+import java.net.URL;
+import java.util.Properties;
+
+import javax.inject.Named;
+import javax.inject.Singleton;
+
+import com.anrisoftware.propertiesutils.ContextPropertiesFactory;
 import com.anrisoftware.sscontrol.core.api.ProfileProperties;
 import com.anrisoftware.sscontrol.core.api.Service;
 import com.google.inject.AbstractModule;
+import com.google.inject.Provides;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 
 class ProfileModule extends AbstractModule {
+
+	private static final URL PROFILE_SERVICE_PROPERTIES_RESOURCE = ProfileModule.class
+			.getResource("profile_service.properties");
 
 	@Override
 	protected void configure() {
@@ -33,4 +45,12 @@ class ProfileModule extends AbstractModule {
 				ProfilePropertiesFactory.class));
 	}
 
+	@Provides
+	@Singleton
+	@Named("profile-service-properties")
+	Properties getProfileServiceProperties() throws IOException {
+		return new ContextPropertiesFactory(ProfileServiceImpl.class)
+				.withProperties(System.getProperties()).fromResource(
+						PROFILE_SERVICE_PROPERTIES_RESOURCE);
+	}
 }

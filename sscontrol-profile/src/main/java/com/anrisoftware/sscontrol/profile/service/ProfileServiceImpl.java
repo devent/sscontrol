@@ -24,14 +24,17 @@ import groovy.lang.GroovyObjectSupport;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import org.apache.commons.collections.functors.NotNullPredicate;
 import org.apache.commons.collections.set.UnmodifiableSet;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import com.anrisoftware.propertiesutils.ContextProperties;
 import com.anrisoftware.sscontrol.core.api.ProfileProperties;
 import com.anrisoftware.sscontrol.core.api.ProfileService;
 import com.anrisoftware.sscontrol.core.api.Service;
@@ -40,26 +43,30 @@ import com.anrisoftware.sscontrol.core.api.ServiceException;
 class ProfileServiceImpl extends GroovyObjectSupport implements ProfileService {
 
 	/**
-	 * @version 0.1
+	 * @version 1.0
 	 */
 	private static final long serialVersionUID = -969170415901859029L;
 
 	private final ProfileServiceImplLogger log;
 
-	private String profileName;
-
 	private final Map<String, ProfileProperties> entries;
 
 	private final ProfilePropertiesFactory propertiesFactory;
 
+	private final ContextProperties properties;
+
+	private String profileName;
+
 	@Inject
 	@SuppressWarnings("unchecked")
 	ProfileServiceImpl(ProfileServiceImplLogger logger,
-			ProfilePropertiesFactory propertiesFactory) {
+			ProfilePropertiesFactory propertiesFactory,
+			@Named("profile-service-properties") Properties properties) {
 		this.log = logger;
 		this.propertiesFactory = propertiesFactory;
 		this.entries = decorate(new HashMap<String, ProfileProperties>(),
 				NotNullPredicate.INSTANCE, NotNullPredicate.INSTANCE);
+		this.properties = new ContextProperties(this, properties);
 
 	}
 
@@ -89,6 +96,14 @@ class ProfileServiceImpl extends GroovyObjectSupport implements ProfileService {
 	public void addEntry(String name, ProfileProperties properties) {
 		entries.put(name, properties);
 		log.entryAdded(this, name);
+		if (name.equals("system")) {
+			for (String key : this.properties.stringPropertyNames()) {
+				if (key.contains(".system.defaults.")) {
+					int i = key.lastIndexOf(".") + 1;
+					properties.put(key.substring(i), this.properties.get(key));
+				}
+			}
+		}
 	}
 
 	@Override

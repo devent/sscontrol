@@ -11,8 +11,9 @@
 
 	<artifactId>sscontrol-hostname</artifactId>
 	<version>0.1-SNAPSHOT</version>
-	<name>Hostname</name>
+	<name>SSControl :: Hostname</name>
 	<description>Sets the host name of the server.</description>
+	<inceptionYear>2012</inceptionYear>
 
 	<dependencies>
 

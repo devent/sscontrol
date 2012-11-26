@@ -46,7 +46,7 @@ String getConfiguration() {
 /**
  * Returns the current hostname configuration.
  */
-String getText() {
+String getCurrentConfiguration() {
 	if (configurationFile.isFile()) {
 		def config = configuration
 		FileUtils.readFileToString(configurationFile, system.charset)
@@ -74,7 +74,7 @@ TokenTemplate getTokenTemplate() {
  * Deploys the hostname configuration to the hostname configuration file.
  */
 def deployHostnameConfiguration() {
-	def worker = workers[TokensTemplateWorkerFactory].create(tokens, tokenTemplate, text)()
+	def worker = workers[TokensTemplateWorkerFactory].create(tokens, tokenTemplate, currentConfiguration)()
 	FileUtils.write(configurationFile, worker.text, system.charset)
 	log.info "Deploy hostname configuration '$worker.text' to {} in {}.", configurationFile, this
 }

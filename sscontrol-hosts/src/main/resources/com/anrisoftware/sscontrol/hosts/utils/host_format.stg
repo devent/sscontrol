@@ -1,0 +1,9 @@
+host_format(host) ::= <<
+address:"<host.address>",name:"<host.hostname>",aliases:[<host_aliases(host)>]
+>>
+
+host_aliases(host) ::= <%
+<if(!host.aliases.empty)>
+<trunc(host.aliases):{alias|"<alias>",}><last(host.aliases):{alias|"<alias>"}>
+<endif>
+%>

@@ -196,7 +196,7 @@ public class HostsServiceImpl extends GroovyObjectSupport implements Service {
 		script.setProperty("workers", workers);
 		script.setProperty("templates", templates);
 		script.setProperty("system", profile.getEntry("system"));
-		script.setProperty("profile", profile.getEntry(name));
+		script.setProperty("profile", profile.getEntry(NAME));
 		script.setProperty("service", this);
 		script.setProperty("name", name);
 		script.setProperty("log", getLogger(format(WORKER_LOGGING_NAME, name)));

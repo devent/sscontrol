@@ -64,7 +64,7 @@ class HostsServiceTest {
 			log.info "Run service again to ensure that configuration is not set double."
 			registry.allServices.each { it.call() }
 			assertFileContent(new File(it, "/etc/hosts"), hostsExpected, true)
-		}, {}, tmp
+		}, {}, tmp, true
 	}
 
 	@Test

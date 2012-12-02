@@ -1,0 +1,8 @@
+hosts_configuration(hosts) ::= <<
+<hosts:host()>
+>>
+
+host(host) ::= <<
+<host.address> <host.hostname> <host.aliases;separator=" ">
+
+>>

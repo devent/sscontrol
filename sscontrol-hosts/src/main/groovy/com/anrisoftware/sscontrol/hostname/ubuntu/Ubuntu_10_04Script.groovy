@@ -73,7 +73,7 @@ TokenTemplate getTokenTemplate() {
  * Deploys the hosts configuration to the hosts configuration file.
  */
 def deployConfiguration() {
-	def worker = workers[TokensTemplateWorkerFactory].create(tokens, tokenTemplate, text)()
+	def worker = workers[TokensTemplateWorkerFactory].create(tokens, tokenTemplate, currentConfiguration)()
 	FileUtils.write(configurationFile, worker.text, system.charset)
 	log.info "Deploy hosts configuration '$worker.text' to {} in {}.", configurationFile, this
 }

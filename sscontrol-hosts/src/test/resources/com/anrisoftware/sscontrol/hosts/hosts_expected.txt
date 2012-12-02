@@ -1,3 +1,5 @@
 # SSCONTROL-ubuntu_10_04
-127.0.0.1 localhost
+192.168.0.49 srv1.ubuntutest.com srv1
+192.168.0.50 srv1.ubuntutest.org srva srvb
+
 # SSCONTROL-ubuntu_10_04-END

@@ -18,6 +18,7 @@
  */
 package com.anrisoftware.sscontrol.core.groovy;
 
+import static org.codehaus.groovy.runtime.InvokerHelper.asArray;
 import groovy.lang.Closure;
 import groovy.lang.GroovyObject;
 import groovy.lang.Script;
@@ -25,8 +26,6 @@ import groovy.util.Proxy;
 
 import java.util.ServiceLoader;
 import java.util.Stack;
-
-import org.codehaus.groovy.runtime.InvokerHelper;
 
 import com.anrisoftware.sscontrol.core.api.ProfileService;
 import com.anrisoftware.sscontrol.core.api.Service;
@@ -39,30 +38,53 @@ public abstract class ScriptBuilder extends Script {
 
 	private Service service;
 
+	private boolean pop;
+
 	public ScriptBuilder() {
 		this.delegate = new Stack<GroovyObject>();
+		pop = false;
+	}
+
+	public Service getService() {
+		return service;
 	}
 
 	public Object methodMissing(String name, Object args)
 			throws ServiceException {
+		GroovyObject current;
 		if (delegate.empty()) {
 			ServiceFactory serviceFactory = loadService(name);
 			service = serviceFactory.create(getProfile());
-			delegate.push(new Proxy().wrap(service));
+			current = new Proxy().wrap(service);
+		} else {
+			current = delegate.peek();
 		}
-		GroovyObject result;
-		result = (GroovyObject) delegate.peek().invokeMethod(name, args);
-		delegate.push(result);
-		Object[] argsArray = InvokerHelper.asArray(args);
-		if (argsArray.length > 0) {
-			if (argsArray[0] instanceof Closure) {
-				Closure<?> closure = (Closure<?>) argsArray[0];
-				closure.setDelegate(delegate.peek());
-				closure.call();
+		if (pop) {
+			delegate.pop();
+		}
+		Closure<?> closure = null;
+		for (Object object : asArray(args)) {
+			if (object instanceof Closure) {
+				closure = (Closure<?>) object;
 			}
 		}
-		delegate.pop();
-		return service;
+
+		GroovyObject ret = (GroovyObject) current.invokeMethod(name, args);
+		if (ret == null) {
+			delegate.pop();
+			return this;
+		}
+		if (ret != current) {
+			delegate.push(ret);
+		}
+		if (closure != null) {
+			closure.call();
+			delegate.pop();
+			pop = false;
+		} else {
+			pop = false;
+		}
+		return this;
 	}
 
 	private ProfileService getProfile() {

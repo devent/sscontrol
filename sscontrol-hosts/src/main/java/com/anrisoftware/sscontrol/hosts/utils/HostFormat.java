@@ -111,7 +111,7 @@ public class HostFormat extends Format {
 		}
 		String address = matcher.group(1);
 		String name = matcher.group(2);
-		Host host = hostFactory.create(address).hostname(name);
+		Host host = hostFactory.create(address).host(name);
 		String[] aliases = split(matcher.group(3), ",");
 		for (int i = 0; i < aliases.length; i++) {
 			host.alias(remove(aliases[i], "\""));

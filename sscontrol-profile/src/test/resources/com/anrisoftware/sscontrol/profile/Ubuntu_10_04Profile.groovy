@@ -24,7 +24,7 @@ profile "ubuntu_10.04", {
 	system {
 		install_command "aptitude update && aptitude install {}"
 		echo_command "echo"
-		set_enabled
+		set_enabled true
 		set_gstring "gstring $foo"
 		set_multiple "aaa", "bbb"
 		set_number 11

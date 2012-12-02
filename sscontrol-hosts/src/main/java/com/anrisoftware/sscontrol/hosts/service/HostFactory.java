@@ -1,6 +1,6 @@
 package com.anrisoftware.sscontrol.hosts.service;
 
-interface HostFactory {
+public interface HostFactory {
 
 	Host create(String address);
 }

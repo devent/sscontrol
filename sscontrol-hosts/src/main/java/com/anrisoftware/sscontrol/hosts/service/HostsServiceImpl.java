@@ -18,11 +18,16 @@
  */
 package com.anrisoftware.sscontrol.hosts.service;
 
+import static com.anrisoftware.sscontrol.hosts.service.HostsServiceFactory.NAME;
 import static java.lang.String.format;
+import static org.apache.commons.collections.list.PredicatedList.decorate;
 import static org.slf4j.LoggerFactory.getLogger;
+import groovy.lang.Closure;
 import groovy.lang.GroovyObjectSupport;
 import groovy.lang.Script;
 
+import java.text.Format;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -33,13 +38,14 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.apache.commons.collections.functors.NotNullPredicate;
-import org.apache.commons.collections.list.PredicatedList;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import com.anrisoftware.propertiesutils.ContextProperties;
 import com.anrisoftware.resources.templates.api.TemplatesFactory;
 import com.anrisoftware.sscontrol.core.api.ProfileService;
 import com.anrisoftware.sscontrol.core.api.Service;
 import com.anrisoftware.sscontrol.core.api.ServiceException;
+import com.anrisoftware.sscontrol.hosts.utils.HostFormatFactory;
 import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokensTemplateWorkerFactory;
 import com.google.inject.Provider;
 
@@ -105,13 +111,36 @@ class HostsServiceImpl extends GroovyObjectSupport implements Service {
 	HostsServiceImpl(HostsServiceImplLogger logger,
 			Map<String, Provider<Script>> scripts, TemplatesFactory templates,
 			@Named("hosts-service-properties") Properties properties,
-			HostFactory hostFactory) {
+			HostFactory hostFactory, HostFormatFactory hostFormatFactory) {
 		this.log = logger;
 		this.scripts = scripts;
 		this.templates = templates;
 		this.hostFactory = hostFactory;
-		this.hosts = PredicatedList.decorate(new ArrayList<String>(),
+		this.hosts = decorate(new ArrayList<String>(),
 				NotNullPredicate.getInstance());
+		setDefaultProperties(new ContextProperties(this, properties),
+				hostFormatFactory.create());
+	}
+
+	private void setDefaultProperties(ContextProperties p, Format format) {
+		setDefaultHosts(p, format);
+	}
+
+	private void setDefaultHosts(ContextProperties p, Format format) {
+		try {
+			p.getTypedListProperty("default_hosts", format);
+		} catch (ParseException e) {
+			log.errorSetDefaultHosts(this, e);
+		}
+	}
+
+	/**
+	 * Starts the hosts configuration.
+	 * 
+	 * @return this {@link HostsServiceImpl}.
+	 */
+	public Object hosts(Closure<?> closure) {
+		return this;
 	}
 
 	/**
@@ -128,7 +157,7 @@ class HostsServiceImpl extends GroovyObjectSupport implements Service {
 	 * @throws IllegalArgumentException
 	 *             if the specified address is empty.
 	 */
-	public Object ip(String address) {
+	public Host ip(String address) {
 		log.checkAddress(this, address);
 		Host host = hostFactory.create(address);
 		hosts.add(host);
@@ -138,7 +167,7 @@ class HostsServiceImpl extends GroovyObjectSupport implements Service {
 
 	@Override
 	public String getName() {
-		return HostsServiceFactory.NAME;
+		return NAME;
 	}
 
 	public void setProfile(ProfileService newProfile) {
@@ -167,7 +196,7 @@ class HostsServiceImpl extends GroovyObjectSupport implements Service {
 		script.setProperty("workers", workers);
 		script.setProperty("templates", templates);
 		script.setProperty("system", profile.getEntry("system"));
-		script.setProperty("profile", profile.getEntry("hostname"));
+		script.setProperty("profile", profile.getEntry(name));
 		script.setProperty("service", this);
 		script.setProperty("name", name);
 		script.setProperty("log", getLogger(format(WORKER_LOGGING_NAME, name)));

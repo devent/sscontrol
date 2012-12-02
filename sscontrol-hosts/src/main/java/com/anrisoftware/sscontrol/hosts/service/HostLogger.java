@@ -2,6 +2,8 @@ package com.anrisoftware.sscontrol.hosts.service;
 
 import static org.apache.commons.lang3.Validate.notEmpty;
 
+import java.util.Collection;
+
 import com.anrisoftware.globalpom.log.AbstractLogger;
 
 /**
@@ -31,11 +33,24 @@ class HostLogger extends AbstractLogger {
 		}
 	}
 
-	void aliasesAdded(Host host, String[] aliases) {
+	void aliasesAdded(Host host, Collection<String> aliases) {
 		if (log.isTraceEnabled()) {
-			log.trace("Set aliases {} for {}.", aliases, host);
+			log.trace("Add aliases {} for {}.", aliases, host);
 		} else if (log.isInfoEnabled()) {
 			log.info("Add aliases {} for host {}.", aliases, host.getAddress());
+		}
+	}
+
+	void checkAlias(Host host, String alias) {
+		notEmpty(alias, "The alias for the host %s cannot be null or empty.",
+				host);
+	}
+
+	void aliasAdded(Host host, String alias) {
+		if (log.isTraceEnabled()) {
+			log.trace("Add alias '{}' for {}.", alias, host);
+		} else if (log.isInfoEnabled()) {
+			log.info("Add alias '{}' for host {}.", alias, host.getAddress());
 		}
 	}
 }

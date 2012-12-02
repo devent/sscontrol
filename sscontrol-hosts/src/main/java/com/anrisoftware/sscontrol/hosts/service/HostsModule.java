@@ -34,9 +34,12 @@ import com.anrisoftware.resources.templates.templates.TemplatesResourcesModule;
 import com.anrisoftware.resources.templates.worker.STDefaultPropertiesModule;
 import com.anrisoftware.resources.templates.worker.STWorkerModule;
 import com.anrisoftware.sscontrol.hostname.ubuntu.Ubuntu_10_04Script;
+import com.anrisoftware.sscontrol.hosts.utils.HostFormat;
+import com.anrisoftware.sscontrol.hosts.utils.HostFormatFactory;
 import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokensTemplateWorkerModule;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
+import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.google.inject.multibindings.MapBinder;
 
 class HostsModule extends AbstractModule {
@@ -54,6 +57,10 @@ class HostsModule extends AbstractModule {
 		install(new TemplatesDefaultMapsModule());
 		install(new STWorkerModule());
 		install(new STDefaultPropertiesModule());
+		install(new FactoryModuleBuilder().implement(Host.class, Host.class)
+				.build(HostFactory.class));
+		install(new FactoryModuleBuilder().implement(HostFormat.class,
+				HostFormat.class).build(HostFormatFactory.class));
 	}
 
 	/**

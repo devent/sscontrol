@@ -20,6 +20,7 @@ package com.anrisoftware.sscontrol.core.groovy;
 
 import groovy.lang.Binding;
 import groovy.lang.GroovyShell;
+import groovy.lang.Script;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -94,7 +95,8 @@ class GroovyLoader implements ServiceLoader {
 	private Service evaluateScript(Reader reader, GroovyShell shell, URL url)
 			throws ServiceException {
 		try {
-			return (Service) shell.evaluate(reader);
+			Script script = (Script) shell.evaluate(reader);
+			return (Service) script.getProperty("service");
 		} catch (Throwable e) {
 			throw log.errorEvaluateScript(e, url);
 		}

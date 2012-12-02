@@ -55,7 +55,7 @@ class LoadProfileTest {
 		assert profile.entryNames.toString() == "[system, hostname]"
 
 		ProfileProperties system = profile.getEntry("system")
-		system.profilePropertyKeys.size() == 8
+		system.keys.size() == 8
 		assert system.get("echo_command") == "echo"
 		assert system.get("install_command") == "aptitude update && aptitude install {}"
 		assert system.get("install_command", "aaa") == "aptitude update && aptitude install aaa"
@@ -67,7 +67,7 @@ class LoadProfileTest {
 		assert system.get("property_with_variables") == "one two three"
 
 		ProfileProperties hostname = profile.getEntry("hostname")
-		system.profilePropertyKeys.size() == 2
+		system.keys.size() == 2
 		assert system.get("echo_command") == "echo"
 		assert system.get("install_command") == "aptitude update && aptitude install {}"
 	}

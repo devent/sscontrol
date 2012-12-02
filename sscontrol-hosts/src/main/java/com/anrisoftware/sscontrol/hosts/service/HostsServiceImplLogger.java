@@ -20,6 +20,8 @@ package com.anrisoftware.sscontrol.hosts.service;
 
 import static org.apache.commons.lang3.Validate.notEmpty;
 
+import java.text.ParseException;
+
 import com.anrisoftware.globalpom.log.AbstractLogger;
 import com.anrisoftware.sscontrol.core.api.ProfileService;
 
@@ -59,6 +61,10 @@ class HostsServiceImplLogger extends AbstractLogger {
 		} else {
 			log.info("Host entry with address '{}' added.", host.getAddress());
 		}
+	}
+
+	void errorSetDefaultHosts(HostsServiceImpl service, ParseException e) {
+		log.error("Error set default hosts", e);
 	}
 
 }

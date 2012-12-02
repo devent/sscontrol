@@ -88,7 +88,6 @@ class ProfileServiceImpl extends GroovyObjectSupport implements ProfileService {
 
 	public Service profile(String name, Closure<?> closure) {
 		profileName = name;
-		closure.call();
 		return this;
 	}
 

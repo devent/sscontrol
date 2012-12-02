@@ -57,12 +57,7 @@ class ProfilePropertiesImpl extends GroovyObjectSupport implements
 	}
 
 	public Object propertyMissing(String name) {
-		if (properties.containsKey(name)) {
-			return properties.get(name);
-		} else {
-			putProperty(name, true);
-			return true;
-		}
+		return properties.get(name);
 	}
 
 	public Object methodMissing(String name, Object args) {

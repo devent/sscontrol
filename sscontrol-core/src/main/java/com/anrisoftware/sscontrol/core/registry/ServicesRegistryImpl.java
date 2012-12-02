@@ -18,13 +18,14 @@
  */
 package com.anrisoftware.sscontrol.core.registry;
 
+import static org.apache.commons.collections.list.UnmodifiableList.decorate;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.collections.collection.UnmodifiableCollection;
-import org.apache.commons.collections.list.UnmodifiableList;
 import org.apache.commons.collections.map.MultiValueMap;
 import org.apache.commons.collections.set.UnmodifiableSet;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -60,8 +61,7 @@ class ServicesRegistryImpl implements ServicesRegistry {
 	@SuppressWarnings({ "unchecked" })
 	@Override
 	public List<Service> getService(String name) {
-		return UnmodifiableList.decorate(new ArrayList<Object>(services
-				.getCollection(name)));
+		return decorate(new ArrayList<Object>(services.getCollection(name)));
 	}
 
 	@SuppressWarnings("unchecked")

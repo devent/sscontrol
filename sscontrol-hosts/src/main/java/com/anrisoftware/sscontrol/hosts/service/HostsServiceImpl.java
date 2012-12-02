@@ -66,7 +66,7 @@ import com.google.inject.Provider;
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class HostsServiceImpl extends GroovyObjectSupport implements Service {
+public class HostsServiceImpl extends GroovyObjectSupport implements Service {
 
 	/**
 	 * @since 1.0

@@ -28,6 +28,8 @@ import com.anrisoftware.sscontrol.core.activator.CoreModule
 import com.anrisoftware.sscontrol.core.api.ServiceException
 import com.anrisoftware.sscontrol.core.api.ServiceLoader as SscontrolServiceLoader
 import com.anrisoftware.sscontrol.core.api.ServicesRegistry
+import com.anrisoftware.sscontrol.hosts.service.Host
+import com.anrisoftware.sscontrol.hosts.service.HostsServiceImpl
 import com.google.inject.Guice
 import com.google.inject.Injector
 
@@ -56,8 +58,7 @@ class HostsServiceTest {
 		def profile = registry.getService("profile")[0]
 		loader.loadService(hostsService, variables, registry, profile)
 
-
-
+		assertService registry
 		withFiles "hostname", {
 			registry.allServices.each { it.call() }
 			log.info "Run service again to ensure that configuration is not set double."
@@ -104,5 +105,22 @@ class HostsServiceTest {
 
 	def createInjector() {
 		Guice.createInjector(new CoreModule())
+	}
+
+	def assertService(ServicesRegistry registry) {
+		HostsServiceImpl service = registry.getService("hosts")[0]
+		assert service.hosts.size() == 2
+
+		int i = 0
+		Host host
+		host = service.hosts[i++]
+		assert host.address == "192.168.0.49"
+		assert host.hostname == "srv1.ubuntutest.com"
+		assert host.aliases == ["srv1"]
+
+		host = service.hosts[i++]
+		assert host.address == "192.168.0.50"
+		assert host.hostname == "srv1.ubuntutest.org"
+		assert host.aliases == ["srva", "srvb"]
 	}
 }

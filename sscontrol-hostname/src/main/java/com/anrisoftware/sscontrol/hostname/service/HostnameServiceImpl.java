@@ -18,6 +18,7 @@
  */
 package com.anrisoftware.sscontrol.hostname.service;
 
+import static com.anrisoftware.sscontrol.hostname.service.HostnameFactory.NAME;
 import static java.lang.String.format;
 import static org.slf4j.LoggerFactory.getLogger;
 import groovy.lang.Closure;
@@ -92,7 +93,7 @@ class HostnameServiceImpl extends GroovyObjectSupport implements Service {
 
 	@Override
 	public String getName() {
-		return HostnameFactory.NAME;
+		return NAME;
 	}
 
 	public void setProfile(ProfileService newProfile) {
@@ -112,7 +113,7 @@ class HostnameServiceImpl extends GroovyObjectSupport implements Service {
 		worker.setProperty("workers", workers);
 		worker.setProperty("templates", templates);
 		worker.setProperty("system", profile.getEntry("system"));
-		worker.setProperty("profile", profile.getEntry("hostname"));
+		worker.setProperty("profile", profile.getEntry(NAME));
 		worker.setProperty("service", this);
 		worker.setProperty("name", name);
 		worker.setProperty("log", getLogger(format(WORKER_LOGGING_NAME, name)));

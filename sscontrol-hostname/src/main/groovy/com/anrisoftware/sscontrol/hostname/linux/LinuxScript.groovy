@@ -38,7 +38,7 @@ import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokensTemplateWorke
  * @since 1.0
  */
 @Slf4j
-class LinuxWorker extends Script {
+class LinuxScript extends Script {
 
 	/**
 	 * {@link TemplatesFactory} to create the templates.

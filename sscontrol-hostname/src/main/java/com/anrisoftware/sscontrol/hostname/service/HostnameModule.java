@@ -33,7 +33,7 @@ import com.anrisoftware.resources.templates.maps.TemplatesDefaultMapsModule;
 import com.anrisoftware.resources.templates.templates.TemplatesResourcesModule;
 import com.anrisoftware.resources.templates.worker.STDefaultPropertiesModule;
 import com.anrisoftware.resources.templates.worker.STWorkerModule;
-import com.anrisoftware.sscontrol.hostname.ubuntu.Ubuntu_10_04Worker;
+import com.anrisoftware.sscontrol.hostname.ubuntu.Ubuntu_10_04Script;
 import com.anrisoftware.sscontrol.workers.command.exec.ExecCommandWorkerModule;
 import com.anrisoftware.sscontrol.workers.command.script.ScriptCommandWorkerModule;
 import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokensTemplateWorkerModule;
@@ -48,9 +48,7 @@ class HostnameModule extends AbstractModule {
 
 	@Override
 	protected void configure() {
-		MapBinder<String, Script> binder;
-		binder = newMapBinder(binder(), String.class, Script.class);
-		binder.addBinding("ubuntu_10_04").to(Ubuntu_10_04Worker.class);
+		bindScripts();
 		install(new ExecCommandWorkerModule());
 		install(new ScriptCommandWorkerModule());
 		install(new TokensTemplateWorkerModule());
@@ -58,6 +56,12 @@ class HostnameModule extends AbstractModule {
 		install(new TemplatesDefaultMapsModule());
 		install(new STWorkerModule());
 		install(new STDefaultPropertiesModule());
+	}
+
+	private void bindScripts() {
+		MapBinder<String, Script> binder;
+		binder = newMapBinder(binder(), String.class, Script.class);
+		binder.addBinding("ubuntu_10_04").to(Ubuntu_10_04Script.class);
 	}
 
 	@Provides

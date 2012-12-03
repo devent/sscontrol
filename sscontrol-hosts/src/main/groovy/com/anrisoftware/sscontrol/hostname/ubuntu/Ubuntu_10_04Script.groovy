@@ -18,77 +18,13 @@
  */
 package com.anrisoftware.sscontrol.hostname.ubuntu
 
-import org.apache.commons.io.FileUtils
-
-import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokenMarker
-import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokenTemplate
-import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokensTemplateWorkerFactory
-
-
-template = templates.create "Hosts_$name"
+import com.anrisoftware.sscontrol.hostname.linux.LinuxScript
 
 /**
- * Returns the hosts configuration file.
+ * Deploys the hosts on the Ubuntu 10.04 Linux system.
+ *
+ * @author Erwin Mueller, erwin.mueller@deventm.org
+ * @since 1.0
  */
-File getConfigurationFile() {
-	profile.configuration_file as File
+class Ubuntu_10_04Script extends LinuxScript {
 }
-
-/**
- * Returns the configuration for each host.
- */
-List getConfiguration() {
-	def res = template.getResource("hosts_configuration")
-	service.hosts.inject([]) { list, host ->
-		res.invalidate()
-		list << res.getText("host", "host", host)
-	}
-}
-
-/**
- * Returns the current hosts configuration.
- */
-String getCurrentConfiguration() {
-	if (configurationFile.isFile()) {
-		FileUtils.readFileToString(configurationFile, system.charset)
-	} else {
-		log.info "No file {} found in {}.", configurationFile, this
-		""
-	}
-}
-
-/**
- * Returns the template tokens for the hosts configuration.
- */
-TokenMarker getTokens() {
-	new TokenMarker("# SSCONTROL-$name", "# SSCONTROL-$name-END\n")
-}
-
-/**
- * Returns the token templates for each the host.
- */
-List getTokenTemplate() {
-	int i = 0
-	service.hosts.inject([]) { list, host ->
-		list << new TokenTemplate("${host.address}.*", configuration[i++])
-	}
-}
-
-/**
- * Deploys the hosts configuration to the hosts configuration file.
- */
-def deployConfiguration() {
-	def configuration = currentConfiguration
-	tokenTemplate.each {
-		def worker = workers[TokensTemplateWorkerFactory].create(tokens, it, configuration)()
-		configuration = worker.text
-		FileUtils.write(configurationFile, configuration, system.charset)
-		log.info "Deploy hosts configuration '$configuration' to {} in {}.", configurationFile, this
-	}
-}
-
-String toString() {
-	"${service.toString()}: $name"
-}
-
-deployConfiguration()

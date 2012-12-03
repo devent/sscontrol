@@ -19,9 +19,7 @@
 package com.anrisoftware.sscontrol.hosts.service;
 
 import static com.anrisoftware.sscontrol.hosts.service.HostsServiceFactory.NAME;
-import static java.lang.String.format;
 import static org.apache.commons.collections.list.PredicatedList.decorate;
-import static org.slf4j.LoggerFactory.getLogger;
 import groovy.lang.Closure;
 import groovy.lang.GroovyObjectSupport;
 import groovy.lang.Script;
@@ -73,15 +71,13 @@ public class HostsServiceImpl extends GroovyObjectSupport implements Service {
 	 */
 	private static final long serialVersionUID = -2535415557268118125L;
 
-	private static final String WORKER_LOGGING_NAME = "com.anrisoftware.sscontrol.hosts.service.%s";
-
 	private final HostsServiceImplLogger log;
 
 	private final Map<String, Provider<Script>> scripts;
 
 	private final List<Host> hosts;
 
-	private final TemplatesFactory templates;
+	private final TemplatesFactory templatesFactory;
 
 	private final HostFactory hostFactory;
 
@@ -114,7 +110,7 @@ public class HostsServiceImpl extends GroovyObjectSupport implements Service {
 			HostFactory hostFactory, HostFormatFactory hostFormatFactory) {
 		this.log = logger;
 		this.scripts = scripts;
-		this.templates = templates;
+		this.templatesFactory = templates;
 		this.hostFactory = hostFactory;
 		this.hosts = decorate(new ArrayList<String>(),
 				NotNullPredicate.getInstance());
@@ -194,12 +190,11 @@ public class HostsServiceImpl extends GroovyObjectSupport implements Service {
 		Script script = scripts.get(name).get();
 		Map<Class<?>, Object> workers = getWorkers();
 		script.setProperty("workers", workers);
-		script.setProperty("templates", templates);
+		script.setProperty("templatesFactory", templatesFactory);
 		script.setProperty("system", profile.getEntry("system"));
 		script.setProperty("profile", profile.getEntry(NAME));
 		script.setProperty("service", this);
 		script.setProperty("name", name);
-		script.setProperty("log", getLogger(format(WORKER_LOGGING_NAME, name)));
 		script.run();
 		return this;
 	}

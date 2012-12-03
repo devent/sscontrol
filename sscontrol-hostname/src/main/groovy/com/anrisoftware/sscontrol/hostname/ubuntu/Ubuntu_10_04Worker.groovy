@@ -21,7 +21,7 @@ package com.anrisoftware.sscontrol.hostname.ubuntu
 import com.anrisoftware.sscontrol.hostname.linux.LinuxWorker
 
 /**
- * Deploys the hostname on the Ubuntu 10.04 linux system.
+ * Deploys the hostname on the Ubuntu 10.04 Linux system.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0

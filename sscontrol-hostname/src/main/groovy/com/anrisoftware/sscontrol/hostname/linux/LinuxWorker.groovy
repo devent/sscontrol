@@ -146,8 +146,11 @@ class LinuxWorker extends Script {
 		"${service.toString()}: $name"
 	}
 
+	/**
+	 * Set properties of the script.
+	 */
 	@Override
-	public void setProperty(String property, Object newValue) {
+	void setProperty(String property, Object newValue) {
 		metaClass.setProperty(this, property, newValue)
 	}
 

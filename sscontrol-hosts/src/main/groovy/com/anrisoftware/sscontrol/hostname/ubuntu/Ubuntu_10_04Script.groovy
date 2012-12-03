@@ -35,11 +35,14 @@ File getConfigurationFile() {
 }
 
 /**
- * Returns the hosts configuration.
+ * Returns the configuration for each host.
  */
-String getConfiguration() {
+List getConfiguration() {
 	def res = template.getResource("hosts_configuration")
-	res.getText("hosts", service.hosts)
+	service.hosts.inject([]) { list, host ->
+		res.invalidate()
+		list << res.getText("host", "host", host)
+	}
 }
 
 /**
@@ -47,7 +50,6 @@ String getConfiguration() {
  */
 String getCurrentConfiguration() {
 	if (configurationFile.isFile()) {
-		def config = configuration
 		FileUtils.readFileToString(configurationFile, system.charset)
 	} else {
 		log.info "No file {} found in {}.", configurationFile, this
@@ -63,19 +65,26 @@ TokenMarker getTokens() {
 }
 
 /**
- * Returns the token template for the hosts configuration.
+ * Returns the token templates for each the host.
  */
-TokenTemplate getTokenTemplate() {
-	new TokenTemplate(".*", configuration)
+List getTokenTemplate() {
+	int i = 0
+	service.hosts.inject([]) { list, host ->
+		list << new TokenTemplate("${host.address}.*", configuration[i++])
+	}
 }
 
 /**
  * Deploys the hosts configuration to the hosts configuration file.
  */
 def deployConfiguration() {
-	def worker = workers[TokensTemplateWorkerFactory].create(tokens, tokenTemplate, currentConfiguration)()
-	FileUtils.write(configurationFile, worker.text, system.charset)
-	log.info "Deploy hosts configuration '$worker.text' to {} in {}.", configurationFile, this
+	def configuration = currentConfiguration
+	tokenTemplate.each {
+		def worker = workers[TokensTemplateWorkerFactory].create(tokens, it, configuration)()
+		configuration = worker.text
+		FileUtils.write(configurationFile, configuration, system.charset)
+		log.info "Deploy hosts configuration '$configuration' to {} in {}.", configurationFile, this
+	}
 }
 
 String toString() {

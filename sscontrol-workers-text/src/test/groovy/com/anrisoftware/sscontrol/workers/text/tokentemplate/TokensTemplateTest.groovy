@@ -95,6 +95,32 @@ bar
 	}
 
 	@Test
+	void "replace template with tokens with two entries"() {
+		def template = new TokenTemplate("foo\nbar", "baz\nbaz")
+		def worker = factory.create tokens, template,
+						"#BEGIN\nfoo\nbar\n#END\n"
+		worker()
+		assertStringContent worker.text, """#BEGIN
+baz
+baz
+#END
+"""
+	}
+
+	@Test
+	void "replace template empty with two entries"() {
+		def template = new TokenTemplate("foo\nbar", "baz\nbaz")
+		def worker = factory.create tokens, template,
+						""
+		worker()
+		assertStringContent worker.text, """#BEGIN
+baz
+baz
+#END
+"""
+	}
+
+	@Test
 	void "append template with tokens to empty configuration"() {
 		def template = new TokenTemplate("foo", "$replace")
 		def worker = factory.create tokens, template,

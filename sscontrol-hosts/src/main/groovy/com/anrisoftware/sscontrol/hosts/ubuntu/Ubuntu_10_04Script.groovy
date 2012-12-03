@@ -16,9 +16,9 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-hostname. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.hostname.ubuntu
+package com.anrisoftware.sscontrol.hosts.ubuntu
 
-import com.anrisoftware.sscontrol.hostname.linux.LinuxScript
+import com.anrisoftware.sscontrol.hosts.linux.LinuxScript
 
 /**
  * Deploys the hosts on the Ubuntu 10.04 Linux system.

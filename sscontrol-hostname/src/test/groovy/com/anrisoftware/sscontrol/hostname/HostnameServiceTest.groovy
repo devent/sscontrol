@@ -100,6 +100,10 @@ class HostnameServiceTest {
 		}
 	}
 
+	static {
+		toStringStyle
+	}
+
 	@Before
 	void setupInjector() {
 		injector = createInjector()

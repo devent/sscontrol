@@ -19,8 +19,6 @@
 package com.anrisoftware.sscontrol.hostname.service;
 
 import static com.anrisoftware.sscontrol.hostname.service.HostnameFactory.NAME;
-import static java.lang.String.format;
-import static org.slf4j.LoggerFactory.getLogger;
 import groovy.lang.Closure;
 import groovy.lang.GroovyObjectSupport;
 import groovy.lang.Script;
@@ -44,8 +42,6 @@ import com.google.inject.Provider;
 
 class HostnameServiceImpl extends GroovyObjectSupport implements Service {
 
-	private static final String WORKER_LOGGING_NAME = "com.anrisoftware.sscontrol.hostname.service.%s";
-
 	/**
 	 * @version 0.1
 	 */
@@ -59,7 +55,7 @@ class HostnameServiceImpl extends GroovyObjectSupport implements Service {
 
 	private String hostname;
 
-	private final TemplatesFactory templates;
+	private final TemplatesFactory templatesFactory;
 
 	@Inject
 	private TokensTemplateWorkerFactory tokensTemplateWorkerFactory;
@@ -73,7 +69,7 @@ class HostnameServiceImpl extends GroovyObjectSupport implements Service {
 			@Named("hostname-service-properties") Properties properties) {
 		this.log = logger;
 		this.scripts = scripts;
-		this.templates = templates;
+		this.templatesFactory = templates;
 	}
 
 	public Object hostname(Closure<?> closure) {
@@ -108,16 +104,15 @@ class HostnameServiceImpl extends GroovyObjectSupport implements Service {
 	@Override
 	public Service call() throws ServiceException {
 		String name = profile.getProfileName();
-		Script worker = scripts.get(name).get();
+		Script script = scripts.get(name).get();
 		Map<Class<?>, Object> workers = getWorkers();
-		worker.setProperty("workers", workers);
-		worker.setProperty("templates", templates);
-		worker.setProperty("system", profile.getEntry("system"));
-		worker.setProperty("profile", profile.getEntry(NAME));
-		worker.setProperty("service", this);
-		worker.setProperty("name", name);
-		worker.setProperty("log", getLogger(format(WORKER_LOGGING_NAME, name)));
-		worker.run();
+		script.setProperty("workers", workers);
+		script.setProperty("templatesFactory", templatesFactory);
+		script.setProperty("system", profile.getEntry("system"));
+		script.setProperty("profile", profile.getEntry(NAME));
+		script.setProperty("service", this);
+		script.setProperty("name", name);
+		script.run();
 		return this;
 	}
 

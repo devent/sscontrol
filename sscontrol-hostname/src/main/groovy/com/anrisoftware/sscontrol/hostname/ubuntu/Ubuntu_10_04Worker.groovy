@@ -18,79 +18,13 @@
  */
 package com.anrisoftware.sscontrol.hostname.ubuntu
 
-import org.apache.commons.io.FileUtils
-
-import com.anrisoftware.sscontrol.workers.command.script.ScriptCommandWorkerFactory
-import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokenMarker
-import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokenTemplate
-import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokensTemplateWorkerFactory
-
-
-template = templates.create "Hostname_$name"
+import com.anrisoftware.sscontrol.hostname.linux.LinuxWorker
 
 /**
- * Returns the hostname configuration file.
+ * Deploys the hostname on the Ubuntu 10.04 linux system.
+ *
+ * @author Erwin Mueller, erwin.mueller@deventm.org
+ * @since 1.0
  */
-File getConfigurationFile() {
-	profile.configuration_file as File
+class Ubuntu_10_04Worker extends LinuxWorker {
 }
-
-/**
- * Returns the hostname configuration.
- */
-String getConfiguration() {
-	def res = template.getResource("hostname_configuration")
-	res.getText("hostname", service.hostname)
-}
-
-/**
- * Returns the current hostname configuration.
- */
-String getCurrentConfiguration() {
-	if (configurationFile.isFile()) {
-		def config = configuration
-		FileUtils.readFileToString(configurationFile, system.charset)
-	} else {
-		log.info "No file {} found in {}.", configurationFile, this
-		""
-	}
-}
-
-/**
- * Returns the template tokens for the hostname configuration.
- */
-TokenMarker getTokens() {
-	new TokenMarker("# SSCONTROL-$name", "# SSCONTROL-$name-END\n")
-}
-
-/**
- * Returns the token template for the hostname configuration.
- */
-TokenTemplate getTokenTemplate() {
-	new TokenTemplate(".*", configuration)
-}
-
-/**
- * Deploys the hostname configuration to the hostname configuration file.
- */
-def deployHostnameConfiguration() {
-	def worker = workers[TokensTemplateWorkerFactory].create(tokens, tokenTemplate, currentConfiguration)()
-	FileUtils.write(configurationFile, worker.text, system.charset)
-	log.info "Deploy hostname configuration '$worker.text' to {} in {}.", configurationFile, this
-}
-
-/**
- * Restarts the hostname service.
- */
-def restartHostnameService() {
-	def template = template.getResource("restart_hostname_command")
-	def worker = workers[ScriptCommandWorkerFactory].create(template, "prefix", system.prefix)()
-	log.info "Restart done with output '{}'.", worker.out
-}
-
-String toString() {
-	"${service.toString()}: $name"
-}
-
-deployHostnameConfiguration()
-restartHostnameService()

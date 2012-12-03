@@ -24,6 +24,8 @@ import static java.util.regex.Pattern.compile;
 import java.io.Serializable;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
 /**
  * Holds the search text and replacement.
  * 
@@ -110,6 +112,12 @@ public class TokenTemplate implements Serializable {
 	 */
 	public String toReplace(String beginToken, String endToken) {
 		return format("%s\n%s\n%s", beginToken, replace, endToken);
+	}
+
+	@Override
+	public String toString() {
+		return new ToStringBuilder(this).append("search", search)
+				.append("replace", replace).toString();
 	}
 
 }

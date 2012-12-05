@@ -1,5 +1,5 @@
 host_parse() ::= <<
-address:"(.*)",name:"(<hostnamePattern()>)",aliases:\[(.*)\]
+address:"(.*)";name:"(<hostnamePattern()>)";aliases:\[(.*)\]
 >>
 
 hostnamePattern() ::= <%

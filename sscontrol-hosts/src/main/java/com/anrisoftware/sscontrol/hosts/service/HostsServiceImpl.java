@@ -66,6 +66,8 @@ import com.google.inject.Provider;
  */
 public class HostsServiceImpl extends GroovyObjectSupport implements Service {
 
+	private static final String DEFAULT_HOSTS_PROPERTY = "default_hosts";
+
 	/**
 	 * @since 1.0
 	 */
@@ -124,7 +126,9 @@ public class HostsServiceImpl extends GroovyObjectSupport implements Service {
 
 	private void setDefaultHosts(ContextProperties p, Format format) {
 		try {
-			p.getTypedListProperty("default_hosts", format);
+			List<Host> list = p.<Host> getTypedListProperty(
+					DEFAULT_HOSTS_PROPERTY, format, ",");
+			hosts.addAll(list);
 		} catch (ParseException e) {
 			log.errorSetDefaultHosts(this, e);
 		}

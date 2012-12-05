@@ -109,10 +109,20 @@ class HostsServiceTest {
 
 	def assertService(ServicesRegistry registry) {
 		HostsServiceImpl service = registry.getService("hosts")[0]
-		assert service.hosts.size() == 2
+		assert service.hosts.size() == 4
 
 		int i = 0
 		Host host
+		host = service.hosts[i++]
+		assert host.address == "1127.0.0.1"
+		assert host.hostname == "srv1.ubuntutest.com"
+		assert host.aliases == ["srv1"]
+
+		host = service.hosts[i++]
+		assert host.address == "192.168.0.49"
+		assert host.hostname == "srv1.ubuntutest.com"
+		assert host.aliases == ["srv1"]
+
 		host = service.hosts[i++]
 		assert host.address == "192.168.0.49"
 		assert host.hostname == "srv1.ubuntutest.com"

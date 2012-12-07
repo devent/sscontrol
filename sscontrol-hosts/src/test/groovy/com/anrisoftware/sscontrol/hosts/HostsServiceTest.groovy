@@ -29,6 +29,7 @@ import com.anrisoftware.sscontrol.core.api.ServiceException
 import com.anrisoftware.sscontrol.core.api.ServiceLoader as SscontrolServiceLoader
 import com.anrisoftware.sscontrol.core.api.ServicesRegistry
 import com.anrisoftware.sscontrol.hosts.service.Host
+import com.anrisoftware.sscontrol.hosts.service.HostsServiceFactory
 import com.anrisoftware.sscontrol.hosts.service.HostsServiceImpl
 import com.google.inject.Guice
 import com.google.inject.Injector
@@ -40,7 +41,11 @@ class HostsServiceTest {
 
 	static hostsService = resourceURL("HostsService.groovy", HostsServiceTest)
 
+	static hostsNullService = resourceURL("HostsNullService.groovy", HostsServiceTest)
+
 	static hostsExpected = resourceURL("hosts_expected.txt", HostsServiceTest)
+
+	static defaultHostsFile = resourceURL("default_hosts.txt", HostsServiceTest)
 
 	Injector injector
 
@@ -59,29 +64,30 @@ class HostsServiceTest {
 		loader.loadService(hostsService, variables, registry, profile)
 
 		assertService registry
-		withFiles "hostname", {
+		withFiles HostsServiceFactory.NAME, {
 			registry.allServices.each { it.call() }
+			assertFileContent(new File(it, "/etc/hosts"), hostsExpected)
 			log.info "Run service again to ensure that configuration is not set double."
 			registry.allServices.each { it.call() }
-			assertFileContent(new File(it, "/etc/hosts"), hostsExpected, true)
+			assertFileContent(new File(it, "/etc/hosts"), hostsExpected)
 		}, {}, tmp, true
 	}
 
 	@Test
-	void "hostname service with hostname already set"() {
+	void "hosts service with hosts already set"() {
 		ServicesRegistry registry = injector.getInstance ServicesRegistry
 		SscontrolServiceLoader loader = injector.getInstance SscontrolServiceLoader
 		loader.loadService(ubuntu1004Profile, variables, registry, null)
 		def profile = registry.getService("profile")[0]
 		loader.loadService(hostsService, variables, registry, profile)
-		withFiles "hostname", {
+		withFiles HostsServiceFactory.NAME, {
 			registry.allServices.each { it.call() }
+			assertFileContent(new File(it, "/etc/hosts"), hostsExpected)
 			log.info "Run service again to ensure that configuration is not set double."
 			registry.allServices.each { it.call() }
-			assertFileContent(new File(it, "/etc/hostname"), hostsExpected, true)
+			assertFileContent(new File(it, "/etc/hosts"), hostsExpected)
 		}, {
-			copyResourceToCommand(restartHostnameCommand, new File(it, "/etc/init.d/hostname"))
-			copyResourceToFile(localhostHostnameFile, new File(it, "/etc/hostname"))
+			copyResourceToFile(defaultHostsFile, new File(it, "/etc/hosts"))
 		}, tmp
 	}
 
@@ -92,7 +98,7 @@ class HostsServiceTest {
 		loader.loadService(ubuntu1004Profile, variables, registry, null)
 		def profile = registry.getService("profile")[0]
 		shouldFailWith ServiceException, {
-			loader.loadService(hostnameNullService, variables, registry, profile)
+			loader.loadService(hostsNullService, variables, registry, profile)
 		}
 	}
 
@@ -114,14 +120,14 @@ class HostsServiceTest {
 		int i = 0
 		Host host
 		host = service.hosts[i++]
-		assert host.address == "1127.0.0.1"
-		assert host.hostname == "srv1.ubuntutest.com"
-		assert host.aliases == ["srv1"]
+		assert host.address == "127.0.0.1"
+		assert host.hostname == "localhost.localdomain"
+		assert host.aliases == ["localhost"]
 
 		host = service.hosts[i++]
-		assert host.address == "192.168.0.49"
-		assert host.hostname == "srv1.ubuntutest.com"
-		assert host.aliases == ["srv1"]
+		assert host.address == "::1"
+		assert host.hostname == "localhost6.localdomain6"
+		assert host.aliases == ["localhost6"]
 
 		host = service.hosts[i++]
 		assert host.address == "192.168.0.49"

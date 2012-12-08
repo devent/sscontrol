@@ -60,8 +60,8 @@ class Ubuntu_10_04Script extends LinuxScript {
 			def worker = workers[TokensTemplateWorkerFactory].create(tokens, it, currentConfiguration)()
 			configuration = worker.text
 			FileUtils.write(configurationFile, worker.text, system.charset)
-			logDeployConfiguration(configuration)
 		}
+		logDeployConfiguration(configuration)
 	}
 
 	/**

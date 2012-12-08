@@ -45,9 +45,13 @@ class DhclientServiceTest {
 
 	static dhclientService = resourceURL("DhclientService.groovy", DhclientServiceTest)
 
-	static dhclientExpected = resourceURL("dhclient_expected.txt", DhclientServiceTest)
+	static dhclientEmptyExpected = resourceURL("dhclient_empty_expected.txt", DhclientServiceTest)
 
 	static installPackagesCommand = resourceURL("install_packages.txt", DhclientServiceTest)
+
+	static dhclientFile = resourceURL("dhclient.txt", DhclientServiceTest)
+
+	static dhclientNotEmptyExpected = resourceURL("dhclient_notempty_expected.txt", DhclientServiceTest)
 
 	Injector injector
 
@@ -66,30 +70,31 @@ class DhclientServiceTest {
 		loader.loadService(dhclientService, variables, registry, profile)
 		withFiles NAME, {
 			registry.allServices.each { it.call() }
-			assertFileContent(new File(it, "/etc/dhcp3/dhclient.conf"), dhclientExpected)
+			assertFileContent(new File(it, "/etc/dhcp3/dhclient.conf"), dhclientEmptyExpected)
 			log.info "Run service again to ensure that configuration is not set double."
 			registry.allServices.each { it.call() }
-			assertFileContent(new File(it, "/etc/dhcp3/dhclient.conf"), dhclientExpected)
+			assertFileContent(new File(it, "/etc/dhcp3/dhclient.conf"), dhclientEmptyExpected)
 		}, {
 			copyResourceToCommand(installPackagesCommand, new File(it, "/usr/bin/aptitude"))
 		}, tmp
 	}
 
 	@Test
-	void "hostname service with hostname already set"() {
+	void "dhclient service with dhclient already set on server"() {
 		ServicesRegistry registry = injector.getInstance ServicesRegistry
 		SscontrolServiceLoader loader = injector.getInstance SscontrolServiceLoader
 		loader.loadService(ubuntu1004Profile, variables, registry, null)
 		def profile = registry.getService("profile")[0]
 		loader.loadService(dhclientService, variables, registry, profile)
-		withFiles "hostname", {
+		withFiles NAME, {
 			registry.allServices.each { it.call() }
+			assertFileContent(new File(it, "/etc/dhcp3/dhclient.conf"), dhclientNotEmptyExpected)
 			log.info "Run service again to ensure that configuration is not set double."
 			registry.allServices.each { it.call() }
-			assertFileContent(new File(it, "/etc/hostname"), dhclientExpected, true)
+			assertFileContent(new File(it, "/etc/dhcp3/dhclient.conf"), dhclientNotEmptyExpected)
 		}, {
-			copyResourceToCommand(restartHostnameCommand, new File(it, "/etc/init.d/hostname"))
-			copyResourceToFile(localhostHostnameFile, new File(it, "/etc/hostname"))
+			copyResourceToCommand(installPackagesCommand, new File(it, "/usr/bin/aptitude"))
+			copyResourceToFile(dhclientFile, new File(it, "/etc/dhcp3/dhclient.conf"))
 		}, tmp
 	}
 

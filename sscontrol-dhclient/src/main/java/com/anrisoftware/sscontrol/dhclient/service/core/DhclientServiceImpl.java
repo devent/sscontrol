@@ -19,6 +19,7 @@
 package com.anrisoftware.sscontrol.dhclient.service.core;
 
 import static com.anrisoftware.sscontrol.dhclient.service.core.DhclientFactory.NAME;
+import static java.util.Collections.unmodifiableList;
 import groovy.lang.Closure;
 import groovy.lang.GroovyObjectSupport;
 import groovy.lang.Script;
@@ -38,21 +39,41 @@ import com.anrisoftware.sscontrol.core.api.ProfileService;
 import com.anrisoftware.sscontrol.core.api.Service;
 import com.anrisoftware.sscontrol.core.api.ServiceException;
 import com.anrisoftware.sscontrol.dhclient.service.statements.Declaration;
+import com.anrisoftware.sscontrol.dhclient.service.statements.DeclarationFactory;
 import com.anrisoftware.sscontrol.dhclient.service.statements.OptionDeclaration;
+import com.anrisoftware.sscontrol.dhclient.service.statements.OptionDeclarationFactory;
 import com.anrisoftware.sscontrol.workers.command.script.ScriptCommandWorkerFactory;
 import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokensTemplateWorkerFactory;
 import com.google.inject.Provider;
 
+/**
+ * The Dhclient service.
+ * 
+ * @author Erwin Mueller, erwin.mueller@deventm.org
+ * @since 1.0
+ */
 class DhclientServiceImpl extends GroovyObjectSupport implements Service {
 
 	/**
 	 * @version 0.1
 	 */
-	private static final long serialVersionUID = 8026832603525631371L;
+	private static final long serialVersionUID = -8433434141420234300L;
 
 	private final DhclientServiceImplLogger log;
 
 	private final Map<String, Provider<Script>> scripts;
+
+	@Inject
+	private TokensTemplateWorkerFactory tokensTemplateWorkerFactory;
+
+	@Inject
+	private ScriptCommandWorkerFactory scriptCommandWorkerFactory;
+
+	@Inject
+	private DeclarationFactory declarationFactory;
+
+	@Inject
+	private OptionDeclarationFactory optionDeclarationFactory;
 
 	private ProfileService profile;
 
@@ -67,12 +88,6 @@ class DhclientServiceImpl extends GroovyObjectSupport implements Service {
 	private final TemplatesFactory templatesFactory;
 
 	@Inject
-	private TokensTemplateWorkerFactory tokensTemplateWorkerFactory;
-
-	@Inject
-	private ScriptCommandWorkerFactory scriptCommandWorkerFactory;
-
-	@Inject
 	DhclientServiceImpl(DhclientServiceImplLogger logger,
 			Map<String, Provider<Script>> scripts, TemplatesFactory templates,
 			@Named("hostname-service-properties") Properties properties) {
@@ -81,19 +96,50 @@ class DhclientServiceImpl extends GroovyObjectSupport implements Service {
 		this.templatesFactory = templates;
 	}
 
-	public Object hostname(Closure<?> closure) {
+	/**
+	 * Entry point in the Dhclient script.
+	 * 
+	 * @param closure
+	 *            the Dhclient script statements.
+	 * 
+	 * @return this {@link Service}.
+	 */
+	public Object dhclient(Closure<?> closure) {
 		return this;
 	}
 
-	public Object set_hostname(String name) {
-		log.checkHostname(this, name);
-		hostname = name;
-		log.hostnameSet(this, name);
+	/**
+	 * Adds a new request.
+	 * 
+	 * @param decl
+	 *            the request declaration.
+	 * 
+	 * @return this {@link Service}.
+	 */
+	public Object requests(String decl) {
+		Declaration declaration = declarationFactory.create(decl);
+		requests.add(declaration);
+		log.reguestAdded(this, declaration);
 		return this;
 	}
 
-	public String getHostname() {
-		return hostname;
+	/**
+	 * Adds a new prepend.
+	 * 
+	 * @param option
+	 *            the prepend option.
+	 * 
+	 * @param decl
+	 *            the prepend declaration.
+	 * 
+	 * @return this {@link Service}.
+	 */
+	public Object prepend(String option, String decl) {
+		OptionDeclaration declaration;
+		declaration = optionDeclarationFactory.create(option, decl);
+		prepends.add(declaration);
+		log.prependAdded(this, declaration);
+		return this;
 	}
 
 	@Override
@@ -101,13 +147,64 @@ class DhclientServiceImpl extends GroovyObjectSupport implements Service {
 		return NAME;
 	}
 
+	/**
+	 * Sets the profile for the service.
+	 * 
+	 * @param newProfile
+	 *            the {@link ProfileService}.
+	 */
 	public void setProfile(ProfileService newProfile) {
 		profile = newProfile;
 		log.profileSet(this, newProfile);
 	}
 
+	/**
+	 * Returns the profile of the service.
+	 * 
+	 * @return the {@link ProfileService}.
+	 */
 	public ProfileService getProfile() {
 		return profile;
+	}
+
+	/**
+	 * Returns the option declarations.
+	 * 
+	 * @return an unmodifiable {@link List} of the {@link Declaration} option
+	 *         declarations.
+	 */
+	public List<Declaration> getOptions() {
+		return unmodifiableList(options);
+	}
+
+	/**
+	 * Returns the prepend declarations.
+	 * 
+	 * @return an unmodifiable {@link List} of the {@link OptionDeclaration}
+	 *         prepend declarations.
+	 */
+	public List<OptionDeclaration> getPrepends() {
+		return unmodifiableList(prepends);
+	}
+
+	/**
+	 * Returns the request declarations.
+	 * 
+	 * @return an unmodifiable {@link List} of the {@link Declaration} request
+	 *         declarations.
+	 */
+	public List<Declaration> getRequests() {
+		return unmodifiableList(requests);
+	}
+
+	/**
+	 * Returns the send declarations.
+	 * 
+	 * @return an unmodifiable {@link List} of the {@link OptionDeclaration}
+	 *         send declarations.
+	 */
+	public List<OptionDeclaration> getSends() {
+		return unmodifiableList(sends);
 	}
 
 	@Override

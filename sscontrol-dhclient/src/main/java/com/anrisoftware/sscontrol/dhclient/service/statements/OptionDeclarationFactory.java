@@ -17,7 +17,7 @@ public interface OptionDeclarationFactory {
 	 * @param declaration
 	 *            the declaration.
 	 * 
-	 * @return the {@link Declaration}.
+	 * @return the {@link OptionDeclaration}.
 	 * 
 	 * @throws NullPointerException
 	 *             if the specified option or declaration is {@code null}.
@@ -25,5 +25,5 @@ public interface OptionDeclarationFactory {
 	 * @throws IllegalArgumentException
 	 *             if the specified option or declaration is empty.
 	 */
-	Declaration create(String option, String declaration);
+	OptionDeclaration create(String option, String declaration);
 }

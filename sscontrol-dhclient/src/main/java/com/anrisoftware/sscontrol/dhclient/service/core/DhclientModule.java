@@ -34,6 +34,7 @@ import com.anrisoftware.resources.templates.templates.TemplatesResourcesModule;
 import com.anrisoftware.resources.templates.worker.STDefaultPropertiesModule;
 import com.anrisoftware.resources.templates.worker.STWorkerModule;
 import com.anrisoftware.sscontrol.dhclient.service.statements.StatementsModule;
+import com.anrisoftware.sscontrol.dhclient.ubuntu.Ubuntu_10_04Script;
 import com.anrisoftware.sscontrol.workers.command.exec.ExecCommandWorkerModule;
 import com.anrisoftware.sscontrol.workers.command.script.ScriptCommandWorkerModule;
 import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokensTemplateWorkerModule;
@@ -41,6 +42,12 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.google.inject.multibindings.MapBinder;
 
+/**
+ * Binds the Dhclient service scripts.
+ * 
+ * @author Erwin Mueller, erwin.mueller@deventm.org
+ * @since 1.0
+ */
 class DhclientModule extends AbstractModule {
 
 	private static final URL DHCLIENT_DEFAULTS_PROPERTIES_RESOURCE = DhclientModule.class

@@ -18,14 +18,14 @@
  */
 package com.anrisoftware.sscontrol.dhclient.service.core;
 
-import static org.apache.commons.lang3.Validate.notEmpty;
-
 import com.anrisoftware.globalpom.log.AbstractSerializedLogger;
 import com.anrisoftware.sscontrol.core.api.ProfileService;
+import com.anrisoftware.sscontrol.dhclient.service.statements.Declaration;
+import com.anrisoftware.sscontrol.dhclient.service.statements.OptionDeclaration;
 
 /**
  * Logging messages for {@link DhclientServiceImpl}.
- * 
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
@@ -47,16 +47,20 @@ class DhclientServiceImplLogger extends AbstractSerializedLogger {
 		}
 	}
 
-	void hostnameSet(DhclientServiceImpl service, String name) {
+	void reguestAdded(DhclientServiceImpl service, Declaration declaration) {
 		if (log.isTraceEnabled()) {
-			log.trace("Hostname '{}' set for {}.", name, service);
+			log.trace("Request '{}' added for {}.", declaration, service);
 		} else {
-			log.info("Hostname '{}' set.", name);
+			log.info("Request '{}' added for dhclient.", declaration);
 		}
 	}
 
-	void checkHostname(DhclientServiceImpl service, String name) {
-		notEmpty(name, "The hostname must not be empty or null for %s.",
-				service);
+	public void prependAdded(DhclientServiceImpl service,
+			OptionDeclaration declaration) {
+		if (log.isTraceEnabled()) {
+			log.trace("Prepend '{}' added for {}.", declaration, service);
+		} else {
+			log.info("Prepend '{}' added for dhclient.", declaration);
+		}
 	}
 }

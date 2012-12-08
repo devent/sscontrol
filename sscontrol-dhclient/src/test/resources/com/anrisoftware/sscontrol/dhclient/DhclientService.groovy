@@ -20,5 +20,5 @@ package com.anrisoftware.sscontrol.dhclient
 
 dhclient {
 	requests "!domain-name-servers"
-	prepend { domain_name_servers "127.0.0.1"
-	} }
+	prepend "domain_name_servers", "127.0.0.1"
+}

@@ -39,8 +39,9 @@ public class OptionDeclaration extends Declaration {
 	 *             if the specified option or declaration is empty.
 	 */
 	@Inject
-	OptionDeclaration(StatementLogger logger, @Assisted String option,
-			@Assisted String declaration) {
+	OptionDeclaration(StatementLogger logger,
+			@Assisted("option") String option,
+			@Assisted("declaration") String declaration) {
 		super(logger, declaration);
 		log.checkOption(option);
 		this.option = option;

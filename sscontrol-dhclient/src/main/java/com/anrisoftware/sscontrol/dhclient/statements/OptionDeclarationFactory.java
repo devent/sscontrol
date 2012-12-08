@@ -1,5 +1,7 @@
 package com.anrisoftware.sscontrol.dhclient.statements;
 
+import com.google.inject.assistedinject.Assisted;
+
 /**
  * Factory to create the option with declaration.
  * 
@@ -25,5 +27,6 @@ public interface OptionDeclarationFactory {
 	 * @throws IllegalArgumentException
 	 *             if the specified option or declaration is empty.
 	 */
-	OptionDeclaration create(String option, String declaration);
+	OptionDeclaration create(@Assisted("option") String option,
+			@Assisted("declaration") String declaration);
 }

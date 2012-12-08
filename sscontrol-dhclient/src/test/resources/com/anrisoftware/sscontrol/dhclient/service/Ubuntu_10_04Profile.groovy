@@ -16,9 +16,17 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-hostname. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.dhclient
+package com.anrisoftware.sscontrol.dhclient.service
 
-dhclient {
-	requests "!domain-name-servers"
-	prepend "domain_name_servers", "127.0.0.1"
+profile "ubuntu_10_04", {
+	system {
+		install_command "${tmp}/aptitude update && ${tmp}/aptitude install {}"
+		cat_command "${tmp}/cat"
+		prefix tmp
+	}
+	hostname {
+		packages "dhcp3-client"
+		configuration_dir "${tmp}/etc/dhcp3"
+		command "${tmp}/etc/init.d/networking"
+	}
 }

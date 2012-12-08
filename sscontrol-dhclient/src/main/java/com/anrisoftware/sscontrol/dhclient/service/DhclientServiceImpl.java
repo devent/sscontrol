@@ -24,6 +24,7 @@ import groovy.lang.Closure;
 import groovy.lang.GroovyObjectSupport;
 import groovy.lang.Script;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -77,23 +78,27 @@ class DhclientServiceImpl extends GroovyObjectSupport implements Service {
 
 	private ProfileService profile;
 
-	private List<Declaration> options;
+	private final List<Declaration> options;
 
-	private List<OptionDeclaration> sends;
+	private final List<OptionDeclaration> sends;
 
-	private List<Declaration> requests;
+	private final List<Declaration> requests;
 
-	private List<OptionDeclaration> prepends;
+	private final List<OptionDeclaration> prepends;
 
 	private final TemplatesFactory templatesFactory;
 
 	@Inject
 	DhclientServiceImpl(DhclientServiceImplLogger logger,
 			Map<String, Provider<Script>> scripts, TemplatesFactory templates,
-			@Named("hostname-service-properties") Properties properties) {
+			@Named("dhclient-defaults-properties") Properties properties) {
 		this.log = logger;
 		this.scripts = scripts;
 		this.templatesFactory = templates;
+		this.options = new ArrayList<Declaration>();
+		this.sends = new ArrayList<OptionDeclaration>();
+		this.requests = new ArrayList<Declaration>();
+		this.prepends = new ArrayList<OptionDeclaration>();
 	}
 
 	/**

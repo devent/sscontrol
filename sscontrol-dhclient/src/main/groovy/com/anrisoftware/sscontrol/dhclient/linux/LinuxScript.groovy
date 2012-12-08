@@ -155,8 +155,18 @@ class LinuxScript extends Script {
 	}
 
 	def run() {
-		templates = templatesFactory.create "Hostname_$name"
-		deployHostnameConfiguration()
-		restartHostnameService()
+		templates = templatesFactory.create "Dhclient_$name"
+		installPackages()
+		deployConfiguration()
+		restartService()
+	}
+
+	def installPackages() {
+	}
+
+	def deployConfiguration() {
+	}
+
+	def restartService() {
 	}
 }

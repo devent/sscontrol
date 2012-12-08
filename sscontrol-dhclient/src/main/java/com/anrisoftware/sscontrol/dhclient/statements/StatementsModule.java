@@ -1,4 +1,4 @@
-package com.anrisoftware.sscontrol.dhclient.service.statements;
+package com.anrisoftware.sscontrol.dhclient.statements;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;

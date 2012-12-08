@@ -16,12 +16,12 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-hostname. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.dhclient.service.core;
+package com.anrisoftware.sscontrol.dhclient.service;
 
 import com.anrisoftware.globalpom.log.AbstractSerializedLogger;
 import com.anrisoftware.sscontrol.core.api.ProfileService;
-import com.anrisoftware.sscontrol.dhclient.service.statements.Declaration;
-import com.anrisoftware.sscontrol.dhclient.service.statements.OptionDeclaration;
+import com.anrisoftware.sscontrol.dhclient.statements.Declaration;
+import com.anrisoftware.sscontrol.dhclient.statements.OptionDeclaration;
 
 /**
  * Logging messages for {@link DhclientServiceImpl}.

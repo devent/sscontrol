@@ -16,9 +16,9 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-hostname. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.dhclient.service.core;
+package com.anrisoftware.sscontrol.dhclient.service;
 
-import static com.anrisoftware.sscontrol.dhclient.service.core.DhclientFactory.NAME;
+import static com.anrisoftware.sscontrol.dhclient.service.DhclientFactory.NAME;
 import static java.util.Collections.unmodifiableList;
 import groovy.lang.Closure;
 import groovy.lang.GroovyObjectSupport;
@@ -38,10 +38,10 @@ import com.anrisoftware.resources.templates.api.TemplatesFactory;
 import com.anrisoftware.sscontrol.core.api.ProfileService;
 import com.anrisoftware.sscontrol.core.api.Service;
 import com.anrisoftware.sscontrol.core.api.ServiceException;
-import com.anrisoftware.sscontrol.dhclient.service.statements.Declaration;
-import com.anrisoftware.sscontrol.dhclient.service.statements.DeclarationFactory;
-import com.anrisoftware.sscontrol.dhclient.service.statements.OptionDeclaration;
-import com.anrisoftware.sscontrol.dhclient.service.statements.OptionDeclarationFactory;
+import com.anrisoftware.sscontrol.dhclient.statements.Declaration;
+import com.anrisoftware.sscontrol.dhclient.statements.DeclarationFactory;
+import com.anrisoftware.sscontrol.dhclient.statements.OptionDeclaration;
+import com.anrisoftware.sscontrol.dhclient.statements.OptionDeclarationFactory;
 import com.anrisoftware.sscontrol.workers.command.script.ScriptCommandWorkerFactory;
 import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokensTemplateWorkerFactory;
 import com.google.inject.Provider;

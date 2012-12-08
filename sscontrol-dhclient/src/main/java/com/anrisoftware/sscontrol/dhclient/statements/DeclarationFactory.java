@@ -1,4 +1,4 @@
-package com.anrisoftware.sscontrol.dhclient.service.statements;
+package com.anrisoftware.sscontrol.dhclient.statements;
 
 /**
  * Factory to create the declaration.

@@ -20,12 +20,12 @@ package com.anrisoftware.sscontrol.dhclient.service
 
 profile "ubuntu_10_04", {
 	system {
-		install_command "${tmp}/aptitude update && ${tmp}/aptitude install {}"
+		install_command "${tmp}/usr/bin/aptitude update && ${tmp}/usr/bin/aptitude install"
 		cat_command "${tmp}/cat"
 		prefix tmp
 	}
-	hostname {
-		packages "dhcp3-client"
+	dhclient {
+		packages "aptitude, dhcp3-client"
 		configuration_dir "${tmp}/etc/dhcp3"
 		command "${tmp}/etc/init.d/networking"
 	}

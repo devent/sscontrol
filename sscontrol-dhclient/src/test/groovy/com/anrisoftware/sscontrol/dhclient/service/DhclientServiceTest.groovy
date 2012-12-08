@@ -47,6 +47,8 @@ class DhclientServiceTest {
 
 	static dhclientExpected = resourceURL("dhclient_expected.txt", DhclientServiceTest)
 
+	static installPackagesCommand = resourceURL("install_packages.txt", DhclientServiceTest)
+
 	Injector injector
 
 	Ubuntu_10_04Profile ubuntu_10_04Profile
@@ -69,6 +71,7 @@ class DhclientServiceTest {
 			registry.allServices.each { it.call() }
 			assertFileContent(new File(it, "/etc/dhcp3/dhclient.conf"), dhclientExpected)
 		}, {
+			copyResourceToCommand(installPackagesCommand, new File(it, "/usr/bin/aptitude"))
 		}, tmp
 	}
 

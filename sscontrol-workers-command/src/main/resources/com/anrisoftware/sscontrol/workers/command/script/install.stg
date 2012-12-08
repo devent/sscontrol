@@ -1,0 +1,5 @@
+install(installCommand, packages) ::= <<
+#!/bin/sh
+<installCommand> <packages;separator=" ">
+
+>>

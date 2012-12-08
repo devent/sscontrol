@@ -79,27 +79,6 @@ class Ubuntu_10_04Script extends LinuxScript {
 	}
 
 	/**
-	 * Returns the dhclient configuration.
-	 */
-	List getConfiguration() {
-		def res = templates.getResource("dhclient_configuration")
-		def list = []
-		service.options.inject(list) { it, option ->
-			res.invalidate()
-			it << res.getText("option", "declaration", option)
-		}
-		service.sends.inject(list) { it, send ->
-			res.invalidate()
-			it << res.getText("send", "declaration", send)
-		}
-		list << res.getText("requests", "requests", service.requests)
-		service.prepends.inject(list) { it, prepend ->
-			res.invalidate()
-			it << res.getText("prepend", "declaration", prepend)
-		}
-	}
-
-	/**
 	 * Returns the dhclient configuration on the server.
 	 */
 	String getCurrentConfiguration() {
@@ -131,16 +110,35 @@ class Ubuntu_10_04Script extends LinuxScript {
 	 */
 	List getTokenTemplate() {
 		int i = 0
+		def configuration = getConfiguration()
 		def list = []
-		service.options.inject([]) { it, option ->
-			it << new TokenTemplate("option .*", configuration[i++])
-		}
+		list << new TokenTemplate("option .*;", configuration[i++])
 		service.sends.inject(list) { it, send ->
-			it << new TokenTemplate("send .*", configuration[i++])
+			it << new TokenTemplate("send .*;", configuration[i++])
 		}
-		list << new TokenTemplate("request .*", configuration[i++])
+		list << new TokenTemplate("request .*;", configuration[i++])
 		service.prepends.inject(list) { it, prepend ->
-			it << new TokenTemplate("prepend .*", configuration[i++])
+			it << new TokenTemplate("prepend .*;", configuration[i++])
+		}
+	}
+
+	/**
+	 * Returns the dhclient configuration.
+	 */
+	List getConfiguration() {
+		def res = templates.getResource("dhclient_configuration")
+		def list = []
+		res.invalidate()
+		list << res.getText("option", "declaration", service.option)
+		service.sends.inject(list) { it, send ->
+			res.invalidate()
+			it << res.getText("send", "declaration", send)
+		}
+		res.invalidate()
+		list << res.getText("requests", "requests", service.requests)
+		service.prepends.inject(list) { it, prepend ->
+			res.invalidate()
+			it << res.getText("prepend", "declaration", prepend)
 		}
 	}
 

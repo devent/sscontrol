@@ -20,6 +20,7 @@ package com.anrisoftware.sscontrol.dhclient.service;
 
 import static com.anrisoftware.sscontrol.dhclient.service.DhclientFactory.NAME;
 import static java.util.Collections.unmodifiableList;
+import static org.apache.commons.lang3.StringUtils.split;
 import groovy.lang.Closure;
 import groovy.lang.GroovyObjectSupport;
 import groovy.lang.Script;
@@ -36,6 +37,7 @@ import javax.inject.Named;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import com.anrisoftware.propertiesutils.ContextProperties;
 import com.anrisoftware.resources.templates.api.TemplatesFactory;
 import com.anrisoftware.sscontrol.core.api.ProfileService;
 import com.anrisoftware.sscontrol.core.api.Service;
@@ -72,15 +74,13 @@ class DhclientServiceImpl extends GroovyObjectSupport implements Service {
 	@Inject
 	private ScriptCommandWorkerFactory scriptCommandWorkerFactory;
 
-	@Inject
-	private DeclarationFactory declarationFactory;
+	private final DeclarationFactory declarationFactory;
 
-	@Inject
-	private OptionDeclarationFactory optionDeclarationFactory;
+	private final OptionDeclarationFactory optionDeclarationFactory;
 
 	private ProfileService profile;
 
-	private final List<Declaration> options;
+	private Declaration option;
 
 	private final List<OptionDeclaration> sends;
 
@@ -92,16 +92,33 @@ class DhclientServiceImpl extends GroovyObjectSupport implements Service {
 
 	@Inject
 	DhclientServiceImpl(DhclientServiceImplLogger logger,
+			DeclarationFactory declarationFactory,
+			OptionDeclarationFactory optionDeclarationFactory,
 			RequestDeclarations requests,
 			Map<String, Provider<Script>> scripts, TemplatesFactory templates,
 			@Named("dhclient-defaults-properties") Properties properties) {
 		this.log = logger;
+		this.declarationFactory = declarationFactory;
+		this.optionDeclarationFactory = optionDeclarationFactory;
 		this.scripts = scripts;
 		this.templatesFactory = templates;
-		this.options = new ArrayList<Declaration>();
 		this.sends = new ArrayList<OptionDeclaration>();
 		this.requests = requests;
 		this.prepends = new ArrayList<OptionDeclaration>();
+		ContextProperties p = new ContextProperties(this, properties);
+		setDefaultOption(p);
+		setDefaultSends(p);
+	}
+
+	private void setDefaultOption(ContextProperties p) {
+		option = declarationFactory.create(p.getProperty("default_option"));
+	}
+
+	private void setDefaultSends(ContextProperties p) {
+		for (String decl : p.getListProperty("default_sends", ";,")) {
+			String[] option = split(decl.trim(), " ");
+			sends.add(optionDeclarationFactory.create(option[0], option[1]));
+		}
 	}
 
 	/**
@@ -174,13 +191,12 @@ class DhclientServiceImpl extends GroovyObjectSupport implements Service {
 	}
 
 	/**
-	 * Returns the option declarations.
+	 * Returns the option declaration.
 	 * 
-	 * @return an unmodifiable {@link List} of the {@link Declaration} option
-	 *         declarations.
+	 * @return the {@link Declaration} option declaration.
 	 */
-	public List<Declaration> getOptions() {
-		return unmodifiableList(options);
+	public Declaration getOption() {
+		return option;
 	}
 
 	/**

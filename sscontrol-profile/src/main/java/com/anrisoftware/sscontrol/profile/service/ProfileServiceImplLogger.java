@@ -18,7 +18,10 @@
  */
 package com.anrisoftware.sscontrol.profile.service;
 
+import static org.apache.commons.lang3.Validate.notNull;
+
 import com.anrisoftware.globalpom.log.AbstractSerializedLogger;
+import com.anrisoftware.sscontrol.core.api.ProfileProperties;
 
 /**
  * Logging messages for {@link ProfileServiceImpl}.
@@ -37,5 +40,12 @@ class ProfileServiceImplLogger extends AbstractSerializedLogger {
 
 	void entryAdded(ProfileServiceImpl profile, String name) {
 		log.trace("Added entry '{}' to {}.", name, profile);
+	}
+
+	void checkProfileEntry(ProfileProperties properties,
+			ProfileServiceImpl service, String name) {
+		notNull(properties,
+				"Can not find the profile entry with name '%s' in %s.", name,
+				service);
 	}
 }

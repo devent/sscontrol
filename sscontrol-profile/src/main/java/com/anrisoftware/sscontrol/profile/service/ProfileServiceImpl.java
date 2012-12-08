@@ -107,7 +107,9 @@ class ProfileServiceImpl extends GroovyObjectSupport implements ProfileService {
 
 	@Override
 	public ProfileProperties getEntry(String name) {
-		return entries.get(name);
+		ProfileProperties properties = entries.get(name);
+		log.checkProfileEntry(properties, this, name);
+		return properties;
 	}
 
 	@SuppressWarnings("unchecked")

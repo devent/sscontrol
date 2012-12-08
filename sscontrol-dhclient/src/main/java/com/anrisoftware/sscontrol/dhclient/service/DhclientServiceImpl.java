@@ -26,6 +26,7 @@ import groovy.lang.Script;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -43,6 +44,7 @@ import com.anrisoftware.sscontrol.dhclient.statements.Declaration;
 import com.anrisoftware.sscontrol.dhclient.statements.DeclarationFactory;
 import com.anrisoftware.sscontrol.dhclient.statements.OptionDeclaration;
 import com.anrisoftware.sscontrol.dhclient.statements.OptionDeclarationFactory;
+import com.anrisoftware.sscontrol.dhclient.statements.RequestDeclarations;
 import com.anrisoftware.sscontrol.workers.command.script.ScriptCommandWorkerFactory;
 import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokensTemplateWorkerFactory;
 import com.google.inject.Provider;
@@ -82,7 +84,7 @@ class DhclientServiceImpl extends GroovyObjectSupport implements Service {
 
 	private final List<OptionDeclaration> sends;
 
-	private final List<Declaration> requests;
+	private final RequestDeclarations requests;
 
 	private final List<OptionDeclaration> prepends;
 
@@ -90,6 +92,7 @@ class DhclientServiceImpl extends GroovyObjectSupport implements Service {
 
 	@Inject
 	DhclientServiceImpl(DhclientServiceImplLogger logger,
+			RequestDeclarations requests,
 			Map<String, Provider<Script>> scripts, TemplatesFactory templates,
 			@Named("dhclient-defaults-properties") Properties properties) {
 		this.log = logger;
@@ -97,7 +100,7 @@ class DhclientServiceImpl extends GroovyObjectSupport implements Service {
 		this.templatesFactory = templates;
 		this.options = new ArrayList<Declaration>();
 		this.sends = new ArrayList<OptionDeclaration>();
-		this.requests = new ArrayList<Declaration>();
+		this.requests = requests;
 		this.prepends = new ArrayList<OptionDeclaration>();
 	}
 
@@ -122,9 +125,7 @@ class DhclientServiceImpl extends GroovyObjectSupport implements Service {
 	 * @return this {@link Service}.
 	 */
 	public Object requests(String decl) {
-		Declaration declaration = declarationFactory.create(decl);
-		requests.add(declaration);
-		log.reguestAdded(this, declaration);
+		requests.add(decl);
 		return this;
 	}
 
@@ -195,11 +196,16 @@ class DhclientServiceImpl extends GroovyObjectSupport implements Service {
 	/**
 	 * Returns the request declarations.
 	 * 
-	 * @return an unmodifiable {@link List} of the {@link Declaration} request
-	 *         declarations.
+	 * @return an unmodifiable {@link Iterable} of the {@link Declaration}
+	 *         request declarations.
 	 */
 	public List<Declaration> getRequests() {
-		return unmodifiableList(requests);
+		List<Declaration> list = new ArrayList<Declaration>();
+		Iterator<Declaration> i = requests.iterator();
+		while (i.hasNext()) {
+			list.add(i.next());
+		}
+		return unmodifiableList(list);
 	}
 
 	/**
@@ -238,7 +244,7 @@ class DhclientServiceImpl extends GroovyObjectSupport implements Service {
 
 	@Override
 	public String toString() {
-		return new ToStringBuilder(this).toString();
+		return new ToStringBuilder(this).append("profile", profile).toString();
 	}
 
 }

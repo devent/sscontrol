@@ -1,0 +1,15 @@
+option(declaration) ::= <<
+option <declaration.declaration>;
+>>
+
+send(declaration) ::= <<
+send <declaration.option> <declaration.declaration>;
+>>
+
+requests(requests) ::= <<
+request <requests; separator=", ">;
+>>
+
+prepend(declaration) ::= <<
+prepend <declaration.option> <declaration.declaration>;
+>>

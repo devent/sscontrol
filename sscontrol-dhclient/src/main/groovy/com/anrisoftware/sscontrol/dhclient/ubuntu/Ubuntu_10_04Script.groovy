@@ -44,10 +44,10 @@ class Ubuntu_10_04Script extends LinuxScript {
 	}
 
 	private logInstallPackagesDone(def worker) {
-		if (log.isInfoEnabled()) {
-			log.info "Installed dhclient service packages: {}.", profile.packages
-		} else {
+		if (log.isDebugEnabled()) {
 			log.debug "Installed dhclient service packages for {}: {}.", this, profile.packages
+		} else {
+			log.info "Installed dhclient service packages: {}.", profile.packages
 		}
 	}
 
@@ -55,9 +55,13 @@ class Ubuntu_10_04Script extends LinuxScript {
 	 * Deploys the dhclient configuration to the dhclient configuration file.
 	 */
 	def deployConfiguration() {
-		def worker = workers[TokensTemplateWorkerFactory].create(tokens, tokenTemplate, currentConfiguration)()
-		FileUtils.write(configurationFile, worker.text, system.charset)
-		logDeployConfiguration()
+		def configuration = currentConfiguration
+		tokenTemplate.each {
+			def worker = workers[TokensTemplateWorkerFactory].create(tokens, it, currentConfiguration)()
+			configuration = worker.text
+			FileUtils.write(configurationFile, worker.text, system.charset)
+			logDeployConfiguration(configuration)
+		}
 	}
 
 	/**
@@ -77,9 +81,22 @@ class Ubuntu_10_04Script extends LinuxScript {
 	/**
 	 * Returns the dhclient configuration.
 	 */
-	String getConfiguration() {
+	List getConfiguration() {
 		def res = templates.getResource("dhclient_configuration")
-		res.getText("service", service)
+		def list = []
+		service.options.inject(list) { it, option ->
+			res.invalidate()
+			it << res.getText("option", "declaration", option)
+		}
+		service.sends.inject(list) { it, send ->
+			res.invalidate()
+			it << res.getText("send", "declaration", send)
+		}
+		list << res.getText("requests", "requests", service.requests)
+		service.prepends.inject(list) { it, prepend ->
+			res.invalidate()
+			it << res.getText("prepend", "declaration", prepend)
+		}
 	}
 
 	/**
@@ -95,10 +112,10 @@ class Ubuntu_10_04Script extends LinuxScript {
 	}
 
 	private logNoConfigurationFound() {
-		if (log.isInfoEnabled()) {
-			log.info "No dhclient configuration found in {}.", configurationFile
-		} else {
+		if (log.isDebugEnabled()) {
 			log.debug "No dhclient configuration file found {} for {}.", configurationFile, this
+		} else {
+			log.info "No dhclient configuration found in {}.", configurationFile
 		}
 	}
 
@@ -110,17 +127,28 @@ class Ubuntu_10_04Script extends LinuxScript {
 	}
 
 	/**
-	 * Returns the token template for the hostname configuration.
+	 * Returns the token templates for each dhclient configuration.
 	 */
-	TokenTemplate getTokenTemplate() {
-		new TokenTemplate(".*", configuration)
+	List getTokenTemplate() {
+		int i = 0
+		def list = []
+		service.options.inject([]) { it, option ->
+			it << new TokenTemplate("option .*", configuration[i++])
+		}
+		service.sends.inject(list) { it, send ->
+			it << new TokenTemplate("send .*", configuration[i++])
+		}
+		list << new TokenTemplate("request .*", configuration[i++])
+		service.prepends.inject(list) { it, prepend ->
+			it << new TokenTemplate("prepend .*", configuration[i++])
+		}
 	}
 
-	private logDeployConfiguration() {
-		if (log.isInfoEnabled()) {
-			log.info "Deploy dhclient configuration to {}.", configurationFile
+	private logDeployConfiguration(def configuration) {
+		if (log.isDebugEnabled()) {
+			log.debug "Deploy hostname configuration '$configuration' to {} in {}.", configurationFile, this
 		} else {
-			log.debug "Deploy hostname configuration '$worker.text' to {} in {}.", configurationFile, this
+			log.info "Deploy dhclient configuration to {}.", configurationFile
 		}
 	}
 
@@ -128,10 +156,10 @@ class Ubuntu_10_04Script extends LinuxScript {
 	}
 
 	private logRestartDone(def worker) {
-		if (log.isInfoEnabled()) {
-			log.info "Restarted dhclient service."
-		} else {
+		if (log.isDebugEnabled()) {
 			log.debug "Restart service done with output for {}: '{}'", this, worker.out
+		} else {
+			log.info "Restarted dhclient service."
 		}
 	}
 }

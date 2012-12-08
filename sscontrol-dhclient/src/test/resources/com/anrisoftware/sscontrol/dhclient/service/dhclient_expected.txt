@@ -1,3 +1,6 @@
-# SSCONTROL-hostname
-test
-# SSCONTROL-hostname-END
+# SSCONTROL-dhclient
+request subnet-mask, broadcast-address, time-offset, routers, domain-name, domain-search, host-name, netbios-name-servers, netbios-scope, interface-mtu, rfc3442-classless-static-routes, ntp-servers;
+# SSCONTROL-dhclient-END
+# SSCONTROL-dhclient
+prepend domain_name_servers 127.0.0.1;
+# SSCONTROL-dhclient-END

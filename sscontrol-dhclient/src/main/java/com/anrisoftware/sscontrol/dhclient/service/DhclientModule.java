@@ -79,7 +79,7 @@ class DhclientModule extends AbstractModule {
 	@Provides
 	@Singleton
 	@Named("dhclient-defaults-properties")
-	Properties getHostnameServiceProperties() throws IOException {
+	Properties getDhclientDefaultsProperties() throws IOException {
 		return new ContextPropertiesFactory(DhclientServiceImpl.class)
 				.withProperties(System.getProperties()).fromResource(
 						DHCLIENT_DEFAULTS_PROPERTIES_RESOURCE);

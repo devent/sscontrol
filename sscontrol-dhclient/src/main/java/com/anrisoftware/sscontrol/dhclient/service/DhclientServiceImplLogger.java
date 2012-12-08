@@ -20,7 +20,6 @@ package com.anrisoftware.sscontrol.dhclient.service;
 
 import com.anrisoftware.globalpom.log.AbstractSerializedLogger;
 import com.anrisoftware.sscontrol.core.api.ProfileService;
-import com.anrisoftware.sscontrol.dhclient.statements.Declaration;
 import com.anrisoftware.sscontrol.dhclient.statements.OptionDeclaration;
 
 /**
@@ -44,14 +43,6 @@ class DhclientServiceImplLogger extends AbstractSerializedLogger {
 		} else {
 			log.info("Set profile {} for hostname service.",
 					profile.getProfileName());
-		}
-	}
-
-	void reguestAdded(DhclientServiceImpl service, Declaration declaration) {
-		if (log.isTraceEnabled()) {
-			log.trace("Request '{}' added for {}.", declaration, service);
-		} else {
-			log.info("Request '{}' added for dhclient.", declaration);
 		}
 	}
 

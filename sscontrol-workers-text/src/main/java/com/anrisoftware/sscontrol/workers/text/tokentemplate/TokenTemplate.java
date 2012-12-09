@@ -28,7 +28,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 /**
  * Holds the search text and replacement.
- * 
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
@@ -39,28 +39,54 @@ public class TokenTemplate implements Serializable {
 	 */
 	private static final long serialVersionUID = 7393785512827671511L;
 
-	/**
-	 * The search string.
-	 */
-	public final String search;
+	private final String search;
 
-	/**
-	 * The replacement string.
-	 */
-	public final String replace;
+	private final String replace;
+
+	private final int flags;
 
 	/**
 	 * Sets the search and replacement string.
-	 * 
+	 *
 	 * @param search
 	 *            the search string.
-	 * 
+	 *
 	 * @param replace
 	 *            the replacement string.
 	 */
 	public TokenTemplate(String search, String replace) {
 		this.search = search;
 		this.replace = replace;
+		this.flags = 0;
+	}
+
+	/**
+	 * Sets the search and replacement string.
+	 *
+	 * @param search
+	 *            the search string.
+	 *
+	 * @param replace
+	 *            the replacement string.
+	 *
+	 * @param flags
+	 *            Match flags, a bit mask that may include
+	 *            <ul>
+	 *            <li>{@link Pattern#CASE_INSENSITIVE},
+	 *            <li>{@link Pattern#MULTILINE},
+	 *            <li>{@link Pattern#DOTALL},
+	 *            <li>{@link Pattern#UNICODE_CASE},
+	 *            <li>{@link Pattern#CANON_EQ},
+	 *            <li>{@link Pattern#UNIX_LINES},
+	 *            <li>{@link Pattern#LITERAL},
+	 *            <li>{@link Pattern#UNICODE_CHARACTER_CLASS} and
+	 *            <li>{@link Pattern#COMMENTS}.
+	 *            </ul>
+	 */
+	public TokenTemplate(String search, String replace, int flags) {
+		this.search = search;
+		this.replace = replace;
+		this.flags = flags;
 	}
 
 	/**
@@ -74,7 +100,7 @@ public class TokenTemplate implements Serializable {
 
 	/**
 	 * Returns the replacement string.
-	 * 
+	 *
 	 * @return the replacement string
 	 */
 	public String getReplace() {
@@ -83,31 +109,31 @@ public class TokenTemplate implements Serializable {
 
 	/**
 	 * Returns the pattern with the begin and end token.
-	 * 
+	 *
 	 * @param beginToken
 	 *            the begin token.
-	 * 
+	 *
 	 * @param endToken
 	 *            the end token.
-	 * 
+	 *
 	 * @return the {@link Pattern}.
 	 */
 	public Pattern toPattern(String beginToken, String endToken) {
 		String config = format("(%s)", search);
 		String pattern;
 		pattern = format("(%s\\n)?%s(\\n%s)?", beginToken, config, endToken);
-		return compile(pattern);
+		return compile(pattern, flags);
 	}
 
 	/**
 	 * Returns the replace string with the begin and end token.
-	 * 
+	 *
 	 * @param beginToken
 	 *            the begin token.
-	 * 
+	 *
 	 * @param endToken
 	 *            the end token.
-	 * 
+	 *
 	 * @return the replace string.
 	 */
 	public String toReplace(String beginToken, String endToken) {

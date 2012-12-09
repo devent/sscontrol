@@ -112,13 +112,13 @@ class Ubuntu_10_04Script extends LinuxScript {
 		int i = 0
 		def configuration = getConfiguration()
 		def list = []
-		list << new TokenTemplate("option .*;", configuration[i++])
+		list << new TokenTemplate("\\#?option .*;", configuration[i++])
 		service.sends.inject(list) { it, send ->
-			it << new TokenTemplate("send .*;", configuration[i++])
+			it << new TokenTemplate("\\#?send .*;", configuration[i++])
 		}
-		list << new TokenTemplate("request .*;", configuration[i++])
+		list << new TokenTemplate("\\#?request .*;", configuration[i++])
 		service.prepends.inject(list) { it, prepend ->
-			it << new TokenTemplate("prepend .*;", configuration[i++])
+			it << new TokenTemplate("\\#?prepend .*;", configuration[i++])
 		}
 	}
 

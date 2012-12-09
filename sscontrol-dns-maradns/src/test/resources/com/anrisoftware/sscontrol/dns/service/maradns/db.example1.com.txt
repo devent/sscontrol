@@ -1,0 +1,1 @@
+example1.com. SOA ns.example1.com. hostmaster@example1.com. /serial 28800 3600 604800 86400 ~

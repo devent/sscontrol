@@ -1,0 +1,11 @@
+test-origin-shortcut.com. SOA ns1.test-origin-shortcut.com. hostmaster@test-origin-shortcut.com. /serial 28800 3600 604800 86400 ~
+test-origin-shortcut.com. +86400 NS ns2.test-origin-shortcut.com. ~
+
+test-origin-shortcut.com. MX 10 mx1.test-origin-shortcut.com. ~
+
+www.test-origin-shortcut.com. +86400 CNAME test-origin-shortcut.com. ~
+
+test-origin-shortcut.com. +86400 A 192.168.0.49 ~
+ns2.test-origin-shortcut.com. +86400 A 192.168.0.49 ~
+mx1.test-origin-shortcut.com. +86400 A 192.168.0.49 ~
+

@@ -1,0 +1,1 @@
+example2.com. SOA ns.example2.com. hostmaster@example2.com. /serial 2 3 4 5 ~

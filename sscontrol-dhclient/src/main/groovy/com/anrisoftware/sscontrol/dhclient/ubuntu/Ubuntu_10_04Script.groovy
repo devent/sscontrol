@@ -1,5 +1,6 @@
 package com.anrisoftware.sscontrol.dhclient.ubuntu
 
+import static java.util.regex.Pattern.*
 import groovy.util.logging.Slf4j
 
 import org.apache.commons.io.FileUtils
@@ -116,7 +117,7 @@ class Ubuntu_10_04Script extends LinuxScript {
 		service.sends.inject(list) { it, send ->
 			it << new TokenTemplate("\\#?send .*;", configuration[i++])
 		}
-		list << new TokenTemplate("\\#?request .*;", configuration[i++])
+		list << new TokenTemplate("\\#?request ([\\w\\-,\\s]?)*;", configuration[i++], DOTALL)
 		service.prepends.inject(list) { it, prepend ->
 			it << new TokenTemplate("\\#?prepend .*;", configuration[i++])
 		}

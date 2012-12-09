@@ -27,10 +27,10 @@ send host-name "<hostname>";
 prepend domain_name_servers 127.0.0.1;
 # SSCONTROL-dhclient-END
 
-request subnet-mask, broadcast-address, time-offset, routers,
-    domain-name, domain-name-servers, domain-search, host-name,
-    netbios-name-servers, netbios-scope, interface-mtu,
-    rfc3442-classless-static-routes, ntp-servers;
+# SSCONTROL-dhclient
+request subnet-mask, broadcast-address, time-offset, routers, domain-name, domain-search, host-name, netbios-name-servers, netbios-scope, interface-mtu, rfc3442-classless-static-routes, ntp-servers;
+# SSCONTROL-dhclient-END
+
 #require subnet-mask, domain-name-servers;
 #timeout 60;
 #retry 60;
@@ -60,6 +60,3 @@ request subnet-mask, broadcast-address, time-offset, routers,
 #  rebind 2 2000/1/12 00:00:01;
 #  expire 2 2000/1/12 00:00:01;
 #}
-# SSCONTROL-dhclient
-request subnet-mask, broadcast-address, time-offset, routers, domain-name, domain-search, host-name, netbios-name-servers, netbios-scope, interface-mtu, rfc3442-classless-static-routes, ntp-servers;
-# SSCONTROL-dhclient-END

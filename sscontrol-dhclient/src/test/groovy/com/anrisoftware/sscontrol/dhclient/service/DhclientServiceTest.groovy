@@ -26,7 +26,6 @@ import org.junit.Before
 import org.junit.Test
 
 import com.anrisoftware.sscontrol.core.activator.CoreModule
-import com.anrisoftware.sscontrol.core.api.ServiceException
 import com.anrisoftware.sscontrol.core.api.ServiceLoader as SscontrolServiceLoader
 import com.anrisoftware.sscontrol.core.api.ServicesRegistry
 import com.google.inject.Guice
@@ -96,17 +95,6 @@ class DhclientServiceTest {
 			copyResourceToCommand(installPackagesCommand, new File(it, "/usr/bin/aptitude"))
 			copyResourceToFile(dhclientFile, new File(it, "/etc/dhcp3/dhclient.conf"))
 		}, tmp
-	}
-
-	@Test
-	void "load hostname service with null value"() {
-		ServicesRegistry registry = injector.getInstance ServicesRegistry
-		SscontrolServiceLoader loader = injector.getInstance SscontrolServiceLoader
-		loader.loadService(ubuntu1004Profile, variables, registry, null)
-		def profile = registry.getService("profile")[0]
-		shouldFailWith ServiceException, {
-			loader.loadService(hostnameNullService, variables, registry, profile)
-		}
 	}
 
 	static {

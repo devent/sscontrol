@@ -29,13 +29,13 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import com.anrisoftware.propertiesutils.ContextProperties;
 import com.anrisoftware.resources.templates.api.TemplatesFactory;
 import com.anrisoftware.sscontrol.core.api.ProfileService;
 import com.anrisoftware.sscontrol.core.api.Service;
@@ -71,17 +71,23 @@ class DnsServiceImpl extends GroovyObjectSupport implements Service {
 
 	private ProfileService profile;
 
-	private int serial;
+	private final List<String> bindAddresses;
 
-	private List<String> bindAddresses;
+	private int serial;
 
 	@Inject
 	DnsServiceImpl(DnsServiceImplLogger logger,
 			Map<String, Provider<Script>> scripts, TemplatesFactory templates,
-			@Named("hostname-service-properties") Properties properties) {
+			@Named("dns-defaults-properties") ContextProperties p) {
 		this.log = logger;
 		this.scripts = scripts;
 		this.templatesFactory = templates;
+		this.bindAddresses = new ArrayList<String>();
+		setDefaultBindAddresses(p);
+	}
+
+	private void setDefaultBindAddresses(ContextProperties p) {
+		bindAddresses.addAll(p.getListProperty("default_bind_addresses"));
 	}
 
 	/**
@@ -191,7 +197,8 @@ class DnsServiceImpl extends GroovyObjectSupport implements Service {
 
 	@Override
 	public String toString() {
-		return new ToStringBuilder(this).toString();
+		return new ToStringBuilder(this).append("serial", serial)
+				.append("bind addresses", bindAddresses).toString();
 	}
 
 }

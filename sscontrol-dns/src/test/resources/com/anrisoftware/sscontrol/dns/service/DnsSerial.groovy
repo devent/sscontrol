@@ -1,2 +1,2 @@
 package com.anrisoftware.sscontrol.dns.service
-dns { serial 1 }
+dns { serial 99 }

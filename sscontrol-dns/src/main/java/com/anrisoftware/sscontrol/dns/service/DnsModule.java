@@ -23,11 +23,11 @@ import groovy.lang.Script;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.Properties;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
 
+import com.anrisoftware.propertiesutils.ContextProperties;
 import com.anrisoftware.propertiesutils.ContextPropertiesFactory;
 import com.anrisoftware.resources.templates.maps.TemplatesDefaultMapsModule;
 import com.anrisoftware.resources.templates.templates.TemplatesResourcesModule;
@@ -48,8 +48,8 @@ import com.google.inject.multibindings.MapBinder;
  */
 class DnsModule extends AbstractModule {
 
-	private static final URL HOSTNAME_SERVICE_PROPERTIES_RESOURCE = DnsModule.class
-			.getResource("hostname_service.properties");
+	private static final URL DNS_DEFAULTS_PROPERTIES_RESOURCE = DnsModule.class
+			.getResource("dns_defaults.properties");
 
 	@Override
 	protected void configure() {
@@ -71,10 +71,10 @@ class DnsModule extends AbstractModule {
 
 	@Provides
 	@Singleton
-	@Named("hostname-service-properties")
-	Properties getHostnameServiceProperties() throws IOException {
+	@Named("dns-defaults-properties")
+	ContextProperties getDnsDefaultsProperties() throws IOException {
 		return new ContextPropertiesFactory(DnsServiceImpl.class)
 				.withProperties(System.getProperties()).fromResource(
-						HOSTNAME_SERVICE_PROPERTIES_RESOURCE);
+						DNS_DEFAULTS_PROPERTIES_RESOURCE);
 	}
 }

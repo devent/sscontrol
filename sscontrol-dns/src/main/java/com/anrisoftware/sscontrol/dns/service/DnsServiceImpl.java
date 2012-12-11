@@ -52,6 +52,8 @@ import com.google.inject.Provider;
  */
 class DnsServiceImpl extends GroovyObjectSupport implements Service {
 
+	private static final String BIND_ADDRESSES_PROPERTY = "default_bind_addresses";
+
 	/**
 	 * @version 0.1
 	 */
@@ -75,6 +77,29 @@ class DnsServiceImpl extends GroovyObjectSupport implements Service {
 
 	private int serial;
 
+	/**
+	 * Sets the default DNS service properties.
+	 * 
+	 * @param logger
+	 *            the {@link DnsServiceImplLogger} for logging messages.
+	 * 
+	 * @param scripts
+	 *            the {@link Map} with the DNS service {@link Script} scripts.
+	 * 
+	 * @param templates
+	 *            the {@link TemplatesFactory} to create new templates
+	 *            resources.
+	 * 
+	 * @param p
+	 *            the default DNS service {@link ContextProperties} properties.
+	 *            Expects the following properties:
+	 *            <dl>
+	 *            <dt>
+	 *            {@code com.anrisoftware.sscontrol.dns.service.default_bind_addresses}
+	 *            </dt>
+	 *            <dd>A list of the default bind addresses.</dd>
+	 *            </dl>
+	 */
 	@Inject
 	DnsServiceImpl(DnsServiceImplLogger logger,
 			Map<String, Provider<Script>> scripts, TemplatesFactory templates,
@@ -87,7 +112,7 @@ class DnsServiceImpl extends GroovyObjectSupport implements Service {
 	}
 
 	private void setDefaultBindAddresses(ContextProperties p) {
-		bindAddresses.addAll(p.getListProperty("default_bind_addresses"));
+		bindAddresses.addAll(p.getListProperty(BIND_ADDRESSES_PROPERTY));
 	}
 
 	/**

@@ -40,6 +40,7 @@ import com.anrisoftware.resources.templates.api.TemplatesFactory;
 import com.anrisoftware.sscontrol.core.api.ProfileService;
 import com.anrisoftware.sscontrol.core.api.Service;
 import com.anrisoftware.sscontrol.core.api.ServiceException;
+import com.anrisoftware.sscontrol.dns.statements.ARecord;
 import com.anrisoftware.sscontrol.dns.statements.DnsZone;
 import com.anrisoftware.sscontrol.dns.statements.DnsZoneFactory;
 import com.anrisoftware.sscontrol.workers.command.script.ScriptCommandWorkerFactory;
@@ -200,6 +201,65 @@ class DnsServiceImpl extends GroovyObjectSupport implements Service {
 		DnsZone zone = dnsZoneFactory.create(name, primaryNameServer, email,
 				serial);
 		zones.add(zone);
+		return zone;
+	}
+
+	/**
+	 * Adds a new DNS zone with an A-record. The A-record is created with the
+	 * name of the zone and the specified IP address.
+	 * 
+	 * @param name
+	 *            the name of the zone.
+	 * 
+	 * @param primaryNameServer
+	 *            the name of the primary DNS server.
+	 * 
+	 * @param email
+	 *            the email address for the zone.
+	 * 
+	 * @param address
+	 *            the IP address for the zone.
+	 * 
+	 * @return the {@link DnsZone} DNS zone.
+	 */
+	public DnsZone zone(String name, String primaryNameServer, String email,
+			String address) {
+		DnsZone zone = dnsZoneFactory.create(name, primaryNameServer, email,
+				serial);
+		zones.add(zone);
+		zone.a_record(name, address);
+		return zone;
+	}
+
+	/**
+	 * Adds a new DNS zone with an A-record. The A-record is created with the
+	 * name of the zone and the specified IP address. The A-record will have the
+	 * specified TTL.
+	 * 
+	 * @param name
+	 *            the name of the zone.
+	 * 
+	 * @param primaryNameServer
+	 *            the name of the primary DNS server.
+	 * 
+	 * @param email
+	 *            the email address for the zone.
+	 * 
+	 * @param address
+	 *            the IP address for the zone.
+	 * 
+	 * @param ttl
+	 *            the TTL for the A-record.
+	 * 
+	 * @return the {@link DnsZone} DNS zone.
+	 */
+	public DnsZone zone(String name, String primaryNameServer, String email,
+			String address, long ttl) {
+		DnsZone zone = dnsZoneFactory.create(name, primaryNameServer, email,
+				serial);
+		zones.add(zone);
+		ARecord arecord = zone.a_record(name, address);
+		arecord.ttl(ttl);
 		return zone;
 	}
 

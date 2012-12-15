@@ -80,7 +80,21 @@ abstract class AbstractRecord extends GroovyObjectSupport implements
 	public AbstractRecord ttl(long timeSeconds) {
 		log.checkTtl(timeSeconds, this);
 		ttl = new Duration(timeSeconds * 1000);
-		log.ttlSet(this, timeSeconds);
+		log.ttlSet(this, ttl);
+		return this;
+	}
+
+	/**
+	 * Sets the time to live time.
+	 * 
+	 * @param time
+	 *            the {@link Duration} duration to live time.
+	 * 
+	 * @return this {@link AbstractRecord}.
+	 */
+	public AbstractRecord ttl(Duration time) {
+		ttl = time;
+		log.ttlSet(this, time);
 		return this;
 	}
 

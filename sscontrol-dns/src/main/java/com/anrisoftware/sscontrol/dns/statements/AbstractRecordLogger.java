@@ -4,6 +4,7 @@ import static com.anrisoftware.sscontrol.dns.statements.AbstractRecord.TTL_MAX_S
 import static com.anrisoftware.sscontrol.dns.statements.AbstractRecord.TTL_MIN_SECONDS;
 import static org.apache.commons.lang3.Validate.inclusiveBetween;
 
+import org.joda.time.Duration;
 import org.slf4j.Logger;
 
 import com.anrisoftware.globalpom.log.AbstractSerializedLogger;
@@ -23,12 +24,12 @@ abstract class AbstractRecordLogger extends AbstractSerializedLogger {
 		super(contextClass);
 	}
 
-	void ttlSet(AbstractRecord record, long time) {
+	void ttlSet(AbstractRecord record, Duration ttl) {
 		if (log.isDebugEnabled()) {
-			log.debug("Set the TTL time {}s for the zone record {}.", time,
+			log.debug("Set the TTL time {}s for the zone record {}.", ttl,
 					record);
 		} else {
-			log.info("Set the TTL time {}s for the zone record {}.", time,
+			log.info("Set the TTL time {}s for the zone record {}.", ttl,
 					record);
 		}
 	}

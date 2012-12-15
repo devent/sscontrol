@@ -57,6 +57,8 @@ class DnsServiceTest {
 
 	static dnsZoneNsRecordsScript = resourceURL("DnsZoneNSRecords.groovy", DnsServiceTest)
 
+	static dnsAutomaticARecordZoneScript = resourceURL("DnsAutomaticARecordForSoa.groovy", DnsServiceTest)
+
 	Injector injector
 
 	File tmp
@@ -85,7 +87,7 @@ class DnsServiceTest {
 		withFiles NAME, {}, {}, tmp
 
 		def service = assertService registry.getService("dns")[0], 0, ["127.0.0.1"]
-		def zone = assertZone service.zones[0], "testa.com", "ns1.testa.com", "hostmaster@testa.com"
+		def zone = assertZone service.zones[0], "testa.com", "ns1.testa.com", "hostmaster@testa.com", 86400
 		assertARecord zone.aaRecords[0], "testa.com", "192.168.0.49", 1
 		assertARecord zone.aaRecords[1], "testb.com", "192.168.0.50", 86400
 		assertARecord zone.aaRecords[2], "testc.com", "192.168.0.51", 86400
@@ -101,7 +103,7 @@ class DnsServiceTest {
 		withFiles NAME, {}, {}, tmp
 
 		def service = assertService registry.getService("dns")[0], 0, ["127.0.0.1"]
-		def zone = assertZone service.zones[0], "testa.com", "ns1.testa.com", "hostmaster@testa.com"
+		def zone = assertZone service.zones[0], "testa.com", "ns1.testa.com", "hostmaster@testa.com", 86400
 		assertCNAMERecord zone.cnameRecords[0], "www.testa.com", "testa.com", 86400
 		assertCNAMERecord zone.cnameRecords[1], "www.testb.com", "testb.com", 1
 	}
@@ -116,7 +118,7 @@ class DnsServiceTest {
 		withFiles NAME, {}, {}, tmp
 
 		def service = assertService registry.getService("dns")[0], 0, ["127.0.0.1"]
-		def zone = assertZone service.zones[0], "testa.com", "ns1.testa.com", "hostmaster@testa.com"
+		def zone = assertZone service.zones[0], "testa.com", "ns1.testa.com", "hostmaster@testa.com", 86400
 		assertARecord zone.aaRecords[0], "mx1.testa.com", "192.168.0.49", 86400
 		assertARecord zone.aaRecords[1], "mx2.testa.com", "192.168.0.50", 86400
 		assertARecord zone.aaRecords[2], "mx3.testa.com", "192.168.0.51", 86400
@@ -137,11 +139,27 @@ class DnsServiceTest {
 		withFiles NAME, {}, {}, tmp
 
 		def service = assertService registry.getService("dns")[0], 0, ["127.0.0.1"]
-		def zone = assertZone service.zones[0], "testa.com", "ns1.testa.com", "hostmaster@testa.com"
+		def zone = assertZone service.zones[0], "testa.com", "ns1.testa.com", "hostmaster@testa.com", 86400
 		assertARecord zone.aaRecords[0], "ns1.testa.com", "192.168.0.49", 86400
 		assertARecord zone.aaRecords[1], "ns2.testa.com", "192.168.0.50", 86400
 		assertNSRecord zone.nsRecords[0], "ns1.testa.com", zone.aaRecords[0], 1
 		assertNSRecord zone.nsRecords[1], "ns2.testa.com", zone.aaRecords[1], 86400
+	}
+
+	@Test
+	void "dns automatic a-record for zone script"() {
+		ServicesRegistry registry = injector.getInstance ServicesRegistry
+		SscontrolServiceLoader loader = injector.getInstance SscontrolServiceLoader
+		loader.loadService(ubuntu1004Profile, variables, registry, null)
+		def profile = registry.getService("profile")[0]
+		loader.loadService(dnsAutomaticARecordZoneScript, variables, registry, profile)
+		withFiles NAME, {}, {}, tmp
+
+		def service = assertService registry.getService("dns")[0], 0, ["127.0.0.1"]
+		def zone = assertZone service.zones[0], "testa.com", "ns1.testa.com", "hostmaster@testa.com", 86400
+		assertARecord zone.aaRecords[0], "testa.com", "192.168.0.49", 86400
+		zone = assertZone service.zones[1], "testb.com", "ns1.testb.com", "hostmaster@testb.com", 86400
+		assertARecord zone.aaRecords[0], "testb.com", "192.168.0.50", 1
 	}
 
 	static {
@@ -158,6 +176,7 @@ class DnsServiceTest {
 		assertStringContent zone.name, args[0]
 		assertStringContent zone.primaryNameServer, args[1]
 		assertStringContent zone.email, args[2]
+		assert zone.ttl.millis == args[3]*1000
 		zone
 	}
 

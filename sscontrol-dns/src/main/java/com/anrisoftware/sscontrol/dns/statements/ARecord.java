@@ -104,4 +104,5 @@ public class ARecord extends AbstractRecord {
 		return new ToStringBuilder(this).append("name", name)
 				.append("address", address).append("TTL", getTtl()).toString();
 	}
+
 }

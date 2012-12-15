@@ -19,7 +19,6 @@
 package com.anrisoftware.sscontrol.profile.service;
 
 import static org.apache.commons.collections.map.PredicatedMap.decorate;
-import groovy.lang.Closure;
 import groovy.lang.GroovyObjectSupport;
 
 import java.util.HashMap;
@@ -86,7 +85,15 @@ class ProfileServiceImpl extends GroovyObjectSupport implements ProfileService {
 		return profileName;
 	}
 
-	public Service profile(String name, Closure<?> closure) {
+	/**
+	 * Adds a new profile with the specified name.
+	 * 
+	 * @param name
+	 *            the profile.
+	 * 
+	 * @return this {@link ProfileService}.
+	 */
+	public Service profile(String name) {
 		profileName = name;
 		return this;
 	}

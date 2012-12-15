@@ -24,6 +24,8 @@ import groovy.lang.GroovyObject;
 import groovy.lang.Script;
 import groovy.util.Proxy;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ServiceLoader;
 import java.util.Stack;
 
@@ -63,13 +65,18 @@ public abstract class ScriptBuilder extends Script {
 			delegate.pop();
 		}
 		Closure<?> closure = null;
-		for (Object object : asArray(args)) {
+		Object[] argsArray = asArray(args);
+		List<Object> argsList = new ArrayList<Object>(argsArray.length);
+		for (Object object : argsArray) {
 			if (object instanceof Closure) {
 				closure = (Closure<?>) object;
+			} else {
+				argsList.add(object);
 			}
 		}
 
-		GroovyObject ret = (GroovyObject) current.invokeMethod(name, args);
+		GroovyObject ret = (GroovyObject) current.invokeMethod(name,
+				argsList.toArray());
 		if (ret == null) {
 			delegate.pop();
 			return this;

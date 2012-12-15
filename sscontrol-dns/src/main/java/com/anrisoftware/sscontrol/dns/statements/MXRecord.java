@@ -118,20 +118,10 @@ public class MXRecord extends AbstractRecord {
 		return aRecord;
 	}
 
-	/**
-	 * TTL is not supported for the MX-record.
-	 * 
-	 * @throws UnsupportedOperationException
-	 */
-	@Override
-	public AbstractRecord ttl(long timeSeconds) {
-		throw log.unsupportedTtl(this);
-	}
-
 	@Override
 	public String toString() {
 		ToStringBuilder s = new ToStringBuilder(this).append("name", name)
-				.append("priority", priority);
+				.append("priority", priority).append("ttl", getTtl());
 		if (aRecord != null) {
 			s.append("A-record", aRecord);
 		}

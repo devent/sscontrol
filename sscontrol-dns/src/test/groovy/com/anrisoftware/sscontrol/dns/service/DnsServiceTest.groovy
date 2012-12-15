@@ -119,8 +119,12 @@ class DnsServiceTest {
 		def zone = assertZone service.zones[0], "testa.com", "ns1.testa.com", "hostmaster@testa.com"
 		assertARecord zone.aaRecords[0], "mx1.testa.com", "192.168.0.49", 86400
 		assertARecord zone.aaRecords[1], "mx2.testa.com", "192.168.0.50", 86400
-		assertMXRecord zone.mxRecords[0], "mx1.testa.com", zone.aaRecords[0], 20
-		assertMXRecord zone.mxRecords[1], "mx2.testa.com", zone.aaRecords[1], 10
+		assertARecord zone.aaRecords[2], "mx3.testa.com", "192.168.0.51", 86400
+		assertARecord zone.aaRecords[3], "mx4.testa.com", "192.168.0.52", 86400
+		assertMXRecord zone.mxRecords[0], "mx1.testa.com", zone.aaRecords[0], 10, 86400
+		assertMXRecord zone.mxRecords[1], "mx2.testa.com", zone.aaRecords[1], 20, 86400
+		assertMXRecord zone.mxRecords[2], "mx3.testa.com", zone.aaRecords[2], 10, 1
+		assertMXRecord zone.mxRecords[3], "mx4.testa.com", zone.aaRecords[3], 20, 1
 	}
 
 	@Test
@@ -173,6 +177,7 @@ class DnsServiceTest {
 		assertStringContent mxrecord.name, args[0]
 		assert mxrecord.aRecord == args[1]
 		assert mxrecord.priority == args[2]
+		assert mxrecord.ttl.millis == args[3]*1000
 	}
 
 	private assertNSRecord(NSRecord nsrecord, Object... args) {

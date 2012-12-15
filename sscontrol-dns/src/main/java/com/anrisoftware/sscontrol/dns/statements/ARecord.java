@@ -2,6 +2,8 @@ package com.anrisoftware.sscontrol.dns.statements;
 
 import javax.inject.Named;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.anrisoftware.propertiesutils.ContextProperties;
@@ -74,6 +76,27 @@ public class ARecord extends AbstractRecord {
 	 */
 	public String getAddress() {
 		return address;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null) {
+			return false;
+		}
+		if (obj == this) {
+			return true;
+		}
+		if (obj.getClass() != getClass()) {
+			return false;
+		}
+		ARecord rhs = (ARecord) obj;
+		return new EqualsBuilder().append(name, rhs.name)
+				.append(address, rhs.address).isEquals();
+	}
+
+	@Override
+	public int hashCode() {
+		return new HashCodeBuilder().append(name).append(address).toHashCode();
 	}
 
 	@Override

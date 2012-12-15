@@ -9,6 +9,7 @@ import java.util.List;
 
 import javax.inject.Named;
 
+import org.apache.commons.collections.list.SetUniqueList;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.joda.time.Duration;
 
@@ -120,6 +121,7 @@ public class DnsZone extends GroovyObjectSupport implements Serializable {
 	 * @param serial
 	 *            The serial number of this zone file.
 	 */
+	@SuppressWarnings("unchecked")
 	@Inject
 	DnsZone(DnsZoneLogger log, ARecordFactory aRecordFactory,
 			NSRecordFactory nsRecordFactory, MXRecordFactory mxRecordFactory,
@@ -133,7 +135,7 @@ public class DnsZone extends GroovyObjectSupport implements Serializable {
 		this.nsRecordFactory = nsRecordFactory;
 		this.mxRecordFactory = mxRecordFactory;
 		this.cnameRecordFactory = cnameRecordFactory;
-		this.aaRecords = new ArrayList<ARecord>();
+		this.aaRecords = SetUniqueList.decorate(new ArrayList<ARecord>());
 		this.cnameRecords = new ArrayList<CNAMERecord>();
 		this.mxRecords = new ArrayList<MXRecord>();
 		this.nsRecords = new ArrayList<NSRecord>();
@@ -308,9 +310,14 @@ public class DnsZone extends GroovyObjectSupport implements Serializable {
 	 */
 	public ARecord a_record(String name, String address) {
 		ARecord record = aRecordFactory.create(this, name, address);
-		aaRecords.add(record);
-		log.aRecordAdded(this, record);
-		return record;
+		int index = aaRecords.indexOf(record);
+		if (index == -1) {
+			aaRecords.add(record);
+			log.aRecordAdded(this, record);
+			return record;
+		} else {
+			return aaRecords.get(index);
+		}
 	}
 
 	/**

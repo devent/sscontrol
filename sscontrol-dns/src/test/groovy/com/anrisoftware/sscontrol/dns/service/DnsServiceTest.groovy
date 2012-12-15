@@ -61,6 +61,8 @@ class DnsServiceTest {
 
 	static dnsNoAutomaticARecordsScript = resourceURL("DnsNoAutomaticARecords.groovy", DnsServiceTest)
 
+	static dnsOriginShortcutScript = resourceURL("DnsOriginShortcut.groovy", DnsServiceTest)
+
 	Injector injector
 
 	File tmp
@@ -178,6 +180,25 @@ class DnsServiceTest {
 		assertARecord zone.aaRecords[0], "testa.com", "192.168.0.49", 86400
 		assertNSRecord zone.nsRecords[0], "ns2.testa.com", null, 86400
 		assertMXRecord zone.mxRecords[0], "mx1.testa.com", null, 10, 86400
+		assertCNAMERecord zone.cnameRecords[0], "www.testa.com", "testa.com", 86400
+	}
+
+	@Test
+	void "dns origin shortcut script"() {
+		ServicesRegistry registry = injector.getInstance ServicesRegistry
+		SscontrolServiceLoader loader = injector.getInstance SscontrolServiceLoader
+		loader.loadService(ubuntu1004Profile, variables, registry, null)
+		def profile = registry.getService("profile")[0]
+		loader.loadService(dnsOriginShortcutScript, variables, registry, profile)
+		withFiles NAME, {}, {}, tmp
+
+		def service = assertService registry.getService("dns")[0], 0, ["127.0.0.1"]
+		def zone = assertZone service.zones[0], "testa.com", "ns1.testa.com", "hostmaster@testa.com", 86400
+		assertARecord zone.aaRecords[0], "testa.com", "192.168.0.49", 86400
+		assertARecord zone.aaRecords[1], "ns2.testa.com", "192.168.0.50", 86400
+		assertARecord zone.aaRecords[2], "mx1.testa.com", "192.168.0.51", 86400
+		assertNSRecord zone.nsRecords[0], "ns2.testa.com", zone.aaRecords[1], 86400
+		assertMXRecord zone.mxRecords[0], "mx1.testa.com", zone.aaRecords[2], 10, 86400
 		assertCNAMERecord zone.cnameRecords[0], "www.testa.com", "testa.com", 86400
 	}
 

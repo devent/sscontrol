@@ -40,11 +40,8 @@ public abstract class ScriptBuilder extends Script {
 
 	private Service service;
 
-	private boolean pop;
-
 	public ScriptBuilder() {
 		this.delegate = new Stack<GroovyObject>();
-		pop = false;
 	}
 
 	public Service getService() {
@@ -60,9 +57,6 @@ public abstract class ScriptBuilder extends Script {
 			current = new Proxy().wrap(service);
 		} else {
 			current = delegate.peek();
-		}
-		if (pop) {
-			delegate.pop();
 		}
 		Closure<?> closure = null;
 		Object[] argsArray = asArray(args);
@@ -81,15 +75,12 @@ public abstract class ScriptBuilder extends Script {
 			delegate.pop();
 			return this;
 		}
-		if (ret != current) {
+		if (ret != current && closure != null) {
 			delegate.push(ret);
 		}
 		if (closure != null) {
 			closure.call();
 			delegate.pop();
-			pop = false;
-		} else {
-			pop = false;
 		}
 		return this;
 	}

@@ -73,7 +73,7 @@
 				<!-- LGPL -->
 				<groupId>com.anrisoftware.propertiesutils</groupId>
 				<artifactId>propertiesutils-contextproperties</artifactId>
-				<version>1.4-SNAPSHOT</version>
+				<version>1.5-SNAPSHOT</version>
 			</dependency>
 
 			<!-- resources -->

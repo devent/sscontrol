@@ -52,12 +52,10 @@ public class NSRecord extends AbstractRecord {
 	 * @param name
 	 *            the {@link String} name of the record. The place holder
 	 *            {@code %} is replaced by the zone name.
-	 * 
-	 * @since 1.1
 	 */
 	@Inject
 	NSRecord(NSRecordLogger logger,
-			@Named("dns-service-properties") ContextProperties p,
+			@Named("dns-defaults-properties") ContextProperties p,
 			@Assisted DnsZone zone, @Assisted String name) {
 		super(logger, p, zone);
 		this.log = logger;

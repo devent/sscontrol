@@ -5,6 +5,7 @@ import java.io.Serializable;
 import javax.inject.Named;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.joda.time.Duration;
 
 import com.anrisoftware.propertiesutils.ContextProperties;
 import com.google.inject.Inject;
@@ -18,7 +19,7 @@ import com.google.inject.assistedinject.Assisted;
  */
 abstract class AbstractRecord implements Serializable {
 
-	private static final String TTL_SECONDS_PROPERTY = "default_ttl_seconds";
+	private static final String TTL_PROPERTY = "default_ttl";
 
 	/**
 	 * @version 1.0
@@ -29,7 +30,7 @@ abstract class AbstractRecord implements Serializable {
 
 	private final DnsZone zone;
 
-	private long ttlSeconds;
+	private Duration ttl;
 
 	static final long TTL_MIN_TIME_SECONDS = 0l;
 
@@ -44,8 +45,8 @@ abstract class AbstractRecord implements Serializable {
 	 * @param p
 	 *            the {@link ContextProperties} with the property:
 	 *            <dl>
-	 *            <dt>{@code default_ttl_seconds}</dt>
-	 *            <dd>the default TTL time for the record in seconds.</dd>
+	 *            <dt>{@code default_ttl}</dt>
+	 *            <dd>the default TTL time for the record.</dd>
 	 *            </dl>
 	 * 
 	 * @param zone
@@ -56,9 +57,13 @@ abstract class AbstractRecord implements Serializable {
 	AbstractRecord(AbstractRecordLogger log,
 			@Named("dns-service-properties") ContextProperties p,
 			@Assisted DnsZone zone) {
-		this.ttlSeconds = p.getNumberProperty(TTL_SECONDS_PROPERTY).longValue();
 		this.log = log;
 		this.zone = zone;
+		setupDefaults(p);
+	}
+
+	private void setupDefaults(ContextProperties p) {
+		this.ttl = p.getDurationProperty(TTL_PROPERTY);
 	}
 
 	/**
@@ -71,7 +76,7 @@ abstract class AbstractRecord implements Serializable {
 	 */
 	public AbstractRecord ttl(long timeSeconds) {
 		log.checkTtl(timeSeconds, this);
-		ttlSeconds = timeSeconds;
+		ttl = new Duration(timeSeconds * 1000);
 		log.ttlSet(this, timeSeconds);
 		return this;
 	}
@@ -88,16 +93,16 @@ abstract class AbstractRecord implements Serializable {
 	/**
 	 * Returns the time to live for the record.
 	 * 
-	 * @return the time to live in seconds.
+	 * @return the time to live {@link Duration}.
 	 */
-	public long getTtlSeconds() {
-		return ttlSeconds;
+	public Duration getTtl() {
+		return ttl;
 	}
 
 	@Override
 	public String toString() {
 		return new ToStringBuilder(this).append("zone", zone.getName())
-				.append("ttl [s]", ttlSeconds).toString();
+				.append("ttl [s]", ttl).toString();
 	}
 
 }

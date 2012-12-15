@@ -5,11 +5,11 @@ import com.google.inject.assistedinject.FactoryModuleBuilder;
 
 /**
  * Installs the DNS service statements factories.
- * 
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class DnsDirectivesModule extends AbstractModule {
+public class DnsStatementsModule extends AbstractModule {
 
 	@Override
 	protected void configure() {

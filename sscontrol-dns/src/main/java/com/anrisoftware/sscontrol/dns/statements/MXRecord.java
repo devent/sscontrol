@@ -54,7 +54,7 @@ public class MXRecord extends AbstractRecord {
 	 */
 	@Inject
 	MXRecord(MXRecordLogger logger,
-			@Named("dns-service-properties") ContextProperties p,
+			@Named("dns-defaults-properties") ContextProperties p,
 			@Assisted DnsZone zone, @Assisted String name) {
 		super(logger, p, zone);
 		this.log = logger;

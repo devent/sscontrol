@@ -34,8 +34,8 @@ public class ARecord extends AbstractRecord {
 	 * @param p
 	 *            the {@link ContextProperties} with the property:
 	 *            <dl>
-	 *            <dt>{@code default_ttl_seconds}</dt>
-	 *            <dd>the default TTL time for the record in seconds.</dd>
+	 *            <dt>{@code default_ttl}</dt>
+	 *            <dd>the default TTL time for the record.</dd>
 	 *            </dl>
 	 * 
 	 * @param zone
@@ -50,7 +50,7 @@ public class ARecord extends AbstractRecord {
 	 */
 	@Inject
 	ARecord(ARecordLogger logger,
-			@Named("dns-service-properties") ContextProperties p,
+			@Named("dns-defaults-properties") ContextProperties p,
 			@Assisted DnsZone zone, @Assisted("name") String name,
 			@Assisted("address") String address) {
 		super(logger, p, zone);
@@ -79,7 +79,6 @@ public class ARecord extends AbstractRecord {
 	@Override
 	public String toString() {
 		return new ToStringBuilder(this).append("name", name)
-				.append("address", address).append("TTL", getTtlSeconds())
-				.toString();
+				.append("address", address).append("TTL", getTtl()).toString();
 	}
 }

@@ -35,8 +35,8 @@ public class CNAMERecord extends AbstractRecord {
 	 * @param p
 	 *            the {@link ContextProperties} with the property:
 	 *            <dl>
-	 *            <dt>{@code default_ttl_seconds}</dt>
-	 *            <dd>the default TTL time for the record in seconds.</dd>
+	 *            <dt>{@code default_ttl}</dt>
+	 *            <dd>the default TTL time for the record.</dd>
 	 *            </dl>
 	 * 
 	 * @param zone
@@ -52,7 +52,7 @@ public class CNAMERecord extends AbstractRecord {
 	 */
 	@Inject
 	CNAMERecord(CNAMERecordLogger log,
-			@Named("dns-service-properties") ContextProperties p,
+			@Named("dns-defaults-properties") ContextProperties p,
 			@Assisted DnsZone zone, @Assisted("name") String name,
 			@Assisted("alias") String alias) {
 		super(log, p, zone);
@@ -81,7 +81,6 @@ public class CNAMERecord extends AbstractRecord {
 	@Override
 	public String toString() {
 		return new ToStringBuilder(this).append("name", name)
-				.append("alias", alias).append("TTL", getTtlSeconds())
-				.toString();
+				.append("alias", alias).append("TTL", getTtl()).toString();
 	}
 }

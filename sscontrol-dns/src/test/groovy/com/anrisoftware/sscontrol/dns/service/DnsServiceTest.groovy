@@ -44,6 +44,8 @@ class DnsServiceTest {
 
 	static dnsSerialScript = resourceURL("DnsSerial.groovy", DnsServiceTest)
 
+	static dnsZoneARecordsScript = resourceURL("DnsZoneARecords.groovy", DnsServiceTest)
+
 	Injector injector
 
 	File tmp
@@ -57,6 +59,20 @@ class DnsServiceTest {
 		loader.loadService(ubuntu1004Profile, variables, registry, null)
 		def profile = registry.getService("profile")[0]
 		loader.loadService(dnsSerialScript, variables, registry, profile)
+		withFiles NAME, {}, {}, tmp
+
+		DnsServiceImpl service = registry.getService("dns")[0]
+		assert service.serial == 99
+		assert service.bindAddresses == ["127.0.0.1"]
+	}
+
+	@Test
+	void "dns zone a-records script"() {
+		ServicesRegistry registry = injector.getInstance ServicesRegistry
+		SscontrolServiceLoader loader = injector.getInstance SscontrolServiceLoader
+		loader.loadService(ubuntu1004Profile, variables, registry, null)
+		def profile = registry.getService("profile")[0]
+		loader.loadService(dnsZoneARecordsScript, variables, registry, profile)
 		withFiles NAME, {}, {}, tmp
 
 		DnsServiceImpl service = registry.getService("dns")[0]

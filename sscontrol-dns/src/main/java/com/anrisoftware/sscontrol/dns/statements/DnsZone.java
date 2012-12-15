@@ -9,6 +9,7 @@ import java.util.List;
 import javax.inject.Named;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.joda.time.Duration;
 
 import com.anrisoftware.propertiesutils.ContextProperties;
 import com.google.inject.Inject;
@@ -33,15 +34,15 @@ public class DnsZone implements Serializable {
 
 	static final long MAX_TIME_SECONDS = Long.MAX_VALUE;
 
-	private static final String TTL_SECONDS_PROPERTY = "default_ttl_seconds";
+	private static final String TTL_PROPERTY = "default_ttl";
 
-	private static final String REFRESH_SECONDS_PROPERTY = "default_refresh_seconds";
+	private static final String REFRESH_PROPERTY = "default_refresh";
 
-	private static final String RETRY_SECONDS_PROPERTY = "default_retry_seconds";
+	private static final String RETRY_PROPERTY = "default_retry";
 
-	private static final String EXPIRE_SECONDS_PROPERTY = "default_expire_seconds";
+	private static final String EXPIRE_PROPERTY = "default_expire";
 
-	private static final String MINIMUM_TTL_SECONDS_PROPERTY = "default_minimum_ttl_seconds";
+	private static final String MINIMUM_TTL_PROPERTY = "default_minimum_ttl";
 
 	private final ARecordFactory aRecordFactory;
 
@@ -61,15 +62,15 @@ public class DnsZone implements Serializable {
 
 	private final long serial;
 
-	private long ttlSeconds;
+	private Duration ttl;
 
-	private long refreshSeconds;
+	private Duration refresh;
 
-	private long retrySeconds;
+	private Duration retry;
 
-	private long expireSeconds;
+	private Duration expire;
 
-	private long minimumTtlSeconds;
+	private Duration minimumTtl;
 
 	private final List<ARecord> aaRecords;
 
@@ -88,19 +89,19 @@ public class DnsZone implements Serializable {
 	 * @param p
 	 *            the {@link ContextProperties} with the property:
 	 *            <dl>
-	 *            <dt>{@code default_ttl_seconds}</dt>
+	 *            <dt>{@code default_ttl}</dt>
 	 *            <dd>the default TTL time for the zone in seconds.</dd>
 	 * 
-	 *            <dt>{@code default_refresh_seconds}</dt>
+	 *            <dt>{@code default_refresh}</dt>
 	 *            <dd>the default refresh time for the zone in seconds.</dd>
 	 * 
-	 *            <dt>{@code default_retry_seconds}</dt>
+	 *            <dt>{@code default_retry}</dt>
 	 *            <dd>the default retry time for the zone in seconds.</dd>
 	 * 
-	 *            <dt>{@code default_expire_seconds}</dt>
+	 *            <dt>{@code default_expire}</dt>
 	 *            <dd>the default expire time for the zone in seconds.</dd>
 	 * 
-	 *            <dt>{@code default_minimum_ttl_seconds}</dt>
+	 *            <dt>{@code default_minimum_ttl}</dt>
 	 *            <dd>the default minimum TTL time for the zone in seconds.</dd>
 	 *            </dl>
 	 * 
@@ -122,7 +123,7 @@ public class DnsZone implements Serializable {
 	DnsZone(DnsZoneLogger log, ARecordFactory aRecordFactory,
 			NSRecordFactory nsRecordFactory, MXRecordFactory mxRecordFactory,
 			CNAMERecordFactory cnameRecordFactory,
-			@Named("dns-service-properties") ContextProperties p,
+			@Named("dns-defaults-properties") ContextProperties p,
 			@Assisted("name") String name,
 			@Assisted("primaryNameServer") String primaryNameServer,
 			@Assisted("email") String email, @Assisted long serial) {
@@ -135,19 +136,19 @@ public class DnsZone implements Serializable {
 		this.cnameRecords = new ArrayList<CNAMERecord>();
 		this.mxRecords = new ArrayList<MXRecord>();
 		this.nsRecords = new ArrayList<NSRecord>();
-		this.ttlSeconds = p.getNumberProperty(TTL_SECONDS_PROPERTY).longValue();
-		this.refreshSeconds = p.getNumberProperty(REFRESH_SECONDS_PROPERTY)
-				.longValue();
-		this.retrySeconds = p.getNumberProperty(RETRY_SECONDS_PROPERTY)
-				.longValue();
-		this.expireSeconds = p.getNumberProperty(EXPIRE_SECONDS_PROPERTY)
-				.longValue();
-		this.minimumTtlSeconds = p.getNumberProperty(
-				MINIMUM_TTL_SECONDS_PROPERTY).longValue();
 		this.name = name;
 		this.primaryNameServer = primaryNameServer.replaceAll("%", name);
 		this.email = email.replaceAll("%", name);
 		this.serial = serial;
+		setupDefaults(p);
+	}
+
+	private void setupDefaults(ContextProperties p) {
+		this.ttl = p.getDurationProperty(TTL_PROPERTY);
+		this.refresh = p.getDurationProperty(REFRESH_PROPERTY);
+		this.retry = p.getDurationProperty(RETRY_PROPERTY);
+		this.expire = p.getDurationProperty(EXPIRE_PROPERTY);
+		this.minimumTtl = p.getDurationProperty(MINIMUM_TTL_PROPERTY);
 	}
 
 	/**
@@ -177,7 +178,7 @@ public class DnsZone implements Serializable {
 	 */
 	public DnsZone ttl(long timeSeconds) {
 		log.checkTtl(timeSeconds, this);
-		ttlSeconds = timeSeconds;
+		ttl = new Duration(timeSeconds * 1000);
 		log.ttlSet(this, timeSeconds);
 		return this;
 	}
@@ -196,7 +197,7 @@ public class DnsZone implements Serializable {
 	 */
 	public DnsZone refresh(long timeSeconds) {
 		log.checkRefreshTime(timeSeconds, this);
-		refreshSeconds = timeSeconds;
+		refresh = new Duration(timeSeconds * 1000);
 		log.refreshTimeSet(this, timeSeconds);
 		return this;
 	}
@@ -215,7 +216,7 @@ public class DnsZone implements Serializable {
 	 */
 	public DnsZone retry(long timeSeconds) {
 		log.checkRetryTime(timeSeconds, this);
-		retrySeconds = timeSeconds;
+		retry = new Duration(timeSeconds * 1000);
 		log.retryTimeSet(this, timeSeconds);
 		return this;
 	}
@@ -234,7 +235,7 @@ public class DnsZone implements Serializable {
 	 */
 	public DnsZone expire(long timeSeconds) {
 		log.checkExpireTime(timeSeconds, this);
-		expireSeconds = timeSeconds;
+		expire = new Duration(timeSeconds * 1000);
 		log.expireTimeSet(this, timeSeconds);
 		return this;
 	}
@@ -253,7 +254,7 @@ public class DnsZone implements Serializable {
 	 */
 	public DnsZone minimum_ttl(long timeSeconds) {
 		log.checkMinimumTtl(timeSeconds, this);
-		minimumTtlSeconds = timeSeconds;
+		minimumTtl = new Duration(timeSeconds * 1000);
 		log.minimumTtlSet(this, timeSeconds);
 		return this;
 	}
@@ -403,46 +404,46 @@ public class DnsZone implements Serializable {
 	/**
 	 * Returns the time to live time for this zone.
 	 * 
-	 * @return the TTL time in seconds.
+	 * @return the TTL time {@link Duration}.
 	 */
-	public long getTtlSeconds() {
-		return ttlSeconds;
+	public Duration getTtl() {
+		return ttl;
 	}
 
 	/**
 	 * Returns the refresh time for this zone.
 	 * 
-	 * @return the refresh time in seconds.
+	 * @return the refresh time {@link Duration}.
 	 */
-	public long getRefreshSeconds() {
-		return refreshSeconds;
+	public Duration getRefresh() {
+		return refresh;
 	}
 
 	/**
 	 * Returns the retry time for this zone.
 	 * 
-	 * @return the retry time in seconds.
+	 * @return the retry time {@link Duration}.
 	 */
-	public long getRetrySeconds() {
-		return retrySeconds;
+	public Duration getRetry() {
+		return retry;
 	}
 
 	/**
 	 * Returns the expire time for this zone.
 	 * 
-	 * @return the expire time in seconds.
+	 * @return the expire time {@link Duration}.
 	 */
-	public long getExpireSeconds() {
-		return expireSeconds;
+	public Duration getExpire() {
+		return expire;
 	}
 
 	/**
 	 * Returns the minimum TTL time for this zone.
 	 * 
-	 * @return the minimum TTL time in seconds.
+	 * @return the minimum TTL time {@link Duration}.
 	 */
-	public long getMinimumTtlSeconds() {
-		return minimumTtlSeconds;
+	public Duration getMinimumTtl() {
+		return minimumTtl;
 	}
 
 	/**

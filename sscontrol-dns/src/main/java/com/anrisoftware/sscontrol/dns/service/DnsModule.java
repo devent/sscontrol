@@ -33,6 +33,7 @@ import com.anrisoftware.resources.templates.maps.TemplatesDefaultMapsModule;
 import com.anrisoftware.resources.templates.templates.TemplatesResourcesModule;
 import com.anrisoftware.resources.templates.worker.STDefaultPropertiesModule;
 import com.anrisoftware.resources.templates.worker.STWorkerModule;
+import com.anrisoftware.sscontrol.dns.statements.DnsStatementsModule;
 import com.anrisoftware.sscontrol.workers.command.exec.ExecCommandWorkerModule;
 import com.anrisoftware.sscontrol.workers.command.script.ScriptCommandWorkerModule;
 import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokensTemplateWorkerModule;
@@ -53,6 +54,7 @@ class DnsModule extends AbstractModule {
 
 	@Override
 	protected void configure() {
+		install(new DnsStatementsModule());
 		bindScripts();
 		install(new ExecCommandWorkerModule());
 		install(new ScriptCommandWorkerModule());

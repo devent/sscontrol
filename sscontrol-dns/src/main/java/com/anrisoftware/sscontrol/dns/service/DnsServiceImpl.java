@@ -40,6 +40,8 @@ import com.anrisoftware.resources.templates.api.TemplatesFactory;
 import com.anrisoftware.sscontrol.core.api.ProfileService;
 import com.anrisoftware.sscontrol.core.api.Service;
 import com.anrisoftware.sscontrol.core.api.ServiceException;
+import com.anrisoftware.sscontrol.dns.statements.DnsZone;
+import com.anrisoftware.sscontrol.dns.statements.DnsZoneFactory;
 import com.anrisoftware.sscontrol.workers.command.script.ScriptCommandWorkerFactory;
 import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokensTemplateWorkerFactory;
 import com.google.inject.Provider;
@@ -71,9 +73,14 @@ class DnsServiceImpl extends GroovyObjectSupport implements Service {
 	@Inject
 	private ScriptCommandWorkerFactory scriptCommandWorkerFactory;
 
+	@Inject
+	private DnsZoneFactory dnsZoneFactory;
+
 	private ProfileService profile;
 
 	private final List<String> bindAddresses;
+
+	private final List<DnsZone> zones;
 
 	private int serial;
 
@@ -108,6 +115,7 @@ class DnsServiceImpl extends GroovyObjectSupport implements Service {
 		this.scripts = scripts;
 		this.templatesFactory = templates;
 		this.bindAddresses = new ArrayList<String>();
+		this.zones = new ArrayList<DnsZone>();
 		setDefaultBindAddresses(p);
 	}
 
@@ -166,6 +174,31 @@ class DnsServiceImpl extends GroovyObjectSupport implements Service {
 		bindAddresses.addAll(list);
 		log.bindAddressesSet(this, list);
 		return this;
+	}
+
+	/**
+	 * Adds a new DNS zone.
+	 * 
+	 * @param name
+	 *            the name of the zone.
+	 * 
+	 * @param primaryNameServer
+	 *            the name of the primary DNS server.
+	 * 
+	 * @param email
+	 *            the email address for the zone.
+	 * 
+	 * @param closure
+	 *            the zone statements.
+	 * 
+	 * @return the {@link DnsZone} DNS zone.
+	 */
+	public DnsZone zone(String name, String primaryNameServer, String email,
+			Closure<?> closure) {
+		DnsZone zone = dnsZoneFactory.create(name, primaryNameServer, email,
+				serial);
+		zones.add(zone);
+		return zone;
 	}
 
 	/**

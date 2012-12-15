@@ -31,6 +31,7 @@ import com.anrisoftware.sscontrol.core.api.ServicesRegistry
 import com.anrisoftware.sscontrol.dns.statements.ARecord
 import com.anrisoftware.sscontrol.dns.statements.CNAMERecord
 import com.anrisoftware.sscontrol.dns.statements.DnsZone
+import com.anrisoftware.sscontrol.dns.statements.MXRecord
 import com.google.inject.Guice
 import com.google.inject.Injector
 
@@ -51,6 +52,8 @@ class DnsServiceTest {
 
 	static dnsZoneCnameRecordsScript = resourceURL("DnsZoneCNAMERecords.groovy", DnsServiceTest)
 
+	static dnsZoneMxRecordsScript = resourceURL("DnsZoneMXRecords.groovy", DnsServiceTest)
+
 	Injector injector
 
 	File tmp
@@ -66,9 +69,7 @@ class DnsServiceTest {
 		loader.loadService(dnsSerialScript, variables, registry, profile)
 		withFiles NAME, {}, {}, tmp
 
-		DnsServiceImpl service = registry.getService("dns")[0]
-		assert service.serial == 99
-		assert service.bindAddresses == ["127.0.0.1"]
+		assertService registry.getService("dns")[0], 99, ["127.0.0.1"]
 	}
 
 	@Test
@@ -80,21 +81,11 @@ class DnsServiceTest {
 		loader.loadService(dnsZoneARecordsScript, variables, registry, profile)
 		withFiles NAME, {}, {}, tmp
 
-		DnsServiceImpl service = registry.getService("dns")[0]
-		assert service.serial == 0
-		assert service.bindAddresses == ["127.0.0.1"]
-		DnsZone zone = service.zones[0]
-		assertStringContent zone.name, "testa.com"
-		assertStringContent zone.primaryNameServer, "ns1.testa.com"
-		assertStringContent zone.email, "hostmaster@testa.com"
-		ARecord arecord = zone.aaRecords[0]
-		assertStringContent arecord.name, "testa.com"
-		assertStringContent arecord.address, "192.168.0.49"
-		assert arecord.ttl.millis == 1*1000
-		arecord = zone.aaRecords[1]
-		assertStringContent arecord.name, "testb.com"
-		assertStringContent arecord.address, "192.168.0.50"
-		assert arecord.ttl.millis == 86400*1000
+		def service = assertService registry.getService("dns")[0], 0, ["127.0.0.1"]
+		def zone = assertZone service.zones[0], "testa.com", "ns1.testa.com", "hostmaster@testa.com"
+		assertARecord zone.aaRecords[0], "testa.com", "192.168.0.49", 1
+		assertARecord zone.aaRecords[1], "testb.com", "192.168.0.50", 86400
+		assertARecord zone.aaRecords[2], "testc.com", "192.168.0.51", 86400
 	}
 
 	@Test
@@ -106,25 +97,62 @@ class DnsServiceTest {
 		loader.loadService(dnsZoneCnameRecordsScript, variables, registry, profile)
 		withFiles NAME, {}, {}, tmp
 
-		DnsServiceImpl service = registry.getService("dns")[0]
-		assert service.serial == 0
-		assert service.bindAddresses == ["127.0.0.1"]
-		DnsZone zone = service.zones[0]
-		assertStringContent zone.name, "testa.com"
-		assertStringContent zone.primaryNameServer, "ns1.testa.com"
-		assertStringContent zone.email, "hostmaster@testa.com"
-		CNAMERecord cnamerecord = zone.cnameRecords[0]
-		assertStringContent cnamerecord.name, "www.testa.com"
-		assertStringContent cnamerecord.alias, "testa.com"
-		assert cnamerecord.ttl.millis == 86400*1000
-		cnamerecord = zone.cnameRecords[1]
-		assertStringContent cnamerecord.name, "www.testb.com"
-		assertStringContent cnamerecord.alias, "testb.com"
-		assert cnamerecord.ttl.millis == 1*1000
+		def service = assertService registry.getService("dns")[0], 0, ["127.0.0.1"]
+		def zone = assertZone service.zones[0], "testa.com", "ns1.testa.com", "hostmaster@testa.com"
+		assertCNAMERecord zone.cnameRecords[0], "www.testa.com", "testa.com", 86400
+		assertCNAMERecord zone.cnameRecords[1], "www.testb.com", "testb.com", 1
+	}
+
+	@Test
+	void "dns zone mx-records script"() {
+		ServicesRegistry registry = injector.getInstance ServicesRegistry
+		SscontrolServiceLoader loader = injector.getInstance SscontrolServiceLoader
+		loader.loadService(ubuntu1004Profile, variables, registry, null)
+		def profile = registry.getService("profile")[0]
+		loader.loadService(dnsZoneMxRecordsScript, variables, registry, profile)
+		withFiles NAME, {}, {}, tmp
+
+		def service = assertService registry.getService("dns")[0], 0, ["127.0.0.1"]
+		def zone = assertZone service.zones[0], "testa.com", "ns1.testa.com", "hostmaster@testa.com"
+		assertARecord zone.aaRecords[0], "mx1.testa.com", "192.168.0.49", 86400
+		assertARecord zone.aaRecords[1], "mx2.testa.com", "192.168.0.50", 86400
+		assertMXRecord zone.mxRecords[0], "mx1.testa.com", zone.aaRecords[0], 20
+		assertMXRecord zone.mxRecords[1], "mx2.testa.com", zone.aaRecords[1], 10
 	}
 
 	static {
 		toStringStyle
+	}
+
+	private DnsServiceImpl assertService(DnsServiceImpl service, Object... args) {
+		assert service.serial == args[0]
+		assert service.bindAddresses == args[1]
+		service
+	}
+
+	private DnsZone assertZone(DnsZone zone, Object... args) {
+		assertStringContent zone.name, args[0]
+		assertStringContent zone.primaryNameServer, args[1]
+		assertStringContent zone.email, args[2]
+		zone
+	}
+
+	private assertARecord(ARecord arecord, Object... args) {
+		assertStringContent arecord.name, args[0]
+		assertStringContent arecord.address, args[1]
+		assert arecord.ttl.millis == args[2]*1000
+	}
+
+	private assertCNAMERecord(CNAMERecord cnamerecord, Object... args) {
+		assertStringContent cnamerecord.name, args[0]
+		assertStringContent cnamerecord.alias, args[1]
+		assert cnamerecord.ttl.millis == args[2]*1000
+	}
+
+	private assertMXRecord(MXRecord mxrecord, Object... args) {
+		assertStringContent mxrecord.name, args[0]
+		assert mxrecord.aRecord == args[1]
+		assert mxrecord.priority == args[2]
 	}
 
 	@Before

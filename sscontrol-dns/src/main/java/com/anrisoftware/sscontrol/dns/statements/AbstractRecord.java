@@ -1,5 +1,7 @@
 package com.anrisoftware.sscontrol.dns.statements;
 
+import groovy.lang.GroovyObjectSupport;
+
 import java.io.Serializable;
 
 import javax.inject.Named;
@@ -17,7 +19,8 @@ import com.google.inject.assistedinject.Assisted;
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-abstract class AbstractRecord implements Serializable {
+abstract class AbstractRecord extends GroovyObjectSupport implements
+		Serializable {
 
 	private static final String TTL_PROPERTY = "default_ttl";
 

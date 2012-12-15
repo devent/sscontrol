@@ -19,8 +19,8 @@
 package com.anrisoftware.sscontrol.dns.service;
 
 import static com.anrisoftware.sscontrol.dns.service.DnsFactory.NAME;
+import static java.util.Collections.unmodifiableList;
 import static org.apache.commons.lang3.StringUtils.split;
-import groovy.lang.Closure;
 import groovy.lang.GroovyObjectSupport;
 import groovy.lang.Script;
 
@@ -126,12 +126,9 @@ class DnsServiceImpl extends GroovyObjectSupport implements Service {
 	/**
 	 * Entry point for the DNS service script.
 	 * 
-	 * @param closure
-	 *            the DNS script statements.
-	 * 
 	 * @return this {@link Service}.
 	 */
-	public Object dns(Closure<?> closure) {
+	public Object dns() {
 		return this;
 	}
 
@@ -177,6 +174,15 @@ class DnsServiceImpl extends GroovyObjectSupport implements Service {
 	}
 
 	/**
+	 * Returns a list of the IP addresses where to bind the DNS service.
+	 * 
+	 * @return an unmodifiable {@link List} of IP addresses.
+	 */
+	public List<String> getBindAddresses() {
+		return unmodifiableList(bindAddresses);
+	}
+
+	/**
 	 * Adds a new DNS zone.
 	 * 
 	 * @param name
@@ -188,17 +194,22 @@ class DnsServiceImpl extends GroovyObjectSupport implements Service {
 	 * @param email
 	 *            the email address for the zone.
 	 * 
-	 * @param closure
-	 *            the zone statements.
-	 * 
 	 * @return the {@link DnsZone} DNS zone.
 	 */
-	public DnsZone zone(String name, String primaryNameServer, String email,
-			Closure<?> closure) {
+	public DnsZone zone(String name, String primaryNameServer, String email) {
 		DnsZone zone = dnsZoneFactory.create(name, primaryNameServer, email,
 				serial);
 		zones.add(zone);
 		return zone;
+	}
+
+	/**
+	 * Returns a list of the DNS zones.
+	 * 
+	 * @return an unmodifiable {@link List} of {@link DnsZone} DNS zones.
+	 */
+	public List<DnsZone> getZones() {
+		return unmodifiableList(zones);
 	}
 
 	/**

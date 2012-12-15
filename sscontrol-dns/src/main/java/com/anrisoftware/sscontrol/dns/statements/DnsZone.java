@@ -1,6 +1,7 @@
 package com.anrisoftware.sscontrol.dns.statements;
 
 import static java.util.Collections.unmodifiableList;
+import groovy.lang.GroovyObjectSupport;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -23,7 +24,7 @@ import com.google.inject.assistedinject.Assisted;
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-public class DnsZone implements Serializable {
+public class DnsZone extends GroovyObjectSupport implements Serializable {
 
 	/**
 	 * @version 1.0

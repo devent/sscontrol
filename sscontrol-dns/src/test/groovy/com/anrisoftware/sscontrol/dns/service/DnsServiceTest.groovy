@@ -28,6 +28,8 @@ import org.junit.Test
 import com.anrisoftware.sscontrol.core.activator.CoreModule
 import com.anrisoftware.sscontrol.core.api.ServiceLoader as SscontrolServiceLoader
 import com.anrisoftware.sscontrol.core.api.ServicesRegistry
+import com.anrisoftware.sscontrol.dns.statements.ARecord
+import com.anrisoftware.sscontrol.dns.statements.DnsZone
 import com.google.inject.Guice
 import com.google.inject.Injector
 
@@ -76,8 +78,20 @@ class DnsServiceTest {
 		withFiles NAME, {}, {}, tmp
 
 		DnsServiceImpl service = registry.getService("dns")[0]
-		assert service.serial == 99
+		assert service.serial == 0
 		assert service.bindAddresses == ["127.0.0.1"]
+		DnsZone zone = service.zones[0]
+		assertStringContent zone.name, "testa.com"
+		assertStringContent zone.primaryNameServer, "ns1.testa.com"
+		assertStringContent zone.email, "hostmaster@testa.com"
+		ARecord arecord = zone.aaRecords[0]
+		assertStringContent arecord.name, "testa.com"
+		assertStringContent arecord.address, "192.168.0.49"
+		assert arecord.ttl.millis == 1*1000
+		arecord = zone.aaRecords[1]
+		assertStringContent arecord.name, "testb.com"
+		assertStringContent arecord.address, "192.168.0.50"
+		assert arecord.ttl.millis == 86400*1000
 	}
 
 	static {

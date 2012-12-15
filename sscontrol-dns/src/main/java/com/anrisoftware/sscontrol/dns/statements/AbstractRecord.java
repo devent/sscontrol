@@ -22,22 +22,22 @@ import com.google.inject.assistedinject.Assisted;
 abstract class AbstractRecord extends GroovyObjectSupport implements
 		Serializable {
 
-	private static final String TTL_PROPERTY = "default_ttl";
-
 	/**
 	 * @version 1.0
 	 */
 	private static final long serialVersionUID = -588712728377074238L;
+
+	static final long TTL_MIN_SECONDS = 1;
+
+	static final long TTL_MAX_SECONDS = Long.MAX_VALUE;
+
+	private static final String TTL_PROPERTY = "default_ttl";
 
 	private final AbstractRecordLogger log;
 
 	private final DnsZone zone;
 
 	private Duration ttl;
-
-	static final long TTL_MIN_TIME_SECONDS = 0l;
-
-	static final long TTL_MAX_TIME_SECONDS = Long.MAX_VALUE;
 
 	/**
 	 * Sets the parameter of the A record.

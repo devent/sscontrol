@@ -32,6 +32,7 @@ import com.anrisoftware.sscontrol.dns.statements.ARecord
 import com.anrisoftware.sscontrol.dns.statements.CNAMERecord
 import com.anrisoftware.sscontrol.dns.statements.DnsZone
 import com.anrisoftware.sscontrol.dns.statements.MXRecord
+import com.anrisoftware.sscontrol.dns.statements.NSRecord
 import com.google.inject.Guice
 import com.google.inject.Injector
 
@@ -53,6 +54,8 @@ class DnsServiceTest {
 	static dnsZoneCnameRecordsScript = resourceURL("DnsZoneCNAMERecords.groovy", DnsServiceTest)
 
 	static dnsZoneMxRecordsScript = resourceURL("DnsZoneMXRecords.groovy", DnsServiceTest)
+
+	static dnsZoneNsRecordsScript = resourceURL("DnsZoneNSRecords.groovy", DnsServiceTest)
 
 	Injector injector
 
@@ -120,6 +123,23 @@ class DnsServiceTest {
 		assertMXRecord zone.mxRecords[1], "mx2.testa.com", zone.aaRecords[1], 10
 	}
 
+	@Test
+	void "dns zone ns-records script"() {
+		ServicesRegistry registry = injector.getInstance ServicesRegistry
+		SscontrolServiceLoader loader = injector.getInstance SscontrolServiceLoader
+		loader.loadService(ubuntu1004Profile, variables, registry, null)
+		def profile = registry.getService("profile")[0]
+		loader.loadService(dnsZoneNsRecordsScript, variables, registry, profile)
+		withFiles NAME, {}, {}, tmp
+
+		def service = assertService registry.getService("dns")[0], 0, ["127.0.0.1"]
+		def zone = assertZone service.zones[0], "testa.com", "ns1.testa.com", "hostmaster@testa.com"
+		assertARecord zone.aaRecords[0], "ns1.testa.com", "192.168.0.49", 86400
+		assertARecord zone.aaRecords[1], "ns2.testa.com", "192.168.0.50", 86400
+		assertNSRecord zone.nsRecords[0], "ns1.testa.com", zone.aaRecords[0], 1
+		assertNSRecord zone.nsRecords[1], "ns2.testa.com", zone.aaRecords[1], 86400
+	}
+
 	static {
 		toStringStyle
 	}
@@ -153,6 +173,12 @@ class DnsServiceTest {
 		assertStringContent mxrecord.name, args[0]
 		assert mxrecord.aRecord == args[1]
 		assert mxrecord.priority == args[2]
+	}
+
+	private assertNSRecord(NSRecord nsrecord, Object... args) {
+		assertStringContent nsrecord.name, args[0]
+		assert nsrecord.aRecord == args[1]
+		assert nsrecord.ttl.millis == args[2]*1000
 	}
 
 	@Before

@@ -29,8 +29,6 @@ public class NSRecord extends AbstractRecord {
 
 	private final String name;
 
-	private long ttlInSeconds;
-
 	private ARecord aRecord;
 
 	/**
@@ -42,7 +40,7 @@ public class NSRecord extends AbstractRecord {
 	 * @param p
 	 *            the {@link ContextProperties} with the property:
 	 *            <dl>
-	 *            <dt>{@code default_ttl_seconds}</dt>
+	 *            <dt>{@code default_ttl}</dt>
 	 *            <dd>the default TTL time for the record in seconds.</dd>
 	 *            </dl>
 	 * 
@@ -87,7 +85,7 @@ public class NSRecord extends AbstractRecord {
 	@Override
 	public String toString() {
 		ToStringBuilder s = new ToStringBuilder(this).append("name", name)
-				.append("ttl [s]", ttlInSeconds);
+				.append("ttl", getTtl());
 		if (aRecord != null) {
 			s.append("A-record", aRecord);
 		}

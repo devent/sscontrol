@@ -29,6 +29,7 @@ import com.anrisoftware.sscontrol.core.activator.CoreModule
 import com.anrisoftware.sscontrol.core.api.ServiceLoader as SscontrolServiceLoader
 import com.anrisoftware.sscontrol.core.api.ServicesRegistry
 import com.anrisoftware.sscontrol.dns.statements.ARecord
+import com.anrisoftware.sscontrol.dns.statements.CNAMERecord
 import com.anrisoftware.sscontrol.dns.statements.DnsZone
 import com.google.inject.Guice
 import com.google.inject.Injector
@@ -47,6 +48,8 @@ class DnsServiceTest {
 	static dnsSerialScript = resourceURL("DnsSerial.groovy", DnsServiceTest)
 
 	static dnsZoneARecordsScript = resourceURL("DnsZoneARecords.groovy", DnsServiceTest)
+
+	static dnsZoneCnameRecordsScript = resourceURL("DnsZoneCNAMERecords.groovy", DnsServiceTest)
 
 	Injector injector
 
@@ -92,6 +95,32 @@ class DnsServiceTest {
 		assertStringContent arecord.name, "testb.com"
 		assertStringContent arecord.address, "192.168.0.50"
 		assert arecord.ttl.millis == 86400*1000
+	}
+
+	@Test
+	void "dns zone cname-records script"() {
+		ServicesRegistry registry = injector.getInstance ServicesRegistry
+		SscontrolServiceLoader loader = injector.getInstance SscontrolServiceLoader
+		loader.loadService(ubuntu1004Profile, variables, registry, null)
+		def profile = registry.getService("profile")[0]
+		loader.loadService(dnsZoneCnameRecordsScript, variables, registry, profile)
+		withFiles NAME, {}, {}, tmp
+
+		DnsServiceImpl service = registry.getService("dns")[0]
+		assert service.serial == 0
+		assert service.bindAddresses == ["127.0.0.1"]
+		DnsZone zone = service.zones[0]
+		assertStringContent zone.name, "testa.com"
+		assertStringContent zone.primaryNameServer, "ns1.testa.com"
+		assertStringContent zone.email, "hostmaster@testa.com"
+		CNAMERecord cnamerecord = zone.cnameRecords[0]
+		assertStringContent cnamerecord.name, "www.testa.com"
+		assertStringContent cnamerecord.alias, "testa.com"
+		assert cnamerecord.ttl.millis == 86400*1000
+		cnamerecord = zone.cnameRecords[1]
+		assertStringContent cnamerecord.name, "www.testb.com"
+		assertStringContent cnamerecord.alias, "testb.com"
+		assert cnamerecord.ttl.millis == 1*1000
 	}
 
 	static {

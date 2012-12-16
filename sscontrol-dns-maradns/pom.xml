@@ -7,11 +7,20 @@
 		<groupId>com.anrisoftware.sscontrol</groupId>
 		<artifactId>sscontrol-parent</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
+		<relativePath>../sscontrol-parent</relativePath>
 	</parent>
 
 	<artifactId>sscontrol-dns-maradns</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>Sscontrol :: DNS :: MaraDNS</name>
 	<description>Setups MaraDNS as the DNS service.</description>
+
+	<dependencies>
+		<dependency>
+			<groupId>com.anrisoftware.sscontrol</groupId>
+			<artifactId>sscontrol-dns</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+	</dependencies>
 
 </project>

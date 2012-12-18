@@ -18,28 +18,19 @@
  */
 package com.anrisoftware.sscontrol.dns.service;
 
-import static com.google.inject.multibindings.MapBinder.newMapBinder;
-import groovy.lang.Script;
-
 import java.io.IOException;
 import java.net.URL;
+import java.util.ServiceLoader;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
 
 import com.anrisoftware.propertiesutils.ContextProperties;
 import com.anrisoftware.propertiesutils.ContextPropertiesFactory;
-import com.anrisoftware.resources.templates.maps.TemplatesDefaultMapsModule;
-import com.anrisoftware.resources.templates.templates.TemplatesResourcesModule;
-import com.anrisoftware.resources.templates.worker.STDefaultPropertiesModule;
-import com.anrisoftware.resources.templates.worker.STWorkerModule;
+import com.anrisoftware.sscontrol.core.api.ServiceScriptFactory;
 import com.anrisoftware.sscontrol.dns.statements.DnsStatementsModule;
-import com.anrisoftware.sscontrol.workers.command.exec.ExecCommandWorkerModule;
-import com.anrisoftware.sscontrol.workers.command.script.ScriptCommandWorkerModule;
-import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokensTemplateWorkerModule;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
-import com.google.inject.multibindings.MapBinder;
 
 /**
  * Binds the DNS service.
@@ -55,20 +46,6 @@ class DnsModule extends AbstractModule {
 	@Override
 	protected void configure() {
 		install(new DnsStatementsModule());
-		bindScripts();
-		install(new ExecCommandWorkerModule());
-		install(new ScriptCommandWorkerModule());
-		install(new TokensTemplateWorkerModule());
-		install(new TemplatesResourcesModule());
-		install(new TemplatesDefaultMapsModule());
-		install(new STWorkerModule());
-		install(new STDefaultPropertiesModule());
-	}
-
-	private void bindScripts() {
-		MapBinder<String, Script> binder;
-		binder = newMapBinder(binder(), String.class, Script.class);
-		// binder.addBinding("ubuntu_10_04").to(Ubuntu_10_04Script.class);
 	}
 
 	@Provides
@@ -78,5 +55,11 @@ class DnsModule extends AbstractModule {
 		return new ContextPropertiesFactory(DnsServiceImpl.class)
 				.withProperties(System.getProperties()).fromResource(
 						DNS_DEFAULTS_PROPERTIES_RESOURCE);
+	}
+
+	@Provides
+	@Singleton
+	ServiceLoader<ServiceScriptFactory> getDnsServiceScripts() {
+		return ServiceLoader.load(ServiceScriptFactory.class);
 	}
 }

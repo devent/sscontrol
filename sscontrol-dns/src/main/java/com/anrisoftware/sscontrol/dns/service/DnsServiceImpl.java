@@ -26,9 +26,9 @@ import groovy.lang.Script;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.ServiceLoader;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -40,12 +40,11 @@ import com.anrisoftware.resources.templates.api.TemplatesFactory;
 import com.anrisoftware.sscontrol.core.api.ProfileService;
 import com.anrisoftware.sscontrol.core.api.Service;
 import com.anrisoftware.sscontrol.core.api.ServiceException;
+import com.anrisoftware.sscontrol.core.api.ServiceScriptFactory;
+import com.anrisoftware.sscontrol.core.api.ServiceScriptInfo;
 import com.anrisoftware.sscontrol.dns.statements.ARecord;
 import com.anrisoftware.sscontrol.dns.statements.DnsZone;
 import com.anrisoftware.sscontrol.dns.statements.DnsZoneFactory;
-import com.anrisoftware.sscontrol.workers.command.script.ScriptCommandWorkerFactory;
-import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokensTemplateWorkerFactory;
-import com.google.inject.Provider;
 
 /**
  * DNS service.
@@ -64,15 +63,7 @@ class DnsServiceImpl extends GroovyObjectSupport implements Service {
 
 	private final DnsServiceImplLogger log;
 
-	private final Map<String, Provider<Script>> scripts;
-
-	private final TemplatesFactory templatesFactory;
-
-	@Inject
-	private TokensTemplateWorkerFactory tokensTemplateWorkerFactory;
-
-	@Inject
-	private ScriptCommandWorkerFactory scriptCommandWorkerFactory;
+	private final ServiceLoader<ServiceScriptFactory> serviceScripts;
 
 	@Inject
 	private DnsZoneFactory dnsZoneFactory;
@@ -110,11 +101,10 @@ class DnsServiceImpl extends GroovyObjectSupport implements Service {
 	 */
 	@Inject
 	DnsServiceImpl(DnsServiceImplLogger logger,
-			Map<String, Provider<Script>> scripts, TemplatesFactory templates,
+			ServiceLoader<ServiceScriptFactory> serviceScripts,
 			@Named("dns-defaults-properties") ContextProperties p) {
 		this.log = logger;
-		this.scripts = scripts;
-		this.templatesFactory = templates;
+		this.serviceScripts = serviceScripts;
 		this.bindAddresses = new ArrayList<String>();
 		this.zones = new ArrayList<DnsZone>();
 		setDefaultBindAddresses(p);
@@ -302,26 +292,27 @@ class DnsServiceImpl extends GroovyObjectSupport implements Service {
 
 	@Override
 	public Service call() throws ServiceException {
-		String name = profile.getProfileName();
-		Script script = scripts.get(name).get();
-		Map<Class<?>, Object> workers = getWorkers();
-		script.setProperty("workers", workers);
-		script.setProperty("templatesFactory", templatesFactory);
+		ServiceScriptFactory scriptFactory = findScriptFactory();
+		Script script = (Script) scriptFactory.getScript();
 		script.setProperty("system", profile.getEntry("system"));
 		script.setProperty("profile", profile.getEntry(NAME));
 		script.setProperty("service", this);
-		script.setProperty("name", name);
+		script.setProperty("name", profile.getProfileName());
 		script.run();
 		return this;
 	}
 
-	private Map<Class<?>, Object> getWorkers() {
-		Map<Class<?>, Object> workers = new HashMap<Class<?>, Object>();
-		workers.put(TokensTemplateWorkerFactory.class,
-				tokensTemplateWorkerFactory);
-		workers.put(ScriptCommandWorkerFactory.class,
-				scriptCommandWorkerFactory);
-		return workers;
+	private ServiceScriptFactory findScriptFactory() throws ServiceException {
+		String name = profile.getProfileName();
+		String service = profile.getEntry(NAME).get("service").toString();
+		for (ServiceScriptFactory scriptFactory : serviceScripts) {
+			ServiceScriptInfo info = scriptFactory.getInfo();
+			if (info.getProfileName().equals(name)
+					&& info.getServiceName().equals(service)) {
+				return scriptFactory;
+			}
+		}
+		throw log.errorFindServiceScript(this, name, service);
 	}
 
 	@Override

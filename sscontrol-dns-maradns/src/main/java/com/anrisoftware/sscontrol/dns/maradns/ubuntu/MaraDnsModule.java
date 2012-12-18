@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-hostname. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.dns.maradns.service;
+package com.anrisoftware.sscontrol.dns.maradns.ubuntu;
 
 import static com.google.inject.multibindings.MapBinder.newMapBinder;
 import groovy.lang.Script;
@@ -55,7 +55,7 @@ class MaraDnsModule extends AbstractModule {
 	private void bindScripts() {
 		MapBinder<String, Script> binder;
 		binder = newMapBinder(binder(), String.class, Script.class);
-		binder.addBinding("ubuntu_10_04").to(Ubuntu_10_04Script.class);
+		binder.addBinding("maradns.ubuntu_10_04").to(Ubuntu_10_04Script.class);
 	}
 
 }

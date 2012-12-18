@@ -16,10 +16,37 @@
 	<description>Setups MaraDNS as the DNS service.</description>
 
 	<dependencies>
+		<!-- test dependencies -->
+		<dependency>
+			<groupId>com.anrisoftware.sscontrol</groupId>
+			<artifactId>sscontrol-core</artifactId>
+			<version>0.1-SNAPSHOT</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.anrisoftware.sscontrol</groupId>
+			<artifactId>sscontrol-profile</artifactId>
+			<version>0.1-SNAPSHOT</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.anrisoftware.globalpom</groupId>
+			<artifactId>globalpom-groovytestutils</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- own modules dependencies -->
 		<dependency>
 			<groupId>com.anrisoftware.sscontrol</groupId>
 			<artifactId>sscontrol-dns</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+
+		<!-- compile dependencies -->
+		<dependency>
+			<groupId>org.mangosdk</groupId>
+			<artifactId>spi</artifactId>
+			<optional>true</optional>
 		</dependency>
 	</dependencies>
 

@@ -22,6 +22,7 @@ import java.util.List;
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
 import com.anrisoftware.sscontrol.core.api.ProfileService;
+import com.anrisoftware.sscontrol.core.api.ServiceException;
 
 /**
  * Logging messages for {@link DnsServiceImpl}.
@@ -61,5 +62,16 @@ class DnsServiceImplLogger extends AbstractLogger {
 		} else {
 			log.info("Bind addresses {} set for DNS service.", list);
 		}
+	}
+
+	ServiceException errorFindServiceScript(DnsServiceImpl dnsservice,
+			String name, String service) {
+		ServiceException ex = new ServiceException(
+				"Error find the service script");
+		ex.addContextValue("service", dnsservice);
+		ex.addContextValue("profile name", name);
+		ex.addContextValue("service name", service);
+		log.error(ex.getLocalizedMessage());
+		return ex;
 	}
 }

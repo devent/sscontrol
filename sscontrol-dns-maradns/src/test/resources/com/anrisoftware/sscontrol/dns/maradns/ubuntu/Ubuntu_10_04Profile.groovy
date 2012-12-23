@@ -19,6 +19,14 @@
 package com.anrisoftware.sscontrol.dns.maradns.ubuntu
 
 profile "ubuntu_10_04", {
-	system { prefix tmp }
-	dns { service "maradns" }
+	system {
+		prefix tmp
+		install_command "${tmp}/usr/bin/aptitude update && ${tmp}/usr/bin/aptitude install"
+		enable_repository_command "${tmp}/usr/bin/add-apt-repository \"deb http://archive.ubuntu.com/ubuntu {} {}\""
+		packages "python-software-properties"
+	}
+	dns {
+		service "maradns"
+		packages "maradns"
+	}
 }

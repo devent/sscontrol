@@ -32,7 +32,13 @@ class MaraDnsUbuntuTest extends MaraDnsLinuxUtil {
 
 	static ubuntu1004Profile = resourceURL("Ubuntu_10_04Profile.groovy", MaraDnsUbuntuTest)
 
-	static restartMaraDnsCommand = resourceURL("maradns_initd_restart.txt", MaraDnsUbuntuTest)
+	static maradnsrcExpected = resourceURL("mararc_ubuntu_10_04_expected_conf.txt", MaraDnsUbuntuTest)
+
+	static addAptRepositoryCommand = resourceURL("echo_command.txt", MaraDnsUbuntuTest)
+
+	static aptitudeCommand = resourceURL("echo_command.txt", MaraDnsUbuntuTest)
+
+	static restartMaraDnsCommand = resourceURL("echo_command.txt", MaraDnsUbuntuTest)
 
 	static maraDnsConfiguration = resourceURL("maradns_ubuntu_10_04_conf.txt", MaraDnsUbuntuTest)
 
@@ -47,8 +53,10 @@ class MaraDnsUbuntuTest extends MaraDnsLinuxUtil {
 			registry.allServices.each { it.call() }
 			log.info "Run service again to ensure that configuration is not set double."
 			registry.allServices.each { it.call() }
-			assertFileContent(new File(it, "/etc/hostname"), hostnameExpected, true)
+			assertFileContent(new File(it, "/etc/maradns/maradns.rc"), maradnsrcExpected)
 		}, {
+			copyResourceToCommand(addAptRepositoryCommand, new File(it, "/usr/bin/add-apt-repository"))
+			copyResourceToCommand(aptitudeCommand, new File(it, "/usr/bin/aptitude"))
 			copyResourceToCommand(restartMaraDnsCommand, new File(it, "/etc/init.d/maradns"))
 			copyResourceToFile(maraDnsConfiguration, new File(it, "/etc/maradns/maradns.rc"))
 		}, tmp

@@ -18,7 +18,7 @@
  */
 package com.anrisoftware.sscontrol.dns.maradns.linux
 
-import groovy.util.logging.Slf4j
+import javax.inject.Inject
 
 import org.apache.commons.io.FileUtils
 
@@ -37,18 +37,29 @@ import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokensTemplateWorke
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-@Slf4j
 class LinuxScript extends Script {
 
-	/**
-	 * {@link TemplatesFactory} to create the templates.
-	 */
+	@Inject
+	LinuxScriptLogger log
+
+	@Inject
 	TemplatesFactory templatesFactory
+
+	@Inject
+	TokensTemplateWorkerFactory tokensTemplateWorkerFactory
+
+	@Inject
+	ScriptCommandWorkerFactory scriptCommandWorkerFactory
 
 	/**
 	 * The {@link Templates} for the script.
 	 */
 	Templates templates
+
+	/**
+	 * The command {@link Templates} for the script command worker.
+	 */
+	Templates commandTemplates
 
 	/**
 	 * The name of the profile for the script.
@@ -74,6 +85,55 @@ class LinuxScript extends Script {
 	 * The script {@link Service}.
 	 */
 	Service service
+
+	def run() {
+		templates = templatesFactory.create "Maradns_$name"
+		commandTemplates = templatesFactory.create "ScriptCommandTemplates"
+		enableUniverseRepository()
+		installPackages(profile.packages)
+		deployConfiguration()
+		restartService()
+	}
+
+	/**
+	 * Enables the "universe" repository where MaraDNS can be found.
+	 */
+	def enableUniverseRepository() {
+		installPackages(system.packages)
+		def template = commandTemplates.getResource("command")
+		def command = system.get("enable_repository_command", "lucid", "universe")
+		def worker = scriptCommandWorkerFactory.create(
+						template, "command", command)()
+		log.installPackagesDone this, worker, profile
+	}
+
+	/**
+	 * Install needed packages for the dns service.
+	 */
+	def installPackages(def packages) {
+		def template = commandTemplates.getResource("install")
+		def worker = scriptCommandWorkerFactory.create(
+						template, "installCommand", system.install_command,
+						"packages", packages)()
+		log.installPackagesDone this, worker, profile
+	}
+
+	/**
+	 * Deploy the MaraDNS configuration.
+	 */
+	def deployConfiguration() {
+		deployCsvHash()
+		deployZones()
+	}
+
+	def deployCsvHash() {
+	}
+
+	def deployZones() {
+	}
+
+	def restartService() {
+	}
 
 	/**
 	 * Returns path of the MaraDNS configuration directory.
@@ -128,7 +188,7 @@ class LinuxScript extends Script {
 	 * Deploys the hostname configuration to the hostname configuration file.
 	 */
 	def deployHostnameConfiguration() {
-		def worker = workers[TokensTemplateWorkerFactory].create(tokens, tokenTemplate, currentConfiguration)()
+		def worker = tokensTemplateWorkerFactory.create(tokens, tokenTemplate, currentConfiguration)()
 		FileUtils.write(configurationFile, worker.text, system.charset)
 		log.info "Deploy hostname configuration '$worker.text' to {} in {}.", configurationFile, this
 	}
@@ -138,7 +198,7 @@ class LinuxScript extends Script {
 	 */
 	def restartHostnameService() {
 		def template = templates.getResource("restart_hostname_command")
-		def worker = workers[ScriptCommandWorkerFactory].create(template, "prefix", system.prefix)()
+		def worker = scriptCommandWorkerFactory.create(template, "prefix", system.prefix)()
 		log.info "Restart done with output '{}'.", worker.out
 	}
 
@@ -152,11 +212,5 @@ class LinuxScript extends Script {
 	@Override
 	void setProperty(String property, Object newValue) {
 		metaClass.setProperty(this, property, newValue)
-	}
-
-	def run() {
-		templates = templatesFactory.create "Hostname_$name"
-		deployHostnameConfiguration()
-		restartHostnameService()
 	}
 }

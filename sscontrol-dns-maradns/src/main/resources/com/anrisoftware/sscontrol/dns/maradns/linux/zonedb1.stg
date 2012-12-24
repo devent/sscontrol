@@ -1,0 +1,29 @@
+zonedb(zone) ::= <<
+<! Template for a zone file in the csv1 format (MaraDNS <= 1.0) !>
+S<zone.name>.|<zone.ttl.standardSeconds>|<zone.primaryNameServer>.|<zone.email>.|<zone.serial>|<zone.refresh.standardSeconds>|<zone.retry.standardSeconds>|<zone.expire.standardSeconds>|<zone.minimumTtl.standardSeconds>
+<zone.nsRecords:{record | <(record.class.simpleName)(record)>}>
+<zone.mxRecords:{record | <(record.class.simpleName)(record)>}>
+<zone.cnameRecords:{record | <(record.class.simpleName)(record)>}>
+<zone.aaRecords:{record | <(record.class.simpleName)(record)>}>
+
+>>
+
+ARecord(record) ::= <<
+A<record.name>.|<record.ttl.standardSeconds>|<record.address>
+
+>>
+
+NSRecord(record) ::= <<
+N<record.zone.name>.|<record.ttl.standardSeconds>|<record.name>.
+
+>>
+
+MXRecord(record) ::= <<
+@<record.zone.name>.|<record.ttl.standardSeconds>|<record.priority>|<record.name>.
+
+>>
+
+CNAMERecord(record) ::= <<
+C<record.name>.|<record.ttl.standardSeconds>|<record.alias>.
+
+>>

@@ -27,26 +27,32 @@ import com.anrisoftware.sscontrol.core.api.ServiceLoader as SscontrolServiceLoad
 import com.anrisoftware.sscontrol.core.api.ServicesRegistry
 import com.google.inject.Injector
 
+/**
+ * Test MaraDNS on a Ubuntu 10.04 server.
+ *
+ * @author Erwin Mueller, erwin.mueller@deventm.org
+ * @since 1.0
+ */
 @Slf4j
-class MaraDnsUbuntuTest extends MaraDnsLinuxUtil {
+class MaraDnsUbuntu_10_04_Test extends MaraDnsLinuxUtil {
 
-	static ubuntu1004Profile = resourceURL("Ubuntu_10_04Profile.groovy", MaraDnsUbuntuTest)
+	static ubuntu1004Profile = resourceURL("Ubuntu_10_04Profile.groovy", MaraDnsUbuntu_10_04_Test)
 
-	static maradnsrcExpected = resourceURL("mararc_ubuntu_10_04_expected_conf.txt", MaraDnsUbuntuTest)
+	static maradnsrcExpected = resourceURL("mararc_ubuntu_10_04_expected_conf.txt", MaraDnsUbuntu_10_04_Test)
 
-	static addAptRepositoryCommand = resourceURL("echo_command.txt", MaraDnsUbuntuTest)
+	static addAptRepositoryCommand = resourceURL("echo_command.txt", MaraDnsUbuntu_10_04_Test)
 
-	static aptitudeCommand = resourceURL("echo_command.txt", MaraDnsUbuntuTest)
+	static aptitudeCommand = resourceURL("echo_command.txt", MaraDnsUbuntu_10_04_Test)
 
-	static restartMaraDnsCommand = resourceURL("echo_command.txt", MaraDnsUbuntuTest)
+	static restartMaraDnsCommand = resourceURL("echo_command.txt", MaraDnsUbuntu_10_04_Test)
 
-	static maraDnsConfiguration = resourceURL("maradns_ubuntu_10_04_conf.txt", MaraDnsUbuntuTest)
+	static maraDnsConfiguration = resourceURL("maradns_ubuntu_10_04_conf.txt", MaraDnsUbuntu_10_04_Test)
 
-	static dbAnrisoftwareExpected = resourceURL("db.anrisoftware.com.txt", MaraDnsUbuntuTest)
+	static dbAnrisoftwareExpected = resourceURL("db.anrisoftware.com.txt", MaraDnsUbuntu_10_04_Test)
 
-	static dbExample1Expected = resourceURL("db.example1.com.txt", MaraDnsUbuntuTest)
+	static dbExample1Expected = resourceURL("db.example1.com.txt", MaraDnsUbuntu_10_04_Test)
 
-	static dbExample2Expected = resourceURL("db.example2.com.txt", MaraDnsUbuntuTest)
+	static dbExample2Expected = resourceURL("db.example2.com.txt", MaraDnsUbuntu_10_04_Test)
 
 	@Test
 	void "maradns service"() {
@@ -66,7 +72,7 @@ class MaraDnsUbuntuTest extends MaraDnsLinuxUtil {
 			copyResourceToCommand(aptitudeCommand, new File(it, "/usr/bin/aptitude"))
 			copyResourceToCommand(restartMaraDnsCommand, new File(it, "/etc/init.d/maradns"))
 			copyResourceToFile(maraDnsConfiguration, new File(it, "/etc/maradns/mararc"))
-		}, tmp, true
+		}, tmp
 	}
 
 	private assertFiles(it) {

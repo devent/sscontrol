@@ -1,23 +1,31 @@
 csv_hash() ::= <%
-csv1 = {}
+csv2 = {}
 %>
 
 csv_hash_search() ::= <%
-#?csv1\s*=\s*\{\}
+#?csv2\s*=\s*\{\}
 %>
 
 bind_address(service) ::= <%
-bind_address = "<first(service.bindAddresses)>"
+#bind_address = "<first(service.bindAddresses)>"
 %>
 
 bind_address_search() ::= <%
-#?bind_address\s*=\s*".*"
+#?bind_address.*
+%>
+
+ip4_bind_address(service) ::= <%
+ipv4_bind_addresses = "<service.bindAddresses; separator=",">"
+%>
+
+ip4_bind_address_search() ::= <%
+#?\s*ipv4_bind_addresses\s*=\s*.*
 %>
 
 zone(zone) ::= <%
-csv1["<zone.name>."] = "db.<zone.name>"
+csv2["<zone.name>."] = "db.<zone.name>"
 %>
 
 zone_search(zone) ::= <%
-#?\s*csv1\["<zone.name>\."\]\s*=\s*"db\.<zone.name>"
+#?\s*csv2\["<zone.name>\."\]\s*=\s*"db\.<zone.name>"
 %>

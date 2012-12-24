@@ -1,0 +1,17 @@
+Sanrisoftware.com.|86400|ns1.anrisoftware.com.|hostmaster@anrisoftware.com.|1|28800|7200|345600|86400
+Nanrisoftware.com.|1|ns1.anrisoftware.com.
+Nanrisoftware.com.|86400|ns2.anrisoftware.com.
+
+@anrisoftware.com.|86400|10|mx1.anrisoftware.com.
+@anrisoftware.com.|86400|20|mx2.anrisoftware.com.
+
+Cwww.anrisoftware.com.|86400|anrisoftware.com.
+Cwww.anrisoftware.com.|1|anrisoftware.com.
+
+Ans1.anrisoftware.com.|86400|127.0.0.1
+Ans2.anrisoftware.com.|86400|192.168.0.49
+Aanrisoftware.com.|86400|192.168.0.49
+Aanrisoftware.com.|1|192.168.0.50
+Amx1.anrisoftware.com.|86400|192.168.0.49
+Amx2.anrisoftware.com.|86400|192.168.0.49
+

@@ -142,8 +142,9 @@ class LinuxScript extends Script {
 	 * Deploy the MaraDNS configuration.
 	 */
 	def deployConfiguration() {
-		deployCsvHash()
 		deployBindAddress()
+		deployIpv4BindAddress()
+		deployCsvHash()
 		deployZones()
 		log.deployConfiguration this
 	}
@@ -159,6 +160,14 @@ class LinuxScript extends Script {
 	def deployBindAddress() {
 		def search = configuration.getText(true, "bind_address_search")
 		def replace = configuration.getText(true, "bind_address", "service", service)
+		def tokenTemplate = new TokenTemplate(search, replace)
+		def worker = tokensTemplateWorkerFactory.create(tokens, tokenTemplate, mararcConfiguration)()
+		write mararcFile, worker.text, system.charset
+	}
+
+	def deployIpv4BindAddress() {
+		def search = configuration.getText(true, "ip4_bind_address_search")
+		def replace = configuration.getText(true, "ip4_bind_address", "service", service)
 		def tokenTemplate = new TokenTemplate(search, replace)
 		def worker = tokensTemplateWorkerFactory.create(tokens, tokenTemplate, mararcConfiguration)()
 		write mararcFile, worker.text, system.charset

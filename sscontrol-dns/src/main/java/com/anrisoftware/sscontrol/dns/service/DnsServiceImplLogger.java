@@ -48,11 +48,16 @@ class DnsServiceImplLogger extends AbstractLogger {
 		}
 	}
 
-	void serialSet(DnsServiceImpl service, int serial) {
+	void serialSet(DnsServiceImpl service, int serial, boolean generate) {
 		if (log.isDebugEnabled()) {
 			log.debug("Serial number {} set for {}.", serial, service);
+			log.debug("Serial number generator is set to active: {} for {}.",
+					generate, service);
 		} else {
 			log.info("Serial number {} set for DNS service.", serial);
+			log.info(
+					"Serial number generator is set to active: {} for DNS service.",
+					generate);
 		}
 	}
 

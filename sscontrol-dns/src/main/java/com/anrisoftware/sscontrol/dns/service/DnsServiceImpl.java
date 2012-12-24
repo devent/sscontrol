@@ -19,6 +19,7 @@
 package com.anrisoftware.sscontrol.dns.service;
 
 import static com.anrisoftware.sscontrol.dns.service.DnsFactory.NAME;
+import static java.lang.String.format;
 import static java.util.Collections.unmodifiableList;
 import static org.apache.commons.lang3.StringUtils.split;
 import groovy.lang.GroovyObjectSupport;
@@ -34,6 +35,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.joda.time.DateTime;
 
 import com.anrisoftware.propertiesutils.ContextProperties;
 import com.anrisoftware.resources.templates.api.TemplatesFactory;
@@ -75,6 +77,8 @@ class DnsServiceImpl extends GroovyObjectSupport implements Service {
 	private final List<DnsZone> zones;
 
 	private int serial;
+
+	private boolean generate;
 
 	/**
 	 * Sets the default DNS service properties.
@@ -132,14 +136,38 @@ class DnsServiceImpl extends GroovyObjectSupport implements Service {
 	 * numbers based on the current date but the user needs to update this
 	 * serial number if the records are changed more then once in a day.
 	 * 
-	 * @param newSerial
+	 * @param serial
 	 *            the serial.
 	 * 
 	 * @return this {@link Service}.
 	 */
-	public Object serial(int newSerial) {
-		serial = newSerial;
-		log.serialSet(this, serial);
+	public Object serial(int serial) {
+		return serial(serial, true);
+	}
+
+	/**
+	 * Sets the serial number of the zone records.
+	 * 
+	 * @param newSerial
+	 *            the serial.
+	 * 
+	 * @param generate
+	 *            if set to {@code true} then the serial number is added to the
+	 *            automatically generated serial. The DNS service needs the
+	 *            serial number to be updated for all records that have been
+	 *            changed. The service can create serial numbers based on the
+	 *            current date but the user needs to update this serial number
+	 *            if the records are changed more then once in a day.
+	 *            <p>
+	 *            if set to {@code false} then the serial number is used as
+	 *            specified.
+	 * 
+	 * @return this {@link Service}.
+	 */
+	public Object serial(int newSerial, boolean generate) {
+		this.serial = newSerial;
+		this.generate = generate;
+		log.serialSet(this, newSerial, generate);
 		return this;
 	}
 
@@ -215,7 +243,7 @@ class DnsServiceImpl extends GroovyObjectSupport implements Service {
 	public DnsZone zone(String name, String primaryNameServer, String email,
 			String address) {
 		DnsZone zone = dnsZoneFactory.create(name, primaryNameServer, email,
-				serial);
+				getSerial());
 		zones.add(zone);
 		zone.a_record(name, address);
 		return zone;
@@ -246,11 +274,25 @@ class DnsServiceImpl extends GroovyObjectSupport implements Service {
 	public DnsZone zone(String name, String primaryNameServer, String email,
 			String address, long ttl) {
 		DnsZone zone = dnsZoneFactory.create(name, primaryNameServer, email,
-				serial);
+				getSerial());
 		zones.add(zone);
 		ARecord arecord = zone.a_record(name, address);
 		arecord.ttl(ttl);
 		return zone;
+	}
+
+	/**
+	 * Returns the serial number.
+	 */
+	public int getSerial() {
+		return generate ? generateSerial(serial) : serial;
+	}
+
+	private int generateSerial(int serial) {
+		DateTime date = new DateTime();
+		String string = format("%d%d%d%02d", date.getYear(),
+				date.getMonthOfYear(), date.getDayOfMonth(), serial);
+		return Integer.parseInt(string);
 	}
 
 	/**

@@ -1,0 +1,3 @@
+restart(restartCommand, prefix) ::= <%
+<prefix><restartCommand> restart
+%>

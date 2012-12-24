@@ -80,6 +80,11 @@ class LinuxScript extends Script {
 	TemplateResource zoneConfiguration
 
 	/**
+	 * Resource containing the commands regarding the MaraDNS service.
+	 */
+	TemplateResource serviceCommands
+
+	/**
 	 * The name of the profile for the script.
 	 */
 	String name
@@ -109,6 +114,7 @@ class LinuxScript extends Script {
 		commandTemplates = templatesFactory.create "ScriptCommandTemplates"
 		configuration = templates.getResource("configuration")
 		zoneConfiguration = templates.getResource("zonedb")
+		serviceCommands = templates.getResource("commands")
 		enableUniverseRepository()
 		installPackages(profile.packages)
 		deployConfiguration()
@@ -197,9 +203,6 @@ class LinuxScript extends Script {
 		new File(configurationDir, "db.${zone.name}")
 	}
 
-	def restartService() {
-	}
-
 	/**
 	 * Returns the template tokens for the dns configuration.
 	 */
@@ -236,19 +239,26 @@ class LinuxScript extends Script {
 	}
 
 	/**
+	 * Restart the MaraDNS server.
+	 */
+	def restartService() {
+		def worker = scriptCommandWorkerFactory.create(serviceCommands,
+						"restart",
+						"restartCommand", restartCommand,
+						"prefix", system.prefix)()
+		log.restartDone this, worker
+	}
+
+	String getRestartCommand() {
+		def command = profile.restart_command
+		command != null ? command : defaultProperties.getProperty("restart_command")
+	}
+
+	/**
 	 * Returns the name of the service.
 	 */
 	String getServiceName() {
 		service.name
-	}
-
-	/**
-	 * Restarts the hostname service.
-	 */
-	def restartHostnameService() {
-		def template = templates.getResource("restart_hostname_command")
-		def worker = scriptCommandWorkerFactory.create(template, "prefix", system.prefix)()
-		log.info "Restart done with output '{}'.", worker.out
 	}
 
 	String toString() {

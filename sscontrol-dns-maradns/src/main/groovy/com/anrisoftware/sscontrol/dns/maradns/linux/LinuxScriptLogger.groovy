@@ -45,4 +45,15 @@ class LinuxScriptLogger extends AbstractSerializedLogger {
 			log.info "Deployed MaraDNS configuration."
 		}
 	}
+
+	void restartDone(LinuxScript script, ScriptCommandWorker worker) {
+		if (log.isTraceEnabled()) {
+			log.trace "Restarted MaraDNS configuration for {}: {}, output: '${worker.out}', error: '${worker.err}', exit code: '${worker.exitCode}'.",
+							script, worker
+		} else if (log.isDebugEnabled()) {
+			log.debug "Restarted MaraDNS service for {}: {}.", script, worker
+		} else {
+			log.info "Restarted MaraDNS service."
+		}
+	}
 }

@@ -14,6 +14,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.joda.time.Duration;
 
 import com.anrisoftware.propertiesutils.ContextProperties;
+import com.anrisoftware.propertiesutils.DateContextProperties;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
@@ -143,10 +144,10 @@ public class DnsZone extends GroovyObjectSupport implements Serializable {
 		this.primaryNameServer = primaryNameServer.replaceAll("%", name);
 		this.email = email.replaceAll("%", name);
 		this.serial = serial;
-		setupDefaults(p);
+		setupDefaultTimes(new DateContextProperties(p.getContext(), p));
 	}
 
-	private void setupDefaults(ContextProperties p) {
+	private void setupDefaultTimes(DateContextProperties p) {
 		this.ttl = p.getDurationProperty(TTL_PROPERTY);
 		this.refresh = p.getDurationProperty(REFRESH_PROPERTY);
 		this.retry = p.getDurationProperty(RETRY_PROPERTY);

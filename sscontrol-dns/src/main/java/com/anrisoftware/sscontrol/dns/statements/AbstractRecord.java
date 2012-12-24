@@ -10,6 +10,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.joda.time.Duration;
 
 import com.anrisoftware.propertiesutils.ContextProperties;
+import com.anrisoftware.propertiesutils.DateContextProperties;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
@@ -62,10 +63,10 @@ abstract class AbstractRecord extends GroovyObjectSupport implements
 			@Assisted DnsZone zone) {
 		this.log = log;
 		this.zone = zone;
-		setupDefaults(p);
+		setupDefaultTimes(new DateContextProperties(p.getContext(), p));
 	}
 
-	private void setupDefaults(ContextProperties p) {
+	private void setupDefaultTimes(DateContextProperties p) {
 		this.ttl = p.getDurationProperty(TTL_PROPERTY);
 	}
 

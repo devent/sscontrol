@@ -4,16 +4,20 @@
 
 # We must initialize the csv1 hash, or MaraDNS will be unable to
 # load any zone files
-## SSCONTROL-MARADNS
+# SSCONTROL-dns
 csv1 = {}
-## SSCONTROL-MARADNS END
+# SSCONTROL-dns-END
+
 
 # This is just to show the format of the file
 # csv1["example.com."] = "db.example.com"
 
 # The address this DNS server runs on.  If you want to bind
 # to all addresses a given machine has, use "0.0.0.0".
-bind_address = "127.0.0.3"
+# SSCONTROL-dns
+bind_address = "127.0.0.1"
+# SSCONTROL-dns-END
+
 # The directory with all of the zone files
 chroot_dir = "/etc/maradns"
 # The numeric UID MaraDNS will run as
@@ -225,3 +229,12 @@ ipv4_alias["opennic"] = "131.161.247.226,209.151.84.102,64.247.218.140,64.247.21
 
 # And that does it for the caching at this point
 
+# SSCONTROL-dns
+csv1["example1.com."] = "db.example1.com"
+# SSCONTROL-dns-END
+# SSCONTROL-dns
+csv1["example2.com."] = "db.example2.com"
+# SSCONTROL-dns-END
+# SSCONTROL-dns
+csv1["anrisoftware.com."] = "db.anrisoftware.com"
+# SSCONTROL-dns-END

@@ -1,0 +1,23 @@
+csv_hash() ::= <%
+csv1 = {}
+%>
+
+csv_hash_search() ::= <%
+#?csv1\s*=\s*\{\}
+%>
+
+bind_address(service) ::= <%
+bind_address = "<first(service.bindAddresses)>"
+%>
+
+bind_address_search() ::= <%
+#?bind_address\s*=\s*".*"
+%>
+
+zone(zone) ::= <%
+csv1["<zone.name>."] = "db.<zone.name>"
+%>
+
+zone_search(zone) ::= <%
+#?\s*csv1\["<zone.name>\."\]\s*=\s*"db\.<zone.name>"
+%>

@@ -53,7 +53,7 @@ class MaraDnsUbuntuTest extends MaraDnsLinuxUtil {
 			registry.allServices.each { it.call() }
 			log.info "Run service again to ensure that configuration is not set double."
 			registry.allServices.each { it.call() }
-			assertFileContent(new File(it, "/etc/maradns/maradns.rc"), maradnsrcExpected)
+			assertFileContent(new File(it, "/etc/maradns/mararc"), maradnsrcExpected)
 		}, {
 			copyResourceToCommand(addAptRepositoryCommand, new File(it, "/usr/bin/add-apt-repository"))
 			copyResourceToCommand(aptitudeCommand, new File(it, "/usr/bin/aptitude"))

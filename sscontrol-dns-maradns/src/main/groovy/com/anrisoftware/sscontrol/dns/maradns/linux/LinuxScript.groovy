@@ -24,10 +24,12 @@ import javax.inject.Named
 import org.apache.commons.io.FileUtils
 
 import com.anrisoftware.propertiesutils.ContextProperties
+import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.Templates
 import com.anrisoftware.resources.templates.api.TemplatesFactory
 import com.anrisoftware.sscontrol.core.api.ProfileProperties
 import com.anrisoftware.sscontrol.core.api.Service
+import com.anrisoftware.sscontrol.dns.statements.DnsZone
 import com.anrisoftware.sscontrol.workers.command.script.ScriptCommandWorkerFactory
 import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokenMarker
 import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokenTemplate
@@ -68,6 +70,11 @@ class LinuxScript extends Script {
 	Templates commandTemplates
 
 	/**
+	 * Resource containing the MaraDNS configuration templates.
+	 */
+	TemplateResource configuration
+
+	/**
 	 * The name of the profile for the script.
 	 */
 	String name
@@ -95,6 +102,7 @@ class LinuxScript extends Script {
 	def run() {
 		templates = templatesFactory.create "Maradns_$name"
 		commandTemplates = templatesFactory.create "ScriptCommandTemplates"
+		configuration = templates.getResource("configuration")
 		enableUniverseRepository()
 		installPackages(profile.packages)
 		deployConfiguration()
@@ -129,17 +137,34 @@ class LinuxScript extends Script {
 	 */
 	def deployConfiguration() {
 		deployCsvHash()
+		deployBindAddress()
 		deployZones()
 	}
 
 	def deployCsvHash() {
-		def configuration = "csv1 = {}"
-		def tokenTemplate = new TokenTemplate(/#?csv1\s*=\s*\{\}/, configuration)
+		def search = configuration.getText(true, "csv_hash_search")
+		def replace = configuration.getText(true, "csv_hash")
+		def tokenTemplate = new TokenTemplate(search, replace)
+		def worker = tokensTemplateWorkerFactory.create(tokens, tokenTemplate, mararcConfiguration)()
+		FileUtils.write(mararcFile, worker.text, system.charset)
+	}
+
+	def deployBindAddress() {
+		def search = configuration.getText(true, "bind_address_search")
+		def replace = configuration.getText(true, "bind_address", "service", service)
+		def tokenTemplate = new TokenTemplate(search, replace)
 		def worker = tokensTemplateWorkerFactory.create(tokens, tokenTemplate, mararcConfiguration)()
 		FileUtils.write(mararcFile, worker.text, system.charset)
 	}
 
 	def deployZones() {
+		service.zones.each { DnsZone it ->
+			def search = configuration.getText(true, "zone_search", "zone", it)
+			def replace = configuration.getText(true, "zone", "zone", it)
+			def tokenTemplate = new TokenTemplate(search, replace)
+			def worker = tokensTemplateWorkerFactory.create(tokens, tokenTemplate, mararcConfiguration)()
+			FileUtils.write(mararcFile, worker.text, system.charset)
+		}
 	}
 
 	def restartService() {

@@ -19,9 +19,11 @@
 package com.anrisoftware.sscontrol.dns.maradns.linux
 
 import javax.inject.Inject
+import javax.inject.Named
 
 import org.apache.commons.io.FileUtils
 
+import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.resources.templates.api.Templates
 import com.anrisoftware.resources.templates.api.TemplatesFactory
 import com.anrisoftware.sscontrol.core.api.ProfileProperties
@@ -41,6 +43,10 @@ class LinuxScript extends Script {
 
 	@Inject
 	LinuxScriptLogger log
+
+	@Inject
+	@Named("maradns-linux-default-properties")
+	ContextProperties defaultProperties
 
 	@Inject
 	TemplatesFactory templatesFactory
@@ -127,6 +133,10 @@ class LinuxScript extends Script {
 	}
 
 	def deployCsvHash() {
+		def configuration = "csv1 = {}"
+		def tokenTemplate = new TokenTemplate(/#?csv1\s*=\s*\{\}/, configuration)
+		def worker = tokensTemplateWorkerFactory.create(tokens, tokenTemplate, mararcConfiguration)()
+		FileUtils.write(mararcFile, worker.text, system.charset)
 	}
 
 	def deployZones() {
@@ -136,38 +146,38 @@ class LinuxScript extends Script {
 	}
 
 	/**
-	 * Returns path of the MaraDNS configuration directory.
-	 */
-	File getConfigurationDir() {
-		profile.configuration_dir as File
-	}
-
-	/**
-	 * Returns the hostname configuration.
-	 */
-	String getConfiguration() {
-		def res = templates.getResource("hostname_configuration")
-		res.getText("hostname", service.hostname)
-	}
-
-	/**
-	 * Returns the current hostname configuration.
-	 */
-	String getCurrentConfiguration() {
-		if (configurationFile.isFile()) {
-			def config = configuration
-			FileUtils.readFileToString(configurationFile, system.charset)
-		} else {
-			log.info "No file {} found in {}.", configurationFile, this
-			""
-		}
-	}
-
-	/**
-	 * Returns the template tokens for the hostname configuration.
+	 * Returns the template tokens for the dns configuration.
 	 */
 	TokenMarker getTokens() {
 		new TokenMarker("# SSCONTROL-$serviceName", "# SSCONTROL-$serviceName-END\n")
+	}
+
+	/**
+	 * Returns path of the MaraDNS configuration directory.
+	 */
+	File getConfigurationDir() {
+		def file = profile.configuration_dir as File
+		file != null ? file : defaultProperties.getFileProperty("configuration_dir")
+	}
+
+	/**
+	 * Returns the file of the {@code mararc} configuration file.
+	 */
+	File getMararcFile() {
+		def file = defaultProperties.getProperty("configuration_file", "mararc")
+		new File(configurationDir, file)
+	}
+
+	/**
+	 * Returns the current {@code mararc} configuration.
+	 */
+	String getMararcConfiguration() {
+		if (mararcFile.isFile()) {
+			FileUtils.readFileToString(mararcFile, system.charset)
+		} else {
+			log.noMararcConfigurationFound this, mararcFile
+			""
+		}
 	}
 
 	/**
@@ -175,22 +185,6 @@ class LinuxScript extends Script {
 	 */
 	String getServiceName() {
 		service.name
-	}
-
-	/**
-	 * Returns the token template for the hostname configuration.
-	 */
-	TokenTemplate getTokenTemplate() {
-		new TokenTemplate(".*", configuration)
-	}
-
-	/**
-	 * Deploys the hostname configuration to the hostname configuration file.
-	 */
-	def deployHostnameConfiguration() {
-		def worker = tokensTemplateWorkerFactory.create(tokens, tokenTemplate, currentConfiguration)()
-		FileUtils.write(configurationFile, worker.text, system.charset)
-		log.info "Deploy hostname configuration '$worker.text' to {} in {}.", configurationFile, this
 	}
 
 	/**

@@ -29,4 +29,12 @@ class LinuxScriptLogger extends AbstractSerializedLogger {
 			log.info "Installed dns service packages: {}.", profile.packages
 		}
 	}
+
+	void noMararcConfigurationFound(LinuxScript script, File file) {
+		if (log.isDebugEnabled()) {
+			log.warn "No MaraDNS configuration file found for {}: {}.", script, file
+		} else {
+			log.warn "No MaraDNS configuration file found: {}.", script, file
+		}
+	}
 }

@@ -21,15 +21,24 @@ package com.anrisoftware.sscontrol.dns.maradns.ubuntu;
 import static com.google.inject.multibindings.MapBinder.newMapBinder;
 import groovy.lang.Script;
 
+import java.io.IOException;
+import java.net.URL;
+
+import javax.inject.Named;
+import javax.inject.Singleton;
+
+import com.anrisoftware.propertiesutils.ContextProperties;
+import com.anrisoftware.propertiesutils.ContextPropertiesFactory;
 import com.anrisoftware.resources.templates.maps.TemplatesDefaultMapsModule;
 import com.anrisoftware.resources.templates.templates.TemplatesResourcesModule;
 import com.anrisoftware.resources.templates.worker.STDefaultPropertiesModule;
 import com.anrisoftware.resources.templates.worker.STWorkerModule;
-import com.anrisoftware.sscontrol.dns.maradns.ubuntu.Ubuntu_10_04Script;
+import com.anrisoftware.sscontrol.dns.maradns.linux.LinuxScript;
 import com.anrisoftware.sscontrol.workers.command.exec.ExecCommandWorkerModule;
 import com.anrisoftware.sscontrol.workers.command.script.ScriptCommandWorkerModule;
 import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokensTemplateWorkerModule;
 import com.google.inject.AbstractModule;
+import com.google.inject.Provides;
 import com.google.inject.multibindings.MapBinder;
 
 /**
@@ -39,6 +48,9 @@ import com.google.inject.multibindings.MapBinder;
  * @since 1.0
  */
 class MaraDnsModule extends AbstractModule {
+
+	private static final URL MARADNS_LINUX_DEFAULT_PROPERTIES_URL = MaraDnsModule.class
+			.getResource("/maradns_linux_default.properties");
 
 	@Override
 	protected void configure() {
@@ -58,4 +70,11 @@ class MaraDnsModule extends AbstractModule {
 		binder.addBinding("maradns.ubuntu_10_04").to(Ubuntu_10_04Script.class);
 	}
 
+	@Provides
+	@Singleton
+	@Named("maradns-linux-default-properties")
+	ContextProperties getMaradnsLinuxDefaultProperties() throws IOException {
+		return new ContextPropertiesFactory(LinuxScript.class)
+				.fromResource(MARADNS_LINUX_DEFAULT_PROPERTIES_URL);
+	}
 }

@@ -28,5 +28,6 @@ profile "ubuntu_10_04", {
 	dns {
 		service "maradns"
 		packages "maradns"
+		configuration_dir "${tmp}/etc/maradns"
 	}
 }

@@ -58,7 +58,7 @@ class MaraDnsUbuntuTest extends MaraDnsLinuxUtil {
 			copyResourceToCommand(addAptRepositoryCommand, new File(it, "/usr/bin/add-apt-repository"))
 			copyResourceToCommand(aptitudeCommand, new File(it, "/usr/bin/aptitude"))
 			copyResourceToCommand(restartMaraDnsCommand, new File(it, "/etc/init.d/maradns"))
-			copyResourceToFile(maraDnsConfiguration, new File(it, "/etc/maradns/maradns.rc"))
-		}, tmp
+			copyResourceToFile(maraDnsConfiguration, new File(it, "/etc/maradns/mararc"))
+		}, tmp, true
 	}
 }

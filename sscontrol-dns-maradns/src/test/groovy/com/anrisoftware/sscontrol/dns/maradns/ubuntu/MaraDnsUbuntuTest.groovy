@@ -42,6 +42,12 @@ class MaraDnsUbuntuTest extends MaraDnsLinuxUtil {
 
 	static maraDnsConfiguration = resourceURL("maradns_ubuntu_10_04_conf.txt", MaraDnsUbuntuTest)
 
+	static dbAnrisoftwareExpected = resourceURL("db.anrisoftware.com.txt", MaraDnsUbuntuTest)
+
+	static dbExample1Expected = resourceURL("db.example1.com.txt", MaraDnsUbuntuTest)
+
+	static dbExample2Expected = resourceURL("db.example2.com.txt", MaraDnsUbuntuTest)
+
 	@Test
 	void "maradns service"() {
 		ServicesRegistry registry = injector.getInstance ServicesRegistry
@@ -51,14 +57,22 @@ class MaraDnsUbuntuTest extends MaraDnsLinuxUtil {
 		loader.loadService(maraDnsService, variables, registry, profile)
 		withFiles "hostname", {
 			registry.allServices.each { it.call() }
+			assertFiles(it)
 			log.info "Run service again to ensure that configuration is not set double."
 			registry.allServices.each { it.call() }
-			assertFileContent(new File(it, "/etc/maradns/mararc"), maradnsrcExpected)
+			assertFiles(it)
 		}, {
 			copyResourceToCommand(addAptRepositoryCommand, new File(it, "/usr/bin/add-apt-repository"))
 			copyResourceToCommand(aptitudeCommand, new File(it, "/usr/bin/aptitude"))
 			copyResourceToCommand(restartMaraDnsCommand, new File(it, "/etc/init.d/maradns"))
 			copyResourceToFile(maraDnsConfiguration, new File(it, "/etc/maradns/mararc"))
 		}, tmp, true
+	}
+
+	private assertFiles(it) {
+		assertFileContent(new File(it, "/etc/maradns/mararc"), maradnsrcExpected)
+		assertFileContent(new File(it, "/etc/maradns/db.anrisoftware.com"), dbAnrisoftwareExpected)
+		assertFileContent(new File(it, "/etc/maradns/db.example1.com"), dbExample1Expected)
+		assertFileContent(new File(it, "/etc/maradns/db.example2.com"), dbExample2Expected)
 	}
 }

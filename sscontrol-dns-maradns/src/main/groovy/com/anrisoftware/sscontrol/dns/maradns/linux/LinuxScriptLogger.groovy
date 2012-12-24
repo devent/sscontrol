@@ -37,4 +37,12 @@ class LinuxScriptLogger extends AbstractSerializedLogger {
 			log.warn "No MaraDNS configuration file found: {}.", script, file
 		}
 	}
+
+	void deployConfiguration(LinuxScript script) {
+		if (log.isDebugEnabled()) {
+			log.debug "Deployed MaraDNS configuration for {}.", script
+		} else {
+			log.info "Deployed MaraDNS configuration."
+		}
+	}
 }

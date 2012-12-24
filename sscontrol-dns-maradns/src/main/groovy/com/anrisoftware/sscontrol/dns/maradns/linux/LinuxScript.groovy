@@ -18,10 +18,10 @@
  */
 package com.anrisoftware.sscontrol.dns.maradns.linux
 
+import static org.apache.commons.io.FileUtils.*
+
 import javax.inject.Inject
 import javax.inject.Named
-
-import org.apache.commons.io.FileUtils
 
 import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.resources.templates.api.TemplateResource
@@ -75,6 +75,11 @@ class LinuxScript extends Script {
 	TemplateResource configuration
 
 	/**
+	 * Resource containing the zone database file templates.
+	 */
+	TemplateResource zoneConfiguration
+
+	/**
 	 * The name of the profile for the script.
 	 */
 	String name
@@ -103,6 +108,7 @@ class LinuxScript extends Script {
 		templates = templatesFactory.create "Maradns_$name"
 		commandTemplates = templatesFactory.create "ScriptCommandTemplates"
 		configuration = templates.getResource("configuration")
+		zoneConfiguration = templates.getResource("zonedb")
 		enableUniverseRepository()
 		installPackages(profile.packages)
 		deployConfiguration()
@@ -139,6 +145,7 @@ class LinuxScript extends Script {
 		deployCsvHash()
 		deployBindAddress()
 		deployZones()
+		log.deployConfiguration this
 	}
 
 	def deployCsvHash() {
@@ -146,7 +153,7 @@ class LinuxScript extends Script {
 		def replace = configuration.getText(true, "csv_hash")
 		def tokenTemplate = new TokenTemplate(search, replace)
 		def worker = tokensTemplateWorkerFactory.create(tokens, tokenTemplate, mararcConfiguration)()
-		FileUtils.write(mararcFile, worker.text, system.charset)
+		write mararcFile, worker.text, system.charset
 	}
 
 	def deployBindAddress() {
@@ -154,17 +161,31 @@ class LinuxScript extends Script {
 		def replace = configuration.getText(true, "bind_address", "service", service)
 		def tokenTemplate = new TokenTemplate(search, replace)
 		def worker = tokensTemplateWorkerFactory.create(tokens, tokenTemplate, mararcConfiguration)()
-		FileUtils.write(mararcFile, worker.text, system.charset)
+		write mararcFile, worker.text, system.charset
 	}
 
 	def deployZones() {
 		service.zones.each { DnsZone it ->
-			def search = configuration.getText(true, "zone_search", "zone", it)
-			def replace = configuration.getText(true, "zone", "zone", it)
-			def tokenTemplate = new TokenTemplate(search, replace)
-			def worker = tokensTemplateWorkerFactory.create(tokens, tokenTemplate, mararcConfiguration)()
-			FileUtils.write(mararcFile, worker.text, system.charset)
+			deployZoneHash(it)
+			deployZoneDb(it)
 		}
+	}
+
+	def deployZoneHash(DnsZone zone) {
+		def search = configuration.getText(true, "zone_search", "zone", zone)
+		def replace = configuration.getText(true, "zone", "zone", zone)
+		def tokenTemplate = new TokenTemplate(search, replace)
+		def worker = tokensTemplateWorkerFactory.create(tokens, tokenTemplate, mararcConfiguration)()
+		write mararcFile, worker.text, system.charset
+	}
+
+	def deployZoneDb(DnsZone zone) {
+		def zoneconfig = zoneConfiguration.getText(true, "zone", zone)
+		write getZoneFile(zone), zoneconfig, system.charset
+	}
+
+	File getZoneFile(DnsZone zone) {
+		new File(configurationDir, "db.${zone.name}")
 	}
 
 	def restartService() {
@@ -198,7 +219,7 @@ class LinuxScript extends Script {
 	 */
 	String getMararcConfiguration() {
 		if (mararcFile.isFile()) {
-			FileUtils.readFileToString(mararcFile, system.charset)
+			readFileToString mararcFile, system.charset
 		} else {
 			log.noMararcConfigurationFound this, mararcFile
 			""

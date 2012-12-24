@@ -1,6 +1,6 @@
 package com.anrisoftware.sscontrol.dns.maradns.ubuntu
 dns {
-	serial 1
+	serial 1, false
 
 	// bind the dns server to localhost only
 	bind_address "127.0.0.1"

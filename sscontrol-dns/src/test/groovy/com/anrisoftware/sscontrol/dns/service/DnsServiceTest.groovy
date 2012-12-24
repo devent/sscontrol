@@ -63,6 +63,14 @@ class DnsServiceTest {
 
 	static dnsOriginShortcutScript = resourceURL("DnsOriginShortcut.groovy", DnsServiceTest)
 
+	static dnsBindOneAddress = resourceURL("DnsBindOneAddress.groovy", DnsServiceTest)
+
+	static dnsBindMultipleAddressString = resourceURL("DnsBindMultipleAddressString.groovy", DnsServiceTest)
+
+	static dnsBindMultipleAddressArray = resourceURL("DnsBindMultipleAddressArray.groovy", DnsServiceTest)
+
+	static dnsBindRemoveLocalhost = resourceURL("DnsBindRemoveLocalhost.groovy", DnsServiceTest)
+
 	Injector injector
 
 	File tmp
@@ -78,7 +86,70 @@ class DnsServiceTest {
 		loader.loadService(dnsSerialScript, variables, registry, profile)
 		withFiles NAME, {}, {}, tmp
 
+		registry.getService("dns")[0].generate = false
 		assertService registry.getService("dns")[0], 99, ["127.0.0.1"]
+	}
+
+	@Test
+	void "dns bind one address"() {
+		ServicesRegistry registry = injector.getInstance ServicesRegistry
+		SscontrolServiceLoader loader = injector.getInstance SscontrolServiceLoader
+		loader.loadService(ubuntu1004Profile, variables, registry, null)
+		def profile = registry.getService("profile")[0]
+		loader.loadService(dnsBindOneAddress, variables, registry, profile)
+		withFiles NAME, {}, {}, tmp
+
+		registry.getService("dns")[0].generate = false
+		assertService registry.getService("dns")[0], 0, ["127.0.0.1"]
+	}
+
+	@Test
+	void "dns bind multiple address string"() {
+		ServicesRegistry registry = injector.getInstance ServicesRegistry
+		SscontrolServiceLoader loader = injector.getInstance SscontrolServiceLoader
+		loader.loadService(ubuntu1004Profile, variables, registry, null)
+		def profile = registry.getService("profile")[0]
+		loader.loadService(dnsBindMultipleAddressString, variables, registry, profile)
+		withFiles NAME, {}, {}, tmp
+
+		registry.getService("dns")[0].generate = false
+		assertService registry.getService("dns")[0], 0, [
+			"127.0.0.3",
+			"127.0.0.2",
+			"127.0.0.4",
+			"127.0.0.1"
+		]
+	}
+
+	@Test
+	void "dns bind multiple address array"() {
+		ServicesRegistry registry = injector.getInstance ServicesRegistry
+		SscontrolServiceLoader loader = injector.getInstance SscontrolServiceLoader
+		loader.loadService(ubuntu1004Profile, variables, registry, null)
+		def profile = registry.getService("profile")[0]
+		loader.loadService(dnsBindMultipleAddressArray, variables, registry, profile)
+		withFiles NAME, {}, {}, tmp
+
+		registry.getService("dns")[0].generate = false
+		assertService registry.getService("dns")[0], 0, [
+			"127.0.0.3",
+			"127.0.0.2",
+			"127.0.0.4",
+			"127.0.0.1"
+		]
+	}
+
+	@Test
+	void "dns bind remove localhost"() {
+		ServicesRegistry registry = injector.getInstance ServicesRegistry
+		SscontrolServiceLoader loader = injector.getInstance SscontrolServiceLoader
+		loader.loadService(ubuntu1004Profile, variables, registry, null)
+		def profile = registry.getService("profile")[0]
+		loader.loadService(dnsBindRemoveLocalhost, variables, registry, profile)
+		withFiles NAME, {}, {}, tmp
+
+		registry.getService("dns")[0].generate = false
+		assertService registry.getService("dns")[0], 0, ["192.168.0.1"]
 	}
 
 	@Test
@@ -90,6 +161,7 @@ class DnsServiceTest {
 		loader.loadService(dnsZoneARecordsScript, variables, registry, profile)
 		withFiles NAME, {}, {}, tmp
 
+		registry.getService("dns")[0].generate = false
 		def service = assertService registry.getService("dns")[0], 0, ["127.0.0.1"]
 		def zone = assertZone service.zones[0], "testa.com", "ns1.testa.com", "hostmaster@testa.com", 86400
 		assertARecord zone.aaRecords[0], "testa.com", "192.168.0.49", 1
@@ -106,6 +178,7 @@ class DnsServiceTest {
 		loader.loadService(dnsZoneCnameRecordsScript, variables, registry, profile)
 		withFiles NAME, {}, {}, tmp
 
+		registry.getService("dns")[0].generate = false
 		def service = assertService registry.getService("dns")[0], 0, ["127.0.0.1"]
 		def zone = assertZone service.zones[0], "testa.com", "ns1.testa.com", "hostmaster@testa.com", 86400
 		assertCNAMERecord zone.cnameRecords[0], "www.testa.com", "testa.com", 86400
@@ -121,6 +194,7 @@ class DnsServiceTest {
 		loader.loadService(dnsZoneMxRecordsScript, variables, registry, profile)
 		withFiles NAME, {}, {}, tmp
 
+		registry.getService("dns")[0].generate = false
 		def service = assertService registry.getService("dns")[0], 0, ["127.0.0.1"]
 		def zone = assertZone service.zones[0], "testa.com", "ns1.testa.com", "hostmaster@testa.com", 86400
 		assertARecord zone.aaRecords[0], "mx1.testa.com", "192.168.0.49", 86400
@@ -142,6 +216,7 @@ class DnsServiceTest {
 		loader.loadService(dnsZoneNsRecordsScript, variables, registry, profile)
 		withFiles NAME, {}, {}, tmp
 
+		registry.getService("dns")[0].generate = false
 		def service = assertService registry.getService("dns")[0], 0, ["127.0.0.1"]
 		def zone = assertZone service.zones[0], "testa.com", "ns1.testa.com", "hostmaster@testa.com", 86400
 		assertARecord zone.aaRecords[0], "ns1.testa.com", "192.168.0.49", 86400
@@ -159,6 +234,7 @@ class DnsServiceTest {
 		loader.loadService(dnsAutomaticARecordZoneScript, variables, registry, profile)
 		withFiles NAME, {}, {}, tmp
 
+		registry.getService("dns")[0].generate = false
 		def service = assertService registry.getService("dns")[0], 0, ["127.0.0.1"]
 		def zone = assertZone service.zones[0], "testa.com", "ns1.testa.com", "hostmaster@testa.com", 86400
 		assertARecord zone.aaRecords[0], "testa.com", "192.168.0.49", 86400
@@ -175,6 +251,7 @@ class DnsServiceTest {
 		loader.loadService(dnsNoAutomaticARecordsScript, variables, registry, profile)
 		withFiles NAME, {}, {}, tmp
 
+		registry.getService("dns")[0].generate = false
 		def service = assertService registry.getService("dns")[0], 0, ["127.0.0.1"]
 		def zone = assertZone service.zones[0], "testa.com", "ns1.testa.com", "hostmaster@testa.com", 86400
 		assertARecord zone.aaRecords[0], "testa.com", "192.168.0.49", 86400
@@ -192,6 +269,7 @@ class DnsServiceTest {
 		loader.loadService(dnsOriginShortcutScript, variables, registry, profile)
 		withFiles NAME, {}, {}, tmp
 
+		registry.getService("dns")[0].generate = false
 		def service = assertService registry.getService("dns")[0], 0, ["127.0.0.1"]
 		def zone = assertZone service.zones[0], "testa.com", "ns1.testa.com", "hostmaster@testa.com", 86400
 		assertARecord zone.aaRecords[0], "testa.com", "192.168.0.49", 86400

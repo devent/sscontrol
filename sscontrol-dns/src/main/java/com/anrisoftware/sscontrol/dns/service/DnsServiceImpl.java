@@ -27,12 +27,13 @@ import groovy.lang.Script;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.ServiceLoader;
+import java.util.Set;
 
 import javax.inject.Inject;
-import javax.inject.Named;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.joda.time.DateTime;
@@ -56,8 +57,6 @@ import com.anrisoftware.sscontrol.dns.statements.DnsZoneFactory;
  */
 class DnsServiceImpl extends GroovyObjectSupport implements Service {
 
-	private static final String BIND_ADDRESSES_PROPERTY = "default_bind_addresses";
-
 	/**
 	 * @version 0.1
 	 */
@@ -72,7 +71,7 @@ class DnsServiceImpl extends GroovyObjectSupport implements Service {
 
 	private ProfileService profile;
 
-	private final List<String> bindAddresses;
+	private final BindAddresses bindAddresses;
 
 	private final List<DnsZone> zones;
 
@@ -106,16 +105,12 @@ class DnsServiceImpl extends GroovyObjectSupport implements Service {
 	@Inject
 	DnsServiceImpl(DnsServiceImplLogger logger,
 			ServiceLoader<ServiceScriptFactory> serviceScripts,
-			@Named("dns-defaults-properties") ContextProperties p) {
+			BindAddresses bindAddresses) {
 		this.log = logger;
 		this.serviceScripts = serviceScripts;
-		this.bindAddresses = new ArrayList<String>();
+		this.bindAddresses = bindAddresses;
 		this.zones = new ArrayList<DnsZone>();
-		setDefaultBindAddresses(p);
-	}
-
-	private void setDefaultBindAddresses(ContextProperties p) {
-		bindAddresses.addAll(p.getListProperty(BIND_ADDRESSES_PROPERTY));
+		this.generate = true;
 	}
 
 	/**
@@ -166,16 +161,32 @@ class DnsServiceImpl extends GroovyObjectSupport implements Service {
 	 */
 	public Object serial(int newSerial, boolean generate) {
 		this.serial = newSerial;
-		this.generate = generate;
 		log.serialSet(this, newSerial, generate);
+		setGenerate(generate);
 		return this;
 	}
 
 	/**
-	 * Sets the IP address to where to bind the DNS service.
+	 * Sets whether the serial should be generated.
+	 * <p>
+	 * The service can create serial numbers based on the current date but the
+	 * user needs to update this serial number if the records are changed more
+	 * then once in a day.
+	 * 
+	 * @param generate
+	 *            {@code true} if the serial number should be generated,
+	 *            {@code false} if not.
+	 */
+	public void setGenerate(boolean generate) {
+		this.generate = generate;
+		log.generateSet(this, generate);
+	}
+
+	/**
+	 * Sets the IP addresses or host names to where to bind the DNS service.
 	 * 
 	 * @param hosts
-	 *            the IP address or the host name.
+	 *            the IP address or the host names.
 	 * 
 	 * @return this {@link Service}.
 	 * 
@@ -183,12 +194,12 @@ class DnsServiceImpl extends GroovyObjectSupport implements Service {
 	 *             if the host name was not found.
 	 */
 	public Object bind_address(String... hosts) throws ServiceException {
-		List<String> list = new ArrayList<String>();
+		Set<String> list = new HashSet<String>();
 		for (String host : hosts) {
 			list.addAll(Arrays.asList(split(host, " ;,")));
 		}
 		bindAddresses.addAll(list);
-		log.bindAddressesSet(this, list);
+		log.bindAddressesSet(this, bindAddresses);
 		return this;
 	}
 
@@ -198,7 +209,7 @@ class DnsServiceImpl extends GroovyObjectSupport implements Service {
 	 * @return an unmodifiable {@link List} of IP addresses.
 	 */
 	public List<String> getBindAddresses() {
-		return unmodifiableList(bindAddresses);
+		return bindAddresses.asList();
 	}
 
 	/**

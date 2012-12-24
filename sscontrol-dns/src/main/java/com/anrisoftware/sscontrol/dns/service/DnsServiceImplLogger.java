@@ -18,8 +18,6 @@
  */
 package com.anrisoftware.sscontrol.dns.service;
 
-import java.util.List;
-
 import com.anrisoftware.globalpom.log.AbstractLogger;
 import com.anrisoftware.sscontrol.core.api.ProfileService;
 import com.anrisoftware.sscontrol.core.api.ServiceException;
@@ -61,11 +59,23 @@ class DnsServiceImplLogger extends AbstractLogger {
 		}
 	}
 
-	void bindAddressesSet(DnsServiceImpl service, List<String> list) {
+	void generateSet(DnsServiceImpl service, boolean generate) {
 		if (log.isDebugEnabled()) {
-			log.debug("Bind addresses {} set for {}.", list, service);
+			log.debug("Serial number generator is set to active: {} for {}.",
+					generate, service);
 		} else {
-			log.info("Bind addresses {} set for DNS service.", list);
+			log.info(
+					"Serial number generator is set to active: {} for DNS service.",
+					generate);
+		}
+	}
+
+	void bindAddressesSet(DnsServiceImpl service, BindAddresses bindAddresses) {
+		if (log.isDebugEnabled()) {
+			log.debug("Bind addresses {} set for {}.", bindAddresses, service);
+		} else {
+			log.info("Bind addresses {} set for DNS service.",
+					bindAddresses.asList());
 		}
 	}
 

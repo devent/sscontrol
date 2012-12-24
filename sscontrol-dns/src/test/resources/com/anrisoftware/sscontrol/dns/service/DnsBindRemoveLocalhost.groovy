@@ -1,2 +1,2 @@
 package com.anrisoftware.sscontrol.dns.service
-dns { serial 99 }
+dns { bind_address "!127.0.0.1, 192.168.0.1" }

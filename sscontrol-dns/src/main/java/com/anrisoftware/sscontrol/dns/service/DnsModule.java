@@ -41,7 +41,7 @@ import com.google.inject.Provides;
 class DnsModule extends AbstractModule {
 
 	private static final URL DNS_DEFAULTS_PROPERTIES_RESOURCE = DnsModule.class
-			.getResource("dns_defaults.properties");
+			.getResource("/dns_defaults.properties");
 
 	@Override
 	protected void configure() {

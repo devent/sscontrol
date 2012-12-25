@@ -23,6 +23,7 @@ import groovy.lang.Script;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.ServiceLoader;
@@ -61,7 +62,7 @@ import com.anrisoftware.sscontrol.firewall.statements.Protocol;
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class FirewallServiceImpl implements Service {
+public class FirewallServiceImpl implements Service {
 
 	/**
 	 * @version 0.1
@@ -125,6 +126,15 @@ class FirewallServiceImpl implements Service {
 		this.allowDefaultFactory = allowDefaultFactory;
 		this.allowPortFactory = allowPortFactory;
 		this.allowFromFactory = allowFromFactory;
+	}
+
+	/**
+	 * Entry point for the firewall service script.
+	 * 
+	 * @return this {@link Service}.
+	 */
+	public Service firewall() {
+		return this;
 	}
 
 	public Object deny() {
@@ -205,34 +215,32 @@ class FirewallServiceImpl implements Service {
 		return statement;
 	}
 
-	public Object allow() {
+	public void allow() {
 		AllowDefault statement = allowDefaultFactory.create();
 		log.created(statement, this);
 		statements.add(statement);
-		return statement;
 	}
 
-	public Object allow(int port) {
-		return allow(port, Protocol.TCPUDP);
+	public void allow(int port) {
+		allow(port, Protocol.TCPUDP);
 	}
 
-	public Object allow(int port, Protocol proto) {
-		return allow(portFactory.fromPortNumber(port), proto);
+	public void allow(int port, Protocol proto) {
+		allow(portFactory.fromPortNumber(port), proto);
 	}
 
-	public Object allow(String service) {
-		return allow(portFactory.fromServiceName(service), Protocol.TCPUDP);
+	public void allow(String service) {
+		allow(portFactory.fromServiceName(service), Protocol.TCPUDP);
 	}
 
-	public Object allow(String service, Protocol proto) {
-		return allow(portFactory.fromServiceName(service), proto);
+	public void allow(String service, Protocol proto) {
+		allow(portFactory.fromServiceName(service), proto);
 	}
 
-	public Object allow(Port port, Protocol proto) {
+	public void allow(Port port, Protocol proto) {
 		AllowPort statement = allowPortFactory.create(port, proto);
 		log.created(statement, this);
 		statements.add(statement);
-		return statement;
 	}
 
 	public Object allow_from(Address address) {
@@ -281,6 +289,31 @@ class FirewallServiceImpl implements Service {
 		log.created(statement, this);
 		statements.add(statement);
 		return statement;
+	}
+
+	public Protocol getTcp() {
+		return Protocol.TCP;
+	}
+
+	public Protocol getUdp() {
+		return Protocol.UDP;
+	}
+
+	public Protocol getTcpUdp() {
+		return Protocol.TCPUDP;
+	}
+
+	public Address getAny() {
+		return addressFactory.anyAddress();
+	}
+
+	/**
+	 * Returns an unmodifiable list of the statements.
+	 * 
+	 * @return an unmodifiable {@link List} of the statements.
+	 */
+	public List<Serializable> getStatements() {
+		return Collections.unmodifiableList(statements);
 	}
 
 	/**

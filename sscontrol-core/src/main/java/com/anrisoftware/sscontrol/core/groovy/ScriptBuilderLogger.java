@@ -18,6 +18,10 @@
  */
 package com.anrisoftware.sscontrol.core.groovy;
 
+import static org.apache.commons.lang3.ArrayUtils.toArray;
+
+import java.util.Arrays;
+
 import com.anrisoftware.globalpom.log.AbstractLogger;
 import com.anrisoftware.sscontrol.core.api.ServiceException;
 
@@ -41,5 +45,20 @@ class ScriptBuilderLogger extends AbstractLogger {
 		ex.addContextValue("service name", name);
 		log.error(ex.getLocalizedMessage());
 		return ex;
+	}
+
+	void returnServiceProperty(ScriptBuilder script, String name) {
+		log.trace("Returning the service property '{}' for {}.", name, script);
+	}
+
+	void createdService(ScriptBuilder script) {
+		log.trace("Created service for {}.", script);
+	}
+
+	void invokeMethod(ScriptBuilder script, String name, Object[] array) {
+		if (log.isTraceEnabled()) {
+			log.trace("Invoke method '{}({})' for {}.",
+					toArray(name, Arrays.toString(array), script));
+		}
 	}
 }

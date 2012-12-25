@@ -48,6 +48,32 @@ public abstract class ScriptBuilder extends Script {
 		return service;
 	}
 
+	/**
+	 * Invoke the method with the specified name and no arguments.
+	 * <p>
+	 * Allowing the script to have a statement without empty parenthesis:
+	 * 
+	 * <pre>
+	 * service {
+	 *     statement
+	 * 
+	 *     // instead of
+	 *     statement()
+	 * }
+	 * </pre>
+	 * 
+	 * @param name
+	 *            the name of the property.
+	 * 
+	 * @return the value of the statement.
+	 * 
+	 * @throws ServiceException
+	 *             if there was an error in the service.
+	 */
+	public Object propertyMissing(String name) throws ServiceException {
+		return methodMissing(name, null);
+	}
+
 	public Object methodMissing(String name, Object args)
 			throws ServiceException {
 		GroovyObject current;

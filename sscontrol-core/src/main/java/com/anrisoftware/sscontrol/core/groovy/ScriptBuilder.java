@@ -69,8 +69,8 @@ public abstract class ScriptBuilder extends Script {
 			}
 		}
 
-		GroovyObject ret = (GroovyObject) current.invokeMethod(name,
-				argsList.toArray());
+		Object object = current.invokeMethod(name, argsList.toArray());
+		GroovyObject ret = new Proxy().wrap(object);
 		if (ret == null) {
 			delegate.pop();
 			return this;

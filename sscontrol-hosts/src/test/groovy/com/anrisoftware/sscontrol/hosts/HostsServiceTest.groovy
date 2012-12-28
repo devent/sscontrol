@@ -47,6 +47,8 @@ class HostsServiceTest {
 
 	static defaultHostsFile = resourceURL("default_hosts.txt", HostsServiceTest)
 
+	static hostsWithDefaultsExpected = resourceURL("hosts_defaults_expected.txt", HostsServiceTest)
+
 	Injector injector
 
 	Ubuntu_10_04Profile ubuntu_10_04Profile
@@ -66,10 +68,10 @@ class HostsServiceTest {
 		assertService registry
 		withFiles HostsServiceFactory.NAME, {
 			registry.allServices.each { it.call() }
-			assertFileContent(new File(it, "/etc/hosts"), hostsExpected)
+			assertFileContent new File(it, "/etc/hosts"), hostsExpected
 			log.info "Run service again to ensure that configuration is not set double."
 			registry.allServices.each { it.call() }
-			assertFileContent(new File(it, "/etc/hosts"), hostsExpected)
+			assertFileContent new File(it, "/etc/hosts"), hostsExpected
 		}, {}, tmp, true
 	}
 
@@ -82,10 +84,10 @@ class HostsServiceTest {
 		loader.loadService(hostsService, variables, registry, profile)
 		withFiles HostsServiceFactory.NAME, {
 			registry.allServices.each { it.call() }
-			assertFileContent(new File(it, "/etc/hosts"), hostsExpected)
+			assertFileContent new File(it, "/etc/hosts"), hostsWithDefaultsExpected
 			log.info "Run service again to ensure that configuration is not set double."
 			registry.allServices.each { it.call() }
-			assertFileContent(new File(it, "/etc/hosts"), hostsExpected)
+			assertFileContent new File(it, "/etc/hosts"), hostsWithDefaultsExpected
 		}, {
 			copyResourceToFile(defaultHostsFile, new File(it, "/etc/hosts"))
 		}, tmp

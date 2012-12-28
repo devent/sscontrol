@@ -1,7 +1,5 @@
 package com.anrisoftware.sscontrol.firewall.statements;
 
-import java.io.Serializable;
-
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.google.inject.Inject;
@@ -13,16 +11,12 @@ import com.google.inject.assistedinject.Assisted;
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-public class DenyPort implements Serializable {
+public class DenyPort extends AllowPort {
 
 	/**
 	 * @version 1.0
 	 */
 	private static final long serialVersionUID = -3628367090901028905L;
-
-	private final Port port;
-
-	private final Protocol protocol;
 
 	/**
 	 * Sets the network port and network protocol to deny.
@@ -35,13 +29,12 @@ public class DenyPort implements Serializable {
 	 */
 	@Inject
 	DenyPort(@Assisted Port port, @Assisted Protocol protocol) {
-		this.port = port;
-		this.protocol = protocol;
+		super(port, protocol);
 	}
 
 	@Override
 	public String toString() {
-		return new ToStringBuilder(this).append("port", port)
-				.append("protocol", protocol).toString();
+		return new ToStringBuilder(this).append("port", getPort())
+				.append("protocol", getProtocol()).toString();
 	}
 }

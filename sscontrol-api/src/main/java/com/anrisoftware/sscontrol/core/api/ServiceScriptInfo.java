@@ -1,12 +1,14 @@
 package com.anrisoftware.sscontrol.core.api;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
 /**
  * Contains information by which the service script is identified.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-public interface ServiceScriptInfo {
+public abstract class ServiceScriptInfo {
 
 	/**
 	 * Returns the service name.
@@ -16,7 +18,7 @@ public interface ServiceScriptInfo {
 	 * 
 	 * @return the service name.
 	 */
-	String getServiceName();
+	public abstract String getServiceName();
 
 	/**
 	 * Returns the profile name.
@@ -26,5 +28,12 @@ public interface ServiceScriptInfo {
 	 * 
 	 * @return the profile name.
 	 */
-	String getProfileName();
+	public abstract String getProfileName();
+
+	@Override
+	public String toString() {
+		return new ToStringBuilder(this)
+				.append("service name", getServiceName())
+				.append("profile name", getProfileName()).toString();
+	}
 }

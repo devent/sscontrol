@@ -39,6 +39,14 @@ public class AllowPort implements Serializable {
 		this.protocol = protocol;
 	}
 
+	public Port getPort() {
+		return port;
+	}
+
+	public Protocol getProtocol() {
+		return protocol;
+	}
+
 	@Override
 	public String toString() {
 		return new ToStringBuilder(this).append("port", port)

@@ -1,0 +1,3 @@
+#!/bin/sh
+echo -n "Status: active"
+exit 0

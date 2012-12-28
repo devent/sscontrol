@@ -122,6 +122,30 @@ public class AllowFrom implements Serializable {
 		this.toProto = proto;
 	}
 
+	public Address getAddress() {
+		return address;
+	}
+
+	public Port getPort() {
+		return port;
+	}
+
+	public Protocol getProto() {
+		return proto;
+	}
+
+	public Address getToAddress() {
+		return toAddress;
+	}
+
+	public Port getToPort() {
+		return toPort;
+	}
+
+	public Protocol getToProto() {
+		return toProto;
+	}
+
 	@Override
 	public String toString() {
 		return new ToStringBuilder(this).append("address", address)

@@ -1,0 +1,64 @@
+rules(service, ufwCommand, prefix) ::= <<
+#!/bin/sh
+<prefix><ufwCommand> --force enable
+<service.statements:{s | <(s.class.simpleName)(s, ufwCommand, prefix)>}>
+>>
+
+DenyDefault(statement, ufwCommand, prefix) ::= <<
+<prefix><ufwCommand> default deny
+
+>>
+
+AllowDefault(statement, ufwCommand, prefix) ::= <<
+<prefix><ufwCommand> default allow
+
+>>
+
+DenyPort(statement, ufwCommand, prefix) ::= <<
+<prefix><ufwCommand> deny <port_port(statement)><port_proto(statement)>
+
+>>
+
+AllowPort(statement, ufwCommand, prefix) ::= <<
+<prefix><ufwCommand> allow <port_port(statement)><port_proto(statement)>
+
+>>
+
+port_port(statement) ::= <<
+<statement.port.name>
+>>
+
+port_proto(statement) ::= <<
+<if(statement.protocol.both)><else>/<statement.protocol><endif>
+>>
+
+DenyFrom(statement, ufwCommand, prefix) ::= <<
+<prefix><ufwCommand> deny <proto(statement)> <address(statement)> <port(statement)> <to_address(statement)> <to_port(statement)>
+
+>>
+
+AllowFrom(statement, ufwCommand, prefix) ::= <<
+<prefix><ufwCommand> allow <proto(statement)> <address(statement)> <port(statement)> <to_address(statement)> <to_port(statement)>
+
+>>
+
+proto(statement) ::= <<
+<if(statement.proto.both)><else>proto <statement.proto><endif>
+>>
+
+address(statement) ::= <<
+<if(statement.address.anywhere)>from any<else>from <statement.address.name><endif>
+>>
+
+port(statement) ::= <<
+<if(statement.port.undefined)><else>port <statement.port.name><endif>
+>>
+
+to_address(statement) ::= <<
+<if(statement.toAddress.anywhere)>to any<else>to <statement.toAddress.name><endif>
+>>
+
+to_port(statement) ::= <<
+<if(statement.toPort.undefined)><else>port <statement.toPort.name><endif>
+>>
+

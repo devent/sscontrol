@@ -19,7 +19,6 @@
 package com.anrisoftware.sscontrol.hostname.service;
 
 import static com.anrisoftware.sscontrol.hostname.service.HostnameFactory.NAME;
-import groovy.lang.Closure;
 import groovy.lang.GroovyObjectSupport;
 import groovy.lang.Script;
 
@@ -72,31 +71,60 @@ class HostnameServiceImpl extends GroovyObjectSupport implements Service {
 		this.templatesFactory = templates;
 	}
 
-	public Object hostname(Closure<?> closure) {
+	/**
+	 * Entry point for the DNS service script.
+	 * 
+	 * @return this {@link Service}.
+	 */
+	public Service hostname(Object closure) {
 		return this;
 	}
 
-	public Object set_hostname(String name) {
+	/**
+	 * Sets the host name.
+	 * 
+	 * @param name
+	 *            the host name.
+	 */
+	public void set_hostname(String name) {
 		log.checkHostname(this, name);
 		hostname = name;
 		log.hostnameSet(this, name);
-		return this;
 	}
 
+	/**
+	 * Returns the host name.
+	 * 
+	 * @return the host name.
+	 */
 	public String getHostname() {
 		return hostname;
 	}
 
+	/**
+	 * Returns the hostname service name.
+	 */
 	@Override
 	public String getName() {
 		return NAME;
 	}
 
+	/**
+	 * Sets the profile for the DNS service.
+	 * 
+	 * @param newProfile
+	 *            the {@link ProfileService}.
+	 */
 	public void setProfile(ProfileService newProfile) {
 		profile = newProfile;
 		log.profileSet(this, newProfile);
 	}
 
+	/**
+	 * Returns the profile for the DNS service.
+	 * 
+	 * @return the {@link ProfileService}.
+	 */
 	public ProfileService getProfile() {
 		return profile;
 	}
@@ -127,7 +155,9 @@ class HostnameServiceImpl extends GroovyObjectSupport implements Service {
 
 	@Override
 	public String toString() {
-		return new ToStringBuilder(this).toString();
+		return new ToStringBuilder(this)
+				.append("profile", profile.getProfileName())
+				.append("hostname", hostname).toString();
 	}
 
 }

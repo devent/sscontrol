@@ -21,7 +21,6 @@ package com.anrisoftware.sscontrol.dhclient.service;
 import static com.anrisoftware.sscontrol.dhclient.service.DhclientFactory.NAME;
 import static java.util.Collections.unmodifiableList;
 import static org.apache.commons.lang3.StringUtils.split;
-import groovy.lang.Closure;
 import groovy.lang.GroovyObjectSupport;
 import groovy.lang.Script;
 
@@ -124,12 +123,9 @@ class DhclientServiceImpl extends GroovyObjectSupport implements Service {
 	/**
 	 * Entry point in the Dhclient script.
 	 * 
-	 * @param closure
-	 *            the Dhclient script statements.
-	 * 
 	 * @return this {@link Service}.
 	 */
-	public Object dhclient(Closure<?> closure) {
+	public Service dhclient(Object closure) {
 		return this;
 	}
 
@@ -138,12 +134,9 @@ class DhclientServiceImpl extends GroovyObjectSupport implements Service {
 	 * 
 	 * @param decl
 	 *            the request declaration.
-	 * 
-	 * @return this {@link Service}.
 	 */
-	public Object requests(String decl) {
+	public void requests(String decl) {
 		requests.add(decl);
-		return this;
 	}
 
 	/**
@@ -154,15 +147,12 @@ class DhclientServiceImpl extends GroovyObjectSupport implements Service {
 	 * 
 	 * @param decl
 	 *            the prepend declaration.
-	 * 
-	 * @return this {@link Service}.
 	 */
-	public Object prepend(String option, String decl) {
+	public void prepend(String option, String decl) {
 		OptionDeclaration declaration;
 		declaration = optionDeclarationFactory.create(option, decl);
 		prepends.add(declaration);
 		log.prependAdded(this, declaration);
-		return this;
 	}
 
 	@Override
@@ -260,7 +250,8 @@ class DhclientServiceImpl extends GroovyObjectSupport implements Service {
 
 	@Override
 	public String toString() {
-		return new ToStringBuilder(this).append("profile", profile).toString();
+		return new ToStringBuilder(this).append("profile",
+				profile.getProfileName()).toString();
 	}
 
 }

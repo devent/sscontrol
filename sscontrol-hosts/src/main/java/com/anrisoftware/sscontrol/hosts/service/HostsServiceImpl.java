@@ -20,7 +20,6 @@ package com.anrisoftware.sscontrol.hosts.service;
 
 import static com.anrisoftware.sscontrol.hosts.service.HostsServiceFactory.NAME;
 import static org.apache.commons.collections.list.PredicatedList.decorate;
-import groovy.lang.Closure;
 import groovy.lang.GroovyObjectSupport;
 import groovy.lang.Script;
 
@@ -30,7 +29,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -43,6 +41,7 @@ import com.anrisoftware.resources.templates.api.TemplatesFactory;
 import com.anrisoftware.sscontrol.core.api.ProfileService;
 import com.anrisoftware.sscontrol.core.api.Service;
 import com.anrisoftware.sscontrol.core.api.ServiceException;
+import com.anrisoftware.sscontrol.hosts.utils.HostFormat;
 import com.anrisoftware.sscontrol.hosts.utils.HostFormatFactory;
 import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokensTemplateWorkerFactory;
 import com.google.inject.Provider;
@@ -66,12 +65,12 @@ import com.google.inject.Provider;
  */
 public class HostsServiceImpl extends GroovyObjectSupport implements Service {
 
-	private static final String DEFAULT_HOSTS_PROPERTY = "default_hosts";
-
 	/**
 	 * @since 1.0
 	 */
 	private static final long serialVersionUID = -2535415557268118125L;
+
+	public static final String DEFAULT_HOSTS_PROPERTY = "default_hosts";
 
 	private final HostsServiceImplLogger log;
 
@@ -101,23 +100,28 @@ public class HostsServiceImpl extends GroovyObjectSupport implements Service {
 	 *            the {@link TemplatesFactory} to create the templates needed
 	 *            for the hosts service script.
 	 * 
-	 * @param properties
-	 *            the default hosts service {@link Properties}.
+	 * @param p
+	 *            the default hosts service {@link ContextProperties}.
+	 *            <dl>
+	 *            <dt>
+	 *            {@code com.anrisoftware.sscontrol.hosts.service.default_hosts}
+	 *            </dt>
+	 *            <dd>A list of the default hosts. See {@link HostFormat}.</dd>
+	 *            </dl>
 	 */
 	@SuppressWarnings("unchecked")
 	@Inject
 	HostsServiceImpl(HostsServiceImplLogger logger,
 			Map<String, Provider<Script>> scripts, TemplatesFactory templates,
-			@Named("hosts-service-properties") Properties properties,
+			@Named("hosts-service-defaults-properties") ContextProperties p,
 			HostFactory hostFactory, HostFormatFactory hostFormatFactory) {
 		this.log = logger;
 		this.scripts = scripts;
 		this.templatesFactory = templates;
 		this.hostFactory = hostFactory;
 		this.hosts = decorate(new ArrayList<String>(),
-				NotNullPredicate.getInstance());
-		setDefaultProperties(new ContextProperties(this, properties),
-				hostFormatFactory.create());
+				NotNullPredicate.INSTANCE);
+		setDefaultProperties(p, hostFormatFactory.create());
 	}
 
 	private void setDefaultProperties(ContextProperties p, Format format) {
@@ -139,7 +143,7 @@ public class HostsServiceImpl extends GroovyObjectSupport implements Service {
 	 * 
 	 * @return this {@link HostsServiceImpl}.
 	 */
-	public Object hosts(Closure<?> closure) {
+	public Object hosts(Object closure) {
 		return this;
 	}
 
@@ -212,7 +216,9 @@ public class HostsServiceImpl extends GroovyObjectSupport implements Service {
 
 	@Override
 	public String toString() {
-		return new ToStringBuilder(this).toString();
+		return new ToStringBuilder(this)
+				.append("profile", profile.getProfileName())
+				.append("hosts", hosts).toString();
 	}
 
 }

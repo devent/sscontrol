@@ -23,11 +23,11 @@ import groovy.lang.Script;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.Properties;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
 
+import com.anrisoftware.propertiesutils.ContextProperties;
 import com.anrisoftware.propertiesutils.ContextPropertiesFactory;
 import com.anrisoftware.resources.templates.maps.TemplatesDefaultMapsModule;
 import com.anrisoftware.resources.templates.templates.TemplatesResourcesModule;
@@ -44,8 +44,8 @@ import com.google.inject.multibindings.MapBinder;
 
 class HostsModule extends AbstractModule {
 
-	private static final URL HOSTS_SERVICE_PROPERTIES_RESOURCE = HostsModule.class
-			.getResource("hosts_service.properties");
+	private static final URL HOSTS_SERVICE_DEFAULTS_PROPERTIES_RESOURCE = HostsModule.class
+			.getResource("/hosts_service_defaults.properties");
 
 	@Override
 	protected void configure() {
@@ -69,19 +69,24 @@ class HostsModule extends AbstractModule {
 
 	/**
 	 * Provides the default hosts service properties.
+	 * <dl>
+	 * <dt>
+	 * {@code com.anrisoftware.sscontrol.hosts.service.default_hosts}</dt>
+	 * <dd>A list of the default hosts. See {@link HostFormat}.</dd>
+	 * </dl>
 	 * 
-	 * @return the default hosts service {@link Properties}.
+	 * @return the default hosts service {@link ContextProperties} properties.
 	 * 
 	 * @throws IOException
 	 *             if there is an error loading the properties from
-	 *             {@link #HOSTS_SERVICE_PROPERTIES_RESOURCE}.
+	 *             {@link #HOSTS_SERVICE_DEFAULTS_PROPERTIES_RESOURCE}.
 	 */
 	@Provides
 	@Singleton
-	@Named("hosts-service-properties")
-	Properties getHostnameServiceProperties() throws IOException {
+	@Named("hosts-service-defaults-properties")
+	ContextProperties getHostnameServiceProperties() throws IOException {
 		return new ContextPropertiesFactory(HostsServiceImpl.class)
 				.withProperties(System.getProperties()).fromResource(
-						HOSTS_SERVICE_PROPERTIES_RESOURCE);
+						HOSTS_SERVICE_DEFAULTS_PROPERTIES_RESOURCE);
 	}
 }

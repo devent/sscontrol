@@ -24,6 +24,7 @@ import groovy.util.logging.Slf4j
 import org.junit.Before
 import org.junit.Test
 
+import com.anrisoftware.globalpom.utils.TestUtils
 import com.anrisoftware.sscontrol.core.activator.CoreModule
 import com.anrisoftware.sscontrol.core.api.ServiceException
 import com.anrisoftware.sscontrol.core.api.ServiceLoader as SscontrolServiceLoader
@@ -56,6 +57,7 @@ class HostnameServiceTest {
 
 	@Test
 	void "hostname service with empty hostname"() {
+		TestUtils.trimStrings = false
 		ServicesRegistry registry = injector.getInstance ServicesRegistry
 		SscontrolServiceLoader loader = injector.getInstance SscontrolServiceLoader
 		loader.loadService(ubuntu1004Profile, variables, registry, null)
@@ -65,14 +67,15 @@ class HostnameServiceTest {
 			registry.allServices.each { it.call() }
 			log.info "Run service again to ensure that configuration is not set double."
 			registry.allServices.each { it.call() }
-			assertFileContent(new File(it, "/etc/hostname"), hostnameExpected, true)
+			assertFileContent(new File(it, "/etc/hostname"), hostnameExpected)
 		}, {
-			copyResourceToCommand(restartHostnameCommand, new File(it, "/etc/init.d/hostname"))
+			copyResourceToCommand restartHostnameCommand, new File(it, "/etc/init.d/hostname")
 		}, tmp
 	}
 
 	@Test
 	void "hostname service with hostname already set"() {
+		TestUtils.trimStrings = true
 		ServicesRegistry registry = injector.getInstance ServicesRegistry
 		SscontrolServiceLoader loader = injector.getInstance SscontrolServiceLoader
 		loader.loadService(ubuntu1004Profile, variables, registry, null)
@@ -82,7 +85,7 @@ class HostnameServiceTest {
 			registry.allServices.each { it.call() }
 			log.info "Run service again to ensure that configuration is not set double."
 			registry.allServices.each { it.call() }
-			assertFileContent(new File(it, "/etc/hostname"), hostnameExpected, true)
+			assertFileContent new File(it, "/etc/hostname"), hostnameExpected
 		}, {
 			copyResourceToCommand(restartHostnameCommand, new File(it, "/etc/init.d/hostname"))
 			copyResourceToFile(localhostHostnameFile, new File(it, "/etc/hostname"))

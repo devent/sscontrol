@@ -116,9 +116,12 @@ class DnsServiceImpl extends GroovyObjectSupport implements Service {
 	/**
 	 * Entry point for the DNS service script.
 	 * 
+	 * @param statements
+	 *            the DNS service statements.
+	 * 
 	 * @return this {@link Service}.
 	 */
-	public Object dns() {
+	public Service dns(Object statements) {
 		return this;
 	}
 
@@ -133,11 +136,9 @@ class DnsServiceImpl extends GroovyObjectSupport implements Service {
 	 * 
 	 * @param serial
 	 *            the serial.
-	 * 
-	 * @return this {@link Service}.
 	 */
-	public Object serial(int serial) {
-		return serial(serial, true);
+	public void serial(int serial) {
+		serial(serial, true);
 	}
 
 	/**
@@ -156,14 +157,11 @@ class DnsServiceImpl extends GroovyObjectSupport implements Service {
 	 *            <p>
 	 *            if set to {@code false} then the serial number is used as
 	 *            specified.
-	 * 
-	 * @return this {@link Service}.
 	 */
-	public Object serial(int newSerial, boolean generate) {
+	public void serial(int newSerial, boolean generate) {
 		this.serial = newSerial;
 		log.serialSet(this, newSerial, generate);
 		setGenerate(generate);
-		return this;
 	}
 
 	/**
@@ -188,19 +186,16 @@ class DnsServiceImpl extends GroovyObjectSupport implements Service {
 	 * @param hosts
 	 *            the IP address or the host names.
 	 * 
-	 * @return this {@link Service}.
-	 * 
 	 * @throws ServiceException
 	 *             if the host name was not found.
 	 */
-	public Object bind_address(String... hosts) throws ServiceException {
+	public void bind_address(String... hosts) throws ServiceException {
 		Set<String> list = new HashSet<String>();
 		for (String host : hosts) {
 			list.addAll(Arrays.asList(split(host, " ;,")));
 		}
 		bindAddresses.addAll(list);
 		log.bindAddressesSet(this, bindAddresses);
-		return this;
 	}
 
 	/**
@@ -223,10 +218,30 @@ class DnsServiceImpl extends GroovyObjectSupport implements Service {
 	 * 
 	 * @param email
 	 *            the email address for the zone.
+	 */
+	public void zone(String name, String primaryNameServer, String email) {
+		zone(name, primaryNameServer, email, (Object) null);
+	}
+
+	/**
+	 * Adds a new DNS zone.
+	 * 
+	 * @param name
+	 *            the name of the zone.
+	 * 
+	 * @param primaryNameServer
+	 *            the name of the primary DNS server.
+	 * 
+	 * @param email
+	 *            the email address for the zone.
+	 * 
+	 * @param statements
+	 *            the zone statements.
 	 * 
 	 * @return the {@link DnsZone} DNS zone.
 	 */
-	public DnsZone zone(String name, String primaryNameServer, String email) {
+	public DnsZone zone(String name, String primaryNameServer, String email,
+			Object statements) {
 		DnsZone zone = dnsZoneFactory.create(name, primaryNameServer, email,
 				serial);
 		zones.add(zone);
@@ -248,11 +263,35 @@ class DnsServiceImpl extends GroovyObjectSupport implements Service {
 	 * 
 	 * @param address
 	 *            the IP address for the zone.
+	 */
+	public void zone(String name, String primaryNameServer, String email,
+			String address) {
+		zone(name, primaryNameServer, email, address, (Object) null);
+	}
+
+	/**
+	 * Adds a new DNS zone with an A-record. The A-record is created with the
+	 * name of the zone and the specified IP address.
+	 * 
+	 * @param name
+	 *            the name of the zone.
+	 * 
+	 * @param primaryNameServer
+	 *            the name of the primary DNS server.
+	 * 
+	 * @param email
+	 *            the email address for the zone.
+	 * 
+	 * @param address
+	 *            the IP address for the zone.
+	 * 
+	 * @param statements
+	 *            the zone statements.
 	 * 
 	 * @return the {@link DnsZone} DNS zone.
 	 */
 	public DnsZone zone(String name, String primaryNameServer, String email,
-			String address) {
+			String address, Object statements) {
 		DnsZone zone = dnsZoneFactory.create(name, primaryNameServer, email,
 				getSerial());
 		zones.add(zone);
@@ -279,15 +318,43 @@ class DnsServiceImpl extends GroovyObjectSupport implements Service {
 	 * 
 	 * @param ttl
 	 *            the TTL for the A-record.
+	 */
+	public void zone(String name, String primaryNameServer, String email,
+			String address, long ttl) {
+		zone(name, primaryNameServer, email, address, ttl, (Object) null);
+	}
+
+	/**
+	 * Adds a new DNS zone with an A-record. The A-record is created with the
+	 * name of the zone and the specified IP address. The A-record will have the
+	 * specified TTL.
+	 * 
+	 * @param name
+	 *            the name of the zone.
+	 * 
+	 * @param primaryNameServer
+	 *            the name of the primary DNS server.
+	 * 
+	 * @param email
+	 *            the email address for the zone.
+	 * 
+	 * @param address
+	 *            the IP address for the zone.
+	 * 
+	 * @param ttl
+	 *            the TTL for the A-record.
+	 * 
+	 * @param statements
+	 *            the zone statements.
 	 * 
 	 * @return the {@link DnsZone} DNS zone.
 	 */
 	public DnsZone zone(String name, String primaryNameServer, String email,
-			String address, long ttl) {
+			String address, long ttl, Object statements) {
 		DnsZone zone = dnsZoneFactory.create(name, primaryNameServer, email,
 				getSerial());
 		zones.add(zone);
-		ARecord arecord = zone.a_record(name, address);
+		ARecord arecord = zone.a_record(name, address, (Object) null);
 		arecord.ttl(ttl);
 		return zone;
 	}
@@ -370,7 +437,9 @@ class DnsServiceImpl extends GroovyObjectSupport implements Service {
 
 	@Override
 	public String toString() {
-		return new ToStringBuilder(this).append("serial", serial)
+		return new ToStringBuilder(this)
+				.append("profile", profile.getProfileName())
+				.append("serial", serial)
 				.append("bind addresses", bindAddresses).toString();
 	}
 

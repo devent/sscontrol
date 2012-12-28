@@ -78,7 +78,7 @@ public class NSRecord extends AbstractRecord {
 	 *            the IP address.
 	 */
 	public void setAddress(String address) {
-		this.aRecord = zone.a_record(name, address);
+		this.aRecord = zone.a_record(name, address, (Object) null);
 		log.aRecordSet(this, aRecord);
 	}
 

@@ -163,9 +163,7 @@ public class DnsZone extends GroovyObjectSupport implements Serializable {
 	 *            the IP address.
 	 */
 	public void setAddress(String address) {
-		ARecord record = a_record(name, address);
-		aaRecords.add(record);
-		log.aRecordSet(this, record);
+		a_record(name, address);
 	}
 
 	/**
@@ -174,17 +172,14 @@ public class DnsZone extends GroovyObjectSupport implements Serializable {
 	 * @param timeSeconds
 	 *            the time to live time, in seconds.
 	 * 
-	 * @return this {@link DnsZone}.
-	 * 
 	 * @throws IllegalArgumentException
 	 *             if the time is not between {@value #MIN_TIME_SECONDS} and
 	 *             {@value #MAX_TIME_SECONDS}.
 	 */
-	public DnsZone ttl(long timeSeconds) {
+	public void ttl(long timeSeconds) {
 		log.checkTtl(timeSeconds, this);
 		ttl = new Duration(timeSeconds * 1000);
 		log.ttlSet(this, timeSeconds);
-		return this;
 	}
 
 	/**
@@ -193,17 +188,14 @@ public class DnsZone extends GroovyObjectSupport implements Serializable {
 	 * @param timeSeconds
 	 *            the refresh time, in seconds.
 	 * 
-	 * @return this {@link DnsZone}.
-	 * 
 	 * @throws IllegalArgumentException
 	 *             if the refresh time is not between {@value #MIN_TIME_SECONDS}
 	 *             and {@value #MAX_TIME_SECONDS}.
 	 */
-	public DnsZone refresh(long timeSeconds) {
+	public void refresh(long timeSeconds) {
 		log.checkRefreshTime(timeSeconds, this);
 		refresh = new Duration(timeSeconds * 1000);
 		log.refreshTimeSet(this, timeSeconds);
-		return this;
 	}
 
 	/**
@@ -212,17 +204,14 @@ public class DnsZone extends GroovyObjectSupport implements Serializable {
 	 * @param timeSeconds
 	 *            the time, in seconds.
 	 * 
-	 * @return this {@link DnsZone}.
-	 * 
 	 * @throws IllegalArgumentException
 	 *             if the retry time is not between {@value #MIN_TIME_SECONDS}
 	 *             and {@value #MAX_TIME_SECONDS}.
 	 */
-	public DnsZone retry(long timeSeconds) {
+	public void retry(long timeSeconds) {
 		log.checkRetryTime(timeSeconds, this);
 		retry = new Duration(timeSeconds * 1000);
 		log.retryTimeSet(this, timeSeconds);
-		return this;
 	}
 
 	/**
@@ -231,17 +220,14 @@ public class DnsZone extends GroovyObjectSupport implements Serializable {
 	 * @param timeSeconds
 	 *            the time, in seconds.
 	 * 
-	 * @return this {@link DnsZone}.
-	 * 
 	 * @throws IllegalArgumentException
 	 *             if the expire time is not between {@value #MIN_TIME_SECONDS}
 	 *             and {@value #MAX_TIME_SECONDS}.
 	 */
-	public DnsZone expire(long timeSeconds) {
+	public void expire(long timeSeconds) {
 		log.checkExpireTime(timeSeconds, this);
 		expire = new Duration(timeSeconds * 1000);
 		log.expireTimeSet(this, timeSeconds);
-		return this;
 	}
 
 	/**
@@ -250,22 +236,33 @@ public class DnsZone extends GroovyObjectSupport implements Serializable {
 	 * @param timeSeconds
 	 *            the time, in seconds.
 	 * 
-	 * @return this {@link DnsZone}.
-	 * 
 	 * @throws IllegalArgumentException
 	 *             if the minimum TTL is not between {@value #MIN_TIME_SECONDS}
 	 *             and {@value #MAX_TIME_SECONDS}.
 	 */
-	public DnsZone minimum_ttl(long timeSeconds) {
+	public void minimum_ttl(long timeSeconds) {
 		log.checkMinimumTtl(timeSeconds, this);
 		minimumTtl = new Duration(timeSeconds * 1000);
 		log.minimumTtlSet(this, timeSeconds);
-		return this;
 	}
 
 	/**
-	 * Adds a new NS record with the name and address. A new A record will be
-	 * created that maps this name to the specified address.
+	 * Adds a new NS record with the specified name and address. A new A record
+	 * will be created that maps this name to the specified address.
+	 * 
+	 * @param name
+	 *            the {@link String} name of the record.
+	 * 
+	 * @param address
+	 *            the {@link String} IP address.
+	 */
+	public void ns_record(String name, String address) {
+		ns_record(name, address, (Object) null);
+	}
+
+	/**
+	 * Adds a new NS record with the specified name and address. A new A record
+	 * will be created that maps this name to the specified address.
 	 * 
 	 * @param name
 	 *            the {@link String} name of the record.
@@ -273,9 +270,12 @@ public class DnsZone extends GroovyObjectSupport implements Serializable {
 	 * @param address
 	 *            the {@link String} IP address.
 	 * 
+	 * @param statements
+	 *            the zone statements.
+	 * 
 	 * @return the new {@link NSRecord}.
 	 */
-	public NSRecord ns_record(String name, String address) {
+	public NSRecord ns_record(String name, String address, Object statements) {
 		NSRecord record = nsRecordFactory.create(this, name);
 		record.setAddress(address);
 		nsRecords.add(record);
@@ -284,14 +284,29 @@ public class DnsZone extends GroovyObjectSupport implements Serializable {
 	}
 
 	/**
-	 * Adds a new NS record with the name.
+	 * Adds a new NS record with the specified name.
 	 * 
 	 * @param name
 	 *            the {@link String} name of the record.
 	 * 
 	 * @return the new {@link NSRecord}.
 	 */
-	public NSRecord ns_record(String name) {
+	public void ns_record(String name) {
+		ns_record(name, (Object) null);
+	}
+
+	/**
+	 * Adds a new NS record with the specified name.
+	 * 
+	 * @param name
+	 *            the {@link String} name of the record.
+	 * 
+	 * @param statements
+	 *            the zone statements.
+	 * 
+	 * @return the new {@link NSRecord}.
+	 */
+	public NSRecord ns_record(String name, Object statements) {
 		NSRecord record = nsRecordFactory.create(this, name);
 		nsRecords.add(record);
 		log.nsRecordAdded(this, record);
@@ -299,7 +314,20 @@ public class DnsZone extends GroovyObjectSupport implements Serializable {
 	}
 
 	/**
-	 * Adds a new A record with the name and address.
+	 * Adds a new A record with the specified name and address.
+	 * 
+	 * @param name
+	 *            the {@link String} name of the record.
+	 * 
+	 * @param address
+	 *            the {@link String} IP address.
+	 */
+	public void a_record(String name, String address) {
+		a_record(name, address, (Object) null);
+	}
+
+	/**
+	 * Adds a new A record with the specified name and address.
 	 * 
 	 * @param name
 	 *            the {@link String} name of the record.
@@ -307,9 +335,12 @@ public class DnsZone extends GroovyObjectSupport implements Serializable {
 	 * @param address
 	 *            the {@link String} IP address.
 	 * 
+	 * @param statements
+	 *            the zone statements.
+	 * 
 	 * @return the new {@link ARecord}.
 	 */
-	public ARecord a_record(String name, String address) {
+	public ARecord a_record(String name, String address, Object statements) {
 		ARecord record = aRecordFactory.create(this, name, address);
 		int index = aaRecords.indexOf(record);
 		if (index == -1) {
@@ -322,8 +353,22 @@ public class DnsZone extends GroovyObjectSupport implements Serializable {
 	}
 
 	/**
-	 * Adds a new MX record with the name and address. A new A record will be
-	 * created that maps this name to the specified address.
+	 * Adds a new MX record with the specified name and address. A new A record
+	 * will be created that maps this name to the specified address.
+	 * 
+	 * @param name
+	 *            the {@link String} name of the record.
+	 * 
+	 * @param address
+	 *            the {@link String} IP address.
+	 */
+	public void mx_record(String name, String address) {
+		mx_record(name, address, (Object) null);
+	}
+
+	/**
+	 * Adds a new MX record with the specified name and address. A new A record
+	 * will be created that maps this name to the specified address.
 	 * 
 	 * @param name
 	 *            the {@link String} name of the record.
@@ -331,9 +376,12 @@ public class DnsZone extends GroovyObjectSupport implements Serializable {
 	 * @param address
 	 *            the {@link String} IP address.
 	 * 
+	 * @param statements
+	 *            the zone statements.
+	 * 
 	 * @return the new {@link MXRecord}.
 	 */
-	public MXRecord mx_record(String name, String address) {
+	public MXRecord mx_record(String name, String address, Object statements) {
 		MXRecord record = mxRecordFactory.create(this, name);
 		record.setAddress(address);
 		mxRecords.add(record);
@@ -342,14 +390,29 @@ public class DnsZone extends GroovyObjectSupport implements Serializable {
 	}
 
 	/**
-	 * Adds a new MX-record with the name.
+	 * Adds a new MX-record with the specified name.
 	 * 
 	 * @param name
 	 *            the {@link String} name of the record.
 	 * 
 	 * @return the new {@link MXRecord}.
 	 */
-	public MXRecord mx_record(String name) {
+	public void mx_record(String name) {
+		mx_record(name, (Object) null);
+	}
+
+	/**
+	 * Adds a new MX-record with the specified name.
+	 * 
+	 * @param name
+	 *            the {@link String} name of the record.
+	 * 
+	 * @param statements
+	 *            the zone statements.
+	 * 
+	 * @return the new {@link MXRecord}.
+	 */
+	public MXRecord mx_record(String name, Object statements) {
 		MXRecord record = mxRecordFactory.create(this, name);
 		mxRecords.add(record);
 		log.mxRecordAdded(this, record);
@@ -357,7 +420,20 @@ public class DnsZone extends GroovyObjectSupport implements Serializable {
 	}
 
 	/**
-	 * Adds a new CNAME record with the name and alias.
+	 * Adds a new CNAME record with the specified name and alias.
+	 * 
+	 * @param name
+	 *            the {@link String} name of the record.
+	 * 
+	 * @param alias
+	 *            the {@link String} alias.
+	 */
+	public void cname_record(String name, String alias) {
+		cname_record(name, alias, (Object) null);
+	}
+
+	/**
+	 * Adds a new CNAME record with the specified name and alias.
 	 * 
 	 * @param name
 	 *            the {@link String} name of the record.
@@ -365,9 +441,12 @@ public class DnsZone extends GroovyObjectSupport implements Serializable {
 	 * @param alias
 	 *            the {@link String} alias.
 	 * 
+	 * @param statements
+	 *            the zone statements.
+	 * 
 	 * @return the new {@link CNAMERecord}.
 	 */
-	public CNAMERecord cname_record(String name, String alias) {
+	public CNAMERecord cname_record(String name, String alias, Object statements) {
 		CNAMERecord record = cnameRecordFactory.create(this, name, alias);
 		cnameRecords.add(record);
 		log.cnameRecordAdded(this, record);

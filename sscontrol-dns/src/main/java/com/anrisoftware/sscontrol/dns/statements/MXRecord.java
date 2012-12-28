@@ -68,13 +68,10 @@ public class MXRecord extends AbstractRecord {
 	 * 
 	 * @param newPriority
 	 *            the priority.
-	 * 
-	 * @return this {@link MXRecordLogger}.
 	 */
-	public MXRecord priority(long newPriority) {
+	public void priority(long newPriority) {
 		priority = newPriority;
 		log.prioritySet(this, newPriority);
-		return this;
 	}
 
 	/**
@@ -87,7 +84,7 @@ public class MXRecord extends AbstractRecord {
 	 * @return this {@link MXRecord}.
 	 */
 	public void setAddress(String address) {
-		this.aRecord = zone.a_record(name, address);
+		this.aRecord = zone.a_record(name, address, (Object) null);
 		log.aRecordSet(this, aRecord);
 	}
 

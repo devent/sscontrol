@@ -44,6 +44,8 @@ class FirewallServiceTest {
 
 	static firewallAllowScript = resourceURL("FirewallAllow.groovy", FirewallServiceTest)
 
+	static firewallDenyScript = resourceURL("FirewallDeny.groovy", FirewallServiceTest)
+
 	Injector injector
 
 	File tmp
@@ -57,6 +59,18 @@ class FirewallServiceTest {
 		loader.loadService(ubuntu1004Profile, variables, registry, null)
 		def profile = registry.getService("profile")[0]
 		loader.loadService(firewallAllowScript, variables, registry, profile)
+		withFiles NAME, {}, {}, tmp
+
+		def service = assertService registry.getService("firewall")[0], 14
+	}
+
+	@Test
+	void "firewall deny script"() {
+		ServicesRegistry registry = injector.getInstance ServicesRegistry
+		SscontrolServiceLoader loader = injector.getInstance SscontrolServiceLoader
+		loader.loadService(ubuntu1004Profile, variables, registry, null)
+		def profile = registry.getService("profile")[0]
+		loader.loadService(firewallDenyScript, variables, registry, profile)
 		withFiles NAME, {}, {}, tmp
 
 		def service = assertService registry.getService("firewall")[0], 14

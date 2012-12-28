@@ -72,7 +72,7 @@ class ProfilePropertiesImpl extends GroovyObjectSupport implements
 		} else {
 			putProperty(name, argsList);
 		}
-		return this;
+		return null;
 	}
 
 	@Override

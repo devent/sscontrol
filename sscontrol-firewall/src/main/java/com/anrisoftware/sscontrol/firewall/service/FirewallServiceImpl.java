@@ -131,40 +131,41 @@ public class FirewallServiceImpl implements Service {
 	/**
 	 * Entry point for the firewall service script.
 	 * 
+	 * @param statements
+	 *            the firewall statements.
+	 * 
 	 * @return this {@link Service}.
 	 */
-	public Service firewall() {
+	public Service firewall(Object statements) {
 		return this;
 	}
 
-	public Object deny() {
+	public void deny() {
 		DenyDefault statement = denyDefaultFactory.create();
 		log.created(statement, this);
 		statements.add(statement);
-		return statement;
 	}
 
-	public Object deny(int port) {
-		return deny(port, Protocol.TCPUDP);
+	public void deny(int port) {
+		deny(port, Protocol.TCPUDP);
 	}
 
-	public Object deny(int port, Protocol proto) {
-		return deny(portFactory.fromPortNumber(port), proto);
+	public void deny(int port, Protocol proto) {
+		deny(portFactory.fromPortNumber(port), proto);
 	}
 
-	public Object deny(String service) {
-		return deny(service, Protocol.TCPUDP);
+	public void deny(String service) {
+		deny(service, Protocol.TCPUDP);
 	}
 
-	public Object deny(String service, Protocol proto) {
-		return deny(portFactory.fromServiceName(service), proto);
+	public void deny(String service, Protocol proto) {
+		deny(portFactory.fromServiceName(service), proto);
 	}
 
-	public Object deny(Port port, Protocol proto) {
+	public void deny(Port port, Protocol proto) {
 		DenyPort statement = denyPortFactory.create(port, proto);
 		log.created(statement, this);
 		statements.add(statement);
-		return statement;
 	}
 
 	public Object deny_from(Address address) {

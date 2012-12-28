@@ -23,7 +23,6 @@ import static org.apache.commons.lang3.ArrayUtils.EMPTY_OBJECT_ARRAY;
 import static org.apache.commons.lang3.StringUtils.capitalize;
 import static org.codehaus.groovy.runtime.InvokerHelper.asArray;
 import groovy.lang.Closure;
-import groovy.lang.GroovyObject;
 import groovy.lang.MetaClass;
 import groovy.lang.MetaMethod;
 import groovy.lang.Script;
@@ -44,15 +43,17 @@ import com.anrisoftware.sscontrol.core.api.ServiceFactory;
 
 public abstract class ScriptBuilder extends Script {
 
-	private final Stack<GroovyObject> delegate;
+	private final Stack<Proxy> delegate;
 
 	private Service service;
 
 	private final ScriptBuilderLogger log;
 
+	private boolean pop;
+
 	public ScriptBuilder() {
 		this.log = new ScriptBuilderLogger();
-		this.delegate = new Stack<GroovyObject>();
+		this.delegate = new Stack<Proxy>();
 	}
 
 	public Service getService() {
@@ -102,14 +103,16 @@ public abstract class ScriptBuilder extends Script {
 
 	public Object methodMissing(String name, Object args)
 			throws ServiceException {
-		GroovyObject current;
+		Proxy current;
 		if (delegate.empty()) {
 			ServiceFactory serviceFactory = loadService(name);
 			service = serviceFactory.create(getProfile());
 			current = new Proxy().wrap(service);
+			pop = false;
 			log.createdService(this);
 		} else {
-			current = delegate.peek();
+			current = pop ? delegate.pop() : delegate.peek();
+			pop = false;
 		}
 		Closure<?> closure = null;
 		Object[] argsArray = asArray(args);
@@ -117,26 +120,20 @@ public abstract class ScriptBuilder extends Script {
 		for (Object object : argsArray) {
 			if (object instanceof Closure) {
 				closure = (Closure<?>) object;
-			} else {
-				argsList.add(object);
 			}
+			argsList.add(object);
 		}
 
-		log.invokeMethod(this, name, argsList.toArray());
+		log.invokeMethod(this, name, argsList.toArray(), current);
 		Object object = current.invokeMethod(name, argsList.toArray());
-		GroovyObject ret = new Proxy().wrap(object);
-		if (object == null) {
-			if (delegate.size() > 1) {
-				delegate.pop();
-			}
-			return this;
-		}
-		if (ret != current) {
-			delegate.push(ret);
-		}
+		Proxy ret = new Proxy().wrap(object);
 		if (closure != null) {
+			delegate.push(ret);
 			closure.call();
 			delegate.pop();
+		} else if (object != null) {
+			delegate.push(ret);
+			pop = true;
 		}
 		return this;
 	}

@@ -93,7 +93,7 @@ class ProfileServiceImpl extends GroovyObjectSupport implements ProfileService {
 	 * 
 	 * @return this {@link ProfileService}.
 	 */
-	public Service profile(String name) {
+	public Service profile(String name, Object closure) {
 		profileName = name;
 		return this;
 	}

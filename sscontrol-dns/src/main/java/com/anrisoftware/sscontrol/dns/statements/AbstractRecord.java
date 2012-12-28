@@ -78,11 +78,10 @@ abstract class AbstractRecord extends GroovyObjectSupport implements
 	 * 
 	 * @return this {@link AbstractRecord}.
 	 */
-	public AbstractRecord ttl(long timeSeconds) {
+	public void ttl(long timeSeconds) {
 		log.checkTtl(timeSeconds, this);
 		ttl = new Duration(timeSeconds * 1000);
 		log.ttlSet(this, ttl);
-		return this;
 	}
 
 	/**
@@ -93,10 +92,9 @@ abstract class AbstractRecord extends GroovyObjectSupport implements
 	 * 
 	 * @return this {@link AbstractRecord}.
 	 */
-	public AbstractRecord ttl(Duration time) {
+	public void ttl(Duration time) {
 		ttl = time;
 		log.ttlSet(this, time);
-		return this;
 	}
 
 	/**

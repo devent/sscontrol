@@ -19,6 +19,7 @@
 package com.anrisoftware.sscontrol.core.groovy;
 
 import static org.apache.commons.lang3.ArrayUtils.toArray;
+import groovy.util.Proxy;
 
 import java.util.Arrays;
 
@@ -55,10 +56,13 @@ class ScriptBuilderLogger extends AbstractLogger {
 		log.trace("Created service for {}.", script);
 	}
 
-	void invokeMethod(ScriptBuilder script, String name, Object[] array) {
+	void invokeMethod(ScriptBuilder script, String name, Object[] array,
+			Proxy current) {
 		if (log.isTraceEnabled()) {
-			log.trace("Invoke method '{}({})' for {}.",
-					toArray(name, Arrays.toString(array), script));
+			String className = current.getAdaptee() != null ? current
+					.getAdaptee().getClass().getSimpleName() : "null";
+			log.trace("Invoke method '{}#{}({})' for {}.",
+					toArray(className, name, Arrays.toString(array), script));
 		}
 	}
 }

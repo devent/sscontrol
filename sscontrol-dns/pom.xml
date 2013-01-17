@@ -14,6 +14,7 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<name>Simle Server Control :: DNS</name>
 	<description>Setups the DNS service for the server.</description>
+	<inceptionYear>2012</inceptionYear>
 
     <dependencies>
 

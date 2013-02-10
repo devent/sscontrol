@@ -18,31 +18,24 @@
  */
 package com.anrisoftware.sscontrol.hostname.service;
 
-import static com.anrisoftware.sscontrol.hostname.service.HostnameFactory.NAME;
-import groovy.lang.GroovyObjectSupport;
+import static com.anrisoftware.sscontrol.hostname.service.HostnameServiceFactory.NAME;
 import groovy.lang.Script;
 
-import java.util.HashMap;
 import java.util.Map;
-import java.util.Properties;
 
 import javax.inject.Inject;
-import javax.inject.Named;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import com.anrisoftware.resources.templates.api.TemplatesFactory;
-import com.anrisoftware.sscontrol.core.api.ProfileService;
 import com.anrisoftware.sscontrol.core.api.Service;
 import com.anrisoftware.sscontrol.core.api.ServiceException;
-import com.anrisoftware.sscontrol.workers.command.script.ScriptCommandWorkerFactory;
-import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokensTemplateWorkerFactory;
+import com.anrisoftware.sscontrol.core.service.AbstractService;
 import com.google.inject.Provider;
 
-class HostnameServiceImpl extends GroovyObjectSupport implements Service {
+class HostnameServiceImpl extends AbstractService {
 
 	/**
-	 * @version 0.1
+	 * @version 1.0
 	 */
 	private static final long serialVersionUID = 8026832603525631371L;
 
@@ -50,29 +43,30 @@ class HostnameServiceImpl extends GroovyObjectSupport implements Service {
 
 	private final Map<String, Provider<Script>> scripts;
 
-	private ProfileService profile;
-
 	private String hostname;
-
-	private final TemplatesFactory templatesFactory;
-
-	@Inject
-	private TokensTemplateWorkerFactory tokensTemplateWorkerFactory;
-
-	@Inject
-	private ScriptCommandWorkerFactory scriptCommandWorkerFactory;
 
 	@Inject
 	HostnameServiceImpl(HostnameServiceImplLogger logger,
-			Map<String, Provider<Script>> scripts, TemplatesFactory templates,
-			@Named("hostname-service-properties") Properties properties) {
+			Map<String, Provider<Script>> scripts) {
 		this.log = logger;
 		this.scripts = scripts;
-		this.templatesFactory = templates;
+	}
+
+	@Override
+	protected Script getScript(String profileName) throws ServiceException {
+		return scripts.get(profileName).get();
 	}
 
 	/**
-	 * Entry point for the DNS service script.
+	 * Returns the hostname service name.
+	 */
+	@Override
+	public String getName() {
+		return NAME;
+	}
+
+	/**
+	 * Entry point for the hostname service script.
 	 * 
 	 * @return this {@link Service}.
 	 */
@@ -101,62 +95,9 @@ class HostnameServiceImpl extends GroovyObjectSupport implements Service {
 		return hostname;
 	}
 
-	/**
-	 * Returns the hostname service name.
-	 */
-	@Override
-	public String getName() {
-		return NAME;
-	}
-
-	/**
-	 * Sets the profile for the DNS service.
-	 * 
-	 * @param newProfile
-	 *            the {@link ProfileService}.
-	 */
-	public void setProfile(ProfileService newProfile) {
-		profile = newProfile;
-		log.profileSet(this, newProfile);
-	}
-
-	/**
-	 * Returns the profile for the DNS service.
-	 * 
-	 * @return the {@link ProfileService}.
-	 */
-	public ProfileService getProfile() {
-		return profile;
-	}
-
-	@Override
-	public Service call() throws ServiceException {
-		String name = profile.getProfileName();
-		Script script = scripts.get(name).get();
-		Map<Class<?>, Object> workers = getWorkers();
-		script.setProperty("workers", workers);
-		script.setProperty("templatesFactory", templatesFactory);
-		script.setProperty("system", profile.getEntry("system"));
-		script.setProperty("profile", profile.getEntry(NAME));
-		script.setProperty("service", this);
-		script.setProperty("name", name);
-		script.run();
-		return this;
-	}
-
-	private Map<Class<?>, Object> getWorkers() {
-		Map<Class<?>, Object> workers = new HashMap<Class<?>, Object>();
-		workers.put(TokensTemplateWorkerFactory.class,
-				tokensTemplateWorkerFactory);
-		workers.put(ScriptCommandWorkerFactory.class,
-				scriptCommandWorkerFactory);
-		return workers;
-	}
-
 	@Override
 	public String toString() {
-		return new ToStringBuilder(this)
-				.append("profile", profile.getProfileName())
+		return new ToStringBuilder(this).appendSuper(super.toString())
 				.append("hostname", hostname).toString();
 	}
 

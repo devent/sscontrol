@@ -23,39 +23,27 @@ import groovy.lang.Script;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.Properties;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
 
+import com.anrisoftware.propertiesutils.ContextProperties;
 import com.anrisoftware.propertiesutils.ContextPropertiesFactory;
-import com.anrisoftware.resources.templates.maps.TemplatesDefaultMapsModule;
-import com.anrisoftware.resources.templates.templates.TemplatesResourcesModule;
-import com.anrisoftware.resources.templates.worker.STDefaultPropertiesModule;
-import com.anrisoftware.resources.templates.worker.STWorkerModule;
+import com.anrisoftware.sscontrol.core.service.ServiceModule;
 import com.anrisoftware.sscontrol.hostname.ubuntu.Ubuntu_10_04Script;
-import com.anrisoftware.sscontrol.workers.command.exec.ExecCommandWorkerModule;
-import com.anrisoftware.sscontrol.workers.command.script.ScriptCommandWorkerModule;
-import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokensTemplateWorkerModule;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.google.inject.multibindings.MapBinder;
 
 class HostnameModule extends AbstractModule {
 
-	private static final URL HOSTNAME_SERVICE_PROPERTIES_RESOURCE = HostnameModule.class
-			.getResource("hostname_service.properties");
+	private static final URL HOSTNAME_DEFAULTS_PROPERTIES_RESOURCE = HostnameModule.class
+			.getResource("/hostname_defaults.properties");
 
 	@Override
 	protected void configure() {
 		bindScripts();
-		install(new ExecCommandWorkerModule());
-		install(new ScriptCommandWorkerModule());
-		install(new TokensTemplateWorkerModule());
-		install(new TemplatesResourcesModule());
-		install(new TemplatesDefaultMapsModule());
-		install(new STWorkerModule());
-		install(new STDefaultPropertiesModule());
+		install(new ServiceModule());
 	}
 
 	private void bindScripts() {
@@ -66,10 +54,10 @@ class HostnameModule extends AbstractModule {
 
 	@Provides
 	@Singleton
-	@Named("hostname-service-properties")
-	Properties getHostnameServiceProperties() throws IOException {
+	@Named("hostname-default-properties")
+	ContextProperties getHostnameServiceProperties() throws IOException {
 		return new ContextPropertiesFactory(HostnameServiceImpl.class)
 				.withProperties(System.getProperties()).fromResource(
-						HOSTNAME_SERVICE_PROPERTIES_RESOURCE);
+						HOSTNAME_DEFAULTS_PROPERTIES_RESOURCE);
 	}
 }

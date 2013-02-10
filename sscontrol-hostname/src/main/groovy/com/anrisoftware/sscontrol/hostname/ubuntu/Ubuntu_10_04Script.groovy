@@ -18,7 +18,7 @@
  */
 package com.anrisoftware.sscontrol.hostname.ubuntu
 
-import com.anrisoftware.sscontrol.hostname.linux.LinuxScript
+import com.anrisoftware.sscontrol.hostname.linux.HostnameScript
 
 /**
  * Deploys the hostname on the Ubuntu 10.04 Linux system.
@@ -26,5 +26,5 @@ import com.anrisoftware.sscontrol.hostname.linux.LinuxScript
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class Ubuntu_10_04Script extends LinuxScript {
+class Ubuntu_10_04Script extends HostnameScript {
 }

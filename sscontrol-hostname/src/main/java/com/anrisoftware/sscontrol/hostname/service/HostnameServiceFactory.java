@@ -26,14 +26,20 @@ import com.anrisoftware.sscontrol.core.api.Service;
 import com.anrisoftware.sscontrol.core.api.ServiceFactory;
 import com.google.inject.Injector;
 
+/**
+ * Provides the hostname service.
+ * 
+ * @author Erwin Mueller, erwin.mueller@deventm.org
+ * @since 1.0
+ */
 @ProviderFor(ServiceFactory.class)
-public class HostnameFactory implements ServiceFactory {
+public class HostnameServiceFactory implements ServiceFactory {
 
 	public static final String NAME = "hostname";
 
 	private final LazyInjector lazyInjector;
 
-	public HostnameFactory() {
+	public HostnameServiceFactory() {
 		this.lazyInjector = new LazyInjector();
 	}
 
@@ -48,6 +54,7 @@ public class HostnameFactory implements ServiceFactory {
 			HostnameServiceImpl service;
 			service = lazyInjector.get().getInstance(HostnameServiceImpl.class);
 			service.setProfile(profile);
+			service.setInjector(lazyInjector.get());
 			return service;
 		} catch (ConcurrentException e) {
 			throw new RuntimeException(e);

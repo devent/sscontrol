@@ -1,4 +1,4 @@
-restart_hostname_command(prefix) ::= <<
+restart_command(prefix) ::= <<
 #!/bin/sh
 <prefix>/etc/init.d/hostname restart
 >>

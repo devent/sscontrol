@@ -49,8 +49,6 @@ import com.google.inject.assistedinject.AssistedInject;
  */
 public class ScriptCommandWorker implements Worker {
 
-	private static final String EXEC_COMMAND_WORKER_NAME = "exec_command_worker";
-
 	/**
 	 * @since 1.0
 	 */
@@ -179,7 +177,7 @@ public class ScriptCommandWorker implements Worker {
 	private String createScript(TemplateResource template, Object[] attributes)
 			throws WorkerException {
 		try {
-			return template.getText(attributes);
+			return template.getText(true, attributes);
 		} catch (ResourcesException e) {
 			throw log.errorProcessTemplate(this, e);
 		}

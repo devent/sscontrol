@@ -29,14 +29,8 @@ import javax.inject.Singleton;
 
 import com.anrisoftware.propertiesutils.ContextProperties;
 import com.anrisoftware.propertiesutils.ContextPropertiesFactory;
-import com.anrisoftware.resources.templates.maps.TemplatesDefaultMapsModule;
-import com.anrisoftware.resources.templates.templates.TemplatesResourcesModule;
-import com.anrisoftware.resources.templates.worker.STDefaultPropertiesModule;
-import com.anrisoftware.resources.templates.worker.STWorkerModule;
-import com.anrisoftware.sscontrol.dns.maradns.linux.LinuxScript;
-import com.anrisoftware.sscontrol.workers.command.exec.ExecCommandWorkerModule;
-import com.anrisoftware.sscontrol.workers.command.script.ScriptCommandWorkerModule;
-import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokensTemplateWorkerModule;
+import com.anrisoftware.sscontrol.core.service.ServiceModule;
+import com.anrisoftware.sscontrol.dns.maradns.linux.MaraDnsScript;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.google.inject.multibindings.MapBinder;
@@ -49,19 +43,13 @@ import com.google.inject.multibindings.MapBinder;
  */
 class MaraDnsModule extends AbstractModule {
 
-	private static final URL MARADNS_LINUX_DEFAULT_PROPERTIES_URL = MaraDnsModule.class
-			.getResource("/maradns_linux_default.properties");
+	private static final URL MARADNS_UBUNTU_10_04_DEFAULT_PROPERTIES_URL = MaraDnsModule.class
+			.getResource("/maradns_ubuntu_10_04_defaults.properties");
 
 	@Override
 	protected void configure() {
 		bindScripts();
-		install(new ExecCommandWorkerModule());
-		install(new ScriptCommandWorkerModule());
-		install(new TokensTemplateWorkerModule());
-		install(new TemplatesResourcesModule());
-		install(new TemplatesDefaultMapsModule());
-		install(new STWorkerModule());
-		install(new STDefaultPropertiesModule());
+		install(new ServiceModule());
 	}
 
 	private void bindScripts() {
@@ -72,9 +60,9 @@ class MaraDnsModule extends AbstractModule {
 
 	@Provides
 	@Singleton
-	@Named("maradns-linux-default-properties")
+	@Named("maradns-ubuntu_10_04-default-properties")
 	ContextProperties getMaradnsLinuxDefaultProperties() throws IOException {
-		return new ContextPropertiesFactory(LinuxScript.class)
-				.fromResource(MARADNS_LINUX_DEFAULT_PROPERTIES_URL);
+		return new ContextPropertiesFactory(MaraDnsScript.class)
+				.fromResource(MARADNS_UBUNTU_10_04_DEFAULT_PROPERTIES_URL);
 	}
 }

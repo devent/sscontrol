@@ -19,7 +19,7 @@
 package com.anrisoftware.sscontrol.dns.service
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
-import static com.anrisoftware.sscontrol.dns.service.DnsFactory.*
+import static com.anrisoftware.sscontrol.dns.service.DnsServiceFactory.*
 import groovy.util.logging.Slf4j
 
 import org.junit.Before

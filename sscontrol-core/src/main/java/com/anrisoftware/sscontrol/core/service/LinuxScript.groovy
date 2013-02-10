@@ -22,6 +22,7 @@ import javax.inject.Inject
 
 import org.apache.commons.io.FileUtils
 
+import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.resources.templates.api.Templates
 import com.anrisoftware.resources.templates.api.TemplatesFactory
 import com.anrisoftware.sscontrol.core.api.ProfileProperties
@@ -60,7 +61,7 @@ class LinuxScript extends Script {
 	Service service
 
 	@Inject
-	LinuxScriptLogger log
+	private LinuxScriptLogger log
 
 	@Inject
 	TemplatesFactory templatesFactory
@@ -76,7 +77,26 @@ class LinuxScript extends Script {
 	@Override
 	def run() {
 		commandTemplates = templatesFactory.create("ScriptCommandTemplates")
+		installSystemPackages()
 	}
+
+	/**
+	 * Installs the system packages.
+	 */
+	void installSystemPackages() {
+		system.hasProperty("packages") ? installPackages(system.packages) : null
+	}
+
+	/**
+	 * Enables the specified repository.
+	 */
+	void enableRepository(String distribution, String repository) {
+		def template = commandTemplates.getResource("command")
+		def command = system.get("enable_repository_command", "lucid", "universe")
+		def worker = scriptCommandFactory.create(template, "command", command)()
+		log.enableRepositoryDone this, worker, distribution, repository
+	}
+
 
 	/**
 	 * Installs the specified packages.
@@ -105,6 +125,7 @@ class LinuxScript extends Script {
 	 * Deploys the configuration to the configuration file.
 	 */
 	def deployConfiguration(TokenMarker tokenMarker, String currentConfiguration, List configurations, File file) {
+		configurations = configurations.flatten()
 		TokensTemplateWorker worker
 		String configuration = currentConfiguration
 		configurations.each {
@@ -126,6 +147,38 @@ class LinuxScript extends Script {
 	 */
 	TokenMarker configurationTokens(def comment = "#") {
 		new TokenMarker("$comment SSCONTROL-$name", "$comment SSCONTROL-$name-END\n")
+	}
+
+	/**
+	 * Restart the service.
+	 *
+	 * @param restartCommand
+	 * 			  the restart command for the service.
+	 */
+	void restartService(String restartCommand) {
+		def prefix = system.prefix
+		def template = commandTemplates.getResource("command")
+		def worker = scriptCommandFactory.create(template, "command", "${prefix}${restartCommand}")()
+		log.restartServiceDone this, worker
+	}
+
+	/**
+	 * Returns a profile property. If the profile property was not set
+	 * return the default value from the default properties.
+	 *
+	 * @param key
+	 * 			  the key of the profile property.
+	 *
+	 * @param defaultProperties
+	 * 			  the {@link ContextProperties} containing the default
+	 * 			  properties.
+	 *
+	 * @return the value of the profile property or the default property
+	 * if the profile property was not set.
+	 */
+	def profileProperty(String key, ContextProperties defaultProperties) {
+		def property = profile[key]
+		property != null ? property : defaultProperties.getProperty(key)
 	}
 
 	/**

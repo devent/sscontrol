@@ -18,7 +18,7 @@
  */
 package com.anrisoftware.sscontrol.dns.maradns.ubuntu
 
-import com.anrisoftware.sscontrol.dns.maradns.linux.LinuxScript
+import com.anrisoftware.sscontrol.dns.maradns.linux.MaraDnsScript
 
 /**
  * Deploys the MaraDNS service on the Ubuntu 10.04 Linux system.
@@ -26,5 +26,11 @@ import com.anrisoftware.sscontrol.dns.maradns.linux.LinuxScript
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class Ubuntu_10_04Script extends LinuxScript {
+class Ubuntu_10_04Script extends MaraDnsScript {
+
+	@Override
+	void distributionSpecificConfiguration() {
+		enableRepository "lucid", "universe"
+		installPackages profile.packages
+	}
 }

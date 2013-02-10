@@ -33,7 +33,7 @@ import com.google.inject.Injector;
  * @since 1.0
  */
 @ProviderFor(ServiceFactory.class)
-public class DnsFactory implements ServiceFactory {
+public class DnsServiceFactory implements ServiceFactory {
 
 	/**
 	 * The name of the DNS service.
@@ -42,7 +42,7 @@ public class DnsFactory implements ServiceFactory {
 
 	private final LazyInjector lazyInjector;
 
-	public DnsFactory() {
+	public DnsServiceFactory() {
 		this.lazyInjector = new LazyInjector();
 	}
 
@@ -57,6 +57,7 @@ public class DnsFactory implements ServiceFactory {
 			DnsServiceImpl service;
 			service = lazyInjector.get().getInstance(DnsServiceImpl.class);
 			service.setProfile(profile);
+			service.setInjector(lazyInjector.get());
 			return service;
 		} catch (ConcurrentException e) {
 			throw new RuntimeException(e);

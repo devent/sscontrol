@@ -12,7 +12,7 @@
 
 	<artifactId>sscontrol-dns-maradns</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>Sscontrol :: DNS :: MaraDNS</name>
+	<name>Server Control :: DNS :: MaraDNS</name>
 	<description>Setups MaraDNS as the DNS service.</description>
 
 	<dependencies>

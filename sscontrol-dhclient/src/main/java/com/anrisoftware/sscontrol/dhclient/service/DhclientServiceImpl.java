@@ -68,6 +68,8 @@ class DhclientServiceImpl extends AbstractService {
 
 	private final List<OptionDeclaration> prepends;
 
+	private final Map<String, Provider<Script>> scripts;
+
 	@Inject
 	DhclientServiceImpl(DhclientServiceImplLogger logger,
 			DeclarationFactory declarationFactory,
@@ -75,7 +77,7 @@ class DhclientServiceImpl extends AbstractService {
 			RequestDeclarations requests,
 			Map<String, Provider<Script>> scripts,
 			@Named("dhclient-defaults-properties") ContextProperties p) {
-		super(scripts);
+		this.scripts = scripts;
 		this.log = logger;
 		this.declarationFactory = declarationFactory;
 		this.optionDeclarationFactory = optionDeclarationFactory;
@@ -95,6 +97,19 @@ class DhclientServiceImpl extends AbstractService {
 			String[] option = split(decl.trim(), " ");
 			sends.add(optionDeclarationFactory.create(option[0], option[1]));
 		}
+	}
+
+	@Override
+	protected Script getScript(String profileName) {
+		return scripts.get(profileName).get();
+	}
+
+	/**
+	 * Returns the dhclient service name.
+	 */
+	@Override
+	public String getName() {
+		return NAME;
 	}
 
 	/**
@@ -130,11 +145,6 @@ class DhclientServiceImpl extends AbstractService {
 		declaration = optionDeclarationFactory.create(option, decl);
 		prepends.add(declaration);
 		log.prependAdded(this, declaration);
-	}
-
-	@Override
-	public String getName() {
-		return NAME;
 	}
 
 	/**

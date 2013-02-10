@@ -19,7 +19,6 @@
 package com.anrisoftware.sscontrol.dns.service;
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
-import com.anrisoftware.sscontrol.core.api.ProfileService;
 import com.anrisoftware.sscontrol.core.api.ServiceException;
 
 /**
@@ -35,15 +34,6 @@ class DnsServiceImplLogger extends AbstractLogger {
 	 */
 	DnsServiceImplLogger() {
 		super(DnsServiceImpl.class);
-	}
-
-	void profileSet(DnsServiceImpl service, ProfileService profile) {
-		if (log.isDebugEnabled()) {
-			log.debug("Set profile {} for {}.", profile, service);
-		} else {
-			log.info("Set profile {} for DNS service.",
-					profile.getProfileName());
-		}
 	}
 
 	void serialSet(DnsServiceImpl service, int serial, boolean generate) {

@@ -2,8 +2,6 @@ package com.anrisoftware.sscontrol.core.service;
 
 import groovy.lang.Script;
 
-import java.util.Map;
-
 import javax.inject.Inject;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -12,7 +10,6 @@ import com.anrisoftware.sscontrol.core.api.ProfileService;
 import com.anrisoftware.sscontrol.core.api.Service;
 import com.anrisoftware.sscontrol.core.api.ServiceException;
 import com.google.inject.Injector;
-import com.google.inject.Provider;
 
 public abstract class AbstractService implements Service {
 
@@ -23,14 +20,11 @@ public abstract class AbstractService implements Service {
 
 	private Injector injector;
 
-	private final Map<String, Provider<Script>> scripts;
-
 	private ProfileService profile;
 
 	private AbstractServiceLogger log;
 
-	protected AbstractService(Map<String, Provider<Script>> scripts) {
-		this.scripts = scripts;
+	protected AbstractService() {
 	}
 
 	@Inject
@@ -65,15 +59,39 @@ public abstract class AbstractService implements Service {
 	@Override
 	public Service call() throws ServiceException {
 		String profileName = profile.getProfileName();
-		Script script = scripts.get(profileName).get();
+		Script script = getScript(profileName);
 		script.setProperty("system", profile.getEntry("system"));
 		script.setProperty("profile", profile.getEntry(getName()));
 		script.setProperty("service", this);
 		script.setProperty("name", getName());
-		injector.injectMembers(script);
+		injectScript(script);
 		script.run();
 		return this;
 	}
+
+	/**
+	 * Injects the dependencies of the script.
+	 * 
+	 * @param script
+	 *            the {@link Script}.
+	 */
+	protected void injectScript(Script script) {
+		injector.injectMembers(script);
+	}
+
+	/**
+	 * Returns the script to the specified profile.
+	 * 
+	 * @param profileName
+	 *            the name of the profile.
+	 * 
+	 * @return the {@link Script}.
+	 * 
+	 * @throws ServiceException
+	 *             if there were some error returning the script.
+	 */
+	protected abstract Script getScript(String profileName)
+			throws ServiceException;
 
 	@Override
 	public String toString() {

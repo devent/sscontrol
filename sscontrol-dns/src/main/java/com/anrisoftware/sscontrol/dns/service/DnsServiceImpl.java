@@ -18,11 +18,10 @@
  */
 package com.anrisoftware.sscontrol.dns.service;
 
-import static com.anrisoftware.sscontrol.dns.service.DnsFactory.NAME;
+import static com.anrisoftware.sscontrol.dns.service.DnsServiceFactory.NAME;
 import static java.lang.String.format;
 import static java.util.Collections.unmodifiableList;
 import static org.apache.commons.lang3.StringUtils.split;
-import groovy.lang.GroovyObjectSupport;
 import groovy.lang.Script;
 
 import java.util.ArrayList;
@@ -40,11 +39,11 @@ import org.joda.time.DateTime;
 
 import com.anrisoftware.propertiesutils.ContextProperties;
 import com.anrisoftware.resources.templates.api.TemplatesFactory;
-import com.anrisoftware.sscontrol.core.api.ProfileService;
 import com.anrisoftware.sscontrol.core.api.Service;
 import com.anrisoftware.sscontrol.core.api.ServiceException;
 import com.anrisoftware.sscontrol.core.api.ServiceScriptFactory;
 import com.anrisoftware.sscontrol.core.api.ServiceScriptInfo;
+import com.anrisoftware.sscontrol.core.service.AbstractService;
 import com.anrisoftware.sscontrol.dns.statements.ARecord;
 import com.anrisoftware.sscontrol.dns.statements.DnsZone;
 import com.anrisoftware.sscontrol.dns.statements.DnsZoneFactory;
@@ -55,10 +54,10 @@ import com.anrisoftware.sscontrol.dns.statements.DnsZoneFactory;
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class DnsServiceImpl extends GroovyObjectSupport implements Service {
+class DnsServiceImpl extends AbstractService {
 
 	/**
-	 * @version 0.1
+	 * @version 1.0
 	 */
 	private static final long serialVersionUID = 2828043940753655821L;
 
@@ -68,8 +67,6 @@ class DnsServiceImpl extends GroovyObjectSupport implements Service {
 
 	@Inject
 	private DnsZoneFactory dnsZoneFactory;
-
-	private ProfileService profile;
 
 	private final BindAddresses bindAddresses;
 
@@ -111,6 +108,41 @@ class DnsServiceImpl extends GroovyObjectSupport implements Service {
 		this.bindAddresses = bindAddresses;
 		this.zones = new ArrayList<DnsZone>();
 		this.generate = true;
+	}
+
+	@Override
+	protected Script getScript(String profileName) throws ServiceException {
+		ServiceScriptFactory scriptFactory = findScriptFactory();
+		return (Script) scriptFactory.getScript();
+	}
+
+	private ServiceScriptFactory findScriptFactory() throws ServiceException {
+		String name = getProfile().getProfileName();
+		String service = getProfile().getEntry(NAME).get("service").toString();
+		for (ServiceScriptFactory scriptFactory : serviceScripts) {
+			ServiceScriptInfo info = scriptFactory.getInfo();
+			if (info.getProfileName().equals(name)
+					&& info.getServiceName().equals(service)) {
+				return scriptFactory;
+			}
+		}
+		throw log.errorFindServiceScript(this, name, service);
+	}
+
+	/**
+	 * Because we load the script from a script service the dependencies are
+	 * already injected.
+	 */
+	@Override
+	protected void injectScript(Script script) {
+	}
+
+	/**
+	 * Returns the DNS service name.
+	 */
+	@Override
+	public String getName() {
+		return NAME;
 	}
 
 	/**
@@ -382,63 +414,9 @@ class DnsServiceImpl extends GroovyObjectSupport implements Service {
 		return unmodifiableList(zones);
 	}
 
-	/**
-	 * Returns the DNS service name.
-	 */
-	@Override
-	public String getName() {
-		return NAME;
-	}
-
-	/**
-	 * Sets the profile for the DNS service.
-	 * 
-	 * @param newProfile
-	 *            the {@link ProfileService}.
-	 */
-	public void setProfile(ProfileService newProfile) {
-		profile = newProfile;
-		log.profileSet(this, newProfile);
-	}
-
-	/**
-	 * Returns the profile for the DNS service.
-	 * 
-	 * @return the {@link ProfileService}.
-	 */
-	public ProfileService getProfile() {
-		return profile;
-	}
-
-	@Override
-	public Service call() throws ServiceException {
-		ServiceScriptFactory scriptFactory = findScriptFactory();
-		Script script = (Script) scriptFactory.getScript();
-		script.setProperty("system", profile.getEntry("system"));
-		script.setProperty("profile", profile.getEntry(NAME));
-		script.setProperty("service", this);
-		script.setProperty("name", profile.getProfileName());
-		script.run();
-		return this;
-	}
-
-	private ServiceScriptFactory findScriptFactory() throws ServiceException {
-		String name = profile.getProfileName();
-		String service = profile.getEntry(NAME).get("service").toString();
-		for (ServiceScriptFactory scriptFactory : serviceScripts) {
-			ServiceScriptInfo info = scriptFactory.getInfo();
-			if (info.getProfileName().equals(name)
-					&& info.getServiceName().equals(service)) {
-				return scriptFactory;
-			}
-		}
-		throw log.errorFindServiceScript(this, name, service);
-	}
-
 	@Override
 	public String toString() {
-		return new ToStringBuilder(this)
-				.append("profile", profile.getProfileName())
+		return new ToStringBuilder(this).appendSuper(super.toString())
 				.append("serial", serial)
 				.append("bind addresses", bindAddresses).toString();
 	}

@@ -29,15 +29,9 @@ import javax.inject.Singleton;
 
 import com.anrisoftware.propertiesutils.ContextProperties;
 import com.anrisoftware.propertiesutils.ContextPropertiesFactory;
-import com.anrisoftware.resources.templates.maps.TemplatesDefaultMapsModule;
-import com.anrisoftware.resources.templates.templates.TemplatesResourcesModule;
-import com.anrisoftware.resources.templates.worker.STDefaultPropertiesModule;
-import com.anrisoftware.resources.templates.worker.STWorkerModule;
+import com.anrisoftware.sscontrol.core.service.ServiceModule;
 import com.anrisoftware.sscontrol.dhclient.statements.StatementsModule;
 import com.anrisoftware.sscontrol.dhclient.ubuntu.Ubuntu_10_04Script;
-import com.anrisoftware.sscontrol.workers.command.exec.ExecCommandWorkerModule;
-import com.anrisoftware.sscontrol.workers.command.script.ScriptCommandWorkerModule;
-import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokensTemplateWorkerModule;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.google.inject.multibindings.MapBinder;
@@ -56,18 +50,8 @@ class DhclientModule extends AbstractModule {
 	@Override
 	protected void configure() {
 		install(new StatementsModule());
+		install(new ServiceModule());
 		bindScripts();
-		installWorkers();
-	}
-
-	private void installWorkers() {
-		install(new ExecCommandWorkerModule());
-		install(new ScriptCommandWorkerModule());
-		install(new TokensTemplateWorkerModule());
-		install(new TemplatesResourcesModule());
-		install(new TemplatesDefaultMapsModule());
-		install(new STWorkerModule());
-		install(new STDefaultPropertiesModule());
 	}
 
 	private void bindScripts() {

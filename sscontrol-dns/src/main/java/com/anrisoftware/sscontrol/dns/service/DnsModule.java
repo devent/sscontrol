@@ -28,6 +28,7 @@ import javax.inject.Singleton;
 import com.anrisoftware.propertiesutils.ContextProperties;
 import com.anrisoftware.propertiesutils.ContextPropertiesFactory;
 import com.anrisoftware.sscontrol.core.api.ServiceScriptFactory;
+import com.anrisoftware.sscontrol.core.service.ServiceModule;
 import com.anrisoftware.sscontrol.dns.statements.DnsStatementsModule;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
@@ -46,6 +47,7 @@ class DnsModule extends AbstractModule {
 	@Override
 	protected void configure() {
 		install(new DnsStatementsModule());
+		install(new ServiceModule());
 	}
 
 	@Provides

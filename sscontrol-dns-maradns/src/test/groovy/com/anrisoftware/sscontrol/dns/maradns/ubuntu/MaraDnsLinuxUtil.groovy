@@ -24,7 +24,6 @@ import groovy.util.logging.Slf4j
 import org.junit.Before
 
 import com.anrisoftware.sscontrol.core.activator.CoreModule
-import com.anrisoftware.sscontrol.dns.maradns.ubuntu.MaraDnsModule
 import com.google.inject.Guice
 import com.google.inject.Injector
 
@@ -51,6 +50,6 @@ class MaraDnsLinuxUtil {
 	}
 
 	def createInjector() {
-		Guice.createInjector(new CoreModule(), new MaraDnsModule())
+		Guice.createInjector(new CoreModule())
 	}
 }

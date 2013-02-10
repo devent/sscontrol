@@ -22,7 +22,7 @@ class Ubuntu_10_04Script extends LinuxScript {
 		super.run()
 		dhclientConfiguration = templatesFactory.create("Dhclient_ubuntu_10_04").getResource("dhclient_configuration")
 		installPackages profile.packages
-		deployConfiguration configurationTokens(), currentConfiguration, configuration, configurationFile
+		deployConfiguration configurationTokens(), currentConfiguration, configurations, configurationFile
 		restartService()
 	}
 
@@ -48,9 +48,9 @@ class Ubuntu_10_04Script extends LinuxScript {
 	}
 
 	/**
-	 * Returns the dhclient configuration.
+	 * Returns the dhclient configurations.
 	 */
-	List getConfiguration() {
+	List getConfigurations() {
 		[
 			new TokenTemplate("\\#?option .*;", optionConfiguration),
 			{
@@ -64,7 +64,7 @@ class Ubuntu_10_04Script extends LinuxScript {
 					list << new TokenTemplate("\\#?prepend .*;", prependConfiguration(prepend))
 				}
 			}()
-		].flatten()
+		]
 	}
 
 	String prependConfiguration(def prepend) {

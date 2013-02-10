@@ -1,14 +1,9 @@
 package com.anrisoftware.sscontrol.dhclient.ubuntu
 
 import static java.util.regex.Pattern.*
-import groovy.util.logging.Slf4j
 
-import org.apache.commons.io.FileUtils
-
-import com.anrisoftware.resources.templates.api.Templates
-import com.anrisoftware.sscontrol.dhclient.linux.LinuxScript
-import com.anrisoftware.sscontrol.workers.command.script.ScriptCommandWorkerFactory
-import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokenMarker
+import com.anrisoftware.resources.templates.api.TemplateResource
+import com.anrisoftware.sscontrol.core.service.LinuxScript
 import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokenTemplate
 import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokensTemplateWorkerFactory
 
@@ -18,58 +13,17 @@ import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokensTemplateWorke
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-@Slf4j
 class Ubuntu_10_04Script extends LinuxScript {
 
-	Templates commandTemplates
+	TemplateResource dhclientConfiguration
 
 	@Override
 	def run() {
 		super.run()
-		templates = templatesFactory.create "Dhclient_$name"
-		commandTemplates = templatesFactory.create "ScriptCommandTemplates"
-		installPackages()
-		deployConfiguration()
+		dhclientConfiguration = templatesFactory.create("Dhclient_ubuntu_10_04").getResource("dhclient_configuration")
+		installPackages profile.packages
+		deployConfiguration configurationTokens(), currentConfiguration, configuration, configurationFile
 		restartService()
-	}
-
-	/**
-	 * Installs the needed dhclient packages.
-	 */
-	def installPackages() {
-		def template = commandTemplates.getResource("install")
-		def worker = workers[ScriptCommandWorkerFactory].create(
-						template, "installCommand", system.install_command,
-						"packages", profile.packages)()
-		logInstallPackagesDone(worker)
-	}
-
-	private logInstallPackagesDone(def worker) {
-		if (log.isDebugEnabled()) {
-			log.debug "Installed dhclient service packages for {}: {}.", this, profile.packages
-		} else {
-			log.info "Installed dhclient service packages: {}.", profile.packages
-		}
-	}
-
-	/**
-	 * Deploys the dhclient configuration to the dhclient configuration file.
-	 */
-	def deployConfiguration() {
-		def configuration = currentConfiguration
-		tokenTemplate.each {
-			def worker = workers[TokensTemplateWorkerFactory].create(tokens, it, currentConfiguration)()
-			configuration = worker.text
-			FileUtils.write(configurationFile, worker.text, system.charset)
-		}
-		logDeployConfiguration(configuration)
-	}
-
-	/**
-	 * Returns the dhclient configuration directory.
-	 */
-	File getConfigurationDir() {
-		profile.configuration_dir as File
 	}
 
 	/**
@@ -80,75 +34,53 @@ class Ubuntu_10_04Script extends LinuxScript {
 	}
 
 	/**
+	 * Returns the dhclient configuration directory.
+	 */
+	File getConfigurationDir() {
+		profile.configuration_dir as File
+	}
+
+	/**
 	 * Returns the dhclient configuration on the server.
 	 */
 	String getCurrentConfiguration() {
-		if (configurationFile.isFile()) {
-			FileUtils.readFileToString(configurationFile, system.charset)
-		} else {
-			logNoConfigurationFound()
-			""
-		}
-	}
-
-	private logNoConfigurationFound() {
-		if (log.isDebugEnabled()) {
-			log.debug "No dhclient configuration file found {} for {}.", configurationFile, this
-		} else {
-			log.info "No dhclient configuration found in {}.", configurationFile
-		}
-	}
-
-	/**
-	 * Returns the template tokens for the hostname configuration.
-	 */
-	TokenMarker getTokens() {
-		new TokenMarker("# SSCONTROL-$serviceName", "# SSCONTROL-$serviceName-END\n")
-	}
-
-	/**
-	 * Returns the token templates for each dhclient configuration.
-	 */
-	List getTokenTemplate() {
-		int i = 0
-		def configuration = getConfiguration()
-		def list = []
-		list << new TokenTemplate("\\#?option .*;", configuration[i++])
-		service.sends.inject(list) { it, send ->
-			it << new TokenTemplate("\\#?send .*;", configuration[i++])
-		}
-		list << new TokenTemplate("\\#?request ([\\w\\-,\\s]?)*;", configuration[i++], DOTALL)
-		service.prepends.inject(list) { it, prepend ->
-			it << new TokenTemplate("\\#?prepend .*;", configuration[i++])
-		}
+		currentConfiguration configurationFile
 	}
 
 	/**
 	 * Returns the dhclient configuration.
 	 */
 	List getConfiguration() {
-		def res = templates.getResource("dhclient_configuration")
-		def list = []
-		res.invalidate()
-		list << res.getText("option", "declaration", service.option)
-		service.sends.inject(list) { it, send ->
-			res.invalidate()
-			it << res.getText("send", "declaration", send)
-		}
-		res.invalidate()
-		list << res.getText("requests", "requests", service.requests)
-		service.prepends.inject(list) { it, prepend ->
-			res.invalidate()
-			it << res.getText("prepend", "declaration", prepend)
-		}
+		[
+			new TokenTemplate("\\#?option .*;", optionConfiguration),
+			{
+				service.sends.inject([]) { list, send ->
+					list << new TokenTemplate("\\#?send .*;", sendConfiguration(send))
+				}
+			}(),
+			new TokenTemplate("\\#?request ([\\w\\-,\\s]?)*;", requestConfiguration, DOTALL),
+			{
+				service.prepends.inject([]) { list, prepend ->
+					list << new TokenTemplate("\\#?prepend .*;", prependConfiguration(prepend))
+				}
+			}()
+		].flatten()
 	}
 
-	private logDeployConfiguration(def configuration) {
-		if (log.isDebugEnabled()) {
-			log.debug "Deploy hostname configuration '$configuration' to {} in {}.", configurationFile, this
-		} else {
-			log.info "Deploy dhclient configuration to {}.", configurationFile
-		}
+	String prependConfiguration(def prepend) {
+		dhclientConfiguration.getText true, "prepend", "declaration", prepend
+	}
+
+	String getRequestConfiguration() {
+		dhclientConfiguration.getText true, "requests", "requests", service.requests
+	}
+
+	String getOptionConfiguration() {
+		dhclientConfiguration.getText true, "option", "declaration", service.option
+	}
+
+	String sendConfiguration(def send) {
+		dhclientConfiguration.getText true, "send", "declaration", send
 	}
 
 	def restartService() {

@@ -19,12 +19,11 @@
 package com.anrisoftware.sscontrol.dhclient.service;
 
 import com.anrisoftware.globalpom.log.AbstractSerializedLogger;
-import com.anrisoftware.sscontrol.core.api.ProfileService;
 import com.anrisoftware.sscontrol.dhclient.statements.OptionDeclaration;
 
 /**
  * Logging messages for {@link DhclientServiceImpl}.
- *
+ * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
@@ -35,15 +34,6 @@ class DhclientServiceImplLogger extends AbstractSerializedLogger {
 	 */
 	DhclientServiceImplLogger() {
 		super(DhclientServiceImpl.class);
-	}
-
-	void profileSet(DhclientServiceImpl service, ProfileService profile) {
-		if (log.isTraceEnabled()) {
-			log.trace("Set profile {} for {}.", profile, service);
-		} else {
-			log.info("Set profile {} for hostname service.",
-					profile.getProfileName());
-		}
 	}
 
 	public void prependAdded(DhclientServiceImpl service,

@@ -19,7 +19,7 @@
 package com.anrisoftware.sscontrol.dhclient.service
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
-import static com.anrisoftware.sscontrol.dhclient.service.DhclientFactory.*
+import static com.anrisoftware.sscontrol.dhclient.service.DhclientServiceFactory.*
 import groovy.util.logging.Slf4j
 
 import org.junit.Before

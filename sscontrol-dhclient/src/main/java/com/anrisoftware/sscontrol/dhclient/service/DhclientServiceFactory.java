@@ -33,7 +33,7 @@ import com.google.inject.Injector;
  * @since 1.0
  */
 @ProviderFor(ServiceFactory.class)
-public class DhclientFactory implements ServiceFactory {
+public class DhclientServiceFactory implements ServiceFactory {
 
 	/**
 	 * The name of the dhclient service.
@@ -42,7 +42,7 @@ public class DhclientFactory implements ServiceFactory {
 
 	private final LazyInjector lazyInjector;
 
-	public DhclientFactory() {
+	public DhclientServiceFactory() {
 		this.lazyInjector = new LazyInjector();
 	}
 
@@ -56,6 +56,7 @@ public class DhclientFactory implements ServiceFactory {
 		try {
 			DhclientServiceImpl service;
 			service = lazyInjector.get().getInstance(DhclientServiceImpl.class);
+			service.setInjector(lazyInjector.get());
 			service.setProfile(profile);
 			return service;
 		} catch (ConcurrentException e) {

@@ -18,36 +18,27 @@
  */
 package com.anrisoftware.sscontrol.dhclient.service;
 
-import static com.anrisoftware.sscontrol.dhclient.service.DhclientFactory.NAME;
+import static com.anrisoftware.sscontrol.dhclient.service.DhclientServiceFactory.NAME;
 import static java.util.Collections.unmodifiableList;
 import static org.apache.commons.lang3.StringUtils.split;
-import groovy.lang.GroovyObjectSupport;
 import groovy.lang.Script;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
-
 import com.anrisoftware.propertiesutils.ContextProperties;
-import com.anrisoftware.resources.templates.api.TemplatesFactory;
-import com.anrisoftware.sscontrol.core.api.ProfileService;
 import com.anrisoftware.sscontrol.core.api.Service;
-import com.anrisoftware.sscontrol.core.api.ServiceException;
+import com.anrisoftware.sscontrol.core.service.AbstractService;
 import com.anrisoftware.sscontrol.dhclient.statements.Declaration;
 import com.anrisoftware.sscontrol.dhclient.statements.DeclarationFactory;
 import com.anrisoftware.sscontrol.dhclient.statements.OptionDeclaration;
 import com.anrisoftware.sscontrol.dhclient.statements.OptionDeclarationFactory;
 import com.anrisoftware.sscontrol.dhclient.statements.RequestDeclarations;
-import com.anrisoftware.sscontrol.workers.command.script.ScriptCommandWorkerFactory;
-import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokensTemplateWorkerFactory;
 import com.google.inject.Provider;
 
 /**
@@ -56,7 +47,7 @@ import com.google.inject.Provider;
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class DhclientServiceImpl extends GroovyObjectSupport implements Service {
+class DhclientServiceImpl extends AbstractService {
 
 	/**
 	 * @version 0.1
@@ -65,19 +56,9 @@ class DhclientServiceImpl extends GroovyObjectSupport implements Service {
 
 	private final DhclientServiceImplLogger log;
 
-	private final Map<String, Provider<Script>> scripts;
-
-	@Inject
-	private TokensTemplateWorkerFactory tokensTemplateWorkerFactory;
-
-	@Inject
-	private ScriptCommandWorkerFactory scriptCommandWorkerFactory;
-
 	private final DeclarationFactory declarationFactory;
 
 	private final OptionDeclarationFactory optionDeclarationFactory;
-
-	private ProfileService profile;
 
 	private Declaration option;
 
@@ -87,24 +68,20 @@ class DhclientServiceImpl extends GroovyObjectSupport implements Service {
 
 	private final List<OptionDeclaration> prepends;
 
-	private final TemplatesFactory templatesFactory;
-
 	@Inject
 	DhclientServiceImpl(DhclientServiceImplLogger logger,
 			DeclarationFactory declarationFactory,
 			OptionDeclarationFactory optionDeclarationFactory,
 			RequestDeclarations requests,
-			Map<String, Provider<Script>> scripts, TemplatesFactory templates,
-			@Named("dhclient-defaults-properties") Properties properties) {
+			Map<String, Provider<Script>> scripts,
+			@Named("dhclient-defaults-properties") ContextProperties p) {
+		super(scripts);
 		this.log = logger;
 		this.declarationFactory = declarationFactory;
 		this.optionDeclarationFactory = optionDeclarationFactory;
-		this.scripts = scripts;
-		this.templatesFactory = templates;
 		this.sends = new ArrayList<OptionDeclaration>();
 		this.requests = requests;
 		this.prepends = new ArrayList<OptionDeclaration>();
-		ContextProperties p = new ContextProperties(this, properties);
 		setDefaultOption(p);
 		setDefaultSends(p);
 	}
@@ -161,26 +138,6 @@ class DhclientServiceImpl extends GroovyObjectSupport implements Service {
 	}
 
 	/**
-	 * Sets the profile for the service.
-	 * 
-	 * @param newProfile
-	 *            the {@link ProfileService}.
-	 */
-	public void setProfile(ProfileService newProfile) {
-		profile = newProfile;
-		log.profileSet(this, newProfile);
-	}
-
-	/**
-	 * Returns the profile of the service.
-	 * 
-	 * @return the {@link ProfileService}.
-	 */
-	public ProfileService getProfile() {
-		return profile;
-	}
-
-	/**
 	 * Returns the option declaration.
 	 * 
 	 * @return the {@link Declaration} option declaration.
@@ -222,36 +179,6 @@ class DhclientServiceImpl extends GroovyObjectSupport implements Service {
 	 */
 	public List<OptionDeclaration> getSends() {
 		return unmodifiableList(sends);
-	}
-
-	@Override
-	public Service call() throws ServiceException {
-		String name = profile.getProfileName();
-		Script script = scripts.get(name).get();
-		Map<Class<?>, Object> workers = getWorkers();
-		script.setProperty("workers", workers);
-		script.setProperty("templatesFactory", templatesFactory);
-		script.setProperty("system", profile.getEntry("system"));
-		script.setProperty("profile", profile.getEntry(NAME));
-		script.setProperty("service", this);
-		script.setProperty("name", name);
-		script.run();
-		return this;
-	}
-
-	private Map<Class<?>, Object> getWorkers() {
-		Map<Class<?>, Object> workers = new HashMap<Class<?>, Object>();
-		workers.put(TokensTemplateWorkerFactory.class,
-				tokensTemplateWorkerFactory);
-		workers.put(ScriptCommandWorkerFactory.class,
-				scriptCommandWorkerFactory);
-		return workers;
-	}
-
-	@Override
-	public String toString() {
-		return new ToStringBuilder(this).append("profile",
-				profile.getProfileName()).toString();
 	}
 
 }

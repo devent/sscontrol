@@ -6,7 +6,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Properties;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -22,8 +21,6 @@ public class RequestDeclarations implements Serializable, Iterable<Declaration> 
 	 */
 	private static final long serialVersionUID = 4961344687617636866L;
 
-	private static final String PARENT_PACKAGE_NAME = "com.anrisoftware.sscontrol.dhclient.service";
-
 	private final List<Declaration> requests;
 
 	private final DeclarationFactory declarationFactory;
@@ -33,12 +30,10 @@ public class RequestDeclarations implements Serializable, Iterable<Declaration> 
 	@Inject
 	RequestDeclarations(RequestDeclarationsLogger logger,
 			DeclarationFactory declarationFactory,
-			@Named("dhclient-defaults-properties") Properties properties) {
+			@Named("dhclient-defaults-properties") ContextProperties p) {
 		this.log = logger;
 		this.declarationFactory = declarationFactory;
 		this.requests = new ArrayList<Declaration>();
-		ContextProperties p;
-		p = new ContextProperties(PARENT_PACKAGE_NAME, properties);
 		addDefaultRequests(p);
 	}
 

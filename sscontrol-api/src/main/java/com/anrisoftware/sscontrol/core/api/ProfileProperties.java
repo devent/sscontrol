@@ -25,9 +25,12 @@ public interface ProfileProperties extends Serializable {
 
 	void put(String key, Object property);
 
+	boolean hasProperty(String key);
+
 	Object get(String key);
 
 	Object get(String key, Object... args);
 
 	Set<String> getKeys();
+
 }

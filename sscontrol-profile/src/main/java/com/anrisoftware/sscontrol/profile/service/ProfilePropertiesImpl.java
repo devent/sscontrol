@@ -76,6 +76,11 @@ class ProfilePropertiesImpl extends GroovyObjectSupport implements
 	}
 
 	@Override
+	public boolean hasProperty(String key) {
+		return properties.containsKey(key);
+	}
+
+	@Override
 	public Object get(String key) {
 		return properties.get(key);
 	}

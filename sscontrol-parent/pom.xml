@@ -39,29 +39,25 @@
 		</license>
 	</licenses>
 
-	<properties>
-		<project.custom.year>${project.inceptionYear}</project.custom.year>
-	</properties>
-
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
 				<!-- LGPL -->
 				<groupId>com.anrisoftware.globalpom</groupId>
 				<artifactId>globalpom-groovytestutils</artifactId>
-				<version>1.13-SNAPSHOT</version>
+				<version>1.13</version>
 			</dependency>
 			<dependency>
 				<!-- LGPL -->
 				<groupId>com.anrisoftware.globalpom</groupId>
 				<artifactId>globalpom-log</artifactId>
-				<version>1.8-SNAPSHOT</version>
+				<version>1.8</version>
 			</dependency>
 			<dependency>
 				<!-- LGPL -->
 				<groupId>com.anrisoftware.propertiesutils</groupId>
 				<artifactId>propertiesutils-contextproperties</artifactId>
-				<version>1.5-SNAPSHOT</version>
+				<version>1.5</version>
 			</dependency>
 
 			<!-- resources -->
@@ -69,19 +65,19 @@
 				<!-- LGPL -->
 				<groupId>com.anrisoftware.resources</groupId>
 				<artifactId>resources-templates</artifactId>
-				<version>1.1-SNAPSHOT</version>
+				<version>1.1</version>
 			</dependency>
 			<dependency>
 				<!-- LGPL -->
 				<groupId>com.anrisoftware.resources</groupId>
 				<artifactId>resources-st</artifactId>
-				<version>1.3-SNAPSHOT</version>
+				<version>1.3</version>
 			</dependency>
             <dependency>
                 <!-- LGPL -->
                 <groupId>com.anrisoftware.resources</groupId>
                 <artifactId>resources-api</artifactId>
-                <version>1.5-SNAPSHOT</version>
+                <version>1.5</version>
             </dependency>
 		</dependencies>
 	</dependencyManagement>

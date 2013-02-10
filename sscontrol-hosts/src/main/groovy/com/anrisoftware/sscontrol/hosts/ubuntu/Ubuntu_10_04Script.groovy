@@ -18,7 +18,7 @@
  */
 package com.anrisoftware.sscontrol.hosts.ubuntu
 
-import com.anrisoftware.sscontrol.hosts.linux.LinuxScript
+import com.anrisoftware.sscontrol.hosts.linux.HostsScript
 
 /**
  * Deploys the hosts on the Ubuntu 10.04 Linux system.
@@ -26,5 +26,5 @@ import com.anrisoftware.sscontrol.hosts.linux.LinuxScript
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class Ubuntu_10_04Script extends LinuxScript {
+class Ubuntu_10_04Script extends HostsScript {
 }

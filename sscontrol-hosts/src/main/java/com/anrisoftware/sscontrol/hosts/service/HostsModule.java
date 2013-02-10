@@ -29,14 +29,10 @@ import javax.inject.Singleton;
 
 import com.anrisoftware.propertiesutils.ContextProperties;
 import com.anrisoftware.propertiesutils.ContextPropertiesFactory;
-import com.anrisoftware.resources.templates.maps.TemplatesDefaultMapsModule;
-import com.anrisoftware.resources.templates.templates.TemplatesResourcesModule;
-import com.anrisoftware.resources.templates.worker.STDefaultPropertiesModule;
-import com.anrisoftware.resources.templates.worker.STWorkerModule;
+import com.anrisoftware.sscontrol.core.service.ServiceModule;
 import com.anrisoftware.sscontrol.hosts.ubuntu.Ubuntu_10_04Script;
 import com.anrisoftware.sscontrol.hosts.utils.HostFormat;
 import com.anrisoftware.sscontrol.hosts.utils.HostFormatFactory;
-import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokensTemplateWorkerModule;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
@@ -44,17 +40,17 @@ import com.google.inject.multibindings.MapBinder;
 
 class HostsModule extends AbstractModule {
 
-	private static final URL HOSTS_SERVICE_DEFAULTS_PROPERTIES_RESOURCE = HostsModule.class
-			.getResource("/hosts_service_defaults.properties");
+	private static final URL HOSTS_DEFAULTS_PROPERTIES_RESOURCE = HostsModule.class
+			.getResource("/hosts_defaults.properties");
 
 	@Override
 	protected void configure() {
 		bindScripts();
-		install(new TokensTemplateWorkerModule());
-		install(new TemplatesResourcesModule());
-		install(new TemplatesDefaultMapsModule());
-		install(new STWorkerModule());
-		install(new STDefaultPropertiesModule());
+		install(new ServiceModule());
+		installHost();
+	}
+
+	private void installHost() {
 		install(new FactoryModuleBuilder().implement(Host.class, Host.class)
 				.build(HostFactory.class));
 		install(new FactoryModuleBuilder().implement(HostFormat.class,
@@ -79,14 +75,14 @@ class HostsModule extends AbstractModule {
 	 * 
 	 * @throws IOException
 	 *             if there is an error loading the properties from
-	 *             {@link #HOSTS_SERVICE_DEFAULTS_PROPERTIES_RESOURCE}.
+	 *             {@link #HOSTS_DEFAULTS_PROPERTIES_RESOURCE}.
 	 */
 	@Provides
 	@Singleton
-	@Named("hosts-service-defaults-properties")
+	@Named("hosts-default-properties")
 	ContextProperties getHostnameServiceProperties() throws IOException {
 		return new ContextPropertiesFactory(HostsServiceImpl.class)
 				.withProperties(System.getProperties()).fromResource(
-						HOSTS_SERVICE_DEFAULTS_PROPERTIES_RESOURCE);
+						HOSTS_DEFAULTS_PROPERTIES_RESOURCE);
 	}
 }

@@ -19,31 +19,26 @@
 package com.anrisoftware.sscontrol.hosts.service;
 
 import static com.anrisoftware.sscontrol.hosts.service.HostsServiceFactory.NAME;
+import static org.apache.commons.collections.functors.NotNullPredicate.INSTANCE;
 import static org.apache.commons.collections.list.PredicatedList.decorate;
-import groovy.lang.GroovyObjectSupport;
 import groovy.lang.Script;
 
 import java.text.Format;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import org.apache.commons.collections.functors.NotNullPredicate;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.anrisoftware.propertiesutils.ContextProperties;
-import com.anrisoftware.resources.templates.api.TemplatesFactory;
-import com.anrisoftware.sscontrol.core.api.ProfileService;
-import com.anrisoftware.sscontrol.core.api.Service;
 import com.anrisoftware.sscontrol.core.api.ServiceException;
+import com.anrisoftware.sscontrol.core.service.AbstractService;
 import com.anrisoftware.sscontrol.hosts.utils.HostFormat;
 import com.anrisoftware.sscontrol.hosts.utils.HostFormatFactory;
-import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokensTemplateWorkerFactory;
 import com.google.inject.Provider;
 
 /**
@@ -63,7 +58,7 @@ import com.google.inject.Provider;
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-public class HostsServiceImpl extends GroovyObjectSupport implements Service {
+public class HostsServiceImpl extends AbstractService {
 
 	/**
 	 * @since 1.0
@@ -78,14 +73,7 @@ public class HostsServiceImpl extends GroovyObjectSupport implements Service {
 
 	private final List<Host> hosts;
 
-	private final TemplatesFactory templatesFactory;
-
 	private final HostFactory hostFactory;
-
-	private ProfileService profile;
-
-	@Inject
-	private TokensTemplateWorkerFactory tokensTemplateWorkerFactory;
 
 	/**
 	 * Sets the dependencies of the hosts service.
@@ -95,10 +83,6 @@ public class HostsServiceImpl extends GroovyObjectSupport implements Service {
 	 * 
 	 * @param scripts
 	 *            a {@link Map} of the hosts service scripts.
-	 * 
-	 * @param templates
-	 *            the {@link TemplatesFactory} to create the templates needed
-	 *            for the hosts service script.
 	 * 
 	 * @param p
 	 *            the default hosts service {@link ContextProperties}.
@@ -112,15 +96,13 @@ public class HostsServiceImpl extends GroovyObjectSupport implements Service {
 	@SuppressWarnings("unchecked")
 	@Inject
 	HostsServiceImpl(HostsServiceImplLogger logger,
-			Map<String, Provider<Script>> scripts, TemplatesFactory templates,
-			@Named("hosts-service-defaults-properties") ContextProperties p,
+			Map<String, Provider<Script>> scripts,
+			@Named("hosts-default-properties") ContextProperties p,
 			HostFactory hostFactory, HostFormatFactory hostFormatFactory) {
 		this.log = logger;
 		this.scripts = scripts;
-		this.templatesFactory = templates;
 		this.hostFactory = hostFactory;
-		this.hosts = decorate(new ArrayList<String>(),
-				NotNullPredicate.INSTANCE);
+		this.hosts = decorate(new ArrayList<String>(), INSTANCE);
 		setDefaultProperties(p, hostFormatFactory.create());
 	}
 
@@ -130,12 +112,25 @@ public class HostsServiceImpl extends GroovyObjectSupport implements Service {
 
 	private void setDefaultHosts(ContextProperties p, Format format) {
 		try {
-			List<Host> list = p.<Host> getTypedListProperty(
-					DEFAULT_HOSTS_PROPERTY, format, ",");
+			List<Host> list;
+			list = p.getTypedListProperty(DEFAULT_HOSTS_PROPERTY, format, ",");
 			hosts.addAll(list);
 		} catch (ParseException e) {
 			log.errorSetDefaultHosts(this, e);
 		}
+	}
+
+	@Override
+	protected Script getScript(String profileName) throws ServiceException {
+		return scripts.get(profileName).get();
+	}
+
+	/**
+	 * Returns the hosts service name.
+	 */
+	@Override
+	public String getName() {
+		return NAME;
 	}
 
 	/**
@@ -169,20 +164,6 @@ public class HostsServiceImpl extends GroovyObjectSupport implements Service {
 		return host;
 	}
 
-	@Override
-	public String getName() {
-		return NAME;
-	}
-
-	public void setProfile(ProfileService newProfile) {
-		profile = newProfile;
-		log.profileSet(this, newProfile);
-	}
-
-	public ProfileService getProfile() {
-		return profile;
-	}
-
 	/**
 	 * Returns the host entries.
 	 * 
@@ -193,31 +174,8 @@ public class HostsServiceImpl extends GroovyObjectSupport implements Service {
 	}
 
 	@Override
-	public Service call() throws ServiceException {
-		String name = profile.getProfileName();
-		Script script = scripts.get(name).get();
-		Map<Class<?>, Object> workers = getWorkers();
-		script.setProperty("workers", workers);
-		script.setProperty("templatesFactory", templatesFactory);
-		script.setProperty("system", profile.getEntry("system"));
-		script.setProperty("profile", profile.getEntry(NAME));
-		script.setProperty("service", this);
-		script.setProperty("name", name);
-		script.run();
-		return this;
-	}
-
-	private Map<Class<?>, Object> getWorkers() {
-		Map<Class<?>, Object> workers = new HashMap<Class<?>, Object>();
-		workers.put(TokensTemplateWorkerFactory.class,
-				tokensTemplateWorkerFactory);
-		return workers;
-	}
-
-	@Override
 	public String toString() {
-		return new ToStringBuilder(this)
-				.append("profile", profile.getProfileName())
+		return new ToStringBuilder(this).appendSuper(super.toString())
 				.append("hosts", hosts).toString();
 	}
 

@@ -57,6 +57,7 @@ public class HostsServiceFactory implements ServiceFactory {
 			HostsServiceImpl service;
 			service = lazyInjector.get().getInstance(HostsServiceImpl.class);
 			service.setProfile(profile);
+			service.setInjector(lazyInjector.get());
 			return service;
 		} catch (ConcurrentException e) {
 			throw new RuntimeException(e);

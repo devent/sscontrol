@@ -37,8 +37,8 @@ import com.google.inject.Provides;
  */
 public class UfwScriptModule extends AbstractModule {
 
-	private static final URL UFW_LINUX_DEFAULTS_PROPERTIES_RESOURCE = UfwScriptModule.class
-			.getResource("/ufw_linux_defaults.properties");
+	private static final URL LINUX_PROPERTIES_RESOURCE = UfwScriptModule.class
+			.getResource("/ufw_linux.properties");
 
 	@Override
 	protected void configure() {
@@ -46,10 +46,9 @@ public class UfwScriptModule extends AbstractModule {
 
 	@Provides
 	@Singleton
-	@Named("ufw-linux-defaults-properties")
-	ContextProperties getDnsDefaultsProperties() throws IOException {
+	@Named("ufw-linux-properties")
+	ContextProperties getLinuxProperties() throws IOException {
 		return new ContextPropertiesFactory(UfwScript.class).withProperties(
-				System.getProperties()).fromResource(
-				UFW_LINUX_DEFAULTS_PROPERTIES_RESOURCE);
+				System.getProperties()).fromResource(LINUX_PROPERTIES_RESOURCE);
 	}
 }

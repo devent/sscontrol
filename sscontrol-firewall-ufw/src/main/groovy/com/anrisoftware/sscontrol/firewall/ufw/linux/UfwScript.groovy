@@ -40,8 +40,8 @@ abstract class UfwScript extends LinuxScript {
 	UfwScriptLogger log
 
 	@Inject
-	@Named("ufw-linux-defaults-properties")
-	ContextProperties defaultProperties
+	@Named("ufw-linux-properties")
+	ContextProperties linuxProperties
 
 	/**
 	 * The {@link Templates} for the script.
@@ -81,6 +81,10 @@ abstract class UfwScript extends LinuxScript {
 
 	/**
 	 * Returns the ufw command.
+	 *
+	 * <ul>
+	 * <li>property key {@code ufw_command}</li>
+	 * </ul>
 	 */
 	abstract String getUfwCommand()
 }

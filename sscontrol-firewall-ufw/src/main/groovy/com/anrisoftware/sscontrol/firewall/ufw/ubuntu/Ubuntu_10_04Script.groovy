@@ -41,39 +41,23 @@ class Ubuntu_10_04Script extends UfwScript {
 		installPackages packages
 	}
 
+	@Override
+	def getDefaultProperties() {
+		ubuntuProperties
+	}
+
 	/**
 	 * Returns the ufw service packages.
 	 *
 	 * <ul>
-	 * <li>property key {@code ufw_packages}</li>
-	 * <li>properties key {@code com.anrisoftware.sscontrol.firewall.ufw.ubuntu.ufw_packages}</li>
+	 * <li>property key {@code packages}</li>
 	 * </ul>
 	 */
 	List getPackages() {
-		profileListProperty "ufw_packages", ubuntuProperties
+		profileListProperty "packages", ubuntuProperties
 	}
 
-	/**
-	 * Returns the install command.
-	 *
-	 * <ul>
-	 * <li>system property key {@code install_command}</li>
-	 * <li>properties key {@code com.anrisoftware.sscontrol.firewall.ufw.ubuntu.install_command}</li>
-	 * </ul>
-	 */
 	@Override
-	String getInstallCommand() {
-		systemProperty "install_command", ubuntuProperties
-	}
-
-	/**
-	 * Returns the ufw command.
-	 *
-	 * <ul>
-	 * <li>property key {@code ufw_command}</li>
-	 * <li>properties key {@code com.anrisoftware.sscontrol.firewall.ufw.ubuntu.ufw_command}</li>
-	 * </ul>
-	 */
 	String getUfwCommand() {
 		profileProperty "ufw_command", ubuntuProperties
 	}

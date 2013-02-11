@@ -43,7 +43,7 @@ import com.google.inject.multibindings.MapBinder;
  */
 class UfwModule extends AbstractModule {
 
-	private static final URL UFW_UBUNTU_10_04_PROPERTIES_RESOURCE = UfwScriptModule.class
+	private static final URL UBUNTU_10_04_PROPERTIES_RESOURCE = UfwScriptModule.class
 			.getResource("/ufw_ubuntu_10_04.properties");
 
 	@Override
@@ -62,9 +62,9 @@ class UfwModule extends AbstractModule {
 	@Provides
 	@Singleton
 	@Named("ufw-ubuntu-10_04-properties")
-	ContextProperties getUFWUbuntuProperties() throws IOException {
+	ContextProperties getUbuntu_10_04Properties() throws IOException {
 		return new ContextPropertiesFactory(Ubuntu_10_04Script.class)
 				.withProperties(System.getProperties()).fromResource(
-						UFW_UBUNTU_10_04_PROPERTIES_RESOURCE);
+						UBUNTU_10_04_PROPERTIES_RESOURCE);
 	}
 }

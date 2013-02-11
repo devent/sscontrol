@@ -20,7 +20,6 @@ package com.anrisoftware.sscontrol.dns.maradns.ubuntu
 
 profile "ubuntu_10_04", {
 	system {
-		prefix tmp
 		install_command "${tmp}/usr/bin/aptitude update && ${tmp}/usr/bin/aptitude install"
 		enable_repository_command "${tmp}/usr/bin/add-apt-repository \"deb http://archive.ubuntu.com/ubuntu %1\$s %2\$s\""
 		system_packages "python-software-properties"

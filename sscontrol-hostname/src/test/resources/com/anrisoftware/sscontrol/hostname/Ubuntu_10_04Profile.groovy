@@ -19,13 +19,9 @@
 package com.anrisoftware.sscontrol.hostname
 
 profile "ubuntu_10_04", {
-	system {
-		install_command "${tmp}/aptitude update && ${tmp}/aptitude install {}"
-		cat_command "${tmp}/cat"
-		prefix tmp
-	}
+	system { install_command "${tmp}/usr/bin/aptitude update && ${tmp}/usr/bin/aptitude install" }
 	hostname {
-		configuration_file "${tmp}/etc/hostname"
-		command "${tmp}/bin/hostname"
+		configuration_directory "${tmp}/etc"
+		restart_command "${tmp}/etc/init.d/hostname restart"
 	}
 }

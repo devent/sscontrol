@@ -18,11 +18,6 @@
  */
 package com.anrisoftware.sscontrol.hostname.linux
 
-import groovy.util.logging.Slf4j
-
-import javax.inject.Inject
-import javax.inject.Named
-
 import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.resources.templates.api.Templates
 import com.anrisoftware.sscontrol.core.service.LinuxScript
@@ -34,12 +29,7 @@ import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokenTemplate
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-@Slf4j
-class HostnameScript extends LinuxScript {
-
-	@Inject
-	@Named("hostname-default-properties")
-	ContextProperties defaultProperties
+abstract class HostnameScript extends LinuxScript {
 
 	Templates hostnameTemplates
 
@@ -47,8 +37,15 @@ class HostnameScript extends LinuxScript {
 	def run() {
 		super.run()
 		hostnameTemplates = templatesFactory.create "Hostname"
+		distributionSpecificConfiguration()
 		deployHostnameConfiguration()
 		restartService restartCommand
+	}
+
+	/**
+	 * Do some distribution specific configuration.
+	 */
+	void distributionSpecificConfiguration() {
 	}
 
 	/**
@@ -81,18 +78,36 @@ class HostnameScript extends LinuxScript {
 	 *
 	 * <ul>
 	 * <li>property key {@code configuration_file}</li>
-	 * <li>properties key {@code com.anrisoftware.sscontrol.hostname.linux.configuration_file}</li>
 	 * </ul>
 	 */
 	File getHostnameFile() {
-		profileProperty("configuration_file", defaultProperties) as File
+		new File(configurationDirectory, configurationFile)
 	}
 
 	/**
-	 * Returns the restart command for the hostname service.
+	 * Returns the hostname configuration file.
+	 *
+	 * <ul>
+	 * <li>property key {@code configuration_file}</li>
+	 * </ul>
 	 */
-	String getRestartCommand() {
-		hostnameTemplates.getResource("restart_command").
-						getText(true, "restart_command", "prefix", system.prefix)
-	}
+	abstract String getConfigurationFile()
+
+	/**
+	 * Returns the hostname configuration file.
+	 *
+	 * <ul>
+	 * <li>property key {@code configuration_file}</li>
+	 * </ul>
+	 */
+	abstract File getConfigurationDirectory()
+
+	/**
+	 * Returns the restart command for the hostname service.
+	 *
+	 * <ul>
+	 * <li>property key {@code restart_command}</li>
+	 * </ul>
+	 */
+	abstract String getRestartCommand()
 }

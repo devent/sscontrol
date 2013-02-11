@@ -41,9 +41,11 @@ class HostnameServiceTest {
 
 	static hostnameNullService = resourceURL("HostnameNullService.groovy", HostnameServiceTest)
 
-	static restartHostnameCommand = resourceURL("restart_hostname.txt", HostnameServiceTest)
+	static restartHostnameCommand = resourceURL("echo_command.txt", HostnameServiceTest)
 
 	static localhostHostnameFile = resourceURL("localhost_hostname.txt", HostnameServiceTest)
+
+	static installCommand = resourceURL("echo_command.txt", HostnameServiceTest)
 
 	static hostnameExpected = resourceURL("hostname_expected.txt", HostnameServiceTest)
 
@@ -69,6 +71,7 @@ class HostnameServiceTest {
 			registry.allServices.each { it.call() }
 			assertFileContent(new File(it, "/etc/hostname"), hostnameExpected)
 		}, {
+			copyResourceToCommand installCommand, new File(it, "/usr/bin/aptitude")
 			copyResourceToCommand restartHostnameCommand, new File(it, "/etc/init.d/hostname")
 		}, tmp
 	}
@@ -87,6 +90,7 @@ class HostnameServiceTest {
 			registry.allServices.each { it.call() }
 			assertFileContent new File(it, "/etc/hostname"), hostnameExpected
 		}, {
+			copyResourceToCommand installCommand, new File(it, "/usr/bin/aptitude")
 			copyResourceToCommand(restartHostnameCommand, new File(it, "/etc/init.d/hostname"))
 			copyResourceToFile(localhostHostnameFile, new File(it, "/etc/hostname"))
 		}, tmp

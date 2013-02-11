@@ -18,6 +18,10 @@
  */
 package com.anrisoftware.sscontrol.hostname.ubuntu
 
+import javax.inject.Inject
+import javax.inject.Named
+
+import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.sscontrol.hostname.linux.HostnameScript
 
 /**
@@ -27,4 +31,40 @@ import com.anrisoftware.sscontrol.hostname.linux.HostnameScript
  * @since 1.0
  */
 class Ubuntu_10_04Script extends HostnameScript {
+
+	@Inject
+	@Named("hostname-ubuntu_10_04-properties")
+	ContextProperties ubuntuProperties
+
+	@Override
+	def getDefaultProperties() {
+		ubuntuProperties
+	}
+
+	@Override
+	void distributionSpecificConfiguration() {
+		installPackages packages
+	}
+
+	/**
+	 * Returns a list of the package names to install.
+	 */
+	List getPackages() {
+		profileListProperty "packages", ubuntuProperties
+	}
+
+	@Override
+	String getConfigurationFile() {
+		profileProperty("configuration_file", ubuntuProperties)
+	}
+
+	@Override
+	File getConfigurationDirectory() {
+		profileProperty("configuration_directory", ubuntuProperties) as File
+	}
+
+	@Override
+	String getRestartCommand() {
+		profileProperty("restart_command", ubuntuProperties)
+	}
 }

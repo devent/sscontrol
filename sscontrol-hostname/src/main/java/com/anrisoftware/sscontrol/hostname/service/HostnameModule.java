@@ -18,46 +18,15 @@
  */
 package com.anrisoftware.sscontrol.hostname.service;
 
-import static com.google.inject.multibindings.MapBinder.newMapBinder;
-import groovy.lang.Script;
-
-import java.io.IOException;
-import java.net.URL;
-
-import javax.inject.Named;
-import javax.inject.Singleton;
-
-import com.anrisoftware.propertiesutils.ContextProperties;
-import com.anrisoftware.propertiesutils.ContextPropertiesFactory;
 import com.anrisoftware.sscontrol.core.service.ServiceModule;
-import com.anrisoftware.sscontrol.hostname.ubuntu.Ubuntu_10_04Script;
+import com.anrisoftware.sscontrol.hostname.ubuntu.UbuntuModule;
 import com.google.inject.AbstractModule;
-import com.google.inject.Provides;
-import com.google.inject.multibindings.MapBinder;
 
 class HostnameModule extends AbstractModule {
 
-	private static final URL HOSTNAME_DEFAULTS_PROPERTIES_RESOURCE = HostnameModule.class
-			.getResource("/hostname_defaults.properties");
-
 	@Override
 	protected void configure() {
-		bindScripts();
 		install(new ServiceModule());
-	}
-
-	private void bindScripts() {
-		MapBinder<String, Script> binder;
-		binder = newMapBinder(binder(), String.class, Script.class);
-		binder.addBinding("ubuntu_10_04").to(Ubuntu_10_04Script.class);
-	}
-
-	@Provides
-	@Singleton
-	@Named("hostname-default-properties")
-	ContextProperties getHostnameServiceProperties() throws IOException {
-		return new ContextPropertiesFactory(HostnameServiceImpl.class)
-				.withProperties(System.getProperties()).fromResource(
-						HOSTNAME_DEFAULTS_PROPERTIES_RESOURCE);
+		install(new UbuntuModule());
 	}
 }

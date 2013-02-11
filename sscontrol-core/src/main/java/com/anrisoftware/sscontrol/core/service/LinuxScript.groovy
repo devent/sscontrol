@@ -104,9 +104,20 @@ class LinuxScript extends Script {
 	void installPackages(def packages) {
 		def template = commandTemplates.getResource("install")
 		def worker = scriptCommandFactory.create(template,
-						"installCommand", system.install_command,
+						"installCommand", installCommand,
 						"packages", packages)()
 		log.installPackagesDone this, worker, packages
+	}
+
+	/**
+	 * Returns the install command.
+	 *
+	 * <ul>
+	 * <li>system property key {@code install_command}</li>
+	 * </ul>
+	 */
+	String getInstallCommand() {
+		system.install_command
 	}
 
 	/**
@@ -160,6 +171,28 @@ class LinuxScript extends Script {
 		def template = commandTemplates.getResource("command")
 		def worker = scriptCommandFactory.create(template, "command", "${prefix}${restartCommand}")()
 		log.restartServiceDone this, worker
+	}
+
+	/**
+	 * Returns a system profile property. If the profile property was not set
+	 * return the default value from the default properties.
+	 *
+	 * @param key
+	 * 			  the key of the profile property.
+	 *
+	 * @param defaultProperties
+	 * 			  the {@link ContextProperties} containing the default
+	 * 			  properties.
+	 *
+	 * @param args
+	 * 			  optional the arguments to the key.
+	 *
+	 * @return the value of the profile property or the default property
+	 * if the profile property was not set.
+	 */
+	def systemProperty(String key, ContextProperties defaultProperties, Object... args) {
+		def property = system.get(key, args)
+		property != null ? property : String.format(defaultProperties.getProperty(key), args)
 	}
 
 	/**

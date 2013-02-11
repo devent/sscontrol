@@ -18,9 +18,6 @@
  */
 package com.anrisoftware.sscontrol.hosts.service;
 
-import static com.google.inject.multibindings.MapBinder.newMapBinder;
-import groovy.lang.Script;
-
 import java.io.IOException;
 import java.net.URL;
 
@@ -30,13 +27,12 @@ import javax.inject.Singleton;
 import com.anrisoftware.propertiesutils.ContextProperties;
 import com.anrisoftware.propertiesutils.ContextPropertiesFactory;
 import com.anrisoftware.sscontrol.core.service.ServiceModule;
-import com.anrisoftware.sscontrol.hosts.ubuntu.Ubuntu_10_04Script;
+import com.anrisoftware.sscontrol.hosts.ubuntu.UbuntuModule;
 import com.anrisoftware.sscontrol.hosts.utils.HostFormat;
 import com.anrisoftware.sscontrol.hosts.utils.HostFormatFactory;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
-import com.google.inject.multibindings.MapBinder;
 
 class HostsModule extends AbstractModule {
 
@@ -45,8 +41,8 @@ class HostsModule extends AbstractModule {
 
 	@Override
 	protected void configure() {
-		bindScripts();
 		install(new ServiceModule());
+		install(new UbuntuModule());
 		installHost();
 	}
 
@@ -55,12 +51,6 @@ class HostsModule extends AbstractModule {
 				.build(HostFactory.class));
 		install(new FactoryModuleBuilder().implement(HostFormat.class,
 				HostFormat.class).build(HostFormatFactory.class));
-	}
-
-	private void bindScripts() {
-		MapBinder<String, Script> binder;
-		binder = newMapBinder(binder(), String.class, Script.class);
-		binder.addBinding("ubuntu_10_04").to(Ubuntu_10_04Script.class);
 	}
 
 	/**

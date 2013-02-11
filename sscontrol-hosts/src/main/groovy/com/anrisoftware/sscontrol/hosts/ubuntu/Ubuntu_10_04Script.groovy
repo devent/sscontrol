@@ -18,6 +18,10 @@
  */
 package com.anrisoftware.sscontrol.hosts.ubuntu
 
+import javax.inject.Inject
+import javax.inject.Named
+
+import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.sscontrol.hosts.linux.HostsScript
 
 /**
@@ -27,4 +31,23 @@ import com.anrisoftware.sscontrol.hosts.linux.HostsScript
  * @since 1.0
  */
 class Ubuntu_10_04Script extends HostsScript {
+
+	@Inject
+	@Named("hosts-ubuntu_10_04-properties")
+	ContextProperties ubuntuProperties
+
+	@Override
+	def getDefaultProperties() {
+		ubuntuProperties
+	}
+
+	@Override
+	String getConfigurationFile() {
+		profileProperty("configuration_file", ubuntuProperties)
+	}
+
+	@Override
+	File getConfigurationDirectory() {
+		profileProperty("configuration_directory", ubuntuProperties) as File
+	}
 }

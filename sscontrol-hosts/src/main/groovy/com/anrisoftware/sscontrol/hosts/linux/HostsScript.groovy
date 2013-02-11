@@ -18,15 +18,11 @@
  */
 package com.anrisoftware.sscontrol.hosts.linux
 
-import javax.inject.Inject
-import javax.inject.Named
-
 import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.Templates
 import com.anrisoftware.sscontrol.core.service.LinuxScript
 import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokenTemplate
-import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokensTemplateWorkerFactory
 
 /**
  * Deploys the hosts on a general Linux system.
@@ -34,11 +30,7 @@ import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokensTemplateWorke
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class HostsScript extends LinuxScript {
-
-	@Inject
-	@Named("hosts-default-properties")
-	ContextProperties defaultProperties
+abstract class HostsScript extends LinuxScript {
 
 	Templates hostsTemplates
 
@@ -80,14 +72,27 @@ class HostsScript extends LinuxScript {
 	}
 
 	/**
+	 * Returns the hosts file.
+	 */
+	File getHostsFile() {
+		new File(configurationDirectory, configurationFile)
+	}
+
+	/**
 	 * Returns the hosts configuration file.
 	 * <p>
 	 * <ul>
 	 * <li>property key {@code configuration_file}</li>
-	 * <li>properties key {@code com.anrisoftware.sscontrol.hosts.service.configuration_file}</li>
 	 * </ul>
 	 */
-	File getHostsFile() {
-		profileProperty("configuration_file", defaultProperties) as File
-	}
+	abstract String getConfigurationFile()
+
+	/**
+	 * Returns the hosts configuration directory.
+	 * <p>
+	 * <ul>
+	 * <li>property key {@code configuration_directory}</li>
+	 * </ul>
+	 */
+	abstract File getConfigurationDirectory()
 }

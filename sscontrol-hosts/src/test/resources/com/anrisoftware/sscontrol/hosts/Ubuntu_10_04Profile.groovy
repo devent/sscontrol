@@ -19,9 +19,9 @@
 package com.anrisoftware.sscontrol.hosts
 
 profile "ubuntu_10_04", {
-	system {
-		install_command "${tmp}/aptitude update && ${tmp}/aptitude install {}"
-		prefix tmp
+	system { install_command "${tmp}/aptitude update && ${tmp}/aptitude install %1\$s" }
+	hosts {
+		configuration_file "hosts"
+		configuration_directory "${tmp}/etc"
 	}
-	hosts { configuration_file "${tmp}/etc/hosts" }
 }

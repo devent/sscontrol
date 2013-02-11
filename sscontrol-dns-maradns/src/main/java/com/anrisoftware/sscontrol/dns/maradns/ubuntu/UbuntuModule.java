@@ -29,27 +29,27 @@ import javax.inject.Singleton;
 
 import com.anrisoftware.propertiesutils.ContextProperties;
 import com.anrisoftware.propertiesutils.ContextPropertiesFactory;
-import com.anrisoftware.sscontrol.core.service.ServiceModule;
-import com.anrisoftware.sscontrol.dns.maradns.linux.MaraDnsScript;
+import com.anrisoftware.sscontrol.dns.maradns.linux.MaraDnsModule;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.google.inject.multibindings.MapBinder;
 
 /**
- * Binds the MaraDNS service.
+ * Installs the MaraDNS Ubuntu script and provides the MaraDNS Ubuntu
+ * properties.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class MaraDnsModule extends AbstractModule {
+public class UbuntuModule extends AbstractModule {
 
-	private static final URL MARADNS_UBUNTU_10_04_DEFAULT_PROPERTIES_URL = MaraDnsModule.class
-			.getResource("/maradns_ubuntu_10_04_defaults.properties");
+	private static final URL UBUNTU_10_04_PROPERTIES_RESOURCE = UbuntuModule.class
+			.getResource("/maradns_ubuntu_10_04.properties");
 
 	@Override
 	protected void configure() {
+		install(new MaraDnsModule());
 		bindScripts();
-		install(new ServiceModule());
 	}
 
 	private void bindScripts() {
@@ -60,9 +60,10 @@ class MaraDnsModule extends AbstractModule {
 
 	@Provides
 	@Singleton
-	@Named("maradns-ubuntu_10_04-default-properties")
-	ContextProperties getMaradnsLinuxDefaultProperties() throws IOException {
-		return new ContextPropertiesFactory(MaraDnsScript.class)
-				.fromResource(MARADNS_UBUNTU_10_04_DEFAULT_PROPERTIES_URL);
+	@Named("maradns-ubuntu-10_04-properties")
+	ContextProperties getUbuntu_10_04Properties() throws IOException {
+		return new ContextPropertiesFactory(Ubuntu_10_04Script.class)
+				.withProperties(System.getProperties()).fromResource(
+						UBUNTU_10_04_PROPERTIES_RESOURCE);
 	}
 }

@@ -18,6 +18,10 @@
  */
 package com.anrisoftware.sscontrol.dns.maradns.ubuntu
 
+import javax.inject.Inject
+import javax.inject.Named
+
+import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.sscontrol.dns.maradns.linux.MaraDnsScript
 
 /**
@@ -28,9 +32,32 @@ import com.anrisoftware.sscontrol.dns.maradns.linux.MaraDnsScript
  */
 class Ubuntu_10_04Script extends MaraDnsScript {
 
+	@Inject
+	@Named("maradns-ubuntu-10_04-properties")
+	ContextProperties ubuntuProperties
+
+	@Inject
+	MaraDns_1_2_Ubuntu_10_04Script maraDnsScript
+
 	@Override
 	void distributionSpecificConfiguration() {
 		enableRepository "lucid", "universe"
-		installPackages profile.packages
+		installPackages packages
+	}
+
+	@Override
+	def getDefaultProperties() {
+		ubuntuProperties
+	}
+
+	/**
+	 * Returns the packages needed for the MaraDNS service.
+	 *
+	 * <ul>
+	 * <li>profile property key {@code packages}</li>
+	 * </ul>
+	 */
+	List getPackages() {
+		profileListProperty "packages", ubuntuProperties
 	}
 }

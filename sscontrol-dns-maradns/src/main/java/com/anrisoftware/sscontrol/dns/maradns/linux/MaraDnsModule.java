@@ -16,19 +16,22 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-hostname. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.dns.maradns.ubuntu
+package com.anrisoftware.sscontrol.dns.maradns.linux;
 
-profile "ubuntu_10_04", {
-	system {
-		prefix tmp
-		install_command "${tmp}/usr/bin/aptitude update && ${tmp}/usr/bin/aptitude install"
-		enable_repository_command "${tmp}/usr/bin/add-apt-repository \"deb http://archive.ubuntu.com/ubuntu %1\$s %2\$s\""
-		system_packages "python-software-properties"
+import com.anrisoftware.sscontrol.core.service.ServiceModule;
+import com.google.inject.AbstractModule;
+
+/**
+ * Provides the MaraDNS default properties.
+ * 
+ * @author Erwin Mueller, erwin.mueller@deventm.org
+ * @since 1.0
+ */
+public class MaraDnsModule extends AbstractModule {
+
+	@Override
+	protected void configure() {
+		install(new ServiceModule());
 	}
-	dns {
-		service "maradns"
-		packages "maradns"
-		configuration_directory "${tmp}/etc/maradns"
-		restart_command "${tmp}/etc/init.d/maradns restart"
-	}
+
 }

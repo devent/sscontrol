@@ -33,12 +33,12 @@ import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokensTemplateWorke
 import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokensTemplateWorkerFactory
 
 /**
- * Setups the dhclient service on a general Linux system.
+ * Provides utilities methods for a Linux service.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class LinuxScript extends Script {
+abstract class LinuxScript extends Script {
 
 	/**
 	 * The name of the script.
@@ -84,24 +84,51 @@ class LinuxScript extends Script {
 	 * Installs the system packages.
 	 */
 	void installSystemPackages() {
-		system.hasProperty("packages") ? installPackages(system.packages) : null
+		def packages = systemListProperty "system_packages", defaultProperties
+		!packages.empty ? installPackages(packages) : null
 	}
 
 	/**
 	 * Enables the specified repository.
+	 *
+	 * @param distribution
+	 * 			  the name of the distribution.
+	 *
+	 * @param repository
+	 * 			  the name of the repository to enable.
+	 *
 	 */
 	void enableRepository(String distribution, String repository) {
 		def template = commandTemplates.getResource("command")
-		def command = system.get("enable_repository_command", "lucid", "universe")
+		def command = enableRepositoryCommand distribution, repository
 		def worker = scriptCommandFactory.create(template, "command", command)()
 		log.enableRepositoryDone this, worker, distribution, repository
 	}
 
+	/**
+	 * Returns the command to enable additional repositories.
+	 *
+	 * @param distribution
+	 * 			  the name of the distribution.
+	 *
+	 * @param repository
+	 * 			  the name of the repository to enable.
+	 *
+	 * <ul>
+	 * <li>system property key {@code enable_repository_command}</li>
+	 * </ul>
+	 */
+	String enableRepositoryCommand(String distribution, String repository) {
+		systemProperty "enable_repository_command", defaultProperties, distribution, repository
+	}
 
 	/**
 	 * Installs the specified packages.
+	 *
+	 * @param packages
+	 * 			  the {@link List} of the package names to install.
 	 */
-	void installPackages(def packages) {
+	void installPackages(List packages) {
 		def template = commandTemplates.getResource("install")
 		def worker = scriptCommandFactory.create(template,
 						"installCommand", installCommand,
@@ -117,7 +144,7 @@ class LinuxScript extends Script {
 	 * </ul>
 	 */
 	String getInstallCommand() {
-		system.install_command
+		systemProperty "install_command", defaultProperties
 	}
 
 	/**
@@ -173,6 +200,11 @@ class LinuxScript extends Script {
 	}
 
 	/**
+	 * Returns the default properties for the service.
+	 */
+	abstract def getDefaultProperties()
+
+	/**
 	 * Returns a system profile property. If the profile property was not set
 	 * return the default value from the default properties.
 	 *
@@ -186,12 +218,31 @@ class LinuxScript extends Script {
 	 * @param args
 	 * 			  optional the arguments to the key.
 	 *
-	 * @return the value of the profile property or the default property
+	 * @return the value of the system profile property or the default property
 	 * if the profile property was not set.
 	 */
 	def systemProperty(String key, ContextProperties defaultProperties, Object... args) {
 		def property = system.get(key, args)
 		property != null ? property : String.format(defaultProperties.getProperty(key), args)
+	}
+
+	/**
+	 * Returns a list of the system profile property. If the profile property
+	 * was not set return the default value from the default properties.
+	 *
+	 * @param key
+	 * 			  the key of the profile property.
+	 *
+	 * @param defaultProperties
+	 * 			  the {@link ContextProperties} containing the default
+	 * 			  properties.
+	 *
+	 * @return the {@link List} of the system profile property or
+	 * the default property if the profile property was not set.
+	 */
+	List systemListProperty(String key, ContextProperties defaultProperties) {
+		def property = profile.getList(key)
+		property.empty ? defaultProperties.getListProperty(key, ",") : property
 	}
 
 	/**

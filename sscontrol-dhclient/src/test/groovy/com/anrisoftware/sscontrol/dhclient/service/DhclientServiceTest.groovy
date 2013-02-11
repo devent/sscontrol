@@ -46,7 +46,9 @@ class DhclientServiceTest {
 
 	static dhclientEmptyExpected = resourceURL("dhclient_empty_expected.txt", DhclientServiceTest)
 
-	static installPackagesCommand = resourceURL("install_packages.txt", DhclientServiceTest)
+	static installCommand = resourceURL("install_command.txt", DhclientServiceTest)
+
+	static restartCommand = resourceURL("restart_command.txt", DhclientServiceTest)
 
 	static dhclientFile = resourceURL("dhclient.txt", DhclientServiceTest)
 
@@ -74,8 +76,9 @@ class DhclientServiceTest {
 			registry.allServices.each { it.call() }
 			assertFileContent(new File(it, "/etc/dhcp3/dhclient.conf"), dhclientEmptyExpected)
 		}, {
-			copyResourceToCommand(installPackagesCommand, new File(it, "/usr/bin/aptitude"))
-		}, tmp
+			copyResourceToCommand(installCommand, new File(it, "/usr/bin/aptitude"))
+			copyResourceToCommand(restartCommand, new File(it, "/etc/init.d/networking"))
+		}, tmp, true
 	}
 
 	@Test
@@ -92,7 +95,8 @@ class DhclientServiceTest {
 			registry.allServices.each { it.call() }
 			assertFileContent(new File(it, "/etc/dhcp3/dhclient.conf"), dhclientNotEmptyExpected)
 		}, {
-			copyResourceToCommand(installPackagesCommand, new File(it, "/usr/bin/aptitude"))
+			copyResourceToCommand(installCommand, new File(it, "/usr/bin/aptitude"))
+			copyResourceToCommand(restartCommand, new File(it, "/etc/init.d/networking"))
 			copyResourceToFile(dhclientFile, new File(it, "/etc/dhcp3/dhclient.conf"))
 		}, tmp
 	}

@@ -16,7 +16,10 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-hostname. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.dhclient.service;
+package com.anrisoftware.sscontrol.dhclient.ubuntu;
+
+import static com.google.inject.multibindings.MapBinder.newMapBinder;
+import groovy.lang.Script;
 
 import java.io.IOException;
 import java.net.URL;
@@ -26,36 +29,38 @@ import javax.inject.Singleton;
 
 import com.anrisoftware.propertiesutils.ContextProperties;
 import com.anrisoftware.propertiesutils.ContextPropertiesFactory;
-import com.anrisoftware.sscontrol.core.service.ServiceModule;
-import com.anrisoftware.sscontrol.dhclient.statements.StatementsModule;
-import com.anrisoftware.sscontrol.dhclient.ubuntu.UbuntuModule;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
+import com.google.inject.multibindings.MapBinder;
 
 /**
- * Binds the Dhclient service scripts.
+ * Binds the UFW service.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class DhclientModule extends AbstractModule {
+public class UbuntuModule extends AbstractModule {
 
-	private static final URL DHCLIENT_DEFAULTS_PROPERTIES_RESOURCE = DhclientModule.class
-			.getResource("dhclient_defaults.properties");
+	private static final URL UBUNTU_10_04_PROPERTIES_RESOURCE = UbuntuModule.class
+			.getResource("/dhclient_ubuntu_10_04.properties");
 
 	@Override
 	protected void configure() {
-		install(new StatementsModule());
-		install(new ServiceModule());
-		install(new UbuntuModule());
+		bindScripts();
+	}
+
+	private void bindScripts() {
+		MapBinder<String, Script> binder;
+		binder = newMapBinder(binder(), String.class, Script.class);
+		binder.addBinding("ubuntu_10_04").to(Ubuntu_10_04Script.class);
 	}
 
 	@Provides
 	@Singleton
-	@Named("dhclient-defaults-properties")
-	ContextProperties getDhclientDefaultsProperties() throws IOException {
-		return new ContextPropertiesFactory(DhclientServiceImpl.class)
+	@Named("dhclient-ubuntu-10_04-properties")
+	ContextProperties getUbuntu_10_04Properties() throws IOException {
+		return new ContextPropertiesFactory(Ubuntu_10_04Script.class)
 				.withProperties(System.getProperties()).fromResource(
-						DHCLIENT_DEFAULTS_PROPERTIES_RESOURCE);
+						UBUNTU_10_04_PROPERTIES_RESOURCE);
 	}
 }

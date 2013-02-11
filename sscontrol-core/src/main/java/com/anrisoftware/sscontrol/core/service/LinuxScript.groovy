@@ -167,9 +167,8 @@ class LinuxScript extends Script {
 	 * 			  the restart command for the service.
 	 */
 	void restartService(String restartCommand) {
-		def prefix = system.prefix
 		def template = commandTemplates.getResource("command")
-		def worker = scriptCommandFactory.create(template, "command", "${prefix}${restartCommand}")()
+		def worker = scriptCommandFactory.create(template, "command", restartCommand)()
 		log.restartServiceDone this, worker
 	}
 

@@ -78,7 +78,7 @@ class HostnameScript extends LinuxScript {
 
 	/**
 	 * Returns the hostname configuration file.
-	 * <p>
+	 *
 	 * <ul>
 	 * <li>property key {@code configuration_file}</li>
 	 * <li>properties key {@code com.anrisoftware.sscontrol.hostname.linux.configuration_file}</li>

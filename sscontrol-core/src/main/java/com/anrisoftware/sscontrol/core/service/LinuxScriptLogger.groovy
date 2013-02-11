@@ -19,11 +19,11 @@ class LinuxScriptLogger extends AbstractSerializedLogger {
 
 	void installPackagesDone(LinuxScript script, def worker, def packages) {
 		if (log.traceEnabled) {
-			log.trace "Installed dhclient service packages {} in {}, worker $worker.", script, packages
+			log.trace "Installed service packages {} in {}, worker $worker.", packages, script
 		} else if (log.debugEnabled) {
-			log.debug "Installed dhclient service packages {} in {}.", script, packages
+			log.debug "Installed service packages {} in {}.", packages, script
 		} else {
-			log.info "Installed dhclient service packages: {}.", packages
+			log.info "Installed service packages: {}.", packages
 		}
 	}
 

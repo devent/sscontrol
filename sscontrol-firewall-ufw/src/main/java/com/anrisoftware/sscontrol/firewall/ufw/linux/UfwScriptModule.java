@@ -16,10 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-hostname. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.firewall.ufw.ubuntu;
-
-import static com.google.inject.multibindings.MapBinder.newMapBinder;
-import groovy.lang.Script;
+package com.anrisoftware.sscontrol.firewall.ufw.linux;
 
 import java.io.IOException;
 import java.net.URL;
@@ -29,42 +26,30 @@ import javax.inject.Singleton;
 
 import com.anrisoftware.propertiesutils.ContextProperties;
 import com.anrisoftware.propertiesutils.ContextPropertiesFactory;
-import com.anrisoftware.sscontrol.core.service.ServiceModule;
-import com.anrisoftware.sscontrol.firewall.ufw.linux.UfwScriptModule;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
-import com.google.inject.multibindings.MapBinder;
 
 /**
- * Binds the UFW service.
+ * Provides the UFW firewall linux default properties.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class UfwModule extends AbstractModule {
+public class UfwScriptModule extends AbstractModule {
 
-	private static final URL UFW_UBUNTU_10_04_PROPERTIES_RESOURCE = UfwScriptModule.class
-			.getResource("/ufw_ubuntu_10_04.properties");
+	private static final URL UFW_LINUX_DEFAULTS_PROPERTIES_RESOURCE = UfwScriptModule.class
+			.getResource("/ufw_linux_defaults.properties");
 
 	@Override
 	protected void configure() {
-		bindScripts();
-		install(new ServiceModule());
-		install(new UfwScriptModule());
-	}
-
-	private void bindScripts() {
-		MapBinder<String, Script> binder;
-		binder = newMapBinder(binder(), String.class, Script.class);
-		binder.addBinding("ufw.ubuntu_10_04").to(Ubuntu_10_04Script.class);
 	}
 
 	@Provides
 	@Singleton
-	@Named("ufw-ubuntu-10_04-properties")
-	ContextProperties getUFWUbuntuProperties() throws IOException {
-		return new ContextPropertiesFactory(Ubuntu_10_04Script.class)
-				.withProperties(System.getProperties()).fromResource(
-						UFW_UBUNTU_10_04_PROPERTIES_RESOURCE);
+	@Named("ufw-linux-defaults-properties")
+	ContextProperties getDnsDefaultsProperties() throws IOException {
+		return new ContextPropertiesFactory(UfwScript.class).withProperties(
+				System.getProperties()).fromResource(
+				UFW_LINUX_DEFAULTS_PROPERTIES_RESOURCE);
 	}
 }

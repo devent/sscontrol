@@ -18,7 +18,11 @@
  */
 package com.anrisoftware.sscontrol.firewall.ufw.ubuntu
 
-import com.anrisoftware.sscontrol.firewall.ufw.linux.LinuxScript
+import javax.inject.Inject
+import javax.inject.Named
+
+import com.anrisoftware.propertiesutils.ContextProperties
+import com.anrisoftware.sscontrol.firewall.ufw.linux.UfwScript
 
 /**
  * Uses the UFW service on the Ubuntu 10.04 Linux system.
@@ -26,5 +30,51 @@ import com.anrisoftware.sscontrol.firewall.ufw.linux.LinuxScript
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class Ubuntu_10_04Script extends LinuxScript {
+class Ubuntu_10_04Script extends UfwScript {
+
+	@Inject
+	@Named("ufw-ubuntu-10_04-properties")
+	ContextProperties ubuntuProperties
+
+	@Override
+	void distributionSpecificConfiguration() {
+		installPackages packages
+	}
+
+	/**
+	 * Returns the ufw service packages.
+	 *
+	 * <ul>
+	 * <li>property key {@code ufw_packages}</li>
+	 * <li>properties key {@code com.anrisoftware.sscontrol.firewall.ufw.ubuntu.ufw_packages}</li>
+	 * </ul>
+	 */
+	List getPackages() {
+		profileListProperty "ufw_packages", ubuntuProperties
+	}
+
+	/**
+	 * Returns the install command.
+	 *
+	 * <ul>
+	 * <li>system property key {@code install_command}</li>
+	 * <li>properties key {@code com.anrisoftware.sscontrol.firewall.ufw.ubuntu.install_command}</li>
+	 * </ul>
+	 */
+	@Override
+	String getInstallCommand() {
+		systemProperty "install_command", ubuntuProperties
+	}
+
+	/**
+	 * Returns the ufw command.
+	 *
+	 * <ul>
+	 * <li>property key {@code ufw_command}</li>
+	 * <li>properties key {@code com.anrisoftware.sscontrol.firewall.ufw.ubuntu.ufw_command}</li>
+	 * </ul>
+	 */
+	String getUfwCommand() {
+		profileProperty "ufw_command", ubuntuProperties
+	}
 }

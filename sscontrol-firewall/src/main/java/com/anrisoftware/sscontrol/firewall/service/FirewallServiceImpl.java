@@ -33,11 +33,11 @@ import javax.inject.Inject;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.anrisoftware.resources.templates.api.TemplatesFactory;
-import com.anrisoftware.sscontrol.core.api.ProfileService;
 import com.anrisoftware.sscontrol.core.api.Service;
 import com.anrisoftware.sscontrol.core.api.ServiceException;
 import com.anrisoftware.sscontrol.core.api.ServiceScriptFactory;
 import com.anrisoftware.sscontrol.core.api.ServiceScriptInfo;
+import com.anrisoftware.sscontrol.core.service.AbstractService;
 import com.anrisoftware.sscontrol.firewall.statements.Address;
 import com.anrisoftware.sscontrol.firewall.statements.AddressFactory;
 import com.anrisoftware.sscontrol.firewall.statements.AllowDefault;
@@ -62,10 +62,10 @@ import com.anrisoftware.sscontrol.firewall.statements.Protocol;
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-public class FirewallServiceImpl implements Service {
+public class FirewallServiceImpl extends AbstractService {
 
 	/**
-	 * @version 0.1
+	 * @version 1.0
 	 */
 	private static final long serialVersionUID = -8391091105514923665L;
 
@@ -90,8 +90,6 @@ public class FirewallServiceImpl implements Service {
 	private final AllowPortFactory allowPortFactory;
 
 	private final AllowFromFactory allowFromFactory;
-
-	private ProfileService profile;
 
 	/**
 	 * Sets the default firewall service properties.
@@ -126,6 +124,41 @@ public class FirewallServiceImpl implements Service {
 		this.allowDefaultFactory = allowDefaultFactory;
 		this.allowPortFactory = allowPortFactory;
 		this.allowFromFactory = allowFromFactory;
+	}
+
+	@Override
+	protected Script getScript(String profileName) throws ServiceException {
+		ServiceScriptFactory scriptFactory = findScriptFactory();
+		return (Script) scriptFactory.getScript();
+	}
+
+	private ServiceScriptFactory findScriptFactory() throws ServiceException {
+		String name = getProfile().getProfileName();
+		String service = getProfile().getEntry(NAME).get("service").toString();
+		for (ServiceScriptFactory scriptFactory : serviceScripts) {
+			ServiceScriptInfo info = scriptFactory.getInfo();
+			if (info.getProfileName().equals(name)
+					&& info.getServiceName().equals(service)) {
+				return scriptFactory;
+			}
+		}
+		throw log.errorFindServiceScript(this, name, service);
+	}
+
+	/**
+	 * Because we load the script from a script service the dependencies are
+	 * already injected.
+	 */
+	@Override
+	protected void injectScript(Script script) {
+	}
+
+	/**
+	 * Returns the firewall service name.
+	 */
+	@Override
+	public String getName() {
+		return NAME;
 	}
 
 	/**
@@ -317,62 +350,10 @@ public class FirewallServiceImpl implements Service {
 		return Collections.unmodifiableList(statements);
 	}
 
-	/**
-	 * Returns the firewall service name.
-	 */
-	@Override
-	public String getName() {
-		return NAME;
-	}
-
-	/**
-	 * Sets the profile for the firewall service.
-	 * 
-	 * @param profile
-	 *            the {@link ProfileService}.
-	 */
-	public void setProfile(ProfileService profile) {
-		this.profile = profile;
-		log.profileSet(this, profile);
-	}
-
-	/**
-	 * Returns the profile for the firewall service.
-	 * 
-	 * @return the {@link ProfileService}.
-	 */
-	public ProfileService getProfile() {
-		return profile;
-	}
-
-	@Override
-	public Service call() throws ServiceException {
-		ServiceScriptFactory scriptFactory = findScriptFactory();
-		Script script = (Script) scriptFactory.getScript();
-		script.setProperty("system", profile.getEntry("system"));
-		script.setProperty("profile", profile.getEntry(NAME));
-		script.setProperty("service", this);
-		script.setProperty("name", profile.getProfileName());
-		script.run();
-		return this;
-	}
-
-	private ServiceScriptFactory findScriptFactory() throws ServiceException {
-		String name = profile.getProfileName();
-		String service = profile.getEntry(NAME).get("service").toString();
-		for (ServiceScriptFactory scriptFactory : serviceScripts) {
-			ServiceScriptInfo info = scriptFactory.getInfo();
-			if (info.getProfileName().equals(name)
-					&& info.getServiceName().equals(service)) {
-				return scriptFactory;
-			}
-		}
-		throw log.errorFindServiceScript(this, name, service);
-	}
-
 	@Override
 	public String toString() {
-		return new ToStringBuilder(this).toString();
+		return new ToStringBuilder(this).appendSuper(super.toString())
+				.toString();
 	}
 
 }

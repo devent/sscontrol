@@ -13,7 +13,7 @@ import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokenTemplate
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class UbuntuScript extends LinuxScript {
+abstract class UbuntuScript extends LinuxScript {
 
 	TemplateResource dhclientConfiguration
 
@@ -21,7 +21,7 @@ class UbuntuScript extends LinuxScript {
 	def run() {
 		super.run()
 		dhclientConfiguration = templatesFactory.create("Dhclient_ubuntu").getResource("dhclient_configuration")
-		installPackages profile.packages
+		installPackages packages
 		distributionSpecificConfiguration()
 		deployConfiguration configurationTokens(), currentConfiguration, configurations, configurationFile
 		restartService restartCommand
@@ -38,7 +38,6 @@ class UbuntuScript extends LinuxScript {
 	 *
 	 * <ul>
 	 * <li>property key {@code packages}</li>
-	 * <li>properties key {@code com.anrisoftware.sscontrol.dhclient.ubuntu.packages}</li>
 	 * </ul>
 	 */
 	List getPackages() {
@@ -46,24 +45,10 @@ class UbuntuScript extends LinuxScript {
 	}
 
 	/**
-	 * Returns the install command.
-	 *
-	 * <ul>
-	 * <li>system property key {@code install_command}</li>
-	 * <li>properties key {@code com.anrisoftware.sscontrol.dhclient.ubuntu.install_command}</li>
-	 * </ul>
-	 */
-	@Override
-	String getInstallCommand() {
-		systemProperty "install_command", ubuntuProperties
-	}
-
-	/**
 	 * Returns the dhclient configuration file.
 	 *
 	 * <ul>
 	 * <li>property key {@code configuration_file}</li>
-	 * <li>properties key {@code com.anrisoftware.sscontrol.dhclient.ubuntu.configuration_file}</li>
 	 * </ul>
 	 */
 	File getConfigurationFile() {
@@ -75,7 +60,6 @@ class UbuntuScript extends LinuxScript {
 	 *
 	 * <ul>
 	 * <li>property key {@code configuration_directory}</li>
-	 * <li>properties key {@code com.anrisoftware.sscontrol.dhclient.ubuntu.configuration_directory}</li>
 	 * </ul>
 	 */
 	File getConfigurationDir() {
@@ -87,12 +71,16 @@ class UbuntuScript extends LinuxScript {
 	 *
 	 * <ul>
 	 * <li>property key {@code restart_command}</li>
-	 * <li>properties key {@code com.anrisoftware.sscontrol.dhclient.ubuntu.restart_command}</li>
 	 * </ul>
 	 */
 	String getRestartCommand() {
 		profileProperty "restart_command", ubuntuProperties
 	}
+
+	/**
+	 * Returns the Ubuntu properties.
+	 */
+	abstract def getUbuntuProperties()
 
 	/**
 	 * Returns the dhclient configuration on the server.

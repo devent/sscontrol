@@ -19,4 +19,9 @@ class Ubuntu_10_04Script extends UbuntuScript {
 	@Inject
 	@Named("dhclient-ubuntu-10_04-properties")
 	ContextProperties ubuntuProperties
+
+	@Override
+	def getDefaultProperties() {
+		ubuntuProperties
+	}
 }

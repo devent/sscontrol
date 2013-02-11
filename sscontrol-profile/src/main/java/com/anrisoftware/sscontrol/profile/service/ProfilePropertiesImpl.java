@@ -22,6 +22,8 @@ import static org.apache.commons.collections.map.PredicatedMap.decorate;
 import groovy.lang.GString;
 import groovy.lang.GroovyObjectSupport;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,6 +33,7 @@ import javax.inject.Inject;
 
 import org.apache.commons.collections.functors.NotNullPredicate;
 import org.apache.commons.collections.set.UnmodifiableSet;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.codehaus.groovy.runtime.InvokerHelper;
 
@@ -90,8 +93,14 @@ class ProfilePropertiesImpl extends GroovyObjectSupport implements
 		String value = (String) get(key);
 		for (int i = 0; i < args.length; i++) {
 			value = value.replaceFirst("\\{\\}", args[i].toString());
+
+	@Override
+	public List<String> getList(String key) {
+		if (!hasProperty(key)) {
+			return Collections.emptyList();
 		}
-		return value;
+		String value = get(key).toString();
+		return Arrays.asList(StringUtils.split(value, ","));
 	}
 
 	@Override

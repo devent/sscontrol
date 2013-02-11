@@ -19,6 +19,7 @@
 package com.anrisoftware.sscontrol.core.api;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Set;
 
 public interface ProfileProperties extends Serializable {
@@ -30,6 +31,8 @@ public interface ProfileProperties extends Serializable {
 	Object get(String key);
 
 	Object get(String key, Object... args);
+
+	List<String> getList(String key);
 
 	Set<String> getKeys();
 

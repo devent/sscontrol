@@ -182,6 +182,25 @@ class LinuxScript extends Script {
 	}
 
 	/**
+	 * Returns a list profile property. If the profile property was not set
+	 * return the default value from the default properties.
+	 *
+	 * @param key
+	 * 			  the key of the profile property.
+	 *
+	 * @param defaultProperties
+	 * 			  the {@link ContextProperties} containing the default
+	 * 			  properties.
+	 *
+	 * @return the {@link List} of the profile property or the default property
+	 * if the profile property was not set.
+	 */
+	List profileListProperty(String key, ContextProperties defaultProperties) {
+		def property = profile.getList(key)
+		property.empty ? defaultProperties.getListProperty(key, ",") : property
+	}
+
+	/**
 	 * Set properties of the script.
 	 */
 	@Override

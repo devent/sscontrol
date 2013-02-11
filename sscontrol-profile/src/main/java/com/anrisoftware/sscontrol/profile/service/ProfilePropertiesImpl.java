@@ -18,6 +18,7 @@
  */
 package com.anrisoftware.sscontrol.profile.service;
 
+import static java.lang.String.format;
 import static org.apache.commons.collections.map.PredicatedMap.decorate;
 import groovy.lang.GString;
 import groovy.lang.GroovyObjectSupport;
@@ -91,8 +92,8 @@ class ProfilePropertiesImpl extends GroovyObjectSupport implements
 	@Override
 	public Object get(String key, Object... args) {
 		String value = (String) get(key);
-		for (int i = 0; i < args.length; i++) {
-			value = value.replaceFirst("\\{\\}", args[i].toString());
+		return value == null ? null : format(value, args);
+	}
 
 	@Override
 	public List<String> getList(String key) {

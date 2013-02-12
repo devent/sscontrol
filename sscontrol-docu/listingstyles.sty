@@ -1,0 +1,29 @@
+% This file is part of Latexlibs.
+% Copyright 2011 Erwin Müller, erwin.mueller@deventm.org.
+% This work is licensed under the Creative Commons Attribution 3.0 Unported
+% License. To view a copy of this license, visit
+% http://creativecommons.org/licenses/by/3.0/ or send a letter to Creative
+% Commons, 444 Castro Street, Suite 900, Mountain View, California, 94041, USA.
+\ProvidesPackage{listingstyles}[2011/11/09 v1.0 Configure custom listings styles]
+
+\RequirePackage{listings}
+
+\lstdefinestyle{numbers}
+{breaklines, numbers=left, stepnumber=1, numberstyle=\tiny, numbersep=10pt, basicstyle=\scriptsize, frame=l, xleftmargin=6pt, numbersep=4pt, captionpos=b}
+\lstdefinestyle{nonumbers}
+{style=numbers,numbers=none}
+\lstdefinestyle{Bash}
+{language=Bash,style=nonumbers}
+\lstdefinestyle{XML}
+{language=Bash,style=numbers}
+\lstdefinestyle{Java}
+{language=Java,style=numbers}
+\lstdefinestyle{R}
+{language=R,style=numbers}
+
+\RequirePackage{color}
+\definecolor{lstbackgroundcolor}{rgb}{0.95,1.0,1.0}
+\lstset{backgroundcolor=\color{lstbackgroundcolor}}
+
+\setlength{\columnseprule}{.1pt}
+

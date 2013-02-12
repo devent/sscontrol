@@ -19,7 +19,6 @@
 package com.anrisoftware.sscontrol.database.service;
 
 import static com.anrisoftware.sscontrol.database.service.DatabaseFactory.NAME;
-import groovy.lang.GroovyObjectSupport;
 import groovy.lang.Script;
 
 import java.util.Map;
@@ -30,11 +29,10 @@ import javax.inject.Inject;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.anrisoftware.propertiesutils.ContextProperties;
-import com.anrisoftware.sscontrol.core.api.ProfileService;
-import com.anrisoftware.sscontrol.core.api.Service;
 import com.anrisoftware.sscontrol.core.api.ServiceException;
 import com.anrisoftware.sscontrol.core.api.ServiceScriptFactory;
 import com.anrisoftware.sscontrol.core.api.ServiceScriptInfo;
+import com.anrisoftware.sscontrol.core.service.AbstractService;
 
 /**
  * Database service.
@@ -42,7 +40,7 @@ import com.anrisoftware.sscontrol.core.api.ServiceScriptInfo;
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class DatabaseServiceImpl extends GroovyObjectSupport implements Service {
+class DatabaseServiceImpl extends AbstractService {
 
 	/**
 	 * @version 1.0
@@ -52,8 +50,6 @@ class DatabaseServiceImpl extends GroovyObjectSupport implements Service {
 	private final DatabaseServiceImplLogger log;
 
 	private final ServiceLoader<ServiceScriptFactory> serviceScripts;
-
-	private ProfileService profile;
 
 	/**
 	 * Sets the default database service properties.
@@ -82,49 +78,15 @@ class DatabaseServiceImpl extends GroovyObjectSupport implements Service {
 		this.serviceScripts = serviceScripts;
 	}
 
-	/**
-	 * Returns the database service name.
-	 */
 	@Override
-	public String getName() {
-		return NAME;
-	}
-
-	/**
-	 * Sets the profile for the database service.
-	 * 
-	 * @param newProfile
-	 *            the {@link ProfileService}.
-	 */
-	public void setProfile(ProfileService newProfile) {
-		profile = newProfile;
-		log.profileSet(this, newProfile);
-	}
-
-	/**
-	 * Returns the profile for the database service.
-	 * 
-	 * @return the {@link ProfileService}.
-	 */
-	public ProfileService getProfile() {
-		return profile;
-	}
-
-	@Override
-	public Service call() throws ServiceException {
+	protected Script getScript(String profileName) throws ServiceException {
 		ServiceScriptFactory scriptFactory = findScriptFactory();
-		Script script = (Script) scriptFactory.getScript();
-		script.setProperty("system", profile.getEntry("system"));
-		script.setProperty("profile", profile.getEntry(NAME));
-		script.setProperty("service", this);
-		script.setProperty("name", profile.getProfileName());
-		script.run();
-		return this;
+		return (Script) scriptFactory.getScript();
 	}
 
 	private ServiceScriptFactory findScriptFactory() throws ServiceException {
-		String name = profile.getProfileName();
-		String service = profile.getEntry(NAME).get("service").toString();
+		String name = getProfile().getProfileName();
+		String service = getProfile().getEntry(NAME).get("service").toString();
 		for (ServiceScriptFactory scriptFactory : serviceScripts) {
 			ServiceScriptInfo info = scriptFactory.getInfo();
 			if (info.getProfileName().equals(name)
@@ -135,10 +97,25 @@ class DatabaseServiceImpl extends GroovyObjectSupport implements Service {
 		throw log.errorFindServiceScript(this, name, service);
 	}
 
+	/**
+	 * Because we load the script from a script service the dependencies are
+	 * already injected.
+	 */
 	@Override
-	public String toString() {
-		return new ToStringBuilder(this).append("profile",
-				profile.getProfileName()).toString();
+	protected void injectScript(Script script) {
 	}
 
+	/**
+	 * Returns the database service name.
+	 */
+	@Override
+	public String getName() {
+		return NAME;
+	}
+
+	@Override
+	public String toString() {
+		return new ToStringBuilder(this).appendSuper(super.toString())
+				.toString();
+	}
 }

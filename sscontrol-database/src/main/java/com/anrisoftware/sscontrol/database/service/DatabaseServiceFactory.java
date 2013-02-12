@@ -33,7 +33,7 @@ import com.google.inject.Injector;
  * @since 1.0
  */
 @ProviderFor(ServiceFactory.class)
-public class DatabaseFactory implements ServiceFactory {
+public class DatabaseServiceFactory implements ServiceFactory {
 
 	/**
 	 * The name of the database service.
@@ -42,7 +42,7 @@ public class DatabaseFactory implements ServiceFactory {
 
 	private final LazyInjector lazyInjector;
 
-	public DatabaseFactory() {
+	public DatabaseServiceFactory() {
 		this.lazyInjector = new LazyInjector();
 	}
 

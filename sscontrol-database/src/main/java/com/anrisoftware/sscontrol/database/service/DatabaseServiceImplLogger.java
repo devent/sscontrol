@@ -18,9 +18,12 @@
  */
 package com.anrisoftware.sscontrol.database.service;
 
+import static org.apache.commons.lang3.Validate.notEmpty;
+
 import com.anrisoftware.globalpom.log.AbstractLogger;
-import com.anrisoftware.sscontrol.core.api.ProfileService;
 import com.anrisoftware.sscontrol.core.api.ServiceException;
+import com.anrisoftware.sscontrol.database.statements.Database;
+import com.anrisoftware.sscontrol.database.statements.User;
 
 /**
  * Logging messages for {@link DatabaseServiceImpl}.
@@ -37,15 +40,6 @@ class DatabaseServiceImplLogger extends AbstractLogger {
 		super(DatabaseServiceImpl.class);
 	}
 
-	void profileSet(DatabaseServiceImpl service, ProfileService profile) {
-		if (log.isDebugEnabled()) {
-			log.debug("Set profile {} for {}.", profile, service);
-		} else {
-			log.info("Set profile {} for database service.",
-					profile.getProfileName());
-		}
-	}
-
 	ServiceException errorFindServiceScript(DatabaseServiceImpl dnsservice,
 			String name, String service) {
 		ServiceException ex = new ServiceException(
@@ -55,5 +49,59 @@ class DatabaseServiceImplLogger extends AbstractLogger {
 		ex.addContextValue("service name", service);
 		log.error(ex.getLocalizedMessage());
 		return ex;
+	}
+
+	void debuggingSet(DatabaseServiceImpl service, boolean debugging) {
+		if (log.isDebugEnabled()) {
+			log.debug("Set debugging {} in {}.", debugging, service);
+		} else {
+			log.info("Set debugging {} for database service {}.", debugging,
+					service.getName());
+		}
+	}
+
+	void checkBindAddress(DatabaseServiceImpl ervice, String address) {
+		notEmpty(address, "Bind address must be set.");
+	}
+
+	void bindAddressSet(DatabaseServiceImpl service, String address) {
+		if (log.isDebugEnabled()) {
+			log.debug("Set bind address '{}' in {}.", address, service);
+		} else {
+			log.info("Set bind address '{}' for database service {}.", address,
+					service.getName());
+		}
+	}
+
+	void checkAdminPassword(DatabaseServiceImpl service, String password) {
+		notEmpty(password, "Administrator password must be set.");
+	}
+
+	void adminPasswordSet(DatabaseServiceImpl service, String password) {
+		if (log.isDebugEnabled()) {
+			log.debug("Set administrator password '{}' in {}.",
+					password.replaceAll(".", "*"), service);
+		} else {
+			log.info(
+					"Set administrator password '{}' for database service {}.",
+					password.replaceAll(".", "*"), service.getName());
+		}
+	}
+
+	void databaseAdd(DatabaseServiceImpl service, Database database) {
+		if (log.isDebugEnabled()) {
+			log.debug("Add database '{}' in {}.", database, service);
+		} else {
+			log.info("Add database '{}' in {}.", database.getName(),
+					service.getName());
+		}
+	}
+
+	void userAdd(DatabaseServiceImpl service, User user) {
+		if (log.isDebugEnabled()) {
+			log.debug("Add user '{}' in {}.", user, service);
+		} else {
+			log.info("Add user '{}' in {}.", user.getName(), service.getName());
+		}
 	}
 }

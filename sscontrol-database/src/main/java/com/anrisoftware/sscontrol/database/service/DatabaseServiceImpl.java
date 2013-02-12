@@ -18,21 +18,29 @@
  */
 package com.anrisoftware.sscontrol.database.service;
 
-import static com.anrisoftware.sscontrol.database.service.DatabaseFactory.NAME;
+import static com.anrisoftware.sscontrol.database.service.DatabaseServiceFactory.NAME;
+import static java.util.Collections.unmodifiableList;
 import groovy.lang.Script;
 
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ServiceLoader;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.anrisoftware.propertiesutils.ContextProperties;
+import com.anrisoftware.sscontrol.core.api.Service;
 import com.anrisoftware.sscontrol.core.api.ServiceException;
 import com.anrisoftware.sscontrol.core.api.ServiceScriptFactory;
 import com.anrisoftware.sscontrol.core.api.ServiceScriptInfo;
 import com.anrisoftware.sscontrol.core.service.AbstractService;
+import com.anrisoftware.sscontrol.database.statements.Database;
+import com.anrisoftware.sscontrol.database.statements.DatabaseFactory;
+import com.anrisoftware.sscontrol.database.statements.User;
+import com.anrisoftware.sscontrol.database.statements.UserFactory;
 
 /**
  * Database service.
@@ -51,31 +59,56 @@ class DatabaseServiceImpl extends AbstractService {
 
 	private final ServiceLoader<ServiceScriptFactory> serviceScripts;
 
+	private final DatabaseFactory databaseFactory;
+
+	private final UserFactory userFactory;
+
+	private final List<Database> databases;
+
+	private final List<User> users;
+
+	private boolean debugging;
+
+	private String bindAddress;
+
+	private String adminPassword;
+
 	/**
 	 * Sets the default database service properties.
 	 * 
 	 * @param logger
 	 *            the {@link DatabaseServiceImplLogger} for logging messages.
 	 * 
-	 * @param scripts
-	 *            the {@link Map} with the database service {@link Script}
-	 *            scripts.
+	 * @param serviceScripts
+	 *            the {@link ServiceLoader} to load the database service
+	 *            {@link Script} scripts.
+	 * 
+	 * @param databaseFactory
+	 *            the {@link DatabaseFactory} to create a new database.
+	 * 
+	 * @param userFactory
+	 *            the {@link UserFactory} to create a new database user.
 	 * 
 	 * @param p
 	 *            the default database service {@link ContextProperties}
 	 *            properties. Expects the following properties:
 	 *            <dl>
 	 *            <dt>
-	 *            {@code com.anrisoftware.sscontrol.dns.service.default_bind_addresses}
-	 *            </dt>
-	 *            <dd>A list of the default bind addresses.</dd>
+	 *            {@code debugging}</dt>
+	 *            <dd>Set to {@code true} to enable debugging logging.</dd>
 	 *            </dl>
 	 */
 	@Inject
 	DatabaseServiceImpl(DatabaseServiceImplLogger logger,
-			ServiceLoader<ServiceScriptFactory> serviceScripts) {
+			ServiceLoader<ServiceScriptFactory> serviceScripts,
+			DatabaseFactory databaseFactory, UserFactory userFactory,
+			@Named("database-defaults.properties") ContextProperties p) {
 		this.log = logger;
 		this.serviceScripts = serviceScripts;
+		this.databases = new ArrayList<Database>();
+		this.databaseFactory = databaseFactory;
+		this.userFactory = userFactory;
+		this.users = new ArrayList<User>();
 	}
 
 	@Override
@@ -113,9 +146,155 @@ class DatabaseServiceImpl extends AbstractService {
 		return NAME;
 	}
 
+	/**
+	 * Entry point for the database service script.
+	 * 
+	 * @param statements
+	 *            the database service statements.
+	 * 
+	 * @return this {@link Service}.
+	 */
+	public Service database(Object statements) {
+		return this;
+	}
+
+	/**
+	 * Enables or disables the general logging for the database server. Defaults
+	 * to {@code false}.
+	 * 
+	 * @param debugging
+	 *            set to {@code true} to enable debug logging, {@code false} to
+	 *            disable.
+	 */
+	public void debugging(boolean debugging) {
+		this.debugging = debugging;
+		log.debuggingSet(this, debugging);
+	}
+
+	/**
+	 * The IP address or the host name on which the database server should
+	 * listen to connections. Defaults to {@code "127.0.0.1"}.
+	 * 
+	 * @param address
+	 *            the IP address or host name.
+	 * 
+	 * @throws NullPointerException
+	 *             if the specified address is {@code null}.
+	 * 
+	 * @throws IllegalArgumentException
+	 *             if the specified address is empty.
+	 */
+	public void bind_address(String address) {
+		log.checkBindAddress(this, address);
+		this.bindAddress = address;
+		log.bindAddressSet(this, address);
+	}
+
+	/**
+	 * The administrator password for the database server.
+	 * 
+	 * @param password
+	 *            the administrator password.
+	 * 
+	 * @throws NullPointerException
+	 *             if the specified password is {@code null}.
+	 * 
+	 * @throws IllegalArgumentException
+	 *             if the specified password is empty.
+	 */
+	public void admin_password(String password) {
+		log.checkAdminPassword(this, password);
+		this.adminPassword = password;
+		log.adminPasswordSet(this, password);
+	}
+
+	/**
+	 * Creates a new database with the specified name.
+	 * 
+	 * @param name
+	 *            the database name.
+	 * 
+	 * @return the {@link Database}.
+	 * 
+	 * @throws IllegalArgumentException
+	 *             if the specified name is empty.
+	 */
+	public Database database(String name) {
+		Database database = databaseFactory.create(name);
+		databases.add(database);
+		log.databaseAdd(this, database);
+		return database;
+	}
+
+	/**
+	 * Creates a new database user with the specified name.
+	 * 
+	 * @param name
+	 *            the user name.
+	 * 
+	 * @return the {@link User}.
+	 * 
+	 * @throws IllegalArgumentException
+	 *             if the specified name is empty.
+	 */
+	public User user(String name) {
+		User user = userFactory.create(name);
+		users.add(user);
+		log.userAdd(this, user);
+		return user;
+	}
+
+	/**
+	 * Returns whether general logging for the database server is enabled or
+	 * disabled.
+	 * 
+	 * @return {@code true} if debugging is enabled, {@code false} if disabled.
+	 */
+	public boolean isDebugging() {
+		return debugging;
+	}
+
+	/**
+	 * Returns the administrator password for the database server.
+	 * 
+	 * @return the administrator password.
+	 */
+	public String getAdminPassword() {
+		return adminPassword;
+	}
+
+	/**
+	 * Returns the IP address or the host name on which the database server
+	 * should listen to connections.
+	 * 
+	 * @return the IP address or host name.
+	 */
+	public String getBindAddress() {
+		return bindAddress;
+	}
+
+	/**
+	 * Returns the databases of the server.
+	 * 
+	 * @return an unmodifiable {@link List}.
+	 */
+	public List<Database> getDatabases() {
+		return unmodifiableList(databases);
+	}
+
+	/**
+	 * Returns the users of the server.
+	 * 
+	 * @return an unmodifiable {@link List}.
+	 */
+	public List<User> getUsers() {
+		return unmodifiableList(users);
+	}
+
 	@Override
 	public String toString() {
 		return new ToStringBuilder(this).appendSuper(super.toString())
-				.toString();
+				.append("debugging", debugging)
+				.append("bind address", bindAddress).toString();
 	}
 }

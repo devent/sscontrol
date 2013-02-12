@@ -28,7 +28,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.ServiceLoader;
 import java.util.Set;
 
@@ -37,8 +36,6 @@ import javax.inject.Inject;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.joda.time.DateTime;
 
-import com.anrisoftware.propertiesutils.ContextProperties;
-import com.anrisoftware.resources.templates.api.TemplatesFactory;
 import com.anrisoftware.sscontrol.core.api.Service;
 import com.anrisoftware.sscontrol.core.api.ServiceException;
 import com.anrisoftware.sscontrol.core.api.ServiceScriptFactory;
@@ -82,22 +79,9 @@ class DnsServiceImpl extends AbstractService {
 	 * @param logger
 	 *            the {@link DnsServiceImplLogger} for logging messages.
 	 * 
-	 * @param scripts
-	 *            the {@link Map} with the DNS service {@link Script} scripts.
-	 * 
-	 * @param templates
-	 *            the {@link TemplatesFactory} to create new templates
-	 *            resources.
-	 * 
-	 * @param p
-	 *            the default DNS service {@link ContextProperties} properties.
-	 *            Expects the following properties:
-	 *            <dl>
-	 *            <dt>
-	 *            {@code com.anrisoftware.sscontrol.dns.service.default_bind_addresses}
-	 *            </dt>
-	 *            <dd>A list of the default bind addresses.</dd>
-	 *            </dl>
+	 * @param serviceScripts
+	 *            the {@link ServiceLoader} that loads the DNS service
+	 *            {@link Script} scripts.
 	 */
 	@Inject
 	DnsServiceImpl(DnsServiceImplLogger logger,

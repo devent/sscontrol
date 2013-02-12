@@ -3,6 +3,7 @@ package com.anrisoftware.sscontrol.database.statements;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -19,6 +20,10 @@ import com.google.inject.assistedinject.Assisted;
  * @since 1.0
  */
 public class User implements Serializable {
+
+	private static final String SERVER_ARG = "server";
+
+	private static final String PASSWORD_ARG = "password";
 
 	/**
 	 * @version 1.0
@@ -38,9 +43,26 @@ public class User implements Serializable {
 	 */
 	private final List<String> databases;
 
+	/**
+	 * Sets the user name and default properties.
+	 * 
+	 * @param logger
+	 *            the {@link UserLogger} for logging messages.
+	 * 
+	 * @param p
+	 *            the default user {@link ContextProperties} properties. Expects
+	 *            the following properties:
+	 *            <dl>
+	 *            <dt>{@code user_server}</dt>
+	 *            <dd>The default user server host.</dd>
+	 *            </dl>
+	 * 
+	 * @param name
+	 *            the user name.
+	 */
 	@Inject
 	User(UserLogger logger,
-			@Named("database-defaults.properties") ContextProperties p,
+			@Named("database-defaults-properties") ContextProperties p,
 			@Assisted String name) {
 		this.log = logger;
 		this.name = name;
@@ -50,6 +72,31 @@ public class User implements Serializable {
 
 	private void setupDefaults(ContextProperties p) {
 		server = p.getProperty("user_server");
+	}
+
+	/**
+	 * Sets additional arguments for the user.
+	 * 
+	 * @param args
+	 *            the arguments {@link Map}.
+	 * 
+	 * @see #setPassword(String)
+	 * @see #setServer(String)
+	 */
+	public void setArguments(Map<String, String> args) {
+		if (args.containsKey(PASSWORD_ARG)) {
+			setPassword(args.get(PASSWORD_ARG));
+		}
+		if (args.containsKey(SERVER_ARG)) {
+			setServer(args.get(SERVER_ARG));
+		}
+	}
+
+	/**
+	 * Returns the name of the user.
+	 */
+	public String getName() {
+		return name;
 	}
 
 	/**
@@ -63,14 +110,26 @@ public class User implements Serializable {
 	 * 
 	 * @throws IllegalArgumentException
 	 *             if the specified password is empty.
-	 * 
-	 * @return this {@link User}.
 	 */
-	User password(String password) {
+	void setPassword(String password) {
 		log.checkPassword(this, password);
 		this.password = password;
-		log.passwordSet(this, password);
-		return this;
+		log.passwordSet(this, getSavePassword());
+	}
+
+	/**
+	 * Returns the user password.
+	 */
+	public String getPassword() {
+		return password;
+	}
+
+	/**
+	 * Returns the user password as stars.
+	 */
+	public String getSavePassword() {
+		return password != null ? password.replaceAll(".", "*") : String
+				.valueOf(password);
 	}
 
 	/**
@@ -84,14 +143,18 @@ public class User implements Serializable {
 	 * 
 	 * @throws IllegalArgumentException
 	 *             if the specified server host is empty.
-	 * 
-	 * @return this {@link User}.
 	 */
-	User server(String server) {
+	void setServer(String server) {
 		log.checkServer(this, server);
 		this.server = server;
 		log.serverSet(this, server);
-		return this;
+	}
+
+	/**
+	 * Returns on which server host the user can connect.
+	 */
+	public String getServer() {
+		return server;
 	}
 
 	/**
@@ -113,27 +176,6 @@ public class User implements Serializable {
 	}
 
 	/**
-	 * Returns the name of the user.
-	 */
-	public String getName() {
-		return name;
-	}
-
-	/**
-	 * Returns on which server host the user can connect.
-	 */
-	public String getServer() {
-		return server;
-	}
-
-	/**
-	 * Returns the user password.
-	 */
-	public String getPassword() {
-		return password;
-	}
-
-	/**
 	 * Returns the user databases.
 	 * 
 	 * @return the {@link List} of the database names.
@@ -145,7 +187,9 @@ public class User implements Serializable {
 	@Override
 	public String toString() {
 		return new ToStringBuilder(this).append("name", name)
-				.append("password", password).append("server", server)
-				.append("databases", databases).toString();
+				.append(PASSWORD_ARG, getSavePassword())
+				.append(SERVER_ARG, server).append("databases", databases)
+				.toString();
 	}
+
 }

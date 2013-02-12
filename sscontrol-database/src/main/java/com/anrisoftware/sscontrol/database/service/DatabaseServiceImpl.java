@@ -23,7 +23,9 @@ import static java.util.Collections.unmodifiableList;
 import groovy.lang.Script;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.ServiceLoader;
 
 import javax.inject.Inject;
@@ -93,22 +95,31 @@ class DatabaseServiceImpl extends AbstractService {
 	 *            the default database service {@link ContextProperties}
 	 *            properties. Expects the following properties:
 	 *            <dl>
-	 *            <dt>
-	 *            {@code debugging}</dt>
+	 *            <dt>{@code debugging}</dt>
 	 *            <dd>Set to {@code true} to enable debugging logging.</dd>
+	 * 
+	 *            <dt>{@code bind_address}</dt>
+	 *            <dd>Set the default IP address or host name to bind the
+	 *            server.</dd>
 	 *            </dl>
 	 */
 	@Inject
 	DatabaseServiceImpl(DatabaseServiceImplLogger logger,
 			ServiceLoader<ServiceScriptFactory> serviceScripts,
 			DatabaseFactory databaseFactory, UserFactory userFactory,
-			@Named("database-defaults.properties") ContextProperties p) {
+			@Named("database-defaults-properties") ContextProperties p) {
 		this.log = logger;
 		this.serviceScripts = serviceScripts;
 		this.databases = new ArrayList<Database>();
 		this.databaseFactory = databaseFactory;
 		this.userFactory = userFactory;
 		this.users = new ArrayList<User>();
+		setupDefaults(p);
+	}
+
+	private void setupDefaults(ContextProperties p) {
+		debugging = p.getBooleanProperty("debugging");
+		bindAddress = p.getProperty("bind_address");
 	}
 
 	@Override
@@ -205,41 +216,81 @@ class DatabaseServiceImpl extends AbstractService {
 	public void admin_password(String password) {
 		log.checkAdminPassword(this, password);
 		this.adminPassword = password;
-		log.adminPasswordSet(this, password);
+		log.adminPasswordSet(this, getSaveAdminPassword());
+	}
+
+	public void database(String name) {
+		database(Collections.<String, String> emptyMap(), name);
+	}
+
+	public void database(Map<String, String> args, String name) {
+		database(args, name, null);
+	}
+
+	public Database database(String name, Object statements) {
+		return database(Collections.<String, String> emptyMap(), name,
+				statements);
 	}
 
 	/**
 	 * Creates a new database with the specified name.
 	 * 
+	 * @param args
+	 *            additional parameter {@link Map}.
+	 * 
 	 * @param name
 	 *            the database name.
 	 * 
-	 * @return the {@link Database}.
+	 * @param statements
+	 *            database statements.
+	 * 
+	 * @return the new {@link Database}.
 	 * 
 	 * @throws IllegalArgumentException
 	 *             if the specified name is empty.
 	 */
-	public Database database(String name) {
+	public Database database(Map<String, String> args, String name,
+			Object statements) {
 		Database database = databaseFactory.create(name);
+		database.setArguments(args);
 		databases.add(database);
 		log.databaseAdd(this, database);
 		return database;
 	}
 
+	public void user(String name) {
+		user(Collections.<String, String> emptyMap(), name, null);
+	}
+
+	public void user(Map<String, String> args, String name) {
+		user(args, name, null);
+	}
+
+	public User user(String name, Object statements) {
+		return user(Collections.<String, String> emptyMap(), name, statements);
+	}
+
 	/**
 	 * Creates a new database user with the specified name.
 	 * 
+	 * @param args
+	 *            additional parameter {@link Map}.
+	 * 
 	 * @param name
 	 *            the user name.
+	 * 
+	 * @param statements
+	 *            user statements.
 	 * 
 	 * @return the {@link User}.
 	 * 
 	 * @throws IllegalArgumentException
 	 *             if the specified name is empty.
 	 */
-	public User user(String name) {
+	public User user(Map<String, String> args, String name, Object statements) {
 		User user = userFactory.create(name);
 		users.add(user);
+		user.setArguments(args);
 		log.userAdd(this, user);
 		return user;
 	}
@@ -261,6 +312,14 @@ class DatabaseServiceImpl extends AbstractService {
 	 */
 	public String getAdminPassword() {
 		return adminPassword;
+	}
+
+	/**
+	 * Returns the administrator password as stars.
+	 */
+	public String getSaveAdminPassword() {
+		return adminPassword != null ? adminPassword.replaceAll(".", "*")
+				: String.valueOf(adminPassword);
 	}
 
 	/**
@@ -295,6 +354,8 @@ class DatabaseServiceImpl extends AbstractService {
 	public String toString() {
 		return new ToStringBuilder(this).appendSuper(super.toString())
 				.append("debugging", debugging)
-				.append("bind address", bindAddress).toString();
+				.append("bind address", bindAddress)
+				.append("administrator passowrd", getSaveAdminPassword())
+				.toString();
 	}
 }

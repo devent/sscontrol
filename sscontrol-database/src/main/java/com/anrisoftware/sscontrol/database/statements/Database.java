@@ -5,7 +5,9 @@ import java.io.Serializable;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -34,7 +36,7 @@ public class Database implements Serializable {
 
 	private String collate;
 
-	private List<URI> sqlImports;
+	private final List<URI> sqlImports;
 
 	/**
 	 * Sets the name of the database.
@@ -53,44 +55,25 @@ public class Database implements Serializable {
 		this.log = logger;
 		log.checkName(this, name);
 		this.name = name;
+		this.sqlImports = new ArrayList<URI>();
 	}
 
 	/**
-	 * Sets the default character set for the database.
+	 * Sets additional arguments for the database.
 	 * 
-	 * @param set
-	 *            the character set.
+	 * @param args
+	 *            the arguments {@link Map}.
 	 * 
-	 * @return this {@link Database}.
-	 * 
-	 * @throws NullPointerException
-	 *             if the specified character set is {@code null}.
-	 * 
-	 * @throws IllegalArgumentException
-	 *             if the specified character set is empty.
+	 * @see #setCharacterSet(String)
+	 * @see #setCollate(String)
 	 */
-	public Database character_set(String set) {
-		setCharacterSet(set);
-		return this;
-	}
-
-	/**
-	 * Sets the default collate for the database.
-	 * 
-	 * @param set
-	 *            the collate.
-	 * 
-	 * @return this {@link Database}.
-	 * 
-	 * @throws NullPointerException
-	 *             if the specified collate is {@code null}.
-	 * 
-	 * @throws IllegalArgumentException
-	 *             if the specified collate is empty.
-	 */
-	public Database collate(String collate) {
-		setCollate(collate);
-		return this;
+	public void setArguments(Map<String, String> args) {
+		if (args.containsKey("character_set")) {
+			setCharacterSet(args.get("character_set"));
+		}
+		if (args.containsKey("collate")) {
+			setCollate(args.get("collate"));
+		}
 	}
 
 	/**
@@ -220,4 +203,5 @@ public class Database implements Serializable {
 				.append("collate", collate).append("imports", sqlImports)
 				.toString();
 	}
+
 }

@@ -25,11 +25,9 @@ class UserLogger extends AbstractSerializedLogger {
 
 	void passwordSet(User user, String password) {
 		if (log.isDebugEnabled()) {
-			log.debug("Set password '{}' for {}.",
-					password.replaceAll(".", "*"), user);
+			log.debug("Set password '{}' for {}.", password, user);
 		} else {
-			log.info("Set password '{}' for user {}.",
-					password.replaceAll(".", "*"), user.getName());
+			log.info("Set password '{}' for user {}.", password, user.getName());
 		}
 	}
 

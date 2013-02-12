@@ -40,8 +40,8 @@ import com.google.inject.Provides;
  */
 class DatabaseModule extends AbstractModule {
 
-	private static final URL DNS_DEFAULTS_PROPERTIES_RESOURCE = DatabaseModule.class
-			.getResource("/dns_defaults.properties");
+	private static final URL DEFAULTS_PROPERTIES_RESOURCE = DatabaseModule.class
+			.getResource("/database_defaults.properties");
 
 	@Override
 	protected void configure() {
@@ -50,11 +50,11 @@ class DatabaseModule extends AbstractModule {
 
 	@Provides
 	@Singleton
-	@Named("dns-defaults-properties")
-	ContextProperties getDnsDefaultsProperties() throws IOException {
+	@Named("database-defaults-properties")
+	ContextProperties getDefaultsProperties() throws IOException {
 		return new ContextPropertiesFactory(DatabaseServiceImpl.class)
 				.withProperties(System.getProperties()).fromResource(
-						DNS_DEFAULTS_PROPERTIES_RESOURCE);
+						DEFAULTS_PROPERTIES_RESOURCE);
 	}
 
 	@Provides

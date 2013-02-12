@@ -30,9 +30,9 @@ the administrator user to create users, create databases and set permissions.
 
 \subsubsection{database}
 
-\statement*{database \typestring{}}
-\statement*{[, character\_set \typestring{}]}
-\statement*{[, collate \typestring{}]}
+\statement*{database \typestring{}}\\
+\statement*{[, character\_set: \typestring{}]}\\
+\statement*{[, collate: \typestring{}]}\\
 \statement*{[, \{ <import\_sql> \}]}
 
 Creates a new database with the specified name, character set and collate.
@@ -76,8 +76,8 @@ is assumed to be a local file, otherwise the string is assumed to be a URI.
 
 \subsubsection{user}
 
-\statement*{user \typestring{}, password \typestring{}}
-\statement*{[, server \typestring{}]}\\
+\statement*{user \typestring{}, password: \typestring{}}
+\statement*{[, server: \typestring{}]}\\
 \statement*{[, \{ <use\_database> \}]}
 
 Creates a new user with the specified name, password and server host.

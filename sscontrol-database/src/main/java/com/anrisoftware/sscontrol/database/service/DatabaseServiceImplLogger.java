@@ -79,12 +79,12 @@ class DatabaseServiceImplLogger extends AbstractLogger {
 
 	void adminPasswordSet(DatabaseServiceImpl service, String password) {
 		if (log.isDebugEnabled()) {
-			log.debug("Set administrator password '{}' in {}.",
-					password.replaceAll(".", "*"), service);
+			log.debug("Set administrator password '{}' in {}.", password,
+					service);
 		} else {
 			log.info(
 					"Set administrator password '{}' for database service {}.",
-					password.replaceAll(".", "*"), service.getName());
+					password, service.getName());
 		}
 	}
 

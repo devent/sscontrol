@@ -22,55 +22,37 @@ import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.database.service.DatabaseServiceFactory.*
 import groovy.util.logging.Slf4j
 
-import org.junit.Before
 import org.junit.Test
 
-import com.anrisoftware.sscontrol.core.activator.CoreModule
 import com.anrisoftware.sscontrol.core.api.ServiceLoader as SscontrolServiceLoader
 import com.anrisoftware.sscontrol.core.api.ServicesRegistry
-import com.google.inject.Guice
 import com.google.inject.Injector
 
 /**
- * Test the database service statements.
+ * Test the database script with default values.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
 @Slf4j
-class DatabaseServiceTest {
-
-	static ubuntu1004Profile = resourceURL("Ubuntu_10_04Profile.groovy", DatabaseServiceTest)
-
-	static databaseScript = resourceURL("Database.groovy", DatabaseServiceTest)
-
-	Injector injector
-
-	File tmp
-
-	Map variables
+class DatabaseScriptWithDefaultsTest extends DatabaseServiceUtil {
 
 	@Test
-	void "dns serial script"() {
+	void "database script"() {
 		ServicesRegistry registry = injector.getInstance ServicesRegistry
 		SscontrolServiceLoader loader = injector.getInstance SscontrolServiceLoader
 		loader.loadService(ubuntu1004Profile, variables, registry, null)
 		def profile = registry.getService("profile")[0]
-		loader.loadService(dnsSerialScript, variables, registry, profile)
+		loader.loadService(databaseScriptWithDefaults, variables, registry, profile)
 		withFiles NAME, {}, {}, tmp
-
-		registry.getService("dns")[0].generate = false
-		assertService registry.getService("dns")[0], 99, ["127.0.0.1"]
+		assertService registry.getService("database")[0]
 	}
 
-	@Before
-	void setupInjector() {
-		injector = createInjector()
-		tmp = createTempDirectory()
-		variables = [tmp: tmp.absoluteFile]
-	}
-
-	def createInjector() {
-		Guice.createInjector(new CoreModule())
+	void assertService(DatabaseServiceImpl database) {
+		assert database.debugging == false
+		assertStringContent database.adminPassword, "mysqladminpassword"
+		assertStringContent database.bindAddress, "127.0.0.1"
+		assert database.databases.size() == 2
+		assert database.users.size() == 2
 	}
 }

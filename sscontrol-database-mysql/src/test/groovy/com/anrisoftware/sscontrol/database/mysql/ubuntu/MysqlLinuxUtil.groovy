@@ -36,6 +36,8 @@ class MysqlLinuxUtil {
 
 	static restartCommand = resourceURL("echo_command.txt", MysqlLinuxUtil)
 
+	static mysqladminCommand = resourceURL("mysqladmin_command.txt", MysqlLinuxUtil)
+
 	Injector injector
 
 	File tmp

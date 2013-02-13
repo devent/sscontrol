@@ -31,6 +31,10 @@ class MySQL_5_1_Ubuntu_10_04Script extends Mysql_5_1Script {
 		profileProperty "restart_command", ubuntuProperties
 	}
 
+	String getMysqladminCommand() {
+		profileProperty "mysqladmin_command", ubuntuProperties
+	}
+
 	@Override
 	def getDefaultProperties() {
 		ubuntuProperties

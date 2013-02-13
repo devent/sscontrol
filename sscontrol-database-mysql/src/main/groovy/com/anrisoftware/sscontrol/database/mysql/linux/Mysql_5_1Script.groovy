@@ -1,6 +1,10 @@
+
+
 package com.anrisoftware.sscontrol.database.mysql.linux
 
 import static org.apache.commons.io.FileUtils.*
+
+import java.util.regex.Pattern
 
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.Templates
@@ -34,16 +38,16 @@ abstract class Mysql_5_1Script extends LinuxScript {
 	 * Deploys the mysqld configuration.
 	 */
 	void deployMysqldConfiguration() {
-		deployConfiguration configurationTokens(), mysqldConfiguration, mysqldConfigurations, mysqldFile
+		deployConfiguration configurationTokens(), currentMysqldConfiguration, mysqldConfiguration, mysqldFile
 	}
 
 	/**
-	 * Returns the mysqld configurations.
+	 * Returns the mysqld configuration.
 	 */
-	List mysqldMararcConfigurations() {
+	List getMysqldConfiguration() {
 		def replace = mysqlConfiguration.getText(true, "mysqld", "service", service)
 		[
-			new TokenTemplate(".*", replace)
+			new TokenTemplate(".*", replace, Pattern.DOTALL)
 		]
 	}
 
@@ -72,7 +76,7 @@ abstract class Mysql_5_1Script extends LinuxScript {
 	/**
 	 * Returns the current {@code mysqld} configuration.
 	 */
-	String getMysqldConfiguration() {
+	String getCurrentMysqldConfiguration() {
 		currentConfiguration mysqldFile
 	}
 

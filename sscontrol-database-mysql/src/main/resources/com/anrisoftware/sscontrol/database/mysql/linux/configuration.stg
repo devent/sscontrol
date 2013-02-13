@@ -1,8 +1,5 @@
 mysqld(service) ::= <<
-## SSCONTROL-DATABASE-MYSQL
 [mysqld]
 bind-address = <service.bindAddress>
 general_log = <if (service.debugging)>1<else>0<endif>
-## SSCONTROL-DATABASE-MYSQL END
-
 >>

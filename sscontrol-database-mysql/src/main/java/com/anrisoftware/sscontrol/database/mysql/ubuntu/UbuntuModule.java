@@ -43,7 +43,7 @@ import com.google.inject.multibindings.MapBinder;
 public class UbuntuModule extends AbstractModule {
 
 	private static final URL UBUNTU_10_04_PROPERTIES_RESOURCE = UbuntuModule.class
-			.getResource("/maradns_ubuntu_10_04.properties");
+			.getResource("/mysql_ubuntu_10_04.properties");
 
 	@Override
 	protected void configure() {
@@ -54,12 +54,12 @@ public class UbuntuModule extends AbstractModule {
 	private void bindScripts() {
 		MapBinder<String, Script> binder;
 		binder = newMapBinder(binder(), String.class, Script.class);
-		binder.addBinding("maradns.ubuntu_10_04").to(Ubuntu_10_04Script.class);
+		binder.addBinding("mysql.ubuntu_10_04").to(Ubuntu_10_04Script.class);
 	}
 
 	@Provides
 	@Singleton
-	@Named("maradns-ubuntu-10_04-properties")
+	@Named("mysql-ubuntu-10_04-properties")
 	ContextProperties getUbuntu_10_04Properties() throws IOException {
 		return new ContextPropertiesFactory(Ubuntu_10_04Script.class)
 				.withProperties(System.getProperties()).fromResource(

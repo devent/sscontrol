@@ -28,6 +28,7 @@ import org.apache.commons.exec.CommandLine;
 import org.apache.commons.exec.DefaultExecutor;
 import org.apache.commons.exec.ExecuteStreamHandler;
 import org.apache.commons.exec.ExecuteWatchdog;
+import org.apache.commons.exec.Executor;
 import org.apache.commons.exec.PumpStreamHandler;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
@@ -60,8 +61,6 @@ public class ExecCommandWorker implements Worker {
 
 	private final HashMap<String, String> environment;
 
-	private int exitValue;
-
 	private int exitCode;
 
 	private transient ByteArrayOutputStream out;
@@ -75,6 +74,8 @@ public class ExecCommandWorker implements Worker {
 	private String error;
 
 	private boolean quatation;
+
+	private int[] exitValues;
 
 	@AssistedInject
 	ExecCommandWorker(ExecCommandWorkerLogger logger, @Assisted String command) {
@@ -93,9 +94,9 @@ public class ExecCommandWorker implements Worker {
 		this.log = logger;
 		this.environment = new HashMap<String, String>(environment);
 		this.command = command;
-		this.exitValue = 0;
 		this.timeoutMs = timeoutMs;
 		this.quatation = true;
+		setExitValue(0);
 		readResolve();
 	}
 
@@ -111,7 +112,7 @@ public class ExecCommandWorker implements Worker {
 		cmdline = quatation ? cmdline : new CommandLineWithoutQuote(cmdline);
 		ExecuteStreamHandler streamHandler = new PumpStreamHandler(out, err);
 		DefaultExecutor executor = new DefaultExecutor();
-		executor.setExitValue(exitValue);
+		executor.setExitValues(exitValues);
 		ExecuteWatchdog watchdog = new ExecuteWatchdog(timeoutMs);
 		executor.setWatchdog(watchdog);
 		executor.setStreamHandler(streamHandler);
@@ -150,7 +151,20 @@ public class ExecCommandWorker implements Worker {
 	}
 
 	public void setExitValue(int value) {
-		exitValue = value;
+		this.exitValues = new int[] { value };
+	}
+
+	/**
+	 * Sets the list of valid exit values for the process.
+	 * 
+	 * @param values
+	 *            the integer array of exit values or {@code null} to skip
+	 *            checking of exit codes.
+	 * 
+	 * @see Executor#setExitValues(int[])
+	 */
+	public void setExitValues(int[] values) {
+		this.exitValues = values;
 	}
 
 	public int getExitCode() {

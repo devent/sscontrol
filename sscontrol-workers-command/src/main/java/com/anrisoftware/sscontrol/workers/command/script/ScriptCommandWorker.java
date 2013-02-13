@@ -29,6 +29,7 @@ import java.util.Properties;
 
 import javax.inject.Named;
 
+import org.apache.commons.exec.Executor;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.anrisoftware.propertiesutils.ContextProperties;
@@ -199,6 +200,19 @@ public class ScriptCommandWorker implements Worker {
 
 	public void setExitValue(int value) {
 		commandWorker.setExitValue(value);
+	}
+
+	/**
+	 * Sets the list of valid exit values for the process.
+	 * 
+	 * @param values
+	 *            the integer array of exit values or {@code null} to skip
+	 *            checking of exit codes.
+	 * 
+	 * @see Executor#setExitValues(int[])
+	 */
+	public void setExitValues(int[] values) {
+		commandWorker.setExitValues(values);
 	}
 
 	public int getExitCode() {

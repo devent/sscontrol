@@ -21,12 +21,6 @@
         <!-- test dependencies -->
         <dependency>
             <groupId>com.anrisoftware.sscontrol</groupId>
-            <artifactId>sscontrol-core</artifactId>
-            <version>0.1-SNAPSHOT</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.anrisoftware.sscontrol</groupId>
             <artifactId>sscontrol-profile</artifactId>
             <version>0.1-SNAPSHOT</version>
             <scope>test</scope>
@@ -40,7 +34,7 @@
         <!-- own modules dependencies -->
         <dependency>
             <groupId>com.anrisoftware.sscontrol</groupId>
-            <artifactId>sscontrol-api</artifactId>
+            <artifactId>sscontrol-core</artifactId>
             <version>0.1-SNAPSHOT</version>
         </dependency>
 

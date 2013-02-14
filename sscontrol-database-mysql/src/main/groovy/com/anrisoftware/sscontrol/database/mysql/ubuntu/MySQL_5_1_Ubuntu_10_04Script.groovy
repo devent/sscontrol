@@ -35,6 +35,10 @@ class MySQL_5_1_Ubuntu_10_04Script extends Mysql_5_1Script {
 		profileProperty "mysqladmin_command", ubuntuProperties
 	}
 
+	String getMysqlCommand() {
+		profileProperty "mysql_command", ubuntuProperties
+	}
+
 	@Override
 	def getDefaultProperties() {
 		ubuntuProperties

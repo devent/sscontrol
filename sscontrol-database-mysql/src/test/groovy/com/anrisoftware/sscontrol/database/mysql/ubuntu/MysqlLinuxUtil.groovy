@@ -38,6 +38,8 @@ class MysqlLinuxUtil {
 
 	static mysqladminCommand = resourceURL("mysqladmin_command.txt", MysqlLinuxUtil)
 
+	static mysqlCommand = resourceURL("echo_command.txt", MysqlLinuxUtil)
+
 	Injector injector
 
 	File tmp

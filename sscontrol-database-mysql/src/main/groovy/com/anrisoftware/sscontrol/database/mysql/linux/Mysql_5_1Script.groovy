@@ -37,6 +37,7 @@ abstract class Mysql_5_1Script extends LinuxScript {
 		mysqlConfiguration = mysqlTemplates.getResource("configuration")
 		deployMysqldConfiguration()
 		setupAdministratorPassword()
+		createDatabases()
 		restartService restartCommand
 	}
 
@@ -75,6 +76,16 @@ abstract class Mysql_5_1Script extends LinuxScript {
 	}
 
 	/**
+	 * Creates the databases from the service.
+	 */
+	void createDatabases() {
+		def worker = scriptCommandFactory.create(mysqlConfiguration, "createDatabases",
+						"mysqlCommand", mysqlCommand,
+						"service", service)()
+		log.databasesCreated this, worker
+	}
+
+	/**
 	 * Returns the mysqladmin command.
 	 * <p>
 	 * Example: {@code /usr/bin/mysqladmin}
@@ -84,6 +95,17 @@ abstract class Mysql_5_1Script extends LinuxScript {
 	 * </ul>
 	 */
 	abstract String getMysqladminCommand()
+
+	/**
+	 * Returns the mysql command.
+	 * <p>
+	 * Example: {@code /usr/bin/mysql}
+	 *
+	 * <ul>
+	 * <li>profile property key {@code mysql_command}</li>
+	 * </ul>
+	 */
+	abstract String getMysqlCommand()
 
 	/**
 	 * Returns path of the MySQL configuration directory.

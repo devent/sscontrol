@@ -58,6 +58,7 @@ class MysqlUbuntu_10_04_Test extends MysqlLinuxUtil {
 			copyResourceToCommand aptitudeCommand, new File(it, "/usr/bin/aptitude")
 			copyResourceToCommand restartCommand, new File(it, "/etc/init.d/mysql")
 			copyResourceToCommand mysqladminCommand, new File(it, "/usr/bin/mysqladmin")
+			copyResourceToCommand mysqlCommand, new File(it, "/usr/bin/mysql")
 		}, tmp
 	}
 

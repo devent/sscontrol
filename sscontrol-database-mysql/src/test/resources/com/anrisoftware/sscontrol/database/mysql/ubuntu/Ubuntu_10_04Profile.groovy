@@ -26,5 +26,6 @@ profile "ubuntu_10_04", {
 		configuration_directory "${tmp}/etc/mysql/conf.d"
 		restart_command "${tmp}/etc/init.d/mysql restart"
 		mysqladmin_command "${tmp}/usr/bin/mysqladmin"
+		mysql_command "${tmp}/usr/bin/mysql"
 	}
 }

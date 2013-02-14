@@ -12,3 +12,53 @@ setupadminpassword(mysqladminCommand, service) ::= <<
 <mysqladminCommand> -u root password <service.adminPassword>
 >>
 
+createDatabases(mysqlCommand, service) ::= <<
+<! create the databases from the specified service !>
+#!/bin/sh
+<mysqlCommand> --password=<service.adminPassword> -t \<\<STOP
+<service.databases:createDatabase()>
+\q
+STOP
+>>
+
+createDatabase(database) ::= <<
+<! create the specified database !>
+CREATE DATABASE IF NOT EXISTS \`<database.name>\` CHARACTER SET <database.characterSet> COLLATE <database.collate>;
+
+>>
+
+createUser(user) ::= <<
+<! create the specified database user !>
+
+CREATE DATABASE IF NOT EXISTS createusertmp;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ANSI';
+USE createusertmp;
+DROP PROCEDURE IF EXISTS createusertmp.create_update_user;
+DELIMITER $$
+CREATE PROCEDURE createusertmp.create_update_user()
+BEGIN
+    DECLARE userexists BIGINT DEFAULT 0;
+
+    SELECT COUNT(*)
+    INTO userexists FROM mysql.user
+        WHERE User='<user.name>' and  Host='<user.server>';
+
+    IF userexists=0 THEN
+        CREATE USER '<user.name>'@'<user.server>' IDENTIFIED BY '<user.password>';
+    ELSEIF userexists=1 THEN
+        SET PASSWORD FOR '<user.name>'@'<user.server>' = PASSWORD('<user.password>');
+    END IF;
+END ;$$
+DELIMITER ;
+CALL createusertmp.create_update_user();
+DROP PROCEDURE IF EXISTS createusertmp.create_update_user;
+DROP DATABASE IF EXISTS createusertmp;
+SET SQL_MODE=@OLD_SQL_MODE;
+
+<user.databases:grandDatabase(user=user)>
+>>
+
+grandDatabase(database, user) ::= <<
+<! grand access to the specified database for the user !>
+GRANT ALL ON <database>.* TO '<user.name>'@'<user.server>';
+>>

@@ -131,7 +131,7 @@ abstract class Mysql_5_1Script extends LinuxScript {
 	abstract String getDefaultCharacterSet()
 
 	/**
-	 * Returns the default character set for databases.
+	 * Returns the default collate for databases.
 	 * <p>
 	 * Example: {@code utf8_general_ci}
 	 *

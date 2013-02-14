@@ -57,3 +57,54 @@ database {
 }
 \end{lstlisting}
 
+\pagebreak
+
+\begin{longtable}{lp{0.5\textwidth}}
+\multicolumn{2}{l}{Commands Properties} \\*
+\toprule
+\endfirsthead
+\endhead
+\caption{MySQL Ubuntu 10.04 Properties}
+\label{tbl:database_mysql_ubuntu_10_04_properties}
+\endlastfoot
+%
+install\_command &
+\code{/usr/bin/aptitude update \&\& /usr/bin/aptitude install} \\
+%
+restart\_command &
+\code{/sbin/restart mysql} \\
+%
+mysqladmin\_command &
+\code{/usr/bin/mysqladmin} \\
+%
+mysql\_command &
+\code{/usr/bin/mysql} \\*
+%
+\toprule
+%
+\multicolumn{2}{l}{Files and Directories Properties} \\*
+\toprule
+%
+configuration\_directory &
+\code{/etc/mysql/conf.d} \\
+%
+mysqld\_configuration\_file &
+\code{sscontrol\_mysqld.cnf} \\*
+%
+\toprule
+%
+\multicolumn{2}{l}{Other Properties} \\*
+\toprule
+%
+packages &
+\code{mysql-server} \\
+%
+default\_character\_set &
+\code{utf-8} \\
+%
+default\_collate &
+\code{utf8\_general\_ci} \\
+%
+\end{longtable}
+
+

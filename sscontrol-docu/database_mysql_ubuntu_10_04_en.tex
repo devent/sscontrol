@@ -2,3 +2,61 @@
 
 Ubuntu 10.04 comes with MySQL version 5.1 in the main repository.
 
+\subsubsection{Properties}
+
+The values for the default properties can be found
+in \reftbl{tbl:database_mysql_ubuntu_10_04_properties}.
+
+\paragraph{install\_command}
+
+\property{install\_command}{install\_command \typestring}
+
+The command to install package on the Ubuntu system.
+
+\paragraph{restart\_command}
+
+\property{restart\_command}{restart\_command \typestring}
+
+The restart command for the MySQL server.
+
+\paragraph{mysqladmin\_command}
+
+\property{mysqladmin\_command}{mysqladmin\_command \typestring}
+
+The \command{mysqladmin}{mysqladmin} command.
+
+\paragraph{mysql\_command}
+
+\property{mysql\_command}{mysql\_command \typestring}
+
+The \command{mysql}{mysql} command.
+
+\paragraph{configuration\_directory}
+
+\property{configuration\_directory}{configuration\_directory \typestring}
+
+The path of the MySQL configuration directory.
+
+\paragraph{mysqld\_configuration\_file}
+
+\property{mysqld\_configuration\_file}{mysqld\_configuration\_file \typestring}
+
+The file name of the {@code mysqld} configuration file.
+
+\paragraph{packages}
+
+\property{packages}{packages \typelist}
+
+The packages needed for the MySQL service.
+
+\paragraph{default\_character\_set}
+
+\property{default\_character\_set}{default\_character\_set \typestring}
+
+The default character set for databases.
+
+\paragraph{default\_collate}
+
+\property{default\_collate}{default\_collate \typestring}
+
+The default collate for databases.

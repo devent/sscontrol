@@ -1,26 +1,26 @@
 \subsection{Database Script}
 
-\subsubsection{database}
+\paragraph{database}
 
 \statement{database}{database \{...\}}
 
 Entry point in the database script.
 
-\subsubsection{debugging}
+\paragraph{debugging}
 
 \statement{debugging}{debugging \typeboolean}
 
 Enables or disables the general logging for the database server.
 Defaults to \literalfalse.
 
-\subsubsection{bind\_address}
+\paragraph{bind\_address}
 
 \statement{bind\_address}{bind\_address \typestring}
 
 The IP address or the host name on which the database server should listen
 to connections. Defaults to \literal{"127.0.0.1"}.
 
-\subsubsection{admin\_password}
+\paragraph{admin\_password}
 
 \statement{admin\_password}{admin\_password \typestring}
 
@@ -28,7 +28,7 @@ The administrator password for the database server. If no password for
 the administrator account was yet set this password is set. Used to login as
 the administrator user to create users, create databases and set permissions.
 
-\subsubsection{database}
+\paragraph{database}
 
 \statement*{database \typestring{}}\\
 \statement*{[, character\_set: \typestring{}]}\\
@@ -39,13 +39,15 @@ Creates a new database with the specified name, character set and collate.
 If the database was already on the server, updates the character set and collate
 to the specified.
 
-\index{database}
 \paragraph{database}
+
+\statement{database}{database \typestring{}}
 
 The name of the database.
 
-\index{database!character\_set}
 \paragraph{character\_set}
+
+\statement{character\_set}{character\_set \typestring{}}
 
 The character set of the database. The database server needs to support the
 specified character set.
@@ -55,8 +57,9 @@ Defaults to the UTF-8 character set:
 \item MySQL: \literal{"utf-8"}
 \end{compactitem}
 
-\index{database!collate}
 \paragraph{collate}
+
+\statement{collate}{collate \typestring{}}
 
 The collate of the database. The database server needs to support the
 specified collate. Defaults to the UTF-8 character set default collate of
@@ -66,15 +69,15 @@ the server:
 \item MySQL: \literal{"utf8\_general\_ci"}
 \end{compactitem}
 
-\subsubsection{import\_sql}
+\paragraph{import\_sql}
 
-\statement{database!import\_sql}{import\_sql \typestring$|$\typefile$|$\typeurl$|$\typeuri}
+\statement{import\_sql}{import\_sql \typestring$|$\typefile$|$\typeurl$|$\typeuri}
 
 Imports SQL script from the specified file, URL or URI. A string will be
 interpreted according to the format. If no scheme is used the string
 is assumed to be a local file, otherwise the string is assumed to be a URI.
 
-\subsubsection{user}
+\paragraph{user}
 
 \statement*{user \typestring{}, password: \typestring{}}
 \statement*{[, server: \typestring{}]}\\
@@ -84,24 +87,27 @@ Creates a new user with the specified name, password and server host.
 If the user already exists on the server, the password is updated for that user.
 A user is identified by the user name and the server host.
 
-\index{user}
 \paragraph{user}
+
+\statement{user}{user \typestring{}}
 
 The user name.
 
-\index{user!password}
 \paragraph{password}
+
+\statement{password}{password \typestring{}}
 
 The user password.
 
-\index{user!server}
 \paragraph{server}
+
+\statement{server}{server \typestring{}}
 
 The server host name. Defaults to the server host \literal{"localhost"}.
 
-\subsubsection{use\_database}
+\paragraph{use\_database}
 
-\statement{user!use\_database}{use\_database \typestring{}}
+\statement{use\_database}{use\_database \typestring{}}
 
 Sets the database that the user have read and write access to. This will not create
 the database on the server, to create a database use the statement \statement*{database}.

@@ -35,6 +35,8 @@ abstract class Mysql_5_1Script extends LinuxScript {
 		super.run()
 		mysqlTemplates = templatesFactory.create("Mysql_5_1")
 		mysqlConfiguration = mysqlTemplates.getResource("configuration")
+		service.setDefaultCharacterSet defaultCharacterSet
+		service.setDefaultCollate defaultCollate
 		deployMysqldConfiguration()
 		setupAdministratorPassword()
 		createDatabases()
@@ -84,6 +86,28 @@ abstract class Mysql_5_1Script extends LinuxScript {
 						"service", service)()
 		log.databasesCreated this, worker
 	}
+
+	/**
+	 * Returns the default character set for databases.
+	 * <p>
+	 * Example: {@code utf-8}
+	 *
+	 * <ul>
+	 * <li>profile property key {@code default_character_set}</li>
+	 * </ul>
+	 */
+	abstract String getDefaultCharacterSet()
+
+	/**
+	 * Returns the default character set for databases.
+	 * <p>
+	 * Example: {@code utf8_general_ci}
+	 *
+	 * <ul>
+	 * <li>profile property key {@code default_collate}</li>
+	 * </ul>
+	 */
+	abstract String getDefaultCollate()
 
 	/**
 	 * Returns the mysqladmin command.

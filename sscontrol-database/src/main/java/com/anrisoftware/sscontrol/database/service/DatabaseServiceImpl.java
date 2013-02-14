@@ -342,6 +342,46 @@ class DatabaseServiceImpl extends AbstractService {
 	}
 
 	/**
+	 * Sets the default character set for databases.
+	 * 
+	 * @param set
+	 *            the character set.
+	 * 
+	 * @throws NullPointerException
+	 *             if the specified character set is {@code null}.
+	 * 
+	 * @throws IllegalArgumentException
+	 *             if the specified character set is empty.
+	 */
+	public void setDefaultCharacterSet(String set) {
+		for (Database database : databases) {
+			if (database.getCharacterSet() == null) {
+				database.setCharacterSet(set);
+			}
+		}
+	}
+
+	/**
+	 * Sets the default collate for databases.
+	 * 
+	 * @param collate
+	 *            the collate.
+	 * 
+	 * @throws NullPointerException
+	 *             if the specified collate is {@code null}.
+	 * 
+	 * @throws IllegalArgumentException
+	 *             if the specified collate is empty.
+	 */
+	public void setDefaultCollate(String collate) {
+		for (Database database : databases) {
+			if (database.getCollate() == null) {
+				database.setCollate(collate);
+			}
+		}
+	}
+
+	/**
 	 * Returns the users of the server.
 	 * 
 	 * @return an unmodifiable {@link List}.

@@ -39,6 +39,15 @@ class MySQL_5_1_Ubuntu_10_04Script extends Mysql_5_1Script {
 		profileProperty "mysql_command", ubuntuProperties
 	}
 
+	String getDefaultCharacterSet() {
+		profileProperty "default_character_set", ubuntuProperties
+	}
+
+	String getDefaultCollate() {
+		profileProperty "default_collate", ubuntuProperties
+	}
+
+
 	@Override
 	def getDefaultProperties() {
 		ubuntuProperties

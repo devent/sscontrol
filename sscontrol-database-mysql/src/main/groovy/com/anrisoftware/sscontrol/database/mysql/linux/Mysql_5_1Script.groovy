@@ -11,6 +11,7 @@ import javax.inject.Inject
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.Templates
 import com.anrisoftware.sscontrol.core.service.LinuxScript
+import com.anrisoftware.sscontrol.database.statements.Database
 import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokenTemplate
 
 /**
@@ -22,7 +23,7 @@ import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokenTemplate
 abstract class Mysql_5_1Script extends LinuxScript {
 
 	@Inject
-	private Mysql_5_1ScriptLogger log
+	Mysql_5_1ScriptLogger log
 
 	Templates mysqlTemplates
 
@@ -42,6 +43,7 @@ abstract class Mysql_5_1Script extends LinuxScript {
 		setupAdministratorPassword()
 		createDatabases()
 		createUsers()
+		importScripts()
 	}
 
 	/**
@@ -96,6 +98,25 @@ abstract class Mysql_5_1Script extends LinuxScript {
 						"mysqlCommand", mysqlCommand,
 						"service", service)()
 		log.usersCreated this, worker
+	}
+
+	/**
+	 * Imports SQL scripts in the databases.
+	 */
+	void importScripts() {
+		def handler = log.errorHandler(this)
+		service.databases.each { Database database ->
+			database.importScripts(handler).each {
+				if (it != null) {
+					def worker = scriptCommandFactory.create(mysqlConfiguration, "importScript",
+									"mysqlCommand", mysqlCommand,
+									"service", service,
+									"script", it, "database", database)()
+					log.importScript this, worker
+				} else {
+				}
+			}
+		}
 	}
 
 	/**

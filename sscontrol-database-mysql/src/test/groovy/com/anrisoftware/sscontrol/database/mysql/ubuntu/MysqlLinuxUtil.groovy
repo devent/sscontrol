@@ -40,6 +40,8 @@ class MysqlLinuxUtil {
 
 	static mysqlCommand = resourceURL("echo_command.txt", MysqlLinuxUtil)
 
+	static postfixTables = resourceURL("postfixtables.txt", MysqlLinuxUtil)
+
 	Injector injector
 
 	File tmp

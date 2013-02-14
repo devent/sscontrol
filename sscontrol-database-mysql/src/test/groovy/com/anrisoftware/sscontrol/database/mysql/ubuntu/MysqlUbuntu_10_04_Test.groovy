@@ -41,7 +41,7 @@ class MysqlUbuntu_10_04_Test extends MysqlLinuxUtil {
 	static mysqldExpected = resourceURL("mysqld_cnf.txt", MysqlUbuntu_10_04_Test)
 
 	@Test
-	void "maradns service"() {
+	void "database script"() {
 		ServicesRegistry registry = injector.getInstance ServicesRegistry
 		SscontrolServiceLoader loader = injector.getInstance SscontrolServiceLoader
 		loader.loadService(ubuntu1004Profile, variables, registry, null)
@@ -59,6 +59,7 @@ class MysqlUbuntu_10_04_Test extends MysqlLinuxUtil {
 			copyResourceToCommand restartCommand, new File(it, "/etc/init.d/mysql")
 			copyResourceToCommand mysqladminCommand, new File(it, "/usr/bin/mysqladmin")
 			copyResourceToCommand mysqlCommand, new File(it, "/usr/bin/mysql")
+			copyResourceToFile postfixTables, new File(it, "/tmp/postfixtables.sql")
 		}, tmp
 	}
 

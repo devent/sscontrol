@@ -83,3 +83,13 @@ grandDatabase(database, user) ::= <<
 <! grand access to the specified database for the user !>
 GRANT ALL ON <database>.* TO '<user.name>'@'<user.server>';
 >>
+
+importScript(mysqlCommand, service, script, database) ::= <<
+<! grand access to the specified database for the user !>
+#!/bin/sh
+<mysqlCommand> --password=<service.adminPassword> -t \<\<STOP
+USE <database.name>;
+<script>
+\q
+STOP
+>>

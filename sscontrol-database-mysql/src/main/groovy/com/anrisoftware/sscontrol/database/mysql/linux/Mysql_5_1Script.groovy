@@ -38,9 +38,10 @@ abstract class Mysql_5_1Script extends LinuxScript {
 		service.setDefaultCharacterSet defaultCharacterSet
 		service.setDefaultCollate defaultCollate
 		deployMysqldConfiguration()
+		restartService restartCommand
 		setupAdministratorPassword()
 		createDatabases()
-		restartService restartCommand
+		createUsers()
 	}
 
 	/**
@@ -85,6 +86,16 @@ abstract class Mysql_5_1Script extends LinuxScript {
 						"mysqlCommand", mysqlCommand,
 						"service", service)()
 		log.databasesCreated this, worker
+	}
+
+	/**
+	 * Creates the users from the service.
+	 */
+	void createUsers() {
+		def worker = scriptCommandFactory.create(mysqlConfiguration, "createUsers",
+						"mysqlCommand", mysqlCommand,
+						"service", service)()
+		log.usersCreated this, worker
 	}
 
 	/**

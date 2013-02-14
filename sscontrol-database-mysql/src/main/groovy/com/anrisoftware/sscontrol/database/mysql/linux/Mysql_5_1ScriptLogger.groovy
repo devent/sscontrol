@@ -43,6 +43,19 @@ class Mysql_5_1ScriptLogger extends AbstractSerializedLogger {
 		}
 	}
 
+	void usersCreated(Mysql_5_1Script script, def worker) {
+		if (log.traceEnabled) {
+			String workerstr = replacePassword script, worker.toString()
+			String workerout = replacePassword script, worker.out
+			log.debug "Created users in {}, worker {}, output: '\n${workerout}'", script, workerstr
+		} else if (log.debugEnabled) {
+			String workerstr = replacePassword script, worker.toString()
+			log.debug "Created users in {}, worker {}.", script, workerstr
+		} else {
+			log.info "Created users in {}.", script.name
+		}
+	}
+
 	String replacePassword(Mysql_5_1Script script, String string) {
 		int length = script.service.adminPassword.length()
 		string.replace(script.service.adminPassword, "*" * length)

@@ -64,6 +64,10 @@
 			<groupId>com.anrisoftware.resources</groupId>
 			<artifactId>resources-st</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>com.anrisoftware.resources</groupId>
+			<artifactId>resources-texts</artifactId>
+		</dependency>
 	</dependencies>
 
 </project>

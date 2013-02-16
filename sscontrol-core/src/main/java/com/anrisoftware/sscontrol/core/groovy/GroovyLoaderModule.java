@@ -33,5 +33,4 @@ public class GroovyLoaderModule extends AbstractModule {
 	protected void configure() {
 		bind(ServiceLoader.class).to(GroovyLoader.class).asEagerSingleton();
 	}
-
 }

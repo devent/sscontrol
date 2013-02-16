@@ -23,7 +23,11 @@ import static org.apache.commons.lang3.Validate.notNull;
 import java.io.IOException;
 import java.net.URL;
 
+import javax.inject.Inject;
+
 import com.anrisoftware.globalpom.log.AbstractLogger;
+import com.anrisoftware.resources.texts.api.Texts;
+import com.anrisoftware.resources.texts.api.TextsFactory;
 import com.anrisoftware.sscontrol.core.api.ServiceException;
 import com.anrisoftware.sscontrol.core.api.ServicesRegistry;
 
@@ -31,15 +35,19 @@ import com.anrisoftware.sscontrol.core.api.ServicesRegistry;
  * Logging messages for {@link GroovyLoader}.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
- * @since 0.1
+ * @since 1.0
  */
 class GroovyLoaderLogger extends AbstractLogger {
+
+	private final Texts texts;
 
 	/**
 	 * Create logger for {@link GroovyLoader}.
 	 */
-	GroovyLoaderLogger() {
+	@Inject
+	GroovyLoaderLogger(TextsFactory textsFactory) {
 		super(GroovyLoader.class);
+		this.texts = textsFactory.create(getClass().getSimpleName());
 	}
 
 	void checkUrl(URL url) {
@@ -54,7 +62,8 @@ class GroovyLoaderLogger extends AbstractLogger {
 		ServiceException ex = new ServiceException(
 				"Error open the script file URL", e);
 		ex.addContextValue("URL", url);
-		log.error(ex.getLocalizedMessage());
+		log.debug(ex.getLocalizedMessage());
+		log.error(texts.getResource("error_open_script_url").getText(), url);
 		return ex;
 	}
 
@@ -62,11 +71,12 @@ class GroovyLoaderLogger extends AbstractLogger {
 		ServiceException ex = new ServiceException(
 				"Error evaluate the script file URL", e);
 		ex.addContextValue("URL", url);
-		log.error(ex.getLocalizedMessage());
+		log.debug(ex.getLocalizedMessage());
+		log.error(texts.getResource("error_evaluate_script_url").getText(), url);
 		return ex;
 	}
 
-	void loadedServiceScript(URL url) {
-		log.trace("Loaded the script file URL {}.", url);
+	void loadServiceScript(URL url) {
+		log.info(texts.getResource("load_script_url").getText(), url);
 	}
 }

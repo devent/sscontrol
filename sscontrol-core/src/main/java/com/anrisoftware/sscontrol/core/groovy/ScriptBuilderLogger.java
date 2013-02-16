@@ -23,7 +23,11 @@ import groovy.util.Proxy;
 
 import java.util.Arrays;
 
+import javax.inject.Inject;
+
 import com.anrisoftware.globalpom.log.AbstractLogger;
+import com.anrisoftware.resources.texts.api.Texts;
+import com.anrisoftware.resources.texts.api.TextsFactory;
 import com.anrisoftware.sscontrol.core.api.ServiceException;
 
 /**
@@ -34,17 +38,22 @@ import com.anrisoftware.sscontrol.core.api.ServiceException;
  */
 class ScriptBuilderLogger extends AbstractLogger {
 
+	private final Texts texts;
+
 	/**
 	 * Create logger for {@link ScriptBuilder}.
 	 */
-	ScriptBuilderLogger() {
+	@Inject
+	ScriptBuilderLogger(TextsFactory textsFactory) {
 		super(ScriptBuilder.class);
+		this.texts = textsFactory.create(getClass().getSimpleName());
 	}
 
 	ServiceException errorNoServiceFound(String name) {
 		ServiceException ex = new ServiceException("No service found");
 		ex.addContextValue("service name", name);
-		log.error(ex.getLocalizedMessage());
+		log.debug(ex.getLocalizedMessage());
+		log.error(texts.getResource("no_service_found").getText(), name);
 		return ex;
 	}
 
@@ -52,8 +61,8 @@ class ScriptBuilderLogger extends AbstractLogger {
 		log.trace("Returning the service property '{}' for {}.", name, script);
 	}
 
-	void createdService(ScriptBuilder script) {
-		log.trace("Created service for {}.", script);
+	void creatingService(String name) {
+		log.info(texts.getResource("creating_service").getText(), name);
 	}
 
 	void invokeMethod(ScriptBuilder script, String name, Object[] array,

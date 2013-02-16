@@ -47,12 +47,9 @@ public abstract class ScriptBuilder extends Script {
 
 	private Service service;
 
-	private final ScriptBuilderLogger log;
-
 	private boolean pop;
 
 	public ScriptBuilder() {
-		this.log = new ScriptBuilderLogger();
 		this.delegate = new Stack<Proxy>();
 	}
 
@@ -94,7 +91,7 @@ public abstract class ScriptBuilder extends Script {
 		MetaClass metaclass = InvokerHelper.getMetaClass(service);
 		List<MetaMethod> methods = metaclass.respondsTo(service, getter);
 		if (methods.size() > 0) {
-			log.returnServiceProperty(this, name);
+			getLog().returnServiceProperty(this, name);
 			return methods.get(0).doMethodInvoke(service, EMPTY_OBJECT_ARRAY);
 		} else {
 			return methodMissing(name, null);
@@ -105,11 +102,7 @@ public abstract class ScriptBuilder extends Script {
 			throws ServiceException {
 		Proxy current;
 		if (delegate.empty()) {
-			ServiceFactory serviceFactory = loadService(name);
-			service = serviceFactory.create(getProfile());
-			current = new Proxy().wrap(service);
-			pop = false;
-			log.createdService(this);
+			current = createService(name);
 		} else {
 			current = pop ? delegate.pop() : delegate.peek();
 			pop = false;
@@ -124,7 +117,7 @@ public abstract class ScriptBuilder extends Script {
 			argsList.add(object);
 		}
 
-		log.invokeMethod(this, name, argsList.toArray(), current);
+		getLog().invokeMethod(this, name, argsList.toArray(), current);
 		Object object = current.invokeMethod(name, argsList.toArray());
 		Proxy ret = new Proxy().wrap(object);
 		if (closure != null) {
@@ -136,6 +129,13 @@ public abstract class ScriptBuilder extends Script {
 			pop = true;
 		}
 		return this;
+	}
+
+	private Proxy createService(String name) throws ServiceException {
+		getLog().creatingService(name);
+		ServiceFactory serviceFactory = loadService(name);
+		service = serviceFactory.create(getProfile());
+		return new Proxy().wrap(service);
 	}
 
 	private ProfileService getProfile() {
@@ -150,7 +150,11 @@ public abstract class ScriptBuilder extends Script {
 				return serviceFactory;
 			}
 		}
-		throw log.errorNoServiceFound(name);
+		throw getLog().errorNoServiceFound(name);
+	}
+
+	private ScriptBuilderLogger getLog() {
+		return (ScriptBuilderLogger) getProperty("scriptBuilderLogger");
 	}
 
 	@Override

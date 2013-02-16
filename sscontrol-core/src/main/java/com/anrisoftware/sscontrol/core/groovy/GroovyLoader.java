@@ -64,10 +64,10 @@ class GroovyLoader implements ServiceLoader {
 			throws ServiceException {
 		log.checkUrl(url);
 		log.checkRegistry(registry);
+		log.loadServiceScript(url);
 		GroovyShell shell = createShell(variables, profile);
 		Reader reader = openScript(url);
 		Service service = evaluateScript(reader, shell, url);
-		log.loadedServiceScript(url);
 		registry.addService(service);
 		return registry;
 	}
@@ -84,7 +84,7 @@ class GroovyLoader implements ServiceLoader {
 	private Binding createBinding(Map<String, Object> variables,
 			ProfileService profile) {
 		Binding binding = new Binding();
-		binding.setProperty("logger", scriptBuilderLogger);
+		binding.setProperty("scriptBuilderLogger", scriptBuilderLogger);
 		binding.setProperty("profile", profile);
 		for (Map.Entry<String, Object> entry : variables.entrySet()) {
 			binding.setProperty(entry.getKey(), entry.getValue());

@@ -18,22 +18,31 @@
  */
 package com.anrisoftware.sscontrol.core.activator;
 
-import com.anrisoftware.sscontrol.core.groovy.GroovyLoaderModule;
-import com.anrisoftware.sscontrol.core.registry.ServicesRegistryModule;
+import com.anrisoftware.resources.binary.binaries.BinariesResourcesModule;
+import com.anrisoftware.resources.binary.maps.BinariesDefaultMapsModule;
+import com.anrisoftware.resources.texts.maps.TextsDefaultMapsModule;
+import com.anrisoftware.resources.texts.texts.TextsResourcesCharsetModule;
+import com.anrisoftware.resources.texts.texts.TextsResourcesModule;
 import com.google.inject.AbstractModule;
 
 /**
- * Installs the core modules.
+ * Installs the core text resources.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-public class CoreModule extends AbstractModule {
+public class CoreResourcesModule extends AbstractModule {
 
 	@Override
 	protected void configure() {
-		install(new GroovyLoaderModule());
-		install(new ServicesRegistryModule());
+		installResources();
 	}
 
+	private void installResources() {
+		install(new TextsResourcesModule());
+		install(new TextsDefaultMapsModule());
+		install(new TextsResourcesCharsetModule());
+		install(new BinariesResourcesModule());
+		install(new BinariesDefaultMapsModule());
+	}
 }

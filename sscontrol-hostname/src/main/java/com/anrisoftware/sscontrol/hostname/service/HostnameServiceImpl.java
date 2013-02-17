@@ -80,7 +80,7 @@ class HostnameServiceImpl extends AbstractService {
 	 * @param name
 	 *            the host name.
 	 */
-	public void set_hostname(String name) {
+	public void set(String name) {
 		log.checkHostname(this, name);
 		hostname = name;
 		log.hostnameSet(this, name);

@@ -26,6 +26,7 @@ import org.junit.Test
 
 import com.anrisoftware.globalpom.utils.TestUtils
 import com.anrisoftware.sscontrol.core.activator.CoreModule
+import com.anrisoftware.sscontrol.core.activator.CoreResourcesModule
 import com.anrisoftware.sscontrol.core.api.ServiceException
 import com.anrisoftware.sscontrol.core.api.ServiceLoader as SscontrolServiceLoader
 import com.anrisoftware.sscontrol.core.api.ServicesRegistry
@@ -41,7 +42,7 @@ class HostnameServiceTest {
 
 	static hostnameNullService = resourceURL("HostnameNullService.groovy", HostnameServiceTest)
 
-	static restartHostnameCommand = resourceURL("echo_command.txt", HostnameServiceTest)
+	static restartCommand = resourceURL("echo_command.txt", HostnameServiceTest)
 
 	static localhostHostnameFile = resourceURL("localhost_hostname.txt", HostnameServiceTest)
 
@@ -72,7 +73,7 @@ class HostnameServiceTest {
 			assertFileContent(new File(it, "/etc/hostname"), hostnameExpected)
 		}, {
 			copyResourceToCommand installCommand, new File(it, "/usr/bin/aptitude")
-			copyResourceToCommand restartHostnameCommand, new File(it, "/etc/init.d/hostname")
+			copyResourceToCommand restartCommand, new File(it, "/sbin/restart")
 		}, tmp
 	}
 
@@ -91,7 +92,7 @@ class HostnameServiceTest {
 			assertFileContent new File(it, "/etc/hostname"), hostnameExpected
 		}, {
 			copyResourceToCommand installCommand, new File(it, "/usr/bin/aptitude")
-			copyResourceToCommand(restartHostnameCommand, new File(it, "/etc/init.d/hostname"))
+			copyResourceToCommand restartCommand, new File(it, "/sbin/restart")
 			copyResourceToFile(localhostHostnameFile, new File(it, "/etc/hostname"))
 		}, tmp
 	}
@@ -119,6 +120,6 @@ class HostnameServiceTest {
 	}
 
 	def createInjector() {
-		Guice.createInjector(new CoreModule())
+		Guice.createInjector(new CoreModule(), new CoreResourcesModule())
 	}
 }

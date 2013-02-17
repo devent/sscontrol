@@ -22,6 +22,6 @@ profile "ubuntu_10_04", {
 	system { install_command "${tmp}/usr/bin/aptitude update && ${tmp}/usr/bin/aptitude install" }
 	hostname {
 		configuration_directory "${tmp}/etc"
-		restart_command "${tmp}/etc/init.d/hostname restart"
+		restart_command "${tmp}/sbin/restart hostname"
 	}
 }

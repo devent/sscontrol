@@ -64,6 +64,12 @@ import com.anrisoftware.sscontrol.firewall.statements.Protocol;
  */
 public class FirewallServiceImpl extends AbstractService {
 
+	private static final String FROM_KEY = "from";
+
+	private static final String PORT_KEY = "port";
+
+	private static final String PROTO_KEY = "proto";
+
 	/**
 	 * @version 1.0
 	 */
@@ -179,70 +185,27 @@ public class FirewallServiceImpl extends AbstractService {
 		statements.add(statement);
 	}
 
-	public void deny(int port) {
-		deny(port, Protocol.TCPUDP);
+	public Object deny(Map<String, Object> args) {
+		Port port = parsePort(args);
+		Protocol proto = parseProto(args);
+		Address address;
+		if (args.containsKey(FROM_KEY)) {
+			address = parseAddress(args);
+			return addDeny(address, port, proto);
+		} else {
+			addDeny(port, proto);
+			return null;
+		}
 	}
 
-	public void deny(int port, Protocol proto) {
-		deny(portFactory.fromPortNumber(port), proto);
-	}
-
-	public void deny(String service) {
-		deny(service, Protocol.TCPUDP);
-	}
-
-	public void deny(String service, Protocol proto) {
-		deny(portFactory.fromServiceName(service), proto);
-	}
-
-	public void deny(Port port, Protocol proto) {
+	private DenyPort addDeny(Port port, Protocol proto) {
 		DenyPort statement = denyPortFactory.create(port, proto);
 		log.created(statement, this);
 		statements.add(statement);
+		return statement;
 	}
 
-	public Object deny_from(Address address) {
-		return deny_from(address, portFactory.undefinedPort());
-	}
-
-	public Object deny_from(String address) {
-		return deny_from(addressFactory.fromAddress(address),
-				portFactory.undefinedPort());
-	}
-
-	public Object deny_from(Address address, int port) {
-		return deny_from(address, portFactory.fromPortNumber(port));
-	}
-
-	public Object deny_from(Address address, String service) {
-		return deny_from(address, portFactory.fromServiceName(service));
-	}
-
-	public Object deny_from(String address, int port) {
-		return deny_from(addressFactory.fromAddress(address),
-				portFactory.fromPortNumber(port));
-	}
-
-	public Object deny_from(String address, int port, Protocol proto) {
-		return deny_from(addressFactory.fromAddress(address),
-				portFactory.fromPortNumber(port), proto);
-	}
-
-	public Object deny_from(String address, String service) {
-		return deny_from(addressFactory.fromAddress(address),
-				portFactory.fromServiceName(service));
-	}
-
-	public Object deny_from(String address, String service, Protocol proto) {
-		return deny_from(addressFactory.fromAddress(address),
-				portFactory.fromServiceName(service), proto);
-	}
-
-	public Object deny_from(Address address, Port port) {
-		return deny_from(address, port, Protocol.TCPUDP);
-	}
-
-	public Object deny_from(Address address, Port port, Protocol proto) {
+	private DenyFrom addDeny(Address address, Port port, Protocol proto) {
 		DenyFrom statement = denyFromFactory.create(address, port, proto);
 		log.created(statement, this);
 		statements.add(statement);
@@ -255,70 +218,57 @@ public class FirewallServiceImpl extends AbstractService {
 		statements.add(statement);
 	}
 
-	public void allow(int port) {
-		allow(port, Protocol.TCPUDP);
+	public Object allow(Map<String, Object> args) {
+		Protocol proto = parseProto(args);
+		Port port = parsePort(args);
+		Address address;
+		if (args.containsKey(FROM_KEY)) {
+			address = parseAddress(args);
+			return addAllow(address, port, proto);
+		} else {
+			addAllow(port, proto);
+			return null;
+		}
 	}
 
-	public void allow(int port, Protocol proto) {
-		allow(portFactory.fromPortNumber(port), proto);
+	private Address parseAddress(Map<String, Object> args) {
+		Object value = args.get(FROM_KEY);
+		if (value instanceof Address) {
+			return (Address) value;
+		} else {
+			return addressFactory.fromAddress(value.toString());
+		}
 	}
 
-	public void allow(String service) {
-		allow(portFactory.fromServiceName(service), Protocol.TCPUDP);
+	private Protocol parseProto(Map<String, Object> args) {
+		if (args.containsKey(PROTO_KEY)) {
+			return (Protocol) args.get(PROTO_KEY);
+		} else {
+			return Protocol.TCPUDP;
+		}
 	}
 
-	public void allow(String service, Protocol proto) {
-		allow(portFactory.fromServiceName(service), proto);
+	private Port parsePort(Map<String, Object> args) {
+		if (args.containsKey(PORT_KEY)) {
+			Object value = args.get(PORT_KEY);
+			if (value instanceof Integer) {
+				return portFactory.fromPortNumber((Integer) value);
+			} else {
+				return portFactory.fromServiceName(value.toString());
+			}
+		} else {
+			return portFactory.undefinedPort();
+		}
 	}
 
-	public void allow(Port port, Protocol proto) {
+	private AllowPort addAllow(Port port, Protocol proto) {
 		AllowPort statement = allowPortFactory.create(port, proto);
 		log.created(statement, this);
 		statements.add(statement);
+		return statement;
 	}
 
-	public Object allow_from(Address address) {
-		return allow_from(address, portFactory.undefinedPort());
-	}
-
-	public Object allow_from(String address) {
-		return allow_from(addressFactory.fromAddress(address),
-				portFactory.undefinedPort());
-	}
-
-	public Object allow_from(Address address, int port) {
-		return allow_from(address, portFactory.fromPortNumber(port));
-	}
-
-	public Object allow_from(Address address, String service) {
-		return allow_from(address, portFactory.fromServiceName(service));
-	}
-
-	public Object allow_from(String address, int port) {
-		return allow_from(addressFactory.fromAddress(address),
-				portFactory.fromPortNumber(port));
-	}
-
-	public Object allow_from(String address, int port, Protocol proto) {
-		return allow_from(addressFactory.fromAddress(address),
-				portFactory.fromPortNumber(port), proto);
-	}
-
-	public Object allow_from(String address, String service) {
-		return allow_from(addressFactory.fromAddress(address),
-				portFactory.fromServiceName(service));
-	}
-
-	public Object allow_from(String address, String service, Protocol proto) {
-		return allow_from(addressFactory.fromAddress(address),
-				portFactory.fromServiceName(service), proto);
-	}
-
-	public Object allow_from(Address address, Port port) {
-		return allow_from(address, port, Protocol.TCPUDP);
-	}
-
-	public Object allow_from(Address address, Port port, Protocol proto) {
+	private AllowFrom addAllow(Address address, Port port, Protocol proto) {
 		AllowFrom statement = allowFromFactory.create(address, port, proto);
 		log.created(statement, this);
 		statements.add(statement);

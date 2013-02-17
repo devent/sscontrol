@@ -26,6 +26,7 @@ import org.junit.Before
 import org.junit.Test
 
 import com.anrisoftware.sscontrol.core.activator.CoreModule
+import com.anrisoftware.sscontrol.core.activator.CoreResourcesModule
 import com.anrisoftware.sscontrol.core.api.ServiceLoader as SscontrolServiceLoader
 import com.anrisoftware.sscontrol.core.api.ServicesRegistry
 import com.google.inject.Guice
@@ -93,6 +94,6 @@ class FirewallServiceTest {
 	}
 
 	def createInjector() {
-		Guice.createInjector(new CoreModule())
+		Guice.createInjector(new CoreModule(), new CoreResourcesModule())
 	}
 }

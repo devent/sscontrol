@@ -18,6 +18,7 @@
  */
 package com.anrisoftware.sscontrol.profile.service;
 
+import static java.util.Collections.unmodifiableSet;
 import static org.apache.commons.collections.map.PredicatedMap.decorate;
 import groovy.lang.GroovyObjectSupport;
 
@@ -30,7 +31,6 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.apache.commons.collections.functors.NotNullPredicate;
-import org.apache.commons.collections.set.UnmodifiableSet;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.anrisoftware.propertiesutils.ContextProperties;
@@ -119,10 +119,14 @@ class ProfileServiceImpl extends GroovyObjectSupport implements ProfileService {
 		return properties;
 	}
 
-	@SuppressWarnings("unchecked")
+	@Override
+	public boolean hasEntry(String name) {
+		return entries.containsKey(name);
+	}
+
 	@Override
 	public Set<String> getEntryNames() {
-		return UnmodifiableSet.decorate(entries.keySet());
+		return unmodifiableSet(entries.keySet());
 	}
 
 	@Override

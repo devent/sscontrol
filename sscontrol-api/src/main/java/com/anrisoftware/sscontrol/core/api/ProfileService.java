@@ -28,5 +28,7 @@ public interface ProfileService extends Service {
 
 	ProfileProperties getEntry(String name);
 
+	boolean hasEntry(String name);
+
 	Set<String> getEntryNames();
 }

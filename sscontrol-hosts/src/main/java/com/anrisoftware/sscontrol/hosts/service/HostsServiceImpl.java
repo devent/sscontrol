@@ -23,21 +23,17 @@ import static org.apache.commons.collections.functors.NotNullPredicate.INSTANCE;
 import static org.apache.commons.collections.list.PredicatedList.decorate;
 import groovy.lang.Script;
 
-import java.text.Format;
-import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
-import javax.inject.Named;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import com.anrisoftware.propertiesutils.ContextProperties;
 import com.anrisoftware.sscontrol.core.api.ServiceException;
 import com.anrisoftware.sscontrol.core.service.AbstractService;
-import com.anrisoftware.sscontrol.hosts.utils.HostFormat;
 import com.anrisoftware.sscontrol.hosts.utils.HostFormatFactory;
 import com.google.inject.Provider;
 
@@ -65,8 +61,6 @@ public class HostsServiceImpl extends AbstractService {
 	 */
 	private static final long serialVersionUID = -2535415557268118125L;
 
-	public static final String DEFAULT_HOSTS_PROPERTY = "default_hosts";
-
 	private final HostsServiceImplLogger log;
 
 	private final Map<String, Provider<Script>> scripts;
@@ -83,41 +77,16 @@ public class HostsServiceImpl extends AbstractService {
 	 * 
 	 * @param scripts
 	 *            a {@link Map} of the hosts service scripts.
-	 * 
-	 * @param p
-	 *            the default hosts service {@link ContextProperties}.
-	 *            <dl>
-	 *            <dt>
-	 *            {@code com.anrisoftware.sscontrol.hosts.service.default_hosts}
-	 *            </dt>
-	 *            <dd>A list of the default hosts. See {@link HostFormat}.</dd>
-	 *            </dl>
 	 */
 	@SuppressWarnings("unchecked")
 	@Inject
 	HostsServiceImpl(HostsServiceImplLogger logger,
-			Map<String, Provider<Script>> scripts,
-			@Named("hosts-default-properties") ContextProperties p,
-			HostFactory hostFactory, HostFormatFactory hostFormatFactory) {
+			Map<String, Provider<Script>> scripts, HostFactory hostFactory,
+			HostFormatFactory hostFormatFactory) {
 		this.log = logger;
 		this.scripts = scripts;
 		this.hostFactory = hostFactory;
 		this.hosts = decorate(new ArrayList<String>(), INSTANCE);
-		setDefaultProperties(p, hostFormatFactory.create());
-	}
-
-	private void setDefaultProperties(ContextProperties p, Format format) {
-		setDefaultHosts(p, format);
-	}
-
-	private void setDefaultHosts(ContextProperties p, Format format) {
-		try {
-			List<Host> list;
-			list = p.getTypedListProperty(DEFAULT_HOSTS_PROPERTY, format, ",");
-			hosts.addAll(list);
-		} catch (ParseException e) {
-			log.errorSetDefaultHosts(this, e);
-		}
 	}
 
 	@Override
@@ -171,6 +140,20 @@ public class HostsServiceImpl extends AbstractService {
 	 */
 	public List<Host> getHosts() {
 		return hosts;
+	}
+
+	/**
+	 * Adds all hosts from the specified collection in front of the current
+	 * hosts.
+	 * 
+	 * @param hosts
+	 *            the {@link Collection}.
+	 */
+	public void addHostsHead(Collection<? extends Host> hosts) {
+		int index = 0;
+		for (Host host : hosts) {
+			this.hosts.add(index++, host);
+		}
 	}
 
 	@Override

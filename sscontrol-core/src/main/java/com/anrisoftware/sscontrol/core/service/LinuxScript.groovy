@@ -18,6 +18,8 @@
  */
 package com.anrisoftware.sscontrol.core.service
 
+import java.text.Format
+
 import javax.inject.Inject
 
 import org.apache.commons.io.FileUtils
@@ -211,9 +213,9 @@ abstract class LinuxScript extends Script {
 	 * @param key
 	 * 			  the key of the profile property.
 	 *
-	 * @param defaultProperties
-	 * 			  the {@link ContextProperties} containing the default
-	 * 			  properties.
+	 * @param p
+	 * 			  the {@link ContextProperties} containing the system
+	 * 			  property values.
 	 *
 	 * @param args
 	 * 			  optional the arguments to the key.
@@ -221,9 +223,9 @@ abstract class LinuxScript extends Script {
 	 * @return the value of the system profile property or the default property
 	 * if the profile property was not set.
 	 */
-	def systemProperty(String key, ContextProperties defaultProperties, Object... args) {
+	def systemProperty(String key, ContextProperties p, Object... args) {
 		def property = system.get(key, args)
-		property != null ? property : String.format(defaultProperties.getProperty(key), args)
+		property != null ? property : String.format(p.getProperty(key), args)
 	}
 
 	/**
@@ -233,16 +235,16 @@ abstract class LinuxScript extends Script {
 	 * @param key
 	 * 			  the key of the profile property.
 	 *
-	 * @param defaultProperties
-	 * 			  the {@link ContextProperties} containing the default
-	 * 			  properties.
+	 * @param p
+	 * 			  the {@link ContextProperties} containing the system
+	 * 			  property values.
 	 *
 	 * @return the {@link List} of the system profile property or
 	 * the default property if the profile property was not set.
 	 */
-	List systemListProperty(String key, ContextProperties defaultProperties) {
+	List systemListProperty(String key, ContextProperties p) {
 		def property = profile.getList(key)
-		property.empty ? defaultProperties.getListProperty(key, ",") : property
+		property.empty ? p.getListProperty(key, ",") : property
 	}
 
 	/**
@@ -252,16 +254,15 @@ abstract class LinuxScript extends Script {
 	 * @param key
 	 * 			  the key of the profile property.
 	 *
-	 * @param defaultProperties
-	 * 			  the {@link ContextProperties} containing the default
-	 * 			  properties.
+	 * @param p
+	 * 			  the {@link ContextProperties} containing the property values.
 	 *
 	 * @return the value of the profile property or the default property
 	 * if the profile property was not set.
 	 */
-	def profileProperty(String key, ContextProperties defaultProperties) {
+	def profileProperty(String key, ContextProperties p) {
 		def property = profile[key]
-		property != null ? property : defaultProperties.getProperty(key)
+		property != null ? property : p.getProperty(key)
 	}
 
 	/**
@@ -271,16 +272,38 @@ abstract class LinuxScript extends Script {
 	 * @param key
 	 * 			  the key of the profile property.
 	 *
-	 * @param defaultProperties
-	 * 			  the {@link ContextProperties} containing the default
-	 * 			  properties.
+	 * @param p
+	 * 			  the {@link ContextProperties} containing the property values.
 	 *
 	 * @return the {@link List} of the profile property or the default property
 	 * if the profile property was not set.
 	 */
-	List profileListProperty(String key, ContextProperties defaultProperties) {
+	List profileListProperty(String key, ContextProperties p) {
 		def property = profile.getList(key)
-		property.empty ? defaultProperties.getListProperty(key, ",") : property
+		property.empty ? p.getListProperty(key, ",") : property
+	}
+
+	/**
+	 * Returns a list profile property. If the profile property was not set
+	 * return the default value from the default properties. The specified
+	 * format is used to create the list items.
+	 *
+	 * @param key
+	 * 			  the key of the profile property.
+	 *
+	 * @param p
+	 * 			  the {@link ContextProperties} containing the property values.
+	 *
+	 * @param format
+	 * 		  	  the {@link Format} that is used to parse the string
+	 * 			  properties and create the list items.
+	 *
+	 * @return the {@link List} of the profile property or the default property
+	 * if the profile property was not set.
+	 */
+	List profileTypedListProperty(String key, ContextProperties p, Format format) {
+		def property = profile.getList(key)
+		property.empty ? p.getTypedListProperty(key, format, ",") : property
 	}
 
 	/**

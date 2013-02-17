@@ -25,6 +25,7 @@ import org.junit.Before
 import org.junit.Test
 
 import com.anrisoftware.sscontrol.core.activator.CoreModule
+import com.anrisoftware.sscontrol.core.activator.CoreResourcesModule
 import com.anrisoftware.sscontrol.core.api.ServiceException
 import com.anrisoftware.sscontrol.core.api.ServiceLoader as SscontrolServiceLoader
 import com.anrisoftware.sscontrol.core.api.ServicesRegistry
@@ -112,25 +113,15 @@ class HostsServiceTest {
 	}
 
 	def createInjector() {
-		Guice.createInjector(new CoreModule())
+		Guice.createInjector(new CoreModule(), new CoreResourcesModule())
 	}
 
 	def assertService(ServicesRegistry registry) {
 		HostsServiceImpl service = registry.getService("hosts")[0]
-		assert service.hosts.size() == 4
+		assert service.hosts.size() == 2
 
 		int i = 0
 		Host host
-		host = service.hosts[i++]
-		assert host.address == "127.0.0.1"
-		assert host.hostname == "localhost.localdomain"
-		assert host.aliases == ["localhost"]
-
-		host = service.hosts[i++]
-		assert host.address == "::1"
-		assert host.hostname == "localhost6.localdomain6"
-		assert host.aliases == ["localhost6"]
-
 		host = service.hosts[i++]
 		assert host.address == "192.168.0.49"
 		assert host.hostname == "srv1.ubuntutest.com"

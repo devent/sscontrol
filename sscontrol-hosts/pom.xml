@@ -11,7 +11,7 @@
 
 	<artifactId>sscontrol-hosts</artifactId>
 	<version>1.0-SNAPSHOT</version>
-	<name>SSControl :: Hosts</name>
+	<name>Server Control :: Hosts</name>
 	<description>Sets the hosts configuration file.</description>
 	<inceptionYear>2012</inceptionYear>
 

@@ -18,10 +18,13 @@
  */
 package com.anrisoftware.sscontrol.hosts.linux
 
+import javax.inject.Inject
+
 import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.Templates
 import com.anrisoftware.sscontrol.core.service.LinuxScript
+import com.anrisoftware.sscontrol.hosts.utils.HostFormatFactory
 import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokenTemplate
 
 /**
@@ -32,6 +35,9 @@ import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokenTemplate
  */
 abstract class HostsScript extends LinuxScript {
 
+	@Inject
+	HostFormatFactory hostsFormat
+
 	Templates hostsTemplates
 
 	TemplateResource hostsConfiguration
@@ -41,7 +47,15 @@ abstract class HostsScript extends LinuxScript {
 		super.run()
 		hostsTemplates = templatesFactory.create "Hosts"
 		hostsConfiguration = hostsTemplates.getResource("hosts_configuration")
+		setupDefaultHosts()
 		deployHostsConfiguration()
+	}
+
+	/**
+	 * Sets the default hosts.
+	 */
+	void setupDefaultHosts() {
+		service.addHostsHead defaultHosts
 	}
 
 	/**
@@ -76,6 +90,17 @@ abstract class HostsScript extends LinuxScript {
 	 */
 	File getHostsFile() {
 		new File(configurationDirectory, configurationFile)
+	}
+
+	/**
+	 * Returns the default hosts.
+	 * <p>
+	 * <ul>
+	 * <li>property key {@code default_hosts}</li>
+	 * </ul>
+	 */
+	List getDefaultHosts() {
+		profileTypedListProperty "default_hosts", defaultProperties, hostsFormat.create()
 	}
 
 	/**

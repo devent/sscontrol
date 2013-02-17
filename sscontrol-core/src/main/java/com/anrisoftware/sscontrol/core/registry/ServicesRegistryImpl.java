@@ -18,16 +18,15 @@
  */
 package com.anrisoftware.sscontrol.core.registry;
 
-import static org.apache.commons.collections.list.UnmodifiableList.decorate;
+import static java.util.Collections.unmodifiableList;
+import static java.util.Collections.unmodifiableSet;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.commons.collections.collection.UnmodifiableCollection;
 import org.apache.commons.collections.map.MultiValueMap;
-import org.apache.commons.collections.set.UnmodifiableSet;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.anrisoftware.sscontrol.core.api.Service;
@@ -37,13 +36,12 @@ import com.anrisoftware.sscontrol.core.api.ServicesRegistry;
  * Stores the services.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
- * @since 0.1
+ * @since 1.0
  */
 class ServicesRegistryImpl implements ServicesRegistry {
 
 	/**
-	 * 
-	 * @version 0.1
+	 * @version 1.0
 	 */
 	private static final long serialVersionUID = -5209241548874285959L;
 
@@ -58,26 +56,26 @@ class ServicesRegistryImpl implements ServicesRegistry {
 		services.put(service.getName(), service);
 	}
 
-	@SuppressWarnings({ "unchecked" })
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<Service> getService(String name) {
-		return decorate(new ArrayList<Object>(services.getCollection(name)));
+		return unmodifiableList(new ArrayList<Service>(
+				services.getCollection(name)));
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public Collection<Service> getAllServices() {
 		List<Service> services = new ArrayList<Service>();
 		for (String name : getServiceNames()) {
 			services.addAll(getService(name));
 		}
-		return UnmodifiableCollection.decorate(services);
+		return unmodifiableList(services);
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public Set<String> getServiceNames() {
-		return UnmodifiableSet.decorate(services.keySet());
+		return unmodifiableSet(services.keySet());
 	}
 
 	@Override

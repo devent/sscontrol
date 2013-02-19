@@ -26,6 +26,7 @@ import org.junit.Before
 import org.junit.Test
 
 import com.anrisoftware.sscontrol.core.activator.CoreModule
+import com.anrisoftware.sscontrol.core.activator.CoreResourcesModule
 import com.anrisoftware.sscontrol.core.api.ServiceLoader as SscontrolServiceLoader
 import com.anrisoftware.sscontrol.core.api.ServicesRegistry
 import com.anrisoftware.sscontrol.dns.statements.ARecord
@@ -48,6 +49,8 @@ class DnsServiceTest {
 	static ubuntu1004Profile = resourceURL("Ubuntu_10_04Profile.groovy", DnsServiceTest)
 
 	static dnsSerialScript = resourceURL("DnsSerial.groovy", DnsServiceTest)
+
+	static dnsSerialGenerateScript = resourceURL("DnsSerialGenerate.groovy", DnsServiceTest)
 
 	static dnsZoneARecordsScript = resourceURL("DnsZoneARecords.groovy", DnsServiceTest)
 
@@ -88,6 +91,19 @@ class DnsServiceTest {
 
 		registry.getService("dns")[0].generate = false
 		assertService registry.getService("dns")[0], 99, ["127.0.0.1"]
+	}
+
+	@Test
+	void "dns serial script [+generate]"() {
+		ServicesRegistry registry = injector.getInstance ServicesRegistry
+		SscontrolServiceLoader loader = injector.getInstance SscontrolServiceLoader
+		loader.loadService(ubuntu1004Profile, variables, registry, null)
+		def profile = registry.getService("profile")[0]
+		loader.loadService(dnsSerialGenerateScript, variables, registry, profile)
+		withFiles NAME, {}, {}, tmp
+
+		registry.getService("dns")[0].generate = true
+		assertServiceGenerateSerial registry.getService("dns")[0], 2003, ["127.0.0.1"]
 	}
 
 	@Test
@@ -290,6 +306,12 @@ class DnsServiceTest {
 		service
 	}
 
+	private DnsServiceImpl assertServiceGenerateSerial(DnsServiceImpl service, Object... args) {
+		assert service.serial > args[0]
+		assert service.bindAddresses == args[1]
+		service
+	}
+
 	private DnsZone assertZone(DnsZone zone, Object... args) {
 		assertStringContent zone.name, args[0]
 		assertStringContent zone.primaryNameServer, args[1]
@@ -331,6 +353,6 @@ class DnsServiceTest {
 	}
 
 	def createInjector() {
-		Guice.createInjector(new CoreModule())
+		Guice.createInjector(new CoreModule(), new CoreResourcesModule())
 	}
 }

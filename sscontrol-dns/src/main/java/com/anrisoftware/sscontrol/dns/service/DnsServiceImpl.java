@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.ServiceLoader;
 import java.util.Set;
 
@@ -143,6 +144,32 @@ class DnsServiceImpl extends AbstractService {
 
 	/**
 	 * Sets the serial number of the zone records.
+	 * 
+	 * @param newSerial
+	 *            the serial.
+	 * 
+	 * @param args
+	 *            the {@link Map} of additional named parameter:
+	 *            <dl>
+	 *            <dt>generate</dt>
+	 *            <dd>if set to {@code true} then the serial number is added to
+	 *            the automatically generated serial. The DNS service needs the
+	 *            serial number to be updated for all records that have been
+	 *            changed. The service can create serial numbers based on the
+	 *            current date but the user needs to update this serial number
+	 *            if the records are changed more then once in a day. If set to
+	 *            {@code false} then the serial number is used as specified.</dd>
+	 *            </dl>
+	 * 
+	 */
+	public void serial(Map<String, Object> args, int newSerial) {
+		if (args.containsKey("generate")) {
+			setGenerate((Boolean) args.get("generate"));
+		}
+	}
+
+	/**
+	 * Sets the serial number of the zone records.
 	 * <p>
 	 * The serial number can be any number, it is added to the automatically
 	 * generated serial. The DNS service needs the serial number to be updated
@@ -154,30 +181,8 @@ class DnsServiceImpl extends AbstractService {
 	 *            the serial.
 	 */
 	public void serial(int serial) {
-		serial(serial, true);
-	}
-
-	/**
-	 * Sets the serial number of the zone records.
-	 * 
-	 * @param newSerial
-	 *            the serial.
-	 * 
-	 * @param generate
-	 *            if set to {@code true} then the serial number is added to the
-	 *            automatically generated serial. The DNS service needs the
-	 *            serial number to be updated for all records that have been
-	 *            changed. The service can create serial numbers based on the
-	 *            current date but the user needs to update this serial number
-	 *            if the records are changed more then once in a day.
-	 *            <p>
-	 *            if set to {@code false} then the serial number is used as
-	 *            specified.
-	 */
-	public void serial(int newSerial, boolean generate) {
-		this.serial = newSerial;
-		log.serialSet(this, newSerial, generate);
-		setGenerate(generate);
+		this.serial = serial;
+		log.serialSet(this, serial, generate);
 	}
 
 	/**

@@ -24,6 +24,7 @@ import groovy.util.logging.Slf4j
 import org.junit.Before
 
 import com.anrisoftware.sscontrol.core.activator.CoreModule
+import com.anrisoftware.sscontrol.core.activator.CoreResourcesModule
 import com.google.inject.Guice
 import com.google.inject.Injector
 
@@ -60,6 +61,6 @@ class MysqlLinuxUtil {
 	}
 
 	def createInjector() {
-		Guice.createInjector(new CoreModule())
+		Guice.createInjector(new CoreModule(), new CoreResourcesModule())
 	}
 }

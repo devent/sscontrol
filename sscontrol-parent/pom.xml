@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>com.anrisoftware.globalpom</groupId>
 		<artifactId>globalpom-groovy</artifactId>
-		<version>1.15</version>
+		<version>1.16</version>
 		<relativePath />
 	</parent>
 
@@ -45,7 +45,7 @@
 				<!-- LGPL -->
 				<groupId>com.anrisoftware.globalpom</groupId>
 				<artifactId>globalpom-groovytestutils</artifactId>
-				<version>1.13</version>
+				<version>1.14</version>
 			</dependency>
 			<dependency>
 				<!-- LGPL -->

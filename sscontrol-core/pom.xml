@@ -7,11 +7,23 @@
 		<groupId>com.anrisoftware.sscontrol</groupId>
 		<artifactId>sscontrol-parent</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
+		<relativePath>../sscontrol-parent</relativePath>
 	</parent>
 
 	<artifactId>sscontrol-core</artifactId>
 	<version>0.1-SNAPSHOT</version>
 	<name>Core Library</name>
+	<url>https://www.anr-institute.com/projects/projects/sscontrol-core</url>
+	<inceptionYear>2013</inceptionYear>
+
+	<properties>
+		<project.custom.year>${project.inceptionYear}</project.custom.year>
+	</properties>
+
+	<issueManagement>
+		<system>Redmine</system>
+		<url>https://www.anr-institute.com/projects/projects/sscontrol-core</url>
+	</issueManagement>
 
 	<dependencies>
 

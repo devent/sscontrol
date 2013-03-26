@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 Erwin Müller <erwin.mueller@deventm.org>
+ * Copyright 2012-2013 Erwin Müller <erwin.mueller@deventm.org>
  *
  * This file is part of sscontrol-workers.
  *
@@ -26,12 +26,8 @@ import org.apache.commons.lang3.exception.ContextedException;
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 0.1
  */
+@SuppressWarnings("serial")
 public class WorkerException extends ContextedException {
-
-	/**
-	 * @version 0.1
-	 */
-	private static final long serialVersionUID = -5781645443728802699L;
 
 	public WorkerException(String message, Throwable cause) {
 		super(message, cause);

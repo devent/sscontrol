@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 Erwin Müller <erwin.mueller@deventm.org>
+ * Copyright 2012-2013 Erwin Müller <erwin.mueller@deventm.org>
  *
  * This file is part of sscontrol-api.
  *
@@ -46,5 +46,5 @@ public interface Service extends Callable<Service>, Serializable {
 	 * @return this {@link Service}.
 	 */
 	@Override
-	public Service call() throws ServiceException;
+	Service call() throws ServiceException;
 }

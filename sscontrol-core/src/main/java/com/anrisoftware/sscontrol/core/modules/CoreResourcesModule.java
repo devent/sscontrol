@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 Erwin Müller <erwin.mueller@deventm.org>
+ * Copyright 2013 Erwin Müller <erwin.mueller@deventm.org>
  *
  * This file is part of sscontrol-core.
  *
@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-core. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.core.activator;
+package com.anrisoftware.sscontrol.core.modules;
 
 import com.anrisoftware.resources.binary.binaries.BinariesResourcesModule;
 import com.anrisoftware.resources.binary.maps.BinariesDefaultMapsModule;

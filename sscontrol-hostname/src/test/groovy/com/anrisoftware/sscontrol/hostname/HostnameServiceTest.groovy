@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 Erwin Müller <erwin.mueller@deventm.org>
+ * Copyright 2012-2013 Erwin Müller <erwin.mueller@deventm.org>
  *
  * This file is part of sscontrol-hostname.
  *
@@ -25,11 +25,11 @@ import org.junit.Before
 import org.junit.Test
 
 import com.anrisoftware.globalpom.utils.TestUtils
-import com.anrisoftware.sscontrol.core.activator.CoreModule
-import com.anrisoftware.sscontrol.core.activator.CoreResourcesModule
 import com.anrisoftware.sscontrol.core.api.ServiceException
 import com.anrisoftware.sscontrol.core.api.ServiceLoader as SscontrolServiceLoader
 import com.anrisoftware.sscontrol.core.api.ServicesRegistry
+import com.anrisoftware.sscontrol.core.modules.CoreModule
+import com.anrisoftware.sscontrol.core.modules.CoreResourcesModule
 import com.google.inject.Guice
 import com.google.inject.Injector
 
@@ -51,8 +51,6 @@ class HostnameServiceTest {
 	static hostnameExpected = resourceURL("hostname_expected.txt", HostnameServiceTest)
 
 	Injector injector
-
-	Ubuntu_10_04Profile ubuntu_10_04Profile
 
 	File tmp
 

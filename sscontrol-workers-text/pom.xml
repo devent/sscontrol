@@ -12,9 +12,15 @@
 
 	<artifactId>sscontrol-workers-text</artifactId>
 	<version>1.0-SNAPSHOT</version>
-	<name>Sscontrol :: Workers Text</name>
-	<description>Workers for text file manipulations.</description>
+	<name>Server Control Core :: Workers Text</name>
+	<description>Text file manipulations.</description>
+	<url>https://www.anr-institute.com/projects/projects/sscontrol-workers-text</url>
 	<inceptionYear>2012</inceptionYear>
+
+	<issueManagement>
+		<system>Redmine</system>
+		<url>https://www.anr-institute.com/projects/projects/sscontrol-workers-text</url>
+	</issueManagement>
 
 	<dependencies>
 
@@ -36,6 +42,14 @@
 		<dependency>
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.anrisoftware.globalpom</groupId>
+			<artifactId>globalpom-log</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.google.inject.extensions</groupId>
+			<artifactId>guice-assistedinject</artifactId>
 		</dependency>
 	</dependencies>
 

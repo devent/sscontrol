@@ -1,0 +1,10 @@
+com.anrisoftware.sscontrol:sscontrol-workers-text:jar:1.0-SNAPSHOT
++- com.anrisoftware.sscontrol:sscontrol-workers:jar:0.1-SNAPSHOT:compile
+|  \- org.apache.commons:commons-lang3:jar:3.1:compile
++- commons-io:commons-io:jar:2.4:compile
++- com.anrisoftware.globalpom:globalpom-log:jar:1.9.1:compile
++- com.google.inject.extensions:guice-assistedinject:jar:3.0:compile
+|  \- com.google.inject:guice:jar:3.0:compile
+|     +- javax.inject:javax.inject:jar:1:compile
+|     \- aopalliance:aopalliance:jar:1.0:compile
++- org.slf4j:slf4j-api:jar:1.6.6:compile

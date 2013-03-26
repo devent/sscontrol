@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 Erwin Müller <erwin.mueller@deventm.org>
+ * Copyright 2012-2013 Erwin Müller <erwin.mueller@deventm.org>
  *
  * This file is part of sscontrol-profile.
  *
@@ -21,7 +21,6 @@ package com.anrisoftware.sscontrol.profile.service;
 import static java.lang.String.format;
 import static org.apache.commons.collections.map.PredicatedMap.decorate;
 import groovy.lang.GString;
-import groovy.lang.GroovyObjectSupport;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -40,13 +39,8 @@ import org.codehaus.groovy.runtime.InvokerHelper;
 
 import com.anrisoftware.sscontrol.core.api.ProfileProperties;
 
-class ProfilePropertiesImpl extends GroovyObjectSupport implements
-		ProfileProperties {
-
-	/**
-	 * @version 0.1
-	 */
-	private static final long serialVersionUID = 7518166865917131502L;
+@SuppressWarnings("serial")
+class ProfilePropertiesImpl implements ProfileProperties {
 
 	private final ProfilePropertiesImplLogger log;
 

@@ -12,8 +12,15 @@
 
 	<artifactId>sscontrol-workers-command</artifactId>
 	<version>1.0-SNAPSHOT</version>
-	<name>Command Workers</name>
+	<name>Server Control Core :: Command Workers</name>
+	<description>Executes commands or scripts.</description>
+	<url>https://www.anr-institute.com/projects/projects/sscontrol-workers-command</url>
 	<inceptionYear>2012</inceptionYear>
+
+	<issueManagement>
+		<system>Redmine</system>
+		<url>https://www.anr-institute.com/projects/projects/sscontrol-workers-command</url>
+	</issueManagement>
 
 	<dependencies>
 
@@ -23,18 +30,18 @@
 			<artifactId>globalpom-groovytestutils</artifactId>
 			<scope>test</scope>
 		</dependency>
-        <dependency>
-            <groupId>com.anrisoftware.resources</groupId>
-            <artifactId>resources-st</artifactId>
-            <scope>test</scope>
-        </dependency>
+		<dependency>
+			<groupId>com.anrisoftware.resources</groupId>
+			<artifactId>resources-st</artifactId>
+			<scope>test</scope>
+		</dependency>
 
 		<!-- own module dependencies -->
-        <dependency>
-            <groupId>com.anrisoftware.sscontrol</groupId>
-            <artifactId>sscontrol-workers</artifactId>
-            <version>0.1-SNAPSHOT</version>
-        </dependency>
+		<dependency>
+			<groupId>com.anrisoftware.sscontrol</groupId>
+			<artifactId>sscontrol-workers</artifactId>
+			<version>0.1-SNAPSHOT</version>
+		</dependency>
 
 		<!-- compile dependencies -->
 		<dependency>
@@ -53,19 +60,27 @@
 			<groupId>com.anrisoftware.globalpom</groupId>
 			<artifactId>globalpom-log</artifactId>
 		</dependency>
-        <dependency>
-            <groupId>org.mangosdk</groupId>
-            <artifactId>spi</artifactId>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
-        	<groupId>com.anrisoftware.resources</groupId>
-        	<artifactId>resources-api</artifactId>
-        </dependency>
-        <dependency>
-        	<groupId>com.anrisoftware.propertiesutils</groupId>
-        	<artifactId>propertiesutils-contextproperties</artifactId>
-        </dependency>
+		<dependency>
+			<groupId>org.mangosdk</groupId>
+			<artifactId>spi</artifactId>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>com.anrisoftware.resources</groupId>
+			<artifactId>resources-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.anrisoftware.propertiesutils</groupId>
+			<artifactId>propertiesutils-contextproperties</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.google.inject.extensions</groupId>
+			<artifactId>guice-multibindings</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.anrisoftware.resources</groupId>
+			<artifactId>resources-templates</artifactId>
+		</dependency>
 	</dependencies>
 
 </project>

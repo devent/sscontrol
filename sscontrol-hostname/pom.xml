@@ -7,28 +7,35 @@
 		<groupId>com.anrisoftware.sscontrol</groupId>
 		<artifactId>sscontrol-parent</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
+		<relativePath>../sscontrol-parent</relativePath>
 	</parent>
 
 	<artifactId>sscontrol-hostname</artifactId>
-	<version>0.1-SNAPSHOT</version>
-	<name>SSControl :: Hostname</name>
+	<version>1.0-SNAPSHOT</version>
+	<name>Server Control Core :: Hostname</name>
 	<description>Sets the host name of the server.</description>
+	<url>https://www.anr-institute.com/projects/projects/sscontrol-hostname</url>
 	<inceptionYear>2012</inceptionYear>
+
+	<issueManagement>
+		<system>Redmine</system>
+		<url>https://www.anr-institute.com/projects/projects/sscontrol-hostname</url>
+	</issueManagement>
 
 	<dependencies>
 
 		<!-- test dependencies -->
-        <dependency>
-            <groupId>com.anrisoftware.sscontrol</groupId>
-            <artifactId>sscontrol-profile</artifactId>
-            <version>0.1-SNAPSHOT</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.anrisoftware.globalpom</groupId>
-            <artifactId>globalpom-groovytestutils</artifactId>
-            <scope>test</scope>
-        </dependency>
+		<dependency>
+			<groupId>com.anrisoftware.sscontrol</groupId>
+			<artifactId>sscontrol-profile</artifactId>
+			<version>0.1-SNAPSHOT</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.anrisoftware.globalpom</groupId>
+			<artifactId>globalpom-groovytestutils</artifactId>
+			<scope>test</scope>
+		</dependency>
 
 		<!-- own modules dependencies -->
 		<dependency>

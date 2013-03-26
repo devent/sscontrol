@@ -1,20 +1,20 @@
 /*
- * Copyright 2012 Erwin Müller <erwin.mueller@deventm.org>
+ * Copyright 2012-2013 Erwin Müller <erwin.mueller@deventm.org>
  *
- * This file is part of sscontrol-core.
+ * This file is part of sscontrol-profile.
  *
- * sscontrol-core is free software: you can redistribute it and/or modify it
+ * sscontrol-profile is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published by the
  * Free Software Foundation, either version 3 of the License, or (at your
  * option) any later version.
  *
- * sscontrol-core is distributed in the hope that it will be useful, but
+ * sscontrol-profile is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
  * for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with sscontrol-core. If not, see <http://www.gnu.org/licenses/>.
+ * along with sscontrol-profile. If not, see <http://www.gnu.org/licenses/>.
  */
 package com.anrisoftware.sscontrol.profile
 
@@ -23,11 +23,12 @@ import static com.anrisoftware.globalpom.utils.TestUtils.*
 import org.junit.Before
 import org.junit.Test
 
-import com.anrisoftware.sscontrol.core.activator.CoreModule
 import com.anrisoftware.sscontrol.core.api.ProfileProperties
 import com.anrisoftware.sscontrol.core.api.ProfileService
 import com.anrisoftware.sscontrol.core.api.ServiceLoader as SscontrolServiceLoader
 import com.anrisoftware.sscontrol.core.api.ServicesRegistry
+import com.anrisoftware.sscontrol.core.modules.CoreModule
+import com.anrisoftware.sscontrol.core.modules.CoreResourcesModule
 import com.google.inject.Guice
 import com.google.inject.Injector
 
@@ -57,7 +58,7 @@ class LoadProfileTest {
 		ProfileProperties system = profile.getEntry("system")
 		system.keys.size() == 8
 		assert system.get("echo_command") == "echo"
-		assert system.get("install_command") == "aptitude update && aptitude install {}"
+		assert system.get("install_command") == "aptitude update && aptitude install %s"
 		assert system.get("install_command", "aaa") == "aptitude update && aptitude install aaa"
 		assert system.get("set_enabled") == true
 		assert system.get("set_gstring") == "gstring test"
@@ -69,7 +70,7 @@ class LoadProfileTest {
 		ProfileProperties hostname = profile.getEntry("hostname")
 		system.keys.size() == 2
 		assert system.get("echo_command") == "echo"
-		assert system.get("install_command") == "aptitude update && aptitude install {}"
+		assert system.get("install_command") == "aptitude update && aptitude install %s"
 	}
 
 	@Before
@@ -78,6 +79,6 @@ class LoadProfileTest {
 	}
 
 	def createInjector() {
-		Guice.createInjector(new CoreModule())
+		Guice.createInjector(new CoreModule(), new CoreResourcesModule())
 	}
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 Erwin Müller <erwin.mueller@deventm.org>
+ * Copyright 2012-2013 Erwin Müller <erwin.mueller@deventm.org>
  *
  * This file is part of sscontrol-workers-command.
  *
@@ -53,7 +53,7 @@ class ExecCommandTest {
 	void "serialize and execute echo command"() {
 		def string = "Test"
 		def worker = factory.create(String.format(echoCommand, string))
-		def workerB = reserialize worker
+		def workerB = reserialize(worker)
 		workerB()
 		assertStringContent workerB.out, string
 	}

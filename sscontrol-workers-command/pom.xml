@@ -61,11 +61,6 @@
 			<artifactId>globalpom-log</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.mangosdk</groupId>
-			<artifactId>spi</artifactId>
-			<optional>true</optional>
-		</dependency>
-		<dependency>
 			<groupId>com.anrisoftware.resources</groupId>
 			<artifactId>resources-api</artifactId>
 		</dependency>

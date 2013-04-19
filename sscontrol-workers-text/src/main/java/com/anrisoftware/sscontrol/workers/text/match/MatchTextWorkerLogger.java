@@ -20,7 +20,7 @@ package com.anrisoftware.sscontrol.workers.text.match;
 
 import java.io.IOException;
 
-import com.anrisoftware.globalpom.log.AbstractSerializedLogger;
+import com.anrisoftware.globalpom.log.AbstractLogger;
 import com.anrisoftware.sscontrol.workers.api.WorkerException;
 
 /**
@@ -29,7 +29,15 @@ import com.anrisoftware.sscontrol.workers.api.WorkerException;
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class MatchTextWorkerLogger extends AbstractSerializedLogger {
+class MatchTextWorkerLogger extends AbstractLogger {
+
+	private static final String WORKER = "worker";
+	private static final String ERROR_READ_RESOURCE_MESSAGE = "Error read resource '%s'";
+	private static final String ERROR_READ_RESOURCE = "Error read resource";
+	private static final String SEARCH_TEXT_NOT_FOUND_INFO = "Search text was not found '{}' in {}.";
+	private static final String SEARCH_TEXT_NOT_FOUND = "Search text was not found in {}.";
+	private static final String SEARCH_TEXT_FOUND_INFO = "Search text was found '{}' in {}.";
+	private static final String SEARCH_TEXT_FOUND = "Search text was found in {}.";
 
 	/**
 	 * Create logger for {@link MatchTextWorker}.
@@ -39,17 +47,27 @@ class MatchTextWorkerLogger extends AbstractSerializedLogger {
 	}
 
 	WorkerException readFileError(MatchTextWorker worker, IOException e) {
-		WorkerException ex = new WorkerException("Read file error", e);
-		ex.addContextValue("worker", worker);
-		log.error(ex.getLocalizedMessage());
-		return ex;
+		return logException(
+				new WorkerException(ERROR_READ_RESOURCE, e).addContextValue(
+						WORKER, worker), ERROR_READ_RESOURCE_MESSAGE,
+				worker.getResource());
 	}
 
 	void textWasFound(MatchTextWorker worker) {
-		log.debug("Search text was found in {}.", worker);
+		if (log.isDebugEnabled()) {
+			log.debug(SEARCH_TEXT_FOUND, worker);
+		} else {
+			log.info(SEARCH_TEXT_FOUND_INFO, worker.getPattern(),
+					worker.getResource());
+		}
 	}
 
 	void textWasNotFound(MatchTextWorker worker) {
-		log.debug("Search text was not found in {}.", worker);
+		if (log.isDebugEnabled()) {
+			log.debug(SEARCH_TEXT_NOT_FOUND, worker);
+		} else {
+			log.info(SEARCH_TEXT_NOT_FOUND_INFO, worker.getPattern(),
+					worker.getResource());
+		}
 	}
 }

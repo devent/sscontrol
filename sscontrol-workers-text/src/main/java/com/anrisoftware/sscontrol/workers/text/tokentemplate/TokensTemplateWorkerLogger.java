@@ -18,7 +18,7 @@
  */
 package com.anrisoftware.sscontrol.workers.text.tokentemplate;
 
-import com.anrisoftware.globalpom.log.AbstractSerializedLogger;
+import com.anrisoftware.globalpom.log.AbstractLogger;
 
 /**
  * Logging messages for {@link TokensTemplateWorker}.
@@ -26,7 +26,12 @@ import com.anrisoftware.globalpom.log.AbstractSerializedLogger;
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class TokensTemplateWorkerLogger extends AbstractSerializedLogger {
+class TokensTemplateWorkerLogger extends AbstractLogger {
+
+	private static final String APPEND_ARGUMENT_INFO = "Append argument in template {}.";
+	private static final String APPEND_ARGUMENT = "Append argument in {}.";
+	private static final String REPLACED_ARGUMENT_INFO = "Replaced argument in template {}.";
+	private static final String REPLACED_ARGUMENT = "Replaced argument in {}.";
 
 	/**
 	 * Create logger for {@link TokensTemplateWorker}.
@@ -36,11 +41,19 @@ class TokensTemplateWorkerLogger extends AbstractSerializedLogger {
 	}
 
 	void replacedArgument(TokensTemplateWorker worker) {
-		log.trace("Replaced argument in {}.", worker);
+		if (log.isDebugEnabled()) {
+			log.debug(REPLACED_ARGUMENT, worker);
+		} else {
+			log.info(REPLACED_ARGUMENT_INFO, worker.getTemplate());
+		}
 	}
 
 	void appendArgument(TokensTemplateWorker worker) {
-		log.trace("Append argument in {}.", worker);
+		if (log.isDebugEnabled()) {
+			log.debug(APPEND_ARGUMENT, worker);
+		} else {
+			log.info(APPEND_ARGUMENT_INFO, worker.getTemplate());
+		}
 	}
 
 }

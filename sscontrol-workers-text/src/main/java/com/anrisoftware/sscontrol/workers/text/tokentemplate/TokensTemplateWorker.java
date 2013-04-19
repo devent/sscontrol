@@ -104,6 +104,10 @@ public class TokensTemplateWorker implements Worker {
 		return replacement;
 	}
 
+	public TokenTemplate getTemplate() {
+		return template;
+	}
+
 	@Override
 	public String toString() {
 		return new ToStringBuilder(this).append(template)

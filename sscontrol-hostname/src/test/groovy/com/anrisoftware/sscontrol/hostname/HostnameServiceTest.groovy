@@ -19,9 +19,12 @@
 package com.anrisoftware.sscontrol.hostname
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
+import static org.apache.commons.io.FileUtils.*
 import groovy.util.logging.Slf4j
 
+import org.junit.After
 import org.junit.Before
+import org.junit.BeforeClass
 import org.junit.Test
 
 import com.anrisoftware.globalpom.utils.TestUtils
@@ -36,26 +39,6 @@ import com.google.inject.Injector
 @Slf4j
 class HostnameServiceTest {
 
-	static ubuntu1004Profile = resourceURL("Ubuntu_10_04Profile.groovy", HostnameServiceTest)
-
-	static hostnameService = resourceURL("HostnameService.groovy", HostnameServiceTest)
-
-	static hostnameNullService = resourceURL("HostnameNullService.groovy", HostnameServiceTest)
-
-	static restartCommand = resourceURL("echo_command.txt", HostnameServiceTest)
-
-	static localhostHostnameFile = resourceURL("localhost_hostname.txt", HostnameServiceTest)
-
-	static installCommand = resourceURL("echo_command.txt", HostnameServiceTest)
-
-	static hostnameExpected = resourceURL("hostname_expected.txt", HostnameServiceTest)
-
-	Injector injector
-
-	File tmp
-
-	Map variables
-
 	@Test
 	void "hostname service with empty hostname"() {
 		TestUtils.trimStrings = false
@@ -64,15 +47,13 @@ class HostnameServiceTest {
 		loader.loadService(ubuntu1004Profile, variables, registry, null)
 		def profile = registry.getService("profile")[0]
 		loader.loadService(hostnameService, variables, registry, profile)
-		withFiles "hostname", {
-			registry.allServices.each { it.call() }
-			log.info "Run service again to ensure that configuration is not set double."
-			registry.allServices.each { it.call() }
-			assertFileContent(new File(it, "/etc/hostname"), hostnameExpected)
-		}, {
-			copyResourceToCommand installCommand, new File(it, "/usr/bin/aptitude")
-			copyResourceToCommand restartCommand, new File(it, "/sbin/restart")
-		}, tmp
+		copyResourceToCommand installCommand, aptitude
+		copyResourceToCommand restartCommand, restart
+
+		registry.allServices.each { it.call() }
+		log.info "Run service again to ensure that configuration is not set double."
+		registry.allServices.each { it.call() }
+		assertFileContent hostname, hostnameExpected
 	}
 
 	@Test
@@ -83,16 +64,14 @@ class HostnameServiceTest {
 		loader.loadService(ubuntu1004Profile, variables, registry, null)
 		def profile = registry.getService("profile")[0]
 		loader.loadService(hostnameService, variables, registry, profile)
-		withFiles "hostname", {
-			registry.allServices.each { it.call() }
-			log.info "Run service again to ensure that configuration is not set double."
-			registry.allServices.each { it.call() }
-			assertFileContent new File(it, "/etc/hostname"), hostnameExpected
-		}, {
-			copyResourceToCommand installCommand, new File(it, "/usr/bin/aptitude")
-			copyResourceToCommand restartCommand, new File(it, "/sbin/restart")
-			copyResourceToFile(localhostHostnameFile, new File(it, "/etc/hostname"))
-		}, tmp
+		copyResourceToCommand installCommand, aptitude
+		copyResourceToCommand restartCommand, restart
+		copyURLToFile localhostHostnameFile, hostname
+
+		registry.allServices.each { it.call() }
+		log.info "Run service again to ensure that configuration is not set double."
+		registry.allServices.each { it.call() }
+		assertFileContent hostname, hostnameExpected
 	}
 
 	@Test
@@ -106,18 +85,57 @@ class HostnameServiceTest {
 		}
 	}
 
-	static {
-		toStringStyle
+	static ubuntu1004Profile = HostnameServiceTest.class.getResource("Ubuntu_10_04Profile.groovy")
+
+	static hostnameService = HostnameServiceTest.class.getResource("HostnameService.groovy")
+
+	static hostnameNullService = HostnameServiceTest.class.getResource("HostnameNullService.groovy")
+
+	static restartCommand = HostnameServiceTest.class.getResource("echo_command.txt")
+
+	static localhostHostnameFile = HostnameServiceTest.class.getResource("localhost_hostname.txt")
+
+	static installCommand = HostnameServiceTest.class.getResource("echo_command.txt")
+
+	static hostnameExpected = HostnameServiceTest.class.getResource("hostname_expected.txt")
+
+	Injector injector
+
+	File aptitude
+
+	File restart
+
+	File hostname
+
+	File tmpdir
+
+	Map variables
+
+	@Before
+	void createTemp() {
+		tmpdir = File.createTempDir("HostnameService", null)
+		aptitude = new File(tmpdir, "/usr/bin/aptitude")
+		restart = new File(tmpdir, "/sbin/restart")
+		hostname = new File(tmpdir, "/etc/hostname")
+		variables = [tmp: tmpdir.absoluteFile]
+	}
+
+	@After
+	void deleteTemp() {
+		tmpdir.deleteDir()
 	}
 
 	@Before
-	void setupInjector() {
+	void createFactories() {
 		injector = createInjector()
-		tmp = createTempDirectory()
-		variables = [tmp: tmp.absoluteFile]
 	}
 
-	def createInjector() {
+	@BeforeClass
+	static void setupToStringStyle() {
+		toStringStyle
+	}
+
+	static Injector createInjector() {
 		Guice.createInjector(new CoreModule(), new CoreResourcesModule())
 	}
 }

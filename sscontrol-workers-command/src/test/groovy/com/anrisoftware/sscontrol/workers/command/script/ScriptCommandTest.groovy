@@ -20,7 +20,10 @@ package com.anrisoftware.sscontrol.workers.command.script
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 
+import org.apache.commons.io.FileUtils
+import org.junit.After
 import org.junit.Before
+import org.junit.BeforeClass
 import org.junit.Test
 
 import com.anrisoftware.resources.templates.api.Templates
@@ -42,118 +45,111 @@ import com.google.inject.Injector
  */
 class ScriptCommandTest {
 
-	static system = SystemSelector.system.name
-
-	Injector injector
-
-	ScriptCommandWorkerFactory factory
-
-	TemplatesFactory templatesFactory
-
-	Templates templates
-
 	@Test
 	void "chmod files"() {
-		withFiles "chmod", {
-			def mod = "-w"
-			def template = templates.getResource("chmod")
-			def worker = factory.create template,
-							system,
-							"chmodCommand", "chmod",
-							"mod", mod,
-							"files", it.files
-			worker()
-			assert it.files[0].canWrite() == false
-			assert it.files[1].canWrite() == false
-		}, { }, 2
+		def mod = "-w"
+		def template = templates.getResource("chmod")
+		def worker = factory.create template,
+				system,
+				"chmodCommand", "chmod",
+				"mod", mod,
+				"files", files
+		worker()
+		assert files[0].canWrite() == false
+		assert files[1].canWrite() == false
 	}
 
 	@Test
 	void "serialize and chmod files"() {
-		withFiles "chmod", {
-			def mod = "-w"
-			def templates = templatesFactory.create("ScriptCommandTemplates")
-			def template = templates.getResource("chmod")
-			def worker = factory.create template,
-							system,
-							"chmodCommand", "chmod",
-							"mod", mod,
-							"files", it.files
-			def workerB = reserialize worker
-			workerB()
-			assert it.files[0].canWrite() == false
-			assert it.files[1].canWrite() == false
-		}, { }, 2
+		def mod = "-w"
+		def templates = templatesFactory.create("ScriptCommandTemplates")
+		def template = templates.getResource("chmod")
+		def worker = factory.create template,
+				system,
+				"chmodCommand", "chmod",
+				"mod", mod,
+				"files", files
+		def workerB = reserialize worker
+		workerB()
+		assert files[0].canWrite() == false
+		assert files[1].canWrite() == false
 	}
 
 	@Test
 	void "chown files"() {
-		withFiles "chown", {
-			def owner = System.getProperty("user.name")
-			def group = System.getProperty("user.name")
-			def template = templates.getResource("chown")
-			def worker = factory.create template,
-							system,
-							"chownCommand", "chown",
-							"owner", owner,
-							"ownerGroup", group,
-							"files", it.files
-			worker()
-		}, { }, 2
+		def owner = System.getProperty("user.name")
+		def group = System.getProperty("user.name")
+		def template = templates.getResource("chown")
+		def worker = factory.create template,
+				system,
+				"chownCommand", "chown",
+				"owner", owner,
+				"ownerGroup", group,
+				"files", files
+		worker()
 	}
 
 	@Test
 	void "ln files"() {
-		withFiles "ln", {
-			def targets = it.files.inject([]) { list, value ->
-				list << new File("${value.absolutePath}_target")
-			}
-			def mod = "-w"
-			def template = templates.getResource("mkln")
-			def worker = factory.create template,
-							system,
-							"lnCommand", "ln",
-							"files", it.files,
-							"targets", targets
-			worker()
-			targets.each { assert it.isFile() }
-		}, { }, 2
+		def targets = files.inject([]) { list, value ->
+			list << new File("${value.absolutePath}_target")
+		}
+		def mod = "-w"
+		def template = templates.getResource("mkln")
+		def worker = factory.create template,
+				system,
+				"lnCommand", "ln",
+				"files", files,
+				"targets", targets
+		worker()
+		targets.each { assert it.isFile() }
 	}
 
+	File tmpdir
+
+	List files
+
 	@Before
-	void createFactories() {
+	void createTmpDir() {
+		tmpdir = File.createTempDir("ScriptCommandTest", null)
+		files = [
+			new File(tmpdir, "one"),
+			new File(tmpdir, "two")
+		]
+		files.each { FileUtils.touch(it) }
+	}
+
+	@After
+	void deleteTmpDir() {
+		tmpdir.deleteDir()
+	}
+
+	static system = SystemSelector.system.name
+
+	static Injector injector
+
+	static ScriptCommandWorkerFactory factory
+
+	static TemplatesFactory templatesFactory
+
+	static Templates templates
+
+	@BeforeClass
+	static void createFactories() {
+		toStringStyle
 		injector = createInjector()
 		factory = injector.getInstance ScriptCommandWorkerFactory
 		templatesFactory = injector.getInstance TemplatesFactory
 		templates = templatesFactory.create("ScriptCommandTemplates")
 	}
 
-	Injector createInjector() {
-		Guice.createInjector(new ScriptCommandWorkerModule(),
-						new ExecCommandWorkerModule(),
-						new TemplatesResourcesModule(),
-						templateWorkerModule, templatesMapModule,
-						templatesPropertiesModule)
-	}
-
-	/**
-	 * Returns the module that binds the template worker.
-	 */
-	def getTemplateWorkerModule() {
-		new STWorkerModule()
-	}
-
-	/**
-	 * Returns the module that binds the template resources maps.
-	 */
-	def getTemplatesMapModule() {
-		new TemplatesDefaultMapsModule()
-	}
-
-	/**
-	 * Returns the module that binds the template properties.
-	 */
-	def getTemplatesPropertiesModule() {
-		new STDefaultPropertiesModule()
+	static Injector createInjector() {
+		Guice.createInjector(
+				new ScriptCommandWorkerModule(),
+				new ExecCommandWorkerModule(),
+				new TemplatesResourcesModule(),
+				new STWorkerModule(),
+				new TemplatesDefaultMapsModule(),
+				new STDefaultPropertiesModule())
 	}
 }

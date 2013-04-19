@@ -237,6 +237,10 @@ public class ScriptCommandWorker implements Worker {
 		return commandWorker.getErr(charsetName);
 	}
 
+	public String getCommand() {
+		return commandWorker.getCommand();
+	}
+
 	@Override
 	public String toString() {
 		return commandWorker != null ? commandWorker.toString()

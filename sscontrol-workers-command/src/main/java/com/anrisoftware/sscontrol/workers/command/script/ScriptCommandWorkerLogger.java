@@ -18,7 +18,7 @@
  */
 package com.anrisoftware.sscontrol.workers.command.script;
 
-import com.anrisoftware.globalpom.log.AbstractSerializedLogger;
+import com.anrisoftware.globalpom.log.AbstractLogger;
 import com.anrisoftware.resources.api.ResourcesException;
 import com.anrisoftware.sscontrol.workers.api.WorkerException;
 
@@ -28,7 +28,11 @@ import com.anrisoftware.sscontrol.workers.api.WorkerException;
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class ScriptCommandWorkerLogger extends AbstractSerializedLogger {
+class ScriptCommandWorkerLogger extends AbstractLogger {
+
+	private static final String WORKER = "worker";
+	private static final String ERROR_PROCESSING_TEMPLATE_MESSAGE = "Error processing template %s#%s.";
+	private static final String ERROR_PROCESSING_TEMPLATE = "Error processing template";
 
 	/**
 	 * Create logger for {@link ScriptCommandWorker}.
@@ -39,9 +43,9 @@ class ScriptCommandWorkerLogger extends AbstractSerializedLogger {
 
 	WorkerException errorProcessTemplate(ScriptCommandWorker worker,
 			ResourcesException e) {
-		WorkerException ex = new WorkerException("Error processing template", e);
-		ex.addContextValue("worker", worker);
-		log.error(ex.getLocalizedMessage());
-		return ex;
+		return logException(
+				new WorkerException(ERROR_PROCESSING_TEMPLATE, e).addContextValue(
+						WORKER, worker), ERROR_PROCESSING_TEMPLATE_MESSAGE,
+				e.getClassName(), e.getKey());
 	}
 }

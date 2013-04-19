@@ -20,9 +20,7 @@ package com.anrisoftware.sscontrol.workers.command.exec;
 
 import java.io.IOException;
 
-import org.apache.commons.exec.CommandLine;
-
-import com.anrisoftware.globalpom.log.AbstractSerializedLogger;
+import com.anrisoftware.globalpom.log.AbstractLogger;
 import com.anrisoftware.sscontrol.workers.api.WorkerException;
 
 /**
@@ -31,7 +29,15 @@ import com.anrisoftware.sscontrol.workers.api.WorkerException;
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class ExecCommandWorkerLogger extends AbstractSerializedLogger {
+class ExecCommandWorkerLogger extends AbstractLogger {
+
+	private static final String EXECUTE_COMMAND_INFO = "Execute command '{}'.";
+	private static final String EXECUTE_COMMAND = "Execute command {}.";
+	private static final String FINISH_EXECUTE_COMMAND_INFO = "Finished execute command '{}'.";
+	private static final String FINISH_EXECUTE_COMMAND = "Finished execute command {}.";
+	private static final String ERROR_EXECUTE_COMMAND_MESSAGE = "Error execute command '%s'.";
+	private static final String WORKER = "worker";
+	private static final String ERROR_EXECUTE_COMMAND = "Error execute command";
 
 	/**
 	 * Create logger for {@link ExecCommandWorker}.
@@ -41,19 +47,25 @@ class ExecCommandWorkerLogger extends AbstractSerializedLogger {
 	}
 
 	WorkerException errorExecuteCommand(ExecCommandWorker worker, IOException e) {
-		WorkerException ex = new WorkerException(
-				"Error execute command in worker", e);
-		ex.addContextValue("worker", worker);
-		log.error(ex.getLocalizedMessage());
-		return ex;
+		return logException(
+				new WorkerException(ERROR_EXECUTE_COMMAND, e).addContextValue(
+						WORKER, worker), ERROR_EXECUTE_COMMAND_MESSAGE,
+				worker.getCommand());
 	}
 
 	void finishedProcess(ExecCommandWorker worker) {
-		log.trace("Finished worker {}.", worker);
+		if (log.isDebugEnabled()) {
+			log.debug(FINISH_EXECUTE_COMMAND, worker);
+		} else {
+			log.info(FINISH_EXECUTE_COMMAND_INFO, worker.getCommand());
+		}
 	}
 
-	void startProcess(CommandLine cmdline) {
-		log.trace("Start the process '{}' '{}'.", cmdline.getExecutable(),
-				cmdline.getArguments());
+	void startProcess(ExecCommandWorker worker) {
+		if (log.isDebugEnabled()) {
+			log.debug(EXECUTE_COMMAND, worker);
+		} else {
+			log.debug(EXECUTE_COMMAND_INFO, worker.getCommand());
+		}
 	}
 }

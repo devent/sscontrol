@@ -124,7 +124,7 @@ public class ExecCommandWorker implements Worker {
 	private void startProcess(DefaultExecutor executor, CommandLine cmdline)
 			throws WorkerException {
 		try {
-			log.startProcess(cmdline);
+			log.startProcess(this);
 			exitCode = executor.execute(cmdline, environment);
 		} catch (IOException e) {
 			throw log.errorExecuteCommand(this, e);
@@ -199,6 +199,10 @@ public class ExecCommandWorker implements Worker {
 			error = err.toString(charsetName);
 		}
 		return error;
+	}
+
+	public String getCommand() {
+		return command;
 	}
 
 	@Override

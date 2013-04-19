@@ -31,6 +31,12 @@ import com.anrisoftware.sscontrol.core.api.ProfileService;
  */
 class HostnameServiceImplLogger extends AbstractLogger {
 
+	private static final String HOSTNAME_EMPTY_NULL = "Hostname must not be empty or null for %s.";
+	private static final String HOSTNAME_SET_INFO = "Hostname '{}' set.";
+	private static final String HOSTNAME_SET = "Hostname '{}' set for {}.";
+	private static final String SET_PROFILE_INFO = "Set profile {} for hostname service.";
+	private static final String SET_PROFILE = "Set profile {} for {}.";
+
 	/**
 	 * Create logger for {@link HostnameServiceImpl}.
 	 */
@@ -39,24 +45,22 @@ class HostnameServiceImplLogger extends AbstractLogger {
 	}
 
 	void profileSet(HostnameServiceImpl service, ProfileService profile) {
-		if (log.isTraceEnabled()) {
-			log.trace("Set profile {} for {}.", profile, service);
+		if (log.isDebugEnabled()) {
+			log.debug(SET_PROFILE, profile, service);
 		} else {
-			log.info("Set profile {} for hostname service.",
-					profile.getProfileName());
+			log.info(SET_PROFILE_INFO, profile.getProfileName());
 		}
 	}
 
 	void hostnameSet(HostnameServiceImpl service, String name) {
-		if (log.isTraceEnabled()) {
-			log.trace("Hostname '{}' set for {}.", name, service);
+		if (log.isDebugEnabled()) {
+			log.debug(HOSTNAME_SET, name, service);
 		} else {
-			log.info("Hostname '{}' set.", name);
+			log.info(HOSTNAME_SET_INFO, name);
 		}
 	}
 
 	void checkHostname(HostnameServiceImpl service, String name) {
-		notEmpty(name, "The hostname must not be empty or null for %s.",
-				service);
+		notEmpty(name, HOSTNAME_EMPTY_NULL, service);
 	}
 }

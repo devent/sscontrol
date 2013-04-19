@@ -18,7 +18,7 @@
  */
 package com.anrisoftware.sscontrol.core.service;
 
-import com.anrisoftware.globalpom.log.AbstractSerializedLogger;
+import com.anrisoftware.globalpom.log.AbstractLogger;
 import com.anrisoftware.sscontrol.core.api.ProfileService;
 
 /**
@@ -27,7 +27,10 @@ import com.anrisoftware.sscontrol.core.api.ProfileService;
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class AbstractServiceLogger extends AbstractSerializedLogger {
+class AbstractServiceLogger extends AbstractLogger {
+
+	private static final String SET_PROFILE_INFO = "Set profile {} for service {}.";
+	private static final String SET_PROFILE_DEBUG = "Set profile {} for {}.";
 
 	/**
 	 * Create logger for {@link AbstractService}.
@@ -37,11 +40,11 @@ class AbstractServiceLogger extends AbstractSerializedLogger {
 	}
 
 	void profileSet(AbstractService service, ProfileService profile) {
-		if (log.isTraceEnabled()) {
-			log.trace("Set profile {} for {}.", profile, service);
+		if (log.isDebugEnabled()) {
+			log.debug(SET_PROFILE_DEBUG, profile, service);
 		} else {
-			log.info("Set profile {} for hostname service.",
-					profile.getProfileName());
+			log.info(SET_PROFILE_INFO, profile.getProfileName(),
+					service.getName());
 		}
 	}
 

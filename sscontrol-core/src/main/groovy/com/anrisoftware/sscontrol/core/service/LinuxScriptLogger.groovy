@@ -18,7 +18,7 @@
  */
 package com.anrisoftware.sscontrol.core.service
 
-import com.anrisoftware.globalpom.log.AbstractSerializedLogger
+import com.anrisoftware.globalpom.log.AbstractLogger
 
 /**
  * Logging messages for {@link LinuxScript}.
@@ -26,7 +26,7 @@ import com.anrisoftware.globalpom.log.AbstractSerializedLogger
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class LinuxScriptLogger extends AbstractSerializedLogger {
+class LinuxScriptLogger extends AbstractLogger {
 
 	/**
 	 * Create logger for {@link LinuxScript}.

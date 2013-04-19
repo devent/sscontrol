@@ -20,7 +20,7 @@ package com.anrisoftware.sscontrol.profile.service;
 
 import static org.apache.commons.lang3.Validate.notNull;
 
-import com.anrisoftware.globalpom.log.AbstractSerializedLogger;
+import com.anrisoftware.globalpom.log.AbstractLogger;
 import com.anrisoftware.sscontrol.core.api.ProfileProperties;
 
 /**
@@ -29,7 +29,11 @@ import com.anrisoftware.sscontrol.core.api.ProfileProperties;
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 0.1
  */
-class ProfileServiceImplLogger extends AbstractSerializedLogger {
+class ProfileServiceImplLogger extends AbstractLogger {
+
+	private static final String NOT_FIND_PROFILE_ENTRY = "Can not find the profile entry name '%s' in %s.";
+	private static final String ADDED_ENTRY_INFO = "Add entry '{}' to '{}' profile.";
+	private static final String ADDED_ENTRY = "Add entry '{}' to {}.";
 
 	/**
 	 * Create logger for {@link ProfileServiceImpl}.
@@ -39,13 +43,15 @@ class ProfileServiceImplLogger extends AbstractSerializedLogger {
 	}
 
 	void entryAdded(ProfileServiceImpl profile, String name) {
-		log.trace("Added entry '{}' to {}.", name, profile);
+		if (log.isDebugEnabled()) {
+			log.debug(ADDED_ENTRY, name, profile);
+		} else {
+			log.info(ADDED_ENTRY_INFO, name, profile.getProfileName());
+		}
 	}
 
 	void checkProfileEntry(ProfileProperties properties,
 			ProfileServiceImpl service, String name) {
-		notNull(properties,
-				"Can not find the profile entry with name '%s' in %s.", name,
-				service);
+		notNull(properties, NOT_FIND_PROFILE_ENTRY, name, service);
 	}
 }

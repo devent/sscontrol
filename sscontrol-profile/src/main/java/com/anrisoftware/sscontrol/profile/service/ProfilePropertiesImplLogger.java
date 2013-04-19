@@ -18,7 +18,7 @@
  */
 package com.anrisoftware.sscontrol.profile.service;
 
-import com.anrisoftware.globalpom.log.AbstractSerializedLogger;
+import com.anrisoftware.globalpom.log.AbstractLogger;
 import com.anrisoftware.sscontrol.core.api.ProfileProperties;
 
 /**
@@ -27,7 +27,9 @@ import com.anrisoftware.sscontrol.core.api.ProfileProperties;
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 0.1
  */
-class ProfilePropertiesImplLogger extends AbstractSerializedLogger {
+class ProfilePropertiesImplLogger extends AbstractLogger {
+
+	private static final String ADD_PROPERTY = "Add property '{}'='{}' to {}.";
 
 	/**
 	 * Create logger for {@link ProfilePropertiesImpl}.
@@ -37,11 +39,9 @@ class ProfilePropertiesImplLogger extends AbstractSerializedLogger {
 	}
 
 	void propertyAdded(ProfileProperties properties, String name, Object value) {
-		if (!log.isTraceEnabled()) {
-			return;
+		if (log.isDebugEnabled()) {
+			log.debug(ADD_PROPERTY, name, value, properties);
 		}
-		log.trace("Added property '{}'='{}' to {}.", new Object[] { name,
-				value, properties });
 	}
 
 }

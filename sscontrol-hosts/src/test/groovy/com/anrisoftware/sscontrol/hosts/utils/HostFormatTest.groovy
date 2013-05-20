@@ -12,6 +12,14 @@ import com.anrisoftware.sscontrol.hosts.service.HostsModule
 import com.google.inject.Guice
 import com.google.inject.Injector
 
+/**
+ * Test host format.
+ * 
+ * @see HostFormat
+ * 
+ * @author Erwin Mueller, erwin.mueller@deventm.org
+ * @since 1.0
+ */
 @Slf4j
 class HostFormatTest {
 

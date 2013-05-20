@@ -19,47 +19,35 @@
 package com.anrisoftware.sscontrol.hosts
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
+import static org.apache.commons.io.FileUtils.*
 import groovy.util.logging.Slf4j
 
+import org.junit.After
 import org.junit.Before
+import org.junit.BeforeClass
 import org.junit.Test
 
-import com.anrisoftware.sscontrol.core.activator.CoreModule
-import com.anrisoftware.sscontrol.core.activator.CoreResourcesModule
 import com.anrisoftware.sscontrol.core.api.ServiceException
 import com.anrisoftware.sscontrol.core.api.ServiceLoader as SscontrolServiceLoader
 import com.anrisoftware.sscontrol.core.api.ServicesRegistry
+import com.anrisoftware.sscontrol.core.modules.CoreModule
+import com.anrisoftware.sscontrol.core.modules.CoreResourcesModule
 import com.anrisoftware.sscontrol.hosts.service.Host
-import com.anrisoftware.sscontrol.hosts.service.HostsServiceFactory
 import com.anrisoftware.sscontrol.hosts.service.HostsServiceImpl
 import com.google.inject.Guice
 import com.google.inject.Injector
 
+/**
+ * Test hosts service.
+ * 
+ * @author Erwin Mueller, erwin.mueller@deventm.org
+ * @since 1.0
+ */
 @Slf4j
 class HostsServiceTest {
 
-	static ubuntu1004Profile = resourceURL("Ubuntu_10_04Profile.groovy", HostsServiceTest)
-
-	static hostsService = resourceURL("HostsService.groovy", HostsServiceTest)
-
-	static hostsNullService = resourceURL("HostsNullService.groovy", HostsServiceTest)
-
-	static hostsExpected = resourceURL("hosts_expected.txt", HostsServiceTest)
-
-	static defaultHostsFile = resourceURL("default_hosts.txt", HostsServiceTest)
-
-	static hostsWithDefaultsExpected = resourceURL("hosts_defaults_expected.txt", HostsServiceTest)
-
-	Injector injector
-
-	Ubuntu_10_04Profile ubuntu_10_04Profile
-
-	File tmp
-
-	Map variables
-
 	@Test
-	void "hosts service with empty configuration"() {
+	void "empty"() {
 		ServicesRegistry registry = injector.getInstance ServicesRegistry
 		SscontrolServiceLoader loader = injector.getInstance SscontrolServiceLoader
 		loader.loadService(ubuntu1004Profile, variables, registry, null)
@@ -67,35 +55,31 @@ class HostsServiceTest {
 		loader.loadService(hostsService, variables, registry, profile)
 
 		assertService registry
-		withFiles HostsServiceFactory.NAME, {
-			registry.allServices.each { it.call() }
-			assertFileContent new File(it, "/etc/hosts"), hostsExpected
-			log.info "Run service again to ensure that configuration is not set double."
-			registry.allServices.each { it.call() }
-			assertFileContent new File(it, "/etc/hosts"), hostsExpected
-		}, {}, tmp, true
+		registry.allServices.each { it.call() }
+		assertFileContent hosts, hostsExpected
+		log.info "Run service again to ensure that configuration is not set double."
+		registry.allServices.each { it.call() }
+		assertFileContent hosts, hostsExpected
 	}
 
 	@Test
-	void "hosts service with hosts already set"() {
+	void "+hosts"() {
 		ServicesRegistry registry = injector.getInstance ServicesRegistry
 		SscontrolServiceLoader loader = injector.getInstance SscontrolServiceLoader
 		loader.loadService(ubuntu1004Profile, variables, registry, null)
 		def profile = registry.getService("profile")[0]
 		loader.loadService(hostsService, variables, registry, profile)
-		withFiles HostsServiceFactory.NAME, {
-			registry.allServices.each { it.call() }
-			assertFileContent new File(it, "/etc/hosts"), hostsWithDefaultsExpected
-			log.info "Run service again to ensure that configuration is not set double."
-			registry.allServices.each { it.call() }
-			assertFileContent new File(it, "/etc/hosts"), hostsWithDefaultsExpected
-		}, {
-			copyResourceToFile(defaultHostsFile, new File(it, "/etc/hosts"))
-		}, tmp
+		copyURLToFile defaultHostsFile, hosts
+
+		registry.allServices.each { it.call() }
+		assertFileContent hosts, hostsWithDefaultsExpected
+		log.info "Run service again to ensure that configuration is not set double."
+		registry.allServices.each { it.call() }
+		assertFileContent hosts, hostsWithDefaultsExpected
 	}
 
 	@Test
-	void "load hostname service with null value"() {
+	void "+null value"() {
 		ServicesRegistry registry = injector.getInstance ServicesRegistry
 		SscontrolServiceLoader loader = injector.getInstance SscontrolServiceLoader
 		loader.loadService(ubuntu1004Profile, variables, registry, null)
@@ -105,18 +89,53 @@ class HostsServiceTest {
 		}
 	}
 
+	static ubuntu1004Profile = HostsServiceTest.class.getResource("Ubuntu_10_04Profile.groovy")
+
+	static hostsService = HostsServiceTest.class.getResource("HostsService.groovy")
+
+	static hostsNullService = HostsServiceTest.class.getResource("HostsNullService.groovy")
+
+	static hostsExpected = HostsServiceTest.class.getResource("hosts_expected.txt")
+
+	static defaultHostsFile = HostsServiceTest.class.getResource("default_hosts.txt")
+
+	static hostsWithDefaultsExpected = HostsServiceTest.class.getResource("hosts_defaults_expected.txt")
+
+	Injector injector
+
+	Map variables
+
+	File tmpdir
+
+	File hosts
+
 	@Before
-	void setupInjector() {
-		injector = createInjector()
-		tmp = createTempDirectory()
-		variables = [tmp: tmp.absoluteFile]
+	void createTemp() {
+		tmpdir = File.createTempDir("HostsService", null)
+		hosts = new File(tmpdir, "/etc/hosts")
+		variables = [tmp: tmpdir.absoluteFile]
 	}
 
-	def createInjector() {
+	@After
+	void deleteTemp() {
+		tmpdir.deleteDir()
+	}
+
+	@Before
+	void createFactories() {
+		injector = createInjector()
+	}
+
+	@BeforeClass
+	static void setupToStringStyle() {
+		toStringStyle
+	}
+
+	static Injector createInjector() {
 		Guice.createInjector(new CoreModule(), new CoreResourcesModule())
 	}
 
-	def assertService(ServicesRegistry registry) {
+	static assertService(ServicesRegistry registry) {
 		HostsServiceImpl service = registry.getService("hosts")[0]
 		assert service.hosts.size() == 2
 

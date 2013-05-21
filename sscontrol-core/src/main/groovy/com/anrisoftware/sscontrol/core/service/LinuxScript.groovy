@@ -133,8 +133,8 @@ abstract class LinuxScript extends Script {
 	void installPackages(List packages) {
 		def template = commandTemplates.getResource("install")
 		def worker = scriptCommandFactory.create(template,
-						"installCommand", installCommand,
-						"packages", packages)()
+				"installCommand", installCommand,
+				"packages", packages)()
 		log.installPackagesDone this, worker, packages
 	}
 
@@ -202,7 +202,18 @@ abstract class LinuxScript extends Script {
 	}
 
 	/**
-	 * Returns the default properties for the service.
+	 * Returns the default properties for the service, as in example:
+	 * 
+	 * <pre>
+	 * 	&#64;Inject
+	 *	&#64;Named("my-properties")
+	 *	ContextProperties myProperties
+	 *
+	 *	&#64;Override
+	 *	def getDefaultProperties() {
+	 *		myProperties
+	 *	}
+	 * </pre>
 	 */
 	abstract def getDefaultProperties()
 
@@ -218,7 +229,8 @@ abstract class LinuxScript extends Script {
 	 * 			  property values.
 	 *
 	 * @param args
-	 * 			  optional the arguments to the key.
+	 * 			  optional the arguments to the key, formatted as in
+	 * 			  {@link String#format(String, Object...)}.
 	 *
 	 * @return the value of the system profile property or the default property
 	 * if the profile property was not set.
@@ -230,14 +242,14 @@ abstract class LinuxScript extends Script {
 
 	/**
 	 * Returns a list of the system profile property. If the profile property
-	 * was not set return the default value from the default properties.
+	 * was not set, it returns the default value from the default properties.
 	 *
 	 * @param key
 	 * 			  the key of the profile property.
 	 *
 	 * @param p
 	 * 			  the {@link ContextProperties} containing the system
-	 * 			  property values.
+	 * 			  property default values.
 	 *
 	 * @return the {@link List} of the system profile property or
 	 * the default property if the profile property was not set.

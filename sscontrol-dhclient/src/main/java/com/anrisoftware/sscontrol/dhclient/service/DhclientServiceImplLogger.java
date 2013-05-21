@@ -18,7 +18,9 @@
  */
 package com.anrisoftware.sscontrol.dhclient.service;
 
-import com.anrisoftware.globalpom.log.AbstractSerializedLogger;
+import javax.inject.Singleton;
+
+import com.anrisoftware.globalpom.log.AbstractLogger;
 import com.anrisoftware.sscontrol.dhclient.statements.OptionDeclaration;
 
 /**
@@ -27,7 +29,11 @@ import com.anrisoftware.sscontrol.dhclient.statements.OptionDeclaration;
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class DhclientServiceImplLogger extends AbstractSerializedLogger {
+@Singleton
+class DhclientServiceImplLogger extends AbstractLogger {
+
+	private static final String PREPEND_INFO = "Prepend '{}' added for dhclient.";
+	private static final String PREPEND = "Prepend '{}' added for {}.";
 
 	/**
 	 * Create logger for {@link DhclientServiceImpl}.
@@ -38,10 +44,10 @@ class DhclientServiceImplLogger extends AbstractSerializedLogger {
 
 	public void prependAdded(DhclientServiceImpl service,
 			OptionDeclaration declaration) {
-		if (log.isTraceEnabled()) {
-			log.trace("Prepend '{}' added for {}.", declaration, service);
+		if (log.isDebugEnabled()) {
+			log.debug(PREPEND, declaration, service);
 		} else {
-			log.info("Prepend '{}' added for dhclient.", declaration);
+			log.info(PREPEND_INFO, declaration);
 		}
 	}
 }

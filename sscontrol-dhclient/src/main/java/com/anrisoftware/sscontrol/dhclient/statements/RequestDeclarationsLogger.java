@@ -1,6 +1,8 @@
 package com.anrisoftware.sscontrol.dhclient.statements;
 
-import com.anrisoftware.globalpom.log.AbstractSerializedLogger;
+import javax.inject.Singleton;
+
+import com.anrisoftware.globalpom.log.AbstractLogger;
 
 /**
  * Logging messages for {@link RequestDeclarations}.
@@ -8,7 +10,15 @@ import com.anrisoftware.globalpom.log.AbstractSerializedLogger;
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class RequestDeclarationsLogger extends AbstractSerializedLogger {
+@Singleton
+class RequestDeclarationsLogger extends AbstractLogger {
+
+	private static final String NO_REQUEST_INFO = "No request '{}' found for removal for dhclient.";
+	private static final String NO_REQUEST = "No request '{}' found for removal in {}.";
+	private static final String REQUEST_REMOVED_INFO = "Request '{}' removed for dhclient.";
+	private static final String REQUEST_REMOVED = "Request '{}' removed from {}.";
+	private static final String REQUEST_INFO = "Request '{}' added for dhclient.";
+	private static final String REQUEST = "Request '{}' added to {}.";
 
 	/**
 	 * Create logger for {@link RequestDeclarations}.
@@ -18,26 +28,26 @@ class RequestDeclarationsLogger extends AbstractSerializedLogger {
 	}
 
 	void reguestAdded(RequestDeclarations requests, Declaration dec) {
-		if (log.isTraceEnabled()) {
-			log.trace("Request '{}' added to {}.", dec, requests);
+		if (log.isDebugEnabled()) {
+			log.debug(REQUEST, dec, requests);
 		} else {
-			log.info("Request '{}' added for dhclient.", dec);
+			log.info(REQUEST_INFO, dec);
 		}
 	}
 
 	void reguestRemoved(RequestDeclarations requests, Declaration req) {
-		if (log.isTraceEnabled()) {
-			log.trace("Request '{}' removed from {}.", req, requests);
+		if (log.isDebugEnabled()) {
+			log.debug(REQUEST_REMOVED, req, requests);
 		} else {
-			log.info("Request '{}' removed for dhclient.", req);
+			log.info(REQUEST_REMOVED_INFO, req);
 		}
 	}
 
 	void noRequestFoundForRemoval(RequestDeclarations requests, Declaration req) {
-		if (log.isTraceEnabled()) {
-			log.warn("No request '{}' found for removal in {}.", req, requests);
+		if (log.isDebugEnabled()) {
+			log.warn(NO_REQUEST, req, requests);
 		} else {
-			log.warn("No request '{}' found for removal for dhclient.", req);
+			log.warn(NO_REQUEST_INFO, req);
 		}
 	}
 

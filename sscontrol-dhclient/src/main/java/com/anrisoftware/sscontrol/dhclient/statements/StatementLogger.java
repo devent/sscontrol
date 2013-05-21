@@ -2,7 +2,9 @@ package com.anrisoftware.sscontrol.dhclient.statements;
 
 import static org.apache.commons.lang3.Validate.notEmpty;
 
-import com.anrisoftware.globalpom.log.AbstractSerializedLogger;
+import javax.inject.Singleton;
+
+import com.anrisoftware.globalpom.log.AbstractLogger;
 
 /**
  * Logging messages for {@link Statement}.
@@ -10,7 +12,11 @@ import com.anrisoftware.globalpom.log.AbstractSerializedLogger;
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class StatementLogger extends AbstractSerializedLogger {
+@Singleton
+class StatementLogger extends AbstractLogger {
+
+	private static final String OPTION_NULL = "Option cannot be null or empty.";
+	private static final String DECLARATION_NULL = "Declaration cannot be null or empty.";
 
 	/**
 	 * Create logger for {@link Statement}.
@@ -20,10 +26,10 @@ class StatementLogger extends AbstractSerializedLogger {
 	}
 
 	void checkDeclaration(String declaration) {
-		notEmpty(declaration, "The declaration cannot be null or empty.");
+		notEmpty(declaration, DECLARATION_NULL);
 	}
 
 	void checkOption(String option) {
-		notEmpty(option, "The option cannot be null or empty.");
+		notEmpty(option, OPTION_NULL);
 	}
 }

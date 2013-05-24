@@ -44,7 +44,6 @@ class DatabaseScriptTest extends DatabaseServiceUtil {
 		loader.loadService(ubuntu1004Profile, variables, registry, null)
 		def profile = registry.getService("profile")[0]
 		loader.loadService(databaseScript, variables, registry, profile)
-		withFiles NAME, {}, {}, tmp
 		assertService registry.getService("database")[0]
 	}
 

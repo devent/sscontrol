@@ -50,11 +50,10 @@ public class User implements Serializable {
 	 *            the {@link UserLogger} for logging messages.
 	 * 
 	 * @param p
-	 *            the default user {@link ContextProperties} properties. Expects
-	 *            the following properties:
+	 *            the default user {@link ContextProperties} properties:
 	 *            <dl>
 	 *            <dt>{@code user_server}</dt>
-	 *            <dd>The default user server host.</dd>
+	 *            <dd>default user server host.</dd>
 	 *            </dl>
 	 * 
 	 * @param name

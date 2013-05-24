@@ -11,7 +11,7 @@
 
 	<artifactId>sscontrol-database</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-    <name>Simle Server Control :: Database</name>
+    <name>RoboBee :: Database</name>
     <description>Setups the Database server.</description>
 	<inceptionYear>2012</inceptionYear>
 

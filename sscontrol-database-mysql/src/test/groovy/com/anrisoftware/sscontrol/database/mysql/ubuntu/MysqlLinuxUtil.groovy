@@ -19,48 +19,80 @@
 package com.anrisoftware.sscontrol.database.mysql.ubuntu
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
-import groovy.util.logging.Slf4j
 
+import org.junit.After
 import org.junit.Before
+import org.junit.BeforeClass
 
-import com.anrisoftware.sscontrol.core.activator.CoreModule
-import com.anrisoftware.sscontrol.core.activator.CoreResourcesModule
+import com.anrisoftware.sscontrol.core.modules.CoreModule
+import com.anrisoftware.sscontrol.core.modules.CoreResourcesModule
 import com.google.inject.Guice
 import com.google.inject.Injector
 
-@Slf4j
+
 class MysqlLinuxUtil {
 
-	static databaseScript = resourceURL("Database.groovy", MysqlLinuxUtil)
+	static databaseScript = MysqlLinuxUtil.class.getResource("Database.groovy")
 
-	static aptitudeCommand = resourceURL("echo_command.txt", MysqlLinuxUtil)
+	static aptitudeCommand = MysqlLinuxUtil.class.getResource("echo_command.txt")
 
-	static restartCommand = resourceURL("echo_command.txt", MysqlLinuxUtil)
+	static restartCommand = MysqlLinuxUtil.class.getResource("echo_command.txt")
 
-	static mysqladminCommand = resourceURL("mysqladmin_command.txt", MysqlLinuxUtil)
+	static mysqladminCommand = MysqlLinuxUtil.class.getResource("mysqladmin_command.txt")
 
-	static mysqlCommand = resourceURL("echo_command.txt", MysqlLinuxUtil)
+	static mysqlCommand = MysqlLinuxUtil.class.getResource("echo_command.txt")
 
-	static postfixTables = resourceURL("postfixtables.txt", MysqlLinuxUtil)
+	static postfixTables = MysqlLinuxUtil.class.getResource("postfixtables.txt")
 
 	Injector injector
 
-	File tmp
+	File tmpdir
 
 	Map variables
 
-	static {
-		toStringStyle
+	File aptitude
+
+	File restart
+
+	File mysqladmin
+
+	File mysql
+
+	File postfixtables
+
+	File confd
+
+	File sscontrolMysqld
+
+	@Before
+	void createTemp() {
+		tmpdir = File.createTempDir this.class.simpleName, null
+		aptitude = new File(tmpdir, "/usr/bin/aptitude")
+		restart = new File(tmpdir, "/etc/init.d/mysql")
+		mysqladmin = new File(tmpdir, "/usr/bin/mysqladmin")
+		mysql = new File(tmpdir, "/usr/bin/mysql")
+		postfixtables = new File(tmpdir, "/tmp/postfixtables.sql")
+		confd = new File(tmpdir, "etc/mysql/conf.d")
+		sscontrolMysqld = new File(tmpdir, "/etc/mysql/conf.d/sscontrol_mysqld.cnf")
+		variables = [tmp: tmpdir.absoluteFile]
+	}
+
+	@After
+	void deleteTemp() {
+		tmpdir.deleteDir()
 	}
 
 	@Before
-	void setupInjector() {
+	void createFactories() {
 		injector = createInjector()
-		tmp = createTempDirectory()
-		variables = [tmp: tmp.absoluteFile]
 	}
 
-	def createInjector() {
+	@BeforeClass
+	static void setupToStringStyle() {
+		toStringStyle
+	}
+
+	static Injector createInjector() {
 		Guice.createInjector(new CoreModule(), new CoreResourcesModule())
 	}
 }

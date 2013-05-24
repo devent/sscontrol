@@ -1,6 +1,6 @@
 package com.anrisoftware.sscontrol.database.mysql.linux
 
-import com.anrisoftware.globalpom.log.AbstractSerializedLogger
+import com.anrisoftware.globalpom.log.AbstractLogger
 import com.anrisoftware.sscontrol.core.api.ServiceException
 import com.anrisoftware.sscontrol.database.statements.Database
 
@@ -10,7 +10,21 @@ import com.anrisoftware.sscontrol.database.statements.Database
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class Mysql_5_1ScriptLogger extends AbstractSerializedLogger {
+@Singleton
+class Mysql_5_1ScriptLogger extends AbstractLogger {
+
+	static final String ADMINISTRATOR_PASSWORD_SET = "Administrator password set for {}, worker {}, output: '\n{}'"
+	static final String ADMINISTRATOR_PASSWORD_SET_DEBUG = "Administrator password set for {}, worker {}."
+	static final String ADMINISTRATOR_PASSWORD_SET_INFO = "Administrator password set for {}."
+	static final String DATABASES_CREATED = "Databases created for {}, worker {}, output: '\n{}'"
+	static final String DATABASES_CREATED_DEBUG = "Databases created for {}, worker {}."
+	static final String DATABASES_CREATED_INFO = "Databases created for {}."
+	static final String USERS_CREATED = "Users created for {}, worker {}, output: '\n{}'"
+	static final String USERS_CREATED_DEBUG = "Users created for {}, worker {}."
+	static final String USERS_CREATED_INFO = "Users created for {}."
+	static final String SQL_SCRIPT_IMPORT = "SQL script import for {}, worker {}, output: '\n{}'"
+	static final String SQL_IMPORT_DEBUG = "SQL import for {}, worker {}."
+	static final String SQL_SCRIPT_IMPORT_INFO = "SQL script import for {}."
 
 	/**
 	 * Create logger for {@link Mysql_5_1Script}.
@@ -23,12 +37,12 @@ class Mysql_5_1ScriptLogger extends AbstractSerializedLogger {
 		if (log.traceEnabled) {
 			String workerstr = replacePassword script, worker.toString()
 			String workerout = replacePassword script, worker.out
-			log.trace "Setup administrator password in {}, worker {}, output: '\n${workerout}'", script, workerstr
+			log.trace ADMINISTRATOR_PASSWORD_SET, script, workerstr, workerout
 		} else if (log.debugEnabled) {
 			String workerstr = replacePassword script, worker.toString()
-			log.debug "Setup administrator password in {}, worker {}.", script, workerstr
+			log.debug ADMINISTRATOR_PASSWORD_SET_DEBUG, script, workerstr
 		} else {
-			log.info "Setup administrator password in {}.", script.name
+			log.info ADMINISTRATOR_PASSWORD_SET_INFO, script.name
 		}
 	}
 
@@ -36,12 +50,12 @@ class Mysql_5_1ScriptLogger extends AbstractSerializedLogger {
 		if (log.traceEnabled) {
 			String workerstr = replacePassword script, worker.toString()
 			String workerout = replacePassword script, worker.out
-			log.trace "Created databases in {}, worker {}, output: '\n${workerout}'", script, workerstr
+			log.trace DATABASES_CREATED, script, workerstr, workerout
 		} else if (log.debugEnabled) {
 			String workerstr = replacePassword script, worker.toString()
-			log.debug "Created databases in {}, worker {}.", script, workerstr
+			log.debug DATABASES_CREATED_DEBUG, script, workerstr
 		} else {
-			log.info "Created databases in {}.", script.name
+			log.info DATABASES_CREATED_INFO, script.name
 		}
 	}
 
@@ -49,12 +63,12 @@ class Mysql_5_1ScriptLogger extends AbstractSerializedLogger {
 		if (log.traceEnabled) {
 			String workerstr = replacePassword script, worker.toString()
 			String workerout = replacePassword script, worker.out
-			log.trace "Created users in {}, worker {}, output: '\n${workerout}'", script, workerstr
+			log.trace USERS_CREATED, script, workerstr, workerout
 		} else if (log.debugEnabled) {
 			String workerstr = replacePassword script, worker.toString()
-			log.debug "Created users in {}, worker {}.", script, workerstr
+			log.debug USERS_CREATED_DEBUG, script, workerstr
 		} else {
-			log.info "Created users in {}.", script.name
+			log.info USERS_CREATED_INFO, script.name
 		}
 	}
 
@@ -62,12 +76,12 @@ class Mysql_5_1ScriptLogger extends AbstractSerializedLogger {
 		if (log.traceEnabled) {
 			String workerstr = replacePassword script, worker.toString()
 			String workerout = replacePassword script, worker.out
-			log.trace "Import SQL script in {}, worker {}, output: '\n${workerout}'", script, workerstr
+			log.trace SQL_SCRIPT_IMPORT, script, workerstr, workerout
 		} else if (log.debugEnabled) {
 			String workerstr = replacePassword script, worker.toString()
-			log.debug "Import SQL script in {}, worker {}.", script, workerstr
+			log.debug SQL_IMPORT_DEBUG, script, workerstr
 		} else {
-			log.info "Import SQL script in {}.", script.name
+			log.info SQL_SCRIPT_IMPORT_INFO, script.name
 		}
 	}
 
@@ -78,10 +92,9 @@ class Mysql_5_1ScriptLogger extends AbstractSerializedLogger {
 	}
 
 	void errorImportSqlScript(Mysql_5_1Script script, Exception e) {
-		ServiceException ex = new ServiceException("Error import SQL script to database", e)
-		ex.addContextValue "service", script
-		log.error(e.localizedMessage)
-		throw ex
+		throw logException(
+		new ServiceException("Error import SQL script", e).
+		addContextValue("service", script), "Error import SQL script for %s", script)
 	}
 
 	String replacePassword(Mysql_5_1Script script, String string) {

@@ -11,7 +11,7 @@
 
 	<artifactId>sscontrol-database-mysql</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>Server Control :: Database :: MySQL</name>
+	<name>RoboBee :: Database :: MySQL</name>
 	<description>Setups MySQL as the database server.</description>
 	<inceptionYear>2013</inceptionYear>
 

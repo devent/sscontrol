@@ -19,6 +19,7 @@
 package com.anrisoftware.sscontrol.database.mysql.ubuntu
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
+import static org.apache.commons.io.FileUtils.*
 import groovy.util.logging.Slf4j
 
 import org.junit.Test
@@ -36,9 +37,9 @@ import com.google.inject.Injector
 @Slf4j
 class MysqlUbuntu_10_04_Test extends MysqlLinuxUtil {
 
-	static ubuntu1004Profile = resourceURL("Ubuntu_10_04Profile.groovy", MysqlUbuntu_10_04_Test)
+	static ubuntu1004Profile = MysqlUbuntu_10_04_Test.class.getResource("Ubuntu_10_04Profile.groovy")
 
-	static mysqldExpected = resourceURL("mysqld_cnf.txt", MysqlUbuntu_10_04_Test)
+	static mysqldExpected = MysqlUbuntu_10_04_Test.class.getResource("mysqld_cnf.txt")
 
 	@Test
 	void "database script"() {
@@ -47,23 +48,21 @@ class MysqlUbuntu_10_04_Test extends MysqlLinuxUtil {
 		loader.loadService(ubuntu1004Profile, variables, registry, null)
 		def profile = registry.getService("profile")[0]
 		loader.loadService(databaseScript, variables, registry, profile)
-		withFiles "database", {
-			registry.allServices.each { it.call() }
-			assertFiles(it)
-			log.info "Run service again to ensure that configuration is not set double."
-			registry.allServices.each { it.call() }
-			assertFiles(it)
-		}, {
-			new File(it, "etc/mysql/conf.d").mkdirs()
-			copyResourceToCommand aptitudeCommand, new File(it, "/usr/bin/aptitude")
-			copyResourceToCommand restartCommand, new File(it, "/etc/init.d/mysql")
-			copyResourceToCommand mysqladminCommand, new File(it, "/usr/bin/mysqladmin")
-			copyResourceToCommand mysqlCommand, new File(it, "/usr/bin/mysql")
-			copyResourceToFile postfixTables, new File(it, "/tmp/postfixtables.sql")
-		}, tmp
+		copyResourceToCommand aptitudeCommand, aptitude
+		copyResourceToCommand restartCommand, restart
+		copyResourceToCommand mysqladminCommand, mysqladmin
+		copyResourceToCommand mysqlCommand, mysql
+		copyURLToFile postfixTables, postfixtables
+		confd.mkdirs()
+
+		registry.allServices.each { it.call() }
+		assertFiles(tmpdir)
+		log.info "Run service again to ensure that configuration is not set double."
+		registry.allServices.each { it.call() }
+		assertFiles(tmpdir)
 	}
 
-	private assertFiles(it) {
-		assertFileContent(new File(it, "/etc/mysql/conf.d/sscontrol_mysqld.cnf"), mysqldExpected)
+	private assertFiles(File tmpdir) {
+		assertFileContent sscontrolMysqld, mysqldExpected
 	}
 }

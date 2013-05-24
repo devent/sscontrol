@@ -73,18 +73,19 @@ abstract class UfwScript extends LinuxScript {
 	 */
 	void deployRules() {
 		def worker = scriptCommandFactory.create(rules,
-						"service", service,
-						"ufwCommand", ufwCommand,
-						"prefix", system.prefix)()
+				"service", service,
+				"ufwCommand", ufwCommand,
+				"prefix", system.prefix)()
 		log.deployedRules this, worker
 	}
 
 	/**
-	 * Returns the ufw command.
+	 * Returns the ufw tool command.
 	 *
 	 * <ul>
-	 * <li>property key {@code ufw_command}</li>
+	 * <li>property {@code "ufw_command"}</li>
 	 * </ul>
 	 */
-	abstract String getUfwCommand()
+	String getUfwCommand() {
+	}
 }

@@ -11,7 +11,7 @@
 
 	<artifactId>sscontrol-firewall-ufw</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>Sscontrol :: Firewall :: UFW</name>
+	<name>Robo Bee :: Firewall :: UFW</name>
 	<description>Uncomplicated FireWall service.</description>
 
 

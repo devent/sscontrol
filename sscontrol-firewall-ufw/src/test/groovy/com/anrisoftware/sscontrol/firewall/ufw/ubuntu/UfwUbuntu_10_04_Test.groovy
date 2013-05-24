@@ -25,7 +25,6 @@ import org.junit.Test
 
 import com.anrisoftware.sscontrol.core.api.ServiceLoader as SscontrolServiceLoader
 import com.anrisoftware.sscontrol.core.api.ServicesRegistry
-import com.anrisoftware.sscontrol.firewall.service.FirewallFactory
 import com.google.inject.Injector
 
 /**
@@ -37,8 +36,6 @@ import com.google.inject.Injector
 @Slf4j
 class UfwUbuntu_10_04_Test extends UfwLinuxUtil {
 
-	static ubuntu1004Profile = resourceURL("Ubuntu_10_04Profile.groovy", UfwUbuntu_10_04_Test)
-
 	@Test
 	void "ufw allow"() {
 		ServicesRegistry registry = injector.getInstance ServicesRegistry
@@ -46,14 +43,12 @@ class UfwUbuntu_10_04_Test extends UfwLinuxUtil {
 		loader.loadService(ubuntu1004Profile, variables, registry, null)
 		def profile = registry.getService("profile")[0]
 		loader.loadService(firewallAllowService, variables, registry, profile)
-		withFiles FirewallFactory.NAME, {
-			registry.allServices.each { it.call() }
-			log.info "Run service again to ensure that configuration is not set double."
-			registry.allServices.each { it.call() }
-		}, {
-			copyResourceToCommand(echoCommand, new File(it, "/usr/sbin/ufw"))
-			copyResourceToCommand(echoCommand, new File(it, "/usr/bin/aptitude"))
-		}, tmp
+		copyResourceToCommand echoCommand, ufw
+		copyResourceToCommand echoCommand, aptitude
+
+		registry.allServices.each { it.call() }
+		log.info "Run service again to ensure that configuration is not set double."
+		registry.allServices.each { it.call() }
 	}
 
 	@Test
@@ -63,13 +58,13 @@ class UfwUbuntu_10_04_Test extends UfwLinuxUtil {
 		loader.loadService(ubuntu1004Profile, variables, registry, null)
 		def profile = registry.getService("profile")[0]
 		loader.loadService(firewallDenyService, variables, registry, profile)
-		withFiles FirewallFactory.NAME, {
-			registry.allServices.each { it.call() }
-			log.info "Run service again to ensure that configuration is not set double."
-			registry.allServices.each { it.call() }
-		}, {
-			copyResourceToCommand(echoCommand, new File(it, "/usr/sbin/ufw"))
-			copyResourceToCommand(echoCommand, new File(it, "/usr/bin/aptitude"))
-		}, tmp
+		copyResourceToCommand echoCommand, ufw
+		copyResourceToCommand echoCommand, aptitude
+
+		registry.allServices.each { it.call() }
+		log.info "Run service again to ensure that configuration is not set double."
+		registry.allServices.each { it.call() }
 	}
+
+	static ubuntu1004Profile = UfwUbuntu_10_04_Test.class.getResource("Ubuntu_10_04Profile.groovy")
 }

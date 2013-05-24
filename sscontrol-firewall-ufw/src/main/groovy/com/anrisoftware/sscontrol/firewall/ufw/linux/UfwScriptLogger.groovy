@@ -1,6 +1,6 @@
 package com.anrisoftware.sscontrol.firewall.ufw.linux
 
-import com.anrisoftware.globalpom.log.AbstractSerializedLogger
+import com.anrisoftware.globalpom.log.AbstractLogger
 
 /**
  * Logging messages for {@link LinuxScript}.
@@ -8,7 +8,8 @@ import com.anrisoftware.globalpom.log.AbstractSerializedLogger
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class UfwScriptLogger extends AbstractSerializedLogger {
+@Singleton
+class UfwScriptLogger extends AbstractLogger {
 
 	/**
 	 * Create logger for {@link LinuxScript}.
@@ -19,9 +20,9 @@ class UfwScriptLogger extends AbstractSerializedLogger {
 
 	void deployedRules(UfwScript script, def worker) {
 		if (log.debugEnabled) {
-			log.debug "Deployed firewall rules for {}, worker {}.", script, worker
+			log.debug "Firewall rules deployed for {}, worker {}.", script, worker
 		} else {
-			log.info "Deployed firewall rules."
+			log.info "Firewall rules deployed."
 		}
 	}
 }

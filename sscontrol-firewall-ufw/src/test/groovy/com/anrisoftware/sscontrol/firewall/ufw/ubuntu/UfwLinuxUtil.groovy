@@ -21,10 +21,12 @@ package com.anrisoftware.sscontrol.firewall.ufw.ubuntu
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import groovy.util.logging.Slf4j
 
+import org.junit.After
 import org.junit.Before
+import org.junit.BeforeClass
 
-import com.anrisoftware.sscontrol.core.activator.CoreModule
-import com.anrisoftware.sscontrol.core.activator.CoreResourcesModule
+import com.anrisoftware.sscontrol.core.modules.CoreModule
+import com.anrisoftware.sscontrol.core.modules.CoreResourcesModule
 import com.google.inject.Guice
 import com.google.inject.Injector
 
@@ -37,30 +39,47 @@ import com.google.inject.Injector
 @Slf4j
 class UfwLinuxUtil {
 
-	static firewallAllowService = resourceURL("FirewallAllow.groovy", UfwLinuxUtil)
+	static firewallAllowService = UfwLinuxUtil.class.getResource("FirewallAllow.groovy")
 
-	static firewallDenyService = resourceURL("FirewallDeny.groovy", UfwLinuxUtil)
+	static firewallDenyService = UfwLinuxUtil.class.getResource("FirewallDeny.groovy")
 
-	static echoCommand = resourceURL("echo_command.txt", UfwLinuxUtil)
+	static echoCommand = UfwLinuxUtil.class.getResource("echo_command.txt")
 
 	Injector injector
 
-	File tmp
+	File tmpdir
 
 	Map variables
 
-	static {
-		toStringStyle
+	File aptitude
+
+	File ufw
+
+	@Before
+	void createTemp() {
+		tmpdir = File.createTempDir this.class.simpleName, null
+		aptitude = new File(tmpdir, "/usr/bin/aptitude")
+		ufw = new File(tmpdir, "/usr/sbin/ufw")
+		variables = [tmp: tmpdir.absoluteFile]
+	}
+
+	@After
+	void deleteTemp() {
+		tmpdir.deleteDir()
 	}
 
 	@Before
-	void setupInjector() {
+	void createFactories() {
 		injector = createInjector()
-		tmp = createTempDirectory()
-		variables = [tmp: tmp.absoluteFile]
 	}
 
-	def createInjector() {
-		Guice.createInjector(new CoreModule(), new CoreResourcesModule(), new UfwModule())
+	@BeforeClass
+	static void setupToStringStyle() {
+		toStringStyle
+	}
+
+	static Injector createInjector() {
+		Guice.createInjector(new CoreModule(), new CoreResourcesModule(),
+				new UfwModule())
 	}
 }

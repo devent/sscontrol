@@ -50,7 +50,7 @@ class Ubuntu_10_04Script extends UfwScript {
 	 * Returns the ufw service packages.
 	 *
 	 * <ul>
-	 * <li>property key {@code packages}</li>
+	 * <li>property {@code "packages"}</li>
 	 * </ul>
 	 */
 	List getPackages() {

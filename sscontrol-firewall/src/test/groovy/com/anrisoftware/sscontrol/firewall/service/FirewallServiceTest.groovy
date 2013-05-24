@@ -19,16 +19,19 @@
 package com.anrisoftware.sscontrol.firewall.service
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
+import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.firewall.service.FirewallFactory.*
 import groovy.util.logging.Slf4j
 
+import org.junit.After
 import org.junit.Before
+import org.junit.BeforeClass
 import org.junit.Test
 
-import com.anrisoftware.sscontrol.core.activator.CoreModule
-import com.anrisoftware.sscontrol.core.activator.CoreResourcesModule
 import com.anrisoftware.sscontrol.core.api.ServiceLoader as SscontrolServiceLoader
 import com.anrisoftware.sscontrol.core.api.ServicesRegistry
+import com.anrisoftware.sscontrol.core.modules.CoreModule
+import com.anrisoftware.sscontrol.core.modules.CoreResourcesModule
 import com.google.inject.Guice
 import com.google.inject.Injector
 
@@ -41,18 +44,6 @@ import com.google.inject.Injector
 @Slf4j
 class FirewallServiceTest {
 
-	static ubuntu1004Profile = resourceURL("Ubuntu_10_04Profile.groovy", FirewallServiceTest)
-
-	static firewallAllowScript = resourceURL("FirewallAllow.groovy", FirewallServiceTest)
-
-	static firewallDenyScript = resourceURL("FirewallDeny.groovy", FirewallServiceTest)
-
-	Injector injector
-
-	File tmp
-
-	Map variables
-
 	@Test
 	void "firewall allow script"() {
 		ServicesRegistry registry = injector.getInstance ServicesRegistry
@@ -60,8 +51,6 @@ class FirewallServiceTest {
 		loader.loadService(ubuntu1004Profile, variables, registry, null)
 		def profile = registry.getService("profile")[0]
 		loader.loadService(firewallAllowScript, variables, registry, profile)
-		withFiles NAME, {}, {}, tmp
-
 		def service = assertService registry.getService("firewall")[0], 14
 	}
 
@@ -72,13 +61,7 @@ class FirewallServiceTest {
 		loader.loadService(ubuntu1004Profile, variables, registry, null)
 		def profile = registry.getService("profile")[0]
 		loader.loadService(firewallDenyScript, variables, registry, profile)
-		withFiles NAME, {}, {}, tmp
-
 		def service = assertService registry.getService("firewall")[0], 14
-	}
-
-	static {
-		toStringStyle
 	}
 
 	private FirewallServiceImpl assertService(FirewallServiceImpl service, Object... args) {
@@ -86,14 +69,40 @@ class FirewallServiceTest {
 		service
 	}
 
+	static ubuntu1004Profile = FirewallServiceTest.class.getResource("Ubuntu_10_04Profile.groovy")
+
+	static firewallAllowScript = FirewallServiceTest.class.getResource("FirewallAllow.groovy")
+
+	static firewallDenyScript = FirewallServiceTest.class.getResource("FirewallDeny.groovy")
+
+	Injector injector
+
+	File tmpdir
+
+	Map variables
+
 	@Before
-	void setupInjector() {
-		injector = createInjector()
-		tmp = createTempDirectory()
-		variables = [tmp: tmp.absoluteFile]
+	void createTemp() {
+		tmpdir = File.createTempDir this.class.simpleName, null
+		variables = [tmp: tmpdir.absoluteFile]
 	}
 
-	def createInjector() {
+	@After
+	void deleteTemp() {
+		tmpdir.deleteDir()
+	}
+
+	@Before
+	void createFactories() {
+		injector = createInjector()
+	}
+
+	@BeforeClass
+	static void setupToStringStyle() {
+		toStringStyle
+	}
+
+	static Injector createInjector() {
 		Guice.createInjector(new CoreModule(), new CoreResourcesModule())
 	}
 }

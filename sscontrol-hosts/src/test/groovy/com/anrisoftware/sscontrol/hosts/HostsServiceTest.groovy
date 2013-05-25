@@ -95,6 +95,21 @@ class HostsServiceTest {
 	}
 
 	@Test
+	void "custom default hosts"() {
+		ServicesRegistry registry = injector.getInstance ServicesRegistry
+		SscontrolServiceLoader loader = injector.getInstance SscontrolServiceLoader
+		loader.loadService ubuntu1004CustomDefaultHostsProfile, variables, registry, null
+		def profile = registry.getService("profile")[0]
+		loader.loadService(hostsService, variables, registry, profile)
+
+		registry.allServices.each { it.call() }
+		assertFileContent hosts, hostsExpected
+		log.info "Run service again to ensure that configuration is not set double."
+		registry.allServices.each { it.call() }
+		assertFileContent hosts, hostsExpected
+	}
+
+	@Test
 	void "with null value"() {
 		ServicesRegistry registry = injector.getInstance ServicesRegistry
 		SscontrolServiceLoader loader = injector.getInstance SscontrolServiceLoader
@@ -106,6 +121,8 @@ class HostsServiceTest {
 	}
 
 	static ubuntu1004Profile = HostsServiceTest.class.getResource("Ubuntu_10_04Profile.groovy")
+
+	static ubuntu1004CustomDefaultHostsProfile = HostsServiceTest.class.getResource("Ubuntu_10_04_CustomDefaultHostsProfile.groovy")
 
 	static hostsService = HostsServiceTest.class.getResource("HostsService.groovy")
 

@@ -315,7 +315,15 @@ abstract class LinuxScript extends Script {
 	 */
 	List profileTypedListProperty(String key, ContextProperties p, Format format) {
 		def property = profile.getList(key)
-		property.empty ? p.getTypedListProperty(key, format, ",") : property
+		property.empty ? p.getTypedListProperty(key, format, ",") : asTypedList(property, format)
+	}
+
+	List asTypedList(List<String> strings, Format format) {
+		List list = new ArrayList()
+		strings.each {
+			list << format.parseObject(it)
+		}
+		return list
 	}
 
 	/**

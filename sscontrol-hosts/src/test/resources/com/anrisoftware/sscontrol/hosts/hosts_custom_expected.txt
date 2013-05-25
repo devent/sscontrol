@@ -1,0 +1,15 @@
+# SSCONTROL-hosts
+127.0.0.1 localhost.localdomain localhost
+# SSCONTROL-hosts-END
+
+# SSCONTROL-hosts
+::1 localhost6.localdomain6 localhost6
+# SSCONTROL-hosts-END
+
+# SSCONTROL-hosts
+192.168.0.49 srv1.ubuntutest.com srv1
+# SSCONTROL-hosts-END
+
+# SSCONTROL-hosts
+192.168.0.50 srv1.ubuntutest.org srva srvb
+# SSCONTROL-hosts-END

@@ -63,7 +63,7 @@ class HostsServiceTest {
 	}
 
 	@Test
-	void "+hosts"() {
+	void "default hosts"() {
 		ServicesRegistry registry = injector.getInstance ServicesRegistry
 		SscontrolServiceLoader loader = injector.getInstance SscontrolServiceLoader
 		loader.loadService(ubuntu1004Profile, variables, registry, null)
@@ -79,7 +79,23 @@ class HostsServiceTest {
 	}
 
 	@Test
-	void "+null value"() {
+	void "custom hosts"() {
+		ServicesRegistry registry = injector.getInstance ServicesRegistry
+		SscontrolServiceLoader loader = injector.getInstance SscontrolServiceLoader
+		loader.loadService(ubuntu1004Profile, variables, registry, null)
+		def profile = registry.getService("profile")[0]
+		loader.loadService(hostsService, variables, registry, profile)
+		copyURLToFile customHostsFile, hosts
+
+		registry.allServices.each { it.call() }
+		assertFileContent hosts, hostsWithCustomExpected
+		log.info "Run service again to ensure that configuration is not set double."
+		registry.allServices.each { it.call() }
+		assertFileContent hosts, hostsWithCustomExpected
+	}
+
+	@Test
+	void "with null value"() {
 		ServicesRegistry registry = injector.getInstance ServicesRegistry
 		SscontrolServiceLoader loader = injector.getInstance SscontrolServiceLoader
 		loader.loadService(ubuntu1004Profile, variables, registry, null)
@@ -100,6 +116,10 @@ class HostsServiceTest {
 	static defaultHostsFile = HostsServiceTest.class.getResource("default_hosts.txt")
 
 	static hostsWithDefaultsExpected = HostsServiceTest.class.getResource("hosts_defaults_expected.txt")
+
+	static customHostsFile = HostsServiceTest.class.getResource("custom_hosts.txt")
+
+	static hostsWithCustomExpected = HostsServiceTest.class.getResource("hosts_custom_expected.txt")
 
 	Injector injector
 

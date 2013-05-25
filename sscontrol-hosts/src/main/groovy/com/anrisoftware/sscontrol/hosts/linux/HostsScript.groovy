@@ -96,7 +96,7 @@ abstract class HostsScript extends LinuxScript {
 	 * Returns the default hosts.
 	 * <p>
 	 * <ul>
-	 * <li>property key {@code default_hosts}</li>
+	 * <li>property {@code "default_hosts"}</li>
 	 * </ul>
 	 */
 	List getDefaultHosts() {
@@ -107,7 +107,7 @@ abstract class HostsScript extends LinuxScript {
 	 * Returns the hosts configuration file.
 	 * <p>
 	 * <ul>
-	 * <li>property key {@code configuration_file}</li>
+	 * <li>property {@code "configuration_file"}</li>
 	 * </ul>
 	 */
 	abstract String getConfigurationFile()
@@ -116,7 +116,7 @@ abstract class HostsScript extends LinuxScript {
 	 * Returns the hosts configuration directory.
 	 * <p>
 	 * <ul>
-	 * <li>property key {@code configuration_directory}</li>
+	 * <li>property {@code "configuration_directory"}</li>
 	 * </ul>
 	 */
 	abstract File getConfigurationDirectory()

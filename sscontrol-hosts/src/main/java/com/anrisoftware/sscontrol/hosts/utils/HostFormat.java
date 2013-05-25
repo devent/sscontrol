@@ -1,6 +1,5 @@
 package com.anrisoftware.sscontrol.hosts.utils;
 
-import static org.apache.commons.lang3.StringUtils.remove;
 import static org.apache.commons.lang3.StringUtils.split;
 import static org.apache.commons.lang3.Validate.isInstanceOf;
 
@@ -20,12 +19,14 @@ import com.anrisoftware.sscontrol.hosts.service.HostFactory;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 
+/**
+ * Format a host IP address, host name and optional aliases.
+ * 
+ * @author Erwin Mueller, erwin.mueller@deventm.org
+ * @since 1.0
+ */
+@SuppressWarnings("serial")
 public class HostFormat extends Format {
-
-	/**
-	 * @since 1.0
-	 */
-	private static final long serialVersionUID = -5629960125042426704L;
 
 	private static final String FORMAT_TEMPLATE_NAME = "host_format";
 
@@ -82,6 +83,7 @@ public class HostFormat extends Format {
 	 * 
 	 * <pre>
 	 * ip:"&lt;address>";name:"&lt;hostname>";aliases:["&lt;alias>",...]
+	 * ip:'&lt;address>';name:'&lt;hostname>';aliases:['&lt;alias>',...]
 	 * </pre>
 	 */
 	@Override
@@ -114,7 +116,8 @@ public class HostFormat extends Format {
 		Host host = hostFactory.create(address).host(name);
 		String[] aliases = split(matcher.group(3), ",");
 		for (int i = 0; i < aliases.length; i++) {
-			host.alias(remove(aliases[i], "\""));
+			String alias = aliases[i].replaceAll("[\"']", "");
+			host.alias(alias);
 		}
 		pos.setIndex(matcher.end());
 		return host;

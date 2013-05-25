@@ -25,14 +25,16 @@ class HostFormatTest {
 
 	static inputsOutputsFormat = [
 		inputs: [
-			[address: "127.0.0.1", name: "localhost", aliases: []],
-			[address: "127.0.0.1", name: "localhost", aliases: ["localdomain"]],
-			[address: "127.0.0.1", name: "localhost", aliases: ["localdomain", "localhost"]],
+			[address: "127.0.0.1", name: "localhost", aliases: [], format: 'address:"127.0.0.1";name:"localhost";aliases:[]'],
+			[address: "127.0.0.1", name: "localhost", aliases: ["localdomain"], format: 'address:"127.0.0.1";name:"localhost";aliases:["localdomain"]'],
+			[address: "127.0.0.1", name: "localhost", aliases: ["localdomain", "localhost"], format: 'address:"127.0.0.1";name:"localhost";aliases:["localdomain","localhost"]'],
+			[address: "127.0.0.1", name: "localhost", aliases: ["localdomain", "localhost"], format: 'address:"127.0.0.1";name:"localhost";aliases:["localdomain","localhost"]'],
 		],
 		outputs: [
 			'address:"127.0.0.1";name:"localhost";aliases:[]',
 			'address:"127.0.0.1";name:"localhost";aliases:["localdomain"]',
 			'address:"127.0.0.1";name:"localhost";aliases:["localdomain","localhost"]',
+			"address:'127.0.0.1';name:'localhost';aliases:['localdomain','localhost']",
 		]
 	]
 
@@ -43,7 +45,7 @@ class HostFormatTest {
 			host.host(it.name).alias(it.aliases)
 			def format = factory.create().format(host)
 			log.info "Format: '{}'.", format
-			assertStringContent format, inputsOutputsFormat.outputs[i]
+			assertStringContent format, inputsOutputsFormat.inputs[i].format
 		}
 	}
 

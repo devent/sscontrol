@@ -23,7 +23,9 @@ class DomainLogger extends AbstractLogger {
 	private static final String ALIAS_DESTINATION = "Alias needs a destination.";
 	private static final String ALIAS_NAME_NULL = "Alias can not be empty or null.";
 	private static final String CATCHALL_ADDED = "Catch-all alias added {} to {}.";
-	private static final String CATCHALL_ADDED_INFO = "Catch-all alias added '{}' to domain.";
+	private static final String CATCHALL_ADDED_INFO = "Catch-all alias added '{}' to '{}' domain.";
+	private static final String USER_ADDED = "User added {} to {}.";
+	private static final String USER_ADDED_INFO = "User added '{}' to '{}' domain.";
 
 	/**
 	 * Create logger for {@link Domain}.
@@ -53,6 +55,14 @@ class DomainLogger extends AbstractLogger {
 			log.debug(CATCHALL_ADDED, alias, domain);
 		} else {
 			log.info(CATCHALL_ADDED_INFO, alias.getName(), domain.getName());
+		}
+	}
+
+	void userAdded(Domain domain, User user) {
+		if (log.isDebugEnabled()) {
+			log.debug(USER_ADDED, user, domain);
+		} else {
+			log.info(USER_ADDED_INFO, user.getName(), domain.getName());
 		}
 	}
 }

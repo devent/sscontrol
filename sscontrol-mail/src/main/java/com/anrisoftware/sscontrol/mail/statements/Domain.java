@@ -1,6 +1,8 @@
 package com.anrisoftware.sscontrol.mail.statements;
 
 import static com.anrisoftware.sscontrol.mail.statements.Alias.DESTINATION_KEY;
+import static com.anrisoftware.sscontrol.mail.statements.User.PASSWORD_KEY;
+import static java.util.Collections.unmodifiableList;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,21 +28,28 @@ public class Domain {
 
 	private final List<Alias> aliases;
 
+	private final List<User> users;
+
 	private final AliasFactory aliasFactory;
 
 	private final CatchallFactory catchallFactory;
 
 	private boolean enabled;
 
+	private final UserFactory userFactory;
+
 	@Inject
 	Domain(DomainLogger logger, AliasFactory aliasFactory,
-			CatchallFactory catchallFactory, @Assisted String name) {
+			UserFactory userFactory, CatchallFactory catchallFactory,
+			@Assisted String name) {
 		this.log = logger;
 		this.aliasFactory = aliasFactory;
 		this.catchallFactory = catchallFactory;
 		this.name = name;
 		this.enabled = true;
 		this.aliases = new ArrayList<Alias>();
+		this.users = new ArrayList<User>();
+		this.userFactory = userFactory;
 	}
 
 	public String getName() {
@@ -68,12 +77,24 @@ public class Domain {
 		return alias;
 	}
 
+	public List<Alias> getAliases() {
+		return unmodifiableList(aliases);
+	}
+
 	public void user(Map<String, Object> args, String name) {
 		user(args, name, null);
 	}
 
-	public Domain user(Map<String, Object> args, String name, Object statements) {
-		return this;
+	public User user(Map<String, Object> args, String name, Object statements) {
+		String password = args.get(PASSWORD_KEY).toString();
+		User user = userFactory.create(this, name, password);
+		users.add(user);
+		log.userAdded(this, user);
+		return user;
+	}
+
+	public List<User> getUsers() {
+		return unmodifiableList(users);
 	}
 
 	public Domain enabled(boolean enabled) {

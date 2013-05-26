@@ -108,5 +108,6 @@ class MailServiceTest {
 		assert service.domains[1].aliases[0].name == "@mail.blobber.org"
 		assert service.domains[1].aliases[0].destination == "@blobber.org"
 		assert service.domains[2].name == "blobber.org"
+		assert service.domains[2].users.size() == 3
 	}
 }

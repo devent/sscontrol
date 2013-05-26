@@ -24,6 +24,8 @@ public class StatementsModule extends AbstractModule {
 				.build(AliasFactory.class));
 		install(new FactoryModuleBuilder().implement(Catchall.class,
 				Catchall.class).build(CatchallFactory.class));
+		install(new FactoryModuleBuilder().implement(User.class, User.class)
+				.build(UserFactory.class));
 	}
 
 }

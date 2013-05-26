@@ -28,8 +28,11 @@ public class Alias {
 	 * @see AliasFactory#create(Domain, String, String)
 	 */
 	@Inject
-	Alias(@Assisted Domain domain, @Assisted("name") String name,
+	Alias(AliasLogger logger, @Assisted Domain domain,
+			@Assisted("name") String name,
 			@Assisted("destination") String destination) {
+		logger.checkName(name);
+		logger.checkDestination(destination);
 		this.domain = domain;
 		this.name = name;
 		this.destination = destination;

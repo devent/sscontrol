@@ -1,9 +1,6 @@
 package com.anrisoftware.sscontrol.mail.statements;
 
-import static org.apache.commons.lang3.Validate.isTrue;
-import static org.apache.commons.lang3.Validate.notBlank;
-
-import java.util.Map;
+import static org.apache.commons.lang3.Validate.notNull;
 
 import javax.inject.Singleton;
 
@@ -20,12 +17,12 @@ class DomainLogger extends AbstractLogger {
 
 	private static final String ALIAS_ADDED_INFO = "Alias added '{}' to '{}' domain.";
 	private static final String ALIAS_ADDED = "Alias added {} to {}.";
-	private static final String ALIAS_DESTINATION = "Alias needs a destination.";
-	private static final String ALIAS_NAME_NULL = "Alias can not be empty or null.";
+	private static final String ALIAS_DESTINATION = "Alias destination needs to be set..";
 	private static final String CATCHALL_ADDED = "Catch-all alias added {} to {}.";
 	private static final String CATCHALL_ADDED_INFO = "Catch-all alias added '{}' to '{}' domain.";
 	private static final String USER_ADDED = "User added {} to {}.";
 	private static final String USER_ADDED_INFO = "User added '{}' to '{}' domain.";
+	private static final String USER_PASSWORD = "User password needs to be set.";
 
 	/**
 	 * Create logger for {@link Domain}.
@@ -34,12 +31,9 @@ class DomainLogger extends AbstractLogger {
 		super(Domain.class);
 	}
 
-	void checkAliasName(Domain domain, String name) {
-		notBlank(name, ALIAS_NAME_NULL);
-	}
-
-	void checkDestination(Domain domain, Map<String, Object> args) {
-		isTrue(args.containsKey(Alias.DESTINATION_KEY), ALIAS_DESTINATION);
+	String checkDestination(Object destination) {
+		notNull(destination, ALIAS_DESTINATION);
+		return destination.toString();
 	}
 
 	void aliasAdded(Domain domain, Alias alias) {
@@ -56,6 +50,11 @@ class DomainLogger extends AbstractLogger {
 		} else {
 			log.info(CATCHALL_ADDED_INFO, alias.getName(), domain.getName());
 		}
+	}
+
+	String checkPassword(Object password) {
+		notNull(password, USER_PASSWORD);
+		return password.toString();
 	}
 
 	void userAdded(Domain domain, User user) {

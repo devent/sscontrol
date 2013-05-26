@@ -68,9 +68,7 @@ public class Domain {
 	}
 
 	public Alias alias(Map<String, Object> args, String name, Object statements) {
-		log.checkAliasName(this, name);
-		log.checkDestination(this, args);
-		String destination = args.get(DESTINATION_KEY).toString();
+		String destination = log.checkDestination(args.get(DESTINATION_KEY));
 		Alias alias = aliasFactory.create(this, name, destination);
 		aliases.add(alias);
 		log.aliasAdded(this, alias);
@@ -86,7 +84,7 @@ public class Domain {
 	}
 
 	public User user(Map<String, Object> args, String name, Object statements) {
-		String password = args.get(PASSWORD_KEY).toString();
+		String password = log.checkPassword(args.get(PASSWORD_KEY));
 		User user = userFactory.create(this, name, password);
 		users.add(user);
 		log.userAdded(this, user);

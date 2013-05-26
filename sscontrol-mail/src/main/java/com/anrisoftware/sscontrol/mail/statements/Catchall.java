@@ -18,7 +18,8 @@ public class Catchall extends Alias {
 	 * @see CatchallFactory#create(Domain, String)
 	 */
 	@Inject
-	Catchall(@Assisted Domain domain, @Assisted String destination) {
-		super(domain, format("@%s", domain.getName()), destination);
+	Catchall(AliasLogger logger, @Assisted Domain domain,
+			@Assisted String destination) {
+		super(logger, domain, format("@%s", domain.getName()), destination);
 	}
 }

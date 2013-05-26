@@ -1,0 +1,19 @@
+hostname(mail) ::= <<
+myhostname = <mail.domainName>
+>>
+
+origin(mail) ::= <<
+myorigin = <mail.origin>
+>>
+
+banner(banner) ::= <<
+smtpd_banner = <banner>
+>>
+
+relayhost(mail) ::= <<
+<if(mail.relayHost)>relayhost = <mail.relayHost><endif>
+>>
+
+interfaces(mail) ::= <<
+inet_interfaces = <mail.bindAddresses>
+>>

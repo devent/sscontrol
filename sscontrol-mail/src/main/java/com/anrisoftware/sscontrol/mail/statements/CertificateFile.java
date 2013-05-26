@@ -6,15 +6,13 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 
 import javax.inject.Inject;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import com.anrisoftware.globalpom.resources.ToURL;
 import com.anrisoftware.sscontrol.core.api.ServiceException;
 import com.google.inject.assistedinject.Assisted;
 
@@ -35,42 +33,16 @@ public class CertificateFile {
 	private final URL caFile;
 
 	/**
-	 * Sets the location of the certificate, certificate key and CA file.
-	 * 
-	 * @param logger
-	 *            the {@link CertificateFileLogger} for logging messages.
-	 * 
-	 * @param file
-	 *            the location of the certificate file.
-	 * 
-	 * @param keyFile
-	 *            the location of the certificate key file.
-	 * 
-	 * @param caFile
-	 *            the location of the certificate CA file.
-	 * 
-	 * @throws ServiceException
-	 *             if one the specified locations could not be parsed in a valid
-	 *             URL.
+	 * @see CertificateFileFactory#create(Object, Object, Object)
 	 */
 	@Inject
-	CertificateFile(CertificateFileLogger logger,
-			@Assisted("file") String file, @Assisted("keyFile") String keyFile,
-			@Assisted("caFile") String caFile) throws ServiceException {
+	CertificateFile(CertificateFileLogger logger, ToURL tourl,
+			@Assisted("file") Object file, @Assisted("keyFile") Object keyFile,
+			@Assisted("caFile") Object caFile) throws ServiceException {
 		this.log = logger;
-		this.file = toURL(file);
-		this.keyFile = toURL(keyFile);
-		this.caFile = toURL(caFile);
-	}
-
-	private URL toURL(String file) throws ServiceException {
-		try {
-			return new URI(file).toURL();
-		} catch (MalformedURLException e) {
-			throw log.errorFileToURL(e, file);
-		} catch (URISyntaxException e) {
-			throw log.errorFileToURL(e, file);
-		}
+		this.file = tourl.convert(file);
+		this.keyFile = tourl.convert(keyFile);
+		this.caFile = tourl.convert(caFile);
 	}
 
 	/**

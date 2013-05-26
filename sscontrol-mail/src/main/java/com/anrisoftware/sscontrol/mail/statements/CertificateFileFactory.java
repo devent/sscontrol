@@ -1,6 +1,7 @@
 package com.anrisoftware.sscontrol.mail.statements;
 
 import com.anrisoftware.sscontrol.core.api.ServiceException;
+import com.google.inject.assistedinject.Assisted;
 
 /**
  * Factory to create the location of the certificate, certificate key and CA
@@ -29,6 +30,7 @@ public interface CertificateFileFactory {
 	 *             if one the specified locations could not be parsed in a valid
 	 *             URL.
 	 */
-	CertificateFile create(String file, String keyFile, String caFile)
-			throws ServiceException;
+	CertificateFile create(@Assisted("file") Object file,
+			@Assisted("keyFile") Object keyFile,
+			@Assisted("caFile") Object caFile) throws ServiceException;
 }

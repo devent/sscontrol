@@ -5,7 +5,9 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 
-import com.anrisoftware.globalpom.log.AbstractSerializedLogger;
+import javax.inject.Singleton;
+
+import com.anrisoftware.globalpom.log.AbstractLogger;
 import com.anrisoftware.sscontrol.core.api.ServiceException;
 
 /**
@@ -14,7 +16,19 @@ import com.anrisoftware.sscontrol.core.api.ServiceException;
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class CertificateFileLogger extends AbstractSerializedLogger {
+@Singleton
+class CertificateFileLogger extends AbstractLogger {
+
+	private static final String ERROR_COPY_SOURCE_MESSAGE = "Error copy source to destination '%s', source '%s'.";
+	private static final String ERROR_COPY_SOURCE = "Error copy source to destination";
+	private static final String DESTINATION_NOT_FOUND_MESSAGE = "Destination not found '%s' for '%s'.";
+	private static final String DESTINATION = "destination";
+	private static final String SOURCE = "source";
+	private static final String CERTIFICATE = "certificate";
+	private static final String DESTINATION_NOT_FOUND = "Destination not found";
+	private static final String FILE = "file";
+	private static final String ERROR_FILE_URL_MESSAGE = "Error parse file '%s' to URL.";
+	private static final String ERROR_FILE_URL = "Error parse file to URL";
 
 	/**
 	 * Create logger for {@link CertificateFile}.
@@ -23,47 +37,29 @@ class CertificateFileLogger extends AbstractSerializedLogger {
 		super(CertificateFile.class);
 	}
 
-	ServiceException errorFileToURL(Exception cause, String file) {
-		ServiceException ex = new ServiceException(
-				"Could not parse file to URL", cause);
-		ex.addContextValue("file", file);
-		if (log.isDebugEnabled()) {
-			log.debug(ex.getLocalizedMessage());
-		} else {
-			log.error("Could not parse file '{}' to URL.", file);
-		}
-		return ex;
+	ServiceException errorFileToURL(Exception e, String file) {
+		return logException(
+				new ServiceException(ERROR_FILE_URL, e).addContextValue(FILE,
+						file), ERROR_FILE_URL_MESSAGE, file);
 	}
 
 	ServiceException destinationNotFound(CertificateFile certificate,
-			FileNotFoundException cause, URL source, File destination) {
-		ServiceException ex = new ServiceException("Destination not found",
-				cause);
-		ex.addContextValue("certificates", certificate);
-		ex.addContextValue("source", source);
-		ex.addContextValue("destination", destination);
-		if (log.isDebugEnabled()) {
-			log.debug(ex.getLocalizedMessage());
-		} else {
-			log.error("Destination not found '{}' for '{}'.", destination,
-					source);
-		}
-		return ex;
+			FileNotFoundException e, URL source, File destination) {
+		return logException(
+				new ServiceException(DESTINATION_NOT_FOUND, e)
+						.addContextValue(CERTIFICATE, certificate)
+						.addContextValue(SOURCE, source)
+						.addContextValue(DESTINATION, destination),
+				DESTINATION_NOT_FOUND_MESSAGE, destination, source);
 	}
 
 	ServiceException errorCopyFile(CertificateFile certificate,
 			IOException cause, URL source, File destination) {
-		ServiceException ex = new ServiceException(
-				"Error copy source to destination", cause);
-		ex.addContextValue("certificates", certificate);
-		ex.addContextValue("source", source);
-		ex.addContextValue("destination", destination);
-		if (log.isDebugEnabled()) {
-			log.debug(ex.getLocalizedMessage());
-		} else {
-			log.error("Error copy source to destination '{}', source '{}'.",
-					destination, source);
-		}
-		return ex;
+		return logException(
+				new ServiceException(ERROR_COPY_SOURCE, cause)
+						.addContextValue(CERTIFICATE, certificate)
+						.addContextValue(SOURCE, source)
+						.addContextValue(DESTINATION, destination),
+				ERROR_COPY_SOURCE_MESSAGE, destination, source);
 	}
 }

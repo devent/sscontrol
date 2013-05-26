@@ -108,16 +108,16 @@ public class MailServiceImpl extends AbstractService {
 	}
 
 	private ServiceScriptFactory findScriptFactory() throws ServiceException {
-		String name = getProfile().getProfileName();
-		String service = getProfile().getEntry(NAME).get("service").toString();
+		String profile = getProfile().getProfileName();
+		String name = getProfile().getEntry(NAME).get("service").toString();
 		for (ServiceScriptFactory scriptFactory : serviceScripts) {
 			ServiceScriptInfo info = scriptFactory.getInfo();
-			if (info.getProfileName().equals(name)
-					&& info.getServiceName().equals(service)) {
+			if (info.getProfileName().equals(profile)
+					&& info.getServiceName().equals(name)) {
 				return scriptFactory;
 			}
 		}
-		throw log.errorFindServiceScript(this, name, service);
+		throw log.errorFindServiceScript(this, profile, name);
 	}
 
 	/**
@@ -187,6 +187,56 @@ public class MailServiceImpl extends AbstractService {
 	}
 
 	/**
+	 * Returns the domain name of the server.
+	 * 
+	 * @return the domain name of the server.
+	 */
+	public String getDomainName() {
+		return domainName;
+	}
+
+	/**
+	 * Sets the domain name of the server.
+	 * 
+	 * @param name
+	 *            the domain {@link String} name.
+	 * 
+	 * @return this {@link Service}.
+	 */
+	public Service name(String name) {
+		log.checkDomainName(this, name);
+		this.domainName = name;
+		log.domainNameSet(this, name);
+		return this;
+	}
+
+	/**
+	 * The domain name that locally-posted mail appears to come from, and that
+	 * locally posted mail is delivered to.
+	 * 
+	 * @return the origin domain name.
+	 */
+	public String getOrigin() {
+		return origin;
+	}
+
+	/**
+	 * Sets domain name that locally-posted mail appears to come from, and that
+	 * locally posted mail is delivered to.
+	 * 
+	 * @param name
+	 *            the domain {@link String} name.
+	 * 
+	 * @return this {@link Service}.
+	 */
+	public Service origin(String name) {
+		log.checkDomainName(this, name);
+		this.origin = name;
+		log.originSet(this, name);
+		return this;
+	}
+
+	/**
 	 * Sets the masquerade domains.
 	 * 
 	 * @param statements
@@ -209,30 +259,12 @@ public class MailServiceImpl extends AbstractService {
 	 *             URL.
 	 */
 	public void certificate(Map<String, Object> args) throws ServiceException {
-		String file = args.get("file").toString();
-		String keyFile = args.get("key").toString();
-		String caFile = args.get("ca").toString();
+		Object file = args.get("file");
+		Object keyFile = args.get("key");
+		Object caFile = args.get("ca");
 		this.certificateFile = certificateFileFactory.create(file, keyFile,
 				caFile);
-	}
-
-	/**
-	 * Returns the domain name of the server.
-	 * 
-	 * @return the domain name of the server.
-	 */
-	public String getDomainName() {
-		return domainName;
-	}
-
-	/**
-	 * The domain name that locally-posted mail appears to come from, and that
-	 * locally posted mail is delivered to.
-	 * 
-	 * @return the origin domain name.
-	 */
-	public String getOrigin() {
-		return origin;
+		log.certificateSet(this, certificateFile);
 	}
 
 	/**
@@ -270,6 +302,14 @@ public class MailServiceImpl extends AbstractService {
 	 */
 	public List<Domain> getDomains() {
 		return unmodifiableList(domains);
+	}
+
+	public BindAddresses getAll() {
+		return BindAddresses.ALL;
+	}
+
+	public BindAddresses getLoopback() {
+		return BindAddresses.LOOPBACK;
 	}
 
 	@Override

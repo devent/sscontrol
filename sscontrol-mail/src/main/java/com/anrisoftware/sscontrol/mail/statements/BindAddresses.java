@@ -29,10 +29,7 @@ public class BindAddresses implements Serializable {
 	private final List<String> addresses;
 
 	/**
-	 * Sets the addresses to bind to.
-	 * 
-	 * @param addresses
-	 *            a list of addresses separated by {@code "[ ,;]"}.
+	 * @see BindAddressesFactory#create(String)
 	 */
 	@Inject
 	BindAddresses(@Assisted String addresses) {

@@ -27,7 +27,7 @@ import com.anrisoftware.sscontrol.core.api.ServiceFactory;
 import com.google.inject.Injector;
 
 /**
- * Creates the firewall service.
+ * Creates the mail service.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
@@ -36,9 +36,9 @@ import com.google.inject.Injector;
 public class MailFactory implements ServiceFactory {
 
 	/**
-	 * The name of the firewall service.
+	 * The name of the mail service.
 	 */
-	public static final String NAME = "firewall";
+	public static final String NAME = "mail";
 
 	private final LazyInjector lazyInjector;
 

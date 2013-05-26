@@ -72,6 +72,11 @@
 				<artifactId>propertiesutils-contextproperties</artifactId>
 				<version>1.6</version>
 			</dependency>
+			<dependency>
+				<groupId>com.anrisoftware.globalpom</groupId>
+				<artifactId>globalpom-utils</artifactId>
+				<version>1.5-SNAPSHOT</version>
+			</dependency>
 
 			<!-- resources -->
 			<dependency>

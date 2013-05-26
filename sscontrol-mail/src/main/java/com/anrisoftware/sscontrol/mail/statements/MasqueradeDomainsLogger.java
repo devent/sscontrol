@@ -1,10 +1,12 @@
 package com.anrisoftware.sscontrol.mail.statements;
 
-import static org.apache.commons.lang3.Validate.notNull;
+import static org.apache.commons.lang3.Validate.notBlank;
 
 import java.util.List;
 
-import com.anrisoftware.globalpom.log.AbstractSerializedLogger;
+import javax.inject.Singleton;
+
+import com.anrisoftware.globalpom.log.AbstractLogger;
 
 /**
  * Logging messages for {@link MasqueradeDomains}.
@@ -12,7 +14,15 @@ import com.anrisoftware.globalpom.log.AbstractSerializedLogger;
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class MasqueradeDomainsLogger extends AbstractSerializedLogger {
+@Singleton
+class MasqueradeDomainsLogger extends AbstractLogger {
+
+	private static final String USER_EXCEPTIONS_INFO = "User exceptions added {}.";
+	private static final String USER_EXCEPTIONS = "User exceptions added {} to {}.";
+	private static final String USERS_LIST_NULL = "Users list cannot be empty or null.";
+	private static final String DOMAINS_ADDED_INFO = "Masquerade domains added {}.";
+	private static final String DOMAINS_ADDED = "Domains added {} to {}.";
+	private static final String DOMAINS_LIST_NULL = "Domains list cannot be empty or null.";
 
 	/**
 	 * Create logger for {@link MasqueradeDomains}.
@@ -22,26 +32,26 @@ class MasqueradeDomainsLogger extends AbstractSerializedLogger {
 	}
 
 	void checkDomains(MasqueradeDomains domains, String list) {
-		notNull(list, "Domains list cannot be null");
+		notBlank(list, DOMAINS_LIST_NULL);
 	}
 
 	void domainsAdded(MasqueradeDomains masquerade, List<String> domains) {
 		if (log.isDebugEnabled()) {
-			log.debug("Domains added {} to {}.", domains, masquerade);
+			log.debug(DOMAINS_ADDED, domains, masquerade);
 		} else {
-			log.debug("Masquerade domains added {}.", domains);
+			log.debug(DOMAINS_ADDED_INFO, domains);
 		}
 	}
 
 	void checkUsers(MasqueradeDomains masquerade, String list) {
-		notNull(list, "Users list cannot be null");
+		notBlank(list, USERS_LIST_NULL);
 	}
 
 	void usersAdded(MasqueradeDomains masquerade, List<String> users) {
 		if (log.isDebugEnabled()) {
-			log.debug("User exceptions added {} to {}.", users, masquerade);
+			log.debug(USER_EXCEPTIONS, users, masquerade);
 		} else {
-			log.debug("User exceptions added {}.", users);
+			log.debug(USER_EXCEPTIONS_INFO, users);
 		}
 	}
 }

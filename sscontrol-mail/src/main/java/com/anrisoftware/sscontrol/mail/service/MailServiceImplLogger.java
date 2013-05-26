@@ -18,12 +18,13 @@
  */
 package com.anrisoftware.sscontrol.mail.service;
 
-import static org.apache.commons.lang3.Validate.notEmpty;
+import static org.apache.commons.lang3.Validate.notBlank;
 import static org.apache.commons.lang3.Validate.notNull;
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
 import com.anrisoftware.sscontrol.core.api.ServiceException;
 import com.anrisoftware.sscontrol.mail.statements.BindAddresses;
+import com.anrisoftware.sscontrol.mail.statements.CertificateFile;
 
 /**
  * Logging messages for {@link MailServiceImpl}.
@@ -33,6 +34,20 @@ import com.anrisoftware.sscontrol.mail.statements.BindAddresses;
  */
 class MailServiceImplLogger extends AbstractLogger {
 
+	private static final String DOMAIN_NAME_SET_INFO = "Domain name '{}' set for mail service.";
+	private static final String DOMAIN_NAME_SET = "Domain name '{}' set for {}.";
+	private static final String BIND_ADDRESSES_NULL = "Bind addresses cannot be empty or null.";
+	private static final String BIND_ADDRESSES_SET_INFO = "Bind addresses set {} for mail service.";
+	private static final String BIND_ADDRESSES_SET = "Bind addresses set {} for {}.";
+	private static final String BIND_ADDRESS_NULL = "Bind address cannot be null.";
+	private static final String ERROR_SERVICE_SCRIPT_MESSAGE = "Error find service script '%s' for profile '%s'.";
+	private static final String ERROR_SERVICE_SCRIPT = "Error find service script";
+	private static final String DOMAIN_NULL = "Domain name can not be empty or null.";
+	private static final String ORIGIN_SET = "Origin '{}' set for {}.";
+	private static final String ORIGIN_SET_INFO = "Origin '{}' set for mail service.";
+	private static final String CERTIFICATE_SET = "Certificate set {} for {}.";
+	private static final String CERTIFICATE_SET_INFO = "Certificate set {} for mail service.";
+
 	/**
 	 * Create logger for {@link MailServiceImpl}.
 	 */
@@ -40,34 +55,57 @@ class MailServiceImplLogger extends AbstractLogger {
 		super(MailServiceImpl.class);
 	}
 
-	ServiceException errorFindServiceScript(MailServiceImpl dnsservice,
-			String name, String service) {
-		ServiceException ex = new ServiceException(
-				"Error find the service script");
-		ex.addContextValue("service", dnsservice);
-		ex.addContextValue("profile name", name);
-		ex.addContextValue("service name", service);
-		log.error(ex.getLocalizedMessage());
-		return ex;
+	ServiceException errorFindServiceScript(MailServiceImpl service,
+			String profile, String name) {
+		return logException(
+				new ServiceException(ERROR_SERVICE_SCRIPT)
+						.addContextValue("service", service)
+						.addContextValue("profile name", profile)
+						.addContextValue("service name", name),
+				ERROR_SERVICE_SCRIPT_MESSAGE, name, profile);
 	}
 
 	void checkBindAddress(MailServiceImpl service, BindAddresses address) {
-		notNull(address, "The bind address cannot be null for service %s.",
-				service);
+		notNull(address, BIND_ADDRESS_NULL);
 	}
 
 	void bindAddressesSet(MailServiceImpl service, BindAddresses address) {
 		if (log.isDebugEnabled()) {
-			log.debug("Set bind addresses {} for {}.", address, service);
+			log.debug(BIND_ADDRESSES_SET, address, service);
 		} else {
-			log.info("Set bind addresses {} for mail service.",
-					address.getAddressesString());
+			log.info(BIND_ADDRESSES_SET_INFO, address.getAddressesString());
 		}
 	}
 
 	void checkBindAddresses(MailServiceImpl service, String addresses) {
-		notEmpty(addresses,
-				"The addresses cannot be null or empty for service %s.",
-				service);
+		notBlank(addresses, BIND_ADDRESSES_NULL);
+	}
+
+	void checkDomainName(MailServiceImpl service, String name) {
+		notBlank(name, DOMAIN_NULL);
+	}
+
+	void domainNameSet(MailServiceImpl service, String name) {
+		if (log.isDebugEnabled()) {
+			log.debug(DOMAIN_NAME_SET, name, service);
+		} else {
+			log.info(DOMAIN_NAME_SET_INFO, name);
+		}
+	}
+
+	void originSet(MailServiceImpl service, String name) {
+		if (log.isDebugEnabled()) {
+			log.debug(ORIGIN_SET, name, service);
+		} else {
+			log.info(ORIGIN_SET_INFO, name);
+		}
+	}
+
+	void certificateSet(MailServiceImpl service, CertificateFile ca) {
+		if (log.isDebugEnabled()) {
+			log.debug(CERTIFICATE_SET, ca, service);
+		} else {
+			log.info(CERTIFICATE_SET_INFO, ca);
+		}
 	}
 }

@@ -11,7 +11,7 @@
 
 	<artifactId>sscontrol-mail</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>Server Control Core :: Mail</name>
+	<name>RoboBee :: Mail</name>
 	<description>Installs mail server with account management.</description>
 	<inceptionYear>2013</inceptionYear>
 
@@ -55,6 +55,10 @@
 		<dependency>
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.anrisoftware.globalpom</groupId>
+			<artifactId>globalpom-utils</artifactId>
 		</dependency>
 	</dependencies>
 

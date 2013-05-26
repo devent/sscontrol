@@ -16,33 +16,9 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-hostname. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.mail.service;
+package com.anrisoftware.sscontrol.mail.service
 
-import java.util.ServiceLoader;
-
-import javax.inject.Singleton;
-
-import com.anrisoftware.sscontrol.core.api.ServiceScriptFactory;
-import com.anrisoftware.sscontrol.mail.statements.StatementsModule;
-import com.google.inject.AbstractModule;
-import com.google.inject.Provides;
-
-/**
- * Binds the mail service.
- * 
- * @author Erwin Mueller, erwin.mueller@deventm.org
- * @since 1.0
- */
-class MailModule extends AbstractModule {
-
-	@Override
-	protected void configure() {
-		install(new StatementsModule());
-	}
-
-	@Provides
-	@Singleton
-	ServiceLoader<ServiceScriptFactory> getMailServiceScripts() {
-		return ServiceLoader.load(ServiceScriptFactory.class);
-	}
+profile "ubuntu_10_04", {
+	system { }
+	mail { configuration_directory "${tmp}/etc" }
 }

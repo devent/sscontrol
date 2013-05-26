@@ -1,4 +1,4 @@
-package com.anrisoftware.sscontrol.mail
+package com.anrisoftware.sscontrol.mail.service
 
 mail {
 	bind_addresses all

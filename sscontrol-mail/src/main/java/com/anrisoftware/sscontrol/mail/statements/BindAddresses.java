@@ -45,15 +45,6 @@ public class BindAddresses implements Serializable {
 		return unmodifiableList(addresses);
 	}
 
-	/**
-	 * Returns a string representation of the addresses.
-	 * 
-	 * @return string representation of the addresses.
-	 */
-	public String getAddressesString() {
-		return StringUtils.join(addresses, ",");
-	}
-
 	@Override
 	public String toString() {
 		return new ToStringBuilder(this).append("addresses", addresses)

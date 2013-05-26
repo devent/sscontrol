@@ -18,6 +18,7 @@
  */
 package com.anrisoftware.sscontrol.mail.service;
 
+import static org.apache.commons.lang3.StringUtils.join;
 import static org.apache.commons.lang3.Validate.notBlank;
 import static org.apache.commons.lang3.Validate.notNull;
 
@@ -78,7 +79,7 @@ class MailServiceImplLogger extends AbstractLogger {
 		if (log.isDebugEnabled()) {
 			log.debug(BIND_ADDRESSES_SET, address, service);
 		} else {
-			log.info(BIND_ADDRESSES_SET_INFO, address.getAddressesString());
+			log.info(BIND_ADDRESSES_SET_INFO, join(address.getAddresses(), ','));
 		}
 	}
 

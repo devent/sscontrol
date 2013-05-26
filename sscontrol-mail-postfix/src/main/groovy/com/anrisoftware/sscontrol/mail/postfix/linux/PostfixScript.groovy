@@ -44,6 +44,9 @@ abstract class PostfixScript extends LinuxScript {
 	@Named("postfix-properties")
 	ContextProperties postfixProperties
 
+	@Inject
+	BindAddressesRenderer bindAddressesRenderer
+
 	/**
 	 * The {@link Templates} for the script.
 	 */
@@ -54,11 +57,18 @@ abstract class PostfixScript extends LinuxScript {
 	@Override
 	def run() {
 		super.run()
-		postfixTemplates = templatesFactory.create "Postfix"
+		postfixTemplates = templatesFactory.create "Postfix", templatesAttributes
 		mainTemplate = postfixTemplates.getResource("main_configuration")
 		deployMailname()
 		deployMain()
 		distributionSpecificConfiguration()
+	}
+
+	/**
+	 * Returns additional template attributes.
+	 */
+	Map getTemplatesAttributes() {
+		["renderers": [bindAddressesRenderer]]
 	}
 
 	/**

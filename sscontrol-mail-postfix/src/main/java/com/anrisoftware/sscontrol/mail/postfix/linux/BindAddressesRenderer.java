@@ -6,8 +6,7 @@ import static org.apache.commons.lang3.StringUtils.join;
 
 import java.util.Locale;
 
-import org.stringtemplate.v4.AttributeRenderer;
-
+import com.anrisoftware.resources.templates.api.AttributeRenderer;
 import com.anrisoftware.sscontrol.mail.statements.BindAddresses;
 
 /**
@@ -16,6 +15,7 @@ import com.anrisoftware.sscontrol.mail.statements.BindAddresses;
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
+@SuppressWarnings("serial")
 public class BindAddressesRenderer implements AttributeRenderer {
 
 	@Override
@@ -31,6 +31,11 @@ public class BindAddressesRenderer implements AttributeRenderer {
 			return "loopback-only";
 		}
 		return join(addresses.getAddresses(), ',');
+	}
+
+	@Override
+	public Class<?> getAttributeType() {
+		return BindAddresses.class;
 	}
 
 }

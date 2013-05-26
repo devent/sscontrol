@@ -17,6 +17,13 @@ public class StatementsModule extends AbstractModule {
 				BindAddresses.class).build(BindAddressesFactory.class));
 		install(new FactoryModuleBuilder().implement(CertificateFile.class,
 				CertificateFile.class).build(CertificateFileFactory.class));
+		install(new FactoryModuleBuilder()
+				.implement(Domain.class, Domain.class).build(
+						DomainFactory.class));
+		install(new FactoryModuleBuilder().implement(Alias.class, Alias.class)
+				.build(AliasFactory.class));
+		install(new FactoryModuleBuilder().implement(Catchall.class,
+				Catchall.class).build(CatchallFactory.class));
 	}
 
 }

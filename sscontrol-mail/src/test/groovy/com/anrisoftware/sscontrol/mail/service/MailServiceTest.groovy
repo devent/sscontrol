@@ -31,6 +31,7 @@ import com.anrisoftware.sscontrol.core.api.ServiceLoader as SscontrolServiceLoad
 import com.anrisoftware.sscontrol.core.api.ServicesRegistry
 import com.anrisoftware.sscontrol.core.modules.CoreModule
 import com.anrisoftware.sscontrol.core.modules.CoreResourcesModule
+import com.anrisoftware.sscontrol.mail.statements.BindAddresses
 import com.google.inject.Guice
 import com.google.inject.Injector
 
@@ -50,7 +51,7 @@ class MailServiceTest {
 		loader.loadService(ubuntu1004Profile, variables, registry, null)
 		def profile = registry.getService("profile")[0]
 		loader.loadService(mailService, variables, registry, profile)
-		def service = assertService registry.getService("mail")[0]
+		def service = assertService registry.getService("mail")[0], tmpdir
 	}
 
 	static ubuntu1004Profile = MailServiceTest.class.getResource("Ubuntu_10_04Profile.groovy")
@@ -91,8 +92,21 @@ class MailServiceTest {
 		Guice.createInjector(new CoreModule(), new CoreResourcesModule())
 	}
 
-	static assertService(MailServiceImpl service) {
+	static assertService(MailServiceImpl service, File tmpdir) {
 		assert service.domainName == "mail.example.com"
 		assert service.origin == "example.com"
+		assert service.bindAddresses == BindAddresses.ALL
+		assert service.masqueradeDomains.domains.contains("mail.example.com")
+		assert service.masqueradeDomains.userExceptions.contains("root")
+		assert service.certificateFile.file.path == "$tmpdir/example-com.crt"
+		assert service.certificateFile.keyFile.path == "$tmpdir/example-com.insecure.key"
+		assert service.certificateFile.caFile.path == "$tmpdir/example-com-ca.crt"
+		assert service.domains.size() == 6
+		assert service.domains[0].name == "example.com"
+		assert service.domains[1].name == "mail.blobber.org"
+		assert service.domains[1].aliases.size() == 1
+		assert service.domains[1].aliases[0].name == "@mail.blobber.org"
+		assert service.domains[1].aliases[0].destination == "@blobber.org"
+		assert service.domains[2].name == "blobber.org"
 	}
 }

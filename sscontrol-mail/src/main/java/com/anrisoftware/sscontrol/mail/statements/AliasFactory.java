@@ -8,10 +8,13 @@ import com.google.inject.assistedinject.Assisted;
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-public interface DomainAliasFactory {
+public interface AliasFactory {
 
 	/**
 	 * Creates the alias with the specified name and destination.
+	 * 
+	 * @param domain
+	 *            the {@link Domain} to where the alias belongs to.
 	 * 
 	 * @param name
 	 *            the name {@link String}.
@@ -19,8 +22,8 @@ public interface DomainAliasFactory {
 	 * @param destination
 	 *            the destination {@link String}.
 	 * 
-	 * @return the {@link DomainAlias}.
+	 * @return the {@link Alias}.
 	 */
-	DomainAlias create(@Assisted("name") String name,
+	Alias create(Domain domain, @Assisted("name") String name,
 			@Assisted("destination") String destination);
 }

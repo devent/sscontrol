@@ -25,6 +25,7 @@ import com.anrisoftware.globalpom.log.AbstractLogger;
 import com.anrisoftware.sscontrol.core.api.ServiceException;
 import com.anrisoftware.sscontrol.mail.statements.BindAddresses;
 import com.anrisoftware.sscontrol.mail.statements.CertificateFile;
+import com.anrisoftware.sscontrol.mail.statements.Domain;
 
 /**
  * Logging messages for {@link MailServiceImpl}.
@@ -47,6 +48,8 @@ class MailServiceImplLogger extends AbstractLogger {
 	private static final String ORIGIN_SET_INFO = "Origin '{}' set for mail service.";
 	private static final String CERTIFICATE_SET = "Certificate set {} for {}.";
 	private static final String CERTIFICATE_SET_INFO = "Certificate set {} for mail service.";
+	private static final String DOMAIN_ADDED = "Domain added {} to {}.";
+	private static final String DOMAIN_ADDED_INFO = "Domain added '{}' to mail service.";
 
 	/**
 	 * Create logger for {@link MailServiceImpl}.
@@ -106,6 +109,14 @@ class MailServiceImplLogger extends AbstractLogger {
 			log.debug(CERTIFICATE_SET, ca, service);
 		} else {
 			log.info(CERTIFICATE_SET_INFO, ca);
+		}
+	}
+
+	void domainAdded(MailServiceImpl service, Domain domain) {
+		if (log.isDebugEnabled()) {
+			log.debug(DOMAIN_ADDED, domain, service);
+		} else {
+			log.info(DOMAIN_ADDED_INFO, domain.getName());
 		}
 	}
 }

@@ -18,8 +18,12 @@ import com.anrisoftware.globalpom.log.AbstractLogger;
 @Singleton
 class DomainLogger extends AbstractLogger {
 
+	private static final String ALIAS_ADDED_INFO = "Alias added '{}' to '{}' domain.";
+	private static final String ALIAS_ADDED = "Alias added {} to {}.";
 	private static final String ALIAS_DESTINATION = "Alias needs a destination.";
 	private static final String ALIAS_NAME_NULL = "Alias can not be empty or null.";
+	private static final String CATCHALL_ADDED = "Catch-all alias added {} to {}.";
+	private static final String CATCHALL_ADDED_INFO = "Catch-all alias added '{}' to domain.";
 
 	/**
 	 * Create logger for {@link Domain}.
@@ -33,6 +37,22 @@ class DomainLogger extends AbstractLogger {
 	}
 
 	void checkDestination(Domain domain, Map<String, Object> args) {
-		isTrue(args.containsKey(DomainAlias.DESTINATION_KEY), ALIAS_DESTINATION);
+		isTrue(args.containsKey(Alias.DESTINATION_KEY), ALIAS_DESTINATION);
+	}
+
+	void aliasAdded(Domain domain, Alias alias) {
+		if (log.isDebugEnabled()) {
+			log.debug(ALIAS_ADDED, alias, domain);
+		} else {
+			log.info(ALIAS_ADDED_INFO, alias.getName(), domain.getName());
+		}
+	}
+
+	void catchallAdded(Domain domain, Catchall alias) {
+		if (log.isDebugEnabled()) {
+			log.debug(CATCHALL_ADDED, alias, domain);
+		} else {
+			log.info(CATCHALL_ADDED_INFO, alias.getName(), domain.getName());
+		}
 	}
 }

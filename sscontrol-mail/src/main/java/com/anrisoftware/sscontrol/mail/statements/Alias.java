@@ -12,7 +12,9 @@ import com.google.inject.assistedinject.Assisted;
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-public class DomainAlias {
+public class Alias {
+
+	public static final String DESTINATION_KEY = "destination";
 
 	private final String name;
 
@@ -20,12 +22,22 @@ public class DomainAlias {
 
 	private boolean enabled;
 
+	private final Domain domain;
+
+	/**
+	 * @see AliasFactory#create(Domain, String, String)
+	 */
 	@Inject
-	DomainAlias(@Assisted("name") String name,
+	Alias(@Assisted Domain domain, @Assisted("name") String name,
 			@Assisted("destination") String destination) {
+		this.domain = domain;
 		this.name = name;
 		this.destination = destination;
 		this.enabled = true;
+	}
+
+	public Domain getDomain() {
+		return domain;
 	}
 
 	public String getName() {
@@ -36,9 +48,8 @@ public class DomainAlias {
 		return destination;
 	}
 
-	public DomainAlias enabled(boolean enabled) {
+	public void enabled(boolean enabled) {
 		this.enabled = enabled;
-		return this;
 	}
 
 	public boolean isEnabled() {

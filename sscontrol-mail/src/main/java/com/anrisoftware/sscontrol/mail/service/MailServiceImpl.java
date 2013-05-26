@@ -42,6 +42,7 @@ import com.anrisoftware.sscontrol.mail.statements.BindAddressesFactory;
 import com.anrisoftware.sscontrol.mail.statements.CertificateFile;
 import com.anrisoftware.sscontrol.mail.statements.CertificateFileFactory;
 import com.anrisoftware.sscontrol.mail.statements.Domain;
+import com.anrisoftware.sscontrol.mail.statements.DomainFactory;
 import com.anrisoftware.sscontrol.mail.statements.MasqueradeDomains;
 
 /**
@@ -73,6 +74,8 @@ public class MailServiceImpl extends AbstractService {
 
 	private CertificateFile certificateFile;
 
+	private final DomainFactory domainFactory;
+
 	/**
 	 * Sets the default mail service dependencies.
 	 * 
@@ -92,13 +95,15 @@ public class MailServiceImpl extends AbstractService {
 			ServiceLoader<ServiceScriptFactory> serviceScripts,
 			BindAddressesFactory bindAddressesFactory,
 			MasqueradeDomains masqueradeDomains,
-			CertificateFileFactory certificateFileFactory) {
+			CertificateFileFactory certificateFileFactory,
+			DomainFactory domainFactory) {
 		this.log = logger;
 		this.serviceScripts = serviceScripts;
 		this.bindAddressesFactory = bindAddressesFactory;
 		this.masqueradeDomains = masqueradeDomains;
 		this.certificateFileFactory = certificateFileFactory;
 		this.domains = new ArrayList<Domain>();
+		this.domainFactory = domainFactory;
 	}
 
 	@Override
@@ -200,14 +205,11 @@ public class MailServiceImpl extends AbstractService {
 	 * 
 	 * @param name
 	 *            the domain {@link String} name.
-	 * 
-	 * @return this {@link Service}.
 	 */
-	public Service name(String name) {
+	public void name(String name) {
 		log.checkDomainName(this, name);
 		this.domainName = name;
 		log.domainNameSet(this, name);
-		return this;
 	}
 
 	/**
@@ -226,14 +228,11 @@ public class MailServiceImpl extends AbstractService {
 	 * 
 	 * @param name
 	 *            the domain {@link String} name.
-	 * 
-	 * @return this {@link Service}.
 	 */
-	public Service origin(String name) {
+	public void origin(String name) {
 		log.checkDomainName(this, name);
 		this.origin = name;
 		log.originSet(this, name);
-		return this;
 	}
 
 	/**
@@ -245,6 +244,15 @@ public class MailServiceImpl extends AbstractService {
 	 * @return the {@link MasqueradeDomains}.
 	 */
 	public MasqueradeDomains masquerade(Object statements) {
+		return masqueradeDomains;
+	}
+
+	/**
+	 * Returns the domains that should be stripped of the sub-domains.
+	 * 
+	 * @return the {@link MasqueradeDomains}.
+	 */
+	public MasqueradeDomains getMasqueradeDomains() {
 		return masqueradeDomains;
 	}
 
@@ -278,21 +286,24 @@ public class MailServiceImpl extends AbstractService {
 	}
 
 	/**
-	 * Returns the domains that should be stripped of the sub-domains.
-	 * 
-	 * @return the {@link MasqueradeDomains}.
-	 */
-	public MasqueradeDomains getMasqueradeDomains() {
-		return masqueradeDomains;
-	}
-
-	/**
 	 * Returns the certificate file for TLS.
 	 * 
 	 * @return the {@link CertificateFile}.
 	 */
 	public CertificateFile getCertificateFile() {
 		return certificateFile;
+	}
+
+	public void domain(String name) {
+		domain(name, null);
+	}
+
+	public Domain domain(String name, Object statements) {
+		log.checkDomainName(this, name);
+		Domain domain = domainFactory.create(name);
+		domains.add(domain);
+		log.domainAdded(this, domain);
+		return domain;
 	}
 
 	/**

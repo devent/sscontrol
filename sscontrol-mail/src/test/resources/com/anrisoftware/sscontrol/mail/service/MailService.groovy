@@ -3,6 +3,7 @@ package com.anrisoftware.sscontrol.mail.service
 mail {
 	bind_addresses all
 
+	relay "smtp.relayhost.com"
 	name "mail.example.com"
 	origin "example.com"
 

@@ -66,6 +66,8 @@ public class MailServiceImpl extends AbstractService {
 
 	private String origin;
 
+	private String relayHost;
+
 	private BindAddresses bindAddresses;
 
 	private final MasqueradeDomains masqueradeDomains;
@@ -104,6 +106,7 @@ public class MailServiceImpl extends AbstractService {
 		this.certificateFileFactory = certificateFileFactory;
 		this.domains = new ArrayList<Domain>();
 		this.domainFactory = domainFactory;
+		this.relayHost = null;
 	}
 
 	@Override
@@ -189,6 +192,26 @@ public class MailServiceImpl extends AbstractService {
 		log.checkBindAddresses(this, addresses);
 		this.bindAddresses = bindAddressesFactory.create(addresses);
 		log.bindAddressesSet(this, bindAddresses);
+	}
+
+	/**
+	 * Sets the relay host.
+	 * 
+	 * @param host
+	 *            the host {@link String}, can be empty or {@code null}.
+	 */
+	public void relay(String host) {
+		this.relayHost = host;
+		log.relayHostSet(this, host);
+	}
+
+	/**
+	 * Returns the relay host.
+	 * 
+	 * @return the relay host {@link String} or {@code null}.
+	 */
+	public String getRelayHost() {
+		return relayHost;
 	}
 
 	/**

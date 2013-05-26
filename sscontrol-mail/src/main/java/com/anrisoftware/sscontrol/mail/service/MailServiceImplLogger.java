@@ -50,6 +50,8 @@ class MailServiceImplLogger extends AbstractLogger {
 	private static final String CERTIFICATE_SET_INFO = "Certificate set {} for mail service.";
 	private static final String DOMAIN_ADDED = "Domain added {} to {}.";
 	private static final String DOMAIN_ADDED_INFO = "Domain added '{}' to mail service.";
+	private static final String RELAY_SET = "Relay host '{}' set for {}.";
+	private static final String RELAY_SET_INFO = "Relay host '{}' set for mail service.";
 
 	/**
 	 * Create logger for {@link MailServiceImpl}.
@@ -117,6 +119,14 @@ class MailServiceImplLogger extends AbstractLogger {
 			log.debug(DOMAIN_ADDED, domain, service);
 		} else {
 			log.info(DOMAIN_ADDED_INFO, domain.getName());
+		}
+	}
+
+	void relayHostSet(MailServiceImpl service, String host) {
+		if (log.isDebugEnabled()) {
+			log.debug(RELAY_SET, host, service);
+		} else {
+			log.info(RELAY_SET_INFO, host);
 		}
 	}
 }

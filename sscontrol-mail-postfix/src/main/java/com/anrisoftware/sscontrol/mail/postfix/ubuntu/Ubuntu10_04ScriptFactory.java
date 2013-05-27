@@ -1,13 +1,14 @@
 package com.anrisoftware.sscontrol.mail.postfix.ubuntu;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.concurrent.ConcurrentException;
 import org.mangosdk.spi.ProviderFor;
 
 import com.anrisoftware.sscontrol.core.api.ServiceException;
 import com.anrisoftware.sscontrol.core.api.ServiceScriptFactory;
 import com.anrisoftware.sscontrol.core.api.ServiceScriptInfo;
+import com.google.inject.Guice;
 import com.google.inject.Injector;
+import com.google.inject.Module;
 
 /**
  * Provides the postfix script for Ubuntu 10.04 server.
@@ -46,7 +47,9 @@ public class Ubuntu10_04ScriptFactory implements ServiceScriptFactory {
 
 	private static Ubuntu10_04ScriptFactoryLogger log = new Ubuntu10_04ScriptFactoryLogger();
 
-	private static LazyInjector lazyInjector = new LazyInjector();
+	private static final Module[] MODULES = new Module[] { new UbuntuModule() };
+
+	private Injector parent;
 
 	@Override
 	public ServiceScriptInfo getInfo() {
@@ -56,15 +59,20 @@ public class Ubuntu10_04ScriptFactory implements ServiceScriptFactory {
 	@Override
 	public Object getScript() throws ServiceException {
 		try {
-			return lazyInjector.get().getInstance(Ubuntu_10_04Script.class);
-		} catch (ConcurrentException e) {
-			throw log.errorCreateScript(this, e.getCause());
+			return createInjector(parent).getInstance(Ubuntu_10_04Script.class);
+		} catch (Exception e) {
+			throw log.errorCreateScript(this, e);
 		}
+	}
+
+	private Injector createInjector(Injector parent) {
+		return parent == null ? Guice.createInjector(MODULES) : parent
+				.createChildInjector(MODULES);
 	}
 
 	@Override
 	public void setParent(Object parent) {
-		lazyInjector.setParentInjector((Injector) parent);
+		this.parent = (Injector) parent;
 	}
 
 	@Override

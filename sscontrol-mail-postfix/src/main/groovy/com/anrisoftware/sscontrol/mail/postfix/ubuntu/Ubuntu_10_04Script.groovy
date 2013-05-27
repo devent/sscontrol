@@ -50,15 +50,41 @@ class Ubuntu_10_04Script extends PostfixScript {
 	 * Returns the postfix service packages.
 	 *
 	 * <ul>
-	 * <li>property {@code "packages"}</li>
+	 * <li>profile property {@code "packages"}</li>
 	 * </ul>
 	 */
 	List getPackages() {
 		profileListProperty "packages", ubuntuProperties
 	}
 
+	/**
+	 * <ul>
+	 * <li>profile property {@code "mailname_file"}</li>
+	 * </ul>
+	 */
 	@Override
-	String getUfwCommand() {
-		profileProperty "ufw_command", ubuntuProperties
+	File getMailnameFile() {
+		def file = profileProperty("mailname_file", ubuntuProperties) as File
+		file.absolute ? file : new File(configurationDir, file.name)
+	}
+
+	/**
+	 * <ul>
+	 * <li>profile property {@code "main_file"}</li>
+	 * </ul>
+	 */
+	@Override
+	File getMainFile() {
+		def file = profileProperty("main_file", ubuntuProperties) as File
+		file.absolute ? file : new File(configurationDir, file.name)
+	}
+
+	/**
+	 * <ul>
+	 * <li>profile property {@code "configuration_directory"}</li>
+	 * </ul>
+	 */
+	File getConfigurationDir() {
+		profileProperty("configuration_directory", ubuntuProperties) as File
 	}
 }

@@ -75,22 +75,22 @@ abstract class PostfixScript extends LinuxScript {
 	 * Sets the domain name of the mail server. This is done usually in 
 	 * the {@code /etc/mailname} file.
 	 * 	
-	 * @see #getMailname()
+	 * @see #getMailnameFile()
 	 * @see #getCurrentMailnameConfiguration()
 	 * @see #getMailnameConfiguration()
 	 */
 	void deployMailname() {
-		deployConfiguration configurationTokens(), currentMailnameConfiguration, mailnameConfiguration, mailname
+		deployConfiguration configurationTokens(), currentMailnameConfiguration, mailnameConfiguration, mailnameFile
 	}
 
 	/**
 	 * Returns the current mail name configuration. This is usually the 
 	 * configuration file {@code /etc/mailname}.
 	 * 	
-	 * @see #getMailname()
+	 * @see #getMailnameFile()
 	 */
 	String getCurrentMailnameConfiguration() {
-		currentConfiguration mailname
+		currentConfiguration mailnameFile
 	}
 
 	/**
@@ -107,28 +107,28 @@ abstract class PostfixScript extends LinuxScript {
 	/**
 	 * Returns the mail name configuration file.
 	 */
-	abstract File getMailname()
+	abstract File getMailnameFile()
 
 	/**
 	 * Sets the main configuration of the mail server. This is done usually in 
 	 * the {@code /etc/postfix/main.cf} file.
 	 * 	
-	 * @see #getMain()
+	 * @see #getMainFile()
 	 * @see #getCurrentMainConfiguration()
 	 * @see #getMainConfiguration()
 	 */
 	void deployMain() {
-		deployConfiguration configurationTokens(), currentMainConfiguration, mainConfiguration, main
+		deployConfiguration configurationTokens(), currentMainConfiguration, mainConfiguration, mainFile
 	}
 
 	/**
 	 * Returns the current postfix main configuration. This is usually the
 	 * configuration file {@code /etc/postfix/main.cf}.
 	 *
-	 * @see #getMain()
+	 * @see #getMainFile()
 	 */
 	String getCurrentMainConfiguration() {
-		currentConfiguration main
+		currentConfiguration mainFile
 	}
 
 	/**
@@ -138,11 +138,12 @@ abstract class PostfixScript extends LinuxScript {
 	 */
 	List getMainConfiguration() {
 		[
-			new TokenTemplate("\\#?myhostname.*", mainTemplate.getText(true, "hostname", "mail", service)),
-			new TokenTemplate("\\#?myorigin.*", mainTemplate.getText(true, "origin", "mail", service)),
-			new TokenTemplate("\\#?smtpd_banner.*", mainTemplate.getText(true, "banner", "banner", banner)),
-			new TokenTemplate("\\#?relayhost.*", mainTemplate.getText(true, "relayhost", "mail", service)),
-			new TokenTemplate("\\#?inet_interfaces.*", mainTemplate.getText(true, "interfaces", "mail", service)),
+			new TokenTemplate("(?m)^\\#?myhostname.*", mainTemplate.getText(true, "hostname", "mail", service)),
+			new TokenTemplate("(?m)^\\#?myorigin.*", mainTemplate.getText(true, "origin", "mail", service)),
+			new TokenTemplate("(?m)^\\#?smtpd_banner.*", mainTemplate.getText(true, "banner", "banner", banner)),
+			new TokenTemplate("(?m)^\\#?relayhost.*", mainTemplate.getText(true, "relayhost", "mail", service)),
+			new TokenTemplate("(?m)^\\#?inet_interfaces.*", mainTemplate.getText(true, "interfaces", "mail", service)),
+			new TokenTemplate("(?m)^\\#?masquerade_domains.*", mainTemplate.getText(true, "masqueradeDomains", "mail", service)),
 		]
 	}
 
@@ -161,7 +162,12 @@ abstract class PostfixScript extends LinuxScript {
 	/**
 	 * Returns the {@code main.cf} file.
 	 */
-	abstract File getMain()
+	abstract File getMainFile()
+
+	/**
+	 * Returns the path of the configuration directory.
+	 */
+	abstract File getConfigurationDir()
 
 	/**
 	 * Run the distribution specific configuration.

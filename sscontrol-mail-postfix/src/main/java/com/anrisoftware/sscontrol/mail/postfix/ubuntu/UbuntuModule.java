@@ -16,7 +16,10 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-hostname. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.mail.postfix.linux;
+package com.anrisoftware.sscontrol.mail.postfix.ubuntu;
+
+import static com.google.inject.multibindings.MapBinder.newMapBinder;
+import groovy.lang.Script;
 
 import java.io.IOException;
 import java.net.URL;
@@ -26,29 +29,42 @@ import javax.inject.Singleton;
 
 import com.anrisoftware.propertiesutils.ContextProperties;
 import com.anrisoftware.propertiesutils.ContextPropertiesFactory;
+import com.anrisoftware.sscontrol.core.service.ServiceModule;
+import com.anrisoftware.sscontrol.mail.postfix.linux.PostfixModule;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
+import com.google.inject.multibindings.MapBinder;
 
 /**
- * Provides the UFW firewall linux default properties.
+ * Binds the postfix service.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-public class PostfixScriptModule extends AbstractModule {
+class UbuntuModule extends AbstractModule {
 
-	private static final URL LINUX_PROPERTIES_RESOURCE = PostfixScriptModule.class
-			.getResource("/ufw_linux.properties");
+	private static final URL UBUNTU_10_04_PROPERTIES_RESOURCE = PostfixModule.class
+			.getResource("/postfix_ubuntu_10_04.properties");
 
 	@Override
 	protected void configure() {
+		bindScripts();
+		install(new ServiceModule());
+		install(new PostfixModule());
+	}
+
+	private void bindScripts() {
+		MapBinder<String, Script> binder;
+		binder = newMapBinder(binder(), String.class, Script.class);
+		binder.addBinding("postfix.ubuntu_10_04").to(Ubuntu_10_04Script.class);
 	}
 
 	@Provides
 	@Singleton
-	@Named("ufw-linux-properties")
-	ContextProperties getLinuxProperties() throws IOException {
-		return new ContextPropertiesFactory(PostfixScript.class).withProperties(
-				System.getProperties()).fromResource(LINUX_PROPERTIES_RESOURCE);
+	@Named("postfix-ubuntu-10_04-properties")
+	ContextProperties getUbuntu_10_04Properties() throws IOException {
+		return new ContextPropertiesFactory(Ubuntu_10_04Script.class)
+				.withProperties(System.getProperties()).fromResource(
+						UBUNTU_10_04_PROPERTIES_RESOURCE);
 	}
 }

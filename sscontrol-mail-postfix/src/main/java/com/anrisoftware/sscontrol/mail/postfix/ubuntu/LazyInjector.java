@@ -48,7 +48,7 @@ class LazyInjector extends LazyInitializer<Injector> {
 
 	@Override
 	protected Injector initialize() throws ConcurrentException {
-		Module[] modules = new Module[] { new PostfixModule() };
+		Module[] modules = new Module[] { new UbuntuModule() };
 		if (parentInjector != null) {
 			return parentInjector.createChildInjector(modules);
 		}

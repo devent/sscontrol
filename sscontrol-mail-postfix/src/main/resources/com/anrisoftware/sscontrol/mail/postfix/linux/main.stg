@@ -17,3 +17,11 @@ relayhost(mail) ::= <<
 interfaces(mail) ::= <<
 inet_interfaces = <mail.bindAddresses>
 >>
+
+masqueradeDomains(mail) ::= <<
+masquerade_domains = <mail.masqueradeDomains.domains;separator=" ">
+>>
+
+masqueradeExceptions(mail) ::= <<
+masquerade_exceptions = <mail.masqueradeDomains.userExceptions;separator=",">
+>>

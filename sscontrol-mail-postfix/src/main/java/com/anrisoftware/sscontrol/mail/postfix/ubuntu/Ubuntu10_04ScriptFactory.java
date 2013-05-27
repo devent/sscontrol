@@ -10,7 +10,7 @@ import com.anrisoftware.sscontrol.core.api.ServiceScriptInfo;
 import com.google.inject.Injector;
 
 /**
- * Provides the UFW script for Ubuntu 10.04 server.
+ * Provides the postfix script for Ubuntu 10.04 server.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
@@ -21,7 +21,7 @@ public class Ubuntu10_04ScriptFactory implements ServiceScriptFactory {
 	/**
 	 * Name of the service.
 	 */
-	public static final String NAME = "ufw";
+	public static final String NAME = "postfix";
 
 	/**
 	 * Name of the profile.

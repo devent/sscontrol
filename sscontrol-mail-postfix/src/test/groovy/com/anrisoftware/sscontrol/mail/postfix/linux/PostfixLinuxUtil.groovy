@@ -42,6 +42,8 @@ class PostfixLinuxUtil {
 
 	static mailService = PostfixLinuxUtil.class.getResource("MailService.groovy")
 
+	static mailSharedUnixAccounts = PostfixLinuxUtil.class.getResource("MailSharedUnixAccounts.groovy")
+
 	static mailname = PostfixLinuxUtil.class.getResource("mailname.txt")
 
 	static maincf = PostfixLinuxUtil.class.getResource("maincf.txt")
@@ -53,6 +55,8 @@ class PostfixLinuxUtil {
 	static mailnameExpected = PostfixLinuxUtil.class.getResource("mailname_expected.txt")
 
 	static maincfExpected = PostfixLinuxUtil.class.getResource("maincf_expected.txt")
+
+	static maincfSharedUnixAccountsExpected = PostfixLinuxUtil.class.getResource("maincf_shared_unix_accounts_expected.txt")
 
 	static mastercfExpected = PostfixLinuxUtil.class.getResource("mastercf_expected.txt")
 

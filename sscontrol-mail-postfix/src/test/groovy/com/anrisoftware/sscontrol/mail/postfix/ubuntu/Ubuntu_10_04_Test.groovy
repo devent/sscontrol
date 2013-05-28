@@ -39,6 +39,26 @@ import com.google.inject.Injector
 class Ubuntu_10_04_Test extends PostfixLinuxUtil {
 
 	@Test
+	void "shared unix accounts"() {
+		ServicesRegistry registry = injector.getInstance ServicesRegistry
+		SscontrolServiceLoader loader = injector.getInstance SscontrolServiceLoader
+		loader.loadService ubuntu1004Profile, variables, registry, null
+		def profile = registry.getService("profile")[0]
+		loader.loadService mailSharedUnixAccounts, variables, registry, profile
+		copyResourceToCommand echoCommand, aptitudeFile
+		copyResourceToCommand echoCommand, restartFile
+		copyURLToFile maincf, maincfFile
+		copyURLToFile mastercf, mastercfFile
+
+		registry.allServices.each { it.call() }
+		log.info "Run service again to ensure that configuration is not set double."
+		registry.allServices.each { it.call() }
+
+		assertFileContent mailnameFile, mailnameExpected
+		assertFileContent maincfFile, maincfSharedUnixAccountsExpected
+	}
+
+	@Test
 	void "mail script"() {
 		ServicesRegistry registry = injector.getInstance ServicesRegistry
 		SscontrolServiceLoader loader = injector.getInstance SscontrolServiceLoader

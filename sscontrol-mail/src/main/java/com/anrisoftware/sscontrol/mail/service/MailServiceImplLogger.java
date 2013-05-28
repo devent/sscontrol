@@ -19,6 +19,7 @@
 package com.anrisoftware.sscontrol.mail.service;
 
 import static org.apache.commons.lang3.StringUtils.join;
+import static org.apache.commons.lang3.Validate.isTrue;
 import static org.apache.commons.lang3.Validate.notBlank;
 import static org.apache.commons.lang3.Validate.notNull;
 
@@ -36,6 +37,7 @@ import com.anrisoftware.sscontrol.mail.statements.Domain;
  */
 class MailServiceImplLogger extends AbstractLogger {
 
+	private static final String DESTINATION_NULL = "Need at least one destination.";
 	private static final String DOMAIN_NAME_SET_INFO = "Domain name '{}' set for mail service.";
 	private static final String DOMAIN_NAME_SET = "Domain name '{}' set for {}.";
 	private static final String BIND_ADDRESSES_NULL = "Bind addresses cannot be empty or null.";
@@ -53,6 +55,8 @@ class MailServiceImplLogger extends AbstractLogger {
 	private static final String DOMAIN_ADDED_INFO = "Domain added '{}' to mail service.";
 	private static final String RELAY_SET = "Relay host '{}' set for {}.";
 	private static final String RELAY_SET_INFO = "Relay host '{}' set for mail service.";
+	private static final String DESTINATION_ADD = "Destination added '{}' to {}.";
+	private static final String DESTINATION_ADD_INFO = "Destination added '{}' to mail service.";
 
 	/**
 	 * Create logger for {@link MailServiceImpl}.
@@ -128,6 +132,18 @@ class MailServiceImplLogger extends AbstractLogger {
 			log.debug(RELAY_SET, host, service);
 		} else {
 			log.info(RELAY_SET_INFO, host);
+		}
+	}
+
+	void checkDestinations(MailServiceImpl service, Object[] list) {
+		isTrue(list.length > 0, DESTINATION_NULL);
+	}
+
+	void destinationAdded(MailServiceImpl service, String destination) {
+		if (log.isDebugEnabled()) {
+			log.debug(DESTINATION_ADD, destination, service);
+		} else {
+			log.info(DESTINATION_ADD_INFO, destination);
 		}
 	}
 }

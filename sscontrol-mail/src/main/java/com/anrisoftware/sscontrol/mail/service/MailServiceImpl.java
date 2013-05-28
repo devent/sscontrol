@@ -78,6 +78,8 @@ public class MailServiceImpl extends AbstractService {
 
 	private final DomainFactory domainFactory;
 
+	private final List<String> destinations;
+
 	/**
 	 * Sets the default mail service dependencies.
 	 * 
@@ -107,6 +109,7 @@ public class MailServiceImpl extends AbstractService {
 		this.domains = new ArrayList<Domain>();
 		this.domainFactory = domainFactory;
 		this.relayHost = null;
+		this.destinations = new ArrayList<String>();
 	}
 
 	@Override
@@ -256,6 +259,31 @@ public class MailServiceImpl extends AbstractService {
 		log.checkDomainName(this, name);
 		this.origin = name;
 		log.originSet(this, name);
+	}
+
+	/**
+	 * Additional list of domains that are delivered to local mail users.
+	 * 
+	 * @param list
+	 *            the list of the domains.
+	 */
+	public void destinations(Object... list) {
+		log.checkDestinations(this, list);
+		for (Object object : list) {
+			String destination = object.toString();
+			destinations.add(destination);
+			log.destinationAdded(this, destination);
+		}
+	}
+
+	/**
+	 * Returns the list of additional domains that are delivered to local mail
+	 * users.
+	 * 
+	 * @return the {@link List} of domains.
+	 */
+	public List<String> getDestinations() {
+		return unmodifiableList(destinations);
 	}
 
 	/**

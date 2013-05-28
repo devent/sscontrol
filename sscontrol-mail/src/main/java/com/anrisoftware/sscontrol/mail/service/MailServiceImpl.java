@@ -19,13 +19,18 @@
 package com.anrisoftware.sscontrol.mail.service;
 
 import static com.anrisoftware.sscontrol.mail.service.MailFactory.NAME;
+import static java.util.Collections.unmodifiableCollection;
 import static java.util.Collections.unmodifiableList;
 import groovy.lang.Script;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.ServiceLoader;
+import java.util.Set;
 
 import javax.inject.Inject;
 
@@ -78,7 +83,7 @@ public class MailServiceImpl extends AbstractService {
 
 	private final DomainFactory domainFactory;
 
-	private final List<String> destinations;
+	private final Set<String> destinations;
 
 	/**
 	 * Sets the default mail service dependencies.
@@ -109,7 +114,7 @@ public class MailServiceImpl extends AbstractService {
 		this.domains = new ArrayList<Domain>();
 		this.domainFactory = domainFactory;
 		this.relayHost = null;
-		this.destinations = new ArrayList<String>();
+		this.destinations = new HashSet<String>();
 	}
 
 	@Override
@@ -268,9 +273,19 @@ public class MailServiceImpl extends AbstractService {
 	 *            the list of the domains.
 	 */
 	public void destinations(Object... list) {
+		destinations(Arrays.asList(list));
+	}
+
+	/**
+	 * Additional list of domains that are delivered to local mail users.
+	 * 
+	 * @param list
+	 *            the list of the domains.
+	 */
+	public void destinations(List<?> list) {
 		log.checkDestinations(this, list);
 		for (Object object : list) {
-			String destination = object.toString();
+			String destination = object.toString().trim();
 			destinations.add(destination);
 			log.destinationAdded(this, destination);
 		}
@@ -280,10 +295,10 @@ public class MailServiceImpl extends AbstractService {
 	 * Returns the list of additional domains that are delivered to local mail
 	 * users.
 	 * 
-	 * @return the {@link List} of domains.
+	 * @return the {@link Collection} of domains.
 	 */
-	public List<String> getDestinations() {
-		return unmodifiableList(destinations);
+	public Collection<String> getDestinations() {
+		return unmodifiableCollection(destinations);
 	}
 
 	/**

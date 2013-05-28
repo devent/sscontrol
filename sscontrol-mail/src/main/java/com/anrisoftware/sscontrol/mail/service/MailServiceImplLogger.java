@@ -23,6 +23,8 @@ import static org.apache.commons.lang3.Validate.isTrue;
 import static org.apache.commons.lang3.Validate.notBlank;
 import static org.apache.commons.lang3.Validate.notNull;
 
+import java.util.List;
+
 import com.anrisoftware.globalpom.log.AbstractLogger;
 import com.anrisoftware.sscontrol.core.api.ServiceException;
 import com.anrisoftware.sscontrol.mail.statements.BindAddresses;
@@ -135,8 +137,8 @@ class MailServiceImplLogger extends AbstractLogger {
 		}
 	}
 
-	void checkDestinations(MailServiceImpl service, Object[] list) {
-		isTrue(list.length > 0, DESTINATION_NULL);
+	void checkDestinations(MailServiceImpl service, List<?> list) {
+		isTrue(list.size() > 0, DESTINATION_NULL);
 	}
 
 	void destinationAdded(MailServiceImpl service, String destination) {

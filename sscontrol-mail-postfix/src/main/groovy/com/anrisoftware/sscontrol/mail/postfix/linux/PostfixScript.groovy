@@ -59,6 +59,7 @@ abstract class PostfixScript extends LinuxScript {
 		super.run()
 		postfixTemplates = templatesFactory.create "Postfix", templatesAttributes
 		mainTemplate = postfixTemplates.getResource("main_configuration")
+		appendDefaultDestinations()
 		deployMailname()
 		deployMain()
 		distributionSpecificConfiguration()
@@ -69,6 +70,24 @@ abstract class PostfixScript extends LinuxScript {
 	 */
 	Map getTemplatesAttributes() {
 		["renderers": [bindAddressesRenderer]]
+	}
+
+	/**
+	 * Append the default destinations.
+	 */
+	void appendDefaultDestinations() {
+		service.destinations defaultDestinations
+	}
+
+	/**
+	 * Returns a list of the default destination domains.
+	 *
+	 * <ul>
+	 * <li>profile property {@code "default_destinations"}</li>
+	 * </ul>
+	 */
+	List getDefaultDestinations() {
+		profileListProperty "default_destinations", postfixProperties
 	}
 
 	/**
@@ -143,6 +162,7 @@ abstract class PostfixScript extends LinuxScript {
 			new TokenTemplate("(?m)^\\#?smtpd_banner.*", mainTemplate.getText(true, "banner", "banner", banner)),
 			new TokenTemplate("(?m)^\\#?relayhost.*", mainTemplate.getText(true, "relayhost", "mail", service)),
 			new TokenTemplate("(?m)^\\#?inet_interfaces.*", mainTemplate.getText(true, "interfaces", "mail", service)),
+			new TokenTemplate("(?m)^\\#?mydestination.*", mainTemplate.getText(true, "destinations", "mail", service)),
 			new TokenTemplate("(?m)^\\#?masquerade_domains.*", mainTemplate.getText(true, "masqueradeDomains", "mail", service)),
 		]
 	}

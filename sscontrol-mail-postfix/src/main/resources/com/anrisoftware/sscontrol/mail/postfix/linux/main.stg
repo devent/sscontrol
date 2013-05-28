@@ -18,6 +18,10 @@ interfaces(mail) ::= <<
 inet_interfaces = <mail.bindAddresses>
 >>
 
+destinations(mail) ::= <<
+mydestination = <mail.destinations;separator=",">
+>>
+
 masqueradeDomains(mail) ::= <<
 masquerade_domains = <mail.masqueradeDomains.domains;separator=" ">
 >>

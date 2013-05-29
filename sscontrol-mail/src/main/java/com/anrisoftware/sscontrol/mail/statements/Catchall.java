@@ -1,7 +1,5 @@
 package com.anrisoftware.sscontrol.mail.statements;
 
-import static java.lang.String.format;
-
 import javax.inject.Inject;
 
 import com.google.inject.assistedinject.Assisted;
@@ -20,6 +18,6 @@ public class Catchall extends Alias {
 	@Inject
 	Catchall(AliasLogger logger, @Assisted Domain domain,
 			@Assisted String destination) {
-		super(logger, domain, format("@%s", domain.getName()), destination);
+		super(logger, domain, "", destination);
 	}
 }

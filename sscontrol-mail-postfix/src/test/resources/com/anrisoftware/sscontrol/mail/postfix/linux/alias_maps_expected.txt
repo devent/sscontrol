@@ -5,5 +5,5 @@ info@example.com joe
 sales@example.com jane
 # SSCONTROL-mail-END
 # SSCONTROL-mail
-@example.com@example.com jim
+@example.com jim
 # SSCONTROL-mail-END

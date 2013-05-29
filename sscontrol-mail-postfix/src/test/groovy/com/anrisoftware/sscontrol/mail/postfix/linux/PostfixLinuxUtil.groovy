@@ -90,11 +90,14 @@ class PostfixLinuxUtil {
 
 	File aliasMapsFile
 
+	File idFile
+
 	@Before
 	void createTemp() {
 		tmpdir = File.createTempDir this.class.simpleName, null
 		aptitudeFile = new File(tmpdir, "/usr/bin/aptitude")
 		restartFile = new File(tmpdir, "/sbin/restart")
+		idFile = new File(tmpdir, "/bin/id")
 		mailnameFile = new File(tmpdir, "/etc/mailname")
 		maincfFile = new File(tmpdir, "/etc/postfix/main.cf")
 		mastercfFile = new File(tmpdir, "/etc/postfix/master.cf")

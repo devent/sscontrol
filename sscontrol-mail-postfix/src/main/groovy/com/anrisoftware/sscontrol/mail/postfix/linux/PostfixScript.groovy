@@ -28,6 +28,7 @@ import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.Templates
 import com.anrisoftware.sscontrol.core.service.LinuxScript
 import com.anrisoftware.sscontrol.mail.statements.Alias
+import com.anrisoftware.sscontrol.mail.statements.User
 import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokenTemplate
 
 /**
@@ -69,6 +70,7 @@ abstract class PostfixScript extends LinuxScript {
 		if (service.domains.size() > 0) {
 			deployVirtualDomains()
 			deployAliases()
+			deployMailbox()
 		}
 		distributionSpecificConfiguration()
 	}
@@ -152,6 +154,8 @@ abstract class PostfixScript extends LinuxScript {
 					[
 						new TokenTemplate("(?m)^\\#?virtual_alias_domains.*", mainTemplate.getText(true, "aliasDomains", "file", aliasDomainsFile)),
 						new TokenTemplate("(?m)^\\#?virtual_alias_maps.*", mainTemplate.getText(true, "aliasMaps", "file", aliasMapsFile)),
+						new TokenTemplate("(?m)^\\#?virtual_mailbox_base.*", mainTemplate.getText(true, "mailboxBase", "dir", mailboxBaseDir)),
+						new TokenTemplate("(?m)^\\#?virtual_mailbox_maps.*", mainTemplate.getText(true, "mailboxMaps", "file", mailboxMapsFile)),
 					]
 				} else {
 					[]
@@ -184,12 +188,31 @@ abstract class PostfixScript extends LinuxScript {
 	void deployAliases() {
 		def configuration = service.domains.inject([]) { list, domain ->
 			list << domain.aliases.inject([]) { aliases, Alias alias ->
-				aliases << new TokenTemplate("(?m)^\\#?${alias.name}.*", postmapsTemplate.getText(true, "alias", "alias", alias))
+				def text = postmapsTemplate.getText(true, "alias", "alias", alias)
+				aliases << new TokenTemplate("(?m)^\\#?${alias.name}@${alias.domain.name}.*", text)
 			}
 		}
 		def currentConfiguration = currentConfiguration aliasMapsFile
 		deployConfiguration configurationTokens(), currentConfiguration, configuration, aliasMapsFile
 		rehashFile aliasMapsFile
+	}
+
+	/**
+	 * Deploys the list of virtual mailbox.
+	 * 
+	 * @see #getMailboxMapsFile()
+	 */
+	void deployMailbox() {
+		def configuration = service.domains.inject([]) { list, domain ->
+			list << domain.users.inject([]) { users, User user ->
+				def path = createMailboxPath(user)
+				def text = postmapsTemplate.getText(true, "user", "user", user, "path", path)
+				users << new TokenTemplate("(?m)^\\#?${user.name}@${user.domain.name}.*", text)
+			}
+		}
+		def currentConfiguration = currentConfiguration mailboxMapsFile
+		deployConfiguration configurationTokens(), currentConfiguration, configuration, mailboxMapsFile
+		rehashFile mailboxMapsFile
 	}
 
 	/**
@@ -201,6 +224,14 @@ abstract class PostfixScript extends LinuxScript {
 		def template = postfixTemplates.getResource("postmap_command")
 		def worker = scriptCommandFactory.create(template, "postmapCommand", postmapCommand, "file", file)()
 		log.rehashFileDone this, file, worker
+	}
+
+	/**
+	 * Replace the variables of the mailbox path pattern.
+	 */
+	String createMailboxPath(User user) {
+		String pattern = mailboxPattern.replace('${domain}', user.domain.name)
+		pattern = pattern.replace('${user}', user.name)
 	}
 
 	/**
@@ -248,6 +279,23 @@ abstract class PostfixScript extends LinuxScript {
 	 */
 	File getAliasMapsFile() {
 		def file = profileProperty("alias_maps_file", postfixProperties) as File
+		file.absolute ? file : new File(configurationDir, file.name)
+	}
+
+	/**
+	 * Returns the absolute path of the virtual mailbox maps hash table file.
+	 * Default is the file {@code "mailbox_maps"} in the configuration
+	 * directory.
+	 *
+	 * <ul>
+	 * <li>profile property {@code "mailbox_maps_file"}</li>
+	 * </ul>
+	 * 
+	 * @see #getConfigurationDir() 
+	 * @see #postfixProperties
+	 */
+	File getMailboxMapsFile() {
+		def file = profileProperty("mailbox_maps_file", postfixProperties) as File
 		file.absolute ? file : new File(configurationDir, file.name)
 	}
 
@@ -307,6 +355,33 @@ abstract class PostfixScript extends LinuxScript {
 	 */
 	File getConfigurationDir() {
 		profileProperty("configuration_directory", defaultProperties) as File
+	}
+
+	/**
+	 * Returns the path of the base directory for virtual users.
+	 * 
+	 * <ul>
+	 * <li>profile property {@code "mailbox_base_directory"}</li>
+	 * </ul>
+	 * 
+	 * @see #getDefaultProperties()
+	 */
+	File getMailboxBaseDir() {
+		profileProperty("mailbox_base_directory", defaultProperties) as File
+	}
+
+	/**
+	 * Returns the pattern for the directories that are created for each virtual
+	 * domain and virtual user under the mailbox base directory. 
+	 * 
+	 * <ul>
+	 * <li>profile property {@code "mailbox_pattern"}</li>
+	 * </ul>
+	 * 
+	 * @see #postfixProperties
+	 */
+	String getMailboxPattern() {
+		profileProperty("mailbox_pattern", postfixProperties) as File
 	}
 
 	/**

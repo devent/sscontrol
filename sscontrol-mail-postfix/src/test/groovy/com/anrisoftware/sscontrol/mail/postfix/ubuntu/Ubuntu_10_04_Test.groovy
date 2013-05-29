@@ -68,6 +68,7 @@ class Ubuntu_10_04_Test extends PostfixLinuxUtil {
 		copyResourceToCommand echoCommand, aptitudeFile
 		copyResourceToCommand echoCommand, restartFile
 		copyResourceToCommand echoCommand, postmapFile
+		copyResourceToCommand echoCommand, idFile
 		copyURLToFile maincf, maincfFile
 		copyURLToFile mastercf, mastercfFile
 

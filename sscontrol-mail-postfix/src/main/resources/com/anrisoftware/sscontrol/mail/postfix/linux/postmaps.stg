@@ -5,3 +5,7 @@ domain(domain) ::= <<
 alias(alias) ::= <<
 <alias.name>@<alias.domain.name> <alias.destination>
 >>
+
+user(user, path) ::= <<
+<user.name>@<user.domain.name> <path>
+>>

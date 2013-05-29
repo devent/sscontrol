@@ -22,6 +22,7 @@ profile "ubuntu_10_04", {
 	system {
 		install_command "$tmp/usr/bin/aptitude update && $tmp/usr/bin/aptitude install"
 		restart_command "$tmp/sbin/restart"
+		id_command "$tmp/bin/id"
 	}
 	mail {
 		service "postfix"
@@ -29,5 +30,6 @@ profile "ubuntu_10_04", {
 		postmap_command "$tmp/usr/sbin/postmap"
 		mailname_file "$tmp/etc/mailname"
 		configuration_directory "$tmp/etc/postfix"
+		mailbox_base_directory "$tmp/var/mail/vhosts"
 	}
 }

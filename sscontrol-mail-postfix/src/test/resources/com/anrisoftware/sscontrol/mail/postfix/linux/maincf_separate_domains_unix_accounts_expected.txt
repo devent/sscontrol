@@ -43,3 +43,9 @@ virtual_alias_domains = hash:/tmp/Ubuntu_10_04.tmp/etc/postfix/alias_domains
 # SSCONTROL-mail
 virtual_alias_maps = hash:/tmp/Ubuntu_10_04.tmp/etc/postfix/alias_maps
 # SSCONTROL-mail-END
+# SSCONTROL-mail
+virtual_mailbox_base = /tmp/Ubuntu_10_04.tmp/var/mail/vhosts
+# SSCONTROL-mail-END
+# SSCONTROL-mail
+virtual_mailbox_maps = hash:/tmp/Ubuntu_10_04.tmp/etc/postfix/mailbox_maps
+# SSCONTROL-mail-END

@@ -156,6 +156,9 @@ abstract class PostfixScript extends LinuxScript {
 						new TokenTemplate("(?m)^\\#?virtual_alias_maps.*", mainTemplate.getText(true, "aliasMaps", "file", aliasMapsFile)),
 						new TokenTemplate("(?m)^\\#?virtual_mailbox_base.*", mainTemplate.getText(true, "mailboxBase", "dir", mailboxBaseDir)),
 						new TokenTemplate("(?m)^\\#?virtual_mailbox_maps.*", mainTemplate.getText(true, "mailboxMaps", "file", mailboxMapsFile)),
+						new TokenTemplate("(?m)^\\#?virtual_minimum_uid.*", mainTemplate.getText(true, "minimumUid", "uid", minimumUid)),
+						new TokenTemplate("(?m)^\\#?virtual_uid_maps.*", mainTemplate.getText(true, "uidMaps", "uid", virtualUid)),
+						new TokenTemplate("(?m)^\\#?virtual_gid_maps.*", mainTemplate.getText(true, "gidMaps", "gid", virtualGid)),
 					]
 				} else {
 					[]
@@ -382,6 +385,45 @@ abstract class PostfixScript extends LinuxScript {
 	 */
 	String getMailboxPattern() {
 		profileProperty("mailbox_pattern", postfixProperties) as File
+	}
+
+	/**
+	 * Returns the minimum identification number for virtual users. 
+	 * 
+	 * <ul>
+	 * <li>profile property {@code "minimum_uid"}</li>
+	 * </ul>
+	 * 
+	 * @see #getDefaultProperties()
+	 */
+	Number getMinimumUid() {
+		profileProperty("minimum_uid", defaultProperties) as Integer
+	}
+
+	/**
+	 * Returns the user identification number for virtual users. 
+	 * 
+	 * <ul>
+	 * <li>profile property {@code "virtual_uid"}</li>
+	 * </ul>
+	 * 
+	 * @see #getDefaultProperties()
+	 */
+	Number getVirtualUid() {
+		profileProperty("virtual_uid", defaultProperties) as Integer
+	}
+
+	/**
+	 * Returns the group identification number for virtual users. 
+	 * 
+	 * <ul>
+	 * <li>profile property {@code "virtual_gid"}</li>
+	 * </ul>
+	 * 
+	 * @see #getDefaultProperties()
+	 */
+	Number getVirtualGid() {
+		profileProperty("virtual_gid", defaultProperties) as Integer
 	}
 
 	/**

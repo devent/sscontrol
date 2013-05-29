@@ -49,3 +49,12 @@ virtual_mailbox_base = /tmp/Ubuntu_10_04.tmp/var/mail/vhosts
 # SSCONTROL-mail
 virtual_mailbox_maps = hash:/tmp/Ubuntu_10_04.tmp/etc/postfix/mailbox_maps
 # SSCONTROL-mail-END
+# SSCONTROL-mail
+virtual_minimum_uid = 5000
+# SSCONTROL-mail-END
+# SSCONTROL-mail
+virtual_uid_maps = static:5000
+# SSCONTROL-mail-END
+# SSCONTROL-mail
+virtual_gid_maps = static:5000
+# SSCONTROL-mail-END

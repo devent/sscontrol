@@ -79,6 +79,7 @@ class Ubuntu_10_04_Test extends PostfixLinuxUtil {
 		assertFileContent mailnameFile, mailnameExpected
 		assertStringContent maincfFileString, resourceToString(maincfSeparateDomainsUnixAccountsExpected)
 		assertFileContent aliasDomainsFile, aliasDomainsExpected
+		assertFileContent aliasMapsFile, aliasMapsExpected
 	}
 
 	@Test

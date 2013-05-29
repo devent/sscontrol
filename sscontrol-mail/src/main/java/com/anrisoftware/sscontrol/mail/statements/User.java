@@ -64,6 +64,7 @@ public class User {
 	@Override
 	public String toString() {
 		return new ToStringBuilder(this).append("name", name)
-				.append("enabled", enabled).toString();
+				.append("domain", domain.getName()).append("enabled", enabled)
+				.toString();
 	}
 }

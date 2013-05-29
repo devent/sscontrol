@@ -1,3 +1,7 @@
 domain(domain) ::= <<
 <domain.name>
 >>
+
+alias(alias) ::= <<
+<alias.name>@<alias.domain.name> <alias.destination>
+>>

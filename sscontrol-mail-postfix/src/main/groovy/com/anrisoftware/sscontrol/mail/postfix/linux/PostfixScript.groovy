@@ -27,6 +27,7 @@ import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.Templates
 import com.anrisoftware.sscontrol.core.service.LinuxScript
+import com.anrisoftware.sscontrol.mail.statements.Alias
 import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokenTemplate
 
 /**
@@ -67,6 +68,7 @@ abstract class PostfixScript extends LinuxScript {
 		deployMain()
 		if (service.domains.size() > 0) {
 			deployVirtualDomains()
+			deployAliases()
 		}
 		distributionSpecificConfiguration()
 	}
@@ -134,6 +136,7 @@ abstract class PostfixScript extends LinuxScript {
 	 * the {@code /etc/postfix/main.cf} file.
 	 * 	
 	 * @see #getMainFile()
+	 * @see #getAliasMapsFile()
 	 */
 	void deployMain() {
 		def configuration = [
@@ -146,11 +149,14 @@ abstract class PostfixScript extends LinuxScript {
 			new TokenTemplate("(?m)^\\#?masquerade_domains.*", mainTemplate.getText(true, "masqueradeDomains", "mail", service)),
 			{
 				if (service.domains.size() > 0) {
-					new TokenTemplate("(?m)^\\#?virtual_alias_domains.*", mainTemplate.getText(true, "aliasDomains", "file", aliasDomainsFile))
+					[
+						new TokenTemplate("(?m)^\\#?virtual_alias_domains.*", mainTemplate.getText(true, "aliasDomains", "file", aliasDomainsFile)),
+						new TokenTemplate("(?m)^\\#?virtual_alias_maps.*", mainTemplate.getText(true, "aliasMaps", "file", aliasMapsFile)),
+					]
 				} else {
 					[]
 				}
-			}()
+			}(),
 		]
 		def currentConfiguration = currentConfiguration mainFile
 		deployConfiguration configurationTokens(), currentConfiguration, configuration, mainFile
@@ -162,12 +168,28 @@ abstract class PostfixScript extends LinuxScript {
 	 * @see #getAliasDomainsFile()
 	 */
 	void deployVirtualDomains() {
-		def configuration = service.domains.inject([]) { list, it ->
-			list << new TokenTemplate("(?m)^\\#?${it.name}.*", postmapsTemplate.getText(true, "domain", "domain", it))
+		def configuration = service.domains.inject([]) { list, domain ->
+			list << new TokenTemplate("(?m)^\\#?${domain.name}.*", postmapsTemplate.getText(true, "domain", "domain", domain))
 		}
 		def currentConfiguration = currentConfiguration aliasDomainsFile
 		deployConfiguration configurationTokens(), currentConfiguration, configuration, aliasDomainsFile
 		rehashFile aliasDomainsFile
+	}
+
+	/**
+	 * Deploys the list of virtual aliases.
+	 * 
+	 * @see #getAliasMapsFile()
+	 */
+	void deployAliases() {
+		def configuration = service.domains.inject([]) { list, domain ->
+			list << domain.aliases.inject([]) { aliases, Alias alias ->
+				aliases << new TokenTemplate("(?m)^\\#?${alias.name}.*", postmapsTemplate.getText(true, "alias", "alias", alias))
+			}
+		}
+		def currentConfiguration = currentConfiguration aliasMapsFile
+		deployConfiguration configurationTokens(), currentConfiguration, configuration, aliasMapsFile
+		rehashFile aliasMapsFile
 	}
 
 	/**
@@ -197,7 +219,7 @@ abstract class PostfixScript extends LinuxScript {
 
 	/**
 	 * Returns the absolute path of the alias domains hash table file.
-	 * Default is the file {@code alias_domains} in the configuration
+	 * Default is the file {@code "alias_domains"} in the configuration
 	 * directory.
 	 *
 	 * <ul>
@@ -209,6 +231,23 @@ abstract class PostfixScript extends LinuxScript {
 	 */
 	File getAliasDomainsFile() {
 		def file = profileProperty("alias_domains_file", postfixProperties) as File
+		file.absolute ? file : new File(configurationDir, file.name)
+	}
+
+	/**
+	 * Returns the absolute path of the alias maps hash table file.
+	 * Default is the file {@code "alias_maps"} in the configuration
+	 * directory.
+	 *
+	 * <ul>
+	 * <li>profile property {@code "alias_maps_file"}</li>
+	 * </ul>
+	 * 
+	 * @see #getConfigurationDir() 
+	 * @see #postfixProperties
+	 */
+	File getAliasMapsFile() {
+		def file = profileProperty("alias_maps_file", postfixProperties) as File
 		file.absolute ? file : new File(configurationDir, file.name)
 	}
 

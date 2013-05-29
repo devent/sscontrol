@@ -66,6 +66,8 @@ class PostfixLinuxUtil {
 
 	static aliasDomainsExpected = PostfixLinuxUtil.class.getResource("alias_domains_expected.txt")
 
+	static aliasMapsExpected = PostfixLinuxUtil.class.getResource("alias_maps_expected.txt")
+
 	Injector injector
 
 	File tmpdir
@@ -86,6 +88,8 @@ class PostfixLinuxUtil {
 
 	File aliasDomainsFile
 
+	File aliasMapsFile
+
 	@Before
 	void createTemp() {
 		tmpdir = File.createTempDir this.class.simpleName, null
@@ -96,6 +100,7 @@ class PostfixLinuxUtil {
 		mastercfFile = new File(tmpdir, "/etc/postfix/master.cf")
 		postmapFile = new File(tmpdir, "/usr/sbin/postmap")
 		aliasDomainsFile = new File(tmpdir, "/etc/postfix/alias_domains")
+		aliasMapsFile = new File(tmpdir, "/etc/postfix/alias_maps")
 		variables = [tmp: tmpdir.absoluteFile]
 	}
 

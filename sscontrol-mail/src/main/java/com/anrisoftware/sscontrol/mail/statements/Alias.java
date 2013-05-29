@@ -62,6 +62,7 @@ public class Alias {
 	@Override
 	public String toString() {
 		return new ToStringBuilder(this).append("alias", name)
+				.append("domain", domain.getName())
 				.append("destination", destination).append("enabled", enabled)
 				.toString();
 	}

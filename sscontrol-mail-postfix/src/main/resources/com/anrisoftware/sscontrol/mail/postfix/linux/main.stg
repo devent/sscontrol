@@ -33,3 +33,7 @@ masquerade_exceptions = <mail.masqueradeDomains.userExceptions;separator=",">
 aliasDomains(file) ::= <<
 virtual_alias_domains = hash:<file>
 >>
+
+aliasMaps(file) ::= <<
+virtual_alias_maps = hash:<file>
+>>

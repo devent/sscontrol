@@ -54,14 +54,20 @@ abstract class PostfixScript extends LinuxScript {
 
 	TemplateResource mainTemplate
 
+	TemplateResource postmapsTemplate
+
 	@Override
 	def run() {
 		super.run()
 		postfixTemplates = templatesFactory.create "Postfix", templatesAttributes
 		mainTemplate = postfixTemplates.getResource("main_configuration")
+		postmapsTemplate = postfixTemplates.getResource("postmaps_configuration")
 		appendDefaultDestinations()
 		deployMailname()
 		deployMain()
+		if (service.domains.size() > 0) {
+			deployVirtualDomains()
+		}
 		distributionSpecificConfiguration()
 	}
 
@@ -124,39 +130,13 @@ abstract class PostfixScript extends LinuxScript {
 	}
 
 	/**
-	 * Returns the mail name configuration file.
-	 */
-	abstract File getMailnameFile()
-
-	/**
 	 * Sets the main configuration of the mail server. This is done usually in 
 	 * the {@code /etc/postfix/main.cf} file.
 	 * 	
 	 * @see #getMainFile()
-	 * @see #getCurrentMainConfiguration()
-	 * @see #getMainConfiguration()
 	 */
 	void deployMain() {
-		deployConfiguration configurationTokens(), currentMainConfiguration, mainConfiguration, mainFile
-	}
-
-	/**
-	 * Returns the current postfix main configuration. This is usually the
-	 * configuration file {@code /etc/postfix/main.cf}.
-	 *
-	 * @see #getMainFile()
-	 */
-	String getCurrentMainConfiguration() {
-		currentConfiguration mainFile
-	}
-
-	/**
-	 * Returns the current postfix main configuration.
-	 * 
-	 * @see #getBanner()
-	 */
-	List getMainConfiguration() {
-		[
+		def configuration = [
 			new TokenTemplate("(?m)^\\#?myhostname.*", mainTemplate.getText(true, "hostname", "mail", service)),
 			new TokenTemplate("(?m)^\\#?myorigin.*", mainTemplate.getText(true, "origin", "mail", service)),
 			new TokenTemplate("(?m)^\\#?smtpd_banner.*", mainTemplate.getText(true, "banner", "banner", banner)),
@@ -164,7 +144,41 @@ abstract class PostfixScript extends LinuxScript {
 			new TokenTemplate("(?m)^\\#?inet_interfaces.*", mainTemplate.getText(true, "interfaces", "mail", service)),
 			new TokenTemplate("(?m)^\\#?mydestination.*", mainTemplate.getText(true, "destinations", "mail", service)),
 			new TokenTemplate("(?m)^\\#?masquerade_domains.*", mainTemplate.getText(true, "masqueradeDomains", "mail", service)),
+			{
+				if (service.domains.size() > 0) {
+					new TokenTemplate("(?m)^\\#?virtual_alias_domains.*", mainTemplate.getText(true, "aliasDomains", "file", aliasDomainsFile))
+				} else {
+					[]
+				}
+			}()
 		]
+		def currentConfiguration = currentConfiguration mainFile
+		deployConfiguration configurationTokens(), currentConfiguration, configuration, mainFile
+	}
+
+	/**
+	 * Deploys the list of virtual domains.
+	 * 
+	 * @see #getAliasDomainsFile()
+	 */
+	void deployVirtualDomains() {
+		def configuration = service.domains.inject([]) { list, it ->
+			list << new TokenTemplate("(?m)^\\#?${it.name}.*", postmapsTemplate.getText(true, "domain", "domain", it))
+		}
+		def currentConfiguration = currentConfiguration aliasDomainsFile
+		deployConfiguration configurationTokens(), currentConfiguration, configuration, aliasDomainsFile
+		rehashFile aliasDomainsFile
+	}
+
+	/**
+	 * Execute the {@code postmap} command on the specified file.
+	 * 
+	 * @see #getPostmapCommand()
+	 */
+	void rehashFile(File file) {
+		def template = postfixTemplates.getResource("postmap_command")
+		def worker = scriptCommandFactory.create(template, "postmapCommand", postmapCommand, "file", file)()
+		log.rehashFileDone this, file, worker
 	}
 
 	/**
@@ -174,20 +188,87 @@ abstract class PostfixScript extends LinuxScript {
 	 * <ul>
 	 * <li>profile property {@code "banner"}</li>
 	 * </ul>
+	 * 
+	 * @see #postfixProperties
 	 */
 	String getBanner() {
 		profileProperty("banner", postfixProperties)
 	}
 
 	/**
-	 * Returns the {@code main.cf} file.
+	 * Returns the absolute path of the alias domains hash table file.
+	 * Default is the file {@code alias_domains} in the configuration
+	 * directory.
+	 *
+	 * <ul>
+	 * <li>profile property {@code "alias_domains_file"}</li>
+	 * </ul>
+	 * 
+	 * @see #getConfigurationDir() 
+	 * @see #postfixProperties
 	 */
-	abstract File getMainFile()
+	File getAliasDomainsFile() {
+		def file = profileProperty("alias_domains_file", postfixProperties) as File
+		file.absolute ? file : new File(configurationDir, file.name)
+	}
+
+	/**
+	 * Returns the command for the {@code postmap} command. Can be a full 
+	 * path or just the command name that can be found in the current 
+	 * search path.
+	 *
+	 * <ul>
+	 * <li>profile property {@code "postmap_command"}</li>
+	 * </ul>
+	 * 
+	 * @see #getDefaultProperties()
+	 */
+	String getPostmapCommand() {
+		profileProperty("postmap_command", defaultProperties)
+	}
+
+	/**
+	 * Returns the absolute path of the mail name configuration file.
+	 * 
+	 * <ul>
+	 * <li>profile property {@code "mailname_file"}</li>
+	 * </ul>
+	 * 
+	 * @see #getConfigurationDir() 
+	 * @see #getDefaultProperties()
+	 */
+	File getMailnameFile() {
+		def file = profileProperty("mailname_file", defaultProperties) as File
+		file.absolute ? file : new File(configurationDir, file.name)
+	}
+
+	/**
+	 * Returns the {@code main.cf} file.
+	 * 
+	 * <ul>
+	 * <li>profile property {@code "main_file"}</li>
+	 * </ul>
+	 * 
+	 * @see #getConfigurationDir() 
+	 * @see #getDefaultProperties()
+	 */
+	File getMainFile() {
+		def file = profileProperty("main_file", defaultProperties) as File
+		file.absolute ? file : new File(configurationDir, file.name)
+	}
 
 	/**
 	 * Returns the path of the configuration directory.
+	 * 
+	 * <ul>
+	 * <li>profile property {@code "configuration_directory"}</li>
+	 * </ul>
+	 * 
+	 * @see #getDefaultProperties()
 	 */
-	abstract File getConfigurationDir()
+	File getConfigurationDir() {
+		profileProperty("configuration_directory", defaultProperties) as File
+	}
 
 	/**
 	 * Run the distribution specific configuration.

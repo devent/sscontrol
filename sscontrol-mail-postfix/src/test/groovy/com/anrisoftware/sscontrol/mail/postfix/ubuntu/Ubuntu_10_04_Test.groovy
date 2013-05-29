@@ -39,7 +39,7 @@ import com.google.inject.Injector
 class Ubuntu_10_04_Test extends PostfixLinuxUtil {
 
 	@Test
-	void "shared unix accounts"() {
+	void "shared domains, unix accounts"() {
 		ServicesRegistry registry = injector.getInstance ServicesRegistry
 		SscontrolServiceLoader loader = injector.getInstance SscontrolServiceLoader
 		loader.loadService ubuntu1004Profile, variables, registry, null
@@ -56,6 +56,29 @@ class Ubuntu_10_04_Test extends PostfixLinuxUtil {
 
 		assertFileContent mailnameFile, mailnameExpected
 		assertFileContent maincfFile, maincfSharedUnixAccountsExpected
+	}
+
+	@Test
+	void "separate domains, unix accounts"() {
+		ServicesRegistry registry = injector.getInstance ServicesRegistry
+		SscontrolServiceLoader loader = injector.getInstance SscontrolServiceLoader
+		loader.loadService ubuntu1004Profile, variables, registry, null
+		def profile = registry.getService("profile")[0]
+		loader.loadService mailSeparateDomainsUnixAccounts, variables, registry, profile
+		copyResourceToCommand echoCommand, aptitudeFile
+		copyResourceToCommand echoCommand, restartFile
+		copyResourceToCommand echoCommand, postmapFile
+		copyURLToFile maincf, maincfFile
+		copyURLToFile mastercf, mastercfFile
+
+		registry.allServices.each { it.call() }
+		log.info "Run service again to ensure that configuration is not set double."
+		registry.allServices.each { it.call() }
+
+		def maincfFileString = readFileToString(maincfFile).replaceAll(/$tmpdir.name/, "Ubuntu_10_04.tmp")
+		assertFileContent mailnameFile, mailnameExpected
+		assertStringContent maincfFileString, resourceToString(maincfSeparateDomainsUnixAccountsExpected)
+		assertFileContent aliasDomainsFile, aliasDomainsExpected
 	}
 
 	@Test

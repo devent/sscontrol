@@ -11,6 +11,9 @@ import com.anrisoftware.globalpom.log.AbstractLogger
 @Singleton
 class PostfixScriptLogger extends AbstractLogger {
 
+	static final String REHASH_FILE = "Rehash file '{}', worker {} for {}."
+	static final String REHASH_FILE_INFO = "Rehash file '{}'."
+
 	/**
 	 * Create logger for {@link LinuxScript}.
 	 */
@@ -18,11 +21,11 @@ class PostfixScriptLogger extends AbstractLogger {
 		super(PostfixScript.class)
 	}
 
-	void deployedRules(PostfixScript script, def worker) {
+	void rehashFileDone(def script, def file, def worker) {
 		if (log.debugEnabled) {
-			log.debug "Firewall rules deployed for {}, worker {}.", script, worker
+			log.debug REHASH_FILE, file, worker, script
 		} else {
-			log.info "Firewall rules deployed."
+			log.info REHASH_FILE_INFO, file
 		}
 	}
 }

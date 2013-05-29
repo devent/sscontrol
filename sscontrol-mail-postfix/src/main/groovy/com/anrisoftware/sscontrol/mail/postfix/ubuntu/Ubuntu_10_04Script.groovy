@@ -56,35 +56,4 @@ class Ubuntu_10_04Script extends PostfixScript {
 	List getPackages() {
 		profileListProperty "packages", ubuntuProperties
 	}
-
-	/**
-	 * <ul>
-	 * <li>profile property {@code "mailname_file"}</li>
-	 * </ul>
-	 */
-	@Override
-	File getMailnameFile() {
-		def file = profileProperty("mailname_file", ubuntuProperties) as File
-		file.absolute ? file : new File(configurationDir, file.name)
-	}
-
-	/**
-	 * <ul>
-	 * <li>profile property {@code "main_file"}</li>
-	 * </ul>
-	 */
-	@Override
-	File getMainFile() {
-		def file = profileProperty("main_file", ubuntuProperties) as File
-		file.absolute ? file : new File(configurationDir, file.name)
-	}
-
-	/**
-	 * <ul>
-	 * <li>profile property {@code "configuration_directory"}</li>
-	 * </ul>
-	 */
-	File getConfigurationDir() {
-		profileProperty("configuration_directory", ubuntuProperties) as File
-	}
 }

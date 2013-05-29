@@ -29,3 +29,7 @@ masquerade_domains = <mail.masqueradeDomains.domains;separator=" ">
 masqueradeExceptions(mail) ::= <<
 masquerade_exceptions = <mail.masqueradeDomains.userExceptions;separator=",">
 >>
+
+aliasDomains(file) ::= <<
+virtual_alias_domains = hash:<file>
+>>

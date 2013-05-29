@@ -1,0 +1,4 @@
+postmap_command(postmapCommand, file) ::= <<
+#!/bin/sh
+<postmapCommand> <file>
+>>

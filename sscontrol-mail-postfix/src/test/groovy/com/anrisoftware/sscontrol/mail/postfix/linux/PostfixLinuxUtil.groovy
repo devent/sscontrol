@@ -44,6 +44,8 @@ class PostfixLinuxUtil {
 
 	static mailSharedUnixAccounts = PostfixLinuxUtil.class.getResource("MailSharedUnixAccounts.groovy")
 
+	static mailSeparateDomainsUnixAccounts = PostfixLinuxUtil.class.getResource("MailSeparateDomainsUnixAccounts.groovy")
+
 	static mailname = PostfixLinuxUtil.class.getResource("mailname.txt")
 
 	static maincf = PostfixLinuxUtil.class.getResource("maincf.txt")
@@ -58,7 +60,11 @@ class PostfixLinuxUtil {
 
 	static maincfSharedUnixAccountsExpected = PostfixLinuxUtil.class.getResource("maincf_shared_unix_accounts_expected.txt")
 
+	static maincfSeparateDomainsUnixAccountsExpected = PostfixLinuxUtil.class.getResource("maincf_separate_domains_unix_accounts_expected.txt")
+
 	static mastercfExpected = PostfixLinuxUtil.class.getResource("mastercf_expected.txt")
+
+	static aliasDomainsExpected = PostfixLinuxUtil.class.getResource("alias_domains_expected.txt")
 
 	Injector injector
 
@@ -76,6 +82,10 @@ class PostfixLinuxUtil {
 
 	File mastercfFile
 
+	File postmapFile
+
+	File aliasDomainsFile
+
 	@Before
 	void createTemp() {
 		tmpdir = File.createTempDir this.class.simpleName, null
@@ -84,12 +94,14 @@ class PostfixLinuxUtil {
 		mailnameFile = new File(tmpdir, "/etc/mailname")
 		maincfFile = new File(tmpdir, "/etc/postfix/main.cf")
 		mastercfFile = new File(tmpdir, "/etc/postfix/master.cf")
+		postmapFile = new File(tmpdir, "/usr/sbin/postmap")
+		aliasDomainsFile = new File(tmpdir, "/etc/postfix/alias_domains")
 		variables = [tmp: tmpdir.absoluteFile]
 	}
 
 	@After
 	void deleteTemp() {
-		tmpdir.deleteDir()
+		//tmpdir.deleteDir()
 	}
 
 	@Before

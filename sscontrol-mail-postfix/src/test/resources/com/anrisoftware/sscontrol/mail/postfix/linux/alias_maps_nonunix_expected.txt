@@ -1,0 +1,6 @@
+# SSCONTROL-mail
+postmaster@example.com postmaster
+# SSCONTROL-mail-END
+# SSCONTROL-mail
+@example.com jim
+# SSCONTROL-mail-END

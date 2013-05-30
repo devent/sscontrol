@@ -12,7 +12,10 @@ mail {
 		users "root"
 	}
 
-	destinations "foo.bar", "bar.bar"
-
-	certificate file: "$tmp/example-com.crt", key: "$tmp/example-com.insecure.key", ca: "$tmp/example-com-ca.crt"
+	domain "example.com", {
+		user "info"
+		user "sales"
+		alias "postmaster", destination: "postmaster"
+		catchall destination: "jim"
+	}
 }

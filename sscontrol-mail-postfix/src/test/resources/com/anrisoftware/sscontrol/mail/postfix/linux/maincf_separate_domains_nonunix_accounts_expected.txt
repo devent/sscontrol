@@ -1,0 +1,60 @@
+# See /usr/share/postfix/main.cf.dist for a commented, more complete version
+
+
+# Debian specific:  Specifying a file name will cause the first
+# line of that file to be used as the name.  The Debian default
+# is /etc/mailname.
+# SSCONTROL-mail
+myorigin = example.com
+# SSCONTROL-mail-END
+
+
+# SSCONTROL-mail
+smtpd_banner = $myhostname ESMTP $mail_name
+# SSCONTROL-mail-END
+
+biff = no
+
+# appending .domain is the MUA's job.
+append_dot_mydomain = no
+
+# Uncomment the next line to generate "delayed mail" warnings
+#delay_warning_time = 4h
+
+readme_directory = no
+# SSCONTROL-mail
+myhostname = mail.example.com
+# SSCONTROL-mail-END
+# SSCONTROL-mail
+relayhost = smtp.relayhost.com
+# SSCONTROL-mail-END
+# SSCONTROL-mail
+inet_interfaces = all
+# SSCONTROL-mail-END
+# SSCONTROL-mail
+mydestination = localhost.$mydomain,localhost,$myhostname
+# SSCONTROL-mail-END
+# SSCONTROL-mail
+masquerade_domains = mail.example.com
+# SSCONTROL-mail-END
+# SSCONTROL-mail
+virtual_alias_domains = hash:/tmp/Ubuntu_10_04.tmp/etc/postfix/alias_domains
+# SSCONTROL-mail-END
+# SSCONTROL-mail
+virtual_alias_maps = hash:/tmp/Ubuntu_10_04.tmp/etc/postfix/alias_maps
+# SSCONTROL-mail-END
+# SSCONTROL-mail
+virtual_mailbox_base = /tmp/Ubuntu_10_04.tmp/var/mail/vhosts
+# SSCONTROL-mail-END
+# SSCONTROL-mail
+virtual_mailbox_maps = hash:/tmp/Ubuntu_10_04.tmp/etc/postfix/mailbox_maps
+# SSCONTROL-mail-END
+# SSCONTROL-mail
+virtual_minimum_uid = 5000
+# SSCONTROL-mail-END
+# SSCONTROL-mail
+virtual_uid_maps = static:5000
+# SSCONTROL-mail-END
+# SSCONTROL-mail
+virtual_gid_maps = static:5000
+# SSCONTROL-mail-END

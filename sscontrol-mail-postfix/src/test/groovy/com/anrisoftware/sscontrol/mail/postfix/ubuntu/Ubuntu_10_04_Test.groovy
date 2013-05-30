@@ -68,7 +68,6 @@ class Ubuntu_10_04_Test extends PostfixLinuxUtil {
 		copyResourceToCommand echoCommand, aptitudeFile
 		copyResourceToCommand echoCommand, restartFile
 		copyResourceToCommand echoCommand, postmapFile
-		copyResourceToCommand echoCommand, idFile
 		copyURLToFile maincf, maincfFile
 		copyURLToFile mastercf, mastercfFile
 
@@ -81,6 +80,32 @@ class Ubuntu_10_04_Test extends PostfixLinuxUtil {
 		assertStringContent maincfFileString, resourceToString(maincfSeparateDomainsUnixAccountsExpected)
 		assertFileContent aliasDomainsFile, aliasDomainsExpected
 		assertFileContent aliasMapsFile, aliasMapsExpected
+		assertFileContent mailboxMapsFile, mailboxMapsExpected
+	}
+
+	@Test
+	void "separate domains, nonunix accounts"() {
+		ServicesRegistry registry = injector.getInstance ServicesRegistry
+		SscontrolServiceLoader loader = injector.getInstance SscontrolServiceLoader
+		loader.loadService ubuntu1004Profile, variables, registry, null
+		def profile = registry.getService("profile")[0]
+		loader.loadService mailSeparateDomainsNonUnixAccounts, variables, registry, profile
+		copyResourceToCommand echoCommand, aptitudeFile
+		copyResourceToCommand echoCommand, restartFile
+		copyResourceToCommand echoCommand, postmapFile
+		copyURLToFile maincf, maincfFile
+		copyURLToFile mastercf, mastercfFile
+
+		registry.allServices.each { it.call() }
+		log.info "Run service again to ensure that configuration is not set double."
+		registry.allServices.each { it.call() }
+
+		def maincfFileString = readFileToString(maincfFile).replaceAll(/$tmpdir.name/, "Ubuntu_10_04.tmp")
+		assertFileContent mailnameFile, mailnameExpected
+		assertStringContent maincfFileString, resourceToString(maincfSeparateDomainsNonUnixAccountsExpected)
+		assertFileContent aliasDomainsFile, aliasDomainsExpected
+		assertFileContent aliasMapsFile, aliasMapsNonUnixExpected
+		assertFileContent mailboxMapsFile, mailboxMapsNonUnixExpected
 	}
 
 	@Test
@@ -92,6 +117,7 @@ class Ubuntu_10_04_Test extends PostfixLinuxUtil {
 		loader.loadService mailService, variables, registry, profile
 		copyResourceToCommand echoCommand, aptitudeFile
 		copyResourceToCommand echoCommand, restartFile
+		copyResourceToCommand echoCommand, postmapFile
 		copyURLToFile maincf, maincfFile
 		copyURLToFile mastercf, mastercfFile
 

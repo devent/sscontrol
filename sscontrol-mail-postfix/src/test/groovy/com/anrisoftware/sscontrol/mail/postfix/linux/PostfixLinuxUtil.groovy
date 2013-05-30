@@ -46,6 +46,8 @@ class PostfixLinuxUtil {
 
 	static mailSeparateDomainsUnixAccounts = PostfixLinuxUtil.class.getResource("MailSeparateDomainsUnixAccounts.groovy")
 
+	static mailSeparateDomainsNonUnixAccounts = PostfixLinuxUtil.class.getResource("MailSeparateDomainsNonUnixAccounts.groovy")
+
 	static mailname = PostfixLinuxUtil.class.getResource("mailname.txt")
 
 	static maincf = PostfixLinuxUtil.class.getResource("maincf.txt")
@@ -62,11 +64,19 @@ class PostfixLinuxUtil {
 
 	static maincfSeparateDomainsUnixAccountsExpected = PostfixLinuxUtil.class.getResource("maincf_separate_domains_unix_accounts_expected.txt")
 
+	static maincfSeparateDomainsNonUnixAccountsExpected = PostfixLinuxUtil.class.getResource("maincf_separate_domains_nonunix_accounts_expected.txt")
+
 	static mastercfExpected = PostfixLinuxUtil.class.getResource("mastercf_expected.txt")
 
 	static aliasDomainsExpected = PostfixLinuxUtil.class.getResource("alias_domains_expected.txt")
 
 	static aliasMapsExpected = PostfixLinuxUtil.class.getResource("alias_maps_expected.txt")
+
+	static aliasMapsNonUnixExpected = PostfixLinuxUtil.class.getResource("alias_maps_nonunix_expected.txt")
+
+	static mailboxMapsExpected = PostfixLinuxUtil.class.getResource("mailbox_maps_expected.txt")
+
+	static mailboxMapsNonUnixExpected = PostfixLinuxUtil.class.getResource("mailbox_maps_nonunix_expected.txt")
 
 	Injector injector
 
@@ -90,26 +100,26 @@ class PostfixLinuxUtil {
 
 	File aliasMapsFile
 
-	File idFile
+	File mailboxMapsFile
 
 	@Before
 	void createTemp() {
 		tmpdir = File.createTempDir this.class.simpleName, null
 		aptitudeFile = new File(tmpdir, "/usr/bin/aptitude")
 		restartFile = new File(tmpdir, "/sbin/restart")
-		idFile = new File(tmpdir, "/bin/id")
 		mailnameFile = new File(tmpdir, "/etc/mailname")
 		maincfFile = new File(tmpdir, "/etc/postfix/main.cf")
 		mastercfFile = new File(tmpdir, "/etc/postfix/master.cf")
 		postmapFile = new File(tmpdir, "/usr/sbin/postmap")
 		aliasDomainsFile = new File(tmpdir, "/etc/postfix/alias_domains")
 		aliasMapsFile = new File(tmpdir, "/etc/postfix/alias_maps")
+		mailboxMapsFile = new File(tmpdir, "/etc/postfix/mailbox_maps")
 		variables = [tmp: tmpdir.absoluteFile]
 	}
 
 	@After
 	void deleteTemp() {
-		//tmpdir.deleteDir()
+		tmpdir.deleteDir()
 	}
 
 	@Before

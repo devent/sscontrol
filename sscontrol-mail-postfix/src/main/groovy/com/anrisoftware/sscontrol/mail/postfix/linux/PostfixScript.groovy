@@ -28,6 +28,7 @@ import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.Templates
 import com.anrisoftware.sscontrol.core.service.LinuxScript
 import com.anrisoftware.sscontrol.mail.statements.Alias
+import com.anrisoftware.sscontrol.mail.statements.Domain
 import com.anrisoftware.sscontrol.mail.statements.User
 import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokenTemplate
 
@@ -175,8 +176,12 @@ abstract class PostfixScript extends LinuxScript {
 	 * @see #getAliasDomainsFile()
 	 */
 	void deployVirtualDomains() {
-		def configuration = service.domains.inject([]) { list, domain ->
-			list << new TokenTemplate("(?m)^\\#?${domain.name}.*", postmapsTemplate.getText(true, "domain", "domain", domain))
+		def configuration = service.domains.inject([]) { list, Domain domain ->
+			if (domain.enabled) {
+				list << new TokenTemplate("(?m)^\\#?${domain.name}.*", postmapsTemplate.getText(true, "domain", "domain", domain))
+			} else {
+				list
+			}
 		}
 		def currentConfiguration = currentConfiguration aliasDomainsFile
 		deployConfiguration configurationTokens(), currentConfiguration, configuration, aliasDomainsFile
@@ -191,8 +196,12 @@ abstract class PostfixScript extends LinuxScript {
 	void deployAliases() {
 		def configuration = service.domains.inject([]) { list, domain ->
 			list << domain.aliases.inject([]) { aliases, Alias alias ->
-				def text = postmapsTemplate.getText(true, "alias", "alias", alias)
-				aliases << new TokenTemplate("(?m)^\\#?${alias.name}@${alias.domain.name}.*", text)
+				if (alias.enabled) {
+					def text = postmapsTemplate.getText(true, "alias", "alias", alias)
+					aliases << new TokenTemplate("(?m)^\\#?${alias.name}@${alias.domain.name}.*", text)
+				} else {
+					aliases
+				}
 			}
 		}
 		def currentConfiguration = currentConfiguration aliasMapsFile
@@ -208,9 +217,13 @@ abstract class PostfixScript extends LinuxScript {
 	void deployMailbox() {
 		def configuration = service.domains.inject([]) { list, domain ->
 			list << domain.users.inject([]) { users, User user ->
-				def path = createMailboxPath(user)
-				def text = postmapsTemplate.getText(true, "user", "user", user, "path", path)
-				users << new TokenTemplate("(?m)^\\#?${user.name}@${user.domain.name}.*", text)
+				if (user.enabled) {
+					def path = createMailboxPath(user)
+					def text = postmapsTemplate.getText(true, "user", "user", user, "path", path)
+					users << new TokenTemplate("(?m)^\\#?${user.name}@${user.domain.name}.*", text)
+				} else {
+					users
+				}
 			}
 		}
 		def currentConfiguration = currentConfiguration mailboxMapsFile

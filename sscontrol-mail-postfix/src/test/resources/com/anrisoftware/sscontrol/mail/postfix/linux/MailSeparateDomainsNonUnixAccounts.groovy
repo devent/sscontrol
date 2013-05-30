@@ -15,7 +15,11 @@ mail {
 	domain "example.com", {
 		user "info"
 		user "sales"
+		user "disabled-user", { enabled false }
 		alias "postmaster", destination: "postmaster"
+		alias "disabled-alias", destination: "postmaster", { enabled false }
 		catchall destination: "jim"
 	}
+
+	domain "disabled.domain", { enabled false }
 }

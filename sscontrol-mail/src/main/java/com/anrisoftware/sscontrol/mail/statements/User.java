@@ -1,10 +1,9 @@
 package com.anrisoftware.sscontrol.mail.statements;
 
-import javax.inject.Inject;
-
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.google.inject.assistedinject.Assisted;
+import com.google.inject.assistedinject.AssistedInject;
 
 /**
  * Mail user.
@@ -22,14 +21,26 @@ public class User {
 
 	private final String name;
 
-	private final String password;
+	private String password;
 
 	private boolean enabled;
 
 	/**
+	 * @see UserFactory#create(Domain, String)
+	 */
+	@AssistedInject
+	User(UserLogger logger, @Assisted Domain domain, @Assisted String name) {
+		this.log = logger;
+		log.checkName(name);
+		this.domain = domain;
+		this.name = name;
+		this.enabled = true;
+	}
+
+	/**
 	 * @see UserFactory#create(Domain, String, String)
 	 */
-	@Inject
+	@AssistedInject
 	User(UserLogger logger, @Assisted Domain domain,
 			@Assisted("name") String name, @Assisted("password") String password) {
 		this.log = logger;

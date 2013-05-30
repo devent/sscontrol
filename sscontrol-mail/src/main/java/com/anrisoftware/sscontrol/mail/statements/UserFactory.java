@@ -29,4 +29,9 @@ public interface UserFactory {
 	 */
 	User create(Domain domain, @Assisted("name") String name,
 			@Assisted("password") String password);
+
+	/**
+	 * @see #create(Domain, String, String)
+	 */
+	User create(Domain domain, String name);
 }

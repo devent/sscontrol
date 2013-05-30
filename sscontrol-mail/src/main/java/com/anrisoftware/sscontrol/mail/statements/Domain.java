@@ -79,6 +79,17 @@ public class Domain {
 		return unmodifiableList(aliases);
 	}
 
+	public void user(String name) {
+		user(name, null);
+	}
+
+	public User user(String name, Object statements) {
+		User user = userFactory.create(this, name);
+		users.add(user);
+		log.userAdded(this, user);
+		return user;
+	}
+
 	public void user(Map<String, Object> args, String name) {
 		user(args, name, null);
 	}

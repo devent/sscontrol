@@ -11,7 +11,6 @@
 	</parent>
 
 	<artifactId>sscontrol-api</artifactId>
-	<version>0.1-SNAPSHOT</version>
 	<name>Server Control Core :: API</name>
 	<url>https://www.anr-institute.com/projects/projects/sscontrol-api</url>
 	<inceptionYear>2012</inceptionYear>
@@ -20,6 +19,12 @@
 		<system>Redmine</system>
 		<url>https://www.anr-institute.com/projects/projects/sscontrol-api</url>
 	</issueManagement>
+
+    <scm>
+        <connection>scm:git:${custom.gitpublic.url}sscontrolnew.git</connection>
+        <developerConnection>scm:git:${custom.gitpublic.url}sscontrolnew.git</developerConnection>
+        <url>scm:git:${custom.gitpublic.url}sscontrolnew.git</url>
+    </scm>
 
 	<dependencies>
 		<dependency>

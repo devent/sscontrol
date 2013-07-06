@@ -1,18 +1,18 @@
 /*
  * Copyright 2013 Erwin Müller <erwin.mueller@deventm.org>
- *
+ * 
  * This file is part of sscontrol-core.
- *
+ * 
  * sscontrol-core is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published by the
  * Free Software Foundation, either version 3 of the License, or (at your
  * option) any later version.
- *
- * sscontrol-core is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
- * for more details.
- *
+ * 
+ * sscontrol-core is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more
+ * details.
+ * 
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-core. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -29,21 +29,27 @@ import com.anrisoftware.sscontrol.core.api.Service;
 import com.anrisoftware.sscontrol.core.api.ServiceException;
 import com.google.inject.Injector;
 
+/**
+ * Sets globally available variables for the Groovy script.
+ * 
+ * <ul>
+ * <li>{@code system:} the system profile properties;
+ * <li>{@code profile:} the profile properties of the script;
+ * <li>{@code service:} this service;
+ * <li>{@code name:} the name of the service.
+ * </ul>
+ * 
+ * @author Erwin Mueller, erwin.mueller@deventm.org
+ * @since 1.0
+ */
+@SuppressWarnings("serial")
 public abstract class AbstractService implements Service {
-
-	/**
-	 *
-	 */
-	private static final long serialVersionUID = -8580699865227701438L;
 
 	private Injector injector;
 
 	private ProfileService profile;
 
 	private AbstractServiceLogger log;
-
-	protected AbstractService() {
-	}
 
 	@Inject
 	void setAbstractServiceLogger(AbstractServiceLogger logger) {
@@ -113,8 +119,8 @@ public abstract class AbstractService implements Service {
 
 	@Override
 	public String toString() {
-		return new ToStringBuilder(this).append("profile",
-				profile.getProfileName()).toString();
+		return new ToStringBuilder(this).append("name", getName())
+				.append("profile", profile.getProfileName()).toString();
 	}
 
 }

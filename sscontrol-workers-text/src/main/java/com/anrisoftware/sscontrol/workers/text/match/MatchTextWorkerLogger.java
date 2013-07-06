@@ -1,20 +1,21 @@
 /*
  * Copyright 2012-2013 Erwin Müller <erwin.mueller@deventm.org>
- *
+ * 
  * This file is part of sscontrol-workers-text.
- *
- * sscontrol-workers-text is free software: you can redistribute it and/or modify it
- * under the terms of the GNU Affero General Public License as published by the
- * Free Software Foundation, either version 3 of the License, or (at your
- * option) any later version.
- *
+ * 
+ * sscontrol-workers-text is free software: you can redistribute it and/or
+ * modify it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the License,
+ * or (at your option) any later version.
+ * 
  * sscontrol-workers-text is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
  * for more details.
- *
+ * 
  * You should have received a copy of the GNU Affero General Public License
- * along with sscontrol-workers-text. If not, see <http://www.gnu.org/licenses/>.
+ * along with sscontrol-workers-text. If not, see
+ * <http://www.gnu.org/licenses/>.
  */
 package com.anrisoftware.sscontrol.workers.text.match;
 
@@ -32,7 +33,7 @@ import com.anrisoftware.sscontrol.workers.api.WorkerException;
 class MatchTextWorkerLogger extends AbstractLogger {
 
 	private static final String WORKER = "worker";
-	private static final String ERROR_READ_RESOURCE_MESSAGE = "Error read resource '%s'";
+	private static final String ERROR_READ_RESOURCE_MESSAGE = "Error read resource '{}'";
 	private static final String ERROR_READ_RESOURCE = "Error read resource";
 	private static final String SEARCH_TEXT_NOT_FOUND_INFO = "Search text was not found '{}' in {}.";
 	private static final String SEARCH_TEXT_NOT_FOUND = "Search text was not found in {}.";

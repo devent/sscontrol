@@ -1,18 +1,18 @@
 /*
  * Copyright 2013 Erwin Müller <erwin.mueller@deventm.org>
- *
+ * 
  * This file is part of sscontrol-core.
- *
+ * 
  * sscontrol-core is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published by the
  * Free Software Foundation, either version 3 of the License, or (at your
  * option) any later version.
- *
- * sscontrol-core is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
- * for more details.
- *
+ * 
+ * sscontrol-core is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more
+ * details.
+ * 
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-core. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -37,6 +37,7 @@ import com.anrisoftware.sscontrol.core.api.Service;
 import com.anrisoftware.sscontrol.core.api.ServiceException;
 import com.anrisoftware.sscontrol.core.api.ServiceLoader;
 import com.anrisoftware.sscontrol.core.api.ServicesRegistry;
+import com.google.inject.assistedinject.Assisted;
 
 /**
  * Loads a service from a groovy script.
@@ -50,17 +51,41 @@ class GroovyLoader implements ServiceLoader {
 
 	private final ScriptBuilderLogger scriptBuilderLogger;
 
+	private final Map<String, Object> variables;
+
+	private final ServicesRegistry registry;
+
+	private Object parent;
+
 	@Inject
 	GroovyLoader(GroovyLoaderLogger logger,
 			ScriptBuilderLogger scriptBuilderLogger,
-			ScriptUtilities scriptUtilities) {
+			ScriptUtilities scriptUtilities,
+			@Assisted ServicesRegistry registry,
+			@Assisted Map<String, Object> variables) {
 		this.log = logger;
 		this.scriptBuilderLogger = scriptBuilderLogger;
+		this.registry = registry;
+		this.variables = variables;
 	}
 
 	@Override
-	public ServicesRegistry loadService(URL url, Map<String, Object> variables,
-			ServicesRegistry registry, ProfileService profile)
+	public ServicesRegistry getRegistry() {
+		return registry;
+	}
+
+	@Override
+	public Map<String, Object> getVariables() {
+		return variables;
+	}
+
+	@Override
+	public void setParent(Object parent) {
+		this.parent = parent;
+	}
+
+	@Override
+	public ServicesRegistry loadService(URL url, ProfileService profile)
 			throws ServiceException {
 		log.checkUrl(url);
 		log.checkRegistry(registry);
@@ -86,6 +111,7 @@ class GroovyLoader implements ServiceLoader {
 		Binding binding = new Binding();
 		binding.setProperty("scriptBuilderLogger", scriptBuilderLogger);
 		binding.setProperty("profile", profile);
+		binding.setProperty("injector", parent);
 		for (Map.Entry<String, Object> entry : variables.entrySet()) {
 			binding.setProperty(entry.getKey(), entry.getValue());
 		}

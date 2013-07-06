@@ -1,18 +1,18 @@
 /*
  * Copyright 2013 Erwin Müller <erwin.mueller@deventm.org>
- *
+ * 
  * This file is part of sscontrol-core.
- *
+ * 
  * sscontrol-core is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published by the
  * Free Software Foundation, either version 3 of the License, or (at your
  * option) any later version.
- *
- * sscontrol-core is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
- * for more details.
- *
+ * 
+ * sscontrol-core is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more
+ * details.
+ * 
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-core. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -40,6 +40,7 @@ import com.anrisoftware.sscontrol.core.api.ProfileService;
 import com.anrisoftware.sscontrol.core.api.Service;
 import com.anrisoftware.sscontrol.core.api.ServiceException;
 import com.anrisoftware.sscontrol.core.api.ServiceFactory;
+import com.google.inject.Injector;
 
 public abstract class ScriptBuilder extends Script {
 
@@ -134,6 +135,7 @@ public abstract class ScriptBuilder extends Script {
 	private Proxy createService(String name) throws ServiceException {
 		getLog().creatingService(name);
 		ServiceFactory serviceFactory = loadService(name);
+		serviceFactory.setParent(getInjector());
 		service = serviceFactory.create(getProfile());
 		return new Proxy().wrap(service);
 	}
@@ -155,6 +157,10 @@ public abstract class ScriptBuilder extends Script {
 
 	private ScriptBuilderLogger getLog() {
 		return (ScriptBuilderLogger) getProperty("scriptBuilderLogger");
+	}
+
+	private Injector getInjector() {
+		return (Injector) getProperty("injector");
 	}
 
 	@Override

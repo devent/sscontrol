@@ -30,6 +30,7 @@ import org.junit.Test
 import com.anrisoftware.globalpom.utils.TestUtils
 import com.anrisoftware.sscontrol.core.api.ServiceException
 import com.anrisoftware.sscontrol.core.api.ServiceLoader as SscontrolServiceLoader
+import com.anrisoftware.sscontrol.core.api.ServiceLoaderFactory
 import com.anrisoftware.sscontrol.core.api.ServicesRegistry
 import com.anrisoftware.sscontrol.core.modules.CoreModule
 import com.anrisoftware.sscontrol.core.modules.CoreResourcesModule
@@ -48,11 +49,10 @@ class HostnameServiceTest {
 	@Test
 	void "hostname service with empty hostname"() {
 		TestUtils.trimStrings = false
-		ServicesRegistry registry = injector.getInstance ServicesRegistry
-		SscontrolServiceLoader loader = injector.getInstance SscontrolServiceLoader
-		loader.loadService(ubuntu1004Profile, variables, registry, null)
+		loader.loadService ubuntu1004Profile, null
 		def profile = registry.getService("profile")[0]
-		loader.loadService(hostnameService, variables, registry, profile)
+		loader.loadService hostnameService, profile
+
 		copyResourceToCommand installCommand, aptitude
 		copyResourceToCommand restartCommand, restart
 
@@ -65,11 +65,10 @@ class HostnameServiceTest {
 	@Test
 	void "hostname service with hostname already set"() {
 		TestUtils.trimStrings = true
-		ServicesRegistry registry = injector.getInstance ServicesRegistry
-		SscontrolServiceLoader loader = injector.getInstance SscontrolServiceLoader
-		loader.loadService(ubuntu1004Profile, variables, registry, null)
+		loader.loadService ubuntu1004Profile, null
 		def profile = registry.getService("profile")[0]
-		loader.loadService(hostnameService, variables, registry, profile)
+		loader.loadService hostnameService, profile
+
 		copyResourceToCommand installCommand, aptitude
 		copyResourceToCommand restartCommand, restart
 		copyURLToFile localhostHostnameFile, hostname
@@ -82,13 +81,9 @@ class HostnameServiceTest {
 
 	@Test
 	void "load hostname service with null value"() {
-		ServicesRegistry registry = injector.getInstance ServicesRegistry
-		SscontrolServiceLoader loader = injector.getInstance SscontrolServiceLoader
-		loader.loadService(ubuntu1004Profile, variables, registry, null)
+		loader.loadService ubuntu1004Profile, null
 		def profile = registry.getService("profile")[0]
-		shouldFailWith ServiceException, {
-			loader.loadService(hostnameNullService, variables, registry, profile)
-		}
+		shouldFailWith ServiceException, { loader.loadService hostnameNullService, profile }
 	}
 
 	static ubuntu1004Profile = HostnameServiceTest.class.getResource("Ubuntu_10_04Profile.groovy")
@@ -105,7 +100,9 @@ class HostnameServiceTest {
 
 	static hostnameExpected = HostnameServiceTest.class.getResource("hostname_expected.txt")
 
-	Injector injector
+	static Injector injector
+
+	static ServiceLoaderFactory loaderFactory
 
 	File aptitude
 
@@ -116,6 +113,10 @@ class HostnameServiceTest {
 	File tmpdir
 
 	Map variables
+
+	ServicesRegistry registry
+
+	SscontrolServiceLoader loader
 
 	@Before
 	void createTemp() {
@@ -132,8 +133,16 @@ class HostnameServiceTest {
 	}
 
 	@Before
-	void createFactories() {
+	void createRegistry() {
+		registry = injector.getInstance ServicesRegistry
+		loader = loaderFactory.create registry, variables
+		loader.setParent injector
+	}
+
+	@BeforeClass
+	static void createFactories() {
 		injector = createInjector()
+		loaderFactory = injector.getInstance ServiceLoaderFactory
 	}
 
 	@BeforeClass

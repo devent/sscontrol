@@ -29,6 +29,7 @@ import org.junit.BeforeClass
 import org.junit.Test
 
 import com.anrisoftware.sscontrol.core.api.ServiceLoader as SscontrolServiceLoader
+import com.anrisoftware.sscontrol.core.api.ServiceLoaderFactory
 import com.anrisoftware.sscontrol.core.api.ServicesRegistry
 import com.anrisoftware.sscontrol.core.modules.CoreModule
 import com.anrisoftware.sscontrol.core.modules.CoreResourcesModule
@@ -45,15 +46,14 @@ import com.google.inject.Injector
 class DhclientServiceTest {
 
 	@Test
-	void "empty"() {
-		ServicesRegistry registry = injector.getInstance ServicesRegistry
-		SscontrolServiceLoader loader = injector.getInstance SscontrolServiceLoader
-		loader.loadService(ubuntu1004Profile, variables, registry, null)
+	void "empty dhcp configuration"() {
+		loader.loadService ubuntu1004Profile, null
 		def profile = registry.getService("profile")[0]
-		loader.loadService(dhclientService, variables, registry, profile)
+		loader.loadService dhclientService, profile
 
 		copyResourceToCommand installCommand, aptitude
 		copyResourceToCommand restartCommand, networking
+
 		registry.allServices.each { it.call() }
 		assertFileContent dhclient, dhclientEmptyExpected
 		log.info "Run service again to ensure that configuration is not set double."
@@ -62,12 +62,10 @@ class DhclientServiceTest {
 	}
 
 	@Test
-	void "+dhclient"() {
-		ServicesRegistry registry = injector.getInstance ServicesRegistry
-		SscontrolServiceLoader loader = injector.getInstance SscontrolServiceLoader
-		loader.loadService(ubuntu1004Profile, variables, registry, null)
+	void "distribution default dhcp configuration"() {
+		loader.loadService ubuntu1004Profile, null
 		def profile = registry.getService("profile")[0]
-		loader.loadService(dhclientService, variables, registry, profile)
+		loader.loadService dhclientService, profile
 
 		copyResourceToCommand installCommand, aptitude
 		copyResourceToCommand restartCommand, networking
@@ -94,7 +92,9 @@ class DhclientServiceTest {
 
 	static dhclientNotEmptyExpected = DhclientServiceTest.class.getResource("dhclient_notempty_expected.txt")
 
-	Injector injector
+	static Injector injector
+
+	static ServiceLoaderFactory loaderFactory
 
 	File tmpdir
 
@@ -105,6 +105,10 @@ class DhclientServiceTest {
 	File networking
 
 	File dhclient
+
+	ServicesRegistry registry
+
+	SscontrolServiceLoader loader
 
 	@Before
 	void createTemp() {
@@ -121,16 +125,24 @@ class DhclientServiceTest {
 	}
 
 	@Before
-	void createFactories() {
+	void createRegistry() {
+		registry = injector.getInstance ServicesRegistry
+		loader = loaderFactory.create registry, variables
+		loader.setParent injector
+	}
+
+	@BeforeClass
+	static void createFactories() {
 		injector = createInjector()
+		loaderFactory = injector.getInstance ServiceLoaderFactory
+	}
+
+	static Injector createInjector() {
+		Guice.createInjector(new CoreModule(), new CoreResourcesModule())
 	}
 
 	@BeforeClass
 	static void setupToStringStyle() {
 		toStringStyle
-	}
-
-	static Injector createInjector() {
-		Guice.createInjector(new CoreModule(), new CoreResourcesModule())
 	}
 }

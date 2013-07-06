@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-hostname. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.dhclient.service
+package com.anrisoftware.sscontrol.dhclient
 
 profile "ubuntu_10_04", {
 	system {

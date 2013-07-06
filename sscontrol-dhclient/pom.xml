@@ -6,63 +6,75 @@
 	<parent>
 		<groupId>com.anrisoftware.sscontrol</groupId>
 		<artifactId>sscontrol-parent</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
+		<version>1.0-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>sscontrol-dhclient</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
 	<name>Sscontrol :: Dhclient</name>
+	<description>Sets the DHCP client configuration file.</description>
+	<url>https://www.anr-institute.com/projects/projects/sscontrol-dhclient</url>
 
-    <dependencies>
+	<issueManagement>
+		<system>Redmine</system>
+		<url>https://www.anr-institute.com/projects/projects/sscontrol-dhclient</url>
+	</issueManagement>
 
-        <!-- test dependencies -->
-        <dependency>
-            <groupId>com.anrisoftware.sscontrol</groupId>
-            <artifactId>sscontrol-core</artifactId>
-            <version>0.1-SNAPSHOT</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.anrisoftware.sscontrol</groupId>
-            <artifactId>sscontrol-profile</artifactId>
-            <version>0.1-SNAPSHOT</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.anrisoftware.globalpom</groupId>
-            <artifactId>globalpom-groovytestutils</artifactId>
-            <scope>test</scope>
-        </dependency>
+	<scm>
+		<connection>scm:git:${custom.gitpublic.url}sscontrolnew.git</connection>
+		<developerConnection>scm:git:${custom.gitpublic.url}sscontrolnew.git</developerConnection>
+		<url>scm:git:${custom.gitpublic.url}sscontrolnew.git</url>
+	</scm>
 
-        <!-- own modules dependencies -->
-        <dependency>
-            <groupId>com.anrisoftware.sscontrol</groupId>
-            <artifactId>sscontrol-api</artifactId>
-            <version>0.1-SNAPSHOT</version>
-        </dependency>
+	<dependencies>
 
-        <!-- compile dependencies -->
-        <dependency>
-            <groupId>org.mangosdk</groupId>
-            <artifactId>spi</artifactId>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>com.anrisoftware.resources</groupId>
-            <artifactId>resources-st</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.google.inject.extensions</groupId>
-            <artifactId>guice-multibindings</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>commons-io</groupId>
-            <artifactId>commons-io</artifactId>
-        </dependency>
-        <dependency>
-        	<groupId>commons-collections</groupId>
-        	<artifactId>commons-collections</artifactId>
-        </dependency>
-    </dependencies>
+		<!-- test dependencies -->
+		<dependency>
+			<groupId>com.anrisoftware.sscontrol</groupId>
+			<artifactId>sscontrol-core</artifactId>
+			<version>1.0-SNAPSHOT</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.anrisoftware.sscontrol</groupId>
+			<artifactId>sscontrol-profile</artifactId>
+			<version>1.0-SNAPSHOT</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.anrisoftware.globalpom</groupId>
+			<artifactId>globalpom-groovytestutils</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- own modules dependencies -->
+		<dependency>
+			<groupId>com.anrisoftware.sscontrol</groupId>
+			<artifactId>sscontrol-api</artifactId>
+			<version>1.0-SNAPSHOT</version>
+		</dependency>
+
+		<!-- compile dependencies -->
+		<dependency>
+			<groupId>org.mangosdk</groupId>
+			<artifactId>spi</artifactId>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>com.anrisoftware.resources</groupId>
+			<artifactId>resources-st</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.google.inject.extensions</groupId>
+			<artifactId>guice-multibindings</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>commons-collections</groupId>
+			<artifactId>commons-collections</artifactId>
+		</dependency>
+	</dependencies>
 
 </project>

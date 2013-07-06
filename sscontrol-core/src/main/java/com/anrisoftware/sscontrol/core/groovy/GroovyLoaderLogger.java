@@ -41,7 +41,7 @@ import com.anrisoftware.sscontrol.core.api.ServicesRegistry;
 class GroovyLoaderLogger extends AbstractLogger {
 
 	private static final String LOAD_SCRIPT = "load_script";
-	private static final String ERROR_EVALUATE_SCRIPT = "Error evaluate script";
+	private static final String ERROR_EVALUATE_SCRIPT = "error_evaluate_script";
 	private static final String ERROR_EVALUATE_SCRIPT_MESSAGE = "error_evaluate_script_message";
 	private static final String URL = "URL";
 	private static final String ERROR_OPEN_SCRIPT = "error_open_script";

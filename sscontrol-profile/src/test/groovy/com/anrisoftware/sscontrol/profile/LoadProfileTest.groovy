@@ -33,16 +33,12 @@ import com.google.inject.Guice
 import com.google.inject.Injector
 
 /**
- * Load a profile from a groovy script.
+ * Load a profile from a Groovy script.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
- * @since 0.1
+ * @since 1.0
  */
 class LoadProfileTest {
-
-	static ubuntu1004Profile = resourceURL("Ubuntu_10_04Profile.groovy", LoadProfileTest)
-
-	Injector injector
 
 	@Test
 	void "load profile script"() {
@@ -72,6 +68,10 @@ class LoadProfileTest {
 		assert system.get("echo_command") == "echo"
 		assert system.get("install_command") == "aptitude update && aptitude install %s"
 	}
+
+	static ubuntu1004Profile = LoadProfileTest.class.getResource("Ubuntu_10_04Profile.groovy")
+
+	Injector injector
 
 	@Before
 	void setupInjector() {

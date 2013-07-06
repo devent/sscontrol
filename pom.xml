@@ -4,7 +4,7 @@
 
     <groupId>com.anrisoftware.sscontrol</groupId>
     <artifactId>sscontrol-bundle</artifactId>
-    <version>0.1-SNAPSHOT</version>
+    <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <modules>
@@ -17,6 +17,7 @@
         <module>sscontrol-template-st</module>
         <module>sscontrol-workers</module>
         <module>sscontrol-workers-command</module>
+        <module>sscontrol-workers-text</module>
     </modules>
 
 </project>

@@ -36,6 +36,12 @@ import com.anrisoftware.sscontrol.core.modules.CoreResourcesModule
 import com.google.inject.Guice
 import com.google.inject.Injector
 
+/**
+ * Tests the hostname service.
+ *
+ * @author Erwin Mueller, erwin.mueller@deventm.org
+ * @since 1.0
+ */
 @Slf4j
 class HostnameServiceTest {
 

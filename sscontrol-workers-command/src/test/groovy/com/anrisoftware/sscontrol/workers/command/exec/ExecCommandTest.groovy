@@ -76,4 +76,8 @@ class ExecCommandTest {
 	Injector createInjector() {
 		Guice.createInjector(new ExecCommandWorkerModule())
 	}
+
+	static {
+		toStringStyle
+	}
 }

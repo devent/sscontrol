@@ -1,20 +1,21 @@
 /*
  * Copyright 2012-2013 Erwin Müller <erwin.mueller@deventm.org>
- *
+ * 
  * This file is part of sscontrol-workers-command.
- *
- * sscontrol-workers-command is free software: you can redistribute it and/or modify it
- * under the terms of the GNU Affero General Public License as published by the
- * Free Software Foundation, either version 3 of the License, or (at your
- * option) any later version.
- *
- * sscontrol-workers-command is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
- * for more details.
- *
+ * 
+ * sscontrol-workers-command is free software: you can redistribute it and/or
+ * modify it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the License,
+ * or (at your option) any later version.
+ * 
+ * sscontrol-workers-command is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero
+ * General Public License for more details.
+ * 
  * You should have received a copy of the GNU Affero General Public License
- * along with sscontrol-workers-command. If not, see <http://www.gnu.org/licenses/>.
+ * along with sscontrol-workers-command. If not, see
+ * <http://www.gnu.org/licenses/>.
  */
 package com.anrisoftware.sscontrol.workers.command.exec;
 
@@ -43,12 +44,8 @@ import com.google.inject.assistedinject.AssistedInject;
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
+@SuppressWarnings("serial")
 public class ExecCommandWorker implements Worker {
-
-	/**
-	 * @since 1.0
-	 */
-	private static final long serialVersionUID = -2471955539937001960L;
 
 	/**
 	 * The default timeout time in milliseconds.
@@ -77,17 +74,26 @@ public class ExecCommandWorker implements Worker {
 
 	private int[] exitValues;
 
+	/**
+	 * @see ExecCommandWorkerFactory#create(String)
+	 */
 	@AssistedInject
 	ExecCommandWorker(ExecCommandWorkerLogger logger, @Assisted String command) {
 		this(logger, command, new HashMap<String, String>(), DEFAULT_TIMEOUT_MS);
 	}
 
+	/**
+	 * @see ExecCommandWorkerFactory#create(String, Map)
+	 */
 	@AssistedInject
 	ExecCommandWorker(ExecCommandWorkerLogger logger, @Assisted String command,
 			@Assisted Map<String, String> environment) {
 		this(logger, command, environment, DEFAULT_TIMEOUT_MS);
 	}
 
+	/**
+	 * @see ExecCommandWorkerFactory#create(String, Map, long)
+	 */
 	@AssistedInject
 	ExecCommandWorker(ExecCommandWorkerLogger logger, @Assisted String command,
 			@Assisted Map<String, String> environment, @Assisted long timeoutMs) {

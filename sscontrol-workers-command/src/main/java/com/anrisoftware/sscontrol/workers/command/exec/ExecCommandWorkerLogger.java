@@ -1,20 +1,21 @@
 /*
  * Copyright 2012-2013 Erwin Müller <erwin.mueller@deventm.org>
- *
+ * 
  * This file is part of sscontrol-workers-command.
- *
- * sscontrol-workers-command is free software: you can redistribute it and/or modify it
- * under the terms of the GNU Affero General Public License as published by the
- * Free Software Foundation, either version 3 of the License, or (at your
- * option) any later version.
- *
- * sscontrol-workers-command is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
- * for more details.
- *
+ * 
+ * sscontrol-workers-command is free software: you can redistribute it and/or
+ * modify it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the License,
+ * or (at your option) any later version.
+ * 
+ * sscontrol-workers-command is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero
+ * General Public License for more details.
+ * 
  * You should have received a copy of the GNU Affero General Public License
- * along with sscontrol-workers-command. If not, see <http://www.gnu.org/licenses/>.
+ * along with sscontrol-workers-command. If not, see
+ * <http://www.gnu.org/licenses/>.
  */
 package com.anrisoftware.sscontrol.workers.command.exec;
 
@@ -35,7 +36,7 @@ class ExecCommandWorkerLogger extends AbstractLogger {
 	private static final String EXECUTE_COMMAND = "Execute command {}.";
 	private static final String FINISH_EXECUTE_COMMAND_INFO = "Finished execute command '{}'.";
 	private static final String FINISH_EXECUTE_COMMAND = "Finished execute command {}.";
-	private static final String ERROR_EXECUTE_COMMAND_MESSAGE = "Error execute command '%s'.";
+	private static final String ERROR_EXECUTE_COMMAND_MESSAGE = "Error execute command '{}'.";
 	private static final String WORKER = "worker";
 	private static final String ERROR_EXECUTE_COMMAND = "Error execute command";
 

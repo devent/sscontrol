@@ -152,4 +152,8 @@ class ScriptCommandTest {
 				new TemplatesDefaultMapsModule(),
 				new STDefaultPropertiesModule())
 	}
+
+	static {
+		toStringStyle
+	}
 }

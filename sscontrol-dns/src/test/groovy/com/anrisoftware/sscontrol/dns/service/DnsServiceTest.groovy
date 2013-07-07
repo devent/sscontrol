@@ -23,12 +23,16 @@ import static com.anrisoftware.sscontrol.dns.service.DnsServiceFactory.*
 import groovy.util.logging.Slf4j
 
 import org.junit.Before
+import org.junit.BeforeClass
+import org.junit.Rule
 import org.junit.Test
+import org.junit.rules.TemporaryFolder
 
-import com.anrisoftware.sscontrol.core.activator.CoreModule
-import com.anrisoftware.sscontrol.core.activator.CoreResourcesModule
 import com.anrisoftware.sscontrol.core.api.ServiceLoader as SscontrolServiceLoader
+import com.anrisoftware.sscontrol.core.api.ServiceLoaderFactory
 import com.anrisoftware.sscontrol.core.api.ServicesRegistry
+import com.anrisoftware.sscontrol.core.modules.CoreModule
+import com.anrisoftware.sscontrol.core.modules.CoreResourcesModule
 import com.anrisoftware.sscontrol.dns.statements.ARecord
 import com.anrisoftware.sscontrol.dns.statements.CNAMERecord
 import com.anrisoftware.sscontrol.dns.statements.DnsZone
@@ -46,48 +50,11 @@ import com.google.inject.Injector
 @Slf4j
 class DnsServiceTest {
 
-	static ubuntu1004Profile = resourceURL("Ubuntu_10_04Profile.groovy", DnsServiceTest)
-
-	static dnsSerialScript = resourceURL("DnsSerial.groovy", DnsServiceTest)
-
-	static dnsSerialGenerateScript = resourceURL("DnsSerialGenerate.groovy", DnsServiceTest)
-
-	static dnsZoneARecordsScript = resourceURL("DnsZoneARecords.groovy", DnsServiceTest)
-
-	static dnsZoneCnameRecordsScript = resourceURL("DnsZoneCNAMERecords.groovy", DnsServiceTest)
-
-	static dnsZoneMxRecordsScript = resourceURL("DnsZoneMXRecords.groovy", DnsServiceTest)
-
-	static dnsZoneNsRecordsScript = resourceURL("DnsZoneNSRecords.groovy", DnsServiceTest)
-
-	static dnsAutomaticARecordZoneScript = resourceURL("DnsAutomaticARecordForSoa.groovy", DnsServiceTest)
-
-	static dnsNoAutomaticARecordsScript = resourceURL("DnsNoAutomaticARecords.groovy", DnsServiceTest)
-
-	static dnsOriginShortcutScript = resourceURL("DnsOriginShortcut.groovy", DnsServiceTest)
-
-	static dnsBindOneAddress = resourceURL("DnsBindOneAddress.groovy", DnsServiceTest)
-
-	static dnsBindMultipleAddressString = resourceURL("DnsBindMultipleAddressString.groovy", DnsServiceTest)
-
-	static dnsBindMultipleAddressArray = resourceURL("DnsBindMultipleAddressArray.groovy", DnsServiceTest)
-
-	static dnsBindRemoveLocalhost = resourceURL("DnsBindRemoveLocalhost.groovy", DnsServiceTest)
-
-	Injector injector
-
-	File tmp
-
-	Map variables
-
 	@Test
 	void "dns serial script"() {
-		ServicesRegistry registry = injector.getInstance ServicesRegistry
-		SscontrolServiceLoader loader = injector.getInstance SscontrolServiceLoader
-		loader.loadService(ubuntu1004Profile, variables, registry, null)
+		loader.loadService ubuntu1004Profile, null
 		def profile = registry.getService("profile")[0]
-		loader.loadService(dnsSerialScript, variables, registry, profile)
-		withFiles NAME, {}, {}, tmp
+		loader.loadService dnsSerialScript, profile
 
 		registry.getService("dns")[0].generate = false
 		assertService registry.getService("dns")[0], 99, ["127.0.0.1"]
@@ -95,12 +62,9 @@ class DnsServiceTest {
 
 	@Test
 	void "dns serial script [+generate]"() {
-		ServicesRegistry registry = injector.getInstance ServicesRegistry
-		SscontrolServiceLoader loader = injector.getInstance SscontrolServiceLoader
-		loader.loadService(ubuntu1004Profile, variables, registry, null)
+		loader.loadService ubuntu1004Profile, null
 		def profile = registry.getService("profile")[0]
-		loader.loadService(dnsSerialGenerateScript, variables, registry, profile)
-		withFiles NAME, {}, {}, tmp
+		loader.loadService dnsSerialGenerateScript, profile
 
 		registry.getService("dns")[0].generate = true
 		assertServiceGenerateSerial registry.getService("dns")[0], 2003, ["127.0.0.1"]
@@ -108,12 +72,9 @@ class DnsServiceTest {
 
 	@Test
 	void "dns bind one address"() {
-		ServicesRegistry registry = injector.getInstance ServicesRegistry
-		SscontrolServiceLoader loader = injector.getInstance SscontrolServiceLoader
-		loader.loadService(ubuntu1004Profile, variables, registry, null)
+		loader.loadService ubuntu1004Profile, null
 		def profile = registry.getService("profile")[0]
-		loader.loadService(dnsBindOneAddress, variables, registry, profile)
-		withFiles NAME, {}, {}, tmp
+		loader.loadService dnsBindOneAddress, profile
 
 		registry.getService("dns")[0].generate = false
 		assertService registry.getService("dns")[0], 0, ["127.0.0.1"]
@@ -121,12 +82,9 @@ class DnsServiceTest {
 
 	@Test
 	void "dns bind multiple address string"() {
-		ServicesRegistry registry = injector.getInstance ServicesRegistry
-		SscontrolServiceLoader loader = injector.getInstance SscontrolServiceLoader
-		loader.loadService(ubuntu1004Profile, variables, registry, null)
+		loader.loadService ubuntu1004Profile, null
 		def profile = registry.getService("profile")[0]
-		loader.loadService(dnsBindMultipleAddressString, variables, registry, profile)
-		withFiles NAME, {}, {}, tmp
+		loader.loadService dnsBindMultipleAddressString, profile
 
 		registry.getService("dns")[0].generate = false
 		assertService registry.getService("dns")[0], 0, [
@@ -139,12 +97,9 @@ class DnsServiceTest {
 
 	@Test
 	void "dns bind multiple address array"() {
-		ServicesRegistry registry = injector.getInstance ServicesRegistry
-		SscontrolServiceLoader loader = injector.getInstance SscontrolServiceLoader
-		loader.loadService(ubuntu1004Profile, variables, registry, null)
+		loader.loadService ubuntu1004Profile, null
 		def profile = registry.getService("profile")[0]
-		loader.loadService(dnsBindMultipleAddressArray, variables, registry, profile)
-		withFiles NAME, {}, {}, tmp
+		loader.loadService dnsBindMultipleAddressArray, profile
 
 		registry.getService("dns")[0].generate = false
 		assertService registry.getService("dns")[0], 0, [
@@ -157,12 +112,9 @@ class DnsServiceTest {
 
 	@Test
 	void "dns bind remove localhost"() {
-		ServicesRegistry registry = injector.getInstance ServicesRegistry
-		SscontrolServiceLoader loader = injector.getInstance SscontrolServiceLoader
-		loader.loadService(ubuntu1004Profile, variables, registry, null)
+		loader.loadService ubuntu1004Profile, null
 		def profile = registry.getService("profile")[0]
-		loader.loadService(dnsBindRemoveLocalhost, variables, registry, profile)
-		withFiles NAME, {}, {}, tmp
+		loader.loadService dnsBindRemoveLocalhost, profile
 
 		registry.getService("dns")[0].generate = false
 		assertService registry.getService("dns")[0], 0, ["192.168.0.1"]
@@ -170,12 +122,9 @@ class DnsServiceTest {
 
 	@Test
 	void "dns zone a-records script"() {
-		ServicesRegistry registry = injector.getInstance ServicesRegistry
-		SscontrolServiceLoader loader = injector.getInstance SscontrolServiceLoader
-		loader.loadService(ubuntu1004Profile, variables, registry, null)
+		loader.loadService ubuntu1004Profile, null
 		def profile = registry.getService("profile")[0]
-		loader.loadService(dnsZoneARecordsScript, variables, registry, profile)
-		withFiles NAME, {}, {}, tmp
+		loader.loadService dnsZoneARecordsScript, profile
 
 		registry.getService("dns")[0].generate = false
 		def service = assertService registry.getService("dns")[0], 0, ["127.0.0.1"]
@@ -187,12 +136,9 @@ class DnsServiceTest {
 
 	@Test
 	void "dns zone cname-records script"() {
-		ServicesRegistry registry = injector.getInstance ServicesRegistry
-		SscontrolServiceLoader loader = injector.getInstance SscontrolServiceLoader
-		loader.loadService(ubuntu1004Profile, variables, registry, null)
+		loader.loadService ubuntu1004Profile, null
 		def profile = registry.getService("profile")[0]
-		loader.loadService(dnsZoneCnameRecordsScript, variables, registry, profile)
-		withFiles NAME, {}, {}, tmp
+		loader.loadService dnsZoneCnameRecordsScript, profile
 
 		registry.getService("dns")[0].generate = false
 		def service = assertService registry.getService("dns")[0], 0, ["127.0.0.1"]
@@ -203,12 +149,9 @@ class DnsServiceTest {
 
 	@Test
 	void "dns zone mx-records script"() {
-		ServicesRegistry registry = injector.getInstance ServicesRegistry
-		SscontrolServiceLoader loader = injector.getInstance SscontrolServiceLoader
-		loader.loadService(ubuntu1004Profile, variables, registry, null)
+		loader.loadService ubuntu1004Profile, null
 		def profile = registry.getService("profile")[0]
-		loader.loadService(dnsZoneMxRecordsScript, variables, registry, profile)
-		withFiles NAME, {}, {}, tmp
+		loader.loadService dnsZoneMxRecordsScript, profile
 
 		registry.getService("dns")[0].generate = false
 		def service = assertService registry.getService("dns")[0], 0, ["127.0.0.1"]
@@ -225,12 +168,9 @@ class DnsServiceTest {
 
 	@Test
 	void "dns zone ns-records script"() {
-		ServicesRegistry registry = injector.getInstance ServicesRegistry
-		SscontrolServiceLoader loader = injector.getInstance SscontrolServiceLoader
-		loader.loadService(ubuntu1004Profile, variables, registry, null)
+		loader.loadService ubuntu1004Profile, null
 		def profile = registry.getService("profile")[0]
-		loader.loadService(dnsZoneNsRecordsScript, variables, registry, profile)
-		withFiles NAME, {}, {}, tmp
+		loader.loadService dnsZoneNsRecordsScript, profile
 
 		registry.getService("dns")[0].generate = false
 		def service = assertService registry.getService("dns")[0], 0, ["127.0.0.1"]
@@ -243,12 +183,9 @@ class DnsServiceTest {
 
 	@Test
 	void "dns automatic a-record for zone script"() {
-		ServicesRegistry registry = injector.getInstance ServicesRegistry
-		SscontrolServiceLoader loader = injector.getInstance SscontrolServiceLoader
-		loader.loadService(ubuntu1004Profile, variables, registry, null)
+		loader.loadService ubuntu1004Profile, null
 		def profile = registry.getService("profile")[0]
-		loader.loadService(dnsAutomaticARecordZoneScript, variables, registry, profile)
-		withFiles NAME, {}, {}, tmp
+		loader.loadService dnsAutomaticARecordZoneScript, profile
 
 		registry.getService("dns")[0].generate = false
 		def service = assertService registry.getService("dns")[0], 0, ["127.0.0.1"]
@@ -260,12 +197,9 @@ class DnsServiceTest {
 
 	@Test
 	void "dns no automatic a-records script"() {
-		ServicesRegistry registry = injector.getInstance ServicesRegistry
-		SscontrolServiceLoader loader = injector.getInstance SscontrolServiceLoader
-		loader.loadService(ubuntu1004Profile, variables, registry, null)
+		loader.loadService ubuntu1004Profile, null
 		def profile = registry.getService("profile")[0]
-		loader.loadService(dnsNoAutomaticARecordsScript, variables, registry, profile)
-		withFiles NAME, {}, {}, tmp
+		loader.loadService dnsNoAutomaticARecordsScript, profile
 
 		registry.getService("dns")[0].generate = false
 		def service = assertService registry.getService("dns")[0], 0, ["127.0.0.1"]
@@ -278,12 +212,9 @@ class DnsServiceTest {
 
 	@Test
 	void "dns origin shortcut script"() {
-		ServicesRegistry registry = injector.getInstance ServicesRegistry
-		SscontrolServiceLoader loader = injector.getInstance SscontrolServiceLoader
-		loader.loadService(ubuntu1004Profile, variables, registry, null)
+		loader.loadService ubuntu1004Profile, null
 		def profile = registry.getService("profile")[0]
-		loader.loadService(dnsOriginShortcutScript, variables, registry, profile)
-		withFiles NAME, {}, {}, tmp
+		loader.loadService dnsOriginShortcutScript, profile
 
 		registry.getService("dns")[0].generate = false
 		def service = assertService registry.getService("dns")[0], 0, ["127.0.0.1"]
@@ -296,7 +227,67 @@ class DnsServiceTest {
 		assertCNAMERecord zone.cnameRecords[0], "www.testa.com", "testa.com", 86400
 	}
 
-	static {
+	static ubuntu1004Profile = DnsServiceTest.class.getResource("Ubuntu_10_04Profile.groovy")
+
+	static dnsSerialScript = DnsServiceTest.class.getResource("DnsSerial.groovy")
+
+	static dnsSerialGenerateScript = DnsServiceTest.class.getResource("DnsSerialGenerate.groovy")
+
+	static dnsZoneARecordsScript = DnsServiceTest.class.getResource("DnsZoneARecords.groovy")
+
+	static dnsZoneCnameRecordsScript = DnsServiceTest.class.getResource("DnsZoneCNAMERecords.groovy")
+
+	static dnsZoneMxRecordsScript = DnsServiceTest.class.getResource("DnsZoneMXRecords.groovy")
+
+	static dnsZoneNsRecordsScript = DnsServiceTest.class.getResource("DnsZoneNSRecords.groovy")
+
+	static dnsAutomaticARecordZoneScript = DnsServiceTest.class.getResource("DnsAutomaticARecordForSoa.groovy")
+
+	static dnsNoAutomaticARecordsScript = DnsServiceTest.class.getResource("DnsNoAutomaticARecords.groovy")
+
+	static dnsOriginShortcutScript = DnsServiceTest.class.getResource("DnsOriginShortcut.groovy")
+
+	static dnsBindOneAddress = DnsServiceTest.class.getResource("DnsBindOneAddress.groovy")
+
+	static dnsBindMultipleAddressString = DnsServiceTest.class.getResource("DnsBindMultipleAddressString.groovy")
+
+	static dnsBindMultipleAddressArray = DnsServiceTest.class.getResource("DnsBindMultipleAddressArray.groovy")
+
+	static dnsBindRemoveLocalhost = DnsServiceTest.class.getResource("DnsBindRemoveLocalhost.groovy")
+
+	static Injector injector
+
+	static ServiceLoaderFactory loaderFactory
+
+	Map variables
+
+	ServicesRegistry registry
+
+	SscontrolServiceLoader loader
+
+	@Rule
+	public TemporaryFolder tmp = new TemporaryFolder()
+
+	@Before
+	void createRegistry() {
+		variables = [tmp: tmp.newFolder()]
+		registry = injector.getInstance ServicesRegistry
+		loader = loaderFactory.create registry, variables
+		loader.setParent injector
+	}
+
+	@BeforeClass
+	static void createFactories() {
+		injector = createInjector()
+		loaderFactory = injector.getInstance ServiceLoaderFactory
+	}
+
+	static Injector createInjector() {
+		Guice.createInjector(new CoreModule(), new CoreResourcesModule())
+	}
+
+	@BeforeClass
+	static void setupToStringStyle() {
 		toStringStyle
 	}
 
@@ -343,16 +334,5 @@ class DnsServiceTest {
 		assertStringContent nsrecord.name, args[0]
 		assert nsrecord.aRecord == args[1]
 		assert nsrecord.ttl.millis == args[2]*1000
-	}
-
-	@Before
-	void setupInjector() {
-		injector = createInjector()
-		tmp = createTempDirectory()
-		variables = [tmp: tmp.absoluteFile]
-	}
-
-	def createInjector() {
-		Guice.createInjector(new CoreModule(), new CoreResourcesModule())
 	}
 }

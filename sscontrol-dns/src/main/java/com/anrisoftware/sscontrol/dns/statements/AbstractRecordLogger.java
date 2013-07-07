@@ -15,7 +15,7 @@ import com.anrisoftware.globalpom.log.AbstractLogger;
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-abstract class AbstractRecordLogger extends AbstractLogger {
+class AbstractRecordLogger extends AbstractLogger {
 
 	private static final String TTL_VALID = "TTL time must be between %d and %d but it is %d for %s.";
 	private static final String TTL_SET_INFO = "TTL time {} s set for the zone record {}.";
@@ -24,8 +24,8 @@ abstract class AbstractRecordLogger extends AbstractLogger {
 	/**
 	 * Creates a new {@link Logger} for the given {@link AbstractRecord}.
 	 */
-	AbstractRecordLogger(Class<? extends AbstractRecord> contextClass) {
-		super(contextClass);
+	AbstractRecordLogger() {
+		super(AbstractRecord.class);
 	}
 
 	void ttlSet(AbstractRecord record, Duration ttl) {

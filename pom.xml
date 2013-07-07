@@ -11,6 +11,7 @@
         <module>sscontrol-api</module>
         <module>sscontrol-core</module>
         <module>sscontrol-dhclient</module>
+        <module>sscontrol-dns</module>
         <module>sscontrol-firewall</module>
         <module>sscontrol-firewall-ufw</module>
         <module>sscontrol-hostname</module>

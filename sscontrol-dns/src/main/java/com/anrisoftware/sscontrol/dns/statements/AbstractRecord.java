@@ -61,8 +61,8 @@ abstract class AbstractRecord extends GroovyObjectSupport implements
 	 *            </dl>
 	 */
 	@Inject
-	@Named("dns-service-properties")
-	public void setDnsServiceProperties(ContextProperties p) {
+	public final void setDnsServiceProperties(
+			@Named("dns-defaults-properties") ContextProperties p) {
 		setupDefaultTimes(new DateContextProperties(p.getContext(), p));
 	}
 
@@ -77,7 +77,7 @@ abstract class AbstractRecord extends GroovyObjectSupport implements
 	 *            the {@link AbstractRecordLogger}.
 	 */
 	@Inject
-	public void setAbstractRecordLogger(AbstractRecordLogger logger) {
+	public final void setAbstractRecordLogger(AbstractRecordLogger logger) {
 		this.log = logger;
 	}
 

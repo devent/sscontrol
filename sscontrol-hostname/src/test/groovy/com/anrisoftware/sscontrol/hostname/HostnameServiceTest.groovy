@@ -145,12 +145,12 @@ class HostnameServiceTest {
 		loaderFactory = injector.getInstance ServiceLoaderFactory
 	}
 
+	static Injector createInjector() {
+		Guice.createInjector(new CoreModule(), new CoreResourcesModule())
+	}
+
 	@BeforeClass
 	static void setupToStringStyle() {
 		toStringStyle
-	}
-
-	static Injector createInjector() {
-		Guice.createInjector(new CoreModule(), new CoreResourcesModule())
 	}
 }

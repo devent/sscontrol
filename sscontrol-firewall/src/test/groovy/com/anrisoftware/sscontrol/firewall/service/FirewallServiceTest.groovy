@@ -29,6 +29,7 @@ import org.junit.BeforeClass
 import org.junit.Test
 
 import com.anrisoftware.sscontrol.core.api.ServiceLoader as SscontrolServiceLoader
+import com.anrisoftware.sscontrol.core.api.ServiceLoaderFactory
 import com.anrisoftware.sscontrol.core.api.ServicesRegistry
 import com.anrisoftware.sscontrol.core.modules.CoreModule
 import com.anrisoftware.sscontrol.core.modules.CoreResourcesModule
@@ -46,21 +47,17 @@ class FirewallServiceTest {
 
 	@Test
 	void "firewall allow script"() {
-		ServicesRegistry registry = injector.getInstance ServicesRegistry
-		SscontrolServiceLoader loader = injector.getInstance SscontrolServiceLoader
-		loader.loadService(ubuntu1004Profile, variables, registry, null)
+		loader.loadService ubuntu1004Profile, null
 		def profile = registry.getService("profile")[0]
-		loader.loadService(firewallAllowScript, variables, registry, profile)
+		loader.loadService firewallAllowScript, profile
 		def service = assertService registry.getService("firewall")[0], 14
 	}
 
 	@Test
 	void "firewall deny script"() {
-		ServicesRegistry registry = injector.getInstance ServicesRegistry
-		SscontrolServiceLoader loader = injector.getInstance SscontrolServiceLoader
-		loader.loadService(ubuntu1004Profile, variables, registry, null)
+		loader.loadService ubuntu1004Profile, null
 		def profile = registry.getService("profile")[0]
-		loader.loadService(firewallDenyScript, variables, registry, profile)
+		loader.loadService firewallDenyScript, profile
 		def service = assertService registry.getService("firewall")[0], 14
 	}
 
@@ -75,11 +72,17 @@ class FirewallServiceTest {
 
 	static firewallDenyScript = FirewallServiceTest.class.getResource("FirewallDeny.groovy")
 
-	Injector injector
+	static Injector injector
+
+	static ServiceLoaderFactory loaderFactory
 
 	File tmpdir
 
 	Map variables
+
+	ServicesRegistry registry
+
+	SscontrolServiceLoader loader
 
 	@Before
 	void createTemp() {
@@ -93,16 +96,24 @@ class FirewallServiceTest {
 	}
 
 	@Before
-	void createFactories() {
+	void createRegistry() {
+		registry = injector.getInstance ServicesRegistry
+		loader = loaderFactory.create registry, variables
+		loader.setParent injector
+	}
+
+	@BeforeClass
+	static void createFactories() {
 		injector = createInjector()
+		loaderFactory = injector.getInstance ServiceLoaderFactory
+	}
+
+	static Injector createInjector() {
+		Guice.createInjector(new CoreModule(), new CoreResourcesModule())
 	}
 
 	@BeforeClass
 	static void setupToStringStyle() {
 		toStringStyle
-	}
-
-	static Injector createInjector() {
-		Guice.createInjector(new CoreModule(), new CoreResourcesModule())
 	}
 }

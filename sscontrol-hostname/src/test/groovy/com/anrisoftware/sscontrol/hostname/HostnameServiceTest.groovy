@@ -47,7 +47,7 @@ import com.google.inject.Injector
 class HostnameServiceTest {
 
 	@Test
-	void "hostname service with empty hostname"() {
+	void "empty hostname configuration"() {
 		TestUtils.trimStrings = false
 		loader.loadService ubuntu1004Profile, null
 		def profile = registry.getService("profile")[0]
@@ -63,7 +63,7 @@ class HostnameServiceTest {
 	}
 
 	@Test
-	void "hostname service with hostname already set"() {
+	void "hostname already set"() {
 		TestUtils.trimStrings = true
 		loader.loadService ubuntu1004Profile, null
 		def profile = registry.getService("profile")[0]

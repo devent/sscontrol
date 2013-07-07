@@ -12,6 +12,7 @@
         <module>sscontrol-core</module>
         <module>sscontrol-dhclient</module>
         <module>sscontrol-hostname</module>
+        <module>sscontrol-hosts</module>
         <module>sscontrol-parent</module>
         <module>sscontrol-profile</module>
         <module>sscontrol-template</module>

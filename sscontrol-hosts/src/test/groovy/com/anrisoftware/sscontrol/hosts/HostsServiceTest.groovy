@@ -29,6 +29,7 @@ import org.junit.Test
 
 import com.anrisoftware.sscontrol.core.api.ServiceException
 import com.anrisoftware.sscontrol.core.api.ServiceLoader as SscontrolServiceLoader
+import com.anrisoftware.sscontrol.core.api.ServiceLoaderFactory
 import com.anrisoftware.sscontrol.core.api.ServicesRegistry
 import com.anrisoftware.sscontrol.core.modules.CoreModule
 import com.anrisoftware.sscontrol.core.modules.CoreResourcesModule
@@ -39,7 +40,7 @@ import com.google.inject.Injector
 
 /**
  * Test hosts service.
- * 
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
@@ -47,12 +48,10 @@ import com.google.inject.Injector
 class HostsServiceTest {
 
 	@Test
-	void "empty"() {
-		ServicesRegistry registry = injector.getInstance ServicesRegistry
-		SscontrolServiceLoader loader = injector.getInstance SscontrolServiceLoader
-		loader.loadService(ubuntu1004Profile, variables, registry, null)
+	void "empty hosts configuration"() {
+		loader.loadService ubuntu1004Profile, null
 		def profile = registry.getService("profile")[0]
-		loader.loadService(hostsService, variables, registry, profile)
+		loader.loadService hostsService, profile
 
 		assertService registry
 		registry.allServices.each { it.call() }
@@ -63,12 +62,11 @@ class HostsServiceTest {
 	}
 
 	@Test
-	void "default hosts"() {
-		ServicesRegistry registry = injector.getInstance ServicesRegistry
-		SscontrolServiceLoader loader = injector.getInstance SscontrolServiceLoader
-		loader.loadService(ubuntu1004Profile, variables, registry, null)
+	void "default hosts already set"() {
+		loader.loadService ubuntu1004Profile, null
 		def profile = registry.getService("profile")[0]
-		loader.loadService(hostsService, variables, registry, profile)
+		loader.loadService hostsService, profile
+
 		copyURLToFile defaultHostsFile, hosts
 
 		registry.allServices.each { it.call() }
@@ -79,12 +77,11 @@ class HostsServiceTest {
 	}
 
 	@Test
-	void "custom hosts"() {
-		ServicesRegistry registry = injector.getInstance ServicesRegistry
-		SscontrolServiceLoader loader = injector.getInstance SscontrolServiceLoader
-		loader.loadService(ubuntu1004Profile, variables, registry, null)
+	void "custom hosts entry already set"() {
+		loader.loadService ubuntu1004Profile, null
 		def profile = registry.getService("profile")[0]
-		loader.loadService(hostsService, variables, registry, profile)
+		loader.loadService hostsService, profile
+
 		copyURLToFile customHostsFile, hosts
 
 		registry.allServices.each { it.call() }
@@ -95,29 +92,10 @@ class HostsServiceTest {
 	}
 
 	@Test
-	void "custom default hosts"() {
-		ServicesRegistry registry = injector.getInstance ServicesRegistry
-		SscontrolServiceLoader loader = injector.getInstance SscontrolServiceLoader
-		loader.loadService ubuntu1004CustomDefaultHostsProfile, variables, registry, null
-		def profile = registry.getService("profile")[0]
-		loader.loadService(hostsService, variables, registry, profile)
-
-		registry.allServices.each { it.call() }
-		assertFileContent hosts, hostsExpected
-		log.info "Run service again to ensure that configuration is not set double."
-		registry.allServices.each { it.call() }
-		assertFileContent hosts, hostsExpected
-	}
-
-	@Test
 	void "with null value"() {
-		ServicesRegistry registry = injector.getInstance ServicesRegistry
-		SscontrolServiceLoader loader = injector.getInstance SscontrolServiceLoader
-		loader.loadService(ubuntu1004Profile, variables, registry, null)
+		loader.loadService ubuntu1004Profile, null
 		def profile = registry.getService("profile")[0]
-		shouldFailWith ServiceException, {
-			loader.loadService(hostsNullService, variables, registry, profile)
-		}
+		shouldFailWith ServiceException, { loader.loadService hostsNullService, profile }
 	}
 
 	static ubuntu1004Profile = HostsServiceTest.class.getResource("Ubuntu_10_04Profile.groovy")
@@ -138,13 +116,19 @@ class HostsServiceTest {
 
 	static hostsWithCustomExpected = HostsServiceTest.class.getResource("hosts_custom_expected.txt")
 
-	Injector injector
+	static Injector injector
+
+	static ServiceLoaderFactory loaderFactory
 
 	Map variables
 
 	File tmpdir
 
 	File hosts
+
+	ServicesRegistry registry
+
+	SscontrolServiceLoader loader
 
 	@Before
 	void createTemp() {
@@ -159,13 +143,16 @@ class HostsServiceTest {
 	}
 
 	@Before
-	void createFactories() {
-		injector = createInjector()
+	void createRegistry() {
+		registry = injector.getInstance ServicesRegistry
+		loader = loaderFactory.create registry, variables
+		loader.setParent injector
 	}
 
 	@BeforeClass
-	static void setupToStringStyle() {
-		toStringStyle
+	static void createFactories() {
+		injector = createInjector()
+		loaderFactory = injector.getInstance ServiceLoaderFactory
 	}
 
 	static Injector createInjector() {
@@ -187,5 +174,10 @@ class HostsServiceTest {
 		assert host.address == "192.168.0.50"
 		assert host.hostname == "srv1.ubuntutest.org"
 		assert host.aliases == ["srva", "srvb"]
+	}
+
+	@BeforeClass
+	static void setupToStringStyle() {
+		toStringStyle
 	}
 }

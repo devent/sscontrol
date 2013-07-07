@@ -20,6 +20,7 @@
         <module>sscontrol-hostname</module>
         <module>sscontrol-hosts</module>
         <module>sscontrol-mail</module>
+        <module>sscontrol-mail-postfix</module>
         <module>sscontrol-parent</module>
         <module>sscontrol-profile</module>
         <module>sscontrol-template</module>

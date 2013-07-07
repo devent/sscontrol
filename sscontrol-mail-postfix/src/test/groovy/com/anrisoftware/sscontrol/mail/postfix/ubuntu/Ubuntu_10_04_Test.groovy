@@ -26,8 +26,7 @@ import org.junit.Test
 
 import com.anrisoftware.sscontrol.core.api.ServiceLoader as SscontrolServiceLoader
 import com.anrisoftware.sscontrol.core.api.ServicesRegistry
-import com.anrisoftware.sscontrol.mail.postfix.linux.PostfixLinuxUtil
-import com.google.inject.Injector
+import com.anrisoftware.sscontrol.mail.postfix.linux.PostfixLinuxBase
 
 /**
  * Test UFW on a Ubuntu 10.04 server.
@@ -36,15 +35,14 @@ import com.google.inject.Injector
  * @since 1.0
  */
 @Slf4j
-class Ubuntu_10_04_Test extends PostfixLinuxUtil {
+class Ubuntu_10_04_Test extends PostfixLinuxBase {
 
 	@Test
 	void "shared domains, unix accounts"() {
-		ServicesRegistry registry = injector.getInstance ServicesRegistry
-		SscontrolServiceLoader loader = injector.getInstance SscontrolServiceLoader
-		loader.loadService ubuntu1004Profile, variables, registry, null
+		loader.loadService ubuntu1004Profile, null
 		def profile = registry.getService("profile")[0]
-		loader.loadService mailSharedUnixAccounts, variables, registry, profile
+		loader.loadService mailSharedUnixAccounts, profile
+
 		copyResourceToCommand echoCommand, aptitudeFile
 		copyResourceToCommand echoCommand, restartFile
 		copyURLToFile maincf, maincfFile
@@ -60,11 +58,10 @@ class Ubuntu_10_04_Test extends PostfixLinuxUtil {
 
 	@Test
 	void "separate domains, unix accounts"() {
-		ServicesRegistry registry = injector.getInstance ServicesRegistry
-		SscontrolServiceLoader loader = injector.getInstance SscontrolServiceLoader
-		loader.loadService ubuntu1004Profile, variables, registry, null
+		loader.loadService ubuntu1004Profile, null
 		def profile = registry.getService("profile")[0]
-		loader.loadService mailSeparateDomainsUnixAccounts, variables, registry, profile
+		loader.loadService mailSeparateDomainsUnixAccounts, profile
+
 		copyResourceToCommand echoCommand, aptitudeFile
 		copyResourceToCommand echoCommand, restartFile
 		copyResourceToCommand echoCommand, postmapFile
@@ -75,7 +72,7 @@ class Ubuntu_10_04_Test extends PostfixLinuxUtil {
 		log.info "Run service again to ensure that configuration is not set double."
 		registry.allServices.each { it.call() }
 
-		def maincfFileString = readFileToString(maincfFile).replaceAll(/$tmpdir.name/, "Ubuntu_10_04.tmp")
+		def maincfFileString = readFileToString(maincfFile).replaceAll(/$tmpdir.absolutePath/, "/Ubuntu_10_04.tmp")
 		assertFileContent mailnameFile, mailnameExpected
 		assertStringContent maincfFileString, resourceToString(maincfSeparateDomainsUnixAccountsExpected)
 		assertFileContent aliasDomainsFile, aliasDomainsExpected
@@ -85,11 +82,10 @@ class Ubuntu_10_04_Test extends PostfixLinuxUtil {
 
 	@Test
 	void "separate domains, nonunix accounts"() {
-		ServicesRegistry registry = injector.getInstance ServicesRegistry
-		SscontrolServiceLoader loader = injector.getInstance SscontrolServiceLoader
-		loader.loadService ubuntu1004Profile, variables, registry, null
+		loader.loadService ubuntu1004Profile, null
 		def profile = registry.getService("profile")[0]
-		loader.loadService mailSeparateDomainsNonUnixAccounts, variables, registry, profile
+		loader.loadService mailSeparateDomainsNonUnixAccounts, profile
+
 		copyResourceToCommand echoCommand, aptitudeFile
 		copyResourceToCommand echoCommand, restartFile
 		copyResourceToCommand echoCommand, postmapFile
@@ -100,7 +96,7 @@ class Ubuntu_10_04_Test extends PostfixLinuxUtil {
 		log.info "Run service again to ensure that configuration is not set double."
 		registry.allServices.each { it.call() }
 
-		def maincfFileString = readFileToString(maincfFile).replaceAll(/$tmpdir.name/, "Ubuntu_10_04.tmp")
+		def maincfFileString = readFileToString(maincfFile).replaceAll(/$tmpdir.absolutePath/, "/Ubuntu_10_04.tmp")
 		assertFileContent mailnameFile, mailnameExpected
 		assertStringContent maincfFileString, resourceToString(maincfSeparateDomainsNonUnixAccountsExpected)
 		assertFileContent aliasDomainsFile, aliasDomainsExpected
@@ -110,11 +106,10 @@ class Ubuntu_10_04_Test extends PostfixLinuxUtil {
 
 	@Test
 	void "mail script"() {
-		ServicesRegistry registry = injector.getInstance ServicesRegistry
-		SscontrolServiceLoader loader = injector.getInstance SscontrolServiceLoader
-		loader.loadService ubuntu1004Profile, variables, registry, null
+		loader.loadService ubuntu1004Profile, null
 		def profile = registry.getService("profile")[0]
-		loader.loadService mailService, variables, registry, profile
+		loader.loadService mailService, profile
+
 		copyResourceToCommand echoCommand, aptitudeFile
 		copyResourceToCommand echoCommand, restartFile
 		copyResourceToCommand echoCommand, postmapFile
@@ -128,6 +123,4 @@ class Ubuntu_10_04_Test extends PostfixLinuxUtil {
 		assertFileContent mailnameFile, mailnameExpected
 		assertFileContent maincfFile, maincfExpected
 	}
-
-	static ubuntu1004Profile = Ubuntu_10_04_Test.class.getResource("Ubuntu_10_04Profile.groovy")
 }

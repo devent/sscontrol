@@ -11,6 +11,10 @@ import com.anrisoftware.sscontrol.core.api.ServiceException;
  */
 class Ubuntu10_04ScriptFactoryLogger extends AbstractLogger {
 
+	private static final String ERROR_CREATE_SCRIPT_MESSAGE = "Error create {}-{} script.";
+	private static final String SCRIPT_FACTORY = "script factory";
+	private static final String ERROR_CREATE_SCRIPT = "Error create script";
+
 	/**
 	 * Create logger for {@link Ubuntu10_04ScriptFactory}.
 	 */
@@ -20,9 +24,10 @@ class Ubuntu10_04ScriptFactoryLogger extends AbstractLogger {
 
 	ServiceException errorCreateScript(Ubuntu10_04ScriptFactory factory,
 			Throwable cause) {
-		ServiceException ex = new ServiceException("Error create script", cause);
-		ex.addContextValue("script factory", factory);
-		log.error(ex.getLocalizedMessage());
-		return ex;
+		return logException(
+				new ServiceException(ERROR_CREATE_SCRIPT, cause).addContextValue(
+						SCRIPT_FACTORY, factory), ERROR_CREATE_SCRIPT_MESSAGE,
+				factory.getInfo().getServiceName(), factory.getInfo()
+						.getProfileName());
 	}
 }

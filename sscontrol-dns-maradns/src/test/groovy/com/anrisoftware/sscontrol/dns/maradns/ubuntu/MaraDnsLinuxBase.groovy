@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-hostname. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.firewall.ufw.ubuntu
+package com.anrisoftware.sscontrol.dns.maradns.ubuntu
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import groovy.util.logging.Slf4j
@@ -35,21 +35,29 @@ import com.google.inject.Guice
 import com.google.inject.Injector
 
 /**
- * Setups the test case for the UFW firewall service.
+ * Setups the test case for the MaraDns service.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
 @Slf4j
-class UfwLinuxBase {
+class MaraDnsLinuxBase {
 
-	static firewallAllowService = UfwLinuxBase.class.getResource("FirewallAllow.groovy")
+	static maraDnsService = MaraDnsLinuxBase.getResource("Dns.groovy")
 
-	static firewallDenyService = UfwLinuxBase.class.getResource("FirewallDeny.groovy")
+	static ubuntu1004Profile = MaraDnsLinuxBase.class.getResource("Ubuntu_10_04Profile.groovy")
 
-	static echoCommand = UfwLinuxBase.class.getResource("echo_command.txt")
+	static maradnsrcExpected = MaraDnsLinuxBase.class.getResource("mararc_ubuntu_10_04_expected_conf.txt")
 
-	static ubuntu1004Profile = UfwLinuxBase.class.getResource("Ubuntu_10_04Profile.groovy")
+	static echoCommand = MaraDnsLinuxBase.class.getResource("echo_command.txt")
+
+	static maraDnsConfiguration = MaraDnsLinuxBase.class.getResource("maradns_ubuntu_10_04_conf.txt")
+
+	static dbAnrisoftwareExpected = MaraDnsLinuxBase.class.getResource("db.anrisoftware.com.txt")
+
+	static dbExample1Expected = MaraDnsLinuxBase.class.getResource("db.example1.com.txt")
+
+	static dbExample2Expected = MaraDnsLinuxBase.class.getResource("db.example2.com.txt")
 
 	static Injector injector
 
@@ -60,11 +68,15 @@ class UfwLinuxBase {
 
 	File tmpdir
 
-	Map variables
+	File addAptRepository
 
 	File aptitude
 
-	File ufw
+	File maradns
+
+	File mararc
+
+	Map variables
 
 	ServicesRegistry registry
 
@@ -72,10 +84,12 @@ class UfwLinuxBase {
 
 	@Before
 	void createTemp() {
-		tmpdir = tmp.newFolder("firewall-ufw")
-		aptitude = new File(tmpdir, "/usr/bin/aptitude")
-		ufw = new File(tmpdir, "/usr/sbin/ufw")
+		tmpdir = tmp.newFolder()
 		variables = [tmp: tmpdir.absoluteFile]
+		aptitude = new File(tmpdir, "/usr/bin/aptitude")
+		addAptRepository = new File(tmpdir, "/usr/bin/add-apt-repository")
+		maradns = new File(tmpdir, "/etc/init.d/maradns")
+		mararc = new File(tmpdir, "/etc/maradns/mararc")
 	}
 
 	@Before
@@ -92,8 +106,7 @@ class UfwLinuxBase {
 	}
 
 	static Injector createInjector() {
-		Guice.createInjector(new CoreModule(), new CoreResourcesModule(),
-				new UfwModule())
+		Guice.createInjector(new CoreModule(), new CoreResourcesModule())
 	}
 
 	@BeforeClass

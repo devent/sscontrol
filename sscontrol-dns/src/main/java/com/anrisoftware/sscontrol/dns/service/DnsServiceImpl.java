@@ -145,7 +145,7 @@ class DnsServiceImpl extends AbstractService {
 	/**
 	 * Sets the serial number of the zone records.
 	 * 
-	 * @param newSerial
+	 * @param serial
 	 *            the serial.
 	 * 
 	 * @param args
@@ -162,10 +162,11 @@ class DnsServiceImpl extends AbstractService {
 	 *            </dl>
 	 * 
 	 */
-	public void serial(Map<String, Object> args, int newSerial) {
+	public void serial(Map<String, Object> args, int serial) {
 		if (args.containsKey("generate")) {
 			setGenerate((Boolean) args.get("generate"));
 		}
+		serial(serial);
 	}
 
 	/**

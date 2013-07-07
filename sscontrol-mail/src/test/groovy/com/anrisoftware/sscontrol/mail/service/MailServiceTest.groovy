@@ -22,12 +22,14 @@ import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static org.apache.commons.io.FileUtils.*
 import groovy.util.logging.Slf4j
 
-import org.junit.After
 import org.junit.Before
 import org.junit.BeforeClass
+import org.junit.Rule
 import org.junit.Test
+import org.junit.rules.TemporaryFolder
 
 import com.anrisoftware.sscontrol.core.api.ServiceLoader as SscontrolServiceLoader
+import com.anrisoftware.sscontrol.core.api.ServiceLoaderFactory
 import com.anrisoftware.sscontrol.core.api.ServicesRegistry
 import com.anrisoftware.sscontrol.core.modules.CoreModule
 import com.anrisoftware.sscontrol.core.modules.CoreResourcesModule
@@ -37,7 +39,7 @@ import com.google.inject.Injector
 
 /**
  * @see MailServiceImpl
- * 
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
@@ -46,11 +48,9 @@ class MailServiceTest {
 
 	@Test
 	void "service"() {
-		ServicesRegistry registry = injector.getInstance ServicesRegistry
-		SscontrolServiceLoader loader = injector.getInstance SscontrolServiceLoader
-		loader.loadService(ubuntu1004Profile, variables, registry, null)
+		loader.loadService ubuntu1004Profile, null
 		def profile = registry.getService("profile")[0]
-		loader.loadService(mailService, variables, registry, profile)
+		loader.loadService mailService, profile
 		def service = assertService registry.getService("mail")[0], tmpdir
 	}
 
@@ -58,7 +58,16 @@ class MailServiceTest {
 
 	static mailService = MailServiceTest.class.getResource("MailService.groovy")
 
-	Injector injector
+	static Injector injector
+
+	static ServiceLoaderFactory loaderFactory
+
+	@Rule
+	public TemporaryFolder tmp = new TemporaryFolder()
+
+	ServicesRegistry registry
+
+	SscontrolServiceLoader loader
 
 	Map variables
 
@@ -68,19 +77,26 @@ class MailServiceTest {
 
 	@Before
 	void createTemp() {
-		tmpdir = File.createTempDir("MailService", null)
+		tmpdir = tmp.newFolder("mail-service")
 		mail = new File(tmpdir, "/etc/mail")
 		variables = [tmp: tmpdir.absoluteFile]
 	}
 
-	@After
-	void deleteTemp() {
-		tmpdir.deleteDir()
+	@Before
+	void createRegistry() {
+		registry = injector.getInstance ServicesRegistry
+		loader = loaderFactory.create registry, variables
+		loader.setParent injector
 	}
 
-	@Before
-	void createFactories() {
+	@BeforeClass
+	static void createFactories() {
 		injector = createInjector()
+		loaderFactory = injector.getInstance ServiceLoaderFactory
+	}
+
+	static Injector createInjector() {
+		Guice.createInjector(new CoreModule(), new CoreResourcesModule())
 	}
 
 	@BeforeClass
@@ -88,16 +104,15 @@ class MailServiceTest {
 		toStringStyle
 	}
 
-	static Injector createInjector() {
-		Guice.createInjector(new CoreModule(), new CoreResourcesModule())
-	}
-
 	static assertService(MailServiceImpl service, File tmpdir) {
+		assert service.bindAddresses == BindAddresses.ALL
+		assert service.relayHost == "smtp.relayhost.com"
 		assert service.domainName == "mail.example.com"
 		assert service.origin == "example.com"
-		assert service.bindAddresses == BindAddresses.ALL
 		assert service.masqueradeDomains.domains.contains("mail.example.com")
 		assert service.masqueradeDomains.userExceptions.contains("root")
+		assert service.destinations.contains("foo.bar")
+		assert service.destinations.contains("bar.bar")
 		assert service.certificateFile.file.path == "$tmpdir/example-com.crt"
 		assert service.certificateFile.keyFile.path == "$tmpdir/example-com.insecure.key"
 		assert service.certificateFile.caFile.path == "$tmpdir/example-com-ca.crt"
@@ -105,7 +120,7 @@ class MailServiceTest {
 		assert service.domains[0].name == "example.com"
 		assert service.domains[1].name == "mail.blobber.org"
 		assert service.domains[1].aliases.size() == 1
-		assert service.domains[1].aliases[0].name == "@mail.blobber.org"
+		assert service.domains[1].aliases[0].name == ""
 		assert service.domains[1].aliases[0].destination == "@blobber.org"
 		assert service.domains[2].name == "blobber.org"
 		assert service.domains[2].users.size() == 3

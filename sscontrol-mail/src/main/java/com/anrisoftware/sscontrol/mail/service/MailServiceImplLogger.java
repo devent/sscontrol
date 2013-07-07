@@ -1,18 +1,18 @@
 /*
  * Copyright 2012 Erwin Müller <erwin.mueller@deventm.org>
- *
+ * 
  * This file is part of sscontrol-hostname.
- *
+ * 
  * sscontrol-hostname is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published by the
  * Free Software Foundation, either version 3 of the License, or (at your
  * option) any later version.
- *
+ * 
  * sscontrol-hostname is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
  * for more details.
- *
+ * 
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-hostname. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -46,8 +46,11 @@ class MailServiceImplLogger extends AbstractLogger {
 	private static final String BIND_ADDRESSES_SET_INFO = "Bind addresses set {} for mail service.";
 	private static final String BIND_ADDRESSES_SET = "Bind addresses set {} for {}.";
 	private static final String BIND_ADDRESS_NULL = "Bind address cannot be null.";
-	private static final String ERROR_SERVICE_SCRIPT_MESSAGE = "Error find service script '%s' for profile '%s'.";
-	private static final String ERROR_SERVICE_SCRIPT = "Error find service script";
+	private static final String SERVICE_NAME = "service name";
+	private static final String PROFILE_NAME = "profile name";
+	private static final String SERVICE = "service";
+	private static final String ERROR_FIND_SERVICE_MESSAGE = "Error find service script '{}' for mail service.";
+	private static final String ERROR_FIND_SERVICE = "Error find service script";
 	private static final String DOMAIN_NULL = "Domain name can not be empty or null.";
 	private static final String ORIGIN_SET = "Origin '{}' set for {}.";
 	private static final String ORIGIN_SET_INFO = "Origin '{}' set for mail service.";
@@ -70,11 +73,11 @@ class MailServiceImplLogger extends AbstractLogger {
 	ServiceException errorFindServiceScript(MailServiceImpl service,
 			String profile, String name) {
 		return logException(
-				new ServiceException(ERROR_SERVICE_SCRIPT)
-						.addContextValue("service", service)
-						.addContextValue("profile name", profile)
-						.addContextValue("service name", name),
-				ERROR_SERVICE_SCRIPT_MESSAGE, name, profile);
+				new ServiceException(ERROR_FIND_SERVICE)
+						.addContextValue(SERVICE, service)
+						.addContextValue(PROFILE_NAME, profile)
+						.addContextValue(SERVICE_NAME, name),
+				ERROR_FIND_SERVICE_MESSAGE, name);
 	}
 
 	void checkBindAddress(MailServiceImpl service, BindAddresses address) {

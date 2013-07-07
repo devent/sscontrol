@@ -20,13 +20,11 @@ package com.anrisoftware.sscontrol.database.service
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.database.service.DatabaseServiceFactory.*
-import groovy.util.logging.Slf4j
 
 import org.junit.Test
 
 import com.anrisoftware.sscontrol.core.api.ServiceLoader as SscontrolServiceLoader
 import com.anrisoftware.sscontrol.core.api.ServicesRegistry
-import com.google.inject.Injector
 
 /**
  * Test the database script.
@@ -34,16 +32,13 @@ import com.google.inject.Injector
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-@Slf4j
-class DatabaseScriptTest extends DatabaseServiceUtil {
+class DatabaseScriptTest extends DatabaseServiceBase {
 
 	@Test
 	void "database script"() {
-		ServicesRegistry registry = injector.getInstance ServicesRegistry
-		SscontrolServiceLoader loader = injector.getInstance SscontrolServiceLoader
-		loader.loadService(ubuntu1004Profile, variables, registry, null)
+		loader.loadService ubuntu1004Profile, null
 		def profile = registry.getService("profile")[0]
-		loader.loadService(databaseScript, variables, registry, profile)
+		loader.loadService databaseScript, profile
 		assertService registry.getService("database")[0]
 	}
 

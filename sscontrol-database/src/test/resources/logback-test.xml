@@ -19,35 +19,12 @@
     along with globalpom-log. If not, see <http://www.gnu.org/licenses/>.
 
 -->
-<configuration scan="true">
-
-	<property resource="logback.properties"/>
-
-	<appender name="MAVEN_STYLE" class="ch.qos.logback.core.ConsoleAppender">
-		<target>System.err</target>
-		<encoder>
-			<pattern>[%level] %-4relative [%thread] %logger{20} - %msg %n%rEx{short}</pattern>
-			<immediateFlush>false</immediateFlush>
-		</encoder>
-	</appender>
+<configuration>
 
 	<appender name="TESTING_STYLE" class="ch.qos.logback.core.ConsoleAppender">
 		<target>System.err</target>
 		<encoder>
 			<pattern>[%level] %-4relative [%thread] %logger{0} - %msg%n%rEx{short}</pattern>
-			<immediateFlush>false</immediateFlush>
-		</encoder>
-	</appender>
-
-	<appender name="FILE_DAILY"
-		class="ch.qos.logback.core.rolling.RollingFileAppender">
-		<file>${java.io.tmpdir}/${project.artifactId}.log</file>
-		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-			<fileNamePattern>logFile.%d{yyyy-MM-dd}.log</fileNamePattern>
-			<maxHistory>30</maxHistory>
-		</rollingPolicy>
-		<encoder>
-			<pattern>[%level] %date{ISO8601} [%thread] %logger - %msg %n%rEx</pattern>
 			<immediateFlush>true</immediateFlush>
 		</encoder>
 	</appender>

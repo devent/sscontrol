@@ -22,16 +22,16 @@ class DatabaseLogger extends AbstractLogger {
 
 	private static final String SQL_SCRIPT_ADDED_INFO = "SQL script for import added '{}' for database '{}'.";
 	private static final String SQL_SCRIPT_ADDED = "SQL script for import added '{}' for {}.";
-	private static final String SQL_SCRIPT_URI = "SQL script URI must not be null for database '%s'.";
-	private static final String SQL_SCRIPT_URL = "SQL script URL must not be null for database '%s'.";
-	private static final String SQL_SCRIPT_FILE = "SQL script file must not be null for database '%s'.";
+	private static final String SQL_SCRIPT_URI = "SQL script URI must not be null for %s.";
+	private static final String SQL_SCRIPT_URL = "SQL script URL must not be null for %s.";
+	private static final String SQL_SCRIPT_FILE = "SQL script file must not be null for %s.";
 	private static final String NAME = "Name must not be empty for database '%s'.";
 	private static final String COLLATE_SET_INFO = "Default collate set '{}' for database '{}'.";
 	private static final String COLLATE_SET = "Default collate set '{}' for {}.";
-	private static final String COLLATE = "Collate must not be null for database '%s'.";
+	private static final String COLLATE = "Collate must not be null for %s.";
 	private static final String CHARACTER_SET_SET_INFO = "Default character set set '{}' for database '{}'.";
 	private static final String CHARACTER_SET_SET = "Default character set set '{}' for {}.";
-	private static final String CHARACTER_SET = "Character set must not be null for database '%s'.";
+	private static final String CHARACTER_SET = "Character set must not be null for %s.";
 
 	/**
 	 * Create logger for {@link Database}.
@@ -41,7 +41,7 @@ class DatabaseLogger extends AbstractLogger {
 	}
 
 	void checkCharacterSet(Database database, String set) {
-		notEmpty(set, CHARACTER_SET, database.getName());
+		notEmpty(set, CHARACTER_SET, database);
 	}
 
 	void characterSetSet(Database database, String set) {
@@ -53,7 +53,7 @@ class DatabaseLogger extends AbstractLogger {
 	}
 
 	void checkCollate(Database database, String collate) {
-		notEmpty(collate, COLLATE, database.getName());
+		notEmpty(collate, COLLATE, database);
 	}
 
 	void collateSet(Database database, String collate) {
@@ -65,19 +65,19 @@ class DatabaseLogger extends AbstractLogger {
 	}
 
 	void checkName(Database database, String name) {
-		notEmpty(name, NAME, database.getName());
+		notEmpty(name, NAME, database);
 	}
 
 	void checkFile(Database database, File file) {
-		notNull(file, SQL_SCRIPT_FILE, database.getName());
+		notNull(file, SQL_SCRIPT_FILE, database);
 	}
 
 	void checkURL(Database database, URL url) {
-		notNull(url, SQL_SCRIPT_URL, database.getName());
+		notNull(url, SQL_SCRIPT_URL, database);
 	}
 
 	void checkURI(Database database, URI uri) {
-		notNull(uri, SQL_SCRIPT_URI, database.getName());
+		notNull(uri, SQL_SCRIPT_URI, database);
 	}
 
 	void sqlScriptAdd(Database database, URI uri) {

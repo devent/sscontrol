@@ -25,27 +25,34 @@ import org.junit.After
 import org.junit.Before
 import org.junit.BeforeClass
 
+import com.anrisoftware.sscontrol.core.api.ServiceLoader as SscontrolServiceLoader
+import com.anrisoftware.sscontrol.core.api.ServiceLoaderFactory
+import com.anrisoftware.sscontrol.core.api.ServicesRegistry
 import com.anrisoftware.sscontrol.core.modules.CoreModule
 import com.anrisoftware.sscontrol.core.modules.CoreResourcesModule
 import com.google.inject.Guice
 import com.google.inject.Injector
 
 /**
- * Utilities to test the UFW service.
+ * Setups the test case for the UFW firewall service.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
 @Slf4j
-class UfwLinuxUtil {
+class UfwLinuxBase {
 
-	static firewallAllowService = UfwLinuxUtil.class.getResource("FirewallAllow.groovy")
+	static firewallAllowService = UfwLinuxBase.class.getResource("FirewallAllow.groovy")
 
-	static firewallDenyService = UfwLinuxUtil.class.getResource("FirewallDeny.groovy")
+	static firewallDenyService = UfwLinuxBase.class.getResource("FirewallDeny.groovy")
 
-	static echoCommand = UfwLinuxUtil.class.getResource("echo_command.txt")
+	static echoCommand = UfwLinuxBase.class.getResource("echo_command.txt")
 
-	Injector injector
+	static ubuntu1004Profile = UfwLinuxBase.class.getResource("Ubuntu_10_04Profile.groovy")
+
+	static Injector injector
+
+	static ServiceLoaderFactory loaderFactory
 
 	File tmpdir
 
@@ -54,6 +61,10 @@ class UfwLinuxUtil {
 	File aptitude
 
 	File ufw
+
+	ServicesRegistry registry
+
+	SscontrolServiceLoader loader
 
 	@Before
 	void createTemp() {
@@ -69,17 +80,25 @@ class UfwLinuxUtil {
 	}
 
 	@Before
-	void createFactories() {
-		injector = createInjector()
+	void createRegistry() {
+		registry = injector.getInstance ServicesRegistry
+		loader = loaderFactory.create registry, variables
+		loader.setParent injector
 	}
 
 	@BeforeClass
-	static void setupToStringStyle() {
-		toStringStyle
+	static void createFactories() {
+		injector = createInjector()
+		loaderFactory = injector.getInstance ServiceLoaderFactory
 	}
 
 	static Injector createInjector() {
 		Guice.createInjector(new CoreModule(), new CoreResourcesModule(),
 				new UfwModule())
+	}
+
+	@BeforeClass
+	static void setupToStringStyle() {
+		toStringStyle
 	}
 }

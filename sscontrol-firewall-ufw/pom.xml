@@ -6,27 +6,38 @@
 	<parent>
 		<groupId>com.anrisoftware.sscontrol</groupId>
 		<artifactId>sscontrol-parent</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
+		<version>1.0-SNAPSHOT</version>
+		<relativePath>../sscontrol-parent</relativePath>
 	</parent>
 
 	<artifactId>sscontrol-firewall-ufw</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
 	<name>Robo Bee :: Firewall :: UFW</name>
 	<description>Uncomplicated FireWall service.</description>
+	<url>https://www.anr-institute.com/projects/projects/robobee-firewall-ufw</url>
 
+	<issueManagement>
+		<system>Redmine</system>
+		<url>https://www.anr-institute.com/projects/projects/robobee-firewall-ufw</url>
+	</issueManagement>
+
+	<scm>
+		<connection>scm:git:${custom.gitpublic.url}sscontrolnew.git</connection>
+		<developerConnection>scm:git:${custom.gitpublic.url}sscontrolnew.git</developerConnection>
+		<url>scm:git:${custom.gitpublic.url}sscontrolnew.git</url>
+	</scm>
 
 	<dependencies>
 		<!-- test dependencies -->
 		<dependency>
 			<groupId>com.anrisoftware.sscontrol</groupId>
 			<artifactId>sscontrol-core</artifactId>
-			<version>0.1-SNAPSHOT</version>
+			<version>1.0-SNAPSHOT</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.anrisoftware.sscontrol</groupId>
 			<artifactId>sscontrol-profile</artifactId>
-			<version>0.1-SNAPSHOT</version>
+			<version>1.0-SNAPSHOT</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
@@ -39,7 +50,7 @@
 		<dependency>
 			<groupId>com.anrisoftware.sscontrol</groupId>
 			<artifactId>sscontrol-firewall</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<version>1.0-SNAPSHOT</version>
 		</dependency>
 
 		<!-- compile dependencies -->

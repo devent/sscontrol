@@ -19,7 +19,6 @@
 package com.anrisoftware.sscontrol.firewall.service
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
-import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.firewall.service.FirewallFactory.*
 import groovy.util.logging.Slf4j
 

@@ -25,7 +25,6 @@ import org.junit.Test
 
 import com.anrisoftware.sscontrol.core.api.ServiceLoader as SscontrolServiceLoader
 import com.anrisoftware.sscontrol.core.api.ServicesRegistry
-import com.google.inject.Injector
 
 /**
  * Test UFW on a Ubuntu 10.04 server.
@@ -34,15 +33,14 @@ import com.google.inject.Injector
  * @since 1.0
  */
 @Slf4j
-class UfwUbuntu_10_04_Test extends UfwLinuxUtil {
+class UfwUbuntu_10_04_Test extends UfwLinuxBase {
 
 	@Test
 	void "ufw allow"() {
-		ServicesRegistry registry = injector.getInstance ServicesRegistry
-		SscontrolServiceLoader loader = injector.getInstance SscontrolServiceLoader
-		loader.loadService(ubuntu1004Profile, variables, registry, null)
+		loader.loadService ubuntu1004Profile, null
 		def profile = registry.getService("profile")[0]
-		loader.loadService(firewallAllowService, variables, registry, profile)
+		loader.loadService firewallAllowService, profile
+
 		copyResourceToCommand echoCommand, ufw
 		copyResourceToCommand echoCommand, aptitude
 
@@ -53,11 +51,10 @@ class UfwUbuntu_10_04_Test extends UfwLinuxUtil {
 
 	@Test
 	void "ufw deny"() {
-		ServicesRegistry registry = injector.getInstance ServicesRegistry
-		SscontrolServiceLoader loader = injector.getInstance SscontrolServiceLoader
-		loader.loadService(ubuntu1004Profile, variables, registry, null)
+		loader.loadService ubuntu1004Profile, null
 		def profile = registry.getService("profile")[0]
-		loader.loadService(firewallDenyService, variables, registry, profile)
+		loader.loadService firewallDenyService, profile
+
 		copyResourceToCommand echoCommand, ufw
 		copyResourceToCommand echoCommand, aptitude
 
@@ -65,6 +62,4 @@ class UfwUbuntu_10_04_Test extends UfwLinuxUtil {
 		log.info "Run service again to ensure that configuration is not set double."
 		registry.allServices.each { it.call() }
 	}
-
-	static ubuntu1004Profile = UfwUbuntu_10_04_Test.class.getResource("Ubuntu_10_04Profile.groovy")
 }

@@ -1,6 +1,6 @@
 package com.anrisoftware.sscontrol.dns.statements;
 
-import static java.lang.String.format;
+import com.anrisoftware.globalpom.log.AbstractLogger;
 
 /**
  * Logging messages for {@link MXRecord}.
@@ -8,7 +8,14 @@ import static java.lang.String.format;
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class MXRecordLogger extends AbstractRecordLogger {
+class MXRecordLogger extends AbstractLogger {
+
+	private static final String TTL_NOT_SUPPORTED_MESSAGE = "TTL not supported for MX-record '{}'.";
+	private static final String TTL_NOT_SUPPORTED = "TTL not supported for MX-record";
+	private static final String A_RECORD_SET_INFO = "A-record '{}' set for MX record '{}'.";
+	private static final String A_RECORD_SET = "A-record {} set for {}.";
+	private static final String PRIORITY_SET_INFO = "Priority {} set for MX record '{}'.";
+	private static final String PRIORITY_SET = "Priority {} set for {}.";
 
 	/**
 	 * Creates a logger for {@link MXRecord}.
@@ -17,20 +24,25 @@ class MXRecordLogger extends AbstractRecordLogger {
 		super(MXRecord.class);
 	}
 
-	MXRecord prioritySet(MXRecord record, long priority) {
-		log.debug("Set the priority {} for the MX record {}.", priority, record);
-		return record;
+	void prioritySet(MXRecord record, long priority) {
+		if (log.isDebugEnabled()) {
+			log.debug(PRIORITY_SET, priority, record);
+		} else {
+			log.info(PRIORITY_SET_INFO, priority, record.getName());
+		}
 	}
 
-	MXRecord aRecordSet(MXRecord record, AbstractRecord a) {
-		log.debug("Set the A record {} for the MX record {}.", a, record);
-		return record;
+	void aRecordSet(MXRecord record, ARecord a) {
+		if (log.isDebugEnabled()) {
+			log.debug(A_RECORD_SET, a, record);
+		} else {
+			log.info(A_RECORD_SET_INFO, a.getName(), record.getName());
+		}
 	}
 
 	UnsupportedOperationException unsupportedTtl(MXRecord record) {
-		UnsupportedOperationException ex = new UnsupportedOperationException(
-				format("TTL is not supported for the MX-record %s", record));
-		log.error(ex.getLocalizedMessage());
-		return ex;
+		return logException(
+				new UnsupportedOperationException(TTL_NOT_SUPPORTED),
+				TTL_NOT_SUPPORTED_MESSAGE, record.getName());
 	}
 }

@@ -1,5 +1,6 @@
 package com.anrisoftware.sscontrol.dns.statements;
 
+import static com.anrisoftware.sscontrol.dns.statements.ZonePlaceholder.ZONE_PLACEHOLDER;
 import static java.util.Collections.unmodifiableList;
 import groovy.lang.GroovyObjectSupport;
 
@@ -26,12 +27,16 @@ import com.google.inject.assistedinject.Assisted;
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
+@SuppressWarnings("serial")
 public class DnsZone extends GroovyObjectSupport implements Serializable {
 
-	/**
-	 * @version 1.0
-	 */
-	private static final long serialVersionUID = -1960952282894291558L;
+	private static final String EMAIL = "email";
+
+	private static final String PRIMARY_NAME_SERVER = "primary name server";
+
+	private static final String NAME = "name";
+
+	private static final String SERIAL = "serial";
 
 	static final long MIN_TIME_SECONDS = 0l;
 
@@ -84,10 +89,7 @@ public class DnsZone extends GroovyObjectSupport implements Serializable {
 	private final List<CNAMERecord> cnameRecords;
 
 	/**
-	 * Sets the parameter of the zone.
-	 * 
-	 * @param log
-	 *            the {@link DnsZoneLogger}.
+	 * @see DnsZoneFactory#create(String, String, String, long)
 	 * 
 	 * @param p
 	 *            the {@link ContextProperties} with the property:
@@ -107,20 +109,6 @@ public class DnsZone extends GroovyObjectSupport implements Serializable {
 	 *            <dt>{@code default_minimum_ttl}</dt>
 	 *            <dd>the default minimum TTL time for the zone in seconds.</dd>
 	 *            </dl>
-	 * 
-	 * @param name
-	 *            the name of the zone.
-	 * 
-	 * @param primaryNameServer
-	 *            the host name of the primary name server. The place holder
-	 *            {@code %} is replaced by the zone name.
-	 * 
-	 * @param email
-	 *            The email address of the administrator for the zone. The place
-	 *            holder {@code %} is replaced by the zone name.
-	 * 
-	 * @param serial
-	 *            The serial number of this zone file.
 	 */
 	@SuppressWarnings("unchecked")
 	@Inject
@@ -128,9 +116,9 @@ public class DnsZone extends GroovyObjectSupport implements Serializable {
 			NSRecordFactory nsRecordFactory, MXRecordFactory mxRecordFactory,
 			CNAMERecordFactory cnameRecordFactory,
 			@Named("dns-defaults-properties") ContextProperties p,
-			@Assisted("name") String name,
+			@Assisted(NAME) String name,
 			@Assisted("primaryNameServer") String primaryNameServer,
-			@Assisted("email") String email, @Assisted long serial) {
+			@Assisted(EMAIL) String email, @Assisted long serial) {
 		this.log = log;
 		this.aRecordFactory = aRecordFactory;
 		this.nsRecordFactory = nsRecordFactory;
@@ -141,8 +129,9 @@ public class DnsZone extends GroovyObjectSupport implements Serializable {
 		this.mxRecords = new ArrayList<MXRecord>();
 		this.nsRecords = new ArrayList<NSRecord>();
 		this.name = name;
-		this.primaryNameServer = primaryNameServer.replaceAll("%", name);
-		this.email = email.replaceAll("%", name);
+		this.primaryNameServer = primaryNameServer.replaceAll(ZONE_PLACEHOLDER,
+				name);
+		this.email = email.replaceAll(ZONE_PLACEHOLDER, name);
 		this.serial = serial;
 		setupDefaultTimes(new DateContextProperties(p.getContext(), p));
 	}
@@ -572,9 +561,9 @@ public class DnsZone extends GroovyObjectSupport implements Serializable {
 
 	@Override
 	public String toString() {
-		return new ToStringBuilder(this).append("serial", serial)
-				.append("name", name)
-				.append("primary name server", primaryNameServer)
-				.append("email", email).toString();
+		return new ToStringBuilder(this).append(SERIAL, serial)
+				.append(NAME, name)
+				.append(PRIMARY_NAME_SERVER, primaryNameServer)
+				.append(EMAIL, email).toString();
 	}
 }

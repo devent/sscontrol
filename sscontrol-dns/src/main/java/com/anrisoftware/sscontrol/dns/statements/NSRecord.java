@@ -1,12 +1,10 @@
 package com.anrisoftware.sscontrol.dns.statements;
 
+import static com.anrisoftware.sscontrol.dns.statements.ZonePlaceholder.ZONE_PLACEHOLDER;
 import static org.apache.commons.lang3.StringUtils.replace;
-
-import javax.inject.Named;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import com.anrisoftware.propertiesutils.ContextProperties;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
@@ -16,12 +14,12 @@ import com.google.inject.assistedinject.Assisted;
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
+@SuppressWarnings("serial")
 public class NSRecord extends AbstractRecord {
 
-	/**
-	 * @version 1.0
-	 */
-	private static final long serialVersionUID = -7223762700710514007L;
+	private static final String A_RECORD = "A-record";
+
+	private static final String NAME = "name";
 
 	private final NSRecordLogger log;
 
@@ -32,33 +30,15 @@ public class NSRecord extends AbstractRecord {
 	private ARecord aRecord;
 
 	/**
-	 * Sets the name of the NS-record.
-	 * 
-	 * @param logger
-	 *            the {@link NSRecordLogger}.
-	 * 
-	 * @param p
-	 *            the {@link ContextProperties} with the property:
-	 *            <dl>
-	 *            <dt>{@code default_ttl}</dt>
-	 *            <dd>the default TTL time for the record in seconds.</dd>
-	 *            </dl>
-	 * 
-	 * @param zone
-	 *            the {@link DnsZone} to which this record belongs to.
-	 * 
-	 * @param name
-	 *            the {@link String} name of the record. The place holder
-	 *            {@code %} is replaced by the zone name.
+	 * @see NSRecordFactory#create(DnsZone, String)
 	 */
 	@Inject
-	NSRecord(NSRecordLogger logger,
-			@Named("dns-defaults-properties") ContextProperties p,
-			@Assisted DnsZone zone, @Assisted String name) {
-		super(logger, p, zone);
+	NSRecord(NSRecordLogger logger, @Assisted DnsZone zone,
+			@Assisted String name) {
+		super(zone);
 		this.log = logger;
 		this.zone = zone;
-		this.name = replace(name, "%", zone.getName());
+		this.name = replace(name, ZONE_PLACEHOLDER, zone.getName());
 	}
 
 	/**
@@ -84,11 +64,9 @@ public class NSRecord extends AbstractRecord {
 
 	@Override
 	public String toString() {
-		ToStringBuilder s = new ToStringBuilder(this).append("name", name)
-				.append("ttl", getTtl());
-		if (aRecord != null) {
-			s.append("A-record", aRecord);
-		}
-		return s.toString();
+		ToStringBuilder s = new ToStringBuilder(this).appendSuper(
+				super.toString()).append(NAME, name);
+		return aRecord == null ? s.toString() : s.append(A_RECORD, aRecord)
+				.toString();
 	}
 }

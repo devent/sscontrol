@@ -1,10 +1,9 @@
 package com.anrisoftware.sscontrol.dns.statements;
 
-import javax.inject.Named;
+import static com.anrisoftware.sscontrol.dns.statements.ZonePlaceholder.ZONE_PLACEHOLDER;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import com.anrisoftware.propertiesutils.ContextProperties;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
@@ -14,12 +13,14 @@ import com.google.inject.assistedinject.Assisted;
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
+@SuppressWarnings("serial")
 public class MXRecord extends AbstractRecord {
 
-	/**
-	 * @version 1.0
-	 */
-	private static final long serialVersionUID = 27383643814320053L;
+	private static final String A_RECORD = "A-record";
+
+	private static final String PRIORITY = "priority";
+
+	private static final String NAME = "name";
 
 	private final MXRecordLogger log;
 
@@ -32,35 +33,16 @@ public class MXRecord extends AbstractRecord {
 	private long priority;
 
 	/**
-	 * Sets the name of the MX record.
-	 * 
-	 * @param logger
-	 *            the {@link MXRecordLogger}.
-	 * 
-	 * @param p
-	 *            the {@link ContextProperties} with the property:
-	 *            <dl>
-	 *            <dt>{@code default_ttl_seconds}</dt>
-	 *            <dd>the default TTL time for the record in seconds.</dd>
-	 *            </dl>
-	 * 
-	 * @param zone
-	 *            the {@link DnsZone} where this record belongs to.
-	 * 
-	 * @param name
-	 *            the {@link String} name of the record. The place holder
-	 *            {@code %} is replaced by the zone name.
-	 * 
+	 * @see MXRecordFactory#create(DnsZone, String)
 	 */
 	@Inject
-	MXRecord(MXRecordLogger logger,
-			@Named("dns-defaults-properties") ContextProperties p,
-			@Assisted DnsZone zone, @Assisted String name) {
-		super(logger, p, zone);
+	MXRecord(MXRecordLogger logger, @Assisted DnsZone zone,
+			@Assisted String name) {
+		super(zone);
 		this.log = logger;
 		this.priority = 10;
 		this.zone = zone;
-		this.name = name.replaceAll("%", zone.getName());
+		this.name = name.replaceAll(ZONE_PLACEHOLDER, zone.getName());
 	}
 
 	/**
@@ -117,11 +99,10 @@ public class MXRecord extends AbstractRecord {
 
 	@Override
 	public String toString() {
-		ToStringBuilder s = new ToStringBuilder(this).append("name", name)
-				.append("priority", priority).append("ttl", getTtl());
-		if (aRecord != null) {
-			s.append("A-record", aRecord);
-		}
-		return s.toString();
+		ToStringBuilder s = new ToStringBuilder(this)
+				.appendSuper(super.toString()).append(NAME, name)
+				.append(PRIORITY, priority);
+		return aRecord == null ? s.toString() : s.append(A_RECORD, aRecord)
+				.toString();
 	}
 }

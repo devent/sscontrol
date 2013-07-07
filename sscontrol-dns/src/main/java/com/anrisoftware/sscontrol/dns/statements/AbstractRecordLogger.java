@@ -7,7 +7,7 @@ import static org.apache.commons.lang3.Validate.inclusiveBetween;
 import org.joda.time.Duration;
 import org.slf4j.Logger;
 
-import com.anrisoftware.globalpom.log.AbstractSerializedLogger;
+import com.anrisoftware.globalpom.log.AbstractLogger;
 
 /**
  * Logger for the zone records.
@@ -15,7 +15,11 @@ import com.anrisoftware.globalpom.log.AbstractSerializedLogger;
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-abstract class AbstractRecordLogger extends AbstractSerializedLogger {
+abstract class AbstractRecordLogger extends AbstractLogger {
+
+	private static final String TTL_VALID = "TTL time must be between %d and %d but it is %d for %s.";
+	private static final String TTL_SET_INFO = "TTL time {} s set for the zone record {}.";
+	private static final String TTL_SET = "TTL time {} s set for {}.";
 
 	/**
 	 * Creates a new {@link Logger} for the given {@link AbstractRecord}.
@@ -26,21 +30,15 @@ abstract class AbstractRecordLogger extends AbstractSerializedLogger {
 
 	void ttlSet(AbstractRecord record, Duration ttl) {
 		if (log.isDebugEnabled()) {
-			log.debug("Set the TTL time {}s for the zone record {}.", ttl,
-					record);
+			log.debug(TTL_SET, ttl, record);
 		} else {
-			log.info("Set the TTL time {}s for the zone record {}.", ttl,
-					record);
+			log.info(TTL_SET_INFO, ttl, record.getClass().getSimpleName());
 		}
 	}
 
 	void checkTtl(long time, AbstractRecord record) {
-		inclusiveBetween(
-				TTL_MIN_SECONDS,
-				TTL_MAX_SECONDS,
-				time,
-				"The TTL time of the zone record %s must be between %d and %d but it is %d.",
-				record, TTL_MIN_SECONDS, TTL_MAX_SECONDS, time);
+		inclusiveBetween(TTL_MIN_SECONDS, TTL_MAX_SECONDS, time, TTL_VALID,
+				TTL_MIN_SECONDS, TTL_MAX_SECONDS, time, record);
 	}
 
 }

@@ -1,12 +1,9 @@
 package com.anrisoftware.sscontrol.dns.statements;
 
-import javax.inject.Named;
-
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import com.anrisoftware.propertiesutils.ContextProperties;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
@@ -16,46 +13,24 @@ import com.google.inject.assistedinject.Assisted;
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
+@SuppressWarnings("serial")
 public class ARecord extends AbstractRecord {
 
-	/**
-	 * @version 1.0
-	 */
-	private static final long serialVersionUID = 2247832837914419440L;
+	private static final String ADDRESS = "address";
+
+	private static final String NAME = "name";
 
 	private final String name;
 
 	private final String address;
 
 	/**
-	 * Sets the parameter of the A record.
-	 * 
-	 * @param log
-	 *            the {@link ARecordLogger}.
-	 * 
-	 * @param p
-	 *            the {@link ContextProperties} with the property:
-	 *            <dl>
-	 *            <dt>{@code default_ttl}</dt>
-	 *            <dd>the default TTL time for the record.</dd>
-	 *            </dl>
-	 * 
-	 * @param zone
-	 *            the {@link DnsZone} to which this record belongs to.
-	 * 
-	 * @param name
-	 *            the host name. The place holder {@code %} is replaced by the
-	 *            zone name.
-	 * 
-	 * @param address
-	 *            the IP address.
+	 * @see ARecordFactory#create(DnsZone, String, String)
 	 */
 	@Inject
-	ARecord(ARecordLogger logger,
-			@Named("dns-defaults-properties") ContextProperties p,
-			@Assisted DnsZone zone, @Assisted("name") String name,
-			@Assisted("address") String address) {
-		super(logger, p, zone);
+	ARecord(@Assisted DnsZone zone, @Assisted(NAME) String name,
+			@Assisted(ADDRESS) String address) {
+		super(zone);
 		this.name = name.replaceAll("%", zone.getName());
 		this.address = address;
 	}
@@ -101,8 +76,7 @@ public class ARecord extends AbstractRecord {
 
 	@Override
 	public String toString() {
-		return new ToStringBuilder(this).append("name", name)
-				.append("address", address).append("TTL", getTtl()).toString();
+		return new ToStringBuilder(this).appendSuper(super.toString())
+				.append(NAME, name).append(ADDRESS, address).toString();
 	}
-
 }

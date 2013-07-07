@@ -1,10 +1,9 @@
 package com.anrisoftware.sscontrol.dns.statements;
 
-import javax.inject.Named;
+import static com.anrisoftware.sscontrol.dns.statements.ZonePlaceholder.ZONE_PLACEHOLDER;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import com.anrisoftware.propertiesutils.ContextProperties;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
@@ -15,49 +14,26 @@ import com.google.inject.assistedinject.Assisted;
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
+@SuppressWarnings("serial")
 public class CNAMERecord extends AbstractRecord {
 
-	/**
-	 * @version 1.0
-	 */
-	private static final long serialVersionUID = 5600994339413183333L;
+	private static final String ALIAS = "alias";
+
+	private static final String NAME = "name";
 
 	private final String name;
 
 	private final String alias;
 
 	/**
-	 * Sets the parameter of the CNAME record.
-	 * 
-	 * @param log
-	 *            the {@link CNAMERecordLogger}.
-	 * 
-	 * @param p
-	 *            the {@link ContextProperties} with the property:
-	 *            <dl>
-	 *            <dt>{@code default_ttl}</dt>
-	 *            <dd>the default TTL time for the record.</dd>
-	 *            </dl>
-	 * 
-	 * @param zone
-	 *            the {@link DnsZone} to which this record belongs to.
-	 * 
-	 * @param name
-	 *            the host name. The place holder {@code %} is replaced by the
-	 *            zone name.
-	 * 
-	 * @param alias
-	 *            the alias name. The place holder {@code %} is replaced by the
-	 *            zone name.
+	 * @see CNAMERecordFactory#create(DnsZone, String, String)
 	 */
 	@Inject
-	CNAMERecord(CNAMERecordLogger log,
-			@Named("dns-defaults-properties") ContextProperties p,
-			@Assisted DnsZone zone, @Assisted("name") String name,
-			@Assisted("alias") String alias) {
-		super(log, p, zone);
-		this.name = name.replaceAll("%", zone.getName());
-		this.alias = alias.replaceAll("%", zone.getName());
+	CNAMERecord(@Assisted DnsZone zone, @Assisted(NAME) String name,
+			@Assisted(ALIAS) String alias) {
+		super(zone);
+		this.name = name.replaceAll(ZONE_PLACEHOLDER, zone.getName());
+		this.alias = alias.replaceAll(ZONE_PLACEHOLDER, zone.getName());
 	}
 
 	/**
@@ -80,7 +56,7 @@ public class CNAMERecord extends AbstractRecord {
 
 	@Override
 	public String toString() {
-		return new ToStringBuilder(this).append("name", name)
-				.append("alias", alias).append("TTL", getTtl()).toString();
+		return new ToStringBuilder(this).appendSuper(super.toString())
+				.append(NAME, name).append(ALIAS, alias).toString();
 	}
 }

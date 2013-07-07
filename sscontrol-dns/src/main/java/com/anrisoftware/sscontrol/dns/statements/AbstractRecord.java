@@ -4,6 +4,7 @@ import groovy.lang.GroovyObjectSupport;
 
 import java.io.Serializable;
 
+import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -11,8 +12,6 @@ import org.joda.time.Duration;
 
 import com.anrisoftware.propertiesutils.ContextProperties;
 import com.anrisoftware.propertiesutils.DateContextProperties;
-import com.google.inject.Inject;
-import com.google.inject.assistedinject.Assisted;
 
 /**
  * Saves the zone and the time to live time for the record.
@@ -20,13 +19,13 @@ import com.google.inject.assistedinject.Assisted;
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
+@SuppressWarnings("serial")
 abstract class AbstractRecord extends GroovyObjectSupport implements
 		Serializable {
 
-	/**
-	 * @version 1.0
-	 */
-	private static final long serialVersionUID = -588712728377074238L;
+	private static final String TTL = "ttl [s]";
+
+	private static final String ZONE = "zone";
 
 	static final long TTL_MIN_SECONDS = 1;
 
@@ -34,17 +33,25 @@ abstract class AbstractRecord extends GroovyObjectSupport implements
 
 	private static final String TTL_PROPERTY = "default_ttl";
 
-	private final AbstractRecordLogger log;
+	private AbstractRecordLogger log;
 
 	private final DnsZone zone;
 
 	private Duration ttl;
 
 	/**
-	 * Sets the parameter of the A record.
+	 * Sets the DNS zone to which this record belongs to.
 	 * 
-	 * @param log
-	 *            the {@link ARecordLogger}.
+	 * @param zone
+	 *            the {@link DnsZone}.
+	 * 
+	 */
+	protected AbstractRecord(DnsZone zone) {
+		this.zone = zone;
+	}
+
+	/**
+	 * Injects the DNS service properties for the record.
 	 * 
 	 * @param p
 	 *            the {@link ContextProperties} with the property:
@@ -52,22 +59,26 @@ abstract class AbstractRecord extends GroovyObjectSupport implements
 	 *            <dt>{@code default_ttl}</dt>
 	 *            <dd>the default TTL time for the record.</dd>
 	 *            </dl>
-	 * 
-	 * @param zone
-	 *            the {@link DnsZone} to which this record belongs to.
-	 * 
 	 */
 	@Inject
-	AbstractRecord(AbstractRecordLogger log,
-			@Named("dns-service-properties") ContextProperties p,
-			@Assisted DnsZone zone) {
-		this.log = log;
-		this.zone = zone;
+	@Named("dns-service-properties")
+	public void setDnsServiceProperties(ContextProperties p) {
 		setupDefaultTimes(new DateContextProperties(p.getContext(), p));
 	}
 
 	private void setupDefaultTimes(DateContextProperties p) {
 		this.ttl = p.getDurationProperty(TTL_PROPERTY);
+	}
+
+	/**
+	 * Injects the logger for this record.
+	 * 
+	 * @param logger
+	 *            the {@link AbstractRecordLogger}.
+	 */
+	@Inject
+	public void setAbstractRecordLogger(AbstractRecordLogger logger) {
+		this.log = logger;
 	}
 
 	/**
@@ -117,8 +128,8 @@ abstract class AbstractRecord extends GroovyObjectSupport implements
 
 	@Override
 	public String toString() {
-		return new ToStringBuilder(this).append("zone", zone.getName())
-				.append("ttl [s]", ttl).toString();
+		return new ToStringBuilder(this).append(ZONE, zone.getName())
+				.append(TTL, ttl).toString();
 	}
 
 }

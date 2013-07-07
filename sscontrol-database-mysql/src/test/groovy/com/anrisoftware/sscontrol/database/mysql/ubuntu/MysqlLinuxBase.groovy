@@ -20,35 +20,58 @@ package com.anrisoftware.sscontrol.database.mysql.ubuntu
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 
-import org.junit.After
 import org.junit.Before
 import org.junit.BeforeClass
+import org.junit.Rule
+import org.junit.rules.TemporaryFolder
 
+import com.anrisoftware.sscontrol.core.api.ServiceLoader as SscontrolServiceLoader
+import com.anrisoftware.sscontrol.core.api.ServiceLoaderFactory
+import com.anrisoftware.sscontrol.core.api.ServicesRegistry
 import com.anrisoftware.sscontrol.core.modules.CoreModule
 import com.anrisoftware.sscontrol.core.modules.CoreResourcesModule
 import com.google.inject.Guice
 import com.google.inject.Injector
 
 
-class MysqlLinuxUtil {
+/**
+ * Loads resources and setups files to test MySQL database service.
+ *
+ * @author Erwin Mueller, erwin.mueller@deventm.org
+ * @since 1.0
+ */
+class MysqlLinuxBase {
 
-	static databaseScript = MysqlLinuxUtil.class.getResource("Database.groovy")
+	static databaseScript = MysqlLinuxBase.class.getResource("Database.groovy")
 
-	static aptitudeCommand = MysqlLinuxUtil.class.getResource("echo_command.txt")
+	static aptitudeCommand = MysqlLinuxBase.class.getResource("echo_command.txt")
 
-	static restartCommand = MysqlLinuxUtil.class.getResource("echo_command.txt")
+	static restartCommand = MysqlLinuxBase.class.getResource("echo_command.txt")
 
-	static mysqladminCommand = MysqlLinuxUtil.class.getResource("mysqladmin_command.txt")
+	static mysqladminCommand = MysqlLinuxBase.class.getResource("mysqladmin_command.txt")
 
-	static mysqlCommand = MysqlLinuxUtil.class.getResource("echo_command.txt")
+	static mysqlCommand = MysqlLinuxBase.class.getResource("echo_command.txt")
 
-	static postfixTables = MysqlLinuxUtil.class.getResource("postfixtables.txt")
+	static postfixTables = MysqlLinuxBase.class.getResource("postfixtables.txt")
 
-	Injector injector
+	static ubuntu1004Profile = MysqlLinuxBase.class.getResource("Ubuntu_10_04Profile.groovy")
+
+	static mysqldExpected = MysqlLinuxBase.class.getResource("mysqld_cnf.txt")
+
+	static Injector injector
+
+	static ServiceLoaderFactory loaderFactory
+
+	@Rule
+	public TemporaryFolder tmp = new TemporaryFolder()
 
 	File tmpdir
 
 	Map variables
+
+	ServicesRegistry registry
+
+	SscontrolServiceLoader loader
 
 	File aptitude
 
@@ -66,7 +89,7 @@ class MysqlLinuxUtil {
 
 	@Before
 	void createTemp() {
-		tmpdir = File.createTempDir this.class.simpleName, null
+		tmpdir = tmp.newFolder()
 		aptitude = new File(tmpdir, "/usr/bin/aptitude")
 		restart = new File(tmpdir, "/etc/init.d/mysql")
 		mysqladmin = new File(tmpdir, "/usr/bin/mysqladmin")
@@ -77,22 +100,25 @@ class MysqlLinuxUtil {
 		variables = [tmp: tmpdir.absoluteFile]
 	}
 
-	@After
-	void deleteTemp() {
-		tmpdir.deleteDir()
+	@Before
+	void createRegistry() {
+		registry = injector.getInstance ServicesRegistry
+		loader = loaderFactory.create registry, variables
+		loader.setParent injector
 	}
 
-	@Before
-	void createFactories() {
+	@BeforeClass
+	static void createFactories() {
 		injector = createInjector()
+		loaderFactory = injector.getInstance ServiceLoaderFactory
+	}
+
+	static Injector createInjector() {
+		Guice.createInjector(new CoreModule(), new CoreResourcesModule())
 	}
 
 	@BeforeClass
 	static void setupToStringStyle() {
 		toStringStyle
-	}
-
-	static Injector createInjector() {
-		Guice.createInjector(new CoreModule(), new CoreResourcesModule())
 	}
 }

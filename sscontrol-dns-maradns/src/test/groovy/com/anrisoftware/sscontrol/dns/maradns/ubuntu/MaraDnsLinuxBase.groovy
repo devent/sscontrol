@@ -35,7 +35,7 @@ import com.google.inject.Guice
 import com.google.inject.Injector
 
 /**
- * Setups the test case for the MaraDns service.
+ * Loads resources and setups files to test MaraDns service.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0

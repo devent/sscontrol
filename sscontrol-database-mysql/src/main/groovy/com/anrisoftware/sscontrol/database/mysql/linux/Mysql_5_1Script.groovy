@@ -67,15 +67,16 @@ abstract class Mysql_5_1Script extends LinuxScript {
 	 * Sets the administrator password if none is set.
 	 */
 	void setupAdministratorPassword() {
-		def worker = scriptCommandFactory.create(mysqlConfiguration, "checkadminpassword",
-						"mysqladminCommand", mysqladminCommand,
-						"service", service)
+		def worker = scriptCommandFactory.create(
+				mysqlConfiguration, "checkadminpassword",
+				"mysqladminCommand", mysqladminCommand,
+				"service", service)
 		worker.exitValues = null
 		worker()
 		if (worker.exitCode != 0) {
 			worker = scriptCommandFactory.create(mysqlConfiguration, "setupadminpassword",
-							"mysqladminCommand", mysqladminCommand,
-							"service", service)()
+					"mysqladminCommand", mysqladminCommand,
+					"service", service)()
 			log.adminPasswordSet this, worker
 		}
 	}
@@ -85,8 +86,8 @@ abstract class Mysql_5_1Script extends LinuxScript {
 	 */
 	void createDatabases() {
 		def worker = scriptCommandFactory.create(mysqlConfiguration, "createDatabases",
-						"mysqlCommand", mysqlCommand,
-						"service", service)()
+				"mysqlCommand", mysqlCommand,
+				"service", service)()
 		log.databasesCreated this, worker
 	}
 
@@ -95,8 +96,8 @@ abstract class Mysql_5_1Script extends LinuxScript {
 	 */
 	void createUsers() {
 		def worker = scriptCommandFactory.create(mysqlConfiguration, "createUsers",
-						"mysqlCommand", mysqlCommand,
-						"service", service)()
+				"mysqlCommand", mysqlCommand,
+				"service", service)()
 		log.usersCreated this, worker
 	}
 
@@ -109,9 +110,9 @@ abstract class Mysql_5_1Script extends LinuxScript {
 			database.importScripts(handler).each {
 				if (it != null) {
 					def worker = scriptCommandFactory.create(mysqlConfiguration, "importScript",
-									"mysqlCommand", mysqlCommand,
-									"service", service,
-									"script", it, "database", database)()
+							"mysqlCommand", mysqlCommand,
+							"service", service,
+							"script", it, "database", database)()
 					log.importScript this, worker
 				} else {
 				}

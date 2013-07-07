@@ -13,18 +13,22 @@ import com.anrisoftware.sscontrol.database.statements.Database
 @Singleton
 class Mysql_5_1ScriptLogger extends AbstractLogger {
 
-	static final String ADMINISTRATOR_PASSWORD_SET = "Administrator password set for {}, worker {}, output: '\n{}'"
+	static final String ADMINISTRATOR_PASSWORD_SET = "Administrator password set for {}, worker {}, output: <<EOL\n{}\nEOL"
 	static final String ADMINISTRATOR_PASSWORD_SET_DEBUG = "Administrator password set for {}, worker {}."
 	static final String ADMINISTRATOR_PASSWORD_SET_INFO = "Administrator password set for {}."
-	static final String DATABASES_CREATED = "Databases created for {}, worker {}, output: '\n{}'"
+	static final String DATABASES_CREATED = "Databases created for {}, worker {}, output: <<EOL\n{}\nEOL"
 	static final String DATABASES_CREATED_DEBUG = "Databases created for {}, worker {}."
 	static final String DATABASES_CREATED_INFO = "Databases created for {}."
-	static final String USERS_CREATED = "Users created for {}, worker {}, output: '\n{}'"
+	static final String USERS_CREATED = "Users created for {}, worker {}, output: <<EOL\n{}\nEOL"
 	static final String USERS_CREATED_DEBUG = "Users created for {}, worker {}."
 	static final String USERS_CREATED_INFO = "Users created for {}."
-	static final String SQL_SCRIPT_IMPORT = "SQL script import for {}, worker {}, output: '\n{}'"
+	static final String SQL_SCRIPT_IMPORT = "SQL script import for {}, worker {}, output: <<EOL\n{}\nEOL"
 	static final String SQL_IMPORT_DEBUG = "SQL import for {}, worker {}."
 	static final String SQL_SCRIPT_IMPORT_INFO = "SQL script import for {}."
+
+	static final String ERROR_IMPORT = "Error import SQL script"
+
+	static final String ERROR_IMPORT_MESSAGE = "Error import SQL script for {}"
 
 	/**
 	 * Create logger for {@link Mysql_5_1Script}.
@@ -92,9 +96,8 @@ class Mysql_5_1ScriptLogger extends AbstractLogger {
 	}
 
 	void errorImportSqlScript(Mysql_5_1Script script, Exception e) {
-		throw logException(
-		new ServiceException("Error import SQL script", e).
-		addContextValue("service", script), "Error import SQL script for %s", script)
+		throw logException(new ServiceException(ERROR_IMPORT, e).
+		addContextValue("service", script), ERROR_IMPORT_MESSAGE, script)
 	}
 
 	String replacePassword(Mysql_5_1Script script, String string) {

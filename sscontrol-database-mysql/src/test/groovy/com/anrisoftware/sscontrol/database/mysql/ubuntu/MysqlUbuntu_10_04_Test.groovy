@@ -26,7 +26,6 @@ import org.junit.Test
 
 import com.anrisoftware.sscontrol.core.api.ServiceLoader as SscontrolServiceLoader
 import com.anrisoftware.sscontrol.core.api.ServicesRegistry
-import com.google.inject.Injector
 
 /**
  * Test MySQL on a Ubuntu 10.04 server.
@@ -35,19 +34,14 @@ import com.google.inject.Injector
  * @since 1.0
  */
 @Slf4j
-class MysqlUbuntu_10_04_Test extends MysqlLinuxUtil {
-
-	static ubuntu1004Profile = MysqlUbuntu_10_04_Test.class.getResource("Ubuntu_10_04Profile.groovy")
-
-	static mysqldExpected = MysqlUbuntu_10_04_Test.class.getResource("mysqld_cnf.txt")
+class MysqlUbuntu_10_04_Test extends MysqlLinuxBase {
 
 	@Test
 	void "database script"() {
-		ServicesRegistry registry = injector.getInstance ServicesRegistry
-		SscontrolServiceLoader loader = injector.getInstance SscontrolServiceLoader
-		loader.loadService(ubuntu1004Profile, variables, registry, null)
+		loader.loadService ubuntu1004Profile, null
 		def profile = registry.getService("profile")[0]
-		loader.loadService(databaseScript, variables, registry, profile)
+		loader.loadService databaseScript, profile
+
 		copyResourceToCommand aptitudeCommand, aptitude
 		copyResourceToCommand restartCommand, restart
 		copyResourceToCommand mysqladminCommand, mysqladmin
@@ -56,13 +50,13 @@ class MysqlUbuntu_10_04_Test extends MysqlLinuxUtil {
 		confd.mkdirs()
 
 		registry.allServices.each { it.call() }
-		assertFiles(tmpdir)
+		assertFiles()
 		log.info "Run service again to ensure that configuration is not set double."
 		registry.allServices.each { it.call() }
-		assertFiles(tmpdir)
+		assertFiles()
 	}
 
-	private assertFiles(File tmpdir) {
+	private assertFiles() {
 		assertFileContent sscontrolMysqld, mysqldExpected
 	}
 }

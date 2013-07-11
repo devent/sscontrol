@@ -24,7 +24,7 @@ abstract class MaraDns_1_2Script extends LinuxScript {
 
 	@Override
 	def run() {
-		super.run()
+		commandTemplates = templatesFactory.create("ScriptCommandTemplates")
 		maradnsTemplates = templatesFactory.create("Maradns_ubuntu_10_04")
 		maradnsConfiguration = maradnsTemplates.getResource("configuration")
 		zoneConfiguration = maradnsTemplates.getResource("zonedb")

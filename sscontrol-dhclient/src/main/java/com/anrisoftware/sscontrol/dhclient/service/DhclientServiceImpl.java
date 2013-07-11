@@ -1,18 +1,18 @@
 /*
  * Copyright 2012 Erwin Müller <erwin.mueller@deventm.org>
- *
+ * 
  * This file is part of sscontrol-hostname.
- *
+ * 
  * sscontrol-hostname is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published by the
  * Free Software Foundation, either version 3 of the License, or (at your
  * option) any later version.
- *
+ * 
  * sscontrol-hostname is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
  * for more details.
- *
+ * 
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-hostname. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -47,12 +47,8 @@ import com.google.inject.Provider;
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
+@SuppressWarnings("serial")
 class DhclientServiceImpl extends AbstractService {
-
-	/**
-	 * @version 0.1
-	 */
-	private static final long serialVersionUID = -8433434141420234300L;
 
 	private final DhclientServiceImplLogger log;
 
@@ -169,8 +165,8 @@ class DhclientServiceImpl extends AbstractService {
 	/**
 	 * Returns the request declarations.
 	 * 
-	 * @return an unmodifiable {@link Iterable} of the {@link Declaration}
-	 *         request declarations.
+	 * @return an unmodifiable {@link List} of the {@link Declaration} request
+	 *         declarations.
 	 */
 	public List<Declaration> getRequests() {
 		List<Declaration> list = new ArrayList<Declaration>();

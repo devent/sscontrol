@@ -14,12 +14,14 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.anrisoftware.propertiesutils.ContextProperties;
 
+/**
+ * Collection of request declarations.
+ * 
+ * @author Erwin Mueller, erwin.mueller@deventm.org
+ * @since 1.0
+ */
+@SuppressWarnings("serial")
 public class RequestDeclarations implements Serializable, Iterable<Declaration> {
-
-	/**
-	 * @version 1.0
-	 */
-	private static final long serialVersionUID = 4961344687617636866L;
 
 	private final List<Declaration> requests;
 

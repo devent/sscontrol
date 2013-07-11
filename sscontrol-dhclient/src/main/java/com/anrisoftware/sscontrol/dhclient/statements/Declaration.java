@@ -15,12 +15,8 @@ import com.google.inject.assistedinject.Assisted;
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
+@SuppressWarnings("serial")
 public class Declaration extends Statement {
-
-	/**
-	 * @version 1.0
-	 */
-	private static final long serialVersionUID = 8891572575919373259L;
 
 	private final String declaration;
 

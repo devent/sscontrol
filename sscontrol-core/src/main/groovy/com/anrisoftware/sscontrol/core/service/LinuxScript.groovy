@@ -93,35 +93,60 @@ abstract class LinuxScript extends Script {
 	/**
 	 * Enables the specified repository.
 	 *
+	 * @param repository
+	 * 			  the repository.
+	 */
+	void enableRepository(String repository) {
+		def template = commandTemplates.getResource("command")
+		def command = "$enableRepositoryCommand \"$repository\""
+		def worker = scriptCommandFactory.create(template, "command", command)()
+		log.enableRepositoryDone this, worker, repository
+	}
+
+	/**
+	 * Enables the specified Debian repositories.
+	 *
 	 * @param distribution
 	 * 			  the name of the distribution.
 	 *
-	 * @param repository
-	 * 			  the name of the repository to enable.
-	 *
+	 * @param repositories
+	 * 			  the list with the repositories.
 	 */
-	void enableRepository(String distribution, String repository) {
-		def template = commandTemplates.getResource("command")
-		def command = enableRepositoryCommand distribution, repository
-		def worker = scriptCommandFactory.create(template, "command", command)()
-		log.enableRepositoryDone this, worker, distribution, repository
+	void enableDebRepositories(String distribution, List repositories) {
+		repositories.each {
+			def string = debRepository distribution, it
+			enableRepository string
+		}
 	}
 
 	/**
 	 * Returns the command to enable additional repositories.
 	 *
+	 * <ul>
+	 * <li>{@code enable_repository_command} system property key
+	 * </ul>
+	 */
+	String getEnableRepositoryCommand() {
+		systemProperty "enable_repository_command", defaultProperties
+	}
+
+	/**
+	 * Returns the repository string for a Debian repository.
+	 * Example for the Ubuntu Linux distribution:
+	 * {@code "deb http://archive.ubuntu.com/ubuntu lucid universe"}.
+	 *
 	 * @param distribution
 	 * 			  the name of the distribution.
 	 *
 	 * @param repository
-	 * 			  the name of the repository to enable.
+	 * 			  the name of the repository.
 	 *
 	 * <ul>
-	 * <li>system property key {@code enable_repository_command}</li>
+	 * <li>{@code repository_string} system property key
 	 * </ul>
 	 */
-	String enableRepositoryCommand(String distribution, String repository) {
-		systemProperty "enable_repository_command", defaultProperties, distribution, repository
+	String debRepository(String distribution, String repository) {
+		systemProperty "repository_string", defaultProperties, distribution, repository
 	}
 
 	/**
@@ -203,7 +228,7 @@ abstract class LinuxScript extends Script {
 
 	/**
 	 * Returns the default properties for the service, as in example:
-	 * 
+	 *
 	 * <pre>
 	 * 	&#64;Inject
 	 *	&#64;Named("my-properties")

@@ -59,6 +59,12 @@ class MaraDnsLinuxBase {
 
 	static dbExample2Expected = MaraDnsLinuxBase.class.getResource("db.example2.com.txt")
 
+	static addAptRepositoryOutExpected = MaraDnsLinuxBase.class.getResource("add-apt-repository_expected.txt")
+
+	static aptitudeOutExpected = MaraDnsLinuxBase.class.getResource("aptitude_expected.txt")
+
+	static maradnsOutExpected = MaraDnsLinuxBase.class.getResource("maradns_out_expected.txt")
+
 	static Injector injector
 
 	static ServiceLoaderFactory loaderFactory
@@ -73,6 +79,12 @@ class MaraDnsLinuxBase {
 	File aptitude
 
 	File maradns
+
+	File addAptRepositoryOut
+
+	File aptitudeOut
+
+	File maradnsOut
 
 	File mararc
 
@@ -89,6 +101,9 @@ class MaraDnsLinuxBase {
 		aptitude = new File(tmpdir, "/usr/bin/aptitude")
 		addAptRepository = new File(tmpdir, "/usr/bin/add-apt-repository")
 		maradns = new File(tmpdir, "/etc/init.d/maradns")
+		aptitudeOut = new File(tmpdir, "/usr/bin/aptitude.out")
+		addAptRepositoryOut = new File(tmpdir, "/usr/bin/add-apt-repository.out")
+		maradnsOut = new File(tmpdir, "/etc/init.d/maradns.out")
 		mararc = new File(tmpdir, "/etc/maradns/mararc")
 	}
 

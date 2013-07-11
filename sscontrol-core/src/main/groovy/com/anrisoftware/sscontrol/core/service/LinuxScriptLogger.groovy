@@ -28,6 +28,10 @@ import com.anrisoftware.globalpom.log.AbstractLogger
  */
 class LinuxScriptLogger extends AbstractLogger {
 
+	static final String ENABLED_REPOSITORY = "Enabled repository '{}' in {}, worker {}."
+
+	static final String ENABLED_REPOSITORY_INFO = "Enabled repository '{}' in service {}."
+
 	/**
 	 * Create logger for {@link LinuxScript}.
 	 */
@@ -61,13 +65,11 @@ class LinuxScriptLogger extends AbstractLogger {
 		}
 	}
 
-	void enableRepositoryDone(LinuxScript script, def worker, String distribution, String repository) {
-		if (log.traceEnabled) {
-			log.trace "Enabled repository $distribution/$repository in {}, worker {}.", script, worker
-		} else if (log.debugEnabled) {
-			log.debug "Enabled repository $distribution/$repository in {}, worker {}.", script, worker
+	void enableRepositoryDone(LinuxScript script, def worker, String repository) {
+		if (log.debugEnabled) {
+			log.debug ENABLED_REPOSITORY, repository, script, worker
 		} else {
-			log.info "Enabled repository {}/{}.", distribution, repository
+			log.info ENABLED_REPOSITORY_INFO, repository, script.name
 		}
 	}
 

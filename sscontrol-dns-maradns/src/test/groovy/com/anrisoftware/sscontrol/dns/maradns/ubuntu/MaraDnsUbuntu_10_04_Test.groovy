@@ -48,13 +48,15 @@ class MaraDnsUbuntu_10_04_Test extends MaraDnsLinuxBase {
 		copyURLToFile maraDnsConfiguration, mararc
 
 		registry.allServices.each { it.call() }
-		assertFiles()
 		log.info "Run service again to ensure that configuration is not set double."
 		registry.allServices.each { it.call() }
 		assertFiles()
 	}
 
 	def assertFiles() {
+		assertFileContent maradnsOut, maradnsOutExpected
+		assertFileContent addAptRepositoryOut, addAptRepositoryOutExpected
+		assertFileContent aptitudeOut, aptitudeOutExpected
 		assertFileContent mararc, maradnsrcExpected
 		assertFileContent new File(tmpdir, "/etc/maradns/db.anrisoftware.com"), dbAnrisoftwareExpected
 		assertFileContent new File(tmpdir, "/etc/maradns/db.example1.com"), dbExample1Expected

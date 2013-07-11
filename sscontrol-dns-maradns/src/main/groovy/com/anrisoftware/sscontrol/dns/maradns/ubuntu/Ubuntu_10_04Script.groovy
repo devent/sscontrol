@@ -25,7 +25,9 @@ import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.sscontrol.dns.maradns.linux.MaraDnsScript
 
 /**
- * Deploys the MaraDNS service on the Ubuntu 10.04 Linux system.
+ * Enabled the universe repository and installs MaraDNS packages.
+ *
+ * @see MaraDns_1_2_Ubuntu_10_04Script
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
@@ -41,7 +43,9 @@ class Ubuntu_10_04Script extends MaraDnsScript {
 
 	@Override
 	void distributionSpecificConfiguration() {
-		enableRepository "lucid", "universe"
+		def distribution = profileProperty "distribution_name", ubuntuProperties
+		def repositories = profileListProperty "additional_repositories", ubuntuProperties
+		enableDebRepositories distribution, repositories
 		installPackages packages
 	}
 

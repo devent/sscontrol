@@ -17,7 +17,8 @@ public interface ARecordFactory {
 	 *            the {@link DnsZone} to which the record belongs to.
 	 * 
 	 * @param name
-	 *            the name of the record.
+	 *            the name of the record. The zone placeholder {code %} is
+	 *            replaced with the name of the zone.
 	 * 
 	 * @param address
 	 *            the address of the record.

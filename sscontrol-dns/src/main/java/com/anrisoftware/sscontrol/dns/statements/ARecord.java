@@ -1,5 +1,8 @@
 package com.anrisoftware.sscontrol.dns.statements;
 
+import static com.anrisoftware.sscontrol.dns.statements.ZonePlaceholder.ZONE_PLACEHOLDER;
+import static org.apache.commons.lang3.StringUtils.replace;
+
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -31,7 +34,7 @@ public class ARecord extends AbstractRecord {
 	ARecord(@Assisted DnsZone zone, @Assisted(NAME) String name,
 			@Assisted(ADDRESS) String address) {
 		super(zone);
-		this.name = name.replaceAll("%", zone.getName());
+		this.name = replace(name, ZONE_PLACEHOLDER, zone.getName());
 		this.address = address;
 	}
 

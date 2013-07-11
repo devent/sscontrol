@@ -52,12 +52,8 @@ import com.anrisoftware.sscontrol.dns.statements.DnsZoneFactory;
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
+@SuppressWarnings("serial")
 class DnsServiceImpl extends AbstractService {
-
-	/**
-	 * @version 1.0
-	 */
-	private static final long serialVersionUID = 2828043940753655821L;
 
 	private final DnsServiceImplLogger log;
 

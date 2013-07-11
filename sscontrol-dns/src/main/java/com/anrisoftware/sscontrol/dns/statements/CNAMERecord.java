@@ -1,6 +1,7 @@
 package com.anrisoftware.sscontrol.dns.statements;
 
 import static com.anrisoftware.sscontrol.dns.statements.ZonePlaceholder.ZONE_PLACEHOLDER;
+import static org.apache.commons.lang3.StringUtils.replace;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
@@ -32,8 +33,8 @@ public class CNAMERecord extends AbstractRecord {
 	CNAMERecord(@Assisted DnsZone zone, @Assisted(NAME) String name,
 			@Assisted(ALIAS) String alias) {
 		super(zone);
-		this.name = name.replaceAll(ZONE_PLACEHOLDER, zone.getName());
-		this.alias = alias.replaceAll(ZONE_PLACEHOLDER, zone.getName());
+		this.name = replace(name, ZONE_PLACEHOLDER, zone.getName());
+		this.alias = replace(alias, ZONE_PLACEHOLDER, zone.getName());
 	}
 
 	/**

@@ -2,6 +2,7 @@ package com.anrisoftware.sscontrol.dns.statements;
 
 import static com.anrisoftware.sscontrol.dns.statements.ZonePlaceholder.ZONE_PLACEHOLDER;
 import static java.util.Collections.unmodifiableList;
+import static org.apache.commons.lang3.StringUtils.replace;
 import groovy.lang.GroovyObjectSupport;
 
 import java.io.Serializable;
@@ -116,8 +117,7 @@ public class DnsZone extends GroovyObjectSupport implements Serializable {
 			NSRecordFactory nsRecordFactory, MXRecordFactory mxRecordFactory,
 			CNAMERecordFactory cnameRecordFactory,
 			@Named("dns-defaults-properties") ContextProperties p,
-			@Assisted(NAME) String name,
-			@Assisted("primaryNameServer") String primaryNameServer,
+			@Assisted(NAME) String name, @Assisted("primary") String primary,
 			@Assisted(EMAIL) String email, @Assisted long serial) {
 		this.log = log;
 		this.aRecordFactory = aRecordFactory;
@@ -129,9 +129,8 @@ public class DnsZone extends GroovyObjectSupport implements Serializable {
 		this.mxRecords = new ArrayList<MXRecord>();
 		this.nsRecords = new ArrayList<NSRecord>();
 		this.name = name;
-		this.primaryNameServer = primaryNameServer.replaceAll(ZONE_PLACEHOLDER,
-				name);
-		this.email = email.replaceAll(ZONE_PLACEHOLDER, name);
+		this.primaryNameServer = replace(primary, ZONE_PLACEHOLDER, name);
+		this.email = replace(email, ZONE_PLACEHOLDER, name);
 		this.serial = serial;
 		setupDefaultTimes(new DateContextProperties(p.getContext(), p));
 	}
@@ -240,7 +239,8 @@ public class DnsZone extends GroovyObjectSupport implements Serializable {
 	 * will be created that maps this name to the specified address.
 	 * 
 	 * @param name
-	 *            the {@link String} name of the record.
+	 *            the {@link String} name of the record. The zone placeholder
+	 *            {code %} is replaced with the name of the zone.
 	 * 
 	 * @param address
 	 *            the {@link String} IP address.
@@ -254,7 +254,8 @@ public class DnsZone extends GroovyObjectSupport implements Serializable {
 	 * will be created that maps this name to the specified address.
 	 * 
 	 * @param name
-	 *            the {@link String} name of the record.
+	 *            the {@link String} name of the record. The zone placeholder
+	 *            {code %} is replaced with the name of the zone.
 	 * 
 	 * @param address
 	 *            the {@link String} IP address.
@@ -276,7 +277,8 @@ public class DnsZone extends GroovyObjectSupport implements Serializable {
 	 * Adds a new NS record with the specified name.
 	 * 
 	 * @param name
-	 *            the {@link String} name of the record.
+	 *            the {@link String} name of the record. The zone placeholder
+	 *            {code %} is replaced with the name of the zone.
 	 * 
 	 * @return the new {@link NSRecord}.
 	 */
@@ -288,7 +290,8 @@ public class DnsZone extends GroovyObjectSupport implements Serializable {
 	 * Adds a new NS record with the specified name.
 	 * 
 	 * @param name
-	 *            the {@link String} name of the record.
+	 *            the {@link String} name of the record. The zone placeholder
+	 *            {code %} is replaced with the name of the zone.
 	 * 
 	 * @param statements
 	 *            the zone statements.
@@ -306,7 +309,8 @@ public class DnsZone extends GroovyObjectSupport implements Serializable {
 	 * Adds a new A record with the specified name and address.
 	 * 
 	 * @param name
-	 *            the {@link String} name of the record.
+	 *            the {@link String} name of the record. The zone placeholder
+	 *            {code %} is replaced with the name of the zone.
 	 * 
 	 * @param address
 	 *            the {@link String} IP address.
@@ -319,7 +323,8 @@ public class DnsZone extends GroovyObjectSupport implements Serializable {
 	 * Adds a new A record with the specified name and address.
 	 * 
 	 * @param name
-	 *            the {@link String} name of the record.
+	 *            the {@link String} name of the record. The zone placeholder
+	 *            {code %} is replaced with the name of the zone.
 	 * 
 	 * @param address
 	 *            the {@link String} IP address.
@@ -346,7 +351,8 @@ public class DnsZone extends GroovyObjectSupport implements Serializable {
 	 * will be created that maps this name to the specified address.
 	 * 
 	 * @param name
-	 *            the {@link String} name of the record.
+	 *            the {@link String} name of the record. The zone placeholder
+	 *            {code %} is replaced with the name of the zone.
 	 * 
 	 * @param address
 	 *            the {@link String} IP address.
@@ -360,7 +366,8 @@ public class DnsZone extends GroovyObjectSupport implements Serializable {
 	 * will be created that maps this name to the specified address.
 	 * 
 	 * @param name
-	 *            the {@link String} name of the record.
+	 *            the {@link String} name of the record. The zone placeholder
+	 *            {code %} is replaced with the name of the zone.
 	 * 
 	 * @param address
 	 *            the {@link String} IP address.
@@ -382,7 +389,8 @@ public class DnsZone extends GroovyObjectSupport implements Serializable {
 	 * Adds a new MX-record with the specified name.
 	 * 
 	 * @param name
-	 *            the {@link String} name of the record.
+	 *            the {@link String} name of the record. The zone placeholder
+	 *            {code %} is replaced with the name of the zone.
 	 * 
 	 * @return the new {@link MXRecord}.
 	 */
@@ -394,7 +402,8 @@ public class DnsZone extends GroovyObjectSupport implements Serializable {
 	 * Adds a new MX-record with the specified name.
 	 * 
 	 * @param name
-	 *            the {@link String} name of the record.
+	 *            the {@link String} name of the record. The zone placeholder
+	 *            {code %} is replaced with the name of the zone.
 	 * 
 	 * @param statements
 	 *            the zone statements.
@@ -412,10 +421,12 @@ public class DnsZone extends GroovyObjectSupport implements Serializable {
 	 * Adds a new CNAME record with the specified name and alias.
 	 * 
 	 * @param name
-	 *            the {@link String} name of the record.
+	 *            the {@link String} name of the record. The zone placeholder
+	 *            {code %} is replaced with the name of the zone.
 	 * 
 	 * @param alias
-	 *            the {@link String} alias.
+	 *            the {@link String} alias. The zone placeholder {code %} is
+	 *            replaced with the name of the zone.
 	 */
 	public void cname_record(String name, String alias) {
 		cname_record(name, alias, (Object) null);
@@ -425,10 +436,12 @@ public class DnsZone extends GroovyObjectSupport implements Serializable {
 	 * Adds a new CNAME record with the specified name and alias.
 	 * 
 	 * @param name
-	 *            the {@link String} name of the record.
+	 *            the {@link String} name of the record. The zone placeholder
+	 *            {code %} is replaced with the name of the zone.
 	 * 
 	 * @param alias
-	 *            the {@link String} alias.
+	 *            the {@link String} alias. The zone placeholder {code %} is
+	 *            replaced with the name of the zone.
 	 * 
 	 * @param statements
 	 *            the zone statements.

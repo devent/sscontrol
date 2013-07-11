@@ -16,11 +16,13 @@ public interface DnsZoneFactory {
 	 * @param name
 	 *            the name of the zone.
 	 * 
-	 * @param primaryNameServer
-	 *            the name of the primary DNS server.
+	 * @param primary
+	 *            the name of the primary DNS server. The zone placeholder {code
+	 *            %} is replaced with the name of the zone.
 	 * 
 	 * @param email
-	 *            the email address for the zone.
+	 *            the email address for the zone. The zone placeholder {code %}
+	 *            is replaced with the name of the zone.
 	 * 
 	 * @param serial
 	 *            the serial for the zone.
@@ -28,6 +30,6 @@ public interface DnsZoneFactory {
 	 * @return the {@link DnsZone}.
 	 */
 	DnsZone create(@Assisted("name") String name,
-			@Assisted("primaryNameServer") String primaryNameServer,
+			@Assisted("primary") String primary,
 			@Assisted("email") String email, @Assisted long serial);
 }

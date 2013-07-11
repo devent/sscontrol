@@ -1,6 +1,7 @@
 package com.anrisoftware.sscontrol.dns.statements;
 
 import static com.anrisoftware.sscontrol.dns.statements.ZonePlaceholder.ZONE_PLACEHOLDER;
+import static org.apache.commons.lang3.StringUtils.replace;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
@@ -42,7 +43,7 @@ public class MXRecord extends AbstractRecord {
 		this.log = logger;
 		this.priority = 10;
 		this.zone = zone;
-		this.name = name.replaceAll(ZONE_PLACEHOLDER, zone.getName());
+		this.name = replace(name, ZONE_PLACEHOLDER, zone.getName());
 	}
 
 	/**

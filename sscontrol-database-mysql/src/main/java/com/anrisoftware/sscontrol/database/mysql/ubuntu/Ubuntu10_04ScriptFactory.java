@@ -66,8 +66,8 @@ public class Ubuntu10_04ScriptFactory implements ServiceScriptFactory {
 
 	private ServiceException errorCreateScript(Throwable cause) {
 		ServiceException ex = new ServiceException("Error create script", cause);
-		ex.addContextValue("service name", NAME);
-		ex.addContextValue("profile name", PROFILE_NAME);
+		ex.add("service name", NAME);
+		ex.add("profile name", PROFILE_NAME);
 		log.error(ex.getLocalizedMessage());
 		return ex;
 	}

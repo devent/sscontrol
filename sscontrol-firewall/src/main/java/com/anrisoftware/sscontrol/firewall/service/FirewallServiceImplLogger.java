@@ -58,9 +58,9 @@ class FirewallServiceImplLogger extends AbstractLogger {
 			String name, String service) {
 		ServiceException ex = new ServiceException(
 				"Error find the service script");
-		ex.addContextValue("service", dnsservice);
-		ex.addContextValue("profile name", name);
-		ex.addContextValue("service name", service);
+		ex.add("service", dnsservice);
+		ex.add("profile name", name);
+		ex.add("service name", service);
 		log.error(ex.getLocalizedMessage());
 		return ex;
 	}

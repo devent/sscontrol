@@ -75,13 +75,13 @@ class GroovyLoaderLogger extends AbstractLogger {
 
 	ServiceException errorOpenScriptUrl(IOException e, URL url) {
 		return logException(
-				new ServiceException(ERROR_OPEN_SCRIPT, e).addContextValue(URL,
+				new ServiceException(ERROR_OPEN_SCRIPT, e).add(URL,
 						url), getText(ERROR_OPEN_SCRIPT_MESSAGE), url);
 	}
 
 	ServiceException errorEvaluateScript(Throwable e, URL url) {
 		return logException(new ServiceException(
-				getText(ERROR_EVALUATE_SCRIPT), e).addContextValue(URL, url),
+				getText(ERROR_EVALUATE_SCRIPT), e).add(URL, url),
 				getText(ERROR_EVALUATE_SCRIPT_MESSAGE), url);
 	}
 

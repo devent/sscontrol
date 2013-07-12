@@ -25,7 +25,7 @@ class Ubuntu10_04ScriptFactoryLogger extends AbstractLogger {
 	ServiceException errorCreateScript(Ubuntu10_04ScriptFactory factory,
 			Throwable cause) {
 		return logException(
-				new ServiceException(ERROR_CREATE_SCRIPT, cause).addContextValue(
+				new ServiceException(ERROR_CREATE_SCRIPT, cause).add(
 						SCRIPT_FACTORY, factory), ERROR_CREATE_SCRIPT_MESSAGE,
 				factory.getInfo().getServiceName(), factory.getInfo()
 						.getProfileName());

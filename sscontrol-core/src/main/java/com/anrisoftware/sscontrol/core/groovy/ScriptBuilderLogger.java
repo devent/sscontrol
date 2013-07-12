@@ -61,7 +61,7 @@ class ScriptBuilderLogger extends AbstractLogger {
 	}
 
 	ServiceException errorNoServiceFound(String name) {
-		return logException(new ServiceException(NO_SERVICE).addContextValue(
+		return logException(new ServiceException(NO_SERVICE).add(
 				SERVICE_NAME, name), getText(NO_SERVICE_MESSAGE), name);
 	}
 

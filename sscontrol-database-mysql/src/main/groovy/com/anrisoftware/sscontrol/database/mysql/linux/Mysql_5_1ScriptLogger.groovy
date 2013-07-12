@@ -97,7 +97,7 @@ class Mysql_5_1ScriptLogger extends AbstractLogger {
 
 	void errorImportSqlScript(Mysql_5_1Script script, Exception e) {
 		throw logException(new ServiceException(ERROR_IMPORT, e).
-		addContextValue("service", script), ERROR_IMPORT_MESSAGE, script)
+		add("service", script), ERROR_IMPORT_MESSAGE, script)
 	}
 
 	String replacePassword(Mysql_5_1Script script, String string) {

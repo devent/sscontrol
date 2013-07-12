@@ -72,9 +72,9 @@ class DnsServiceImplLogger extends AbstractLogger {
 			String name, String service) {
 		return logException(
 				new ServiceException(ERROR_FIND_SERVICE)
-						.addContextValue(SERVICE, dnsservice)
-						.addContextValue(PROFILE_NAME, name)
-						.addContextValue(SERVICE_NAME, service),
+						.add(SERVICE, dnsservice)
+						.add(PROFILE_NAME, name)
+						.add(SERVICE_NAME, service),
 				ERROR_FIND_SERVICE_MESSAGE, name);
 	}
 }

@@ -74,9 +74,9 @@ class MailServiceImplLogger extends AbstractLogger {
 			String profile, String name) {
 		return logException(
 				new ServiceException(ERROR_FIND_SERVICE)
-						.addContextValue(SERVICE, service)
-						.addContextValue(PROFILE_NAME, profile)
-						.addContextValue(SERVICE_NAME, name),
+						.add(SERVICE, service)
+						.add(PROFILE_NAME, profile)
+						.add(SERVICE_NAME, name),
 				ERROR_FIND_SERVICE_MESSAGE, name);
 	}
 

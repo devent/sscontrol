@@ -39,7 +39,7 @@ class CertificateFileLogger extends AbstractLogger {
 
 	ServiceException errorFileToURL(Exception e, String file) {
 		return logException(
-				new ServiceException(ERROR_FILE_URL, e).addContextValue(FILE,
+				new ServiceException(ERROR_FILE_URL, e).add(FILE,
 						file), ERROR_FILE_URL_MESSAGE, file);
 	}
 
@@ -47,9 +47,9 @@ class CertificateFileLogger extends AbstractLogger {
 			FileNotFoundException e, URL source, File destination) {
 		return logException(
 				new ServiceException(DESTINATION_NOT_FOUND, e)
-						.addContextValue(CERTIFICATE, certificate)
-						.addContextValue(SOURCE, source)
-						.addContextValue(DESTINATION, destination),
+						.add(CERTIFICATE, certificate)
+						.add(SOURCE, source)
+						.add(DESTINATION, destination),
 				DESTINATION_NOT_FOUND_MESSAGE, destination, source);
 	}
 
@@ -57,9 +57,9 @@ class CertificateFileLogger extends AbstractLogger {
 			IOException cause, URL source, File destination) {
 		return logException(
 				new ServiceException(ERROR_COPY_SOURCE, cause)
-						.addContextValue(CERTIFICATE, certificate)
-						.addContextValue(SOURCE, source)
-						.addContextValue(DESTINATION, destination),
+						.add(CERTIFICATE, certificate)
+						.add(SOURCE, source)
+						.add(DESTINATION, destination),
 				ERROR_COPY_SOURCE_MESSAGE, destination, source);
 	}
 }

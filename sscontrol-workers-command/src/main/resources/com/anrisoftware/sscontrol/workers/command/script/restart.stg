@@ -1,0 +1,4 @@
+restart(restartCommand, services) ::= <<
+#!/bin/sh
+<services:{service | <restartCommand> <service><\n>}>
+>>

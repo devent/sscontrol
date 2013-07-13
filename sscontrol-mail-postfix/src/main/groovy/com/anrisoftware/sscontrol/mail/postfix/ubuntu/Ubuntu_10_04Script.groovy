@@ -47,17 +47,4 @@ class Ubuntu_10_04Script extends PostfixScript {
 	def getDefaultProperties() {
 		ubuntuProperties
 	}
-
-	/**
-	 * Returns the postfix service packages.
-	 *
-	 * <ul>
-	 * <li>{@code "packages"}</li>
-	 * </ul>
-	 *
-	 * @see #ubuntuProperties
-	 */
-	List getPackages() {
-		profileListProperty "packages", ubuntuProperties
-	}
 }

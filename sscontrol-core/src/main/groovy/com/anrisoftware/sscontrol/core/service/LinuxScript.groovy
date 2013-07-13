@@ -215,14 +215,19 @@ abstract class LinuxScript extends Script {
 	}
 
 	/**
-	 * Restart the service.
+	 * Restart the services.
 	 *
-	 * @param restartCommand
-	 * 			  the restart command for the service.
+	 * @param services
+	 * 			  a {@link List} of services to restart.
+	 *
+	 * @see #getRestartCommand()
+	 * @see #getRestartServices()
 	 */
-	void restartService(String restartCommand) {
-		def template = commandTemplates.getResource("command")
-		def worker = scriptCommandFactory.create(template, "command", restartCommand)()
+	void restartServices(List services = restartServices) {
+		def template = commandTemplates.getResource("restart")
+		def worker = scriptCommandFactory.create(template,
+				"restartCommand", restartCommand,
+				"services", services)()
 		log.restartServiceDone this, worker
 	}
 
@@ -241,6 +246,58 @@ abstract class LinuxScript extends Script {
 	 * </pre>
 	 */
 	abstract def getDefaultProperties()
+
+	/**
+	 * Returns the restart command for the postfix service.
+	 *
+	 * <ul>
+	 * <li>system property key {@code restart_command}</li>
+	 * </ul>
+	 *
+	 * @see #getDefaultProperties()
+	 */
+	String getRestartCommand() {
+		systemProperty "restart_command", defaultProperties
+	}
+
+	/**
+	 * Returns the services to restart.
+	 *
+	 * <ul>
+	 * <li>profile property {@code restart_services}</li>
+	 * </ul>
+	 *
+	 * @see #getDefaultProperties()
+	 */
+	List getRestartServices() {
+		profileListProperty "restart_services", defaultProperties
+	}
+
+	/**
+	 * Returns the service packages.
+	 *
+	 * <ul>
+	 * <li>profile property {@code "packages"}</li>
+	 * </ul>
+	 *
+	 * @see #getDefaultProperties()
+	 */
+	List getPackages() {
+		profileListProperty "packages", defaultProperties
+	}
+
+	/**
+	 * Returns the path of the configuration directory.
+	 *
+	 * <ul>
+	 * <li>profile property {@code "configuration_directory"}</li>
+	 * </ul>
+	 *
+	 * @see #getDefaultProperties()
+	 */
+	File getConfigurationDir() {
+		profileProperty("configuration_directory", defaultProperties) as File
+	}
 
 	/**
 	 * Returns a system profile property. If the profile property was not set

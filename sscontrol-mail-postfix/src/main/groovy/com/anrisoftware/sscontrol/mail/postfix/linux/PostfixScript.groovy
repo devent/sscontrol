@@ -77,6 +77,7 @@ abstract class PostfixScript extends LinuxScript {
 			deployAliases()
 			deployMailbox()
 		}
+		restartServices()
 	}
 
 	/**
@@ -269,19 +270,6 @@ abstract class PostfixScript extends LinuxScript {
 	File getMainFile() {
 		def file = profileProperty("main_file", defaultProperties) as File
 		file.absolute ? file : new File(configurationDir, file.name)
-	}
-
-	/**
-	 * Returns the path of the configuration directory.
-	 *
-	 * <ul>
-	 * <li>profile property {@code "configuration_directory"}</li>
-	 * </ul>
-	 *
-	 * @see #getDefaultProperties()
-	 */
-	File getConfigurationDir() {
-		profileProperty("configuration_directory", defaultProperties) as File
 	}
 
 	/**

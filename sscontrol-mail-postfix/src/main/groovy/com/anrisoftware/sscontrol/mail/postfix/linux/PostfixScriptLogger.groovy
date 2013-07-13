@@ -18,7 +18,7 @@ class PostfixScriptLogger extends AbstractLogger {
 	 * Create logger for {@link LinuxScript}.
 	 */
 	PostfixScriptLogger() {
-		super(PostfixScript.class)
+		super(BasePostfixScript.class)
 	}
 
 	void rehashFileDone(def script, def file, def worker) {

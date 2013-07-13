@@ -12,6 +12,9 @@ import com.anrisoftware.sscontrol.mail.statements.BindAddresses;
 /**
  * Renderer for postfix bind addresses.
  * 
+ * @see BindAddresses#ALL
+ * @see BindAddresses#LOOPBACK
+ * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */

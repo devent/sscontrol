@@ -359,6 +359,20 @@ abstract class LinuxScript extends Script {
 		metaClass.setProperty(this, property, newValue)
 	}
 
+	/**
+	 * Runs the specified script in the context of the current script.
+	 */
+	void runScript(LinuxScript script) {
+		def that = this
+		script.name = name
+		script.system = system
+		script.profile = profile
+		script.service = service
+		script.metaClass.propertyMissing = { name -> that."$name" }
+		script.metaClass.propertyMissing = { name, value -> that."$name($value)" }
+		script.run()
+	}
+
 	@Override
 	String toString() {
 		"${service.toString()}: $name"

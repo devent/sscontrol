@@ -36,11 +36,13 @@ class Ubuntu_10_04Script extends PostfixScript {
 	@Named("postfix-ubuntu-10_04-properties")
 	ContextProperties ubuntuProperties
 
-	@Override
-	void distributionSpecificConfiguration() {
+	def runDistributionSpecific() {
 		installPackages packages
 	}
 
+	/**
+	 * @see #ubuntuProperties
+	 */
 	@Override
 	def getDefaultProperties() {
 		ubuntuProperties
@@ -50,8 +52,10 @@ class Ubuntu_10_04Script extends PostfixScript {
 	 * Returns the postfix service packages.
 	 *
 	 * <ul>
-	 * <li>profile property {@code "packages"}</li>
+	 * <li>{@code "packages"}</li>
 	 * </ul>
+	 *
+	 * @see #ubuntuProperties
 	 */
 	List getPackages() {
 		profileListProperty "packages", ubuntuProperties

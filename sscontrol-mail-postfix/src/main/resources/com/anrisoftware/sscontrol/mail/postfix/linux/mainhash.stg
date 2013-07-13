@@ -1,0 +1,27 @@
+aliasDomains(file) ::= <<
+virtual_alias_domains = hash:<file>
+>>
+
+aliasMaps(file) ::= <<
+virtual_alias_maps = hash:<file>
+>>
+
+mailboxBase(dir) ::= <<
+virtual_mailbox_base = <dir>
+>>
+
+mailboxMaps(file) ::= <<
+virtual_mailbox_maps = hash:<file>
+>>
+
+minimumUid(uid) ::= <<
+virtual_minimum_uid = <uid>
+>>
+
+uidMaps(uid) ::= <<
+virtual_uid_maps = static:<uid>
+>>
+
+gidMaps(gid) ::= <<
+virtual_gid_maps = static:<gid>
+>>

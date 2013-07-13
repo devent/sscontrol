@@ -21,9 +21,7 @@ package com.anrisoftware.sscontrol.mail.postfix.linux
 import static org.apache.commons.io.FileUtils.*
 
 import javax.inject.Inject
-import javax.inject.Named
 
-import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.Templates
 import com.anrisoftware.sscontrol.core.service.LinuxScript
@@ -33,7 +31,7 @@ import com.anrisoftware.sscontrol.mail.statements.User
 import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokenTemplate
 
 /**
- * Uses the postfix service on a general Linux system.
+ * Configures the postfix service from hash files.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
@@ -44,9 +42,14 @@ abstract class PostfixScript extends LinuxScript {
 	PostfixScriptLogger log
 
 	@Inject
-	@Named("postfix-properties")
-	ContextProperties postfixProperties
+	BasePostfixScript basePostfixScript
 
+	@Inject
+	PostfixPropertiesProvider postfixProperties
+
+	/**
+	 * Renderer for {@code inet_interfaces}.
+	 */
 	@Inject
 	BindAddressesRenderer bindAddressesRenderer
 
@@ -62,19 +65,24 @@ abstract class PostfixScript extends LinuxScript {
 	@Override
 	def run() {
 		super.run()
-		postfixTemplates = templatesFactory.create "Postfix", templatesAttributes
-		mainTemplate = postfixTemplates.getResource("main_configuration")
-		postmapsTemplate = postfixTemplates.getResource("postmaps_configuration")
-		appendDefaultDestinations()
-		deployMailname()
-		deployMain()
+		runDistributionSpecific()
+		basePostfixScript.postfixScript = this
+		runScript basePostfixScript
+		postfixTemplates = templatesFactory.create "PostfixScript", templatesAttributes
+		mainTemplate = postfixTemplates.getResource "main_hash_configuration"
+		postmapsTemplate = postfixTemplates.getResource "postmaps_configuration"
 		if (service.domains.size() > 0) {
+			deployMain()
 			deployVirtualDomains()
 			deployAliases()
 			deployMailbox()
 		}
-		distributionSpecificConfiguration()
 	}
+
+	/**
+	 * Deploy distribution specific configuration.
+	 */
+	abstract runDistributionSpecific()
 
 	/**
 	 * Returns additional template attributes.
@@ -84,95 +92,27 @@ abstract class PostfixScript extends LinuxScript {
 	}
 
 	/**
-	 * Append the default destinations.
-	 */
-	void appendDefaultDestinations() {
-		service.destinations defaultDestinations
-	}
-
-	/**
-	 * Returns a list of the default destination domains.
+	 * Sets the virtual aliases and mailboxes.
 	 *
-	 * <ul>
-	 * <li>profile property {@code "default_destinations"}</li>
-	 * </ul>
-	 */
-	List getDefaultDestinations() {
-		profileListProperty "default_destinations", postfixProperties
-	}
-
-	/**
-	 * Sets the domain name of the mail server. This is done usually in 
-	 * the {@code /etc/mailname} file.
-	 * 	
-	 * @see #getMailnameFile()
-	 * @see #getCurrentMailnameConfiguration()
-	 * @see #getMailnameConfiguration()
-	 */
-	void deployMailname() {
-		deployConfiguration configurationTokens(), currentMailnameConfiguration, mailnameConfiguration, mailnameFile
-	}
-
-	/**
-	 * Returns the current mail name configuration. This is usually the 
-	 * configuration file {@code /etc/mailname}.
-	 * 	
-	 * @see #getMailnameFile()
-	 */
-	String getCurrentMailnameConfiguration() {
-		currentConfiguration mailnameFile
-	}
-
-	/**
-	 * Returns the mail name configuration.
-	 */
-	List getMailnameConfiguration() {
-		[
-			new TokenTemplate(".*",
-			postfixTemplates.getResource("mailname_configuration").
-			getText(true, "name", service.domainName))
-		]
-	}
-
-	/**
-	 * Sets the main configuration of the mail server. This is done usually in 
-	 * the {@code /etc/postfix/main.cf} file.
-	 * 	
 	 * @see #getMainFile()
 	 * @see #getAliasMapsFile()
 	 */
 	void deployMain() {
-		def configuration = [
-			new TokenTemplate("(?m)^\\#?myhostname.*", mainTemplate.getText(true, "hostname", "mail", service)),
-			new TokenTemplate("(?m)^\\#?myorigin.*", mainTemplate.getText(true, "origin", "mail", service)),
-			new TokenTemplate("(?m)^\\#?smtpd_banner.*", mainTemplate.getText(true, "banner", "banner", banner)),
-			new TokenTemplate("(?m)^\\#?relayhost.*", mainTemplate.getText(true, "relayhost", "mail", service)),
-			new TokenTemplate("(?m)^\\#?inet_interfaces.*", mainTemplate.getText(true, "interfaces", "mail", service)),
-			new TokenTemplate("(?m)^\\#?mydestination.*", mainTemplate.getText(true, "destinations", "mail", service)),
-			new TokenTemplate("(?m)^\\#?masquerade_domains.*", mainTemplate.getText(true, "masqueradeDomains", "mail", service)),
-			{
-				if (service.domains.size() > 0) {
-					[
-						new TokenTemplate("(?m)^\\#?virtual_alias_domains.*", mainTemplate.getText(true, "aliasDomains", "file", aliasDomainsFile)),
-						new TokenTemplate("(?m)^\\#?virtual_alias_maps.*", mainTemplate.getText(true, "aliasMaps", "file", aliasMapsFile)),
-						new TokenTemplate("(?m)^\\#?virtual_mailbox_base.*", mainTemplate.getText(true, "mailboxBase", "dir", mailboxBaseDir)),
-						new TokenTemplate("(?m)^\\#?virtual_mailbox_maps.*", mainTemplate.getText(true, "mailboxMaps", "file", mailboxMapsFile)),
-						new TokenTemplate("(?m)^\\#?virtual_minimum_uid.*", mainTemplate.getText(true, "minimumUid", "uid", minimumUid)),
-						new TokenTemplate("(?m)^\\#?virtual_uid_maps.*", mainTemplate.getText(true, "uidMaps", "uid", virtualUid)),
-						new TokenTemplate("(?m)^\\#?virtual_gid_maps.*", mainTemplate.getText(true, "gidMaps", "gid", virtualGid)),
-					]
-				} else {
-					[]
-				}
-			}(),
-		]
+		def configuration = []
+		configuration << new TokenTemplate("(?m)^\\#?virtual_alias_domains.*", mainTemplate.getText(true, "aliasDomains", "file", aliasDomainsFile))
+		configuration << new TokenTemplate("(?m)^\\#?virtual_alias_maps.*", mainTemplate.getText(true, "aliasMaps", "file", aliasMapsFile))
+		configuration << new TokenTemplate("(?m)^\\#?virtual_mailbox_base.*", mainTemplate.getText(true, "mailboxBase", "dir", mailboxBaseDir))
+		configuration << new TokenTemplate("(?m)^\\#?virtual_mailbox_maps.*", mainTemplate.getText(true, "mailboxMaps", "file", mailboxMapsFile))
+		configuration << new TokenTemplate("(?m)^\\#?virtual_minimum_uid.*", mainTemplate.getText(true, "minimumUid", "uid", minimumUid))
+		configuration << new TokenTemplate("(?m)^\\#?virtual_uid_maps.*", mainTemplate.getText(true, "uidMaps", "uid", virtualUid))
+		configuration << new TokenTemplate("(?m)^\\#?virtual_gid_maps.*", mainTemplate.getText(true, "gidMaps", "gid", virtualGid))
 		def currentConfiguration = currentConfiguration mainFile
 		deployConfiguration configurationTokens(), currentConfiguration, configuration, mainFile
 	}
 
 	/**
 	 * Deploys the list of virtual domains.
-	 * 
+	 *
 	 * @see #getAliasDomainsFile()
 	 */
 	void deployVirtualDomains() {
@@ -190,7 +130,7 @@ abstract class PostfixScript extends LinuxScript {
 
 	/**
 	 * Deploys the list of virtual aliases.
-	 * 
+	 *
 	 * @see #getAliasMapsFile()
 	 */
 	void deployAliases() {
@@ -211,7 +151,7 @@ abstract class PostfixScript extends LinuxScript {
 
 	/**
 	 * Deploys the list of virtual mailbox.
-	 * 
+	 *
 	 * @see #getMailboxMapsFile()
 	 */
 	void deployMailbox() {
@@ -233,7 +173,7 @@ abstract class PostfixScript extends LinuxScript {
 
 	/**
 	 * Execute the {@code postmap} command on the specified file.
-	 * 
+	 *
 	 * @see #getPostmapCommand()
 	 */
 	void rehashFile(File file) {
@@ -251,20 +191,6 @@ abstract class PostfixScript extends LinuxScript {
 	}
 
 	/**
-	 * Returns the banner text that follows the 220 status code in the SMTP 
-	 * greeting banner.
-	 *
-	 * <ul>
-	 * <li>profile property {@code "banner"}</li>
-	 * </ul>
-	 * 
-	 * @see #postfixProperties
-	 */
-	String getBanner() {
-		profileProperty("banner", postfixProperties)
-	}
-
-	/**
 	 * Returns the absolute path of the alias domains hash table file.
 	 * Default is the file {@code "alias_domains"} in the configuration
 	 * directory.
@@ -272,12 +198,12 @@ abstract class PostfixScript extends LinuxScript {
 	 * <ul>
 	 * <li>profile property {@code "alias_domains_file"}</li>
 	 * </ul>
-	 * 
-	 * @see #getConfigurationDir() 
+	 *
+	 * @see #getConfigurationDir()
 	 * @see #postfixProperties
 	 */
 	File getAliasDomainsFile() {
-		def file = profileProperty("alias_domains_file", postfixProperties) as File
+		def file = profileProperty("alias_domains_file", postfixProperties.get()) as File
 		file.absolute ? file : new File(configurationDir, file.name)
 	}
 
@@ -289,12 +215,12 @@ abstract class PostfixScript extends LinuxScript {
 	 * <ul>
 	 * <li>profile property {@code "alias_maps_file"}</li>
 	 * </ul>
-	 * 
-	 * @see #getConfigurationDir() 
+	 *
+	 * @see #getConfigurationDir()
 	 * @see #postfixProperties
 	 */
 	File getAliasMapsFile() {
-		def file = profileProperty("alias_maps_file", postfixProperties) as File
+		def file = profileProperty("alias_maps_file", postfixProperties.get()) as File
 		file.absolute ? file : new File(configurationDir, file.name)
 	}
 
@@ -306,24 +232,24 @@ abstract class PostfixScript extends LinuxScript {
 	 * <ul>
 	 * <li>profile property {@code "mailbox_maps_file"}</li>
 	 * </ul>
-	 * 
-	 * @see #getConfigurationDir() 
+	 *
+	 * @see #getConfigurationDir()
 	 * @see #postfixProperties
 	 */
 	File getMailboxMapsFile() {
-		def file = profileProperty("mailbox_maps_file", postfixProperties) as File
+		def file = profileProperty("mailbox_maps_file", postfixProperties.get()) as File
 		file.absolute ? file : new File(configurationDir, file.name)
 	}
 
 	/**
-	 * Returns the command for the {@code postmap} command. Can be a full 
-	 * path or just the command name that can be found in the current 
+	 * Returns the command for the {@code postmap} command. Can be a full
+	 * path or just the command name that can be found in the current
 	 * search path.
 	 *
 	 * <ul>
 	 * <li>profile property {@code "postmap_command"}</li>
 	 * </ul>
-	 * 
+	 *
 	 * @see #getDefaultProperties()
 	 */
 	String getPostmapCommand() {
@@ -331,28 +257,13 @@ abstract class PostfixScript extends LinuxScript {
 	}
 
 	/**
-	 * Returns the absolute path of the mail name configuration file.
-	 * 
-	 * <ul>
-	 * <li>profile property {@code "mailname_file"}</li>
-	 * </ul>
-	 * 
-	 * @see #getConfigurationDir() 
-	 * @see #getDefaultProperties()
-	 */
-	File getMailnameFile() {
-		def file = profileProperty("mailname_file", defaultProperties) as File
-		file.absolute ? file : new File(configurationDir, file.name)
-	}
-
-	/**
 	 * Returns the {@code main.cf} file.
-	 * 
+	 *
 	 * <ul>
 	 * <li>profile property {@code "main_file"}</li>
 	 * </ul>
-	 * 
-	 * @see #getConfigurationDir() 
+	 *
+	 * @see #getConfigurationDir()
 	 * @see #getDefaultProperties()
 	 */
 	File getMainFile() {
@@ -362,11 +273,11 @@ abstract class PostfixScript extends LinuxScript {
 
 	/**
 	 * Returns the path of the configuration directory.
-	 * 
+	 *
 	 * <ul>
 	 * <li>profile property {@code "configuration_directory"}</li>
 	 * </ul>
-	 * 
+	 *
 	 * @see #getDefaultProperties()
 	 */
 	File getConfigurationDir() {
@@ -375,11 +286,11 @@ abstract class PostfixScript extends LinuxScript {
 
 	/**
 	 * Returns the path of the base directory for virtual users.
-	 * 
+	 *
 	 * <ul>
 	 * <li>profile property {@code "mailbox_base_directory"}</li>
 	 * </ul>
-	 * 
+	 *
 	 * @see #getDefaultProperties()
 	 */
 	File getMailboxBaseDir() {
@@ -388,25 +299,25 @@ abstract class PostfixScript extends LinuxScript {
 
 	/**
 	 * Returns the pattern for the directories that are created for each virtual
-	 * domain and virtual user under the mailbox base directory. 
-	 * 
+	 * domain and virtual user under the mailbox base directory.
+	 *
 	 * <ul>
 	 * <li>profile property {@code "mailbox_pattern"}</li>
 	 * </ul>
-	 * 
+	 *
 	 * @see #postfixProperties
 	 */
 	String getMailboxPattern() {
-		profileProperty("mailbox_pattern", postfixProperties) as File
+		profileProperty("mailbox_pattern", postfixProperties.get()) as File
 	}
 
 	/**
-	 * Returns the minimum identification number for virtual users. 
-	 * 
+	 * Returns the minimum identification number for virtual users.
+	 *
 	 * <ul>
 	 * <li>profile property {@code "minimum_uid"}</li>
 	 * </ul>
-	 * 
+	 *
 	 * @see #getDefaultProperties()
 	 */
 	Number getMinimumUid() {
@@ -414,12 +325,12 @@ abstract class PostfixScript extends LinuxScript {
 	}
 
 	/**
-	 * Returns the user identification number for virtual users. 
-	 * 
+	 * Returns the user identification number for virtual users.
+	 *
 	 * <ul>
 	 * <li>profile property {@code "virtual_uid"}</li>
 	 * </ul>
-	 * 
+	 *
 	 * @see #getDefaultProperties()
 	 */
 	Number getVirtualUid() {
@@ -427,21 +338,15 @@ abstract class PostfixScript extends LinuxScript {
 	}
 
 	/**
-	 * Returns the group identification number for virtual users. 
-	 * 
+	 * Returns the group identification number for virtual users.
+	 *
 	 * <ul>
 	 * <li>profile property {@code "virtual_gid"}</li>
 	 * </ul>
-	 * 
+	 *
 	 * @see #getDefaultProperties()
 	 */
 	Number getVirtualGid() {
 		profileProperty("virtual_gid", defaultProperties) as Integer
-	}
-
-	/**
-	 * Run the distribution specific configuration.
-	 */
-	void distributionSpecificConfiguration() {
 	}
 }

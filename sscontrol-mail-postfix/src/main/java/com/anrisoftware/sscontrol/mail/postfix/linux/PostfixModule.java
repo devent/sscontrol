@@ -48,7 +48,7 @@ public class PostfixModule extends AbstractModule {
 	@Singleton
 	@Named("postfix-properties")
 	ContextProperties getLinuxProperties() throws IOException {
-		return new ContextPropertiesFactory(PostfixScript.class)
+		return new ContextPropertiesFactory(BasePostfixScript.class)
 				.withProperties(System.getProperties()).fromResource(
 						POSTFIX_PROPERTIES_RESOURCE);
 	}

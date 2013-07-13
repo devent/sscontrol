@@ -153,9 +153,11 @@ abstract class LinuxScript extends Script {
 	 * Installs the specified packages.
 	 *
 	 * @param packages
-	 * 			  the {@link List} of the package names to install.
+	 * 			  optionally, the {@link List} of the package names to install.
+	 *
+	 * @see #getPackages()
 	 */
-	void installPackages(List packages) {
+	void installPackages(List packages = packages) {
 		def template = commandTemplates.getResource("install")
 		def worker = scriptCommandFactory.create(template,
 				"installCommand", installCommand,
@@ -218,7 +220,7 @@ abstract class LinuxScript extends Script {
 	 * Restart the services.
 	 *
 	 * @param services
-	 * 			  a {@link List} of services to restart.
+	 * 			  optionally, a {@link List} of services to restart.
 	 *
 	 * @see #getRestartCommand()
 	 * @see #getRestartServices()

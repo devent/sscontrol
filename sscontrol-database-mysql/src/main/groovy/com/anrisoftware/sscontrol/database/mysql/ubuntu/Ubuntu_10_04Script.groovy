@@ -41,22 +41,11 @@ class Ubuntu_10_04Script extends MysqlScript {
 
 	@Override
 	void distributionSpecificConfiguration() {
-		installPackages packages
+		installPackages()
 	}
 
 	@Override
 	def getDefaultProperties() {
 		ubuntuProperties
-	}
-
-	/**
-	 * Returns the packages needed for the MySQL service.
-	 *
-	 * <ul>
-	 * <li>profile property key {@code packages}</li>
-	 * </ul>
-	 */
-	List getPackages() {
-		profileListProperty "packages", ubuntuProperties
 	}
 }

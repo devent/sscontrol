@@ -39,7 +39,7 @@ abstract class Mysql_5_1Script extends LinuxScript {
 		service.setDefaultCharacterSet defaultCharacterSet
 		service.setDefaultCollate defaultCollate
 		deployMysqldConfiguration()
-		restartService restartCommand
+		restartServices()
 		setupAdministratorPassword()
 		createDatabases()
 		createUsers()
@@ -71,7 +71,7 @@ abstract class Mysql_5_1Script extends LinuxScript {
 				mysqlConfiguration, "checkadminpassword",
 				"mysqladminCommand", mysqladminCommand,
 				"service", service)
-		worker.exitValues = null
+		worker.skipExitValue = true
 		worker()
 		if (worker.exitCode != 0) {
 			worker = scriptCommandFactory.create(mysqlConfiguration, "setupadminpassword",
@@ -165,17 +165,6 @@ abstract class Mysql_5_1Script extends LinuxScript {
 	abstract String getMysqlCommand()
 
 	/**
-	 * Returns path of the MySQL configuration directory.
-	 * <p>
-	 * Example: {@code /etc/mysql/conf.d}
-	 *
-	 * <ul>
-	 * <li>profile property key {@code configuration_directory}</li>
-	 * </ul>
-	 */
-	abstract File getConfigurationDir()
-
-	/**
 	 * Returns the file of the {@code mysqld} configuration file.
 	 * <p>
 	 * Example: {@code sscontrol_mysqld.cnf}
@@ -192,15 +181,4 @@ abstract class Mysql_5_1Script extends LinuxScript {
 	String getCurrentMysqldConfiguration() {
 		currentConfiguration mysqldFile
 	}
-
-	/**
-	 * Returns the restart command for the MySQL server.
-	 * <p>
-	 * Example: {@code /etc/init.d/mysql restart}
-	 *
-	 * <ul>
-	 * <li>profile property key {@code restart_command}</li>
-	 * </ul>
-	 */
-	abstract String getRestartCommand()
 }

@@ -44,19 +44,19 @@ class MysqlLinuxBase {
 
 	static databaseScript = MysqlLinuxBase.class.getResource("Database.groovy")
 
-	static aptitudeCommand = MysqlLinuxBase.class.getResource("echo_command.txt")
-
-	static restartCommand = MysqlLinuxBase.class.getResource("echo_command.txt")
+	static echoCommand = MysqlLinuxBase.class.getResource("echo_command.txt")
 
 	static mysqladminCommand = MysqlLinuxBase.class.getResource("mysqladmin_command.txt")
-
-	static mysqlCommand = MysqlLinuxBase.class.getResource("echo_command.txt")
 
 	static postfixTables = MysqlLinuxBase.class.getResource("postfixtables.txt")
 
 	static ubuntu1004Profile = MysqlLinuxBase.class.getResource("Ubuntu_10_04Profile.groovy")
 
 	static mysqldExpected = MysqlLinuxBase.class.getResource("mysqld_cnf.txt")
+
+	static aptitudeOutExpected = MysqlLinuxBase.class.getResource("aptitude_out.txt")
+
+	static restartOutExpected = MysqlLinuxBase.class.getResource("restart_out.txt")
 
 	static Injector injector
 
@@ -87,16 +87,22 @@ class MysqlLinuxBase {
 
 	File sscontrolMysqld
 
+	File restartOut
+
+	File aptitudeOut
+
 	@Before
 	void createTemp() {
 		tmpdir = tmp.newFolder()
 		aptitude = new File(tmpdir, "/usr/bin/aptitude")
-		restart = new File(tmpdir, "/etc/init.d/mysql")
+		restart = new File(tmpdir, "/sbin/restart")
 		mysqladmin = new File(tmpdir, "/usr/bin/mysqladmin")
 		mysql = new File(tmpdir, "/usr/bin/mysql")
 		postfixtables = new File(tmpdir, "/tmp/postfixtables.sql")
 		confd = new File(tmpdir, "etc/mysql/conf.d")
 		sscontrolMysqld = new File(tmpdir, "/etc/mysql/conf.d/sscontrol_mysqld.cnf")
+		restartOut = new File(tmpdir, "/sbin/restart.out")
+		aptitudeOut = new File(tmpdir, "/usr/bin/aptitude.out")
 		variables = [tmp: tmpdir.absoluteFile]
 	}
 

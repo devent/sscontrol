@@ -1,0 +1,4 @@
+update
+install mysql-server mysql-client
+update
+install mysql-server mysql-client

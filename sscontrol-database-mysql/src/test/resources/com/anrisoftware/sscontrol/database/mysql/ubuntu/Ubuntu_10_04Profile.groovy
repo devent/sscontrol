@@ -19,12 +19,14 @@
 package com.anrisoftware.sscontrol.database.mysql.ubuntu
 
 profile "ubuntu_10_04", {
-	system { install_command "${tmp}/usr/bin/aptitude update && ${tmp}/usr/bin/aptitude install" }
+	system {
+		install_command "${tmp}/usr/bin/aptitude update && ${tmp}/usr/bin/aptitude install"
+		restart_command "${tmp}/sbin/restart"
+	}
 	database {
 		service "mysql"
-		packages "mysql-server"
+		packages "mysql-server, mysql-client"
 		configuration_directory "${tmp}/etc/mysql/conf.d"
-		restart_command "${tmp}/etc/init.d/mysql restart"
 		mysqladmin_command "${tmp}/usr/bin/mysqladmin"
 		mysql_command "${tmp}/usr/bin/mysql"
 	}

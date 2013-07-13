@@ -27,10 +27,6 @@ class MySQL_5_1_Ubuntu_10_04Script extends Mysql_5_1Script {
 		new File(configurationDir, file)
 	}
 
-	String getRestartCommand() {
-		profileProperty "restart_command", ubuntuProperties
-	}
-
 	String getMysqladminCommand() {
 		profileProperty "mysqladmin_command", ubuntuProperties
 	}
@@ -46,7 +42,6 @@ class MySQL_5_1_Ubuntu_10_04Script extends Mysql_5_1Script {
 	String getDefaultCollate() {
 		profileProperty "default_collate", ubuntuProperties
 	}
-
 
 	@Override
 	def getDefaultProperties() {

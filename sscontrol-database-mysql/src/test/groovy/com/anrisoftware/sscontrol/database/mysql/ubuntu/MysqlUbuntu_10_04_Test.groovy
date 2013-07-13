@@ -42,15 +42,14 @@ class MysqlUbuntu_10_04_Test extends MysqlLinuxBase {
 		def profile = registry.getService("profile")[0]
 		loader.loadService databaseScript, profile
 
-		copyResourceToCommand aptitudeCommand, aptitude
-		copyResourceToCommand restartCommand, restart
+		copyResourceToCommand echoCommand, aptitude
+		copyResourceToCommand echoCommand, restart
 		copyResourceToCommand mysqladminCommand, mysqladmin
-		copyResourceToCommand mysqlCommand, mysql
+		copyResourceToCommand echoCommand, mysql
 		copyURLToFile postfixTables, postfixtables
 		confd.mkdirs()
 
 		registry.allServices.each { it.call() }
-		assertFiles()
 		log.info "Run service again to ensure that configuration is not set double."
 		registry.allServices.each { it.call() }
 		assertFiles()
@@ -58,5 +57,7 @@ class MysqlUbuntu_10_04_Test extends MysqlLinuxBase {
 
 	private assertFiles() {
 		assertFileContent sscontrolMysqld, mysqldExpected
+		assertFileContent restartOut, restartOutExpected
+		assertFileContent aptitudeOut, aptitudeOutExpected
 	}
 }

@@ -5,13 +5,13 @@ import groovy.lang.GroovyObjectSupport;
 import java.io.Serializable;
 
 import javax.inject.Inject;
-import javax.inject.Named;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.joda.time.Duration;
 
 import com.anrisoftware.propertiesutils.ContextProperties;
 import com.anrisoftware.propertiesutils.DateContextProperties;
+import com.anrisoftware.sscontrol.dns.service.DnsPropertiesProvider;
 
 /**
  * Saves the zone and the time to live time for the record.
@@ -61,9 +61,9 @@ abstract class AbstractRecord extends GroovyObjectSupport implements
 	 *            </dl>
 	 */
 	@Inject
-	public final void setDnsServiceProperties(
-			@Named("dns-defaults-properties") ContextProperties p) {
-		setupDefaultTimes(new DateContextProperties(p.getContext(), p));
+	public final void setDnsServiceProperties(DnsPropertiesProvider p) {
+		ContextProperties pp = p.get();
+		setupDefaultTimes(new DateContextProperties(pp.getContext(), pp));
 	}
 
 	private void setupDefaultTimes(DateContextProperties p) {

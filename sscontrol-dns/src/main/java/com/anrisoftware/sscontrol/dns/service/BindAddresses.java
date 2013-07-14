@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.Set;
 
 import javax.inject.Inject;
-import javax.inject.Named;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
@@ -37,22 +36,11 @@ public class BindAddresses implements Serializable, Iterable<String> {
 
 	private final BindAddressesLogger log;
 
-	/**
-	 * Sets default bind addresses from the specified properties.
-	 * 
-	 * @param logger
-	 *            the {@link BindAddressesLogger} for logging messages.
-	 * 
-	 * @param p
-	 *            the {@link ContextProperties} properties with the default bind
-	 *            addresses.
-	 */
 	@Inject
-	BindAddresses(BindAddressesLogger logger,
-			@Named("dns-defaults-properties") ContextProperties p) {
+	BindAddresses(BindAddressesLogger logger, DnsPropertiesProvider p) {
 		this.log = logger;
 		this.addresses = new HashSet<String>();
-		setDefaultBindAddresses(p);
+		setDefaultBindAddresses(p.get());
 	}
 
 	private void setDefaultBindAddresses(ContextProperties p) {

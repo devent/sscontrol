@@ -18,17 +18,8 @@
  */
 package com.anrisoftware.sscontrol.dns.service;
 
-import java.io.IOException;
-import java.net.URL;
-
-import javax.inject.Named;
-import javax.inject.Singleton;
-
-import com.anrisoftware.propertiesutils.ContextProperties;
-import com.anrisoftware.propertiesutils.ContextPropertiesFactory;
 import com.anrisoftware.sscontrol.dns.statements.DnsStatementsModule;
 import com.google.inject.AbstractModule;
-import com.google.inject.Provides;
 
 /**
  * Binds the DNS service.
@@ -38,20 +29,8 @@ import com.google.inject.Provides;
  */
 class DnsModule extends AbstractModule {
 
-	private static final URL DNS_DEFAULTS_PROPERTIES_RESOURCE = DnsModule.class
-			.getResource("/dns_defaults.properties");
-
 	@Override
 	protected void configure() {
 		install(new DnsStatementsModule());
-	}
-
-	@Provides
-	@Singleton
-	@Named("dns-defaults-properties")
-	ContextProperties getDnsDefaultsProperties() throws IOException {
-		return new ContextPropertiesFactory(DnsServiceImpl.class)
-				.withProperties(System.getProperties()).fromResource(
-						DNS_DEFAULTS_PROPERTIES_RESOURCE);
 	}
 }

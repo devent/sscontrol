@@ -9,14 +9,13 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.inject.Named;
-
 import org.apache.commons.collections.list.SetUniqueList;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.joda.time.Duration;
 
 import com.anrisoftware.propertiesutils.ContextProperties;
 import com.anrisoftware.propertiesutils.DateContextProperties;
+import com.anrisoftware.sscontrol.dns.service.DnsPropertiesProvider;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
@@ -91,32 +90,12 @@ public class DnsZone extends GroovyObjectSupport implements Serializable {
 
 	/**
 	 * @see DnsZoneFactory#create(String, String, String, long)
-	 * 
-	 * @param p
-	 *            the {@link ContextProperties} with the property:
-	 *            <dl>
-	 *            <dt>{@code default_ttl}</dt>
-	 *            <dd>the default TTL time for the zone in seconds.</dd>
-	 * 
-	 *            <dt>{@code default_refresh}</dt>
-	 *            <dd>the default refresh time for the zone in seconds.</dd>
-	 * 
-	 *            <dt>{@code default_retry}</dt>
-	 *            <dd>the default retry time for the zone in seconds.</dd>
-	 * 
-	 *            <dt>{@code default_expire}</dt>
-	 *            <dd>the default expire time for the zone in seconds.</dd>
-	 * 
-	 *            <dt>{@code default_minimum_ttl}</dt>
-	 *            <dd>the default minimum TTL time for the zone in seconds.</dd>
-	 *            </dl>
 	 */
 	@SuppressWarnings("unchecked")
 	@Inject
 	DnsZone(DnsZoneLogger log, ARecordFactory aRecordFactory,
 			NSRecordFactory nsRecordFactory, MXRecordFactory mxRecordFactory,
-			CNAMERecordFactory cnameRecordFactory,
-			@Named("dns-defaults-properties") ContextProperties p,
+			CNAMERecordFactory cnameRecordFactory, DnsPropertiesProvider p,
 			@Assisted(NAME) String name, @Assisted("primary") String primary,
 			@Assisted(EMAIL) String email, @Assisted long serial) {
 		this.log = log;
@@ -132,7 +111,8 @@ public class DnsZone extends GroovyObjectSupport implements Serializable {
 		this.primaryNameServer = replace(primary, ZONE_PLACEHOLDER, name);
 		this.email = replace(email, ZONE_PLACEHOLDER, name);
 		this.serial = serial;
-		setupDefaultTimes(new DateContextProperties(p.getContext(), p));
+		ContextProperties pp = p.get();
+		setupDefaultTimes(new DateContextProperties(pp.getContext(), pp));
 	}
 
 	private void setupDefaultTimes(DateContextProperties p) {

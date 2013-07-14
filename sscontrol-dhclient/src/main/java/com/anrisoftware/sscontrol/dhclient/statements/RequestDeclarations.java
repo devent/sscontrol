@@ -8,11 +8,11 @@ import java.util.Iterator;
 import java.util.List;
 
 import javax.inject.Inject;
-import javax.inject.Named;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.anrisoftware.propertiesutils.ContextProperties;
+import com.anrisoftware.sscontrol.dhclient.service.DhclientPropertiesProvider;
 
 /**
  * Collection of request declarations.
@@ -31,12 +31,11 @@ public class RequestDeclarations implements Serializable, Iterable<Declaration> 
 
 	@Inject
 	RequestDeclarations(RequestDeclarationsLogger logger,
-			DeclarationFactory declarationFactory,
-			@Named("dhclient-defaults-properties") ContextProperties p) {
+			DeclarationFactory declarationFactory, DhclientPropertiesProvider p) {
 		this.log = logger;
 		this.declarationFactory = declarationFactory;
 		this.requests = new ArrayList<Declaration>();
-		addDefaultRequests(p);
+		addDefaultRequests(p.get());
 	}
 
 	private void addDefaultRequests(ContextProperties p) {

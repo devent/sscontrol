@@ -18,19 +18,9 @@
  */
 package com.anrisoftware.sscontrol.dhclient.service;
 
-import java.io.IOException;
-import java.net.URL;
-
-import javax.inject.Named;
-import javax.inject.Singleton;
-
-import com.anrisoftware.propertiesutils.ContextProperties;
-import com.anrisoftware.propertiesutils.ContextPropertiesFactory;
-import com.anrisoftware.sscontrol.core.service.ServiceModule;
 import com.anrisoftware.sscontrol.dhclient.statements.StatementsModule;
 import com.anrisoftware.sscontrol.dhclient.ubuntu.UbuntuModule;
 import com.google.inject.AbstractModule;
-import com.google.inject.Provides;
 
 /**
  * Binds the Dhclient service scripts.
@@ -40,22 +30,9 @@ import com.google.inject.Provides;
  */
 class DhclientModule extends AbstractModule {
 
-	private static final URL DHCLIENT_DEFAULTS_PROPERTIES_RESOURCE = DhclientModule.class
-			.getResource("/dhclient_defaults.properties");
-
 	@Override
 	protected void configure() {
 		install(new StatementsModule());
-		install(new ServiceModule());
 		install(new UbuntuModule());
-	}
-
-	@Provides
-	@Singleton
-	@Named("dhclient-defaults-properties")
-	ContextProperties getDhclientDefaultsProperties() throws IOException {
-		return new ContextPropertiesFactory(DhclientServiceImpl.class)
-				.withProperties(System.getProperties()).fromResource(
-						DHCLIENT_DEFAULTS_PROPERTIES_RESOURCE);
 	}
 }

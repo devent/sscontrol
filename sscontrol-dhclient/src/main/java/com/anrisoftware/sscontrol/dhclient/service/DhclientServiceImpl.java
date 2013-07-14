@@ -29,7 +29,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
-import javax.inject.Named;
 
 import com.anrisoftware.propertiesutils.ContextProperties;
 import com.anrisoftware.sscontrol.core.api.Service;
@@ -71,8 +70,7 @@ class DhclientServiceImpl extends AbstractService {
 			DeclarationFactory declarationFactory,
 			OptionDeclarationFactory optionDeclarationFactory,
 			RequestDeclarations requests,
-			Map<String, Provider<Script>> scripts,
-			@Named("dhclient-defaults-properties") ContextProperties p) {
+			Map<String, Provider<Script>> scripts, DhclientPropertiesProvider p) {
 		this.scripts = scripts;
 		this.log = logger;
 		this.declarationFactory = declarationFactory;
@@ -80,8 +78,8 @@ class DhclientServiceImpl extends AbstractService {
 		this.sends = new ArrayList<OptionDeclaration>();
 		this.requests = requests;
 		this.prepends = new ArrayList<OptionDeclaration>();
-		setDefaultOption(p);
-		setDefaultSends(p);
+		setDefaultOption(p.get());
+		setDefaultSends(p.get());
 	}
 
 	private void setDefaultOption(ContextProperties p) {

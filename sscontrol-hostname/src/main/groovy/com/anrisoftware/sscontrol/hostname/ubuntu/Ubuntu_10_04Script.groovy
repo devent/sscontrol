@@ -19,7 +19,6 @@
 package com.anrisoftware.sscontrol.hostname.ubuntu
 
 import javax.inject.Inject
-import javax.inject.Named
 
 import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.sscontrol.hostname.linux.HostnameScript
@@ -33,17 +32,16 @@ import com.anrisoftware.sscontrol.hostname.linux.HostnameScript
 class Ubuntu_10_04Script extends HostnameScript {
 
 	@Inject
-	@Named("hostname-ubuntu_10_04-properties")
-	ContextProperties ubuntuProperties
+	Ubuntu10_04PropertiesProvider ubuntuProperties
 
 	@Override
 	def getDefaultProperties() {
-		ubuntuProperties
+		ubuntuProperties.get()
 	}
 
 	@Override
 	void distributionSpecificConfiguration() {
-		installPackages packages
+		installPackages()
 	}
 
 	@Override

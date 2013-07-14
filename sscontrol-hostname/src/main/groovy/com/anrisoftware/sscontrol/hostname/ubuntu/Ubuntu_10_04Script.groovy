@@ -46,25 +46,8 @@ class Ubuntu_10_04Script extends HostnameScript {
 		installPackages packages
 	}
 
-	/**
-	 * Returns a list of the package names to install.
-	 */
-	List getPackages() {
-		profileListProperty "packages", ubuntuProperties
-	}
-
 	@Override
 	String getConfigurationFile() {
-		profileProperty("configuration_file", ubuntuProperties)
-	}
-
-	@Override
-	File getConfigurationDirectory() {
-		profileProperty("configuration_directory", ubuntuProperties) as File
-	}
-
-	@Override
-	String getRestartCommand() {
-		profileProperty("restart_command", ubuntuProperties)
+		profileProperty "configuration_file", defaultProperties
 	}
 }

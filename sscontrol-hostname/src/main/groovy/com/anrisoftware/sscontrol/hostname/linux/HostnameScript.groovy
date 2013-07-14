@@ -39,14 +39,13 @@ abstract class HostnameScript extends LinuxScript {
 		hostnameTemplates = templatesFactory.create "Hostname"
 		distributionSpecificConfiguration()
 		deployHostnameConfiguration()
-		restartService restartCommand
+		restartServices()
 	}
 
 	/**
 	 * Do some distribution specific configuration.
 	 */
-	void distributionSpecificConfiguration() {
-	}
+	abstract void distributionSpecificConfiguration()
 
 	/**
 	 * Deploys the hostname configuration.
@@ -81,7 +80,7 @@ abstract class HostnameScript extends LinuxScript {
 	 * </ul>
 	 */
 	File getHostnameFile() {
-		new File(configurationDirectory, configurationFile)
+		new File(configurationDir, configurationFile)
 	}
 
 	/**
@@ -92,22 +91,4 @@ abstract class HostnameScript extends LinuxScript {
 	 * </ul>
 	 */
 	abstract String getConfigurationFile()
-
-	/**
-	 * Returns the hostname configuration file.
-	 *
-	 * <ul>
-	 * <li>property key {@code configuration_file}</li>
-	 * </ul>
-	 */
-	abstract File getConfigurationDirectory()
-
-	/**
-	 * Returns the restart command for the hostname service.
-	 *
-	 * <ul>
-	 * <li>property key {@code restart_command}</li>
-	 * </ul>
-	 */
-	abstract String getRestartCommand()
 }

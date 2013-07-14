@@ -20,6 +20,9 @@ class Ubuntu_10_04Script extends UbuntuScript {
 	@Named("dhclient-ubuntu-10_04-properties")
 	ContextProperties ubuntuProperties
 
+	def distributionSpecificConfiguration() {
+	}
+
 	@Override
 	def getDefaultProperties() {
 		ubuntuProperties

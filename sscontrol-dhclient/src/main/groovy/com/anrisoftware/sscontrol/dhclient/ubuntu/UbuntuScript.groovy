@@ -2,8 +2,8 @@ package com.anrisoftware.sscontrol.dhclient.ubuntu
 
 import static java.util.regex.Pattern.*
 
-import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.resources.templates.api.TemplateResource
+import com.anrisoftware.resources.templates.api.Templates
 import com.anrisoftware.sscontrol.core.service.LinuxScript
 import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokenTemplate
 
@@ -15,72 +15,36 @@ import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokenTemplate
  */
 abstract class UbuntuScript extends LinuxScript {
 
+	Templates dhclientTemplates
+
 	TemplateResource dhclientConfiguration
 
 	@Override
 	def run() {
 		super.run()
-		dhclientConfiguration = templatesFactory.create("Dhclient_ubuntu").getResource("dhclient_configuration")
-		installPackages packages
+		dhclientTemplates = templatesFactory.create "Dhclient_ubuntu"
+		dhclientConfiguration = dhclientTemplates.getResource "dhclient_configuration"
+		installPackages()
 		distributionSpecificConfiguration()
 		deployConfiguration configurationTokens(), currentConfiguration, configurations, configurationFile
-		restartService restartCommand
+		restartServices()
 	}
 
 	/**
 	 * Do the distribution specific configuration.
 	 */
-	void distributionSpecificConfiguration() {
-	}
-
-	/**
-	 * Returns the dhclient service packages.
-	 *
-	 * <ul>
-	 * <li>property key {@code packages}</li>
-	 * </ul>
-	 */
-	List getPackages() {
-		profileListProperty "packages", ubuntuProperties
-	}
+	abstract distributionSpecificConfiguration()
 
 	/**
 	 * Returns the dhclient configuration file.
 	 *
 	 * <ul>
-	 * <li>property key {@code configuration_file}</li>
+	 * <li>profile property key {@code configuration_file}</li>
 	 * </ul>
 	 */
 	File getConfigurationFile() {
-		new File(configurationDir, profileProperty("configuration_file", ubuntuProperties))
+		new File(configurationDir, profileProperty("configuration_file", defaultProperties))
 	}
-
-	/**
-	 * Returns the dhclient configuration directory.
-	 *
-	 * <ul>
-	 * <li>property key {@code configuration_directory}</li>
-	 * </ul>
-	 */
-	File getConfigurationDir() {
-		profileProperty("configuration_directory", ubuntuProperties) as File
-	}
-
-	/**
-	 * Returns the dhclient restart command.
-	 *
-	 * <ul>
-	 * <li>property key {@code restart_command}</li>
-	 * </ul>
-	 */
-	String getRestartCommand() {
-		profileProperty "restart_command", ubuntuProperties
-	}
-
-	/**
-	 * Returns the Ubuntu properties.
-	 */
-	abstract def getUbuntuProperties()
 
 	/**
 	 * Returns the dhclient configuration on the server.

@@ -31,7 +31,7 @@ import com.anrisoftware.sscontrol.core.api.ServiceLoaderFactory
 import com.anrisoftware.sscontrol.core.api.ServicesRegistry
 import com.anrisoftware.sscontrol.core.modules.CoreModule
 import com.anrisoftware.sscontrol.core.modules.CoreResourcesModule
-import com.anrisoftware.sscontrol.mail.postfix.ubuntu.UbuntuModule
+import com.anrisoftware.sscontrol.core.service.ServiceModule
 import com.google.inject.Guice
 import com.google.inject.Injector
 
@@ -146,8 +146,8 @@ class PostfixLinuxBase {
 	}
 
 	static Injector createInjector() {
-		Guice.createInjector(new CoreModule(), new CoreResourcesModule(),
-				new UbuntuModule())
+		Guice.createInjector(
+				new CoreModule(), new CoreResourcesModule(), new ServiceModule())
 	}
 
 	@BeforeClass

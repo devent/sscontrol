@@ -1,18 +1,18 @@
 /*
  * Copyright 2012 Erwin Müller <erwin.mueller@deventm.org>
- *
+ * 
  * This file is part of sscontrol-hostname.
- *
+ * 
  * sscontrol-hostname is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published by the
  * Free Software Foundation, either version 3 of the License, or (at your
  * option) any later version.
- *
+ * 
  * sscontrol-hostname is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
  * for more details.
- *
+ * 
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-hostname. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -29,18 +29,16 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.ServiceLoader;
 import java.util.Set;
 
 import javax.inject.Inject;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import com.anrisoftware.resources.templates.api.TemplatesFactory;
+import com.anrisoftware.sscontrol.core.api.ProfileService;
 import com.anrisoftware.sscontrol.core.api.Service;
 import com.anrisoftware.sscontrol.core.api.ServiceException;
 import com.anrisoftware.sscontrol.core.api.ServiceScriptFactory;
-import com.anrisoftware.sscontrol.core.api.ServiceScriptInfo;
 import com.anrisoftware.sscontrol.core.service.AbstractService;
 import com.anrisoftware.sscontrol.mail.statements.BindAddresses;
 import com.anrisoftware.sscontrol.mail.statements.BindAddressesFactory;
@@ -60,8 +58,6 @@ import com.anrisoftware.sscontrol.mail.statements.MasqueradeDomains;
 public class MailServiceImpl extends AbstractService {
 
 	private final MailServiceImplLogger log;
-
-	private final ServiceLoader<ServiceScriptFactory> serviceScripts;
 
 	private final BindAddressesFactory bindAddressesFactory;
 
@@ -86,28 +82,15 @@ public class MailServiceImpl extends AbstractService {
 	private final Set<String> destinations;
 
 	/**
-	 * Sets the default mail service dependencies.
-	 * 
-	 * @param logger
-	 *            the {@link MailServiceImplLogger} for logging messages.
-	 * 
-	 * @param scripts
-	 *            the {@link Map} with the mail service {@link Script} scripts.
-	 * 
-	 * @param templates
-	 *            the {@link TemplatesFactory} to create new templates
-	 *            resources.
-	 * 
+	 * @see MailFactory#create(ProfileService)
 	 */
 	@Inject
 	MailServiceImpl(MailServiceImplLogger logger,
-			ServiceLoader<ServiceScriptFactory> serviceScripts,
 			BindAddressesFactory bindAddressesFactory,
 			MasqueradeDomains masqueradeDomains,
 			CertificateFileFactory certificateFileFactory,
 			DomainFactory domainFactory) {
 		this.log = logger;
-		this.serviceScripts = serviceScripts;
 		this.bindAddressesFactory = bindAddressesFactory;
 		this.masqueradeDomains = masqueradeDomains;
 		this.certificateFileFactory = certificateFileFactory;
@@ -119,21 +102,8 @@ public class MailServiceImpl extends AbstractService {
 
 	@Override
 	protected Script getScript(String profileName) throws ServiceException {
-		ServiceScriptFactory scriptFactory = findScriptFactory();
+		ServiceScriptFactory scriptFactory = findScriptFactory(NAME);
 		return (Script) scriptFactory.getScript();
-	}
-
-	private ServiceScriptFactory findScriptFactory() throws ServiceException {
-		String profile = getProfile().getProfileName();
-		String name = getProfile().getEntry(NAME).get("service").toString();
-		for (ServiceScriptFactory scriptFactory : serviceScripts) {
-			ServiceScriptInfo info = scriptFactory.getInfo();
-			if (info.getProfileName().equals(profile)
-					&& info.getServiceName().equals(name)) {
-				return scriptFactory;
-			}
-		}
-		throw log.errorFindServiceScript(this, profile, name);
 	}
 
 	/**

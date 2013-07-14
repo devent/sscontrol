@@ -26,7 +26,6 @@ import static org.apache.commons.lang3.Validate.notNull;
 import java.util.List;
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
-import com.anrisoftware.sscontrol.core.api.ServiceException;
 import com.anrisoftware.sscontrol.mail.statements.BindAddresses;
 import com.anrisoftware.sscontrol.mail.statements.CertificateFile;
 import com.anrisoftware.sscontrol.mail.statements.Domain;
@@ -46,11 +45,6 @@ class MailServiceImplLogger extends AbstractLogger {
 	private static final String BIND_ADDRESSES_SET_INFO = "Bind addresses set {} for mail service.";
 	private static final String BIND_ADDRESSES_SET = "Bind addresses set {} for {}.";
 	private static final String BIND_ADDRESS_NULL = "Bind address cannot be null.";
-	private static final String SERVICE_NAME = "service name";
-	private static final String PROFILE_NAME = "profile name";
-	private static final String SERVICE = "service";
-	private static final String ERROR_FIND_SERVICE_MESSAGE = "Error find service script '{}' for mail service.";
-	private static final String ERROR_FIND_SERVICE = "Error find service script";
 	private static final String DOMAIN_NULL = "Domain name can not be empty or null.";
 	private static final String ORIGIN_SET = "Origin '{}' set for {}.";
 	private static final String ORIGIN_SET_INFO = "Origin '{}' set for mail service.";
@@ -68,16 +62,6 @@ class MailServiceImplLogger extends AbstractLogger {
 	 */
 	MailServiceImplLogger() {
 		super(MailServiceImpl.class);
-	}
-
-	ServiceException errorFindServiceScript(MailServiceImpl service,
-			String profile, String name) {
-		return logException(
-				new ServiceException(ERROR_FIND_SERVICE)
-						.add(SERVICE, service)
-						.add(PROFILE_NAME, profile)
-						.add(SERVICE_NAME, name),
-				ERROR_FIND_SERVICE_MESSAGE, name);
 	}
 
 	void checkBindAddress(MailServiceImpl service, BindAddresses address) {

@@ -19,7 +19,6 @@
 package com.anrisoftware.sscontrol.firewall.ufw.ubuntu
 
 import javax.inject.Inject
-import javax.inject.Named
 
 import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.sscontrol.firewall.ufw.linux.UfwScript
@@ -33,8 +32,7 @@ import com.anrisoftware.sscontrol.firewall.ufw.linux.UfwScript
 class Ubuntu_10_04Script extends UfwScript {
 
 	@Inject
-	@Named("ufw-ubuntu-10_04-properties")
-	ContextProperties ubuntuProperties
+	Ubuntu10_04PropertiesProvider ubuntuProperties
 
 	@Override
 	def distributionSpecificConfiguration() {
@@ -43,11 +41,11 @@ class Ubuntu_10_04Script extends UfwScript {
 
 	@Override
 	def getDefaultProperties() {
-		ubuntuProperties
+		ubuntuProperties.get()
 	}
 
 	@Override
 	String getUfwCommand() {
-		profileProperty "ufw_command", ubuntuProperties
+		profileProperty "ufw_command", defaultProperties
 	}
 }

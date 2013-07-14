@@ -18,17 +18,8 @@
  */
 package com.anrisoftware.sscontrol.firewall.service;
 
-import java.io.IOException;
-import java.net.URL;
-
-import javax.inject.Named;
-import javax.inject.Singleton;
-
-import com.anrisoftware.propertiesutils.ContextProperties;
-import com.anrisoftware.propertiesutils.ContextPropertiesFactory;
 import com.anrisoftware.sscontrol.firewall.statements.FirewallStatementsModule;
 import com.google.inject.AbstractModule;
-import com.google.inject.Provides;
 
 /**
  * Binds the firewall service.
@@ -38,20 +29,8 @@ import com.google.inject.Provides;
  */
 class FirewallModule extends AbstractModule {
 
-	private static final URL DNS_DEFAULTS_PROPERTIES_RESOURCE = FirewallModule.class
-			.getResource("/dns_defaults.properties");
-
 	@Override
 	protected void configure() {
 		install(new FirewallStatementsModule());
-	}
-
-	@Provides
-	@Singleton
-	@Named("dns-defaults-properties")
-	ContextProperties getDnsDefaultsProperties() throws IOException {
-		return new ContextPropertiesFactory(FirewallServiceImpl.class)
-				.withProperties(System.getProperties()).fromResource(
-						DNS_DEFAULTS_PROPERTIES_RESOURCE);
 	}
 }

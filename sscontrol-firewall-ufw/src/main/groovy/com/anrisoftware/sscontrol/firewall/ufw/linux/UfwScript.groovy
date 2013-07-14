@@ -21,7 +21,6 @@ package com.anrisoftware.sscontrol.firewall.ufw.linux
 import static org.apache.commons.io.FileUtils.*
 
 import javax.inject.Inject
-import javax.inject.Named
 
 import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.resources.templates.api.TemplateResource
@@ -38,10 +37,6 @@ abstract class UfwScript extends LinuxScript {
 
 	@Inject
 	UfwScriptLogger log
-
-	@Inject
-	@Named("ufw-linux-properties")
-	ContextProperties linuxProperties
 
 	/**
 	 * The {@link Templates} for the script.

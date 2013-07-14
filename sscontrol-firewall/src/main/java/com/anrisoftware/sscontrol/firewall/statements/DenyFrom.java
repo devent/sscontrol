@@ -10,32 +10,11 @@ import com.google.inject.assistedinject.Assisted;
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
+@SuppressWarnings("serial")
 public class DenyFrom extends AllowFrom {
 
 	/**
-	 * @version 1.0
-	 */
-	private static final long serialVersionUID = -2311097866774038417L;
-
-	/**
-	 * Sets deny from the specified address, network port and network protocol.
-	 * 
-	 * @param portFactory
-	 *            the {@link PortFactory} to create the destination network
-	 *            port.
-	 * 
-	 * @param addressFactory
-	 *            the {@link PortFactory} to create the destination network
-	 *            address.
-	 * 
-	 * @param address
-	 *            the source network {@link Address} address.
-	 * 
-	 * @param port
-	 *            the source network {@link Port} port.
-	 * 
-	 * @param proto
-	 *            the source network {@link Protocol} protocol.
+	 * @see DenyFromFactory#create(Address, Port, Protocol)
 	 */
 	@Inject
 	DenyFrom(PortFactory portFactory, AddressFactory addressFactory,

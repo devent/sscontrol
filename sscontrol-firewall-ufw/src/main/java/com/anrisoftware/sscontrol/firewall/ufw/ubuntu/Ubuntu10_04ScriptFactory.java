@@ -1,13 +1,13 @@
 package com.anrisoftware.sscontrol.firewall.ufw.ubuntu;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.concurrent.ConcurrentException;
 import org.mangosdk.spi.ProviderFor;
 
 import com.anrisoftware.sscontrol.core.api.ServiceException;
 import com.anrisoftware.sscontrol.core.api.ServiceScriptFactory;
 import com.anrisoftware.sscontrol.core.api.ServiceScriptInfo;
 import com.google.inject.Injector;
+import com.google.inject.Module;
 
 /**
  * Provides the UFW script for Ubuntu 10.04 server.
@@ -44,9 +44,9 @@ public class Ubuntu10_04ScriptFactory implements ServiceScriptFactory {
 		}
 	};
 
-	private static Ubuntu10_04ScriptFactoryLogger log = new Ubuntu10_04ScriptFactoryLogger();
+	private static final Module[] MODULES = new Module[] { new UfwModule() };
 
-	private static LazyInjector lazyInjector = new LazyInjector();
+	private Injector injector;
 
 	@Override
 	public ServiceScriptInfo getInfo() {
@@ -55,16 +55,12 @@ public class Ubuntu10_04ScriptFactory implements ServiceScriptFactory {
 
 	@Override
 	public Object getScript() throws ServiceException {
-		try {
-			return lazyInjector.get().getInstance(Ubuntu_10_04Script.class);
-		} catch (ConcurrentException e) {
-			throw log.errorCreateScript(this, e.getCause());
-		}
+		return injector.getInstance(Ubuntu_10_04Script.class);
 	}
 
 	@Override
 	public void setParent(Object parent) {
-		lazyInjector.setParentInjector((Injector) parent);
+		this.injector = ((Injector) parent).createChildInjector(MODULES);
 	}
 
 	@Override

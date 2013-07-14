@@ -1,18 +1,18 @@
 /*
  * Copyright 2012 Erwin Müller <erwin.mueller@deventm.org>
- *
+ * 
  * This file is part of sscontrol-hostname.
- *
+ * 
  * sscontrol-hostname is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published by the
  * Free Software Foundation, either version 3 of the License, or (at your
  * option) any later version.
- *
+ * 
  * sscontrol-hostname is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
  * for more details.
- *
+ * 
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-hostname. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -20,7 +20,6 @@ package com.anrisoftware.sscontrol.firewall.service;
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
 import com.anrisoftware.sscontrol.core.api.ProfileService;
-import com.anrisoftware.sscontrol.core.api.ServiceException;
 
 /**
  * Logging messages for {@link FirewallServiceImpl}.
@@ -29,6 +28,11 @@ import com.anrisoftware.sscontrol.core.api.ServiceException;
  * @since 1.0
  */
 class FirewallServiceImplLogger extends AbstractLogger {
+
+	private static final String STATEMENT_ADDED2 = "Statement {} added for firewall service.";
+	private static final String STATEMENT_ADDED = "Statement {} added for {}.";
+	private static final String PROFILE_SET2 = "Profile '{}' set for DNS service.";
+	private static final String PROFILE_SET = "Profile {} set for {}.";
 
 	/**
 	 * Create logger for {@link FirewallServiceImpl}.
@@ -39,29 +43,18 @@ class FirewallServiceImplLogger extends AbstractLogger {
 
 	void profileSet(FirewallServiceImpl service, ProfileService profile) {
 		if (log.isDebugEnabled()) {
-			log.debug("Set profile {} for {}.", profile, service);
+			log.debug(PROFILE_SET, profile, service);
 		} else {
-			log.info("Set profile {} for DNS service.",
-					profile.getProfileName());
+			log.info(PROFILE_SET2, profile.getProfileName());
 		}
 	}
 
 	void created(Object statement, FirewallServiceImpl service) {
 		if (log.isDebugEnabled()) {
-			log.debug("Add statement {} for {}.", statement, service);
+			log.debug(STATEMENT_ADDED, statement, service);
 		} else {
-			log.info("Add statement {} for firewall service.", statement);
+			log.info(STATEMENT_ADDED2, statement);
 		}
 	}
 
-	ServiceException errorFindServiceScript(FirewallServiceImpl dnsservice,
-			String name, String service) {
-		ServiceException ex = new ServiceException(
-				"Error find the service script");
-		ex.add("service", dnsservice);
-		ex.add("profile name", name);
-		ex.add("service name", service);
-		log.error(ex.getLocalizedMessage());
-		return ex;
-	}
 }

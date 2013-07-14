@@ -65,8 +65,7 @@ abstract class UfwScript extends LinuxScript {
 	/**
 	 * Run the distribution specific configuration.
 	 */
-	void distributionSpecificConfiguration() {
-	}
+	abstract distributionSpecificConfiguration()
 
 	/**
 	 * Deploys the firewall rules.
@@ -83,9 +82,8 @@ abstract class UfwScript extends LinuxScript {
 	 * Returns the ufw tool command.
 	 *
 	 * <ul>
-	 * <li>property {@code "ufw_command"}</li>
+	 * <li>profile property {@code "ufw_command"}</li>
 	 * </ul>
 	 */
-	String getUfwCommand() {
-	}
+	abstract String getUfwCommand()
 }

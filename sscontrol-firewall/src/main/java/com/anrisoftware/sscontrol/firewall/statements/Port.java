@@ -14,19 +14,17 @@ import com.google.inject.assistedinject.AssistedInject;
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
+@SuppressWarnings("serial")
 public class Port implements Serializable {
 
-	/**
-	 * @version 1.0
-	 */
-	private static final long serialVersionUID = -6208930021184432542L;
+	private static final String UNDEFINED = "undefined";
 
 	private final String serviceName;
 
 	private final Integer portNumber;
 
 	/**
-	 * Sets that the port is undefined.
+	 * @see PortFactory#undefinedPort()
 	 */
 	@AssistedInject
 	Port() {
@@ -35,10 +33,7 @@ public class Port implements Serializable {
 	}
 
 	/**
-	 * Sets the network port number.
-	 * 
-	 * @param portNumber
-	 *            the port number.
+	 * @see PortFactory#fromPortNumber(int)
 	 */
 	@AssistedInject
 	Port(@Assisted int portNumber) {
@@ -47,10 +42,7 @@ public class Port implements Serializable {
 	}
 
 	/**
-	 * Sets the service name.
-	 * 
-	 * @param serviceName
-	 *            the name of the service.
+	 * @see PortFactory#fromServiceName(String)
 	 */
 	@AssistedInject
 	Port(@Assisted String serviceName) {
@@ -95,7 +87,7 @@ public class Port implements Serializable {
 	public String toString() {
 		ToStringBuilder builder = new ToStringBuilder(this);
 		if (isUndefined()) {
-			builder.append("undefined");
+			builder.append(UNDEFINED);
 		} else {
 			builder.append(getName());
 		}

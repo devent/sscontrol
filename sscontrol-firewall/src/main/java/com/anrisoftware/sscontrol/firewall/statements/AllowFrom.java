@@ -15,12 +15,15 @@ import com.google.inject.assistedinject.Assisted;
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
+@SuppressWarnings("serial")
 public class AllowFrom implements Serializable {
 
-	/**
-	 * @version 1.0
-	 */
-	private static final long serialVersionUID = -5291719795852192982L;
+	private static final String TO_PROTO = "to proto";
+	private static final String TO_PORT = "to port";
+	private static final String TO_ADDRESS = "to address";
+	private static final String PROTOCOL = "protocol";
+	private static final String PORT = "port";
+	private static final String ADDRESS = "address";
 
 	private final transient PortFactory portFactory;
 
@@ -39,24 +42,7 @@ public class AllowFrom implements Serializable {
 	private Protocol toProto;
 
 	/**
-	 * Sets allow from the specified address, network port and network protocol.
-	 * 
-	 * @param portFactory
-	 *            the {@link PortFactory} to create the destination network
-	 *            port.
-	 * 
-	 * @param addressFactory
-	 *            the {@link PortFactory} to create the destination network
-	 *            address.
-	 * 
-	 * @param address
-	 *            the source network {@link Address} address.
-	 * 
-	 * @param port
-	 *            the source network {@link Port} port.
-	 * 
-	 * @param proto
-	 *            the source network {@link Protocol} protocol.
+	 * @see AllowFromFactory#create(Address, Port, Protocol)
 	 */
 	@Inject
 	AllowFrom(PortFactory portFactory, AddressFactory addressFactory,
@@ -87,8 +73,8 @@ public class AllowFrom implements Serializable {
 		if (args.containsKey("proto")) {
 			proto = (Protocol) args.get("proto");
 		}
-		if (args.containsKey("port")) {
-			Object value = args.get("port");
+		if (args.containsKey(PORT)) {
+			Object value = args.get(PORT);
 			if (value instanceof Integer) {
 				port = portFactory.fromPortNumber((Integer) value);
 			} else {
@@ -134,9 +120,9 @@ public class AllowFrom implements Serializable {
 
 	@Override
 	public String toString() {
-		return new ToStringBuilder(this).append("address", address)
-				.append("port", port).append("protocol", proto)
-				.append("to address", toAddress).append("to port", toPort)
-				.append("to proto", toProto).toString();
+		return new ToStringBuilder(this).append(ADDRESS, address)
+				.append(PORT, port).append(PROTOCOL, proto)
+				.append(TO_ADDRESS, toAddress).append(TO_PORT, toPort)
+				.append(TO_PROTO, toProto).toString();
 	}
 }

@@ -14,17 +14,16 @@ import com.google.inject.assistedinject.AssistedInject;
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
+@SuppressWarnings("serial")
 public class Address implements Serializable {
 
-	/**
-	 * @version 1.0
-	 */
-	private static final long serialVersionUID = 5388100560469846662L;
+	private static final String ANY = "any";
+	private static final String ADDRESS = "address";
 
 	private final String address;
 
 	/**
-	 * Sets the address to anywhere.
+	 * @see AddressFactory#anyAddress()
 	 */
 	@AssistedInject
 	Address() {
@@ -32,10 +31,7 @@ public class Address implements Serializable {
 	}
 
 	/**
-	 * Sets the specified IP address or host name.
-	 * 
-	 * @param address
-	 *            the IP address or host name.
+	 * @see AddressFactory#fromAddress(String)
 	 */
 	@AssistedInject
 	Address(@Assisted String address) {
@@ -72,9 +68,9 @@ public class Address implements Serializable {
 	public String toString() {
 		ToStringBuilder builder = new ToStringBuilder(this);
 		if (address != null) {
-			builder.append("address", address);
+			builder.append(ADDRESS, address);
 		} else {
-			builder.append("any");
+			builder.append(ANY);
 		}
 		return builder.toString();
 	}

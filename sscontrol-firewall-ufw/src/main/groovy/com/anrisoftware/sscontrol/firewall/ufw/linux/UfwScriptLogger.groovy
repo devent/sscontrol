@@ -11,6 +11,9 @@ import com.anrisoftware.globalpom.log.AbstractLogger
 @Singleton
 class UfwScriptLogger extends AbstractLogger {
 
+	static final String RULES_DEPLOYED = "Firewall rules deployed for {}, worker {}."
+	static final String RULES_DEPLOYED2 = "Firewall rules deployed."
+
 	/**
 	 * Create logger for {@link LinuxScript}.
 	 */
@@ -20,9 +23,9 @@ class UfwScriptLogger extends AbstractLogger {
 
 	void deployedRules(UfwScript script, def worker) {
 		if (log.debugEnabled) {
-			log.debug "Firewall rules deployed for {}, worker {}.", script, worker
+			log.debug RULES_DEPLOYED, script, worker
 		} else {
-			log.info "Firewall rules deployed."
+			log.info RULES_DEPLOYED2
 		}
 	}
 }

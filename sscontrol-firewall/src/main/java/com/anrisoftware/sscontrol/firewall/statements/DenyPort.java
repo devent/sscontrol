@@ -11,21 +11,14 @@ import com.google.inject.assistedinject.Assisted;
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
+@SuppressWarnings("serial")
 public class DenyPort extends AllowPort {
 
-	/**
-	 * @version 1.0
-	 */
-	private static final long serialVersionUID = -3628367090901028905L;
+	private static final String PROTOCOL = "protocol";
+	private static final String PORT = "port";
 
 	/**
-	 * Sets the network port and network protocol to deny.
-	 * 
-	 * @param port
-	 *            the network {@link Port} port.
-	 * 
-	 * @param protocol
-	 *            the network {@link Protocol} protocol.
+	 * @see DenyPortFactory#create(Port, Protocol)
 	 */
 	@Inject
 	DenyPort(@Assisted Port port, @Assisted Protocol protocol) {
@@ -34,7 +27,7 @@ public class DenyPort extends AllowPort {
 
 	@Override
 	public String toString() {
-		return new ToStringBuilder(this).append("port", getPort())
-				.append("protocol", getProtocol()).toString();
+		return new ToStringBuilder(this).append(PORT, getPort())
+				.append(PROTOCOL, getProtocol()).toString();
 	}
 }

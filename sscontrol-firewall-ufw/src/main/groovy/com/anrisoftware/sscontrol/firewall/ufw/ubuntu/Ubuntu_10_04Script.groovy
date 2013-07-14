@@ -37,24 +37,13 @@ class Ubuntu_10_04Script extends UfwScript {
 	ContextProperties ubuntuProperties
 
 	@Override
-	void distributionSpecificConfiguration() {
-		installPackages packages
+	def distributionSpecificConfiguration() {
+		installPackages()
 	}
 
 	@Override
 	def getDefaultProperties() {
 		ubuntuProperties
-	}
-
-	/**
-	 * Returns the ufw service packages.
-	 *
-	 * <ul>
-	 * <li>property {@code "packages"}</li>
-	 * </ul>
-	 */
-	List getPackages() {
-		profileListProperty "packages", ubuntuProperties
 	}
 
 	@Override

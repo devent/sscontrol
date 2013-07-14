@@ -32,6 +32,7 @@ import com.anrisoftware.sscontrol.core.api.ServiceLoaderFactory
 import com.anrisoftware.sscontrol.core.api.ServicesRegistry
 import com.anrisoftware.sscontrol.core.modules.CoreModule
 import com.anrisoftware.sscontrol.core.modules.CoreResourcesModule
+import com.anrisoftware.sscontrol.core.service.ServiceModule
 import com.google.inject.Guice
 import com.google.inject.Injector
 
@@ -108,7 +109,8 @@ class FirewallServiceTest {
 	}
 
 	static Injector createInjector() {
-		Guice.createInjector(new CoreModule(), new CoreResourcesModule())
+		Guice.createInjector(
+				new CoreModule(), new CoreResourcesModule(), new ServiceModule())
 	}
 
 	@BeforeClass

@@ -30,6 +30,7 @@ import com.anrisoftware.sscontrol.core.service.LinuxScript
  */
 abstract class MysqlScript extends LinuxScript {
 
+	@Override
 	def run() {
 		super.run()
 		distributionSpecificConfiguration()

@@ -20,6 +20,8 @@ package com.anrisoftware.sscontrol.core.service;
 
 import groovy.lang.Script;
 
+import java.util.ServiceLoader;
+
 import javax.inject.Inject;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -27,6 +29,8 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import com.anrisoftware.sscontrol.core.api.ProfileService;
 import com.anrisoftware.sscontrol.core.api.Service;
 import com.anrisoftware.sscontrol.core.api.ServiceException;
+import com.anrisoftware.sscontrol.core.api.ServiceScriptFactory;
+import com.anrisoftware.sscontrol.core.api.ServiceScriptInfo;
 import com.google.inject.Injector;
 
 /**
@@ -56,7 +60,8 @@ public abstract class AbstractService implements Service {
 		this.log = logger;
 	}
 
-	public void setInjector(Injector injector) {
+	@Inject
+	void setInjector(Injector injector) {
 		this.injector = injector;
 	}
 
@@ -116,6 +121,39 @@ public abstract class AbstractService implements Service {
 	 */
 	protected abstract Script getScript(String profileName)
 			throws ServiceException;
+
+	/**
+	 * Finds the script factory with the specified service name.
+	 * 
+	 * @param serviceName
+	 *            the service name {@link String}.
+	 * 
+	 * @return the {@link ServiceScriptFactory}.
+	 * 
+	 * @throws ServiceException
+	 *             if no script factory with the specified name was found.
+	 */
+	protected final ServiceScriptFactory findScriptFactory(String serviceName)
+			throws ServiceException {
+		String name = getProfile().getProfileName();
+		Object service = getProfile().getEntry(serviceName).get("service");
+		ServiceLoader<ServiceScriptFactory> loader = ServiceLoader
+				.load(ServiceScriptFactory.class);
+		for (ServiceScriptFactory scriptFactory : loader) {
+			ServiceScriptInfo info = scriptFactory.getInfo();
+			if (serviceCompare(info, name, service)) {
+				scriptFactory.setParent(injector);
+				return scriptFactory;
+			}
+		}
+		throw log.errorFindServiceScript(this, name, service);
+	}
+
+	private boolean serviceCompare(ServiceScriptInfo info, String name,
+			Object service) {
+		return info.getProfileName().equals(name)
+				&& info.getServiceName().equals(service);
+	}
 
 	@Override
 	public String toString() {

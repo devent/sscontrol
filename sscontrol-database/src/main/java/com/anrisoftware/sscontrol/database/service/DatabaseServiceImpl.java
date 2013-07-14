@@ -1,18 +1,18 @@
 /*
  * Copyright 2012 Erwin Müller <erwin.mueller@deventm.org>
- *
+ * 
  * This file is part of sscontrol-hostname.
- *
+ * 
  * sscontrol-hostname is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published by the
  * Free Software Foundation, either version 3 of the License, or (at your
  * option) any later version.
- *
+ * 
  * sscontrol-hostname is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
  * for more details.
- *
+ * 
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-hostname. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -26,7 +26,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.ServiceLoader;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -37,7 +36,6 @@ import com.anrisoftware.propertiesutils.ContextProperties;
 import com.anrisoftware.sscontrol.core.api.Service;
 import com.anrisoftware.sscontrol.core.api.ServiceException;
 import com.anrisoftware.sscontrol.core.api.ServiceScriptFactory;
-import com.anrisoftware.sscontrol.core.api.ServiceScriptInfo;
 import com.anrisoftware.sscontrol.core.service.AbstractService;
 import com.anrisoftware.sscontrol.database.statements.Database;
 import com.anrisoftware.sscontrol.database.statements.DatabaseFactory;
@@ -50,16 +48,10 @@ import com.anrisoftware.sscontrol.database.statements.UserFactory;
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
+@SuppressWarnings("serial")
 class DatabaseServiceImpl extends AbstractService {
 
-	/**
-	 * @version 1.0
-	 */
-	private static final long serialVersionUID = 8391052070668552719L;
-
 	private final DatabaseServiceImplLogger log;
-
-	private final ServiceLoader<ServiceScriptFactory> serviceScripts;
 
 	private final DatabaseFactory databaseFactory;
 
@@ -78,19 +70,6 @@ class DatabaseServiceImpl extends AbstractService {
 	/**
 	 * Sets the default database service properties.
 	 * 
-	 * @param logger
-	 *            the {@link DatabaseServiceImplLogger} for logging messages.
-	 * 
-	 * @param serviceScripts
-	 *            the {@link ServiceLoader} to load the database service
-	 *            {@link Script} scripts.
-	 * 
-	 * @param databaseFactory
-	 *            the {@link DatabaseFactory} to create a new database.
-	 * 
-	 * @param userFactory
-	 *            the {@link UserFactory} to create a new database user.
-	 * 
 	 * @param p
 	 *            the default database service {@link ContextProperties}
 	 *            properties. Expects the following properties:
@@ -105,11 +84,9 @@ class DatabaseServiceImpl extends AbstractService {
 	 */
 	@Inject
 	DatabaseServiceImpl(DatabaseServiceImplLogger logger,
-			ServiceLoader<ServiceScriptFactory> serviceScripts,
 			DatabaseFactory databaseFactory, UserFactory userFactory,
 			@Named("database-defaults-properties") ContextProperties p) {
 		this.log = logger;
-		this.serviceScripts = serviceScripts;
 		this.databases = new ArrayList<Database>();
 		this.databaseFactory = databaseFactory;
 		this.userFactory = userFactory;
@@ -124,21 +101,8 @@ class DatabaseServiceImpl extends AbstractService {
 
 	@Override
 	protected Script getScript(String profileName) throws ServiceException {
-		ServiceScriptFactory scriptFactory = findScriptFactory();
+		ServiceScriptFactory scriptFactory = findScriptFactory(NAME);
 		return (Script) scriptFactory.getScript();
-	}
-
-	private ServiceScriptFactory findScriptFactory() throws ServiceException {
-		String name = getProfile().getProfileName();
-		String service = getProfile().getEntry(NAME).get("service").toString();
-		for (ServiceScriptFactory scriptFactory : serviceScripts) {
-			ServiceScriptInfo info = scriptFactory.getInfo();
-			if (info.getProfileName().equals(name)
-					&& info.getServiceName().equals(service)) {
-				return scriptFactory;
-			}
-		}
-		throw log.errorFindServiceScript(this, name, service);
 	}
 
 	/**

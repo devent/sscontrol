@@ -24,6 +24,7 @@ import com.anrisoftware.globalpom.log.AbstractLogger;
 import com.anrisoftware.resources.texts.api.Texts;
 import com.anrisoftware.resources.texts.api.TextsFactory;
 import com.anrisoftware.sscontrol.core.api.ProfileService;
+import com.anrisoftware.sscontrol.core.api.ServiceException;
 
 /**
  * Logging messages for {@link AbstractService}.
@@ -33,10 +34,16 @@ import com.anrisoftware.sscontrol.core.api.ProfileService;
  */
 class AbstractServiceLogger extends AbstractLogger {
 
+	private static final String SERVICE_NAME = "service name";
+	private static final String PROFILE_NAME = "profile name";
+	private static final String SERVICE = "service";
+	private static final String ERROR_FIND_SERVICE2 = "Error find service script '{}' for service '{}'.";
+	private static final String ERROR_FIND_SERVICE = "Error find service script";
 	private static final String PROFILE_SET_INFO = "profile_set_info";
 	private static final String PROFILE_SET_DEBUG = "profile_set_debug";
 	private static final String NAME = AbstractServiceLogger.class
 			.getSimpleName();
+
 	private final Texts texts;
 
 	/**
@@ -59,6 +66,14 @@ class AbstractServiceLogger extends AbstractLogger {
 			log.info(getText(PROFILE_SET_INFO), profile.getProfileName(),
 					service.getName());
 		}
+	}
+
+	ServiceException errorFindServiceScript(AbstractService service,
+			String name, Object serviceName) {
+		return logException(
+				new ServiceException(ERROR_FIND_SERVICE).add(SERVICE, service)
+						.add(PROFILE_NAME, name).add(SERVICE_NAME, serviceName),
+				ERROR_FIND_SERVICE2, name, serviceName);
 	}
 
 }

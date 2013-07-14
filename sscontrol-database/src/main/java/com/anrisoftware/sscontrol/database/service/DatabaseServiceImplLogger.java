@@ -22,7 +22,6 @@ import static org.apache.commons.lang3.StringUtils.repeat;
 import static org.apache.commons.lang3.Validate.notEmpty;
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
-import com.anrisoftware.sscontrol.core.api.ServiceException;
 import com.anrisoftware.sscontrol.database.statements.Database;
 import com.anrisoftware.sscontrol.database.statements.User;
 
@@ -34,6 +33,7 @@ import com.anrisoftware.sscontrol.database.statements.User;
  */
 class DatabaseServiceImplLogger extends AbstractLogger {
 
+	private static final String BIND_ADDRESS = "Bind address must be set.";
 	private static final String USER_ADD_INFO = "User '{}' add for database service.";
 	private static final String USER_ADD = "User {} add for {}.";
 	private static final String DATABASE_ADD_INFO = "Database '{}' add for database service.";
@@ -47,27 +47,12 @@ class DatabaseServiceImplLogger extends AbstractLogger {
 	private static final String ACTIVATED = "activated";
 	private static final String DEBUGGING_SET_INFO = "Debugging {} for database service.";
 	private static final String DEBUGGING_SET = "Debugging {} set for {}.";
-	private static final String SERVICE_NAME = "service name";
-	private static final String PROFILE_NAME = "profile name";
-	private static final String SERVICE = "service";
-	private static final String ERROR_FIND_SERVICE_MESSAGE = "Error find service script '{}' for database service.";
-	private static final String ERROR_FIND_SERVICE = "Error find service script";
 
 	/**
 	 * Create logger for {@link DatabaseServiceImpl}.
 	 */
 	DatabaseServiceImplLogger() {
 		super(DatabaseServiceImpl.class);
-	}
-
-	ServiceException errorFindServiceScript(DatabaseServiceImpl dnsservice,
-			String name, String service) {
-		return logException(
-				new ServiceException(ERROR_FIND_SERVICE)
-						.add(SERVICE, dnsservice)
-						.add(PROFILE_NAME, name)
-						.add(SERVICE_NAME, service),
-				ERROR_FIND_SERVICE_MESSAGE, name);
 	}
 
 	void debuggingSet(DatabaseServiceImpl service, boolean debugging) {
@@ -79,7 +64,7 @@ class DatabaseServiceImplLogger extends AbstractLogger {
 	}
 
 	void checkBindAddress(DatabaseServiceImpl ervice, String address) {
-		notEmpty(address, "Bind address must be set.");
+		notEmpty(address, BIND_ADDRESS);
 	}
 
 	void bindAddressSet(DatabaseServiceImpl service, String address) {

@@ -1,18 +1,18 @@
 /*
  * Copyright 2012 Erwin Müller <erwin.mueller@deventm.org>
- *
+ * 
  * This file is part of sscontrol-hostname.
- *
+ * 
  * sscontrol-hostname is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published by the
  * Free Software Foundation, either version 3 of the License, or (at your
  * option) any later version.
- *
+ * 
  * sscontrol-hostname is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
  * for more details.
- *
+ * 
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-hostname. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -54,12 +54,8 @@ import com.google.inject.Provider;
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
+@SuppressWarnings("serial")
 public class HostsServiceImpl extends AbstractService {
-
-	/**
-	 * @since 1.0
-	 */
-	private static final long serialVersionUID = -2535415557268118125L;
 
 	private final HostsServiceImplLogger log;
 
@@ -69,15 +65,6 @@ public class HostsServiceImpl extends AbstractService {
 
 	private final HostFactory hostFactory;
 
-	/**
-	 * Sets the dependencies of the hosts service.
-	 * 
-	 * @param logger
-	 *            the {@link HostsServiceImplLogger} for logging messages.
-	 * 
-	 * @param scripts
-	 *            a {@link Map} of the hosts service scripts.
-	 */
 	@SuppressWarnings("unchecked")
 	@Inject
 	HostsServiceImpl(HostsServiceImplLogger logger,

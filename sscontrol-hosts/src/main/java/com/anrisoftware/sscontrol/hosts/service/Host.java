@@ -1,7 +1,6 @@
 package com.anrisoftware.sscontrol.hosts.service;
 
 import static java.util.Arrays.asList;
-import groovy.lang.GroovyObjectSupport;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -18,12 +17,11 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.google.inject.assistedinject.Assisted;
 
-public class Host extends GroovyObjectSupport implements Serializable {
+@SuppressWarnings("serial")
+public class Host implements Serializable {
 
-	/**
-	 * @since 1.0
-	 */
-	private static final long serialVersionUID = -57159439803794231L;
+	private static final String ALIASES = "aliases";
+	private static final String HOSTNAME = "hostname";
 
 	private final HostLogger log;
 
@@ -33,6 +31,9 @@ public class Host extends GroovyObjectSupport implements Serializable {
 
 	private final List<String> aliases;
 
+	/**
+	 * @see HostFactory#create(String)
+	 */
 	@SuppressWarnings("unchecked")
 	@Inject
 	Host(HostLogger logger, @Assisted String address) {
@@ -151,7 +152,6 @@ public class Host extends GroovyObjectSupport implements Serializable {
 	@Override
 	public String toString() {
 		return new ToStringBuilder(this).append(address)
-				.append("hostname", hostname).append("aliases", aliases)
-				.toString();
+				.append(HOSTNAME, hostname).append(ALIASES, aliases).toString();
 	}
 }

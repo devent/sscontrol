@@ -89,7 +89,7 @@ abstract class HostsScript extends LinuxScript {
 	 * Returns the hosts file.
 	 */
 	File getHostsFile() {
-		new File(configurationDirectory, configurationFile)
+		new File(configurationDir, configurationFile)
 	}
 
 	/**
@@ -111,13 +111,4 @@ abstract class HostsScript extends LinuxScript {
 	 * </ul>
 	 */
 	abstract String getConfigurationFile()
-
-	/**
-	 * Returns the hosts configuration directory.
-	 * <p>
-	 * <ul>
-	 * <li>property {@code "configuration_directory"}</li>
-	 * </ul>
-	 */
-	abstract File getConfigurationDirectory()
 }

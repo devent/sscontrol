@@ -43,11 +43,6 @@ class Ubuntu_10_04Script extends HostsScript {
 
 	@Override
 	String getConfigurationFile() {
-		profileProperty("configuration_file", ubuntuProperties)
-	}
-
-	@Override
-	File getConfigurationDirectory() {
-		profileProperty("configuration_directory", ubuntuProperties) as File
+		profileProperty "configuration_file", defaultProperties
 	}
 }

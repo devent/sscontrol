@@ -19,17 +19,9 @@ class MaraDns_1_2_Ubuntu_10_04Script extends MaraDns_1_2Script {
 	@Named("maradns-ubuntu-10_04-properties")
 	ContextProperties ubuntuProperties
 
-	File getConfigurationDir() {
-		profileProperty("configuration_directory", ubuntuProperties) as File
-	}
-
 	File getMararcFile() {
 		def file = profileProperty "configuration_file", ubuntuProperties
 		new File(configurationDir, file)
-	}
-
-	String getRestartCommand() {
-		profileProperty "restart_command", ubuntuProperties
 	}
 
 	@Override

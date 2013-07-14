@@ -33,15 +33,7 @@ abstract class MaraDnsScript extends LinuxScript {
 	def run() {
 		super.run()
 		distributionSpecificConfiguration()
-		runMaraDnsScript()
-	}
-
-	void runMaraDnsScript() {
-		maraDnsScript.name = name
-		maraDnsScript.system = system
-		maraDnsScript.profile = profile
-		maraDnsScript.service = service
-		maraDnsScript.run()
+		runScript maraDnsScript
 	}
 
 	/**
@@ -52,6 +44,5 @@ abstract class MaraDnsScript extends LinuxScript {
 	/**
 	 * Run the distribution specific configuration.
 	 */
-	void distributionSpecificConfiguration() {
-	}
+	abstract distributionSpecificConfiguration()
 }

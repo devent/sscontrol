@@ -21,6 +21,7 @@ package com.anrisoftware.sscontrol.dns.maradns.ubuntu
 profile "ubuntu_10_04", {
 	system {
 		install_command "${tmp}/usr/bin/aptitude update && ${tmp}/usr/bin/aptitude install"
+		restart_command "${tmp}/etc/init.d/maradns restart"
 		enable_repository_command "${tmp}/usr/bin/add-apt-repository"
 		system_packages "python-software-properties"
 	}
@@ -28,6 +29,5 @@ profile "ubuntu_10_04", {
 		service "maradns"
 		packages "maradns"
 		configuration_directory "${tmp}/etc/maradns"
-		restart_command "${tmp}/etc/init.d/maradns restart"
 	}
 }

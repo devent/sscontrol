@@ -30,7 +30,7 @@ abstract class MaraDns_1_2Script extends LinuxScript {
 		zoneConfiguration = maradnsTemplates.getResource("zonedb")
 		deployMaraDnsConfiguration()
 		deployZoneDbConfigurations()
-		restartService restartCommand
+		restartServices()
 	}
 
 	/**
@@ -100,15 +100,6 @@ abstract class MaraDns_1_2Script extends LinuxScript {
 	}
 
 	/**
-	 * Returns path of the MaraDNS configuration directory.
-	 *
-	 * <ul>
-	 * <li>profile property key {@code configuration_directory}</li>
-	 * </ul>
-	 */
-	abstract File getConfigurationDir()
-
-	/**
 	 * Returns the file of the {@code mararc} configuration file.
 	 *
 	 * <ul>
@@ -123,13 +114,4 @@ abstract class MaraDns_1_2Script extends LinuxScript {
 	String getMararcConfiguration() {
 		currentConfiguration mararcFile
 	}
-
-	/**
-	 * Returns the restart command for the MaraDNS server.
-	 *
-	 * <ul>
-	 * <li>profile property key {@code restart_command}</li>
-	 * </ul>
-	 */
-	abstract String getRestartCommand()
 }

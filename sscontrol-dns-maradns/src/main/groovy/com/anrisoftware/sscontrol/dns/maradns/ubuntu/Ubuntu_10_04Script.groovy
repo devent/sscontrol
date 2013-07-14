@@ -42,7 +42,7 @@ class Ubuntu_10_04Script extends MaraDnsScript {
 	MaraDns_1_2_Ubuntu_10_04Script maraDnsScript
 
 	@Override
-	void distributionSpecificConfiguration() {
+	def distributionSpecificConfiguration() {
 		def distribution = profileProperty "distribution_name", ubuntuProperties
 		def repositories = profileListProperty "additional_repositories", ubuntuProperties
 		enableDebRepositories distribution, repositories
@@ -52,16 +52,5 @@ class Ubuntu_10_04Script extends MaraDnsScript {
 	@Override
 	def getDefaultProperties() {
 		ubuntuProperties
-	}
-
-	/**
-	 * Returns the packages needed for the MaraDNS service.
-	 *
-	 * <ul>
-	 * <li>profile property key {@code packages}</li>
-	 * </ul>
-	 */
-	List getPackages() {
-		profileListProperty "packages", ubuntuProperties
 	}
 }

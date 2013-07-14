@@ -29,7 +29,6 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.ServiceLoader;
 import java.util.Set;
 
 import javax.inject.Inject;
@@ -40,7 +39,6 @@ import org.joda.time.DateTime;
 import com.anrisoftware.sscontrol.core.api.Service;
 import com.anrisoftware.sscontrol.core.api.ServiceException;
 import com.anrisoftware.sscontrol.core.api.ServiceScriptFactory;
-import com.anrisoftware.sscontrol.core.api.ServiceScriptInfo;
 import com.anrisoftware.sscontrol.core.service.AbstractService;
 import com.anrisoftware.sscontrol.dns.statements.ARecord;
 import com.anrisoftware.sscontrol.dns.statements.DnsZone;
@@ -57,8 +55,6 @@ class DnsServiceImpl extends AbstractService {
 
 	private final DnsServiceImplLogger log;
 
-	private final ServiceLoader<ServiceScriptFactory> serviceScripts;
-
 	@Inject
 	private DnsZoneFactory dnsZoneFactory;
 
@@ -70,22 +66,9 @@ class DnsServiceImpl extends AbstractService {
 
 	private boolean generate;
 
-	/**
-	 * Sets the default DNS service properties.
-	 * 
-	 * @param logger
-	 *            the {@link DnsServiceImplLogger} for logging messages.
-	 * 
-	 * @param serviceScripts
-	 *            the {@link ServiceLoader} that loads the DNS service
-	 *            {@link Script} scripts.
-	 */
 	@Inject
-	DnsServiceImpl(DnsServiceImplLogger logger,
-			ServiceLoader<ServiceScriptFactory> serviceScripts,
-			BindAddresses bindAddresses) {
+	DnsServiceImpl(DnsServiceImplLogger logger, BindAddresses bindAddresses) {
 		this.log = logger;
-		this.serviceScripts = serviceScripts;
 		this.bindAddresses = bindAddresses;
 		this.zones = new ArrayList<DnsZone>();
 		this.generate = true;
@@ -93,21 +76,8 @@ class DnsServiceImpl extends AbstractService {
 
 	@Override
 	protected Script getScript(String profileName) throws ServiceException {
-		ServiceScriptFactory scriptFactory = findScriptFactory();
+		ServiceScriptFactory scriptFactory = findScriptFactory(NAME);
 		return (Script) scriptFactory.getScript();
-	}
-
-	private ServiceScriptFactory findScriptFactory() throws ServiceException {
-		String name = getProfile().getProfileName();
-		String service = getProfile().getEntry(NAME).get("service").toString();
-		for (ServiceScriptFactory scriptFactory : serviceScripts) {
-			ServiceScriptInfo info = scriptFactory.getInfo();
-			if (info.getProfileName().equals(name)
-					&& info.getServiceName().equals(service)) {
-				return scriptFactory;
-			}
-		}
-		throw log.errorFindServiceScript(this, name, service);
 	}
 
 	/**

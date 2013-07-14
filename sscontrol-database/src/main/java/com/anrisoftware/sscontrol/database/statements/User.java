@@ -6,11 +6,11 @@ import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
-import javax.inject.Named;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.anrisoftware.propertiesutils.ContextProperties;
+import com.anrisoftware.sscontrol.database.service.DatabasePropertiesProvider;
 import com.google.inject.assistedinject.Assisted;
 
 /**
@@ -19,16 +19,12 @@ import com.google.inject.assistedinject.Assisted;
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
+@SuppressWarnings("serial")
 public class User implements Serializable {
 
 	private static final String SERVER_ARG = "server";
 
 	private static final String PASSWORD_ARG = "password";
-
-	/**
-	 * @version 1.0
-	 */
-	private static final long serialVersionUID = 771102898596872661L;
 
 	private final UserLogger log;
 
@@ -44,29 +40,14 @@ public class User implements Serializable {
 	private final List<String> databases;
 
 	/**
-	 * Sets the user name and default properties.
-	 * 
-	 * @param logger
-	 *            the {@link UserLogger} for logging messages.
-	 * 
-	 * @param p
-	 *            the default user {@link ContextProperties} properties:
-	 *            <dl>
-	 *            <dt>{@code user_server}</dt>
-	 *            <dd>default user server host.</dd>
-	 *            </dl>
-	 * 
-	 * @param name
-	 *            the user name.
+	 * @see UserFactory#create(String)
 	 */
 	@Inject
-	User(UserLogger logger,
-			@Named("database-defaults-properties") ContextProperties p,
-			@Assisted String name) {
+	User(UserLogger logger, DatabasePropertiesProvider p, @Assisted String name) {
 		this.log = logger;
 		this.name = name;
 		this.databases = new ArrayList<String>();
-		setupDefaults(p);
+		setupDefaults(p.get());
 	}
 
 	private void setupDefaults(ContextProperties p) {

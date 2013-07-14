@@ -212,6 +212,18 @@ public class ScriptCommandWorker implements Worker {
 		commandWorker.setExitValues(values);
 	}
 
+	/**
+	 * Sets to skip the checking of the exit codes.
+	 * 
+	 * @param skip
+	 *            set to {@code true} to skip the checking.
+	 */
+	public void setSkipExitValue(boolean skip) {
+		if (skip) {
+			setExitValues(null);
+		}
+	}
+
 	public int getExitCode() {
 		return commandWorker.getExitCode();
 	}

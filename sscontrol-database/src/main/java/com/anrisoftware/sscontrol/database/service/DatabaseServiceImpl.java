@@ -28,7 +28,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
-import javax.inject.Named;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
@@ -67,31 +66,16 @@ class DatabaseServiceImpl extends AbstractService {
 
 	private String adminPassword;
 
-	/**
-	 * Sets the default database service properties.
-	 * 
-	 * @param p
-	 *            the default database service {@link ContextProperties}
-	 *            properties. Expects the following properties:
-	 *            <dl>
-	 *            <dt>{@code debugging}</dt>
-	 *            <dd>Set to {@code true} to enable debugging logging.</dd>
-	 * 
-	 *            <dt>{@code bind_address}</dt>
-	 *            <dd>Set the default IP address or host name to bind the
-	 *            server.</dd>
-	 *            </dl>
-	 */
 	@Inject
 	DatabaseServiceImpl(DatabaseServiceImplLogger logger,
 			DatabaseFactory databaseFactory, UserFactory userFactory,
-			@Named("database-defaults-properties") ContextProperties p) {
+			DatabasePropertiesProvider p) {
 		this.log = logger;
 		this.databases = new ArrayList<Database>();
 		this.databaseFactory = databaseFactory;
 		this.userFactory = userFactory;
 		this.users = new ArrayList<User>();
-		setupDefaults(p);
+		setupDefaults(p.get());
 	}
 
 	private void setupDefaults(ContextProperties p) {

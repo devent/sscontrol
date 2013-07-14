@@ -14,7 +14,7 @@ public interface DatabaseFactory {
 	 * @param name
 	 *            the name of the database.
 	 * 
-	 * @re the {@link Database}.
+	 * @return the {@link Database}.
 	 */
 	Database create(String name);
 }

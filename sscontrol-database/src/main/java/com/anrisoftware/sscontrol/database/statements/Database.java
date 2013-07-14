@@ -27,12 +27,8 @@ import com.google.inject.assistedinject.Assisted;
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
+@SuppressWarnings("serial")
 public class Database implements Serializable {
-
-	/**
-	 * @version 1.0
-	 */
-	private static final long serialVersionUID = 4244380138329390017L;
 
 	private final DatabaseLogger log;
 
@@ -45,16 +41,7 @@ public class Database implements Serializable {
 	private final List<URI> sqlImports;
 
 	/**
-	 * Sets the name of the database.
-	 * 
-	 * @param logger
-	 *            the {@link DatabaseLogger} for logging messages.
-	 * 
-	 * @param name
-	 *            the name of the database.
-	 * 
-	 * @throws IllegalArgumentException
-	 *             if the specified name is empty.
+	 * @see DatabaseFactory#create(String)
 	 */
 	@Inject
 	Database(DatabaseLogger logger, @Assisted String name) {

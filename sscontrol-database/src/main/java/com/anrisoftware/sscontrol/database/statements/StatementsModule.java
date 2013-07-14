@@ -7,7 +7,7 @@ import com.google.inject.assistedinject.FactoryModuleBuilder;
  * Binds the database statements factories.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
- * @since 0.8
+ * @since 1.0
  */
 public class StatementsModule extends AbstractModule {
 

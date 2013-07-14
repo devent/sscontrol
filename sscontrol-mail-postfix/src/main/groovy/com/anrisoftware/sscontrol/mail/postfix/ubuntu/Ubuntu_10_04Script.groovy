@@ -19,7 +19,6 @@
 package com.anrisoftware.sscontrol.mail.postfix.ubuntu
 
 import javax.inject.Inject
-import javax.inject.Named
 
 import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.sscontrol.mail.postfix.linux.PostfixScript
@@ -33,11 +32,10 @@ import com.anrisoftware.sscontrol.mail.postfix.linux.PostfixScript
 class Ubuntu_10_04Script extends PostfixScript {
 
 	@Inject
-	@Named("postfix-ubuntu-10_04-properties")
-	ContextProperties ubuntuProperties
+	Ubuntu10_04PropertiesProvider ubuntuProperties
 
 	def runDistributionSpecific() {
-		installPackages packages
+		installPackages()
 	}
 
 	/**
@@ -45,6 +43,6 @@ class Ubuntu_10_04Script extends PostfixScript {
 	 */
 	@Override
 	def getDefaultProperties() {
-		ubuntuProperties
+		ubuntuProperties.get()
 	}
 }

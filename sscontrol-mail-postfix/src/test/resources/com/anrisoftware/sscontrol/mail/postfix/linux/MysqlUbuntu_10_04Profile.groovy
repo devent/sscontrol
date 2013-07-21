@@ -16,33 +16,21 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-hostname. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.mail.postfix.ubuntu
+package com.anrisoftware.sscontrol.mail.postfix.linux
 
-import javax.inject.Inject
-
-import com.anrisoftware.propertiesutils.ContextProperties
-import com.anrisoftware.sscontrol.mail.postfix.linux.PostfixScript
-
-/**
- * Configures the postfix service from hash files on a Ubuntu 10.04 system.
- *
- * @author Erwin Mueller, erwin.mueller@deventm.org
- * @since 1.0
- */
-class Ubuntu_10_04Script extends PostfixScript {
-
-	@Inject
-	Ubuntu10_04PropertiesProvider ubuntuProperties
-
-	def runDistributionSpecific() {
-		installPackages()
+profile "ubuntu_10_04", {
+	system {
+		install_command "$tmp/usr/bin/aptitude update && $tmp/usr/bin/aptitude install"
+		restart_command "$tmp/sbin/restart"
+		id_command "$tmp/bin/id"
 	}
-
-	/**
-	 * @see #ubuntuProperties
-	 */
-	@Override
-	def getDefaultProperties() {
-		ubuntuProperties.get()
+	mail {
+		service "postfix"
+		storage "mysql"
+		postalias_command "$tmp/usr/sbin/postalias"
+		postmap_command "$tmp/usr/sbin/postmap"
+		mailname_file "$tmp/etc/mailname"
+		configuration_directory "$tmp/etc/postfix"
+		mailbox_base_directory "$tmp/var/mail/vhosts"
 	}
 }

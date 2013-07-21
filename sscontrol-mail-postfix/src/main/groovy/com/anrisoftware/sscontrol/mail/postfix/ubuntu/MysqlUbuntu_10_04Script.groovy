@@ -20,16 +20,16 @@ package com.anrisoftware.sscontrol.mail.postfix.ubuntu
 
 import javax.inject.Inject
 
-import com.anrisoftware.propertiesutils.ContextProperties
-import com.anrisoftware.sscontrol.mail.postfix.linux.PostfixScript
+import com.anrisoftware.sscontrol.mail.postfix.linux.MysqlScript
 
 /**
- * Configures the postfix service from hash files on a Ubuntu 10.04 system.
+ * Configures the postfix service to use MySQL database for virtual users
+ * and domains on a Ubuntu 10.04 server.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class Ubuntu_10_04Script extends PostfixScript {
+class MysqlUbuntu_10_04Script extends MysqlScript {
 
 	@Inject
 	Ubuntu10_04PropertiesProvider ubuntuProperties

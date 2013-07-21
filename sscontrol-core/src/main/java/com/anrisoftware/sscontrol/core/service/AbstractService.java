@@ -18,6 +18,7 @@
  */
 package com.anrisoftware.sscontrol.core.service;
 
+import static java.util.ServiceLoader.load;
 import groovy.lang.Script;
 
 import java.util.ServiceLoader;
@@ -135,23 +136,37 @@ public abstract class AbstractService implements Service {
 	 */
 	protected final ServiceScriptFactory findScriptFactory(String serviceName)
 			throws ServiceException {
-		String name = getProfile().getProfileName();
-		Object service = getProfile().getEntry(serviceName).get("service");
-		ServiceLoader<ServiceScriptFactory> loader = ServiceLoader
-				.load(ServiceScriptFactory.class);
+		ProfileService profile = getProfile();
+		ServiceLoader<ServiceScriptFactory> loader = load(ServiceScriptFactory.class);
 		for (ServiceScriptFactory scriptFactory : loader) {
 			ServiceScriptInfo info = scriptFactory.getInfo();
-			if (serviceCompare(info, name, service)) {
+			if (serviceScriptCompare(info, serviceName, profile)) {
 				scriptFactory.setParent(injector);
 				return scriptFactory;
 			}
 		}
-		throw log.errorFindServiceScript(this, name, service);
+		throw log.errorFindServiceScript(this, profile, serviceName);
 	}
 
-	private boolean serviceCompare(ServiceScriptInfo info, String name,
-			Object service) {
-		return info.getProfileName().equals(name)
+	/**
+	 * Compares the service script name to the specified service information.
+	 * 
+	 * @param info
+	 *            the {@link ServiceScriptInfo}.
+	 * 
+	 * @param serviceName
+	 *            the name of the service.
+	 * 
+	 * @param profile
+	 *            the service {@link ProfileService}.
+	 * 
+	 * @return {@code true} if the service script that is specified by the
+	 *         service script information is the correct one for the service.
+	 */
+	protected boolean serviceScriptCompare(ServiceScriptInfo info,
+			String serviceName, ProfileService profile) {
+		Object service = getProfile().getEntry(serviceName).get("service");
+		return info.getProfileName().equals(profile.getProfileName())
 				&& info.getServiceName().equals(service);
 	}
 

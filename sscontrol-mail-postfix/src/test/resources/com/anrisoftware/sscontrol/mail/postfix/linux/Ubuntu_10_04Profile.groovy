@@ -26,6 +26,7 @@ profile "ubuntu_10_04", {
 	}
 	mail {
 		service "postfix"
+		storage "hash"
 		postalias_command "$tmp/usr/sbin/postalias"
 		postmap_command "$tmp/usr/sbin/postmap"
 		mailname_file "$tmp/etc/mailname"

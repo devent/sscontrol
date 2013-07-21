@@ -35,10 +35,10 @@ import com.anrisoftware.sscontrol.core.api.ServiceException;
 class AbstractServiceLogger extends AbstractLogger {
 
 	private static final String SERVICE_NAME = "service name";
-	private static final String PROFILE_NAME = "profile name";
+	private static final String PROFILE = "profile";
 	private static final String SERVICE = "service";
-	private static final String ERROR_FIND_SERVICE2 = "Error find service script '{}' for service '{}'.";
-	private static final String ERROR_FIND_SERVICE = "Error find service script";
+	private static final String FIND_SERVICE2 = "Error find service script '{}' for service '{}'.";
+	private static final String FIND_SERVICE = "Error find service script";
 	private static final String PROFILE_SET_INFO = "profile_set_info";
 	private static final String PROFILE_SET_DEBUG = "profile_set_debug";
 	private static final String NAME = AbstractServiceLogger.class
@@ -69,11 +69,11 @@ class AbstractServiceLogger extends AbstractLogger {
 	}
 
 	ServiceException errorFindServiceScript(AbstractService service,
-			String name, Object serviceName) {
+			ProfileService profile, String serviceName) {
 		return logException(
-				new ServiceException(ERROR_FIND_SERVICE).add(SERVICE, service)
-						.add(PROFILE_NAME, name).add(SERVICE_NAME, serviceName),
-				ERROR_FIND_SERVICE2, name, serviceName);
+				new ServiceException(FIND_SERVICE).add(SERVICE, service)
+						.add(PROFILE, profile).add(SERVICE_NAME, serviceName),
+				FIND_SERVICE2, profile.getProfileName(), serviceName);
 	}
 
 }

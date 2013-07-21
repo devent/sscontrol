@@ -39,6 +39,7 @@ import com.anrisoftware.sscontrol.core.api.ProfileService;
 import com.anrisoftware.sscontrol.core.api.Service;
 import com.anrisoftware.sscontrol.core.api.ServiceException;
 import com.anrisoftware.sscontrol.core.api.ServiceScriptFactory;
+import com.anrisoftware.sscontrol.core.api.ServiceScriptInfo;
 import com.anrisoftware.sscontrol.core.service.AbstractService;
 import com.anrisoftware.sscontrol.mail.statements.BindAddresses;
 import com.anrisoftware.sscontrol.mail.statements.BindAddressesFactory;
@@ -104,6 +105,18 @@ public class MailServiceImpl extends AbstractService {
 	protected Script getScript(String profileName) throws ServiceException {
 		ServiceScriptFactory scriptFactory = findScriptFactory(NAME);
 		return (Script) scriptFactory.getScript();
+	}
+
+	@Override
+	protected boolean serviceScriptCompare(ServiceScriptInfo info,
+			String serviceName, ProfileService profile) {
+		boolean found = super.serviceScriptCompare(info, serviceName, profile);
+		if (info instanceof MailServiceScriptInfo) {
+			MailServiceScriptInfo mail = (MailServiceScriptInfo) info;
+			Object storage = getProfile().getEntry(serviceName).get("storage");
+			found = mail.getStorage().equals(storage);
+		}
+		return found;
 	}
 
 	/**

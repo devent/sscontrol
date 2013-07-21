@@ -28,7 +28,14 @@ import com.anrisoftware.sscontrol.core.service.LinuxScript
 import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokenTemplate
 
 /**
- * Uses the postfix service on a general Linux system.
+ * Sets the basic postfix configuration.
+ *
+ * <ul>
+ * <li>bind address,
+ * <li>default destinations,
+ * <li>mail name,
+ * <li>etc.
+ * </ul>
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0

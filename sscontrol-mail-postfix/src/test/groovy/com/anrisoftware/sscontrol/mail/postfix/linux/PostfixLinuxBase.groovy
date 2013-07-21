@@ -84,6 +84,8 @@ class PostfixLinuxBase {
 
 	static ubuntu1004Profile = PostfixLinuxBase.class.getResource("Ubuntu_10_04Profile.groovy")
 
+	static mysqlUbuntu1004Profile = PostfixLinuxBase.class.getResource("MysqlUbuntu_10_04Profile.groovy")
+
 	static Injector injector
 
 	static ServiceLoaderFactory loaderFactory

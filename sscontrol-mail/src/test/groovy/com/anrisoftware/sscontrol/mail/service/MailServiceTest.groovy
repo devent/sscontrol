@@ -55,9 +55,22 @@ class MailServiceTest {
 		def service = assertService registry.getService("mail")[0], tmpdir
 	}
 
+	@Test
+	void "service mysql"() {
+		loader.loadService ubuntu1004Profile, null
+		def profile = registry.getService("profile")[0]
+		loader.loadService mailMysqlService, profile
+		def service = registry.getService("mail")[0]
+		assert service.database.database == "maildb"
+		assert service.database.user == "root"
+		assert service.database.password == "password"
+	}
+
 	static ubuntu1004Profile = MailServiceTest.class.getResource("Ubuntu_10_04Profile.groovy")
 
 	static mailService = MailServiceTest.class.getResource("MailService.groovy")
+
+	static mailMysqlService = MailServiceTest.class.getResource("MailMysqlService.groovy")
 
 	static Injector injector
 

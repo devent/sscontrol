@@ -45,6 +45,8 @@ import com.anrisoftware.sscontrol.mail.statements.BindAddresses;
 import com.anrisoftware.sscontrol.mail.statements.BindAddressesFactory;
 import com.anrisoftware.sscontrol.mail.statements.CertificateFile;
 import com.anrisoftware.sscontrol.mail.statements.CertificateFileFactory;
+import com.anrisoftware.sscontrol.mail.statements.Database;
+import com.anrisoftware.sscontrol.mail.statements.DatabaseFactory;
 import com.anrisoftware.sscontrol.mail.statements.Domain;
 import com.anrisoftware.sscontrol.mail.statements.DomainFactory;
 import com.anrisoftware.sscontrol.mail.statements.MasqueradeDomains;
@@ -81,6 +83,11 @@ public class MailServiceImpl extends AbstractService {
 	private final DomainFactory domainFactory;
 
 	private final Set<String> destinations;
+
+	@Inject
+	private DatabaseFactory databaseFactory;
+
+	private Database database;
 
 	/**
 	 * @see MailFactory#create(ProfileService)
@@ -370,6 +377,15 @@ public class MailServiceImpl extends AbstractService {
 
 	public BindAddresses getLoopback() {
 		return BindAddresses.LOOPBACK;
+	}
+
+	public Database database(String database) {
+		this.database = databaseFactory.create(database);
+		return this.database;
+	}
+
+	public Database getDatabase() {
+		return database;
 	}
 
 	@Override

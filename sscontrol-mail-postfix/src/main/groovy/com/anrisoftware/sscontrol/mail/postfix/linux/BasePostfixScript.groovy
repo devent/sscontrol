@@ -43,6 +43,9 @@ import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokenTemplate
  */
 class BasePostfixScript extends LinuxScript {
 
+	@Inject
+	BasePostfixScriptLogger log
+
 	/**
 	 * The {@link Templates} for the script.
 	 */
@@ -183,6 +186,8 @@ class BasePostfixScript extends LinuxScript {
 			new TokenTemplate("(?m)^\\#?inet_interfaces.*", mainTemplate.getText(true, "interfaces", "mail", service)),
 			new TokenTemplate("(?m)^\\#?mydestination.*", mainTemplate.getText(true, "destinations", "mail", service)),
 			new TokenTemplate("(?m)^\\#?masquerade_domains.*", mainTemplate.getText(true, "masqueradeDomains", "mail", service)),
+			//new TokenTemplate("(?m)^\\#?alias_maps.*", mainTemplate.getText(true, "aliasMaps", "mail", service)),
+			//new TokenTemplate("(?m)^\\#?alias_database.*", mainTemplate.getText(true, "aliasDatabase", "mail", service)),
 		]
 		def currentConfiguration = currentConfiguration mainFile
 		deployConfiguration configurationTokens(), currentConfiguration, configuration, mainFile
@@ -236,7 +241,7 @@ class BasePostfixScript extends LinuxScript {
 	 * @see #getPostmapCommand()
 	 */
 	void rehashFile(File file) {
-		def template = mysqlTemplates.getResource("postmap_command")
+		def template = postfixTemplates.getResource("postmap_command")
 		def worker = scriptCommandFactory.create(template, "postmapCommand", postmapCommand, "file", file)()
 		log.rehashFileDone this, file, worker
 	}

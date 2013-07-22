@@ -29,3 +29,11 @@ masquerade_domains = <mail.masqueradeDomains.domains;separator=" ">
 masqueradeExceptions(mail) ::= <<
 masquerade_exceptions = <mail.masqueradeDomains.userExceptions;separator=",">
 >>
+
+aliasMaps(mail) ::= <<
+alias_maps = <mail.masqueradeDomains.userExceptions;separator=",">
+>>
+
+aliasDomains(mail) ::= <<
+masquerade_exceptions = <mail.masqueradeDomains.userExceptions;separator=",">
+>>

@@ -24,6 +24,7 @@ import javax.inject.Inject
 
 import org.apache.commons.io.FileUtils
 
+import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.Templates
 import com.anrisoftware.sscontrol.core.service.LinuxScript
@@ -65,10 +66,9 @@ class BasePostfixScript extends LinuxScript {
 	BindAddressesRenderer bindAddressesRenderer
 
 	/**
-	 * Postfix default properties.
+	 * Postfix properties.
 	 */
-	@Inject
-	PostfixPropertiesProvider postfixProperties
+	ContextProperties postfixProperties
 
 	/**
 	 * Delegate postfix service script.
@@ -121,7 +121,7 @@ class BasePostfixScript extends LinuxScript {
 	 * </ul>
 	 */
 	List getDefaultDestinations() {
-		profileListProperty "default_destinations", postfixProperties.get()
+		profileListProperty "default_destinations", postfixProperties
 	}
 
 	/**
@@ -188,8 +188,8 @@ class BasePostfixScript extends LinuxScript {
 			new TokenTemplate("(?m)^\\#?inet_interfaces.*", mainTemplate.getText(true, "interfaces", "mail", service)),
 			new TokenTemplate("(?m)^\\#?mydestination.*", mainTemplate.getText(true, "destinations", "mail", service)),
 			new TokenTemplate("(?m)^\\#?masquerade_domains.*", mainTemplate.getText(true, "masqueradeDomains", "mail", service)),
-			new TokenTemplate("(?m)^\\#?alias_maps.*", mainTemplate.getText(true, "aliasMaps", "file", aliasMapsFile)),
-			new TokenTemplate("(?m)^\\#?alias_database.*", mainTemplate.getText(true, "aliasDatabase", "file", aliasDatabaseFile)),
+			new TokenTemplate("(?m)^\\#?alias_maps.*", mainTemplate.getText(true, "aliasMaps", "file", aliasesMapsFile)),
+			new TokenTemplate("(?m)^\\#?alias_database.*", mainTemplate.getText(true, "aliasDatabase", "file", aliasesDatabaseFile)),
 		]
 		def currentConfiguration = currentConfiguration mainFile
 		deployConfiguration configurationTokens(), currentConfiguration, configuration, mainFile
@@ -206,7 +206,7 @@ class BasePostfixScript extends LinuxScript {
 	 * @see #postfixProperties
 	 */
 	String getBanner() {
-		profileProperty "banner", postfixProperties.get()
+		profileProperty "banner", postfixProperties
 	}
 
 	/**
@@ -268,19 +268,19 @@ class BasePostfixScript extends LinuxScript {
 	}
 
 	/**
-	 * Returns the absolute path of the alias maps hash table file.
+	 * Returns the absolute path of the aliases maps file.
 	 * Default is the file {@code "aliases"} in the configuration
 	 * directory.
 	 *
 	 * <ul>
-	 * <li>profile property {@code "alias_maps_file"}</li>
+	 * <li>profile property {@code "aliases_maps_file"}</li>
 	 * </ul>
 	 *
 	 * @see #getConfigurationDir()
 	 * @see #postfixProperties
 	 */
-	File getAliasMapsFile() {
-		def file = profileProperty("alias_maps_file", postfixProperties.get()) as File
+	File getAliasesMapsFile() {
+		def file = profileProperty("aliases_maps_file", postfixProperties) as File
 		file = file.absolute ? file : new File(configurationDir, file.name)
 		if (!file.isFile()) {
 			FileUtils.touch file
@@ -290,19 +290,19 @@ class BasePostfixScript extends LinuxScript {
 	}
 
 	/**
-	 * Returns the absolute path of the alias database hash table file.
+	 * Returns the absolute path of the aliases database file.
 	 * Default is the file {@code "aliases"} in the configuration
 	 * directory.
 	 *
 	 * <ul>
-	 * <li>profile property {@code "alias_database_file"}</li>
+	 * <li>profile property {@code "aliases_database_file"}</li>
 	 * </ul>
 	 *
 	 * @see #getConfigurationDir()
 	 * @see #postfixProperties
 	 */
-	File getAliasDatabaseFile() {
-		def file = profileProperty("alias_database_file", postfixProperties.get()) as File
+	File getAliasesDatabaseFile() {
+		def file = profileProperty("aliases_database_file", postfixProperties) as File
 		file.absolute ? file : new File(configurationDir, file.name)
 	}
 
@@ -319,7 +319,7 @@ class BasePostfixScript extends LinuxScript {
 	 * @see #postfixProperties
 	 */
 	File getVirtualDomainsFile() {
-		def file = profileProperty("virtual_domains_file", postfixProperties.get()) as File
+		def file = profileProperty("virtual_domains_file", postfixProperties) as File
 		file.absolute ? file : new File(configurationDir, file.name)
 	}
 
@@ -336,7 +336,7 @@ class BasePostfixScript extends LinuxScript {
 	 * @see #postfixProperties
 	 */
 	File getVirtualAliasFile() {
-		def file = profileProperty("virtual_alias_file", postfixProperties.get()) as File
+		def file = profileProperty("virtual_alias_file", postfixProperties) as File
 		file.absolute ? file : new File(configurationDir, file.name)
 	}
 
@@ -353,7 +353,7 @@ class BasePostfixScript extends LinuxScript {
 	 * @see #postfixProperties
 	 */
 	File getVirtualMailboxFile() {
-		def file = profileProperty("virtual_mailbox_file", postfixProperties.get()) as File
+		def file = profileProperty("virtual_mailbox_file", postfixProperties) as File
 		file.absolute ? file : new File(configurationDir, file.name)
 	}
 
@@ -411,7 +411,7 @@ class BasePostfixScript extends LinuxScript {
 	 * @see #postfixProperties
 	 */
 	String getMailboxPattern() {
-		profileProperty("mailbox_pattern", postfixProperties.get()) as File
+		profileProperty("mailbox_pattern", postfixProperties) as File
 	}
 
 	/**
@@ -451,5 +451,50 @@ class BasePostfixScript extends LinuxScript {
 	 */
 	Number getVirtualGid() {
 		profileProperty("virtual_gid", defaultProperties) as Integer
+	}
+
+	/**
+	 * Returns the absolute path of the mailbox maps file.
+	 *
+	 * <ul>
+	 * <li>profile property {@code "mailbox_maps_file"}</li>
+	 * </ul>
+	 *
+	 * @see #getConfigurationDir()
+	 * @see #postfixProperties
+	 */
+	File getMailboxMapsFile() {
+		def file = profileProperty("mailbox_maps_file", postfixProperties) as File
+		file.absolute ? file : new File(configurationDir, file.name)
+	}
+
+	/**
+	 * Returns the absolute path of the alias maps file.
+	 *
+	 * <ul>
+	 * <li>profile property {@code "alias_maps_file"}</li>
+	 * </ul>
+	 *
+	 * @see #getConfigurationDir()
+	 * @see #postfixProperties
+	 */
+	File getAliasMapsFile() {
+		def file = profileProperty("alias_maps_file", postfixProperties) as File
+		file.absolute ? file : new File(configurationDir, file.name)
+	}
+
+	/**
+	 * Returns the absolute path of the mailbox domains maps file.
+	 *
+	 * <ul>
+	 * <li>profile property {@code "mailbox_domains_file"}</li>
+	 * </ul>
+	 *
+	 * @see #getConfigurationDir()
+	 * @see #postfixProperties
+	 */
+	File getMailboxDomainsFile() {
+		def file = profileProperty("mailbox_domains_file", postfixProperties) as File
+		file.absolute ? file : new File(configurationDir, file.name)
 	}
 }

@@ -22,6 +22,8 @@ import static org.apache.commons.io.FileUtils.*
 
 import javax.inject.Inject
 
+import org.apache.commons.io.FileUtils
+
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.Templates
 import com.anrisoftware.sscontrol.core.service.LinuxScript
@@ -46,7 +48,7 @@ abstract class MysqlScript extends LinuxScript {
 	BasePostfixScript postfixScript
 
 	@Inject
-	PostfixPropertiesProvider postfixProperties
+	MysqlPropertiesProvider postfixProperties
 
 	/**
 	 * Renderer for {@code inet_interfaces}.
@@ -63,22 +65,23 @@ abstract class MysqlScript extends LinuxScript {
 
 	TemplateResource mainTemplate
 
-	TemplateResource postmapsTemplate
+	TemplateResource configTemplate
 
 	@Override
 	def run() {
 		super.run()
 		//runDistributionSpecific()
+		postfixScript.postfixProperties = postfixProperties.get()
 		postfixScript.postfixScript = this
 		runScript postfixScript
 		mysqlTemplates = templatesFactory.create "MysqlScript"
 		tablesTemplate = mysqlTemplates.getResource "database_tables"
-		//mainTemplate = mysqlTemplates.getResource "main_configuration"
+		mainTemplate = mysqlTemplates.getResource "main_configuration"
+		configTemplate = mysqlTemplates.getResource "database_configuration"
 		//postmapsTemplate = mysqlTemplates.getResource "postmaps_configuration"
 		deployDatabaseTables()
-		//if (service.domains.size() > 0) {
-		//deployMain()
-		//deployVirtualDomains()
+		deployMain()
+		deployVirtualMailboxFile()
 		//deployAliases()
 		//deployMailbox()
 		//}
@@ -89,25 +92,6 @@ abstract class MysqlScript extends LinuxScript {
 	 * Deploy distribution specific configuration.
 	 */
 	abstract runDistributionSpecific()
-
-	/**
-	 * Sets the virtual aliases and mailboxes.
-	 *
-	 * @see #getMainFile()
-	 * @see #getAliasMapsFile()
-	 */
-	void deployMain() {
-		def configuration = []
-		configuration << new TokenTemplate("(?m)^\\#?virtual_alias_domains.*", mainTemplate.getText(true, "aliasDomains", "file", aliasDomainsFile))
-		configuration << new TokenTemplate("(?m)^\\#?virtual_alias_maps.*", mainTemplate.getText(true, "aliasMaps", "file", aliasMapsFile))
-		configuration << new TokenTemplate("(?m)^\\#?virtual_mailbox_base.*", mainTemplate.getText(true, "mailboxBase", "dir", mailboxBaseDir))
-		configuration << new TokenTemplate("(?m)^\\#?virtual_mailbox_maps.*", mainTemplate.getText(true, "mailboxMaps", "file", mailboxMapsFile))
-		configuration << new TokenTemplate("(?m)^\\#?virtual_minimum_uid.*", mainTemplate.getText(true, "minimumUid", "uid", minimumUid))
-		configuration << new TokenTemplate("(?m)^\\#?virtual_uid_maps.*", mainTemplate.getText(true, "uidMaps", "uid", virtualUid))
-		configuration << new TokenTemplate("(?m)^\\#?virtual_gid_maps.*", mainTemplate.getText(true, "gidMaps", "gid", virtualGid))
-		def currentConfiguration = currentConfiguration mainFile
-		deployConfiguration configurationTokens(), currentConfiguration, configuration, mainFile
-	}
 
 	/**
 	 * Creates the tables in the database for virtual domains and users.
@@ -126,11 +110,38 @@ abstract class MysqlScript extends LinuxScript {
 	}
 
 	/**
-	 * Deploys the list of virtual domains.
+	 * Sets the virtual aliases and mailboxes.
+	 */
+	void deployMain() {
+		def configuration = []
+		configuration << new TokenTemplate("(?m)^\\#?virtual_mailbox_base.*", mainTemplate.getText(true, "mailboxBase", "dir", postfixScript.mailboxBaseDir))
+		configuration << new TokenTemplate("(?m)^\\#?virtual_mailbox_maps.*", mainTemplate.getText(true, "mailboxMaps", "file", postfixScript.mailboxMapsFile))
+		configuration << new TokenTemplate("(?m)^\\#?virtual_alias_maps.*", mainTemplate.getText(true, "aliasMaps", "file", postfixScript.aliasMapsFile))
+		configuration << new TokenTemplate("(?m)^\\#?virtual_mailbox_domains.*", mainTemplate.getText(true, "mailboxDomains", "file", postfixScript.mailboxDomainsFile))
+		configuration << new TokenTemplate("(?m)^\\#?virtual_uid_maps.*", mainTemplate.getText(true, "uidMaps", "uid", postfixScript.virtualUid))
+		configuration << new TokenTemplate("(?m)^\\#?virtual_gid_maps.*", mainTemplate.getText(true, "gidMaps", "gid", postfixScript.virtualGid))
+		def currentConfiguration = currentConfiguration postfixScript.mainFile
+		deployConfiguration configurationTokens(), currentConfiguration, configuration, postfixScript.mainFile
+	}
+
+	/**
+	 * Deploys the virtual mailbox database configuration.
+	 */
+	void deployVirtualMailboxFile() {
+		def string = configTemplate.getText(true, "mailbox", "service", service)
+		FileUtils.write postfixScript.mailboxMapsFile, string
+		string = configTemplate.getText(true, "alias", "service", service)
+		FileUtils.write postfixScript.aliasMapsFile, string
+		string = configTemplate.getText(true, "domains", "service", service)
+		FileUtils.write postfixScript.mailboxDomainsFile, string
+	}
+
+	/**
+	 * Deploys
 	 *
 	 * @see #getAliasDomainsFile()
 	 */
-	void deployVirtualDomains() {
+	void deployVirtualMailbox() {
 		def configuration = service.domains.inject([]) { list, Domain domain ->
 			if (domain.enabled) {
 				list << new TokenTemplate("(?m)^\\#?${domain.name}.*", postmapsTemplate.getText(true, "domain", "domain", domain))

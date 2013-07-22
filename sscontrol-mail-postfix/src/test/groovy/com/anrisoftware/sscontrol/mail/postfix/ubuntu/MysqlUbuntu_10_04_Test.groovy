@@ -22,6 +22,7 @@ import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static org.apache.commons.io.FileUtils.*
 import groovy.util.logging.Slf4j
 
+import org.junit.Before
 import org.junit.Test
 
 import com.anrisoftware.sscontrol.core.api.ServiceLoader as SscontrolServiceLoader
@@ -47,6 +48,7 @@ class MysqlUbuntu_10_04_Test extends PostfixLinuxBase {
 		copyResourceToCommand echoCommand, aptitudeFile
 		copyResourceToCommand echoCommand, restartFile
 		copyResourceToCommand echoCommand, postmapFile
+		copyResourceToCommand echoCommand, postaliasFile
 		copyResourceToCommand echoCommand, mysqlFile
 		copyURLToFile maincf, maincfFile
 		copyURLToFile mastercf, mastercfFile
@@ -58,8 +60,23 @@ class MysqlUbuntu_10_04_Test extends PostfixLinuxBase {
 		def maincfFileString = readFileToString(maincfFile).replaceAll(/$tmpdir.absolutePath/, "/Ubuntu_10_04.tmp")
 		assertFileContent mailnameFile, mailnameExpected
 		assertStringContent maincfFileString, resourceToString(maincfMysqlExpected)
-		assertFileContent aliasDomainsFile, aliasDomainsExpected
-		assertFileContent aliasMapsFile, aliasMapsNonUnixExpected
-		assertFileContent mailboxMapsFile, mailboxMapsNonUnixExpected
+		assertFileContent mailboxCfFile, mailboxCf
+		assertFileContent aliasCfFile, aliasCf
+		assertFileContent domainsCfFile, domainsCf
+	}
+
+	static mailboxCf = PostfixLinuxBase.class.getResource("mysql_mailbox_cf_expected.txt")
+	static aliasCf = PostfixLinuxBase.class.getResource("mysql_alias_cf_expected.txt")
+	static domainsCf = PostfixLinuxBase.class.getResource("mysql_domains_cf_expected.txt")
+
+	File mailboxCfFile
+	File aliasCfFile
+	File domainsCfFile
+
+	@Before
+	void createTempMysql() {
+		mailboxCfFile = new File(tmpdir, "/etc/postfix/mysql_mailbox.cf")
+		aliasCfFile = new File(tmpdir, "/etc/postfix/mysql_alias.cf")
+		domainsCfFile = new File(tmpdir, "/etc/postfix/mysql_domains.cf")
 	}
 }

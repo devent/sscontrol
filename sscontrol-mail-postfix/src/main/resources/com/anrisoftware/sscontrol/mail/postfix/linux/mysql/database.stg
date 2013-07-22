@@ -1,0 +1,35 @@
+mailbox(service) ::= <<
+user=<service.database.user>
+password=<service.database.password>
+dbname=<service.database.database>
+table=users
+select_field=maildir
+where_field=id
+hosts=127.0.0.1
+additional_conditions = and enabled = 1
+
+>>
+
+alias(service) ::= <<
+user=<service.database.user>
+password=<service.database.password>
+dbname=<service.database.database>
+table=aliases
+select_field=destination
+where_field=mail
+hosts=127.0.0.1
+additional_conditions = and enabled = 1
+
+>>
+
+domains(service) ::= <<
+user=<service.database.user>
+password=<service.database.password>
+dbname=<service.database.database>
+table=domains
+select_field=domain
+where_field=domain
+hosts=127.0.0.1
+additional_conditions = and enabled = 1
+
+>>

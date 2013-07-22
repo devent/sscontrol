@@ -105,7 +105,7 @@ abstract class MysqlScript extends LinuxScript {
 				"mysqlCommand", mysqlCommand, "service", service)()
 		log.deployedDomainsTable this, worker
 		worker = scriptCommandFactory.create(tablesTemplate, "createUsersTable",
-				"mysqlCommand", mysqlCommand, "service", service)()
+				"mysqlCommand", mysqlCommand, "service", service, "profile", postfixScript)()
 		log.deployedUsersTable this, worker
 	}
 

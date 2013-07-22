@@ -48,9 +48,8 @@ class ExecCommandWorkerLogger extends AbstractLogger {
 	}
 
 	WorkerException errorExecuteCommand(ExecCommandWorker worker, IOException e) {
-		return logException(
-				new WorkerException(ERROR_EXECUTE_COMMAND, e).addContextValue(
-						WORKER, worker), ERROR_EXECUTE_COMMAND_MESSAGE,
+		return logException(new WorkerException(ERROR_EXECUTE_COMMAND, e).add(
+				WORKER, worker), ERROR_EXECUTE_COMMAND_MESSAGE,
 				worker.getCommand());
 	}
 

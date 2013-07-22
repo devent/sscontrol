@@ -32,8 +32,8 @@ import com.anrisoftware.sscontrol.workers.api.WorkerException;
 class ScriptCommandWorkerLogger extends AbstractLogger {
 
 	private static final String WORKER = "worker";
-	private static final String ERROR_PROCESSING_TEMPLATE_MESSAGE = "Error processing template {}#{}.";
-	private static final String ERROR_PROCESSING_TEMPLATE = "Error processing template";
+	private static final String ERROR_PROCESSING2 = "Error processing template {}#{}.";
+	private static final String ERROR_PROCESSING = "Error processing template";
 
 	/**
 	 * Create logger for {@link ScriptCommandWorker}.
@@ -45,8 +45,7 @@ class ScriptCommandWorkerLogger extends AbstractLogger {
 	WorkerException errorProcessTemplate(ScriptCommandWorker worker,
 			ResourcesException e) {
 		return logException(
-				new WorkerException(ERROR_PROCESSING_TEMPLATE, e).addContextValue(
-						WORKER, worker), ERROR_PROCESSING_TEMPLATE_MESSAGE,
-				e.getClassName(), e.getKey());
+				new WorkerException(ERROR_PROCESSING, e).add(WORKER, worker),
+				ERROR_PROCESSING2, e.getClassName(), e.getKey());
 	}
 }

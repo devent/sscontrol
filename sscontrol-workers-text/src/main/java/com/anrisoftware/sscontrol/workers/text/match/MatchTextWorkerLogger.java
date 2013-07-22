@@ -33,12 +33,12 @@ import com.anrisoftware.sscontrol.workers.api.WorkerException;
 class MatchTextWorkerLogger extends AbstractLogger {
 
 	private static final String WORKER = "worker";
-	private static final String ERROR_READ_RESOURCE_MESSAGE = "Error read resource '{}'";
-	private static final String ERROR_READ_RESOURCE = "Error read resource";
-	private static final String SEARCH_TEXT_NOT_FOUND_INFO = "Search text was not found '{}' in {}.";
-	private static final String SEARCH_TEXT_NOT_FOUND = "Search text was not found in {}.";
-	private static final String SEARCH_TEXT_FOUND_INFO = "Search text was found '{}' in {}.";
-	private static final String SEARCH_TEXT_FOUND = "Search text was found in {}.";
+	private static final String ERROR_READ2 = "Error read resource '{}'";
+	private static final String ERROR_READ = "Error read resource";
+	private static final String NO_SEARCH_TEXT2 = "Search text was not found '{}' in {}.";
+	private static final String NO_SEARCH_TEXT = "Search text was not found in {}.";
+	private static final String SEARCH_TEXT2 = "Search text was found '{}' in {}.";
+	private static final String SEARCH_TEXT = "Search text was found in {}.";
 
 	/**
 	 * Create logger for {@link MatchTextWorker}.
@@ -49,26 +49,23 @@ class MatchTextWorkerLogger extends AbstractLogger {
 
 	WorkerException readFileError(MatchTextWorker worker, IOException e) {
 		return logException(
-				new WorkerException(ERROR_READ_RESOURCE, e).addContextValue(
-						WORKER, worker), ERROR_READ_RESOURCE_MESSAGE,
-				worker.getResource());
+				new WorkerException(ERROR_READ, e).add(WORKER, worker),
+				ERROR_READ2, worker.getResource());
 	}
 
 	void textWasFound(MatchTextWorker worker) {
 		if (log.isDebugEnabled()) {
-			log.debug(SEARCH_TEXT_FOUND, worker);
+			log.debug(SEARCH_TEXT, worker);
 		} else {
-			log.info(SEARCH_TEXT_FOUND_INFO, worker.getPattern(),
-					worker.getResource());
+			log.info(SEARCH_TEXT2, worker.getPattern(), worker.getResource());
 		}
 	}
 
 	void textWasNotFound(MatchTextWorker worker) {
 		if (log.isDebugEnabled()) {
-			log.debug(SEARCH_TEXT_NOT_FOUND, worker);
+			log.debug(NO_SEARCH_TEXT, worker);
 		} else {
-			log.info(SEARCH_TEXT_NOT_FOUND_INFO, worker.getPattern(),
-					worker.getResource());
+			log.info(NO_SEARCH_TEXT2, worker.getPattern(), worker.getResource());
 		}
 	}
 }

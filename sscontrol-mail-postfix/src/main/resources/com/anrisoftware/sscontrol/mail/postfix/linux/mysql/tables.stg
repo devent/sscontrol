@@ -28,7 +28,7 @@ CREATE TABLE IF NOT EXISTS `domains` (
 `enabled` tinyint(1) NOT NULL default '1',
 PRIMARY KEY (`pkid`) ) ;
 
-CREATE INDEX `domains_index`
+CREATE UNIQUE INDEX `domains_index`
 ON `domains` (`domain`);
 \q
 STOP

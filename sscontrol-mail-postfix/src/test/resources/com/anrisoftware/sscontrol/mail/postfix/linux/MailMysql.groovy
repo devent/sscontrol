@@ -13,14 +13,14 @@ mail {
 		users "root"
 	}
 
-	domain "example.com", {
-		user "info"
-		user "sales"
-		user "disabled-user", { enabled false }
-		alias "postmaster", destination: "postmaster"
-		alias "disabled-alias", destination: "postmaster", { enabled false }
-		catchall destination: "jim"
+	domain "localhost.localdomain", { catchall destination: "@localhost" }
+	domain "localhost", {
+		alias "postmaster", destination: "root"
+		alias "sysadmin", destination: "root"
+		alias "webmaster", destination: "root"
+		alias "abuse", destination: "root"
+		alias "root", destination: "root"
+		catchall destination: "root"
+		user "root", password: "rootpasswd"
 	}
-
-	domain "disabled.domain", { enabled false }
 }

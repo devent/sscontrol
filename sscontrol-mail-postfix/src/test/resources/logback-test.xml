@@ -35,6 +35,7 @@
 
 	<logger name="com.anrisoftware" level="INFO" />
 	<logger name="com.anrisoftware.sscontrol" level="DEBUG" />
+	<logger name="com.anrisoftware.sscontrol.workers.command" level="ERROR" />
 	<logger name="com.anrisoftware.sscontrol.mail" level="ALL" />
 
 </configuration>

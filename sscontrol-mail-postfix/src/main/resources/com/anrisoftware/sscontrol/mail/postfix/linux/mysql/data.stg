@@ -1,0 +1,65 @@
+insertDomains(mysqlCommand, service) ::= <<
+<! creates the aliases table !>
+#!/bin/sh
+<mysqlCommand> --user=<service.database.user> --password=<service.database.password> -t \<\<STOP
+USE <service.database.database>;
+<service.domains:domainRow()>\q
+STOP
+>>
+
+domainRow(domain) ::= <<
+INSERT INTO `domains` (`domain`, `enabled`) VALUES
+('<domain.name>', <enabledStr(domain.enabled)>)
+ON DUPLICATE KEY UPDATE
+`enabled`=<enabledStr(domain.enabled)>;
+
+>>
+
+insertAliases(mysqlCommand, service, domain) ::= <<
+<! creates the aliases table !>
+#!/bin/sh
+<mysqlCommand> --user=<service.database.user> --password=<service.database.password> -t \<\<STOP
+USE <service.database.database>;
+<domain.aliases:aliasRow()>\q
+STOP
+>>
+
+aliasRow(alias) ::= <<
+INSERT INTO `aliases` (`mail`, `destination`, `enabled`) VALUES
+('<aliasName(alias)>', '<aliasDestination(alias)>', <enabledStr(alias.enabled)>)
+ON DUPLICATE KEY UPDATE
+`destination`='<aliasDestination(alias)>',
+`enabled`=<enabledStr(alias.enabled)>;
+
+>>
+
+aliasName(alias) ::= <%
+<if(alias.nameDomain)><alias.name><else><alias.name>@<alias.domain.name><endif>
+%>
+
+aliasDestination(alias) ::= <%
+<if(alias.destinationDomain)><alias.destination><else><alias.destination>@<alias.domain.name><endif>
+%>
+
+insertUsers(mysqlCommand, service, domain) ::= <<
+<! creates the aliases table !>
+#!/bin/sh
+<mysqlCommand> --user=<service.database.user> --password=<service.database.password> -t \<\<STOP
+USE <service.database.database>;
+<domain.users:userRow()>\q
+STOP
+>>
+
+userRow(user) ::= <<
+INSERT INTO `users` (`id`, `name`, `maildir`, `enabled`, `crypt`) VALUES
+('<user.name>@<user.domain.name>', '<user.name>', '<user.name>/', <enabledStr(user.enabled)>, encrypt('<user.password>'))
+ON DUPLICATE KEY UPDATE
+`enabled`=<enabledStr(user.enabled)>,
+`crypt`=encrypt('<user.password>');
+
+>>
+
+enabledStr(enabled) ::= <%
+<if(enabled)>1<else>0<endif>
+%>
+

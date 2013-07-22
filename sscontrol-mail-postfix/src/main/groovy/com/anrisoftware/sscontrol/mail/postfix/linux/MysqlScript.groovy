@@ -27,9 +27,7 @@ import org.apache.commons.io.FileUtils
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.Templates
 import com.anrisoftware.sscontrol.core.service.LinuxScript
-import com.anrisoftware.sscontrol.mail.statements.Alias
 import com.anrisoftware.sscontrol.mail.statements.Domain
-import com.anrisoftware.sscontrol.mail.statements.User
 import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokenTemplate
 
 /**
@@ -67,6 +65,8 @@ abstract class MysqlScript extends LinuxScript {
 
 	TemplateResource configTemplate
 
+	TemplateResource dataTemplate
+
 	@Override
 	def run() {
 		super.run()
@@ -78,12 +78,13 @@ abstract class MysqlScript extends LinuxScript {
 		tablesTemplate = mysqlTemplates.getResource "database_tables"
 		mainTemplate = mysqlTemplates.getResource "main_configuration"
 		configTemplate = mysqlTemplates.getResource "database_configuration"
-		//postmapsTemplate = mysqlTemplates.getResource "postmaps_configuration"
+		dataTemplate = mysqlTemplates.getResource "database_data"
 		deployDatabaseTables()
 		deployMain()
 		deployVirtualMailboxFile()
-		//deployAliases()
-		//deployMailbox()
+		deployDomains()
+		deployAliases()
+		deployUsers()
 		//}
 		//restartServices()
 	}
@@ -137,64 +138,40 @@ abstract class MysqlScript extends LinuxScript {
 	}
 
 	/**
-	 * Deploys
-	 *
-	 * @see #getAliasDomainsFile()
+	 * Deploys the virtual domains.
 	 */
-	void deployVirtualMailbox() {
-		def configuration = service.domains.inject([]) { list, Domain domain ->
-			if (domain.enabled) {
-				list << new TokenTemplate("(?m)^\\#?${domain.name}.*", postmapsTemplate.getText(true, "domain", "domain", domain))
-			} else {
-				list
-			}
-		}
-		def currentConfiguration = currentConfiguration aliasDomainsFile
-		deployConfiguration configurationTokens(), currentConfiguration, configuration, aliasDomainsFile
-		rehashFile aliasDomainsFile
+	void deployDomains() {
+		def worker = scriptCommandFactory.create(dataTemplate, "insertDomains",
+				"mysqlCommand", mysqlCommand, "service", service)()
+		log.deployedDomainsData this, worker
 	}
 
 	/**
-	 * Deploys the list of virtual aliases.
-	 *
-	 * @see #getAliasMapsFile()
+	 * Deploys the virtual aliases.
 	 */
 	void deployAliases() {
-		def configuration = service.domains.inject([]) { list, domain ->
-			list << domain.aliases.inject([]) { aliases, Alias alias ->
-				if (alias.enabled) {
-					def text = postmapsTemplate.getText(true, "alias", "alias", alias)
-					aliases << new TokenTemplate("(?m)^\\#?${alias.name}@${alias.domain.name}.*", text)
-				} else {
-					aliases
-				}
+		for (Domain domain : service.domains) {
+			if (domain.aliases.empty) {
+				continue
 			}
+			def worker = scriptCommandFactory.create(dataTemplate, "insertAliases",
+					"mysqlCommand", mysqlCommand, "service", service, "domain", domain)()
+			log.deployedAliasesData this, worker
 		}
-		def currentConfiguration = currentConfiguration aliasMapsFile
-		deployConfiguration configurationTokens(), currentConfiguration, configuration, aliasMapsFile
-		rehashFile aliasMapsFile
 	}
 
 	/**
-	 * Deploys the list of virtual mailbox.
-	 *
-	 * @see #getMailboxMapsFile()
+	 * Deploys the virtual users.
 	 */
-	void deployMailbox() {
-		def configuration = service.domains.inject([]) { list, domain ->
-			list << domain.users.inject([]) { users, User user ->
-				if (user.enabled) {
-					def path = createMailboxPath(user)
-					def text = postmapsTemplate.getText(true, "user", "user", user, "path", path)
-					users << new TokenTemplate("(?m)^\\#?${user.name}@${user.domain.name}.*", text)
-				} else {
-					users
-				}
+	void deployUsers() {
+		for (Domain domain : service.domains) {
+			if (domain.users.empty) {
+				continue
 			}
+			def worker = scriptCommandFactory.create(dataTemplate, "insertUsers",
+					"mysqlCommand", mysqlCommand, "service", service, "domain", domain)()
+			log.deployedUsersData this, worker
 		}
-		def currentConfiguration = currentConfiguration mailboxMapsFile
-		deployConfiguration configurationTokens(), currentConfiguration, configuration, mailboxMapsFile
-		rehashFile mailboxMapsFile
 	}
 
 	/**

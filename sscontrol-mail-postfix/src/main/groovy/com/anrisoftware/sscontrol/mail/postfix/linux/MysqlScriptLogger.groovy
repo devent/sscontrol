@@ -18,13 +18,19 @@ class MysqlScriptLogger extends AbstractLogger {
 	static final PASSWORD_MASK = "*"
 	static final String ALIAS_TABLE = "Alias table created, worker {}, output: <<EOL\n{}\nEOL"
 	static final String ALIAS_TABLE1 = "Alias table created for {}, worker {}."
-	static final String ALIAS_TABLE2 = "Alias table created for {}."
+	static final String ALIAS_TABLE2 = "Alias table created for script '{}'."
 	static final String DOMAINS_TABLE = "Domains table created, worker {}, output: <<EOL\n{}\nEOL"
 	static final String DOMAINS_TABLE1 = "Domains table created for {}, worker {}."
-	static final String DOMAINS_TABLE2 = "Domains table created for {}."
+	static final String DOMAINS_TABLE2 = "Domains table created for script '{}'."
 	static final String USERS_TABLE = "Users table created, worker {}, output: <<EOL\n{}\nEOL"
 	static final String USERS_TABLE1 = "Users table created for {}, worker {}."
-	static final String USERS_TABLE2 = "Users table created for {}."
+	static final String USERS_TABLE2 = "Users table created for script '{}'."
+	static final String DEPLOYED_DOMAINS = "Deployed domains for {}, worker {}."
+	static final String DEPLOYED_DOMAINS2 = "Deployed domains for script '{}'."
+	static final String DEPLOYED_ALIASES = "Deployed aliases for {}, worker {}."
+	static final String DEPLOYED_ALIASES2 = "Deployed aliases for script '{}'."
+	static final String DEPLOYED_USERS = "Deployed users for {}, worker {}."
+	static final String DEPLOYED_USERS2 = "Deployed users for script '{}'."
 
 	/**
 	 * Create logger for {@link MysqlScript}.
@@ -72,12 +78,24 @@ class MysqlScriptLogger extends AbstractLogger {
 		}
 	}
 
+	void deployedDomainsData(MysqlScript script, def worker) {
+		log.debugEnabled ? log.debug(DEPLOYED_DOMAINS, script, worker) :
+				log.info(DEPLOYED_DOMAINS2, script.name)
+	}
+
+	void deployedAliasesData(MysqlScript script, def worker) {
+		log.debugEnabled ? log.debug(DEPLOYED_ALIASES, script, worker) :
+				log.info(DEPLOYED_ALIASES2, script.name)
+	}
+
+	void deployedUsersData(MysqlScript script, def worker) {
+		log.debugEnabled ? log.debug(DEPLOYED_USERS, script, worker) :
+				log.info(DEPLOYED_USERS2, script.name)
+	}
+
 	void rehashFileDone(def script, def file, def worker) {
-		if (log.debugEnabled) {
-			log.debug REHASH_FILE, file, worker, script
-		} else {
-			log.info REHASH_FILE_INFO, file
-		}
+		log.debugEnabled ? log.debug(REHASH_FILE, file, worker, script) :
+				log.info(REHASH_FILE_INFO, file)
 	}
 
 	String replacePassword(MysqlScript script, String string) {

@@ -1,0 +1,39 @@
+# See /usr/share/postfix/main.cf.dist for a commented, more complete version
+
+
+# Debian specific:  Specifying a file name will cause the first
+# line of that file to be used as the name.  The Debian default
+# is /etc/mailname.
+# SSCONTROL-mail
+myorigin = example.com
+# SSCONTROL-mail-END
+
+
+# SSCONTROL-mail
+smtpd_banner = $myhostname ESMTP $mail_name
+# SSCONTROL-mail-END
+
+biff = no
+
+# appending .domain is the MUA's job.
+append_dot_mydomain = no
+
+# Uncomment the next line to generate "delayed mail" warnings
+#delay_warning_time = 4h
+
+readme_directory = no
+# SSCONTROL-mail
+myhostname = mail.example.com
+# SSCONTROL-mail-END
+# SSCONTROL-mail
+relayhost = smtp.relayhost.com
+# SSCONTROL-mail-END
+# SSCONTROL-mail
+inet_interfaces = all
+# SSCONTROL-mail-END
+# SSCONTROL-mail
+mydestination = localhost.\$mydomain,localhost,\$myhostname
+# SSCONTROL-mail-END
+# SSCONTROL-mail
+masquerade_domains = mail.example.com
+# SSCONTROL-mail-END

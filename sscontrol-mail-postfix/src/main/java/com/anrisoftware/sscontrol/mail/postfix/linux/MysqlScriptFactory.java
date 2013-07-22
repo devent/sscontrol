@@ -8,23 +8,23 @@ import org.mangosdk.spi.ProviderFor;
 import com.anrisoftware.sscontrol.core.api.ServiceScriptFactory;
 import com.anrisoftware.sscontrol.core.api.ServiceScriptInfo;
 import com.anrisoftware.sscontrol.core.service.AbstractScriptFactory;
-import com.anrisoftware.sscontrol.mail.postfix.ubuntu.Ubuntu_10_04Script;
+import com.anrisoftware.sscontrol.mail.postfix.ubuntu.MysqlUbuntu_10_04Script;
 import com.anrisoftware.sscontrol.mail.service.MailServiceScriptInfo;
 import com.google.inject.Module;
 
 /**
- * Provides the postfix service from hash files for Ubuntu 10.04 server.
+ * Provides the postfix service with MySQL database for Ubuntu 10.04 server.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
 @ProviderFor(ServiceScriptFactory.class)
-public class PostfixScriptFactory extends AbstractScriptFactory {
+public class MysqlScriptFactory extends AbstractScriptFactory {
 
 	/**
 	 * Name of the storage.
 	 */
-	public static final String STORAGE_NAME = "hash";
+	public static final String STORAGE_NAME = "mysql";
 
 	/**
 	 * Name of the service.
@@ -75,6 +75,6 @@ public class PostfixScriptFactory extends AbstractScriptFactory {
 
 	@Override
 	protected Class<?> getScriptClass() {
-		return Ubuntu_10_04Script.class;
+		return MysqlUbuntu_10_04Script.class;
 	}
 }

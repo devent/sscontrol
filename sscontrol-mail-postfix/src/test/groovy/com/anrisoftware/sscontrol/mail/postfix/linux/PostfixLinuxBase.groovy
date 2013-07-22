@@ -52,6 +52,8 @@ class PostfixLinuxBase {
 
 	static mailSeparateDomainsNonUnixAccounts = PostfixLinuxBase.class.getResource("MailSeparateDomainsNonUnixAccounts.groovy")
 
+	static mailMysql = PostfixLinuxBase.class.getResource("MailMysql.groovy")
+
 	static mailname = PostfixLinuxBase.class.getResource("mailname.txt")
 
 	static maincf = PostfixLinuxBase.class.getResource("maincf.txt")
@@ -86,6 +88,8 @@ class PostfixLinuxBase {
 
 	static mysqlUbuntu1004Profile = PostfixLinuxBase.class.getResource("MysqlUbuntu_10_04Profile.groovy")
 
+	static maincfMysqlExpected = PostfixLinuxBase.class.getResource("maincf_mysql.txt")
+
 	static Injector injector
 
 	static ServiceLoaderFactory loaderFactory
@@ -113,6 +117,8 @@ class PostfixLinuxBase {
 
 	File postmapFile
 
+	File mysqlFile
+
 	File aliasDomainsFile
 
 	File aliasMapsFile
@@ -128,6 +134,7 @@ class PostfixLinuxBase {
 		maincfFile = new File(tmpdir, "/etc/postfix/main.cf")
 		mastercfFile = new File(tmpdir, "/etc/postfix/master.cf")
 		postmapFile = new File(tmpdir, "/usr/sbin/postmap")
+		mysqlFile = new File(tmpdir, "/usr/bin/mysql")
 		aliasDomainsFile = new File(tmpdir, "/etc/postfix/alias_domains")
 		aliasMapsFile = new File(tmpdir, "/etc/postfix/alias_maps")
 		mailboxMapsFile = new File(tmpdir, "/etc/postfix/mailbox_maps")

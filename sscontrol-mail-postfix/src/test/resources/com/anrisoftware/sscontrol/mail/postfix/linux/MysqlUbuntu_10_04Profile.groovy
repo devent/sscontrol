@@ -32,5 +32,6 @@ profile "ubuntu_10_04", {
 		mailname_file "$tmp/etc/mailname"
 		configuration_directory "$tmp/etc/postfix"
 		mailbox_base_directory "$tmp/var/mail/vhosts"
+		mysql_command "$tmp/usr/bin/mysql"
 	}
 }

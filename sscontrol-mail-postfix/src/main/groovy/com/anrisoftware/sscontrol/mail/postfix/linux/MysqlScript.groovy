@@ -40,10 +40,10 @@ import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokenTemplate
 abstract class MysqlScript extends LinuxScript {
 
 	@Inject
-	PostfixScriptLogger log
+	MysqlScriptLogger log
 
 	@Inject
-	BasePostfixScript basePostfixScript
+	BasePostfixScript postfixScript
 
 	@Inject
 	PostfixPropertiesProvider postfixProperties
@@ -57,7 +57,9 @@ abstract class MysqlScript extends LinuxScript {
 	/**
 	 * The {@link Templates} for the script.
 	 */
-	Templates postfixTemplates
+	Templates mysqlTemplates
+
+	TemplateResource tablesTemplate
 
 	TemplateResource mainTemplate
 
@@ -66,32 +68,27 @@ abstract class MysqlScript extends LinuxScript {
 	@Override
 	def run() {
 		super.run()
-		runDistributionSpecific()
-		basePostfixScript.postfixScript = this
-		runScript basePostfixScript
-		postfixTemplates = templatesFactory.create "PostfixScript", templatesAttributes
-		mainTemplate = postfixTemplates.getResource "main_hash_configuration"
-		postmapsTemplate = postfixTemplates.getResource "postmaps_configuration"
-		if (service.domains.size() > 0) {
-			deployMain()
-			deployVirtualDomains()
-			deployAliases()
-			deployMailbox()
-		}
-		restartServices()
+		//runDistributionSpecific()
+		postfixScript.postfixScript = this
+		runScript postfixScript
+		mysqlTemplates = templatesFactory.create "MysqlScript"
+		tablesTemplate = mysqlTemplates.getResource "database_tables"
+		//mainTemplate = mysqlTemplates.getResource "main_configuration"
+		//postmapsTemplate = mysqlTemplates.getResource "postmaps_configuration"
+		deployDatabaseTables()
+		//if (service.domains.size() > 0) {
+		//deployMain()
+		//deployVirtualDomains()
+		//deployAliases()
+		//deployMailbox()
+		//}
+		//restartServices()
 	}
 
 	/**
 	 * Deploy distribution specific configuration.
 	 */
 	abstract runDistributionSpecific()
-
-	/**
-	 * Returns additional template attributes.
-	 */
-	Map getTemplatesAttributes() {
-		["renderers": [bindAddressesRenderer]]
-	}
 
 	/**
 	 * Sets the virtual aliases and mailboxes.
@@ -110,6 +107,22 @@ abstract class MysqlScript extends LinuxScript {
 		configuration << new TokenTemplate("(?m)^\\#?virtual_gid_maps.*", mainTemplate.getText(true, "gidMaps", "gid", virtualGid))
 		def currentConfiguration = currentConfiguration mainFile
 		deployConfiguration configurationTokens(), currentConfiguration, configuration, mainFile
+	}
+
+	/**
+	 * Creates the tables in the database for virtual domains and users.
+	 */
+	void deployDatabaseTables() {
+		def worker
+		worker = scriptCommandFactory.create(tablesTemplate, "createAliasesTable",
+				"mysqlCommand", mysqlCommand, "service", service)()
+		log.deployedAliasesTable this, worker
+		worker = scriptCommandFactory.create(tablesTemplate, "createDomainsTable",
+				"mysqlCommand", mysqlCommand, "service", service)()
+		log.deployedDomainsTable this, worker
+		worker = scriptCommandFactory.create(tablesTemplate, "createUsersTable",
+				"mysqlCommand", mysqlCommand, "service", service)()
+		log.deployedUsersTable this, worker
 	}
 
 	/**
@@ -174,168 +187,17 @@ abstract class MysqlScript extends LinuxScript {
 	}
 
 	/**
-	 * Execute the {@code postmap} command on the specified file.
-	 *
-	 * @see #getPostmapCommand()
-	 */
-	void rehashFile(File file) {
-		def template = postfixTemplates.getResource("postmap_command")
-		def worker = scriptCommandFactory.create(template, "postmapCommand", postmapCommand, "file", file)()
-		log.rehashFileDone this, file, worker
-	}
-
-	/**
-	 * Replace the variables of the mailbox path pattern.
-	 */
-	String createMailboxPath(User user) {
-		String pattern = mailboxPattern.replace('${domain}', user.domain.name)
-		pattern = pattern.replace('${user}', user.name)
-	}
-
-	/**
-	 * Returns the absolute path of the alias domains hash table file.
-	 * Default is the file {@code "alias_domains"} in the configuration
-	 * directory.
-	 *
-	 * <ul>
-	 * <li>profile property {@code "alias_domains_file"}</li>
-	 * </ul>
-	 *
-	 * @see #getConfigurationDir()
-	 * @see #postfixProperties
-	 */
-	File getAliasDomainsFile() {
-		def file = profileProperty("alias_domains_file", postfixProperties.get()) as File
-		file.absolute ? file : new File(configurationDir, file.name)
-	}
-
-	/**
-	 * Returns the absolute path of the alias maps hash table file.
-	 * Default is the file {@code "alias_maps"} in the configuration
-	 * directory.
-	 *
-	 * <ul>
-	 * <li>profile property {@code "alias_maps_file"}</li>
-	 * </ul>
-	 *
-	 * @see #getConfigurationDir()
-	 * @see #postfixProperties
-	 */
-	File getAliasMapsFile() {
-		def file = profileProperty("alias_maps_file", postfixProperties.get()) as File
-		file.absolute ? file : new File(configurationDir, file.name)
-	}
-
-	/**
-	 * Returns the absolute path of the virtual mailbox maps hash table file.
-	 * Default is the file {@code "mailbox_maps"} in the configuration
-	 * directory.
-	 *
-	 * <ul>
-	 * <li>profile property {@code "mailbox_maps_file"}</li>
-	 * </ul>
-	 *
-	 * @see #getConfigurationDir()
-	 * @see #postfixProperties
-	 */
-	File getMailboxMapsFile() {
-		def file = profileProperty("mailbox_maps_file", postfixProperties.get()) as File
-		file.absolute ? file : new File(configurationDir, file.name)
-	}
-
-	/**
-	 * Returns the command for the {@code postmap} command. Can be a full
+	 * Returns the command for the MySQL server. Can be a full
 	 * path or just the command name that can be found in the current
 	 * search path.
 	 *
 	 * <ul>
-	 * <li>profile property {@code "postmap_command"}</li>
+	 * <li>profile property {@code "mysql_command"}</li>
 	 * </ul>
 	 *
 	 * @see #getDefaultProperties()
 	 */
-	String getPostmapCommand() {
-		profileProperty("postmap_command", defaultProperties)
-	}
-
-	/**
-	 * Returns the {@code main.cf} file.
-	 *
-	 * <ul>
-	 * <li>profile property {@code "main_file"}</li>
-	 * </ul>
-	 *
-	 * @see #getConfigurationDir()
-	 * @see #getDefaultProperties()
-	 */
-	File getMainFile() {
-		def file = profileProperty("main_file", defaultProperties) as File
-		file.absolute ? file : new File(configurationDir, file.name)
-	}
-
-	/**
-	 * Returns the path of the base directory for virtual users.
-	 *
-	 * <ul>
-	 * <li>profile property {@code "mailbox_base_directory"}</li>
-	 * </ul>
-	 *
-	 * @see #getDefaultProperties()
-	 */
-	File getMailboxBaseDir() {
-		profileProperty("mailbox_base_directory", defaultProperties) as File
-	}
-
-	/**
-	 * Returns the pattern for the directories that are created for each virtual
-	 * domain and virtual user under the mailbox base directory.
-	 *
-	 * <ul>
-	 * <li>profile property {@code "mailbox_pattern"}</li>
-	 * </ul>
-	 *
-	 * @see #postfixProperties
-	 */
-	String getMailboxPattern() {
-		profileProperty("mailbox_pattern", postfixProperties.get()) as File
-	}
-
-	/**
-	 * Returns the minimum identification number for virtual users.
-	 *
-	 * <ul>
-	 * <li>profile property {@code "minimum_uid"}</li>
-	 * </ul>
-	 *
-	 * @see #getDefaultProperties()
-	 */
-	Number getMinimumUid() {
-		profileProperty("minimum_uid", defaultProperties) as Integer
-	}
-
-	/**
-	 * Returns the user identification number for virtual users.
-	 *
-	 * <ul>
-	 * <li>profile property {@code "virtual_uid"}</li>
-	 * </ul>
-	 *
-	 * @see #getDefaultProperties()
-	 */
-	Number getVirtualUid() {
-		profileProperty("virtual_uid", defaultProperties) as Integer
-	}
-
-	/**
-	 * Returns the group identification number for virtual users.
-	 *
-	 * <ul>
-	 * <li>profile property {@code "virtual_gid"}</li>
-	 * </ul>
-	 *
-	 * @see #getDefaultProperties()
-	 */
-	Number getVirtualGid() {
-		profileProperty("virtual_gid", defaultProperties) as Integer
+	String getMysqlCommand() {
+		profileProperty("mysql_command", defaultProperties)
 	}
 }

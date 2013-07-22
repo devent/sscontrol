@@ -25,6 +25,7 @@ import javax.inject.Inject
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.Templates
 import com.anrisoftware.sscontrol.core.service.LinuxScript
+import com.anrisoftware.sscontrol.mail.statements.User
 import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokenTemplate
 
 /**
@@ -227,5 +228,156 @@ class BasePostfixScript extends LinuxScript {
 	 */
 	File getConfigurationDir() {
 		profileProperty("configuration_directory", defaultProperties) as File
+	}
+
+	/**
+	 * Execute the {@code postmap} command on the specified file.
+	 *
+	 * @see #getPostmapCommand()
+	 */
+	void rehashFile(File file) {
+		def template = mysqlTemplates.getResource("postmap_command")
+		def worker = scriptCommandFactory.create(template, "postmapCommand", postmapCommand, "file", file)()
+		log.rehashFileDone this, file, worker
+	}
+
+	/**
+	 * Replace the variables of the mailbox path pattern.
+	 */
+	String createMailboxPath(User user) {
+		String pattern = mailboxPattern.replace('${domain}', user.domain.name)
+		pattern = pattern.replace('${user}', user.name)
+	}
+
+	/**
+	 * Returns the absolute path of the alias domains hash table file.
+	 * Default is the file {@code "alias_domains"} in the configuration
+	 * directory.
+	 *
+	 * <ul>
+	 * <li>profile property {@code "alias_domains_file"}</li>
+	 * </ul>
+	 *
+	 * @see #getConfigurationDir()
+	 * @see #postfixProperties
+	 */
+	File getAliasDomainsFile() {
+		def file = profileProperty("alias_domains_file", postfixProperties.get()) as File
+		file.absolute ? file : new File(configurationDir, file.name)
+	}
+
+	/**
+	 * Returns the absolute path of the alias maps hash table file.
+	 * Default is the file {@code "alias_maps"} in the configuration
+	 * directory.
+	 *
+	 * <ul>
+	 * <li>profile property {@code "alias_maps_file"}</li>
+	 * </ul>
+	 *
+	 * @see #getConfigurationDir()
+	 * @see #postfixProperties
+	 */
+	File getAliasMapsFile() {
+		def file = profileProperty("alias_maps_file", postfixProperties.get()) as File
+		file.absolute ? file : new File(configurationDir, file.name)
+	}
+
+	/**
+	 * Returns the absolute path of the virtual mailbox maps hash table file.
+	 * Default is the file {@code "mailbox_maps"} in the configuration
+	 * directory.
+	 *
+	 * <ul>
+	 * <li>profile property {@code "mailbox_maps_file"}</li>
+	 * </ul>
+	 *
+	 * @see #getConfigurationDir()
+	 * @see #postfixProperties
+	 */
+	File getMailboxMapsFile() {
+		def file = profileProperty("mailbox_maps_file", postfixProperties.get()) as File
+		file.absolute ? file : new File(configurationDir, file.name)
+	}
+
+	/**
+	 * Returns the command for the {@code postmap} command. Can be a full
+	 * path or just the command name that can be found in the current
+	 * search path.
+	 *
+	 * <ul>
+	 * <li>profile property {@code "postmap_command"}</li>
+	 * </ul>
+	 *
+	 * @see #getDefaultProperties()
+	 */
+	String getPostmapCommand() {
+		profileProperty("postmap_command", defaultProperties)
+	}
+
+	/**
+	 * Returns the path of the base directory for virtual users.
+	 *
+	 * <ul>
+	 * <li>profile property {@code "mailbox_base_directory"}</li>
+	 * </ul>
+	 *
+	 * @see #getDefaultProperties()
+	 */
+	File getMailboxBaseDir() {
+		profileProperty("mailbox_base_directory", defaultProperties) as File
+	}
+
+	/**
+	 * Returns the pattern for the directories that are created for each virtual
+	 * domain and virtual user under the mailbox base directory.
+	 *
+	 * <ul>
+	 * <li>profile property {@code "mailbox_pattern"}</li>
+	 * </ul>
+	 *
+	 * @see #postfixProperties
+	 */
+	String getMailboxPattern() {
+		profileProperty("mailbox_pattern", postfixProperties.get()) as File
+	}
+
+	/**
+	 * Returns the minimum identification number for virtual users.
+	 *
+	 * <ul>
+	 * <li>profile property {@code "minimum_uid"}</li>
+	 * </ul>
+	 *
+	 * @see #getDefaultProperties()
+	 */
+	Number getMinimumUid() {
+		profileProperty("minimum_uid", defaultProperties) as Integer
+	}
+
+	/**
+	 * Returns the user identification number for virtual users.
+	 *
+	 * <ul>
+	 * <li>profile property {@code "virtual_uid"}</li>
+	 * </ul>
+	 *
+	 * @see #getDefaultProperties()
+	 */
+	Number getVirtualUid() {
+		profileProperty("virtual_uid", defaultProperties) as Integer
+	}
+
+	/**
+	 * Returns the group identification number for virtual users.
+	 *
+	 * <ul>
+	 * <li>profile property {@code "virtual_gid"}</li>
+	 * </ul>
+	 *
+	 * @see #getDefaultProperties()
+	 */
+	Number getVirtualGid() {
+		profileProperty("virtual_gid", defaultProperties) as Integer
 	}
 }

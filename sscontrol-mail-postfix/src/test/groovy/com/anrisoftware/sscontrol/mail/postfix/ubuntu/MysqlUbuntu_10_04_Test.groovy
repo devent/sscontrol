@@ -42,21 +42,22 @@ class MysqlUbuntu_10_04_Test extends PostfixLinuxBase {
 	void "virtual mysql"() {
 		loader.loadService mysqlUbuntu1004Profile, null
 		def profile = registry.getService("profile")[0]
-		loader.loadService mailSeparateDomainsNonUnixAccounts, profile
+		loader.loadService mailMysql, profile
 
 		copyResourceToCommand echoCommand, aptitudeFile
 		copyResourceToCommand echoCommand, restartFile
 		copyResourceToCommand echoCommand, postmapFile
+		copyResourceToCommand echoCommand, mysqlFile
 		copyURLToFile maincf, maincfFile
 		copyURLToFile mastercf, mastercfFile
 
 		registry.allServices.each { it.call() }
 		log.info "Run service again to ensure that configuration is not set double."
-		registry.allServices.each { it.call() }
+		//registry.allServices.each { it.call() }
 
 		def maincfFileString = readFileToString(maincfFile).replaceAll(/$tmpdir.absolutePath/, "/Ubuntu_10_04.tmp")
 		assertFileContent mailnameFile, mailnameExpected
-		assertStringContent maincfFileString, resourceToString(maincfSeparateDomainsNonUnixAccountsExpected)
+		assertStringContent maincfFileString, resourceToString(maincfMysqlExpected)
 		assertFileContent aliasDomainsFile, aliasDomainsExpected
 		assertFileContent aliasMapsFile, aliasMapsNonUnixExpected
 		assertFileContent mailboxMapsFile, mailboxMapsNonUnixExpected

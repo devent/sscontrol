@@ -15,6 +15,8 @@ class BasePostfixScriptLogger extends AbstractLogger {
 
 	static final String REHASH_FILE = "Rehash file '{}', worker {} for {}."
 	static final String REHASH_FILE_INFO = "Rehash file '{}'."
+	static final String REALIAS_FILE = "Realias file '{}', worker {} for {}."
+	static final String REALIAS_FILE_INFO = "Realias file '{}'."
 
 	/**
 	 * Creates a logger for {@link BasePostfixScript}.
@@ -28,6 +30,14 @@ class BasePostfixScriptLogger extends AbstractLogger {
 			log.debug REHASH_FILE, file, worker, script
 		} else {
 			log.info REHASH_FILE_INFO, file
+		}
+	}
+
+	void realiasFileDone(def script, def file, def worker) {
+		if (log.debugEnabled) {
+			log.debug REALIAS_FILE, file, worker, script
+		} else {
+			log.info REALIAS_FILE_INFO, file
 		}
 	}
 }

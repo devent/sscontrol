@@ -1,0 +1,4 @@
+postalias_command(command, file) ::= <<
+#!/bin/sh
+<command> <file>
+>>

@@ -203,8 +203,6 @@ abstract class LinuxScript extends Script {
 		log.deployConfigurationDone this, file, configuration
 	}
 
-
-
 	/**
 	 * Returns the configuration template tokens.
 	 *

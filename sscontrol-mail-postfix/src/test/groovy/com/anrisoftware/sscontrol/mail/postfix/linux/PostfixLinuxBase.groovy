@@ -117,6 +117,8 @@ class PostfixLinuxBase {
 
 	File postmapFile
 
+	File postaliasFile
+
 	File mysqlFile
 
 	File aliasDomainsFile
@@ -134,6 +136,7 @@ class PostfixLinuxBase {
 		maincfFile = new File(tmpdir, "/etc/postfix/main.cf")
 		mastercfFile = new File(tmpdir, "/etc/postfix/master.cf")
 		postmapFile = new File(tmpdir, "/usr/sbin/postmap")
+		postaliasFile = new File(tmpdir, "/usr/sbin/postalias")
 		mysqlFile = new File(tmpdir, "/usr/bin/mysql")
 		aliasDomainsFile = new File(tmpdir, "/etc/postfix/alias_domains")
 		aliasMapsFile = new File(tmpdir, "/etc/postfix/alias_maps")

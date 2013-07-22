@@ -30,10 +30,13 @@ masqueradeExceptions(mail) ::= <<
 masquerade_exceptions = <mail.masqueradeDomains.userExceptions;separator=",">
 >>
 
-aliasMaps(mail) ::= <<
-alias_maps = <mail.masqueradeDomains.userExceptions;separator=",">
+aliasDomains(file) ::= <<
 >>
 
-aliasDomains(mail) ::= <<
-masquerade_exceptions = <mail.masqueradeDomains.userExceptions;separator=",">
+aliasMaps(file) ::= <<
+alias_maps = hash:<file>
+>>
+
+aliasDatabase(file) ::= <<
+alias_database = hash:<file>
 >>

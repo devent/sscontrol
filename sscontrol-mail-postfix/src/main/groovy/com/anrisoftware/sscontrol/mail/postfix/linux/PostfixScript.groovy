@@ -100,10 +100,10 @@ abstract class PostfixScript extends LinuxScript {
 	 */
 	void deployMain() {
 		def configuration = []
-		configuration << new TokenTemplate("(?m)^\\#?virtual_alias_domains.*", mainTemplate.getText(true, "aliasDomains", "file", postfixScript.aliasDomainsFile))
-		configuration << new TokenTemplate("(?m)^\\#?virtual_alias_maps.*", mainTemplate.getText(true, "aliasMaps", "file", postfixScript.aliasMapsFile))
+		configuration << new TokenTemplate("(?m)^\\#?virtual_alias_domains.*", mainTemplate.getText(true, "aliasDomains", "file", postfixScript.virtualDomainsFile))
+		configuration << new TokenTemplate("(?m)^\\#?virtual_alias_maps.*", mainTemplate.getText(true, "aliasMaps", "file", postfixScript.virtualAliasFile))
 		configuration << new TokenTemplate("(?m)^\\#?virtual_mailbox_base.*", mainTemplate.getText(true, "mailboxBase", "dir", postfixScript.mailboxBaseDir))
-		configuration << new TokenTemplate("(?m)^\\#?virtual_mailbox_maps.*", mainTemplate.getText(true, "mailboxMaps", "file", postfixScript.mailboxMapsFile))
+		configuration << new TokenTemplate("(?m)^\\#?virtual_mailbox_maps.*", mainTemplate.getText(true, "mailboxMaps", "file", postfixScript.virtualMailboxFile))
 		configuration << new TokenTemplate("(?m)^\\#?virtual_minimum_uid.*", mainTemplate.getText(true, "minimumUid", "uid", postfixScript.minimumUid))
 		configuration << new TokenTemplate("(?m)^\\#?virtual_uid_maps.*", mainTemplate.getText(true, "uidMaps", "uid", postfixScript.virtualUid))
 		configuration << new TokenTemplate("(?m)^\\#?virtual_gid_maps.*", mainTemplate.getText(true, "gidMaps", "gid", postfixScript.virtualGid))
@@ -124,9 +124,9 @@ abstract class PostfixScript extends LinuxScript {
 				list
 			}
 		}
-		def currentConfiguration = currentConfiguration postfixScript.aliasDomainsFile
-		deployConfiguration configurationTokens(), currentConfiguration, configuration, postfixScript.aliasDomainsFile
-		postfixScript.rehashFile postfixScript.aliasDomainsFile
+		def currentConfiguration = currentConfiguration postfixScript.virtualDomainsFile
+		deployConfiguration configurationTokens(), currentConfiguration, configuration, postfixScript.virtualDomainsFile
+		postfixScript.rehashFile postfixScript.virtualDomainsFile
 	}
 
 	/**
@@ -145,9 +145,9 @@ abstract class PostfixScript extends LinuxScript {
 				}
 			}
 		}
-		def currentConfiguration = currentConfiguration postfixScript.aliasMapsFile
-		deployConfiguration configurationTokens(), currentConfiguration, configuration, postfixScript.aliasMapsFile
-		postfixScript.rehashFile postfixScript.aliasMapsFile
+		def currentConfiguration = currentConfiguration postfixScript.virtualAliasFile
+		deployConfiguration configurationTokens(), currentConfiguration, configuration, postfixScript.virtualAliasFile
+		postfixScript.rehashFile postfixScript.virtualAliasFile
 	}
 
 	/**
@@ -167,8 +167,8 @@ abstract class PostfixScript extends LinuxScript {
 				}
 			}
 		}
-		def currentConfiguration = currentConfiguration postfixScript.mailboxMapsFile
-		deployConfiguration configurationTokens(), currentConfiguration, configuration, postfixScript.mailboxMapsFile
-		postfixScript.rehashFile postfixScript.mailboxMapsFile
+		def currentConfiguration = currentConfiguration postfixScript.virtualMailboxFile
+		deployConfiguration configurationTokens(), currentConfiguration, configuration, postfixScript.virtualMailboxFile
+		postfixScript.rehashFile postfixScript.virtualMailboxFile
 	}
 }

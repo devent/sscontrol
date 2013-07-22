@@ -45,6 +45,7 @@ class Ubuntu_10_04_Test extends PostfixLinuxBase {
 
 		copyResourceToCommand echoCommand, aptitudeFile
 		copyResourceToCommand echoCommand, restartFile
+		copyResourceToCommand echoCommand, postaliasFile
 		copyURLToFile maincf, maincfFile
 		copyURLToFile mastercf, mastercfFile
 
@@ -52,8 +53,9 @@ class Ubuntu_10_04_Test extends PostfixLinuxBase {
 		log.info "Run service again to ensure that configuration is not set double."
 		registry.allServices.each { it.call() }
 
+		def maincfFileString = readFileToString(maincfFile).replaceAll(/$tmpdir.absolutePath/, "/Ubuntu_10_04.tmp")
 		assertFileContent mailnameFile, mailnameExpected
-		assertFileContent maincfFile, maincfSharedUnixAccountsExpected
+		assertStringContent maincfFileString, resourceToString(maincfSharedUnixAccountsExpected)
 	}
 
 	@Test
@@ -65,6 +67,7 @@ class Ubuntu_10_04_Test extends PostfixLinuxBase {
 		copyResourceToCommand echoCommand, aptitudeFile
 		copyResourceToCommand echoCommand, restartFile
 		copyResourceToCommand echoCommand, postmapFile
+		copyResourceToCommand echoCommand, postaliasFile
 		copyURLToFile maincf, maincfFile
 		copyURLToFile mastercf, mastercfFile
 
@@ -89,6 +92,7 @@ class Ubuntu_10_04_Test extends PostfixLinuxBase {
 		copyResourceToCommand echoCommand, aptitudeFile
 		copyResourceToCommand echoCommand, restartFile
 		copyResourceToCommand echoCommand, postmapFile
+		copyResourceToCommand echoCommand, postaliasFile
 		copyURLToFile maincf, maincfFile
 		copyURLToFile mastercf, mastercfFile
 
@@ -113,6 +117,7 @@ class Ubuntu_10_04_Test extends PostfixLinuxBase {
 		copyResourceToCommand echoCommand, aptitudeFile
 		copyResourceToCommand echoCommand, restartFile
 		copyResourceToCommand echoCommand, postmapFile
+		copyResourceToCommand echoCommand, postaliasFile
 		copyURLToFile maincf, maincfFile
 		copyURLToFile mastercf, mastercfFile
 
@@ -120,7 +125,8 @@ class Ubuntu_10_04_Test extends PostfixLinuxBase {
 		log.info "Run service again to ensure that configuration is not set double."
 		registry.allServices.each { it.call() }
 
+		def maincfFileString = readFileToString(maincfFile).replaceAll(/$tmpdir.absolutePath/, "/Ubuntu_10_04.tmp")
 		assertFileContent mailnameFile, mailnameExpected
-		assertFileContent maincfFile, maincfExpected
+		assertStringContent maincfFileString, resourceToString(maincfExpected)
 	}
 }

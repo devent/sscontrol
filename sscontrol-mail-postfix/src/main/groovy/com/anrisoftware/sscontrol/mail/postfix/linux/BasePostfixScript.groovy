@@ -22,6 +22,8 @@ import static org.apache.commons.io.FileUtils.*
 
 import javax.inject.Inject
 
+import org.apache.commons.io.FileUtils
+
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.Templates
 import com.anrisoftware.sscontrol.core.service.LinuxScript
@@ -186,8 +188,8 @@ class BasePostfixScript extends LinuxScript {
 			new TokenTemplate("(?m)^\\#?inet_interfaces.*", mainTemplate.getText(true, "interfaces", "mail", service)),
 			new TokenTemplate("(?m)^\\#?mydestination.*", mainTemplate.getText(true, "destinations", "mail", service)),
 			new TokenTemplate("(?m)^\\#?masquerade_domains.*", mainTemplate.getText(true, "masqueradeDomains", "mail", service)),
-			//new TokenTemplate("(?m)^\\#?alias_maps.*", mainTemplate.getText(true, "aliasMaps", "mail", service)),
-			//new TokenTemplate("(?m)^\\#?alias_database.*", mainTemplate.getText(true, "aliasDatabase", "mail", service)),
+			new TokenTemplate("(?m)^\\#?alias_maps.*", mainTemplate.getText(true, "aliasMaps", "file", aliasMapsFile)),
+			new TokenTemplate("(?m)^\\#?alias_database.*", mainTemplate.getText(true, "aliasDatabase", "file", aliasDatabaseFile)),
 		]
 		def currentConfiguration = currentConfiguration mainFile
 		deployConfiguration configurationTokens(), currentConfiguration, configuration, mainFile
@@ -247,6 +249,17 @@ class BasePostfixScript extends LinuxScript {
 	}
 
 	/**
+	 * Execute the {@code postalias} command on the specified file.
+	 *
+	 * @see #getPostmapCommand()
+	 */
+	void realiasFile(File file) {
+		def template = postfixTemplates.getResource("postalias_command")
+		def worker = scriptCommandFactory.create(template, "command", postaliasCommand, "file", file)()
+		log.realiasFileDone this, file, worker
+	}
+
+	/**
 	 * Replace the variables of the mailbox path pattern.
 	 */
 	String createMailboxPath(User user) {
@@ -255,25 +268,8 @@ class BasePostfixScript extends LinuxScript {
 	}
 
 	/**
-	 * Returns the absolute path of the alias domains hash table file.
-	 * Default is the file {@code "alias_domains"} in the configuration
-	 * directory.
-	 *
-	 * <ul>
-	 * <li>profile property {@code "alias_domains_file"}</li>
-	 * </ul>
-	 *
-	 * @see #getConfigurationDir()
-	 * @see #postfixProperties
-	 */
-	File getAliasDomainsFile() {
-		def file = profileProperty("alias_domains_file", postfixProperties.get()) as File
-		file.absolute ? file : new File(configurationDir, file.name)
-	}
-
-	/**
 	 * Returns the absolute path of the alias maps hash table file.
-	 * Default is the file {@code "alias_maps"} in the configuration
+	 * Default is the file {@code "aliases"} in the configuration
 	 * directory.
 	 *
 	 * <ul>
@@ -285,6 +281,62 @@ class BasePostfixScript extends LinuxScript {
 	 */
 	File getAliasMapsFile() {
 		def file = profileProperty("alias_maps_file", postfixProperties.get()) as File
+		file = file.absolute ? file : new File(configurationDir, file.name)
+		if (!file.isFile()) {
+			FileUtils.touch file
+		}
+		realiasFile file
+		return file
+	}
+
+	/**
+	 * Returns the absolute path of the alias database hash table file.
+	 * Default is the file {@code "aliases"} in the configuration
+	 * directory.
+	 *
+	 * <ul>
+	 * <li>profile property {@code "alias_database_file"}</li>
+	 * </ul>
+	 *
+	 * @see #getConfigurationDir()
+	 * @see #postfixProperties
+	 */
+	File getAliasDatabaseFile() {
+		def file = profileProperty("alias_database_file", postfixProperties.get()) as File
+		file.absolute ? file : new File(configurationDir, file.name)
+	}
+
+	/**
+	 * Returns the absolute path of the alias domains hash table file.
+	 * Default is the file {@code "alias_domains"} in the configuration
+	 * directory.
+	 *
+	 * <ul>
+	 * <li>profile property {@code "virtual_domains_file"}</li>
+	 * </ul>
+	 *
+	 * @see #getConfigurationDir()
+	 * @see #postfixProperties
+	 */
+	File getVirtualDomainsFile() {
+		def file = profileProperty("virtual_domains_file", postfixProperties.get()) as File
+		file.absolute ? file : new File(configurationDir, file.name)
+	}
+
+	/**
+	 * Returns the absolute path of the alias maps hash table file.
+	 * Default is the file {@code "alias_maps"} in the configuration
+	 * directory.
+	 *
+	 * <ul>
+	 * <li>profile property {@code "virtual_alias_file"}</li>
+	 * </ul>
+	 *
+	 * @see #getConfigurationDir()
+	 * @see #postfixProperties
+	 */
+	File getVirtualAliasFile() {
+		def file = profileProperty("virtual_alias_file", postfixProperties.get()) as File
 		file.absolute ? file : new File(configurationDir, file.name)
 	}
 
@@ -294,14 +346,14 @@ class BasePostfixScript extends LinuxScript {
 	 * directory.
 	 *
 	 * <ul>
-	 * <li>profile property {@code "mailbox_maps_file"}</li>
+	 * <li>profile property {@code "virtual_mailbox_file"}</li>
 	 * </ul>
 	 *
 	 * @see #getConfigurationDir()
 	 * @see #postfixProperties
 	 */
-	File getMailboxMapsFile() {
-		def file = profileProperty("mailbox_maps_file", postfixProperties.get()) as File
+	File getVirtualMailboxFile() {
+		def file = profileProperty("virtual_mailbox_file", postfixProperties.get()) as File
 		file.absolute ? file : new File(configurationDir, file.name)
 	}
 
@@ -318,6 +370,21 @@ class BasePostfixScript extends LinuxScript {
 	 */
 	String getPostmapCommand() {
 		profileProperty("postmap_command", defaultProperties)
+	}
+
+	/**
+	 * Returns the command for the {@code postalias} command. Can be a full
+	 * path or just the command name that can be found in the current
+	 * search path.
+	 *
+	 * <ul>
+	 * <li>profile property {@code "postalias_command"}</li>
+	 * </ul>
+	 *
+	 * @see #getDefaultProperties()
+	 */
+	String getPostaliasCommand() {
+		profileProperty("postalias_command", defaultProperties)
 	}
 
 	/**

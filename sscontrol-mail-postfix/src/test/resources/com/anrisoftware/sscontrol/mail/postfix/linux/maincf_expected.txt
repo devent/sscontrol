@@ -37,3 +37,9 @@ mydestination = bar.bar,foo.bar,localhost.$mydomain,localhost,$myhostname
 # SSCONTROL-mail
 masquerade_domains = mail.example.com
 # SSCONTROL-mail-END
+# SSCONTROL-mail
+alias_maps = hash:/Ubuntu_10_04.tmp/etc/postfix/aliases
+# SSCONTROL-mail-END
+# SSCONTROL-mail
+alias_database = hash:/Ubuntu_10_04.tmp/etc/postfix/aliases
+# SSCONTROL-mail-END

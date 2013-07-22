@@ -59,6 +59,14 @@ public class Alias {
 		return enabled;
 	}
 
+	public boolean isNameDomain() {
+		return name.contains("@");
+	}
+
+	public boolean isDestinationDomain() {
+		return destination.contains("@");
+	}
+
 	@Override
 	public String toString() {
 		return new ToStringBuilder(this).append("alias", name)

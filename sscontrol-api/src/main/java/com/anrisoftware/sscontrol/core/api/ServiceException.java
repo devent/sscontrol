@@ -26,7 +26,7 @@ import com.anrisoftware.globalpom.exceptions.Context;
  * Indicates an error with a service.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
- * @since 0.1
+ * @since 1.0
  */
 @SuppressWarnings("serial")
 public class ServiceException extends Exception {
@@ -34,13 +34,15 @@ public class ServiceException extends Exception {
 	private final Context<ServiceException> context;
 
 	/**
-	 * Sets the message and the cause of the exception.
-	 * 
-	 * @param message
-	 *            the message.
-	 * 
-	 * @param cause
-	 *            the {@link Throwable} cause.
+	 * @see Exception#Exception(String, Throwable)
+	 */
+	public ServiceException(String message) {
+		super(message);
+		this.context = new Context<ServiceException>(this);
+	}
+
+	/**
+	 * @see Exception#Exception(String, Throwable)
 	 */
 	public ServiceException(String message, Throwable cause) {
 		super(message, cause);
@@ -48,14 +50,18 @@ public class ServiceException extends Exception {
 	}
 
 	/**
-	 * Sets the message of the exception.
-	 * 
-	 * @param message
-	 *            the message.
-	 * 
+	 * @see Exception#Exception(String, Throwable)
 	 */
-	public ServiceException(String message) {
-		super(message);
+	public ServiceException(Object message, Throwable cause) {
+		super(message.toString(), cause);
+		this.context = new Context<ServiceException>(this);
+	}
+
+	/**
+	 * @see Exception#Exception(String)
+	 */
+	public ServiceException(Object message) {
+		super(message.toString());
 		this.context = new Context<ServiceException>(this);
 	}
 
@@ -64,6 +70,14 @@ public class ServiceException extends Exception {
 	 */
 	public ServiceException add(String name, Object value) {
 		context.addContext(name, value);
+		return this;
+	}
+
+	/**
+	 * @see Context#addContext(String, Object)
+	 */
+	public ServiceException add(Object name, Object value) {
+		context.addContext(name.toString(), value);
 		return this;
 	}
 

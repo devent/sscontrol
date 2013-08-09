@@ -24,6 +24,9 @@ import groovy.util.logging.Slf4j
 import org.junit.BeforeClass
 import org.junit.Test
 
+import com.anrisoftware.sscontrol.core.modules.CoreModule
+import com.anrisoftware.sscontrol.core.modules.CoreResourcesModule
+import com.anrisoftware.sscontrol.core.service.ServiceModule
 import com.anrisoftware.sscontrol.hosts.service.Host
 import com.anrisoftware.sscontrol.hosts.service.HostFactory
 import com.anrisoftware.sscontrol.hosts.service.HostsModule
@@ -86,7 +89,9 @@ class HostFormatTest {
 
 	@BeforeClass
 	static void createFactory() {
-		injector = Guice.createInjector(new HostsModule())
+		injector = Guice.createInjector(
+				new HostsModule(), new CoreModule(),
+				new CoreResourcesModule(), new ServiceModule())
 		factory = injector.getInstance(HostFormatFactory)
 		hostFactory = injector.getInstance(HostFactory)
 	}

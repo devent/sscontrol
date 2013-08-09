@@ -16,31 +16,25 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-hosts. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.hosts.service;
+package com.anrisoftware.sscontrol.hosts.utils;
 
-import com.anrisoftware.sscontrol.hosts.ubuntu.UbuntuModule;
-import com.anrisoftware.sscontrol.hosts.utils.HostsUtilsModule;
 import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 
 /**
- * Hosts service module.
+ * Installs the host format factory.
+ * 
+ * @see HostFormat
+ * @see HostFormatFactory
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class HostsModule extends AbstractModule {
+public class HostsUtilsModule extends AbstractModule {
 
 	@Override
 	protected void configure() {
-		install(new UbuntuModule());
-		install(new HostsUtilsModule());
-		installHost();
+		install(new FactoryModuleBuilder().implement(HostFormat.class,
+				HostFormat.class).build(HostFormatFactory.class));
 	}
-
-	private void installHost() {
-		install(new FactoryModuleBuilder().implement(Host.class, Host.class)
-				.build(HostFactory.class));
-	}
-
 }

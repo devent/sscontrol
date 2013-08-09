@@ -23,8 +23,6 @@
         <module>sscontrol-mail-postfix</module>
         <module>sscontrol-parent</module>
         <module>sscontrol-profile</module>
-        <module>sscontrol-template</module>
-        <module>sscontrol-template-st</module>
         <module>sscontrol-workers</module>
         <module>sscontrol-workers-command</module>
         <module>sscontrol-workers-text</module>

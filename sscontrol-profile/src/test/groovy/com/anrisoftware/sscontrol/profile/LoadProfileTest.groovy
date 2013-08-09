@@ -21,14 +21,17 @@ package com.anrisoftware.sscontrol.profile
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 
 import org.junit.Before
+import org.junit.BeforeClass
 import org.junit.Test
 
 import com.anrisoftware.sscontrol.core.api.ProfileProperties
 import com.anrisoftware.sscontrol.core.api.ProfileService
 import com.anrisoftware.sscontrol.core.api.ServiceLoader as SscontrolServiceLoader
+import com.anrisoftware.sscontrol.core.api.ServiceLoaderFactory
 import com.anrisoftware.sscontrol.core.api.ServicesRegistry
 import com.anrisoftware.sscontrol.core.modules.CoreModule
 import com.anrisoftware.sscontrol.core.modules.CoreResourcesModule
+import com.anrisoftware.sscontrol.core.service.ServiceModule
 import com.google.inject.Guice
 import com.google.inject.Injector
 
@@ -42,10 +45,7 @@ class LoadProfileTest {
 
 	@Test
 	void "load profile script"() {
-		def variables = [one: "one", two: "two", three: "three"]
-		ServicesRegistry registry = injector.getInstance ServicesRegistry
-		SscontrolServiceLoader loader = injector.getInstance SscontrolServiceLoader
-		loader.loadService(ubuntu1004Profile, variables, registry, null)
+		loader.loadService ubuntu1004Profile, null
 		assert registry.serviceNames.toString() == "[profile]"
 		assert registry.getService("profile").size() == 1
 		ProfileService profile = registry.getService("profile")[0]
@@ -71,14 +71,37 @@ class LoadProfileTest {
 
 	static ubuntu1004Profile = LoadProfileTest.class.getResource("Ubuntu_10_04Profile.groovy")
 
-	Injector injector
+	static Injector injector
 
-	@Before
-	void setupInjector() {
+	static ServiceLoaderFactory loaderFactory
+
+	ServicesRegistry registry
+
+	SscontrolServiceLoader loader
+
+	Map variables
+
+	@BeforeClass
+	static void createFactories() {
 		injector = createInjector()
+		loaderFactory = injector.getInstance ServiceLoaderFactory
 	}
 
-	def createInjector() {
-		Guice.createInjector(new CoreModule(), new CoreResourcesModule())
+	static createInjector() {
+		Guice.createInjector(
+				new CoreModule(), new CoreResourcesModule(), new ServiceModule())
+	}
+
+	@Before
+	void createRegistry() {
+		variables = [one: "one", two: "two", three: "three"]
+		registry = injector.getInstance ServicesRegistry
+		loader = loaderFactory.create registry, variables
+		loader.setParent injector
+	}
+
+	@BeforeClass
+	static void setupToStringStyle() {
+		toStringStyle
 	}
 }

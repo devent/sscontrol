@@ -373,6 +373,7 @@ abstract class LinuxScript extends Script {
 	 * if the profile property was not set.
 	 */
 	List profileListProperty(String key, ContextProperties p) {
+		log.checkProperties this, p, key
 		def property = profile.getList(key)
 		property.empty ? p.getListProperty(key, ",") : property
 	}

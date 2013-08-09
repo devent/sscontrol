@@ -18,6 +18,8 @@
  */
 package com.anrisoftware.sscontrol.core.service
 
+import static org.apache.commons.lang3.Validate.*
+
 import com.anrisoftware.globalpom.log.AbstractLogger
 
 /**
@@ -81,5 +83,9 @@ class LinuxScriptLogger extends AbstractLogger {
 		} else {
 			log.info "Restarted service {}.", script.name
 		}
+	}
+
+	void checkProperties(LinuxScript script, def properties, String key) {
+		notNull properties, "Properties cannot be null for key '%s' in %s.", key, script
 	}
 }

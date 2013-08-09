@@ -67,6 +67,7 @@ abstract class PostfixScript extends LinuxScript {
 		super.run()
 		runDistributionSpecific()
 		postfixScript.postfixScript = this
+		postfixScript.postfixProperties = postfixProperties.get()
 		runScript postfixScript
 		postfixTemplates = templatesFactory.create "PostfixScript", templatesAttributes
 		mainTemplate = postfixTemplates.getResource "main_hash_configuration"

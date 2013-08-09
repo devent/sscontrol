@@ -10,7 +10,7 @@
 	</parent>
 
 	<artifactId>sscontrol-hosts</artifactId>
-	<name>Server Control :: Hosts</name>
+	<name>RoboBee :: Hosts</name>
 	<description>Sets the hosts configuration file.</description>
 	<inceptionYear>2012</inceptionYear>
 	<url>https://www.anr-institute.com/projects/projects/sscontrol-hosts</url>

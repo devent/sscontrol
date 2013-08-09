@@ -11,7 +11,7 @@
 	</parent>
 
 	<artifactId>sscontrol-core</artifactId>
-	<name>Core Library</name>
+	<name>RoboBee :: Core</name>
 	<url>https://www.anr-institute.com/projects/projects/sscontrol-core</url>
 	<inceptionYear>2013</inceptionYear>
 

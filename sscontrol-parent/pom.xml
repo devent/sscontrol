@@ -14,7 +14,7 @@
 	<artifactId>sscontrol-parent</artifactId>
 	<version>1.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
-	<name>Parent POM</name>
+	<name>RoboBee :: Parent POM</name>
 	<description>Manages the core libraries dependencies.</description>
 	<url>https://www.anr-institute.com/projects/projects/sscontrol-parent1</url>
 	<inceptionYear>2012</inceptionYear>

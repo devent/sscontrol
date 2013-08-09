@@ -11,7 +11,7 @@
 	</parent>
 
 	<artifactId>sscontrol-workers-text</artifactId>
-	<name>Server Control Core :: Workers Text</name>
+	<name>RoboBee :: Workers Text</name>
 	<description>Text file manipulations.</description>
 	<url>https://www.anr-institute.com/projects/projects/sscontrol-workers-text</url>
 	<inceptionYear>2012</inceptionYear>

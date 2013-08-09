@@ -13,8 +13,12 @@
 	<artifactId>sscontrol-mail-postfix</artifactId>
 	<name>RoboBee :: Mail :: Postfix</name>
 	<description>Installs postfix mail server.</description>
-	<inceptionYear>2013</inceptionYear>
 	<url>https://www.anr-institute.com/projects/projects/sscontrol-mail</url>
+	<inceptionYear>2013</inceptionYear>
+
+	<properties>
+		<project.custom.year>${project.inceptionYear}</project.custom.year>
+	</properties>
 
 	<issueManagement>
 		<system>Redmine</system>

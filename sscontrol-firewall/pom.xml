@@ -11,7 +11,7 @@
 	</parent>
 
 	<artifactId>sscontrol-firewall</artifactId>
-	<name>Sscontrol :: Firewall</name>
+	<name>RoboBee :: Firewall</name>
 	<description>Configuration of rules for the firewall service.</description>
 	<inceptionYear>2012</inceptionYear>
 	<url>https://www.anr-institute.com/projects/projects/sscontrol-firewall</url>

@@ -11,7 +11,7 @@
 	</parent>
 
 	<artifactId>sscontrol-workers</artifactId>
-	<name>Server Control Core :: Workers API</name>
+	<name>RoboBee :: Workers API</name>
 	<description>Public interface of the workers.</description>
 	<url>https://www.anr-institute.com/projects/projects/sscontrol-workers2</url>
 	<inceptionYear>2012</inceptionYear>

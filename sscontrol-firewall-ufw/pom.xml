@@ -11,9 +11,14 @@
 	</parent>
 
 	<artifactId>sscontrol-firewall-ufw</artifactId>
-	<name>Robo Bee :: Firewall :: UFW</name>
+	<name>RoboBee :: Firewall :: UFW</name>
 	<description>Uncomplicated FireWall service.</description>
 	<url>https://www.anr-institute.com/projects/projects/robobee-firewall-ufw</url>
+	<inceptionYear>2013</inceptionYear>
+
+	<properties>
+		<project.custom.year>${project.inceptionYear}</project.custom.year>
+	</properties>
 
 	<issueManagement>
 		<system>Redmine</system>

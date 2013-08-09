@@ -16,6 +16,10 @@
 	<inceptionYear>2013</inceptionYear>
 	<url>https://www.anr-institute.com/projects/projects/robobee-database-mysql</url>
 
+	<properties>
+		<project.custom.year>${project.inceptionYear}</project.custom.year>
+	</properties>
+
 	<issueManagement>
 		<system>Redmine</system>
 		<url>https://www.anr-institute.com/projects/projects/robobee-database-mysql</url>

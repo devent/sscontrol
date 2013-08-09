@@ -10,9 +10,10 @@
 	</parent>
 
 	<artifactId>sscontrol-dhclient</artifactId>
-	<name>Sscontrol :: Dhclient</name>
+	<name>RoboBee :: Dhclient</name>
 	<description>Sets the DHCP client configuration file.</description>
 	<url>https://www.anr-institute.com/projects/projects/sscontrol-dhclient</url>
+	<inceptionYear>2012</inceptionYear>
 
 	<issueManagement>
 		<system>Redmine</system>

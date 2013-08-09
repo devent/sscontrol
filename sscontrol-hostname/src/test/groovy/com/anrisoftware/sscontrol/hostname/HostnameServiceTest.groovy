@@ -22,10 +22,11 @@ import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static org.apache.commons.io.FileUtils.*
 import groovy.util.logging.Slf4j
 
-import org.junit.After
 import org.junit.Before
 import org.junit.BeforeClass
+import org.junit.Rule
 import org.junit.Test
+import org.junit.rules.TemporaryFolder
 
 import com.anrisoftware.globalpom.utils.TestUtils
 import com.anrisoftware.sscontrol.core.api.ServiceException
@@ -87,6 +88,9 @@ class HostnameServiceTest {
 		shouldFailWith ServiceException, { loader.loadService hostnameNullService, profile }
 	}
 
+	@Rule
+	public TemporaryFolder tmp = new TemporaryFolder()
+
 	static ubuntu1004Profile = HostnameServiceTest.class.getResource("Ubuntu_10_04Profile.groovy")
 
 	static hostnameService = HostnameServiceTest.class.getResource("HostnameService.groovy")
@@ -121,16 +125,11 @@ class HostnameServiceTest {
 
 	@Before
 	void createTemp() {
-		tmpdir = File.createTempDir("HostnameService", null)
+		tmpdir = tmp.newFolder "HostnameService"
 		aptitude = new File(tmpdir, "/usr/bin/aptitude")
 		restart = new File(tmpdir, "/sbin/restart")
 		hostname = new File(tmpdir, "/etc/hostname")
 		variables = [tmp: tmpdir.absoluteFile]
-	}
-
-	@After
-	void deleteTemp() {
-		tmpdir.deleteDir()
 	}
 
 	@Before

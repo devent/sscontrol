@@ -97,7 +97,7 @@ class HostnameServiceTest {
 
 	static hostnameNullService = HostnameServiceTest.class.getResource("HostnameNullService.groovy")
 
-	static restartCommand = HostnameServiceTest.class.getResource("echo_command.txt")
+	static restartCommand = HostnameServiceTest.class.getResource("restart_command.txt")
 
 	static localhostHostnameFile = HostnameServiceTest.class.getResource("localhost_hostname.txt")
 

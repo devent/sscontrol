@@ -32,6 +32,9 @@ import com.anrisoftware.sscontrol.hostname.linux.HostnameScript
 class Ubuntu_10_04Script extends HostnameScript {
 
 	@Inject
+	Ubuntu_10_04ScriptLogger log
+
+	@Inject
 	Ubuntu10_04PropertiesProvider ubuntuProperties
 
 	@Override
@@ -47,5 +50,15 @@ class Ubuntu_10_04Script extends HostnameScript {
 	@Override
 	String getConfigurationFile() {
 		profileProperty "configuration_file", defaultProperties
+	}
+
+	void restartServices(List services = restartServices) {
+		def template = commandTemplates.getResource("restart")
+		def worker = scriptCommandFactory.create(template,
+				"restartCommand", restartCommand,
+				"services", services)
+		worker.exitValue = 1
+		worker()
+		log.restartServiceDone this, worker
 	}
 }

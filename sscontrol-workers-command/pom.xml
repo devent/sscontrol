@@ -81,6 +81,10 @@
 			<groupId>com.anrisoftware.resources</groupId>
 			<artifactId>resources-templates</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+		</dependency>
 	</dependencies>
 
 </project>

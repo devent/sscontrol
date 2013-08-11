@@ -21,7 +21,6 @@ package com.anrisoftware.sscontrol.workers.command.script;
 import java.util.Map;
 
 import com.anrisoftware.resources.templates.api.TemplateResource;
-import com.anrisoftware.sscontrol.workers.api.WorkerException;
 import com.anrisoftware.sscontrol.workers.api.WorkerFactory;
 import com.anrisoftware.sscontrol.workers.command.exec.ExecCommandWorker;
 
@@ -46,12 +45,8 @@ public interface ScriptCommandWorkerFactory extends WorkerFactory {
 	 *            the template attributes.
 	 * 
 	 * @return the {@link ScriptCommandWorker}.
-	 * 
-	 * @throws WorkerException
-	 *             if there was an error processing the template.
 	 */
-	ScriptCommandWorker create(TemplateResource template, Object... attributes)
-			throws WorkerException;
+	ScriptCommandWorker create(TemplateResource template, Object... attributes);
 
 	/**
 	 * Creates a new worker that executes a shell script. The shell script is
@@ -70,13 +65,9 @@ public interface ScriptCommandWorkerFactory extends WorkerFactory {
 	 *            the template attributes.
 	 * 
 	 * @return the {@link ScriptCommandWorker}.
-	 * 
-	 * @throws WorkerException
-	 *             if there was an error processing the template.
 	 */
 	ScriptCommandWorker create(TemplateResource template,
-			Map<String, String> environment, Object... attributes)
-			throws WorkerException;
+			Map<String, String> environment, Object... attributes);
 
 	/**
 	 * Creates a new worker that executes a shell script. The shell script is
@@ -97,11 +88,8 @@ public interface ScriptCommandWorkerFactory extends WorkerFactory {
 	 *            the template attributes.
 	 * 
 	 * @return the {@link ScriptCommandWorker}.
-	 * 
-	 * @throws WorkerException
-	 *             if there was an error processing the template.
 	 */
 	ScriptCommandWorker create(TemplateResource template,
 			Map<String, String> environment, long timeoutMs,
-			Object... attributes) throws WorkerException;
+			Object... attributes);
 }

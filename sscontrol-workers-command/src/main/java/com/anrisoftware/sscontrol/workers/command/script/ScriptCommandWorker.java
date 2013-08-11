@@ -19,17 +19,19 @@
 package com.anrisoftware.sscontrol.workers.command.script;
 
 import static com.anrisoftware.sscontrol.workers.command.exec.ExecCommandWorker.DEFAULT_TIMEOUT_MS;
+import static java.io.File.createTempFile;
 import static java.lang.String.format;
 
+import java.io.File;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Properties;
 
-import javax.inject.Named;
+import javax.inject.Inject;
 
 import org.apache.commons.exec.Executor;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.anrisoftware.propertiesutils.ContextProperties;
@@ -51,124 +53,104 @@ import com.google.inject.assistedinject.AssistedInject;
 @SuppressWarnings("serial")
 public class ScriptCommandWorker implements Worker {
 
-	private final ScriptCommandWorkerLogger log;
+	private final TemplateResource template;
 
-	private final ExecCommandWorker commandWorker;
+	private final Map<String, String> environment;
 
-	private final ContextProperties properties;
+	private final long timeoutMs;
+
+	private final Object[] attributes;
+
+	@Inject
+	private transient ExecCommandWorkerFactory executeFactory;
+
+	@Inject
+	private ScriptCommandWorkerLogger log;
+
+	private ExecCommandWorker commandWorker;
+
+	private String shell;
+
+	private String scriptString;
+
+	private File scriptFile;
 
 	/**
-	 * Set the template that creates the command to execute.
-	 * 
-	 * @param logger
-	 *            the {@link ScriptCommandWorkerLogger} for logging messages.
-	 * 
-	 * @param executeFactory
-	 *            the {@link ExecCommandWorkerFactory} to create the worker that
-	 *            executes the command.
-	 * 
-	 * @param template
-	 *            the template resource {@link TemplatesResources}.
-	 * 
-	 * @param attributes
-	 *            the template attributes.
-	 * 
-	 * @throws WorkerException
-	 *             if there was an error processing the template.
+	 * @see ScriptCommandWorkerFactory#create(TemplateResource, Object...)
 	 */
 	@AssistedInject
-	ScriptCommandWorker(ScriptCommandWorkerLogger logger,
-			ExecCommandWorkerFactory executeFactory,
-			@Named("script-command-worker-properties") Properties properties,
-			@Assisted TemplateResource template, @Assisted Object... attributes)
-			throws WorkerException {
-		this(logger, executeFactory, properties, template,
-				new HashMap<String, String>(), attributes);
+	ScriptCommandWorker(@Assisted TemplateResource template,
+			@Assisted Object... attributes) {
+		this(template, new HashMap<String, String>(), attributes);
 	}
 
 	/**
-	 * Set the template that creates the command to execute and the environment
-	 * variables for the script.
-	 * 
-	 * @param logger
-	 *            the {@link ScriptCommandWorkerLogger} for logging messages.
-	 * 
-	 * @param workerFactory
-	 *            the {@link ExecCommandWorker} to execute the command.
-	 * 
-	 * @param template
-	 *            the template resource {@link TemplateResource}.
-	 * 
-	 * @param environment
-	 *            a {@link Map} of the environment variables as
-	 *            {@code [<name>=<value>]}.
-	 * 
-	 * @param attributes
-	 *            the template attributes.
-	 * 
-	 * @throws WorkerException
-	 *             if there was an error processing the template.
+	 * @see ScriptCommandWorkerFactory#create(TemplateResource, Map, Object...)
 	 */
 	@AssistedInject
-	ScriptCommandWorker(ScriptCommandWorkerLogger logger,
-			ExecCommandWorkerFactory executeFactory,
-			@Named("script-command-worker-properties") Properties properties,
-			@Assisted TemplateResource template,
+	ScriptCommandWorker(@Assisted TemplateResource template,
 			@Assisted Map<String, String> environment,
-			@Assisted Object... attributes) throws WorkerException {
-		this(logger, executeFactory, properties, template, environment,
-				DEFAULT_TIMEOUT_MS, attributes);
+			@Assisted Object... attributes) {
+		this(template, environment, DEFAULT_TIMEOUT_MS, attributes);
 	}
 
 	/**
-	 * Set the template that creates the command to execute.
-	 * 
-	 * @param logger
-	 *            the {@link ScriptCommandWorkerLogger} for logging messages.
-	 * 
-	 * @param workerFactory
-	 *            the {@link ExecCommandWorker} to execute the command.
-	 * 
-	 * @param templateFactory
-	 *            the {@link TemplateFactory} to process the template.
-	 * 
-	 * @param templateResource
-	 *            the {@link URL} of the template.
-	 * 
-	 * @param templateName
-	 *            the template name.
-	 * 
-	 * @param attributes
-	 *            a {@link Map} of the template attributes.
-	 * 
-	 * @throws WorkerException
-	 *             if there was an error processing the template.
+	 * @see ScriptCommandWorkerFactory#create(TemplateResource, Map, long,
+	 *      Object...)
 	 */
 	@AssistedInject
-	ScriptCommandWorker(ScriptCommandWorkerLogger logger,
-			ExecCommandWorkerFactory executeFactory,
-			@Named("script-command-worker-properties") Properties properties,
-			@Assisted TemplateResource template,
+	ScriptCommandWorker(@Assisted TemplateResource template,
 			@Assisted Map<String, String> environment,
-			@Assisted long timeoutMs, @Assisted Object... attributes)
-			throws WorkerException {
-		this.log = logger;
-		this.properties = new ContextProperties(this, properties);
-		this.commandWorker = createCommandWorker(executeFactory, environment,
-				timeoutMs, template, attributes);
+			@Assisted long timeoutMs, @Assisted Object... attributes) {
+		this.template = template;
+		this.environment = environment;
+		this.timeoutMs = timeoutMs;
+		this.attributes = attributes;
 	}
 
-	private ExecCommandWorker createCommandWorker(
-			ExecCommandWorkerFactory executeFactory,
-			Map<String, String> environment, long timeoutMs,
-			TemplateResource template, Object[] attributes)
-			throws WorkerException {
-		String shell = properties.getProperty("shell");
-		String script = createScript(template, attributes);
+	/**
+	 * Sets the script command worker properties.
+	 * 
+	 * @param provider
+	 *            the {@link PropertiesProvider}.
+	 */
+	@Inject
+	void setProperties(PropertiesProvider provider) {
+		ContextProperties p = provider.get();
+		this.shell = p.getProperty("shell");
+	}
+
+	@Override
+	public Worker call() throws WorkerException {
+		scriptString = createScript(template, attributes);
+		scriptFile = copyScript();
+		try {
+			commandWorker = createCommandWorker();
+			log.startScript(this);
+			commandWorker.call();
+			log.finishedScript(this);
+		} finally {
+			scriptFile.delete();
+		}
+		return this;
+	}
+
+	private ExecCommandWorker createCommandWorker() throws WorkerException {
 		ExecCommandWorker worker = executeFactory.create(
-				format("%s \"%s\"", shell, script), environment, timeoutMs);
+				format("%s %s", shell, scriptFile.getAbsolutePath()),
+				environment, timeoutMs);
 		worker.setQuotation(false);
 		return worker;
+	}
+
+	private File copyScript() throws WorkerException {
+		try {
+			File file = createTempFile("script", ".sh");
+			FileUtils.write(file, scriptString);
+			return file;
+		} catch (IOException e) {
+			throw log.errorCopyScript(this, e);
+		}
 	}
 
 	private String createScript(TemplateResource template, Object[] attributes)
@@ -178,12 +160,6 @@ public class ScriptCommandWorker implements Worker {
 		} catch (ResourcesException e) {
 			throw log.errorProcessTemplate(this, e);
 		}
-	}
-
-	@Override
-	public Worker call() throws WorkerException {
-		commandWorker.call();
-		return this;
 	}
 
 	public Map<String, String> getEnvironment() {
@@ -246,7 +222,7 @@ public class ScriptCommandWorker implements Worker {
 	}
 
 	public String getCommand() {
-		return commandWorker.getCommand();
+		return scriptString;
 	}
 
 	@Override

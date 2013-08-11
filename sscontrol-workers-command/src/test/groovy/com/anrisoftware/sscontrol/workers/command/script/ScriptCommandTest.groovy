@@ -70,6 +70,7 @@ class ScriptCommandTest {
 				"mod", mod,
 				"files", files
 		def workerB = reserialize worker
+		injector.injectMembers workerB
 		workerB()
 		assert files[0].canWrite() == false
 		assert files[1].canWrite() == false

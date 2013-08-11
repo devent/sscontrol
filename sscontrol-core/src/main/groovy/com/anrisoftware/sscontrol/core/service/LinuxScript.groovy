@@ -98,7 +98,7 @@ abstract class LinuxScript extends Script {
 	 */
 	void enableRepository(String repository) {
 		def template = commandTemplates.getResource("command")
-		def command = "$enableRepositoryCommand \"$repository\""
+		def command = "$enableRepositoryCommand '$repository'"
 		def worker = scriptCommandFactory.create(template, "command", command)()
 		log.enableRepositoryDone this, worker, repository
 	}

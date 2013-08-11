@@ -31,7 +31,7 @@ import com.anrisoftware.sscontrol.workers.api.WorkerException;
  */
 class ExecCommandWorkerLogger extends AbstractLogger {
 
-	private static final String EXECUTE_COMMAND = "Execute command {}.";
+	private static final String EXECUTE_COMMAND = "Execute command {} <<<\n{}<<<EOL";
 	private static final String FINISH_EXECUTE_COMMAND = "Finished execute command {} code={}, <<<\n{}\n<<<EOL, out= <<<\n{}<<<EOL, err= <<<\n{}<<<EOL";
 	private static final String ERROR_EXECUTE_COMMAND_MESSAGE = "Error execute command <<<\n{}\n<<<EOL";
 	private static final String WORKER = "worker";
@@ -63,6 +63,6 @@ class ExecCommandWorkerLogger extends AbstractLogger {
 	}
 
 	void startProcess(ExecCommandWorker worker) {
-		log.debug(EXECUTE_COMMAND, worker);
+		log.debug(EXECUTE_COMMAND, worker, worker.getCommand());
 	}
 }

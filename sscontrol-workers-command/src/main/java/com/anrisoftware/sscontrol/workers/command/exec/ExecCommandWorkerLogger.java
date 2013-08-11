@@ -35,7 +35,7 @@ class ExecCommandWorkerLogger extends AbstractLogger {
 	private static final String FINISH_EXECUTE_COMMAND = "Finished execute command {} code={}, <<<\n{}\n<<<EOL, out= <<<\n{}<<<EOL, err= <<<\n{}<<<EOL";
 	private static final String ERROR_EXECUTE_COMMAND_MESSAGE = "Error execute command <<<\n{}\n<<<EOL";
 	private static final String WORKER = "worker";
-	private static final String ERROR_EXECUTE_COMMAND = "Error execute command";
+	private static final String ERROR_EXECUTE_COMMAND = "Error execute command, error: '%s'";
 	private static final String EXIT_CODE = "exit code";
 	private static final String OUT = "output";
 	private static final String ERR = "error output";
@@ -50,7 +50,7 @@ class ExecCommandWorkerLogger extends AbstractLogger {
 
 	WorkerException errorExecuteCommand(ExecCommandWorker worker, IOException e) {
 		return logException(
-				new WorkerException(ERROR_EXECUTE_COMMAND, e)
+				new WorkerException(ERROR_EXECUTE_COMMAND, e, worker.getErr())
 						.add(WORKER, worker).add(COMMAND, worker.getCommand())
 						.add(EXIT_CODE, worker.getExitCode())
 						.add(OUT, worker.getOut()).add(ERR, worker.getErr()),

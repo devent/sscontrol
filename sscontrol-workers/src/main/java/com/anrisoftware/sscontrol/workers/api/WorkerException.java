@@ -18,6 +18,8 @@
  */
 package com.anrisoftware.sscontrol.workers.api;
 
+import static java.lang.String.format;
+
 import java.util.Map;
 
 import com.anrisoftware.globalpom.exceptions.Context;
@@ -33,11 +35,25 @@ public class WorkerException extends Exception {
 
 	private final Context<WorkerException> context;
 
+	/**
+	 * @see Exception#Exception(String, Throwable)
+	 */
 	public WorkerException(String message, Throwable cause) {
 		super(message, cause);
 		this.context = new Context<WorkerException>(this);
 	}
 
+	/**
+	 * @see Exception#Exception(String, Throwable)
+	 */
+	public WorkerException(String format, Throwable cause, Object... args) {
+		super(format(format, args), cause);
+		this.context = new Context<WorkerException>(this);
+	}
+
+	/**
+	 * @see Exception#Exception(String)
+	 */
 	public WorkerException(String message) {
 		super(message);
 		this.context = new Context<WorkerException>(this);

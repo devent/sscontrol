@@ -1,2 +1,2 @@
-deb
-deb
+deb http://archive.ubuntu.com/ubuntu lucid universe
+deb http://archive.ubuntu.com/ubuntu lucid universe

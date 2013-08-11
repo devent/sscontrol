@@ -18,6 +18,8 @@
  */
 package com.anrisoftware.sscontrol.core.service
 
+import static org.apache.commons.lang3.StringUtils.*
+
 import java.text.Format
 
 import javax.inject.Inject
@@ -98,7 +100,7 @@ abstract class LinuxScript extends Script {
 	 */
 	void enableRepository(String repository) {
 		def template = commandTemplates.getResource("command")
-		def command = "$enableRepositoryCommand '$repository'"
+		def command = "$enableRepositoryCommand $repository"
 		def worker = scriptCommandFactory.create(template, "command", command)()
 		log.enableRepositoryDone this, worker, repository
 	}
@@ -146,7 +148,8 @@ abstract class LinuxScript extends Script {
 	 * </ul>
 	 */
 	String debRepository(String distribution, String repository) {
-		systemProperty "repository_string", defaultProperties, distribution, repository
+		String string = systemProperty "repository_string", defaultProperties, distribution, repository
+		string.replaceAll(/\p{Blank}/, "\\\\ ")
 	}
 
 	/**

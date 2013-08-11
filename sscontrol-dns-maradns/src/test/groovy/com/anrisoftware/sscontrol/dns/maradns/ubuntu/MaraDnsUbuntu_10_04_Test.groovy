@@ -46,6 +46,7 @@ class MaraDnsUbuntu_10_04_Test extends MaraDnsLinuxBase {
 		copyResourceToCommand echoCommand, aptitude
 		copyResourceToCommand echoCommand, maradns
 		copyURLToFile maraDnsConfiguration, mararc
+		copyURLToFile aptSources, aptSourcesFile
 
 		registry.allServices.each { it.call() }
 		log.info "Run service again to ensure that configuration is not set double."

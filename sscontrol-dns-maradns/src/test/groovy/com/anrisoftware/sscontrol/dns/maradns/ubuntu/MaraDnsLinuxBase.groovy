@@ -66,6 +66,8 @@ class MaraDnsLinuxBase {
 
 	static maradnsOutExpected = MaraDnsLinuxBase.class.getResource("maradns_out_expected.txt")
 
+	static aptSources = MaraDnsLinuxBase.class.getResource("sources.list")
+
 	static Injector injector
 
 	static ServiceLoaderFactory loaderFactory
@@ -89,6 +91,8 @@ class MaraDnsLinuxBase {
 
 	File mararc
 
+	File aptSourcesFile
+
 	Map variables
 
 	ServicesRegistry registry
@@ -106,6 +110,8 @@ class MaraDnsLinuxBase {
 		addAptRepositoryOut = new File(tmpdir, "/usr/bin/add-apt-repository.out")
 		maradnsOut = new File(tmpdir, "/etc/init.d/maradns.out")
 		mararc = new File(tmpdir, "/etc/maradns/mararc")
+		aptSourcesFile = new File(tmpdir, "/etc/apt/sources.list")
+		aptSourcesFile.parentFile.mkdirs()
 	}
 
 	@Before

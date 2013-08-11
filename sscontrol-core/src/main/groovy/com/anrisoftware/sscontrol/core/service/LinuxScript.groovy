@@ -116,9 +116,52 @@ abstract class LinuxScript extends Script {
 	 */
 	void enableDebRepositories(String distribution, List repositories) {
 		repositories.each {
-			def string = debRepository distribution, it
-			enableRepository string
+			if (!containsDebRepository(distribution, it)) {
+				enableRepository debRepository(distribution, it)
+			}
 		}
+	}
+
+	/**
+	 * Tests if the system already have the repository enabled.
+	 *
+	 * @param distribution
+	 * 			  the name of the distribution.
+	 *
+	 * @param repository
+	 * 			  the name of the repository.
+	 *
+	 * @return {@code true} if the repository is already enabled.
+	 */
+	boolean containsDebRepository(String distribution, String repository) {
+		def template = commandTemplates.getResource("list_repositories")
+		def worker = scriptCommandFactory.create(
+				template, packagingType, "configurationDir", packagingConfigurationDir)()
+		split(worker.out, '\n').find { it.endsWith "$distribution $repository" } != null
+	}
+
+	/**
+	 * Returns the packaging type. The packaging type is the packaging system
+	 * used on the system, like apt or yum.
+	 *
+	 * <ul>
+	 * <li>{@code packaging_type} system property key
+	 * </ul>
+	 */
+	String getPackagingType() {
+		systemProperty "packaging_type", defaultProperties
+	}
+
+	/**
+	 * Returns the configuration directory of the packaging system for the
+	 * system.
+	 *
+	 * <ul>
+	 * <li>{@code packaging_configuration_directory} system property key
+	 * </ul>
+	 */
+	File getPackagingConfigurationDir() {
+		systemProperty("packaging_configuration_directory", defaultProperties) as File
 	}
 
 	/**
@@ -148,8 +191,7 @@ abstract class LinuxScript extends Script {
 	 * </ul>
 	 */
 	String debRepository(String distribution, String repository) {
-		String string = systemProperty "repository_string", defaultProperties, distribution, repository
-		string.replaceAll(/\p{Blank}/, "\\\\ ")
+		systemProperty "repository_string", defaultProperties, distribution, repository
 	}
 
 	/**

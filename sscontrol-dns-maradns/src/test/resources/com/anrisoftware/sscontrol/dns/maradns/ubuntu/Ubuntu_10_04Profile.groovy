@@ -24,6 +24,7 @@ profile "ubuntu_10_04", {
 		restart_command "${tmp}/etc/init.d/maradns restart"
 		enable_repository_command "${tmp}/usr/bin/add-apt-repository"
 		system_packages "python-software-properties"
+		packaging_configuration_directory "$tmp/etc/apt"
 	}
 	dns {
 		service "maradns"

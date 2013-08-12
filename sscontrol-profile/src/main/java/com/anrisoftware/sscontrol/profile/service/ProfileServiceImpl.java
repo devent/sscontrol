@@ -18,18 +18,17 @@
  */
 package com.anrisoftware.sscontrol.profile.service;
 
-import static java.util.Collections.unmodifiableSet;
-import static org.apache.commons.collections.map.PredicatedMap.decorate;
+import static java.util.Collections.unmodifiableList;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import java.util.Set;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import org.apache.commons.collections.functors.NotNullPredicate;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.anrisoftware.propertiesutils.ContextProperties;
@@ -51,6 +50,8 @@ class ProfileServiceImpl implements ProfileService {
 
 	private final Map<String, ProfileProperties> entries;
 
+	private final List<String> entrieKeys;
+
 	private final ProfilePropertiesFactory propertiesFactory;
 
 	private final ContextProperties properties;
@@ -58,14 +59,13 @@ class ProfileServiceImpl implements ProfileService {
 	private String profileName;
 
 	@Inject
-	@SuppressWarnings("unchecked")
 	ProfileServiceImpl(ProfileServiceImplLogger logger,
 			ProfilePropertiesFactory propertiesFactory,
 			@Named("profile-service-properties") Properties properties) {
 		this.log = logger;
 		this.propertiesFactory = propertiesFactory;
-		this.entries = decorate(new HashMap<String, ProfileProperties>(),
-				NotNullPredicate.INSTANCE, NotNullPredicate.INSTANCE);
+		this.entries = new HashMap<String, ProfileProperties>();
+		this.entrieKeys = new ArrayList<String>();
 		this.properties = new ContextProperties(this, properties);
 
 	}
@@ -102,6 +102,7 @@ class ProfileServiceImpl implements ProfileService {
 	@Override
 	public void addEntry(String name, ProfileProperties properties) {
 		entries.put(name, properties);
+		entrieKeys.add(name);
 		log.entryAdded(this, name);
 		if (name.equals("system")) {
 			for (String key : this.properties.stringPropertyNames()) {
@@ -126,8 +127,8 @@ class ProfileServiceImpl implements ProfileService {
 	}
 
 	@Override
-	public Set<String> getEntryNames() {
-		return unmodifiableSet(entries.keySet());
+	public List<String> getEntryNames() {
+		return unmodifiableList(entrieKeys);
 	}
 
 	@Override

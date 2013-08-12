@@ -57,8 +57,6 @@ public class ScriptCommandWorker implements Worker {
 
 	private final Map<String, String> environment;
 
-	private final long timeoutMs;
-
 	private final Object[] attributes;
 
 	@Inject
@@ -74,6 +72,10 @@ public class ScriptCommandWorker implements Worker {
 	private String scriptString;
 
 	private File scriptFile;
+
+	private int[] values;
+
+	private long timeoutMs;
 
 	/**
 	 * @see ScriptCommandWorkerFactory#create(TemplateResource, Object...)
@@ -106,6 +108,7 @@ public class ScriptCommandWorker implements Worker {
 		this.environment = environment;
 		this.timeoutMs = timeoutMs;
 		this.attributes = attributes;
+		this.values = null;
 	}
 
 	/**
@@ -140,6 +143,8 @@ public class ScriptCommandWorker implements Worker {
 				format("%s %s", shell, scriptFile.getAbsolutePath()),
 				environment, timeoutMs);
 		worker.setQuotation(false);
+		worker.setExitValues(values);
+		worker.setTimeoutMs(timeoutMs);
 		return worker;
 	}
 
@@ -163,15 +168,15 @@ public class ScriptCommandWorker implements Worker {
 	}
 
 	public Map<String, String> getEnvironment() {
-		return commandWorker.getEnvironment();
+		return environment;
 	}
 
-	public void setTimeoutMs(long newTimeoutMs) {
-		commandWorker.setTimeoutMs(newTimeoutMs);
+	public void setTimeoutMs(long timeoutMs) {
+		this.timeoutMs = timeoutMs;
 	}
 
 	public void setExitValue(int value) {
-		commandWorker.setExitValue(value);
+		setExitValues(new int[] { value });
 	}
 
 	/**
@@ -184,7 +189,7 @@ public class ScriptCommandWorker implements Worker {
 	 * @see Executor#setExitValues(int[])
 	 */
 	public void setExitValues(int[] values) {
-		commandWorker.setExitValues(values);
+		this.values = values;
 	}
 
 	/**

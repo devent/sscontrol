@@ -75,6 +75,11 @@ class ServicesRegistryImpl implements ServicesRegistry {
 	}
 
 	@Override
+	public boolean haveService(String name) {
+		return services.containsKey(name);
+	}
+
+	@Override
 	public String toString() {
 		return new ToStringBuilder(this).append("services", services.keySet())
 				.toString();

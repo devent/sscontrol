@@ -24,10 +24,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 
 import javax.inject.Inject;
-import javax.inject.Named;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
@@ -46,27 +44,25 @@ import com.anrisoftware.sscontrol.core.api.ServiceException;
 @SuppressWarnings("serial")
 class ProfileServiceImpl implements ProfileService {
 
-	private final ProfileServiceImplLogger log;
+	@Inject
+	private ProfileServiceImplLogger log;
+
+	@Inject
+	private ProfilePropertiesFactory propertiesFactory;
+
+	@Inject
+	private ProfilePropertiesProvider properties;
 
 	private final Map<String, ProfileProperties> entries;
 
 	private final List<String> entrieKeys;
 
-	private final ProfilePropertiesFactory propertiesFactory;
-
-	private final ContextProperties properties;
-
 	private String profileName;
 
 	@Inject
-	ProfileServiceImpl(ProfileServiceImplLogger logger,
-			ProfilePropertiesFactory propertiesFactory,
-			@Named("profile-service-properties") Properties properties) {
-		this.log = logger;
-		this.propertiesFactory = propertiesFactory;
+	ProfileServiceImpl() {
 		this.entries = new HashMap<String, ProfileProperties>();
 		this.entrieKeys = new ArrayList<String>();
-		this.properties = new ContextProperties(this, properties);
 
 	}
 
@@ -100,15 +96,16 @@ class ProfileServiceImpl implements ProfileService {
 	}
 
 	@Override
-	public void addEntry(String name, ProfileProperties properties) {
-		entries.put(name, properties);
+	public void addEntry(String name, ProfileProperties profile) {
+		entries.put(name, profile);
 		entrieKeys.add(name);
 		log.entryAdded(this, name);
 		if (name.equals("system")) {
-			for (String key : this.properties.stringPropertyNames()) {
+			ContextProperties properties = this.properties.get();
+			for (String key : properties.stringPropertyNames()) {
 				if (key.contains(".system.defaults.")) {
 					int i = key.lastIndexOf(".") + 1;
-					properties.put(key.substring(i), this.properties.get(key));
+					profile.put(key.substring(i), properties.get(key));
 				}
 			}
 		}

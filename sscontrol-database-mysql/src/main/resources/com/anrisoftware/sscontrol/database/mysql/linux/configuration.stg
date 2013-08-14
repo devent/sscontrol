@@ -23,7 +23,7 @@ STOP
 
 createDatabase(database) ::= <<
 <! create the specified database !>
-CREATE DATABASE IF NOT EXISTS \`<database.name>\` CHARACTER SET <database.characterSet> COLLATE <database.collate>;
+CREATE DATABASE IF NOT EXISTS \`<database.name>\` CHARACTER SET \`<database.characterSet>\` COLLATE \`<database.collate>\`;
 
 >>
 

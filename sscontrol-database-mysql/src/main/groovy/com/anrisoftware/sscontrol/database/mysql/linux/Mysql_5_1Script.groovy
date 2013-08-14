@@ -69,6 +69,7 @@ abstract class Mysql_5_1Script extends LinuxScript {
 	 */
 	void deployMysqldConfiguration() {
 		deployConfiguration configurationTokens(), currentMysqldConfiguration, mysqldConfiguration, mysqldFile
+		log.mysqldConfigurationDeployed this
 	}
 
 	/**
@@ -92,7 +93,8 @@ abstract class Mysql_5_1Script extends LinuxScript {
 		worker.skipExitValue = true
 		worker()
 		if (worker.exitCode != 0) {
-			worker = scriptCommandFactory.create(mysqlConfiguration, "setupadminpassword",
+			worker = scriptCommandFactory.create(
+					mysqlConfiguration, "setupadminpassword",
 					"mysqladminCommand", mysqladminCommand,
 					"service", service)()
 			log.adminPasswordSet this, worker
@@ -103,7 +105,8 @@ abstract class Mysql_5_1Script extends LinuxScript {
 	 * Creates the databases from the service.
 	 */
 	void createDatabases() {
-		def worker = scriptCommandFactory.create(mysqlConfiguration, "createDatabases",
+		def worker = scriptCommandFactory.create(
+				mysqlConfiguration, "createDatabases",
 				"mysqlCommand", mysqlCommand,
 				"service", service)()
 		log.databasesCreated this, worker
@@ -113,7 +116,8 @@ abstract class Mysql_5_1Script extends LinuxScript {
 	 * Creates the users from the service.
 	 */
 	void createUsers() {
-		def worker = scriptCommandFactory.create(mysqlConfiguration, "createUsers",
+		def worker = scriptCommandFactory.create(
+				mysqlConfiguration, "createUsers",
 				"mysqlCommand", mysqlCommand,
 				"service", service)()
 		log.usersCreated this, worker
@@ -127,12 +131,12 @@ abstract class Mysql_5_1Script extends LinuxScript {
 		service.databases.each { Database database ->
 			database.importScripts(handler).each {
 				if (it != null) {
-					def worker = scriptCommandFactory.create(mysqlConfiguration, "importScript",
+					def worker = scriptCommandFactory.create(
+							mysqlConfiguration, "importScript",
 							"mysqlCommand", mysqlCommand,
 							"service", service,
 							"script", it, "database", database)()
 					log.importScript this, worker
-				} else {
 				}
 			}
 		}

@@ -31,22 +31,34 @@ import com.anrisoftware.sscontrol.database.statements.Database
 @Singleton
 class Mysql_5_1ScriptLogger extends AbstractLogger {
 
-	static final String ADMINISTRATOR_PASSWORD_SET = "Administrator password set for {}, worker {}, output: <<EOL\n{}\nEOL"
-	static final String ADMINISTRATOR_PASSWORD_SET_DEBUG = "Administrator password set for {}, worker {}."
-	static final String ADMINISTRATOR_PASSWORD_SET_INFO = "Administrator password set for {}."
-	static final String DATABASES_CREATED = "Databases created for {}, worker {}, output: <<EOL\n{}\nEOL"
-	static final String DATABASES_CREATED_DEBUG = "Databases created for {}, worker {}."
-	static final String DATABASES_CREATED_INFO = "Databases created for {}."
-	static final String USERS_CREATED = "Users created for {}, worker {}, output: <<EOL\n{}\nEOL"
-	static final String USERS_CREATED_DEBUG = "Users created for {}, worker {}."
-	static final String USERS_CREATED_INFO = "Users created for {}."
-	static final String SQL_SCRIPT_IMPORT = "SQL script import for {}, worker {}, output: <<EOL\n{}\nEOL"
-	static final String SQL_IMPORT_DEBUG = "SQL import for {}, worker {}."
-	static final String SQL_SCRIPT_IMPORT_INFO = "SQL script import for {}."
+	enum _ {
+		ADMINISTRATOR_PASSWORD_SET("Administrator password set for {}, worker {}, output: <<EOL\n{}\nEOL"),
+		ADMINISTRATOR_PASSWORD_SET_DEBUG("Administrator password set for {}, worker {}."),
+		ADMINISTRATOR_PASSWORD_SET_INFO("Administrator password set for {}."),
+		DATABASES_CREATED("Databases created for {}, worker {}, output: <<EOL\n{}\nEOL"),
+		DATABASES_CREATED_DEBUG("Databases created for {}, worker {}."),
+		DATABASES_CREATED_INFO("Databases created for {}."),
+		USERS_CREATED("Users created for {}, worker {}, output: <<EOL\n{}\nEOL"),
+		USERS_CREATED_DEBUG("Users created for {}, worker {}."),
+		USERS_CREATED_INFO("Users created for {}."),
+		SQL_SCRIPT_IMPORT("SQL script import for {}, worker {}, output: <<EOL\n{}\nEOL"),
+		SQL_IMPORT_DEBUG("SQL import for {}, worker {}."),
+		SQL_SCRIPT_IMPORT_INFO("SQL script import for {}."),
+		ERROR_IMPORT("Error import SQL script"),
+		ERROR_IMPORT_MESSAGE("Error import SQL script for {}"),
+		MYSQLD_CONFIGURATION_DEBUG("Mysqld configuration set for {}."),
+		MYSQLD_CONFIGURATION_INFO("Mysqld configuration set for script '{}'.")
 
-	static final String ERROR_IMPORT = "Error import SQL script"
+		private String name
 
-	static final String ERROR_IMPORT_MESSAGE = "Error import SQL script for {}"
+		private _(String name) {
+			this.name = name
+		}
+
+		public String toString() {
+			return name
+		}
+	}
 
 	/**
 	 * Create logger for {@link Mysql_5_1Script}.
@@ -55,70 +67,78 @@ class Mysql_5_1ScriptLogger extends AbstractLogger {
 		super(Mysql_5_1Script.class)
 	}
 
-	void adminPasswordSet(Mysql_5_1Script script, def worker) {
+	void adminPasswordSet(def script, def worker) {
 		if (log.traceEnabled) {
 			String workerstr = replacePassword script, worker.toString()
 			String workerout = replacePassword script, worker.out
-			log.trace ADMINISTRATOR_PASSWORD_SET, script, workerstr, workerout
+			log.trace _.ADMINISTRATOR_PASSWORD_SET.name, script, workerstr, workerout
 		} else if (log.debugEnabled) {
 			String workerstr = replacePassword script, worker.toString()
-			log.debug ADMINISTRATOR_PASSWORD_SET_DEBUG, script, workerstr
+			log.debug _.ADMINISTRATOR_PASSWORD_SET_DEBUG.name, script, workerstr
 		} else {
-			log.info ADMINISTRATOR_PASSWORD_SET_INFO, script.name
+			log.info _.ADMINISTRATOR_PASSWORD_SET_INFO.name, script.name
 		}
 	}
 
-	void databasesCreated(Mysql_5_1Script script, def worker) {
+	void mysqldConfigurationDeployed(def script) {
+		if (log.debugEnabled) {
+			log.debug _.MYSQLD_CONFIGURATION_DEBUG.name, script
+		} else {
+			log.info _.MYSQLD_CONFIGURATION_INFO.name, script.name
+		}
+	}
+
+	void databasesCreated(def script, def worker) {
 		if (log.traceEnabled) {
 			String workerstr = replacePassword script, worker.toString()
 			String workerout = replacePassword script, worker.out
-			log.trace DATABASES_CREATED, script, workerstr, workerout
+			log.trace _.DATABASES_CREATED.name, script, workerstr, workerout
 		} else if (log.debugEnabled) {
 			String workerstr = replacePassword script, worker.toString()
-			log.debug DATABASES_CREATED_DEBUG, script, workerstr
+			log.debug _.DATABASES_CREATED_DEBUG.name, script, workerstr
 		} else {
-			log.info DATABASES_CREATED_INFO, script.name
+			log.info _.DATABASES_CREATED_INFO.name, script.name
 		}
 	}
 
-	void usersCreated(Mysql_5_1Script script, def worker) {
+	void usersCreated(def script, def worker) {
 		if (log.traceEnabled) {
 			String workerstr = replacePassword script, worker.toString()
 			String workerout = replacePassword script, worker.out
-			log.trace USERS_CREATED, script, workerstr, workerout
+			log.trace _.USERS_CREATED.name, script, workerstr, workerout
 		} else if (log.debugEnabled) {
 			String workerstr = replacePassword script, worker.toString()
-			log.debug USERS_CREATED_DEBUG, script, workerstr
+			log.debug _.USERS_CREATED_DEBUG.name, script, workerstr
 		} else {
-			log.info USERS_CREATED_INFO, script.name
+			log.info _.USERS_CREATED_INFO.name, script.name
 		}
 	}
 
-	void importScript(Mysql_5_1Script script, def worker) {
+	void importScript(def script, def worker) {
 		if (log.traceEnabled) {
 			String workerstr = replacePassword script, worker.toString()
 			String workerout = replacePassword script, worker.out
-			log.trace SQL_SCRIPT_IMPORT, script, workerstr, workerout
+			log.trace _.SQL_SCRIPT_IMPORT.name, script, workerstr, workerout
 		} else if (log.debugEnabled) {
 			String workerstr = replacePassword script, worker.toString()
-			log.debug SQL_IMPORT_DEBUG, script, workerstr
+			log.debug _.SQL_IMPORT_DEBUG.name, script, workerstr
 		} else {
-			log.info SQL_SCRIPT_IMPORT_INFO, script.name
+			log.info _.SQL_SCRIPT_IMPORT_INFO.name, script.name
 		}
 	}
 
-	Database.ErrorHandler errorHandler(Mysql_5_1Script script) {
+	Database.ErrorHandler errorHandler(def script) {
 		[errorThrown: { Exception ex ->
 				errorImportSqlScript(script, ex)
 			}] as Database.ErrorHandler
 	}
 
-	void errorImportSqlScript(Mysql_5_1Script script, Exception e) {
-		throw logException(new ServiceException(ERROR_IMPORT, e).
-		add("service", script), ERROR_IMPORT_MESSAGE, script)
+	void errorImportSqlScript(def script, Exception e) {
+		throw logException(new ServiceException(_.ERROR_IMPORT, e).
+		add("service", script), _.ERROR_IMPORT_MESSAGE, script)
 	}
 
-	String replacePassword(Mysql_5_1Script script, String string) {
+	String replacePassword(def script, String string) {
 		int length = script.service.adminPassword.length()
 		string.replace(script.service.adminPassword, "*" * length)
 	}

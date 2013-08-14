@@ -18,30 +18,56 @@
  */
 package com.anrisoftware.sscontrol.dns.statements;
 
-import com.google.inject.AbstractModule;
-import com.google.inject.assistedinject.FactoryModuleBuilder;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.inject.Inject;
+
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 /**
- * Installs the DNS service statements factories.
+ * List of aliases.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-public class DnsStatementsModule extends AbstractModule {
+public class Aliases {
+
+	@Inject
+	private AliasesLogger log;
+
+	private final List<Alias> aliases;
+
+	Aliases() {
+		this.aliases = new ArrayList<Alias>();
+	}
+
+	/**
+	 * Adds the alias.
+	 * 
+	 * @param alias
+	 *            the {@link Alias}.
+	 * 
+	 * @throws NullPointerException
+	 *             if the specified alias is {@code null}.
+	 */
+	public void addAlias(Alias alias) {
+		log.checkAlias(this, alias);
+		aliases.add(alias);
+		log.aliasAdded(this, alias);
+	}
+
+	/**
+	 * Returns the list of aliases.
+	 * 
+	 * @return the {@link List} of aliases {@link Alias}.
+	 */
+	public List<Alias> getAliases() {
+		return aliases;
+	}
 
 	@Override
-	protected void configure() {
-		install(new FactoryModuleBuilder().implement(DnsZone.class,
-				DnsZone.class).build(DnsZoneFactory.class));
-		install(new FactoryModuleBuilder().implement(ARecord.class,
-				ARecord.class).build(ARecordFactory.class));
-		install(new FactoryModuleBuilder().implement(NSRecord.class,
-				NSRecord.class).build(NSRecordFactory.class));
-		install(new FactoryModuleBuilder().implement(MXRecord.class,
-				MXRecord.class).build(MXRecordFactory.class));
-		install(new FactoryModuleBuilder().implement(CNAMERecord.class,
-				CNAMERecord.class).build(CNAMERecordFactory.class));
-		install(new FactoryModuleBuilder().implement(Alias.class, Alias.class)
-				.build(AliasFactory.class));
+	public String toString() {
+		return new ToStringBuilder(this).append(aliases).toString();
 	}
 }

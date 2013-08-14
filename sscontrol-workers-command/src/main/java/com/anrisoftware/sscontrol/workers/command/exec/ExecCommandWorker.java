@@ -34,6 +34,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.anrisoftware.sscontrol.workers.api.Worker;
 import com.anrisoftware.sscontrol.workers.api.WorkerException;
+import com.anrisoftware.sscontrol.workers.command.utils.Nullable;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 
@@ -55,7 +56,7 @@ public class ExecCommandWorker implements Worker {
 
 	private final String command;
 
-	private final HashMap<String, String> environment;
+	private final Map<String, String> environment;
 
 	private int exitCode;
 
@@ -86,7 +87,7 @@ public class ExecCommandWorker implements Worker {
 	 */
 	@AssistedInject
 	ExecCommandWorker(ExecCommandWorkerLogger logger, @Assisted String command,
-			@Assisted Map<String, String> environment) {
+			@Assisted @Nullable Map<String, String> environment) {
 		this(logger, command, environment, DEFAULT_TIMEOUT_MS);
 	}
 
@@ -95,14 +96,24 @@ public class ExecCommandWorker implements Worker {
 	 */
 	@AssistedInject
 	ExecCommandWorker(ExecCommandWorkerLogger logger, @Assisted String command,
-			@Assisted Map<String, String> environment, @Assisted long timeoutMs) {
+			@Assisted @Nullable Map<String, String> environment,
+			@Assisted long timeoutMs) {
 		this.log = logger;
-		this.environment = new HashMap<String, String>(environment);
+		this.environment = createEnvironment(environment);
 		this.command = command;
 		this.timeoutMs = timeoutMs;
 		this.quatation = true;
 		setExitValue(0);
 		readResolve();
+	}
+
+	private Map<String, String> createEnvironment(
+			Map<String, String> environment) {
+		if (environment != null) {
+			return new HashMap<String, String>(environment);
+		} else {
+			return null;
+		}
 	}
 
 	private Object readResolve() {

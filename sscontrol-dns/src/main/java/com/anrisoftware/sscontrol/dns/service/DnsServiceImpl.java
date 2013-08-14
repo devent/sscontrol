@@ -41,8 +41,13 @@ import com.anrisoftware.sscontrol.core.api.ServiceException;
 import com.anrisoftware.sscontrol.core.api.ServiceScriptFactory;
 import com.anrisoftware.sscontrol.core.service.AbstractService;
 import com.anrisoftware.sscontrol.dns.statements.ARecord;
+import com.anrisoftware.sscontrol.dns.statements.Alias;
+import com.anrisoftware.sscontrol.dns.statements.AliasFactory;
+import com.anrisoftware.sscontrol.dns.statements.Aliases;
 import com.anrisoftware.sscontrol.dns.statements.DnsZone;
 import com.anrisoftware.sscontrol.dns.statements.DnsZoneFactory;
+import com.anrisoftware.sscontrol.dns.statements.Recursive;
+import com.anrisoftware.sscontrol.dns.statements.Roots;
 
 /**
  * DNS service.
@@ -53,12 +58,26 @@ import com.anrisoftware.sscontrol.dns.statements.DnsZoneFactory;
 @SuppressWarnings("serial")
 class DnsServiceImpl extends AbstractService {
 
-	private final DnsServiceImplLogger log;
+	@Inject
+	private DnsServiceImplLogger log;
 
 	@Inject
 	private DnsZoneFactory dnsZoneFactory;
 
-	private final BindAddresses bindAddresses;
+	@Inject
+	private AliasFactory aliasFactory;
+
+	@Inject
+	private BindAddresses bindAddresses;
+
+	@Inject
+	private Aliases aliases;
+
+	@Inject
+	private Roots roots;
+
+	@Inject
+	private Recursive recursive;
 
 	private final List<DnsZone> zones;
 
@@ -66,10 +85,7 @@ class DnsServiceImpl extends AbstractService {
 
 	private boolean generate;
 
-	@Inject
-	DnsServiceImpl(DnsServiceImplLogger logger, BindAddresses bindAddresses) {
-		this.log = logger;
-		this.bindAddresses = bindAddresses;
+	DnsServiceImpl() {
 		this.zones = new ArrayList<DnsZone>();
 		this.generate = true;
 	}
@@ -367,6 +383,72 @@ class DnsServiceImpl extends AbstractService {
 	 */
 	public List<DnsZone> getZones() {
 		return unmodifiableList(zones);
+	}
+
+	/**
+	 * Adds a new alias.
+	 * 
+	 * @param name
+	 *            the name of the alias.
+	 * 
+	 * @return the {@link Alias}.
+	 */
+	public Alias alias(String name) {
+		Alias alias = aliasFactory.create();
+		alias.setName(name);
+		aliases.addAlias(alias);
+		return alias;
+	}
+
+	/**
+	 * Returns the aliases.
+	 * 
+	 * @return the {@link Aliases}.
+	 */
+	public Aliases getAliases() {
+		return aliases;
+	}
+
+	/**
+	 * Returns the root servers.
+	 * 
+	 * @param statements
+	 *            the roots statements.
+	 * 
+	 * @return the {@link Roots}.
+	 */
+	public Roots roots(Object statements) {
+		return roots;
+	}
+
+	/**
+	 * Returns the root servers.
+	 * 
+	 * @return the {@link Roots}.
+	 */
+	public Roots getRoots() {
+		return roots;
+	}
+
+	/**
+	 * Returns the recursive servers.
+	 * 
+	 * @param statements
+	 *            the recursive statements.
+	 * 
+	 * @return the {@link Recursive}.
+	 */
+	public Recursive recursive(Object statements) {
+		return recursive;
+	}
+
+	/**
+	 * Returns the recursive servers.
+	 * 
+	 * @return the {@link Recursive}.
+	 */
+	public Recursive getRecursive() {
+		return recursive;
 	}
 
 	@Override

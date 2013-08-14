@@ -46,9 +46,13 @@ class MaraDnsLinuxBase {
 
 	static maraDnsService = MaraDnsLinuxBase.getResource("Dns.groovy")
 
+	static maradnsRecursiveService = MaraDnsLinuxBase.getResource("DnsRecursive.groovy")
+
 	static ubuntu1004Profile = MaraDnsLinuxBase.class.getResource("Ubuntu_10_04Profile.groovy")
 
 	static maradnsrcExpected = MaraDnsLinuxBase.class.getResource("mararc_ubuntu_10_04_expected_conf.txt")
+
+	static maradnsRecursiveExpected = MaraDnsLinuxBase.class.getResource("mararc_recursive_ubuntu_10_04_expected_conf.txt")
 
 	static echoCommand = MaraDnsLinuxBase.class.getResource("echo_command.txt")
 

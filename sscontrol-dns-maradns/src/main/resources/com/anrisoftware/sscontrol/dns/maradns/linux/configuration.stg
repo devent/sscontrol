@@ -22,6 +22,46 @@ ip4_bind_address_search() ::= <%
 #?\s*ipv4_bind_addresses\s*=\s*.*
 %>
 
+ip4_aliases_search() ::= <%
+#?\s*ipv4_alias\s*=\s*\{\s*\}.*
+%>
+
+ip4_aliases() ::= <%
+ipv4_alias = {}
+%>
+
+ip4_alias_search(alias) ::= <%
+#?\s*ipv4_alias\["<alias.name>"\]\s*=\s*".*".*
+%>
+
+ip4_alias(alias) ::= <%
+ipv4_alias["<alias.name>"] = "<alias.address;separator=",">"
+%>
+
+root_servers_search() ::= <%
+#?\s*root_servers\s*=\s*\{\s*\}.*
+%>
+
+root_servers() ::= <%
+root_servers = {}
+%>
+
+root_servers_list_search(roots) ::= <%
+#?\s*root_servers\["."\]\s*=\s*"<roots.servers;separator=",">".*
+%>
+
+root_servers_list(roots) ::= <%
+root_servers["."] = "<roots.servers;separator=",">"
+%>
+
+recursive_acl_search() ::= <%
+#?\s*recursive_acl\s*=\s*".*?".*
+%>
+
+recursive_acl(recursive) ::= <%
+recursive_acl = "<recursive.servers;separator=",">"
+%>
+
 zone(zone) ::= <%
 csv2["<zone.name>."] = "db.<zone.name>"
 %>

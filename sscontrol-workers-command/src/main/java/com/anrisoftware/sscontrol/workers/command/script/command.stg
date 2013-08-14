@@ -1,0 +1,5 @@
+command(command) ::= <<
+#!/bin/sh
+<command>
+
+>>

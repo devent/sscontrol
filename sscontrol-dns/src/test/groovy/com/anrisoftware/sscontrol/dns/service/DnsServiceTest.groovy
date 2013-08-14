@@ -19,6 +19,7 @@
 package com.anrisoftware.sscontrol.dns.service
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
+import static com.anrisoftware.sscontrol.dns.service.DnsResources.*
 import static com.anrisoftware.sscontrol.dns.service.DnsServiceFactory.*
 import groovy.util.logging.Slf4j
 
@@ -228,33 +229,20 @@ class DnsServiceTest {
 		assertCNAMERecord zone.cnameRecords[0], "www.testa.com", "testa.com", 86400
 	}
 
-	static ubuntu1004Profile = DnsServiceTest.class.getResource("Ubuntu_10_04Profile.groovy")
+	@Test
+	void "recursive script"() {
+		loader.loadService ubuntu1004Profile, null
+		def profile = registry.getService("profile")[0]
+		loader.loadService dnsRecursive, profile
 
-	static dnsSerialScript = DnsServiceTest.class.getResource("DnsSerial.groovy")
-
-	static dnsSerialGenerateScript = DnsServiceTest.class.getResource("DnsSerialGenerate.groovy")
-
-	static dnsZoneARecordsScript = DnsServiceTest.class.getResource("DnsZoneARecords.groovy")
-
-	static dnsZoneCnameRecordsScript = DnsServiceTest.class.getResource("DnsZoneCNAMERecords.groovy")
-
-	static dnsZoneMxRecordsScript = DnsServiceTest.class.getResource("DnsZoneMXRecords.groovy")
-
-	static dnsZoneNsRecordsScript = DnsServiceTest.class.getResource("DnsZoneNSRecords.groovy")
-
-	static dnsAutomaticARecordZoneScript = DnsServiceTest.class.getResource("DnsAutomaticARecordForSoa.groovy")
-
-	static dnsNoAutomaticARecordsScript = DnsServiceTest.class.getResource("DnsNoAutomaticARecords.groovy")
-
-	static dnsOriginShortcutScript = DnsServiceTest.class.getResource("DnsOriginShortcut.groovy")
-
-	static dnsBindOneAddress = DnsServiceTest.class.getResource("DnsBindOneAddress.groovy")
-
-	static dnsBindMultipleAddressString = DnsServiceTest.class.getResource("DnsBindMultipleAddressString.groovy")
-
-	static dnsBindMultipleAddressArray = DnsServiceTest.class.getResource("DnsBindMultipleAddressArray.groovy")
-
-	static dnsBindRemoveLocalhost = DnsServiceTest.class.getResource("DnsBindRemoveLocalhost.groovy")
+		def service = assertService registry.getService("dns")[0], 1, ["127.0.0.1"]
+		def zone = assertZone service.zones[0], "example1.com", "ns.example1.com", "hostmaster@example1.com", 86400
+		assert service.aliases.aliases.size() == 1
+		assert service.aliases.aliases[0].name == "localhost"
+		assert service.aliases.aliases[0].addresses[0] == "127.0.0.1"
+		assert service.roots.servers[0] == "icann"
+		assert service.recursive.servers[0] == "localhost"
+	}
 
 	static Injector injector
 

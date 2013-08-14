@@ -25,7 +25,6 @@ import static java.lang.String.format;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.util.HashMap;
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -73,6 +72,8 @@ public class ScriptCommandWorker implements Worker {
 
 	private File scriptFile;
 
+	private boolean valuesSet;
+
 	private int[] values;
 
 	private long timeoutMs;
@@ -83,7 +84,7 @@ public class ScriptCommandWorker implements Worker {
 	@AssistedInject
 	ScriptCommandWorker(@Assisted TemplateResource template,
 			@Assisted Object... attributes) {
-		this(template, new HashMap<String, String>(), attributes);
+		this(template, null, attributes);
 	}
 
 	/**
@@ -108,6 +109,7 @@ public class ScriptCommandWorker implements Worker {
 		this.environment = environment;
 		this.timeoutMs = timeoutMs;
 		this.attributes = attributes;
+		this.valuesSet = false;
 		this.values = null;
 	}
 
@@ -143,7 +145,9 @@ public class ScriptCommandWorker implements Worker {
 				format("%s %s", shell, scriptFile.getAbsolutePath()),
 				environment, timeoutMs);
 		worker.setQuotation(false);
-		worker.setExitValues(values);
+		if (valuesSet) {
+			worker.setExitValues(values);
+		}
 		worker.setTimeoutMs(timeoutMs);
 		return worker;
 	}
@@ -189,6 +193,7 @@ public class ScriptCommandWorker implements Worker {
 	 * @see Executor#setExitValues(int[])
 	 */
 	public void setExitValues(int[] values) {
+		this.valuesSet = true;
 		this.values = values;
 	}
 

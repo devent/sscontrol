@@ -18,30 +18,50 @@
  */
 package com.anrisoftware.sscontrol.dns.statements;
 
-import com.google.inject.AbstractModule;
-import com.google.inject.assistedinject.FactoryModuleBuilder;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 /**
- * Installs the DNS service statements factories.
+ * Alias for an IP address.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-public class DnsStatementsModule extends AbstractModule {
+public class Alias {
+
+	private String name;
+
+	private final List<String> addresses;
+
+	Alias() {
+		this.addresses = new ArrayList<String>();
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void address(String address) {
+		addAddress(address);
+	}
+
+	public void addAddress(String address) {
+		addresses.add(address);
+	}
+
+	public List<String> getAddress() {
+		return addresses;
+	}
 
 	@Override
-	protected void configure() {
-		install(new FactoryModuleBuilder().implement(DnsZone.class,
-				DnsZone.class).build(DnsZoneFactory.class));
-		install(new FactoryModuleBuilder().implement(ARecord.class,
-				ARecord.class).build(ARecordFactory.class));
-		install(new FactoryModuleBuilder().implement(NSRecord.class,
-				NSRecord.class).build(NSRecordFactory.class));
-		install(new FactoryModuleBuilder().implement(MXRecord.class,
-				MXRecord.class).build(MXRecordFactory.class));
-		install(new FactoryModuleBuilder().implement(CNAMERecord.class,
-				CNAMERecord.class).build(CNAMERecordFactory.class));
-		install(new FactoryModuleBuilder().implement(Alias.class, Alias.class)
-				.build(AliasFactory.class));
+	public String toString() {
+		return new ToStringBuilder(this).append("name", name)
+				.append("address", addresses).toString();
 	}
 }

@@ -153,8 +153,14 @@ ipv4_alias["opennic"] = "131.161.247.226,209.151.84.102,64.247.218.140,64.247.21
 # Recursive ACL: Who is allowd to perform recursive queries.  The format
 # is identical to that of "zone_transfer_acl", including ipv4_alias support
 
-# ipv4_alias["localhost"] = "127.0.0.0/8"
-# recursive_acl = "localhost"
+# SSCONTROL-dns
+ipv4_alias["localhost"] = "127.0.0.1"
+# SSCONTROL-dns-END
+
+# SSCONTROL-dns
+recursive_acl = "localhost"
+# SSCONTROL-dns-END
+
 
 # Random seed file: The file from which we read 16 bytes from to get the
 # 128-bit random Rijndael key.  This is ideally a file which is a good source
@@ -184,7 +190,10 @@ ipv4_alias["opennic"] = "131.161.247.226,209.151.84.102,64.247.218.140,64.247.21
 # The root servers which we use when making recursive queries.
 
 # The following line must be uncommented to enable recursive queries
-# root_servers = {}
+# SSCONTROL-dns
+root_servers = {}
+# SSCONTROL-dns-END
+
 
 # You can choose which set of root servers to use.  Current values (set above)
 # are: icann, osrc, alternic, opennic,  pacificroot, irsc, tinc, and
@@ -232,14 +241,14 @@ ipv4_alias["opennic"] = "131.161.247.226,209.151.84.102,64.247.218.140,64.247.21
 ipv4_bind_addresses = "127.0.0.1"
 # SSCONTROL-dns-END
 # SSCONTROL-dns
+ipv4_alias["vbox"] = "10.0.2.2"
+# SSCONTROL-dns-END
+# SSCONTROL-dns
+root_servers["."] = "icann"
+# SSCONTROL-dns-END
+# SSCONTROL-dns
 csv2 = {}
 # SSCONTROL-dns-END
 # SSCONTROL-dns
 csv2["example1.com."] = "db.example1.com"
-# SSCONTROL-dns-END
-# SSCONTROL-dns
-csv2["example2.com."] = "db.example2.com"
-# SSCONTROL-dns-END
-# SSCONTROL-dns
-csv2["anrisoftware.com."] = "db.anrisoftware.com"
 # SSCONTROL-dns-END

@@ -1,0 +1,5 @@
+error_script() ::= <<
+#!/bin/sh
+cat not_found_command_xxx
+
+>>

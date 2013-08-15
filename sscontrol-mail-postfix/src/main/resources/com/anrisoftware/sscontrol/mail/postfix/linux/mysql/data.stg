@@ -8,10 +8,10 @@ STOP
 >>
 
 domainRow(domain) ::= <<
-INSERT INTO `domains` (`domain`, `enabled`) VALUES
+INSERT INTO \`domains\` (\`domain\`, \`enabled\`) VALUES
 ('<domain.name>', <enabledStr(domain.enabled)>)
 ON DUPLICATE KEY UPDATE
-`enabled`=<enabledStr(domain.enabled)>;
+\`enabled\`=<enabledStr(domain.enabled)>;
 
 >>
 
@@ -25,11 +25,11 @@ STOP
 >>
 
 aliasRow(alias) ::= <<
-INSERT INTO `aliases` (`mail`, `destination`, `enabled`) VALUES
+INSERT INTO \`aliases\` (\`mail\`, \`destination\`, \`enabled\`) VALUES
 ('<aliasName(alias)>', '<aliasDestination(alias)>', <enabledStr(alias.enabled)>)
 ON DUPLICATE KEY UPDATE
-`destination`='<aliasDestination(alias)>',
-`enabled`=<enabledStr(alias.enabled)>;
+\`destination\`='<aliasDestination(alias)>',
+\`enabled\`=<enabledStr(alias.enabled)>;
 
 >>
 
@@ -51,11 +51,11 @@ STOP
 >>
 
 userRow(user) ::= <<
-INSERT INTO `users` (`id`, `name`, `maildir`, `enabled`, `crypt`) VALUES
+INSERT INTO \`users\` (\`id\`, \`name\`, \`maildir\`, \`enabled\`, \`crypt\`) VALUES
 ('<user.name>@<user.domain.name>', '<user.name>', '<user.name>/', <enabledStr(user.enabled)>, encrypt('<user.password>'))
 ON DUPLICATE KEY UPDATE
-`enabled`=<enabledStr(user.enabled)>,
-`crypt`=encrypt('<user.password>');
+\`enabled\`=<enabledStr(user.enabled)>,
+\`crypt\`=encrypt('<user.password>');
 
 >>
 

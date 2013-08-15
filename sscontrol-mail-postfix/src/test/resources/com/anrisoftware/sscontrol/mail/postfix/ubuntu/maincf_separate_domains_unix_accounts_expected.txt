@@ -22,38 +22,58 @@ append_dot_mydomain = no
 #delay_warning_time = 4h
 
 readme_directory = no
+
+# TLS parameters
+smtpd_tls_cert_file=/etc/ssl/certs/ssl-cert-snakeoil.pem
+smtpd_tls_key_file=/etc/ssl/private/ssl-cert-snakeoil.key
+smtpd_use_tls=yes
+smtpd_tls_session_cache_database = btree:${data_directory}/smtpd_scache
+smtp_tls_session_cache_database = btree:${data_directory}/smtp_scache
+
+# See /usr/share/doc/postfix/TLS_README.gz in the postfix-doc package for
+# information on enabling SSL in the smtp client.
+
 # SSCONTROL-mail
 myhostname = mail.example.com
 # SSCONTROL-mail-END
+
 # SSCONTROL-mail
-relayhost = smtp.relayhost.com
+alias_maps = hash:/tmp/etc/postfix/aliases
 # SSCONTROL-mail-END
+
 # SSCONTROL-mail
-inet_interfaces = all
+alias_database = hash:/tmp/etc/postfix/aliases
 # SSCONTROL-mail-END
+
 # SSCONTROL-mail
 mydestination = localhost.$mydomain,localhost,$myhostname
 # SSCONTROL-mail-END
+
+# SSCONTROL-mail
+relayhost = smtp.relayhost.com
+# SSCONTROL-mail-END
+
+mynetworks = 127.0.0.0/8 [::ffff:127.0.0.0]/104 [::1]/128
+mailbox_size_limit = 0
+recipient_delimiter = +
+# SSCONTROL-mail
+inet_interfaces = all
+# SSCONTROL-mail-END
+
 # SSCONTROL-mail
 masquerade_domains = mail.example.com
 # SSCONTROL-mail-END
 # SSCONTROL-mail
-alias_maps = hash:/Ubuntu_10_04.tmp/etc/postfix/aliases
+virtual_alias_domains = hash:/tmp/etc/postfix/alias_domains
 # SSCONTROL-mail-END
 # SSCONTROL-mail
-alias_database = hash:/Ubuntu_10_04.tmp/etc/postfix/aliases
+virtual_alias_maps = hash:/tmp/etc/postfix/alias_maps
 # SSCONTROL-mail-END
 # SSCONTROL-mail
-virtual_alias_domains = hash:/Ubuntu_10_04.tmp/etc/postfix/alias_domains
+virtual_mailbox_base = /tmp/var/mail/vhosts
 # SSCONTROL-mail-END
 # SSCONTROL-mail
-virtual_alias_maps = hash:/Ubuntu_10_04.tmp/etc/postfix/alias_maps
-# SSCONTROL-mail-END
-# SSCONTROL-mail
-virtual_mailbox_base = /Ubuntu_10_04.tmp/var/mail/vhosts
-# SSCONTROL-mail-END
-# SSCONTROL-mail
-virtual_mailbox_maps = hash:/Ubuntu_10_04.tmp/etc/postfix/mailbox_maps
+virtual_mailbox_maps = hash:/tmp/etc/postfix/mailbox_maps
 # SSCONTROL-mail-END
 # SSCONTROL-mail
 virtual_minimum_uid = 5000

@@ -16,28 +16,22 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-mail-postfix. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.mail.postfix.linux
+package com.anrisoftware.sscontrol.mail.postfix.ubuntu
 
-mail {
-	bind_addresses all
-
-	relay "smtp.relayhost.com"
-	name "mail.example.com"
-	origin "example.com"
-
-	masquerade {
-		domains "mail.example.com"
-		users "root"
+profile "ubuntu_10_04", {
+	system {
+		install_command "$tmp/usr/bin/aptitude update && $tmp/usr/bin/aptitude install"
+		restart_command "$tmp/sbin/restart"
+		id_command "$tmp/bin/id"
 	}
-
-	domain "example.com", {
-		user "info"
-		user "sales"
-		user "disabled-user", { enabled false }
-		alias "postmaster", destination: "postmaster"
-		alias "disabled-alias", destination: "postmaster", { enabled false }
-		catchall destination: "jim"
+	mail {
+		service "postfix"
+		storage "mysql"
+		postalias_command "$tmp/usr/sbin/postalias"
+		postmap_command "$tmp/usr/sbin/postmap"
+		mailname_file "$tmp/etc/mailname"
+		configuration_directory "$tmp/etc/postfix"
+		mailbox_base_directory "$tmp/var/mail/vhosts"
+		mysql_command "$tmp/usr/bin/mysql"
 	}
-
-	domain "disabled.domain", { enabled false }
 }

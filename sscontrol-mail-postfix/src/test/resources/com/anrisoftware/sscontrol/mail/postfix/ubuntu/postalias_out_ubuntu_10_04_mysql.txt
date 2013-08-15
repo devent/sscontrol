@@ -1,2 +1,2 @@
-/Ubuntu_10_04.tmp/etc/postfix/aliases
-/Ubuntu_10_04.tmp/etc/postfix/aliases
+/tmp/etc/postfix/aliases
+/tmp/etc/postfix/aliases

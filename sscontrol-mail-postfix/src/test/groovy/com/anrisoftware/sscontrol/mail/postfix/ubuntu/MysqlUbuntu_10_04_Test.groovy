@@ -20,15 +20,24 @@ package com.anrisoftware.sscontrol.mail.postfix.ubuntu
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.mail.postfix.ubuntu.MysqlUbuntu10_04Resources.*
+import static com.anrisoftware.sscontrol.mail.postfix.ubuntu.Ubuntu10_04Resources.*
 import static org.apache.commons.io.FileUtils.*
 import groovy.util.logging.Slf4j
 
 import org.junit.Before
+import org.junit.BeforeClass
+import org.junit.Rule
 import org.junit.Test
+import org.junit.rules.TemporaryFolder
 
 import com.anrisoftware.sscontrol.core.api.ServiceLoader as SscontrolServiceLoader
+import com.anrisoftware.sscontrol.core.api.ServiceLoaderFactory
 import com.anrisoftware.sscontrol.core.api.ServicesRegistry
-import com.anrisoftware.sscontrol.mail.postfix.linux.PostfixLinuxBase
+import com.anrisoftware.sscontrol.core.modules.CoreModule
+import com.anrisoftware.sscontrol.core.modules.CoreResourcesModule
+import com.anrisoftware.sscontrol.core.service.ServiceModule
+import com.google.inject.Guice
+import com.google.inject.Injector
 
 /**
  * Test mail on a Ubuntu 10.04 server with virtual domains and users
@@ -38,38 +47,48 @@ import com.anrisoftware.sscontrol.mail.postfix.linux.PostfixLinuxBase
  * @since 1.0
  */
 @Slf4j
-class MysqlUbuntu_10_04_Test extends PostfixLinuxBase {
+class MysqlUbuntu_10_04_Test {
 
 	@Test
 	void "virtual mysql"() {
-		loader.loadService mysqlUbuntu1004Profile, null
+		loader.loadService mysqlUbuntu10_04Profile.resource, null
 		def profile = registry.getService("profile")[0]
-		loader.loadService mailMysql, profile
+		loader.loadService mailMysql.resource, profile
 
-		copyResourceToCommand echoCommand, aptitudeFile
-		copyResourceToCommand echoCommand, restartFile
-		copyResourceToCommand echoCommand, postmapFile
-		copyResourceToCommand echoCommand, postaliasFile
-		copyResourceToCommand echoCommand, mysqlFile
-		copyURLToFile maincf, maincfFile
-		copyURLToFile mastercf, mastercfFile
 
 		registry.allServices.each { it.call() }
 		log.info "Run service again to ensure that configuration is not set double."
 		registry.allServices.each { it.call() }
 
 		assertFileContent mailnameFile, mailnameExpected
-		def maincfFileString = readFileToString(mainCfFile).replaceAll(/$tmpdir.absolutePath/, "/Ubuntu_10_04.tmp")
-		assertStringContent maincfFileString, mainCf.toString()
-		assertFileContent mailboxCfFile, mailboxCf.resource
-		assertFileContent aliasCfFile, aliasCf.resource
-		assertFileContent domainsCfFile, domainsCf.resource
+		assertStringContent replaceFileContent(tmpdir, maincfFile), mainConfigMysql.toString()
+		assertFileContent mailboxCfFile, mailboxConfig.resource
+		assertFileContent aliasCfFile, aliasConfig.resource
+		assertFileContent domainsCfFile, domainsConfig.resource
 		assertFileContent aptitudeOutFile, aptitudeOut.resource
 		assertFileContent mysqlOutFile, mysqlOut.resource
-		def postaliasOutFileString = readFileToString(postaliasOutFile).replaceAll(/$tmpdir.absolutePath/, "/Ubuntu_10_04.tmp")
-		assertStringContent postaliasOutFileString, postaliasOut.toString()
+		assertStringContent replaceFileContent(tmpdir, postaliasOutFile), postaliasOut.toString()
 	}
 
+	static Injector injector
+	static ServiceLoaderFactory loaderFactory
+	@Rule
+	public TemporaryFolder tmp = new TemporaryFolder()
+	ServicesRegistry registry
+	SscontrolServiceLoader loader
+	File tmpdir
+	Map variables
+	File aptitudeFile
+	File restartFile
+	File mysqlFile
+	File mailnameFile
+	File maincfFile
+	File mastercfFile
+	File postmapFile
+	File postaliasFile
+	File aliasDomainsFile
+	File aliasMapsFile
+	File mailboxMapsFile
 	File mainCfFile
 	File mailboxCfFile
 	File aliasCfFile
@@ -79,13 +98,66 @@ class MysqlUbuntu_10_04_Test extends PostfixLinuxBase {
 	File postaliasOutFile
 
 	@Before
-	void createTempMysql() {
-		mainCfFile = new File(tmpdir, mainCf.fileName)
-		mailboxCfFile = new File(tmpdir, mailboxCf.fileName)
-		aliasCfFile = new File(tmpdir, aliasCf.fileName)
-		domainsCfFile = new File(tmpdir, domainsCf.fileName)
-		aptitudeOutFile = new File(tmpdir, aptitudeOut.fileName)
-		mysqlOutFile = new File(tmpdir, mysqlOut.fileName)
-		postaliasOutFile = new File(tmpdir, postaliasOut.fileName)
+	void createTemp() {
+		tmpdir = tmp.newFolder("postfix-linux")
+		variables = [tmp: tmpdir.absoluteFile]
+		createFiles()
+		copyFiles()
+	}
+
+	private createFiles() {
+		aptitudeFile = aptitude.createFile tmpdir
+		restartFile = restart.createFile tmpdir
+		mysqlFile = mysql.createFile tmpdir
+		mailnameFile = mailname.createFile tmpdir
+		maincfFile = maincf.createFile tmpdir
+		mastercfFile = mastercf.createFile tmpdir
+		postmapFile = postmap.createFile tmpdir
+		postaliasFile = postalias.createFile tmpdir
+		aliasDomainsFile = aliasDomains.createFile tmpdir
+		aliasMapsFile = aliasMaps.createFile tmpdir
+		mailboxMapsFile = mailboxMaps.createFile tmpdir
+		mainCfFile = mainConfigMysql.createFile tmpdir
+		mailboxCfFile = mailboxConfig.createFile tmpdir
+		aliasCfFile = aliasConfig.createFile tmpdir
+		domainsCfFile = domainsConfig.createFile tmpdir
+		aptitudeOutFile = aptitudeOut.createFile tmpdir
+		mysqlOutFile = mysqlOut.createFile tmpdir
+		postaliasOutFile = postaliasOut.createFile tmpdir
+	}
+
+	private copyFiles() {
+		echoCommand.toCommand aptitudeFile
+		echoCommand.toCommand restartFile
+		echoCommand.toCommand postaliasFile
+		echoCommand.toCommand postmapFile
+		echoCommand.toCommand mysqlFile
+		mainConfig.toFileParent tmpdir
+		masterConfig.toFileParent tmpdir
+		mainConfig.toFileParent tmpdir
+		masterConfig.toFileParent tmpdir
+	}
+
+	@Before
+	void createRegistry() {
+		registry = injector.getInstance ServicesRegistry
+		loader = loaderFactory.create registry, variables
+		loader.setParent injector
+	}
+
+	@BeforeClass
+	static void createFactories() {
+		injector = createInjector()
+		loaderFactory = injector.getInstance ServiceLoaderFactory
+	}
+
+	static Injector createInjector() {
+		Guice.createInjector(
+				new CoreModule(), new CoreResourcesModule(), new ServiceModule())
+	}
+
+	@BeforeClass
+	static void setupToStringStyle() {
+		toStringStyle
 	}
 }

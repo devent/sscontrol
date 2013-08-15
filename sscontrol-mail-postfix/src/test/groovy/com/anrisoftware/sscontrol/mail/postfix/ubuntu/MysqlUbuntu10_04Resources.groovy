@@ -28,13 +28,16 @@ import static com.anrisoftware.globalpom.utils.TestUtils.*
  */
 enum MysqlUbuntu10_04Resources {
 
-	mainCf("maincf_ubuntu_10_04_mysql.txt", "/etc/postfix/main.cf"),
-	mailboxCf("mysql_mailbox_cf_expected.txt", "/etc/postfix/mysql_mailbox.cf"),
-	aliasCf("mysql_alias_cf_expected.txt", "/etc/postfix/mysql_alias.cf"),
-	domainsCf("mysql_domains_cf_expected.txt", "/etc/postfix/mysql_domains.cf"),
+	mainConfigMysql("maincf_ubuntu_10_04_mysql.txt", "/etc/postfix/main.cf"),
+	mailboxConfig("mailboxcf_ubuntu_10_04_mysql.txt", "/etc/postfix/mysql_mailbox.cf"),
+	aliasConfig("aliascf_ubuntu_10_04_mysql.txt", "/etc/postfix/mysql_alias.cf"),
+	domainsConfig("domainscf_ubuntu_10_04_mysql.txt", "/etc/postfix/mysql_domains.cf"),
 	aptitudeOut("aptitude_out_ubuntu_10_04_mysql.txt", "/usr/bin/aptitude.out"),
 	mysqlOut("mysql_out_ubuntu_10_04_mysql.txt", "/usr/bin/mysql.out"),
-	postaliasOut("postalias_out_ubuntu_10_04_mysql.txt", "/usr/sbin/postalias.out")
+	postaliasOut("postalias_out_ubuntu_10_04_mysql.txt", "/usr/sbin/postalias.out"),
+	mysqlUbuntu10_04Profile("MysqlUbuntu_10_04Profile.groovy", null),
+	mailMysql("MailMysql.groovy", null),
+	mysql(null, "/usr/bin/mysql"),
 
 	URL resource
 
@@ -42,8 +45,14 @@ enum MysqlUbuntu10_04Resources {
 
 	MysqlUbuntu10_04Resources(String name, String fileName) {
 		this.fileName = fileName
-		this.resource = MysqlUbuntu10_04Resources.class.getResource name
-		assert resource != null : "Resource '$name' not found"
+		if (name != null) {
+			this.resource = MysqlUbuntu10_04Resources.class.getResource name
+			assert resource != null : "Resource '$name' not found"
+		}
+	}
+
+	File createFile(File parent) {
+		new File(parent, fileName)
 	}
 
 	String toString() {

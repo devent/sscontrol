@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-mail-postfix. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.mail.postfix.linux
+package com.anrisoftware.sscontrol.mail.postfix.ubuntu
 
 mail {
 	bind_addresses all
@@ -24,21 +24,15 @@ mail {
 	relay "smtp.relayhost.com"
 	name "mail.example.com"
 	origin "example.com"
-	database "maildb" user "root" password "password"
 
 	masquerade {
 		domains "mail.example.com"
 		users "root"
 	}
 
-	domain "localhost.localdomain", { catchall destination: "@localhost" }
-	domain "localhost", {
-		alias "postmaster", destination: "root"
-		alias "sysadmin", destination: "root"
-		alias "webmaster", destination: "root"
-		alias "abuse", destination: "root"
-		alias "root", destination: "root"
-		catchall destination: "root"
-		user "root", password: "rootpasswd"
+	domain "example.com", {
+		alias "info", destination: "joe"
+		alias "sales", destination: "jane"
+		catchall destination: "jim"
 	}
 }

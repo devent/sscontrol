@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-mail-postfix. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.mail.postfix.linux
+package com.anrisoftware.sscontrol.mail.postfix.ubuntu
 
 profile "ubuntu_10_04", {
 	system {
@@ -26,12 +26,11 @@ profile "ubuntu_10_04", {
 	}
 	mail {
 		service "postfix"
-		storage "mysql"
+		storage "hash"
 		postalias_command "$tmp/usr/sbin/postalias"
 		postmap_command "$tmp/usr/sbin/postmap"
 		mailname_file "$tmp/etc/mailname"
 		configuration_directory "$tmp/etc/postfix"
 		mailbox_base_directory "$tmp/var/mail/vhosts"
-		mysql_command "$tmp/usr/bin/mysql"
 	}
 }

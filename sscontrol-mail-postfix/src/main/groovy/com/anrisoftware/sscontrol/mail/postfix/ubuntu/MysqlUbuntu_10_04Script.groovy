@@ -32,7 +32,7 @@ import com.anrisoftware.sscontrol.mail.postfix.linux.MysqlScript
 class MysqlUbuntu_10_04Script extends MysqlScript {
 
 	@Inject
-	Ubuntu10_04PropertiesProvider ubuntuProperties
+	MysqlUbuntu10_04PropertiesProvider ubuntuProperties
 
 	def runDistributionSpecific() {
 		installPackages()

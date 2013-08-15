@@ -1,4 +1,4 @@
 update
-install postfix
+install postfix mysql-client mysql-server
 update
-install postfix
+install postfix mysql-client mysql-server

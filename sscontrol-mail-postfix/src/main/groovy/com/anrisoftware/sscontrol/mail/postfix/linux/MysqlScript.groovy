@@ -74,7 +74,7 @@ abstract class MysqlScript extends LinuxScript {
 		postfixScript.postfixProperties = postfixProperties.get()
 		postfixScript.postfixScript = this
 		runScript postfixScript
-		mysqlTemplates = templatesFactory.create "MysqlScript"
+		mysqlTemplates = templatesFactory.create "PostfixMysqlScript"
 		tablesTemplate = mysqlTemplates.getResource "database_tables"
 		mainTemplate = mysqlTemplates.getResource "main_configuration"
 		configTemplate = mysqlTemplates.getResource "database_configuration"

@@ -36,10 +36,9 @@ public class MysqlUbuntu10_04PropertiesProvider extends
 		AbstractContextPropertiesProvider {
 
 	private static final URL RESOURCE = MysqlUbuntu10_04PropertiesProvider.class
-			.getResource("/mysql_ubuntu_10_04.properties");
+			.getResource("/postfix_mysql_ubuntu_10_04.properties");
 
 	MysqlUbuntu10_04PropertiesProvider() {
 		super(MysqlUbuntu10_04PropertiesProvider.class, RESOURCE);
 	}
-
 }

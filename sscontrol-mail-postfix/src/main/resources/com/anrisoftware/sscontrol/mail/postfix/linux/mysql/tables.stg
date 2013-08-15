@@ -10,8 +10,7 @@ CREATE TABLE IF NOT EXISTS \`aliases\` (
 \`enabled\` tinyint(1) NOT NULL default '1',
 PRIMARY KEY (\`pkid\`));
 
-CREATE UNIQUE INDEX \`aliases_index\`
-ON \`aliases\` (\`mail\`);
+<createIndexIfNotExists("aliases", "mail", "aliases_index")>
 \q
 STOP
 >>
@@ -28,8 +27,7 @@ CREATE TABLE IF NOT EXISTS \`domains\` (
 \`enabled\` tinyint(1) NOT NULL default '1',
 PRIMARY KEY (\`pkid\`) ) ;
 
-CREATE UNIQUE INDEX \`domains_index\`
-ON \`domains\` (\`domain\`);
+<createIndexIfNotExists("domains", "domain", "domains_index")>
 \q
 STOP
 >>
@@ -56,8 +54,28 @@ CREATE TABLE IF NOT EXISTS \`users\` (
 \`spamassassinrc\` varchar(128) NOT NULL default '',
 PRIMARY KEY (\`pkid\`));
 
-CREATE UNIQUE INDEX \`users_index\`
-ON \`users\` (\`id\`);
+<createIndexIfNotExists("users", "id", "users_index")>
 \q
 STOP
+>>
+
+createIndexIfNotExists(table, column, indexName) ::= <<
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ANSI';
+DROP PROCEDURE IF EXISTS create_index;
+DELIMITER $$
+CREATE PROCEDURE create_index()
+BEGIN
+    DECLARE indexexists BIGINT DEFAULT 0;
+    SELECT COUNT(*) INTO indexexists FROM information_schema.statistics
+        WHERE TABLE_SCHEMA = DATABASE()
+        AND table_name = '<table>' AND index_name = '<indexName>';
+    IF indexexists = 0 THEN
+        CREATE UNIQUE INDEX \`<indexName>\`
+        ON \`<table>\` (\`<column>\`);
+    END IF;
+END ;$$
+DELIMITER ;
+CALL create_index();
+DROP PROCEDURE IF EXISTS create_index;
+SET SQL_MODE=@OLD_SQL_MODE;
 >>

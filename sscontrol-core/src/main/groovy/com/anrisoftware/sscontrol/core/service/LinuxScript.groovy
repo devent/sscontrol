@@ -364,7 +364,13 @@ abstract class LinuxScript extends Script {
 	 */
 	def systemProperty(String key, ContextProperties p, Object... args) {
 		def property = system.get(key, args)
-		property != null ? property : String.format(p.getProperty(key), args)
+		property != null ? property : propertyKey(key, p, args)
+	}
+
+	private propertyKey(String key, ContextProperties p, Object... args) {
+		String property = p.getProperty(key)
+		log.checkPropertyKey this, property, key
+		String.format(property, args)
 	}
 
 	/**

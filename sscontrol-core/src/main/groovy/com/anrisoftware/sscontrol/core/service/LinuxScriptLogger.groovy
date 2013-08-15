@@ -88,4 +88,8 @@ class LinuxScriptLogger extends AbstractLogger {
 	void checkProperties(LinuxScript script, def properties, String key) {
 		notNull properties, "Properties cannot be null for key '%s' in %s.", key, script
 	}
+
+	void checkPropertyKey(def script, def property, def key) {
+		notNull property, "Property '%s' is not set for %s.", key, script
+	}
 }

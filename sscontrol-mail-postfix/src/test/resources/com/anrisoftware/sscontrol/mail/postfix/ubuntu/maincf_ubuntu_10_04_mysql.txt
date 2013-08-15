@@ -32,7 +32,7 @@ relayhost = smtp.relayhost.com
 inet_interfaces = all
 # SSCONTROL-mail-END
 # SSCONTROL-mail
-mydestination = localhost.\$mydomain,localhost,\$myhostname
+mydestination = localhost.$mydomain,localhost,$myhostname
 # SSCONTROL-mail-END
 # SSCONTROL-mail
 masquerade_domains = mail.example.com

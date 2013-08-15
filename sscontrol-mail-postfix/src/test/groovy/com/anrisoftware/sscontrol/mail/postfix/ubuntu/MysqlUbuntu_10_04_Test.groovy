@@ -19,6 +19,7 @@
 package com.anrisoftware.sscontrol.mail.postfix.ubuntu
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
+import static com.anrisoftware.sscontrol.mail.postfix.ubuntu.MysqlUbuntu10_04Resources.*
 import static org.apache.commons.io.FileUtils.*
 import groovy.util.logging.Slf4j
 
@@ -55,28 +56,36 @@ class MysqlUbuntu_10_04_Test extends PostfixLinuxBase {
 
 		registry.allServices.each { it.call() }
 		log.info "Run service again to ensure that configuration is not set double."
-		//registry.allServices.each { it.call() }
+		registry.allServices.each { it.call() }
 
-		def maincfFileString = readFileToString(maincfFile).replaceAll(/$tmpdir.absolutePath/, "/Ubuntu_10_04.tmp")
 		assertFileContent mailnameFile, mailnameExpected
-		assertStringContent maincfFileString, resourceToString(maincfMysqlExpected)
-		assertFileContent mailboxCfFile, mailboxCf
-		assertFileContent aliasCfFile, aliasCf
-		assertFileContent domainsCfFile, domainsCf
+		def maincfFileString = readFileToString(mainCfFile).replaceAll(/$tmpdir.absolutePath/, "/Ubuntu_10_04.tmp")
+		assertStringContent maincfFileString, mainCf.toString()
+		assertFileContent mailboxCfFile, mailboxCf.resource
+		assertFileContent aliasCfFile, aliasCf.resource
+		assertFileContent domainsCfFile, domainsCf.resource
+		assertFileContent aptitudeOutFile, aptitudeOut.resource
+		assertFileContent mysqlOutFile, mysqlOut.resource
+		def postaliasOutFileString = readFileToString(postaliasOutFile).replaceAll(/$tmpdir.absolutePath/, "/Ubuntu_10_04.tmp")
+		assertStringContent postaliasOutFileString, postaliasOut.toString()
 	}
 
-	static mailboxCf = PostfixLinuxBase.class.getResource("mysql_mailbox_cf_expected.txt")
-	static aliasCf = PostfixLinuxBase.class.getResource("mysql_alias_cf_expected.txt")
-	static domainsCf = PostfixLinuxBase.class.getResource("mysql_domains_cf_expected.txt")
-
+	File mainCfFile
 	File mailboxCfFile
 	File aliasCfFile
 	File domainsCfFile
+	File aptitudeOutFile
+	File mysqlOutFile
+	File postaliasOutFile
 
 	@Before
 	void createTempMysql() {
-		mailboxCfFile = new File(tmpdir, "/etc/postfix/mysql_mailbox.cf")
-		aliasCfFile = new File(tmpdir, "/etc/postfix/mysql_alias.cf")
-		domainsCfFile = new File(tmpdir, "/etc/postfix/mysql_domains.cf")
+		mainCfFile = new File(tmpdir, mainCf.fileName)
+		mailboxCfFile = new File(tmpdir, mailboxCf.fileName)
+		aliasCfFile = new File(tmpdir, aliasCf.fileName)
+		domainsCfFile = new File(tmpdir, domainsCf.fileName)
+		aptitudeOutFile = new File(tmpdir, aptitudeOut.fileName)
+		mysqlOutFile = new File(tmpdir, mysqlOut.fileName)
+		postaliasOutFile = new File(tmpdir, postaliasOut.fileName)
 	}
 }

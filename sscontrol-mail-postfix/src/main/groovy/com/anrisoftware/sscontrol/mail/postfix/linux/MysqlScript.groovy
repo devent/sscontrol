@@ -70,7 +70,7 @@ abstract class MysqlScript extends LinuxScript {
 	@Override
 	def run() {
 		super.run()
-		//runDistributionSpecific()
+		runDistributionSpecific()
 		postfixScript.postfixProperties = postfixProperties.get()
 		postfixScript.postfixScript = this
 		runScript postfixScript
@@ -85,8 +85,7 @@ abstract class MysqlScript extends LinuxScript {
 		deployDomains()
 		deployAliases()
 		deployUsers()
-		//}
-		//restartServices()
+		restartServices()
 	}
 
 	/**

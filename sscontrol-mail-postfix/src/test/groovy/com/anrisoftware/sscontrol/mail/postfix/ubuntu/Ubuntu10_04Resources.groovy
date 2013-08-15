@@ -47,7 +47,7 @@ enum Ubuntu10_04Resources {
 	mailService("MailService.groovy", null),
 	mailSharedUnixAccounts("MailSharedUnixAccounts.groovy", null),
 	aptitude(null, "/usr/bin/aptitude"),
-	restart(null, "/sbin/restart"),
+	restart(null, "/etc/init.d/postfix"),
 	mailname(null, "/etc/mailname"),
 	maincf(null, "/etc/postfix/main.cf"),
 	mastercf(null, "/etc/postfix/master.cf"),

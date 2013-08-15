@@ -21,7 +21,7 @@ package com.anrisoftware.sscontrol.mail.postfix.ubuntu
 profile "ubuntu_10_04", {
 	system {
 		install_command "$tmp/usr/bin/aptitude update && $tmp/usr/bin/aptitude install"
-		restart_command "$tmp/sbin/restart"
+		restart_command "$tmp/etc/init.d/postfix"
 		id_command "$tmp/bin/id"
 	}
 	mail {

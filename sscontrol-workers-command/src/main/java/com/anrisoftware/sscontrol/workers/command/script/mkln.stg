@@ -1,5 +1,0 @@
-unix(lnCommand, files, targets) ::= <<
-#!/bin/sh
-<files,targets:{file,target|<lnCommand> -s <file> <target><\n>}>
-
->>

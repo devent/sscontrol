@@ -1,5 +1,0 @@
-unix(chownCommand, owner, ownerGroup, files) ::= <<
-#!/bin/sh
-<files:{file|<chownCommand> <owner>.<ownerGroup> <file><\n>}>
-
->>

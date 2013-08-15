@@ -1,7 +1,0 @@
-restart(restartCommand, services) ::= <<
-#!/bin/sh
-<if(services)><services:{service | <restartCommand> <service><\n>}>
-<else>
-<restartCommand>
-<endif>
->>

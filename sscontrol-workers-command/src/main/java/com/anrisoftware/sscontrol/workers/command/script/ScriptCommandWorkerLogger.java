@@ -40,8 +40,8 @@ class ScriptCommandWorkerLogger extends AbstractLogger {
 	private static final String ERROR_PROCESSING = "Error processing template";
 	private static final String ERROR_COPY = "Error copy script";
 	private static final String ERROR_COPY2 = "Error copy script <<<\n{}\n<<<EOL";
-	private static final String EXECUTE_COMMAND = "Execute script {} <<<\n{}<<<EOL";
-	private static final String FINISH_EXECUTE_COMMAND = "Finished execute script {} <<<\n{}\n<<<EOL";
+	private static final String EXECUTE_COMMAND = "Execute script {}: '{}' <<<\n{}<<<EOL";
+	private static final String FINISH_EXECUTE_COMMAND = "Finished execute script {}: '{}' <<<\n{}\n<<<EOL";
 
 	/**
 	 * Create logger for {@link ScriptCommandWorker}.
@@ -64,10 +64,12 @@ class ScriptCommandWorkerLogger extends AbstractLogger {
 	}
 
 	void finishedScript(ScriptCommandWorker worker) {
-		log.debug(FINISH_EXECUTE_COMMAND, worker, worker.getCommand());
+		log.debug(FINISH_EXECUTE_COMMAND, worker, worker.getScriptFile(),
+				worker.getCommand());
 	}
 
 	void startScript(ScriptCommandWorker worker) {
-		log.debug(EXECUTE_COMMAND, worker, worker.getCommand());
+		log.debug(EXECUTE_COMMAND, worker, worker.getScriptFile(),
+				worker.getCommand());
 	}
 }

@@ -235,6 +235,10 @@ public class ScriptCommandWorker implements Worker {
 		return scriptString;
 	}
 
+	public File getScriptFile() {
+		return scriptFile;
+	}
+
 	@Override
 	public String toString() {
 		return commandWorker != null ? commandWorker.toString()

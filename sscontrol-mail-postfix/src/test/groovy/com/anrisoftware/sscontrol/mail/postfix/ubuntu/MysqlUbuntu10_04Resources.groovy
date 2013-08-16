@@ -19,6 +19,7 @@
 package com.anrisoftware.sscontrol.mail.postfix.ubuntu
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
+import static org.apache.commons.io.FileUtils.*
 
 /**
  * Postfix MySQL Ubuntu 10.04 resources.
@@ -37,7 +38,9 @@ enum MysqlUbuntu10_04Resources {
 	postaliasOut("postalias_out_ubuntu_10_04_mysql.txt", "/usr/sbin/postalias.out"),
 	mysqlUbuntu10_04Profile("MysqlUbuntu_10_04Profile.groovy", null),
 	mailMysql("MailMysql.groovy", null),
-	mysql(null, "/usr/bin/mysql"),
+	chown("echo_command.txt", "/bin/chown"),
+	mysql("echo_command.txt", "/usr/bin/mysql"),
+	virtualMailBox(null, "/var/mail/vhosts"),
 
 	URL resource
 
@@ -53,6 +56,14 @@ enum MysqlUbuntu10_04Resources {
 
 	File createFile(File parent) {
 		new File(parent, fileName)
+	}
+
+	void toFileParent(File parent) {
+		copyURLToFile resource, createFile(parent)
+	}
+
+	void toCommandParent(File parent) {
+		copyResourceToCommand resource, createFile(parent)
 	}
 
 	String toString() {

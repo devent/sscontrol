@@ -85,6 +85,7 @@ abstract class MysqlScript extends LinuxScript {
 		deployDomains()
 		deployAliases()
 		deployUsers()
+		createVirtualDirectory()
 		restartServices()
 	}
 
@@ -174,6 +175,22 @@ abstract class MysqlScript extends LinuxScript {
 	}
 
 	/**
+	 * Creates the virtual mail box directory and set the owner.
+	 */
+	void createVirtualDirectory() {
+		File dir = mailboxBaseDirectory
+		if (!dir.exists()) {
+			dir.mkdirs()
+		}
+		def template = commandTemplates.getResource("chown")
+		def worker = scriptCommandFactory.create(template, "unix",
+				"chownCommand", chownCommand,
+				"owner", virtualUid,
+				"ownerGroup", virtualGid,
+				"files", dir)()
+	}
+
+	/**
 	 * Returns the command for the MySQL server. Can be a full
 	 * path or just the command name that can be found in the current
 	 * search path.
@@ -186,5 +203,44 @@ abstract class MysqlScript extends LinuxScript {
 	 */
 	String getMysqlCommand() {
 		profileProperty("mysql_command", defaultProperties)
+	}
+
+	/**
+	 * Returns the path of the mailbox base directory.
+	 *
+	 * <ul>
+	 * <li>profile property {@code "mailbox_base_directory"}</li>
+	 * </ul>
+	 *
+	 * @see #getDefaultProperties()
+	 */
+	File getMailboxBaseDirectory() {
+		profileProperty("mailbox_base_directory", defaultProperties) as File
+	}
+
+	/**
+	 * Returns the virtual user ID.
+	 *
+	 * <ul>
+	 * <li>profile property {@code "virtual_uid"}</li>
+	 * </ul>
+	 *
+	 * @see #getDefaultProperties()
+	 */
+	String getVirtualUid() {
+		profileProperty("virtual_uid", defaultProperties)
+	}
+
+	/**
+	 * Returns the virtual group ID.
+	 *
+	 * <ul>
+	 * <li>profile property {@code "virtual_gid"}</li>
+	 * </ul>
+	 *
+	 * @see #getDefaultProperties()
+	 */
+	String getVirtualGid() {
+		profileProperty("virtual_gid", defaultProperties)
 	}
 }

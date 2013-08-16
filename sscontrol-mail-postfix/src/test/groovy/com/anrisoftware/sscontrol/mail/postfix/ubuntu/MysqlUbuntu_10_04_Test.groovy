@@ -68,6 +68,7 @@ class MysqlUbuntu_10_04_Test {
 		assertFileContent aptitudeOutFile, aptitudeOut.resource
 		assertFileContent mysqlOutFile, mysqlOut.resource
 		assertStringContent replaceFileContent(tmpdir, postaliasOutFile), postaliasOut.toString()
+		assert virtualMailBoxDir.isDirectory()
 	}
 
 	static Injector injector
@@ -96,6 +97,8 @@ class MysqlUbuntu_10_04_Test {
 	File aptitudeOutFile
 	File mysqlOutFile
 	File postaliasOutFile
+	File chownFile
+	File virtualMailBoxDir
 
 	@Before
 	void createTemp() {
@@ -124,6 +127,8 @@ class MysqlUbuntu_10_04_Test {
 		aptitudeOutFile = aptitudeOut.createFile tmpdir
 		mysqlOutFile = mysqlOut.createFile tmpdir
 		postaliasOutFile = postaliasOut.createFile tmpdir
+		chownFile = chown.createFile tmpdir
+		virtualMailBoxDir = new File(tmpdir, virtualMailBox.fileName)
 	}
 
 	private copyFiles() {
@@ -136,6 +141,7 @@ class MysqlUbuntu_10_04_Test {
 		masterConfig.toFileParent tmpdir
 		mainConfig.toFileParent tmpdir
 		masterConfig.toFileParent tmpdir
+		chown.toCommandParent tmpdir
 	}
 
 	@Before

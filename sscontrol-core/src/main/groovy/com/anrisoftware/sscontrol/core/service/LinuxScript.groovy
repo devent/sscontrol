@@ -345,6 +345,19 @@ abstract class LinuxScript extends Script {
 	}
 
 	/**
+	 * Returns the change owner command.
+	 *
+	 * <ul>
+	 * <li>system property key {@code chown_command}</li>
+	 * </ul>
+	 *
+	 * @see #getDefaultProperties()
+	 */
+	String getChownCommand() {
+		systemProperty "chown_command", defaultProperties
+	}
+
+	/**
 	 * Returns a system profile property. If the profile property was not set
 	 * return the default value from the default properties.
 	 *

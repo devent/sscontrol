@@ -22,7 +22,7 @@ profile "ubuntu_10_04", {
 	system {
 		install_command "$tmp/usr/bin/aptitude update && $tmp/usr/bin/aptitude install"
 		restart_command "$tmp/etc/init.d/postfix"
-		id_command "$tmp/bin/id"
+		chown_command "$tmp/bin/chown"
 	}
 	mail {
 		service "postfix"

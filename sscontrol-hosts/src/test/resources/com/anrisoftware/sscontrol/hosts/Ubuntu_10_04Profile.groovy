@@ -18,7 +18,4 @@
  */
 package com.anrisoftware.sscontrol.hosts
 
-profile "ubuntu_10_04", {
-	system { }
-	hosts { configuration_directory "${tmp}/etc" }
-}
+profile "ubuntu_10_04", { hosts { configuration_directory "${tmp}/etc" } }

@@ -20,6 +20,7 @@ package com.anrisoftware.sscontrol.core.service
 
 import static org.apache.commons.lang3.StringUtils.*
 
+import java.nio.charset.Charset
 import java.text.Format
 
 import javax.inject.Inject
@@ -309,8 +310,8 @@ abstract class LinuxScript extends Script {
 	 *
 	 * @see #getDefaultProperties()
 	 */
-	String getCharset() {
-		profileProperty "charset", defaultProperties
+	Charset getCharset() {
+		Charset.forName profileProperty("charset", defaultProperties)
 	}
 
 	/**

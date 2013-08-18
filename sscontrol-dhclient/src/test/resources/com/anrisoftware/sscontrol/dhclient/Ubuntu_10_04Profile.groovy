@@ -19,12 +19,9 @@
 package com.anrisoftware.sscontrol.dhclient
 
 profile "ubuntu_10_04", {
-	system {
+	dhclient {
 		install_command "${tmp}/usr/bin/aptitude update && ${tmp}/usr/bin/aptitude install"
 		restart_command "${tmp}/etc/init.d/networking restart"
-		prefix tmp
-	}
-	dhclient {
 		packages "dhcp3-client"
 		configuration_directory "${tmp}/etc/dhcp3"
 	}

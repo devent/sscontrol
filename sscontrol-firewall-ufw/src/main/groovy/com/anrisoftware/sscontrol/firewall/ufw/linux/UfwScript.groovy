@@ -67,9 +67,7 @@ abstract class UfwScript extends LinuxScript {
 	 */
 	void deployRules() {
 		def worker = scriptCommandFactory.create(rules,
-				"service", service,
-				"ufwCommand", ufwCommand,
-				"prefix", system.prefix)()
+				"service", service, "ufwCommand", ufwCommand)()
 		log.deployedRules this, worker
 	}
 

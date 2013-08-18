@@ -19,9 +19,9 @@
 package com.anrisoftware.sscontrol.firewall.ufw.ubuntu
 
 profile "ubuntu_10_04", {
-	system { install_command "${tmp}/usr/bin/aptitude update && ${tmp}/usr/bin/aptitude install" }
 	firewall {
 		service "ufw"
+		install_command "${tmp}/usr/bin/aptitude update && ${tmp}/usr/bin/aptitude install"
 		ufw_command "${tmp}/usr/sbin/ufw"
 	}
 }

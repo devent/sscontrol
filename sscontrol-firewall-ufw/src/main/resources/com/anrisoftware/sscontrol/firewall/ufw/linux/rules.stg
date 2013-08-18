@@ -1,26 +1,26 @@
-rules(service, ufwCommand, prefix) ::= <<
+rules(service, ufwCommand) ::= <<
 #!/bin/sh
-<prefix><ufwCommand> --force enable
-<service.statements:{s | <(s.class.simpleName)(s, ufwCommand, prefix)>}>
+<ufwCommand> --force enable
+<service.statements:{s | <(s.class.simpleName)(s, ufwCommand)>}>
 >>
 
-DenyDefault(statement, ufwCommand, prefix) ::= <<
-<prefix><ufwCommand> default deny
-
->>
-
-AllowDefault(statement, ufwCommand, prefix) ::= <<
-<prefix><ufwCommand> default allow
+DenyDefault(statement, ufwCommand) ::= <<
+<ufwCommand> default deny
 
 >>
 
-DenyPort(statement, ufwCommand, prefix) ::= <<
-<prefix><ufwCommand> deny <port_port(statement)><port_proto(statement)>
+AllowDefault(statement, ufwCommand) ::= <<
+<ufwCommand> default allow
 
 >>
 
-AllowPort(statement, ufwCommand, prefix) ::= <<
-<prefix><ufwCommand> allow <port_port(statement)><port_proto(statement)>
+DenyPort(statement, ufwCommand) ::= <<
+<ufwCommand> deny <port_port(statement)><port_proto(statement)>
+
+>>
+
+AllowPort(statement, ufwCommand) ::= <<
+<ufwCommand> allow <port_port(statement)><port_proto(statement)>
 
 >>
 
@@ -32,13 +32,13 @@ port_proto(statement) ::= <<
 <if(statement.protocol.both)><else>/<statement.protocol><endif>
 >>
 
-DenyFrom(statement, ufwCommand, prefix) ::= <<
-<prefix><ufwCommand> deny <proto(statement)> <address(statement)> <port(statement)> <to_address(statement)> <to_port(statement)>
+DenyFrom(statement, ufwCommand) ::= <<
+<ufwCommand> deny <proto(statement)> <address(statement)> <port(statement)> <to_address(statement)> <to_port(statement)>
 
 >>
 
-AllowFrom(statement, ufwCommand, prefix) ::= <<
-<prefix><ufwCommand> allow <proto(statement)> <address(statement)> <port(statement)> <to_address(statement)> <to_port(statement)>
+AllowFrom(statement, ufwCommand) ::= <<
+<ufwCommand> allow <proto(statement)> <address(statement)> <port(statement)> <to_address(statement)> <to_port(statement)>
 
 >>
 

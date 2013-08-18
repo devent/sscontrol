@@ -19,14 +19,12 @@
 package com.anrisoftware.sscontrol.mail.postfix.ubuntu
 
 profile "ubuntu_10_04", {
-	system {
-		install_command "$tmp/usr/bin/aptitude update && $tmp/usr/bin/aptitude install"
-		restart_command "$tmp/etc/init.d/postfix"
-		chown_command "$tmp/bin/chown"
-	}
 	mail {
 		service "postfix"
 		storage "mysql"
+		install_command "$tmp/usr/bin/aptitude update && $tmp/usr/bin/aptitude install"
+		restart_command "$tmp/etc/init.d/postfix"
+		chown_command "$tmp/bin/chown"
 		postalias_command "$tmp/usr/sbin/postalias"
 		postmap_command "$tmp/usr/sbin/postmap"
 		mailname_file "$tmp/etc/mailname"

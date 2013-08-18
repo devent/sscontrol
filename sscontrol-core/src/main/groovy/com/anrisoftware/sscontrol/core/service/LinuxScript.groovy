@@ -467,7 +467,6 @@ abstract class LinuxScript extends Script {
 	void runScript(LinuxScript script) {
 		def that = this
 		script.name = name
-		script.system = system
 		script.profile = profile
 		script.service = service
 		script.metaClass.propertyMissing = { name -> that."$name" }

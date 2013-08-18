@@ -18,8 +18,4 @@
  */
 package com.anrisoftware.sscontrol.dns.service
 
-profile "ubuntu_10_04", {
-	system { prefix tmp }
-	dns {
-	}
-}
+profile "ubuntu_10_04", { dns { } }

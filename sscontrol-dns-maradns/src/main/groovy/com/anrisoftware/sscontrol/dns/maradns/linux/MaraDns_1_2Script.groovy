@@ -169,7 +169,7 @@ abstract class MaraDns_1_2Script extends LinuxScript {
 	void deployZoneDbConfigurations() {
 		service.zones.each { DnsZone zone ->
 			def zoneconfig = zoneConfiguration.getText(true, "zone", zone)
-			write zoneFile(zone), zoneconfig, system.charset
+			write zoneFile(zone), zoneconfig, charset
 		}
 	}
 

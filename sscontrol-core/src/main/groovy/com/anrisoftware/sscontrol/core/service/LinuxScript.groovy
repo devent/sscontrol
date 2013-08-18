@@ -200,7 +200,8 @@ abstract class LinuxScript extends Script {
 	 * </ul>
 	 */
 	String debRepository(String distribution, String repository) {
-		profileProperty "repository_string", defaultProperties, distribution, repository
+		def str = profileProperty "repository_string", defaultProperties
+		String.format str, distribution, repository
 	}
 
 	/**

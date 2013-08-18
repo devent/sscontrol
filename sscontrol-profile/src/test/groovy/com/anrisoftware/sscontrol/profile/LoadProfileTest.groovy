@@ -49,9 +49,9 @@ class LoadProfileTest {
 		assert registry.serviceNames.toString() == "[profile]"
 		assert registry.getService("profile").size() == 1
 		ProfileService profile = registry.getService("profile")[0]
-		assert profile.entryNames.toString() == "[system, hostname]"
+		assert profile.entryNames.toString() == "[hosts, hostname]"
 
-		ProfileProperties system = profile.getEntry("system")
+		ProfileProperties system = profile.getEntry("hosts")
 		system.keys.size() == 8
 		assert system.get("echo_command") == "echo"
 		assert system.get("install_command") == "aptitude update && aptitude install %s"

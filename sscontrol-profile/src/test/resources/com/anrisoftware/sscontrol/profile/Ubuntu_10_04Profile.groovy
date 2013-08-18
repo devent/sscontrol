@@ -21,7 +21,7 @@ package com.anrisoftware.sscontrol.profile
 foo = "test"
 
 profile "ubuntu_10.04", {
-	system {
+	hosts {
 		install_command "aptitude update && aptitude install %s"
 		echo_command "echo"
 		set_enabled true

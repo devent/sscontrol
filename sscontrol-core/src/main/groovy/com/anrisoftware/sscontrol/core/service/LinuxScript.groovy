@@ -50,11 +50,6 @@ abstract class LinuxScript extends Script {
 	String name
 
 	/**
-	 * The system {@link ProfileProperties} profile properties.
-	 */
-	ProfileProperties system
-
-	/**
 	 * The service {@link ProfileProperties} profile properties.
 	 */
 	ProfileProperties profile
@@ -88,8 +83,21 @@ abstract class LinuxScript extends Script {
 	 * Installs the system packages.
 	 */
 	void installSystemPackages() {
-		def packages = systemListProperty "system_packages", defaultProperties
+		def packages = systemPackages
 		!packages.empty ? installPackages(packages) : null
+	}
+
+	/**
+	 * Returns the system packages to install.
+	 *
+	 * <ul>
+	 * <li>profile property {@code system_packages}</li>
+	 * </ul>
+	 *
+	 * @see #getDefaultProperties()
+	 */
+	List getSystemPackages() {
+		profileListProperty "system_packages", defaultProperties
 	}
 
 	/**
@@ -145,11 +153,11 @@ abstract class LinuxScript extends Script {
 	 * used on the system, like apt or yum.
 	 *
 	 * <ul>
-	 * <li>{@code packaging_type} system property key
+	 * <li>property key {@code packaging_type}
 	 * </ul>
 	 */
 	String getPackagingType() {
-		systemProperty "packaging_type", defaultProperties
+		profileProperty "packaging_type", defaultProperties
 	}
 
 	/**
@@ -157,22 +165,22 @@ abstract class LinuxScript extends Script {
 	 * system.
 	 *
 	 * <ul>
-	 * <li>{@code packaging_configuration_directory} system property key
+	 * <li>property key {@code packaging_configuration_directory}
 	 * </ul>
 	 */
 	File getPackagingConfigurationDir() {
-		systemProperty("packaging_configuration_directory", defaultProperties) as File
+		profileProperty("packaging_configuration_directory", defaultProperties) as File
 	}
 
 	/**
 	 * Returns the command to enable additional repositories.
 	 *
 	 * <ul>
-	 * <li>{@code enable_repository_command} system property key
+	 * <li>property key {@code enable_repository_command}
 	 * </ul>
 	 */
 	String getEnableRepositoryCommand() {
-		systemProperty "enable_repository_command", defaultProperties
+		profileProperty "enable_repository_command", defaultProperties
 	}
 
 	/**
@@ -187,11 +195,11 @@ abstract class LinuxScript extends Script {
 	 * 			  the name of the repository.
 	 *
 	 * <ul>
-	 * <li>{@code repository_string} system property key
+	 * <li>property key {@code repository_string}
 	 * </ul>
 	 */
 	String debRepository(String distribution, String repository) {
-		systemProperty "repository_string", defaultProperties, distribution, repository
+		profileProperty "repository_string", defaultProperties, distribution, repository
 	}
 
 	/**
@@ -214,11 +222,11 @@ abstract class LinuxScript extends Script {
 	 * Returns the install command.
 	 *
 	 * <ul>
-	 * <li>system property key {@code install_command}</li>
+	 * <li>property key {@code install_command}</li>
 	 * </ul>
 	 */
 	String getInstallCommand() {
-		systemProperty "install_command", defaultProperties
+		profileProperty "install_command", defaultProperties
 	}
 
 	/**
@@ -226,7 +234,7 @@ abstract class LinuxScript extends Script {
 	 */
 	String currentConfiguration(File file) {
 		if (file.isFile()) {
-			FileUtils.readFileToString file, system.charset
+			FileUtils.readFileToString file, charset
 		} else {
 			log.noConfigurationFound this, file
 			""
@@ -244,7 +252,7 @@ abstract class LinuxScript extends Script {
 			worker = tokensTemplateFactory.create(tokenMarker, it, configuration)()
 			configuration = worker.getText()
 		}
-		FileUtils.write file, configuration, system.charset
+		FileUtils.write file, configuration, charset
 		log.deployConfigurationDone this, file, configuration
 	}
 
@@ -293,16 +301,29 @@ abstract class LinuxScript extends Script {
 	abstract def getDefaultProperties()
 
 	/**
+	 * Returns the default character set.
+	 *
+	 * <ul>
+	 * <li>property key {@code charset}</li>
+	 * </ul>
+	 *
+	 * @see #getDefaultProperties()
+	 */
+	String getCharset() {
+		profileProperty "charset", defaultProperties
+	}
+
+	/**
 	 * Returns the restart command for the postfix service.
 	 *
 	 * <ul>
-	 * <li>system property key {@code restart_command}</li>
+	 * <li>property key {@code restart_command}</li>
 	 * </ul>
 	 *
 	 * @see #getDefaultProperties()
 	 */
 	String getRestartCommand() {
-		systemProperty "restart_command", defaultProperties
+		profileProperty "restart_command", defaultProperties
 	}
 
 	/**
@@ -348,61 +369,13 @@ abstract class LinuxScript extends Script {
 	 * Returns the change owner command.
 	 *
 	 * <ul>
-	 * <li>system property key {@code chown_command}</li>
+	 * <li>property key {@code chown_command}</li>
 	 * </ul>
 	 *
 	 * @see #getDefaultProperties()
 	 */
 	String getChownCommand() {
-		systemProperty "chown_command", defaultProperties
-	}
-
-	/**
-	 * Returns a system profile property. If the profile property was not set
-	 * return the default value from the default properties.
-	 *
-	 * @param key
-	 * 			  the key of the profile property.
-	 *
-	 * @param p
-	 * 			  the {@link ContextProperties} containing the system
-	 * 			  property values.
-	 *
-	 * @param args
-	 * 			  optional the arguments to the key, formatted as in
-	 * 			  {@link String#format(String, Object...)}.
-	 *
-	 * @return the value of the system profile property or the default property
-	 * if the profile property was not set.
-	 */
-	def systemProperty(String key, ContextProperties p, Object... args) {
-		def property = system.get(key, args)
-		property != null ? property : propertyKey(key, p, args)
-	}
-
-	private propertyKey(String key, ContextProperties p, Object... args) {
-		String property = p.getProperty(key)
-		log.checkPropertyKey this, property, key
-		String.format(property, args)
-	}
-
-	/**
-	 * Returns a list of the system profile property. If the profile property
-	 * was not set, it returns the default value from the default properties.
-	 *
-	 * @param key
-	 * 			  the key of the profile property.
-	 *
-	 * @param p
-	 * 			  the {@link ContextProperties} containing the system
-	 * 			  property default values.
-	 *
-	 * @return the {@link List} of the system profile property or
-	 * the default property if the profile property was not set.
-	 */
-	List systemListProperty(String key, ContextProperties p) {
-		def property = profile.getList(key)
-		property.empty ? p.getListProperty(key, ",") : property
+		profileProperty "chown_command", defaultProperties
 	}
 
 	/**
@@ -421,6 +394,12 @@ abstract class LinuxScript extends Script {
 	def profileProperty(String key, ContextProperties p) {
 		def property = profile[key]
 		property != null ? property : p.getProperty(key)
+	}
+
+	private propertyKey(String key, ContextProperties p) {
+		def property = p.getProperty(key)
+		log.checkPropertyKey this, property, key
+		return property
 	}
 
 	/**

@@ -29,7 +29,6 @@ import javax.inject.Inject;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import com.anrisoftware.propertiesutils.ContextProperties;
 import com.anrisoftware.sscontrol.core.api.ProfileProperties;
 import com.anrisoftware.sscontrol.core.api.ProfileService;
 import com.anrisoftware.sscontrol.core.api.Service;
@@ -49,9 +48,6 @@ class ProfileServiceImpl implements ProfileService {
 
 	@Inject
 	private ProfilePropertiesFactory propertiesFactory;
-
-	@Inject
-	private ProfilePropertiesProvider properties;
 
 	private final Map<String, ProfileProperties> entries;
 
@@ -100,15 +96,6 @@ class ProfileServiceImpl implements ProfileService {
 		entries.put(name, profile);
 		entrieKeys.add(name);
 		log.entryAdded(this, name);
-		if (name.equals("system")) {
-			ContextProperties properties = this.properties.get();
-			for (String key : properties.stringPropertyNames()) {
-				if (key.contains(".system.defaults.")) {
-					int i = key.lastIndexOf(".") + 1;
-					profile.put(key.substring(i), properties.get(key));
-				}
-			}
-		}
 	}
 
 	@Override

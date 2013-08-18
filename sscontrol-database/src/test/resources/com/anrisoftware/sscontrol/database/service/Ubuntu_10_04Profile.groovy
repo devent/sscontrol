@@ -18,7 +18,4 @@
  */
 package com.anrisoftware.sscontrol.database.service
 
-profile "ubuntu_10_04", {
-	system { }
-	database { }
-}
+profile "ubuntu_10_04", { database { } }

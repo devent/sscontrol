@@ -34,15 +34,7 @@ abstract class MysqlScript extends LinuxScript {
 	def run() {
 		super.run()
 		distributionSpecificConfiguration()
-		runMysqlScript()
-	}
-
-	void runMysqlScript() {
-		mysqlScript.name = name
-		mysqlScript.system = system
-		mysqlScript.profile = profile
-		mysqlScript.service = service
-		mysqlScript.run()
+		runScript mysqlScript
 	}
 
 	/**

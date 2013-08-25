@@ -1,0 +1,31 @@
+
+defaultconf() ::= <<
+\<Directory /\>
+    AllowOverride None
+    Order Deny,Allow
+    Deny from all
+\</Directory\>
+
+\<Directory /var/www/sites\>
+    AllowOverride None
+    Order Deny,Allow
+    Deny from all
+\</Directory\>
+
+>>
+
+virtualhostsconf(service) ::= <<
+<trunc(service.domains):{<nameVirtualHost(it)><\n>}><last(service.directives):{<nameVirtualHost(it)>}>
+>>
+
+nameVirtualHost(directive) ::= "NameVirtualHost <directive.address>:<directive.port>"
+
+enable_apachemods(enableCommand, mods) ::= <<
+#!/bin/sh
+<mods:enable_mod(enableCommand=enableCommand, mod=it)>
+>>
+
+enable_mod(enableCommand, mod) ::= <<
+<enableCommand> <mod>
+
+>>

@@ -1,0 +1,11 @@
+<Directory />
+    AllowOverride None
+    Order Deny,Allow
+    Deny from all
+</Directory>
+
+<Directory /var/www/sites>
+    AllowOverride None
+    Order Deny,Allow
+    Deny from all
+</Directory>

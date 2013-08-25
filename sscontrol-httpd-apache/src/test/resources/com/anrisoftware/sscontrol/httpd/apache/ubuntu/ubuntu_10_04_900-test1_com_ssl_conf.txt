@@ -1,0 +1,26 @@
+<VirtualHost 192.168.0.50:443>
+
+    # domain('anrisoftware.com')
+    ServerName anrisoftware.com
+    DocumentRoot /var/www/anrisoftware.com/web
+    <Directory /var/www/anrisoftware.com/web>
+        AllowOverride None
+        Order allow,deny
+        Allow from all
+    </Directory>
+    
+    SSLEngine on
+    SSLCertificateFile /var/www/anrisoftware.com/ssl/www.anrisoftware.com.crt
+    SSLCertificateKeyFile /var/www/anrisoftware.com/ssl/www.anrisoftware.com.keyinsecure
+    
+    # redirect_to_www
+    ServerAlias www.anrisoftware.com
+    RewriteEngine On
+    RewriteCond %{HTTP_HOST} ^anrisoftware\.com$ [NC]
+    RewriteRule ^(.*)$ https://www.anrisoftware.com$1 [L,R=301]
+    
+    Alias / /var/www/anrisoftware.com/web/
+    
+    # end
+
+</VirtualHost>

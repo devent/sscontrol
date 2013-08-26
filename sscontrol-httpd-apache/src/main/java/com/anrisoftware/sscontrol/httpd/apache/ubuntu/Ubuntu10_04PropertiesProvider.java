@@ -34,9 +34,6 @@ import com.anrisoftware.propertiesutils.AbstractContextPropertiesProvider;
  * <dt>{@code install_command}</dt>
  * <dd>the default packages installation command;</dd>
  * 
- * <dt>{@code ufw_command}</dt>
- * <dd>the UFW command;</dd>
- * 
  * <dt>{@code packages}</dt>
  * <dd>the list of needed packages for the service.</dd>
  * </dl>

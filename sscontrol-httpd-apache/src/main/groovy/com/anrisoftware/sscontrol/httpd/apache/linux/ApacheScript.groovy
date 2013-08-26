@@ -28,7 +28,7 @@ import com.anrisoftware.resources.templates.api.Templates
 import com.anrisoftware.sscontrol.core.service.LinuxScript
 
 /**
- * Uses the UFW service on a general Linux system.
+ * Uses Apache service on a general Linux system.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
@@ -51,25 +51,13 @@ abstract class ApacheScript extends LinuxScript {
 	@Override
 	def run() {
 		super.run()
-		ufwTemplates = templatesFactory.create "Ufw"
-		rules = ufwTemplates.getResource "rules"
 		distributionSpecificConfiguration()
-		deployRules()
 	}
 
 	/**
 	 * Run the distribution specific configuration.
 	 */
 	abstract distributionSpecificConfiguration()
-
-	/**
-	 * Deploys the firewall rules.
-	 */
-	void deployRules() {
-		def worker = scriptCommandFactory.create(rules,
-				"service", service, "ufwCommand", ufwCommand)()
-		log.deployedRules this, worker
-	}
 
 	/**
 	 * Returns the ufw tool command.

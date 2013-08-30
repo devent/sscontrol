@@ -1,18 +1,18 @@
 /*
  * Copyright 2012-2013 Erwin Müller <erwin.mueller@deventm.org>
- *
+ * 
  * This file is part of sscontrol-httpd.
- *
+ * 
  * sscontrol-httpd is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published by the
  * Free Software Foundation, either version 3 of the License, or (at your
  * option) any later version.
- *
+ * 
  * sscontrol-httpd is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
  * for more details.
- *
+ * 
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -24,6 +24,8 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.google.inject.assistedinject.Assisted;
@@ -133,6 +135,27 @@ public class Domain {
 		Redirect redirect = redirectFactory.createHttpToHttps();
 		redirects.add(redirect);
 		log.redirectHttpToHttpsAdded(this, redirect);
+	}
+
+	@Override
+	public int hashCode() {
+		return new HashCodeBuilder().append(address).append(port).hashCode();
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null) {
+			return false;
+		}
+		if (obj == this) {
+			return true;
+		}
+		if (obj.getClass() != getClass()) {
+			return false;
+		}
+		Domain rhs = (Domain) obj;
+		return new EqualsBuilder().append(address, rhs.getAddress())
+				.append(port, rhs.getPort()).isEquals();
 	}
 
 	@Override

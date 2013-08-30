@@ -42,6 +42,8 @@ class HttpdTest extends HttpdTestUtil {
 		loader.loadService ubuntu1004Profile, null
 		def profile = registry.getService("profile")[0]
 		loader.loadService httpdScript, profile
-		def service = registry.getService("httpd")[0]
+		HttpdServiceImpl service = registry.getService("httpd")[0]
+		service.domains.size() == 5
+		service.virtualDomains.size() == 4
 	}
 }

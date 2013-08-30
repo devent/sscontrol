@@ -131,15 +131,23 @@ public class Domain {
 	}
 
 	public void to_www() {
-		Redirect redirect = redirectFactory.createToWww();
-		redirects.add(redirect);
+		Redirect redirect = redirectFactory.createToWwwHttp(this);
+		addRedirect(redirect);
 		log.redirectToWwwAdded(this, redirect);
 	}
 
 	public void http_to_https() {
-		Redirect redirect = redirectFactory.createHttpToHttps();
-		redirects.add(redirect);
+		Redirect redirect = redirectFactory.createHttpToHttps(this);
+		addRedirect(redirect);
 		log.redirectHttpToHttpsAdded(this, redirect);
+	}
+
+	protected final void addRedirect(Redirect redirect) {
+		redirects.add(redirect);
+	}
+
+	protected final RedirectFactory getRedirectFactory() {
+		return redirectFactory;
 	}
 
 	@Override

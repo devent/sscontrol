@@ -37,12 +37,23 @@ import com.google.inject.assistedinject.Assisted;
  */
 public class SslDomain extends Domain {
 
+	@Inject
+	private DomainLogger log;
+
 	private URL certificationFile;
+
 	private URL certificationKeyFile;
 
 	@Inject
 	SslDomain(@Assisted Map<String, Object> args, @Assisted String name) {
 		super(args, 443, name);
+	}
+
+	@Override
+	public void to_www() {
+		Redirect redirect = getRedirectFactory().createToWwwHttps(this);
+		addRedirect(redirect);
+		log.redirectToWwwAdded(this, redirect);
 	}
 
 	public void certification_file(Object path) throws MalformedURLException,

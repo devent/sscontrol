@@ -18,35 +18,21 @@
  */
 package com.anrisoftware.sscontrol.httpd.statements;
 
+import javax.inject.Inject;
+
+import com.google.inject.assistedinject.Assisted;
+
 /**
- * Factory to create redirects.
+ * Redirects the current address to a www sub-domain.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-public interface RedirectFactory {
+public class RedirectToWwwHttp extends Redirect {
 
-	/**
-	 * Creates the redirect to www.
-	 * 
-	 * @param domain
-	 *            the {@link Domain} of the redirect.
-	 */
-	RedirectToWwwHttp createToWwwHttp(Domain domain);
+	@Inject
+	RedirectToWwwHttp(@Assisted Domain domain) {
+		super(domain);
+	}
 
-	/**
-	 * Creates the redirect to www.
-	 * 
-	 * @param domain
-	 *            the {@link Domain} of the redirect.
-	 */
-	RedirectToWwwHttps createToWwwHttps(Domain domain);
-
-	/**
-	 * Creates the redirect from http to https.
-	 * 
-	 * @param domain
-	 *            the {@link Domain} of the redirect.
-	 */
-	RedirectHttpToHttps createHttpToHttps(Domain domain);
 }

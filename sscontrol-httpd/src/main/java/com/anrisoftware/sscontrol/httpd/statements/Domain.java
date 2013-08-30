@@ -66,8 +66,13 @@ public class Domain {
 	 */
 	@Inject
 	Domain(@Assisted Map<String, Object> args, @Assisted String name) {
+		this(args, 80, name);
+	}
+
+	protected Domain(Map<String, Object> args, int port, String name) {
 		this.name = name;
 		this.redirects = new ArrayList<Redirect>();
+		this.port = port;
 		if (args.containsKey(ADDRESS)) {
 			this.address = (String) args.get(ADDRESS);
 		}

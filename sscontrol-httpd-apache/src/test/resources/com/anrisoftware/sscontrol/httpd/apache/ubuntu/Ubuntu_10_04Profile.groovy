@@ -18,4 +18,18 @@
  */
 package com.anrisoftware.sscontrol.httpd.apache.ubuntu
 
-profile "ubuntu_10_04", { httpd { } }
+import static com.anrisoftware.sscontrol.httpd.apache.ubuntu.UbuntuResources.*
+
+profile "ubuntu_10_04", {
+	httpd {
+		service "apache"
+		install_command "${aptitudeCommand.file(tmp)} update && ${aptitudeCommand.file(tmp)} install"
+		restart_command "${restartCommand.file(tmp)}"
+		enable_mod_command "${a2enmodCommand.file(tmp)}"
+		disable_mod_command "${a2dismodCommand.file(tmp)}"
+		enable_site_command "${a2ensiteCommand.file(tmp)}"
+		disable_site_command "${a2dissiteCommand.file(tmp)}"
+		apache_command "${apache2Command.file(tmp)}"
+		apache_control_command "${apache2ctlCommand.file(tmp)}"
+	}
+}

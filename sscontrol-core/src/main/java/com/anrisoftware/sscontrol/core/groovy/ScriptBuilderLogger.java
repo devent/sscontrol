@@ -1,23 +1,30 @@
 /*
  * Copyright 2013 Erwin Müller <erwin.mueller@deventm.org>
- *
+ * 
  * This file is part of sscontrol-core.
- *
+ * 
  * sscontrol-core is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published by the
  * Free Software Foundation, either version 3 of the License, or (at your
  * option) any later version.
- *
- * sscontrol-core is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
- * for more details.
- *
+ * 
+ * sscontrol-core is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more
+ * details.
+ * 
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-core. If not, see <http://www.gnu.org/licenses/>.
  */
 package com.anrisoftware.sscontrol.core.groovy;
 
+import static com.anrisoftware.sscontrol.core.groovy.ScriptBuilderLogger._.creating_service;
+import static com.anrisoftware.sscontrol.core.groovy.ScriptBuilderLogger._.invoke_method;
+import static com.anrisoftware.sscontrol.core.groovy.ScriptBuilderLogger._.no_service;
+import static com.anrisoftware.sscontrol.core.groovy.ScriptBuilderLogger._.no_service_message;
+import static com.anrisoftware.sscontrol.core.groovy.ScriptBuilderLogger._.retrieveResources;
+import static com.anrisoftware.sscontrol.core.groovy.ScriptBuilderLogger._.returning_service_property;
+import static com.anrisoftware.sscontrol.core.groovy.ScriptBuilderLogger._.service_name;
 import groovy.util.Proxy;
 
 import java.util.Arrays;
@@ -37,15 +44,55 @@ import com.anrisoftware.sscontrol.core.api.ServiceException;
  */
 class ScriptBuilderLogger extends AbstractLogger {
 
-	private static final String INVOKE_METHOD = "invoke_method";
-	private static final String CREATING_SERVICE = "creating_service";
-	private static final String RETURNING_SERVICE_PROPERTY = "returning_service_property";
-	private static final String NO_SERVICE_MESSAGE = "no_service_message";
-	private static final String SERVICE_NAME = "service_name";
-	private static final String NO_SERVICE = "no_service";
-	private static final String NAME = ScriptBuilderLogger.class
-			.getSimpleName();
-	private final Texts texts;
+	enum _ {
+
+		invoke_method("invoke_method"),
+
+		creating_service("creating_service"),
+
+		returning_service_property("returning_service_property"),
+
+		no_service_message("no_service_message"),
+
+		service_name("service_name"),
+
+		no_service("no_service");
+
+		/**
+		 * Retrieves the text resources for the logging messages.
+		 * 
+		 * @param texts
+		 *            the texts {@link Texts} resources.
+		 */
+		public static void retrieveResources(Texts texts) {
+			for (_ value : values()) {
+				value.setText(texts);
+			}
+		}
+
+		private String name;
+
+		private String text;
+
+		private _(String name) {
+			this.name = name;
+		}
+
+		/**
+		 * Retrieve the text resource for the logging message.
+		 * 
+		 * @param texts
+		 *            the texts {@link Texts} resources.
+		 */
+		public void setText(Texts texts) {
+			this.text = texts.getResource(name).getText();
+		}
+
+		@Override
+		public String toString() {
+			return text;
+		}
+	}
 
 	/**
 	 * Create logger for {@link ScriptBuilder}.
@@ -53,24 +100,22 @@ class ScriptBuilderLogger extends AbstractLogger {
 	@Inject
 	ScriptBuilderLogger(TextsFactory textsFactory) {
 		super(ScriptBuilder.class);
-		this.texts = textsFactory.create(NAME);
-	}
-
-	private String getText(String name) {
-		return texts.getResource(name).getText();
+		retrieveResources(textsFactory.create(ScriptBuilderLogger.class
+				.getSimpleName()));
 	}
 
 	ServiceException errorNoServiceFound(String name) {
-		return logException(new ServiceException(NO_SERVICE).add(
-				SERVICE_NAME, name), getText(NO_SERVICE_MESSAGE), name);
+		return logException(
+				new ServiceException(no_service).add(service_name, name),
+				no_service_message, name);
 	}
 
 	void returnServiceProperty(ScriptBuilder script, String name) {
-		log.trace(RETURNING_SERVICE_PROPERTY, name, script);
+		trace(returning_service_property, name, script);
 	}
 
 	void creatingService(String name) {
-		log.info(getText(CREATING_SERVICE), name);
+		info(creating_service, name);
 	}
 
 	void invokeMethod(ScriptBuilder script, String name, Object[] array,
@@ -80,7 +125,6 @@ class ScriptBuilderLogger extends AbstractLogger {
 		}
 		String className = current.getAdaptee() != null ? current.getAdaptee()
 				.getClass().getSimpleName() : "null";
-		log.trace(getText(INVOKE_METHOD), className, name,
-				Arrays.toString(array), script);
+		trace(invoke_method, className, name, Arrays.toString(array), script);
 	}
 }

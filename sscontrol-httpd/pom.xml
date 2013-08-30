@@ -7,68 +7,69 @@
 		<groupId>com.anrisoftware.sscontrol</groupId>
 		<artifactId>sscontrol-parent</artifactId>
 		<version>1.0-SNAPSHOT</version>
+		<relativePath>../sscontrol-parent</relativePath>
 	</parent>
 
 	<artifactId>sscontrol-httpd</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>RoboBee :: Httpd</name>
 	<description>Setups the Http server.</description>
-    <inceptionYear>2012</inceptionYear>
-    <url>https://www.anr-institute.com/projects/projects/sscontrol-httpd</url>
+	<inceptionYear>2012</inceptionYear>
+	<url>https://www.anr-institute.com/projects/projects/sscontrol-httpd</url>
 
-    <issueManagement>
-    <system>Redmine</system>
-    <url>https://www.anr-institute.com/projects/projects/sscontrol-httpd</url>
-    </issueManagement>
+	<issueManagement>
+		<system>Redmine</system>
+		<url>https://www.anr-institute.com/projects/projects/sscontrol-httpd</url>
+	</issueManagement>
 
-    <scm>
-        <connection>scm:git:${custom.gitpublic.url}sscontrolnew.git</connection>
-        <developerConnection>scm:git:${custom.gitpublic.url}sscontrolnew.git</developerConnection>
-        <url>scm:git:${custom.gitpublic.url}sscontrolnew.git</url>
-    </scm>
+	<scm>
+		<connection>scm:git:${custom.gitpublic.url}sscontrolnew.git</connection>
+		<developerConnection>scm:git:${custom.gitpublic.url}sscontrolnew.git</developerConnection>
+		<url>scm:git:${custom.gitpublic.url}sscontrolnew.git</url>
+	</scm>
 
-    <dependencies>
+	<dependencies>
 
-        <!-- test dependencies -->
-        <dependency>
-            <groupId>com.anrisoftware.sscontrol</groupId>
-            <artifactId>sscontrol-profile</artifactId>
-            <version>1.0-SNAPSHOT</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.anrisoftware.globalpom</groupId>
-            <artifactId>globalpom-groovytestutils</artifactId>
-            <scope>test</scope>
-        </dependency>
+		<!-- test dependencies -->
+		<dependency>
+			<groupId>com.anrisoftware.sscontrol</groupId>
+			<artifactId>sscontrol-profile</artifactId>
+			<version>1.0-SNAPSHOT</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.anrisoftware.globalpom</groupId>
+			<artifactId>globalpom-groovytestutils</artifactId>
+			<scope>test</scope>
+		</dependency>
 
-        <!-- own modules dependencies -->
-        <dependency>
-            <groupId>com.anrisoftware.sscontrol</groupId>
-            <artifactId>sscontrol-core</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>com.anrisoftware.sscontrol</groupId>
-            <artifactId>sscontrol-workers-text</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>com.anrisoftware.sscontrol</groupId>
-            <artifactId>sscontrol-workers-command</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
+		<!-- own modules dependencies -->
+		<dependency>
+			<groupId>com.anrisoftware.sscontrol</groupId>
+			<artifactId>sscontrol-core</artifactId>
+			<version>1.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>com.anrisoftware.sscontrol</groupId>
+			<artifactId>sscontrol-workers-text</artifactId>
+			<version>1.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>com.anrisoftware.sscontrol</groupId>
+			<artifactId>sscontrol-workers-command</artifactId>
+			<version>1.0-SNAPSHOT</version>
+		</dependency>
 
-        <!-- compile dependencies -->
-        <dependency>
-            <groupId>org.mangosdk</groupId>
-            <artifactId>spi</artifactId>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>com.google.inject.extensions</groupId>
-            <artifactId>guice-multibindings</artifactId>
-        </dependency>
-    </dependencies>
+		<!-- compile dependencies -->
+		<dependency>
+			<groupId>org.mangosdk</groupId>
+			<artifactId>spi</artifactId>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>com.google.inject.extensions</groupId>
+			<artifactId>guice-multibindings</artifactId>
+		</dependency>
+	</dependencies>
 
 </project>

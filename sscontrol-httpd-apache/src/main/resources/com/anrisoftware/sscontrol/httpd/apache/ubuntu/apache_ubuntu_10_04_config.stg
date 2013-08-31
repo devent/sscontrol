@@ -21,9 +21,21 @@ domainsConfiguration(service) ::= <<
 
 nameVirtualHost(domain) ::= "NameVirtualHost <domain.address>:<domain.port>"
 
-domain(properties, domain) ::= <<
+Domain(properties, domain) ::= <<
 \<VirtualHost <domain.address>:<domain.port>\>
+
     <domainBody(properties, domain)>
+    <domain.redirects:domainRedirects(domain)>
+    <domainAlias(properties, domain)>
+\</VirtualHost>
+
+>>
+
+SslDomain(properties, domain) ::= <<
+\<VirtualHost <domain.address>:<domain.port>\>
+
+    <domainBody(properties, domain)>
+    <domainCerts(properties, domain)>
     <domain.redirects:domainRedirects(domain)>
     <domainAlias(properties, domain)>
 \</VirtualHost>
@@ -39,6 +51,13 @@ DocumentRoot <properties.sitesDirectory>/<domain.siteDirectory>
     Order allow,deny
     Allow from all
 \</Directory>
+
+>>
+
+domainCerts(properties, domain) ::= <<
+SSLEngine on
+SSLCertificateFile <properties.sitesDirectory>/<domain.name>/ssl/<domain.certificationFile>
+SSLCertificateKeyFile <properties.sitesDirectory>/<domain.name>/ssl/<domain.certificationKeyFile>
 
 >>
 

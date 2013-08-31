@@ -74,7 +74,7 @@ class Ubuntu_10_04Script extends ApacheScript {
 
 	def deployConfig() {
 		service.domains.each {
-			def string = configTemplate.getText true, "domain", "properties", this, "domain", it
+			def string = configTemplate.getText true, it.class.simpleName, "properties", this, "domain", it
 			FileUtils.write new File(configurationDir, "sites-available/${it.fileName}"), string
 		}
 	}

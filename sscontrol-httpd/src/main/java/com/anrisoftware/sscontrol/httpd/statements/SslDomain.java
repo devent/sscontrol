@@ -42,9 +42,13 @@ public class SslDomain extends Domain {
 	@Inject
 	private DomainLogger log;
 
-	private URL certificationFile;
+	private URL certificationResource;
 
-	private URL certificationKeyFile;
+	private URL certificationKeyResource;
+
+	private String certificationFile;
+
+	private String certificationKeyFile;
 
 	@Inject
 	SslDomain(@Assisted Map<String, Object> args, @Assisted String name) {
@@ -78,16 +82,26 @@ public class SslDomain extends Domain {
 		}
 	}
 
-	public void certification_file(URL url) {
-		this.certificationFile = url;
+	public void certification_file(URL url) throws URISyntaxException {
+		this.certificationResource = url;
+		this.certificationFile = new File(url.getPath()).getName();
 	}
 
 	/**
-	 * Returns the certificate file URL.
+	 * Returns the certificate resource.
 	 * 
-	 * @return the the certificate file {@link URL}.
+	 * @return the the certificate {@link URL} resource.
 	 */
-	public URL getCertificationFile() {
+	public URL getCertificationResource() {
+		return certificationResource;
+	}
+
+	/**
+	 * Returns the certificate file name.
+	 * 
+	 * @return the the certificate file name.
+	 */
+	public String getCertificationFile() {
 		return certificationFile;
 	}
 
@@ -106,16 +120,27 @@ public class SslDomain extends Domain {
 		}
 	}
 
-	public void certification_key_file(URL url) {
-		this.certificationKeyFile = url;
+	public void certification_key_file(URL url) throws URISyntaxException {
+		this.certificationKeyResource = url;
+		this.certificationKeyFile = new File(url.getPath()).getName();
 	}
 
 	/**
-	 * Returns the certificate key file URL.
+	 * Returns the certificate key resource.
 	 * 
-	 * @return the the certificate key file {@link URL}.
+	 * @return the the certificate key {@link URL} resource.
 	 */
-	public URL getCertificationKeyFile() {
+	public URL getCertificationKeyResource() {
+		return certificationKeyResource;
+	}
+
+	/**
+	 * Returns the certificate key file path.
+	 * 
+	 * @return the the certificate key path.
+	 */
+	public String getCertificationKeyFile() {
 		return certificationKeyFile;
 	}
+
 }

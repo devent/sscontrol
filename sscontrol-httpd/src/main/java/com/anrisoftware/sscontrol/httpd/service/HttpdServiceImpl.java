@@ -35,8 +35,8 @@ import com.anrisoftware.sscontrol.core.api.Service;
 import com.anrisoftware.sscontrol.core.api.ServiceException;
 import com.anrisoftware.sscontrol.core.api.ServiceScriptFactory;
 import com.anrisoftware.sscontrol.core.service.AbstractService;
-import com.anrisoftware.sscontrol.httpd.statements.Domain;
-import com.anrisoftware.sscontrol.httpd.statements.DomainFactory;
+import com.anrisoftware.sscontrol.httpd.statements.domain.Domain;
+import com.anrisoftware.sscontrol.httpd.statements.domain.DomainFactory;
 
 /**
  * Firewall service.

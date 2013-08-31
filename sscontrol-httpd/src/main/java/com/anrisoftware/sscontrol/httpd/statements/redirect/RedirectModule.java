@@ -16,23 +16,23 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.statements;
+package com.anrisoftware.sscontrol.httpd.statements.redirect;
 
-import javax.inject.Inject;
-
-import com.google.inject.assistedinject.Assisted;
+import com.google.inject.AbstractModule;
+import com.google.inject.assistedinject.FactoryModuleBuilder;
 
 /**
- * Redirects the current address to a www sub-domain.
+ * Installs the redirect factories.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-public class RedirectToWwwHttps extends Redirect {
+public class RedirectModule extends AbstractModule {
 
-	@Inject
-	RedirectToWwwHttps(@Assisted Domain domain) {
-		super(domain);
+	@Override
+	protected void configure() {
+		install(new FactoryModuleBuilder().implement(Redirect.class,
+				Redirect.class).build(RedirectFactory.class));
 	}
 
 }

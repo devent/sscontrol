@@ -28,7 +28,7 @@ import static com.anrisoftware.sscontrol.httpd.service.HttpdServiceImplLogger._.
 import com.anrisoftware.globalpom.log.AbstractLogger;
 import com.anrisoftware.sscontrol.core.api.ProfileService;
 import com.anrisoftware.sscontrol.core.api.Service;
-import com.anrisoftware.sscontrol.httpd.statements.Domain;
+import com.anrisoftware.sscontrol.httpd.statements.domain.Domain;
 
 /**
  * Logging messages for {@link HttpdServiceImpl}.

@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.statements;
+package com.anrisoftware.sscontrol.httpd.statements.domain;
 
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
@@ -31,6 +31,9 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import com.anrisoftware.sscontrol.httpd.statements.redirect.Redirect;
+import com.anrisoftware.sscontrol.httpd.statements.redirect.RedirectFactory;
+import com.anrisoftware.sscontrol.httpd.statements.redirect.RedirectToWwwHttp;
 import com.google.inject.assistedinject.Assisted;
 
 /**

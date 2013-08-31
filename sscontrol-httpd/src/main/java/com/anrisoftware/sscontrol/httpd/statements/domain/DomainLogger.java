@@ -16,24 +16,25 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.statements;
+package com.anrisoftware.sscontrol.httpd.statements.domain;
 
-import static com.anrisoftware.sscontrol.httpd.statements.DomainLogger._.addressSet;
-import static com.anrisoftware.sscontrol.httpd.statements.DomainLogger._.addressSetDebug;
-import static com.anrisoftware.sscontrol.httpd.statements.DomainLogger._.documentRootDebug;
-import static com.anrisoftware.sscontrol.httpd.statements.DomainLogger._.documentRootSet;
-import static com.anrisoftware.sscontrol.httpd.statements.DomainLogger._.portSet;
-import static com.anrisoftware.sscontrol.httpd.statements.DomainLogger._.portSetDebug;
-import static com.anrisoftware.sscontrol.httpd.statements.DomainLogger._.redirectHttpToHttpsAdded;
-import static com.anrisoftware.sscontrol.httpd.statements.DomainLogger._.redirectHttpToHttpsAddedDebug;
-import static com.anrisoftware.sscontrol.httpd.statements.DomainLogger._.redirectToWwwAdded;
-import static com.anrisoftware.sscontrol.httpd.statements.DomainLogger._.redirectToWwwAddedDebug;
-import static com.anrisoftware.sscontrol.httpd.statements.DomainLogger._.useDomain;
-import static com.anrisoftware.sscontrol.httpd.statements.DomainLogger._.useDomainDebug;
+import static com.anrisoftware.sscontrol.httpd.statements.domain.DomainLogger._.addressSet;
+import static com.anrisoftware.sscontrol.httpd.statements.domain.DomainLogger._.addressSetDebug;
+import static com.anrisoftware.sscontrol.httpd.statements.domain.DomainLogger._.documentRootDebug;
+import static com.anrisoftware.sscontrol.httpd.statements.domain.DomainLogger._.documentRootSet;
+import static com.anrisoftware.sscontrol.httpd.statements.domain.DomainLogger._.portSet;
+import static com.anrisoftware.sscontrol.httpd.statements.domain.DomainLogger._.portSetDebug;
+import static com.anrisoftware.sscontrol.httpd.statements.domain.DomainLogger._.redirectHttpToHttpsAdded;
+import static com.anrisoftware.sscontrol.httpd.statements.domain.DomainLogger._.redirectHttpToHttpsAddedDebug;
+import static com.anrisoftware.sscontrol.httpd.statements.domain.DomainLogger._.redirectToWwwAdded;
+import static com.anrisoftware.sscontrol.httpd.statements.domain.DomainLogger._.redirectToWwwAddedDebug;
+import static com.anrisoftware.sscontrol.httpd.statements.domain.DomainLogger._.useDomain;
+import static com.anrisoftware.sscontrol.httpd.statements.domain.DomainLogger._.useDomainDebug;
 
 import javax.inject.Singleton;
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
+import com.anrisoftware.sscontrol.httpd.statements.redirect.Redirect;
 
 /**
  * Logging messages for {@link Domain}.

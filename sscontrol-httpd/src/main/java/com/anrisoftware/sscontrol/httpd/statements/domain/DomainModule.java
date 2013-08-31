@@ -16,37 +16,24 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.statements;
+package com.anrisoftware.sscontrol.httpd.statements.domain;
+
+import com.google.inject.AbstractModule;
+import com.google.inject.assistedinject.FactoryModuleBuilder;
 
 /**
- * Factory to create redirects.
+ * Installs the domain factories.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-public interface RedirectFactory {
+public class DomainModule extends AbstractModule {
 
-	/**
-	 * Creates the redirect to www.
-	 * 
-	 * @param domain
-	 *            the {@link Domain} of the redirect.
-	 */
-	RedirectToWwwHttp createToWwwHttp(Domain domain);
+	@Override
+	protected void configure() {
+		install(new FactoryModuleBuilder()
+				.implement(Domain.class, Domain.class).build(
+						DomainFactory.class));
+	}
 
-	/**
-	 * Creates the redirect to www.
-	 * 
-	 * @param domain
-	 *            the {@link Domain} of the redirect.
-	 */
-	RedirectToWwwHttps createToWwwHttps(Domain domain);
-
-	/**
-	 * Creates the redirect from http to https.
-	 * 
-	 * @param domain
-	 *            the {@link Domain} of the redirect.
-	 */
-	RedirectHttpToHttps createHttpToHttps(Domain domain);
 }

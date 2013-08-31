@@ -46,4 +46,13 @@ class HttpdTest extends HttpdTestUtil {
 		service.domains.size() == 5
 		service.virtualDomains.size() == 4
 	}
+
+	@Test
+	void "httpd auth file"() {
+		loader.loadService ubuntu1004Profile, null
+		def profile = registry.getService("profile")[0]
+		loader.loadService authFileScript, profile
+		HttpdServiceImpl service = registry.getService("httpd")[0]
+		service.domains.size() == 2
+	}
 }

@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.statements;
+package com.anrisoftware.sscontrol.httpd.statements.domain;
 
 import static java.lang.String.format;
 
@@ -29,6 +29,7 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
+import com.anrisoftware.sscontrol.httpd.statements.redirect.Redirect;
 import com.google.inject.assistedinject.Assisted;
 
 /**

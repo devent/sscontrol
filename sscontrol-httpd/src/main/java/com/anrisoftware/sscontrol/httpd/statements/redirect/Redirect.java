@@ -16,23 +16,38 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.statements;
+package com.anrisoftware.sscontrol.httpd.statements.redirect;
 
-import javax.inject.Inject;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import com.google.inject.assistedinject.Assisted;
+import com.anrisoftware.sscontrol.httpd.statements.domain.Domain;
 
 /**
- * Redirects the HTTP address to a HTTPS domain.
+ * Redirect statement.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-public class RedirectHttpToHttps extends Redirect {
+public class Redirect {
 
-	@Inject
-	RedirectHttpToHttps(@Assisted Domain domain) {
-		super(domain);
+	private final Domain domain;
+
+	/**
+	 * Sets the domain of the redirect.
+	 * 
+	 * @param domain
+	 *            the {@link Domain}.
+	 */
+	protected Redirect(Domain domain) {
+		this.domain = domain;
 	}
 
+	public Domain getDomain() {
+		return domain;
+	}
+
+	@Override
+	public String toString() {
+		return new ToStringBuilder(this).toString();
+	}
 }

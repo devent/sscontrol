@@ -1,0 +1,25 @@
+<VirtualHost 192.168.0.50:80>
+    # domain test1.com
+    ServerName test1.com
+    DocumentRoot /tmp/var/www/test1.com/web
+    <Directory /tmp/var/www/test1.com/web>
+        AllowOverride None
+        Order allow,deny
+        Allow from all
+    </Directory>
+
+    # redirect to www http
+    ServerAlias www.test1.com
+    RewriteEngine On
+    RewriteCond %{HTTP_HOST} ^test1\.com$ [NC]
+    RewriteRule ^(.*)$ http://www.test1.com$1 [L,R=301]
+
+    # redirect http to https
+    RewriteEngine On
+    RewriteCond %{HTTP_HOST} ^test1.com
+    RewriteRule (.*) https://test1.com$1 [R=301,L]
+
+
+    Alias / /tmp/var/www/test1.com/web/
+
+</VirtualHost>

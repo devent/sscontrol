@@ -18,6 +18,9 @@
  */
 package com.anrisoftware.sscontrol.httpd.statements;
 
+import static java.lang.String.format;
+import static java.util.Arrays.asList;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -59,7 +62,7 @@ public class Domain {
 
 	private String documentRoot;
 
-	private String useDomains;
+	private String useDomain;
 
 	/**
 	 * @see DomainFactory#create(Map, String)
@@ -83,12 +86,45 @@ public class Domain {
 			this.documentRoot = (String) args.get(ROOT);
 		}
 		if (args.containsKey(USE)) {
-			this.useDomains = (String) args.get(USE);
+			this.useDomain = (String) args.get(USE);
 		}
 	}
 
 	public String getName() {
 		return name;
+	}
+
+	public String getNamePattern() {
+		return name.replaceAll("\\.", "\\\\.");
+	}
+
+	public String getFileName() {
+		return format("100-robobee-%s.conf", getName());
+	}
+
+	/**
+	 * Returns the directory of the site for this domain.
+	 */
+	public String getSiteDirectory() {
+		if (useDomain != null) {
+			return format("%s/web", useDomain);
+		} else {
+			return format("%s/web", getName());
+		}
+	}
+
+	/**
+	 * Returns the server alias of this directive. The server alias can be a
+	 * sub-domain, for example www.domain.com.
+	 */
+	public String getServerAlias() {
+		boolean www = findDirective(asList(new Class<?>[] {
+				RedirectToWwwHttp.class, RedirectToWwwHttp.class }));
+		return www ? format("www.%s", getName()) : getName();
+	}
+
+	private boolean findDirective(List<Class<?>> directives) {
+		return redirects.containsAll(directives);
 	}
 
 	public void address(String address) {
@@ -119,12 +155,12 @@ public class Domain {
 	}
 
 	public void useDomain(String use) {
-		this.useDomains = use;
+		this.useDomain = use;
 		log.useDomainSet(this, use);
 	}
 
-	public String getUseDomains() {
-		return useDomains;
+	public String getUseDomain() {
+		return useDomain;
 	}
 
 	public void redirect(Object s) {
@@ -140,6 +176,10 @@ public class Domain {
 		Redirect redirect = redirectFactory.createHttpToHttps(this);
 		addRedirect(redirect);
 		log.redirectHttpToHttpsAdded(this, redirect);
+	}
+
+	public List<Redirect> getRedirects() {
+		return redirects;
 	}
 
 	protected final void addRedirect(Redirect redirect) {

@@ -1,31 +1,86 @@
 
-defaultconf() ::= <<
-\<Directory /\>
+defaultConfiguration() ::= <<
+\<Directory />
     AllowOverride None
     Order Deny,Allow
     Deny from all
-\</Directory\>
+\</Directory>
 
-\<Directory /var/www/sites\>
+\<Directory /var/www/sites>
     AllowOverride None
     Order Deny,Allow
     Deny from all
-\</Directory\>
+\</Directory>
 
 >>
 
-virtualhostsconf(service) ::= <<
-<trunc(service.domains):{<nameVirtualHost(it)><\n>}><last(service.directives):{<nameVirtualHost(it)>}>
+domainsConfiguration(service) ::= <<
+<trunc(service.virtualDomains):{domain | <nameVirtualHost(domain)><\n>}><last(service.virtualDomains):{domain | <nameVirtualHost(domain)>}>
+
 >>
 
-nameVirtualHost(directive) ::= "NameVirtualHost <directive.address>:<directive.port>"
+nameVirtualHost(domain) ::= "NameVirtualHost <domain.address>:<domain.port>"
 
-enable_apachemods(enableCommand, mods) ::= <<
-#!/bin/sh
-<mods:enable_mod(enableCommand=enableCommand, mod=it)>
+domain(properties, domain) ::= <<
+\<VirtualHost <domain.address>:<domain.port>\>
+    <domainBody(properties, domain)>
+    <domain.redirects:domainRedirects(domain)>
+    <domainAlias(properties, domain)>
+\</VirtualHost>
+
 >>
 
-enable_mod(enableCommand, mod) ::= <<
-<enableCommand> <mod>
+domainBody(properties, domain) ::= <<
+# domain <domain.name>
+ServerName <domain.name>
+DocumentRoot <properties.sitesDirectory>/<domain.siteDirectory>
+\<Directory <properties.sitesDirectory>/<domain.siteDirectory>\>
+    AllowOverride None
+    Order allow,deny
+    Allow from all
+\</Directory>
 
+>>
+
+domainRedirects(redirect, domain) ::= <<
+<(redirect.class.simpleName)(redirect, domain)>
+>>
+
+RedirectHttpToHttps(redirect, domain) ::= <<
+# redirect http to https
+RewriteEngine On
+RewriteCond %{HTTP_HOST} ^<domain.name>
+RewriteRule (.*) https://<domain.name>$1 [R=301,L]
+
+
+>>
+
+RedirectToWwwHttp(redirect, domain) ::= <<
+# redirect to www http
+ServerAlias www.<domain.name>
+RewriteEngine On
+RewriteCond %{HTTP_HOST} ^<domain.namePattern>$ [NC]
+RewriteRule ^(.*)$ http://www.<domain.name>$1 [L,R=301]
+
+
+>>
+
+RedirectToWwwHttps(redirect, domain) ::= <<
+# redirect to www https
+ServerAlias www.<domain.name>
+RewriteEngine On
+RewriteCond %{HTTP_HOST} ^<domain.namePattern>$ [NC]
+RewriteRule ^(.*)$ https://www.<domain.name>$1 [L,R=301]
+
+
+>>
+
+domainAlias(properties, domain) ::= <<
+Alias / <documentRoot(properties, domain)><domain.documentRoot>/
+
+>>
+
+documentRoot(properties, domain) ::= <<
+<if(domain.useDomain)><properties.sitesDirectory>/<domain.useDomain>/web
+<else><properties.sitesDirectory>/<domain.name>/web<endif>
 >>

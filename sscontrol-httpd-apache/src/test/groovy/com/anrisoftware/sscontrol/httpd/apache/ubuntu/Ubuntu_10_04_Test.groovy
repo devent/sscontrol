@@ -49,7 +49,7 @@ class Ubuntu_10_04_Test extends UbuntuTestUtil {
 
 		assertFileContent ubuntu1004DefaultConf.file(tmpdir), ubuntu1004DefaultConf
 		assertFileContent ubuntu1004DomainsConf.file(tmpdir), ubuntu1004DomainsConf
-		assertStringContent ubuntu1004Test1comConf.replaced(tmpdir, "/tmp"), ubuntu1004Test1comConf.toString()
-		assertStringContent ubuntu1004Test1comSslConf.replaced(tmpdir, "/tmp"), ubuntu1004Test1comSslConf.toString()
+		assertStringContent ubuntu1004Test1comConf.replaced(tmpdir, tmpdir, "/tmp"), ubuntu1004Test1comConf.toString()
+		assertStringContent ubuntu1004Test1comSslConf.replaced(tmpdir, tmpdir, "/tmp"), ubuntu1004Test1comSslConf.toString()
 	}
 }

@@ -1,0 +1,9 @@
+enableMods(command, mods) ::= <<
+<mods:enable_mod(command)>
+>>
+
+enableMod(mod, command) ::= <<
+<command> <mod>
+
+>>
+

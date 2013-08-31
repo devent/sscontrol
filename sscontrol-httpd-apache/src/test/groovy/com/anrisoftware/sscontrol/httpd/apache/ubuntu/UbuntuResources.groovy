@@ -24,12 +24,14 @@ enum UbuntuResources {
 	a2dissiteCommand("/usr/sbin/a2dissite", UbuntuResources.class.getResource("echo_command.txt")),
 	apache2Command("/usr/sbin/apache2", UbuntuResources.class.getResource("echo_command.txt")),
 	apache2ctlCommand("/usr/sbin/apache2ctl", UbuntuResources.class.getResource("httpd_status_command.txt")),
+	configurationDir("/etc/apache2", null),
+	sitesDir("/var/www", null),
 	defaultConf("/etc/apache2/sites-available/default", UbuntuResources.class.getResource("default.txt")),
 	defaultSslConf("/etc/apache2/sites-available/default-ssl", UbuntuResources.class.getResource("default_ssl.txt")),
-	ubuntu1004DefaultConf("/etc/apache2/sites-available/000-default.conf", UbuntuResources.class.getResource("ubuntu_10_04_000-default_conf.txt")),
-	ubuntu1004DomainsConf("/etc/apache2/conf.d/000-domains.conf", UbuntuResources.class.getResource("ubuntu_10_04_000-domains_conf.txt")),
-	ubuntu1004Test1comConf("/etc/apache2/sites-available/100-test1.com.conf", UbuntuResources.class.getResource("ubuntu_10_04_900-test1_com_conf.txt")),
-	ubuntu1004Test1comSslConf("/etc/apache2/sites-available/100-test1.com-ssl.conf", UbuntuResources.class.getResource("ubuntu_10_04_900-test1_com_ssl_conf.txt"))
+	ubuntu1004DefaultConf("/etc/apache2/sites-available/000-robobee-default.conf", UbuntuResources.class.getResource("ubuntu_10_04_000-robobee-default_conf.txt")),
+	ubuntu1004DomainsConf("/etc/apache2/conf.d/000-robobee-domains.conf", UbuntuResources.class.getResource("ubuntu_10_04_000-robobee-domains_conf.txt")),
+	ubuntu1004Test1comConf("/etc/apache2/sites-available/100-robobee-test1.com.conf", UbuntuResources.class.getResource("ubuntu_10_04_100-robobee-test1_com_conf.txt")),
+	ubuntu1004Test1comSslConf("/etc/apache2/sites-available/100-robobee-test1.com-ssl.conf", UbuntuResources.class.getResource("ubuntu_10_04_100-robobee-test1_com_ssl_conf.txt"))
 
 	static copyUbuntuFiles(File parent) {
 		aptitudeCommand.createCommand parent
@@ -65,8 +67,9 @@ enum UbuntuResources {
 		copyResourceToCommand resource, new File(parent, path)
 	}
 
-	String replaced(def search, def replace) {
-		readFileToString(file).replaceAll(search, replace)
+	String replaced(File parent, def search, def replace) {
+		String text = readFileToString(this.file(parent))
+		text.replaceAll(search.toString(), replace)
 	}
 
 	String toString() {

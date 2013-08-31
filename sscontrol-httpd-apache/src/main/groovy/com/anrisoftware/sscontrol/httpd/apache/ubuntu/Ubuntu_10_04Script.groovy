@@ -20,6 +20,10 @@ package com.anrisoftware.sscontrol.httpd.apache.ubuntu
 
 import javax.inject.Inject
 
+import org.apache.commons.io.FileUtils
+
+import com.anrisoftware.resources.templates.api.TemplateResource
+import com.anrisoftware.resources.templates.api.Templates
 import com.anrisoftware.sscontrol.httpd.apache.linux.ApacheScript
 
 /**
@@ -33,9 +37,24 @@ class Ubuntu_10_04Script extends ApacheScript {
 	@Inject
 	Ubuntu10_04PropertiesProvider ubuntuProperties
 
+	/**
+	 * The {@link Templates} for the script.
+	 */
+	Templates apacheTemplates
+
+	/**
+	 * Resource containing the Apache configuration templates.
+	 */
+	TemplateResource configTemplate
+
 	@Override
 	def distributionSpecificConfiguration() {
+		apacheTemplates = templatesFactory.create "ApacheUbuntu_10_04"
+		configTemplate = apacheTemplates.getResource "config"
 		installPackages()
+		deployDefaultConfig()
+		deployDomainsConfig()
+		deployConfig()
 	}
 
 	@Override
@@ -43,8 +62,20 @@ class Ubuntu_10_04Script extends ApacheScript {
 		ubuntuProperties.get()
 	}
 
-	@Override
-	String getUfwCommand() {
-		profileProperty "ufw_command", defaultProperties
+	def deployDefaultConfig() {
+		def string = configTemplate.getText true, "defaultConfiguration"
+		FileUtils.write defaultConfigFile, string
+	}
+
+	def deployDomainsConfig() {
+		def string = configTemplate.getText true, "domainsConfiguration", "service", service
+		FileUtils.write domainsConfigFile, string
+	}
+
+	def deployConfig() {
+		service.domains.each {
+			def string = configTemplate.getText true, "domain", "properties", this, "domain", it
+			FileUtils.write new File(configurationDir, "sites-available/${it.fileName}"), string
+		}
 	}
 }

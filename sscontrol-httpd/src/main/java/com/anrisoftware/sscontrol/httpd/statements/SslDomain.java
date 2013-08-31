@@ -18,6 +18,8 @@
  */
 package com.anrisoftware.sscontrol.httpd.statements;
 
+import static java.lang.String.format;
+
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -47,6 +49,11 @@ public class SslDomain extends Domain {
 	@Inject
 	SslDomain(@Assisted Map<String, Object> args, @Assisted String name) {
 		super(args, 443, name);
+	}
+
+	@Override
+	public String getFileName() {
+		return format("100-robobee-%s-ssl.conf", getName());
 	}
 
 	@Override

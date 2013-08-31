@@ -20,10 +20,7 @@ package com.anrisoftware.sscontrol.httpd.apache.linux
 
 import static org.apache.commons.io.FileUtils.*
 
-import javax.inject.Inject
-
 import com.anrisoftware.propertiesutils.ContextProperties
-import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.Templates
 import com.anrisoftware.sscontrol.core.service.LinuxScript
 
@@ -34,19 +31,6 @@ import com.anrisoftware.sscontrol.core.service.LinuxScript
  * @since 1.0
  */
 abstract class ApacheScript extends LinuxScript {
-
-	@Inject
-	ApacheScriptLogger log
-
-	/**
-	 * The {@link Templates} for the script.
-	 */
-	Templates ufwTemplates
-
-	/**
-	 * Resource containing the MaraDNS configuration templates.
-	 */
-	TemplateResource rules
 
 	@Override
 	def run() {
@@ -60,11 +44,101 @@ abstract class ApacheScript extends LinuxScript {
 	abstract distributionSpecificConfiguration()
 
 	/**
-	 * Returns the ufw tool command.
+	 * Returns the enable mod command {@code a2enmod}.
 	 *
 	 * <ul>
-	 * <li>profile property {@code "ufw_command"}</li>
+	 * <li>profile property {@code "enable_mod_command"}</li>
 	 * </ul>
 	 */
-	abstract String getUfwCommand()
+	String getEnableModCommand() {
+		profileProperty "enable_mod_command", defaultProperties
+	}
+
+	/**
+	 * Returns the disable mod command {@code a2dismod}.
+	 *
+	 * <ul>
+	 * <li>profile property {@code "disable_mod_command"}</li>
+	 * </ul>
+	 */
+	String getDisableModCommand() {
+		profileProperty "disable_mod_command", defaultProperties
+	}
+
+	/**
+	 * Returns the disable site command {@code a2ensite}.
+	 *
+	 * <ul>
+	 * <li>profile property {@code "enable_site_command"}</li>
+	 * </ul>
+	 */
+	String getEnableSiteCommand() {
+		profileProperty "enable_site_command", defaultProperties
+	}
+
+	/**
+	 * Returns the disable site command {@code a2dissite}.
+	 *
+	 * <ul>
+	 * <li>profile property {@code "disable_site_command"}</li>
+	 * </ul>
+	 */
+	String getDisableSiteCommand() {
+		profileProperty "disable_size_command", defaultProperties
+	}
+
+	/**
+	 * Returns the Apache server command {@code apache2}.
+	 *
+	 * <ul>
+	 * <li>profile property {@code "apache_command"}</li>
+	 * </ul>
+	 */
+	String getApacheCommand() {
+		profileProperty "apache_command", defaultProperties
+	}
+
+	/**
+	 * Returns the Apache control command {@code apache2ctl}.
+	 *
+	 * <ul>
+	 * <li>profile property {@code "apache_control_command"}</li>
+	 * </ul>
+	 */
+	String getApacheControlCommand() {
+		profileProperty "apache_control_command", defaultProperties
+	}
+
+	/**
+	 * Returns the path for the Apache default configuration file.
+	 *
+	 * <ul>
+	 * <li>profile property {@code "default_config_file"}</li>
+	 * </ul>
+	 */
+	File getDefaultConfigFile() {
+		profileProperty("default_config_file", defaultProperties) as File
+	}
+
+	/**
+	 * Returns the path for the Apache virtual domains configuration file.
+	 *
+	 * <ul>
+	 * <li>profile property {@code "domains_config_file"}</li>
+	 * </ul>
+	 */
+	File getDomainsConfigFile() {
+		profileProperty("domains_config_file", defaultProperties) as File
+	}
+
+	/**
+	 * Returns the path for the parent directory containing the sites.
+	 *
+	 * <ul>
+	 * <li>profile property {@code "sites_directory"}</li>
+	 * </ul>
+	 */
+	File getSitesDirectory() {
+		profileProperty("sites_directory", defaultProperties) as File
+	}
 }

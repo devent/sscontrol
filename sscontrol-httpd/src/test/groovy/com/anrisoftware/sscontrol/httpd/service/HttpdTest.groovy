@@ -70,12 +70,22 @@ class HttpdTest extends HttpdTestUtil {
 		assert require.class == AuthRequireGroup
 		assert require.name == "admin"
 
-		def user = auth.users[0]
-		assert user.name == "foo"
-		assert user.password == "foopassword"
-		assert user.group == "admin"
+		assert auth.groups.size() == 1
+		def group = auth.groups[0]
+		assert group.name == "admin"
+		assert group.users.size() == 2
 
-		user = auth.users[1]
+		def user = group.users[0]
+		assert user.name == "adminfoo"
+		assert user.password == "adminfoopassword"
+		assert user.group == group
+
+		user = group.users[1]
+		assert user.name == "adminbar"
+		assert user.password == "adminbarpassword"
+		assert user.group == group
+
+		user = auth.users[0]
 		assert user.name == "bar"
 		assert user.password == "barpassword"
 	}

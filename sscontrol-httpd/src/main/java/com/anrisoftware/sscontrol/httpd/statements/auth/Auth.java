@@ -33,11 +33,16 @@ public class Auth {
 	@Inject
 	private AuthUserFactory userFactory;
 
+	@Inject
+	private AuthGroupFactory groupFactory;
+
 	private final List<String> locations;
 
 	private final List<AuthRequire> requires;
 
 	private final List<AuthUser> users;
+
+	private final List<AuthGroup> groups;
 
 	private AuthProvider provider;
 
@@ -53,6 +58,7 @@ public class Auth {
 		this.locations = new ArrayList<String>();
 		this.requires = new ArrayList<AuthRequire>();
 		this.users = new ArrayList<AuthUser>();
+		this.groups = new ArrayList<AuthGroup>();
 		if (map.containsKey(PROVIDER)) {
 			this.provider = (AuthProvider) map.get(PROVIDER);
 		}
@@ -108,6 +114,17 @@ public class Auth {
 
 	public List<AuthRequire> getRequires() {
 		return requires;
+	}
+
+	public AuthGroup group(String name, Object s) {
+		AuthGroup group = groupFactory.create(name);
+		groups.add(group);
+		log.groupAdded(this, group);
+		return group;
+	}
+
+	public List<AuthGroup> getGroups() {
+		return groups;
 	}
 
 	public void user(Map<String, Object> map, String name) {

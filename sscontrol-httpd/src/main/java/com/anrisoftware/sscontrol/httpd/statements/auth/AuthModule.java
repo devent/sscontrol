@@ -37,6 +37,8 @@ public class AuthModule extends AbstractModule {
 				AuthRequire.class).build(AuthRequireFactory.class));
 		install(new FactoryModuleBuilder().implement(AuthUser.class,
 				AuthUser.class).build(AuthUserFactory.class));
+		install(new FactoryModuleBuilder().implement(AuthGroup.class,
+				AuthGroup.class).build(AuthGroupFactory.class));
 	}
 
 }

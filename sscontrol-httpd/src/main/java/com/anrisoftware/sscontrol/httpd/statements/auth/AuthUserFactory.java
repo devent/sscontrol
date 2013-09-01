@@ -5,4 +5,6 @@ import java.util.Map;
 public interface AuthUserFactory {
 
 	AuthUser create(Map<String, Object> map, String name);
+
+	AuthUser create(AuthGroup group, Map<String, Object> map, String name);
 }

@@ -2,11 +2,10 @@ package com.anrisoftware.sscontrol.httpd.statements.auth;
 
 import java.util.Map;
 
-import javax.inject.Inject;
-
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.google.inject.assistedinject.Assisted;
+import com.google.inject.assistedinject.AssistedInject;
 
 /**
  * User for authentication.
@@ -16,27 +15,35 @@ import com.google.inject.assistedinject.Assisted;
  */
 public class AuthUser {
 
-	private static final String GROUP = "group";
-
 	private static final String PASSWORD = "password";
 
 	private final String name;
 
 	private String password;
 
-	private String group;
+	private AuthGroup group;
 
 	/**
 	 * @see AuthUserFactory#create(Map, String)
 	 */
-	@Inject
+	@AssistedInject
 	AuthUser(@Assisted Map<String, Object> map, @Assisted String name) {
 		this.name = name;
 		if (map.containsKey(PASSWORD)) {
 			this.password = (String) map.get(PASSWORD);
 		}
-		if (map.containsKey(GROUP)) {
-			this.group = (String) map.get(GROUP);
+	}
+
+	/**
+	 * @see AuthUserFactory#create(AuthGroup, Map, String)
+	 */
+	@AssistedInject
+	AuthUser(@Assisted AuthGroup group, @Assisted Map<String, Object> map,
+			@Assisted String name) {
+		this.name = name;
+		this.group = group;
+		if (map.containsKey(PASSWORD)) {
+			this.password = (String) map.get(PASSWORD);
 		}
 	}
 
@@ -61,9 +68,9 @@ public class AuthUser {
 	/**
 	 * Returns the group that the user belongs to.
 	 * 
-	 * @return the group or {@code null}.
+	 * @return the {@link AuthGroup} or {@code null}.
 	 */
-	public String getGroup() {
+	public AuthGroup getGroup() {
 		return group;
 	}
 

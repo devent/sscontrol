@@ -31,7 +31,10 @@ httpd {
 			location "private"
 			require valid_user
 			require group: "admin"
-			user "foo", password: "foopassword", group: "admin"
+			group "admin", {
+				user "adminfoo", password: "adminfoopassword"
+				user "adminbar", password: "adminbarpassword"
+			}
 			user "bar", password: "barpassword"
 		}
 	}

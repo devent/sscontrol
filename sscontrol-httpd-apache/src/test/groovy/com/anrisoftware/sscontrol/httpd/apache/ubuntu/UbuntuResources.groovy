@@ -37,7 +37,8 @@ enum UbuntuResources {
 	ubuntu1004AuthFileDomainsConf("/etc/apache2/conf.d/000-robobee-domains.conf", UbuntuResources.class.getResource("ubuntu_10_04_000-authfile-domains_conf.txt")),
 	ubuntu1004AuthFileTest1comConf("/etc/apache2/sites-available/100-robobee-test1.com.conf", UbuntuResources.class.getResource("ubuntu_10_04_100-authfile-test1_com_conf.txt")),
 	ubuntu1004AuthFileTest1comSslConf("/etc/apache2/sites-available/100-robobee-test1.com-ssl.conf", UbuntuResources.class.getResource("ubuntu_10_04_100-authfile-test1_com_ssl_conf.txt")),
-	ubuntu1004AuthFileHtpasswdOut("/usr/bin/htpasswd.out", UbuntuResources.class.getResource("ubuntu_10_04_100-authfile-htpasswd_out.txt.txt"))
+	ubuntu1004AuthFileHtpasswdOut("/usr/bin/htpasswd.out", UbuntuResources.class.getResource("ubuntu_10_04_100-authfile-htpasswd_out.txt")),
+	ubuntu1004AuthFileGroupOut("/var/www/test1.com/auth/private.group", UbuntuResources.class.getResource("ubuntu_10_04_100-authfile-private_group.txt"))
 
 	static copyUbuntuFiles(File parent) {
 		aptitudeCommand.createCommand parent
@@ -48,6 +49,7 @@ enum UbuntuResources {
 		a2ensiteCommand.createCommand parent
 		apache2Command.createCommand parent
 		apache2ctlCommand.createCommand parent
+		htpasswdCommand.createCommand parent
 		defaultConf.createFile parent
 		defaultSslConf.createFile parent
 	}
@@ -66,10 +68,12 @@ enum UbuntuResources {
 	}
 
 	void createFile(File parent) {
+		assert resource : "Resource cannot be null for ${name()}"
 		copyURLToFile resource, new File(parent, path)
 	}
 
 	void createCommand(File parent) {
+		assert resource : "Resource cannot be null for ${name()}"
 		copyResourceToCommand resource, new File(parent, path)
 	}
 

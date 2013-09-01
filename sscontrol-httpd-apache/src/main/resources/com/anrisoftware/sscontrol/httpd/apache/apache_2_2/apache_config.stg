@@ -130,3 +130,12 @@ Require valid-user
 AuthRequireGroup(require) ::= <<
 Require group <require.name>
 >>
+
+groupFile(auth) ::= <<
+<auth.groups: { groupp | <groupp.name>: <groupFileUser(groupp)> }>
+
+>>
+
+groupFileUser(groupp) ::= <%
+<groupp.users: { user | <user.name>};separator=" ">
+%>

@@ -51,5 +51,7 @@ class Ubuntu_10_04_AuthFile_Test extends UbuntuTestUtil {
 		assertFileContent ubuntu1004AuthFileDomainsConf.file(tmpdir), ubuntu1004AuthFileDomainsConf
 		assertStringContent ubuntu1004AuthFileTest1comConf.replaced(tmpdir, tmpdir, "/tmp"), ubuntu1004AuthFileTest1comConf.toString()
 		assertStringContent ubuntu1004AuthFileTest1comSslConf.replaced(tmpdir, tmpdir, "/tmp"), ubuntu1004AuthFileTest1comSslConf.toString()
+		assertStringContent ubuntu1004AuthFileHtpasswdOut.replaced(tmpdir, tmpdir, "/tmp"), ubuntu1004AuthFileHtpasswdOut.toString()
+		assertStringContent ubuntu1004AuthFileGroupOut.replaced(tmpdir, tmpdir, "/tmp"), ubuntu1004AuthFileGroupOut.toString()
 	}
 }

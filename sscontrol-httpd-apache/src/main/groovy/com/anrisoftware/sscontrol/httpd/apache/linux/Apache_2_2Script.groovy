@@ -20,10 +20,14 @@ package com.anrisoftware.sscontrol.httpd.apache.linux
 
 import static org.apache.commons.io.FileUtils.*
 
+import javax.inject.Inject
+
 import org.apache.commons.io.FileUtils
 
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.Templates
+import com.anrisoftware.sscontrol.httpd.statements.auth.Auth
+import com.anrisoftware.sscontrol.httpd.statements.domain.Domain
 
 /**
  * Configures Apache 2.2 service.
@@ -32,6 +36,9 @@ import com.anrisoftware.resources.templates.api.Templates
  * @since 1.0
  */
 abstract class Apache_2_2Script extends ApacheScript {
+
+	@Inject
+	FileAuthProvider fileAuthProvider
 
 	/**
 	 * The {@link Templates} for the script.
@@ -43,14 +50,22 @@ abstract class Apache_2_2Script extends ApacheScript {
 	 */
 	TemplateResource configTemplate
 
+	/**
+	 * Resource containing the Apache commands templates.
+	 */
+	TemplateResource commandsTemplate
+
 	@Override
 	def run() {
 		apacheTemplates = templatesFactory.create "Apache_2_2"
 		configTemplate = apacheTemplates.getResource "config"
+		commandsTemplate = apacheTemplates.getResource "commands"
+		fileAuthProvider.script = this
 		super.run()
 		deployDefaultConfig()
 		deployDomainsConfig()
 		deployConfig()
+		deployAuths()
 	}
 
 	def deployDefaultConfig() {
@@ -67,6 +82,14 @@ abstract class Apache_2_2Script extends ApacheScript {
 		service.domains.each {
 			def string = configTemplate.getText true, it.class.simpleName, "properties", this, "domain", it
 			FileUtils.write new File(configurationDir, "sites-available/${it.fileName}"), string
+		}
+	}
+
+	def deployAuths() {
+		service.domains.each { Domain domain ->
+			domain.auths.each { Auth auth ->
+				fileAuthProvider.deployAuth domain, auth
+			}
 		}
 	}
 }

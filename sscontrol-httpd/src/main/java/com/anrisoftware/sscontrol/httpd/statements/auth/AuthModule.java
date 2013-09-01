@@ -16,25 +16,27 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.service;
+package com.anrisoftware.sscontrol.httpd.statements.auth;
 
-import com.anrisoftware.sscontrol.httpd.statements.auth.AuthModule;
-import com.anrisoftware.sscontrol.httpd.statements.domain.DomainModule;
-import com.anrisoftware.sscontrol.httpd.statements.redirect.RedirectModule;
 import com.google.inject.AbstractModule;
+import com.google.inject.assistedinject.FactoryModuleBuilder;
 
 /**
- * Installs the httpd script statements.
+ * Installs the auth factories.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class HttpdModule extends AbstractModule {
+public class AuthModule extends AbstractModule {
 
 	@Override
 	protected void configure() {
-		install(new DomainModule());
-		install(new RedirectModule());
-		install(new AuthModule());
+		install(new FactoryModuleBuilder().implement(Auth.class, Auth.class)
+				.build(AuthFactory.class));
+		install(new FactoryModuleBuilder().implement(AuthRequire.class,
+				AuthRequire.class).build(AuthRequireFactory.class));
+		install(new FactoryModuleBuilder().implement(AuthUser.class,
+				AuthUser.class).build(AuthUserFactory.class));
 	}
+
 }

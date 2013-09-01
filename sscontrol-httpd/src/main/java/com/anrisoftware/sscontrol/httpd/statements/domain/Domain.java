@@ -31,6 +31,8 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import com.anrisoftware.sscontrol.httpd.statements.auth.Auth;
+import com.anrisoftware.sscontrol.httpd.statements.auth.AuthFactory;
 import com.anrisoftware.sscontrol.httpd.statements.redirect.Redirect;
 import com.anrisoftware.sscontrol.httpd.statements.redirect.RedirectFactory;
 import com.anrisoftware.sscontrol.httpd.statements.redirect.RedirectToWwwHttp;
@@ -55,9 +57,14 @@ public class Domain {
 	@Inject
 	private RedirectFactory redirectFactory;
 
+	@Inject
+	private AuthFactory authFactory;
+
 	private final String name;
 
 	private final List<Redirect> redirects;
+
+	private final List<Auth> auths;
 
 	private String address;
 
@@ -78,6 +85,7 @@ public class Domain {
 	protected Domain(Map<String, Object> args, int port, String name) {
 		this.name = name;
 		this.redirects = new ArrayList<Redirect>();
+		this.auths = new ArrayList<Auth>();
 		this.port = port;
 		if (args.containsKey(ADDRESS)) {
 			this.address = (String) args.get(ADDRESS);
@@ -191,6 +199,16 @@ public class Domain {
 
 	protected final RedirectFactory getRedirectFactory() {
 		return redirectFactory;
+	}
+
+	public Auth setup_auth(Map<String, Object> map, Object s) {
+		Auth auth = authFactory.create(this, map);
+		auths.add(auth);
+		return auth;
+	}
+
+	public List<Auth> getAuths() {
+		return auths;
 	}
 
 	@Override

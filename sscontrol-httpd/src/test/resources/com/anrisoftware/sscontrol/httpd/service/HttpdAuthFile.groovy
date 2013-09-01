@@ -29,9 +29,9 @@ httpd {
 	ssl_domain "test1.com", address: "192.168.0.50", {
 		setup_auth provider: file, name: "private", {
 			require valid_user
-			require group "admin"
-			add user "foo" password "foopassword" group "admin"
-			add user "bar" password "barpassword"
+			require group: "admin"
+			user "foo", password: "foopassword", group: "admin"
+			user "bar", password: "barpassword"
 		}
 	}
 }

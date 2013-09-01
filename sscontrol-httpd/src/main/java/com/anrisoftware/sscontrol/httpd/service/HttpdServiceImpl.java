@@ -35,6 +35,7 @@ import com.anrisoftware.sscontrol.core.api.Service;
 import com.anrisoftware.sscontrol.core.api.ServiceException;
 import com.anrisoftware.sscontrol.core.api.ServiceScriptFactory;
 import com.anrisoftware.sscontrol.core.service.AbstractService;
+import com.anrisoftware.sscontrol.httpd.statements.auth.AuthProvider;
 import com.anrisoftware.sscontrol.httpd.statements.domain.Domain;
 import com.anrisoftware.sscontrol.httpd.statements.domain.DomainFactory;
 
@@ -65,7 +66,9 @@ public class HttpdServiceImpl extends AbstractService {
 	@Override
 	protected Script getScript(String profileName) throws ServiceException {
 		ServiceScriptFactory scriptFactory = findScriptFactory(NAME);
-		return (Script) scriptFactory.getScript();
+		Script script = (Script) scriptFactory.getScript();
+		script.setProperty("file", AuthProvider.file);
+		return script;
 	}
 
 	/**
@@ -148,6 +151,10 @@ public class HttpdServiceImpl extends AbstractService {
 	 */
 	public Set<Domain> getVirtualDomains() {
 		return virtualDomains;
+	}
+
+	public AuthProvider getFile() {
+		return AuthProvider.file;
 	}
 
 	@Override

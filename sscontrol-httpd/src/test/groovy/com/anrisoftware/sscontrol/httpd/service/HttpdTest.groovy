@@ -26,6 +26,9 @@ import org.junit.Test
 
 import com.anrisoftware.sscontrol.core.api.ServiceLoader as SscontrolServiceLoader
 import com.anrisoftware.sscontrol.core.api.ServicesRegistry
+import com.anrisoftware.sscontrol.httpd.statements.auth.AuthProvider
+import com.anrisoftware.sscontrol.httpd.statements.auth.AuthRequireGroup
+import com.anrisoftware.sscontrol.httpd.statements.auth.AuthRequireValidUser
 
 /**
  * @see HttpdServiceImpl
@@ -54,5 +57,25 @@ class HttpdTest extends HttpdTestUtil {
 		loader.loadService authFileScript, profile
 		HttpdServiceImpl service = registry.getService("httpd")[0]
 		service.domains.size() == 2
+
+		def auth = service.domains[1].auths[0]
+		assert auth.provider == AuthProvider.file
+		assert auth.name == "private"
+
+		def require = auth.requires[0]
+		assert require.class == AuthRequireValidUser
+
+		require = auth.requires[1]
+		assert require.class == AuthRequireGroup
+		assert require.name == "admin"
+
+		def user = auth.users[0]
+		assert user.name == "foo"
+		assert user.password == "foopassword"
+		assert user.group == "admin"
+
+		user = auth.users[1]
+		assert user.name == "bar"
+		assert user.password == "barpassword"
 	}
 }

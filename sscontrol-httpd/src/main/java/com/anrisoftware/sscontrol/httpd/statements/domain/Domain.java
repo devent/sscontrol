@@ -202,7 +202,7 @@ public class Domain {
 	}
 
 	public Auth setup_auth(Map<String, Object> map, Object s) {
-		Auth auth = authFactory.create(this, map);
+		Auth auth = authFactory.create(map);
 		auths.add(auth);
 		return auth;
 	}

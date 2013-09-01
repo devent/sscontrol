@@ -8,7 +8,6 @@ import javax.inject.Inject;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import com.anrisoftware.sscontrol.httpd.statements.domain.Domain;
 import com.google.inject.assistedinject.Assisted;
 
 /**
@@ -34,42 +33,60 @@ public class Auth {
 	@Inject
 	private AuthUserFactory userFactory;
 
+	private final List<String> locations;
+
 	private final List<AuthRequire> requires;
 
 	private final List<AuthUser> users;
 
-	private final Domain domain;
-
 	private AuthProvider provider;
+
+	private AuthType type;
 
 	private String name;
 
 	/**
-	 * @see AuthFactory#create(Domain, Map)
+	 * @see AuthFactory#create(Map)
 	 */
 	@Inject
-	Auth(@Assisted Domain domain, @Assisted Map<String, Object> map) {
-		this.domain = domain;
+	Auth(@Assisted Map<String, Object> map) {
+		this.locations = new ArrayList<String>();
 		this.requires = new ArrayList<AuthRequire>();
 		this.users = new ArrayList<AuthUser>();
 		if (map.containsKey(PROVIDER)) {
 			this.provider = (AuthProvider) map.get(PROVIDER);
+		}
+		if (map.containsKey("type")) {
+			this.type = (AuthType) map.get("type");
 		}
 		if (map.containsKey(NAME)) {
 			this.name = (String) map.get(NAME);
 		}
 	}
 
-	public Domain getDomain() {
-		return domain;
+	public String getName() {
+		return name;
+	}
+
+	public AuthType getType() {
+		return type;
 	}
 
 	public AuthProvider getProvider() {
 		return provider;
 	}
 
-	public String getName() {
-		return name;
+	public void location(String location) {
+		log.checkLocation(this, location);
+		locations.add(location);
+		log.locationAdd(this, location);
+	}
+
+	public List<String> getLocations() {
+		if (locations.size() == 0) {
+			locations.add("");
+		}
+		return locations;
 	}
 
 	public void valid_user() {
@@ -89,14 +106,22 @@ public class Auth {
 		}
 	}
 
+	public List<AuthRequire> getRequires() {
+		return requires;
+	}
+
 	public void user(Map<String, Object> map, String name) {
 		AuthUser user = userFactory.create(map, name);
 		users.add(user);
 		log.userAdded(this, user);
 	}
 
+	public List<AuthUser> getUsers() {
+		return users;
+	}
+
 	@Override
 	public String toString() {
-		return new ToStringBuilder(this).append("domain", domain).toString();
+		return new ToStringBuilder(this).append("name", name).toString();
 	}
 }

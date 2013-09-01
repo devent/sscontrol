@@ -59,6 +59,7 @@ class HttpdTest extends HttpdTestUtil {
 		service.domains.size() == 2
 
 		def auth = service.domains[1].auths[0]
+		assert auth.locations.contains("private")
 		assert auth.provider == AuthProvider.file
 		assert auth.name == "private"
 

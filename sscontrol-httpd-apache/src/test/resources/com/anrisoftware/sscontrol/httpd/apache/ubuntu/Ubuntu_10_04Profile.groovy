@@ -31,6 +31,7 @@ profile "ubuntu_10_04", {
 		disable_site_command "${a2dissiteCommand.file(tmp)}"
 		apache_command "${apache2Command.file(tmp)}"
 		apache_control_command "${apache2ctlCommand.file(tmp)}"
+		htpasswd_command "${htpasswdCommand.file(tmp)}"
 		configuration_directory "${configurationDir.file(tmp)}"
 		sites_directory "${sitesDir.file(tmp)}"
 		default_config_file "${ubuntu1004DefaultConf.file(tmp)}"

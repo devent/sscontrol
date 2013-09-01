@@ -13,6 +13,7 @@ enum UbuntuResources {
 
 	ubuntu1004Profile("Ubuntu_10_04Profile.groovy", UbuntuResources.class.getResource("Ubuntu_10_04Profile.groovy")),
 	httpdScript("Httpd.groovy", UbuntuResources.class.getResource("Httpd.groovy")),
+	httpdAuthFileScript("Httpd.groovy", UbuntuResources.class.getResource("HttpdAuthFile.groovy")),
 	certCrt("cert.crt", UbuntuResources.class.getResource("cert_crt.txt")),
 	certKey("cert.key", UbuntuResources.class.getResource("cert_key.txt")),
 	apacheConf("/etc/apache2/apache2.conf", UbuntuResources.class.getResource("apache2_conf.txt")),
@@ -24,14 +25,19 @@ enum UbuntuResources {
 	a2dissiteCommand("/usr/sbin/a2dissite", UbuntuResources.class.getResource("echo_command.txt")),
 	apache2Command("/usr/sbin/apache2", UbuntuResources.class.getResource("echo_command.txt")),
 	apache2ctlCommand("/usr/sbin/apache2ctl", UbuntuResources.class.getResource("httpd_status_command.txt")),
+	htpasswdCommand("/usr/bin/htpasswd", UbuntuResources.class.getResource("echo_command.txt")),
 	configurationDir("/etc/apache2", null),
 	sitesDir("/var/www", null),
 	defaultConf("/etc/apache2/sites-available/default", UbuntuResources.class.getResource("default.txt")),
 	defaultSslConf("/etc/apache2/sites-available/default-ssl", UbuntuResources.class.getResource("default_ssl.txt")),
-	ubuntu1004DefaultConf("/etc/apache2/sites-available/000-robobee-default.conf", UbuntuResources.class.getResource("ubuntu_10_04_000-robobee-default_conf.txt")),
-	ubuntu1004DomainsConf("/etc/apache2/conf.d/000-robobee-domains.conf", UbuntuResources.class.getResource("ubuntu_10_04_000-robobee-domains_conf.txt")),
-	ubuntu1004Test1comConf("/etc/apache2/sites-available/100-robobee-test1.com.conf", UbuntuResources.class.getResource("ubuntu_10_04_100-robobee-test1_com_conf.txt")),
-	ubuntu1004Test1comSslConf("/etc/apache2/sites-available/100-robobee-test1.com-ssl.conf", UbuntuResources.class.getResource("ubuntu_10_04_100-robobee-test1_com_ssl_conf.txt"))
+	ubuntu1004DefaultConf("/etc/apache2/sites-available/000-robobee-default.conf", UbuntuResources.class.getResource("ubuntu_10_04_000-default_conf.txt")),
+	ubuntu1004DomainsConf("/etc/apache2/conf.d/000-robobee-domains.conf", UbuntuResources.class.getResource("ubuntu_10_04_000-domains_conf.txt")),
+	ubuntu1004Test1comConf("/etc/apache2/sites-available/100-robobee-test1.com.conf", UbuntuResources.class.getResource("ubuntu_10_04_100-test1_com_conf.txt")),
+	ubuntu1004Test1comSslConf("/etc/apache2/sites-available/100-robobee-test1.com-ssl.conf", UbuntuResources.class.getResource("ubuntu_10_04_100-test1_com_ssl_conf.txt")),
+	ubuntu1004AuthFileDomainsConf("/etc/apache2/conf.d/000-robobee-domains.conf", UbuntuResources.class.getResource("ubuntu_10_04_000-authfile-domains_conf.txt")),
+	ubuntu1004AuthFileTest1comConf("/etc/apache2/sites-available/100-robobee-test1.com.conf", UbuntuResources.class.getResource("ubuntu_10_04_100-authfile-test1_com_conf.txt")),
+	ubuntu1004AuthFileTest1comSslConf("/etc/apache2/sites-available/100-robobee-test1.com-ssl.conf", UbuntuResources.class.getResource("ubuntu_10_04_100-authfile-test1_com_ssl_conf.txt")),
+	ubuntu1004AuthFileHtpasswdOut("/usr/bin/htpasswd.out", UbuntuResources.class.getResource("ubuntu_10_04_100-authfile-htpasswd_out.txt.txt"))
 
 	static copyUbuntuFiles(File parent) {
 		aptitudeCommand.createCommand parent

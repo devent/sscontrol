@@ -20,9 +20,9 @@ package com.anrisoftware.sscontrol.httpd.apache.linux
 
 import static org.apache.commons.io.FileUtils.*
 
-import com.anrisoftware.propertiesutils.ContextProperties
-import com.anrisoftware.resources.templates.api.Templates
 import com.anrisoftware.sscontrol.core.service.LinuxScript
+import com.anrisoftware.sscontrol.httpd.statements.auth.AuthProvider
+import com.anrisoftware.sscontrol.httpd.statements.auth.AuthType
 
 /**
  * Uses Apache service on a general Linux system.
@@ -110,6 +110,18 @@ abstract class ApacheScript extends LinuxScript {
 	}
 
 	/**
+	 * Returns the command to manage user files for basic authentication
+	 * {@code htpasswd}.
+	 *
+	 * <ul>
+	 * <li>profile property {@code "htpasswd_command"}</li>
+	 * </ul>
+	 */
+	String getHtpasswdCommand() {
+		profileProperty "htpasswd_command", defaultProperties
+	}
+
+	/**
 	 * Returns the path for the Apache default configuration file.
 	 *
 	 * <ul>
@@ -140,5 +152,27 @@ abstract class ApacheScript extends LinuxScript {
 	 */
 	File getSitesDirectory() {
 		profileProperty("sites_directory", defaultProperties) as File
+	}
+
+	/**
+	 * Returns the default authentication provider.
+	 *
+	 * <ul>
+	 * <li>profile property {@code "default_auth_provider"}</li>
+	 * </ul>
+	 */
+	AuthProvider getDefaultAuthProvider() {
+		AuthProvider.parse profileProperty("default_auth_provider", defaultProperties)
+	}
+
+	/**
+	 * Returns the default authentication type.
+	 *
+	 * <ul>
+	 * <li>profile property {@code "default_auth_type"}</li>
+	 * </ul>
+	 */
+	AuthType getDefaultAuthType() {
+		AuthType.parse profileProperty("default_auth_type", defaultProperties)
 	}
 }

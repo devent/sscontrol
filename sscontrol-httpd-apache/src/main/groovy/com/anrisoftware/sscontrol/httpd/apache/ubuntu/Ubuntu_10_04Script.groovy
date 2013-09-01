@@ -20,11 +20,7 @@ package com.anrisoftware.sscontrol.httpd.apache.ubuntu
 
 import javax.inject.Inject
 
-import org.apache.commons.io.FileUtils
-
-import com.anrisoftware.resources.templates.api.TemplateResource
-import com.anrisoftware.resources.templates.api.Templates
-import com.anrisoftware.sscontrol.httpd.apache.linux.ApacheScript
+import com.anrisoftware.sscontrol.httpd.apache.linux.Apache_2_2Script
 
 /**
  * Uses the Apache service on the Ubuntu 10.04 Linux system.
@@ -32,50 +28,18 @@ import com.anrisoftware.sscontrol.httpd.apache.linux.ApacheScript
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class Ubuntu_10_04Script extends ApacheScript {
+class Ubuntu_10_04Script extends Apache_2_2Script {
 
 	@Inject
 	Ubuntu10_04PropertiesProvider ubuntuProperties
 
-	/**
-	 * The {@link Templates} for the script.
-	 */
-	Templates apacheTemplates
-
-	/**
-	 * Resource containing the Apache configuration templates.
-	 */
-	TemplateResource configTemplate
-
 	@Override
 	def distributionSpecificConfiguration() {
-		apacheTemplates = templatesFactory.create "ApacheUbuntu_10_04"
-		configTemplate = apacheTemplates.getResource "config"
 		installPackages()
-		deployDefaultConfig()
-		deployDomainsConfig()
-		deployConfig()
 	}
 
 	@Override
 	def getDefaultProperties() {
 		ubuntuProperties.get()
-	}
-
-	def deployDefaultConfig() {
-		def string = configTemplate.getText true, "defaultConfiguration"
-		FileUtils.write defaultConfigFile, string
-	}
-
-	def deployDomainsConfig() {
-		def string = configTemplate.getText true, "domainsConfiguration", "service", service
-		FileUtils.write domainsConfigFile, string
-	}
-
-	def deployConfig() {
-		service.domains.each {
-			def string = configTemplate.getText true, it.class.simpleName, "properties", this, "domain", it
-			FileUtils.write new File(configurationDir, "sites-available/${it.fileName}"), string
-		}
 	}
 }

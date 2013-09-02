@@ -101,8 +101,16 @@ public class Auth {
 		return name;
 	}
 
+	public void setType(AuthType type) {
+		this.type = type;
+	}
+
 	public AuthType getType() {
 		return type;
+	}
+
+	public void setProvider(AuthProvider provider) {
+		this.provider = provider;
 	}
 
 	public AuthProvider getProvider() {

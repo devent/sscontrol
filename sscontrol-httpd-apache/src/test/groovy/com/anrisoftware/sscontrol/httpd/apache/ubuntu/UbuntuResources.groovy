@@ -37,7 +37,7 @@ enum UbuntuResources {
 	certKey("cert.key", UbuntuResources.class.getResource("cert_key.txt")),
 	apacheConf("/etc/apache2/apache2.conf", UbuntuResources.class.getResource("apache2_conf.txt")),
 	aptitudeCommand("/usr/bin/aptitude", UbuntuResources.class.getResource("echo_command.txt")),
-	restartCommand("/sbin/restart", UbuntuResources.class.getResource("echo_command.txt")),
+	restartCommand("/etc/init.d/apache2", UbuntuResources.class.getResource("echo_command.txt")),
 	a2enmodCommand("/usr/sbin/a2enmod", UbuntuResources.class.getResource("echo_command.txt")),
 	a2dismodCommand("/usr/sbin/a2dismod", UbuntuResources.class.getResource("echo_command.txt")),
 	a2ensiteCommand("/usr/sbin/a2ensite", UbuntuResources.class.getResource("echo_command.txt")),

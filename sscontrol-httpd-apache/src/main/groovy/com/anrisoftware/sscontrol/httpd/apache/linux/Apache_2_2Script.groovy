@@ -71,6 +71,7 @@ abstract class Apache_2_2Script extends ApacheScript {
 		deployDomainsConfig()
 		deployConfig()
 		deployAuths()
+		restartServices()
 	}
 
 	def deployDefaultConfig() {

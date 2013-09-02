@@ -208,6 +208,17 @@ abstract class ApacheScript extends LinuxScript {
 	}
 
 	/**
+	 * Returns the name of the directory to store the site web files.
+	 *
+	 * <ul>
+	 * <li>profile property {@code "web_subdirectory"}</li>
+	 * </ul>
+	 */
+	String getWebSubdirectory() {
+		profileProperty("web_subdirectory", defaultProperties)
+	}
+
+	/**
 	 * Returns the default authentication provider.
 	 *
 	 * <ul>
@@ -234,6 +245,13 @@ abstract class ApacheScript extends LinuxScript {
 	 */
 	File sslDir(Domain domain) {
 		new File(domainDir(domain), sslSubdirectory)
+	}
+
+	/**
+	 * Returns the directory for the domain web files.
+	 */
+	File webDir(Domain domain) {
+		new File(domainDir(domain), webSubdirectory)
 	}
 
 	/**

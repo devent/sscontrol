@@ -89,7 +89,7 @@ abstract class Apache_2_2Script extends ApacheScript {
 
 	def deployConfig() {
 		service.domains.each {
-			domainDir(it).mkdirs()
+			webDir(it).mkdirs()
 			def string = configTemplate.getText true, it.class.simpleName, "properties", this, "domain", it
 			FileUtils.write new File(sitesAvailableDir, it.fileName), string
 			enableDomain it

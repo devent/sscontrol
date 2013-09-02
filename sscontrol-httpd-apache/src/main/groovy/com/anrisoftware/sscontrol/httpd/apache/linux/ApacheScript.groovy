@@ -23,6 +23,7 @@ import static org.apache.commons.io.FileUtils.*
 import com.anrisoftware.sscontrol.core.service.LinuxScript
 import com.anrisoftware.sscontrol.httpd.statements.auth.AuthProvider
 import com.anrisoftware.sscontrol.httpd.statements.auth.AuthType
+import com.anrisoftware.sscontrol.httpd.statements.domain.Domain
 
 /**
  * Uses Apache service on a general Linux system.
@@ -192,7 +193,18 @@ abstract class ApacheScript extends LinuxScript {
 	 * </ul>
 	 */
 	String getAuthSubdirectory() {
-		profileProperty("auth_subdirectory", defaultProperties) as File
+		profileProperty("auth_subdirectory", defaultProperties)
+	}
+
+	/**
+	 * Returns the name of the directory to store SSL/certificates files.
+	 *
+	 * <ul>
+	 * <li>profile property {@code "ssl_subdirectory"}</li>
+	 * </ul>
+	 */
+	String getSslSubdirectory() {
+		profileProperty("ssl_subdirectory", defaultProperties)
 	}
 
 	/**
@@ -215,5 +227,19 @@ abstract class ApacheScript extends LinuxScript {
 	 */
 	AuthType getDefaultAuthType() {
 		AuthType.parse profileProperty("default_auth_type", defaultProperties)
+	}
+
+	/**
+	 * Returns the SSL/certificates directory for the domain.
+	 */
+	File sslDir(Domain domain) {
+		new File(domainDir(domain), sslSubdirectory)
+	}
+
+	/**
+	 * Returns the domain site directory.
+	 */
+	File domainDir(Domain domain) {
+		new File(sitesDirectory, domain.name)
 	}
 }

@@ -28,6 +28,7 @@ import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.Templates
 import com.anrisoftware.sscontrol.httpd.statements.auth.Auth
 import com.anrisoftware.sscontrol.httpd.statements.domain.Domain
+import com.anrisoftware.sscontrol.httpd.statements.domain.SslDomain
 
 /**
  * Configures Apache 2.2 service.
@@ -39,6 +40,9 @@ abstract class Apache_2_2Script extends ApacheScript {
 
 	@Inject
 	FileAuthProvider fileAuthProvider
+
+	@Inject
+	SslDomainConfig sslDomainConfig
 
 	/**
 	 * The {@link Templates} for the script.
@@ -61,6 +65,7 @@ abstract class Apache_2_2Script extends ApacheScript {
 		configTemplate = apacheTemplates.getResource "config"
 		commandsTemplate = apacheTemplates.getResource "commands"
 		fileAuthProvider.script = this
+		sslDomainConfig.script = this
 		super.run()
 		deployDefaultConfig()
 		deployDomainsConfig()
@@ -83,6 +88,9 @@ abstract class Apache_2_2Script extends ApacheScript {
 			domainDir(it).mkdirs()
 			def string = configTemplate.getText true, it.class.simpleName, "properties", this, "domain", it
 			FileUtils.write new File(sitesAvailableDir, it.fileName), string
+			if (it.class == SslDomain) {
+				sslDomainConfig.deployCertificates(it)
+			}
 		}
 	}
 
@@ -92,9 +100,5 @@ abstract class Apache_2_2Script extends ApacheScript {
 				fileAuthProvider.deployAuth domain, auth
 			}
 		}
-	}
-
-	File domainDir(Domain domain) {
-		new File(sitesDirectory, domain.name)
 	}
 }

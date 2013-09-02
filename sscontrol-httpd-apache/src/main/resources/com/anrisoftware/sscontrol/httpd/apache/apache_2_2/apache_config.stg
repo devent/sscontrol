@@ -62,8 +62,8 @@ DocumentRoot <properties.sitesDirectory>/<domain.siteDirectory>
 
 domainCerts(properties, domain) ::= <<
 SSLEngine on
-SSLCertificateFile <properties.sitesDirectory>/<domain.name>/ssl/<domain.certificationFile>
-SSLCertificateKeyFile <properties.sitesDirectory>/<domain.name>/ssl/<domain.certificationKeyFile>
+SSLCertificateFile <properties.sitesDirectory>/<domain.name>/<properties.sslSubdirectory>/<domain.certificationFile>
+SSLCertificateKeyFile <properties.sitesDirectory>/<domain.name>/<properties.sslSubdirectory>/<domain.certificationKeyFile>
 >>
 
 domainRedirects(redirect, domain) ::= <<
@@ -117,8 +117,8 @@ domainAuthLocation(location, auth, properties, domain) ::= <<
     AuthName "<auth.name>"
     AuthDigestDomain /<auth.name>
     AuthDigestProvider <if(auth.provider)><auth.provider><else><properties.defaultAuthType><endif>
-    AuthUserFile <properties.sitesDirectory>/<domain.name>/auth/<auth.name>.passwd
-    AuthUserFile <properties.sitesDirectory>/<domain.name>/auth/<auth.name>.group
+    AuthUserFile <properties.sitesDirectory>/<domain.name>/<properties.authSubdirectory>/<auth.name>.passwd
+    AuthUserFile <properties.sitesDirectory>/<domain.name>/<properties.authSubdirectory>/<auth.name>.group
     <auth.requires:{requires | <(requires.class.simpleName)(requires)>};separator="\n">
 \</Location>
 >>

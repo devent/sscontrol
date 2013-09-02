@@ -35,9 +35,9 @@ class FileAuthProvider {
 
 	void deployAuth(Domain domain, Auth auth) {
 		makeAuthDirectory(domain)
-		deployUsers(domain, auth, auth.users)
+		boolean nogroupUsers = deployUsers(domain, auth, auth.users)
 		auth.groups.each { AuthGroup group ->
-			deployGroups(domain, auth, group)
+			deployGroups(domain, auth, group, nogroupUsers)
 		}
 	}
 
@@ -47,18 +47,20 @@ class FileAuthProvider {
 
 	private deployUsers(Domain domain, Auth auth, List users) {
 		if (users.empty) {
-			return
+			return false
 		}
+		def template = auth.appending ? "appendPasswordFile" : "createPasswordFile"
 		def worker = script.scriptCommandFactory.create(
-				script.commandsTemplate, "createPasswordFile",
+				script.commandsTemplate, template,
 				"command", script.htpasswdCommand,
 				"file", passwordFile(domain, auth),
 				"users", users)()
 		log.deployAuthUsers script, worker, auth
+		return true
 	}
 
-	private deployGroups(Domain domain, Auth auth, AuthGroup group) {
-		appendUsers(domain, auth, group.users)
+	private deployGroups(Domain domain, Auth auth, AuthGroup group, boolean nogroupUsers) {
+		nogroupUsers ? appendUsers(domain, auth, group.users) : deployUsers(domain, auth, group.users)
 		def string = script.configTemplate.getText true, "groupFile", "auth", auth
 		FileUtils.write groupFile(domain, auth), string
 	}

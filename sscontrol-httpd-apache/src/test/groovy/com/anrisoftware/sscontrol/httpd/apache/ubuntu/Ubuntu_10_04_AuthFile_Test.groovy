@@ -54,4 +54,22 @@ class Ubuntu_10_04_AuthFile_Test extends UbuntuTestUtil {
 		assertStringContent ubuntu1004AuthFileHtpasswdOut.replaced(tmpdir, tmpdir, "/tmp"), ubuntu1004AuthFileHtpasswdOut.toString()
 		assertStringContent ubuntu1004AuthFileGroupOut.replaced(tmpdir, tmpdir, "/tmp"), ubuntu1004AuthFileGroupOut.toString()
 	}
+
+	@Test
+	void "auth file appending"() {
+		loader.loadService ubuntu1004Profile.resource, null
+		def profile = registry.getService("profile")[0]
+		loader.loadService httpdAuthFileAppendingScript.resource, profile
+
+		registry.allServices.each { it.call() }
+		log.info "Run service again to ensure that configuration is not set double."
+		registry.allServices.each { it.call() }
+
+		assertFileContent ubuntu1004DefaultConf.file(tmpdir), ubuntu1004DefaultConf
+		assertFileContent ubuntu1004AuthFileDomainsConf.file(tmpdir), ubuntu1004AuthFileDomainsConf
+		assertStringContent ubuntu1004AuthFileTest1comConf.replaced(tmpdir, tmpdir, "/tmp"), ubuntu1004AuthFileTest1comConf.toString()
+		assertStringContent ubuntu1004AuthFileTest1comSslConf.replaced(tmpdir, tmpdir, "/tmp"), ubuntu1004AuthFileTest1comSslConf.toString()
+		assertStringContent ubuntu1004AuthFileAppendingHtpasswdOut.replaced(tmpdir, tmpdir, "/tmp"), ubuntu1004AuthFileAppendingHtpasswdOut.toString()
+		assertStringContent ubuntu1004AuthFileGroupOut.replaced(tmpdir, tmpdir, "/tmp"), ubuntu1004AuthFileGroupOut.toString()
+	}
 }

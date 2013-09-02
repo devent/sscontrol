@@ -25,6 +25,7 @@ profile "ubuntu_10_04", {
 		service "apache"
 		install_command "${aptitudeCommand.file(tmp)} update && ${aptitudeCommand.file(tmp)} install"
 		restart_command "${restartCommand.file(tmp)}"
+		chmod_command "${chmodCommand.file(tmp)}"
 		enable_mod_command "${a2enmodCommand.file(tmp)}"
 		disable_mod_command "${a2dismodCommand.file(tmp)}"
 		enable_site_command "${a2ensiteCommand.file(tmp)}"

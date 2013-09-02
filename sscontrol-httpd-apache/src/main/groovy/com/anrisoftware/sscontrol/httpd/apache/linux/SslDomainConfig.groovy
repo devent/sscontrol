@@ -45,6 +45,12 @@ class SslDomainConfig {
 		log.deployedCert domain
 		copyURLToFile domain.certificationKeyResource, certKeyFile(domain)
 		log.deployedCertKey domain
+		changePermissions(domain)
+	}
+
+	void changePermissions(SslDomain domain) {
+		def dir = script.sslDir(domain)
+		script.changeMod "go-r", ["$dir.absolutePath/*"]
 	}
 
 	File certFile(SslDomain domain) {

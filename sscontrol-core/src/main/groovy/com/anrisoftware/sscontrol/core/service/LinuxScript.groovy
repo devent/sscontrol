@@ -32,6 +32,7 @@ import com.anrisoftware.resources.templates.api.Templates
 import com.anrisoftware.resources.templates.api.TemplatesFactory
 import com.anrisoftware.sscontrol.core.api.ProfileProperties
 import com.anrisoftware.sscontrol.core.api.Service
+import com.anrisoftware.sscontrol.workers.command.script.ScriptCommandWorker
 import com.anrisoftware.sscontrol.workers.command.script.ScriptCommandWorkerFactory
 import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokenMarker
 import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokensTemplateWorker
@@ -232,6 +233,27 @@ abstract class LinuxScript extends Script {
 	}
 
 	/**
+	 * Change the permissions to the specified files.
+	 *
+	 * @param mod
+	 * 			  the modification.
+	 *
+	 * @param files
+	 * 			  the {@link List} of files.
+	 *
+	 * @return the {@link ScriptCommandWorker} worker.
+	 */
+	ScriptCommandWorker changeMod(def mod, List files, def system = "unix") {
+		def template = commandTemplates.getResource("chmod")
+		def worker = scriptCommandFactory.create template, system,
+				"chmodCommand", chmodCommand,
+				"mod", mod,
+				"files", files
+		worker()
+		log.changeModDone this, worker, files
+	}
+
+	/**
 	 * Returns the configuration on the server.
 	 */
 	String currentConfiguration(File file) {
@@ -378,6 +400,19 @@ abstract class LinuxScript extends Script {
 	 */
 	String getChownCommand() {
 		profileProperty "chown_command", defaultProperties
+	}
+
+	/**
+	 * Returns the change permissions command.
+	 *
+	 * <ul>
+	 * <li>property key {@code chmod_command}</li>
+	 * </ul>
+	 *
+	 * @see #getDefaultProperties()
+	 */
+	String getChmodCommand() {
+		profileProperty "chmod_command", defaultProperties
 	}
 
 	/**

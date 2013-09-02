@@ -38,6 +38,7 @@ enum UbuntuResources {
 	apacheConf("/etc/apache2/apache2.conf", UbuntuResources.class.getResource("apache2_conf.txt")),
 	aptitudeCommand("/usr/bin/aptitude", UbuntuResources.class.getResource("echo_command.txt")),
 	restartCommand("/etc/init.d/apache2", UbuntuResources.class.getResource("echo_command.txt")),
+	chmodCommand("/bin/chmod", UbuntuResources.class.getResource("echo_command.txt")),
 	a2enmodCommand("/usr/sbin/a2enmod", UbuntuResources.class.getResource("echo_command.txt")),
 	a2dismodCommand("/usr/sbin/a2dismod", UbuntuResources.class.getResource("echo_command.txt")),
 	a2ensiteCommand("/usr/sbin/a2ensite", UbuntuResources.class.getResource("echo_command.txt")),
@@ -70,6 +71,7 @@ enum UbuntuResources {
 	static copyUbuntuFiles(File parent) {
 		aptitudeCommand.createCommand parent
 		restartCommand.createCommand parent
+		chmodCommand.createCommand parent
 		a2enmodCommand.createCommand parent
 		a2dismodCommand.createCommand parent
 		a2dissiteCommand.createCommand parent

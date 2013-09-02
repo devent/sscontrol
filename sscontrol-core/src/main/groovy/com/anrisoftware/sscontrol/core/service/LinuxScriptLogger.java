@@ -1,0 +1,167 @@
+/*
+ * Copyright 2013 Erwin Müller <erwin.mueller@deventm.org>
+ *
+ * This file is part of sscontrol-core.
+ *
+ * sscontrol-core is free software: you can redistribute it and/or modify it
+ * under the terms of the GNU Affero General Public License as published by the
+ * Free Software Foundation, either version 3 of the License, or (at your
+ * option) any later version.
+ *
+ * sscontrol-core is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
+ * for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with sscontrol-core. If not, see <http://www.gnu.org/licenses/>.
+ */
+package com.anrisoftware.sscontrol.core.service;
+
+import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.conf_file_found_debug;
+import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.conf_file_found_info;
+import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.deployed_conf_debug;
+import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.deployed_conf_info;
+import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.enabled_repository_debug;
+import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.enabled_repository_info;
+import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.install_packages_done_debug;
+import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.install_packages_done_info;
+import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.install_packages_done_trace;
+import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.properties_null;
+import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.property_not_set;
+import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.restarted_service_debug;
+import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.restarted_service_info;
+import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.restarted_service_trace;
+import static org.apache.commons.lang3.Validate.notNull;
+
+import java.io.File;
+
+import com.anrisoftware.globalpom.log.AbstractLogger;
+
+/**
+ * Logging messages for {@link LinuxScript}.
+ * 
+ * @author Erwin Mueller, erwin.mueller@deventm.org
+ * @since 1.0
+ */
+class LinuxScriptLogger extends AbstractLogger {
+
+	enum _ {
+
+		enabled_repository_debug("Enabled repository '{}' in {}, {}."),
+
+		enabled_repository_info("Enabled repository '{}' in service {}."),
+
+		install_packages_done_trace("Installed packages {} in {}, {}."),
+
+		install_packages_done_debug("Installed packages {} in {}."),
+
+		install_packages_done_info("Installed service packages: {}."),
+
+		conf_file_found_debug("No configuration file found '{}' in {}."),
+
+		conf_file_found_info("No configuration file found '{}'."),
+
+		deployed_conf_debug("Deploy configuration to '{}' in {}: '{}'."),
+
+		deployed_conf_info("Deploy configuration to '{}'."),
+
+		restarted_service_trace("Restarted service {}, {}."),
+
+		restarted_service_debug("Restarted service {}."),
+
+		restarted_service_info("Restarted service {}."),
+
+		properties_null("Properties cannot be null for key '%s' in %s."),
+
+		property_not_set("Property '%s' is not set for %s."),
+
+		chmod_done_trace("Change permissions done for files {} in {}, {}."),
+
+		chmod_done_debug("Change permissions done for files {} in {}."),
+
+		chmod_done_info("Change permissions done for files {}.");
+
+		private String name;
+
+		private _(String name) {
+			this.name = name;
+		}
+
+		@Override
+		public String toString() {
+			return name;
+		}
+	}
+
+	/**
+	 * Create logger for {@link LinuxScript}.
+	 */
+	LinuxScriptLogger() {
+		super(LinuxScript.class);
+	}
+
+	void installPackagesDone(LinuxScript script, Object worker, Object packages) {
+		if (isTraceEnabled()) {
+			trace(install_packages_done_trace, packages, script, worker);
+		} else if (isDebugEnabled()) {
+			debug(install_packages_done_debug, packages, script);
+		} else {
+			info(install_packages_done_info, packages);
+		}
+	}
+
+	void changeModDone(LinuxScript script, Object worker, Object files) {
+		if (isTraceEnabled()) {
+			trace(_.chmod_done_trace, files, script, worker);
+		} else if (isDebugEnabled()) {
+			debug(_.chmod_done_debug, files, script);
+		} else {
+			info(_.chmod_done_info, files);
+		}
+	}
+
+	void noConfigurationFound(LinuxScript script, Object file) {
+		if (isDebugEnabled()) {
+			debug(conf_file_found_debug, file, script);
+		} else {
+			info(conf_file_found_info, file);
+		}
+	}
+
+	void deployConfigurationDone(LinuxScript script, File file,
+			String configuration) {
+		if (isDebugEnabled()) {
+			debug(deployed_conf_debug, file, script, configuration);
+		} else {
+			info(deployed_conf_info, file);
+		}
+	}
+
+	void enableRepositoryDone(LinuxScript script, Object worker,
+			String repository) {
+		if (isDebugEnabled()) {
+			debug(enabled_repository_debug, repository, script, worker);
+		} else {
+			info(enabled_repository_info, repository, script.getName());
+		}
+	}
+
+	void restartServiceDone(LinuxScript script, Object worker) {
+		if (isTraceEnabled()) {
+			trace(restarted_service_trace, script, worker);
+		} else if (isDebugEnabled()) {
+			debug(restarted_service_debug, script);
+		} else {
+			info(restarted_service_info, script.getName());
+		}
+	}
+
+	void checkProperties(LinuxScript script, Object properties, String key) {
+		notNull(properties, properties_null.toString(), key, script);
+	}
+
+	void checkPropertyKey(LinuxScript script, Object property, Object key) {
+		notNull(property, property_not_set.toString(), key, script);
+	}
+}

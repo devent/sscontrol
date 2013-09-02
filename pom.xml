@@ -20,6 +20,8 @@
         <module>sscontrol-firewall-ufw</module>
         <module>sscontrol-hostname</module>
         <module>sscontrol-hosts</module>
+        <module>sscontrol-httpd</module>
+        <module>sscontrol-httpd-apache</module>
         <module>sscontrol-mail</module>
         <module>sscontrol-mail-postfix</module>
         <module>sscontrol-parent</module>

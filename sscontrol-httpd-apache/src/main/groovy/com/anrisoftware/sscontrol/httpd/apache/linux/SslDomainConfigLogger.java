@@ -22,6 +22,8 @@ import static com.anrisoftware.sscontrol.httpd.apache.linux.SslDomainConfigLogge
 import static com.anrisoftware.sscontrol.httpd.apache.linux.SslDomainConfigLogger._.deployed_cert1;
 import static com.anrisoftware.sscontrol.httpd.apache.linux.SslDomainConfigLogger._.deployed_cert_key;
 import static com.anrisoftware.sscontrol.httpd.apache.linux.SslDomainConfigLogger._.deployed_cert_key1;
+import static com.anrisoftware.sscontrol.httpd.apache.linux.SslDomainConfigLogger._.enabled_ssl_debug;
+import static com.anrisoftware.sscontrol.httpd.apache.linux.SslDomainConfigLogger._.enabled_ssl_info;
 
 import javax.inject.Singleton;
 
@@ -45,7 +47,11 @@ class SslDomainConfigLogger extends AbstractLogger {
 
 		deployed_cert_key("Deployed certificate key for {}."),
 
-		deployed_cert_key1("Deployed certificate key '{}' for domain '{}'.");
+		deployed_cert_key1("Deployed certificate key '{}' for domain '{}'."),
+
+		enabled_ssl_debug("Enabled SSL/mod, {}."),
+
+		enabled_ssl_info("Enabled SSL/mod.");
 
 		private String name;
 
@@ -81,6 +87,14 @@ class SslDomainConfigLogger extends AbstractLogger {
 		} else {
 			info(deployed_cert_key1, domain.getCertificationKeyFile(),
 					domain.getName());
+		}
+	}
+
+	void enabledSsl(Object worker) {
+		if (isDebugEnabled()) {
+			debug(enabled_ssl_debug, worker);
+		} else {
+			info(enabled_ssl_info);
 		}
 	}
 }

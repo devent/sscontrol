@@ -60,7 +60,8 @@ enum UbuntuResources {
 	ubuntu1004Test1comWeb("/var/www/test1.com/web", null),
 	ubuntu1004Test1comCrt("/var/www/test1.com/ssl/cert_crt.txt", UbuntuResources.class.getResource("cert_crt.txt")),
 	ubuntu1004Test1comKey("/var/www/test1.com/ssl/cert_key.txt", UbuntuResources.class.getResource("cert_key.txt")),
-	ubuntu1004Test1comEnsiteOut("/usr/sbin/a2ensite.out", UbuntuResources.class.getResource("ubuntu_10_04_100-auth-ensite_out.txt")),
+	ubuntu1004Test1comEnsiteOut("/usr/sbin/a2ensite.out", UbuntuResources.class.getResource("ubuntu_10_04_100-ensite_out.txt")),
+	ubuntu1004Test1comEnmodOut("/usr/sbin/a2enmod.out", UbuntuResources.class.getResource("ubuntu_10_04_100-enmod_out.txt")),
 	// AuthFile
 	ubuntu1004AuthFileDomainsConf("/etc/apache2/conf.d/000-robobee-domains.conf", UbuntuResources.class.getResource("ubuntu_10_04_000-authfile-domains_conf.txt")),
 	ubuntu1004AuthFileTest1comConf("/etc/apache2/sites-available/100-robobee-test1.com.conf", UbuntuResources.class.getResource("ubuntu_10_04_100-authfile-test1_com_conf.txt")),

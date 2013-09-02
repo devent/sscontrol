@@ -94,6 +94,7 @@ abstract class Apache_2_2Script extends ApacheScript {
 			FileUtils.write new File(sitesAvailableDir, it.fileName), string
 			enableDomain it
 			if (it.class == SslDomain) {
+				sslDomainConfig.enableSsl()
 				sslDomainConfig.deployCertificates(it)
 			}
 		}

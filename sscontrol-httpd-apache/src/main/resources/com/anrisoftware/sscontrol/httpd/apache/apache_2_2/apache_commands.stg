@@ -2,6 +2,10 @@ enableSite(command, site) ::= <<
 <command> <site>
 >>
 
+enableMod(command, mod) ::= <<
+<command> <mod>
+>>
+
 enableMods(command, mods) ::= <<
 <mods:{ mod | <command> <mod>};separator="\n">
 >>

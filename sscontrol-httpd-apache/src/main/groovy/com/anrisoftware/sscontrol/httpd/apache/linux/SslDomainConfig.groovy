@@ -60,4 +60,16 @@ class SslDomainConfig {
 	File certKeyFile(SslDomain domain) {
 		new File(script.sslDir(domain), domain.certificationKeyFile)
 	}
+
+	/**
+	 * Enable the SSL mod.
+	 */
+	void enableSsl() {
+		def worker = script.scriptCommandFactory.create script.commandsTemplate,
+				"enableMod",
+				"command", script.enableModCommand,
+				"mod", "ssl"
+		worker()
+		log.enabledSsl worker
+	}
 }

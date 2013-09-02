@@ -122,25 +122,31 @@ abstract class ApacheScript extends LinuxScript {
 	}
 
 	/**
-	 * Returns the directory with the available sites.
+	 * Returns the directory with the available sites. If the path is
+	 * not absolute then it is assume to be under the configuration directory.
 	 *
 	 * <ul>
 	 * <li>profile property {@code "sites_available_directory"}</li>
 	 * </ul>
 	 */
 	File getSitesAvailableDir() {
-		profileProperty("sites_available_directory", defaultProperties) as File
+		def path = profileProperty("sites_available_directory", defaultProperties)
+		def file = new File(path)
+		return file.absolute ? file : new File(configurationDir, path)
 	}
 
 	/**
-	 * Returns the directory for the included configuration.
+	 * Returns the directory for the included configuration. If the path is
+	 * not absolute then it is assume to be under the configuration directory.
 	 *
 	 * <ul>
 	 * <li>profile property {@code "config_include_directory"}</li>
 	 * </ul>
 	 */
 	File getConfigIncludeDir() {
-		profileProperty("config_include_directory", defaultProperties) as File
+		def path = profileProperty("config_include_directory", defaultProperties)
+		def file = new File(path)
+		return file.absolute ? file : new File(configurationDir, path)
 	}
 
 	/**

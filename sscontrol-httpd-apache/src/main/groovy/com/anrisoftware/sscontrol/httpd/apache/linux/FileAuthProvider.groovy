@@ -34,13 +34,21 @@ class FileAuthProvider {
 	Apache_2_2Script script
 
 	void deployAuth(Domain domain, Auth auth) {
+		makeAuthDirectory(domain)
 		deployUsers(domain, auth, auth.users)
 		auth.groups.each { AuthGroup group ->
 			deployGroups(domain, auth, group)
 		}
 	}
 
+	private makeAuthDirectory(Domain domain) {
+		new File(script.domainDir(domain), script.authSubdirectory).mkdirs()
+	}
+
 	private deployUsers(Domain domain, Auth auth, List users) {
+		if (users.empty) {
+			return
+		}
 		def worker = script.scriptCommandFactory.create(
 				script.commandsTemplate, "createPasswordFile",
 				"command", script.htpasswdCommand,
@@ -56,6 +64,9 @@ class FileAuthProvider {
 	}
 
 	private appendUsers(Domain domain, Auth auth, List users) {
+		if (users.empty) {
+			return
+		}
 		def worker = script.scriptCommandFactory.create(
 				script.commandsTemplate, "appendPasswordFile",
 				"command", script.htpasswdCommand,

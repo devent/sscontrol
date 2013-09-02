@@ -179,6 +179,17 @@ abstract class ApacheScript extends LinuxScript {
 	}
 
 	/**
+	 * Returns the name of the directory to store authentication files.
+	 *
+	 * <ul>
+	 * <li>profile property {@code "auth_subdirectory"}</li>
+	 * </ul>
+	 */
+	String getAuthSubdirectory() {
+		profileProperty("auth_subdirectory", defaultProperties) as File
+	}
+
+	/**
 	 * Returns the default authentication provider.
 	 *
 	 * <ul>

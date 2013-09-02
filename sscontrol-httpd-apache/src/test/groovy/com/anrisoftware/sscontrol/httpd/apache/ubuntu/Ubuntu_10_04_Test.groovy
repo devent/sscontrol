@@ -53,5 +53,6 @@ class Ubuntu_10_04_Test extends UbuntuTestUtil {
 		assertStringContent ubuntu1004Test1comSslConf.replaced(tmpdir, tmpdir, "/tmp"), ubuntu1004Test1comSslConf.toString()
 		assertFileContent ubuntu1004Test1comCrt.file(tmpdir), ubuntu1004Test1comCrt
 		assertFileContent ubuntu1004Test1comKey.file(tmpdir), ubuntu1004Test1comKey
+		assertFileContent ubuntu1004Test1comEnsiteOut.file(tmpdir), ubuntu1004Test1comEnsiteOut
 	}
 }

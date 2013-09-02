@@ -39,6 +39,9 @@ import com.anrisoftware.sscontrol.httpd.statements.domain.SslDomain
 abstract class Apache_2_2Script extends ApacheScript {
 
 	@Inject
+	Apache_2_2ScriptLogger log
+
+	@Inject
 	FileAuthProvider fileAuthProvider
 
 	@Inject
@@ -89,10 +92,19 @@ abstract class Apache_2_2Script extends ApacheScript {
 			domainDir(it).mkdirs()
 			def string = configTemplate.getText true, it.class.simpleName, "properties", this, "domain", it
 			FileUtils.write new File(sitesAvailableDir, it.fileName), string
+			enableDomain it
 			if (it.class == SslDomain) {
 				sslDomainConfig.deployCertificates(it)
 			}
 		}
+	}
+
+	def enableDomain(Domain domain) {
+		def worker = scriptCommandFactory.create commandsTemplate, "enableSite",
+				"command", enableSiteCommand,
+				"site", domain.fileName
+		worker()
+		log.enabledDomain this, worker, domain
 	}
 
 	def deployAuths() {

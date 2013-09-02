@@ -35,9 +35,16 @@ class FileAuthProvider {
 
 	void deployAuth(Domain domain, Auth auth) {
 		makeAuthDirectory(domain)
-		boolean nogroupUsers = deployUsers(domain, auth, auth.users)
+		removeUsers(domain, auth)
+		deployUsers(domain, auth, auth.users)
 		auth.groups.each { AuthGroup group ->
-			deployGroups(domain, auth, group, nogroupUsers)
+			deployGroups(domain, auth, group)
+		}
+	}
+
+	private removeUsers(Domain domain, Auth auth) {
+		if (!auth.appending) {
+			passwordFile(domain, auth).delete()
 		}
 	}
 
@@ -47,38 +54,24 @@ class FileAuthProvider {
 
 	private deployUsers(Domain domain, Auth auth, List users) {
 		if (users.empty) {
-			return false
+			return
 		}
-		def template = auth.appending ? "appendPasswordFile" : "createPasswordFile"
 		def worker = script.scriptCommandFactory.create(
-				script.commandsTemplate, template,
-				"command", script.htpasswdCommand,
+				script.commandsTemplate, "appendDigestPasswordFile",
 				"file", passwordFile(domain, auth),
+				"auth", auth,
 				"users", users)()
 		log.deployAuthUsers script, worker, auth
-		return true
 	}
 
-	private deployGroups(Domain domain, Auth auth, AuthGroup group, boolean nogroupUsers) {
-		nogroupUsers ? appendUsers(domain, auth, group.users) : deployUsers(domain, auth, group.users)
+	private deployGroups(Domain domain, Auth auth, AuthGroup group) {
+		deployUsers(domain, auth, group.users)
 		def string = script.configTemplate.getText true, "groupFile", "auth", auth
 		FileUtils.write groupFile(domain, auth), string
 	}
 
-	private appendUsers(Domain domain, Auth auth, List users) {
-		if (users.empty) {
-			return
-		}
-		def worker = script.scriptCommandFactory.create(
-				script.commandsTemplate, "appendPasswordFile",
-				"command", script.htpasswdCommand,
-				"file", passwordFile(domain, auth),
-				"users", users)()
-		log.deployAuthUsers script, worker, auth
-	}
-
-	String passwordFile(Domain domain, Auth auth) {
-		new File(script.domainDir(domain), "auth/${auth.name}.passwd").absolutePath
+	File passwordFile(Domain domain, Auth auth) {
+		new File(script.domainDir(domain), "auth/${auth.passwordFileName}")
 	}
 
 	File groupFile(Domain domain, Auth auth) {

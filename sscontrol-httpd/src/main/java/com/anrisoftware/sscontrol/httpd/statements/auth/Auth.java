@@ -18,6 +18,8 @@
  */
 package com.anrisoftware.sscontrol.httpd.statements.auth;
 
+import static java.lang.String.format;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -174,6 +176,17 @@ public class Auth {
 
 	public List<AuthUser> getUsers() {
 		return users;
+	}
+
+	public String getPasswordFileName() {
+		switch (type) {
+		case basic:
+			return format("%s.passwd", getName());
+		case digest:
+			return format("%s-digest.passwd", getName());
+		default:
+			return null;
+		}
 	}
 
 	@Override

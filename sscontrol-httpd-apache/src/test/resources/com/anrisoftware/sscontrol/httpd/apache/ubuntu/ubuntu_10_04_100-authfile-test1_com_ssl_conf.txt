@@ -27,7 +27,7 @@
         AuthName "private"
         AuthDigestDomain /private
         AuthDigestProvider file
-        AuthUserFile /tmp/var/www/test1.com/auth/private.passwd
+        AuthUserFile /tmp/var/www/test1.com/auth/private-digest.passwd
         AuthGroupFile /tmp/var/www/test1.com/auth/private.group
         Require valid-user
         Require group admin

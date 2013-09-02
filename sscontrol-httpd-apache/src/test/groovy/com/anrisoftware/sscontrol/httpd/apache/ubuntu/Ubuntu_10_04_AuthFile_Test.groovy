@@ -51,8 +51,8 @@ class Ubuntu_10_04_AuthFile_Test extends UbuntuTestUtil {
 		assertFileContent ubuntu1004AuthFileDomainsConf.file(tmpdir), ubuntu1004AuthFileDomainsConf
 		assertStringContent ubuntu1004AuthFileTest1comConf.replaced(tmpdir, tmpdir, "/tmp"), ubuntu1004AuthFileTest1comConf.toString()
 		assertStringContent ubuntu1004AuthFileTest1comSslConf.replaced(tmpdir, tmpdir, "/tmp"), ubuntu1004AuthFileTest1comSslConf.toString()
-		assertStringContent ubuntu1004AuthFileHtpasswdOut.replaced(tmpdir, tmpdir, "/tmp"), ubuntu1004AuthFileHtpasswdOut.toString()
-		assertStringContent ubuntu1004AuthFileGroupOut.replaced(tmpdir, tmpdir, "/tmp"), ubuntu1004AuthFileGroupOut.toString()
+		assertFileContent ubuntu1004AuthFilePrivatepasswd.file(tmpdir), ubuntu1004AuthFilePrivatepasswd.toString()
+		assertFileContent ubuntu1004AuthFileGroupOut.file(tmpdir), ubuntu1004AuthFileGroupOut.toString()
 		assertFileContent ubuntu1004AuthFileEnmodOut.file(tmpdir), ubuntu1004AuthFileEnmodOut
 	}
 
@@ -70,8 +70,8 @@ class Ubuntu_10_04_AuthFile_Test extends UbuntuTestUtil {
 		assertFileContent ubuntu1004AuthFileDomainsConf.file(tmpdir), ubuntu1004AuthFileDomainsConf
 		assertStringContent ubuntu1004AuthFileTest1comConf.replaced(tmpdir, tmpdir, "/tmp"), ubuntu1004AuthFileTest1comConf.toString()
 		assertStringContent ubuntu1004AuthFileTest1comSslConf.replaced(tmpdir, tmpdir, "/tmp"), ubuntu1004AuthFileTest1comSslConf.toString()
-		assertStringContent ubuntu1004AuthFileAppendingHtpasswdOut.replaced(tmpdir, tmpdir, "/tmp"), ubuntu1004AuthFileAppendingHtpasswdOut.toString()
-		assertStringContent ubuntu1004AuthFileGroupOut.replaced(tmpdir, tmpdir, "/tmp"), ubuntu1004AuthFileGroupOut.toString()
+		assertFileContent ubuntu1004AuthFileAppendingPrivatepasswd.file(tmpdir), ubuntu1004AuthFileAppendingPrivatepasswd.toString()
+		assertFileContent ubuntu1004AuthFileGroupOut.file(tmpdir), ubuntu1004AuthFileGroupOut.toString()
 		assertFileContent ubuntu1004AuthFileEnmodOut.file(tmpdir), ubuntu1004AuthFileEnmodOut
 	}
 }

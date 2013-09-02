@@ -20,3 +20,8 @@ appendPasswordFile(command, file, users) ::= <<
 <users:{ user | <command> -b <file> <user.name> <user.password>};separator="\n">
 
 >>
+
+appendDigestPasswordFile(file, auth, users) ::= <<
+<users:{ user | (echo -n "<user.name>:<auth.name>:" && echo -n "<user.name>:<auth.name>:<user.password>" | md5sum) | cut -d ' ' -f 1 >\> <file>};separator="\n">
+
+>>

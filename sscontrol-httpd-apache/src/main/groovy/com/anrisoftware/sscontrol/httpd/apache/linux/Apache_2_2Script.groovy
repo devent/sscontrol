@@ -106,9 +106,6 @@ abstract class Apache_2_2Script extends ApacheScript {
 	def deployConfig() {
 		service.domains.each { Domain domain ->
 			webDir(domain).mkdirs()
-			def string = configTemplate.getText true, domain.class.simpleName, "properties", this, "domain", domain
-			FileUtils.write new File(sitesAvailableDir, domain.fileName), string
-			enableDomain domain
 			domain.redirects.each {
 				this."deploy${it.class.simpleName}".deployRedirect(domain, it)
 			}
@@ -119,7 +116,14 @@ abstract class Apache_2_2Script extends ApacheScript {
 				sslDomainConfig.enableSsl()
 				sslDomainConfig.deployCertificates(domain)
 			}
+			deployDomain domain
+			enableDomain domain
 		}
+	}
+
+	def deployDomain(Domain domain) {
+		def string = configTemplate.getText true, domain.class.simpleName, "properties", this, "domain", domain
+		FileUtils.write new File(sitesAvailableDir, domain.fileName), string
 	}
 
 	def enableDomain(Domain domain) {

@@ -46,6 +46,7 @@ enum UbuntuResources {
 	apache2Command("/usr/sbin/apache2", UbuntuResources.class.getResource("echo_command.txt")),
 	apache2ctlCommand("/usr/sbin/apache2ctl", UbuntuResources.class.getResource("httpd_status_command.txt")),
 	htpasswdCommand("/usr/bin/htpasswd", UbuntuResources.class.getResource("echo_command.txt")),
+	htdigestCommand("/usr/bin/htdigest", UbuntuResources.class.getResource("echo_command.txt")),
 	configurationDir("/etc/apache2", null),
 	sitesAvailableDir("/etc/apache2/sites-available", null),
 	configIncludeDir("/etc/apache2/conf.d", null),
@@ -66,11 +67,11 @@ enum UbuntuResources {
 	ubuntu1004AuthFileDomainsConf("/etc/apache2/conf.d/000-robobee-domains.conf", UbuntuResources.class.getResource("ubuntu_10_04_000-authfile-domains_conf.txt")),
 	ubuntu1004AuthFileTest1comConf("/etc/apache2/sites-available/100-robobee-test1.com.conf", UbuntuResources.class.getResource("ubuntu_10_04_100-authfile-test1_com_conf.txt")),
 	ubuntu1004AuthFileTest1comSslConf("/etc/apache2/sites-available/100-robobee-test1.com-ssl.conf", UbuntuResources.class.getResource("ubuntu_10_04_100-authfile-test1_com_ssl_conf.txt")),
-	ubuntu1004AuthFileHtpasswdOut("/usr/bin/htpasswd.out", UbuntuResources.class.getResource("ubuntu_10_04_100-authfile-htpasswd_out.txt")),
+	ubuntu1004AuthFilePrivatepasswd("/var/www/test1.com/auth/private-digest.passwd", UbuntuResources.class.getResource("ubuntu_10_04_100-authfile-privatepasswd.txt")),
 	ubuntu1004AuthFileGroupOut("/var/www/test1.com/auth/private.group", UbuntuResources.class.getResource("ubuntu_10_04_100-authfile-private_group.txt")),
 	ubuntu1004AuthFileEnmodOut("/usr/sbin/a2enmod.out", UbuntuResources.class.getResource("ubuntu_10_04_100-authfile-enmod_out.txt")),
 	// AuthFileAppending
-	ubuntu1004AuthFileAppendingHtpasswdOut("/usr/bin/htpasswd.out", UbuntuResources.class.getResource("ubuntu_10_04_100-authfileappending-htpasswd_out.txt")),
+	ubuntu1004AuthFileAppendingPrivatepasswd("/var/www/test1.com/auth/private-digest.passwd", UbuntuResources.class.getResource("ubuntu_10_04_100-authfileappending-privatepasswd.txt")),
 
 	static copyUbuntuFiles(File parent) {
 		aptitudeCommand.createCommand parent

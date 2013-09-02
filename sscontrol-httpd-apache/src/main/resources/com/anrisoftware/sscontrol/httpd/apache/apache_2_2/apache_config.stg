@@ -117,7 +117,7 @@ domainAuthLocation(location, auth, properties, domain) ::= <<
     AuthName "<auth.name>"
     AuthDigestDomain /<auth.name>
     AuthDigestProvider <if(auth.provider)><auth.provider><else><properties.defaultAuthType><endif>
-    AuthUserFile <properties.sitesDirectory>/<domain.name>/<properties.authSubdirectory>/<auth.name>.passwd
+    AuthUserFile <properties.sitesDirectory>/<domain.name>/<properties.authSubdirectory>/<auth.passwordFileName>
     <authGroupFile(auth, properties, domain)>
     <auth.requires:{requires | <(requires.class.simpleName)(requires)>};separator="\n">
 \</Location>

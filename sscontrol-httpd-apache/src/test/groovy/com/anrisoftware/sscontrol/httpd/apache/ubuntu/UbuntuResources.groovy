@@ -45,6 +45,8 @@ enum UbuntuResources {
 	apache2ctlCommand("/usr/sbin/apache2ctl", UbuntuResources.class.getResource("httpd_status_command.txt")),
 	htpasswdCommand("/usr/bin/htpasswd", UbuntuResources.class.getResource("echo_command.txt")),
 	configurationDir("/etc/apache2", null),
+	sitesAvailableDir("/etc/apache2/sites-available", null),
+	configIncludeDir("/etc/apache2/conf.d", null),
 	sitesDir("/var/www", null),
 	defaultConf("/etc/apache2/sites-available/default", UbuntuResources.class.getResource("default.txt")),
 	defaultSslConf("/etc/apache2/sites-available/default-ssl", UbuntuResources.class.getResource("default_ssl.txt")),

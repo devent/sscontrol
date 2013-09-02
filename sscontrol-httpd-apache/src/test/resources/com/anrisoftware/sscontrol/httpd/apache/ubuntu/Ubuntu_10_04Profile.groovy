@@ -33,8 +33,10 @@ profile "ubuntu_10_04", {
 		apache_control_command "${apache2ctlCommand.file(tmp)}"
 		htpasswd_command "${htpasswdCommand.file(tmp)}"
 		configuration_directory "${configurationDir.file(tmp)}"
+		sites_available_directory "${sitesAvailableDir.file(tmp)}"
+		config_include_directory "${configIncludeDir.file(tmp)}"
 		sites_directory "${sitesDir.file(tmp)}"
-		default_config_file "${ubuntu1004DefaultConf.file(tmp)}"
-		domains_config_file "${ubuntu1004DomainsConf.file(tmp)}"
+		default_config_file "000-robobee-default.conf"
+		domains_config_file "000-robobee-domains.conf"
 	}
 }

@@ -122,6 +122,28 @@ abstract class ApacheScript extends LinuxScript {
 	}
 
 	/**
+	 * Returns the directory with the available sites.
+	 *
+	 * <ul>
+	 * <li>profile property {@code "sites_available_directory"}</li>
+	 * </ul>
+	 */
+	File getSitesAvailableDir() {
+		profileProperty("sites_available_directory", defaultProperties) as File
+	}
+
+	/**
+	 * Returns the directory for the included configuration.
+	 *
+	 * <ul>
+	 * <li>profile property {@code "config_include_directory"}</li>
+	 * </ul>
+	 */
+	File getConfigIncludeDir() {
+		profileProperty("config_include_directory", defaultProperties) as File
+	}
+
+	/**
 	 * Returns the path for the Apache default configuration file.
 	 *
 	 * <ul>
@@ -129,7 +151,8 @@ abstract class ApacheScript extends LinuxScript {
 	 * </ul>
 	 */
 	File getDefaultConfigFile() {
-		profileProperty("default_config_file", defaultProperties) as File
+		def file = profileProperty("default_config_file", defaultProperties)
+		new File(sitesAvailableDir, file)
 	}
 
 	/**
@@ -140,7 +163,8 @@ abstract class ApacheScript extends LinuxScript {
 	 * </ul>
 	 */
 	File getDomainsConfigFile() {
-		profileProperty("domains_config_file", defaultProperties) as File
+		def file = profileProperty("domains_config_file", defaultProperties)
+		new File(configIncludeDir, file)
 	}
 
 	/**

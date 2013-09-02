@@ -47,6 +47,15 @@ abstract class Apache_2_2Script extends ApacheScript {
 	@Inject
 	SslDomainConfig sslDomainConfig
 
+	@Inject
+	RedirectConfig deployRedirectHttpToHttps
+
+	@Inject
+	RedirectConfig deployRedirectToWwwHttp
+
+	@Inject
+	RedirectConfig deployRedirectToWwwHttps
+
 	/**
 	 * The {@link Templates} for the script.
 	 */
@@ -69,6 +78,9 @@ abstract class Apache_2_2Script extends ApacheScript {
 		commandsTemplate = apacheTemplates.getResource "commands"
 		fileAuthProvider.script = this
 		sslDomainConfig.script = this
+		deployRedirectHttpToHttps.script = this
+		deployRedirectToWwwHttp.script = this
+		deployRedirectToWwwHttps.script = this
 		super.run()
 		deployDefaultConfig()
 		deployDomainsConfig()
@@ -88,14 +100,17 @@ abstract class Apache_2_2Script extends ApacheScript {
 	}
 
 	def deployConfig() {
-		service.domains.each {
-			webDir(it).mkdirs()
-			def string = configTemplate.getText true, it.class.simpleName, "properties", this, "domain", it
-			FileUtils.write new File(sitesAvailableDir, it.fileName), string
-			enableDomain it
-			if (it.class == SslDomain) {
+		service.domains.each { Domain domain ->
+			webDir(domain).mkdirs()
+			def string = configTemplate.getText true, domain.class.simpleName, "properties", this, "domain", domain
+			FileUtils.write new File(sitesAvailableDir, domain.fileName), string
+			enableDomain domain
+			domain.redirects.each {
+				this."deploy${it.class.simpleName}".deployRedirect(domain, it)
+			}
+			if (domain.class == SslDomain) {
 				sslDomainConfig.enableSsl()
-				sslDomainConfig.deployCertificates(it)
+				sslDomainConfig.deployCertificates(domain)
 			}
 		}
 	}

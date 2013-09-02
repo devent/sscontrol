@@ -53,6 +53,7 @@ class Ubuntu_10_04_AuthFile_Test extends UbuntuTestUtil {
 		assertStringContent ubuntu1004AuthFileTest1comSslConf.replaced(tmpdir, tmpdir, "/tmp"), ubuntu1004AuthFileTest1comSslConf.toString()
 		assertStringContent ubuntu1004AuthFileHtpasswdOut.replaced(tmpdir, tmpdir, "/tmp"), ubuntu1004AuthFileHtpasswdOut.toString()
 		assertStringContent ubuntu1004AuthFileGroupOut.replaced(tmpdir, tmpdir, "/tmp"), ubuntu1004AuthFileGroupOut.toString()
+		assertFileContent ubuntu1004AuthFileEnmodOut.file(tmpdir), ubuntu1004AuthFileEnmodOut
 	}
 
 	@Test
@@ -71,5 +72,6 @@ class Ubuntu_10_04_AuthFile_Test extends UbuntuTestUtil {
 		assertStringContent ubuntu1004AuthFileTest1comSslConf.replaced(tmpdir, tmpdir, "/tmp"), ubuntu1004AuthFileTest1comSslConf.toString()
 		assertStringContent ubuntu1004AuthFileAppendingHtpasswdOut.replaced(tmpdir, tmpdir, "/tmp"), ubuntu1004AuthFileAppendingHtpasswdOut.toString()
 		assertStringContent ubuntu1004AuthFileGroupOut.replaced(tmpdir, tmpdir, "/tmp"), ubuntu1004AuthFileGroupOut.toString()
+		assertFileContent ubuntu1004AuthFileEnmodOut.file(tmpdir), ubuntu1004AuthFileEnmodOut
 	}
 }

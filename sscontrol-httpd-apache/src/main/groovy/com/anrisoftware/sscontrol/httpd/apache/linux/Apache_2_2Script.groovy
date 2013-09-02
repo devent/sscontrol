@@ -56,6 +56,9 @@ abstract class Apache_2_2Script extends ApacheScript {
 	@Inject
 	RedirectConfig deployRedirectToWwwHttps
 
+	@Inject
+	AuthConfig deployAuth
+
 	/**
 	 * The {@link Templates} for the script.
 	 */
@@ -81,6 +84,7 @@ abstract class Apache_2_2Script extends ApacheScript {
 		deployRedirectHttpToHttps.script = this
 		deployRedirectToWwwHttp.script = this
 		deployRedirectToWwwHttps.script = this
+		deployAuth.script = this
 		super.run()
 		deployDefaultConfig()
 		deployDomainsConfig()
@@ -107,6 +111,9 @@ abstract class Apache_2_2Script extends ApacheScript {
 			enableDomain domain
 			domain.redirects.each {
 				this."deploy${it.class.simpleName}".deployRedirect(domain, it)
+			}
+			domain.auths.each {
+				deployAuth.deployAuth(domain, it)
 			}
 			if (domain.class == SslDomain) {
 				sslDomainConfig.enableSsl()

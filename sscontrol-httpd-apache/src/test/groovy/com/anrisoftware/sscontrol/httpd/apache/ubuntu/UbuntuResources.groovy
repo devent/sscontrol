@@ -68,6 +68,7 @@ enum UbuntuResources {
 	ubuntu1004AuthFileTest1comSslConf("/etc/apache2/sites-available/100-robobee-test1.com-ssl.conf", UbuntuResources.class.getResource("ubuntu_10_04_100-authfile-test1_com_ssl_conf.txt")),
 	ubuntu1004AuthFileHtpasswdOut("/usr/bin/htpasswd.out", UbuntuResources.class.getResource("ubuntu_10_04_100-authfile-htpasswd_out.txt")),
 	ubuntu1004AuthFileGroupOut("/var/www/test1.com/auth/private.group", UbuntuResources.class.getResource("ubuntu_10_04_100-authfile-private_group.txt")),
+	ubuntu1004AuthFileEnmodOut("/usr/sbin/a2enmod.out", UbuntuResources.class.getResource("ubuntu_10_04_100-authfile-enmod_out.txt")),
 	// AuthFileAppending
 	ubuntu1004AuthFileAppendingHtpasswdOut("/usr/bin/htpasswd.out", UbuntuResources.class.getResource("ubuntu_10_04_100-authfileappending-htpasswd_out.txt")),
 

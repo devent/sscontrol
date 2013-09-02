@@ -3,10 +3,12 @@ enableMods(command, mods) ::= <<
 >>
 
 createPasswordFile(command, file, users) ::= <<
-<command> -c <file> <first(users):{ user | <user.name>}> <first(users):{ user | <user.password>}>
-<rest(users):{ user | <command> <file> <user.name> <user.password>};separator="\n">
+<command> -cb <file> <first(users):{ user | <user.name>}> <first(users):{ user | <user.password>}>
+<rest(users):{ user | <command> -b <file> <user.name> <user.password>};separator="\n">
+
 >>
 
 appendPasswordFile(command, file, users) ::= <<
-<users:{ user | <command> <file> <user.name> <user.password>};separator="\n">
+<users:{ user | <command> -b <file> <user.name> <user.password>};separator="\n">
+
 >>

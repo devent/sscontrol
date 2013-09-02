@@ -34,41 +34,41 @@ class FileAuthProvider {
 	Apache_2_2Script script
 
 	void deployAuth(Domain domain, Auth auth) {
-		deployUsers(auth, auth.users)
+		deployUsers(domain, auth, auth.users)
 		auth.groups.each { AuthGroup group ->
 			deployGroups(domain, auth, group)
 		}
 	}
 
-	private deployUsers(Auth auth, List users) {
+	private deployUsers(Domain domain, Auth auth, List users) {
 		def worker = script.scriptCommandFactory.create(
 				script.commandsTemplate, "createPasswordFile",
 				"command", script.htpasswdCommand,
-				"file", passwordFile(auth),
+				"file", passwordFile(domain, auth),
 				"users", users)()
 		log.deployAuthUsers script, worker, auth
 	}
 
 	private deployGroups(Domain domain, Auth auth, AuthGroup group) {
-		appendUsers(auth, group.users)
+		appendUsers(domain, auth, group.users)
 		def string = script.configTemplate.getText true, "groupFile", "auth", auth
 		FileUtils.write groupFile(domain, auth), string
 	}
 
-	private appendUsers(Auth auth, List users) {
+	private appendUsers(Domain domain, Auth auth, List users) {
 		def worker = script.scriptCommandFactory.create(
 				script.commandsTemplate, "appendPasswordFile",
 				"command", script.htpasswdCommand,
-				"file", passwordFile(auth),
+				"file", passwordFile(domain, auth),
 				"users", users)()
 		log.deployAuthUsers script, worker, auth
 	}
 
-	String passwordFile(Auth auth) {
-		new File(script.sitesDirectory, "auth/${auth.name}.passwd").absolutePath
+	String passwordFile(Domain domain, Auth auth) {
+		new File(script.domainDir(domain), "auth/${auth.name}.passwd").absolutePath
 	}
 
 	File groupFile(Domain domain, Auth auth) {
-		new File(script.sitesDirectory, "${domain.name}/auth/${auth.name}.group")
+		new File(script.domainDir(domain), "auth/${auth.name}.group")
 	}
 }

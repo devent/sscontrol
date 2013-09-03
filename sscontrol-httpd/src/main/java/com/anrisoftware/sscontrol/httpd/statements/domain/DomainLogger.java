@@ -1,40 +1,43 @@
 /*
  * Copyright 2012-2013 Erwin Müller <erwin.mueller@deventm.org>
- *
+ * 
  * This file is part of sscontrol-httpd.
- *
+ * 
  * sscontrol-httpd is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published by the
  * Free Software Foundation, either version 3 of the License, or (at your
  * option) any later version.
- *
+ * 
  * sscontrol-httpd is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
  * for more details.
- *
+ * 
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd. If not, see <http://www.gnu.org/licenses/>.
  */
 package com.anrisoftware.sscontrol.httpd.statements.domain;
 
-import static com.anrisoftware.sscontrol.httpd.statements.domain.DomainLogger._.addressSet;
-import static com.anrisoftware.sscontrol.httpd.statements.domain.DomainLogger._.addressSetDebug;
-import static com.anrisoftware.sscontrol.httpd.statements.domain.DomainLogger._.documentRootDebug;
-import static com.anrisoftware.sscontrol.httpd.statements.domain.DomainLogger._.documentRootSet;
-import static com.anrisoftware.sscontrol.httpd.statements.domain.DomainLogger._.portSet;
-import static com.anrisoftware.sscontrol.httpd.statements.domain.DomainLogger._.portSetDebug;
-import static com.anrisoftware.sscontrol.httpd.statements.domain.DomainLogger._.redirectHttpToHttpsAdded;
-import static com.anrisoftware.sscontrol.httpd.statements.domain.DomainLogger._.redirectHttpToHttpsAddedDebug;
-import static com.anrisoftware.sscontrol.httpd.statements.domain.DomainLogger._.redirectToWwwAdded;
-import static com.anrisoftware.sscontrol.httpd.statements.domain.DomainLogger._.redirectToWwwAddedDebug;
-import static com.anrisoftware.sscontrol.httpd.statements.domain.DomainLogger._.useDomain;
-import static com.anrisoftware.sscontrol.httpd.statements.domain.DomainLogger._.useDomainDebug;
+import static com.anrisoftware.sscontrol.httpd.statements.domain.DomainLogger._.address_set;
+import static com.anrisoftware.sscontrol.httpd.statements.domain.DomainLogger._.address_set_debug;
+import static com.anrisoftware.sscontrol.httpd.statements.domain.DomainLogger._.document_root_debug;
+import static com.anrisoftware.sscontrol.httpd.statements.domain.DomainLogger._.document_root_set;
+import static com.anrisoftware.sscontrol.httpd.statements.domain.DomainLogger._.port_set;
+import static com.anrisoftware.sscontrol.httpd.statements.domain.DomainLogger._.port_set_debug;
+import static com.anrisoftware.sscontrol.httpd.statements.domain.DomainLogger._.redirect_http_to_https_added;
+import static com.anrisoftware.sscontrol.httpd.statements.domain.DomainLogger._.redirect_http_to_https_added_debug;
+import static com.anrisoftware.sscontrol.httpd.statements.domain.DomainLogger._.redirect_to_www_added;
+import static com.anrisoftware.sscontrol.httpd.statements.domain.DomainLogger._.redirect_to_www_added_debug;
+import static com.anrisoftware.sscontrol.httpd.statements.domain.DomainLogger._.service_added_debug;
+import static com.anrisoftware.sscontrol.httpd.statements.domain.DomainLogger._.service_added_info;
+import static com.anrisoftware.sscontrol.httpd.statements.domain.DomainLogger._.use_domain;
+import static com.anrisoftware.sscontrol.httpd.statements.domain.DomainLogger._.use_domain_debug;
 
 import javax.inject.Singleton;
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
 import com.anrisoftware.sscontrol.httpd.statements.redirect.Redirect;
+import com.anrisoftware.sscontrol.httpd.statements.webservice.WebService;
 
 /**
  * Logging messages for {@link Domain}.
@@ -47,29 +50,33 @@ class DomainLogger extends AbstractLogger {
 
 	enum _ {
 
-		addressSetDebug("Address '{}' set for {}."),
+		address_set_debug("Address '{}' set for {}."),
 
-		addressSet("Address '{}' set for domain '{}'."),
+		address_set("Address '{}' set for domain '{}'."),
 
-		portSetDebug("Port '{}' set for {}."),
+		port_set_debug("Port '{}' set for {}."),
 
-		portSet("Port '{}' set for domain '{}'."),
+		port_set("Port '{}' set for domain '{}'."),
 
-		documentRootDebug("Document root '{}' set for {}."),
+		document_root_debug("Document root '{}' set for {}."),
 
-		documentRootSet("Document root '{}' set for domain '{}'."),
+		document_root_set("Document root '{}' set for domain '{}'."),
 
-		useDomainDebug("Use domain '{}' set for {}."),
+		use_domain_debug("Use domain '{}' set for {}."),
 
-		useDomain("Use domains '{}' set for domain '{}'."),
+		use_domain("Use domains '{}' set for domain '{}'."),
 
-		redirectToWwwAdded("Redirect to www added for {}."),
+		redirect_to_www_added("Redirect to www added for {}."),
 
-		redirectToWwwAddedDebug("Redirect {} added for {}."),
+		redirect_to_www_added_debug("Redirect {} added for {}."),
 
-		redirectHttpToHttpsAddedDebug("Redirect {} added for {}."),
+		redirect_http_to_https_added_debug("Redirect {} added for {}."),
 
-		redirectHttpToHttpsAdded("Redirect http to https added for {}.");
+		redirect_http_to_https_added("Redirect http to https added for {}."),
+
+		service_added_debug("Service {} added for {}."),
+
+		service_added_info("Service '{}' added for domain '{}'.");
 
 		private String name;
 
@@ -92,49 +99,57 @@ class DomainLogger extends AbstractLogger {
 
 	void addressSet(Domain domain, String address) {
 		if (isDebugEnabled()) {
-			debug(addressSetDebug, address, domain);
+			debug(address_set_debug, address, domain);
 		} else {
-			info(addressSet, address, domain.getName());
+			info(address_set, address, domain.getName());
 		}
 	}
 
 	void portSet(Domain domain, int port) {
 		if (isDebugEnabled()) {
-			debug(portSetDebug, port, domain);
+			debug(port_set_debug, port, domain);
 		} else {
-			info(portSet, port, domain.getName());
+			info(port_set, port, domain.getName());
 		}
 	}
 
 	void documentRootSet(Domain domain, String root) {
 		if (isDebugEnabled()) {
-			debug(documentRootDebug, root, domain);
+			debug(document_root_debug, root, domain);
 		} else {
-			info(documentRootSet, root, domain.getName());
+			info(document_root_set, root, domain.getName());
 		}
 	}
 
 	void useDomainSet(Domain domain, String use) {
 		if (isDebugEnabled()) {
-			debug(useDomainDebug, use, domain);
+			debug(use_domain_debug, use, domain);
 		} else {
-			info(useDomain, use, domain.getName());
+			info(use_domain, use, domain.getName());
 		}
 	}
 
 	void redirectToWwwAdded(Domain domain, Redirect redirect) {
 		if (isDebugEnabled()) {
-			debug(redirectToWwwAddedDebug, redirect, domain);
+			debug(redirect_to_www_added_debug, redirect, domain);
 		} else {
-			info(redirectToWwwAdded, domain.getName());
+			info(redirect_to_www_added, domain.getName());
 		}
 	}
 
 	void redirectHttpToHttpsAdded(Domain domain, Redirect redirect) {
 		if (isDebugEnabled()) {
-			debug(redirectHttpToHttpsAddedDebug, redirect, domain);
+			debug(redirect_http_to_https_added_debug, redirect, domain);
 		} else {
-			info(redirectHttpToHttpsAdded, domain.getName());
+			info(redirect_http_to_https_added, domain.getName());
+		}
+	}
+
+	void servicesAdded(Domain domain, WebService service) {
+		if (isDebugEnabled()) {
+			debug(service_added_debug, service, domain);
+		} else {
+			info(service_added_info, service.getName(), domain.getName());
 		}
 	}
 

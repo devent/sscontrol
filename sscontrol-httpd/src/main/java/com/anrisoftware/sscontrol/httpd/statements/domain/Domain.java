@@ -36,6 +36,8 @@ import com.anrisoftware.sscontrol.httpd.statements.auth.AuthFactory;
 import com.anrisoftware.sscontrol.httpd.statements.redirect.Redirect;
 import com.anrisoftware.sscontrol.httpd.statements.redirect.RedirectFactory;
 import com.anrisoftware.sscontrol.httpd.statements.redirect.RedirectToWwwHttp;
+import com.anrisoftware.sscontrol.httpd.statements.webservice.WebService;
+import com.anrisoftware.sscontrol.httpd.statements.webservice.WebServiceFactory;
 import com.google.inject.assistedinject.Assisted;
 
 /**
@@ -66,6 +68,11 @@ public class Domain {
 
 	private final List<Auth> auths;
 
+	private final List<WebService> services;
+
+	@Inject
+	private Map<String, WebServiceFactory> serviceFactories;
+
 	private String address;
 
 	private int port;
@@ -86,6 +93,7 @@ public class Domain {
 		this.name = name;
 		this.redirects = new ArrayList<Redirect>();
 		this.auths = new ArrayList<Auth>();
+		this.services = new ArrayList<WebService>();
 		this.port = port;
 		if (args.containsKey(ADDRESS)) {
 			this.address = (String) args.get(ADDRESS);
@@ -209,6 +217,18 @@ public class Domain {
 
 	public List<Auth> getAuths() {
 		return auths;
+	}
+
+	public WebService setup(Map<String, Object> map, String name, Object s) {
+		WebServiceFactory factory = serviceFactories.get(name);
+		WebService service = factory.create(map);
+		services.add(service);
+		log.servicesAdded(this, service);
+		return service;
+	}
+
+	public List<WebService> getServices() {
+		return services;
 	}
 
 	@Override

@@ -28,4 +28,5 @@ class HttpdResources {
 	static ubuntu1004Profile = HttpdResources.class.getResource("Ubuntu_10_04Profile.groovy")
 	static httpdScript = HttpdResources.class.getResource("Httpd.groovy")
 	static authFileScript = HttpdResources.class.getResource("HttpdAuthFile.groovy")
+	static phpmyadminScript = HttpdResources.class.getResource("HttpdPhpmyadmin.groovy")
 }

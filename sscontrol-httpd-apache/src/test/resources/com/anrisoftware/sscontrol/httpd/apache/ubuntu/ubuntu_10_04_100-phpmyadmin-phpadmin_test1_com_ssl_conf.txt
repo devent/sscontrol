@@ -1,0 +1,18 @@
+<VirtualHost 192.168.0.50:443>
+
+    # domain phpadmin.test1.com
+    ServerName phpadmin.test1.com
+    DocumentRoot /tmp/var/www/phpadmin.test1.com/web
+    <Directory /tmp/var/www/phpadmin.test1.com/web>
+        AllowOverride None
+        Order allow,deny
+        Allow from all
+    </Directory>
+
+    SSLEngine on
+    SSLCertificateFile /tmp/var/www/phpadmin.test1.com/ssl/cert_crt.txt
+    SSLCertificateKeyFile /tmp/var/www/phpadmin.test1.com/ssl/cert_key.txt
+
+    Alias / /tmp/var/www/phpadmin.test1.com/web/
+
+</VirtualHost>

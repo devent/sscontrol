@@ -18,15 +18,16 @@
  */
 package com.anrisoftware.sscontrol.httpd.apache.linux
 
-import javax.inject.Inject
-
 import com.anrisoftware.sscontrol.httpd.statements.auth.Auth
 import com.anrisoftware.sscontrol.httpd.statements.domain.Domain
 
+/**
+ * Server authentication configuration.
+ *
+ * @author Erwin Mueller, erwin.mueller@deventm.org
+ * @since 1.0
+ */
 class AuthConfig {
-
-	@Inject
-	AuthConfigLogger log
 
 	ApacheScript script
 
@@ -48,12 +49,14 @@ class AuthConfig {
 	}
 
 	private enableDigest() {
-		def mod = "auth_digest"
-		def worker = script.scriptCommandFactory.create script.commandsTemplate,
-				"enableMod",
-				"command", script.enableModCommand,
-				"mod", mod
-		worker()
-		log.enabledMod mod, worker
+		enableMods "auth_digest"
+	}
+
+	def propertyMissing(String name) {
+		script.getProperty name
+	}
+
+	def methodMissing(String name, def args) {
+		script.invokeMethod name, args
 	}
 }

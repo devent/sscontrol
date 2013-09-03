@@ -1,13 +1,11 @@
-enableSite(command, site) ::= <<
-<command> <site>
->>
+enableSites(command, sites) ::= <<
+<sites:{ site | <command> <site>};separator="\n">
 
-enableMod(command, mod) ::= <<
-<command> <mod>
 >>
 
 enableMods(command, mods) ::= <<
 <mods:{ mod | <command> <mod>};separator="\n">
+
 >>
 
 createPasswordFile(command, file, users) ::= <<

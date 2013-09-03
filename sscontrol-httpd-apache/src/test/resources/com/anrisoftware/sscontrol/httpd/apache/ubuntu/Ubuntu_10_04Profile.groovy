@@ -23,7 +23,7 @@ import static com.anrisoftware.sscontrol.httpd.apache.ubuntu.UbuntuResources.*
 profile "ubuntu_10_04", {
 	httpd {
 		service "apache"
-		install_command "${aptitudeCommand.file(tmp)} update && ${aptitudeCommand.file(tmp)} install"
+		install_command "export DEBIAN_FRONTEND=noninteractive; ${aptitudeCommand.file(tmp)} update && ${aptitudeCommand.file(tmp)} install"
 		restart_command "${restartCommand.file(tmp)}"
 		chmod_command "${chmodCommand.file(tmp)}"
 		enable_mod_command "${a2enmodCommand.file(tmp)}"

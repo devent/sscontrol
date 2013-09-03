@@ -18,28 +18,28 @@
  */
 package com.anrisoftware.sscontrol.httpd.apache.linux
 
-import javax.inject.Inject
-
 import com.anrisoftware.sscontrol.httpd.statements.domain.Domain
 import com.anrisoftware.sscontrol.httpd.statements.redirect.Redirect
 
+/**
+ * Redirect configuration.
+ *
+ * @author Erwin Mueller, erwin.mueller@deventm.org
+ * @since 1.0
+ */
 class RedirectConfig {
-
-	@Inject
-	RedirectConfigLogger log
 
 	ApacheScript script
 
 	def deployRedirect(Domain domain, Redirect redirect) {
-		enableRewrite()
+		enableMods "rewrite"
 	}
 
-	private enableRewrite() {
-		def worker = script.scriptCommandFactory.create script.commandsTemplate,
-				"enableMod",
-				"command", script.enableModCommand,
-				"mod", "rewrite"
-		worker()
-		log.enabledRewrite worker
+	def propertyMissing(String name) {
+		script.getProperty name
+	}
+
+	def methodMissing(String name, def args) {
+		script.invokeMethod name, args
 	}
 }

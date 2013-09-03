@@ -20,6 +20,9 @@ package com.anrisoftware.sscontrol.httpd.apache.linux
 
 import static org.apache.commons.io.FileUtils.*
 
+import javax.inject.Inject
+
+import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.sscontrol.core.service.LinuxScript
 import com.anrisoftware.sscontrol.httpd.statements.auth.AuthProvider
 import com.anrisoftware.sscontrol.httpd.statements.auth.AuthType
@@ -33,6 +36,9 @@ import com.anrisoftware.sscontrol.httpd.statements.domain.Domain
  */
 abstract class ApacheScript extends LinuxScript {
 
+	@Inject
+	private ApacheScriptLogger log
+
 	@Override
 	def run() {
 		super.run()
@@ -43,6 +49,11 @@ abstract class ApacheScript extends LinuxScript {
 	 * Run the distribution specific configuration.
 	 */
 	abstract distributionSpecificConfiguration()
+
+	/**
+	 * Returns the template resource containing Apache commands.
+	 */
+	abstract TemplateResource getApacheCommandsTemplate()
 
 	/**
 	 * Returns the enable mod command {@code a2enmod}.
@@ -259,5 +270,29 @@ abstract class ApacheScript extends LinuxScript {
 	 */
 	File domainDir(Domain domain) {
 		new File(sitesDirectory, domain.name)
+	}
+
+	/**
+	 * Enable the specified Apache/mods.
+	 */
+	def enableMods(def mods) {
+		def worker = scriptCommandFactory.create apacheCommandsTemplate,
+				"enableMods",
+				"command", enableModCommand,
+				"mods", mods
+		worker()
+		log.enabledMods this, worker, mods
+	}
+
+	/**
+	 * Enable the specified sites.
+	 */
+	def enableSites(def sites) {
+		def worker = scriptCommandFactory.create apacheCommandsTemplate,
+				"enableSites",
+				"command", enableSiteCommand,
+				"sites", sites
+		worker()
+		log.enabledSites this, worker, sites
 	}
 }

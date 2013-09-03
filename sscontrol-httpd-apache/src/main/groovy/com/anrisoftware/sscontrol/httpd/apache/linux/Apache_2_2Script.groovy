@@ -29,6 +29,7 @@ import com.anrisoftware.resources.templates.api.Templates
 import com.anrisoftware.sscontrol.httpd.statements.auth.Auth
 import com.anrisoftware.sscontrol.httpd.statements.domain.Domain
 import com.anrisoftware.sscontrol.httpd.statements.domain.SslDomain
+import com.anrisoftware.sscontrol.httpd.statements.webservice.WebService
 
 /**
  * Configures Apache 2.2 service.
@@ -57,6 +58,9 @@ abstract class Apache_2_2Script extends ApacheScript {
 	RedirectConfig deployRedirectToWwwHttps
 
 	@Inject
+	PhpmyadminConfig deployPhpmyadmin
+
+	@Inject
 	AuthConfig deployAuth
 
 	/**
@@ -72,22 +76,24 @@ abstract class Apache_2_2Script extends ApacheScript {
 	/**
 	 * Resource containing the Apache commands templates.
 	 */
-	TemplateResource commandsTemplate
+	TemplateResource apacheCommandsTemplate
 
 	@Override
 	def run() {
 		apacheTemplates = templatesFactory.create "Apache_2_2"
 		configTemplate = apacheTemplates.getResource "config"
-		commandsTemplate = apacheTemplates.getResource "commands"
+		apacheCommandsTemplate = apacheTemplates.getResource "commands"
 		fileAuthProvider.script = this
 		sslDomainConfig.script = this
 		deployRedirectHttpToHttps.script = this
 		deployRedirectToWwwHttp.script = this
 		deployRedirectToWwwHttps.script = this
 		deployAuth.script = this
+		deployPhpmyadmin.script = this
 		super.run()
 		deployDefaultConfig()
 		deployDomainsConfig()
+		enableDefaultMods()
 		deployConfig()
 		deployAuths()
 		restartServices()
@@ -103,35 +109,50 @@ abstract class Apache_2_2Script extends ApacheScript {
 		FileUtils.write domainsConfigFile, string
 	}
 
+	def enableDefaultMods() {
+		enableMods "suexec"
+	}
+
 	def deployConfig() {
 		service.domains.each { Domain domain ->
 			webDir(domain).mkdirs()
-			domain.redirects.each {
-				this."deploy${it.class.simpleName}".deployRedirect(domain, it)
-			}
-			domain.auths.each {
-				deployAuth.deployAuth(domain, it)
-			}
-			if (domain.class == SslDomain) {
-				sslDomainConfig.enableSsl()
-				sslDomainConfig.deployCertificates(domain)
-			}
+			deployRedirect domain
+			deployAuth domain
+			deployService domain
+			deploySslDomain domain
 			deployDomain domain
-			enableDomain domain
+			enableSites domain.name
+		}
+	}
+
+	def deployService(Domain domain) {
+		domain.services.each { WebService service ->
+			this."deploy${service.name.capitalize()}".deployService(domain, service)
+		}
+	}
+
+	def deployRedirect(Domain domain) {
+		domain.redirects.each {
+			this."deploy${it.class.simpleName}".deployRedirect(domain, it)
+		}
+	}
+
+	def deployAuth(Domain domain) {
+		domain.auths.each {
+			deployAuth.deployAuth(domain, it)
+		}
+	}
+
+	def deploySslDomain(Domain domain) {
+		if (domain.class == SslDomain) {
+			sslDomainConfig.enableSsl()
+			sslDomainConfig.deployCertificates(domain)
 		}
 	}
 
 	def deployDomain(Domain domain) {
 		def string = configTemplate.getText true, domain.class.simpleName, "properties", this, "domain", domain
 		FileUtils.write new File(sitesAvailableDir, domain.fileName), string
-	}
-
-	def enableDomain(Domain domain) {
-		def worker = scriptCommandFactory.create commandsTemplate, "enableSite",
-				"command", enableSiteCommand,
-				"site", domain.fileName
-		worker()
-		log.enabledDomain this, worker, domain
 	}
 
 	def deployAuths() {

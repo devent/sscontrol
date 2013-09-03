@@ -65,11 +65,6 @@ class SslDomainConfig {
 	 * Enable the SSL mod.
 	 */
 	void enableSsl() {
-		def worker = script.scriptCommandFactory.create script.commandsTemplate,
-				"enableMod",
-				"command", script.enableModCommand,
-				"mod", "ssl"
-		worker()
-		log.enabledSsl worker
+		script.enableMods "ssl"
 	}
 }

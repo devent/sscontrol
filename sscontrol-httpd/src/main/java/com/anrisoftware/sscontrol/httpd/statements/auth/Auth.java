@@ -179,6 +179,7 @@ public class Auth {
 	}
 
 	public String getPasswordFileName() {
+		log.checkType(this, type);
 		switch (type) {
 		case basic:
 			return format("%s.passwd", getName());

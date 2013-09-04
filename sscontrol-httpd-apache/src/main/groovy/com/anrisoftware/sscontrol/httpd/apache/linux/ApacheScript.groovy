@@ -317,6 +317,21 @@ abstract class ApacheScript extends LinuxScript {
 	}
 
 	/**
+	 * Returns unique domains. The domains are identified by their name.
+	 */
+	List getUniqueDomains() {
+		List domains = []
+		Set names = []
+		service.domains.each { Domain domain ->
+			if (!names.contains(domain.name)) {
+				names.add domain.name
+				domains.add domain
+			}
+		}
+		return domains
+	}
+
+	/**
 	 * Enable the specified Apache/mods.
 	 */
 	def enableMods(def mods) {

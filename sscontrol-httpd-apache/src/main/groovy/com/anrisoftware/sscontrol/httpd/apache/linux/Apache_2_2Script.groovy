@@ -118,12 +118,13 @@ abstract class Apache_2_2Script extends ApacheScript {
 	}
 
 	def deployConfig() {
+		uniqueDomains.each { deployDomain it }
 		service.domains.each { Domain domain ->
 			deployRedirect domain
 			deployAuth domain
 			deployService domain
+			deployDomainConfig domain
 			deploySslDomain domain
-			deployDomain domain
 			enableSites domain.fileName
 		}
 	}
@@ -155,6 +156,9 @@ abstract class Apache_2_2Script extends ApacheScript {
 
 	def deployDomain(Domain domain) {
 		domainConfig.deployDomain domain
+	}
+
+	def deployDomainConfig(Domain domain) {
 		def string = configTemplate.getText true, domain.class.simpleName, "properties", this, "domain", domain
 		FileUtils.write new File(sitesAvailableDir, domain.fileName), string
 	}

@@ -34,12 +34,18 @@ class FileAuthProvider {
 	Apache_2_2Script script
 
 	void deployAuth(Domain domain, Auth auth) {
+		setupDefaultAuth auth
 		makeAuthDirectory(domain)
 		removeUsers(domain, auth)
 		deployUsers(domain, auth, auth.users)
 		auth.groups.each { AuthGroup group ->
 			deployGroups(domain, auth, group)
 		}
+	}
+
+	private setupDefaultAuth(Auth auth) {
+		auth.type = auth.type == null ? script.defaultAuthType : auth.type
+		auth.provider = auth.provider == null ? script.defaultAuthProvider : auth.provider
 	}
 
 	private removeUsers(Domain domain, Auth auth) {

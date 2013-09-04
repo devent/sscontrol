@@ -18,15 +18,28 @@ class DomainConfig {
 
 	def deployDomain(Domain domain) {
 		domainNumber++
-		int gid = minimumGid + domainNumber
 		def group = new DecimalFormat(groupPattern).format(domainNumber)
-		int uid = minimumUid + domainNumber
 		def user = new DecimalFormat(userPattern).format(domainNumber)
+		addSiteGroup group
+		addSiteUser domain, user, group
+		createWebDir domain, user, group
+	}
+
+	private createWebDir(Domain domain, String user, String group) {
+		webDir(domain).mkdirs()
+		script.changeOwner user, group, [webDir(domain)]
+	}
+
+	private addSiteUser(Domain domain, String user, String group) {
+		int uid = minimumUid + domainNumber
 		def home = domainDir domain
 		def shell = "/bin/false"
-		webDir(domain).mkdirs()
-		addGroup group, gid
 		addUser user, group, uid, home, shell
+	}
+
+	private addSiteGroup(String group) {
+		int gid = minimumGid + domainNumber
+		addGroup group, gid
 	}
 
 	def propertyMissing(String name) {

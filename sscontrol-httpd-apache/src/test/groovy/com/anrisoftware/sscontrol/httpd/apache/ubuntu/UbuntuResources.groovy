@@ -41,6 +41,7 @@ enum UbuntuResources {
 	aptitudeCommand("/usr/bin/aptitude", UbuntuResources.class.getResource("echo_command.txt")),
 	restartCommand("/etc/init.d/apache2", UbuntuResources.class.getResource("echo_command.txt")),
 	chmodCommand("/bin/chmod", UbuntuResources.class.getResource("echo_command.txt")),
+	chownCommand("/bin/chown", UbuntuResources.class.getResource("echo_command.txt")),
 	useraddCommand("/usr/sbin/useradd", UbuntuResources.class.getResource("echo_command.txt")),
 	groupaddCommand("/usr/sbin/groupadd", UbuntuResources.class.getResource("echo_command.txt")),
 	a2enmodCommand("/usr/sbin/a2enmod", UbuntuResources.class.getResource("echo_command.txt")),
@@ -69,6 +70,7 @@ enum UbuntuResources {
 	ubuntu1004Test1comEnmodOut("/usr/sbin/a2enmod.out", UbuntuResources.class.getResource("ubuntu_10_04_enmod_out.txt")),
 	ubuntu1004Test1comUseraddOut("/usr/sbin/useradd.out", UbuntuResources.class.getResource("ubuntu_10_04_useradd_out.txt")),
 	ubuntu1004Test1comGroupaddOut("/usr/sbin/groupadd.out", UbuntuResources.class.getResource("ubuntu_10_04_groupadd_out.txt")),
+	ubuntu1004Test1comChownOut("/bin/chown.out", UbuntuResources.class.getResource("ubuntu_10_04_chown_out.txt")),
 	// AuthFile
 	ubuntu1004AuthFileDomainsConf("/etc/apache2/conf.d/000-robobee-domains.conf", UbuntuResources.class.getResource("ubuntu_10_04_000-authfile-domains_conf.txt")),
 	ubuntu1004AuthFileTest1comConf("/etc/apache2/sites-available/100-robobee-test1.com.conf", UbuntuResources.class.getResource("ubuntu_10_04_100-authfile-test1_com_conf.txt")),
@@ -89,6 +91,7 @@ enum UbuntuResources {
 		aptitudeCommand.createCommand parent
 		restartCommand.createCommand parent
 		chmodCommand.createCommand parent
+		chownCommand.createCommand parent
 		groupaddCommand.createCommand parent
 		useraddCommand.createCommand parent
 		a2enmodCommand.createCommand parent

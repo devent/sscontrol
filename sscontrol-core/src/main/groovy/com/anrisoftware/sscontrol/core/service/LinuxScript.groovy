@@ -254,6 +254,31 @@ abstract class LinuxScript extends Script {
 	}
 
 	/**
+	 * Change the owner to the specified files.
+	 *
+	 * @param user
+	 * 			  the owner user.
+	 *
+	 * @param group
+	 * 			  the owner group.
+	 *
+	 * @param files
+	 * 			  the {@link List} of files.
+	 *
+	 * @return the {@link ScriptCommandWorker} worker.
+	 */
+	ScriptCommandWorker changeOwner(def user, def group, List files, def system = "unix") {
+		def template = commandTemplates.getResource("chown")
+		def worker = scriptCommandFactory.create template, system,
+				"chownCommand", chownCommand,
+				"owner", user,
+				"ownerGroup", group,
+				"files", files
+		worker()
+		log.changeOwnerDone this, worker, files
+	}
+
+	/**
 	 * Returns the configuration on the server.
 	 */
 	String currentConfiguration(File file) {

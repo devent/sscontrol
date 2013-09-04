@@ -26,6 +26,7 @@ profile "ubuntu_10_04", {
 		install_command "export DEBIAN_FRONTEND=noninteractive; ${aptitudeCommand.file(tmp)} update && ${aptitudeCommand.file(tmp)} install"
 		restart_command "${restartCommand.file(tmp)}"
 		chmod_command "${chmodCommand.file(tmp)}"
+		chown_command "${chownCommand.file(tmp)}"
 		group_add_command "${groupaddCommand.file(tmp)}"
 		user_add_command "${useraddCommand.file(tmp)}"
 		enable_mod_command "${a2enmodCommand.file(tmp)}"

@@ -18,6 +18,12 @@
  */
 package com.anrisoftware.sscontrol.core.service;
 
+import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.chmod_done_debug;
+import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.chmod_done_info;
+import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.chmod_done_trace;
+import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.chown_done_debug;
+import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.chown_done_info;
+import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.chown_done_trace;
 import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.conf_file_found_debug;
 import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.conf_file_found_info;
 import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.deployed_conf_debug;
@@ -88,6 +94,12 @@ class LinuxScriptLogger extends AbstractLogger {
 
 		chmod_done_info("Change permissions done for files {}."),
 
+		chown_done_trace("Change owner done for files {} in {}, {}."),
+
+		chown_done_debug("Change owner done for files {} in {}."),
+
+		chown_done_info("Change owner done for files {}."),
+
 		group_add_trace("Add group '{}' in {}, {}."),
 
 		group_add_debug("Add group '{}' in {}."),
@@ -131,11 +143,21 @@ class LinuxScriptLogger extends AbstractLogger {
 
 	void changeModDone(LinuxScript script, Object worker, Object files) {
 		if (isTraceEnabled()) {
-			trace(_.chmod_done_trace, files, script, worker);
+			trace(chmod_done_trace, files, script, worker);
 		} else if (isDebugEnabled()) {
-			debug(_.chmod_done_debug, files, script);
+			debug(chmod_done_debug, files, script);
 		} else {
-			info(_.chmod_done_info, files);
+			info(chmod_done_info, files);
+		}
+	}
+
+	void changeOwnerDone(LinuxScript script, Object worker, Object files) {
+		if (isTraceEnabled()) {
+			trace(chown_done_trace, files, script, worker);
+		} else if (isDebugEnabled()) {
+			debug(chown_done_debug, files, script);
+		} else {
+			info(chown_done_info, files);
 		}
 	}
 

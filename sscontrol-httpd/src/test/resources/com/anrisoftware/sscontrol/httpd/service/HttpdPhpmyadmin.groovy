@@ -37,4 +37,13 @@ httpd {
 			server "127.0.0.1", port: 3306
 		}
 	}
+	ssl_domain "phpadmin.test2.com", address: "192.168.0.50", {
+		certification_file certFile
+		certification_key_file certKeyFile
+		setup "phpmyadmin", {
+			admin "root", password: "rootpass"
+			control "phpmyadmin", password: "somepass", database: "phpmyadmin"
+			server "127.0.0.1", port: 3306
+		}
+	}
 }

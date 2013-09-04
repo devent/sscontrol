@@ -22,6 +22,7 @@ import static java.lang.String.format;
 import static java.util.Arrays.asList;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -217,6 +218,10 @@ public class Domain {
 
 	public List<Auth> getAuths() {
 		return auths;
+	}
+
+	public WebService setup(String name, Object s) {
+		return setup(new HashMap<String, Object>(), name, s);
 	}
 
 	public WebService setup(Map<String, Object> map, String name, Object s) {

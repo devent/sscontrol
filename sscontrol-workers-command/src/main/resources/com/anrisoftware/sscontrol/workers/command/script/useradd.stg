@@ -1,0 +1,18 @@
+unix(useraddCommand, userFile, name, groupName, uid, home, shell) ::= <<
+if [ -z "`grep <name> <userFile> | cut -d ':' -f 3`" ]; then
+    <useraddCommand> <unixShell(shell)> <unixHome(home)> <unixUid(uid)> -g <groupName> <name>
+fi
+
+>>
+
+unixShell(shell) ::= <%
+<if(shell)>-s <shell><endif>
+%>
+
+unixHome(home) ::= <%
+<if(home)>-d <home> -m<endif>
+%>
+
+unixUid(uid) ::= <%
+<if(uid)>-u <uid><endif>
+%>

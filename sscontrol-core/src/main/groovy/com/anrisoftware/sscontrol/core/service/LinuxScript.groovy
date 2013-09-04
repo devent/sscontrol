@@ -309,22 +309,6 @@ abstract class LinuxScript extends Script {
 	}
 
 	/**
-	 * Returns the default properties for the service, as in example:
-	 *
-	 * <pre>
-	 * 	&#64;Inject
-	 *	&#64;Named("my-properties")
-	 *	ContextProperties myProperties
-	 *
-	 *	&#64;Override
-	 *	def getDefaultProperties() {
-	 *		myProperties
-	 *	}
-	 * </pre>
-	 */
-	abstract def getDefaultProperties()
-
-	/**
 	 * Returns the default character set.
 	 *
 	 * <ul>
@@ -416,6 +400,108 @@ abstract class LinuxScript extends Script {
 	}
 
 	/**
+	 * Adds the specified local group.
+	 *
+	 * @param group
+	 * 			  the name of the group.
+	 *
+	 * @param gid
+	 * 			  optionally, the ID of the group.
+	 */
+	void addGroup(def group, def gid = null) {
+		def template = commandTemplates.getResource("groupadd")
+		def worker = scriptCommandFactory.create(template, "unix",
+				"groupaddCommand", groupAddCommand,
+				"groupFile", groupFile,
+				"name", group,
+				"gid", gid)()
+		log.addGroupDone this, worker, group
+	}
+
+	/**
+	 * Returns the command to create a new local group.
+	 *
+	 * <ul>
+	 * <li>property key {@code group_add_command}</li>
+	 * </ul>
+	 *
+	 * @see #getDefaultProperties()
+	 */
+	String getGroupAddCommand() {
+		profileProperty "group_add_command", defaultProperties
+	}
+
+	/**
+	 * Returns the local groups file.
+	 *
+	 * <ul>
+	 * <li>property key {@code group_file}</li>
+	 * </ul>
+	 *
+	 * @see #getDefaultProperties()
+	 */
+	String getGroupFile() {
+		profileProperty "group_file", defaultProperties
+	}
+
+	/**
+	 * Adds the specified local user.
+	 *
+	 * @param user
+	 * 			  the name of the user.
+	 *
+	 * @param group
+	 * 			  the group name for the user.
+	 *
+	 * @param uid
+	 * 			  optionally, the ID of the user.
+	 *
+	 * @param home
+	 * 			  optionally, the home directory for the user.
+	 *
+	 * @param shell
+	 * 			  optionally, the shell for the user.
+	 */
+	void addUser(def user, def group, def uid = null, def home = null, def shell = null) {
+		def template = commandTemplates.getResource("useradd")
+		def worker = scriptCommandFactory.create(template, "unix",
+				"useraddCommand", userAddCommand,
+				"userFile", userFile,
+				"name", user,
+				"groupName", group,
+				"uid", uid,
+				"home", home,
+				"shell", shell)()
+		log.addUserDone this, worker, user
+	}
+
+	/**
+	 * Returns the command to create a new local user.
+	 *
+	 * <ul>
+	 * <li>property key {@code user_add_command}</li>
+	 * </ul>
+	 *
+	 * @see #getDefaultProperties()
+	 */
+	String getUserAddCommand() {
+		profileProperty "user_add_command", defaultProperties
+	}
+
+	/**
+	 * Returns the local users file.
+	 *
+	 * <ul>
+	 * <li>property key {@code user_file}</li>
+	 * </ul>
+	 *
+	 * @see #getDefaultProperties()
+	 */
+	String getUserFile() {
+		profileProperty "user_file", defaultProperties
+	}
+
+	/**
 	 * Returns a profile property. If the profile property was not set
 	 * return the default value from the default properties.
 	 *
@@ -431,6 +517,24 @@ abstract class LinuxScript extends Script {
 	def profileProperty(String key, ContextProperties p) {
 		def property = profile[key]
 		property != null ? property : p.getProperty(key)
+	}
+
+	/**
+	 * Returns a profile number property. If the profile property was not set
+	 * return the default value from the default properties.
+	 *
+	 * @param key
+	 * 			  the key of the profile property.
+	 *
+	 * @param p
+	 * 			  the {@link ContextProperties} containing the property values.
+	 *
+	 * @return the value of the profile property or the default property
+	 * if the profile property was not set.
+	 */
+	def profileNumberProperty(String key, ContextProperties p) {
+		def property = profile[key]
+		property != null ? property : p.getNumberProperty(key)
 	}
 
 	private propertyKey(String key, ContextProperties p) {
@@ -488,6 +592,22 @@ abstract class LinuxScript extends Script {
 		}
 		return list
 	}
+
+	/**
+	 * Returns the default properties for the service, as in example:
+	 *
+	 * <pre>
+	 * 	&#64;Inject
+	 *	&#64;Named("my-properties")
+	 *	ContextProperties myProperties
+	 *
+	 *	&#64;Override
+	 *	def getDefaultProperties() {
+	 *		myProperties
+	 *	}
+	 * </pre>
+	 */
+	abstract def getDefaultProperties()
 
 	/**
 	 * Set properties of the script.

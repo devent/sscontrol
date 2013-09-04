@@ -56,5 +56,7 @@ class Ubuntu_10_04_Test extends UbuntuTestUtil {
 		assertFileContent ubuntu1004Test1comKey.file(tmpdir), ubuntu1004Test1comKey
 		assertFileContent ubuntu1004Test1comEnsiteOut.file(tmpdir), ubuntu1004Test1comEnsiteOut
 		assertFileContent ubuntu1004Test1comEnmodOut.file(tmpdir), ubuntu1004Test1comEnmodOut
+		assertStringContent ubuntu1004Test1comUseraddOut.replaced(tmpdir, tmpdir, "/tmp"), ubuntu1004Test1comUseraddOut.toString()
+		assertStringContent ubuntu1004Test1comGroupaddOut.replaced(tmpdir, tmpdir, "/tmp"), ubuntu1004Test1comGroupaddOut.toString()
 	}
 }

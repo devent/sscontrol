@@ -1,0 +1,10 @@
+unix(groupaddCommand, groupFile, name, gid) ::= <<
+if [ -z "`grep <name> <groupFile> | cut -d ":" -f 3`" ]; then
+    <groupaddCommand> <unixGid(gid)> <name>
+fi
+
+>>
+
+unixGid(gid) ::= <%
+<if(gid)>-g <gid><endif>
+%>

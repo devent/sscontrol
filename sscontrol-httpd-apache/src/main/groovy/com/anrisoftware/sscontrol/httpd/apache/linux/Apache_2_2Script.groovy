@@ -46,6 +46,9 @@ abstract class Apache_2_2Script extends ApacheScript {
 	FileAuthProvider fileAuthProvider
 
 	@Inject
+	DomainConfig domainConfig
+
+	@Inject
 	SslDomainConfig sslDomainConfig
 
 	@Inject
@@ -84,6 +87,7 @@ abstract class Apache_2_2Script extends ApacheScript {
 		configTemplate = apacheTemplates.getResource "config"
 		apacheCommandsTemplate = apacheTemplates.getResource "commands"
 		fileAuthProvider.script = this
+		domainConfig.script = this
 		sslDomainConfig.script = this
 		deployRedirectHttpToHttps.script = this
 		deployRedirectToWwwHttp.script = this
@@ -115,13 +119,12 @@ abstract class Apache_2_2Script extends ApacheScript {
 
 	def deployConfig() {
 		service.domains.each { Domain domain ->
-			webDir(domain).mkdirs()
 			deployRedirect domain
 			deployAuth domain
 			deployService domain
 			deploySslDomain domain
 			deployDomain domain
-			enableSites domain.name
+			enableSites domain.fileName
 		}
 	}
 
@@ -151,6 +154,7 @@ abstract class Apache_2_2Script extends ApacheScript {
 	}
 
 	def deployDomain(Domain domain) {
+		domainConfig.deployDomain domain
 		def string = configTemplate.getText true, domain.class.simpleName, "properties", this, "domain", domain
 		FileUtils.write new File(sitesAvailableDir, domain.fileName), string
 	}

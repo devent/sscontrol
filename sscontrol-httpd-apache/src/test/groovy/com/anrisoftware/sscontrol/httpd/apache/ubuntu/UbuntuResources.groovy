@@ -35,10 +35,14 @@ enum UbuntuResources {
 	httpdAuthFileAppendingScript("Httpd.groovy", UbuntuResources.class.getResource("HttpdAuthFileAppending.groovy")),
 	certCrt("cert.crt", UbuntuResources.class.getResource("cert_crt.txt")),
 	certKey("cert.key", UbuntuResources.class.getResource("cert_key.txt")),
+	group("/etc/group", UbuntuResources.class.getResource("group.txt")),
+	user("/etc/passwd", UbuntuResources.class.getResource("passwd.txt")),
 	apacheConf("/etc/apache2/apache2.conf", UbuntuResources.class.getResource("apache2_conf.txt")),
 	aptitudeCommand("/usr/bin/aptitude", UbuntuResources.class.getResource("echo_command.txt")),
 	restartCommand("/etc/init.d/apache2", UbuntuResources.class.getResource("echo_command.txt")),
 	chmodCommand("/bin/chmod", UbuntuResources.class.getResource("echo_command.txt")),
+	useraddCommand("/usr/sbin/useradd", UbuntuResources.class.getResource("echo_command.txt")),
+	groupaddCommand("/usr/sbin/groupadd", UbuntuResources.class.getResource("echo_command.txt")),
 	a2enmodCommand("/usr/sbin/a2enmod", UbuntuResources.class.getResource("echo_command.txt")),
 	a2dismodCommand("/usr/sbin/a2dismod", UbuntuResources.class.getResource("echo_command.txt")),
 	a2ensiteCommand("/usr/sbin/a2ensite", UbuntuResources.class.getResource("echo_command.txt")),
@@ -54,15 +58,17 @@ enum UbuntuResources {
 	defaultConf("/etc/apache2/sites-available/default", UbuntuResources.class.getResource("default.txt")),
 	defaultSslConf("/etc/apache2/sites-available/default-ssl", UbuntuResources.class.getResource("default_ssl.txt")),
 	// Domains
-	ubuntu1004DefaultConf("/etc/apache2/sites-available/000-robobee-default.conf", UbuntuResources.class.getResource("ubuntu_10_04_000-default_conf.txt")),
-	ubuntu1004DomainsConf("/etc/apache2/conf.d/000-robobee-domains.conf", UbuntuResources.class.getResource("ubuntu_10_04_000-domains_conf.txt")),
-	ubuntu1004Test1comConf("/etc/apache2/sites-available/100-robobee-test1.com.conf", UbuntuResources.class.getResource("ubuntu_10_04_100-test1_com_conf.txt")),
-	ubuntu1004Test1comSslConf("/etc/apache2/sites-available/100-robobee-test1.com-ssl.conf", UbuntuResources.class.getResource("ubuntu_10_04_100-test1_com_ssl_conf.txt")),
+	ubuntu1004DefaultConf("/etc/apache2/sites-available/000-robobee-default.conf", UbuntuResources.class.getResource("ubuntu_10_04_default_conf.txt")),
+	ubuntu1004DomainsConf("/etc/apache2/conf.d/000-robobee-domains.conf", UbuntuResources.class.getResource("ubuntu_10_04_domains_conf.txt")),
+	ubuntu1004Test1comConf("/etc/apache2/sites-available/100-robobee-test1.com.conf", UbuntuResources.class.getResource("ubuntu_10_04_test1_com_conf.txt")),
+	ubuntu1004Test1comSslConf("/etc/apache2/sites-available/100-robobee-test1.com-ssl.conf", UbuntuResources.class.getResource("ubuntu_10_04_test1_com_ssl_conf.txt")),
 	ubuntu1004Test1comWeb("/var/www/test1.com/web", null),
 	ubuntu1004Test1comCrt("/var/www/test1.com/ssl/cert_crt.txt", UbuntuResources.class.getResource("cert_crt.txt")),
 	ubuntu1004Test1comKey("/var/www/test1.com/ssl/cert_key.txt", UbuntuResources.class.getResource("cert_key.txt")),
-	ubuntu1004Test1comEnsiteOut("/usr/sbin/a2ensite.out", UbuntuResources.class.getResource("ubuntu_10_04_100-ensite_out.txt")),
-	ubuntu1004Test1comEnmodOut("/usr/sbin/a2enmod.out", UbuntuResources.class.getResource("ubuntu_10_04_100-enmod_out.txt")),
+	ubuntu1004Test1comEnsiteOut("/usr/sbin/a2ensite.out", UbuntuResources.class.getResource("ubuntu_10_04_ensite_out.txt")),
+	ubuntu1004Test1comEnmodOut("/usr/sbin/a2enmod.out", UbuntuResources.class.getResource("ubuntu_10_04_enmod_out.txt")),
+	ubuntu1004Test1comUseraddOut("/usr/sbin/useradd.out", UbuntuResources.class.getResource("ubuntu_10_04_useradd_out.txt")),
+	ubuntu1004Test1comGroupaddOut("/usr/sbin/groupadd.out", UbuntuResources.class.getResource("ubuntu_10_04_groupadd_out.txt")),
 	// AuthFile
 	ubuntu1004AuthFileDomainsConf("/etc/apache2/conf.d/000-robobee-domains.conf", UbuntuResources.class.getResource("ubuntu_10_04_000-authfile-domains_conf.txt")),
 	ubuntu1004AuthFileTest1comConf("/etc/apache2/sites-available/100-robobee-test1.com.conf", UbuntuResources.class.getResource("ubuntu_10_04_100-authfile-test1_com_conf.txt")),
@@ -83,6 +89,8 @@ enum UbuntuResources {
 		aptitudeCommand.createCommand parent
 		restartCommand.createCommand parent
 		chmodCommand.createCommand parent
+		groupaddCommand.createCommand parent
+		useraddCommand.createCommand parent
 		a2enmodCommand.createCommand parent
 		a2dismodCommand.createCommand parent
 		a2dissiteCommand.createCommand parent
@@ -90,6 +98,8 @@ enum UbuntuResources {
 		apache2Command.createCommand parent
 		apache2ctlCommand.createCommand parent
 		htpasswdCommand.createCommand parent
+		group.createFile parent
+		user.createFile parent
 		defaultConf.createFile parent
 		defaultSslConf.createFile parent
 	}
@@ -123,6 +133,7 @@ enum UbuntuResources {
 	}
 
 	String toString() {
+		assert resource : "Resource cannot be null for ${name()}"
 		resourceToString resource
 	}
 }

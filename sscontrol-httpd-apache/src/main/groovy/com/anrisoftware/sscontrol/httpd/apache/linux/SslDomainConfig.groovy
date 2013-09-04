@@ -50,21 +50,29 @@ class SslDomainConfig {
 
 	void changePermissions(SslDomain domain) {
 		def dir = script.sslDir(domain)
-		script.changeMod "go-r", ["$dir.absolutePath/*"]
+		changeMod "go-r", ["$dir.absolutePath/*"]
 	}
 
 	File certFile(SslDomain domain) {
-		new File(script.sslDir(domain), domain.certificationFile)
+		new File(sslDir(domain), domain.certificationFile)
 	}
 
 	File certKeyFile(SslDomain domain) {
-		new File(script.sslDir(domain), domain.certificationKeyFile)
+		new File(sslDir(domain), domain.certificationKeyFile)
 	}
 
 	/**
 	 * Enable the SSL mod.
 	 */
 	void enableSsl() {
-		script.enableMods "ssl"
+		enableMods "ssl"
+	}
+
+	def propertyMissing(String name) {
+		script.getProperty name
+	}
+
+	def methodMissing(String name, def args) {
+		script.invokeMethod name, args
 	}
 }

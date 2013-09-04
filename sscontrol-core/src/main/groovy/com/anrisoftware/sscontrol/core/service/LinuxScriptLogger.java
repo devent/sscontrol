@@ -24,6 +24,9 @@ import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.deploy
 import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.deployed_conf_info;
 import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.enabled_repository_debug;
 import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.enabled_repository_info;
+import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.group_add_debug;
+import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.group_add_info;
+import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.group_add_trace;
 import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.install_packages_done_debug;
 import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.install_packages_done_info;
 import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.install_packages_done_trace;
@@ -32,6 +35,9 @@ import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.proper
 import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.restarted_service_debug;
 import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.restarted_service_info;
 import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.restarted_service_trace;
+import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.user_add_debug;
+import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.user_add_info;
+import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.user_add_trace;
 import static org.apache.commons.lang3.Validate.notNull;
 
 import java.io.File;
@@ -80,7 +86,19 @@ class LinuxScriptLogger extends AbstractLogger {
 
 		chmod_done_debug("Change permissions done for files {} in {}."),
 
-		chmod_done_info("Change permissions done for files {}.");
+		chmod_done_info("Change permissions done for files {}."),
+
+		group_add_trace("Add group '{}' in {}, {}."),
+
+		group_add_debug("Add group '{}' in {}."),
+
+		group_add_info("Add group '{}' to service '{}'."),
+
+		user_add_trace("Add user '{}' in {}, {}."),
+
+		user_add_debug("Add user '{}' in {}."),
+
+		user_add_info("Add user '{}' to service '{}'.");
 
 		private String name;
 
@@ -154,6 +172,26 @@ class LinuxScriptLogger extends AbstractLogger {
 			debug(restarted_service_debug, script);
 		} else {
 			info(restarted_service_info, script.getName());
+		}
+	}
+
+	void addGroupDone(LinuxScript script, Object worker, Object group) {
+		if (isTraceEnabled()) {
+			trace(group_add_trace, group, script, worker);
+		} else if (isDebugEnabled()) {
+			debug(group_add_debug, group, script);
+		} else {
+			info(group_add_info, group, script.getName());
+		}
+	}
+
+	void addUserDone(LinuxScript script, Object worker, Object user) {
+		if (isTraceEnabled()) {
+			trace(user_add_trace, user, script, worker);
+		} else if (isDebugEnabled()) {
+			debug(user_add_debug, user, script);
+		} else {
+			info(user_add_info, user, script.getName());
 		}
 	}
 

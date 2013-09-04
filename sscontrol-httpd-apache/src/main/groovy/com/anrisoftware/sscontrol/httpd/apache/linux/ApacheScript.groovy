@@ -252,6 +252,50 @@ abstract class ApacheScript extends LinuxScript {
 	}
 
 	/**
+	 * Returns the group name pattern for site users.
+	 *
+	 * <ul>
+	 * <li>profile property {@code "group_pattern"}</li>
+	 * </ul>
+	 */
+	String getGroupPattern() {
+		profileProperty("group_pattern", defaultProperties)
+	}
+
+	/**
+	 * Returns the user name pattern for site users.
+	 *
+	 * <ul>
+	 * <li>profile property {@code "user_pattern"}</li>
+	 * </ul>
+	 */
+	String getUserPattern() {
+		profileProperty("user_pattern", defaultProperties)
+	}
+
+	/**
+	 * Returns the minimum group ID for site users.
+	 *
+	 * <ul>
+	 * <li>profile property {@code "minimum_gid"}</li>
+	 * </ul>
+	 */
+	int getMinimumGid() {
+		profileNumberProperty("minimum_gid", defaultProperties)
+	}
+
+	/**
+	 * Returns the minimum user ID for site users.
+	 *
+	 * <ul>
+	 * <li>profile property {@code "minimum_uid"}</li>
+	 * </ul>
+	 */
+	int getMinimumUid() {
+		profileNumberProperty("minimum_uid", defaultProperties)
+	}
+
+	/**
 	 * Returns the SSL/certificates directory for the domain.
 	 */
 	File sslDir(Domain domain) {

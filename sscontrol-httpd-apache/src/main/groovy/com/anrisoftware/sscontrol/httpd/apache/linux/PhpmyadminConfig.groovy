@@ -62,6 +62,18 @@ class PhpmyadminConfig {
 		fcgiConfig.deployConfig domain, domainUser
 		deployConfiguration service
 		reconfigureService()
+		importTables service
+	}
+
+	void importTables(PhpmyadminService service) {
+		def worker = scriptCommandFactory.create(
+				phpmyadminCommandsTemplate, "importTables",
+				"zcatCommand", script.zcatCommand,
+				"mysqlCommand", mysqlCommand,
+				"admin", service.adminUser,
+				"user", service.controlUser,
+				"script", databaseScriptFile)()
+		log.importTables script, worker
 	}
 
 	/**

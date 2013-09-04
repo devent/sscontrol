@@ -82,10 +82,13 @@ enum UbuntuResources {
 	ubuntu1004AuthFileAppendingPrivatepasswd("/var/www/test1.com/auth/private-digest.passwd", UbuntuResources.class.getResource("ubuntu_10_04_authfileappending-privatepasswd.txt")),
 	// Phpmyadmin
 	httpdPhpmyadminScript("Httpd.groovy", UbuntuResources.class.getResource("HttpdPhpmyadmin.groovy")),
-	ubuntu1004PhpmyadminDomainsConf("/etc/apache2/conf.d/000-robobee-domains.conf", UbuntuResources.class.getResource("ubuntu_10_04_000-phpmyadmin-domains_conf.txt")),
-	ubuntu1004PhpmyadminTest1comConf("/etc/apache2/sites-available/100-robobee-test1.com.conf", UbuntuResources.class.getResource("ubuntu_10_04_100-phpmyadmin-test1_com_conf.txt")),
-	ubuntu1004PhpmyadminTest1comSslConf("/etc/apache2/sites-available/100-robobee-test1.com-ssl.conf", UbuntuResources.class.getResource("ubuntu_10_04_100-phpmyadmin-test1_com_ssl_conf.txt")),
-	ubuntu1004PhpmyadminPhpadminTest1comSslConf("/etc/apache2/sites-available/100-robobee-phpadmin.test1.com-ssl.conf", UbuntuResources.class.getResource("ubuntu_10_04_100-phpmyadmin-phpadmin_test1_com_ssl_conf.txt")),
+	phpmyadminDomainsConf("/etc/apache2/conf.d/000-robobee-domains.conf", UbuntuResources.class.getResource("ubuntu_10_04_phpmyadmin-domains_conf.txt")),
+	phpmyadminTest1comConf("/etc/apache2/sites-available/100-robobee-test1.com.conf", UbuntuResources.class.getResource("ubuntu_10_04_phpmyadmin-test1_com_conf.txt")),
+	phpmyadminTest1comSslConf("/etc/apache2/sites-available/100-robobee-test1.com-ssl.conf", UbuntuResources.class.getResource("ubuntu_10_04_phpmyadmin-test1_com_ssl_conf.txt")),
+	phpmyadminPhpadminTest1comSslConf("/etc/apache2/sites-available/100-robobee-phpadmin.test1.com-ssl.conf", UbuntuResources.class.getResource("ubuntu_10_04_phpmyadmin-phpadmin_test1_com_ssl_conf.txt")),
+	phpmyadminPhpadminTest1comSslFcgiScript("/var/www/php-fcgi-scripts/phpadmin.test1.com/php-fcgi-starter", UbuntuResources.class.getResource("ubuntu_10_04_phpmyadmin-php_fcgi_starter.txt")),
+	phpmyadminChownOut("/bin/chown.out", UbuntuResources.class.getResource("ubuntu_10_04_phpmyadmin-chown_out.txt")),
+	phpmyadminChmodOut("/bin/chmod.out", UbuntuResources.class.getResource("ubuntu_10_04_phpmyadmin-chmod_out.txt")),
 
 	static copyUbuntuFiles(File parent) {
 		aptitudeCommand.createCommand parent

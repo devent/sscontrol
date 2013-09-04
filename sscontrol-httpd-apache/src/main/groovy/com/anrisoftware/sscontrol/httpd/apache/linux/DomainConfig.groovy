@@ -30,8 +30,11 @@ class DomainConfig {
 
 	ApacheScript script
 
+	Map domainUsers
+
 	DomainConfig() {
 		this.domainNumber = 0
+		this.domainUsers = [:]
 	}
 
 	def deployDomain(Domain domain) {
@@ -41,11 +44,12 @@ class DomainConfig {
 		addSiteGroup group
 		addSiteUser domain, user, group
 		createWebDir domain, user, group
+		domainUsers.put domain.name, [group: group, user: user]
 	}
 
 	private createWebDir(Domain domain, String user, String group) {
 		webDir(domain).mkdirs()
-		script.changeOwner user, group, [webDir(domain)]
+		changeOwner user: user, group: group, files: webDir(domain)
 	}
 
 	private addSiteUser(Domain domain, String user, String group) {

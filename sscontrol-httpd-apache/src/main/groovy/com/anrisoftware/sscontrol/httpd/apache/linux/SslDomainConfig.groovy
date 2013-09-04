@@ -50,7 +50,7 @@ class SslDomainConfig {
 
 	void changePermissions(SslDomain domain) {
 		def dir = script.sslDir(domain)
-		changeMod "go-r", ["$dir.absolutePath/*"]
+		changeMod mod: "go-r", files: "$dir.absolutePath/*"
 	}
 
 	File certFile(SslDomain domain) {

@@ -1,18 +1,18 @@
 /*
  * Copyright 2013 Erwin Müller <erwin.mueller@deventm.org>
- *
+ * 
  * This file is part of sscontrol-core.
- *
+ * 
  * sscontrol-core is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published by the
  * Free Software Foundation, either version 3 of the License, or (at your
  * option) any later version.
- *
- * sscontrol-core is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
- * for more details.
- *
+ * 
+ * sscontrol-core is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more
+ * details.
+ * 
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-core. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -88,17 +88,17 @@ class LinuxScriptLogger extends AbstractLogger {
 
 		property_not_set("Property '%s' is not set for %s."),
 
-		chmod_done_trace("Change permissions done for files {} in {}, {}."),
+		chmod_done_trace("Change permissions done {} in {}, {}."),
 
-		chmod_done_debug("Change permissions done for files {} in {}."),
+		chmod_done_debug("Change permissions done {} in {}."),
 
-		chmod_done_info("Change permissions done for files {}."),
+		chmod_done_info("Change permissions done for {}."),
 
-		chown_done_trace("Change owner done for files {} in {}, {}."),
+		chown_done_trace("Change owner done {} in {}, {}."),
 
-		chown_done_debug("Change owner done for files {} in {}."),
+		chown_done_debug("Change owner done {} in {}."),
 
-		chown_done_info("Change owner done for files {}."),
+		chown_done_info("Change owner done for {}."),
 
 		group_add_trace("Add group '{}' in {}, {}."),
 
@@ -141,23 +141,23 @@ class LinuxScriptLogger extends AbstractLogger {
 		}
 	}
 
-	void changeModDone(LinuxScript script, Object worker, Object files) {
+	void changeModDone(LinuxScript script, Object worker, Object args) {
 		if (isTraceEnabled()) {
-			trace(chmod_done_trace, files, script, worker);
+			trace(chmod_done_trace, args, script, worker);
 		} else if (isDebugEnabled()) {
-			debug(chmod_done_debug, files, script);
+			debug(chmod_done_debug, args, script);
 		} else {
-			info(chmod_done_info, files);
+			info(chmod_done_info, args);
 		}
 	}
 
-	void changeOwnerDone(LinuxScript script, Object worker, Object files) {
+	void changeOwnerDone(LinuxScript script, Object worker, Object args) {
 		if (isTraceEnabled()) {
-			trace(chown_done_trace, files, script, worker);
+			trace(chown_done_trace, args, script, worker);
 		} else if (isDebugEnabled()) {
-			debug(chown_done_debug, files, script);
+			debug(chown_done_debug, args, script);
 		} else {
-			info(chown_done_info, files);
+			info(chown_done_info, args);
 		}
 	}
 

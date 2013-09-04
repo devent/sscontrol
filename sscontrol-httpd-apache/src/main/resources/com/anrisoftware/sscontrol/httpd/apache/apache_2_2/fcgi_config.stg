@@ -1,0 +1,9 @@
+fcgiStarter(properties) ::= <<
+#!/bin/bash
+PHPRC=/etc/php5/cgi/
+export PHPRC
+PHP_FCGI_MAX_REQUESTS=<properties.maxRequests>
+export PHP_FCGI_MAX_REQUESTS
+exec /usr/lib/cgi-bin/php
+
+>>

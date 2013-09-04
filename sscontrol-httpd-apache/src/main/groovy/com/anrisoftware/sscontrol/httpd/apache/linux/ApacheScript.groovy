@@ -187,6 +187,7 @@ abstract class ApacheScript extends LinuxScript {
 
 	/**
 	 * Returns the path for the parent directory containing the sites.
+	 * For example {@code /var/www}.
 	 *
 	 * <ul>
 	 * <li>profile property {@code "sites_directory"}</li>

@@ -18,15 +18,29 @@
  */
 package com.anrisoftware.sscontrol.httpd.apache.linux
 
+import javax.inject.Inject
+
 import com.anrisoftware.sscontrol.httpd.statements.domain.Domain
 import com.anrisoftware.sscontrol.httpd.statements.phpmyadmin.PhpmyadminService
 
+/**
+ * Configures the Phpmyadmin service.
+ *
+ * @author Erwin Mueller, erwin.mueller@deventm.org
+ * @since 1.0
+ */
 class PhpmyadminConfig {
 
 	ApacheScript script
 
-	def deployService(Domain domain, PhpmyadminService service) {
+	@Inject
+	FcgiConfig fcgiConfig
+
+	def deployService(Domain domain, PhpmyadminService service, Map domainUser) {
+		fcgiConfig.script = script
 		installPackages phpmyadminPackages
+		fcgiConfig.enableFcgi()
+		fcgiConfig.deployConfig domain, domainUser
 	}
 
 	/**

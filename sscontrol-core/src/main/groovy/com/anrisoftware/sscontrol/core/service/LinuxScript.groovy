@@ -235,47 +235,62 @@ abstract class LinuxScript extends Script {
 	/**
 	 * Change the permissions to the specified files.
 	 *
-	 * @param mod
-	 * 			  the modification.
 	 *
-	 * @param files
-	 * 			  the {@link List} of files.
+	 * @param args
+	 * 			  the arguments:
+	 * <ul>
+	 * <li>{@code mod:} the modification;
+	 * <li>{@code files:} the file or files;
+	 * <li>{@code recursive:} optionally, set to {@code true} to
+	 * recursively change the permissions of all files and sub-directories.
+	 * <li>{@code system:} optionally, the system of the server.
+	 * Defaults to unix;
+	 * </ul>
 	 *
 	 * @return the {@link ScriptCommandWorker} worker.
 	 */
-	ScriptCommandWorker changeMod(def mod, List files, def system = "unix") {
+	ScriptCommandWorker changeMod(Map args) {
+		args.system = args.containsKey("system") ? args.system : "unix"
+		args.recursive = args.containsKey("recursive") ? args.recursive : false
 		def template = commandTemplates.getResource("chmod")
-		def worker = scriptCommandFactory.create template, system,
+		def worker = scriptCommandFactory.create template, args.system,
 				"chmodCommand", chmodCommand,
-				"mod", mod,
-				"files", files
+				"mod", args.mod,
+				"files", args.files,
+				"recursive", args.recursive
 		worker()
-		log.changeModDone this, worker, files
+		log.changeModDone this, worker, args
 	}
 
 	/**
 	 * Change the owner to the specified files.
 	 *
-	 * @param user
-	 * 			  the owner user.
-	 *
-	 * @param group
-	 * 			  the owner group.
-	 *
-	 * @param files
-	 * 			  the {@link List} of files.
+	 * @param args
+	 * 			  the arguments:
+	 * <ul>
+	 * <li>{@code user:} the owner user;
+	 * <li>{@code group:} the owner group;
+	 * <li>{@code files:} the file or files;
+	 * <li>{@code recursive:} optionally, set to {@code true} to
+	 * recursively change the owner of all files and sub-directories.
+	 * <li>{@code system:} optionally, the system of the server.
+	 * Defaults to unix;
+	 * </ul>
 	 *
 	 * @return the {@link ScriptCommandWorker} worker.
 	 */
-	ScriptCommandWorker changeOwner(def user, def group, List files, def system = "unix") {
+	ScriptCommandWorker changeOwner(Map args) {
+		args.system = args.containsKey("system") ? args.system : "unix"
+		args.recursive = args.containsKey("recursive") ? args.recursive : false
 		def template = commandTemplates.getResource("chown")
-		def worker = scriptCommandFactory.create template, system,
+		def worker = scriptCommandFactory.create template, args.system,
 				"chownCommand", chownCommand,
-				"owner", user,
-				"ownerGroup", group,
-				"files", files
+				"owner", args.user,
+				"ownerGroup", args.group,
+				"files", args.files,
+				"recursive", args.recursive
 		worker()
-		log.changeOwnerDone this, worker, files
+		log.changeOwnerDone this, worker, args
 	}
 
 	/**

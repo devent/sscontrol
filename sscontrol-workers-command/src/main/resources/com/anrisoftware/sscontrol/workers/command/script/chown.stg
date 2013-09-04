@@ -1,5 +1,9 @@
-unix(chownCommand, owner, ownerGroup, files) ::= <<
+unix(chownCommand, owner, ownerGroup, files, recursive) ::= <<
 #!/bin/sh
-<files:{file|<chownCommand> <owner>.<ownerGroup> <file><\n>}>
+<files:{file|<chownCommand> <unixRecursive(recursive)> <owner>.<ownerGroup> <file><\n>}>
 
 >>
+
+unixRecursive(recursive) ::= <%
+<if(recursive)>-R<endif>
+%>

@@ -47,13 +47,13 @@ class Ubuntu_10_04_AuthFile_Test extends UbuntuTestUtil {
 		log.info "Run service again to ensure that configuration is not set double."
 		registry.allServices.each { it.call() }
 
-		assertFileContent ubuntu1004DefaultConf.file(tmpdir), ubuntu1004DefaultConf
-		assertFileContent ubuntu1004AuthFileDomainsConf.file(tmpdir), ubuntu1004AuthFileDomainsConf
+		assertFileContent ubuntu1004DefaultConf.asFile(tmpdir), ubuntu1004DefaultConf
+		assertFileContent ubuntu1004AuthFileDomainsConf.asFile(tmpdir), ubuntu1004AuthFileDomainsConf
 		assertStringContent ubuntu1004AuthFileTest1comConf.replaced(tmpdir, tmpdir, "/tmp"), ubuntu1004AuthFileTest1comConf.toString()
 		assertStringContent ubuntu1004AuthFileTest1comSslConf.replaced(tmpdir, tmpdir, "/tmp"), ubuntu1004AuthFileTest1comSslConf.toString()
-		assertFileContent ubuntu1004AuthFilePrivatepasswd.file(tmpdir), ubuntu1004AuthFilePrivatepasswd.toString()
-		assertFileContent ubuntu1004AuthFileGroupOut.file(tmpdir), ubuntu1004AuthFileGroupOut.toString()
-		assertFileContent ubuntu1004AuthFileEnmodOut.file(tmpdir), ubuntu1004AuthFileEnmodOut
+		assertFileContent ubuntu1004AuthFilePrivatepasswd.asFile(tmpdir), ubuntu1004AuthFilePrivatepasswd
+		assertFileContent ubuntu1004AuthFileGroupOut.asFile(tmpdir), ubuntu1004AuthFileGroupOut
+		assertFileContent ubuntu1004AuthFileEnmodOut.asFile(tmpdir), ubuntu1004AuthFileEnmodOut
 	}
 
 	@Test
@@ -66,12 +66,12 @@ class Ubuntu_10_04_AuthFile_Test extends UbuntuTestUtil {
 		log.info "Run service again to ensure that configuration is not set double."
 		registry.allServices.each { it.call() }
 
-		assertFileContent ubuntu1004DefaultConf.file(tmpdir), ubuntu1004DefaultConf
-		assertFileContent ubuntu1004AuthFileDomainsConf.file(tmpdir), ubuntu1004AuthFileDomainsConf
+		assertFileContent ubuntu1004DefaultConf.asFile(tmpdir), ubuntu1004DefaultConf
+		assertFileContent ubuntu1004AuthFileDomainsConf.asFile(tmpdir), ubuntu1004AuthFileDomainsConf
 		assertStringContent ubuntu1004AuthFileTest1comConf.replaced(tmpdir, tmpdir, "/tmp"), ubuntu1004AuthFileTest1comConf.toString()
 		assertStringContent ubuntu1004AuthFileTest1comSslConf.replaced(tmpdir, tmpdir, "/tmp"), ubuntu1004AuthFileTest1comSslConf.toString()
-		assertFileContent ubuntu1004AuthFileAppendingPrivatepasswd.file(tmpdir), ubuntu1004AuthFileAppendingPrivatepasswd.toString()
-		assertFileContent ubuntu1004AuthFileGroupOut.file(tmpdir), ubuntu1004AuthFileGroupOut.toString()
-		assertFileContent ubuntu1004AuthFileEnmodOut.file(tmpdir), ubuntu1004AuthFileEnmodOut
+		assertFileContent ubuntu1004AuthFileAppendingPrivatepasswd.asFile(tmpdir), ubuntu1004AuthFileAppendingPrivatepasswd.toString()
+		assertFileContent ubuntu1004AuthFileGroupOut.asFile(tmpdir), ubuntu1004AuthFileGroupOut.toString()
+		assertFileContent ubuntu1004AuthFileEnmodOut.asFile(tmpdir), ubuntu1004AuthFileEnmodOut
 	}
 }

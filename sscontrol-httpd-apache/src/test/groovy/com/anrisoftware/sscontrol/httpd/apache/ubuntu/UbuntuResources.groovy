@@ -72,14 +72,14 @@ enum UbuntuResources {
 	ubuntu1004Test1comGroupaddOut("/usr/sbin/groupadd.out", UbuntuResources.class.getResource("ubuntu_10_04_groupadd_out.txt")),
 	ubuntu1004Test1comChownOut("/bin/chown.out", UbuntuResources.class.getResource("ubuntu_10_04_chown_out.txt")),
 	// AuthFile
-	ubuntu1004AuthFileDomainsConf("/etc/apache2/conf.d/000-robobee-domains.conf", UbuntuResources.class.getResource("ubuntu_10_04_000-authfile-domains_conf.txt")),
-	ubuntu1004AuthFileTest1comConf("/etc/apache2/sites-available/100-robobee-test1.com.conf", UbuntuResources.class.getResource("ubuntu_10_04_100-authfile-test1_com_conf.txt")),
-	ubuntu1004AuthFileTest1comSslConf("/etc/apache2/sites-available/100-robobee-test1.com-ssl.conf", UbuntuResources.class.getResource("ubuntu_10_04_100-authfile-test1_com_ssl_conf.txt")),
-	ubuntu1004AuthFilePrivatepasswd("/var/www/test1.com/auth/private-digest.passwd", UbuntuResources.class.getResource("ubuntu_10_04_100-authfile-privatepasswd.txt")),
-	ubuntu1004AuthFileGroupOut("/var/www/test1.com/auth/private.group", UbuntuResources.class.getResource("ubuntu_10_04_100-authfile-private_group.txt")),
-	ubuntu1004AuthFileEnmodOut("/usr/sbin/a2enmod.out", UbuntuResources.class.getResource("ubuntu_10_04_100-authfile-enmod_out.txt")),
+	ubuntu1004AuthFileDomainsConf("/etc/apache2/conf.d/000-robobee-domains.conf", UbuntuResources.class.getResource("ubuntu_10_04_authfile-domains_conf.txt")),
+	ubuntu1004AuthFileTest1comConf("/etc/apache2/sites-available/100-robobee-test1.com.conf", UbuntuResources.class.getResource("ubuntu_10_04_authfile-test1_com_conf.txt")),
+	ubuntu1004AuthFileTest1comSslConf("/etc/apache2/sites-available/100-robobee-test1.com-ssl.conf", UbuntuResources.class.getResource("ubuntu_10_04_authfile-test1_com_ssl_conf.txt")),
+	ubuntu1004AuthFilePrivatepasswd("/var/www/test1.com/auth/private-digest.passwd", UbuntuResources.class.getResource("ubuntu_10_04_authfile-privatepasswd.txt")),
+	ubuntu1004AuthFileGroupOut("/var/www/test1.com/auth/private.group", UbuntuResources.class.getResource("ubuntu_10_04_authfile-private_group.txt")),
+	ubuntu1004AuthFileEnmodOut("/usr/sbin/a2enmod.out", UbuntuResources.class.getResource("ubuntu_10_04_authfile-enmod_out.txt")),
 	// AuthFileAppending
-	ubuntu1004AuthFileAppendingPrivatepasswd("/var/www/test1.com/auth/private-digest.passwd", UbuntuResources.class.getResource("ubuntu_10_04_100-authfileappending-privatepasswd.txt")),
+	ubuntu1004AuthFileAppendingPrivatepasswd("/var/www/test1.com/auth/private-digest.passwd", UbuntuResources.class.getResource("ubuntu_10_04_authfileappending-privatepasswd.txt")),
 	// Phpmyadmin
 	httpdPhpmyadminScript("Httpd.groovy", UbuntuResources.class.getResource("HttpdPhpmyadmin.groovy")),
 	ubuntu1004PhpmyadminDomainsConf("/etc/apache2/conf.d/000-robobee-domains.conf", UbuntuResources.class.getResource("ubuntu_10_04_000-phpmyadmin-domains_conf.txt")),
@@ -116,7 +116,7 @@ enum UbuntuResources {
 		this.resource = resource
 	}
 
-	File file(File parent) {
+	File asFile(File parent) {
 		new File(parent, path)
 	}
 
@@ -131,7 +131,7 @@ enum UbuntuResources {
 	}
 
 	String replaced(File parent, def search, def replace) {
-		String text = readFileToString(this.file(parent))
+		String text = readFileToString(this.asFile(parent))
 		text.replaceAll(search.toString(), replace)
 	}
 

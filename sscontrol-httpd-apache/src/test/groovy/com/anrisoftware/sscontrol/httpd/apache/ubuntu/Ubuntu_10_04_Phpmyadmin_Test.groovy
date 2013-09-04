@@ -47,8 +47,8 @@ class Ubuntu_10_04_Phpmyadmin_Test extends UbuntuTestUtil {
 		log.info "Run service again to ensure that configuration is not set double."
 		registry.allServices.each { it.call() }
 
-		assertFileContent ubuntu1004DefaultConf.file(tmpdir), ubuntu1004DefaultConf
-		assertFileContent ubuntu1004PhpmyadminDomainsConf.file(tmpdir), ubuntu1004PhpmyadminDomainsConf
+		assertFileContent ubuntu1004DefaultConf.asFile(tmpdir), ubuntu1004DefaultConf
+		assertFileContent ubuntu1004PhpmyadminDomainsConf.asFile(tmpdir), ubuntu1004PhpmyadminDomainsConf
 		assertStringContent ubuntu1004PhpmyadminTest1comConf.replaced(tmpdir, tmpdir, "/tmp"), ubuntu1004PhpmyadminTest1comConf.toString()
 		assertStringContent ubuntu1004PhpmyadminTest1comSslConf.replaced(tmpdir, tmpdir, "/tmp"), ubuntu1004PhpmyadminTest1comSslConf.toString()
 		assertStringContent ubuntu1004PhpmyadminPhpadminTest1comSslConf.replaced(tmpdir, tmpdir, "/tmp"), ubuntu1004PhpmyadminPhpadminTest1comSslConf.toString()

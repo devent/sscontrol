@@ -1,8 +1,10 @@
+suexec
 rewrite
 rewrite
 rewrite
 auth_digest
 ssl
+suexec
 rewrite
 rewrite
 rewrite

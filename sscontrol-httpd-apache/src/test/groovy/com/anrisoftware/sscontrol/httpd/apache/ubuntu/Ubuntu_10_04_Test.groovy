@@ -47,15 +47,15 @@ class Ubuntu_10_04_Test extends UbuntuTestUtil {
 		log.info "Run service again to ensure that configuration is not set double."
 		registry.allServices.each { it.call() }
 
-		assertFileContent ubuntu1004DefaultConf.file(tmpdir), ubuntu1004DefaultConf
-		assertFileContent ubuntu1004DomainsConf.file(tmpdir), ubuntu1004DomainsConf
+		assertFileContent ubuntu1004DefaultConf.asFile(tmpdir), ubuntu1004DefaultConf
+		assertFileContent ubuntu1004DomainsConf.asFile(tmpdir), ubuntu1004DomainsConf
 		assertStringContent ubuntu1004Test1comConf.replaced(tmpdir, tmpdir, "/tmp"), ubuntu1004Test1comConf.toString()
 		assertStringContent ubuntu1004Test1comSslConf.replaced(tmpdir, tmpdir, "/tmp"), ubuntu1004Test1comSslConf.toString()
-		assert ubuntu1004Test1comWeb.file(tmpdir).isDirectory()
-		assertFileContent ubuntu1004Test1comCrt.file(tmpdir), ubuntu1004Test1comCrt
-		assertFileContent ubuntu1004Test1comKey.file(tmpdir), ubuntu1004Test1comKey
-		assertFileContent ubuntu1004Test1comEnsiteOut.file(tmpdir), ubuntu1004Test1comEnsiteOut
-		assertFileContent ubuntu1004Test1comEnmodOut.file(tmpdir), ubuntu1004Test1comEnmodOut
+		assert ubuntu1004Test1comWeb.asFile(tmpdir).isDirectory()
+		assertFileContent ubuntu1004Test1comCrt.asFile(tmpdir), ubuntu1004Test1comCrt
+		assertFileContent ubuntu1004Test1comKey.asFile(tmpdir), ubuntu1004Test1comKey
+		assertFileContent ubuntu1004Test1comEnsiteOut.asFile(tmpdir), ubuntu1004Test1comEnsiteOut
+		assertFileContent ubuntu1004Test1comEnmodOut.asFile(tmpdir), ubuntu1004Test1comEnmodOut
 		assertStringContent ubuntu1004Test1comUseraddOut.replaced(tmpdir, tmpdir, "/tmp"), ubuntu1004Test1comUseraddOut.toString()
 		assertStringContent ubuntu1004Test1comGroupaddOut.replaced(tmpdir, tmpdir, "/tmp"), ubuntu1004Test1comGroupaddOut.toString()
 		assertStringContent ubuntu1004Test1comChownOut.replaced(tmpdir, tmpdir, "/tmp"), ubuntu1004Test1comChownOut.toString()

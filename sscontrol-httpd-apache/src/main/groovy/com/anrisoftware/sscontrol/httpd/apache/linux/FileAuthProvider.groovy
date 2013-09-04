@@ -49,7 +49,7 @@ class FileAuthProvider {
 	}
 
 	private makeAuthDirectory(Domain domain) {
-		new File(script.domainDir(domain), script.authSubdirectory).mkdirs()
+		new File(domainDir(domain), authSubdirectory).mkdirs()
 	}
 
 	private deployUsers(Domain domain, Auth auth, List users) {
@@ -57,7 +57,7 @@ class FileAuthProvider {
 			return
 		}
 		def worker = script.scriptCommandFactory.create(
-				script.commandsTemplate, "appendDigestPasswordFile",
+				apacheCommandsTemplate, "appendDigestPasswordFile",
 				"file", passwordFile(domain, auth),
 				"auth", auth,
 				"users", users)()
@@ -66,15 +66,23 @@ class FileAuthProvider {
 
 	private deployGroups(Domain domain, Auth auth, AuthGroup group) {
 		deployUsers(domain, auth, group.users)
-		def string = script.configTemplate.getText true, "groupFile", "auth", auth
+		def string = configTemplate.getText true, "groupFile", "auth", auth
 		FileUtils.write groupFile(domain, auth), string
 	}
 
 	File passwordFile(Domain domain, Auth auth) {
-		new File(script.domainDir(domain), "auth/${auth.passwordFileName}")
+		new File(domainDir(domain), "auth/${auth.passwordFileName}")
 	}
 
 	File groupFile(Domain domain, Auth auth) {
-		new File(script.domainDir(domain), "auth/${auth.name}.group")
+		new File(domainDir(domain), "auth/${auth.name}.group")
+	}
+
+	def propertyMissing(String name) {
+		script.getProperty name
+	}
+
+	def methodMissing(String name, def args) {
+		script.invokeMethod name, args
 	}
 }

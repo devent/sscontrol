@@ -1,8 +1,7 @@
-domainConfig(domain, properties, fcgiProperties) ::= <<
+domainConfig(domain, service, properties, fcgiProperties) ::= <<
 # phpmyadmin
 
-Alias /phpmyadmin /usr/share/phpmyadmin
-
+<serviceAlias(service.alias)>
 \<Directory /usr/share/phpmyadmin>
     AddHandler fcgid-script .php
     FCGIWrapper <properties.sitesDirectory>/<fcgiProperties.scriptsSubdirectory>/<domain.name>/<fcgiProperties.scriptStarterFileName> .php
@@ -19,6 +18,11 @@ Alias /phpmyadmin /usr/share/phpmyadmin
     Order Deny,Allow
     Deny from All
 \</Directory>
+
+>>
+
+serviceAlias(alias) ::= <<
+<if(alias)>Alias /<alias> /usr/share/phpmyadmin<endif>
 
 >>
 

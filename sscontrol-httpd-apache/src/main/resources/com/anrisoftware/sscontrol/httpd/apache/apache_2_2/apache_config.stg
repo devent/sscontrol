@@ -21,7 +21,7 @@ domainsConfiguration(service) ::= <<
 
 nameVirtualHost(domain) ::= "NameVirtualHost <domain.address>:<domain.port>"
 
-Domain(properties, domain) ::= <<
+Domain(properties, domain, servicesConfig) ::= <<
 \<VirtualHost <domain.address>:<domain.port>\>
 
     <domainBody(properties, domain)>
@@ -30,11 +30,12 @@ Domain(properties, domain) ::= <<
     <domainAlias(properties, domain)>
 
     <domain.auths:domainAuth(properties, domain);separator="\n">
+    <servicesConfig;separator="\n">
 \</VirtualHost>
 
 >>
 
-SslDomain(properties, domain) ::= <<
+SslDomain(properties, domain, servicesConfig) ::= <<
 \<VirtualHost <domain.address>:<domain.port>\>
 
     <domainBody(properties, domain)>
@@ -45,6 +46,7 @@ SslDomain(properties, domain) ::= <<
     <domainAlias(properties, domain)>
 
     <domain.auths:domainAuth(properties, domain);separator="\n">
+    <servicesConfig;separator="\n">
 \</VirtualHost>
 
 >>

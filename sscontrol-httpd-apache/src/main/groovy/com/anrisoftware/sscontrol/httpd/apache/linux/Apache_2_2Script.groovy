@@ -118,20 +118,22 @@ abstract class Apache_2_2Script extends ApacheScript {
 	}
 
 	def deployConfig() {
+		List serviceConfig = []
 		uniqueDomains.each { deployDomain it }
 		service.domains.each { Domain domain ->
 			deployRedirect domain
 			deployAuth domain
-			deployService domain, domainConfig.domainUsers
-			deployDomainConfig domain
+			deployService domain, domainConfig.domainUsers, serviceConfig
+			deployDomainConfig domain, serviceConfig
 			deploySslDomain domain
 			enableSites domain.fileName
 		}
 	}
 
-	def deployService(Domain domain, Map domainUsers) {
+	def deployService(Domain domain, Map domainUsers, List serviceConfig) {
 		domain.services.each { WebService service ->
-			this."deploy${service.name.capitalize()}".deployService(domain, service, domainUsers[domain.name])
+			def users = domainUsers[domain.name]
+			this."deploy${service.name.capitalize()}".deployService(domain, service, users, serviceConfig)
 		}
 	}
 
@@ -158,8 +160,11 @@ abstract class Apache_2_2Script extends ApacheScript {
 		domainConfig.deployDomain domain
 	}
 
-	def deployDomainConfig(Domain domain) {
-		def string = configTemplate.getText true, domain.class.simpleName, "properties", this, "domain", domain
+	def deployDomainConfig(Domain domain, List servicesConfig) {
+		def string = configTemplate.getText(true, domain.class.simpleName,
+				"properties", this,
+				"domain", domain,
+				"servicesConfig", servicesConfig)
 		FileUtils.write new File(sitesAvailableDir, domain.fileName), string
 	}
 

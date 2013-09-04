@@ -1,18 +1,18 @@
 /*
  * Copyright 2012-2013 Erwin Müller <erwin.mueller@deventm.org>
- *
+ * 
  * This file is part of sscontrol-httpd.
- *
+ * 
  * sscontrol-httpd is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published by the
  * Free Software Foundation, either version 3 of the License, or (at your
  * option) any later version.
- *
+ * 
  * sscontrol-httpd is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
  * for more details.
- *
+ * 
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -35,12 +35,12 @@ import com.google.inject.assistedinject.Assisted;
  */
 public class PhpmyadminService implements WebService {
 
+	private static final String ALIAS = "alias";
+
 	public static final String NAME = "phpmyadmin";
 
 	@Inject
 	private PhpmyadminServiceLogger log;
-
-	private boolean usePma;
 
 	@Inject
 	private AdminUser adminUser;
@@ -51,10 +51,12 @@ public class PhpmyadminService implements WebService {
 	@Inject
 	private Server server;
 
+	private String alias;
+
 	@Inject
 	PhpmyadminService(@Assisted Map<String, Object> map) {
-		if (map.containsKey("pma")) {
-			this.usePma = (Boolean) map.get("pma");
+		if (map.containsKey(ALIAS)) {
+			this.alias = (String) map.get(ALIAS);
 		}
 	}
 
@@ -63,12 +65,12 @@ public class PhpmyadminService implements WebService {
 		return NAME;
 	}
 
-	public void setUsePma(boolean use) {
-		this.usePma = use;
+	public void setAlias(String alias) {
+		this.alias = alias;
 	}
 
-	public boolean isUsePma() {
-		return usePma;
+	public String getAlias() {
+		return alias;
 	}
 
 	public void admin(Map<String, Object> map, String admin) {
@@ -104,7 +106,8 @@ public class PhpmyadminService implements WebService {
 
 	@Override
 	public String toString() {
-		return new ToStringBuilder(this).append(NAME).append(adminUser)
-				.append(controlUser).append(server).toString();
+		return new ToStringBuilder(this).append(NAME).append(ALIAS, alias)
+				.append(adminUser).append(controlUser).append(server)
+				.toString();
 	}
 }

@@ -29,6 +29,8 @@ profile "ubuntu_10_04", {
 		chown_command "${chownCommand.asFile(tmp)}"
 		group_add_command "${groupaddCommand.asFile(tmp)}"
 		user_add_command "${useraddCommand.asFile(tmp)}"
+		reconfigure_command "${reconfigureCommand.asFile(tmp)}"
+		zcat_command "${zcatCommand.asFile(tmp)}"
 		enable_mod_command "${a2enmodCommand.asFile(tmp)}"
 		disable_mod_command "${a2dismodCommand.asFile(tmp)}"
 		enable_site_command "${a2ensiteCommand.asFile(tmp)}"
@@ -44,5 +46,9 @@ profile "ubuntu_10_04", {
 		sites_directory "${sitesDir.asFile(tmp)}"
 		default_config_file "000-robobee-default.conf"
 		domains_config_file "000-robobee-domains.conf"
+		// phpmyadmin
+		mysql_command "${phpmyadminMysqlCommand.asFile(tmp)}"
+		phpmyadmin_configuration_file "${phpmyadminConfig.asFile(tmp)}"
+		phpmyadmin_database_script_file "${phpmyadminCreateTablesSql.asFile(tmp)}"
 	}
 }

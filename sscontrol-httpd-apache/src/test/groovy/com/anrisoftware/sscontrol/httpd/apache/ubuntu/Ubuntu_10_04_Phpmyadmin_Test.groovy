@@ -39,6 +39,10 @@ class Ubuntu_10_04_Phpmyadmin_Test extends UbuntuTestUtil {
 
 	@Test
 	void "phpmyadmin"() {
+		phpmyadminMysqlCommand.createCommand tmpdir
+		phpmyadminCreateTablesSql.createFile tmpdir
+		phpmyadminConfig.createFile tmpdir
+
 		loader.loadService ubuntu1004Profile.resource, null
 		def profile = registry.getService("profile")[0]
 		loader.loadService httpdPhpmyadminScript.resource, profile
@@ -55,5 +59,6 @@ class Ubuntu_10_04_Phpmyadmin_Test extends UbuntuTestUtil {
 		assertFileContent phpmyadminPhpadminTest1comSslFcgiScript.asFile(tmpdir), phpmyadminPhpadminTest1comSslFcgiScript
 		assertStringContent phpmyadminChownOut.replaced(tmpdir, tmpdir, "/tmp"), phpmyadminChownOut.toString()
 		assertStringContent phpmyadminChmodOut.replaced(tmpdir, tmpdir, "/tmp"), phpmyadminChmodOut.toString()
+		//assertFileContent phpmyadminConfigExpecting.asFile(tmpdir), phpmyadminConfigExpecting
 	}
 }

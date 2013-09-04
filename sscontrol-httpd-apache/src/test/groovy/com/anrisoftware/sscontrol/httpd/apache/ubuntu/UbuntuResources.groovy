@@ -44,6 +44,8 @@ enum UbuntuResources {
 	chownCommand("/bin/chown", UbuntuResources.class.getResource("echo_command.txt")),
 	useraddCommand("/usr/sbin/useradd", UbuntuResources.class.getResource("echo_command.txt")),
 	groupaddCommand("/usr/sbin/groupadd", UbuntuResources.class.getResource("echo_command.txt")),
+	zcatCommand("/bin/zcat", UbuntuResources.class.getResource("echo_command.txt")),
+	reconfigureCommand("/usr/sbin/dpkg-reconfigure", UbuntuResources.class.getResource("echo_command.txt")),
 	a2enmodCommand("/usr/sbin/a2enmod", UbuntuResources.class.getResource("echo_command.txt")),
 	a2dismodCommand("/usr/sbin/a2dismod", UbuntuResources.class.getResource("echo_command.txt")),
 	a2ensiteCommand("/usr/sbin/a2ensite", UbuntuResources.class.getResource("echo_command.txt")),
@@ -89,6 +91,10 @@ enum UbuntuResources {
 	phpmyadminPhpadminTest1comSslFcgiScript("/var/www/php-fcgi-scripts/phpadmin.test1.com/php-fcgi-starter", UbuntuResources.class.getResource("ubuntu_10_04_phpmyadmin-php_fcgi_starter.txt")),
 	phpmyadminChownOut("/bin/chown.out", UbuntuResources.class.getResource("ubuntu_10_04_phpmyadmin-chown_out.txt")),
 	phpmyadminChmodOut("/bin/chmod.out", UbuntuResources.class.getResource("ubuntu_10_04_phpmyadmin-chmod_out.txt")),
+	phpmyadminMysqlCommand("/usr/bin/mysql", UbuntuResources.class.getResource("echo_command.txt")),
+	phpmyadminConfig("/etc/dbconfig-common/phpmyadmin.conf", UbuntuResources.class.getResource("phpmyadmin.conf")),
+	phpmyadminConfigExpecting("/etc/dbconfig-common/phpmyadmin.conf", UbuntuResources.class.getResource("phpmyadmin_conf_expecting.txt")),
+	phpmyadminCreateTablesSql("/usr/share/doc/phpmyadmin/examples/create_tables.sql.gz", UbuntuResources.class.getResource("create_tables.sql.gz")),
 
 	static copyUbuntuFiles(File parent) {
 		aptitudeCommand.createCommand parent
@@ -97,6 +103,8 @@ enum UbuntuResources {
 		chownCommand.createCommand parent
 		groupaddCommand.createCommand parent
 		useraddCommand.createCommand parent
+		zcatCommand.createCommand parent
+		reconfigureCommand.createCommand parent
 		a2enmodCommand.createCommand parent
 		a2dismodCommand.createCommand parent
 		a2dissiteCommand.createCommand parent

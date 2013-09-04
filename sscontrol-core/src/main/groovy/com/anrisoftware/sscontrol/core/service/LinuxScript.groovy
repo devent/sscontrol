@@ -542,6 +542,33 @@ abstract class LinuxScript extends Script {
 	}
 
 	/**
+	 * Returns the reconfigure command, for
+	 * example {@code "/usr/sbin/dpkg-reconfigure"}.
+	 *
+	 * <ul>
+	 * <li>property key {@code reconfigure_command}</li>
+	 * </ul>
+	 *
+	 * @see #getDefaultProperties()
+	 */
+	String getReconfigureCommand() {
+		profileProperty "reconfigure_command", defaultProperties
+	}
+
+	/**
+	 * Returns the zcat command, for example {@code "/bin/zcat"}.
+	 *
+	 * <ul>
+	 * <li>property key {@code zcat_command}</li>
+	 * </ul>
+	 *
+	 * @see #getDefaultProperties()
+	 */
+	String getZcatCommand() {
+		profileProperty "zcat_command", defaultProperties
+	}
+
+	/**
 	 * Returns a profile property. If the profile property was not set
 	 * return the default value from the default properties.
 	 *

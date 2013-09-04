@@ -1,0 +1,5 @@
+reconfigure(command) ::= <<
+#!/bin/sh
+<command> phpmyadmin
+
+>>

@@ -20,8 +20,11 @@ package com.anrisoftware.sscontrol.httpd.apache.linux
 
 import javax.inject.Inject
 
+import com.anrisoftware.resources.templates.api.TemplateResource
+import com.anrisoftware.resources.templates.api.Templates
 import com.anrisoftware.sscontrol.httpd.statements.domain.Domain
 import com.anrisoftware.sscontrol.httpd.statements.phpmyadmin.PhpmyadminService
+import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokenTemplate
 
 /**
  * Configures the Phpmyadmin service.
@@ -31,16 +34,105 @@ import com.anrisoftware.sscontrol.httpd.statements.phpmyadmin.PhpmyadminService
  */
 class PhpmyadminConfig {
 
+	@Inject
+	PhpmyadminConfigLogger log
+
+	Templates phpmyadminTemplates
+
+	TemplateResource phpmyadminConfigTemplate
+
+	TemplateResource phpmyadminCommandsTemplate
+
 	ApacheScript script
 
 	@Inject
 	FcgiConfig fcgiConfig
+
+	void setScript(ApacheScript script) {
+		this.script = script
+		phpmyadminTemplates = templatesFactory.create "Apache_2_2_Phpmyadmin"
+		phpmyadminConfigTemplate = phpmyadminTemplates.getResource "config"
+		phpmyadminCommandsTemplate = phpmyadminTemplates.getResource "commands"
+	}
 
 	def deployService(Domain domain, PhpmyadminService service, Map domainUser) {
 		fcgiConfig.script = script
 		installPackages phpmyadminPackages
 		fcgiConfig.enableFcgi()
 		fcgiConfig.deployConfig domain, domainUser
+		deployConfiguration service
+		reconfigureService()
+	}
+
+	/**
+	 * Deploys the phpmyadmin configuration.
+	 */
+	void deployConfiguration(PhpmyadminService service) {
+		deployConfiguration configurationTokens(), phpmyadminConfiguration, phpmyadminConfigurations(service), configurationFile
+	}
+
+	/**
+	 * Returns the current {@code phpmyadmin.conf} configuration.
+	 */
+	String getPhpmyadminConfiguration() {
+		currentConfiguration configurationFile
+	}
+
+	/**
+	 * Returns the phpmyadmin configurations.
+	 */
+	List phpmyadminConfigurations(PhpmyadminService service) {
+		[
+			configDbuser(service),
+			configDbpassword(service),
+			configDbserver(service),
+			configDbport(service),
+			configDbname(service),
+			configDbadmin(service)
+		]
+	}
+
+	def configDbuser(PhpmyadminService service) {
+		def search = phpmyadminConfigTemplate.getText(true, "configDbuser_search")
+		def replace = phpmyadminConfigTemplate.getText(true, "configDbuser", "user", service.controlUser)
+		new TokenTemplate(search, replace)
+	}
+
+	def configDbpassword(PhpmyadminService service) {
+		def search = phpmyadminConfigTemplate.getText(true, "configDbpassword_search")
+		def replace = phpmyadminConfigTemplate.getText(true, "configDbpassword", "user", service.controlUser)
+		new TokenTemplate(search, replace)
+	}
+
+	def configDbserver(PhpmyadminService service) {
+		def search = phpmyadminConfigTemplate.getText(true, "configDbserver_search")
+		def replace = phpmyadminConfigTemplate.getText(true, "configDbserver", "server", service.server)
+		new TokenTemplate(search, replace)
+	}
+
+	def configDbport(PhpmyadminService service) {
+		def search = phpmyadminConfigTemplate.getText(true, "configDbport_search")
+		def replace = phpmyadminConfigTemplate.getText(true, "configDbport", "server", service.server)
+		new TokenTemplate(search, replace)
+	}
+
+	def configDbname(PhpmyadminService service) {
+		def search = phpmyadminConfigTemplate.getText(true, "configDbname_search")
+		def replace = phpmyadminConfigTemplate.getText(true, "configDbname", "user", service.controlUser)
+		new TokenTemplate(search, replace)
+	}
+
+	def configDbadmin(PhpmyadminService service) {
+		def search = phpmyadminConfigTemplate.getText(true, "configDbadmin_search")
+		def replace = phpmyadminConfigTemplate.getText(true, "configDbadmin", "admin", service.adminUser)
+		new TokenTemplate(search, replace)
+	}
+
+	def reconfigureService() {
+		def worker = scriptCommandFactory.create(
+				phpmyadminCommandsTemplate, "reconfigure",
+				"command", reconfigureCommand)()
+		log.reconfigureService script, worker
 	}
 
 	/**
@@ -52,6 +144,41 @@ class PhpmyadminConfig {
 	 */
 	List getPhpmyadminPackages() {
 		profileListProperty "phpmyadmin_packages", defaultProperties
+	}
+
+	/**
+	 * Returns the mysql client command, for example {@code /usr/bin/mysql}.
+	 *
+	 * <ul>
+	 * <li>profile property {@code "mysql_command"}</li>
+	 * </ul>
+	 */
+	String getMysqlCommand() {
+		profileProperty "mysql_command", defaultProperties
+	}
+
+	/**
+	 * Phpmyadmin configuration file, for
+	 * example {@code "/etc/dbconfig-common/phpmyadmin.conf"}.
+	 *
+	 * <ul>
+	 * <li>profile property {@code "phpmyadmin_configuration_file"}</li>
+	 * </ul>
+	 */
+	File getConfigurationFile() {
+		profileProperty("phpmyadmin_configuration_file", defaultProperties) as File
+	}
+
+	/**
+	 * Phpmyadmin database script file, for
+	 * example {@code "/usr/share/doc/phpmyadmin/examples/create_tables.sql.gz"}.
+	 *
+	 * <ul>
+	 * <li>profile property {@code "phpmyadmin_database_script_file"}</li>
+	 * </ul>
+	 */
+	File getDatabaseScriptFile() {
+		profileProperty("phpmyadmin_database_script_file", defaultProperties) as File
 	}
 
 	def propertyMissing(String name) {

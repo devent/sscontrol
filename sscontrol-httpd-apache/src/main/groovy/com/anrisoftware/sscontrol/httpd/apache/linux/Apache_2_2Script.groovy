@@ -123,17 +123,16 @@ abstract class Apache_2_2Script extends ApacheScript {
 		service.domains.each { Domain domain ->
 			deployRedirect domain
 			deployAuth domain
-			deployService domain, domainConfig.domainUsers, serviceConfig
+			deployService domain, serviceConfig
 			deployDomainConfig domain, serviceConfig
 			deploySslDomain domain
 			enableSites domain.fileName
 		}
 	}
 
-	def deployService(Domain domain, Map domainUsers, List serviceConfig) {
+	def deployService(Domain domain, List serviceConfig) {
 		domain.services.each { WebService service ->
-			def users = domainUsers[domain.name]
-			this."deploy${service.name.capitalize()}".deployService(domain, service, users, serviceConfig)
+			this."deploy${service.name.capitalize()}".deployService(domain, service, serviceConfig)
 		}
 	}
 

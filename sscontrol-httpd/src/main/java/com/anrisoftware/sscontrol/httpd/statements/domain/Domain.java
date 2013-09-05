@@ -74,6 +74,9 @@ public class Domain {
 	@Inject
 	private Map<String, WebServiceFactory> serviceFactories;
 
+	@Inject
+	private DomainUser domainUser;
+
 	private String address;
 
 	private int port;
@@ -145,6 +148,15 @@ public class Domain {
 
 	private boolean findDirective(List<Class<?>> directives) {
 		return redirects.containsAll(directives);
+	}
+
+	public void user(Map<String, Object> map, String name) {
+		domainUser.setUser(name);
+		domainUser.setGroup(map.get("group"));
+	}
+
+	public DomainUser getDomainUser() {
+		return domainUser;
 	}
 
 	public void address(String address) {
@@ -259,6 +271,7 @@ public class Domain {
 
 	@Override
 	public String toString() {
-		return new ToStringBuilder(this).append("name", name).toString();
+		return new ToStringBuilder(this).append("name", name)
+				.append(domainUser).toString();
 	}
 }

@@ -48,22 +48,24 @@ class FcgiConfig {
 		enableMods "fcgid"
 	}
 
-	def deployConfig(Domain domain, Map domainUser) {
-		createScriptDirectory domain, domainUser
-		deployStarterScript domain, domainUser
+	def deployConfig(Domain domain) {
+		createScriptDirectory domain
+		deployStarterScript domain
 	}
 
-	private createScriptDirectory(Domain domain, Map domainUser) {
+	private createScriptDirectory(Domain domain) {
+		def user = domain.domainUser
 		def scripts = scriptDir domain
 		scripts.mkdirs()
-		changeOwner user: domainUser.user, group: domainUser.group, files: scripts, recursive: true
+		changeOwner user: user.name, group: user.group, files: scripts, recursive: true
 	}
 
-	private deployStarterScript(Domain domain, Map domainUser) {
+	private deployStarterScript(Domain domain) {
+		def user = domain.domainUser
 		def string = fcgiConfigTemplate.getText true, "fcgiStarter", "properties", this
 		def file = scriptStarterFile(domain)
 		FileUtils.write file, string
-		changeOwner user: domainUser.user, group: domainUser.group, files: file
+		changeOwner user: user.name, group: user.group, files: file
 		changeMod mod: "755", files: file
 	}
 

@@ -30,38 +30,46 @@ class DomainConfig {
 
 	ApacheScript script
 
-	Map domainUsers
-
 	DomainConfig() {
 		this.domainNumber = 0
-		this.domainUsers = [:]
 	}
 
 	def deployDomain(Domain domain) {
 		domainNumber++
+		setupUserGroup domain
+		addSiteGroup domain
+		addSiteUser domain
+		createWebDir domain
+	}
+
+	private setupUserGroup(Domain domain) {
 		def group = new DecimalFormat(groupPattern).format(domainNumber)
 		def user = new DecimalFormat(userPattern).format(domainNumber)
-		addSiteGroup group
-		addSiteUser domain, user, group
-		createWebDir domain, user, group
-		domainUsers.put domain.name, [group: group, user: user]
+		script.service.domains.findAll { Domain d ->
+			d.name == domain.name
+		}.each { Domain d ->
+			d.domainUser.name = domain.domainUser.name == null ? user : domain.domainUser.name
+			d.domainUser.group = domain.domainUser.group == null ? user : domain.domainUser.group
+		}
 	}
 
-	private createWebDir(Domain domain, String user, String group) {
+	private createWebDir(Domain domain) {
+		def user = domain.domainUser
 		webDir(domain).mkdirs()
-		changeOwner user: user, group: group, files: webDir(domain)
+		changeOwner user: user.name, group: user.group, files: webDir(domain)
 	}
 
-	private addSiteUser(Domain domain, String user, String group) {
+	private addSiteUser(Domain domain) {
+		def user = domain.domainUser
 		int uid = minimumUid + domainNumber
 		def home = domainDir domain
 		def shell = "/bin/false"
-		addUser user, group, uid, home, shell
+		addUser user.name, user.group, uid, home, shell
 	}
 
-	private addSiteGroup(String group) {
+	private addSiteGroup(Domain domain) {
 		int gid = minimumGid + domainNumber
-		addGroup group, gid
+		addGroup domain.domainUser.group, gid
 	}
 
 	def propertyMissing(String name) {

@@ -51,6 +51,7 @@ domainBody(properties, domain) ::= <<
 # domain <domain.name>
 ServerName <domain.name>
 DocumentRoot <properties.sitesDirectory>/<domain.siteDirectory>
+SuexecUserGroup <domain.domainUser.name> <domain.domainUser.group>
 \<Directory <properties.sitesDirectory>/<domain.siteDirectory>\>
     AllowOverride None
     Order allow,deny

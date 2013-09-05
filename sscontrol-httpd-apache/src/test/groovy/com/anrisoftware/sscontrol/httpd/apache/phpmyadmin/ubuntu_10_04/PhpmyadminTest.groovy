@@ -57,6 +57,8 @@ class PhpmyadminTest extends UbuntuTestUtil {
 		assertFileContent phpadminTest1comSslFcgiScript.asFile(tmpdir), phpadminTest1comSslFcgiScript
 		assertStringContent chownOut.replaced(tmpdir, tmpdir, "/tmp"), chownOut.toString()
 		assertStringContent chmodOut.replaced(tmpdir, tmpdir, "/tmp"), chmodOut.toString()
+		assertStringContent groupaddOut.replaced(tmpdir, tmpdir, "/tmp"), groupaddOut.toString()
+		assertStringContent useraddOut.replaced(tmpdir, tmpdir, "/tmp"), useraddOut.toString()
 		//assertFileContent phpmyadminConfigExpecting.asFile(tmpdir), phpmyadminConfigExpecting
 	}
 }

@@ -3,6 +3,7 @@
     # domain phpadmin.test1.com
     ServerName phpadmin.test1.com
     DocumentRoot /tmp/var/www/phpadmin.test1.com/web
+    SuexecUserGroup www-data www-data
     <Directory /tmp/var/www/phpadmin.test1.com/web>
         AllowOverride None
         Order allow,deny

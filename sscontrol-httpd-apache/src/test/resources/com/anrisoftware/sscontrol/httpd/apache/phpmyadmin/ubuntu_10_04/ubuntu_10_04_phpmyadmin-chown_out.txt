@@ -1,8 +1,0 @@
-web_001.web_001 /tmp/var/www/test1.com/web
-web_002.web_002 /tmp/var/www/phpadmin.test1.com/web
--R web_002.web_002 /tmp/var/www/php-fcgi-scripts/phpadmin.test1.com
-web_002.web_002 /tmp/var/www/php-fcgi-scripts/phpadmin.test1.com/php-fcgi-starter
-web_001.web_001 /tmp/var/www/test1.com/web
-web_002.web_002 /tmp/var/www/phpadmin.test1.com/web
--R web_002.web_002 /tmp/var/www/php-fcgi-scripts/phpadmin.test1.com
-web_002.web_002 /tmp/var/www/php-fcgi-scripts/phpadmin.test1.com/php-fcgi-starter

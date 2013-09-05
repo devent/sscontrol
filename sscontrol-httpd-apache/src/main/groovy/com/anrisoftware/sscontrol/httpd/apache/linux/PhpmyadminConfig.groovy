@@ -55,11 +55,11 @@ class PhpmyadminConfig {
 		phpmyadminCommandsTemplate = phpmyadminTemplates.getResource "commands"
 	}
 
-	def deployService(Domain domain, PhpmyadminService service, Map domainUser, List serviceConfig) {
+	def deployService(Domain domain, PhpmyadminService service, List serviceConfig) {
 		fcgiConfig.script = script
 		installPackages phpmyadminPackages
 		fcgiConfig.enableFcgi()
-		fcgiConfig.deployConfig domain, domainUser
+		fcgiConfig.deployConfig domain
 		deployConfiguration service
 		reconfigureService()
 		importTables service

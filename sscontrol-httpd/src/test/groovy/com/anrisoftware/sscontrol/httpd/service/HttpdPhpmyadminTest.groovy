@@ -26,6 +26,7 @@ import org.junit.Test
 
 import com.anrisoftware.sscontrol.core.api.ServiceLoader as SscontrolServiceLoader
 import com.anrisoftware.sscontrol.core.api.ServicesRegistry
+import com.anrisoftware.sscontrol.httpd.statements.domain.Domain
 
 /**
  * @see HttpdServiceImpl
@@ -43,5 +44,9 @@ class HttpdPhpmyadminTest extends HttpdTestUtil {
 		def profile = registry.getService("profile")[0]
 		loader.loadService phpmyadminScript, profile
 		HttpdServiceImpl service = registry.getService("httpd")[0]
+
+		Domain domain = service.domains[2]
+		assert domain.domainUser.name == "www-data"
+		assert domain.domainUser.group == "www-data"
 	}
 }

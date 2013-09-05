@@ -16,17 +16,17 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd-apache. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.apache.ubuntu
+package com.anrisoftware.sscontrol.httpd.apache.phpmyadmin.ubuntu_10_04
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
-import static com.anrisoftware.sscontrol.httpd.apache.ubuntu.UbuntuResources.*
+import static com.anrisoftware.sscontrol.httpd.apache.core.ubuntu_10_04.UbuntuResources.*
+import static com.anrisoftware.sscontrol.httpd.apache.phpmyadmin.ubuntu_10_04.PhpmyadminResources.*
 import static org.apache.commons.io.FileUtils.*
 import groovy.util.logging.Slf4j
 
 import org.junit.Test
 
-import com.anrisoftware.sscontrol.core.api.ServiceLoader as SscontrolServiceLoader
-import com.anrisoftware.sscontrol.core.api.ServicesRegistry
+import com.anrisoftware.sscontrol.httpd.apache.ubuntu.UbuntuTestUtil
 
 /**
  * Test Apache on a Ubuntu 10.04 server.
@@ -35,30 +35,28 @@ import com.anrisoftware.sscontrol.core.api.ServicesRegistry
  * @since 1.0
  */
 @Slf4j
-class Ubuntu_10_04_Phpmyadmin_Test extends UbuntuTestUtil {
+class PhpmyadminTest extends UbuntuTestUtil {
 
 	@Test
 	void "phpmyadmin"() {
-		phpmyadminMysqlCommand.createCommand tmpdir
-		phpmyadminCreateTablesSql.createFile tmpdir
-		phpmyadminConfig.createFile tmpdir
+		copyUbuntuFiles tmpdir
 
-		loader.loadService ubuntu1004Profile.resource, null
+		loader.loadService profile.resource, null
 		def profile = registry.getService("profile")[0]
-		loader.loadService httpdPhpmyadminScript.resource, profile
+		loader.loadService httpdScript.resource, profile
 
 		registry.allServices.each { it.call() }
 		log.info "Run service again to ensure that configuration is not set double."
 		registry.allServices.each { it.call() }
 
-		assertFileContent ubuntu1004DefaultConf.asFile(tmpdir), ubuntu1004DefaultConf
-		assertFileContent phpmyadminDomainsConf.asFile(tmpdir), phpmyadminDomainsConf
-		assertStringContent phpmyadminTest1comConf.replaced(tmpdir, tmpdir, "/tmp"), phpmyadminTest1comConf.toString()
-		assertStringContent phpmyadminTest1comSslConf.replaced(tmpdir, tmpdir, "/tmp"), phpmyadminTest1comSslConf.toString()
-		assertStringContent phpmyadminPhpadminTest1comSslConf.replaced(tmpdir, tmpdir, "/tmp"), phpmyadminPhpadminTest1comSslConf.toString()
-		assertFileContent phpmyadminPhpadminTest1comSslFcgiScript.asFile(tmpdir), phpmyadminPhpadminTest1comSslFcgiScript
-		assertStringContent phpmyadminChownOut.replaced(tmpdir, tmpdir, "/tmp"), phpmyadminChownOut.toString()
-		assertStringContent phpmyadminChmodOut.replaced(tmpdir, tmpdir, "/tmp"), phpmyadminChmodOut.toString()
+		assertFileContent defaultConf.asFile(tmpdir), defaultConf
+		assertFileContent domainsConf.asFile(tmpdir), PhpmyadminResources.domainsConf
+		assertStringContent test1comConf.replaced(tmpdir, tmpdir, "/tmp"), test1comConf.toString()
+		assertStringContent test1comSslConf.replaced(tmpdir, tmpdir, "/tmp"), test1comSslConf.toString()
+		assertStringContent phpadminTest1comSslConf.replaced(tmpdir, tmpdir, "/tmp"), phpadminTest1comSslConf.toString()
+		assertFileContent phpadminTest1comSslFcgiScript.asFile(tmpdir), phpadminTest1comSslFcgiScript
+		assertStringContent chownOut.replaced(tmpdir, tmpdir, "/tmp"), chownOut.toString()
+		assertStringContent chmodOut.replaced(tmpdir, tmpdir, "/tmp"), chmodOut.toString()
 		//assertFileContent phpmyadminConfigExpecting.asFile(tmpdir), phpmyadminConfigExpecting
 	}
 }

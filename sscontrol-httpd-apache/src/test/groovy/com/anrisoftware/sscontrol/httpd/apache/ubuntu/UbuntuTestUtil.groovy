@@ -19,7 +19,6 @@
 package com.anrisoftware.sscontrol.httpd.apache.ubuntu
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
-import static com.anrisoftware.sscontrol.httpd.apache.ubuntu.UbuntuResources.*
 
 import org.junit.Before
 import org.junit.BeforeClass
@@ -62,7 +61,6 @@ class UbuntuTestUtil {
 	void createTemp() {
 		tmpdir = tmp.newFolder("apache-ubuntu-10-04")
 		variables = [tmp: tmpdir.absoluteFile]
-		copyUbuntuFiles tmpdir
 	}
 
 	@Before

@@ -16,9 +16,9 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd-apache. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.apache.ubuntu
+package com.anrisoftware.sscontrol.httpd.apache.core.ubuntu_10_04
 
-import static com.anrisoftware.sscontrol.httpd.apache.ubuntu.UbuntuResources.*
+import static com.anrisoftware.sscontrol.httpd.apache.core.ubuntu_10_04.UbuntuResources.*
 
 httpd {
 	domain "test1.com", address: "192.168.0.50", port: 80, {

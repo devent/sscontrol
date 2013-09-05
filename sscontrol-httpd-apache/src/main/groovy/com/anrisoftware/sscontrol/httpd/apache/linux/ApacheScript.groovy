@@ -143,8 +143,12 @@ abstract class ApacheScript extends LinuxScript {
 	 */
 	File getSitesAvailableDir() {
 		def path = profileProperty("sites_available_directory", defaultProperties)
-		def file = new File(path)
-		return file.absolute ? file : new File(configurationDir, path)
+		if (path instanceof File) {
+			return path
+		} else {
+			def file = new File(path)
+			return file.absolute ? file : new File(configurationDir, path)
+		}
 	}
 
 	/**
@@ -157,8 +161,12 @@ abstract class ApacheScript extends LinuxScript {
 	 */
 	File getConfigIncludeDir() {
 		def path = profileProperty("config_include_directory", defaultProperties)
-		def file = new File(path)
-		return file.absolute ? file : new File(configurationDir, path)
+		if (path instanceof File) {
+			return path
+		} else {
+			def file = new File(path)
+			return file.absolute ? file : new File(configurationDir, path)
+		}
 	}
 
 	/**

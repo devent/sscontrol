@@ -16,7 +16,9 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd-apache. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.apache.ubuntu
+package com.anrisoftware.sscontrol.httpd.apache.authfile.ubuntu_10_04
+
+import com.anrisoftware.sscontrol.httpd.apache.core.ubuntu_10_04.UbuntuResources;
 
 httpd {
 	domain "test1.com", address: "192.168.0.50", {
@@ -27,7 +29,7 @@ httpd {
 		certification_file UbuntuResources.certCrt.resource
 		certification_key_file UbuntuResources.certKey.resource
 		redirect to_www
-		setup_auth provider: file, name: "private", appending: true, {
+		setup_auth provider: file, name: "private", {
 			location "private"
 			require valid_user
 			require group: "admin"

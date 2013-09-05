@@ -62,6 +62,7 @@ class PhpmyadminConfig {
 		fcgiConfig.deployConfig domain
 		deployConfiguration service
 		reconfigureService()
+		changeOwnerConfiguration domain
 		importTables service
 		createDomainConfig domain, service, serviceConfig
 	}
@@ -150,6 +151,15 @@ class PhpmyadminConfig {
 		new TokenTemplate(search, replace)
 	}
 
+	def changeOwnerConfiguration(Domain domain) {
+		def user = domain.domainUser
+		script.changeOwner user: "root", group: user.group, files: [
+			localBlowfishFile,
+			localConfigFile,
+			localDatabaseConfigFile
+		]
+	}
+
 	def reconfigureService() {
 		def worker = scriptCommandFactory.create(
 				phpmyadminCommandsTemplate, "reconfigure",
@@ -201,6 +211,42 @@ class PhpmyadminConfig {
 	 */
 	File getDatabaseScriptFile() {
 		profileProperty("phpmyadmin_database_script_file", defaultProperties) as File
+	}
+
+	/**
+	 * Phpmyadmin local configuration file, for
+	 * example {@code "/var/lib/phpmyadmin/config.inc.php"}.
+	 *
+	 * <ul>
+	 * <li>profile property {@code "phpmyadmin_local_config_file"}</li>
+	 * </ul>
+	 */
+	File getLocalConfigFile() {
+		profileProperty("phpmyadmin_local_config_file", defaultProperties) as File
+	}
+
+	/**
+	 * Phpmyadmin local blowfish secret file, for
+	 * example {@code "/var/lib/phpmyadmin/blowfish_secret.inc.php"}.
+	 *
+	 * <ul>
+	 * <li>profile property {@code "phpmyadmin_local_blowfish_secret_file"}</li>
+	 * </ul>
+	 */
+	File getLocalBlowfishFile() {
+		profileProperty("phpmyadmin_local_blowfish_secret_file", defaultProperties) as File
+	}
+
+	/**
+	 * Phpmyadmin local database configuration file, for
+	 * example {@code "/etc/phpmyadmin/config-db.php"}.
+	 *
+	 * <ul>
+	 * <li>profile property {@code "phpmyadmin_local_database_config_file"}</li>
+	 * </ul>
+	 */
+	File getLocalDatabaseConfigFile() {
+		profileProperty("phpmyadmin_local_database_config_file", defaultProperties) as File
 	}
 
 	def propertyMissing(String name) {

@@ -48,7 +48,10 @@ profile "ubuntu_10_04", {
 		domains_config_file "000-robobee-domains.conf"
 		// phpmyadmin
 		mysql_command UbuntuResources.mysqlCommand.asFile(tmp)
-		phpmyadmin_configuration_file PhpmyadminResources.config.asFile(tmp)
+		phpmyadmin_configuration_file PhpmyadminResources.dbconfigConfig.asFile(tmp)
 		phpmyadmin_database_script_file PhpmyadminResources.createTablesSql.asFile(tmp)
+		phpmyadmin_local_config_file PhpmyadminResources.localConfig.asFile(tmp)
+		phpmyadmin_local_blowfish_secret_file PhpmyadminResources.localBlowfish.asFile(tmp)
+		phpmyadmin_local_database_config_file PhpmyadminResources.localDbConfig.asFile(tmp)
 	}
 }

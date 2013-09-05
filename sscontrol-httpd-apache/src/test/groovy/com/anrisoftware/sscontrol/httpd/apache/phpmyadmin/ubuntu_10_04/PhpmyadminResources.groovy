@@ -41,13 +41,19 @@ enum PhpmyadminResources {
 	chmodOut("/bin/chmod.out", PhpmyadminResources.class.getResource("chmod_out.txt")),
 	useraddOut("/usr/sbin/useradd.out", PhpmyadminResources.class.getResource("useradd_out.txt")),
 	groupaddOut("/usr/sbin/groupadd.out", PhpmyadminResources.class.getResource("groupadd_out.txt")),
-	config("/etc/dbconfig-common/phpmyadmin.conf", PhpmyadminResources.class.getResource("phpmyadmin.conf")),
+	dbconfigConfig("/etc/dbconfig-common/phpmyadmin.conf", PhpmyadminResources.class.getResource("phpmyadmin.conf")),
 	configExpecting("/etc/dbconfig-common/phpmyadmin.conf", PhpmyadminResources.class.getResource("phpmyadmin_conf_expecting.txt")),
 	createTablesSql("/usr/share/doc/phpmyadmin/examples/create_tables.sql.gz", PhpmyadminResources.class.getResource("create_tables.sql.gz")),
+	localConfig("/var/lib/phpmyadmin/config.inc.php", PhpmyadminResources.class.getResource("config_inc_php.txt")),
+	localBlowfish("/var/lib/phpmyadmin/blowfish_secret.inc.php", PhpmyadminResources.class.getResource("blowfish_secret_inc_php.txt")),
+	localDbConfig("/etc/phpmyadmin/config-db.php", PhpmyadminResources.class.getResource("config_db_php.txt")),
 
 	static copyUbuntuFiles(File parent) {
 		createTablesSql.createFile parent
-		config.createFile parent
+		dbconfigConfig.createFile parent
+		localConfig.createFile parent
+		localBlowfish.createFile parent
+		localDbConfig.createFile parent
 	}
 
 	ResourcesUtils resources

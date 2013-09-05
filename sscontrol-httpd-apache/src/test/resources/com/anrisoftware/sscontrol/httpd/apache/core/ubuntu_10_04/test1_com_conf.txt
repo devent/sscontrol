@@ -3,6 +3,7 @@
     # domain test1.com
     ServerName test1.com
     DocumentRoot /tmp/var/www/test1.com/web
+    SuexecUserGroup web_001 web_001
     <Directory /tmp/var/www/test1.com/web>
         AllowOverride None
         Order allow,deny

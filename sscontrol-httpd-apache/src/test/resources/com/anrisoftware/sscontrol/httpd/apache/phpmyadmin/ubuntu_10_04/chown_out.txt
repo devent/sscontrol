@@ -2,7 +2,13 @@ web_001.web_001 /tmp/var/www/test1.com/web
 www-data.www-data /tmp/var/www/phpadmin.test1.com/web
 -R www-data.www-data /tmp/var/www/php-fcgi-scripts/phpadmin.test1.com
 www-data.www-data /tmp/var/www/php-fcgi-scripts/phpadmin.test1.com/php-fcgi-starter
+root.www-data /tmp/var/lib/phpmyadmin/blowfish_secret.inc.php
+root.www-data /tmp/var/lib/phpmyadmin/config.inc.php
+root.www-data /tmp/etc/phpmyadmin/config-db.php
 web_001.web_001 /tmp/var/www/test1.com/web
 www-data.www-data /tmp/var/www/phpadmin.test1.com/web
 -R www-data.www-data /tmp/var/www/php-fcgi-scripts/phpadmin.test1.com
 www-data.www-data /tmp/var/www/php-fcgi-scripts/phpadmin.test1.com/php-fcgi-starter
+root.www-data /tmp/var/lib/phpmyadmin/blowfish_secret.inc.php
+root.www-data /tmp/var/lib/phpmyadmin/config.inc.php
+root.www-data /tmp/etc/phpmyadmin/config-db.php

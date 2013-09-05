@@ -34,14 +34,14 @@ enum AuthfileResources {
 	httpdScript("Httpd.groovy", AuthfileResources.class.getResource("HttpdAuthFile.groovy")),
 	httpdAppendingScript("Httpd.groovy", AuthfileResources.class.getResource("HttpdAuthFileAppending.groovy")),
 	// AuthFile
-	domainsConf("/etc/apache2/conf.d/000-robobee-domains.conf", AuthfileResources.class.getResource("ubuntu_10_04_authfile-domains_conf.txt")),
-	test1comConf("/etc/apache2/sites-available/100-robobee-test1.com.conf", AuthfileResources.class.getResource("ubuntu_10_04_authfile-test1_com_conf.txt")),
-	test1comSslConf("/etc/apache2/sites-available/100-robobee-test1.com-ssl.conf", AuthfileResources.class.getResource("ubuntu_10_04_authfile-test1_com_ssl_conf.txt")),
-	privatepasswd("/var/www/test1.com/auth/private-digest.passwd", AuthfileResources.class.getResource("ubuntu_10_04_authfile-privatepasswd.txt")),
-	groupOut("/var/www/test1.com/auth/private.group", AuthfileResources.class.getResource("ubuntu_10_04_authfile-private_group.txt")),
-	enmodOut("/usr/sbin/a2enmod.out", AuthfileResources.class.getResource("ubuntu_10_04_authfile-enmod_out.txt")),
+	domainsConf("/etc/apache2/conf.d/000-robobee-domains.conf", AuthfileResources.class.getResource("domains_conf.txt")),
+	test1comConf("/etc/apache2/sites-available/100-robobee-test1.com.conf", AuthfileResources.class.getResource("test1_com_conf.txt")),
+	test1comSslConf("/etc/apache2/sites-available/100-robobee-test1.com-ssl.conf", AuthfileResources.class.getResource("test1_com_ssl_conf.txt")),
+	privatepasswd("/var/www/test1.com/auth/private-digest.passwd", AuthfileResources.class.getResource("privatepasswd.txt")),
+	groupOut("/var/www/test1.com/auth/private.group", AuthfileResources.class.getResource("private_group.txt")),
+	enmodOut("/usr/sbin/a2enmod.out", AuthfileResources.class.getResource("enmod_out.txt")),
 	// AuthFileAppending
-	appendingPrivatepasswd("/var/www/test1.com/auth/private-digest.passwd", AuthfileResources.class.getResource("ubuntu_10_04_authfileappending-privatepasswd.txt")),
+	appendingPrivatepasswd("/var/www/test1.com/auth/private-digest.passwd", AuthfileResources.class.getResource("appending-privatepasswd.txt")),
 
 	ResourcesUtils resources
 

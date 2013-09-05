@@ -13,8 +13,6 @@
     SSLCertificateFile /tmp/var/www/phpadmin.test1.com/ssl/cert_crt.txt
     SSLCertificateKeyFile /tmp/var/www/phpadmin.test1.com/ssl/cert_key.txt
 
-    Alias / /tmp/var/www/phpadmin.test1.com/web/
-
     # phpmyadmin
 
     Alias /phpmyadmin /usr/share/phpmyadmin

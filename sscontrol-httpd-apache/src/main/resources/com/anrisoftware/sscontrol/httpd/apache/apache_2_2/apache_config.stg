@@ -27,8 +27,6 @@ Domain(properties, domain, servicesConfig) ::= <<
     <domainBody(properties, domain)>
 
     <domain.redirects:domainRedirects(domain);separator="\n">
-    <domainAlias(properties, domain)>
-
     <domain.auths:domainAuth(properties, domain);separator="\n">
     <servicesConfig;separator="\n">
 \</VirtualHost>
@@ -43,8 +41,6 @@ SslDomain(properties, domain, servicesConfig) ::= <<
     <domainCerts(properties, domain)>
 
     <domain.redirects:domainRedirects(domain);separator="\n">
-    <domainAlias(properties, domain)>
-
     <domain.auths:domainAuth(properties, domain);separator="\n">
     <servicesConfig;separator="\n">
 \</VirtualHost>

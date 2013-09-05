@@ -19,6 +19,4 @@
     RewriteCond %{HTTP_HOST} ^test1\.com$ [NC]
     RewriteRule ^(.*)$ https://www.test1.com$1 [L,R=301]
 
-    Alias / /tmp/var/www/test1.com/web/
-
 </VirtualHost>

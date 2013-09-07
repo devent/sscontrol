@@ -18,6 +18,7 @@
  */
 package com.anrisoftware.sscontrol.ldap.service;
 
+import com.anrisoftware.sscontrol.ldap.dbindex.DbIndexModule;
 import com.anrisoftware.sscontrol.ldap.statements.StatementsModule;
 import com.google.inject.AbstractModule;
 
@@ -32,5 +33,6 @@ class LdapModule extends AbstractModule {
 	@Override
 	protected void configure() {
 		install(new StatementsModule());
+		install(new DbIndexModule());
 	}
 }

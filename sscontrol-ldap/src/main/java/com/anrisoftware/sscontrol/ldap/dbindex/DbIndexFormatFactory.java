@@ -1,4 +1,4 @@
-package com.anrisoftware.sscontrol.ldap.openldap.dbindex;
+package com.anrisoftware.sscontrol.ldap.dbindex;
 
 /**
  * Factory to create the database index format.

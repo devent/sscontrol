@@ -48,6 +48,7 @@ class LdapTest extends LdapTestUtil {
 		service.admin.domain.size() == 2
 		service.admin.domain[0] == "ubuntutest"
 		service.admin.domain[1] == "com"
+		service.indices.size() == 2
 		service.scripts.each { String it ->
 			assert it.startsWith("# LDIF Export for o=deventorg,dc=ubuntutest,dc=com")
 		}

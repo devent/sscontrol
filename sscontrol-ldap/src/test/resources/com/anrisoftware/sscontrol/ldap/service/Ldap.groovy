@@ -20,6 +20,8 @@ package com.anrisoftware.sscontrol.ldap.service
 
 ldap {
 	admin "admin", password: "adminpass", domain: "ubuntutest.com"
+	index "uniqueName", type: equality
+	index "foo", type: [equality, substring]
 	script LdapResources.exportLdif
 	script """# LDIF Export for o=deventorg,dc=ubuntutest,dc=com
 # Server: My LDAP Server (127.0.0.1)

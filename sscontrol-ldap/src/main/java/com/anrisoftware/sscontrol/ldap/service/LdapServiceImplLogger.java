@@ -20,6 +20,8 @@ package com.anrisoftware.sscontrol.ldap.service;
 
 import static com.anrisoftware.sscontrol.ldap.service.LdapServiceImplLogger._.admin_set_debug;
 import static com.anrisoftware.sscontrol.ldap.service.LdapServiceImplLogger._.admin_set_info;
+import static com.anrisoftware.sscontrol.ldap.service.LdapServiceImplLogger._.index_added_debug;
+import static com.anrisoftware.sscontrol.ldap.service.LdapServiceImplLogger._.index_added_info;
 import static com.anrisoftware.sscontrol.ldap.service.LdapServiceImplLogger._.profileSet;
 import static com.anrisoftware.sscontrol.ldap.service.LdapServiceImplLogger._.profileSetDebug;
 import static com.anrisoftware.sscontrol.ldap.service.LdapServiceImplLogger._.script_resource_added_debug;
@@ -29,6 +31,7 @@ import static org.apache.commons.lang3.StringUtils.substring;
 import com.anrisoftware.globalpom.log.AbstractLogger;
 import com.anrisoftware.sscontrol.core.api.ProfileService;
 import com.anrisoftware.sscontrol.core.api.Service;
+import com.anrisoftware.sscontrol.ldap.dbindex.DbIndex;
 import com.anrisoftware.sscontrol.ldap.statements.Admin;
 
 /**
@@ -52,7 +55,11 @@ class LdapServiceImplLogger extends AbstractLogger {
 		script_resource_added_debug("Script resource '{}' added for {}."),
 
 		script_resource_added_info(
-				"Script resource '{}' added for service '{}'.");
+				"Script resource '{}' added for service '{}'."),
+
+		index_added_debug("Index {} added for {}."),
+
+		index_added_info("Index {} added for service '{}'.");
 
 		private String name;
 
@@ -96,6 +103,14 @@ class LdapServiceImplLogger extends AbstractLogger {
 		} else {
 			String str = substring(resource.toString(), 0, 64);
 			info(script_resource_added_info, str, service.getName());
+		}
+	}
+
+	void indexAdded(LdapServiceImpl service, DbIndex index) {
+		if (isDebugEnabled()) {
+			debug(index_added_debug, index, service);
+		} else {
+			debug(index_added_info, index.getNames(), service.getName());
 		}
 	}
 

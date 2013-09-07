@@ -1,4 +1,4 @@
-package com.anrisoftware.sscontrol.ldap.openldap.dbindex;
+package com.anrisoftware.sscontrol.ldap.dbindex;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;

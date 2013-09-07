@@ -1,7 +1,7 @@
-package com.anrisoftware.sscontrol.ldap.openldap.dbindex
+package com.anrisoftware.sscontrol.ldap.dbindex
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
-import static com.anrisoftware.sscontrol.ldap.openldap.dbindex.IndexType.*
+import static com.anrisoftware.sscontrol.ldap.dbindex.IndexType.*
 
 import java.text.Format
 
@@ -11,6 +11,12 @@ import org.junit.Test
 import com.google.inject.Guice
 import com.google.inject.Injector
 
+/**
+ * @see DbIndexFormat
+ *
+ * @author Erwin Mueller, erwin.mueller@deventm.org
+ * @since 1.0
+ */
 class DbIndexFormatTest {
 
 	@Test

@@ -19,10 +19,17 @@
 package com.anrisoftware.sscontrol.ldap.service;
 
 import static com.anrisoftware.sscontrol.ldap.service.LdapFactory.NAME;
+import static java.util.Arrays.asList;
+import static org.apache.commons.lang3.StringUtils.split;
 import groovy.lang.Script;
 
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.inject.Inject;
 
@@ -32,6 +39,9 @@ import com.anrisoftware.sscontrol.core.api.Service;
 import com.anrisoftware.sscontrol.core.api.ServiceException;
 import com.anrisoftware.sscontrol.core.api.ServiceScriptFactory;
 import com.anrisoftware.sscontrol.core.service.AbstractService;
+import com.anrisoftware.sscontrol.ldap.dbindex.DbIndex;
+import com.anrisoftware.sscontrol.ldap.dbindex.DbIndexFactory;
+import com.anrisoftware.sscontrol.ldap.dbindex.IndexType;
 import com.anrisoftware.sscontrol.ldap.statements.Admin;
 import com.anrisoftware.sscontrol.ldap.statements.AdminFactory;
 import com.anrisoftware.sscontrol.ldap.statements.Scripts;
@@ -55,6 +65,15 @@ public class LdapServiceImpl extends AbstractService {
 
 	@Inject
 	private Scripts scripts;
+
+	@Inject
+	private DbIndexFactory indexFactory;
+
+	private final List<DbIndex> indices;
+
+	LdapServiceImpl() {
+		this.indices = new ArrayList<DbIndex>();
+	}
 
 	@Override
 	protected Script getScript(String profileName) throws ServiceException {
@@ -97,6 +116,48 @@ public class LdapServiceImpl extends AbstractService {
 
 	public Admin getAdmin() {
 		return admin;
+	}
+
+	public IndexType getPresent() {
+		return IndexType.present;
+	}
+
+	public IndexType getApprox() {
+		return IndexType.approx;
+	}
+
+	public IndexType getEquality() {
+		return IndexType.equality;
+	}
+
+	public IndexType getNone() {
+		return IndexType.none;
+	}
+
+	public IndexType getSubstring() {
+		return IndexType.substring;
+	}
+
+	public void index(Map<String, Object> args, String namess) {
+		Set<String> names = new HashSet<String>(asList(split(namess, ',')));
+		Set<IndexType> types = new HashSet<IndexType>();
+		if (args.containsKey("type")) {
+			Object typeo = args.get("type");
+			if (typeo instanceof IndexType) {
+				types.add((IndexType) typeo);
+			} else if (typeo instanceof Collection) {
+				@SuppressWarnings("unchecked")
+				Collection<IndexType> typesc = (Collection<IndexType>) typeo;
+				types.addAll(typesc);
+			}
+		}
+		DbIndex index = indexFactory.create(names, types);
+		indices.add(index);
+		log.indexAdded(this, index);
+	}
+
+	public List<DbIndex> getIndices() {
+		return indices;
 	}
 
 	public void script(Object resource) throws URISyntaxException {

@@ -1,4 +1,4 @@
-package com.anrisoftware.sscontrol.ldap.openldap.dbindex;
+package com.anrisoftware.sscontrol.ldap.dbindex;
 
 import static java.util.Arrays.asList;
 import static org.apache.commons.lang3.StringUtils.split;

@@ -1,7 +1,7 @@
-package com.anrisoftware.sscontrol.ldap.openldap.dbindex;
+package com.anrisoftware.sscontrol.ldap.dbindex;
 
-import static com.anrisoftware.sscontrol.ldap.openldap.dbindex.DbIndexFormatLogger._.error_parse;
-import static com.anrisoftware.sscontrol.ldap.openldap.dbindex.DbIndexFormatLogger._.error_parse1;
+import static com.anrisoftware.sscontrol.ldap.dbindex.DbIndexFormatLogger._.error_parse;
+import static com.anrisoftware.sscontrol.ldap.dbindex.DbIndexFormatLogger._.error_parse1;
 import static java.lang.String.format;
 
 import java.text.ParseException;

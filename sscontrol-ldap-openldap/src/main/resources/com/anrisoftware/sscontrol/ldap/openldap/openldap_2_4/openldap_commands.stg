@@ -1,0 +1,25 @@
+enableSites(command, sites) ::= <<
+<sites:{ site | <command> <site>};separator="\n">
+
+>>
+
+enableMods(command, mods) ::= <<
+<mods:{ mod | <command> <mod>};separator="\n">
+
+>>
+
+createPasswordFile(command, file, users) ::= <<
+<command> -cb <file> <first(users):{ user | <user.name>}> <first(users):{ user | <user.password>}>
+<rest(users):{ user | <command> -b <file> <user.name> <user.password>};separator="\n">
+
+>>
+
+appendPasswordFile(command, file, users) ::= <<
+<users:{ user | <command> -b <file> <user.name> <user.password>};separator="\n">
+
+>>
+
+appendDigestPasswordFile(file, auth, users) ::= <<
+<users:{ user | (echo -n "<user.name>:<auth.name>:" && echo -n "<user.name>:<auth.name>:<user.password>" | md5sum) | cut -d ' ' -f 1 >\> <file>};separator="\n">
+
+>>

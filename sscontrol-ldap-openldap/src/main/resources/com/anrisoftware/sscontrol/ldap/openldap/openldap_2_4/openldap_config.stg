@@ -1,0 +1,85 @@
+defaultConfiguration(properties, service, password) ::= <<
+# Load dynamic backend modules
+dn: cn=module{0},cn=config
+objectClass: olcModuleList
+cn: module
+olcModulepath: <properties.moduleDirectory>
+olcModuleload: {0}back_hdb
+
+# Create the database
+dn: olcDatabase={1}hdb,cn=config
+objectClass: olcDatabaseConfig
+objectClass: olcHdbConfig
+olcDatabase: {1}hdb
+olcDbDirectory: <properties.databaseDirectory>
+olcSuffix: <domainComponent(service.admin.domain)>
+olcRootDN: cn=<service.admin.user>,<domainComponent(service.admin.domain)>
+olcRootPW: <password>
+olcDbConfig: {0}set_cachesize <properties.cacheSizeGbytes> <properties.cacheSizeBytes> <properties.cacheSegments>
+olcDbConfig: {1}set_lk_max_objects <properties.maxLockObjects>
+olcDbConfig: {2}set_lk_max_locks <properties.maxLocks>
+olcDbConfig: {3}set_lk_max_lockers <properties.maxLockers>
+olcLastMod: TRUE
+olcDbCheckpoint: <properties.checkpointKbytes> <properties.checkpointMinutes>
+<databaseIndices(service)>
+olcDbIndex: uid pres,eq
+olcDbIndex: cn,sn,mail pres,eq,approx,sub
+olcDbIndex: objectClass eq
+>>
+
+baseConfiguration(properties, service, password) ::= <<
+dn: dc=example,dc=com
+objectClass: dcObject
+objectclass: organization
+o: example.com
+dc: example
+description: My LDAP Root
+
+dn: cn=admin,dc=example,dc=com
+objectClass: simpleSecurityObject
+objectClass: organizationalRole
+cn: admin
+userPassword: {MD5}Gnmk1g3mcY6OWzJuM4rlMw==
+description: LDAP administrator
+>>
+
+configConfiguration(properties, service) ::= <<
+dn: cn=config
+changetype: modify
+
+dn: olcDatabase={-1}frontend,cn=config
+changetype: modify
+
+dn: olcDatabase={0}config,cn=config
+changetype: modify
+
+dn: olcDatabase={0}config,cn=config
+changetype: modify
+add: olcRootDN
+olcRootDN: cn=admin,cn=config
+
+dn: olcDatabase={0}config,cn=config
+changetype: modify
+add: olcRootPW
+olcRootPW: {MD5}Gnmk1g3mcY6OWzJuM4rlMw==
+
+dn: olcDatabase={0}config,cn=config
+changetype: modify
+delete: olcAccess
+>>
+
+aclConfiguration(properties, service) ::= <<
+dn: olcDatabase={1}hdb,cn=config
+add: olcAccess
+olcAccess: to attrs=userPassword,shadowLastChange by dn="cn=admin,dc=example,dc=com" write by anonymous auth by self write by * none
+olcAccess: to dn.base="" by * read
+olcAccess: to * by dn="cn=admin,dc=example,dc=com" write by * read
+>>
+
+domainComponent(domain) ::= <%
+<first(domain):{ d | dc=<d>}><rest(domain);separated=",dc=">
+%>
+
+databaseIndices(service) ::= <<
+<service.indices:{ i | olcDbIndex: <i.names;separated=","> }> <i.types;separated=","> };separated="\n">
+>>

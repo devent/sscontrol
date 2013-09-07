@@ -661,6 +661,32 @@ abstract class LinuxScript extends Script {
 	}
 
 	/**
+	 * Returns the profile path property. If the profile property was not set
+	 * return the default value from the default properties. If the path is
+	 * not absolute then it is assume to be under the configuration directory.
+	 *
+	 * @param key
+	 * 			  the key of the profile property.
+	 *
+	 * @param p
+	 * 			  the {@link ContextProperties} containing the property values,
+	 * 			  defaults to {@link #getDefaultProperties()}.
+	 *
+	 * @param parent
+	 * 			  the parent {@link File} directory,
+	 * 			  defaults to {@link #getConfigurationDir()}.
+	 */
+	File propertyFile(String key, ContextProperties p=defaultProperties, File parent=configurationDir) {
+		def path = profileProperty(key, p)
+		if (path instanceof File) {
+			return path
+		} else {
+			def file = new File(path)
+			return file.absolute ? file : new File(parent, path)
+		}
+	}
+
+	/**
 	 * Returns the default properties for the service, as in example:
 	 *
 	 * <pre>

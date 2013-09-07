@@ -24,7 +24,7 @@ import javax.inject.Inject
 
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.sscontrol.core.service.LinuxScript
-import com.anrisoftware.sscontrol.ldap.openldap.dbindex.DbIndexFormatFactory
+import com.anrisoftware.sscontrol.ldap.dbindex.DbIndexFormatFactory;
 
 /**
  * OpenLDAP service on a general Linux system.
@@ -86,7 +86,7 @@ abstract class OpenldapScript extends LinuxScript {
 	 * </ul>
 	 */
 	File getModuleDirectory() {
-		propertyProperty("module_directory", defaultProperties) as File
+		profileProperty("module_directory", defaultProperties) as File
 	}
 
 	/**
@@ -97,7 +97,7 @@ abstract class OpenldapScript extends LinuxScript {
 	 * </ul>
 	 */
 	File getDatabaseDirectory() {
-		propertyProperty("database_directory", defaultProperties) as File
+		profileProperty("database_directory", defaultProperties) as File
 	}
 
 	/**

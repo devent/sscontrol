@@ -22,6 +22,8 @@ import javax.inject.Inject
 
 import org.apache.commons.io.FileUtils
 
+import com.anrisoftware.sscontrol.workers.command.script.ScriptCommandWorker
+
 /**
  * Deploys database, base and administrator, systems ACL's and LDAP ACL's.
  *
@@ -37,20 +39,32 @@ class Openldap_2_4Config {
 
 	void deployConfig() {
 		deployDatabase()
-		deployBase()
-		deploySystem()
-		deployLdap()
+		//deployBase()
+		//deploySystem()
+		//deployLdap()
 	}
 
 	private deployDatabase() {
-		def string = ldapConfigTemplate.getText true, "databaseConfig",
+		ScriptCommandWorker worker = scriptCommandFactory.create(
+				ldapCommandsTemplate, "makePassword",
+				"command", slappasswdCommand,
+				"password", service.admin.password)()
+		def password = worker.out
+		def string = ldapConfigTemplate.getText true, "dbConfig",
 				"properties", script,
-				"service", service
+				"service", service,
+				"password", password
 		FileUtils.write databaseConfigFile, string
-		log.databaseConfigDeployed script, databaseConfigFile
+		script.changeMod mod: "o-r", files: databaseConfigFile
+		worker = scriptCommandFactory.create(
+				ldapCommandsTemplate, "addEntry",
+				"command", ldapaddCommand,
+				"file", databaseConfigFile)()
+		log.databaseConfigDeployed script, databaseConfigFile, worker
 	}
 
 	private deployBase() {
+		def password = "aa"
 		def string = ldapConfigTemplate.getText true, "baseConfig",
 				"properties", script,
 				"service", service

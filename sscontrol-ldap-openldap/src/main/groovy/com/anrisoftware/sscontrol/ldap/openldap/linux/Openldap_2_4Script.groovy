@@ -24,8 +24,7 @@ import javax.inject.Inject
 
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.Templates
-import com.anrisoftware.sscontrol.ldap.openldap.dbindex.IndexType
-import com.anrisoftware.sscontrol.ldap.openldap.dbindex.IndexTypeRenderer
+import com.anrisoftware.sscontrol.ldap.dbindex.IndexTypeRenderer
 
 /**
  * Configures OpenLDAP 2.4 service.
@@ -38,6 +37,7 @@ abstract class Openldap_2_4Script extends OpenldapScript {
 	@Inject
 	Openldap_2_4ScriptLogger log
 
+	@Inject
 	Openldap_2_4Config openldapConfig
 
 	/**
@@ -57,15 +57,15 @@ abstract class Openldap_2_4Script extends OpenldapScript {
 
 	@Override
 	def run() {
-		apacheTemplates = templatesFactory.create "Openldap_2_4", [
-			IndexType.class,
-			new IndexTypeRenderer()
+		openldapTemplates = templatesFactory.create "Openldap_2_4", [
+			IndexType: new IndexTypeRenderer()
 		]
-		configTemplate = apacheTemplates.getResource "config"
-		ldapCommandsTemplate = apacheTemplates.getResource "commands"
+		ldapConfigTemplate = openldapTemplates.getResource "config"
+		ldapCommandsTemplate = openldapTemplates.getResource "commands"
 		openldapConfig.script = this
 		super.run()
 		deployDefaultConfig()
+		restartServices()
 	}
 
 	def deployDefaultConfig() {

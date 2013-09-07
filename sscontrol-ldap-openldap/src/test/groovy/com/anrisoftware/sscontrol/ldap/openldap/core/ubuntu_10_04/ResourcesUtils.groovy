@@ -18,25 +18,36 @@
  */
 package com.anrisoftware.sscontrol.ldap.openldap.core.ubuntu_10_04
 
-import static com.anrisoftware.sscontrol.httpd.apache.core.ubuntu_10_04.UbuntuResources.*
+import static com.anrisoftware.globalpom.utils.TestUtils.*
+import static org.apache.commons.io.FileUtils.*
 
-httpd {
-	domain "test1.com", address: "192.168.0.50", port: 80, {
-		redirect to_www
-		redirect http_to_https
+class ResourcesUtils {
+
+	String path
+
+	URL resource
+
+	File asFile(File parent) {
+		new File(parent, path)
 	}
-	ssl_domain "test1.com", address: "192.168.0.50", {
-		certification_file certCrt.resource
-		certification_key_file certKey.resource
-		redirect to_www
+
+	void createFile(File parent) {
+		assert resource : "Resource cannot be null for ${resource}"
+		copyURLToFile resource, new File(parent, path)
 	}
-	domain "test2.com", address: "192.168.0.51", root: "test2", {
-		redirect to_www
-		redirect http_to_https
+
+	void createCommand(File parent) {
+		assert resource : "Resource cannot be null for ${resource}"
+		copyResourceToCommand resource, new File(parent, path)
 	}
-	ssl_domain "test2.com", address: "192.168.0.51", use: "test2", {
-		redirect to_www
-		certification_file certCrt.resource
-		certification_key_file certKey.resource
+
+	String replaced(File parent, def search, def replace) {
+		String text = readFileToString(this.asFile(parent))
+		text.replaceAll(search.toString(), replace)
+	}
+
+	String toString() {
+		assert resource : "Resource cannot be null for ${resource}"
+		resourceToString resource
 	}
 }

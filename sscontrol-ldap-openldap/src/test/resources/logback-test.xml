@@ -37,6 +37,6 @@
 	<logger name="com.anrisoftware.sscontrol" level="DEBUG" />
 	<logger name="com.anrisoftware.sscontrol.workers.command" level="ERROR" />
     <logger name="com.anrisoftware.sscontrol.workers.command.script" level="DEBUG" />
-	<logger name="com.anrisoftware.sscontrol.httpd" level="ALL" />
+	<logger name="com.anrisoftware.sscontrol.ldap" level="ALL" />
 
 </configuration>

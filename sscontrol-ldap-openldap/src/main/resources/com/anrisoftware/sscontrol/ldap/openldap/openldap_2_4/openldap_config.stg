@@ -1,4 +1,4 @@
-defaultConfiguration(properties, service, password) ::= <<
+dbConfig(properties, service, password) ::= <<
 # Load dynamic backend modules
 dn: cn=module{0},cn=config
 objectClass: olcModuleList
@@ -13,7 +13,7 @@ objectClass: olcHdbConfig
 olcDatabase: {1}hdb
 olcDbDirectory: <properties.databaseDirectory>
 olcSuffix: <domainComponent(service.admin.domain)>
-olcRootDN: cn=<service.admin.user>,<domainComponent(service.admin.domain)>
+olcRootDN: cn=<service.admin.name>,<domainComponent(service.admin.domain)>
 olcRootPW: <password>
 olcDbConfig: {0}set_cachesize <properties.cacheSizeGbytes> <properties.cacheSizeBytes> <properties.cacheSegments>
 olcDbConfig: {1}set_lk_max_objects <properties.maxLockObjects>
@@ -25,9 +25,10 @@ olcDbCheckpoint: <properties.checkpointKbytes> <properties.checkpointMinutes>
 olcDbIndex: uid pres,eq
 olcDbIndex: cn,sn,mail pres,eq,approx,sub
 olcDbIndex: objectClass eq
+
 >>
 
-baseConfiguration(properties, service, password) ::= <<
+baseConfig(properties, service, password) ::= <<
 dn: dc=example,dc=com
 objectClass: dcObject
 objectclass: organization
@@ -43,7 +44,7 @@ userPassword: {MD5}Gnmk1g3mcY6OWzJuM4rlMw==
 description: LDAP administrator
 >>
 
-configConfiguration(properties, service) ::= <<
+systemConfig(properties, service) ::= <<
 dn: cn=config
 changetype: modify
 
@@ -68,7 +69,7 @@ changetype: modify
 delete: olcAccess
 >>
 
-aclConfiguration(properties, service) ::= <<
+aclConfig(properties, service) ::= <<
 dn: olcDatabase={1}hdb,cn=config
 add: olcAccess
 olcAccess: to attrs=userPassword,shadowLastChange by dn="cn=admin,dc=example,dc=com" write by anonymous auth by self write by * none
@@ -77,9 +78,9 @@ olcAccess: to * by dn="cn=admin,dc=example,dc=com" write by * read
 >>
 
 domainComponent(domain) ::= <%
-<first(domain):{ d | dc=<d>}><rest(domain);separated=",dc=">
+dc=<domain:{ d | <d>};separator=",dc=">
 %>
 
 databaseIndices(service) ::= <<
-<service.indices:{ i | olcDbIndex: <i.names;separated=","> }> <i.types;separated=","> };separated="\n">
+<service.indices:{ index | olcDbIndex: <index.names;separator=","> <index.types;separator=","> };separator="\n">
 >>

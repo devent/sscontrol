@@ -1,4 +1,0 @@
-web_001.web_001 /tmp/var/www/test1.com/web
-web_002.web_002 /tmp/var/www/test2.com/web
-web_001.web_001 /tmp/var/www/test1.com/web
-web_002.web_002 /tmp/var/www/test2.com/web

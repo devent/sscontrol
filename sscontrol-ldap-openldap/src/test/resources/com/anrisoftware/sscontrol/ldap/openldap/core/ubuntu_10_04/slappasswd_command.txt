@@ -1,0 +1,3 @@
+theCommand="$0"
+echo "$@" >> $theCommand.out
+echo -n "{SSHA}fOkEHm7GKIowh+1eBnFg66m/vEPO7cj1"

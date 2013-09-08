@@ -16,27 +16,28 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.statements.auth;
+package com.anrisoftware.sscontrol.httpd.statements.authfile;
 
-import static com.anrisoftware.sscontrol.httpd.statements.auth.AuthLogger._.group_added;
-import static com.anrisoftware.sscontrol.httpd.statements.auth.AuthLogger._.group_added1;
-import static com.anrisoftware.sscontrol.httpd.statements.auth.AuthLogger._.location_null;
-import static com.anrisoftware.sscontrol.httpd.statements.auth.AuthLogger._.user_added;
-import static com.anrisoftware.sscontrol.httpd.statements.auth.AuthLogger._.user_added1;
+import static com.anrisoftware.sscontrol.httpd.statements.authfile.AuthFileLogger._.group_added;
+import static com.anrisoftware.sscontrol.httpd.statements.authfile.AuthFileLogger._.group_added1;
+import static com.anrisoftware.sscontrol.httpd.statements.authfile.AuthFileLogger._.location_null;
+import static com.anrisoftware.sscontrol.httpd.statements.authfile.AuthFileLogger._.user_added;
+import static com.anrisoftware.sscontrol.httpd.statements.authfile.AuthFileLogger._.user_added1;
 import static org.apache.commons.lang3.Validate.notNull;
 
 import javax.inject.Singleton;
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
+import com.anrisoftware.sscontrol.httpd.statements.auth.AuthType;
 
 /**
- * Logging messages for {@link Auth}.
+ * Logging messages for {@link AuthFile}.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
 @Singleton
-class AuthLogger extends AbstractLogger {
+class AuthFileLogger extends AbstractLogger {
 
 	enum _ {
 
@@ -65,17 +66,17 @@ class AuthLogger extends AbstractLogger {
 	}
 
 	/**
-	 * Creates a logger for {@link Auth}.
+	 * Creates a logger for {@link AuthFile}.
 	 */
-	public AuthLogger() {
-		super(Auth.class);
+	public AuthFileLogger() {
+		super(AuthFile.class);
 	}
 
 	void checkLocation(Object location) {
 		notNull(location, location_null.toString());
 	}
 
-	void groupAdded(Auth auth, AuthGroup group) {
+	void groupAdded(AuthFile auth, FileGroup group) {
 		if (isDebugEnabled()) {
 			debug(group_added, group, auth);
 		} else {
@@ -83,7 +84,7 @@ class AuthLogger extends AbstractLogger {
 		}
 	}
 
-	void userAdded(Auth auth, AuthUser user) {
+	void userAdded(AuthFile auth, FileUser user) {
 		if (isDebugEnabled()) {
 			debug(user_added, user, auth);
 		} else {

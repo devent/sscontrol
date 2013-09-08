@@ -33,8 +33,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.anrisoftware.sscontrol.httpd.statements.auth.AbstractAuth;
-import com.anrisoftware.sscontrol.httpd.statements.auth.AuthFactory;
 import com.anrisoftware.sscontrol.httpd.statements.auth.AuthProvider;
+import com.anrisoftware.sscontrol.httpd.statements.authfile.AuthFileFactory;
 import com.anrisoftware.sscontrol.httpd.statements.authldap.AuthLdapFactory;
 import com.anrisoftware.sscontrol.httpd.statements.redirect.Redirect;
 import com.anrisoftware.sscontrol.httpd.statements.redirect.RedirectFactory;
@@ -63,7 +63,7 @@ public class Domain {
 	private RedirectFactory redirectFactory;
 
 	@Inject
-	private AuthFactory authFactory;
+	private AuthFileFactory authFactory;
 
 	@Inject
 	private AuthLdapFactory authLdapFactory;

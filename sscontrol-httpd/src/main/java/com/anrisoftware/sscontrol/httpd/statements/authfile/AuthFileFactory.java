@@ -16,9 +16,12 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.statements.auth;
+package com.anrisoftware.sscontrol.httpd.statements.authfile;
 
 import java.util.Map;
+
+import com.anrisoftware.sscontrol.httpd.statements.auth.AuthProvider;
+import com.anrisoftware.sscontrol.httpd.statements.auth.AuthType;
 
 /**
  * Factory to create an authentication.
@@ -26,7 +29,7 @@ import java.util.Map;
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-public interface AuthFactory {
+public interface AuthFileFactory {
 
 	/**
 	 * Create the authentication.
@@ -48,7 +51,7 @@ public interface AuthFactory {
 	 * @param name
 	 *            the name {@link String}.
 	 * 
-	 * @return the created {@link Auth} authentication.
+	 * @return the created {@link AuthFile} authentication.
 	 */
-	Auth create(Map<String, Object> args, String name);
+	AuthFile create(Map<String, Object> args, String name);
 }

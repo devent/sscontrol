@@ -16,9 +16,13 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.statements.auth;
+package com.anrisoftware.sscontrol.httpd.statements.authfile;
 
-public interface AuthGroupFactory {
+import java.util.Map;
 
-	AuthGroup create(String name);
+public interface FileUserFactory {
+
+	FileUser create(Map<String, Object> map, String name);
+
+	FileUser create(FileGroup group, Map<String, Object> map, String name);
 }

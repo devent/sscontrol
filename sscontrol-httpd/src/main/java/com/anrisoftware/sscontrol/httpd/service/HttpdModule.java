@@ -19,6 +19,7 @@
 package com.anrisoftware.sscontrol.httpd.service;
 
 import com.anrisoftware.sscontrol.httpd.statements.auth.AuthModule;
+import com.anrisoftware.sscontrol.httpd.statements.authfile.AuthFileModule;
 import com.anrisoftware.sscontrol.httpd.statements.authldap.AuthLdapModule;
 import com.anrisoftware.sscontrol.httpd.statements.domain.DomainModule;
 import com.anrisoftware.sscontrol.httpd.statements.phpmyadmin.PhpmyadminModule;
@@ -38,6 +39,7 @@ class HttpdModule extends AbstractModule {
 		install(new DomainModule());
 		install(new RedirectModule());
 		install(new AuthModule());
+		install(new AuthFileModule());
 		install(new AuthLdapModule());
 		install(new PhpmyadminModule());
 	}

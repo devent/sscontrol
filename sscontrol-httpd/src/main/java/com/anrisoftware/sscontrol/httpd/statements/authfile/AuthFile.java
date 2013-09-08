@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.statements.auth;
+package com.anrisoftware.sscontrol.httpd.statements.authfile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,16 +26,19 @@ import javax.inject.Inject;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import com.anrisoftware.sscontrol.httpd.statements.auth.AbstractAuth;
+import com.anrisoftware.sscontrol.httpd.statements.auth.AuthProvider;
+import com.anrisoftware.sscontrol.httpd.statements.auth.AuthType;
+import com.anrisoftware.sscontrol.httpd.statements.auth.SatisfyType;
 import com.google.inject.assistedinject.Assisted;
 
-/*
- * Authentication.
+/**
+ * File/authentication.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
- * 
  * @since 1.0
  */
-public class Auth extends AbstractAuth {
+public class AuthFile extends AbstractAuth {
 
 	private static final String SATISFY = "satisfy";
 
@@ -47,35 +50,35 @@ public class Auth extends AbstractAuth {
 
 	private static final String PROVIDER = "provider";
 
-	private final List<AuthUser> users;
+	private final List<FileUser> users;
 
-	private final List<AuthGroup> groups;
+	private final List<FileGroup> groups;
 
 	private Map<String, Object> args;
 
-	private AuthLogger log;
+	private AuthFileLogger log;
 
 	@Inject
-	private AuthUserFactory userFactory;
+	private FileUserFactory userFactory;
 
 	@Inject
-	private AuthGroupFactory groupFactory;
+	private FileGroupFactory groupFactory;
 
 	private boolean appending;
 
 	/**
-	 * @see AuthFactory#create(Map, String)
+	 * @see AuthFileFactory#create(Map, String)
 	 */
 	@Inject
-	Auth(@Assisted Map<String, Object> args, @Assisted String name) {
+	AuthFile(@Assisted Map<String, Object> args, @Assisted String name) {
 		super(name);
 		this.args = args;
-		this.users = new ArrayList<AuthUser>();
-		this.groups = new ArrayList<AuthGroup>();
+		this.users = new ArrayList<FileUser>();
+		this.groups = new ArrayList<FileGroup>();
 	}
 
 	@Inject
-	void setAuthLogger(AuthLogger logger) {
+	void setAuthLogger(AuthFileLogger logger) {
 		this.log = logger;
 		setLocation(args.get(LOCATION));
 		if (args.containsKey(TYPE)) {
@@ -106,24 +109,24 @@ public class Auth extends AbstractAuth {
 		return appending;
 	}
 
-	public AuthGroup group(String name, Object s) {
-		AuthGroup group = groupFactory.create(name);
+	public FileGroup group(String name, Object s) {
+		FileGroup group = groupFactory.create(name);
 		groups.add(group);
 		log.groupAdded(this, group);
 		return group;
 	}
 
-	public List<AuthGroup> getGroups() {
+	public List<FileGroup> getGroups() {
 		return groups;
 	}
 
 	public void user(Map<String, Object> map, String name) {
-		AuthUser user = userFactory.create(map, name);
+		FileUser user = userFactory.create(map, name);
 		users.add(user);
 		log.userAdded(this, user);
 	}
 
-	public List<AuthUser> getUsers() {
+	public List<FileUser> getUsers() {
 		return users;
 	}
 

@@ -156,6 +156,7 @@ public class DomainComponent implements List<String> {
 
 	@Override
 	public String toString() {
-		return new ToStringBuilder(this).append(components).toString();
+		return new ToStringBuilder(this).append(components.toString())
+				.toString();
 	}
 }

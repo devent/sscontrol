@@ -9,6 +9,12 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.google.inject.assistedinject.Assisted;
 
+/**
+ * The administrator user.
+ * 
+ * @author Erwin Mueller, erwin.mueller@deventm.org
+ * @since 1.0
+ */
 public class Admin {
 
 	private final AdminLogger log;
@@ -21,15 +27,20 @@ public class Admin {
 
 	private String password;
 
+	private String description;
+
+	/**
+	 * @see AdminFactory#create(Map, DomainComponent, String)
+	 */
 	@Inject
-	Admin(AdminLogger log, DomainComponent domain, Scripts scripts,
-			@Assisted Map<String, Object> args, @Assisted String name) {
+	Admin(AdminLogger log, Scripts scripts, @Assisted Map<String, Object> args,
+			@Assisted DomainComponent domain, @Assisted String name) {
 		this.log = log;
 		this.name = name;
 		this.domain = domain;
 		this.scripts = scripts;
 		setPassword(args.get("password"));
-		setDomain(args.get("domain"));
+		setDescription(args.get("description"));
 	}
 
 	public String getName() {
@@ -45,9 +56,12 @@ public class Admin {
 		return password;
 	}
 
-	public void setDomain(Object domain) {
-		log.checkDomain(domain);
-		this.domain.setDomain(domain.toString());
+	public void setDescription(Object description) {
+		this.description = description.toString();
+	}
+
+	public String getDescription() {
+		return description;
 	}
 
 	public DomainComponent getDomain() {

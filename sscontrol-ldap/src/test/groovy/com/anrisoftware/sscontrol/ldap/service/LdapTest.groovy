@@ -43,11 +43,15 @@ class LdapTest extends LdapTestUtil {
 		def profile = registry.getService("profile")[0]
 		loader.loadService ldapScript, profile
 		LdapServiceImpl service = registry.getService("ldap")[0]
-		service.admin.name == "admin"
-		service.admin.password == "adminpass"
-		service.admin.domain.size() == 2
-		service.admin.domain[0] == "ubuntutest"
-		service.admin.domain[1] == "com"
+		service.organization.name == "ubuntutest"
+		service.organization.domain.size() == 2
+		service.organization.domain[0] == "ubuntutest"
+		service.organization.domain[1] == "com"
+		service.organization.admin.name == "admin"
+		service.organization.admin.password == "adminpass"
+		service.organization.admin.domain.size() == 2
+		service.organization.admin.domain[0] == "ubuntutest"
+		service.organization.admin.domain[1] == "com"
 		service.indices.size() == 2
 		service.scripts.each { String it ->
 			assert it.startsWith("# LDIF Export for o=deventorg,dc=ubuntutest,dc=com")

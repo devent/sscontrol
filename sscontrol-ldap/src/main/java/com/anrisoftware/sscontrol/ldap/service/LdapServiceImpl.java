@@ -42,8 +42,8 @@ import com.anrisoftware.sscontrol.core.service.AbstractService;
 import com.anrisoftware.sscontrol.ldap.dbindex.DbIndex;
 import com.anrisoftware.sscontrol.ldap.dbindex.DbIndexFactory;
 import com.anrisoftware.sscontrol.ldap.dbindex.IndexType;
-import com.anrisoftware.sscontrol.ldap.statements.Admin;
-import com.anrisoftware.sscontrol.ldap.statements.AdminFactory;
+import com.anrisoftware.sscontrol.ldap.organization.Organization;
+import com.anrisoftware.sscontrol.ldap.organization.OrganizationFactory;
 import com.anrisoftware.sscontrol.ldap.statements.Scripts;
 
 /**
@@ -59,9 +59,9 @@ public class LdapServiceImpl extends AbstractService {
 	private LdapServiceImplLogger log;
 
 	@Inject
-	private AdminFactory adminFactory;
+	private OrganizationFactory organizationFactory;
 
-	private Admin admin;
+	private Organization organization;
 
 	@Inject
 	private Scripts scripts;
@@ -109,13 +109,15 @@ public class LdapServiceImpl extends AbstractService {
 		return this;
 	}
 
-	public void admin(Map<String, Object> args, String name) {
-		this.admin = adminFactory.create(args, name);
-		log.adminSet(this, admin);
+	public Organization organization(Map<String, Object> args, String name,
+			Object s) {
+		this.organization = organizationFactory.create(args, name);
+		log.organizationSet(this, organization);
+		return organization;
 	}
 
-	public Admin getAdmin() {
-		return admin;
+	public Organization getOrganization() {
+		return organization;
 	}
 
 	public IndexType getPresent() {
@@ -172,7 +174,7 @@ public class LdapServiceImpl extends AbstractService {
 	@Override
 	public String toString() {
 		return new ToStringBuilder(this).appendSuper(super.toString())
-				.toString();
+				.append(organization).toString();
 	}
 
 }

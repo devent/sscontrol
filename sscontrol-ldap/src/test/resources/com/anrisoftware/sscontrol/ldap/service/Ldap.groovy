@@ -19,7 +19,9 @@
 package com.anrisoftware.sscontrol.ldap.service
 
 ldap {
-	admin "admin", password: "adminpass", domain: "ubuntutest.com"
+	organization "ubuntutest", domain: "ubuntutest.com", description: "My LDAP Root", {
+		admin "admin", password: "adminpass", description: "LDAP Administrator"
+	}
 	index "uniqueName", type: equality
 	index "foo", type: [equality, substring]
 	script LdapResources.exportLdif

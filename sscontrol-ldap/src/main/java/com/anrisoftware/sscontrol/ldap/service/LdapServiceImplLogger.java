@@ -18,10 +18,10 @@
  */
 package com.anrisoftware.sscontrol.ldap.service;
 
-import static com.anrisoftware.sscontrol.ldap.service.LdapServiceImplLogger._.admin_set_debug;
-import static com.anrisoftware.sscontrol.ldap.service.LdapServiceImplLogger._.admin_set_info;
 import static com.anrisoftware.sscontrol.ldap.service.LdapServiceImplLogger._.index_added_debug;
 import static com.anrisoftware.sscontrol.ldap.service.LdapServiceImplLogger._.index_added_info;
+import static com.anrisoftware.sscontrol.ldap.service.LdapServiceImplLogger._.org_set_debug;
+import static com.anrisoftware.sscontrol.ldap.service.LdapServiceImplLogger._.org_set_info;
 import static com.anrisoftware.sscontrol.ldap.service.LdapServiceImplLogger._.profileSet;
 import static com.anrisoftware.sscontrol.ldap.service.LdapServiceImplLogger._.profileSetDebug;
 import static com.anrisoftware.sscontrol.ldap.service.LdapServiceImplLogger._.script_resource_added_debug;
@@ -32,7 +32,7 @@ import com.anrisoftware.globalpom.log.AbstractLogger;
 import com.anrisoftware.sscontrol.core.api.ProfileService;
 import com.anrisoftware.sscontrol.core.api.Service;
 import com.anrisoftware.sscontrol.ldap.dbindex.DbIndex;
-import com.anrisoftware.sscontrol.ldap.statements.Admin;
+import com.anrisoftware.sscontrol.ldap.organization.Organization;
 
 /**
  * Logging messages for {@link LdapServiceImpl}.
@@ -48,9 +48,9 @@ class LdapServiceImplLogger extends AbstractLogger {
 
 		profileSet("Profile '{}' set for DNS service."),
 
-		admin_set_debug("Admin {} set for {}."),
+		org_set_debug("Organization {} set for {}."),
 
-		admin_set_info("Admin '{}' set for service '{}'."),
+		org_set_info("Organization '{}' set for service '{}'."),
 
 		script_resource_added_debug("Script resource '{}' added for {}."),
 
@@ -88,11 +88,11 @@ class LdapServiceImplLogger extends AbstractLogger {
 		}
 	}
 
-	void adminSet(LdapServiceImpl service, Admin admin) {
+	void organizationSet(LdapServiceImpl service, Organization organization) {
 		if (isDebugEnabled()) {
-			debug(admin_set_debug, admin, service);
+			debug(org_set_debug, organization, service);
 		} else {
-			info(admin_set_info, admin.getName(), service.getName());
+			info(org_set_info, organization.getName(), service.getName());
 		}
 	}
 

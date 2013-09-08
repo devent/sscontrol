@@ -1,7 +1,5 @@
 package com.anrisoftware.sscontrol.ldap.statements;
 
-import static com.anrisoftware.sscontrol.ldap.statements.AdminLogger._.domain_blank;
-import static com.anrisoftware.sscontrol.ldap.statements.AdminLogger._.domain_null;
 import static com.anrisoftware.sscontrol.ldap.statements.AdminLogger._.password_blank;
 import static com.anrisoftware.sscontrol.ldap.statements.AdminLogger._.password_null;
 import static org.apache.commons.lang3.Validate.notBlank;
@@ -24,11 +22,7 @@ class AdminLogger extends AbstractLogger {
 
 		password_null("Password cannot be null."),
 
-		password_blank("Password cannot be blank."),
-
-		domain_null("Domain cannot be null."),
-
-		domain_blank("Domain cannot be blank.");
+		password_blank("Password cannot be blank.");
 
 		private String name;
 
@@ -52,11 +46,6 @@ class AdminLogger extends AbstractLogger {
 	void checkPassword(Object password) {
 		notNull(password, password_null.toString());
 		notBlank(password.toString(), password_blank.toString());
-	}
-
-	void checkDomain(Object domain) {
-		notNull(domain, domain_null.toString());
-		notBlank(domain.toString(), domain_blank.toString());
 	}
 
 }

@@ -22,7 +22,7 @@ import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 
 /**
- * Installs the auth factories.
+ * Installs the authentication factories.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
@@ -33,12 +33,14 @@ public class AuthModule extends AbstractModule {
 	protected void configure() {
 		install(new FactoryModuleBuilder().implement(Auth.class, Auth.class)
 				.build(AuthFactory.class));
-		install(new FactoryModuleBuilder().implement(AuthRequire.class,
-				AuthRequire.class).build(AuthRequireFactory.class));
 		install(new FactoryModuleBuilder().implement(AuthUser.class,
 				AuthUser.class).build(AuthUserFactory.class));
 		install(new FactoryModuleBuilder().implement(AuthGroup.class,
 				AuthGroup.class).build(AuthGroupFactory.class));
+		install(new FactoryModuleBuilder().implement(RequireValidUser.class,
+				RequireValidUser.class).build(RequireValidUserFactory.class));
+		install(new FactoryModuleBuilder().implement(RequireValidGroup.class,
+				RequireValidGroup.class).build(RequireValidGroupFactory.class));
 	}
 
 }

@@ -16,22 +16,25 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.statements.auth;
+package com.anrisoftware.sscontrol.httpd.statements.authldap;
 
 import java.util.Map;
 
+import com.anrisoftware.sscontrol.httpd.statements.auth.AuthProvider;
+import com.anrisoftware.sscontrol.httpd.statements.auth.AuthType;
+
 /**
- * Factory to create an authentication.
+ * Factory to create LDAP/authentication.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-public interface AuthFactory {
+public interface AuthLdapFactory {
 
 	/**
 	 * Create the authentication.
 	 * 
-	 * @param args
+	 * @param map
 	 *            {@link Map} of the arguments:
 	 *            <ul>
 	 *            <li>{@code location} the location of the resource;
@@ -39,8 +42,6 @@ public interface AuthFactory {
 	 *            authentication;
 	 *            <li>{@code provider} the {@link AuthProvider} provider of the
 	 *            authentication;
-	 *            <li>{@code appending} set to {@code true} to append users and
-	 *            groups, otherwise the users and groups are overridden.
 	 *            <li>{@code satisfy} the {@link AuthProvider} provider of the
 	 *            resource;
 	 *            </ul>
@@ -48,7 +49,7 @@ public interface AuthFactory {
 	 * @param name
 	 *            the name {@link String}.
 	 * 
-	 * @return the created {@link Auth} authentication.
+	 * @return the created {@link AuthLdap} authentication.
 	 */
-	Auth create(Map<String, Object> args, String name);
+	AuthLdap create(Map<String, Object> map, String name);
 }

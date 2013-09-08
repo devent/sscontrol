@@ -20,17 +20,9 @@ package com.anrisoftware.sscontrol.httpd.statements.auth;
 
 import static com.anrisoftware.sscontrol.httpd.statements.auth.AuthLogger._.group_added;
 import static com.anrisoftware.sscontrol.httpd.statements.auth.AuthLogger._.group_added1;
-import static com.anrisoftware.sscontrol.httpd.statements.auth.AuthLogger._.locationNull;
 import static com.anrisoftware.sscontrol.httpd.statements.auth.AuthLogger._.location_null;
-import static com.anrisoftware.sscontrol.httpd.statements.auth.AuthLogger._.provider_null;
-import static com.anrisoftware.sscontrol.httpd.statements.auth.AuthLogger._.require_added;
-import static com.anrisoftware.sscontrol.httpd.statements.auth.AuthLogger._.require_group_added;
-import static com.anrisoftware.sscontrol.httpd.statements.auth.AuthLogger._.require_valid_user_added;
-import static com.anrisoftware.sscontrol.httpd.statements.auth.AuthLogger._.satisfy_null;
-import static com.anrisoftware.sscontrol.httpd.statements.auth.AuthLogger._.type_null;
 import static com.anrisoftware.sscontrol.httpd.statements.auth.AuthLogger._.user_added;
 import static com.anrisoftware.sscontrol.httpd.statements.auth.AuthLogger._.user_added1;
-import static org.apache.commons.lang3.Validate.notBlank;
 import static org.apache.commons.lang3.Validate.notNull;
 
 import javax.inject.Singleton;
@@ -48,29 +40,17 @@ class AuthLogger extends AbstractLogger {
 
 	enum _ {
 
-		require_added("Require {} added to {}."),
-
-		require_valid_user_added("Require valid user added to auth '{}'."),
-
-		require_group_added("Require group '{}' added to auth '{}'."),
-
 		user_added("User {} added to {}."),
 
 		user_added1("Require user '{}' added to auth '{}'."),
-
-		locationNull("Location cannot be null or empty for {}."),
 
 		group_added("Group {} added to {}."),
 
 		group_added1("Group '{}' added to auth '{}'."),
 
-		type_null("Authentication cannot be null"),
-
 		location_null("Location cannot be null."),
 
-		provider_null("Provider cannot be null."),
-
-		satisfy_null("Satisfy type cannot be null.");
+		type_null("Authentication type cannot be null.");
 
 		private String name;
 
@@ -91,20 +71,8 @@ class AuthLogger extends AbstractLogger {
 		super(Auth.class);
 	}
 
-	void requireValidUserAdded(Auth auth, AuthRequire require) {
-		if (isDebugEnabled()) {
-			debug(require_added, require, auth);
-		} else {
-			info(require_valid_user_added, auth.getName());
-		}
-	}
-
-	void requireGroupAdded(Auth auth, AuthRequireGroup require) {
-		if (isDebugEnabled()) {
-			debug(require_added, require, auth);
-		} else {
-			info(require_group_added, require.getName(), auth.getName());
-		}
+	void checkLocation(Object location) {
+		notNull(location, location_null.toString());
 	}
 
 	void groupAdded(Auth auth, AuthGroup group) {
@@ -123,23 +91,8 @@ class AuthLogger extends AbstractLogger {
 		}
 	}
 
-	void checkLocation(Auth auth, String location) {
-		notBlank(location, locationNull.toString(), auth);
+	void checkType(AuthType authType) {
+		notNull(authType, _.type_null.toString());
 	}
 
-	void checkType(AuthType type) {
-		notNull(type, type_null.toString());
-	}
-
-	void checkLocation(Object location) {
-		notNull(location, location_null.toString());
-	}
-
-	void checkProvider(AuthProvider provider) {
-		notNull(provider, provider_null.toString());
-	}
-
-	void checkSatisfy(SatisfyType type) {
-		notNull(type, satisfy_null.toString());
-	}
 }

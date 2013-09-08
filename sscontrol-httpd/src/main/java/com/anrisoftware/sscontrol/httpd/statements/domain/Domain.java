@@ -32,8 +32,10 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import com.anrisoftware.sscontrol.httpd.statements.auth.Auth;
+import com.anrisoftware.sscontrol.httpd.statements.auth.AbstractAuth;
 import com.anrisoftware.sscontrol.httpd.statements.auth.AuthFactory;
+import com.anrisoftware.sscontrol.httpd.statements.auth.AuthProvider;
+import com.anrisoftware.sscontrol.httpd.statements.authldap.AuthLdapFactory;
 import com.anrisoftware.sscontrol.httpd.statements.redirect.Redirect;
 import com.anrisoftware.sscontrol.httpd.statements.redirect.RedirectFactory;
 import com.anrisoftware.sscontrol.httpd.statements.redirect.RedirectToWwwHttp;
@@ -63,11 +65,14 @@ public class Domain {
 	@Inject
 	private AuthFactory authFactory;
 
+	@Inject
+	private AuthLdapFactory authLdapFactory;
+
 	private final String name;
 
 	private final List<Redirect> redirects;
 
-	private final List<Auth> auths;
+	private final List<AbstractAuth> auths;
 
 	private final List<WebService> services;
 
@@ -96,7 +101,7 @@ public class Domain {
 	protected Domain(Map<String, Object> args, int port, String name) {
 		this.name = name;
 		this.redirects = new ArrayList<Redirect>();
-		this.auths = new ArrayList<Auth>();
+		this.auths = new ArrayList<AbstractAuth>();
 		this.services = new ArrayList<WebService>();
 		this.port = port;
 		if (args.containsKey(ADDRESS)) {
@@ -222,13 +227,25 @@ public class Domain {
 		return redirectFactory;
 	}
 
-	public Auth auth(Map<String, Object> map, String name, Object s) {
-		Auth auth = authFactory.create(map, name);
+	public AbstractAuth auth(Map<String, Object> args, String name, Object s) {
+		AbstractAuth auth = null;
+		if (args.containsKey("provider")) {
+			AuthProvider provider = (AuthProvider) args.get("provider");
+			switch (provider) {
+			case file:
+				auth = authFactory.create(args, name);
+				break;
+			case ldap:
+				auth = authLdapFactory.create(args, name);
+				break;
+			}
+		}
+		auth = auth == null ? authFactory.create(args, name) : auth;
 		auths.add(auth);
 		return auth;
 	}
 
-	public List<Auth> getAuths() {
+	public List<AbstractAuth> getAuths() {
 		return auths;
 	}
 

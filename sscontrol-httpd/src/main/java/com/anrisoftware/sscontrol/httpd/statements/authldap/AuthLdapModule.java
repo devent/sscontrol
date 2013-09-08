@@ -16,47 +16,25 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.statements.auth;
+package com.anrisoftware.sscontrol.httpd.statements.authldap;
 
-import static java.lang.String.format;
+import com.google.inject.AbstractModule;
+import com.google.inject.assistedinject.FactoryModuleBuilder;
 
 /**
- * Different authentication types.
+ * Installs the authentication factories.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-public enum AuthType {
+public class AuthLdapModule extends AbstractModule {
 
-	/**
-	 * MD5 digest authentication.
-	 */
-	digest,
-
-	/**
-	 * HTTP basic authentication.
-	 */
-	basic;
-
-	private static final String VALID_TYPE = "String '%s' is not a valid provider.";
-
-	/**
-	 * Parses the string to an authentication type.
-	 * 
-	 * @param string
-	 *            the {@link String} to parse.
-	 * 
-	 * @return the {@link AuthType}.
-	 * 
-	 * @throws IllegalArgumentException
-	 *             if the specified string is not a valid type.
-	 */
-	public static AuthType parse(String string) {
-		for (AuthType type : values()) {
-			if (type.toString().equals(string)) {
-				return type;
-			}
-		}
-		throw new IllegalArgumentException(format(VALID_TYPE, string));
+	@Override
+	protected void configure() {
+		install(new FactoryModuleBuilder().implement(AuthLdap.class,
+				AuthLdap.class).build(AuthLdapFactory.class));
+		install(new FactoryModuleBuilder().implement(AuthAttribute.class,
+				AuthAttribute.class).build(AuthAttributeFactory.class));
 	}
+
 }

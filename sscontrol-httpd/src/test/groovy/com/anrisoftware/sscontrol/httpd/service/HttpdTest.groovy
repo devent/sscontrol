@@ -27,8 +27,8 @@ import org.junit.Test
 import com.anrisoftware.sscontrol.core.api.ServiceLoader as SscontrolServiceLoader
 import com.anrisoftware.sscontrol.core.api.ServicesRegistry
 import com.anrisoftware.sscontrol.httpd.statements.auth.AuthProvider
-import com.anrisoftware.sscontrol.httpd.statements.auth.AuthRequireGroup
-import com.anrisoftware.sscontrol.httpd.statements.auth.AuthRequireValidUser
+import com.anrisoftware.sscontrol.httpd.statements.auth.RequireValidGroup
+import com.anrisoftware.sscontrol.httpd.statements.auth.RequireValidUser
 import com.anrisoftware.sscontrol.httpd.statements.auth.AuthType
 import com.anrisoftware.sscontrol.httpd.statements.auth.SatisfyType
 
@@ -69,10 +69,10 @@ class HttpdTest extends HttpdTestUtil {
 		assert auth.satisfy == SatisfyType.any
 
 		def require = auth.requires[0]
-		assert require.class == AuthRequireValidUser
+		assert require.class == RequireValidUser
 
 		require = auth.requires[1]
-		assert require.class == AuthRequireGroup
+		assert require.class == RequireValidGroup
 		assert require.name == "admin"
 
 		assert auth.groups.size() == 1
@@ -93,5 +93,33 @@ class HttpdTest extends HttpdTestUtil {
 		user = auth.users[0]
 		assert user.name == "bar"
 		assert user.password == "barpassword"
+	}
+
+	@Test
+	void "httpd auth ldap"() {
+		loader.loadService ubuntu1004Profile, null
+		def profile = registry.getService("profile")[0]
+		loader.loadService authLdapScript, profile
+		HttpdServiceImpl service = registry.getService("httpd")[0]
+		service.domains.size() == 2
+
+		def auth = service.domains[1].auths[0]
+		assert auth.name == "Private Directory"
+		assert auth.location == "private"
+		assert auth.type == AuthType.digest
+		assert auth.provider == AuthProvider.ldap
+		assert auth.satisfy == SatisfyType.any
+
+		def require = auth.requires[0]
+		assert require.class == RequireValidUser
+
+		require = auth.requires[1]
+		assert require.class == AuthRequireLdapGroup
+		assert require.name == "cn=ldapadminGroup,o=deventorg,dc=ubuntutest,dc=com"
+		assert require.attribute.name == "uniqueMember"
+		assert require.attribute.dn == true
+
+		assert auth.groups.size() == 0
+		assert auth.users.size() == 0
 	}
 }

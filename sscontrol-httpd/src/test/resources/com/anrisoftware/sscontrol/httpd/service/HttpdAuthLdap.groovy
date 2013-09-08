@@ -18,16 +18,23 @@
  */
 package com.anrisoftware.sscontrol.httpd.service
 
-/**
- * Loads the resources.
- *
- * @author Erwin Mueller, erwin.mueller@deventm.org
- * @since 1.0
- */
-class HttpdResources {
-	static ubuntu1004Profile = HttpdResources.class.getResource("Ubuntu_10_04Profile.groovy")
-	static httpdScript = HttpdResources.class.getResource("Httpd.groovy")
-	static authFileScript = HttpdResources.class.getResource("HttpdAuthFile.groovy")
-	static authLdapScript = HttpdResources.class.getResource("HttpdAuthLdap.groovy")
-	static phpmyadminScript = HttpdResources.class.getResource("HttpdPhpmyadmin.groovy")
+def certFile = HttpdResources.class.getResource "cert_crt.txt"
+def certKeyFile = HttpdResources.class.getResource "cert_key.txt"
+
+httpd {
+	domain "test1.com", address: "192.168.0.50", {
+		redirect to_www
+		redirect http_to_https
+	}
+	ssl_domain "test1.com", address: "192.168.0.50", {
+		auth "Private Directory", location: "private", type: digest, provider: ldap, satisfy: any, {
+			host "ldap://127.0.0.1:389", url: "o=deventorg,dc=ubuntutest,dc=com?cn"
+			credentials "cn=admin,dc=ubuntutest,dc=com", password: "adminpass"
+			require valid_user
+			require group: "cn=ldapadminGroup,o=deventorg,dc=ubuntutest,dc=com", {
+				attribute "uniqueMember"
+				attribute "uniqueMember", dn: true
+			}
+		}
+	}
 }

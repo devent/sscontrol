@@ -157,6 +157,10 @@ public class HttpdServiceImpl extends AbstractService {
 		return AuthProvider.file;
 	}
 
+	public AuthProvider getLdap() {
+		return AuthProvider.ldap;
+	}
+
 	public AuthType getDigest() {
 		return AuthType.digest;
 	}

@@ -1,64 +1,64 @@
 /*
  * Copyright 2012-2013 Erwin Müller <erwin.mueller@deventm.org>
- *
+ * 
  * This file is part of sscontrol-httpd.
- *
+ * 
  * sscontrol-httpd is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published by the
  * Free Software Foundation, either version 3 of the License, or (at your
  * option) any later version.
- *
+ * 
  * sscontrol-httpd is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
  * for more details.
- *
+ * 
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.statements.auth;
+package com.anrisoftware.sscontrol.httpd.statements.authldap;
 
-import java.util.Map;
+import static com.anrisoftware.sscontrol.httpd.statements.authldap.AuthLdapLogger._.location_null;
+import static org.apache.commons.lang3.Validate.notNull;
 
-import javax.inject.Inject;
+import javax.inject.Singleton;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
-
-import com.google.inject.assistedinject.Assisted;
+import com.anrisoftware.globalpom.log.AbstractLogger;
 
 /**
- * Group for authentication.
+ * Logging messages for {@link AuthLdap}.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-public class AuthRequireGroup extends AuthRequire {
+@Singleton
+class AuthLdapLogger extends AbstractLogger {
 
-	private static final String GROUP = "group";
+	enum _ {
 
-	private final String name;
+		location_null("Location cannot be null.");
 
-	/**
-	 * @see AuthRequireFactory#group(Map)
-	 */
-	@Inject
-	AuthRequireGroup(AuthRequireGroupLogger log,
-			@Assisted Map<String, Object> map) {
-		log.checkGroupName(map);
-		this.name = (String) map.get(GROUP);
+		private String name;
+
+		private _(String name) {
+			this.name = name;
+		}
+
+		@Override
+		public String toString() {
+			return name;
+		}
 	}
 
 	/**
-	 * Returns the name of the group.
-	 * 
-	 * @return the group name.
+	 * Creates a logger for {@link AuthLdap}.
 	 */
-	public String getName() {
-		return name;
+	public AuthLdapLogger() {
+		super(AuthLdap.class);
 	}
 
-	@Override
-	public String toString() {
-		return new ToStringBuilder(this).append("name", name).toString();
+	void checkLocation(Object location) {
+		notNull(location, location_null.toString());
 	}
+
 }

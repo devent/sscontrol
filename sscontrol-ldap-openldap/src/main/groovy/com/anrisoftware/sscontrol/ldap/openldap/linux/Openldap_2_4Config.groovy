@@ -44,7 +44,7 @@ class Openldap_2_4Config {
 		deployDatabase()
 		deployBase()
 		deploySystem()
-		//deployLdap()
+		deployLdap()
 	}
 
 	private createAdminPassword() {
@@ -98,11 +98,18 @@ class Openldap_2_4Config {
 	}
 
 	private deployLdap() {
-		def string = ldapConfigTemplate.getText true, "ldapConfig",
+		def string = ldapConfigTemplate.getText true, "aclConfig",
 				"properties", script,
 				"service", service
 		FileUtils.write ldapACLConfigFile, string
-		log.ldapConfigDeployed script, ldapACLConfigFile
+		script.changeMod mod: "o-r", files: ldapACLConfigFile
+		def worker = scriptCommandFactory.create(
+				ldapCommandsTemplate, "modifyAdminEntry",
+				"command", ldapmodifyCommand,
+				"file", ldapACLConfigFile,
+				"adminName", service.organization.admin.name,
+				"adminPass", service.organization.admin.password)()
+		log.systemConfigDeployed script, ldapACLConfigFile, worker
 	}
 
 	def propertyMissing(String name) {

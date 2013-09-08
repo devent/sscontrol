@@ -34,6 +34,7 @@ enum UbuntuResources {
 	restartCommand("/etc/init.d/slapd", UbuntuResources.class.getResource("echo_command.txt")),
 	chmodCommand("/bin/chmod", UbuntuResources.class.getResource("echo_command.txt")),
 	ldapaddCommand("/usr/bin/ldapadd", UbuntuResources.class.getResource("echo_command.txt")),
+	ldapmodifyCommand("/usr/bin/ldapmodify", UbuntuResources.class.getResource("echo_command.txt")),
 	slappasswdCommand("/usr/sbin/slappasswd", UbuntuResources.class.getResource("slappasswd_command.txt")),
 	confDir("/etc/ldap", null),
 
@@ -42,6 +43,7 @@ enum UbuntuResources {
 		restartCommand.createCommand parent
 		chmodCommand.createCommand parent
 		ldapaddCommand.createCommand parent
+		ldapmodifyCommand.createCommand parent
 		slappasswdCommand.createCommand parent
 		slappasswdCommand.asFile(parent).mkdirs()
 	}

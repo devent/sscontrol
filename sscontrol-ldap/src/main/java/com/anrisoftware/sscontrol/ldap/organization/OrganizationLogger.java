@@ -2,6 +2,7 @@ package com.anrisoftware.sscontrol.ldap.organization;
 
 import static com.anrisoftware.sscontrol.ldap.organization.OrganizationLogger._.admin_set_debug;
 import static com.anrisoftware.sscontrol.ldap.organization.OrganizationLogger._.admin_set_info;
+import static com.anrisoftware.sscontrol.ldap.organization.OrganizationLogger._.description_null;
 import static com.anrisoftware.sscontrol.ldap.organization.OrganizationLogger._.domain_blank;
 import static com.anrisoftware.sscontrol.ldap.organization.OrganizationLogger._.domain_null;
 import static com.anrisoftware.sscontrol.ldap.organization.OrganizationLogger._.name_blank;
@@ -32,7 +33,9 @@ class OrganizationLogger extends AbstractLogger {
 
 		admin_set_debug("Admin {} set for {}."),
 
-		admin_set_info("Admin '{}' set for service '{}'.");
+		admin_set_info("Admin '{}' set for service '{}'."),
+
+		description_null("Description cannot be null.");
 
 		private String name;
 
@@ -68,6 +71,10 @@ class OrganizationLogger extends AbstractLogger {
 		} else {
 			info(admin_set_info, admin.getName(), org.getName());
 		}
+	}
+
+	void checkDescription(Object description) {
+		notNull(description, description_null.toString());
 	}
 
 }

@@ -74,9 +74,10 @@ delete: olcAccess
 aclConfig(properties, service) ::= <<
 dn: olcDatabase={1}hdb,cn=config
 add: olcAccess
-olcAccess: to attrs=userPassword,shadowLastChange by dn="cn=admin,dc=example,dc=com" write by anonymous auth by self write by * none
+olcAccess: to attrs=userPassword,shadowLastChange by dn="cn=<service.organization.admin.name>,<domainComponent(service.organization.admin.domain)>" write by anonymous auth by self write by * none
 olcAccess: to dn.base="" by * read
-olcAccess: to * by dn="cn=admin,dc=example,dc=com" write by * read
+olcAccess: to * by dn="cn=<service.organization.admin.name>,<domainComponent(service.organization.admin.domain)>" write by * read
+
 >>
 
 domainComponent(domain) ::= <%

@@ -1,6 +1,8 @@
 o-r /tmp/etc/ldap/db.ldif
 o-r /tmp/etc/ldap/base.ldif
 o-r /tmp/etc/ldap/config.ldif
+o-r /tmp/etc/ldap/acl.ldif
 o-r /tmp/etc/ldap/db.ldif
 o-r /tmp/etc/ldap/base.ldif
 o-r /tmp/etc/ldap/config.ldif
+o-r /tmp/etc/ldap/acl.ldif

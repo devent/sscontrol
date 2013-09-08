@@ -30,6 +30,8 @@ public class Organization {
 
 	private Admin admin;
 
+	private String description;
+
 	/**
 	 * @see OrganizationFactory#create(Map, String)
 	 */
@@ -41,10 +43,20 @@ public class Organization {
 		this.name = name;
 		this.domain = domain;
 		setDomain(args.get("domain"));
+		setDescription(args.get("description"));
 	}
 
 	public String getName() {
 		return name;
+	}
+
+	public void setDescription(Object description) {
+		log.checkDescription(description);
+		this.description = description.toString();
+	}
+
+	public String getDescription() {
+		return description;
 	}
 
 	public void setDomain(Object domain) {
@@ -52,9 +64,17 @@ public class Organization {
 		this.domain.setDomain(domain.toString());
 	}
 
+	public DomainComponent getDomain() {
+		return domain;
+	}
+
 	public void admin(Map<String, Object> args, String name) {
 		this.admin = adminFactory.create(args, domain, name);
 		log.adminSet(this, admin);
+	}
+
+	public Admin getAdmin() {
+		return admin;
 	}
 
 	@Override

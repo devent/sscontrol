@@ -31,11 +31,13 @@ enum CoreResources {
 
 	ldapScript("Ldap.groovy", CoreResources.class.getResource("Ldap.groovy")),
 	ldapaddOut("/usr/bin/ldapadd.out", CoreResources.class.getResource("ldapadd_out.txt")),
+	ldapmodifyOut("/usr/bin/ldapmodify.out", CoreResources.class.getResource("ldapmodify_out.txt")),
 	dbConf("/etc/ldap/db.ldif", CoreResources.class.getResource("db_ldif.txt")),
 	baseConf("/etc/ldap/base.ldif", CoreResources.class.getResource("base_ldif.txt")),
 	systemConf("/etc/ldap/config.ldif", UbuntuResources.class.getResource("config_ldif.txt")),
 	ldapConf("/etc/ldap/acl.ldif", UbuntuResources.class.getResource("acl_ldif.txt")),
 	chmodOut("/bin/chmod.out", UbuntuResources.class.getResource("chmod_out.txt")),
+	restartOut("/etc/init.d/slapd.out", UbuntuResources.class.getResource("restart_out.txt")),
 
 	ResourcesUtils resources
 

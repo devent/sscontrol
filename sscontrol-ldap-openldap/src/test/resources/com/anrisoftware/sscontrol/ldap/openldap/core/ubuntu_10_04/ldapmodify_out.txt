@@ -1,0 +1,2 @@
+-x -D cn=admin,cn=config -w adminpass -f /tmp/etc/ldap/acl.ldif
+-x -D cn=admin,cn=config -w adminpass -f /tmp/etc/ldap/acl.ldif

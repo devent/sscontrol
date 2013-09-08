@@ -24,7 +24,7 @@ import javax.inject.Inject
 
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.sscontrol.core.service.LinuxScript
-import com.anrisoftware.sscontrol.ldap.dbindex.DbIndexFormatFactory;
+import com.anrisoftware.sscontrol.ldap.dbindex.DbIndexFormatFactory
 
 /**
  * OpenLDAP service on a general Linux system.
@@ -76,6 +76,17 @@ abstract class OpenldapScript extends LinuxScript {
 	 */
 	String getSlappasswdCommand() {
 		profileProperty "slappasswd_command", defaultProperties
+	}
+
+	/**
+	 * Returns the LDAP modify entry and LDAP add entry tool {@code ldapmodify}.
+	 *
+	 * <ul>
+	 * <li>profile property {@code "ldapmodify_command"}</li>
+	 * </ul>
+	 */
+	String getLdapmodifyCommand() {
+		profileProperty "ldapmodify_command", defaultProperties
 	}
 
 	/**

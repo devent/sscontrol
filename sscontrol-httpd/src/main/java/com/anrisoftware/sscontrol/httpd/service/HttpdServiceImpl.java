@@ -37,6 +37,7 @@ import com.anrisoftware.sscontrol.core.api.ServiceScriptFactory;
 import com.anrisoftware.sscontrol.core.service.AbstractService;
 import com.anrisoftware.sscontrol.httpd.statements.auth.AuthProvider;
 import com.anrisoftware.sscontrol.httpd.statements.auth.AuthType;
+import com.anrisoftware.sscontrol.httpd.statements.auth.SatisfyType;
 import com.anrisoftware.sscontrol.httpd.statements.domain.Domain;
 import com.anrisoftware.sscontrol.httpd.statements.domain.DomainFactory;
 
@@ -162,6 +163,14 @@ public class HttpdServiceImpl extends AbstractService {
 
 	public AuthType getBasic() {
 		return AuthType.basic;
+	}
+
+	public SatisfyType getAll() {
+		return SatisfyType.all;
+	}
+
+	public SatisfyType getAny() {
+		return SatisfyType.any;
 	}
 
 	@Override

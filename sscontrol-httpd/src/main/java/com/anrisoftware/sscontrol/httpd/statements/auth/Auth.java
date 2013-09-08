@@ -38,18 +38,19 @@ import com.google.inject.assistedinject.Assisted;
  */
 public class Auth {
 
+	private static final String SATISFY = "satisfy";
+
+	private static final String LOCATION = "location";
+
 	private static final String APPENDING = "appending";
 
 	private static final String TYPE = "type";
 
 	private static final String GROUP = "group";
 
-	private static final String NAME = "name";
-
 	private static final String PROVIDER = "provider";
 
-	@Inject
-	private AuthLogger log;
+	private final AuthLogger log;
 
 	@Inject
 	private AuthRequireFactory requireFactory;
@@ -59,8 +60,6 @@ public class Auth {
 
 	@Inject
 	private AuthGroupFactory groupFactory;
-
-	private final List<String> locations;
 
 	private final List<AuthRequire> requires;
 
@@ -72,38 +71,47 @@ public class Auth {
 
 	private AuthType type;
 
-	private String name;
+	private final String name;
 
 	private boolean appending;
 
+	private String location;
+
+	private SatisfyType satisfy;
+
 	/**
-	 * @see AuthFactory#create(Map)
+	 * @see AuthFactory#create(Map, String)
 	 */
 	@Inject
-	Auth(@Assisted Map<String, Object> map) {
-		this.locations = new ArrayList<String>();
+	Auth(AuthLogger log, @Assisted Map<String, Object> args,
+			@Assisted String name) {
+		this.log = log;
+		this.name = name;
+		setLocation(args.get(LOCATION));
+		setType((AuthType) args.get(TYPE));
+		setProvider((AuthProvider) args.get(PROVIDER));
+		setAppending((Boolean) args.get(APPENDING));
+		setSatisfy((SatisfyType) args.get(SATISFY));
 		this.requires = new ArrayList<AuthRequire>();
 		this.users = new ArrayList<AuthUser>();
 		this.groups = new ArrayList<AuthGroup>();
-		if (map.containsKey(PROVIDER)) {
-			this.provider = (AuthProvider) map.get(PROVIDER);
-		}
-		if (map.containsKey(TYPE)) {
-			this.type = (AuthType) map.get(TYPE);
-		}
-		if (map.containsKey(NAME)) {
-			this.name = (String) map.get(NAME);
-		}
-		if (map.containsKey(APPENDING)) {
-			this.appending = (Boolean) map.get(APPENDING);
-		}
 	}
 
 	public String getName() {
 		return name;
 	}
 
+	public void setLocation(Object location) {
+		log.checkLocation(location);
+		this.location = location.toString();
+	}
+
+	public String getLocation() {
+		return location;
+	}
+
 	public void setType(AuthType type) {
+		log.checkType(type);
 		this.type = type;
 	}
 
@@ -112,6 +120,7 @@ public class Auth {
 	}
 
 	public void setProvider(AuthProvider provider) {
+		log.checkProvider(provider);
 		this.provider = provider;
 	}
 
@@ -119,21 +128,21 @@ public class Auth {
 		return provider;
 	}
 
+	public void setAppending(Boolean appending) {
+		this.appending = appending;
+	}
+
 	public boolean isAppending() {
 		return appending;
 	}
 
-	public void location(String location) {
-		log.checkLocation(this, location);
-		locations.add(location);
-		log.locationAdd(this, location);
+	public void setSatisfy(SatisfyType type) {
+		log.checkSatisfy(type);
+		this.satisfy = type;
 	}
 
-	public List<String> getLocations() {
-		if (locations.size() == 0) {
-			locations.add("");
-		}
-		return locations;
+	public SatisfyType getSatisfy() {
+		return satisfy;
 	}
 
 	public void valid_user() {
@@ -179,7 +188,7 @@ public class Auth {
 	}
 
 	public String getPasswordFileName() {
-		log.checkType(this, type);
+		log.checkType(type);
 		switch (type) {
 		case basic:
 			return format("%s.passwd", getName());

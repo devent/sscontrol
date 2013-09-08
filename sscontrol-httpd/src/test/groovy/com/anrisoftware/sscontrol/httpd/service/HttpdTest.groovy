@@ -29,6 +29,8 @@ import com.anrisoftware.sscontrol.core.api.ServicesRegistry
 import com.anrisoftware.sscontrol.httpd.statements.auth.AuthProvider
 import com.anrisoftware.sscontrol.httpd.statements.auth.AuthRequireGroup
 import com.anrisoftware.sscontrol.httpd.statements.auth.AuthRequireValidUser
+import com.anrisoftware.sscontrol.httpd.statements.auth.AuthType
+import com.anrisoftware.sscontrol.httpd.statements.auth.SatisfyType
 
 /**
  * @see HttpdServiceImpl
@@ -59,10 +61,12 @@ class HttpdTest extends HttpdTestUtil {
 		service.domains.size() == 2
 
 		def auth = service.domains[1].auths[0]
-		assert auth.locations.contains("private")
+		assert auth.name == "Private Directory"
+		assert auth.location == "private"
+		assert auth.type == AuthType.digest
 		assert auth.provider == AuthProvider.file
-		assert auth.name == "private"
 		assert auth.appending == true
+		assert auth.satisfy == SatisfyType.any
 
 		def require = auth.requires[0]
 		assert require.class == AuthRequireValidUser

@@ -222,8 +222,8 @@ public class Domain {
 		return redirectFactory;
 	}
 
-	public Auth setup_auth(Map<String, Object> map, Object s) {
-		Auth auth = authFactory.create(map);
+	public Auth auth(Map<String, Object> map, String name, Object s) {
+		Auth auth = authFactory.create(map, name);
 		auths.add(auth);
 		return auth;
 	}

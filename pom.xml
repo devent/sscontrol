@@ -22,6 +22,8 @@
         <module>sscontrol-hosts</module>
         <module>sscontrol-httpd</module>
         <module>sscontrol-httpd-apache</module>
+        <module>sscontrol-ldap</module>
+        <module>sscontrol-ldap-openldap</module>
         <module>sscontrol-mail</module>
         <module>sscontrol-mail-postfix</module>
         <module>sscontrol-parent</module>

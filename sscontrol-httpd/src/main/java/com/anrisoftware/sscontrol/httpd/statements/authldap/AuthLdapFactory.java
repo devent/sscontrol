@@ -34,7 +34,7 @@ public interface AuthLdapFactory {
 	/**
 	 * Create the authentication.
 	 * 
-	 * @param map
+	 * @param args
 	 *            {@link Map} of the arguments:
 	 *            <ul>
 	 *            <li>{@code location} the location of the resource;
@@ -51,5 +51,5 @@ public interface AuthLdapFactory {
 	 * 
 	 * @return the created {@link AuthLdap} authentication.
 	 */
-	AuthLdap create(Map<String, Object> map, String name);
+	AuthLdap create(Map<String, Object> args, String name);
 }

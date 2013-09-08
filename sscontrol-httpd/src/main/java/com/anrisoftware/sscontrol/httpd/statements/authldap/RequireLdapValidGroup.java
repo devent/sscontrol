@@ -8,6 +8,7 @@ import javax.inject.Inject;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.anrisoftware.sscontrol.httpd.statements.auth.AbstractRequireGroup;
+import com.google.inject.assistedinject.Assisted;
 
 /**
  * Required LDAP/group.
@@ -15,11 +16,11 @@ import com.anrisoftware.sscontrol.httpd.statements.auth.AbstractRequireGroup;
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-public class AuthRequireLdapGroup extends AbstractRequireGroup {
+public class RequireLdapValidGroup extends AbstractRequireGroup {
 
 	private static final String GROUP = "group";
 
-	private AuthRequireLdapGroupLogger log;
+	private RequireLdapValidGroupLogger log;
 
 	@Inject
 	private AuthAttributeFactory attributeFactory;
@@ -28,13 +29,16 @@ public class AuthRequireLdapGroup extends AbstractRequireGroup {
 
 	private Map<String, Object> args;
 
+	/**
+	 * @see RequireLdapValidGroupFactory#create(Map)
+	 */
 	@Inject
-	AuthRequireLdapGroup(Map<String, Object> args) {
+	RequireLdapValidGroup(@Assisted Map<String, Object> args) {
 		this.args = args;
 	}
 
 	@Inject
-	void setAuthRequireGroupLogger(AuthRequireLdapGroupLogger logger) {
+	void setAuthRequireGroupLogger(RequireLdapValidGroupLogger logger) {
 		this.log = logger;
 		setName(args.get(GROUP));
 		args = null;

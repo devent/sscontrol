@@ -18,12 +18,19 @@
  */
 package com.anrisoftware.sscontrol.httpd.statements.authldap;
 
+import static com.anrisoftware.sscontrol.httpd.statements.authldap.AuthLdapLogger._.credentials_set_debug;
+import static com.anrisoftware.sscontrol.httpd.statements.authldap.AuthLdapLogger._.credentials_set_info;
+import static com.anrisoftware.sscontrol.httpd.statements.authldap.AuthLdapLogger._.host_set_debug;
+import static com.anrisoftware.sscontrol.httpd.statements.authldap.AuthLdapLogger._.host_set_info;
 import static com.anrisoftware.sscontrol.httpd.statements.authldap.AuthLdapLogger._.location_null;
+import static com.anrisoftware.sscontrol.httpd.statements.authldap.AuthLdapLogger._.require_added;
+import static com.anrisoftware.sscontrol.httpd.statements.authldap.AuthLdapLogger._.require_group_added;
 import static org.apache.commons.lang3.Validate.notNull;
 
 import javax.inject.Singleton;
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
+import com.anrisoftware.sscontrol.httpd.statements.auth.AbstractAuth;
 
 /**
  * Logging messages for {@link AuthLdap}.
@@ -36,7 +43,19 @@ class AuthLdapLogger extends AbstractLogger {
 
 	enum _ {
 
-		location_null("Location cannot be null.");
+		location_null("Location cannot be null."),
+
+		host_set_debug("Host {} set for {}."),
+
+		host_set_info("Host '{}' set for authentification '{}'."),
+
+		credentials_set_debug("Credentials {} set for {}."),
+
+		credentials_set_info("Credentials '{}' set for authentification '{}'."),
+
+		require_added("Require {} added to {}."),
+
+		require_group_added("Require group '{}' added to auth '{}'.");
 
 		private String name;
 
@@ -59,6 +78,30 @@ class AuthLdapLogger extends AbstractLogger {
 
 	void checkLocation(Object location) {
 		notNull(location, location_null.toString());
+	}
+
+	void hostSet(AuthLdap auth, AuthHost host) {
+		if (isDebugEnabled()) {
+			debug(host_set_debug, host, auth);
+		} else {
+			info(host_set_info, host.getName(), auth.getName());
+		}
+	}
+
+	void credentialsSet(AuthLdap auth, Credentials credentials) {
+		if (isDebugEnabled()) {
+			debug(credentials_set_debug, credentials, auth);
+		} else {
+			info(credentials_set_info, credentials.getName(), auth.getName());
+		}
+	}
+
+	void requireGroupAdded(AbstractAuth auth, RequireLdapValidGroup require) {
+		if (isDebugEnabled()) {
+			debug(require_added, require, auth);
+		} else {
+			info(require_group_added, require.getName(), auth.getName());
+		}
 	}
 
 }

@@ -16,45 +16,31 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.statements.auth;
+package com.anrisoftware.sscontrol.httpd.statements.authldap;
 
 import java.util.Map;
 
-import javax.inject.Inject;
-
-import com.google.inject.assistedinject.Assisted;
-
 /**
- * Require valid group for authentication.
+ * Factory to create LDAP/authentication host.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-public class RequireValidGroup extends AbstractRequireGroup {
-
-	private static final String GROUP = "group";
-
-	private RequireValidGroupLogger log;
-
-	private Map<String, Object> args;
+public interface AuthHostFactory {
 
 	/**
-	 * @see AuthRequireFactory#group(Map)
+	 * Create the LDAP/authentication host.
+	 * 
+	 * @param args
+	 *            {@link Map} of the arguments:
+	 *            <ul>
+	 *            <li>{@code url} the query URL string;
+	 *            </ul>
+	 * 
+	 * @param name
+	 *            the host name {@link String}.
+	 * 
+	 * @return the created {@link AuthHost} authentication.
 	 */
-	@Inject
-	RequireValidGroup(@Assisted Map<String, Object> args) {
-		this.args = args;
-	}
-
-	@Inject
-	void setAuthRequireGroupLogger(RequireValidGroupLogger logger) {
-		this.log = logger;
-		setName(args.get(GROUP));
-		args = null;
-	}
-
-	private void setName(Object name) {
-		log.checkName(name);
-		setName(name.toString());
-	}
+	AuthHost create(Map<String, Object> args, String name);
 }

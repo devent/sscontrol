@@ -110,6 +110,10 @@ public class AbstractAuth {
 		}
 	}
 
+	public void addRequire(AuthRequire require) {
+		this.requires.add(require);
+	}
+
 	public List<AuthRequire> getRequires() {
 		return requires;
 	}

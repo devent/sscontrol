@@ -27,10 +27,11 @@ import org.junit.Test
 import com.anrisoftware.sscontrol.core.api.ServiceLoader as SscontrolServiceLoader
 import com.anrisoftware.sscontrol.core.api.ServicesRegistry
 import com.anrisoftware.sscontrol.httpd.statements.auth.AuthProvider
+import com.anrisoftware.sscontrol.httpd.statements.auth.AuthType
 import com.anrisoftware.sscontrol.httpd.statements.auth.RequireValidGroup
 import com.anrisoftware.sscontrol.httpd.statements.auth.RequireValidUser
-import com.anrisoftware.sscontrol.httpd.statements.auth.AuthType
 import com.anrisoftware.sscontrol.httpd.statements.auth.SatisfyType
+import com.anrisoftware.sscontrol.httpd.statements.authldap.RequireLdapValidGroup
 
 /**
  * @see HttpdServiceImpl
@@ -114,12 +115,9 @@ class HttpdTest extends HttpdTestUtil {
 		assert require.class == RequireValidUser
 
 		require = auth.requires[1]
-		assert require.class == AuthRequireLdapGroup
+		assert require.class == RequireLdapValidGroup
 		assert require.name == "cn=ldapadminGroup,o=deventorg,dc=ubuntutest,dc=com"
 		assert require.attribute.name == "uniqueMember"
-		assert require.attribute.dn == true
-
-		assert auth.groups.size() == 0
-		assert auth.users.size() == 0
+		assert require.attribute.dn == false
 	}
 }

@@ -35,6 +35,13 @@ public class AuthLdapModule extends AbstractModule {
 				AuthLdap.class).build(AuthLdapFactory.class));
 		install(new FactoryModuleBuilder().implement(AuthAttribute.class,
 				AuthAttribute.class).build(AuthAttributeFactory.class));
+		install(new FactoryModuleBuilder().implement(AuthHost.class,
+				AuthHost.class).build(AuthHostFactory.class));
+		install(new FactoryModuleBuilder().implement(Credentials.class,
+				Credentials.class).build(CredentialsFactory.class));
+		install(new FactoryModuleBuilder().implement(
+				RequireLdapValidGroup.class, RequireLdapValidGroup.class)
+				.build(RequireLdapValidGroupFactory.class));
 	}
 
 }

@@ -10,6 +10,12 @@ import com.anrisoftware.sscontrol.httpd.statements.auth.AuthType;
 import com.anrisoftware.sscontrol.httpd.statements.auth.SatisfyType;
 import com.google.inject.assistedinject.Assisted;
 
+/**
+ * LDAP/authentication.
+ * 
+ * @author Erwin Mueller, erwin.mueller@deventm.org
+ * @since 1.0
+ */
 public class AuthLdap extends AbstractAuth {
 
 	private static final String SATISFY = "satisfy";
@@ -20,9 +26,24 @@ public class AuthLdap extends AbstractAuth {
 
 	private static final String PROVIDER = "provider";
 
+	private static final String GROUP = "group";
+
 	private AuthLdapLogger log;
 
 	private Map<String, Object> args;
+
+	@Inject
+	private AuthHostFactory hostFactory;
+
+	@Inject
+	private CredentialsFactory credentialsFactory;
+
+	@Inject
+	private RequireLdapValidGroupFactory validGroupFactory;
+
+	private AuthHost host;
+
+	private Credentials credentials;
 
 	@Inject
 	AuthLdap(@Assisted Map<String, Object> args, @Assisted String name) {
@@ -49,5 +70,25 @@ public class AuthLdap extends AbstractAuth {
 	public void setLocation(Object location) {
 		log.checkLocation(location);
 		super.setLocation(location.toString());
+	}
+
+	public void host(Map<String, Object> args, String name) {
+		this.host = hostFactory.create(args, name);
+		log.hostSet(this, host);
+	}
+
+	public void credentials(Map<String, Object> args, String name) {
+		this.credentials = credentialsFactory.create(args, name);
+		log.credentialsSet(this, credentials);
+	}
+
+	public RequireLdapValidGroup require(Map<String, Object> args, Object s) {
+		if (args.containsKey(GROUP)) {
+			RequireLdapValidGroup require = validGroupFactory.create(args);
+			addRequire(require);
+			log.requireGroupAdded(this, require);
+			return require;
+		}
+		return null;
 	}
 }

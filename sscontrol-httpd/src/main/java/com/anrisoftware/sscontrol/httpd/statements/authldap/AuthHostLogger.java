@@ -16,45 +16,49 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.statements.auth;
+package com.anrisoftware.sscontrol.httpd.statements.authldap;
 
-import java.util.Map;
+import static com.anrisoftware.sscontrol.httpd.statements.authldap.AuthHostLogger._.url_null;
+import static org.apache.commons.lang3.Validate.notNull;
 
-import javax.inject.Inject;
+import javax.inject.Singleton;
 
-import com.google.inject.assistedinject.Assisted;
+import com.anrisoftware.globalpom.log.AbstractLogger;
 
 /**
- * Require valid group for authentication.
+ * Logging messages for {@link AuthLdap}.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-public class RequireValidGroup extends AbstractRequireGroup {
+@Singleton
+class AuthHostLogger extends AbstractLogger {
 
-	private static final String GROUP = "group";
+	enum _ {
 
-	private RequireValidGroupLogger log;
+		url_null("Host URL cannot be null.");
 
-	private Map<String, Object> args;
+		private String name;
+
+		private _(String name) {
+			this.name = name;
+		}
+
+		@Override
+		public String toString() {
+			return name;
+		}
+	}
 
 	/**
-	 * @see AuthRequireFactory#group(Map)
+	 * Creates a logger for {@link AuthLdap}.
 	 */
-	@Inject
-	RequireValidGroup(@Assisted Map<String, Object> args) {
-		this.args = args;
+	public AuthHostLogger() {
+		super(AuthLdap.class);
 	}
 
-	@Inject
-	void setAuthRequireGroupLogger(RequireValidGroupLogger logger) {
-		this.log = logger;
-		setName(args.get(GROUP));
-		args = null;
+	void checkUrl(Object url) {
+		notNull(url, url_null.toString());
 	}
 
-	private void setName(Object name) {
-		log.checkName(name);
-		setName(name.toString());
-	}
 }

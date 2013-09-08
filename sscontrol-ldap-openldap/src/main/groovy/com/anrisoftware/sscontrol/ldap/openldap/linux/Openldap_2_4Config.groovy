@@ -43,7 +43,7 @@ class Openldap_2_4Config {
 		adminPassword = createAdminPassword()
 		deployDatabase()
 		deployBase()
-		//deploySystem()
+		deploySystem()
 		//deployLdap()
 	}
 
@@ -86,9 +86,15 @@ class Openldap_2_4Config {
 	private deploySystem() {
 		def string = ldapConfigTemplate.getText true, "systemConfig",
 				"properties", script,
-				"service", service
+				"service", service,
+				"password", adminPassword
 		FileUtils.write systemACLConfigFile, string
-		log.systemConfigDeployed script, systemACLConfigFile
+		script.changeMod mod: "o-r", files: systemACLConfigFile
+		def worker = scriptCommandFactory.create(
+				ldapCommandsTemplate, "addEntry",
+				"command", ldapaddCommand,
+				"file", systemACLConfigFile)()
+		log.systemConfigDeployed script, systemACLConfigFile, worker
 	}
 
 	private deployLdap() {

@@ -45,7 +45,7 @@ description: <service.organization.admin.description>
 
 >>
 
-systemConfig(properties, service) ::= <<
+systemConfig(properties, service, password) ::= <<
 dn: cn=config
 changetype: modify
 
@@ -58,16 +58,17 @@ changetype: modify
 dn: olcDatabase={0}config,cn=config
 changetype: modify
 add: olcRootDN
-olcRootDN: cn=admin,cn=config
+olcRootDN: cn=<service.organization.admin.name>,cn=config
 
 dn: olcDatabase={0}config,cn=config
 changetype: modify
 add: olcRootPW
-olcRootPW: {MD5}Gnmk1g3mcY6OWzJuM4rlMw==
+olcRootPW: <password>
 
 dn: olcDatabase={0}config,cn=config
 changetype: modify
 delete: olcAccess
+
 >>
 
 aclConfig(properties, service) ::= <<

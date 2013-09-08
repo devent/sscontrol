@@ -1,4 +1,6 @@
 -Y EXTERNAL -H ldapi:/// -f /tmp/etc/ldap/db.ldif
 -Y EXTERNAL -H ldapi:/// -f /tmp/etc/ldap/base.ldif
+-Y EXTERNAL -H ldapi:/// -f /tmp/etc/ldap/config.ldif
 -Y EXTERNAL -H ldapi:/// -f /tmp/etc/ldap/db.ldif
 -Y EXTERNAL -H ldapi:/// -f /tmp/etc/ldap/base.ldif
+-Y EXTERNAL -H ldapi:/// -f /tmp/etc/ldap/config.ldif

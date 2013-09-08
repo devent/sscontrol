@@ -1,5 +1,7 @@
 package com.anrisoftware.sscontrol.httpd.statements.auth;
 
+import static java.lang.String.format;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -39,6 +41,8 @@ public class AbstractAuth {
 
 	private SatisfyType satisfy;
 
+	private final List<String> domains;
+
 	/**
 	 * Sets the name and default type, provider and satisfy type.
 	 * 
@@ -48,6 +52,7 @@ public class AbstractAuth {
 	protected AbstractAuth(String name) {
 		this.name = name;
 		this.requires = new ArrayList<AuthRequire>();
+		this.domains = new ArrayList<String>();
 		this.type = AuthType.digest;
 		this.provider = AuthProvider.file;
 		this.satisfy = SatisfyType.all;
@@ -60,10 +65,27 @@ public class AbstractAuth {
 	public void setLocation(String location) {
 		log.checkLocation(location);
 		this.location = location;
+		if (domains.isEmpty()) {
+			addDomain(format("/%s", location));
+		}
 	}
 
 	public String getLocation() {
 		return location;
+	}
+
+	public void domain(String domain) {
+		addDomain(domain);
+	}
+
+	public void addDomain(String domain) {
+		log.checkDomain(domain);
+		domains.add(domain);
+		log.domainAdded(this, domain);
+	}
+
+	public List<String> getDomains() {
+		return domains;
 	}
 
 	public void setType(AuthType type) {

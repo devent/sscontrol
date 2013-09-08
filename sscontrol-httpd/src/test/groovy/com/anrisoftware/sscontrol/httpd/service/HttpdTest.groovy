@@ -69,6 +69,11 @@ class HttpdTest extends HttpdTestUtil {
 		assert auth.appending == true
 		assert auth.satisfy == SatisfyType.any
 
+		def domains = auth.domains
+		assert domains.size() == 2
+		assert domains[0] == "/private"
+		assert domains[1] == "https://private"
+
 		def require = auth.requires[0]
 		assert require.class == RequireValidUser
 

@@ -1,5 +1,7 @@
 package com.anrisoftware.sscontrol.httpd.statements.auth;
 
+import static com.anrisoftware.sscontrol.httpd.statements.auth.AbstractAuthLogger._.domain_added_debug;
+import static com.anrisoftware.sscontrol.httpd.statements.auth.AbstractAuthLogger._.domain_added_info;
 import static com.anrisoftware.sscontrol.httpd.statements.auth.AbstractAuthLogger._.location_null;
 import static com.anrisoftware.sscontrol.httpd.statements.auth.AbstractAuthLogger._.provider_null;
 import static com.anrisoftware.sscontrol.httpd.statements.auth.AbstractAuthLogger._.require_added;
@@ -37,7 +39,13 @@ class AbstractAuthLogger extends AbstractLogger {
 
 		provider_null("Provider cannot be null."),
 
-		satisfy_null("Satisfy type cannot be null.");
+		satisfy_null("Satisfy type cannot be null."),
+
+		domain_null("Domain cannot be null or blank."),
+
+		domain_added_debug("Domain '{}' added to {}."),
+
+		domain_added_info("Domain '{}' added to auth '{}'.");
 
 		private String name;
 
@@ -88,5 +96,17 @@ class AbstractAuthLogger extends AbstractLogger {
 
 	void checkSatisfy(SatisfyType type) {
 		notNull(type, satisfy_null.toString());
+	}
+
+	void checkDomain(String domain) {
+		notBlank(domain, _.domain_null.toString());
+	}
+
+	void domainAdded(AbstractAuth auth, String domain) {
+		if (isDebugEnabled()) {
+			debug(domain_added_debug, domain, auth);
+		} else {
+			info(domain_added_info, domain, auth.getName());
+		}
 	}
 }

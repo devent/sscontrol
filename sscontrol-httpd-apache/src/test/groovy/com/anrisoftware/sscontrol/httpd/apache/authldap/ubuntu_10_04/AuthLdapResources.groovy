@@ -16,44 +16,59 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd-apache. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.apache.core.ubuntu_10_04
+package com.anrisoftware.sscontrol.httpd.apache.authldap.ubuntu_10_04
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static org.apache.commons.io.FileUtils.*
 
+import com.anrisoftware.sscontrol.httpd.apache.core.ubuntu_10_04.ResourcesUtils
+
 /**
- * Loads resources.
+ * Loads the resources.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class ResourcesUtils {
+enum AuthLdapResources {
 
-	String path
+	httpdScript("Httpd.groovy", AuthLdapResources.class.getResource("HttpdAuthLdap.groovy")),
+	// AuthFile
+	domainsConf("/etc/apache2/conf.d/000-robobee-domains.conf", AuthLdapResources.class.getResource("domains_conf.txt")),
+	test1comConf("/etc/apache2/sites-available/100-robobee-test1.com.conf", AuthLdapResources.class.getResource("test1_com_conf.txt")),
+	test1comSslConf("/etc/apache2/sites-available/100-robobee-test1.com-ssl.conf", AuthLdapResources.class.getResource("test1_com_ssl_conf.txt")),
+	enmodOut("/usr/sbin/a2enmod.out", AuthLdapResources.class.getResource("enmod_out.txt")),
 
-	URL resource
+	ResourcesUtils resources
+
+	AuthLdapResources(String path, URL resource) {
+		this.resources = new ResourcesUtils(path: path, resource: resource)
+	}
+
+	String getPath() {
+		resources.path
+	}
+
+	URL getResource() {
+		resources.resource
+	}
 
 	File asFile(File parent) {
-		new File(parent, path)
+		resources.asFile parent
 	}
 
 	void createFile(File parent) {
-		assert resource : "Resource cannot be null for ${resource}"
-		copyURLToFile resource, new File(parent, path)
+		resources.createFile parent
 	}
 
 	void createCommand(File parent) {
-		assert resource : "Resource cannot be null for ${resource}"
-		copyResourceToCommand resource, new File(parent, path)
+		resources.createCommand parent
 	}
 
 	String replaced(File parent, def search, def replace) {
-		String text = readFileToString(this.asFile(parent))
-		text.replaceAll(search.toString(), replace)
+		resources.replaced parent, search, replace
 	}
 
 	String toString() {
-		assert resource : "Resource cannot be null for ${resource}"
-		resourceToString resource
+		resources.toString()
 	}
 }

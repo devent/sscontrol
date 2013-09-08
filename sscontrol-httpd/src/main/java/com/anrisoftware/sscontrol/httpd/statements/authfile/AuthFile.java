@@ -134,9 +134,9 @@ public class AuthFile extends AbstractAuth {
 		log.checkType(getType());
 		switch (getType()) {
 		case basic:
-			return String.format("%s.passwd", getName());
+			return String.format("%s.passwd", getLocation());
 		case digest:
-			return String.format("%s-digest.passwd", getName());
+			return String.format("%s-digest.passwd", getLocation());
 		default:
 			return null;
 		}

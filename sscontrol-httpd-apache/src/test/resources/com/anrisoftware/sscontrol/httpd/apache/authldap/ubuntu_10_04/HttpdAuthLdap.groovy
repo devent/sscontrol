@@ -16,9 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd-apache. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.apache.authfile.ubuntu_10_04
-
-import com.anrisoftware.sscontrol.httpd.apache.core.ubuntu_10_04.UbuntuResources
+package com.anrisoftware.sscontrol.httpd.apache.authldap.ubuntu_10_04
 
 httpd {
 	domain "test1.com", address: "192.168.0.50", {
@@ -26,20 +24,13 @@ httpd {
 		redirect http_to_https
 	}
 	ssl_domain "test1.com", address: "192.168.0.50", {
-		certification_file UbuntuResources.certCrt.resource
-		certification_key_file UbuntuResources.certKey.resource
-		redirect to_www
-		auth "Private Location", location: "private", provider: file, {
+		auth "Private Directory", location: "private", type: digest, provider: ldap, satisfy: any, {
+			host "ldap://127.0.0.1:389", url: "o=deventorg,dc=ubuntutest,dc=com?cn"
+			credentials "cn=admin,dc=ubuntutest,dc=com", password: "adminpass"
 			require valid_user
-			require group: "admin"
-			group "admin", {
-				user "adminfoo", password: "adminfoopassword"
-				user "adminbar", password: "adminbarpassword"
-				user "adminbaz", password: "adminbazpassword"
+			require group: "cn=ldapadminGroup,o=deventorg,dc=ubuntutest,dc=com", {
+				attribute "uniqueMember", dn: true //.
 			}
-			user "foo", password: "foopassword"
-			user "bar", password: "barpassword"
-			user "baz", password: "bazpassword"
 		}
 	}
 }

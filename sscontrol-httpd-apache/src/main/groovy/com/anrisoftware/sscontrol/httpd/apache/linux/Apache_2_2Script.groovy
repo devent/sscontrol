@@ -26,7 +26,6 @@ import org.apache.commons.io.FileUtils
 
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.Templates
-import com.anrisoftware.sscontrol.httpd.statements.auth.Auth
 import com.anrisoftware.sscontrol.httpd.statements.domain.Domain
 import com.anrisoftware.sscontrol.httpd.statements.domain.SslDomain
 import com.anrisoftware.sscontrol.httpd.statements.webservice.WebService
@@ -41,9 +40,6 @@ abstract class Apache_2_2Script extends ApacheScript {
 
 	@Inject
 	Apache_2_2ScriptLogger log
-
-	@Inject
-	FileAuthProvider fileAuthProvider
 
 	@Inject
 	DomainConfig domainConfig
@@ -64,7 +60,7 @@ abstract class Apache_2_2Script extends ApacheScript {
 	PhpmyadminConfig deployPhpmyadmin
 
 	@Inject
-	AuthConfig deployAuth
+	AuthFileConfig deployAuthFile
 
 	/**
 	 * The {@link Templates} for the script.
@@ -86,20 +82,18 @@ abstract class Apache_2_2Script extends ApacheScript {
 		apacheTemplates = templatesFactory.create "Apache_2_2"
 		configTemplate = apacheTemplates.getResource "config"
 		apacheCommandsTemplate = apacheTemplates.getResource "commands"
-		fileAuthProvider.script = this
 		domainConfig.script = this
 		sslDomainConfig.script = this
 		deployRedirectHttpToHttps.script = this
 		deployRedirectToWwwHttp.script = this
 		deployRedirectToWwwHttps.script = this
-		deployAuth.script = this
+		deployAuthFile.script = this
 		deployPhpmyadmin.script = this
 		super.run()
 		deployDefaultConfig()
 		deployDomainsConfig()
 		enableDefaultMods()
 		deployConfig()
-		deployAuths()
 		restartServices()
 	}
 
@@ -122,7 +116,7 @@ abstract class Apache_2_2Script extends ApacheScript {
 		uniqueDomains.each { deployDomain it }
 		service.domains.each { Domain domain ->
 			deployRedirect domain
-			deployAuth domain
+			deployAuth domain, serviceConfig
 			deployService domain, serviceConfig
 			deployDomainConfig domain, serviceConfig
 			deploySslDomain domain
@@ -142,9 +136,9 @@ abstract class Apache_2_2Script extends ApacheScript {
 		}
 	}
 
-	def deployAuth(Domain domain) {
+	def deployAuth(Domain domain, List serviceConfig) {
 		domain.auths.each {
-			deployAuth.deployAuth(domain, it)
+			this."deploy${it.class.simpleName}".deployAuth(domain, it, serviceConfig)
 		}
 	}
 
@@ -165,13 +159,5 @@ abstract class Apache_2_2Script extends ApacheScript {
 				"domain", domain,
 				"servicesConfig", servicesConfig)
 		FileUtils.write new File(sitesAvailableDir, domain.fileName), string
-	}
-
-	def deployAuths() {
-		service.domains.each { Domain domain ->
-			domain.auths.each { Auth auth ->
-				fileAuthProvider.deployAuth domain, auth
-			}
-		}
 	}
 }

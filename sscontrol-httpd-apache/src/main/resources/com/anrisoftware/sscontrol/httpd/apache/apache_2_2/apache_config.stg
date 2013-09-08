@@ -27,7 +27,6 @@ Domain(properties, domain, servicesConfig) ::= <<
     <domainBody(properties, domain)>
 
     <domain.redirects:domainRedirects(domain);separator="\n">
-    <domain.auths:domainAuth(properties, domain);separator="\n">
     <servicesConfig;separator="\n">
 \</VirtualHost>
 
@@ -41,7 +40,6 @@ SslDomain(properties, domain, servicesConfig) ::= <<
     <domainCerts(properties, domain)>
 
     <domain.redirects:domainRedirects(domain);separator="\n">
-    <domain.auths:domainAuth(properties, domain);separator="\n">
     <servicesConfig;separator="\n">
 \</VirtualHost>
 
@@ -103,44 +101,3 @@ documentRoot(properties, domain) ::= <<
 <if(domain.useDomain)><properties.sitesDirectory>/<domain.useDomain>/web
 <else><properties.sitesDirectory>/<domain.name>/web<endif>
 >>
-
-domainAuth(auth, properties, domain) ::= <<
-# auth <auth.name>
-<auth.locations:domainAuthLocation(auth, properties, domain);separator="\n">
-
->>
-
-domainAuthLocation(location, auth, properties, domain) ::= <<
-\<Location /<location>\>
-    AuthType <if(auth.type)><auth.type><else><properties.defaultAuthType><endif>
-    AuthName "<auth.name>"
-    AuthDigestDomain /<auth.name>
-    AuthDigestProvider <if(auth.provider)><auth.provider><else><properties.defaultAuthType><endif>
-    AuthUserFile <properties.sitesDirectory>/<domain.name>/<properties.authSubdirectory>/<auth.passwordFileName>
-    <authGroupFile(auth, properties, domain)>
-    <auth.requires:{requires | <(requires.class.simpleName)(requires)>};separator="\n">
-\</Location>
->>
-
-authGroupFile(auth, properties, domain) ::= <%
-<if(auth.groups)>
-AuthGroupFile <properties.sitesDirectory>/<domain.name>/<properties.authSubdirectory>/<auth.name>.group
-<endif>
-%>
-
-AuthRequireValidUser(require) ::= <<
-Require valid-user
->>
-
-AuthRequireGroup(require) ::= <<
-Require group <require.name>
->>
-
-groupFile(auth) ::= <<
-<auth.groups: { groupp | <groupp.name>: <groupFileUser(groupp)> }>
-
->>
-
-groupFileUser(groupp) ::= <%
-<groupp.users: { user | <user.name>};separator=" ">
-%>

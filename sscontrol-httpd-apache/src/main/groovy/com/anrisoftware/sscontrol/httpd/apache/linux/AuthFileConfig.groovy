@@ -22,33 +22,54 @@ import javax.inject.Inject
 
 import org.apache.commons.io.FileUtils
 
-import com.anrisoftware.sscontrol.httpd.statements.auth.Auth
-import com.anrisoftware.sscontrol.httpd.statements.auth.AuthGroup
+import com.anrisoftware.resources.templates.api.TemplateResource
+import com.anrisoftware.sscontrol.httpd.statements.authfile.AuthFile
+import com.anrisoftware.sscontrol.httpd.statements.authfile.FileGroup
 import com.anrisoftware.sscontrol.httpd.statements.domain.Domain
 
-class FileAuthProvider {
+/**
+ * Server file/authentication configuration.
+ *
+ * @author Erwin Mueller, erwin.mueller@deventm.org
+ * @since 1.0
+ */
+class AuthFileConfig extends AuthConfig {
 
 	@Inject
-	FileAuthProviderLogger log
+	AuthFileConfigLogger log
 
-	Apache_2_2Script script
+	/**
+	 * File/auth configuration.
+	 */
+	TemplateResource authConfigTemplate
 
-	void deployAuth(Domain domain, Auth auth) {
-		setupDefaultAuth auth
+	/**
+	 * File/auth commands.
+	 */
+	TemplateResource authCommandsTemplate
+
+	def deployAuth(Domain domain, AuthFile auth, List serviceConfig) {
+		super.deployAuth(domain, auth, serviceConfig)
+		authConfigTemplate = apacheTemplates.getResource "authfile_config"
+		authCommandsTemplate = apacheTemplates.getResource "authfile_commands"
+		createDomainConfig domain, auth, serviceConfig
 		makeAuthDirectory(domain)
 		removeUsers(domain, auth)
 		deployUsers(domain, auth, auth.users)
-		auth.groups.each { AuthGroup group ->
+		auth.groups.each { FileGroup group ->
 			deployGroups(domain, auth, group)
 		}
 	}
 
-	private setupDefaultAuth(Auth auth) {
-		auth.type = auth.type == null ? script.defaultAuthType : auth.type
-		auth.provider = auth.provider == null ? script.defaultAuthProvider : auth.provider
+	void createDomainConfig(Domain domain, AuthFile auth, List serviceConfig) {
+		def config = authConfigTemplate.getText(true, "domainAuth",
+				"domain", domain,
+				"properties", script,
+				"auth", auth)
+		serviceConfig << config
 	}
 
-	private removeUsers(Domain domain, Auth auth) {
+	private removeUsers(Domain domain, AuthFile auth) {
 		if (!auth.appending) {
 			passwordFile(domain, auth).delete()
 		}
@@ -58,37 +79,29 @@ class FileAuthProvider {
 		new File(domainDir(domain), authSubdirectory).mkdirs()
 	}
 
-	private deployUsers(Domain domain, Auth auth, List users) {
+	private deployUsers(Domain domain, AuthFile auth, List users) {
 		if (users.empty) {
 			return
 		}
-		def worker = script.scriptCommandFactory.create(
-				apacheCommandsTemplate, "appendDigestPasswordFile",
+		def worker = scriptCommandFactory.create(
+				authCommandsTemplate, "appendDigestPasswordFile",
 				"file", passwordFile(domain, auth),
 				"auth", auth,
 				"users", users)()
 		log.deployAuthUsers script, worker, auth
 	}
 
-	private deployGroups(Domain domain, Auth auth, AuthGroup group) {
+	private deployGroups(Domain domain, AuthFile auth, FileGroup group) {
 		deployUsers(domain, auth, group.users)
-		def string = configTemplate.getText true, "groupFile", "auth", auth
+		def string = authConfigTemplate.getText true, "groupFile", "auth", auth
 		FileUtils.write groupFile(domain, auth), string
 	}
 
-	File passwordFile(Domain domain, Auth auth) {
+	File passwordFile(Domain domain, AuthFile auth) {
 		new File(domainDir(domain), "auth/${auth.passwordFileName}")
 	}
 
-	File groupFile(Domain domain, Auth auth) {
-		new File(domainDir(domain), "auth/${auth.name}.group")
-	}
-
-	def propertyMissing(String name) {
-		script.getProperty name
-	}
-
-	def methodMissing(String name, def args) {
-		script.invokeMethod name, args
+	File groupFile(Domain domain, AuthFile auth) {
+		new File(domainDir(domain), "auth/${auth.location}.group")
 	}
 }

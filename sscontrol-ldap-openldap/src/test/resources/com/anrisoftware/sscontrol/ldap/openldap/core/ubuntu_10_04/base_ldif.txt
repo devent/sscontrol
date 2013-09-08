@@ -1,0 +1,13 @@
+dn: dc=ubuntutest,dc=com
+objectClass: dcObject
+objectclass: organization
+o: ubuntutest.com
+dc: ubuntutest
+description: My LDAP Root
+
+dn: cn=admin,dc=ubuntutest,dc=com
+objectClass: simpleSecurityObject
+objectClass: organizationalRole
+cn: admin
+userPassword: {SSHA}fOkEHm7GKIowh+1eBnFg66m/vEPO7cj1
+description: LDAP Administrator

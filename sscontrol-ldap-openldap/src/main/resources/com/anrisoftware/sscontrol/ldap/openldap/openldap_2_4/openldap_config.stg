@@ -12,8 +12,8 @@ objectClass: olcDatabaseConfig
 objectClass: olcHdbConfig
 olcDatabase: {1}hdb
 olcDbDirectory: <properties.databaseDirectory>
-olcSuffix: <domainComponent(service.admin.domain)>
-olcRootDN: cn=<service.admin.name>,<domainComponent(service.admin.domain)>
+olcSuffix: <domainComponent(service.organization.domain)>
+olcRootDN: cn=<service.organization.admin.name>,<domainComponent(service.organization.admin.domain)>
 olcRootPW: <password>
 olcDbConfig: {0}set_cachesize <properties.cacheSizeGbytes> <properties.cacheSizeBytes> <properties.cacheSegments>
 olcDbConfig: {1}set_lk_max_objects <properties.maxLockObjects>
@@ -29,19 +29,20 @@ olcDbIndex: objectClass eq
 >>
 
 baseConfig(properties, service, password) ::= <<
-dn: dc=example,dc=com
+dn: <domainComponent(service.organization.domain)>
 objectClass: dcObject
 objectclass: organization
-o: example.com
-dc: example
-description: My LDAP Root
+o: <domainName(service.organization.domain)>
+dc: <service.organization.name>
+description: <service.organization.description>
 
-dn: cn=admin,dc=example,dc=com
+dn: cn=<service.organization.admin.name>,<domainComponent(service.organization.admin.domain)>
 objectClass: simpleSecurityObject
 objectClass: organizationalRole
-cn: admin
-userPassword: {MD5}Gnmk1g3mcY6OWzJuM4rlMw==
-description: LDAP administrator
+cn: <service.organization.admin.name>
+userPassword: <password>
+description: <service.organization.admin.description>
+
 >>
 
 systemConfig(properties, service) ::= <<
@@ -79,6 +80,10 @@ olcAccess: to * by dn="cn=admin,dc=example,dc=com" write by * read
 
 domainComponent(domain) ::= <%
 dc=<domain:{ d | <d>};separator=",dc=">
+%>
+
+domainName(domain) ::= <%
+<domain:{ d | <d>};separator=".">
 %>
 
 databaseIndices(service) ::= <<

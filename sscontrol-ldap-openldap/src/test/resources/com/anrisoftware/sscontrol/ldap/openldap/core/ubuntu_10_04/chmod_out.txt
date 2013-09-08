@@ -1,2 +1,4 @@
 o-r /tmp/etc/ldap/db.ldif
+o-r /tmp/etc/ldap/base.ldif
 o-r /tmp/etc/ldap/db.ldif
+o-r /tmp/etc/ldap/base.ldif

@@ -19,7 +19,9 @@
 package com.anrisoftware.sscontrol.ldap.openldap.core.ubuntu_10_04
 
 ldap {
-	admin "admin", password: "adminpass", domain: "ubuntutest.com"
+	organization "ubuntutest", domain: "ubuntutest.com", description: "My LDAP Root", {
+		admin "admin", password: "adminpass", description: "LDAP Administrator"
+	}
 	script """# LDIF Export for o=deventorg,dc=ubuntutest,dc=com
 # Server: My LDAP Server (127.0.0.1)
 # Search Scope: sub

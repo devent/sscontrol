@@ -37,26 +37,32 @@ class Openldap_2_4Config {
 
 	Openldap_2_4Script script
 
+	def adminPassword
+
 	void deployConfig() {
+		adminPassword = createAdminPassword()
 		deployDatabase()
-		//deployBase()
+		deployBase()
 		//deploySystem()
 		//deployLdap()
 	}
 
-	private deployDatabase() {
+	private createAdminPassword() {
 		ScriptCommandWorker worker = scriptCommandFactory.create(
 				ldapCommandsTemplate, "makePassword",
 				"command", slappasswdCommand,
-				"password", service.admin.password)()
-		def password = worker.out
+				"password", service.organization.admin.password)()
+		worker.out
+	}
+
+	private deployDatabase() {
 		def string = ldapConfigTemplate.getText true, "dbConfig",
 				"properties", script,
 				"service", service,
-				"password", password
+				"password", adminPassword
 		FileUtils.write databaseConfigFile, string
 		script.changeMod mod: "o-r", files: databaseConfigFile
-		worker = scriptCommandFactory.create(
+		def worker = scriptCommandFactory.create(
 				ldapCommandsTemplate, "addEntry",
 				"command", ldapaddCommand,
 				"file", databaseConfigFile)()
@@ -64,12 +70,17 @@ class Openldap_2_4Config {
 	}
 
 	private deployBase() {
-		def password = "aa"
 		def string = ldapConfigTemplate.getText true, "baseConfig",
 				"properties", script,
-				"service", service
+				"service", service,
+				"password", adminPassword
 		FileUtils.write baseConfigFile, string
-		log.baseConfigDeployed script, baseConfigFile
+		script.changeMod mod: "o-r", files: baseConfigFile
+		def worker = scriptCommandFactory.create(
+				ldapCommandsTemplate, "addEntry",
+				"command", ldapaddCommand,
+				"file", baseConfigFile)()
+		log.baseConfigDeployed script, baseConfigFile, worker
 	}
 
 	private deploySystem() {

@@ -47,7 +47,7 @@ class CoreTest extends UbuntuTestUtil {
 		registry.allServices.each { it.call() }
 
 		assertFileContent CoreResources.dbConf.asFile(tmpdir), CoreResources.dbConf
-		//assertFileContent CoreResources.baseConf.asFile(tmpdir), CoreResources.baseConf
+		assertFileContent CoreResources.baseConf.asFile(tmpdir), CoreResources.baseConf
 		//assertFileContent CoreResources.systemConf.asFile(tmpdir), CoreResources.systemConf
 		//assertFileContent CoreResources.ldapConf.asFile(tmpdir), CoreResources.ldapConf
 		assertStringContent CoreResources.chmodOut.replaced(tmpdir, tmpdir, "/tmp"), CoreResources.chmodOut.toString()

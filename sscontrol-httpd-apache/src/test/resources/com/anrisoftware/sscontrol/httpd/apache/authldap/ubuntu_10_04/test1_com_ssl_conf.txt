@@ -14,26 +14,21 @@
     SSLCertificateFile /tmp/var/www/test1.com/ssl/cert_crt.txt
     SSLCertificateKeyFile /tmp/var/www/test1.com/ssl/cert_key.txt
 
-    # redirect to www https
-    ServerAlias www.test1.com
-    RewriteEngine On
-    RewriteCond %{HTTP_HOST} ^test1\.com$ [NC]
-    RewriteRule ^(.*)$ https://www.test1.com$1 [L,R=301]
-
-    # auth private
-    <Location /private>
-       AuthType Basic
-       AuthName "Private Directory"
-       AuthBasicProvider ldap
-       AuthzLDAPAuthoritative on
-       AuthLDAPURL ldap://127.0.0.1:389/o=deventorg,dc=ubuntutest,dc=com?cn
-       AuthLDAPBindDN "cn=admin,dc=ubuntutest,dc=com"
-       AuthLDAPBindPassword "d8yyqfgq"
-       AuthLDAPGroupAttribute uniqueMember
-       AuthLDAPGroupAttributeIsDN on
-       Require ldap-group cn=ldapadminGroup,o=deventorg,dc=ubuntutest,dc=com
-       Require valid-user
-       Satisfy any
+    # auth "Private Directory"
+    <Location private>
+        AuthType digest
+        AuthName "Private Directory"
+        AuthDigestDomain /private
+        AuthDigestProvider ldap
+        AuthzLDAPAuthoritative on
+        AuthLDAPURL ldap://127.0.0.1:389/o=deventorg,dc=ubuntutest,dc=com?cn
+        AuthLDAPBindDN "cn=admin,dc=ubuntutest,dc=com"
+        AuthLDAPBindPassword "adminpass"
+        Require valid-user
+        AuthLDAPGroupAttribute uniqueMember
+        AuthLDAPGroupAttributeIsDN on
+        Require ldap-group cn=ldapadminGroup,o=deventorg,dc=ubuntutest,dc=com
+        Satisfy any
     </Location>
 
 </VirtualHost>

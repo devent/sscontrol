@@ -1,12 +1,12 @@
 suexec
 rewrite
 rewrite
-rewrite
 auth_digest
+authnz_ldap
 ssl
 suexec
 rewrite
 rewrite
-rewrite
 auth_digest
+authnz_ldap
 ssl

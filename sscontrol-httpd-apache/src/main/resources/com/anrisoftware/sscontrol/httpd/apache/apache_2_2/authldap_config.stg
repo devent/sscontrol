@@ -1,0 +1,39 @@
+domainAuth(domain, properties, auth) ::= <<
+# auth "<auth.name>"
+\<Location <auth.location>\>
+    <(auth.type)(auth)>
+    AuthzLDAPAuthoritative on
+    AuthLDAPURL <auth.host.name><auth.host.url>
+    AuthLDAPBindDN "<auth.credentials.name>"
+    AuthLDAPBindPassword "<auth.credentials.password>"
+    <auth.requires:{requires | <(requires.class.simpleName)(requires)>};separator="\n">
+    Satisfy any
+\</Location>
+
+>>
+
+digest(auth) ::= <<
+AuthType <auth.type>
+AuthName "<auth.name>"
+AuthDigestDomain <auth.domains;separator=" ">
+AuthDigestProvider <auth.provider>
+>>
+
+RequireValidUser(require) ::= <<
+Require valid-user
+>>
+
+RequireLdapValidGroup(require) ::= <<
+AuthLDAPGroupAttribute <require.attribute.name>
+AuthLDAPGroupAttributeIsDN <require.attribute.dn>
+Require ldap-group <require.name>
+>>
+
+groupFile(auth) ::= <<
+<auth.groups: { groupp | <groupp.name>: <groupFileUser(groupp)> }>
+
+>>
+
+groupFileUser(groupp) ::= <%
+<groupp.users: { user | <user.name>};separator=" ">
+%>

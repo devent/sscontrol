@@ -31,6 +31,7 @@ import com.anrisoftware.sscontrol.httpd.statements.auth.AuthType
 import com.anrisoftware.sscontrol.httpd.statements.auth.RequireValidGroup
 import com.anrisoftware.sscontrol.httpd.statements.auth.RequireValidUser
 import com.anrisoftware.sscontrol.httpd.statements.auth.SatisfyType
+import com.anrisoftware.sscontrol.httpd.statements.authldap.AttributeDn
 import com.anrisoftware.sscontrol.httpd.statements.authldap.RequireLdapValidGroup
 
 /**
@@ -123,6 +124,6 @@ class HttpdTest extends HttpdTestUtil {
 		assert require.class == RequireLdapValidGroup
 		assert require.name == "cn=ldapadminGroup,o=deventorg,dc=ubuntutest,dc=com"
 		assert require.attribute.name == "uniqueMember"
-		assert require.attribute.dn == false
+		assert require.attribute.dn == AttributeDn.off
 	}
 }

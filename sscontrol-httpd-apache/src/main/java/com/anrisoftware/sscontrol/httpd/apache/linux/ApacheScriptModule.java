@@ -1,24 +1,28 @@
 /*
  * Copyright 2013 Erwin Müller <erwin.mueller@deventm.org>
- *
+ * 
  * This file is part of sscontrol-httpd-apache.
- *
- * sscontrol-httpd-apache is free software: you can redistribute it and/or modify it
- * under the terms of the GNU Affero General Public License as published by the
- * Free Software Foundation, either version 3 of the License, or (at your
- * option) any later version.
- *
+ * 
+ * sscontrol-httpd-apache is free software: you can redistribute it and/or
+ * modify it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the License,
+ * or (at your option) any later version.
+ * 
  * sscontrol-httpd-apache is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
  * for more details.
- *
+ * 
  * You should have received a copy of the GNU Affero General Public License
- * along with sscontrol-httpd-apache. If not, see <http://www.gnu.org/licenses/>.
+ * along with sscontrol-httpd-apache. If not, see
+ * <http://www.gnu.org/licenses/>.
  */
 package com.anrisoftware.sscontrol.httpd.apache.linux;
 
+import static com.google.inject.multibindings.MapBinder.newMapBinder;
+
 import com.google.inject.AbstractModule;
+import com.google.inject.multibindings.MapBinder;
 
 /**
  * Apache service module.
@@ -30,5 +34,13 @@ public class ApacheScriptModule extends AbstractModule {
 
 	@Override
 	protected void configure() {
+		bindAuthConfig();
+	}
+
+	private void bindAuthConfig() {
+		MapBinder<String, AuthConfig> map = newMapBinder(binder(),
+				String.class, AuthConfig.class);
+		map.addBinding("AuthFile").to(AuthFileConfig.class);
+		map.addBinding("AuthLdap").to(AuthLdapConfig.class);
 	}
 }

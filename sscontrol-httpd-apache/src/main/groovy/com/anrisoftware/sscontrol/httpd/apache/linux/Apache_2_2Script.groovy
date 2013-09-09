@@ -60,7 +60,7 @@ abstract class Apache_2_2Script extends ApacheScript {
 	PhpmyadminConfig deployPhpmyadmin
 
 	@Inject
-	AuthFileConfig deployAuthFile
+	Map<String, AuthConfig> authConfigs
 
 	/**
 	 * The {@link Templates} for the script.
@@ -87,7 +87,7 @@ abstract class Apache_2_2Script extends ApacheScript {
 		deployRedirectHttpToHttps.script = this
 		deployRedirectToWwwHttp.script = this
 		deployRedirectToWwwHttps.script = this
-		deployAuthFile.script = this
+		authConfigs.each { it.value.script = this }
 		deployPhpmyadmin.script = this
 		super.run()
 		deployDefaultConfig()
@@ -138,7 +138,7 @@ abstract class Apache_2_2Script extends ApacheScript {
 
 	def deployAuth(Domain domain, List serviceConfig) {
 		domain.auths.each {
-			this."deploy${it.class.simpleName}".deployAuth(domain, it, serviceConfig)
+			authConfigs[it.class.simpleName].deployAuth(domain, it, serviceConfig)
 		}
 	}
 

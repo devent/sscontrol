@@ -20,6 +20,8 @@ package com.anrisoftware.sscontrol.httpd.statements.domain;
 
 import static com.anrisoftware.sscontrol.httpd.statements.domain.DomainLogger._.address_set;
 import static com.anrisoftware.sscontrol.httpd.statements.domain.DomainLogger._.address_set_debug;
+import static com.anrisoftware.sscontrol.httpd.statements.domain.DomainLogger._.certification_key_resource_null;
+import static com.anrisoftware.sscontrol.httpd.statements.domain.DomainLogger._.certification_resource_null;
 import static com.anrisoftware.sscontrol.httpd.statements.domain.DomainLogger._.document_root_debug;
 import static com.anrisoftware.sscontrol.httpd.statements.domain.DomainLogger._.document_root_set;
 import static com.anrisoftware.sscontrol.httpd.statements.domain.DomainLogger._.port_set;
@@ -32,6 +34,7 @@ import static com.anrisoftware.sscontrol.httpd.statements.domain.DomainLogger._.
 import static com.anrisoftware.sscontrol.httpd.statements.domain.DomainLogger._.service_added_info;
 import static com.anrisoftware.sscontrol.httpd.statements.domain.DomainLogger._.use_domain;
 import static com.anrisoftware.sscontrol.httpd.statements.domain.DomainLogger._.use_domain_debug;
+import static org.apache.commons.lang3.Validate.notNull;
 
 import javax.inject.Singleton;
 
@@ -76,7 +79,12 @@ class DomainLogger extends AbstractLogger {
 
 		service_added_debug("Service {} added for {}."),
 
-		service_added_info("Service '{}' added for domain '{}'.");
+		service_added_info("Service '{}' added for domain '{}'."),
+
+		certification_resource_null("Certificate resource must be set for %s."),
+
+		certification_key_resource_null(
+				"Certificate key resource must be set for %s.");
 
 		private String name;
 
@@ -151,6 +159,14 @@ class DomainLogger extends AbstractLogger {
 		} else {
 			info(service_added_info, service.getName(), domain.getName());
 		}
+	}
+
+	void checkCertificationResource(SslDomain domain, Object resource) {
+		notNull(resource, certification_resource_null.toString(), domain);
+	}
+
+	void checkCertificationKeyResource(SslDomain domain, Object resource) {
+		notNull(resource, certification_key_resource_null.toString(), domain);
 	}
 
 }

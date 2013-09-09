@@ -94,6 +94,7 @@ public class SslDomain extends Domain {
 	 * @return the the certificate {@link URL} resource.
 	 */
 	public URL getCertificationResource() {
+		log.checkCertificationResource(this, certificationResource);
 		return certificationResource;
 	}
 
@@ -103,6 +104,7 @@ public class SslDomain extends Domain {
 	 * @return the the certificate file name.
 	 */
 	public String getCertificationFile() {
+		log.checkCertificationResource(this, certificationFile);
 		return certificationFile;
 	}
 
@@ -132,6 +134,7 @@ public class SslDomain extends Domain {
 	 * @return the the certificate key {@link URL} resource.
 	 */
 	public URL getCertificationKeyResource() {
+		log.checkCertificationResource(this, certificationKeyResource);
 		return certificationKeyResource;
 	}
 

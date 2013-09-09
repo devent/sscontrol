@@ -1,0 +1,57 @@
+<VirtualHost 192.168.0.50:443>
+
+    # domain phpadmin.test1.com
+    ServerName phpadmin.test1.com
+    DocumentRoot /tmp/var/www/phpadmin.test1.com/web
+    SuexecUserGroup www-data www-data
+    <Directory /tmp/var/www/phpadmin.test1.com/web>
+        AllowOverride None
+        Order allow,deny
+        Allow from all
+    </Directory>
+
+    SSLEngine on
+    SSLCertificateFile /tmp/var/www/phpadmin.test1.com/ssl/cert_crt.txt
+    SSLCertificateKeyFile /tmp/var/www/phpadmin.test1.com/ssl/cert_key.txt
+
+    # phpmyadmin
+
+    Alias /phpldapadmin /var/www/ldapadmin.ubuntutest.com/phpldapadmin/htdocs
+
+    <Directory /var/www/ldapadmin.ubuntutest.com/phpldapadmin/htdocs>
+        AddHandler fcgid-script .php
+        FCGIWrapper /var/www/php-fcgi-scripts/ldapadmin.ubuntutest.com/php-fcgi-starter .php
+
+        DirectoryIndex index.php
+        Options +FollowSymLinks +ExecCGI
+        AllowOverride None
+
+        Order allow,deny
+        Allow from all
+
+        <IfModule mod_mime.c>
+            <IfModule mod_php5.c>
+                AddType application/x-httpd-php .php
+                php_flag magic_quotes_gpc Off
+                php_flag track_vars On
+                php_flag register_globals On
+                php_value include_path .
+                php_value memory_limit 32M
+            </IfModule>
+
+            <IfModule !mod_php5.c>
+                <IfModule mod_actions.c>
+                    <IfModule mod_cgi.c>
+                        AddType application/x-httpd-php .php
+                        Action application/x-httpd-php /cgi-bin/php5
+                    </IfModule>
+                    <IfModule mod_cgid.c>
+                        AddType application/x-httpd-php .php
+                        Action application/x-httpd-php /cgi-bin/php5
+                    </IfModule>
+                </IfModule>
+            </IfModule>
+        </IfModule>
+    </Directory>
+
+</VirtualHost>

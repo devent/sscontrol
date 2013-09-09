@@ -22,7 +22,7 @@ public class AuthAttribute {
 
 	private String name;
 
-	private boolean dn;
+	private AttributeDn dn;
 
 	/**
 	 * @see AuthAttributeFactory#create(Map, String)
@@ -31,10 +31,10 @@ public class AuthAttribute {
 	AuthAttribute(AuthAttributeLogger log, @Assisted Map<String, Object> args,
 			@Assisted String name) {
 		this.log = log;
-		this.dn = true;
+		this.dn = AttributeDn.on;
 		setName(name);
 		if (args.containsKey(DN)) {
-			dn = (Boolean) args.get(DN);
+			setDn((Boolean) args.get(DN));
 		}
 	}
 
@@ -47,7 +47,11 @@ public class AuthAttribute {
 		return name;
 	}
 
-	public boolean isDn() {
+	public void setDn(boolean dn) {
+		this.dn = dn ? AttributeDn.on : AttributeDn.off;
+	}
+
+	public AttributeDn getDn() {
 		return dn;
 	}
 

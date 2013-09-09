@@ -16,19 +16,20 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.service
+package com.anrisoftware.sscontrol.httpd.statements.phpldapadmin;
+
+import java.util.Map;
+
+import com.anrisoftware.sscontrol.httpd.statements.webservice.WebServiceFactory;
 
 /**
- * Loads the resources.
- *
+ * Factory to create the phpmyadmin service.
+ * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class HttpdResources {
-	static ubuntu1004Profile = HttpdResources.class.getResource("Ubuntu_10_04Profile.groovy")
-	static httpdScript = HttpdResources.class.getResource("Httpd.groovy")
-	static authFileScript = HttpdResources.class.getResource("HttpdAuthFile.groovy")
-	static authLdapScript = HttpdResources.class.getResource("HttpdAuthLdap.groovy")
-	static phpmyadminScript = HttpdResources.class.getResource("HttpdPhpmyadmin.groovy")
-	static phpldapadminScript = HttpdResources.class.getResource("HttpdPhpldapadmin.groovy")
+public interface PhpldapadminServiceFactory extends WebServiceFactory {
+
+	@Override
+	PhpldapadminService create(Map<String, Object> map);
 }

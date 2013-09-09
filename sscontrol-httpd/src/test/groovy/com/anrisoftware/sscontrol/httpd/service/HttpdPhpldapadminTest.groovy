@@ -18,17 +18,33 @@
  */
 package com.anrisoftware.sscontrol.httpd.service
 
+import static com.anrisoftware.globalpom.utils.TestUtils.*
+import static com.anrisoftware.sscontrol.httpd.service.HttpdResources.*
+import groovy.util.logging.Slf4j
+
+import org.junit.Test
+
+import com.anrisoftware.sscontrol.core.api.ServiceLoader as SscontrolServiceLoader
+import com.anrisoftware.sscontrol.core.api.ServicesRegistry
+import com.anrisoftware.sscontrol.httpd.statements.domain.Domain
+
 /**
- * Loads the resources.
+ * @see HttpdServiceImpl
+ * @see Httpd
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class HttpdResources {
-	static ubuntu1004Profile = HttpdResources.class.getResource("Ubuntu_10_04Profile.groovy")
-	static httpdScript = HttpdResources.class.getResource("Httpd.groovy")
-	static authFileScript = HttpdResources.class.getResource("HttpdAuthFile.groovy")
-	static authLdapScript = HttpdResources.class.getResource("HttpdAuthLdap.groovy")
-	static phpmyadminScript = HttpdResources.class.getResource("HttpdPhpmyadmin.groovy")
-	static phpldapadminScript = HttpdResources.class.getResource("HttpdPhpldapadmin.groovy")
+@Slf4j
+class HttpdPhpldapadminTest extends HttpdTestUtil {
+
+	@Test
+	void "phpldapadmin"() {
+		loader.loadService ubuntu1004Profile, null
+		def profile = registry.getService("profile")[0]
+		loader.loadService phpldapadminScript, profile
+		HttpdServiceImpl service = registry.getService("httpd")[0]
+
+		Domain domain = service.domains[2]
+	}
 }

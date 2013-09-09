@@ -22,6 +22,7 @@ import com.anrisoftware.sscontrol.httpd.statements.auth.AuthModule;
 import com.anrisoftware.sscontrol.httpd.statements.authfile.AuthFileModule;
 import com.anrisoftware.sscontrol.httpd.statements.authldap.AuthLdapModule;
 import com.anrisoftware.sscontrol.httpd.statements.domain.DomainModule;
+import com.anrisoftware.sscontrol.httpd.statements.phpldapadmin.PhpldapadminModule;
 import com.anrisoftware.sscontrol.httpd.statements.phpmyadmin.PhpmyadminModule;
 import com.anrisoftware.sscontrol.httpd.statements.redirect.RedirectModule;
 import com.google.inject.AbstractModule;
@@ -42,5 +43,6 @@ class HttpdModule extends AbstractModule {
 		install(new AuthFileModule());
 		install(new AuthLdapModule());
 		install(new PhpmyadminModule());
+		install(new PhpldapadminModule());
 	}
 }

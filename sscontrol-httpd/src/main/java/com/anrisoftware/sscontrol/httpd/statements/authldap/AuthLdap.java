@@ -77,9 +77,17 @@ public class AuthLdap extends AbstractAuth {
 		log.hostSet(this, host);
 	}
 
+	public AuthHost getHost() {
+		return host;
+	}
+
 	public void credentials(Map<String, Object> args, String name) {
 		this.credentials = credentialsFactory.create(args, name);
 		log.credentialsSet(this, credentials);
+	}
+
+	public Credentials getCredentials() {
+		return credentials;
 	}
 
 	public RequireLdapValidGroup require(Map<String, Object> args, Object s) {

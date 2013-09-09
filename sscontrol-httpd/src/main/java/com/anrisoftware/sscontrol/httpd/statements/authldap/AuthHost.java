@@ -1,5 +1,8 @@
 package com.anrisoftware.sscontrol.httpd.statements.authldap;
 
+import static java.lang.String.format;
+import static org.apache.commons.lang3.StringUtils.startsWith;
+
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -47,7 +50,8 @@ public class AuthHost {
 
 	public void setUrl(Object url) {
 		log.checkUrl(url);
-		this.url = url.toString();
+		String string = url.toString();
+		this.url = !startsWith(string, "/") ? format("/%s", string) : string;
 	}
 
 	public String getUrl() {

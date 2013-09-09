@@ -8,6 +8,7 @@ import com.anrisoftware.sscontrol.httpd.statements.auth.AbstractAuth;
 import com.anrisoftware.sscontrol.httpd.statements.auth.AuthProvider;
 import com.anrisoftware.sscontrol.httpd.statements.auth.AuthType;
 import com.anrisoftware.sscontrol.httpd.statements.auth.SatisfyType;
+import com.anrisoftware.sscontrol.httpd.statements.yesno.YesNoFlag;
 import com.google.inject.assistedinject.Assisted;
 
 /**
@@ -45,9 +46,12 @@ public class AuthLdap extends AbstractAuth {
 
 	private Credentials credentials;
 
+	private Authoritative authoritative;
+
 	@Inject
 	AuthLdap(@Assisted Map<String, Object> args, @Assisted String name) {
 		super(name);
+		this.authoritative = Authoritative.on;
 		this.args = args;
 	}
 
@@ -64,12 +68,35 @@ public class AuthLdap extends AbstractAuth {
 		if (args.containsKey(SATISFY)) {
 			setSatisfy((SatisfyType) args.get(SATISFY));
 		}
+		if (args.containsKey("authoritative")) {
+			setAuthoritative((YesNoFlag) args.get("authoritative"));
+		}
 		this.args = null;
 	}
 
 	public void setLocation(Object location) {
 		log.checkLocation(location);
 		super.setLocation(location.toString());
+	}
+
+	public void setAuthoritative(YesNoFlag flag) {
+		switch (flag) {
+		case yes:
+			setAuthoritative(Authoritative.on);
+			break;
+		case no:
+			setAuthoritative(Authoritative.off);
+			break;
+		}
+	}
+
+	public void setAuthoritative(Authoritative authoritative) {
+		this.authoritative = authoritative;
+		log.authoritativeSet(this, authoritative);
+	}
+
+	public Authoritative getAuthoritative() {
+		return authoritative;
 	}
 
 	public void host(Map<String, Object> args, String name) {

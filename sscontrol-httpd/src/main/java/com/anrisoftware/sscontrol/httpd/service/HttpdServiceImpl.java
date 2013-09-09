@@ -40,6 +40,7 @@ import com.anrisoftware.sscontrol.httpd.statements.auth.AuthType;
 import com.anrisoftware.sscontrol.httpd.statements.auth.SatisfyType;
 import com.anrisoftware.sscontrol.httpd.statements.domain.Domain;
 import com.anrisoftware.sscontrol.httpd.statements.domain.DomainFactory;
+import com.anrisoftware.sscontrol.httpd.statements.yesno.YesNoFlag;
 
 /**
  * Firewall service.
@@ -151,6 +152,14 @@ public class HttpdServiceImpl extends AbstractService {
 	 */
 	public Set<Domain> getVirtualDomains() {
 		return virtualDomains;
+	}
+
+	public YesNoFlag getYes() {
+		return YesNoFlag.yes;
+	}
+
+	public YesNoFlag getNo() {
+		return YesNoFlag.no;
 	}
 
 	public AuthProvider getFile() {

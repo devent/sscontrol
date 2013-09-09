@@ -32,6 +32,7 @@ import com.anrisoftware.sscontrol.httpd.statements.auth.RequireValidGroup
 import com.anrisoftware.sscontrol.httpd.statements.auth.RequireValidUser
 import com.anrisoftware.sscontrol.httpd.statements.auth.SatisfyType
 import com.anrisoftware.sscontrol.httpd.statements.authldap.AttributeDn
+import com.anrisoftware.sscontrol.httpd.statements.authldap.Authoritative
 import com.anrisoftware.sscontrol.httpd.statements.authldap.RequireLdapValidGroup
 
 /**
@@ -116,6 +117,7 @@ class HttpdTest extends HttpdTestUtil {
 		assert auth.type == AuthType.digest
 		assert auth.provider == AuthProvider.ldap
 		assert auth.satisfy == SatisfyType.any
+		assert auth.authoritative == Authoritative.off
 
 		def require = auth.requires[0]
 		assert require.class == RequireValidUser

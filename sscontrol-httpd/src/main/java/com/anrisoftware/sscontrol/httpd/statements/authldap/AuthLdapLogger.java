@@ -18,6 +18,8 @@
  */
 package com.anrisoftware.sscontrol.httpd.statements.authldap;
 
+import static com.anrisoftware.sscontrol.httpd.statements.authldap.AuthLdapLogger._.authoritative_set_debug;
+import static com.anrisoftware.sscontrol.httpd.statements.authldap.AuthLdapLogger._.authoritative_set_info;
 import static com.anrisoftware.sscontrol.httpd.statements.authldap.AuthLdapLogger._.credentials_set_debug;
 import static com.anrisoftware.sscontrol.httpd.statements.authldap.AuthLdapLogger._.credentials_set_info;
 import static com.anrisoftware.sscontrol.httpd.statements.authldap.AuthLdapLogger._.host_set_debug;
@@ -55,7 +57,11 @@ class AuthLdapLogger extends AbstractLogger {
 
 		require_added("Require {} added to {}."),
 
-		require_group_added("Require group '{}' added to auth '{}'.");
+		require_group_added("Require group '{}' added to auth '{}'."),
+
+		authoritative_set_debug("Authoritative {} set to {}."),
+
+		authoritative_set_info("Authoritative {} set to auth '{}'.");
 
 		private String name;
 
@@ -101,6 +107,14 @@ class AuthLdapLogger extends AbstractLogger {
 			debug(require_added, require, auth);
 		} else {
 			info(require_group_added, require.getName(), auth.getName());
+		}
+	}
+
+	void authoritativeSet(AuthLdap auth, Authoritative authoritative) {
+		if (isDebugEnabled()) {
+			debug(authoritative_set_debug, authoritative, auth);
+		} else {
+			info(authoritative_set_info, authoritative, auth.getName());
 		}
 	}
 

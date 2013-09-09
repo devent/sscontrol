@@ -2,7 +2,7 @@ domainAuth(domain, properties, auth) ::= <<
 # auth "<auth.name>"
 \<Location <auth.location>\>
     <(auth.type)(auth)>
-    AuthzLDAPAuthoritative on
+    AuthzLDAPAuthoritative <auth.authoritative>
     AuthLDAPURL <auth.host.name><auth.host.url>
     AuthLDAPBindDN "<auth.credentials.name>"
     AuthLDAPBindPassword "<auth.credentials.password>"

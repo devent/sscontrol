@@ -33,7 +33,7 @@ httpd {
 			credentials "cn=admin,dc=ubuntutest,dc=com", password: "adminpass"
 			require valid_user
 			require group: "cn=ldapadminGroup,o=deventorg,dc=ubuntutest,dc=com", {
-				attribute "uniqueMember", dn: true //.
+				attribute "uniqueMember", dn: yes //.
 			}
 		}
 	}

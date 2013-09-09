@@ -1,15 +1,19 @@
 domainAuth(domain, properties, auth) ::= <<
-# auth <auth.name>
+# auth "<auth.name>"
 \<Location /<auth.location>\>
-    AuthType <if(auth.type)><auth.type><else><properties.defaultAuthType><endif>
-    AuthName "<auth.name>"
-    AuthDigestDomain <auth.domains;separator=" ">
-    AuthDigestProvider <if(auth.provider)><auth.provider><else><properties.defaultAuthType><endif>
+    <(auth.type)(auth)>
     AuthUserFile <properties.sitesDirectory>/<domain.name>/<properties.authSubdirectory>/<auth.passwordFileName>
     <authGroupFile(auth, properties, domain)>
     <auth.requires:{requires | <(requires.class.simpleName)(requires)>};separator="\n">
 \</Location>
 
+>>
+
+digest(auth) ::= <<
+AuthType <auth.type>
+AuthName "<auth.name>"
+AuthDigestDomain <auth.domains;separator=" ">
+AuthDigestProvider <auth.provider>
 >>
 
 authGroupFile(auth, properties, domain) ::= <%

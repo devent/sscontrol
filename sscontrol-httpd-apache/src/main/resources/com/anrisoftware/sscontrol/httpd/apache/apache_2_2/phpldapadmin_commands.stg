@@ -1,0 +1,10 @@
+reconfigure(command) ::= <<
+#!/bin/sh
+<command> phpmyadmin
+
+>>
+
+importTables(zcatCommand, mysqlCommand, admin, user, script) ::= <<
+#!/bin/sh
+<zcatCommand> <script> | <mysqlCommand> --user=<admin.user> --password=<admin.password> <user.database>
+>>

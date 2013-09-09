@@ -27,8 +27,6 @@ import groovy.lang.Script;
 
 import com.anrisoftware.sscontrol.httpd.apache.linux.ApacheScriptModule;
 import com.anrisoftware.sscontrol.httpd.apache.linux.ServiceConfig;
-import com.anrisoftware.sscontrol.httpd.apache.ubuntu_10_04.PhpmyadminConfig;
-import com.anrisoftware.sscontrol.httpd.apache.ubuntu_10_04.Ubuntu_10_04Script;
 import com.google.inject.AbstractModule;
 import com.google.inject.multibindings.MapBinder;
 
@@ -59,5 +57,7 @@ class UbuntuModule extends AbstractModule {
 				String.class, ServiceConfig.class);
 		map.addBinding(format("%s.%s", PROFILE, PhpmyadminConfig.NAME)).to(
 				PhpmyadminConfig.class);
+		map.addBinding(format("%s.%s", PROFILE, PhpldapadminConfig.NAME)).to(
+				PhpldapadminConfig.class);
 	}
 }

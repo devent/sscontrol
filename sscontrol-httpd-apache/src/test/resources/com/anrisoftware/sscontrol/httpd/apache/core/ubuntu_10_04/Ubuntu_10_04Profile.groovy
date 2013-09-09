@@ -18,6 +18,7 @@
  */
 package com.anrisoftware.sscontrol.httpd.apache.core.ubuntu_10_04
 
+import com.anrisoftware.sscontrol.httpd.apache.phpldapadmin.ubuntu_10_04.PhpldapadminResources
 import com.anrisoftware.sscontrol.httpd.apache.phpmyadmin.ubuntu_10_04.PhpmyadminResources
 
 profile "ubuntu_10_04", {
@@ -31,6 +32,7 @@ profile "ubuntu_10_04", {
 		user_add_command UbuntuResources.useraddCommand.asFile(tmp)
 		reconfigure_command UbuntuResources.reconfigureCommand.asFile(tmp)
 		zcat_command UbuntuResources.zcatCommand.asFile(tmp)
+		tar_command UbuntuResources.tarCommand.asFile(tmp)
 		enable_mod_command UbuntuResources.a2enmodCommand.asFile(tmp)
 		disable_mod_command UbuntuResources.a2dismodCommand.asFile(tmp)
 		enable_site_command UbuntuResources.a2ensiteCommand.asFile(tmp)
@@ -38,6 +40,7 @@ profile "ubuntu_10_04", {
 		apache_command UbuntuResources.apache2Command.asFile(tmp)
 		apache_control_command UbuntuResources.apache2ctlCommand.asFile(tmp)
 		htpasswd_command UbuntuResources.htpasswdCommand.asFile(tmp)
+		temp_directory UbuntuResources.tmpDir.asFile(tmp)
 		configuration_directory UbuntuResources.configurationDir.asFile(tmp)
 		group_file UbuntuResources.group.asFile(tmp)
 		user_file UbuntuResources.user.asFile(tmp)
@@ -53,5 +56,8 @@ profile "ubuntu_10_04", {
 		phpmyadmin_local_config_file PhpmyadminResources.localConfig.asFile(tmp)
 		phpmyadmin_local_blowfish_secret_file PhpmyadminResources.localBlowfish.asFile(tmp)
 		phpmyadmin_local_database_config_file PhpmyadminResources.localDbConfig.asFile(tmp)
+		// phpmyadmin
+		phpldapadmin_source PhpldapadminResources.phpldapadminTgz.resource
+		phpldapadmin_configuration_directory PhpldapadminResources.configDir.asFile(tmp)
 	}
 }

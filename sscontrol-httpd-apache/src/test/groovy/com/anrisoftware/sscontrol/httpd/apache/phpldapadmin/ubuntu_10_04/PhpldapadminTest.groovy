@@ -26,6 +26,7 @@ import groovy.util.logging.Slf4j
 
 import org.junit.Test
 
+import com.anrisoftware.sscontrol.httpd.apache.core.ubuntu_10_04.UbuntuResources
 import com.anrisoftware.sscontrol.httpd.apache.ubuntu.UbuntuTestUtil
 
 /**
@@ -39,7 +40,7 @@ class PhpldapadminTest extends UbuntuTestUtil {
 
 	@Test
 	void "phpldapadmin"() {
-		copyUbuntuFiles tmpdir
+		UbuntuResources.copyUbuntuFiles tmpdir
 
 		loader.loadService profile.resource, null
 		def profile = registry.getService("profile")[0]
@@ -49,6 +50,8 @@ class PhpldapadminTest extends UbuntuTestUtil {
 		log.info "Run service again to ensure that configuration is not set double."
 		registry.allServices.each { it.call() }
 
+		assert phpldapadminTgz.asFile(tmpdir).isFile()
+		assertFileContent tarOut.asFile(tmpdir), tarOut
 		assertFileContent defaultConf.asFile(tmpdir), defaultConf
 		assertFileContent domainsConf.asFile(tmpdir), PhpldapadminResources.domainsConf
 		assertStringContent test1comConf.replaced(tmpdir, tmpdir, "/tmp"), test1comConf.toString()
@@ -57,7 +60,6 @@ class PhpldapadminTest extends UbuntuTestUtil {
 		assertFileContent ldapadminTest1comSslFcgiScript.asFile(tmpdir), ldapadminTest1comSslFcgiScript
 		assertStringContent chownOut.replaced(tmpdir, tmpdir, "/tmp"), chownOut.toString()
 		assertStringContent chmodOut.replaced(tmpdir, tmpdir, "/tmp"), chmodOut.toString()
-		assert phpldapadminTgz.asFile(tmpdir).isFile()
 		assertFileContent exampleConfig.asFile(tmpdir), exampleConfig
 		assertFileContent linkedExampleConfig.asFile(tmpdir), linkedExampleConfig
 		assertFileContent expectedConfig.asFile(tmpdir), expectedConfig

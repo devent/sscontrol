@@ -42,6 +42,7 @@ enum UbuntuResources {
 	useraddCommand("/usr/sbin/useradd", UbuntuResources.class.getResource("echo_command.txt")),
 	groupaddCommand("/usr/sbin/groupadd", UbuntuResources.class.getResource("echo_command.txt")),
 	zcatCommand("/bin/zcat", UbuntuResources.class.getResource("echo_command.txt")),
+	tarCommand("/bin/tar", UbuntuResources.class.getResource("echo_command.txt")),
 	reconfigureCommand("/usr/sbin/dpkg-reconfigure", UbuntuResources.class.getResource("echo_command.txt")),
 	mysqlCommand("/usr/bin/mysql", UbuntuResources.class.getResource("echo_command.txt")),
 	a2enmodCommand("/usr/sbin/a2enmod", UbuntuResources.class.getResource("echo_command.txt")),
@@ -52,6 +53,7 @@ enum UbuntuResources {
 	apache2ctlCommand("/usr/sbin/apache2ctl", UbuntuResources.class.getResource("httpd_status_command.txt")),
 	htpasswdCommand("/usr/bin/htpasswd", UbuntuResources.class.getResource("echo_command.txt")),
 	htdigestCommand("/usr/bin/htdigest", UbuntuResources.class.getResource("echo_command.txt")),
+	tmpDir("/tmp", null),
 	configurationDir("/etc/apache2", null),
 	sitesAvailableDir("/etc/apache2/sites-available", null),
 	configIncludeDir("/etc/apache2/conf.d", null),
@@ -67,6 +69,7 @@ enum UbuntuResources {
 		groupaddCommand.createCommand parent
 		useraddCommand.createCommand parent
 		zcatCommand.createCommand parent
+		tarCommand.createCommand parent
 		reconfigureCommand.createCommand parent
 		a2enmodCommand.createCommand parent
 		a2dismodCommand.createCommand parent
@@ -75,6 +78,7 @@ enum UbuntuResources {
 		apache2Command.createCommand parent
 		apache2ctlCommand.createCommand parent
 		htpasswdCommand.createCommand parent
+		tmpDir.asFile(parent).mkdirs()
 		mysqlCommand.createCommand parent
 		group.createFile parent
 		user.createFile parent

@@ -119,7 +119,9 @@ abstract class Apache_2_2Script extends ApacheScript {
 
 	def deployService(Domain domain, List serviceConfig) {
 		domain.services.each { WebService service ->
-			serviceConfigs["${PROFILE}.${service.name}"].deployService(domain, service, serviceConfig)
+			def config = serviceConfigs["${PROFILE}.${service.name}"]
+			log.checkConfig config, service
+			config.deployService(domain, service, serviceConfig)
 		}
 	}
 

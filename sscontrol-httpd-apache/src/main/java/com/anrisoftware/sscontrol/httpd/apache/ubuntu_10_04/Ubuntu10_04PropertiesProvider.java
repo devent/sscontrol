@@ -16,30 +16,39 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd-apache. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.apache.ubuntu
+package com.anrisoftware.sscontrol.httpd.apache.ubuntu_10_04;
 
-import javax.inject.Inject
+import java.net.URL;
 
-import com.anrisoftware.sscontrol.httpd.apache.linux.Apache_2_2Script
+import com.anrisoftware.propertiesutils.AbstractContextPropertiesProvider;
 
 /**
- * Uses the Apache service on the Ubuntu 10.04 Linux system.
- *
+ * Provides the default Apache Ubuntu 10.04 properties from
+ * {@code apache_ubuntu_10_04.properties}.
+ * <p>
+ * <h2>Properties</h2>
+ * <p>
+ * 
+ * <dl>
+ * <dt>{@code install_command}</dt>
+ * <dd>the default packages installation command;</dd>
+ * 
+ * <dt>{@code packages}</dt>
+ * <dd>the list of needed packages for the service.</dd>
+ * </dl>
+ * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class Ubuntu_10_04Script extends Apache_2_2Script {
+@SuppressWarnings("serial")
+public class Ubuntu10_04PropertiesProvider extends
+		AbstractContextPropertiesProvider {
 
-	@Inject
-	Ubuntu10_04PropertiesProvider ubuntuProperties
+	private static final URL RESOURCE = Ubuntu10_04PropertiesProvider.class
+			.getResource("/apache_ubuntu_10_04.properties");
 
-	@Override
-	def distributionSpecificConfiguration() {
-		installPackages()
+	Ubuntu10_04PropertiesProvider() {
+		super(Ubuntu10_04PropertiesProvider.class, RESOURCE);
 	}
 
-	@Override
-	def getDefaultProperties() {
-		ubuntuProperties.get()
-	}
 }

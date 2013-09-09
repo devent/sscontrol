@@ -16,33 +16,30 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd-apache. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.apache.ubuntu;
+package com.anrisoftware.sscontrol.httpd.apache.ubuntu_10_04
 
-import static com.google.inject.multibindings.MapBinder.newMapBinder;
-import groovy.lang.Script;
+import javax.inject.Inject
 
-import com.anrisoftware.sscontrol.httpd.apache.linux.ApacheScriptModule;
-import com.google.inject.AbstractModule;
-import com.google.inject.multibindings.MapBinder;
+import com.anrisoftware.sscontrol.httpd.apache.linux.Apache_2_2Script
 
 /**
- * Binds the Apache Ubuntu service.
- * 
+ * Uses the Apache service on the Ubuntu 10.04 Linux system.
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class UbuntuModule extends AbstractModule {
+class Ubuntu_10_04Script extends Apache_2_2Script {
+
+	@Inject
+	Ubuntu10_04PropertiesProvider ubuntuProperties
 
 	@Override
-	protected void configure() {
-		bindScripts();
-		install(new ApacheScriptModule());
+	def distributionSpecificConfiguration() {
+		installPackages()
 	}
 
-	private void bindScripts() {
-		MapBinder<String, Script> binder;
-		binder = newMapBinder(binder(), String.class, Script.class);
-		binder.addBinding("ufw.ubuntu_10_04").to(Ubuntu_10_04Script.class);
+	@Override
+	def getDefaultProperties() {
+		ubuntuProperties.get()
 	}
-
 }

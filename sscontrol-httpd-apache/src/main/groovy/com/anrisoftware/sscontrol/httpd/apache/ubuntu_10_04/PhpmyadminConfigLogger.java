@@ -16,14 +16,14 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd-apache. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.apache.linux;
+package com.anrisoftware.sscontrol.httpd.apache.ubuntu_10_04;
 
-import static com.anrisoftware.sscontrol.httpd.apache.linux.PhpmyadminConfigLogger._.import_tables_debug;
-import static com.anrisoftware.sscontrol.httpd.apache.linux.PhpmyadminConfigLogger._.import_tables_info;
-import static com.anrisoftware.sscontrol.httpd.apache.linux.PhpmyadminConfigLogger._.import_tables_trace;
-import static com.anrisoftware.sscontrol.httpd.apache.linux.PhpmyadminConfigLogger._.reconfigure_service_debug;
-import static com.anrisoftware.sscontrol.httpd.apache.linux.PhpmyadminConfigLogger._.reconfigure_service_info;
-import static com.anrisoftware.sscontrol.httpd.apache.linux.PhpmyadminConfigLogger._.reconfigure_service_trace;
+import static com.anrisoftware.sscontrol.httpd.apache.ubuntu_10_04.PhpmyadminConfigLogger._.import_tables_debug;
+import static com.anrisoftware.sscontrol.httpd.apache.ubuntu_10_04.PhpmyadminConfigLogger._.import_tables_info;
+import static com.anrisoftware.sscontrol.httpd.apache.ubuntu_10_04.PhpmyadminConfigLogger._.import_tables_trace;
+import static com.anrisoftware.sscontrol.httpd.apache.ubuntu_10_04.PhpmyadminConfigLogger._.reconfigure_service_debug;
+import static com.anrisoftware.sscontrol.httpd.apache.ubuntu_10_04.PhpmyadminConfigLogger._.reconfigure_service_info;
+import static com.anrisoftware.sscontrol.httpd.apache.ubuntu_10_04.PhpmyadminConfigLogger._.reconfigure_service_trace;
 
 import javax.inject.Singleton;
 

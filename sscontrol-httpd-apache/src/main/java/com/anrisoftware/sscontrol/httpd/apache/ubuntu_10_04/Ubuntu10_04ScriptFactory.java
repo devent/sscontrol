@@ -1,22 +1,23 @@
 /*
  * Copyright 2013 Erwin Müller <erwin.mueller@deventm.org>
- *
+ * 
  * This file is part of sscontrol-httpd-apache.
- *
- * sscontrol-httpd-apache is free software: you can redistribute it and/or modify it
- * under the terms of the GNU Affero General Public License as published by the
- * Free Software Foundation, either version 3 of the License, or (at your
- * option) any later version.
- *
+ * 
+ * sscontrol-httpd-apache is free software: you can redistribute it and/or
+ * modify it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the License,
+ * or (at your option) any later version.
+ * 
  * sscontrol-httpd-apache is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
  * for more details.
- *
+ * 
  * You should have received a copy of the GNU Affero General Public License
- * along with sscontrol-httpd-apache. If not, see <http://www.gnu.org/licenses/>.
+ * along with sscontrol-httpd-apache. If not, see
+ * <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.apache.ubuntu;
+package com.anrisoftware.sscontrol.httpd.apache.ubuntu_10_04;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.mangosdk.spi.ProviderFor;
@@ -24,6 +25,7 @@ import org.mangosdk.spi.ProviderFor;
 import com.anrisoftware.sscontrol.core.api.ServiceException;
 import com.anrisoftware.sscontrol.core.api.ServiceScriptFactory;
 import com.anrisoftware.sscontrol.core.api.ServiceScriptInfo;
+import com.anrisoftware.sscontrol.httpd.apache.ubuntu_10_04.Ubuntu_10_04Script;
 import com.google.inject.Injector;
 import com.google.inject.Module;
 
@@ -44,7 +46,7 @@ public class Ubuntu10_04ScriptFactory implements ServiceScriptFactory {
 	/**
 	 * Name of the profile.
 	 */
-	public static final String PROFILE_NAME = "ubuntu_10_04";
+	public static final String PROFILE = "ubuntu_10_04";
 
 	/**
 	 * {@link ServiceScriptInfo} information identifying this service.
@@ -58,7 +60,7 @@ public class Ubuntu10_04ScriptFactory implements ServiceScriptFactory {
 
 		@Override
 		public String getProfileName() {
-			return PROFILE_NAME;
+			return PROFILE;
 		}
 	};
 

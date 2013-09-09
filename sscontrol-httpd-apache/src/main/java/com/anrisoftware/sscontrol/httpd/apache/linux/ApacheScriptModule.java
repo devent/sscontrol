@@ -43,4 +43,5 @@ public class ApacheScriptModule extends AbstractModule {
 		map.addBinding("AuthFile").to(AuthFileConfig.class);
 		map.addBinding("AuthLdap").to(AuthLdapConfig.class);
 	}
+
 }

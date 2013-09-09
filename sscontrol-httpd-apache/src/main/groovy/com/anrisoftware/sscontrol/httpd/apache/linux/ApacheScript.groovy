@@ -39,8 +39,16 @@ abstract class ApacheScript extends LinuxScript {
 	@Inject
 	private ApacheScriptLogger log
 
+	@Inject
+	Map<String, ServiceConfig> serviceConfigs
+
+	@Inject
+	Map<String, AuthConfig> authConfigs
+
 	@Override
 	def run() {
+		authConfigs.each { it.value.script = this }
+		serviceConfigs.each { it.value.script = this }
 		super.run()
 		distributionSpecificConfiguration()
 	}

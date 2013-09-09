@@ -16,23 +16,32 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd-apache. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.apache.linux
+package com.anrisoftware.sscontrol.httpd.apache.ubuntu_10_04
+
+import static com.anrisoftware.sscontrol.httpd.apache.ubuntu_10_04.Ubuntu10_04ScriptFactory.PROFILE
 
 import javax.inject.Inject
 
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.Templates
+import com.anrisoftware.sscontrol.httpd.apache.linux.ApacheScript
+import com.anrisoftware.sscontrol.httpd.apache.linux.BasePhpmyadminConfig
+import com.anrisoftware.sscontrol.httpd.apache.linux.FcgiConfig
+import com.anrisoftware.sscontrol.httpd.apache.linux.ServiceConfig
 import com.anrisoftware.sscontrol.httpd.statements.domain.Domain
 import com.anrisoftware.sscontrol.httpd.statements.phpmyadmin.PhpmyadminService
+import com.anrisoftware.sscontrol.httpd.statements.webservice.WebService
 import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokenTemplate
 
 /**
- * Configures the Phpmyadmin service.
+ * Configures the phpmyadmin/service.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class PhpmyadminConfig {
+class PhpmyadminConfig extends BasePhpmyadminConfig implements ServiceConfig {
+
+	public static final String NAME = "phpmyadmin"
 
 	@Inject
 	PhpmyadminConfigLogger log
@@ -43,19 +52,29 @@ class PhpmyadminConfig {
 
 	TemplateResource phpmyadminCommandsTemplate
 
-	ApacheScript script
-
 	@Inject
 	FcgiConfig fcgiConfig
 
+	@Override
+	String getProfile() {
+		PROFILE
+	}
+
+	@Override
+	String getServiceName() {
+		NAME
+	}
+
+	@Override
 	void setScript(ApacheScript script) {
-		this.script = script
+		super.setScript script
 		phpmyadminTemplates = templatesFactory.create "Apache_2_2_Phpmyadmin"
 		phpmyadminConfigTemplate = phpmyadminTemplates.getResource "config"
 		phpmyadminCommandsTemplate = phpmyadminTemplates.getResource "commands"
 	}
 
-	def deployService(Domain domain, PhpmyadminService service, List serviceConfig) {
+	@Override
+	void deployService(Domain domain, WebService service, List serviceConfig) {
 		fcgiConfig.script = script
 		installPackages phpmyadminPackages
 		fcgiConfig.enableFcgi()
@@ -92,13 +111,6 @@ class PhpmyadminConfig {
 	 */
 	void deployConfiguration(PhpmyadminService service) {
 		deployConfiguration configurationTokens(), phpmyadminConfiguration, phpmyadminConfigurations(service), configurationFile
-	}
-
-	/**
-	 * Returns the current {@code phpmyadmin.conf} configuration.
-	 */
-	String getPhpmyadminConfiguration() {
-		currentConfiguration configurationFile
 	}
 
 	/**
@@ -165,95 +177,5 @@ class PhpmyadminConfig {
 				phpmyadminCommandsTemplate, "reconfigure",
 				"command", reconfigureCommand)()
 		log.reconfigureService script, worker
-	}
-
-	/**
-	 * Returns the list of needed packages for phpmyadmin.
-	 *
-	 * <ul>
-	 * <li>profile property {@code "phpmyadmin_packages"}</li>
-	 * </ul>
-	 */
-	List getPhpmyadminPackages() {
-		profileListProperty "phpmyadmin_packages", defaultProperties
-	}
-
-	/**
-	 * Returns the mysql client command, for example {@code /usr/bin/mysql}.
-	 *
-	 * <ul>
-	 * <li>profile property {@code "mysql_command"}</li>
-	 * </ul>
-	 */
-	String getMysqlCommand() {
-		profileProperty "mysql_command", defaultProperties
-	}
-
-	/**
-	 * Phpmyadmin configuration file, for
-	 * example {@code "/etc/dbconfig-common/phpmyadmin.conf"}.
-	 *
-	 * <ul>
-	 * <li>profile property {@code "phpmyadmin_configuration_file"}</li>
-	 * </ul>
-	 */
-	File getConfigurationFile() {
-		profileProperty("phpmyadmin_configuration_file", defaultProperties) as File
-	}
-
-	/**
-	 * Phpmyadmin database script file, for
-	 * example {@code "/usr/share/doc/phpmyadmin/examples/create_tables.sql.gz"}.
-	 *
-	 * <ul>
-	 * <li>profile property {@code "phpmyadmin_database_script_file"}</li>
-	 * </ul>
-	 */
-	File getDatabaseScriptFile() {
-		profileProperty("phpmyadmin_database_script_file", defaultProperties) as File
-	}
-
-	/**
-	 * Phpmyadmin local configuration file, for
-	 * example {@code "/var/lib/phpmyadmin/config.inc.php"}.
-	 *
-	 * <ul>
-	 * <li>profile property {@code "phpmyadmin_local_config_file"}</li>
-	 * </ul>
-	 */
-	File getLocalConfigFile() {
-		profileProperty("phpmyadmin_local_config_file", defaultProperties) as File
-	}
-
-	/**
-	 * Phpmyadmin local blowfish secret file, for
-	 * example {@code "/var/lib/phpmyadmin/blowfish_secret.inc.php"}.
-	 *
-	 * <ul>
-	 * <li>profile property {@code "phpmyadmin_local_blowfish_secret_file"}</li>
-	 * </ul>
-	 */
-	File getLocalBlowfishFile() {
-		profileProperty("phpmyadmin_local_blowfish_secret_file", defaultProperties) as File
-	}
-
-	/**
-	 * Phpmyadmin local database configuration file, for
-	 * example {@code "/etc/phpmyadmin/config-db.php"}.
-	 *
-	 * <ul>
-	 * <li>profile property {@code "phpmyadmin_local_database_config_file"}</li>
-	 * </ul>
-	 */
-	File getLocalDatabaseConfigFile() {
-		profileProperty("phpmyadmin_local_database_config_file", defaultProperties) as File
-	}
-
-	def propertyMissing(String name) {
-		script.getProperty name
-	}
-
-	def methodMissing(String name, def args) {
-		script.invokeMethod name, args
 	}
 }

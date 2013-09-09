@@ -16,11 +16,11 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd-apache. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.apache.ubuntu;
+package com.anrisoftware.sscontrol.httpd.apache.ubuntu_10_04;
 
-import static com.anrisoftware.sscontrol.httpd.apache.ubuntu.Ubuntu10_04ScriptFactoryLogger._.errorCreateScript;
-import static com.anrisoftware.sscontrol.httpd.apache.ubuntu.Ubuntu10_04ScriptFactoryLogger._.errorCreateScript1;
-import static com.anrisoftware.sscontrol.httpd.apache.ubuntu.Ubuntu10_04ScriptFactoryLogger._.scriptFactory;
+import static com.anrisoftware.sscontrol.httpd.apache.ubuntu_10_04.Ubuntu10_04ScriptFactoryLogger._.errorCreateScript;
+import static com.anrisoftware.sscontrol.httpd.apache.ubuntu_10_04.Ubuntu10_04ScriptFactoryLogger._.errorCreateScript1;
+import static com.anrisoftware.sscontrol.httpd.apache.ubuntu_10_04.Ubuntu10_04ScriptFactoryLogger._.scriptFactory;
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
 import com.anrisoftware.sscontrol.core.api.ServiceException;

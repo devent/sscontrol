@@ -18,6 +18,7 @@
  */
 package com.anrisoftware.sscontrol.httpd.apache.linux
 
+import static com.anrisoftware.sscontrol.httpd.apache.ubuntu_10_04.Ubuntu10_04ScriptFactory.PROFILE
 import static org.apache.commons.io.FileUtils.*
 
 import javax.inject.Inject
@@ -56,12 +57,6 @@ abstract class Apache_2_2Script extends ApacheScript {
 	@Inject
 	RedirectConfig deployRedirectToWwwHttps
 
-	@Inject
-	PhpmyadminConfig deployPhpmyadmin
-
-	@Inject
-	Map<String, AuthConfig> authConfigs
-
 	/**
 	 * The {@link Templates} for the script.
 	 */
@@ -87,8 +82,6 @@ abstract class Apache_2_2Script extends ApacheScript {
 		deployRedirectHttpToHttps.script = this
 		deployRedirectToWwwHttp.script = this
 		deployRedirectToWwwHttps.script = this
-		authConfigs.each { it.value.script = this }
-		deployPhpmyadmin.script = this
 		super.run()
 		deployDefaultConfig()
 		deployDomainsConfig()
@@ -126,7 +119,7 @@ abstract class Apache_2_2Script extends ApacheScript {
 
 	def deployService(Domain domain, List serviceConfig) {
 		domain.services.each { WebService service ->
-			this."deploy${service.name.capitalize()}".deployService(domain, service, serviceConfig)
+			serviceConfigs["${PROFILE}.${service.name}"].deployService(domain, service, serviceConfig)
 		}
 	}
 

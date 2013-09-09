@@ -33,7 +33,7 @@ httpd {
 			require valid_user
 			require group: "cn=ldapadminGroup,o=deventorg,dc=ubuntutest,dc=com", {
 				attribute "uniqueMember"
-				attribute "uniqueMember", dn: false
+				attribute "uniqueMember", dn: no
 			}
 		}
 	}

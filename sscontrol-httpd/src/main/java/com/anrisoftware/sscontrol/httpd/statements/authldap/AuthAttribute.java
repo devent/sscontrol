@@ -1,11 +1,16 @@
 package com.anrisoftware.sscontrol.httpd.statements.authldap;
 
+import static com.anrisoftware.sscontrol.httpd.statements.authldap.AttributeDn.off;
+import static com.anrisoftware.sscontrol.httpd.statements.authldap.AttributeDn.on;
+import static com.anrisoftware.sscontrol.httpd.statements.yesno.YesNoFlag.yes;
+
 import java.util.Map;
 
 import javax.inject.Inject;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import com.anrisoftware.sscontrol.httpd.statements.yesno.YesNoFlag;
 import com.google.inject.assistedinject.Assisted;
 
 /**
@@ -34,7 +39,7 @@ public class AuthAttribute {
 		this.dn = AttributeDn.on;
 		setName(name);
 		if (args.containsKey(DN)) {
-			setDn((Boolean) args.get(DN));
+			setDn(args.get(DN));
 		}
 	}
 
@@ -47,8 +52,20 @@ public class AuthAttribute {
 		return name;
 	}
 
-	public void setDn(boolean dn) {
-		this.dn = dn ? AttributeDn.on : AttributeDn.off;
+	private void setDn(Object object) {
+		if (object instanceof Boolean) {
+			setDn((Boolean) object);
+		} else if (object instanceof YesNoFlag) {
+			setDn((YesNoFlag) object);
+		}
+	}
+
+	public void setDn(YesNoFlag flag) {
+		this.dn = flag == yes ? on : off;
+	}
+
+	public void setDn(Boolean dn) {
+		this.dn = dn ? on : off;
 	}
 
 	public AttributeDn getDn() {

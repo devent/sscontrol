@@ -87,8 +87,7 @@ class PhpldapadminConfig extends BasePhpldapadminConfig implements ServiceConfig
 		downloadPhpldapadmin domain
 		deployConfiguration domain, service
 		deployServerConfig domain, service
-		//changeOwnerConfiguration domain
-		//createDomainConfig domain, service, serviceConfig
+		createDomainConfig domain, service, serviceConfig
 	}
 
 	void downloadPhpldapadmin(Domain domain) {
@@ -103,10 +102,14 @@ class PhpldapadminConfig extends BasePhpldapadminConfig implements ServiceConfig
 		link([files: outputDir, targets: linkTarget])
 	}
 
+	/**
+	 * Creates the Apache/domain configuration.
+	 */
 	void createDomainConfig(Domain domain, PhpldapadminService service, List serviceConfig) {
 		def config = adminConfigTemplate.getText(true, "domainConfig",
 				"domain", domain,
 				"service", service,
+				"serviceDir", adminLinkedConfigurationDir(domain),
 				"properties", script,
 				"fcgiProperties", fcgiConfig)
 		serviceConfig << config

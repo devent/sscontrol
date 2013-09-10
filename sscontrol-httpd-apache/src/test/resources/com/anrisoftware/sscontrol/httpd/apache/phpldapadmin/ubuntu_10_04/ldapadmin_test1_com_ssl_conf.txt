@@ -1,29 +1,29 @@
 <VirtualHost 192.168.0.50:443>
 
-    # domain phpadmin.test1.com
-    ServerName phpadmin.test1.com
-    DocumentRoot /tmp/var/www/phpadmin.test1.com/web
+    # domain ldapadmin.test1.com
+    ServerName ldapadmin.test1.com
+    DocumentRoot /tmp/var/www/ldapadmin.test1.com/web
     SuexecUserGroup www-data www-data
-    <Directory /tmp/var/www/phpadmin.test1.com/web>
+    <Directory /tmp/var/www/ldapadmin.test1.com/web>
         AllowOverride None
         Order allow,deny
         Allow from all
     </Directory>
 
     SSLEngine on
-    SSLCertificateFile /tmp/var/www/phpadmin.test1.com/ssl/cert_crt.txt
-    SSLCertificateKeyFile /tmp/var/www/phpadmin.test1.com/ssl/cert_key.txt
+    SSLCertificateFile /tmp/var/www/ldapadmin.test1.com/ssl/cert_crt.txt
+    SSLCertificateKeyFile /tmp/var/www/ldapadmin.test1.com/ssl/cert_key.txt
 
-    # phpmyadmin
+    # phpldapadmin
 
-    Alias /phpldapadmin /var/www/ldapadmin.ubuntutest.com/phpldapadmin/htdocs
+    Alias /ldapadmin /tmp/var/www/ldapadmin.test1.com/phpldapadmin/htdocs
 
-    <Directory /var/www/ldapadmin.ubuntutest.com/phpldapadmin/htdocs>
+    /tmp/var/www/ldapadmin.test1.com/web>
+    <Directory /tmp/var/www/ldapadmin.test1.com/phpldapadmin/htdocs>
         AddHandler fcgid-script .php
-        FCGIWrapper /var/www/php-fcgi-scripts/ldapadmin.ubuntutest.com/php-fcgi-starter .php
-
+        FCGIWrapper /tmp/var/www/php-fcgi-scripts/ldapadmin.test1.com/php-fcgi-starter .php
+        Options +ExecCGI +FollowSymLinks
         DirectoryIndex index.php
-        Options +FollowSymLinks +ExecCGI
         AllowOverride None
 
         Order allow,deny

@@ -39,7 +39,6 @@ enum PhpldapadminResources {
 	ldapadminTest1comSslFcgiScript("/var/www/php-fcgi-scripts/ldapadmin.test1.com/php-fcgi-starter", PhpldapadminResources.class.getResource("php_fcgi_starter.txt")),
 	tarOut("/bin/tar.out", PhpldapadminResources.class.getResource("tar_out.txt")),
 	lnOut("/bin/ln.out", PhpldapadminResources.class.getResource("ln_out.txt")),
-	chownOut("/bin/chown.out", PhpldapadminResources.class.getResource("chown_out.txt")),
 	chmodOut("/bin/chmod.out", PhpldapadminResources.class.getResource("chmod_out.txt")),
 	phpldapadminTgz("/tmp/phpldapadmin-1.2.3.tgz", PhpldapadminResources.class.getResource("phpldapadmin-1.2.3.tgz")),
 	configDir("/var/www/ldapadmin.test1.com/phpldapadmin-1.2.3", null),

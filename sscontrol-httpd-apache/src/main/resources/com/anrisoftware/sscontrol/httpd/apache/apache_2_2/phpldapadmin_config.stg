@@ -1,23 +1,47 @@
-domainConfig(domain, service, properties, fcgiProperties) ::= <<
-# phpmyadmin
+domainConfig(domain, service, serviceDir, properties, fcgiProperties) ::= <<
+# phpldapadmin
 
-<serviceAlias(service.alias)>
-\<Directory /usr/share/phpmyadmin>
+<serviceAlias(service.alias, serviceDir)>
+<properties.sitesDirectory>/<domain.siteDirectory>\>
+\<Directory <serviceDir>/htdocs>
     AddHandler fcgid-script .php
     FCGIWrapper <properties.sitesDirectory>/<fcgiProperties.scriptsSubdirectory>/<domain.name>/<fcgiProperties.scriptStarterFileName> .php
-    Options +ExecCGI
+    Options +ExecCGI +FollowSymLinks
     DirectoryIndex index.php
+    AllowOverride None
+
+    Order allow,deny
+    Allow from all
+
+    \<IfModule mod_mime.c>
+        \<IfModule mod_php5.c>
+            AddType application/x-httpd-php .php
+            php_flag magic_quotes_gpc Off
+            php_flag track_vars On
+            php_flag register_globals On
+            php_value include_path .
+            php_value memory_limit 32M
+        \</IfModule>
+
+        \<IfModule !mod_php5.c>
+            \<IfModule mod_actions.c>
+                \<IfModule mod_cgi.c>
+                    AddType application/x-httpd-php .php
+                    Action application/x-httpd-php /cgi-bin/php5
+                \</IfModule>
+                \<IfModule mod_cgid.c>
+                    AddType application/x-httpd-php .php
+                    Action application/x-httpd-php /cgi-bin/php5
+                \</IfModule>
+            \</IfModule>
+        \</IfModule>
+    \</IfModule>
 \</Directory>
 
-# Disallow web access to directories that don't need it
-\<Directory /usr/share/phpmyadmin/libraries>
-    Order Deny,Allow
-    Deny from All
-\</Directory>
-\<Directory /usr/share/phpmyadmin/setup/lib>
-    Order Deny,Allow
-    Deny from All
-\</Directory>
+>>
+
+serviceAlias(alias, serviceDir) ::= <<
+<if(alias)>Alias /<alias> <serviceDir>/htdocs<endif>
 
 >>
 
@@ -36,11 +60,6 @@ $servers->setValue('login','auth_type','session');
 $servers->setValue('login','bind_id','');
 $servers->setValue('login','bind_pass','');
 $servers->setValue('server','tls',false);
-
->>
-
-serviceAlias(alias) ::= <<
-<if(alias)>Alias /<alias> /usr/share/phpmyadmin<endif>
 
 >>
 

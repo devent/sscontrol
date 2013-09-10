@@ -40,7 +40,8 @@ public class PhpldapadminService implements WebService {
 
 	public static final String NAME = "phpldapadmin";
 
-	@Inject
+	private static final String ALIAS = "alias";
+
 	private PhpldapadminServiceLogger log;
 
 	@Inject
@@ -48,14 +49,40 @@ public class PhpldapadminService implements WebService {
 
 	private final List<LdapServer> servers;
 
+	private Map<String, Object> args;
+
+	private String alias;
+
 	@Inject
-	PhpldapadminService(@Assisted Map<String, Object> map) {
+	PhpldapadminService(@Assisted Map<String, Object> args) {
+		this.args = args;
 		this.servers = new ArrayList<LdapServer>();
+	}
+
+	@Inject
+	void setPhpldapadminServiceLogger(PhpldapadminServiceLogger logger) {
+		this.log = logger;
+		if (args.containsKey(ALIAS)) {
+			setAlias(args.get(ALIAS));
+		}
+		args = null;
 	}
 
 	@Override
 	public String getName() {
 		return NAME;
+	}
+
+	private void setAlias(Object alias) {
+		setAlias(alias.toString());
+	}
+
+	public void setAlias(String alias) {
+		this.alias = alias;
+	}
+
+	public String getAlias() {
+		return alias;
 	}
 
 	public void server(String name) {

@@ -74,7 +74,6 @@ class PhpldapadminTest extends UbuntuTestUtil {
 		assertStringContent test1comSslConf.replaced(tmpdir, tmpdir, "/tmp"), test1comSslConf.toString()
 		assertStringContent ldapadminTest1comSslConf.replaced(tmpdir, tmpdir, "/tmp"), ldapadminTest1comSslConf.toString()
 		assertFileContent ldapadminTest1comSslFcgiScript.asFile(tmpdir), ldapadminTest1comSslFcgiScript
-		assertStringContent chownOut.replaced(tmpdir, tmpdir, "/tmp"), chownOut.toString()
 		assertStringContent chmodOut.replaced(tmpdir, tmpdir, "/tmp"), chmodOut.toString()
 	}
 }

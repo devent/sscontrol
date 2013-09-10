@@ -29,7 +29,7 @@ httpd {
 		certification_key_file UbuntuResources.certKey.resource
 		redirect to_www
 	}
-	ssl_domain "phpadmin.test1.com", address: "192.168.0.50", {
+	ssl_domain "ldapadmin.test1.com", address: "192.168.0.50", {
 		user "www-data", group: "www-data"
 		certification_file UbuntuResources.certCrt.resource
 		certification_key_file UbuntuResources.certKey.resource

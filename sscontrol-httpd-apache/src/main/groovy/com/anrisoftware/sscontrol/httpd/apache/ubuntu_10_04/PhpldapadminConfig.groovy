@@ -125,14 +125,35 @@ class PhpldapadminConfig extends BasePhpldapadminConfig implements ServiceConfig
 	 */
 	List adminConfigurations(PhpldapadminService service) {
 		[
-			removeFirstNewServer(),
+			commentFirstNewServer(),
+			commentFirstNewServerName(),
+			addIncludeStatement(),
 		]
 	}
 
-	def removeFirstNewServer() {
+	def commentFirstNewServer() {
 		def search = adminConfigTemplate.getText(true, "firstNewServer_search")
 		def replace = adminConfigTemplate.getText(true, "firstNewServer")
-		new TokenTemplate(search, replace)
+		def token = new TokenTemplate(search, replace)
+		token.append = false
+		token
+	}
+
+	def commentFirstNewServerName() {
+		def search = adminConfigTemplate.getText(true, "firstNewServerName_search")
+		def replace = adminConfigTemplate.getText(true, "firstNewServerName")
+		def token = new TokenTemplate(search, replace)
+		token.append = false
+		token
+	}
+
+	def addIncludeStatement() {
+		def search = adminConfigTemplate.getText(true, "includeStatement_search")
+		def replace = adminConfigTemplate.getText(true, "includeStatement")
+		def token = new TokenTemplate(search, replace)
+		token.append = false
+		token.enclose = false
+		token
 	}
 
 	/**

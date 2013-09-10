@@ -121,7 +121,6 @@ public class TokenTemplate implements Serializable {
 		String config = format("(%s)", search);
 		String pattern;
 		pattern = format("(%s\\n)?%s(\\n%s)?", beginToken, config, endToken);
-		System.out.println(pattern);// TODO println
 		return compile(pattern, flags);
 	}
 

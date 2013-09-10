@@ -26,52 +26,29 @@ serviceAlias(alias) ::= <<
 
 >>
 
-firstNewServer() ::= <%
-   declaration. */
+firstNewServer() ::= <<
+//   declaration. */
 // \$servers->newServer\('ldap_pla'\);
-%>
+>>
 
 firstNewServer_search() ::= <%
-   declaration. */
-\$servers->newServer\('ldap_pla'\);
+   declaration\. \*/\n\$servers->newServer\('ldap_pla'\);
 %>
 
-configDbpassword(user) ::= <%
-dbc_dbpass='<user.password>'
+firstNewServerName() ::= <<
+//   phpLDAPadmin to identify this LDAP server to users\. \*
+// \$servers->setValue('server','name','My LDAP Server');
+>>
+
+firstNewServerName_search() ::= <%
+   phpLDAPadmin to identify this LDAP server to users\. \*/\n\$servers->setValue\('server','name','My LDAP Server'\);
 %>
 
-configDbpassword_search() ::= <%
-#?dbc_dbpass\s*=\s*'.*?'
-%>
+includeStatement(server) ::= <<
+include "robobee-config.php";
+?\>
+>>
 
-configDbserver(server) ::= <%
-dbc_dbserver='<server.host>'
-%>
-
-configDbserver_search() ::= <%
-#?dbc_dbserver\s*=\s*'.*?'
-%>
-
-configDbport(server) ::= <%
-dbc_dbport='<server.port>'
-%>
-
-configDbport_search() ::= <%
-#?dbc_dbport\s*=\s*'.*?'
-%>
-
-configDbname(user) ::= <%
-dbc_dbname='<user.database>'
-%>
-
-configDbname_search() ::= <%
-#?dbc_dbname\s*=\s*'.*?'
-%>
-
-configDbadmin(admin) ::= <%
-dbc_dbadmin='<admin.user>'
-%>
-
-configDbadmin_search() ::= <%
-#?dbc_dbadmin\s*=\s*'.*?'
+includeStatement_search() ::= <%
+(include "robobee-config\.php";\n)?\?>
 %>

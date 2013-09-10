@@ -12,11 +12,10 @@ domainAuth(domain, properties, auth) ::= <<
 
 >>
 
-digest(auth) ::= <<
+basic(auth) ::= <<
 AuthType <auth.type>
 AuthName "<auth.name>"
-AuthDigestDomain <auth.domains;separator=" ">
-AuthDigestProvider <auth.provider>
+AuthBasicProvider <auth.provider>
 >>
 
 RequireValidUser(require) ::= <<
@@ -28,12 +27,3 @@ AuthLDAPGroupAttribute <require.attribute.name>
 AuthLDAPGroupAttributeIsDN <require.attribute.dn>
 Require ldap-group <require.name>
 >>
-
-groupFile(auth) ::= <<
-<auth.groups: { groupp | <groupp.name>: <groupFileUser(groupp)> }>
-
->>
-
-groupFileUser(groupp) ::= <%
-<groupp.users: { user | <user.name>};separator=" ">
-%>

@@ -54,21 +54,4 @@ class AuthLdapTest extends UbuntuTestUtil {
 		assertStringContent test1comSslConf.replaced(tmpdir, tmpdir, "/tmp"), test1comSslConf.toString()
 		assertFileContent enmodOut.asFile(tmpdir), enmodOut
 	}
-
-	@Test
-	void "auth file ldap"() {
-		copyUbuntuFiles tmpdir
-		loader.loadService profile.resource, null
-		def profile = registry.getService("profile")[0]
-		loader.loadService fileldapScript.resource, profile
-
-		registry.allServices.each { it.call() }
-		log.info "Run service again to ensure that configuration is not set double."
-		registry.allServices.each { it.call() }
-
-		assertFileContent defaultConf.asFile(tmpdir), defaultConf
-		assertFileContent domainsConf.asFile(tmpdir), domainsConf
-		assertStringContent test1comConf.replaced(tmpdir, tmpdir, "/tmp"), test1comConf.toString()
-		assertStringContent authFileLdapTest1comSslConf.replaced(tmpdir, tmpdir, "/tmp"), authFileLdapTest1comSslConf.toString()
-	}
 }

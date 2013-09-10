@@ -65,10 +65,14 @@ class AuthLdapConfig extends BasicAuth implements AuthConfig {
 
 	@Override
 	void deployAuth(Domain domain, AbstractAuth auth, List serviceConfig) {
-		super.deployAuth(domain, auth, serviceConfig)
 		authConfigTemplate = apacheTemplates.getResource "authldap_config"
+		setupDefaultProperties auth
 		createDomainConfig domain, auth, serviceConfig
 		enableMods auth
+	}
+
+	def setupDefaultProperties(AbstractAuth auth) {
+		auth.type = AuthType.basic
 	}
 
 	void createDomainConfig(Domain domain, AuthLdap auth, List serviceConfig) {

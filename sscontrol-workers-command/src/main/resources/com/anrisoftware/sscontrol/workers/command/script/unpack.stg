@@ -1,0 +1,15 @@
+unix(type, command, output, file) ::= <<
+#!/bin/sh
+<(type)(command, output, file)>
+
+>>
+
+tgz(command, output, file) ::= <<
+<tar(command, output, file)>
+>>
+
+tar(command, output, file) ::= <<
+cd <output>
+<command> -xf <file>
+
+>>

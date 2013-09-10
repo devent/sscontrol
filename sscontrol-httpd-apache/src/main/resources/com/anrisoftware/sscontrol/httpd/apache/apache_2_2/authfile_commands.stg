@@ -1,15 +1,9 @@
-createPasswordFile(command, file, users) ::= <<
-<command> -cb <file> <first(users):{ user | <user.name>}> <first(users):{ user | <user.password>}>
-<rest(users):{ user | <command> -b <file> <user.name> <user.password>};separator="\n">
-
->>
-
-appendPasswordFile(command, file, users) ::= <<
+appendBasicPasswordFile(command, auth, file, users) ::= <<
 <users:{ user | <command> -b <file> <user.name> <user.password>};separator="\n">
 
 >>
 
-appendDigestPasswordFile(file, auth, users) ::= <<
+appendDigestPasswordFile(command, auth, file, users) ::= <<
 <users:{ user | (echo -n "<user.name>:<auth.locationFilename>:" && echo -n "<user.name>:<auth.locationFilename>:<user.password>" | md5sum) | cut -d ' ' -f 1 >\> <file>};separator="\n">
 
 >>

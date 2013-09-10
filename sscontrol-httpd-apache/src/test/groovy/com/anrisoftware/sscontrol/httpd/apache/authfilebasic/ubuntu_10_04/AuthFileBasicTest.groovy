@@ -26,6 +26,7 @@ import groovy.util.logging.Slf4j
 
 import org.junit.Test
 
+import com.anrisoftware.sscontrol.httpd.apache.core.ubuntu_10_04.UbuntuResources
 import com.anrisoftware.sscontrol.httpd.apache.ubuntu.UbuntuTestUtil
 
 /**
@@ -40,6 +41,8 @@ class AuthFileBasicTest extends UbuntuTestUtil {
 	@Test
 	void "auth file basic"() {
 		copyUbuntuFiles tmpdir
+		copyAuthFileBasicFiles tmpdir
+
 		loader.loadService profile.resource, null
 		def profile = registry.getService("profile")[0]
 		loader.loadService httpdScript.resource, profile
@@ -60,6 +63,8 @@ class AuthFileBasicTest extends UbuntuTestUtil {
 	@Test
 	void "auth file appending basic"() {
 		copyUbuntuFiles tmpdir
+		copyAuthFileBasicFiles tmpdir
+
 		loader.loadService profile.resource, null
 		def profile = registry.getService("profile")[0]
 		loader.loadService httpdAppendingScript.resource, profile

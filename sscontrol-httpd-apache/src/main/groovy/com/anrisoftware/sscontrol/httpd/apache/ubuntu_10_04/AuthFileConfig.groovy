@@ -68,7 +68,6 @@ class AuthFileConfig extends BasicAuth implements AuthConfig {
 
 	@Override
 	void deployAuth(Domain domain, AbstractAuth auth, List serviceConfig) {
-		super.deployAuth(domain, auth, serviceConfig)
 		authConfigTemplate = apacheTemplates.getResource "authfile_config"
 		authCommandsTemplate = apacheTemplates.getResource "authfile_commands"
 		createDomainConfig domain, auth, serviceConfig
@@ -99,14 +98,18 @@ class AuthFileConfig extends BasicAuth implements AuthConfig {
 		}
 	}
 
-	private removeUsers(Domain domain, AuthFile auth) {
-		if (!auth.appending) {
-			passwordFile(domain, auth).delete()
-		}
-	}
-
 	private makeAuthDirectory(Domain domain) {
 		new File(domainDir(domain), authSubdirectory).mkdirs()
+	}
+
+	private removeUsers(Domain domain, AuthFile auth) {
+		def file = passwordFile(domain, auth)
+		if (!auth.appending) {
+			file.delete()
+		}
+		if (!file.isFile()) {
+			FileUtils.touch file
+		}
 	}
 
 	private deployUsers(Domain domain, AuthFile auth, List users) {
@@ -114,7 +117,9 @@ class AuthFileConfig extends BasicAuth implements AuthConfig {
 			return
 		}
 		def worker = scriptCommandFactory.create(
-				authCommandsTemplate, "appendDigestPasswordFile",
+				authCommandsTemplate,
+				"append${auth.type.name().capitalize()}PasswordFile",
+				"command", htpasswdCommand,
 				"file", passwordFile(domain, auth),
 				"auth", auth,
 				"users", users)()

@@ -1,0 +1,14 @@
+suexec
+rewrite
+rewrite
+rewrite
+authn_file
+auth_basic
+ssl
+suexec
+rewrite
+rewrite
+rewrite
+authn_file
+auth_basic
+ssl

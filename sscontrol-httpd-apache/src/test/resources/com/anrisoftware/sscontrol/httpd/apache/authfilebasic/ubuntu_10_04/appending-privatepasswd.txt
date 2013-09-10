@@ -1,0 +1,12 @@
+foo:foopassword
+bar:barpassword
+baz:bazpassword
+adminfoo:adminfoopassword
+adminbar:adminbarpassword
+adminbaz:adminbazpassword
+foo:foopassword
+bar:barpassword
+baz:bazpassword
+adminfoo:adminfoopassword
+adminbar:adminbarpassword
+adminbaz:adminbazpassword

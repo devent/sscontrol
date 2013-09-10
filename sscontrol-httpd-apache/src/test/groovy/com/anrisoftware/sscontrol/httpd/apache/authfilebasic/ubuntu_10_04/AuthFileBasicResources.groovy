@@ -34,6 +34,7 @@ enum AuthFileBasicResources {
 	httpdScript("Httpd.groovy", AuthFileBasicResources.class.getResource("HttpdAuthFileBasic.groovy")),
 	httpdAppendingScript("Httpd.groovy", AuthFileBasicResources.class.getResource("HttpdAuthFileBasicAppending.groovy")),
 	// AuthFile
+	htpasswdCommand("/usr/bin/htpasswd", AuthFileBasicResources.class.getResource("htpasswd_command.txt")),
 	domainsConf("/etc/apache2/conf.d/000-robobee-domains.conf", AuthFileBasicResources.class.getResource("domains_conf.txt")),
 	test1comConf("/etc/apache2/sites-available/100-robobee-test1.com.conf", AuthFileBasicResources.class.getResource("test1_com_conf.txt")),
 	test1comSslConf("/etc/apache2/sites-available/100-robobee-test1.com-ssl.conf", AuthFileBasicResources.class.getResource("test1_com_ssl_conf.txt")),
@@ -42,6 +43,10 @@ enum AuthFileBasicResources {
 	enmodOut("/usr/sbin/a2enmod.out", AuthFileBasicResources.class.getResource("enmod_out.txt")),
 	// Appending
 	appendingPrivatepasswd("/var/www/test1.com/auth/private.passwd", AuthFileBasicResources.class.getResource("appending-privatepasswd.txt")),
+
+	static copyAuthFileBasicFiles(File parent) {
+		htpasswdCommand.createCommand parent
+	}
 
 	ResourcesUtils resources
 

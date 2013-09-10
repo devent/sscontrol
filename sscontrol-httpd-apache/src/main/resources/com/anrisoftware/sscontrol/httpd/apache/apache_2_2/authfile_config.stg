@@ -16,6 +16,12 @@ AuthDigestDomain <auth.domains;separator=" ">
 AuthDigestProvider <auth.provider>
 >>
 
+basic(auth) ::= <<
+AuthType <auth.type>
+AuthName "<auth.name>"
+AuthBasicProvider <auth.provider>
+>>
+
 authGroupFile(auth, groupFile) ::= <%
 <if(auth.groups)>
 AuthGroupFile <groupFile>

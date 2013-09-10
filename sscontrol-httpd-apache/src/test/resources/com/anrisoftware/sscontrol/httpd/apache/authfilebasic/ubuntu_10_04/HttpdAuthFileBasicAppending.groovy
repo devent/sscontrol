@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd-apache. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.apache.authfiledigest.ubuntu_10_04
+package com.anrisoftware.sscontrol.httpd.apache.authfilebasic.ubuntu_10_04
 
 import com.anrisoftware.sscontrol.httpd.apache.core.ubuntu_10_04.UbuntuResources
 
@@ -29,7 +29,7 @@ httpd {
 		certification_file UbuntuResources.certCrt.resource
 		certification_key_file UbuntuResources.certKey.resource
 		redirect to_www
-		auth "Private Location", location: "/private", {
+		auth "Private Location", location: "/private", type: basic, provider: file, appending: true, {
 			require valid_user
 			require group: "admin"
 			group "admin", {

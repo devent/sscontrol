@@ -48,18 +48,13 @@ public class TokenTemplate implements Serializable {
 
 	private boolean append;
 
-	/**
-	 * @see #TokenTemplate(String, String, int, boolean)
-	 */
-	public TokenTemplate(String search, String replace) {
-		this(search, replace, 0, true);
-	}
+	private boolean enclose;
 
 	/**
 	 * @see #TokenTemplate(String, String, int, boolean)
 	 */
-	public TokenTemplate(String search, String replace, int flags) {
-		this(search, replace, flags, true);
+	public TokenTemplate(String search, String replace) {
+		this(search, replace, 0);
 	}
 
 	/**
@@ -84,16 +79,13 @@ public class TokenTemplate implements Serializable {
 	 *            <li>{@link Pattern#UNICODE_CHARACTER_CLASS} and
 	 *            <li>{@link Pattern#COMMENTS}.
 	 *            </ul>
-	 * 
-	 * @param append
-	 *            set to {@code true} to append the replacement.
 	 */
-	public TokenTemplate(String search, String replace, int flags,
-			boolean append) {
+	public TokenTemplate(String search, String replace, int flags) {
 		this.search = search;
 		this.replace = replace;
 		this.flags = flags;
-		this.append = append;
+		this.append = true;
+		this.enclose = true;
 	}
 
 	/**
@@ -129,6 +121,7 @@ public class TokenTemplate implements Serializable {
 		String config = format("(%s)", search);
 		String pattern;
 		pattern = format("(%s\\n)?%s(\\n%s)?", beginToken, config, endToken);
+		System.out.println(pattern);// TODO println
 		return compile(pattern, flags);
 	}
 
@@ -144,7 +137,11 @@ public class TokenTemplate implements Serializable {
 	 * @return the replace string.
 	 */
 	public String toReplace(String beginToken, String endToken) {
-		return format("%s\n%s\n%s", beginToken, replace, endToken);
+		if (enclose) {
+			return format("%s\n%s\n%s", beginToken, replace, endToken);
+		} else {
+			return replace;
+		}
 	}
 
 	/**
@@ -166,6 +163,25 @@ public class TokenTemplate implements Serializable {
 	 */
 	public boolean isAppend() {
 		return append;
+	}
+
+	/**
+	 * Sets if the replacement should be enclosed in the begin and end token.
+	 * 
+	 * @param append
+	 *            set to {@code true} to enclose.
+	 */
+	public void setEnclose(boolean enclose) {
+		this.enclose = enclose;
+	}
+
+	/**
+	 * Returns if the replacement should be enclosed in the begin and end token.
+	 * 
+	 * @return {@code true} to enclose.
+	 */
+	public boolean isEnclose() {
+		return enclose;
 	}
 
 	@Override

@@ -33,6 +33,7 @@ profile "ubuntu_10_04", {
 		reconfigure_command UbuntuResources.reconfigureCommand.asFile(tmp)
 		zcat_command UbuntuResources.zcatCommand.asFile(tmp)
 		tar_command UbuntuResources.tarCommand.asFile(tmp)
+		link_command UbuntuResources.lnCommand.asFile(tmp)
 		enable_mod_command UbuntuResources.a2enmodCommand.asFile(tmp)
 		disable_mod_command UbuntuResources.a2dismodCommand.asFile(tmp)
 		enable_site_command UbuntuResources.a2ensiteCommand.asFile(tmp)
@@ -59,5 +60,6 @@ profile "ubuntu_10_04", {
 		// phpmyadmin
 		phpldapadmin_source PhpldapadminResources.phpldapadminTgz.resource
 		phpldapadmin_configuration_directory PhpldapadminResources.configDir.asFile(tmp)
+		phpldapadmin_linked_configuration_directory PhpldapadminResources.linkedConfigDir.asFile(tmp)
 	}
 }

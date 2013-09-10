@@ -38,13 +38,16 @@ enum PhpldapadminResources {
 	ldapadminTest1comSslConf("/etc/apache2/sites-available/100-robobee-ldapadmin.test1.com-ssl.conf", PhpldapadminResources.class.getResource("ldapadmin_test1_com_ssl_conf.txt")),
 	ldapadminTest1comSslFcgiScript("/var/www/php-fcgi-scripts/ldapadmin.test1.com/php-fcgi-starter", PhpldapadminResources.class.getResource("php_fcgi_starter.txt")),
 	tarOut("/bin/tar.out", PhpldapadminResources.class.getResource("tar_out.txt")),
+	lnOut("/bin/ln.out", PhpldapadminResources.class.getResource("ln_out.txt")),
 	chownOut("/bin/chown.out", PhpldapadminResources.class.getResource("chown_out.txt")),
 	chmodOut("/bin/chmod.out", PhpldapadminResources.class.getResource("chmod_out.txt")),
 	phpldapadminTgz("/tmp/phpldapadmin-1.2.3.tgz", PhpldapadminResources.class.getResource("phpldapadmin-1.2.3.tgz")),
-	configDir("/var/www/ldapadmin.test1.com/phpldapadmin", PhpldapadminResources.class.getResource("config_php_example.txt")),
+	configDir("/var/www/ldapadmin.test1.com/phpldapadmin-1.2.3", null),
+	linkedConfigDir("/var/www/ldapadmin.test1.com/phpldapadmin", null),
 	exampleConfig("/var/www/ldapadmin.test1.com/phpldapadmin-1.2.3/config/config.php.example", PhpldapadminResources.class.getResource("config_php_example.txt")),
 	linkedExampleConfig("/var/www/ldapadmin.test1.com/phpldapadmin/config/config.php.example", PhpldapadminResources.class.getResource("config_php_example.txt")),
 	expectedConfig("/var/www/ldapadmin.test1.com/phpldapadmin-1.2.3/config/config.php", PhpldapadminResources.class.getResource("config_php_expected.txt")),
+	linkedExpectedConfig("/var/www/ldapadmin.test1.com/phpldapadmin/config/config.php", PhpldapadminResources.class.getResource("config_php_expected.txt")),
 
 	static copyUbuntuFiles(File parent) {
 		exampleConfig.createFile parent

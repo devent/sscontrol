@@ -32,7 +32,7 @@ import com.anrisoftware.sscontrol.httpd.apache.linux.BasePhpldapadminConfig
 import com.anrisoftware.sscontrol.httpd.apache.linux.FcgiConfig
 import com.anrisoftware.sscontrol.httpd.apache.linux.ServiceConfig
 import com.anrisoftware.sscontrol.httpd.statements.domain.Domain
-import com.anrisoftware.sscontrol.httpd.statements.phpmyadmin.PhpmyadminService
+import com.anrisoftware.sscontrol.httpd.statements.phpldapadmin.PhpldapadminService
 import com.anrisoftware.sscontrol.httpd.statements.webservice.WebService
 import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokenTemplate
 
@@ -51,7 +51,7 @@ class PhpldapadminConfig extends BasePhpldapadminConfig implements ServiceConfig
 
 	Templates phpldapadminTemplates
 
-	TemplateResource phpldapadminConfigTemplate
+	TemplateResource adminConfigTemplate
 
 	TemplateResource phpldapadminCommandsTemplate
 
@@ -72,35 +72,36 @@ class PhpldapadminConfig extends BasePhpldapadminConfig implements ServiceConfig
 	void setScript(ApacheScript script) {
 		super.setScript script
 		phpldapadminTemplates = templatesFactory.create "Apache_2_2_Phpldapadmin"
-		phpldapadminConfigTemplate = phpldapadminTemplates.getResource "config"
+		adminConfigTemplate = phpldapadminTemplates.getResource "config"
 		phpldapadminCommandsTemplate = phpldapadminTemplates.getResource "commands"
 	}
 
 	@Override
 	void deployService(Domain domain, WebService service, List serviceConfig) {
 		fcgiConfig.script = script
-		installPackages phpldapadminPackages
+		installPackages adminPackages
 		fcgiConfig.enableFcgi()
 		fcgiConfig.deployConfig domain
 		downloadPhpldapadmin domain
-		//deployConfiguration service
+		deployConfiguration domain, service
 		//changeOwnerConfiguration domain
 		//createDomainConfig domain, service, serviceConfig
 	}
 
 	void downloadPhpldapadmin(Domain domain) {
-		def name = new File(phpmyadminSource.toURI()).name
+		def name = new File(adminSource.toURI()).name
 		def target = new File(tmpDirectory, name)
 		def extension = FilenameUtils.getExtension target.absolutePath
-		def outputDir = phpmyadminConfigurationDir(domain)
-		if (!phpmyadminConfigFile(domain).isFile()) {
-			FileUtils.copyURLToFile phpmyadminSource, target
+		def outputDir = adminConfigurationDir(domain)
+		if (!adminConfigFile(domain).isFile()) {
+			FileUtils.copyURLToFile adminSource, target
 			unpack([file: target, type: extension, output: outputDir, command: tarCommand])
+			link([files: outputDir, targets: adminLinkedConfigurationDir(domain)])
 		}
 	}
 
-	void createDomainConfig(Domain domain, PhpmyadminService service, List serviceConfig) {
-		def config = phpldapadminConfigTemplate.getText(true, "domainConfig",
+	void createDomainConfig(Domain domain, PhpldapadminService service, List serviceConfig) {
+		def config = adminConfigTemplate.getText(true, "domainConfig",
 				"domain", domain,
 				"service", service,
 				"properties", script,
@@ -108,100 +109,58 @@ class PhpldapadminConfig extends BasePhpldapadminConfig implements ServiceConfig
 		serviceConfig << config
 	}
 
-	void importTables(PhpmyadminService service) {
-		def worker = scriptCommandFactory.create(
-				phpldapadminCommandsTemplate, "importTables",
-				"zcatCommand", script.zcatCommand,
-				"mysqlCommand", mysqlCommand,
-				"admin", service.adminUser,
-				"user", service.controlUser,
-				"script", databaseScriptFile)()
-		log.importTables script, worker
+	/**
+	 * Deploys the phpldapadmin/configuration.
+	 */
+	void deployConfiguration(Domain domain, PhpldapadminService service) {
+		def configFile = adminConfigFile(domain)
+		println configFile
+		if (!configFile.isFile()) {
+			FileUtils.copyFile adminExampleConfig(domain), configFile
+		}
+		script.deployConfiguration configurationTokens("//"), adminConfiguration(domain), adminConfigurations(service), configFile
 	}
 
 	/**
-	 * Deploys the phpldapadmin configuration.
+	 * Returns the phpldapadmin/configurations.
 	 */
-	void deployConfiguration(PhpmyadminService service) {
-		deployConfiguration configurationTokens(), phpldapadminConfiguration, phpldapadminConfigurations(service), configurationFile
-	}
-
-	/**
-	 * Returns the phpmyadmin configurations.
-	 */
-	List phpmyadminConfigurations(PhpmyadminService service) {
+	List adminConfigurations(PhpldapadminService service) {
 		[
-			configDbuser(service),
-			configDbpassword(service),
-			configDbserver(service),
-			configDbport(service),
-			configDbname(service),
-			configDbadmin(service)
+			removeFirstNewServer(),
 		]
 	}
 
-	def configDbuser(PhpmyadminService service) {
-		def search = phpldapadminConfigTemplate.getText(true, "configDbuser_search")
-		def replace = phpldapadminConfigTemplate.getText(true, "configDbuser", "user", service.controlUser)
+	def removeFirstNewServer() {
+		def search = adminConfigTemplate.getText(true, "firstNewServer_search")
+		def replace = adminConfigTemplate.getText(true, "firstNewServer")
 		new TokenTemplate(search, replace)
-	}
-
-	def configDbpassword(PhpmyadminService service) {
-		def search = phpldapadminConfigTemplate.getText(true, "configDbpassword_search")
-		def replace = phpldapadminConfigTemplate.getText(true, "configDbpassword", "user", service.controlUser)
-		new TokenTemplate(search, replace)
-	}
-
-	def configDbserver(PhpmyadminService service) {
-		def search = phpldapadminConfigTemplate.getText(true, "configDbserver_search")
-		def replace = phpldapadminConfigTemplate.getText(true, "configDbserver", "server", service.server)
-		new TokenTemplate(search, replace)
-	}
-
-	def configDbport(PhpmyadminService service) {
-		def search = phpldapadminConfigTemplate.getText(true, "configDbport_search")
-		def replace = phpldapadminConfigTemplate.getText(true, "configDbport", "server", service.server)
-		new TokenTemplate(search, replace)
-	}
-
-	def configDbname(PhpmyadminService service) {
-		def search = phpldapadminConfigTemplate.getText(true, "configDbname_search")
-		def replace = phpldapadminConfigTemplate.getText(true, "configDbname", "user", service.controlUser)
-		new TokenTemplate(search, replace)
-	}
-
-	def configDbadmin(PhpmyadminService service) {
-		def search = phpldapadminConfigTemplate.getText(true, "configDbadmin_search")
-		def replace = phpldapadminConfigTemplate.getText(true, "configDbadmin", "admin", service.adminUser)
-		new TokenTemplate(search, replace)
-	}
-
-	def changeOwnerConfiguration(Domain domain) {
-		def user = domain.domainUser
-		script.changeOwner user: "root", group: user.group, files: [
-			localBlowfishFile,
-			localConfigFile,
-			localDatabaseConfigFile
-		]
-	}
-
-	def reconfigureService() {
-		def worker = scriptCommandFactory.create(
-				phpldapadminCommandsTemplate, "reconfigure",
-				"command", reconfigureCommand)()
-		log.reconfigureService script, worker
 	}
 
 	/**
 	 * Phpldapadmin/configuration directory, for
-	 * example {@code "/etc/phpldapadmin"}.
+	 * example {@code "/etc/%s/phpldampadmin-1.2.3"}. The first argument
+	 * is replaced with the domain directory.
 	 *
 	 * <ul>
 	 * <li>profile property {@code "phpldapadmin_configuration_directory"}</li>
 	 * </ul>
 	 */
-	File phpmyadminConfigurationDir(def domain) {
+	File adminConfigurationDir(def domain) {
 		String path = profileProperty "phpldapadmin_configuration_directory"
+		new File(String.format(path, domainDir(domain)))
+	}
+
+	/**
+	 * The linked Phpldapadmin/configuration directory, for
+	 * example {@code "/etc/%s/phpldampadmin"}. The first argument
+	 * is replaced with the domain directory.
+	 *
+	 * <ul>
+	 * <li>profile property {@code "phpldapadmin_linked_configuration_directory"}</li>
+	 * </ul>
+	 */
+	File adminLinkedConfigurationDir(def domain) {
+		String path = profileProperty "phpldapadmin_linked_configuration_directory"
 		new File(String.format(path, domainDir(domain)))
 	}
 
@@ -214,8 +173,28 @@ class PhpldapadminConfig extends BasePhpldapadminConfig implements ServiceConfig
 	 * <li>profile property {@code "phpldapadmin_configuration_file"}</li>
 	 * </ul>
 	 */
-	File phpmyadminConfigFile(Domain domain) {
-		propertyFile("phpldapadmin_configuration_file", defaultProperties, phpmyadminConfigurationDir(domain)) as File
+	File adminConfigFile(Domain domain) {
+		propertyFile("phpldapadmin_configuration_file", defaultProperties, adminConfigurationDir(domain)) as File
+	}
+
+	/**
+	 * Example phpldapadmin/configuration file, for
+	 * example {@code "config/config.php.example"}. If the path is
+	 * not absolute then it is assume to be under the configuration directory.
+	 *
+	 * <ul>
+	 * <li>profile property {@code "phpldapadmin_example_configuration_file"}</li>
+	 * </ul>
+	 */
+	File adminExampleConfig(Domain domain) {
+		propertyFile("phpldapadmin_example_configuration_file", defaultProperties, adminConfigurationDir(domain)) as File
+	}
+
+	/**
+	 * Returns the current phpldapadmin/configuration.
+	 */
+	String adminConfiguration(Domain domain) {
+		currentConfiguration adminConfigFile(domain)
 	}
 
 	/**
@@ -226,7 +205,7 @@ class PhpldapadminConfig extends BasePhpldapadminConfig implements ServiceConfig
 	 * <li>profile property {@code "phpldapadmin_source"}</li>
 	 * </ul>
 	 */
-	URL getPhpmyadminSource() {
+	URL getAdminSource() {
 		script.profileProperty("phpldapadmin_source") as URL
 	}
 }

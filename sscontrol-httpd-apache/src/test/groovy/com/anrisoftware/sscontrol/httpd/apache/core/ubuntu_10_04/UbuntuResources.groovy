@@ -43,6 +43,7 @@ enum UbuntuResources {
 	groupaddCommand("/usr/sbin/groupadd", UbuntuResources.class.getResource("echo_command.txt")),
 	zcatCommand("/bin/zcat", UbuntuResources.class.getResource("echo_command.txt")),
 	tarCommand("/bin/tar", UbuntuResources.class.getResource("echo_command.txt")),
+	lnCommand("/bin/ln", UbuntuResources.class.getResource("echo_command.txt")),
 	reconfigureCommand("/usr/sbin/dpkg-reconfigure", UbuntuResources.class.getResource("echo_command.txt")),
 	mysqlCommand("/usr/bin/mysql", UbuntuResources.class.getResource("echo_command.txt")),
 	a2enmodCommand("/usr/sbin/a2enmod", UbuntuResources.class.getResource("echo_command.txt")),
@@ -70,6 +71,7 @@ enum UbuntuResources {
 		useraddCommand.createCommand parent
 		zcatCommand.createCommand parent
 		tarCommand.createCommand parent
+		lnCommand.createCommand parent
 		reconfigureCommand.createCommand parent
 		a2enmodCommand.createCommand parent
 		a2dismodCommand.createCommand parent

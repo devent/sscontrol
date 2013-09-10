@@ -26,12 +26,14 @@ serviceAlias(alias) ::= <<
 
 >>
 
-configDbuser(user) ::= <%
-dbc_dbuser='<user.user>'
+firstNewServer() ::= <%
+   declaration. */
+// \$servers->newServer\('ldap_pla'\);
 %>
 
-configDbuser_search() ::= <%
-#?dbc_dbuser\s*=\s*'.*?'
+firstNewServer_search() ::= <%
+   declaration. */
+\$servers->newServer\('ldap_pla'\);
 %>
 
 configDbpassword(user) ::= <%

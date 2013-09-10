@@ -39,7 +39,7 @@ class BasePhpldapadminConfig {
 	 * <li>profile property {@code "phpldapadmin_packages"}</li>
 	 * </ul>
 	 */
-	List getPhpldapadminPackages() {
+	List getAdminPackages() {
 		script.profileListProperty "phpldapadmin_packages"
 	}
 
@@ -51,7 +51,7 @@ class BasePhpldapadminConfig {
 	 * <li>profile property {@code "phpldapadmin_configuration_directory"}</li>
 	 * </ul>
 	 */
-	File getPhpmyadminConfigurationDir() {
+	File getAdminConfigurationDir() {
 		profileProperty("phpldapadmin_configuration_directory") as File
 	}
 
@@ -64,7 +64,7 @@ class BasePhpldapadminConfig {
 	 * <li>profile property {@code "phpldapadmin_configuration_file"}</li>
 	 * </ul>
 	 */
-	File getPhpmyadminConfigFile() {
+	File getAdminConfigFile() {
 		propertyFile("phpldapadmin_configuration_file", defaultProperties, phpmyadminConfigurationDir) as File
 	}
 

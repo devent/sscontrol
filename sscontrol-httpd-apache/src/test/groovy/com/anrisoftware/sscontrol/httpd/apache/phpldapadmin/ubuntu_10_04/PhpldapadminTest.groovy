@@ -39,8 +39,23 @@ import com.anrisoftware.sscontrol.httpd.apache.ubuntu.UbuntuTestUtil
 class PhpldapadminTest extends UbuntuTestUtil {
 
 	@Test
+	void "unpack phpldapadmin"() {
+		UbuntuResources.copyUbuntuFiles tmpdir
+		PhpldapadminResources.copyUbuntuFiles tmpdir
+
+		loader.loadService profile.resource, null
+		def profile = registry.getService("profile")[0]
+		loader.loadService httpdScript.resource, profile
+
+		registry.allServices.each { it.call() }
+		assertStringContent tarOut.replaced(tmpdir, tmpdir, "/tmp"), tarOut.toString()
+		assertStringContent lnOut.replaced(tmpdir, tmpdir, "/tmp"), lnOut.toString()
+	}
+
+	@Test
 	void "phpldapadmin"() {
 		UbuntuResources.copyUbuntuFiles tmpdir
+		PhpldapadminResources.copyUbuntuFiles tmpdir
 
 		loader.loadService profile.resource, null
 		def profile = registry.getService("profile")[0]
@@ -51,6 +66,10 @@ class PhpldapadminTest extends UbuntuTestUtil {
 		registry.allServices.each { it.call() }
 
 		assert phpldapadminTgz.asFile(tmpdir).isFile()
+		assertFileContent exampleConfig.asFile(tmpdir), exampleConfig
+		assertFileContent linkedExampleConfig.asFile(tmpdir), linkedExampleConfig
+		assertFileContent expectedConfig.asFile(tmpdir), expectedConfig
+		assertFileContent linkedExpectedConfig.asFile(tmpdir), linkedExpectedConfig
 		assertFileContent tarOut.asFile(tmpdir), tarOut
 		assertFileContent defaultConf.asFile(tmpdir), defaultConf
 		assertFileContent domainsConf.asFile(tmpdir), PhpldapadminResources.domainsConf
@@ -60,8 +79,5 @@ class PhpldapadminTest extends UbuntuTestUtil {
 		assertFileContent ldapadminTest1comSslFcgiScript.asFile(tmpdir), ldapadminTest1comSslFcgiScript
 		assertStringContent chownOut.replaced(tmpdir, tmpdir, "/tmp"), chownOut.toString()
 		assertStringContent chmodOut.replaced(tmpdir, tmpdir, "/tmp"), chmodOut.toString()
-		assertFileContent exampleConfig.asFile(tmpdir), exampleConfig
-		assertFileContent linkedExampleConfig.asFile(tmpdir), linkedExampleConfig
-		assertFileContent expectedConfig.asFile(tmpdir), expectedConfig
 	}
 }

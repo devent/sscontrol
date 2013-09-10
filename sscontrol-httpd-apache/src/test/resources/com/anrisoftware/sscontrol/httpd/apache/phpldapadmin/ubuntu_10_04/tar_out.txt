@@ -1,1 +1,1 @@
--xf /tmp/junit6317985785263972411/apache-ubuntu-10-04/tmp/phpldapadmin-1.2.3.tgz
+-xf /tmp/tmp/phpldapadmin-1.2.3.tgz

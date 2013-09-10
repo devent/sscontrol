@@ -123,6 +123,7 @@ class PhpldapadminConfig extends BasePhpldapadminConfig implements ServiceConfig
 		if (!configFile.isFile()) {
 			FileUtils.copyFile adminExampleConfig(domain), configFile
 		}
+		changeMod([mod: "o-r", files: configFile])
 		def configs = adminConfigurations(domain, service)
 		script.deployConfiguration configurationTokens("//"), adminConfiguration(domain), configs, configFile
 	}
@@ -171,6 +172,7 @@ class PhpldapadminConfig extends BasePhpldapadminConfig implements ServiceConfig
 		def string = adminConfigTemplate.getText true, "serversConfig", "service", service
 		def file = adminServersConfigFile(domain)
 		FileUtils.write file, string
+		changeMod([mod: "o-r", files: file])
 		log.serverConfigdeployed script, file
 	}
 

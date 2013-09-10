@@ -93,11 +93,11 @@ class PhpldapadminConfig extends BasePhpldapadminConfig implements ServiceConfig
 		def target = new File(tmpDirectory, name)
 		def extension = FilenameUtils.getExtension target.absolutePath
 		def outputDir = adminConfigurationDir(domain)
-		if (!adminConfigFile(domain).isFile()) {
-			FileUtils.copyURLToFile adminSource, target
-			unpack([file: target, type: extension, output: outputDir, command: tarCommand])
-			link([files: outputDir, targets: adminLinkedConfigurationDir(domain)])
-		}
+		def linkTarget = adminLinkedConfigurationDir(domain)
+		FileUtils.copyURLToFile adminSource, target
+		unpack([file: target, type: extension, output: outputDir, command: tarCommand, override: true])
+		linkTarget.delete()
+		link([files: outputDir, targets: linkTarget])
 	}
 
 	void createDomainConfig(Domain domain, PhpldapadminService service, List serviceConfig) {
@@ -114,7 +114,6 @@ class PhpldapadminConfig extends BasePhpldapadminConfig implements ServiceConfig
 	 */
 	void deployConfiguration(Domain domain, PhpldapadminService service) {
 		def configFile = adminConfigFile(domain)
-		println configFile
 		if (!configFile.isFile()) {
 			FileUtils.copyFile adminExampleConfig(domain), configFile
 		}
@@ -172,9 +171,11 @@ class PhpldapadminConfig extends BasePhpldapadminConfig implements ServiceConfig
 	 * <ul>
 	 * <li>profile property {@code "phpldapadmin_configuration_file"}</li>
 	 * </ul>
+	 *
+	 * @see #adminLinkedConfigurationDir(Object)
 	 */
 	File adminConfigFile(Domain domain) {
-		propertyFile("phpldapadmin_configuration_file", defaultProperties, adminConfigurationDir(domain)) as File
+		propertyFile("phpldapadmin_configuration_file", defaultProperties, adminLinkedConfigurationDir(domain)) as File
 	}
 
 	/**
@@ -185,9 +186,11 @@ class PhpldapadminConfig extends BasePhpldapadminConfig implements ServiceConfig
 	 * <ul>
 	 * <li>profile property {@code "phpldapadmin_example_configuration_file"}</li>
 	 * </ul>
+	 *
+	 * @see #adminLinkedConfigurationDir(Object)
 	 */
 	File adminExampleConfig(Domain domain) {
-		propertyFile("phpldapadmin_example_configuration_file", defaultProperties, adminConfigurationDir(domain)) as File
+		propertyFile("phpldapadmin_example_configuration_file", defaultProperties, adminLinkedConfigurationDir(domain)) as File
 	}
 
 	/**

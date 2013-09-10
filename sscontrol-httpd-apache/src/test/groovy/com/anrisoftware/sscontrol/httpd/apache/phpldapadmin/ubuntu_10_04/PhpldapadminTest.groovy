@@ -48,6 +48,7 @@ class PhpldapadminTest extends UbuntuTestUtil {
 		loader.loadService httpdScript.resource, profile
 
 		registry.allServices.each { it.call() }
+		assert phpldapadminTgz.asFile(tmpdir).isFile()
 		assertStringContent tarOut.replaced(tmpdir, tmpdir, "/tmp"), tarOut.toString()
 		assertStringContent lnOut.replaced(tmpdir, tmpdir, "/tmp"), lnOut.toString()
 	}
@@ -65,12 +66,7 @@ class PhpldapadminTest extends UbuntuTestUtil {
 		log.info "Run service again to ensure that configuration is not set double."
 		registry.allServices.each { it.call() }
 
-		assert phpldapadminTgz.asFile(tmpdir).isFile()
-		assertFileContent exampleConfig.asFile(tmpdir), exampleConfig
-		assertFileContent linkedExampleConfig.asFile(tmpdir), linkedExampleConfig
-		assertFileContent expectedConfig.asFile(tmpdir), expectedConfig
 		assertFileContent linkedExpectedConfig.asFile(tmpdir), linkedExpectedConfig
-		assertFileContent tarOut.asFile(tmpdir), tarOut
 		assertFileContent defaultConf.asFile(tmpdir), defaultConf
 		assertFileContent domainsConf.asFile(tmpdir), PhpldapadminResources.domainsConf
 		assertStringContent test1comConf.replaced(tmpdir, tmpdir, "/tmp"), test1comConf.toString()

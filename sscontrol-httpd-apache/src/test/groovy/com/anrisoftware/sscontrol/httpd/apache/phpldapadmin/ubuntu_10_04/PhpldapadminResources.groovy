@@ -44,13 +44,10 @@ enum PhpldapadminResources {
 	phpldapadminTgz("/tmp/phpldapadmin-1.2.3.tgz", PhpldapadminResources.class.getResource("phpldapadmin-1.2.3.tgz")),
 	configDir("/var/www/ldapadmin.test1.com/phpldapadmin-1.2.3", null),
 	linkedConfigDir("/var/www/ldapadmin.test1.com/phpldapadmin", null),
-	exampleConfig("/var/www/ldapadmin.test1.com/phpldapadmin-1.2.3/config/config.php.example", PhpldapadminResources.class.getResource("config_php_example.txt")),
 	linkedExampleConfig("/var/www/ldapadmin.test1.com/phpldapadmin/config/config.php.example", PhpldapadminResources.class.getResource("config_php_example.txt")),
-	expectedConfig("/var/www/ldapadmin.test1.com/phpldapadmin-1.2.3/config/config.php", PhpldapadminResources.class.getResource("config_php_expected.txt")),
 	linkedExpectedConfig("/var/www/ldapadmin.test1.com/phpldapadmin/config/config.php", PhpldapadminResources.class.getResource("config_php_expected.txt")),
 
 	static copyUbuntuFiles(File parent) {
-		exampleConfig.createFile parent
 		linkedExampleConfig.createFile parent
 	}
 

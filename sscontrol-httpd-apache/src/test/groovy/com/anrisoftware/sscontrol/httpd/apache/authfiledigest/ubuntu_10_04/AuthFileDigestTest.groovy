@@ -16,10 +16,10 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd-apache. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.apache.authfile.ubuntu_10_04
+package com.anrisoftware.sscontrol.httpd.apache.authfiledigest.ubuntu_10_04
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
-import static com.anrisoftware.sscontrol.httpd.apache.authfile.ubuntu_10_04.AuthfileResources.*
+import static com.anrisoftware.sscontrol.httpd.apache.authfiledigest.ubuntu_10_04.AuthFileDigestResources.*
 import static com.anrisoftware.sscontrol.httpd.apache.core.ubuntu_10_04.UbuntuResources.*
 import static org.apache.commons.io.FileUtils.*
 import groovy.util.logging.Slf4j
@@ -29,16 +29,16 @@ import org.junit.Test
 import com.anrisoftware.sscontrol.httpd.apache.ubuntu.UbuntuTestUtil
 
 /**
- * Test Apache on a Ubuntu 10.04 server.
+ * Auth/file/digest
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
 @Slf4j
-class AuthFileTest extends UbuntuTestUtil {
+class AuthFileDigestTest extends UbuntuTestUtil {
 
 	@Test
-	void "auth file"() {
+	void "auth file digest"() {
 		copyUbuntuFiles tmpdir
 		loader.loadService profile.resource, null
 		def profile = registry.getService("profile")[0]
@@ -58,7 +58,7 @@ class AuthFileTest extends UbuntuTestUtil {
 	}
 
 	@Test
-	void "auth file appending"() {
+	void "auth file appending digest"() {
 		copyUbuntuFiles tmpdir
 		loader.loadService profile.resource, null
 		def profile = registry.getService("profile")[0]

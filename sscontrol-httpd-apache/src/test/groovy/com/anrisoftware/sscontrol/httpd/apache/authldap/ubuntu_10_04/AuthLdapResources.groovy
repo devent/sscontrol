@@ -31,12 +31,15 @@ import com.anrisoftware.sscontrol.httpd.apache.core.ubuntu_10_04.ResourcesUtils
  */
 enum AuthLdapResources {
 
+	// Auth/ldap
 	httpdScript("Httpd.groovy", AuthLdapResources.class.getResource("HttpdAuthLdap.groovy")),
-	// AuthFile
 	domainsConf("/etc/apache2/conf.d/000-robobee-domains.conf", AuthLdapResources.class.getResource("domains_conf.txt")),
 	test1comConf("/etc/apache2/sites-available/100-robobee-test1.com.conf", AuthLdapResources.class.getResource("test1_com_conf.txt")),
 	test1comSslConf("/etc/apache2/sites-available/100-robobee-test1.com-ssl.conf", AuthLdapResources.class.getResource("test1_com_ssl_conf.txt")),
 	enmodOut("/usr/sbin/a2enmod.out", AuthLdapResources.class.getResource("enmod_out.txt")),
+	// Auth file/ldap
+	fileldapScript("Httpd.groovy", AuthLdapResources.class.getResource("HttpdAuthFileLdap.groovy")),
+	authFileLdapTest1comSslConf("/etc/apache2/sites-available/100-robobee-test1.com-ssl.conf", AuthLdapResources.class.getResource("authfileldap_test1_com_ssl_conf.txt")),
 
 	ResourcesUtils resources
 

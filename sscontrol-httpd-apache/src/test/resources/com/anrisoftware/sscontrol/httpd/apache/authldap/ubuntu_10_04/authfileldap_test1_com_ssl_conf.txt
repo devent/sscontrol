@@ -19,6 +19,16 @@
         AuthType digest
         AuthName "Private Directory"
         AuthDigestDomain /private
+        AuthDigestProvider file
+        AuthUserFile /tmp/var/www/test1.com/auth/private-digest.passwd
+        Require valid-user
+    </Location>
+
+    # auth "Private Directory"
+    <Location /private>
+        AuthType digest
+        AuthName "Private Directory"
+        AuthDigestDomain /private
         AuthDigestProvider ldap
         AuthzLDAPAuthoritative on
         AuthLDAPURL ldap://127.0.0.1:389/o=deventorg,dc=ubuntutest,dc=com?cn

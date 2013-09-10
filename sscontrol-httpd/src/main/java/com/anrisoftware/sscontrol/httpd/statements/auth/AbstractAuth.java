@@ -1,7 +1,5 @@
 package com.anrisoftware.sscontrol.httpd.statements.auth;
 
-import static java.lang.String.format;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -66,7 +64,7 @@ public class AbstractAuth {
 		log.checkLocation(location);
 		this.location = location;
 		if (domains.isEmpty()) {
-			addDomain(format("/%s", location));
+			addDomain(location);
 		}
 	}
 

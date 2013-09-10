@@ -18,7 +18,7 @@
  */
 package com.anrisoftware.sscontrol.httpd.apache.authfile.ubuntu_10_04
 
-import com.anrisoftware.sscontrol.httpd.apache.core.ubuntu_10_04.UbuntuResources;
+import com.anrisoftware.sscontrol.httpd.apache.core.ubuntu_10_04.UbuntuResources
 
 httpd {
 	domain "test1.com", address: "192.168.0.50", {
@@ -29,8 +29,7 @@ httpd {
 		certification_file UbuntuResources.certCrt.resource
 		certification_key_file UbuntuResources.certKey.resource
 		redirect to_www
-		setup_auth provider: file, name: "private", appending: true, {
-			location "private"
+		auth "Private Location", location: "/private", provider: file, appending: true, {
 			require valid_user
 			require group: "admin"
 			group "admin", {

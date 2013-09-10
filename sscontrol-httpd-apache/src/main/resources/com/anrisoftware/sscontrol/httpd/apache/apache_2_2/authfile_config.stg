@@ -1,6 +1,6 @@
 domainAuth(domain, properties, auth) ::= <<
 # auth "<auth.name>"
-\<Location /<auth.location>\>
+\<Location <auth.location>\>
     <(auth.type)(auth)>
     AuthUserFile <properties.sitesDirectory>/<domain.name>/<properties.authSubdirectory>/<auth.passwordFileName>
     <authGroupFile(auth, properties, domain)>
@@ -18,7 +18,7 @@ AuthDigestProvider <auth.provider>
 
 authGroupFile(auth, properties, domain) ::= <%
 <if(auth.groups)>
-AuthGroupFile <properties.sitesDirectory>/<domain.name>/<properties.authSubdirectory>/<auth.location>.group
+AuthGroupFile <properties.sitesDirectory>/<domain.name>/<properties.authSubdirectory>/<auth.locationFilename>.group
 <endif>
 %>
 

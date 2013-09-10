@@ -29,7 +29,7 @@ httpd {
 		certification_file UbuntuResources.certCrt.resource
 		certification_key_file UbuntuResources.certKey.resource
 		redirect to_www
-		auth "Private Location", location: "private", provider: file, {
+		auth "Private Location", location: "/private", provider: file, {
 			require valid_user
 			require group: "admin"
 			group "admin", {

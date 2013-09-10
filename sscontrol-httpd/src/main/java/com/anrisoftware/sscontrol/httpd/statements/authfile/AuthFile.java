@@ -18,6 +18,7 @@
  */
 package com.anrisoftware.sscontrol.httpd.statements.authfile;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -96,9 +97,13 @@ public class AuthFile extends AbstractAuth {
 		this.args = null;
 	}
 
-	public void setLocation(Object location) {
+	private void setLocation(Object location) {
 		log.checkLocation(location);
 		super.setLocation(location.toString());
+	}
+
+	public String getLocationFilename() {
+		return new File(getLocation()).getName();
 	}
 
 	public void setAppending(boolean appending) {
@@ -132,11 +137,12 @@ public class AuthFile extends AbstractAuth {
 
 	public String getPasswordFileName() {
 		log.checkType(getType());
+		String location = getLocationFilename();
 		switch (getType()) {
 		case basic:
-			return String.format("%s.passwd", getLocation());
+			return String.format("%s.passwd", location);
 		case digest:
-			return String.format("%s-digest.passwd", getLocation());
+			return String.format("%s-digest.passwd", location);
 		default:
 			return null;
 		}

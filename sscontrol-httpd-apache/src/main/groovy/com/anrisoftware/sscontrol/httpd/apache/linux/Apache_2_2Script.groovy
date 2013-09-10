@@ -27,6 +27,7 @@ import org.apache.commons.io.FileUtils
 
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.Templates
+import com.anrisoftware.sscontrol.httpd.statements.auth.AbstractAuth
 import com.anrisoftware.sscontrol.httpd.statements.domain.Domain
 import com.anrisoftware.sscontrol.httpd.statements.domain.SslDomain
 import com.anrisoftware.sscontrol.httpd.statements.webservice.WebService
@@ -120,7 +121,7 @@ abstract class Apache_2_2Script extends ApacheScript {
 	def deployService(Domain domain, List serviceConfig) {
 		domain.services.each { WebService service ->
 			def config = serviceConfigs["${PROFILE}.${service.name}"]
-			log.checkConfig config, service
+			log.checkServiceConfig config, service
 			config.deployService(domain, service, serviceConfig)
 		}
 	}
@@ -132,8 +133,10 @@ abstract class Apache_2_2Script extends ApacheScript {
 	}
 
 	def deployAuth(Domain domain, List serviceConfig) {
-		domain.auths.each {
-			authConfigs[it.class.simpleName].deployAuth(domain, it, serviceConfig)
+		domain.auths.each { AbstractAuth auth ->
+			def config = authConfigs["${PROFILE}.${auth.class.simpleName}"]
+			log.checkAuthConfig config, auth
+			config.deployAuth(domain, auth, serviceConfig)
 		}
 	}
 

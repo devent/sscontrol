@@ -64,7 +64,7 @@ public class Ubuntu10_04ScriptFactory implements ServiceScriptFactory {
 		}
 	};
 
-	private static final Module[] MODULES = new Module[] { new UbuntuModule() };
+	private static final Module[] MODULES = new Module[] { new Ubuntu10_04Module() };
 
 	private Injector injector;
 

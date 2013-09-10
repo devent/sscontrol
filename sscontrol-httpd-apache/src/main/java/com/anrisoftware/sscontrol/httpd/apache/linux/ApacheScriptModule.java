@@ -19,10 +19,7 @@
  */
 package com.anrisoftware.sscontrol.httpd.apache.linux;
 
-import static com.google.inject.multibindings.MapBinder.newMapBinder;
-
 import com.google.inject.AbstractModule;
-import com.google.inject.multibindings.MapBinder;
 
 /**
  * Apache service module.
@@ -34,14 +31,5 @@ public class ApacheScriptModule extends AbstractModule {
 
 	@Override
 	protected void configure() {
-		bindAuthConfig();
 	}
-
-	private void bindAuthConfig() {
-		MapBinder<String, AuthConfig> map = newMapBinder(binder(),
-				String.class, AuthConfig.class);
-		map.addBinding("AuthFile").to(AuthFileConfig.class);
-		map.addBinding("AuthLdap").to(AuthLdapConfig.class);
-	}
-
 }

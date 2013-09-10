@@ -16,40 +16,59 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd-apache. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.apache.linux
+package com.anrisoftware.sscontrol.httpd.apache.ubuntu_10_04
+
+import static com.anrisoftware.sscontrol.httpd.apache.ubuntu_10_04.Ubuntu10_04ScriptFactory.PROFILE
 
 import javax.inject.Inject
 
 import com.anrisoftware.resources.templates.api.TemplateResource
+import com.anrisoftware.sscontrol.httpd.apache.linux.AuthConfig
+import com.anrisoftware.sscontrol.httpd.apache.linux.BasicAuth
+import com.anrisoftware.sscontrol.httpd.statements.auth.AbstractAuth
+import com.anrisoftware.sscontrol.httpd.statements.auth.AuthType
 import com.anrisoftware.sscontrol.httpd.statements.authldap.AuthLdap
 import com.anrisoftware.sscontrol.httpd.statements.domain.Domain
 
 /**
- * Server LDAP/authentication configuration.
+ * Auth/LDAP configuration.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class AuthLdapConfig extends AuthConfig {
+class AuthLdapConfig extends BasicAuth implements AuthConfig {
+
+	public static final String NAME = "AuthLdap"
 
 	@Inject
 	AuthLdapConfigLogger log
 
 	/**
-	 * File/auth configuration.
+	 * Auth/ldap configuration.
 	 */
 	TemplateResource authConfigTemplate
 
 	/**
-	 * File/auth commands.
+	 * Auth/ldap commands.
 	 */
 	TemplateResource authCommandsTemplate
 
-	def deployAuth(Domain domain, AuthLdap auth, List serviceConfig) {
+	@Override
+	String getProfile() {
+		PROFILE
+	}
+
+	@Override
+	String getAuthName() {
+		NAME
+	}
+
+	@Override
+	void deployAuth(Domain domain, AbstractAuth auth, List serviceConfig) {
 		super.deployAuth(domain, auth, serviceConfig)
 		authConfigTemplate = apacheTemplates.getResource "authldap_config"
 		createDomainConfig domain, auth, serviceConfig
-		enableMods "authnz_ldap"
+		enableMods auth
 	}
 
 	void createDomainConfig(Domain domain, AuthLdap auth, List serviceConfig) {
@@ -59,5 +78,13 @@ class AuthLdapConfig extends AuthConfig {
 				"auth", auth)
 		serviceConfig << config
 		log.domainConfigCreated script, auth
+	}
+
+	private enableMods(AbstractAuth auth) {
+		switch (auth.type) {
+			case AuthType.basic:
+				enableMods(["authnz_ldap", "auth_basic"])
+				break
+		}
 	}
 }

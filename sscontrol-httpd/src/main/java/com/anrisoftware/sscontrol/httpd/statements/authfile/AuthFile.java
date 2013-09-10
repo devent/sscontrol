@@ -135,19 +135,6 @@ public class AuthFile extends AbstractAuth {
 		return users;
 	}
 
-	public String getPasswordFileName() {
-		log.checkType(getType());
-		String location = getLocationFilename();
-		switch (getType()) {
-		case basic:
-			return String.format("%s.passwd", location);
-		case digest:
-			return String.format("%s-digest.passwd", location);
-		default:
-			return null;
-		}
-	}
-
 	@Override
 	public String toString() {
 		return new ToStringBuilder(this).appendSuper(super.toString())

@@ -26,22 +26,24 @@ import static java.lang.String.format;
 import groovy.lang.Script;
 
 import com.anrisoftware.sscontrol.httpd.apache.linux.ApacheScriptModule;
+import com.anrisoftware.sscontrol.httpd.apache.linux.AuthConfig;
 import com.anrisoftware.sscontrol.httpd.apache.linux.ServiceConfig;
 import com.google.inject.AbstractModule;
 import com.google.inject.multibindings.MapBinder;
 
 /**
- * Binds the Apache Ubuntu service.
+ * Binds the Apache/Ubuntu 10.04 services.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class UbuntuModule extends AbstractModule {
+class Ubuntu10_04Module extends AbstractModule {
 
 	@Override
 	protected void configure() {
 		install(new ApacheScriptModule());
 		bindScripts();
+		bindAuthConfig();
 		bindServiceConfig();
 	}
 
@@ -50,6 +52,15 @@ class UbuntuModule extends AbstractModule {
 		binder = newMapBinder(binder(), String.class, Script.class);
 		binder.addBinding(format("%s.%s", NAME, PROFILE)).to(
 				Ubuntu_10_04Script.class);
+	}
+
+	private void bindAuthConfig() {
+		MapBinder<String, AuthConfig> map = newMapBinder(binder(),
+				String.class, AuthConfig.class);
+		map.addBinding(format("%s.%s", PROFILE, AuthFileConfig.NAME)).to(
+				AuthFileConfig.class);
+		map.addBinding(format("%s.%s", PROFILE, AuthLdapConfig.NAME)).to(
+				AuthLdapConfig.class);
 	}
 
 	private void bindServiceConfig() {

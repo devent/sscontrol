@@ -19,12 +19,14 @@
  */
 package com.anrisoftware.sscontrol.httpd.apache.linux;
 
+import static com.anrisoftware.sscontrol.httpd.apache.linux.Apache_2_2ScriptLogger._.auth_config_null;
 import static com.anrisoftware.sscontrol.httpd.apache.linux.Apache_2_2ScriptLogger._.service_config_null;
 import static org.apache.commons.lang3.Validate.notNull;
 
 import javax.inject.Singleton;
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
+import com.anrisoftware.sscontrol.httpd.statements.auth.AbstractAuth;
 import com.anrisoftware.sscontrol.httpd.statements.webservice.WebService;
 
 /**
@@ -38,7 +40,9 @@ class Apache_2_2ScriptLogger extends AbstractLogger {
 
 	enum _ {
 
-		service_config_null("Service configuration not found for '%s'.");
+		service_config_null("Service configuration not found for '%s'."),
+
+		auth_config_null("Authentication configuration not found for '%s'.");
 
 		private String name;
 
@@ -59,7 +63,12 @@ class Apache_2_2ScriptLogger extends AbstractLogger {
 		super(Apache_2_2Script.class);
 	}
 
-	void checkConfig(ServiceConfig config, WebService service) {
+	void checkServiceConfig(ServiceConfig config, WebService service) {
 		notNull(config, service_config_null.toString(), service.getName());
+	}
+
+	void checkAuthConfig(AuthConfig config, AbstractAuth auth) {
+		notNull(config, auth_config_null.toString(), auth.getClass()
+				.getSimpleName());
 	}
 }

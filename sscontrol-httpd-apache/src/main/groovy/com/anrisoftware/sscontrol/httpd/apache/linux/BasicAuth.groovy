@@ -4,18 +4,21 @@ import com.anrisoftware.sscontrol.httpd.statements.auth.AbstractAuth
 import com.anrisoftware.sscontrol.httpd.statements.domain.Domain
 
 /**
- * Server authentication configuration.
+ * Sets the default properties for http/auth.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class AuthConfig {
+class BasicAuth {
 
 	ApacheScript script
 
-	def deployAuth(Domain domain, AbstractAuth auth, List serviceConfig) {
+	void setScript(ApacheScript script) {
+		this.script = script
+	}
+
+	void deployAuth(Domain domain, AbstractAuth auth, List serviceConfig) {
 		setupDefaultProperties(auth)
-		this."enable${auth.type.toString().capitalize()}"()
 	}
 
 	private setupDefaultProperties(AbstractAuth auth) {
@@ -25,13 +28,6 @@ class AuthConfig {
 		if (auth.provider == null) {
 			auth.provider = script.defaultAuthProvider
 		}
-	}
-
-	private enableBasic() {
-	}
-
-	private enableDigest() {
-		enableMods "auth_digest"
 	}
 
 	def propertyMissing(String name) {

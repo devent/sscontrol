@@ -1,9 +1,9 @@
-domainAuth(domain, properties, auth) ::= <<
+domainAuth(domain, auth, passwordFile, groupFile) ::= <<
 # auth "<auth.name>"
 \<Location <auth.location>\>
     <(auth.type)(auth)>
-    AuthUserFile <properties.sitesDirectory>/<domain.name>/<properties.authSubdirectory>/<auth.passwordFileName>
-    <authGroupFile(auth, properties, domain)>
+    AuthUserFile <passwordFile>
+    <authGroupFile(auth, groupFile)>
     <auth.requires:{requires | <(requires.class.simpleName)(requires)>};separator="\n">
 \</Location>
 
@@ -16,9 +16,9 @@ AuthDigestDomain <auth.domains;separator=" ">
 AuthDigestProvider <auth.provider>
 >>
 
-authGroupFile(auth, properties, domain) ::= <%
+authGroupFile(auth, groupFile) ::= <%
 <if(auth.groups)>
-AuthGroupFile <properties.sitesDirectory>/<domain.name>/<properties.authSubdirectory>/<auth.locationFilename>.group
+AuthGroupFile <groupFile>
 <endif>
 %>
 

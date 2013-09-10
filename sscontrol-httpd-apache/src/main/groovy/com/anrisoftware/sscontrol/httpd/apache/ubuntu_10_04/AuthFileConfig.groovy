@@ -16,24 +16,32 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd-apache. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.apache.linux
+package com.anrisoftware.sscontrol.httpd.apache.ubuntu_10_04
+
+import static com.anrisoftware.sscontrol.httpd.apache.ubuntu_10_04.Ubuntu10_04ScriptFactory.PROFILE
 
 import javax.inject.Inject
 
 import org.apache.commons.io.FileUtils
 
 import com.anrisoftware.resources.templates.api.TemplateResource
+import com.anrisoftware.sscontrol.httpd.apache.linux.AuthConfig
+import com.anrisoftware.sscontrol.httpd.apache.linux.BasicAuth
+import com.anrisoftware.sscontrol.httpd.statements.auth.AbstractAuth
+import com.anrisoftware.sscontrol.httpd.statements.auth.AuthType
 import com.anrisoftware.sscontrol.httpd.statements.authfile.AuthFile
 import com.anrisoftware.sscontrol.httpd.statements.authfile.FileGroup
 import com.anrisoftware.sscontrol.httpd.statements.domain.Domain
 
 /**
- * Server file/authentication configuration.
+ * Auth/file configuration.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class AuthFileConfig extends AuthConfig {
+class AuthFileConfig extends BasicAuth implements AuthConfig {
+
+	public static final String NAME = "AuthFile"
 
 	@Inject
 	AuthFileConfigLogger log
@@ -48,25 +56,47 @@ class AuthFileConfig extends AuthConfig {
 	 */
 	TemplateResource authCommandsTemplate
 
-	def deployAuth(Domain domain, AuthFile auth, List serviceConfig) {
+	@Override
+	String getProfile() {
+		PROFILE
+	}
+
+	@Override
+	String getAuthName() {
+		NAME
+	}
+
+	@Override
+	void deployAuth(Domain domain, AbstractAuth auth, List serviceConfig) {
 		super.deployAuth(domain, auth, serviceConfig)
 		authConfigTemplate = apacheTemplates.getResource "authfile_config"
 		authCommandsTemplate = apacheTemplates.getResource "authfile_commands"
 		createDomainConfig domain, auth, serviceConfig
-		makeAuthDirectory(domain)
-		removeUsers(domain, auth)
-		deployUsers(domain, auth, auth.users)
-		auth.groups.each { FileGroup group ->
-			deployGroups(domain, auth, group)
-		}
+		enableMods auth
+		makeAuthDirectory domain
+		removeUsers domain, auth
+		deployUsers domain, auth, auth.users
+		deployGroups auth, domain
 	}
 
-	void createDomainConfig(Domain domain, AuthFile auth, List serviceConfig) {
+	def createDomainConfig(Domain domain, AuthFile auth, List serviceConfig) {
 		def config = authConfigTemplate.getText(true, "domainAuth",
 				"domain", domain,
-				"properties", script,
-				"auth", auth)
+				"auth", auth,
+				"passwordFile", passwordFile(domain, auth),
+				"groupFile", groupFile(domain, auth))
 		serviceConfig << config
+	}
+
+	private enableMods(AbstractAuth auth) {
+		switch (auth.type) {
+			case AuthType.basic:
+				enableMods(["authn_file", "auth_basic"])
+				break
+			case AuthType.digest:
+				enableMods(["authn_file", "auth_digest"])
+				break
+		}
 	}
 
 	private removeUsers(Domain domain, AuthFile auth) {
@@ -91,17 +121,33 @@ class AuthFileConfig extends AuthConfig {
 		log.deployAuthUsers script, worker, auth
 	}
 
-	private deployGroups(Domain domain, AuthFile auth, FileGroup group) {
+	private deployGroups(AuthFile auth, Domain domain) {
+		auth.groups.each { FileGroup group ->
+			deployGroup(domain, auth, group)
+		}
+	}
+
+	private deployGroup(Domain domain, AuthFile auth, FileGroup group) {
 		deployUsers(domain, auth, group.users)
 		def string = authConfigTemplate.getText true, "groupFile", "auth", auth
 		FileUtils.write groupFile(domain, auth), string
 	}
 
 	File passwordFile(Domain domain, AuthFile auth) {
-		new File(domainDir(domain), "auth/${auth.passwordFileName}")
+		def file = passwordFileName auth
+		new File(domainDir(domain), "auth/${file}")
 	}
 
 	File groupFile(Domain domain, AuthFile auth) {
-		new File(domainDir(domain), "auth/${auth.location}.group")
+		new File(domainDir(domain), "auth/${auth.locationFilename}.group")
+	}
+
+	String passwordFileName(AuthFile auth) {
+		switch (auth.type) {
+			case AuthType.basic:
+				return "${auth.locationFilename}.passwd"
+			case AuthType.digest:
+				return "${auth.locationFilename}-digest.passwd"
+		}
 	}
 }

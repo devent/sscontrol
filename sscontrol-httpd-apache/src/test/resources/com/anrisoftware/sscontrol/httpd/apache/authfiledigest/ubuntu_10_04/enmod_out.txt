@@ -2,11 +2,13 @@ suexec
 rewrite
 rewrite
 rewrite
+authn_file
 auth_digest
 ssl
 suexec
 rewrite
 rewrite
 rewrite
+authn_file
 auth_digest
 ssl

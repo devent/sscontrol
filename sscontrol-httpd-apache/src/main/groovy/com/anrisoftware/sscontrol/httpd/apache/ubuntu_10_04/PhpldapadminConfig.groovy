@@ -20,6 +20,8 @@ package com.anrisoftware.sscontrol.httpd.apache.ubuntu_10_04
 
 import static com.anrisoftware.sscontrol.httpd.apache.ubuntu_10_04.Ubuntu10_04ScriptFactory.PROFILE
 
+import java.util.regex.Pattern
+
 import javax.inject.Inject
 
 import org.apache.commons.io.FileUtils
@@ -84,6 +86,7 @@ class PhpldapadminConfig extends BasePhpldapadminConfig implements ServiceConfig
 		fcgiConfig.deployConfig domain
 		downloadPhpldapadmin domain
 		deployConfiguration domain, service
+		deployServerConfig domain, service
 		//changeOwnerConfiguration domain
 		//createDomainConfig domain, service, serviceConfig
 	}
@@ -117,17 +120,18 @@ class PhpldapadminConfig extends BasePhpldapadminConfig implements ServiceConfig
 		if (!configFile.isFile()) {
 			FileUtils.copyFile adminExampleConfig(domain), configFile
 		}
-		script.deployConfiguration configurationTokens("//"), adminConfiguration(domain), adminConfigurations(service), configFile
+		def configs = adminConfigurations(domain, service)
+		script.deployConfiguration configurationTokens("//"), adminConfiguration(domain), configs, configFile
 	}
 
 	/**
 	 * Returns the phpldapadmin/configurations.
 	 */
-	List adminConfigurations(PhpldapadminService service) {
+	List adminConfigurations(Domain domain, PhpldapadminService service) {
 		[
 			commentFirstNewServer(),
 			commentFirstNewServerName(),
-			addIncludeStatement(),
+			addIncludeServers(domain),
 		]
 	}
 
@@ -147,13 +151,24 @@ class PhpldapadminConfig extends BasePhpldapadminConfig implements ServiceConfig
 		token
 	}
 
-	def addIncludeStatement() {
-		def search = adminConfigTemplate.getText(true, "includeStatement_search")
-		def replace = adminConfigTemplate.getText(true, "includeStatement")
+	def addIncludeServers(def domain) {
+		def file = adminServersConfigFile(domain)
+		def search = adminConfigTemplate.getText(true, "includeServersConfig_search", "file", Pattern.quote(file.name))
+		def replace = adminConfigTemplate.getText(true, "includeServersConfig", "file", file.name)
 		def token = new TokenTemplate(search, replace)
 		token.append = false
 		token.enclose = false
 		token
+	}
+
+	/**
+	 * Deploy the servers configuration.
+	 */
+	def deployServerConfig(Domain domain, PhpldapadminService service) {
+		def string = adminConfigTemplate.getText true, "serversConfig", "service", service
+		def file = adminServersConfigFile(domain)
+		FileUtils.write file, string
+		log.serverConfigdeployed script, file
 	}
 
 	/**
@@ -197,6 +212,21 @@ class PhpldapadminConfig extends BasePhpldapadminConfig implements ServiceConfig
 	 */
 	File adminConfigFile(Domain domain) {
 		propertyFile("phpldapadmin_configuration_file", defaultProperties, adminLinkedConfigurationDir(domain)) as File
+	}
+
+	/**
+	 * Phpldapadmin/server configuration file, for
+	 * example {@code "config/robobee-servers.php"}. If the path is
+	 * not absolute then it is assume to be under the configuration directory.
+	 *
+	 * <ul>
+	 * <li>profile property {@code "phpldapadmin_servers_configuration_file"}</li>
+	 * </ul>
+	 *
+	 * @see #adminLinkedConfigurationDir(Object)
+	 */
+	File adminServersConfigFile(Domain domain) {
+		propertyFile("phpldapadmin_servers_configuration_file", defaultProperties, adminLinkedConfigurationDir(domain)) as File
 	}
 
 	/**

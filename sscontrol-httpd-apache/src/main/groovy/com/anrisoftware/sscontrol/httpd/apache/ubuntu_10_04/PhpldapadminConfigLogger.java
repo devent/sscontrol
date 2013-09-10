@@ -19,12 +19,8 @@
  */
 package com.anrisoftware.sscontrol.httpd.apache.ubuntu_10_04;
 
-import static com.anrisoftware.sscontrol.httpd.apache.ubuntu_10_04.PhpldapadminConfigLogger._.import_tables_debug;
-import static com.anrisoftware.sscontrol.httpd.apache.ubuntu_10_04.PhpldapadminConfigLogger._.import_tables_info;
-import static com.anrisoftware.sscontrol.httpd.apache.ubuntu_10_04.PhpldapadminConfigLogger._.import_tables_trace;
-import static com.anrisoftware.sscontrol.httpd.apache.ubuntu_10_04.PhpldapadminConfigLogger._.reconfigure_service_debug;
-import static com.anrisoftware.sscontrol.httpd.apache.ubuntu_10_04.PhpldapadminConfigLogger._.reconfigure_service_info;
-import static com.anrisoftware.sscontrol.httpd.apache.ubuntu_10_04.PhpldapadminConfigLogger._.reconfigure_service_trace;
+import static com.anrisoftware.sscontrol.httpd.apache.ubuntu_10_04.PhpldapadminConfigLogger._.server_config_deployed_debug;
+import static com.anrisoftware.sscontrol.httpd.apache.ubuntu_10_04.PhpldapadminConfigLogger._.server_config_deployed_info;
 
 import javax.inject.Singleton;
 
@@ -42,17 +38,11 @@ class PhpldapadminConfigLogger extends AbstractLogger {
 
 	enum _ {
 
-		reconfigure_service_trace("Reconfigure phpmyadmin for {}, {}."),
+		server_config_deployed_debug(
+				"Deployed servers configuration to '{}' for {}."),
 
-		reconfigure_service_debug("Reconfigure phpmyadmin for {}."),
-
-		reconfigure_service_info("Reconfigure phpmyadmin for service '{}'."),
-
-		import_tables_trace("Import tables for phpmyadmin for {}, {}."),
-
-		import_tables_debug("Import tables for phpmyadmin for {}."),
-
-		import_tables_info("Import tables for phpmyadmin for service '{}'.");
+		server_config_deployed_info(
+				"Deployed servers configuration to '{}' for service '{}'.");
 
 		private String name;
 
@@ -73,23 +63,11 @@ class PhpldapadminConfigLogger extends AbstractLogger {
 		super(PhpmyadminConfig.class);
 	}
 
-	void reconfigureService(LinuxScript script, Object worker) {
-		if (isTraceEnabled()) {
-			trace(reconfigure_service_trace, script, worker);
-		} else if (isDebugEnabled()) {
-			debug(reconfigure_service_debug, script);
+	void serverConfigdeployed(LinuxScript script, Object file) {
+		if (isDebugEnabled()) {
+			debug(server_config_deployed_debug, file, script);
 		} else {
-			info(reconfigure_service_info, script.getName());
-		}
-	}
-
-	void importTables(LinuxScript script, Object worker) {
-		if (isTraceEnabled()) {
-			trace(import_tables_trace, script, worker);
-		} else if (isDebugEnabled()) {
-			debug(import_tables_debug, script);
-		} else {
-			info(import_tables_info, script.getName());
+			info(server_config_deployed_info, file, script.getName());
 		}
 	}
 }

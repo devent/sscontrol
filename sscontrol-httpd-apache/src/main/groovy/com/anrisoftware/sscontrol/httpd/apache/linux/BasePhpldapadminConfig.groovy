@@ -1,5 +1,6 @@
 package com.anrisoftware.sscontrol.httpd.apache.linux
 
+
 /**
  * Returns phpmyadmin/properties.
  *

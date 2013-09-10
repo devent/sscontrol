@@ -46,6 +46,7 @@ enum PhpldapadminResources {
 	linkedConfigDir("/var/www/ldapadmin.test1.com/phpldapadmin", null),
 	linkedExampleConfig("/var/www/ldapadmin.test1.com/phpldapadmin/config/config.php.example", PhpldapadminResources.class.getResource("config_php_example.txt")),
 	linkedExpectedConfig("/var/www/ldapadmin.test1.com/phpldapadmin/config/config.php", PhpldapadminResources.class.getResource("config_php_expected.txt")),
+	robobeeServers("/var/www/ldapadmin.test1.com/phpldapadmin/config/robobee-servers.php", PhpldapadminResources.class.getResource("robobee_servers_php.txt")),
 
 	static copyUbuntuFiles(File parent) {
 		linkedExampleConfig.createFile parent

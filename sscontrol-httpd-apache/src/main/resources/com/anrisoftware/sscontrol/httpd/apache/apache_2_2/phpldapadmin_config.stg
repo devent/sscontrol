@@ -21,6 +21,24 @@ domainConfig(domain, service, properties, fcgiProperties) ::= <<
 
 >>
 
+serversConfig(service) ::= <<
+<service.servers:serverConfig();separator="\n">
+>>
+
+serverConfig(server) ::= <<
+// Server "<server.name>"
+$servers->newServer('ldap_pla');
+$servers->setValue('server','name','<server.name>');
+$servers->setValue('server','host','<server.host>');
+<if(server.port)>$servers->setValue('server','port',<server.port>);<endif>
+$servers->setValue('server','base',array(''));
+$servers->setValue('login','auth_type','session');
+$servers->setValue('login','bind_id','');
+$servers->setValue('login','bind_pass','');
+$servers->setValue('server','tls',false);
+
+>>
+
 serviceAlias(alias) ::= <<
 <if(alias)>Alias /<alias> /usr/share/phpmyadmin<endif>
 
@@ -44,11 +62,11 @@ firstNewServerName_search() ::= <%
    phpLDAPadmin to identify this LDAP server to users\. \*/\n\$servers->setValue\('server','name','My LDAP Server'\);
 %>
 
-includeStatement(server) ::= <<
-include "robobee-config.php";
+includeServersConfig(file) ::= <<
+include "<file>";
 ?\>
 >>
 
-includeStatement_search() ::= <%
-(include "robobee-config\.php";\n)?\?>
+includeServersConfig_search(file) ::= <%
+(include "<file>";\n)?\?>
 %>

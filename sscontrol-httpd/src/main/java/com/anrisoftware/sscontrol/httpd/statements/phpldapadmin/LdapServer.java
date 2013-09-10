@@ -44,6 +44,10 @@ public class LdapServer {
 		}
 	}
 
+	public String getName() {
+		return name;
+	}
+
 	private void setHost(Object object) {
 		log.checkHost(object);
 		setHost(object.toString());

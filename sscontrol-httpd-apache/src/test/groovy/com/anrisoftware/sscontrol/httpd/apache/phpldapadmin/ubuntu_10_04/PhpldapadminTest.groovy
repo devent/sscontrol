@@ -67,6 +67,7 @@ class PhpldapadminTest extends UbuntuTestUtil {
 		registry.allServices.each { it.call() }
 
 		assertFileContent linkedExpectedConfig.asFile(tmpdir), linkedExpectedConfig
+		assertFileContent robobeeServers.asFile(tmpdir), robobeeServers
 		assertFileContent defaultConf.asFile(tmpdir), defaultConf
 		assertFileContent domainsConf.asFile(tmpdir), PhpldapadminResources.domainsConf
 		assertStringContent test1comConf.replaced(tmpdir, tmpdir, "/tmp"), test1comConf.toString()

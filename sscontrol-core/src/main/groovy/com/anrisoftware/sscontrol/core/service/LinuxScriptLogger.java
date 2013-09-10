@@ -1,18 +1,18 @@
 /*
  * Copyright 2013 Erwin Müller <erwin.mueller@deventm.org>
- *
+ * 
  * This file is part of sscontrol-core.
- *
+ * 
  * sscontrol-core is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published by the
  * Free Software Foundation, either version 3 of the License, or (at your
  * option) any later version.
- *
- * sscontrol-core is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
- * for more details.
- *
+ * 
+ * sscontrol-core is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more
+ * details.
+ * 
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-core. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -36,11 +36,17 @@ import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.group_
 import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.install_packages_done_debug;
 import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.install_packages_done_info;
 import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.install_packages_done_trace;
+import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.link_files_done_debug;
+import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.link_files_done_info;
+import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.link_files_done_trace;
 import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.properties_null;
 import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.property_not_set;
 import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.restarted_service_debug;
 import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.restarted_service_info;
 import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.restarted_service_trace;
+import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.unpack_done_debug;
+import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.unpack_done_info;
+import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.unpack_done_trace;
 import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.user_add_debug;
 import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.user_add_info;
 import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.user_add_trace;
@@ -110,7 +116,20 @@ class LinuxScriptLogger extends AbstractLogger {
 
 		user_add_debug("Add user '{}' in {}."),
 
-		user_add_info("Add user '{}' to service '{}'.");
+		user_add_info("Add user '{}' to service '{}'."),
+
+		link_files_done_trace("Link {} to {} done in {}, {}."),
+
+		link_files_done_debug("Link {} to {} done in {}."),
+
+		link_files_done_info(
+				"Link files {} to targets {} done in service '{}'."),
+
+		unpack_done_trace("Unpack {} to {} done in {}, {}."),
+
+		unpack_done_debug("Unpack {} to {} done in {}."),
+
+		unpack_done_info("Unpack file {} to {} done in service '{}'.");
 
 		private String name;
 
@@ -214,6 +233,28 @@ class LinuxScriptLogger extends AbstractLogger {
 			debug(user_add_debug, user, script);
 		} else {
 			info(user_add_info, user, script.getName());
+		}
+	}
+
+	void linkFilesDone(LinuxScript script, Object worker, Object files,
+			Object targets) {
+		if (isTraceEnabled()) {
+			trace(link_files_done_trace, files, targets, script, worker);
+		} else if (isDebugEnabled()) {
+			debug(link_files_done_debug, files, targets, script);
+		} else {
+			info(link_files_done_info, files, targets, script.getName());
+		}
+	}
+
+	void unpackDone(LinuxScript script, Object worker, Object file,
+			Object target) {
+		if (isTraceEnabled()) {
+			trace(unpack_done_trace, file, target, script, worker);
+		} else if (isDebugEnabled()) {
+			debug(unpack_done_debug, file, target, script);
+		} else {
+			info(unpack_done_info, file, target, script.getName());
 		}
 	}
 

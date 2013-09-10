@@ -349,6 +349,86 @@ abstract class LinuxScript extends Script {
 	}
 
 	/**
+	 * Installs the specified packages.
+	 *
+	 * @param args
+	 * 			  the arguments:
+	 * <ul>
+	 * <li>{@code file:} the archive {@link File};
+	 * <li>{@code type:} the type of the archive, for example {@code tar},
+	 * {@code zip};
+	 * <li>{@code output:} the output {@link File} directory;
+	 * <li>{@code system:} optionally, the system of the server.
+	 * Defaults to unix;
+	 * </ul>
+	 *
+	 * @return the {@link ScriptCommandWorker} worker.
+	 */
+	void unpack(Map args) {
+		args.system = args.containsKey("system") ? args.system : "unix"
+		def template = commandTemplates.getResource("unpack")
+		def worker = scriptCommandFactory.create(template,
+				args.system,
+				"type", args.type,
+				"command", args.command,
+				"output", args.output,
+				"file", args.file)()
+		log.unpackDone this, worker, args.file, args.output
+	}
+
+	/**
+	 * Returns the {@code tar} command.
+	 *
+	 * <ul>
+	 * <li>property key {@code tar_command}</li>
+	 * </ul>
+	 *
+	 * @see #getDefaultProperties()
+	 */
+	String getTarCommand() {
+		profileProperty "tar_command", defaultProperties
+	}
+
+	/**
+	 * Link files and directories.
+	 *
+	 * @param args
+	 * 			  the arguments:
+	 * <ul>
+	 * <li>{@code files:} the source {@link File} or files.
+	 * <li>{@code targets:} the target {@link File} or files;
+	 * <li>{@code system:} the system of the server, defaults to {@code unix};
+	 * <li>{@code command:} the link command, defaults to {@link #getLinkCommand()}.
+	 * </ul>
+	 *
+	 * @return the {@link ScriptCommandWorker} worker.
+	 */
+	void link(Map args) {
+		args.system = args.containsKey("system") ? args.system : "unix"
+		args.command = args.containsKey("command") ? args.command : linkCommand
+		def template = commandTemplates.getResource("mkln")
+		def worker = scriptCommandFactory.create(template,
+				args.system,
+				"lnCommand", args.command,
+				"files", args.files,
+				"targets", args.targets)()
+		log.linkFilesDone this, worker, args.files, args.targets
+	}
+
+	/**
+	 * Returns the file link command.
+	 *
+	 * <ul>
+	 * <li>property key {@code link_command}</li>
+	 * </ul>
+	 *
+	 * @see #getDefaultProperties()
+	 */
+	String getLinkCommand() {
+		profileProperty "link_command", defaultProperties
+	}
+
+	/**
 	 * Returns the default character set.
 	 *
 	 * <ul>
@@ -411,6 +491,21 @@ abstract class LinuxScript extends Script {
 	 */
 	File getConfigurationDir() {
 		profileProperty("configuration_directory", defaultProperties) as File
+	}
+
+	/**
+	 * Returns the path of the temporary directory, defaults to
+	 * {@link System#getProperties()}.
+	 *
+	 * <ul>
+	 * <li>profile property {@code "temp_directory"}</li>
+	 * </ul>
+	 *
+	 * @see #getDefaultProperties()
+	 */
+	File getTmpDirectory() {
+		String path = profileProperty("temp_directory")
+		path == null ? System.getProperty("java.io.tmpdir") : new File(path)
 	}
 
 	/**
@@ -576,12 +671,13 @@ abstract class LinuxScript extends Script {
 	 * 			  the key of the profile property.
 	 *
 	 * @param p
-	 * 			  the {@link ContextProperties} containing the property values.
+	 * 			  the {@link ContextProperties} containing the property values,
+	 * 			  defaults to {@link #getDefaultProperties()}.
 	 *
 	 * @return the value of the profile property or the default property
 	 * if the profile property was not set.
 	 */
-	def profileProperty(String key, ContextProperties p) {
+	def profileProperty(String key, ContextProperties p=defaultProperties) {
 		def property = profile[key]
 		property != null ? property : p.getProperty(key)
 	}
@@ -594,12 +690,13 @@ abstract class LinuxScript extends Script {
 	 * 			  the key of the profile property.
 	 *
 	 * @param p
-	 * 			  the {@link ContextProperties} containing the property values.
+	 * 			  the {@link ContextProperties} containing the property values,
+	 * 			  defaults to {@link #getDefaultProperties()}.
 	 *
 	 * @return the value of the profile property or the default property
 	 * if the profile property was not set.
 	 */
-	def profileNumberProperty(String key, ContextProperties p) {
+	def profileNumberProperty(String key, ContextProperties p=defaultProperties) {
 		def property = profile[key]
 		property != null ? property : p.getNumberProperty(key)
 	}
@@ -618,12 +715,13 @@ abstract class LinuxScript extends Script {
 	 * 			  the key of the profile property.
 	 *
 	 * @param p
-	 * 			  the {@link ContextProperties} containing the property values.
+	 * 			  the {@link ContextProperties} containing the property values,
+	 * 			  defaults to {@link #getDefaultProperties()}.
 	 *
 	 * @return the {@link List} of the profile property or the default property
 	 * if the profile property was not set.
 	 */
-	List profileListProperty(String key, ContextProperties p) {
+	List profileListProperty(String key, ContextProperties p=defaultProperties) {
 		log.checkProperties this, p, key
 		def property = profile.getList(key)
 		property.empty ? p.getListProperty(key, ",") : property

@@ -358,21 +358,23 @@ abstract class LinuxScript extends Script {
 	 * <li>{@code type:} the type of the archive, for example {@code tar},
 	 * {@code zip};
 	 * <li>{@code output:} the output {@link File} directory;
-	 * <li>{@code system:} optionally, the system of the server.
-	 * Defaults to unix;
+	 * <li>{@code system:} the system of the server, defaults to {@code unix};
+	 * <li>{@code override:} set to {@code true} to override existing files;
 	 * </ul>
 	 *
 	 * @return the {@link ScriptCommandWorker} worker.
 	 */
 	void unpack(Map args) {
 		args.system = args.containsKey("system") ? args.system : "unix"
+		args.override = args.containsKey("override") ? args.override : false
 		def template = commandTemplates.getResource("unpack")
 		def worker = scriptCommandFactory.create(template,
 				args.system,
 				"type", args.type,
 				"command", args.command,
 				"output", args.output,
-				"file", args.file)()
+				"file", args.file,
+				"override", args.override)()
 		log.unpackDone this, worker, args.file, args.output
 	}
 

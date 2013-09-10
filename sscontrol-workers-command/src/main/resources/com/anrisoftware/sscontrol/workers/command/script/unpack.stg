@@ -1,15 +1,15 @@
-unix(type, command, output, file) ::= <<
+unix(type, command, output, file, override) ::= <<
 #!/bin/sh
-<(type)(command, output, file)>
+<(type)(command, output, file, override)>
 
 >>
 
-tgz(command, output, file) ::= <<
-<tar(command, output, file)>
+tgz(command, output, file, override) ::= <<
+<tar(command, output, file, override)>
 >>
 
-tar(command, output, file) ::= <<
+tar(command, output, file, override) ::= <<
 cd <output>
-<command> -xf <file>
+<command> <if(override)>--overwrite<endif> -xf <file>
 
 >>

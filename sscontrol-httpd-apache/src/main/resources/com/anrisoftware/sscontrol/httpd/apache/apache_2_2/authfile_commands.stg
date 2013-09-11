@@ -4,6 +4,6 @@ appendBasicPasswordFile(command, auth, file, users) ::= <<
 >>
 
 appendDigestPasswordFile(command, auth, file, users) ::= <<
-<users:{ user | (echo -n "<user.name>:<auth.locationFilename>:" && echo -n "<user.name>:<auth.locationFilename>:<user.password>" | md5sum) | cut -d ' ' -f 1 >\> <file>};separator="\n">
+<users:{ user | (echo -n "<user.name>:<auth.name>:" && echo -n "<user.name>:<auth.name>:<user.password>" | md5sum) | cut -d '-' -f 1 >\> <file>};separator="\n">
 
 >>

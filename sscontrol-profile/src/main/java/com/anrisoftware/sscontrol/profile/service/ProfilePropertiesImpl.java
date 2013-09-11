@@ -122,7 +122,6 @@ class ProfilePropertiesImpl implements ProfileProperties {
 
 	@Override
 	public String toString() {
-		return new ToStringBuilder(this).append("properties",
-				properties.keySet()).toString();
+		return new ToStringBuilder(this).toString();
 	}
 }

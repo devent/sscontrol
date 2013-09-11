@@ -27,7 +27,7 @@ httpd {
 		redirect http_to_https
 	}
 	ssl_domain "test1.com", address: "192.168.0.50", {
-		auth "Private Directory", location: "private", type: digest, provider: file, appending: true, satisfy: any, {
+		auth "Private Directory", location: "/private", type: digest, provider: file, appending: true, satisfy: any, {
 			domain "https://private"
 			require valid_user
 			require group: "admin"

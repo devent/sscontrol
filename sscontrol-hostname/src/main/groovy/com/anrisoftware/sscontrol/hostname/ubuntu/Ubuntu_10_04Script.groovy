@@ -56,9 +56,7 @@ class Ubuntu_10_04Script extends HostnameScript {
 		def template = commandTemplates.getResource("restart")
 		def worker = scriptCommandFactory.create(template,
 				"restartCommand", restartCommand,
-				"services", services)
-		worker.exitValue = 1
-		worker()
+				"services", services)()
 		log.restartServiceDone this, worker
 	}
 }

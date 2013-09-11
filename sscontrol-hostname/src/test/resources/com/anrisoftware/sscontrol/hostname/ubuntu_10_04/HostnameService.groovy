@@ -16,6 +16,6 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-hostname. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.hostname
+package com.anrisoftware.sscontrol.hostname.ubuntu_10_04
 
 hostname { set "test" }

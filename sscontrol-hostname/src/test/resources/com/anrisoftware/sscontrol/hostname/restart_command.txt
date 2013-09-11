@@ -1,2 +1,0 @@
-echo "restart: Unknown instance:"
-exit 1

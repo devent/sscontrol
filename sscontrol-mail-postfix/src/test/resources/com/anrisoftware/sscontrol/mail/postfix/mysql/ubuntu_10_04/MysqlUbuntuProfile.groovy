@@ -16,20 +16,22 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-mail-postfix. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.mail.postfix.ubuntu
+package com.anrisoftware.sscontrol.mail.postfix.mysql.ubuntu_10_04
+
+import com.anrisoftware.sscontrol.mail.postfix.ubuntu_10_04.UbuntuResources
 
 profile "ubuntu_10_04", {
 	mail {
 		service "postfix"
 		storage "mysql"
-		install_command "$tmp/usr/bin/aptitude update && $tmp/usr/bin/aptitude install"
-		restart_command "$tmp/etc/init.d/postfix"
-		chown_command "$tmp/bin/chown"
-		postalias_command "$tmp/usr/sbin/postalias"
-		postmap_command "$tmp/usr/sbin/postmap"
-		mailname_file "$tmp/etc/mailname"
-		configuration_directory "$tmp/etc/postfix"
-		mailbox_base_directory "$tmp/var/mail/vhosts"
-		mysql_command "$tmp/usr/bin/mysql"
+		install_command "${UbuntuResources.aptitudeCommand.asFile(tmp)} update && ${UbuntuResources.aptitudeCommand.asFile(tmp)} install"
+		restart_command UbuntuResources.restartCommand.asFile(tmp)
+		chown_command UbuntuResources.chownCommand.asFile(tmp)
+		mysql_command UbuntuResources.mysqlCommand.asFile(tmp)
+		postalias_command UbuntuResources.postaliasCommand.asFile(tmp)
+		postmap_command UbuntuResources.postmapCommand.asFile(tmp)
+		mailname_file UbuntuResources.mailname.asFile(tmp)
+		configuration_directory UbuntuResources.confDir.asFile(tmp)
+		mailbox_base_directory UbuntuResources.mailboxBaseDir.asFile(tmp)
 	}
 }

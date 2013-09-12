@@ -16,33 +16,32 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-mail-postfix. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.mail.postfix.ubuntu
+package com.anrisoftware.sscontrol.mail.postfix.mysqlstorage.ubuntu_10_04
 
 import javax.inject.Inject
 
-import com.anrisoftware.sscontrol.mail.postfix.linux.MysqlScript
+import com.anrisoftware.propertiesutils.ContextProperties
+import com.anrisoftware.sscontrol.mail.postfix.mysqlstorage.linux.MysqlStorageConfig
+import com.anrisoftware.sscontrol.mail.postfix.script.ubuntu_10_04.Ubuntu_10_04_ScriptFactory
 
 /**
- * Configures the postfix service to use MySQL database for virtual users
- * and domains on a Ubuntu 10.04 server.
+ * MySQL/Ubuntu 10.04 storage.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class MysqlUbuntu_10_04Script extends MysqlScript {
+class UbuntuMysqlStorageConfig extends MysqlStorageConfig {
 
 	@Inject
-	MysqlUbuntu10_04PropertiesProvider ubuntuProperties
+	MysqlStoragePropertiesProvider mysqlStoragePropertiesProperties
 
-	def runDistributionSpecific() {
-		installPackages()
+	@Override
+	String getProfile() {
+		Ubuntu_10_04_ScriptFactory.PROFILE_NAME
 	}
 
-	/**
-	 * @see #ubuntuProperties
-	 */
 	@Override
-	def getDefaultProperties() {
-		ubuntuProperties.get()
+	ContextProperties getStorageProperties() {
+		mysqlStoragePropertiesProperties.get()
 	}
 }

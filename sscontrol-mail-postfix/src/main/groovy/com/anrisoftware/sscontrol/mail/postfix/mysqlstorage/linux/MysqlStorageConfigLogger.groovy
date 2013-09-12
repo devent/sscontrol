@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-mail-postfix. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.mail.postfix.linux
+package com.anrisoftware.sscontrol.mail.postfix.mysqlstorage.linux
 
 import static org.apache.commons.lang3.StringUtils.repeat
 
@@ -29,7 +29,7 @@ import com.anrisoftware.globalpom.log.AbstractLogger
  * @since 1.0
  */
 @Singleton
-class MysqlScriptLogger extends AbstractLogger {
+class MysqlStorageConfigLogger extends AbstractLogger {
 
 	static final String REHASH_FILE = "Rehash file '{}', worker {} for {}."
 	static final String REHASH_FILE_INFO = "Rehash file '{}'."
@@ -53,11 +53,11 @@ class MysqlScriptLogger extends AbstractLogger {
 	/**
 	 * Create logger for {@link MysqlScript}.
 	 */
-	MysqlScriptLogger() {
-		super(MysqlScript.class)
+	MysqlStorageConfigLogger() {
+		super(MysqlStorageConfig.class)
 	}
 
-	void deployedAliasesTable(MysqlScript script, def worker) {
+	void deployedAliasesTable(MysqlStorageConfig script, def worker) {
 		if (log.traceEnabled) {
 			String workerstr = replacePassword script, worker.toString()
 			String workerout = replacePassword script, worker.out
@@ -70,7 +70,7 @@ class MysqlScriptLogger extends AbstractLogger {
 		}
 	}
 
-	void deployedDomainsTable(MysqlScript script, def worker) {
+	void deployedDomainsTable(MysqlStorageConfig script, def worker) {
 		if (log.traceEnabled) {
 			String workerstr = replacePassword script, worker.toString()
 			String workerout = replacePassword script, worker.out
@@ -83,7 +83,7 @@ class MysqlScriptLogger extends AbstractLogger {
 		}
 	}
 
-	void deployedUsersTable(MysqlScript script, def worker) {
+	void deployedUsersTable(MysqlStorageConfig script, def worker) {
 		if (log.traceEnabled) {
 			String workerstr = replacePassword script, worker.toString()
 			String workerout = replacePassword script, worker.out
@@ -96,17 +96,17 @@ class MysqlScriptLogger extends AbstractLogger {
 		}
 	}
 
-	void deployedDomainsData(MysqlScript script, def worker) {
+	void deployedDomainsData(MysqlStorageConfig script, def worker) {
 		log.debugEnabled ? log.debug(DEPLOYED_DOMAINS, script, worker) :
 				log.info(DEPLOYED_DOMAINS2, script.name)
 	}
 
-	void deployedAliasesData(MysqlScript script, def worker) {
+	void deployedAliasesData(MysqlStorageConfig script, def worker) {
 		log.debugEnabled ? log.debug(DEPLOYED_ALIASES, script, worker) :
 				log.info(DEPLOYED_ALIASES2, script.name)
 	}
 
-	void deployedUsersData(MysqlScript script, def worker) {
+	void deployedUsersData(MysqlStorageConfig script, def worker) {
 		log.debugEnabled ? log.debug(DEPLOYED_USERS, script, worker) :
 				log.info(DEPLOYED_USERS2, script.name)
 	}
@@ -116,7 +116,7 @@ class MysqlScriptLogger extends AbstractLogger {
 				log.info(REHASH_FILE_INFO, file)
 	}
 
-	String replacePassword(MysqlScript script, String string) {
+	String replacePassword(MysqlStorageConfig script, String string) {
 		def password = script.service.database.password
 		int length = password.length()
 		string.replace(password, PASSWORD_MASK * length)

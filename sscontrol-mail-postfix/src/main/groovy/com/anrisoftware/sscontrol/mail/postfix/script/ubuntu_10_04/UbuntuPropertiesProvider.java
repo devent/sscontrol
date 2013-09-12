@@ -17,32 +17,33 @@
  * along with sscontrol-mail-postfix. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.mail.postfix.linux;
+package com.anrisoftware.sscontrol.mail.postfix.script.ubuntu_10_04;
 
 import java.net.URL;
 
-import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import com.anrisoftware.propertiesutils.AbstractContextPropertiesProvider;
 
 /**
- * Postfix/MySQL properties.
+ * Postfix/Ubuntu 10.04 properties provider.
+ * 
+ * <ul>
+ * <li>{@code /postfix_ubuntu_10_04.properties}
+ * </ul>
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
 @Singleton
 @SuppressWarnings("serial")
-public class MysqlPropertiesProvider extends AbstractContextPropertiesProvider {
+public class UbuntuPropertiesProvider extends AbstractContextPropertiesProvider {
 
-	private static final URL RESOURCE = MysqlPropertiesProvider.class
-			.getResource("/mysql_postfix.properties");
+	private static final URL RESOURCE = UbuntuPropertiesProvider.class
+			.getResource("/postfix_ubuntu_10_04.properties");
 
-	@Inject
-	MysqlPropertiesProvider(PostfixPropertiesProvider postfixProperties) {
-		super(PostfixScript.class, RESOURCE);
-		setDefaultProperties(postfixProperties.get());
+	UbuntuPropertiesProvider() {
+		super(UbuntuPropertiesProvider.class, RESOURCE);
 	}
 
 }

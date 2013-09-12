@@ -17,34 +17,31 @@
  * along with sscontrol-mail-postfix. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.mail.postfix.linux;
+package com.anrisoftware.sscontrol.mail.postfix.hashstorage.ubuntu_10_04;
 
-import java.net.URL;
+import static com.google.inject.multibindings.MapBinder.newMapBinder;
 
-import javax.inject.Singleton;
-
-import com.anrisoftware.propertiesutils.AbstractContextPropertiesProvider;
+import com.anrisoftware.sscontrol.mail.postfix.linux.StorageConfig;
+import com.google.inject.AbstractModule;
+import com.google.inject.multibindings.MapBinder;
 
 /**
- * Postfix/properties provider.
- * 
- * <ul>
- * <li>{@code /postfix.properties}
- * </ul>
+ * Binds hash/storage/Ubuntu 10.04.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-@Singleton
-@SuppressWarnings("serial")
-public class PostfixPropertiesProvider extends
-		AbstractContextPropertiesProvider {
+class UbuntuHashStorageModule extends AbstractModule {
 
-	private static final URL RESOURCE = PostfixPropertiesProvider.class
-			.getResource("/postfix.properties");
-
-	PostfixPropertiesProvider() {
-		super(PostfixPropertiesProvider.class, RESOURCE);
+	@Override
+	protected void configure() {
+		bindScripts();
 	}
 
+	private void bindScripts() {
+		MapBinder<String, StorageConfig> binder;
+		binder = newMapBinder(binder(), String.class, StorageConfig.class);
+		binder.addBinding("hash.ubuntu_10_04")
+				.to(UbuntuHashStorageConfig.class);
+	}
 }

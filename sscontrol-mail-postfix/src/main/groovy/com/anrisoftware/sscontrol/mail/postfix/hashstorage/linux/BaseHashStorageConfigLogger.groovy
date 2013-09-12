@@ -16,23 +16,23 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-mail-postfix. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.mail.postfix.linux
+package com.anrisoftware.sscontrol.mail.postfix.hashstorage.linux
 
 import com.anrisoftware.globalpom.log.AbstractLogger
 
 /**
- * Logging messages for {@link PostfixScriptLogger}.
+ * Logging messages for {@link BaseHashStorageConfig}.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
 @Singleton
-class PostfixScriptLogger extends AbstractLogger {
+class BaseHashStorageConfigLogger extends AbstractLogger {
 
 	/**
-	 * Create logger for {@link PostfixScriptLogger}.
+	 * Create logger for {@link BaseHashStorageConfig}.
 	 */
-	PostfixScriptLogger() {
-		super(PostfixScriptLogger.class)
+	BaseHashStorageConfigLogger() {
+		super(BaseHashStorageConfig.class)
 	}
 }

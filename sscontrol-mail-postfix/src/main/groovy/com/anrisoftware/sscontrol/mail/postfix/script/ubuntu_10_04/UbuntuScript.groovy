@@ -16,30 +16,38 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-mail-postfix. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.mail.postfix.ubuntu;
+package com.anrisoftware.sscontrol.mail.postfix.script.ubuntu_10_04
 
-import java.net.URL;
+import javax.inject.Inject
 
-import javax.inject.Singleton;
-
-import com.anrisoftware.propertiesutils.AbstractContextPropertiesProvider;
+import com.anrisoftware.sscontrol.mail.postfix.script.linux.BasePostfixScript
 
 /**
- * Provides the postfix properties.
- * 
+ * Postfix/Ubuntu 10.04.
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-@Singleton
-@SuppressWarnings("serial")
-public class Ubuntu10_04PropertiesProvider extends
-		AbstractContextPropertiesProvider {
+class UbuntuScript extends BasePostfixScript {
 
-	private static final URL RESOURCE = Ubuntu10_04PropertiesProvider.class
-			.getResource("/postfix_ubuntu_10_04.properties");
+	@Inject
+	UbuntuPropertiesProvider ubuntuProperties
 
-	Ubuntu10_04PropertiesProvider() {
-		super(Ubuntu10_04PropertiesProvider.class, RESOURCE);
+	@Override
+	String getProfileName() {
+		Ubuntu_10_04_ScriptFactory.PROFILE_NAME
 	}
 
+	/**
+	 * @see #ubuntuProperties
+	 */
+	@Override
+	def getDefaultProperties() {
+		ubuntuProperties.get()
+	}
+
+	@Override
+	def runDistributionSpecific() {
+		installPackages()
+	}
 }

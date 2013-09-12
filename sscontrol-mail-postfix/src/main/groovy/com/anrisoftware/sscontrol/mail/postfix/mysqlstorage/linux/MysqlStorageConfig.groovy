@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-mail-postfix. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.mail.postfix.linux
+package com.anrisoftware.sscontrol.mail.postfix.mysqlstorage.linux
 
 import static org.apache.commons.io.FileUtils.*
 
@@ -26,27 +26,27 @@ import org.apache.commons.io.FileUtils
 
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.Templates
-import com.anrisoftware.sscontrol.core.service.LinuxScript
+import com.anrisoftware.sscontrol.mail.postfix.linux.BindAddressesRenderer
+import com.anrisoftware.sscontrol.mail.postfix.linux.StorageConfig
+import com.anrisoftware.sscontrol.mail.postfix.script.linux.BaseStorage
 import com.anrisoftware.sscontrol.mail.statements.Domain
 import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokenTemplate
 
 /**
- * Configures the postfix service to use MySQL database for virtual users
- * and domains.
+ * Mysql/storage.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-abstract class MysqlScript extends LinuxScript {
+abstract class MysqlStorageConfig extends BaseStorage implements StorageConfig {
+
+	public static final String NAME = "mysql"
 
 	@Inject
-	MysqlScriptLogger log
+	MysqlStorageConfigLogger log
 
 	@Inject
-	BasePostfixScript postfixScript
-
-	@Inject
-	MysqlPropertiesProvider postfixProperties
+	MysqlStoragePropertiesProvider mysqlStorageProperties
 
 	/**
 	 * Renderer for {@code inet_interfaces}.
@@ -68,17 +68,18 @@ abstract class MysqlScript extends LinuxScript {
 	TemplateResource dataTemplate
 
 	@Override
-	def run() {
-		super.run()
-		runDistributionSpecific()
-		postfixScript.postfixProperties = postfixProperties.get()
-		postfixScript.postfixScript = this
-		runScript postfixScript
-		mysqlTemplates = templatesFactory.create "PostfixMysqlScript"
+	String getStorageName() {
+		NAME
+	}
+
+	@Override
+	void deployStorage() {
+		mysqlTemplates = templatesFactory.create "MysqlStorageConfig"
 		tablesTemplate = mysqlTemplates.getResource "database_tables"
 		mainTemplate = mysqlTemplates.getResource "main_configuration"
 		configTemplate = mysqlTemplates.getResource "database_configuration"
 		dataTemplate = mysqlTemplates.getResource "database_data"
+		installPackages mysqlStoragePackages
 		deployDatabaseTables()
 		deployMain()
 		deployVirtualMailboxFile()
@@ -86,13 +87,7 @@ abstract class MysqlScript extends LinuxScript {
 		deployAliases()
 		deployUsers()
 		createVirtualDirectory()
-		restartServices()
 	}
-
-	/**
-	 * Deploy distribution specific configuration.
-	 */
-	abstract runDistributionSpecific()
 
 	/**
 	 * Creates the tables in the database for virtual domains and users.
@@ -106,7 +101,7 @@ abstract class MysqlScript extends LinuxScript {
 				"mysqlCommand", mysqlCommand, "service", service)()
 		log.deployedDomainsTable this, worker
 		worker = scriptCommandFactory.create(tablesTemplate, "createUsersTable",
-				"mysqlCommand", mysqlCommand, "service", service, "profile", postfixScript)()
+				"mysqlCommand", mysqlCommand, "service", service, "profile", script)()
 		log.deployedUsersTable this, worker
 	}
 
@@ -115,14 +110,13 @@ abstract class MysqlScript extends LinuxScript {
 	 */
 	void deployMain() {
 		def configuration = []
-		configuration << new TokenTemplate("(?m)^\\#?virtual_mailbox_base.*", mainTemplate.getText(true, "mailboxBase", "dir", postfixScript.mailboxBaseDir))
-		configuration << new TokenTemplate("(?m)^\\#?virtual_mailbox_maps.*", mainTemplate.getText(true, "mailboxMaps", "file", postfixScript.mailboxMapsFile))
-		configuration << new TokenTemplate("(?m)^\\#?virtual_alias_maps.*", mainTemplate.getText(true, "aliasMaps", "file", postfixScript.aliasMapsFile))
-		configuration << new TokenTemplate("(?m)^\\#?virtual_mailbox_domains.*", mainTemplate.getText(true, "mailboxDomains", "file", postfixScript.mailboxDomainsFile))
-		configuration << new TokenTemplate("(?m)^\\#?virtual_uid_maps.*", mainTemplate.getText(true, "uidMaps", "uid", postfixScript.virtualUid))
-		configuration << new TokenTemplate("(?m)^\\#?virtual_gid_maps.*", mainTemplate.getText(true, "gidMaps", "gid", postfixScript.virtualGid))
-		def currentConfiguration = currentConfiguration postfixScript.mainFile
-		deployConfiguration configurationTokens(), currentConfiguration, configuration, postfixScript.mainFile
+		configuration << new TokenTemplate("(?m)^\\#?virtual_mailbox_base.*", mainTemplate.getText(true, "mailboxBase", "dir", script.mailboxBaseDir))
+		configuration << new TokenTemplate("(?m)^\\#?virtual_mailbox_maps.*", mainTemplate.getText(true, "mailboxMaps", "file", mailboxMapsFile))
+		configuration << new TokenTemplate("(?m)^\\#?virtual_alias_maps.*", mainTemplate.getText(true, "aliasMaps", "file", aliasMapsFile))
+		configuration << new TokenTemplate("(?m)^\\#?virtual_mailbox_domains.*", mainTemplate.getText(true, "mailboxDomains", "file", mailboxDomainsFile))
+		configuration << new TokenTemplate("(?m)^\\#?virtual_uid_maps.*", mainTemplate.getText(true, "uidMaps", "uid", script.virtualUid))
+		configuration << new TokenTemplate("(?m)^\\#?virtual_gid_maps.*", mainTemplate.getText(true, "gidMaps", "gid", script.virtualGid))
+		deployConfiguration configurationTokens(), currentMainConfiguration, configuration, mainFile
 	}
 
 	/**
@@ -130,11 +124,11 @@ abstract class MysqlScript extends LinuxScript {
 	 */
 	void deployVirtualMailboxFile() {
 		def string = configTemplate.getText(true, "mailbox", "service", service)
-		FileUtils.write postfixScript.mailboxMapsFile, string
+		FileUtils.write mailboxMapsFile, string
 		string = configTemplate.getText(true, "alias", "service", service)
-		FileUtils.write postfixScript.aliasMapsFile, string
+		FileUtils.write aliasMapsFile, string
 		string = configTemplate.getText(true, "domains", "service", service)
-		FileUtils.write postfixScript.mailboxDomainsFile, string
+		FileUtils.write mailboxDomainsFile, string
 	}
 
 	/**
@@ -178,7 +172,7 @@ abstract class MysqlScript extends LinuxScript {
 	 * Creates the virtual mail box directory and set the owner.
 	 */
 	void createVirtualDirectory() {
-		File dir = mailboxBaseDirectory
+		File dir = script.mailboxBaseDir
 		if (!dir.exists()) {
 			dir.mkdirs()
 		}
@@ -202,45 +196,55 @@ abstract class MysqlScript extends LinuxScript {
 	 * @see #getDefaultProperties()
 	 */
 	String getMysqlCommand() {
-		profileProperty("mysql_command", defaultProperties)
+		profileProperty "mysql_command"
 	}
 
 	/**
-	 * Returns the path of the mailbox base directory.
-	 *
-	 * <ul>
-	 * <li>profile property {@code "mailbox_base_directory"}</li>
-	 * </ul>
-	 *
-	 * @see #getDefaultProperties()
+	 * Returns list of needed packages.
 	 */
-	File getMailboxBaseDirectory() {
-		profileProperty("mailbox_base_directory", defaultProperties) as File
+	List getMysqlStoragePackages() {
+		profileListProperty "packages", storageProperties
 	}
 
 	/**
-	 * Returns the virtual user ID.
+	 * Returns the absolute path of the mailbox maps file.
 	 *
 	 * <ul>
-	 * <li>profile property {@code "virtual_uid"}</li>
+	 * <li>profile property {@code "mailbox_maps_file"}</li>
 	 * </ul>
 	 *
-	 * @see #getDefaultProperties()
+	 * @see #getConfigurationDir()
+	 * @see #getStorageProperties()
 	 */
-	String getVirtualUid() {
-		profileProperty("virtual_uid", defaultProperties)
+	File getMailboxMapsFile() {
+		propertyFile "mailbox_maps_file", storageProperties
 	}
 
 	/**
-	 * Returns the virtual group ID.
+	 * Returns the absolute path of the alias maps file.
 	 *
 	 * <ul>
-	 * <li>profile property {@code "virtual_gid"}</li>
+	 * <li>profile property {@code "alias_maps_file"}</li>
 	 * </ul>
 	 *
-	 * @see #getDefaultProperties()
+	 * @see #getConfigurationDir()
+	 * @see #getStorageProperties()
 	 */
-	String getVirtualGid() {
-		profileProperty("virtual_gid", defaultProperties)
+	File getAliasMapsFile() {
+		propertyFile "alias_maps_file", storageProperties
+	}
+
+	/**
+	 * Returns the absolute path of the mailbox domains maps file.
+	 *
+	 * <ul>
+	 * <li>profile property {@code "mailbox_domains_file"}</li>
+	 * </ul>
+	 *
+	 * @see #getConfigurationDir()
+	 * @see #getStorageProperties()
+	 */
+	File getMailboxDomainsFile() {
+		propertyFile "mailbox_domains_file", storageProperties
 	}
 }

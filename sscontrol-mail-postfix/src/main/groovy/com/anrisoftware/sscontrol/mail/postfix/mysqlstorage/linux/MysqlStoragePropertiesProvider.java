@@ -17,19 +17,21 @@
  * along with sscontrol-mail-postfix. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.mail.postfix.linux;
+package com.anrisoftware.sscontrol.mail.postfix.mysqlstorage.linux;
 
 import java.net.URL;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import com.anrisoftware.propertiesutils.AbstractContextPropertiesProvider;
+import com.anrisoftware.sscontrol.mail.postfix.linux.PostfixPropertiesProvider;
 
 /**
- * Postfix/properties provider.
+ * Mysql/storage properties provider.
  * 
  * <ul>
- * <li>{@code /postfix.properties}
+ * <li>{@code /mysql_postfix.properties}
  * </ul>
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
@@ -37,14 +39,15 @@ import com.anrisoftware.propertiesutils.AbstractContextPropertiesProvider;
  */
 @Singleton
 @SuppressWarnings("serial")
-public class PostfixPropertiesProvider extends
-		AbstractContextPropertiesProvider {
+public class MysqlStoragePropertiesProvider extends AbstractContextPropertiesProvider {
 
-	private static final URL RESOURCE = PostfixPropertiesProvider.class
-			.getResource("/postfix.properties");
+	private static final URL RESOURCE = MysqlStoragePropertiesProvider.class
+			.getResource("/mysql_postfix.properties");
 
-	PostfixPropertiesProvider() {
-		super(PostfixPropertiesProvider.class, RESOURCE);
+	@Inject
+	MysqlStoragePropertiesProvider(PostfixPropertiesProvider postfixProperties) {
+		super(MysqlStoragePropertiesProvider.class, RESOURCE);
+		setDefaultProperties(postfixProperties.get());
 	}
 
 }

@@ -1,48 +1,41 @@
 /*
  * Copyright 2013 Erwin Müller <erwin.mueller@deventm.org>
- *
+ * 
  * This file is part of sscontrol-mail-postfix.
- *
- * sscontrol-mail-postfix is free software: you can redistribute it and/or modify it
- * under the terms of the GNU Affero General Public License as published by the
- * Free Software Foundation, either version 3 of the License, or (at your
- * option) any later version.
- *
+ * 
+ * sscontrol-mail-postfix is free software: you can redistribute it and/or
+ * modify it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the License,
+ * or (at your option) any later version.
+ * 
  * sscontrol-mail-postfix is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
  * for more details.
- *
+ * 
  * You should have received a copy of the GNU Affero General Public License
- * along with sscontrol-mail-postfix. If not, see <http://www.gnu.org/licenses/>.
+ * along with sscontrol-mail-postfix. If not, see
+ * <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.mail.postfix.linux;
+package com.anrisoftware.sscontrol.mail.postfix.script.ubuntu_10_04;
 
 import static java.util.Arrays.asList;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.mangosdk.spi.ProviderFor;
 
 import com.anrisoftware.sscontrol.core.api.ServiceScriptFactory;
 import com.anrisoftware.sscontrol.core.api.ServiceScriptInfo;
 import com.anrisoftware.sscontrol.core.service.AbstractScriptFactory;
-import com.anrisoftware.sscontrol.mail.postfix.ubuntu.MysqlUbuntu_10_04Script;
-import com.anrisoftware.sscontrol.mail.service.MailServiceScriptInfo;
 import com.google.inject.Module;
 
 /**
- * Provides the postfix service with MySQL database for Ubuntu 10.04 server.
+ * Postfix/Ubuntu 10.04 service.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
 @ProviderFor(ServiceScriptFactory.class)
-public class MysqlScriptFactory extends AbstractScriptFactory {
-
-	/**
-	 * Name of the storage.
-	 */
-	public static final String STORAGE_NAME = "mysql";
+public class Ubuntu_10_04_ScriptFactory extends AbstractScriptFactory {
 
 	/**
 	 * Name of the service.
@@ -55,9 +48,9 @@ public class MysqlScriptFactory extends AbstractScriptFactory {
 	public static final String PROFILE_NAME = "ubuntu_10_04";
 
 	/**
-	 * {@link ServiceScriptInfo} information identifying this service.
+	 * Identifying this service.
 	 */
-	public static ServiceScriptInfo INFO = new MailServiceScriptInfo() {
+	public static ServiceScriptInfo INFO = new ServiceScriptInfo() {
 
 		@Override
 		public String getServiceName() {
@@ -68,17 +61,6 @@ public class MysqlScriptFactory extends AbstractScriptFactory {
 		public String getProfileName() {
 			return PROFILE_NAME;
 		}
-
-		@Override
-		public String getStorage() {
-			return STORAGE_NAME;
-		}
-
-		@Override
-		public String toString() {
-			return new ToStringBuilder(this).appendSuper(super.toString())
-					.append("storage", getStorage()).toString();
-		}
 	};
 
 	@Override
@@ -88,11 +70,11 @@ public class MysqlScriptFactory extends AbstractScriptFactory {
 
 	@Override
 	protected Iterable<? extends Module> getModules() {
-		return asList(new Module[] { new PostfixModule() });
+		return asList(new Module[] { new UbuntuModule() });
 	}
 
 	@Override
 	protected Class<?> getScriptClass() {
-		return MysqlUbuntu_10_04Script.class;
+		return UbuntuScript.class;
 	}
 }

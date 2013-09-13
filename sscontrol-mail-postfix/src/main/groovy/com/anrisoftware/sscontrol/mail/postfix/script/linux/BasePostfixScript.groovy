@@ -1,3 +1,5 @@
+
+
 /*
  * Copyright 2013 Erwin Müller <erwin.mueller@deventm.org>
  *
@@ -151,9 +153,9 @@ abstract class BasePostfixScript extends LinuxScript {
 	 * Returns the mail name configuration.
 	 */
 	List getMailnameConfiguration() {
-		[
-			new TokenTemplate(".*", mailnameConfigurationTemplate.getText(true, "name", service.domainName))
-		]
+		def template = new TokenTemplate(".*\n", mailnameConfigurationTemplate.getText(true, "name", service.domainName))
+		template.enclose = false
+		[template]
 	}
 
 	/**

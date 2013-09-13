@@ -16,49 +16,39 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-mail-postfix. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.mail.postfix.ubuntu
+package com.anrisoftware.sscontrol.mail.postfix.hashstorage.ubuntu_10_04.separate_domains_unix_accounts
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
-import static com.anrisoftware.sscontrol.mail.postfix.ubuntu.Ubuntu10_04Resources.*
+import static com.anrisoftware.sscontrol.mail.postfix.hashstorage.ubuntu_10_04.separate_domains_unix_accounts.HashUbuntuResources.*
+import static com.anrisoftware.sscontrol.mail.postfix.script.ubuntu_10_04.UbuntuResources.*
 import static org.apache.commons.io.FileUtils.*
 import groovy.util.logging.Slf4j
 
-import org.junit.Before
-import org.junit.BeforeClass
-import org.junit.Rule
 import org.junit.Test
-import org.junit.rules.TemporaryFolder
 
-import com.anrisoftware.sscontrol.core.api.ServiceLoader as SscontrolServiceLoader
-import com.anrisoftware.sscontrol.core.api.ServiceLoaderFactory
-import com.anrisoftware.sscontrol.core.api.ServicesRegistry
-import com.anrisoftware.sscontrol.core.modules.CoreModule
-import com.anrisoftware.sscontrol.core.modules.CoreResourcesModule
-import com.anrisoftware.sscontrol.core.service.ServiceModule
-import com.google.inject.Guice
-import com.google.inject.Injector
+import com.anrisoftware.sscontrol.mail.postfix.script.ubuntu_10_04.UbuntuTestUtil
 
 /**
- * Test UFW on a Ubuntu 10.04 server.
+ * Postfix/Hash/storage Ubuntu 10.04.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
 @Slf4j
-class Ubuntu_10_04_Test {
+class HashPostfixTest extends UbuntuTestUtil {
 
 	@Test
 	void "shared domains, unix accounts"() {
-		loader.loadService ubuntu10_04Profile.resource, null
+		loader.loadService profile.resource, null
 		def profile = registry.getService("profile")[0]
-		loader.loadService mailSharedUnixAccounts.resource, profile
+		loader.loadService mailSharedDomainsUnixAccounts.resource, profile
 
 		registry.allServices.each { it.call() }
 		log.info "Run service again to ensure that configuration is not set double."
 		registry.allServices.each { it.call() }
 
-		assertFileContent mailnameFile, mailnameExpected
-		assertStringContent replaceFileContent(tmpdir, maincfFile), maincfSharedUnixAccountsExpected.toString()
+		assertFileContent mailnameExpected.asFile(tmpdir), mailnameExpected
+		assertStringContent maincfSharedDomainsUnixAccountsExpected.replaced(tmpdir, tmpdir, "/tmp"), maincfSharedDomainsUnixAccountsExpected.toString()
 	}
 
 	@Test
@@ -93,69 +83,5 @@ class Ubuntu_10_04_Test {
 		assertFileContent aliasDomainsFile, aliasDomainsExpected
 		assertFileContent aliasMapsFile, aliasMapsNonUnixExpected
 		assertFileContent mailboxMapsFile, mailboxMapsNonUnixExpected
-	}
-
-	static Injector injector
-	static ServiceLoaderFactory loaderFactory
-	@Rule
-	public TemporaryFolder tmp = new TemporaryFolder()
-	ServicesRegistry registry
-	SscontrolServiceLoader loader
-	File tmpdir
-	Map variables
-	File aptitudeFile
-	File restartFile
-	File mailnameFile
-	File maincfFile
-	File mastercfFile
-	File postmapFile
-	File postaliasFile
-	File aliasDomainsFile
-	File aliasMapsFile
-	File mailboxMapsFile
-
-	@Before
-	void createTemp() {
-		tmpdir = tmp.newFolder("postfix-linux")
-		aptitudeFile = aptitude.createFile tmpdir
-		restartFile = restart.createFile tmpdir
-		mailnameFile = mailname.createFile tmpdir
-		maincfFile = maincf.createFile tmpdir
-		mastercfFile = mastercf.createFile tmpdir
-		postmapFile = postmap.createFile tmpdir
-		postaliasFile = postalias.createFile tmpdir
-		aliasDomainsFile = aliasDomains.createFile tmpdir
-		aliasMapsFile = aliasMaps.createFile tmpdir
-		mailboxMapsFile = mailboxMaps.createFile tmpdir
-		variables = [tmp: tmpdir.absoluteFile]
-		echoCommand.toCommand aptitudeFile
-		echoCommand.toCommand restartFile
-		echoCommand.toCommand postaliasFile
-		echoCommand.toCommand postmapFile
-		mainConfig.toFileParent tmpdir
-		masterConfig.toFileParent tmpdir
-	}
-
-	@Before
-	void createRegistry() {
-		registry = injector.getInstance ServicesRegistry
-		loader = loaderFactory.create registry, variables
-		loader.setParent injector
-	}
-
-	@BeforeClass
-	static void createFactories() {
-		injector = createInjector()
-		loaderFactory = injector.getInstance ServiceLoaderFactory
-	}
-
-	static Injector createInjector() {
-		Guice.createInjector(
-				new CoreModule(), new CoreResourcesModule(), new ServiceModule())
-	}
-
-	@BeforeClass
-	static void setupToStringStyle() {
-		toStringStyle
 	}
 }

@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-mail-postfix. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.mail.postfix.ubuntu
+package com.anrisoftware.sscontrol.mail.postfix.hashstorage.ubuntu_10_04.separate_domains_unix_accounts
 
 mail {
 	bind_addresses all
@@ -30,7 +30,9 @@ mail {
 		users "root"
 	}
 
-	destinations "foo.bar", "bar.bar"
-
-	certificate file: "$tmp/example-com.crt", key: "$tmp/example-com.insecure.key", ca: "$tmp/example-com-ca.crt"
+	domain "example.com", {
+		alias "info", destination: "joe"
+		alias "sales", destination: "jane"
+		catchall destination: "jim"
+	}
 }

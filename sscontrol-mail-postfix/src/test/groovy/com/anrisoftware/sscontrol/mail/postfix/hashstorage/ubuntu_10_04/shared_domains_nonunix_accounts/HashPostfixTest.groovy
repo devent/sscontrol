@@ -16,49 +16,38 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-mail-postfix. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.mail.postfix.mysql.ubuntu_10_04
+package com.anrisoftware.sscontrol.mail.postfix.hashstorage.ubuntu_10_04.shared_domains_nonunix_accounts
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
-import static com.anrisoftware.sscontrol.mail.postfix.mysql.ubuntu_10_04.MysqlResources.*
-import static com.anrisoftware.sscontrol.mail.postfix.ubuntu_10_04.UbuntuResources.*
+import static com.anrisoftware.sscontrol.mail.postfix.hashstorage.ubuntu_10_04.shared_domains_nonunix_accounts.HashUbuntuResources.*
+import static com.anrisoftware.sscontrol.mail.postfix.script.ubuntu_10_04.UbuntuResources.*
 import static org.apache.commons.io.FileUtils.*
 import groovy.util.logging.Slf4j
 
 import org.junit.Test
 
-import com.anrisoftware.sscontrol.mail.postfix.ubuntu_10_04.UbuntuResources
-import com.anrisoftware.sscontrol.mail.postfix.ubuntu_10_04.UbuntuTestUtil
+import com.anrisoftware.sscontrol.mail.postfix.script.ubuntu_10_04.UbuntuTestUtil
 
 /**
- * Postfix/MySQL/Ubuntu 10.04.
+ * Postfix/Hash/storage Ubuntu 10.04 shared domains, non-unix accounts.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
 @Slf4j
-class MysqlPostfixTest extends UbuntuTestUtil {
+class HashPostfixTest extends UbuntuTestUtil {
 
 	@Test
-	void "virtual mysql"() {
-		copyUbuntuFiles tmpdir
-		mysqlCommand.createCommand tmpdir
-
+	void "shared domains, non-unix accounts"() {
 		loader.loadService profile.resource, null
 		def profile = registry.getService("profile")[0]
-		loader.loadService mailScript.resource, profile
+		loader.loadService mailSharedDomainsUnixAccounts.resource, profile
 
 		registry.allServices.each { it.call() }
 		log.info "Run service again to ensure that configuration is not set double."
 		registry.allServices.each { it.call() }
 
 		assertFileContent mailnameExpected.asFile(tmpdir), mailnameExpected
-		assertStringContent mainConfigExpected.replaced(tmpdir, tmpdir, "/tmp"), mainConfigExpected.toString()
-		assertFileContent mailboxExpected.asFile(tmpdir), mailboxExpected
-		assertFileContent aliasExpected.asFile(tmpdir), aliasExpected
-		assertFileContent domainsExpected.asFile(tmpdir), domainsExpected
-		assertFileContent aptitudeOut.asFile(tmpdir), aptitudeOut
-		assertFileContent mysqlOut.asFile(tmpdir), mysqlOut
-		assertStringContent postaliasOut.replaced(tmpdir, tmpdir, "/tmp"), postaliasOut.toString()
-		assert mailboxBaseDir.asFile(tmpdir).isDirectory()
+		assertStringContent maincfSharedDomainsUnixAccountsExpected.replaced(tmpdir, tmpdir, "/tmp"), maincfSharedDomainsUnixAccountsExpected.toString()
 	}
 }

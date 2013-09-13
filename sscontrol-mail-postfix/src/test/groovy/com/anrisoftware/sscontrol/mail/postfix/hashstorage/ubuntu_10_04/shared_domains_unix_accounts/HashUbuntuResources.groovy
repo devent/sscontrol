@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-mail-postfix. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.mail.postfix.mysql.ubuntu_10_04
+package com.anrisoftware.sscontrol.mail.postfix.hashstorage.ubuntu_10_04.shared_domains_unix_accounts
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static org.apache.commons.io.FileUtils.*
@@ -24,27 +24,24 @@ import static org.apache.commons.io.FileUtils.*
 import com.anrisoftware.sscontrol.mail.postfix.resources.ResourcesUtils
 
 /**
- * Postfix/MySQL/Ubuntu 10.04 resources.
+ * Postfix/Hash/storage Ubuntu 10.04 resources for
+ * shared domains, unix accounts.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-enum MysqlResources {
+enum HashUbuntuResources {
 
-	mailScript("Mail.groovy", MysqlResources.class.getResource("MailMysql.groovy")),
-	profile("UbuntuProfile.groovy", MysqlResources.class.getResource("MysqlUbuntuProfile.groovy")),
-	mainConfigExpected("/etc/postfix/main.cf", MysqlResources.class.getResource("main_cf_expected.txt")),
-	mailnameExpected("/etc/mailname", MysqlResources.class.getResource("mailname_expected.txt")),
-	mailboxExpected("/etc/postfix/mysql_mailbox.cf", MysqlResources.class.getResource("mysql_mailbox_cf_expected.txt")),
-	aliasExpected("/etc/postfix/mysql_alias.cf", MysqlResources.class.getResource("mysql_alias_cf_expected.txt")),
-	domainsExpected("/etc/postfix/mysql_domains.cf", MysqlResources.class.getResource("mysql_domains_cf_expected.txt")),
-	aptitudeOut("/usr/bin/aptitude.out", MysqlResources.class.getResource("aptitude_out.txt")),
-	mysqlOut("/usr/bin/mysql.out", MysqlResources.class.getResource("mysql_out.txt")),
-	postaliasOut("/usr/sbin/postalias.out", MysqlResources.class.getResource("postalias_out.txt")),
+	profile("UbuntuProfile.groovy", HashUbuntuResources.class.getResource("HashUbuntuProfile.groovy")),
+	mailScript("Mail.groovy", HashUbuntuResources.class.getResource("MailHash.groovy")),
+	mailnameExpected("/etc/mailname", HashUbuntuResources.class.getResource("mailname_expected.txt")),
+	maincfExpected("/etc/postfix/main.cf", HashUbuntuResources.class.getResource("maincf_expected.txt")),
+	aliasDomainsExpected("/etc/postfix/alias_domains", HashUbuntuResources.class.getResource("alias_domains_expected.txt")),
+	aliasMapsExpected("/etc/postfix/alias_maps", HashUbuntuResources.class.getResource("alias_maps_expected.txt")),
 
 	ResourcesUtils resources
 
-	MysqlResources(String path, URL resource) {
+	HashUbuntuResources(String path, URL resource) {
 		this.resources = new ResourcesUtils(path: path, resource: resource)
 	}
 

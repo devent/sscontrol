@@ -1,0 +1,9 @@
+# SSCONTROL-mail
+info@example.com joe
+# SSCONTROL-mail-END
+# SSCONTROL-mail
+sales@example.com jane
+# SSCONTROL-mail-END
+# SSCONTROL-mail
+@example.com jim
+# SSCONTROL-mail-END

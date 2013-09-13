@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-ldap-openldap. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.mail.postfix.ubuntu_10_04
+package com.anrisoftware.sscontrol.mail.postfix.script.ubuntu_10_04
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 

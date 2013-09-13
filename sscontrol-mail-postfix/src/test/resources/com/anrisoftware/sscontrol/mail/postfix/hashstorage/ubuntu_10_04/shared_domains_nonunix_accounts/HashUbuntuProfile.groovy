@@ -16,18 +16,20 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-mail-postfix. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.mail.postfix.ubuntu
+package com.anrisoftware.sscontrol.mail.postfix.hashstorage.ubuntu_10_04.shared_domains_nonunix_accounts
 
-mail {
-	bind_addresses all
+import com.anrisoftware.sscontrol.mail.postfix.script.ubuntu_10_04.UbuntuResources
 
-	relay "smtp.relayhost.com"
-	name "mail.example.com"
-	origin "example.com"
-	destinations "foo.bar", "bar.bar"
-
-	masquerade {
-		domains "mail.example.com"
-		users "root"
+profile "ubuntu_10_04", {
+	mail {
+		service "postfix"
+		storage "hash"
+		install_command "${UbuntuResources.aptitudeCommand.asFile(tmp)} update && ${UbuntuResources.aptitudeCommand.asFile(tmp)} install"
+		restart_command UbuntuResources.restartCommand.asFile(tmp)
+		chown_command UbuntuResources.chownCommand.asFile(tmp)
+		postalias_command UbuntuResources.postaliasCommand.asFile(tmp)
+		postmap_command UbuntuResources.postmapCommand.asFile(tmp)
+		mailname_file UbuntuResources.mailname.asFile(tmp)
+		configuration_directory UbuntuResources.confDir.asFile(tmp)
 	}
 }

@@ -39,6 +39,7 @@ enum MysqlResources {
 	aliasExpected("/etc/postfix/mysql_alias.cf", MysqlResources.class.getResource("mysql_alias_cf_expected.txt")),
 	domainsExpected("/etc/postfix/mysql_domains.cf", MysqlResources.class.getResource("mysql_domains_cf_expected.txt")),
 	aptitudeOut("/usr/bin/aptitude.out", MysqlResources.class.getResource("aptitude_out.txt")),
+	chownOut("bin/chown.out", MysqlResources.class.getResource("chown_out.txt")),
 	mysqlOut("/usr/bin/mysql.out", MysqlResources.class.getResource("mysql_out.txt")),
 	postaliasOut("/usr/sbin/postalias.out", MysqlResources.class.getResource("postalias_out.txt")),
 

@@ -32,8 +32,8 @@ enum UbuntuResources {
 	profile("Ubuntu_10_04Profile.groovy", UbuntuResources.class.getResource("Ubuntu_10_04Profile.groovy")),
 	certCrt("cert.crt", UbuntuResources.class.getResource("cert_crt.txt")),
 	certKey("cert.key", UbuntuResources.class.getResource("cert_key.txt")),
-	group("/etc/group", UbuntuResources.class.getResource("group.txt")),
-	user("/etc/passwd", UbuntuResources.class.getResource("passwd.txt")),
+	groups("/etc/group", UbuntuResources.class.getResource("group.txt")),
+	users("/etc/passwd", UbuntuResources.class.getResource("passwd.txt")),
 	apacheConf("/etc/apache2/apache2.conf", UbuntuResources.class.getResource("apache2_conf.txt")),
 	aptitudeCommand("/usr/bin/aptitude", UbuntuResources.class.getResource("echo_command.txt")),
 	restartCommand("/etc/init.d/apache2", UbuntuResources.class.getResource("echo_command.txt")),
@@ -82,8 +82,8 @@ enum UbuntuResources {
 		htpasswdCommand.createCommand parent
 		tmpDir.asFile(parent).mkdirs()
 		mysqlCommand.createCommand parent
-		group.createFile parent
-		user.createFile parent
+		groups.createFile parent
+		users.createFile parent
 		defaultConf.createFile parent
 		defaultSslConf.createFile parent
 	}

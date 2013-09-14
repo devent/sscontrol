@@ -56,7 +56,7 @@ class DomainConfig {
 	private createWebDir(Domain domain) {
 		def user = domain.domainUser
 		webDir(domain).mkdirs()
-		changeOwner user: user.name, group: user.group, files: webDir(domain)
+		script.changeOwner owner: user.name, ownerGroup: user.group, files: webDir(domain)
 	}
 
 	private addSiteUser(Domain domain) {
@@ -64,12 +64,12 @@ class DomainConfig {
 		int uid = minimumUid + domainNumber
 		def home = domainDir domain
 		def shell = "/bin/false"
-		addUser user.name, user.group, uid, home, shell
+		script.addUser userName: user.name, groupName: user.group, userId: uid, homeDir: home, shell: shell
 	}
 
 	private addSiteGroup(Domain domain) {
 		int gid = minimumGid + domainNumber
-		addGroup domain.domainUser.group, gid
+		addGroup groupName: domain.domainUser.group, groupId: gid
 	}
 
 	def propertyMissing(String name) {

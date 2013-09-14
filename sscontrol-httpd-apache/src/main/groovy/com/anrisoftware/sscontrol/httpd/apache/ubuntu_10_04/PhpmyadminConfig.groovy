@@ -165,7 +165,7 @@ class PhpmyadminConfig extends BasePhpmyadminConfig implements ServiceConfig {
 
 	def changeOwnerConfiguration(Domain domain) {
 		def user = domain.domainUser
-		script.changeOwner user: "root", group: user.group, files: [
+		changeOwner owner: "root", ownerGroup: user.group, files: [
 			localBlowfishFile,
 			localConfigFile,
 			localDatabaseConfigFile

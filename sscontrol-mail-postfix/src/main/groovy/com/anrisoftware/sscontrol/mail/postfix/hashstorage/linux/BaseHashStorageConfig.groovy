@@ -175,8 +175,8 @@ abstract class BaseHashStorageConfig extends BaseStorage implements StorageConfi
 	void createVirtualDirectory() {
 		File dir = script.mailboxBaseDir
 		dir.exists() ? null : dir.mkdirs()
-		addGroup([groupName: virtualGroupName, groupId: virtualGid, systemGroup: true])
-		addUser([userName: virtualUserName, groupName: virtualGroupName, userId: virtualUid, systemGroup: true])
-		changeOwner([owner: virtualUid, ownerGroup: virtualGid, files: dir])
+		addGroup groupName: virtualGroupName, groupId: virtualGid, systemGroup: true
+		addUser userName: virtualUserName, groupName: virtualGroupName, userId: virtualUid, systemGroup: true
+		changeOwner owner: virtualUid, ownerGroup: virtualGid, files: dir
 	}
 }

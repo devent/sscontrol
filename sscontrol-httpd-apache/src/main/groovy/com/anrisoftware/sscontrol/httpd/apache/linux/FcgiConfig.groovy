@@ -57,7 +57,7 @@ class FcgiConfig {
 		def user = domain.domainUser
 		def scripts = scriptDir domain
 		scripts.mkdirs()
-		changeOwner user: user.name, group: user.group, files: scripts, recursive: true
+		changeOwner owner: user.name, ownerGroup: user.group, files: scripts, recursive: true
 	}
 
 	private deployStarterScript(Domain domain) {
@@ -65,7 +65,7 @@ class FcgiConfig {
 		def string = fcgiConfigTemplate.getText true, "fcgiStarter", "properties", this
 		def file = scriptStarterFile(domain)
 		FileUtils.write file, string
-		changeOwner user: user.name, group: user.group, files: file
+		changeOwner owner: user.name, ownerGroup: user.group, files: file
 		changeMod mod: "755", files: file
 	}
 

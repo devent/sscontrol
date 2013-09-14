@@ -40,6 +40,8 @@ enum HashUbuntuResources {
 	aliasMapsExpected("/etc/postfix/alias_maps", HashUbuntuResources.class.getResource("alias_maps_expected.txt")),
 	mailboxMapsExpected("/etc/postfix/mailbox_maps", HashUbuntuResources.class.getResource("mailbox_maps_expected.txt")),
 	chownOut("/bin/chown.out", HashUbuntuResources.class.getResource("chown_out.txt")),
+	useraddOut("/sbin/useradd.out", HashUbuntuResources.class.getResource("useradd_out.txt")),
+	groupaddOut("/sbin/groupadd.out", HashUbuntuResources.class.getResource("groupadd_out.txt")),
 	postaliasOut("/usr/sbin/postalias.out", HashUbuntuResources.class.getResource("postalias_out.txt")),
 	virtualMailboxBaseDir("/var/mail/vhosts", null),
 

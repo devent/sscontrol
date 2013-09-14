@@ -1,9 +1,13 @@
-unix(chownCommand, owner, ownerGroup, files, recursive) ::= <<
+unix(args) ::= <<
 #!/bin/sh
-<files:{file|<chownCommand> <unixRecursive(recursive)> <owner>.<ownerGroup> <file><\n>}>
+<args.files:unixChown(args);separator="\n">
 
 >>
 
-unixRecursive(recursive) ::= <%
+unixChown(file, args) ::= <<
+<args.command> <unixChownRecursive(args.recursive)> <args.owner>.<args.ownerGroup> <file>
+>>
+
+unixChownRecursive(recursive) ::= <%
 <if(recursive)>-R<endif>
 %>

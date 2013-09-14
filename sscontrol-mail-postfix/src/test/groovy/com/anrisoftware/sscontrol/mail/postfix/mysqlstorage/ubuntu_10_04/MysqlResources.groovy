@@ -42,6 +42,8 @@ enum MysqlResources {
 	chownOut("bin/chown.out", MysqlResources.class.getResource("chown_out.txt")),
 	mysqlOut("/usr/bin/mysql.out", MysqlResources.class.getResource("mysql_out.txt")),
 	postaliasOut("/usr/sbin/postalias.out", MysqlResources.class.getResource("postalias_out.txt")),
+	useraddOut("/sbin/useradd.out", MysqlResources.class.getResource("useradd_out.txt")),
+	groupaddOut("/sbin/groupadd.out", MysqlResources.class.getResource("groupadd_out.txt")),
 
 	ResourcesUtils resources
 

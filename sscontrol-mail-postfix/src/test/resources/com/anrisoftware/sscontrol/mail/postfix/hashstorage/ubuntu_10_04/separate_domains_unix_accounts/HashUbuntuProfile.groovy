@@ -27,8 +27,12 @@ profile "ubuntu_10_04", {
 		install_command "${UbuntuResources.aptitudeCommand.asFile(tmp)} update && ${UbuntuResources.aptitudeCommand.asFile(tmp)} install"
 		restart_command UbuntuResources.restartCommand.asFile(tmp)
 		chown_command UbuntuResources.chownCommand.asFile(tmp)
+		group_add_command UbuntuResources.groupaddCommand.asFile(tmp)
+		user_add_command UbuntuResources.useraddCommand.asFile(tmp)
 		postalias_command UbuntuResources.postaliasCommand.asFile(tmp)
 		postmap_command UbuntuResources.postmapCommand.asFile(tmp)
+		group_file UbuntuResources.group.asFile(tmp)
+		users_file UbuntuResources.passwd.asFile(tmp)
 		mailname_file UbuntuResources.mailname.asFile(tmp)
 		configuration_directory UbuntuResources.confDir.asFile(tmp)
 		mailbox_base_directory HashUbuntuResources.virtualMailboxBaseDir.asFile(tmp)

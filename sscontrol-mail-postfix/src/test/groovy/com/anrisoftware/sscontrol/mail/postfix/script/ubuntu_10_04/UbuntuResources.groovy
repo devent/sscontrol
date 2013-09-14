@@ -35,9 +35,13 @@ enum UbuntuResources {
 	restartCommand("/etc/init.d/slapd", UbuntuResources.class.getResource("echo_command.txt")),
 	chmodCommand("/bin/chmod", UbuntuResources.class.getResource("echo_command.txt")),
 	chownCommand("/bin/chown", UbuntuResources.class.getResource("echo_command.txt")),
+	useraddCommand("/sbin/useradd", UbuntuResources.class.getResource("echo_command.txt")),
+	groupaddCommand("/sbin/groupadd", UbuntuResources.class.getResource("echo_command.txt")),
 	postmapCommand("/usr/sbin/postmap", UbuntuResources.class.getResource("echo_command.txt")),
 	postaliasCommand("/usr/sbin/postalias", UbuntuResources.class.getResource("echo_command.txt")),
 	mysqlCommand("/usr/bin/mysql", UbuntuResources.class.getResource("echo_command.txt")),
+	group("/etc/group", UbuntuResources.class.getResource("group.txt")),
+	passwd("/etc/passwd", UbuntuResources.class.getResource("passwd.txt")),
 	mainConfig("/etc/postfix/main.cf", UbuntuResources.class.getResource("main_cf.txt")),
 	masterConfig("/etc/postfix/master.cf", UbuntuResources.class.getResource("master_cf.txt")),
 	mailname("/etc/mailname", UbuntuResources.class.getResource("mailname.txt")),
@@ -50,8 +54,12 @@ enum UbuntuResources {
 		restartCommand.createCommand parent
 		chmodCommand.createCommand parent
 		chownCommand.createCommand parent
+		useraddCommand.createCommand parent
+		groupaddCommand.createCommand parent
 		postmapCommand.createCommand parent
 		postaliasCommand.createCommand parent
+		group.createFile parent
+		passwd.createFile parent
 		mainConfig.createFile parent
 		masterConfig.createFile parent
 		mailname.createFile parent

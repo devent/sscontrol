@@ -107,17 +107,17 @@ class LinuxScriptLogger extends AbstractLogger {
 
 		chown_done_info("Change owner done for {}."),
 
-		group_add_trace("Add group '{}' in {}, {}."),
+		group_add_trace("Add group {} in {}, {}."),
 
-		group_add_debug("Add group '{}' in {}."),
+		group_add_debug("Add group {} in {}."),
 
-		group_add_info("Add group '{}' to service '{}'."),
+		group_add_info("Add group {} to service '{}'."),
 
-		user_add_trace("Add user '{}' in {}, {}."),
+		user_add_trace("Add user {} in {}, {}."),
 
-		user_add_debug("Add user '{}' in {}."),
+		user_add_debug("Add user {} in {}."),
 
-		user_add_info("Add user '{}' to service '{}'."),
+		user_add_info("Add user {} to service '{}'."),
 
 		link_files_done_trace("Link {} to {} done in {}, {}."),
 

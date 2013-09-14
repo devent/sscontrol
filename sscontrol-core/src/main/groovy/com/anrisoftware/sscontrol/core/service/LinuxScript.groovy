@@ -250,14 +250,13 @@ abstract class LinuxScript extends Script {
 	 * @return the {@link ScriptCommandWorker} worker.
 	 */
 	ScriptCommandWorker changeMod(Map args) {
+		args.command = args.containsKey("command") ? args.command : chmodCommand
 		args.system = args.containsKey("system") ? args.system : "unix"
 		args.recursive = args.containsKey("recursive") ? args.recursive : false
 		def template = commandTemplates.getResource("chmod")
-		def worker = scriptCommandFactory.create template, args.system,
-				"chmodCommand", chmodCommand,
-				"mod", args.mod,
-				"files", args.files,
-				"recursive", args.recursive
+		def worker = scriptCommandFactory.create template,
+				args.system,
+				"args", args
 		worker()
 		log.changeModDone this, worker, args
 	}
@@ -269,7 +268,7 @@ abstract class LinuxScript extends Script {
 	 * 			  the arguments:
 	 * <ul>
 	 * <li>{@code user:} the owner user;
-	 * <li>{@code group:} the owner group;
+	 * <li>{@code userGroup:} the owner group;
 	 * <li>{@code files:} the file or files;
 	 * <li>{@code recursive:} optionally, set to {@code true} to
 	 * recursively change the owner of all files and sub-directories.
@@ -280,15 +279,12 @@ abstract class LinuxScript extends Script {
 	 * @return the {@link ScriptCommandWorker} worker.
 	 */
 	ScriptCommandWorker changeOwner(Map args) {
+		args.command = args.containsKey("command") ? args.command : chownCommand
 		args.system = args.containsKey("system") ? args.system : "unix"
-		args.recursive = args.containsKey("recursive") ? args.recursive : false
 		def template = commandTemplates.getResource("chown")
-		def worker = scriptCommandFactory.create template, args.system,
-				"chownCommand", chownCommand,
-				"owner", args.user,
-				"ownerGroup", args.group,
-				"files", args.files,
-				"recursive", args.recursive
+		def worker = scriptCommandFactory.create template,
+				args.system,
+				"args", args
 		worker()
 		log.changeOwnerDone this, worker, args
 	}
@@ -539,20 +535,25 @@ abstract class LinuxScript extends Script {
 	/**
 	 * Adds the specified local group.
 	 *
-	 * @param group
-	 * 			  the name of the group.
-	 *
-	 * @param gid
-	 * 			  optionally, the ID of the group.
+	 * @param args
+	 * 			  the arguments:
+	 * <ul>
+	 * <li>{@code groupName:} the name of the group;
+	 * <li>{@code groupId:} optionally, the ID of the group;
+	 * <li>{@code systemGroup:} optionally, {@code true} if the group should be a system group;
+	 * <li>{@code system:} the system of the server, defaults to {@code unix};
+	 * <li>{@code command:} the link command, defaults to {@link #getGroupAddCommand()};
+	 * </ul>
 	 */
-	void addGroup(def group, def gid = null) {
+	void addGroup(Map args) {
+		args.system = args.containsKey("system") ? args.system : "unix"
+		args.command = args.containsKey("command") ? args.command : groupAddCommand
+		args.groupFile = args.containsKey("groupFile") ? args.groupFile : groupFile
 		def template = commandTemplates.getResource("groupadd")
-		def worker = scriptCommandFactory.create(template, "unix",
-				"groupaddCommand", groupAddCommand,
-				"groupFile", groupFile,
-				"name", group,
-				"gid", gid)()
-		log.addGroupDone this, worker, group
+		def worker = scriptCommandFactory.create(
+				template, args.system,
+				"args", args)()
+		log.addGroupDone this, worker, args
 	}
 
 	/**
@@ -565,7 +566,7 @@ abstract class LinuxScript extends Script {
 	 * @see #getDefaultProperties()
 	 */
 	String getGroupAddCommand() {
-		profileProperty "group_add_command", defaultProperties
+		profileProperty "group_add_command"
 	}
 
 	/**
@@ -578,38 +579,34 @@ abstract class LinuxScript extends Script {
 	 * @see #getDefaultProperties()
 	 */
 	String getGroupFile() {
-		profileProperty "group_file", defaultProperties
+		profileProperty "group_file"
 	}
 
 	/**
 	 * Adds the specified local user.
 	 *
-	 * @param user
-	 * 			  the name of the user.
-	 *
-	 * @param group
-	 * 			  the group name for the user.
-	 *
-	 * @param uid
-	 * 			  optionally, the ID of the user.
-	 *
-	 * @param home
-	 * 			  optionally, the home directory for the user.
-	 *
-	 * @param shell
-	 * 			  optionally, the shell for the user.
+	 * @param args
+	 * 			  the arguments:
+	 * <ul>
+	 * <li>{@code userName:} the name of the user;
+	 * <li>{@code groupName:} the name of the user's group;
+	 * <li>{@code userId:} optionally, the ID of the user;
+	 * <li>{@code systemUser:} optionally, {@code true} if the group should be a system group;
+	 * <li>{@code homeDir:} optionally, the home directory for the user;
+	 * <li>{@code shell:} optionally, the shell for the user;
+	 * <li>{@code system:} the system of the server, defaults to {@code unix};
+	 * <li>{@code command:} the link command, defaults to {@link #getUserAddCommand()};
+	 * </ul>
 	 */
-	void addUser(def user, def group, def uid = null, def home = null, def shell = null) {
+	void addUser(Map args) {
+		args.system = args.containsKey("system") ? args.system : "unix"
+		args.command = args.containsKey("command") ? args.command : userAddCommand
+		args.usersFile = args.containsKey("usersFile") ? args.usersFile : usersFile
 		def template = commandTemplates.getResource("useradd")
-		def worker = scriptCommandFactory.create(template, "unix",
-				"useraddCommand", userAddCommand,
-				"userFile", userFile,
-				"name", user,
-				"groupName", group,
-				"uid", uid,
-				"home", home,
-				"shell", shell)()
-		log.addUserDone this, worker, user
+		def worker = scriptCommandFactory.create(
+				template, "unix",
+				"args", args)()
+		log.addUserDone this, worker, args
 	}
 
 	/**
@@ -622,20 +619,20 @@ abstract class LinuxScript extends Script {
 	 * @see #getDefaultProperties()
 	 */
 	String getUserAddCommand() {
-		profileProperty "user_add_command", defaultProperties
+		profileProperty "user_add_command"
 	}
 
 	/**
 	 * Returns the local users file.
 	 *
 	 * <ul>
-	 * <li>property key {@code user_file}</li>
+	 * <li>property key {@code users_file}</li>
 	 * </ul>
 	 *
 	 * @see #getDefaultProperties()
 	 */
-	String getUserFile() {
-		profileProperty "user_file", defaultProperties
+	String getUsersFile() {
+		profileProperty "users_file"
 	}
 
 	/**
@@ -649,7 +646,7 @@ abstract class LinuxScript extends Script {
 	 * @see #getDefaultProperties()
 	 */
 	String getReconfigureCommand() {
-		profileProperty "reconfigure_command", defaultProperties
+		profileProperty "reconfigure_command"
 	}
 
 	/**
@@ -662,7 +659,7 @@ abstract class LinuxScript extends Script {
 	 * @see #getDefaultProperties()
 	 */
 	String getZcatCommand() {
-		profileProperty "zcat_command", defaultProperties
+		profileProperty "zcat_command"
 	}
 
 	/**

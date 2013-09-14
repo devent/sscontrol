@@ -48,12 +48,8 @@ class ScriptCommandTest {
 	@Test
 	void "chmod files"() {
 		def mod = "-w"
-		def template = templates.getResource("chmod")
-		def worker = factory.create template,
-				system,
-				"chmodCommand", "chmod",
-				"mod", mod,
-				"files", files
+		def worker = factory.create templates.getResource("chmod"),
+				system, "args", ["command": "chmod", "mod": mod, "files": files]
 		worker()
 		assert files[0].canWrite() == false
 		assert files[1].canWrite() == false
@@ -62,48 +58,13 @@ class ScriptCommandTest {
 	@Test
 	void "serialize and chmod files"() {
 		def mod = "-w"
-		def templates = templatesFactory.create("ScriptCommandTemplates")
-		def template = templates.getResource("chmod")
-		def worker = factory.create template,
-				system,
-				"chmodCommand", "chmod",
-				"mod", mod,
-				"files", files
+		def worker = factory.create templates.getResource("chmod"),
+				system, "args", ["command": "chmod", "mod": mod, "files": files]
 		def workerB = reserialize worker
 		injector.injectMembers workerB
 		workerB()
 		assert files[0].canWrite() == false
 		assert files[1].canWrite() == false
-	}
-
-	@Test
-	void "chown files"() {
-		def owner = System.getProperty("user.name")
-		def group = System.getProperty("user.name")
-		def template = templates.getResource("chown")
-		def worker = factory.create template,
-				system,
-				"chownCommand", "chown",
-				"owner", owner,
-				"ownerGroup", group,
-				"files", files
-		worker()
-	}
-
-	@Test
-	void "ln files"() {
-		def targets = files.inject([]) { list, value ->
-			list << new File("${value.absolutePath}_target")
-		}
-		def mod = "-w"
-		def template = templates.getResource("mkln")
-		def worker = factory.create template,
-				system,
-				"lnCommand", "ln",
-				"files", files,
-				"targets", targets
-		worker()
-		targets.each { assert it.isFile() }
 	}
 
 	File tmpdir

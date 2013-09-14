@@ -356,6 +356,32 @@ abstract class BasePostfixScript extends LinuxScript {
 	}
 
 	/**
+	 * Returns the group name of the virtual user accounts.
+	 *
+	 * <ul>
+	 * <li>profile property {@code "virtual_group_name"}</li>
+	 * </ul>
+	 *
+	 * @see #getDefaultProperties()
+	 */
+	String getVirtualGroupName() {
+		profileProperty "virtual_group_name"
+	}
+
+	/**
+	 * Returns the user name of the virtual user accounts.
+	 *
+	 * <ul>
+	 * <li>profile property {@code "virtual_name_name"}</li>
+	 * </ul>
+	 *
+	 * @see #getDefaultProperties()
+	 */
+	String getVirtualUserName() {
+		profileProperty "virtual_name_name"
+	}
+
+	/**
 	 * Returns the minimum identification number for virtual users.
 	 *
 	 * <ul>
@@ -364,8 +390,8 @@ abstract class BasePostfixScript extends LinuxScript {
 	 *
 	 * @see #getDefaultProperties()
 	 */
-	Number getMinimumUid() {
-		profileProperty("minimum_uid", defaultProperties) as Integer
+	int getMinimumUid() {
+		profileNumberProperty "minimum_uid"
 	}
 
 	/**
@@ -377,8 +403,8 @@ abstract class BasePostfixScript extends LinuxScript {
 	 *
 	 * @see #getDefaultProperties()
 	 */
-	Number getVirtualUid() {
-		profileProperty("virtual_uid", defaultProperties) as Integer
+	int getVirtualUid() {
+		profileNumberProperty "virtual_uid"
 	}
 
 	/**
@@ -390,8 +416,8 @@ abstract class BasePostfixScript extends LinuxScript {
 	 *
 	 * @see #getDefaultProperties()
 	 */
-	Number getVirtualGid() {
-		profileProperty("virtual_gid", defaultProperties) as Integer
+	int getVirtualGid() {
+		profileNumberProperty "virtual_gid"
 	}
 
 	/**

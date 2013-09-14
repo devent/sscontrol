@@ -1,9 +1,13 @@
-unix(chmodCommand, mod, files, recursive) ::= <<
+unix(args) ::= <<
 #!/bin/sh
-<files:{file|<chmodCommand> <unixRecursive(recursive)> <mod> <file><\n>}>
+<args.files:unixChmod(args);separator="\n">
 
 >>
 
-unixRecursive(recursive) ::= <%
-<if(recursive)>-R<endif>
+unixChmod(file, args) ::= <<
+<args.command> <unixChmodRecursive(args)> <args.mod> <file>
+>>
+
+unixChmodRecursive(args) ::= <%
+<if(args.recursive)>-R<endif>
 %>

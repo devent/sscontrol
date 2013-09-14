@@ -1,10 +1,18 @@
-unix(groupaddCommand, groupFile, name, gid) ::= <<
-if [ -z "`grep <name> <groupFile> | cut -d ":" -f 3`" ]; then
-    <groupaddCommand> <unixGid(gid)> <name>
+unix(args) ::= <<
+if [ -z "`grep <args.groupName> <args.groupFile> | cut -d ":" -f 3`" ]; then
+    <unixGroupAdd(args)>
 fi
 
 >>
 
-unixGid(gid) ::= <%
-<if(gid)>-g <gid><endif>
+unixGroupAdd(args) ::= <%
+<args.command> <unixGroupAddSystem(args)> <unixGroupAddGroupId(args)> <args.groupName>
+%>
+
+unixGroupAddSystem(args) ::= <%
+<if(args.systemGroup)>-r<endif>
+%>
+
+unixGroupAddGroupId(args) ::= <%
+<if(args.groupId)>-g <args.groupId><endif>
 %>

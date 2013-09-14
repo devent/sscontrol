@@ -189,7 +189,7 @@ abstract class MysqlStorageConfig extends BaseStorage implements StorageConfig {
 	 * @see #getDefaultProperties()
 	 */
 	String getMysqlCommand() {
-		profileProperty "mysql_command"
+		profileProperty "mysql_command", storageProperties
 	}
 
 	/**

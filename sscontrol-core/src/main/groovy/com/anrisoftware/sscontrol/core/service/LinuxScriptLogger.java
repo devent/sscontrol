@@ -1,18 +1,18 @@
 /*
  * Copyright 2013 Erwin Müller <erwin.mueller@deventm.org>
- *
+ * 
  * This file is part of sscontrol-core.
- *
+ * 
  * sscontrol-core is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published by the
  * Free Software Foundation, either version 3 of the License, or (at your
  * option) any later version.
- *
- * sscontrol-core is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
- * for more details.
- *
+ * 
+ * sscontrol-core is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more
+ * details.
+ * 
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-core. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -40,6 +40,7 @@ import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.link_f
 import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.link_files_done_info;
 import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.link_files_done_trace;
 import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.properties_null;
+import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.property_file_null;
 import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.property_not_set;
 import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.restarted_service_debug;
 import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.restarted_service_info;
@@ -129,7 +130,9 @@ class LinuxScriptLogger extends AbstractLogger {
 
 		unpack_done_debug("Unpack {} to {} done in {}."),
 
-		unpack_done_info("Unpack file {} to {} done in service '{}'.");
+		unpack_done_info("Unpack file {} to {} done in service '{}'."),
+
+		property_file_null("Property file cannot be null for key '%s' in %s.");
 
 		private String name;
 
@@ -264,5 +267,9 @@ class LinuxScriptLogger extends AbstractLogger {
 
 	void checkPropertyKey(LinuxScript script, Object property, Object key) {
 		notNull(property, property_not_set.toString(), key, script);
+	}
+
+	void checkPropertyFile(LinuxScript script, Object path, Object key) {
+		notNull(path, property_file_null.toString(), key, script);
 	}
 }

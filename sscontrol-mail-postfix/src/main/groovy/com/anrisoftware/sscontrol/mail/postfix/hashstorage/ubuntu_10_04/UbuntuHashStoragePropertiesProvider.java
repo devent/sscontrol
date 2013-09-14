@@ -41,7 +41,7 @@ public class UbuntuHashStoragePropertiesProvider extends
 		AbstractContextPropertiesProvider {
 
 	private static final URL RESOURCE = UbuntuHashStoragePropertiesProvider.class
-			.getResource("/postfix_mysqlstorage_ubuntu_10_04.properties");
+			.getResource("/postfix_hash_ubuntu_10_04.properties");
 
 	UbuntuHashStoragePropertiesProvider() {
 		super(UbuntuHashStoragePropertiesProvider.class, RESOURCE);

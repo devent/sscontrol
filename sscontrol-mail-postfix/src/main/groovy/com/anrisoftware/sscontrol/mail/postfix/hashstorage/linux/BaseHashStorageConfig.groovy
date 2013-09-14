@@ -61,6 +61,7 @@ abstract class BaseHashStorageConfig extends BaseStorage implements StorageConfi
 			deployVirtualDomains()
 			deployAliases()
 			deployMailbox()
+			createVirtualDirectory()
 		}
 	}
 
@@ -148,5 +149,14 @@ abstract class BaseHashStorageConfig extends BaseStorage implements StorageConfi
 		def currentConfiguration = currentConfiguration virtualMailboxFile
 		deployConfiguration configurationTokens(), currentConfiguration, configuration, virtualMailboxFile
 		rehashFile virtualMailboxFile
+	}
+
+	/**
+	 * Creates the virtual mail box directory and set the owner.
+	 */
+	void createVirtualDirectory() {
+		File dir = script.mailboxBaseDir
+		dir.exists() ? null : dir.mkdirs()
+		changeOwner([user: virtualUid, group: virtualGid, files: dir])
 	}
 }

@@ -36,8 +36,7 @@ enum HashUbuntuResources {
 	mailScript("Mail.groovy", HashUbuntuResources.class.getResource("MailHash.groovy")),
 	mailnameExpected("/etc/mailname", HashUbuntuResources.class.getResource("mailname_expected.txt")),
 	maincfExpected("/etc/postfix/main.cf", HashUbuntuResources.class.getResource("maincf_expected.txt")),
-	aliasDomainsExpected("/etc/postfix/alias_domains", HashUbuntuResources.class.getResource("alias_domains_expected.txt")),
-	aliasMapsExpected("/etc/postfix/alias_maps", HashUbuntuResources.class.getResource("alias_maps_expected.txt")),
+	postaliasOut("/usr/sbin/postalias.out", HashUbuntuResources.class.getResource("postalias_out.txt")),
 
 	ResourcesUtils resources
 

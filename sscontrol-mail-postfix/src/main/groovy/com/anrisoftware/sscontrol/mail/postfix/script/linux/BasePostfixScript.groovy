@@ -350,7 +350,7 @@ abstract class BasePostfixScript extends LinuxScript {
 	 * @see #postfixProperties
 	 */
 	String getMailboxPattern() {
-		profileProperty("mailbox_pattern", postfixProperties) as File
+		profileProperty("mailbox_pattern", postfixProperties)
 	}
 
 	/**

@@ -51,7 +51,6 @@ class HashPostfixTest extends UbuntuTestUtil {
 
 		assertStringContent maincfExpected.replaced(tmpdir, tmpdir, "/tmp"), maincfExpected.toString()
 		assertFileContent mailnameExpected.asFile(tmpdir), mailnameExpected
-		assertFileContent aliasDomainsExpected.asFile(tmpdir), aliasDomainsExpected
-		assertFileContent aliasMapsExpected.asFile(tmpdir), aliasMapsExpected
+		assertStringContent postaliasOut.replaced(tmpdir, tmpdir, "/tmp"), postaliasOut.toString()
 	}
 }

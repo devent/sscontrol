@@ -781,6 +781,7 @@ abstract class LinuxScript extends Script {
 		if (path instanceof File) {
 			return path
 		} else {
+			log.checkPropertyFile this, path, key
 			def file = new File(path)
 			return file.absolute ? file : new File(parent, path)
 		}

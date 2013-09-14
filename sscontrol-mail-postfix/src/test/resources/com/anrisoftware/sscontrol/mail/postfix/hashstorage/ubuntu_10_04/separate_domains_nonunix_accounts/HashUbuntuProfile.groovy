@@ -31,5 +31,6 @@ profile "ubuntu_10_04", {
 		postmap_command UbuntuResources.postmapCommand.asFile(tmp)
 		mailname_file UbuntuResources.mailname.asFile(tmp)
 		configuration_directory UbuntuResources.confDir.asFile(tmp)
+		mailbox_base_directory HashUbuntuResources.virtualMailboxBaseDir.asFile(tmp)
 	}
 }

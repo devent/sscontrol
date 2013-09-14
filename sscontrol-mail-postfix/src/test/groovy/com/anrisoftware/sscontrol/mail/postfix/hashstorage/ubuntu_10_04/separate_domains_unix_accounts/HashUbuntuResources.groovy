@@ -35,9 +35,12 @@ enum HashUbuntuResources {
 	profile("UbuntuProfile.groovy", HashUbuntuResources.class.getResource("HashUbuntuProfile.groovy")),
 	mailScript("Mail.groovy", HashUbuntuResources.class.getResource("MailHash.groovy")),
 	mailnameExpected("/etc/mailname", HashUbuntuResources.class.getResource("mailname_expected.txt")),
+	maincfExpected("/etc/postfix/main.cf", HashUbuntuResources.class.getResource("maincf_expected.txt")),
 	aliasDomainsExpected("/etc/postfix/alias_domains", HashUbuntuResources.class.getResource("alias_domains_expected.txt")),
 	aliasMapsExpected("/etc/postfix/alias_maps", HashUbuntuResources.class.getResource("alias_maps_expected.txt")),
-	maincfSeparateDomainsUnixAccountsExpected("/etc/postfix/main.cf", HashUbuntuResources.class.getResource("maincf_separate_domains_unix_accounts_expected.txt")),
+	mailboxMapsExpected("/etc/postfix/mailbox_maps", HashUbuntuResources.class.getResource("mailbox_maps_expected.txt")),
+	chownOut("/bin/chown.out", HashUbuntuResources.class.getResource("chown_out.txt")),
+	virtualMailboxBaseDir("/var/mail/vhosts", null),
 
 	ResourcesUtils resources
 

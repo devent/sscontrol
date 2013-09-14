@@ -29,7 +29,8 @@ import org.junit.Test
 import com.anrisoftware.sscontrol.mail.postfix.script.ubuntu_10_04.UbuntuTestUtil
 
 /**
- * Postfix/Hash/storage Ubuntu 10.04.
+ * Postfix/Hash/storage Ubuntu 10.04 for
+ * shared domains, unix accounts.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
@@ -38,50 +39,23 @@ import com.anrisoftware.sscontrol.mail.postfix.script.ubuntu_10_04.UbuntuTestUti
 class HashPostfixTest extends UbuntuTestUtil {
 
 	@Test
-	void "shared domains, unix accounts"() {
+	void "separate domains, nonunix accounts"() {
+		copyUbuntuFiles tmpdir
+
 		loader.loadService profile.resource, null
 		def profile = registry.getService("profile")[0]
-		loader.loadService mailSharedDomainsUnixAccounts.resource, profile
+		loader.loadService mailScript.resource, profile
 
 		registry.allServices.each { it.call() }
 		log.info "Run service again to ensure that configuration is not set double."
 		registry.allServices.each { it.call() }
 
 		assertFileContent mailnameExpected.asFile(tmpdir), mailnameExpected
-		assertStringContent maincfSharedDomainsUnixAccountsExpected.replaced(tmpdir, tmpdir, "/tmp"), maincfSharedDomainsUnixAccountsExpected.toString()
-	}
-
-	@Test
-	void "separate domains, unix accounts"() {
-		loader.loadService ubuntu10_04Profile.resource, null
-		def profile = registry.getService("profile")[0]
-		loader.loadService mailSeparateDomainsUnixAccounts.resource, profile
-
-		registry.allServices.each { it.call() }
-		log.info "Run service again to ensure that configuration is not set double."
-		registry.allServices.each { it.call() }
-
-		assertFileContent mailnameFile, mailnameExpected
-		assertStringContent replaceFileContent(tmpdir, maincfFile), maincfSeparateDomainsUnixAccountsExpected.toString()
-		assertFileContent aliasDomainsFile, aliasDomainsExpected
-		assertFileContent aliasMapsFile, aliasMapsExpected
-		assertFileContent mailboxMapsFile, mailboxMapsExpected
-	}
-
-	@Test
-	void "separate domains, nonunix accounts"() {
-		loader.loadService ubuntu10_04Profile.resource, null
-		def profile = registry.getService("profile")[0]
-		loader.loadService mailSeparateDomainsNonUnixAccounts.resource, profile
-
-		registry.allServices.each { it.call() }
-		log.info "Run service again to ensure that configuration is not set double."
-		registry.allServices.each { it.call() }
-
-		assertFileContent mailnameFile, mailnameExpected
-		assertStringContent replaceFileContent(tmpdir, maincfFile), maincfSeparateDomainsNonUnixAccountsExpected.toString()
-		assertFileContent aliasDomainsFile, aliasDomainsExpected
-		assertFileContent aliasMapsFile, aliasMapsNonUnixExpected
-		assertFileContent mailboxMapsFile, mailboxMapsNonUnixExpected
+		assertStringContent maincfExpected.replaced(tmpdir, tmpdir, "/tmp"), maincfExpected.toString()
+		assertFileContent aliasDomainsExpected.asFile(tmpdir), aliasDomainsExpected
+		assertFileContent aliasMapsExpected.asFile(tmpdir), aliasMapsExpected
+		assertFileContent mailboxMapsExpected.asFile(tmpdir), mailboxMapsExpected
+		assertStringContent chownOut.replaced(tmpdir, tmpdir, "/tmp"), chownOut.toString()
+		assert virtualMailboxBaseDir.asFile(tmpdir).isDirectory()
 	}
 }

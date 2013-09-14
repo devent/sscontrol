@@ -173,15 +173,8 @@ abstract class MysqlStorageConfig extends BaseStorage implements StorageConfig {
 	 */
 	void createVirtualDirectory() {
 		File dir = script.mailboxBaseDir
-		if (!dir.exists()) {
-			dir.mkdirs()
-		}
-		def template = commandTemplates.getResource("chown")
-		def worker = scriptCommandFactory.create(template, "unix",
-				"chownCommand", chownCommand,
-				"owner", virtualUid,
-				"ownerGroup", virtualGid,
-				"files", dir)()
+		dir.exists() ? null : dir.mkdirs()
+		changeOwner([user: virtualUid, group: virtualGid, files: dir])
 	}
 
 	/**

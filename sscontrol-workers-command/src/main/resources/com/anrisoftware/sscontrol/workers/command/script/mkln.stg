@@ -1,5 +1,5 @@
-unix(lnCommand, files, targets) ::= <<
+unix(args) ::= <<
 #!/bin/sh
-<files,targets:{file,target|<lnCommand> -s <file> <target><\n>}>
+<args.files,args.targets:{file,target|<args.command> -s <file> <target><\n>}>
 
 >>

@@ -215,9 +215,7 @@ abstract class LinuxScript extends Script {
 	 */
 	void installPackages(List packages = packages) {
 		def template = commandTemplates.getResource("install")
-		def worker = scriptCommandFactory.create(template,
-				"installCommand", installCommand,
-				"packages", packages)()
+		def worker = scriptCommandFactory.create(template, "installCommand", installCommand, "packages", packages)()
 		log.installPackagesDone this, worker, packages
 	}
 
@@ -252,12 +250,9 @@ abstract class LinuxScript extends Script {
 	ScriptCommandWorker changeMod(Map args) {
 		args.command = args.containsKey("command") ? args.command : chmodCommand
 		args.system = args.containsKey("system") ? args.system : "unix"
-		args.recursive = args.containsKey("recursive") ? args.recursive : false
+		log.checkChangeModArgs args
 		def template = commandTemplates.getResource("chmod")
-		def worker = scriptCommandFactory.create template,
-				args.system,
-				"args", args
-		worker()
+		def worker = scriptCommandFactory.create(template, args.system, "args", args)()
 		log.changeModDone this, worker, args
 	}
 
@@ -267,8 +262,8 @@ abstract class LinuxScript extends Script {
 	 * @param args
 	 * 			  the arguments:
 	 * <ul>
-	 * <li>{@code user:} the owner user;
-	 * <li>{@code userGroup:} the owner group;
+	 * <li>{@code owner:} the owner user;
+	 * <li>{@code ownerGroup:} the owner group;
 	 * <li>{@code files:} the file or files;
 	 * <li>{@code recursive:} optionally, set to {@code true} to
 	 * recursively change the owner of all files and sub-directories.
@@ -281,11 +276,9 @@ abstract class LinuxScript extends Script {
 	ScriptCommandWorker changeOwner(Map args) {
 		args.command = args.containsKey("command") ? args.command : chownCommand
 		args.system = args.containsKey("system") ? args.system : "unix"
+		log.checkChangeOwnerArgs args
 		def template = commandTemplates.getResource("chown")
-		def worker = scriptCommandFactory.create template,
-				args.system,
-				"args", args
-		worker()
+		def worker = scriptCommandFactory.create(template, args.system, "args", args)()
 		log.changeOwnerDone this, worker, args
 	}
 
@@ -354,23 +347,17 @@ abstract class LinuxScript extends Script {
 	 * <li>{@code type:} the type of the archive, for example {@code tar},
 	 * {@code zip};
 	 * <li>{@code output:} the output {@link File} directory;
-	 * <li>{@code system:} the system of the server, defaults to {@code unix};
 	 * <li>{@code override:} set to {@code true} to override existing files;
+	 * <li>{@code system:} the system of the server, defaults to {@code unix};
 	 * </ul>
 	 *
 	 * @return the {@link ScriptCommandWorker} worker.
 	 */
 	void unpack(Map args) {
 		args.system = args.containsKey("system") ? args.system : "unix"
-		args.override = args.containsKey("override") ? args.override : false
+		log.checkUnpackArgs args
 		def template = commandTemplates.getResource("unpack")
-		def worker = scriptCommandFactory.create(template,
-				args.system,
-				"type", args.type,
-				"command", args.command,
-				"output", args.output,
-				"file", args.file,
-				"override", args.override)()
+		def worker = scriptCommandFactory.create(template, args.system,	"args", args)()
 		log.unpackDone this, worker, args.file, args.output
 	}
 
@@ -404,13 +391,10 @@ abstract class LinuxScript extends Script {
 	void link(Map args) {
 		args.system = args.containsKey("system") ? args.system : "unix"
 		args.command = args.containsKey("command") ? args.command : linkCommand
+		log.checkLinkArgs args
 		def template = commandTemplates.getResource("mkln")
-		def worker = scriptCommandFactory.create(template,
-				args.system,
-				"lnCommand", args.command,
-				"files", args.files,
-				"targets", args.targets)()
-		log.linkFilesDone this, worker, args.files, args.targets
+		def worker = scriptCommandFactory.create(template, args.system,	"args", args)()
+		log.linkFilesDone this, worker, args
 	}
 
 	/**
@@ -548,11 +532,10 @@ abstract class LinuxScript extends Script {
 	void addGroup(Map args) {
 		args.system = args.containsKey("system") ? args.system : "unix"
 		args.command = args.containsKey("command") ? args.command : groupAddCommand
-		args.groupFile = args.containsKey("groupFile") ? args.groupFile : groupFile
+		args.groupsFile = args.containsKey("groupsFile") ? args.groupsFile : groupsFile
+		log.checkAddGroupArgs args
 		def template = commandTemplates.getResource("groupadd")
-		def worker = scriptCommandFactory.create(
-				template, args.system,
-				"args", args)()
+		def worker = scriptCommandFactory.create(template, args.system, "args", args)()
 		log.addGroupDone this, worker, args
 	}
 
@@ -573,13 +556,13 @@ abstract class LinuxScript extends Script {
 	 * Returns the local groups file.
 	 *
 	 * <ul>
-	 * <li>property key {@code group_file}</li>
+	 * <li>property key {@code groups_file}</li>
 	 * </ul>
 	 *
 	 * @see #getDefaultProperties()
 	 */
-	String getGroupFile() {
-		profileProperty "group_file"
+	String getGroupsFile() {
+		profileProperty "groups_file"
 	}
 
 	/**
@@ -602,10 +585,9 @@ abstract class LinuxScript extends Script {
 		args.system = args.containsKey("system") ? args.system : "unix"
 		args.command = args.containsKey("command") ? args.command : userAddCommand
 		args.usersFile = args.containsKey("usersFile") ? args.usersFile : usersFile
+		log.checkAddUserArgs args
 		def template = commandTemplates.getResource("useradd")
-		def worker = scriptCommandFactory.create(
-				template, "unix",
-				"args", args)()
+		def worker = scriptCommandFactory.create(template, args.system, "args", args)()
 		log.addUserDone this, worker, args
 	}
 

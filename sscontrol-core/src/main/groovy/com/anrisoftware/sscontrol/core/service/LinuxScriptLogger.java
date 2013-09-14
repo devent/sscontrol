@@ -1,26 +1,30 @@
 /*
  * Copyright 2013 Erwin Müller <erwin.mueller@deventm.org>
- *
+ * 
  * This file is part of sscontrol-core.
- *
+ * 
  * sscontrol-core is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published by the
  * Free Software Foundation, either version 3 of the License, or (at your
  * option) any later version.
- *
- * sscontrol-core is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
- * for more details.
- *
+ * 
+ * sscontrol-core is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more
+ * details.
+ * 
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-core. If not, see <http://www.gnu.org/licenses/>.
  */
 package com.anrisoftware.sscontrol.core.service;
 
+import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.addgroup_args_missing;
+import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.adduser_args_missing;
+import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.chmod_args_missing;
 import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.chmod_done_debug;
 import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.chmod_done_info;
 import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.chmod_done_trace;
+import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.chown_args_missing;
 import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.chown_done_debug;
 import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.chown_done_info;
 import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.chown_done_trace;
@@ -36,6 +40,7 @@ import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.group_
 import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.install_packages_done_debug;
 import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.install_packages_done_info;
 import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.install_packages_done_trace;
+import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.link_args_missing;
 import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.link_files_done_debug;
 import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.link_files_done_info;
 import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.link_files_done_trace;
@@ -45,15 +50,18 @@ import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.proper
 import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.restarted_service_debug;
 import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.restarted_service_info;
 import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.restarted_service_trace;
+import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.unpack_args_missing;
 import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.unpack_done_debug;
 import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.unpack_done_info;
 import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.unpack_done_trace;
 import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.user_add_debug;
 import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.user_add_info;
 import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.user_add_trace;
+import static org.apache.commons.lang3.Validate.isTrue;
 import static org.apache.commons.lang3.Validate.notNull;
 
 import java.io.File;
+import java.util.Map;
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
 
@@ -64,6 +72,21 @@ import com.anrisoftware.globalpom.log.AbstractLogger;
  * @since 1.0
  */
 class LinuxScriptLogger extends AbstractLogger {
+
+	private static final String GROUPS_FILE = "groupsFile";
+	private static final String GROUP_NAME = "groupName";
+	private static final String USERS_FILE = "usersFile";
+	private static final String USER_NAME = "userName";
+	private static final String TARGETS = "targets";
+	private static final String OUTPUT = "output";
+	private static final String TYPE = "type";
+	private static final String FILE = "file";
+	private static final String MOD = "mod";
+	private static final String SYSTEM = "system";
+	private static final String OWNER_GROUP = "ownerGroup";
+	private static final String OWNER = "owner";
+	private static final String COMMAND = "command";
+	private static final String FILES = "files";
 
 	enum _ {
 
@@ -119,12 +142,11 @@ class LinuxScriptLogger extends AbstractLogger {
 
 		user_add_info("Add user {} to service '{}'."),
 
-		link_files_done_trace("Link {} to {} done in {}, {}."),
+		link_files_done_trace("Link {} done in {}, {}."),
 
-		link_files_done_debug("Link {} to {} done in {}."),
+		link_files_done_debug("Link {} done in {}."),
 
-		link_files_done_info(
-				"Link files {} to targets {} done in service '{}'."),
+		link_files_done_info("Link files {} done in service '{}'."),
 
 		unpack_done_trace("Unpack {} to {} done in {}, {}."),
 
@@ -132,7 +154,19 @@ class LinuxScriptLogger extends AbstractLogger {
 
 		unpack_done_info("Unpack file {} to {} done in service '{}'."),
 
-		property_file_null("Property file cannot be null for key '%s' in %s.");
+		property_file_null("Property file cannot be null for key '%s' in %s."),
+
+		chown_args_missing("Change owner argument '%s' missing."),
+
+		chmod_args_missing("Change owner argument '%s' missing."),
+
+		unpack_args_missing("Unpack argument '%s' missing."),
+
+		link_args_missing("Link argument '%s' missing."),
+
+		adduser_args_missing("Add user argument '%s' missing."),
+
+		addgroup_args_missing("Add group argument '%s' missing.");
 
 		private String name;
 
@@ -239,14 +273,13 @@ class LinuxScriptLogger extends AbstractLogger {
 		}
 	}
 
-	void linkFilesDone(LinuxScript script, Object worker, Object files,
-			Object targets) {
+	void linkFilesDone(LinuxScript script, Object worker, Object args) {
 		if (isTraceEnabled()) {
-			trace(link_files_done_trace, files, targets, script, worker);
+			trace(link_files_done_trace, args, script, worker);
 		} else if (isDebugEnabled()) {
-			debug(link_files_done_debug, files, targets, script);
+			debug(link_files_done_debug, args, script);
 		} else {
-			info(link_files_done_info, files, targets, script.getName());
+			info(link_files_done_info, args, script.getName());
 		}
 	}
 
@@ -271,5 +304,61 @@ class LinuxScriptLogger extends AbstractLogger {
 
 	void checkPropertyFile(LinuxScript script, Object path, Object key) {
 		notNull(path, property_file_null.toString(), key, script);
+	}
+
+	void checkChangeOwnerArgs(Map<String, Object> args) {
+		isTrue(args.containsKey(FILES), chown_args_missing.toString(), FILES);
+		isTrue(args.containsKey(COMMAND), chown_args_missing.toString(),
+				COMMAND);
+		isTrue(args.containsKey(OWNER), chown_args_missing.toString(), OWNER);
+		isTrue(args.containsKey(OWNER_GROUP), chown_args_missing.toString(),
+				OWNER_GROUP);
+		isTrue(args.containsKey(SYSTEM), chown_args_missing.toString(), SYSTEM);
+	}
+
+	void checkChangeModArgs(Map<String, Object> args) {
+		isTrue(args.containsKey(FILES), chmod_args_missing.toString(), FILES);
+		isTrue(args.containsKey(COMMAND), chmod_args_missing.toString(),
+				COMMAND);
+		isTrue(args.containsKey(MOD), chmod_args_missing.toString(), MOD);
+		isTrue(args.containsKey(SYSTEM), chmod_args_missing.toString(), SYSTEM);
+	}
+
+	void checkUnpackArgs(Map<String, Object> args) {
+		isTrue(args.containsKey(FILE), unpack_args_missing.toString(), FILE);
+		isTrue(args.containsKey(TYPE), unpack_args_missing.toString(), TYPE);
+		isTrue(args.containsKey(OUTPUT), unpack_args_missing.toString(), OUTPUT);
+		isTrue(args.containsKey(SYSTEM), unpack_args_missing.toString(), SYSTEM);
+	}
+
+	void checkLinkArgs(Map<String, Object> args) {
+		isTrue(args.containsKey(FILES), link_args_missing.toString(), FILES);
+		isTrue(args.containsKey(TARGETS), link_args_missing.toString(), TARGETS);
+		isTrue(args.containsKey(COMMAND), link_args_missing.toString(), COMMAND);
+		isTrue(args.containsKey(SYSTEM), link_args_missing.toString(), SYSTEM);
+	}
+
+	void checkAddUserArgs(Map<String, Object> args) {
+		isTrue(args.containsKey(SYSTEM), adduser_args_missing.toString(),
+				SYSTEM);
+		isTrue(args.containsKey(USER_NAME), adduser_args_missing.toString(),
+				FILES);
+		isTrue(args.containsKey(GROUP_NAME), adduser_args_missing.toString(),
+				GROUP_NAME);
+		isTrue(args.containsKey(USERS_FILE), adduser_args_missing.toString(),
+				USERS_FILE);
+		isTrue(args.containsKey(COMMAND), adduser_args_missing.toString(),
+				COMMAND);
+	}
+
+	void checkAddGroupArgs(Map<String, Object> args) {
+		isTrue(args.containsKey(SYSTEM), addgroup_args_missing.toString(),
+				SYSTEM);
+		isTrue(args.containsKey(GROUPS_FILE), addgroup_args_missing.toString(),
+				GROUPS_FILE);
+		isTrue(args.containsKey(COMMAND), addgroup_args_missing.toString(),
+				COMMAND);
+		isTrue(args.containsKey(GROUP_NAME), addgroup_args_missing.toString(),
+				GROUP_NAME);
 	}
 }

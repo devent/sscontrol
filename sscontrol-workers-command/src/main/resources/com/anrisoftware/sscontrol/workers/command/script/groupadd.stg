@@ -1,5 +1,5 @@
 unix(args) ::= <<
-if [ -z "`grep <args.groupName> <args.groupFile> | cut -d ":" -f 3`" ]; then
+if [ -z "`grep <args.groupName> <args.groupsFile> | cut -d ":" -f 3`" ]; then
     <unixGroupAdd(args)>
 fi
 

@@ -40,6 +40,7 @@ enum HashUbuntuResources {
 	aliasMapsExpected("/etc/postfix/alias_maps", HashUbuntuResources.class.getResource("alias_maps_expected.txt")),
 	mailboxMapsExpected("/etc/postfix/mailbox_maps", HashUbuntuResources.class.getResource("mailbox_maps_expected.txt")),
 	chownOut("/bin/chown.out", HashUbuntuResources.class.getResource("chown_out.txt")),
+	postaliasOut("/usr/sbin/postalias.out", HashUbuntuResources.class.getResource("postalias_out.txt")),
 
 	ResourcesUtils resources
 

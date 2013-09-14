@@ -41,6 +41,7 @@ enum UbuntuResources {
 	mainConfig("/etc/postfix/main.cf", UbuntuResources.class.getResource("main_cf.txt")),
 	masterConfig("/etc/postfix/master.cf", UbuntuResources.class.getResource("master_cf.txt")),
 	mailname("/etc/mailname", UbuntuResources.class.getResource("mailname.txt")),
+	aliases("/etc/postfix/aliases", UbuntuResources.class.getResource("aliases.txt")),
 	confDir("/etc/postfix", null),
 	mailboxBaseDir("/var/mail/vhosts", null),
 

@@ -24,6 +24,7 @@ import static org.apache.commons.io.FileUtils.*
 
 import javax.inject.Inject
 
+import org.apache.commons.io.FileUtils
 import org.stringtemplate.v4.ST
 
 import com.anrisoftware.resources.templates.api.TemplateResource
@@ -127,6 +128,7 @@ abstract class BasePostfixScript extends LinuxScript {
 	 * Rehash and re-alias files.
 	 */
 	def reconfigureFiles() {
+		aliasesDatabaseFile.isFile() ? null : FileUtils.touch(aliasesDatabaseFile)
 		realiasFile aliasesDatabaseFile
 	}
 

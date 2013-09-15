@@ -61,4 +61,22 @@ class HashPostfixTest extends UbuntuTestUtil {
 		assertStringContent postaliasOut.replaced(tmpdir, tmpdir, "/tmp"), postaliasOut.toString()
 		assert mailboxBaseDir.asFile(tmpdir).isDirectory()
 	}
+
+	@Test
+	void "separate domains, nonunix accounts, reset domains"() {
+		copyUbuntuFiles tmpdir
+
+		loader.loadService profile.resource, null
+		def profile = registry.getService("profile")[0]
+		loader.loadService mailResetDomainsScript.resource, profile
+
+		registry.allServices.each { it.call() }
+		log.info "Run service again to ensure that configuration is not set double."
+		registry.allServices.each { it.call() }
+
+		assertFileContent aliasDomainsExpected.asFile(tmpdir), aliasDomainsExpected
+		assertFileContent aliasMapsExpected.asFile(tmpdir), aliasMapsExpected
+		assertFileContent mailboxMapsExpected.asFile(tmpdir), mailboxMapsExpected
+		assertStringContent postaliasOut.replaced(tmpdir, tmpdir, "/tmp"), postaliasOut.toString()
+	}
 }

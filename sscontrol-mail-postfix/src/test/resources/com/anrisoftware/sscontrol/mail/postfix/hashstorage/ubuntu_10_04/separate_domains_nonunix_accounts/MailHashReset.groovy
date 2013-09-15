@@ -16,23 +16,29 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-mail-postfix. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.mail.postfix.hashstorage.linux
+package com.anrisoftware.sscontrol.mail.postfix.hashstorage.ubuntu_10_04.separate_domains_nonunix_accounts
 
-import com.anrisoftware.globalpom.log.AbstractLogger
+mail {
+	reset domains: yes
 
-/**
- * Logging messages for {@link BaseHashStorageConfig}.
- *
- * @author Erwin Mueller, erwin.mueller@deventm.org
- * @since 1.0
- */
-@Singleton
-class BaseHashStorageConfigLogger extends AbstractLogger {
+	bind_addresses all
+	relay "smtp.relayhost.com"
+	name "mail.example.com"
+	origin "example.com"
 
-	/**
-	 * Create logger for {@link BaseHashStorageConfig}.
-	 */
-	BaseHashStorageConfigLogger() {
-		super(BaseHashStorageConfig.class)
+	masquerade {
+		domains "mail.example.com"
+		users "root"
 	}
+
+	domain "example.com", {
+		user "info"
+		user "sales"
+		user "disabled-user", { enabled false }
+		alias "postmaster", destination: "postmaster"
+		alias "disabled-alias", destination: "postmaster", { enabled false }
+		catchall destination: "jim"
+	}
+
+	domain "disabled.domain", { enabled false }
 }

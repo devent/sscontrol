@@ -121,9 +121,18 @@ abstract class BaseHashStorageConfig extends BaseStorage implements StorageConfi
 				list
 			}
 		}
+		service.resetDomains.resetDomains ? resetDomains() : false
 		def currentConfiguration = currentConfiguration virtualDomainsFile
 		deployConfiguration configurationTokens(), currentConfiguration, configuration, virtualDomainsFile
 		rehashFile virtualDomainsFile
+	}
+
+	/**
+	 * Removes the old domains file.
+	 */
+	void resetDomains() {
+		virtualDomainsFile.delete()
+		log.domainsReseted this, virtualDomainsFile
 	}
 
 	/**
@@ -142,9 +151,18 @@ abstract class BaseHashStorageConfig extends BaseStorage implements StorageConfi
 				}
 			}
 		}
+		service.resetDomains.resetAliases ? resetAliases() : false
 		def currentConfiguration = currentConfiguration virtualAliasFile
 		deployConfiguration configurationTokens(), currentConfiguration, configuration, virtualAliasFile
 		rehashFile virtualAliasFile
+	}
+
+	/**
+	 * Removes the old aliases file.
+	 */
+	void resetAliases() {
+		virtualAliasFile.delete()
+		log.aliasesReseted this, virtualAliasFile
 	}
 
 	/**
@@ -164,9 +182,18 @@ abstract class BaseHashStorageConfig extends BaseStorage implements StorageConfi
 				}
 			}
 		}
+		service.resetDomains.resetUsers ? resetUsers() : false
 		def currentConfiguration = currentConfiguration virtualMailboxFile
 		deployConfiguration configurationTokens(), currentConfiguration, configuration, virtualMailboxFile
 		rehashFile virtualMailboxFile
+	}
+
+	/**
+	 * Removes the old mailbox file.
+	 */
+	void resetUsers() {
+		virtualMailboxFile.delete()
+		log.usersReseted this, virtualMailboxFile
 	}
 
 	/**

@@ -33,6 +33,7 @@ import com.anrisoftware.sscontrol.mail.postfix.resources.ResourcesUtils
 enum HashUbuntuResources {
 
 	mailScript("Mail.groovy", HashUbuntuResources.class.getResource("MailHash.groovy")),
+	mailResetDomainsScript("Mail.groovy", HashUbuntuResources.class.getResource("MailHashReset.groovy")),
 	profile("UbuntuProfile.groovy", HashUbuntuResources.class.getResource("HashUbuntuProfile.groovy")),
 	mailnameExpected("/etc/mailname", HashUbuntuResources.class.getResource("mailname_expected.txt")),
 	maincfExpected("/etc/postfix/main.cf", HashUbuntuResources.class.getResource("maincf_expected.txt")),

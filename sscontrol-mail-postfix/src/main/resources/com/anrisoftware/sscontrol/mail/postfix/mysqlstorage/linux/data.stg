@@ -1,5 +1,4 @@
 insertDomains(mysqlCommand, service) ::= <<
-<! creates the aliases table !>
 #!/bin/sh
 <mysqlCommand> --user=<service.database.user> --password=<service.database.password> -t \<\<STOP
 USE <service.database.database>;
@@ -15,8 +14,15 @@ ON DUPLICATE KEY UPDATE
 
 >>
 
+resetDomains(mysqlCommand, service) ::= <<
+#!/bin/sh
+<mysqlCommand> --user=<service.database.user> --password=<service.database.password> -t \<\<STOP
+USE <service.database.database>;
+TRUNCATE TABLE \`domains\`;
+STOP
+>>
+
 insertAliases(mysqlCommand, service, domain) ::= <<
-<! creates the aliases table !>
 #!/bin/sh
 <mysqlCommand> --user=<service.database.user> --password=<service.database.password> -t \<\<STOP
 USE <service.database.database>;
@@ -41,8 +47,15 @@ aliasDestination(alias) ::= <%
 <if(alias.destinationDomain)><alias.destination><else><alias.destination>@<alias.domain.name><endif>
 %>
 
+resetAliases(mysqlCommand, service) ::= <<
+#!/bin/sh
+<mysqlCommand> --user=<service.database.user> --password=<service.database.password> -t \<\<STOP
+USE <service.database.database>;
+TRUNCATE TABLE \`aliases\`;
+STOP
+>>
+
 insertUsers(mysqlCommand, service, domain) ::= <<
-<! creates the aliases table !>
 #!/bin/sh
 <mysqlCommand> --user=<service.database.user> --password=<service.database.password> -t \<\<STOP
 USE <service.database.database>;
@@ -57,6 +70,14 @@ ON DUPLICATE KEY UPDATE
 \`enabled\`=<enabledStr(user.enabled)>,
 \`crypt\`=encrypt('<user.password>');
 
+>>
+
+resetUsers(mysqlCommand, service) ::= <<
+#!/bin/sh
+<mysqlCommand> --user=<service.database.user> --password=<service.database.password> -t \<\<STOP
+USE <service.database.database>;
+TRUNCATE TABLE \`users\`;
+STOP
 >>
 
 enabledStr(enabled) ::= <%

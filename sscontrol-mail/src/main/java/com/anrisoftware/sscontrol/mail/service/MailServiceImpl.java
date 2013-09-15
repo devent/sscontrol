@@ -26,6 +26,7 @@ import groovy.lang.Script;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -87,7 +88,6 @@ public class MailServiceImpl extends AbstractService {
 
 	private final Set<String> destinations;
 
-	@Inject
 	private ResetDomainsFactory resetDomainsFactory;
 
 	private ResetDomains resetDomains;
@@ -114,6 +114,13 @@ public class MailServiceImpl extends AbstractService {
 		this.domainFactory = domainFactory;
 		this.relayHost = null;
 		this.destinations = new HashSet<String>();
+	}
+
+	@Inject
+	void setResetDomainsFactory(ResetDomainsFactory factory) {
+		this.resetDomainsFactory = factory;
+		this.resetDomains = resetDomainsFactory
+				.create(new HashMap<String, Object>());
 	}
 
 	@Override

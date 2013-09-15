@@ -17,6 +17,10 @@ import com.google.inject.assistedinject.Assisted;
  */
 public class ResetDomains {
 
+	private static final String ALIASES = "aliases";
+	private static final String USERS = "users";
+	private static final String DOMAINS = "domains";
+
 	private Map<String, Object> args;
 
 	private ResetDomainsLogger log;
@@ -30,14 +34,23 @@ public class ResetDomains {
 	@Inject
 	ResetDomains(@Assisted Map<String, Object> args) {
 		this.args = args;
+		this.resetDomains = false;
+		this.resetUsers = false;
+		this.resetAliases = false;
 	}
 
 	@Inject
 	void setResetDomainsLogger(ResetDomainsLogger logger) {
 		this.log = logger;
-		setResetDomains(args.get("domains"));
-		setResetUsers(args.get("users"));
-		setResetAliases(args.get("aliases"));
+		if (args.containsKey(DOMAINS)) {
+			setResetDomains(args.get(DOMAINS));
+		}
+		if (args.containsKey(USERS)) {
+			setResetUsers(args.get(USERS));
+		}
+		if (args.containsKey(ALIASES)) {
+			setResetAliases(args.get(ALIASES));
+		}
 		args = null;
 	}
 

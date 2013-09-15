@@ -32,6 +32,7 @@ import com.anrisoftware.sscontrol.mail.postfix.resources.ResourcesUtils
 enum MysqlResources {
 
 	mailScript("Mail.groovy", MysqlResources.class.getResource("MailMysql.groovy")),
+	mailResetScript("Mail.groovy", MysqlResources.class.getResource("MailMysqlReset.groovy")),
 	profile("UbuntuProfile.groovy", MysqlResources.class.getResource("MysqlUbuntuProfile.groovy")),
 	mainConfigExpected("/etc/postfix/main.cf", MysqlResources.class.getResource("main_cf_expected.txt")),
 	mailnameExpected("/etc/mailname", MysqlResources.class.getResource("mailname_expected.txt")),
@@ -41,6 +42,7 @@ enum MysqlResources {
 	aptitudeOut("/usr/bin/aptitude.out", MysqlResources.class.getResource("aptitude_out.txt")),
 	chownOut("bin/chown.out", MysqlResources.class.getResource("chown_out.txt")),
 	mysqlOut("/usr/bin/mysql.out", MysqlResources.class.getResource("mysql_out.txt")),
+	mysqlResetDomainsOut("/usr/bin/mysql.out", MysqlResources.class.getResource("mysql_resetdomains_out.txt")),
 	postaliasOut("/usr/sbin/postalias.out", MysqlResources.class.getResource("postalias_out.txt")),
 	useraddOut("/sbin/useradd.out", MysqlResources.class.getResource("useradd_out.txt")),
 	groupaddOut("/sbin/groupadd.out", MysqlResources.class.getResource("groupadd_out.txt")),

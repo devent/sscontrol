@@ -135,15 +135,26 @@ abstract class MysqlStorageConfig extends BaseStorage implements StorageConfig {
 	 * Deploys the virtual domains.
 	 */
 	void deployDomains() {
+		service.resetDomains.resetDomains ? resetDomains() : false
 		def worker = scriptCommandFactory.create(dataTemplate, "insertDomains",
 				"mysqlCommand", mysqlCommand, "service", service)()
 		log.deployedDomainsData this, worker
 	}
 
 	/**
+	 * Resets virtual domains.
+	 */
+	void resetDomains() {
+		def worker = scriptCommandFactory.create(dataTemplate, "resetDomains",
+				"mysqlCommand", mysqlCommand, "service", service)()
+		log.resetDomainsData this, worker
+	}
+
+	/**
 	 * Deploys the virtual aliases.
 	 */
 	void deployAliases() {
+		service.resetDomains.resetAliases ? resetAliases() : false
 		for (Domain domain : service.domains) {
 			if (domain.aliases.empty) {
 				continue
@@ -155,9 +166,19 @@ abstract class MysqlStorageConfig extends BaseStorage implements StorageConfig {
 	}
 
 	/**
+	 * Resets aliases.
+	 */
+	void resetAliases() {
+		def worker = scriptCommandFactory.create(dataTemplate, "resetAliases",
+				"mysqlCommand", mysqlCommand, "service", service)()
+		log.resetAliasesData this, worker
+	}
+
+	/**
 	 * Deploys the virtual users.
 	 */
 	void deployUsers() {
+		service.resetDomains.resetUsers ? resetUsers() : false
 		for (Domain domain : service.domains) {
 			if (domain.users.empty) {
 				continue
@@ -166,6 +187,15 @@ abstract class MysqlStorageConfig extends BaseStorage implements StorageConfig {
 					"mysqlCommand", mysqlCommand, "service", service, "domain", domain)()
 			log.deployedUsersData this, worker
 		}
+	}
+
+	/**
+	 * Resets users.
+	 */
+	void resetUsers() {
+		def worker = scriptCommandFactory.create(dataTemplate, "resetUsers",
+				"mysqlCommand", mysqlCommand, "service", service)()
+		log.resetUsersData this, worker
 	}
 
 	/**

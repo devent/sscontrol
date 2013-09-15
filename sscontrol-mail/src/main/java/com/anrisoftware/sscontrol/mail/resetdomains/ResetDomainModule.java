@@ -16,23 +16,25 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-mail. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.mail.service;
+package com.anrisoftware.sscontrol.mail.resetdomains;
 
-import com.anrisoftware.sscontrol.mail.resetdomains.ResetDomainModule;
-import com.anrisoftware.sscontrol.mail.statements.StatementsModule;
 import com.google.inject.AbstractModule;
+import com.google.inject.assistedinject.FactoryModuleBuilder;
 
 /**
- * Binds the mail service.
+ * Installs the reset domains factory.
+ * 
+ * @see ResetDomainsFactory
+ * @see ResetDomains
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class MailModule extends AbstractModule {
+public class ResetDomainModule extends AbstractModule {
 
 	@Override
 	protected void configure() {
-		install(new StatementsModule());
-		install(new ResetDomainModule());
+		install(new FactoryModuleBuilder().implement(ResetDomains.class,
+				ResetDomains.class).build(ResetDomainsFactory.class));
 	}
 }

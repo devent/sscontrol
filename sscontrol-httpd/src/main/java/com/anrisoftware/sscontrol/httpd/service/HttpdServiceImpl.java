@@ -35,12 +35,12 @@ import com.anrisoftware.sscontrol.core.api.Service;
 import com.anrisoftware.sscontrol.core.api.ServiceException;
 import com.anrisoftware.sscontrol.core.api.ServiceScriptFactory;
 import com.anrisoftware.sscontrol.core.service.AbstractService;
+import com.anrisoftware.sscontrol.core.yesno.YesNoFlag;
 import com.anrisoftware.sscontrol.httpd.statements.auth.AuthProvider;
 import com.anrisoftware.sscontrol.httpd.statements.auth.AuthType;
 import com.anrisoftware.sscontrol.httpd.statements.auth.SatisfyType;
 import com.anrisoftware.sscontrol.httpd.statements.domain.Domain;
 import com.anrisoftware.sscontrol.httpd.statements.domain.DomainFactory;
-import com.anrisoftware.sscontrol.httpd.statements.yesno.YesNoFlag;
 
 /**
  * Firewall service.

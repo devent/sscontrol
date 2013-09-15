@@ -53,6 +53,9 @@ class MailServiceTest {
 		def profile = registry.getService("profile")[0]
 		loader.loadService mailService, profile
 		def service = assertService registry.getService("mail")[0], tmpdir
+		assert service.resetDomains.resetDomains == true
+		assert service.resetDomains.resetUsers == false
+		assert service.resetDomains.resetAliases == false
 	}
 
 	@Test
@@ -119,7 +122,7 @@ class MailServiceTest {
 		toStringStyle
 	}
 
-	static assertService(MailServiceImpl service, File tmpdir) {
+	static MailServiceImpl assertService(MailServiceImpl service, File tmpdir) {
 		assert service.bindAddresses == BindAddresses.ALL
 		assert service.relayHost == "smtp.relayhost.com"
 		assert service.domainName == "mail.example.com"
@@ -139,5 +142,6 @@ class MailServiceTest {
 		assert service.domains[1].aliases[0].destination == "@blobber.org"
 		assert service.domains[2].name == "blobber.org"
 		assert service.domains[2].users.size() == 3
+		service
 	}
 }

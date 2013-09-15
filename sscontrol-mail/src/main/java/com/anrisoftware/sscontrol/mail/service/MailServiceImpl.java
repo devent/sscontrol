@@ -1,18 +1,18 @@
 /*
  * Copyright 2013 Erwin Müller <erwin.mueller@deventm.org>
- *
+ * 
  * This file is part of sscontrol-mail.
- *
+ * 
  * sscontrol-mail is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published by the
  * Free Software Foundation, either version 3 of the License, or (at your
  * option) any later version.
- *
- * sscontrol-mail is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
- * for more details.
- *
+ * 
+ * sscontrol-mail is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more
+ * details.
+ * 
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-mail. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -41,6 +41,9 @@ import com.anrisoftware.sscontrol.core.api.ServiceException;
 import com.anrisoftware.sscontrol.core.api.ServiceScriptFactory;
 import com.anrisoftware.sscontrol.core.api.ServiceScriptInfo;
 import com.anrisoftware.sscontrol.core.service.AbstractService;
+import com.anrisoftware.sscontrol.core.yesno.YesNoFlag;
+import com.anrisoftware.sscontrol.mail.resetdomains.ResetDomains;
+import com.anrisoftware.sscontrol.mail.resetdomains.ResetDomainsFactory;
 import com.anrisoftware.sscontrol.mail.statements.BindAddresses;
 import com.anrisoftware.sscontrol.mail.statements.BindAddressesFactory;
 import com.anrisoftware.sscontrol.mail.statements.CertificateFile;
@@ -83,6 +86,11 @@ public class MailServiceImpl extends AbstractService {
 	private final DomainFactory domainFactory;
 
 	private final Set<String> destinations;
+
+	@Inject
+	private ResetDomainsFactory resetDomainsFactory;
+
+	private ResetDomains resetDomains;
 
 	@Inject
 	private DatabaseFactory databaseFactory;
@@ -371,12 +379,14 @@ public class MailServiceImpl extends AbstractService {
 		return unmodifiableList(domains);
 	}
 
-	public BindAddresses getAll() {
-		return BindAddresses.ALL;
+	public void reset(Map<String, Object> args) {
+		ResetDomains reset = resetDomainsFactory.create(args);
+		this.resetDomains = reset;
+		log.resetDomainSet(this, reset);
 	}
 
-	public BindAddresses getLoopback() {
-		return BindAddresses.LOOPBACK;
+	public ResetDomains getResetDomains() {
+		return resetDomains;
 	}
 
 	public Database database(String database) {
@@ -386,6 +396,22 @@ public class MailServiceImpl extends AbstractService {
 
 	public Database getDatabase() {
 		return database;
+	}
+
+	public YesNoFlag getYes() {
+		return YesNoFlag.yes;
+	}
+
+	public YesNoFlag getNo() {
+		return YesNoFlag.no;
+	}
+
+	public BindAddresses getAll() {
+		return BindAddresses.ALL;
+	}
+
+	public BindAddresses getLoopback() {
+		return BindAddresses.LOOPBACK;
 	}
 
 	@Override

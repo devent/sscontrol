@@ -26,7 +26,9 @@ import java.text.Format
 import javax.inject.Inject
 
 import org.apache.commons.io.FileUtils
+import org.joda.time.Duration
 
+import com.anrisoftware.globalpom.format.duration.DurationFormatFactory
 import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.resources.templates.api.Templates
 import com.anrisoftware.resources.templates.api.TemplatesFactory
@@ -63,6 +65,9 @@ abstract class LinuxScript extends Script {
 
 	@Inject
 	private LinuxScriptLogger log
+
+	@Inject
+	DurationFormatFactory durationFormatFactory
 
 	@Inject
 	TemplatesFactory templatesFactory
@@ -661,6 +666,28 @@ abstract class LinuxScript extends Script {
 	def profileProperty(String key, ContextProperties p=defaultProperties) {
 		def property = profile[key]
 		property != null ? property : p.getProperty(key)
+	}
+
+	/**
+	 * Returns a duration profile property. If the profile property was not set
+	 * return the default value from the default properties.
+	 *
+	 * @param key
+	 * 			  the key of the profile property.
+	 *
+	 * @param p
+	 * 			  the {@link ContextProperties} containing the property values,
+	 * 			  defaults to {@link #getDefaultProperties()}.
+	 *
+	 * @return the {@link Duration} of the profile property or the
+	 * default property if the profile property was not set.
+	 *
+	 * @see DurationFormat#parse(String)
+	 */
+	Duration profileDurationProperty(String key, ContextProperties p=defaultProperties) {
+		def property = profile[key]
+		property = property != null ? property : p.getProperty(key)
+		durationFormatFactory.create().parse property
 	}
 
 	/**

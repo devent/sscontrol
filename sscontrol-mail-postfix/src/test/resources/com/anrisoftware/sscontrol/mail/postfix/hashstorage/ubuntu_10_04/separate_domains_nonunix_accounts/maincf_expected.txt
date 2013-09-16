@@ -19,7 +19,10 @@ biff = no
 append_dot_mydomain = no
 
 # Uncomment the next line to generate "delayed mail" warnings
-#delay_warning_time = 4h
+# SSCONTROL-mail
+delay_warning_time = 4h
+# SSCONTROL-mail-END
+
 
 readme_directory = no
 
@@ -62,6 +65,30 @@ inet_interfaces = all
 
 # SSCONTROL-mail
 masquerade_domains = mail.example.com
+# SSCONTROL-mail-END
+# SSCONTROL-mail
+unknown_local_recipient_reject_code = 550
+# SSCONTROL-mail-END
+# SSCONTROL-mail
+maximal_queue_lifetime = 7d
+# SSCONTROL-mail-END
+# SSCONTROL-mail
+minimal_backoff_time = 15m
+# SSCONTROL-mail-END
+# SSCONTROL-mail
+maximal_backoff_time = 2h
+# SSCONTROL-mail-END
+# SSCONTROL-mail
+smtp_helo_timeout = 60s
+# SSCONTROL-mail-END
+# SSCONTROL-mail
+smtpd_recipient_limit = 16
+# SSCONTROL-mail-END
+# SSCONTROL-mail
+smtpd_soft_error_limit = 3
+# SSCONTROL-mail-END
+# SSCONTROL-mail
+smtpd_hard_error_limit = 12
 # SSCONTROL-mail-END
 # SSCONTROL-mail
 virtual_alias_domains = hash:/tmp/etc/postfix/alias_domains

@@ -40,3 +40,39 @@ alias_maps = hash:<file>
 aliasDatabase(file) ::= <<
 alias_database = hash:<file>
 >>
+
+unknownLocalRecipientRejectCode(code) ::= <<
+unknown_local_recipient_reject_code = <code>
+>>
+
+delayWarningTime(time) ::= <<
+delay_warning_time = <time>
+>>
+
+maximalQueueLifetime(time) ::= <<
+maximal_queue_lifetime = <time>
+>>
+
+minimalRetriesDelay(time) ::= <<
+minimal_backoff_time = <time>
+>>
+
+maximumRetriesDelay(time) ::= <<
+maximal_backoff_time = <time>
+>>
+
+heloTimeout(time) ::= <<
+smtp_helo_timeout = <time>
+>>
+
+recipientLimit(limit) ::= <<
+smtpd_recipient_limit = <limit>
+>>
+
+backOffErrorLimit(limit) ::= <<
+smtpd_soft_error_limit = <limit>
+>>
+
+blockingErrorLimit(limit) ::= <<
+smtpd_hard_error_limit = <limit>
+>>

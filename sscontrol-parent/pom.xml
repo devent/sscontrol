@@ -75,7 +75,7 @@
 			<dependency>
 				<groupId>com.anrisoftware.globalpom</groupId>
 				<artifactId>globalpom-utils</artifactId>
-				<version>1.7</version>
+				<version>1.9-SNAPSHOT</version>
 			</dependency>
 
 			<!-- resources -->

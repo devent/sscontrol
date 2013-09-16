@@ -25,6 +25,7 @@ import static org.apache.commons.io.FileUtils.*
 import javax.inject.Inject
 
 import org.apache.commons.io.FileUtils
+import org.joda.time.Duration
 import org.stringtemplate.v4.ST
 
 import com.anrisoftware.resources.templates.api.TemplateResource
@@ -32,6 +33,7 @@ import com.anrisoftware.resources.templates.api.Templates
 import com.anrisoftware.sscontrol.core.service.LinuxScript
 import com.anrisoftware.sscontrol.mail.postfix.linux.BasePostfixScriptLogger
 import com.anrisoftware.sscontrol.mail.postfix.linux.BindAddressesRenderer
+import com.anrisoftware.sscontrol.mail.postfix.linux.DurationRenderer
 import com.anrisoftware.sscontrol.mail.postfix.linux.PostfixPropertiesProvider
 import com.anrisoftware.sscontrol.mail.postfix.linux.StorageConfig
 import com.anrisoftware.sscontrol.mail.statements.User
@@ -79,6 +81,12 @@ abstract class BasePostfixScript extends LinuxScript {
 	 */
 	@Inject
 	BindAddressesRenderer bindAddressesRenderer
+
+	/**
+	 * Renderer for time duration.
+	 */
+	@Inject
+	DurationRenderer durationRenderer
 
 	@Inject
 	PostfixPropertiesProvider postfixPropertiesProvider
@@ -178,6 +186,15 @@ abstract class BasePostfixScript extends LinuxScript {
 			new TokenTemplate("(?m)^\\#?masquerade_domains.*", mainConfigurationTemplate.getText(true, "masqueradeDomains", "mail", service)),
 			new TokenTemplate("(?m)^\\#?alias_maps.*", mainConfigurationTemplate.getText(true, "aliasMaps", "file", aliasesMapsFile)),
 			new TokenTemplate("(?m)^\\#?alias_database.*", mainConfigurationTemplate.getText(true, "aliasDatabase", "file", aliasesDatabaseFile)),
+			new TokenTemplate("(?m)^\\#?unknown_local_recipient_reject_code.*", mainConfigurationTemplate.getText(true, "unknownLocalRecipientRejectCode", "code", unknownLocalRecipientRejectCode)),
+			new TokenTemplate("(?m)^\\#?delay_warning_time.*", mainConfigurationTemplate.getText(true, "delayWarningTime", "time", delayWarningTime)),
+			new TokenTemplate("(?m)^\\#?maximal_queue_lifetime.*", mainConfigurationTemplate.getText(true, "maximalQueueLifetime", "time", maximalQueueLifetime)),
+			new TokenTemplate("(?m)^\\#?minimal_backoff_time.*", mainConfigurationTemplate.getText(true, "minimalRetriesDelay", "time", minimalRetriesDelay)),
+			new TokenTemplate("(?m)^\\#?maximal_backoff_time.*", mainConfigurationTemplate.getText(true, "maximumRetriesDelay", "time", maximalRetriesDelay)),
+			new TokenTemplate("(?m)^\\#?smtp_helo_timeout.*", mainConfigurationTemplate.getText(true, "heloTimeout", "time", heloTimeout)),
+			new TokenTemplate("(?m)^\\#?smtpd_recipient_limit.*", mainConfigurationTemplate.getText(true, "recipientLimit", "limit", recipientLimit)),
+			new TokenTemplate("(?m)^\\#?smtpd_soft_error_limit.*", mainConfigurationTemplate.getText(true, "backOffErrorLimit", "limit", backOffErrorLimit)),
+			new TokenTemplate("(?m)^\\#?smtpd_hard_error_limit.*", mainConfigurationTemplate.getText(true, "blockingErrorLimit", "limit", blockingErrorLimit)),
 		]
 		deployConfiguration configurationTokens(), currentMainConfiguration, configuration, mainFile
 	}
@@ -356,6 +373,142 @@ abstract class BasePostfixScript extends LinuxScript {
 	}
 
 	/**
+	 * Returns the numerical Postfix/SMTP server response code when a
+	 * local recipient address is unknown. Example {@code 550}.
+	 *
+	 * <ul>
+	 * <li>profile property {@code "unknown_local_recipient_reject_code"}</li>
+	 * </ul>
+	 *
+	 * @see #postfixProperties
+	 */
+	int getUnknownLocalRecipientRejectCode() {
+		profileNumberProperty("unknown_local_recipient_reject_code", postfixProperties)
+	}
+
+	/**
+	 * Returns the time after which the sender receives a copy of the message
+	 * headers of mail that is still queued. Example {@code PT4H}.
+	 *
+	 * <ul>
+	 * <li>profile property {@code "delay_warning_time"}</li>
+	 * </ul>
+	 *
+	 * @see Duration#parse(String)
+	 * @see #postfixProperties
+	 */
+	Duration getDelayWarningTime() {
+		profileDurationProperty("delay_warning_time", postfixProperties)
+	}
+
+	/**
+	 * Returns the time after which the message is consider as undeliverable.
+	 * Example {@code P7D}.
+	 *
+	 * <ul>
+	 * <li>profile property {@code "maximal_queue_lifetime"}</li>
+	 * </ul>
+	 *
+	 * @see Duration#parse(String)
+	 * @see #postfixProperties
+	 */
+	Duration getMaximalQueueLifetime() {
+		profileDurationProperty("maximal_queue_lifetime", postfixProperties)
+	}
+
+	/**
+	 * Returns the minimal time between attempts to deliver a deferred message.
+	 * Example {@code PT15M}.
+	 *
+	 * <ul>
+	 * <li>profile property {@code "minimal_retries_delay"}</li>
+	 * </ul>
+	 *
+	 * @see Duration#parse(String)
+	 * @see #postfixProperties
+	 */
+	Duration getMinimalRetriesDelay() {
+		profileDurationProperty("minimal_retries_delay", postfixProperties)
+	}
+
+	/**
+	 * Returns the maximal time between attempts to deliver a deferred message.
+	 * Example {@code PT2H}.
+	 *
+	 * <ul>
+	 * <li>profile property {@code "maximal_retries_delay"}</li>
+	 * </ul>
+	 *
+	 * @see Duration#parse(String)
+	 * @see #postfixProperties
+	 */
+	Duration getMaximalRetriesDelay() {
+		profileDurationProperty("maximal_retries_delay", postfixProperties)
+	}
+
+	/**
+	 * Returns the Postfix/SMTP client time limit for sending the HELO or
+	 * EHLO command, and for receiving the initial remote SMTP server response.
+	 * Example {@code PT60S}.
+	 *
+	 * <ul>
+	 * <li>profile property {@code "helo_timeout"}</li>
+	 * </ul>
+	 *
+	 * @see Duration#parse(String)
+	 * @see #postfixProperties
+	 */
+	Duration getHeloTimeout() {
+		profileDurationProperty("helo_timeout", postfixProperties)
+	}
+
+	/**
+	 * Returns the maximal number of recipients that the Postfix/SMTP server
+	 * accepts per message delivery request.
+	 * Example {@code 16}.
+	 *
+	 * <ul>
+	 * <li>profile property {@code "recipient_limit"}</li>
+	 * </ul>
+	 *
+	 * @see Duration#parse(String)
+	 * @see #postfixProperties
+	 */
+	int getRecipientLimit() {
+		profileNumberProperty("recipient_limit", postfixProperties)
+	}
+
+	/**
+	 * Returns the number of errors before the Postfix/SMTP server slows
+	 * down all its responses. Example {@code 3}.
+	 *
+	 * <ul>
+	 * <li>profile property {@code "back_off_error_limit"}</li>
+	 * </ul>
+	 *
+	 * @see Duration#parse(String)
+	 * @see #postfixProperties
+	 */
+	int getBackOffErrorLimit() {
+		profileNumberProperty("back_off_error_limit", postfixProperties)
+	}
+
+	/**
+	 * Returns the maximal number of errors a remote SMTP client is allowed
+	 * to make without delivering mail. Example {@code 12}.
+	 *
+	 * <ul>
+	 * <li>profile property {@code "blocking_error_limit"}</li>
+	 * </ul>
+	 *
+	 * @see Duration#parse(String)
+	 * @see #postfixProperties
+	 */
+	int getBlockingErrorLimit() {
+		profileNumberProperty("blocking_error_limit", postfixProperties)
+	}
+
+	/**
 	 * Returns the group name of the virtual user accounts.
 	 *
 	 * <ul>
@@ -431,7 +584,10 @@ abstract class BasePostfixScript extends LinuxScript {
 	 * Returns additional template attributes.
 	 */
 	Map getTemplatesAttributes() {
-		["renderers": [bindAddressesRenderer]]
+		["renderers": [
+				bindAddressesRenderer,
+				durationRenderer
+			]]
 	}
 
 	/**

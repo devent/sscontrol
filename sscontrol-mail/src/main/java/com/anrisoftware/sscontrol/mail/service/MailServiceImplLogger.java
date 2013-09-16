@@ -1,41 +1,41 @@
 /*
  * Copyright 2013 Erwin Müller <erwin.mueller@deventm.org>
- * 
+ *
  * This file is part of sscontrol-mail.
- * 
+ *
  * sscontrol-mail is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published by the
  * Free Software Foundation, either version 3 of the License, or (at your
  * option) any later version.
- * 
- * sscontrol-mail is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more
- * details.
- * 
+ *
+ * sscontrol-mail is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
+ * for more details.
+ *
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-mail. If not, see <http://www.gnu.org/licenses/>.
  */
 package com.anrisoftware.sscontrol.mail.service;
 
+import static com.anrisoftware.sscontrol.mail.service.MailServiceImplLogger._.bind_address_null;
+import static com.anrisoftware.sscontrol.mail.service.MailServiceImplLogger._.bind_addresses_null;
 import static com.anrisoftware.sscontrol.mail.service.MailServiceImplLogger._.bind_addresses_set;
 import static com.anrisoftware.sscontrol.mail.service.MailServiceImplLogger._.bind_addresses_set_info;
-import static com.anrisoftware.sscontrol.mail.service.MailServiceImplLogger._.bind_address_null;
 import static com.anrisoftware.sscontrol.mail.service.MailServiceImplLogger._.certificate_set;
 import static com.anrisoftware.sscontrol.mail.service.MailServiceImplLogger._.certificate_set_info;
 import static com.anrisoftware.sscontrol.mail.service.MailServiceImplLogger._.destination_add;
 import static com.anrisoftware.sscontrol.mail.service.MailServiceImplLogger._.destination_add_info;
+import static com.anrisoftware.sscontrol.mail.service.MailServiceImplLogger._.destination_null;
 import static com.anrisoftware.sscontrol.mail.service.MailServiceImplLogger._.domain_added;
 import static com.anrisoftware.sscontrol.mail.service.MailServiceImplLogger._.domain_added_info;
+import static com.anrisoftware.sscontrol.mail.service.MailServiceImplLogger._.domain_name_set;
+import static com.anrisoftware.sscontrol.mail.service.MailServiceImplLogger._.domain_name_set_info;
 import static com.anrisoftware.sscontrol.mail.service.MailServiceImplLogger._.domain_null;
 import static com.anrisoftware.sscontrol.mail.service.MailServiceImplLogger._.origin_set;
 import static com.anrisoftware.sscontrol.mail.service.MailServiceImplLogger._.origin_set_info;
 import static com.anrisoftware.sscontrol.mail.service.MailServiceImplLogger._.relay_set;
 import static com.anrisoftware.sscontrol.mail.service.MailServiceImplLogger._.relay_set_info;
-import static com.anrisoftware.sscontrol.mail.service.MailServiceImplLogger._.bind_addresses_null;
-import static com.anrisoftware.sscontrol.mail.service.MailServiceImplLogger._.destination_null;
-import static com.anrisoftware.sscontrol.mail.service.MailServiceImplLogger._.domain_name_set;
-import static com.anrisoftware.sscontrol.mail.service.MailServiceImplLogger._.domain_name_set_info;
 import static com.anrisoftware.sscontrol.mail.service.MailServiceImplLogger._.reset_domain_set_debug;
 import static com.anrisoftware.sscontrol.mail.service.MailServiceImplLogger._.reset_domain_set_info;
 import static org.apache.commons.lang3.StringUtils.join;

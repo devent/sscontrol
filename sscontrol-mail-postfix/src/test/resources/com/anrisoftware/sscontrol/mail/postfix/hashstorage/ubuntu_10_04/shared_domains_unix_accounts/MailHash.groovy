@@ -20,7 +20,6 @@ package com.anrisoftware.sscontrol.mail.postfix.hashstorage.ubuntu_10_04.shared_
 
 mail {
 	bind_addresses all
-
 	relay "smtp.relayhost.com"
 	name "mail.example.com"
 	origin "example.com"

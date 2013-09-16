@@ -90,3 +90,27 @@ smtpd_soft_error_limit = 3
 # SSCONTROL-mail
 smtpd_hard_error_limit = 12
 # SSCONTROL-mail-END
+# SSCONTROL-mail
+smtpd_helo_restrictions = permit_mynetworks, warn_if_reject reject_non_fqdn_hostname, reject_invalid_hostname, permit
+# SSCONTROL-mail-END
+# SSCONTROL-mail
+smtpd_sender_restrictions = permit_mynetworks, warn_if_reject reject_non_fqdn_sender, reject_unknown_sender_domain, reject_unauth_pipelining, permit
+# SSCONTROL-mail-END
+# SSCONTROL-mail
+smtpd_client_restrictions = reject_rbl_client sbl.spamhaus.org, reject_rbl_client blackholes.easynet.nl, reject_rbl_client dnsbl.njabl.org
+# SSCONTROL-mail-END
+# SSCONTROL-mail
+smtpd_recipient_restrictions = reject_unauth_pipelining, permit_mynetworks, reject_non_fqdn_recipient, reject_unknown_recipient_domain, reject_unauth_destination, permit
+# SSCONTROL-mail-END
+# SSCONTROL-mail
+smtpd_data_restrictions = reject_unauth_pipelining
+# SSCONTROL-mail-END
+# SSCONTROL-mail
+smtpd_helo_required = yes
+# SSCONTROL-mail-END
+# SSCONTROL-mail
+smtpd_delay_reject = yes
+# SSCONTROL-mail-END
+# SSCONTROL-mail
+disable_vrfy_command = yes
+# SSCONTROL-mail-END

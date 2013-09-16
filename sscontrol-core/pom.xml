@@ -24,11 +24,11 @@
 		<url>https://www.anr-institute.com/projects/projects/sscontrol-core</url>
 	</issueManagement>
 
-    <scm>
-        <connection>scm:git:${custom.gitpublic.url}sscontrolnew.git</connection>
-        <developerConnection>scm:git:${custom.gitpublic.url}sscontrolnew.git</developerConnection>
-        <url>scm:git:${custom.gitpublic.url}sscontrolnew.git</url>
-    </scm>
+	<scm>
+		<connection>scm:git:${custom.gitpublic.url}sscontrolnew.git</connection>
+		<developerConnection>scm:git:${custom.gitpublic.url}sscontrolnew.git</developerConnection>
+		<url>scm:git:${custom.gitpublic.url}sscontrolnew.git</url>
+	</scm>
 
 	<dependencies>
 
@@ -84,6 +84,10 @@
 		<dependency>
 			<groupId>com.anrisoftware.resources</groupId>
 			<artifactId>resources-texts</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>joda-time</groupId>
+			<artifactId>joda-time</artifactId>
 		</dependency>
 	</dependencies>
 

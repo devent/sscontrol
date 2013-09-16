@@ -76,3 +76,35 @@ smtpd_soft_error_limit = <limit>
 blockingErrorLimit(limit) ::= <<
 smtpd_hard_error_limit = <limit>
 >>
+
+heloRestrictions(restrictions) ::= <<
+smtpd_helo_restrictions = <restrictions>
+>>
+
+senderRestrictions(restrictions) ::= <<
+smtpd_sender_restrictions = <restrictions>
+>>
+
+clientRestrictions(restrictions) ::= <<
+smtpd_client_restrictions = <restrictions>
+>>
+
+recipientRestrictions(restrictions) ::= <<
+smtpd_recipient_restrictions = <restrictions>
+>>
+
+dataRestrictions(restrictions) ::= <<
+smtpd_data_restrictions = <restrictions>
+>>
+
+heloRequired(flag) ::= <<
+smtpd_helo_required = <if(flag)>yes<else>no<endif>
+>>
+
+delayReject(flag) ::= <<
+smtpd_delay_reject = <if(flag)>yes<else>no<endif>
+>>
+
+disableVrfyCommand(flag) ::= <<
+disable_vrfy_command = <if(flag)>yes<else>no<endif>
+>>

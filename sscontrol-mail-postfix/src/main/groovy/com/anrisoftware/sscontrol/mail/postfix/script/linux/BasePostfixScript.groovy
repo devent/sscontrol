@@ -195,6 +195,14 @@ abstract class BasePostfixScript extends LinuxScript {
 			new TokenTemplate("(?m)^\\#?smtpd_recipient_limit.*", mainConfigurationTemplate.getText(true, "recipientLimit", "limit", recipientLimit)),
 			new TokenTemplate("(?m)^\\#?smtpd_soft_error_limit.*", mainConfigurationTemplate.getText(true, "backOffErrorLimit", "limit", backOffErrorLimit)),
 			new TokenTemplate("(?m)^\\#?smtpd_hard_error_limit.*", mainConfigurationTemplate.getText(true, "blockingErrorLimit", "limit", blockingErrorLimit)),
+			new TokenTemplate("(?m)^\\#?smtpd_helo_restrictions.*", mainConfigurationTemplate.getText(true, "heloRestrictions", "restrictions", heloRestrictions)),
+			new TokenTemplate("(?m)^\\#?smtpd_sender_restrictions.*", mainConfigurationTemplate.getText(true, "senderRestrictions", "restrictions", senderRestrictions)),
+			new TokenTemplate("(?m)^\\#?smtpd_client_restrictions.*", mainConfigurationTemplate.getText(true, "clientRestrictions", "restrictions", clientRestrictions)),
+			new TokenTemplate("(?m)^\\#?smtpd_recipient_restrictions.*", mainConfigurationTemplate.getText(true, "recipientRestrictions", "restrictions", recipientRestrictions)),
+			new TokenTemplate("(?m)^\\#?smtpd_data_restrictions.*", mainConfigurationTemplate.getText(true, "dataRestrictions", "restrictions", dataRestrictions)),
+			new TokenTemplate("(?m)^\\#?smtpd_helo_required.*", mainConfigurationTemplate.getText(true, "heloRequired", "flag", heloRequired)),
+			new TokenTemplate("(?m)^\\#?smtpd_delay_reject.*", mainConfigurationTemplate.getText(true, "delayReject", "flag", delayReject)),
+			new TokenTemplate("(?m)^\\#?disable_vrfy_command.*", mainConfigurationTemplate.getText(true, "disableVrfyCommand", "flag", disableVrfyCommand)),
 		]
 		deployConfiguration configurationTokens(), currentMainConfiguration, configuration, mainFile
 	}
@@ -471,7 +479,6 @@ abstract class BasePostfixScript extends LinuxScript {
 	 * <li>profile property {@code "recipient_limit"}</li>
 	 * </ul>
 	 *
-	 * @see Duration#parse(String)
 	 * @see #postfixProperties
 	 */
 	int getRecipientLimit() {
@@ -486,7 +493,6 @@ abstract class BasePostfixScript extends LinuxScript {
 	 * <li>profile property {@code "back_off_error_limit"}</li>
 	 * </ul>
 	 *
-	 * @see Duration#parse(String)
 	 * @see #postfixProperties
 	 */
 	int getBackOffErrorLimit() {
@@ -501,11 +507,120 @@ abstract class BasePostfixScript extends LinuxScript {
 	 * <li>profile property {@code "blocking_error_limit"}</li>
 	 * </ul>
 	 *
-	 * @see Duration#parse(String)
 	 * @see #postfixProperties
 	 */
 	int getBlockingErrorLimit() {
 		profileNumberProperty("blocking_error_limit", postfixProperties)
+	}
+
+	/**
+	 * Returns the restrictions that the Postfix/SMTP server applies in the
+	 * context of a client HELO command.
+	 *
+	 * <ul>
+	 * <li>profile property {@code "helo_restrictions"}</li>
+	 * </ul>
+	 *
+	 * @see #postfixProperties
+	 */
+	String getHeloRestrictions() {
+		profileProperty("helo_restrictions", postfixProperties)
+	}
+
+	/**
+	 * Returns the restrictions that the Postfix/SMTP server applies in the
+	 * context of a client MAIL FROM command.
+	 *
+	 * <ul>
+	 * <li>profile property {@code "sender_restrictions"}</li>
+	 * </ul>
+	 *
+	 * @see #postfixProperties
+	 */
+	String getSenderRestrictions() {
+		profileProperty("sender_restrictions", postfixProperties)
+	}
+
+	/**
+	 * Returns the restrictions that the Postfix/SMTP server applies in the
+	 * context of a client connection request.
+	 *
+	 * <ul>
+	 * <li>profile property {@code "client_restrictions"}</li>
+	 * </ul>
+	 *
+	 * @see #postfixProperties
+	 */
+	String getClientRestrictions() {
+		profileProperty("client_restrictions", postfixProperties)
+	}
+
+	/**
+	 * Returns the restrictions that the Postfix/SMTP server applies in the
+	 * context of a client RCPT TO command
+	 *
+	 * <ul>
+	 * <li>profile property {@code "recipient_restrictions"}</li>
+	 * </ul>
+	 *
+	 * @see #postfixProperties
+	 */
+	String getRecipientRestrictions() {
+		profileProperty("recipient_restrictions", postfixProperties)
+	}
+
+	/**
+	 * Returns the restrictions that the Postfix/SMTP server applies in the
+	 * context of the SMTP DATA command.
+	 *
+	 * <ul>
+	 * <li>profile property {@code "data_restrictions"}</li>
+	 * </ul>
+	 *
+	 * @see #postfixProperties
+	 */
+	String getDataRestrictions() {
+		profileProperty("data_restrictions", postfixProperties)
+	}
+
+	/**
+	 * Require that a remote SMTP client introduces itself with the HELO/EHLO
+	 * command.
+	 *
+	 * <ul>
+	 * <li>profile property {@code "helo_required"}</li>
+	 * </ul>
+	 *
+	 * @see #postfixProperties
+	 */
+	boolean isHeloRequired() {
+		profileProperty("helo_required", postfixProperties)
+	}
+
+	/**
+	 * Wait until the RCPT TO/ETRN command.
+	 *
+	 * <ul>
+	 * <li>profile property {@code "delay_reject"}</li>
+	 * </ul>
+	 *
+	 * @see #postfixProperties
+	 */
+	boolean isDelayReject() {
+		profileProperty("delay_reject", postfixProperties)
+	}
+
+	/**
+	 * Disable the SMTP VRFY command.
+	 *
+	 * <ul>
+	 * <li>profile property {@code "disable_vrfy_command"}</li>
+	 * </ul>
+	 *
+	 * @see #postfixProperties
+	 */
+	boolean isDisableVrfyCommand() {
+		profileProperty("disable_vrfy_command", postfixProperties)
 	}
 
 	/**

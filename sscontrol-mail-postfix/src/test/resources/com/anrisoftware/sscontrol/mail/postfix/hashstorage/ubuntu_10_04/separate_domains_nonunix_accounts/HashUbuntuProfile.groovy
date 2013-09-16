@@ -31,7 +31,7 @@ profile "ubuntu_10_04", {
 		user_add_command UbuntuResources.useraddCommand.asFile(tmp)
 		postalias_command UbuntuResources.postaliasCommand.asFile(tmp)
 		postmap_command UbuntuResources.postmapCommand.asFile(tmp)
-		group_file UbuntuResources.group.asFile(tmp)
+		groups_file UbuntuResources.group.asFile(tmp)
 		users_file UbuntuResources.passwd.asFile(tmp)
 		mailname_file UbuntuResources.mailname.asFile(tmp)
 		configuration_directory UbuntuResources.confDir.asFile(tmp)

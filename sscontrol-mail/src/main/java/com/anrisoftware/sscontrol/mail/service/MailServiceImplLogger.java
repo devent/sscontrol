@@ -24,6 +24,8 @@ import static com.anrisoftware.sscontrol.mail.service.MailServiceImplLogger._.bi
 import static com.anrisoftware.sscontrol.mail.service.MailServiceImplLogger._.bind_addresses_set_info;
 import static com.anrisoftware.sscontrol.mail.service.MailServiceImplLogger._.certificate_set;
 import static com.anrisoftware.sscontrol.mail.service.MailServiceImplLogger._.certificate_set_info;
+import static com.anrisoftware.sscontrol.mail.service.MailServiceImplLogger._.database_set_debug;
+import static com.anrisoftware.sscontrol.mail.service.MailServiceImplLogger._.database_set_info;
 import static com.anrisoftware.sscontrol.mail.service.MailServiceImplLogger._.debug_level_null;
 import static com.anrisoftware.sscontrol.mail.service.MailServiceImplLogger._.debug_level_set_debug;
 import static com.anrisoftware.sscontrol.mail.service.MailServiceImplLogger._.debug_level_set_info;
@@ -52,6 +54,7 @@ import com.anrisoftware.globalpom.log.AbstractLogger;
 import com.anrisoftware.sscontrol.mail.resetdomains.ResetDomains;
 import com.anrisoftware.sscontrol.mail.statements.BindAddresses;
 import com.anrisoftware.sscontrol.mail.statements.CertificateFile;
+import com.anrisoftware.sscontrol.mail.statements.Database;
 import com.anrisoftware.sscontrol.mail.statements.Domain;
 
 /**
@@ -109,7 +112,11 @@ class MailServiceImplLogger extends AbstractLogger {
 
 		debug_level_set_debug("Debug level {} set for {}."),
 
-		debug_level_set_info("Debug level {} set for mail service.");
+		debug_level_set_info("Debug level {} set for mail service."),
+
+		database_set_debug("Database {} set for {}."),
+
+		database_set_info("Database '{}', user '{}' set for mail service.");
 
 		private String name;
 
@@ -221,6 +228,14 @@ class MailServiceImplLogger extends AbstractLogger {
 			debug(debug_level_set_debug, level, service);
 		} else {
 			info(debug_level_set_info, level);
+		}
+	}
+
+	void databaseSet(MailServiceImpl service, Database database) {
+		if (isDebugEnabled()) {
+			debug(database_set_debug, database, service);
+		} else {
+			info(database_set_info, database.getDatabase(), database.getUser());
 		}
 	}
 

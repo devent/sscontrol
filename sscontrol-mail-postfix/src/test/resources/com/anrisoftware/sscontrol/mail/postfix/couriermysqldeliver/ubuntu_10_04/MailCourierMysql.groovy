@@ -24,7 +24,7 @@ mail {
 	relay "smtp.relayhost.com"
 	name "mail.example.com"
 	origin "example.com"
-	database "maildb" user "root" password "password"
+	database "maildb", user: "root", password: "password"
 
 	masquerade {
 		domains "mail.example.com"

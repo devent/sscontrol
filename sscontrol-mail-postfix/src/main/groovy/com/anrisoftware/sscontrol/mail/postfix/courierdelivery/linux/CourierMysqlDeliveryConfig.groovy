@@ -77,6 +77,12 @@ abstract class CourierMysqlDeliveryConfig extends BaseDelivery implements Delive
 		configuration << new TokenTemplate(debugLoggingSearchTemplate, debugLoggingTemplate, Pattern.MULTILINE)
 		deployConfiguration configurationTokens(), currentAuthdaemonConfiguration, configuration, authdaemonFile
 		log.configurationDeployed this, authdaemonFile
+		configuration = []
+		configuration << new TokenTemplate(mysqlServerSearchTemplate, mysqlServerTemplate, Pattern.MULTILINE)
+		configuration << new TokenTemplate(mysqlUsernameSearchTemplate, mysqlUsernameTemplate, Pattern.MULTILINE)
+		configuration << new TokenTemplate(mysqlPasswordSearchTemplate, mysqlPasswordTemplate, Pattern.MULTILINE)
+		deployConfiguration configurationTokens(), currentAuthdaemonConfiguration, configuration, authdaemonFile
+		log.configurationDeployed this, authdaemonFile
 	}
 
 	/**
@@ -102,6 +108,30 @@ abstract class CourierMysqlDeliveryConfig extends BaseDelivery implements Delive
 
 	String getDebugLoggingTemplate() {
 		authTemplate.getText(true, "debugLogging", "level", service.debugLogging)
+	}
+
+	String getMysqlServerSearchTemplate() {
+		authTemplate.getText(true, "mysqlServerSearch")
+	}
+
+	String getMysqlServerTemplate() {
+		authTemplate.getText(true, "mysqlServer", "server", service.database.database)
+	}
+
+	String getMysqlUsernameSearchTemplate() {
+		authTemplate.getText(true, "mysqlUsernameSearch")
+	}
+
+	String getMysqlUsernameTemplate() {
+		authTemplate.getText(true, "mysqlUsername", "name", service.database.user)
+	}
+
+	String getMysqlPasswordSearchTemplate() {
+		authTemplate.getText(true, "mysqlPasswordSearch")
+	}
+
+	String getMysqlPasswordTemplate() {
+		authTemplate.getText(true, "mysqlPassword", "password", service.database.password)
 	}
 
 	/**

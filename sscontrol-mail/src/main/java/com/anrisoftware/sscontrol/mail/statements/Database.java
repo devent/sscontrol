@@ -1,22 +1,24 @@
 /*
  * Copyright 2013 Erwin Müller <erwin.mueller@deventm.org>
- *
+ * 
  * This file is part of sscontrol-mail.
- *
+ * 
  * sscontrol-mail is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published by the
  * Free Software Foundation, either version 3 of the License, or (at your
  * option) any later version.
- *
- * sscontrol-mail is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
- * for more details.
- *
+ * 
+ * sscontrol-mail is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more
+ * details.
+ * 
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-mail. If not, see <http://www.gnu.org/licenses/>.
  */
 package com.anrisoftware.sscontrol.mail.statements;
+
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -32,41 +34,55 @@ import com.google.inject.assistedinject.Assisted;
  */
 public class Database {
 
-	private final DatabaseLogger log;
+	private DatabaseLogger log;
 
-	private final String database;
+	private String database;
 
 	private String user;
 
 	private String password;
 
+	private Map<String, Object> args;
+
 	/**
-	 * @see DatabaseFactory#create(String)
+	 * @see DatabaseFactory#create(Map, String)
 	 */
 	@Inject
-	Database(DatabaseLogger logger, @Assisted String database) {
+	Database(@Assisted Map<String, Object> args, @Assisted String name) {
+		this.args = args;
+		this.database = name;
+	}
+
+	@Inject
+	void setDatabaseLogger(DatabaseLogger logger) {
 		this.log = logger;
-		log.checkDatabase(database);
-		this.database = database;
+		setDatabase(database);
+		setUser(args.get("user"));
+		setPassword(args.get("password"));
+		args = null;
+	}
+
+	private void setDatabase(Object object) {
+		log.checkDatabase(object);
+		this.database = object.toString();
 	}
 
 	public String getDatabase() {
 		return database;
 	}
 
-	public Database user(String user) {
-		this.user = user;
-		log.userSet(this, user);
-		return this;
+	private void setUser(Object object) {
+		log.checkUser(object);
+		this.user = object.toString();
 	}
 
 	public String getUser() {
 		return user;
 	}
 
-	public void password(String password) {
-		this.password = password;
-		log.passwordSet(this, password);
+	private void setPassword(Object object) {
+		log.checkPassword(object);
+		this.password = object.toString();
 	}
 
 	public String getPassword() {

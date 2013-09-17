@@ -411,9 +411,9 @@ public class MailServiceImpl extends AbstractService {
 		return resetDomains;
 	}
 
-	public Database database(String database) {
-		this.database = databaseFactory.create(database);
-		return this.database;
+	public void database(Map<String, Object> args, String name) {
+		this.database = databaseFactory.create(args, name);
+		log.databaseSet(this, database);
 	}
 
 	public Database getDatabase() {

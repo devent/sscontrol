@@ -1,18 +1,18 @@
 /*
  * Copyright 2013 Erwin Müller <erwin.mueller@deventm.org>
- *
+ * 
  * This file is part of sscontrol-mail.
- *
+ * 
  * sscontrol-mail is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published by the
  * Free Software Foundation, either version 3 of the License, or (at your
  * option) any later version.
- *
- * sscontrol-mail is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
- * for more details.
- *
+ * 
+ * sscontrol-mail is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more
+ * details.
+ * 
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-mail. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -70,6 +70,8 @@ public class MailServiceImpl extends AbstractService {
 
 	private final CertificateFileFactory certificateFileFactory;
 
+	private int debugLogging;
+
 	private String domainName;
 
 	private String origin;
@@ -107,6 +109,7 @@ public class MailServiceImpl extends AbstractService {
 			CertificateFileFactory certificateFileFactory,
 			DomainFactory domainFactory) {
 		this.log = logger;
+		this.debugLogging = 0;
 		this.bindAddressesFactory = bindAddressesFactory;
 		this.masqueradeDomains = masqueradeDomains;
 		this.certificateFileFactory = certificateFileFactory;
@@ -167,6 +170,17 @@ public class MailServiceImpl extends AbstractService {
 	 */
 	public Service mail(Object statements) {
 		return this;
+	}
+
+	public void debug(Map<String, Object> args) {
+		Integer level = (Integer) args.get("logging");
+		log.checkDebugLevel(this, level);
+		this.debugLogging = level;
+		log.debugLevelSet(this, level);
+	}
+
+	public int getDebugLogging() {
+		return debugLogging;
 	}
 
 	/**

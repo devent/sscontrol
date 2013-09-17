@@ -1,18 +1,18 @@
 /*
  * Copyright 2013 Erwin Müller <erwin.mueller@deventm.org>
- *
+ * 
  * This file is part of sscontrol-mail.
- *
+ * 
  * sscontrol-mail is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published by the
  * Free Software Foundation, either version 3 of the License, or (at your
  * option) any later version.
- *
- * sscontrol-mail is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
- * for more details.
- *
+ * 
+ * sscontrol-mail is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more
+ * details.
+ * 
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-mail. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -24,6 +24,9 @@ import static com.anrisoftware.sscontrol.mail.service.MailServiceImplLogger._.bi
 import static com.anrisoftware.sscontrol.mail.service.MailServiceImplLogger._.bind_addresses_set_info;
 import static com.anrisoftware.sscontrol.mail.service.MailServiceImplLogger._.certificate_set;
 import static com.anrisoftware.sscontrol.mail.service.MailServiceImplLogger._.certificate_set_info;
+import static com.anrisoftware.sscontrol.mail.service.MailServiceImplLogger._.debug_level_null;
+import static com.anrisoftware.sscontrol.mail.service.MailServiceImplLogger._.debug_level_set_debug;
+import static com.anrisoftware.sscontrol.mail.service.MailServiceImplLogger._.debug_level_set_info;
 import static com.anrisoftware.sscontrol.mail.service.MailServiceImplLogger._.destination_add;
 import static com.anrisoftware.sscontrol.mail.service.MailServiceImplLogger._.destination_add_info;
 import static com.anrisoftware.sscontrol.mail.service.MailServiceImplLogger._.destination_null;
@@ -100,7 +103,13 @@ class MailServiceImplLogger extends AbstractLogger {
 		reset_domain_set_debug("Reset domains {} set for {}."),
 
 		reset_domain_set_info(
-				"Reset domains {}, users {}, aliases {} set for {}.");
+				"Reset domains {}, users {}, aliases {} set for {}."),
+
+		debug_level_null("Debug level must not be null for {}."),
+
+		debug_level_set_debug("Debug level {} set for {}."),
+
+		debug_level_set_info("Debug level {} set for mail service.");
 
 		private String name;
 
@@ -200,6 +209,18 @@ class MailServiceImplLogger extends AbstractLogger {
 			info(reset_domain_set_info, reset.isResetDomains(),
 					reset.isResetUsers(), reset.isResetAliases(),
 					service.getName());
+		}
+	}
+
+	void checkDebugLevel(MailServiceImpl service, Integer level) {
+		notNull(level, debug_level_null.toString(), service);
+	}
+
+	void debugLevelSet(MailServiceImpl service, Integer level) {
+		if (isDebugEnabled()) {
+			debug(debug_level_set_debug, level, service);
+		} else {
+			info(debug_level_set_info, level);
 		}
 	}
 

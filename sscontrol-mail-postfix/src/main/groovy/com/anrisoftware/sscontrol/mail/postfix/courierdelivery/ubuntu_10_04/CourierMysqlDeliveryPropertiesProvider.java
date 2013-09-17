@@ -17,7 +17,7 @@
  * along with sscontrol-mail-postfix. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.mail.postfix.mysqlstorage.ubuntu_10_04;
+package com.anrisoftware.sscontrol.mail.postfix.courierdelivery.ubuntu_10_04;
 
 import java.net.URL;
 
@@ -26,10 +26,10 @@ import javax.inject.Singleton;
 import com.anrisoftware.propertiesutils.AbstractContextPropertiesProvider;
 
 /**
- * MySQL/storage Ubuntu 10.04 properties provider.
+ * Courier/MySQL/delivery Ubuntu 10.04 properties provider.
  * 
  * <ul>
- * <li>{@code /postfix_mysql_ubuntu_10_04.properties}
+ * <li>{@code /postfix_couriermysqldelivery_ubuntu_10_04.properties}
  * </ul>
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
@@ -37,13 +37,13 @@ import com.anrisoftware.propertiesutils.AbstractContextPropertiesProvider;
  */
 @Singleton
 @SuppressWarnings("serial")
-public class MysqlStoragePropertiesProvider extends
+public class CourierMysqlDeliveryPropertiesProvider extends
 		AbstractContextPropertiesProvider {
 
-	private static final URL RESOURCE = MysqlStoragePropertiesProvider.class
-			.getResource("/postfix_mysqlstorage_ubuntu_10_04.properties");
+	private static final URL RESOURCE = CourierMysqlDeliveryPropertiesProvider.class
+			.getResource("/postfix_couriermysqldelivery_ubuntu_10_04.properties");
 
-	MysqlStoragePropertiesProvider() {
-		super(MysqlStoragePropertiesProvider.class, RESOURCE);
+	CourierMysqlDeliveryPropertiesProvider() {
+		super(CourierMysqlDeliveryPropertiesProvider.class, RESOURCE);
 	}
 }

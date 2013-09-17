@@ -1,27 +1,30 @@
 /*
  * Copyright 2013 Erwin Müller <erwin.mueller@deventm.org>
- *
+ * 
  * This file is part of sscontrol-mail-postfix.
- *
- * sscontrol-mail-postfix is free software: you can redistribute it and/or modify it
- * under the terms of the GNU Affero General Public License as published by the
- * Free Software Foundation, either version 3 of the License, or (at your
- * option) any later version.
- *
+ * 
+ * sscontrol-mail-postfix is free software: you can redistribute it and/or
+ * modify it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the License,
+ * or (at your option) any later version.
+ * 
  * sscontrol-mail-postfix is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
  * for more details.
- *
+ * 
  * You should have received a copy of the GNU Affero General Public License
- * along with sscontrol-mail-postfix. If not, see <http://www.gnu.org/licenses/>.
+ * along with sscontrol-mail-postfix. If not, see
+ * <http://www.gnu.org/licenses/>.
  */
 package com.anrisoftware.sscontrol.mail.postfix.script.ubuntu_10_04;
 
 import static com.google.inject.multibindings.MapBinder.newMapBinder;
 import groovy.lang.Script;
 
+import com.anrisoftware.sscontrol.mail.postfix.courierdelivery.ubuntu_10_04.UbuntuCourierMysqlDeliveryConfig;
 import com.anrisoftware.sscontrol.mail.postfix.hashstorage.ubuntu_10_04.UbuntuHashStorageConfig;
+import com.anrisoftware.sscontrol.mail.postfix.linux.DeliveryConfig;
 import com.anrisoftware.sscontrol.mail.postfix.linux.StorageConfig;
 import com.anrisoftware.sscontrol.mail.postfix.mysqlstorage.ubuntu_10_04.UbuntuMysqlStorageConfig;
 import com.google.inject.AbstractModule;
@@ -39,6 +42,7 @@ class UbuntuModule extends AbstractModule {
 	protected void configure() {
 		bindScripts();
 		bindStorage();
+		bindDelivery();
 	}
 
 	private void bindScripts() {
@@ -54,5 +58,12 @@ class UbuntuModule extends AbstractModule {
 				.to(UbuntuHashStorageConfig.class);
 		binder.addBinding("mysql.ubuntu_10_04").to(
 				UbuntuMysqlStorageConfig.class);
+	}
+
+	private void bindDelivery() {
+		MapBinder<String, DeliveryConfig> binder;
+		binder = newMapBinder(binder(), String.class, DeliveryConfig.class);
+		binder.addBinding("courier.mysql.ubuntu_10_04").to(
+				UbuntuCourierMysqlDeliveryConfig.class);
 	}
 }

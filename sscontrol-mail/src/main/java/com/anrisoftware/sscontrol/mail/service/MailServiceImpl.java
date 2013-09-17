@@ -43,6 +43,7 @@ import com.anrisoftware.sscontrol.core.api.ServiceScriptFactory;
 import com.anrisoftware.sscontrol.core.api.ServiceScriptInfo;
 import com.anrisoftware.sscontrol.core.service.AbstractService;
 import com.anrisoftware.sscontrol.core.yesno.YesNoFlag;
+import com.anrisoftware.sscontrol.mail.debuglogging.DebugLoggingLevel;
 import com.anrisoftware.sscontrol.mail.resetdomains.ResetDomains;
 import com.anrisoftware.sscontrol.mail.resetdomains.ResetDomainsFactory;
 import com.anrisoftware.sscontrol.mail.statements.BindAddresses;
@@ -70,7 +71,7 @@ public class MailServiceImpl extends AbstractService {
 
 	private final CertificateFileFactory certificateFileFactory;
 
-	private int debugLogging;
+	private DebugLoggingLevel debugLogging;
 
 	private String domainName;
 
@@ -109,7 +110,7 @@ public class MailServiceImpl extends AbstractService {
 			CertificateFileFactory certificateFileFactory,
 			DomainFactory domainFactory) {
 		this.log = logger;
-		this.debugLogging = 0;
+		this.debugLogging = DebugLoggingLevel.OFF;
 		this.bindAddressesFactory = bindAddressesFactory;
 		this.masqueradeDomains = masqueradeDomains;
 		this.certificateFileFactory = certificateFileFactory;
@@ -175,11 +176,11 @@ public class MailServiceImpl extends AbstractService {
 	public void debug(Map<String, Object> args) {
 		Integer level = (Integer) args.get("logging");
 		log.checkDebugLevel(this, level);
-		this.debugLogging = level;
+		this.debugLogging = new DebugLoggingLevel(level);
 		log.debugLevelSet(this, level);
 	}
 
-	public int getDebugLogging() {
+	public DebugLoggingLevel getDebugLogging() {
 		return debugLogging;
 	}
 

@@ -16,37 +16,34 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-mail-postfix. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.mail.postfix.mysqlstorage.linux;
+package com.anrisoftware.sscontrol.mail.postfix.script.linux
 
-import java.net.URL;
-
-import javax.inject.Inject;
-import javax.inject.Singleton;
-
-import com.anrisoftware.propertiesutils.AbstractContextPropertiesProvider;
-import com.anrisoftware.sscontrol.mail.postfix.linux.PostfixPropertiesProvider;
+import com.anrisoftware.propertiesutils.ContextProperties
 
 /**
- * Mysql/storage properties provider.
- * 
- * <ul>
- * <li>{@code /mysql_postfix.properties}
- * </ul>
- * 
+ * Sets the parent script for the delivery.
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-@Singleton
-@SuppressWarnings("serial")
-public class MysqlStoragePropertiesProvider extends AbstractContextPropertiesProvider {
+abstract class BaseDelivery {
 
-	private static final URL RESOURCE = MysqlStoragePropertiesProvider.class
-			.getResource("/mysql_postfix.properties");
+	BasePostfixScript script
 
-	@Inject
-	MysqlStoragePropertiesProvider(PostfixPropertiesProvider postfixProperties) {
-		super(MysqlStoragePropertiesProvider.class, RESOURCE);
-		setDefaultProperties(postfixProperties.get());
+	void setScript(BasePostfixScript script) {
+		this.script = script
 	}
 
+	def propertyMissing(String name) {
+		script.getProperty name
+	}
+
+	def methodMissing(String name, def args) {
+		script.invokeMethod name, args
+	}
+
+	/**
+	 * Returns the delivery/properties.
+	 */
+	abstract ContextProperties getDeliveryProperties()
 }

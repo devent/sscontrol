@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-mail-postfix. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.mail.postfix.mysqlstorage.ubuntu_10_04
+package com.anrisoftware.sscontrol.mail.postfix.couriermysqldeliver.ubuntu_10_04
 
 import com.anrisoftware.sscontrol.mail.postfix.script.ubuntu_10_04.UbuntuResources
 
@@ -38,5 +38,8 @@ profile "ubuntu_10_04", {
 		mailname_file UbuntuResources.mailname.asFile(tmp)
 		configuration_directory UbuntuResources.confDir.asFile(tmp)
 		mailbox_base_directory UbuntuResources.mailboxBaseDir.asFile(tmp)
+		// courier
+		courier_restart_command CourierMysqlResources.courierRestartCommand.asFile(tmp)
+		courier_configuration_directory CourierMysqlResources.configDir.asFile(tmp)
 	}
 }

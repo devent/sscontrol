@@ -33,6 +33,7 @@ import com.anrisoftware.resources.templates.api.Templates
 import com.anrisoftware.sscontrol.core.service.LinuxScript
 import com.anrisoftware.sscontrol.mail.postfix.linux.BasePostfixScriptLogger
 import com.anrisoftware.sscontrol.mail.postfix.linux.BindAddressesRenderer
+import com.anrisoftware.sscontrol.mail.postfix.linux.DeliveryConfig
 import com.anrisoftware.sscontrol.mail.postfix.linux.DurationRenderer
 import com.anrisoftware.sscontrol.mail.postfix.linux.PostfixPropertiesProvider
 import com.anrisoftware.sscontrol.mail.postfix.linux.StorageConfig
@@ -91,8 +92,17 @@ abstract class BasePostfixScript extends LinuxScript {
 	@Inject
 	PostfixPropertiesProvider postfixPropertiesProvider
 
+	/**
+	 * Storages configuration.
+	 */
 	@Inject
 	Map<String, Provider<StorageConfig>> storages
+
+	/**
+	 * Storages configuration.
+	 */
+	@Inject
+	Map<String, Provider<DeliveryConfig>> deliveries
 
 	/**
 	 * Returns the profile name of the script.
@@ -113,6 +123,7 @@ abstract class BasePostfixScript extends LinuxScript {
 		deployMain()
 		reconfigureFiles()
 		deployStorage()
+		deployDelivery()
 	}
 
 	/**
@@ -130,6 +141,17 @@ abstract class BasePostfixScript extends LinuxScript {
 		def config = provider.get()
 		config.script = this
 		config.deployStorage()
+	}
+
+	/**
+	 * Deploy delivery configuration.
+	 */
+	def deployDelivery() {
+		def provider = deliveries["${deliveryName}.${storageName}.${profileName}"]
+		log.checkDeliveryConfig provider, this, deliveryName, storageName, profileName
+		def config = provider.get()
+		config.script = this
+		config.deployDelivery()
 	}
 
 	/**
@@ -218,6 +240,19 @@ abstract class BasePostfixScript extends LinuxScript {
 	 */
 	String getStorageName() {
 		profileProperty "storage"
+	}
+
+	/**
+	 * Returns the delivery method.
+	 *
+	 * <ul>
+	 * <li>profile property {@code "delivery"}</li>
+	 * </ul>
+	 *
+	 * @see #getDefaultProperties()
+	 */
+	String getDeliveryName() {
+		profileProperty "delivery"
 	}
 
 	/**

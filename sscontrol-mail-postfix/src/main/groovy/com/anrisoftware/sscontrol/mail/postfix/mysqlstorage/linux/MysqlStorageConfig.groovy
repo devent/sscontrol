@@ -45,9 +45,6 @@ abstract class MysqlStorageConfig extends BaseStorage implements StorageConfig {
 	@Inject
 	MysqlStorageConfigLogger log
 
-	@Inject
-	MysqlStoragePropertiesProvider mysqlStorageProperties
-
 	/**
 	 * Renderer for {@code inet_interfaces}.
 	 */

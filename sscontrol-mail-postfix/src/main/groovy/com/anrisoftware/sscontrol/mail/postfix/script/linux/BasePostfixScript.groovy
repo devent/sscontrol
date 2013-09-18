@@ -147,6 +147,9 @@ abstract class BasePostfixScript extends LinuxScript {
 	 * Deploy delivery configuration.
 	 */
 	def deployDelivery() {
+		if (deliveryName == null) {
+			return
+		}
 		def provider = deliveries["${deliveryName}.${storageName}.${profileName}"]
 		log.checkDeliveryConfig provider, this, deliveryName, storageName, profileName
 		def config = provider.get()

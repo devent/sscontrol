@@ -24,7 +24,6 @@ profile "ubuntu_10_04", {
 	mail {
 		service "postfix"
 		storage "mysql"
-		delivery "courier"
 		install_command "${UbuntuResources.aptitudeCommand.asFile(tmp)} update && ${UbuntuResources.aptitudeCommand.asFile(tmp)} install"
 		restart_command UbuntuResources.restartCommand.asFile(tmp)
 		chown_command UbuntuResources.chownCommand.asFile(tmp)

@@ -1,5 +1,3 @@
-
-
 /*
  * Copyright 2013 Erwin Müller <erwin.mueller@deventm.org>
  *
@@ -20,9 +18,8 @@
  */
 package com.anrisoftware.sscontrol.mail.postfix.courierdelivery.linux
 
+import static java.util.regex.Pattern.*
 import static org.apache.commons.io.FileUtils.*
-
-import java.util.regex.Pattern
 
 import javax.inject.Inject
 
@@ -73,16 +70,28 @@ abstract class CourierMysqlDeliveryConfig extends BaseDelivery implements Delive
 	 */
 	void deployConfig() {
 		def configuration = []
-		configuration << new TokenTemplate(moduleListSearchTemplate, moduleListTemplate, Pattern.MULTILINE)
-		configuration << new TokenTemplate(debugLoggingSearchTemplate, debugLoggingTemplate, Pattern.MULTILINE)
+		configuration << new TokenTemplate(moduleListSearchTemplate, moduleListTemplate, MULTILINE)
+		configuration << new TokenTemplate(debugLoggingSearchTemplate, debugLoggingTemplate, MULTILINE)
 		deployConfiguration configurationTokens(), currentAuthdaemonConfiguration, configuration, authdaemonFile
 		log.configurationDeployed this, authdaemonFile
 		configuration = []
-		configuration << new TokenTemplate(mysqlServerSearchTemplate, mysqlServerTemplate, Pattern.MULTILINE)
-		configuration << new TokenTemplate(mysqlUsernameSearchTemplate, mysqlUsernameTemplate, Pattern.MULTILINE)
-		configuration << new TokenTemplate(mysqlPasswordSearchTemplate, mysqlPasswordTemplate, Pattern.MULTILINE)
-		deployConfiguration configurationTokens(), currentAuthdaemonConfiguration, configuration, authdaemonFile
-		log.configurationDeployed this, authdaemonFile
+		configuration << new TokenTemplate(mysqlServerSearchTemplate, mysqlServerTemplate, MULTILINE)
+		configuration << new TokenTemplate(mysqlPortSearchTemplate, mysqlPortTemplate, MULTILINE)
+		configuration << new TokenTemplate(mysqlDatabaseSearchTemplate, mysqlDatabaseTemplate, MULTILINE)
+		configuration << new TokenTemplate(mysqlUsernameSearchTemplate, mysqlUsernameTemplate, MULTILINE)
+		configuration << new TokenTemplate(mysqlPasswordSearchTemplate, mysqlPasswordTemplate, MULTILINE)
+		configuration << new TokenTemplate(mysqlUserTableSearchTemplate, mysqlUserTableTemplate, MULTILINE)
+		configuration << new TokenTemplate(mysqlCryptPwfieldSearchTemplate, mysqlCryptPwfieldTemplate, MULTILINE)
+		configuration << new TokenTemplate(mysqlClearPwfieldSearchTemplate, mysqlClearPwfieldTemplate, MULTILINE)
+		configuration << new TokenTemplate(mysqlUidFieldSearchTemplate, mysqlUidFieldTemplate, MULTILINE)
+		configuration << new TokenTemplate(mysqlGidFieldSearchTemplate, mysqlGidFieldTemplate, MULTILINE)
+		configuration << new TokenTemplate(mysqlLoginFieldSearchTemplate, mysqlLoginFieldTemplate, MULTILINE)
+		configuration << new TokenTemplate(mysqlHomeFieldSearchTemplate, mysqlHomeFieldTemplate, MULTILINE)
+		configuration << new TokenTemplate(mysqlNameFieldSearchTemplate, mysqlNameFieldTemplate, MULTILINE)
+		configuration << new TokenTemplate(mysqlMaildirFieldSearchTemplate, mysqlMaildirFieldTemplate, MULTILINE)
+		configuration << new TokenTemplate(mysqlWhereClauseSearchTemplate, mysqlWhereClauseTemplate, MULTILINE)
+		deployConfiguration configurationTokens(), currentAuthmysqlConfiguration, configuration, authmysqlFile
+		log.configurationDeployed this, authmysqlFile
 	}
 
 	/**
@@ -115,7 +124,23 @@ abstract class CourierMysqlDeliveryConfig extends BaseDelivery implements Delive
 	}
 
 	String getMysqlServerTemplate() {
-		authTemplate.getText(true, "mysqlServer", "server", service.database.database)
+		authTemplate.getText(true, "mysqlServer", "server", service.database.server)
+	}
+
+	String getMysqlPortSearchTemplate() {
+		authTemplate.getText(true, "mysqlPortSearch")
+	}
+
+	String getMysqlPortTemplate() {
+		authTemplate.getText(true, "mysqlPort", "port", service.database.port)
+	}
+
+	String getMysqlDatabaseSearchTemplate() {
+		authTemplate.getText(true, "mysqlDatabaseSearch")
+	}
+
+	String getMysqlDatabaseTemplate() {
+		authTemplate.getText(true, "mysqlDatabase", "name", service.database.database)
 	}
 
 	String getMysqlUsernameSearchTemplate() {
@@ -134,6 +159,86 @@ abstract class CourierMysqlDeliveryConfig extends BaseDelivery implements Delive
 		authTemplate.getText(true, "mysqlPassword", "password", service.database.password)
 	}
 
+	String getMysqlUserTableSearchTemplate() {
+		authTemplate.getText(true, "mysqlUserTableSearch")
+	}
+
+	String getMysqlUserTableTemplate() {
+		authTemplate.getText(true, "mysqlUserTable", "table", "users")
+	}
+
+	String getMysqlCryptPwfieldSearchTemplate() {
+		authTemplate.getText(true, "mysqlCryptPwfieldSearch")
+	}
+
+	String getMysqlCryptPwfieldTemplate() {
+		authTemplate.getText(true, "mysqlCryptPwfield", "field", "crypt")
+	}
+
+	String getMysqlClearPwfieldSearchTemplate() {
+		authTemplate.getText(true, "mysqlClearPwfieldSearch")
+	}
+
+	String getMysqlClearPwfieldTemplate() {
+		authTemplate.getText(true, "mysqlClearPwfield")
+	}
+
+	String getMysqlUidFieldSearchTemplate() {
+		authTemplate.getText(true, "mysqlUidFieldSearch")
+	}
+
+	String getMysqlUidFieldTemplate() {
+		authTemplate.getText(true, "mysqlUidField", "field", "uid")
+	}
+
+	String getMysqlGidFieldSearchTemplate() {
+		authTemplate.getText(true, "mysqlGidFieldSearch")
+	}
+
+	String getMysqlGidFieldTemplate() {
+		authTemplate.getText(true, "mysqlGidField", "field", "gid")
+	}
+
+	String getMysqlLoginFieldSearchTemplate() {
+		authTemplate.getText(true, "mysqlLoginFieldSearch")
+	}
+
+	String getMysqlLoginFieldTemplate() {
+		authTemplate.getText(true, "mysqlLoginField", "field", "login")
+	}
+
+	String getMysqlHomeFieldSearchTemplate() {
+		authTemplate.getText(true, "mysqlHomeFieldSearch")
+	}
+
+	String getMysqlHomeFieldTemplate() {
+		authTemplate.getText(true, "mysqlHomeField", "field", "home")
+	}
+
+	String getMysqlNameFieldSearchTemplate() {
+		authTemplate.getText(true, "mysqlNameFieldSearch")
+	}
+
+	String getMysqlNameFieldTemplate() {
+		authTemplate.getText(true, "mysqlNameField", "field", "name")
+	}
+
+	String getMysqlMaildirFieldSearchTemplate() {
+		authTemplate.getText(true, "mysqlMaildirFieldSearch")
+	}
+
+	String getMysqlMaildirFieldTemplate() {
+		authTemplate.getText(true, "mysqlMaildirField", "field", "concat(home,'/',maildir)")
+	}
+
+	String getMysqlWhereClauseSearchTemplate() {
+		authTemplate.getText(true, "mysqlWhereClauseSearch")
+	}
+
+	String getMysqlWhereClauseTemplate() {
+		authTemplate.getText(true, "mysqlWhereClause", "clause", "enabled=1")
+	}
+
 	/**
 	 * Returns the current {@code authdaemonrc} configuration. This is usually
 	 * the configuration file {@code /etc/courier/authdaemonrc}.
@@ -142,6 +247,16 @@ abstract class CourierMysqlDeliveryConfig extends BaseDelivery implements Delive
 	 */
 	String getCurrentAuthdaemonConfiguration() {
 		currentConfiguration authdaemonFile
+	}
+
+	/**
+	 * Returns the current {@code authmysqlrc} configuration. This is usually
+	 * the configuration file {@code /etc/courier/authmysqlrc}.
+	 *
+	 * @see #getMainFile()
+	 */
+	String getCurrentAuthmysqlConfiguration() {
+		currentConfiguration authmysqlFile
 	}
 
 	/**

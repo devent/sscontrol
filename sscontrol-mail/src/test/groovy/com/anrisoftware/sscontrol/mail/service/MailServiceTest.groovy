@@ -68,6 +68,8 @@ class MailServiceTest {
 		assert service.database.database == "maildb"
 		assert service.database.user == "root"
 		assert service.database.password == "password"
+		assert service.database.server == "localhost"
+		assert service.database.port == 663
 	}
 
 	static ubuntu1004Profile = MailServiceTest.class.getResource("Ubuntu_10_04Profile.groovy")

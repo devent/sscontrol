@@ -44,6 +44,10 @@ public class Database {
 
 	private Map<String, Object> args;
 
+	private String server;
+
+	private Integer port;
+
 	/**
 	 * @see DatabaseFactory#create(Map, String)
 	 */
@@ -59,7 +63,32 @@ public class Database {
 		setDatabase(database);
 		setUser(args.get("user"));
 		setPassword(args.get("password"));
+		setServer(args.get("server"));
+		setPort(args.get("port"));
 		args = null;
+	}
+
+	private void setPort(Object object) {
+		if (object == null) {
+			return;
+		}
+		this.port = (Integer) object;
+	}
+
+	public Integer getPort() {
+		return port;
+	}
+
+	private void setServer(Object object) {
+		if (object == null) {
+			return;
+		}
+		log.checkServer(object);
+		this.server = object.toString();
+	}
+
+	public String getServer() {
+		return server;
 	}
 
 	private void setDatabase(Object object) {
@@ -92,6 +121,7 @@ public class Database {
 	@Override
 	public String toString() {
 		return new ToStringBuilder(this).append("database", database)
-				.append("user", user).append("password", password).toString();
+				.append("user", user).append("password", password)
+				.append("server", server).append("port", port).toString();
 	}
 }

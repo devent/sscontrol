@@ -20,6 +20,8 @@ package com.anrisoftware.sscontrol.mail.statements;
 
 import static com.anrisoftware.sscontrol.mail.statements.DatabaseLogger._.database_null;
 import static com.anrisoftware.sscontrol.mail.statements.DatabaseLogger._.password_null;
+import static com.anrisoftware.sscontrol.mail.statements.DatabaseLogger._.port_null;
+import static com.anrisoftware.sscontrol.mail.statements.DatabaseLogger._.server_null;
 import static com.anrisoftware.sscontrol.mail.statements.DatabaseLogger._.user_null;
 import static org.apache.commons.lang3.Validate.notBlank;
 import static org.apache.commons.lang3.Validate.notNull;
@@ -45,7 +47,11 @@ class DatabaseLogger extends AbstractLogger {
 
 		password_null("Database password cannot be null."),
 
-		database_null("Database name cannot be null.");
+		database_null("Database name cannot be null."),
+
+		server_null("Database server cannot be null or blank."),
+
+		port_null("Database port cannot be null.");
 
 		private String name;
 
@@ -103,6 +109,14 @@ class DatabaseLogger extends AbstractLogger {
 
 	void checkDatabase(Object object) {
 		notBlank(object.toString(), database_null.toString());
+	}
+
+	void checkServer(Object object) {
+		notBlank(object.toString(), server_null.toString());
+	}
+
+	void checkPort(Object object) {
+		notNull(object, port_null.toString());
 	}
 
 }

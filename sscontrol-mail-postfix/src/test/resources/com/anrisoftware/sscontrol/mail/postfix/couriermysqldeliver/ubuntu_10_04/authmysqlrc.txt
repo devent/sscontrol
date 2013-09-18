@@ -23,9 +23,9 @@
 #
 # The server name, userid, and password used to log in.
 
-MYSQL_SERVER		localhost
-MYSQL_USERNAME		admin
-MYSQL_PASSWORD		admin
+MYSQL_SERVER        localhost
+MYSQL_USERNAME      admin
+MYSQL_PASSWORD      admin
 
 ##NAME: SSLINFO:0
 #
@@ -46,26 +46,26 @@ MYSQL_PASSWORD		admin
 # MYSQL_SOCKET can be used with MySQL version 3.22 or later, it specifies the
 # filesystem pipe used for the connection
 #
-# MYSQL_SOCKET		/var/run/mysqld/mysqld.sock
+# MYSQL_SOCKET      /var/run/mysqld/mysqld.sock
 
 ##NAME: MYSQL_PORT:0
 #
 # MYSQL_PORT can be used with MySQL version 3.22 or later to specify a port to
 # connect to.
 
-MYSQL_PORT		0
+MYSQL_PORT      0
 
 ##NAME: MYSQL_OPT:0
 #
 # Leave MYSQL_OPT as 0, unless you know what you're doing.
 
-MYSQL_OPT		0
+MYSQL_OPT       0
 
 ##NAME: MYSQL_DATABASE:0
 #
 # The name of the MySQL database we will open:
 
-MYSQL_DATABASE		mysql
+MYSQL_DATABASE      mysql
 
 #NAME: MYSQL_CHARACTER_SET:0
 #
@@ -78,9 +78,9 @@ MYSQL_DATABASE		mysql
 ##NAME: MYSQL_USER_TABLE:0
 #
 # The name of the table containing your user data.  See README.authmysqlrc
-# for the required fields in this table. 
+# for the required fields in this table.
 
-MYSQL_USER_TABLE	passwd
+MYSQL_USER_TABLE    passwd
 
 ##NAME: MYSQL_CRYPT_PWFIELD:0
 #
@@ -89,12 +89,12 @@ MYSQL_USER_TABLE	passwd
 # passwords go into MYSQL_CLEAR_PWFIELD.  Cleartext passwords allow
 # CRAM-MD5 authentication to be implemented.
 
-MYSQL_CRYPT_PWFIELD	crypt
+MYSQL_CRYPT_PWFIELD crypt
 
 ##NAME: MYSQL_CLEAR_PWFIELD:0
 #
 #
-# MYSQL_CLEAR_PWFIELD	clear
+# MYSQL_CLEAR_PWFIELD   clear
 
 ##NAME: MYSQL_DEFAULT_DOMAIN:0
 #
@@ -102,7 +102,7 @@ MYSQL_CRYPT_PWFIELD	crypt
 # we will look up 'user@DEFAULT_DOMAIN' instead.
 #
 #
-# DEFAULT_DOMAIN		example.com
+# DEFAULT_DOMAIN        example.com
 
 ##NAME: MYSQL_UID_FIELD:0
 #
@@ -110,13 +110,13 @@ MYSQL_CRYPT_PWFIELD	crypt
 #
 # MYSQL_UID_FIELD - contains the numerical userid of the account
 #
-MYSQL_UID_FIELD		uid
+MYSQL_UID_FIELD     uid
 
 ##NAME: MYSQL_GID_FIELD:0
 #
 # Numerical groupid of the account
 
-MYSQL_GID_FIELD		gid
+MYSQL_GID_FIELD     gid
 
 ##NAME: MYSQL_LOGIN_FIELD:0
 #
@@ -125,18 +125,18 @@ MYSQL_GID_FIELD		gid
 #  SELECT MYSQL_UID_FIELD, MYSQL_GID_FIELD, ... WHERE id='loginid'
 #
 
-MYSQL_LOGIN_FIELD	id
+MYSQL_LOGIN_FIELD   id
 
 ##NAME: MYSQL_HOME_FIELD:0
 #
 
-MYSQL_HOME_FIELD	home
+MYSQL_HOME_FIELD    home
 
 ##NAME: MYSQL_NAME_FIELD:0
 #
 # The user's name (optional)
 
-MYSQL_NAME_FIELD	name
+MYSQL_NAME_FIELD    name
 
 ##NAME: MYSQL_MAILDIR_FIELD:0
 #
@@ -147,7 +147,7 @@ MYSQL_NAME_FIELD	name
 # You still need to provide a MYSQL_HOME_FIELD, even if you uncomment this
 # out.
 #
-# MYSQL_MAILDIR_FIELD	maildir
+# MYSQL_MAILDIR_FIELD   maildir
 
 ##NAME: MYSQL_DEFAULTDELIVERY:0
 #
@@ -160,9 +160,9 @@ MYSQL_NAME_FIELD	name
 ##NAME: MYSQL_QUOTA_FIELD:0
 #
 # Define MYSQL_QUOTA_FIELD to be the name of the field that can optionally
-# specify a maildir quota.  See README.maildirquota for more information 
+# specify a maildir quota.  See README.maildirquota for more information
 #
-# MYSQL_QUOTA_FIELD	quota
+# MYSQL_QUOTA_FIELD quota
 
 ##NAME: MYSQL_AUXOPTIONS:0
 #
@@ -172,12 +172,12 @@ MYSQL_NAME_FIELD	name
 # "options", as given in INSTALL's description of the "Account OPTIONS"
 # setting.
 #
-# MYSQL_AUXOPTIONS_FIELD	auxoptions
+# MYSQL_AUXOPTIONS_FIELD    auxoptions
 #
 # You might want to try something like this, if you'd like to use a bunch
 # of individual fields, instead of a single text blob:
 #
-# MYSQL_AUXOPTIONS_FIELD	CONCAT("disableimap=",disableimap,",disablepop3=",disablepop3,",disablewebmail=",disablewebmail,",sharedgroup=",sharedgroup)
+# MYSQL_AUXOPTIONS_FIELD    CONCAT("disableimap=",disableimap,",disablepop3=",disablepop3,",disablewebmail=",disablewebmail,",sharedgroup=",sharedgroup)
 #
 # This will let you define fields called "disableimap", etc, with the end result
 # being something that the OPTIONS parser understands.
@@ -188,7 +188,7 @@ MYSQL_NAME_FIELD	name
 # This is optional, MYSQL_WHERE_CLAUSE can be basically set to an arbitrary
 # fixed string that is appended to the WHERE clause of our query
 #
-# MYSQL_WHERE_CLAUSE	server='mailhost.example.com'
+# MYSQL_WHERE_CLAUSE    server='mailhost.example.com'
 
 ##NAME: MYSQL_SELECT_CLAUSE:0
 #
@@ -208,7 +208,7 @@ MYSQL_NAME_FIELD	name
 # There are two variables, which you can use. Substitution will be made
 # for them, so you can put entered username (local part) and domain name
 # in the right place of your query. These variables are:
-#	 	$(local_part), $(domain), $(service)
+#       $(local_part), $(domain), $(service)
 #
 # If a $(domain) is empty (not given by the remote user) the default domain
 # name is used in its place.
@@ -223,22 +223,22 @@ MYSQL_NAME_FIELD	name
 # This example is a little bit modified adaptation of vmail-sql
 # database scheme:
 #
-# MYSQL_SELECT_CLAUSE	SELECT CONCAT(popbox.local_part, '@', popbox.domain_name),			\
-#			CONCAT('{MD5}', popbox.password_hash),		\
-#			popbox.clearpw,					\
-#			domain.uid,					\
-#			domain.gid,					\
-#			CONCAT(domain.path, '/', popbox.mbox_name),	\
-#			'',						\
-#			domain.quota,					\
-#			'',						\
-#			CONCAT("disableimap=",disableimap,",disablepop3=",    \
+# MYSQL_SELECT_CLAUSE   SELECT CONCAT(popbox.local_part, '@', popbox.domain_name),          \
+#           CONCAT('{MD5}', popbox.password_hash),      \
+#           popbox.clearpw,                 \
+#           domain.uid,                 \
+#           domain.gid,                 \
+#           CONCAT(domain.path, '/', popbox.mbox_name), \
+#           '',                     \
+#           domain.quota,                   \
+#           '',                     \
+#           CONCAT("disableimap=",disableimap,",disablepop3=",    \
 #                              disablepop3,",disablewebmail=",disablewebmail, \
 #                              ",sharedgroup=",sharedgroup)             \
-#			FROM popbox, domain				\
-#			WHERE popbox.local_part = '$(local_part)'	\
-#			AND popbox.domain_name = '$(domain)'		\
-#			AND popbox.domain_name = domain.domain_name
+#           FROM popbox, domain             \
+#           WHERE popbox.local_part = '$(local_part)'   \
+#           AND popbox.domain_name = '$(domain)'        \
+#           AND popbox.domain_name = domain.domain_name
 
 
 ##NAME: MYSQL_ENUMERATE_CLAUSE:1
@@ -249,16 +249,16 @@ MYSQL_NAME_FIELD	name
 # should return the following fields: name, uid, gid, homedir, maildir, options
 #
 # Example:
-# MYSQL_ENUMERATE_CLAUSE	SELECT CONCAT(popbox.local_part, '@', popbox.domain_name),			\
-#			domain.uid,					\
-#			domain.gid,					\
-#			CONCAT(domain.path, '/', popbox.mbox_name),	\
-#			'',						\
-#			CONCAT('sharedgroup=', sharedgroup)		\
-#			FROM popbox, domain				\
-#			WHERE popbox.local_part = '$(local_part)'	\
-#			AND popbox.domain_name = '$(domain)'		\
-#			AND popbox.domain_name = domain.domain_name
+# MYSQL_ENUMERATE_CLAUSE    SELECT CONCAT(popbox.local_part, '@', popbox.domain_name),          \
+#           domain.uid,                 \
+#           domain.gid,                 \
+#           CONCAT(domain.path, '/', popbox.mbox_name), \
+#           '',                     \
+#           CONCAT('sharedgroup=', sharedgroup)     \
+#           FROM popbox, domain             \
+#           WHERE popbox.local_part = '$(local_part)'   \
+#           AND popbox.domain_name = '$(domain)'        \
+#           AND popbox.domain_name = domain.domain_name
 
 
 
@@ -273,16 +273,16 @@ MYSQL_NAME_FIELD	name
 # There are four variables, which you can use. Substitution will be made
 # for them, so you can put entered username (local part) and domain name
 # in the right place of your query. There variables are:
-# 	$(local_part) , $(domain) , $(newpass) , $(newpass_crypt)
+#   $(local_part) , $(domain) , $(newpass) , $(newpass_crypt)
 #
 # If a $(domain) is empty (not given by the remote user) the default domain
 # name is used in its place.
 # $(newpass) contains plain password
 # $(newpass_crypt) contains its crypted form
 #
-# MYSQL_CHPASS_CLAUSE	UPDATE	popbox					\
-#			SET	clearpw='$(newpass)',			\
-#				password_hash='$(newpass_crypt)'	\
-#			WHERE	local_part='$(local_part)'		\
-#			AND	domain_name='$(domain)'
+# MYSQL_CHPASS_CLAUSE   UPDATE  popbox                  \
+#           SET clearpw='$(newpass)',           \
+#               password_hash='$(newpass_crypt)'    \
+#           WHERE   local_part='$(local_part)'      \
+#           AND domain_name='$(domain)'
 #

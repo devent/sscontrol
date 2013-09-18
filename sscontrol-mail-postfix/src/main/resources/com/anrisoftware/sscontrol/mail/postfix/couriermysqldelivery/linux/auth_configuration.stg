@@ -1,0 +1,135 @@
+moduleListSearch() ::= <%
+^#?\s*authmodulelist\s*=\s*".*"$
+%>
+
+moduleList(modules) ::= <%
+authmodulelist="<modules;separator=" ">"
+%>
+
+debugLoggingSearch() ::= <%
+^#?\s*DEBUG_LOGIN\s*=\s*\d*$
+%>
+
+debugLogging(level) ::= <%
+DEBUG_LOGIN=<level>
+%>
+
+mysqlServerSearch() ::= <%
+^#?\s*MYSQL_SERVER\s*\w*$
+%>
+
+mysqlServer(server) ::= <%
+MYSQL_SERVER <if(server)><server><else>localhost<endif>
+%>
+
+mysqlPortSearch() ::= <%
+^#?\s*MYSQL_PORT\s*\d*$
+%>
+
+mysqlPort(port) ::= <%
+MYSQL_PORT <if(port)><port><else>0<endif>
+%>
+
+mysqlDatabaseSearch() ::= <%
+^#?\s*MYSQL_DATABASE\s*\w*$
+%>
+
+mysqlDatabase(name) ::= <%
+MYSQL_DATABASE <name>
+%>
+
+mysqlUsernameSearch() ::= <%
+^#?\s*MYSQL_USERNAME\s*\w*$
+%>
+
+mysqlUsername(name) ::= <%
+MYSQL_USERNAME <name>
+%>
+
+mysqlPasswordSearch() ::= <%
+^#?\s*MYSQL_PASSWORD\s*\w*$
+%>
+
+mysqlPassword(password) ::= <%
+MYSQL_PASSWORD <password>
+%>
+
+mysqlUserTableSearch() ::= <%
+^#?\s*MYSQL_USER_TABLE\s*\w*$
+%>
+
+mysqlUserTable(table) ::= <%
+MYSQL_USER_TABLE <table>
+%>
+
+mysqlCryptPwfieldSearch() ::= <%
+^#?\s*MYSQL_CRYPT_PWFIELD\s*\w*$
+%>
+
+mysqlCryptPwfield(field) ::= <%
+MYSQL_CRYPT_PWFIELD <field>
+%>
+
+mysqlClearPwfieldSearch() ::= <%
+^#?\s*MYSQL_CLEAR_PWFIELD\s*\w*$
+%>
+
+mysqlClearPwfield() ::= <%
+# MYSQL_CLEAR_PWFIELD clear
+%>
+
+mysqlUidFieldSearch() ::= <%
+^#?\s*MYSQL_UID_FIELD\s*\w*$
+%>
+
+mysqlUidField(field) ::= <%
+MYSQL_UID_FIELD <field>
+%>
+
+mysqlGidFieldSearch() ::= <%
+^#?\s*MYSQL_GID_FIELD\s*\w*$
+%>
+
+mysqlGidField(field) ::= <%
+MYSQL_GID_FIELD <field>
+%>
+
+mysqlLoginFieldSearch() ::= <%
+^#?\s*MYSQL_LOGIN_FIELD\s*\w*$
+%>
+
+mysqlLoginField(field) ::= <%
+MYSQL_LOGIN_FIELD <field>
+%>
+
+mysqlHomeFieldSearch() ::= <%
+^#?\s*MYSQL_HOME_FIELD\s*\w*$
+%>
+
+mysqlHomeField(field) ::= <%
+MYSQL_HOME_FIELD <field>
+%>
+
+mysqlNameFieldSearch() ::= <%
+^#?\s*MYSQL_NAME_FIELD\s*\w*$
+%>
+
+mysqlNameField(field) ::= <%
+MYSQL_NAME_FIELD <field>
+%>
+
+mysqlMaildirFieldSearch() ::= <%
+^#?\s*MYSQL_MAILDIR_FIELD\s*[\w\(\),'/]*$
+%>
+
+mysqlMaildirField(field) ::= <%
+MYSQL_MAILDIR_FIELD <field>
+%>
+
+mysqlWhereClauseSearch() ::= <%
+^#?\s*MYSQL_WHERE_CLAUSE\s*[\w=\d]*$
+%>
+
+mysqlWhereClause(clause) ::= <%
+MYSQL_WHERE_CLAUSE <clause>
+%>

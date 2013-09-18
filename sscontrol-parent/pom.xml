@@ -58,7 +58,7 @@
 				<!-- LGPL -->
 				<groupId>com.anrisoftware.globalpom</groupId>
 				<artifactId>globalpom-groovytestutils</artifactId>
-				<version>1.20.1</version>
+				<version>1.20.2-SNAPSHOT</version>
 			</dependency>
 			<dependency>
 				<!-- LGPL -->

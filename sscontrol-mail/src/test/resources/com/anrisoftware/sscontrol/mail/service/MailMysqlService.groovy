@@ -19,5 +19,5 @@
 package com.anrisoftware.sscontrol.mail.service
 
 mail {
-	database "maildb", user: "root", password: "password"
+	database "maildb", user: "root", password: "password", server: "localhost", port: 663
 }

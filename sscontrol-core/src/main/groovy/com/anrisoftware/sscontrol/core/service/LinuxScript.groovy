@@ -328,17 +328,19 @@ abstract class LinuxScript extends Script {
 	/**
 	 * Restart the services.
 	 *
-	 * @param services
-	 * 			  optionally, a {@link List} of services to restart.
-	 *
-	 * @see #getRestartCommand()
-	 * @see #getRestartServices()
+	 * @param args
+	 * <ul>
+	 * <li>{@code restartCommand:} the restart command, defaults to {@link #getRestartCommand()}.
+	 * <li>{@code services:} the services to restart, defaults to {@link #getRestartServices()}.
+	 * </ul>
 	 */
-	void restartServices(List services = restartServices) {
+	void restartServices(Map args = [:]) {
+		args.restartCommand = args.containsKey("restartCommand") ? args.restartCommand : restartCommand
+		args.services = args.containsKey("services") ? args.services : restartServices
 		def template = commandTemplates.getResource("restart")
 		def worker = scriptCommandFactory.create(template,
-				"restartCommand", restartCommand,
-				"services", services)()
+				"restartCommand", args.restartCommand,
+				"services", args.services)()
 		log.restartServiceDone this, worker
 	}
 

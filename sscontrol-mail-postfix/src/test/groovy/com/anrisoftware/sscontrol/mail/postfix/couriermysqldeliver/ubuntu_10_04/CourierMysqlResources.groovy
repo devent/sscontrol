@@ -34,7 +34,10 @@ enum CourierMysqlResources {
 
 	mailScript("Mail.groovy", CourierMysqlResources.class.getResource("MailCourierMysql.groovy")),
 	profile("UbuntuProfile.groovy", CourierMysqlResources.class.getResource("CourierMysqlUbuntuProfile.groovy")),
-	courierRestartCommand("/etc/init.d/courier-imap", UbuntuResources.class.getResource("echo_command.txt")),
+	courierImapRestartCommand("/etc/init.d/courier-imap", UbuntuResources.class.getResource("echo_command.txt")),
+	courierImapRestartOut("/etc/init.d/courier-imap.out", CourierMysqlResources.class.getResource("courier_imap_out.txt")),
+	courierAuthdaemonRestartCommand("/etc/init.d/courier-authdaemon", UbuntuResources.class.getResource("echo_command.txt")),
+	courierAuthdaemonRestartOut("/etc/init.d/courier-authdaemon.out", CourierMysqlResources.class.getResource("courier_authdaemon_out.txt")),
 	configDir("/etc/courier", null),
 	authdaemonConfig("/etc/courier/authdaemonrc", CourierMysqlResources.class.getResource("authdaemonrc.txt")),
 	authdaemonConfigExpected("/etc/courier/authdaemonrc", CourierMysqlResources.class.getResource("authdaemonrc_expected.txt")),
@@ -43,7 +46,8 @@ enum CourierMysqlResources {
 
 	static copyCourierFiles(File parent) {
 		configDir.asFile parent mkdirs()
-		courierRestartCommand.createCommand parent
+		courierImapRestartCommand.createCommand parent
+		courierAuthdaemonRestartCommand.createCommand parent
 		authdaemonConfig.createFile parent
 		authmysqlConfig.createFile parent
 	}

@@ -53,5 +53,7 @@ class CourierMysqlPostfixTest extends UbuntuTestUtil {
 
 		assertFileContent authdaemonConfigExpected.asFile(tmpdir), authdaemonConfigExpected
 		assertFileContent authmysqlConfigExpected.asFile(tmpdir), authmysqlConfigExpected
+		assertFileContent courierImapRestartOut.asFile(tmpdir), courierImapRestartOut
+		assertFileContent courierAuthdaemonRestartOut.asFile(tmpdir), courierAuthdaemonRestartOut
 	}
 }

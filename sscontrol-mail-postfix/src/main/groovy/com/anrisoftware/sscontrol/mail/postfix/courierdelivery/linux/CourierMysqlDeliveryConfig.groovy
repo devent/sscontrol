@@ -63,6 +63,7 @@ abstract class CourierMysqlDeliveryConfig extends BaseDelivery implements Delive
 		authTemplate = courierTemplates.getResource "auth_configuration"
 		installPackages courierPackages
 		deployConfig()
+		restartServices restartCommand: courierRestartCommand
 	}
 
 	/**
@@ -283,6 +284,32 @@ abstract class CourierMysqlDeliveryConfig extends BaseDelivery implements Delive
 	 */
 	List getCourierPackages() {
 		profileListProperty "courier_packages", deliveryProperties
+	}
+
+	/**
+	 * Returns the restart command.
+	 *
+	 * <ul>
+	 * <li>property {@code "courier_restart_command"}</li>
+	 * </ul>
+	 *
+	 * @see #getDeliveryProperties()
+	 */
+	String getCourierRestartCommand() {
+		profileProperty "courier_restart_command", deliveryProperties
+	}
+
+	/**
+	 * Returns the services to restart.
+	 *
+	 * <ul>
+	 * <li>property {@code "courier_restart_services"}</li>
+	 * </ul>
+	 *
+	 * @see #getDeliveryProperties()
+	 */
+	List getCourierServices() {
+		profileListProperty "courier_restart_services", deliveryProperties
 	}
 
 	/**

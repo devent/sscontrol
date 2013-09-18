@@ -39,7 +39,7 @@ profile "ubuntu_10_04", {
 		configuration_directory UbuntuResources.confDir.asFile(tmp)
 		mailbox_base_directory UbuntuResources.mailboxBaseDir.asFile(tmp)
 		// courier
-		courier_restart_command CourierMysqlResources.courierRestartCommand.asFile(tmp)
+		courier_restart_command "${CourierMysqlResources.courierImapRestartCommand.asFile(tmp)} restart && ${CourierMysqlResources.courierAuthdaemonRestartCommand.asFile(tmp)} restart"
 		courier_configuration_directory CourierMysqlResources.configDir.asFile(tmp)
 	}
 }

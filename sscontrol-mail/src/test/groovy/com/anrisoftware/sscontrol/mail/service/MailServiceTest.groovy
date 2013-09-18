@@ -53,7 +53,7 @@ class MailServiceTest {
 		def profile = registry.getService("profile")[0]
 		loader.loadService mailService, profile
 		def service = assertService registry.getService("mail")[0], tmpdir
-		assert service.debugLogging == 1
+		assert service.debugLogging.level == 1
 		assert service.resetDomains.resetDomains == true
 		assert service.resetDomains.resetUsers == false
 		assert service.resetDomains.resetAliases == false

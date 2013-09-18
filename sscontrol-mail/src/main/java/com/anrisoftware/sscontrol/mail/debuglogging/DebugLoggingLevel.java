@@ -18,6 +18,8 @@
  */
 package com.anrisoftware.sscontrol.mail.debuglogging;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
 /**
  * Debug logging level.
  * 
@@ -62,4 +64,8 @@ public class DebugLoggingLevel extends Number {
 		return level;
 	}
 
+	@Override
+	public String toString() {
+		return new ToStringBuilder(this).toString();
+	}
 }

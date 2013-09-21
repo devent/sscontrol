@@ -49,6 +49,7 @@ class MysqlPostfixTest extends UbuntuTestUtil {
 		registry.allServices.each { it.call() }
 		log.info "Run service again to ensure that configuration is not set double."
 		registry.allServices.each { it.call() }
+		println "Services done."
 
 		assertFileContent mailnameExpected.asFile(tmpdir), mailnameExpected
 		assertStringContent mainConfigExpected.replaced(tmpdir, tmpdir, "/tmp"), mainConfigExpected.toString()
@@ -57,11 +58,29 @@ class MysqlPostfixTest extends UbuntuTestUtil {
 		assertFileContent domainsExpected.asFile(tmpdir), domainsExpected
 		assertFileContent aptitudeOut.asFile(tmpdir), aptitudeOut
 		assertFileContent mysqlOut.asFile(tmpdir), mysqlOut
+		assertStringContent mysqlIn.replaced(tmpdir, tmpdir, "/tmp"), mysqlIn.toString()
 		assertFileContent aliases.asFile(tmpdir), aliases
 		assertFileContent useraddOut.asFile(tmpdir), useraddOut
 		assertFileContent groupaddOut.asFile(tmpdir), groupaddOut
 		assertStringContent postaliasOut.replaced(tmpdir, tmpdir, "/tmp"), postaliasOut.toString()
 		assertStringContent chownOut.replaced(tmpdir, tmpdir, "/tmp"), chownOut.toString()
 		assert mailboxBaseDir.asFile(tmpdir).isDirectory()
+	}
+
+	@Test
+	void "virtual mysql, reset domains"() {
+		copyUbuntuFiles tmpdir
+		mysqlCommand.createCommand tmpdir
+
+		loader.loadService profile.resource, null
+		def profile = registry.getService("profile")[0]
+		loader.loadService mailResetScript.resource, profile
+
+		registry.allServices.each { it.call() }
+		log.info "Run service again to ensure that configuration is not set double."
+		registry.allServices.each { it.call() }
+		println "Services done."
+		assertStringContent mysqlResetDomainsIn.replaced(tmpdir, tmpdir, "/tmp"), mysqlResetDomainsIn.toString()
+		assertStringContent mysqlResetDomainsOut.replaced(tmpdir, tmpdir, "/tmp"), mysqlResetDomainsOut.toString()
 	}
 }

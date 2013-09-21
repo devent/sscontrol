@@ -92,14 +92,98 @@ abstract class MysqlStorageConfig extends BaseStorage implements StorageConfig {
 	void deployDatabaseTables() {
 		def worker
 		worker = scriptCommandFactory.create(tablesTemplate, "createAliasesTable",
-				"mysqlCommand", mysqlCommand, "service", service)()
+				"properties", this, "service", service)()
 		log.deployedAliasesTable this, worker
 		worker = scriptCommandFactory.create(tablesTemplate, "createDomainsTable",
-				"mysqlCommand", mysqlCommand, "service", service)()
+				"properties", this, "service", service)()
 		log.deployedDomainsTable this, worker
 		worker = scriptCommandFactory.create(tablesTemplate, "createUsersTable",
-				"mysqlCommand", mysqlCommand, "service", service, "profile", script)()
+				"properties", this, "service", service, "profile", script)()
 		log.deployedUsersTable this, worker
+	}
+
+	String getAliasesTable() {
+		script.profileProperty "aliases_table", storageProperties
+	}
+
+	String getIdField() {
+		script.profileProperty "id_field", storageProperties
+	}
+
+	String getMailField() {
+		script.profileProperty "mail_field", storageProperties
+	}
+
+	String getDestinationField() {
+		script.profileProperty "destination_field", storageProperties
+	}
+
+	String getEnabledField() {
+		script.profileProperty "enabled_field", storageProperties
+	}
+
+	String getDomainsTable() {
+		script.profileProperty "domains_table", storageProperties
+	}
+
+	String getDomainField() {
+		script.profileProperty "domain_field", storageProperties
+	}
+
+	String getTransportField() {
+		script.profileProperty "transport_field", storageProperties
+	}
+
+	String getUsersTable() {
+		script.profileProperty "users_table", storageProperties
+	}
+
+	String getLoginField() {
+		script.profileProperty "login_field", storageProperties
+	}
+
+	String getNameField() {
+		script.profileProperty "name_field", storageProperties
+	}
+
+	String getUidField() {
+		script.profileProperty "uid_field", storageProperties
+	}
+
+	String getGidField() {
+		script.profileProperty "gid_field", storageProperties
+	}
+
+	String getHomeField() {
+		script.profileProperty "home_field", storageProperties
+	}
+
+	String getMaildirField() {
+		script.profileProperty "maildir_field", storageProperties
+	}
+
+	String getChangePasswordField() {
+		script.profileProperty "change_password_field", storageProperties
+	}
+
+	String getClearField() {
+		script.profileProperty "clear_field", storageProperties
+	}
+
+	String getCryptField() {
+		script.profileProperty "crypt_field", storageProperties
+	}
+
+	String getQuotaField() {
+		script.profileProperty "quota_field", storageProperties
+	}
+
+	String getProcmailrcField() {
+		script.profileProperty "procmailrc_field", storageProperties
+	}
+
+	String getSpamassassinrcField() {
+		script.profileProperty "spamassassinrc_field", storageProperties
 	}
 
 	/**
@@ -134,7 +218,7 @@ abstract class MysqlStorageConfig extends BaseStorage implements StorageConfig {
 	void deployDomains() {
 		service.resetDomains.resetDomains ? resetDomains() : false
 		def worker = scriptCommandFactory.create(dataTemplate, "insertDomains",
-				"mysqlCommand", mysqlCommand, "service", service)()
+				"properties", this, "service", service)()
 		log.deployedDomainsData this, worker
 	}
 
@@ -143,7 +227,7 @@ abstract class MysqlStorageConfig extends BaseStorage implements StorageConfig {
 	 */
 	void resetDomains() {
 		def worker = scriptCommandFactory.create(dataTemplate, "resetDomains",
-				"mysqlCommand", mysqlCommand, "service", service)()
+				"properties", this, "service", service)()
 		log.resetDomainsData this, worker
 	}
 
@@ -157,7 +241,7 @@ abstract class MysqlStorageConfig extends BaseStorage implements StorageConfig {
 				continue
 			}
 			def worker = scriptCommandFactory.create(dataTemplate, "insertAliases",
-					"mysqlCommand", mysqlCommand, "service", service, "domain", domain)()
+					"properties", this, "service", service, "domain", domain)()
 			log.deployedAliasesData this, worker
 		}
 	}
@@ -167,7 +251,7 @@ abstract class MysqlStorageConfig extends BaseStorage implements StorageConfig {
 	 */
 	void resetAliases() {
 		def worker = scriptCommandFactory.create(dataTemplate, "resetAliases",
-				"mysqlCommand", mysqlCommand, "service", service)()
+				"properties", this, "service", service)()
 		log.resetAliasesData this, worker
 	}
 
@@ -181,7 +265,7 @@ abstract class MysqlStorageConfig extends BaseStorage implements StorageConfig {
 				continue
 			}
 			def worker = scriptCommandFactory.create(dataTemplate, "insertUsers",
-					"mysqlCommand", mysqlCommand, "service", service, "domain", domain)()
+					"properties", this, "service", service, "domain", domain)()
 			log.deployedUsersData this, worker
 		}
 	}
@@ -191,7 +275,7 @@ abstract class MysqlStorageConfig extends BaseStorage implements StorageConfig {
 	 */
 	void resetUsers() {
 		def worker = scriptCommandFactory.create(dataTemplate, "resetUsers",
-				"mysqlCommand", mysqlCommand, "service", service)()
+				"properties", this, "service", service)()
 		log.resetUsersData this, worker
 	}
 

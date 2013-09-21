@@ -1,65 +1,65 @@
-createAliasesTable(mysqlCommand, service) ::= <<
+createAliasesTable(properties, service) ::= <<
 <! creates the aliases table !>
 #!/bin/sh
-<mysqlCommand> --user=<service.database.user> --password=<service.database.password> -t \<\<STOP
+<properties.mysqlCommand> --user=<service.database.user> --password=<service.database.password> -t \<\<'STOP'
 USE <service.database.database>;
-CREATE TABLE IF NOT EXISTS \`aliases\` (
-\`pkid\` smallint(3) NOT NULL auto_increment,
-\`mail\` varchar(120) NOT NULL default '',
-\`destination\` varchar(120) NOT NULL default '',
-\`enabled\` tinyint(1) NOT NULL default '1',
-PRIMARY KEY (\`pkid\`));
+CREATE TABLE IF NOT EXISTS `<properties.aliasesTable>` (
+`<properties.idField>` smallint(3) NOT NULL auto_increment,
+`<properties.mailField>` varchar(120) NOT NULL default '',
+`<properties.destinationField>` varchar(120) NOT NULL default '',
+`<properties.enabledField>` tinyint(1) NOT NULL default '1',
+PRIMARY KEY (`<properties.idField>`));
 
-<createIndexIfNotExists("aliases", "mail", "aliases_index")>
+<createIndexIfNotExists(properties.aliasesTable, properties.mailField)>
 \q
 STOP
 >>
 
-createDomainsTable(mysqlCommand, service) ::= <<
+createDomainsTable(properties, service) ::= <<
 <! creates the domains table !>
 #!/bin/sh
-<mysqlCommand> --user=<service.database.user> --password=<service.database.password> -t \<\<STOP
+<properties.mysqlCommand> --user=<service.database.user> --password=<service.database.password> -t \<\<'STOP'
 USE <service.database.database>;
-CREATE TABLE IF NOT EXISTS \`domains\` (
-\`pkid\` smallint(6) NOT NULL auto_increment,
-\`domain\` varchar(120) NOT NULL default '',
-\`transport\` varchar(120) NOT NULL default 'virtual:',
-\`enabled\` tinyint(1) NOT NULL default '1',
-PRIMARY KEY (\`pkid\`) ) ;
+CREATE TABLE IF NOT EXISTS `<properties.domainsTable>` (
+`<properties.idField>` smallint(6) NOT NULL auto_increment,
+`<properties.domainField>` varchar(120) NOT NULL default '',
+`<properties.transportField>` varchar(120) NOT NULL default 'virtual:',
+`<properties.enabledField>` tinyint(1) NOT NULL default '1',
+PRIMARY KEY (`<properties.idField>`) ) ;
 
-<createIndexIfNotExists("domains", "domain", "domains_index")>
+<createIndexIfNotExists(properties.domainsTable, properties.domainField)>
 \q
 STOP
 >>
 
-createUsersTable(mysqlCommand, service, profile) ::= <<
+createUsersTable(properties, service, profile) ::= <<
 <! creates the users table !>
 #!/bin/sh
-<mysqlCommand> --user=<service.database.user> --password=<service.database.password> -t \<\<STOP
+<properties.mysqlCommand> --user=<service.database.user> --password=<service.database.password> -t \<\<'STOP'
 USE <service.database.database>;
-CREATE TABLE IF NOT EXISTS \`users\` (
-\`pkid\` smallint(6) NOT NULL auto_increment,
-\`id\` varchar(128) NOT NULL default '',
-\`name\` varchar(128) NOT NULL default '',
-\`uid\` smallint(5) unsigned NOT NULL default '<profile.virtualUid>',
-\`gid\` smallint(5) unsigned NOT NULL default '<profile.virtualGid>',
-\`home\` varchar(255) NOT NULL default '<profile.mailboxBaseDir>',
-\`maildir\` varchar(255) NOT NULL,
-\`enabled\` tinyint(3) unsigned NOT NULL default '1',
-\`change_password\` tinyint(3) unsigned NOT NULL default '1',
-\`clear\` varchar(128) NOT NULL default 'ChangeMe',
-\`crypt\` varchar(128) NOT NULL default 'sdtrusfX0Jj66',
-\`quota\` varchar(255) NOT NULL default '',
-\`procmailrc\` varchar(128) NOT NULL default '',
-\`spamassassinrc\` varchar(128) NOT NULL default '',
-PRIMARY KEY (\`pkid\`));
+CREATE TABLE IF NOT EXISTS `<properties.usersTable>` (
+`<properties.idField>` smallint(6) NOT NULL auto_increment,
+`<properties.loginField>` varchar(128) NOT NULL default '',
+`<properties.nameField>` varchar(128) NOT NULL default '',
+`<properties.uidField>` smallint(5) unsigned NOT NULL default '<profile.virtualUid>',
+`<properties.gidField>` smallint(5) unsigned NOT NULL default '<profile.virtualGid>',
+`<properties.homeField>` varchar(255) NOT NULL default '<profile.mailboxBaseDir>',
+`<properties.maildirField>` varchar(255) NOT NULL,
+`<properties.enabledField>` tinyint(3) unsigned NOT NULL default '1',
+`<properties.changePasswordField>` tinyint(3) unsigned NOT NULL default '1',
+`<properties.clearField>` varchar(128) NOT NULL default 'ChangeMe',
+`<properties.cryptField>` varchar(128) NOT NULL default 'sdtrusfX0Jj66',
+`<properties.quotaField>` varchar(255) NOT NULL default '',
+`<properties.procmailrcField>` varchar(128) NOT NULL default '',
+`<properties.spamassassinrcField>` varchar(128) NOT NULL default '',
+PRIMARY KEY (`<properties.idField>`));
 
-<createIndexIfNotExists("users", "id", "users_index")>
+<createIndexIfNotExists(properties.usersTable, properties.loginField)>
 \q
 STOP
 >>
 
-createIndexIfNotExists(table, column, indexName) ::= <<
+createIndexIfNotExists(table, column) ::= <<
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ANSI';
 DROP PROCEDURE IF EXISTS create_index;
 DELIMITER $$
@@ -68,10 +68,10 @@ BEGIN
     DECLARE indexexists BIGINT DEFAULT 0;
     SELECT COUNT(*) INTO indexexists FROM information_schema.statistics
         WHERE TABLE_SCHEMA = DATABASE()
-        AND table_name = '<table>' AND index_name = '<indexName>';
+        AND table_name = '<table>' AND index_name = '<column>_<table>_index';
     IF indexexists = 0 THEN
-        CREATE UNIQUE INDEX \`<indexName>\`
-        ON \`<table>\` (\`<column>\`);
+        CREATE UNIQUE INDEX `<column>_<table>_index`
+        ON `<table>` (`<column>`);
     END IF;
 END ;$$
 DELIMITER ;

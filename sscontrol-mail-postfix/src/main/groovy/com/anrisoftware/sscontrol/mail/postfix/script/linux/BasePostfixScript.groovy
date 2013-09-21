@@ -448,8 +448,8 @@ abstract class BasePostfixScript extends LinuxScript {
 	}
 
 	/**
-	 * Returns the time after which the message is consider as undeliverable.
-	 * Example {@code P7D}.
+	 * Returns the time after which the message is consider as not possible
+	 * to deliver. Example {@code P7D}.
 	 *
 	 * <ul>
 	 * <li>profile property {@code "maximal_queue_lifetime"}</li>

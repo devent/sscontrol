@@ -165,7 +165,7 @@ abstract class CourierMysqlDeliveryConfig extends BaseDelivery implements Delive
 	}
 
 	String getMysqlUserTableTemplate() {
-		authTemplate.getText(true, "mysqlUserTable", "table", "users")
+		authTemplate.getText(true, "mysqlUserTable", "table", usersTable)
 	}
 
 	String getMysqlCryptPwfieldSearchTemplate() {
@@ -173,7 +173,7 @@ abstract class CourierMysqlDeliveryConfig extends BaseDelivery implements Delive
 	}
 
 	String getMysqlCryptPwfieldTemplate() {
-		authTemplate.getText(true, "mysqlCryptPwfield", "field", "crypt")
+		authTemplate.getText(true, "mysqlCryptPwfield", "field", cryptField)
 	}
 
 	String getMysqlClearPwfieldSearchTemplate() {
@@ -189,7 +189,7 @@ abstract class CourierMysqlDeliveryConfig extends BaseDelivery implements Delive
 	}
 
 	String getMysqlUidFieldTemplate() {
-		authTemplate.getText(true, "mysqlUidField", "field", "uid")
+		authTemplate.getText(true, "mysqlUidField", "field", uidField)
 	}
 
 	String getMysqlGidFieldSearchTemplate() {
@@ -197,7 +197,7 @@ abstract class CourierMysqlDeliveryConfig extends BaseDelivery implements Delive
 	}
 
 	String getMysqlGidFieldTemplate() {
-		authTemplate.getText(true, "mysqlGidField", "field", "gid")
+		authTemplate.getText(true, "mysqlGidField", "field", gidField)
 	}
 
 	String getMysqlLoginFieldSearchTemplate() {
@@ -205,7 +205,7 @@ abstract class CourierMysqlDeliveryConfig extends BaseDelivery implements Delive
 	}
 
 	String getMysqlLoginFieldTemplate() {
-		authTemplate.getText(true, "mysqlLoginField", "field", "login")
+		authTemplate.getText(true, "mysqlLoginField", "field", loginField)
 	}
 
 	String getMysqlHomeFieldSearchTemplate() {
@@ -213,7 +213,7 @@ abstract class CourierMysqlDeliveryConfig extends BaseDelivery implements Delive
 	}
 
 	String getMysqlHomeFieldTemplate() {
-		authTemplate.getText(true, "mysqlHomeField", "field", "home")
+		authTemplate.getText(true, "mysqlHomeField", "field", homeField)
 	}
 
 	String getMysqlNameFieldSearchTemplate() {
@@ -221,7 +221,7 @@ abstract class CourierMysqlDeliveryConfig extends BaseDelivery implements Delive
 	}
 
 	String getMysqlNameFieldTemplate() {
-		authTemplate.getText(true, "mysqlNameField", "field", "name")
+		authTemplate.getText(true, "mysqlNameField", "field", nameField)
 	}
 
 	String getMysqlMaildirFieldSearchTemplate() {
@@ -229,7 +229,7 @@ abstract class CourierMysqlDeliveryConfig extends BaseDelivery implements Delive
 	}
 
 	String getMysqlMaildirFieldTemplate() {
-		authTemplate.getText(true, "mysqlMaildirField", "field", "concat(home,'/',maildir)")
+		authTemplate.getText(true, "mysqlMaildirField", "field", "concat(${homeField},'/',${maildirField})")
 	}
 
 	String getMysqlWhereClauseSearchTemplate() {
@@ -237,7 +237,47 @@ abstract class CourierMysqlDeliveryConfig extends BaseDelivery implements Delive
 	}
 
 	String getMysqlWhereClauseTemplate() {
-		authTemplate.getText(true, "mysqlWhereClause", "clause", "enabled=1")
+		authTemplate.getText(true, "mysqlWhereClause", "clause", "${enabledField}=1")
+	}
+
+	String getUsersTable() {
+		script.profileProperty "users_table", deliveryProperties
+	}
+
+	String getEnabledField() {
+		script.profileProperty "enabled_field", deliveryProperties
+	}
+
+	String getLoginField() {
+		script.profileProperty "login_field", deliveryProperties
+	}
+
+	String getNameField() {
+		script.profileProperty "name_field", deliveryProperties
+	}
+
+	String getUidField() {
+		script.profileProperty "uid_field", deliveryProperties
+	}
+
+	String getGidField() {
+		script.profileProperty "gid_field", deliveryProperties
+	}
+
+	String getHomeField() {
+		script.profileProperty "home_field", deliveryProperties
+	}
+
+	String getMaildirField() {
+		script.profileProperty "maildir_field", deliveryProperties
+	}
+
+	String getClearField() {
+		script.profileProperty "clear_field", deliveryProperties
+	}
+
+	String getCryptField() {
+		script.profileProperty "crypt_field", deliveryProperties
 	}
 
 	/**

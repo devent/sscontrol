@@ -1,14 +1,30 @@
+mailboxBaseSearch() ::= <%
+(?m)^\\#?virtual_mailbox_base.*
+%>
+
 mailboxBase(dir) ::= <<
 virtual_mailbox_base = <dir>
 >>
+
+mailboxMapsSearch() ::= <%
+(?m)^\\#?virtual_mailbox_maps.*
+%>
 
 mailboxMaps(file) ::= <<
 virtual_mailbox_maps = mysql:<file>
 >>
 
+aliasesMapsSearch() ::= <%
+(?m)^\\#?virtual_alias_maps.*
+%>
+
 aliasMaps(file) ::= <<
 virtual_alias_maps = mysql:<file>
 >>
+
+mailboxDomainsSearch() ::= <%
+(?m)^\\#?virtual_mailbox_domains.*
+%>
 
 mailboxDomains(file) ::= <<
 virtual_mailbox_domains = mysql:<file>
@@ -18,9 +34,17 @@ minimumUid(uid) ::= <<
 virtual_minimum_uid = <uid>
 >>
 
+uidMapsSearch() ::= <%
+(?m)^\\#?virtual_uid_maps.*
+%>
+
 uidMaps(uid) ::= <<
 virtual_uid_maps = static:<uid>
 >>
+
+gidMapsSearch() ::= <%
+(?m)^\\#?virtual_gid_maps.*
+%>
 
 gidMaps(gid) ::= <<
 virtual_gid_maps = static:<gid>

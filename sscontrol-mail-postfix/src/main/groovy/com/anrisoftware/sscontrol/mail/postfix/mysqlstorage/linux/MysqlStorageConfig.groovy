@@ -102,102 +102,66 @@ abstract class MysqlStorageConfig extends BaseStorage implements StorageConfig {
 		log.deployedUsersTable this, worker
 	}
 
-	String getAliasesTable() {
-		script.profileProperty "aliases_table", storageProperties
-	}
-
-	String getIdField() {
-		script.profileProperty "id_field", storageProperties
-	}
-
-	String getMailField() {
-		script.profileProperty "mail_field", storageProperties
-	}
-
-	String getDestinationField() {
-		script.profileProperty "destination_field", storageProperties
-	}
-
-	String getEnabledField() {
-		script.profileProperty "enabled_field", storageProperties
-	}
-
-	String getDomainsTable() {
-		script.profileProperty "domains_table", storageProperties
-	}
-
-	String getDomainField() {
-		script.profileProperty "domain_field", storageProperties
-	}
-
-	String getTransportField() {
-		script.profileProperty "transport_field", storageProperties
-	}
-
-	String getUsersTable() {
-		script.profileProperty "users_table", storageProperties
-	}
-
-	String getLoginField() {
-		script.profileProperty "login_field", storageProperties
-	}
-
-	String getNameField() {
-		script.profileProperty "name_field", storageProperties
-	}
-
-	String getUidField() {
-		script.profileProperty "uid_field", storageProperties
-	}
-
-	String getGidField() {
-		script.profileProperty "gid_field", storageProperties
-	}
-
-	String getHomeField() {
-		script.profileProperty "home_field", storageProperties
-	}
-
-	String getMaildirField() {
-		script.profileProperty "maildir_field", storageProperties
-	}
-
-	String getChangePasswordField() {
-		script.profileProperty "change_password_field", storageProperties
-	}
-
-	String getClearField() {
-		script.profileProperty "clear_field", storageProperties
-	}
-
-	String getCryptField() {
-		script.profileProperty "crypt_field", storageProperties
-	}
-
-	String getQuotaField() {
-		script.profileProperty "quota_field", storageProperties
-	}
-
-	String getProcmailrcField() {
-		script.profileProperty "procmailrc_field", storageProperties
-	}
-
-	String getSpamassassinrcField() {
-		script.profileProperty "spamassassinrc_field", storageProperties
-	}
-
 	/**
 	 * Sets the virtual aliases and mailboxes.
 	 */
 	void deployMain() {
 		def configuration = []
-		configuration << new TokenTemplate("(?m)^\\#?virtual_mailbox_base.*", mainTemplate.getText(true, "mailboxBase", "dir", script.mailboxBaseDir))
-		configuration << new TokenTemplate("(?m)^\\#?virtual_mailbox_maps.*", mainTemplate.getText(true, "mailboxMaps", "file", mailboxMapsFile))
-		configuration << new TokenTemplate("(?m)^\\#?virtual_alias_maps.*", mainTemplate.getText(true, "aliasMaps", "file", aliasMapsFile))
-		configuration << new TokenTemplate("(?m)^\\#?virtual_mailbox_domains.*", mainTemplate.getText(true, "mailboxDomains", "file", mailboxDomainsFile))
-		configuration << new TokenTemplate("(?m)^\\#?virtual_uid_maps.*", mainTemplate.getText(true, "uidMaps", "uid", script.virtualUid))
-		configuration << new TokenTemplate("(?m)^\\#?virtual_gid_maps.*", mainTemplate.getText(true, "gidMaps", "gid", script.virtualGid))
+		configuration << new TokenTemplate(mailboxBaseSearch, mailboxBase)
+		configuration << new TokenTemplate(mailboxMapsSearch, mailboxMaps)
+		configuration << new TokenTemplate(aliasesMapsSearch, aliasesMaps)
+		configuration << new TokenTemplate(mailboxDomainsSearch, mailboxDomains)
+		configuration << new TokenTemplate(uidMapsSearch, uidMaps)
+		configuration << new TokenTemplate(gidMapsSearch, gidMaps)
 		deployConfiguration configurationTokens(), currentMainConfiguration, configuration, mainFile
+	}
+
+	String getMailboxBaseSearch() {
+		mainTemplate.getText(true, "mailboxBaseSearch")
+	}
+
+	String getMailboxBase() {
+		mainTemplate.getText(true, "mailboxBase", "dir", script.mailboxBaseDir)
+	}
+
+	String getMailboxMapsSearch() {
+		mainTemplate.getText(true, "mailboxMapsSearch")
+	}
+
+	String getMailboxMaps() {
+		mainTemplate.getText(true, "mailboxMaps", "file", mailboxMapsFile)
+	}
+
+	String getAliasesMapsSearch() {
+		mainTemplate.getText(true, "aliasesMapsSearch")
+	}
+
+	String getAliasesMaps() {
+		mainTemplate.getText(true, "aliasMaps", "file", aliasMapsFile)
+	}
+
+	String getMailboxDomainsSearch() {
+		mainTemplate.getText(true, "mailboxDomainsSearch")
+	}
+
+	String getMailboxDomains() {
+		mainTemplate.getText(true, "mailboxDomains", "file", mailboxDomainsFile)
+	}
+
+	String getUidMapsSearch() {
+		mainTemplate.getText(true, "uidMapsSearch")
+	}
+
+	String getUidMaps() {
+		mainTemplate.getText(true, "uidMaps", "uid", script.virtualUid)
+	}
+
+	String getGidMapsSearch() {
+		mainTemplate.getText(true, "gidMapsSearch")
+	}
+
+	String getGidMaps() {
+		mainTemplate.getText(true, "gidMaps", "gid", script.virtualGid)
 	}
 
 	/**
@@ -352,5 +316,89 @@ abstract class MysqlStorageConfig extends BaseStorage implements StorageConfig {
 	 */
 	File getMailboxDomainsFile() {
 		propertyFile "mailbox_domains_file", storageProperties
+	}
+
+	String getAliasesTable() {
+		script.profileProperty "aliases_table", storageProperties
+	}
+
+	String getIdField() {
+		script.profileProperty "id_field", storageProperties
+	}
+
+	String getMailField() {
+		script.profileProperty "mail_field", storageProperties
+	}
+
+	String getDestinationField() {
+		script.profileProperty "destination_field", storageProperties
+	}
+
+	String getEnabledField() {
+		script.profileProperty "enabled_field", storageProperties
+	}
+
+	String getDomainsTable() {
+		script.profileProperty "domains_table", storageProperties
+	}
+
+	String getDomainField() {
+		script.profileProperty "domain_field", storageProperties
+	}
+
+	String getTransportField() {
+		script.profileProperty "transport_field", storageProperties
+	}
+
+	String getUsersTable() {
+		script.profileProperty "users_table", storageProperties
+	}
+
+	String getLoginField() {
+		script.profileProperty "login_field", storageProperties
+	}
+
+	String getNameField() {
+		script.profileProperty "name_field", storageProperties
+	}
+
+	String getUidField() {
+		script.profileProperty "uid_field", storageProperties
+	}
+
+	String getGidField() {
+		script.profileProperty "gid_field", storageProperties
+	}
+
+	String getHomeField() {
+		script.profileProperty "home_field", storageProperties
+	}
+
+	String getMaildirField() {
+		script.profileProperty "maildir_field", storageProperties
+	}
+
+	String getChangePasswordField() {
+		script.profileProperty "change_password_field", storageProperties
+	}
+
+	String getClearField() {
+		script.profileProperty "clear_field", storageProperties
+	}
+
+	String getCryptField() {
+		script.profileProperty "crypt_field", storageProperties
+	}
+
+	String getQuotaField() {
+		script.profileProperty "quota_field", storageProperties
+	}
+
+	String getProcmailrcField() {
+		script.profileProperty "procmailrc_field", storageProperties
+	}
+
+	String getSpamassassinrcField() {
+		script.profileProperty "spamassassinrc_field", storageProperties
 	}
 }

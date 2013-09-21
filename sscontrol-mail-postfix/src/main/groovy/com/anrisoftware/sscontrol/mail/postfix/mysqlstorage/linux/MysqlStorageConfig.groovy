@@ -168,11 +168,11 @@ abstract class MysqlStorageConfig extends BaseStorage implements StorageConfig {
 	 * Deploys the virtual mailbox database configuration.
 	 */
 	void deployVirtualMailboxFile() {
-		def string = configTemplate.getText(true, "mailbox", "service", service)
+		def string = configTemplate.getText(true, "mailbox", "properties", this, "service", service)
 		FileUtils.write mailboxMapsFile, string
-		string = configTemplate.getText(true, "alias", "service", service)
+		string = configTemplate.getText(true, "alias", "properties", this, "service", service)
 		FileUtils.write aliasMapsFile, string
-		string = configTemplate.getText(true, "domains", "service", service)
+		string = configTemplate.getText(true, "domains", "properties", this, "service", service)
 		FileUtils.write mailboxDomainsFile, string
 	}
 

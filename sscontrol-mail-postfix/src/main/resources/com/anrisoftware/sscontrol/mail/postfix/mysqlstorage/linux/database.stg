@@ -1,35 +1,39 @@
-mailbox(service) ::= <<
+mailbox(properties, service) ::= <<
+hosts=<databaseHost(service)>
 user=<service.database.user>
 password=<service.database.password>
 dbname=<service.database.database>
-table=users
-select_field=maildir
-where_field=id
-hosts=127.0.0.1
-additional_conditions = and enabled = 1
+table=<properties.usersTable>
+select_field=<properties.maildirField>
+where_field=<properties.loginField>
+additional_conditions = and <properties.enabledField> = 1
 
 >>
 
-alias(service) ::= <<
+alias(properties, service) ::= <<
+hosts=<databaseHost(service)>
 user=<service.database.user>
 password=<service.database.password>
 dbname=<service.database.database>
-table=aliases
-select_field=destination
-where_field=mail
-hosts=127.0.0.1
-additional_conditions = and enabled = 1
+table=<properties.aliasesTable>
+select_field=<properties.destinationField>
+where_field=<properties.mailField>
+additional_conditions = and <properties.enabledField> = 1
 
 >>
 
-domains(service) ::= <<
+domains(properties, service) ::= <<
+hosts=<databaseHost(service)>
 user=<service.database.user>
 password=<service.database.password>
 dbname=<service.database.database>
-table=domains
-select_field=domain
-where_field=domain
-hosts=127.0.0.1
-additional_conditions = and enabled = 1
+table=<properties.domainsTable>
+select_field=<properties.domainField>
+where_field=<properties.domainField>
+additional_conditions = and <properties.enabledField> = 1
 
 >>
+
+databaseHost(service) ::= <%
+<if(service.database.server)><service.database.server><else>127.0.0.1<endif><if(service.database.port)>:<service.database.port><endif>
+%>

@@ -16,13 +16,27 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-dhclient. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.dhclient
+package com.anrisoftware.sscontrol.dhclient.ubuntu_10_04;
 
-profile "ubuntu_10_04", {
-	dhclient {
-		install_command "${tmp}/usr/bin/aptitude update && ${tmp}/usr/bin/aptitude install"
-		restart_command "${tmp}/etc/init.d/networking restart"
-		packages "dhcp3-client"
-		configuration_directory "${tmp}/etc/dhcp3"
+import java.net.URL;
+
+import com.anrisoftware.propertiesutils.AbstractContextPropertiesProvider;
+
+/**
+ * Provides Dhclient/Ubuntu 10.04 properties from
+ * {@code /dhclient_ubuntu_10_04.properties}.
+ * 
+ * @author Erwin Mueller, erwin.mueller@deventm.org
+ * @since 1.0
+ */
+@SuppressWarnings("serial")
+class UbuntuPropertiesProvider extends AbstractContextPropertiesProvider {
+
+	private static final URL RESOURCE = UbuntuModule.class
+			.getResource("/dhclient_ubuntu_10_04.properties");
+
+	UbuntuPropertiesProvider() {
+		super(UbuntuPropertiesProvider.class, RESOURCE);
 	}
+
 }

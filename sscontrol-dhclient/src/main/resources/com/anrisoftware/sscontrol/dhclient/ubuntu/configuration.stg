@@ -1,15 +1,32 @@
+prependSearch() ::= <<
+#?prepend .*;
+>>
+
+prepend(declaration) ::= <<
+prepend <declaration.option> <declaration.declaration>;
+>>
+
+optionSearch() ::= <<
+#?option .*;
+>>
+
 option(declaration) ::= <<
 option <declaration.declaration>;
+>>
+
+sendSearch() ::= <<
+#?send .*;
 >>
 
 send(declaration) ::= <<
 send <declaration.option> <declaration.declaration>;
 >>
 
-requests(requests) ::= <<
+requestSearch() ::= <<
+#?request ([\w\-,\s]?)*;
+>>
+
+request(requests) ::= <<
 request <requests; separator=", ">;
 >>
 
-prepend(declaration) ::= <<
-prepend <declaration.option> <declaration.declaration>;
->>

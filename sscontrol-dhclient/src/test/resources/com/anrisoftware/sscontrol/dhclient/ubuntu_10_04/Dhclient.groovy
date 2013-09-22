@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-dhclient. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.dhclient
+package com.anrisoftware.sscontrol.dhclient.ubuntu_10_04
 
 dhclient {
 	requests "!domain-name-servers"

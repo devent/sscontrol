@@ -16,23 +16,44 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-dhclient. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.dhclient.service;
+package com.anrisoftware.sscontrol.dhclient.resources
 
-import com.anrisoftware.sscontrol.dhclient.statements.StatementsModule;
-import com.anrisoftware.sscontrol.dhclient.ubuntu_10_04.UbuntuModule;
-import com.google.inject.AbstractModule;
+import static com.anrisoftware.globalpom.utils.TestUtils.*
+import static org.apache.commons.io.FileUtils.*
 
 /**
- * Binds the Dhclient service scripts.
- * 
+ * Loads resources.
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class DhclientModule extends AbstractModule {
+class ResourcesUtils {
 
-	@Override
-	protected void configure() {
-		install(new StatementsModule());
-		install(new UbuntuModule());
+	String path
+
+	URL resource
+
+	File asFile(File parent) {
+		new File(parent, path)
+	}
+
+	void createFile(File parent) {
+		assert resource : "Resource cannot be null for ${resource}"
+		copyURLToFile resource, new File(parent, path)
+	}
+
+	void createCommand(File parent) {
+		assert resource : "Resource cannot be null for ${resource}"
+		copyResourceToCommand resource, new File(parent, path)
+	}
+
+	String replaced(File parent, def search, def replace) {
+		String text = readFileToString(this.asFile(parent))
+		text.replaceAll(search.toString(), replace)
+	}
+
+	String toString() {
+		assert resource : "Resource cannot be null for ${resource}"
+		resourceToString resource
 	}
 }

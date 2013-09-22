@@ -16,23 +16,15 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-dhclient. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.dhclient.service;
+package com.anrisoftware.sscontrol.dhclient.ubuntu_10_04
 
-import com.anrisoftware.sscontrol.dhclient.statements.StatementsModule;
-import com.anrisoftware.sscontrol.dhclient.ubuntu_10_04.UbuntuModule;
-import com.google.inject.AbstractModule;
+import com.anrisoftware.sscontrol.dhclient.ubuntu.UbuntuResources
 
-/**
- * Binds the Dhclient service scripts.
- * 
- * @author Erwin Mueller, erwin.mueller@deventm.org
- * @since 1.0
- */
-class DhclientModule extends AbstractModule {
-
-	@Override
-	protected void configure() {
-		install(new StatementsModule());
-		install(new UbuntuModule());
+profile "ubuntu_10_04", {
+	dhclient {
+		install_command "${UbuntuResources.aptitudeCommand.asFile(tmp)} update && ${UbuntuResources.aptitudeCommand.asFile(tmp)} install"
+		restart_command "${UbuntuResources.restartCommand.asFile(tmp)} restart"
+		packages "dhcp3-client"
+		configuration_directory "${UbuntuResources.confDir.asFile(tmp)}"
 	}
 }

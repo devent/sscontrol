@@ -16,18 +16,17 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-dhclient. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.dhclient.ubuntu
+package com.anrisoftware.sscontrol.dhclient.ubuntu_10_04
 
 import static java.util.regex.Pattern.*
 
 import javax.inject.Inject
-import javax.inject.Named
 
-import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.resources.templates.api.TemplateResource
+import com.anrisoftware.sscontrol.dhclient.ubuntu.UbuntuScript
 
 /**
- * Setups the dhclient service on a Ubuntu 10.04 Linux system.
+ * Dhclient/Ubuntu 10.04.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
@@ -35,14 +34,14 @@ import com.anrisoftware.resources.templates.api.TemplateResource
 class Ubuntu_10_04Script extends UbuntuScript {
 
 	@Inject
-	@Named("dhclient-ubuntu-10_04-properties")
-	ContextProperties ubuntuProperties
+	UbuntuPropertiesProvider ubuntuProperties
 
 	def distributionSpecificConfiguration() {
+		installPackages()
 	}
 
 	@Override
 	def getDefaultProperties() {
-		ubuntuProperties
+		ubuntuProperties.get()
 	}
 }

@@ -39,7 +39,7 @@ class LdapTest extends LdapTestUtil {
 
 	@Test
 	void "ldap script"() {
-		loader.loadService ubuntu1004Profile, null
+		loader.loadService ubuntuProfile, null
 		def profile = registry.getService("profile")[0]
 		loader.loadService ldapScript, profile
 		LdapServiceImpl service = registry.getService("ldap")[0]

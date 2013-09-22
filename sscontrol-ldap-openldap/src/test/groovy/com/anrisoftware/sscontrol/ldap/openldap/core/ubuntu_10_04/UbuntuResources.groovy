@@ -29,7 +29,7 @@ import static org.apache.commons.io.FileUtils.*
  */
 enum UbuntuResources {
 
-	profile("Ubuntu_10_04Profile.groovy", UbuntuResources.class.getResource("Ubuntu_10_04Profile.groovy")),
+	profile("UbuntuProfile.groovy", UbuntuResources.class.getResource("UbuntuProfile.groovy")),
 	aptitudeCommand("/usr/bin/aptitude", UbuntuResources.class.getResource("echo_command.txt")),
 	restartCommand("/etc/init.d/slapd", UbuntuResources.class.getResource("echo_command.txt")),
 	chmodCommand("/bin/chmod", UbuntuResources.class.getResource("echo_command.txt")),

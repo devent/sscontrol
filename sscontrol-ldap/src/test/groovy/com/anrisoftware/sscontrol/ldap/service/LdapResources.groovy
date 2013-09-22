@@ -25,7 +25,7 @@ package com.anrisoftware.sscontrol.ldap.service
  * @since 1.0
  */
 class LdapResources {
-	static ubuntu1004Profile = LdapResources.class.getResource("Ubuntu_10_04Profile.groovy")
+	static ubuntuProfile = LdapResources.class.getResource("UbuntuProfile.groovy")
 	static ldapScript = LdapResources.class.getResource("Ldap.groovy")
 	static exportLdif = LdapResources.class.getResource("export1_ldif.txt")
 }

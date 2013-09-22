@@ -18,8 +18,14 @@
  */
 package com.anrisoftware.sscontrol.profile.service;
 
+import static com.anrisoftware.sscontrol.profile.service.ProfilePropertiesImplLogger._.profile_key;
+import static com.anrisoftware.sscontrol.profile.service.ProfilePropertiesImplLogger._.profile_property_null;
+import static com.anrisoftware.sscontrol.profile.service.ProfilePropertiesImplLogger._.profile_property_null_message;
+import static com.anrisoftware.sscontrol.profile.service.ProfilePropertiesImplLogger._.property_add;
+
 import com.anrisoftware.globalpom.log.AbstractLogger;
 import com.anrisoftware.sscontrol.core.api.ProfileProperties;
+import com.anrisoftware.sscontrol.core.api.ServiceException;
 
 /**
  * Logging messages for {@link ProfilePropertiesImpl}.
@@ -29,7 +35,29 @@ import com.anrisoftware.sscontrol.core.api.ProfileProperties;
  */
 class ProfilePropertiesImplLogger extends AbstractLogger {
 
-	private static final String PROPERTY_ADD = "Property '{}'='{}' added to {}.";
+	enum _ {
+
+		property_add("Property '{}'='{}' added to {}."),
+
+		profile_property_null("Profile property not found"),
+
+		profile_property_null_message("Profile property '{}' not found."),
+
+		profile("profile"),
+
+		profile_key("key");
+
+		private String name;
+
+		private _(String name) {
+			this.name = name;
+		}
+
+		@Override
+		public String toString() {
+			return name;
+		}
+	}
 
 	/**
 	 * Create logger for {@link ProfilePropertiesImpl}.
@@ -39,9 +67,16 @@ class ProfilePropertiesImplLogger extends AbstractLogger {
 	}
 
 	void propertyAdded(ProfileProperties properties, String name, Object value) {
-		if (log.isDebugEnabled()) {
-			log.debug(PROPERTY_ADD, name, value, properties);
+		if (isDebugEnabled()) {
+			debug(property_add, name, value, properties);
 		}
+	}
+
+	ServiceException noProfileProperty(ProfileProperties profile, String key) {
+		return logException(
+				new ServiceException(profile_property_null).add(profile,
+						profile).add(profile_key, key),
+				profile_property_null_message, key);
 	}
 
 }

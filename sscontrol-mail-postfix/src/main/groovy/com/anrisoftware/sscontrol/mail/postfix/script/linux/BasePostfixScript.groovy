@@ -238,8 +238,6 @@ abstract class BasePostfixScript extends LinuxScript {
 	 * <ul>
 	 * <li>profile property {@code "storage"}</li>
 	 * </ul>
-	 *
-	 * @see #getDefaultProperties()
 	 */
 	String getStorageName() {
 		profileProperty "storage"
@@ -251,11 +249,9 @@ abstract class BasePostfixScript extends LinuxScript {
 	 * <ul>
 	 * <li>profile property {@code "delivery"}</li>
 	 * </ul>
-	 *
-	 * @see #getDefaultProperties()
 	 */
 	String getDeliveryName() {
-		profileProperty "delivery"
+		containsKey("delivery") ? profileProperty("delivery") : null
 	}
 
 	/**
@@ -294,11 +290,24 @@ abstract class BasePostfixScript extends LinuxScript {
 	 * <li>property {@code "mailname_file"}</li>
 	 * </ul>
 	 *
-	 * @see #getConfigurationDir()
+	 * @see #getMailnameConfigurationDir()
 	 * @see #getDefaultProperties()
 	 */
 	File getMailnameFile() {
-		propertyFile "mailname_file"
+		profileFileProperty "mailname_file", mailnameConfigurationDir, defaultProperties
+	}
+
+	/**
+	 * Returns the absolute path of the mail name configuration directory.
+	 *
+	 * <ul>
+	 * <li>property {@code "mailname_configuration_directory"}</li>
+	 * </ul>
+	 *
+	 * @see #getDefaultProperties()
+	 */
+	File getMailnameConfigurationDir() {
+		profileDirProperty "mailname_configuration_directory", defaultProperties
 	}
 
 	/**
@@ -313,20 +322,7 @@ abstract class BasePostfixScript extends LinuxScript {
 	 * @see #getDefaultProperties()
 	 */
 	File getMainFile() {
-		propertyFile "main_file"
-	}
-
-	/**
-	 * Returns the path of the configuration directory.
-	 *
-	 * <ul>
-	 * <li>property {@code "configuration_directory"}</li>
-	 * </ul>
-	 *
-	 * @see #getDefaultProperties()
-	 */
-	File getConfigurationDir() {
-		profileProperty("configuration_directory") as File
+		profileFileProperty "main_file", configurationDir, defaultProperties
 	}
 
 	/**
@@ -342,7 +338,7 @@ abstract class BasePostfixScript extends LinuxScript {
 	 * @see #getDefaultProperties()
 	 */
 	File getAliasesMapsFile() {
-		propertyFile "aliases_maps_file"
+		profileFileProperty "aliases_maps_file", configurationDir, defaultProperties
 	}
 
 	/**
@@ -358,7 +354,7 @@ abstract class BasePostfixScript extends LinuxScript {
 	 * @see #getDefaultProperties()
 	 */
 	File getAliasesDatabaseFile() {
-		propertyFile "aliases_database_file"
+		profileFileProperty "aliases_database_file", configurationDir, defaultProperties
 	}
 
 	/**
@@ -373,7 +369,7 @@ abstract class BasePostfixScript extends LinuxScript {
 	 * @see #getDefaultProperties()
 	 */
 	String getPostmapCommand() {
-		profileProperty("postmap_command", defaultProperties)
+		profileProperty "postmap_command", defaultProperties
 	}
 
 	/**
@@ -388,7 +384,7 @@ abstract class BasePostfixScript extends LinuxScript {
 	 * @see #getDefaultProperties()
 	 */
 	String getPostaliasCommand() {
-		profileProperty("postalias_command", defaultProperties)
+		profileProperty "postalias_command", defaultProperties
 	}
 
 	/**
@@ -401,7 +397,7 @@ abstract class BasePostfixScript extends LinuxScript {
 	 * @see #getDefaultProperties()
 	 */
 	File getMailboxBaseDir() {
-		profileProperty("mailbox_base_directory", defaultProperties) as File
+		profileDirProperty "mailbox_base_directory", defaultProperties
 	}
 
 	/**
@@ -415,7 +411,7 @@ abstract class BasePostfixScript extends LinuxScript {
 	 * @see #postfixProperties
 	 */
 	String getMailboxPattern() {
-		profileProperty("mailbox_pattern", postfixProperties)
+		profileProperty "mailbox_pattern", postfixProperties
 	}
 
 	/**
@@ -429,7 +425,7 @@ abstract class BasePostfixScript extends LinuxScript {
 	 * @see #postfixProperties
 	 */
 	int getUnknownLocalRecipientRejectCode() {
-		profileNumberProperty("unknown_local_recipient_reject_code", postfixProperties)
+		profileNumberProperty "unknown_local_recipient_reject_code", postfixProperties
 	}
 
 	/**
@@ -444,7 +440,7 @@ abstract class BasePostfixScript extends LinuxScript {
 	 * @see #postfixProperties
 	 */
 	Duration getDelayWarningTime() {
-		profileDurationProperty("delay_warning_time", postfixProperties)
+		profileDurationProperty "delay_warning_time", postfixProperties
 	}
 
 	/**
@@ -459,7 +455,7 @@ abstract class BasePostfixScript extends LinuxScript {
 	 * @see #postfixProperties
 	 */
 	Duration getMaximalQueueLifetime() {
-		profileDurationProperty("maximal_queue_lifetime", postfixProperties)
+		profileDurationProperty "maximal_queue_lifetime", postfixProperties
 	}
 
 	/**
@@ -474,7 +470,7 @@ abstract class BasePostfixScript extends LinuxScript {
 	 * @see #postfixProperties
 	 */
 	Duration getMinimalRetriesDelay() {
-		profileDurationProperty("minimal_retries_delay", postfixProperties)
+		profileDurationProperty "minimal_retries_delay", postfixProperties
 	}
 
 	/**
@@ -489,7 +485,7 @@ abstract class BasePostfixScript extends LinuxScript {
 	 * @see #postfixProperties
 	 */
 	Duration getMaximalRetriesDelay() {
-		profileDurationProperty("maximal_retries_delay", postfixProperties)
+		profileDurationProperty "maximal_retries_delay", postfixProperties
 	}
 
 	/**
@@ -505,7 +501,7 @@ abstract class BasePostfixScript extends LinuxScript {
 	 * @see #postfixProperties
 	 */
 	Duration getHeloTimeout() {
-		profileDurationProperty("helo_timeout", postfixProperties)
+		profileDurationProperty "helo_timeout", postfixProperties
 	}
 
 	/**
@@ -520,7 +516,7 @@ abstract class BasePostfixScript extends LinuxScript {
 	 * @see #postfixProperties
 	 */
 	int getRecipientLimit() {
-		profileNumberProperty("recipient_limit", postfixProperties)
+		profileNumberProperty "recipient_limit", postfixProperties
 	}
 
 	/**
@@ -534,7 +530,7 @@ abstract class BasePostfixScript extends LinuxScript {
 	 * @see #postfixProperties
 	 */
 	int getBackOffErrorLimit() {
-		profileNumberProperty("back_off_error_limit", postfixProperties)
+		profileNumberProperty "back_off_error_limit", postfixProperties
 	}
 
 	/**
@@ -548,7 +544,7 @@ abstract class BasePostfixScript extends LinuxScript {
 	 * @see #postfixProperties
 	 */
 	int getBlockingErrorLimit() {
-		profileNumberProperty("blocking_error_limit", postfixProperties)
+		profileNumberProperty "blocking_error_limit", postfixProperties
 	}
 
 	/**
@@ -562,7 +558,7 @@ abstract class BasePostfixScript extends LinuxScript {
 	 * @see #postfixProperties
 	 */
 	String getHeloRestrictions() {
-		profileProperty("helo_restrictions", postfixProperties)
+		profileProperty "helo_restrictions", postfixProperties
 	}
 
 	/**
@@ -576,7 +572,7 @@ abstract class BasePostfixScript extends LinuxScript {
 	 * @see #postfixProperties
 	 */
 	String getSenderRestrictions() {
-		profileProperty("sender_restrictions", postfixProperties)
+		profileProperty "sender_restrictions", postfixProperties
 	}
 
 	/**
@@ -590,7 +586,7 @@ abstract class BasePostfixScript extends LinuxScript {
 	 * @see #postfixProperties
 	 */
 	String getClientRestrictions() {
-		profileProperty("client_restrictions", postfixProperties)
+		profileProperty "client_restrictions", postfixProperties
 	}
 
 	/**
@@ -604,7 +600,7 @@ abstract class BasePostfixScript extends LinuxScript {
 	 * @see #postfixProperties
 	 */
 	String getRecipientRestrictions() {
-		profileProperty("recipient_restrictions", postfixProperties)
+		profileProperty "recipient_restrictions", postfixProperties
 	}
 
 	/**
@@ -618,7 +614,7 @@ abstract class BasePostfixScript extends LinuxScript {
 	 * @see #postfixProperties
 	 */
 	String getDataRestrictions() {
-		profileProperty("data_restrictions", postfixProperties)
+		profileProperty "data_restrictions", postfixProperties
 	}
 
 	/**
@@ -632,7 +628,7 @@ abstract class BasePostfixScript extends LinuxScript {
 	 * @see #postfixProperties
 	 */
 	boolean isHeloRequired() {
-		profileProperty("helo_required", postfixProperties)
+		profileProperty "helo_required", postfixProperties
 	}
 
 	/**
@@ -645,7 +641,7 @@ abstract class BasePostfixScript extends LinuxScript {
 	 * @see #postfixProperties
 	 */
 	boolean isDelayReject() {
-		profileProperty("delay_reject", postfixProperties)
+		profileProperty "delay_reject", postfixProperties
 	}
 
 	/**
@@ -658,7 +654,7 @@ abstract class BasePostfixScript extends LinuxScript {
 	 * @see #postfixProperties
 	 */
 	boolean isDisableVrfyCommand() {
-		profileProperty("disable_vrfy_command", postfixProperties)
+		profileProperty "disable_vrfy_command", postfixProperties
 	}
 
 	/**
@@ -671,7 +667,7 @@ abstract class BasePostfixScript extends LinuxScript {
 	 * @see #getDefaultProperties()
 	 */
 	String getVirtualGroupName() {
-		profileProperty "virtual_group_name"
+		profileProperty "virtual_group_name", defaultProperties
 	}
 
 	/**
@@ -684,7 +680,7 @@ abstract class BasePostfixScript extends LinuxScript {
 	 * @see #getDefaultProperties()
 	 */
 	String getVirtualUserName() {
-		profileProperty "virtual_name_name"
+		profileProperty "virtual_name_name", defaultProperties
 	}
 
 	/**
@@ -697,7 +693,7 @@ abstract class BasePostfixScript extends LinuxScript {
 	 * @see #getDefaultProperties()
 	 */
 	int getMinimumUid() {
-		profileNumberProperty "minimum_uid"
+		profileNumberProperty "minimum_uid", defaultProperties
 	}
 
 	/**
@@ -710,7 +706,7 @@ abstract class BasePostfixScript extends LinuxScript {
 	 * @see #getDefaultProperties()
 	 */
 	int getVirtualUid() {
-		profileNumberProperty "virtual_uid"
+		profileNumberProperty "virtual_uid", defaultProperties
 	}
 
 	/**
@@ -723,7 +719,7 @@ abstract class BasePostfixScript extends LinuxScript {
 	 * @see #getDefaultProperties()
 	 */
 	int getVirtualGid() {
-		profileNumberProperty "virtual_gid"
+		profileNumberProperty "virtual_gid", defaultProperties
 	}
 
 	/**

@@ -22,8 +22,11 @@ import static java.lang.String.format;
 import static org.apache.commons.collections.map.PredicatedMap.decorate;
 import groovy.lang.GString;
 
+import java.io.File;
+import java.text.Format;
+import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,8 +39,12 @@ import org.apache.commons.collections.set.UnmodifiableSet;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.codehaus.groovy.runtime.InvokerHelper;
+import org.joda.time.Duration;
 
+import com.anrisoftware.globalpom.format.duration.DurationFormatFactory;
+import com.anrisoftware.propertiesutils.ContextProperties;
 import com.anrisoftware.sscontrol.core.api.ProfileProperties;
+import com.anrisoftware.sscontrol.core.api.ServiceException;
 
 /**
  * @see ProfileProperties
@@ -48,22 +55,41 @@ import com.anrisoftware.sscontrol.core.api.ProfileProperties;
 @SuppressWarnings("serial")
 class ProfilePropertiesImpl implements ProfileProperties {
 
-	private final ProfilePropertiesImplLogger log;
+	@Inject
+	private ProfilePropertiesImplLogger log;
+
+	@Inject
+	private DurationFormatFactory durationFormatFactory;
 
 	private final Map<String, Object> properties;
 
 	@SuppressWarnings("unchecked")
-	@Inject
-	ProfilePropertiesImpl(ProfilePropertiesImplLogger logger) {
-		this.log = logger;
+	ProfilePropertiesImpl() {
 		this.properties = decorate(new HashMap<String, Object>(),
 				NotNullPredicate.INSTANCE, NotNullPredicate.INSTANCE);
 	}
 
+	/**
+	 * Returns the profile property with the specified name.
+	 * 
+	 * @param name
+	 *            the {@link String} name.
+	 * 
+	 * @return the property value.
+	 */
 	public Object propertyMissing(String name) {
 		return properties.get(name);
 	}
 
+	/**
+	 * Adds the profile property with the specified name and value.
+	 * 
+	 * @param name
+	 *            the profile {@link String} name.
+	 * 
+	 * @param args
+	 *            the profile value.
+	 */
 	public Object methodMissing(String name, Object args) {
 		@SuppressWarnings("unchecked")
 		List<Object> argsList = InvokerHelper.asList(args);
@@ -80,7 +106,7 @@ class ProfilePropertiesImpl implements ProfileProperties {
 	}
 
 	@Override
-	public boolean hasProperty(String key) {
+	public boolean containsKey(String key) {
 		return properties.containsKey(key);
 	}
 
@@ -97,8 +123,8 @@ class ProfilePropertiesImpl implements ProfileProperties {
 
 	@Override
 	public List<String> getList(String key) {
-		if (!hasProperty(key)) {
-			return Collections.emptyList();
+		if (!containsKey(key)) {
+			return null;
 		}
 		String value = get(key).toString();
 		return Arrays.asList(StringUtils.split(value, ","));
@@ -118,6 +144,244 @@ class ProfilePropertiesImpl implements ProfileProperties {
 	@Override
 	public Set<String> getKeys() {
 		return UnmodifiableSet.decorate(properties.keySet());
+	}
+
+	/**
+	 * Returns a profile property.
+	 * 
+	 * @param key
+	 *            the property {@link String} key.
+	 * 
+	 * @return the value of the profile property.
+	 * 
+	 * @throws ServiceException
+	 *             if the profile property was not found.
+	 */
+	public Object profileProperty(String key) throws ServiceException {
+		Object property = get(key);
+		if (property != null) {
+			return property;
+		}
+		throw log.noProfileProperty(this, key);
+	}
+
+	/**
+	 * Returns a profile property. If the profile property was not set return
+	 * the default value from the default properties.
+	 * 
+	 * @param key
+	 *            the property {@link String} key.
+	 * 
+	 * @param defaults
+	 *            default {@link ContextProperties} properties.
+	 * 
+	 * @return the value of the profile property.
+	 * 
+	 * @throws ServiceException
+	 *             if the profile property was not found.
+	 */
+	public Object profileProperty(String key, ContextProperties defaults)
+			throws ServiceException {
+		Object property = get(key);
+		if (property != null) {
+			return property;
+		}
+		property = defaults.getProperty(key);
+		if (property != null) {
+			return property;
+		}
+		throw log.noProfileProperty(this, key);
+	}
+
+	/**
+	 * Returns a duration profile property. If the profile property was not set
+	 * return the default value from the default properties.
+	 * 
+	 * @param key
+	 *            the property {@link String} key.
+	 * 
+	 * @param defaults
+	 *            default {@link ContextProperties} properties.
+	 * 
+	 * @return the {@link Duration} value of the profile property.
+	 * 
+	 * @throws ServiceException
+	 *             if the profile property was not found.
+	 * 
+	 * @throws ParseException
+	 *             if the profile property could not be parsed to a duration.
+	 */
+	public Duration profileDurationProperty(String key,
+			ContextProperties defaults) throws ServiceException, ParseException {
+		Object property = get(key);
+		if (property != null) {
+			return durationFormatFactory.create().parse(property.toString());
+		}
+		property = defaults.getProperty(key);
+		if (property != null) {
+			return durationFormatFactory.create().parse(property.toString());
+		}
+		throw log.noProfileProperty(this, key);
+	}
+
+	/**
+	 * Returns a profile number property. If the profile property was not set
+	 * return the default value from the default properties.
+	 * 
+	 * @param key
+	 *            the property {@link String} key.
+	 * 
+	 * @param defaults
+	 *            default {@link ContextProperties} properties.
+	 * 
+	 * @return the {@link Number} value of the profile property.
+	 * 
+	 * @throws ServiceException
+	 *             if the profile property was not found.
+	 * 
+	 * @throws ClassCastException
+	 *             if the profile property is not a number.
+	 */
+	public Number profileNumberProperty(String key, ContextProperties defaults)
+			throws ServiceException {
+		Number property = (Number) get(key);
+		if (property != null) {
+			return property;
+		}
+		property = defaults.getNumberProperty(key);
+		if (property != null) {
+			return property;
+		}
+		throw log.noProfileProperty(this, key);
+	}
+
+	/**
+	 * Returns a list profile property. If the profile property was not set
+	 * return the default value from the default properties.
+	 * 
+	 * @param key
+	 *            the property {@link String} key.
+	 * 
+	 * @param defaults
+	 *            default {@link ContextProperties} properties.
+	 * 
+	 * @return the {@link List} value of the profile property.
+	 * 
+	 * @throws ServiceException
+	 *             if the profile property was not found.
+	 */
+	public List<String> profileListProperty(String key,
+			ContextProperties defaults) throws ServiceException {
+		List<String> property = getList(key);
+		if (property != null) {
+			return property;
+		}
+		property = defaults.getListProperty(key);
+		if (property != null) {
+			return property;
+		}
+		throw log.noProfileProperty(this, key);
+	}
+
+	/**
+	 * Returns a list profile property. If the profile property was not set
+	 * return the default value from the default properties. The specified
+	 * format is used to create the list items.
+	 * 
+	 * @param key
+	 *            the property {@link String} key.
+	 * 
+	 * @param format
+	 *            the {@link Format} that is used to parse the string properties
+	 *            and create the list items.
+	 * 
+	 * @param defaults
+	 *            default {@link ContextProperties} properties.
+	 * 
+	 * @return the {@link List} value of the profile property.
+	 * 
+	 * @throws ServiceException
+	 *             if the profile property was not found.
+	 * 
+	 * @throws ParseException
+	 *             if the profile property could not be parsed.
+	 */
+	public <T> List<T> profileTypedListProperty(String key, Format format,
+			ContextProperties defaults) throws ServiceException, ParseException {
+		List<String> values = getList(key);
+		if (values != null) {
+			return asTypedList(values, format);
+		}
+		List<T> property = defaults.getTypedListProperty(key, format, ",");
+		if (property != null) {
+			return property;
+		}
+		throw log.noProfileProperty(this, key);
+	}
+
+	@SuppressWarnings("unchecked")
+	private <T> List<T> asTypedList(List<String> property, Format format)
+			throws ParseException {
+		List<T> list = new ArrayList<T>();
+		for (String value : property) {
+			list.add((T) format.parseObject(value));
+		}
+		return list;
+	}
+
+	/**
+	 * Returns the profile directory path property. If the profile property was
+	 * not set return the default value from the default properties.
+	 * 
+	 * @param key
+	 *            the key of the profile property.
+	 * 
+	 * @param p
+	 *            default {@link ContextProperties} properties.
+	 * 
+	 * @return the profile directory {@link File} path.
+	 * 
+	 * @throws ServiceException
+	 *             if the profile property was not found.
+	 */
+	public File profileDirProperty(String key, ContextProperties defaults)
+			throws ServiceException {
+		Object path = profileProperty(key, defaults);
+		if (path instanceof File) {
+			return (File) path;
+		} else {
+			return new File(path.toString());
+		}
+	}
+
+	/**
+	 * Returns the profile path property. If the profile property was not set
+	 * return the default value from the default properties. If the path is not
+	 * absolute then it is assume to be under the specified parent directory.
+	 * 
+	 * @param key
+	 *            the key of the profile property.
+	 * 
+	 * @param parent
+	 *            the parent {@link File} directory.
+	 * 
+	 * @param p
+	 *            default {@link ContextProperties} properties.
+	 * 
+	 * @return the profile file {@link File} path.
+	 * 
+	 * @throws ServiceException
+	 *             if the profile property was not found.
+	 */
+	public File profileFileProperty(String key, File parent,
+			ContextProperties defaults) throws ServiceException {
+		Object path = profileProperty(key, defaults);
+		if (path instanceof File) {
+			return (File) path;
+		} else {
+			File file = new File(path.toString());
+			return file.isAbsolute() ? file : new File(parent, path.toString());
+		}
 	}
 
 	@Override

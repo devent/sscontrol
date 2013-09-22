@@ -284,7 +284,7 @@ abstract class OpenldapStorageConfig extends BaseStorage implements StorageConfi
 	 * @see #getStorageProperties()
 	 */
 	File getMailboxMapsFile() {
-		propertyFile "mailbox_maps_file", storageProperties
+		script.propertyFile "mailbox_maps_file", storageProperties
 	}
 
 	/**

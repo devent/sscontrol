@@ -21,15 +21,12 @@ package com.anrisoftware.sscontrol.core.service
 import static org.apache.commons.lang3.StringUtils.*
 
 import java.nio.charset.Charset
-import java.text.Format
 
 import javax.inject.Inject
 
 import org.apache.commons.io.FileUtils
-import org.joda.time.Duration
+import org.codehaus.groovy.runtime.InvokerHelper
 
-import com.anrisoftware.globalpom.format.duration.DurationFormatFactory
-import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.resources.templates.api.Templates
 import com.anrisoftware.resources.templates.api.TemplatesFactory
 import com.anrisoftware.sscontrol.core.api.ProfileProperties
@@ -65,9 +62,6 @@ abstract class LinuxScript extends Script {
 
 	@Inject
 	private LinuxScriptLogger log
-
-	@Inject
-	DurationFormatFactory durationFormatFactory
 
 	@Inject
 	TemplatesFactory templatesFactory
@@ -556,7 +550,7 @@ abstract class LinuxScript extends Script {
 	 * @see #getDefaultProperties()
 	 */
 	String getGroupAddCommand() {
-		profileProperty "group_add_command"
+		profileProperty "group_add_command", defaultProperties
 	}
 
 	/**
@@ -569,7 +563,7 @@ abstract class LinuxScript extends Script {
 	 * @see #getDefaultProperties()
 	 */
 	String getGroupsFile() {
-		profileProperty "groups_file"
+		profileProperty "groups_file", defaultProperties
 	}
 
 	/**
@@ -608,7 +602,7 @@ abstract class LinuxScript extends Script {
 	 * @see #getDefaultProperties()
 	 */
 	String getUserAddCommand() {
-		profileProperty "user_add_command"
+		profileProperty "user_add_command", defaultProperties
 	}
 
 	/**
@@ -621,7 +615,7 @@ abstract class LinuxScript extends Script {
 	 * @see #getDefaultProperties()
 	 */
 	String getUsersFile() {
-		profileProperty "users_file"
+		profileProperty "users_file", defaultProperties
 	}
 
 	/**
@@ -635,7 +629,7 @@ abstract class LinuxScript extends Script {
 	 * @see #getDefaultProperties()
 	 */
 	String getReconfigureCommand() {
-		profileProperty "reconfigure_command"
+		profileProperty "reconfigure_command", defaultProperties
 	}
 
 	/**
@@ -648,151 +642,7 @@ abstract class LinuxScript extends Script {
 	 * @see #getDefaultProperties()
 	 */
 	String getZcatCommand() {
-		profileProperty "zcat_command"
-	}
-
-	/**
-	 * Returns a profile property. If the profile property was not set
-	 * return the default value from the default properties.
-	 *
-	 * @param key
-	 * 			  the key of the profile property.
-	 *
-	 * @param p
-	 * 			  the {@link ContextProperties} containing the property values,
-	 * 			  defaults to {@link #getDefaultProperties()}.
-	 *
-	 * @return the value of the profile property or the default property
-	 * if the profile property was not set.
-	 */
-	def profileProperty(String key, ContextProperties p=defaultProperties) {
-		def property = profile[key]
-		property != null ? property : p.getProperty(key)
-	}
-
-	/**
-	 * Returns a duration profile property. If the profile property was not set
-	 * return the default value from the default properties.
-	 *
-	 * @param key
-	 * 			  the key of the profile property.
-	 *
-	 * @param p
-	 * 			  the {@link ContextProperties} containing the property values,
-	 * 			  defaults to {@link #getDefaultProperties()}.
-	 *
-	 * @return the {@link Duration} of the profile property or the
-	 * default property if the profile property was not set.
-	 *
-	 * @see DurationFormat#parse(String)
-	 */
-	Duration profileDurationProperty(String key, ContextProperties p=defaultProperties) {
-		def property = profile[key]
-		property = property != null ? property : p.getProperty(key)
-		durationFormatFactory.create().parse property
-	}
-
-	/**
-	 * Returns a profile number property. If the profile property was not set
-	 * return the default value from the default properties.
-	 *
-	 * @param key
-	 * 			  the key of the profile property.
-	 *
-	 * @param p
-	 * 			  the {@link ContextProperties} containing the property values,
-	 * 			  defaults to {@link #getDefaultProperties()}.
-	 *
-	 * @return the value of the profile property or the default property
-	 * if the profile property was not set.
-	 */
-	def profileNumberProperty(String key, ContextProperties p=defaultProperties) {
-		def property = profile[key]
-		property != null ? property : p.getNumberProperty(key)
-	}
-
-	private propertyKey(String key, ContextProperties p) {
-		def property = p.getProperty(key)
-		log.checkPropertyKey this, property, key
-		return property
-	}
-
-	/**
-	 * Returns a list profile property. If the profile property was not set
-	 * return the default value from the default properties.
-	 *
-	 * @param key
-	 * 			  the key of the profile property.
-	 *
-	 * @param p
-	 * 			  the {@link ContextProperties} containing the property values,
-	 * 			  defaults to {@link #getDefaultProperties()}.
-	 *
-	 * @return the {@link List} of the profile property or the default property
-	 * if the profile property was not set.
-	 */
-	List profileListProperty(String key, ContextProperties p=defaultProperties) {
-		log.checkProperties this, p, key
-		def property = profile.getList(key)
-		property.empty ? p.getListProperty(key, ",") : property
-	}
-
-	/**
-	 * Returns a list profile property. If the profile property was not set
-	 * return the default value from the default properties. The specified
-	 * format is used to create the list items.
-	 *
-	 * @param key
-	 * 			  the key of the profile property.
-	 *
-	 * @param p
-	 * 			  the {@link ContextProperties} containing the property values.
-	 *
-	 * @param format
-	 * 		  	  the {@link Format} that is used to parse the string
-	 * 			  properties and create the list items.
-	 *
-	 * @return the {@link List} of the profile property or the default property
-	 * if the profile property was not set.
-	 */
-	List profileTypedListProperty(String key, ContextProperties p, Format format) {
-		def property = profile.getList(key)
-		property.empty ? p.getTypedListProperty(key, format, ",") : asTypedList(property, format)
-	}
-
-	List asTypedList(List<String> strings, Format format) {
-		List list = new ArrayList()
-		strings.each {
-			list << format.parseObject(it)
-		}
-		return list
-	}
-
-	/**
-	 * Returns the profile path property. If the profile property was not set
-	 * return the default value from the default properties. If the path is
-	 * not absolute then it is assume to be under the configuration directory.
-	 *
-	 * @param key
-	 * 			  the key of the profile property.
-	 *
-	 * @param p
-	 * 			  the {@link ContextProperties} containing the property values,
-	 * 			  defaults to {@link #getDefaultProperties()}.
-	 *
-	 * @param parent
-	 * 			  the parent {@link File} directory,
-	 * 			  defaults to {@link #getConfigurationDir()}.
-	 */
-	File propertyFile(String key, ContextProperties p=defaultProperties, File parent=configurationDir) {
-		def path = profileProperty(key, p)
-		if (path instanceof File) {
-			return path
-		} else {
-			log.checkPropertyFile this, path, key
-			def file = new File(path)
-			return file.absolute ? file : new File(parent, path)
-		}
+		profileProperty "zcat_command", defaultProperties
 	}
 
 	/**
@@ -817,6 +667,22 @@ abstract class LinuxScript extends Script {
 	@Override
 	void setProperty(String property, Object newValue) {
 		metaClass.setProperty(this, property, newValue)
+	}
+
+	/**
+	 * Delegates profile property methods.
+	 */
+	def methodMissing(String name, def args) {
+		switch (name) {
+			case 'profileProperty':
+			case 'profileDurationProperty':
+			case 'profileNumberProperty':
+			case 'profileListProperty':
+			case 'profileTypedListProperty':
+			case 'profileFileProperty':
+			case 'containsKey':
+				return InvokerHelper.invokeMethod(profile, name, args)
+		}
 	}
 
 	/**

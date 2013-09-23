@@ -34,7 +34,7 @@ import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokenTemplate
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-abstract class MaraDns_1_2Script extends LinuxScript {
+abstract class Maradns12Script extends MaradnsScript {
 
 	Templates maradnsTemplates
 
@@ -44,13 +44,13 @@ abstract class MaraDns_1_2Script extends LinuxScript {
 
 	@Override
 	def run() {
+		super.run()
 		commandTemplates = templatesFactory.create("ScriptCommandTemplates")
-		maradnsTemplates = templatesFactory.create("Maradns_ubuntu_10_04")
+		maradnsTemplates = templatesFactory.create("Maradns12")
 		maradnsConfiguration = maradnsTemplates.getResource("configuration")
 		zoneConfiguration = maradnsTemplates.getResource("zonedb")
 		deployMaraDnsConfiguration()
 		deployZoneDbConfigurations()
-		restartServices()
 	}
 
 	/**

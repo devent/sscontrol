@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-dns-maradns. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.dns.maradns.ubuntu;
+package com.anrisoftware.sscontrol.dns.maradns.ubuntu_10_04;
 
 import java.net.URL;
 
@@ -68,14 +68,14 @@ import com.anrisoftware.propertiesutils.AbstractContextPropertiesProvider;
  * @since 1.0
  */
 @SuppressWarnings("serial")
-public class Ubuntu10_04PropertiesProvider extends
+public class Ubuntu1004PropertiesProvider extends
 		AbstractContextPropertiesProvider {
 
-	private static final URL RESOURCE = Ubuntu10_04PropertiesProvider.class
+	private static final URL RESOURCE = Ubuntu1004PropertiesProvider.class
 			.getResource("/maradns_ubuntu_10_04.properties");
 
-	Ubuntu10_04PropertiesProvider() {
-		super(Ubuntu10_04PropertiesProvider.class, RESOURCE);
+	Ubuntu1004PropertiesProvider() {
+		super(Ubuntu1004PropertiesProvider.class, RESOURCE);
 	}
 
 }

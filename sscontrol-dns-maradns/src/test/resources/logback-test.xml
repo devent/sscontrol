@@ -33,7 +33,10 @@
 		<appender-ref ref="TESTING_STYLE" />
 	</root>
 
-	<logger name="com.anrisoftware" level="INFO" />
-	<logger name="com.anrisoftware.sscontrol" level="ALL" />
+    <logger name="com.anrisoftware" level="INFO" />
+    <logger name="com.anrisoftware.sscontrol" level="DEBUG" />
+    <logger name="com.anrisoftware.sscontrol.workers.command" level="ERROR" />
+    <logger name="com.anrisoftware.sscontrol.workers.command.script" level="DEBUG" />
+    <logger name="com.anrisoftware.sscontrol.dns" level="ALL" />
 
 </configuration>

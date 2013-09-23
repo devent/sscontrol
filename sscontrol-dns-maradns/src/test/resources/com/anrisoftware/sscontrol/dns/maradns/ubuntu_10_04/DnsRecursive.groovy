@@ -16,32 +16,30 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-dns-maradns. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.dns.maradns.ubuntu
+package com.anrisoftware.sscontrol.dns.maradns.ubuntu_10_04
+dns {
+	serial 1, generate: false
 
-import javax.inject.Inject
+	// bind the dns server to address only
+	bind_address "127.0.0.1"
 
-import com.anrisoftware.propertiesutils.ContextProperties
-import com.anrisoftware.sscontrol.dns.maradns.linux.MaraDns_1_2Script
+	// soa entry, default timers
+	zone "example1.com", "ns.example1.com", "hostmaster@example1.com"
 
-/**
- * Returns the configuration directory, the configuration file and the
- * restart command for Ubuntu 10.04.
- *
- * @author Erwin Mueller, erwin.mueller@deventm.org
- * @since 1.0
- */
-class MaraDns_1_2_Ubuntu_10_04Script extends MaraDns_1_2Script {
+	// adds IPv4 address alias
+	alias "localhost" address "127.0.0.1"
+	alias "vbox" address "10.0.2.2"
 
-	@Inject
-	Ubuntu10_04PropertiesProvider ubuntuProperties
-
-	File getMararcFile() {
-		def file = profileProperty "configuration_file", defaultProperties
-		new File(configurationDir, file)
+	// sets the group to the root servers
+	roots {
+		servers "icann"
 	}
 
-	@Override
-	def getDefaultProperties() {
-		ubuntuProperties.get()
+	// sets recursive host
+	recursive {
+		servers "localhost"
 	}
+
+	// soa entry, default timers
+	zone "example1.com", "ns.example1.com", "hostmaster@example1.com"
 }

@@ -16,30 +16,27 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-dns-maradns. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.dns.maradns.ubuntu
-dns {
-	serial 1, generate: false
+package com.anrisoftware.sscontrol.dns.maradns.linux
 
-	// bind the dns server to address only
-	bind_address "127.0.0.1"
+import com.anrisoftware.resources.templates.api.Templates
+import com.anrisoftware.sscontrol.core.service.LinuxScript
 
-	// soa entry, default timers
-	zone "example1.com", "ns.example1.com", "hostmaster@example1.com"
+/**
+ * MaraDNS/service.
+ *
+ * @author Erwin Mueller, erwin.mueller@deventm.org
+ * @since 1.0
+ */
+abstract class MaradnsScript extends LinuxScript {
 
-	// adds IPv4 address alias
-	alias "localhost" address "127.0.0.1"
-	alias "vbox" address "10.0.2.2"
-
-	// sets the group to the root servers
-	roots {
-		servers "icann"
+	def run() {
+		super.run()
+		beforeConfiguration()
 	}
 
-	// sets recursive host
-	recursive {
-		servers "localhost"
-	}
-
-	// soa entry, default timers
-	zone "example1.com", "ns.example1.com", "hostmaster@example1.com"
+	/**
+	 * Runs distribution specific configuration before
+	 * the MaraDNS/configuration.
+	 */
+	abstract beforeConfiguration()
 }

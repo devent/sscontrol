@@ -16,39 +16,31 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-dns-maradns. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.dns.maradns.ubuntu
+package com.anrisoftware.sscontrol.dns.maradns.ubuntu_10_04;
 
-import javax.inject.Inject
+import static com.google.inject.multibindings.MapBinder.newMapBinder;
+import groovy.lang.Script;
 
-import com.anrisoftware.propertiesutils.ContextProperties
-import com.anrisoftware.sscontrol.dns.maradns.linux.MaraDnsScript
+import com.google.inject.AbstractModule;
+import com.google.inject.multibindings.MapBinder;
 
 /**
- * Enabled the universe repository and installs MaraDNS packages.
- *
- * @see MaraDns_1_2_Ubuntu_10_04Script
- *
+ * Installs the MaraDNS Ubuntu script and provides the MaraDNS Ubuntu
+ * properties.
+ * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class Ubuntu_10_04Script extends MaraDnsScript {
-
-	@Inject
-	Ubuntu10_04PropertiesProvider ubuntuProperties
-
-	@Inject
-	MaraDns_1_2_Ubuntu_10_04Script maraDnsScript
+public class UbuntuModule extends AbstractModule {
 
 	@Override
-	def distributionSpecificConfiguration() {
-		def distribution = profileProperty "distribution_name", defaultProperties
-		def repositories = profileListProperty "additional_repositories", defaultProperties
-		enableDebRepositories distribution, repositories
-		installPackages packages
+	protected void configure() {
+		bindScripts();
 	}
 
-	@Override
-	def getDefaultProperties() {
-		ubuntuProperties.get()
+	private void bindScripts() {
+		MapBinder<String, Script> binder;
+		binder = newMapBinder(binder(), String.class, Script.class);
+		binder.addBinding("maradns.ubuntu_10_04").to(Ubuntu1004Script.class);
 	}
 }

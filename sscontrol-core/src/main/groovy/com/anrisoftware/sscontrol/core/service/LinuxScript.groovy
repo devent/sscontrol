@@ -473,7 +473,7 @@ abstract class LinuxScript extends Script {
 	 * @see #getDefaultProperties()
 	 */
 	File getConfigurationDir() {
-		profileProperty("configuration_directory", defaultProperties) as File
+		profileDirProperty "configuration_directory", defaultProperties
 	}
 
 	/**
@@ -487,7 +487,7 @@ abstract class LinuxScript extends Script {
 	 * @see #getDefaultProperties()
 	 */
 	File getTmpDirectory() {
-		String path = profileProperty("temp_directory")
+		String path = profileProperty("temp_directory", defaultProperties)
 		path == null ? System.getProperty("java.io.tmpdir") : new File(path)
 	}
 
@@ -680,8 +680,11 @@ abstract class LinuxScript extends Script {
 			case 'profileListProperty':
 			case 'profileTypedListProperty':
 			case 'profileFileProperty':
+			case 'profileDirProperty':
 			case 'containsKey':
 				return InvokerHelper.invokeMethod(profile, name, args)
+			default:
+				return InvokerHelper.invokeMethod(this, name, args)
 		}
 	}
 

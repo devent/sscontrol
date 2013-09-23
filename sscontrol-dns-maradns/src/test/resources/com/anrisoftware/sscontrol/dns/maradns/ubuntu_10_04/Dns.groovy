@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-dns-maradns. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.dns.maradns.ubuntu
+package com.anrisoftware.sscontrol.dns.maradns.ubuntu_10_04
 dns {
 	serial 1, generate: false
 

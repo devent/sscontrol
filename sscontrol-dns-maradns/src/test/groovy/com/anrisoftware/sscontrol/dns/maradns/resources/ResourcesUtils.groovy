@@ -16,33 +16,44 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-dns-maradns. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.dns.maradns.linux
+package com.anrisoftware.sscontrol.dns.maradns.resources
 
-import com.anrisoftware.propertiesutils.ContextProperties
-import com.anrisoftware.resources.templates.api.Templates
-import com.anrisoftware.sscontrol.core.service.LinuxScript
+import static com.anrisoftware.globalpom.utils.TestUtils.*
+import static org.apache.commons.io.FileUtils.*
 
 /**
- * Deploys the MaraDNS service on a general Linux system.
+ * Loads resources.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-abstract class MaraDnsScript extends LinuxScript {
+class ResourcesUtils {
 
-	def run() {
-		super.run()
-		distributionSpecificConfiguration()
-		runScript maraDnsScript
+	String path
+
+	URL resource
+
+	File asFile(File parent) {
+		new File(parent, path)
 	}
 
-	/**
-	 * Returns the MaraDNS service script.
-	 */
-	abstract def getMaraDnsScript()
+	void createFile(File parent) {
+		assert resource : "Resource cannot be null for ${resource}"
+		copyURLToFile resource, new File(parent, path)
+	}
 
-	/**
-	 * Run the distribution specific configuration.
-	 */
-	abstract distributionSpecificConfiguration()
+	void createCommand(File parent) {
+		assert resource : "Resource cannot be null for ${resource}"
+		copyResourceToCommand resource, new File(parent, path)
+	}
+
+	String replaced(File parent, def search, def replace) {
+		String text = readFileToString(this.asFile(parent))
+		text.replaceAll(search.toString(), replace)
+	}
+
+	String toString() {
+		assert resource : "Resource cannot be null for ${resource}"
+		resourceToString resource
+	}
 }

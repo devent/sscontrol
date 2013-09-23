@@ -16,20 +16,17 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-dns-maradns. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.dns.maradns.linux;
+package com.anrisoftware.sscontrol.dns.maradns.ubuntu_10_04
 
-import com.google.inject.AbstractModule;
+import com.anrisoftware.sscontrol.dns.maradns.ubuntu.UbuntuResources
 
-/**
- * MaraDNS module.
- * 
- * @author Erwin Mueller, erwin.mueller@deventm.org
- * @since 1.0
- */
-public class MaraDnsModule extends AbstractModule {
-
-	@Override
-	protected void configure() {
+profile "ubuntu_10_04", {
+	dns {
+		service "maradns"
+		install_command "${UbuntuResources.aptitudeCommand.asFile(tmp)} update && ${UbuntuResources.aptitudeCommand.asFile(tmp)} install"
+		restart_command "${UbuntuResources.restartCommand.asFile(tmp)} restart"
+		enable_repository_command UbuntuResources.addRepositoryCommand.asFile(tmp)
+		configuration_directory UbuntuResources.confDir.asFile(tmp)
+		packaging_configuration_directory UbuntuResources.packagingConfigurationDirectory.asFile(tmp)
 	}
-
 }

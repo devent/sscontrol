@@ -1,18 +1,18 @@
 /*
  * Copyright 2012-2013 Erwin Müller <erwin.mueller@deventm.org>
- *
+ * 
  * This file is part of sscontrol-hosts.
- *
+ * 
  * sscontrol-hosts is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published by the
  * Free Software Foundation, either version 3 of the License, or (at your
  * option) any later version.
- *
+ * 
  * sscontrol-hosts is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
  * for more details.
- *
+ * 
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-hosts. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -26,16 +26,15 @@ import groovy.lang.Script;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
 import javax.inject.Inject;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.anrisoftware.sscontrol.core.api.ServiceException;
+import com.anrisoftware.sscontrol.core.api.ServiceScriptFactory;
 import com.anrisoftware.sscontrol.core.service.AbstractService;
 import com.anrisoftware.sscontrol.hosts.utils.HostFormatFactory;
-import com.google.inject.Provider;
 
 /**
  * The hosts service.
@@ -59,26 +58,31 @@ public class HostsServiceImpl extends AbstractService {
 
 	private final HostsServiceImplLogger log;
 
-	private final Map<String, Provider<Script>> scripts;
-
 	private final List<Host> hosts;
 
 	private final HostFactory hostFactory;
 
 	@SuppressWarnings("unchecked")
 	@Inject
-	HostsServiceImpl(HostsServiceImplLogger logger,
-			Map<String, Provider<Script>> scripts, HostFactory hostFactory,
+	HostsServiceImpl(HostsServiceImplLogger logger, HostFactory hostFactory,
 			HostFormatFactory hostFormatFactory) {
 		this.log = logger;
-		this.scripts = scripts;
 		this.hostFactory = hostFactory;
 		this.hosts = decorate(new ArrayList<String>(), INSTANCE);
 	}
 
 	@Override
 	protected Script getScript(String profileName) throws ServiceException {
-		return scripts.get(profileName).get();
+		ServiceScriptFactory scriptFactory = findScriptFactory(NAME);
+		return (Script) scriptFactory.getScript();
+	}
+
+	/**
+	 * Because we load the script from a script service the dependencies are
+	 * already injected.
+	 */
+	@Override
+	protected void injectScript(Script script) {
 	}
 
 	/**

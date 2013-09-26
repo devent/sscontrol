@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-hosts. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.hosts.ubuntu
+package com.anrisoftware.sscontrol.hosts.ubuntu_10_04
 
 import javax.inject.Inject
 
@@ -29,10 +29,10 @@ import com.anrisoftware.sscontrol.hosts.linux.HostsScript
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class Ubuntu_10_04Script extends HostsScript {
+class Ubuntu1004Script extends HostsScript {
 
 	@Inject
-	Ubuntu10_04PropertiesProvider ubuntuProperties
+	Ubuntu1004PropertiesProvider ubuntuProperties
 
 	@Override
 	def getDefaultProperties() {

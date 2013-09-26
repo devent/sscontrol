@@ -18,7 +18,6 @@
  */
 package com.anrisoftware.sscontrol.hosts.service;
 
-import com.anrisoftware.sscontrol.hosts.ubuntu.UbuntuModule;
 import com.anrisoftware.sscontrol.hosts.utils.HostsUtilsModule;
 import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
@@ -33,7 +32,6 @@ class HostsModule extends AbstractModule {
 
 	@Override
 	protected void configure() {
-		install(new UbuntuModule());
 		install(new HostsUtilsModule());
 		installHost();
 	}

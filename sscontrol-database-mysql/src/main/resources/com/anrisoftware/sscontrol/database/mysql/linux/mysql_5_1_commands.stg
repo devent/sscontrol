@@ -1,14 +1,8 @@
-mysqld(service) ::= <<
-[mysqld]
-bind-address = <service.bindAddress>
-general_log = <if (service.debugging)>1<else>0<endif>
->>
-
-checkadminpassword(mysqladminCommand, service) ::= <<
+checkAdminPassword(mysqladminCommand, service) ::= <<
 <mysqladminCommand> -u root --password=<service.adminPassword> status
 >>
 
-setupadminpassword(mysqladminCommand, service) ::= <<
+setupAdminPassword(mysqladminCommand, service) ::= <<
 <mysqladminCommand> -u root password <service.adminPassword>
 >>
 
@@ -23,7 +17,7 @@ STOP
 
 createDatabase(database) ::= <<
 <! create the specified database !>
-CREATE DATABASE IF NOT EXISTS \`<database.name>\` CHARACTER SET \`<database.characterSet>\` COLLATE \`<database.collate>\`;
+CREATE DATABASE IF NOT EXISTS `<database.name>` CHARACTER SET `<database.characterSet>` COLLATE `<database.collate>`;
 
 >>
 

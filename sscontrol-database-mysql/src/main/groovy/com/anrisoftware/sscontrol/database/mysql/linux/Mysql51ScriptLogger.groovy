@@ -29,7 +29,7 @@ import com.anrisoftware.sscontrol.database.statements.Database
  * @since 1.0
  */
 @Singleton
-class Mysql_5_1ScriptLogger extends AbstractLogger {
+class Mysql51ScriptLogger extends AbstractLogger {
 
 	enum _ {
 		ADMINISTRATOR_PASSWORD_SET("Administrator password set for {}, worker {}, output: <<EOL\n{}\nEOL"),
@@ -63,8 +63,8 @@ class Mysql_5_1ScriptLogger extends AbstractLogger {
 	/**
 	 * Create logger for {@link Mysql_5_1Script}.
 	 */
-	Mysql_5_1ScriptLogger() {
-		super(Mysql_5_1Script.class)
+	Mysql51ScriptLogger() {
+		super(Mysql51Script.class)
 	}
 
 	void adminPasswordSet(def script, def worker) {

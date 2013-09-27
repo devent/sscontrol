@@ -16,13 +16,9 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-database-mysql. If not, see <http://www.gnu.org/licenses/>.
  */
-
-
 package com.anrisoftware.sscontrol.database.mysql.linux
 
 import static org.apache.commons.io.FileUtils.*
-
-import java.util.regex.Pattern
 
 import javax.inject.Inject
 
@@ -33,29 +29,28 @@ import com.anrisoftware.sscontrol.database.statements.Database
 import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokenTemplate
 
 /**
- * Script to configure MySQL 5.1.
+ * MySQL 5.1 service script.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-abstract class Mysql_5_1Script extends LinuxScript {
+abstract class Mysql51Script extends MysqlScript {
 
 	@Inject
-	Mysql_5_1ScriptLogger log
+	Mysql51ScriptLogger log
 
 	Templates mysqlTemplates
 
 	TemplateResource mysqlConfiguration
 
-	TemplateResource zoneConfiguration
+	TemplateResource mysqlCommands
 
 	@Override
 	def run() {
 		super.run()
-		mysqlTemplates = templatesFactory.create("Mysql_5_1")
+		mysqlTemplates = templatesFactory.create("Mysql51")
 		mysqlConfiguration = mysqlTemplates.getResource("configuration")
-		service.setDefaultCharacterSet defaultCharacterSet
-		service.setDefaultCollate defaultCollate
+		mysqlCommands = mysqlTemplates.getResource("commands")
 		deployMysqldConfiguration()
 		restartServices()
 		setupAdministratorPassword()
@@ -65,21 +60,21 @@ abstract class Mysql_5_1Script extends LinuxScript {
 	}
 
 	/**
-	 * Deploys the mysqld configuration.
+	 * Deploys the mysqld/configuration.
 	 */
 	void deployMysqldConfiguration() {
-		deployConfiguration configurationTokens(), currentMysqldConfiguration, mysqldConfiguration, mysqldFile
+		def replace = mysqlConfiguration.getText(true, "mysqld", "service", service)
+		deployConfiguration configurationTokens(), currentMysqldConfiguration, [
+			new TokenTemplate("(?s).*", replace)
+		], mysqldFile
 		log.mysqldConfigurationDeployed this
 	}
 
 	/**
-	 * Returns the mysqld configuration.
+	 * Returns the current {@code mysqld} configuration.
 	 */
-	List getMysqldConfiguration() {
-		def replace = mysqlConfiguration.getText(true, "mysqld", "service", service)
-		[
-			new TokenTemplate(".*", replace, Pattern.DOTALL)
-		]
+	String getCurrentMysqldConfiguration() {
+		currentConfiguration mysqldFile
 	}
 
 	/**
@@ -87,14 +82,14 @@ abstract class Mysql_5_1Script extends LinuxScript {
 	 */
 	void setupAdministratorPassword() {
 		def worker = scriptCommandFactory.create(
-				mysqlConfiguration, "checkadminpassword",
+				mysqlCommands, "checkAdminPassword",
 				"mysqladminCommand", mysqladminCommand,
 				"service", service)
 		worker.skipExitValue = true
 		worker()
 		if (worker.exitCode != 0) {
 			worker = scriptCommandFactory.create(
-					mysqlConfiguration, "setupadminpassword",
+					mysqlCommands, "setupAdminPassword",
 					"mysqladminCommand", mysqladminCommand,
 					"service", service)()
 			log.adminPasswordSet this, worker
@@ -106,7 +101,7 @@ abstract class Mysql_5_1Script extends LinuxScript {
 	 */
 	void createDatabases() {
 		def worker = scriptCommandFactory.create(
-				mysqlConfiguration, "createDatabases",
+				mysqlCommands, "createDatabases",
 				"mysqlCommand", mysqlCommand,
 				"service", service)()
 		log.databasesCreated this, worker
@@ -117,7 +112,7 @@ abstract class Mysql_5_1Script extends LinuxScript {
 	 */
 	void createUsers() {
 		def worker = scriptCommandFactory.create(
-				mysqlConfiguration, "createUsers",
+				mysqlCommands, "createUsers",
 				"mysqlCommand", mysqlCommand,
 				"service", service)()
 		log.usersCreated this, worker
@@ -132,7 +127,7 @@ abstract class Mysql_5_1Script extends LinuxScript {
 			database.importScripts(handler).each {
 				if (it != null) {
 					def worker = scriptCommandFactory.create(
-							mysqlConfiguration, "importScript",
+							mysqlCommands, "importScript",
 							"mysqlCommand", mysqlCommand,
 							"service", service,
 							"script", it, "database", database)()
@@ -140,67 +135,5 @@ abstract class Mysql_5_1Script extends LinuxScript {
 				}
 			}
 		}
-	}
-
-	/**
-	 * Returns the default character set for databases.
-	 * <p>
-	 * Example: {@code utf-8}
-	 *
-	 * <ul>
-	 * <li>profile property key {@code default_character_set}</li>
-	 * </ul>
-	 */
-	abstract String getDefaultCharacterSet()
-
-	/**
-	 * Returns the default collate for databases.
-	 * <p>
-	 * Example: {@code utf8_general_ci}
-	 *
-	 * <ul>
-	 * <li>profile property key {@code default_collate}</li>
-	 * </ul>
-	 */
-	abstract String getDefaultCollate()
-
-	/**
-	 * Returns the mysqladmin command.
-	 * <p>
-	 * Example: {@code /usr/bin/mysqladmin}
-	 *
-	 * <ul>
-	 * <li>profile property key {@code mysqladmin_command}</li>
-	 * </ul>
-	 */
-	abstract String getMysqladminCommand()
-
-	/**
-	 * Returns the mysql command.
-	 * <p>
-	 * Example: {@code /usr/bin/mysql}
-	 *
-	 * <ul>
-	 * <li>profile property key {@code mysql_command}</li>
-	 * </ul>
-	 */
-	abstract String getMysqlCommand()
-
-	/**
-	 * Returns the file of the {@code mysqld} configuration file.
-	 * <p>
-	 * Example: {@code sscontrol_mysqld.cnf}
-	 *
-	 * <ul>
-	 * <li>profile property key {@code mysqld_configuration_file}</li>
-	 * </ul>
-	 */
-	abstract File getMysqldFile()
-
-	/**
-	 * Returns the current {@code mysqld} configuration.
-	 */
-	String getCurrentMysqldConfiguration() {
-		currentConfiguration mysqldFile
 	}
 }

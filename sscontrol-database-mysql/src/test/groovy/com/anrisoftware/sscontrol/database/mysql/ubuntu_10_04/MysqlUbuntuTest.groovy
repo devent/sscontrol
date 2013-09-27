@@ -16,48 +16,43 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-database-mysql. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.database.mysql.ubuntu
+package com.anrisoftware.sscontrol.database.mysql.ubuntu_10_04
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
+import static com.anrisoftware.sscontrol.database.mysql.ubuntu.UbuntuResources.*
+import static com.anrisoftware.sscontrol.database.mysql.ubuntu_10_04.MysqlUbuntuResources.*
 import static org.apache.commons.io.FileUtils.*
 import groovy.util.logging.Slf4j
 
 import org.junit.Test
 
-import com.anrisoftware.sscontrol.core.api.ServiceLoader as SscontrolServiceLoader
-import com.anrisoftware.sscontrol.core.api.ServicesRegistry
+import com.anrisoftware.sscontrol.database.mysql.ubuntu.UbuntuTestUtil
 
 /**
- * Test MySQL on a Ubuntu 10.04 server.
+ * MySQL/Ubuntu 10.04.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
 @Slf4j
-class MysqlUbuntu_10_04_Test extends MysqlLinuxBase {
+class MysqlUbuntuTest extends UbuntuTestUtil {
 
 	@Test
 	void "database script"() {
-		loader.loadService ubuntu1004Profile, null
+		copyUbuntuFiles tmpdir
+		copyMysqlFiles tmpdir
+		postfixtables.createFile tmpdir
+		loader.loadService profile.resource, null
 		def profile = registry.getService("profile")[0]
-		loader.loadService databaseScript, profile
-
-		copyResourceToCommand echoCommand, aptitude
-		copyResourceToCommand echoCommand, restart
-		copyResourceToCommand mysqladminCommand, mysqladmin
-		copyResourceToCommand echoCommand, mysql
-		copyURLToFile postfixTables, postfixtables
-		confd.mkdirs()
+		loader.loadService databaseScript.resource, profile
 
 		registry.allServices.each { it.call() }
 		log.info "Run service again to ensure that configuration is not set double."
 		registry.allServices.each { it.call() }
-		assertFiles()
-	}
-
-	private assertFiles() {
-		assertFileContent sscontrolMysqld, mysqldExpected
-		assertFileContent restartOut, restartOutExpected
-		assertFileContent aptitudeOut, aptitudeOutExpected
+		assertFileContent sscontrolMysqld.asFile(tmpdir), sscontrolMysqld
+		assertFileContent restartOut.asFile(tmpdir), restartOut
+		assertFileContent aptitudeOut.asFile(tmpdir), aptitudeOut
+		assertFileContent mysqlOut.asFile(tmpdir), mysqlOut
+		assertFileContent mysqlIn.asFile(tmpdir), mysqlIn
 	}
 }

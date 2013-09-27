@@ -15,7 +15,7 @@ setupadminpassword(mysqladminCommand, service) ::= <<
 createDatabases(mysqlCommand, service) ::= <<
 <! create the databases from the specified service !>
 #!/bin/sh
-<mysqlCommand> --password=<service.adminPassword> -t \<\<STOP
+<mysqlCommand> --password=<service.adminPassword> -t \<\<"STOP"
 <service.databases:createDatabase()>
 \q
 STOP
@@ -30,7 +30,7 @@ CREATE DATABASE IF NOT EXISTS \`<database.name>\` CHARACTER SET \`<database.char
 createUsers(mysqlCommand, service) ::= <<
 <! create the users from the specified service !>
 #!/bin/sh
-<mysqlCommand> --password=<service.adminPassword> -t \<\<STOP
+<mysqlCommand> --password=<service.adminPassword> -t \<\<"STOP"
 <createUsersTemp(service.users)>
 <service.users:grandDatabaseToUsers()>
 FLUSH PRIVILEGES;
@@ -85,9 +85,8 @@ GRANT ALL ON <database>.* TO '<user.name>'@'<user.server>';
 >>
 
 importScript(mysqlCommand, service, script, database) ::= <<
-<! grand access to the specified database for the user !>
 #!/bin/sh
-<mysqlCommand> --password=<service.adminPassword> -t \<\<STOP
+<mysqlCommand> --password=<service.adminPassword> -t \<\<"STOP"
 USE <database.name>;
 <script>
 \q

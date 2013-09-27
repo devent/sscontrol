@@ -1,0 +1,21 @@
+createDatabases(script) ::= <<
+# creates the databases
+<script.mysqlCommand> --password=<script.service.adminPassword> -t \<\<"STOP"
+<script.service.databases:createDatabase(script)>
+\q
+STOP
+>>
+
+createDatabase(database, script) ::= <<
+# create database "<database.name>"
+CREATE DATABASE IF NOT EXISTS `<database.name>` CHARACTER SET `<databaseCharacterSet(database, script)>` COLLATE `<databaseCollate(database, script)>`;
+
+>>
+
+databaseCharacterSet(database, script) ::= <%
+<if(database.characterSet)><database.characterSet><else><script.defaultCharacterSet><endif>
+%>
+
+databaseCollate(database, script) ::= <%
+<if(database.collate)><database.collate><else><script.defaultCollate><endif>
+%>

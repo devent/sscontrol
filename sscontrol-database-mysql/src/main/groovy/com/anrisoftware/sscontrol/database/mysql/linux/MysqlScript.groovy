@@ -32,16 +32,7 @@ abstract class MysqlScript extends LinuxScript {
 	@Override
 	def run() {
 		super.run()
-		setupDefaultProperties()
 		beforeConfiguration()
-	}
-
-	/**
-	 * Sets the default properties.
-	 */
-	void setupDefaultProperties() {
-		service.setDefaultCharacterSet defaultCharacterSet
-		service.setDefaultCollate defaultCollate
 	}
 
 	/**
@@ -76,6 +67,48 @@ abstract class MysqlScript extends LinuxScript {
 	 */
 	String getDefaultCollate() {
 		profileProperty "default_collate", defaultProperties
+	}
+
+	/**
+	 * Returns the default debug logging level,
+	 * for example: {@code "0"}.
+	 *
+	 * <ul>
+	 * <li>profile property key {@code default_collate}</li>
+	 * </ul>
+	 *
+	 * @see #getDefaultProperties()
+	 */
+	int getDefaultDebugLogging() {
+		profileNumberProperty "debug_logging", defaultProperties
+	}
+
+	/**
+	 * Returns the default server bind address,
+	 * for example: {@code "127.0.0.1"}.
+	 *
+	 * <ul>
+	 * <li>profile property key {@code default_bind_address}</li>
+	 * </ul>
+	 *
+	 * @see #getDefaultProperties()
+	 */
+	String getDefaultBindAddress() {
+		profileProperty "default_bind_address", defaultProperties
+	}
+
+	/**
+	 * Returns the default user server host,
+	 * for example: {@code "localhost"}.
+	 *
+	 * <ul>
+	 * <li>profile property key {@code default_user_server}</li>
+	 * </ul>
+	 *
+	 * @see #getDefaultProperties()
+	 */
+	String getDefaultUserServer() {
+		profileProperty "default_user_server", defaultProperties
 	}
 
 	/**

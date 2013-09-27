@@ -16,42 +16,44 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-database. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.database.service;
+package com.anrisoftware.sscontrol.database.debuglogging;
 
-import java.net.URL;
-
-import com.anrisoftware.propertiesutils.AbstractContextPropertiesProvider;
+import java.util.Map;
 
 /**
- * Provides the default database properties from
- * {@code database_defaults.properties}.
- * <p>
- * <h2>Properties</h2>
- * <p>
- * 
- * <dl>
- * <dt>{@code debugging}</dt>
- * <dd>set to {@code true} to enable debugging logging;</dd>
- * 
- * <dt>{@code bind_address}</dt>
- * <dd>IP address or host name to bind the server;</dd>
- * 
- * <dt>{@code user_server}</dt>
- * <dd>default server for new users.</dd>
- * </dl>
+ * Factory to create debug logging.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-@SuppressWarnings("serial")
-public class DatabasePropertiesProvider extends
-		AbstractContextPropertiesProvider {
+public interface DebugLoggingFactory {
 
-	private static final URL RESOURCE = DatabaseModule.class
-			.getResource("/database_defaults.properties");
+	/**
+	 * Creates debug logging.
+	 * 
+	 * @param args
+	 *            the {@link Map} containing the logging arguments:
+	 *            <ul>
+	 *            <li>{@code logging:} the logging level.
+	 *            </ul>
+	 * 
+	 * @return the {@link DebugLogging}.
+	 */
+	DebugLogging create(Map<String, Object> args);
 
-	DatabasePropertiesProvider() {
-		super(DatabasePropertiesProvider.class, RESOURCE);
-	}
+	/**
+	 * Creates the debug logging with the specified logging level.
+	 * 
+	 * @param level
+	 *            the logging level.
+	 * 
+	 * @return the {@link DebugLogging}.
+	 */
+	DebugLogging create(int level);
+
+	/**
+	 * Creates deactivated debug logging.
+	 */
+	DebugLogging createOff();
 
 }

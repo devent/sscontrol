@@ -1,18 +1,18 @@
 /*
  * Copyright 2012-2013 Erwin Müller <erwin.mueller@deventm.org>
- *
+ * 
  * This file is part of sscontrol-database.
- *
+ * 
  * sscontrol-database is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published by the
  * Free Software Foundation, either version 3 of the License, or (at your
  * option) any later version.
- *
+ * 
  * sscontrol-database is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
  * for more details.
- *
+ * 
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-database. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -31,11 +31,12 @@ import javax.inject.Inject;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import com.anrisoftware.propertiesutils.ContextProperties;
 import com.anrisoftware.sscontrol.core.api.Service;
 import com.anrisoftware.sscontrol.core.api.ServiceException;
 import com.anrisoftware.sscontrol.core.api.ServiceScriptFactory;
 import com.anrisoftware.sscontrol.core.service.AbstractService;
+import com.anrisoftware.sscontrol.database.debuglogging.DebugLogging;
+import com.anrisoftware.sscontrol.database.debuglogging.DebugLoggingFactory;
 import com.anrisoftware.sscontrol.database.statements.Database;
 import com.anrisoftware.sscontrol.database.statements.DatabaseFactory;
 import com.anrisoftware.sscontrol.database.statements.User;
@@ -60,7 +61,10 @@ class DatabaseServiceImpl extends AbstractService {
 
 	private final List<User> users;
 
-	private boolean debugging;
+	@Inject
+	private DebugLoggingFactory debugLoggingFactory;
+
+	private DebugLogging debugLogging;
 
 	private String bindAddress;
 
@@ -68,19 +72,12 @@ class DatabaseServiceImpl extends AbstractService {
 
 	@Inject
 	DatabaseServiceImpl(DatabaseServiceImplLogger logger,
-			DatabaseFactory databaseFactory, UserFactory userFactory,
-			DatabasePropertiesProvider p) {
+			DatabaseFactory databaseFactory, UserFactory userFactory) {
 		this.log = logger;
 		this.databases = new ArrayList<Database>();
 		this.databaseFactory = databaseFactory;
 		this.userFactory = userFactory;
 		this.users = new ArrayList<User>();
-		setupDefaults(p.get());
-	}
-
-	private void setupDefaults(ContextProperties p) {
-		debugging = p.getBooleanProperty("debugging");
-		bindAddress = p.getProperty("bind_address");
 	}
 
 	@Override
@@ -117,17 +114,13 @@ class DatabaseServiceImpl extends AbstractService {
 		return this;
 	}
 
-	/**
-	 * Enables or disables the general logging for the database server. Defaults
-	 * to {@code false}.
-	 * 
-	 * @param debugging
-	 *            set to {@code true} to enable debug logging, {@code false} to
-	 *            disable.
-	 */
-	public void debugging(boolean debugging) {
-		this.debugging = debugging;
-		log.debuggingSet(this, debugging);
+	public void debug(Map<String, Object> args) {
+		debugLogging = debugLoggingFactory.create(args);
+		log.debugLoggingSet(this, debugLogging);
+	}
+
+	public DebugLogging getDebugLogging() {
+		return debugLogging;
 	}
 
 	/**
@@ -244,16 +237,6 @@ class DatabaseServiceImpl extends AbstractService {
 	}
 
 	/**
-	 * Returns whether general logging for the database server is enabled or
-	 * disabled.
-	 * 
-	 * @return {@code true} if debugging is enabled, {@code false} if disabled.
-	 */
-	public boolean isDebugging() {
-		return debugging;
-	}
-
-	/**
 	 * Returns the administrator password for the database server.
 	 * 
 	 * @return the administrator password.
@@ -341,7 +324,7 @@ class DatabaseServiceImpl extends AbstractService {
 	@Override
 	public String toString() {
 		return new ToStringBuilder(this).appendSuper(super.toString())
-				.append("debugging", debugging)
+				.append("debugging", debugLogging)
 				.append("bind address", bindAddress)
 				.append("administrator passowrd", getSaveAdminPassword())
 				.toString();

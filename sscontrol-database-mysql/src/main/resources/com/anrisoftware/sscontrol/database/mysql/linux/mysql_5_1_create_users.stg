@@ -1,0 +1,56 @@
+createUsers(script) ::= <<
+# create database users
+<script.mysqlCommand> --password=<script.service.adminPassword> -t \<\<"STOP"
+<createUsersTemp(script)>
+<script.service.users:grandDatabaseToUsers(script)>
+FLUSH PRIVILEGES;
+\q
+STOP
+>>
+
+createUsersTemp(script) ::= <<
+# create temporary database to add users
+CREATE DATABASE IF NOT EXISTS createusertmp;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ANSI';
+USE createusertmp;
+DROP PROCEDURE IF EXISTS createusertmp.create_update_user;
+DELIMITER $$
+CREATE PROCEDURE createusertmp.create_update_user()
+BEGIN
+    DECLARE userexists BIGINT DEFAULT 0;
+    <script.service.users:createUser(script)>
+
+END ;$$
+DELIMITER ;
+CALL createusertmp.create_update_user();
+DROP PROCEDURE IF EXISTS createusertmp.create_update_user;
+DROP DATABASE IF EXISTS createusertmp;
+SET SQL_MODE=@OLD_SQL_MODE;
+>>
+
+createUser(user, script) ::= <<
+
+# user <user.name>@<userServer(user, script)>
+SELECT COUNT(*) INTO userexists FROM mysql.user
+    WHERE User='<user.name>' and  Host='<user.server>';
+IF userexists=0 THEN
+    CREATE USER '<user.name>'@'<userServer(user, script)>' IDENTIFIED BY '<user.password>';
+ELSEIF userexists=1 THEN
+    SET PASSWORD FOR '<user.name>'@'<userServer(user, script)>' = PASSWORD('<user.password>');
+END IF;
+>>
+
+grandDatabaseToUsers(user, script) ::= <<
+<user.databases:grandDatabase(user, script)>
+>>
+
+
+grandDatabase(database, user, script) ::= <<
+# grand access "<user.name>@<userServer(user, script)>" to "<database>.*"
+GRANT ALL ON <database>.* TO '<user.name>'@'<userServer(user, script)>';
+>>
+
+userServer(user, script) ::= <%
+<if(user.server)><user.server><else><script.defaultUserServer><endif>
+%>
+

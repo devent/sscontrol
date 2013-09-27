@@ -1,18 +1,18 @@
 /*
  * Copyright 2012-2013 Erwin Müller <erwin.mueller@deventm.org>
- *
+ * 
  * This file is part of sscontrol-database.
- *
+ * 
  * sscontrol-database is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published by the
  * Free Software Foundation, either version 3 of the License, or (at your
  * option) any later version.
- *
+ * 
  * sscontrol-database is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
  * for more details.
- *
+ * 
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-database. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -22,6 +22,7 @@ import static org.apache.commons.lang3.StringUtils.repeat;
 import static org.apache.commons.lang3.Validate.notEmpty;
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
+import com.anrisoftware.sscontrol.database.debuglogging.DebugLogging;
 import com.anrisoftware.sscontrol.database.statements.Database;
 import com.anrisoftware.sscontrol.database.statements.User;
 
@@ -43,8 +44,6 @@ class DatabaseServiceImplLogger extends AbstractLogger {
 	private static final String ADMINISTRATOR_PASSWORD = "Administrator password must be set for %s.";
 	private static final String ADDRESS_SET_INFO = "Bind address '{}' set for database service.";
 	private static final String ADDRESS_SET = "Bind address '{}' set for {}.";
-	private static final String DEACTIVATED = "deactivated";
-	private static final String ACTIVATED = "activated";
 	private static final String DEBUGGING_SET_INFO = "Debugging {} for database service.";
 	private static final String DEBUGGING_SET = "Debugging {} set for {}.";
 
@@ -55,11 +54,11 @@ class DatabaseServiceImplLogger extends AbstractLogger {
 		super(DatabaseServiceImpl.class);
 	}
 
-	void debuggingSet(DatabaseServiceImpl service, boolean debugging) {
+	void debugLoggingSet(DatabaseServiceImpl service, DebugLogging logging) {
 		if (log.isDebugEnabled()) {
-			log.debug(DEBUGGING_SET, debugging, service);
+			log.debug(DEBUGGING_SET, logging, service);
 		} else {
-			log.info(DEBUGGING_SET_INFO, debugging ? ACTIVATED : DEACTIVATED);
+			log.info(DEBUGGING_SET_INFO, logging.getLevel());
 		}
 	}
 

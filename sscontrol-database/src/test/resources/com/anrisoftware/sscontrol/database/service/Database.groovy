@@ -20,9 +20,9 @@ package com.anrisoftware.sscontrol.database.service
 database {
 
 	// enable debugging output
-	debugging true
+	debug logging: 1
 
-	// bind the database server to all addresses only
+	// bind the database server to all addresses
 	bind_address "0.0.0.0"
 
 	// set the administrator password

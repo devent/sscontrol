@@ -1,0 +1,5 @@
+mysqldConfig(script) ::= <<
+[mysqld]
+bind-address = <if(script.service.bindAddress)><script.service.bindAddress><else><script.defaultBindAddress><endif>
+general_log = <if(script.service.debugLogging)><script.service.debugLogging.level><else><script.defaultDebugLogging><endif>
+>>

@@ -20,7 +20,7 @@ package com.anrisoftware.sscontrol.database.mysql.ubuntu_10_04
 database {
 
 	// enable debugging output
-	debugging true
+	debug logging: 1
 
 	// bind the database server to all addresses only
 	bind_address "0.0.0.0"

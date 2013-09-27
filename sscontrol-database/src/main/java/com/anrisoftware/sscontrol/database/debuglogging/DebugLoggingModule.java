@@ -16,23 +16,22 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-database. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.database.service;
+package com.anrisoftware.sscontrol.database.debuglogging;
 
-import com.anrisoftware.sscontrol.database.debuglogging.DebugLoggingModule;
-import com.anrisoftware.sscontrol.database.statements.StatementsModule;
 import com.google.inject.AbstractModule;
+import com.google.inject.assistedinject.FactoryModuleBuilder;
 
 /**
- * Binds the database service.
+ * Binds the debug logging factory.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class DatabaseModule extends AbstractModule {
+public class DebugLoggingModule extends AbstractModule {
 
 	@Override
 	protected void configure() {
-		install(new StatementsModule());
-		install(new DebugLoggingModule());
+		install(new FactoryModuleBuilder().implement(DebugLogging.class,
+				DebugLogging.class).build(DebugLoggingFactory.class));
 	}
 }

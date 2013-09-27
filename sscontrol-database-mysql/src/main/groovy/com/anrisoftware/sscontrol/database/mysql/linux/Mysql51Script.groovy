@@ -41,16 +41,20 @@ abstract class Mysql51Script extends MysqlScript {
 
 	Templates mysqlTemplates
 
-	TemplateResource mysqlConfiguration
+	TemplateResource mysqldConfTemplates
 
-	TemplateResource mysqlCommands
+	TemplateResource adminPasswordTemplate
+
+	TemplateResource createDatabasesTemplate
+
+	TemplateResource createUsersTemplate
+
+	TemplateResource importScriptTemplate
 
 	@Override
 	def run() {
 		super.run()
-		mysqlTemplates = templatesFactory.create("Mysql51")
-		mysqlConfiguration = mysqlTemplates.getResource("configuration")
-		mysqlCommands = mysqlTemplates.getResource("commands")
+		loadTemplate()
 		deployMysqldConfiguration()
 		restartServices()
 		setupAdministratorPassword()
@@ -59,11 +63,20 @@ abstract class Mysql51Script extends MysqlScript {
 		importScripts()
 	}
 
+	def loadTemplate() {
+		mysqlTemplates = templatesFactory.create("Mysql51")
+		mysqldConfTemplates = mysqlTemplates.getResource("mysqld_configuration")
+		adminPasswordTemplate = mysqlTemplates.getResource("admin_password")
+		createDatabasesTemplate = mysqlTemplates.getResource("create_databases")
+		createUsersTemplate = mysqlTemplates.getResource("create_users")
+		importScriptTemplate = mysqlTemplates.getResource("import_script")
+	}
+
 	/**
 	 * Deploys the mysqld/configuration.
 	 */
 	void deployMysqldConfiguration() {
-		def replace = mysqlConfiguration.getText(true, "mysqld", "service", service)
+		def replace = mysqldConfTemplates.getText(true, "mysqldConfig", "script", this)
 		deployConfiguration configurationTokens(), currentMysqldConfiguration, [
 			new TokenTemplate("(?s).*", replace)
 		], mysqldFile
@@ -82,16 +95,12 @@ abstract class Mysql51Script extends MysqlScript {
 	 */
 	void setupAdministratorPassword() {
 		def worker = scriptCommandFactory.create(
-				mysqlCommands, "checkAdminPassword",
-				"mysqladminCommand", mysqladminCommand,
-				"service", service)
+				adminPasswordTemplate, "checkAdminPassword", "script", this)
 		worker.skipExitValue = true
 		worker()
 		if (worker.exitCode != 0) {
 			worker = scriptCommandFactory.create(
-					mysqlCommands, "setupAdminPassword",
-					"mysqladminCommand", mysqladminCommand,
-					"service", service)()
+					adminPasswordTemplate, "setupAdminPassword", "script", this)()
 			log.adminPasswordSet this, worker
 		}
 	}
@@ -101,9 +110,7 @@ abstract class Mysql51Script extends MysqlScript {
 	 */
 	void createDatabases() {
 		def worker = scriptCommandFactory.create(
-				mysqlCommands, "createDatabases",
-				"mysqlCommand", mysqlCommand,
-				"service", service)()
+				createDatabasesTemplate, "createDatabases", "script", this)()
 		log.databasesCreated this, worker
 	}
 
@@ -112,9 +119,7 @@ abstract class Mysql51Script extends MysqlScript {
 	 */
 	void createUsers() {
 		def worker = scriptCommandFactory.create(
-				mysqlCommands, "createUsers",
-				"mysqlCommand", mysqlCommand,
-				"service", service)()
+				createUsersTemplate, "createUsers", "script", this)()
 		log.usersCreated this, worker
 	}
 
@@ -127,10 +132,8 @@ abstract class Mysql51Script extends MysqlScript {
 			database.importScripts(handler).each {
 				if (it != null) {
 					def worker = scriptCommandFactory.create(
-							mysqlCommands, "importScript",
-							"mysqlCommand", mysqlCommand,
-							"service", service,
-							"script", it, "database", database)()
+							importScriptTemplate, "importScript",
+							"script", this, "database", database, "string", it)()
 					log.importScript this, worker
 				}
 			}

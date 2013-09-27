@@ -1,18 +1,18 @@
 /*
  * Copyright 2012-2013 Erwin Müller <erwin.mueller@deventm.org>
- *
+ * 
  * This file is part of sscontrol-database.
- *
+ * 
  * sscontrol-database is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published by the
  * Free Software Foundation, either version 3 of the License, or (at your
  * option) any later version.
- *
+ * 
  * sscontrol-database is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
  * for more details.
- *
+ * 
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-database. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -27,8 +27,6 @@ import javax.inject.Inject;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import com.anrisoftware.propertiesutils.ContextProperties;
-import com.anrisoftware.sscontrol.database.service.DatabasePropertiesProvider;
 import com.google.inject.assistedinject.Assisted;
 
 /**
@@ -61,15 +59,10 @@ public class User implements Serializable {
 	 * @see UserFactory#create(String)
 	 */
 	@Inject
-	User(UserLogger logger, DatabasePropertiesProvider p, @Assisted String name) {
+	User(UserLogger logger, @Assisted String name) {
 		this.log = logger;
 		this.name = name;
 		this.databases = new ArrayList<String>();
-		setupDefaults(p.get());
-	}
-
-	private void setupDefaults(ContextProperties p) {
-		server = p.getProperty("user_server");
 	}
 
 	/**

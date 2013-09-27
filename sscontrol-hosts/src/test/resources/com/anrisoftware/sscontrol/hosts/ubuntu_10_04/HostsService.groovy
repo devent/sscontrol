@@ -16,9 +16,9 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-hosts. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.hosts
+package com.anrisoftware.sscontrol.hosts.ubuntu_10_04
 
 hosts {
-	ip "192.168.0.49" host null alias "srv1"
+	ip "192.168.0.49" host "srv1.ubuntutest.com" alias "srv1"
 	ip "192.168.0.50" host "srv1.ubuntutest.org" alias "srva", "srvb"
 }

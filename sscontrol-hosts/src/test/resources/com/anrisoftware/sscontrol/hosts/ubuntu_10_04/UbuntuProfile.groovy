@@ -16,6 +16,6 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-hosts. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.hosts
+package com.anrisoftware.sscontrol.hosts.ubuntu_10_04
 
 profile "ubuntu_10_04", { hosts { configuration_directory "${tmp}/etc" } }

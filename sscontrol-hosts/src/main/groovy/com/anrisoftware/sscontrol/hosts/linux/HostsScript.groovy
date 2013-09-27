@@ -20,7 +20,6 @@ package com.anrisoftware.sscontrol.hosts.linux
 
 import javax.inject.Inject
 
-import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.Templates
 import com.anrisoftware.sscontrol.core.service.LinuxScript
@@ -100,7 +99,7 @@ abstract class HostsScript extends LinuxScript {
 	 * </ul>
 	 */
 	List getDefaultHosts() {
-		profileTypedListProperty "default_hosts", defaultProperties, hostsFormat.create()
+		profileTypedListProperty "default_hosts", hostsFormat.create(), defaultProperties
 	}
 
 	/**

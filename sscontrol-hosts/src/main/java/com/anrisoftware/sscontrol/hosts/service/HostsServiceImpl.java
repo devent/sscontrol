@@ -31,8 +31,10 @@ import javax.inject.Inject;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import com.anrisoftware.sscontrol.core.api.ProfileService;
 import com.anrisoftware.sscontrol.core.api.ServiceException;
 import com.anrisoftware.sscontrol.core.api.ServiceScriptFactory;
+import com.anrisoftware.sscontrol.core.api.ServiceScriptInfo;
 import com.anrisoftware.sscontrol.core.service.AbstractService;
 import com.anrisoftware.sscontrol.hosts.utils.HostFormatFactory;
 
@@ -75,6 +77,12 @@ public class HostsServiceImpl extends AbstractService {
 	protected Script getScript(String profileName) throws ServiceException {
 		ServiceScriptFactory scriptFactory = findScriptFactory(NAME);
 		return (Script) scriptFactory.getScript();
+	}
+
+	@Override
+	protected boolean serviceScriptCompare(ServiceScriptInfo info,
+			String serviceName, ProfileService profile) {
+		return info.getProfileName().equals(profile.getProfileName());
 	}
 
 	/**

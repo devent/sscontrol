@@ -22,8 +22,8 @@ database {
 	// enable debugging output
 	debug logging: 1
 
-	// bind the database server to all addresses only
-	bind_address "0.0.0.0"
+	// bind the database server to all addresses
+	bind address: "0.0.0.0"
 
 	// set the administrator password
 	admin_password "mysqladminpassword"

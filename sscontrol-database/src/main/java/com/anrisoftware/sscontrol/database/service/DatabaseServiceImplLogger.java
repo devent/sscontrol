@@ -18,11 +18,24 @@
  */
 package com.anrisoftware.sscontrol.database.service;
 
+import static com.anrisoftware.sscontrol.database.service.DatabaseServiceImplLogger._.ADMINISTRATOR_PASSWORD;
+import static com.anrisoftware.sscontrol.database.service.DatabaseServiceImplLogger._.ADMINISTRATOR_PASSWORD_SET;
+import static com.anrisoftware.sscontrol.database.service.DatabaseServiceImplLogger._.ADMINISTRATOR_PASSWORD_SET_INFO;
+import static com.anrisoftware.sscontrol.database.service.DatabaseServiceImplLogger._.DATABASE_ADD;
+import static com.anrisoftware.sscontrol.database.service.DatabaseServiceImplLogger._.DATABASE_ADD_INFO;
+import static com.anrisoftware.sscontrol.database.service.DatabaseServiceImplLogger._.USER_ADD;
+import static com.anrisoftware.sscontrol.database.service.DatabaseServiceImplLogger._.USER_ADD_INFO;
+import static com.anrisoftware.sscontrol.database.service.DatabaseServiceImplLogger._.address_set_debug;
+import static com.anrisoftware.sscontrol.database.service.DatabaseServiceImplLogger._.address_set_info;
+import static com.anrisoftware.sscontrol.database.service.DatabaseServiceImplLogger._.debugging_set_debug;
+import static com.anrisoftware.sscontrol.database.service.DatabaseServiceImplLogger._.debugging_set_info;
 import static org.apache.commons.lang3.StringUtils.repeat;
 import static org.apache.commons.lang3.Validate.notEmpty;
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
+import com.anrisoftware.sscontrol.core.api.Service;
 import com.anrisoftware.sscontrol.database.debuglogging.DebugLogging;
+import com.anrisoftware.sscontrol.database.statements.Binding;
 import com.anrisoftware.sscontrol.database.statements.Database;
 import com.anrisoftware.sscontrol.database.statements.User;
 
@@ -34,18 +47,42 @@ import com.anrisoftware.sscontrol.database.statements.User;
  */
 class DatabaseServiceImplLogger extends AbstractLogger {
 
-	private static final String BIND_ADDRESS = "Bind address must be set.";
-	private static final String USER_ADD_INFO = "User '{}' add for database service.";
-	private static final String USER_ADD = "User {} add for {}.";
-	private static final String DATABASE_ADD_INFO = "Database '{}' add for database service.";
-	private static final String DATABASE_ADD = "Database {} add for {}.";
-	private static final String ADMINISTRATOR_PASSWORD_SET_INFO = "Administrator password {} set for database service.";
-	private static final String ADMINISTRATOR_PASSWORD_SET = "Administrator password {} set for {}.";
-	private static final String ADMINISTRATOR_PASSWORD = "Administrator password must be set for %s.";
-	private static final String ADDRESS_SET_INFO = "Bind address '{}' set for database service.";
-	private static final String ADDRESS_SET = "Bind address '{}' set for {}.";
-	private static final String DEBUGGING_SET_INFO = "Debugging {} for database service.";
-	private static final String DEBUGGING_SET = "Debugging {} set for {}.";
+	enum _ {
+
+		address_set_info("Bind address '{}' set for database service."),
+
+		address_set_debug("Bind address '{}' set for {}."),
+
+		USER_ADD_INFO("User '{}' add for database service."),
+
+		USER_ADD("User {} add for {}."),
+
+		DATABASE_ADD_INFO("Database '{}' add for database service."),
+
+		DATABASE_ADD("Database {} add for {}."),
+
+		ADMINISTRATOR_PASSWORD_SET_INFO(
+				"Administrator password {} set for database service."),
+
+		ADMINISTRATOR_PASSWORD_SET("Administrator password {} set for {}."),
+
+		ADMINISTRATOR_PASSWORD("Administrator password must be set for %s."),
+
+		debugging_set_info("Debugging {} for database service."),
+
+		debugging_set_debug("Debugging {} set for {}.");
+
+		private String name;
+
+		private _(String name) {
+			this.name = name;
+		}
+
+		@Override
+		public String toString() {
+			return name;
+		}
+	}
 
 	/**
 	 * Create logger for {@link DatabaseServiceImpl}.
@@ -55,52 +92,48 @@ class DatabaseServiceImplLogger extends AbstractLogger {
 	}
 
 	void debugLoggingSet(DatabaseServiceImpl service, DebugLogging logging) {
-		if (log.isDebugEnabled()) {
-			log.debug(DEBUGGING_SET, logging, service);
+		if (isDebugEnabled()) {
+			debug(debugging_set_debug, logging, service);
 		} else {
-			log.info(DEBUGGING_SET_INFO, logging.getLevel());
+			info(debugging_set_info, logging.getLevel());
 		}
 	}
 
-	void checkBindAddress(DatabaseServiceImpl ervice, String address) {
-		notEmpty(address, BIND_ADDRESS);
-	}
-
-	void bindAddressSet(DatabaseServiceImpl service, String address) {
-		if (log.isDebugEnabled()) {
-			log.debug(ADDRESS_SET, address, service);
+	void bindingSet(Service service, Binding binding) {
+		if (isDebugEnabled()) {
+			debug(address_set_debug, binding, service);
 		} else {
-			log.info(ADDRESS_SET_INFO, address);
+			info(address_set_info, binding.getAddress());
 		}
 	}
 
 	void checkAdminPassword(DatabaseServiceImpl service, String password) {
-		notEmpty(password, ADMINISTRATOR_PASSWORD, service);
+		notEmpty(password, ADMINISTRATOR_PASSWORD.toString(), service);
 	}
 
 	void adminPasswordSet(DatabaseServiceImpl service, String password) {
-		if (log.isDebugEnabled()) {
-			log.debug(ADMINISTRATOR_PASSWORD_SET,
-					repeat('*', password.length()), service);
+		if (isDebugEnabled()) {
+			debug(ADMINISTRATOR_PASSWORD_SET, repeat('*', password.length()),
+					service);
 		} else {
-			log.info(ADMINISTRATOR_PASSWORD_SET_INFO,
+			info(ADMINISTRATOR_PASSWORD_SET_INFO,
 					repeat('*', password.length()));
 		}
 	}
 
 	void databaseAdd(DatabaseServiceImpl service, Database database) {
-		if (log.isDebugEnabled()) {
-			log.debug(DATABASE_ADD, database, service);
+		if (isDebugEnabled()) {
+			debug(DATABASE_ADD, database, service);
 		} else {
-			log.info(DATABASE_ADD_INFO, database.getName());
+			info(DATABASE_ADD_INFO, database.getName());
 		}
 	}
 
 	void userAdd(DatabaseServiceImpl service, User user) {
-		if (log.isDebugEnabled()) {
-			log.debug(USER_ADD, user, service);
+		if (isDebugEnabled()) {
+			debug(USER_ADD, user, service);
 		} else {
-			log.info(USER_ADD_INFO, user.getName());
+			info(USER_ADD_INFO, user.getName());
 		}
 	}
 }

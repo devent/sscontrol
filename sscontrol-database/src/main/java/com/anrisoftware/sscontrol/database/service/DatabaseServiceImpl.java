@@ -37,6 +37,8 @@ import com.anrisoftware.sscontrol.core.api.ServiceScriptFactory;
 import com.anrisoftware.sscontrol.core.service.AbstractService;
 import com.anrisoftware.sscontrol.database.debuglogging.DebugLogging;
 import com.anrisoftware.sscontrol.database.debuglogging.DebugLoggingFactory;
+import com.anrisoftware.sscontrol.database.statements.Binding;
+import com.anrisoftware.sscontrol.database.statements.BindingFactory;
 import com.anrisoftware.sscontrol.database.statements.Database;
 import com.anrisoftware.sscontrol.database.statements.DatabaseFactory;
 import com.anrisoftware.sscontrol.database.statements.User;
@@ -64,9 +66,12 @@ class DatabaseServiceImpl extends AbstractService {
 	@Inject
 	private DebugLoggingFactory debugLoggingFactory;
 
+	@Inject
+	private BindingFactory bindingFactory;
+
 	private DebugLogging debugLogging;
 
-	private String bindAddress;
+	private Binding binding;
 
 	private String adminPassword;
 
@@ -124,22 +129,17 @@ class DatabaseServiceImpl extends AbstractService {
 	}
 
 	/**
-	 * The IP address or the host name on which the database server should
-	 * listen to connections. Defaults to {@code "127.0.0.1"}.
+	 * Sets binding for database server.
 	 * 
-	 * @param address
-	 *            the IP address or host name.
-	 * 
-	 * @throws NullPointerException
-	 *             if the specified address is {@code null}.
-	 * 
-	 * @throws IllegalArgumentException
-	 *             if the specified address is empty.
+	 * @see BindingFactory#create(Map)
 	 */
-	public void bind_address(String address) {
-		log.checkBindAddress(this, address);
-		this.bindAddress = address;
-		log.bindAddressSet(this, address);
+	public void bind(Map<String, Object> args) {
+		this.binding = bindingFactory.create(args);
+		log.bindingSet(this, binding);
+	}
+
+	public Binding getBinding() {
+		return binding;
 	}
 
 	/**
@@ -254,16 +254,6 @@ class DatabaseServiceImpl extends AbstractService {
 	}
 
 	/**
-	 * Returns the IP address or the host name on which the database server
-	 * should listen to connections.
-	 * 
-	 * @return the IP address or host name.
-	 */
-	public String getBindAddress() {
-		return bindAddress;
-	}
-
-	/**
 	 * Returns the databases of the server.
 	 * 
 	 * @return an unmodifiable {@link List}.
@@ -324,9 +314,6 @@ class DatabaseServiceImpl extends AbstractService {
 	@Override
 	public String toString() {
 		return new ToStringBuilder(this).appendSuper(super.toString())
-				.append("debugging", debugLogging)
-				.append("bind address", bindAddress)
-				.append("administrator passowrd", getSaveAdminPassword())
 				.toString();
 	}
 }

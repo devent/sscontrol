@@ -18,24 +18,58 @@
  */
 package com.anrisoftware.sscontrol.database.statements;
 
-import com.google.inject.AbstractModule;
-import com.google.inject.assistedinject.FactoryModuleBuilder;
+import java.io.Serializable;
+import java.util.Map;
+
+import javax.inject.Inject;
+
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
+import com.google.inject.assistedinject.Assisted;
 
 /**
- * Binds the database statements factories.
+ * Binding for database server.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-public class StatementsModule extends AbstractModule {
+@SuppressWarnings("serial")
+public class Binding implements Serializable {
+
+	@Inject
+	private BindingLogger log;
+
+	private Map<String, Object> args;
+
+	private String address;
+
+	/**
+	 * @see BindingFactory#create(Map)
+	 */
+	@Inject
+	Binding(@Assisted Map<String, Object> args) {
+		this.args = args;
+	}
+
+	@Inject
+	void setBindLogger(BindingLogger logger) {
+		this.log = logger;
+		setAddress(args.get("address"));
+		args = null;
+	}
+
+	private void setAddress(Object object) {
+		log.checkAddress(object);
+		this.address = object.toString();
+	}
+
+	public String getAddress() {
+		return address;
+	}
 
 	@Override
-	protected void configure() {
-		install(new FactoryModuleBuilder().implement(Binding.class,
-				Binding.class).build(BindingFactory.class));
-		install(new FactoryModuleBuilder().implement(Database.class,
-				Database.class).build(DatabaseFactory.class));
-		install(new FactoryModuleBuilder().implement(User.class, User.class)
-				.build(UserFactory.class));
+	public String toString() {
+		return new ToStringBuilder(this).append("address", address).toString();
 	}
+
 }

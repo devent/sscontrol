@@ -23,7 +23,7 @@ import javax.inject.Inject
 import com.anrisoftware.sscontrol.dns.maradns.linux.Maradns12Script
 
 /**
- * Enabled the universe repository and installs MaraDNS packages.
+ * MaraDNS/Ubuntu 10.04 service script.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
@@ -39,7 +39,7 @@ class Ubuntu1004Script extends Maradns12Script {
 	}
 
 	@Override
-	def beforeConfiguration() {
+	void beforeConfiguration() {
 		enableRepositories()
 		installPackages packages
 	}

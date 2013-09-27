@@ -29,7 +29,7 @@ import com.anrisoftware.sscontrol.dns.statements.Roots
 import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokenTemplate
 
 /**
- * Script to configure MaraDNS 1.2.
+ * MaraDNS 1.2 service script.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0

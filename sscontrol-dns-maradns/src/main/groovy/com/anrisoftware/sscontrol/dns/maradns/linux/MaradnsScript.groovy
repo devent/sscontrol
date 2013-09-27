@@ -22,7 +22,7 @@ import com.anrisoftware.resources.templates.api.Templates
 import com.anrisoftware.sscontrol.core.service.LinuxScript
 
 /**
- * MaraDNS/service.
+ * MaraDNS/service script.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
@@ -38,5 +38,5 @@ abstract class MaradnsScript extends LinuxScript {
 	 * Runs distribution specific configuration before
 	 * the MaraDNS/configuration.
 	 */
-	abstract beforeConfiguration()
+	abstract void beforeConfiguration()
 }

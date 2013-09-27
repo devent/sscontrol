@@ -18,26 +18,23 @@
  */
 package com.anrisoftware.sscontrol.database.statements;
 
-import com.google.inject.AbstractModule;
-import com.google.inject.assistedinject.FactoryModuleBuilder;
+import java.util.Map;
 
 /**
- * Binds the database statements factories.
+ * Factory to create database administrator.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-public class StatementsModule extends AbstractModule {
+public interface AdminFactory {
 
-	@Override
-	protected void configure() {
-		install(new FactoryModuleBuilder().implement(Binding.class,
-				Binding.class).build(BindingFactory.class));
-		install(new FactoryModuleBuilder().implement(Admin.class, Admin.class)
-				.build(AdminFactory.class));
-		install(new FactoryModuleBuilder().implement(Database.class,
-				Database.class).build(DatabaseFactory.class));
-		install(new FactoryModuleBuilder().implement(User.class, User.class)
-				.build(UserFactory.class));
-	}
+	/**
+	 * Creates database administrator.
+	 * 
+	 * @param args
+	 *            the {@link Map} arguments for the administrator.
+	 * 
+	 * @return the {@link Binding}.
+	 */
+	Admin create(Map<String, Object> args);
 }

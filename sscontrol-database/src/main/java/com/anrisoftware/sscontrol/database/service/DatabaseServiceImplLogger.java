@@ -18,23 +18,22 @@
  */
 package com.anrisoftware.sscontrol.database.service;
 
-import static com.anrisoftware.sscontrol.database.service.DatabaseServiceImplLogger._.ADMINISTRATOR_PASSWORD;
-import static com.anrisoftware.sscontrol.database.service.DatabaseServiceImplLogger._.ADMINISTRATOR_PASSWORD_SET;
-import static com.anrisoftware.sscontrol.database.service.DatabaseServiceImplLogger._.ADMINISTRATOR_PASSWORD_SET_INFO;
 import static com.anrisoftware.sscontrol.database.service.DatabaseServiceImplLogger._.DATABASE_ADD;
 import static com.anrisoftware.sscontrol.database.service.DatabaseServiceImplLogger._.DATABASE_ADD_INFO;
 import static com.anrisoftware.sscontrol.database.service.DatabaseServiceImplLogger._.USER_ADD;
 import static com.anrisoftware.sscontrol.database.service.DatabaseServiceImplLogger._.USER_ADD_INFO;
 import static com.anrisoftware.sscontrol.database.service.DatabaseServiceImplLogger._.address_set_debug;
 import static com.anrisoftware.sscontrol.database.service.DatabaseServiceImplLogger._.address_set_info;
+import static com.anrisoftware.sscontrol.database.service.DatabaseServiceImplLogger._.admin_set_debug;
+import static com.anrisoftware.sscontrol.database.service.DatabaseServiceImplLogger._.admin_set_info;
 import static com.anrisoftware.sscontrol.database.service.DatabaseServiceImplLogger._.debugging_set_debug;
 import static com.anrisoftware.sscontrol.database.service.DatabaseServiceImplLogger._.debugging_set_info;
 import static org.apache.commons.lang3.StringUtils.repeat;
-import static org.apache.commons.lang3.Validate.notEmpty;
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
 import com.anrisoftware.sscontrol.core.api.Service;
 import com.anrisoftware.sscontrol.database.debuglogging.DebugLogging;
+import com.anrisoftware.sscontrol.database.statements.Admin;
 import com.anrisoftware.sscontrol.database.statements.Binding;
 import com.anrisoftware.sscontrol.database.statements.Database;
 import com.anrisoftware.sscontrol.database.statements.User;
@@ -61,10 +60,9 @@ class DatabaseServiceImplLogger extends AbstractLogger {
 
 		DATABASE_ADD("Database {} add for {}."),
 
-		ADMINISTRATOR_PASSWORD_SET_INFO(
-				"Administrator password {} set for database service."),
+		admin_set_info("Administrator password '{}' set for database service."),
 
-		ADMINISTRATOR_PASSWORD_SET("Administrator password {} set for {}."),
+		admin_set_debug("Administrator password {} set for {}."),
 
 		ADMINISTRATOR_PASSWORD("Administrator password must be set for %s."),
 
@@ -107,17 +105,11 @@ class DatabaseServiceImplLogger extends AbstractLogger {
 		}
 	}
 
-	void checkAdminPassword(DatabaseServiceImpl service, String password) {
-		notEmpty(password, ADMINISTRATOR_PASSWORD.toString(), service);
-	}
-
-	void adminPasswordSet(DatabaseServiceImpl service, String password) {
+	void adminSet(Service service, Admin admin) {
 		if (isDebugEnabled()) {
-			debug(ADMINISTRATOR_PASSWORD_SET, repeat('*', password.length()),
-					service);
+			debug(admin_set_debug, admin, service);
 		} else {
-			info(ADMINISTRATOR_PASSWORD_SET_INFO,
-					repeat('*', password.length()));
+			info(admin_set_info, repeat('*', admin.getPassword().length()));
 		}
 	}
 

@@ -18,26 +18,60 @@
  */
 package com.anrisoftware.sscontrol.database.statements;
 
-import com.google.inject.AbstractModule;
-import com.google.inject.assistedinject.FactoryModuleBuilder;
+import java.io.Serializable;
+import java.util.Map;
+
+import javax.inject.Inject;
+
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
+import com.google.inject.assistedinject.Assisted;
 
 /**
- * Binds the database statements factories.
+ * Database administrator.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-public class StatementsModule extends AbstractModule {
+@SuppressWarnings("serial")
+public class Admin implements Serializable {
+
+	private static final String PASSWORD = "password";
+
+	@Inject
+	private AdminLogger log;
+
+	private Map<String, Object> args;
+
+	private String password;
+
+	/**
+	 * @see AdminFactory#create(Map)
+	 */
+	@Inject
+	Admin(@Assisted Map<String, Object> args) {
+		this.args = args;
+	}
+
+	@Inject
+	void setAdminLogger(AdminLogger logger) {
+		this.log = logger;
+		setPassword(args.get(PASSWORD));
+		args = null;
+	}
+
+	private void setPassword(Object object) {
+		log.checkPassword(object);
+		this.password = object.toString();
+	}
+
+	public String getPassword() {
+		return password;
+	}
 
 	@Override
-	protected void configure() {
-		install(new FactoryModuleBuilder().implement(Binding.class,
-				Binding.class).build(BindingFactory.class));
-		install(new FactoryModuleBuilder().implement(Admin.class, Admin.class)
-				.build(AdminFactory.class));
-		install(new FactoryModuleBuilder().implement(Database.class,
-				Database.class).build(DatabaseFactory.class));
-		install(new FactoryModuleBuilder().implement(User.class, User.class)
-				.build(UserFactory.class));
+	public String toString() {
+		return new ToStringBuilder(this).append(PASSWORD, password).toString();
 	}
+
 }

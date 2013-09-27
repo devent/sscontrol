@@ -26,7 +26,7 @@ database {
 	bind address: "0.0.0.0"
 
 	// set the administrator password
-	admin_password "mysqladminpassword"
+	admin password: "mysqladminpassword"
 
 	// add new database with default character set and collate
 	database "wordpressdb"

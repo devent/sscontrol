@@ -36,6 +36,8 @@ import com.google.inject.assistedinject.Assisted;
 @SuppressWarnings("serial")
 public class Binding implements Serializable {
 
+	private static final String ADDRESS = "address";
+
 	@Inject
 	private BindingLogger log;
 
@@ -54,7 +56,7 @@ public class Binding implements Serializable {
 	@Inject
 	void setBindLogger(BindingLogger logger) {
 		this.log = logger;
-		setAddress(args.get("address"));
+		setAddress(args.get(ADDRESS));
 		args = null;
 	}
 
@@ -69,7 +71,7 @@ public class Binding implements Serializable {
 
 	@Override
 	public String toString() {
-		return new ToStringBuilder(this).append("address", address).toString();
+		return new ToStringBuilder(this).append(ADDRESS, address).toString();
 	}
 
 }

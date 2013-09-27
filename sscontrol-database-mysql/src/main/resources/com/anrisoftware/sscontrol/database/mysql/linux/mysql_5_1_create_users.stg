@@ -1,6 +1,6 @@
 createUsers(script) ::= <<
 # create database users
-<script.mysqlCommand> --password=<script.service.adminPassword> -t \<\<"STOP"
+<script.mysqlCommand> --password=<script.service.admin.password> -t \<\<"STOP"
 <createUsersTemp(script)>
 <script.service.users:grandDatabaseToUsers(script)>
 FLUSH PRIVILEGES;

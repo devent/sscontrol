@@ -1,6 +1,6 @@
 createDatabases(script) ::= <<
 # creates the databases
-<script.mysqlCommand> --password=<script.service.adminPassword> -t \<\<"STOP"
+<script.mysqlCommand> --password=<script.service.admin.password> -t \<\<"STOP"
 <script.service.databases:createDatabase(script)>
 \q
 STOP

@@ -37,6 +37,8 @@ import com.anrisoftware.sscontrol.core.api.ServiceScriptFactory;
 import com.anrisoftware.sscontrol.core.service.AbstractService;
 import com.anrisoftware.sscontrol.database.debuglogging.DebugLogging;
 import com.anrisoftware.sscontrol.database.debuglogging.DebugLoggingFactory;
+import com.anrisoftware.sscontrol.database.statements.Admin;
+import com.anrisoftware.sscontrol.database.statements.AdminFactory;
 import com.anrisoftware.sscontrol.database.statements.Binding;
 import com.anrisoftware.sscontrol.database.statements.BindingFactory;
 import com.anrisoftware.sscontrol.database.statements.Database;
@@ -69,11 +71,14 @@ class DatabaseServiceImpl extends AbstractService {
 	@Inject
 	private BindingFactory bindingFactory;
 
+	@Inject
+	private AdminFactory adminFactory;
+
 	private DebugLogging debugLogging;
 
 	private Binding binding;
 
-	private String adminPassword;
+	private Admin admin;
 
 	@Inject
 	DatabaseServiceImpl(DatabaseServiceImplLogger logger,
@@ -145,19 +150,15 @@ class DatabaseServiceImpl extends AbstractService {
 	/**
 	 * The administrator password for the database server.
 	 * 
-	 * @param password
-	 *            the administrator password.
-	 * 
-	 * @throws NullPointerException
-	 *             if the specified password is {@code null}.
-	 * 
-	 * @throws IllegalArgumentException
-	 *             if the specified password is empty.
+	 * @see AdminFactory#create(Map)
 	 */
-	public void admin_password(String password) {
-		log.checkAdminPassword(this, password);
-		this.adminPassword = password;
-		log.adminPasswordSet(this, getSaveAdminPassword());
+	public void admin(Map<String, Object> args) {
+		this.admin = adminFactory.create(args);
+		log.adminSet(this, admin);
+	}
+
+	public Admin getAdmin() {
+		return admin;
 	}
 
 	public void database(String name) {
@@ -234,23 +235,6 @@ class DatabaseServiceImpl extends AbstractService {
 		user.setArguments(args);
 		log.userAdd(this, user);
 		return user;
-	}
-
-	/**
-	 * Returns the administrator password for the database server.
-	 * 
-	 * @return the administrator password.
-	 */
-	public String getAdminPassword() {
-		return adminPassword;
-	}
-
-	/**
-	 * Returns the administrator password as stars.
-	 */
-	public String getSaveAdminPassword() {
-		return adminPassword != null ? adminPassword.replaceAll(".", "*")
-				: String.valueOf(adminPassword);
 	}
 
 	/**

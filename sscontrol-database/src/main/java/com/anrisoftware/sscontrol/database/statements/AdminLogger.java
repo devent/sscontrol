@@ -18,26 +18,46 @@
  */
 package com.anrisoftware.sscontrol.database.statements;
 
-import com.google.inject.AbstractModule;
-import com.google.inject.assistedinject.FactoryModuleBuilder;
+import static com.anrisoftware.sscontrol.database.statements.AdminLogger._.address_null;
+import static org.apache.commons.lang3.Validate.notNull;
+
+import javax.inject.Singleton;
+
+import com.anrisoftware.globalpom.log.AbstractLogger;
 
 /**
- * Binds the database statements factories.
+ * Logging messages for {@link Binding}.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-public class StatementsModule extends AbstractModule {
+@Singleton
+class AdminLogger extends AbstractLogger {
 
-	@Override
-	protected void configure() {
-		install(new FactoryModuleBuilder().implement(Binding.class,
-				Binding.class).build(BindingFactory.class));
-		install(new FactoryModuleBuilder().implement(Admin.class, Admin.class)
-				.build(AdminFactory.class));
-		install(new FactoryModuleBuilder().implement(Database.class,
-				Database.class).build(DatabaseFactory.class));
-		install(new FactoryModuleBuilder().implement(User.class, User.class)
-				.build(UserFactory.class));
+	enum _ {
+
+		address_null("Bind address cannot be null.");
+
+		private String name;
+
+		private _(String name) {
+			this.name = name;
+		}
+
+		@Override
+		public String toString() {
+			return name;
+		}
+	}
+
+	/**
+	 * Create logger for {@link Binding}.
+	 */
+	AdminLogger() {
+		super(Binding.class);
+	}
+
+	void checkPassword(Object object) {
+		notNull(object, address_null.toString());
 	}
 }

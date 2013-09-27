@@ -684,7 +684,7 @@ abstract class LinuxScript extends Script {
 			case 'containsKey':
 				return InvokerHelper.invokeMethod(profile, name, args)
 			default:
-				return InvokerHelper.invokeMethod(this, name, args)
+				throw new MissingMethodException(name, getClass(), args)
 		}
 	}
 

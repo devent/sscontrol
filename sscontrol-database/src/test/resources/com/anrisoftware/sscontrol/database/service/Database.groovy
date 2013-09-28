@@ -35,10 +35,10 @@ database {
 	database "drupal6db", character_set: "latin1", collate: "latin1_swedish_ci"
 
 	// add new database and import tables
-	database "maildb", { import_sql "postfixtables.sql" }
+	database "maildb", { script execute: "postfixtables.sql" }
 
 	// add new database and import tables
-	database "postfixdb", character_set: "latin1", collate: "latin1_swedish_ci", { import_sql "postfixtables.sql" }
+	database "postfixdb", character_set: "latin1", collate: "latin1_swedish_ci", { script execute: "postfixtables.sql" }
 
 	// add a new user
 	user "test1", password: "test1password", server: "srv1"

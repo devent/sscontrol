@@ -124,18 +124,15 @@ abstract class Mysql51Script extends MysqlScript {
 	}
 
 	/**
-	 * Imports SQL scripts in the databases.
+	 * Execute database scripts.
 	 */
 	void importScripts() {
-		def handler = log.errorHandler(this)
 		service.databases.each { Database database ->
-			database.importScripts(handler).each {
-				if (it != null) {
-					def worker = scriptCommandFactory.create(
-							importScriptTemplate, "importScript",
-							"script", this, "database", database, "string", it)()
-					log.importScript this, worker
-				}
+			database.scripts.each {
+				def worker = scriptCommandFactory.create(
+						importScriptTemplate, "importScript",
+						"script", this, "database", database, "string", it)()
+				log.scriptExecuted this, worker
 			}
 		}
 	}

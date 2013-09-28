@@ -1,40 +1,29 @@
 /*
  * Copyright 2012-2013 Erwin Müller <erwin.mueller@deventm.org>
- *
+ * 
  * This file is part of sscontrol-database.
- *
+ * 
  * sscontrol-database is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published by the
  * Free Software Foundation, either version 3 of the License, or (at your
  * option) any later version.
- *
+ * 
  * sscontrol-database is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
  * for more details.
- *
+ * 
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-database. If not, see <http://www.gnu.org/licenses/>.
  */
 package com.anrisoftware.sscontrol.database.statements;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.Serializable;
-import java.net.MalformedURLException;
-import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.google.inject.assistedinject.Assisted;
@@ -48,15 +37,24 @@ import com.google.inject.assistedinject.Assisted;
 @SuppressWarnings("serial")
 public class Database implements Serializable {
 
+	private static final String SCRIPTS = "scripts";
+	private static final String COLLATE = "collate";
+	private static final String CHARACTER_SET = "character set";
+	private static final String NAME = "name";
+
 	private final DatabaseLogger log;
 
 	private final String name;
 
+	@Inject
+	private Scripts scripts;
+
+	@Inject
+	private ScriptFactory scriptFactory;
+
 	private String characterSet;
 
 	private String collate;
-
-	private final List<URI> sqlImports;
 
 	/**
 	 * @see DatabaseFactory#create(String)
@@ -66,7 +64,6 @@ public class Database implements Serializable {
 		this.log = logger;
 		log.checkName(this, name);
 		this.name = name;
-		this.sqlImports = new ArrayList<URI>();
 	}
 
 	/**
@@ -82,159 +79,22 @@ public class Database implements Serializable {
 		if (args.containsKey("character_set")) {
 			setCharacterSet(args.get("character_set"));
 		}
-		if (args.containsKey("collate")) {
-			setCollate(args.get("collate"));
+		if (args.containsKey(COLLATE)) {
+			setCollate(args.get(COLLATE));
 		}
 	}
 
 	/**
-	 * Adds a SQL script to import in the database from the specified URI.
+	 * Database script to execute.
 	 * 
-	 * @param str
-	 *            the string to be parsed as URI.
-	 * 
-	 * @throws URISyntaxException
-	 *             If the given string violates RFC&nbsp;2396, as augmented by
-	 *             {@link URI#URI(String)}
+	 * @see ScriptFactory#create(Map)
 	 */
-	public void import_sql(String str) throws URISyntaxException {
-		import_sql(new URI(str));
+	public void script(Map<String, Object> args) throws URISyntaxException {
+		scripts.addScript(scriptFactory.create(args));
 	}
 
-	/**
-	 * Adds a SQL script to import in the database from the specified local
-	 * file.
-	 * 
-	 * @param file
-	 *            the local {@link File} of the script.
-	 * 
-	 * @throws NullPointerException
-	 *             if the specified file is {@code null}.
-	 */
-	public void import_sql(File file) {
-		log.checkFile(this, file);
-		import_sql(file.toURI());
-	}
-
-	/**
-	 * Adds a SQL script to import in the database from the specified URL.
-	 * 
-	 * @param url
-	 *            the {@link URL} of the script.
-	 * 
-	 * @throws URISyntaxException
-	 *             if this URL cannot be converted to a URI.
-	 * 
-	 * @throws NullPointerException
-	 *             if the specified URL is {@code null}.
-	 * 
-	 * @see URL#toURI()
-	 */
-	public void import_sql(URL url) throws URISyntaxException {
-		log.checkURL(this, url);
-		import_sql(url.toURI());
-	}
-
-	/**
-	 * Adds a SQL script to import in the database from the specified URI.
-	 * 
-	 * @param uri
-	 *            the {@link URI} of the script.
-	 * 
-	 * @throws NullPointerException
-	 *             if the specified URI is {@code null}.
-	 */
-	public void import_sql(URI uri) {
-		log.checkURI(this, uri);
-		sqlImports.add(uri);
-		log.sqlScriptAdd(this, uri);
-	}
-
-	/**
-	 * Returns the SQL scripts to import in the database.
-	 * 
-	 * @param handler
-	 *            the {@link ErrorHandler} that handles errors from the
-	 *            iterator.
-	 * 
-	 * @return {@link Iterable} over the SQL script.
-	 */
-	public Iterable<String> importScripts(final ErrorHandler handler) {
-		return new Iterable<String>() {
-
-			@Override
-			public Iterator<String> iterator() {
-				return new ImportScriptsIterator(handler);
-			}
-		};
-	}
-
-	/**
-	 * Handlers errors from the import script iterator.
-	 * 
-	 * @author Erwin Mueller, erwin.mueller@deventm.org
-	 * @since 1.0
-	 */
-	public static interface ErrorHandler {
-
-		/**
-		 * Called if the specified exception was thrown.
-		 * 
-		 * @param e
-		 *            the {@link Exception}.
-		 */
-		void errorThrown(Exception e);
-	}
-
-	private class ImportScriptsIterator implements Iterator<String> {
-
-		int size = sqlImports.size();
-
-		int index = 0;
-
-		final ErrorHandler handler;
-
-		boolean error;
-
-		public ImportScriptsIterator(ErrorHandler handler) {
-			this.error = false;
-			this.handler = handler;
-		}
-
-		@Override
-		public boolean hasNext() {
-			return !error && index < size;
-		}
-
-		@Override
-		public String next() {
-			int i = index;
-			String string = null;
-			try {
-				InputStream stream;
-				URI uri = sqlImports.get(i++);
-				if (uri.isAbsolute()) {
-					stream = uri.toURL().openStream();
-				} else {
-					stream = new FileInputStream(new File(uri.toString()));
-				}
-				string = IOUtils.toString(stream);
-			} catch (MalformedURLException e) {
-				error = true;
-				handler.errorThrown(e);
-			} catch (IOException e) {
-				error = true;
-				handler.errorThrown(e);
-			}
-			index = i;
-			return string;
-		}
-
-		@Override
-		public void remove() {
-			throw new UnsupportedOperationException();
-		}
-
+	public Scripts getScripts() {
+		return scripts;
 	}
 
 	/**
@@ -296,10 +156,9 @@ public class Database implements Serializable {
 
 	@Override
 	public String toString() {
-		return new ToStringBuilder(this).append("name", name)
-				.append("character set", characterSet)
-				.append("collate", collate).append("imports", sqlImports)
-				.toString();
+		return new ToStringBuilder(this).append(NAME, name)
+				.append(CHARACTER_SET, characterSet).append(COLLATE, collate)
+				.append(SCRIPTS, scripts).toString();
 	}
 
 }

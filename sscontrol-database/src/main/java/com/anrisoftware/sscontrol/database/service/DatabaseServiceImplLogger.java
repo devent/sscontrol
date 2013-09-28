@@ -18,16 +18,16 @@
  */
 package com.anrisoftware.sscontrol.database.service;
 
-import static com.anrisoftware.sscontrol.database.service.DatabaseServiceImplLogger._.DATABASE_ADD;
-import static com.anrisoftware.sscontrol.database.service.DatabaseServiceImplLogger._.DATABASE_ADD_INFO;
-import static com.anrisoftware.sscontrol.database.service.DatabaseServiceImplLogger._.USER_ADD;
-import static com.anrisoftware.sscontrol.database.service.DatabaseServiceImplLogger._.USER_ADD_INFO;
 import static com.anrisoftware.sscontrol.database.service.DatabaseServiceImplLogger._.address_set_debug;
 import static com.anrisoftware.sscontrol.database.service.DatabaseServiceImplLogger._.address_set_info;
 import static com.anrisoftware.sscontrol.database.service.DatabaseServiceImplLogger._.admin_set_debug;
 import static com.anrisoftware.sscontrol.database.service.DatabaseServiceImplLogger._.admin_set_info;
+import static com.anrisoftware.sscontrol.database.service.DatabaseServiceImplLogger._.database_add_debug;
+import static com.anrisoftware.sscontrol.database.service.DatabaseServiceImplLogger._.database_add_info;
 import static com.anrisoftware.sscontrol.database.service.DatabaseServiceImplLogger._.debugging_set_debug;
 import static com.anrisoftware.sscontrol.database.service.DatabaseServiceImplLogger._.debugging_set_info;
+import static com.anrisoftware.sscontrol.database.service.DatabaseServiceImplLogger._.user_add_debug;
+import static com.anrisoftware.sscontrol.database.service.DatabaseServiceImplLogger._.user_add_info;
 import static org.apache.commons.lang3.StringUtils.repeat;
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
@@ -52,13 +52,13 @@ class DatabaseServiceImplLogger extends AbstractLogger {
 
 		address_set_debug("Bind address '{}' set for {}."),
 
-		USER_ADD_INFO("User '{}' add for database service."),
+		user_add_info("User '{}' add for database service."),
 
-		USER_ADD("User {} add for {}."),
+		user_add_debug("User {} add for {}."),
 
-		DATABASE_ADD_INFO("Database '{}' add for database service."),
+		database_add_info("Database '{}' add for database service."),
 
-		DATABASE_ADD("Database {} add for {}."),
+		database_add_debug("Database {} add for {}."),
 
 		admin_set_info("Administrator password '{}' set for database service."),
 
@@ -115,17 +115,17 @@ class DatabaseServiceImplLogger extends AbstractLogger {
 
 	void databaseAdd(DatabaseServiceImpl service, Database database) {
 		if (isDebugEnabled()) {
-			debug(DATABASE_ADD, database, service);
+			debug(database_add_debug, database, service);
 		} else {
-			info(DATABASE_ADD_INFO, database.getName());
+			info(database_add_info, database.getName());
 		}
 	}
 
 	void userAdd(DatabaseServiceImpl service, User user) {
 		if (isDebugEnabled()) {
-			debug(USER_ADD, user, service);
+			debug(user_add_debug, user, service);
 		} else {
-			info(USER_ADD_INFO, user.getName());
+			info(user_add_info, user.getName());
 		}
 	}
 }

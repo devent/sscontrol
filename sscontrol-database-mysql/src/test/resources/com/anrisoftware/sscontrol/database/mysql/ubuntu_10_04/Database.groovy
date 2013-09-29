@@ -32,7 +32,7 @@ database {
 	database "wordpressdb"
 
 	// add new database
-	database "drupal6db", character_set: "latin1", collate: "latin1_swedish_ci"
+	database "drupal6db", charset: "latin1", collate: "latin1_swedish_ci"
 
 	// add new database and import tables
 	database "maildb", {
@@ -41,7 +41,7 @@ database {
 	}
 
 	// add new database and import tables
-	database "postfixdb", character_set: "latin1", collate: "latin1_swedish_ci", {
+	database "postfixdb", charset: "latin1", collate: "latin1_swedish_ci", {
 		script execute: "${tmp}/tmp/postfixtables.sql"
 		//.
 	}

@@ -37,6 +37,7 @@ import com.google.inject.assistedinject.Assisted;
 @SuppressWarnings("serial")
 public class Database implements Serializable {
 
+	private static final String CHARACTER_SET_KEY = "charset";
 	private static final String SCRIPTS = "scripts";
 	private static final String COLLATE = "collate";
 	private static final String CHARACTER_SET = "character set";
@@ -76,8 +77,8 @@ public class Database implements Serializable {
 	 * @see #setCollate(String)
 	 */
 	public void setArguments(Map<String, String> args) {
-		if (args.containsKey("character_set")) {
-			setCharacterSet(args.get("character_set"));
+		if (args.containsKey(CHARACTER_SET_KEY)) {
+			setCharacterSet(args.get(CHARACTER_SET_KEY));
 		}
 		if (args.containsKey(COLLATE)) {
 			setCollate(args.get(COLLATE));

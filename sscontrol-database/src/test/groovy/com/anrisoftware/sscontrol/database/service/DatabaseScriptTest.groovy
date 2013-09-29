@@ -48,5 +48,19 @@ class DatabaseScriptTest extends DatabaseServiceBase {
 		assertStringContent database.binding.address, "0.0.0.0"
 		assert database.databases.size() == 4
 		assert database.users.size() == 2
+
+		def user = database.users[0]
+		assert user.name == "test1"
+		assert user.password == "test1password"
+		assert user.server == "srv1"
+
+		user = database.users[1]
+		assert user.name == "drupal6"
+		assert user.password == "drupal6password"
+		assert user.server == "srv2"
+		assert user.access.size() == 1
+
+		def access = user.access[0]
+		assert access.database == "drupal6db"
 	}
 }

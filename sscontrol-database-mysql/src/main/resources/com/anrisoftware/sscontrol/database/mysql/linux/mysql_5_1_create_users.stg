@@ -41,13 +41,13 @@ END IF;
 >>
 
 grandDatabaseToUsers(user, script) ::= <<
-<user.databases:grandDatabase(user, script)>
+<user.access:grandDatabase(user, script)>
 >>
 
 
-grandDatabase(database, user, script) ::= <<
-# grand access "<user.name>@<userServer(user, script)>" to "<database>.*"
-GRANT ALL ON <database>.* TO '<user.name>'@'<userServer(user, script)>';
+grandDatabase(access, user, script) ::= <<
+# grand access "<user.name>@<userServer(user, script)>" to "<access.database>.*"
+GRANT ALL ON <access.database>.* TO '<user.name>'@'<userServer(user, script)>';
 >>
 
 userServer(user, script) ::= <%

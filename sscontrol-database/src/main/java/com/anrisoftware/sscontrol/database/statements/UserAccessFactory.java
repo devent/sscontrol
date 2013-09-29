@@ -18,31 +18,29 @@
  */
 package com.anrisoftware.sscontrol.database.statements;
 
-import com.google.inject.AbstractModule;
-import com.google.inject.assistedinject.FactoryModuleBuilder;
+import java.util.Map;
 
 /**
- * Binds the database statements factories.
+ * Factory to create user access to database.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-public class StatementsModule extends AbstractModule {
+public interface UserAccessFactory {
 
-	@Override
-	protected void configure() {
-		install(new FactoryModuleBuilder().implement(Binding.class,
-				Binding.class).build(BindingFactory.class));
-		install(new FactoryModuleBuilder().implement(Admin.class, Admin.class)
-				.build(AdminFactory.class));
-		install(new FactoryModuleBuilder().implement(Database.class,
-				Database.class).build(DatabaseFactory.class));
-		install(new FactoryModuleBuilder().implement(User.class, User.class)
-				.build(UserFactory.class));
-		install(new FactoryModuleBuilder()
-				.implement(Script.class, Script.class).build(
-						ScriptFactory.class));
-		install(new FactoryModuleBuilder().implement(UserAccess.class,
-				UserAccess.class).build(UserAccessFactory.class));
-	}
+	/**
+	 * Creates user access to database.
+	 * 
+	 * @param args
+	 *            the {@link Map} arguments for the user access.
+	 * 
+	 * @return the {@link UserAccess}.
+	 * 
+	 * @throws NullPointerException
+	 *             if the database name is {@code null}.
+	 * 
+	 * @throws IllegalArgumentException
+	 *             if the database name is blank.
+	 */
+	UserAccess create(Map<String, Object> args);
 }

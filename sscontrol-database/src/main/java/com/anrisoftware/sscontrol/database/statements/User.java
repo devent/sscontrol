@@ -46,6 +46,9 @@ public class User implements Serializable {
 
 	private final String name;
 
+	@Inject
+	private transient UserAccessFactory accessFactory;
+
 	private String password;
 
 	private String server;
@@ -53,7 +56,7 @@ public class User implements Serializable {
 	/**
 	 * The databases to which the user have access.
 	 */
-	private final List<String> databases;
+	private final List<UserAccess> access;
 
 	/**
 	 * @see UserFactory#create(String)
@@ -62,7 +65,7 @@ public class User implements Serializable {
 	User(UserLogger logger, @Assisted String name) {
 		this.log = logger;
 		this.name = name;
-		this.databases = new ArrayList<String>();
+		this.access = new ArrayList<UserAccess>();
 	}
 
 	/**
@@ -151,36 +154,39 @@ public class User implements Serializable {
 	/**
 	 * Sets the database that the user have read and write access to.
 	 * 
-	 * @param name
-	 *            the database name.
+	 * @param args
+	 *            the {@link Map} arguments:
+	 *            <ul>
+	 *            <li>{@code database:} the database name;
+	 *            </ul>
 	 * 
 	 * @throws NullPointerException
-	 *             if the specified database name is {@code null}.
+	 *             if the database name is {@code null}.
 	 * 
 	 * @throws IllegalArgumentException
-	 *             if the specified database name is empty.
+	 *             if the database name is empty.
 	 */
-	void use_database(String name) {
+	void access(Map<String, Object> args) {
 		log.checkDatabase(this, name);
-		databases.add(name);
+		UserAccess access = accessFactory.create(args);
+		this.access.add(access);
 		log.databaseAdd(this, name);
 	}
 
 	/**
-	 * Returns the user databases.
+	 * Returns the user access for databases.
 	 * 
-	 * @return the {@link List} of the database names.
+	 * @return the {@link List} of the user access.
 	 */
-	public List<String> getDatabases() {
-		return databases;
+	public List<UserAccess> getAccess() {
+		return access;
 	}
 
 	@Override
 	public String toString() {
 		return new ToStringBuilder(this).append("name", name)
 				.append(PASSWORD_ARG, getSavePassword())
-				.append(SERVER_ARG, server).append("databases", databases)
-				.toString();
+				.append(SERVER_ARG, server).append("access", access).toString();
 	}
 
 }

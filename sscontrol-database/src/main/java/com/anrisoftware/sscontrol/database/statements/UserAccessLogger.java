@@ -18,31 +18,48 @@
  */
 package com.anrisoftware.sscontrol.database.statements;
 
-import com.google.inject.AbstractModule;
-import com.google.inject.assistedinject.FactoryModuleBuilder;
+import static com.anrisoftware.sscontrol.database.statements.UserAccessLogger._.database_null;
+import static org.apache.commons.lang3.Validate.notBlank;
+import static org.apache.commons.lang3.Validate.notNull;
+
+import javax.inject.Singleton;
+
+import com.anrisoftware.globalpom.log.AbstractLogger;
 
 /**
- * Binds the database statements factories.
+ * Logging messages for {@link UserAccess}.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-public class StatementsModule extends AbstractModule {
+@Singleton
+class UserAccessLogger extends AbstractLogger {
 
-	@Override
-	protected void configure() {
-		install(new FactoryModuleBuilder().implement(Binding.class,
-				Binding.class).build(BindingFactory.class));
-		install(new FactoryModuleBuilder().implement(Admin.class, Admin.class)
-				.build(AdminFactory.class));
-		install(new FactoryModuleBuilder().implement(Database.class,
-				Database.class).build(DatabaseFactory.class));
-		install(new FactoryModuleBuilder().implement(User.class, User.class)
-				.build(UserFactory.class));
-		install(new FactoryModuleBuilder()
-				.implement(Script.class, Script.class).build(
-						ScriptFactory.class));
-		install(new FactoryModuleBuilder().implement(UserAccess.class,
-				UserAccess.class).build(UserAccessFactory.class));
+	enum _ {
+
+		database_null("Database name cannot be null or blank.");
+
+		private String name;
+
+		private _(String name) {
+			this.name = name;
+		}
+
+		@Override
+		public String toString() {
+			return name;
+		}
+	}
+
+	/**
+	 * Create logger for {@link UserAccess}.
+	 */
+	UserAccessLogger() {
+		super(UserAccess.class);
+	}
+
+	void checkDatabase(Object object) {
+		notNull(object, database_null.toString());
+		notBlank(object.toString(), database_null.toString());
 	}
 }

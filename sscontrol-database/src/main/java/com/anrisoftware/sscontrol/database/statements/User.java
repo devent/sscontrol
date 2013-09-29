@@ -152,7 +152,7 @@ public class User implements Serializable {
 	}
 
 	/**
-	 * Sets the database that the user have read and write access to.
+	 * Sets the access of the user.
 	 * 
 	 * @param args
 	 *            the {@link Map} arguments:

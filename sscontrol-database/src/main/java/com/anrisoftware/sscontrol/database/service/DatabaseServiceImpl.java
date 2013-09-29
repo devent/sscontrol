@@ -124,6 +124,11 @@ class DatabaseServiceImpl extends AbstractService {
 		return this;
 	}
 
+	/**
+	 * Sets the debug logging for the database server.
+	 * 
+	 * @see DebugLoggingFactory#create(Map)
+	 */
 	public void debug(Map<String, Object> args) {
 		debugLogging = debugLoggingFactory.create(args);
 		log.debugLoggingSet(this, debugLogging);

@@ -21,7 +21,7 @@ dns {
 	serial 1, generate: false
 
 	// bind the dns server to address only
-	bind_address "127.0.0.1"
+	bind address: "127.0.0.1"
 
 	// soa entry, default timers
 	zone "example1.com", "ns.example1.com", "hostmaster@example1.com"
@@ -31,14 +31,10 @@ dns {
 	alias "vbox" address "10.0.2.2"
 
 	// sets the group to the root servers
-	roots {
-		servers "icann"
-	}
+	roots { servers "icann" }
 
 	// sets recursive host
-	recursive {
-		servers "localhost"
-	}
+	recursive { servers "localhost" }
 
 	// soa entry, default timers
 	zone "example1.com", "ns.example1.com", "hostmaster@example1.com"

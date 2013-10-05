@@ -89,7 +89,7 @@ abstract class Maradns12Script extends MaradnsScript {
 
 	def getIpv4BindAddressConfiguration() {
 		def search = maradnsConfiguration.getText(true, "ip4_bind_address_search")
-		def replace = maradnsConfiguration.getText(true, "ip4_bind_address", "service", service)
+		def replace = maradnsConfiguration.getText(true, "ip4_bind_address", "service", service, "properties", this)
 		new TokenTemplate(search, replace)
 	}
 
@@ -186,8 +186,26 @@ abstract class Maradns12Script extends MaradnsScript {
 	 * <ul>
 	 * <li>profile property key {@code configuration_file}</li>
 	 * </ul>
+	 *
+	 * @see #getConfigurationDir()
+	 * @see #getDefaultProperties()
 	 */
-	abstract File getMararcFile()
+	File getMararcFile() {
+		profileFileProperty "configuration_file", configurationDir, defaultProperties
+	}
+
+	/**
+	 * Returns the default bindings.
+	 *
+	 * <ul>
+	 * <li>profile property key {@code default_binding_addresses}</li>
+	 * </ul>
+	 *
+	 * @see #getDefaultProperties()
+	 */
+	List getDefaultBinding() {
+		profileListProperty "default_binding_addresses", defaultProperties
+	}
 
 	/**
 	 * Returns the current {@code mararc} configuration.

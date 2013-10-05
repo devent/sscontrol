@@ -47,17 +47,11 @@ class Ubuntu1004Script extends Maradns12Script {
 	def enableRepositories() {
 		def distribution = profileProperty "distribution_name", defaultProperties
 		def repositories = profileListProperty "additional_repositories", defaultProperties
-		println distribution
-		println repositories
 		enableDebRepositories distribution, repositories
 	}
 
 	@Override
 	def getDefaultProperties() {
 		ubuntuProperties.get()
-	}
-
-	File getMararcFile() {
-		profileFileProperty "configuration_file", configurationDir, defaultProperties
 	}
 }

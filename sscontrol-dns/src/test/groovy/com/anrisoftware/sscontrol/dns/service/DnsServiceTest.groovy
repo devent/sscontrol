@@ -23,34 +23,18 @@ import static com.anrisoftware.sscontrol.dns.service.DnsResources.*
 import static com.anrisoftware.sscontrol.dns.service.DnsServiceFactory.*
 import groovy.util.logging.Slf4j
 
-import org.junit.Before
-import org.junit.BeforeClass
-import org.junit.Rule
 import org.junit.Test
-import org.junit.rules.TemporaryFolder
 
-import com.anrisoftware.sscontrol.core.api.ServiceLoader as SscontrolServiceLoader
-import com.anrisoftware.sscontrol.core.api.ServiceLoaderFactory
 import com.anrisoftware.sscontrol.core.api.ServicesRegistry
-import com.anrisoftware.sscontrol.core.modules.CoreModule
-import com.anrisoftware.sscontrol.core.modules.CoreResourcesModule
-import com.anrisoftware.sscontrol.core.service.ServiceModule
-import com.anrisoftware.sscontrol.dns.statements.ARecord
-import com.anrisoftware.sscontrol.dns.statements.CNAMERecord
-import com.anrisoftware.sscontrol.dns.statements.DnsZone
-import com.anrisoftware.sscontrol.dns.statements.MXRecord
-import com.anrisoftware.sscontrol.dns.statements.NSRecord
-import com.google.inject.Guice
-import com.google.inject.Injector
 
 /**
- * Test the DNS service statements.
+ * DNS/service.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
 @Slf4j
-class DnsServiceTest {
+class DnsServiceTest extends DnsServiceBase {
 
 	@Test
 	void "dns serial script"() {
@@ -59,17 +43,21 @@ class DnsServiceTest {
 		loader.loadService dnsSerialScript, profile
 
 		registry.getService("dns")[0].generate = false
-		assertService registry.getService("dns")[0], 99, ["127.0.0.1"]
+		assertService registry.getService("dns")[0],
+		generate: false,
+		serial: 99,
+		binding: []
 	}
 
 	@Test
-	void "dns serial script [+generate]"() {
+	void "dns serial generate script"() {
 		loader.loadService ubuntu1004Profile, null
 		def profile = registry.getService("profile")[0]
 		loader.loadService dnsSerialGenerateScript, profile
 
-		registry.getService("dns")[0].generate = true
-		assertServiceGenerateSerial registry.getService("dns")[0], 2003, ["127.0.0.1"]
+		assertServiceGenerateSerial registry.getService("dns")[0],
+		serial: 2003,
+		binding: []
 	}
 
 	@Test
@@ -79,7 +67,10 @@ class DnsServiceTest {
 		loader.loadService dnsBindOneAddress, profile
 
 		registry.getService("dns")[0].generate = false
-		assertService registry.getService("dns")[0], 0, ["127.0.0.1"]
+		assertService registry.getService("dns")[0],
+		generate: false,
+		serial: 0,
+		binding: ["127.0.0.1"]
 	}
 
 	@Test
@@ -89,7 +80,10 @@ class DnsServiceTest {
 		loader.loadService dnsBindMultipleAddressString, profile
 
 		registry.getService("dns")[0].generate = false
-		assertService registry.getService("dns")[0], 0, [
+		assertService registry.getService("dns")[0],
+		generate: false,
+		serial: 0,
+		binding: [
 			"127.0.0.3",
 			"127.0.0.2",
 			"127.0.0.4",
@@ -104,22 +98,15 @@ class DnsServiceTest {
 		loader.loadService dnsBindMultipleAddressArray, profile
 
 		registry.getService("dns")[0].generate = false
-		assertService registry.getService("dns")[0], 0, [
+		assertService registry.getService("dns")[0],
+		generate: false,
+		serial: 0,
+		binding: [
 			"127.0.0.3",
 			"127.0.0.2",
 			"127.0.0.4",
 			"127.0.0.1"
 		]
-	}
-
-	@Test
-	void "dns bind remove localhost"() {
-		loader.loadService ubuntu1004Profile, null
-		def profile = registry.getService("profile")[0]
-		loader.loadService dnsBindRemoveLocalhost, profile
-
-		registry.getService("dns")[0].generate = false
-		assertService registry.getService("dns")[0], 0, ["192.168.0.1"]
 	}
 
 	@Test
@@ -129,7 +116,10 @@ class DnsServiceTest {
 		loader.loadService dnsZoneARecordsScript, profile
 
 		registry.getService("dns")[0].generate = false
-		def service = assertService registry.getService("dns")[0], 0, ["127.0.0.1"]
+		def service = assertService registry.getService("dns")[0],
+		generate: false,
+		serial: 0,
+		binding: []
 		def zone = assertZone service.zones[0], "testa.com", "ns1.testa.com", "hostmaster@testa.com", 86400
 		assertARecord zone.aaRecords[0], "testa.com", "192.168.0.49", 1
 		assertARecord zone.aaRecords[1], "testb.com", "192.168.0.50", 86400
@@ -143,7 +133,10 @@ class DnsServiceTest {
 		loader.loadService dnsZoneCnameRecordsScript, profile
 
 		registry.getService("dns")[0].generate = false
-		def service = assertService registry.getService("dns")[0], 0, ["127.0.0.1"]
+		def service = assertService registry.getService("dns")[0],
+		generate: false,
+		serial: 0,
+		binding: []
 		def zone = assertZone service.zones[0], "testa.com", "ns1.testa.com", "hostmaster@testa.com", 86400
 		assertCNAMERecord zone.cnameRecords[0], "www.testa.com", "testa.com", 86400
 		assertCNAMERecord zone.cnameRecords[1], "www.testb.com", "testb.com", 1
@@ -156,7 +149,10 @@ class DnsServiceTest {
 		loader.loadService dnsZoneMxRecordsScript, profile
 
 		registry.getService("dns")[0].generate = false
-		def service = assertService registry.getService("dns")[0], 0, ["127.0.0.1"]
+		def service = assertService registry.getService("dns")[0],
+		generate: false,
+		serial: 0,
+		binding: []
 		def zone = assertZone service.zones[0], "testa.com", "ns1.testa.com", "hostmaster@testa.com", 86400
 		assertARecord zone.aaRecords[0], "mx1.testa.com", "192.168.0.49", 86400
 		assertARecord zone.aaRecords[1], "mx2.testa.com", "192.168.0.50", 86400
@@ -175,7 +171,10 @@ class DnsServiceTest {
 		loader.loadService dnsZoneNsRecordsScript, profile
 
 		registry.getService("dns")[0].generate = false
-		def service = assertService registry.getService("dns")[0], 0, ["127.0.0.1"]
+		def service = assertService registry.getService("dns")[0],
+		generate: false,
+		serial: 0,
+		binding: []
 		def zone = assertZone service.zones[0], "testa.com", "ns1.testa.com", "hostmaster@testa.com", 86400
 		assertARecord zone.aaRecords[0], "ns1.testa.com", "192.168.0.49", 86400
 		assertARecord zone.aaRecords[1], "ns2.testa.com", "192.168.0.50", 86400
@@ -190,7 +189,10 @@ class DnsServiceTest {
 		loader.loadService dnsAutomaticARecordZoneScript, profile
 
 		registry.getService("dns")[0].generate = false
-		def service = assertService registry.getService("dns")[0], 0, ["127.0.0.1"]
+		def service = assertService registry.getService("dns")[0],
+		generate: false,
+		serial: 0,
+		binding: []
 		def zone = assertZone service.zones[0], "testa.com", "ns1.testa.com", "hostmaster@testa.com", 86400
 		assertARecord zone.aaRecords[0], "testa.com", "192.168.0.49", 86400
 		zone = assertZone service.zones[1], "testb.com", "ns1.testb.com", "hostmaster@testb.com", 86400
@@ -204,7 +206,10 @@ class DnsServiceTest {
 		loader.loadService dnsNoAutomaticARecordsScript, profile
 
 		registry.getService("dns")[0].generate = false
-		def service = assertService registry.getService("dns")[0], 0, ["127.0.0.1"]
+		def service = assertService registry.getService("dns")[0],
+		generate: false,
+		serial: 0,
+		binding: []
 		def zone = assertZone service.zones[0], "testa.com", "ns1.testa.com", "hostmaster@testa.com", 86400
 		assertARecord zone.aaRecords[0], "testa.com", "192.168.0.49", 86400
 		assertNSRecord zone.nsRecords[0], "ns2.testa.com", null, 86400
@@ -219,7 +224,10 @@ class DnsServiceTest {
 		loader.loadService dnsOriginShortcutScript, profile
 
 		registry.getService("dns")[0].generate = false
-		def service = assertService registry.getService("dns")[0], 0, ["127.0.0.1"]
+		def service = assertService registry.getService("dns")[0],
+		generate: false,
+		serial: 0,
+		binding: []
 		def zone = assertZone service.zones[0], "testa.com", "ns1.testa.com", "hostmaster@testa.com", 86400
 		assertARecord zone.aaRecords[0], "testa.com", "192.168.0.49", 86400
 		assertARecord zone.aaRecords[1], "ns2.testa.com", "192.168.0.50", 86400
@@ -235,94 +243,15 @@ class DnsServiceTest {
 		def profile = registry.getService("profile")[0]
 		loader.loadService dnsRecursive, profile
 
-		def service = assertService registry.getService("dns")[0], 1, ["127.0.0.1"]
+		def service = assertService registry.getService("dns")[0],
+		generate: false,
+		serial: 1,
+		binding: ["127.0.0.1"]
 		def zone = assertZone service.zones[0], "example1.com", "ns.example1.com", "hostmaster@example1.com", 86400
 		assert service.aliases.aliases.size() == 1
 		assert service.aliases.aliases[0].name == "localhost"
 		assert service.aliases.aliases[0].addresses[0] == "127.0.0.1"
 		assert service.roots.servers[0] == "icann"
 		assert service.recursive.servers[0] == "localhost"
-	}
-
-	static Injector injector
-
-	static ServiceLoaderFactory loaderFactory
-
-	Map variables
-
-	ServicesRegistry registry
-
-	SscontrolServiceLoader loader
-
-	@Rule
-	public TemporaryFolder tmp = new TemporaryFolder()
-
-	@Before
-	void createRegistry() {
-		variables = [tmp: tmp.newFolder()]
-		registry = injector.getInstance ServicesRegistry
-		loader = loaderFactory.create registry, variables
-		loader.setParent injector
-	}
-
-	@BeforeClass
-	static void createFactories() {
-		injector = createInjector()
-		loaderFactory = injector.getInstance ServiceLoaderFactory
-	}
-
-	static Injector createInjector() {
-		Guice.createInjector(
-				new CoreModule(), new CoreResourcesModule(), new ServiceModule())
-	}
-
-	@BeforeClass
-	static void setupToStringStyle() {
-		toStringStyle
-	}
-
-	private DnsServiceImpl assertService(DnsServiceImpl service, Object... args) {
-		assert service.serial == args[0]
-		assert service.bindAddresses == args[1]
-		service
-	}
-
-	private DnsServiceImpl assertServiceGenerateSerial(DnsServiceImpl service, Object... args) {
-		assert service.serial > args[0]
-		assert service.bindAddresses == args[1]
-		service
-	}
-
-	private DnsZone assertZone(DnsZone zone, Object... args) {
-		assertStringContent zone.name, args[0]
-		assertStringContent zone.primaryNameServer, args[1]
-		assertStringContent zone.email, args[2]
-		assert zone.ttl.millis == args[3]*1000
-		zone
-	}
-
-	private assertARecord(ARecord arecord, Object... args) {
-		assertStringContent arecord.name, args[0]
-		assertStringContent arecord.address, args[1]
-		assert arecord.ttl.millis == args[2]*1000
-	}
-
-	private assertCNAMERecord(CNAMERecord cnamerecord, Object... args) {
-		assertStringContent cnamerecord.name, args[0]
-		assertStringContent cnamerecord.alias, args[1]
-		assert cnamerecord.ttl.millis == args[2]*1000
-	}
-
-	private assertMXRecord(MXRecord mxrecord, Object... args) {
-		assertStringContent mxrecord.name, args[0]
-		assert mxrecord.aRecord == args[1]
-		assert mxrecord.priority == args[2]
-		assert mxrecord.ttl.millis == args[3]*1000
-	}
-
-	private assertNSRecord(NSRecord nsrecord, Object... args) {
-		assertStringContent nsrecord.name, args[0]
-		assert nsrecord.aRecord == args[1]
-		assert nsrecord.ttl.millis == args[2]*1000
 	}
 }

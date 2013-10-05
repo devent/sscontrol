@@ -22,20 +22,16 @@ dns {
 	serial 1, generate: false
 
 	// bind the dns server to localhost only
-	bind_address "127.0.0.1"
+	bind address: "127.0.0.1"
 
 	// adds IPv4 address alias
 	alias "localhost" address "127.0.0.1"
 
 	// sets the group to the root servers
-	roots {
-		servers "icann"
-	}
+	roots { servers "icann" }
 
 	// sets recursive host
-	recursive {
-		servers "localhost"
-	}
+	recursive { servers "localhost" }
 
 	// soa entry, default timers
 	zone "example1.com", "ns.example1.com", "hostmaster@example1.com"

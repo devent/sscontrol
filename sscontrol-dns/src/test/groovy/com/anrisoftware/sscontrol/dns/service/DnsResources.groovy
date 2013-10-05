@@ -39,6 +39,5 @@ class DnsResources {
 	static dnsBindOneAddress = DnsResources.class.getResource("DnsBindOneAddress.groovy")
 	static dnsBindMultipleAddressString = DnsResources.class.getResource("DnsBindMultipleAddressString.groovy")
 	static dnsBindMultipleAddressArray = DnsResources.class.getResource("DnsBindMultipleAddressArray.groovy")
-	static dnsBindRemoveLocalhost = DnsResources.class.getResource("DnsBindRemoveLocalhost.groovy")
 	static dnsRecursive = DnsResources.class.getResource("DnsRecursive.groovy")
 }

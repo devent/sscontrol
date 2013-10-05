@@ -1,18 +1,18 @@
 /*
  * Copyright 2012-2013 Erwin Müller <erwin.mueller@deventm.org>
- *
+ * 
  * This file is part of sscontrol-dns.
- *
+ * 
  * sscontrol-dns is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published by the
  * Free Software Foundation, either version 3 of the License, or (at your
  * option) any later version.
- *
- * sscontrol-dns is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
- * for more details.
- *
+ * 
+ * sscontrol-dns is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more
+ * details.
+ * 
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-dns. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -21,15 +21,11 @@ package com.anrisoftware.sscontrol.dns.service;
 import static com.anrisoftware.sscontrol.dns.service.DnsServiceFactory.NAME;
 import static java.lang.String.format;
 import static java.util.Collections.unmodifiableList;
-import static org.apache.commons.lang3.StringUtils.split;
 import groovy.lang.Script;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.inject.Inject;
 
@@ -44,6 +40,8 @@ import com.anrisoftware.sscontrol.dns.statements.ARecord;
 import com.anrisoftware.sscontrol.dns.statements.Alias;
 import com.anrisoftware.sscontrol.dns.statements.AliasFactory;
 import com.anrisoftware.sscontrol.dns.statements.Aliases;
+import com.anrisoftware.sscontrol.dns.statements.Binding;
+import com.anrisoftware.sscontrol.dns.statements.BindingFactory;
 import com.anrisoftware.sscontrol.dns.statements.DnsZone;
 import com.anrisoftware.sscontrol.dns.statements.DnsZoneFactory;
 import com.anrisoftware.sscontrol.dns.statements.Recursive;
@@ -68,7 +66,10 @@ class DnsServiceImpl extends AbstractService {
 	private AliasFactory aliasFactory;
 
 	@Inject
-	private BindAddresses bindAddresses;
+	private BindingFactory bindingFactory;
+
+	@Inject
+	private Binding binding;
 
 	@Inject
 	private Aliases aliases;
@@ -187,27 +188,31 @@ class DnsServiceImpl extends AbstractService {
 	/**
 	 * Sets the IP addresses or host names to where to bind the DNS service.
 	 * 
-	 * @param hosts
-	 *            the IP address or the host names.
-	 * 
-	 * @throws ServiceException
-	 *             if the host name was not found.
+	 * @see BindingFactory#create(Map)
 	 */
-	public void bind_address(String... hosts) throws ServiceException {
-		Set<String> list = new HashSet<String>();
-		for (String host : hosts) {
-			list.addAll(Arrays.asList(split(host, " ;,")));
-		}
-		bindAddresses.addAll(list);
+	public void bind(Map<String, Object> args) throws ServiceException {
+		this.binding = bindingFactory.create(args);
+		log.bindingSet(this, binding);
+	}
+
+	/**
+	 * Sets the IP addresses or host names to where to bind the DNS service.
+	 * 
+	 * @see BindingFactory#create(Map)
+	 */
+	public void bind(Map<String, Object> args, String... array)
+			throws ServiceException {
+		this.binding = bindingFactory.create(args, array);
+		log.bindingSet(this, binding);
 	}
 
 	/**
 	 * Returns a list of the IP addresses where to bind the DNS service.
 	 * 
-	 * @return an unmodifiable {@link List} of IP addresses.
+	 * @return the {@link Binding}.
 	 */
-	public List<String> getBindAddresses() {
-		return bindAddresses.asList();
+	public Binding getBinding() {
+		return binding;
 	}
 
 	/**
@@ -454,8 +459,8 @@ class DnsServiceImpl extends AbstractService {
 	@Override
 	public String toString() {
 		return new ToStringBuilder(this).appendSuper(super.toString())
-				.append("serial", serial)
-				.append("bind addresses", bindAddresses).toString();
+				.append("serial", serial).append("bind addresses", binding)
+				.toString();
 	}
 
 }

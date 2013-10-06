@@ -73,6 +73,15 @@ public class Binding implements Serializable {
 		this.addresses = new ArrayList<String>();
 	}
 
+	/**
+	 * @see BindingFactory#create(BindingAddress)
+	 */
+	@AssistedInject
+	Binding(@Assisted BindingAddress address) {
+		this.addresses = new ArrayList<String>();
+		addresses.add(address.toString());
+	}
+
 	@Inject
 	void setBindLogger(BindingLogger logger) {
 		this.log = logger;

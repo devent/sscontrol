@@ -41,6 +41,7 @@ import com.anrisoftware.sscontrol.dns.statements.Alias;
 import com.anrisoftware.sscontrol.dns.statements.AliasFactory;
 import com.anrisoftware.sscontrol.dns.statements.Aliases;
 import com.anrisoftware.sscontrol.dns.statements.Binding;
+import com.anrisoftware.sscontrol.dns.statements.BindingAddress;
 import com.anrisoftware.sscontrol.dns.statements.BindingFactory;
 import com.anrisoftware.sscontrol.dns.statements.DnsZone;
 import com.anrisoftware.sscontrol.dns.statements.DnsZoneFactory;
@@ -188,7 +189,7 @@ class DnsServiceImpl extends AbstractService {
 	/**
 	 * Sets the IP addresses or host names to where to bind the DNS service.
 	 * 
-	 * @see BindingFactory#create(Map)
+	 * @see BindingFactory#create(Map, String...)
 	 */
 	public void bind(Map<String, Object> args) throws ServiceException {
 		this.binding = bindingFactory.create(args);
@@ -198,11 +199,21 @@ class DnsServiceImpl extends AbstractService {
 	/**
 	 * Sets the IP addresses or host names to where to bind the DNS service.
 	 * 
-	 * @see BindingFactory#create(Map)
+	 * @see BindingFactory#create(Map, String...)
 	 */
 	public void bind(Map<String, Object> args, String... array)
 			throws ServiceException {
 		this.binding = bindingFactory.create(args, array);
+		log.bindingSet(this, binding);
+	}
+
+	/**
+	 * Sets the IP addresses or host names to where to bind the DNS service.
+	 * 
+	 * @see BindingFactory#create(BindingAddress)
+	 */
+	public void bind(BindingAddress address) throws ServiceException {
+		this.binding = bindingFactory.create(address);
 		log.bindingSet(this, binding);
 	}
 
@@ -454,6 +465,20 @@ class DnsServiceImpl extends AbstractService {
 	 */
 	public Recursive getRecursive() {
 		return recursive;
+	}
+
+	/**
+	 * @see BindingAddress#loopback
+	 */
+	public BindingAddress getLoopback() {
+		return BindingAddress.loopback;
+	}
+
+	/**
+	 * @see BindingAddress#all
+	 */
+	public BindingAddress getAll() {
+		return BindingAddress.all;
 	}
 
 	@Override

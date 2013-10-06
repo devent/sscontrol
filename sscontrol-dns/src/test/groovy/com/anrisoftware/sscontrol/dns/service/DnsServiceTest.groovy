@@ -110,6 +110,32 @@ class DnsServiceTest extends DnsServiceBase {
 	}
 
 	@Test
+	void "dns bind loopback"() {
+		loader.loadService ubuntu1004Profile, null
+		def profile = registry.getService("profile")[0]
+		loader.loadService dnsBindLoopback, profile
+
+		registry.getService("dns")[0].generate = false
+		assertService registry.getService("dns")[0],
+		generate: false,
+		serial: 0,
+		binding: ["127.0.0.1"]
+	}
+
+	@Test
+	void "dns bind all"() {
+		loader.loadService ubuntu1004Profile, null
+		def profile = registry.getService("profile")[0]
+		loader.loadService dnsBindAll, profile
+
+		registry.getService("dns")[0].generate = false
+		assertService registry.getService("dns")[0],
+		generate: false,
+		serial: 0,
+		binding: ["0.0.0.0"]
+	}
+
+	@Test
 	void "dns zone a-records script"() {
 		loader.loadService ubuntu1004Profile, null
 		def profile = registry.getService("profile")[0]

@@ -40,4 +40,14 @@ public interface BindingFactory {
 	 * @return the {@link Binding}.
 	 */
 	Binding create(Map<String, Object> args, String... array);
+
+	/**
+	 * Creates a new binding for DNS/server.
+	 * 
+	 * @param address
+	 *            the {@link BindingAddress} address.
+	 * 
+	 * @return the {@link Binding}.
+	 */
+	Binding create(BindingAddress address);
 }

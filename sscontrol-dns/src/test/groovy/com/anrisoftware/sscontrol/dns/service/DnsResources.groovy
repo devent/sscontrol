@@ -39,5 +39,7 @@ class DnsResources {
 	static dnsBindOneAddress = DnsResources.class.getResource("DnsBindOneAddress.groovy")
 	static dnsBindMultipleAddressString = DnsResources.class.getResource("DnsBindMultipleAddressString.groovy")
 	static dnsBindMultipleAddressArray = DnsResources.class.getResource("DnsBindMultipleAddressArray.groovy")
+	static dnsBindLoopback = DnsResources.class.getResource("DnsBindLoopback.groovy")
+	static dnsBindAll = DnsResources.class.getResource("DnsBindAll.groovy")
 	static dnsRecursive = DnsResources.class.getResource("DnsRecursive.groovy")
 }

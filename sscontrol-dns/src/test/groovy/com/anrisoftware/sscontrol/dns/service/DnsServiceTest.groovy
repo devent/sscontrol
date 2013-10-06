@@ -146,7 +146,7 @@ class DnsServiceTest extends DnsServiceBase {
 		generate: false,
 		serial: 0,
 		binding: []
-		def zone = assertZone service.zones[0], "testa.com", "ns1.testa.com", "hostmaster@testa.com", 86400
+		def zone = assertZone service.zones[0], name: "testa.com", primary: "ns1.testa.com", email: "hostmaster@testa.com", ttl: null
 		assertARecord zone.aaRecords[0], "testa.com", "192.168.0.49", 1
 		assertARecord zone.aaRecords[1], "testb.com", "192.168.0.50", 86400
 		assertARecord zone.aaRecords[2], "testc.com", "192.168.0.51", 86400
@@ -159,11 +159,8 @@ class DnsServiceTest extends DnsServiceBase {
 		loader.loadService dnsZoneCnameRecordsScript, profile
 
 		registry.getService("dns")[0].generate = false
-		def service = assertService registry.getService("dns")[0],
-		generate: false,
-		serial: 0,
-		binding: []
-		def zone = assertZone service.zones[0], "testa.com", "ns1.testa.com", "hostmaster@testa.com", 86400
+		def service = assertService registry.getService("dns")[0], generate: false, serial: 0, binding: []
+		def zone = assertZone service.zones[0], name: "testa.com", primary: "ns1.testa.com", email: "hostmaster@testa.com", ttl: null
 		assertCNAMERecord zone.cnameRecords[0], "www.testa.com", "testa.com", 86400
 		assertCNAMERecord zone.cnameRecords[1], "www.testb.com", "testb.com", 1
 	}
@@ -175,11 +172,8 @@ class DnsServiceTest extends DnsServiceBase {
 		loader.loadService dnsZoneMxRecordsScript, profile
 
 		registry.getService("dns")[0].generate = false
-		def service = assertService registry.getService("dns")[0],
-		generate: false,
-		serial: 0,
-		binding: []
-		def zone = assertZone service.zones[0], "testa.com", "ns1.testa.com", "hostmaster@testa.com", 86400
+		def service = assertService registry.getService("dns")[0], generate: false, serial: 0, binding: []
+		def zone = assertZone service.zones[0], name: "testa.com", primary: "ns1.testa.com", email: "hostmaster@testa.com"
 		assertARecord zone.aaRecords[0], "mx1.testa.com", "192.168.0.49", 86400
 		assertARecord zone.aaRecords[1], "mx2.testa.com", "192.168.0.50", 86400
 		assertARecord zone.aaRecords[2], "mx3.testa.com", "192.168.0.51", 86400
@@ -197,11 +191,8 @@ class DnsServiceTest extends DnsServiceBase {
 		loader.loadService dnsZoneNsRecordsScript, profile
 
 		registry.getService("dns")[0].generate = false
-		def service = assertService registry.getService("dns")[0],
-		generate: false,
-		serial: 0,
-		binding: []
-		def zone = assertZone service.zones[0], "testa.com", "ns1.testa.com", "hostmaster@testa.com", 86400
+		def service = assertService registry.getService("dns")[0], generate: false, serial: 0, binding: []
+		def zone = assertZone service.zones[0], name: "testa.com", primary: "ns1.testa.com", email: "hostmaster@testa.com"
 		assertARecord zone.aaRecords[0], "ns1.testa.com", "192.168.0.49", 86400
 		assertARecord zone.aaRecords[1], "ns2.testa.com", "192.168.0.50", 86400
 		assertNSRecord zone.nsRecords[0], "ns1.testa.com", zone.aaRecords[0], 1
@@ -215,14 +206,11 @@ class DnsServiceTest extends DnsServiceBase {
 		loader.loadService dnsAutomaticARecordZoneScript, profile
 
 		registry.getService("dns")[0].generate = false
-		def service = assertService registry.getService("dns")[0],
-		generate: false,
-		serial: 0,
-		binding: []
-		def zone = assertZone service.zones[0], "testa.com", "ns1.testa.com", "hostmaster@testa.com", 86400
+		def service = assertService registry.getService("dns")[0], generate: false, serial: 0, binding: []
+		def zone = assertZone service.zones[0], name: "testa.com", primary: "ns1.testa.com", email: "hostmaster@testa.com"
 		assertARecord zone.aaRecords[0], "testa.com", "192.168.0.49", 86400
-		zone = assertZone service.zones[1], "testb.com", "ns1.testb.com", "hostmaster@testb.com", 86400
-		assertARecord zone.aaRecords[0], "testb.com", "192.168.0.50", 1
+		zone = assertZone service.zones[1], name: "testb.com", primary: "ns1.testb.com", email: "hostmaster@testb.com", serial: 1
+		assertARecord zone.aaRecords[0], "testb.com", "192.168.0.50", 86400
 	}
 
 	@Test
@@ -232,11 +220,8 @@ class DnsServiceTest extends DnsServiceBase {
 		loader.loadService dnsNoAutomaticARecordsScript, profile
 
 		registry.getService("dns")[0].generate = false
-		def service = assertService registry.getService("dns")[0],
-		generate: false,
-		serial: 0,
-		binding: []
-		def zone = assertZone service.zones[0], "testa.com", "ns1.testa.com", "hostmaster@testa.com", 86400
+		def service = assertService registry.getService("dns")[0], generate: false, serial: 0, binding: []
+		def zone = assertZone service.zones[0], name: "testa.com", primary: "ns1.testa.com", email: "hostmaster@testa.com"
 		assertARecord zone.aaRecords[0], "testa.com", "192.168.0.49", 86400
 		assertNSRecord zone.nsRecords[0], "ns2.testa.com", null, 86400
 		assertMXRecord zone.mxRecords[0], "mx1.testa.com", null, 10, 86400
@@ -250,11 +235,8 @@ class DnsServiceTest extends DnsServiceBase {
 		loader.loadService dnsOriginShortcutScript, profile
 
 		registry.getService("dns")[0].generate = false
-		def service = assertService registry.getService("dns")[0],
-		generate: false,
-		serial: 0,
-		binding: []
-		def zone = assertZone service.zones[0], "testa.com", "ns1.testa.com", "hostmaster@testa.com", 86400
+		def service = assertService registry.getService("dns")[0], generate: false, serial: 0, binding: []
+		def zone = assertZone service.zones[0], name: "testa.com", primary: "ns1.testa.com", email: "hostmaster@testa.com"
 		assertARecord zone.aaRecords[0], "testa.com", "192.168.0.49", 86400
 		assertARecord zone.aaRecords[1], "ns2.testa.com", "192.168.0.50", 86400
 		assertARecord zone.aaRecords[2], "mx1.testa.com", "192.168.0.51", 86400
@@ -269,11 +251,8 @@ class DnsServiceTest extends DnsServiceBase {
 		def profile = registry.getService("profile")[0]
 		loader.loadService dnsRecursive, profile
 
-		def service = assertService registry.getService("dns")[0],
-		generate: false,
-		serial: 1,
-		binding: ["127.0.0.1"]
-		def zone = assertZone service.zones[0], "example1.com", "ns.example1.com", "hostmaster@example1.com", 86400
+		def service = assertService registry.getService("dns")[0], generate: false, serial: 1, binding: ["127.0.0.1"]
+		def zone = assertZone service.zones[0], name: "example1.com", primary: "ns.example1.com", email: "hostmaster@example1.com"
 		assert service.aliases.aliases.size() == 1
 		assert service.aliases.aliases[0].name == "localhost"
 		assert service.aliases.aliases[0].addresses[0] == "127.0.0.1"

@@ -1,18 +1,18 @@
 /*
  * Copyright 2012-2013 Erwin Müller <erwin.mueller@deventm.org>
- *
+ * 
  * This file is part of sscontrol-dns.
- *
+ * 
  * sscontrol-dns is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published by the
  * Free Software Foundation, either version 3 of the License, or (at your
  * option) any later version.
- *
- * sscontrol-dns is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
- * for more details.
- *
+ * 
+ * sscontrol-dns is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more
+ * details.
+ * 
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-dns. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -33,38 +33,23 @@ import javax.inject.Inject;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import com.anrisoftware.propertiesutils.ContextProperties;
-
 /**
  * Adds and removes bind addresses for the DNS service.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
+@SuppressWarnings("serial")
 public class BindAddresses implements Serializable, Iterable<String> {
-
-	/**
-	 * @version 1.0
-	 */
-	private static final long serialVersionUID = -8742470951064628343L;
-
-	private static final String BIND_ADDRESSES_PROPERTY = "default_bind_addresses";
 
 	private final Set<String> addresses;
 
 	private final BindAddressesLogger log;
 
 	@Inject
-	BindAddresses(BindAddressesLogger logger, DnsPropertiesProvider p) {
+	BindAddresses(BindAddressesLogger logger) {
 		this.log = logger;
 		this.addresses = new HashSet<String>();
-		setDefaultBindAddresses(p.get());
-	}
-
-	private void setDefaultBindAddresses(ContextProperties p) {
-		for (String address : p.getListProperty(BIND_ADDRESSES_PROPERTY)) {
-			add(address);
-		}
 	}
 
 	/**

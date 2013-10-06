@@ -18,6 +18,6 @@
  */
 package com.anrisoftware.sscontrol.dns.service
 dns {
-	zone "testa.com", "ns1.testa.com", "hostmaster@testa.com", "192.168.0.49"
-	zone "testb.com", "ns1.testb.com", "hostmaster@testb.com", "192.168.0.50", 1
+	zone "testa.com", primary: "ns1.testa.com", email: "hostmaster@testa.com", address: "192.168.0.49"
+	zone "testb.com", primary: "ns1.testb.com", email: "hostmaster@testb.com", address: "192.168.0.50", serial: 1
 }

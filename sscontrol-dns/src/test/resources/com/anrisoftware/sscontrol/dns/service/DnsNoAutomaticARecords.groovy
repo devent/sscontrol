@@ -18,7 +18,7 @@
  */
 package com.anrisoftware.sscontrol.dns.service
 dns {
-	zone "testa.com", "ns1.testa.com", "hostmaster@testa.com", {
+	zone "testa.com", primary: "ns1.testa.com", email: "hostmaster@testa.com", {
 		a_record "testa.com", "192.168.0.49"
 		ns_record "ns2.testa.com"
 		mx_record "mx1.testa.com"

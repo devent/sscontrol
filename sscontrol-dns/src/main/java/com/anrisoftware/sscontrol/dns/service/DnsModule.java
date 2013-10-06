@@ -19,7 +19,13 @@
 package com.anrisoftware.sscontrol.dns.service;
 
 import com.anrisoftware.sscontrol.core.list.ListModule;
-import com.anrisoftware.sscontrol.dns.statements.DnsStatementsModule;
+import com.anrisoftware.sscontrol.dns.aliases.AliasesModule;
+import com.anrisoftware.sscontrol.dns.arecord.ARecordModule;
+import com.anrisoftware.sscontrol.dns.bindings.BindingsModule;
+import com.anrisoftware.sscontrol.dns.mxrecord.MXRecordModule;
+import com.anrisoftware.sscontrol.dns.nsrecord.NSRecordModule;
+import com.anrisoftware.sscontrol.dns.time.TimeModule;
+import com.anrisoftware.sscontrol.dns.zone.ZoneModule;
 import com.google.inject.AbstractModule;
 
 /**
@@ -32,7 +38,13 @@ class DnsModule extends AbstractModule {
 
 	@Override
 	protected void configure() {
-		install(new DnsStatementsModule());
+		install(new ZoneModule());
 		install(new ListModule());
+		install(new AliasesModule());
+		install(new BindingsModule());
+		install(new ARecordModule());
+		install(new NSRecordModule());
+		install(new MXRecordModule());
+		install(new TimeModule());
 	}
 }

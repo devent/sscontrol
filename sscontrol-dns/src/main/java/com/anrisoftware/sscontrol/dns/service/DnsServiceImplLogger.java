@@ -18,12 +18,25 @@
  */
 package com.anrisoftware.sscontrol.dns.service;
 
+import static com.anrisoftware.sscontrol.dns.service.DnsServiceImplLogger._.active;
 import static com.anrisoftware.sscontrol.dns.service.DnsServiceImplLogger._.binding_set_debug;
 import static com.anrisoftware.sscontrol.dns.service.DnsServiceImplLogger._.binding_set_info;
+import static com.anrisoftware.sscontrol.dns.service.DnsServiceImplLogger._.error_find_service;
+import static com.anrisoftware.sscontrol.dns.service.DnsServiceImplLogger._.error_find_service_message;
+import static com.anrisoftware.sscontrol.dns.service.DnsServiceImplLogger._.not_active;
+import static com.anrisoftware.sscontrol.dns.service.DnsServiceImplLogger._.profile_name;
+import static com.anrisoftware.sscontrol.dns.service.DnsServiceImplLogger._.serial_generator_set;
+import static com.anrisoftware.sscontrol.dns.service.DnsServiceImplLogger._.serial_generator_set_info;
+import static com.anrisoftware.sscontrol.dns.service.DnsServiceImplLogger._.serial_set;
+import static com.anrisoftware.sscontrol.dns.service.DnsServiceImplLogger._.serial_set_info;
+import static com.anrisoftware.sscontrol.dns.service.DnsServiceImplLogger._.service_name;
+import static com.anrisoftware.sscontrol.dns.service.DnsServiceImplLogger._.zone_added_debug;
+import static com.anrisoftware.sscontrol.dns.service.DnsServiceImplLogger._.zone_added_info;
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
 import com.anrisoftware.sscontrol.core.api.ServiceException;
-import com.anrisoftware.sscontrol.dns.statements.Binding;
+import com.anrisoftware.sscontrol.dns.bindings.Binding;
+import com.anrisoftware.sscontrol.dns.zone.DnsZone;
 
 /**
  * Logging messages for {@link DnsServiceImpl}.
@@ -35,11 +48,37 @@ class DnsServiceImplLogger extends AbstractLogger {
 
 	enum _ {
 
-		message("message"),
+		service_name("service name"),
+
+		profile_name("profile name"),
+
+		service("service"),
+
+		error_find_service_message(
+				"Error find service script '{}' for DNS service."),
+
+		error_find_service("Error find service script"),
+
+		not_active("not active"),
+
+		active("active"),
+
+		serial_generator_set_info(
+				"Serial number generator {} set for DNS service."),
+
+		serial_set_info("Serial number {} set for DNS service."),
+
+		serial_generator_set("Serial number generator active set {} for {}."),
+
+		serial_set("Serial number {} set for {}."),
 
 		binding_set_debug("Binding address {} set {}."),
 
-		binding_set_info("Binding address {} set for DNS service.");
+		binding_set_info("Binding address {} set for DNS service."),
+
+		zone_added_debug("Zone {} added to {}."),
+
+		zone_added_info("Zone '{}' added.");
 
 		private String name;
 
@@ -53,18 +92,6 @@ class DnsServiceImplLogger extends AbstractLogger {
 		}
 	}
 
-	private static final String SERVICE_NAME = "service name";
-	private static final String PROFILE_NAME = "profile name";
-	private static final String SERVICE = "service";
-	private static final String ERROR_FIND_SERVICE_MESSAGE = "Error find service script '{}' for DNS service.";
-	private static final String ERROR_FIND_SERVICE = "Error find service script";
-	private static final String NOT_ACTIVE = "not active";
-	private static final String ACTIVE = "active";
-	private static final String SERIAL_NUMBER_GENERATOR_SET_INFO = "Serial number generator {} set for DNS service.";
-	private static final String SERIAL_NUMBER_SET_INFO = "Serial number {} set for DNS service.";
-	private static final String SERIAL_NUMBER_GENERATOR_SET = "Serial number generator active set {} for {}.";
-	private static final String SERIAL_NUMBER_SET = "Serial number {} set for {}.";
-
 	/**
 	 * Create logger for {@link DnsServiceImpl}.
 	 */
@@ -73,32 +100,30 @@ class DnsServiceImplLogger extends AbstractLogger {
 	}
 
 	void serialSet(DnsServiceImpl service, int serial, boolean generate) {
-		if (log.isDebugEnabled()) {
-			log.debug(SERIAL_NUMBER_SET, serial, service);
-			log.debug(SERIAL_NUMBER_GENERATOR_SET, generate, service);
+		if (isDebugEnabled()) {
+			debug(serial_set, serial, service);
+			debug(serial_generator_set, generate, service);
 		} else {
-			log.info(SERIAL_NUMBER_SET_INFO, serial);
-			log.info(SERIAL_NUMBER_GENERATOR_SET_INFO, generate ? ACTIVE
-					: NOT_ACTIVE);
+			info(serial_set_info, serial);
+			info(serial_generator_set_info, generate ? active : not_active);
 		}
 	}
 
 	void generateSet(DnsServiceImpl service, boolean generate) {
-		if (log.isDebugEnabled()) {
-			log.debug(SERIAL_NUMBER_GENERATOR_SET, generate, service);
+		if (isDebugEnabled()) {
+			debug(serial_generator_set, generate, service);
 		} else {
-			log.info(SERIAL_NUMBER_GENERATOR_SET_INFO, generate ? ACTIVE
-					: NOT_ACTIVE);
+			info(serial_generator_set_info, generate ? active : not_active);
 		}
 	}
 
 	ServiceException errorFindServiceScript(DnsServiceImpl dnsservice,
 			String name, String service) {
 		return logException(
-				new ServiceException(ERROR_FIND_SERVICE)
-						.add(SERVICE, dnsservice).add(PROFILE_NAME, name)
-						.add(SERVICE_NAME, service),
-				ERROR_FIND_SERVICE_MESSAGE, name);
+				new ServiceException(error_find_service)
+						.add(service, dnsservice).add(profile_name, name)
+						.add(service_name, service),
+				error_find_service_message, name);
 	}
 
 	void bindingSet(DnsServiceImpl service, Binding binding) {
@@ -106,6 +131,14 @@ class DnsServiceImplLogger extends AbstractLogger {
 			debug(binding_set_debug, binding, service);
 		} else {
 			info(binding_set_info, binding.getAddresses());
+		}
+	}
+
+	void zoneAdded(DnsServiceImpl service, DnsZone zone) {
+		if (isDebugEnabled()) {
+			debug(zone_added_debug, zone, service);
+		} else {
+			info(zone_added_info, zone.getName());
 		}
 	}
 }

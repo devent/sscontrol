@@ -34,5 +34,5 @@ dns {
 	recursive { servers "localhost" }
 
 	// soa entry, default timers
-	zone "example1.com", "ns.example1.com", "hostmaster@example1.com"
+	zone "example1.com", primary: "ns.example1.com", email: "hostmaster@example1.com"
 }

@@ -19,6 +19,7 @@
 package com.anrisoftware.sscontrol.dns.service;
 
 import static com.anrisoftware.sscontrol.dns.service.DnsServiceFactory.NAME;
+import static com.anrisoftware.sscontrol.dns.zone.DnsZoneArgs.ADDRESS;
 import static java.lang.String.format;
 import static java.util.Collections.unmodifiableList;
 import groovy.lang.Script;
@@ -36,17 +37,17 @@ import com.anrisoftware.sscontrol.core.api.Service;
 import com.anrisoftware.sscontrol.core.api.ServiceException;
 import com.anrisoftware.sscontrol.core.api.ServiceScriptFactory;
 import com.anrisoftware.sscontrol.core.service.AbstractService;
-import com.anrisoftware.sscontrol.dns.statements.ARecord;
-import com.anrisoftware.sscontrol.dns.statements.Alias;
-import com.anrisoftware.sscontrol.dns.statements.AliasFactory;
-import com.anrisoftware.sscontrol.dns.statements.Aliases;
-import com.anrisoftware.sscontrol.dns.statements.Binding;
-import com.anrisoftware.sscontrol.dns.statements.BindingAddress;
-import com.anrisoftware.sscontrol.dns.statements.BindingFactory;
-import com.anrisoftware.sscontrol.dns.statements.DnsZone;
-import com.anrisoftware.sscontrol.dns.statements.DnsZoneFactory;
-import com.anrisoftware.sscontrol.dns.statements.Recursive;
-import com.anrisoftware.sscontrol.dns.statements.Roots;
+import com.anrisoftware.sscontrol.dns.aliases.Alias;
+import com.anrisoftware.sscontrol.dns.aliases.AliasFactory;
+import com.anrisoftware.sscontrol.dns.aliases.Aliases;
+import com.anrisoftware.sscontrol.dns.bindings.Binding;
+import com.anrisoftware.sscontrol.dns.bindings.BindingAddress;
+import com.anrisoftware.sscontrol.dns.bindings.BindingFactory;
+import com.anrisoftware.sscontrol.dns.recursive.Recursive;
+import com.anrisoftware.sscontrol.dns.roots.Roots;
+import com.anrisoftware.sscontrol.dns.zone.DnsZone;
+import com.anrisoftware.sscontrol.dns.zone.DnsZoneFactory;
+import com.anrisoftware.sscontrol.dns.zone.Record;
 
 /**
  * DNS service.
@@ -57,11 +58,15 @@ import com.anrisoftware.sscontrol.dns.statements.Roots;
 @SuppressWarnings("serial")
 class DnsServiceImpl extends AbstractService {
 
+	private static final String BINDINGS = "bindings";
+
+	private static final String SERIAL = "serial";
+
 	@Inject
 	private DnsServiceImplLogger log;
 
 	@Inject
-	private DnsZoneFactory dnsZoneFactory;
+	private DnsZoneFactory zoneFactory;
 
 	@Inject
 	private AliasFactory aliasFactory;
@@ -229,152 +234,32 @@ class DnsServiceImpl extends AbstractService {
 	/**
 	 * Adds a new DNS zone.
 	 * 
-	 * @param name
-	 *            the name of the zone.
+	 * @see DnsZoneFactory#create(Map, String)
 	 * 
-	 * @param primaryNameServer
-	 *            the name of the primary DNS server.
-	 * 
-	 * @param email
-	 *            the email address for the zone.
+	 * @return the {@link DnsZone}.
 	 */
-	public void zone(String name, String primaryNameServer, String email) {
-		zone(name, primaryNameServer, email, (Object) null);
+	public void zone(Map<String, Object> args, String name) {
+		zone(args, name, null);
 	}
 
 	/**
 	 * Adds a new DNS zone.
 	 * 
-	 * @param name
-	 *            the name of the zone.
+	 * @see DnsZoneFactory#create(Map, String)
 	 * 
-	 * @param primaryNameServer
-	 *            the name of the primary DNS server.
-	 * 
-	 * @param email
-	 *            the email address for the zone.
-	 * 
-	 * @param statements
-	 *            the zone statements.
-	 * 
-	 * @return the {@link DnsZone} DNS zone.
+	 * @return the {@link DnsZone}.
 	 */
-	public DnsZone zone(String name, String primaryNameServer, String email,
-			Object statements) {
-		DnsZone zone = dnsZoneFactory.create(name, primaryNameServer, email,
-				serial);
+	public DnsZone zone(Map<String, Object> args, String name, Object statements) {
+		if (!args.containsKey(SERIAL)) {
+			args.put(SERIAL, getSerial());
+		}
+		DnsZone zone = zoneFactory.create(args, name);
 		zones.add(zone);
-		return zone;
-	}
-
-	/**
-	 * Adds a new DNS zone with an A-record. The A-record is created with the
-	 * name of the zone and the specified IP address.
-	 * 
-	 * @param name
-	 *            the name of the zone.
-	 * 
-	 * @param primaryNameServer
-	 *            the name of the primary DNS server.
-	 * 
-	 * @param email
-	 *            the email address for the zone.
-	 * 
-	 * @param address
-	 *            the IP address for the zone.
-	 */
-	public void zone(String name, String primaryNameServer, String email,
-			String address) {
-		zone(name, primaryNameServer, email, address, (Object) null);
-	}
-
-	/**
-	 * Adds a new DNS zone with an A-record. The A-record is created with the
-	 * name of the zone and the specified IP address.
-	 * 
-	 * @param name
-	 *            the name of the zone.
-	 * 
-	 * @param primaryNameServer
-	 *            the name of the primary DNS server.
-	 * 
-	 * @param email
-	 *            the email address for the zone.
-	 * 
-	 * @param address
-	 *            the IP address for the zone.
-	 * 
-	 * @param statements
-	 *            the zone statements.
-	 * 
-	 * @return the {@link DnsZone} DNS zone.
-	 */
-	public DnsZone zone(String name, String primaryNameServer, String email,
-			String address, Object statements) {
-		DnsZone zone = dnsZoneFactory.create(name, primaryNameServer, email,
-				getSerial());
-		zones.add(zone);
-		zone.a_record(name, address);
-		return zone;
-	}
-
-	/**
-	 * Adds a new DNS zone with an A-record. The A-record is created with the
-	 * name of the zone and the specified IP address. The A-record will have the
-	 * specified TTL.
-	 * 
-	 * @param name
-	 *            the name of the zone.
-	 * 
-	 * @param primaryNameServer
-	 *            the name of the primary DNS server.
-	 * 
-	 * @param email
-	 *            the email address for the zone.
-	 * 
-	 * @param address
-	 *            the IP address for the zone.
-	 * 
-	 * @param ttl
-	 *            the TTL for the A-record.
-	 */
-	public void zone(String name, String primaryNameServer, String email,
-			String address, long ttl) {
-		zone(name, primaryNameServer, email, address, ttl, (Object) null);
-	}
-
-	/**
-	 * Adds a new DNS zone with an A-record. The A-record is created with the
-	 * name of the zone and the specified IP address. The A-record will have the
-	 * specified TTL.
-	 * 
-	 * @param name
-	 *            the name of the zone.
-	 * 
-	 * @param primaryNameServer
-	 *            the name of the primary DNS server.
-	 * 
-	 * @param email
-	 *            the email address for the zone.
-	 * 
-	 * @param address
-	 *            the IP address for the zone.
-	 * 
-	 * @param ttl
-	 *            the TTL for the A-record.
-	 * 
-	 * @param statements
-	 *            the zone statements.
-	 * 
-	 * @return the {@link DnsZone} DNS zone.
-	 */
-	public DnsZone zone(String name, String primaryNameServer, String email,
-			String address, long ttl, Object statements) {
-		DnsZone zone = dnsZoneFactory.create(name, primaryNameServer, email,
-				getSerial());
-		zones.add(zone);
-		ARecord arecord = zone.a_record(name, address, (Object) null);
-		arecord.ttl(ttl);
+		if (args.containsKey(ADDRESS)) {
+			args.put(NAME, name);
+			zone.record(args, Record.a, (Object) null);
+		}
+		log.zoneAdded(this, zone);
 		return zone;
 	}
 
@@ -484,8 +369,7 @@ class DnsServiceImpl extends AbstractService {
 	@Override
 	public String toString() {
 		return new ToStringBuilder(this).appendSuper(super.toString())
-				.append("serial", serial).append("bind addresses", binding)
-				.toString();
+				.append(SERIAL, serial).append(BINDINGS, binding).toString();
 	}
 
 }

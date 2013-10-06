@@ -13,11 +13,11 @@ import com.anrisoftware.sscontrol.core.api.ServicesRegistry
 import com.anrisoftware.sscontrol.core.modules.CoreModule
 import com.anrisoftware.sscontrol.core.modules.CoreResourcesModule
 import com.anrisoftware.sscontrol.core.service.ServiceModule
-import com.anrisoftware.sscontrol.dns.statements.ARecord
-import com.anrisoftware.sscontrol.dns.statements.CNAMERecord
-import com.anrisoftware.sscontrol.dns.statements.DnsZone
-import com.anrisoftware.sscontrol.dns.statements.MXRecord
-import com.anrisoftware.sscontrol.dns.statements.NSRecord
+import com.anrisoftware.sscontrol.dns.arecord.ARecord
+import com.anrisoftware.sscontrol.dns.cnamerecord.CNAMERecord
+import com.anrisoftware.sscontrol.dns.mxrecord.MXRecord
+import com.anrisoftware.sscontrol.dns.nsrecord.NSRecord
+import com.anrisoftware.sscontrol.dns.zone.DnsZone
 import com.google.inject.Guice
 import com.google.inject.Injector
 
@@ -79,11 +79,12 @@ class DnsServiceBase {
 		service
 	}
 
-	def DnsZone assertZone(DnsZone zone, Object... args) {
-		assertStringContent zone.name, args[0]
-		assertStringContent zone.primaryNameServer, args[1]
-		assertStringContent zone.email, args[2]
-		assert zone.ttl.millis == args[3]*1000
+	def DnsZone assertZone(Map args, DnsZone zone) {
+		assertStringContent zone.name, args.name
+		assertStringContent zone.primaryNameServer, args.primary
+		assertStringContent zone.email, args.email
+		assert zone.serial == args.serial
+		assert zone.ttl == args.ttl
 		zone
 	}
 

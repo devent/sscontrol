@@ -29,7 +29,7 @@ class DnsResources {
 	static ubuntu1004Profile = DnsResources.class.getResource("Ubuntu_10_04Profile.groovy")
 	static dnsSerialScript = DnsResources.class.getResource("DnsSerial.groovy")
 	static dnsSerialGenerateScript = DnsResources.class.getResource("DnsSerialGenerate.groovy")
-	static dnsZoneARecordsScript = DnsResources.class.getResource("DnsZoneARecords.groovy")
+	static aRecordsScript = DnsResources.class.getResource("ARecords.groovy")
 	static dnsZoneCnameRecordsScript = DnsResources.class.getResource("DnsZoneCNAMERecords.groovy")
 	static dnsZoneMxRecordsScript = DnsResources.class.getResource("DnsZoneMXRecords.groovy")
 	static dnsZoneNsRecordsScript = DnsResources.class.getResource("DnsZoneNSRecords.groovy")

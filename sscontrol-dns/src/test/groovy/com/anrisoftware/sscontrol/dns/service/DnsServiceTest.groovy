@@ -136,20 +136,17 @@ class DnsServiceTest extends DnsServiceBase {
 	}
 
 	@Test
-	void "dns zone a-records script"() {
+	void "a-records"() {
 		loader.loadService ubuntu1004Profile, null
 		def profile = registry.getService("profile")[0]
-		loader.loadService dnsZoneARecordsScript, profile
+		loader.loadService aRecordsScript, profile
 
 		registry.getService("dns")[0].generate = false
-		def service = assertService registry.getService("dns")[0],
-		generate: false,
-		serial: 0,
-		binding: []
-		def zone = assertZone service.zones[0], name: "testa.com", primary: "ns1.testa.com", email: "hostmaster@testa.com", ttl: null
-		assertARecord zone.aaRecords[0], "testa.com", "192.168.0.49", 1
-		assertARecord zone.aaRecords[1], "testb.com", "192.168.0.50", 86400
-		assertARecord zone.aaRecords[2], "testc.com", "192.168.0.51", 86400
+		def service = assertService registry.getService("dns")[0], generate: false, serial: 0, binding: []
+		def zone = assertZone service.zones[0], name: "testa.com", primary: "ns1.testa.com", email: "hostmaster@testa.com"
+		assertARecord zone.records[0], name: "testa.com", address: "192.168.0.49", ttl: 1000
+		assertARecord zone.records[1], name: "testb.com", address: "192.168.0.50", ttl: 86400000
+		assertARecord zone.records[2], name: "testc.com", address: "192.168.0.51"
 	}
 
 	@Test

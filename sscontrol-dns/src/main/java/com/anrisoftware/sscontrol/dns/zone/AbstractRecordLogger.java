@@ -18,15 +18,15 @@
  */
 package com.anrisoftware.sscontrol.dns.zone;
 
-import static com.anrisoftware.sscontrol.dns.zone.AbstractRecordLogger._.TTL_SET;
-import static com.anrisoftware.sscontrol.dns.zone.AbstractRecordLogger._.TTL_SET_INFO;
-import static com.anrisoftware.sscontrol.dns.zone.AbstractRecordLogger._.TTL_VALID;
-import static org.apache.commons.lang3.Validate.inclusiveBetween;
+import static com.anrisoftware.sscontrol.dns.zone.AbstractRecordLogger._.duration_null;
+import static com.anrisoftware.sscontrol.dns.zone.AbstractRecordLogger._.ttl_set_debug;
+import static com.anrisoftware.sscontrol.dns.zone.AbstractRecordLogger._.ttl_set_info;
+import static org.apache.commons.lang3.Validate.notNull;
 
-import org.joda.time.Duration;
 import org.slf4j.Logger;
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
+import com.anrisoftware.sscontrol.dns.time.TimeDuration;
 
 /**
  * Logger for the zone records.
@@ -36,16 +36,13 @@ import com.anrisoftware.globalpom.log.AbstractLogger;
  */
 class AbstractRecordLogger extends AbstractLogger {
 
-	private static final long TTL_MIN_SECONDS = 1;
-	private static final long TTL_MAX_SECONDS = Long.MAX_VALUE;
-
 	enum _ {
 
-		TTL_VALID("TTL %d s must be [%d, %d] for %s."),
+		ttl_set_info("TTL time {} set for the zone record {}."),
 
-		TTL_SET_INFO("TTL time {} s set for the zone record {}."),
+		ttl_set_debug("TTL time {} set for {}."),
 
-		TTL_SET("TTL time {} s set for {}.");
+		duration_null("Duration time cannot be null for %s.");
 
 		private String name;
 
@@ -66,18 +63,16 @@ class AbstractRecordLogger extends AbstractLogger {
 		super(AbstractRecord.class);
 	}
 
-	void ttlSet(AbstractRecord record, Duration ttl) {
+	void ttlSet(AbstractRecord record, TimeDuration ttl) {
 		if (isDebugEnabled()) {
-			debug(TTL_SET, ttl, record);
+			debug(ttl_set_debug, ttl, record);
 		} else {
-			info(TTL_SET_INFO, ttl, record.getClass().getSimpleName());
+			info(ttl_set_info, ttl, record.getClass().getSimpleName());
 		}
 	}
 
-	void checkTtl(long time, AbstractRecord record) {
-		inclusiveBetween(TTL_MIN_SECONDS, TTL_MAX_SECONDS, time,
-				TTL_VALID.toString(), time, TTL_MIN_SECONDS, TTL_MAX_SECONDS,
-				record);
+	void checkDuration(AbstractRecord record, Object duration) {
+		notNull(duration, duration_null.toString(), record);
 	}
 
 }

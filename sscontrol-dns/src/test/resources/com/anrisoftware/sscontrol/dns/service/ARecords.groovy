@@ -19,8 +19,8 @@
 package com.anrisoftware.sscontrol.dns.service
 dns {
 	zone "testa.com", primary: "ns1.testa.com", email: "hostmaster@testa.com", {
-		record a, name: "testa.com", address: "192.168.0.49", { time ttl, 1 }
-		record a, name: "testb.com", address: "192.168.0.50", { time ttl, "PT24H" }
+		record a, name: "testa.com", address: "192.168.0.49", { ttl duration: "PT1S" }
+		record a, name: "testb.com", address: "192.168.0.50", { ttl duration: "PT24H" }
 		record a, name: "testc.com", address: "192.168.0.51"
 	}
 }

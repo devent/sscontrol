@@ -366,6 +366,34 @@ class DnsServiceImpl extends AbstractService {
 		return BindingAddress.all;
 	}
 
+	/**
+	 * @see Record#a
+	 */
+	public Record getA() {
+		return Record.a;
+	}
+
+	/**
+	 * @see Record#cname
+	 */
+	public Record getCname() {
+		return Record.cname;
+	}
+
+	/**
+	 * @see Record#mx
+	 */
+	public Record getMx() {
+		return Record.mx;
+	}
+
+	/**
+	 * @see Record#ns
+	 */
+	public Record getNs() {
+		return Record.ns;
+	}
+
 	@Override
 	public String toString() {
 		return new ToStringBuilder(this).appendSuper(super.toString())

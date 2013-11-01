@@ -1,6 +1,11 @@
 package com.anrisoftware.sscontrol.dns.zone;
 
+import java.text.ParseException;
+import java.util.Map;
+
 import org.joda.time.Duration;
+
+import com.anrisoftware.sscontrol.dns.time.TimeDurationFactory;
 
 /**
  * DNS/zone record.
@@ -10,25 +15,16 @@ import org.joda.time.Duration;
  */
 public interface ZoneRecord {
 
-	/**
-	 * Sets the time to live time.
-	 * 
-	 * @param timeSeconds
-	 *            the time to live time, in seconds.
-	 * 
-	 * @return this {@link AbstractRecord}.
-	 */
-	void ttl(long timeSeconds);
 
 	/**
 	 * Sets the time to live time.
 	 * 
-	 * @param time
-	 *            the {@link Duration} duration to live time.
+	 * @see TimeDurationFactory#create(Object, Map)
 	 * 
-	 * @return this {@link AbstractRecord}.
+	 * @throws ParseException
+	 *             if the duration string is not valid ISO 8601.
 	 */
-	void ttl(Duration time);
+	void ttl(Map<String, Object> args) throws ParseException;
 
 	/**
 	 * Returns the zone to which this record belongs to.

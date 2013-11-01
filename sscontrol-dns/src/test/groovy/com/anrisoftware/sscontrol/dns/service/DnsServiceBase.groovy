@@ -83,15 +83,21 @@ class DnsServiceBase {
 		assertStringContent zone.name, args.name
 		assertStringContent zone.primaryNameServer, args.primary
 		assertStringContent zone.email, args.email
-		assert zone.serial == args.serial
-		assert zone.ttl == args.ttl
+		if (args.containsKey("serial")) {
+			assert zone.serial == args.serial
+		}
+		if (args.containsKey("ttl")) {
+			assert zone.ttl == args.ttl
+		}
 		zone
 	}
 
-	def assertARecord(ARecord arecord, Object... args) {
-		assertStringContent arecord.name, args[0]
-		assertStringContent arecord.address, args[1]
-		assert arecord.ttl.millis == args[2]*1000
+	def assertARecord(Map args, ARecord arecord) {
+		assertStringContent arecord.name, args.name
+		assertStringContent arecord.address, args.address
+		if (args.containsKey("ttl")) {
+			assert arecord.ttl.millis == args.ttl
+		}
 	}
 
 	def assertCNAMERecord(CNAMERecord cnamerecord, Object... args) {

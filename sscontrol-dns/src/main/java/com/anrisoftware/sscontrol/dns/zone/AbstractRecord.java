@@ -19,11 +19,17 @@
 package com.anrisoftware.sscontrol.dns.zone;
 
 import java.io.Serializable;
+import java.text.ParseException;
+import java.util.Map;
 
 import javax.inject.Inject;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.joda.time.Duration;
+
+import com.anrisoftware.globalpom.format.duration.DurationFormatFactory;
+import com.anrisoftware.sscontrol.dns.time.TimeDuration;
+import com.anrisoftware.sscontrol.dns.time.TimeDurationFactory;
 
 /**
  * Saves the zone and the time to live time for the record.
@@ -34,15 +40,23 @@ import org.joda.time.Duration;
 @SuppressWarnings("serial")
 public abstract class AbstractRecord implements ZoneRecord, Serializable {
 
-	private static final String TTL = "ttl [s]";
+	private static final String DURATION = "duration";
+
+	private static final String TTL = "ttl";
 
 	private static final String ZONE = "zone";
 
 	private final DnsZone zone;
 
+	@Inject
+	private DurationFormatFactory durationFormatFactory;
+
+	@Inject
+	private TimeDurationFactory durationFactory;
+
 	private AbstractRecordLogger log;
 
-	private Duration ttl;
+	private TimeDuration ttl;
 
 	/**
 	 * Sets the DNS zone to which this record belongs to.
@@ -67,16 +81,19 @@ public abstract class AbstractRecord implements ZoneRecord, Serializable {
 	}
 
 	@Override
-	public void ttl(long timeSeconds) {
-		log.checkTtl(timeSeconds, this);
-		ttl = new Duration(timeSeconds * 1000);
+	public void ttl(Map<String, Object> args) throws ParseException {
+		args.put(DURATION, asDuration(args.get(DURATION)));
+		this.ttl = durationFactory.create(this, args);
 		log.ttlSet(this, ttl);
 	}
 
-	@Override
-	public void ttl(Duration time) {
-		ttl = time;
-		log.ttlSet(this, time);
+	private Duration asDuration(Object object) throws ParseException {
+		log.checkDuration(this, object);
+		if (!(object instanceof Duration)) {
+			return durationFormatFactory.create().parse(object.toString());
+		} else {
+			return (Duration) object;
+		}
 	}
 
 	@Override
@@ -86,7 +103,7 @@ public abstract class AbstractRecord implements ZoneRecord, Serializable {
 
 	@Override
 	public Duration getTtl() {
-		return ttl;
+		return ttl.getDuration();
 	}
 
 	@Override

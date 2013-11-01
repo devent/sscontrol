@@ -34,6 +34,7 @@
 	</root>
 
 	<logger name="com.anrisoftware" level="INFO" />
-	<logger name="com.anrisoftware.sscontrol" level="ALL" />
+	<logger name="com.anrisoftware.sscontrol" level="DEBUG" />
+	<logger name="com.anrisoftware.sscontrol.dns" level="ALL" />
 
 </configuration>

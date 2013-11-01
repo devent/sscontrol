@@ -1,7 +1,7 @@
 package com.anrisoftware.sscontrol.dns.mxrecord;
 
-import static com.anrisoftware.sscontrol.dns.mxrecord.MXRecordArgsLogger._.name_null;
-import static com.anrisoftware.sscontrol.dns.mxrecord.MXRecordArgsLogger._.priority_negative;
+import static com.anrisoftware.sscontrol.dns.mxrecord.MxRecordArgsLogger._.name_null;
+import static com.anrisoftware.sscontrol.dns.mxrecord.MxRecordArgsLogger._.priority_negative;
 import static org.apache.commons.lang3.Validate.isTrue;
 import static org.apache.commons.lang3.Validate.notBlank;
 import static org.apache.commons.lang3.Validate.notNull;
@@ -12,13 +12,13 @@ import com.anrisoftware.globalpom.log.AbstractLogger;
 import com.anrisoftware.sscontrol.dns.zone.DnsZone;
 
 /**
- * Logging messages for {@link MXRecord}.
+ * Logging messages for {@link MxRecord}.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
 @Singleton
-class MXRecordArgsLogger extends AbstractLogger {
+class MxRecordArgsLogger extends AbstractLogger {
 
 	enum _ {
 
@@ -39,10 +39,10 @@ class MXRecordArgsLogger extends AbstractLogger {
 	}
 
 	/**
-	 * Creates a logger for {@link MXRecord}.
+	 * Creates a logger for {@link MxRecord}.
 	 */
-	public MXRecordArgsLogger() {
-		super(MXRecord.class);
+	public MxRecordArgsLogger() {
+		super(MxRecord.class);
 	}
 
 	void checkName(Object name, DnsZone zone) {

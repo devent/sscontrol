@@ -23,7 +23,7 @@ import com.anrisoftware.sscontrol.dns.aliases.AliasesModule;
 import com.anrisoftware.sscontrol.dns.arecord.ARecordModule;
 import com.anrisoftware.sscontrol.dns.bindings.BindingsModule;
 import com.anrisoftware.sscontrol.dns.cnamerecord.CnameRecordModule;
-import com.anrisoftware.sscontrol.dns.mxrecord.MXRecordModule;
+import com.anrisoftware.sscontrol.dns.mxrecord.MxRecordModule;
 import com.anrisoftware.sscontrol.dns.nsrecord.NsRecordModule;
 import com.anrisoftware.sscontrol.dns.time.TimeModule;
 import com.anrisoftware.sscontrol.dns.zone.ZoneModule;
@@ -46,7 +46,7 @@ class DnsModule extends AbstractModule {
 		install(new ARecordModule());
 		install(new CnameRecordModule());
 		install(new NsRecordModule());
-		install(new MXRecordModule());
+		install(new MxRecordModule());
 		install(new TimeModule());
 	}
 }

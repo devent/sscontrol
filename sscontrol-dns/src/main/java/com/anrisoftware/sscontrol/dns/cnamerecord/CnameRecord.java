@@ -46,7 +46,7 @@ public class CnameRecord extends AbstractRecord {
 	private final String alias;
 
 	/**
-	 * @see MXRecordFactory#create(DnsZone, Map)
+	 * @see MxRecordFactory#create(DnsZone, Map)
 	 */
 	@Inject
 	CnameRecord(CnameRecordArgs aargs, @Assisted DnsZone zone,

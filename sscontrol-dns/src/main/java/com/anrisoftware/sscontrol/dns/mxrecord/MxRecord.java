@@ -18,11 +18,12 @@
  */
 package com.anrisoftware.sscontrol.dns.mxrecord;
 
-import static com.anrisoftware.sscontrol.dns.mxrecord.MXRecordArgs.ADDRESS;
-import static com.anrisoftware.sscontrol.dns.mxrecord.MXRecordArgs.NAME;
-import static com.anrisoftware.sscontrol.dns.mxrecord.MXRecordArgs.PRIORITY;
+import static com.anrisoftware.sscontrol.dns.mxrecord.MxRecordArgs.ADDRESS;
+import static com.anrisoftware.sscontrol.dns.mxrecord.MxRecordArgs.NAME;
+import static com.anrisoftware.sscontrol.dns.mxrecord.MxRecordArgs.PRIORITY;
 import static com.anrisoftware.sscontrol.dns.zone.Record.a;
 
+import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -42,19 +43,19 @@ import com.google.inject.assistedinject.Assisted;
  * @since 1.0
  */
 @SuppressWarnings("serial")
-public class MXRecord extends AbstractRecord {
+public class MxRecord extends AbstractRecord {
 
 	private final String name;
 
-	private final long priority;
+	private final Long priority;
 
 	private ZoneRecord address;
 
 	/**
-	 * @see MXRecordFactory#create(DnsZone, Map)
+	 * @see MxRecordFactory#create(DnsZone, Map)
 	 */
 	@Inject
-	MXRecord(MXRecordArgs aargs, @Assisted DnsZone zone,
+	MxRecord(MxRecordArgs aargs, @Assisted DnsZone zone,
 			@Assisted Map<String, Object> args) {
 		super(zone);
 		this.name = aargs.name(args, zone);
@@ -70,6 +71,14 @@ public class MXRecord extends AbstractRecord {
 		args.put(NAME, getName());
 		args.put(ADDRESS, address);
 		this.address = getZone().record(args, a, null);
+	}
+
+	@Override
+	public void ttl(Map<String, Object> args) throws ParseException {
+		super.ttl(args);
+		if (address != null) {
+			address.ttl(args);
+		}
 	}
 
 	@Override

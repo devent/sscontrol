@@ -26,6 +26,6 @@ import com.anrisoftware.sscontrol.dns.recursive.RecordFactory;
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-interface MXRecordFactory extends RecordFactory {
+interface MxRecordFactory extends RecordFactory {
 
 }

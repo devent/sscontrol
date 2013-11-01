@@ -33,14 +33,14 @@ import com.google.inject.multibindings.MapBinder;
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-public class MXRecordModule extends AbstractModule {
+public class MxRecordModule extends AbstractModule {
 
 	@Override
 	protected void configure() {
 		install(new FactoryModuleBuilder().implement(ZoneRecord.class,
-				MXRecord.class).build(MXRecordFactory.class));
+				MxRecord.class).build(MxRecordFactory.class));
 		MapBinder<Record, RecordFactory> map = newMapBinder(binder(),
 				Record.class, RecordFactory.class);
-		map.addBinding(Record.mx).to(MXRecordFactory.class);
+		map.addBinding(Record.mx).to(MxRecordFactory.class);
 	}
 }

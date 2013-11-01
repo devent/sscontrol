@@ -127,22 +127,27 @@ class DnsServiceTest extends DnsServiceBase {
 	}
 
 	@Test
-	void "dns zone mx-records script"() {
+	void "mx-records with a-records"() {
 		loader.loadService ubuntu1004Profile, null
 		def profile = registry.getService("profile")[0]
-		loader.loadService dnsZoneMxRecordsScript, profile
+		loader.loadService mxRecordsWithARecords, profile
+		DnsServiceImpl service = registry.getService("dns")[0]
+		DnsZone zone = service.zones[0]
+		assertMxRecord zone.records[1], name: "mx1.testa.com", arecord: zone.records[0]
+		assertMxRecord zone.records[3], name: "mx2.testa.com", priority: 20, arecord: zone.records[2]
+		assertMxRecord zone.records[5], name: "mx3.testa.com", ttl: 1000, arecord: zone.records[4]
+	}
 
-		registry.getService("dns")[0].generate = false
-		def service = assertService registry.getService("dns")[0], generate: false, serial: 0, binding: []
-		def zone = assertZone service.zones[0], name: "testa.com", primary: "ns1.testa.com", email: "hostmaster@testa.com"
-		assertARecord zone.aaRecords[0], "mx1.testa.com", "192.168.0.49", 86400
-		assertARecord zone.aaRecords[1], "mx2.testa.com", "192.168.0.50", 86400
-		assertARecord zone.aaRecords[2], "mx3.testa.com", "192.168.0.51", 86400
-		assertARecord zone.aaRecords[3], "mx4.testa.com", "192.168.0.52", 86400
-		assertMXRecord zone.mxRecords[0], "mx1.testa.com", zone.aaRecords[0], 10, 86400
-		assertMXRecord zone.mxRecords[1], "mx2.testa.com", zone.aaRecords[1], 20, 86400
-		assertMXRecord zone.mxRecords[2], "mx3.testa.com", zone.aaRecords[2], 10, 1
-		assertMXRecord zone.mxRecords[3], "mx4.testa.com", zone.aaRecords[3], 20, 1
+	@Test
+	void "mx-records"() {
+		loader.loadService ubuntu1004Profile, null
+		def profile = registry.getService("profile")[0]
+		loader.loadService mxRecords, profile
+		DnsServiceImpl service = registry.getService("dns")[0]
+		DnsZone zone = service.zones[0]
+		assertMxRecord zone.records[0], name: "mx1.testa.com"
+		assertMxRecord zone.records[1], name: "mx2.testa.com", priority: 20
+		assertMxRecord zone.records[2], name: "mx3.testa.com", ttl: 1000
 	}
 
 	@Test
@@ -153,7 +158,7 @@ class DnsServiceTest extends DnsServiceBase {
 		DnsServiceImpl service = registry.getService("dns")[0]
 		DnsZone zone = service.zones[0]
 		assertNsRecord zone.records[1], name: "ns1.testa.com", arecord: zone.records[0]
-		assertNsRecord zone.records[3], name: "ns2.testa.com", arecord: zone.records[2], ttl: 1000
+		assertNsRecord zone.records[3], name: "ns2.testa.com", ttl: 1000, arecord: zone.records[2]
 	}
 
 	@Test
@@ -193,7 +198,7 @@ class DnsServiceTest extends DnsServiceBase {
 		assertARecord zone.aaRecords[1], "ns2.testa.com", "192.168.0.50", 86400
 		assertARecord zone.aaRecords[2], "mx1.testa.com", "192.168.0.51", 86400
 		assertNsRecord zone.nsRecords[0], "ns2.testa.com", zone.aaRecords[1], 86400
-		assertMXRecord zone.mxRecords[0], "mx1.testa.com", zone.aaRecords[2], 10, 86400
+		assertMxRecord zone.mxRecords[0], "mx1.testa.com", zone.aaRecords[2], 10, 86400
 		assertCnameRecord zone.cnameRecords[0], "www.testa.com", "testa.com", 86400
 	}
 

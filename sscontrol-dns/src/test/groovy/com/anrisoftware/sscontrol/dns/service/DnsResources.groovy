@@ -31,6 +31,7 @@ class DnsResources {
 	static serialGenerated = DnsResources.class.getResource("SerialGenerated.groovy")
 	static aRecords = DnsResources.class.getResource("ARecords.groovy")
 	static cnameRecords = DnsResources.class.getResource("CNAMERecords.groovy")
+	static mxRecordsWithARecords = DnsResources.class.getResource("MXRecordsWithARecords.groovy")
 	static mxRecords = DnsResources.class.getResource("MXRecords.groovy")
 	static nsRecordsWithARecords = DnsResources.class.getResource("NSRecordsWithARecords.groovy")
 	static nsRecords = DnsResources.class.getResource("NSRecords.groovy")

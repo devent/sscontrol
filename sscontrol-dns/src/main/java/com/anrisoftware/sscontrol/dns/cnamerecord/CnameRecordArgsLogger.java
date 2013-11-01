@@ -8,11 +8,11 @@ import static org.apache.commons.lang3.Validate.notNull;
 import javax.inject.Singleton;
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
-import com.anrisoftware.sscontrol.dns.mxrecord.MXRecord;
+import com.anrisoftware.sscontrol.dns.mxrecord.MxRecord;
 import com.anrisoftware.sscontrol.dns.zone.DnsZone;
 
 /**
- * Logging messages for {@link MXRecord}.
+ * Logging messages for {@link MxRecord}.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
@@ -39,7 +39,7 @@ class CnameRecordArgsLogger extends AbstractLogger {
 	}
 
 	/**
-	 * Creates a logger for {@link MXRecord}.
+	 * Creates a logger for {@link MxRecord}.
 	 */
 	public CnameRecordArgsLogger() {
 		super(CnameRecord.class);

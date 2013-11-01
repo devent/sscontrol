@@ -15,7 +15,7 @@ import com.anrisoftware.sscontrol.core.modules.CoreResourcesModule
 import com.anrisoftware.sscontrol.core.service.ServiceModule
 import com.anrisoftware.sscontrol.dns.arecord.ARecord
 import com.anrisoftware.sscontrol.dns.cnamerecord.CnameRecord
-import com.anrisoftware.sscontrol.dns.mxrecord.MXRecord
+import com.anrisoftware.sscontrol.dns.mxrecord.MxRecord
 import com.anrisoftware.sscontrol.dns.nsrecord.NsRecord
 import com.anrisoftware.sscontrol.dns.zone.DnsZone
 import com.google.inject.Guice
@@ -209,11 +209,35 @@ class DnsServiceBase {
 		record
 	}
 
-	def assertMXRecord(MXRecord mxrecord, Object... args) {
-		assertStringContent mxrecord.name, args[0]
-		assert mxrecord.aRecord == args[1]
-		assert mxrecord.priority == args[2]
-		assert mxrecord.ttl.millis == args[3]*1000
+	/**
+	 * Compares the attributes of the MX/record.
+	 *
+	 * @param args
+	 * 			  the {@link Map} arguments:
+	 * 			  <ul>
+	 * 			  <li>{@code name}
+	 * 			  <li>{@code priority}, optional.
+	 * 			  <li>{@code arecord}, optional.
+	 * 			  <li>{@code ttl}, optional.
+	 * 			  </ul>
+	 *
+	 * @param record
+	 * 			  the {@link MxRecord}.
+	 *
+	 * @return the {@link MxRecord}.
+	 */
+	MxRecord assertMxRecord(Map args, MxRecord record) {
+		assertStringContent record.name, args.name
+		if (args.containsKey("priority")) {
+			assert record.priority == args.priority
+		}
+		if (args.containsKey("arecord")) {
+			assert record.address == args.arecord
+		}
+		if (args.containsKey("ttl")) {
+			assert record.ttl.millis == args.ttl
+		}
+		record
 	}
 
 	/**

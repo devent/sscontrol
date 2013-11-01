@@ -14,6 +14,11 @@ public enum BindingAddress {
 	loopback("127.0.0.1"),
 
 	/**
+	 * Local host address {@code 127.0.0.1}
+	 */
+	local("127.0.0.1"),
+
+	/**
 	 * All address {@code 0.0.0.0}
 	 */
 	all("0.0.0.0");

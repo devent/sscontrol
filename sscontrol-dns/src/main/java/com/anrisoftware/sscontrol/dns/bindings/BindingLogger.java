@@ -18,7 +18,9 @@
  */
 package com.anrisoftware.sscontrol.dns.bindings;
 
+import static com.anrisoftware.sscontrol.dns.bindings.BindingLogger._.address_blank;
 import static com.anrisoftware.sscontrol.dns.bindings.BindingLogger._.address_null;
+import static org.apache.commons.lang3.Validate.notBlank;
 import static org.apache.commons.lang3.Validate.notNull;
 
 import javax.inject.Singleton;
@@ -36,7 +38,9 @@ class BindingLogger extends AbstractLogger {
 
 	enum _ {
 
-		address_null("Bind address cannot be null.");
+		address_null("Bind address cannot be null."),
+
+		address_blank("Bind address cannot be blank.");
 
 		private String name;
 
@@ -59,5 +63,6 @@ class BindingLogger extends AbstractLogger {
 
 	void checkAddress(Object object) {
 		notNull(object, address_null.toString());
+		notBlank(object.toString(), address_blank.toString());
 	}
 }

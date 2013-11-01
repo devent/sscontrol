@@ -1,18 +1,18 @@
 /*
  * Copyright 2013 Erwin Müller <erwin.mueller@deventm.org>
- *
+ * 
  * This file is part of sscontrol-core.
- *
+ * 
  * sscontrol-core is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published by the
  * Free Software Foundation, either version 3 of the License, or (at your
  * option) any later version.
- *
- * sscontrol-core is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
- * for more details.
- *
+ * 
+ * sscontrol-core is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more
+ * details.
+ * 
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-core. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -25,6 +25,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
+
+import javax.inject.Inject;
 
 import org.apache.commons.collections.map.MultiValueMap;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -43,20 +45,26 @@ class ServicesRegistryImpl implements ServicesRegistry {
 
 	private final MultiValueMap services;
 
+	@Inject
+	private ServicesRegistryImplLogger log;
+
 	ServicesRegistryImpl() {
 		this.services = new MultiValueMap();
 	}
 
 	@Override
 	public void addService(Service service) {
-		services.put(service.getName(), service);
+		String name = service.getName();
+		services.put(name, service);
+		log.serviceAdded(name, service);
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public List<Service> getService(String name) {
-		return unmodifiableList(new ArrayList<Service>(
-				services.getCollection(name)));
+		@SuppressWarnings("unchecked")
+		Collection<Service> list = services.getCollection(name);
+		log.checkService(name, list);
+		return unmodifiableList(new ArrayList<Service>(list));
 	}
 
 	@Override

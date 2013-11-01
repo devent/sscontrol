@@ -64,7 +64,7 @@ class DnsServiceTest extends DnsServiceBase {
 	void "dns bind one address"() {
 		loader.loadService ubuntu1004Profile, null
 		def profile = registry.getService("profile")[0]
-		loader.loadService dnsBindOneAddress, profile
+		loader.loadService bindOneAddress, profile
 
 		registry.getService("dns")[0].generate = false
 		assertService registry.getService("dns")[0],
@@ -77,7 +77,7 @@ class DnsServiceTest extends DnsServiceBase {
 	void "dns bind multiple address string"() {
 		loader.loadService ubuntu1004Profile, null
 		def profile = registry.getService("profile")[0]
-		loader.loadService dnsBindMultipleAddressString, profile
+		loader.loadService bindMultipleAddressString, profile
 
 		registry.getService("dns")[0].generate = false
 		assertService registry.getService("dns")[0],
@@ -95,7 +95,7 @@ class DnsServiceTest extends DnsServiceBase {
 	void "dns bind multiple address array"() {
 		loader.loadService ubuntu1004Profile, null
 		def profile = registry.getService("profile")[0]
-		loader.loadService dnsBindMultipleAddressArray, profile
+		loader.loadService bindMultipleAddressArray, profile
 
 		registry.getService("dns")[0].generate = false
 		assertService registry.getService("dns")[0],
@@ -110,10 +110,10 @@ class DnsServiceTest extends DnsServiceBase {
 	}
 
 	@Test
-	void "dns bind loopback"() {
+	void "dns bind local"() {
 		loader.loadService ubuntu1004Profile, null
 		def profile = registry.getService("profile")[0]
-		loader.loadService dnsBindLoopback, profile
+		loader.loadService bindLocal, profile
 
 		registry.getService("dns")[0].generate = false
 		assertService registry.getService("dns")[0],
@@ -126,7 +126,7 @@ class DnsServiceTest extends DnsServiceBase {
 	void "dns bind all"() {
 		loader.loadService ubuntu1004Profile, null
 		def profile = registry.getService("profile")[0]
-		loader.loadService dnsBindAll, profile
+		loader.loadService bindAll, profile
 
 		registry.getService("dns")[0].generate = false
 		assertService registry.getService("dns")[0],

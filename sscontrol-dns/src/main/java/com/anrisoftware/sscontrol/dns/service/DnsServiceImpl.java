@@ -353,10 +353,10 @@ class DnsServiceImpl extends AbstractService {
 	}
 
 	/**
-	 * @see BindingAddress#loopback
+	 * @see BindingAddress#local
 	 */
-	public BindingAddress getLoopback() {
-		return BindingAddress.loopback;
+	public BindingAddress getLocal() {
+		return BindingAddress.local;
 	}
 
 	/**

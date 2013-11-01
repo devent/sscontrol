@@ -27,14 +27,13 @@ package com.anrisoftware.sscontrol.dns.service
 class DnsResources {
 
 	static ubuntu1004Profile = DnsResources.class.getResource("Ubuntu_10_04Profile.groovy")
-	static dnsSerialScript = DnsResources.class.getResource("DnsSerial.groovy")
-	static dnsSerialGenerateScript = DnsResources.class.getResource("DnsSerialGenerate.groovy")
+	static serialFixed = DnsResources.class.getResource("SerialFixed.groovy")
+	static serialGenerated = DnsResources.class.getResource("SerialGenerated.groovy")
 	static aRecordsScript = DnsResources.class.getResource("ARecords.groovy")
 	static dnsZoneCnameRecordsScript = DnsResources.class.getResource("DnsZoneCNAMERecords.groovy")
 	static dnsZoneMxRecordsScript = DnsResources.class.getResource("DnsZoneMXRecords.groovy")
 	static dnsZoneNsRecordsScript = DnsResources.class.getResource("DnsZoneNSRecords.groovy")
-	static dnsAutomaticARecordZoneScript = DnsResources.class.getResource("DnsAutomaticARecordForSoa.groovy")
-	static dnsNoAutomaticARecordsScript = DnsResources.class.getResource("DnsNoAutomaticARecords.groovy")
+	static zoneARecord = DnsResources.class.getResource("ZoneARecord.groovy")
 	static dnsOriginShortcutScript = DnsResources.class.getResource("DnsOriginShortcut.groovy")
 	static bindOneAddress = DnsResources.class.getResource("BindOneAddress.groovy")
 	static bindMultipleAddressString = DnsResources.class.getResource("BindMultipleAddressString.groovy")

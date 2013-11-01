@@ -198,6 +198,7 @@ public class DnsZone extends GroovyObjectSupport implements Serializable {
 		ZoneRecord therecord = recordFactories.get(record).create(this, args);
 		log.checkRecordUnique(this, uniqueRecords.add(therecord), therecord);
 		records.add(therecord);
+		log.recordAdded(this, therecord);
 		return therecord;
 	}
 

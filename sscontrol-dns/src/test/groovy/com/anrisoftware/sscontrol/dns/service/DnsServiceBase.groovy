@@ -66,20 +66,87 @@ class DnsServiceBase {
 		toStringStyle
 	}
 
-	def DnsServiceImpl assertService(Map args, DnsServiceImpl service) {
-		//assert service.generate == args.generate
-		assert service.serial == args.serial
-		assert service.binding.addresses.containsAll(args.binding)
+	/**
+	 * Compares the attributes of the DNS/service.
+	 *
+	 * @param args
+	 * 			  the {@link Map} arguments:
+	 * 			  <ul>
+	 * 			  <li>{@code generate}, optional.
+	 * 			  <li>{@code serial}, optional.
+	 * 			  <li>{@code binding}, optional.
+	 * 			  </ul>
+	 *
+	 * @param service
+	 * 			  the {@link DnsServiceImpl}.
+	 *
+	 * @return the {@link DnsServiceImpl}.
+	 */
+	DnsServiceImpl assertService(Map args, DnsServiceImpl service) {
+		assert service != null
+		if (args.containsKey("generate")) {
+			assert service.generate == args.generate
+		}
+		if (args.containsKey("serial")) {
+			assert service.serial == args.serial
+		}
+		if (args.containsKey("binding")) {
+			assert service.binding.addresses.containsAll(args.binding)
+		}
 		service
 	}
 
-	def DnsServiceImpl assertServiceGenerateSerial(Map args, DnsServiceImpl service) {
-		assert service.serial > args.serial
-		assert service.binding.addresses.containsAll(args.binding)
+	/**
+	 * Compares the attributes of the DNS/service with a generated
+	 * serial number.
+	 *
+	 * @param args
+	 * 			  the {@link Map} arguments:
+	 * 			  <ul>
+	 * 			  <li>{@code generate}, optional.
+	 * 			  <li>{@code serial}, optional.
+	 * 			  <li>{@code binding}, optional.
+	 * 			  </ul>
+	 *
+	 * @param service
+	 * 			  the {@link DnsServiceImpl}.
+	 *
+	 * @return the {@link DnsServiceImpl}.
+	 */
+	def DnsServiceImpl assertServiceGeneratedSerial(Map args, DnsServiceImpl service) {
+		assert service != null
+		if (args.containsKey("generate")) {
+			assert service.generate == args.generate
+		}
+		if (args.containsKey("serial")) {
+			assert service.serial > args.serial
+		}
+		if (args.containsKey("binding")) {
+			assert service.binding.addresses.containsAll(args.binding)
+		}
 		service
 	}
 
-	def DnsZone assertZone(Map args, DnsZone zone) {
+	/**
+	 * Compares the attributes of the DNS/zone.
+	 *
+	 * @param args
+	 * 			  the {@link Map} arguments:
+	 * 			  <ul>
+	 * 			  <li>{@code name}
+	 * 			  <li>{@code primary}
+	 * 			  <li>{@code email}
+	 * 			  <li>{@code serial}, optional.
+	 * 			  <li>{@code ttl}, optional.
+	 * 			  </ul>
+	 *
+	 * @param zone
+	 * 			  the {@link DnsZone}.
+	 *
+	 * @return the {@link DnsZone}.
+	 */
+	DnsZone assertZone(Map args, DnsZone zone) {
+		assert zone != null
 		assertStringContent zone.name, args.name
 		assertStringContent zone.primaryNameServer, args.primary
 		assertStringContent zone.email, args.email
@@ -92,12 +159,30 @@ class DnsServiceBase {
 		zone
 	}
 
-	def assertARecord(Map args, ARecord arecord) {
-		assertStringContent arecord.name, args.name
-		assertStringContent arecord.address, args.address
+	/**
+	 * Compares the attributes of the A/record.
+	 *
+	 * @param args
+	 * 			  the {@link Map} arguments:
+	 * 			  <ul>
+	 * 			  <li>{@code name}
+	 * 			  <li>{@code address}
+	 * 			  <li>{@code ttl}, optional.
+	 * 			  </ul>
+	 *
+	 * @param record
+	 * 			  the {@link ARecord}.
+	 *
+	 * @return the {@link ARecord}.
+	 */
+	ARecord assertARecord(Map args, ARecord record) {
+		assert record != null
+		assertStringContent record.name, args.name
+		assertStringContent record.address, args.address
 		if (args.containsKey("ttl")) {
-			assert arecord.ttl.millis == args.ttl
+			assert record.ttl.millis == args.ttl
 		}
+		record
 	}
 
 	def assertCNAMERecord(CNAMERecord cnamerecord, Object... args) {

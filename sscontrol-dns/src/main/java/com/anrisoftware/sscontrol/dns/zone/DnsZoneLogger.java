@@ -20,7 +20,11 @@ package com.anrisoftware.sscontrol.dns.zone;
 
 import static com.anrisoftware.sscontrol.dns.zone.DnsZoneLogger._.duration_null;
 import static com.anrisoftware.sscontrol.dns.zone.DnsZoneLogger._.email_null;
+import static com.anrisoftware.sscontrol.dns.zone.DnsZoneLogger._.expire_set_debug;
+import static com.anrisoftware.sscontrol.dns.zone.DnsZoneLogger._.expire_set_info;
 import static com.anrisoftware.sscontrol.dns.zone.DnsZoneLogger._.primary_null;
+import static com.anrisoftware.sscontrol.dns.zone.DnsZoneLogger._.record_added_debug;
+import static com.anrisoftware.sscontrol.dns.zone.DnsZoneLogger._.record_added_info;
 import static com.anrisoftware.sscontrol.dns.zone.DnsZoneLogger._.record_unique;
 import static com.anrisoftware.sscontrol.dns.zone.DnsZoneLogger._.refresh_set_debug;
 import static com.anrisoftware.sscontrol.dns.zone.DnsZoneLogger._.refresh_set_info;
@@ -70,7 +74,11 @@ class DnsZoneLogger extends AbstractLogger {
 
 		expire_set_debug("Expire time {} set for {}."),
 
-		expire_set_info("Expire time {} set for zone '{}'.");
+		expire_set_info("Expire time {} set for zone '{}'."),
+
+		record_added_debug("Record {} added for {}."),
+
+		record_added_info("{}/record added for zone '{}'.");
 
 		private String name;
 
@@ -148,9 +156,17 @@ class DnsZoneLogger extends AbstractLogger {
 
 	void expireSet(DnsZone zone, TimeDuration duration) {
 		if (isDebugEnabled()) {
-			debug(_.expire_set_debug, duration, zone);
+			debug(expire_set_debug, duration, zone);
 		} else {
-			info(_.expire_set_info, duration.getDuration(), zone.getName());
+			info(expire_set_info, duration.getDuration(), zone.getName());
+		}
+	}
+
+	void recordAdded(DnsZone zone, ZoneRecord record) {
+		if (isDebugEnabled()) {
+			debug(record_added_debug, record, zone);
+		} else {
+			info(record_added_info, record.getRecord(), zone.getName());
 		}
 	}
 }

@@ -36,7 +36,7 @@ public class DnsZoneArgs {
 		}
 	}
 
-	String email(Map<String, Object> args, String name) {
+	public String email(Map<String, Object> args, String name) {
 		if (args.containsKey(EMAIL)) {
 			Object email = args.get(EMAIL);
 			log.checkEmail(email, name);
@@ -46,7 +46,7 @@ public class DnsZoneArgs {
 		}
 	}
 
-	Long serial(Map<String, Object> args, String name) {
+	public Long serial(Map<String, Object> args, String name) {
 		if (args.containsKey(SERIAL)) {
 			Number serial = (Number) args.get(SERIAL);
 			log.checkSerial(serial, name);

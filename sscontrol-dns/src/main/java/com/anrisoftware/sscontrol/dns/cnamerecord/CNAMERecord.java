@@ -27,6 +27,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.anrisoftware.sscontrol.dns.zone.AbstractRecord;
 import com.anrisoftware.sscontrol.dns.zone.DnsZone;
+import com.anrisoftware.sscontrol.dns.zone.Record;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
@@ -53,6 +54,11 @@ public class CNAMERecord extends AbstractRecord {
 		super(zone);
 		this.name = aargs.name(args, zone);
 		this.alias = aargs.alias(args, zone);
+	}
+
+	@Override
+	public Record getRecord() {
+		return Record.cname;
 	}
 
 	/**

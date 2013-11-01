@@ -15,6 +15,12 @@ import com.anrisoftware.sscontrol.dns.time.TimeDurationFactory;
  */
 public interface ZoneRecord {
 
+	/**
+	 * Returns the record type.
+	 * 
+	 * @return the {@link Record}.
+	 */
+	Record getRecord();
 
 	/**
 	 * Sets the time to live time.

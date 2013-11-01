@@ -1,30 +1,30 @@
 /*
  * Copyright 2012-2013 Erwin Müller <erwin.mueller@deventm.org>
- * 
+ *
  * This file is part of sscontrol-dns.
- * 
+ *
  * sscontrol-dns is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published by the
  * Free Software Foundation, either version 3 of the License, or (at your
  * option) any later version.
- * 
+ *
  * sscontrol-dns is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more
  * details.
- * 
+ *
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-dns. If not, see <http://www.gnu.org/licenses/>.
  */
 package com.anrisoftware.sscontrol.dns.service;
 
-import static com.anrisoftware.sscontrol.dns.service.DnsServiceFactory.NAME;
-import static com.anrisoftware.sscontrol.dns.zone.DnsZoneArgs.ADDRESS;
 import static java.lang.String.format;
 import static java.util.Collections.unmodifiableList;
 import groovy.lang.Script;
 
+import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -48,15 +48,24 @@ import com.anrisoftware.sscontrol.dns.roots.Roots;
 import com.anrisoftware.sscontrol.dns.zone.DnsZone;
 import com.anrisoftware.sscontrol.dns.zone.DnsZoneFactory;
 import com.anrisoftware.sscontrol.dns.zone.Record;
+import com.anrisoftware.sscontrol.dns.zone.ZoneRecord;
 
 /**
  * DNS service.
- * 
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
 @SuppressWarnings("serial")
 class DnsServiceImpl extends AbstractService {
+
+	private static final String DURATION = "duration";
+
+	private static final String TTL = "ttl";
+
+	private static final String ADDRESS = "address";
+
+	private static final String NAME = "name";
 
 	private static final String BINDINGS = "bindings";
 
@@ -116,15 +125,15 @@ class DnsServiceImpl extends AbstractService {
 	 */
 	@Override
 	public String getName() {
-		return NAME;
+		return DnsServiceFactory.NAME;
 	}
 
 	/**
 	 * Entry point for the DNS service script.
-	 * 
+	 *
 	 * @param statements
 	 *            the DNS service statements.
-	 * 
+	 *
 	 * @return this {@link Service}.
 	 */
 	public Service dns(Object statements) {
@@ -133,10 +142,10 @@ class DnsServiceImpl extends AbstractService {
 
 	/**
 	 * Sets the serial number of the zone records.
-	 * 
+	 *
 	 * @param serial
 	 *            the serial.
-	 * 
+	 *
 	 * @param args
 	 *            the {@link Map} of additional named parameter:
 	 *            <dl>
@@ -149,7 +158,7 @@ class DnsServiceImpl extends AbstractService {
 	 *            if the records are changed more then once in a day. If set to
 	 *            {@code false} then the serial number is used as specified.</dd>
 	 *            </dl>
-	 * 
+	 *
 	 */
 	public void serial(Map<String, Object> args, int serial) {
 		if (args.containsKey("generate")) {
@@ -166,7 +175,7 @@ class DnsServiceImpl extends AbstractService {
 	 * for all records that have been changed. The service can create serial
 	 * numbers based on the current date but the user needs to update this
 	 * serial number if the records are changed more then once in a day.
-	 * 
+	 *
 	 * @param serial
 	 *            the serial.
 	 */
@@ -181,10 +190,9 @@ class DnsServiceImpl extends AbstractService {
 	 * The service can create serial numbers based on the current date but the
 	 * user needs to update this serial number if the records are changed more
 	 * then once in a day.
-	 * 
+	 *
 	 * @param generate
-	 *            {@code true} if the serial number should be generated,
-	 *            {@code false} if not.
+	 *            {@code true} if the serial number should be generated.
 	 */
 	public void setGenerate(boolean generate) {
 		this.generate = generate;
@@ -192,8 +200,17 @@ class DnsServiceImpl extends AbstractService {
 	}
 
 	/**
+	 * Returns whether the serial is generated.
+	 *
+	 * @return {@code true} if the serial number is generated.
+	 */
+	public boolean isGenerate() {
+		return generate;
+	}
+
+	/**
 	 * Sets the IP addresses or host names to where to bind the DNS service.
-	 * 
+	 *
 	 * @see BindingFactory#create(Map, String...)
 	 */
 	public void bind(Map<String, Object> args) throws ServiceException {
@@ -203,7 +220,7 @@ class DnsServiceImpl extends AbstractService {
 
 	/**
 	 * Sets the IP addresses or host names to where to bind the DNS service.
-	 * 
+	 *
 	 * @see BindingFactory#create(Map, String...)
 	 */
 	public void bind(Map<String, Object> args, String... array)
@@ -214,7 +231,7 @@ class DnsServiceImpl extends AbstractService {
 
 	/**
 	 * Sets the IP addresses or host names to where to bind the DNS service.
-	 * 
+	 *
 	 * @see BindingFactory#create(BindingAddress)
 	 */
 	public void bind(BindingAddress address) throws ServiceException {
@@ -224,7 +241,7 @@ class DnsServiceImpl extends AbstractService {
 
 	/**
 	 * Returns a list of the IP addresses where to bind the DNS service.
-	 * 
+	 *
 	 * @return the {@link Binding}.
 	 */
 	public Binding getBinding() {
@@ -237,8 +254,13 @@ class DnsServiceImpl extends AbstractService {
 	 * @see DnsZoneFactory#create(Map, String)
 	 * 
 	 * @return the {@link DnsZone}.
+	 * 
+	 * @throws ParseException
+	 *             if the TTL duration of the automatic A-record could not be
+	 *             parsed.
 	 */
-	public void zone(Map<String, Object> args, String name) {
+	public void zone(Map<String, Object> args, String name)
+			throws ParseException {
 		zone(args, name, null);
 	}
 
@@ -248,19 +270,35 @@ class DnsServiceImpl extends AbstractService {
 	 * @see DnsZoneFactory#create(Map, String)
 	 * 
 	 * @return the {@link DnsZone}.
+	 * 
+	 * @throws ParseException
+	 *             if the TTL duration of the automatic A-record could not be
+	 *             parsed.
 	 */
-	public DnsZone zone(Map<String, Object> args, String name, Object statements) {
+	public DnsZone zone(Map<String, Object> args, String name, Object statements)
+			throws ParseException {
 		if (!args.containsKey(SERIAL)) {
 			args.put(SERIAL, getSerial());
 		}
 		DnsZone zone = zoneFactory.create(args, name);
 		zones.add(zone);
 		if (args.containsKey(ADDRESS)) {
-			args.put(NAME, name);
-			zone.record(args, Record.a, (Object) null);
+			automaticARecord(args, name, zone);
 		}
 		log.zoneAdded(this, zone);
 		return zone;
+	}
+
+	private void automaticARecord(Map<String, Object> args, String name,
+			DnsZone zone) throws ParseException {
+		Map<String, Object> aargs = new HashMap<String, Object>();
+		aargs.put(NAME, name);
+		aargs.put(ADDRESS, args.get(ADDRESS));
+		ZoneRecord record = zone.record(aargs, Record.a, (Object) null);
+		if (args.containsKey(TTL)) {
+			aargs.put(DURATION, args.get(TTL));
+			record.ttl(aargs);
+		}
 	}
 
 	/**
@@ -279,7 +317,7 @@ class DnsServiceImpl extends AbstractService {
 
 	/**
 	 * Returns a list of the DNS zones.
-	 * 
+	 *
 	 * @return an unmodifiable {@link List} of {@link DnsZone} DNS zones.
 	 */
 	public List<DnsZone> getZones() {
@@ -288,10 +326,10 @@ class DnsServiceImpl extends AbstractService {
 
 	/**
 	 * Adds a new alias.
-	 * 
+	 *
 	 * @param name
 	 *            the name of the alias.
-	 * 
+	 *
 	 * @return the {@link Alias}.
 	 */
 	public Alias alias(String name) {
@@ -303,7 +341,7 @@ class DnsServiceImpl extends AbstractService {
 
 	/**
 	 * Returns the aliases.
-	 * 
+	 *
 	 * @return the {@link Aliases}.
 	 */
 	public Aliases getAliases() {
@@ -312,10 +350,10 @@ class DnsServiceImpl extends AbstractService {
 
 	/**
 	 * Returns the root servers.
-	 * 
+	 *
 	 * @param statements
 	 *            the roots statements.
-	 * 
+	 *
 	 * @return the {@link Roots}.
 	 */
 	public Roots roots(Object statements) {
@@ -324,7 +362,7 @@ class DnsServiceImpl extends AbstractService {
 
 	/**
 	 * Returns the root servers.
-	 * 
+	 *
 	 * @return the {@link Roots}.
 	 */
 	public Roots getRoots() {
@@ -333,10 +371,10 @@ class DnsServiceImpl extends AbstractService {
 
 	/**
 	 * Returns the recursive servers.
-	 * 
+	 *
 	 * @param statements
 	 *            the recursive statements.
-	 * 
+	 *
 	 * @return the {@link Recursive}.
 	 */
 	public Recursive recursive(Object statements) {
@@ -345,7 +383,7 @@ class DnsServiceImpl extends AbstractService {
 
 	/**
 	 * Returns the recursive servers.
-	 * 
+	 *
 	 * @return the {@link Recursive}.
 	 */
 	public Recursive getRecursive() {

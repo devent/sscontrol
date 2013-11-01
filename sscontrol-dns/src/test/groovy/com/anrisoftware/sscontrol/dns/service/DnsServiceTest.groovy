@@ -26,6 +26,7 @@ import groovy.util.logging.Slf4j
 import org.junit.Test
 
 import com.anrisoftware.sscontrol.core.api.ServicesRegistry
+import com.anrisoftware.sscontrol.dns.zone.DnsZone
 
 /**
  * DNS/service.
@@ -37,53 +38,35 @@ import com.anrisoftware.sscontrol.core.api.ServicesRegistry
 class DnsServiceTest extends DnsServiceBase {
 
 	@Test
-	void "dns serial script"() {
+	void "fixed serial"() {
 		loader.loadService ubuntu1004Profile, null
 		def profile = registry.getService("profile")[0]
-		loader.loadService dnsSerialScript, profile
-
-		registry.getService("dns")[0].generate = false
-		assertService registry.getService("dns")[0],
-		generate: false,
-		serial: 99,
-		binding: []
+		loader.loadService serialFixed, profile
+		assertService registry.getService("dns")[0], generate: false, serial: 99
 	}
 
 	@Test
-	void "dns serial generate script"() {
+	void "generated serial"() {
 		loader.loadService ubuntu1004Profile, null
 		def profile = registry.getService("profile")[0]
-		loader.loadService dnsSerialGenerateScript, profile
-
-		assertServiceGenerateSerial registry.getService("dns")[0],
-		serial: 2003,
-		binding: []
+		loader.loadService serialGenerated, profile
+		assertServiceGeneratedSerial registry.getService("dns")[0], generate: true, serial: 2003
 	}
 
 	@Test
-	void "dns bind one address"() {
+	void "bind one address"() {
 		loader.loadService ubuntu1004Profile, null
 		def profile = registry.getService("profile")[0]
 		loader.loadService bindOneAddress, profile
-
-		registry.getService("dns")[0].generate = false
-		assertService registry.getService("dns")[0],
-		generate: false,
-		serial: 0,
-		binding: ["127.0.0.1"]
+		assertService registry.getService("dns")[0], binding: ["127.0.0.1"]
 	}
 
 	@Test
-	void "dns bind multiple address string"() {
+	void "bind multiple address string"() {
 		loader.loadService ubuntu1004Profile, null
 		def profile = registry.getService("profile")[0]
 		loader.loadService bindMultipleAddressString, profile
-
-		registry.getService("dns")[0].generate = false
-		assertService registry.getService("dns")[0],
-		generate: false,
-		serial: 0,
-		binding: [
+		assertService registry.getService("dns")[0], binding: [
 			"127.0.0.3",
 			"127.0.0.2",
 			"127.0.0.4",
@@ -92,16 +75,11 @@ class DnsServiceTest extends DnsServiceBase {
 	}
 
 	@Test
-	void "dns bind multiple address array"() {
+	void "bind multiple address array"() {
 		loader.loadService ubuntu1004Profile, null
 		def profile = registry.getService("profile")[0]
 		loader.loadService bindMultipleAddressArray, profile
-
-		registry.getService("dns")[0].generate = false
-		assertService registry.getService("dns")[0],
-		generate: false,
-		serial: 0,
-		binding: [
+		assertService registry.getService("dns")[0], binding: [
 			"127.0.0.3",
 			"127.0.0.2",
 			"127.0.0.4",
@@ -110,29 +88,19 @@ class DnsServiceTest extends DnsServiceBase {
 	}
 
 	@Test
-	void "dns bind local"() {
+	void "bind local"() {
 		loader.loadService ubuntu1004Profile, null
 		def profile = registry.getService("profile")[0]
 		loader.loadService bindLocal, profile
-
-		registry.getService("dns")[0].generate = false
-		assertService registry.getService("dns")[0],
-		generate: false,
-		serial: 0,
-		binding: ["127.0.0.1"]
+		assertService registry.getService("dns")[0], binding: ["127.0.0.1"]
 	}
 
 	@Test
-	void "dns bind all"() {
+	void "bind all"() {
 		loader.loadService ubuntu1004Profile, null
 		def profile = registry.getService("profile")[0]
 		loader.loadService bindAll, profile
-
-		registry.getService("dns")[0].generate = false
-		assertService registry.getService("dns")[0],
-		generate: false,
-		serial: 0,
-		binding: ["0.0.0.0"]
+		assertService registry.getService("dns")[0], binding: ["0.0.0.0"]
 	}
 
 	@Test
@@ -140,9 +108,7 @@ class DnsServiceTest extends DnsServiceBase {
 		loader.loadService ubuntu1004Profile, null
 		def profile = registry.getService("profile")[0]
 		loader.loadService aRecordsScript, profile
-
-		registry.getService("dns")[0].generate = false
-		def service = assertService registry.getService("dns")[0], generate: false, serial: 0, binding: []
+		DnsServiceImpl service = registry.getService("dns")[0]
 		def zone = assertZone service.zones[0], name: "testa.com", primary: "ns1.testa.com", email: "hostmaster@testa.com"
 		assertARecord zone.records[0], name: "testa.com", address: "192.168.0.49", ttl: 1000
 		assertARecord zone.records[1], name: "testb.com", address: "192.168.0.50", ttl: 86400000
@@ -197,32 +163,16 @@ class DnsServiceTest extends DnsServiceBase {
 	}
 
 	@Test
-	void "dns automatic a-record for zone script"() {
+	void "zone automatic a-record"() {
 		loader.loadService ubuntu1004Profile, null
 		def profile = registry.getService("profile")[0]
-		loader.loadService dnsAutomaticARecordZoneScript, profile
+		loader.loadService zoneARecord, profile
 
-		registry.getService("dns")[0].generate = false
-		def service = assertService registry.getService("dns")[0], generate: false, serial: 0, binding: []
+		DnsServiceImpl service = registry.getService("dns")[0]
 		def zone = assertZone service.zones[0], name: "testa.com", primary: "ns1.testa.com", email: "hostmaster@testa.com"
-		assertARecord zone.aaRecords[0], "testa.com", "192.168.0.49", 86400
+		assertARecord zone.records[0], name: "testa.com", address: "192.168.0.49"
 		zone = assertZone service.zones[1], name: "testb.com", primary: "ns1.testb.com", email: "hostmaster@testb.com", serial: 1
-		assertARecord zone.aaRecords[0], "testb.com", "192.168.0.50", 86400
-	}
-
-	@Test
-	void "dns no automatic a-records script"() {
-		loader.loadService ubuntu1004Profile, null
-		def profile = registry.getService("profile")[0]
-		loader.loadService dnsNoAutomaticARecordsScript, profile
-
-		registry.getService("dns")[0].generate = false
-		def service = assertService registry.getService("dns")[0], generate: false, serial: 0, binding: []
-		def zone = assertZone service.zones[0], name: "testa.com", primary: "ns1.testa.com", email: "hostmaster@testa.com"
-		assertARecord zone.aaRecords[0], "testa.com", "192.168.0.49", 86400
-		assertNSRecord zone.nsRecords[0], "ns2.testa.com", null, 86400
-		assertMXRecord zone.mxRecords[0], "mx1.testa.com", null, 10, 86400
-		assertCNAMERecord zone.cnameRecords[0], "www.testa.com", "testa.com", 86400
+		assertARecord zone.records[0], name: "testb.com", address: "192.168.0.50", ttl: 1000
 	}
 
 	@Test

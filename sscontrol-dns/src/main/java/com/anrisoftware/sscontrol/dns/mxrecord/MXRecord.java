@@ -30,6 +30,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.anrisoftware.sscontrol.dns.zone.AbstractRecord;
 import com.anrisoftware.sscontrol.dns.zone.DnsZone;
+import com.anrisoftware.sscontrol.dns.zone.Record;
 import com.anrisoftware.sscontrol.dns.zone.ZoneRecord;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
@@ -69,6 +70,11 @@ public class MXRecord extends AbstractRecord {
 		args.put(NAME, getName());
 		args.put(ADDRESS, address);
 		this.address = getZone().record(args, a, null);
+	}
+
+	@Override
+	public Record getRecord() {
+		return Record.mx;
 	}
 
 	/**

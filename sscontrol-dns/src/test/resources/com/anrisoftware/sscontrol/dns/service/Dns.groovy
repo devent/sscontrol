@@ -28,7 +28,7 @@ dns {
 
 	// soa entry, with timers
 	zone "example2.com", primary: "ns.example2.com", email: "hostmaster@example2.com", {
-		ttl duration: "PT1S", minimum: "PT2"
+		ttl duration: "PT1S", minimum: "PT2S"
 		refresh duration: "PT2S"
 		retry duration: "PT3S"
 		expire duration: "PT4S"

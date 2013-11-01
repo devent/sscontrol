@@ -16,7 +16,7 @@ import com.anrisoftware.sscontrol.core.service.ServiceModule
 import com.anrisoftware.sscontrol.dns.arecord.ARecord
 import com.anrisoftware.sscontrol.dns.cnamerecord.CnameRecord
 import com.anrisoftware.sscontrol.dns.mxrecord.MXRecord
-import com.anrisoftware.sscontrol.dns.nsrecord.NSRecord
+import com.anrisoftware.sscontrol.dns.nsrecord.NsRecord
 import com.anrisoftware.sscontrol.dns.zone.DnsZone
 import com.google.inject.Guice
 import com.google.inject.Injector
@@ -216,9 +216,30 @@ class DnsServiceBase {
 		assert mxrecord.ttl.millis == args[3]*1000
 	}
 
-	def assertNSRecord(NSRecord nsrecord, Object... args) {
-		assertStringContent nsrecord.name, args[0]
-		assert nsrecord.aRecord == args[1]
-		assert nsrecord.ttl.millis == args[2]*1000
+	/**
+	 * Compares the attributes of the NS/record.
+	 *
+	 * @param args
+	 * 			  the {@link Map} arguments:
+	 * 			  <ul>
+	 * 			  <li>{@code name}
+	 * 			  <li>{@code arecord}, optional.
+	 * 			  <li>{@code ttl}, optional.
+	 * 			  </ul>
+	 *
+	 * @param record
+	 * 			  the {@link NsRecord}.
+	 *
+	 * @return the {@link NsRecord}.
+	 */
+	NsRecord assertNsRecord(Map args, NsRecord record) {
+		assertStringContent record.name, args.name
+		if (args.containsKey("arecord")) {
+			assert record.address == args.arecord
+		}
+		if (args.containsKey("ttl")) {
+			assert record.ttl.millis == args.ttl
+		}
+		record
 	}
 }

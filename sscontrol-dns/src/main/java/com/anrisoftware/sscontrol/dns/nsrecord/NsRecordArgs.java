@@ -15,14 +15,14 @@ import com.anrisoftware.sscontrol.dns.zone.DnsZone;
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-public class NSRecordArgs {
+public class NsRecordArgs {
 
 	static final String NAME = "name";
 
 	static final String ADDRESS = "address";
 
 	@Inject
-	private NSRecordArgsLogger log;
+	private NsRecordArgsLogger log;
 
 	String name(Map<String, Object> args, DnsZone zone) {
 		Object name = args.get(NAME);

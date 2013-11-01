@@ -18,10 +18,11 @@
  */
 package com.anrisoftware.sscontrol.dns.nsrecord;
 
-import static com.anrisoftware.sscontrol.dns.nsrecord.NSRecordArgs.ADDRESS;
-import static com.anrisoftware.sscontrol.dns.nsrecord.NSRecordArgs.NAME;
+import static com.anrisoftware.sscontrol.dns.nsrecord.NsRecordArgs.ADDRESS;
+import static com.anrisoftware.sscontrol.dns.nsrecord.NsRecordArgs.NAME;
 import static com.anrisoftware.sscontrol.dns.zone.Record.a;
 
+import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -41,17 +42,17 @@ import com.google.inject.assistedinject.Assisted;
  * @since 1.0
  */
 @SuppressWarnings("serial")
-public class NSRecord extends AbstractRecord {
+public class NsRecord extends AbstractRecord {
 
 	private final String name;
 
 	private ZoneRecord address;
 
 	/**
-	 * @see NSRecordFactory#create(DnsZone, Map)
+	 * @see NsRecordFactory#create(DnsZone, Map)
 	 */
 	@Inject
-	NSRecord(NSRecordArgs aargs, @Assisted DnsZone zone,
+	NsRecord(NsRecordArgs aargs, @Assisted DnsZone zone,
 			@Assisted Map<String, Object> args) {
 		super(zone);
 		this.name = aargs.name(args, zone);
@@ -66,6 +67,14 @@ public class NSRecord extends AbstractRecord {
 		args.put(NAME, getName());
 		args.put(ADDRESS, address);
 		this.address = getZone().record(args, a, null);
+	}
+
+	@Override
+	public void ttl(Map<String, Object> args) throws ParseException {
+		super.ttl(args);
+		if (address != null) {
+			address.ttl(args);
+		}
 	}
 
 	@Override

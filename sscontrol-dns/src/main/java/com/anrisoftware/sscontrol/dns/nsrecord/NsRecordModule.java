@@ -18,14 +18,29 @@
  */
 package com.anrisoftware.sscontrol.dns.nsrecord;
 
+import static com.google.inject.multibindings.MapBinder.newMapBinder;
+
 import com.anrisoftware.sscontrol.dns.recursive.RecordFactory;
+import com.anrisoftware.sscontrol.dns.zone.Record;
+import com.anrisoftware.sscontrol.dns.zone.ZoneRecord;
+import com.google.inject.AbstractModule;
+import com.google.inject.assistedinject.FactoryModuleBuilder;
+import com.google.inject.multibindings.MapBinder;
 
 /**
- * Factory to create a new NS/record.
+ * Installs the NS/record.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-public interface NSRecordFactory extends RecordFactory {
+public class NsRecordModule extends AbstractModule {
 
+	@Override
+	protected void configure() {
+		install(new FactoryModuleBuilder().implement(ZoneRecord.class,
+				NsRecord.class).build(NsRecordFactory.class));
+		MapBinder<Record, RecordFactory> map = newMapBinder(binder(),
+				Record.class, RecordFactory.class);
+		map.addBinding(Record.ns).to(NsRecordFactory.class);
+	}
 }

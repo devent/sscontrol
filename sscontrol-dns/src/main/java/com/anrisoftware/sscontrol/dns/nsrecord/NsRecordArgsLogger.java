@@ -1,6 +1,6 @@
 package com.anrisoftware.sscontrol.dns.nsrecord;
 
-import static com.anrisoftware.sscontrol.dns.nsrecord.NSRecordArgsLogger._.name_null;
+import static com.anrisoftware.sscontrol.dns.nsrecord.NsRecordArgsLogger._.name_null;
 import static org.apache.commons.lang3.Validate.notBlank;
 import static org.apache.commons.lang3.Validate.notNull;
 
@@ -10,13 +10,13 @@ import com.anrisoftware.globalpom.log.AbstractLogger;
 import com.anrisoftware.sscontrol.dns.zone.DnsZone;
 
 /**
- * Logging messages for {@link NSRecord}.
+ * Logging messages for {@link NsRecord}.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
 @Singleton
-class NSRecordArgsLogger extends AbstractLogger {
+class NsRecordArgsLogger extends AbstractLogger {
 
 	enum _ {
 
@@ -35,10 +35,10 @@ class NSRecordArgsLogger extends AbstractLogger {
 	}
 
 	/**
-	 * Creates a logger for {@link NSRecord}.
+	 * Creates a logger for {@link NsRecord}.
 	 */
-	public NSRecordArgsLogger() {
-		super(NSRecord.class);
+	public NsRecordArgsLogger() {
+		super(NsRecord.class);
 	}
 
 	void checkName(Object name, DnsZone zone) {

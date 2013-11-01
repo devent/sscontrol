@@ -14,7 +14,7 @@ import com.anrisoftware.sscontrol.core.modules.CoreModule
 import com.anrisoftware.sscontrol.core.modules.CoreResourcesModule
 import com.anrisoftware.sscontrol.core.service.ServiceModule
 import com.anrisoftware.sscontrol.dns.arecord.ARecord
-import com.anrisoftware.sscontrol.dns.cnamerecord.CNAMERecord
+import com.anrisoftware.sscontrol.dns.cnamerecord.CnameRecord
 import com.anrisoftware.sscontrol.dns.mxrecord.MXRecord
 import com.anrisoftware.sscontrol.dns.nsrecord.NSRecord
 import com.anrisoftware.sscontrol.dns.zone.DnsZone
@@ -185,10 +185,28 @@ class DnsServiceBase {
 		record
 	}
 
-	def assertCNAMERecord(CNAMERecord cnamerecord, Object... args) {
-		assertStringContent cnamerecord.name, args[0]
-		assertStringContent cnamerecord.alias, args[1]
-		assert cnamerecord.ttl.millis == args[2]*1000
+	/**
+	 * Compares the attributes of the CNAME/record.
+	 *
+	 * @param args
+	 * 			  the {@link Map} arguments:
+	 * 			  <ul>
+	 * 			  <li>{@code name}
+	 * 			  <li>{@code alias}
+	 * 			  </ul>
+	 *
+	 * @param record
+	 * 			  the {@link CnameRecord}.
+	 *
+	 * @return the {@link CnameRecord}.
+	 */
+	CnameRecord assertCnameRecord(Map args, CnameRecord record) {
+		assertStringContent record.name, args.name
+		assertStringContent record.alias, args.alias
+		if (args.containsKey("ttl")) {
+			assert record.ttl.millis == args.ttl
+		}
+		record
 	}
 
 	def assertMXRecord(MXRecord mxrecord, Object... args) {

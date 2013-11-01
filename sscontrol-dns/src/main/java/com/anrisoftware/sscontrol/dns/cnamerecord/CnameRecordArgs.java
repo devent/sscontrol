@@ -15,16 +15,14 @@ import com.anrisoftware.sscontrol.dns.zone.DnsZone;
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-public class CNAMERecordArgs {
+public class CnameRecordArgs {
 
 	static final String ALIAS = "alias";
-
-	static final String PRIORITY = "priority";
 
 	static final String NAME = "name";
 
 	@Inject
-	private CNAMERecordArgsLogger log;
+	private CnameRecordArgsLogger log;
 
 	String name(Map<String, Object> args, DnsZone zone) {
 		Object name = args.get(NAME);

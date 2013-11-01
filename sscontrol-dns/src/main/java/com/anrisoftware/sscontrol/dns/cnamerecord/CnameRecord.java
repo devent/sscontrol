@@ -18,8 +18,8 @@
  */
 package com.anrisoftware.sscontrol.dns.cnamerecord;
 
-import static com.anrisoftware.sscontrol.dns.cnamerecord.CNAMERecordArgs.ALIAS;
-import static com.anrisoftware.sscontrol.dns.cnamerecord.CNAMERecordArgs.NAME;
+import static com.anrisoftware.sscontrol.dns.cnamerecord.CnameRecordArgs.ALIAS;
+import static com.anrisoftware.sscontrol.dns.cnamerecord.CnameRecordArgs.NAME;
 
 import java.util.Map;
 
@@ -39,7 +39,7 @@ import com.google.inject.assistedinject.Assisted;
  * @since 1.0
  */
 @SuppressWarnings("serial")
-public class CNAMERecord extends AbstractRecord {
+public class CnameRecord extends AbstractRecord {
 
 	private final String name;
 
@@ -49,7 +49,7 @@ public class CNAMERecord extends AbstractRecord {
 	 * @see MXRecordFactory#create(DnsZone, Map)
 	 */
 	@Inject
-	CNAMERecord(CNAMERecordArgs aargs, @Assisted DnsZone zone,
+	CnameRecord(CnameRecordArgs aargs, @Assisted DnsZone zone,
 			@Assisted Map<String, Object> args) {
 		super(zone);
 		this.name = aargs.name(args, zone);

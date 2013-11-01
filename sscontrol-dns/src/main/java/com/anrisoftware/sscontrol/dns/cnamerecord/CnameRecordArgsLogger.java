@@ -1,7 +1,7 @@
 package com.anrisoftware.sscontrol.dns.cnamerecord;
 
-import static com.anrisoftware.sscontrol.dns.cnamerecord.CNAMERecordArgsLogger._.alias_null;
-import static com.anrisoftware.sscontrol.dns.cnamerecord.CNAMERecordArgsLogger._.name_null;
+import static com.anrisoftware.sscontrol.dns.cnamerecord.CnameRecordArgsLogger._.alias_null;
+import static com.anrisoftware.sscontrol.dns.cnamerecord.CnameRecordArgsLogger._.name_null;
 import static org.apache.commons.lang3.Validate.notBlank;
 import static org.apache.commons.lang3.Validate.notNull;
 
@@ -18,7 +18,7 @@ import com.anrisoftware.sscontrol.dns.zone.DnsZone;
  * @since 1.0
  */
 @Singleton
-class CNAMERecordArgsLogger extends AbstractLogger {
+class CnameRecordArgsLogger extends AbstractLogger {
 
 	enum _ {
 
@@ -41,8 +41,8 @@ class CNAMERecordArgsLogger extends AbstractLogger {
 	/**
 	 * Creates a logger for {@link MXRecord}.
 	 */
-	public CNAMERecordArgsLogger() {
-		super(CNAMERecord.class);
+	public CnameRecordArgsLogger() {
+		super(CnameRecord.class);
 	}
 
 	void checkName(Object name, DnsZone zone) {

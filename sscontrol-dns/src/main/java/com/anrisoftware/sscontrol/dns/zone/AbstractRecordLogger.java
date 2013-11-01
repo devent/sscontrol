@@ -19,6 +19,8 @@
 package com.anrisoftware.sscontrol.dns.zone;
 
 import static com.anrisoftware.sscontrol.dns.zone.AbstractRecordLogger._.duration_null;
+import static com.anrisoftware.sscontrol.dns.zone.AbstractRecordLogger._.invalid_operation;
+import static com.anrisoftware.sscontrol.dns.zone.AbstractRecordLogger._.invalid_operation_message;
 import static com.anrisoftware.sscontrol.dns.zone.AbstractRecordLogger._.ttl_set_debug;
 import static com.anrisoftware.sscontrol.dns.zone.AbstractRecordLogger._.ttl_set_info;
 import static org.apache.commons.lang3.Validate.notNull;
@@ -26,6 +28,7 @@ import static org.apache.commons.lang3.Validate.notNull;
 import org.slf4j.Logger;
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
+import com.anrisoftware.sscontrol.core.api.ServiceException;
 import com.anrisoftware.sscontrol.dns.time.TimeDuration;
 
 /**
@@ -42,7 +45,15 @@ class AbstractRecordLogger extends AbstractLogger {
 
 		ttl_set_debug("TTL time {} set for {}."),
 
-		duration_null("Duration time cannot be null for %s.");
+		duration_null("Duration time cannot be null for %s."),
+
+		invalid_operation("Invalid operation"),
+
+		record("record"),
+
+		operation("operation"),
+
+		invalid_operation_message("Invalid operation '{}' for {}.");
 
 		private String name;
 
@@ -73,6 +84,14 @@ class AbstractRecordLogger extends AbstractLogger {
 
 	void checkDuration(AbstractRecord record, Object duration) {
 		notNull(duration, duration_null.toString(), record);
+	}
+
+	void invalidOperation(AbstractRecord record, String operation)
+			throws ServiceException {
+		throw logException(
+				new ServiceException(invalid_operation).add(record, record)
+						.add(operation, operation), invalid_operation_message,
+				operation, record);
 	}
 
 }

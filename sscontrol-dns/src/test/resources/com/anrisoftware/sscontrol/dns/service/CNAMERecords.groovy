@@ -19,7 +19,7 @@
 package com.anrisoftware.sscontrol.dns.service
 dns {
 	zone "testa.com", primary: "ns1.testa.com", email: "hostmaster@testa.com", {
-		cname_record "www.testa.com", "testa.com"
-		cname_record "www.testb.com", "testb.com", { ttl 1 }
+		record cname, name: "www.testa.com", alias: "testa.com"
+		record cname, name: "www.testb.com", alias: "testb.com", { ttl duration: "PT1S" }
 	}
 }

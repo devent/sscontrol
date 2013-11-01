@@ -28,6 +28,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.joda.time.Duration;
 
 import com.anrisoftware.globalpom.format.duration.DurationFormatFactory;
+import com.anrisoftware.sscontrol.core.api.ServiceException;
 import com.anrisoftware.sscontrol.dns.time.TimeDuration;
 import com.anrisoftware.sscontrol.dns.time.TimeDurationFactory;
 
@@ -85,6 +86,10 @@ public abstract class AbstractRecord implements ZoneRecord, Serializable {
 		args.put(DURATION, asDuration(args.get(DURATION)));
 		this.ttl = durationFactory.create(this, args);
 		log.ttlSet(this, ttl);
+	}
+
+	public void ttl(Object args) throws ServiceException {
+		log.invalidOperation(this, "ttl");
 	}
 
 	private Duration asDuration(Object object) throws ParseException {

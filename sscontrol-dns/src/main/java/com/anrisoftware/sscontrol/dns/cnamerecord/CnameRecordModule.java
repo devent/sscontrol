@@ -16,37 +16,31 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-dns. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.dns.service;
+package com.anrisoftware.sscontrol.dns.cnamerecord;
 
-import com.anrisoftware.sscontrol.core.list.ListModule;
-import com.anrisoftware.sscontrol.dns.aliases.AliasesModule;
-import com.anrisoftware.sscontrol.dns.arecord.ARecordModule;
-import com.anrisoftware.sscontrol.dns.bindings.BindingsModule;
-import com.anrisoftware.sscontrol.dns.cnamerecord.CnameRecordModule;
-import com.anrisoftware.sscontrol.dns.mxrecord.MXRecordModule;
-import com.anrisoftware.sscontrol.dns.nsrecord.NSRecordModule;
-import com.anrisoftware.sscontrol.dns.time.TimeModule;
-import com.anrisoftware.sscontrol.dns.zone.ZoneModule;
+import static com.google.inject.multibindings.MapBinder.newMapBinder;
+
+import com.anrisoftware.sscontrol.dns.recursive.RecordFactory;
+import com.anrisoftware.sscontrol.dns.zone.Record;
+import com.anrisoftware.sscontrol.dns.zone.ZoneRecord;
 import com.google.inject.AbstractModule;
+import com.google.inject.assistedinject.FactoryModuleBuilder;
+import com.google.inject.multibindings.MapBinder;
 
 /**
- * Binds the DNS service.
+ * Installs the CNAME/record.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class DnsModule extends AbstractModule {
+public class CnameRecordModule extends AbstractModule {
 
 	@Override
 	protected void configure() {
-		install(new ZoneModule());
-		install(new ListModule());
-		install(new AliasesModule());
-		install(new BindingsModule());
-		install(new ARecordModule());
-		install(new CnameRecordModule());
-		install(new NSRecordModule());
-		install(new MXRecordModule());
-		install(new TimeModule());
+		install(new FactoryModuleBuilder().implement(ZoneRecord.class,
+				CnameRecord.class).build(CnameRecordFactory.class));
+		MapBinder<Record, RecordFactory> map = newMapBinder(binder(),
+				Record.class, RecordFactory.class);
+		map.addBinding(Record.cname).to(CnameRecordFactory.class);
 	}
 }

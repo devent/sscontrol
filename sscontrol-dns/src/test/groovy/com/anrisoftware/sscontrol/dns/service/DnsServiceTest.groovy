@@ -201,13 +201,12 @@ class DnsServiceTest extends DnsServiceBase {
 	}
 
 	@Test
-	void "recursive script"() {
+	void "recursive"() {
 		loader.loadService ubuntu1004Profile, null
 		def profile = registry.getService("profile")[0]
-		loader.loadService dnsRecursive, profile
-
-		def service = assertService registry.getService("dns")[0], generate: false, serial: 1, binding: ["127.0.0.1"]
-		def zone = assertZone service.zones[0], name: "example1.com", primary: "ns.example1.com", email: "hostmaster@example1.com"
+		loader.loadService recursive, profile
+		DnsServiceImpl service = registry.getService("dns")[0]
+		DnsZone zone = service.zones[0]
 		assert service.aliases.aliases.size() == 1
 		assert service.aliases.aliases[0].name == "localhost"
 		assert service.aliases.aliases[0].addresses[0] == "127.0.0.1"

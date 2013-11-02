@@ -18,12 +18,6 @@
  */
 package com.anrisoftware.sscontrol.dns.service
 dns {
-	// serial number of SOA records
-	serial 1, generate: false
-
-	// bind the dns server to localhost only
-	bind address: "127.0.0.1"
-
 	// adds IPv4 address alias
 	alias "localhost" address "127.0.0.1"
 

@@ -42,5 +42,5 @@ class DnsResources {
 	static bindMultipleAddressArray = DnsResources.class.getResource("BindMultipleAddressArray.groovy")
 	static bindLocal = DnsResources.class.getResource("BindLocal.groovy")
 	static bindAll = DnsResources.class.getResource("BindAll.groovy")
-	static dnsRecursive = DnsResources.class.getResource("DnsRecursive.groovy")
+	static recursive = DnsResources.class.getResource("Recursive.groovy")
 }

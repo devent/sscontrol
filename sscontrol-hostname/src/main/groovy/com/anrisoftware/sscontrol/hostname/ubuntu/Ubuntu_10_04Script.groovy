@@ -38,7 +38,7 @@ class Ubuntu_10_04Script extends HostnameScript {
 	Ubuntu10_04PropertiesProvider ubuntuProperties
 
 	@Override
-	def getDefaultProperties() {
+	ContextProperties getDefaultProperties() {
 		ubuntuProperties.get()
 	}
 

@@ -20,6 +20,7 @@ package com.anrisoftware.sscontrol.database.mysql.ubuntu
 
 import javax.inject.Inject
 
+import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.sscontrol.database.mysql.linux.Mysql51Script
 
 /**
@@ -39,7 +40,7 @@ class Ubuntu1004Script extends Mysql51Script {
 	}
 
 	@Override
-	def getDefaultProperties() {
+	ContextProperties getDefaultProperties() {
 		ubuntuProperties.get()
 	}
 }

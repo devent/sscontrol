@@ -20,6 +20,7 @@ package com.anrisoftware.sscontrol.mail.postfix.script.ubuntu_10_04
 
 import javax.inject.Inject
 
+import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.sscontrol.mail.postfix.script.linux.BasePostfixScript
 
 /**
@@ -42,7 +43,7 @@ class UbuntuScript extends BasePostfixScript {
 	 * @see #ubuntuProperties
 	 */
 	@Override
-	def getDefaultProperties() {
+	ContextProperties getDefaultProperties() {
 		ubuntuProperties.get()
 	}
 

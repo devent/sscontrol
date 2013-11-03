@@ -40,7 +40,7 @@ class Ubuntu_10_04Script extends UfwScript {
 	}
 
 	@Override
-	def getDefaultProperties() {
+	ContextProperties getDefaultProperties() {
 		ubuntuProperties.get()
 	}
 

@@ -20,6 +20,7 @@ package com.anrisoftware.sscontrol.httpd.apache.ubuntu_10_04
 
 import javax.inject.Inject
 
+import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.sscontrol.httpd.apache.linux.Apache_2_2Script
 
 /**
@@ -39,7 +40,7 @@ class Ubuntu_10_04Script extends Apache_2_2Script {
 	}
 
 	@Override
-	def getDefaultProperties() {
+	ContextProperties getDefaultProperties() {
 		ubuntuProperties.get()
 	}
 }

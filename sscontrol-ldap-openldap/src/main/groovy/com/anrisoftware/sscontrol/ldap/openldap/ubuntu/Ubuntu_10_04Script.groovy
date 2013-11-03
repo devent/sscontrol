@@ -20,6 +20,7 @@ package com.anrisoftware.sscontrol.ldap.openldap.ubuntu
 
 import javax.inject.Inject
 
+import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.sscontrol.ldap.openldap.linux.Openldap_2_4Script
 
 /**
@@ -39,7 +40,7 @@ class Ubuntu_10_04Script extends Openldap_2_4Script {
 	}
 
 	@Override
-	def getDefaultProperties() {
+	ContextProperties getDefaultProperties() {
 		ubuntuProperties.get()
 	}
 }

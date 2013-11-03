@@ -22,7 +22,7 @@ import static java.util.regex.Pattern.*
 
 import javax.inject.Inject
 
-import com.anrisoftware.resources.templates.api.TemplateResource
+import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.sscontrol.dhclient.ubuntu.UbuntuScript
 
 /**
@@ -41,7 +41,7 @@ class Ubuntu_10_04Script extends UbuntuScript {
 	}
 
 	@Override
-	def getDefaultProperties() {
+	ContextProperties getDefaultProperties() {
 		ubuntuProperties.get()
 	}
 }

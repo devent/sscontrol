@@ -35,7 +35,7 @@ class Ubuntu1004Script extends HostsScript {
 	Ubuntu1004PropertiesProvider ubuntuProperties
 
 	@Override
-	def getDefaultProperties() {
+	ContextProperties getDefaultProperties() {
 		ubuntuProperties.get()
 	}
 

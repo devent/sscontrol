@@ -20,7 +20,8 @@ package com.anrisoftware.sscontrol.dns.maradns.ubuntu_10_04
 
 import javax.inject.Inject
 
-import com.anrisoftware.sscontrol.dns.maradns.maradns12.Maradns12Script;
+import com.anrisoftware.propertiesutils.ContextProperties
+import com.anrisoftware.sscontrol.dns.maradns.maradns12.Maradns12Script
 
 /**
  * MaraDNS/Ubuntu 10.04 service script.
@@ -51,7 +52,7 @@ class Ubuntu1004Script extends Maradns12Script {
 	}
 
 	@Override
-	def getDefaultProperties() {
+	ContextProperties getDefaultProperties() {
 		ubuntuProperties.get()
 	}
 }

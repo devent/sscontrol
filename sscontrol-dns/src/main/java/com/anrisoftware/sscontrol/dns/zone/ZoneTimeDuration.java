@@ -1,6 +1,6 @@
 package com.anrisoftware.sscontrol.dns.zone;
 
-import static com.anrisoftware.sscontrol.dns.zone.ZoneTimeDurationArgs.MINIMAL;
+import static com.anrisoftware.sscontrol.dns.zone.ZoneTimeDurationArgs.MINIMUM;
 
 import java.util.Map;
 
@@ -20,7 +20,7 @@ import com.google.inject.assistedinject.Assisted;
  */
 class ZoneTimeDuration extends TimeDuration {
 
-	private final Duration minimal;
+	private final Duration minimum;
 
 	/**
 	 * @see ZoneTimeDurationFactory#create(DnsZone, Map)
@@ -29,16 +29,16 @@ class ZoneTimeDuration extends TimeDuration {
 	ZoneTimeDuration(ZoneTimeDurationArgs aargs, @Assisted DnsZone zone,
 			@Assisted Map<String, Object> args) {
 		super(zone, args);
-		this.minimal = aargs.minimal(zone, args);
+		this.minimum = aargs.minimum(zone, args);
 	}
 
-	public Duration getMinimal() {
-		return minimal;
+	public Duration getMinimum() {
+		return minimum;
 	}
 
 	@Override
 	public String toString() {
 		return new ToStringBuilder(this).appendSuper(super.toString())
-				.append(MINIMAL, minimal).toString();
+				.append(MINIMUM, minimum).toString();
 	}
 }

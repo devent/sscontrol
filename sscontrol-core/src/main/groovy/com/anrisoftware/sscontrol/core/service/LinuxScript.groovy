@@ -27,6 +27,7 @@ import javax.inject.Inject
 import org.apache.commons.io.FileUtils
 import org.codehaus.groovy.runtime.InvokerHelper
 
+import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.resources.templates.api.Templates
 import com.anrisoftware.resources.templates.api.TemplatesFactory
 import com.anrisoftware.sscontrol.core.api.ProfileProperties
@@ -659,7 +660,7 @@ abstract class LinuxScript extends Script {
 	 *	}
 	 * </pre>
 	 */
-	abstract def getDefaultProperties()
+	abstract ContextProperties getDefaultProperties()
 
 	/**
 	 * Set properties of the script.

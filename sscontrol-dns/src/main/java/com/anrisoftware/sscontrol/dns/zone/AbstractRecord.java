@@ -108,7 +108,7 @@ public abstract class AbstractRecord implements ZoneRecord, Serializable {
 
 	@Override
 	public Duration getTtl() {
-		return ttl.getDuration();
+		return ttl == null ? null : ttl.getDuration();
 	}
 
 	@Override

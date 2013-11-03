@@ -35,16 +35,16 @@ import com.anrisoftware.sscontrol.dns.maradns.ubuntu.UbuntuTestUtil
  * @since 1.0
  */
 @Slf4j
-class MaraDnsUbuntu1004Test extends UbuntuTestUtil {
+class RecursiveTest extends UbuntuTestUtil {
 
 	@Test
-	void "maradns service"() {
+	void "maradns recursive"() {
 		copyUbuntuFiles tmpdir
 		mararc.createFile tmpdir
 
 		loader.loadService profile.resource, null
 		def profile = registry.getService("profile")[0]
-		loader.loadService maradnsScript.resource, profile
+		loader.loadService maradnsRecursiveScript.resource, profile
 
 		registry.allServices.each { it.call() }
 		log.info "Run service again to ensure that configuration is not set double."
@@ -53,9 +53,7 @@ class MaraDnsUbuntu1004Test extends UbuntuTestUtil {
 		assertFileContent restartOutExpected.asFile(tmpdir), restartOutExpected
 		assertFileContent addAptRepositoryOutExpected.asFile(tmpdir), addAptRepositoryOutExpected
 		assertFileContent aptitudeOutExpected.asFile(tmpdir), aptitudeOutExpected
-		assertFileContent mararcExpected.asFile(tmpdir), mararcExpected
-		assertFileContent dbAnrisoftwareExpected.asFile(tmpdir), dbAnrisoftwareExpected
+		assertFileContent mararcRecursiveExpected.asFile(tmpdir), mararcRecursiveExpected
 		assertFileContent dbExample1Expected.asFile(tmpdir), dbExample1Expected
-		assertFileContent dbExample2Expected.asFile(tmpdir), dbExample2Expected
 	}
 }

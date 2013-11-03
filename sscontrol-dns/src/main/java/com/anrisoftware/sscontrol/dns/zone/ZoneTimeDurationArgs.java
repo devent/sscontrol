@@ -14,14 +14,14 @@ import org.joda.time.Duration;
  */
 class ZoneTimeDurationArgs {
 
-	static final String MINIMAL = "minimal";
+	static final String MINIMUM = "minimum";
 
 	@Inject
 	private ZoneTimeDurationArgsLogger log;
 
-	Duration minimal(DnsZone zone, Map<String, Object> args) {
-		if (args.containsKey(MINIMAL)) {
-			Duration minimal = (Duration) args.get(MINIMAL);
+	Duration minimum(DnsZone zone, Map<String, Object> args) {
+		if (args.containsKey(MINIMUM)) {
+			Duration minimal = (Duration) args.get(MINIMUM);
 			log.checkMinimal(zone, minimal);
 			return minimal;
 		} else {

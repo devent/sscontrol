@@ -51,6 +51,8 @@ import com.google.inject.assistedinject.Assisted;
 @SuppressWarnings("serial")
 public class DnsZone extends GroovyObjectSupport implements Serializable {
 
+	private static final String MINIMUM = "minimum";
+
 	private static final String DURATION = "duration";
 
 	private static final String EMAIL = "email";
@@ -120,6 +122,7 @@ public class DnsZone extends GroovyObjectSupport implements Serializable {
 	 */
 	public void ttl(Map<String, Object> args) throws ParseException {
 		args.put(DURATION, asDuration(args.get(DURATION)));
+		args.put(MINIMUM, asDuration(args.get(MINIMUM)));
 		this.ttl = zoneDurationFactory.create(this, args);
 		log.ttlSet(this, ttl);
 	}
@@ -244,7 +247,7 @@ public class DnsZone extends GroovyObjectSupport implements Serializable {
 	 * @return the TTL time {@link Duration}.
 	 */
 	public Duration getTtl() {
-		return ttl.getDuration();
+		return ttl == null ? null : ttl.getDuration();
 	}
 
 	/**
@@ -253,7 +256,7 @@ public class DnsZone extends GroovyObjectSupport implements Serializable {
 	 * @return the refresh time {@link Duration}.
 	 */
 	public Duration getRefresh() {
-		return refresh.getDuration();
+		return refresh == null ? null : refresh.getDuration();
 	}
 
 	/**
@@ -262,7 +265,7 @@ public class DnsZone extends GroovyObjectSupport implements Serializable {
 	 * @return the retry time {@link Duration}.
 	 */
 	public Duration getRetry() {
-		return retry.getDuration();
+		return retry == null ? null : retry.getDuration();
 	}
 
 	/**
@@ -271,7 +274,7 @@ public class DnsZone extends GroovyObjectSupport implements Serializable {
 	 * @return the expire time {@link Duration}.
 	 */
 	public Duration getExpire() {
-		return expire.getDuration();
+		return expire == null ? null : expire.getDuration();
 	}
 
 	/**
@@ -280,7 +283,7 @@ public class DnsZone extends GroovyObjectSupport implements Serializable {
 	 * @return the minimum TTL time {@link Duration}.
 	 */
 	public Duration getMinimumTtl() {
-		return ttl.getMinimal();
+		return ttl == null ? null : ttl.getMinimum();
 	}
 
 	/**

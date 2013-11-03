@@ -1,29 +1,39 @@
-zonedb(zone) ::= <<
+zonedb(properties, zone) ::= <<
 <! Template for a zone file in the csv2 format (MaraDNS >= 1.2) !>
-<zone.name>. +<zone.ttl.standardSeconds> SOA <zone.primaryNameServer>. <zone.email>. <zone.serial> <zone.refresh.standardSeconds> <zone.retry.standardSeconds> <zone.expire.standardSeconds> <zone.minimumTtl.standardSeconds> ~
-<zone.nsRecords:{record | <(record.class.simpleName)(record)>}>
-<zone.mxRecords:{record | <(record.class.simpleName)(record)>}>
-<zone.cnameRecords:{record | <(record.class.simpleName)(record)>}>
-<zone.aaRecords:{record | <(record.class.simpleName)(record)>}>
+<Zone(properties, zone)>
+<zone.records:{record|<(record.class.simpleName)(properties, record)>};separator="\n">
 
 >>
 
-ARecord(record) ::= <<
-<record.name>. +<record.ttl.standardSeconds> A <record.address> ~
+Zone(properties, zone) ::= <%
+<zone.name>.
+<\ >+<seconds(zone.ttl, properties.defaultTtl)> SOA
+<\ ><zone.primaryNameServer>.
+<\ ><zone.email>.
+<\ ><zone.serial>
+<\ ><seconds(zone.refresh, properties.defaultRefresh)>
+<\ ><seconds(zone.retry, properties.defaultRetry)>
+<\ ><seconds(zone.expire, properties.defaultExpire)>
+<\ ><seconds(zone.minimumTtl, properties.defaultMinimumTtl)>
+<\ >~
+%>
 
+ARecord(properties, record) ::= <<
+<record.name>. +<seconds(record.ttl, properties.defaultTtl)> A <record.address> ~
 >>
 
-NSRecord(record) ::= <<
-<record.zone.name>. +<record.ttl.standardSeconds> NS <record.name>. ~
-
+NsRecord(properties, record) ::= <<
+<record.zone.name>. +<seconds(record.ttl, properties.defaultTtl)> NS <record.name>. ~
 >>
 
-MXRecord(record) ::= <<
+MxRecord(properties, record) ::= <<
 <record.zone.name>. MX <record.priority> <record.name>. ~
-
 >>
 
-CNAMERecord(record) ::= <<
-<record.name>. +<record.ttl.standardSeconds> CNAME <record.alias>. ~
-
+CnameRecord(properties, record) ::= <<
+<record.name>. +<seconds(record.ttl, properties.defaultTtl)> CNAME <record.alias>. ~
 >>
+
+seconds(duration, defaultDuration) ::= <%
+<if(duration)><duration.standardSeconds><else><defaultDuration.standardSeconds><endif>
+%>

@@ -23,7 +23,7 @@ import static org.apache.commons.io.FileUtils.*
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.Templates
 import com.anrisoftware.sscontrol.dns.aliases.Alias
-import com.anrisoftware.sscontrol.dns.maradns.linux.MaradnsScript;
+import com.anrisoftware.sscontrol.dns.maradns.linux.MaradnsScript
 import com.anrisoftware.sscontrol.dns.roots.Roots
 import com.anrisoftware.sscontrol.dns.zone.DnsZone
 import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokenTemplate
@@ -168,7 +168,7 @@ abstract class Maradns12Script extends MaradnsScript {
 	 */
 	void deployZoneDbConfigurations() {
 		service.zones.each { DnsZone zone ->
-			def zoneconfig = zoneConfiguration.getText(true, "zone", zone)
+			def zoneconfig = zoneConfiguration.getText(true, "properties", this, "zone", zone)
 			write zoneFile(zone), zoneconfig, charset
 		}
 	}
@@ -178,33 +178,6 @@ abstract class Maradns12Script extends MaradnsScript {
 	 */
 	File zoneFile(DnsZone zone) {
 		new File(configurationDir, "db.${zone.name}")
-	}
-
-	/**
-	 * Returns the file of the {@code mararc} configuration file.
-	 *
-	 * <ul>
-	 * <li>profile property key {@code configuration_file}</li>
-	 * </ul>
-	 *
-	 * @see #getConfigurationDir()
-	 * @see #getDefaultProperties()
-	 */
-	File getMararcFile() {
-		profileFileProperty "configuration_file", configurationDir, defaultProperties
-	}
-
-	/**
-	 * Returns the default bindings.
-	 *
-	 * <ul>
-	 * <li>profile property key {@code default_binding_addresses}</li>
-	 * </ul>
-	 *
-	 * @see #getDefaultProperties()
-	 */
-	List getDefaultBinding() {
-		profileListProperty "default_binding_addresses", defaultProperties
 	}
 
 	/**

@@ -23,9 +23,6 @@ dns {
 	// bind the dns server to address only
 	bind address: "127.0.0.1"
 
-	// soa entry, default timers
-	zone "example1.com", "ns.example1.com", "hostmaster@example1.com"
-
 	// adds IPv4 address alias
 	alias "localhost" address "127.0.0.1"
 	alias "vbox" address "10.0.2.2"
@@ -36,6 +33,6 @@ dns {
 	// sets recursive host
 	recursive { servers "localhost" }
 
-	// soa entry, default timers
-	zone "example1.com", "ns.example1.com", "hostmaster@example1.com"
+	// soa entry
+	zone "example1.com", primary: "ns.example1.com", email: "hostmaster@example1.com"
 }

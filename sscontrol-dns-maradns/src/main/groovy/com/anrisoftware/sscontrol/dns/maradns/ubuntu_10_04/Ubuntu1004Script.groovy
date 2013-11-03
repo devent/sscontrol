@@ -20,7 +20,7 @@ package com.anrisoftware.sscontrol.dns.maradns.ubuntu_10_04
 
 import javax.inject.Inject
 
-import com.anrisoftware.sscontrol.dns.maradns.linux.Maradns12Script
+import com.anrisoftware.sscontrol.dns.maradns.maradns12.Maradns12Script;
 
 /**
  * MaraDNS/Ubuntu 10.04 service script.

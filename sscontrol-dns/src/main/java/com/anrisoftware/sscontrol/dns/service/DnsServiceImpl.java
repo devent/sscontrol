@@ -108,7 +108,7 @@ class DnsServiceImpl extends AbstractService {
 
 	@Override
 	protected Script getScript(String profileName) throws ServiceException {
-		ServiceScriptFactory scriptFactory = findScriptFactory(NAME);
+		ServiceScriptFactory scriptFactory = findScriptFactory(DnsServiceFactory.NAME);
 		return (Script) scriptFactory.getScript();
 	}
 

@@ -16,16 +16,16 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-dns-maradns. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.dns.maradns.linux
+package com.anrisoftware.sscontrol.dns.maradns.maradns12
 
 import static org.apache.commons.io.FileUtils.*
 
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.Templates
-import com.anrisoftware.sscontrol.core.service.LinuxScript
-import com.anrisoftware.sscontrol.dns.statements.Alias
-import com.anrisoftware.sscontrol.dns.statements.DnsZone
-import com.anrisoftware.sscontrol.dns.statements.Roots
+import com.anrisoftware.sscontrol.dns.aliases.Alias
+import com.anrisoftware.sscontrol.dns.maradns.linux.MaradnsScript;
+import com.anrisoftware.sscontrol.dns.roots.Roots
+import com.anrisoftware.sscontrol.dns.zone.DnsZone
 import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokenTemplate
 
 /**

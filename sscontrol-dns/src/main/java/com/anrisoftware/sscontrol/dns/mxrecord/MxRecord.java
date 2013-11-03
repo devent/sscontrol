@@ -98,9 +98,9 @@ public class MxRecord extends AbstractRecord {
 	/**
 	 * Returns the priority for the MX-record.
 	 * 
-	 * @return the priority.
+	 * @return the priority or {@code null}.
 	 */
-	public long getPriority() {
+	public Long getPriority() {
 		return priority;
 	}
 

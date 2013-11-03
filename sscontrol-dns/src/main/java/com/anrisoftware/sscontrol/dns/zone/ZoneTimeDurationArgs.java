@@ -20,8 +20,12 @@ class ZoneTimeDurationArgs {
 	private ZoneTimeDurationArgsLogger log;
 
 	Duration minimal(DnsZone zone, Map<String, Object> args) {
-		Duration minimal = (Duration) args.get(MINIMAL);
-		log.checkMinimal(zone, minimal);
-		return minimal;
+		if (args.containsKey(MINIMAL)) {
+			Duration minimal = (Duration) args.get(MINIMAL);
+			log.checkMinimal(zone, minimal);
+			return minimal;
+		} else {
+			return null;
+		}
 	}
 }

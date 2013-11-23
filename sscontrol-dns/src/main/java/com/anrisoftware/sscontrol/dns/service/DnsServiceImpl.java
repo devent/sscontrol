@@ -71,6 +71,8 @@ class DnsServiceImpl extends AbstractService {
 
 	private static final String SERIAL = "serial";
 
+	private final List<DnsZone> zones;
+
 	@Inject
 	private DnsServiceImplLogger log;
 
@@ -94,8 +96,6 @@ class DnsServiceImpl extends AbstractService {
 
 	@Inject
 	private Recursive recursive;
-
-	private final List<DnsZone> zones;
 
 	private int serial;
 

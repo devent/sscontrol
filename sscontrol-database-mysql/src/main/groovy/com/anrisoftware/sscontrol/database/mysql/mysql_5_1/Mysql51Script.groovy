@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-database-mysql. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.database.mysql.linux
+package com.anrisoftware.sscontrol.database.mysql.mysql_5_1
 
 import static org.apache.commons.io.FileUtils.*
 
@@ -25,6 +25,7 @@ import javax.inject.Inject
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.Templates
 import com.anrisoftware.sscontrol.core.service.LinuxScript
+import com.anrisoftware.sscontrol.database.mysql.linux.MysqlScript;
 import com.anrisoftware.sscontrol.database.statements.Database
 import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokenTemplate
 

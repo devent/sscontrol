@@ -34,13 +34,14 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import com.anrisoftware.sscontrol.core.api.Service;
 import com.anrisoftware.sscontrol.core.api.ServiceException;
 import com.anrisoftware.sscontrol.core.api.ServiceScriptFactory;
+import com.anrisoftware.sscontrol.core.bindings.Binding;
+import com.anrisoftware.sscontrol.core.bindings.BindingAddress;
+import com.anrisoftware.sscontrol.core.bindings.BindingFactory;
 import com.anrisoftware.sscontrol.core.service.AbstractService;
 import com.anrisoftware.sscontrol.database.debuglogging.DebugLogging;
 import com.anrisoftware.sscontrol.database.debuglogging.DebugLoggingFactory;
 import com.anrisoftware.sscontrol.database.statements.Admin;
 import com.anrisoftware.sscontrol.database.statements.AdminFactory;
-import com.anrisoftware.sscontrol.database.statements.Binding;
-import com.anrisoftware.sscontrol.database.statements.BindingFactory;
 import com.anrisoftware.sscontrol.database.statements.Database;
 import com.anrisoftware.sscontrol.database.statements.DatabaseFactory;
 import com.anrisoftware.sscontrol.database.statements.User;
@@ -55,38 +56,38 @@ import com.anrisoftware.sscontrol.database.statements.UserFactory;
 @SuppressWarnings("serial")
 class DatabaseServiceImpl extends AbstractService {
 
-	private final DatabaseServiceImplLogger log;
-
-	private final DatabaseFactory databaseFactory;
-
-	private final UserFactory userFactory;
-
 	private final List<Database> databases;
 
 	private final List<User> users;
 
 	@Inject
+	private DatabaseServiceImplLogger log;
+
+	@Inject
+	private DatabaseFactory databaseFactory;
+
+	@Inject
+	private UserFactory userFactory;
+
+	@Inject
 	private DebugLoggingFactory debugLoggingFactory;
+
+	@Inject
+	private AdminFactory adminFactory;
 
 	@Inject
 	private BindingFactory bindingFactory;
 
 	@Inject
-	private AdminFactory adminFactory;
-
-	private DebugLogging debugLogging;
-
 	private Binding binding;
 
 	private Admin admin;
 
+	private DebugLogging debugLogging;
+
 	@Inject
-	DatabaseServiceImpl(DatabaseServiceImplLogger logger,
-			DatabaseFactory databaseFactory, UserFactory userFactory) {
-		this.log = logger;
+	DatabaseServiceImpl() {
 		this.databases = new ArrayList<Database>();
-		this.databaseFactory = databaseFactory;
-		this.userFactory = userFactory;
 		this.users = new ArrayList<User>();
 	}
 
@@ -139,15 +140,44 @@ class DatabaseServiceImpl extends AbstractService {
 	}
 
 	/**
-	 * Sets binding for database server.
+	 * Sets the IP addresses or host names to where to bind the database
+	 * service.
 	 * 
-	 * @see BindingFactory#create(Map)
+	 * @see BindingFactory#create(Map, String...)
 	 */
-	public void bind(Map<String, Object> args) {
+	public void bind(Map<String, Object> args) throws ServiceException {
 		this.binding = bindingFactory.create(args);
 		log.bindingSet(this, binding);
 	}
 
+	/**
+	 * Sets the IP addresses or host names to where to bind the database
+	 * service.
+	 * 
+	 * @see BindingFactory#create(Map, String...)
+	 */
+	public void bind(Map<String, Object> args, String... array)
+			throws ServiceException {
+		this.binding = bindingFactory.create(args, array);
+		log.bindingSet(this, binding);
+	}
+
+	/**
+	 * Sets the IP addresses or host names to where to bind the database
+	 * service.
+	 * 
+	 * @see BindingFactory#create(BindingAddress)
+	 */
+	public void bind(BindingAddress address) throws ServiceException {
+		this.binding = bindingFactory.create(address);
+		log.bindingSet(this, binding);
+	}
+
+	/**
+	 * Returns a list of the IP addresses where to bind the DNS service.
+	 * 
+	 * @return the {@link Binding}.
+	 */
 	public Binding getBinding() {
 		return binding;
 	}
@@ -298,6 +328,20 @@ class DatabaseServiceImpl extends AbstractService {
 	 */
 	public List<User> getUsers() {
 		return unmodifiableList(users);
+	}
+
+	/**
+	 * @see BindingAddress#local
+	 */
+	public BindingAddress getLocal() {
+		return BindingAddress.local;
+	}
+
+	/**
+	 * @see BindingAddress#all
+	 */
+	public BindingAddress getAll() {
+		return BindingAddress.all;
 	}
 
 	@Override

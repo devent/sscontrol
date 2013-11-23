@@ -18,7 +18,7 @@
  */
 package com.anrisoftware.sscontrol.database.statements;
 
-import static com.anrisoftware.sscontrol.database.statements.AdminLogger._.address_null;
+import static com.anrisoftware.sscontrol.database.statements.AdminLogger._.password_null;
 import static org.apache.commons.lang3.Validate.notNull;
 
 import javax.inject.Singleton;
@@ -26,7 +26,7 @@ import javax.inject.Singleton;
 import com.anrisoftware.globalpom.log.AbstractLogger;
 
 /**
- * Logging messages for {@link Binding}.
+ * Logging messages for {@link Admin}.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
@@ -36,7 +36,7 @@ class AdminLogger extends AbstractLogger {
 
 	enum _ {
 
-		address_null("Bind address cannot be null.");
+		password_null("Administrator password cannot be null.");
 
 		private String name;
 
@@ -54,10 +54,10 @@ class AdminLogger extends AbstractLogger {
 	 * Create logger for {@link Binding}.
 	 */
 	AdminLogger() {
-		super(Binding.class);
+		super(Admin.class);
 	}
 
 	void checkPassword(Object object) {
-		notNull(object, address_null.toString());
+		notNull(object, password_null.toString());
 	}
 }

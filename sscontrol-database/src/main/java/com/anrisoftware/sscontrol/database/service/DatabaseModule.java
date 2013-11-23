@@ -18,6 +18,8 @@
  */
 package com.anrisoftware.sscontrol.database.service;
 
+import com.anrisoftware.sscontrol.core.bindings.BindingsModule;
+import com.anrisoftware.sscontrol.core.list.ListModule;
 import com.anrisoftware.sscontrol.database.debuglogging.DebugLoggingModule;
 import com.anrisoftware.sscontrol.database.statements.StatementsModule;
 import com.google.inject.AbstractModule;
@@ -34,5 +36,7 @@ class DatabaseModule extends AbstractModule {
 	protected void configure() {
 		install(new StatementsModule());
 		install(new DebugLoggingModule());
+		install(new BindingsModule());
+		install(new ListModule());
 	}
 }

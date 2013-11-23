@@ -31,8 +31,6 @@ public class StatementsModule extends AbstractModule {
 
 	@Override
 	protected void configure() {
-		install(new FactoryModuleBuilder().implement(Binding.class,
-				Binding.class).build(BindingFactory.class));
 		install(new FactoryModuleBuilder().implement(Admin.class, Admin.class)
 				.build(AdminFactory.class));
 		install(new FactoryModuleBuilder().implement(Database.class,

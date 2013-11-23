@@ -21,7 +21,7 @@ package com.anrisoftware.sscontrol.database.mysql.ubuntu
 import javax.inject.Inject
 
 import com.anrisoftware.propertiesutils.ContextProperties
-import com.anrisoftware.sscontrol.database.mysql.linux.Mysql51Script
+import com.anrisoftware.sscontrol.database.mysql.mysql_5_1.Mysql51Script;
 
 /**
  * MySQL/Ubuntu 10.04 service script.

@@ -16,26 +16,27 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-database-mysql. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.database.mysql.linux;
+package com.anrisoftware.sscontrol.database.mysql.mysql_5_1;
 
-import static com.anrisoftware.sscontrol.database.mysql.linux.Mysql51ScriptLogger._.databases_created_debug;
-import static com.anrisoftware.sscontrol.database.mysql.linux.Mysql51ScriptLogger._.databases_created_info;
-import static com.anrisoftware.sscontrol.database.mysql.linux.Mysql51ScriptLogger._.databases_created_trace;
-import static com.anrisoftware.sscontrol.database.mysql.linux.Mysql51ScriptLogger._.mysqld_deployed_debug;
-import static com.anrisoftware.sscontrol.database.mysql.linux.Mysql51ScriptLogger._.mysqld_deployed_info;
-import static com.anrisoftware.sscontrol.database.mysql.linux.Mysql51ScriptLogger._.password_set_debug;
-import static com.anrisoftware.sscontrol.database.mysql.linux.Mysql51ScriptLogger._.password_set_info;
-import static com.anrisoftware.sscontrol.database.mysql.linux.Mysql51ScriptLogger._.password_set_trace;
-import static com.anrisoftware.sscontrol.database.mysql.linux.Mysql51ScriptLogger._.script_executed_debug;
-import static com.anrisoftware.sscontrol.database.mysql.linux.Mysql51ScriptLogger._.script_executed_info;
-import static com.anrisoftware.sscontrol.database.mysql.linux.Mysql51ScriptLogger._.script_executed_trace;
-import static com.anrisoftware.sscontrol.database.mysql.linux.Mysql51ScriptLogger._.users_created_debug;
-import static com.anrisoftware.sscontrol.database.mysql.linux.Mysql51ScriptLogger._.users_created_info;
-import static com.anrisoftware.sscontrol.database.mysql.linux.Mysql51ScriptLogger._.users_created_trace;
+import static com.anrisoftware.sscontrol.database.mysql.mysql_5_1.Mysql51ScriptLogger._.databases_created_debug;
+import static com.anrisoftware.sscontrol.database.mysql.mysql_5_1.Mysql51ScriptLogger._.databases_created_info;
+import static com.anrisoftware.sscontrol.database.mysql.mysql_5_1.Mysql51ScriptLogger._.databases_created_trace;
+import static com.anrisoftware.sscontrol.database.mysql.mysql_5_1.Mysql51ScriptLogger._.mysqld_deployed_debug;
+import static com.anrisoftware.sscontrol.database.mysql.mysql_5_1.Mysql51ScriptLogger._.mysqld_deployed_info;
+import static com.anrisoftware.sscontrol.database.mysql.mysql_5_1.Mysql51ScriptLogger._.password_set_debug;
+import static com.anrisoftware.sscontrol.database.mysql.mysql_5_1.Mysql51ScriptLogger._.password_set_info;
+import static com.anrisoftware.sscontrol.database.mysql.mysql_5_1.Mysql51ScriptLogger._.password_set_trace;
+import static com.anrisoftware.sscontrol.database.mysql.mysql_5_1.Mysql51ScriptLogger._.script_executed_debug;
+import static com.anrisoftware.sscontrol.database.mysql.mysql_5_1.Mysql51ScriptLogger._.script_executed_info;
+import static com.anrisoftware.sscontrol.database.mysql.mysql_5_1.Mysql51ScriptLogger._.script_executed_trace;
+import static com.anrisoftware.sscontrol.database.mysql.mysql_5_1.Mysql51ScriptLogger._.users_created_debug;
+import static com.anrisoftware.sscontrol.database.mysql.mysql_5_1.Mysql51ScriptLogger._.users_created_info;
+import static com.anrisoftware.sscontrol.database.mysql.mysql_5_1.Mysql51ScriptLogger._.users_created_trace;
 
 import javax.inject.Singleton;
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
+import com.anrisoftware.sscontrol.database.mysql.linux.MysqlScript;
 import com.anrisoftware.sscontrol.workers.command.script.ScriptCommandWorker;
 
 /**

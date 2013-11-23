@@ -16,12 +16,12 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-database. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.dns.bindings;
+package com.anrisoftware.sscontrol.core.bindings;
 
 import java.util.Map;
 
 /**
- * Factory to create a binding for DNS/server.
+ * Factory to create a binding for service.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
@@ -29,7 +29,7 @@ import java.util.Map;
 public interface BindingFactory {
 
 	/**
-	 * Creates a new binding for DNS/server.
+	 * Creates a new binding for service.
 	 * 
 	 * @param args
 	 *            the {@link Map} arguments for the binding.
@@ -42,7 +42,7 @@ public interface BindingFactory {
 	Binding create(Map<String, Object> args, String... array);
 
 	/**
-	 * Creates a new binding for DNS/server.
+	 * Creates a new binding for service.
 	 * 
 	 * @param address
 	 *            the {@link BindingAddress} address.

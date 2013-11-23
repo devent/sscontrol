@@ -16,10 +16,10 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-database. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.dns.bindings;
+package com.anrisoftware.sscontrol.core.bindings;
 
-import static com.anrisoftware.sscontrol.dns.bindings.BindingLogger._.address_blank;
-import static com.anrisoftware.sscontrol.dns.bindings.BindingLogger._.address_null;
+import static com.anrisoftware.sscontrol.core.bindings.BindingLogger._.address_blank;
+import static com.anrisoftware.sscontrol.core.bindings.BindingLogger._.address_null;
 import static org.apache.commons.lang3.Validate.notBlank;
 import static org.apache.commons.lang3.Validate.notNull;
 

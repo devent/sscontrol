@@ -35,7 +35,7 @@ import static com.anrisoftware.sscontrol.dns.service.DnsServiceImplLogger._.zone
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
 import com.anrisoftware.sscontrol.core.api.ServiceException;
-import com.anrisoftware.sscontrol.dns.bindings.Binding;
+import com.anrisoftware.sscontrol.core.bindings.Binding;
 import com.anrisoftware.sscontrol.dns.zone.DnsZone;
 
 /**

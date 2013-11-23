@@ -1,4 +1,4 @@
-package com.anrisoftware.sscontrol.dns.bindings;
+package com.anrisoftware.sscontrol.core.bindings;
 
 /**
  * Special binding address.

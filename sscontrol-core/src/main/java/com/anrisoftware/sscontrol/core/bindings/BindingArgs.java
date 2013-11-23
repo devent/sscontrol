@@ -1,4 +1,4 @@
-package com.anrisoftware.sscontrol.dns.bindings;
+package com.anrisoftware.sscontrol.core.bindings;
 
 import static org.apache.commons.lang3.StringUtils.trim;
 

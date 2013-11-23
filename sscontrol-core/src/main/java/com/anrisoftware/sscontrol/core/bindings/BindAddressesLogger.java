@@ -16,14 +16,14 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-dns. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.dns.bindings;
+package com.anrisoftware.sscontrol.core.bindings;
 
-import static com.anrisoftware.sscontrol.dns.bindings.BindAddressesLogger._.address_added;
-import static com.anrisoftware.sscontrol.dns.bindings.BindAddressesLogger._.address_added_info;
-import static com.anrisoftware.sscontrol.dns.bindings.BindAddressesLogger._.address_not_found;
-import static com.anrisoftware.sscontrol.dns.bindings.BindAddressesLogger._.address_not_found_info;
-import static com.anrisoftware.sscontrol.dns.bindings.BindAddressesLogger._.address_removed;
-import static com.anrisoftware.sscontrol.dns.bindings.BindAddressesLogger._.address_removed_info;
+import static com.anrisoftware.sscontrol.core.bindings.BindAddressesLogger._.address_added;
+import static com.anrisoftware.sscontrol.core.bindings.BindAddressesLogger._.address_added_info;
+import static com.anrisoftware.sscontrol.core.bindings.BindAddressesLogger._.address_not_found;
+import static com.anrisoftware.sscontrol.core.bindings.BindAddressesLogger._.address_not_found_info;
+import static com.anrisoftware.sscontrol.core.bindings.BindAddressesLogger._.address_removed;
+import static com.anrisoftware.sscontrol.core.bindings.BindAddressesLogger._.address_removed_info;
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
 
@@ -38,15 +38,15 @@ class BindAddressesLogger extends AbstractLogger {
 	enum _ {
 
 		address_not_found_info(
-				"Address '{}' not found for removal for DNS service."),
+				"Address '{}' not found for removal for service."),
 
 		address_not_found("Address '{}' not found for removal in {}."),
 
-		address_removed_info("Bind address '{}' removed for DNS service."),
+		address_removed_info("Bind address '{}' removed for service."),
 
 		address_removed("Bind address '{}' removed from {}."),
 
-		address_added_info("Bind address '{}' added for DNS service."),
+		address_added_info("Bind address '{}' added for service."),
 
 		address_added("Bind address '{}' added to {}.");
 

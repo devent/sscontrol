@@ -16,10 +16,10 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-database. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.dns.bindings;
+package com.anrisoftware.sscontrol.core.bindings;
 
-import static com.anrisoftware.sscontrol.dns.bindings.BindingArgs.ADDRESS;
-import static com.anrisoftware.sscontrol.dns.bindings.BindingArgs.ADDRESSES;
+import static com.anrisoftware.sscontrol.core.bindings.BindingArgs.ADDRESS;
+import static com.anrisoftware.sscontrol.core.bindings.BindingArgs.ADDRESSES;
 import static java.util.Arrays.asList;
 
 import java.io.Serializable;
@@ -33,7 +33,7 @@ import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 
 /**
- * Binding for DNS/server.
+ * Binding for the service.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0

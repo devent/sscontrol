@@ -18,10 +18,10 @@
  */
 package com.anrisoftware.sscontrol.dns.service;
 
+import com.anrisoftware.sscontrol.core.bindings.BindingsModule;
 import com.anrisoftware.sscontrol.core.list.ListModule;
 import com.anrisoftware.sscontrol.dns.aliases.AliasesModule;
 import com.anrisoftware.sscontrol.dns.arecord.ARecordModule;
-import com.anrisoftware.sscontrol.dns.bindings.BindingsModule;
 import com.anrisoftware.sscontrol.dns.cnamerecord.CnameRecordModule;
 import com.anrisoftware.sscontrol.dns.mxrecord.MxRecordModule;
 import com.anrisoftware.sscontrol.dns.nsrecord.NsRecordModule;

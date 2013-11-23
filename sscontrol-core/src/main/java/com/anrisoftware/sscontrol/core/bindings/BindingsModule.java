@@ -16,13 +16,15 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-dns. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.dns.bindings;
+package com.anrisoftware.sscontrol.core.bindings;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 
 /**
- * Installs the DNS server binding.
+ * Installs the service binding.
+ * 
+ * @see BindingFactory
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0

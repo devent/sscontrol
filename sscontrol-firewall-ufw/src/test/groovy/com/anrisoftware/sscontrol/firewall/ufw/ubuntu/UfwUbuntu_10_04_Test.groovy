@@ -19,11 +19,12 @@
 package com.anrisoftware.sscontrol.firewall.ufw.ubuntu
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
+import static com.anrisoftware.sscontrol.firewall.ufw.ubuntu.UbuntuResources.*
+import static com.anrisoftware.sscontrol.firewall.ufw.ubuntu.Ubuntu_10_04_Resources.*
 import groovy.util.logging.Slf4j
 
 import org.junit.Test
 
-import com.anrisoftware.sscontrol.core.api.ServiceLoader as SscontrolServiceLoader
 import com.anrisoftware.sscontrol.core.api.ServicesRegistry
 
 /**
@@ -35,31 +36,35 @@ import com.anrisoftware.sscontrol.core.api.ServicesRegistry
 @Slf4j
 class UfwUbuntu_10_04_Test extends UfwLinuxBase {
 
-	@Test
-	void "ufw allow"() {
-		loader.loadService ubuntu1004Profile, null
-		def profile = registry.getService("profile")[0]
-		loader.loadService firewallAllowService, profile
+    @Test
+    void "ufw allow"() {
+        copyUbuntuFiles tmpdir
+        loader.loadService profile.resource, null
+        def profile = registry.getService("profile")[0]
+        loader.loadService allowService.resource, profile
 
-		copyResourceToCommand echoCommand, ufw
-		copyResourceToCommand echoCommand, aptitude
+        registry.allServices.each { it.call() }
+        log.info "Run service again to ensure that configuration is not set double."
+        registry.allServices.each { it.call() }
+        assertFileContent aptitudeInExpected.asFile(tmpdir), aptitudeInExpected
+        assertFileContent aptitudeOutExpected.asFile(tmpdir), aptitudeOutExpected
+        assertFileContent ufwInAllowExpected.asFile(tmpdir), ufwInAllowExpected
+        assertFileContent ufwOutAllowExpected.asFile(tmpdir), ufwOutAllowExpected
+    }
 
-		registry.allServices.each { it.call() }
-		log.info "Run service again to ensure that configuration is not set double."
-		registry.allServices.each { it.call() }
-	}
+    @Test
+    void "ufw deny"() {
+        copyUbuntuFiles tmpdir
+        loader.loadService profile.resource, null
+        def profile = registry.getService("profile")[0]
+        loader.loadService denyService.resource, profile
 
-	@Test
-	void "ufw deny"() {
-		loader.loadService ubuntu1004Profile, null
-		def profile = registry.getService("profile")[0]
-		loader.loadService firewallDenyService, profile
-
-		copyResourceToCommand echoCommand, ufw
-		copyResourceToCommand echoCommand, aptitude
-
-		registry.allServices.each { it.call() }
-		log.info "Run service again to ensure that configuration is not set double."
-		registry.allServices.each { it.call() }
-	}
+        registry.allServices.each { it.call() }
+        log.info "Run service again to ensure that configuration is not set double."
+        registry.allServices.each { it.call() }
+        assertFileContent aptitudeInExpected.asFile(tmpdir), aptitudeInExpected
+        assertFileContent aptitudeOutExpected.asFile(tmpdir), aptitudeOutExpected
+        assertFileContent ufwInDenyExpected.asFile(tmpdir), ufwInDenyExpected
+        assertFileContent ufwOutDenyExpected.asFile(tmpdir), ufwOutDenyExpected
+    }
 }

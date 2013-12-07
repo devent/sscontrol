@@ -16,26 +16,20 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.service
+package com.anrisoftware.sscontrol.httpd.statements.roundcube;
 
-def certFile = ServicesResources.class.getResource "cert_crt.txt"
-def certKeyFile = ServicesResources.class.getResource "cert_key.txt"
+import java.util.Map;
 
-httpd {
-	domain "test1.com", address: "192.168.0.50", {
-		redirect to_www
-		redirect http_to_https
-	}
-	ssl_domain "test1.com", address: "192.168.0.50", {
-		auth "Private Directory", location: "/private", type: digest, provider: file, appending: true, satisfy: any, {
-			domain "https://private"
-			require valid_user
-			require group: "admin"
-			group "admin", {
-				user "adminfoo", password: "adminfoopassword"
-				user "adminbar", password: "adminbarpassword"
-			}
-			user "bar", password: "barpassword"
-		}
-	}
+import com.anrisoftware.sscontrol.httpd.statements.webservice.WebServiceFactory;
+
+/**
+ * Factory to create the roundcube service.
+ * 
+ * @author Erwin Mueller, erwin.mueller@deventm.org
+ * @since 1.0
+ */
+public interface RoundcubeServiceFactory extends WebServiceFactory {
+
+	@Override
+    RoundcubeService create(Map<String, Object> map);
 }

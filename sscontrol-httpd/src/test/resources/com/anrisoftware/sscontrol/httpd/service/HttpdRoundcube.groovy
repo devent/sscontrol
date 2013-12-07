@@ -30,13 +30,17 @@ httpd {
 		certification_key_file certKeyFile
 		redirect to_www
 	}
-	ssl_domain "ldapadmin.test1.com", address: "192.168.0.50", {
+	ssl_domain "mail.test1.com", address: "192.168.0.50", {
+		user "www-data", group: "www-data"
 		certification_file certFile
 		certification_key_file certKeyFile
-		setup "phpldapadmin", alias: "phpldapadmin", {
-			server "Local LDAP/Server", host: "127.0.0.1", port: "ldap"
-			server "Example.com LDAP/Server", host: "ldap.example.com", port: 389
-			server "Secured LDAP/Server", host: "ldaps://ldap.example.com/"
+		setup "roundcube", alias: "roundcube", {
+			database "roundcube", user: "user", password: "userpass", host: "localhost"
+            host "localhost"
+			host "mail.example.com", alias: "Default Server"
+            host "webmail.example.com", alias: "Webmail Server"
+            host "ssl://mail.example.com:993", alias: "Secure Webmail Server"
+            host "othermail.example.com", alias: "Other Server", domain: "otherdomain.com"
 		}
 	}
 }

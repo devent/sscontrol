@@ -18,8 +18,8 @@
  */
 package com.anrisoftware.sscontrol.httpd.service
 
-def certFile = HttpdResources.class.getResource "cert_crt.txt"
-def certKeyFile = HttpdResources.class.getResource "cert_key.txt"
+def certFile = ServicesResources.class.getResource "cert_crt.txt"
+def certKeyFile = ServicesResources.class.getResource "cert_key.txt"
 
 httpd {
 	domain "test1.com", address: "192.168.0.50", port: 80, {

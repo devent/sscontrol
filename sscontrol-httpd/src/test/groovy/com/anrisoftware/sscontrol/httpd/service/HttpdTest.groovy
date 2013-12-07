@@ -19,7 +19,7 @@
 package com.anrisoftware.sscontrol.httpd.service
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
-import static com.anrisoftware.sscontrol.httpd.service.HttpdResources.*
+import static com.anrisoftware.sscontrol.httpd.service.ServicesResources.*
 import groovy.util.logging.Slf4j
 
 import org.junit.Test
@@ -45,87 +45,87 @@ import com.anrisoftware.sscontrol.httpd.statements.authldap.RequireLdapValidGrou
 @Slf4j
 class HttpdTest extends HttpdTestUtil {
 
-	@Test
-	void "httpd script"() {
-		loader.loadService ubuntu1004Profile, null
-		def profile = registry.getService("profile")[0]
-		loader.loadService httpdScript, profile
-		HttpdServiceImpl service = registry.getService("httpd")[0]
-		service.domains.size() == 5
-		service.virtualDomains.size() == 4
-	}
+    @Test
+    void "httpd script"() {
+        loader.loadService profile.resource, null
+        def profile = registry.getService("profile")[0]
+        loader.loadService httpdScript.resource, profile
+        HttpdServiceImpl service = registry.getService("httpd")[0]
+        service.domains.size() == 5
+        service.virtualDomains.size() == 4
+    }
 
-	@Test
-	void "httpd auth file"() {
-		loader.loadService ubuntu1004Profile, null
-		def profile = registry.getService("profile")[0]
-		loader.loadService authFileScript, profile
-		HttpdServiceImpl service = registry.getService("httpd")[0]
-		service.domains.size() == 2
+    @Test
+    void "httpd auth file"() {
+        loader.loadService profile.resource, null
+        def profile = registry.getService("profile")[0]
+        loader.loadService authFileScript.resource, profile
+        HttpdServiceImpl service = registry.getService("httpd")[0]
+        service.domains.size() == 2
 
-		def auth = service.domains[1].auths[0]
-		assert auth.name == "Private Directory"
-		assert auth.location == "/private"
-		assert auth.type == AuthType.digest
-		assert auth.provider == AuthProvider.file
-		assert auth.appending == true
-		assert auth.satisfy == SatisfyType.any
+        def auth = service.domains[1].auths[0]
+        assert auth.name == "Private Directory"
+        assert auth.location == "/private"
+        assert auth.type == AuthType.digest
+        assert auth.provider == AuthProvider.file
+        assert auth.appending == true
+        assert auth.satisfy == SatisfyType.any
 
-		def domains = auth.domains
-		assert domains.size() == 2
-		assert domains[0] == "/private"
-		assert domains[1] == "https://private"
+        def domains = auth.domains
+        assert domains.size() == 2
+        assert domains[0] == "/private"
+        assert domains[1] == "https://private"
 
-		def require = auth.requires[0]
-		assert require.class == RequireValidUser
+        def require = auth.requires[0]
+        assert require.class == RequireValidUser
 
-		require = auth.requires[1]
-		assert require.class == RequireValidGroup
-		assert require.name == "admin"
+        require = auth.requires[1]
+        assert require.class == RequireValidGroup
+        assert require.name == "admin"
 
-		assert auth.groups.size() == 1
-		def group = auth.groups[0]
-		assert group.name == "admin"
-		assert group.users.size() == 2
+        assert auth.groups.size() == 1
+        def group = auth.groups[0]
+        assert group.name == "admin"
+        assert group.users.size() == 2
 
-		def user = group.users[0]
-		assert user.name == "adminfoo"
-		assert user.password == "adminfoopassword"
-		assert user.group == group
+        def user = group.users[0]
+        assert user.name == "adminfoo"
+        assert user.password == "adminfoopassword"
+        assert user.group == group
 
-		user = group.users[1]
-		assert user.name == "adminbar"
-		assert user.password == "adminbarpassword"
-		assert user.group == group
+        user = group.users[1]
+        assert user.name == "adminbar"
+        assert user.password == "adminbarpassword"
+        assert user.group == group
 
-		user = auth.users[0]
-		assert user.name == "bar"
-		assert user.password == "barpassword"
-	}
+        user = auth.users[0]
+        assert user.name == "bar"
+        assert user.password == "barpassword"
+    }
 
-	@Test
-	void "httpd auth ldap"() {
-		loader.loadService ubuntu1004Profile, null
-		def profile = registry.getService("profile")[0]
-		loader.loadService authLdapScript, profile
-		HttpdServiceImpl service = registry.getService("httpd")[0]
-		service.domains.size() == 2
+    @Test
+    void "httpd auth ldap"() {
+        loader.loadService profile.resource, null
+        def profile = registry.getService("profile")[0]
+        loader.loadService authLdapScript.resource, profile
+        HttpdServiceImpl service = registry.getService("httpd")[0]
+        service.domains.size() == 2
 
-		def auth = service.domains[1].auths[0]
-		assert auth.name == "Private Directory"
-		assert auth.location == "private"
-		assert auth.type == AuthType.digest
-		assert auth.provider == AuthProvider.ldap
-		assert auth.satisfy == SatisfyType.any
-		assert auth.authoritative == Authoritative.off
+        def auth = service.domains[1].auths[0]
+        assert auth.name == "Private Directory"
+        assert auth.location == "private"
+        assert auth.type == AuthType.digest
+        assert auth.provider == AuthProvider.ldap
+        assert auth.satisfy == SatisfyType.any
+        assert auth.authoritative == Authoritative.off
 
-		def require = auth.requires[0]
-		assert require.class == RequireValidUser
+        def require = auth.requires[0]
+        assert require.class == RequireValidUser
 
-		require = auth.requires[1]
-		assert require.class == RequireLdapValidGroup
-		assert require.name == "cn=ldapadminGroup,o=deventorg,dc=ubuntutest,dc=com"
-		assert require.attribute.name == "uniqueMember"
-		assert require.attribute.dn == AttributeDn.off
-	}
+        require = auth.requires[1]
+        assert require.class == RequireLdapValidGroup
+        assert require.name == "cn=ldapadminGroup,o=deventorg,dc=ubuntutest,dc=com"
+        assert require.attribute.name == "uniqueMember"
+        assert require.attribute.dn == AttributeDn.off
+    }
 }

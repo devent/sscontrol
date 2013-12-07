@@ -19,7 +19,7 @@
 package com.anrisoftware.sscontrol.httpd.service
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
-import static com.anrisoftware.sscontrol.httpd.service.HttpdResources.*
+import static com.anrisoftware.sscontrol.httpd.service.ServicesResources.*
 import groovy.util.logging.Slf4j
 
 import org.junit.Test
@@ -38,15 +38,15 @@ import com.anrisoftware.sscontrol.httpd.statements.domain.Domain
 @Slf4j
 class HttpdPhpmyadminTest extends HttpdTestUtil {
 
-	@Test
-	void "phpmyadmin"() {
-		loader.loadService ubuntu1004Profile, null
-		def profile = registry.getService("profile")[0]
-		loader.loadService phpmyadminScript, profile
-		HttpdServiceImpl service = registry.getService("httpd")[0]
+    @Test
+    void "phpmyadmin"() {
+        loader.loadService profile.resource, null
+        def profile = registry.getService("profile")[0]
+        loader.loadService phpmyadminScript.resource, profile
+        HttpdServiceImpl service = registry.getService("httpd")[0]
 
-		Domain domain = service.domains[2]
-		assert domain.domainUser.name == "www-data"
-		assert domain.domainUser.group == "www-data"
-	}
+        Domain domain = service.domains[2]
+        assert domain.domainUser.name == "www-data"
+        assert domain.domainUser.group == "www-data"
+    }
 }

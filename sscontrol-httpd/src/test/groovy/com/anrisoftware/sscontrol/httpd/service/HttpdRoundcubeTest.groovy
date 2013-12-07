@@ -27,23 +27,36 @@ import org.junit.Test
 import com.anrisoftware.sscontrol.core.api.ServiceLoader as SscontrolServiceLoader
 import com.anrisoftware.sscontrol.core.api.ServicesRegistry
 import com.anrisoftware.sscontrol.httpd.statements.domain.Domain
+import com.anrisoftware.sscontrol.httpd.statements.roundcube.RoundcubeService
+import com.anrisoftware.sscontrol.httpd.statements.webservice.WebService
 
 /**
- * @see PhpldapadminService
+ * @see RoundcubeService
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
 @Slf4j
-class HttpdPhpldapadminTest extends HttpdTestUtil {
+class HttpdRoundcubeTest extends HttpdTestUtil {
 
     @Test
-    void "phpldapadmin"() {
+    void "roundcube"() {
         loader.loadService profile.resource, null
         def profile = registry.getService("profile")[0]
-        loader.loadService phpldapadminScript.resource, profile
+        loader.loadService roundcubeScript.resource, profile
         HttpdServiceImpl service = registry.getService("httpd")[0]
 
         Domain domain = service.domains[2]
+        assert domain.domainUser.name == "www-data"
+        assert domain.domainUser.group == "www-data"
+        WebService webservice = domain.services[0]
+        assert webservice.getClass() == RoundcubeService
+        assert webservice.name == "roundcube"
+        assert webservice.alias == "roundcube"
+        assert webservice.database.database == "roundcube"
+        assert webservice.database.user == "user"
+        assert webservice.database.password == "userpass"
+        assert webservice.database.host == "localhost"
+        assert webservice.hosts.size() == 5
     }
 }

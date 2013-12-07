@@ -41,50 +41,50 @@ import com.google.inject.Injector
  */
 class HttpdTestUtil {
 
-	static Injector injector
+    static Injector injector
 
-	static ServiceLoaderFactory loaderFactory
+    static ServiceLoaderFactory loaderFactory
 
-	File tmpdir
+    File tmpdir
 
-	Map variables
+    Map variables
 
-	ServicesRegistry registry
+    ServicesRegistry registry
 
-	SscontrolServiceLoader loader
+    SscontrolServiceLoader loader
 
-	@Before
-	void createTemp() {
-		tmpdir = File.createTempDir this.class.simpleName, null
-		variables = [tmp: tmpdir.absoluteFile]
-	}
+    @Before
+    void createTemp() {
+        tmpdir = File.createTempDir this.class.simpleName, null
+        variables = [tmp: tmpdir.absoluteFile]
+    }
 
-	@After
-	void deleteTemp() {
-		tmpdir.deleteDir()
-	}
+    @After
+    void deleteTemp() {
+        tmpdir.deleteDir()
+    }
 
-	@Before
-	void createRegistry() {
-		registry = injector.getInstance ServicesRegistry
-		loader = loaderFactory.create registry, variables
-		loader.setParent injector
-	}
+    @Before
+    void createRegistry() {
+        registry = injector.getInstance ServicesRegistry
+        loader = loaderFactory.create registry, variables
+        loader.setParent injector
+    }
 
-	@BeforeClass
-	static void createFactories() {
-		injector = createInjector()
-		loaderFactory = injector.getInstance ServiceLoaderFactory
-	}
+    @BeforeClass
+    static void createFactories() {
+        injector = createInjector()
+        loaderFactory = injector.getInstance ServiceLoaderFactory
+    }
 
-	static Injector createInjector() {
-		Guice.createInjector(
-				new CoreModule(), new CoreResourcesModule(), new ServiceModule())
-	}
+    static Injector createInjector() {
+        Guice.createInjector(new CoreModule(), new CoreResourcesModule(),
+                new ServiceModule())
+    }
 
-	@BeforeClass
-	static void setupToStringStyle() {
-		toStringStyle
-	}
+    @BeforeClass
+    static void setupToStringStyle() {
+        toStringStyle
+    }
 }
 

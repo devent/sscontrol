@@ -18,6 +18,8 @@
  */
 package com.anrisoftware.sscontrol.httpd.service;
 
+import com.anrisoftware.sscontrol.core.debuglogging.DebugLoggingModule;
+import com.anrisoftware.sscontrol.core.list.ListModule;
 import com.anrisoftware.sscontrol.httpd.statements.auth.AuthModule;
 import com.anrisoftware.sscontrol.httpd.statements.authfile.AuthFileModule;
 import com.anrisoftware.sscontrol.httpd.statements.authldap.AuthLdapModule;
@@ -46,5 +48,7 @@ class HttpdModule extends AbstractModule {
 		install(new PhpmyadminModule());
 		install(new PhpldapadminModule());
         install(new RoundcubeModule());
+        install(new DebugLoggingModule());
+        install(new ListModule());
 	}
 }

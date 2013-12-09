@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-database. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.database.debuglogging;
+package com.anrisoftware.sscontrol.core.debuglogging;
 
 import java.util.Map;
 
@@ -28,32 +28,33 @@ import java.util.Map;
  */
 public interface DebugLoggingFactory {
 
-	/**
-	 * Creates debug logging.
-	 * 
-	 * @param args
-	 *            the {@link Map} containing the logging arguments:
-	 *            <ul>
-	 *            <li>{@code logging:} the logging level.
-	 *            </ul>
-	 * 
-	 * @return the {@link DebugLogging}.
-	 */
-	DebugLogging create(Map<String, Object> args);
+    /**
+     * Creates debug logging.
+     * 
+     * @param args
+     *            the {@link Map} containing the logging arguments:
+     *            <ul>
+     *            <li>{@code logging:} the logging level.
+     *            <li>{@code module:} the module name for the logging.
+     *            </ul>
+     * 
+     * @return the {@link DebugLogging}.
+     */
+    DebugLogging create(Map<String, Object> args);
 
-	/**
-	 * Creates the debug logging with the specified logging level.
-	 * 
-	 * @param level
-	 *            the logging level.
-	 * 
-	 * @return the {@link DebugLogging}.
-	 */
-	DebugLogging create(int level);
+    /**
+     * Creates the debug logging with the specified logging level.
+     * 
+     * @param level
+     *            the logging level.
+     * 
+     * @return the {@link DebugLogging}.
+     */
+    DebugLogging create(int level);
 
-	/**
-	 * Creates deactivated debug logging.
-	 */
-	DebugLogging createOff();
+    /**
+     * Creates deactivated debug logging.
+     */
+    DebugLogging createOff();
 
 }

@@ -22,12 +22,15 @@ import static com.anrisoftware.sscontrol.httpd.statements.roundcube.RoundcubeSer
 import static com.anrisoftware.sscontrol.httpd.statements.roundcube.RoundcubeServiceLogger._.alias_set_info;
 import static com.anrisoftware.sscontrol.httpd.statements.roundcube.RoundcubeServiceLogger._.database_set_debug;
 import static com.anrisoftware.sscontrol.httpd.statements.roundcube.RoundcubeServiceLogger._.database_set_info;
+import static com.anrisoftware.sscontrol.httpd.statements.roundcube.RoundcubeServiceLogger._.debug_set_debug;
+import static com.anrisoftware.sscontrol.httpd.statements.roundcube.RoundcubeServiceLogger._.debug_set_info;
 import static com.anrisoftware.sscontrol.httpd.statements.roundcube.RoundcubeServiceLogger._.host_added_debug;
 import static com.anrisoftware.sscontrol.httpd.statements.roundcube.RoundcubeServiceLogger._.host_added_info;
 
 import javax.inject.Singleton;
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
+import com.anrisoftware.sscontrol.core.debuglogging.DebugLogging;
 
 /**
  * Logging messages for {@link RoundcubeService}.
@@ -50,7 +53,11 @@ class RoundcubeServiceLogger extends AbstractLogger {
 
         host_added_debug("Host {} added for {}."),
 
-        host_added_info("Host '{}' added for service '{}'.");
+        host_added_info("Host '{}' added for service '{}'."),
+
+        debug_set_debug("Debug logging {} set for {}."),
+
+        debug_set_info("Debug logging level {} set for service '{}'.");
 
         private String name;
 
@@ -92,6 +99,14 @@ class RoundcubeServiceLogger extends AbstractLogger {
             debug(host_added_debug, host, service);
         } else {
             info(host_added_info, host.getHost(), service.getName());
+        }
+    }
+
+    void debugSet(RoundcubeService service, DebugLogging logging) {
+        if (isDebugEnabled()) {
+            debug(debug_set_debug, logging, service);
+        } else {
+            info(debug_set_info, logging.getLevel(), service.getName());
         }
     }
 

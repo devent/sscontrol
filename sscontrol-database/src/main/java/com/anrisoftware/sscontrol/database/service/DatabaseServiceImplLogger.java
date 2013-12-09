@@ -33,7 +33,7 @@ import static org.apache.commons.lang3.StringUtils.repeat;
 import com.anrisoftware.globalpom.log.AbstractLogger;
 import com.anrisoftware.sscontrol.core.api.Service;
 import com.anrisoftware.sscontrol.core.bindings.Binding;
-import com.anrisoftware.sscontrol.database.debuglogging.DebugLogging;
+import com.anrisoftware.sscontrol.core.debuglogging.DebugLogging;
 import com.anrisoftware.sscontrol.database.statements.Admin;
 import com.anrisoftware.sscontrol.database.statements.Database;
 import com.anrisoftware.sscontrol.database.statements.User;

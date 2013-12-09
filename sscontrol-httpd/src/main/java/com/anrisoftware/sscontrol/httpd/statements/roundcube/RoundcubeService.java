@@ -9,6 +9,10 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
+import com.anrisoftware.sscontrol.core.debuglogging.DebugLogging;
+import com.anrisoftware.sscontrol.core.debuglogging.DebugLoggingFactory;
 import com.anrisoftware.sscontrol.httpd.statements.webservice.WebService;
 import com.google.inject.assistedinject.Assisted;
 
@@ -22,7 +26,11 @@ import com.google.inject.assistedinject.Assisted;
  */
 public class RoundcubeService implements WebService {
 
+    private static final String NAME1 = "name";
+
     public static final String NAME = "roundcube";
+
+    private static final String ALIAS = "alias";
 
     private final RoundcubeServiceLogger log;
 
@@ -34,9 +42,14 @@ public class RoundcubeService implements WebService {
     @Inject
     private HostFactory hostFactory;
 
+    @Inject
+    private DebugLoggingFactory debugLoggingFactory;
+
     private String alias;
 
     private Database database;
+
+    private DebugLogging debugLogging;
 
     /**
      * @see RoundcubeServiceFactory#create(Map)
@@ -89,5 +102,27 @@ public class RoundcubeService implements WebService {
 
     public List<Host> getHosts() {
         return hosts;
+    }
+
+    public void debug(Map<String, Object> args) {
+        DebugLogging logging = debugLoggingFactory.create(args);
+        log.debugSet(this, logging);
+        this.debugLogging = logging;
+    }
+
+    public void debug(int level) {
+        DebugLogging logging = debugLoggingFactory.create(level);
+        log.debugSet(this, logging);
+        this.debugLogging = logging;
+    }
+
+    public DebugLogging getDebugLogging() {
+        return debugLogging;
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this).append(NAME1, NAME)
+                .append(ALIAS, alias).toString();
     }
 }

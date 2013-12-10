@@ -80,7 +80,7 @@ public class RoundcubeService implements WebService {
 
     public void database(Map<String, Object> args, String name) {
         args.put(DATABASE, name);
-        Database database = databaseFactory.create(args);
+        Database database = databaseFactory.create(this, args);
         log.databaseSet(this, database);
         this.database = database;
     }

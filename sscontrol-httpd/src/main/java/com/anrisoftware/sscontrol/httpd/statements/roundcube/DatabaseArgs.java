@@ -2,6 +2,8 @@ package com.anrisoftware.sscontrol.httpd.statements.roundcube;
 
 import java.util.Map;
 
+import javax.inject.Inject;
+
 /**
  * Parses arguments for Roundcube database credentials.
  * 
@@ -10,10 +12,14 @@ import java.util.Map;
  */
 class DatabaseArgs {
 
+    public static final String PROVIDER = "provider";
     public static final String HOST = "host";
     public static final String PASSWORD = "password";
     public static final String USER = "user";
     public static final String DATABASE = "database";
+
+    @Inject
+    private DatabaseLogger log;
 
     boolean haveDatabase(Map<String, Object> args) {
         return args.containsKey(DATABASE);
@@ -45,6 +51,12 @@ class DatabaseArgs {
 
     String host(Map<String, Object> args) {
         return args.get(HOST).toString();
+    }
+
+    String provider(Object service, Map<String, Object> args) {
+        Object provider = args.get(PROVIDER);
+        log.checkProvider(service, provider);
+        return provider.toString();
     }
 
 }

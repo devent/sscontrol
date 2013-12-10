@@ -54,6 +54,7 @@ class HttpdRoundcubeTest extends HttpdTestUtil {
         assert webservice.name == "roundcube"
         assert webservice.alias == "roundcube"
         assert webservice.database.database == "roundcube"
+        assert webservice.database.provider == "mysql"
         assert webservice.database.user == "user"
         assert webservice.database.password == "userpass"
         assert webservice.database.host == "localhost"

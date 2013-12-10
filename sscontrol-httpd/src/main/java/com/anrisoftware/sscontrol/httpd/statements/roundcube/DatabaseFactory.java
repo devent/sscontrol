@@ -13,10 +13,13 @@ interface DatabaseFactory {
     /**
      * Creates Roundcube database credentials from the specified arguments.
      * 
+     * @param service
+     *            the Roundcube service.
+     * 
      * @param args
      *            the {@link Map} arguments.
      * 
      * @return the {@link Database}.
      */
-    Database create(Map<String, Object> args);
+    Database create(Object service, Map<String, Object> args);
 }

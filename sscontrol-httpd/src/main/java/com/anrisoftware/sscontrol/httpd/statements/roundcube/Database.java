@@ -32,8 +32,13 @@ public class Database {
 
     private String host;
 
+    /**
+     * @see DatabaseFactory#create(Object, Map)
+     */
     @Inject
-    Database(DatabaseArgs argss, @Assisted Map<String, Object> args) {
+    Database(DatabaseArgs argss, @Assisted Object service,
+            @Assisted Map<String, Object> args) {
+        setProvider(argss.provider(service, args));
         if (argss.haveUser(args)) {
             setUser(argss.user(args));
         }

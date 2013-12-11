@@ -67,6 +67,90 @@ class BaseRoundcube_0_9_Config extends BaseRoundcubeConfig {
     }
 
     /**
+     * Deploys the main configuration.
+     *
+     * @param service
+     *            the {@link RoundcubeService}.
+     */
+    void deployMainConfig(RoundcubeService service) {
+        if (!configurationFile.isFile()) {
+            copyFile configurationDistFile, configurationFile
+        }
+        deployConfiguration configurationTokens(), mainConfiguration, mainConfigurations(service), configurationFile
+    }
+
+    /**
+     * Returns the main configurations.
+     */
+    List mainConfigurations(RoundcubeService service) {
+        [
+            configDebuglevel(service),
+            configSmtplog(service),
+            configLoglogins(service),
+            configLogsession(service),
+            configSqldebug(service),
+            configImapdebug(service),
+            configLdapdebug(service),
+            configSmtpdebug(service),
+        ]
+    }
+
+    def configDebuglevel(RoundcubeService service) {
+        def search = roundcubeConfigTemplate.getText(true, "configDebuglevel_search")
+        def replace = roundcubeConfigTemplate.getText(true, "configDebuglevel", "debug", service.debugLogging)
+        new TokenTemplate(search, replace)
+    }
+
+    def configSmtplog(RoundcubeService service) {
+        def enabled = service.debugLogging.modules?.contains("smtp")
+        def search = roundcubeConfigTemplate.getText(true, "configSmtplog_search")
+        def replace = roundcubeConfigTemplate.getText(true, "configSmtplog", "enabled", enabled)
+        new TokenTemplate(search, replace)
+    }
+
+    def configLoglogins(RoundcubeService service) {
+        def enabled = service.debugLogging.modules?.contains("logins")
+        def search = roundcubeConfigTemplate.getText(true, "configLoglogins_search")
+        def replace = roundcubeConfigTemplate.getText(true, "configLoglogins", "enabled", enabled)
+        new TokenTemplate(search, replace)
+    }
+
+    def configLogsession(RoundcubeService service) {
+        def enabled = service.debugLogging.modules?.contains("session")
+        def search = roundcubeConfigTemplate.getText(true, "configLogsession_search")
+        def replace = roundcubeConfigTemplate.getText(true, "configLogsession", "enabled", enabled)
+        new TokenTemplate(search, replace)
+    }
+
+    def configSqldebug(RoundcubeService service) {
+        def enabled = service.debugLogging.modules?.contains("sql")
+        def search = roundcubeConfigTemplate.getText(true, "configSqldebug_search")
+        def replace = roundcubeConfigTemplate.getText(true, "configSqldebug", "enabled", enabled)
+        new TokenTemplate(search, replace)
+    }
+
+    def configImapdebug(RoundcubeService service) {
+        def enabled = service.debugLogging.modules?.contains("imap")
+        def search = roundcubeConfigTemplate.getText(true, "configImapdebug_search")
+        def replace = roundcubeConfigTemplate.getText(true, "configImapdebug", "enabled", enabled)
+        new TokenTemplate(search, replace)
+    }
+
+    def configLdapdebug(RoundcubeService service) {
+        def enabled = service.debugLogging.modules?.contains("ldap")
+        def search = roundcubeConfigTemplate.getText(true, "configLdapdebug_search")
+        def replace = roundcubeConfigTemplate.getText(true, "configLdapdebug", "enabled", enabled)
+        new TokenTemplate(search, replace)
+    }
+
+    def configSmtpdebug(RoundcubeService service) {
+        def enabled = service.debugLogging.modules?.contains("smtp")
+        def search = roundcubeConfigTemplate.getText(true, "configSmtpdebug_search")
+        def replace = roundcubeConfigTemplate.getText(true, "configSmtpdebug", "enabled", enabled)
+        new TokenTemplate(search, replace)
+    }
+
+    /**
      * Roundcube main configuration file, for
      * example {@code "config/main.inc.php"}. If the path is relative then
      * the file will be under the Roundcube installation directory.
@@ -79,6 +163,21 @@ class BaseRoundcube_0_9_Config extends BaseRoundcubeConfig {
      */
     File getConfigurationFile() {
         profileFileProperty("roundcube_main_file", roundcubeDir, defaultProperties)
+    }
+
+    /**
+     * Roundcube main distribution configuration file, for
+     * example {@code "config/main.inc.php.dist"}. If the path is relative then
+     * the file will be under the Roundcube installation directory.
+     *
+     * <ul>
+     * <li>profile property {@code "roundcube_main_dist_file"}</li>
+     * </ul>
+     *
+     * @see ApacheScript#getDefaultProperties()
+     */
+    File getConfigurationDistFile() {
+        profileFileProperty("roundcube_main_dist_file", roundcubeDir, defaultProperties)
     }
 
     /**
@@ -111,6 +210,24 @@ class BaseRoundcube_0_9_Config extends BaseRoundcubeConfig {
      */
     File getDatabaseDistFile() {
         profileFileProperty("roundcube_database_dist_file", roundcubeDir, defaultProperties)
+    }
+
+    /**
+     * Returns the current database configuration.
+     *
+     * @see #getDatabaseeConfigFile()
+     */
+    String getDatabaseConfiguration() {
+        currentConfiguration databaseConfigFile
+    }
+
+    /**
+     * Returns the current main configuration.
+     *
+     * @see #getConfigurationFile()
+     */
+    String getMainConfiguration() {
+        currentConfiguration configurationFile
     }
 
     @Override

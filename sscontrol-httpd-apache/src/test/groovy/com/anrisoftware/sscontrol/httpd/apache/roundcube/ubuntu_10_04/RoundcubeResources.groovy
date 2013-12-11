@@ -45,6 +45,7 @@ enum RoundcubeResources {
     roundcube_0_9_db("/usr/local/roundcube/config/db.inc.php.dist", RoundcubeResources.class.getResource("roundcube_0_9_db_inc_php_dist.txt")),
     roundcube_0_9_db_expected("/usr/local/roundcube/config/db.inc.php", RoundcubeResources.class.getResource("roundcube_0_9_db_inc_php_expected.txt")),
     roundcube_0_9_main("/usr/local/roundcube/config/main.inc.php.dist", RoundcubeResources.class.getResource("roundcube_0_9_main_inc_php_dist.txt")),
+    roundcube_0_9_main_expected("/usr/local/roundcube/config/main.inc.php", RoundcubeResources.class.getResource("roundcube_0_9_main_inc_php_expected.txt")),
     tarOut("/bin/tar.out", RoundcubeResources.class.getResource("tar_out.txt")),
 
     static copyRoundcubeFiles(File parent) {

@@ -56,6 +56,7 @@ class RoundcubeTest extends UbuntuTestUtil {
         assertStringContent test1comConf.replaced(tmpdir, tmpdir, "/tmp"), test1comConf.toString()
         assertStringContent test1comSslConf.replaced(tmpdir, tmpdir, "/tmp"), test1comSslConf.toString()
         assertFileContent roundcube_0_9_db_expected.asFile(tmpdir), roundcube_0_9_db_expected
+        assertFileContent roundcube_0_9_main_expected.asFile(tmpdir), roundcube_0_9_main_expected
         assertStringContent chownOut.replaced(tmpdir, tmpdir, "/tmp"), chownOut.toString()
         assertStringContent chmodOut.replaced(tmpdir, tmpdir, "/tmp"), chmodOut.toString()
         assertStringContent groupaddOut.replaced(tmpdir, tmpdir, "/tmp"), groupaddOut.toString()

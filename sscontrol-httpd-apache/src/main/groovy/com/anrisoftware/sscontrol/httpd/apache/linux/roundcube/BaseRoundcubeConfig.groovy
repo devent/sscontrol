@@ -83,15 +83,6 @@ class BaseRoundcubeConfig {
     }
 
     /**
-     * Returns the current database configuration.
-     *
-     * @see #getDatabaseeConfigFile()
-     */
-    String getDatabaseConfiguration() {
-        currentConfiguration databaseConfigFile
-    }
-
-    /**
      * Roundcube installation directory, for
      * example {@code "roundcube"}. If the path is relative then
      * the directory will be under the local software directory.

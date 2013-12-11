@@ -117,6 +117,9 @@ public class RoundcubeService implements WebService {
     }
 
     public DebugLogging getDebugLogging() {
+        if (debugLogging == null) {
+            this.debugLogging = debugLoggingFactory.createOff();
+        }
         return debugLogging;
     }
 

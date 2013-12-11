@@ -66,6 +66,7 @@ class RoundcubeConfig extends BaseRoundcube_0_9_Config implements ServiceConfig 
         fcgiConfig.enableFcgi()
         fcgiConfig.deployConfig domain
         deployDatabaseConfig service
+        deployMainConfig service
     }
 
     void createDomainConfig(Domain domain, PhpmyadminService service, List serviceConfig) {

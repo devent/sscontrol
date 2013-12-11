@@ -18,6 +18,7 @@
  */
 package com.anrisoftware.sscontrol.core.debuglogging;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -77,11 +78,9 @@ public class DebugLogging extends Number {
     }
 
     public void setModule(String module) {
-        args.put(MODULE, module);
-    }
-
-    public String getModule() {
-        return (String) args.get(MODULE);
+        List<String> modules = new ArrayList<String>();
+        modules.add(module);
+        setModules(modules);
     }
 
     public void setModules(List<String> modules) {

@@ -22,7 +22,10 @@ $rcmail_config = array();
 // ----------------------------------
 
 // system error reporting, sum of: 1 = log; 4 = show, 8 = trace
-$rcmail_config['debug_level'] = 1;
+# SSCONTROL-httpd
+$rcmail_config['debug_level'] = 0;
+# SSCONTROL-httpd-END
+
 
 // log driver:  'syslog' or 'file'.
 $rcmail_config['log_driver'] = 'file';
@@ -39,25 +42,46 @@ $rcmail_config['syslog_id'] = 'roundcube';
 $rcmail_config['syslog_facility'] = LOG_USER;
 
 // Log sent messages to <log_dir>/sendmail or to syslog
-$rcmail_config['smtp_log'] = true;
+# SSCONTROL-httpd
+$rcmail_config['smtp_log'] = false;
+# SSCONTROL-httpd-END
+
 
 // Log successful logins to <log_dir>/userlogins or to syslog
+# SSCONTROL-httpd
 $rcmail_config['log_logins'] = false;
+# SSCONTROL-httpd-END
+
 
 // Log session authentication errors to <log_dir>/session or to syslog
+# SSCONTROL-httpd
 $rcmail_config['log_session'] = false;
+# SSCONTROL-httpd-END
+
 
 // Log SQL queries to <log_dir>/sql or to syslog
+# SSCONTROL-httpd
 $rcmail_config['sql_debug'] = false;
+# SSCONTROL-httpd-END
+
 
 // Log IMAP conversation to <log_dir>/imap or to syslog
+# SSCONTROL-httpd
 $rcmail_config['imap_debug'] = false;
+# SSCONTROL-httpd-END
+
 
 // Log LDAP conversation to <log_dir>/ldap or to syslog
+# SSCONTROL-httpd
 $rcmail_config['ldap_debug'] = false;
+# SSCONTROL-httpd-END
+
 
 // Log SMTP conversation to <log_dir>/smtp or to syslog
+# SSCONTROL-httpd
 $rcmail_config['smtp_debug'] = false;
+# SSCONTROL-httpd-END
+
 
 // ----------------------------------
 // IMAP

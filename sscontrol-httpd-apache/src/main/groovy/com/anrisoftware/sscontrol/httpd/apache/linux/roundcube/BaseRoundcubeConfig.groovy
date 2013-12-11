@@ -21,6 +21,7 @@ package com.anrisoftware.sscontrol.httpd.apache.linux.roundcube
 import javax.inject.Inject
 
 import com.anrisoftware.sscontrol.httpd.apache.linux.apache.ApacheScript
+import com.anrisoftware.sscontrol.httpd.statements.roundcube.RoundcubeService
 
 /**
  * Returns roundcube/properties.
@@ -32,20 +33,27 @@ class BaseRoundcubeConfig {
 
     public static final String NAME = "roundcube"
 
-    ApacheScript script
+    @Inject
+    private BaseRoundcubeConfigLogger log
 
     @Inject
-    Map<String, RoundcubeDatabaseConfig> databaseConfigs
+    private Map<String, RoundcubeDatabaseConfig> databaseConfigs
 
-    void setScript(ApacheScript script) {
-        this.script = script
-    }
+    private ApacheScript script
 
     /**
-     * Returns the service name {@code "roundcube".}
+     * Setups the database.
+     *
+     * @param service
+     *            the {@link RoundcubeService}.
+     *
+     * @see #getDatabaseBackend()
      */
-    String getServiceName() {
-        NAME
+    void setupDatabase(RoundcubeService service) {
+        def config = databaseConfigs[databaseBackend]
+        log.checkDatabaseConfig script, config, databaseBackend
+        config.setScript script
+        config.setupDatabase service
     }
 
     /**
@@ -57,8 +65,8 @@ class BaseRoundcubeConfig {
      *
      * @see ApacheScript#getDefaultProperties()
      */
-    URL getRoundcubeArchive() {
-        profileURIProperty "roundcube_archive", defaultProperties
+    URI getRoundcubeArchive() {
+        profileURIProperty("roundcube_archive", defaultProperties)
     }
 
     /**
@@ -75,7 +83,18 @@ class BaseRoundcubeConfig {
     }
 
     /**
-     * Roundcube main configuration file, for example {@code "main.inc.php"}.
+     * Returns the current database configuration.
+     *
+     * @see #getDatabaseeConfigFile()
+     */
+    String getDatabaseConfiguration() {
+        currentConfiguration databaseConfigFile
+    }
+
+    /**
+     * Roundcube main configuration file, for
+     * example {@code "config/main.inc.php"}. If the path is relative then
+     * the file will be under the Roundcube installation directory.
      *
      * <ul>
      * <li>profile property {@code "roundcube_main_file"}</li>
@@ -84,21 +103,77 @@ class BaseRoundcubeConfig {
      * @see ApacheScript#getDefaultProperties()
      */
     File getConfigurationFile() {
-        profileProperty("roundcube_main_file", defaultProperties) as File
+        profileFileProperty("roundcube_main_file", roundcubeDir, defaultProperties)
     }
 
     /**
      * Roundcube database configuration file, for
-     * example {@code "db.inc.php"}.
+     * example {@code "config/db.inc.php"}. If the path is relative then
+     * the file will be under the Roundcube installation directory.
      *
      * <ul>
      * <li>profile property {@code "roundcube_database_file"}</li>
      * </ul>
      *
      * @see ApacheScript#getDefaultProperties()
+     * @see #getConfigurationDir()
      */
-    File getDatabaseScriptFile() {
-        profileProperty("roundcube_database_file", defaultProperties) as File
+    File getDatabaseConfigFile() {
+        profileFileProperty("roundcube_database_file", roundcubeDir, defaultProperties)
+    }
+
+    /**
+     * Roundcube installation directory, for
+     * example {@code "roundcube"}. If the path is relative then
+     * the directory will be under the local software directory.
+     *
+     * <ul>
+     * <li>profile property {@code "roundcube_directory"}</li>
+     * </ul>
+     *
+     * @see ApacheScript#getDefaultProperties()
+     * @see ApacheScript#getLocalSoftwareDir()
+     */
+    File getRoundcubeDir() {
+        profileFileProperty("roundcube_directory", localSoftwareDir, defaultProperties)
+    }
+
+    /**
+     * Returns the Roundcube database back-end, for example {@code "mysql"}.
+     *
+     * <ul>
+     * <li>profile property {@code "roundcube_database_backend"}</li>
+     * </ul>
+     */
+    String getDatabaseBackend() {
+        profileProperty("roundcube_database_backend")
+    }
+
+    /**
+     * Returns the service name {@code "roundcube".}
+     */
+    String getServiceName() {
+        NAME
+    }
+
+    /**
+     * Sets the parent script with the properties.
+     *
+     * @param script
+     *            the {@link ApacheScript}.
+     */
+    void setScript(ApacheScript script) {
+        this.script = script
+        databaseConfigs.each { it.value.script = script }
+    }
+
+    /**
+     * Returns the parent script with the properties.
+     *
+     * @return the {@link ApacheScript}.
+     */
+    ApacheScript getScript() {
+        script
     }
 
     def propertyMissing(String name) {

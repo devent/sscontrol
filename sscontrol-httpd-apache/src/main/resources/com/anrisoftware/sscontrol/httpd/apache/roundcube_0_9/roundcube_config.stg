@@ -1,0 +1,139 @@
+domainConfig(domain, service, properties, fcgiProperties) ::= <<
+# roundcube
+
+<serviceAlias(service.alias)>
+\<Directory /usr/share/phpmyadmin>
+    AddHandler fcgid-script .php
+    FCGIWrapper <properties.sitesDirectory>/<fcgiProperties.scriptsSubdirectory>/<domain.name>/<fcgiProperties.scriptStarterFileName> .php
+    Options +ExecCGI
+    DirectoryIndex index.php
+\</Directory>
+
+# Disallow web access to directories that don't need it
+\<Directory /usr/share/phpmyadmin/libraries>
+    Order Deny,Allow
+    Deny from All
+\</Directory>
+\<Directory /usr/share/phpmyadmin/setup/lib>
+    Order Deny,Allow
+    Deny from All
+\</Directory>
+
+>>
+
+serviceAlias(alias) ::= <<
+<if(alias)>Alias /<alias> /usr/share/phpmyadmin<endif>
+
+>>
+
+configDbdsnw(database) ::= <%
+$rcmail_config['db_dsnw'] = '<database.provider>://<database.user>:<database.password>@<database.host>/<database.database>';
+%>
+
+configDbdsnw_search() ::= <%
+\$rcmail_config\['db_dsnw'\]\s*=\s*'.*';
+%>
+
+configSmtplog(enabled) ::= <%
+$rcmail_config['smtp_log'] = <if(enabled)>true<else>false<endif>;
+%>
+
+configSmtplog_search() ::= <%
+\$rcmail_config\['smtp_log'\]\s*=\s*.*;
+%>
+
+configLoglogins(enabled) ::= <%
+$rcmail_config['log_logins'] = <if(enabled)>true<else>false<endif>;
+%>
+
+configLoglogins_search() ::= <%
+\$rcmail_config\['log_logins'\]\s*=\s*.*;
+%>
+
+configLogsession(enabled) ::= <%
+$rcmail_config['log_session'] = <if(enabled)>true<else>false<endif>;
+%>
+
+configLogsession_search() ::= <%
+\$rcmail_config\['log_session'\]\s*=\s*.*;
+%>
+
+configDebuglevel(debug) ::= <%
+$rcmail_config['debug_level'] = <debug.level>;
+%>
+
+configDebuglevel_search() ::= <%
+\$rcmail_config\['debug_level'\]\s*=\s*.*;
+%>
+
+configLogdriver(driver) ::= <%
+$rcmail_config['log_driver'] = '<driver>';
+%>
+
+configLogdriver_search() ::= <%
+\$rcmail_config\['log_driver'\]\s*=\s*".*";
+%>
+
+configSqldebug(enabled) ::= <%
+$rcmail_config['sql_debug'] = <if(enabled)>true<else>false<endif>;
+%>
+
+configSqldebug_search() ::= <%
+\$rcmail_config\['sql_debug'\]\s*=\s*.*;
+%>
+
+configImapdebug(enabled) ::= <%
+$rcmail_config['imap_debug'] = <if(enabled)>true<else>false<endif>;
+%>
+
+configImapdebug_search() ::= <%
+\$rcmail_config\['imap_debug'\]\s*=\s*.*;
+%>
+
+configLdapdebug(enabled) ::= <%
+$rcmail_config['ldap_debug'] = <if(enabled)>true<else>false<endif>;
+%>
+
+configLdapdebug_search() ::= <%
+\$rcmail_config\['ldap_debug'\]\s*=\s*.*;
+%>
+
+configSmtpdebug(enabled) ::= <%
+$rcmail_config['smtp_debug'] = <if(enabled)>true<else>false<endif>;
+%>
+
+configSmtpdebug_search() ::= <%
+\$rcmail_config\['smtp_debug'\]\s*=\s*.*;
+%>
+
+configDefaultHostSingle(host) ::= <%
+$rcmail_config['default_host'] = '<host.host>';
+%>
+
+configDefaultHostSingle_search() ::= <%
+\$rcmail_config\['default_host'\]\s*=\s*'.*';
+%>
+
+configDefaultHostMultiple(host) ::= <%
+$rcmail_config['default_host'][] = '<host.host>';
+%>
+
+configDefaultHostMultiple_search(host) ::= <%
+\$rcmail_config\['default_host'\]\[\]\s*=\s*'<host.host>';
+%>
+
+configDefaultHostMap(host) ::= <%
+$rcmail_config['default_host'][] = 'host.host' => 'host.alias';
+%>
+
+configDefaultHostMap_search(host) ::= <%
+\$rcmail_config\['default_host'\]\[\]\s*=\s*'<host.host>'.*;
+%>
+
+configDefaultHostMultipleInit() ::= <%
+$rcmail_config['default_host'] = array();
+%>
+
+configDefaultHostMultipleInit_search() ::= <%
+\$rcmail_config\['default_host'\]\s*=\s*array(.*
+%>

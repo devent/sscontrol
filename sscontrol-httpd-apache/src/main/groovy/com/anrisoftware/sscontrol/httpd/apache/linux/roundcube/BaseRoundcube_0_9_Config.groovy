@@ -21,6 +21,8 @@ package com.anrisoftware.sscontrol.httpd.apache.linux.roundcube
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.Templates
 import com.anrisoftware.sscontrol.httpd.apache.linux.apache.ApacheScript
+import com.anrisoftware.sscontrol.httpd.statements.roundcube.RoundcubeService
+import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokenTemplate
 
 /**
  * Roundcube 0.9 configuration.
@@ -33,6 +35,31 @@ class BaseRoundcube_0_9_Config extends BaseRoundcubeConfig {
     Templates roundcubeTemplates
 
     TemplateResource roundcubeConfigTemplate
+
+    /**
+     * Deploys the database configuration.
+     *
+     * @param service
+     *            the {@link RoundcubeService}.
+     */
+    void deployDatabaseConfig(RoundcubeService service) {
+        deployConfiguration configurationTokens(), databaseConfiguration, databaseConfigurations(service), configurationFile
+    }
+
+    /**
+     * Returns the database configurations.
+     */
+    List databaseConfigurations(RoundcubeService service) {
+        [
+            configDbdsnw(service),
+        ]
+    }
+
+    def configDbdsnw(RoundcubeService service) {
+        def search = roundcubeConfigTemplate.getText(true, "configDbdsnw_search")
+        def replace = roundcubeConfigTemplate.getText(true, "configDbdsnw", "database", service.database)
+        new TokenTemplate(search, replace)
+    }
 
     @Override
     void setScript(ApacheScript script) {

@@ -32,7 +32,7 @@ import com.anrisoftware.sscontrol.httpd.apache.core.ubuntu_10_04.ResourcesUtils
 enum RoundcubeResources {
 
     httpdScript("Httpd.groovy", RoundcubeResources.class.getResource("HttpdRoundcube.groovy")),
-    roundcubeArchive("roundcubemail-0.9.5.tar.gz", RoundcubeResources.class.getResource("roundcubemail-0.9.5.tar.gz")),
+    roundcubeArchive("/tmp/web-roundcubemail-0.9.5.tar.gz", RoundcubeResources.class.getResource("roundcubemail-0.9.5.tar.gz")),
     domainsConf("/etc/apache2/conf.d/000-robobee-domains.conf", RoundcubeResources.class.getResource("domains_conf.txt")),
     test1comConf("/etc/apache2/sites-available/100-robobee-test1.com.conf", RoundcubeResources.class.getResource("test1_com_conf.txt")),
     test1comSslConf("/etc/apache2/sites-available/100-robobee-test1.com-ssl.conf", RoundcubeResources.class.getResource("test1_com_ssl_conf.txt")),
@@ -42,8 +42,14 @@ enum RoundcubeResources {
     chmodOut("/bin/chmod.out", RoundcubeResources.class.getResource("chmod_out.txt")),
     useraddOut("/usr/sbin/useradd.out", RoundcubeResources.class.getResource("useradd_out.txt")),
     groupaddOut("/usr/sbin/groupadd.out", RoundcubeResources.class.getResource("groupadd_out.txt")),
+    roundcube_0_9_db("/usr/local/roundcube/config/db.inc.php.dist", RoundcubeResources.class.getResource("roundcube_0_9_db_inc_php_dist.txt")),
+    roundcube_0_9_main("/usr/local/roundcube/config/main.inc.php.dist", RoundcubeResources.class.getResource("roundcube_0_9_main_inc_php_dist.txt")),
+    tarOut("/bin/tar.out", RoundcubeResources.class.getResource("tar_out.txt")),
 
-    static copyUbuntuFiles(File parent) {
+    static copyRoundcubeFiles(File parent) {
+        roundcubeArchive.createFile parent
+        roundcube_0_9_db.createFile parent
+        roundcube_0_9_main.createFile parent
     }
 
     ResourcesUtils resources

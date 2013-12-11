@@ -18,6 +18,7 @@
  */
 package com.anrisoftware.sscontrol.httpd.apache.roundcube.ubuntu_10_04
 
+import static com.anrisoftware.sscontrol.httpd.apache.roundcube.ubuntu_10_04.RoundcubeResources.*
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.httpd.apache.core.ubuntu_10_04.UbuntuResources.*
 import static com.anrisoftware.sscontrol.httpd.apache.roundcube.ubuntu_10_04.RoundcubeResources.*
@@ -40,6 +41,7 @@ class RoundcubeTest extends UbuntuTestUtil {
     @Test
     void "roundcube"() {
         copyUbuntuFiles tmpdir
+        copyRoundcubeFiles tmpdir
 
         loader.loadService profile.resource, null
         def profile = registry.getService("profile")[0]
@@ -57,5 +59,6 @@ class RoundcubeTest extends UbuntuTestUtil {
         assertStringContent chmodOut.replaced(tmpdir, tmpdir, "/tmp"), chmodOut.toString()
         assertStringContent groupaddOut.replaced(tmpdir, tmpdir, "/tmp"), groupaddOut.toString()
         assertStringContent useraddOut.replaced(tmpdir, tmpdir, "/tmp"), useraddOut.toString()
+        assertStringContent tarOut.replaced(tmpdir, tmpdir, "/tmp"), tarOut.toString()
     }
 }

@@ -401,8 +401,8 @@ class ProfilePropertiesImpl implements ProfileProperties {
      * @throws ServiceException
      *             if the profile property was not found.
      */
-    public URI profileURIProperty(String key, File parent,
-            ContextProperties defaults) throws ServiceException {
+    public URI profileURIProperty(String key, ContextProperties defaults)
+            throws ServiceException {
         Object path = profileProperty(key, defaults);
         if (path instanceof File) {
             return ((File) path).toURI();

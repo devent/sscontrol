@@ -18,12 +18,16 @@
  */
 package com.anrisoftware.sscontrol.httpd.apache.ubuntu_10_04.roundcube;
 
+import static com.anrisoftware.sscontrol.httpd.apache.ubuntu_10_04.roundcube.RoundcubeConfigLogger._.download_archive_info;
+import static com.anrisoftware.sscontrol.httpd.apache.ubuntu_10_04.roundcube.RoundcubeConfigLogger._.download_archive_trace;
 import static com.anrisoftware.sscontrol.httpd.apache.ubuntu_10_04.roundcube.RoundcubeConfigLogger._.import_tables_debug;
 import static com.anrisoftware.sscontrol.httpd.apache.ubuntu_10_04.roundcube.RoundcubeConfigLogger._.import_tables_info;
 import static com.anrisoftware.sscontrol.httpd.apache.ubuntu_10_04.roundcube.RoundcubeConfigLogger._.import_tables_trace;
 import static com.anrisoftware.sscontrol.httpd.apache.ubuntu_10_04.roundcube.RoundcubeConfigLogger._.reconfigure_service_debug;
 import static com.anrisoftware.sscontrol.httpd.apache.ubuntu_10_04.roundcube.RoundcubeConfigLogger._.reconfigure_service_info;
 import static com.anrisoftware.sscontrol.httpd.apache.ubuntu_10_04.roundcube.RoundcubeConfigLogger._.reconfigure_service_trace;
+
+import java.net.URI;
 
 import javax.inject.Singleton;
 
@@ -52,7 +56,12 @@ class RoundcubeConfigLogger extends AbstractLogger {
 
 		import_tables_debug("Import tables for phpmyadmin for {}."),
 
-		import_tables_info("Import tables for phpmyadmin for service '{}'.");
+        import_tables_info("Import tables for phpmyadmin for service '{}'."),
+
+        download_archive_trace("Downloaded and unpack archive '{}' for {}."),
+
+        download_archive_info(
+                "Downloaded and unpack archive '{}' for service '{}'.");
 
 		private String name;
 
@@ -92,4 +101,12 @@ class RoundcubeConfigLogger extends AbstractLogger {
 			info(import_tables_info, script.getName());
 		}
 	}
+
+    void downloadArchive(LinuxScript script, URI archive) {
+        if (isDebugEnabled()) {
+            debug(download_archive_trace, archive, script);
+        } else {
+            info(download_archive_info, archive, script.getName());
+        }
+    }
 }

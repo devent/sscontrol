@@ -44,6 +44,7 @@ profile "ubuntu_10_04", {
         htpasswd_command UbuntuResources.htpasswdCommand.asFile(tmp)
         temp_directory UbuntuResources.tmpDir.asFile(tmp)
         configuration_directory UbuntuResources.configurationDir.asFile(tmp)
+        local_software_directory UbuntuResources.localSoftwareDir.asFile(tmp)
         groups_file UbuntuResources.groups.asFile(tmp)
         users_file UbuntuResources.users.asFile(tmp)
         sites_available_directory UbuntuResources.sitesAvailableDir.asFile(tmp)
@@ -64,6 +65,5 @@ profile "ubuntu_10_04", {
         phpldapadmin_linked_configuration_directory PhpldapadminResources.linkedConfigDir.asFile(tmp)
         // roundcube
         roundcube_archive RoundcubeResources.roundcubeArchive.asFile(tmp)
-        roundcube_database "mysql"
     }
 }

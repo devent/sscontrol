@@ -34,7 +34,7 @@ httpd {
         certification_file UbuntuResources.certCrt.resource
         certification_key_file UbuntuResources.certKey.resource
         setup "roundcube", alias: "roundcube", {
-            database "roundcube", user: "user", password: "userpass", host: "localhost"
+            database "roundcube", provider: "mysql", user: "user", password: "userpass", host: "localhost"
             host "localhost"
             host "mail.example.com", alias: "Default Server"
             host "webmail.example.com", alias: "Webmail Server"

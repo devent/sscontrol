@@ -24,59 +24,65 @@ import java.text.DecimalFormat
 
 import com.anrisoftware.sscontrol.httpd.statements.domain.Domain
 
+/**
+ * Apache domain configuration.
+ *
+ * @author Erwin Mueller, erwin.mueller@deventm.org
+ * @since 1.0
+ */
 class DomainConfig {
 
-	int domainNumber
+    int domainNumber
 
-	ApacheScript script
+    ApacheScript script
 
-	DomainConfig() {
-		this.domainNumber = 0
-	}
+    DomainConfig() {
+        this.domainNumber = 0
+    }
 
-	def deployDomain(Domain domain) {
-		domainNumber++
-		setupUserGroup domain
-		addSiteGroup domain
-		addSiteUser domain
-		createWebDir domain
-	}
+    def deployDomain(Domain domain) {
+        domainNumber++
+        setupUserGroup domain
+        addSiteGroup domain
+        addSiteUser domain
+        createWebDir domain
+    }
 
-	private setupUserGroup(Domain domain) {
-		def group = new DecimalFormat(groupPattern).format(domainNumber)
-		def user = new DecimalFormat(userPattern).format(domainNumber)
-		script.service.domains.findAll { Domain d ->
-			d.name == domain.name
-		}.each { Domain d ->
-			d.domainUser.name = domain.domainUser.name == null ? user : domain.domainUser.name
-			d.domainUser.group = domain.domainUser.group == null ? user : domain.domainUser.group
-		}
-	}
+    private setupUserGroup(Domain domain) {
+        def group = new DecimalFormat(groupPattern).format(domainNumber)
+        def user = new DecimalFormat(userPattern).format(domainNumber)
+        script.service.domains.findAll { Domain d ->
+            d.name == domain.name
+        }.each { Domain d ->
+            d.domainUser.name = domain.domainUser.name == null ? user : domain.domainUser.name
+            d.domainUser.group = domain.domainUser.group == null ? user : domain.domainUser.group
+        }
+    }
 
-	private createWebDir(Domain domain) {
-		def user = domain.domainUser
-		webDir(domain).mkdirs()
-		script.changeOwner owner: user.name, ownerGroup: user.group, files: webDir(domain)
-	}
+    private createWebDir(Domain domain) {
+        def user = domain.domainUser
+        webDir(domain).mkdirs()
+        script.changeOwner owner: user.name, ownerGroup: user.group, files: webDir(domain)
+    }
 
-	private addSiteUser(Domain domain) {
-		def user = domain.domainUser
-		int uid = minimumUid + domainNumber
-		def home = domainDir domain
-		def shell = "/bin/false"
-		script.addUser userName: user.name, groupName: user.group, userId: uid, homeDir: home, shell: shell
-	}
+    private addSiteUser(Domain domain) {
+        def user = domain.domainUser
+        int uid = minimumUid + domainNumber
+        def home = domainDir domain
+        def shell = "/bin/false"
+        script.addUser userName: user.name, groupName: user.group, userId: uid, homeDir: home, shell: shell
+    }
 
-	private addSiteGroup(Domain domain) {
-		int gid = minimumGid + domainNumber
-		addGroup groupName: domain.domainUser.group, groupId: gid
-	}
+    private addSiteGroup(Domain domain) {
+        int gid = minimumGid + domainNumber
+        addGroup groupName: domain.domainUser.group, groupId: gid
+    }
 
-	def propertyMissing(String name) {
-		script.getProperty name
-	}
+    def propertyMissing(String name) {
+        script.getProperty name
+    }
 
-	def methodMissing(String name, def args) {
-		script.invokeMethod name, args
-	}
+    def methodMissing(String name, def args) {
+        script.invokeMethod name, args
+    }
 }

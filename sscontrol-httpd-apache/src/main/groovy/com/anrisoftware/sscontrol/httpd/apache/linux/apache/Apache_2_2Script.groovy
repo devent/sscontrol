@@ -18,7 +18,7 @@
  */
 package com.anrisoftware.sscontrol.httpd.apache.linux.apache
 
-import static com.anrisoftware.sscontrol.httpd.apache.ubuntu_10_04.apache.Ubuntu10_04ScriptFactory.PROFILE;
+import static com.anrisoftware.sscontrol.httpd.apache.ubuntu_10_04.apache.Ubuntu10_04ScriptFactory.PROFILE
 import static org.apache.commons.io.FileUtils.*
 
 import javax.inject.Inject
@@ -40,122 +40,122 @@ import com.anrisoftware.sscontrol.httpd.statements.webservice.WebService
  */
 abstract class Apache_2_2Script extends ApacheScript {
 
-	@Inject
-	Apache_2_2ScriptLogger log
+    @Inject
+    Apache_2_2ScriptLogger log
 
-	@Inject
-	DomainConfig domainConfig
+    @Inject
+    DomainConfig domainConfig
 
-	@Inject
-	SslDomainConfig sslDomainConfig
+    @Inject
+    SslDomainConfig sslDomainConfig
 
-	@Inject
-	RedirectConfig deployRedirectHttpToHttps
+    @Inject
+    RedirectConfig deployRedirectHttpToHttps
 
-	@Inject
-	RedirectConfig deployRedirectToWwwHttp
+    @Inject
+    RedirectConfig deployRedirectToWwwHttp
 
-	@Inject
-	RedirectConfig deployRedirectToWwwHttps
+    @Inject
+    RedirectConfig deployRedirectToWwwHttps
 
-	/**
-	 * The {@link Templates} for the script.
-	 */
-	Templates apacheTemplates
+    /**
+     * The {@link Templates} for the script.
+     */
+    Templates apacheTemplates
 
-	/**
-	 * Resource containing the Apache configuration templates.
-	 */
-	TemplateResource configTemplate
+    /**
+     * Resource containing the Apache configuration templates.
+     */
+    TemplateResource configTemplate
 
-	/**
-	 * Resource containing the Apache commands templates.
-	 */
-	TemplateResource apacheCommandsTemplate
+    /**
+     * Resource containing the Apache commands templates.
+     */
+    TemplateResource apacheCommandsTemplate
 
-	@Override
-	def run() {
-		apacheTemplates = templatesFactory.create "Apache_2_2"
-		configTemplate = apacheTemplates.getResource "config"
-		apacheCommandsTemplate = apacheTemplates.getResource "commands"
-		domainConfig.script = this
-		sslDomainConfig.script = this
-		deployRedirectHttpToHttps.script = this
-		deployRedirectToWwwHttp.script = this
-		deployRedirectToWwwHttps.script = this
-		super.run()
-		deployDefaultConfig()
-		deployDomainsConfig()
-		enableDefaultMods()
-		deployConfig()
-		restartServices()
-	}
+    @Override
+    def run() {
+        apacheTemplates = templatesFactory.create "Apache_2_2"
+        configTemplate = apacheTemplates.getResource "config"
+        apacheCommandsTemplate = apacheTemplates.getResource "commands"
+        domainConfig.script = this
+        sslDomainConfig.script = this
+        deployRedirectHttpToHttps.script = this
+        deployRedirectToWwwHttp.script = this
+        deployRedirectToWwwHttps.script = this
+        super.run()
+        deployDefaultConfig()
+        deployDomainsConfig()
+        enableDefaultMods()
+        deployConfig()
+        restartServices()
+    }
 
-	def deployDefaultConfig() {
-		def string = configTemplate.getText true, "defaultConfiguration"
-		FileUtils.write defaultConfigFile, string
-	}
+    def deployDefaultConfig() {
+        def string = configTemplate.getText true, "defaultConfiguration"
+        FileUtils.write defaultConfigFile, string
+    }
 
-	def deployDomainsConfig() {
-		def string = configTemplate.getText true, "domainsConfiguration", "service", service
-		FileUtils.write domainsConfigFile, string
-	}
+    def deployDomainsConfig() {
+        def string = configTemplate.getText true, "domainsConfiguration", "service", service
+        FileUtils.write domainsConfigFile, string
+    }
 
-	def enableDefaultMods() {
-		enableMods "suexec"
-	}
+    def enableDefaultMods() {
+        enableMods "suexec"
+    }
 
-	def deployConfig() {
-		List serviceConfig = []
-		uniqueDomains.each { deployDomain it }
-		service.domains.each { Domain domain ->
-			deployRedirect domain
-			deployAuth domain, serviceConfig
-			deployService domain, serviceConfig
-			deployDomainConfig domain, serviceConfig
-			deploySslDomain domain
-			enableSites domain.fileName
-		}
-	}
+    def deployConfig() {
+        List serviceConfig = []
+        uniqueDomains.each { deployDomain it }
+        service.domains.each { Domain domain ->
+            deployRedirect domain
+            deployAuth domain, serviceConfig
+            deployService domain, serviceConfig
+            deployDomainConfig domain, serviceConfig
+            deploySslDomain domain
+            enableSites domain.fileName
+        }
+    }
 
-	def deployService(Domain domain, List serviceConfig) {
-		domain.services.each { WebService service ->
-			def config = serviceConfigs["${PROFILE}.${service.name}"]
-			log.checkServiceConfig config, service
-			config.deployService(domain, service, serviceConfig)
-		}
-	}
+    def deployService(Domain domain, List serviceConfig) {
+        domain.services.each { WebService service ->
+            def config = serviceConfigs["${PROFILE}.${service.name}"]
+            log.checkServiceConfig config, service
+            config.deployService(domain, service, serviceConfig)
+        }
+    }
 
-	def deployRedirect(Domain domain) {
-		domain.redirects.each {
-			this."deploy${it.class.simpleName}".deployRedirect(domain, it)
-		}
-	}
+    def deployRedirect(Domain domain) {
+        domain.redirects.each {
+            this."deploy${it.class.simpleName}".deployRedirect(domain, it)
+        }
+    }
 
-	def deployAuth(Domain domain, List serviceConfig) {
-		domain.auths.each { AbstractAuth auth ->
-			def config = authConfigs["${PROFILE}.${auth.class.simpleName}"]
-			log.checkAuthConfig config, auth
-			config.deployAuth(domain, auth, serviceConfig)
-		}
-	}
+    def deployAuth(Domain domain, List serviceConfig) {
+        domain.auths.each { AbstractAuth auth ->
+            def config = authConfigs["${PROFILE}.${auth.class.simpleName}"]
+            log.checkAuthConfig config, auth
+            config.deployAuth(domain, auth, serviceConfig)
+        }
+    }
 
-	def deploySslDomain(Domain domain) {
-		if (domain.class == SslDomain) {
-			sslDomainConfig.enableSsl()
-			sslDomainConfig.deployCertificates(domain)
-		}
-	}
+    def deploySslDomain(Domain domain) {
+        if (domain.class == SslDomain) {
+            sslDomainConfig.enableSsl()
+            sslDomainConfig.deployCertificates(domain)
+        }
+    }
 
-	def deployDomain(Domain domain) {
-		domainConfig.deployDomain domain
-	}
+    def deployDomain(Domain domain) {
+        domainConfig.deployDomain domain
+    }
 
-	def deployDomainConfig(Domain domain, List servicesConfig) {
-		def string = configTemplate.getText(true, domain.class.simpleName,
-				"properties", this,
-				"domain", domain,
-				"servicesConfig", servicesConfig)
-		FileUtils.write new File(sitesAvailableDir, domain.fileName), string
-	}
+    def deployDomainConfig(Domain domain, List servicesConfig) {
+        def string = configTemplate.getText(true, domain.class.simpleName,
+                "properties", this,
+                "domain", domain,
+                "servicesConfig", servicesConfig)
+        FileUtils.write new File(sitesAvailableDir, domain.fileName), string
+    }
 }

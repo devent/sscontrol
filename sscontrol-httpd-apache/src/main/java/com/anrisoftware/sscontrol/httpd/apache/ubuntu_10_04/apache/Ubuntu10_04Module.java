@@ -27,11 +27,10 @@ import groovy.lang.Script;
 import com.anrisoftware.sscontrol.httpd.apache.linux.apache.ApacheScriptModule;
 import com.anrisoftware.sscontrol.httpd.apache.linux.apache.AuthConfig;
 import com.anrisoftware.sscontrol.httpd.apache.linux.apache.ServiceConfig;
-import com.anrisoftware.sscontrol.httpd.apache.ubuntu_10_04.apache.AuthFileConfig;
-import com.anrisoftware.sscontrol.httpd.apache.ubuntu_10_04.apache.AuthLdapConfig;
-import com.anrisoftware.sscontrol.httpd.apache.ubuntu_10_04.apache.Ubuntu_10_04Script;
+import com.anrisoftware.sscontrol.httpd.apache.linux.roundcube.RoundcubeModule;
 import com.anrisoftware.sscontrol.httpd.apache.ubuntu_10_04.phpldapadmin.PhpldapadminConfig;
 import com.anrisoftware.sscontrol.httpd.apache.ubuntu_10_04.phpmyadmin.PhpmyadminConfig;
+import com.anrisoftware.sscontrol.httpd.apache.ubuntu_10_04.roundcube.RoundcubeConfig;
 import com.google.inject.AbstractModule;
 import com.google.inject.multibindings.MapBinder;
 
@@ -46,6 +45,7 @@ class Ubuntu10_04Module extends AbstractModule {
 	@Override
 	protected void configure() {
 		install(new ApacheScriptModule());
+        install(new RoundcubeModule());
 		bindScripts();
 		bindAuthConfig();
 		bindServiceConfig();
@@ -74,5 +74,7 @@ class Ubuntu10_04Module extends AbstractModule {
 				PhpmyadminConfig.class);
 		map.addBinding(format("%s.%s", PROFILE, PhpldapadminConfig.NAME)).to(
 				PhpldapadminConfig.class);
+        map.addBinding(format("%s.%s", PROFILE, RoundcubeConfig.NAME)).to(
+                RoundcubeConfig.class);
 	}
 }

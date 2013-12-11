@@ -346,21 +346,79 @@ abstract class LinuxScript extends Script {
      * 			  the arguments:
      * <ul>
      * <li>{@code file:} the archive {@link File};
-     * <li>{@code type:} the type of the archive, for example {@code tar},
-     * {@code zip};
+     * <li>{@code type:} the type of the archive, for example {@code tar, zip}.
+     * If not set then the type is determined from the archive file name;
      * <li>{@code output:} the output {@link File} directory;
      * <li>{@code override:} set to {@code true} to override existing files;
      * <li>{@code system:} the system of the server, defaults to {@code unix};
+     * <li>{@code command:} the command to unpack the archive,
+     * defaults to what the type of the archive is;
      * </ul>
      *
      * @return the {@link ScriptCommandWorker} worker.
      */
     void unpack(Map args) {
         args.system = args.containsKey("system") ? args.system : "unix"
+        args.type = args.containsKey("type") ? args.type : archiveType(args)
+        args.command = args.containsKey("command") ? args.command : unpackCommand(args)
         log.checkUnpackArgs args
         def template = commandTemplates.getResource("unpack")
         def worker = scriptCommandFactory.create(template, args.system,	"args", args)()
         log.unpackDone this, worker, args.file, args.output
+    }
+
+    /**
+     * Returns the type for the specified archive.
+     *
+     * @param args
+     *            the arguments:
+     * <ul>
+     * <li>{@code file:} the archive {@link File};
+     * </ul>
+     *
+     * @return the archive type.
+     *
+     * throws ServiceException
+     *          if the archive type is unknown.
+     */
+    String archiveType(Map args) {
+        def name = args.file
+        if (args.file instanceof File) {
+            name = args.file.getName()
+        }
+        switch (name) {
+            case ~/.*tar\.gz$/:
+                return "tgz"
+            case ~/.*\.zip$/:
+                return "zip"
+            default:
+                throw log.unknownArchiveType(this, args)
+        }
+    }
+
+    /**
+     * Returns the unpack command for the specified archive.
+     *
+     * @param args
+     *            the arguments:
+     * <ul>
+     * <li>{@code type:} the archive type;
+     * </ul>
+     *
+     * @return the archive type.
+     *
+     * throws ServiceException
+     *          if the archive type is unknown.
+     */
+    String unpackCommand(Map args) {
+        switch (args.type) {
+            case 'tgz':
+                return tarCommand
+            case 'zip':
+                return "zip"
+            default:
+                throw log.unknownArchiveType(this, args)
+        }
     }
 
     /**
@@ -374,6 +432,19 @@ abstract class LinuxScript extends Script {
      */
     String getTarCommand() {
         profileProperty "tar_command", defaultProperties
+    }
+
+    /**
+     * Returns the {@code zip} command.
+     *
+     * <ul>
+     * <li>property key {@code zip_command}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    String getZipCommand() {
+        profileProperty "zip_command", defaultProperties
     }
 
     /**

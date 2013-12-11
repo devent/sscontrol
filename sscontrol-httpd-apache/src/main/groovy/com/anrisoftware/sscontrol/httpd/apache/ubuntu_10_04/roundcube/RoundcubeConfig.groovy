@@ -18,17 +18,17 @@
  */
 package com.anrisoftware.sscontrol.httpd.apache.ubuntu_10_04.roundcube
 
-import static com.anrisoftware.sscontrol.httpd.apache.ubuntu_10_04.apache.Ubuntu10_04ScriptFactory.PROFILE;
+import static com.anrisoftware.sscontrol.httpd.apache.ubuntu_10_04.apache.Ubuntu10_04ScriptFactory.PROFILE
+import static org.apache.commons.io.FileUtils.*
 
 import javax.inject.Inject
 
 import com.anrisoftware.resources.templates.api.TemplateResource
-import com.anrisoftware.resources.templates.api.Templates
 import com.anrisoftware.sscontrol.httpd.apache.linux.apache.ApacheScript
 import com.anrisoftware.sscontrol.httpd.apache.linux.apache.FcgiConfig
-import com.anrisoftware.sscontrol.httpd.apache.linux.apache.ServiceConfig;
+import com.anrisoftware.sscontrol.httpd.apache.linux.apache.ServiceConfig
 import com.anrisoftware.sscontrol.httpd.apache.linux.roundcube.BaseRoundcube_0_9_Config
-import com.anrisoftware.sscontrol.httpd.apache.ubuntu_10_04.apache.Ubuntu10_04ScriptFactory;
+import com.anrisoftware.sscontrol.httpd.apache.ubuntu_10_04.apache.Ubuntu10_04ScriptFactory
 import com.anrisoftware.sscontrol.httpd.statements.domain.Domain
 import com.anrisoftware.sscontrol.httpd.statements.phpmyadmin.PhpmyadminService
 import com.anrisoftware.sscontrol.httpd.statements.webservice.WebService
@@ -43,10 +43,10 @@ import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokenTemplate
 class RoundcubeConfig extends BaseRoundcube_0_9_Config implements ServiceConfig {
 
     @Inject
-    RoundcubeConfigLogger log
+    private RoundcubeConfigLogger log
 
     @Inject
-    FcgiConfig fcgiConfig
+    private FcgiConfig fcgiConfig
 
     @Override
     void setScript(ApacheScript script) {
@@ -62,13 +62,10 @@ class RoundcubeConfig extends BaseRoundcube_0_9_Config implements ServiceConfig 
     void deployService(Domain domain, WebService service, List serviceConfig) {
         fcgiConfig.script = script
         installPackages roundcubePackages
+        downloadArchive()
         fcgiConfig.enableFcgi()
         fcgiConfig.deployConfig domain
-        deployConfiguration service
-        reconfigureService()
-        changeOwnerConfiguration domain
-        importTables service
-        createDomainConfig domain, service, serviceConfig
+        deployDatabaseConfig service
     }
 
     void createDomainConfig(Domain domain, PhpmyadminService service, List serviceConfig) {
@@ -80,15 +77,16 @@ class RoundcubeConfig extends BaseRoundcube_0_9_Config implements ServiceConfig 
         serviceConfig << config
     }
 
-    void importTables(PhpmyadminService service) {
-        def worker = scriptCommandFactory.create(
-                roundcubeCommandsTemplate, "importTables",
-                "zcatCommand", script.zcatCommand,
-                "mysqlCommand", mysqlCommand,
-                "admin", service.adminUser,
-                "user", service.controlUser,
-                "script", databaseScriptFile)()
-        log.importTables script, worker
+    void downloadArchive() {
+        def name = new File(roundcubeArchive).name
+        def dest = new File(tmpDirectory, "roundcube-$name")
+        def type = archiveType file: dest
+        if (!roundcubeDir.isDirectory()) {
+            roundcubeDir.mkdirs()
+        }
+        copyURLToFile roundcubeArchive.toURL(), dest
+        unpack file: dest, type: type, output: roundcubeDir, override: true
+        log.downloadArchive script, roundcubeArchive
     }
 
     /**

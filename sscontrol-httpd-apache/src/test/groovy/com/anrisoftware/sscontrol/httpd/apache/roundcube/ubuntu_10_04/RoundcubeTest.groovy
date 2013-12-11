@@ -52,9 +52,10 @@ class RoundcubeTest extends UbuntuTestUtil {
         registry.allServices.each { it.call() }
 
         assertFileContent defaultConf.asFile(tmpdir), defaultConf
-        assertFileContent domainsConf.asFile(tmpdir), RoundcubeResources.domainsConf
+        assertFileContent domainsConf.asFile(tmpdir), domainsConf
         assertStringContent test1comConf.replaced(tmpdir, tmpdir, "/tmp"), test1comConf.toString()
         assertStringContent test1comSslConf.replaced(tmpdir, tmpdir, "/tmp"), test1comSslConf.toString()
+        assertFileContent roundcube_0_9_db_expected.asFile(tmpdir), roundcube_0_9_db_expected
         assertStringContent chownOut.replaced(tmpdir, tmpdir, "/tmp"), chownOut.toString()
         assertStringContent chmodOut.replaced(tmpdir, tmpdir, "/tmp"), chmodOut.toString()
         assertStringContent groupaddOut.replaced(tmpdir, tmpdir, "/tmp"), groupaddOut.toString()

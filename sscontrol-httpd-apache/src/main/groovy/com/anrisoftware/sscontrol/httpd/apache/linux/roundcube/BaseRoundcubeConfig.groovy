@@ -92,37 +92,6 @@ class BaseRoundcubeConfig {
     }
 
     /**
-     * Roundcube main configuration file, for
-     * example {@code "config/main.inc.php"}. If the path is relative then
-     * the file will be under the Roundcube installation directory.
-     *
-     * <ul>
-     * <li>profile property {@code "roundcube_main_file"}</li>
-     * </ul>
-     *
-     * @see ApacheScript#getDefaultProperties()
-     */
-    File getConfigurationFile() {
-        profileFileProperty("roundcube_main_file", roundcubeDir, defaultProperties)
-    }
-
-    /**
-     * Roundcube database configuration file, for
-     * example {@code "config/db.inc.php"}. If the path is relative then
-     * the file will be under the Roundcube installation directory.
-     *
-     * <ul>
-     * <li>profile property {@code "roundcube_database_file"}</li>
-     * </ul>
-     *
-     * @see ApacheScript#getDefaultProperties()
-     * @see #getConfigurationDir()
-     */
-    File getDatabaseConfigFile() {
-        profileFileProperty("roundcube_database_file", roundcubeDir, defaultProperties)
-    }
-
-    /**
      * Roundcube installation directory, for
      * example {@code "roundcube"}. If the path is relative then
      * the directory will be under the local software directory.

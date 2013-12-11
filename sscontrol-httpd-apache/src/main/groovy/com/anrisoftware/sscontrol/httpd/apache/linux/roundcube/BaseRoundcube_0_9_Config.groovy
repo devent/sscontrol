@@ -18,6 +18,8 @@
  */
 package com.anrisoftware.sscontrol.httpd.apache.linux.roundcube
 
+import static org.apache.commons.io.FileUtils.*
+
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.Templates
 import com.anrisoftware.sscontrol.httpd.apache.linux.apache.ApacheScript
@@ -43,7 +45,10 @@ class BaseRoundcube_0_9_Config extends BaseRoundcubeConfig {
      *            the {@link RoundcubeService}.
      */
     void deployDatabaseConfig(RoundcubeService service) {
-        deployConfiguration configurationTokens(), databaseConfiguration, databaseConfigurations(service), configurationFile
+        if (!databaseConfigFile.isFile()) {
+            copyFile databaseDistFile, databaseConfigFile
+        }
+        deployConfiguration configurationTokens(), databaseConfiguration, databaseConfigurations(service), databaseConfigFile
     }
 
     /**
@@ -59,6 +64,53 @@ class BaseRoundcube_0_9_Config extends BaseRoundcubeConfig {
         def search = roundcubeConfigTemplate.getText(true, "configDbdsnw_search")
         def replace = roundcubeConfigTemplate.getText(true, "configDbdsnw", "database", service.database)
         new TokenTemplate(search, replace)
+    }
+
+    /**
+     * Roundcube main configuration file, for
+     * example {@code "config/main.inc.php"}. If the path is relative then
+     * the file will be under the Roundcube installation directory.
+     *
+     * <ul>
+     * <li>profile property {@code "roundcube_main_file"}</li>
+     * </ul>
+     *
+     * @see ApacheScript#getDefaultProperties()
+     */
+    File getConfigurationFile() {
+        profileFileProperty("roundcube_main_file", roundcubeDir, defaultProperties)
+    }
+
+    /**
+     * Roundcube database configuration file, for
+     * example {@code "config/db.inc.php"}. If the path is relative then
+     * the file will be under the Roundcube installation directory.
+     *
+     * <ul>
+     * <li>profile property {@code "roundcube_database_file"}</li>
+     * </ul>
+     *
+     * @see ApacheScript#getDefaultProperties()
+     * @see #getConfigurationDir()
+     */
+    File getDatabaseConfigFile() {
+        profileFileProperty("roundcube_database_file", roundcubeDir, defaultProperties)
+    }
+
+    /**
+     * Roundcube database distribution configuration file, for
+     * example {@code "config/db.inc.php.dist"}. If the path is relative then
+     * the file will be under the Roundcube installation directory.
+     *
+     * <ul>
+     * <li>profile property {@code "roundcube_database_dist_file"}</li>
+     * </ul>
+     *
+     * @see ApacheScript#getDefaultProperties()
+     * @see #getConfigurationDir()
+     */
+    File getDatabaseDistFile() {
+        profileFileProperty("roundcube_database_dist_file", roundcubeDir, defaultProperties)
     }
 
     @Override

@@ -27,7 +27,7 @@ serviceAlias(alias) ::= <<
 >>
 
 configDbdsnw(database) ::= <%
-$rcmail_config['db_dsnw'] = '<database.provider>://<database.user>:<database.password>@<database.host>/<database.database>';
+\$rcmail_config['db_dsnw'] = '<database.provider>://<database.user>:<database.password>@<database.host>/<database.database>';
 %>
 
 configDbdsnw_search() ::= <%
@@ -35,7 +35,7 @@ configDbdsnw_search() ::= <%
 %>
 
 configSmtplog(enabled) ::= <%
-$rcmail_config['smtp_log'] = <if(enabled)>true<else>false<endif>;
+\$rcmail_config['smtp_log'] = <if(enabled)>true<else>false<endif>;
 %>
 
 configSmtplog_search() ::= <%
@@ -43,7 +43,7 @@ configSmtplog_search() ::= <%
 %>
 
 configLoglogins(enabled) ::= <%
-$rcmail_config['log_logins'] = <if(enabled)>true<else>false<endif>;
+\$rcmail_config['log_logins'] = <if(enabled)>true<else>false<endif>;
 %>
 
 configLoglogins_search() ::= <%
@@ -51,7 +51,7 @@ configLoglogins_search() ::= <%
 %>
 
 configLogsession(enabled) ::= <%
-$rcmail_config['log_session'] = <if(enabled)>true<else>false<endif>;
+\$rcmail_config['log_session'] = <if(enabled)>true<else>false<endif>;
 %>
 
 configLogsession_search() ::= <%
@@ -59,7 +59,7 @@ configLogsession_search() ::= <%
 %>
 
 configDebuglevel(debug) ::= <%
-$rcmail_config['debug_level'] = <debug.level>;
+\$rcmail_config['debug_level'] = <debug.level>;
 %>
 
 configDebuglevel_search() ::= <%
@@ -67,7 +67,7 @@ configDebuglevel_search() ::= <%
 %>
 
 configLogdriver(driver) ::= <%
-$rcmail_config['log_driver'] = '<driver>';
+\$rcmail_config['log_driver'] = '<driver>';
 %>
 
 configLogdriver_search() ::= <%
@@ -75,7 +75,7 @@ configLogdriver_search() ::= <%
 %>
 
 configSqldebug(enabled) ::= <%
-$rcmail_config['sql_debug'] = <if(enabled)>true<else>false<endif>;
+\$rcmail_config['sql_debug'] = <if(enabled)>true<else>false<endif>;
 %>
 
 configSqldebug_search() ::= <%
@@ -83,7 +83,7 @@ configSqldebug_search() ::= <%
 %>
 
 configImapdebug(enabled) ::= <%
-$rcmail_config['imap_debug'] = <if(enabled)>true<else>false<endif>;
+\$rcmail_config['imap_debug'] = <if(enabled)>true<else>false<endif>;
 %>
 
 configImapdebug_search() ::= <%
@@ -91,7 +91,7 @@ configImapdebug_search() ::= <%
 %>
 
 configLdapdebug(enabled) ::= <%
-$rcmail_config['ldap_debug'] = <if(enabled)>true<else>false<endif>;
+\$rcmail_config['ldap_debug'] = <if(enabled)>true<else>false<endif>;
 %>
 
 configLdapdebug_search() ::= <%
@@ -99,7 +99,7 @@ configLdapdebug_search() ::= <%
 %>
 
 configSmtpdebug(enabled) ::= <%
-$rcmail_config['smtp_debug'] = <if(enabled)>true<else>false<endif>;
+\$rcmail_config['smtp_debug'] = <if(enabled)>true<else>false<endif>;
 %>
 
 configSmtpdebug_search() ::= <%
@@ -107,7 +107,7 @@ configSmtpdebug_search() ::= <%
 %>
 
 configDefaultHostSingle(host) ::= <%
-$rcmail_config['default_host'] = '<host.host>';
+\$rcmail_config['default_host'] = '<host.host>';
 %>
 
 configDefaultHostSingle_search() ::= <%
@@ -115,7 +115,7 @@ configDefaultHostSingle_search() ::= <%
 %>
 
 configDefaultHostMultiple(host) ::= <%
-$rcmail_config['default_host'][] = '<host.host>';
+\$rcmail_config['default_host'][] = '<host.host>';
 %>
 
 configDefaultHostMultiple_search(host) ::= <%
@@ -123,7 +123,7 @@ configDefaultHostMultiple_search(host) ::= <%
 %>
 
 configDefaultHostMap(host) ::= <%
-$rcmail_config['default_host'][] = 'host.host' => 'host.alias';
+\$rcmail_config['default_host'][] = 'host.host' => 'host.alias';
 %>
 
 configDefaultHostMap_search(host) ::= <%
@@ -131,7 +131,7 @@ configDefaultHostMap_search(host) ::= <%
 %>
 
 configDefaultHostMultipleInit() ::= <%
-$rcmail_config['default_host'] = array();
+\$rcmail_config['default_host'] = array();
 %>
 
 configDefaultHostMultipleInit_search() ::= <%

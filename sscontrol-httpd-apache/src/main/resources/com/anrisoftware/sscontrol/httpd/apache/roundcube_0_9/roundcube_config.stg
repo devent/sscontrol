@@ -137,3 +137,19 @@ configDefaultHostMultipleInit() ::= <%
 configDefaultHostMultipleInit_search() ::= <%
 \$rcmail_config\['default_host'\]\s*=.*
 %>
+
+configUsernameDomainInit() ::= <%
+\$rcmail_config['username_domain'] = array();
+%>
+
+configUsernameDomainInit_search() ::= <%
+\$rcmail_config\['username_domain'\]\s*=.*
+%>
+
+configUsernameDomain(host) ::= <%
+$rcmail_config['username_domain']['<host.host>'] = '<host.domain>';
+%>
+
+configUsernameDomain_search(host) ::= <%
+^\$rcmail_config\['username_domain'\]\[\]\s*=\s*'<host.host>'.*;
+%>

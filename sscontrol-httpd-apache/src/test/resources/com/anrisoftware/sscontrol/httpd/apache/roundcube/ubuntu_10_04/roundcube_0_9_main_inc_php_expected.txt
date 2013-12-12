@@ -320,7 +320,10 @@ $rcmail_config['des_key'] = 'rcmail-!24ByteDESkey*Str';
 // %d - domain (http hostname $_SERVER['HTTP_HOST'] without the first part)
 // %z - IMAP domain (IMAP hostname without the first part)
 // For example %n = mail.domain.tld, %t = domain.tld
-$rcmail_config['username_domain'] = '';
+# SSCONTROL-httpd
+$rcmail_config['username_domain'] = array();
+# SSCONTROL-httpd-END
+
 
 // This domain will be used to form e-mail addresses of new users
 // Specify an array with 'host' => 'domain' values to support multiple hosts
@@ -938,6 +941,9 @@ $rcmail_config['default_host']['ssl://mail.example.com:993'] = 'Secure Webmail S
 $rcmail_config['default_host']['othermail.example.com'] = 'Other Server';
 # SSCONTROL-httpd-END
 # SSCONTROL-httpd
+$rcmail_config['username_domain']['othermail.example.com'] = 'otherdomain.com';
+# SSCONTROL-httpd-END
+# SSCONTROL-httpd
 $rcmail_config['default_host']['mail.example.com'] = 'Default Server';
 # SSCONTROL-httpd-END
 # SSCONTROL-httpd
@@ -948,4 +954,7 @@ $rcmail_config['default_host']['ssl://mail.example.com:993'] = 'Secure Webmail S
 # SSCONTROL-httpd-END
 # SSCONTROL-httpd
 $rcmail_config['default_host']['othermail.example.com'] = 'Other Server';
+# SSCONTROL-httpd-END
+# SSCONTROL-httpd
+$rcmail_config['username_domain']['othermail.example.com'] = 'otherdomain.com';
 # SSCONTROL-httpd-END

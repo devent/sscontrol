@@ -159,6 +159,8 @@ class BaseRoundcube_0_9_Config extends BaseRoundcubeConfig {
         [
             configDefaultHostsInit(service),
             configDefaultHosts(service),
+            configUsernameDomainsInit(service),
+            configUsernameDomains(service),
         ]
     }
 
@@ -197,6 +199,34 @@ class BaseRoundcube_0_9_Config extends BaseRoundcubeConfig {
                 def search = roundcubeConfigTemplate.getText(true, "configDefaultHostMap_search", "host", host)
                 def replace = roundcubeConfigTemplate.getText(true, "configDefaultHostMap", "host", host)
                 list << new TokenTemplate(search, replace)
+            }
+        }
+    }
+
+    def configUsernameDomainsInit(RoundcubeService service) {
+        def domains = service.hosts.inject([]) { List list, Host host ->
+            if (host.domain != null) {
+                list << host
+            } else {
+                list
+            }
+        }
+        if (domains.size() > 0) {
+            def search = roundcubeConfigTemplate.getText(true, "configUsernameDomainInit_search")
+            def replace = roundcubeConfigTemplate.getText(true, "configUsernameDomainInit")
+            return new TokenTemplate(search, replace)
+        }
+        []
+    }
+
+    def configUsernameDomains(RoundcubeService service) {
+        def domains = service.hosts.inject([]) { List list, Host host ->
+            if (host.domain != null) {
+                def search = roundcubeConfigTemplate.getText(true, "configUsernameDomain_search", "host", host)
+                def replace = roundcubeConfigTemplate.getText(true, "configUsernameDomain", "host", host)
+                list << new TokenTemplate(search, replace)
+            } else {
+                list
             }
         }
     }

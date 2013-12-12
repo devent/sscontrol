@@ -119,15 +119,15 @@ configDefaultHostMultiple(host) ::= <%
 %>
 
 configDefaultHostMultiple_search(host) ::= <%
-\$rcmail_config\['default_host'\]\[\]\s*=\s*'<host.host>';
+^\$rcmail_config\['default_host'\]\['<host.host>'\] = '.*';
 %>
 
 configDefaultHostMap(host) ::= <%
-\$rcmail_config['default_host'][] = 'host.host' => 'host.alias';
+$rcmail_config['default_host']['<host.host>'] = '<host.alias>';
 %>
 
 configDefaultHostMap_search(host) ::= <%
-\$rcmail_config\['default_host'\]\[\]\s*=\s*'<host.host>'.*;
+^\$rcmail_config\['default_host'\]\[\]\s*=\s*'<host.host>'.*;
 %>
 
 configDefaultHostMultipleInit() ::= <%
@@ -135,5 +135,5 @@ configDefaultHostMultipleInit() ::= <%
 %>
 
 configDefaultHostMultipleInit_search() ::= <%
-\$rcmail_config\['default_host'\]\s*=\s*array(.*
+\$rcmail_config\['default_host'\]\s*=.*
 %>

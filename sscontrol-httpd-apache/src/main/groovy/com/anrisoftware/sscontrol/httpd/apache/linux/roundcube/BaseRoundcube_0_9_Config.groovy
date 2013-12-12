@@ -23,6 +23,7 @@ import static org.apache.commons.io.FileUtils.*
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.Templates
 import com.anrisoftware.sscontrol.httpd.apache.linux.apache.ApacheScript
+import com.anrisoftware.sscontrol.httpd.statements.roundcube.Host
 import com.anrisoftware.sscontrol.httpd.statements.roundcube.RoundcubeService
 import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokenTemplate
 
@@ -76,13 +77,14 @@ class BaseRoundcube_0_9_Config extends BaseRoundcubeConfig {
         if (!configurationFile.isFile()) {
             copyFile configurationDistFile, configurationFile
         }
+        deployConfiguration configurationTokens(), mainConfiguration, loggingConfigurations(service), configurationFile
         deployConfiguration configurationTokens(), mainConfiguration, mainConfigurations(service), configurationFile
     }
 
     /**
-     * Returns the main configurations.
+     * Returns the main logging configurations.
      */
-    List mainConfigurations(RoundcubeService service) {
+    List loggingConfigurations(RoundcubeService service) {
         [
             configDebuglevel(service),
             configSmtplog(service),
@@ -148,6 +150,55 @@ class BaseRoundcube_0_9_Config extends BaseRoundcubeConfig {
         def search = roundcubeConfigTemplate.getText(true, "configSmtpdebug_search")
         def replace = roundcubeConfigTemplate.getText(true, "configSmtpdebug", "enabled", enabled)
         new TokenTemplate(search, replace)
+    }
+
+    /**
+     * Returns the main configurations.
+     */
+    List mainConfigurations(RoundcubeService service) {
+        [
+            configDefaultHostsInit(service),
+            configDefaultHosts(service),
+        ]
+    }
+
+    def configDefaultHostsInit(RoundcubeService service) {
+        if (service.hosts.size() == 1 && service.hosts[0].alias != null) {
+            def search = roundcubeConfigTemplate.getText(true, "configDefaultHostMultipleInit_search")
+            def replace = roundcubeConfigTemplate.getText(true, "configDefaultHostMultipleInit")
+            return new TokenTemplate(search, replace)
+        }
+        if (service.hosts.size() > 1) {
+            def search = roundcubeConfigTemplate.getText(true, "configDefaultHostMultipleInit_search")
+            def replace = roundcubeConfigTemplate.getText(true, "configDefaultHostMultipleInit")
+            return new TokenTemplate(search, replace)
+        }
+        []
+    }
+
+    def configDefaultHosts(RoundcubeService service) {
+        if (service.hosts.size() == 1) {
+            def search = roundcubeConfigTemplate.getText(true, "configDefaultHostSingle_search")
+            def replace = roundcubeConfigTemplate.getText(true, "configDefaultHostSingle")
+            return new TokenTemplate(search, replace)
+        }
+        if (service.hosts.size() == 1 && service.hosts[0].alias != null) {
+            def search = roundcubeConfigTemplate.getText(true, "configDefaultHostMap_search")
+            def replace = roundcubeConfigTemplate.getText(true, "configDefaultHostMap")
+            return new TokenTemplate(search, replace)
+        }
+        service.hosts.inject([]) { List list, Host host ->
+            println host
+            if (host.alias == null) {
+                def search = roundcubeConfigTemplate.getText(true, "configDefaultHostMultiple_search", "host", host)
+                def replace = roundcubeConfigTemplate.getText(true, "configDefaultHostMultiple", "host", host)
+                list << new TokenTemplate(search, replace)
+            } else {
+                def search = roundcubeConfigTemplate.getText(true, "configDefaultHostMap_search", "host", host)
+                def replace = roundcubeConfigTemplate.getText(true, "configDefaultHostMap", "host", host)
+                list << new TokenTemplate(search, replace)
+            }
+        }
     }
 
     /**

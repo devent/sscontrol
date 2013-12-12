@@ -26,6 +26,8 @@ import static com.anrisoftware.sscontrol.httpd.statements.roundcube.RoundcubeSer
 import static com.anrisoftware.sscontrol.httpd.statements.roundcube.RoundcubeServiceLogger._.debug_set_info;
 import static com.anrisoftware.sscontrol.httpd.statements.roundcube.RoundcubeServiceLogger._.host_added_debug;
 import static com.anrisoftware.sscontrol.httpd.statements.roundcube.RoundcubeServiceLogger._.host_added_info;
+import static com.anrisoftware.sscontrol.httpd.statements.roundcube.RoundcubeServiceLogger._.smtp_set_debug;
+import static com.anrisoftware.sscontrol.httpd.statements.roundcube.RoundcubeServiceLogger._.smtp_set_info;
 
 import javax.inject.Singleton;
 
@@ -57,7 +59,11 @@ class RoundcubeServiceLogger extends AbstractLogger {
 
         debug_set_debug("Debug logging {} set for {}."),
 
-        debug_set_info("Debug logging level {} set for service '{}'.");
+        debug_set_info("Debug logging level {} set for service '{}'."),
+
+        smtp_set_debug("SMTP server {} set for {}."),
+
+        smtp_set_info("SMTP server host '{}' set for service '{}'.");
 
         private String name;
 
@@ -107,6 +113,14 @@ class RoundcubeServiceLogger extends AbstractLogger {
             debug(debug_set_debug, logging, service);
         } else {
             info(debug_set_info, logging.getLevel(), service.getName());
+        }
+    }
+
+    void smtpSet(RoundcubeService service, SmtpServer smtp) {
+        if (isDebugEnabled()) {
+            debug(smtp_set_debug, smtp, service);
+        } else {
+            info(smtp_set_info, smtp.getHost(), service.getName());
         }
     }
 

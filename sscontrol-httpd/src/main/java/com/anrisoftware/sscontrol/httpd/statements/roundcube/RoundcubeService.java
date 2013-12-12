@@ -43,13 +43,18 @@ public class RoundcubeService implements WebService {
     private HostFactory hostFactory;
 
     @Inject
-    private DebugLoggingFactory debugLoggingFactory;
+    private DebugLoggingFactory debugFactory;
+
+    @Inject
+    private SmtpServerFactory smtpFactory;
 
     private String alias;
 
     private Database database;
 
-    private DebugLogging debugLogging;
+    private DebugLogging debug;
+
+    private SmtpServer smtp;
 
     /**
      * @see RoundcubeServiceFactory#create(Map)
@@ -105,22 +110,33 @@ public class RoundcubeService implements WebService {
     }
 
     public void debug(Map<String, Object> args) {
-        DebugLogging logging = debugLoggingFactory.create(args);
+        DebugLogging logging = debugFactory.create(args);
         log.debugSet(this, logging);
-        this.debugLogging = logging;
+        this.debug = logging;
     }
 
     public void debug(int level) {
-        DebugLogging logging = debugLoggingFactory.create(level);
+        DebugLogging logging = debugFactory.create(level);
         log.debugSet(this, logging);
-        this.debugLogging = logging;
+        this.debug = logging;
     }
 
     public DebugLogging getDebugLogging() {
-        if (debugLogging == null) {
-            this.debugLogging = debugLoggingFactory.createOff();
+        if (debug == null) {
+            this.debug = debugFactory.createOff();
         }
-        return debugLogging;
+        return debug;
+    }
+
+    public void smtp(Map<String, Object> args, String host) {
+        args.put(SmtpServerArgs.HOST, host);
+        SmtpServer smtp = smtpFactory.create(this, args);
+        log.smtpSet(this, smtp);
+        this.smtp = smtp;
+    }
+
+    public SmtpServer getSmtp() {
+        return smtp;
     }
 
     @Override

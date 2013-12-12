@@ -43,6 +43,8 @@ public class RoundcubeModule extends AbstractModule {
                 Database.class).build(DatabaseFactory.class));
         install(new FactoryModuleBuilder().implement(Host.class, Host.class)
                 .build(HostFactory.class));
+        install(new FactoryModuleBuilder().implement(SmtpServer.class,
+                SmtpServer.class).build(SmtpServerFactory.class));
         bindService();
     }
 

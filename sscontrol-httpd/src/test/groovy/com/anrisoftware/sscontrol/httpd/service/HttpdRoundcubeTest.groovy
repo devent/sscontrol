@@ -59,5 +59,8 @@ class HttpdRoundcubeTest extends HttpdTestUtil {
         assert webservice.database.password == "userpass"
         assert webservice.database.host == "localhost"
         assert webservice.hosts.size() == 5
+        assert webservice.smtp.host == "localhost"
+        assert webservice.smtp.user == "smtpuser"
+        assert webservice.smtp.password == "smtppass"
     }
 }

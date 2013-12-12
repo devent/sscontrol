@@ -37,8 +37,6 @@ import com.google.inject.assistedinject.AssistedInject;
 @SuppressWarnings("serial")
 public class DebugLogging extends Number {
 
-    private static final String MODULE = "module";
-
     private static final String LEVEL = "level";
 
     private static final String MODULES = "modules";

@@ -36,6 +36,7 @@ httpd {
         certification_key_file certKeyFile
         setup "roundcube", alias: "roundcube", {
             database "roundcube", provider: "mysql", user: "user", password: "userpass", host: "localhost"
+            smtp "localhost", user: "smtpuser", password: "smtppass"
             host "localhost"
             host "mail.example.com", alias: "Default Server"
             host "webmail.example.com", alias: "Webmail Server"

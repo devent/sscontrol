@@ -1,6 +1,6 @@
-package com.anrisoftware.sscontrol.httpd.statements.roundcube;
+package com.anrisoftware.sscontrol.core.database;
 
-import static com.anrisoftware.sscontrol.httpd.statements.roundcube.DatabaseLogger._.provider_null;
+import static com.anrisoftware.sscontrol.core.database.DatabaseLogger._.provider_null;
 import static org.apache.commons.lang3.Validate.notBlank;
 import static org.apache.commons.lang3.Validate.notNull;
 

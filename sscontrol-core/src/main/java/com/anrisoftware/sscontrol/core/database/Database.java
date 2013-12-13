@@ -1,4 +1,4 @@
-package com.anrisoftware.sscontrol.httpd.statements.roundcube;
+package com.anrisoftware.sscontrol.core.database;
 
 import static java.lang.String.format;
 
@@ -11,7 +11,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import com.google.inject.assistedinject.Assisted;
 
 /**
- * Roundcube database credentials.
+ * Database credentials.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0

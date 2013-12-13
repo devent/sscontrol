@@ -16,9 +16,9 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.statements.roundcube;
+package com.anrisoftware.sscontrol.httpd.statements.wordpress;
 
-import static com.anrisoftware.sscontrol.httpd.statements.roundcube.RoundcubeService.NAME;
+import static com.anrisoftware.sscontrol.httpd.statements.wordpress.WordpressService.NAME;
 import static com.google.inject.multibindings.MapBinder.newMapBinder;
 
 import com.anrisoftware.sscontrol.httpd.statements.webservice.WebService;
@@ -28,21 +28,17 @@ import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.google.inject.multibindings.MapBinder;
 
 /**
- * Installs the Roundcube service factory.
+ * Installs the Wordpress service factory.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-public class RoundcubeModule extends AbstractModule {
+public class WordpressModule extends AbstractModule {
 
     @Override
     protected void configure() {
         install(new FactoryModuleBuilder().implement(WebService.class,
-                RoundcubeService.class).build(RoundcubeServiceFactory.class));
-        install(new FactoryModuleBuilder().implement(Host.class, Host.class)
-                .build(HostFactory.class));
-        install(new FactoryModuleBuilder().implement(SmtpServer.class,
-                SmtpServer.class).build(SmtpServerFactory.class));
+                WordpressService.class).build(WordpressServiceFactory.class));
         bindService();
     }
 
@@ -50,6 +46,6 @@ public class RoundcubeModule extends AbstractModule {
         MapBinder<String, WebServiceFactory> mapbinder;
         mapbinder = newMapBinder(binder(), String.class,
                 WebServiceFactory.class);
-        mapbinder.addBinding(NAME).toProvider(RoundcubeServiceProvider.class);
+        mapbinder.addBinding(NAME).toProvider(WordpressServiceProvider.class);
     }
 }

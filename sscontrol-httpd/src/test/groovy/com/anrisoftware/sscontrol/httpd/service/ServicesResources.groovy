@@ -38,6 +38,7 @@ enum ServicesResources {
     phpmyadminScript("Httpd.groovy", ServicesResources.class.getResource("HttpdPhpmyadmin.groovy")),
     phpldapadminScript("Httpd.groovy", ServicesResources.class.getResource("HttpdPhpldapadmin.groovy")),
     roundcubeScript("Httpd.groovy", ServicesResources.class.getResource("HttpdRoundcube.groovy")),
+    wordpressScript("Httpd.groovy", ServicesResources.class.getResource("HttpdWordpress.groovy")),
 
     ResourcesUtils resources
 

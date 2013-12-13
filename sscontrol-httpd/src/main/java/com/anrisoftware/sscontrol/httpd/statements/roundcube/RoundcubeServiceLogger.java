@@ -32,6 +32,7 @@ import static com.anrisoftware.sscontrol.httpd.statements.roundcube.RoundcubeSer
 import javax.inject.Singleton;
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
+import com.anrisoftware.sscontrol.core.database.Database;
 import com.anrisoftware.sscontrol.core.debuglogging.DebugLogging;
 
 /**

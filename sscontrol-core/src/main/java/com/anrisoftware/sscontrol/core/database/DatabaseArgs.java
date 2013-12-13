@@ -1,16 +1,16 @@
-package com.anrisoftware.sscontrol.httpd.statements.roundcube;
+package com.anrisoftware.sscontrol.core.database;
 
 import java.util.Map;
 
 import javax.inject.Inject;
 
 /**
- * Parses arguments for Roundcube database credentials.
+ * Parses arguments for database credentials.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class DatabaseArgs {
+public class DatabaseArgs {
 
     public static final String PROVIDER = "provider";
     public static final String HOST = "host";

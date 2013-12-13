@@ -1,14 +1,14 @@
-package com.anrisoftware.sscontrol.httpd.statements.roundcube;
+package com.anrisoftware.sscontrol.core.database;
 
 import java.util.Map;
 
 /**
- * Factory to create Roundcube database credentials.
+ * Factory to create database credentials.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-interface DatabaseFactory {
+public interface DatabaseFactory {
 
     /**
      * Creates Roundcube database credentials from the specified arguments.

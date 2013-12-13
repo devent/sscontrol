@@ -18,6 +18,7 @@
  */
 package com.anrisoftware.sscontrol.httpd.service;
 
+import com.anrisoftware.sscontrol.core.database.DatabaseModule;
 import com.anrisoftware.sscontrol.core.debuglogging.DebugLoggingModule;
 import com.anrisoftware.sscontrol.core.list.ListModule;
 import com.anrisoftware.sscontrol.httpd.statements.auth.AuthModule;
@@ -28,6 +29,7 @@ import com.anrisoftware.sscontrol.httpd.statements.phpldapadmin.PhpldapadminModu
 import com.anrisoftware.sscontrol.httpd.statements.phpmyadmin.PhpmyadminModule;
 import com.anrisoftware.sscontrol.httpd.statements.redirect.RedirectModule;
 import com.anrisoftware.sscontrol.httpd.statements.roundcube.RoundcubeModule;
+import com.anrisoftware.sscontrol.httpd.statements.wordpress.WordpressModule;
 import com.google.inject.AbstractModule;
 
 /**
@@ -48,7 +50,9 @@ class HttpdModule extends AbstractModule {
 		install(new PhpmyadminModule());
 		install(new PhpldapadminModule());
         install(new RoundcubeModule());
+        install(new WordpressModule());
         install(new DebugLoggingModule());
         install(new ListModule());
+        install(new DatabaseModule());
 	}
 }

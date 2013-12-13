@@ -1,7 +1,5 @@
 package com.anrisoftware.sscontrol.httpd.statements.roundcube;
 
-import static com.anrisoftware.sscontrol.httpd.statements.roundcube.DatabaseArgs.DATABASE;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -11,6 +9,9 @@ import javax.inject.Inject;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import com.anrisoftware.sscontrol.core.database.Database;
+import com.anrisoftware.sscontrol.core.database.DatabaseArgs;
+import com.anrisoftware.sscontrol.core.database.DatabaseFactory;
 import com.anrisoftware.sscontrol.core.debuglogging.DebugLogging;
 import com.anrisoftware.sscontrol.core.debuglogging.DebugLoggingFactory;
 import com.anrisoftware.sscontrol.httpd.statements.webservice.WebService;
@@ -89,7 +90,7 @@ public class RoundcubeService implements WebService {
     }
 
     public void database(Map<String, Object> args, String name) {
-        args.put(DATABASE, name);
+        args.put(DatabaseArgs.DATABASE, name);
         Database database = databaseFactory.create(this, args);
         log.databaseSet(this, database);
         this.database = database;

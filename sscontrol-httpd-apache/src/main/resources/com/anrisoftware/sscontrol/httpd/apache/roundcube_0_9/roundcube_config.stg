@@ -166,22 +166,54 @@ configSmtpserver(smtp) ::= <%
 $rcmail_config['smtp_server'] = '<smtp.host>';
 %>
 
-configSmtpserver_search(smtp) ::= <%
-\\$rcmail_config\\['smtp_server'\\]\\s*=\\s*'<smtp.host>';
+configSmtpserver_search() ::= <%
+\\$rcmail_config\\['smtp_server'\\]\\s*=\\s*.*;
 %>
 
 configSmtpuser(smtp) ::= <%
 $rcmail_config['smtp_user'] = '<smtp.user>';
 %>
 
-configSmtpuser_search(smtp) ::= <%
-\\$rcmail_config\\['smtp_user'\\]\\s*=\\s*'<smtp.user>';
+configSmtpuser_search() ::= <%
+\\$rcmail_config\\['smtp_user'\\]\\s*=\\s*.*;
 %>
 
 configSmtppass(smtp) ::= <%
 $rcmail_config['smtp_pass'] = '<smtp.password>';
 %>
 
-configSmtppass_search(smtp) ::= <%
-\\$rcmail_config\\['smtp_pass'\\]\\s*=\\s*'<smtp.password>';
+configSmtppass_search() ::= <%
+\\$rcmail_config\\['smtp_pass'\\]\\s*=\\s*.*;
+%>
+
+configImapauthtype(type) ::= <%
+$rcmail_config['imap_auth_type'] = <if(type)>'<type>'<else>null<endif>;
+%>
+
+configImapauthtype_search() ::= <%
+\\$rcmail_config\\['imap_auth_type'\\]\\s*=\\s*.*;
+%>
+
+configImapnspersonal(option) ::= <%
+$rcmail_config['imap_ns_personal'] = <if(option)>'<option>'<else>null<endif>;
+%>
+
+configImapnspersonal_search() ::= <%
+\\$rcmail_config\\['imap_ns_personal'\\]\\s*=\\s*.*;
+%>
+
+configImapnsother(option) ::= <%
+$rcmail_config['imap_ns_other'] = <if(option)>'<option>'<else>null<endif>;
+%>
+
+configImapnsother_search() ::= <%
+\\$rcmail_config\\['imap_ns_other'\\]\\s*=\\s*.*;
+%>
+
+configImapnsshared(option) ::= <%
+$rcmail_config['imap_ns_shared'] = <if(option)>'<option>'<else>null<endif>;
+%>
+
+configImapnsshared_search() ::= <%
+\\$rcmail_config\\['imap_ns_shared'\\]\\s*=\\s*.*;
 %>

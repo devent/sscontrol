@@ -176,6 +176,7 @@ class BaseRoundcube_0_9_Config extends BaseRoundcubeConfig {
             configUsernameDomainsInit(service),
             configUsernameDomains(service),
             configSmtp(service),
+            configImap(service),
         ]
     }
 
@@ -256,14 +257,30 @@ class BaseRoundcube_0_9_Config extends BaseRoundcubeConfig {
             service.smtp.password = smtpDefaultPassword
         }
         def list = []
-        def search = roundcubeConfigTemplate.getText(true, "configSmtpserver_search", "smtp", service.smtp)
+        def search = roundcubeConfigTemplate.getText(true, "configSmtpserver_search")
         def replace = roundcubeConfigTemplate.getText(true, "configSmtpserver", "smtp", service.smtp)
         list << new TokenTemplate(search, replace)
-        search = roundcubeConfigTemplate.getText(true, "configSmtpuser_search", "smtp", service.smtp)
+        search = roundcubeConfigTemplate.getText(true, "configSmtpuser_search")
         replace = roundcubeConfigTemplate.getText(true, "configSmtpuser", "smtp", service.smtp)
         list << new TokenTemplate(search, replace)
-        search = roundcubeConfigTemplate.getText(true, "configSmtppass_search", "smtp", service.smtp)
+        search = roundcubeConfigTemplate.getText(true, "configSmtppass_search")
         replace = roundcubeConfigTemplate.getText(true, "configSmtppass", "smtp", service.smtp)
+        list << new TokenTemplate(search, replace)
+    }
+
+    def configImap(RoundcubeService service) {
+        def list = []
+        def search = roundcubeConfigTemplate.getText(true, "configImapauthtype_search")
+        def replace = roundcubeConfigTemplate.getText(true, "configImapauthtype", "type", imapAuthType)
+        list << new TokenTemplate(search, replace)
+        search = roundcubeConfigTemplate.getText(true, "configImapnspersonal_search")
+        replace = roundcubeConfigTemplate.getText(true, "configImapnspersonal", "option", imapNsPersonal)
+        list << new TokenTemplate(search, replace)
+        search = roundcubeConfigTemplate.getText(true, "configImapnsother_search")
+        replace = roundcubeConfigTemplate.getText(true, "configImapnsother", "option", imapNsOther)
+        list << new TokenTemplate(search, replace)
+        search = roundcubeConfigTemplate.getText(true, "configImapnsshared_search")
+        replace = roundcubeConfigTemplate.getText(true, "configImapnsshared", "option", imapNsShared)
         list << new TokenTemplate(search, replace)
     }
 

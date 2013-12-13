@@ -178,6 +178,76 @@ class BaseRoundcubeConfig {
     }
 
     /**
+     * Returns the IMAP authentication type, for example {@code "LOG_MAIL"}.
+     *
+     * <ul>
+     * <li>profile property {@code "roundcube_imap_auth_type"}</li>
+     * </ul>
+     *
+     * @see ApacheScript#getDefaultProperties()
+     */
+    String getImapAuthType() {
+        def type = profileProperty("roundcube_imap_auth_type", defaultProperties)
+        type.isEmpty() ? null : type
+    }
+
+    /**
+     * Returns the IMAP folder delimiter, for example {@code "/"}.
+     *
+     * <ul>
+     * <li>profile property {@code "roundcube_imap_delimiter"}</li>
+     * </ul>
+     *
+     * @see ApacheScript#getDefaultProperties()
+     */
+    String getImapDelimiter() {
+        def delimiter = profileProperty("roundcube_imap_delimiter", defaultProperties)
+        delimiter.isEmpty() ? null : delimiter
+    }
+
+    /**
+     * Returns the IMAP NAMESPACE extension property.
+     *
+     * <ul>
+     * <li>profile property {@code "roundcube_imap_ns_personal"}</li>
+     * </ul>
+     *
+     * @see ApacheScript#getDefaultProperties()
+     */
+    String getImapNsPersonal() {
+        def option = profileProperty("roundcube_imap_ns_personal", defaultProperties)
+        option.isEmpty() ? null : option
+    }
+
+    /**
+     * Returns the IMAP NAMESPACE extension property.
+     *
+     * <ul>
+     * <li>profile property {@code "roundcube_imap_ns_other"}</li>
+     * </ul>
+     *
+     * @see ApacheScript#getDefaultProperties()
+     */
+    String getImapNsOther() {
+        def option = profileProperty("roundcube_imap_ns_other", defaultProperties)
+        option.isEmpty() ? null : option
+    }
+
+    /**
+     * Returns the IMAP NAMESPACE extension property.
+     *
+     * <ul>
+     * <li>profile property {@code "roundcube_imap_ns_shared"}</li>
+     * </ul>
+     *
+     * @see ApacheScript#getDefaultProperties()
+     */
+    String getImapNsShared() {
+        def option = profileProperty("roundcube_imap_ns_shared", defaultProperties)
+        option.isEmpty() ? null : option
+    }
+
+    /**
      * Returns the service name {@code "roundcube".}
      */
     String getServiceName() {

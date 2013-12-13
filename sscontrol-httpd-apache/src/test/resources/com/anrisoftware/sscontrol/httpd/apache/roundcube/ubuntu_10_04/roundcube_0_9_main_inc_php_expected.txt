@@ -23,12 +23,15 @@ $rcmail_config = array();
 
 // system error reporting, sum of: 1 = log; 4 = show, 8 = trace
 # SSCONTROL-httpd
-$rcmail_config['debug_level'] = 0;
+$rcmail_config['debug_level'] = 1;
 # SSCONTROL-httpd-END
 
 
 // log driver:  'syslog' or 'file'.
-$rcmail_config['log_driver'] = 'file';
+# SSCONTROL-httpd
+$rcmail_config['log_driver'] = 'syslog';
+# SSCONTROL-httpd-END
+
 
 // date format for log entries
 // (read http://php.net/manual/en/function.date.php for all format characters)
@@ -39,7 +42,10 @@ $rcmail_config['syslog_id'] = 'roundcube';
 
 // Syslog facility to use, if using the 'syslog' log driver.
 // For possible values see installer or http://php.net/manual/en/function.openlog.php
-$rcmail_config['syslog_facility'] = LOG_USER;
+# SSCONTROL-httpd
+$rcmail_config['syslog_facility'] = LOG_MAIL;
+# SSCONTROL-httpd-END
+
 
 // Log sent messages to <log_dir>/sendmail or to syslog
 # SSCONTROL-httpd
@@ -61,7 +67,7 @@ $rcmail_config['log_session'] = false;
 
 // Log SQL queries to <log_dir>/sql or to syslog
 # SSCONTROL-httpd
-$rcmail_config['sql_debug'] = false;
+$rcmail_config['sql_debug'] = true;
 # SSCONTROL-httpd-END
 
 
@@ -73,7 +79,7 @@ $rcmail_config['imap_debug'] = false;
 
 // Log LDAP conversation to <log_dir>/ldap or to syslog
 # SSCONTROL-httpd
-$rcmail_config['ldap_debug'] = false;
+$rcmail_config['ldap_debug'] = true;
 # SSCONTROL-httpd-END
 
 

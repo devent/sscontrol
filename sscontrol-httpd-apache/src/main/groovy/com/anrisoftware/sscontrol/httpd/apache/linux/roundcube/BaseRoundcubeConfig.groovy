@@ -104,7 +104,7 @@ class BaseRoundcubeConfig {
      * <ul>
      * <li>profile property {@code "roundcube_database_backend"}</li>
      * </ul>
-     * 
+     *
      * @see ApacheScript#getDefaultProperties()
      */
     String getDatabaseBackend() {
@@ -117,7 +117,7 @@ class BaseRoundcubeConfig {
      * <ul>
      * <li>profile property {@code "roundcube_smtp_default_host"}</li>
      * </ul>
-     * 
+     *
      * @see ApacheScript#getDefaultProperties()
      */
     String getSmtpDefaultHost() {
@@ -130,7 +130,7 @@ class BaseRoundcubeConfig {
      * <ul>
      * <li>profile property {@code "roundcube_smtp_default_user"}</li>
      * </ul>
-     * 
+     *
      * @see ApacheScript#getDefaultProperties()
      */
     String getSmtpDefaultUser() {
@@ -143,11 +143,38 @@ class BaseRoundcubeConfig {
      * <ul>
      * <li>profile property {@code "roundcube_smtp_default_password"}</li>
      * </ul>
-     * 
+     *
      * @see ApacheScript#getDefaultProperties()
      */
     String getSmtpDefaultPassword() {
         profileProperty("roundcube_smtp_default_password", defaultProperties)
+    }
+
+    /**
+     * Returns the logging driver, for example {@code "syslog", "file"}.
+     *
+     * <ul>
+     * <li>profile property {@code "roundcube_log_driver"}</li>
+     * </ul>
+     *
+     * @see ApacheScript#getDefaultProperties()
+     */
+    String getLogDriver() {
+        profileProperty("roundcube_log_driver", defaultProperties)
+    }
+
+    /**
+     * Returns the logging facility, for example {@code "LOG_MAIL"}.
+     *
+     * <ul>
+     * <li>profile property {@code "roundcube_log_facility"}</li>
+     * </ul>
+     *
+     * @see <a href="http://php.net/manual/en/function.openlog.php">openlog [php.net]</a>
+     * @see ApacheScript#getDefaultProperties()
+     */
+    String getLogFacility() {
+        profileProperty("roundcube_log_facility", defaultProperties)
     }
 
     /**

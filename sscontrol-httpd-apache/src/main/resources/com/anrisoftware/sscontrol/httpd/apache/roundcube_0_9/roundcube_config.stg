@@ -71,7 +71,15 @@ $rcmail_config['log_driver'] = '<driver>';
 %>
 
 configLogdriver_search() ::= <%
-\\$rcmail_config\\['log_driver'\\]\\s*=\\s*".*";
+\\$rcmail_config\\['log_driver'\\]\\s*=\\s*.*;
+%>
+
+configSyslogfacility(facility) ::= <%
+$rcmail_config['syslog_facility'] = <facility>;
+%>
+
+configSyslogfacility_search() ::= <%
+\\$rcmail_config\\['syslog_facility'\\]\\s*=\\s*.*;
 %>
 
 configSqldebug(enabled) ::= <%

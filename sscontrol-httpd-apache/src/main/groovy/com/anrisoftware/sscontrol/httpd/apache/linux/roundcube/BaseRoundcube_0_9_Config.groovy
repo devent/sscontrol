@@ -86,6 +86,8 @@ class BaseRoundcube_0_9_Config extends BaseRoundcubeConfig {
      */
     List loggingConfigurations(RoundcubeService service) {
         [
+            configLogdriver(service),
+            configSyslogfacility(service),
             configDebuglevel(service),
             configSmtplog(service),
             configLoglogins(service),
@@ -95,6 +97,18 @@ class BaseRoundcube_0_9_Config extends BaseRoundcubeConfig {
             configLdapdebug(service),
             configSmtpdebug(service),
         ]
+    }
+
+    def configLogdriver(RoundcubeService service) {
+        def search = roundcubeConfigTemplate.getText(true, "configLogdriver_search")
+        def replace = roundcubeConfigTemplate.getText(true, "configLogdriver", "driver", logDriver)
+        new TokenTemplate(search, replace)
+    }
+
+    def configSyslogfacility(RoundcubeService service) {
+        def search = roundcubeConfigTemplate.getText(true, "configSyslogfacility_search")
+        def replace = roundcubeConfigTemplate.getText(true, "configSyslogfacility", "facility", logFacility)
+        new TokenTemplate(search, replace)
     }
 
     def configDebuglevel(RoundcubeService service) {

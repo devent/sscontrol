@@ -34,158 +34,180 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
  */
 public class TokenTemplate implements Serializable {
 
-	/**
-	 * @since 1.0
-	 */
-	private static final long serialVersionUID = 7393785512827671511L;
+    /**
+     * @since 1.0
+     */
+    private static final long serialVersionUID = 7393785512827671511L;
 
-	private final String search;
+    private final String search;
 
-	private final String replace;
+    private final String replace;
 
-	private final int flags;
+    private final int flags;
 
-	private boolean append;
+    private boolean append;
 
-	private boolean enclose;
+    private boolean enclose;
 
-	/**
-	 * @see #TokenTemplate(String, String, int, boolean)
-	 */
-	public TokenTemplate(String search, String replace) {
-		this(search, replace, 0);
-	}
+    private boolean escape;
 
-	/**
-	 * Sets the search and replacement string.
-	 * 
-	 * @param search
-	 *            the search string.
-	 * 
-	 * @param replace
-	 *            the replacement string.
-	 * 
-	 * @param flags
-	 *            Match flags, a bit mask that may include
-	 *            <ul>
-	 *            <li>{@link Pattern#CASE_INSENSITIVE},
-	 *            <li>{@link Pattern#MULTILINE},
-	 *            <li>{@link Pattern#DOTALL},
-	 *            <li>{@link Pattern#UNICODE_CASE},
-	 *            <li>{@link Pattern#CANON_EQ},
-	 *            <li>{@link Pattern#UNIX_LINES},
-	 *            <li>{@link Pattern#LITERAL},
-	 *            <li>{@link Pattern#UNICODE_CHARACTER_CLASS} and
-	 *            <li>{@link Pattern#COMMENTS}.
-	 *            </ul>
-	 */
-	public TokenTemplate(String search, String replace, int flags) {
-		this.search = search;
-		this.replace = replace;
-		this.flags = flags;
-		this.append = true;
-		this.enclose = true;
-	}
+    /**
+     * @see #TokenTemplate(String, String, int, boolean)
+     */
+    public TokenTemplate(String search, String replace) {
+        this(search, replace, 0);
+    }
 
-	/**
-	 * Returns the search string.
-	 * 
-	 * @return the search string
-	 */
-	public String getSearch() {
-		return search;
-	}
+    /**
+     * Sets the search and replacement string.
+     * 
+     * @param search
+     *            the search string.
+     * 
+     * @param replace
+     *            the replacement string.
+     * 
+     * @param flags
+     *            Match flags, a bit mask that may include
+     *            <ul>
+     *            <li>{@link Pattern#CASE_INSENSITIVE},
+     *            <li>{@link Pattern#MULTILINE},
+     *            <li>{@link Pattern#DOTALL},
+     *            <li>{@link Pattern#UNICODE_CASE},
+     *            <li>{@link Pattern#CANON_EQ},
+     *            <li>{@link Pattern#UNIX_LINES},
+     *            <li>{@link Pattern#LITERAL},
+     *            <li>{@link Pattern#UNICODE_CHARACTER_CLASS} and
+     *            <li>{@link Pattern#COMMENTS}.
+     *            </ul>
+     */
+    public TokenTemplate(String search, String replace, int flags) {
+        this.search = search;
+        this.replace = replace;
+        this.flags = flags;
+        this.append = true;
+        this.enclose = true;
+        this.escape = true;
+    }
 
-	/**
-	 * Returns the replacement string.
-	 * 
-	 * @return the replacement string
-	 */
-	public String getReplace() {
-		return replace;
-	}
+    /**
+     * Returns the search string.
+     * 
+     * @return the search string
+     */
+    public String getSearch() {
+        return search;
+    }
 
-	/**
-	 * Returns the pattern with the begin and end token.
-	 * 
-	 * @param beginToken
-	 *            the begin token.
-	 * 
-	 * @param endToken
-	 *            the end token.
-	 * 
-	 * @return the {@link Pattern}.
-	 */
-	public Pattern toPattern(String beginToken, String endToken) {
-		String config = format("(%s)", search);
-		String pattern;
-		pattern = format("(%s\\n)?%s(\\n%s)?", beginToken, config, endToken);
-		return compile(pattern, flags);
-	}
+    /**
+     * Returns the replacement string.
+     * 
+     * @return the replacement string
+     */
+    public String getReplace() {
+        return replace;
+    }
 
-	/**
-	 * Returns the replace string with the begin and end token.
-	 * 
-	 * @param beginToken
-	 *            the begin token.
-	 * 
-	 * @param endToken
-	 *            the end token.
-	 * 
-	 * @return the replace string.
-	 */
-	public String toReplace(String beginToken, String endToken) {
-		if (enclose) {
-			return format("%s\n%s\n%s", beginToken, replace, endToken);
-		} else {
-			return replace;
-		}
-	}
+    /**
+     * Returns the pattern with the begin and end token.
+     * 
+     * @param beginToken
+     *            the begin token.
+     * 
+     * @param endToken
+     *            the end token.
+     * 
+     * @return the {@link Pattern}.
+     */
+    public Pattern toPattern(String beginToken, String endToken) {
+        String config = format("(%s)", search);
+        String pattern;
+        pattern = format("(%s\\n)?%s(\\n%s)?", beginToken, config, endToken);
+        return compile(pattern, flags);
+    }
 
-	/**
-	 * Sets if the replacement should be appended if the search string was not
-	 * found.
-	 * 
-	 * @param append
-	 *            set to {@code true} to append the replacement.
-	 */
-	public void setAppend(boolean append) {
-		this.append = append;
-	}
+    /**
+     * Returns the replace string with the begin and end token.
+     * 
+     * @param beginToken
+     *            the begin token.
+     * 
+     * @param endToken
+     *            the end token.
+     * 
+     * @return the replace string.
+     */
+    public String toReplace(String beginToken, String endToken) {
+        if (enclose) {
+            return format("%s\n%s\n%s", beginToken, replace, endToken);
+        } else {
+            return replace;
+        }
+    }
 
-	/**
-	 * Returns if the replacement should be appended if the search string was
-	 * not found.
-	 * 
-	 * @return {@code true} to append the replacement.
-	 */
-	public boolean isAppend() {
-		return append;
-	}
+    /**
+     * Sets if the replacement should be appended if the search string was not
+     * found.
+     * 
+     * @param append
+     *            set to {@code true} to append the replacement.
+     */
+    public void setAppend(boolean append) {
+        this.append = append;
+    }
 
-	/**
-	 * Sets if the replacement should be enclosed in the begin and end token.
-	 * 
-	 * @param append
-	 *            set to {@code true} to enclose.
-	 */
-	public void setEnclose(boolean enclose) {
-		this.enclose = enclose;
-	}
+    /**
+     * Returns if the replacement should be appended if the search string was
+     * not found.
+     * 
+     * @return {@code true} to append the replacement.
+     */
+    public boolean isAppend() {
+        return append;
+    }
 
-	/**
-	 * Returns if the replacement should be enclosed in the begin and end token.
-	 * 
-	 * @return {@code true} to enclose.
-	 */
-	public boolean isEnclose() {
-		return enclose;
-	}
+    /**
+     * Sets if the replacement should be enclosed in the begin and end token.
+     * 
+     * @param append
+     *            set to {@code true} to enclose.
+     */
+    public void setEnclose(boolean enclose) {
+        this.enclose = enclose;
+    }
 
-	@Override
-	public String toString() {
-		return new ToStringBuilder(this).append("search", search)
-				.append("replace", replace).toString();
-	}
+    /**
+     * Returns if the replacement should be enclosed in the begin and end token.
+     * 
+     * @return {@code true} to enclose.
+     */
+    public boolean isEnclose() {
+        return enclose;
+    }
+
+    /**
+     * Sets if the replacement should escape all dollar characters {@code $}.
+     * 
+     * @param escape
+     *            set to {@code true} to escape.
+     */
+    public void setEscape(boolean escape) {
+        this.escape = escape;
+    }
+
+    /**
+     * Returns if the replacement should escape all dollar characters {@code $}.
+     * 
+     * @return {@code true} to escape.
+     */
+    public boolean isEscape() {
+        return escape;
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this).append("search", search)
+                .append("replace", replace).toString();
+    }
 
 }

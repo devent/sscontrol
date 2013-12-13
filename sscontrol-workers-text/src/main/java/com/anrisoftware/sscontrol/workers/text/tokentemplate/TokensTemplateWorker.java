@@ -55,19 +55,19 @@ public class TokensTemplateWorker implements Worker {
 
 	private transient String replacement;
 
-	/**
-	 * Sets the begin and end tokens, the template and the argument.
-	 * 
-	 * @param tokenMarker
-	 *            the {@link TokenMarker} holding the begin and end tokens.
-	 * 
-	 * @param template
-	 *            the {@link TokenTemplate} containing the search text and the
-	 *            replacement.
-	 * 
-	 * @param text
-	 *            the text in which to replace.
-	 */
+	            /**
+     * Sets the begin and end tokens, the template and the argument.
+     * 
+     * @param tokenMarker
+     *            the {@link TokenMarker} holding the begin and end tokens.
+     * 
+     * @param template
+     *            the {@link TokenTemplate} containing the search text and the
+     *            replacement.
+     * 
+     * @param text
+     *            the text in which to replace.
+     */
 	@Inject
 	TokensTemplateWorker(TokensTemplateWorkerLogger logger,
 			@Assisted TokenMarker tokenMarker,
@@ -86,22 +86,37 @@ public class TokensTemplateWorker implements Worker {
 		boolean find = matcher.find();
 		String replace = template.toReplace(beginToken, endToken);
 		if (find) {
-			replacement = matcher.replaceFirst(replace);
-			log.replacedArgument(this);
+            replace(matcher, replace);
 		} else if (template.isAppend()) {
-			replacement = text + replace;
-			log.appendArgument(this);
+            appendReplace(replace);
 		} else {
 			replacement = text;
 		}
 		return this;
 	}
 
-	/**
-	 * Returns the formatted text.
-	 * 
-	 * @return the text.
-	 */
+    private void appendReplace(String replace) {
+        replacement = text + replace;
+        log.appendArgument(this);
+    }
+
+    private void replace(Matcher matcher, String replace) {
+        if (template.isEscape()) {
+            replace = escapeReplace(replace);
+        }
+        replacement = matcher.replaceFirst(replace);
+        log.replacedArgument(this);
+    }
+
+    private String escapeReplace(String replace) {
+        return Matcher.quoteReplacement(replace);
+    }
+
+    /**
+     * Returns the formatted text.
+     * 
+     * @return the text.
+     */
 	public String getText() {
 		return replacement;
 	}

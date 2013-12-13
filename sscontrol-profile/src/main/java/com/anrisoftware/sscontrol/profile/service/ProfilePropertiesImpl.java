@@ -258,6 +258,37 @@ class ProfilePropertiesImpl implements ProfileProperties {
     }
 
     /**
+     * Returns a profile boolean property. If the profile property was not set
+     * return the default value from the default properties.
+     * 
+     * @param key
+     *            the property {@link String} key.
+     * 
+     * @param defaults
+     *            default {@link ContextProperties} properties.
+     * 
+     * @return the {@link Boolean} value of the profile property.
+     * 
+     * @throws ServiceException
+     *             if the profile property was not found.
+     * 
+     * @throws ClassCastException
+     *             if the profile property is not a number.
+     */
+    public Boolean profileBooleanProperty(String key, ContextProperties defaults)
+            throws ServiceException {
+        Boolean property = (Boolean) get(key);
+        if (property != null) {
+            return property;
+        }
+        property = defaults.getBooleanProperty(key);
+        if (property != null) {
+            return property;
+        }
+        throw log.noProfileProperty(this, key);
+    }
+
+    /**
      * Returns a list profile property. If the profile property was not set
      * return the default value from the default properties.
      * 

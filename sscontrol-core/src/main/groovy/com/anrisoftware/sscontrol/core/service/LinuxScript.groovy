@@ -768,6 +768,7 @@ abstract class LinuxScript extends Script {
             case 'profileFileProperty':
             case 'profileDirProperty':
             case 'profileURIProperty':
+            case 'profileBooleanProperty':
             case 'containsKey':
                 return InvokerHelper.invokeMethod(profile, name, args)
             default:

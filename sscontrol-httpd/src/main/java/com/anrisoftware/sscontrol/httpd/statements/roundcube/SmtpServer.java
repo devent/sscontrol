@@ -2,11 +2,10 @@ package com.anrisoftware.sscontrol.httpd.statements.roundcube;
 
 import java.util.Map;
 
-import javax.inject.Inject;
-
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.google.inject.assistedinject.Assisted;
+import com.google.inject.assistedinject.AssistedInject;
 
 /**
  * Roundcube SMTP server.
@@ -25,9 +24,16 @@ public class SmtpServer {
     private String password;
 
     /**
+     * @see SmtpServerFactory#createDefault()
+     */
+    @AssistedInject
+    SmtpServer() {
+    }
+
+    /**
      * @see SmtpServerFactory#create(Object, Map)
      */
-    @Inject
+    @AssistedInject
     SmtpServer(SmtpServerArgs aargs, @Assisted Object service,
             @Assisted Map<String, Object> args) {
         setHost(aargs.host(service, args));

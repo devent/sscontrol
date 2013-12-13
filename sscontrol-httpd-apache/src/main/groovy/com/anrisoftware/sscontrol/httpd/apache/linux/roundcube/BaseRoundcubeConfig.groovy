@@ -104,9 +104,50 @@ class BaseRoundcubeConfig {
      * <ul>
      * <li>profile property {@code "roundcube_database_backend"}</li>
      * </ul>
+     * 
+     * @see ApacheScript#getDefaultProperties()
      */
     String getDatabaseBackend() {
-        profileProperty("roundcube_database_backend")
+        profileProperty("roundcube_database_backend", defaultProperties)
+    }
+
+    /**
+     * Returns the SMTP default host, for example {@code "tls://%h"}.
+     *
+     * <ul>
+     * <li>profile property {@code "roundcube_smtp_default_host"}</li>
+     * </ul>
+     * 
+     * @see ApacheScript#getDefaultProperties()
+     */
+    String getSmtpDefaultHost() {
+        profileProperty("roundcube_smtp_default_host", defaultProperties)
+    }
+
+    /**
+     * Returns the SMTP default user, for example {@code "%u"}.
+     *
+     * <ul>
+     * <li>profile property {@code "roundcube_smtp_default_user"}</li>
+     * </ul>
+     * 
+     * @see ApacheScript#getDefaultProperties()
+     */
+    String getSmtpDefaultUser() {
+        profileProperty("roundcube_smtp_default_user", defaultProperties)
+    }
+
+    /**
+     * Returns the SMTP default user, for example {@code "%p"}.
+     *
+     * <ul>
+     * <li>profile property {@code "roundcube_smtp_default_password"}</li>
+     * </ul>
+     * 
+     * @see ApacheScript#getDefaultProperties()
+     */
+    String getSmtpDefaultPassword() {
+        profileProperty("roundcube_smtp_default_password", defaultProperties)
     }
 
     /**

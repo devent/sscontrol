@@ -944,17 +944,11 @@ $rcmail_config['default_host']['othermail.example.com'] = 'Other Server';
 $rcmail_config['username_domain']['othermail.example.com'] = 'otherdomain.com';
 # SSCONTROL-httpd-END
 # SSCONTROL-httpd
-$rcmail_config['default_host']['mail.example.com'] = 'Default Server';
+$rcmail_config['smtp_server'] = 'localhost';
 # SSCONTROL-httpd-END
 # SSCONTROL-httpd
-$rcmail_config['default_host']['webmail.example.com'] = 'Webmail Server';
+$rcmail_config['smtp_user'] = '%u';
 # SSCONTROL-httpd-END
 # SSCONTROL-httpd
-$rcmail_config['default_host']['ssl://mail.example.com:993'] = 'Secure Webmail Server';
-# SSCONTROL-httpd-END
-# SSCONTROL-httpd
-$rcmail_config['default_host']['othermail.example.com'] = 'Other Server';
-# SSCONTROL-httpd-END
-# SSCONTROL-httpd
-$rcmail_config['username_domain']['othermail.example.com'] = 'otherdomain.com';
+$rcmail_config['smtp_pass'] = '%p';
 # SSCONTROL-httpd-END

@@ -13,6 +13,13 @@ public interface SmtpServerFactory {
     /**
      * Creates the SMTP server.
      * 
+     * @return the {@link SmtpServer}.
+     */
+    SmtpServer createDefault();
+
+    /**
+     * Creates the SMTP server.
+     * 
      * @param service
      *            the Roundcube service.
      * 

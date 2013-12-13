@@ -27,99 +27,99 @@ serviceAlias(alias) ::= <<
 >>
 
 configDbdsnw(database) ::= <%
-\$rcmail_config['db_dsnw'] = '<database.provider>://<database.user>:<database.password>@<database.host>/<database.database>';
+$rcmail_config['db_dsnw'] = '<database.provider>://<database.user>:<database.password>@<database.host>/<database.database>';
 %>
 
 configDbdsnw_search() ::= <%
-\$rcmail_config\['db_dsnw'\]\s*=\s*'.*';
+\\$rcmail_config\\['db_dsnw'\\]\\s*=\\s*'.*';
 %>
 
 configSmtplog(enabled) ::= <%
-\$rcmail_config['smtp_log'] = <if(enabled)>true<else>false<endif>;
+$rcmail_config['smtp_log'] = <if(enabled)>true<else>false<endif>;
 %>
 
 configSmtplog_search() ::= <%
-\$rcmail_config\['smtp_log'\]\s*=\s*.*;
+\\$rcmail_config\\['smtp_log'\\]\\s*=\\s*.*;
 %>
 
 configLoglogins(enabled) ::= <%
-\$rcmail_config['log_logins'] = <if(enabled)>true<else>false<endif>;
+$rcmail_config['log_logins'] = <if(enabled)>true<else>false<endif>;
 %>
 
 configLoglogins_search() ::= <%
-\$rcmail_config\['log_logins'\]\s*=\s*.*;
+\\$rcmail_config\\['log_logins'\\]\\s*=\\s*.*;
 %>
 
 configLogsession(enabled) ::= <%
-\$rcmail_config['log_session'] = <if(enabled)>true<else>false<endif>;
+$rcmail_config['log_session'] = <if(enabled)>true<else>false<endif>;
 %>
 
 configLogsession_search() ::= <%
-\$rcmail_config\['log_session'\]\s*=\s*.*;
+\\$rcmail_config\\['log_session'\\]\\s*=\\s*.*;
 %>
 
 configDebuglevel(debug) ::= <%
-\$rcmail_config['debug_level'] = <debug.level>;
+$rcmail_config['debug_level'] = <debug.level>;
 %>
 
 configDebuglevel_search() ::= <%
-\$rcmail_config\['debug_level'\]\s*=\s*.*;
+\\$rcmail_config\\['debug_level'\\]\\s*=\\s*.*;
 %>
 
 configLogdriver(driver) ::= <%
-\$rcmail_config['log_driver'] = '<driver>';
+$rcmail_config['log_driver'] = '<driver>';
 %>
 
 configLogdriver_search() ::= <%
-\$rcmail_config\['log_driver'\]\s*=\s*".*";
+\\$rcmail_config\\['log_driver'\\]\\s*=\\s*".*";
 %>
 
 configSqldebug(enabled) ::= <%
-\$rcmail_config['sql_debug'] = <if(enabled)>true<else>false<endif>;
+$rcmail_config['sql_debug'] = <if(enabled)>true<else>false<endif>;
 %>
 
 configSqldebug_search() ::= <%
-\$rcmail_config\['sql_debug'\]\s*=\s*.*;
+\\$rcmail_config\\['sql_debug'\\]\\s*=\\s*.*;
 %>
 
 configImapdebug(enabled) ::= <%
-\$rcmail_config['imap_debug'] = <if(enabled)>true<else>false<endif>;
+$rcmail_config['imap_debug'] = <if(enabled)>true<else>false<endif>;
 %>
 
 configImapdebug_search() ::= <%
-\$rcmail_config\['imap_debug'\]\s*=\s*.*;
+\\$rcmail_config\\['imap_debug'\\]\\s*=\\s*.*;
 %>
 
 configLdapdebug(enabled) ::= <%
-\$rcmail_config['ldap_debug'] = <if(enabled)>true<else>false<endif>;
+$rcmail_config['ldap_debug'] = <if(enabled)>true<else>false<endif>;
 %>
 
 configLdapdebug_search() ::= <%
-\$rcmail_config\['ldap_debug'\]\s*=\s*.*;
+\\$rcmail_config\\['ldap_debug'\\]\\s*=\\s*.*;
 %>
 
 configSmtpdebug(enabled) ::= <%
-\$rcmail_config['smtp_debug'] = <if(enabled)>true<else>false<endif>;
+$rcmail_config['smtp_debug'] = <if(enabled)>true<else>false<endif>;
 %>
 
 configSmtpdebug_search() ::= <%
-\$rcmail_config\['smtp_debug'\]\s*=\s*.*;
+\\$rcmail_config\\['smtp_debug'\\]\\s*=\\s*.*;
 %>
 
 configDefaultHostSingle(host) ::= <%
-\$rcmail_config['default_host'] = '<host.host>';
+$rcmail_config['default_host'] = '<host.host>';
 %>
 
 configDefaultHostSingle_search() ::= <%
-\$rcmail_config\['default_host'\]\s*=\s*'.*';
+\\$rcmail_config\\['default_host'\\]\\s*=\\s*'.*';
 %>
 
 configDefaultHostMultiple(host) ::= <%
-\$rcmail_config['default_host'][] = '<host.host>';
+$rcmail_config['default_host'][] = '<host.host>';
 %>
 
 configDefaultHostMultiple_search(host) ::= <%
-^\$rcmail_config\['default_host'\]\['<host.host>'\] = '.*';
+\\$rcmail_config\\['default_host'\\]\\['<host.host>'\\] = '.*';
 %>
 
 configDefaultHostMap(host) ::= <%
@@ -127,23 +127,23 @@ $rcmail_config['default_host']['<host.host>'] = '<host.alias>';
 %>
 
 configDefaultHostMap_search(host) ::= <%
-^\$rcmail_config\['default_host'\]\[\]\s*=\s*'<host.host>'.*;
+\\$rcmail_config\\['default_host'\\]\\['<host.host>'\\]\\s*=\\s*'.*';
 %>
 
 configDefaultHostMultipleInit() ::= <%
-\$rcmail_config['default_host'] = array();
+$rcmail_config['default_host'] = array();
 %>
 
 configDefaultHostMultipleInit_search() ::= <%
-\$rcmail_config\['default_host'\]\s*=.*
+\\$rcmail_config\\['default_host'\\]\\s*=.*
 %>
 
 configUsernameDomainInit() ::= <%
-\$rcmail_config['username_domain'] = array();
+$rcmail_config['username_domain'] = array();
 %>
 
 configUsernameDomainInit_search() ::= <%
-\$rcmail_config\['username_domain'\]\s*=.*
+\\$rcmail_config\\['username_domain'\\]\\s*=.*
 %>
 
 configUsernameDomain(host) ::= <%
@@ -151,5 +151,29 @@ $rcmail_config['username_domain']['<host.host>'] = '<host.domain>';
 %>
 
 configUsernameDomain_search(host) ::= <%
-^\$rcmail_config\['username_domain'\]\[\]\s*=\s*'<host.host>'.*;
+\\$rcmail_config\\['username_domain'\\]\\['<host.host>'\\]\\s*=\\s*'.*';
+%>
+
+configSmtpserver(smtp) ::= <%
+$rcmail_config['smtp_server'] = '<smtp.host>';
+%>
+
+configSmtpserver_search(smtp) ::= <%
+\\$rcmail_config\\['smtp_server'\\]\\s*=\\s*'<smtp.host>';
+%>
+
+configSmtpuser(smtp) ::= <%
+$rcmail_config['smtp_user'] = '<smtp.user>';
+%>
+
+configSmtpuser_search(smtp) ::= <%
+\\$rcmail_config\\['smtp_user'\\]\\s*=\\s*'<smtp.user>';
+%>
+
+configSmtppass(smtp) ::= <%
+$rcmail_config['smtp_pass'] = '<smtp.password>';
+%>
+
+configSmtppass_search(smtp) ::= <%
+\\$rcmail_config\\['smtp_pass'\\]\\s*=\\s*'<smtp.password>';
 %>

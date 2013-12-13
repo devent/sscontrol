@@ -45,7 +45,6 @@ public class RoundcubeService implements WebService {
     @Inject
     private DebugLoggingFactory debugFactory;
 
-    @Inject
     private SmtpServerFactory smtpFactory;
 
     private String alias;
@@ -67,6 +66,12 @@ public class RoundcubeService implements WebService {
         if (argss.haveAlias(args)) {
             setAlias(argss.alias(args));
         }
+    }
+
+    @Inject
+    void setSmtpServerFactory(SmtpServerFactory factory) {
+        this.smtp = factory.createDefault();
+        this.smtpFactory = factory;
     }
 
     @Override
@@ -126,6 +131,10 @@ public class RoundcubeService implements WebService {
             this.debug = debugFactory.createOff();
         }
         return debug;
+    }
+
+    public void smtp(String host) {
+        smtp(new HashMap<String, Object>(), host);
     }
 
     public void smtp(Map<String, Object> args, String host) {

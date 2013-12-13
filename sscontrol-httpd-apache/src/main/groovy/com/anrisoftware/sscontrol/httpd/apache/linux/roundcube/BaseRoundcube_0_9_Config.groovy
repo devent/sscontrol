@@ -161,6 +161,7 @@ class BaseRoundcube_0_9_Config extends BaseRoundcubeConfig {
             configDefaultHosts(service),
             configUsernameDomainsInit(service),
             configUsernameDomains(service),
+            configSmtp(service),
         ]
     }
 
@@ -190,7 +191,6 @@ class BaseRoundcube_0_9_Config extends BaseRoundcubeConfig {
             return new TokenTemplate(search, replace)
         }
         service.hosts.inject([]) { List list, Host host ->
-            println host
             if (host.alias == null) {
                 def search = roundcubeConfigTemplate.getText(true, "configDefaultHostMultiple_search", "host", host)
                 def replace = roundcubeConfigTemplate.getText(true, "configDefaultHostMultiple", "host", host)
@@ -229,6 +229,28 @@ class BaseRoundcube_0_9_Config extends BaseRoundcubeConfig {
                 list
             }
         }
+    }
+
+    def configSmtp(RoundcubeService service) {
+        if (service.smtp.host == null) {
+            service.smtp.host = smtpDefaultHost
+        }
+        if (service.smtp.user == null) {
+            service.smtp.user = smtpDefaultUser
+        }
+        if (service.smtp.password == null) {
+            service.smtp.password = smtpDefaultPassword
+        }
+        def list = []
+        def search = roundcubeConfigTemplate.getText(true, "configSmtpserver_search", "smtp", service.smtp)
+        def replace = roundcubeConfigTemplate.getText(true, "configSmtpserver", "smtp", service.smtp)
+        list << new TokenTemplate(search, replace)
+        search = roundcubeConfigTemplate.getText(true, "configSmtpuser_search", "smtp", service.smtp)
+        replace = roundcubeConfigTemplate.getText(true, "configSmtpuser", "smtp", service.smtp)
+        list << new TokenTemplate(search, replace)
+        search = roundcubeConfigTemplate.getText(true, "configSmtppass_search", "smtp", service.smtp)
+        replace = roundcubeConfigTemplate.getText(true, "configSmtppass", "smtp", service.smtp)
+        list << new TokenTemplate(search, replace)
     }
 
     /**

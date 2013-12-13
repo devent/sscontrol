@@ -65,5 +65,6 @@ profile "ubuntu_10_04", {
         phpldapadmin_linked_configuration_directory PhpldapadminResources.linkedConfigDir.asFile(tmp)
         // roundcube
         roundcube_archive RoundcubeResources.roundcubeArchive.asFile(tmp)
+        roundcube_des_key "some-DES-key-24-long0123"
     }
 }

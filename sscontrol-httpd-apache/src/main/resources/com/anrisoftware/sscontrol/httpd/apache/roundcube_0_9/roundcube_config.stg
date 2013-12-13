@@ -217,3 +217,83 @@ $rcmail_config['imap_ns_shared'] = <if(option)>'<option>'<else>null<endif>;
 configImapnsshared_search() ::= <%
 \\$rcmail_config\\['imap_ns_shared'\\]\\s*=\\s*.*;
 %>
+
+configEnableinstaller(enable) ::= <%
+$rcmail_config['enable_installer'] = <if(enable)>true<else>false<endif>;
+%>
+
+configEnableinstaller_search() ::= <%
+\\$rcmail_config\\['enable_installer'\\]\\s*=\\s*.*;
+%>
+
+configForcehttps(enable) ::= <%
+$rcmail_config['force_https'] = <if(enable)>true<else>false<endif>;
+%>
+
+configForcehttps_search() ::= <%
+\\$rcmail_config\\['force_https'\\]\\s*=\\s*.*;
+%>
+
+configLoginautocomplete(level) ::= <%
+$rcmail_config['login_autocomplete'] = <level>;
+%>
+
+configLoginautocomplete_search() ::= <%
+\\$rcmail_config\\['login_autocomplete'\\]\\s*=\\s*.*;
+%>
+
+configIpcheck(enable) ::= <%
+$rcmail_config['ip_check'] = <if(enable)>true<else>false<endif>;
+%>
+
+configIpcheck_search() ::= <%
+\\$rcmail_config\\['ip_check'\\]\\s*=\\s*.*;
+%>
+
+configLogincasesensitive(level) ::= <%
+$rcmail_config['login_lc'] = <level>;
+%>
+
+configLogincasesensitive_search() ::= <%
+\\$rcmail_config\\['login_lc'\\]\\s*=\\s*.*;
+%>
+
+configAutocreateuser(enable) ::= <%
+$rcmail_config['auto_create_user'] = <if(enable)>true<else>false<endif>;
+%>
+
+configAutocreateuser_search() ::= <%
+\\$rcmail_config\\['auto_create_user'\\]\\s*=\\s*.*;
+%>
+
+configDeskey(key) ::= <%
+$rcmail_config['des_key'] = '<key>';
+%>
+
+configDeskey_search() ::= <%
+\\$rcmail_config\\['des_key'\\]\\s*=\\s*.*;
+%>
+
+configUseragent(name) ::= <%
+$rcmail_config['useragent'] = '<name>';
+%>
+
+configUseragent_search() ::= <%
+\\$rcmail_config\\['useragent'\\]\\s*=\\s*.*;
+%>
+
+configIdentitieslevel(level) ::= <%
+$rcmail_config['identities_level'] = <level>;
+%>
+
+configIdentitieslevel_search() ::= <%
+\\$rcmail_config\\['identities_level'\\]\\s*=\\s*.*;
+%>
+
+configEnablespellcheck(enable) ::= <%
+$rcmail_config['enable_spellcheck'] = <if(enable)>true<else>false<endif>;
+%>
+
+configEnablespellcheck_search() ::= <%
+\\$rcmail_config\\['enable_spellcheck'\\]\\s*=\\s*.*;
+%>

@@ -177,6 +177,7 @@ class BaseRoundcube_0_9_Config extends BaseRoundcubeConfig {
             configUsernameDomains(service),
             configSmtp(service),
             configImap(service),
+            configMiscOptions(service),
         ]
     }
 
@@ -281,6 +282,40 @@ class BaseRoundcube_0_9_Config extends BaseRoundcubeConfig {
         list << new TokenTemplate(search, replace)
         search = roundcubeConfigTemplate.getText(true, "configImapnsshared_search")
         replace = roundcubeConfigTemplate.getText(true, "configImapnsshared", "option", imapNsShared)
+        list << new TokenTemplate(search, replace)
+    }
+
+    def configMiscOptions(RoundcubeService service) {
+        def list = []
+        def search = roundcubeConfigTemplate.getText(true, "configEnableinstaller_search")
+        def replace = roundcubeConfigTemplate.getText(true, "configEnableinstaller", "enable", enableInstaller)
+        list << new TokenTemplate(search, replace)
+        search = roundcubeConfigTemplate.getText(true, "configForcehttps_search")
+        replace = roundcubeConfigTemplate.getText(true, "configForcehttps", "enable", forceHttps)
+        list << new TokenTemplate(search, replace)
+        search = roundcubeConfigTemplate.getText(true, "configLoginautocomplete_search")
+        replace = roundcubeConfigTemplate.getText(true, "configLoginautocomplete", "level", loginAutocomplete)
+        list << new TokenTemplate(search, replace)
+        search = roundcubeConfigTemplate.getText(true, "configIpcheck_search")
+        replace = roundcubeConfigTemplate.getText(true, "configIpcheck", "enable", ipCheck)
+        list << new TokenTemplate(search, replace)
+        search = roundcubeConfigTemplate.getText(true, "configLogincasesensitive_search")
+        replace = roundcubeConfigTemplate.getText(true, "configLogincasesensitive", "level", (loginCaseSensitive ? 0 : 2));
+        list << new TokenTemplate(search, replace)
+        search = roundcubeConfigTemplate.getText(true, "configAutocreateuser_search")
+        replace = roundcubeConfigTemplate.getText(true, "configAutocreateuser", "enable", autoCreateUser)
+        list << new TokenTemplate(search, replace)
+        search = roundcubeConfigTemplate.getText(true, "configUseragent_search")
+        replace = roundcubeConfigTemplate.getText(true, "configUseragent", "name", userAgent)
+        list << new TokenTemplate(search, replace)
+        search = roundcubeConfigTemplate.getText(true, "configIdentitieslevel_search")
+        replace = roundcubeConfigTemplate.getText(true, "configIdentitieslevel", "level", identitiesLevel)
+        list << new TokenTemplate(search, replace)
+        search = roundcubeConfigTemplate.getText(true, "configEnablespellcheck_search")
+        replace = roundcubeConfigTemplate.getText(true, "configEnablespellcheck", "enable", enableSpellcheck)
+        list << new TokenTemplate(search, replace)
+        search = roundcubeConfigTemplate.getText(true, "configDeskey_search")
+        replace = roundcubeConfigTemplate.getText(true, "configDeskey", "key", desKey)
         list << new TokenTemplate(search, replace)
     }
 

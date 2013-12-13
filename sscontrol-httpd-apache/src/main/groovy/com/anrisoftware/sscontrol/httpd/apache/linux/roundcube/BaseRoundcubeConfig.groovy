@@ -20,6 +20,8 @@ package com.anrisoftware.sscontrol.httpd.apache.linux.roundcube
 
 import javax.inject.Inject
 
+import org.apache.commons.lang3.RandomStringUtils
+
 import com.anrisoftware.sscontrol.httpd.apache.linux.apache.ApacheScript
 import com.anrisoftware.sscontrol.httpd.statements.roundcube.RoundcubeService
 
@@ -245,6 +247,150 @@ class BaseRoundcubeConfig {
     String getImapNsShared() {
         def option = profileProperty("roundcube_imap_ns_shared", defaultProperties)
         option.isEmpty() ? null : option
+    }
+
+    /**
+     * Returns to enable the installer after configuration.
+     *
+     * <ul>
+     * <li>profile property {@code "roundcube_enable_installer"}</li>
+     * </ul>
+     *
+     * @see ApacheScript#getDefaultProperties()
+     */
+    boolean getEnableInstaller() {
+        profileBooleanProperty("roundcube_enable_installer", defaultProperties)
+    }
+
+    /**
+     * Returns to force HTTPS.
+     *
+     * <ul>
+     * <li>profile property {@code "roundcube_force_https"}</li>
+     * </ul>
+     *
+     * @see ApacheScript#getDefaultProperties()
+     */
+    boolean getForceHttps() {
+        profileBooleanProperty("roundcube_force_https", defaultProperties)
+    }
+
+    /**
+     * Returns the level of auto-complete on log-in.
+     * <ul>
+     * <li>0: disabled,
+     * <li>1: user name and host only,
+     * <li>2: user name, host, password.</li>
+     * </ul>
+     *
+     * <ul>
+     * <li>profile property {@code "roundcube_login_autocomplete"}</li>
+     * </ul>
+     *
+     * @see ApacheScript#getDefaultProperties()
+     */
+    int getLoginAutocomplete() {
+        profileNumberProperty("roundcube_login_autocomplete", defaultProperties)
+    }
+
+    /**
+     * Returns to check client IP in session authorization.
+     *
+     * <ul>
+     * <li>profile property {@code "roundcube_ip_check"}</li>
+     * </ul>
+     *
+     * @see ApacheScript#getDefaultProperties()
+     */
+    boolean getIpCheck() {
+        profileBooleanProperty("roundcube_ip_check", defaultProperties)
+    }
+
+    /**
+     * Returns that the log-in is case sensitive.
+     *
+     * <ul>
+     * <li>profile property {@code "roundcube_login_case_sensitive"}</li>
+     * </ul>
+     *
+     * @see ApacheScript#getDefaultProperties()
+     */
+    boolean getLoginCaseSensitive() {
+        profileBooleanProperty("roundcube_login_case_sensitive", defaultProperties)
+    }
+
+    /**
+     * Returns to automatically create a new Roundcube user
+     * when log-in the first time.
+     *
+     * <ul>
+     * <li>profile property {@code "roundcube_auto_create_user"}</li>
+     * </ul>
+     *
+     * @see ApacheScript#getDefaultProperties()
+     */
+    boolean getAutoCreateUser() {
+        profileBooleanProperty("roundcube_auto_create_user", defaultProperties)
+    }
+
+    /**
+     * Returns the user agent string.
+     *
+     * <ul>
+     * <li>profile property {@code "roundcube_useragent"}</li>
+     * </ul>
+     *
+     * @see ApacheScript#getDefaultProperties()
+     */
+    String getUserAgent() {
+        profileProperty("roundcube_useragent", defaultProperties)
+    }
+
+    /**
+     * Returns the identities access level:
+     * <ul>
+     * <li>0: many identities with possibility to edit all parameters,
+     * <li>1: many identities with possibility to edit all parameters but not email address,
+     * <li>2: one identity with possibility to edit all parameters,</li>
+     * <li>3: one identity with possibility to edit all parameters but not email address,</li>
+     * <li>4: one identity with possibility to edit only signature.</li>
+     * </ul>
+     *
+     * <ul>
+     * <li>profile property {@code "roundcube_identities_level"}</li>
+     * </ul>
+     *
+     * @see ApacheScript#getDefaultProperties()
+     */
+    int getIdentitiesLevel() {
+        profileNumberProperty("roundcube_identities_level", defaultProperties)
+    }
+
+    /**
+     * Returns use of the built-in spell checker.
+     *
+     * <ul>
+     * <li>profile property {@code "roundcube_enable_spellcheck"}</li>
+     * </ul>
+     *
+     * @see ApacheScript#getDefaultProperties()
+     */
+    boolean getEnableSpellcheck() {
+        profileBooleanProperty("roundcube_enable_spellcheck", defaultProperties)
+    }
+
+    /**
+     * Returns the DES key.
+     *
+     * <ul>
+     * <li>profile property {@code "roundcube_des_key"}</li>
+     * </ul>
+     *
+     * @see ApacheScript#getDefaultProperties()
+     */
+    String getDesKey() {
+        def key = profileProperty("roundcube_des_key", defaultProperties)
+        key.isEmpty() ? RandomStringUtils.randomAlphanumeric(24) : key
     }
 
     /**

@@ -201,7 +201,6 @@ class BaseWordpressConfig {
      */
     void setScript(ApacheScript script) {
         this.script = script
-        databaseConfigs.each { it.value.script = script }
     }
 
     /**

@@ -21,6 +21,7 @@ package com.anrisoftware.sscontrol.httpd.apache.core.ubuntu_10_04
 import com.anrisoftware.sscontrol.httpd.apache.phpldapadmin.ubuntu_10_04.PhpldapadminResources
 import com.anrisoftware.sscontrol.httpd.apache.phpmyadmin.ubuntu_10_04.PhpmyadminResources
 import com.anrisoftware.sscontrol.httpd.apache.roundcube.ubuntu_10_04.RoundcubeResources
+import com.anrisoftware.sscontrol.httpd.apache.wordpress.ubuntu_10_04.WordpressResources
 
 profile "ubuntu_10_04", {
     httpd {
@@ -66,5 +67,7 @@ profile "ubuntu_10_04", {
         // roundcube
         roundcube_archive RoundcubeResources.roundcubeArchive.asFile(tmp)
         roundcube_des_key "some-DES-key-24-long0123"
+        // wordpress
+        wordpress_archive WordpressResources.wordpressArchive.asFile(tmp)
     }
 }

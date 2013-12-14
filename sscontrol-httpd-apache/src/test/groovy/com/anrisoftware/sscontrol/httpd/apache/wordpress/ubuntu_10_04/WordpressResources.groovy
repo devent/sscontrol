@@ -42,8 +42,8 @@ enum WordpressResources {
     chmodOut("/bin/chmod.out", WordpressResources.class.getResource("chmod_out.txt")),
     useraddOut("/usr/sbin/useradd.out", WordpressResources.class.getResource("useradd_out.txt")),
     groupaddOut("/usr/sbin/groupadd.out", WordpressResources.class.getResource("groupadd_out.txt")),
-    wordpress_3_9_config("/usr/local/wordpress/wp-config-sample.php", WordpressResources.class.getResource("wordpress_3_8_config_sample_php.txt")),
-    wordpress_3_9_config_expected("/usr/local/wordpress/wp-config.php", WordpressResources.class.getResource("wordpress_3_8_config_php_expected.txt")),
+    wordpress_3_9_config("/usr/local/wordpress3/wp-config-sample.php", WordpressResources.class.getResource("wordpress_3_8_config_sample_php.txt")),
+    wordpress_3_9_config_expected("/usr/local/wordpress3/wp-config.php", WordpressResources.class.getResource("wordpress_3_8_config_php_expected.txt")),
     tarOut("/bin/tar.out", WordpressResources.class.getResource("tar_out.txt")),
 
     static copyRoundcubeFiles(File parent) {

@@ -1,8 +1,8 @@
 web_001.web_001 /tmp/var/www/test1.com/web
-www-data.www-data /tmp/var/www/mail.test1.com/web
--R www-data.www-data /tmp/var/www/php-fcgi-scripts/mail.test1.com
-www-data.www-data /tmp/var/www/php-fcgi-scripts/mail.test1.com/php-fcgi-starter
+web_002.web_002 /tmp/var/www/www.test1.com/web
+-R web_002.web_002 /tmp/var/www/php-fcgi-scripts/www.test1.com
+web_002.web_002 /tmp/var/www/php-fcgi-scripts/www.test1.com/php-fcgi-starter
 web_001.web_001 /tmp/var/www/test1.com/web
-www-data.www-data /tmp/var/www/mail.test1.com/web
--R www-data.www-data /tmp/var/www/php-fcgi-scripts/mail.test1.com
-www-data.www-data /tmp/var/www/php-fcgi-scripts/mail.test1.com/php-fcgi-starter
+web_002.web_002 /tmp/var/www/www.test1.com/web
+-R web_002.web_002 /tmp/var/www/php-fcgi-scripts/www.test1.com
+web_002.web_002 /tmp/var/www/php-fcgi-scripts/www.test1.com/php-fcgi-starter

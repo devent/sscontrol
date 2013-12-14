@@ -1,0 +1,180 @@
+domainConfig(domain, service, properties, fcgiProperties) ::= <<
+# roundcube
+
+<serviceAlias(service.alias)>
+\<Directory /usr/share/phpmyadmin>
+    AddHandler fcgid-script .php
+    FCGIWrapper <properties.sitesDirectory>/<fcgiProperties.scriptsSubdirectory>/<domain.name>/<fcgiProperties.scriptStarterFileName> .php
+    Options +ExecCGI
+    DirectoryIndex index.php
+\</Directory>
+
+# Disallow web access to directories that don't need it
+\<Directory /usr/share/phpmyadmin/libraries>
+    Order Deny,Allow
+    Deny from All
+\</Directory>
+\<Directory /usr/share/phpmyadmin/setup/lib>
+    Order Deny,Allow
+    Deny from All
+\</Directory>
+
+>>
+
+serviceAlias(alias) ::= <<
+<if(alias)>Alias /<alias> /usr/share/phpmyadmin<endif>
+
+>>
+
+configDatabaseName(database) ::= <%
+define('DB_NAME', '<database.database>');
+$rcmail_config['db_dsnw'] = '<database.provider>://<database.user>:<database.password>@<database.host>/<database.database>';
+%>
+
+configDatabaseName_search() ::= <%
+define\\('DB_NAME', '.*?'\\);
+%>
+
+configDatabaseUser(database) ::= <%
+define('DB_USER', '<database.user>');
+%>
+
+configDatabaseUser_search() ::= <%
+define\\('DB_USER', '.*?'\\);
+%>
+
+configDatabasePassword(database) ::= <%
+define('DB_PASSWORD', '<database.password>');
+%>
+
+configDatabasePassword_search() ::= <%
+define\\('DB_PASSWORD', '.*?'\\);
+%>
+
+configDatabaseHost(database) ::= <%
+define('DB_HOST', '<database.host>');
+%>
+
+configDatabaseHost_search() ::= <%
+define\\('DB_HOST', '.*?'\\);
+%>
+
+configDatabaseCharset(charset) ::= <%
+define('DB_CHARSET', '<charset>');
+%>
+
+configDatabaseCharset_search() ::= <%
+define\\('DB_CHARSET', '.*'\\);
+%>
+
+configDatabaseCollate(collate) ::= <%
+define\\('DB_COLLATE', '<collate>'\\);
+%>
+
+configDatabaseCollate_search() ::= <%
+define\\('DB_COLLATE', '.*'\\);
+%>
+
+configAuthKey(key) ::= <%
+define('AUTH_KEY', '<key>');
+%>
+
+configAuthKey_search() ::= <%
+define\\('AUTH_KEY', '.*?'\\);
+%>
+
+configSecureAuthKey(key) ::= <%
+define('SECURE_AUTH_KEY', '<key>');
+%>
+
+configSecureAuthKey_search() ::= <%
+define\\('SECURE_AUTH_KEY', '.*?'\\);
+%>
+
+configLoggedInKey(key) ::= <%
+define('LOGGED_IN_KEY', '<key>');
+%>
+
+configLoggedInKey_search() ::= <%
+define\\('LOGGED_IN_KEY', '.*?'\\);
+%>
+
+configNonceKey(key) ::= <%
+define('NONCE_KEY', '<key>');
+%>
+
+configNonceKey_search() ::= <%
+define\\('NONCE_KEY', '.*?'\\);
+%>
+
+configAuthSalt(key) ::= <%
+define('AUTH_SALT', '<key>');
+%>
+
+configAuthSalt_search() ::= <%
+define\\('AUTH_SALT', '.*?'\\);
+%>
+
+configSecureAuthSalt(key) ::= <%
+define('SECURE_AUTH_SALT', '<key>');
+%>
+
+configSecureAuthSalt_search() ::= <%
+define\\('SECURE_AUTH_SALT', '.*'\\);
+%>
+
+configLoggedInSalt(key) ::= <%
+define\\('LOGGED_IN_SALT', '<key>'\\);
+%>
+
+configLoggedInSalt_search() ::= <%
+define('LOGGED_IN_SALT', '.*?');
+%>
+
+configNonceSalt(key) ::= <%
+define('NONCE_SALT', '<key>');
+%>
+
+configNonceSalt_search() ::= <%
+define\\('NONCE_SALT', '.*?'\\);
+%>
+
+configTablePrefix(prefix) ::= <%
+$table_prefix = '<prefix>';
+%>
+
+configTablePrefix_search() ::= <%
+\\$table_prefix\\s*=\\s*'.*?';
+%>
+
+configLanguage(language) ::= <%
+define('WPLANG', '<language>');
+%>
+
+configLanguage_search() ::= <%
+define\\('WPLANG', '.*?'\\);
+%>
+
+configDebug(enabled) ::= <%
+define('WP_DEBUG', <if(enabled)>true<else>false<endif>);
+%>
+
+configDebug_search() ::= <%
+define\\('WP_DEBUG', .*?\\);
+%>
+
+configForceSecureLogin(enabled) ::= <%
+define('FORCE_SSL_LOGIN', <if(enabled)>true<else>false<endif>);
+%>
+
+configForceSecureLogin_search() ::= <%
+define\\('FORCE_SSL_LOGIN', .*?\\);
+%>
+
+configForceSecureAdmin(enabled) ::= <%
+define('FORCE_SSL_ADMIN', <if(enabled)>true<else>false<endif>);
+%>
+
+configForceSecureAdmin_search() ::= <%
+define\\('FORCE_SSL_ADMIN', .*?\\);
+%>

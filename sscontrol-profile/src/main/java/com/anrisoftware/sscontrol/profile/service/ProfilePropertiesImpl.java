@@ -25,12 +25,14 @@ import groovy.lang.GString;
 import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.charset.Charset;
 import java.text.Format;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -446,6 +448,63 @@ class ProfilePropertiesImpl implements ProfileProperties {
         } catch (URISyntaxException e) {
             return new File(path.toString()).toURI();
         }
+    }
+
+    /**
+     * Returns the profile resource locale property. If the profile property was
+     * not set return the default value from the default properties.
+     * 
+     * @param key
+     *            the key of the profile property.
+     * 
+     * @param p
+     *            default {@link ContextProperties} properties.
+     * 
+     * @return the profile resource {@link Locale}.
+     * 
+     * @throws ServiceException
+     *             if the profile property was not found.
+     */
+    public Locale profileLocaleProperty(String key, ContextProperties defaults)
+            throws ServiceException {
+        Locale property = (Locale) get(key);
+        if (property != null) {
+            return property;
+        }
+        String tag = defaults.getProperty(key);
+        if (tag != null) {
+            return Locale.forLanguageTag(tag);
+        }
+        throw log.noProfileProperty(this, key);
+    }
+
+    /**
+     * Returns the profile resource character set property. If the profile
+     * property was not set return the default value from the default
+     * properties.
+     * 
+     * @param key
+     *            the key of the profile property.
+     * 
+     * @param p
+     *            default {@link ContextProperties} properties.
+     * 
+     * @return the profile resource {@link Charset}.
+     * 
+     * @throws ServiceException
+     *             if the profile property was not found.
+     */
+    public Charset profileCharsetProperty(String key, ContextProperties defaults)
+            throws ServiceException {
+        Charset property = (Charset) get(key);
+        if (property != null) {
+            return property;
+        }
+        property = defaults.getCharsetProperty(key);
+        if (property != null) {
+            return property;
+        }
+        throw log.noProfileProperty(this, key);
     }
 
     @Override

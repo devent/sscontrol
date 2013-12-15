@@ -33,6 +33,7 @@ enum WordpressResources {
 
     httpdScript("Httpd.groovy", WordpressResources.class.getResource("HttpdWordpress.groovy")),
     wordpressArchive("/tmp/web-wordpress-3.8.tar.gz", WordpressResources.class.getResource("wordpress-3.8.tar.gz")),
+    wordpressArchive_de_DE("/tmp/web-wordpress-3.8_de_DE.tar.gz", WordpressResources.class.getResource("wordpress-3.8.tar.gz")),
     domainsConf("/etc/apache2/conf.d/000-robobee-domains.conf", WordpressResources.class.getResource("domains_conf.txt")),
     test1comConf("/etc/apache2/sites-available/100-robobee-test1.com.conf", WordpressResources.class.getResource("test1_com_conf.txt")),
     test1comSslConf("/etc/apache2/sites-available/100-robobee-test1.com-ssl.conf", WordpressResources.class.getResource("test1_com_ssl_conf.txt")),
@@ -44,10 +45,13 @@ enum WordpressResources {
     groupaddOut("/usr/sbin/groupadd.out", WordpressResources.class.getResource("groupadd_out.txt")),
     wordpress_3_9_config("/usr/local/wordpress3/wp-config-sample.php", WordpressResources.class.getResource("wordpress_3_8_config_sample_php.txt")),
     wordpress_3_9_config_expected("/usr/local/wordpress3/wp-config.php", WordpressResources.class.getResource("wordpress_3_8_config_php_expected.txt")),
+    wordpress_3_9_de_DE_config_expected("/usr/local/wordpress3/wp-config.php", WordpressResources.class.getResource("wordpress_3_8_de_DE_config_php_expected.txt")),
     tarOut("/bin/tar.out", WordpressResources.class.getResource("tar_out.txt")),
+    tar_de_DE_Out("/bin/tar.out", WordpressResources.class.getResource("tar_de_DE_out.txt")),
 
     static copyRoundcubeFiles(File parent) {
         wordpressArchive.createFile parent
+        wordpressArchive_de_DE.createFile parent
         wordpress_3_9_config.createFile parent
     }
 

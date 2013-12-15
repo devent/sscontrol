@@ -51,7 +51,17 @@ class BaseWordpressConfig {
      * @see ApacheScript#getDefaultProperties()
      */
     URI getWordpressArchive() {
-        profileURIProperty("wordpress_archive", defaultProperties)
+        String lang = language.toString()
+        switch (lang) {
+            case "":
+                return profileURIProperty("wordpress_archive", defaultProperties)
+            default:
+                if (containsKey("wordpress_archive_$lang")) {
+                    return profileURIProperty("wordpress_archive_$lang", defaultProperties)
+                } else {
+                    return profileURIProperty("wordpress_archive", defaultProperties)
+                }
+        }
     }
 
     /**

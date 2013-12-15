@@ -186,6 +186,34 @@ class BaseWordpress_3_Config extends BaseWordpressConfig {
     }
 
     /**
+     * Deploys the language configuration.
+     *
+     * @param service
+     *            the {@link WordpressService}.
+     */
+    void deployLanguageConfig(WordpressService service) {
+        if (!configurationFile.isFile()) {
+            copyFile configurationDistFile, configurationFile
+        }
+        deployConfiguration configurationTokens(), mainConfiguration, languageConfigurations(service), configurationFile
+    }
+
+    /**
+     * Returns the language configurations.
+     */
+    List languageConfigurations(WordpressService service) {
+        [
+            configLanguage(),
+        ]
+    }
+
+    def configLanguage() {
+        def search = wordpressConfigTemplate.getText(true, "configLanguage_search")
+        def replace = wordpressConfigTemplate.getText(true, "configLanguage", "language", language)
+        new TokenTemplate(search, replace)
+    }
+
+    /**
      * Wordpress main configuration file, for
      * example {@code "config/wp-config.php"}. If the path is relative then
      * the file will be under the Wordpress installation directory.

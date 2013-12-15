@@ -760,15 +760,7 @@ abstract class LinuxScript extends Script {
      */
     def methodMissing(String name, def args) {
         switch (name) {
-            case 'profileProperty':
-            case 'profileDurationProperty':
-            case 'profileNumberProperty':
-            case 'profileListProperty':
-            case 'profileTypedListProperty':
-            case 'profileFileProperty':
-            case 'profileDirProperty':
-            case 'profileURIProperty':
-            case 'profileBooleanProperty':
+            case ~/profile.*Property/:
             case 'containsKey':
                 return InvokerHelper.invokeMethod(profile, name, args)
             default:

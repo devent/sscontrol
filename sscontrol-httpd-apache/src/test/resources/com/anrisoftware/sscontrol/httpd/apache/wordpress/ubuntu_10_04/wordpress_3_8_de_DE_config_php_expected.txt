@@ -115,7 +115,7 @@ $table_prefix = 'wp_';
  * language support.
  */
 # SSCONTROL-httpd
-define('WPLANG', '');
+define('WPLANG', 'de_DE');
 # SSCONTROL-httpd-END
 
 

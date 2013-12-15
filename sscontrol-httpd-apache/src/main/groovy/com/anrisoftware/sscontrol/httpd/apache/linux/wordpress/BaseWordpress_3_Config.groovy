@@ -62,6 +62,7 @@ class BaseWordpress_3_Config extends BaseWordpressConfig {
             configDatabaseHost(service),
             configDatabaseCharset(service),
             configDatabaseCollate(service),
+            configDatabaseTablePrefix(service),
         ]
     }
 
@@ -98,6 +99,12 @@ class BaseWordpress_3_Config extends BaseWordpressConfig {
     def configDatabaseCollate(WordpressService service) {
         def search = wordpressConfigTemplate.getText(true, "configDatabaseCollate_search")
         def replace = wordpressConfigTemplate.getText(true, "configDatabaseCollate", "collate", databaseDefaultCollate)
+        new TokenTemplate(search, replace)
+    }
+
+    def configDatabaseTablePrefix(WordpressService service) {
+        def search = wordpressConfigTemplate.getText(true, "configTablePrefix_search")
+        def replace = wordpressConfigTemplate.getText(true, "configTablePrefix", "prefix", databaseDefaultTablePrefix)
         new TokenTemplate(search, replace)
     }
 

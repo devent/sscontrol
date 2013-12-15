@@ -29,69 +29,69 @@ import com.anrisoftware.propertiesutils.ContextProperties
  */
 abstract class BaseStorage {
 
-	BasePostfixScript script
+    BasePostfixScript script
 
-	void setScript(BasePostfixScript script) {
-		this.script = script
-	}
+    void setScript(BasePostfixScript script) {
+        this.script = script
+    }
 
-	def propertyMissing(String name) {
-		script.getProperty name
-	}
+    def propertyMissing(String name) {
+        script.getProperty name
+    }
 
-	def methodMissing(String name, def args) {
-		script.invokeMethod name, args
-	}
+    def methodMissing(String name, def args) {
+        script.invokeMethod name, args
+    }
 
-	/**
-	 * Returns the storage/properties.
-	 */
-	abstract ContextProperties getStorageProperties()
+    /**
+     * Returns the storage/properties.
+     */
+    abstract ContextProperties getStorageProperties()
 
-	/**
-	 * Returns the absolute path of the alias domains hash table file.
-	 * If the path is not absolute then it is assume to be under
-	 * the configuration directory.
-	 *
-	 * <ul>
-	 * <li>profile property {@code "virtual_domains_file"}</li>
-	 * </ul>
-	 *
-	 * @see #getConfigurationDir()
-	 * @see #getStorageProperties()
-	 */
-	File getVirtualDomainsFile() {
-		propertyFile "virtual_domains_file", storageProperties
-	}
+    /**
+     * Returns the absolute path of the alias domains hash table file.
+     * If the path is not absolute then it is assume to be under
+     * the configuration directory.
+     *
+     * <ul>
+     * <li>profile property {@code "virtual_domains_file"}</li>
+     * </ul>
+     *
+     * @see #getConfigurationDir()
+     * @see #getStorageProperties()
+     */
+    File getVirtualDomainsFile() {
+        profileFileProperty "virtual_domains_file", script.configurationDir, storageProperties
+    }
 
-	/**
-	 * Returns the absolute path of the alias maps hash table file.
-	 * If the path is not absolute then it is assume to be under
-	 * the configuration directory.
-	 *
-	 * <ul>
-	 * <li>profile property {@code "virtual_alias_file"}</li>
-	 * </ul>
-	 *
-	 * @see #getConfigurationDir()
-	 * @see #getStorageProperties()
-	 */
-	File getVirtualAliasFile() {
-		propertyFile "virtual_alias_file", storageProperties
-	}
+    /**
+     * Returns the absolute path of the alias maps hash table file.
+     * If the path is not absolute then it is assume to be under
+     * the configuration directory.
+     *
+     * <ul>
+     * <li>profile property {@code "virtual_alias_file"}</li>
+     * </ul>
+     *
+     * @see #getConfigurationDir()
+     * @see #getStorageProperties()
+     */
+    File getVirtualAliasFile() {
+        profileFileProperty "virtual_alias_file", script.configurationDir, storageProperties
+    }
 
-	/**
-	 * Returns the absolute path of the virtual mailbox maps hash table file.
-	 * If the path is not absolute then it is assume to be under
-	 * the configuration directory.
-	 *
-	 * <ul>
-	 * <li>profile property {@code "virtual_mailbox_file"}</li>
-	 * </ul>
-	 *
-	 * @see #getConfigurationDir()
-	 */
-	File getVirtualMailboxFile() {
-		propertyFile "virtual_mailbox_file", storageProperties
-	}
+    /**
+     * Returns the absolute path of the virtual mailbox maps hash table file.
+     * If the path is not absolute then it is assume to be under
+     * the configuration directory.
+     *
+     * <ul>
+     * <li>profile property {@code "virtual_mailbox_file"}</li>
+     * </ul>
+     *
+     * @see #getConfigurationDir()
+     */
+    File getVirtualMailboxFile() {
+        profileFileProperty "virtual_mailbox_file", script.configurationDir, storageProperties
+    }
 }

@@ -22,6 +22,7 @@ import static java.lang.String.format;
 import static java.util.regex.Pattern.compile;
 
 import java.io.Serializable;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -32,24 +33,47 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
+@SuppressWarnings("serial")
 public class TokenTemplate implements Serializable {
 
-    /**
-     * @since 1.0
-     */
-    private static final long serialVersionUID = 7393785512827671511L;
+    private static final String ESCAPE = "escape";
+
+    private static final String ENCLOSE = "enclose";
+
+    private static final String APPEND = "append";
+
+    private static final String FLAGS = "flags";
 
     private final String search;
 
     private final String replace;
 
-    private final int flags;
+    private int flags;
 
     private boolean append;
 
     private boolean enclose;
 
     private boolean escape;
+
+    /**
+     * @see #TokenTemplate(String, String, int, boolean)
+     */
+    public TokenTemplate(Map<String, Object> args, String search, String replace) {
+        this(search, replace);
+        if (args.containsKey(FLAGS)) {
+            this.flags = (Integer) args.get(FLAGS);
+        }
+        if (args.containsKey(APPEND)) {
+            this.append = (Boolean) args.get(APPEND);
+        }
+        if (args.containsKey(ENCLOSE)) {
+            this.enclose = (Boolean) args.get(ENCLOSE);
+        }
+        if (args.containsKey(ESCAPE)) {
+            this.escape = (Boolean) args.get(ESCAPE);
+        }
+    }
 
     /**
      * @see #TokenTemplate(String, String, int, boolean)

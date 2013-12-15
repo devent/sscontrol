@@ -58,6 +58,10 @@
 			<artifactId>spi</artifactId>
 			<optional>true</optional>
 		</dependency>
+		<dependency>
+			<groupId>joda-time</groupId>
+			<artifactId>joda-time</artifactId>
+		</dependency>
 	</dependencies>
 
 </project>

@@ -37,361 +37,361 @@ import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokenTemplate
  */
 abstract class CourierMysqlDeliveryConfig extends BaseDelivery implements DeliveryConfig {
 
-	public static final String NAME = "courier.mysql"
+    public static final String NAME = "courier.mysql"
 
-	@Inject
-	CourierMysqlDeliveryConfigLogger log
+    @Inject
+    CourierMysqlDeliveryConfigLogger log
 
-	@Inject
-	DebugLoggingLevelRenderer debugLoggingLevelRenderer
+    @Inject
+    DebugLoggingLevelRenderer debugLoggingLevelRenderer
 
-	/**
-	 * The {@link Templates} for the script.
-	 */
-	Templates courierTemplates
+    /**
+     * The {@link Templates} for the script.
+     */
+    Templates courierTemplates
 
-	TemplateResource authTemplate
+    TemplateResource authTemplate
 
-	@Override
-	String getDeliveryName() {
-		NAME
-	}
+    @Override
+    String getDeliveryName() {
+        NAME
+    }
 
-	@Override
-	void deployDelivery() {
-		courierTemplates = templatesFactory.create "CourierMysqlDeliveryConfig", templatesAttributes
-		authTemplate = courierTemplates.getResource "auth_configuration"
-		installPackages courierPackages
-		deployConfig()
-		restartServices restartCommand: courierRestartCommand
-	}
+    @Override
+    void deployDelivery() {
+        courierTemplates = templatesFactory.create "CourierMysqlDeliveryConfig", templatesAttributes
+        authTemplate = courierTemplates.getResource "auth_configuration"
+        installPackages courierPackages
+        deployConfig()
+        restartServices restartCommand: courierRestartCommand
+    }
 
-	/**
-	 * Sets the configuration.
-	 */
-	void deployConfig() {
-		def configuration = []
-		configuration << new TokenTemplate(moduleListSearchTemplate, moduleListTemplate, MULTILINE)
-		configuration << new TokenTemplate(debugLoggingSearchTemplate, debugLoggingTemplate, MULTILINE)
-		deployConfiguration configurationTokens(), currentAuthdaemonConfiguration, configuration, authdaemonFile
-		log.configurationDeployed this, authdaemonFile
-		configuration = []
-		configuration << new TokenTemplate(mysqlServerSearchTemplate, mysqlServerTemplate, MULTILINE)
-		configuration << new TokenTemplate(mysqlPortSearchTemplate, mysqlPortTemplate, MULTILINE)
-		configuration << new TokenTemplate(mysqlDatabaseSearchTemplate, mysqlDatabaseTemplate, MULTILINE)
-		configuration << new TokenTemplate(mysqlUsernameSearchTemplate, mysqlUsernameTemplate, MULTILINE)
-		configuration << new TokenTemplate(mysqlPasswordSearchTemplate, mysqlPasswordTemplate, MULTILINE)
-		configuration << new TokenTemplate(mysqlUserTableSearchTemplate, mysqlUserTableTemplate, MULTILINE)
-		configuration << new TokenTemplate(mysqlCryptPwfieldSearchTemplate, mysqlCryptPwfieldTemplate, MULTILINE)
-		configuration << new TokenTemplate(mysqlClearPwfieldSearchTemplate, mysqlClearPwfieldTemplate, MULTILINE)
-		configuration << new TokenTemplate(mysqlUidFieldSearchTemplate, mysqlUidFieldTemplate, MULTILINE)
-		configuration << new TokenTemplate(mysqlGidFieldSearchTemplate, mysqlGidFieldTemplate, MULTILINE)
-		configuration << new TokenTemplate(mysqlLoginFieldSearchTemplate, mysqlLoginFieldTemplate, MULTILINE)
-		configuration << new TokenTemplate(mysqlHomeFieldSearchTemplate, mysqlHomeFieldTemplate, MULTILINE)
-		configuration << new TokenTemplate(mysqlNameFieldSearchTemplate, mysqlNameFieldTemplate, MULTILINE)
-		configuration << new TokenTemplate(mysqlMaildirFieldSearchTemplate, mysqlMaildirFieldTemplate, MULTILINE)
-		configuration << new TokenTemplate(mysqlWhereClauseSearchTemplate, mysqlWhereClauseTemplate, MULTILINE)
-		deployConfiguration configurationTokens(), currentAuthmysqlConfiguration, configuration, authmysqlFile
-		log.configurationDeployed this, authmysqlFile
-	}
+    /**
+     * Sets the configuration.
+     */
+    void deployConfig() {
+        def configuration = []
+        configuration << new TokenTemplate(moduleListSearchTemplate, moduleListTemplate, MULTILINE)
+        configuration << new TokenTemplate(debugLoggingSearchTemplate, debugLoggingTemplate, MULTILINE)
+        deployConfiguration configurationTokens(), currentAuthdaemonConfiguration, configuration, authdaemonFile
+        log.configurationDeployed this, authdaemonFile
+        configuration = []
+        configuration << new TokenTemplate(mysqlServerSearchTemplate, mysqlServerTemplate, MULTILINE)
+        configuration << new TokenTemplate(mysqlPortSearchTemplate, mysqlPortTemplate, MULTILINE)
+        configuration << new TokenTemplate(mysqlDatabaseSearchTemplate, mysqlDatabaseTemplate, MULTILINE)
+        configuration << new TokenTemplate(mysqlUsernameSearchTemplate, mysqlUsernameTemplate, MULTILINE)
+        configuration << new TokenTemplate(mysqlPasswordSearchTemplate, mysqlPasswordTemplate, MULTILINE)
+        configuration << new TokenTemplate(mysqlUserTableSearchTemplate, mysqlUserTableTemplate, MULTILINE)
+        configuration << new TokenTemplate(mysqlCryptPwfieldSearchTemplate, mysqlCryptPwfieldTemplate, MULTILINE)
+        configuration << new TokenTemplate(mysqlClearPwfieldSearchTemplate, mysqlClearPwfieldTemplate, MULTILINE)
+        configuration << new TokenTemplate(mysqlUidFieldSearchTemplate, mysqlUidFieldTemplate, MULTILINE)
+        configuration << new TokenTemplate(mysqlGidFieldSearchTemplate, mysqlGidFieldTemplate, MULTILINE)
+        configuration << new TokenTemplate(mysqlLoginFieldSearchTemplate, mysqlLoginFieldTemplate, MULTILINE)
+        configuration << new TokenTemplate(mysqlHomeFieldSearchTemplate, mysqlHomeFieldTemplate, MULTILINE)
+        configuration << new TokenTemplate(mysqlNameFieldSearchTemplate, mysqlNameFieldTemplate, MULTILINE)
+        configuration << new TokenTemplate(mysqlMaildirFieldSearchTemplate, mysqlMaildirFieldTemplate, MULTILINE)
+        configuration << new TokenTemplate(mysqlWhereClauseSearchTemplate, mysqlWhereClauseTemplate, MULTILINE)
+        deployConfiguration configurationTokens(), currentAuthmysqlConfiguration, configuration, authmysqlFile
+        log.configurationDeployed this, authmysqlFile
+    }
 
-	/**
-	 * Returns additional template attributes.
-	 */
-	Map getTemplatesAttributes() {
-		["renderers": [
-				debugLoggingLevelRenderer
-			]]
-	}
+    /**
+     * Returns additional template attributes.
+     */
+    Map getTemplatesAttributes() {
+        ["renderers": [
+                debugLoggingLevelRenderer
+            ]]
+    }
 
-	String getModuleListSearchTemplate() {
-		authTemplate.getText(true, "moduleListSearch")
-	}
+    String getModuleListSearchTemplate() {
+        authTemplate.getText(true, "moduleListSearch")
+    }
 
-	String getModuleListTemplate() {
-		authTemplate.getText(true, "moduleList", "modules", authModules)
-	}
+    String getModuleListTemplate() {
+        authTemplate.getText(true, "moduleList", "modules", authModules)
+    }
 
-	String getDebugLoggingSearchTemplate() {
-		authTemplate.getText(true, "debugLoggingSearch")
-	}
+    String getDebugLoggingSearchTemplate() {
+        authTemplate.getText(true, "debugLoggingSearch")
+    }
 
-	String getDebugLoggingTemplate() {
-		authTemplate.getText(true, "debugLogging", "level", service.debugLogging)
-	}
+    String getDebugLoggingTemplate() {
+        authTemplate.getText(true, "debugLogging", "level", service.debugLogging)
+    }
 
-	String getMysqlServerSearchTemplate() {
-		authTemplate.getText(true, "mysqlServerSearch")
-	}
+    String getMysqlServerSearchTemplate() {
+        authTemplate.getText(true, "mysqlServerSearch")
+    }
 
-	String getMysqlServerTemplate() {
-		authTemplate.getText(true, "mysqlServer", "server", service.database.server)
-	}
+    String getMysqlServerTemplate() {
+        authTemplate.getText(true, "mysqlServer", "server", service.database.server)
+    }
 
-	String getMysqlPortSearchTemplate() {
-		authTemplate.getText(true, "mysqlPortSearch")
-	}
+    String getMysqlPortSearchTemplate() {
+        authTemplate.getText(true, "mysqlPortSearch")
+    }
 
-	String getMysqlPortTemplate() {
-		authTemplate.getText(true, "mysqlPort", "port", service.database.port)
-	}
+    String getMysqlPortTemplate() {
+        authTemplate.getText(true, "mysqlPort", "port", service.database.port)
+    }
 
-	String getMysqlDatabaseSearchTemplate() {
-		authTemplate.getText(true, "mysqlDatabaseSearch")
-	}
+    String getMysqlDatabaseSearchTemplate() {
+        authTemplate.getText(true, "mysqlDatabaseSearch")
+    }
 
-	String getMysqlDatabaseTemplate() {
-		authTemplate.getText(true, "mysqlDatabase", "name", service.database.database)
-	}
+    String getMysqlDatabaseTemplate() {
+        authTemplate.getText(true, "mysqlDatabase", "name", service.database.database)
+    }
 
-	String getMysqlUsernameSearchTemplate() {
-		authTemplate.getText(true, "mysqlUsernameSearch")
-	}
+    String getMysqlUsernameSearchTemplate() {
+        authTemplate.getText(true, "mysqlUsernameSearch")
+    }
 
-	String getMysqlUsernameTemplate() {
-		authTemplate.getText(true, "mysqlUsername", "name", service.database.user)
-	}
+    String getMysqlUsernameTemplate() {
+        authTemplate.getText(true, "mysqlUsername", "name", service.database.user)
+    }
 
-	String getMysqlPasswordSearchTemplate() {
-		authTemplate.getText(true, "mysqlPasswordSearch")
-	}
+    String getMysqlPasswordSearchTemplate() {
+        authTemplate.getText(true, "mysqlPasswordSearch")
+    }
 
-	String getMysqlPasswordTemplate() {
-		authTemplate.getText(true, "mysqlPassword", "password", service.database.password)
-	}
+    String getMysqlPasswordTemplate() {
+        authTemplate.getText(true, "mysqlPassword", "password", service.database.password)
+    }
 
-	String getMysqlUserTableSearchTemplate() {
-		authTemplate.getText(true, "mysqlUserTableSearch")
-	}
+    String getMysqlUserTableSearchTemplate() {
+        authTemplate.getText(true, "mysqlUserTableSearch")
+    }
 
-	String getMysqlUserTableTemplate() {
-		authTemplate.getText(true, "mysqlUserTable", "table", usersTable)
-	}
+    String getMysqlUserTableTemplate() {
+        authTemplate.getText(true, "mysqlUserTable", "table", usersTable)
+    }
 
-	String getMysqlCryptPwfieldSearchTemplate() {
-		authTemplate.getText(true, "mysqlCryptPwfieldSearch")
-	}
+    String getMysqlCryptPwfieldSearchTemplate() {
+        authTemplate.getText(true, "mysqlCryptPwfieldSearch")
+    }
 
-	String getMysqlCryptPwfieldTemplate() {
-		authTemplate.getText(true, "mysqlCryptPwfield", "field", cryptField)
-	}
+    String getMysqlCryptPwfieldTemplate() {
+        authTemplate.getText(true, "mysqlCryptPwfield", "field", cryptField)
+    }
 
-	String getMysqlClearPwfieldSearchTemplate() {
-		authTemplate.getText(true, "mysqlClearPwfieldSearch")
-	}
+    String getMysqlClearPwfieldSearchTemplate() {
+        authTemplate.getText(true, "mysqlClearPwfieldSearch")
+    }
 
-	String getMysqlClearPwfieldTemplate() {
-		authTemplate.getText(true, "mysqlClearPwfield")
-	}
+    String getMysqlClearPwfieldTemplate() {
+        authTemplate.getText(true, "mysqlClearPwfield")
+    }
 
-	String getMysqlUidFieldSearchTemplate() {
-		authTemplate.getText(true, "mysqlUidFieldSearch")
-	}
+    String getMysqlUidFieldSearchTemplate() {
+        authTemplate.getText(true, "mysqlUidFieldSearch")
+    }
 
-	String getMysqlUidFieldTemplate() {
-		authTemplate.getText(true, "mysqlUidField", "field", uidField)
-	}
+    String getMysqlUidFieldTemplate() {
+        authTemplate.getText(true, "mysqlUidField", "field", uidField)
+    }
 
-	String getMysqlGidFieldSearchTemplate() {
-		authTemplate.getText(true, "mysqlGidFieldSearch")
-	}
+    String getMysqlGidFieldSearchTemplate() {
+        authTemplate.getText(true, "mysqlGidFieldSearch")
+    }
 
-	String getMysqlGidFieldTemplate() {
-		authTemplate.getText(true, "mysqlGidField", "field", gidField)
-	}
+    String getMysqlGidFieldTemplate() {
+        authTemplate.getText(true, "mysqlGidField", "field", gidField)
+    }
 
-	String getMysqlLoginFieldSearchTemplate() {
-		authTemplate.getText(true, "mysqlLoginFieldSearch")
-	}
+    String getMysqlLoginFieldSearchTemplate() {
+        authTemplate.getText(true, "mysqlLoginFieldSearch")
+    }
 
-	String getMysqlLoginFieldTemplate() {
-		authTemplate.getText(true, "mysqlLoginField", "field", loginField)
-	}
+    String getMysqlLoginFieldTemplate() {
+        authTemplate.getText(true, "mysqlLoginField", "field", loginField)
+    }
 
-	String getMysqlHomeFieldSearchTemplate() {
-		authTemplate.getText(true, "mysqlHomeFieldSearch")
-	}
+    String getMysqlHomeFieldSearchTemplate() {
+        authTemplate.getText(true, "mysqlHomeFieldSearch")
+    }
 
-	String getMysqlHomeFieldTemplate() {
-		authTemplate.getText(true, "mysqlHomeField", "field", homeField)
-	}
+    String getMysqlHomeFieldTemplate() {
+        authTemplate.getText(true, "mysqlHomeField", "field", homeField)
+    }
 
-	String getMysqlNameFieldSearchTemplate() {
-		authTemplate.getText(true, "mysqlNameFieldSearch")
-	}
+    String getMysqlNameFieldSearchTemplate() {
+        authTemplate.getText(true, "mysqlNameFieldSearch")
+    }
 
-	String getMysqlNameFieldTemplate() {
-		authTemplate.getText(true, "mysqlNameField", "field", nameField)
-	}
+    String getMysqlNameFieldTemplate() {
+        authTemplate.getText(true, "mysqlNameField", "field", nameField)
+    }
 
-	String getMysqlMaildirFieldSearchTemplate() {
-		authTemplate.getText(true, "mysqlMaildirFieldSearch")
-	}
+    String getMysqlMaildirFieldSearchTemplate() {
+        authTemplate.getText(true, "mysqlMaildirFieldSearch")
+    }
 
-	String getMysqlMaildirFieldTemplate() {
-		authTemplate.getText(true, "mysqlMaildirField", "field", "concat(${homeField},'/',${maildirField})")
-	}
+    String getMysqlMaildirFieldTemplate() {
+        authTemplate.getText(true, "mysqlMaildirField", "field", "concat(${homeField},'/',${maildirField})")
+    }
 
-	String getMysqlWhereClauseSearchTemplate() {
-		authTemplate.getText(true, "mysqlWhereClauseSearch")
-	}
+    String getMysqlWhereClauseSearchTemplate() {
+        authTemplate.getText(true, "mysqlWhereClauseSearch")
+    }
 
-	String getMysqlWhereClauseTemplate() {
-		authTemplate.getText(true, "mysqlWhereClause", "clause", "${enabledField}=1")
-	}
+    String getMysqlWhereClauseTemplate() {
+        authTemplate.getText(true, "mysqlWhereClause", "clause", "${enabledField}=1")
+    }
 
-	String getUsersTable() {
-		script.profileProperty "users_table", deliveryProperties
-	}
+    String getUsersTable() {
+        script.profileProperty "users_table", deliveryProperties
+    }
 
-	String getEnabledField() {
-		script.profileProperty "enabled_field", deliveryProperties
-	}
+    String getEnabledField() {
+        script.profileProperty "enabled_field", deliveryProperties
+    }
 
-	String getLoginField() {
-		script.profileProperty "login_field", deliveryProperties
-	}
+    String getLoginField() {
+        script.profileProperty "login_field", deliveryProperties
+    }
 
-	String getNameField() {
-		script.profileProperty "name_field", deliveryProperties
-	}
+    String getNameField() {
+        script.profileProperty "name_field", deliveryProperties
+    }
 
-	String getUidField() {
-		script.profileProperty "uid_field", deliveryProperties
-	}
+    String getUidField() {
+        script.profileProperty "uid_field", deliveryProperties
+    }
 
-	String getGidField() {
-		script.profileProperty "gid_field", deliveryProperties
-	}
+    String getGidField() {
+        script.profileProperty "gid_field", deliveryProperties
+    }
 
-	String getHomeField() {
-		script.profileProperty "home_field", deliveryProperties
-	}
+    String getHomeField() {
+        script.profileProperty "home_field", deliveryProperties
+    }
 
-	String getMaildirField() {
-		script.profileProperty "maildir_field", deliveryProperties
-	}
+    String getMaildirField() {
+        script.profileProperty "maildir_field", deliveryProperties
+    }
 
-	String getClearField() {
-		script.profileProperty "clear_field", deliveryProperties
-	}
+    String getClearField() {
+        script.profileProperty "clear_field", deliveryProperties
+    }
 
-	String getCryptField() {
-		script.profileProperty "crypt_field", deliveryProperties
-	}
+    String getCryptField() {
+        script.profileProperty "crypt_field", deliveryProperties
+    }
 
-	/**
-	 * Returns the current {@code authdaemonrc} configuration. This is usually
-	 * the configuration file {@code /etc/courier/authdaemonrc}.
-	 *
-	 * @see #getMainFile()
-	 */
-	String getCurrentAuthdaemonConfiguration() {
-		currentConfiguration authdaemonFile
-	}
+    /**
+     * Returns the current {@code authdaemonrc} configuration. This is usually
+     * the configuration file {@code /etc/courier/authdaemonrc}.
+     *
+     * @see #getMainFile()
+     */
+    String getCurrentAuthdaemonConfiguration() {
+        currentConfiguration authdaemonFile
+    }
 
-	/**
-	 * Returns the current {@code authmysqlrc} configuration. This is usually
-	 * the configuration file {@code /etc/courier/authmysqlrc}.
-	 *
-	 * @see #getMainFile()
-	 */
-	String getCurrentAuthmysqlConfiguration() {
-		currentConfiguration authmysqlFile
-	}
+    /**
+     * Returns the current {@code authmysqlrc} configuration. This is usually
+     * the configuration file {@code /etc/courier/authmysqlrc}.
+     *
+     * @see #getMainFile()
+     */
+    String getCurrentAuthmysqlConfiguration() {
+        currentConfiguration authmysqlFile
+    }
 
-	/**
-	 * Returns the list of authentication modules.
-	 *
-	 * <ul>
-	 * <li>property {@code "courier_auth_modules"}</li>
-	 * </ul>
-	 *
-	 * @see #getMainFile()
-	 */
-	List getAuthModules() {
-		profileListProperty "courier_auth_modules", deliveryProperties
-	}
+    /**
+     * Returns the list of authentication modules.
+     *
+     * <ul>
+     * <li>property {@code "courier_auth_modules"}</li>
+     * </ul>
+     *
+     * @see #getMainFile()
+     */
+    List getAuthModules() {
+        profileListProperty "courier_auth_modules", deliveryProperties
+    }
 
-	/**
-	 * Returns the list of Courier/packages.
-	 *
-	 * <ul>
-	 * <li>property {@code "courier_packages"}</li>
-	 * </ul>
-	 *
-	 * @see #getDeliveryProperties()
-	 */
-	List getCourierPackages() {
-		profileListProperty "courier_packages", deliveryProperties
-	}
+    /**
+     * Returns the list of Courier/packages.
+     *
+     * <ul>
+     * <li>property {@code "courier_packages"}</li>
+     * </ul>
+     *
+     * @see #getDeliveryProperties()
+     */
+    List getCourierPackages() {
+        profileListProperty "courier_packages", deliveryProperties
+    }
 
-	/**
-	 * Returns the restart command.
-	 *
-	 * <ul>
-	 * <li>property {@code "courier_restart_command"}</li>
-	 * </ul>
-	 *
-	 * @see #getDeliveryProperties()
-	 */
-	String getCourierRestartCommand() {
-		profileProperty "courier_restart_command", deliveryProperties
-	}
+    /**
+     * Returns the restart command.
+     *
+     * <ul>
+     * <li>property {@code "courier_restart_command"}</li>
+     * </ul>
+     *
+     * @see #getDeliveryProperties()
+     */
+    String getCourierRestartCommand() {
+        profileProperty "courier_restart_command", deliveryProperties
+    }
 
-	/**
-	 * Returns the services to restart.
-	 *
-	 * <ul>
-	 * <li>property {@code "courier_restart_services"}</li>
-	 * </ul>
-	 *
-	 * @see #getDeliveryProperties()
-	 */
-	List getCourierServices() {
-		profileListProperty "courier_restart_services", deliveryProperties
-	}
+    /**
+     * Returns the services to restart.
+     *
+     * <ul>
+     * <li>property {@code "courier_restart_services"}</li>
+     * </ul>
+     *
+     * @see #getDeliveryProperties()
+     */
+    List getCourierServices() {
+        profileListProperty "courier_restart_services", deliveryProperties
+    }
 
-	/**
-	 * Returns the path of the configuration directory.
-	 *
-	 * <ul>
-	 * <li>property {@code "courier_configuration_directory"}</li>
-	 * </ul>
-	 *
-	 * @see #getDeliveryProperties()
-	 */
-	File getCourierConfigurationDir() {
-		script.profileProperty("courier_configuration_directory", deliveryProperties) as File
-	}
+    /**
+     * Returns the path of the configuration directory.
+     *
+     * <ul>
+     * <li>property {@code "courier_configuration_directory"}</li>
+     * </ul>
+     *
+     * @see #getDeliveryProperties()
+     */
+    File getCourierConfigurationDir() {
+        script.profileProperty("courier_configuration_directory", deliveryProperties) as File
+    }
 
-	/**
-	 * Returns the {@code authdaemonrc} file. If the path is not absolute
-	 * then it is assume to be under the configuration directory.
-	 *
-	 * <ul>
-	 * <li>property {@code "courier_authdaemon_file"}</li>
-	 * </ul>
-	 *
-	 * @see #getCourierConfigurationDir()
-	 * @see #getDeliveryProperties()
-	 */
-	File getAuthdaemonFile() {
-		script.propertyFile "courier_authdaemon_file", deliveryProperties, courierConfigurationDir
-	}
+    /**
+     * Returns the {@code authdaemonrc} file. If the path is not absolute
+     * then it is assume to be under the configuration directory.
+     *
+     * <ul>
+     * <li>property {@code "courier_authdaemon_file"}</li>
+     * </ul>
+     *
+     * @see #getCourierConfigurationDir()
+     * @see #getDeliveryProperties()
+     */
+    File getAuthdaemonFile() {
+        script.profileFileProperty "courier_authdaemon_file", courierConfigurationDir, deliveryProperties
+    }
 
-	/**
-	 * Returns the {@code authmysqlrc} file. If the path is not absolute
-	 * then it is assume to be under the configuration directory.
-	 *
-	 * <ul>
-	 * <li>property {@code "courier_authmysql_file"}</li>
-	 * </ul>
-	 *
-	 * @see #getCourierConfigurationDir()
-	 * @see #getDeliveryProperties()
-	 */
-	File getAuthmysqlFile() {
-		propertyFile "courier_authmysql_file", deliveryProperties, courierConfigurationDir
-	}
+    /**
+     * Returns the {@code authmysqlrc} file. If the path is not absolute
+     * then it is assume to be under the configuration directory.
+     *
+     * <ul>
+     * <li>property {@code "courier_authmysql_file"}</li>
+     * </ul>
+     *
+     * @see #getCourierConfigurationDir()
+     * @see #getDeliveryProperties()
+     */
+    File getAuthmysqlFile() {
+        profileFileProperty "courier_authmysql_file", courierConfigurationDir, deliveryProperties
+    }
 }

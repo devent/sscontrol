@@ -65,20 +65,20 @@ $servers->setValue('server','tls',false);
 
 firstNewServer() ::= <<
 //   declaration. */
-// \$servers->newServer\('ldap_pla'\);
+// $servers->newServer('ldap_pla');
 >>
 
 firstNewServer_search() ::= <%
-   declaration\. \*/\n\$servers->newServer\('ldap_pla'\);
+   declaration\\. \\*/\n\\$servers->newServer\\('ldap_pla'\\);
 %>
 
 firstNewServerName() ::= <<
-//   phpLDAPadmin to identify this LDAP server to users\. \*
-// \$servers->setValue('server','name','My LDAP Server');
+//   phpLDAPadmin to identify this LDAP server to users. *
+// $servers->setValue('server','name','My LDAP Server');
 >>
 
 firstNewServerName_search() ::= <%
-   phpLDAPadmin to identify this LDAP server to users\. \*/\n\$servers->setValue\('server','name','My LDAP Server'\);
+   phpLDAPadmin to identify this LDAP server to users\\. \\*/\n\\$servers->setValue\\('server','name','My LDAP Server'\\);
 %>
 
 includeServersConfig(file) ::= <<
@@ -87,5 +87,5 @@ include "<file>";
 >>
 
 includeServersConfig_search(file) ::= <%
-(include "<file>";\n)?\?>
+(include "<file>";\n)?\\?>
 %>

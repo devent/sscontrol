@@ -18,7 +18,7 @@
  */
 package com.anrisoftware.sscontrol.httpd.apache.ubuntu_10_04.phpldapadmin
 
-import static com.anrisoftware.sscontrol.httpd.apache.ubuntu_10_04.apache.Ubuntu10_04ScriptFactory.PROFILE;
+import static com.anrisoftware.sscontrol.httpd.apache.ubuntu_10_04.apache.Ubuntu10_04ScriptFactory.PROFILE
 
 import java.util.regex.Pattern
 
@@ -29,11 +29,11 @@ import org.apache.commons.io.FilenameUtils
 
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.Templates
-import com.anrisoftware.sscontrol.httpd.apache.linux.apache.ApacheScript;
-import com.anrisoftware.sscontrol.httpd.apache.linux.apache.FcgiConfig;
-import com.anrisoftware.sscontrol.httpd.apache.linux.apache.ServiceConfig;
-import com.anrisoftware.sscontrol.httpd.apache.linux.phpldapadmin.BasePhpldapadminConfig;
-import com.anrisoftware.sscontrol.httpd.apache.ubuntu_10_04.apache.Ubuntu10_04ScriptFactory;
+import com.anrisoftware.sscontrol.httpd.apache.linux.apache.ApacheScript
+import com.anrisoftware.sscontrol.httpd.apache.linux.apache.FcgiConfig
+import com.anrisoftware.sscontrol.httpd.apache.linux.apache.ServiceConfig
+import com.anrisoftware.sscontrol.httpd.apache.linux.phpldapadmin.BasePhpldapadminConfig
+import com.anrisoftware.sscontrol.httpd.apache.ubuntu_10_04.apache.Ubuntu10_04ScriptFactory
 import com.anrisoftware.sscontrol.httpd.statements.domain.Domain
 import com.anrisoftware.sscontrol.httpd.statements.phpldapadmin.PhpldapadminService
 import com.anrisoftware.sscontrol.httpd.statements.webservice.WebService
@@ -47,225 +47,228 @@ import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokenTemplate
  */
 class PhpldapadminConfig extends BasePhpldapadminConfig implements ServiceConfig {
 
-	public static final String NAME = "phpldapadmin"
+    public static final String NAME = "phpldapadmin"
 
-	@Inject
-	PhpldapadminConfigLogger log
+    @Inject
+    PhpldapadminConfigLogger log
 
-	Templates phpldapadminTemplates
+    Templates phpldapadminTemplates
 
-	TemplateResource adminConfigTemplate
+    TemplateResource adminConfigTemplate
 
-	TemplateResource phpldapadminCommandsTemplate
+    TemplateResource phpldapadminCommandsTemplate
 
-	@Inject
-	FcgiConfig fcgiConfig
+    @Inject
+    FcgiConfig fcgiConfig
 
-	@Override
-	String getProfile() {
-		PROFILE
-	}
+    @Override
+    String getProfile() {
+        PROFILE
+    }
 
-	@Override
-	String getServiceName() {
-		NAME
-	}
+    @Override
+    String getServiceName() {
+        NAME
+    }
 
-	@Override
-	void setScript(ApacheScript script) {
-		super.setScript script
-		phpldapadminTemplates = templatesFactory.create "Apache_2_2_Phpldapadmin"
-		adminConfigTemplate = phpldapadminTemplates.getResource "config"
-		phpldapadminCommandsTemplate = phpldapadminTemplates.getResource "commands"
-	}
+    @Override
+    void setScript(ApacheScript script) {
+        super.setScript script
+        phpldapadminTemplates = templatesFactory.create "Apache_2_2_Phpldapadmin"
+        adminConfigTemplate = phpldapadminTemplates.getResource "config"
+        phpldapadminCommandsTemplate = phpldapadminTemplates.getResource "commands"
+    }
 
-	@Override
-	void deployService(Domain domain, WebService service, List serviceConfig) {
-		fcgiConfig.script = script
-		installPackages adminPackages
-		fcgiConfig.enableFcgi()
-		fcgiConfig.deployConfig domain
-		downloadPhpldapadmin domain
-		deployConfiguration domain, service
-		deployServerConfig domain, service
-		createDomainConfig domain, service, serviceConfig
-	}
+    @Override
+    void deployService(Domain domain, WebService service, List serviceConfig) {
+        fcgiConfig.script = script
+        installPackages adminPackages
+        fcgiConfig.enableFcgi()
+        fcgiConfig.deployConfig domain
+        downloadPhpldapadmin domain
+        deployConfiguration domain, service
+        deployServerConfig domain, service
+        createDomainConfig domain, service, serviceConfig
+    }
 
-	void downloadPhpldapadmin(Domain domain) {
-		def name = new File(adminSource.toURI()).name
-		def target = new File(tmpDirectory, name)
-		def extension = FilenameUtils.getExtension target.absolutePath
-		def outputDir = adminConfigurationDir(domain)
-		def linkTarget = adminLinkedConfigurationDir(domain)
-		FileUtils.copyURLToFile adminSource, target
-		unpack([file: target, type: extension, output: outputDir, command: tarCommand, override: true])
-		linkTarget.delete()
-		link([files: outputDir, targets: linkTarget])
-	}
+    void downloadPhpldapadmin(Domain domain) {
+        def name = new File(adminSource.toURI()).name
+        def target = new File(tmpDirectory, name)
+        def extension = FilenameUtils.getExtension target.absolutePath
+        def outputDir = adminConfigurationDir(domain)
+        def linkTarget = adminLinkedConfigurationDir(domain)
+        FileUtils.copyURLToFile adminSource, target
+        unpack([file: target, type: extension, output: outputDir, command: tarCommand, override: true])
+        linkTarget.delete()
+        link([files: outputDir, targets: linkTarget])
+    }
 
-	/**
-	 * Creates the Apache/domain configuration.
-	 */
-	void createDomainConfig(Domain domain, PhpldapadminService service, List serviceConfig) {
-		def config = adminConfigTemplate.getText(true, "domainConfig",
-				"domain", domain,
-				"service", service,
-				"serviceDir", adminLinkedConfigurationDir(domain),
-				"properties", script,
-				"fcgiProperties", fcgiConfig)
-		serviceConfig << config
-	}
+    /**
+     * Creates the Apache/domain configuration.
+     */
+    void createDomainConfig(Domain domain, PhpldapadminService service, List serviceConfig) {
+        def config = adminConfigTemplate.getText(true, "domainConfig",
+                "domain", domain,
+                "service", service,
+                "serviceDir", adminLinkedConfigurationDir(domain),
+                "properties", script,
+                "fcgiProperties", fcgiConfig)
+        serviceConfig << config
+    }
 
-	/**
-	 * Deploys the phpldapadmin/configuration.
-	 */
-	void deployConfiguration(Domain domain, PhpldapadminService service) {
-		def configFile = adminConfigFile(domain)
-		if (!configFile.isFile()) {
-			FileUtils.copyFile adminExampleConfig(domain), configFile
-		}
-		changeMod([mod: "o-r", files: configFile])
-		def configs = adminConfigurations(domain, service)
-		script.deployConfiguration configurationTokens("//"), adminConfiguration(domain), configs, configFile
-	}
+    /**
+     * Deploys the phpldapadmin/configuration.
+     */
+    void deployConfiguration(Domain domain, PhpldapadminService service) {
+        def configFile = adminConfigFile(domain)
+        if (!configFile.isFile()) {
+            FileUtils.copyFile adminExampleConfig(domain), configFile
+        }
+        changeMod mod: "o-r", files: configFile
+        def configs = adminConfigurations(domain, service)
+        script.deployConfiguration configurationTokens("//"), adminConfiguration(domain), configs, configFile
+    }
 
-	/**
-	 * Returns the phpldapadmin/configurations.
-	 */
-	List adminConfigurations(Domain domain, PhpldapadminService service) {
-		[
-			commentFirstNewServer(),
-			commentFirstNewServerName(),
-			addIncludeServers(domain),
-		]
-	}
+    /**
+     * Returns the phpldapadmin/configurations.
+     */
+    List adminConfigurations(Domain domain, PhpldapadminService service) {
+        [
+            commentFirstNewServer(),
+            commentFirstNewServerName(),
+            addIncludeServers(domain),
+        ]
+    }
 
-	def commentFirstNewServer() {
-		def search = adminConfigTemplate.getText(true, "firstNewServer_search")
-		def replace = adminConfigTemplate.getText(true, "firstNewServer")
-		def token = new TokenTemplate(search, replace)
-		token.append = false
-		token
-	}
+    def commentFirstNewServer() {
+        def search = adminConfigTemplate.getText(true, "firstNewServer_search")
+        def replace = adminConfigTemplate.getText(true, "firstNewServer")
+        def token = new TokenTemplate(search, replace)
+        token.append = false
+        token
+    }
 
-	def commentFirstNewServerName() {
-		def search = adminConfigTemplate.getText(true, "firstNewServerName_search")
-		def replace = adminConfigTemplate.getText(true, "firstNewServerName")
-		def token = new TokenTemplate(search, replace)
-		token.append = false
-		token
-	}
+    def commentFirstNewServerName() {
+        def search = adminConfigTemplate.getText(true, "firstNewServerName_search")
+        def replace = adminConfigTemplate.getText(true, "firstNewServerName")
+        def token = new TokenTemplate(search, replace)
+        token.append = false
+        token
+    }
 
-	def addIncludeServers(def domain) {
-		def file = adminServersConfigFile(domain)
-		def search = adminConfigTemplate.getText(true, "includeServersConfig_search", "file", Pattern.quote(file.name))
-		def replace = adminConfigTemplate.getText(true, "includeServersConfig", "file", file.name)
-		def token = new TokenTemplate(search, replace)
-		token.append = false
-		token.enclose = false
-		token
-	}
+    def addIncludeServers(def domain) {
+        def file = adminServersConfigFile(domain)
+        def search = adminConfigTemplate.getText(true, "includeServersConfig_search", "file", Pattern.quote(file.name))
+        def replace = adminConfigTemplate.getText(true, "includeServersConfig", "file", file.name)
+        def token = new TokenTemplate(search, replace)
+        token.append = false
+        token.enclose = false
+        token
+    }
 
-	/**
-	 * Deploy the servers configuration.
-	 */
-	def deployServerConfig(Domain domain, PhpldapadminService service) {
-		def string = adminConfigTemplate.getText true, "serversConfig", "service", service
-		def file = adminServersConfigFile(domain)
-		FileUtils.write file, string
-		changeMod([mod: "o-r", files: file])
-		log.serverConfigdeployed script, file
-	}
+    /**
+     * Deploy the servers configuration.
+     */
+    def deployServerConfig(Domain domain, PhpldapadminService service) {
+        def string = adminConfigTemplate.getText true, "serversConfig", "service", service
+        def file = adminServersConfigFile(domain)
+        FileUtils.write file, string
+        changeMod([mod: "o-r", files: file])
+        log.serverConfigdeployed script, file
+    }
 
-	/**
-	 * Phpldapadmin/configuration directory, for
-	 * example {@code "/etc/%s/phpldampadmin-1.2.3"}. The first argument
-	 * is replaced with the domain directory.
-	 *
-	 * <ul>
-	 * <li>profile property {@code "phpldapadmin_configuration_directory"}</li>
-	 * </ul>
-	 */
-	File adminConfigurationDir(def domain) {
-		String path = profileProperty "phpldapadmin_configuration_directory"
-		new File(String.format(path, domainDir(domain)))
-	}
+    /**
+     * Phpldapadmin configuration directory, for
+     * example {@code "/etc/%s/phpldampadmin-1.2.3"}. The first argument
+     * is replaced with the domain directory.
+     *
+     * <ul>
+     * <li>profile property {@code "phpldapadmin_configuration_directory"}</li>
+     * </ul>
+     */
+    File adminConfigurationDir(def domain) {
+        String path = profileProperty "phpldapadmin_configuration_directory"
+        new File(String.format(path, domainDir(domain)))
+    }
 
-	/**
-	 * The linked Phpldapadmin/configuration directory, for
-	 * example {@code "/etc/%s/phpldampadmin"}. The first argument
-	 * is replaced with the domain directory.
-	 *
-	 * <ul>
-	 * <li>profile property {@code "phpldapadmin_linked_configuration_directory"}</li>
-	 * </ul>
-	 */
-	File adminLinkedConfigurationDir(def domain) {
-		String path = profileProperty "phpldapadmin_linked_configuration_directory"
-		new File(String.format(path, domainDir(domain)))
-	}
+    /**
+     * The linked Phpldapadmin configuration directory, for
+     * example {@code "/etc/%s/phpldampadmin"}. The first argument
+     * is replaced with the domain directory.
+     *
+     * <ul>
+     * <li>profile property {@code "phpldapadmin_linked_configuration_directory"}</li>
+     * </ul>
+     */
+    File adminLinkedConfigurationDir(def domain) {
+        String path = profileProperty "phpldapadmin_linked_configuration_directory"
+        new File(String.format(path, domainDir(domain)))
+    }
 
-	/**
-	 * Phpldapadmin/configuration file, for
-	 * example {@code "config/config.php"}. If the path is
-	 * not absolute then it is assume to be under the configuration directory.
-	 *
-	 * <ul>
-	 * <li>profile property {@code "phpldapadmin_configuration_file"}</li>
-	 * </ul>
-	 *
-	 * @see #adminLinkedConfigurationDir(Object)
-	 */
-	File adminConfigFile(Domain domain) {
-		propertyFile("phpldapadmin_configuration_file", defaultProperties, adminLinkedConfigurationDir(domain)) as File
-	}
+    /**
+     * Phpldapadmin configuration file, for
+     * example {@code "config/config.php"}. If the path is
+     * not absolute then it is assume to be under the configuration directory.
+     *
+     * <ul>
+     * <li>profile property {@code "phpldapadmin_configuration_file"}</li>
+     * </ul>
+     *
+     * @see #adminLinkedConfigurationDir(Object)
+     */
+    File adminConfigFile(Domain domain) {
+        def parent = adminLinkedConfigurationDir(domain)
+        profileFileProperty "phpldapadmin_configuration_file", parent, defaultProperties
+    }
 
-	/**
-	 * Phpldapadmin/server configuration file, for
-	 * example {@code "config/robobee-servers.php"}. If the path is
-	 * not absolute then it is assume to be under the configuration directory.
-	 *
-	 * <ul>
-	 * <li>profile property {@code "phpldapadmin_servers_configuration_file"}</li>
-	 * </ul>
-	 *
-	 * @see #adminLinkedConfigurationDir(Object)
-	 */
-	File adminServersConfigFile(Domain domain) {
-		propertyFile("phpldapadmin_servers_configuration_file", defaultProperties, adminLinkedConfigurationDir(domain)) as File
-	}
+    /**
+     * Phpldapadmin server configuration file, for
+     * example {@code "config/robobee-servers.php"}. If the path is
+     * not absolute then it is assume to be under the configuration directory.
+     *
+     * <ul>
+     * <li>profile property {@code "phpldapadmin_servers_configuration_file"}</li>
+     * </ul>
+     *
+     * @see #adminLinkedConfigurationDir(Object)
+     */
+    File adminServersConfigFile(Domain domain) {
+        def parent = adminLinkedConfigurationDir(domain)
+        profileFileProperty "phpldapadmin_servers_configuration_file", parent, defaultProperties
+    }
 
-	/**
-	 * Example phpldapadmin/configuration file, for
-	 * example {@code "config/config.php.example"}. If the path is
-	 * not absolute then it is assume to be under the configuration directory.
-	 *
-	 * <ul>
-	 * <li>profile property {@code "phpldapadmin_example_configuration_file"}</li>
-	 * </ul>
-	 *
-	 * @see #adminLinkedConfigurationDir(Object)
-	 */
-	File adminExampleConfig(Domain domain) {
-		propertyFile("phpldapadmin_example_configuration_file", defaultProperties, adminLinkedConfigurationDir(domain)) as File
-	}
+    /**
+     * Example Phpldapadmin configuration file, for
+     * example {@code "config/config.php.example"}. If the path is
+     * not absolute then it is assume to be under the configuration directory.
+     *
+     * <ul>
+     * <li>profile property {@code "phpldapadmin_example_configuration_file"}</li>
+     * </ul>
+     *
+     * @see #adminLinkedConfigurationDir(Object)
+     */
+    File adminExampleConfig(Domain domain) {
+        def parent = adminLinkedConfigurationDir(domain)
+        profileFileProperty "phpldapadmin_example_configuration_file", parent, defaultProperties
+    }
 
-	/**
-	 * Returns the current phpldapadmin/configuration.
-	 */
-	String adminConfiguration(Domain domain) {
-		currentConfiguration adminConfigFile(domain)
-	}
+    /**
+     * Returns the current phpldapadmin/configuration.
+     */
+    String adminConfiguration(Domain domain) {
+        currentConfiguration adminConfigFile(domain)
+    }
 
-	/**
-	 * Phpldapadmin/source, for
-	 * example {@code "http://downloads.sourceforge.net/project/phpldapadmin/phpldapadmin-php5/1.2.3/phpldapadmin-1.2.3.tgz"}.
-	 *
-	 * <ul>
-	 * <li>profile property {@code "phpldapadmin_source"}</li>
-	 * </ul>
-	 */
-	URL getAdminSource() {
-		script.profileProperty("phpldapadmin_source") as URL
-	}
+    /**
+     * Phpldapadmin/source, for
+     * example {@code "http://downloads.sourceforge.net/project/phpldapadmin/phpldapadmin-php5/1.2.3/phpldapadmin-1.2.3.tgz"}.
+     *
+     * <ul>
+     * <li>profile property {@code "phpldapadmin_source"}</li>
+     * </ul>
+     */
+    URL getAdminSource() {
+        script.profileProperty("phpldapadmin_source") as URL
+    }
 }

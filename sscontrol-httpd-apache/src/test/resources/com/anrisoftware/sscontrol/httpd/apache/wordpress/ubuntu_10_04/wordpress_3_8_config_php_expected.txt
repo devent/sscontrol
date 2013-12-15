@@ -17,9 +17,7 @@
 // ** MySQL settings - You can get this info from your web host ** //
 /** The name of the database for WordPress */
 # SSCONTROL-httpd
-define('DB_NAME', 'wordpress3');$rcmail_config['db_dsnw'] = 'mysql://user:userpass@localhost/wordpress3';
-# SSCONTROL-httpd-END
-$rcmail_config['db_dsnw'] = 'mysql://user:userpass@localhost/wordpress3';
+define('DB_NAME', 'wordpress3');
 # SSCONTROL-httpd-END
 
 
@@ -49,7 +47,7 @@ define('DB_CHARSET', 'utf8');
 
 /** The Database Collate type. Don't change this if in doubt. */
 # SSCONTROL-httpd
-define\('DB_COLLATE', ''\);
+define('DB_COLLATE', '');
 # SSCONTROL-httpd-END
 
 
@@ -62,14 +60,38 @@ define\('DB_COLLATE', ''\);
  *
  * @since 2.6.0
  */
-define('AUTH_KEY',         'put your unique phrase here');
-define('SECURE_AUTH_KEY',  'put your unique phrase here');
-define('LOGGED_IN_KEY',    'put your unique phrase here');
-define('NONCE_KEY',        'put your unique phrase here');
-define('AUTH_SALT',        'put your unique phrase here');
-define('SECURE_AUTH_SALT', 'put your unique phrase here');
-define('LOGGED_IN_SALT',   'put your unique phrase here');
-define('NONCE_SALT',       'put your unique phrase here');
+# SSCONTROL-httpd
+define('AUTH_KEY', 'auth-key');
+# SSCONTROL-httpd-END
+
+# SSCONTROL-httpd
+define('SECURE_AUTH_KEY', 'secure-auth-key');
+# SSCONTROL-httpd-END
+
+# SSCONTROL-httpd
+define('LOGGED_IN_KEY', 'logged-in-key');
+# SSCONTROL-httpd-END
+
+# SSCONTROL-httpd
+define('NONCE_KEY', 'nonce-key');
+# SSCONTROL-httpd-END
+
+# SSCONTROL-httpd
+define('AUTH_SALT', 'auth-salt');
+# SSCONTROL-httpd-END
+
+# SSCONTROL-httpd
+define('SECURE_AUTH_SALT', 'secure-auth-salt');
+# SSCONTROL-httpd-END
+
+# SSCONTROL-httpd
+define('LOGGED_IN_SALT', 'logged-in-salt');
+# SSCONTROL-httpd-END
+
+# SSCONTROL-httpd
+define('NONCE_SALT', 'nonce-salt');
+# SSCONTROL-httpd-END
+
 
 /**#@-*/
 
@@ -108,6 +130,3 @@ if ( !defined('ABSPATH') )
 
 /** Sets up WordPress vars and included files. */
 require_once(ABSPATH . 'wp-settings.php');
-# SSCONTROL-httpd
-define\('DB_COLLATE', ''\);
-# SSCONTROL-httpd-END

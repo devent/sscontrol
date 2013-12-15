@@ -64,6 +64,7 @@ class WordpressConfig extends BaseWordpress_3_Config implements ServiceConfig {
         fcgiConfig.enableFcgi()
         fcgiConfig.deployConfig domain
         deployDatabaseConfig service
+        deployKeysConfig service
     }
 
     void createDomainConfig(Domain domain, PhpmyadminService service, List serviceConfig) {

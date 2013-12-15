@@ -102,6 +102,83 @@ class BaseWordpress_3_Config extends BaseWordpressConfig {
     }
 
     /**
+     * Deploys the keys and salts.
+     *
+     * @param service
+     *            the {@link WordpressService}.
+     */
+    void deployKeysConfig(WordpressService service) {
+        if (!configurationFile.isFile()) {
+            copyFile configurationDistFile, configurationFile
+        }
+        deployConfiguration configurationTokens(), mainConfiguration, keysConfigurations(service), configurationFile
+    }
+
+    /**
+     * Returns the keys and salts configurations.
+     */
+    List keysConfigurations(WordpressService service) {
+        [
+            configAuthKey(),
+            configSecureAuthKey(),
+            configLoggedInKey(),
+            configNonceKey(),
+            configAuthSalt(),
+            configSecureAuthSalt(),
+            configLoggedInSalt(),
+            configNonceSalt(),
+        ]
+    }
+
+    def configAuthKey() {
+        def search = wordpressConfigTemplate.getText(true, "configAuthKey_search")
+        def replace = wordpressConfigTemplate.getText(true, "configAuthKey", "key", authKey)
+        new TokenTemplate(search, replace)
+    }
+
+    def configSecureAuthKey() {
+        def search = wordpressConfigTemplate.getText(true, "configSecureAuthKey_search")
+        def replace = wordpressConfigTemplate.getText(true, "configSecureAuthKey", "key", secureAuthKey)
+        new TokenTemplate(search, replace)
+    }
+
+    def configLoggedInKey() {
+        def search = wordpressConfigTemplate.getText(true, "configLoggedInKey_search")
+        def replace = wordpressConfigTemplate.getText(true, "configLoggedInKey", "key", loggedInKey)
+        new TokenTemplate(search, replace)
+    }
+
+    def configNonceKey() {
+        def search = wordpressConfigTemplate.getText(true, "configNonceKey_search")
+        def replace = wordpressConfigTemplate.getText(true, "configNonceKey", "key", nonceKey)
+        new TokenTemplate(search, replace)
+    }
+
+    def configAuthSalt() {
+        def search = wordpressConfigTemplate.getText(true, "configAuthSalt_search")
+        def replace = wordpressConfigTemplate.getText(true, "configAuthSalt", "salt", authSalt)
+        new TokenTemplate(search, replace)
+    }
+
+    def configSecureAuthSalt() {
+        def search = wordpressConfigTemplate.getText(true, "configSecureAuthSalt_search")
+        def replace = wordpressConfigTemplate.getText(true, "configSecureAuthSalt", "salt", secureAuthSalt)
+        new TokenTemplate(search, replace)
+    }
+
+    def configLoggedInSalt() {
+        def search = wordpressConfigTemplate.getText(true, "configLoggedInSalt_search")
+        def replace = wordpressConfigTemplate.getText(true, "configLoggedInSalt", "salt", loggedInSalt)
+        new TokenTemplate(search, replace)
+    }
+
+    def configNonceSalt() {
+        def search = wordpressConfigTemplate.getText(true, "configNonceSalt_search")
+        def replace = wordpressConfigTemplate.getText(true, "configNonceSalt", "salt", nonceSalt)
+        new TokenTemplate(search, replace)
+    }
+
+    /**
      * Wordpress main configuration file, for
      * example {@code "config/wp-config.php"}. If the path is relative then
      * the file will be under the Wordpress installation directory.

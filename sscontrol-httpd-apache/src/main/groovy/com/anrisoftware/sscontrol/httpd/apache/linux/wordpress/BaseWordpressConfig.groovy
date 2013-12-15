@@ -22,6 +22,8 @@ import java.nio.charset.Charset
 
 import javax.inject.Inject
 
+import org.apache.commons.lang3.RandomStringUtils
+
 import com.anrisoftware.sscontrol.httpd.apache.linux.apache.ApacheScript
 
 /**
@@ -121,19 +123,6 @@ class BaseWordpressConfig {
     }
 
     /**
-     * Returns to generate keys and salts, for example {@code "true"}.
-     *
-     * <ul>
-     * <li>profile property {@code "wordpress_generate_keys"}</li>
-     * </ul>
-     *
-     * @see ApacheScript#getDefaultProperties()
-     */
-    boolean getGenerateKeys() {
-        profileBooleanProperty("wordpress_generate_keys", defaultProperties)
-    }
-
-    /**
      * Returns to force secure log-in, for example {@code "true"}.
      *
      * <ul>
@@ -184,6 +173,126 @@ class BaseWordpressConfig {
      */
     Locale getLanguage() {
         profileLocaleProperty("wordpress_language", defaultProperties)
+    }
+
+    /**
+     * Returns the authentication key, if empty the key is generated.
+     *
+     * <ul>
+     * <li>profile property {@code "wordpress_auth_key"}</li>
+     * </ul>
+     *
+     * @see <a href="https://api.wordpress.org/secret-key/1.1/salt/">Secret key salt [wordpress.org]</a>
+     * @see ApacheScript#getDefaultProperties()
+     */
+    String getAuthKey() {
+        def key = profileProperty("wordpress_auth_key", defaultProperties)
+        key.empty ? RandomStringUtils.randomAlphanumeric(64) : key
+    }
+
+    /**
+     * Returns the secure authentication key, if empty the key is generated.
+     *
+     * <ul>
+     * <li>profile property {@code "wordpress_secure_auth_key"}</li>
+     * </ul>
+     *
+     * @see <a href="https://api.wordpress.org/secret-key/1.1/salt/">Secret key salt [wordpress.org]</a>
+     * @see ApacheScript#getDefaultProperties()
+     */
+    String getSecureAuthKey() {
+        def key = profileProperty("wordpress_secure_auth_key", defaultProperties)
+        key.empty ? RandomStringUtils.randomAlphanumeric(64) : key
+    }
+
+    /**
+     * Returns the logged-in key, if empty the key is generated.
+     *
+     * <ul>
+     * <li>profile property {@code "wordpress_logged_in_key"}</li>
+     * </ul>
+     *
+     * @see <a href="https://api.wordpress.org/secret-key/1.1/salt/">Secret key salt [wordpress.org]</a>
+     * @see ApacheScript#getDefaultProperties()
+     */
+    String getLoggedInKey() {
+        def key = profileProperty("wordpress_logged_in_key", defaultProperties)
+        key.empty ? RandomStringUtils.randomAlphanumeric(64) : key
+    }
+
+    /**
+     * Returns the Nonce key, if empty the key is generated.
+     *
+     * <ul>
+     * <li>profile property {@code "wordpress_nonce_key"}</li>
+     * </ul>
+     *
+     * @see <a href="https://api.wordpress.org/secret-key/1.1/salt/">Secret key salt [wordpress.org]</a>
+     * @see ApacheScript#getDefaultProperties()
+     */
+    String getNonceKey() {
+        def key = profileProperty("wordpress_nonce_key", defaultProperties)
+        key.empty ? RandomStringUtils.randomAlphanumeric(64) : key
+    }
+
+    /**
+     * Returns the authentication salt, if empty the key is generated.
+     *
+     * <ul>
+     * <li>profile property {@code "wordpress_auth_salt"}</li>
+     * </ul>
+     *
+     * @see <a href="https://api.wordpress.org/secret-key/1.1/salt/">Secret key salt [wordpress.org]</a>
+     * @see ApacheScript#getDefaultProperties()
+     */
+    String getAuthSalt() {
+        def key = profileProperty("wordpress_auth_salt", defaultProperties)
+        key.empty ? RandomStringUtils.randomAlphanumeric(64) : key
+    }
+
+    /**
+     * Returns the secure authentication salt, if empty the key is generated.
+     *
+     * <ul>
+     * <li>profile property {@code "wordpress_secure_auth_salt"}</li>
+     * </ul>
+     *
+     * @see <a href="https://api.wordpress.org/secret-key/1.1/salt/">Secret key salt [wordpress.org]</a>
+     * @see ApacheScript#getDefaultProperties()
+     */
+    String getSecureAuthSalt() {
+        def key = profileProperty("wordpress_secure_auth_salt", defaultProperties)
+        key.empty ? RandomStringUtils.randomAlphanumeric(64) : key
+    }
+
+    /**
+     * Returns the logged-in salt, if empty the key is generated.
+     *
+     * <ul>
+     * <li>profile property {@code "wordpress_logged_in_salt"}</li>
+     * </ul>
+     *
+     * @see <a href="https://api.wordpress.org/secret-key/1.1/salt/">Secret key salt [wordpress.org]</a>
+     * @see ApacheScript#getDefaultProperties()
+     */
+    String getLoggedInSalt() {
+        def key = profileProperty("wordpress_logged_in_salt", defaultProperties)
+        key.empty ? RandomStringUtils.randomAlphanumeric(64) : key
+    }
+
+    /**
+     * Returns the Nonce salt, if empty the key is generated.
+     *
+     * <ul>
+     * <li>profile property {@code "wordpress_nonce_salt"}</li>
+     * </ul>
+     *
+     * @see <a href="https://api.wordpress.org/secret-key/1.1/salt/">Secret key salt [wordpress.org]</a>
+     * @see ApacheScript#getDefaultProperties()
+     */
+    String getNonceSalt() {
+        def key = profileProperty("wordpress_nonce_salt", defaultProperties)
+        key.empty ? RandomStringUtils.randomAlphanumeric(64) : key
     }
 
     /**

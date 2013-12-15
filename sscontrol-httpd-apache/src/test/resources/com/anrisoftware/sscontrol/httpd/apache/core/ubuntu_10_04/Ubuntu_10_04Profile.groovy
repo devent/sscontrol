@@ -69,5 +69,13 @@ profile "ubuntu_10_04", {
         roundcube_des_key "some-DES-key-24-long0123"
         // wordpress
         wordpress_archive WordpressResources.wordpressArchive.asFile(tmp)
+        wordpress_auth_key "auth-key"
+        wordpress_secure_auth_key "secure-auth-key"
+        wordpress_logged_in_key "logged-in-key"
+        wordpress_nonce_key "nonce-key"
+        wordpress_auth_salt "auth-salt"
+        wordpress_secure_auth_salt "secure-auth-salt"
+        wordpress_logged_in_salt "logged-in-salt"
+        wordpress_nonce_salt "nonce-salt"
     }
 }

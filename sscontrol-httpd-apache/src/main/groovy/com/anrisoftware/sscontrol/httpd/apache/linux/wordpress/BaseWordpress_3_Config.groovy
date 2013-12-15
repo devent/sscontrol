@@ -214,6 +214,41 @@ class BaseWordpress_3_Config extends BaseWordpressConfig {
     }
 
     /**
+     * Deploys the force secure log-in configuration.
+     *
+     * @param service
+     *            the {@link WordpressService}.
+     */
+    void deploySecureLoginConfig(WordpressService service) {
+        if (!configurationFile.isFile()) {
+            copyFile configurationDistFile, configurationFile
+        }
+        deployConfiguration configurationTokens(), mainConfiguration, secureLoginConfigurations(service), configurationFile
+    }
+
+    /**
+     * Returns the force secure log-in configurations.
+     */
+    List secureLoginConfigurations(WordpressService service) {
+        [
+            configForceSecureLogin(),
+            configForceSecureAdmin(),
+        ]
+    }
+
+    def configForceSecureLogin() {
+        def search = wordpressConfigTemplate.getText(true, "configForceSecureLogin_search")
+        def replace = wordpressConfigTemplate.getText(true, "configForceSecureLogin", "enabled", forceSecureLogin)
+        new TokenTemplate(search, replace)
+    }
+
+    def configForceSecureAdmin() {
+        def search = wordpressConfigTemplate.getText(true, "configForceSecureAdmin_search")
+        def replace = wordpressConfigTemplate.getText(true, "configForceSecureAdmin", "enabled", forceSecureAdmin)
+        new TokenTemplate(search, replace)
+    }
+
+    /**
      * Wordpress main configuration file, for
      * example {@code "config/wp-config.php"}. If the path is relative then
      * the file will be under the Wordpress installation directory.

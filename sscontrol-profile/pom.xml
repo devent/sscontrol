@@ -21,11 +21,11 @@
 		<url>https://www.anr-institute.com/projects/projects/sscontrol-profile2</url>
 	</issueManagement>
 
-    <scm>
-        <connection>scm:git:${custom.gitpublic.url}sscontrolnew.git</connection>
-        <developerConnection>scm:git:${custom.gitpublic.url}sscontrolnew.git</developerConnection>
-        <url>scm:git:${custom.gitpublic.url}sscontrolnew.git</url>
-    </scm>
+	<scm>
+		<connection>scm:git:${custom.gitpublic.url}sscontrolnew.git</connection>
+		<developerConnection>scm:git:${custom.gitpublic.url}sscontrolnew.git</developerConnection>
+		<url>scm:git:${custom.gitpublic.url}sscontrolnew.git</url>
+	</scm>
 
 	<dependencies>
 		<!-- test dependencies -->
@@ -77,6 +77,10 @@
 		<dependency>
 			<groupId>org.codehaus.groovy</groupId>
 			<artifactId>groovy</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>joda-time</groupId>
+			<artifactId>joda-time</artifactId>
 		</dependency>
 	</dependencies>
 

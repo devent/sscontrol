@@ -85,10 +85,6 @@
 			<groupId>com.anrisoftware.resources</groupId>
 			<artifactId>resources-texts</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>joda-time</groupId>
-			<artifactId>joda-time</artifactId>
-		</dependency>
 	</dependencies>
 
 </project>

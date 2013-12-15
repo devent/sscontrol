@@ -63,11 +63,13 @@ class WordpressConfig extends BaseWordpress_3_Config implements ServiceConfig {
         downloadArchive()
         fcgiConfig.enableFcgi()
         fcgiConfig.deployConfig domain
+        deployMainConfig service
         deployDatabaseConfig service
         deployKeysConfig service
         deployLanguageConfig service
         deploySecureLoginConfig service
         deployDebugConfig service
+        deployMainConfigEnding service
     }
 
     void createDomainConfig(Domain domain, PhpmyadminService service, List serviceConfig) {

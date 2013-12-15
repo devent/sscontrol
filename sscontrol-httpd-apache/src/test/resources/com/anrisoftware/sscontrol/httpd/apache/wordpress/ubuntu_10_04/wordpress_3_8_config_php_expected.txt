@@ -126,8 +126,16 @@ define('WPLANG', '');
  * It is strongly recommended that plugin and theme developers use WP_DEBUG
  * in their development environments.
  */
+# SSCONTROL-httpd
 define('WP_DEBUG', false);
+# SSCONTROL-httpd-END
 
+# SSCONTROL-httpd
+define('FORCE_SSL_LOGIN', true);
+# SSCONTROL-httpd-END
+# SSCONTROL-httpd
+define('FORCE_SSL_ADMIN', true);
+# SSCONTROL-httpd-END
 /* That's all, stop editing! Happy blogging. */
 
 /** Absolute path to the WordPress directory. */
@@ -136,9 +144,3 @@ if ( !defined('ABSPATH') )
 
 /** Sets up WordPress vars and included files. */
 require_once(ABSPATH . 'wp-settings.php');
-# SSCONTROL-httpd
-define('FORCE_SSL_LOGIN', true);
-# SSCONTROL-httpd-END
-# SSCONTROL-httpd
-define('FORCE_SSL_ADMIN', true);
-# SSCONTROL-httpd-END

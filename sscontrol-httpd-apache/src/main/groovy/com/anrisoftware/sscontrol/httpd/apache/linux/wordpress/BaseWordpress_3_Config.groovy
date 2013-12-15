@@ -39,15 +39,43 @@ class BaseWordpress_3_Config extends BaseWordpressConfig {
     TemplateResource wordpressConfigTemplate
 
     /**
+     * Deploys the main configuration.
+     *
+     * @param service
+     *            the {@link WordpressService}.
+     */
+    void deployMainConfig(WordpressService service) {
+        def name = configurationFile.name
+        def tmp = new File(name, tmpDirectory)
+        if (!configurationFile.isFile()) {
+            copyFile configurationDistFile, tmp
+        }
+        List file = readLines(tmp, configFileCharset)
+        writeLines configurationFile, configFileCharset.toString(), file[0..-10]
+    }
+
+    /**
+     * Deploys the main configuration end.
+     *
+     * @param service
+     *            the {@link WordpressService}.
+     */
+    void deployMainConfigEnding(WordpressService service) {
+        def search = wordpressConfigTemplate.getText(true, "configEnding_search")
+        def replace = wordpressConfigTemplate.getText(true, "configEnding")
+        def temp = new TokenTemplate(search, replace)
+        temp.enclose = false
+        def configs = [temp]
+        deployConfiguration configurationTokens(), mainConfiguration, configs, configurationFile
+    }
+
+    /**
      * Deploys the database configuration.
      *
      * @param service
      *            the {@link WordpressService}.
      */
     void deployDatabaseConfig(WordpressService service) {
-        if (!configurationFile.isFile()) {
-            copyFile configurationDistFile, configurationFile
-        }
         deployConfiguration configurationTokens(), mainConfiguration, databaseConfigurations(service), configurationFile
     }
 
@@ -115,9 +143,6 @@ class BaseWordpress_3_Config extends BaseWordpressConfig {
      *            the {@link WordpressService}.
      */
     void deployKeysConfig(WordpressService service) {
-        if (!configurationFile.isFile()) {
-            copyFile configurationDistFile, configurationFile
-        }
         deployConfiguration configurationTokens(), mainConfiguration, keysConfigurations(service), configurationFile
     }
 
@@ -192,9 +217,6 @@ class BaseWordpress_3_Config extends BaseWordpressConfig {
      *            the {@link WordpressService}.
      */
     void deployLanguageConfig(WordpressService service) {
-        if (!configurationFile.isFile()) {
-            copyFile configurationDistFile, configurationFile
-        }
         deployConfiguration configurationTokens(), mainConfiguration, languageConfigurations(service), configurationFile
     }
 
@@ -220,9 +242,6 @@ class BaseWordpress_3_Config extends BaseWordpressConfig {
      *            the {@link WordpressService}.
      */
     void deploySecureLoginConfig(WordpressService service) {
-        if (!configurationFile.isFile()) {
-            copyFile configurationDistFile, configurationFile
-        }
         deployConfiguration configurationTokens(), mainConfiguration, secureLoginConfigurations(service), configurationFile
     }
 
@@ -255,9 +274,6 @@ class BaseWordpress_3_Config extends BaseWordpressConfig {
      *            the {@link WordpressService}.
      */
     void deployDebugConfig(WordpressService service) {
-        if (!configurationFile.isFile()) {
-            copyFile configurationDistFile, configurationFile
-        }
         deployConfiguration configurationTokens(), mainConfiguration, debugConfigurations(service), configurationFile
     }
 

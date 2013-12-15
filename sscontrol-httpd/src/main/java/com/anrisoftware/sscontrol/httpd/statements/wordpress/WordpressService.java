@@ -9,6 +9,8 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import com.anrisoftware.sscontrol.core.database.Database;
 import com.anrisoftware.sscontrol.core.database.DatabaseArgs;
 import com.anrisoftware.sscontrol.core.database.DatabaseFactory;
+import com.anrisoftware.sscontrol.core.debuglogging.DebugLogging;
+import com.anrisoftware.sscontrol.core.debuglogging.DebugLoggingFactory;
 import com.anrisoftware.sscontrol.httpd.statements.webservice.WebService;
 import com.google.inject.assistedinject.Assisted;
 
@@ -33,9 +35,13 @@ public class WordpressService implements WebService {
     @Inject
     private DatabaseFactory databaseFactory;
 
+    private DebugLoggingFactory debugFactory;
+
     private String alias;
 
     private Database database;
+
+    private DebugLogging debug;
 
     /**
      * @see WordpressServiceFactory#create(Map)
@@ -47,6 +53,12 @@ public class WordpressService implements WebService {
         if (argss.haveAlias(args)) {
             setAlias(argss.alias(args));
         }
+    }
+
+    @Inject
+    void setDebugLoggingFactory(DebugLoggingFactory factory) {
+        this.debugFactory = factory;
+        this.debug = factory.createOff();
     }
 
     @Override
@@ -72,6 +84,19 @@ public class WordpressService implements WebService {
 
     public Database getDatabase() {
         return database;
+    }
+
+    public void debug(boolean enabled) {
+        DebugLogging logging = debugFactory.create(enabled ? 1 : 0);
+        log.debugSet(this, logging);
+        this.debug = logging;
+    }
+
+    public DebugLogging getDebugLogging() {
+        if (debug == null) {
+            this.debug = debugFactory.createOff();
+        }
+        return debug;
     }
 
     @Override

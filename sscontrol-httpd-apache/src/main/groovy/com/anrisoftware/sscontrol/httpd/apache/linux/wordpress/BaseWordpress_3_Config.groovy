@@ -249,6 +249,34 @@ class BaseWordpress_3_Config extends BaseWordpressConfig {
     }
 
     /**
+     * Deploys the debug configuration.
+     *
+     * @param service
+     *            the {@link WordpressService}.
+     */
+    void deployDebugConfig(WordpressService service) {
+        if (!configurationFile.isFile()) {
+            copyFile configurationDistFile, configurationFile
+        }
+        deployConfiguration configurationTokens(), mainConfiguration, debugConfigurations(service), configurationFile
+    }
+
+    /**
+     * Returns the debug configurations.
+     */
+    List debugConfigurations(WordpressService service) {
+        [
+            configDebug(service),
+        ]
+    }
+
+    def configDebug(WordpressService service) {
+        def search = wordpressConfigTemplate.getText(true, "configDebug_search")
+        def replace = wordpressConfigTemplate.getText(true, "configDebug", "enabled", service.debug.level == 1)
+        new TokenTemplate(search, replace)
+    }
+
+    /**
      * Wordpress main configuration file, for
      * example {@code "config/wp-config.php"}. If the path is relative then
      * the file will be under the Wordpress installation directory.

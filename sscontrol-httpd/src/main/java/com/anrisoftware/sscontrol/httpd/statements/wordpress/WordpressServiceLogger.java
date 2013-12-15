@@ -22,11 +22,14 @@ import static com.anrisoftware.sscontrol.httpd.statements.wordpress.WordpressSer
 import static com.anrisoftware.sscontrol.httpd.statements.wordpress.WordpressServiceLogger._.alias_set_info;
 import static com.anrisoftware.sscontrol.httpd.statements.wordpress.WordpressServiceLogger._.database_set_debug;
 import static com.anrisoftware.sscontrol.httpd.statements.wordpress.WordpressServiceLogger._.database_set_info;
+import static com.anrisoftware.sscontrol.httpd.statements.wordpress.WordpressServiceLogger._.debug_set_debug;
+import static com.anrisoftware.sscontrol.httpd.statements.wordpress.WordpressServiceLogger._.debug_set_info;
 
 import javax.inject.Singleton;
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
 import com.anrisoftware.sscontrol.core.database.Database;
+import com.anrisoftware.sscontrol.core.debuglogging.DebugLogging;
 
 /**
  * Logging messages for {@link WordpressService}.
@@ -45,7 +48,11 @@ class WordpressServiceLogger extends AbstractLogger {
 
         database_set_debug("Database {} set for {}."),
 
-        database_set_info("Database '{}' set for service '{}'.");
+        database_set_info("Database '{}' set for service '{}'."),
+
+        debug_set_debug("Debug logging {} set for {}."),
+
+        debug_set_info("Debug logging level {} set for service '{}'.");
 
         private String name;
 
@@ -79,6 +86,14 @@ class WordpressServiceLogger extends AbstractLogger {
             debug(database_set_debug, database, service);
         } else {
             info(database_set_info, database.getDatabase(), service.getName());
+        }
+    }
+
+    void debugSet(WordpressService service, DebugLogging debug) {
+        if (isDebugEnabled()) {
+            debug(debug_set_debug, debug, service);
+        } else {
+            info(debug_set_info, debug.getLevel(), service.getName());
         }
     }
 

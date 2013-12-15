@@ -87,4 +87,29 @@ class WordpressTest extends UbuntuTestUtil {
         assertStringContent useraddOut.replaced(tmpdir, tmpdir, "/tmp"), useraddOut.toString()
         assertStringContent tar_de_DE_Out.replaced(tmpdir, tmpdir, "/tmp"), tar_de_DE_Out.toString()
     }
+
+    @Test
+    void "wordpress debug"() {
+        copyUbuntuFiles tmpdir
+        copyRoundcubeFiles tmpdir
+
+        loader.loadService profile.resource, null
+        def profile = registry.getService("profile")[0]
+        loader.loadService httpdDebugScript.resource, profile
+
+        registry.allServices.each { it.call() }
+        log.info "Run service again to ensure that configuration is not set double."
+        registry.allServices.each { it.call() }
+
+        assertFileContent defaultConf.asFile(tmpdir), defaultConf
+        assertFileContent domainsConf.asFile(tmpdir), domainsConf
+        assertStringContent test1comConf.replaced(tmpdir, tmpdir, "/tmp"), test1comConf.toString()
+        assertStringContent test1comSslConf.replaced(tmpdir, tmpdir, "/tmp"), test1comSslConf.toString()
+        assertFileContent wordpress_3_9_debug_config_expected.asFile(tmpdir), wordpress_3_9_debug_config_expected
+        assertStringContent chownOut.replaced(tmpdir, tmpdir, "/tmp"), chownOut.toString()
+        assertStringContent chmodOut.replaced(tmpdir, tmpdir, "/tmp"), chmodOut.toString()
+        assertStringContent groupaddOut.replaced(tmpdir, tmpdir, "/tmp"), groupaddOut.toString()
+        assertStringContent useraddOut.replaced(tmpdir, tmpdir, "/tmp"), useraddOut.toString()
+        assertStringContent tarOut.replaced(tmpdir, tmpdir, "/tmp"), tarOut.toString()
+    }
 }

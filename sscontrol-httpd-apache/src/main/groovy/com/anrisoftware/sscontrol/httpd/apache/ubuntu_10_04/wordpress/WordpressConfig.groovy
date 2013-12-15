@@ -67,6 +67,7 @@ class WordpressConfig extends BaseWordpress_3_Config implements ServiceConfig {
         deployKeysConfig service
         deployLanguageConfig service
         deploySecureLoginConfig service
+        deployDebugConfig service
     }
 
     void createDomainConfig(Domain domain, PhpmyadminService service, List serviceConfig) {

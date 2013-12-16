@@ -33,6 +33,14 @@ BEGIN
     ELSEIF userexists=1 THEN
         SET PASSWORD FOR 'drupal6'@'srv2' = PASSWORD('drupal6password');
     END IF;
+    # user drupal6@localhost
+    SELECT COUNT(*) INTO userexists FROM mysql.user
+        WHERE User='drupal6' and  Host='localhost';
+    IF userexists=0 THEN
+        CREATE USER 'drupal6'@'localhost' IDENTIFIED BY 'drupal6password';
+    ELSEIF userexists=1 THEN
+        SET PASSWORD FOR 'drupal6'@'localhost' = PASSWORD('drupal6password');
+    END IF;
 
 END ;$$
 DELIMITER ;
@@ -41,7 +49,8 @@ DROP PROCEDURE IF EXISTS createusertmp.create_update_user;
 DROP DATABASE IF EXISTS createusertmp;
 SET SQL_MODE=@OLD_SQL_MODE;
 # grand access "drupal6@srv2" to "drupal6db.*"
-GRANT ALL ON drupal6db.* TO 'drupal6'@'srv2';
+GRANT ALL ON drupal6db.* TO 'drupal6'@'srv2';# grand access "drupal6@localhost" to "drupal6db.*"
+GRANT ALL ON drupal6db.* TO 'drupal6'@'localhost';
 FLUSH PRIVILEGES;
 \q
 USE maildb;
@@ -91,6 +100,14 @@ BEGIN
     ELSEIF userexists=1 THEN
         SET PASSWORD FOR 'drupal6'@'srv2' = PASSWORD('drupal6password');
     END IF;
+    # user drupal6@localhost
+    SELECT COUNT(*) INTO userexists FROM mysql.user
+        WHERE User='drupal6' and  Host='localhost';
+    IF userexists=0 THEN
+        CREATE USER 'drupal6'@'localhost' IDENTIFIED BY 'drupal6password';
+    ELSEIF userexists=1 THEN
+        SET PASSWORD FOR 'drupal6'@'localhost' = PASSWORD('drupal6password');
+    END IF;
 
 END ;$$
 DELIMITER ;
@@ -99,7 +116,8 @@ DROP PROCEDURE IF EXISTS createusertmp.create_update_user;
 DROP DATABASE IF EXISTS createusertmp;
 SET SQL_MODE=@OLD_SQL_MODE;
 # grand access "drupal6@srv2" to "drupal6db.*"
-GRANT ALL ON drupal6db.* TO 'drupal6'@'srv2';
+GRANT ALL ON drupal6db.* TO 'drupal6'@'srv2';# grand access "drupal6@localhost" to "drupal6db.*"
+GRANT ALL ON drupal6db.* TO 'drupal6'@'localhost';
 FLUSH PRIVILEGES;
 \q
 USE maildb;

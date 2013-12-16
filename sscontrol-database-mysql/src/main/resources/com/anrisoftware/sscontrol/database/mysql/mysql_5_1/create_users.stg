@@ -32,7 +32,7 @@ createUser(user, script) ::= <<
 
 # user <user.name>@<userServer(user, script)>
 SELECT COUNT(*) INTO userexists FROM mysql.user
-    WHERE User='<user.name>' and  Host='<user.server>';
+    WHERE User='<user.name>' and  Host='<userServer(user, script)>';
 IF userexists=0 THEN
     CREATE USER '<user.name>'@'<userServer(user, script)>' IDENTIFIED BY '<user.password>';
 ELSEIF userexists=1 THEN

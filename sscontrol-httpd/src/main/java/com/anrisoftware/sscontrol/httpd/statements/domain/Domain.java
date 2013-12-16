@@ -256,7 +256,7 @@ public class Domain {
     public WebService setup(Map<String, Object> map, String name, Object s) {
         WebServiceFactory factory = serviceFactories.get(name);
         log.checkService(this, factory, name);
-        WebService service = factory.create(map);
+        WebService service = factory.create(this, map);
         services.add(service);
         log.servicesAdded(this, service);
         return service;

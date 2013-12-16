@@ -1,18 +1,18 @@
 /*
  * Copyright 2012-2013 Erwin Müller <erwin.mueller@deventm.org>
- * 
+ *
  * This file is part of sscontrol-httpd.
- * 
+ *
  * sscontrol-httpd is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published by the
  * Free Software Foundation, either version 3 of the License, or (at your
  * option) any later version.
- * 
+ *
  * sscontrol-httpd is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
  * for more details.
- * 
+ *
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -27,6 +27,7 @@ import javax.inject.Inject;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import com.anrisoftware.sscontrol.httpd.statements.domain.Domain;
 import com.anrisoftware.sscontrol.httpd.statements.webservice.WebService;
 import com.google.inject.assistedinject.Assisted;
 
@@ -38,70 +39,70 @@ import com.google.inject.assistedinject.Assisted;
  */
 public class PhpldapadminService implements WebService {
 
-	public static final String NAME = "phpldapadmin";
+    public static final String NAME = "phpldapadmin";
 
-	private static final String ALIAS = "alias";
+    private final PhpldapadminServiceLogger log;
 
-	private PhpldapadminServiceLogger log;
+    private final List<LdapServer> servers;
 
-	@Inject
-	private LdapServerFactory serverFactory;
+    private final Domain domain;
 
-	private final List<LdapServer> servers;
+    @Inject
+    private LdapServerFactory serverFactory;
 
-	private Map<String, Object> args;
+    private String alias;
 
-	private String alias;
+    /**
+     * @see PhpldapadminServiceFactory#create(Domain, Map)
+     */
+    @Inject
+    PhpldapadminService(PhpldapadminServiceArgs aargs,
+            PhpldapadminServiceLogger logger, @Assisted Domain domain,
+            @Assisted Map<String, Object> args) {
+        this.log = logger;
+        this.domain = domain;
+        this.servers = new ArrayList<LdapServer>();
+        if (aargs.haveAlias(args)) {
+            setAlias(aargs.alias(this, args));
+        }
+    }
 
-	@Inject
-	PhpldapadminService(@Assisted Map<String, Object> args) {
-		this.args = args;
-		this.servers = new ArrayList<LdapServer>();
-	}
+    @Override
+    public Domain getDomain() {
+        return domain;
+    }
 
-	@Inject
-	void setPhpldapadminServiceLogger(PhpldapadminServiceLogger logger) {
-		this.log = logger;
-		if (args.containsKey(ALIAS)) {
-			setAlias(args.get(ALIAS));
-		}
-		args = null;
-	}
+    @Override
+    public String getName() {
+        return NAME;
+    }
 
-	@Override
-	public String getName() {
-		return NAME;
-	}
+    public void setAlias(String alias) {
+        this.alias = alias;
+        log.aliasSet(this, alias);
+    }
 
-	private void setAlias(Object alias) {
-		setAlias(alias.toString());
-	}
+    public String getAlias() {
+        return alias;
+    }
 
-	public void setAlias(String alias) {
-		this.alias = alias;
-	}
+    public void server(String name) {
+        server(new HashMap<String, Object>(), name);
+    }
 
-	public String getAlias() {
-		return alias;
-	}
+    public void server(Map<String, Object> args, String name) {
+        LdapServer server = serverFactory.create(args, name);
+        servers.add(server);
+        log.serverAdded(this, server);
+    }
 
-	public void server(String name) {
-		server(new HashMap<String, Object>(), name);
-	}
+    public List<LdapServer> getServers() {
+        return servers;
+    }
 
-	public void server(Map<String, Object> args, String name) {
-		LdapServer server = serverFactory.create(args, name);
-		servers.add(server);
-		log.serverAdded(this, server);
-	}
-
-	public List<LdapServer> getServers() {
-		return servers;
-	}
-
-	@Override
-	public String toString() {
-		return new ToStringBuilder(this).append(NAME).toString();
-	}
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this).append(NAME).toString();
+    }
 
 }

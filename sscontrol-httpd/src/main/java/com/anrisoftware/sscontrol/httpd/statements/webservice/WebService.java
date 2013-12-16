@@ -18,6 +18,8 @@
  */
 package com.anrisoftware.sscontrol.httpd.statements.webservice;
 
+import com.anrisoftware.sscontrol.httpd.statements.domain.Domain;
+
 /**
  * Web service.
  * 
@@ -26,11 +28,17 @@ package com.anrisoftware.sscontrol.httpd.statements.webservice;
  */
 public interface WebService {
 
-	/**
-	 * Returns the name of the service.
-	 * 
-	 * @return the service {@link String} name.
-	 */
-	String getName();
+    /**
+     * Returns the name of the service.
+     * 
+     * @return the service {@link String} name.
+     */
+    String getName();
 
+    /**
+     * Returns the domain for which the service is configured.
+     * 
+     * @return the {@link Domain}.
+     */
+    Domain getDomain();
 }

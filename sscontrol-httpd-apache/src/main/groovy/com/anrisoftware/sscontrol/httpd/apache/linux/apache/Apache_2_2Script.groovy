@@ -106,9 +106,9 @@ abstract class Apache_2_2Script extends ApacheScript {
     }
 
     def deployConfig() {
-        List serviceConfig = []
         uniqueDomains.each { deployDomain it }
         service.domains.each { Domain domain ->
+            List serviceConfig = []
             deployRedirect domain
             deployAuth domain, serviceConfig
             deployService domain, serviceConfig
@@ -119,7 +119,9 @@ abstract class Apache_2_2Script extends ApacheScript {
     }
 
     def deployService(Domain domain, List serviceConfig) {
-        domain.services.each { WebService service ->
+        domain.services.findAll { WebService service ->
+            service.domain == domain
+        }.each { WebService service ->
             def config = serviceConfigs["${PROFILE}.${service.name}"]
             log.checkServiceConfig config, service
             config.deployService(domain, service, serviceConfig)

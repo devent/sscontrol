@@ -1,18 +1,18 @@
-<VirtualHost 192.168.0.50:443>
+<VirtualHost 192.168.0.100:443>
 
-    # domain phpadmin.test1.com
-    ServerName phpadmin.test1.com
-    DocumentRoot /tmp/var/www/phpadmin.test1.com/web
-    SuexecUserGroup www-data www-data
-    <Directory /tmp/var/www/phpadmin.test1.com/web>
+    # domain ubuntutest.com
+    ServerName ubuntutest.com
+    DocumentRoot /tmp/var/www/ubuntutest.com/web
+    SuexecUserGroup web_001 web_001
+    <Directory /tmp/var/www/ubuntutest.com/web>
         AllowOverride None
         Order allow,deny
         Allow from all
     </Directory>
 
     SSLEngine on
-    SSLCertificateFile /tmp/var/www/phpadmin.test1.com/ssl/cert_crt.txt
-    SSLCertificateKeyFile /tmp/var/www/phpadmin.test1.com/ssl/cert_key.txt
+    SSLCertificateFile /tmp/var/www/ubuntutest.com/ssl/cert_crt.txt
+    SSLCertificateKeyFile /tmp/var/www/ubuntutest.com/ssl/cert_key.txt
 
     # phpmyadmin
 
@@ -20,7 +20,7 @@
 
     <Directory /usr/share/phpmyadmin>
         AddHandler fcgid-script .php
-        FCGIWrapper /tmp/var/www/php-fcgi-scripts/phpadmin.test1.com/php-fcgi-starter .php
+        FCGIWrapper /tmp/var/www/php-fcgi-scripts/ubuntutest.com/php-fcgi-starter .php
         Options +ExecCGI
         DirectoryIndex index.php
     </Directory>

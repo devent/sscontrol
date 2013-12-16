@@ -52,9 +52,10 @@ class PhpmyadminTest extends UbuntuTestUtil {
 
         assertFileContent defaultConf.asFile(tmpdir), defaultConf
         assertFileContent domainsConf.asFile(tmpdir), PhpmyadminResources.domainsConf
-        assertStringContent test1comConf.replaced(tmpdir, tmpdir, "/tmp"), test1comConf.toString()
-        assertStringContent test1comSslConf.replaced(tmpdir, tmpdir, "/tmp"), test1comSslConf.toString()
-        assertStringContent phpadminTest1comSslConf.replaced(tmpdir, tmpdir, "/tmp"), phpadminTest1comSslConf.toString()
+        assertStringContent ubuntutestcomConf.replaced(tmpdir, tmpdir, "/tmp"), ubuntutestcomConf.toString()
+        assertStringContent ubuntutestcomSslConf.replaced(tmpdir, tmpdir, "/tmp"), ubuntutestcomSslConf.toString()
+        assertStringContent wwwUbuntutestcomConf.replaced(tmpdir, tmpdir, "/tmp"), wwwUbuntutestcomConf.toString()
+        assertStringContent wwwUbuntutestcomSslConf.replaced(tmpdir, tmpdir, "/tmp"), wwwUbuntutestcomSslConf.toString()
         assertFileContent phpadminTest1comSslFcgiScript.asFile(tmpdir), phpadminTest1comSslFcgiScript
         assertStringContent chownOut.replaced(tmpdir, tmpdir, "/tmp"), chownOut.toString()
         assertStringContent chmodOut.replaced(tmpdir, tmpdir, "/tmp"), chmodOut.toString()

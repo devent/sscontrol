@@ -20,6 +20,7 @@ package com.anrisoftware.sscontrol.httpd.statements.phpldapadmin;
 
 import java.util.Map;
 
+import com.anrisoftware.sscontrol.httpd.statements.domain.Domain;
 import com.anrisoftware.sscontrol.httpd.statements.webservice.WebServiceFactory;
 
 /**
@@ -30,6 +31,6 @@ import com.anrisoftware.sscontrol.httpd.statements.webservice.WebServiceFactory;
  */
 public interface PhpldapadminServiceFactory extends WebServiceFactory {
 
-	@Override
-	PhpldapadminService create(Map<String, Object> map);
+    @Override
+    PhpldapadminService create(Domain domain, Map<String, Object> map);
 }

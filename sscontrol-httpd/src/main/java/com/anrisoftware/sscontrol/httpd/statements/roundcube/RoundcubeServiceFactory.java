@@ -20,16 +20,17 @@ package com.anrisoftware.sscontrol.httpd.statements.roundcube;
 
 import java.util.Map;
 
+import com.anrisoftware.sscontrol.httpd.statements.domain.Domain;
 import com.anrisoftware.sscontrol.httpd.statements.webservice.WebServiceFactory;
 
 /**
- * Factory to create the roundcube service.
+ * Factory to create the Roundcube service.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
 public interface RoundcubeServiceFactory extends WebServiceFactory {
 
-	@Override
-    RoundcubeService create(Map<String, Object> map);
+    @Override
+    RoundcubeService create(Domain domain, Map<String, Object> map);
 }

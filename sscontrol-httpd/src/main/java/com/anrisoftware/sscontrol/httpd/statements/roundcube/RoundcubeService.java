@@ -32,6 +32,7 @@ import com.anrisoftware.sscontrol.core.database.DatabaseArgs;
 import com.anrisoftware.sscontrol.core.database.DatabaseFactory;
 import com.anrisoftware.sscontrol.core.debuglogging.DebugLogging;
 import com.anrisoftware.sscontrol.core.debuglogging.DebugLoggingFactory;
+import com.anrisoftware.sscontrol.httpd.statements.domain.Domain;
 import com.anrisoftware.sscontrol.httpd.statements.webservice.WebService;
 import com.google.inject.assistedinject.Assisted;
 
@@ -55,6 +56,8 @@ public class RoundcubeService implements WebService {
 
     private final List<Host> hosts;
 
+    private final Domain domain;
+
     @Inject
     private DatabaseFactory databaseFactory;
 
@@ -75,12 +78,14 @@ public class RoundcubeService implements WebService {
     private SmtpServer smtp;
 
     /**
-     * @see RoundcubeServiceFactory#create(Map)
+     * @see RoundcubeServiceFactory#create(Domain, Map)
      */
     @Inject
-    RoundcubeService(RoundcubeServiceArgs argss, RoundcubeServiceLogger log,
+    RoundcubeService(RoundcubeServiceLogger log, RoundcubeServiceArgs argss,
+            @Assisted Domain domain,
             @Assisted Map<String, Object> args) {
         this.log = log;
+        this.domain = domain;
         this.hosts = new ArrayList<Host>();
         if (argss.haveAlias(args)) {
             setAlias(argss.alias(args));
@@ -91,6 +96,11 @@ public class RoundcubeService implements WebService {
     void setSmtpServerFactory(SmtpServerFactory factory) {
         this.smtp = factory.createDefault();
         this.smtpFactory = factory;
+    }
+
+    @Override
+    public Domain getDomain() {
+        return domain;
     }
 
     @Override

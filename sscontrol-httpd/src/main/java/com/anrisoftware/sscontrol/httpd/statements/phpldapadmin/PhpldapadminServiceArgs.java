@@ -16,30 +16,33 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.statements.webservice;
+package com.anrisoftware.sscontrol.httpd.statements.phpldapadmin;
 
 import java.util.Map;
 
-import com.anrisoftware.sscontrol.httpd.statements.domain.Domain;
+import javax.inject.Inject;
 
 /**
- * Factory to create the web service.
+ * Parses arguments for {@link PhpldapadminService}.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-public interface WebServiceFactory {
+class PhpldapadminServiceArgs {
 
-    /**
-     * Creates the web service for the specified domain.
-     * 
-     * @param domain
-     *            the {@link Domain}.
-     * 
-     * @param map
-     *            the {@link Map} arguments.
-     * 
-     * @return the {@link WebService}.
-     */
-    WebService create(Domain domain, Map<String, Object> map);
+    @Inject
+    private PhpldapadminServiceLogger log;
+
+    private static final String ALIAS = "alias";
+
+    boolean haveAlias(Map<String, Object> args) {
+        return args.containsKey(ALIAS);
+    }
+
+    String alias(PhpldapadminService service, Map<String, Object> args) {
+        Object alias = args.get(ALIAS);
+        log.checkAlias(service, alias);
+        return alias.toString();
+    }
+
 }

@@ -1,14 +1,14 @@
-web_001.web_001 /tmp/var/www/test1.com/web
-www-data.www-data /tmp/var/www/phpadmin.test1.com/web
--R www-data.www-data /tmp/var/www/php-fcgi-scripts/phpadmin.test1.com
-www-data.www-data /tmp/var/www/php-fcgi-scripts/phpadmin.test1.com/php-fcgi-starter
-root.www-data /tmp/var/lib/phpmyadmin/blowfish_secret.inc.php
-root.www-data /tmp/var/lib/phpmyadmin/config.inc.php
-root.www-data /tmp/etc/phpmyadmin/config-db.php
-web_001.web_001 /tmp/var/www/test1.com/web
-www-data.www-data /tmp/var/www/phpadmin.test1.com/web
--R www-data.www-data /tmp/var/www/php-fcgi-scripts/phpadmin.test1.com
-www-data.www-data /tmp/var/www/php-fcgi-scripts/phpadmin.test1.com/php-fcgi-starter
-root.www-data /tmp/var/lib/phpmyadmin/blowfish_secret.inc.php
-root.www-data /tmp/var/lib/phpmyadmin/config.inc.php
-root.www-data /tmp/etc/phpmyadmin/config-db.php
+web_001.web_001 /tmp/var/www/ubuntutest.com/web
+web_002.web_002 /tmp/var/www/www.ubuntutest.com/web
+-R web_001.web_001 /tmp/var/www/php-fcgi-scripts/ubuntutest.com
+web_001.web_001 /tmp/var/www/php-fcgi-scripts/ubuntutest.com/php-fcgi-starter
+root.web_001 /tmp/var/lib/phpmyadmin/blowfish_secret.inc.php
+root.web_001 /tmp/var/lib/phpmyadmin/config.inc.php
+root.web_001 /tmp/etc/phpmyadmin/config-db.php
+web_001.web_001 /tmp/var/www/ubuntutest.com/web
+web_002.web_002 /tmp/var/www/www.ubuntutest.com/web
+-R web_001.web_001 /tmp/var/www/php-fcgi-scripts/ubuntutest.com
+web_001.web_001 /tmp/var/www/php-fcgi-scripts/ubuntutest.com/php-fcgi-starter
+root.web_001 /tmp/var/lib/phpmyadmin/blowfish_secret.inc.php
+root.web_001 /tmp/var/lib/phpmyadmin/config.inc.php
+root.web_001 /tmp/etc/phpmyadmin/config-db.php

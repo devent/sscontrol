@@ -21,22 +21,22 @@ package com.anrisoftware.sscontrol.httpd.apache.phpmyadmin.ubuntu_10_04
 import com.anrisoftware.sscontrol.httpd.apache.core.ubuntu_10_04.UbuntuResources
 
 httpd {
-	domain "test1.com", address: "192.168.0.50", port: 80, { //.
-		redirect to_www //.
-	}
-	ssl_domain "test1.com", address: "192.168.0.50", {
-		certification_file UbuntuResources.certCrt.resource
-		certification_key_file UbuntuResources.certKey.resource
-		redirect to_www
-	}
-	ssl_domain "phpadmin.test1.com", address: "192.168.0.50", {
-		user "www-data", group: "www-data"
-		certification_file UbuntuResources.certCrt.resource
-		certification_key_file UbuntuResources.certKey.resource
-		setup "phpmyadmin", alias: "phpmyadmin", {
-			admin "root", password: "rootpass"
-			control "phpmyadmin", password: "somepass", database: "phpmyadmin"
-			server "127.0.0.1", port: 3306
-		}
-	}
+    domain "ubuntutest.com", address: "192.168.0.100", { //.
+        redirect to_www //.
+    }
+    ssl_domain "ubuntutest.com", address: "192.168.0.100", {
+        certification_file UbuntuResources.certCrt.resource
+        certification_key_file UbuntuResources.certKey.resource
+        setup "phpmyadmin", alias: "phpmyadmin", {
+            admin "root", password: "mysqladminpassword"
+            control "phpmyadmin", password: "phpmyadminpassword", database: "phpmyadmin"
+            server "127.0.0.1", port: 3306
+        }
+    }
+    domain "www.ubuntutest.com", address: "192.168.0.110", {
+    }
+    ssl_domain "www.ubuntutest.com", address: "192.168.0.110", {
+        certification_file UbuntuResources.certCrt.resource
+        certification_key_file UbuntuResources.certKey.resource
+    }
 }

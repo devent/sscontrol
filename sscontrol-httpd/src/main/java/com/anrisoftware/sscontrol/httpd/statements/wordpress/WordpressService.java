@@ -29,6 +29,7 @@ import com.anrisoftware.sscontrol.core.database.DatabaseArgs;
 import com.anrisoftware.sscontrol.core.database.DatabaseFactory;
 import com.anrisoftware.sscontrol.core.debuglogging.DebugLogging;
 import com.anrisoftware.sscontrol.core.debuglogging.DebugLoggingFactory;
+import com.anrisoftware.sscontrol.httpd.statements.domain.Domain;
 import com.anrisoftware.sscontrol.httpd.statements.webservice.WebService;
 import com.google.inject.assistedinject.Assisted;
 
@@ -50,6 +51,8 @@ public class WordpressService implements WebService {
 
     private final WordpressServiceLogger log;
 
+    private final Domain domain;
+
     @Inject
     private DatabaseFactory databaseFactory;
 
@@ -66,8 +69,9 @@ public class WordpressService implements WebService {
      */
     @Inject
     WordpressService(WordpressServiceArgs argss, WordpressServiceLogger log,
-            @Assisted Map<String, Object> args) {
+            @Assisted Domain domain, @Assisted Map<String, Object> args) {
         this.log = log;
+        this.domain = domain;
         if (argss.haveAlias(args)) {
             setAlias(argss.alias(args));
         }
@@ -77,6 +81,11 @@ public class WordpressService implements WebService {
     void setDebugLoggingFactory(DebugLoggingFactory factory) {
         this.debugFactory = factory;
         this.debug = factory.createOff();
+    }
+
+    @Override
+    public Domain getDomain() {
+        return domain;
     }
 
     @Override

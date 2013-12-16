@@ -33,7 +33,7 @@ dbc_dbuser='phpmyadmin'
 #   the password to use with the above username when connecting
 #   to a database, if one is required
 # SSCONTROL-httpd
-dbc_dbpass='somepass'
+dbc_dbpass='phpmyadminpassword'
 # SSCONTROL-httpd-END
 
 

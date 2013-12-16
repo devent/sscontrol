@@ -38,8 +38,9 @@ enum WordpressResources {
     domainsConf("/etc/apache2/conf.d/000-robobee-domains.conf", WordpressResources.class.getResource("domains_conf.txt")),
     test1comConf("/etc/apache2/sites-available/100-robobee-test1.com.conf", WordpressResources.class.getResource("test1_com_conf.txt")),
     test1comSslConf("/etc/apache2/sites-available/100-robobee-test1.com-ssl.conf", WordpressResources.class.getResource("test1_com_ssl_conf.txt")),
-    mailSslConf("/etc/apache2/sites-available/100-robobee-test1.com-ssl.conf", WordpressResources.class.getResource("mail_test1_com_ssl_conf.txt")),
-    mailSslFcgiScript("/var/www/php-fcgi-scripts/test1.com/php-fcgi-starter", WordpressResources.class.getResource("php_fcgi_starter.txt")),
+    wwwtest1comConf("/etc/apache2/sites-available/100-robobee-www.test1.com.conf", WordpressResources.class.getResource("www_test1_com_conf.txt")),
+    wwwtest1comSslConf("/etc/apache2/sites-available/100-robobee-www.test1.com-ssl.conf", WordpressResources.class.getResource("www_test1_com_ssl_conf.txt")),
+    wwwtest1comSslFcgiScript("/var/www/php-fcgi-scripts/www.test1.com/php-fcgi-starter", WordpressResources.class.getResource("php_fcgi_starter.txt")),
     chownOut("/bin/chown.out", WordpressResources.class.getResource("chown_out.txt")),
     chmodOut("/bin/chmod.out", WordpressResources.class.getResource("chmod_out.txt")),
     useraddOut("/usr/sbin/useradd.out", WordpressResources.class.getResource("useradd_out.txt")),
@@ -50,6 +51,7 @@ enum WordpressResources {
     wordpress_3_9_debug_config_expected("/var/www/www.test1.com/wordpress-3.8/wp-config.php", WordpressResources.class.getResource("wordpress_3_8_debug_config_php_expected.txt")),
     tarOut("/bin/tar.out", WordpressResources.class.getResource("tar_out.txt")),
     tar_de_DE_Out("/bin/tar.out", WordpressResources.class.getResource("tar_de_DE_out.txt")),
+    aptitudeOut("/usr/bin/aptitude.out", WordpressResources.class.getResource("aptitude_out.txt")),
 
     static copyRoundcubeFiles(File parent) {
         wordpressArchive.createFile parent

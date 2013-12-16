@@ -29,7 +29,6 @@ import com.anrisoftware.sscontrol.httpd.apache.linux.apache.ServiceConfig
 import com.anrisoftware.sscontrol.httpd.apache.linux.wordpress.BaseWordpress_3_Config
 import com.anrisoftware.sscontrol.httpd.apache.ubuntu_10_04.apache.Ubuntu10_04ScriptFactory
 import com.anrisoftware.sscontrol.httpd.statements.domain.Domain
-import com.anrisoftware.sscontrol.httpd.statements.phpmyadmin.PhpmyadminService
 import com.anrisoftware.sscontrol.httpd.statements.webservice.WebService
 
 /**
@@ -59,10 +58,12 @@ class WordpressConfig extends BaseWordpress_3_Config implements ServiceConfig {
     @Override
     void deployService(Domain domain, WebService service, List serviceConfig) {
         fcgiConfig.script = script
-        installPackages wordpressPackages
         downloadArchive domain
+        fcgiConfig.installPackages()
         fcgiConfig.enableFcgi()
         fcgiConfig.deployConfig domain
+        installPackages wordpressPackages
+        createDomainConfig domain, service, serviceConfig
         deployMainConfig service, domain
         deployDatabaseConfig service, domain
         deployKeysConfig service, domain
@@ -72,10 +73,13 @@ class WordpressConfig extends BaseWordpress_3_Config implements ServiceConfig {
         deployMainConfigEnding service, domain
     }
 
-    void createDomainConfig(Domain domain, PhpmyadminService service, List serviceConfig) {
-        def config = wordpressConfigTemplate.getText(true, "domainConfig",
+    void createDomainConfig(Domain domain, WebService service, List serviceConfig) {
+        def serviceDir = wordpressDir domain
+        def config = wordpressConfigTemplate.getText(
+                true, "domainConfig",
                 "domain", domain,
                 "service", service,
+                "serviceDir", serviceDir,
                 "properties", script,
                 "fcgiProperties", fcgiConfig)
         serviceConfig << config

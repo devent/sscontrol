@@ -1,29 +1,47 @@
-domainConfig(domain, service, properties, fcgiProperties) ::= <<
-# roundcube
+domainConfig(domain, service, serviceDir, properties, fcgiProperties) ::= <<
+# <serviceDir>
 
-<serviceAlias(service.alias)>
-\<Directory /usr/share/phpmyadmin>
+<serviceAlias(service.alias, serviceDir)>
+
+\<Directory <serviceDir>\>
     AddHandler fcgid-script .php
     FCGIWrapper <properties.sitesDirectory>/<fcgiProperties.scriptsSubdirectory>/<domain.name>/<fcgiProperties.scriptStarterFileName> .php
-    Options +ExecCGI
+    Options +ExecCGI +FollowSymLinks
     DirectoryIndex index.php
-\</Directory>
+    AllowOverride All
 
-# Disallow web access to directories that don't need it
-\<Directory /usr/share/phpmyadmin/libraries>
-    Order Deny,Allow
-    Deny from All
-\</Directory>
-\<Directory /usr/share/phpmyadmin/setup/lib>
-    Order Deny,Allow
-    Deny from All
+    Order allow,deny
+    Allow from all
+
+    \<IfModule mod_mime.c>
+        \<IfModule mod_php5.c>
+            AddType application/x-httpd-php .php
+            php_flag magic_quotes_gpc Off
+            php_flag track_vars On
+            php_flag register_globals On
+            php_value include_path .
+            php_value memory_limit 32M
+        \</IfModule>
+
+        \<IfModule !mod_php5.c>
+            \<IfModule mod_actions.c>
+                \<IfModule mod_cgi.c>
+                    AddType application/x-httpd-php .php
+                    Action application/x-httpd-php /cgi-bin/php5
+                \</IfModule>
+                \<IfModule mod_cgid.c>
+                    AddType application/x-httpd-php .php
+                    Action application/x-httpd-php /cgi-bin/php5
+                \</IfModule>
+            \</IfModule>
+        \</IfModule>
+    \</IfModule>
 \</Directory>
 
 >>
 
-serviceAlias(alias) ::= <<
-<if(alias)>Alias /<alias> /usr/share/phpmyadmin<endif>
-
+serviceAlias(alias, serviceDir) ::= <<
+<if(alias)>Alias /<alias> <serviceDir><endif>
 >>
 
 configEnding() ::= <<

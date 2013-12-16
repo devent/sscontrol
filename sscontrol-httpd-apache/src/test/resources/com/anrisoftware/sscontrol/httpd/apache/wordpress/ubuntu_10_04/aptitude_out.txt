@@ -1,0 +1,12 @@
+update
+install apache2 apache2-suexec
+update
+install apache2-suexec libapache2-mod-fcgid php5-cgi
+update
+install php5 mysql-client mysql-server
+update
+install apache2 apache2-suexec
+update
+install apache2-suexec libapache2-mod-fcgid php5-cgi
+update
+install php5 mysql-client mysql-server

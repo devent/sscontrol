@@ -32,97 +32,132 @@ import com.anrisoftware.sscontrol.httpd.statements.domain.Domain
  */
 class FcgiConfig {
 
-	Templates fcgiTemplates
+    Templates fcgiTemplates
 
-	TemplateResource fcgiConfigTemplate
+    TemplateResource fcgiConfigTemplate
 
-	ApacheScript script
+    ApacheScript script
 
-	void setScript(ApacheScript script) {
-		this.script = script
-		fcgiTemplates = templatesFactory.create "Apache_2_2_Fcgi"
-		fcgiConfigTemplate = fcgiTemplates.getResource "config"
-	}
+    /**
+     * Sets the parent Apache script.
+     *
+     * @param script
+     *            the {@link ApacheScript}.
+     */
+    void setScript(ApacheScript script) {
+        this.script = script
+        fcgiTemplates = templatesFactory.create "Apache_2_2_Fcgi"
+        fcgiConfigTemplate = fcgiTemplates.getResource "config"
+    }
 
-	def enableFcgi() {
-		enableMods "fcgid"
-	}
+    /**
+     * Enables the {@code fcgid} packages.
+     */
+    void installPackages() {
+        installPackages fcgidPackages
+    }
 
-	def deployConfig(Domain domain) {
-		createScriptDirectory domain
-		deployStarterScript domain
-	}
+    /**
+     * Enables the {@code fcgid} Apache/mod.
+     */
+    void enableFcgi() {
+        enableMods "fcgid"
+    }
 
-	private createScriptDirectory(Domain domain) {
-		def user = domain.domainUser
-		def scripts = scriptDir domain
-		scripts.mkdirs()
-		changeOwner owner: user.name, ownerGroup: user.group, files: scripts, recursive: true
-	}
+    /**
+     * Setups the domain for php-fcgi.
+     *
+     * @param domain
+     *            the {@link Domain}.
+     */
+    void deployConfig(Domain domain) {
+        createScriptDirectory domain
+        deployStarterScript domain
+    }
 
-	private deployStarterScript(Domain domain) {
-		def user = domain.domainUser
-		def string = fcgiConfigTemplate.getText true, "fcgiStarter", "properties", this
-		def file = scriptStarterFile(domain)
-		FileUtils.write file, string
-		changeOwner owner: user.name, ownerGroup: user.group, files: file
-		changeMod mod: "755", files: file
-	}
+    private createScriptDirectory(Domain domain) {
+        def user = domain.domainUser
+        def scripts = scriptDir domain
+        scripts.mkdirs()
+        changeOwner owner: user.name, ownerGroup: user.group, files: scripts, recursive: true
+    }
 
-	/**
-	 * Returns the maximum requests for php/fcgi.
-	 *
-	 * <ul>
-	 * <li>profile property {@code "php_fcgi_max_requests"}</li>
-	 * </ul>
-	 */
-	int getMaxRequests() {
-		profileNumberProperty("php_fcgi_max_requests", defaultProperties)
-	}
+    private deployStarterScript(Domain domain) {
+        def user = domain.domainUser
+        def string = fcgiConfigTemplate.getText true, "fcgiStarter", "properties", this
+        def file = scriptStarterFile(domain)
+        FileUtils.write file, string
+        changeOwner owner: user.name, ownerGroup: user.group, files: file
+        changeMod mod: "755", files: file
+    }
 
-	/**
-	 * Returns the sub-directory to save the php/fcgi scripts.
-	 * For example {@code "php-fcgi-scripts"}.
-	 *
-	 * <ul>
-	 * <li>profile property {@code "php_fcgi_scripts_subdirectory"}</li>
-	 * </ul>
-	 */
-	String getScriptsSubdirectory() {
-		profileProperty("php_fcgi_scripts_subdirectory", defaultProperties)
-	}
+    /**
+     * Returns the maximum requests for php/fcgi.
+     *
+     * <ul>
+     * <li>profile property {@code "php_fcgi_max_requests"}</li>
+     * </ul>
+     */
+    int getMaxRequests() {
+        profileNumberProperty("php_fcgi_max_requests", defaultProperties)
+    }
 
-	/**
-	 * Returns the name of the fcgi/starter script.
-	 * For example {@code "php-fcgi-starter"}.
-	 *
-	 * <ul>
-	 * <li>profile property {@code "php_fcgi_scripts_file"}</li>
-	 * </ul>
-	 */
-	String getScriptStarterFileName() {
-		profileProperty("php_fcgi_scripts_file", defaultProperties)
-	}
+    /**
+     * Returns the sub-directory to save the php/fcgi scripts.
+     * For example {@code "php-fcgi-scripts"}.
+     *
+     * <ul>
+     * <li>profile property {@code "php_fcgi_scripts_subdirectory"}</li>
+     * </ul>
+     */
+    String getScriptsSubdirectory() {
+        profileProperty("php_fcgi_scripts_subdirectory", defaultProperties)
+    }
 
-	/**
-	 * Returns the scripts directory for the specified domain.
-	 */
-	File scriptDir(Domain domain) {
-		new File(sitesDirectory, "$scriptsSubdirectory/$domain.name")
-	}
+    /**
+     * Returns the name of the fcgi/starter script.
+     * For example {@code "php-fcgi-starter"}.
+     *
+     * <ul>
+     * <li>profile property {@code "php_fcgi_scripts_file"}</li>
+     * </ul>
+     */
+    String getScriptStarterFileName() {
+        profileProperty("php_fcgi_scripts_file", defaultProperties)
+    }
 
-	/**
-	 * Returns the scripts directory for the specified domain.
-	 */
-	File scriptStarterFile(Domain domain) {
-		new File(scriptDir(domain), scriptStarterFileName)
-	}
+    /**
+     * Returns the scripts directory for the specified domain.
+     */
+    File scriptDir(Domain domain) {
+        new File(sitesDirectory, "$scriptsSubdirectory/$domain.name")
+    }
 
-	def propertyMissing(String name) {
-		script.getProperty name
-	}
+    /**
+     * Returns the list of needed packages for Fcgid.
+     *
+     * <ul>
+     * <li>profile property {@code "php_fcgi_packages"}</li>
+     * </ul>
+     *
+     * @see ApacheScript#getDefaultProperties()
+     */
+    List getFcgidPackages() {
+        profileListProperty "php_fcgi_packages", defaultProperties
+    }
 
-	def methodMissing(String name, def args) {
-		script.invokeMethod name, args
-	}
+    /**
+     * Returns the scripts directory for the specified domain.
+     */
+    File scriptStarterFile(Domain domain) {
+        new File(scriptDir(domain), scriptStarterFileName)
+    }
+
+    def propertyMissing(String name) {
+        script.getProperty name
+    }
+
+    def methodMissing(String name, def args) {
+        script.invokeMethod name, args
+    }
 }

@@ -60,16 +60,16 @@ class WordpressConfig extends BaseWordpress_3_Config implements ServiceConfig {
     void deployService(Domain domain, WebService service, List serviceConfig) {
         fcgiConfig.script = script
         installPackages wordpressPackages
-        downloadArchive()
+        downloadArchive domain
         fcgiConfig.enableFcgi()
         fcgiConfig.deployConfig domain
-        deployMainConfig service
-        deployDatabaseConfig service
-        deployKeysConfig service
-        deployLanguageConfig service
-        deploySecureLoginConfig service
-        deployDebugConfig service
-        deployMainConfigEnding service
+        deployMainConfig service, domain
+        deployDatabaseConfig service, domain
+        deployKeysConfig service, domain
+        deployLanguageConfig service, domain
+        deploySecureLoginConfig service, domain
+        deployDebugConfig service, domain
+        deployMainConfigEnding service, domain
     }
 
     void createDomainConfig(Domain domain, PhpmyadminService service, List serviceConfig) {
@@ -81,15 +81,16 @@ class WordpressConfig extends BaseWordpress_3_Config implements ServiceConfig {
         serviceConfig << config
     }
 
-    void downloadArchive() {
+    void downloadArchive(Domain domain) {
+        def dir = wordpressDir domain
         def name = new File(wordpressArchive.path).name
-        def dest = new File(tmpDirectory, "wordpress-$name")
+        def dest = new File(tmpDirectory, "wordpress-3-8-$name")
         def type = archiveType file: dest
-        if (!wordpressDir.isDirectory()) {
-            wordpressDir.mkdirs()
+        if (!dir.isDirectory()) {
+            dir.mkdirs()
         }
         copyURLToFile wordpressArchive.toURL(), dest
-        unpack file: dest, type: type, output: wordpressDir, override: true
+        unpack file: dest, type: type, output: dir, override: true
         log.downloadArchive script, wordpressArchive
     }
 

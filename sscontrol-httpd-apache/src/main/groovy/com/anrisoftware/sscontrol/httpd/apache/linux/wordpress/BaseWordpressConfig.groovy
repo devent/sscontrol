@@ -78,19 +78,35 @@ class BaseWordpressConfig {
     }
 
     /**
-     * Wordpress installation directory, for
-     * example {@code "wordpress"}. If the path is relative then
-     * the directory will be under the local software directory.
+     * Wordpress configuration directory, for
+     * example {@code "wordpress-3.8"}. If the path is relative then
+     * the directory will be under the domain directory.
      *
      * <ul>
      * <li>profile property {@code "wordpress_directory"}</li>
      * </ul>
      *
-     * @see ApacheScript#getDefaultProperties()
-     * @see ApacheScript#getLocalSoftwareDir()
+     * @param domain
+     *            the domain for which the directory is returned.
      */
-    File getWordpressDir() {
-        profileFileProperty("wordpress_directory", localSoftwareDir, defaultProperties)
+    File wordpressDir(def domain) {
+        profileFileProperty "wordpress_directory", domainDir(domain), defaultProperties
+    }
+
+    /**
+     * Wordpress linked configuration directory, for
+     * example {@code "wordpress"}. If the path is relative then
+     * the directory will be under the domain directory.
+     *
+     * <ul>
+     * <li>profile property {@code "wordpress_linked_directory"}</li>
+     * </ul>
+     *
+     * @param domain
+     *            the domain for which the directory is returned.
+     */
+    File wordpressLinkedDir(def domain) {
+        profileFileProperty "wordpress_linked_directory", domainDir(domain), defaultProperties
     }
 
     /**

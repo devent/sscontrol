@@ -185,6 +185,9 @@ class PhpldapadminConfig extends BasePhpldapadminConfig implements ServiceConfig
      * <ul>
      * <li>profile property {@code "phpldapadmin_configuration_directory"}</li>
      * </ul>
+     *
+     * @param domain
+     *            the domain for which the directory is returned.
      */
     File adminConfigurationDir(def domain) {
         String path = profileProperty "phpldapadmin_configuration_directory"
@@ -199,6 +202,9 @@ class PhpldapadminConfig extends BasePhpldapadminConfig implements ServiceConfig
      * <ul>
      * <li>profile property {@code "phpldapadmin_linked_configuration_directory"}</li>
      * </ul>
+     *
+     * @param domain
+     *            the domain for which the directory is returned.
      */
     File adminLinkedConfigurationDir(def domain) {
         String path = profileProperty "phpldapadmin_linked_configuration_directory"

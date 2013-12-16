@@ -43,15 +43,19 @@ class BaseWordpress_3_Config extends BaseWordpressConfig {
      *
      * @param service
      *            the {@link WordpressService}.
+     *
+     * @param domain
+     *            the domain for which the configuration is returned.
      */
-    void deployMainConfig(WordpressService service) {
-        def name = configurationFile.name
+    void deployMainConfig(WordpressService service, def domain) {
+        def file = configurationFile domain
+        def name = file.name
         def tmp = new File(name, tmpDirectory)
-        if (!configurationFile.isFile()) {
-            copyFile configurationDistFile, tmp
+        if (!file.isFile()) {
+            copyFile configurationDistFile(domain), tmp
         }
-        List file = readLines(tmp, configFileCharset)
-        writeLines configurationFile, configFileCharset.toString(), file[0..-10]
+        List lines = readLines(tmp, configFileCharset)
+        writeLines configurationFile(domain), configFileCharset.toString(), lines[0..-10]
     }
 
     /**
@@ -59,14 +63,19 @@ class BaseWordpress_3_Config extends BaseWordpressConfig {
      *
      * @param service
      *            the {@link WordpressService}.
+     *
+     * @param domain
+     *            the domain for which the configuration is returned.
      */
-    void deployMainConfigEnding(WordpressService service) {
+    void deployMainConfigEnding(WordpressService service, def domain) {
         def search = wordpressConfigTemplate.getText(true, "configEnding_search")
         def replace = wordpressConfigTemplate.getText(true, "configEnding")
         def temp = new TokenTemplate(search, replace)
         temp.enclose = false
         def configs = [temp]
-        deployConfiguration configurationTokens(), mainConfiguration, configs, configurationFile
+        def conf = mainConfiguration domain
+        def file = configurationFile domain
+        deployConfiguration configurationTokens(), conf, configs, file
     }
 
     /**
@@ -74,9 +83,14 @@ class BaseWordpress_3_Config extends BaseWordpressConfig {
      *
      * @param service
      *            the {@link WordpressService}.
+     *
+     * @param domain
+     *            the domain for which the configuration is returned.
      */
-    void deployDatabaseConfig(WordpressService service) {
-        deployConfiguration configurationTokens(), mainConfiguration, databaseConfigurations(service), configurationFile
+    void deployDatabaseConfig(WordpressService service, def domain) {
+        def conf = mainConfiguration domain
+        def file = configurationFile domain
+        deployConfiguration configurationTokens(), conf, databaseConfigurations(service), file
     }
 
     /**
@@ -141,9 +155,14 @@ class BaseWordpress_3_Config extends BaseWordpressConfig {
      *
      * @param service
      *            the {@link WordpressService}.
+     *
+     * @param domain
+     *            the domain for which the configuration is returned.
      */
-    void deployKeysConfig(WordpressService service) {
-        deployConfiguration configurationTokens(), mainConfiguration, keysConfigurations(service), configurationFile
+    void deployKeysConfig(WordpressService service, def domain) {
+        def conf = mainConfiguration domain
+        def file = configurationFile domain
+        deployConfiguration configurationTokens(), conf, keysConfigurations(service), file
     }
 
     /**
@@ -215,9 +234,14 @@ class BaseWordpress_3_Config extends BaseWordpressConfig {
      *
      * @param service
      *            the {@link WordpressService}.
+     *
+     * @param domain
+     *            the domain for which the configuration is returned.
      */
-    void deployLanguageConfig(WordpressService service) {
-        deployConfiguration configurationTokens(), mainConfiguration, languageConfigurations(service), configurationFile
+    void deployLanguageConfig(WordpressService service, def domain) {
+        def conf = mainConfiguration domain
+        def file = configurationFile domain
+        deployConfiguration configurationTokens(), conf, languageConfigurations(service), file
     }
 
     /**
@@ -240,9 +264,14 @@ class BaseWordpress_3_Config extends BaseWordpressConfig {
      *
      * @param service
      *            the {@link WordpressService}.
+     *
+     * @param domain
+     *            the domain for which the configuration is returned.
      */
-    void deploySecureLoginConfig(WordpressService service) {
-        deployConfiguration configurationTokens(), mainConfiguration, secureLoginConfigurations(service), configurationFile
+    void deploySecureLoginConfig(WordpressService service, def domain) {
+        def conf = mainConfiguration domain
+        def file = configurationFile domain
+        deployConfiguration configurationTokens(), conf, secureLoginConfigurations(service), file
     }
 
     /**
@@ -272,9 +301,14 @@ class BaseWordpress_3_Config extends BaseWordpressConfig {
      *
      * @param service
      *            the {@link WordpressService}.
+     *
+     * @param domain
+     *            the domain for which the configuration is returned.
      */
-    void deployDebugConfig(WordpressService service) {
-        deployConfiguration configurationTokens(), mainConfiguration, debugConfigurations(service), configurationFile
+    void deployDebugConfig(WordpressService service, def domain) {
+        def conf = mainConfiguration domain
+        def file = configurationFile domain
+        deployConfiguration configurationTokens(), conf, debugConfigurations(service), file
     }
 
     /**
@@ -301,11 +335,14 @@ class BaseWordpress_3_Config extends BaseWordpressConfig {
      * <li>profile property {@code "wordpress_main_file"}</li>
      * </ul>
      *
+     * @param domain
+     *            the domain for which the directory is returned.
+     *
      * @see ApacheScript#getDefaultProperties()
-     * @see #getWordpressDir()
+     * @see #wordpressDir(Object)
      */
-    File getConfigurationFile() {
-        profileFileProperty("wordpress_main_file", wordpressDir, defaultProperties)
+    File configurationFile(def domain) {
+        profileFileProperty "wordpress_main_file", wordpressDir(domain), defaultProperties
     }
 
     /**
@@ -317,20 +354,27 @@ class BaseWordpress_3_Config extends BaseWordpressConfig {
      * <li>profile property {@code "wordpress_main_dist_file"}</li>
      * </ul>
      *
+     * @param domain
+     *            the domain for which the directory is returned.
+     *
      * @see ApacheScript#getDefaultProperties()
-     * @see #getWordpressDir()
+     * @see #wordpressDir(Object)
      */
-    File getConfigurationDistFile() {
-        profileFileProperty("wordpress_main_dist_file", wordpressDir, defaultProperties)
+    File configurationDistFile(def domain) {
+        profileFileProperty "wordpress_main_dist_file", wordpressDir(domain), defaultProperties
     }
 
     /**
      * Returns the current main configuration.
      *
+     * @param domain
+     *            the domain for which the directory is returned.
+     *
      * @see #getConfigurationFile()
+     * @see #configurationFile(Object)
      */
-    String getMainConfiguration() {
-        currentConfiguration configurationFile
+    String mainConfiguration(def domain) {
+        currentConfiguration configurationFile(domain)
     }
 
     @Override

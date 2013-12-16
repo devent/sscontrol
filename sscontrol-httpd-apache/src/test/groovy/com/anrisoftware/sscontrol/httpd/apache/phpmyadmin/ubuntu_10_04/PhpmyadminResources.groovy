@@ -31,62 +31,63 @@ import com.anrisoftware.sscontrol.httpd.apache.core.ubuntu_10_04.ResourcesUtils
  */
 enum PhpmyadminResources {
 
-	httpdScript("Httpd.groovy", PhpmyadminResources.class.getResource("HttpdPhpmyadmin.groovy")),
-	domainsConf("/etc/apache2/conf.d/000-robobee-domains.conf", PhpmyadminResources.class.getResource("domains_conf.txt")),
-	test1comConf("/etc/apache2/sites-available/100-robobee-test1.com.conf", PhpmyadminResources.class.getResource("test1_com_conf.txt")),
-	test1comSslConf("/etc/apache2/sites-available/100-robobee-test1.com-ssl.conf", PhpmyadminResources.class.getResource("test1_com_ssl_conf.txt")),
-	phpadminTest1comSslConf("/etc/apache2/sites-available/100-robobee-phpadmin.test1.com-ssl.conf", PhpmyadminResources.class.getResource("phpadmin_test1_com_ssl_conf.txt")),
-	phpadminTest1comSslFcgiScript("/var/www/php-fcgi-scripts/phpadmin.test1.com/php-fcgi-starter", PhpmyadminResources.class.getResource("php_fcgi_starter.txt")),
-	chownOut("/bin/chown.out", PhpmyadminResources.class.getResource("chown_out.txt")),
-	chmodOut("/bin/chmod.out", PhpmyadminResources.class.getResource("chmod_out.txt")),
-	useraddOut("/usr/sbin/useradd.out", PhpmyadminResources.class.getResource("useradd_out.txt")),
-	groupaddOut("/usr/sbin/groupadd.out", PhpmyadminResources.class.getResource("groupadd_out.txt")),
-	dbconfigConfig("/etc/dbconfig-common/phpmyadmin.conf", PhpmyadminResources.class.getResource("phpmyadmin.conf")),
-	configExpecting("/etc/dbconfig-common/phpmyadmin.conf", PhpmyadminResources.class.getResource("phpmyadmin_conf_expecting.txt")),
-	createTablesSql("/usr/share/doc/phpmyadmin/examples/create_tables.sql.gz", PhpmyadminResources.class.getResource("create_tables.sql.gz")),
-	localConfig("/var/lib/phpmyadmin/config.inc.php", PhpmyadminResources.class.getResource("config_inc_php.txt")),
-	localBlowfish("/var/lib/phpmyadmin/blowfish_secret.inc.php", PhpmyadminResources.class.getResource("blowfish_secret_inc_php.txt")),
-	localDbConfig("/etc/phpmyadmin/config-db.php", PhpmyadminResources.class.getResource("config_db_php.txt")),
+    httpdScript("Httpd.groovy", PhpmyadminResources.class.getResource("HttpdPhpmyadmin.groovy")),
+    domainsConf("/etc/apache2/conf.d/000-robobee-domains.conf", PhpmyadminResources.class.getResource("domains_conf.txt")),
+    test1comConf("/etc/apache2/sites-available/100-robobee-test1.com.conf", PhpmyadminResources.class.getResource("test1_com_conf.txt")),
+    test1comSslConf("/etc/apache2/sites-available/100-robobee-test1.com-ssl.conf", PhpmyadminResources.class.getResource("test1_com_ssl_conf.txt")),
+    phpadminTest1comSslConf("/etc/apache2/sites-available/100-robobee-phpadmin.test1.com-ssl.conf", PhpmyadminResources.class.getResource("phpadmin_test1_com_ssl_conf.txt")),
+    phpadminTest1comSslFcgiScript("/var/www/php-fcgi-scripts/phpadmin.test1.com/php-fcgi-starter", PhpmyadminResources.class.getResource("php_fcgi_starter.txt")),
+    chownOut("/bin/chown.out", PhpmyadminResources.class.getResource("chown_out.txt")),
+    chmodOut("/bin/chmod.out", PhpmyadminResources.class.getResource("chmod_out.txt")),
+    useraddOut("/usr/sbin/useradd.out", PhpmyadminResources.class.getResource("useradd_out.txt")),
+    groupaddOut("/usr/sbin/groupadd.out", PhpmyadminResources.class.getResource("groupadd_out.txt")),
+    config("/etc/dbconfig-common/phpmyadmin.conf", PhpmyadminResources.class.getResource("phpmyadmin_conf.txt")),
+    configExpected("/etc/dbconfig-common/phpmyadmin.conf", PhpmyadminResources.class.getResource("phpmyadmin_conf_expecting.txt")),
+    createTablesSql("/usr/share/doc/phpmyadmin/examples/create_tables.sql.gz", PhpmyadminResources.class.getResource("create_tables.sql.gz")),
+    localConfig("/var/lib/phpmyadmin/config.inc.php", PhpmyadminResources.class.getResource("config_inc_php.txt")),
+    localBlowfish("/var/lib/phpmyadmin/blowfish_secret.inc.php", PhpmyadminResources.class.getResource("blowfish_secret_inc_php.txt")),
+    localDbConfig("/etc/phpmyadmin/config-db.php", PhpmyadminResources.class.getResource("config_db_php.txt")),
+    aptitudeOut("/usr/bin/aptitude.out", PhpmyadminResources.class.getResource("aptitude_out.txt")),
 
-	static copyUbuntuFiles(File parent) {
-		createTablesSql.createFile parent
-		dbconfigConfig.createFile parent
-		localConfig.createFile parent
-		localBlowfish.createFile parent
-		localDbConfig.createFile parent
-	}
+    static copyPhpmyadminFiles(File parent) {
+        createTablesSql.createFile parent
+        config.createFile parent
+        localConfig.createFile parent
+        localBlowfish.createFile parent
+        localDbConfig.createFile parent
+    }
 
-	ResourcesUtils resources
+    ResourcesUtils resources
 
-	PhpmyadminResources(String path, URL resource) {
-		this.resources = new ResourcesUtils(path: path, resource: resource)
-	}
+    PhpmyadminResources(String path, URL resource) {
+        this.resources = new ResourcesUtils(path: path, resource: resource)
+    }
 
-	String getPath() {
-		resources.path
-	}
+    String getPath() {
+        resources.path
+    }
 
-	URL getResource() {
-		resources.resource
-	}
+    URL getResource() {
+        resources.resource
+    }
 
-	File asFile(File parent) {
-		resources.asFile parent
-	}
+    File asFile(File parent) {
+        resources.asFile parent
+    }
 
-	void createFile(File parent) {
-		resources.createFile parent
-	}
+    void createFile(File parent) {
+        resources.createFile parent
+    }
 
-	void createCommand(File parent) {
-		resources.createCommand parent
-	}
+    void createCommand(File parent) {
+        resources.createCommand parent
+    }
 
-	String replaced(File parent, def search, def replace) {
-		resources.replaced parent, search, replace
-	}
+    String replaced(File parent, def search, def replace) {
+        resources.replaced parent, search, replace
+    }
 
-	String toString() {
-		resources.toString()
-	}
+    String toString() {
+        resources.toString()
+    }
 }

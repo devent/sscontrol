@@ -37,28 +37,30 @@ import com.anrisoftware.sscontrol.httpd.apache.ubuntu.UbuntuTestUtil
 @Slf4j
 class PhpmyadminTest extends UbuntuTestUtil {
 
-	@Test
-	void "phpmyadmin"() {
-		copyUbuntuFiles tmpdir
+    @Test
+    void "phpmyadmin"() {
+        copyUbuntuFiles tmpdir
+        copyPhpmyadminFiles tmpdir
 
-		loader.loadService profile.resource, null
-		def profile = registry.getService("profile")[0]
-		loader.loadService httpdScript.resource, profile
+        loader.loadService profile.resource, null
+        def profile = registry.getService("profile")[0]
+        loader.loadService httpdScript.resource, profile
 
-		registry.allServices.each { it.call() }
-		log.info "Run service again to ensure that configuration is not set double."
-		registry.allServices.each { it.call() }
+        registry.allServices.each { it.call() }
+        log.info "Run service again to ensure that configuration is not set double."
+        registry.allServices.each { it.call() }
 
-		assertFileContent defaultConf.asFile(tmpdir), defaultConf
-		assertFileContent domainsConf.asFile(tmpdir), PhpmyadminResources.domainsConf
-		assertStringContent test1comConf.replaced(tmpdir, tmpdir, "/tmp"), test1comConf.toString()
-		assertStringContent test1comSslConf.replaced(tmpdir, tmpdir, "/tmp"), test1comSslConf.toString()
-		assertStringContent phpadminTest1comSslConf.replaced(tmpdir, tmpdir, "/tmp"), phpadminTest1comSslConf.toString()
-		assertFileContent phpadminTest1comSslFcgiScript.asFile(tmpdir), phpadminTest1comSslFcgiScript
-		assertStringContent chownOut.replaced(tmpdir, tmpdir, "/tmp"), chownOut.toString()
-		assertStringContent chmodOut.replaced(tmpdir, tmpdir, "/tmp"), chmodOut.toString()
-		assertStringContent groupaddOut.replaced(tmpdir, tmpdir, "/tmp"), groupaddOut.toString()
-		assertStringContent useraddOut.replaced(tmpdir, tmpdir, "/tmp"), useraddOut.toString()
-		//assertFileContent phpmyadminConfigExpecting.asFile(tmpdir), phpmyadminConfigExpecting
-	}
+        assertFileContent defaultConf.asFile(tmpdir), defaultConf
+        assertFileContent domainsConf.asFile(tmpdir), PhpmyadminResources.domainsConf
+        assertStringContent test1comConf.replaced(tmpdir, tmpdir, "/tmp"), test1comConf.toString()
+        assertStringContent test1comSslConf.replaced(tmpdir, tmpdir, "/tmp"), test1comSslConf.toString()
+        assertStringContent phpadminTest1comSslConf.replaced(tmpdir, tmpdir, "/tmp"), phpadminTest1comSslConf.toString()
+        assertFileContent phpadminTest1comSslFcgiScript.asFile(tmpdir), phpadminTest1comSslFcgiScript
+        assertStringContent chownOut.replaced(tmpdir, tmpdir, "/tmp"), chownOut.toString()
+        assertStringContent chmodOut.replaced(tmpdir, tmpdir, "/tmp"), chmodOut.toString()
+        assertStringContent groupaddOut.replaced(tmpdir, tmpdir, "/tmp"), groupaddOut.toString()
+        assertStringContent useraddOut.replaced(tmpdir, tmpdir, "/tmp"), useraddOut.toString()
+        assertFileContent aptitudeOut.asFile(tmpdir), aptitudeOut
+        assertFileContent configExpected.asFile(tmpdir), configExpected
+    }
 }

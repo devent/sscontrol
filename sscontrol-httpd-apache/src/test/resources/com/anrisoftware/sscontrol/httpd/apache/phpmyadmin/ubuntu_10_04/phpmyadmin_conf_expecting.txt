@@ -17,7 +17,7 @@ dbc_remove=''
 
 # dbc_dbtype: type of underlying database to use
 #   this exists primarily to let dbconfig-common know what database
-#   type to use when a package supports multiple database types.  
+#   type to use when a package supports multiple database types.
 #   don't change this value unless you know for certain that this
 #   package supports multiple database types
 dbc_dbtype='mysql'
@@ -37,7 +37,7 @@ dbc_dbpass='somepass'
 # SSCONTROL-httpd-END
 
 
-# dbc_dbserver: database host.  
+# dbc_dbserver: database host.
 #   leave unset to use localhost (or a more efficient local method
 #   if it exists).
 # SSCONTROL-httpd
@@ -69,7 +69,7 @@ dbc_dbadmin='root'
 
 # dbc_basepath: base directory to hold database files
 #   leave unset to use the default.  only applicable if you are
-#   using a local (filesystem based) database.    
+#   using a local (filesystem based) database.
 dbc_basepath=''
 
 ##

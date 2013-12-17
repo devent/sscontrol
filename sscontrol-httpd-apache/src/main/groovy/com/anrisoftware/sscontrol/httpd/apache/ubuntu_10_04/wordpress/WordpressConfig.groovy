@@ -63,6 +63,7 @@ class WordpressConfig extends BaseWordpress_3_Config implements ServiceConfig {
         fcgiConfig.enableFcgi()
         fcgiConfig.deployConfig domain
         installPackages wordpressPackages
+        enableMods wordpressMods
         createDomainConfig domain, service, serviceConfig
         deployMainConfig service, domain
         deployDatabaseConfig service, domain

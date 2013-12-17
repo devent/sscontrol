@@ -88,7 +88,7 @@ class BaseWordpressConfig {
     }
 
     /**
-     * Returns the list of needed packages for Wordpress web mail.
+     * Returns the list of needed packages for Wordpress.
      *
      * <ul>
      * <li>profile property {@code "wordpress_packages"}</li>
@@ -98,6 +98,19 @@ class BaseWordpressConfig {
      */
     List getWordpressPackages() {
         profileListProperty "wordpress_packages", defaultProperties
+    }
+
+    /**
+     * Returns the list of needed Apache mods.
+     *
+     * <ul>
+     * <li>profile property {@code "wordpress_mods"}</li>
+     * </ul>
+     *
+     * @see ApacheScript#getDefaultProperties()
+     */
+    List getWordpressMods() {
+        profileListProperty "wordpress_mods", defaultProperties
     }
 
     /**

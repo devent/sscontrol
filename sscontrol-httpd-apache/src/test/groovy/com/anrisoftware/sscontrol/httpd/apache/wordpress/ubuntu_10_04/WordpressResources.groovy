@@ -52,6 +52,7 @@ enum WordpressResources {
     tarOut("/bin/tar.out", WordpressResources.class.getResource("tar_out.txt")),
     tar_de_DE_Out("/bin/tar.out", WordpressResources.class.getResource("tar_de_DE_out.txt")),
     aptitudeOut("/usr/bin/aptitude.out", WordpressResources.class.getResource("aptitude_out.txt")),
+    a2enmodOut("/usr/sbin/a2enmod.out", WordpressResources.class.getResource("a2enmod_out.txt")),
 
     static copyRoundcubeFiles(File parent) {
         wordpressArchive.createFile parent

@@ -64,6 +64,7 @@ class WordpressTest extends UbuntuTestUtil {
         assertStringContent useraddOut.replaced(tmpdir, tmpdir, "/tmp"), useraddOut.toString()
         assertStringContent tarOut.replaced(tmpdir, tmpdir, "/tmp"), tarOut.toString()
         assertFileContent aptitudeOut.asFile(tmpdir), aptitudeOut
+        assertFileContent a2enmodOut.asFile(tmpdir), a2enmodOut
     }
 
     @Test

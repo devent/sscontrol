@@ -25,6 +25,7 @@ import java.nio.charset.Charset
 import javax.inject.Inject
 
 import org.apache.commons.io.FileUtils
+import org.apache.commons.lang3.StringUtils
 import org.codehaus.groovy.runtime.InvokerHelper
 
 import com.anrisoftware.propertiesutils.ContextProperties
@@ -573,8 +574,23 @@ abstract class LinuxScript extends Script {
      * @see #getDefaultProperties()
      */
     File getTmpDirectory() {
-        String path = profileProperty("temp_directory", defaultProperties)
-        path == null ? System.getProperty("java.io.tmpdir") : new File(path)
+        if (containsKey("temp_directory")) {
+            def dir = profileProperty("temp_directory", defaultProperties)
+            if (dir instanceof File) {
+                return dir
+            }
+            if (StringUtils.isBlank(dir)) {
+                return javaTmpDirectory
+            } else {
+                return new File(dir)
+            }
+        } else {
+            return javaTmpDirectory
+        }
+    }
+
+    private getJavaTmpDirectory() {
+        new File(System.getProperty("java.io.tmpdir"))
     }
 
     /**

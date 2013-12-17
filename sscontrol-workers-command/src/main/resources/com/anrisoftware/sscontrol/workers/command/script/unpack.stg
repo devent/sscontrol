@@ -10,6 +10,14 @@ tgz(args) ::= <<
 
 tar(args) ::= <<
 cd <args.output>
-<args.command> <if(args.override)>--overwrite<endif> -xf <args.file>
+<args.command> <overrideTar(args)> <stripTar(args)> -xf <args.file>
 
 >>
+
+overrideTar(args) ::= <%
+<if(args.override)>--overwrite<endif>
+%>
+
+stripTar(args) ::= <%
+<if(args.strip)>--strip 1<endif>
+%>

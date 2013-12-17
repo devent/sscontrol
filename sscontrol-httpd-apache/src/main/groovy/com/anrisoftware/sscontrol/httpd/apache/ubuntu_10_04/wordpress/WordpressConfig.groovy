@@ -90,11 +90,12 @@ class WordpressConfig extends BaseWordpress_3_Config implements ServiceConfig {
         def name = new File(wordpressArchive.path).name
         def dest = new File(tmpDirectory, "wordpress-3-8-$name")
         def type = archiveType file: dest
+        def strip = stripArchive
         if (!dir.isDirectory()) {
             dir.mkdirs()
         }
         copyURLToFile wordpressArchive.toURL(), dest
-        unpack file: dest, type: type, output: dir, override: true
+        unpack file: dest, type: type, output: dir, override: true, strip: strip
         log.downloadArchive script, wordpressArchive
     }
 

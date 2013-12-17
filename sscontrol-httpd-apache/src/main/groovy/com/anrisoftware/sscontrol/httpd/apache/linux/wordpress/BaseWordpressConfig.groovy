@@ -45,7 +45,7 @@ class BaseWordpressConfig {
      * Returns the Wordpress web mail distribution archive.
      *
      * <ul>
-     * <li>profile property {@code "wordpress_archive"}</li>
+     * <li>profile property {@code "wordpress_archive[_<language>]"}</li>
      * </ul>
      *
      * @see ApacheScript#getDefaultProperties()
@@ -60,6 +60,29 @@ class BaseWordpressConfig {
                     return profileURIProperty("wordpress_archive_$lang", defaultProperties)
                 } else {
                     return profileURIProperty("wordpress_archive", defaultProperties)
+                }
+        }
+    }
+
+    /**
+     * Returns to strip the Wordpress archive from the container directory.
+     *
+     * <ul>
+     * <li>profile property {@code "wordpress_strip_archive[_<language>]"}</li>
+     * </ul>
+     *
+     * @see ApacheScript#getDefaultProperties()
+     */
+    boolean getStripArchive() {
+        String lang = language.toString()
+        switch (lang) {
+            case "":
+                return profileBooleanProperty("wordpress_strip_archive", defaultProperties)
+            default:
+                if (containsKey("wordpress_strip_archive_$lang")) {
+                    return profileBooleanProperty("wordpress_strip_archive_$lang", defaultProperties)
+                } else {
+                    return profileBooleanProperty("wordpress_strip_archive", defaultProperties)
                 }
         }
     }

@@ -18,8 +18,6 @@
  */
 package com.anrisoftware.sscontrol.httpd.statements.roundcube;
 
-import static com.anrisoftware.sscontrol.httpd.statements.roundcube.RoundcubeServiceLogger._.alias_set_debug;
-import static com.anrisoftware.sscontrol.httpd.statements.roundcube.RoundcubeServiceLogger._.alias_set_info;
 import static com.anrisoftware.sscontrol.httpd.statements.roundcube.RoundcubeServiceLogger._.database_set_debug;
 import static com.anrisoftware.sscontrol.httpd.statements.roundcube.RoundcubeServiceLogger._.database_set_info;
 import static com.anrisoftware.sscontrol.httpd.statements.roundcube.RoundcubeServiceLogger._.debug_set_debug;
@@ -45,10 +43,6 @@ import com.anrisoftware.sscontrol.core.debuglogging.DebugLogging;
 class RoundcubeServiceLogger extends AbstractLogger {
 
     enum _ {
-
-        alias_set_debug("Alias '{}' set for {}."),
-
-        alias_set_info("Alias '{}' set for service '{}'."),
 
         database_set_debug("Database {} set for {}."),
 
@@ -83,14 +77,6 @@ class RoundcubeServiceLogger extends AbstractLogger {
      */
     public RoundcubeServiceLogger() {
         super(RoundcubeService.class);
-    }
-
-    void aliasSet(RoundcubeService service, String alias) {
-        if (isDebugEnabled()) {
-            debug(alias_set_debug, alias, service);
-        } else {
-            info(alias_set_info, alias, service.getName());
-        }
     }
 
     void databaseSet(RoundcubeService service, Database database) {

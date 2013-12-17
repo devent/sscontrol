@@ -26,6 +26,8 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.anrisoftware.sscontrol.httpd.statements.domain.Domain;
 import com.anrisoftware.sscontrol.httpd.statements.webservice.WebService;
+import com.anrisoftware.sscontrol.httpd.statements.webserviceargs.WebServiceArgs;
+import com.anrisoftware.sscontrol.httpd.statements.webserviceargs.WebServiceLogger;
 import com.google.inject.assistedinject.Assisted;
 
 /**
@@ -42,7 +44,10 @@ public class PhpmyadminService implements WebService {
 
     private final Domain domain;
 
-    private final PhpmyadminServiceLogger log;
+    private final WebServiceLogger serviceLog;
+
+    @Inject
+    private PhpmyadminServiceLogger log;
 
     @Inject
     private AdminUser adminUser;
@@ -55,17 +60,26 @@ public class PhpmyadminService implements WebService {
 
     private String alias;
 
+    private String id;
+
+    private String ref;
+
     /**
      * @see PhpmyadminServiceFactory#create(Domain, Map)
      */
     @Inject
-    PhpmyadminService(PhpmyadminServiceLogger logger,
-            PhpmyadminServiceArgs aargs, @Assisted Domain domain,
-            @Assisted Map<String, Object> args) {
-        this.log = logger;
+    PhpmyadminService(WebServiceArgs aargs, WebServiceLogger logger,
+            @Assisted Domain domain, @Assisted Map<String, Object> args) {
+        this.serviceLog = logger;
         this.domain = domain;
         if (aargs.haveAlias(args)) {
             setAlias(aargs.alias(this, args));
+        }
+        if (aargs.haveId(args)) {
+            setId(aargs.id(this, args));
+        }
+        if (aargs.haveRef(args)) {
+            setRef(aargs.ref(this, args));
         }
     }
 
@@ -81,10 +95,31 @@ public class PhpmyadminService implements WebService {
 
     public void setAlias(String alias) {
         this.alias = alias;
+        serviceLog.aliasSet(this, alias);
     }
 
     public String getAlias() {
         return alias;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+        serviceLog.idSet(this, id);
+    }
+
+    @Override
+    public String getId() {
+        return id;
+    }
+
+    public void setRef(String ref) {
+        this.ref = ref;
+        serviceLog.refSet(this, ref);
+    }
+
+    @Override
+    public String getRef() {
+        return ref;
     }
 
     public void admin(Map<String, Object> map, String admin) {

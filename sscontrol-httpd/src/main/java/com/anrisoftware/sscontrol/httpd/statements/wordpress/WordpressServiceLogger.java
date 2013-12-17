@@ -18,8 +18,6 @@
  */
 package com.anrisoftware.sscontrol.httpd.statements.wordpress;
 
-import static com.anrisoftware.sscontrol.httpd.statements.wordpress.WordpressServiceLogger._.alias_set_debug;
-import static com.anrisoftware.sscontrol.httpd.statements.wordpress.WordpressServiceLogger._.alias_set_info;
 import static com.anrisoftware.sscontrol.httpd.statements.wordpress.WordpressServiceLogger._.database_set_debug;
 import static com.anrisoftware.sscontrol.httpd.statements.wordpress.WordpressServiceLogger._.database_set_info;
 import static com.anrisoftware.sscontrol.httpd.statements.wordpress.WordpressServiceLogger._.debug_set_debug;
@@ -41,10 +39,6 @@ import com.anrisoftware.sscontrol.core.debuglogging.DebugLogging;
 class WordpressServiceLogger extends AbstractLogger {
 
     enum _ {
-
-        alias_set_debug("Alias '{}' set for {}."),
-
-        alias_set_info("Alias '{}' set for service '{}'."),
 
         database_set_debug("Database {} set for {}."),
 
@@ -71,14 +65,6 @@ class WordpressServiceLogger extends AbstractLogger {
      */
     public WordpressServiceLogger() {
         super(WordpressService.class);
-    }
-
-    void aliasSet(WordpressService service, String alias) {
-        if (isDebugEnabled()) {
-            debug(alias_set_debug, alias, service);
-        } else {
-            info(alias_set_info, alias, service.getName());
-        }
     }
 
     void databaseSet(WordpressService service, Database database) {

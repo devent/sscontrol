@@ -34,6 +34,8 @@ import com.anrisoftware.sscontrol.core.debuglogging.DebugLogging;
 import com.anrisoftware.sscontrol.core.debuglogging.DebugLoggingFactory;
 import com.anrisoftware.sscontrol.httpd.statements.domain.Domain;
 import com.anrisoftware.sscontrol.httpd.statements.webservice.WebService;
+import com.anrisoftware.sscontrol.httpd.statements.webserviceargs.WebServiceArgs;
+import com.anrisoftware.sscontrol.httpd.statements.webserviceargs.WebServiceLogger;
 import com.google.inject.assistedinject.Assisted;
 
 /**
@@ -52,11 +54,14 @@ public class RoundcubeService implements WebService {
 
     private static final String ALIAS = "alias";
 
-    private final RoundcubeServiceLogger log;
-
     private final List<Host> hosts;
 
     private final Domain domain;
+
+    private final WebServiceLogger serviceLog;
+
+    @Inject
+    private RoundcubeServiceLogger log;
 
     @Inject
     private DatabaseFactory databaseFactory;
@@ -77,18 +82,27 @@ public class RoundcubeService implements WebService {
 
     private SmtpServer smtp;
 
+    private String id;
+
+    private String ref;
+
     /**
      * @see RoundcubeServiceFactory#create(Domain, Map)
      */
     @Inject
-    RoundcubeService(RoundcubeServiceLogger log, RoundcubeServiceArgs argss,
-            @Assisted Domain domain,
-            @Assisted Map<String, Object> args) {
-        this.log = log;
+    RoundcubeService(WebServiceArgs aargs, WebServiceLogger logger,
+            @Assisted Domain domain, @Assisted Map<String, Object> args) {
+        this.serviceLog = logger;
         this.domain = domain;
         this.hosts = new ArrayList<Host>();
-        if (argss.haveAlias(args)) {
-            setAlias(argss.alias(args));
+        if (aargs.haveAlias(args)) {
+            setAlias(aargs.alias(this, args));
+        }
+        if (aargs.haveId(args)) {
+            setId(aargs.id(this, args));
+        }
+        if (aargs.haveRef(args)) {
+            setRef(aargs.ref(this, args));
         }
     }
 
@@ -110,11 +124,31 @@ public class RoundcubeService implements WebService {
 
     public void setAlias(String alias) {
         this.alias = alias;
-        log.aliasSet(this, alias);
+        serviceLog.aliasSet(this, alias);
     }
 
     public String getAlias() {
         return alias;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+        serviceLog.idSet(this, id);
+    }
+
+    @Override
+    public String getId() {
+        return id;
+    }
+
+    public void setRef(String ref) {
+        this.ref = ref;
+        serviceLog.refSet(this, ref);
+    }
+
+    @Override
+    public String getRef() {
+        return ref;
     }
 
     public void database(Map<String, Object> args, String name) {

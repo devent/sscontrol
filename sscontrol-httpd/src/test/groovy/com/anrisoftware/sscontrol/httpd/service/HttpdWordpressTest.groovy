@@ -27,6 +27,7 @@ import org.junit.Test
 import com.anrisoftware.sscontrol.core.api.ServiceLoader as SscontrolServiceLoader
 import com.anrisoftware.sscontrol.core.api.ServicesRegistry
 import com.anrisoftware.sscontrol.httpd.statements.domain.Domain
+import com.anrisoftware.sscontrol.httpd.statements.domain.SslDomain
 import com.anrisoftware.sscontrol.httpd.statements.webservice.WebService
 import com.anrisoftware.sscontrol.httpd.statements.wordpress.WordpressService
 
@@ -46,17 +47,45 @@ class HttpdWordpressTest extends HttpdTestUtil {
         loader.loadService wordpressScript.resource, profile
         HttpdServiceImpl service = registry.getService("httpd")[0]
 
-        Domain domain = service.domains[2]
+        Domain domain = service.domains[0]
+        assert domain.name == "test1.com"
+        assert domain.address == "192.168.0.50"
+        assert (domain instanceof Domain)
+
+        domain = service.domains[1]
+        assert domain.name == "test1.com"
+        assert domain.address == "192.168.0.50"
+        assert (domain instanceof SslDomain)
+
+        domain = service.domains[2]
+        assert domain.name == "www.test1.com"
+        assert domain.address == "192.168.0.51"
+        assert (domain instanceof Domain)
         assert domain.domainUser.name == "www-data"
         assert domain.domainUser.group == "www-data"
         WebService webservice = domain.services[0]
-        assert webservice.getClass() == WordpressService
+        assert (webservice instanceof WordpressService)
         assert webservice.name == "wordpress"
+        assert webservice.id == "wordpress3"
+        assert webservice.ref == null
         assert webservice.alias == "wordpress3"
         assert webservice.database.database == "wordpress3"
         assert webservice.database.provider == "mysql"
         assert webservice.database.user == "user"
         assert webservice.database.password == "userpass"
         assert webservice.database.host == "localhost"
+
+        domain = service.domains[3]
+        assert domain.name == "www.test1.com"
+        assert domain.address == "192.168.0.51"
+        assert (domain instanceof SslDomain)
+        assert domain.domainUser.name == "www-data"
+        assert domain.domainUser.group == "www-data"
+        webservice = domain.services[0]
+        assert (webservice instanceof WordpressService)
+        assert webservice.name == "wordpress"
+        assert webservice.id == null
+        assert webservice.ref == "wordpress3"
+        assert webservice.database == null
     }
 }

@@ -20,15 +20,10 @@ package com.anrisoftware.sscontrol.httpd.statements.phpmyadmin;
 
 import static com.anrisoftware.sscontrol.httpd.statements.phpmyadmin.PhpmyadminServiceLogger._.admin_set_debug;
 import static com.anrisoftware.sscontrol.httpd.statements.phpmyadmin.PhpmyadminServiceLogger._.admin_set_info;
-import static com.anrisoftware.sscontrol.httpd.statements.phpmyadmin.PhpmyadminServiceLogger._.alias_null;
-import static com.anrisoftware.sscontrol.httpd.statements.phpmyadmin.PhpmyadminServiceLogger._.alias_set_debug;
-import static com.anrisoftware.sscontrol.httpd.statements.phpmyadmin.PhpmyadminServiceLogger._.alias_set_info;
 import static com.anrisoftware.sscontrol.httpd.statements.phpmyadmin.PhpmyadminServiceLogger._.control_set_debug;
 import static com.anrisoftware.sscontrol.httpd.statements.phpmyadmin.PhpmyadminServiceLogger._.control_set_info;
 import static com.anrisoftware.sscontrol.httpd.statements.phpmyadmin.PhpmyadminServiceLogger._.server_set_debug;
 import static com.anrisoftware.sscontrol.httpd.statements.phpmyadmin.PhpmyadminServiceLogger._.server_set_info;
-import static org.apache.commons.lang3.Validate.notBlank;
-import static org.apache.commons.lang3.Validate.notNull;
 
 import javax.inject.Singleton;
 
@@ -55,13 +50,7 @@ class PhpmyadminServiceLogger extends AbstractLogger {
 
 		server_set_debug("Server {} set for {}."),
 
-        server_set_info("Server '{}' set for service '{}'."),
-
-        alias_null("Alias cannot be null or blank for {}."),
-
-        alias_set_debug("Alias '{}' set for {}."),
-
-        alias_set_info("Alias '{}' set for service '{}'.");
+        server_set_info("Server '{}' set for service '{}'.");
 
 		private String name;
 
@@ -106,16 +95,4 @@ class PhpmyadminServiceLogger extends AbstractLogger {
 		}
 	}
 
-    void checkAlias(PhpmyadminService service, Object alias) {
-        notNull(alias, alias_null.toString(), service);
-        notBlank(alias.toString(), alias_null.toString(), service);
-    }
-
-    void aliasSet(PhpmyadminService service, String alias) {
-        if (isDebugEnabled()) {
-            debug(alias_set_debug, alias, service);
-        } else {
-            info(alias_set_info, alias, service.getName());
-        }
-    }
 }

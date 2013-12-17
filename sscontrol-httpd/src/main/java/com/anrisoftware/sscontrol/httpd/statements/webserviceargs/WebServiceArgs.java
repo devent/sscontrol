@@ -16,33 +16,59 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.statements.phpmyadmin;
+package com.anrisoftware.sscontrol.httpd.statements.webserviceargs;
 
 import java.util.Map;
 
 import javax.inject.Inject;
 
+import com.anrisoftware.sscontrol.httpd.statements.webservice.WebService;
+
 /**
- * Parses arguments for {@link PhpmyadminService}.
+ * Parses arguments for {@link WebService}.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class PhpmyadminServiceArgs {
+public class WebServiceArgs {
 
-    @Inject
-    private PhpmyadminServiceLogger log;
+    private static final String REF = "ref";
+
+    private static final String ID = "id";
 
     private static final String ALIAS = "alias";
 
-    boolean haveAlias(Map<String, Object> args) {
+    @Inject
+    private WebServiceLogger log;
+
+    public boolean haveAlias(Map<String, Object> args) {
         return args.containsKey(ALIAS);
     }
 
-    String alias(PhpmyadminService service, Map<String, Object> args) {
+    public String alias(WebService service, Map<String, Object> args) {
         Object alias = args.get(ALIAS);
         log.checkAlias(service, alias);
         return alias.toString();
+    }
+
+    public boolean haveId(Map<String, Object> args) {
+        return args.containsKey(ID);
+    }
+
+    public String id(WebService service, Map<String, Object> args) {
+        Object id = args.get(ID);
+        log.checkId(service, id);
+        return id.toString();
+    }
+
+    public boolean haveRef(Map<String, Object> args) {
+        return args.containsKey(REF);
+    }
+
+    public String ref(WebService service, Map<String, Object> args) {
+        Object ref = args.get(REF);
+        log.checkId(service, ref);
+        return ref.toString();
     }
 
 }

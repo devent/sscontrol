@@ -253,6 +253,10 @@ public class Domain {
         return setup(new HashMap<String, Object>(), name, s);
     }
 
+    public void setup(Map<String, Object> map, String name) {
+        setup(map, name, null);
+    }
+
     public WebService setup(Map<String, Object> map, String name, Object s) {
         WebServiceFactory factory = serviceFactories.get(name);
         log.checkService(this, factory, name);

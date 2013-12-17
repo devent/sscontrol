@@ -29,6 +29,8 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.anrisoftware.sscontrol.httpd.statements.domain.Domain;
 import com.anrisoftware.sscontrol.httpd.statements.webservice.WebService;
+import com.anrisoftware.sscontrol.httpd.statements.webserviceargs.WebServiceArgs;
+import com.anrisoftware.sscontrol.httpd.statements.webserviceargs.WebServiceLogger;
 import com.google.inject.assistedinject.Assisted;
 
 /**
@@ -41,29 +43,41 @@ public class PhpldapadminService implements WebService {
 
     public static final String NAME = "phpldapadmin";
 
-    private final PhpldapadminServiceLogger log;
-
     private final List<LdapServer> servers;
 
     private final Domain domain;
+
+    private final WebServiceLogger serviceLog;
+
+    @Inject
+    private PhpldapadminServiceLogger log;
 
     @Inject
     private LdapServerFactory serverFactory;
 
     private String alias;
 
+    private String id;
+
+    private String ref;
+
     /**
      * @see PhpldapadminServiceFactory#create(Domain, Map)
      */
     @Inject
-    PhpldapadminService(PhpldapadminServiceArgs aargs,
-            PhpldapadminServiceLogger logger, @Assisted Domain domain,
-            @Assisted Map<String, Object> args) {
-        this.log = logger;
+    PhpldapadminService(WebServiceArgs aargs, WebServiceLogger logger,
+            @Assisted Domain domain, @Assisted Map<String, Object> args) {
+        this.serviceLog = logger;
         this.domain = domain;
         this.servers = new ArrayList<LdapServer>();
         if (aargs.haveAlias(args)) {
             setAlias(aargs.alias(this, args));
+        }
+        if (aargs.haveId(args)) {
+            setId(aargs.id(this, args));
+        }
+        if (aargs.haveRef(args)) {
+            setRef(aargs.ref(this, args));
         }
     }
 
@@ -79,11 +93,31 @@ public class PhpldapadminService implements WebService {
 
     public void setAlias(String alias) {
         this.alias = alias;
-        log.aliasSet(this, alias);
+        serviceLog.aliasSet(this, alias);
     }
 
     public String getAlias() {
         return alias;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+        serviceLog.idSet(this, id);
+    }
+
+    @Override
+    public String getId() {
+        return id;
+    }
+
+    public void setRef(String ref) {
+        this.ref = ref;
+        serviceLog.refSet(this, ref);
+    }
+
+    @Override
+    public String getRef() {
+        return ref;
     }
 
     public void server(String name) {

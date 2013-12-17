@@ -36,6 +36,20 @@ public interface WebService {
     String getName();
 
     /**
+     * Returns the identifier of the service.
+     * 
+     * @return the service {@link String} identifier.
+     */
+    String getId();
+
+    /**
+     * Returns the reference of the service.
+     * 
+     * @return the service {@link String} reference.
+     */
+    String getRef();
+
+    /**
      * Returns the domain for which the service is configured.
      * 
      * @return the {@link Domain}.

@@ -18,13 +18,8 @@
  */
 package com.anrisoftware.sscontrol.httpd.statements.phpldapadmin;
 
-import static com.anrisoftware.sscontrol.httpd.statements.phpldapadmin.PhpldapadminServiceLogger._.alias_null;
-import static com.anrisoftware.sscontrol.httpd.statements.phpldapadmin.PhpldapadminServiceLogger._.alias_set_debug;
-import static com.anrisoftware.sscontrol.httpd.statements.phpldapadmin.PhpldapadminServiceLogger._.alias_set_info;
 import static com.anrisoftware.sscontrol.httpd.statements.phpldapadmin.PhpldapadminServiceLogger._.server_added_debug;
 import static com.anrisoftware.sscontrol.httpd.statements.phpldapadmin.PhpldapadminServiceLogger._.server_added_info;
-import static org.apache.commons.lang3.Validate.notBlank;
-import static org.apache.commons.lang3.Validate.notNull;
 
 import javax.inject.Singleton;
 
@@ -43,13 +38,7 @@ class PhpldapadminServiceLogger extends AbstractLogger {
 
 		server_added_debug("Server {} added for {}."),
 
-        server_added_info("Server '{}' added for service '{}'."),
-
-        alias_null("Alias cannot be null or blank for {}."),
-
-        alias_set_debug("Alias '{}' set for {}."),
-
-        alias_set_info("Alias '{}' set for service '{}'.");
+        server_added_info("Server '{}' added for service '{}'.");
 
 		private String name;
 
@@ -77,18 +66,5 @@ class PhpldapadminServiceLogger extends AbstractLogger {
 			info(server_added_info, server.getHost(), service.getName());
 		}
 	}
-
-    void checkAlias(PhpldapadminService service, Object alias) {
-        notNull(alias, alias_null.toString(), service);
-        notBlank(alias.toString(), alias_null.toString(), service);
-    }
-
-    void aliasSet(PhpldapadminService service, String alias) {
-        if (isDebugEnabled()) {
-            debug(alias_set_debug, alias, service);
-        } else {
-            info(alias_set_info, alias, service.getName());
-        }
-    }
 
 }

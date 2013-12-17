@@ -31,6 +31,8 @@ import com.anrisoftware.sscontrol.core.debuglogging.DebugLogging;
 import com.anrisoftware.sscontrol.core.debuglogging.DebugLoggingFactory;
 import com.anrisoftware.sscontrol.httpd.statements.domain.Domain;
 import com.anrisoftware.sscontrol.httpd.statements.webservice.WebService;
+import com.anrisoftware.sscontrol.httpd.statements.webserviceargs.WebServiceArgs;
+import com.anrisoftware.sscontrol.httpd.statements.webserviceargs.WebServiceLogger;
 import com.google.inject.assistedinject.Assisted;
 
 /**
@@ -49,9 +51,12 @@ public class WordpressService implements WebService {
 
     private static final String ALIAS = "alias";
 
-    private final WordpressServiceLogger log;
+    private final WebServiceLogger serviceLog;
 
     private final Domain domain;
+
+    @Inject
+    private WordpressServiceLogger log;
 
     @Inject
     private DatabaseFactory databaseFactory;
@@ -64,16 +69,26 @@ public class WordpressService implements WebService {
 
     private DebugLogging debug;
 
+    private String id;
+
+    private String ref;
+
     /**
      * @see WordpressServiceFactory#create(Map)
      */
     @Inject
-    WordpressService(WordpressServiceArgs argss, WordpressServiceLogger log,
+    WordpressService(WebServiceArgs aargs, WebServiceLogger logger,
             @Assisted Domain domain, @Assisted Map<String, Object> args) {
-        this.log = log;
+        this.serviceLog = logger;
         this.domain = domain;
-        if (argss.haveAlias(args)) {
-            setAlias(argss.alias(args));
+        if (aargs.haveAlias(args)) {
+            setAlias(aargs.alias(this, args));
+        }
+        if (aargs.haveId(args)) {
+            setId(aargs.id(this, args));
+        }
+        if (aargs.haveRef(args)) {
+            setRef(aargs.ref(this, args));
         }
     }
 
@@ -95,11 +110,31 @@ public class WordpressService implements WebService {
 
     public void setAlias(String alias) {
         this.alias = alias;
-        log.aliasSet(this, alias);
+        serviceLog.aliasSet(this, alias);
     }
 
     public String getAlias() {
         return alias;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+        serviceLog.idSet(this, id);
+    }
+
+    @Override
+    public String getId() {
+        return id;
+    }
+
+    public void setRef(String ref) {
+        this.ref = ref;
+        serviceLog.refSet(this, ref);
+    }
+
+    @Override
+    public String getRef() {
+        return ref;
     }
 
     public void database(Map<String, Object> args, String name) {

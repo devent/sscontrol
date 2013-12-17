@@ -72,6 +72,40 @@ class WordpressTest extends UbuntuTestUtil {
     }
 
     @Test
+    void "wordpress ref"() {
+        copyUbuntuFiles tmpdir
+        copyRoundcubeFiles tmpdir
+
+        loader.loadService profile.resource, null
+        def profile = registry.getService("profile")[0]
+        loader.loadService httpdRefScript.resource, profile
+
+        registry.allServices.each { it.call() }
+        log.info "Run service again to ensure that configuration is not set double."
+        registry.allServices.each { it.call() }
+
+        assertFileContent defaultConf.asFile(tmpdir), defaultConf
+        assertFileContent domainsConf.asFile(tmpdir), domainsConf
+        assertStringContent test1comRefConf.replaced(tmpdir, tmpdir, "/tmp"), test1comRefConf.toString()
+        assertStringContent test1comSslRefConf.replaced(tmpdir, tmpdir, "/tmp"), test1comSslRefConf.toString()
+        assertStringContent wwwtest1comRefConf.replaced(tmpdir, tmpdir, "/tmp"), wwwtest1comRefConf.toString()
+        assertStringContent wwwtest1comSslRefConf.replaced(tmpdir, tmpdir, "/tmp"), wwwtest1comSslRefConf.toString()
+        assertStringContent wwwtest1comSslFcgiScript.replaced(tmpdir, tmpdir, "/tmp"), wwwtest1comSslFcgiScript.toString()
+        assertFileContent wordpress_3_8_config_expected.asFile(tmpdir), wordpress_3_8_config_expected
+        assertStringContent chownRetOut.replaced(tmpdir, tmpdir, "/tmp"), chownRetOut.toString()
+        assertStringContent chmodRetOut.replaced(tmpdir, tmpdir, "/tmp"), chmodRetOut.toString()
+        assertStringContent groupaddOut.replaced(tmpdir, tmpdir, "/tmp"), groupaddOut.toString()
+        assertStringContent useraddOut.replaced(tmpdir, tmpdir, "/tmp"), useraddOut.toString()
+        assertStringContent tarOut.replaced(tmpdir, tmpdir, "/tmp"), tarOut.toString()
+        assertFileContent aptitudeOut.asFile(tmpdir), aptitudeOut
+        assertFileContent a2enmodOut.asFile(tmpdir), a2enmodOut
+        assert wordpress_3_8_cache_dir.asFile(tmpdir).isDirectory()
+        assert wordpress_3_8_plugins_dir.asFile(tmpdir).isDirectory()
+        assert wordpress_3_8_themes_dir.asFile(tmpdir).isDirectory()
+        assert wordpress_3_8_uploads_dir.asFile(tmpdir).isDirectory()
+    }
+
+    @Test
     void "wordpress de_DE"() {
         copyUbuntuFiles tmpdir
         copyRoundcubeFiles tmpdir

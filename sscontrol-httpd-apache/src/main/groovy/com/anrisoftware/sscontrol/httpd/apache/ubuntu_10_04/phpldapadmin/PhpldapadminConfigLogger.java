@@ -25,7 +25,6 @@ import javax.inject.Singleton;
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
 import com.anrisoftware.sscontrol.core.service.LinuxScript;
-import com.anrisoftware.sscontrol.httpd.apache.ubuntu_10_04.phpmyadmin.PhpmyadminConfig;
 
 /**
  * Logging messages for {@link PhpldapadminConfig}.
@@ -60,7 +59,7 @@ class PhpldapadminConfigLogger extends AbstractLogger {
 	 * Creates a logger for {@link PhpldapadminConfig}.
 	 */
 	public PhpldapadminConfigLogger() {
-		super(PhpmyadminConfig.class);
+        super(PhpldapadminConfig.class);
 	}
 
 	void serverConfigdeployed(LinuxScript script, Object file) {

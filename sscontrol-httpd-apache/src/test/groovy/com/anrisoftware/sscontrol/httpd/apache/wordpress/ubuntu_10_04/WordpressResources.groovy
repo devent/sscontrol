@@ -57,6 +57,14 @@ enum WordpressResources {
     tar_de_DE_Out("/bin/tar.out", WordpressResources.class.getResource("tar_de_DE_out.txt")),
     aptitudeOut("/usr/bin/aptitude.out", WordpressResources.class.getResource("aptitude_out.txt")),
     a2enmodOut("/usr/sbin/a2enmod.out", WordpressResources.class.getResource("a2enmod_out.txt")),
+    // Wordpress per reference
+    httpdRefScript("Httpd.groovy", WordpressResources.class.getResource("HttpdWordpressRef.groovy")),
+    test1comRefConf("/etc/apache2/sites-available/100-robobee-test1.com.conf", WordpressResources.class.getResource("test1_com_ref_conf.txt")),
+    test1comSslRefConf("/etc/apache2/sites-available/100-robobee-test1.com-ssl.conf", WordpressResources.class.getResource("test1_com_ssl_ref_conf.txt")),
+    wwwtest1comRefConf("/etc/apache2/sites-available/100-robobee-www.test1.com.conf", WordpressResources.class.getResource("www_test1_com_ref_conf.txt")),
+    wwwtest1comSslRefConf("/etc/apache2/sites-available/100-robobee-www.test1.com-ssl.conf", WordpressResources.class.getResource("www_test1_com_ssl_ref_conf.txt")),
+    chownRetOut("/bin/chown.out", WordpressResources.class.getResource("chown_ret_out.txt")),
+    chmodRetOut("/bin/chmod.out", WordpressResources.class.getResource("chmod_ret_out.txt")),
 
     static copyRoundcubeFiles(File parent) {
         wordpressArchive.createFile parent

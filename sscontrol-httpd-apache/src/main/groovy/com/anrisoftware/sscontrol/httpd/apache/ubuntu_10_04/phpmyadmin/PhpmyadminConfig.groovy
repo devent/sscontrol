@@ -75,7 +75,14 @@ class PhpmyadminConfig extends BasePhpmyadminConfig implements ServiceConfig {
     }
 
     @Override
-    void deployService(Domain domain, WebService service, List serviceConfig) {
+    void deployDomain(Domain domain, WebService service, List config) {
+        fcgiConfig.script = script
+        fcgiConfig.deployConfig domain
+        createDomainConfig domain, service, config
+    }
+
+    @Override
+    void deployService(Domain domain, WebService service, List config) {
         fcgiConfig.script = script
         fcgiConfig.installPackages()
         fcgiConfig.enableFcgi()
@@ -85,7 +92,7 @@ class PhpmyadminConfig extends BasePhpmyadminConfig implements ServiceConfig {
         reconfigureService()
         changeOwnerConfiguration domain
         importTables service
-        createDomainConfig domain, service, serviceConfig
+        createDomainConfig domain, service, config
     }
 
     void createDomainConfig(Domain domain, PhpmyadminService service, List serviceConfig) {

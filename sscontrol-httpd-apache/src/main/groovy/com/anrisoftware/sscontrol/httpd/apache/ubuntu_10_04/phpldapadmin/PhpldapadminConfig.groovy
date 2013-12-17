@@ -80,7 +80,14 @@ class PhpldapadminConfig extends BasePhpldapadminConfig implements ServiceConfig
     }
 
     @Override
-    void deployService(Domain domain, WebService service, List serviceConfig) {
+    void deployDomain(Domain domain, WebService service, List config) {
+        fcgiConfig.script = script
+        fcgiConfig.deployConfig domain
+        createDomainConfig domain, service, config
+    }
+
+    @Override
+    void deployService(Domain domain, WebService service, List config) {
         fcgiConfig.script = script
         installPackages adminPackages
         fcgiConfig.enableFcgi()
@@ -88,7 +95,7 @@ class PhpldapadminConfig extends BasePhpldapadminConfig implements ServiceConfig
         downloadPhpldapadmin domain
         deployConfiguration domain, service
         deployServerConfig domain, service
-        createDomainConfig domain, service, serviceConfig
+        createDomainConfig domain, service, config
     }
 
     void downloadPhpldapadmin(Domain domain) {

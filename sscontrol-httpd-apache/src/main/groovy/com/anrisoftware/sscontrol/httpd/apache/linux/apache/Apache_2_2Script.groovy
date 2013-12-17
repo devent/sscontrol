@@ -122,10 +122,29 @@ abstract class Apache_2_2Script extends ApacheScript {
         domain.services.findAll { WebService service ->
             service.domain == domain
         }.each { WebService service ->
+            def reftarget = findReference service
             def config = serviceConfigs["${PROFILE}.${service.name}"]
-            log.checkServiceConfig config, service
-            config.deployService(domain, service, serviceConfig)
+            if (reftarget == null) {
+                log.checkServiceConfig config, service
+                config.deployService domain, service, serviceConfig
+            } else {
+                log.checkServiceConfig config, service
+                config.deployDomain domain, reftarget, serviceConfig
+            }
         }
+    }
+
+    WebService findReference(WebService service) {
+        WebService refservice = null
+        for (Domain domain : this.service.domains) {
+            refservice = domain.services.find { WebService s ->
+                s.id != null && s.id == service.ref
+            }
+            if (refservice != null) {
+                break
+            }
+        }
+        return refservice
     }
 
     def deployRedirect(Domain domain) {

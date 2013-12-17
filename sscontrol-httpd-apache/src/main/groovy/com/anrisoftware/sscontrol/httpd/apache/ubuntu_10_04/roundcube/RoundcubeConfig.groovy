@@ -59,7 +59,13 @@ class RoundcubeConfig extends BaseRoundcube_0_9_Config implements ServiceConfig 
     }
 
     @Override
-    void deployService(Domain domain, WebService service, List serviceConfig) {
+    void deployDomain(Domain domain, WebService service, List config) {
+        fcgiConfig.script = script
+        fcgiConfig.deployConfig domain
+    }
+
+    @Override
+    void deployService(Domain domain, WebService service, List config) {
         fcgiConfig.script = script
         installPackages roundcubePackages
         downloadArchive()

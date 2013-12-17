@@ -73,6 +73,8 @@ public class WordpressService implements WebService {
 
     private String ref;
 
+    private MultiSite multiSite;
+
     /**
      * @see WordpressServiceFactory#create(Map)
      */
@@ -159,6 +161,14 @@ public class WordpressService implements WebService {
             this.debug = debugFactory.createOff();
         }
         return debug;
+    }
+
+    public void multisite(MultiSite type) {
+        this.multiSite = type;
+    }
+
+    public MultiSite getMultiSite() {
+        return multiSite;
     }
 
     @Override

@@ -18,6 +18,8 @@
  */
 package com.anrisoftware.sscontrol.httpd.service
 
+import com.anrisoftware.sscontrol.httpd.statements.wordpress.MultiSite
+
 def certFile = ServicesResources.class.getResource "cert_crt.txt"
 def certKeyFile = ServicesResources.class.getResource "cert_key.txt"
 
@@ -32,7 +34,7 @@ httpd {
     domain "www.test1.com", address: "192.168.0.51", {
         user "www-data", group: "www-data"
         setup "wordpress", id: "wordpress3", alias: "wordpress3", {
-            database "wordpress3", provider: "mysql", user: "user", password: "userpass", host: "localhost"
+            database "wordpress3", user: "user", password: "userpass", host: "localhost"
         }
     }
     ssl_domain "www.test1.com", address: "192.168.0.51", {
@@ -40,5 +42,17 @@ httpd {
         certification_file certFile
         certification_key_file certKeyFile
         setup "wordpress", ref: "wordpress3"
+    }
+    domain "www.test2.com", address: "192.168.0.51", {
+        setup "wordpress", alias: "wordpress3", {
+            database "wordpress3", user: "user", password: "userpass", host: "localhost"
+            multisite MultiSite.subdir
+        }
+    }
+    domain "www.test3.com", address: "192.168.0.51", {
+        setup "wordpress", alias: "wordpress3", {
+            database "wordpress3", user: "user", password: "userpass", host: "localhost"
+            multisite MultiSite.subdomain
+        }
     }
 }

@@ -29,6 +29,7 @@ import com.anrisoftware.sscontrol.core.api.ServicesRegistry
 import com.anrisoftware.sscontrol.httpd.statements.domain.Domain
 import com.anrisoftware.sscontrol.httpd.statements.domain.SslDomain
 import com.anrisoftware.sscontrol.httpd.statements.webservice.WebService
+import com.anrisoftware.sscontrol.httpd.statements.wordpress.MultiSite
 import com.anrisoftware.sscontrol.httpd.statements.wordpress.WordpressService
 
 /**
@@ -70,7 +71,6 @@ class HttpdWordpressTest extends HttpdTestUtil {
         assert webservice.ref == null
         assert webservice.alias == "wordpress3"
         assert webservice.database.database == "wordpress3"
-        assert webservice.database.provider == "mysql"
         assert webservice.database.user == "user"
         assert webservice.database.password == "userpass"
         assert webservice.database.host == "localhost"
@@ -87,5 +87,23 @@ class HttpdWordpressTest extends HttpdTestUtil {
         assert webservice.id == null
         assert webservice.ref == "wordpress3"
         assert webservice.database == null
+
+        domain = service.domains[4]
+        assert domain.name == "www.test2.com"
+        assert domain.address == "192.168.0.51"
+        assert (domain instanceof Domain)
+        webservice = domain.services[0]
+        assert (webservice instanceof WordpressService)
+        assert webservice.name == "wordpress"
+        assert webservice.multiSite == MultiSite.subdir
+
+        domain = service.domains[5]
+        assert domain.name == "www.test3.com"
+        assert domain.address == "192.168.0.51"
+        assert (domain instanceof Domain)
+        webservice = domain.services[0]
+        assert (webservice instanceof WordpressService)
+        assert webservice.name == "wordpress"
+        assert webservice.multiSite == MultiSite.subdomain
     }
 }

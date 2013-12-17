@@ -57,7 +57,7 @@ class WordpressTest extends UbuntuTestUtil {
         assertStringContent wwwtest1comConf.replaced(tmpdir, tmpdir, "/tmp"), wwwtest1comConf.toString()
         assertStringContent wwwtest1comSslConf.replaced(tmpdir, tmpdir, "/tmp"), wwwtest1comSslConf.toString()
         assertStringContent wwwtest1comSslFcgiScript.replaced(tmpdir, tmpdir, "/tmp"), wwwtest1comSslFcgiScript.toString()
-        assertFileContent wordpress_3_9_config_expected.asFile(tmpdir), wordpress_3_9_config_expected
+        assertFileContent wordpress_3_8_config_expected.asFile(tmpdir), wordpress_3_8_config_expected
         assertStringContent chownOut.replaced(tmpdir, tmpdir, "/tmp"), chownOut.toString()
         assertStringContent chmodOut.replaced(tmpdir, tmpdir, "/tmp"), chmodOut.toString()
         assertStringContent groupaddOut.replaced(tmpdir, tmpdir, "/tmp"), groupaddOut.toString()
@@ -65,6 +65,10 @@ class WordpressTest extends UbuntuTestUtil {
         assertStringContent tarOut.replaced(tmpdir, tmpdir, "/tmp"), tarOut.toString()
         assertFileContent aptitudeOut.asFile(tmpdir), aptitudeOut
         assertFileContent a2enmodOut.asFile(tmpdir), a2enmodOut
+        assert wordpress_3_8_cache_dir.asFile(tmpdir).isDirectory()
+        assert wordpress_3_8_plugins_dir.asFile(tmpdir).isDirectory()
+        assert wordpress_3_8_themes_dir.asFile(tmpdir).isDirectory()
+        assert wordpress_3_8_uploads_dir.asFile(tmpdir).isDirectory()
     }
 
     @Test
@@ -85,7 +89,7 @@ class WordpressTest extends UbuntuTestUtil {
         assertFileContent domainsConf.asFile(tmpdir), domainsConf
         assertStringContent test1comConf.replaced(tmpdir, tmpdir, "/tmp"), test1comConf.toString()
         assertStringContent test1comSslConf.replaced(tmpdir, tmpdir, "/tmp"), test1comSslConf.toString()
-        assertFileContent wordpress_3_9_de_DE_config_expected.asFile(tmpdir), wordpress_3_9_de_DE_config_expected
+        assertFileContent wordpress_3_8_de_DE_config_expected.asFile(tmpdir), wordpress_3_8_de_DE_config_expected
         assertStringContent chownOut.replaced(tmpdir, tmpdir, "/tmp"), chownOut.toString()
         assertStringContent chmodOut.replaced(tmpdir, tmpdir, "/tmp"), chmodOut.toString()
         assertStringContent groupaddOut.replaced(tmpdir, tmpdir, "/tmp"), groupaddOut.toString()
@@ -110,7 +114,7 @@ class WordpressTest extends UbuntuTestUtil {
         assertFileContent domainsConf.asFile(tmpdir), domainsConf
         assertStringContent test1comConf.replaced(tmpdir, tmpdir, "/tmp"), test1comConf.toString()
         assertStringContent test1comSslConf.replaced(tmpdir, tmpdir, "/tmp"), test1comSslConf.toString()
-        assertFileContent wordpress_3_9_debug_config_expected.asFile(tmpdir), wordpress_3_9_debug_config_expected
+        assertFileContent wordpress_3_8_debug_config_expected.asFile(tmpdir), wordpress_3_8_debug_config_expected
         assertStringContent chownOut.replaced(tmpdir, tmpdir, "/tmp"), chownOut.toString()
         assertStringContent chmodOut.replaced(tmpdir, tmpdir, "/tmp"), chmodOut.toString()
         assertStringContent groupaddOut.replaced(tmpdir, tmpdir, "/tmp"), groupaddOut.toString()

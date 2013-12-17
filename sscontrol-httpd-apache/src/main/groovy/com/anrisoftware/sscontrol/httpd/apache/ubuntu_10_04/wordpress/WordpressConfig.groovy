@@ -72,6 +72,8 @@ class WordpressConfig extends BaseWordpress_3_Config implements ServiceConfig {
         deploySecureLoginConfig service, domain
         deployDebugConfig service, domain
         deployMainConfigEnding service, domain
+        createDirectories domain
+        setupPermissions domain
     }
 
     void createDomainConfig(Domain domain, WebService service, List serviceConfig) {
@@ -100,12 +102,32 @@ class WordpressConfig extends BaseWordpress_3_Config implements ServiceConfig {
         log.downloadArchive script, wordpressArchive
     }
 
-    def changeOwnerConfiguration(Domain domain) {
+    void createDirectories(Domain domain) {
+        wordpressContentCacheDir(domain).mkdirs()
+        wordpressContentPluginsDir(domain).mkdirs()
+        wordpressContentThemesDir(domain).mkdirs()
+        wordpressContentUploadsDir(domain).mkdirs()
+    }
+
+    void setupPermissions(Domain domain) {
         def user = domain.domainUser
-        changeOwner owner: "root", ownerGroup: user.group, files: [
-            localBlowfishFile,
-            localConfigFile,
-            localDatabaseConfigFile
+        script.changeOwner owner: "root", ownerGroup: user.group, files: [
+            configurationFile(domain),
+        ]
+        script.changeMod mod: "0440", files: [
+            configurationFile(domain),
+        ]
+        script.changeOwner owner: user.name, ownerGroup: user.group, files: [
+            wordpressContentCacheDir(domain),
+            wordpressContentPluginsDir(domain),
+            wordpressContentThemesDir(domain),
+            wordpressContentUploadsDir(domain),
+        ]
+        script.changeMod mod: "0770", files: [
+            wordpressContentCacheDir(domain),
+            wordpressContentPluginsDir(domain),
+            wordpressContentThemesDir(domain),
+            wordpressContentUploadsDir(domain),
         ]
     }
 }

@@ -45,10 +45,14 @@ enum WordpressResources {
     chmodOut("/bin/chmod.out", WordpressResources.class.getResource("chmod_out.txt")),
     useraddOut("/usr/sbin/useradd.out", WordpressResources.class.getResource("useradd_out.txt")),
     groupaddOut("/usr/sbin/groupadd.out", WordpressResources.class.getResource("groupadd_out.txt")),
-    wordpress_3_9_config("/var/www/www.test1.com/wordpress-3.8/wp-config-sample.php", WordpressResources.class.getResource("wordpress_3_8_config_sample_php.txt")),
-    wordpress_3_9_config_expected("/var/www/www.test1.com/wordpress-3.8/wp-config.php", WordpressResources.class.getResource("wordpress_3_8_config_php_expected.txt")),
-    wordpress_3_9_de_DE_config_expected("/var/www/www.test1.com/wordpress-3.8/wp-config.php", WordpressResources.class.getResource("wordpress_3_8_de_DE_config_php_expected.txt")),
-    wordpress_3_9_debug_config_expected("/var/www/www.test1.com/wordpress-3.8/wp-config.php", WordpressResources.class.getResource("wordpress_3_8_debug_config_php_expected.txt")),
+    wordpress_3_8_config("/var/www/www.test1.com/wordpress-3.8/wp-config-sample.php", WordpressResources.class.getResource("wordpress_3_8_config_sample_php.txt")),
+    wordpress_3_8_config_expected("/var/www/www.test1.com/wordpress-3.8/wp-config.php", WordpressResources.class.getResource("wordpress_3_8_config_php_expected.txt")),
+    wordpress_3_8_de_DE_config_expected("/var/www/www.test1.com/wordpress-3.8/wp-config.php", WordpressResources.class.getResource("wordpress_3_8_de_DE_config_php_expected.txt")),
+    wordpress_3_8_debug_config_expected("/var/www/www.test1.com/wordpress-3.8/wp-config.php", WordpressResources.class.getResource("wordpress_3_8_debug_config_php_expected.txt")),
+    wordpress_3_8_cache_dir("/var/www/www.test1.com/wordpress-3.8/wp-content/cache", null),
+    wordpress_3_8_plugins_dir("/var/www/www.test1.com/wordpress-3.8/wp-content/plugins", null),
+    wordpress_3_8_themes_dir("/var/www/www.test1.com/wordpress-3.8/wp-content/themes", null),
+    wordpress_3_8_uploads_dir("/var/www/www.test1.com/wordpress-3.8/wp-content/uploads", null),
     tarOut("/bin/tar.out", WordpressResources.class.getResource("tar_out.txt")),
     tar_de_DE_Out("/bin/tar.out", WordpressResources.class.getResource("tar_de_DE_out.txt")),
     aptitudeOut("/usr/bin/aptitude.out", WordpressResources.class.getResource("aptitude_out.txt")),
@@ -57,7 +61,7 @@ enum WordpressResources {
     static copyRoundcubeFiles(File parent) {
         wordpressArchive.createFile parent
         wordpressArchive_de_DE.createFile parent
-        wordpress_3_9_config.createFile parent
+        wordpress_3_8_config.createFile parent
     }
 
     ResourcesUtils resources

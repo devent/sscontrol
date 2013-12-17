@@ -377,6 +377,82 @@ class BaseWordpress_3_Config extends BaseWordpressConfig {
         currentConfiguration configurationFile(domain)
     }
 
+    /**
+     * Wordpress content cache directory, for
+     * example {@code "wp-content/cache/"}. If the path is relative then
+     * the file will be under the Wordpress installation directory.
+     *
+     * <ul>
+     * <li>profile property {@code "wordpress_content_cache_directory"}</li>
+     * </ul>
+     *
+     * @param domain
+     *            the domain for which the directory is returned.
+     *
+     * @see ApacheScript#getDefaultProperties()
+     * @see #wordpressDir(Object)
+     */
+    File wordpressContentCacheDir(def domain) {
+        profileFileProperty "wordpress_content_cache_directory", wordpressDir(domain), defaultProperties
+    }
+
+    /**
+     * Wordpress content plugins directory, for
+     * example {@code "wp-content/plugins/"}. If the path is relative then
+     * the file will be under the Wordpress installation directory.
+     *
+     * <ul>
+     * <li>profile property {@code "wordpress_content_plugins_directory"}</li>
+     * </ul>
+     *
+     * @param domain
+     *            the domain for which the directory is returned.
+     *
+     * @see ApacheScript#getDefaultProperties()
+     * @see #wordpressDir(Object)
+     */
+    File wordpressContentPluginsDir(def domain) {
+        profileFileProperty "wordpress_content_plugins_directory", wordpressDir(domain), defaultProperties
+    }
+
+    /**
+     * Wordpress content themes directory, for
+     * example {@code "wp-content/themes/"}. If the path is relative then
+     * the file will be under the Wordpress installation directory.
+     *
+     * <ul>
+     * <li>profile property {@code "wordpress_content_themes_directory"}</li>
+     * </ul>
+     *
+     * @param domain
+     *            the domain for which the directory is returned.
+     *
+     * @see ApacheScript#getDefaultProperties()
+     * @see #wordpressDir(Object)
+     */
+    File wordpressContentThemesDir(def domain) {
+        profileFileProperty "wordpress_content_themes_directory", wordpressDir(domain), defaultProperties
+    }
+
+    /**
+     * Wordpress content uploads directory, for
+     * example {@code "wp-content/uploads/"}. If the path is relative then
+     * the file will be under the Wordpress installation directory.
+     *
+     * <ul>
+     * <li>profile property {@code "wordpress_content_uploads_directory"}</li>
+     * </ul>
+     *
+     * @param domain
+     *            the domain for which the directory is returned.
+     *
+     * @see ApacheScript#getDefaultProperties()
+     * @see #wordpressDir(Object)
+     */
+    File wordpressContentUploadsDir(def domain) {
+        profileFileProperty "wordpress_content_uploads_directory", wordpressDir(domain), defaultProperties
+    }
+
     @Override
     void setScript(ApacheScript script) {
         super.setScript script

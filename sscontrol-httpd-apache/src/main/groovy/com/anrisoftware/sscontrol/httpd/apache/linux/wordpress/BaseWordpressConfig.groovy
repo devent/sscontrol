@@ -25,6 +25,7 @@ import javax.inject.Inject
 import org.apache.commons.lang3.RandomStringUtils
 
 import com.anrisoftware.sscontrol.httpd.apache.linux.apache.ApacheScript
+import com.anrisoftware.sscontrol.httpd.statements.webservice.WebService
 
 /**
  * Returns roundcube/properties.
@@ -143,6 +144,34 @@ class BaseWordpressConfig {
      */
     File wordpressLinkedDir(def domain) {
         profileFileProperty "wordpress_linked_directory", domainDir(domain), defaultProperties
+    }
+
+    /**
+     * Returns the service alias directory path.
+     *
+     * @param service
+     *            the Wordpress {@link WebService} web service.
+     *
+     * @param domain
+     *            the domain for which the path is returned.
+     *
+     * @see #wordpressDir(def)
+     */
+    String serviceAliasDir(WebService service, def domain) {
+        def serviceDir = wordpressDir(domain).absolutePath
+        service.alias.empty ? "$serviceDir/" : serviceDir
+    }
+
+    /**
+     * Returns the service directory path.
+     *
+     * @param domain
+     *            the domain for which the path is returned.
+     *
+     * @see #wordpressDir(def)
+     */
+    String serviceDir(def domain) {
+        wordpressDir(domain).absolutePath
     }
 
     /**

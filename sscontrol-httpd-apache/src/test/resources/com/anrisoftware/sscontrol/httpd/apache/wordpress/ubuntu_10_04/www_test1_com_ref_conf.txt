@@ -1,4 +1,4 @@
-<VirtualHost 192.168.0.50:80>
+<VirtualHost 192.168.0.51:80>
 
     # domain www.test1.com
     ServerName www.test1.com

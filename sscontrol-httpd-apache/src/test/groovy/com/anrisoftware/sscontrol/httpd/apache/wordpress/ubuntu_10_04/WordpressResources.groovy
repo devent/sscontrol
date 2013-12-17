@@ -65,6 +65,10 @@ enum WordpressResources {
     wwwtest1comSslRefConf("/etc/apache2/sites-available/100-robobee-www.test1.com-ssl.conf", WordpressResources.class.getResource("www_test1_com_ssl_ref_conf.txt")),
     chownRetOut("/bin/chown.out", WordpressResources.class.getResource("chown_ret_out.txt")),
     chmodRetOut("/bin/chmod.out", WordpressResources.class.getResource("chmod_ret_out.txt")),
+    // Wordpress Root Alias
+    httpdRootScript("Httpd.groovy", WordpressResources.class.getResource("HttpdWordpressRoot.groovy")),
+    wwwtest1comRootConf("/etc/apache2/sites-available/100-robobee-www.test1.com.conf", WordpressResources.class.getResource("www_test1_com_root_conf.txt")),
+    wwwtest1comSslRootConf("/etc/apache2/sites-available/100-robobee-www.test1.com-ssl.conf", WordpressResources.class.getResource("www_test1_com_ssl_root_conf.txt")),
 
     static copyRoundcubeFiles(File parent) {
         wordpressArchive.createFile parent

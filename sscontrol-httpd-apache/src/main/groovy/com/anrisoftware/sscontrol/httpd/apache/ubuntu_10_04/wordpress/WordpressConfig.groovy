@@ -84,14 +84,16 @@ class WordpressConfig extends BaseWordpress_3_Config implements ServiceConfig {
     }
 
     void createDomainConfig(Domain domain, WebService service, List config) {
-        def serviceDir = wordpressDir domain
+        def serviceAliasDir = serviceAliasDir service, domain
+        def serviceDir = serviceDir domain
         def configStr = wordpressConfigTemplate.getText(
                 true, "domainConfig",
                 "domain", domain,
                 "service", service,
-                "serviceDir", serviceDir,
                 "properties", script,
-                "fcgiProperties", fcgiConfig)
+                "config", this,
+                "serviceAliasDir", serviceAliasDir,
+                "serviceDir", serviceDir)
         config << configStr
     }
 
@@ -136,5 +138,19 @@ class WordpressConfig extends BaseWordpress_3_Config implements ServiceConfig {
             wordpressContentThemesDir(domain),
             wordpressContentUploadsDir(domain),
         ]
+    }
+
+    /**
+     * @see FcgiConfig#getScriptsSubdirectory()
+     */
+    String getScriptsSubdirectory() {
+        fcgiConfig.scriptsSubdirectory
+    }
+
+    /**
+     * @see FcgiConfig#getScriptStarterFileName()
+     */
+    String getScriptStarterFileName() {
+        fcgiConfig.scriptStarterFileName
     }
 }

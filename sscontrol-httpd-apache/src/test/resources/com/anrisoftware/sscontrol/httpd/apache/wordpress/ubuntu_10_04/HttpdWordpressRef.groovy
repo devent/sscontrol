@@ -29,12 +29,12 @@ httpd {
         certification_key_file UbuntuResources.certKey.resource
         redirect to_www
     }
-    domain "www.test1.com", address: "192.168.0.50", {
+    domain "www.test1.com", address: "192.168.0.51", {
         setup "wordpress", id: "wordpress3", alias: "wordpress3", {
             database "wordpress3", provider: "mysql", user: "user", password: "userpass", host: "localhost"
         }
     }
-    ssl_domain "www.test1.com", address: "192.168.0.50", {
+    ssl_domain "www.test1.com", address: "192.168.0.51", {
         certification_file UbuntuResources.certCrt.resource
         certification_key_file UbuntuResources.certKey.resource
         setup "wordpress", ref: "wordpress3"

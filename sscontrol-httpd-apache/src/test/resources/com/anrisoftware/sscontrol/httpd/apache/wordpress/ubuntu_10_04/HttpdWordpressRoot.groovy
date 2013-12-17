@@ -30,7 +30,7 @@ httpd {
         redirect to_www
     }
     domain "www.test1.com", address: "192.168.0.51", {
-        setup "wordpress", alias: "wordpress3", {
+        setup "wordpress", alias: "/", {
             database "wordpress3", provider: "mysql", user: "user", password: "userpass", host: "localhost"
         }
     }

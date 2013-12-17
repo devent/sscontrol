@@ -155,4 +155,21 @@ class WordpressTest extends UbuntuTestUtil {
         assertStringContent useraddOut.replaced(tmpdir, tmpdir, "/tmp"), useraddOut.toString()
         assertStringContent tarOut.replaced(tmpdir, tmpdir, "/tmp"), tarOut.toString()
     }
+
+    @Test
+    void "wordpress root alias"() {
+        copyUbuntuFiles tmpdir
+        copyRoundcubeFiles tmpdir
+
+        loader.loadService profile.resource, null
+        def profile = registry.getService("profile")[0]
+        loader.loadService httpdRootScript.resource, profile
+
+        registry.allServices.each { it.call() }
+        log.info "Run service again to ensure that configuration is not set double."
+        registry.allServices.each { it.call() }
+
+        assertStringContent wwwtest1comRootConf.replaced(tmpdir, tmpdir, "/tmp"), wwwtest1comRootConf.toString()
+        assertStringContent wwwtest1comSslRootConf.replaced(tmpdir, tmpdir, "/tmp"), wwwtest1comSslRootConf.toString()
+    }
 }

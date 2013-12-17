@@ -32,6 +32,8 @@ import com.anrisoftware.sscontrol.httpd.statements.webservice.WebService;
  */
 public class WebServiceArgs {
 
+    private static final String SLASH = "/";
+
     private static final String REF = "ref";
 
     private static final String ID = "id";
@@ -48,7 +50,11 @@ public class WebServiceArgs {
     public String alias(WebService service, Map<String, Object> args) {
         Object alias = args.get(ALIAS);
         log.checkAlias(service, alias);
-        return alias.toString();
+        String str = alias.toString();
+        if (str.startsWith(SLASH)) {
+            str = str.substring(1);
+        }
+        return str;
     }
 
     public boolean haveId(Map<String, Object> args) {

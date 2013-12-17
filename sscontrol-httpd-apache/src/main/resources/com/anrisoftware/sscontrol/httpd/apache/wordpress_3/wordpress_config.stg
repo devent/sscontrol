@@ -1,11 +1,11 @@
-domainConfig(domain, service, serviceDir, properties, fcgiProperties) ::= <<
+domainConfig(domain, service, properties, config, serviceAliasDir, serviceDir) ::= <<
 # <serviceDir>
 
-<serviceAlias(service.alias, serviceDir)>
+<serviceAlias(service, serviceAliasDir)>
 
 \<Directory <serviceDir>\>
     AddHandler fcgid-script .php
-    FCGIWrapper <properties.sitesDirectory>/<fcgiProperties.scriptsSubdirectory>/<domain.name>/<fcgiProperties.scriptStarterFileName> .php
+    FCGIWrapper <properties.sitesDirectory>/<config.scriptsSubdirectory>/<domain.name>/<config.scriptStarterFileName> .php
     Options +ExecCGI +FollowSymLinks
     DirectoryIndex index.php
     AllowOverride All
@@ -40,8 +40,8 @@ domainConfig(domain, service, serviceDir, properties, fcgiProperties) ::= <<
 
 >>
 
-serviceAlias(alias, serviceDir) ::= <<
-<if(alias)>Alias /<alias> <serviceDir><endif>
+serviceAlias(service, serviceAliasDir) ::= <<
+<if(service.alias)>Alias /<service.alias> <serviceAliasDir><endif>
 >>
 
 configEnding() ::= <<

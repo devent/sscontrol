@@ -1,4 +1,4 @@
-<VirtualHost 192.168.0.51:443>
+<VirtualHost 192.168.0.51:80>
 
     # domain www.test1.com
     ServerName www.test1.com
@@ -10,13 +10,9 @@
         Allow from all
     </Directory>
 
-    SSLEngine on
-    SSLCertificateFile /tmp/var/www/www.test1.com/ssl/cert_crt.txt
-    SSLCertificateKeyFile /tmp/var/www/www.test1.com/ssl/cert_key.txt
-
     # /tmp/var/www/www.test1.com/wordpress-3.8
 
-    Alias /wordpress3 /tmp/var/www/www.test1.com/wordpress-3.8
+    Alias / /tmp/var/www/www.test1.com/wordpress-3.8/
 
     <Directory /tmp/var/www/www.test1.com/wordpress-3.8>
         AddHandler fcgid-script .php

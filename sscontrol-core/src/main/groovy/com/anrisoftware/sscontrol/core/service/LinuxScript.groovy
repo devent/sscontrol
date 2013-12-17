@@ -589,7 +589,7 @@ abstract class LinuxScript extends Script {
         }
     }
 
-    private getJavaTmpDirectory() {
+    def getJavaTmpDirectory() {
         new File(System.getProperty("java.io.tmpdir"))
     }
 

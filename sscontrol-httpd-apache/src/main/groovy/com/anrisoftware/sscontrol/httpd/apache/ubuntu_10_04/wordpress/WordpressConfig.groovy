@@ -130,7 +130,7 @@ class WordpressConfig extends BaseWordpress_3_Config implements ServiceConfig {
             wordpressContentThemesDir(domain),
             wordpressContentUploadsDir(domain),
         ]
-        script.changeMod mod: "0770", files: [
+        script.changeMod mod: "0775", files: [
             wordpressContentCacheDir(domain),
             wordpressContentPluginsDir(domain),
             wordpressContentThemesDir(domain),

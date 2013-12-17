@@ -46,6 +46,7 @@ import org.codehaus.groovy.runtime.InvokerHelper;
 import org.joda.time.Duration;
 
 import com.anrisoftware.globalpom.format.duration.DurationFormatFactory;
+import com.anrisoftware.globalpom.format.locale.LocaleFormatFactory;
 import com.anrisoftware.propertiesutils.ContextProperties;
 import com.anrisoftware.sscontrol.core.api.ProfileProperties;
 import com.anrisoftware.sscontrol.core.api.ServiceException;
@@ -64,6 +65,9 @@ class ProfilePropertiesImpl implements ProfileProperties {
 
     @Inject
     private DurationFormatFactory durationFormatFactory;
+
+    @Inject
+    private LocaleFormatFactory localeFormatFactory;
 
     private final Map<String, Object> properties;
 
@@ -464,16 +468,19 @@ class ProfilePropertiesImpl implements ProfileProperties {
      * 
      * @throws ServiceException
      *             if the profile property was not found.
+     * 
+     * @throws ParseException
+     *             if the locale could not be parsed.
      */
     public Locale profileLocaleProperty(String key, ContextProperties defaults)
-            throws ServiceException {
+            throws ServiceException, ParseException {
         Locale property = (Locale) get(key);
         if (property != null) {
             return property;
         }
         String tag = defaults.getProperty(key);
         if (tag != null) {
-            return Locale.forLanguageTag(tag);
+            return localeFormatFactory.create().parse(tag);
         }
         throw log.noProfileProperty(this, key);
     }

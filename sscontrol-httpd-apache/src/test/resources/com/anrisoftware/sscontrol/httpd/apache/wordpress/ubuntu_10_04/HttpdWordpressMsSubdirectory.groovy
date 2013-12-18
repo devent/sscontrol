@@ -19,7 +19,6 @@
 package com.anrisoftware.sscontrol.httpd.apache.wordpress.ubuntu_10_04
 
 import com.anrisoftware.sscontrol.httpd.apache.core.ubuntu_10_04.UbuntuResources
-import com.anrisoftware.sscontrol.httpd.statements.wordpress.MultiSite
 
 
 httpd {
@@ -35,7 +34,7 @@ httpd {
         user "wwwtest1", group: "wwwtest1"
         setup "wordpress", id: "wordpress3", alias: "/", {
             database "wordpress3", user: "user", password: "userpass", host: "localhost"
-            multisite MultiSite.subdir
+            multisite "subdir"
         }
     }
     ssl_domain "www.test1.com", address: "192.168.0.51", {

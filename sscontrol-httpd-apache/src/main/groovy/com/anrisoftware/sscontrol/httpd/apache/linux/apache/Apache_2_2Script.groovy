@@ -131,7 +131,7 @@ abstract class Apache_2_2Script extends ApacheScript {
                 log.checkServiceConfig config, service
                 def refdomain = findReferencedDomain service
                 if (refdomain == null) {
-                    config.deployDomain domain, reftarget, serviceConfig
+                    config.deployDomain domain, null, reftarget, serviceConfig
                 } else {
                     config.deployDomain domain, refdomain, reftarget, serviceConfig
                 }

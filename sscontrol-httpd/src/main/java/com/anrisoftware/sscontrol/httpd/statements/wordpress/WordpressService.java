@@ -181,6 +181,10 @@ public class WordpressService implements WebService {
         this.multiSite = type;
     }
 
+    public void multisite(String string) {
+        this.multiSite = MultiSite.parse(string);
+    }
+
     public MultiSite getMultiSite() {
         return multiSite;
     }

@@ -56,7 +56,9 @@ public class Database {
     @Inject
     Database(DatabaseArgs argss, @Assisted Object service,
             @Assisted Map<String, Object> args) {
-        setProvider(argss.provider(service, args));
+        if (argss.haveProvider(args)) {
+            setProvider(argss.provider(this, args));
+        }
         if (argss.haveUser(args)) {
             setUser(argss.user(args));
         }

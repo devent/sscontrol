@@ -71,6 +71,10 @@ public class DatabaseArgs {
         return args.get(HOST).toString();
     }
 
+    boolean haveProvider(Map<String, Object> args) {
+        return args.containsKey(PROVIDER);
+    }
+
     String provider(Object service, Map<String, Object> args) {
         Object provider = args.get(PROVIDER);
         log.checkProvider(service, provider);

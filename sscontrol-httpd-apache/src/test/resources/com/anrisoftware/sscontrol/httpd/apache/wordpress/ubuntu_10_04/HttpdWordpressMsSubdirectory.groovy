@@ -19,6 +19,8 @@
 package com.anrisoftware.sscontrol.httpd.apache.wordpress.ubuntu_10_04
 
 import com.anrisoftware.sscontrol.httpd.apache.core.ubuntu_10_04.UbuntuResources
+import com.anrisoftware.sscontrol.httpd.statements.wordpress.MultiSite
+
 
 httpd {
     domain "test1.com", address: "192.168.0.50", { //.
@@ -29,14 +31,24 @@ httpd {
         certification_key_file UbuntuResources.certKey.resource
         redirect to_www
     }
-    domain "www.test1.com", address: "192.168.0.51", {
-        setup "wordpress", alias: "wordpress3", {
-            debug true
+    domain "www.test1.com", id: "wwwtest1", address: "192.168.0.51", {
+        user "wwwtest1", group: "wwwtest1"
+        setup "wordpress", id: "wordpress3", alias: "/", {
             database "wordpress3", user: "user", password: "userpass", host: "localhost"
+            multisite MultiSite.subdir
         }
     }
     ssl_domain "www.test1.com", address: "192.168.0.51", {
+        user "test1_com", group: "test1_com"
         certification_file UbuntuResources.certCrt.resource
         certification_key_file UbuntuResources.certKey.resource
+    }
+    domain "www.blogfoo.com", address: "192.168.0.51", {
+        user "wwwtest1", group: "wwwtest1"
+        setup "wordpress", ref: "wordpress3", refdomain: "wwwtest1"
+    }
+    domain "www.blogbar.com", address: "192.168.0.51", {
+        user "wwwtest1", group: "wwwtest1"
+        setup "wordpress", ref: "wordpress3", refdomain: "wwwtest1"
     }
 }

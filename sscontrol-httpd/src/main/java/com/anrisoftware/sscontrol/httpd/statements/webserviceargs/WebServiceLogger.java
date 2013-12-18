@@ -27,6 +27,7 @@ import static com.anrisoftware.sscontrol.httpd.statements.webserviceargs.WebServ
 import static com.anrisoftware.sscontrol.httpd.statements.webserviceargs.WebServiceLogger._.ref_null;
 import static com.anrisoftware.sscontrol.httpd.statements.webserviceargs.WebServiceLogger._.ref_set_debug;
 import static com.anrisoftware.sscontrol.httpd.statements.webserviceargs.WebServiceLogger._.ref_set_info;
+import static com.anrisoftware.sscontrol.httpd.statements.webserviceargs.WebServiceLogger._.refdomain_null;
 import static org.apache.commons.lang3.Validate.notBlank;
 import static org.apache.commons.lang3.Validate.notNull;
 
@@ -59,7 +60,9 @@ public class WebServiceLogger extends AbstractLogger {
 
         ref_set_debug("Reference '{}' set for {}."),
 
-        ref_set_info("Identifier '{}' set for service '{}'.");
+        ref_set_info("Identifier '{}' set for service '{}'."),
+
+        refdomain_null("Domain reference cannot be null or blank for {}.");
 
         private String name;
 
@@ -117,5 +120,10 @@ public class WebServiceLogger extends AbstractLogger {
         } else {
             info(ref_set_info, ref, service.getName());
         }
+    }
+
+    void checkRefDomain(WebService service, Object ref) {
+        notNull(ref, refdomain_null.toString(), service);
+        notBlank(ref.toString(), refdomain_null.toString(), service);
     }
 }

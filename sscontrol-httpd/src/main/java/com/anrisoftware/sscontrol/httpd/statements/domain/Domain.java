@@ -51,6 +51,13 @@ import com.google.inject.assistedinject.Assisted;
  */
 public class Domain {
 
+    private static final String USER = "user";
+    private static final String AUTH_PROVIDER = "provider";
+    private static final String SITE_DIR = "%s/web";
+    private static final String WWW = "www.%s";
+    private static final String GROUP = "group";
+    private static final String NAME = "name";
+    private static final String ID = "id";
     private static final String USE = "use";
     private static final String ROOT = "root";
     private static final String PORT = "port";
@@ -90,6 +97,8 @@ public class Domain {
 
     private String useDomain;
 
+    private String id;
+
     /**
      * @see DomainFactory#create(Map, String)
      */
@@ -116,10 +125,17 @@ public class Domain {
         if (args.containsKey(USE)) {
             this.useDomain = (String) args.get(USE);
         }
+        if (args.containsKey(ID)) {
+            this.id = (String) args.get(ID);
+        }
     }
 
     public String getName() {
         return name;
+    }
+
+    public String getId() {
+        return id;
     }
 
     public String getNamePattern() {
@@ -135,9 +151,9 @@ public class Domain {
      */
     public String getSiteDirectory() {
         if (useDomain != null) {
-            return format("%s/web", useDomain);
+            return format(SITE_DIR, useDomain);
         } else {
-            return format("%s/web", getName());
+            return format(SITE_DIR, getName());
         }
     }
 
@@ -148,7 +164,7 @@ public class Domain {
     public String getServerAlias() {
         boolean www = findDirective(asList(new Class<?>[] {
                 RedirectToWwwHttp.class, RedirectToWwwHttp.class }));
-        return www ? format("www.%s", getName()) : getName();
+        return www ? format(WWW, getName()) : getName();
     }
 
     private boolean findDirective(List<Class<?>> directives) {
@@ -157,7 +173,7 @@ public class Domain {
 
     public void user(Map<String, Object> map, String name) {
         domainUser.setUser(name);
-        domainUser.setGroup(map.get("group"));
+        domainUser.setGroup(map.get(GROUP));
     }
 
     public DomainUser getDomainUser() {
@@ -229,8 +245,8 @@ public class Domain {
 
     public AbstractAuth auth(Map<String, Object> args, String name, Object s) {
         AbstractAuth auth = null;
-        if (args.containsKey("provider")) {
-            AuthProvider provider = (AuthProvider) args.get("provider");
+        if (args.containsKey(AUTH_PROVIDER)) {
+            AuthProvider provider = (AuthProvider) args.get(AUTH_PROVIDER);
             switch (provider) {
             case file:
                 auth = authFactory.create(args, name);
@@ -293,7 +309,11 @@ public class Domain {
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this).append("name", name)
-                .append(domainUser).toString();
+        ToStringBuilder builder = new ToStringBuilder(this);
+        builder.append(NAME, name);
+        builder = id != null ? builder.append(ID, id) : builder;
+        builder.append(USER, domainUser);
+        builder.append(ADDRESS, address).append(PORT, port);
+        return builder.toString();
     }
 }

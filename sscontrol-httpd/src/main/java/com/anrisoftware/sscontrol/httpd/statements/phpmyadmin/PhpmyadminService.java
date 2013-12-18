@@ -64,6 +64,8 @@ public class PhpmyadminService implements WebService {
 
     private String ref;
 
+    private String refDomain;
+
     /**
      * @see PhpmyadminServiceFactory#create(Domain, Map)
      */
@@ -80,6 +82,9 @@ public class PhpmyadminService implements WebService {
         }
         if (aargs.haveRef(args)) {
             setRef(aargs.ref(this, args));
+        }
+        if (aargs.haveRefDomain(args)) {
+            setRefDomain(aargs.refDomain(this, args));
         }
     }
 
@@ -120,6 +125,15 @@ public class PhpmyadminService implements WebService {
     @Override
     public String getRef() {
         return ref;
+    }
+
+    public void setRefDomain(String ref) {
+        this.refDomain = ref;
+    }
+
+    @Override
+    public String getRefDomain() {
+        return refDomain;
     }
 
     public void admin(Map<String, Object> map, String admin) {

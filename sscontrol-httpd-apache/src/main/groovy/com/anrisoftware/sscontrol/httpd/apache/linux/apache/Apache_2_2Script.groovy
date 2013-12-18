@@ -122,19 +122,24 @@ abstract class Apache_2_2Script extends ApacheScript {
         domain.services.findAll { WebService service ->
             service.domain == domain
         }.each { WebService service ->
-            def reftarget = findReference service
+            def reftarget = findReferencedService service
             def config = serviceConfigs["${PROFILE}.${service.name}"]
             if (reftarget == null) {
                 log.checkServiceConfig config, service
                 config.deployService domain, service, serviceConfig
             } else {
                 log.checkServiceConfig config, service
-                config.deployDomain domain, reftarget, serviceConfig
+                def refdomain = findReferencedDomain service
+                if (refdomain == null) {
+                    config.deployDomain domain, reftarget, serviceConfig
+                } else {
+                    config.deployDomain domain, refdomain, reftarget, serviceConfig
+                }
             }
         }
     }
 
-    WebService findReference(WebService service) {
+    WebService findReferencedService(WebService service) {
         WebService refservice = null
         for (Domain domain : this.service.domains) {
             refservice = domain.services.find { WebService s ->
@@ -145,6 +150,12 @@ abstract class Apache_2_2Script extends ApacheScript {
             }
         }
         return refservice
+    }
+
+    Domain findReferencedDomain(WebService service) {
+        this.service.domains.find { Domain domain ->
+            domain.id != null && domain.id == service.refDomain
+        }
     }
 
     def deployRedirect(Domain domain) {

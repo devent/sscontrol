@@ -55,4 +55,14 @@ httpd {
             multisite MultiSite.subdomain
         }
     }
+    domain "www.testid.com", id: "testid", address: "192.168.0.51", {
+        user "www-data", group: "www-data"
+        setup "wordpress", id: "wordpress3", alias: "wordpress3", {
+            database "wordpress3", user: "user", password: "userpass", host: "localhost"
+        }
+    }
+    domain "www.testref.com", address: "192.168.0.51", {
+        user "www-data", group: "www-data"
+        setup "wordpress", ref: "wordpress3", refdomain: "testid"
+    }
 }

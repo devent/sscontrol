@@ -61,6 +61,8 @@ public class PhpldapadminService implements WebService {
 
     private String ref;
 
+    private String refDomain;
+
     /**
      * @see PhpldapadminServiceFactory#create(Domain, Map)
      */
@@ -78,6 +80,9 @@ public class PhpldapadminService implements WebService {
         }
         if (aargs.haveRef(args)) {
             setRef(aargs.ref(this, args));
+        }
+        if (aargs.haveRefDomain(args)) {
+            setRefDomain(aargs.refDomain(this, args));
         }
     }
 
@@ -118,6 +123,15 @@ public class PhpldapadminService implements WebService {
     @Override
     public String getRef() {
         return ref;
+    }
+
+    public void setRefDomain(String ref) {
+        this.refDomain = ref;
+    }
+
+    @Override
+    public String getRefDomain() {
+        return refDomain;
     }
 
     public void server(String name) {

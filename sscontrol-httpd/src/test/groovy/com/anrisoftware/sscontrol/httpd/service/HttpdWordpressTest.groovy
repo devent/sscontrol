@@ -105,5 +105,25 @@ class HttpdWordpressTest extends HttpdTestUtil {
         assert (webservice instanceof WordpressService)
         assert webservice.name == "wordpress"
         assert webservice.multiSite == MultiSite.subdomain
+
+        domain = service.domains[6]
+        assert domain.name == "www.testid.com"
+        assert domain.address == "192.168.0.51"
+        assert domain.id == "testid"
+        assert (domain instanceof Domain)
+        webservice = domain.services[0]
+        assert (webservice instanceof WordpressService)
+        assert webservice.name == "wordpress"
+        assert webservice.id == "wordpress3"
+
+        domain = service.domains[7]
+        assert domain.name == "www.testref.com"
+        assert domain.address == "192.168.0.51"
+        assert (domain instanceof Domain)
+        webservice = domain.services[0]
+        assert (webservice instanceof WordpressService)
+        assert webservice.name == "wordpress"
+        assert webservice.ref == "wordpress3"
+        assert webservice.refDomain == "testid"
     }
 }

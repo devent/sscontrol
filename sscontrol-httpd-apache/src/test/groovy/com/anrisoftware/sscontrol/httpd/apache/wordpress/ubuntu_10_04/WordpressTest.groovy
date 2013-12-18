@@ -172,4 +172,27 @@ class WordpressTest extends UbuntuTestUtil {
         assertStringContent wwwtest1comRootConf.replaced(tmpdir, tmpdir, "/tmp"), wwwtest1comRootConf.toString()
         assertStringContent wwwtest1comSslRootConf.replaced(tmpdir, tmpdir, "/tmp"), wwwtest1comSslRootConf.toString()
     }
+
+    @Test
+    void "wordpress ms subdirectory"() {
+        copyUbuntuFiles tmpdir
+        copyRoundcubeFiles tmpdir
+
+        loader.loadService profile.resource, null
+        def profile = registry.getService("profile")[0]
+        loader.loadService httpdMsSubdirectoryScript.resource, profile
+
+        registry.allServices.each { it.call() }
+        log.info "Run service again to ensure that configuration is not set double."
+        registry.allServices.each { it.call() }
+
+        assertStringContent wwwtest1comMsSubdirectoryConf.replaced(tmpdir, tmpdir, "/tmp"), wwwtest1comMsSubdirectoryConf.toString()
+        assertStringContent wwwtest1comSslMsSubdirectoryConf.replaced(tmpdir, tmpdir, "/tmp"), wwwtest1comSslMsSubdirectoryConf.toString()
+        assertStringContent wwwblogfoocomMsSubdirectoryConf.replaced(tmpdir, tmpdir, "/tmp"), wwwblogfoocomMsSubdirectoryConf.toString()
+        assertStringContent wwwblogbarcomMsSubdirectoryConf.replaced(tmpdir, tmpdir, "/tmp"), wwwblogbarcomMsSubdirectoryConf.toString()
+        assertStringContent chownMsSubdirectoryOut.replaced(tmpdir, tmpdir, "/tmp"), chownMsSubdirectoryOut.toString()
+        assertStringContent chmodMsSubdirectoryOut.replaced(tmpdir, tmpdir, "/tmp"), chmodMsSubdirectoryOut.toString()
+        assertStringContent groupaddMsSubdirectoryOut.replaced(tmpdir, tmpdir, "/tmp"), groupaddMsSubdirectoryOut.toString()
+        assertStringContent useraddMsSubdirectoryOut.replaced(tmpdir, tmpdir, "/tmp"), useraddMsSubdirectoryOut.toString()
+    }
 }

@@ -69,6 +69,16 @@ enum WordpressResources {
     httpdRootScript("Httpd.groovy", WordpressResources.class.getResource("HttpdWordpressRoot.groovy")),
     wwwtest1comRootConf("/etc/apache2/sites-available/100-robobee-www.test1.com.conf", WordpressResources.class.getResource("www_test1_com_root_conf.txt")),
     wwwtest1comSslRootConf("/etc/apache2/sites-available/100-robobee-www.test1.com-ssl.conf", WordpressResources.class.getResource("www_test1_com_ssl_root_conf.txt")),
+    // Wordpress Multi-Site Sub-Directories
+    httpdMsSubdirectoryScript("Httpd.groovy", WordpressResources.class.getResource("HttpdWordpressMsSubdirectory.groovy")),
+    wwwtest1comMsSubdirectoryConf("/etc/apache2/sites-available/100-robobee-www.test1.com.conf", WordpressResources.class.getResource("www_test1_com_mssubdirectory_conf.txt")),
+    wwwtest1comSslMsSubdirectoryConf("/etc/apache2/sites-available/100-robobee-www.test1.com-ssl.conf", WordpressResources.class.getResource("www_test1_com_ssl_mssubdirectory_conf.txt")),
+    wwwblogfoocomMsSubdirectoryConf("/etc/apache2/sites-available/100-robobee-www.blogfoo.com.conf", WordpressResources.class.getResource("www_blogfoo_com_mssubdirectory_conf.txt")),
+    wwwblogbarcomMsSubdirectoryConf("/etc/apache2/sites-available/100-robobee-www.blogbar.com.conf", WordpressResources.class.getResource("www_blogbar_com_mssubdirectory_conf.txt")),
+    chownMsSubdirectoryOut("/bin/chown.out", WordpressResources.class.getResource("chown_mssubdirectory_out.txt")),
+    chmodMsSubdirectoryOut("/bin/chmod.out", WordpressResources.class.getResource("chmod_mssubdirectory_out.txt")),
+    useraddMsSubdirectoryOut("/usr/sbin/useradd.out", WordpressResources.class.getResource("useradd_mssubdirectory_out.txt")),
+    groupaddMsSubdirectoryOut("/usr/sbin/groupadd.out", WordpressResources.class.getResource("groupadd_mssubdirectory_out.txt")),
 
     static copyRoundcubeFiles(File parent) {
         wordpressArchive.createFile parent

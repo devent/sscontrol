@@ -80,11 +80,15 @@ public interface ServiceConfig {
      * @param domain
      *            the {@link Domain}.
      * 
+     * @param refDomain
+     *            the referenced {@link Domain} or {@code null}.
+     * 
      * @param service
      *            the {@link WebService}.
      * 
      * @param config
      *            the {@link List} of the domain configuration.
      */
-    void deployDomain(Domain domain, WebService service, List<String> config);
+    void deployDomain(Domain domain, Domain refDomain, WebService service,
+            List<String> config);
 }

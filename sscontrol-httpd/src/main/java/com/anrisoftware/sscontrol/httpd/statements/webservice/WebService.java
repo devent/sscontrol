@@ -55,4 +55,11 @@ public interface WebService {
      * @return the {@link Domain}.
      */
     Domain getDomain();
+
+    /**
+     * Returns the domain reference of the service.
+     * 
+     * @return the domain {@link String} reference.
+     */
+    String getRefDomain();
 }

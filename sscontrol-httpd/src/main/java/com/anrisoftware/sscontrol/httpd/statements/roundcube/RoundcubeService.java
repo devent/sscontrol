@@ -86,6 +86,8 @@ public class RoundcubeService implements WebService {
 
     private String ref;
 
+    private String refDomain;
+
     /**
      * @see RoundcubeServiceFactory#create(Domain, Map)
      */
@@ -103,6 +105,9 @@ public class RoundcubeService implements WebService {
         }
         if (aargs.haveRef(args)) {
             setRef(aargs.ref(this, args));
+        }
+        if (aargs.haveRefDomain(args)) {
+            setRefDomain(aargs.refDomain(this, args));
         }
     }
 
@@ -149,6 +154,15 @@ public class RoundcubeService implements WebService {
     @Override
     public String getRef() {
         return ref;
+    }
+
+    public void setRefDomain(String ref) {
+        this.refDomain = ref;
+    }
+
+    @Override
+    public String getRefDomain() {
+        return refDomain;
     }
 
     public void database(Map<String, Object> args, String name) {

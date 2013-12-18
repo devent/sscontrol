@@ -25,6 +25,7 @@ import javax.inject.Inject
 import org.apache.commons.lang3.RandomStringUtils
 
 import com.anrisoftware.sscontrol.httpd.apache.linux.apache.ApacheScript
+import com.anrisoftware.sscontrol.httpd.statements.domain.Domain
 import com.anrisoftware.sscontrol.httpd.statements.webservice.WebService
 
 /**
@@ -153,12 +154,15 @@ class BaseWordpressConfig {
      *            the Wordpress {@link WebService} web service.
      *
      * @param domain
-     *            the domain for which the path is returned.
+     *            the {@link Domain} for which the path is returned.
+     *
+     * @param refDomain
+     *            the references {@link Domain} or {@code null}.
      *
      * @see #wordpressDir(def)
      */
-    String serviceAliasDir(WebService service, def domain) {
-        def serviceDir = wordpressDir(domain).absolutePath
+    String serviceAliasDir(WebService service, Domain domain, Domain refDomain) {
+        def serviceDir = serviceDir domain, refDomain
         service.alias.empty ? "$serviceDir/" : serviceDir
     }
 
@@ -166,12 +170,16 @@ class BaseWordpressConfig {
      * Returns the service directory path.
      *
      * @param domain
-     *            the domain for which the path is returned.
+     *            the {@link Domain} for which the path is returned.
+     *
+     * @param refDomain
+     *            the references {@link Domain} or {@code null}.
      *
      * @see #wordpressDir(def)
      */
-    String serviceDir(def domain) {
-        wordpressDir(domain).absolutePath
+    String serviceDir(Domain domain, Domain refDomain) {
+        refDomain == null ? wordpressDir(domain).absolutePath :
+                wordpressDir(refDomain).absolutePath
     }
 
     /**

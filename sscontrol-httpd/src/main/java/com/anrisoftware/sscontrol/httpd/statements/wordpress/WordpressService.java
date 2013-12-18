@@ -73,6 +73,8 @@ public class WordpressService implements WebService {
 
     private String ref;
 
+    private String refDomain;
+
     private MultiSite multiSite;
 
     /**
@@ -91,6 +93,9 @@ public class WordpressService implements WebService {
         }
         if (aargs.haveRef(args)) {
             setRef(aargs.ref(this, args));
+        }
+        if (aargs.haveRefDomain(args)) {
+            setRefDomain(aargs.refDomain(this, args));
         }
     }
 
@@ -137,6 +142,15 @@ public class WordpressService implements WebService {
     @Override
     public String getRef() {
         return ref;
+    }
+
+    public void setRefDomain(String refDomain) {
+        this.refDomain = refDomain;
+    }
+
+    @Override
+    public String getRefDomain() {
+        return refDomain;
     }
 
     public void database(Map<String, Object> args, String name) {

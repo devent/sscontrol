@@ -32,6 +32,8 @@ import com.anrisoftware.sscontrol.httpd.statements.webservice.WebService;
  */
 public class WebServiceArgs {
 
+    private static final String REFDOMAIN = "refdomain";
+
     private static final String SLASH = "/";
 
     private static final String REF = "ref";
@@ -73,7 +75,17 @@ public class WebServiceArgs {
 
     public String ref(WebService service, Map<String, Object> args) {
         Object ref = args.get(REF);
-        log.checkId(service, ref);
+        log.checkRef(service, ref);
+        return ref.toString();
+    }
+
+    public boolean haveRefDomain(Map<String, Object> args) {
+        return args.containsKey(REFDOMAIN);
+    }
+
+    public String refDomain(WebService service, Map<String, Object> args) {
+        Object ref = args.get(REFDOMAIN);
+        log.checkRefDomain(service, ref);
         return ref.toString();
     }
 

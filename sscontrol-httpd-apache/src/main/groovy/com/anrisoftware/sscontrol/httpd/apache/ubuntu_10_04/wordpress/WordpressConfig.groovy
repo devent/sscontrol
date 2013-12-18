@@ -56,10 +56,10 @@ class WordpressConfig extends BaseWordpress_3_Config implements ServiceConfig {
     }
 
     @Override
-    void deployDomain(Domain domain, WebService service, List config) {
+    void deployDomain(Domain domain, Domain refDomain, WebService service, List config) {
         fcgiConfig.script = script
         fcgiConfig.deployConfig domain
-        createDomainConfig domain, service, config
+        createDomainConfig domain, refDomain, service, config
     }
 
     @Override
@@ -71,7 +71,7 @@ class WordpressConfig extends BaseWordpress_3_Config implements ServiceConfig {
         downloadArchive domain
         installPackages wordpressPackages
         enableMods wordpressMods
-        createDomainConfig domain, service, config
+        createDomainConfig domain, null, service, config
         deployMainConfig service, domain
         deployDatabaseConfig service, domain
         deployKeysConfig service, domain
@@ -83,9 +83,9 @@ class WordpressConfig extends BaseWordpress_3_Config implements ServiceConfig {
         setupPermissions domain
     }
 
-    void createDomainConfig(Domain domain, WebService service, List config) {
-        def serviceAliasDir = serviceAliasDir service, domain
-        def serviceDir = serviceDir domain
+    void createDomainConfig(Domain domain, Domain refDomain, WebService service, List config) {
+        def serviceAliasDir = serviceAliasDir service, domain, refDomain
+        def serviceDir = serviceDir domain, refDomain
         def configStr = wordpressConfigTemplate.getText(
                 true, "domainConfig",
                 "domain", domain,

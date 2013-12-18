@@ -26,7 +26,7 @@ package com.anrisoftware.sscontrol.httpd.statements.wordpress;
  */
 public enum MultiSite {
 
-    subdir, subdomain;
+    none, subdir, subdomain;
 
     private static String no_value = "No value for string '%s'";
 

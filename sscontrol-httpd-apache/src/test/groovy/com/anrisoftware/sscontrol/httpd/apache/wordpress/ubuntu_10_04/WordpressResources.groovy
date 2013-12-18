@@ -79,6 +79,7 @@ enum WordpressResources {
     chmodMsSubdirectoryOut("/bin/chmod.out", WordpressResources.class.getResource("chmod_mssubdirectory_out.txt")),
     useraddMsSubdirectoryOut("/usr/sbin/useradd.out", WordpressResources.class.getResource("useradd_mssubdirectory_out.txt")),
     groupaddMsSubdirectoryOut("/usr/sbin/groupadd.out", WordpressResources.class.getResource("groupadd_mssubdirectory_out.txt")),
+    wordpress_3_8_MsSubdirectoryConfigExpected("/var/www/www.test1.com/wordpress-3.8/wp-config.php", WordpressResources.class.getResource("wordpress_3_8_config_php_mssubdirectory_expected.txt")),
 
     static copyRoundcubeFiles(File parent) {
         wordpressArchive.createFile parent

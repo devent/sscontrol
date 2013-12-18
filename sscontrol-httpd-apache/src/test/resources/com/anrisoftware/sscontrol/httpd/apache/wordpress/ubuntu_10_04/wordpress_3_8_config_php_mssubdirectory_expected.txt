@@ -115,7 +115,7 @@ $table_prefix = 'wp_';
  * language support.
  */
 # SSCONTROL-httpd
-define('WPLANG', 'de_DE');
+define('WPLANG', '');
 # SSCONTROL-httpd-END
 
 
@@ -137,7 +137,7 @@ define('FORCE_SSL_LOGIN', true);
 define('FORCE_SSL_ADMIN', true);
 # SSCONTROL-httpd-END
 # SSCONTROL-httpd
-define('WP_ALLOW_MULTISITE', false);
+define('WP_ALLOW_MULTISITE', true);
 # SSCONTROL-httpd-END
 /* That's all, stop editing! Happy blogging. */
 

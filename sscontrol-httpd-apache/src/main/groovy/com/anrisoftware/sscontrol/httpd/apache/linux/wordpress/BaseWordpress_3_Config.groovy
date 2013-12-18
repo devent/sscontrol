@@ -23,6 +23,7 @@ import static org.apache.commons.io.FileUtils.*
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.Templates
 import com.anrisoftware.sscontrol.httpd.apache.linux.apache.ApacheScript
+import com.anrisoftware.sscontrol.httpd.statements.wordpress.MultiSite
 import com.anrisoftware.sscontrol.httpd.statements.wordpress.WordpressService
 import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokenTemplate
 
@@ -323,6 +324,36 @@ class BaseWordpress_3_Config extends BaseWordpressConfig {
     def configDebug(WordpressService service) {
         def search = wordpressConfigTemplate.getText(true, "configDebug_search")
         def replace = wordpressConfigTemplate.getText(true, "configDebug", "enabled", service.debug.level == 1)
+        new TokenTemplate(search, replace)
+    }
+
+    /**
+     * Deploys multi-site configuration.
+     *
+     * @param service
+     *            the {@link WordpressService}.
+     *
+     * @param domain
+     *            the domain for which the configuration is returned.
+     */
+    void deployMultisiteConfig(WordpressService service, def domain) {
+        def conf = mainConfiguration domain
+        def file = configurationFile domain
+        deployConfiguration configurationTokens(), conf, debugMultisiteConfig(service), file
+    }
+
+    /**
+     * Returns the multi-site configurations.
+     */
+    List debugMultisiteConfig(WordpressService service) {
+        [
+            configAllowMultisite(service),
+        ]
+    }
+
+    def configAllowMultisite(WordpressService service) {
+        def search = wordpressConfigTemplate.getText(true, "configAllowMultisite_search")
+        def replace = wordpressConfigTemplate.getText(true, "configAllowMultisite", "enabled", service.multiSite != MultiSite.none)
         new TokenTemplate(search, replace)
     }
 

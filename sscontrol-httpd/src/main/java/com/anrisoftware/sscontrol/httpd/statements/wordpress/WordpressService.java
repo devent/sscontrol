@@ -85,6 +85,7 @@ public class WordpressService implements WebService {
             @Assisted Domain domain, @Assisted Map<String, Object> args) {
         this.serviceLog = logger;
         this.domain = domain;
+        this.multiSite = MultiSite.none;
         if (aargs.haveAlias(args)) {
             setAlias(aargs.alias(this, args));
         }

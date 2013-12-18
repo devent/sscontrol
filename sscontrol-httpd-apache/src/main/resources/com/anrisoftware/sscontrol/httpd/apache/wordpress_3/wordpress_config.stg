@@ -211,3 +211,11 @@ define('FORCE_SSL_ADMIN', <if(enabled)>true<else>false<endif>);
 configForceSecureAdmin_search() ::= <%
 define\\('FORCE_SSL_ADMIN', .*?\\);
 %>
+
+configAllowMultisite(enabled) ::= <%
+define('WP_ALLOW_MULTISITE', <if(enabled)>true<else>false<endif>);
+%>
+
+configAllowMultisite_search() ::= <%
+define\\('WP_ALLOW_MULTISITE',.*?\\);
+%>

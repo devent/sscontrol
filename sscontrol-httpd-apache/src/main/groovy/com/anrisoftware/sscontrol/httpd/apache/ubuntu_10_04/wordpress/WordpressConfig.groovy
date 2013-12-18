@@ -78,6 +78,7 @@ class WordpressConfig extends BaseWordpress_3_Config implements ServiceConfig {
         deployLanguageConfig service, domain
         deploySecureLoginConfig service, domain
         deployDebugConfig service, domain
+        deployMultisiteConfig service, domain
         deployMainConfigEnding service, domain
         createDirectories domain
         setupPermissions domain

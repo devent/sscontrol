@@ -194,5 +194,6 @@ class WordpressTest extends UbuntuTestUtil {
         assertStringContent chmodMsSubdirectoryOut.replaced(tmpdir, tmpdir, "/tmp"), chmodMsSubdirectoryOut.toString()
         assertStringContent groupaddMsSubdirectoryOut.replaced(tmpdir, tmpdir, "/tmp"), groupaddMsSubdirectoryOut.toString()
         assertStringContent useraddMsSubdirectoryOut.replaced(tmpdir, tmpdir, "/tmp"), useraddMsSubdirectoryOut.toString()
+        assertFileContent wordpress_3_8_MsSubdirectoryConfigExpected.asFile(tmpdir), wordpress_3_8_MsSubdirectoryConfigExpected
     }
 }

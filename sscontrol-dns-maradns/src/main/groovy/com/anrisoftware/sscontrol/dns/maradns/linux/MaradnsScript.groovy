@@ -30,106 +30,119 @@ import com.anrisoftware.sscontrol.core.service.LinuxScript
  */
 abstract class MaradnsScript extends LinuxScript {
 
-	def run() {
-		super.run()
-		beforeConfiguration()
-	}
+    def run() {
+        super.run()
+        beforeConfiguration()
+    }
 
-	/**
-	 * Runs distribution specific configuration before
-	 * the MaraDNS/configuration.
-	 */
-	abstract void beforeConfiguration()
+    /**
+     * Runs distribution specific configuration before
+     * the MaraDNS/configuration.
+     */
+    abstract void beforeConfiguration()
 
-	/**
-	 * Returns the file of the {@code mararc} configuration file.
-	 *
-	 * <ul>
-	 * <li>profile property key {@code configuration_file}</li>
-	 * </ul>
-	 *
-	 * @see #getConfigurationDir()
-	 * @see #getDefaultProperties()
-	 */
-	File getMararcFile() {
-		profileFileProperty "configuration_file", configurationDir, defaultProperties
-	}
+    /**
+     * Returns the file of the {@code mararc} configuration file.
+     *
+     * <ul>
+     * <li>profile property key {@code configuration_file}</li>
+     * </ul>
+     *
+     * @see #getConfigurationDir()
+     * @see #getDefaultProperties()
+     */
+    File getMararcFile() {
+        profileFileProperty "configuration_file", configurationDir, defaultProperties
+    }
 
-	/**
-	 * Returns the default bindings.
-	 *
-	 * <ul>
-	 * <li>profile property key {@code default_binding_addresses}</li>
-	 * </ul>
-	 *
-	 * @see #getDefaultProperties()
-	 */
-	List getDefaultBinding() {
-		profileListProperty "default_binding_addresses", defaultProperties
-	}
+    /**
+     * Returns the default bindings.
+     *
+     * <ul>
+     * <li>profile property key {@code default_binding_addresses}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    List getDefaultBinding() {
+        profileListProperty "default_binding_addresses", defaultProperties
+    }
 
-	/**
-	 * Returns the default TTL duration, for example {@code P1D}.
-	 *
-	 * <ul>
-	 * <li>profile property key {@code default_ttl_duration}</li>
-	 * </ul>
-	 *
-	 * @see #getDefaultProperties()
-	 */
-	Duration getDefaultTtl() {
-		profileDurationProperty "default_ttl_duration", defaultProperties
-	}
+    /**
+     * Returns the default TTL duration, for example {@code P1D}.
+     *
+     * <ul>
+     * <li>profile property key {@code default_ttl_duration}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    Duration getDefaultTtl() {
+        profileDurationProperty "default_ttl_duration", defaultProperties
+    }
 
-	/**
-	 * Returns the default refresh duration, for example {@code PT8H}.
-	 *
-	 * <ul>
-	 * <li>profile property key {@code default_refresh_duration}</li>
-	 * </ul>
-	 *
-	 * @see #getDefaultProperties()
-	 */
-	Duration getDefaultRefresh() {
-		profileDurationProperty "default_refresh_duration", defaultProperties
-	}
+    /**
+     * Returns the default refresh duration, for example {@code PT8H}.
+     *
+     * <ul>
+     * <li>profile property key {@code default_refresh_duration}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    Duration getDefaultRefresh() {
+        profileDurationProperty "default_refresh_duration", defaultProperties
+    }
 
-	/**
-	 * Returns the default retry duration, for example {@code PT2H}.
-	 *
-	 * <ul>
-	 * <li>profile property key {@code default_retry_duration}</li>
-	 * </ul>
-	 *
-	 * @see #getDefaultProperties()
-	 */
-	Duration getDefaultRetry() {
-		profileDurationProperty "default_retry_duration", defaultProperties
-	}
+    /**
+     * Returns the default retry duration, for example {@code PT2H}.
+     *
+     * <ul>
+     * <li>profile property key {@code default_retry_duration}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    Duration getDefaultRetry() {
+        profileDurationProperty "default_retry_duration", defaultProperties
+    }
 
-	/**
-	 * Returns the default expire duration, for example {@code P4D}.
-	 *
-	 * <ul>
-	 * <li>profile property key {@code default_expire_duration}</li>
-	 * </ul>
-	 *
-	 * @see #getDefaultProperties()
-	 */
-	Duration getDefaultExpire() {
-		profileDurationProperty "default_expire_duration", defaultProperties
-	}
+    /**
+     * Returns the default expire duration, for example {@code P4D}.
+     *
+     * <ul>
+     * <li>profile property key {@code default_expire_duration}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    Duration getDefaultExpire() {
+        profileDurationProperty "default_expire_duration", defaultProperties
+    }
 
-	/**
-	 * Returns the default minimum TTL duration, for example {@code P1D}.
-	 *
-	 * <ul>
-	 * <li>profile property key {@code default_minimum_duration}</li>
-	 * </ul>
-	 *
-	 * @see #getDefaultProperties()
-	 */
-	Duration getDefaultMinimumTtl() {
-		profileDurationProperty "default_minimum_duration", defaultProperties
-	}
+    /**
+     * Returns the default minimum TTL duration, for example {@code P1D}.
+     *
+     * <ul>
+     * <li>profile property key {@code default_minimum_duration}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    Duration getDefaultMinimumTtl() {
+        profileDurationProperty "default_minimum_duration", defaultProperties
+    }
+
+    /**
+     * Returns the default priority for MX records, for example {@code "10"}.
+     *
+     * <ul>
+     * <li>profile property key {@code default_mx_priority}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    int getMxDefaultPriority() {
+        profileNumberProperty "default_mx_priority", defaultProperties
+    }
 }

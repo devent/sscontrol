@@ -27,7 +27,7 @@ NsRecord(properties, record) ::= <<
 >>
 
 MxRecord(properties, record) ::= <<
-<record.zone.name>. MX <record.priority> <record.name>. ~
+<record.zone.name>. MX <if(record.priority)><record.priority><else><properties.mxDefaultPriority><endif> <record.name>. ~
 >>
 
 CnameRecord(properties, record) ::= <<

@@ -196,4 +196,19 @@ class WordpressTest extends UbuntuTestUtil {
         assertStringContent useraddMsSubdirectoryOut.replaced(tmpdir, tmpdir, "/tmp"), useraddMsSubdirectoryOut.toString()
         assertFileContent wordpress_3_8_MsSubdirectoryConfigExpected.asFile(tmpdir), wordpress_3_8_MsSubdirectoryConfigExpected
     }
+
+    @Test
+    void "wordpress themes, plugins"() {
+        copyUbuntuFiles tmpdir
+        copyRoundcubeFiles tmpdir
+
+        loader.loadService profile.resource, null
+        def profile = registry.getService("profile")[0]
+        loader.loadService httpdPluginsScript.resource, profile
+
+        registry.allServices.each { it.call() }
+        log.info "Run service again to ensure that configuration is not set double."
+        registry.allServices.each { it.call() }
+        assertStringContent unzipPluginsOut.replaced(tmpdir, tmpdir, "/tmp"), unzipPluginsOut.toString()
+    }
 }

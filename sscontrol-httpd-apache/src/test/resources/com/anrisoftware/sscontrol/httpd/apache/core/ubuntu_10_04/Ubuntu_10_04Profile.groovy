@@ -35,6 +35,7 @@ profile "ubuntu_10_04", {
         reconfigure_command UbuntuResources.reconfigureCommand.asFile(tmp)
         zcat_command UbuntuResources.zcatCommand.asFile(tmp)
         tar_command UbuntuResources.tarCommand.asFile(tmp)
+        unzip_command UbuntuResources.unzipCommand.asFile(tmp)
         link_command UbuntuResources.lnCommand.asFile(tmp)
         enable_mod_command UbuntuResources.a2enmodCommand.asFile(tmp)
         disable_mod_command UbuntuResources.a2dismodCommand.asFile(tmp)
@@ -78,5 +79,9 @@ profile "ubuntu_10_04", {
         wordpress_secure_auth_salt "secure-auth-salt"
         wordpress_logged_in_salt "logged-in-salt"
         wordpress_nonce_salt "nonce-salt"
+        wordpress_broken_link_checker WordpressResources.brokenLinkCheckerArchive.asFile(tmp)
+        wordpress_hyphenator WordpressResources.hyphenatorArchive.asFile(tmp)
+        wordpress_picochic WordpressResources.picochicArchive.asFile(tmp)
+        wordpress_tagebuch WordpressResources.tagebuchArchive.asFile(tmp)
     }
 }

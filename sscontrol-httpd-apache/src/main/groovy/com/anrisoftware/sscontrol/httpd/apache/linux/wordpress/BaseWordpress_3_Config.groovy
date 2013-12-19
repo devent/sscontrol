@@ -20,9 +20,12 @@ package com.anrisoftware.sscontrol.httpd.apache.linux.wordpress
 
 import static org.apache.commons.io.FileUtils.*
 
+import org.apache.commons.io.FilenameUtils
+
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.Templates
 import com.anrisoftware.sscontrol.httpd.apache.linux.apache.ApacheScript
+import com.anrisoftware.sscontrol.httpd.statements.domain.Domain
 import com.anrisoftware.sscontrol.httpd.statements.wordpress.MultiSite
 import com.anrisoftware.sscontrol.httpd.statements.wordpress.WordpressService
 import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokenTemplate
@@ -409,79 +412,49 @@ class BaseWordpress_3_Config extends BaseWordpressConfig {
     }
 
     /**
-     * Wordpress content cache directory, for
-     * example {@code "wp-content/cache/"}. If the path is relative then
-     * the file will be under the Wordpress installation directory.
-     *
-     * <ul>
-     * <li>profile property {@code "wordpress_content_cache_directory"}</li>
-     * </ul>
+     * Downloads and unpacks the themes.
      *
      * @param domain
-     *            the domain for which the directory is returned.
+     *            the {@link Domain} where the themes are unpacked.
      *
-     * @see ApacheScript#getDefaultProperties()
-     * @see #wordpressDir(Object)
+     * @param service
+     *            the {@link WordpressService} service.
+     *
+     * @see #wordpressContentThemesDir(Object)
      */
-    File wordpressContentCacheDir(def domain) {
-        profileFileProperty "wordpress_content_cache_directory", wordpressDir(domain), defaultProperties
+    void deployThemes(Domain domain, WordpressService service) {
+        def dir = wordpressContentThemesDir domain
+        service.themes.each { String theme ->
+            def archive = themeArchive theme
+            def name = new File(archive.path).name
+            def dest = new File(tmpDirectory, name)
+            def type = archiveType file: dest
+            copyURLToFile archive.toURL(), dest
+            unpack file: dest, type: type, output: dir, override: true, strip: false
+        }
     }
 
     /**
-     * Wordpress content plugins directory, for
-     * example {@code "wp-content/plugins/"}. If the path is relative then
-     * the file will be under the Wordpress installation directory.
-     *
-     * <ul>
-     * <li>profile property {@code "wordpress_content_plugins_directory"}</li>
-     * </ul>
+     * Downloads and unpacks the plug-ins.
      *
      * @param domain
-     *            the domain for which the directory is returned.
+     *            the {@link Domain} where the plug-ins are unpacked.
      *
-     * @see ApacheScript#getDefaultProperties()
-     * @see #wordpressDir(Object)
+     * @param service
+     *            the {@link WordpressService} service.
+     *
+     * @see #wordpressContentPluginsDir(Object)
      */
-    File wordpressContentPluginsDir(def domain) {
-        profileFileProperty "wordpress_content_plugins_directory", wordpressDir(domain), defaultProperties
-    }
-
-    /**
-     * Wordpress content themes directory, for
-     * example {@code "wp-content/themes/"}. If the path is relative then
-     * the file will be under the Wordpress installation directory.
-     *
-     * <ul>
-     * <li>profile property {@code "wordpress_content_themes_directory"}</li>
-     * </ul>
-     *
-     * @param domain
-     *            the domain for which the directory is returned.
-     *
-     * @see ApacheScript#getDefaultProperties()
-     * @see #wordpressDir(Object)
-     */
-    File wordpressContentThemesDir(def domain) {
-        profileFileProperty "wordpress_content_themes_directory", wordpressDir(domain), defaultProperties
-    }
-
-    /**
-     * Wordpress content uploads directory, for
-     * example {@code "wp-content/uploads/"}. If the path is relative then
-     * the file will be under the Wordpress installation directory.
-     *
-     * <ul>
-     * <li>profile property {@code "wordpress_content_uploads_directory"}</li>
-     * </ul>
-     *
-     * @param domain
-     *            the domain for which the directory is returned.
-     *
-     * @see ApacheScript#getDefaultProperties()
-     * @see #wordpressDir(Object)
-     */
-    File wordpressContentUploadsDir(def domain) {
-        profileFileProperty "wordpress_content_uploads_directory", wordpressDir(domain), defaultProperties
+    void deployPlugins(Domain domain, WordpressService service) {
+        def dir = wordpressContentPluginsDir domain
+        service.plugins.each { String plugin ->
+            def archive = pluginArchive plugin
+            def name = FilenameUtils.getName(archive.toString())
+            def dest = new File(tmpDirectory, name)
+            def type = archiveType file: dest
+            copyURLToFile archive.toURL(), dest
+            unpack file: dest, type: type, output: dir, override: true, strip: false
+        }
     }
 
     @Override

@@ -80,11 +80,22 @@ enum WordpressResources {
     useraddMsSubdirectoryOut("/usr/sbin/useradd.out", WordpressResources.class.getResource("useradd_mssubdirectory_out.txt")),
     groupaddMsSubdirectoryOut("/usr/sbin/groupadd.out", WordpressResources.class.getResource("groupadd_mssubdirectory_out.txt")),
     wordpress_3_8_MsSubdirectoryConfigExpected("/var/www/www.test1.com/wordpress-3.8/wp-config.php", WordpressResources.class.getResource("wordpress_3_8_config_php_mssubdirectory_expected.txt")),
+    // Wordpress Themes, Plugins
+    httpdPluginsScript("Httpd.groovy", WordpressResources.class.getResource("HttpdWordpressPlugins.groovy")),
+    brokenLinkCheckerArchive("/tmp/web-broken-link-checker.zip", WordpressResources.class.getResource("broken-link-checker.zip")),
+    hyphenatorArchive("/tmp/web-hyphenator.zip", WordpressResources.class.getResource("hyphenator.zip")),
+    picochicArchive("/tmp/web-picochic.zip", WordpressResources.class.getResource("picochic.zip")),
+    tagebuchArchive("/tmp/web-tagebuch.zip", WordpressResources.class.getResource("tagebuch.zip")),
+    unzipPluginsOut("/usr/bin/unzip.out", WordpressResources.class.getResource("unzip_plugins_out.txt")),
 
     static copyRoundcubeFiles(File parent) {
         wordpressArchive.createFile parent
         wordpressArchive_de_DE.createFile parent
         wordpress_3_8_config.createFile parent
+        brokenLinkCheckerArchive.createFile parent
+        hyphenatorArchive.createFile parent
+        picochicArchive.createFile parent
+        tagebuchArchive.createFile parent
     }
 
     ResourcesUtils resources

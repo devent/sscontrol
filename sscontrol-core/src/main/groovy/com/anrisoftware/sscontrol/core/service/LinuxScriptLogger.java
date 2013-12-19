@@ -178,7 +178,8 @@ class LinuxScriptLogger extends AbstractLogger {
 
         unknown_archive_type("Unknown archive type"),
 
-        unknown_archive_type_message("Unknown archive type"),
+        unknown_archive_type_message(
+                "Unknown archive type '{}' for script '{}'."),
 
         script1("script"),
 
@@ -357,7 +358,7 @@ class LinuxScriptLogger extends AbstractLogger {
         return logException(
                 new ServiceException(unknown_archive_type).add(script1, script)
                         .add(args1, args), unknown_archive_type_message,
-                script.getName(), args.get(FILE));
+                args.get(FILE), script.getName());
     }
 
     void checkLinkArgs(Map<String, Object> args) {

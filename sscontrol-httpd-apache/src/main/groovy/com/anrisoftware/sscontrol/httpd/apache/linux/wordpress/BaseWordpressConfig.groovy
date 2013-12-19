@@ -18,6 +18,8 @@
  */
 package com.anrisoftware.sscontrol.httpd.apache.linux.wordpress
 
+import static org.apache.commons.lang3.StringUtils.*
+
 import java.nio.charset.Charset
 
 import javax.inject.Inject
@@ -125,9 +127,9 @@ class BaseWordpressConfig {
      * </ul>
      *
      * @param domain
-     *            the domain for which the directory is returned.
+     *            the {@link Domain} for which the directory is returned.
      */
-    File wordpressDir(def domain) {
+    File wordpressDir(Domain domain) {
         profileFileProperty "wordpress_directory", domainDir(domain), defaultProperties
     }
 
@@ -145,6 +147,82 @@ class BaseWordpressConfig {
      */
     File wordpressLinkedDir(def domain) {
         profileFileProperty "wordpress_linked_directory", domainDir(domain), defaultProperties
+    }
+
+    /**
+     * Wordpress content cache directory, for
+     * example {@code "wp-content/cache/"}. If the path is relative then
+     * the file will be under the Wordpress installation directory.
+     *
+     * <ul>
+     * <li>profile property {@code "wordpress_content_cache_directory"}</li>
+     * </ul>
+     *
+     * @param domain
+     *            the domain for which the directory is returned.
+     *
+     * @see ApacheScript#getDefaultProperties()
+     * @see #wordpressDir(Object)
+     */
+    File wordpressContentCacheDir(def domain) {
+        profileFileProperty "wordpress_content_cache_directory", wordpressDir(domain), defaultProperties
+    }
+
+    /**
+     * Wordpress content plugins directory, for
+     * example {@code "wp-content/plugins/"}. If the path is relative then
+     * the file will be under the Wordpress installation directory.
+     *
+     * <ul>
+     * <li>profile property {@code "wordpress_content_plugins_directory"}</li>
+     * </ul>
+     *
+     * @param domain
+     *            the domain for which the directory is returned.
+     *
+     * @see ApacheScript#getDefaultProperties()
+     * @see #wordpressDir(Object)
+     */
+    File wordpressContentPluginsDir(def domain) {
+        profileFileProperty "wordpress_content_plugins_directory", wordpressDir(domain), defaultProperties
+    }
+
+    /**
+     * Wordpress content themes directory, for
+     * example {@code "wp-content/themes/"}. If the path is relative then
+     * the file will be under the Wordpress installation directory.
+     *
+     * <ul>
+     * <li>profile property {@code "wordpress_content_themes_directory"}</li>
+     * </ul>
+     *
+     * @param domain
+     *            the domain for which the directory is returned.
+     *
+     * @see ApacheScript#getDefaultProperties()
+     * @see #wordpressDir(Object)
+     */
+    File wordpressContentThemesDir(def domain) {
+        profileFileProperty "wordpress_content_themes_directory", wordpressDir(domain), defaultProperties
+    }
+
+    /**
+     * Wordpress content uploads directory, for
+     * example {@code "wp-content/uploads/"}. If the path is relative then
+     * the file will be under the Wordpress installation directory.
+     *
+     * <ul>
+     * <li>profile property {@code "wordpress_content_uploads_directory"}</li>
+     * </ul>
+     *
+     * @param domain
+     *            the domain for which the directory is returned.
+     *
+     * @see ApacheScript#getDefaultProperties()
+     * @see #wordpressDir(Object)
+     */
+    File wordpressContentUploadsDir(def domain) {
+        profileFileProperty "wordpress_content_uploads_directory", wordpressDir(domain), defaultProperties
     }
 
     /**
@@ -392,6 +470,34 @@ class BaseWordpressConfig {
     String getNonceSalt() {
         def key = profileProperty("wordpress_nonce_salt", defaultProperties)
         key.empty ? RandomStringUtils.randomAlphanumeric(64) : key
+    }
+
+    /**
+     * Returns the theme archive for the specified name.
+     *
+     * @param name
+     *            the name of the theme.
+     *
+     * @return the {@link URI} of the theme.
+     */
+    URI themeArchive(String name) {
+        name = replace(name, "-", "_")
+        name = replace(name, " ", "_")
+        profileURIProperty "wordpress_$name", defaultProperties
+    }
+
+    /**
+     * Returns the plug-in archive for the specified name.
+     *
+     * @param name
+     *            the name of the plug-in.
+     *
+     * @return the {@link URI} of the plug-in.
+     */
+    URI pluginArchive(String name) {
+        name = replace(name, "-", "_")
+        name = replace(name, " ", "_")
+        profileURIProperty "wordpress_$name", defaultProperties
     }
 
     /**

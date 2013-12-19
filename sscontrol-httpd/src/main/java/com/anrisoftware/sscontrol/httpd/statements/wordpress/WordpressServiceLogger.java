@@ -22,6 +22,12 @@ import static com.anrisoftware.sscontrol.httpd.statements.wordpress.WordpressSer
 import static com.anrisoftware.sscontrol.httpd.statements.wordpress.WordpressServiceLogger._.database_set_info;
 import static com.anrisoftware.sscontrol.httpd.statements.wordpress.WordpressServiceLogger._.debug_set_debug;
 import static com.anrisoftware.sscontrol.httpd.statements.wordpress.WordpressServiceLogger._.debug_set_info;
+import static com.anrisoftware.sscontrol.httpd.statements.wordpress.WordpressServiceLogger._.plugins_added_debug;
+import static com.anrisoftware.sscontrol.httpd.statements.wordpress.WordpressServiceLogger._.plugins_added_info;
+import static com.anrisoftware.sscontrol.httpd.statements.wordpress.WordpressServiceLogger._.themes_added_debug;
+import static com.anrisoftware.sscontrol.httpd.statements.wordpress.WordpressServiceLogger._.themes_added_info;
+
+import java.util.List;
 
 import javax.inject.Singleton;
 
@@ -46,7 +52,15 @@ class WordpressServiceLogger extends AbstractLogger {
 
         debug_set_debug("Debug logging {} set for {}."),
 
-        debug_set_info("Debug logging level {} set for service '{}'.");
+        debug_set_info("Debug logging level {} set for service '{}'."),
+
+        themes_added_debug("Themes '{}' added for {}."),
+
+        themes_added_info("Themes '{}' added for service '{}'."),
+
+        plugins_added_debug("Plugins '{}' added for {}."),
+
+        plugins_added_info("Plugins '{}' added for service '{}'.");
 
         private String name;
 
@@ -80,6 +94,22 @@ class WordpressServiceLogger extends AbstractLogger {
             debug(debug_set_debug, debug, service);
         } else {
             info(debug_set_info, debug.getLevel(), service.getName());
+        }
+    }
+
+    void themesAdded(WordpressService service, List<String> themes) {
+        if (isDebugEnabled()) {
+            debug(themes_added_debug, themes, service);
+        } else {
+            info(themes_added_info, themes, service.getName());
+        }
+    }
+
+    void pluginsAdded(WordpressService service, List<String> plugins) {
+        if (isDebugEnabled()) {
+            debug(plugins_added_debug, plugins, service);
+        } else {
+            info(plugins_added_info, plugins, service.getName());
         }
     }
 

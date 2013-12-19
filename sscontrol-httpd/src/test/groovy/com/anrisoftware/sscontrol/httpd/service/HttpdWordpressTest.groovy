@@ -74,6 +74,13 @@ class HttpdWordpressTest extends HttpdTestUtil {
         assert webservice.database.user == "user"
         assert webservice.database.password == "userpass"
         assert webservice.database.host == "localhost"
+        assert webservice.plugins.size() == 3
+        assert webservice.plugins.contains("wp-typography")
+        assert webservice.plugins.contains("link-indication")
+        assert webservice.plugins.contains("broken-link-checker")
+        assert webservice.themes.size() == 2
+        assert webservice.themes.contains("picochic")
+        assert webservice.themes.contains("tagebuch")
 
         domain = service.domains[3]
         assert domain.name == "www.test1.com"

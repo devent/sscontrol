@@ -35,6 +35,8 @@ httpd {
         user "www-data", group: "www-data"
         setup "wordpress", id: "wordpress3", alias: "wordpress3", {
             database "wordpress3", user: "user", password: "userpass", host: "localhost"
+            plugins "wp-typography, link-indication, broken-link-checker"
+            themes "picochic, tagebuch"
         }
     }
     ssl_domain "www.test1.com", address: "192.168.0.51", {

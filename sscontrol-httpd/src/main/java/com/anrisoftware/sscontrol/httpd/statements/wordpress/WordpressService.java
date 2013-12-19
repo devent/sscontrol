@@ -18,6 +18,8 @@
  */
 package com.anrisoftware.sscontrol.httpd.statements.wordpress;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -29,6 +31,7 @@ import com.anrisoftware.sscontrol.core.database.DatabaseArgs;
 import com.anrisoftware.sscontrol.core.database.DatabaseFactory;
 import com.anrisoftware.sscontrol.core.debuglogging.DebugLogging;
 import com.anrisoftware.sscontrol.core.debuglogging.DebugLoggingFactory;
+import com.anrisoftware.sscontrol.core.list.StringToListFactory;
 import com.anrisoftware.sscontrol.httpd.statements.domain.Domain;
 import com.anrisoftware.sscontrol.httpd.statements.webservice.WebService;
 import com.anrisoftware.sscontrol.httpd.statements.webserviceargs.WebServiceArgs;
@@ -55,11 +58,16 @@ public class WordpressService implements WebService {
 
     private final Domain domain;
 
+    private final List<String> themes;
+
     @Inject
     private WordpressServiceLogger log;
 
     @Inject
     private DatabaseFactory databaseFactory;
+
+    @Inject
+    private StringToListFactory toListFactory;
 
     private DebugLoggingFactory debugFactory;
 
@@ -77,6 +85,8 @@ public class WordpressService implements WebService {
 
     private MultiSite multiSite;
 
+    private final List<String> plugins;
+
     /**
      * @see WordpressServiceFactory#create(Map)
      */
@@ -86,6 +96,8 @@ public class WordpressService implements WebService {
         this.serviceLog = logger;
         this.domain = domain;
         this.multiSite = MultiSite.none;
+        this.themes = new ArrayList<String>();
+        this.plugins = new ArrayList<String>();
         if (aargs.haveAlias(args)) {
             setAlias(aargs.alias(this, args));
         }
@@ -188,6 +200,36 @@ public class WordpressService implements WebService {
 
     public MultiSite getMultiSite() {
         return multiSite;
+    }
+
+    public void themes(String themes) {
+        List<String> list = toListFactory.create(themes).getList();
+        log.themesAdded(this, list);
+        this.themes.addAll(list);
+    }
+
+    public void themes(List<String> themes) {
+        log.themesAdded(this, themes);
+        this.themes.addAll(themes);
+    }
+
+    public List<String> getThemes() {
+        return themes;
+    }
+
+    public void plugins(String plugins) {
+        List<String> list = toListFactory.create(plugins).getList();
+        log.pluginsAdded(this, list);
+        this.plugins.addAll(list);
+    }
+
+    public void plugins(List<String> plugins) {
+        log.pluginsAdded(this, plugins);
+        this.plugins.addAll(plugins);
+    }
+
+    public List<String> getPlugins() {
+        return plugins;
     }
 
     @Override

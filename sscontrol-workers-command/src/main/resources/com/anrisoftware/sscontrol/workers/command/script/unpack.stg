@@ -21,3 +21,16 @@ overrideTar(args) ::= <%
 stripTar(args) ::= <%
 <if(args.strip)>--strip 1<endif>
 %>
+
+zip(args) ::= <<
+cd <args.output>
+<args.command> <overrideZip(args)> <stripZip(args)> <args.file>
+
+>>
+
+overrideZip(args) ::= <%
+<if(args.override)>-uo<endif>
+%>
+
+stripZip(args) ::= <%
+%>

@@ -416,7 +416,7 @@ abstract class LinuxScript extends Script {
             case 'tgz':
                 return tarCommand
             case 'zip':
-                return "zip"
+                return unzipCommand
             default:
                 throw log.unknownArchiveType(this, args)
         }
@@ -436,16 +436,16 @@ abstract class LinuxScript extends Script {
     }
 
     /**
-     * Returns the {@code zip} command.
+     * Returns the {@code unzip} command.
      *
      * <ul>
-     * <li>property key {@code zip_command}</li>
+     * <li>property key {@code unzip_command}</li>
      * </ul>
      *
      * @see #getDefaultProperties()
      */
-    String getZipCommand() {
-        profileProperty "zip_command", defaultProperties
+    String getUnzipCommand() {
+        profileProperty "unzip_command", defaultProperties
     }
 
     /**

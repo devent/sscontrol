@@ -21,6 +21,16 @@ public interface AddressFactory {
     /**
      * Creates the address.
      * 
+     * @param port
+     *            the port.
+     * 
+     * @return the {@link Address}.
+     */
+    Address create(int port);
+
+    /**
+     * Creates the address.
+     * 
      * @param address
      *            the host name or the IP address.
      * 

@@ -27,6 +27,15 @@ public class Address {
     }
 
     /**
+     * @see AddressFactory#create(int)
+     */
+    @AssistedInject
+    Address(@Assisted int port) {
+        this.address = null;
+        this.port = port;
+    }
+
+    /**
      * @see AddressFactory#create(String, int)
      */
     @AssistedInject
@@ -38,7 +47,7 @@ public class Address {
     /**
      * Returns the host name or IP address.
      * 
-     * @return the {@link String} address.
+     * @return the {@link String} address or {@code null}.
      */
     public String getAddress() {
         return address;
@@ -55,6 +64,12 @@ public class Address {
 
     @Override
     public String toString() {
-        return port == null ? address : format("%s:%d", address, port);
+        if (port == null) {
+            return address;
+        }
+        if (address == null) {
+            return Integer.toString(port);
+        }
+        return format("%s:%d", address, port);
     }
 }

@@ -50,15 +50,26 @@ public class Binding implements Serializable {
         this.addresses = new ArrayList<Address>();
     }
 
+    public int size() {
+        return addresses.size();
+    }
+
     public void addAddress(String address) {
         String[] split = split(address, PORT_SEP);
-        String add = split[0];
+        String addr = null;
         Integer port = null;
+        try {
+            port = Integer.valueOf(split[0]);
+            addAddress(addressFactory.create(port));
+            return;
+        } catch (NumberFormatException e) {
+            addr = split[0];
+        }
         if (split.length > 1) {
             port = Integer.valueOf(split[1]);
-            addAddress(addressFactory.create(add, port));
+            addAddress(addressFactory.create(addr, port));
         } else {
-            addAddress(addressFactory.create(add));
+            addAddress(addressFactory.create(addr));
         }
     }
 

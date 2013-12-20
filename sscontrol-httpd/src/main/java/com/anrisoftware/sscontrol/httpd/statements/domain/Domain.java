@@ -98,7 +98,6 @@ public class Domain {
     private String useDomain;
 
     private String id;
-    private Proxy proxy;
 
     /**
      * @see DomainFactory#create(Map, String)
@@ -114,7 +113,6 @@ public class Domain {
         this.auths = new ArrayList<AbstractAuth>();
         this.services = new ArrayList<WebService>();
         this.port = port;
-        this.proxy = Proxy.none;
         if (args.containsKey(ADDRESS)) {
             this.address = (String) args.get(ADDRESS);
         }
@@ -286,25 +284,6 @@ public class Domain {
 
     public List<WebService> getServices() {
         return services;
-    }
-
-    public void proxy(Object s) {
-    }
-
-    /**
-     * @see Proxy#reverse_cache
-     */
-    public void reverse_cache() {
-        setProxy(Proxy.reverse_cache);
-    }
-
-    public void setProxy(Proxy proxy) {
-        this.proxy = proxy;
-        log.proxySet(this, proxy);
-    }
-
-    public Proxy getProxy() {
-        return proxy;
     }
 
     @Override

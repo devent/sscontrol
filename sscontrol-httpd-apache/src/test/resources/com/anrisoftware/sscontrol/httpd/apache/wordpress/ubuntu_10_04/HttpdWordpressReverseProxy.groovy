@@ -37,7 +37,6 @@ httpd {
     }
     // domain www.test1.com
     domain "www.test1.com", address: "192.168.0.51", port: 8080, {
-        proxy reverse_cache
         setup "wordpress", alias: "wordpress3", {
             database "wordpress3", user: "user", password: "userpass", host: "localhost"
         }

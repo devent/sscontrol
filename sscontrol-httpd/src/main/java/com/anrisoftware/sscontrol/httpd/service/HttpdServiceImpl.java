@@ -173,17 +173,11 @@ class HttpdServiceImpl extends AbstractService implements HttpdService {
         return domain;
     }
 
-    /* (non-Javadoc)
-     * @see com.anrisoftware.sscontrol.httpd.service.HttpdService#getDomains()
-     */
     @Override
     public List<Domain> getDomains() {
         return domains;
     }
 
-    /* (non-Javadoc)
-     * @see com.anrisoftware.sscontrol.httpd.service.HttpdService#getVirtualDomains()
-     */
     @Override
     public Set<Domain> getVirtualDomains() {
         return virtualDomains;

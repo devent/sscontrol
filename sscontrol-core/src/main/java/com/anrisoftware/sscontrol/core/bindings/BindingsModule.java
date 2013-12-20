@@ -24,6 +24,8 @@ import com.google.inject.assistedinject.FactoryModuleBuilder;
 /**
  * Installs the service binding.
  * 
+ * @see BindingFactory
+ * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
@@ -31,6 +33,8 @@ public class BindingsModule extends AbstractModule {
 
 	@Override
 	protected void configure() {
+        install(new FactoryModuleBuilder().implement(Binding.class,
+                Binding.class).build(BindingFactory.class));
         install(new FactoryModuleBuilder().implement(Address.class,
                 Address.class).build(AddressFactory.class));
 	}

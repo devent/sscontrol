@@ -19,6 +19,7 @@
 package com.anrisoftware.sscontrol.core.bindings;
 
 import static com.anrisoftware.sscontrol.core.bindings.BindingArgs.ADDRESS;
+import static org.apache.commons.lang3.StringUtils.split;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -38,6 +39,8 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 @SuppressWarnings("serial")
 public class Binding implements Serializable {
 
+    private static final String PORT_SEP = ":";
+
     private final List<Address> addresses;
 
     @Inject
@@ -45,6 +48,18 @@ public class Binding implements Serializable {
 
     Binding() {
         this.addresses = new ArrayList<Address>();
+    }
+
+    public void addAddress(String address) {
+        String[] split = split(address, PORT_SEP);
+        String add = split[0];
+        Integer port = null;
+        if (split.length > 1) {
+            port = Integer.valueOf(split[1]);
+            addAddress(addressFactory.create(add, port));
+        } else {
+            addAddress(addressFactory.create(add));
+        }
     }
 
     public void addAddress(Address address) {

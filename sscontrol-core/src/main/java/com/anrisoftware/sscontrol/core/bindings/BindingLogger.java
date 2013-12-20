@@ -20,6 +20,9 @@ package com.anrisoftware.sscontrol.core.bindings;
 
 import static com.anrisoftware.sscontrol.core.bindings.BindingLogger._.address_blank;
 import static com.anrisoftware.sscontrol.core.bindings.BindingLogger._.address_null;
+import static com.anrisoftware.sscontrol.core.bindings.BindingLogger._.port_null;
+import static com.anrisoftware.sscontrol.core.bindings.BindingLogger._.port_number;
+import static org.apache.commons.lang3.Validate.isInstanceOf;
 import static org.apache.commons.lang3.Validate.notBlank;
 import static org.apache.commons.lang3.Validate.notNull;
 
@@ -38,9 +41,13 @@ class BindingLogger extends AbstractLogger {
 
 	enum _ {
 
-		address_null("Bind address cannot be null."),
+        address_null("Bind address cannot be null for %s."),
 
-		address_blank("Bind address cannot be blank.");
+        address_blank("Bind address cannot be blank for %s."),
+
+        port_null("Port cannot be null for %s."),
+
+        port_number("Port must be a number for %s.");
 
 		private String name;
 
@@ -61,8 +68,13 @@ class BindingLogger extends AbstractLogger {
 		super(Binding.class);
 	}
 
-	void checkAddress(Object object) {
-		notNull(object, address_null.toString());
-		notBlank(object.toString(), address_blank.toString());
+    void checkAddress(Object service, Object object) {
+        notNull(object, address_null.toString(), service);
+        notBlank(object.toString(), address_blank.toString(), service);
 	}
+
+    void checkPort(Object service, Object object) {
+        notNull(object, port_null.toString(), service);
+        isInstanceOf(Integer.class, object, port_number.toString(), service);
+    }
 }

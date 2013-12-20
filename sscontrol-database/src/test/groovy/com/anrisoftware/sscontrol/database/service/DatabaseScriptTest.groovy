@@ -34,33 +34,34 @@ import com.anrisoftware.sscontrol.core.api.ServicesRegistry
  */
 class DatabaseScriptTest extends DatabaseServiceBase {
 
-	@Test
-	void "database script"() {
-		loader.loadService ubuntu1004Profile, null
-		def profile = registry.getService("profile")[0]
-		loader.loadService databaseScript, profile
-		assertService registry.getService("database")[0]
-	}
+    @Test
+    void "database script"() {
+        loader.loadService ubuntu1004Profile, null
+        def profile = registry.getService("profile")[0]
+        loader.loadService databaseScript, profile
+        assertService registry.getService("database")[0]
+    }
 
-	void assertService(DatabaseServiceImpl database) {
-		assert database.debugLogging.level == 1
-		assertStringContent database.admin.password, "mysqladminpassword"
-		assert database.binding.addresses.containsAll("0.0.0.0")
-		assert database.databases.size() == 4
-		assert database.users.size() == 2
+    void assertService(DatabaseServiceImpl database) {
+        assert database.debugLogging.level == 1
+        assertStringContent database.admin.password, "mysqladminpassword"
+        assert database.binding.addresses.size() == 1
+        assert database.binding.addresses[0].address == "0.0.0.0"
+        assert database.databases.size() == 4
+        assert database.users.size() == 2
 
-		def user = database.users[0]
-		assert user.name == "test1"
-		assert user.password == "test1password"
-		assert user.server == "srv1"
+        def user = database.users[0]
+        assert user.name == "test1"
+        assert user.password == "test1password"
+        assert user.server == "srv1"
 
-		user = database.users[1]
-		assert user.name == "drupal6"
-		assert user.password == "drupal6password"
-		assert user.server == "srv2"
-		assert user.access.size() == 1
+        user = database.users[1]
+        assert user.name == "drupal6"
+        assert user.password == "drupal6password"
+        assert user.server == "srv2"
+        assert user.access.size() == 1
 
-		def access = user.access[0]
-		assert access.database == "drupal6db"
-	}
+        def access = user.access[0]
+        assert access.database == "drupal6db"
+    }
 }

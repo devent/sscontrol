@@ -19,18 +19,15 @@
 package com.anrisoftware.sscontrol.core.bindings;
 
 import static com.anrisoftware.sscontrol.core.bindings.BindingArgs.ADDRESS;
-import static com.anrisoftware.sscontrol.core.bindings.BindingArgs.ADDRESSES;
-import static java.util.Arrays.asList;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
-import java.util.Map;
+
+import javax.inject.Inject;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
-
-import com.google.inject.assistedinject.Assisted;
-import com.google.inject.assistedinject.AssistedInject;
 
 /**
  * Binding for the service.
@@ -41,47 +38,36 @@ import com.google.inject.assistedinject.AssistedInject;
 @SuppressWarnings("serial")
 public class Binding implements Serializable {
 
-	private final List<String> addresses;
+    private final List<Address> addresses;
 
-	@AssistedInject
-	Binding() {
-		this.addresses = new ArrayList<String>();
-	}
+    @Inject
+    private AddressFactory addressFactory;
 
-	/**
-	 * @see BindingFactory#create(Map, String...)
-	 */
-	@AssistedInject
-	Binding(BindingArgs aargs, @Assisted Map<String, Object> args,
-			@Assisted String[] array) {
-		this.addresses = new ArrayList<String>();
-		if (args.containsKey(ADDRESS)) {
-			addresses.add(aargs.address(args));
-		}
-		if (args.containsKey(ADDRESSES)) {
-			addresses.addAll(aargs.addresses(args));
-		}
-		if (array != null) {
-			addresses.addAll(asList(array));
-		}
-	}
+    Binding() {
+        this.addresses = new ArrayList<Address>();
+    }
 
-	/**
-	 * @see BindingFactory#create(BindingAddress)
-	 */
-	@AssistedInject
-	Binding(@Assisted BindingAddress address) {
-		this.addresses = new ArrayList<String>();
-		addresses.add(address.toString());
-	}
+    public void addAddress(Address address) {
+        this.addresses.add(address);
+    }
 
-	public List<String> getAddresses() {
-		return addresses;
-	}
+    public void addAddress(Collection<Address> addresses) {
+        for (Address address : addresses) {
+            addAddress(address);
+        }
+    }
 
-	@Override
-	public String toString() {
-		return new ToStringBuilder(this).append(ADDRESS, addresses).toString();
-	}
+    public void addAddress(BindingAddress address) {
+        addresses.add(addressFactory.create(address.toString()));
+    }
+
+    public List<Address> getAddresses() {
+        return addresses;
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this).append(ADDRESS, addresses).toString();
+    }
 
 }

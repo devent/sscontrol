@@ -20,7 +20,7 @@ package com.anrisoftware.sscontrol.core.bindings;
 
 /**
  * Special binding address.
- * 
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
@@ -41,18 +41,18 @@ public enum BindingAddress {
 	 */
 	all("0.0.0.0");
 
-	private String address;
+    private String address;
 
 	private BindingAddress(String address) {
-		this.address = address;
+        this.address = address;
 	}
 
-	public String getAddress() {
+    public String getAddress() {
 		return address;
 	}
 
 	@Override
 	public String toString() {
-		return address;
+        return address;
 	}
 }

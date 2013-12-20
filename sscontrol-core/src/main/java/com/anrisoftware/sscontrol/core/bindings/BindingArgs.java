@@ -20,7 +20,9 @@ package com.anrisoftware.sscontrol.core.bindings;
 
 import static org.apache.commons.lang3.StringUtils.trim;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -33,27 +35,69 @@ import com.anrisoftware.sscontrol.core.list.StringToListFactory;
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class BindingArgs {
+public class BindingArgs {
 
-	public static final String ADDRESS = "address";
+    public static final String PORT = "port";
 
-	public static final String ADDRESSES = "addresses";
+    public static final String ADDRESS = "address";
 
-	@Inject
-	private BindingLogger log;
+    public static final String ADDRESSES = "addresses";
 
-	@Inject
-	private StringToListFactory listFactory;
+    @Inject
+    private BindingLogger log;
 
-	public String address(Map<String, Object> args) {
-		Object object = args.get(ADDRESS);
-		log.checkAddress(object);
-		return trim(object.toString());
-	}
+    @Inject
+    private StringToListFactory listFactory;
 
-	public Collection<String> addresses(Map<String, Object> args) {
-		Object object = args.get(ADDRESSES);
-		log.checkAddress(object);
-		return listFactory.create(object).getList();
-	}
+    @Inject
+    private AddressFactory addressFactory;
+
+    public List<Address> createAddress(Object service, Map<String, Object> args) {
+        List<Address> list = new ArrayList<Address>();
+        if (haveAddress(args)) {
+            String address = address(service, args);
+            if (havePort(args)) {
+                list.add(addressFactory.create(address, port(service, args)));
+            } else {
+                list.add(addressFactory.create(address));
+            }
+        }
+        if (haveAddresses(args)) {
+            for (String address : addresses(service, args)) {
+                list.add(addressFactory.create(address));
+            }
+        }
+        return list;
+    }
+
+    public boolean haveAddress(Map<String, Object> args) {
+        return args.containsKey(ADDRESS);
+    }
+
+    public String address(Object service, Map<String, Object> args) {
+        Object object = args.get(ADDRESS);
+        log.checkAddress(service, object);
+        return trim(object.toString());
+    }
+
+    public boolean haveAddresses(Map<String, Object> args) {
+        return args.containsKey(ADDRESSES);
+    }
+
+    public Collection<String> addresses(Object service, Map<String, Object> args) {
+        Object object = args.get(ADDRESSES);
+        log.checkAddress(service, object);
+        return listFactory.create(object).getList();
+    }
+
+    public boolean havePort(Map<String, Object> args) {
+        return args.containsKey(PORT);
+    }
+
+    public int port(Object service, Map<String, Object> args) {
+        Object object = args.get(PORT);
+        log.checkPort(service, object);
+        return (Integer) object;
+    }
+
 }

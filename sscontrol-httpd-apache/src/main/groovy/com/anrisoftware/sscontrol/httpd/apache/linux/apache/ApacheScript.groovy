@@ -23,7 +23,9 @@ import static org.apache.commons.io.FileUtils.*
 import javax.inject.Inject
 
 import com.anrisoftware.resources.templates.api.TemplateResource
+import com.anrisoftware.sscontrol.core.bindings.BindingFactory
 import com.anrisoftware.sscontrol.core.service.LinuxScript
+import com.anrisoftware.sscontrol.httpd.service.HttpdService
 import com.anrisoftware.sscontrol.httpd.statements.auth.AuthProvider
 import com.anrisoftware.sscontrol.httpd.statements.auth.AuthType
 import com.anrisoftware.sscontrol.httpd.statements.domain.Domain
@@ -38,6 +40,9 @@ abstract class ApacheScript extends LinuxScript {
 
     @Inject
     private ApacheScriptLogger log
+
+    @Inject
+    private BindingFactory bindingFactory
 
     @Inject
     Map<String, ServiceConfig> serviceConfigs
@@ -63,12 +68,19 @@ abstract class ApacheScript extends LinuxScript {
      */
     abstract TemplateResource getApacheCommandsTemplate()
 
+    @Override
+    HttpdService getService() {
+        super.getService();
+    }
+
     /**
      * Returns the enable mod command {@code a2enmod}.
      *
      * <ul>
      * <li>profile property {@code "enable_mod_command"}</li>
      * </ul>
+     *
+     * @see #getDefaultProperties()
      */
     String getEnableModCommand() {
         profileProperty "enable_mod_command", defaultProperties
@@ -80,6 +92,8 @@ abstract class ApacheScript extends LinuxScript {
      * <ul>
      * <li>profile property {@code "disable_mod_command"}</li>
      * </ul>
+     *
+     * @see #getDefaultProperties()
      */
     String getDisableModCommand() {
         profileProperty "disable_mod_command", defaultProperties
@@ -91,6 +105,8 @@ abstract class ApacheScript extends LinuxScript {
      * <ul>
      * <li>profile property {@code "enable_site_command"}</li>
      * </ul>
+     *
+     * @see #getDefaultProperties()
      */
     String getEnableSiteCommand() {
         profileProperty "enable_site_command", defaultProperties
@@ -102,6 +118,8 @@ abstract class ApacheScript extends LinuxScript {
      * <ul>
      * <li>profile property {@code "disable_site_command"}</li>
      * </ul>
+     *
+     * @see #getDefaultProperties()
      */
     String getDisableSiteCommand() {
         profileProperty "disable_size_command", defaultProperties
@@ -113,6 +131,8 @@ abstract class ApacheScript extends LinuxScript {
      * <ul>
      * <li>profile property {@code "apache_command"}</li>
      * </ul>
+     *
+     * @see #getDefaultProperties()
      */
     String getApacheCommand() {
         profileProperty "apache_command", defaultProperties
@@ -124,6 +144,8 @@ abstract class ApacheScript extends LinuxScript {
      * <ul>
      * <li>profile property {@code "apache_control_command"}</li>
      * </ul>
+     *
+     * @see #getDefaultProperties()
      */
     String getApacheControlCommand() {
         profileProperty "apache_control_command", defaultProperties
@@ -136,6 +158,8 @@ abstract class ApacheScript extends LinuxScript {
      * <ul>
      * <li>profile property {@code "htpasswd_command"}</li>
      * </ul>
+     *
+     * @see #getDefaultProperties()
      */
     String getHtpasswdCommand() {
         profileProperty "htpasswd_command", defaultProperties
@@ -148,6 +172,9 @@ abstract class ApacheScript extends LinuxScript {
      * <ul>
      * <li>profile property {@code "sites_available_directory"}</li>
      * </ul>
+     *
+     * @see #getDefaultProperties()
+     * @see #getConfigurationDir()
      */
     File getSitesAvailableDir() {
         def path = profileProperty("sites_available_directory", defaultProperties)
@@ -166,6 +193,9 @@ abstract class ApacheScript extends LinuxScript {
      * <ul>
      * <li>profile property {@code "config_include_directory"}</li>
      * </ul>
+     *
+     * @see #getDefaultProperties()
+     * @see #getConfigurationDir()
      */
     File getConfigIncludeDir() {
         def path = profileProperty("config_include_directory", defaultProperties)
@@ -178,11 +208,30 @@ abstract class ApacheScript extends LinuxScript {
     }
 
     /**
+     * Returns the path for the Apache ports configuration file, for
+     * example {@code "ports.conf".}
+     * If the file path is not absolute then the file returned is under the
+     * configuration directory.
+     *
+     * <ul>
+     * <li>profile property {@code "ports_config_file"}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     * @see #getConfigurationDir()
+     */
+    File getPortsConfigFile() {
+        def file = profileFileProperty "ports_config_file", configurationDir, defaultProperties
+    }
+
+    /**
      * Returns the path for the Apache default configuration file.
      *
      * <ul>
      * <li>profile property {@code "default_config_file"}</li>
      * </ul>
+     *
+     * @see #getDefaultProperties()
      */
     File getDefaultConfigFile() {
         def file = profileProperty("default_config_file", defaultProperties)
@@ -195,6 +244,8 @@ abstract class ApacheScript extends LinuxScript {
      * <ul>
      * <li>profile property {@code "domains_config_file"}</li>
      * </ul>
+     *
+     * @see #getDefaultProperties()
      */
     File getDomainsConfigFile() {
         def file = profileProperty("domains_config_file", defaultProperties)
@@ -208,6 +259,8 @@ abstract class ApacheScript extends LinuxScript {
      * <ul>
      * <li>profile property {@code "sites_directory"}</li>
      * </ul>
+     *
+     * @see #getDefaultProperties()
      */
     File getSitesDirectory() {
         profileProperty("sites_directory", defaultProperties) as File
@@ -219,6 +272,8 @@ abstract class ApacheScript extends LinuxScript {
      * <ul>
      * <li>profile property {@code "auth_subdirectory"}</li>
      * </ul>
+     *
+     * @see #getDefaultProperties()
      */
     String getAuthSubdirectory() {
         profileProperty("auth_subdirectory", defaultProperties)
@@ -230,6 +285,8 @@ abstract class ApacheScript extends LinuxScript {
      * <ul>
      * <li>profile property {@code "ssl_subdirectory"}</li>
      * </ul>
+     *
+     * @see #getDefaultProperties()
      */
     String getSslSubdirectory() {
         profileProperty("ssl_subdirectory", defaultProperties)
@@ -241,6 +298,8 @@ abstract class ApacheScript extends LinuxScript {
      * <ul>
      * <li>profile property {@code "web_subdirectory"}</li>
      * </ul>
+     *
+     * @see #getDefaultProperties()
      */
     String getWebSubdirectory() {
         profileProperty("web_subdirectory", defaultProperties)
@@ -252,6 +311,8 @@ abstract class ApacheScript extends LinuxScript {
      * <ul>
      * <li>profile property {@code "default_auth_provider"}</li>
      * </ul>
+     *
+     * @see #getDefaultProperties()
      */
     AuthProvider getDefaultAuthProvider() {
         AuthProvider.parse profileProperty("default_auth_provider", defaultProperties)
@@ -263,6 +324,8 @@ abstract class ApacheScript extends LinuxScript {
      * <ul>
      * <li>profile property {@code "default_auth_type"}</li>
      * </ul>
+     *
+     * @see #getDefaultProperties()
      */
     AuthType getDefaultAuthType() {
         AuthType.parse profileProperty("default_auth_type", defaultProperties)
@@ -274,6 +337,8 @@ abstract class ApacheScript extends LinuxScript {
      * <ul>
      * <li>profile property {@code "group_pattern"}</li>
      * </ul>
+     *
+     * @see #getDefaultProperties()
      */
     String getGroupPattern() {
         profileProperty("group_pattern", defaultProperties)
@@ -285,6 +350,8 @@ abstract class ApacheScript extends LinuxScript {
      * <ul>
      * <li>profile property {@code "user_pattern"}</li>
      * </ul>
+     *
+     * @see #getDefaultProperties()
      */
     String getUserPattern() {
         profileProperty("user_pattern", defaultProperties)
@@ -296,6 +363,8 @@ abstract class ApacheScript extends LinuxScript {
      * <ul>
      * <li>profile property {@code "minimum_gid"}</li>
      * </ul>
+     *
+     * @see #getDefaultProperties()
      */
     int getMinimumGid() {
         profileNumberProperty("minimum_gid", defaultProperties)
@@ -307,6 +376,8 @@ abstract class ApacheScript extends LinuxScript {
      * <ul>
      * <li>profile property {@code "minimum_uid"}</li>
      * </ul>
+     *
+     * @see #getDefaultProperties()
      */
     int getMinimumUid() {
         profileNumberProperty("minimum_uid", defaultProperties)
@@ -314,6 +385,9 @@ abstract class ApacheScript extends LinuxScript {
 
     /**
      * Returns the SSL/certificates directory for the domain.
+     *
+     * @see #domainDir(Domain)
+     * @see #getSslSubdirectory()
      */
     File sslDir(Domain domain) {
         new File(domainDir(domain), sslSubdirectory)
@@ -321,6 +395,9 @@ abstract class ApacheScript extends LinuxScript {
 
     /**
      * Returns the directory for the domain web files.
+     *
+     * @see #domainDir(Domain)
+     * @see #getWebSubdirectory()
      */
     File webDir(Domain domain) {
         new File(domainDir(domain), webSubdirectory)
@@ -328,9 +405,24 @@ abstract class ApacheScript extends LinuxScript {
 
     /**
      * Returns the domain site directory.
+     *
+     * @see #getSitesDirectory()
      */
     File domainDir(Domain domain) {
         new File(sitesDirectory, domain.name)
+    }
+
+    /**
+     * Returns the default bind addresses.
+     *
+     * <ul>
+     * <li>profile property {@code "default_binding"}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    List getDefaultBinding() {
+        profileListProperty "default_binding", defaultProperties
     }
 
     /**

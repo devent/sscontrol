@@ -50,6 +50,7 @@ class WordpressTest extends UbuntuTestUtil {
         log.info "Run service again to ensure that configuration is not set double."
         registry.allServices.each { it.call() }
 
+        assertFileContent portsConfExpected.asFile(tmpdir), portsConfExpected
         assertFileContent defaultConf.asFile(tmpdir), defaultConf
         assertFileContent domainsConf.asFile(tmpdir), domainsConf
         assertStringContent test1comConf.replaced(tmpdir, tmpdir, "/tmp"), test1comConf.toString()
@@ -210,5 +211,25 @@ class WordpressTest extends UbuntuTestUtil {
         log.info "Run service again to ensure that configuration is not set double."
         registry.allServices.each { it.call() }
         assertStringContent unzipPluginsOut.replaced(tmpdir, tmpdir, "/tmp"), unzipPluginsOut.toString()
+    }
+
+    @Test
+    void "wordpress reverse proxy"() {
+        copyUbuntuFiles tmpdir
+        copyRoundcubeFiles tmpdir
+
+        loader.loadService profile.resource, null
+        def profile = registry.getService("profile")[0]
+        profile.getEntry("httpd").proxy "nginx"
+        loader.loadService httpdProxyScript.resource, profile
+
+        registry.allServices.each { it.call() }
+        log.info "Run service again to ensure that configuration is not set double."
+        registry.allServices.each { it.call() }
+        assertStringContent test1comConf.replaced(tmpdir, tmpdir, "/tmp"), test1comConf.toString()
+        assertStringContent test1comSslConf.replaced(tmpdir, tmpdir, "/tmp"), test1comSslConf.toString()
+        assertStringContent wwwtest1comConf.replaced(tmpdir, tmpdir, "/tmp"), wwwtest1comConf.toString()
+        assertStringContent wwwtest1comSslConf.replaced(tmpdir, tmpdir, "/tmp"), wwwtest1comSslConf.toString()
+        assertStringContent wwwtest1comSslFcgiScript.replaced(tmpdir, tmpdir, "/tmp"), wwwtest1comSslFcgiScript.toString()
     }
 }

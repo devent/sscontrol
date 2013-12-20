@@ -35,6 +35,8 @@ enum WordpressResources {
     httpdDebugScript("Httpd.groovy", WordpressResources.class.getResource("HttpdWordpressDebug.groovy")),
     wordpressArchive("/tmp/web-wordpress-3.8.tar.gz", WordpressResources.class.getResource("wordpress-3.8.tar.gz")),
     wordpressArchive_de_DE("/tmp/web-wordpress-3.8_de_DE.tar.gz", WordpressResources.class.getResource("wordpress-3.8.tar.gz")),
+    portsConf("/etc/apache2/ports.conf", WordpressResources.class.getResource("ports_conf.txt")),
+    portsConfExpected("/etc/apache2/ports.conf", WordpressResources.class.getResource("ports_conf_expected.txt")),
     domainsConf("/etc/apache2/conf.d/000-robobee-domains.conf", WordpressResources.class.getResource("domains_conf.txt")),
     test1comConf("/etc/apache2/sites-available/100-robobee-test1.com.conf", WordpressResources.class.getResource("test1_com_conf.txt")),
     test1comSslConf("/etc/apache2/sites-available/100-robobee-test1.com-ssl.conf", WordpressResources.class.getResource("test1_com_ssl_conf.txt")),
@@ -87,8 +89,11 @@ enum WordpressResources {
     picochicArchive("/tmp/web-picochic.zip", WordpressResources.class.getResource("picochic.zip")),
     tagebuchArchive("/tmp/web-tagebuch.zip", WordpressResources.class.getResource("tagebuch.zip")),
     unzipPluginsOut("/usr/bin/unzip.out", WordpressResources.class.getResource("unzip_plugins_out.txt")),
+    // Wordpress Reverse Proxy
+    httpdProxyScript("Httpd.groovy", WordpressResources.class.getResource("HttpdWordpressReverseProxy.groovy")),
 
     static copyRoundcubeFiles(File parent) {
+        portsConf.createFile parent
         wordpressArchive.createFile parent
         wordpressArchive_de_DE.createFile parent
         wordpress_3_8_config.createFile parent

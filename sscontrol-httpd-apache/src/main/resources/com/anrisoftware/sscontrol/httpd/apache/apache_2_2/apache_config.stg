@@ -1,3 +1,21 @@
+portsConfiguration(service) ::= <<
+# Robobee Ports - Auto-generated
+#
+# To add custom ports add a new include directive to the Apache configuration
+# file: "Include /etc/apache2/custom-ports.conf".
+#
+
+<service.binding.addresses:listenAddress();separator="\n">
+
+>>
+
+listenAddress(address) ::= <%
+Listen <if(address.address)><address.address>:<endif><listenPort(address)>
+%>
+
+listenPort(address) ::= <%
+<if(address.port)><address.port><endif>
+%>
 
 defaultConfiguration() ::= <<
 \<Directory />

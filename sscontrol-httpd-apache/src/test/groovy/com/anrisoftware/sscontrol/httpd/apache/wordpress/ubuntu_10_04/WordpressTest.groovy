@@ -226,10 +226,9 @@ class WordpressTest extends UbuntuTestUtil {
         registry.allServices.each { it.call() }
         log.info "Run service again to ensure that configuration is not set double."
         registry.allServices.each { it.call() }
-        assertStringContent test1comConf.replaced(tmpdir, tmpdir, "/tmp"), test1comConf.toString()
-        assertStringContent test1comSslConf.replaced(tmpdir, tmpdir, "/tmp"), test1comSslConf.toString()
-        assertStringContent wwwtest1comConf.replaced(tmpdir, tmpdir, "/tmp"), wwwtest1comConf.toString()
-        assertStringContent wwwtest1comSslConf.replaced(tmpdir, tmpdir, "/tmp"), wwwtest1comSslConf.toString()
-        assertStringContent wwwtest1comSslFcgiScript.replaced(tmpdir, tmpdir, "/tmp"), wwwtest1comSslFcgiScript.toString()
+        assertStringContent test1comProxyConf.replaced(tmpdir, tmpdir, "/tmp"), test1comProxyConf.toString()
+        assertStringContent test1comSslProxyConf.replaced(tmpdir, tmpdir, "/tmp"), test1comSslProxyConf.toString()
+        assertStringContent wwwtest1comProxyConf.replaced(tmpdir, tmpdir, "/tmp"), wwwtest1comProxyConf.toString()
+        assertStringContent wwwtest1comSslProxyConf.replaced(tmpdir, tmpdir, "/tmp"), wwwtest1comSslProxyConf.toString()
     }
 }

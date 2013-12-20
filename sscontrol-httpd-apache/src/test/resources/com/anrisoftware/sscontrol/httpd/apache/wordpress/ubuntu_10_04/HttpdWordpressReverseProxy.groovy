@@ -22,28 +22,28 @@ import com.anrisoftware.sscontrol.httpd.apache.core.ubuntu_10_04.UbuntuResources
 
 httpd {
     // http
-    bind address: "127.0.0.1", port: 8080
+    bind port: 8080
     // https
-    bind address: "127.0.0.1", port: 8082
+    bind port: 8082
     // domain test1.com
-    domain "test1.com", address: "192.168.0.50", { //.
+    domain "test1.com", address: "192.168.0.50", port: 8080, { //.
         redirect to_www //.
     }
     // SSL/domain test1.com
-    ssl_domain "test1.com", address: "192.168.0.50", {
+    ssl_domain "test1.com", address: "192.168.0.50", port: 8082, {
         certification_file UbuntuResources.certCrt.resource
         certification_key_file UbuntuResources.certKey.resource
         redirect to_www
     }
     // domain www.test1.com
-    domain "www.test1.com", address: "192.168.0.51", {
+    domain "www.test1.com", address: "192.168.0.51", port: 8080, {
         proxy reverse_cache
         setup "wordpress", alias: "wordpress3", {
             database "wordpress3", user: "user", password: "userpass", host: "localhost"
         }
     }
     // SSL/domain www.test1.com
-    ssl_domain "www.test1.com", address: "192.168.0.51", {
+    ssl_domain "www.test1.com", address: "192.168.0.51", port: 8082, {
         certification_file UbuntuResources.certCrt.resource
         certification_key_file UbuntuResources.certKey.resource
     }

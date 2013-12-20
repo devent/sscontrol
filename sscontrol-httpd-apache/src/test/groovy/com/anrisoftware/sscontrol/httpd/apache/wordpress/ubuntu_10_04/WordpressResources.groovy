@@ -91,6 +91,10 @@ enum WordpressResources {
     unzipPluginsOut("/usr/bin/unzip.out", WordpressResources.class.getResource("unzip_plugins_out.txt")),
     // Wordpress Reverse Proxy
     httpdProxyScript("Httpd.groovy", WordpressResources.class.getResource("HttpdWordpressReverseProxy.groovy")),
+    test1comProxyConf("/etc/apache2/sites-available/100-robobee-test1.com.conf", WordpressResources.class.getResource("test1_com_reverseproxy_conf.txt")),
+    test1comSslProxyConf("/etc/apache2/sites-available/100-robobee-test1.com-ssl.conf", WordpressResources.class.getResource("test1_com_ssl_reverseproxy_conf.txt")),
+    wwwtest1comProxyConf("/etc/apache2/sites-available/100-robobee-www.test1.com.conf", WordpressResources.class.getResource("www_test1_com_reverseproxy_conf.txt")),
+    wwwtest1comSslProxyConf("/etc/apache2/sites-available/100-robobee-www.test1.com-ssl.conf", WordpressResources.class.getResource("www_test1_com_ssl_reverseproxy_conf.txt")),
 
     static copyRoundcubeFiles(File parent) {
         portsConf.createFile parent

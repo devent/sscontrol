@@ -18,6 +18,8 @@
  */
 package com.anrisoftware.sscontrol.httpd.service;
 
+import static com.anrisoftware.sscontrol.httpd.service.HttpdServiceImplLogger._.binding_set_debug;
+import static com.anrisoftware.sscontrol.httpd.service.HttpdServiceImplLogger._.binding_set_info;
 import static com.anrisoftware.sscontrol.httpd.service.HttpdServiceImplLogger._.domainAdded;
 import static com.anrisoftware.sscontrol.httpd.service.HttpdServiceImplLogger._.domainAddedDebug;
 import static com.anrisoftware.sscontrol.httpd.service.HttpdServiceImplLogger._.profileSet;
@@ -28,6 +30,7 @@ import static com.anrisoftware.sscontrol.httpd.service.HttpdServiceImplLogger._.
 import com.anrisoftware.globalpom.log.AbstractLogger;
 import com.anrisoftware.sscontrol.core.api.ProfileService;
 import com.anrisoftware.sscontrol.core.api.Service;
+import com.anrisoftware.sscontrol.core.bindings.Binding;
 import com.anrisoftware.sscontrol.httpd.statements.domain.Domain;
 
 /**
@@ -50,7 +53,11 @@ class HttpdServiceImplLogger extends AbstractLogger {
 
 		sslDomainAddedDebug("SSL domain {} added for {}."),
 
-		sslDomainAdded("SSL domain '{}' added for service '{}'.");
+        sslDomainAdded("SSL domain '{}' added for service '{}'."),
+
+        binding_set_debug("Binding address {} set {}."),
+
+        binding_set_info("Binding address {} set for httpd service.");
 
 		private String name;
 
@@ -94,5 +101,13 @@ class HttpdServiceImplLogger extends AbstractLogger {
 			info(sslDomainAdded, domain.getName(), service.getName());
 		}
 	}
+
+    void bindingSet(HttpdServiceImpl service, Binding binding) {
+        if (isDebugEnabled()) {
+            debug(binding_set_debug, binding, service);
+        } else {
+            info(binding_set_info, binding.getAddresses());
+        }
+    }
 
 }

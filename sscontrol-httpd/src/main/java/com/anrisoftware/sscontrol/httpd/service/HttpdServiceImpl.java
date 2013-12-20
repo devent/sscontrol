@@ -1,18 +1,18 @@
 /*
  * Copyright 2012-2013 Erwin Müller <erwin.mueller@deventm.org>
- * 
+ *
  * This file is part of sscontrol-httpd.
- * 
+ *
  * sscontrol-httpd is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published by the
  * Free Software Foundation, either version 3 of the License, or (at your
  * option) any later version.
- * 
+ *
  * sscontrol-httpd is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
  * for more details.
- * 
+ *
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -34,6 +34,10 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import com.anrisoftware.sscontrol.core.api.Service;
 import com.anrisoftware.sscontrol.core.api.ServiceException;
 import com.anrisoftware.sscontrol.core.api.ServiceScriptFactory;
+import com.anrisoftware.sscontrol.core.bindings.Address;
+import com.anrisoftware.sscontrol.core.bindings.Binding;
+import com.anrisoftware.sscontrol.core.bindings.BindingAddress;
+import com.anrisoftware.sscontrol.core.bindings.BindingArgs;
 import com.anrisoftware.sscontrol.core.service.AbstractService;
 import com.anrisoftware.sscontrol.core.yesno.YesNoFlag;
 import com.anrisoftware.sscontrol.httpd.statements.auth.AuthProvider;
@@ -51,145 +55,181 @@ import com.anrisoftware.sscontrol.httpd.statements.domain.DomainFactory;
 @SuppressWarnings("serial")
 public class HttpdServiceImpl extends AbstractService {
 
-	@Inject
-	private HttpdServiceImplLogger log;
+    private final List<Domain> domains;
 
-	@Inject
-	private DomainFactory domainFactory;
+    private final Set<Domain> virtualDomains;
 
-	private final List<Domain> domains;
+    @Inject
+    private HttpdServiceImplLogger log;
 
-	private final Set<Domain> virtualDomains;
+    @Inject
+    private DomainFactory domainFactory;
 
-	HttpdServiceImpl() {
-		this.domains = new ArrayList<Domain>();
-		this.virtualDomains = new HashSet<Domain>();
-	}
+    @Inject
+    private Binding binding;
 
-	@Override
-	protected Script getScript(String profileName) throws ServiceException {
-		ServiceScriptFactory scriptFactory = findScriptFactory(NAME);
-		return (Script) scriptFactory.getScript();
-	}
+    @Inject
+    private BindingArgs bindingArgs;
 
-	/**
-	 * Because we load the script from a script service the dependencies are
-	 * already injected.
-	 */
-	@Override
-	protected void injectScript(Script script) {
-	}
+    HttpdServiceImpl() {
+        this.domains = new ArrayList<Domain>();
+        this.virtualDomains = new HashSet<Domain>();
+    }
 
-	/**
-	 * Returns the httpd service name.
-	 */
-	@Override
-	public String getName() {
-		return NAME;
-	}
+    @Override
+    protected Script getScript(String profileName) throws ServiceException {
+        ServiceScriptFactory scriptFactory = findScriptFactory(NAME);
+        return (Script) scriptFactory.getScript();
+    }
 
-	/**
-	 * Entry point for the httpd service script.
-	 * 
-	 * @param statements
-	 *            the httpd statements.
-	 * 
-	 * @return this {@link Service}.
-	 */
-	public Service httpd(Object statements) {
-		return this;
-	}
+    /**
+     * Because we load the script from a script service the dependencies are
+     * already injected.
+     */
+    @Override
+    protected void injectScript(Script script) {
+    }
 
-	/**
-	 * @see DomainFactory#create(Map, String)
-	 */
-	public void domain(Map<String, Object> args, String name) {
-		domain(args, name, null);
-	}
+    /**
+     * Returns the httpd service name.
+     */
+    @Override
+    public String getName() {
+        return NAME;
+    }
 
-	/**
-	 * @see DomainFactory#create(Map, String)
-	 */
-	public Domain domain(Map<String, Object> args, String name, Object s) {
-		Domain domain = domainFactory.create(args, name);
-		domains.add(domain);
-		virtualDomains.add(domain);
-		log.domainAdded(this, domain);
-		return domain;
-	}
+    /**
+     * Entry point for the httpd service script.
+     * 
+     * @param statements
+     *            the httpd statements.
+     * 
+     * @return this {@link Service}.
+     */
+    public Service httpd(Object statements) {
+        return this;
+    }
 
-	/**
-	 * @see DomainFactory#createSsl(Map, String)
-	 */
-	public void ssl_domain(Map<String, Object> args, String name) {
-		ssl_domain(args, name, null);
-	}
+    /**
+     * Sets the IP addresses or host names to where to bind the DNS service.
+     * 
+     * @see BindingFactory#create(Map, String...)
+     */
+    public void bind(Map<String, Object> args) throws ServiceException {
+        List<Address> addresses = bindingArgs.createAddress(this, args);
+        binding.addAddress(addresses);
+        log.bindingSet(this, binding);
+    }
 
-	/**
-	 * @see DomainFactory#createSsl(Map, String)
-	 */
-	public Domain ssl_domain(Map<String, Object> args, String name, Object s) {
-		Domain domain = domainFactory.createSsl(args, name);
-		domains.add(domain);
-		virtualDomains.add(domain);
-		log.sslDomainAdded(this, domain);
-		return domain;
-	}
+    /**
+     * Sets the IP addresses or host names to where to bind the DNS service.
+     * 
+     * @see BindingFactory#create(BindingAddress)
+     */
+    public void bind(BindingAddress address) throws ServiceException {
+        binding.addAddress(address);
+        log.bindingSet(this, binding);
+    }
 
-	/**
-	 * Returns all domains of the service.
-	 * 
-	 * @return the {@link List} of the {@link Domain} domains.
-	 */
-	public List<Domain> getDomains() {
-		return domains;
-	}
+    /**
+     * Returns a list of the IP addresses where to bind the DNS service.
+     * 
+     * @return the {@link Binding}.
+     */
+    public Binding getBinding() {
+        return binding;
+    }
 
-	/**
-	 * Returns a set of the virtual domains of the service.
-	 * 
-	 * @return the {@link Set} of the virtual {@link Domain} domains.
-	 */
-	public Set<Domain> getVirtualDomains() {
-		return virtualDomains;
-	}
+    /**
+     * @see DomainFactory#create(Map, String)
+     */
+    public void domain(Map<String, Object> args, String name) {
+        domain(args, name, null);
+    }
 
-	public YesNoFlag getYes() {
-		return YesNoFlag.yes;
-	}
+    /**
+     * @see DomainFactory#create(Map, String)
+     */
+    public Domain domain(Map<String, Object> args, String name, Object s) {
+        Domain domain = domainFactory.create(args, name);
+        domains.add(domain);
+        virtualDomains.add(domain);
+        log.domainAdded(this, domain);
+        return domain;
+    }
 
-	public YesNoFlag getNo() {
-		return YesNoFlag.no;
-	}
+    /**
+     * @see DomainFactory#createSsl(Map, String)
+     */
+    public void ssl_domain(Map<String, Object> args, String name) {
+        ssl_domain(args, name, null);
+    }
 
-	public AuthProvider getFile() {
-		return AuthProvider.file;
-	}
+    /**
+     * @see DomainFactory#createSsl(Map, String)
+     */
+    public Domain ssl_domain(Map<String, Object> args, String name, Object s) {
+        Domain domain = domainFactory.createSsl(args, name);
+        domains.add(domain);
+        virtualDomains.add(domain);
+        log.sslDomainAdded(this, domain);
+        return domain;
+    }
 
-	public AuthProvider getLdap() {
-		return AuthProvider.ldap;
-	}
+    /**
+     * Returns all domains of the service.
+     * 
+     * @return the {@link List} of the {@link Domain} domains.
+     */
+    public List<Domain> getDomains() {
+        return domains;
+    }
 
-	public AuthType getDigest() {
-		return AuthType.digest;
-	}
+    /**
+     * Returns a set of the virtual domains of the service.
+     * 
+     * @return the {@link Set} of the virtual {@link Domain} domains.
+     */
+    public Set<Domain> getVirtualDomains() {
+        return virtualDomains;
+    }
 
-	public AuthType getBasic() {
-		return AuthType.basic;
-	}
+    public YesNoFlag getYes() {
+        return YesNoFlag.yes;
+    }
 
-	public SatisfyType getAll() {
-		return SatisfyType.all;
-	}
+    public YesNoFlag getNo() {
+        return YesNoFlag.no;
+    }
 
-	public SatisfyType getAny() {
-		return SatisfyType.any;
-	}
+    public AuthProvider getFile() {
+        return AuthProvider.file;
+    }
 
-	@Override
-	public String toString() {
-		return new ToStringBuilder(this).appendSuper(super.toString())
-				.toString();
-	}
+    public AuthProvider getLdap() {
+        return AuthProvider.ldap;
+    }
+
+    public AuthType getDigest() {
+        return AuthType.digest;
+    }
+
+    public AuthType getBasic() {
+        return AuthType.basic;
+    }
+
+    public SatisfyType getAll() {
+        return SatisfyType.all;
+    }
+
+    public SatisfyType getAny() {
+        return SatisfyType.any;
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this).appendSuper(super.toString())
+                .toString();
+    }
 
 }

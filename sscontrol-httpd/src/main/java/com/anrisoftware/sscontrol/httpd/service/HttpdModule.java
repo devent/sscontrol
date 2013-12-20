@@ -18,6 +18,7 @@
  */
 package com.anrisoftware.sscontrol.httpd.service;
 
+import com.anrisoftware.sscontrol.core.bindings.BindingsModule;
 import com.anrisoftware.sscontrol.core.database.DatabaseModule;
 import com.anrisoftware.sscontrol.core.debuglogging.DebugLoggingModule;
 import com.anrisoftware.sscontrol.core.list.ListModule;
@@ -54,5 +55,6 @@ class HttpdModule extends AbstractModule {
         install(new DebugLoggingModule());
         install(new ListModule());
         install(new DatabaseModule());
+        install(new BindingsModule());
 	}
 }

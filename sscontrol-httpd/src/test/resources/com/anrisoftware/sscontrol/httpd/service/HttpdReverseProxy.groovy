@@ -22,11 +22,17 @@ def certFile = ServicesResources.class.getResource "cert_crt.txt"
 def certKeyFile = ServicesResources.class.getResource "cert_key.txt"
 
 httpd {
+    // http
+    bind address: "127.0.0.1", port: 8080
+    // https
+    bind address: "127.0.0.1", port: 8082
+    // domain test1.com
 	domain "test1.com", address: "192.168.0.50", {
 		redirect to_www
 		redirect http_to_https
         proxy reverse_cache
 	}
+    // SSL/domain test1.com
 	ssl_domain "test1.com", address: "192.168.0.50", {
 		certification_file certFile
 		certification_key_file certKeyFile

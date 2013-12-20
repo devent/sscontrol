@@ -38,6 +38,7 @@ import com.anrisoftware.sscontrol.core.bindings.Address;
 import com.anrisoftware.sscontrol.core.bindings.Binding;
 import com.anrisoftware.sscontrol.core.bindings.BindingAddress;
 import com.anrisoftware.sscontrol.core.bindings.BindingArgs;
+import com.anrisoftware.sscontrol.core.bindings.BindingFactory;
 import com.anrisoftware.sscontrol.core.service.AbstractService;
 import com.anrisoftware.sscontrol.core.yesno.YesNoFlag;
 import com.anrisoftware.sscontrol.httpd.statements.auth.AuthProvider;
@@ -47,13 +48,13 @@ import com.anrisoftware.sscontrol.httpd.statements.domain.Domain;
 import com.anrisoftware.sscontrol.httpd.statements.domain.DomainFactory;
 
 /**
- * Firewall service.
+ * Httpd service.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
 @SuppressWarnings("serial")
-public class HttpdServiceImpl extends AbstractService {
+class HttpdServiceImpl extends AbstractService implements HttpdService {
 
     private final List<Domain> domains;
 
@@ -90,9 +91,6 @@ public class HttpdServiceImpl extends AbstractService {
     protected void injectScript(Script script) {
     }
 
-    /**
-     * Returns the httpd service name.
-     */
     @Override
     public String getName() {
         return NAME;
@@ -131,11 +129,10 @@ public class HttpdServiceImpl extends AbstractService {
         log.bindingSet(this, binding);
     }
 
-    /**
-     * Returns a list of the IP addresses where to bind the DNS service.
-     * 
-     * @return the {@link Binding}.
+    /* (non-Javadoc)
+     * @see com.anrisoftware.sscontrol.httpd.service.HttpdService#getBinding()
      */
+    @Override
     public Binding getBinding() {
         return binding;
     }
@@ -176,20 +173,18 @@ public class HttpdServiceImpl extends AbstractService {
         return domain;
     }
 
-    /**
-     * Returns all domains of the service.
-     * 
-     * @return the {@link List} of the {@link Domain} domains.
+    /* (non-Javadoc)
+     * @see com.anrisoftware.sscontrol.httpd.service.HttpdService#getDomains()
      */
+    @Override
     public List<Domain> getDomains() {
         return domains;
     }
 
-    /**
-     * Returns a set of the virtual domains of the service.
-     * 
-     * @return the {@link Set} of the virtual {@link Domain} domains.
+    /* (non-Javadoc)
+     * @see com.anrisoftware.sscontrol.httpd.service.HttpdService#getVirtualDomains()
      */
+    @Override
     public Set<Domain> getVirtualDomains() {
         return virtualDomains;
     }

@@ -102,7 +102,7 @@ class HttpdServiceImplLogger extends AbstractLogger {
 		}
 	}
 
-    void bindingSet(HttpdServiceImpl service, Binding binding) {
+    void bindingSet(HttpdService service, Binding binding) {
         if (isDebugEnabled()) {
             debug(binding_set_debug, binding, service);
         } else {

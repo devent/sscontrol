@@ -24,14 +24,7 @@ import static com.google.inject.multibindings.MapBinder.newMapBinder;
 import static java.lang.String.format;
 import groovy.lang.Script;
 
-import com.anrisoftware.sscontrol.httpd.apache.linux.roundcube.RoundcubeModule;
-import com.anrisoftware.sscontrol.httpd.apache.ubuntu_10_04.phpldapadmin.PhpldapadminConfig;
-import com.anrisoftware.sscontrol.httpd.apache.ubuntu_10_04.phpmyadmin.PhpmyadminConfig;
-import com.anrisoftware.sscontrol.httpd.apache.ubuntu_10_04.roundcube.RoundcubeConfig;
-import com.anrisoftware.sscontrol.httpd.apache.ubuntu_10_04.wordpress.WordpressConfig;
-import com.anrisoftware.sscontrol.httpd.nginx.linux.nginx.ApacheScriptModule;
-import com.anrisoftware.sscontrol.httpd.nginx.linux.nginx.AuthConfig;
-import com.anrisoftware.sscontrol.httpd.nginx.linux.nginx.ServiceConfig;
+import com.anrisoftware.sscontrol.httpd.nginx.linux.nginx.NginxScriptModule;
 import com.google.inject.AbstractModule;
 import com.google.inject.multibindings.MapBinder;
 
@@ -45,11 +38,8 @@ class Ubuntu10_04Module extends AbstractModule {
 
 	@Override
 	protected void configure() {
-		install(new ApacheScriptModule());
-        install(new RoundcubeModule());
+		install(new NginxScriptModule());
 		bindScripts();
-		bindAuthConfig();
-		bindServiceConfig();
 	}
 
 	private void bindScripts() {
@@ -59,25 +49,4 @@ class Ubuntu10_04Module extends AbstractModule {
 				Ubuntu_10_04Script.class);
 	}
 
-	private void bindAuthConfig() {
-		MapBinder<String, AuthConfig> map = newMapBinder(binder(),
-				String.class, AuthConfig.class);
-		map.addBinding(format("%s.%s", PROFILE, AuthFileConfig.NAME)).to(
-				AuthFileConfig.class);
-		map.addBinding(format("%s.%s", PROFILE, AuthLdapConfig.NAME)).to(
-				AuthLdapConfig.class);
-	}
-
-	private void bindServiceConfig() {
-		MapBinder<String, ServiceConfig> map = newMapBinder(binder(),
-				String.class, ServiceConfig.class);
-		map.addBinding(format("%s.%s", PROFILE, PhpmyadminConfig.NAME)).to(
-				PhpmyadminConfig.class);
-		map.addBinding(format("%s.%s", PROFILE, PhpldapadminConfig.NAME)).to(
-				PhpldapadminConfig.class);
-        map.addBinding(format("%s.%s", PROFILE, RoundcubeConfig.NAME)).to(
-                RoundcubeConfig.class);
-        map.addBinding(format("%s.%s", PROFILE, WordpressConfig.NAME)).to(
-                WordpressConfig.class);
-	}
 }

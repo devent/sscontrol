@@ -16,28 +16,19 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd-apache. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.nginx.linux.nginx
+package com.anrisoftware.sscontrol.httpd.nginx.linux.nginx;
 
+import com.google.inject.AbstractModule;
 
 /**
- * Sets the parent script http/auth.
- *
+ * Nginx service module.
+ * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class BasicAuth {
+public class NginxScriptModule extends AbstractModule {
 
-	ApacheScript script
-
-	void setScript(ApacheScript script) {
-		this.script = script
-	}
-
-	def propertyMissing(String name) {
-		script.getProperty name
-	}
-
-	def methodMissing(String name, def args) {
-		script.invokeMethod name, args
+	@Override
+	protected void configure() {
 	}
 }

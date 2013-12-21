@@ -28,7 +28,7 @@ import com.google.inject.Injector;
 import com.google.inject.Module;
 
 /**
- * Provides the Apache script for Ubuntu 10.04 server.
+ * Provides the Nginx script for Ubuntu 10.04 server.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
@@ -39,7 +39,7 @@ public class Ubuntu10_04ScriptFactory implements ServiceScriptFactory {
 	/**
 	 * Name of the service.
 	 */
-	public static final String NAME = "apache";
+    public static final String NAME = "nginx";
 
 	/**
 	 * Name of the profile.

@@ -35,7 +35,7 @@ class SslDomainConfig {
 	@Inject
 	SslDomainConfigLogger log
 
-	ApacheScript script
+	NginxScript script
 
 	/**
 	 * Copies the certificates to the server.

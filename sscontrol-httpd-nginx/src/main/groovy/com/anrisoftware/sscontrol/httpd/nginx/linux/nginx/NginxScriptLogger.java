@@ -18,12 +18,12 @@
  */
 package com.anrisoftware.sscontrol.httpd.nginx.linux.nginx;
 
-import static com.anrisoftware.sscontrol.httpd.nginx.linux.nginx.ApacheScriptLogger._.enabled_mods_debug;
-import static com.anrisoftware.sscontrol.httpd.nginx.linux.nginx.ApacheScriptLogger._.enabled_mods_info;
-import static com.anrisoftware.sscontrol.httpd.nginx.linux.nginx.ApacheScriptLogger._.enabled_mods_trace;
-import static com.anrisoftware.sscontrol.httpd.nginx.linux.nginx.ApacheScriptLogger._.enabled_sites_debug;
-import static com.anrisoftware.sscontrol.httpd.nginx.linux.nginx.ApacheScriptLogger._.enabled_sites_info;
-import static com.anrisoftware.sscontrol.httpd.nginx.linux.nginx.ApacheScriptLogger._.enabled_sites_trace;
+import static com.anrisoftware.sscontrol.httpd.nginx.linux.nginx.NginxScriptLogger._.enabled_mods_debug;
+import static com.anrisoftware.sscontrol.httpd.nginx.linux.nginx.NginxScriptLogger._.enabled_mods_info;
+import static com.anrisoftware.sscontrol.httpd.nginx.linux.nginx.NginxScriptLogger._.enabled_mods_trace;
+import static com.anrisoftware.sscontrol.httpd.nginx.linux.nginx.NginxScriptLogger._.enabled_sites_debug;
+import static com.anrisoftware.sscontrol.httpd.nginx.linux.nginx.NginxScriptLogger._.enabled_sites_info;
+import static com.anrisoftware.sscontrol.httpd.nginx.linux.nginx.NginxScriptLogger._.enabled_sites_trace;
 
 import javax.inject.Singleton;
 
@@ -37,7 +37,7 @@ import com.anrisoftware.sscontrol.core.service.LinuxScript;
  * @since 1.0
  */
 @Singleton
-class ApacheScriptLogger extends AbstractLogger {
+class NginxScriptLogger extends AbstractLogger {
 
 	enum _ {
 
@@ -68,11 +68,11 @@ class ApacheScriptLogger extends AbstractLogger {
 	/**
 	 * Create logger for {@link LinuxScript}.
 	 */
-	ApacheScriptLogger() {
-		super(ApacheScript.class);
+	NginxScriptLogger() {
+		super(NginxScript.class);
 	}
 
-	void enabledMods(ApacheScript script, Object worker, Object mods) {
+	void enabledMods(NginxScript script, Object worker, Object mods) {
 		if (isTraceEnabled()) {
 			trace(enabled_mods_trace, mods, script, worker);
 		} else if (isDebugEnabled()) {
@@ -82,7 +82,7 @@ class ApacheScriptLogger extends AbstractLogger {
 		}
 	}
 
-	void enabledSites(ApacheScript script, Object worker, Object sites) {
+	void enabledSites(NginxScript script, Object worker, Object sites) {
 		if (isTraceEnabled()) {
 			trace(enabled_sites_trace, sites, script, worker);
 		} else if (isDebugEnabled()) {

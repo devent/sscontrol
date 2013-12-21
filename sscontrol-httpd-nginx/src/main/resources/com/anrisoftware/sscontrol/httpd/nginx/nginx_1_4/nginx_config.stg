@@ -1,0 +1,121 @@
+errorLog_search() ::= <%
+error_log\s+/var/log/nginx/error.log\s+.*?;
+%>
+
+errorLog_search(debug) ::= <%
+error_log /var/log/nginx/error.log <debug>;
+%>
+
+errorLog_search() ::= <%
+error_log\s+/var/log/nginx/error.log\s+.*?;
+%>
+
+errorLog_search(debug) ::= <%
+error_log /var/log/nginx/error.log <debug>;
+%>
+
+Domain(properties, domain, servicesConfig) ::= <<
+server {
+
+    <domainBody(properties, domain)>
+
+    <domain.redirects:domainRedirects(domain);separator="\n">
+    <servicesConfig;separator="\n">
+\</VirtualHost>
+
+
+server {
+
+    location / {
+        try_files $uri $uri/ /index.php;
+    }
+
+    location ~ \.php$ {
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $remote_addr;
+        proxy_set_header Host $host;
+        proxy_pass http://127.0.0.1:8080;
+    }
+
+    location ~ /\.ht {
+        deny all;
+    }
+}
+
+>>
+
+SslDomain(properties, domain, servicesConfig) ::= <<
+\<VirtualHost <domain.address>:<domain.port>\>
+
+    <domainBody(properties, domain)>
+
+    <domainCerts(properties, domain)>
+
+    <domain.redirects:domainRedirects(domain);separator="\n">
+    <servicesConfig;separator="\n">
+\</VirtualHost>
+
+>>
+
+domainBody(properties, domain) ::= <<
+# domain <domain.name>
+listen <if(<domain.address>)>:<domain.port>;
+root <properties.sitesDirectory>/<domain.siteDirectory>;
+index index.php index.html index.htm;
+server_name <domain.name>;
+
+location / {
+    try_files $uri $uri/ /index.php;
+}
+    
+\<Directory <properties.sitesDirectory>/<domain.siteDirectory>\>
+    AllowOverride None
+    Order allow,deny
+    Allow from all
+\</Directory>
+>>
+
+domainCerts(properties, domain) ::= <<
+SSLEngine on
+SSLCertificateFile <properties.sitesDirectory>/<domain.name>/<properties.sslSubdirectory>/<domain.certificationFile>
+SSLCertificateKeyFile <properties.sitesDirectory>/<domain.name>/<properties.sslSubdirectory>/<domain.certificationKeyFile>
+>>
+
+domainRedirects(redirect, domain) ::= <<
+<(redirect.class.simpleName)(redirect, domain)>
+>>
+
+RedirectHttpToHttps(redirect, domain) ::= <<
+# redirect http to https
+RewriteEngine On
+RewriteCond %{HTTP_HOST} ^<domain.name>
+RewriteRule (.*) https://<domain.name>$1 [R=301,L]
+
+>>
+
+RedirectToWwwHttp(redirect, domain) ::= <<
+# redirect to www http
+ServerAlias www.<domain.name>
+RewriteEngine On
+RewriteCond %{HTTP_HOST} ^<domain.namePattern>$ [NC]
+RewriteRule ^(.*)$ http://www.<domain.name>$1 [L,R=301]
+
+>>
+
+RedirectToWwwHttps(redirect, domain) ::= <<
+# redirect to www https
+ServerAlias www.<domain.name>
+RewriteEngine On
+RewriteCond %{HTTP_HOST} ^<domain.namePattern>$ [NC]
+RewriteRule ^(.*)$ https://www.<domain.name>$1 [L,R=301]
+
+>>
+
+domainAlias(properties, domain) ::= <<
+Alias / <documentRoot(properties, domain)><domain.documentRoot>/
+>>
+
+documentRoot(properties, domain) ::= <<
+<if(domain.useDomain)><properties.sitesDirectory>/<domain.useDomain>/web
+<else><properties.sitesDirectory>/<domain.name>/web<endif>
+>>

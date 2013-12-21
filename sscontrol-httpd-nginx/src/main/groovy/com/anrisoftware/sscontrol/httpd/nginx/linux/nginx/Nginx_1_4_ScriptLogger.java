@@ -18,32 +18,22 @@
  */
 package com.anrisoftware.sscontrol.httpd.nginx.linux.nginx;
 
-import static com.anrisoftware.sscontrol.httpd.nginx.linux.nginx.Apache_2_2ScriptLogger._.auth_config_null;
-import static com.anrisoftware.sscontrol.httpd.nginx.linux.nginx.Apache_2_2ScriptLogger._.service_config_null;
-import static org.apache.commons.lang3.Validate.notNull;
-
 import javax.inject.Singleton;
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
-import com.anrisoftware.sscontrol.httpd.nginx.linux.nginx.AuthConfig;
-import com.anrisoftware.sscontrol.httpd.nginx.linux.nginx.ServiceConfig;
-import com.anrisoftware.sscontrol.httpd.statements.auth.AbstractAuth;
-import com.anrisoftware.sscontrol.httpd.statements.webservice.WebService;
 
 /**
- * Logging messages for {@link Apache_2_2Script}.
+ * Logging messages for {@link Nginx_1_4_Script}.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
 @Singleton
-class Apache_2_2ScriptLogger extends AbstractLogger {
+class Nginx_1_4_ScriptLogger extends AbstractLogger {
 
 	enum _ {
 
-		service_config_null("Service configuration not found for '%s'."),
-
-		auth_config_null("Authentication configuration not found for '%s'.");
+        message("message");
 
 		private String name;
 
@@ -58,18 +48,10 @@ class Apache_2_2ScriptLogger extends AbstractLogger {
 	}
 
 	/**
-	 * Creates a logger for {@link Apache_2_2Script}.
+	 * Creates a logger for {@link Nginx_1_4_Script}.
 	 */
-	public Apache_2_2ScriptLogger() {
-		super(Apache_2_2Script.class);
+	public Nginx_1_4_ScriptLogger() {
+		super(Nginx_1_4_Script.class);
 	}
 
-	void checkServiceConfig(ServiceConfig config, WebService service) {
-		notNull(config, service_config_null.toString(), service.getName());
-	}
-
-	void checkAuthConfig(AuthConfig config, AbstractAuth auth) {
-		notNull(config, auth_config_null.toString(), auth.getClass()
-				.getSimpleName());
-	}
 }

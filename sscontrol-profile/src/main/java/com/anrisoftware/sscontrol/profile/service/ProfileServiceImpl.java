@@ -1,18 +1,18 @@
 /*
  * Copyright 2012-2013 Erwin Müller <erwin.mueller@deventm.org>
- * 
+ *
  * This file is part of sscontrol-profile.
- * 
+ *
  * sscontrol-profile is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published by the
  * Free Software Foundation, either version 3 of the License, or (at your
  * option) any later version.
- * 
+ *
  * sscontrol-profile is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
  * for more details.
- * 
+ *
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-profile. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -78,14 +78,14 @@ class ProfileServiceImpl implements ProfileService {
 		return profileName;
 	}
 
-	/**
-	 * Adds a new profile with the specified name.
-	 * 
-	 * @param name
-	 *            the profile.
-	 * 
-	 * @return this {@link ProfileService}.
-	 */
+	    /**
+     * Adds a new profile with the specified name.
+     * 
+     * @param name
+     *            the profile.
+     * 
+     * @return this {@link ProfileService}.
+     */
 	public Service profile(String name, Object closure) {
 		profileName = name;
 		return this;
@@ -116,6 +116,11 @@ class ProfileServiceImpl implements ProfileService {
 	}
 
 	@Override
+    public String getRefservice() {
+        return null;
+    }
+
+    @Override
 	public Service call() throws ServiceException {
 		return this;
 	}

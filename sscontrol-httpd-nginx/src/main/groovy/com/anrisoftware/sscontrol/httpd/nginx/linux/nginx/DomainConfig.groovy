@@ -34,7 +34,7 @@ class DomainConfig {
 
     int domainNumber
 
-    ApacheScript script
+    NginxScript script
 
     DomainConfig() {
         this.domainNumber = 0

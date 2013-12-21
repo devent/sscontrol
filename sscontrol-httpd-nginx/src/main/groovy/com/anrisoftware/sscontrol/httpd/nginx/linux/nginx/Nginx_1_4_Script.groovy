@@ -18,7 +18,7 @@
  */
 package com.anrisoftware.sscontrol.httpd.nginx.linux.nginx
 
-import static com.anrisoftware.sscontrol.httpd.nginx.ubuntu_10_04.nginx.Ubuntu10_04ScriptFactory.PROFILE;
+import static com.anrisoftware.sscontrol.httpd.nginx.ubuntu_10_04.nginx.Ubuntu10_04ScriptFactory.PROFILE
 import static org.apache.commons.io.FileUtils.*
 
 import javax.inject.Inject
@@ -33,15 +33,15 @@ import com.anrisoftware.sscontrol.httpd.statements.domain.SslDomain
 import com.anrisoftware.sscontrol.httpd.statements.webservice.WebService
 
 /**
- * Configures Apache 2.2 service.
+ * Configures Nginx 1.4 service.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-abstract class Apache_2_2Script extends ApacheScript {
+abstract class Nginx_1_4_Script extends NginxScript {
 
     @Inject
-    Apache_2_2ScriptLogger log
+    Nginx_1_4_ScriptLogger log
 
     @Inject
     DomainConfig domainConfig
@@ -49,43 +49,30 @@ abstract class Apache_2_2Script extends ApacheScript {
     @Inject
     SslDomainConfig sslDomainConfig
 
-    @Inject
-    RedirectConfig deployRedirectHttpToHttps
-
-    @Inject
-    RedirectConfig deployRedirectToWwwHttp
-
-    @Inject
-    RedirectConfig deployRedirectToWwwHttps
-
     /**
      * The {@link Templates} for the script.
      */
     Templates apacheTemplates
 
     /**
-     * Resource containing the Apache configuration templates.
+     * Resource containing the configuration templates.
      */
     TemplateResource configTemplate
 
     /**
-     * Resource containing the Apache commands templates.
+     * Resource containing the commands templates.
      */
-    TemplateResource apacheCommandsTemplate
+    TemplateResource nginxCommandsTemplate
 
     @Override
     def run() {
-        apacheTemplates = templatesFactory.create "Apache_2_2"
+        apacheTemplates = templatesFactory.create "Nginx_1_4"
         configTemplate = apacheTemplates.getResource "config"
-        apacheCommandsTemplate = apacheTemplates.getResource "commands"
+        nginxCommandsTemplate = apacheTemplates.getResource "commands"
         domainConfig.script = this
         sslDomainConfig.script = this
-        deployRedirectHttpToHttps.script = this
-        deployRedirectToWwwHttp.script = this
-        deployRedirectToWwwHttps.script = this
         super.run()
         setupDefaultBinding()
-        deployPortsConfig()
         deployDefaultConfig()
         deployDomainsConfig()
         enableDefaultMods()
@@ -97,11 +84,6 @@ abstract class Apache_2_2Script extends ApacheScript {
         if (service.binding.size() == 0) {
             defaultBinding.each { service.binding.addAddress(it) }
         }
-    }
-
-    def deployPortsConfig() {
-        def string = configTemplate.getText true, "portsConfiguration", "service", service
-        FileUtils.write portsConfigFile, string
     }
 
     def deployDefaultConfig() {

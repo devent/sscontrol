@@ -20,9 +20,9 @@ package com.anrisoftware.sscontrol.core.groovy;
 
 import static com.anrisoftware.sscontrol.core.groovy.ScriptBuilderLogger._.creating_service;
 import static com.anrisoftware.sscontrol.core.groovy.ScriptBuilderLogger._.invoke_method;
+import static com.anrisoftware.sscontrol.core.groovy.ScriptBuilderLogger._.loadTexts;
 import static com.anrisoftware.sscontrol.core.groovy.ScriptBuilderLogger._.no_service;
 import static com.anrisoftware.sscontrol.core.groovy.ScriptBuilderLogger._.no_service_message;
-import static com.anrisoftware.sscontrol.core.groovy.ScriptBuilderLogger._.retrieveResources;
 import static com.anrisoftware.sscontrol.core.groovy.ScriptBuilderLogger._.returning_service_property;
 import static com.anrisoftware.sscontrol.core.groovy.ScriptBuilderLogger._.service_name;
 import groovy.util.Proxy;
@@ -44,64 +44,46 @@ import com.anrisoftware.sscontrol.core.api.ServiceException;
  */
 class ScriptBuilderLogger extends AbstractLogger {
 
-	enum _ {
+    enum _ {
 
-		invoke_method("invoke_method"),
+        invoke_method,
 
-		creating_service("creating_service"),
+        creating_service,
 
-		returning_service_property("returning_service_property"),
+        returning_service_property,
 
-		no_service_message("no_service_message"),
+        no_service_message,
 
-		service_name("service_name"),
+        service_name,
 
-		no_service("no_service");
+        no_service;
 
-		/**
-		 * Retrieves the text resources for the logging messages.
-		 * 
-		 * @param texts
-		 *            the texts {@link Texts} resources.
-		 */
-		public static void retrieveResources(Texts texts) {
-			for (_ value : values()) {
-				value.setText(texts);
-			}
-		}
+        public static void loadTexts(TextsFactory factory) {
+            String name = ScriptBuilderLogger.class.getSimpleName();
+            Texts texts = factory.create(name);
+            for (_ value : values()) {
+                value.text = texts.getResource(value.name()).getText();
+            }
+        }
 
-		private String name;
+        private String text;
 
-		private String text;
-
-		private _(String name) {
-			this.name = name;
-		}
-
-		/**
-		 * Retrieve the text resource for the logging message.
-		 * 
-		 * @param texts
-		 *            the texts {@link Texts} resources.
-		 */
-		public void setText(Texts texts) {
-			this.text = texts.getResource(name).getText();
-		}
-
-		@Override
-		public String toString() {
-			return text;
-		}
-	}
+        @Override
+        public String toString() {
+            return text;
+        }
+    }
 
 	/**
 	 * Create logger for {@link ScriptBuilder}.
 	 */
+    ScriptBuilderLogger() {
+        super(ScriptBuilder.class);
+    }
+
 	@Inject
-	ScriptBuilderLogger(TextsFactory textsFactory) {
-		super(ScriptBuilder.class);
-		retrieveResources(textsFactory.create(ScriptBuilderLogger.class
-				.getSimpleName()));
+    void setTextsFactory(TextsFactory factory) {
+        loadTexts(factory);
 	}
 
 	ServiceException errorNoServiceFound(String name) {

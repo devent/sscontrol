@@ -128,4 +128,17 @@ class HttpdTest extends HttpdTestUtil {
         assert require.attribute.name == "uniqueMember"
         assert require.attribute.dn == AttributeDn.off
     }
+
+    @Test
+    void "httpd proxy script"() {
+        loader.loadService profile.resource, null
+        def profile = registry.getService("profile")[0]
+        profile.getEntry("httpd").service(["idapache2": "apache"], ["idproxy": "nginx"])
+        loader.loadService proxyDomainsScript.resource, profile
+        loader.loadService proxyScript.resource, profile
+
+        HttpdServiceImpl service = registry.getService("httpd")[0]
+        service.domains.size() == 5
+        service.virtualDomains.size() == 4
+    }
 }

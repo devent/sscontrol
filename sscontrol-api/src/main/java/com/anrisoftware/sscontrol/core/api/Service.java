@@ -25,26 +25,33 @@ import java.util.concurrent.Callable;
  * Configure a service on the target server.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
- * @since 0.1
+ * @since 1.0
  */
 public interface Service extends Callable<Service>, Serializable {
 
-	/**
-	 * Returns the service name. Examples are: profile, http, mta, hosts,
-	 * hostname, dns, etc.
-	 * 
-	 * @return the name of the service.
-	 */
-	String getName();
+    /**
+     * Returns the service name. Examples are: profile, http, mta, hosts,
+     * hostname, dns, etc.
+     * 
+     * @return the name of the service.
+     */
+    String getName();
 
-	/**
-	 * Configure the service on the target server.
-	 * 
-	 * @throws ServiceException
-	 *             if there was an error with the configuration.
-	 * 
-	 * @return this {@link Service}.
-	 */
-	@Override
-	Service call() throws ServiceException;
+    /**
+     * Returns the service reference.
+     * 
+     * @return the service reference or {@code null}.
+     */
+    String getRefservice();
+
+    /**
+     * Configure the service on the target server.
+     * 
+     * @throws ServiceException
+     *             if there was an error with the configuration.
+     * 
+     * @return this {@link Service}.
+     */
+    @Override
+    Service call() throws ServiceException;
 }

@@ -220,6 +220,8 @@ class WordpressTest extends UbuntuTestUtil {
 
         loader.loadService profile.resource, null
         def profile = registry.getService("profile")[0]
+        profile.getEntry("httpd").service(["idapache2": "apache", "idproxy": "nginx"])
+        loader.loadService httpdProxyDomainsScript.resource, profile
         loader.loadService httpdProxyScript.resource, profile
 
         registry.allServices.each { it.call() }

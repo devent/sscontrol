@@ -21,12 +21,15 @@ package com.anrisoftware.sscontrol.core.service;
 import static java.util.ServiceLoader.load;
 import groovy.lang.Script;
 
+import java.util.List;
+import java.util.Map;
 import java.util.ServiceLoader;
 
 import javax.inject.Inject;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import com.anrisoftware.sscontrol.core.api.ProfileProperties;
 import com.anrisoftware.sscontrol.core.api.ProfileService;
 import com.anrisoftware.sscontrol.core.api.Service;
 import com.anrisoftware.sscontrol.core.api.ServiceException;
@@ -50,132 +53,160 @@ import com.google.inject.Injector;
 @SuppressWarnings("serial")
 public abstract class AbstractService implements Service {
 
-	private Injector injector;
+    private Injector injector;
 
-	private ProfileService profile;
+    private ProfileService profile;
 
-	private AbstractServiceLogger log;
+    private AbstractServiceLogger log;
 
-	@Inject
-	void setAbstractServiceLogger(AbstractServiceLogger logger) {
-		this.log = logger;
-	}
+    private String refservice;
 
-	@Inject
-	void setInjector(Injector injector) {
-		this.injector = injector;
-	}
+    @Inject
+    void setAbstractServiceLogger(AbstractServiceLogger logger) {
+        this.log = logger;
+    }
 
-	/**
-	 * Sets the profile for the service.
-	 * 
-	 * @param profile
-	 *            the {@link ProfileService}.
-	 */
-	public void setProfile(ProfileService profile) {
-		this.profile = profile;
-		log.profileSet(this, profile);
-	}
+    @Inject
+    void setInjector(Injector injector) {
+        this.injector = injector;
+    }
 
-	/**
-	 * Returns the profile of the service.
-	 * 
-	 * @return the {@link ProfileService}.
-	 */
-	public ProfileService getProfile() {
-		return profile;
-	}
+    /**
+     * Sets the profile for the service.
+     * 
+     * @param profile
+     *            the {@link ProfileService}.
+     */
+    public void setProfile(ProfileService profile) {
+        this.profile = profile;
+        log.profileSet(this, profile);
+    }
 
-	@Override
-	public Service call() throws ServiceException {
-		String profileName = profile.getProfileName();
-		Script script = getScript(profileName);
-		script.setProperty("profile", profile.getEntry(getName()));
-		script.setProperty("service", this);
-		script.setProperty("name", getName());
-		injectScript(script);
-		script.run();
-		return this;
-	}
+    /**
+     * Returns the profile of the service.
+     * 
+     * @return the {@link ProfileService}.
+     */
+    public ProfileService getProfile() {
+        return profile;
+    }
 
-	/**
-	 * Injects the dependencies of the script.
-	 * 
-	 * @param script
-	 *            the {@link Script}.
-	 */
-	protected void injectScript(Script script) {
-		injector.injectMembers(script);
-	}
+    @Override
+    public Service call() throws ServiceException {
+        String profileName = profile.getProfileName();
+        Script script = getScript(profileName);
+        script.setProperty("profile", profile.getEntry(getName()));
+        script.setProperty("service", this);
+        script.setProperty("name", getName());
+        injectScript(script);
+        script.run();
+        return this;
+    }
 
-	/**
-	 * Returns the script to the specified profile.
-	 * 
-	 * @param profileName
-	 *            the name of the profile.
-	 * 
-	 * @return the {@link Script}.
-	 * 
-	 * @throws ServiceException
-	 *             if there were some error returning the script.
-	 */
-	protected abstract Script getScript(String profileName)
-			throws ServiceException;
+    /**
+     * Injects the dependencies of the script.
+     * 
+     * @param script
+     *            the {@link Script}.
+     */
+    protected void injectScript(Script script) {
+        injector.injectMembers(script);
+    }
 
-	/**
-	 * Finds the script factory with the specified service name.
-	 * 
-	 * @param serviceName
-	 *            the service name {@link String}.
-	 * 
-	 * @return the {@link ServiceScriptFactory}.
-	 * 
-	 * @throws ServiceException
-	 *             if no script factory with the specified name was found.
-	 */
-	protected final ServiceScriptFactory findScriptFactory(String serviceName)
-			throws ServiceException {
-		ProfileService profile = getProfile();
-		ServiceLoader<ServiceScriptFactory> loader = load(ServiceScriptFactory.class);
-		for (ServiceScriptFactory scriptFactory : loader) {
-			ServiceScriptInfo info = scriptFactory.getInfo();
-			if (serviceScriptCompare(info, serviceName, profile)) {
-				scriptFactory.setParent(injector);
-				return scriptFactory;
-			}
-		}
-		throw log.errorFindServiceScript(this, profile, serviceName);
-	}
+    /**
+     * Returns the script to the specified profile.
+     * 
+     * @param profileName
+     *            the name of the profile.
+     * 
+     * @return the {@link Script}.
+     * 
+     * @throws ServiceException
+     *             if there were some error returning the script.
+     */
+    protected abstract Script getScript(String profileName)
+            throws ServiceException;
 
-	/**
-	 * Compares the service script name to the specified service information.
-	 * 
-	 * @param info
-	 *            the {@link ServiceScriptInfo}.
-	 * 
-	 * @param serviceName
-	 *            the name of the service.
-	 * 
-	 * @param profile
-	 *            the service {@link ProfileService}.
-	 * 
-	 * @return {@code true} if the service script that is specified by the
-	 *         service script information is the correct one for the service.
-	 */
-	protected boolean serviceScriptCompare(ServiceScriptInfo info,
-			String serviceName, ProfileService profile) {
-		Object service = getProfile().getEntry(serviceName).get("service");
-		return info.getProfileName().equals(profile.getProfileName())
-				&& info.getServiceName().equals(service);
-	}
+    /**
+     * Finds the script factory with the specified service name.
+     * 
+     * @param name
+     *            the service name {@link String}.
+     * 
+     * @return the {@link List} of {@link ServiceScriptFactory}.
+     * 
+     * @throws ServiceException
+     *             if no script factory with the specified name was found.
+     */
+    protected final ServiceScriptFactory findScriptFactory(String name)
+            throws ServiceException {
+        return findScriptFactory0(name);
+    }
 
-	@Override
-	public String toString() {
-		ToStringBuilder builder = new ToStringBuilder(this).append("name",
-				getName());
-		if (profile != null) {
-			builder.append("profile", profile.getProfileName());
-		}
-		return builder.toString();
-	}
+    private ServiceScriptFactory findScriptFactory0(String name)
+            throws ServiceException {
+        ProfileService profile = getProfile();
+        ServiceLoader<ServiceScriptFactory> loader = load(ServiceScriptFactory.class);
+        for (ServiceScriptFactory scriptFactory : loader) {
+            ServiceScriptInfo info = scriptFactory.getInfo();
+            if (serviceScriptCompare(info, name, profile)) {
+                scriptFactory.setParent(injector);
+                return scriptFactory;
+            }
+        }
+        throw log.errorFindServiceScript(this, profile, name);
+    }
+
+    /**
+     * Compares the service script name to the specified service information.
+     * 
+     * @param info
+     *            the {@link ServiceScriptInfo}.
+     * 
+     * @param serviceName
+     *            the name of the service.
+     * 
+     * @param profile
+     *            the service {@link ProfileService}.
+     * 
+     * @return {@code true} if the service script that is specified by the
+     *         service script information is the correct one for the service.
+     */
+    protected boolean serviceScriptCompare(ServiceScriptInfo info,
+            String serviceName, ProfileService profile) {
+        ProfileProperties entry = getProfile().getEntry(serviceName);
+        Object service = entry.get("service");
+        if (getRefservice() != null) {
+            Map<String, String> map = asServicesMap(entry);
+            service = map.get(getRefservice());
+        }
+        return info.getProfileName().equals(profile.getProfileName())
+                && info.getServiceName().equals(service);
+    }
+
+    @SuppressWarnings({ "unchecked" })
+    private Map<String, String> asServicesMap(ProfileProperties entry) {
+        Object obj = entry.get("service");
+        return (Map<String, String>) obj;
+    }
+
+    public void refservice(String refservice) {
+        this.refservice = refservice;
+        log.refserviceSet(this, refservice);
+    }
+
+    @Override
+    public String getRefservice() {
+        return refservice;
+    }
+
+    @Override
+    public String toString() {
+        ToStringBuilder builder = new ToStringBuilder(this).append("name",
+                getName());
+        if (profile != null) {
+            builder.append("profile", profile.getProfileName());
+        }
+        return builder.toString();
+    }
 }

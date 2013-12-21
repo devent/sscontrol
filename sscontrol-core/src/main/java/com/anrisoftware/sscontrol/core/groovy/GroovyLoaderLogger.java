@@ -18,6 +18,14 @@
  */
 package com.anrisoftware.sscontrol.core.groovy;
 
+import static com.anrisoftware.sscontrol.core.groovy.GroovyLoaderLogger._.error_evaluate_script;
+import static com.anrisoftware.sscontrol.core.groovy.GroovyLoaderLogger._.error_evaluate_script_message;
+import static com.anrisoftware.sscontrol.core.groovy.GroovyLoaderLogger._.error_open_script;
+import static com.anrisoftware.sscontrol.core.groovy.GroovyLoaderLogger._.error_open_script_message;
+import static com.anrisoftware.sscontrol.core.groovy.GroovyLoaderLogger._.loadTexts;
+import static com.anrisoftware.sscontrol.core.groovy.GroovyLoaderLogger._.load_script;
+import static com.anrisoftware.sscontrol.core.groovy.GroovyLoaderLogger._.script_file_null;
+import static com.anrisoftware.sscontrol.core.groovy.GroovyLoaderLogger._.services_registry_null;
 import static org.apache.commons.lang3.Validate.notNull;
 
 import java.io.IOException;
@@ -33,59 +41,80 @@ import com.anrisoftware.sscontrol.core.api.ServicesRegistry;
 
 /*
  * Logging messages for {@link GroovyLoader}.
- * 
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
- * 
+ *
  * @since 1.0
  */
 class GroovyLoaderLogger extends AbstractLogger {
 
-	private static final String LOAD_SCRIPT = "load_script";
-	private static final String ERROR_EVALUATE_SCRIPT = "error_evaluate_script";
-	private static final String ERROR_EVALUATE_SCRIPT_MESSAGE = "error_evaluate_script_message";
-	private static final String URL = "URL";
-	private static final String ERROR_OPEN_SCRIPT = "error_open_script";
-	private static final String ERROR_OPEN_SCRIPT_MESSAGE = "error_open_script_message";
-	private static final String SERVICES_REGISTRY_NULL = "services_registry_null";
-	private static final String SCRIPT_FILE_NULL = "script_file_null";
-	private static final String NAME = GroovyLoaderLogger.class.getSimpleName();
+    enum _ {
 
-	private final Texts texts;
+        load_script,
 
-	/**
-	 * Create logger for {@link GroovyLoader}.
-	 */
-	@Inject
-	GroovyLoaderLogger(TextsFactory textsFactory) {
-		super(GroovyLoader.class);
-		this.texts = textsFactory.create(NAME);
-	}
+        error_evaluate_script,
 
-	private String getText(String name) {
-		return texts.getResource(name).getText();
-	}
+        error_evaluate_script_message,
 
-	void checkUrl(URL url) {
-		notNull(url, getText(SCRIPT_FILE_NULL));
-	}
+        url,
 
-	void checkRegistry(ServicesRegistry registry) {
-		notNull(registry, getText(SERVICES_REGISTRY_NULL));
-	}
+        error_open_script,
 
-	ServiceException errorOpenScriptUrl(IOException e, URL url) {
-		return logException(
-				new ServiceException(ERROR_OPEN_SCRIPT, e).add(URL,
-						url), getText(ERROR_OPEN_SCRIPT_MESSAGE), url);
-	}
+        error_open_script_message,
 
-	ServiceException errorEvaluateScript(Throwable e, URL url) {
-		return logException(new ServiceException(
-				getText(ERROR_EVALUATE_SCRIPT), e).add(URL, url),
-				getText(ERROR_EVALUATE_SCRIPT_MESSAGE), url);
-	}
+        services_registry_null,
 
-	void loadServiceScript(URL url) {
-		log.info(getText(LOAD_SCRIPT), url);
-	}
+        script_file_null;
+
+        public static void loadTexts(TextsFactory factory) {
+            String name = GroovyLoaderLogger.class.getSimpleName();
+            Texts texts = factory.create(name);
+            for (_ value : values()) {
+                value.text = texts.getResource(value.name()).getText();
+            }
+        }
+
+        private String text;
+
+        @Override
+        public String toString() {
+            return text;
+        }
+    }
+
+    /**
+     * Create logger for {@link GroovyLoader}.
+     */
+    GroovyLoaderLogger() {
+        super(GroovyLoader.class);
+    }
+
+    @Inject
+    void setTextsFactory(TextsFactory factory) {
+        loadTexts(factory);
+    }
+
+    void checkUrl(URL url) {
+        notNull(url, script_file_null.toString());
+    }
+
+    void checkRegistry(ServicesRegistry registry) {
+        notNull(registry, services_registry_null.toString());
+    }
+
+    ServiceException errorOpenScriptUrl(IOException e, URL url) {
+        return logException(
+                new ServiceException(error_open_script, e).add(url, url),
+                error_open_script_message, url);
+    }
+
+    ServiceException errorEvaluateScript(Throwable e, URL url) {
+        return logException(
+                new ServiceException(error_evaluate_script, e).add(url, url),
+                error_evaluate_script_message, url);
+    }
+
+    void loadServiceScript(URL url) {
+        info(load_script, url);
+    }
 }

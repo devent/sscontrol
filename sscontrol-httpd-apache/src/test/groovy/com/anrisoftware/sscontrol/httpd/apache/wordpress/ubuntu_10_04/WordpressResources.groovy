@@ -90,6 +90,7 @@ enum WordpressResources {
     tagebuchArchive("/tmp/web-tagebuch.zip", WordpressResources.class.getResource("tagebuch.zip")),
     unzipPluginsOut("/usr/bin/unzip.out", WordpressResources.class.getResource("unzip_plugins_out.txt")),
     // Wordpress Reverse Proxy
+    httpdProxyDomainsScript("Httpd.groovy", WordpressResources.class.getResource("HttpdWordpressReverseProxyDomains.groovy")),
     httpdProxyScript("Httpd.groovy", WordpressResources.class.getResource("HttpdWordpressReverseProxy.groovy")),
     test1comProxyConf("/etc/apache2/sites-available/100-robobee-test1.com.conf", WordpressResources.class.getResource("test1_com_reverseproxy_conf.txt")),
     test1comSslProxyConf("/etc/apache2/sites-available/100-robobee-test1.com-ssl.conf", WordpressResources.class.getResource("test1_com_ssl_reverseproxy_conf.txt")),

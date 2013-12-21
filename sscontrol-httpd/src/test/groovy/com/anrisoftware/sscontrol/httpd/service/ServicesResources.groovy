@@ -39,7 +39,8 @@ enum ServicesResources {
     phpldapadminScript("Httpd.groovy", ServicesResources.class.getResource("HttpdPhpldapadmin.groovy")),
     roundcubeScript("Httpd.groovy", ServicesResources.class.getResource("HttpdRoundcube.groovy")),
     wordpressScript("Httpd.groovy", ServicesResources.class.getResource("HttpdWordpress.groovy")),
-    proxyScript("Httpd.groovy", ServicesResources.class.getResource("HttpdReverseProxy.groovy")),
+    proxyScript("Httpd.groovy", ServicesResources.class.getResource("HttpdProxy.groovy")),
+    proxyDomainsScript("Httpd.groovy", ServicesResources.class.getResource("HttpdProxyDomains.groovy")),
 
     ResourcesUtils resources
 

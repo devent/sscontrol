@@ -18,6 +18,15 @@
  */
 package com.anrisoftware.sscontrol.core.service;
 
+import static com.anrisoftware.sscontrol.core.service.AbstractServiceLogger._.find_service;
+import static com.anrisoftware.sscontrol.core.service.AbstractServiceLogger._.find_service_message;
+import static com.anrisoftware.sscontrol.core.service.AbstractServiceLogger._.loadTexts;
+import static com.anrisoftware.sscontrol.core.service.AbstractServiceLogger._.profile_set_debug;
+import static com.anrisoftware.sscontrol.core.service.AbstractServiceLogger._.profile_set_info;
+import static com.anrisoftware.sscontrol.core.service.AbstractServiceLogger._.refservice_set_debug;
+import static com.anrisoftware.sscontrol.core.service.AbstractServiceLogger._.refservice_set_info;
+import static com.anrisoftware.sscontrol.core.service.AbstractServiceLogger._.service_name;
+
 import javax.inject.Inject;
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
@@ -28,52 +37,83 @@ import com.anrisoftware.sscontrol.core.api.ServiceException;
 
 /**
  * Logging messages for {@link AbstractService}.
- * 
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
 class AbstractServiceLogger extends AbstractLogger {
 
-	private static final String SERVICE_NAME = "service name";
-	private static final String PROFILE = "profile";
-	private static final String SERVICE = "service";
-	private static final String FIND_SERVICE2 = "Error find service script '{}' for service '{}'.";
-	private static final String FIND_SERVICE = "Error find service script";
-	private static final String PROFILE_SET_INFO = "profile_set_info";
-	private static final String PROFILE_SET_DEBUG = "profile_set_debug";
-	private static final String NAME = AbstractServiceLogger.class
-			.getSimpleName();
+    enum _ {
 
-	private final Texts texts;
+        service_name,
 
-	/**
-	 * Create logger for {@link AbstractService}.
-	 */
-	@Inject
-	AbstractServiceLogger(TextsFactory textsFactory) {
-		super(AbstractService.class);
-		this.texts = textsFactory.create(NAME);
-	}
+        profile,
 
-	private String getText(String name) {
-		return texts.getResource(name).getText();
-	}
+        service,
 
-	void profileSet(AbstractService service, ProfileService profile) {
-		if (log.isDebugEnabled()) {
-			log.debug(getText(PROFILE_SET_DEBUG), profile, service);
-		} else {
-			log.info(getText(PROFILE_SET_INFO), profile.getProfileName(),
-					service.getName());
-		}
-	}
+        find_service_message,
 
-	ServiceException errorFindServiceScript(AbstractService service,
-			ProfileService profile, String serviceName) {
-		return logException(
-				new ServiceException(FIND_SERVICE).add(SERVICE, service)
-						.add(PROFILE, profile).add(SERVICE_NAME, serviceName),
-				FIND_SERVICE2, profile.getProfileName(), serviceName);
-	}
+        find_service,
+
+        profile_set_info,
+
+        profile_set_debug,
+
+        refservice_set_debug,
+
+        refservice_set_info;
+
+        public static void loadTexts(TextsFactory factory) {
+            String name = AbstractServiceLogger.class.getSimpleName();
+            Texts texts = factory.create(name);
+            for (_ value : values()) {
+                value.text = texts.getResource(value.name()).getText();
+            }
+        }
+
+        private String text;
+
+        @Override
+        public String toString() {
+            return text;
+        }
+    }
+
+    /**
+     * Create logger for {@link AbstractService}.
+     */
+    @Inject
+    AbstractServiceLogger(TextsFactory textsFactory) {
+        super(AbstractService.class);
+    }
+
+    @Inject
+    void setTextsResources(TextsFactory factory) {
+        loadTexts(factory);
+    }
+
+    void profileSet(AbstractService service, ProfileService profile) {
+        if (isDebugEnabled()) {
+            debug(profile_set_debug, profile, service);
+        } else {
+            info(profile_set_info, profile.getProfileName(), service.getName());
+        }
+    }
+
+    ServiceException errorFindServiceScript(AbstractService service,
+            ProfileService profile, String serviceName) {
+        return logException(
+                new ServiceException(find_service).add(service, service)
+                        .add(profile, profile).add(service_name, serviceName),
+                find_service_message, profile.getProfileName(), serviceName);
+    }
+
+    void refserviceSet(AbstractService service, String refservice) {
+        if (isDebugEnabled()) {
+            debug(refservice_set_debug, refservice, service);
+        } else {
+            info(refservice_set_info, refservice, service.getName());
+        }
+    }
 
 }

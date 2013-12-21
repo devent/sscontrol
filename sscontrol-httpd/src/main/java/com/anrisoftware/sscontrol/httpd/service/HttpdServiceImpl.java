@@ -129,9 +129,6 @@ class HttpdServiceImpl extends AbstractService implements HttpdService {
         log.bindingSet(this, binding);
     }
 
-    /* (non-Javadoc)
-     * @see com.anrisoftware.sscontrol.httpd.service.HttpdService#getBinding()
-     */
     @Override
     public Binding getBinding() {
         return binding;

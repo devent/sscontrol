@@ -34,6 +34,7 @@ import com.anrisoftware.sscontrol.httpd.statements.auth.SatisfyType
 import com.anrisoftware.sscontrol.httpd.statements.authldap.AttributeDn
 import com.anrisoftware.sscontrol.httpd.statements.authldap.Authoritative
 import com.anrisoftware.sscontrol.httpd.statements.authldap.RequireLdapValidGroup
+import com.anrisoftware.sscontrol.httpd.statements.domain.Domain
 
 /**
  * @see HttpdServiceImpl
@@ -138,7 +139,15 @@ class HttpdTest extends HttpdTestUtil {
         loader.loadService proxyScript.resource, profile
 
         HttpdServiceImpl service = registry.getService("httpd")[0]
-        service.domains.size() == 5
-        service.virtualDomains.size() == 4
+        assert service.domains.size() == 2
+        assert service.virtualDomains.size() == 2
+
+        service = registry.getService("httpd")[1]
+        assert service.domains.size() == 2
+        assert service.virtualDomains.size() == 2
+        Domain domain = service.domains[0]
+        assert domain.proxy.service == "servicefoo"
+        assert domain.proxy.address == "http://127.0.0.1:8080"
+        assert domain.proxy.alias == "fooalias"
     }
 }

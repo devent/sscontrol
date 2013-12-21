@@ -36,6 +36,9 @@ import com.anrisoftware.sscontrol.httpd.statements.auth.AbstractAuth;
 import com.anrisoftware.sscontrol.httpd.statements.auth.AuthProvider;
 import com.anrisoftware.sscontrol.httpd.statements.authfile.AuthFileFactory;
 import com.anrisoftware.sscontrol.httpd.statements.authldap.AuthLdapFactory;
+import com.anrisoftware.sscontrol.httpd.statements.proxy.Proxy;
+import com.anrisoftware.sscontrol.httpd.statements.proxy.ProxyArgs;
+import com.anrisoftware.sscontrol.httpd.statements.proxy.ProxyFactory;
 import com.anrisoftware.sscontrol.httpd.statements.redirect.Redirect;
 import com.anrisoftware.sscontrol.httpd.statements.redirect.RedirectFactory;
 import com.anrisoftware.sscontrol.httpd.statements.redirect.RedirectToWwwHttp;
@@ -89,6 +92,9 @@ public class Domain {
     @Inject
     private DomainUser domainUser;
 
+    @Inject
+    private ProxyFactory proxyFactory;
+
     private String address;
 
     private int port;
@@ -98,6 +104,8 @@ public class Domain {
     private String useDomain;
 
     private String id;
+
+    private Proxy proxy;
 
     /**
      * @see DomainFactory#create(Map, String)
@@ -284,6 +292,22 @@ public class Domain {
 
     public List<WebService> getServices() {
         return services;
+    }
+
+    public void proxy(Map<String, Object> args, String service) {
+        args.put(ProxyArgs.SERVICE, service);
+        Proxy proxy = proxyFactory.create(this, args);
+        log.proxySet(this, proxy);
+        this.proxy = proxy;
+    }
+
+    /**
+     * Returns the domain proxy.
+     * 
+     * @return the domain {@link Proxy} or {@code null}.
+     */
+    public Proxy getProxy() {
+        return proxy;
     }
 
     @Override

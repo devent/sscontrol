@@ -16,22 +16,25 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.service
+package com.anrisoftware.sscontrol.httpd.statements.proxy;
 
-def certFile = ServicesResources.class.getResource "cert_crt.txt"
-def certKeyFile = ServicesResources.class.getResource "cert_key.txt"
+import com.google.inject.AbstractModule;
+import com.google.inject.assistedinject.FactoryModuleBuilder;
 
-httpd {
-    // reference service with id "idproxy"
-    refservice "idproxy"
-    // domain "test1.com"
-    domain "test1.com", address: "192.168.0.50", {
-        proxy "servicefoo", alias: "fooalias", address: "http://127.0.0.1:8080"
+/**
+ * Installs the domain proxy factory.
+ * 
+ * @see ProxyFactory
+ * 
+ * @author Erwin Mueller, erwin.mueller@deventm.org
+ * @since 1.0
+ */
+public class ProxyModule extends AbstractModule {
+
+    @Override
+    protected void configure() {
+        install(new FactoryModuleBuilder().implement(Proxy.class, Proxy.class)
+                .build(ProxyFactory.class));
     }
-    // SSL/domain "test1.com"
-    ssl_domain "test1.com", address: "192.168.0.50", {
-        proxy "servicebar", address: "http://127.0.0.1:8080"
-        certification_file certFile
-        certification_key_file certKeyFile
-    }
+
 }

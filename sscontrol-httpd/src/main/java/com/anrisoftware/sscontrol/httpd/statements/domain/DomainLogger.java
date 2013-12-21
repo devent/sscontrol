@@ -26,6 +26,7 @@ import static com.anrisoftware.sscontrol.httpd.statements.domain.DomainLogger._.
 import static com.anrisoftware.sscontrol.httpd.statements.domain.DomainLogger._.document_root_set;
 import static com.anrisoftware.sscontrol.httpd.statements.domain.DomainLogger._.port_set;
 import static com.anrisoftware.sscontrol.httpd.statements.domain.DomainLogger._.port_set_debug;
+import static com.anrisoftware.sscontrol.httpd.statements.domain.DomainLogger._.proxy_set_debug;
 import static com.anrisoftware.sscontrol.httpd.statements.domain.DomainLogger._.redirect_http_to_https_added;
 import static com.anrisoftware.sscontrol.httpd.statements.domain.DomainLogger._.redirect_http_to_https_added_debug;
 import static com.anrisoftware.sscontrol.httpd.statements.domain.DomainLogger._.redirect_to_www_added;
@@ -39,6 +40,7 @@ import static org.apache.commons.lang3.Validate.notNull;
 import javax.inject.Singleton;
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
+import com.anrisoftware.sscontrol.httpd.statements.proxy.Proxy;
 import com.anrisoftware.sscontrol.httpd.statements.redirect.Redirect;
 import com.anrisoftware.sscontrol.httpd.statements.webservice.WebService;
 import com.anrisoftware.sscontrol.httpd.statements.webservice.WebServiceFactory;
@@ -87,7 +89,9 @@ class DomainLogger extends AbstractLogger {
         certification_key_resource_null(
                 "Certificate key resource must be set for %s."),
 
-        service_not_found("Service '%s' not found for %s.");
+        service_not_found("Service '%s' not found for %s."),
+
+        proxy_set_debug("Domain proxy {} set for {}.");
 
         private String name;
 
@@ -174,5 +178,9 @@ class DomainLogger extends AbstractLogger {
 
     void checkService(Domain domain, WebServiceFactory factory, String name) {
         notNull(factory, _.service_not_found.toString(), name, domain);
+    }
+
+    void proxySet(Domain domain, Proxy proxy) {
+        debug(proxy_set_debug, proxy, domain);
     }
 }

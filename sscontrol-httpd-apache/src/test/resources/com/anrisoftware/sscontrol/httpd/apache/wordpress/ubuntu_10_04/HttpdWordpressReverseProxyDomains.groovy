@@ -39,7 +39,7 @@ httpd {
     }
     // domain www.test1.com
     domain "www.test1.com", address: "192.168.0.51", port: 8080, {
-        setup "wordpress", alias: "wordpress3", {
+        setup "wordpress", id: "test1wordpress", alias: "wordpress3", {
             database "wordpress3", user: "user", password: "userpass", host: "localhost"
         }
     }
@@ -47,5 +47,6 @@ httpd {
     ssl_domain "www.test1.com", address: "192.168.0.51", port: 8082, {
         certification_file UbuntuResources.certCrt.resource
         certification_key_file UbuntuResources.certKey.resource
+        setup "wordpress", ref: "test1wordpress"
     }
 }

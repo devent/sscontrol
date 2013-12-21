@@ -28,6 +28,7 @@ import com.anrisoftware.sscontrol.httpd.statements.authldap.AuthLdapModule;
 import com.anrisoftware.sscontrol.httpd.statements.domain.DomainModule;
 import com.anrisoftware.sscontrol.httpd.statements.phpldapadmin.PhpldapadminModule;
 import com.anrisoftware.sscontrol.httpd.statements.phpmyadmin.PhpmyadminModule;
+import com.anrisoftware.sscontrol.httpd.statements.proxy.ProxyModule;
 import com.anrisoftware.sscontrol.httpd.statements.redirect.RedirectModule;
 import com.anrisoftware.sscontrol.httpd.statements.roundcube.RoundcubeModule;
 import com.anrisoftware.sscontrol.httpd.statements.wordpress.WordpressModule;
@@ -56,5 +57,6 @@ class HttpdModule extends AbstractModule {
         install(new ListModule());
         install(new DatabaseModule());
         install(new BindingsModule());
+        install(new ProxyModule());
 	}
 }

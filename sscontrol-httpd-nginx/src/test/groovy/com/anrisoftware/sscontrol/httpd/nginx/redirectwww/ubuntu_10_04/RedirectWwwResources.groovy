@@ -40,6 +40,7 @@ enum RedirectWwwResources {
     addAptRepositoryOutExpected("/usr/bin/add-apt-repository.out", RedirectWwwResources.class.getResource("add_apt_repository_out_expected.txt")),
     aptitudeOutExpected("/usr/bin/aptitude.out", RedirectWwwResources.class.getResource("aptitude_out_expected.txt")),
     restartOutExpected("/etc/init.d/nginx.out", RedirectWwwResources.class.getResource("restart_out_expected.txt")),
+    lnOutExpected("/bin/ln.out", RedirectWwwResources.class.getResource("ln_out_expected.txt")),
 
     static copyRedirectWwwFiles(File parent) {
     }

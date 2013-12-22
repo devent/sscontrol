@@ -86,6 +86,7 @@ abstract class Nginx_1_4_Script extends NginxScript {
         beforeConfiguration()
         setupDefaultBinding()
         setupDefaultLogging()
+        createSitesDirectories()
         deployDefaultConfig()
         deployConfig()
     }
@@ -105,6 +106,17 @@ abstract class Nginx_1_4_Script extends NginxScript {
         if (!service.debug.args.containsKey("storage")) {
             service.debug.args.storage = loggingStorage
         }
+    }
+
+    /**
+     * Creates sites configuration directories.
+     *
+     * @see #getSitesAvailableDir()
+     * @see #getSitesEnabledDir()
+     */
+    void createSitesDirectories() {
+        sitesAvailableDir.mkdirs()
+        sitesEnabledDir.mkdirs()
     }
 
     /**

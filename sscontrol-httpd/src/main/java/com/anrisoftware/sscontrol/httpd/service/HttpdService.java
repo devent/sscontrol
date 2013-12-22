@@ -5,6 +5,7 @@ import java.util.Set;
 
 import com.anrisoftware.sscontrol.core.api.Service;
 import com.anrisoftware.sscontrol.core.bindings.Binding;
+import com.anrisoftware.sscontrol.core.debuglogging.DebugLogging;
 import com.anrisoftware.sscontrol.httpd.statements.domain.Domain;
 
 /**
@@ -41,5 +42,12 @@ public interface HttpdService extends Service {
      * @return the {@link Set} of the virtual {@link Domain} domains.
      */
     Set<Domain> getVirtualDomains();
+
+    /**
+     * Returns debug logging.
+     * 
+     * @return the {@link DebugLogging}.
+     */
+    DebugLogging getDebug();
 
 }

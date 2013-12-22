@@ -20,6 +20,8 @@ package com.anrisoftware.sscontrol.httpd.service;
 
 import static com.anrisoftware.sscontrol.httpd.service.HttpdServiceImplLogger._.binding_set_debug;
 import static com.anrisoftware.sscontrol.httpd.service.HttpdServiceImplLogger._.binding_set_info;
+import static com.anrisoftware.sscontrol.httpd.service.HttpdServiceImplLogger._.debug_set_debug;
+import static com.anrisoftware.sscontrol.httpd.service.HttpdServiceImplLogger._.debug_set_info;
 import static com.anrisoftware.sscontrol.httpd.service.HttpdServiceImplLogger._.domainAdded;
 import static com.anrisoftware.sscontrol.httpd.service.HttpdServiceImplLogger._.domainAddedDebug;
 import static com.anrisoftware.sscontrol.httpd.service.HttpdServiceImplLogger._.profileSet;
@@ -31,6 +33,7 @@ import com.anrisoftware.globalpom.log.AbstractLogger;
 import com.anrisoftware.sscontrol.core.api.ProfileService;
 import com.anrisoftware.sscontrol.core.api.Service;
 import com.anrisoftware.sscontrol.core.bindings.Binding;
+import com.anrisoftware.sscontrol.core.debuglogging.DebugLogging;
 import com.anrisoftware.sscontrol.httpd.statements.domain.Domain;
 
 /**
@@ -41,72 +44,84 @@ import com.anrisoftware.sscontrol.httpd.statements.domain.Domain;
  */
 class HttpdServiceImplLogger extends AbstractLogger {
 
-	enum _ {
+    enum _ {
 
-		domainAddedDebug("Domain {} added for {}."),
+        domainAddedDebug("Domain {} added for {}."),
 
-		domainAdded("Domain '{}' added for service '{}'."),
+        domainAdded("Domain '{}' added for service '{}'."),
 
-		profileSetDebug("Profile {} set for {}."),
+        profileSetDebug("Profile {} set for {}."),
 
-		profileSet("Profile '{}' set for DNS service."),
+        profileSet("Profile '{}' set for DNS service."),
 
-		sslDomainAddedDebug("SSL domain {} added for {}."),
+        sslDomainAddedDebug("SSL domain {} added for {}."),
 
         sslDomainAdded("SSL domain '{}' added for service '{}'."),
 
         binding_set_debug("Binding address {} set {}."),
 
-        binding_set_info("Binding address {} set for httpd service.");
+        binding_set_info("Binding address {} set for httpd service."),
 
-		private String name;
+        debug_set_debug("Debug logging {} set for {}."),
 
-		private _(String name) {
-			this.name = name;
-		}
+        debug_set_info("Debug level {} set for service '{}'.");
 
-		@Override
-		public String toString() {
-			return name;
-		}
-	}
+        private String name;
 
-	/**
-	 * Create logger for {@link HttpdServiceImpl}.
-	 */
-	HttpdServiceImplLogger() {
-		super(HttpdServiceImpl.class);
-	}
+        private _(String name) {
+            this.name = name;
+        }
 
-	void profileSet(Service service, ProfileService profile) {
-		if (isDebugEnabled()) {
-			debug(profileSetDebug, profile, service);
-		} else {
-			info(profileSet, profile.getProfileName());
-		}
-	}
+        @Override
+        public String toString() {
+            return name;
+        }
+    }
 
-	void domainAdded(Service service, Domain domain) {
-		if (isDebugEnabled()) {
-			debug(domainAddedDebug, domain, service);
-		} else {
-			info(domainAdded, domain.getName(), service.getName());
-		}
-	}
+    /**
+     * Create logger for {@link HttpdServiceImpl}.
+     */
+    HttpdServiceImplLogger() {
+        super(HttpdServiceImpl.class);
+    }
 
-	void sslDomainAdded(Service service, Domain domain) {
-		if (isDebugEnabled()) {
-			debug(sslDomainAddedDebug, domain, service);
-		} else {
-			info(sslDomainAdded, domain.getName(), service.getName());
-		}
-	}
+    void profileSet(Service service, ProfileService profile) {
+        if (isDebugEnabled()) {
+            debug(profileSetDebug, profile, service);
+        } else {
+            info(profileSet, profile.getProfileName());
+        }
+    }
+
+    void domainAdded(Service service, Domain domain) {
+        if (isDebugEnabled()) {
+            debug(domainAddedDebug, domain, service);
+        } else {
+            info(domainAdded, domain.getName(), service.getName());
+        }
+    }
+
+    void sslDomainAdded(Service service, Domain domain) {
+        if (isDebugEnabled()) {
+            debug(sslDomainAddedDebug, domain, service);
+        } else {
+            info(sslDomainAdded, domain.getName(), service.getName());
+        }
+    }
 
     void bindingSet(HttpdService service, Binding binding) {
         if (isDebugEnabled()) {
             debug(binding_set_debug, binding, service);
         } else {
             info(binding_set_info, binding.getAddresses());
+        }
+    }
+
+    void debugSet(HttpdServiceImpl service, DebugLogging debug) {
+        if (isDebugEnabled()) {
+            debug(debug_set_debug, debug, service);
+        } else {
+            info(debug_set_info, debug.getLevel(), service.getName());
         }
     }
 

@@ -39,6 +39,8 @@ import com.anrisoftware.sscontrol.core.bindings.Binding;
 import com.anrisoftware.sscontrol.core.bindings.BindingAddress;
 import com.anrisoftware.sscontrol.core.bindings.BindingArgs;
 import com.anrisoftware.sscontrol.core.bindings.BindingFactory;
+import com.anrisoftware.sscontrol.core.debuglogging.DebugLogging;
+import com.anrisoftware.sscontrol.core.debuglogging.DebugLoggingFactory;
 import com.anrisoftware.sscontrol.core.service.AbstractService;
 import com.anrisoftware.sscontrol.core.yesno.YesNoFlag;
 import com.anrisoftware.sscontrol.httpd.statements.auth.AuthProvider;
@@ -71,6 +73,12 @@ class HttpdServiceImpl extends AbstractService implements HttpdService {
 
     @Inject
     private BindingArgs bindingArgs;
+
+    @Inject
+    private DebugLogging debug;
+
+    @Inject
+    private DebugLoggingFactory debugFactory;
 
     HttpdServiceImpl() {
         this.domains = new ArrayList<Domain>();
@@ -178,6 +186,21 @@ class HttpdServiceImpl extends AbstractService implements HttpdService {
     @Override
     public Set<Domain> getVirtualDomains() {
         return virtualDomains;
+    }
+
+    /**
+     * Sets the debug logging for the database server.
+     * 
+     * @see DebugLoggingFactory#create(Map)
+     */
+    public void debug(Map<String, Object> args) {
+        this.debug = debugFactory.create(args);
+        log.debugSet(this, debug);
+    }
+
+    @Override
+    public DebugLogging getDebug() {
+        return debug;
     }
 
     public YesNoFlag getYes() {

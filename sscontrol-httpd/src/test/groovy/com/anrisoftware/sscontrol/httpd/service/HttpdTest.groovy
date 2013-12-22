@@ -52,8 +52,10 @@ class HttpdTest extends HttpdTestUtil {
         def profile = registry.getService("profile")[0]
         loader.loadService httpdScript.resource, profile
         HttpdServiceImpl service = registry.getService("httpd")[0]
-        service.domains.size() == 5
-        service.virtualDomains.size() == 4
+
+        assert service.domains.size() == 5
+        assert service.virtualDomains.size() == 4
+        assert service.debug.level == 1
     }
 
     @Test

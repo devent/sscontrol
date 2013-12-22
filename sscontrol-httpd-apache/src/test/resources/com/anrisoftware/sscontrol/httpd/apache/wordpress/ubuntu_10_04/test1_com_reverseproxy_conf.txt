@@ -1,19 +1,11 @@
-<VirtualHost 192.168.0.50:8080>
-
+server {
     # domain test1.com
-    ServerName test1.com
-    DocumentRoot /tmp/var/www/test1.com/web
-    SuexecUserGroup web_001 web_001
-    <Directory /tmp/var/www/test1.com/web>
-        AllowOverride None
-        Order allow,deny
-        Allow from all
-    </Directory>
+    listen 192.168.0.50:80;
+    root /tmp/var/www/test1.com/web;
+    index index.php index.html index.htm;
+    server_name test1.com;
 
     # redirect to www http
-    ServerAlias www.test1.com
-    RewriteEngine On
-    RewriteCond %{HTTP_HOST} ^test1\.com$ [NC]
-    RewriteRule ^(.*)$ http://www.test1.com$1 [L,R=301]
+    return 301 http://www.test1.com$request_uri;
 
-</VirtualHost>
+}

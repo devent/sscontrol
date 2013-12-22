@@ -53,11 +53,31 @@ abstract class NginxScript extends LinuxScript {
     }
 
     /**
+     * Returns the path of the Nginx configuration directory.
+     *
+     * <ul>
+     * <li>profile property {@code "nginx_configuration_directory"}</li>
+     * <li>profile property {@code "configuration_directory"}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    @Override
+    File getConfigurationDir() {
+        if (containsKey("nginx_configuration_directory")) {
+            profileDirProperty "nginx_configuration_directory", defaultProperties
+        } else {
+            profileDirProperty "configuration_directory", defaultProperties
+        }
+    }
+
+    /**
      * Returns the directory for the included configuration, for
      * example {@code "conf.d".} If the path is
      * not absolute then it is assume to be under the configuration directory.
      *
      * <ul>
+     * <li>profile property {@code "nginx_config_include_directory"}</li>
      * <li>profile property {@code "config_include_directory"}</li>
      * </ul>
      *
@@ -65,7 +85,11 @@ abstract class NginxScript extends LinuxScript {
      * @see #getConfigurationDir()
      */
     File getConfigIncludeDir() {
-        profileFileProperty "config_include_directory", configurationDir, defaultProperties
+        if (containsKey("nginx_config_include_directory")) {
+            profileFileProperty "nginx_config_include_directory", configurationDir, defaultProperties
+        } else {
+            profileFileProperty "config_include_directory", configurationDir, defaultProperties
+        }
     }
 
     /**
@@ -74,6 +98,7 @@ abstract class NginxScript extends LinuxScript {
      * not absolute then it is assume to be under the configuration directory.
      *
      * <ul>
+     * <li>profile property {@code "nginx_sites_available_directory"}</li>
      * <li>profile property {@code "sites_available_directory"}</li>
      * </ul>
      *
@@ -81,7 +106,11 @@ abstract class NginxScript extends LinuxScript {
      * @see #getConfigurationDir()
      */
     File getSitesAvailableDir() {
-        profileFileProperty "sites_available_directory", configurationDir, defaultProperties
+        if (containsKey("nginx_sites_available_directory")) {
+            profileFileProperty "nginx_sites_available_directory", configurationDir, defaultProperties
+        } else {
+            profileFileProperty "sites_available_directory", configurationDir, defaultProperties
+        }
     }
 
     /**
@@ -90,6 +119,7 @@ abstract class NginxScript extends LinuxScript {
      * not absolute then it is assume to be under the configuration directory.
      *
      * <ul>
+     * <li>profile property {@code "nginx_sites_enabled_directory"}</li>
      * <li>profile property {@code "sites_enabled_directory"}</li>
      * </ul>
      *
@@ -97,7 +127,11 @@ abstract class NginxScript extends LinuxScript {
      * @see #getConfigurationDir()
      */
     File getSitesEnabledDir() {
-        profileFileProperty "sites_enabled_directory", configurationDir, defaultProperties
+        if (containsKey("nginx_sites_enabled_directory")) {
+            profileFileProperty "nginx_sites_enabled_directory", configurationDir, defaultProperties
+        } else {
+            profileFileProperty "sites_enabled_directory", configurationDir, defaultProperties
+        }
     }
 
     /**
@@ -128,23 +162,6 @@ abstract class NginxScript extends LinuxScript {
      */
     File getNginxConfigFile() {
         profileFileProperty "nginx_config_file", configurationDir, defaultProperties
-    }
-
-    /**
-     * Returns the path for the default configuration file,
-     * for example {@code "default.conf".}  If the path is
-     * not absolute then it is assume to be under the configuration
-     * include directory.
-     *
-     * <ul>
-     * <li>profile property {@code "default_config_file"}</li>
-     * </ul>
-     *
-     * @see #getConfigIncludeDir()
-     * @see #getDefaultProperties()
-     */
-    File getDefaultConfigFile() {
-        profileFileProperty "default_config_file", configIncludeDir, defaultProperties
     }
 
     /**

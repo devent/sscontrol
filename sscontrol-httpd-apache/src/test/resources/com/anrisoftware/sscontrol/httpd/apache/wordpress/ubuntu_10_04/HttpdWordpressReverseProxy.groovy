@@ -24,12 +24,10 @@ httpd {
     // reference service with id "idproxy"
     refservice "idproxy"
     // domain test1.com
-    domain "test1.com", address: "192.168.0.50", {
-        proxy "static", address: "http://127.0.0.1:8080" //.
-    }
+    domain "test1.com", address: "192.168.0.50", { redirect to_www }
     // SSL/domain test1.com
     ssl_domain "test1.com", address: "192.168.0.50", {
-        proxy "static", address: "http://127.0.0.1:8080"
+        redirect to_www
         certification_file UbuntuResources.certCrt.resource
         certification_key_file UbuntuResources.certKey.resource
     }

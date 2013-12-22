@@ -225,6 +225,8 @@ abstract class Nginx_1_4_Script extends NginxScript {
                 "properties", this,
                 "domain", domain,
                 "servicesConfig", servicesConfig)
-        FileUtils.write new File(sitesAvailableDir, domain.fileName), string
+        def file = new File(sitesAvailableDir, domain.fileName)
+        FileUtils.write file, string
+        log.deployDomainConfig this, domain, file
     }
 }

@@ -166,10 +166,30 @@ abstract class ApacheScript extends LinuxScript {
     }
 
     /**
+     * Returns the path of the Apache configuration directory.
+     *
+     * <ul>
+     * <li>profile property {@code "apache_configuration_directory"}</li>
+     * <li>profile property {@code "configuration_directory"}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    @Override
+    File getConfigurationDir() {
+        if (containsKey("apache_configuration_directory")) {
+            profileDirProperty "apache_configuration_directory", defaultProperties
+        } else {
+            profileDirProperty "configuration_directory", defaultProperties
+        }
+    }
+
+    /**
      * Returns the directory with the available sites. If the path is
      * not absolute then it is assume to be under the configuration directory.
      *
      * <ul>
+     * <li>profile property {@code "apache_sites_available_directory"}</li>
      * <li>profile property {@code "sites_available_directory"}</li>
      * </ul>
      *
@@ -177,12 +197,10 @@ abstract class ApacheScript extends LinuxScript {
      * @see #getConfigurationDir()
      */
     File getSitesAvailableDir() {
-        def path = profileProperty("sites_available_directory", defaultProperties)
-        if (path instanceof File) {
-            return path
+        if (containsKey("apache_sites_available_directory")) {
+            profileDirProperty "apache_sites_available_directory", defaultProperties
         } else {
-            def file = new File(path)
-            return file.absolute ? file : new File(configurationDir, path)
+            profileFileProperty "sites_available_directory", configurationDir, defaultProperties
         }
     }
 
@@ -191,6 +209,7 @@ abstract class ApacheScript extends LinuxScript {
      * not absolute then it is assume to be under the configuration directory.
      *
      * <ul>
+     * <li>profile property {@code "apache_config_include_directory"}</li>
      * <li>profile property {@code "config_include_directory"}</li>
      * </ul>
      *
@@ -198,12 +217,10 @@ abstract class ApacheScript extends LinuxScript {
      * @see #getConfigurationDir()
      */
     File getConfigIncludeDir() {
-        def path = profileProperty("config_include_directory", defaultProperties)
-        if (path instanceof File) {
-            return path
+        if (containsKey("apache_config_include_directory")) {
+            profileDirProperty "apache_config_include_directory", defaultProperties
         } else {
-            def file = new File(path)
-            return file.absolute ? file : new File(configurationDir, path)
+            profileFileProperty "config_include_directory", configurationDir, defaultProperties
         }
     }
 
@@ -221,7 +238,7 @@ abstract class ApacheScript extends LinuxScript {
      * @see #getConfigurationDir()
      */
     File getPortsConfigFile() {
-        def file = profileFileProperty "ports_config_file", configurationDir, defaultProperties
+        profileFileProperty "ports_config_file", configurationDir, defaultProperties
     }
 
     /**
@@ -234,8 +251,7 @@ abstract class ApacheScript extends LinuxScript {
      * @see #getDefaultProperties()
      */
     File getDefaultConfigFile() {
-        def file = profileProperty("default_config_file", defaultProperties)
-        new File(sitesAvailableDir, file)
+        profileFileProperty "default_config_file", sitesAvailableDir, defaultProperties
     }
 
     /**
@@ -248,8 +264,7 @@ abstract class ApacheScript extends LinuxScript {
      * @see #getDefaultProperties()
      */
     File getDomainsConfigFile() {
-        def file = profileProperty("domains_config_file", defaultProperties)
-        new File(configIncludeDir, file)
+        profileFileProperty "domains_config_file", configIncludeDir, defaultProperties
     }
 
     /**

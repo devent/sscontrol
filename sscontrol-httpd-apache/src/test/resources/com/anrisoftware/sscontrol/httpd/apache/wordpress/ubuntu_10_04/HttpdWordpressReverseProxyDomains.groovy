@@ -27,24 +27,16 @@ httpd {
     bind port: 8080
     // https
     bind port: 8082
-    // domain test1.com
-    domain "test1.com", address: "192.168.0.50", port: 8080, { //.
-        redirect to_www //.
-    }
-    // SSL/domain test1.com
-    ssl_domain "test1.com", address: "192.168.0.50", port: 8082, {
-        certification_file UbuntuResources.certCrt.resource
-        certification_key_file UbuntuResources.certKey.resource
-        redirect to_www
-    }
     // domain www.test1.com
     domain "www.test1.com", address: "192.168.0.51", port: 8080, {
+        user "web_002", uid: 2002, group: "web_002", gid: 2002
         setup "wordpress", id: "test1wordpress", alias: "wordpress3", {
             database "wordpress3", user: "user", password: "userpass", host: "localhost"
         }
     }
     // SSL/domain www.test1.com
     ssl_domain "www.test1.com", address: "192.168.0.51", port: 8082, {
+        user "web_002", uid: 2002, group: "web_002", gid: 2002
         certification_file UbuntuResources.certCrt.resource
         certification_key_file UbuntuResources.certKey.resource
         setup "wordpress", ref: "test1wordpress"

@@ -92,10 +92,16 @@ enum WordpressResources {
     // Wordpress Reverse Proxy
     httpdProxyDomainsScript("Httpd.groovy", WordpressResources.class.getResource("HttpdWordpressReverseProxyDomains.groovy")),
     httpdProxyScript("Httpd.groovy", WordpressResources.class.getResource("HttpdWordpressReverseProxy.groovy")),
-    test1comProxyConf("/etc/apache2/sites-available/100-robobee-test1.com.conf", WordpressResources.class.getResource("test1_com_reverseproxy_conf.txt")),
-    test1comSslProxyConf("/etc/apache2/sites-available/100-robobee-test1.com-ssl.conf", WordpressResources.class.getResource("test1_com_ssl_reverseproxy_conf.txt")),
-    wwwtest1comProxyConf("/etc/apache2/sites-available/100-robobee-www.test1.com.conf", WordpressResources.class.getResource("www_test1_com_reverseproxy_conf.txt")),
-    wwwtest1comSslProxyConf("/etc/apache2/sites-available/100-robobee-www.test1.com-ssl.conf", WordpressResources.class.getResource("www_test1_com_ssl_reverseproxy_conf.txt")),
+    test1comProxyConf("/etc/nginx/sites-available/100-robobee-test1.com.conf", WordpressResources.class.getResource("test1_com_reverseproxy_conf.txt")),
+    test1comSslProxyConf("/etc/nginx/sites-available/100-robobee-test1.com-ssl.conf", WordpressResources.class.getResource("test1_com_ssl_reverseproxy_conf.txt")),
+    wwwtest1comDomainProxyConf("/etc/apache2/sites-available/100-robobee-www.test1.com.conf", WordpressResources.class.getResource("www_test1_com_reverseproxydomain_conf.txt")),
+    wwwtest1comSslDomainProxyConf("/etc/apache2/sites-available/100-robobee-www.test1.com-ssl.conf", WordpressResources.class.getResource("www_test1_com_ssl_reverseproxydomain_conf.txt")),
+    wwwtest1comProxyConf("/etc/nginx/sites-available/100-robobee-www.test1.com.conf", WordpressResources.class.getResource("www_test1_com_reverseproxy_conf.txt")),
+    wwwtest1comSslProxyConf("/etc/nginx/sites-available/100-robobee-www.test1.com-ssl.conf", WordpressResources.class.getResource("www_test1_com_ssl_reverseproxy_conf.txt")),
+    chownProxyOut("/bin/chown.out", WordpressResources.class.getResource("chown_reverseproxy_out.txt")),
+    chmodProxyOut("/bin/chmod.out", WordpressResources.class.getResource("chmod_reverseproxy_out.txt")),
+    useraddProxyOut("/usr/sbin/useradd.out", WordpressResources.class.getResource("useradd_reverseproxy_out.txt")),
+    groupaddProxyOut("/usr/sbin/groupadd.out", WordpressResources.class.getResource("groupadd_reverseproxy_out.txt")),
 
     static copyRoundcubeFiles(File parent) {
         portsConf.createFile parent

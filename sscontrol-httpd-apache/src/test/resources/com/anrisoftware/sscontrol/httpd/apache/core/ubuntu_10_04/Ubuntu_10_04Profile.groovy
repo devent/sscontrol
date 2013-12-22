@@ -27,6 +27,7 @@ profile "ubuntu_10_04", {
     httpd {
         service "apache"
         install_command "export DEBIAN_FRONTEND=noninteractive; ${UbuntuResources.aptitudeCommand.asFile(tmp)} update && ${UbuntuResources.aptitudeCommand.asFile(tmp)} install"
+        enable_repository_command UbuntuResources.addRepositoryCommand.asFile(tmp)
         restart_command UbuntuResources.restartCommand.asFile(tmp)
         chmod_command UbuntuResources.chmodCommand.asFile(tmp)
         chown_command UbuntuResources.chownCommand.asFile(tmp)
@@ -46,10 +47,11 @@ profile "ubuntu_10_04", {
         htpasswd_command UbuntuResources.htpasswdCommand.asFile(tmp)
         temp_directory UbuntuResources.tmpDir.asFile(tmp)
         configuration_directory UbuntuResources.configurationDir.asFile(tmp)
-        local_software_directory UbuntuResources.localSoftwareDir.asFile(tmp)
+        packaging_configuration_directory UbuntuResources.packagingConfigurationDirectory.asFile(tmp)
         groups_file UbuntuResources.groups.asFile(tmp)
         users_file UbuntuResources.users.asFile(tmp)
         sites_available_directory UbuntuResources.sitesAvailableDir.asFile(tmp)
+        sites_enabled_directory UbuntuResources.sitesEnabledDir.asFile(tmp)
         config_include_directory UbuntuResources.configIncludeDir.asFile(tmp)
         sites_directory UbuntuResources.sitesDir.asFile(tmp)
         default_config_file "000-robobee-default.conf"

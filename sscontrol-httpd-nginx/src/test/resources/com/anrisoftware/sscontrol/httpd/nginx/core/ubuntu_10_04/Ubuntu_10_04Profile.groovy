@@ -34,9 +34,6 @@ profile "ubuntu_10_04", {
         packaging_configuration_directory UbuntuResources.packagingConfigurationDirectory.asFile(tmp)
         groups_file UbuntuResources.groups.asFile(tmp)
         users_file UbuntuResources.users.asFile(tmp)
-        sites_available_directory UbuntuResources.sitesAvailableDir.asFile(tmp)
-        sites_enabled_directory UbuntuResources.sitesEnabledDir.asFile(tmp)
-        config_include_directory UbuntuResources.configIncludeDir.asFile(tmp)
         sites_directory UbuntuResources.sitesDir.asFile(tmp)
     }
 }

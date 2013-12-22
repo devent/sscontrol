@@ -1,17 +1,21 @@
-<VirtualHost 192.168.0.51:8082>
+server {
+    # SSL/domain www.test1.com
+    listen 192.168.0.51:443;
+    root /tmp/var/www/www.test1.com/web;
+    index index.php index.html index.htm;
+    server_name www.test1.com;
 
-    # domain www.test1.com
-    ServerName www.test1.com
-    DocumentRoot /tmp/var/www/www.test1.com/web
-    SuexecUserGroup web_002 web_002
-    <Directory /tmp/var/www/www.test1.com/web>
-        AllowOverride None
-        Order allow,deny
-        Allow from all
-    </Directory>
+    ssl on;
+    ssl_certificate /tmp/var/www/www.test1.com/ssl/cert_crt.txt;
+    ssl_certificate_key /tmp/var/www/www.test1.com/ssl/cert_key.txt;
+    ssl_session_timeout 5m;
+    ssl_protocols SSLv3 TLSv1;
+    ssl_ciphers ALL:!ADH:!EXPORT56:RC4+RSA:+HIGH:+MEDIUM:+EXP;
+    ssl_prefer_server_ciphers on;
 
-    SSLEngine on
-    SSLCertificateFile /tmp/var/www/www.test1.com/ssl/cert_crt.txt
-    SSLCertificateKeyFile /tmp/var/www/www.test1.com/ssl/cert_key.txt
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $remote_addr;
+    proxy_set_header Host $host;
+    proxy_pass http://127.0.0.1:8080;
 
-</VirtualHost>
+}

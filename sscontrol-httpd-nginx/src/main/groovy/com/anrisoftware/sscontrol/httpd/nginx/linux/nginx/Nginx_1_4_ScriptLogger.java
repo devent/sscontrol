@@ -18,9 +18,16 @@
  */
 package com.anrisoftware.sscontrol.httpd.nginx.linux.nginx;
 
+import static com.anrisoftware.sscontrol.httpd.nginx.linux.nginx.Nginx_1_4_ScriptLogger._.deploy_domain_config_debug;
+import static com.anrisoftware.sscontrol.httpd.nginx.linux.nginx.Nginx_1_4_ScriptLogger._.deploy_domain_config_info;
+
+import java.io.File;
+
 import javax.inject.Singleton;
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
+import com.anrisoftware.sscontrol.core.service.LinuxScript;
+import com.anrisoftware.sscontrol.httpd.statements.domain.Domain;
 
 /**
  * Logging messages for {@link Nginx_1_4_Script}.
@@ -31,27 +38,39 @@ import com.anrisoftware.globalpom.log.AbstractLogger;
 @Singleton
 class Nginx_1_4_ScriptLogger extends AbstractLogger {
 
-	enum _ {
+    enum _ {
 
-        message("message");
+        deploy_domain_config_debug(
+                "Deploy domain {} configuration to '{}' for {}."),
 
-		private String name;
+        deploy_domain_config_info(
+                "Deploy domain '{}' configuration to '{}' for script '{}'.");
 
-		private _(String name) {
-			this.name = name;
-		}
+        private String name;
 
-		@Override
-		public String toString() {
-			return name;
-		}
-	}
+        private _(String name) {
+            this.name = name;
+        }
 
-	/**
-	 * Creates a logger for {@link Nginx_1_4_Script}.
-	 */
-	public Nginx_1_4_ScriptLogger() {
-		super(Nginx_1_4_Script.class);
-	}
+        @Override
+        public String toString() {
+            return name;
+        }
+    }
 
+    /**
+     * Creates a logger for {@link Nginx_1_4_Script}.
+     */
+    public Nginx_1_4_ScriptLogger() {
+        super(Nginx_1_4_Script.class);
+    }
+
+    void deployDomainConfig(LinuxScript script, Domain domain, File file) {
+        if (isDebugEnabled()) {
+            debug(deploy_domain_config_debug, domain, file, script);
+        } else {
+            info(deploy_domain_config_info, domain.getName(), file,
+                    script.getName());
+        }
+    }
 }

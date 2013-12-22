@@ -221,6 +221,14 @@ class WordpressTest extends UbuntuTestUtil {
         loader.loadService profile.resource, null
         def profile = registry.getService("profile")[0]
         profile.getEntry("httpd").service(["idapache2": "apache", "idproxy": "nginx"])
+        profile.getEntry("httpd").apache_configuration_directory configurationDir.asFile(tmpdir)
+        profile.getEntry("httpd").nginx_configuration_directory nginxConfigurationDir.asFile(tmpdir)
+        profile.getEntry("httpd").apache_sites_available_directory sitesAvailableDir.asFile(tmpdir)
+        profile.getEntry("httpd").nginx_sites_available_directory nginxSitesAvailableDir.asFile(tmpdir)
+        profile.getEntry("httpd").apache_sites_enabled_directory sitesEnabledDir.asFile(tmpdir)
+        profile.getEntry("httpd").nginx_sites_enabled_directory nginxSitesEnabledDir.asFile(tmpdir)
+        profile.getEntry("httpd").apache_config_include_directory configIncludeDir.asFile(tmpdir)
+        profile.getEntry("httpd").nginx_config_include_directory nginxConfigIncludeDir.asFile(tmpdir)
         loader.loadService httpdProxyDomainsScript.resource, profile
         loader.loadService httpdProxyScript.resource, profile
 
@@ -229,7 +237,13 @@ class WordpressTest extends UbuntuTestUtil {
         registry.allServices.each { it.call() }
         assertStringContent test1comProxyConf.replaced(tmpdir, tmpdir, "/tmp"), test1comProxyConf.toString()
         assertStringContent test1comSslProxyConf.replaced(tmpdir, tmpdir, "/tmp"), test1comSslProxyConf.toString()
+        assertStringContent wwwtest1comDomainProxyConf.replaced(tmpdir, tmpdir, "/tmp"), wwwtest1comDomainProxyConf.toString()
+        assertStringContent wwwtest1comSslDomainProxyConf.replaced(tmpdir, tmpdir, "/tmp"), wwwtest1comSslDomainProxyConf.toString()
         assertStringContent wwwtest1comProxyConf.replaced(tmpdir, tmpdir, "/tmp"), wwwtest1comProxyConf.toString()
         assertStringContent wwwtest1comSslProxyConf.replaced(tmpdir, tmpdir, "/tmp"), wwwtest1comSslProxyConf.toString()
+        assertStringContent chownProxyOut.replaced(tmpdir, tmpdir, "/tmp"), chownProxyOut.toString()
+        assertStringContent chmodProxyOut.replaced(tmpdir, tmpdir, "/tmp"), chmodProxyOut.toString()
+        assertStringContent groupaddProxyOut.replaced(tmpdir, tmpdir, "/tmp"), groupaddProxyOut.toString()
+        assertStringContent useraddProxyOut.replaced(tmpdir, tmpdir, "/tmp"), useraddProxyOut.toString()
     }
 }

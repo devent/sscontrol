@@ -32,11 +32,10 @@ import com.anrisoftware.sscontrol.httpd.nginx.core.ubuntu_10_04.ResourcesUtils
 enum ProxyResources {
 
     httpdScript("Httpd.groovy", ProxyResources.class.getResource("HttpdProxy.groovy")),
-    defaultConfExpected("/etc/nginx/conf.d/default.conf", ProxyResources.class.getResource("default_conf_expected.txt")),
-    test1comConf("/etc/apache2/sites-available/100-robobee-test1.com.conf", ProxyResources.class.getResource("test1_com_conf.txt")),
-    test1comSslConf("/etc/apache2/sites-available/100-robobee-test1.com-ssl.conf", ProxyResources.class.getResource("test1_com_ssl_conf.txt")),
-    wwwtest1comConf("/etc/apache2/sites-available/100-robobee-www.test1.com.conf", ProxyResources.class.getResource("www_test1_com_conf.txt")),
-    wwwtest1comSslConf("/etc/apache2/sites-available/100-robobee-www.test1.com-ssl.conf", ProxyResources.class.getResource("www_test1_com_ssl_conf.txt")),
+    test1comConf("/etc/nginx/sites-available/100-robobee-test1.com.conf", ProxyResources.class.getResource("test1_com_conf.txt")),
+    test1comSslConf("/etc/nginx/sites-available/100-robobee-test1.com-ssl.conf", ProxyResources.class.getResource("test1_com_ssl_conf.txt")),
+    wwwtest1comConf("/etc/nginx/sites-available/100-robobee-www.test1.com.conf", ProxyResources.class.getResource("www_test1_com_conf.txt")),
+    wwwtest1comSslConf("/etc/nginx/sites-available/100-robobee-www.test1.com-ssl.conf", ProxyResources.class.getResource("www_test1_com_ssl_conf.txt")),
 
     static copyProxyFiles(File parent) {
     }

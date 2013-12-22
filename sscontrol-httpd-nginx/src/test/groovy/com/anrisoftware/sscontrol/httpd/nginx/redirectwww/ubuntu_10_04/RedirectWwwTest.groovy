@@ -50,16 +50,10 @@ class RedirectWwwTest extends UbuntuTestUtil {
         log.info "Run service again to ensure that configuration is not set double."
         registry.allServices.each { it.call() }
 
-        assertStringContent nginxConfExpected.replaced(tmpdir, tmpdir, "/tmp"), nginxConfExpected.toString()
-        assert sitesAvailableDir.asFile(tmpdir).isDirectory()
-        assert sitesEnabledDir.asFile(tmpdir).isDirectory()
         assertStringContent test1comConf.replaced(tmpdir, tmpdir, "/tmp"), test1comConf.toString()
         assertStringContent test1comSslConf.replaced(tmpdir, tmpdir, "/tmp"), test1comSslConf.toString()
         assertStringContent wwwtest1comConf.replaced(tmpdir, tmpdir, "/tmp"), wwwtest1comConf.toString()
         assertStringContent wwwtest1comSslConf.replaced(tmpdir, tmpdir, "/tmp"), wwwtest1comSslConf.toString()
         assertStringContent lnOutExpected.replaced(tmpdir, tmpdir, "/tmp"), lnOutExpected.toString()
-        assertFileContent restartOutExpected.asFile(tmpdir), restartOutExpected
-        assertFileContent addAptRepositoryOutExpected.asFile(tmpdir), addAptRepositoryOutExpected
-        assertFileContent aptitudeOutExpected.asFile(tmpdir), aptitudeOutExpected
     }
 }

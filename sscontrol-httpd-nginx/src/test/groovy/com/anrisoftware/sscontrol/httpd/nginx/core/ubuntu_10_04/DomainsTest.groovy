@@ -16,11 +16,11 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd-nginx. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.nginx.proxy.ubuntu_10_04
+package com.anrisoftware.sscontrol.httpd.nginx.core.ubuntu_10_04
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
+import static com.anrisoftware.sscontrol.httpd.nginx.core.ubuntu_10_04.DomainsResources.*
 import static com.anrisoftware.sscontrol.httpd.nginx.core.ubuntu_10_04.UbuntuResources.*
-import static com.anrisoftware.sscontrol.httpd.nginx.proxy.ubuntu_10_04.ProxyResources.*
 import static org.apache.commons.io.FileUtils.*
 import groovy.util.logging.Slf4j
 
@@ -29,18 +29,18 @@ import org.junit.Test
 import com.anrisoftware.sscontrol.httpd.nginx.ubuntu.UbuntuTestUtil
 
 /**
- * Proxy Nginx on a Ubuntu 10.04 server.
+ * Redirect to Www Nginx on a Ubuntu 10.04 server.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
 @Slf4j
-class ProxyTest extends UbuntuTestUtil {
+class DomainsTest extends UbuntuTestUtil {
 
     @Test
-    void "proxy"() {
+    void "domains"() {
         copyUbuntuFiles tmpdir
-        copyProxyFiles tmpdir
+        copyDomainsFiles tmpdir
 
         loader.loadService profile.resource, null
         def profile = registry.getService("profile")[0]
@@ -50,9 +50,18 @@ class ProxyTest extends UbuntuTestUtil {
         log.info "Run service again to ensure that configuration is not set double."
         registry.allServices.each { it.call() }
 
+        assertStringContent nginxConfExpected.replaced(tmpdir, tmpdir, "/tmp"), nginxConfExpected.toString()
+        assert sitesAvailableDir.asFile(tmpdir).isDirectory()
+        assert sitesEnabledDir.asFile(tmpdir).isDirectory()
         assertStringContent test1comConf.replaced(tmpdir, tmpdir, "/tmp"), test1comConf.toString()
         assertStringContent test1comSslConf.replaced(tmpdir, tmpdir, "/tmp"), test1comSslConf.toString()
-        assertStringContent wwwtest1comConf.replaced(tmpdir, tmpdir, "/tmp"), wwwtest1comConf.toString()
-        assertStringContent wwwtest1comSslConf.replaced(tmpdir, tmpdir, "/tmp"), wwwtest1comSslConf.toString()
+        assertStringContent lnOutExpected.replaced(tmpdir, tmpdir, "/tmp"), lnOutExpected.toString()
+        assertFileContent restartOutExpected.asFile(tmpdir), restartOutExpected
+        assertFileContent addAptRepositoryOutExpected.asFile(tmpdir), addAptRepositoryOutExpected
+        assertFileContent aptitudeOutExpected.asFile(tmpdir), aptitudeOutExpected
+        assertStringContent useraddOutExpected.replaced(tmpdir, tmpdir, "/tmp"), useraddOutExpected.toString()
+        assertStringContent groupaddOutExpected.replaced(tmpdir, tmpdir, "/tmp"), groupaddOutExpected.toString()
+        assertStringContent chownOutExpected.replaced(tmpdir, tmpdir, "/tmp"), chownOutExpected.toString()
+        assertStringContent chmodOutExpected.replaced(tmpdir, tmpdir, "/tmp"), chmodOutExpected.toString()
     }
 }

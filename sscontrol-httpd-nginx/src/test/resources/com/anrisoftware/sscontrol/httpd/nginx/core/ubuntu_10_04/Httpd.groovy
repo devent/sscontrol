@@ -23,21 +23,9 @@ import com.anrisoftware.sscontrol.httpd.nginx.core.ubuntu_10_04.UbuntuResources
 httpd {
     // domain test1.com
     domain "test1.com", address: "192.168.0.50", {
-        redirect to_www
     }
     // SSL/domain test1.com
     ssl_domain "test1.com", address: "192.168.0.50", {
-        redirect to_www
-        certification_file UbuntuResources.certCrt.resource
-        certification_key_file UbuntuResources.certKey.resource
-    }
-    // domain www.test1.com
-    domain "www.test1.com", address: "192.168.0.51", {
-        proxy "wordpress", alias: "wordpress3", address: "http://127.0.0.1:8080"
-    }
-    // SSL/domain www.test1.com
-    ssl_domain "www.test1.com", address: "192.168.0.51", {
-        proxy "wordpress", alias: "wordpress3", address: "http://127.0.0.1:8082"
         certification_file UbuntuResources.certCrt.resource
         certification_key_file UbuntuResources.certKey.resource
     }

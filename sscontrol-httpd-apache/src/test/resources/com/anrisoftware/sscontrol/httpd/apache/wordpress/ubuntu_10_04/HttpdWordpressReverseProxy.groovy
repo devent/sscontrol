@@ -24,19 +24,25 @@ httpd {
     // reference service with id "idproxy"
     refservice "idproxy"
     // domain test1.com
-    domain "test1.com", address: "192.168.0.50", { redirect to_www }
+    domain "test1.com", address: "192.168.0.50", {
+        user "web_001", uid: 2001, group: "web_001", gid: 2001
+        redirect to_www
+    }
     // SSL/domain test1.com
     ssl_domain "test1.com", address: "192.168.0.50", {
+        user "web_001", uid: 2001, group: "web_001", gid: 2001
         redirect to_www
         certification_file UbuntuResources.certCrt.resource
         certification_key_file UbuntuResources.certKey.resource
     }
     // domain www.test1.com
     domain "www.test1.com", address: "192.168.0.51", {
+        user "web_002", uid: 2002, group: "web_002", gid: 2002
         proxy "wordpress", alias: "wordpress3", address: "http://127.0.0.1:8080" //.
     }
     // SSL/domain www.test1.com
     ssl_domain "www.test1.com", address: "192.168.0.51", {
+        user "web_002", uid: 2002, group: "web_002", gid: 2002
         proxy "wordpress", alias: "wordpress3", address: "http://127.0.0.1:8080" //.
         certification_file UbuntuResources.certCrt.resource
         certification_key_file UbuntuResources.certKey.resource

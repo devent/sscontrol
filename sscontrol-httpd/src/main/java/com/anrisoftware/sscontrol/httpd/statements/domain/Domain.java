@@ -42,6 +42,9 @@ import com.anrisoftware.sscontrol.httpd.statements.proxy.ProxyFactory;
 import com.anrisoftware.sscontrol.httpd.statements.redirect.Redirect;
 import com.anrisoftware.sscontrol.httpd.statements.redirect.RedirectFactory;
 import com.anrisoftware.sscontrol.httpd.statements.redirect.RedirectToWwwHttp;
+import com.anrisoftware.sscontrol.httpd.statements.user.DomainUser;
+import com.anrisoftware.sscontrol.httpd.statements.user.DomainUserArgs;
+import com.anrisoftware.sscontrol.httpd.statements.user.DomainUserFactory;
 import com.anrisoftware.sscontrol.httpd.statements.webservice.WebService;
 import com.anrisoftware.sscontrol.httpd.statements.webservice.WebServiceFactory;
 import com.google.inject.assistedinject.Assisted;
@@ -58,7 +61,6 @@ public class Domain {
     private static final String AUTH_PROVIDER = "provider";
     private static final String SITE_DIR = "%s/web";
     private static final String WWW = "www.%s";
-    private static final String GROUP = "group";
     private static final String NAME = "name";
     private static final String ID = "id";
     private static final String USE = "use";
@@ -90,10 +92,13 @@ public class Domain {
     private Map<String, WebServiceFactory> serviceFactories;
 
     @Inject
-    private DomainUser domainUser;
+    private ProxyFactory proxyFactory;
 
     @Inject
-    private ProxyFactory proxyFactory;
+    private DomainUserFactory domainUserFactory;
+
+    @Inject
+    private DomainUser domainUser;
 
     private String address;
 
@@ -179,9 +184,11 @@ public class Domain {
         return redirects.containsAll(directives);
     }
 
-    public void user(Map<String, Object> map, String name) {
-        domainUser.setUser(name);
-        domainUser.setGroup(map.get(GROUP));
+    public void user(Map<String, Object> args, String name) {
+        args.put(DomainUserArgs.USER, name);
+        DomainUser user = domainUserFactory.create(this, args);
+        log.userSet(this, user);
+        this.domainUser = user;
     }
 
     public DomainUser getDomainUser() {

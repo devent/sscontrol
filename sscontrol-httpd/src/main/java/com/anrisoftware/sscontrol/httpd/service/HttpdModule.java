@@ -31,6 +31,7 @@ import com.anrisoftware.sscontrol.httpd.statements.phpmyadmin.PhpmyadminModule;
 import com.anrisoftware.sscontrol.httpd.statements.proxy.ProxyModule;
 import com.anrisoftware.sscontrol.httpd.statements.redirect.RedirectModule;
 import com.anrisoftware.sscontrol.httpd.statements.roundcube.RoundcubeModule;
+import com.anrisoftware.sscontrol.httpd.statements.user.DomainUserModule;
 import com.anrisoftware.sscontrol.httpd.statements.wordpress.WordpressModule;
 import com.google.inject.AbstractModule;
 
@@ -58,5 +59,6 @@ class HttpdModule extends AbstractModule {
         install(new DatabaseModule());
         install(new BindingsModule());
         install(new ProxyModule());
+        install(new DomainUserModule());
 	}
 }

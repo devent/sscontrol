@@ -16,48 +16,25 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.statements.domain;
+package com.anrisoftware.sscontrol.httpd.statements.user;
 
-import javax.inject.Inject;
-
-import org.apache.commons.lang3.builder.ToStringBuilder;
+import com.google.inject.AbstractModule;
+import com.google.inject.assistedinject.FactoryModuleBuilder;
 
 /**
- * Domain user.
+ * Installs the domain user factory.
+ * 
+ * @see DomainUserFactory
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-public class DomainUser {
+public class DomainUserModule extends AbstractModule {
 
-	@Inject
-	private DomainUserLogger log;
+    @Override
+    protected void configure() {
+        install(new FactoryModuleBuilder().implement(DomainUser.class,
+                DomainUser.class).build(DomainUserFactory.class));
+    }
 
-	private String name;
-
-	private String group;
-
-	public void setUser(String name) {
-		log.checkUser(name);
-		this.name = name;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setGroup(Object group) {
-		log.checkGroup(group);
-		this.group = group.toString();
-	}
-
-	public String getGroup() {
-		return group;
-	}
-
-	@Override
-	public String toString() {
-		return new ToStringBuilder(this).append("user", name)
-				.append("group", group).toString();
-	}
 }

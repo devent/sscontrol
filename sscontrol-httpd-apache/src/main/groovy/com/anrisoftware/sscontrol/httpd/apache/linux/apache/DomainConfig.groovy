@@ -67,14 +67,15 @@ class DomainConfig {
 
     private addSiteUser(Domain domain) {
         def user = domain.domainUser
-        int uid = minimumUid + domainNumber
+        int uid = user.uid != null ? user.uid : (minimumUid + domainNumber)
         def home = domainDir domain
         def shell = "/bin/false"
         script.addUser userName: user.name, groupName: user.group, userId: uid, homeDir: home, shell: shell
     }
 
     private addSiteGroup(Domain domain) {
-        int gid = minimumGid + domainNumber
+        def user = domain.domainUser
+        int gid = user.gid != null ? user.gid : (minimumGid + domainNumber)
         addGroup groupName: domain.domainUser.group, groupId: gid
     }
 

@@ -35,6 +35,8 @@ import static com.anrisoftware.sscontrol.httpd.statements.domain.DomainLogger._.
 import static com.anrisoftware.sscontrol.httpd.statements.domain.DomainLogger._.service_added_info;
 import static com.anrisoftware.sscontrol.httpd.statements.domain.DomainLogger._.use_domain;
 import static com.anrisoftware.sscontrol.httpd.statements.domain.DomainLogger._.use_domain_debug;
+import static com.anrisoftware.sscontrol.httpd.statements.domain.DomainLogger._.user_set_debug;
+import static com.anrisoftware.sscontrol.httpd.statements.domain.DomainLogger._.user_set_info;
 import static org.apache.commons.lang3.Validate.notNull;
 
 import javax.inject.Singleton;
@@ -42,6 +44,7 @@ import javax.inject.Singleton;
 import com.anrisoftware.globalpom.log.AbstractLogger;
 import com.anrisoftware.sscontrol.httpd.statements.proxy.Proxy;
 import com.anrisoftware.sscontrol.httpd.statements.redirect.Redirect;
+import com.anrisoftware.sscontrol.httpd.statements.user.DomainUser;
 import com.anrisoftware.sscontrol.httpd.statements.webservice.WebService;
 import com.anrisoftware.sscontrol.httpd.statements.webservice.WebServiceFactory;
 
@@ -91,7 +94,11 @@ class DomainLogger extends AbstractLogger {
 
         service_not_found("Service '%s' not found for %s."),
 
-        proxy_set_debug("Domain proxy {} set for {}.");
+        proxy_set_debug("Domain proxy {} set for {}."),
+
+        user_set_debug("Domain user {} set for {}."),
+
+        user_set_info("Domain user '{}' set for domain '{}'.");
 
         private String name;
 
@@ -182,5 +189,13 @@ class DomainLogger extends AbstractLogger {
 
     void proxySet(Domain domain, Proxy proxy) {
         debug(proxy_set_debug, proxy, domain);
+    }
+
+    void userSet(Domain domain, DomainUser user) {
+        if (isDebugEnabled()) {
+            debug(user_set_debug, domain, domain);
+        } else {
+            info(user_set_info, user.getName(), domain.getName());
+        }
     }
 }

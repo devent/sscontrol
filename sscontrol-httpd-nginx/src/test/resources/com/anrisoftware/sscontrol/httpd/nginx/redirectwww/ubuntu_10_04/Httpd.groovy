@@ -16,19 +16,27 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd-apache. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.nginx.linux.nginx;
+package com.anrisoftware.sscontrol.httpd.nginx.proxy.ubuntu_10_04
 
-import com.google.inject.AbstractModule;
+import com.anrisoftware.sscontrol.httpd.nginx.core.ubuntu_10_04.UbuntuResources
 
-/**
- * Nginx service module.
- * 
- * @author Erwin Mueller, erwin.mueller@deventm.org
- * @since 1.0
- */
-public class NginxScriptModule extends AbstractModule {
-
-    @Override
-    protected void configure() {
+httpd {
+    // domain test1.com
+    domain "test1.com", address: "192.168.0.50", {
+        redirect to_www
+    }
+    // SSL/domain test1.com
+    ssl_domain "test1.com", address: "192.168.0.50", {
+        redirect to_www
+        certification_file UbuntuResources.certCrt.resource
+        certification_key_file UbuntuResources.certKey.resource
+    }
+    // domain www.test1.com
+    domain "www.test1.com", address: "192.168.0.51", {
+    }
+    // SSL/domain www.test1.com
+    ssl_domain "www.test1.com", address: "192.168.0.51", {
+        certification_file UbuntuResources.certCrt.resource
+        certification_key_file UbuntuResources.certKey.resource
     }
 }

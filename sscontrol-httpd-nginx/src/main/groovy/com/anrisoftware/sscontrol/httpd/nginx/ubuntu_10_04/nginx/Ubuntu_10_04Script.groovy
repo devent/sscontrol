@@ -35,8 +35,21 @@ class Ubuntu_10_04Script extends Nginx_1_4_Script {
     Ubuntu10_04PropertiesProvider ubuntuProperties
 
     @Override
-    def distributionSpecificConfiguration() {
+    def run() {
+        super.run()
+        restartServices()
+    }
+
+    @Override
+    void beforeConfiguration() {
+        enableRepositories()
         installPackages()
+    }
+
+    void enableRepositories() {
+        def distribution = profileProperty "distribution_name", defaultProperties
+        def repositories = profileListProperty "additional_repositories", defaultProperties
+        enableDebRepositories distribution, repositories
     }
 
     @Override

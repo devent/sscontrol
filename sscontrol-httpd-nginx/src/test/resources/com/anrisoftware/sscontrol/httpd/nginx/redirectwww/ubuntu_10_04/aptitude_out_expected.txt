@@ -1,0 +1,8 @@
+update
+install python-software-properties
+update
+install nginx
+update
+install python-software-properties
+update
+install nginx

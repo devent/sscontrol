@@ -29,7 +29,7 @@ import com.google.inject.AbstractModule;
 import com.google.inject.multibindings.MapBinder;
 
 /**
- * Binds the Apache/Ubuntu 10.04 services.
+ * Binds the Nginx/Ubuntu 10.04 services.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0

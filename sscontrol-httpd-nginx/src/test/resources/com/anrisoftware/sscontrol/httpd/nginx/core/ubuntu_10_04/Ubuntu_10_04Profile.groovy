@@ -22,10 +22,16 @@ profile "ubuntu_10_04", {
     httpd {
         service "nginx"
         install_command "export DEBIAN_FRONTEND=noninteractive\n${UbuntuResources.aptitudeCommand.asFile(tmp)} update && ${UbuntuResources.aptitudeCommand.asFile(tmp)} install"
-        restart_command UbuntuResources.restartCommand.asFile(tmp)
+        restart_command "${UbuntuResources.restartCommand.asFile(tmp)} restart"
+        enable_repository_command UbuntuResources.addRepositoryCommand.asFile(tmp)
+        chmod_command UbuntuResources.chmodCommand.asFile(tmp)
+        chown_command UbuntuResources.chownCommand.asFile(tmp)
+        group_add_command UbuntuResources.groupaddCommand.asFile(tmp)
+        user_add_command UbuntuResources.useraddCommand.asFile(tmp)
         link_command UbuntuResources.lnCommand.asFile(tmp)
         temp_directory UbuntuResources.tmpDir.asFile(tmp)
         configuration_directory UbuntuResources.configurationDir.asFile(tmp)
+        packaging_configuration_directory UbuntuResources.packagingConfigurationDirectory.asFile(tmp)
         groups_file UbuntuResources.groups.asFile(tmp)
         users_file UbuntuResources.users.asFile(tmp)
         sites_available_directory UbuntuResources.sitesAvailableDir.asFile(tmp)

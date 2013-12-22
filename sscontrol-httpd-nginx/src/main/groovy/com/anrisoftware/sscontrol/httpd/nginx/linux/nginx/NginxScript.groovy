@@ -42,17 +42,6 @@ abstract class NginxScript extends LinuxScript {
     @Inject
     private BindingFactory bindingFactory
 
-    @Override
-    def run() {
-        super.run()
-        distributionSpecificConfiguration()
-    }
-
-    /**
-     * Run the distribution specific configuration.
-     */
-    abstract distributionSpecificConfiguration()
-
     /**
      * Returns the template resource containing commands.
      */
@@ -64,7 +53,8 @@ abstract class NginxScript extends LinuxScript {
     }
 
     /**
-     * Returns the directory for the included configuration. If the path is
+     * Returns the directory for the included configuration, for
+     * example {@code "conf.d".} If the path is
      * not absolute then it is assume to be under the configuration directory.
      *
      * <ul>
@@ -75,32 +65,44 @@ abstract class NginxScript extends LinuxScript {
      * @see #getConfigurationDir()
      */
     File getConfigIncludeDir() {
-        def path = profileProperty("config_include_directory", defaultProperties)
-        if (path instanceof File) {
-            return path
-        } else {
-            def file = new File(path)
-            return file.absolute ? file : new File(configurationDir, path)
-        }
+        profileFileProperty "config_include_directory", configurationDir, defaultProperties
     }
 
     /**
-     * Returns the path for the default configuration file.
+     * Returns the directory for the available sites, for
+     * example {@code "sites-available".} If the path is
+     * not absolute then it is assume to be under the configuration directory.
      *
      * <ul>
-     * <li>profile property {@code "default_config_file"}</li>
+     * <li>profile property {@code "sites_available_directory"}</li>
      * </ul>
      *
      * @see #getDefaultProperties()
+     * @see #getConfigurationDir()
      */
-    File getDefaultConfigFile() {
-        def file = profileProperty("default_config_file", defaultProperties)
-        new File(sitesAvailableDir, file)
+    File getSitesAvailableDir() {
+        profileFileProperty "sites_available_directory", configurationDir, defaultProperties
     }
 
     /**
-     * Returns the path for the parent directory containing the sites.
-     * For example {@code /var/www}.
+     * Returns the directory for the enabled sites, for
+     * example {@code "sites-enabled".} If the path is
+     * not absolute then it is assume to be under the configuration directory.
+     *
+     * <ul>
+     * <li>profile property {@code "sites_enabled_directory"}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     * @see #getConfigurationDir()
+     */
+    File getSitesEnabledDir() {
+        profileFileProperty "sites_enabled_directory", configurationDir, defaultProperties
+    }
+
+    /**
+     * Returns the path for the parent directory containing the sites,
+     * for example {@code "/var/www".}
      *
      * <ul>
      * <li>profile property {@code "sites_directory"}</li>
@@ -113,6 +115,39 @@ abstract class NginxScript extends LinuxScript {
     }
 
     /**
+     * Returns the path for the Nginx configuration file,
+     * for example {@code "nginx.conf".}  If the path is
+     * not absolute then it is assume to be under the configuration directory.
+     *
+     * <ul>
+     * <li>profile property {@code "nginx_config_file"}</li>
+     * </ul>
+     *
+     * @see #getConfigurationDir()
+     * @see #getDefaultProperties()
+     */
+    File getNginxConfigFile() {
+        profileFileProperty "nginx_config_file", configurationDir, defaultProperties
+    }
+
+    /**
+     * Returns the path for the default configuration file,
+     * for example {@code "default.conf".}  If the path is
+     * not absolute then it is assume to be under the configuration
+     * include directory.
+     *
+     * <ul>
+     * <li>profile property {@code "default_config_file"}</li>
+     * </ul>
+     *
+     * @see #getConfigIncludeDir()
+     * @see #getDefaultProperties()
+     */
+    File getDefaultConfigFile() {
+        profileFileProperty "default_config_file", configIncludeDir, defaultProperties
+    }
+
+    /**
      * Returns the name of the directory to store SSL/certificates files.
      *
      * <ul>
@@ -122,7 +157,7 @@ abstract class NginxScript extends LinuxScript {
      * @see #getDefaultProperties()
      */
     String getSslSubdirectory() {
-        profileProperty("ssl_subdirectory", defaultProperties)
+        profileProperty "ssl_subdirectory", defaultProperties
     }
 
     /**
@@ -135,7 +170,7 @@ abstract class NginxScript extends LinuxScript {
      * @see #getDefaultProperties()
      */
     String getWebSubdirectory() {
-        profileProperty("web_subdirectory", defaultProperties)
+        profileProperty "web_subdirectory", defaultProperties
     }
 
     /**
@@ -181,6 +216,128 @@ abstract class NginxScript extends LinuxScript {
     }
 
     /**
+     * Returns the index files for
+     * example {@code "index.php,index.html,index.htm".}
+     *
+     * <ul>
+     * <li>profile property {@code "index_files"}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    List getIndexFiles() {
+        profileListProperty "index_files", defaultProperties
+    }
+
+    /**
+     * Returns the SSL protocols, for
+     * example {@code "SSLv3,TLSv1".}
+     *
+     * <ul>
+     * <li>profile property {@code "ssl_protocols"}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    List getSslProtocols() {
+        profileListProperty "ssl_protocols", defaultProperties
+    }
+
+    /**
+     * Returns the SSL ciphers, for
+     * example {@code "ALL,!ADH,!EXPORT56,RC4+RSA,+HIGH,+MEDIUM,+EXP".}
+     *
+     * <ul>
+     * <li>profile property {@code "ssl_ciphers"}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    List getSslCiphers() {
+        profileListProperty "ssl_ciphers", defaultProperties
+    }
+
+    /**
+     * Returns the SSL session timeout, for
+     * example {@code "5m".}
+     *
+     * <ul>
+     * <li>profile property {@code "ssl_session_timeout"}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    String getSslSessionTimeout() {
+        profileProperty "ssl_session_timeout", defaultProperties
+    }
+
+    /**
+     * Returns the logging storage, for
+     * example {@code "/var/log/nginx/error.log".}
+     *
+     * <ul>
+     * <li>profile property {@code "logging_storage"}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    String getLoggingStorage() {
+        profileProperty "logging_storage", defaultProperties
+    }
+
+    /**
+     * Returns the group name pattern for site users.
+     *
+     * <ul>
+     * <li>profile property {@code "group_pattern"}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    String getGroupPattern() {
+        profileProperty("group_pattern", defaultProperties)
+    }
+
+    /**
+     * Returns the user name pattern for site users.
+     *
+     * <ul>
+     * <li>profile property {@code "user_pattern"}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    String getUserPattern() {
+        profileProperty("user_pattern", defaultProperties)
+    }
+
+    /**
+     * Returns the minimum group ID for site users.
+     *
+     * <ul>
+     * <li>profile property {@code "minimum_gid"}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    int getMinimumGid() {
+        profileNumberProperty("minimum_gid", defaultProperties)
+    }
+
+    /**
+     * Returns the minimum user ID for site users.
+     *
+     * <ul>
+     * <li>profile property {@code "minimum_uid"}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    int getMinimumUid() {
+        profileNumberProperty("minimum_uid", defaultProperties)
+    }
+
+    /**
      * Returns unique domains. The domains are identified by their name.
      */
     List getUniqueDomains() {
@@ -193,5 +350,19 @@ abstract class NginxScript extends LinuxScript {
             }
         }
         return domains
+    }
+
+    /**
+     * Enable the specified sites.
+     */
+    def enableSites(List sites) {
+        def files = sites.inject([]) { acc, val ->
+            acc << new File(sitesAvailableDir, val)
+        }
+        def targets = sites.inject([]) { acc, val ->
+            acc << new File(sitesEnabledDir, val)
+        }
+        link([files: files, targets: targets])
+        log.enabledSites this, sites
     }
 }

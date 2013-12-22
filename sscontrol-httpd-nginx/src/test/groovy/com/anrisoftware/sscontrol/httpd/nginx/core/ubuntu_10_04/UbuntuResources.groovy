@@ -35,12 +35,17 @@ enum UbuntuResources {
     groups("/etc/group", UbuntuResources.class.getResource("group.txt")),
     users("/etc/passwd", UbuntuResources.class.getResource("passwd.txt")),
     nginxConf("/etc/nginx/nginx.conf", UbuntuResources.class.getResource("nginx_conf.txt")),
-    defaultConf("/etc/nginx/conf.d/default.conf", UbuntuResources.class.getResource("default_conf.txt")),
     aptitudeCommand("/usr/bin/aptitude", UbuntuResources.class.getResource("echo_command.txt")),
+    addRepositoryCommand("/usr/bin/add-apt-repository", UbuntuResources.class.getResource("echo_command.txt")),
     restartCommand("/etc/init.d/nginx", UbuntuResources.class.getResource("echo_command.txt")),
     lnCommand("/bin/ln", UbuntuResources.class.getResource("echo_command.txt")),
+    chmodCommand("/bin/chmod", UbuntuResources.class.getResource("echo_command.txt")),
+    chownCommand("/bin/chown", UbuntuResources.class.getResource("echo_command.txt")),
+    useraddCommand("/usr/sbin/useradd", UbuntuResources.class.getResource("echo_command.txt")),
+    groupaddCommand("/usr/sbin/groupadd", UbuntuResources.class.getResource("echo_command.txt")),
     tmpDir("/tmp", null),
     configurationDir("/etc/nginx", null),
+    packagingConfigurationDirectory("/etc/apt", null),
     sitesAvailableDir("/etc/nginx/sites-available", null),
     sitesEnabledDir("/etc/nginx/sites-enabled", null),
     configIncludeDir("/etc/nginx/conf.d", null),
@@ -48,13 +53,19 @@ enum UbuntuResources {
 
     static copyUbuntuFiles(File parent) {
         aptitudeCommand.createCommand parent
+        addRepositoryCommand.createCommand parent
         restartCommand.createCommand parent
         lnCommand.createCommand parent
         tmpDir.asFile(parent).mkdirs()
+        packagingConfigurationDirectory.asFile parent mkdirs()
+        configurationDir.asFile parent mkdirs()
+        chmodCommand.createCommand parent
+        chownCommand.createCommand parent
+        groupaddCommand.createCommand parent
+        useraddCommand.createCommand parent
         groups.createFile parent
         users.createFile parent
         nginxConf.createFile parent
-        defaultConf.createFile parent
     }
 
     ResourcesUtils resources

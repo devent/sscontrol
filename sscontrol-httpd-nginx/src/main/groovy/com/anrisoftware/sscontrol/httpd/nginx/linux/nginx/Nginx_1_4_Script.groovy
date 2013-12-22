@@ -27,10 +27,12 @@ import org.apache.commons.io.FileUtils
 
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.Templates
+import com.anrisoftware.sscontrol.httpd.service.HttpdService
 import com.anrisoftware.sscontrol.httpd.statements.auth.AbstractAuth
 import com.anrisoftware.sscontrol.httpd.statements.domain.Domain
 import com.anrisoftware.sscontrol.httpd.statements.domain.SslDomain
 import com.anrisoftware.sscontrol.httpd.statements.webservice.WebService
+import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokenTemplate
 
 /**
  * Configures Nginx 1.4 service.
@@ -49,10 +51,19 @@ abstract class Nginx_1_4_Script extends NginxScript {
     @Inject
     SslDomainConfig sslDomainConfig
 
+    @Inject
+    DebugLoggingRenderer debugLoggingRenderer
+
+    @Inject
+    RedirectConfig deployRedirectToWwwHttp
+
+    @Inject
+    RedirectConfig deployRedirectToWwwHttps
+
     /**
      * The {@link Templates} for the script.
      */
-    Templates apacheTemplates
+    Templates nginxTemplates
 
     /**
      * Resource containing the configuration templates.
@@ -66,38 +77,58 @@ abstract class Nginx_1_4_Script extends NginxScript {
 
     @Override
     def run() {
-        apacheTemplates = templatesFactory.create "Nginx_1_4"
-        configTemplate = apacheTemplates.getResource "config"
-        nginxCommandsTemplate = apacheTemplates.getResource "commands"
+        nginxTemplates = templatesFactory.create "Nginx_1_4", ["renderers": [debugLoggingRenderer]]
+        configTemplate = nginxTemplates.getResource "config"
+        nginxCommandsTemplate = nginxTemplates.getResource "commands"
         domainConfig.script = this
         sslDomainConfig.script = this
         super.run()
+        beforeConfiguration()
         setupDefaultBinding()
+        setupDefaultLogging()
         deployDefaultConfig()
-        deployDomainsConfig()
-        enableDefaultMods()
         deployConfig()
-        restartServices()
     }
 
-    def setupDefaultBinding() {
+    /**
+     * Called before the configuration.
+     */
+    abstract void beforeConfiguration()
+
+    void setupDefaultBinding() {
         if (service.binding.size() == 0) {
             defaultBinding.each { service.binding.addAddress(it) }
         }
     }
 
-    def deployDefaultConfig() {
-        def string = configTemplate.getText true, "defaultConfiguration"
-        FileUtils.write defaultConfigFile, string
+    void setupDefaultLogging() {
+        if (!service.debug.args.containsKey("storage")) {
+            service.debug.args.storage = loggingStorage
+        }
     }
 
-    def deployDomainsConfig() {
-        def string = configTemplate.getText true, "domainsConfiguration", "service", service
-        FileUtils.write domainsConfigFile, string
+    /**
+     * Deploys the configuration of the Nginx service.
+     */
+    void deployDefaultConfig() {
+        def file = nginxConfigFile
+        def conf = currentConfiguration file
+        deployConfiguration configurationTokens(), conf, mainConfigurations(service), file
     }
 
-    def enableDefaultMods() {
-        enableMods "suexec"
+    /**
+     * Returns the Nginx service configurations.
+     */
+    List mainConfigurations(HttpdService service) {
+        [
+            configErrorLog(service),
+        ]
+    }
+
+    def configErrorLog(HttpdService service) {
+        def search = configTemplate.getText(true, "errorLog_search")
+        def replace = configTemplate.getText(true, "errorLog", "debug", service.debug)
+        new TokenTemplate(search, replace)
     }
 
     def deployConfig() {
@@ -109,7 +140,7 @@ abstract class Nginx_1_4_Script extends NginxScript {
             deployService domain, serviceConfig
             deployDomainConfig domain, serviceConfig
             deploySslDomain domain
-            enableSites domain.fileName
+            enableSites([domain.fileName])
         }
     }
 
@@ -169,7 +200,6 @@ abstract class Nginx_1_4_Script extends NginxScript {
 
     def deploySslDomain(Domain domain) {
         if (domain.class == SslDomain) {
-            sslDomainConfig.enableSsl()
             sslDomainConfig.deployCertificates(domain)
         }
     }

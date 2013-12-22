@@ -16,19 +16,29 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd-apache. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.nginx.linux.nginx;
+package com.anrisoftware.sscontrol.httpd.nginx.linux.nginx
 
-import com.google.inject.AbstractModule;
+import com.anrisoftware.sscontrol.httpd.statements.domain.Domain
+import com.anrisoftware.sscontrol.httpd.statements.redirect.Redirect
 
 /**
- * Nginx service module.
- * 
+ * Redirect configuration.
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-public class NginxScriptModule extends AbstractModule {
+class RedirectConfig {
 
-    @Override
-    protected void configure() {
+    NginxScript script
+
+    def deployRedirect(Domain domain, Redirect redirect) {
+    }
+
+    def propertyMissing(String name) {
+        script.getProperty name
+    }
+
+    def methodMissing(String name, def args) {
+        script.invokeMethod name, args
     }
 }

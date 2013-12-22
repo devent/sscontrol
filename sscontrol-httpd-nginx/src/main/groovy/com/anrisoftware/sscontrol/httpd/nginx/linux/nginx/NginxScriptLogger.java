@@ -18,12 +18,8 @@
  */
 package com.anrisoftware.sscontrol.httpd.nginx.linux.nginx;
 
-import static com.anrisoftware.sscontrol.httpd.nginx.linux.nginx.NginxScriptLogger._.enabled_mods_debug;
-import static com.anrisoftware.sscontrol.httpd.nginx.linux.nginx.NginxScriptLogger._.enabled_mods_info;
-import static com.anrisoftware.sscontrol.httpd.nginx.linux.nginx.NginxScriptLogger._.enabled_mods_trace;
 import static com.anrisoftware.sscontrol.httpd.nginx.linux.nginx.NginxScriptLogger._.enabled_sites_debug;
 import static com.anrisoftware.sscontrol.httpd.nginx.linux.nginx.NginxScriptLogger._.enabled_sites_info;
-import static com.anrisoftware.sscontrol.httpd.nginx.linux.nginx.NginxScriptLogger._.enabled_sites_trace;
 
 import javax.inject.Singleton;
 
@@ -41,17 +37,9 @@ class NginxScriptLogger extends AbstractLogger {
 
 	enum _ {
 
-		enabled_mods_trace("Enabled Mods/{} for {}, {}."),
-
-		enabled_mods_debug("Enabled Mods/{} for {}."),
-
-		enabled_mods_info("Enabled Mods/{}."),
-
-		enabled_sites_trace("Enabled sites {} for {}, {}."),
-
 		enabled_sites_debug("Enabled sites {} for {}."),
 
-		enabled_sites_info("Enabled sites '{}'.");
+        enabled_sites_info("Enabled sites '{}' for service '{}'.");
 
 		private String name;
 
@@ -72,23 +60,11 @@ class NginxScriptLogger extends AbstractLogger {
 		super(NginxScript.class);
 	}
 
-	void enabledMods(NginxScript script, Object worker, Object mods) {
-		if (isTraceEnabled()) {
-			trace(enabled_mods_trace, mods, script, worker);
-		} else if (isDebugEnabled()) {
-			debug(enabled_mods_debug, mods, script);
-		} else {
-			info(enabled_mods_info, mods);
-		}
-	}
-
-	void enabledSites(NginxScript script, Object worker, Object sites) {
-		if (isTraceEnabled()) {
-			trace(enabled_sites_trace, sites, script, worker);
-		} else if (isDebugEnabled()) {
+    void enabledSites(NginxScript script, Object sites) {
+        if (isDebugEnabled()) {
 			debug(enabled_sites_debug, sites, script);
 		} else {
-			info(enabled_sites_info, sites);
+            info(enabled_sites_info, sites, script.getName());
 		}
 	}
 }

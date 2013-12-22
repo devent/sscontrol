@@ -1,84 +1,53 @@
-errorLog_search() ::= <%
-error_log\s+/var/log/nginx/error.log\s+.*?;
-%>
-
-errorLog_search(debug) ::= <%
-error_log /var/log/nginx/error.log <debug>;
-%>
-
-errorLog_search() ::= <%
-error_log\s+/var/log/nginx/error.log\s+.*?;
-%>
-
-errorLog_search(debug) ::= <%
-error_log /var/log/nginx/error.log <debug>;
-%>
-
-Domain(properties, domain, servicesConfig) ::= <<
+Domain(properties, domain, servicesConfig, proxyConfig) ::= <<
 server {
-
+    # domain <domain.name>
     <domainBody(properties, domain)>
-
+    <domainProxy(properties, domain)>
     <domain.redirects:domainRedirects(domain);separator="\n">
+    <proxyConfig;separator="\n">
     <servicesConfig;separator="\n">
-\</VirtualHost>
-
-
-server {
-
-    location / {
-        try_files $uri $uri/ /index.php;
-    }
-
-    location ~ \.php$ {
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $remote_addr;
-        proxy_set_header Host $host;
-        proxy_pass http://127.0.0.1:8080;
-    }
-
-    location ~ /\.ht {
-        deny all;
-    }
 }
 
 >>
 
-SslDomain(properties, domain, servicesConfig) ::= <<
-\<VirtualHost <domain.address>:<domain.port>\>
-
+SslDomain(properties, domain, servicesConfig, proxyConfig) ::= <<
+server {
+    # SSL/domain <domain.name>
     <domainBody(properties, domain)>
-
     <domainCerts(properties, domain)>
-
     <domain.redirects:domainRedirects(domain);separator="\n">
+    <domainProxy(properties, domain)>
     <servicesConfig;separator="\n">
-\</VirtualHost>
+}
 
 >>
 
 domainBody(properties, domain) ::= <<
-# domain <domain.name>
-listen <if(<domain.address>)>:<domain.port>;
+listen <domain.address>:<domain.port>;
 root <properties.sitesDirectory>/<domain.siteDirectory>;
-index index.php index.html index.htm;
+index <properties.indexFiles;separator=" ">;
 server_name <domain.name>;
 
-location / {
-    try_files $uri $uri/ /index.php;
-}
-    
-\<Directory <properties.sitesDirectory>/<domain.siteDirectory>\>
-    AllowOverride None
-    Order allow,deny
-    Allow from all
-\</Directory>
+>>
+
+domainProxy(properties, domain) ::= <<
+<if(domain.proxy)>
+proxy_set_header X-Real-IP $remote_addr;
+proxy_set_header X-Forwarded-For $remote_addr;
+proxy_set_header Host $host;
+proxy_pass <domain.proxy.address>;
+<endif>
 >>
 
 domainCerts(properties, domain) ::= <<
-SSLEngine on
-SSLCertificateFile <properties.sitesDirectory>/<domain.name>/<properties.sslSubdirectory>/<domain.certificationFile>
-SSLCertificateKeyFile <properties.sitesDirectory>/<domain.name>/<properties.sslSubdirectory>/<domain.certificationKeyFile>
+ssl on;
+ssl_certificate <properties.sitesDirectory>/<domain.name>/<properties.sslSubdirectory>/<domain.certificationFile>;
+ssl_certificate_key <properties.sitesDirectory>/<domain.name>/<properties.sslSubdirectory>/<domain.certificationKeyFile>;
+ssl_session_timeout <properties.sslSessionTimeout>;
+ssl_protocols <properties.sslProtocols;separator=" ">;
+ssl_ciphers <properties.sslCiphers;separator=":">;
+ssl_prefer_server_ciphers on;
+
 >>
 
 domainRedirects(redirect, domain) ::= <<
@@ -95,27 +64,20 @@ RewriteRule (.*) https://<domain.name>$1 [R=301,L]
 
 RedirectToWwwHttp(redirect, domain) ::= <<
 # redirect to www http
-ServerAlias www.<domain.name>
-RewriteEngine On
-RewriteCond %{HTTP_HOST} ^<domain.namePattern>$ [NC]
-RewriteRule ^(.*)$ http://www.<domain.name>$1 [L,R=301]
+return 301 http://www.<domain.name>$request_uri;
 
 >>
 
 RedirectToWwwHttps(redirect, domain) ::= <<
 # redirect to www https
-ServerAlias www.<domain.name>
-RewriteEngine On
-RewriteCond %{HTTP_HOST} ^<domain.namePattern>$ [NC]
-RewriteRule ^(.*)$ https://www.<domain.name>$1 [L,R=301]
+return 301 https://www.<domain.name>$request_uri;
 
 >>
 
-domainAlias(properties, domain) ::= <<
-Alias / <documentRoot(properties, domain)><domain.documentRoot>/
->>
+errorLog_search() ::= <%
+error_log\s+.*?;
+%>
 
-documentRoot(properties, domain) ::= <<
-<if(domain.useDomain)><properties.sitesDirectory>/<domain.useDomain>/web
-<else><properties.sitesDirectory>/<domain.name>/web<endif>
->>
+errorLog(debug) ::= <%
+error_log <debug>;
+%>

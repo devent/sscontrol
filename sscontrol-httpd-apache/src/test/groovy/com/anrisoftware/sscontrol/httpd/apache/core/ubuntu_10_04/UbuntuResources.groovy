@@ -70,6 +70,7 @@ enum UbuntuResources {
     nginxSitesAvailableDir("/etc/nginx/sites-available", null),
     nginxSitesEnabledDir("/etc/nginx/sites-enabled", null),
     nginxConfigIncludeDir("/etc/nginx/conf.d", null),
+    nginxRestartCommand("/etc/init.d/nginx", UbuntuResources.class.getResource("echo_command.txt")),
 
     static copyUbuntuFiles(File parent) {
         aptitudeCommand.createCommand parent

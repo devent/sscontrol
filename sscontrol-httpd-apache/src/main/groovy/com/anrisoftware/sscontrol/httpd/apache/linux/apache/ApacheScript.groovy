@@ -74,6 +74,25 @@ abstract class ApacheScript extends LinuxScript {
     }
 
     /**
+     * Returns the restart command for the Apache service.
+     *
+     * <ul>
+     * <li>property key {@code apache_restart_command}</li>
+     * <li>property key {@code restart_command}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    @Override
+    String getRestartCommand() {
+        if (containsKey("apache_restart_command")) {
+            profileProperty "apache_restart_command", defaultProperties
+        } else {
+            profileProperty "restart_command", defaultProperties
+        }
+    }
+
+    /**
      * Returns the enable mod command {@code a2enmod}.
      *
      * <ul>

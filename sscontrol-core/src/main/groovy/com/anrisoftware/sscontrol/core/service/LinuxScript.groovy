@@ -498,7 +498,7 @@ abstract class LinuxScript extends Script {
     }
 
     /**
-     * Returns the restart command for the postfix service.
+     * Returns the restart command for the service.
      *
      * <ul>
      * <li>property key {@code restart_command}</li>

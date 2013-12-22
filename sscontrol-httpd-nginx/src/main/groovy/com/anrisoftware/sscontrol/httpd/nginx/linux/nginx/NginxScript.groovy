@@ -53,6 +53,25 @@ abstract class NginxScript extends LinuxScript {
     }
 
     /**
+     * Returns the restart command for the Nginx service.
+     *
+     * <ul>
+     * <li>property key {@code nginx_restart_command}</li>
+     * <li>property key {@code restart_command}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    @Override
+    String getRestartCommand() {
+        if (containsKey("nginx_restart_command")) {
+            profileProperty "nginx_restart_command", defaultProperties
+        } else {
+            profileProperty "restart_command", defaultProperties
+        }
+    }
+
+    /**
      * Returns the path of the Nginx configuration directory.
      *
      * <ul>

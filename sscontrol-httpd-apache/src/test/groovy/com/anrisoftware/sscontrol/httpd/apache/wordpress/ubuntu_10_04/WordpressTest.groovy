@@ -217,10 +217,13 @@ class WordpressTest extends UbuntuTestUtil {
     void "wordpress reverse proxy"() {
         copyUbuntuFiles tmpdir
         copyRoundcubeFiles tmpdir
+        nginxRestartCommand.createCommand tmpdir
 
         loader.loadService profile.resource, null
         def profile = registry.getService("profile")[0]
         profile.getEntry("httpd").service(["idapache2": "apache", "idproxy": "nginx"])
+        profile.getEntry("httpd").apache_restart_command "${restartCommand.asFile(tmpdir)} restart"
+        profile.getEntry("httpd").nginx_restart_command "${nginxRestartCommand.asFile(tmpdir)} restart"
         profile.getEntry("httpd").apache_configuration_directory configurationDir.asFile(tmpdir)
         profile.getEntry("httpd").nginx_configuration_directory nginxConfigurationDir.asFile(tmpdir)
         profile.getEntry("httpd").apache_sites_available_directory sitesAvailableDir.asFile(tmpdir)

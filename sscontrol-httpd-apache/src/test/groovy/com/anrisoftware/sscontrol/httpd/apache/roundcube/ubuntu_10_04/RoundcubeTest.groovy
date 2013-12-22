@@ -25,8 +25,6 @@ import static com.anrisoftware.sscontrol.httpd.apache.roundcube.ubuntu_10_04.Rou
 import static org.apache.commons.io.FileUtils.*
 import groovy.util.logging.Slf4j
 
-import org.junit.Test
-
 import com.anrisoftware.sscontrol.httpd.apache.ubuntu.UbuntuTestUtil
 
 /**
@@ -38,7 +36,7 @@ import com.anrisoftware.sscontrol.httpd.apache.ubuntu.UbuntuTestUtil
 @Slf4j
 class RoundcubeTest extends UbuntuTestUtil {
 
-    @Test
+    //@Test
     void "roundcube"() {
         copyUbuntuFiles tmpdir
         copyRoundcubeFiles tmpdir

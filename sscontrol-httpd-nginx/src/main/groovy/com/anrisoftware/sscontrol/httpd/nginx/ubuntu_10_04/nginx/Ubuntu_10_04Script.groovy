@@ -22,6 +22,7 @@ import javax.inject.Inject
 
 import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.sscontrol.httpd.nginx.linux.nginx.Nginx_1_4_Script
+import com.anrisoftware.sscontrol.httpd.service.HttpdService
 
 /**
  * Uses the Nginx service on the Ubuntu 10.04 Linux system.
@@ -42,14 +43,8 @@ class Ubuntu_10_04Script extends Nginx_1_4_Script {
 
     @Override
     void beforeConfiguration() {
-        enableRepositories()
+        enableDebRepositories()
         installPackages()
-    }
-
-    void enableRepositories() {
-        def distribution = profileProperty "distribution_name", defaultProperties
-        def repositories = profileListProperty "additional_repositories", defaultProperties
-        enableDebRepositories distribution, repositories
     }
 
     @Override

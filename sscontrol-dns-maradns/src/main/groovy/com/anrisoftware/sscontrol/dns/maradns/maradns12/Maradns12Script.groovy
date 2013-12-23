@@ -44,11 +44,11 @@ abstract class Maradns12Script extends MaradnsScript {
 
     @Override
     def run() {
-        super.run()
         commandTemplates = templatesFactory.create("ScriptCommandTemplates")
         maradnsTemplates = templatesFactory.create("Maradns12")
         maradnsConfiguration = maradnsTemplates.getResource("configuration")
         zoneConfiguration = maradnsTemplates.getResource("zonedb")
+        super.run()
         deployMaraDnsConfiguration()
         deployZoneDbConfigurations()
     }

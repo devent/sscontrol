@@ -31,51 +31,51 @@ import com.anrisoftware.sscontrol.dns.maradns.resources.ResourcesUtils
  */
 enum UbuntuResources {
 
-	aptitudeCommand("/usr/bin/aptitude", UbuntuResources.class.getResource("echo_command.txt")),
-	restartCommand("/etc/init.d/maradns", UbuntuResources.class.getResource("echo_command.txt")),
-	addRepositoryCommand("/usr/bin/add-apt-repository", UbuntuResources.class.getResource("echo_command.txt")),
-	confDir("/etc/maradns", null),
-	packagingConfigurationDirectory("/etc/apt", null),
+    aptitudeCommand("/usr/bin/aptitude", UbuntuResources.class.getResource("echo_command.txt")),
+    restartCommand("/etc/init.d/maradns", UbuntuResources.class.getResource("echo_command.txt")),
+    addRepositoryCommand("/usr/bin/add-apt-repository", UbuntuResources.class.getResource("echo_command.txt")),
+    confDir("/etc/maradns", null),
+    packagesSourcesFile("/etc/apt/sources.list", UbuntuResources.class.getResource("sources_list.txt")),
 
-	static copyUbuntuFiles(File parent) {
-		aptitudeCommand.createCommand parent
-		restartCommand.createCommand parent
-		addRepositoryCommand.createCommand parent
-		confDir.asFile parent mkdirs()
-		packagingConfigurationDirectory.asFile parent mkdirs()
-	}
+    static copyUbuntuFiles(File parent) {
+        aptitudeCommand.createCommand parent
+        restartCommand.createCommand parent
+        addRepositoryCommand.createCommand parent
+        confDir.asFile parent mkdirs()
+        packagesSourcesFile.createFile parent
+    }
 
-	ResourcesUtils resources
+    ResourcesUtils resources
 
-	UbuntuResources(String path, URL resource) {
-		this.resources = new ResourcesUtils(path: path, resource: resource)
-	}
+    UbuntuResources(String path, URL resource) {
+        this.resources = new ResourcesUtils(path: path, resource: resource)
+    }
 
-	String getPath() {
-		resources.path
-	}
+    String getPath() {
+        resources.path
+    }
 
-	URL getResource() {
-		resources.resource
-	}
+    URL getResource() {
+        resources.resource
+    }
 
-	File asFile(File parent) {
-		resources.asFile parent
-	}
+    File asFile(File parent) {
+        resources.asFile parent
+    }
 
-	void createFile(File parent) {
-		resources.createFile parent
-	}
+    void createFile(File parent) {
+        resources.createFile parent
+    }
 
-	void createCommand(File parent) {
-		resources.createCommand parent
-	}
+    void createCommand(File parent) {
+        resources.createCommand parent
+    }
 
-	String replaced(File parent, def search, def replace) {
-		resources.replaced parent, search, replace
-	}
+    String replaced(File parent, def search, def replace) {
+        resources.replaced parent, search, replace
+    }
 
-	String toString() {
-		resources.toString()
-	}
+    String toString() {
+        resources.toString()
+    }
 }

@@ -77,3 +77,11 @@ csv2["<zone.name>."] = "db.<zone.name>"
 zone_search(zone) ::= <%
 #?\s*csv2\["<zone.name>\."\]\s*=\s*"db\.<zone.name>"
 %>
+
+packagesSources_search(repository) ::= <%
+<repository>
+%>
+
+packagesSources(repository) ::= <%
+<repository>
+%>

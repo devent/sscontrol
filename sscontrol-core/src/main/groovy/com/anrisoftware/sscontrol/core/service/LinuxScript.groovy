@@ -104,56 +104,131 @@ abstract class LinuxScript extends Script {
     }
 
     /**
-     * Enables the specified repository.
+     * Returns the packages sources file, for
+     * example {@code /etc/apt/sources.list}.
      *
-     * @param repository
-     * 			  the repository.
+     * <ul>
+     * <li>profile property {@code packages_sources_file}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
      */
-    void enableRepository(String repository) {
-        def template = commandTemplates.getResource("command")
-        def command = "$enableRepositoryCommand $repository"
-        def worker = scriptCommandFactory.create(template, "command", command)()
-        log.enableRepositoryDone this, worker, repository
+    File getPackagesSourcesFile() {
+        profileProperty("packages_sources_file", defaultProperties) as File
+    }
+
+    /**
+     * Returns additional repositories to enable.
+     *
+     * <ul>
+     * <li>profile property {@code additional_repositories}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    List getAdditionalRepositories() {
+        profileListProperty "additional_repositories", defaultProperties
+    }
+
+    /**
+     * Returns the distribution name, for example {@code "lucid"}.
+     *
+     * <ul>
+     * <li>profile property {@code distribution_name}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    String getDistributionName() {
+        profileProperty "distribution_name", defaultProperties
     }
 
     /**
      * Enables the specified Debian repositories.
      *
-     * @param distribution
-     * 			  the name of the distribution.
-     *
      * @param repositories
-     * 			  the list with the repositories.
+     *               the list with the repositories.
+     *
+     * @param distributionName
+     *               optionally, the name of the distribution.
+     *
+     * @return {@code true} if at least one of the repositories was enabled.
+     *
+     * @see #getDistributionName()
      */
-    void enableDebRepositories(String distribution, List repositories) {
+    boolean enableDebRepositories(List repositories = additionalRepositories, String distributionName = distributionName) {
+        boolean enabled = false
         repositories.each {
-            if (!containsDebRepository(distribution, it)) {
-                enableRepository debRepository(distribution, it)
+            if (!containsDebRepository(it, distributionName)) {
+                enableDebRepository it, distributionName
+                enabled = true
             }
         }
+        return enabled
+    }
+
+    /**
+     * Enables the Debian repository.
+     *
+     * @param repository
+     *               the repository name.
+     *
+     * @param distribution
+     *               the name of the distribution.
+     *
+     * @see #getPackagesSourcesFile()
+     */
+    void enableDebRepository(String repository, String distributionName) {
+        def str = repositoryString repository, distributionName
+        FileUtils.write packagesSourcesFile, "$str\n", charset, true
+        log.enableRepositoryDone this, repository
+    }
+
+    /**
+     * Returns the repository string.
+     *
+     * @param repository
+     *            the repository name.
+     *
+     * @param distributionName
+     *            optionally, the distribution name.
+     *
+     * <ul>
+     * <li>profile property {@code repository_string}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     * @see #getDistributionName()
+     */
+    String repositoryString(String repository, String distributionName = distributionName) {
+        def str = profileProperty "repository_string", defaultProperties
+        String.format str, distributionName, repository
     }
 
     /**
      * Tests if the system already have the repository enabled.
      *
-     * @param distribution
-     * 			  the name of the distribution.
-     *
      * @param repository
-     * 			  the name of the repository.
+     *            the repository name.
+     *
+     * @param distributionName
+     *            optionally, the distribution name.
      *
      * @return {@code true} if the repository is already enabled.
+     *
+     * @see #getPackagesSourcesFile()
+     * @see #getPackagingType()
      */
-    boolean containsDebRepository(String distribution, String repository) {
+    boolean containsDebRepository(String repository, String distributionName = distributionName) {
+        def dir = packagesSourcesFile.parentFile
         def template = commandTemplates.getResource("list_repositories")
-        def worker = scriptCommandFactory.create(
-                template, packagingType, "configurationDir", packagingConfigurationDir)()
-        split(worker.out, '\n').find { it.endsWith "$distribution $repository" } != null
+        def worker = scriptCommandFactory.create(template, packagingType, "configurationDir", dir)()
+        split(worker.out, '\n').find { it.trim().endsWith "$distributionName $repository" } != null
     }
 
     /**
      * Returns the packaging type. The packaging type is the packaging system
-     * used on the system, like apt or yum.
+     * used on the system, like {@code "apt", "yum".}
      *
      * <ul>
      * <li>property key {@code packaging_type}
@@ -161,49 +236,6 @@ abstract class LinuxScript extends Script {
      */
     String getPackagingType() {
         profileProperty "packaging_type", defaultProperties
-    }
-
-    /**
-     * Returns the configuration directory of the packaging system for the
-     * system.
-     *
-     * <ul>
-     * <li>property key {@code packaging_configuration_directory}
-     * </ul>
-     */
-    File getPackagingConfigurationDir() {
-        profileProperty("packaging_configuration_directory", defaultProperties) as File
-    }
-
-    /**
-     * Returns the command to enable additional repositories.
-     *
-     * <ul>
-     * <li>property key {@code enable_repository_command}
-     * </ul>
-     */
-    String getEnableRepositoryCommand() {
-        profileProperty "enable_repository_command", defaultProperties
-    }
-
-    /**
-     * Returns the repository string for a Debian repository.
-     * Example for the Ubuntu Linux distribution:
-     * {@code "deb http://archive.ubuntu.com/ubuntu lucid universe"}.
-     *
-     * @param distribution
-     * 			  the name of the distribution.
-     *
-     * @param repository
-     * 			  the name of the repository.
-     *
-     * <ul>
-     * <li>property key {@code repository_string}
-     * </ul>
-     */
-    String debRepository(String distribution, String repository) {
-        def str = profileProperty "repository_string", defaultProperties
-        String.format str, distribution, repository
     }
 
     /**
@@ -229,6 +261,17 @@ abstract class LinuxScript extends Script {
      */
     String getInstallCommand() {
         profileProperty "install_command", defaultProperties
+    }
+
+    /**
+     * Returns the {@code apt-key} command.
+     *
+     * <ul>
+     * <li>property key {@code apt_key_command}</li>
+     * </ul>
+     */
+    String getAptKeyCommand() {
+        profileProperty "apt_key_command", defaultProperties
     }
 
     /**

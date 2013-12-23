@@ -37,23 +37,22 @@ import com.anrisoftware.sscontrol.dns.maradns.ubuntu.UbuntuTestUtil
 @Slf4j
 class RecursiveTest extends UbuntuTestUtil {
 
-	@Test
-	void "maradns recursive"() {
-		copyUbuntuFiles tmpdir
-		mararc.createFile tmpdir
+    @Test
+    void "maradns recursive"() {
+        copyUbuntuFiles tmpdir
+        mararc.createFile tmpdir
 
-		loader.loadService profile.resource, null
-		def profile = registry.getService("profile")[0]
-		loader.loadService maradnsRecursiveScript.resource, profile
+        loader.loadService profile.resource, null
+        def profile = registry.getService("profile")[0]
+        loader.loadService maradnsRecursiveScript.resource, profile
 
-		registry.allServices.each { it.call() }
-		log.info "Run service again to ensure that configuration is not set double."
-		registry.allServices.each { it.call() }
+        registry.allServices.each { it.call() }
+        log.info "Run service again to ensure that configuration is not set double."
+        registry.allServices.each { it.call() }
 
-		assertFileContent restartOutExpected.asFile(tmpdir), restartOutExpected
-		assertFileContent addAptRepositoryOutExpected.asFile(tmpdir), addAptRepositoryOutExpected
-		assertFileContent aptitudeOutExpected.asFile(tmpdir), aptitudeOutExpected
-		assertFileContent mararcRecursiveExpected.asFile(tmpdir), mararcRecursiveExpected
-		assertFileContent dbExample1Expected.asFile(tmpdir), dbExample1Expected
-	}
+        assertFileContent restartOutExpected.asFile(tmpdir), restartOutExpected
+        assertFileContent aptitudeOutExpected.asFile(tmpdir), aptitudeOutExpected
+        assertFileContent mararcRecursiveExpected.asFile(tmpdir), mararcRecursiveExpected
+        assertFileContent dbExample1Expected.asFile(tmpdir), dbExample1Expected
+    }
 }

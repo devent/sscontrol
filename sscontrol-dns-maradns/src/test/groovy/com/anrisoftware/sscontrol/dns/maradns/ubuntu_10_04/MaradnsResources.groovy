@@ -31,51 +31,51 @@ import com.anrisoftware.sscontrol.dns.maradns.resources.ResourcesUtils
  */
 enum MaradnsResources {
 
-	profile("UbuntuProfile.groovy", MaradnsResources.class.getResource("UbuntuProfile.groovy")),
-	maradnsScript("Dns.groovy", MaradnsResources.class.getResource("Dns.groovy")),
-	maradnsRecursiveScript("Dns.groovy", MaradnsResources.class.getResource("DnsRecursive.groovy")),
-	mararc("/etc/maradns/mararc", MaradnsResources.class.getResource("mararc.txt")),
-	mararcExpected("/etc/maradns/mararc", MaradnsResources.class.getResource("mararc_expected.txt")),
-	mararcRecursiveExpected("/etc/maradns/mararc", MaradnsResources.class.getResource("mararc_recursive_expected.txt")),
-	dbAnrisoftwareExpected("/etc/maradns/db.anrisoftware.com", MaradnsResources.class.getResource("db.anrisoftware.com.txt")),
-	dbExample1Expected("/etc/maradns/db.example1.com", MaradnsResources.class.getResource("db.example1.com.txt")),
-	dbExample2Expected("/etc/maradns/db.example2.com", MaradnsResources.class.getResource("db.example2.com.txt")),
-	addAptRepositoryOutExpected("/usr/bin/add-apt-repository.out", MaradnsResources.class.getResource("add-apt-repository_out.txt")),
-	aptitudeOutExpected("/usr/bin/aptitude.out", MaradnsResources.class.getResource("aptitude_expected.txt")),
-	restartOutExpected("/etc/init.d/maradns.out", MaradnsResources.class.getResource("restart_out.txt")),
-	aptSources("/etc/apt/sources.list", MaradnsResources.class.getResource("sources.list")),
+    profile("UbuntuProfile.groovy", MaradnsResources.class.getResource("UbuntuProfile.groovy")),
+    sourcesListExpected("/etc/apt/sources.list", MaradnsResources.class.getResource("sources_list_expected.txt")),
+    maradnsScript("Dns.groovy", MaradnsResources.class.getResource("Dns.groovy")),
+    maradnsRecursiveScript("Dns.groovy", MaradnsResources.class.getResource("DnsRecursive.groovy")),
+    mararc("/etc/maradns/mararc", MaradnsResources.class.getResource("mararc.txt")),
+    mararcExpected("/etc/maradns/mararc", MaradnsResources.class.getResource("mararc_expected.txt")),
+    mararcRecursiveExpected("/etc/maradns/mararc", MaradnsResources.class.getResource("mararc_recursive_expected.txt")),
+    dbAnrisoftwareExpected("/etc/maradns/db.anrisoftware.com", MaradnsResources.class.getResource("db.anrisoftware.com.txt")),
+    dbExample1Expected("/etc/maradns/db.example1.com", MaradnsResources.class.getResource("db.example1.com.txt")),
+    dbExample2Expected("/etc/maradns/db.example2.com", MaradnsResources.class.getResource("db.example2.com.txt")),
+    aptitudeOutExpected("/usr/bin/aptitude.out", MaradnsResources.class.getResource("aptitude_expected.txt")),
+    restartOutExpected("/etc/init.d/maradns.out", MaradnsResources.class.getResource("restart_out.txt")),
+    aptSources("/etc/apt/sources.list", MaradnsResources.class.getResource("sources.list")),
 
-	ResourcesUtils resources
+    ResourcesUtils resources
 
-	MaradnsResources(String path, URL resource) {
-		this.resources = new ResourcesUtils(path: path, resource: resource)
-	}
+    MaradnsResources(String path, URL resource) {
+        this.resources = new ResourcesUtils(path: path, resource: resource)
+    }
 
-	String getPath() {
-		resources.path
-	}
+    String getPath() {
+        resources.path
+    }
 
-	URL getResource() {
-		resources.resource
-	}
+    URL getResource() {
+        resources.resource
+    }
 
-	File asFile(File parent) {
-		resources.asFile parent
-	}
+    File asFile(File parent) {
+        resources.asFile parent
+    }
 
-	void createFile(File parent) {
-		resources.createFile parent
-	}
+    void createFile(File parent) {
+        resources.createFile parent
+    }
 
-	void createCommand(File parent) {
-		resources.createCommand parent
-	}
+    void createCommand(File parent) {
+        resources.createCommand parent
+    }
 
-	String replaced(File parent, def search, def replace) {
-		resources.replaced parent, search, replace
-	}
+    String replaced(File parent, def search, def replace) {
+        resources.replaced parent, search, replace
+    }
 
-	String toString() {
-		resources.toString()
-	}
+    String toString() {
+        resources.toString()
+    }
 }

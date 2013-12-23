@@ -96,9 +96,9 @@ class LinuxScriptLogger extends AbstractLogger {
 
     enum _ {
 
-        enabled_repository_debug("Enabled repository '{}' in {}, {}."),
+        enabled_repository_debug("Enabled repository '{}' for {}."),
 
-        enabled_repository_info("Enabled repository '{}' in service {}."),
+        enabled_repository_info("Enabled repository '{}' for service {}."),
 
         install_packages_done_trace("Installed packages {} in {}, {}."),
 
@@ -251,10 +251,9 @@ class LinuxScriptLogger extends AbstractLogger {
         }
     }
 
-    void enableRepositoryDone(LinuxScript script, Object worker,
-            String repository) {
+    void enableRepositoryDone(LinuxScript script, String repository) {
         if (isDebugEnabled()) {
-            debug(enabled_repository_debug, repository, script, worker);
+            debug(enabled_repository_debug, repository, script);
         } else {
             info(enabled_repository_info, repository, script.getName());
         }

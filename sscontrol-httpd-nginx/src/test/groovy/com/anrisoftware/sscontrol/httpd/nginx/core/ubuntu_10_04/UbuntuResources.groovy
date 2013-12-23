@@ -36,7 +36,6 @@ enum UbuntuResources {
     users("/etc/passwd", UbuntuResources.class.getResource("passwd.txt")),
     nginxConf("/etc/nginx/nginx.conf", UbuntuResources.class.getResource("nginx_conf.txt")),
     aptitudeCommand("/usr/bin/aptitude", UbuntuResources.class.getResource("echo_command.txt")),
-    addRepositoryCommand("/usr/bin/add-apt-repository", UbuntuResources.class.getResource("echo_command.txt")),
     restartCommand("/etc/init.d/nginx", UbuntuResources.class.getResource("echo_command.txt")),
     lnCommand("/bin/ln", UbuntuResources.class.getResource("echo_command.txt")),
     chmodCommand("/bin/chmod", UbuntuResources.class.getResource("echo_command.txt")),
@@ -50,10 +49,10 @@ enum UbuntuResources {
     sitesEnabledDir("/etc/nginx/sites-enabled", null),
     configIncludeDir("/etc/nginx/conf.d", null),
     sitesDir("/var/www", null),
+    packagesSourcesFile("/etc/apt/sources.list", UbuntuResources.class.getResource("sources_list.txt")),
 
     static copyUbuntuFiles(File parent) {
         aptitudeCommand.createCommand parent
-        addRepositoryCommand.createCommand parent
         restartCommand.createCommand parent
         lnCommand.createCommand parent
         tmpDir.asFile(parent).mkdirs()
@@ -65,6 +64,7 @@ enum UbuntuResources {
         useraddCommand.createCommand parent
         groups.createFile parent
         users.createFile parent
+        packagesSourcesFile.createFile parent
         nginxConf.createFile parent
     }
 

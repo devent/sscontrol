@@ -31,28 +31,22 @@ import com.anrisoftware.sscontrol.dns.maradns.maradns12.Maradns12Script
  */
 class Ubuntu1004Script extends Maradns12Script {
 
-	@Inject
-	Ubuntu1004PropertiesProvider ubuntuProperties
+    @Inject
+    Ubuntu1004PropertiesProvider ubuntuProperties
 
-	def run() {
-		super.run()
-		restartServices()
-	}
+    def run() {
+        super.run()
+        restartServices()
+    }
 
-	@Override
-	void beforeConfiguration() {
-		enableRepositories()
-		installPackages packages
-	}
+    @Override
+    void beforeConfiguration() {
+        enableDebRepositories()
+        installPackages packages
+    }
 
-	def enableRepositories() {
-		def distribution = profileProperty "distribution_name", defaultProperties
-		def repositories = profileListProperty "additional_repositories", defaultProperties
-		enableDebRepositories distribution, repositories
-	}
-
-	@Override
-	ContextProperties getDefaultProperties() {
-		ubuntuProperties.get()
-	}
+    @Override
+    ContextProperties getDefaultProperties() {
+        ubuntuProperties.get()
+    }
 }

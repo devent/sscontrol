@@ -21,12 +21,12 @@ package com.anrisoftware.sscontrol.dns.maradns.ubuntu_10_04
 import com.anrisoftware.sscontrol.dns.maradns.ubuntu.UbuntuResources
 
 profile "ubuntu_10_04", {
-	dns {
-		service "maradns"
-		install_command "${UbuntuResources.aptitudeCommand.asFile(tmp)} update && ${UbuntuResources.aptitudeCommand.asFile(tmp)} install"
-		restart_command "${UbuntuResources.restartCommand.asFile(tmp)} restart"
-		enable_repository_command UbuntuResources.addRepositoryCommand.asFile(tmp)
-		configuration_directory UbuntuResources.confDir.asFile(tmp)
-		packaging_configuration_directory UbuntuResources.packagingConfigurationDirectory.asFile(tmp)
-	}
+    dns {
+        service "maradns"
+        install_command "${UbuntuResources.aptitudeCommand.asFile(tmp)} update && ${UbuntuResources.aptitudeCommand.asFile(tmp)} install"
+        restart_command "${UbuntuResources.restartCommand.asFile(tmp)} restart"
+        enable_repository_command UbuntuResources.addRepositoryCommand.asFile(tmp)
+        configuration_directory UbuntuResources.confDir.asFile(tmp)
+        packages_sources_file UbuntuResources.packagesSourcesFile.asFile(tmp)
+    }
 }

@@ -36,6 +36,7 @@ enum UbuntuResources {
     users("/etc/passwd", UbuntuResources.class.getResource("passwd.txt")),
     nginxConf("/etc/nginx/nginx.conf", UbuntuResources.class.getResource("nginx_conf.txt")),
     aptitudeCommand("/usr/bin/aptitude", UbuntuResources.class.getResource("echo_command.txt")),
+    aptKeyCommand("/usr/bin/apt-key", UbuntuResources.class.getResource("echo_command.txt")),
     restartCommand("/etc/init.d/nginx", UbuntuResources.class.getResource("echo_command.txt")),
     lnCommand("/bin/ln", UbuntuResources.class.getResource("echo_command.txt")),
     chmodCommand("/bin/chmod", UbuntuResources.class.getResource("echo_command.txt")),
@@ -50,9 +51,11 @@ enum UbuntuResources {
     configIncludeDir("/etc/nginx/conf.d", null),
     sitesDir("/var/www", null),
     packagesSourcesFile("/etc/apt/sources.list", UbuntuResources.class.getResource("sources_list.txt")),
+    nginxSigningKeyFile("/tmp/web-nginx_signing.key", UbuntuResources.class.getResource("nginx_signing_key.txt")),
 
     static copyUbuntuFiles(File parent) {
         aptitudeCommand.createCommand parent
+        aptKeyCommand.createCommand parent
         restartCommand.createCommand parent
         lnCommand.createCommand parent
         tmpDir.asFile(parent).mkdirs()
@@ -66,6 +69,7 @@ enum UbuntuResources {
         users.createFile parent
         packagesSourcesFile.createFile parent
         nginxConf.createFile parent
+        nginxSigningKeyFile.createFile parent
     }
 
     ResourcesUtils resources

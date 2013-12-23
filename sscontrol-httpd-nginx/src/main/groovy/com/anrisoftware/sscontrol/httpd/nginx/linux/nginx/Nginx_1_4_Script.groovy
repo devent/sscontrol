@@ -43,7 +43,7 @@ import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokenTemplate
 abstract class Nginx_1_4_Script extends NginxScript {
 
     @Inject
-    Nginx_1_4_ScriptLogger log
+    private Nginx_1_4_ScriptLogger log
 
     @Inject
     DomainConfig domainConfig

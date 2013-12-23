@@ -1,9 +1,4 @@
-enableSites(command, sites) ::= <<
-<sites:{ site | <command> <site>};separator="\n">
-
->>
-
-enableMods(command, mods) ::= <<
-<mods:{ mod | <command> <mod>};separator="\n">
+aptKey(command, key) ::= <<
+<command> add <key>
 
 >>

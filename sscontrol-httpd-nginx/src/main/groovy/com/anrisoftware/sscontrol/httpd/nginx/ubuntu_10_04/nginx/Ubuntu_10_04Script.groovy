@@ -20,9 +20,10 @@ package com.anrisoftware.sscontrol.httpd.nginx.ubuntu_10_04.nginx
 
 import javax.inject.Inject
 
+import org.apache.commons.io.FileUtils
+
 import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.sscontrol.httpd.nginx.linux.nginx.Nginx_1_4_Script
-import com.anrisoftware.sscontrol.httpd.service.HttpdService
 
 /**
  * Uses the Nginx service on the Ubuntu 10.04 Linux system.
@@ -31,6 +32,9 @@ import com.anrisoftware.sscontrol.httpd.service.HttpdService
  * @since 1.0
  */
 class Ubuntu_10_04Script extends Nginx_1_4_Script {
+
+    @Inject
+    private Ubuntu_10_04ScriptLogger log
 
     @Inject
     Ubuntu10_04PropertiesProvider ubuntuProperties
@@ -43,8 +47,33 @@ class Ubuntu_10_04Script extends Nginx_1_4_Script {
 
     @Override
     void beforeConfiguration() {
-        enableDebRepositories()
+        if (enableDebRepositories()) {
+            signRepositories()
+        }
         installPackages()
+    }
+
+    /**
+     * Signs the repositories.
+     */
+    void signRepositories() {
+        def keyFile = new File(tmpDirectory, "nginx_signing.key")
+        FileUtils.copyURLToFile nginxSigningKey.toURL(), keyFile
+        def worker = scriptCommandFactory.create(nginxCommandsTemplate, "aptKey", "command", aptKeyCommand, "key", keyFile)()
+        log.repositorySigned this, worker, nginxSigningKey
+    }
+
+    /**
+     * Returns the URI of the repository signing key.
+     *
+     * <ul>
+     * <li>profile property {@code nginx_signing_key}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    URI getNginxSigningKey() {
+        profileURIProperty "nginx_signing_key", defaultProperties
     }
 
     @Override

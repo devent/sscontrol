@@ -18,15 +18,12 @@
  */
 package com.anrisoftware.sscontrol.httpd.statements.proxy;
 
-import static com.anrisoftware.sscontrol.httpd.statements.proxy.ProxyLogger._.address_null;
-import static com.anrisoftware.sscontrol.httpd.statements.proxy.ProxyLogger._.address_set_debug;
-import static com.anrisoftware.sscontrol.httpd.statements.proxy.ProxyLogger._.address_set_info;
-import static com.anrisoftware.sscontrol.httpd.statements.proxy.ProxyLogger._.alias_null;
-import static com.anrisoftware.sscontrol.httpd.statements.proxy.ProxyLogger._.alias_set_debug;
-import static com.anrisoftware.sscontrol.httpd.statements.proxy.ProxyLogger._.alias_set_info;
-import static com.anrisoftware.sscontrol.httpd.statements.proxy.ProxyLogger._.service_null;
-import static com.anrisoftware.sscontrol.httpd.statements.proxy.ProxyLogger._.service_set_debug;
-import static com.anrisoftware.sscontrol.httpd.statements.proxy.ProxyLogger._.service_set_info;
+import static com.anrisoftware.sscontrol.httpd.statements.proxy.ProxyServiceLogger._.address_null;
+import static com.anrisoftware.sscontrol.httpd.statements.proxy.ProxyServiceLogger._.address_set_debug;
+import static com.anrisoftware.sscontrol.httpd.statements.proxy.ProxyServiceLogger._.address_set_info;
+import static com.anrisoftware.sscontrol.httpd.statements.proxy.ProxyServiceLogger._.service_null;
+import static com.anrisoftware.sscontrol.httpd.statements.proxy.ProxyServiceLogger._.service_set_debug;
+import static com.anrisoftware.sscontrol.httpd.statements.proxy.ProxyServiceLogger._.service_set_info;
 import static org.apache.commons.lang3.Validate.notBlank;
 import static org.apache.commons.lang3.Validate.notNull;
 
@@ -34,12 +31,12 @@ import com.anrisoftware.globalpom.log.AbstractLogger;
 import com.anrisoftware.sscontrol.httpd.statements.domain.Domain;
 
 /**
- * Logging for {@link Proxy}.
+ * Logging for {@link ProxyService}.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class ProxyLogger extends AbstractLogger {
+class ProxyServiceLogger extends AbstractLogger {
 
     enum _ {
 
@@ -53,13 +50,7 @@ class ProxyLogger extends AbstractLogger {
 
         service_set_debug("Proxy service '{}' set for {}."),
 
-        service_set_info("Proxy service '{}' set for domain '{}'."),
-
-        alias_null("Proxy alias cannot be null or empty for %s."),
-
-        alias_set_debug("Proxy alias '{}' set for {}."),
-
-        alias_set_info("Proxy alias '{}' set for domain '{}'.");
+        service_set_info("Proxy service '{}' set for domain '{}'.");
 
         private String name;
 
@@ -74,10 +65,10 @@ class ProxyLogger extends AbstractLogger {
     }
 
     /**
-     * Sets the context of the logger to {@link Proxy}.
+     * Sets the context of the logger to {@link ProxyService}.
      */
-    public ProxyLogger() {
-        super(Proxy.class);
+    public ProxyServiceLogger() {
+        super(ProxyService.class);
     }
 
     void checkAddress(Domain domain, Object address) {
@@ -103,19 +94,6 @@ class ProxyLogger extends AbstractLogger {
             debug(service_set_debug, service, domain);
         } else {
             info(service_set_info, service, domain.getName());
-        }
-    }
-
-    void checkAlias(Domain domain, Object alias) {
-        notNull(alias, alias_null.toString(), domain);
-        notBlank(alias.toString(), alias_null.toString(), domain);
-    }
-
-    public void aliasSet(Domain domain, String alias) {
-        if (isDebugEnabled()) {
-            debug(alias_set_debug, alias, domain);
-        } else {
-            info(alias_set_info, alias, domain.getName());
         }
     }
 }

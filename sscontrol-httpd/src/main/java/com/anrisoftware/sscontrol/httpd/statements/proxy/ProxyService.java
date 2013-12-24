@@ -25,15 +25,20 @@ import javax.inject.Inject;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.anrisoftware.sscontrol.httpd.statements.domain.Domain;
+import com.anrisoftware.sscontrol.httpd.statements.webservice.WebService;
+import com.anrisoftware.sscontrol.httpd.statements.webserviceargs.WebServiceArgs;
+import com.anrisoftware.sscontrol.httpd.statements.webserviceargs.WebServiceLogger;
 import com.google.inject.assistedinject.Assisted;
 
 /**
- * Domain proxy.
+ * Domain proxy service.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-public class Proxy {
+public class ProxyService implements WebService {
+
+    public static final String NAME = "proxy";
 
     private static final String SERVICE = "service";
 
@@ -41,7 +46,9 @@ public class Proxy {
 
     private final Domain domain;
 
-    private final ProxyLogger log;
+    private final ProxyServiceLogger log;
+
+    private final WebServiceLogger serviceLog;
 
     private String service;
 
@@ -49,16 +56,84 @@ public class Proxy {
 
     private String alias;
 
+    private String id;
+
+    private String ref;
+
+    private String refDomain;
+
+    /**
+     * @see ProxyServiceFactory#create(Domain, Map)
+     */
     @Inject
-    Proxy(ProxyLogger logger, ProxyArgs aargs, @Assisted Domain domain,
+    ProxyService(WebServiceArgs aargs, WebServiceLogger serviceLogger,
+            ProxyServiceLogger logger, ProxyServiceArgs proxyaargs, @Assisted Domain domain,
             @Assisted Map<String, Object> args) {
         this.log = logger;
+        this.serviceLog = serviceLogger;
         this.domain = domain;
-        setService(aargs.service(domain, args));
-        setAddress(aargs.address(domain, args));
+        setService(proxyaargs.service(domain, args));
+        setAddress(proxyaargs.address(domain, args));
         if (aargs.haveAlias(args)) {
-            setAlias(aargs.alias(domain, args));
+            setAlias(aargs.alias(this, args));
         }
+        if (aargs.haveId(args)) {
+            setId(aargs.id(this, args));
+        }
+        if (aargs.haveRef(args)) {
+            setRef(aargs.ref(this, args));
+        }
+        if (aargs.haveRefDomain(args)) {
+            setRefDomain(aargs.refDomain(this, args));
+        }
+    }
+
+    @Override
+    public String getName() {
+        return NAME;
+    }
+
+    @Override
+    public Domain getDomain() {
+        return domain;
+    }
+
+    public void setAlias(String alias) {
+        this.alias = alias;
+        serviceLog.aliasSet(this, alias);
+    }
+
+    public String getAlias() {
+        return alias;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+        serviceLog.idSet(this, id);
+    }
+
+    @Override
+    public String getId() {
+        return id;
+    }
+
+    public void setRef(String ref) {
+        this.ref = ref;
+        serviceLog.refSet(this, ref);
+    }
+
+    @Override
+    public String getRef() {
+        return ref;
+    }
+
+    public void setRefDomain(String refDomain) {
+        this.refDomain = refDomain;
+    }
+
+    @Override
+    public String getRefDomain() {
+        return refDomain;
     }
 
     public void setService(String service) {
@@ -77,15 +152,6 @@ public class Proxy {
 
     public String getAddress() {
         return address;
-    }
-
-    public void setAlias(String alias) {
-        this.alias = alias;
-        log.aliasSet(domain, alias);
-    }
-
-    public String getAlias() {
-        return alias;
     }
 
     @Override

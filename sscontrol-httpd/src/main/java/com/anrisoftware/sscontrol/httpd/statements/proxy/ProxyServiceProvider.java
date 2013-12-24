@@ -18,28 +18,25 @@
  */
 package com.anrisoftware.sscontrol.httpd.statements.proxy;
 
-import java.util.Map;
+import javax.inject.Inject;
+import javax.inject.Provider;
 
-import com.anrisoftware.sscontrol.httpd.statements.domain.Domain;
+import com.anrisoftware.sscontrol.httpd.statements.webservice.WebServiceFactory;
 
 /**
- * Factory to create domain proxy.
+ * Provides the domain proxy service factory.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-public interface ProxyFactory {
+public class ProxyServiceProvider implements Provider<WebServiceFactory> {
 
-    /**
-     * Creates the domain proxy.
-     * 
-     * @param domain
-     *            the {@link Domain} of the proxy.
-     * 
-     * @param args
-     *            the {@link Map} arguments.
-     * 
-     * @return the {@link Proxy}.
-     */
-    Proxy create(Domain domain, Map<String, Object> args);
+	@Inject
+    private ProxyServiceFactory factory;
+
+	@Override
+	public WebServiceFactory get() {
+		return factory;
+	}
+
 }

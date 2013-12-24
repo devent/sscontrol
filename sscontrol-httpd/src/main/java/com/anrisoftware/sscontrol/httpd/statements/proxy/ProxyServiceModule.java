@@ -18,23 +18,37 @@
  */
 package com.anrisoftware.sscontrol.httpd.statements.proxy;
 
+import static com.anrisoftware.sscontrol.httpd.statements.proxy.ProxyService.NAME;
+import static com.google.inject.multibindings.MapBinder.newMapBinder;
+
+import com.anrisoftware.sscontrol.httpd.statements.webservice.WebService;
+import com.anrisoftware.sscontrol.httpd.statements.webservice.WebServiceFactory;
 import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
+import com.google.inject.multibindings.MapBinder;
 
 /**
  * Installs the domain proxy factory.
  * 
- * @see ProxyFactory
+ * @see ProxyServiceFactory
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-public class ProxyModule extends AbstractModule {
+public class ProxyServiceModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        install(new FactoryModuleBuilder().implement(Proxy.class, Proxy.class)
-                .build(ProxyFactory.class));
+        install(new FactoryModuleBuilder().implement(WebService.class,
+                ProxyService.class).build(ProxyServiceFactory.class));
+        bindService();
+    }
+
+    private void bindService() {
+        MapBinder<String, WebServiceFactory> mapbinder;
+        mapbinder = newMapBinder(binder(), String.class,
+                WebServiceFactory.class);
+        mapbinder.addBinding(NAME).toProvider(ProxyServiceProvider.class);
     }
 
 }

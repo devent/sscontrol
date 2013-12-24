@@ -25,12 +25,12 @@ import javax.inject.Inject;
 import com.anrisoftware.sscontrol.httpd.statements.domain.Domain;
 
 /**
- * Parses arguments for {@link Proxy}.
+ * Parses arguments for {@link ProxyService}.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-public class ProxyArgs {
+public class ProxyServiceArgs {
 
     public static final String ALIAS = "alias";
 
@@ -39,11 +39,7 @@ public class ProxyArgs {
     public static final String ADDRESS = "address";
 
     @Inject
-    private ProxyLogger log;
-
-    public boolean haveAddress(Map<String, Object> args) {
-        return args.containsKey(ADDRESS);
-    }
+    private ProxyServiceLogger log;
 
     public String address(Domain domain, Map<String, Object> args) {
         Object address = args.get(ADDRESS);
@@ -57,13 +53,4 @@ public class ProxyArgs {
         return service.toString();
     }
 
-    public boolean haveAlias(Map<String, Object> args) {
-        return args.containsKey(ALIAS);
-    }
-
-    public String alias(Domain domain, Map<String, Object> args) {
-        Object alias = args.get(ALIAS);
-        log.checkAlias(domain, alias);
-        return alias.toString();
-    }
 }

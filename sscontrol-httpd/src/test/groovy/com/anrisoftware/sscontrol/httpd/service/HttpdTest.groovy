@@ -34,7 +34,6 @@ import com.anrisoftware.sscontrol.httpd.statements.auth.SatisfyType
 import com.anrisoftware.sscontrol.httpd.statements.authldap.AttributeDn
 import com.anrisoftware.sscontrol.httpd.statements.authldap.Authoritative
 import com.anrisoftware.sscontrol.httpd.statements.authldap.RequireLdapValidGroup
-import com.anrisoftware.sscontrol.httpd.statements.domain.Domain
 
 /**
  * @see HttpdServiceImpl
@@ -130,26 +129,5 @@ class HttpdTest extends HttpdTestUtil {
         assert require.name == "cn=ldapadminGroup,o=deventorg,dc=ubuntutest,dc=com"
         assert require.attribute.name == "uniqueMember"
         assert require.attribute.dn == AttributeDn.off
-    }
-
-    @Test
-    void "httpd proxy script"() {
-        loader.loadService profile.resource, null
-        def profile = registry.getService("profile")[0]
-        profile.getEntry("httpd").service(["idapache2": "apache"], ["idproxy": "nginx"])
-        loader.loadService proxyDomainsScript.resource, profile
-        loader.loadService proxyScript.resource, profile
-
-        HttpdServiceImpl service = registry.getService("httpd")[0]
-        assert service.domains.size() == 2
-        assert service.virtualDomains.size() == 2
-
-        service = registry.getService("httpd")[1]
-        assert service.domains.size() == 2
-        assert service.virtualDomains.size() == 2
-        Domain domain = service.domains[0]
-        assert domain.proxy.service == "servicefoo"
-        assert domain.proxy.address == "http://127.0.0.1:8080"
-        assert domain.proxy.alias == "fooalias"
     }
 }

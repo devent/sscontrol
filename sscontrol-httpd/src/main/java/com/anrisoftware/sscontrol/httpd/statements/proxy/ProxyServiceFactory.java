@@ -16,22 +16,32 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.service
+package com.anrisoftware.sscontrol.httpd.statements.proxy;
 
-def certFile = ServicesResources.class.getResource "cert_crt.txt"
-def certKeyFile = ServicesResources.class.getResource "cert_key.txt"
+import java.util.Map;
 
-httpd {
-    // reference service with id "idproxy"
-    refservice "idproxy"
-    // domain "test1.com"
-    domain "test1.com", address: "192.168.0.50", {
-        setup "proxy", service: "servicefoo", alias: "fooalias", address: "http://127.0.0.1:8080"
-    }
-    // SSL/domain "test1.com"
-    ssl_domain "test1.com", address: "192.168.0.50", {
-        setup "proxy", service: "servicebar", address: "http://127.0.0.1:8080"
-        certification_file certFile
-        certification_key_file certKeyFile
-    }
+import com.anrisoftware.sscontrol.httpd.statements.domain.Domain;
+import com.anrisoftware.sscontrol.httpd.statements.webservice.WebServiceFactory;
+
+/**
+ * Factory to create domain proxy.
+ * 
+ * @author Erwin Mueller, erwin.mueller@deventm.org
+ * @since 1.0
+ */
+public interface ProxyServiceFactory extends WebServiceFactory {
+
+    /**
+     * Creates the domain proxy.
+     * 
+     * @param domain
+     *            the {@link Domain} of the proxy.
+     * 
+     * @param args
+     *            the {@link Map} arguments.
+     * 
+     * @return the {@link ProxyService}.
+     */
+    @Override
+    ProxyService create(Domain domain, Map<String, Object> args);
 }

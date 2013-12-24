@@ -25,7 +25,7 @@ import javax.inject.Inject;
 import com.anrisoftware.sscontrol.httpd.statements.domain.Domain;
 
 /**
- * Parses arguments for {@link Proxy}.
+ * Parses arguments for {@link ProxyService}.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0

@@ -731,6 +731,9 @@ abstract class LinuxScript extends Script {
         args.system = args.containsKey("system") ? args.system : "unix"
         args.command = args.containsKey("command") ? args.command : userAddCommand
         args.usersFile = args.containsKey("usersFile") ? args.usersFile : usersFile
+        if (args.containsKey("homeDir")) {
+            args.homeDir.parentFile.mkdirs()
+        }
         log.checkAddUserArgs args
         def template = commandTemplates.getResource("useradd")
         def worker = scriptCommandFactory.create(template, args.system, "args", args)()

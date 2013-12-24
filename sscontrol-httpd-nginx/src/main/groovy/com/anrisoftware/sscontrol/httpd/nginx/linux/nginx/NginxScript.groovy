@@ -398,7 +398,7 @@ abstract class NginxScript extends LinuxScript {
         def targets = sites.inject([]) { acc, val ->
             acc << new File(sitesEnabledDir, val)
         }
-        link([files: files, targets: targets])
+        link files: files, targets: targets, override: true
         log.enabledSites this, sites
     }
 }

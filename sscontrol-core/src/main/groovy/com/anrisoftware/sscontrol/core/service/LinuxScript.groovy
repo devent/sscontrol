@@ -501,6 +501,7 @@ abstract class LinuxScript extends Script {
      * <li>{@code targets:} the target {@link File} or files;
      * <li>{@code system:} the system of the server, defaults to {@code unix};
      * <li>{@code command:} the link command, defaults to {@link #getLinkCommand()}.
+     * <li>{@code override:} set to {@code true} to override existing links.
      * </ul>
      *
      * @return the {@link ScriptCommandWorker} worker.

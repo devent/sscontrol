@@ -184,6 +184,23 @@ abstract class NginxScript extends LinuxScript {
     }
 
     /**
+     * Returns the path for the included configuration file,
+     * for example {@code "000-robobee.conf".}  If the path is
+     * not absolute then it is assume to be under the configuration
+     * include directory.
+     *
+     * <ul>
+     * <li>profile property {@code "config_include_file"}</li>
+     * </ul>
+     *
+     * @see #getConfigIncludeDir()
+     * @see #getDefaultProperties()
+     */
+    File getConfigIncludeFile() {
+        profileFileProperty "config_include_file", configIncludeDir, defaultProperties
+    }
+
+    /**
      * Returns the name of the directory to store SSL/certificates files.
      *
      * <ul>

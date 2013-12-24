@@ -87,7 +87,8 @@ abstract class Nginx_1_4_Script extends NginxScript {
         setupDefaultBinding()
         setupDefaultLogging()
         createSitesDirectories()
-        deployDefaultConfig()
+        deployNginxConfig()
+        deployIncludedConfig()
         deployConfig()
     }
 
@@ -122,7 +123,7 @@ abstract class Nginx_1_4_Script extends NginxScript {
     /**
      * Deploys the configuration of the Nginx service.
      */
-    void deployDefaultConfig() {
+    void deployNginxConfig() {
         def file = nginxConfigFile
         def conf = currentConfiguration file
         deployConfiguration configurationTokens(), conf, mainConfigurations(service), file
@@ -140,6 +141,30 @@ abstract class Nginx_1_4_Script extends NginxScript {
     def configErrorLog(HttpdService service) {
         def search = configTemplate.getText(true, "errorLog_search")
         def replace = configTemplate.getText(true, "errorLog", "debug", service.debug)
+        new TokenTemplate(search, replace)
+    }
+
+    /**
+     * Deploys the included configuration.
+     */
+    void deployIncludedConfig() {
+        def file = configIncludeFile
+        def conf = currentConfiguration file
+        deployConfiguration configurationTokens(), conf, includedConfigs(service), file
+    }
+
+    /**
+     * Returns the included configuration.
+     */
+    List includedConfigs(HttpdService service) {
+        [
+            includeSitesEnabled(service),
+        ]
+    }
+
+    def includeSitesEnabled(HttpdService service) {
+        def search = configTemplate.getText(true, "includeSitesEnabled_search", "dir", sitesEnabledDir)
+        def replace = configTemplate.getText(true, "includeSitesEnabled", "dir", sitesEnabledDir)
         new TokenTemplate(search, replace)
     }
 

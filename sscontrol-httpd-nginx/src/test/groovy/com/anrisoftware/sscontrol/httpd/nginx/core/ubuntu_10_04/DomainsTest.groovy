@@ -51,6 +51,7 @@ class DomainsTest extends UbuntuTestUtil {
         registry.allServices.each { it.call() }
 
         assertStringContent nginxConfExpected.replaced(tmpdir, tmpdir, "/tmp"), nginxConfExpected.toString()
+        assertStringContent robobeeConfExpected.replaced(tmpdir, tmpdir, "/tmp"), robobeeConfExpected.toString()
         assert sitesAvailableDir.asFile(tmpdir).isDirectory()
         assert sitesEnabledDir.asFile(tmpdir).isDirectory()
         assertStringContent test1comConf.replaced(tmpdir, tmpdir, "/tmp"), test1comConf.toString()

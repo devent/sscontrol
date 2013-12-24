@@ -81,3 +81,11 @@ error_log\s+.*?;
 errorLog(debug) ::= <%
 error_log <debug>;
 %>
+
+includeSitesEnabled_search(dir) ::= <%
+include\\s+.*/\\*\\.conf;
+%>
+
+includeSitesEnabled(dir) ::= <%
+include <dir>/*.conf;
+%>

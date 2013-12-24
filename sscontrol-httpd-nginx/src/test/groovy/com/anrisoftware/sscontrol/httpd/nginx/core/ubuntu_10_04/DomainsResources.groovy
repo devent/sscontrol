@@ -33,6 +33,7 @@ enum DomainsResources {
     test1comConf("/etc/nginx/sites-available/100-robobee-test1.com.conf", DomainsResources.class.getResource("test1_com_conf.txt")),
     test1comSslConf("/etc/nginx/sites-available/100-robobee-test1.com-ssl.conf", DomainsResources.class.getResource("test1_com_ssl_conf.txt")),
     nginxConfExpected("/etc/nginx/nginx.conf", DomainsResources.class.getResource("nginx_conf_expected.txt")),
+    robobeeConfExpected("/etc/nginx/conf.d/000-robobee.conf", DomainsResources.class.getResource("robobee_conf_expected.txt")),
     sourcesListExpected("/etc/apt/sources.list", DomainsResources.class.getResource("sources_list_expected.txt")),
     aptKeyOutExpected("/usr/bin/apt-key.out", DomainsResources.class.getResource("apt_key_out_expected.txt")),
     aptitudeOutExpected("/usr/bin/aptitude.out", DomainsResources.class.getResource("aptitude_out_expected.txt")),

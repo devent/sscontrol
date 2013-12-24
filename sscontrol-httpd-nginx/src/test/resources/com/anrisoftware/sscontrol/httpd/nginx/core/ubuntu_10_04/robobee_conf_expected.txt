@@ -1,3 +1,24 @@
 # SSCONTROL-httpd
+gzip on;
+# SSCONTROL-httpd-END
+# SSCONTROL-httpd
+gzip_comp_level 1;
+# SSCONTROL-httpd-END
+# SSCONTROL-httpd
+gzip_min_length 1400;
+# SSCONTROL-httpd-END
+# SSCONTROL-httpd
+gzip_vary on;
+# SSCONTROL-httpd-END
+# SSCONTROL-httpd
+gzip_types text/plain text/css image/png image/gif image/jpeg application/x-javascript text/xml application/xml application/xml+rss text/javascript;
+# SSCONTROL-httpd-END
+# SSCONTROL-httpd
+gzip_disable "MSIE [1-6]\.(?!.*SV1)";
+# SSCONTROL-httpd-END
+# SSCONTROL-httpd
+gzip_http_version 1.1;
+# SSCONTROL-httpd-END
+# SSCONTROL-httpd
 include /tmp/etc/nginx/sites-enabled/*.conf;
 # SSCONTROL-httpd-END

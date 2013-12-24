@@ -89,3 +89,59 @@ include\\s+.*/\\*\\.conf;
 includeSitesEnabled(dir) ::= <%
 include <dir>/*.conf;
 %>
+
+domainCompression_search() ::= <%
+#?gzip\\s+(on|off);
+%>
+
+domainCompression(enabled) ::= <%
+gzip <if(enabled)>on<else>off<endif>;
+%>
+
+compressionLevel_search() ::= <%
+#?gzip_comp_level\\s+[1-9];
+%>
+
+compressionLevel(level) ::= <%
+gzip_comp_level <level>;
+%>
+
+compressionMinSize_search() ::= <%
+#?gzip_min_length\\s+\d+;
+%>
+
+compressionMinSize(size) ::= <%
+gzip_min_length <size>;
+%>
+
+compressionVary_search() ::= <%
+#?gzip_vary\\s+(on|off);
+%>
+
+compressionVary(enabled) ::= <%
+gzip_vary <if(enabled)>on<else>off<endif>;
+%>
+
+compressionTypes_search() ::= <%
+#?gzip_types\\s+.*?;
+%>
+
+compressionTypes(types) ::= <%
+gzip_types <types;separator=" ">;
+%>
+
+compressionException_search() ::= <%
+#?gzip_disable\\s+.*?;
+%>
+
+compressionException(exception) ::= <%
+gzip_disable "<exception>";
+%>
+
+compressionHttpVersion_search() ::= <%
+#?gzip_http_version\\s+.*?;
+%>
+
+compressionHttpVersion(version) ::= <%
+gzip_http_version <version>;
+%>

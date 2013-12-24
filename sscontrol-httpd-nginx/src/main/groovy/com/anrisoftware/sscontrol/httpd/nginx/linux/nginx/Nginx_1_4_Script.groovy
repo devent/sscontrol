@@ -158,8 +158,57 @@ abstract class Nginx_1_4_Script extends NginxScript {
      */
     List includedConfigs(HttpdService service) {
         [
+            domainCompression(service),
+            compressionLevel(service),
+            compressionMinSize(service),
+            compressionVary(service),
+            compressionTypes(service),
+            compressionException(service),
+            compressionHttpVersion(service),
             includeSitesEnabled(service),
         ]
+    }
+
+    def domainCompression(HttpdService service) {
+        def search = configTemplate.getText(true, "domainCompression_search")
+        def replace = configTemplate.getText(true, "domainCompression", "enabled", domainCompression)
+        new TokenTemplate(search, replace)
+    }
+
+    def compressionLevel(HttpdService service) {
+        def search = configTemplate.getText(true, "compressionLevel_search")
+        def replace = configTemplate.getText(true, "compressionLevel", "level", compressionLevel)
+        new TokenTemplate(search, replace)
+    }
+
+    def compressionMinSize(HttpdService service) {
+        def search = configTemplate.getText(true, "compressionMinSize_search")
+        def replace = configTemplate.getText(true, "compressionMinSize", "size", compressionMinSize)
+        new TokenTemplate(search, replace)
+    }
+
+    def compressionVary(HttpdService service) {
+        def search = configTemplate.getText(true, "compressionVary_search")
+        def replace = configTemplate.getText(true, "compressionVary", "enabled", compressionVary)
+        new TokenTemplate(search, replace)
+    }
+
+    def compressionTypes(HttpdService service) {
+        def search = configTemplate.getText(true, "compressionTypes_search")
+        def replace = configTemplate.getText(true, "compressionTypes", "types", compressionTypes)
+        new TokenTemplate(search, replace)
+    }
+
+    def compressionException(HttpdService service) {
+        def search = configTemplate.getText(true, "compressionException_search")
+        def replace = configTemplate.getText(true, "compressionException", "exception", compressionException)
+        new TokenTemplate(search, replace)
+    }
+
+    def compressionHttpVersion(HttpdService service) {
+        def search = configTemplate.getText(true, "compressionHttpVersion_search")
+        def replace = configTemplate.getText(true, "compressionHttpVersion", "version", compressionHttpVersion)
+        new TokenTemplate(search, replace)
     }
 
     def includeSitesEnabled(HttpdService service) {

@@ -67,6 +67,10 @@
 			<groupId>com.google.inject.extensions</groupId>
 			<artifactId>guice-multibindings</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>org.jscience</groupId>
+			<artifactId>jscience</artifactId>
+		</dependency>
 	</dependencies>
 
 </project>

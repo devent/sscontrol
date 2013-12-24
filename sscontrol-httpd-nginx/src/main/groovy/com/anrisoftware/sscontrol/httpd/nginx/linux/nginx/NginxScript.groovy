@@ -21,6 +21,8 @@ package com.anrisoftware.sscontrol.httpd.nginx.linux.nginx
 import static org.apache.commons.io.FileUtils.*
 
 import javax.inject.Inject
+import javax.measure.MeasureFormat
+import javax.measure.unit.NonSI
 
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.sscontrol.core.bindings.BindingFactory
@@ -336,6 +338,102 @@ abstract class NginxScript extends LinuxScript {
      */
     String getLoggingStorage() {
         profileProperty "logging_storage", defaultProperties
+    }
+
+    /**
+     * Returns to enable compression, for example {@code "true".}
+     *
+     * <ul>
+     * <li>profile property {@code "domain_compression"}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    boolean getDomainCompression() {
+        profileProperty "domain_compression", defaultProperties
+    }
+
+    /**
+     * Returns the compression level, for example {@code "1".}
+     *
+     * <ul>
+     * <li>profile property {@code "domain_compression_level"}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    int getCompressionLevel() {
+        profileNumberProperty "domain_compression_level", defaultProperties
+    }
+
+    /**
+     * Returns the compression minimum size, for example {@code "1400".}
+     *
+     * <ul>
+     * <li>profile property {@code "compression_min_size"}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    int getCompressionMinSize() {
+        def str = profileProperty "compression_min_size", defaultProperties
+        MeasureFormat.getInstance().parseObject(str).intValue NonSI.BYTE
+    }
+
+    /**
+     * Returns to enable sending {@code "Vary: Accept-Encoding"}, for
+     * example {@code "true".}
+     *
+     * <ul>
+     * <li>profile property {@code "compression_vary"}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    boolean getCompressionVary() {
+        profileBooleanProperty "compression_vary", defaultProperties
+    }
+
+    /**
+     * Returns the MIME types for compression, for
+     * example {@code "text/plain, text/css, image/png, image/gif, image/jpeg, application/x-javascript, text/xml, application/xml, application/xml+rss, text/javascript".}
+     *
+     * <ul>
+     * <li>profile property {@code "compression_types"}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    List getCompressionTypes() {
+        profileListProperty "compression_types", defaultProperties
+    }
+
+    /**
+     * Returns the compression exception, can be a regular expression, for
+     * example {@code "MSIE [1-6]\\.(?!.*SV1)".}
+     *
+     * <ul>
+     * <li>profile property {@code "compression_exception"}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    String getCompressionException() {
+        profileProperty "compression_exception", defaultProperties
+    }
+
+    /**
+     * Returns the compression HTTP version, for
+     * example {@code "1.1".}
+     *
+     * <ul>
+     * <li>profile property {@code "compression_http_version"}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    String getCompressionHttpVersion() {
+        profileProperty "compression_http_version", defaultProperties
     }
 
     /**

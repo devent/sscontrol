@@ -67,6 +67,9 @@ public class BindingArgs {
                 list.add(addressFactory.create(address));
             }
         }
+        if (havePort(args)) {
+            list.add(addressFactory.create(port(service, args)));
+        }
         return list;
     }
 

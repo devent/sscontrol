@@ -18,6 +18,7 @@
  */
 package com.anrisoftware.sscontrol.core.bindings;
 
+import static com.anrisoftware.sscontrol.core.bindings.BindingLogger._.address_added;
 import static com.anrisoftware.sscontrol.core.bindings.BindingLogger._.address_blank;
 import static com.anrisoftware.sscontrol.core.bindings.BindingLogger._.address_null;
 import static com.anrisoftware.sscontrol.core.bindings.BindingLogger._.port_null;
@@ -47,7 +48,9 @@ class BindingLogger extends AbstractLogger {
 
         port_null("Port cannot be null for %s."),
 
-        port_number("Port must be a number for %s.");
+        port_number("Port must be a number for %s."),
+
+        address_added("Binding address {} added.");
 
 		private String name;
 
@@ -76,5 +79,9 @@ class BindingLogger extends AbstractLogger {
     void checkPort(Object service, Object object) {
         notNull(object, port_null.toString(), service);
         isInstanceOf(Integer.class, object, port_number.toString(), service);
+    }
+
+    void addressAdded(Address address) {
+        debug(address_added, address);
     }
 }

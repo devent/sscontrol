@@ -44,6 +44,9 @@ public class Binding implements Serializable {
     private final List<Address> addresses;
 
     @Inject
+    private BindingLogger log;
+
+    @Inject
     private AddressFactory addressFactory;
 
     Binding() {
@@ -75,6 +78,7 @@ public class Binding implements Serializable {
 
     public void addAddress(Address address) {
         this.addresses.add(address);
+        log.addressAdded(address);
     }
 
     public void addAddress(Collection<Address> addresses) {

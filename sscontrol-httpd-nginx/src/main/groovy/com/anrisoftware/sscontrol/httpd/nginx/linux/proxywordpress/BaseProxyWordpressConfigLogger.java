@@ -16,21 +16,41 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd-nginx. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.nginx.linux.nginx;
+package com.anrisoftware.sscontrol.httpd.nginx.linux.proxywordpress;
 
-import com.anrisoftware.globalpom.format.byteformat.ByteFormatModule;
-import com.google.inject.AbstractModule;
+import javax.inject.Singleton;
+
+import com.anrisoftware.globalpom.log.AbstractLogger;
 
 /**
- * Nginx service module.
+ * Logging messages for {@link BaseProxyWordpressConfig}.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-public class NginxScriptModule extends AbstractModule {
+@Singleton
+class BaseProxyWordpressConfigLogger extends AbstractLogger {
 
-    @Override
-    protected void configure() {
-        install(new ByteFormatModule());
+    enum _ {
+
+        message("");
+
+        private String name;
+
+        private _(String name) {
+            this.name = name;
+        }
+
+        @Override
+        public String toString() {
+            return name;
+        }
+    }
+
+    /**
+     * Creates a logger for {@link BaseProxyWordpressConfig}.
+     */
+    public BaseProxyWordpressConfigLogger() {
+        super(BaseProxyWordpressConfig.class);
     }
 }

@@ -202,6 +202,42 @@ class ProfilePropertiesImpl implements ProfileProperties {
     }
 
     /**
+     * Returns a typed profile property. If the profile property was not set
+     * return the default value from the default properties.
+     * 
+     * @param key
+     *            the property {@link String} key.
+     * 
+     * @param format
+     *            the {@link Format} to parse the type.
+     * 
+     * @param defaults
+     *            default {@link ContextProperties} properties.
+     * 
+     * @return the value of the profile property.
+     * 
+     * @throws ServiceException
+     *             if the profile property was not found.
+     * 
+     * @throws ParseException
+     *             if the property cannot be parsed to the type.
+     * 
+     */
+    public <T> T profileTypedProperty(String key, Format format,
+            ContextProperties defaults) throws ServiceException, ParseException {
+        @SuppressWarnings("unchecked")
+        T property = (T) get(key);
+        if (property != null) {
+            return property;
+        }
+        property = defaults.getTypedProperty(key, format);
+        if (property != null) {
+            return property;
+        }
+        throw log.noProfileProperty(this, key);
+    }
+
+    /**
      * Returns a duration profile property. If the profile property was not set
      * return the default value from the default properties.
      * 

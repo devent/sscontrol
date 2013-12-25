@@ -36,7 +36,7 @@ enum UbuntuResources {
     users("/etc/passwd", UbuntuResources.class.getResource("passwd.txt")),
     apacheConf("/etc/apache2/apache2.conf", UbuntuResources.class.getResource("apache2_conf.txt")),
     aptitudeCommand("/usr/bin/aptitude", UbuntuResources.class.getResource("echo_command.txt")),
-    addRepositoryCommand("/usr/bin/add-apt-repository", UbuntuResources.class.getResource("echo_command.txt")),
+    aptKeyCommand("/usr/bin/apt-key", UbuntuResources.class.getResource("echo_command.txt")),
     restartCommand("/etc/init.d/apache2", UbuntuResources.class.getResource("echo_command.txt")),
     chmodCommand("/bin/chmod", UbuntuResources.class.getResource("echo_command.txt")),
     chownCommand("/bin/chown", UbuntuResources.class.getResource("echo_command.txt")),
@@ -65,16 +65,11 @@ enum UbuntuResources {
     sitesDir("/var/www", null),
     defaultConf("/etc/apache2/sites-available/default", UbuntuResources.class.getResource("default.txt")),
     defaultSslConf("/etc/apache2/sites-available/default-ssl", UbuntuResources.class.getResource("default_ssl.txt")),
-    // nginx
-    nginxConfigurationDir("/etc/nginx", null),
-    nginxSitesAvailableDir("/etc/nginx/sites-available", null),
-    nginxSitesEnabledDir("/etc/nginx/sites-enabled", null),
-    nginxConfigIncludeDir("/etc/nginx/conf.d", null),
-    nginxRestartCommand("/etc/init.d/nginx", UbuntuResources.class.getResource("echo_command.txt")),
+    packagesSourcesFile("/etc/apt/sources.list", UbuntuResources.class.getResource("sources_list.txt")),
 
     static copyUbuntuFiles(File parent) {
         aptitudeCommand.createCommand parent
-        addRepositoryCommand.createCommand parent
+        aptKeyCommand.createCommand parent
         restartCommand.createCommand parent
         chmodCommand.createCommand parent
         chownCommand.createCommand parent
@@ -100,6 +95,7 @@ enum UbuntuResources {
         users.createFile parent
         defaultConf.createFile parent
         defaultSslConf.createFile parent
+        packagesSourcesFile.createFile parent
     }
 
     ResourcesUtils resources

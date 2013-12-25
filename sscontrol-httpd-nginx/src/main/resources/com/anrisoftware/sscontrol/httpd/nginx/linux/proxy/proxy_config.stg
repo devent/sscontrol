@@ -1,0 +1,39 @@
+wordpressProxy(properties, domain, proxy) ::= <<
+# wordpress proxy
+proxy_set_header X-Real-IP $remote_addr;
+proxy_set_header X-Forwarded-For $remote_addr;
+proxy_set_header Host $host;
+proxy_pass <proxy.address>;
+>>
+
+proxyCachePath_search() ::= <%
+#?proxy_cache_path\\s+.*?;
+%>
+
+proxyCachePath(dir, name, size, maxsize) ::= <%
+proxy_cache_path <dir> levels=1:2 keys_zone=<name>:<size> max_size=<maxsize>;
+%>
+
+proxyConnectTimeout_search() ::= <%
+#?proxy_connect_timeout\\s+.*?;
+%>
+
+proxyConnectTimeout(time) ::= <%
+proxy_connect_timeout <time>;
+%>
+
+proxyReadTimeout_search() ::= <%
+#?proxy_read_timeout\\s+.*?;
+%>
+
+proxyReadTimeout(time) ::= <%
+proxy_read_timeout <time>;
+%>
+
+proxySendTimeout_search() ::= <%
+#?proxy_send_timeout\\s+.*?;
+%>
+
+proxySendTimeout(time) ::= <%
+proxy_send_timeout <time>;
+%>

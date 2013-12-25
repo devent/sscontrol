@@ -21,18 +21,24 @@ package com.anrisoftware.sscontrol.profile
 foo = "test"
 
 profile "ubuntu_10.04", {
-	hosts {
-		install_command "aptitude update && aptitude install %s"
-		echo_command "echo"
-		set_enabled true
-		set_gstring "gstring $foo"
-		set_multiple "aaa", "bbb"
-		set_number 11
-		set_method_enabled()
-		property_with_variables "$one $two $three"
-	}
-	hostname {
-		install_command "aptitude update && aptitude install {}"
-		echo_command "echo"
-	}
+    hosts {
+        install_command "aptitude update && aptitude install %s"
+        echo_command "echo"
+        set_enabled true
+        set_gstring "gstring $foo"
+        set_multiple "aaa", "bbb"
+        set_number 11
+        set_method_enabled()
+        property_with_variables "$one $two $three"
+    }
+    hostname {
+        install_command "aptitude update && aptitude install %s"
+        echo_command "echo"
+    }
+    httpd {
+        service([
+            "idapache2": "apache",
+            "idproxy": "nginx"
+        ])
+    }
 }

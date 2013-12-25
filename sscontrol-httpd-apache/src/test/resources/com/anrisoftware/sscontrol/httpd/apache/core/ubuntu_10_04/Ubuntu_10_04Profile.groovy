@@ -27,7 +27,7 @@ profile "ubuntu_10_04", {
     httpd {
         service "apache"
         install_command "export DEBIAN_FRONTEND=noninteractive; ${UbuntuResources.aptitudeCommand.asFile(tmp)} update && ${UbuntuResources.aptitudeCommand.asFile(tmp)} install"
-        enable_repository_command UbuntuResources.addRepositoryCommand.asFile(tmp)
+        apt_key_command UbuntuResources.aptKeyCommand.asFile(tmp)
         restart_command UbuntuResources.restartCommand.asFile(tmp)
         chmod_command UbuntuResources.chmodCommand.asFile(tmp)
         chown_command UbuntuResources.chownCommand.asFile(tmp)
@@ -56,6 +56,7 @@ profile "ubuntu_10_04", {
         sites_directory UbuntuResources.sitesDir.asFile(tmp)
         default_config_file "000-robobee-default.conf"
         domains_config_file "000-robobee-domains.conf"
+        packages_sources_file UbuntuResources.packagesSourcesFile.asFile(tmp)
         // phpmyadmin
         mysql_command UbuntuResources.mysqlCommand.asFile(tmp)
         phpmyadmin_configuration_file PhpmyadminResources.config.asFile(tmp)

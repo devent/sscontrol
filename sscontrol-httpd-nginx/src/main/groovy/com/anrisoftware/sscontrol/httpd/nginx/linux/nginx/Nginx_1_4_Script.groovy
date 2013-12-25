@@ -60,28 +60,32 @@ abstract class Nginx_1_4_Script extends NginxScript {
     @Inject
     RedirectConfig deployRedirectToWwwHttps
 
+    @Inject
+    Map<String, ServiceConfig> serviceConfigs
+
     /**
      * The {@link Templates} for the script.
      */
     Templates nginxTemplates
 
     /**
-     * Resource containing the configuration templates.
+     * Resource containing the Nginx configuration templates.
      */
-    TemplateResource configTemplate
+    TemplateResource nginxConfigTemplate
 
     /**
-     * Resource containing the commands templates.
+     * Resource containing the Nginx commands templates.
      */
     TemplateResource nginxCommandsTemplate
 
     @Override
     def run() {
         nginxTemplates = templatesFactory.create "Nginx_1_4", ["renderers": [debugLoggingRenderer]]
-        configTemplate = nginxTemplates.getResource "config"
+        nginxConfigTemplate = nginxTemplates.getResource "config"
         nginxCommandsTemplate = nginxTemplates.getResource "commands"
         domainConfig.script = this
         sslDomainConfig.script = this
+        serviceConfigs.values().each { it.script = this }
         super.run()
         beforeConfiguration()
         setupDefaultBinding()
@@ -139,8 +143,8 @@ abstract class Nginx_1_4_Script extends NginxScript {
     }
 
     def configErrorLog(HttpdService service) {
-        def search = configTemplate.getText(true, "errorLog_search")
-        def replace = configTemplate.getText(true, "errorLog", "debug", service.debug)
+        def search = nginxConfigTemplate.getText(true, "errorLog_search")
+        def replace = nginxConfigTemplate.getText(true, "errorLog", "debug", service.debug)
         new TokenTemplate(search, replace)
     }
 
@@ -170,50 +174,50 @@ abstract class Nginx_1_4_Script extends NginxScript {
     }
 
     def domainCompression(HttpdService service) {
-        def search = configTemplate.getText(true, "domainCompression_search")
-        def replace = configTemplate.getText(true, "domainCompression", "enabled", domainCompression)
+        def search = nginxConfigTemplate.getText(true, "domainCompression_search")
+        def replace = nginxConfigTemplate.getText(true, "domainCompression", "enabled", domainCompression)
         new TokenTemplate(search, replace)
     }
 
     def compressionLevel(HttpdService service) {
-        def search = configTemplate.getText(true, "compressionLevel_search")
-        def replace = configTemplate.getText(true, "compressionLevel", "level", compressionLevel)
+        def search = nginxConfigTemplate.getText(true, "compressionLevel_search")
+        def replace = nginxConfigTemplate.getText(true, "compressionLevel", "level", compressionLevel)
         new TokenTemplate(search, replace)
     }
 
     def compressionMinSize(HttpdService service) {
-        def search = configTemplate.getText(true, "compressionMinSize_search")
-        def replace = configTemplate.getText(true, "compressionMinSize", "size", compressionMinSize)
+        def search = nginxConfigTemplate.getText(true, "compressionMinSize_search")
+        def replace = nginxConfigTemplate.getText(true, "compressionMinSize", "size", compressionMinSize)
         new TokenTemplate(search, replace)
     }
 
     def compressionVary(HttpdService service) {
-        def search = configTemplate.getText(true, "compressionVary_search")
-        def replace = configTemplate.getText(true, "compressionVary", "enabled", compressionVary)
+        def search = nginxConfigTemplate.getText(true, "compressionVary_search")
+        def replace = nginxConfigTemplate.getText(true, "compressionVary", "enabled", compressionVary)
         new TokenTemplate(search, replace)
     }
 
     def compressionTypes(HttpdService service) {
-        def search = configTemplate.getText(true, "compressionTypes_search")
-        def replace = configTemplate.getText(true, "compressionTypes", "types", compressionTypes)
+        def search = nginxConfigTemplate.getText(true, "compressionTypes_search")
+        def replace = nginxConfigTemplate.getText(true, "compressionTypes", "types", compressionTypes)
         new TokenTemplate(search, replace)
     }
 
     def compressionException(HttpdService service) {
-        def search = configTemplate.getText(true, "compressionException_search")
-        def replace = configTemplate.getText(true, "compressionException", "exception", compressionException)
+        def search = nginxConfigTemplate.getText(true, "compressionException_search")
+        def replace = nginxConfigTemplate.getText(true, "compressionException", "exception", compressionException)
         new TokenTemplate(search, replace)
     }
 
     def compressionHttpVersion(HttpdService service) {
-        def search = configTemplate.getText(true, "compressionHttpVersion_search")
-        def replace = configTemplate.getText(true, "compressionHttpVersion", "version", compressionHttpVersion)
+        def search = nginxConfigTemplate.getText(true, "compressionHttpVersion_search")
+        def replace = nginxConfigTemplate.getText(true, "compressionHttpVersion", "version", compressionHttpVersion)
         new TokenTemplate(search, replace)
     }
 
     def includeSitesEnabled(HttpdService service) {
-        def search = configTemplate.getText(true, "includeSitesEnabled_search", "dir", sitesEnabledDir)
-        def replace = configTemplate.getText(true, "includeSitesEnabled", "dir", sitesEnabledDir)
+        def search = nginxConfigTemplate.getText(true, "includeSitesEnabled_search", "dir", sitesEnabledDir)
+        def replace = nginxConfigTemplate.getText(true, "includeSitesEnabled", "dir", sitesEnabledDir)
         new TokenTemplate(search, replace)
     }
 
@@ -231,16 +235,17 @@ abstract class Nginx_1_4_Script extends NginxScript {
     }
 
     def deployService(Domain domain, List serviceConfig) {
+        def llog = log
         domain.services.findAll { WebService service ->
             service.domain == domain
         }.each { WebService service ->
-            def reftarget = findReferencedService service
-            def config = serviceConfigs["${PROFILE}.${service.name}"]
+            WebService reftarget = findReferencedService service
+            ServiceConfig config = serviceConfigs["${PROFILE}.${service.name}"]
             if (reftarget == null) {
-                log.checkServiceConfig config, service
+                llog.checkServiceConfig config, service
                 config.deployService domain, service, serviceConfig
             } else {
-                log.checkServiceConfig config, service
+                llog.checkServiceConfig config, service
                 def refdomain = findReferencedDomain service
                 if (refdomain == null) {
                     config.deployDomain domain, null, reftarget, serviceConfig
@@ -295,7 +300,7 @@ abstract class Nginx_1_4_Script extends NginxScript {
     }
 
     def deployDomainConfig(Domain domain, List servicesConfig) {
-        def string = configTemplate.getText(true, domain.class.simpleName,
+        def string = nginxConfigTemplate.getText(true, domain.class.simpleName,
                 "properties", this,
                 "domain", domain,
                 "servicesConfig", servicesConfig)

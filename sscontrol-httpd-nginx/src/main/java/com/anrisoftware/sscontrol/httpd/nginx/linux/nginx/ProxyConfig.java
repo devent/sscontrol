@@ -18,19 +18,18 @@
  */
 package com.anrisoftware.sscontrol.httpd.nginx.linux.nginx;
 
-import com.anrisoftware.globalpom.format.byteformat.ByteFormatModule;
-import com.google.inject.AbstractModule;
-
 /**
- * Nginx service module.
+ * Configures domain proxy service.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-public class NginxScriptModule extends AbstractModule {
+public interface ProxyConfig extends ServiceConfig {
 
-    @Override
-    protected void configure() {
-        install(new ByteFormatModule());
-    }
+    /**
+     * Returns the proxy service name.
+     * 
+     * @return the proxy service {@link String} name.
+     */
+    String getProxyService();
 }

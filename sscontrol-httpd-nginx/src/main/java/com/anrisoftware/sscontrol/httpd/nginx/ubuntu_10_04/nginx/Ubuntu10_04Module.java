@@ -25,6 +25,8 @@ import static java.lang.String.format;
 import groovy.lang.Script;
 
 import com.anrisoftware.sscontrol.httpd.nginx.linux.nginx.NginxScriptModule;
+import com.anrisoftware.sscontrol.httpd.nginx.linux.nginx.ServiceConfig;
+import com.anrisoftware.sscontrol.httpd.nginx.ubuntu_10_04.proxywordpress.ProxyWordpressConfig;
 import com.google.inject.AbstractModule;
 import com.google.inject.multibindings.MapBinder;
 
@@ -40,6 +42,7 @@ class Ubuntu10_04Module extends AbstractModule {
 	protected void configure() {
 		install(new NginxScriptModule());
 		bindScripts();
+        bindServiceConfig();
 	}
 
 	private void bindScripts() {
@@ -49,4 +52,10 @@ class Ubuntu10_04Module extends AbstractModule {
 				Ubuntu_10_04Script.class);
 	}
 
+    private void bindServiceConfig() {
+        MapBinder<String, ServiceConfig> map = newMapBinder(binder(),
+                String.class, ServiceConfig.class);
+        map.addBinding(format("%s.%s", PROFILE, ProxyWordpressConfig.NAME)).to(
+                ProxyWordpressConfig.class);
+    }
 }

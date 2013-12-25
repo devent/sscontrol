@@ -43,65 +43,70 @@ import com.google.inject.Injector
  */
 class LoadProfileTest {
 
-	@Test
-	void "load profile script"() {
-		loader.loadService ubuntu1004Profile, null
-		assert registry.serviceNames.toString() == "[profile]"
-		assert registry.getService("profile").size() == 1
-		ProfileService profile = registry.getService("profile")[0]
-		assert profile.entryNames.toString() == "[hosts, hostname]"
+    @Test
+    void "load profile script"() {
+        loader.loadService ubuntu1004Profile, null
+        assert registry.serviceNames.toString() == "[profile]"
+        assert registry.getService("profile").size() == 1
+        ProfileService profile = registry.getService("profile")[0]
+        assert profile.entryNames.toString() == "[hosts, hostname, httpd]"
 
-		ProfileProperties system = profile.getEntry("hosts")
-		system.keys.size() == 8
-		assert system.get("echo_command") == "echo"
-		assert system.get("install_command") == "aptitude update && aptitude install %s"
-		assert system.get("install_command", "aaa") == "aptitude update && aptitude install aaa"
-		assert system.get("set_enabled") == true
-		assert system.get("set_gstring") == "gstring test"
-		assert system.get("set_multiple") == ["aaa", "bbb"]
-		assert system.get("set_number") == 11
-		assert system.get("set_method_enabled") == true
-		assert system.get("property_with_variables") == "one two three"
+        ProfileProperties system = profile.getEntry("hosts")
+        assert system.keys.size() == 8
+        assert system.get("echo_command") == "echo"
+        assert system.get("install_command") == "aptitude update && aptitude install %s"
+        assert system.get("install_command", "aaa") == "aptitude update && aptitude install aaa"
+        assert system.get("set_enabled") == true
+        assert system.get("set_gstring") == "gstring test"
+        assert system.get("set_multiple") == ["aaa", "bbb"]
+        assert system.get("set_number") == 11
+        assert system.get("set_method_enabled") == true
+        assert system.get("property_with_variables") == "one two three"
 
-		ProfileProperties hostname = profile.getEntry("hostname")
-		system.keys.size() == 2
-		assert system.get("echo_command") == "echo"
-		assert system.get("install_command") == "aptitude update && aptitude install %s"
-	}
+        ProfileProperties hostname = profile.getEntry("hostname")
+        assert hostname.keys.size() == 2
+        assert hostname.get("echo_command") == "echo"
+        assert hostname.get("install_command") == "aptitude update && aptitude install %s"
 
-	static ubuntu1004Profile = LoadProfileTest.class.getResource("Ubuntu_10_04Profile.groovy")
+        ProfileProperties httpd = profile.getEntry("httpd")
+        assert httpd.keys.size() == 1
+        assert httpd.get("service").idapache2 == "apache"
+        assert httpd.get("service").idproxy == "nginx"
+    }
 
-	static Injector injector
+    static ubuntu1004Profile = LoadProfileTest.class.getResource("Ubuntu_10_04Profile.groovy")
 
-	static ServiceLoaderFactory loaderFactory
+    static Injector injector
 
-	ServicesRegistry registry
+    static ServiceLoaderFactory loaderFactory
 
-	SscontrolServiceLoader loader
+    ServicesRegistry registry
 
-	Map variables
+    SscontrolServiceLoader loader
 
-	@BeforeClass
-	static void createFactories() {
-		injector = createInjector()
-		loaderFactory = injector.getInstance ServiceLoaderFactory
-	}
+    Map variables
 
-	static createInjector() {
-		Guice.createInjector(
-				new CoreModule(), new CoreResourcesModule(), new ServiceModule())
-	}
+    @BeforeClass
+    static void createFactories() {
+        injector = createInjector()
+        loaderFactory = injector.getInstance ServiceLoaderFactory
+    }
 
-	@Before
-	void createRegistry() {
-		variables = [one: "one", two: "two", three: "three"]
-		registry = injector.getInstance ServicesRegistry
-		loader = loaderFactory.create registry, variables
-		loader.setParent injector
-	}
+    static createInjector() {
+        Guice.createInjector(
+                new CoreModule(), new CoreResourcesModule(), new ServiceModule())
+    }
 
-	@BeforeClass
-	static void setupToStringStyle() {
-		toStringStyle
-	}
+    @Before
+    void createRegistry() {
+        variables = [one: "one", two: "two", three: "three"]
+        registry = injector.getInstance ServicesRegistry
+        loader = loaderFactory.create registry, variables
+        loader.setParent injector
+    }
+
+    @BeforeClass
+    static void setupToStringStyle() {
+        toStringStyle
+    }
 }

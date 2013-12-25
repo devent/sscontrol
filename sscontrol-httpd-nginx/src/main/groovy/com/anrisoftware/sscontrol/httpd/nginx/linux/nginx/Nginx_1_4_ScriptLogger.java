@@ -20,6 +20,8 @@ package com.anrisoftware.sscontrol.httpd.nginx.linux.nginx;
 
 import static com.anrisoftware.sscontrol.httpd.nginx.linux.nginx.Nginx_1_4_ScriptLogger._.deploy_domain_config_debug;
 import static com.anrisoftware.sscontrol.httpd.nginx.linux.nginx.Nginx_1_4_ScriptLogger._.deploy_domain_config_info;
+import static com.anrisoftware.sscontrol.httpd.nginx.linux.nginx.Nginx_1_4_ScriptLogger._.service_config_null;
+import static org.apache.commons.lang3.Validate.notNull;
 
 import java.io.File;
 
@@ -28,6 +30,7 @@ import javax.inject.Singleton;
 import com.anrisoftware.globalpom.log.AbstractLogger;
 import com.anrisoftware.sscontrol.core.service.LinuxScript;
 import com.anrisoftware.sscontrol.httpd.statements.domain.Domain;
+import com.anrisoftware.sscontrol.httpd.statements.webservice.WebService;
 
 /**
  * Logging messages for {@link Nginx_1_4_Script}.
@@ -44,7 +47,9 @@ class Nginx_1_4_ScriptLogger extends AbstractLogger {
                 "Deploy domain {} configuration to '{}' for {}."),
 
         deploy_domain_config_info(
-                "Deploy domain '{}' configuration to '{}' for script '{}'.");
+                "Deploy domain '{}' configuration to '{}' for script '{}'."),
+
+        service_config_null("Service configuration not found for '%s'.");
 
         private String name;
 
@@ -73,4 +78,9 @@ class Nginx_1_4_ScriptLogger extends AbstractLogger {
                     script.getName());
         }
     }
+
+    void checkServiceConfig(ServiceConfig config, WebService service) {
+        notNull(config, service_config_null.toString(), service.getName());
+    }
+
 }

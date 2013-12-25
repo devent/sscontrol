@@ -36,6 +36,7 @@ enum ProxyResources {
     test1comSslConf("/etc/nginx/sites-available/100-robobee-test1.com-ssl.conf", ProxyResources.class.getResource("test1_com_ssl_conf.txt")),
     wwwtest1comConf("/etc/nginx/sites-available/100-robobee-www.test1.com.conf", ProxyResources.class.getResource("www_test1_com_conf.txt")),
     wwwtest1comSslConf("/etc/nginx/sites-available/100-robobee-www.test1.com-ssl.conf", ProxyResources.class.getResource("www_test1_com_ssl_conf.txt")),
+    wwwtest1comProxyConf("/etc/nginx/conf.d/100-robobee-www.test1.com-proxy.conf", ProxyResources.class.getResource("www_test1_com_proxy_conf.txt")),
 
     static copyProxyFiles(File parent) {
     }

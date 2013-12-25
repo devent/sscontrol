@@ -2,9 +2,7 @@ Domain(properties, domain, servicesConfig, proxyConfig) ::= <<
 server {
     # domain <domain.name>
     <domainBody(properties, domain)>
-    <domainProxy(properties, domain)>
     <domain.redirects:domainRedirects(domain);separator="\n">
-    <proxyConfig;separator="\n">
     <servicesConfig;separator="\n">
 }
 
@@ -16,7 +14,6 @@ server {
     <domainBody(properties, domain)>
     <domainCerts(properties, domain)>
     <domain.redirects:domainRedirects(domain);separator="\n">
-    <domainProxy(properties, domain)>
     <servicesConfig;separator="\n">
 }
 
@@ -28,15 +25,6 @@ root <properties.sitesDirectory>/<domain.siteDirectory>;
 index <properties.indexFiles;separator=" ">;
 server_name <domain.name>;
 
->>
-
-domainProxy(properties, domain) ::= <<
-<if(domain.proxy)>
-proxy_set_header X-Real-IP $remote_addr;
-proxy_set_header X-Forwarded-For $remote_addr;
-proxy_set_header Host $host;
-proxy_pass <domain.proxy.address>;
-<endif>
 >>
 
 domainCerts(properties, domain) ::= <<

@@ -64,6 +64,7 @@ class HttpdProxyTest extends HttpdTestUtil {
         assert webservice.service == "servicefoo"
         assert webservice.address == "http://127.0.0.1:8080"
         assert webservice.alias == "fooalias"
+        assert webservice.proxyName == "servicefoo_fooalias"
 
         domain = service.domains[1]
         webservice = domain.services[0]
@@ -73,5 +74,6 @@ class HttpdProxyTest extends HttpdTestUtil {
         assert webservice.ref == null
         assert webservice.service == "servicebar"
         assert webservice.address == "http://127.0.0.1:8080"
+        assert webservice.proxyName == "bar"
     }
 }

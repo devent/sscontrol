@@ -32,6 +32,8 @@ import com.anrisoftware.sscontrol.httpd.statements.webservice.WebService;
  */
 public class WebServiceArgs {
 
+    private static final String PROXYNAME = "proxyname";
+
     private static final String REFDOMAIN = "refdomain";
 
     private static final String SLASH = "/";
@@ -87,6 +89,16 @@ public class WebServiceArgs {
         Object ref = args.get(REFDOMAIN);
         log.checkRefDomain(service, ref);
         return ref.toString();
+    }
+
+    public boolean haveProxyName(Map<String, Object> args) {
+        return args.containsKey(PROXYNAME);
+    }
+
+    public String proxyName(WebService service, Map<String, Object> args) {
+        Object name = args.get(PROXYNAME);
+        log.checkProxyName(service, name);
+        return name.toString();
     }
 
 }

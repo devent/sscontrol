@@ -21,6 +21,8 @@ package com.anrisoftware.sscontrol.httpd.statements.proxy;
 import static com.anrisoftware.sscontrol.httpd.statements.proxy.ProxyServiceLogger._.address_null;
 import static com.anrisoftware.sscontrol.httpd.statements.proxy.ProxyServiceLogger._.address_set_debug;
 import static com.anrisoftware.sscontrol.httpd.statements.proxy.ProxyServiceLogger._.address_set_info;
+import static com.anrisoftware.sscontrol.httpd.statements.proxy.ProxyServiceLogger._.proxyname_set_debug;
+import static com.anrisoftware.sscontrol.httpd.statements.proxy.ProxyServiceLogger._.proxyname_set_info;
 import static com.anrisoftware.sscontrol.httpd.statements.proxy.ProxyServiceLogger._.service_null;
 import static com.anrisoftware.sscontrol.httpd.statements.proxy.ProxyServiceLogger._.service_set_debug;
 import static com.anrisoftware.sscontrol.httpd.statements.proxy.ProxyServiceLogger._.service_set_info;
@@ -50,7 +52,11 @@ class ProxyServiceLogger extends AbstractLogger {
 
         service_set_debug("Proxy service '{}' set for {}."),
 
-        service_set_info("Proxy service '{}' set for domain '{}'.");
+        service_set_info("Proxy service '{}' set for domain '{}'."),
+
+        proxyname_set_debug("Proxy name '{}' set for {}."),
+
+        proxyname_set_info("Proxy name '{}' set for domain '{}'.");
 
         private String name;
 
@@ -94,6 +100,14 @@ class ProxyServiceLogger extends AbstractLogger {
             debug(service_set_debug, service, domain);
         } else {
             info(service_set_info, service, domain.getName());
+        }
+    }
+
+    void proxyNameSet(Domain domain, String name) {
+        if (isDebugEnabled()) {
+            debug(proxyname_set_debug, name, domain);
+        } else {
+            info(proxyname_set_info, name, domain.getName());
         }
     }
 }

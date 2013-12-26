@@ -30,7 +30,7 @@ httpd {
     }
     // SSL/domain "test1.com"
     ssl_domain "test1.com", address: "192.168.0.50", {
-        setup "proxy", service: "servicebar", address: "http://127.0.0.1:8080"
+        setup "proxy", service: "servicebar", proxyname: "bar", address: "http://127.0.0.1:8080"
         certification_file certFile
         certification_key_file certKeyFile
     }

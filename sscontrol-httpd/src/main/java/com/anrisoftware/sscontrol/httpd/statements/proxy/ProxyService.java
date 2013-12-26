@@ -18,6 +18,9 @@
  */
 package com.anrisoftware.sscontrol.httpd.statements.proxy;
 
+import static java.lang.String.format;
+import static org.apache.commons.lang3.StringUtils.replace;
+
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -62,13 +65,15 @@ public class ProxyService implements WebService {
 
     private String refDomain;
 
+    private String proxyName;
+
     /**
      * @see ProxyServiceFactory#create(Domain, Map)
      */
     @Inject
     ProxyService(WebServiceArgs aargs, WebServiceLogger serviceLogger,
-            ProxyServiceLogger logger, ProxyServiceArgs proxyaargs, @Assisted Domain domain,
-            @Assisted Map<String, Object> args) {
+            ProxyServiceLogger logger, ProxyServiceArgs proxyaargs,
+            @Assisted Domain domain, @Assisted Map<String, Object> args) {
         this.log = logger;
         this.serviceLog = serviceLogger;
         this.domain = domain;
@@ -85,6 +90,21 @@ public class ProxyService implements WebService {
         }
         if (aargs.haveRefDomain(args)) {
             setRefDomain(aargs.refDomain(this, args));
+        }
+        if (aargs.haveProxyName(args)) {
+            setProxyName(aargs.proxyName(this, args));
+        } else {
+            setDefaultProxyName(aargs, args);
+        }
+    }
+
+    private void setDefaultProxyName(WebServiceArgs aargs,
+            Map<String, Object> args) {
+        if (aargs.haveAlias(args)) {
+            setProxyName(format("%s_%s", service, alias));
+        } else {
+            setProxyName(format("%s_%s", service,
+                    replace(domain.getName(), ".", "_")));
         }
     }
 
@@ -152,6 +172,15 @@ public class ProxyService implements WebService {
 
     public String getAddress() {
         return address;
+    }
+
+    public void setProxyName(String proxyName) {
+        this.proxyName = proxyName;
+        log.proxyNameSet(domain, proxyName);
+    }
+
+    public String getProxyName() {
+        return proxyName;
     }
 
     @Override

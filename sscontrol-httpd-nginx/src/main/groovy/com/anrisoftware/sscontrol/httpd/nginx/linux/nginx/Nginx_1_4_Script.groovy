@@ -93,6 +93,7 @@ abstract class Nginx_1_4_Script extends NginxScript {
         createSitesDirectories()
         deployNginxConfig()
         deployIncludedConfig()
+        deploySitesConfig()
         deployConfig()
     }
 
@@ -153,72 +154,17 @@ abstract class Nginx_1_4_Script extends NginxScript {
      */
     void deployIncludedConfig() {
         def file = configIncludeFile
-        def conf = currentConfiguration file
-        deployConfiguration configurationTokens(), conf, includedConfigs(service), file
+        def confstr = nginxConfigTemplate.getText(true, "robobeeConfig", "properties", this)
+        FileUtils.write file, confstr, charset
     }
 
     /**
-     * Returns the included configuration.
+     * Deploys the sites configuration.
      */
-    List includedConfigs(HttpdService service) {
-        [
-            domainCompression(service),
-            compressionLevel(service),
-            compressionMinSize(service),
-            compressionVary(service),
-            compressionTypes(service),
-            compressionException(service),
-            compressionHttpVersion(service),
-            includeSitesEnabled(service),
-        ]
-    }
-
-    def domainCompression(HttpdService service) {
-        def search = nginxConfigTemplate.getText(true, "domainCompression_search")
-        def replace = nginxConfigTemplate.getText(true, "domainCompression", "enabled", domainCompression)
-        new TokenTemplate(search, replace)
-    }
-
-    def compressionLevel(HttpdService service) {
-        def search = nginxConfigTemplate.getText(true, "compressionLevel_search")
-        def replace = nginxConfigTemplate.getText(true, "compressionLevel", "level", compressionLevel)
-        new TokenTemplate(search, replace)
-    }
-
-    def compressionMinSize(HttpdService service) {
-        def search = nginxConfigTemplate.getText(true, "compressionMinSize_search")
-        def replace = nginxConfigTemplate.getText(true, "compressionMinSize", "size", compressionMinSize)
-        new TokenTemplate(search, replace)
-    }
-
-    def compressionVary(HttpdService service) {
-        def search = nginxConfigTemplate.getText(true, "compressionVary_search")
-        def replace = nginxConfigTemplate.getText(true, "compressionVary", "enabled", compressionVary)
-        new TokenTemplate(search, replace)
-    }
-
-    def compressionTypes(HttpdService service) {
-        def search = nginxConfigTemplate.getText(true, "compressionTypes_search")
-        def replace = nginxConfigTemplate.getText(true, "compressionTypes", "types", compressionTypes)
-        new TokenTemplate(search, replace)
-    }
-
-    def compressionException(HttpdService service) {
-        def search = nginxConfigTemplate.getText(true, "compressionException_search")
-        def replace = nginxConfigTemplate.getText(true, "compressionException", "exception", compressionException)
-        new TokenTemplate(search, replace)
-    }
-
-    def compressionHttpVersion(HttpdService service) {
-        def search = nginxConfigTemplate.getText(true, "compressionHttpVersion_search")
-        def replace = nginxConfigTemplate.getText(true, "compressionHttpVersion", "version", compressionHttpVersion)
-        new TokenTemplate(search, replace)
-    }
-
-    def includeSitesEnabled(HttpdService service) {
-        def search = nginxConfigTemplate.getText(true, "includeSitesEnabled_search", "dir", sitesEnabledDir)
-        def replace = nginxConfigTemplate.getText(true, "includeSitesEnabled", "dir", sitesEnabledDir)
-        new TokenTemplate(search, replace)
+    void deploySitesConfig() {
+        def file = configSitesFile
+        def confstr = nginxConfigTemplate.getText(true, "sitesConfig", "properties", this)
+        FileUtils.write file, confstr, charset
     }
 
     def deployConfig() {

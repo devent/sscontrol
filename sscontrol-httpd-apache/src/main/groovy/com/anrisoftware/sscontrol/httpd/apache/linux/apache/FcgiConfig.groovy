@@ -51,17 +51,10 @@ class FcgiConfig {
     }
 
     /**
-     * Enables the {@code fcgid} packages.
-     */
-    void installPackages() {
-        installPackages fcgidPackages
-    }
-
-    /**
      * Enables the {@code fcgid} Apache/mod.
      */
     void enableFcgi() {
-        enableMods "fcgid"
+        enableMod "fcgid"
     }
 
     /**
@@ -131,19 +124,6 @@ class FcgiConfig {
      */
     File scriptDir(Domain domain) {
         new File(sitesDirectory, "$scriptsSubdirectory/$domain.name")
-    }
-
-    /**
-     * Returns the list of needed packages for Fcgid.
-     *
-     * <ul>
-     * <li>profile property {@code "php_fcgi_packages"}</li>
-     * </ul>
-     *
-     * @see ApacheScript#getDefaultProperties()
-     */
-    List getFcgidPackages() {
-        profileListProperty "php_fcgi_packages", defaultProperties
     }
 
     /**

@@ -187,7 +187,7 @@ abstract class NginxScript extends LinuxScript {
 
     /**
      * Returns the path for the included configuration file,
-     * for example {@code "000-robobee.conf".}  If the path is
+     * for example {@code "000-robobee_defaults.conf".}  If the path is
      * not absolute then it is assume to be under the configuration
      * include directory.
      *
@@ -200,6 +200,37 @@ abstract class NginxScript extends LinuxScript {
      */
     File getConfigIncludeFile() {
         profileFileProperty "config_include_file", configIncludeDir, defaultProperties
+    }
+
+    /**
+     * Returns the path for the sites configuration file,
+     * for example {@code "999-robobee_sites.conf".}  If the path is
+     * not absolute then it is assume to be under the configuration
+     * include directory.
+     *
+     * <ul>
+     * <li>profile property {@code "config_sites_file"}</li>
+     * </ul>
+     *
+     * @see #getConfigIncludeDir()
+     * @see #getDefaultProperties()
+     */
+    File getConfigSitesFile() {
+        profileFileProperty "config_sites_file", configIncludeDir, defaultProperties
+    }
+
+    /**
+     * Returns the directory of static 50x-error files,
+     * for example {@code "/usr/share/nginx/html".}
+     *
+     * <ul>
+     * <li>profile property {@code "error_pages_dir"}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    File getErrorPagesDir() {
+        profileProperty("error_pages_dir", defaultProperties) as File
     }
 
     /**

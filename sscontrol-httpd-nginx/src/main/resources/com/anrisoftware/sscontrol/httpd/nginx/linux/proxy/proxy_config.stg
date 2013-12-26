@@ -1,39 +1,28 @@
-wordpressProxy(properties, domain, proxy) ::= <<
-# wordpress proxy
-proxy_set_header X-Real-IP $remote_addr;
-proxy_set_header X-Forwarded-For $remote_addr;
-proxy_set_header Host $host;
-proxy_pass <proxy.address>;
+proxyConf(properties) ::= <<
+# - Robobee Proxy -
+# - Auto-generated -
+#
+# To add custom proxy configuration add a new included
+# Nginx configuration file: "/etc/nginx/conf.d/custom-proxy.conf".
+#
+
+proxy_connect_timeout <properties.proxyConnectTimeout>;
+proxy_read_timeout <properties.proxyReadTimeout>;
+proxy_send_timeout <properties.proxySendTimeout>;
+
+<properties.proxySetHeaders:proxyHeaders();separator="\n">
+
 >>
 
-proxyCachePath_search() ::= <%
-#?proxy_cache_path\\s+.*?;
+proxyHeaders(header) ::= <%
+proxy_set_header <header>;
 %>
 
-proxyCachePath(dir, name, size, maxsize) ::= <%
-proxy_cache_path <dir> levels=1:2 keys_zone=<name>:<size> max_size=<maxsize>;
-%>
+proxyDomainConf(proxy, properties) ::= <<
+# - Robobee Proxy for "<proxy.proxyName>" -
+# - Auto-generated -
+#
 
-proxyConnectTimeout_search() ::= <%
-#?proxy_connect_timeout\\s+.*?;
-%>
+proxy_cache_path <properties.proxyCacheDir> levels=1:2 keys_zone=<proxy.proxyName>:<properties.proxyCacheSize> max_size=<properties.proxyCacheMaximumSize>;
 
-proxyConnectTimeout(time) ::= <%
-proxy_connect_timeout <time>;
-%>
-
-proxyReadTimeout_search() ::= <%
-#?proxy_read_timeout\\s+.*?;
-%>
-
-proxyReadTimeout(time) ::= <%
-proxy_read_timeout <time>;
-%>
-
-proxySendTimeout_search() ::= <%
-#?proxy_send_timeout\\s+.*?;
-%>
-
-proxySendTimeout(time) ::= <%
-proxy_send_timeout <time>;
-%>
+>>

@@ -1,12 +1,20 @@
 update
 install apache2 apache2-suexec
 update
+install libapache2-mod-rpaf
+update
 install apache2-suexec libapache2-mod-fcgid php5-cgi
 update
 install php5 php5-mysql mysql-client mysql-server unzip
+update
+install nginx
 update
 install apache2 apache2-suexec
 update
+install libapache2-mod-rpaf
+update
 install apache2-suexec libapache2-mod-fcgid php5-cgi
 update
 install php5 php5-mysql mysql-client mysql-server unzip
+update
+install nginx

@@ -114,8 +114,12 @@ abstract class Apache_2_2Script extends ApacheScript {
         FileUtils.write domainsConfigFile, string
     }
 
-    def enableDefaultMods() {
-        enableMods "suexec"
+    /**
+     * Enables default Apache/mods.
+     */
+    void enableDefaultMods() {
+        enableMod "suexec"
+        enableMods additionalMods
     }
 
     def deployConfig() {

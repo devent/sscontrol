@@ -20,11 +20,8 @@ package com.anrisoftware.sscontrol.httpd.nginx.ubuntu_10_04.proxywordpress
 
 import static org.apache.commons.io.FileUtils.*
 
-import org.apache.commons.lang3.StringUtils
-
 import com.anrisoftware.sscontrol.httpd.nginx.linux.proxywordpress.BaseProxyWordpressConfig
 import com.anrisoftware.sscontrol.httpd.nginx.ubuntu_10_04.nginx.Ubuntu10_04ScriptFactory
-import com.anrisoftware.sscontrol.httpd.statements.proxy.ProxyService
 
 /**
  * Configures proxy service for the Wordpress service for Ubuntu 10.04.
@@ -38,22 +35,6 @@ class ProxyWordpressConfig extends BaseProxyWordpressConfig {
      * Name of the proxy service.
      */
     public static final String SERVICE_NAME = "wordpress"
-
-    /**
-     * Returns the proxy cache name,
-     * for example {@code "wordpressstaticfilecache".}
-     *
-     * <ul>
-     * <li>profile property {@code "wordpress_proxy_cache_name"}</li>
-     * </ul>
-     *
-     * @see #getDefaultProperties()
-     */
-    String proxyCacheName(ProxyService service) {
-        def str = profileProperty "wordpress_proxy_cache_name", defaultProperties
-        def name = StringUtils.replace service.domain.name, ".", "_"
-        String.format str, name
-    }
 
     @Override
     String getProxyService() {

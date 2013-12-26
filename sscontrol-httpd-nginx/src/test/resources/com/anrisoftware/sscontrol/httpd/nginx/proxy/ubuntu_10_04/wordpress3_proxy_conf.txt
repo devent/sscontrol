@@ -1,0 +1,5 @@
+# - Robobee Proxy for "wordpress3" -
+# - Auto-generated -
+#
+
+proxy_cache_path /var/cache/nginx levels=1:2 keys_zone=wordpress3:128m max_size=512m;

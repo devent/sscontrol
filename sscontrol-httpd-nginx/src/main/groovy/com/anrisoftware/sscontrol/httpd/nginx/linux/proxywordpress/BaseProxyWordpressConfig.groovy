@@ -58,46 +58,22 @@ abstract class BaseProxyWordpressConfig extends BaseProxyConfig {
 
     @Override
     void deployService(Domain domain, WebService service, List config) {
-        deployProxyConfig(service)
+        deployProxyConfiguration()
+        deployProxyDomainConfig(service)
         config.addAll createDomainConfig(domain, null, service)
-    }
-
-    /**
-     * Deploys the proxy configuration.
-     */
-    void deployProxyConfig(ProxyService service) {
-        def file = proxyConfigFile service
-        def conf = currentConfiguration file
-        deployConfiguration configurationTokens(), conf, proxyConfigurations(service), file
-    }
-
-    /**
-     * Returns the proxy configuration file.
-     */
-    File proxyConfigFile(ProxyService service) {
-        new File(script.configIncludeDir, "100-robobee-${service.domain.name}-proxy.conf")
-    }
-
-    /**
-     * Returns the included configuration.
-     */
-    List proxyConfigurations(ProxyService service) {
-        [
-            proxyCachePathConfig(service),
-            proxyConnectTimeoutConfig(service),
-            proxyReadTimeoutConfig(service),
-            proxySendTimeoutConfig(service),
-        ]
     }
 
     List createDomainConfig(Domain domain, Domain refDomain, ProxyService service) {
         List list = []
-        def configStr = proxyConfigTemplate.getText(true,
+        def configstr = wordpressProxyConfigTemplate.getText(
+                true,
                 "wordpressProxy",
-                "properties", script,
+                "properties", this,
+                "script", script,
                 "domain", domain,
-                "proxy", service)
-        list << configStr
+                "proxy", service,
+                "location", proxyLocation(service))
+        list << configstr
     }
 
     /**
@@ -110,6 +86,6 @@ abstract class BaseProxyWordpressConfig extends BaseProxyConfig {
     void setScript(NginxScript script) {
         super.setScript script
         this.wordpressProxyTemplates = templatesFactory.create "BaseProxyWordpressConfig"
-        this.wordpressProxyConfigTemplate = proxyTemplates.getResource "config"
+        this.wordpressProxyConfigTemplate = wordpressProxyTemplates.getResource "config"
     }
 }

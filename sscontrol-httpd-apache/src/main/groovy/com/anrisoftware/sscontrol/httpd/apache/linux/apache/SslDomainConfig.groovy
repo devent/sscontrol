@@ -32,47 +32,47 @@ import com.anrisoftware.sscontrol.httpd.statements.domain.SslDomain
  */
 class SslDomainConfig {
 
-	@Inject
-	SslDomainConfigLogger log
+    @Inject
+    SslDomainConfigLogger log
 
-	ApacheScript script
+    ApacheScript script
 
-	/**
-	 * Copies the certificates to the server.
-	 */
-	void deployCertificates(SslDomain domain) {
-		copyURLToFile domain.certificationResource, certFile(domain)
-		log.deployedCert domain
-		copyURLToFile domain.certificationKeyResource, certKeyFile(domain)
-		log.deployedCertKey domain
-		changePermissions(domain)
-	}
+    /**
+     * Copies the certificates to the server.
+     */
+    void deployCertificates(SslDomain domain) {
+        copyURLToFile domain.certificationResource, certFile(domain)
+        log.deployedCert domain
+        copyURLToFile domain.certificationKeyResource, certKeyFile(domain)
+        log.deployedCertKey domain
+        changePermissions(domain)
+    }
 
-	void changePermissions(SslDomain domain) {
-		def dir = script.sslDir(domain)
-		changeMod mod: "go-r", files: "$dir.absolutePath/*"
-	}
+    void changePermissions(SslDomain domain) {
+        def dir = script.sslDir(domain)
+        changeMod mod: "go-r", files: "$dir.absolutePath/*"
+    }
 
-	File certFile(SslDomain domain) {
-		new File(sslDir(domain), domain.certificationFile)
-	}
+    File certFile(SslDomain domain) {
+        new File(sslDir(domain), domain.certificationFile)
+    }
 
-	File certKeyFile(SslDomain domain) {
-		new File(sslDir(domain), domain.certificationKeyFile)
-	}
+    File certKeyFile(SslDomain domain) {
+        new File(sslDir(domain), domain.certificationKeyFile)
+    }
 
-	/**
-	 * Enable the SSL mod.
-	 */
-	void enableSsl() {
-		enableMods "ssl"
-	}
+    /**
+     * Enable the SSL mod.
+     */
+    void enableSsl() {
+        enableMod "ssl"
+    }
 
-	def propertyMissing(String name) {
-		script.getProperty name
-	}
+    def propertyMissing(String name) {
+        script.getProperty name
+    }
 
-	def methodMissing(String name, def args) {
-		script.invokeMethod name, args
-	}
+    def methodMissing(String name, def args) {
+        script.invokeMethod name, args
+    }
 }

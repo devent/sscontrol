@@ -24,6 +24,7 @@ import javax.inject.Inject
 import javax.measure.MeasureFormat
 import javax.measure.unit.SI
 
+import org.apache.commons.io.FileUtils
 import org.apache.commons.math3.util.FastMath
 
 import com.anrisoftware.globalpom.format.byteformat.ByteFormatFactory
@@ -33,7 +34,6 @@ import com.anrisoftware.resources.templates.api.Templates
 import com.anrisoftware.sscontrol.httpd.nginx.linux.nginx.NginxScript
 import com.anrisoftware.sscontrol.httpd.nginx.linux.nginx.ProxyConfig
 import com.anrisoftware.sscontrol.httpd.statements.proxy.ProxyService
-import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokenTemplate
 
 /**
  * Base proxy configuration.
@@ -66,43 +66,27 @@ abstract class BaseProxyConfig implements ProxyConfig {
      */
     NginxScript script
 
-    def proxyCachePathConfig(ProxyService service) {
-        def search = proxyConfigTemplate.getText(true, "proxyCachePath_search")
-        def replace = proxyConfigTemplate.getText(true,
-                "proxyCachePath", "dir", proxyCacheDir,
-                "name", proxyCacheName(service),
-                "size", proxyCacheSize,
-                "maxsize", proxyCacheMaximumSize)
-        new TokenTemplate(search, replace)
+    /**
+     * Deploys the proxy configuration to {@code proxy.conf}.
+     */
+    void deployProxyConfiguration() {
+        def file = proxyConfFile
+        def confstr = proxyConfigTemplate.getText(true, "proxyConf", "properties", this)
+        FileUtils.write file, confstr, charset
     }
 
-    def proxyCacheTempPathConfig(ProxyService service) {
-        def search = proxyConfigTemplate.getText(true, "proxyCacheTempPath_search")
-        def replace = proxyConfigTemplate.getText(true, "proxyCacheTempPath", "dir", proxyCacheDir)
-        new TokenTemplate(search, replace)
-    }
-
-    def proxyConnectTimeoutConfig(ProxyService service) {
-        def search = proxyConfigTemplate.getText(true, "proxyConnectTimeout_search")
-        def replace = proxyConfigTemplate.getText(true, "proxyConnectTimeout", "time", proxyConnectTimeout)
-        new TokenTemplate(search, replace)
-    }
-
-    def proxyReadTimeoutConfig(ProxyService service) {
-        def search = proxyConfigTemplate.getText(true, "proxyReadTimeout_search")
-        def replace = proxyConfigTemplate.getText(true, "proxyReadTimeout", "time", proxyReadTimeout)
-        new TokenTemplate(search, replace)
-    }
-
-    def proxySendTimeoutConfig(ProxyService service) {
-        def search = proxyConfigTemplate.getText(true, "proxySendTimeout_search")
-        def replace = proxyConfigTemplate.getText(true, "proxySendTimeout", "time", proxySendTimeout)
-        new TokenTemplate(search, replace)
+    /**
+     * Deploys the domain specific proxy configuration.
+     */
+    void deployProxyDomainConfig(ProxyService service) {
+        def file = proxyDomainConfigFile service
+        def confstr = proxyConfigTemplate.getText(true, "proxyDomainConf", "proxy", service, "properties", this)
+        FileUtils.write file, confstr, charset
     }
 
     /**
      * Returns the proxy cache directory,
-     * for example {@code "/var/lib/nginx/cache".}
+     * for example {@code "/var/cache/nginx".}
      *
      * <ul>
      * <li>profile property {@code "proxy_cache_directory"}</li>
@@ -115,12 +99,28 @@ abstract class BaseProxyConfig implements ProxyConfig {
     }
 
     /**
-     * Returns the proxy cache name.
+     * Returns the proxy configuration file,
+     * for example {@code "010-robobee_proxy.conf".}  If the path is
+     * not absolute then it is assume to be under the configuration
+     * include directory.
      *
-     * @param service
-     *            the {@link ProxyService}.
+     * <ul>
+     * <li>profile property {@code "proxy_config_file"}</li>
+     * </ul>
+     *
+     * @see #getConfigIncludeDir()
+     * @see #getDefaultProperties()
      */
-    abstract String proxyCacheName(ProxyService service)
+    File getProxyConfFile() {
+        profileFileProperty "proxy_config_file", configIncludeDir, defaultProperties
+    }
+
+    /**
+     * Returns the proxy domain configuration file.
+     */
+    File proxyDomainConfigFile(ProxyService service) {
+        new File(script.configIncludeDir, "020-robobee-${service.proxyName}-proxy.conf")
+    }
 
     /**
      * Returns the proxy cache size,
@@ -198,6 +198,80 @@ abstract class BaseProxyConfig implements ProxyConfig {
     }
 
     /**
+     * Returns the proxy headers to set, for
+     * example {@code "X-Real-IP $remote_addr, X-Forwarded-For $proxy_add_x_forwarded_for, Host $host".}
+     *
+     * <ul>
+     * <li>profile property {@code "proxy_set_headers"}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    List getProxySetHeaders() {
+        profileListProperty "proxy_set_headers", ",", defaultProperties
+    }
+
+    /**
+     * Returns the time for caching different replies, for
+     * example {@code "20 min".}
+     *
+     * <ul>
+     * <li>profile property {@code "proxy_replies_cache_time"}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    long getProxyRepliesCacheTime() {
+        def str = profileProperty "proxy_replies_cache_time", defaultProperties
+        MeasureFormat.getInstance().parseObject(str).longValue SI.SECOND
+    }
+
+    /**
+     * Returns the time for caching static files, for
+     * example {@code "120 min".}
+     *
+     * <ul>
+     * <li>profile property {@code "proxy_static_cache_time"}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    long getProxyStaticCacheTime() {
+        def str = profileProperty "proxy_static_cache_time", defaultProperties
+        MeasureFormat.getInstance().parseObject(str).longValue SI.SECOND
+    }
+
+    /**
+     * Returns the HTTP header expire time for cached static files, for
+     * example {@code "10 d".}
+     *
+     * <ul>
+     * <li>profile property {@code "proxy_expire_time"}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    long getProxyExpireTime() {
+        def str = profileProperty "proxy_expire_time", defaultProperties
+        MeasureFormat.getInstance().parseObject(str).longValue SI.SECOND
+    }
+
+    /**
+     * Returns the time for cached feeds files, for
+     * example {@code "45 min".}
+     *
+     * <ul>
+     * <li>profile property {@code "proxy_feeds_cache_time"}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    long getProxyFeedsCacheTime() {
+        def str = profileProperty "proxy_feeds_cache_time", defaultProperties
+        MeasureFormat.getInstance().parseObject(str).longValue SI.SECOND
+    }
+
+    /**
      * Returns the size for the specified byte value.
      *
      * @param value
@@ -217,6 +291,22 @@ abstract class BaseProxyConfig implements ProxyConfig {
             u = "k"
         }
         "$value$u"
+    }
+
+    /**
+     * Returns the proxy service location.
+     *
+     * @param service
+     *            the {@link ProxyService}.
+     *
+     * @return the location.
+     */
+    String proxyLocation(ProxyService service) {
+        String location = service.alias == null ? "" : service.alias
+        if (!location.startsWith("/")) {
+            location = "/$location"
+        }
+        return location
     }
 
     /**

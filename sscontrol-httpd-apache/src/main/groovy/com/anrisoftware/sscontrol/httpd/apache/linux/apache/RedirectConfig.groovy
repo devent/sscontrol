@@ -29,17 +29,17 @@ import com.anrisoftware.sscontrol.httpd.statements.redirect.Redirect
  */
 class RedirectConfig {
 
-	ApacheScript script
+    ApacheScript script
 
-	def deployRedirect(Domain domain, Redirect redirect) {
-		enableMods "rewrite"
-	}
+    def deployRedirect(Domain domain, Redirect redirect) {
+        enableMod "rewrite"
+    }
 
-	def propertyMissing(String name) {
-		script.getProperty name
-	}
+    def propertyMissing(String name) {
+        script.getProperty name
+    }
 
-	def methodMissing(String name, def args) {
-		script.invokeMethod name, args
-	}
+    def methodMissing(String name, def args) {
+        script.invokeMethod name, args
+    }
 }

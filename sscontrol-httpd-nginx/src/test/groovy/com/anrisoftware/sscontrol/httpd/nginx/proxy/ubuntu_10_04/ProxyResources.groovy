@@ -32,11 +32,12 @@ import com.anrisoftware.sscontrol.httpd.nginx.core.ubuntu_10_04.ResourcesUtils
 enum ProxyResources {
 
     httpdScript("Httpd.groovy", ProxyResources.class.getResource("HttpdProxy.groovy")),
+    proxyConf("/etc/nginx/conf.d/010-robobee_proxy.conf", ProxyResources.class.getResource("proxy_conf_expected.txt")),
     test1comConf("/etc/nginx/sites-available/100-robobee-test1.com.conf", ProxyResources.class.getResource("test1_com_conf.txt")),
     test1comSslConf("/etc/nginx/sites-available/100-robobee-test1.com-ssl.conf", ProxyResources.class.getResource("test1_com_ssl_conf.txt")),
     wwwtest1comConf("/etc/nginx/sites-available/100-robobee-www.test1.com.conf", ProxyResources.class.getResource("www_test1_com_conf.txt")),
     wwwtest1comSslConf("/etc/nginx/sites-available/100-robobee-www.test1.com-ssl.conf", ProxyResources.class.getResource("www_test1_com_ssl_conf.txt")),
-    wwwtest1comProxyConf("/etc/nginx/conf.d/100-robobee-www.test1.com-proxy.conf", ProxyResources.class.getResource("www_test1_com_proxy_conf.txt")),
+    wordpress3ProxyConf("/etc/nginx/conf.d/020-robobee-wordpress3-proxy.conf", ProxyResources.class.getResource("wordpress3_proxy_conf.txt")),
 
     static copyProxyFiles(File parent) {
     }

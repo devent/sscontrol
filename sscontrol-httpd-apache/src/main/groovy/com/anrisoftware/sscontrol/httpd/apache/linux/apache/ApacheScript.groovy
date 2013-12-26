@@ -460,6 +460,19 @@ abstract class ApacheScript extends LinuxScript {
     }
 
     /**
+     * Returns additional Apache/mpds to enable.
+     *
+     * <ul>
+     * <li>profile property {@code "additional_mods"}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    List getAdditionalMods() {
+        profileListProperty "additional_mods", defaultProperties
+    }
+
+    /**
      * Returns unique domains. The domains are identified by their name.
      */
     List getUniqueDomains() {
@@ -475,9 +488,28 @@ abstract class ApacheScript extends LinuxScript {
     }
 
     /**
-     * Enable the specified Apache/mods.
+     * Enable the specified Apache/mod.
+     *
+     * @param mod
+     *            the {@link String} of Apache/mod.
      */
-    def enableMods(def mods) {
+    void enableMod(String mod) {
+        enableMods([mod])
+    }
+
+    /**
+     * Enable the specified Apache/mods.
+     *
+     * @param mods
+     *            the {@link List} of Apache/mods.
+     */
+    void enableMods(List mods) {
+        mods.each {
+            def packages = modPackages it
+            if (packages.size() > 0) {
+                installPackages packages
+            }
+        }
         def worker = scriptCommandFactory.create apacheCommandsTemplate,
                 "enableMods",
                 "command", enableModCommand,
@@ -496,5 +528,17 @@ abstract class ApacheScript extends LinuxScript {
                 "sites", sites
         worker()
         log.enabledSites this, worker, sites
+    }
+
+    /**
+     * Returns the packages needed for the specified Apache/mod.
+     *
+     * @param mod
+     *            the Apache/mod {@link String} name.
+     *
+     * @return the {@link List} of the packages.
+     */
+    List modPackages(String mod) {
+        profileListProperty "${mod}_packages", defaultProperties
     }
 }

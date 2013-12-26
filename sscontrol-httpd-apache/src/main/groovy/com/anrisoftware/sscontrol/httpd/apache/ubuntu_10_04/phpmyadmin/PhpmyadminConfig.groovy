@@ -84,7 +84,6 @@ class PhpmyadminConfig extends BasePhpmyadminConfig implements ServiceConfig {
     @Override
     void deployService(Domain domain, WebService service, List config) {
         fcgiConfig.script = script
-        fcgiConfig.installPackages()
         fcgiConfig.enableFcgi()
         fcgiConfig.deployConfig domain
         installPackages phpmyadminPackages

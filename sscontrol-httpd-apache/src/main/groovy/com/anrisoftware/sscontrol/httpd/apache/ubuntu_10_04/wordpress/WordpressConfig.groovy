@@ -65,7 +65,6 @@ class WordpressConfig extends BaseWordpress_3_Config implements ServiceConfig {
     @Override
     void deployService(Domain domain, WebService service, List config) {
         fcgiConfig.script = script
-        fcgiConfig.installPackages()
         fcgiConfig.enableFcgi()
         fcgiConfig.deployConfig domain
         downloadArchive domain

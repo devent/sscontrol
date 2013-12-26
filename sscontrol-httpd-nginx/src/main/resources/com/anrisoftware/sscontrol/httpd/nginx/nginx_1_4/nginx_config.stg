@@ -62,6 +62,30 @@ return 301 https://www.<domain.name>$request_uri;
 
 >>
 
+robobeeConfig(properties) ::= <<
+# - Robobee Include Configuration -
+# - Auto-generated -
+#
+
+gzip <if(properties.domainCompression)>on<else>off<endif>;
+gzip_comp_level <properties.compressionLevel>;
+gzip_min_length <properties.compressionMinSize>;
+gzip_vary <if(properties.compressionVary)>on<else>off<endif>;
+gzip_types <properties.compressionTypes;separator=" ">;
+gzip_disable "<properties.compressionException>";
+gzip_http_version <properties.compressionHttpVersion>;
+
+>>
+
+sitesConfig(properties) ::= <<
+# - Robobee Include Sites -
+# - Auto-generated -
+#
+
+include <properties.sitesEnabledDir>/*.conf;
+
+>>
+
 errorLog_search() ::= <%
 error_log\s+.*?;
 %>
@@ -70,66 +94,3 @@ errorLog(debug) ::= <%
 error_log <debug>;
 %>
 
-includeSitesEnabled_search(dir) ::= <%
-include\\s+.*/\\*\\.conf;
-%>
-
-includeSitesEnabled(dir) ::= <%
-include <dir>/*.conf;
-%>
-
-domainCompression_search() ::= <%
-#?gzip\\s+(on|off);
-%>
-
-domainCompression(enabled) ::= <%
-gzip <if(enabled)>on<else>off<endif>;
-%>
-
-compressionLevel_search() ::= <%
-#?gzip_comp_level\\s+[1-9];
-%>
-
-compressionLevel(level) ::= <%
-gzip_comp_level <level>;
-%>
-
-compressionMinSize_search() ::= <%
-#?gzip_min_length\\s+\d+;
-%>
-
-compressionMinSize(size) ::= <%
-gzip_min_length <size>;
-%>
-
-compressionVary_search() ::= <%
-#?gzip_vary\\s+(on|off);
-%>
-
-compressionVary(enabled) ::= <%
-gzip_vary <if(enabled)>on<else>off<endif>;
-%>
-
-compressionTypes_search() ::= <%
-#?gzip_types\\s+.*?;
-%>
-
-compressionTypes(types) ::= <%
-gzip_types <types;separator=" ">;
-%>
-
-compressionException_search() ::= <%
-#?gzip_disable\\s+.*?;
-%>
-
-compressionException(exception) ::= <%
-gzip_disable "<exception>";
-%>
-
-compressionHttpVersion_search() ::= <%
-#?gzip_http_version\\s+.*?;
-%>
-
-compressionHttpVersion(version) ::= <%
-gzip_http_version <version>;
-%>

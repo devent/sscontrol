@@ -360,6 +360,38 @@ class ProfilePropertiesImpl implements ProfileProperties {
 
     /**
      * Returns a list profile property. If the profile property was not set
+     * return the default value from the default properties.
+     * 
+     * @param key
+     *            the property {@link String} key.
+     * 
+     * @param separatorChars
+     *            the characters used as the delimiters, {@code null} splits on
+     *            whitespace.
+     * 
+     * @param defaults
+     *            default {@link ContextProperties} properties.
+     * 
+     * @return the {@link List} value of the profile property.
+     * 
+     * @throws ServiceException
+     *             if the profile property was not found.
+     */
+    public List<String> profileListProperty(String key, String separatorChars,
+            ContextProperties defaults) throws ServiceException {
+        List<String> property = getList(key);
+        if (property != null) {
+            return property;
+        }
+        property = defaults.getListProperty(key, separatorChars);
+        if (property != null) {
+            return property;
+        }
+        throw log.noProfileProperty(this, key);
+    }
+
+    /**
+     * Returns a list profile property. If the profile property was not set
      * return the default value from the default properties. The specified
      * format is used to create the list items.
      * 

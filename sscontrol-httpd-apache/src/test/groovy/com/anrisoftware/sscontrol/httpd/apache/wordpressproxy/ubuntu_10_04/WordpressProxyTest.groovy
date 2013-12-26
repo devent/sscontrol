@@ -45,6 +45,7 @@ class WordpressProxyTest extends UbuntuTestUtil {
         loader.loadService profile.resource, null
         def profile = registry.getService("profile")[0]
         profile.getEntry("httpd").service(["idapache2": "apache", "idproxy": "nginx"])
+        profile.getEntry("httpd").additional_mods "rpaf"
         profile.getEntry("httpd").apache_restart_command "${restartCommand.asFile(tmpdir)} restart"
         profile.getEntry("httpd").nginx_restart_command "${nginxRestartCommand.asFile(tmpdir)} restart"
         profile.getEntry("httpd").apache_configuration_directory configurationDir.asFile(tmpdir)
@@ -62,6 +63,7 @@ class WordpressProxyTest extends UbuntuTestUtil {
         registry.allServices.each { it.call() }
         log.info "Run service again to ensure that configuration is not set double."
         registry.allServices.each { it.call() }
+        assertFileContent aptitudeExpectedConf.asFile(tmpdir), aptitudeExpectedConf
         assertFileContent portsProxyExpectedConf.asFile(tmpdir), portsProxyExpectedConf
         assertStringContent test1comProxyConf.replaced(tmpdir, tmpdir, "/tmp"), test1comProxyConf.toString()
         assertStringContent test1comSslProxyConf.replaced(tmpdir, tmpdir, "/tmp"), test1comSslProxyConf.toString()

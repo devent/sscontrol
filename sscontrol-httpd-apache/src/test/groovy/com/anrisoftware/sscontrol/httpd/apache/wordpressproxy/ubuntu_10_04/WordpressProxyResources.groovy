@@ -34,6 +34,7 @@ enum WordpressProxyResources {
     wordpressArchive("/tmp/web-wordpress-3.8.tar.gz", WordpressProxyResources.class.getResource("wordpress-3.8.tar.gz")),
     wordpress_3_8_config("/var/www/www.test1.com/wordpress-3.8/wp-config-sample.php", WordpressProxyResources.class.getResource("wordpress_3_8_config_sample_php.txt")),
     wordpress_3_8_config_expected("/var/www/www.test1.com/wordpress-3.8/wp-config.php", WordpressProxyResources.class.getResource("wordpress_3_8_config_php_expected.txt")),
+    aptitudeExpectedConf("/usr/bin/aptitude.out", WordpressProxyResources.class.getResource("aptitude_out_expected.txt")),
     httpdProxyDomainsScript("Httpd.groovy", WordpressProxyResources.class.getResource("HttpdWordpressReverseProxyDomains.groovy")),
     httpdProxyScript("Httpd.groovy", WordpressProxyResources.class.getResource("HttpdWordpressReverseProxy.groovy")),
     portsProxyExpectedConf("/etc/apache2/ports.conf", WordpressProxyResources.class.getResource("ports_reverseproxy_expected_conf.txt")),

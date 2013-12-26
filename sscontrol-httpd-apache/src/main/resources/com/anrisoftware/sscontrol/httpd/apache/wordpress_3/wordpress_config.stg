@@ -13,6 +13,7 @@ domainConfig(domain, service, properties, config, serviceAliasDir, serviceDir) :
     Order allow,deny
     Allow from all
 
+    <blockNoReferrerRequests(domain, config)>
     \<IfModule mod_mime.c>
         \<IfModule mod_php5.c>
             AddType application/x-httpd-php .php
@@ -42,6 +43,21 @@ domainConfig(domain, service, properties, config, serviceAliasDir, serviceDir) :
 
 serviceAlias(service, serviceAliasDir) ::= <<
 <if(service.alias)>Alias /<service.alias> <serviceAliasDir><endif>
+>>
+
+blockNoReferrerRequests(domain, config) ::= <<
+<if(config.blockNoReferrerRequests)>
+\<IfModule mod_rewrite.c>
+    # block comment spam by denying access to no-referrer requests
+    RewriteEngine On
+    RewriteCond %{REQUEST_METHOD} POST
+    RewriteCond %{REQUEST_URI} .wp-comments-post\.php*
+    RewriteCond %{HTTP_REFERER} !.*<domain.namePattern>.* [OR]
+    RewriteCond %{HTTP_USER_AGENT} ^$
+    RewriteRule ^(.*)$ ^http://%{REMOTE_ADDR}/$ [R=301,L]
+\</IfModule>
+<endif>
+
 >>
 
 configEnding() ::= <<

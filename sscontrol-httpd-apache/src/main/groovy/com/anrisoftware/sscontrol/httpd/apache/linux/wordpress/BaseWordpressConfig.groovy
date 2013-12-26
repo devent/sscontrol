@@ -261,6 +261,19 @@ class BaseWordpressConfig {
     }
 
     /**
+     * Returns to block no-referrer requests, for example {@code "true"}.
+     *
+     * <ul>
+     * <li>profile property {@code "wordpress_block_no_referrer_requests"}</li>
+     * </ul>
+     *
+     * @see ApacheScript#getDefaultProperties()
+     */
+    boolean getBlockNoReferrerRequests() {
+        profileBooleanProperty "wordpress_block_no_referrer_requests", defaultProperties
+    }
+
+    /**
      * Returns the database default character set, for example {@code "utf8"}.
      *
      * <ul>

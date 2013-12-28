@@ -21,12 +21,18 @@ package com.anrisoftware.sscontrol.remote.service
 import com.anrisoftware.sscontrol.remote.ubuntu_10_04.UbuntuResources
 
 remote {
-    user "bar", password: "barpass", uid: 2001, gid: 2001
+    user "bar", password: "barpass", uid: 2001
     user "baz", password: "bazpass", {
         passphrase "somepass"
         home "/var/home/baz"
     }
     user "foo", password: "foopass", {
+        passphrase "somepass"
+        access key: UbuntuResources.fooRemotePub.resource
+        access key: UbuntuResources.barRemotePub.resource
+    }
+    user "foobar", password: "foopass", {
+        group "foob", gid: 2001
         passphrase "somepass"
         access key: UbuntuResources.fooRemotePub.resource
         access key: UbuntuResources.barRemotePub.resource

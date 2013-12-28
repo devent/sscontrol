@@ -1,8 +1,8 @@
 package com.anrisoftware.sscontrol.remote.user;
 
 import static com.anrisoftware.sscontrol.remote.user.UserArgsLogger._.comment_null;
-import static com.anrisoftware.sscontrol.remote.user.UserArgsLogger._.gid_null;
-import static com.anrisoftware.sscontrol.remote.user.UserArgsLogger._.gid_number;
+import static com.anrisoftware.sscontrol.remote.user.UserArgsLogger._.group_set_debug;
+import static com.anrisoftware.sscontrol.remote.user.UserArgsLogger._.group_set_info;
 import static com.anrisoftware.sscontrol.remote.user.UserArgsLogger._.home_null;
 import static com.anrisoftware.sscontrol.remote.user.UserArgsLogger._.key_added_debug;
 import static com.anrisoftware.sscontrol.remote.user.UserArgsLogger._.key_added_info;
@@ -20,7 +20,7 @@ import com.anrisoftware.sscontrol.core.api.Service;
 
 /**
  * Logging for {@link UserArgs}.
- * 
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
@@ -42,13 +42,13 @@ class UserArgsLogger extends AbstractLogger {
 
         uid_number("ID of user must be a number for %s."),
 
-        gid_null("ID of user group cannot be null for %s."),
-
-        gid_number("ID of user group must be a number for %s."),
-
         comment_null("User comment cannot be null for %s for %s."),
 
-        home_null("Home comment cannot be null for %s for %s.");
+        home_null("Home comment cannot be null for %s for %s."),
+
+        group_set_debug("User group {} set for {} for {}."),
+
+        group_set_info("User group '{}' set for user '{}' for service '{}'.");
 
         private String name;
 
@@ -95,16 +95,20 @@ class UserArgsLogger extends AbstractLogger {
         isInstanceOf(Number.class, uid, uid_number.toString(), service);
     }
 
-    void checkGid(Object gid, Service service) {
-        notNull(gid, gid_null.toString(), service);
-        isInstanceOf(Number.class, gid, gid_number.toString(), service);
-    }
-
     void checkComment(User user, Service service, String comment) {
         notNull(comment, comment_null.toString(), service, user);
     }
 
     void checkHome(User user, Service service, String home) {
         notNull(home, home_null.toString(), service, user);
+    }
+
+    void groupSet(User user, Service service, Group group) {
+        if (isDebugEnabled()) {
+            debug(group_set_debug, group, user, service);
+        } else {
+            info(group_set_info, group.getName(), user.getName(),
+                    service.getName());
+        }
     }
 }

@@ -17,6 +17,8 @@ public class UserModule extends AbstractModule {
                 .build(UserFactory.class));
         install(new FactoryModuleBuilder().implement(Key.class, Key.class)
                 .build(KeyFactory.class));
+        install(new FactoryModuleBuilder().implement(Group.class, Group.class)
+                .build(GroupFactory.class));
     }
 
 }

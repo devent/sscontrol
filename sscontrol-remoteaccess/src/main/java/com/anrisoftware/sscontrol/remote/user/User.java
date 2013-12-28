@@ -20,6 +20,8 @@ import com.google.inject.assistedinject.Assisted;
  */
 public class User {
 
+    private static final String GROUP_NAME = "name";
+
     private final Service service;
 
     private final String name;
@@ -32,15 +34,18 @@ public class User {
     @Inject
     private KeyFactory keyFactory;
 
+    @Inject
+    private GroupFactory groupFactory;
+
     private String password;
 
     private String passphrase;
 
+    private Group group;
+
     private String comment;
 
     private Integer uid;
-
-    private Integer gid;
 
     private String home;
 
@@ -50,19 +55,17 @@ public class User {
      * @see UserFactory#create(Service, Map)
      */
     @Inject
-    User(UserArgs aargs, @Assisted Service service,
+    User(UserArgs aargs, GroupFactory groupFactory, @Assisted Service service,
             @Assisted Map<String, Object> args) {
         this.service = service;
         this.keys = new ArrayList<Key>();
         this.name = aargs.name(service, args);
+        this.group = groupFactory.create(service, name);
         if (aargs.havePassword(args)) {
-        this.password = aargs.password(service, args);
+            this.password = aargs.password(service, args);
         }
         if (aargs.haveUid(args)) {
             this.uid = aargs.uid(service, args);
-        }
-        if (aargs.haveGid(args)) {
-            this.gid = aargs.gid(service, args);
         }
     }
 
@@ -78,8 +81,28 @@ public class User {
         return uid;
     }
 
-    public Integer getGid() {
-        return gid;
+    public void group(String name) {
+        Group group = groupFactory.create(service, name);
+        log.groupSet(this, service, group);
+        this.group = group;
+    }
+
+    public void group(Map<String, Object> args, String name) {
+        args.put(GROUP_NAME, name);
+        group(args);
+    }
+
+    public void group(Map<String, Object> args) {
+        if (!args.containsKey(GROUP_NAME)) {
+            args.put(GROUP_NAME, name);
+        }
+        Group group = groupFactory.create(service, args);
+        log.groupSet(this, service, group);
+        this.group = group;
+    }
+
+    public Group getGroup() {
+        return group;
     }
 
     public void comment(String comment) {

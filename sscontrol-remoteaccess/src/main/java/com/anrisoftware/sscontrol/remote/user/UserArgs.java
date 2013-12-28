@@ -16,8 +16,6 @@ class UserArgs {
 
     private static final String UID = "uid";
 
-    private static final String GID = "gid";
-
     private static final String PASSWORD = "password";
 
     private static final String NAME = "name";
@@ -49,16 +47,6 @@ class UserArgs {
         Object uid = args.get(UID);
         log.checkUid(uid, service);
         return ((Number) uid).intValue();
-    }
-
-    boolean haveGid(Map<String, Object> args) {
-        return args.containsKey(GID);
-    }
-
-    int gid(Service service, Map<String, Object> args) {
-        Object gid = args.get(GID);
-        log.checkGid(gid, service);
-        return ((Number) gid).intValue();
     }
 
 }

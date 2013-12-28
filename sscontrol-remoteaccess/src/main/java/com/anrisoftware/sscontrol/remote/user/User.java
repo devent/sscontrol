@@ -24,8 +24,6 @@ public class User {
 
     private final String name;
 
-    private final String password;
-
     private final List<Key> keys;
 
     @Inject
@@ -34,11 +32,19 @@ public class User {
     @Inject
     private KeyFactory keyFactory;
 
+    private String password;
+
     private String passphrase;
+
+    private String comment;
 
     private Integer uid;
 
     private Integer gid;
+
+    private String home;
+
+    private String login;
 
     /**
      * @see UserFactory#create(Service, Map)
@@ -49,7 +55,9 @@ public class User {
         this.service = service;
         this.keys = new ArrayList<Key>();
         this.name = aargs.name(service, args);
+        if (aargs.havePassword(args)) {
         this.password = aargs.password(service, args);
+        }
         if (aargs.haveUid(args)) {
             this.uid = aargs.uid(service, args);
         }
@@ -72,6 +80,40 @@ public class User {
 
     public Integer getGid() {
         return gid;
+    }
+
+    public void comment(String comment) {
+        log.checkComment(this, service, comment);
+        this.comment = comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void home(String home) {
+        log.checkHome(this, service, home);
+        this.home = home;
+    }
+
+    public void setHome(String home) {
+        this.home = home;
+    }
+
+    public String getHome() {
+        return home;
+    }
+
+    public void setLogin(String login) {
+        this.login = login;
+    }
+
+    public String getLogin() {
+        return login;
     }
 
     public void passphrase(String passphrase) {

@@ -31,6 +31,10 @@ class UserArgs {
         return name.toString();
     }
 
+    boolean havePassword(Map<String, Object> args) {
+        return args.containsKey(PASSWORD);
+    }
+
     String password(Object service, Map<String, Object> args) {
         Object password = args.get(PASSWORD);
         log.checkPassword(password, service);

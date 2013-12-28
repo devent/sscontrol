@@ -18,4 +18,4 @@
  */
 package com.anrisoftware.sscontrol.firewall.service
 
-profile "ubuntu_10_04", { firewall { } }
+profile "ubuntu_10_04", { remote { } }

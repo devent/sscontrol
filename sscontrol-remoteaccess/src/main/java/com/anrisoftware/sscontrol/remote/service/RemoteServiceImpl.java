@@ -29,9 +29,11 @@ import javax.inject.Inject;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import com.anrisoftware.sscontrol.core.api.ProfileService;
 import com.anrisoftware.sscontrol.core.api.Service;
 import com.anrisoftware.sscontrol.core.api.ServiceException;
 import com.anrisoftware.sscontrol.core.api.ServiceScriptFactory;
+import com.anrisoftware.sscontrol.core.api.ServiceScriptInfo;
 import com.anrisoftware.sscontrol.core.service.AbstractService;
 import com.anrisoftware.sscontrol.remote.user.User;
 import com.anrisoftware.sscontrol.remote.user.UserFactory;
@@ -73,6 +75,7 @@ public class RemoteServiceImpl extends AbstractService implements RemoteService 
     protected void injectScript(Script script) {
     }
 
+
     /**
      * Returns the remote access service name.
      */
@@ -108,6 +111,12 @@ public class RemoteServiceImpl extends AbstractService implements RemoteService 
     @Override
     public List<User> getUsers() {
         return users;
+    }
+
+    @Override
+    protected boolean isServiceScriptEquals(ServiceScriptInfo info,
+            ProfileService profile, Object service) {
+        return info.getProfileName().equals(profile.getProfileName());
     }
 
     @Override

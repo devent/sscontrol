@@ -1,7 +1,9 @@
 package com.anrisoftware.sscontrol.remote.user;
 
+import static com.anrisoftware.sscontrol.remote.user.UserArgsLogger._.comment_null;
 import static com.anrisoftware.sscontrol.remote.user.UserArgsLogger._.gid_null;
 import static com.anrisoftware.sscontrol.remote.user.UserArgsLogger._.gid_number;
+import static com.anrisoftware.sscontrol.remote.user.UserArgsLogger._.home_null;
 import static com.anrisoftware.sscontrol.remote.user.UserArgsLogger._.key_added_debug;
 import static com.anrisoftware.sscontrol.remote.user.UserArgsLogger._.key_added_info;
 import static com.anrisoftware.sscontrol.remote.user.UserArgsLogger._.name_null;
@@ -42,7 +44,11 @@ class UserArgsLogger extends AbstractLogger {
 
         gid_null("ID of user group cannot be null for %s."),
 
-        gid_number("ID of user group must be a number for %s.");
+        gid_number("ID of user group must be a number for %s."),
+
+        comment_null("User comment cannot be null for %s for %s."),
+
+        home_null("Home comment cannot be null for %s for %s.");
 
         private String name;
 
@@ -92,5 +98,13 @@ class UserArgsLogger extends AbstractLogger {
     void checkGid(Object gid, Service service) {
         notNull(gid, gid_null.toString(), service);
         isInstanceOf(Number.class, gid, gid_number.toString(), service);
+    }
+
+    void checkComment(User user, Service service, String comment) {
+        notNull(comment, comment_null.toString(), service, user);
+    }
+
+    void checkHome(User user, Service service, String home) {
+        notNull(home, home_null.toString(), service, user);
     }
 }

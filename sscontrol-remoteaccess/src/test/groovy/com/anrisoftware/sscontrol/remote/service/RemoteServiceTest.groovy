@@ -24,6 +24,7 @@ import groovy.util.logging.Slf4j
 
 import org.junit.Test
 
+import com.anrisoftware.sscontrol.remote.resources.RemoteTestUtil
 import com.anrisoftware.sscontrol.remote.user.Key
 import com.anrisoftware.sscontrol.remote.user.User
 
@@ -46,18 +47,24 @@ class RemoteServiceTest extends RemoteTestUtil {
         assert service.users.size() == 3
 
         User user = service.users[0]
-        assert user.name == "root"
-        assert user.password == "rootpass"
-
-        user = service.users[1]
         assert user.name == "bar"
         assert user.password == "barpass"
         assert user.uid == 2001
         assert user.gid == 2001
 
+        user = service.users[1]
+        assert user.name == "baz"
+        assert user.password == "bazpass"
+        assert user.uid == null
+        assert user.gid == null
+        assert user.keys.size() == 0
+        assert user.passphrase == "somepass"
+        assert user.home == "/var/home/baz"
+
         user = service.users[2]
         assert user.name == "foo"
         assert user.password == "foopass"
+        assert user.passphrase == "somepass"
         assert user.keys.size() == 2
 
         Key key = user.keys[0]

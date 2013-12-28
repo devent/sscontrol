@@ -1,0 +1,4 @@
+update
+-y install passwd
+update
+-y install passwd

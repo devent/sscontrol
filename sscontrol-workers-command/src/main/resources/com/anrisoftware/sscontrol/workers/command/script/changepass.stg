@@ -1,0 +1,5 @@
+unix(args) ::= <<
+#!/bin/sh
+echo "<args.password>" | <args.command> --stdin "<args.userName>"
+
+>>

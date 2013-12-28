@@ -51,5 +51,7 @@ class RemoteTest extends RemoteTestUtil {
         assertFileContent aptitudeOutExpected.asFile(tmpdir), aptitudeOutExpected
         assertFileContent groupaddOutExpected.asFile(tmpdir), groupaddOutExpected
         assertFileContent useraddOutExpected.asFile(tmpdir), useraddOutExpected
+        assertFileContent passwdOutExpected.asFile(tmpdir), passwdOutExpected
+        assertFileContent passwdInExpected.asFile(tmpdir), passwdInExpected
     }
 }

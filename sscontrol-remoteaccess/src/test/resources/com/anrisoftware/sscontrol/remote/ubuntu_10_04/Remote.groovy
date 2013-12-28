@@ -19,6 +19,11 @@
 package com.anrisoftware.sscontrol.remote.ubuntu_10_04
 
 remote {
+    user "devent", password: "foopass", {
+        passphrase "somepass"
+        access key: UbuntuResources.fooRemotePub.resource
+        require password
+    }
     user "bar", password: "barpass", uid: 2001
     user "baz", password: "bazpass", {
         passphrase "somepass"
@@ -34,5 +39,8 @@ remote {
         passphrase "somepass"
         access key: UbuntuResources.fooRemotePub.resource
         access key: UbuntuResources.barRemotePub.resource
+    }
+    user "foobaz", password: "foopass", {
+        passphrase "somepass"
     }
 }

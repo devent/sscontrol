@@ -28,6 +28,8 @@ public class User {
 
     private final List<Key> keys;
 
+    private final List<Require> requires;
+
     @Inject
     private UserArgsLogger log;
 
@@ -59,6 +61,7 @@ public class User {
             @Assisted Map<String, Object> args) {
         this.service = service;
         this.keys = new ArrayList<Key>();
+        this.requires = new ArrayList<Require>();
         this.name = aargs.name(service, args);
         this.group = groupFactory.create(service, name);
         if (aargs.havePassword(args)) {
@@ -152,6 +155,15 @@ public class User {
         Key key = keyFactory.create(service, args);
         log.keyAdded(this, service, key);
         keys.add(key);
+    }
+
+    public void require(Object s) {
+    }
+
+    public void password() {
+        Require require = Require.password;
+        requires.add(require);
+        log.addRequire(this, service, require);
     }
 
     public List<Key> getKeys() {

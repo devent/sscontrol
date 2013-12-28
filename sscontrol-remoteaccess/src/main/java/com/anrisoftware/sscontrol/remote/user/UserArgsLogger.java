@@ -9,6 +9,8 @@ import static com.anrisoftware.sscontrol.remote.user.UserArgsLogger._.key_added_
 import static com.anrisoftware.sscontrol.remote.user.UserArgsLogger._.name_null;
 import static com.anrisoftware.sscontrol.remote.user.UserArgsLogger._.passphrase_null;
 import static com.anrisoftware.sscontrol.remote.user.UserArgsLogger._.password_null;
+import static com.anrisoftware.sscontrol.remote.user.UserArgsLogger._.require_added_debug;
+import static com.anrisoftware.sscontrol.remote.user.UserArgsLogger._.require_added_info;
 import static com.anrisoftware.sscontrol.remote.user.UserArgsLogger._.uid_null;
 import static com.anrisoftware.sscontrol.remote.user.UserArgsLogger._.uid_number;
 import static org.apache.commons.lang3.Validate.isInstanceOf;
@@ -34,21 +36,25 @@ class UserArgsLogger extends AbstractLogger {
 
         passphrase_null("Key passphrase cannot be null for %s."),
 
-        key_added_debug("Key {} added for {} for {}."),
+        key_added_debug("Key {} added for {} in {}."),
 
-        key_added_info("Key {} added for user '{}' for service '{}'."),
+        key_added_info("Key {} added for user '{}' in service '{}'."),
 
         uid_null("ID of user cannot be null for %s."),
 
         uid_number("ID of user must be a number for %s."),
 
-        comment_null("User comment cannot be null for %s for %s."),
+        comment_null("User comment cannot be null for %s in %s."),
 
-        home_null("Home comment cannot be null for %s for %s."),
+        home_null("Home comment cannot be null for %s in %s."),
 
-        group_set_debug("User group {} set for {} for {}."),
+        group_set_debug("User group {} set for {} in {}."),
 
-        group_set_info("User group '{}' set for user '{}' for service '{}'.");
+        group_set_info("User group '{}' set for user '{}' in service '{}'."),
+
+        require_added_debug("Require {} added for {} in {}."),
+
+        require_added_info("Require {} added for user '{}' in service '{}'.");
 
         private String name;
 
@@ -109,6 +115,14 @@ class UserArgsLogger extends AbstractLogger {
         } else {
             info(group_set_info, group.getName(), user.getName(),
                     service.getName());
+        }
+    }
+
+    void addRequire(User user, Service service, Require require) {
+        if (isDebugEnabled()) {
+            debug(require_added_debug, require, user, service);
+        } else {
+            info(require_added_info, require, user.getName(), service.getName());
         }
     }
 }

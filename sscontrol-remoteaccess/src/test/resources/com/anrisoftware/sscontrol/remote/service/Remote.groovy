@@ -25,6 +25,7 @@ remote {
     user "baz", password: "bazpass", {
         passphrase "somepass"
         home "/var/home/baz"
+        require password
     }
     user "foo", password: "foopass", {
         passphrase "somepass"

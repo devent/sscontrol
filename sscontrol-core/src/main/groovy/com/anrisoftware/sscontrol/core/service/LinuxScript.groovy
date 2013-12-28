@@ -58,7 +58,7 @@ abstract class LinuxScript extends Script {
     ProfileProperties profile
 
     /**
-     * The script {@link Service}.
+     * The {@link Service} of the script.
      */
     Service service
 
@@ -80,6 +80,15 @@ abstract class LinuxScript extends Script {
     def run() {
         commandTemplates = templatesFactory.create("ScriptCommandTemplates")
         installSystemPackages()
+    }
+
+    /**
+     * Returns the service of the script.
+     *
+     * @return the {@link Service}.
+     */
+    Service getService() {
+        service
     }
 
     /**
@@ -529,6 +538,44 @@ abstract class LinuxScript extends Script {
     }
 
     /**
+     * Changes the password of the specified user.
+     *
+     * @param args
+     *            the arguments:
+     * <ul>
+     * <li>{@code userName:} the user name;
+     * <li>{@code password:} the new password;
+     * <li>{@code system:} optionally, the system of the server;
+     * <li>{@code command:} optionally, the change password command;
+     * </ul>
+     *
+     * @return the {@link ScriptCommandWorker} worker.
+     *
+     * @see #getChangePasswordCommand()
+     */
+    ScriptCommandWorker changePassword(Map args) {
+        args.command = args.containsKey("command") ? args.command : changePasswordCommand
+        args.system = args.containsKey("system") ? args.system : "unix"
+        log.checkChangePasswordArgs args
+        def template = commandTemplates.getResource("changepass")
+        def worker = scriptCommandFactory.create(template, args.system, "args", args)()
+        log.changePasswordDone this, worker, args
+    }
+
+    /**
+     * Returns the file link command.
+     *
+     * <ul>
+     * <li>property key {@code "change_password_command"}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    String getChangePasswordCommand() {
+        profileProperty "change_password_command", defaultProperties
+    }
+
+    /**
      * Returns the default character set.
      *
      * <ul>
@@ -708,8 +755,8 @@ abstract class LinuxScript extends Script {
      *
      * @see #getDefaultProperties()
      */
-    String getGroupsFile() {
-        profileProperty "groups_file", defaultProperties
+    File getGroupsFile() {
+        profileProperty("groups_file", defaultProperties) as File
     }
 
     /**
@@ -763,8 +810,8 @@ abstract class LinuxScript extends Script {
      *
      * @see #getDefaultProperties()
      */
-    String getUsersFile() {
-        profileProperty "users_file", defaultProperties
+    File getUsersFile() {
+        profileProperty("users_file", defaultProperties) as File
     }
 
     /**

@@ -175,11 +175,36 @@ public abstract class AbstractService implements Service {
     protected boolean serviceScriptCompare(ServiceScriptInfo info,
             String serviceName, ProfileService profile) {
         ProfileProperties entry = getProfile().getEntry(serviceName);
+        Object service = findService(entry);
+        return isServiceScriptEquals(info, profile, service);
+    }
+
+    private Object findService(ProfileProperties entry) {
         Object service = entry.get("service");
         if (getRefservice() != null) {
             Map<String, String> map = asServicesMap(entry);
             service = map.get(getRefservice());
         }
+        return service;
+    }
+
+    /**
+     * Compares the service script name to the specified service information.
+     * 
+     * @param info
+     *            the {@link ServiceScriptInfo}.
+     * 
+     * @param profile
+     *            the service {@link ProfileService}.
+     * 
+     * @param service
+     *            the service.
+     * 
+     * @return {@code true} if the service script that is specified by the
+     *         service script information is the correct one for the service.
+     */
+    protected boolean isServiceScriptEquals(ServiceScriptInfo info,
+            ProfileService profile, Object service) {
         return info.getProfileName().equals(profile.getProfileName())
                 && info.getServiceName().equals(service);
     }

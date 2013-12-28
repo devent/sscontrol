@@ -22,6 +22,10 @@ import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.addgro
 import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.adduser_args_missing;
 import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.archive_type_args_missing;
 import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.args1;
+import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.change_password_args_missing;
+import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.change_password_done_debug;
+import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.change_password_done_info;
+import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.change_password_done_trace;
 import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.chmod_args_missing;
 import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.chmod_done_debug;
 import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.chmod_done_info;
@@ -93,6 +97,7 @@ class LinuxScriptLogger extends AbstractLogger {
     private static final String OWNER = "owner";
     private static final String COMMAND = "command";
     private static final String FILES = "files";
+    private static final String PASSWORD = "password";
 
     enum _ {
 
@@ -160,6 +165,12 @@ class LinuxScriptLogger extends AbstractLogger {
 
         unpack_done_info("Unpack file {} to {} done in service '{}'."),
 
+        change_password_done_trace("Change password {} to {} done in {}, {}."),
+
+        change_password_done_debug("Change password {} to {} done in {}."),
+
+        change_password_done_info("Chagen password {} done in service '{}'."),
+
         property_file_null("Property file cannot be null for key '%s' in %s."),
 
         chown_args_missing("Change owner argument '%s' missing."),
@@ -180,6 +191,8 @@ class LinuxScriptLogger extends AbstractLogger {
 
         unknown_archive_type_message(
                 "Unknown archive type '{}' for script '{}'."),
+
+        change_password_args_missing("Change password argument '%s' missing."),
 
         script1("script"),
 
@@ -390,4 +403,26 @@ class LinuxScriptLogger extends AbstractLogger {
         isTrue(args.containsKey(GROUP_NAME), addgroup_args_missing.toString(),
                 GROUP_NAME);
     }
+
+    void checkChangePasswordArgs(Map<String, Object> args) {
+        isTrue(args.containsKey(USER_NAME),
+                change_password_args_missing.toString(), USER_NAME);
+        isTrue(args.containsKey(PASSWORD),
+                change_password_args_missing.toString(), PASSWORD);
+        isTrue(args.containsKey(SYSTEM),
+                change_password_args_missing.toString(), SYSTEM);
+        isTrue(args.containsKey(COMMAND),
+                change_password_args_missing.toString(), COMMAND);
+    }
+
+    void changePasswordDone(LinuxScript script, Object worker, Object args) {
+        if (isTraceEnabled()) {
+            trace(change_password_done_trace, args, script, worker);
+        } else if (isDebugEnabled()) {
+            debug(change_password_done_debug, args, script);
+        } else {
+            info(change_password_done_info, args, script.getName());
+        }
+    }
+
 }

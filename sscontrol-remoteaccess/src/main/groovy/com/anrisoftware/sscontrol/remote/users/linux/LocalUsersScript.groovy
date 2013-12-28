@@ -29,6 +29,7 @@ import com.anrisoftware.sscontrol.core.service.LinuxScript
 import com.anrisoftware.sscontrol.remote.service.RemoteService
 import com.anrisoftware.sscontrol.remote.user.Group
 import com.anrisoftware.sscontrol.remote.user.GroupFactory
+import com.anrisoftware.sscontrol.remote.user.Require
 import com.anrisoftware.sscontrol.remote.user.User
 import com.anrisoftware.sscontrol.remote.user.UserFactory
 
@@ -72,16 +73,30 @@ abstract class LocalUsersScript extends LinuxScript {
     void createLocalGroups() {
         def service = getService()
         def groups = loadGroups()
-        int min = minimumGid
-        int i = 0
+        int id = minimumGid
         service.users.each { User user ->
-            User found = groups.find { Group it -> it.name == user.group.name }
+            Group found = groups.find { Group it -> it.name == user.group.name }
+            if (found) {
+                groupHaveId found, id, { id++ }
+            }
             if (!found) {
-                user.group.gid = user.group.gid == null ? min + i : user.group.gid
+                updateGroupId user.group, id, { id++ }
                 def group = user.group.name
                 addGroup "groupName": group, "groupId": user.group.gid
             }
-            i++
+        }
+    }
+
+    void groupHaveId(Group group, int id, def callback) {
+        if (group.gid == id) {
+            callback()
+        }
+    }
+
+    void updateGroupId(Group group, int id, def callback) {
+        if (group.gid == null) {
+            group.gid = id
+            callback()
         }
     }
 
@@ -91,19 +106,47 @@ abstract class LocalUsersScript extends LinuxScript {
     void createLocalUsers() {
         def service = getService()
         def users = loadUsers()
-        int min = minimumUid
-        int i = 0
+        int id = minimumUid
         service.users.each { User user ->
             User found = users.find { User it -> it.name == user.name }
+            if (found) {
+                userHaveId found, id, { id++ }
+                updateUserPassword user
+            }
             if (!found) {
+                updateUserId user, id, { id++ }
                 def home = new File(String.format(homePattern, user.name))
                 def shell = user.login == null ? defaultLoginShell : user.login
                 def group = user.group.name
-                user.uid = user.uid == null ? min + i : user.uid
                 addUser "userName": user.name, "homeDir": home, "shell": shell, "groupName": group, "userId": user.uid
             }
-            i++
         }
+    }
+
+    void userHaveId(User user, int id, def callback) {
+        if (user.uid == id) {
+            callback()
+        }
+    }
+
+    void updateUserId(User user, int id, def callback) {
+        if (user.uid == null) {
+            user.uid = id
+            callback()
+        }
+    }
+
+    /**
+     * Updates the user password.
+     *
+     * @param user
+     *            the {@link User}.
+     */
+    void updateUserPassword(User user) {
+        if (!user.requires.contains(Require.password)) {
+            return
+        }
+        changePassword "userName": user.name, "password": user.password
     }
 
     /**

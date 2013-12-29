@@ -38,5 +38,6 @@ profile "ubuntu_10_04", {
         users_file passwdfile
         change_password_command passwd
         sshd_configuration_directory sshdconfigFile.parentFile
+        authorized_keys_file_pattern "$tmp/<user.home>/.ssh/authorized_keys"
     }
 }

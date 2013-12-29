@@ -16,25 +16,30 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-hostname. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.remote.openssh.openssh.ubuntu_10_04;
+package com.anrisoftware.sscontrol.remote.openssh.authorizedkeys.ubuntu_10_04;
 
-import com.anrisoftware.sscontrol.remote.openssh.authorizedkeys.ubuntu_10_04.AuthorizedKeysUbuntu_10_04_Module;
-import com.anrisoftware.sscontrol.remote.openssh.userkey.ubuntu_10_04.UserKeyUbuntu_10_04_Module;
-import com.anrisoftware.sscontrol.remote.openssh.users.ubuntu_10_04.UsersUbuntu_10_04_Module;
+import static com.google.inject.multibindings.MapBinder.newMapBinder;
+
+import com.anrisoftware.sscontrol.remote.api.RemoteScript;
 import com.google.inject.AbstractModule;
+import com.google.inject.multibindings.MapBinder;
 
 /**
- * Installs the Remote Access/Ubuntu 10.04 script.
+ * Installs the deployment of authorized keys to local users for Ubuntu 10.04.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-public class UbuntuModule extends AbstractModule {
+public class AuthorizedKeysUbuntu_10_04_Module extends AbstractModule {
 
     @Override
     protected void configure() {
-        install(new UsersUbuntu_10_04_Module());
-        install(new UserKeyUbuntu_10_04_Module());
-        install(new AuthorizedKeysUbuntu_10_04_Module());
+        bindScripts();
+    }
+
+    private void bindScripts() {
+        MapBinder<String, RemoteScript> binder;
+        binder = newMapBinder(binder(), String.class, RemoteScript.class);
+        binder.addBinding("authorizedkeys").to(Ubuntu_10_04_Script.class);
     }
 }

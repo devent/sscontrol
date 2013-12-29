@@ -20,7 +20,7 @@ libuuid:x:100:101::/var/lib/libuuid:/bin/sh
 syslog:x:101:103::/home/syslog:/bin/false
 sshd:x:102:65534::/var/run/sshd:/usr/sbin/nologin
 landscape:x:103:108::/var/lib/landscape:/bin/false
-devent:x:1000:1000:devent,,,:/home/devent:/bin/bash
+devent:x:1000:1000:devent,,,:/tmp/home/devent:/bin/bash
 maradns:x:104:112::/etc/maradns:/bin/false
 mysql:x:105:113:MySQL Server,,,:/var/lib/mysql:/bin/false
 nginx:x:106:114:nginx user,,,:/nonexistent:/bin/false

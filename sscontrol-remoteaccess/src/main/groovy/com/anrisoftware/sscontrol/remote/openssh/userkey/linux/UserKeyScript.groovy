@@ -79,7 +79,7 @@ abstract class UserKeyScript implements RemoteScript {
     void createSshkeys() {
         RemoteService service = this.service
         service.users.each { User user ->
-            def sshkeyfile = new File(String.format(sshkeyPattern, user.name))
+            def sshkeyfile = sshkeyFile user
             if (sshkeyfile.isFile()) {
                 updateSshkey user, sshkeyfile
             } else {

@@ -26,7 +26,7 @@ import org.apache.commons.lang3.StringUtils
 
 import com.anrisoftware.resources.templates.api.Templates
 import com.anrisoftware.sscontrol.core.service.LinuxScript
-import com.anrisoftware.sscontrol.remote.api.RemoteScript;
+import com.anrisoftware.sscontrol.remote.api.RemoteScript
 import com.anrisoftware.sscontrol.remote.service.RemoteService
 import com.anrisoftware.sscontrol.remote.user.Group
 import com.anrisoftware.sscontrol.remote.user.GroupFactory
@@ -101,15 +101,16 @@ abstract class LocalUsersScript implements RemoteScript {
         service.users.each { User user ->
             User found = users.find { User it -> it.name == user.name }
             if (found) {
+                user.home = found.home
                 userHaveId found, id, { id++ }
                 updateUserPassword user
             }
             if (!found) {
                 updateUserId user, id, { id++ }
-                def home = new File(String.format(homePattern, user.name))
+                user.home = homeDir user
                 def shell = user.login == null ? defaultLoginShell : user.login
                 def group = user.group.name
-                addUser "userName": user.name, "homeDir": home, "shell": shell, "groupName": group, "userId": user.uid
+                addUser "userName": user.name, "homeDir": user.home, "shell": shell, "groupName": group, "userId": user.uid
             }
         }
     }
@@ -212,7 +213,7 @@ abstract class LocalUsersScript implements RemoteScript {
             String login = str[6]
             def user = userFactory.create service, ["name": name, "password": "", "uid": uid, "gid": gid]
             user.comment = comment
-            user.home = home
+            user.home = new File(home)
             user.login = login
             acc << user
         }

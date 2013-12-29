@@ -1,5 +1,6 @@
 package com.anrisoftware.sscontrol.remote.user;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -49,7 +50,7 @@ public class User {
 
     private Integer uid;
 
-    private String home;
+    private File home;
 
     private String login;
 
@@ -123,14 +124,14 @@ public class User {
 
     public void home(String home) {
         log.checkHome(this, service, home);
+        this.home = new File(home);
+    }
+
+    public void setHome(File home) {
         this.home = home;
     }
 
-    public void setHome(String home) {
-        this.home = home;
-    }
-
-    public String getHome() {
+    public File getHome() {
         return home;
     }
 

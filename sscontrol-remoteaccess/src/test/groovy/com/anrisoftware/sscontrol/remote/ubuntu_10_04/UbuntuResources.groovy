@@ -50,6 +50,9 @@ enum UbuntuResources {
     passwdInExpected("/usr/bin/passwd.in", UbuntuResources.class.getResource("passwd_in_excepted.txt")),
     sshkeygenOutExpected("/usr/bin/ssh-keygen.out", UbuntuResources.class.getResource("sshkeygen_out_expected.txt")),
     sshdconfigExpected("/etc/ssh/sshd_config", UbuntuResources.class.getResource("sshd_config_expected.txt")),
+    deventAuthorizedkeysExpected("/tmp/home/devent/.ssh/authorized_keys", UbuntuResources.class.getResource("devent_authorizedkeys_expected.txt")),
+    fooAuthorizedkeysExpected("/home/foo/.ssh/authorized_keys", UbuntuResources.class.getResource("foo_authorizedkeys_expected.txt")),
+    foobarAuthorizedkeysExpected("/home/foobar/.ssh/authorized_keys", UbuntuResources.class.getResource("foobar_authorizedkeys_expected.txt")),
 
     static copyUbuntuFiles(File parent) {
         aptitudeCommand.createCommand parent

@@ -23,6 +23,7 @@ import static org.apache.commons.io.FileUtils.*
 import javax.inject.Inject
 
 import org.joda.time.Duration
+import org.stringtemplate.v4.ST
 
 import com.anrisoftware.sscontrol.core.bindings.BindingFactory
 import com.anrisoftware.sscontrol.core.debuglogging.DebugLogging
@@ -30,6 +31,7 @@ import com.anrisoftware.sscontrol.core.debuglogging.DebugLoggingProperty
 import com.anrisoftware.sscontrol.core.service.LinuxScript
 import com.anrisoftware.sscontrol.remote.api.RemoteScript
 import com.anrisoftware.sscontrol.remote.service.RemoteService
+import com.anrisoftware.sscontrol.remote.user.User
 
 /**
  * Base OpenSSH remote script.
@@ -57,6 +59,7 @@ abstract class BaseOpensshRemoteScript extends LinuxScript {
         beforeConfiguration()
         remoteScript.users.deployRemoteScript service
         remoteScript.userkey.deployRemoteScript service
+        remoteScript.authorizedkeys.deployRemoteScript service
     }
 
     void setupParentScript() {
@@ -131,7 +134,7 @@ abstract class BaseOpensshRemoteScript extends LinuxScript {
 
     /**
      * Returns the user home directory pattern, for
-     * example {@code "/home/%1$s".}
+     * example {@code "/home/<user.name>".}
      *
      * <ul>
      * <li>profile property {@code "home_pattern"}</li>
@@ -144,8 +147,21 @@ abstract class BaseOpensshRemoteScript extends LinuxScript {
     }
 
     /**
+     * Returns the user home directory for the specified user.
+     *
+     * @param user
+     *            the {@link User}.
+     *
+     * @see #getHomePattern()
+     */
+    File homeDir(User user) {
+        def st = new ST(homePattern).add("user", user)
+        new File(st.render())
+    }
+
+    /**
      * Returns the user SSH/key pattern, for
-     * example {@code "/home/%1$s/.ssh/id_rsa".}
+     * example {@code "/home/<user.name>/.ssh/id_rsa".}
      *
      * <ul>
      * <li>profile property {@code "ssh_key_pattern"}</li>
@@ -155,6 +171,46 @@ abstract class BaseOpensshRemoteScript extends LinuxScript {
      */
     String getSshkeyPattern() {
         profileProperty "ssh_key_pattern", defaultProperties
+    }
+
+    /**
+     * Returns the user SSH/key file for the specified user.
+     *
+     * @param user
+     *            the {@link User}.
+     *
+     * @see #getSshkeyPattern()
+     */
+    File sshkeyFile(User user) {
+        def st = new ST(sshkeyPattern).add("user", user)
+        new File(st.render())
+    }
+
+    /**
+     * Returns the user authorized keys file pattern, for
+     * example {@code "<user.home>/.ssh/authorized_keys".}
+     *
+     * <ul>
+     * <li>profile property {@code "authorized_keys_file_pattern"}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    String getAuthorizedKeysFilePattern() {
+        profileProperty "authorized_keys_file_pattern", defaultProperties
+    }
+
+    /**
+     * Returns the user authorized keys file for the specified user.
+     *
+     * @param user
+     *            the {@link User}.
+     *
+     * @see #getAuthorizedKeysFilePattern()
+     */
+    File authorizedKeysFile(User user) {
+        def st = new ST(authorizedKeysFilePattern).add("user", user)
+        new File(st.render())
     }
 
     /**

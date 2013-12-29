@@ -1,0 +1,71 @@
+portConfig(port) ::= <%
+Port <port>
+%>
+
+portConfig_search() ::= <%
+#?Port.*
+%>
+
+addressConfig(address) ::= <%
+ListenAddress <address>
+%>
+
+addressConfig_search() ::= <%
+#?ListenAddress.*
+%>
+
+protocolConfig(protocols) ::= <%
+Protocol <protocols;separator=",">
+%>
+
+protocolConfig_search() ::= <%
+#?Protocol.*
+%>
+
+loginGraceTimeConfig(time) ::= <%
+LoginGraceTime <time>
+%>
+
+loginGraceTimeConfig_search() ::= <%
+#?LoginGraceTime.*
+%>
+
+permitRootLoginConfig(enabled) ::= <%
+PermitRootLogin <if(enabled)>yes<else>no<endif>
+%>
+
+permitRootLoginConfig_search() ::= <%
+#?PermitRootLogin.*
+%>
+
+strictModesConfig(enabled) ::= <%
+StrictModes <if(enabled)>yes<else>no<endif>
+%>
+
+strictModesConfig_search() ::= <%
+#?StrictModes.*
+%>
+
+authorizedKeysFileConfig(file) ::= <%
+AuthorizedKeysFile <file>
+%>
+
+authorizedKeysFileConfig_search() ::= <%
+#?AuthorizedKeysFile.*
+%>
+
+passwordAuthenticationConfig(enabled) ::= <%
+PasswordAuthentication <if(enabled)>yes<else>no<endif>
+%>
+
+passwordAuthenticationConfig_search() ::= <%
+#?PasswordAuthentication.*
+%>
+
+xForwardingConfig(enabled) ::= <%
+X11Forwarding <if(enabled)>yes<else>no<endif>
+%>
+
+xForwardingConfig_search() ::= <%
+#?X11Forwarding.*
+%>

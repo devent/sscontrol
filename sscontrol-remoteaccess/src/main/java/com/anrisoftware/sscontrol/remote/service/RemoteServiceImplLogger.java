@@ -18,10 +18,13 @@
  */
 package com.anrisoftware.sscontrol.remote.service;
 
+import static com.anrisoftware.sscontrol.remote.service.RemoteServiceImplLogger._.binding_set_debug;
+import static com.anrisoftware.sscontrol.remote.service.RemoteServiceImplLogger._.binding_set_info;
 import static com.anrisoftware.sscontrol.remote.service.RemoteServiceImplLogger._.user_added_debug;
 import static com.anrisoftware.sscontrol.remote.service.RemoteServiceImplLogger._.user_added_info;
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
+import com.anrisoftware.sscontrol.core.bindings.Binding;
 import com.anrisoftware.sscontrol.remote.user.User;
 
 /**
@@ -36,7 +39,11 @@ class RemoteServiceImplLogger extends AbstractLogger {
 
         user_added_debug("Local user {} added to {}."),
 
-        user_added_info("Local user '{}' added to service '{}'.");
+        user_added_info("Local user '{}' added to service '{}'."),
+
+        binding_set_debug("Binding address {} set {}."),
+
+        binding_set_info("Binding address {} set for service '{}'.");
 
         private String name;
 
@@ -57,7 +64,7 @@ class RemoteServiceImplLogger extends AbstractLogger {
         super(RemoteServiceImpl.class);
     }
 
-    void userAdded(RemoteServiceImpl service, User user) {
+    void userAdded(RemoteService service, User user) {
         if (isDebugEnabled()) {
             debug(user_added_debug, user, service);
         } else {
@@ -65,4 +72,11 @@ class RemoteServiceImplLogger extends AbstractLogger {
         }
     }
 
+    void bindingSet(RemoteService service, Binding binding) {
+        if (isDebugEnabled()) {
+            debug(binding_set_debug, binding, service);
+        } else {
+            info(binding_set_info, binding.getAddresses(), service.getName());
+        }
+    }
 }

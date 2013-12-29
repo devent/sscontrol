@@ -25,6 +25,7 @@ def passwd = UbuntuResources.passwdCommand.asFile(tmp)
 def sshkeygen = UbuntuResources.sshkeygenCommand.asFile(tmp)
 def groupfile = UbuntuResources.groupsFile.asFile(tmp)
 def passwdfile = UbuntuResources.passwdFile.asFile(tmp)
+def sshdconfigFile = UbuntuResources.sshdconfigFile.asFile(tmp)
 
 profile "ubuntu_10_04", {
     remote {
@@ -36,5 +37,6 @@ profile "ubuntu_10_04", {
         groups_file groupfile
         users_file passwdfile
         change_password_command passwd
+        sshd_configuration_directory sshdconfigFile.parentFile
     }
 }

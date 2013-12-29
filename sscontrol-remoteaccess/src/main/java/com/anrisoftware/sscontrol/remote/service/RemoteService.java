@@ -3,6 +3,7 @@ package com.anrisoftware.sscontrol.remote.service;
 import java.util.List;
 
 import com.anrisoftware.sscontrol.core.api.Service;
+import com.anrisoftware.sscontrol.core.bindings.Binding;
 import com.anrisoftware.sscontrol.remote.user.User;
 
 /**
@@ -25,5 +26,12 @@ public interface RemoteService extends Service {
      * @return the {@link List} of local {@link User} users.
      */
     List<User> getUsers();
+
+    /**
+     * Returns a list of the IP addresses where to bind the remote service.
+     * 
+     * @return the {@link Binding}.
+     */
+    Binding getBinding();
 
 }

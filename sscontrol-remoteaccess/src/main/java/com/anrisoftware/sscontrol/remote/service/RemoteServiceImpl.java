@@ -32,13 +32,18 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import com.anrisoftware.sscontrol.core.api.Service;
 import com.anrisoftware.sscontrol.core.api.ServiceException;
 import com.anrisoftware.sscontrol.core.api.ServiceScriptFactory;
+import com.anrisoftware.sscontrol.core.bindings.Address;
+import com.anrisoftware.sscontrol.core.bindings.Binding;
+import com.anrisoftware.sscontrol.core.bindings.BindingAddress;
+import com.anrisoftware.sscontrol.core.bindings.BindingArgs;
+import com.anrisoftware.sscontrol.core.bindings.BindingFactory;
 import com.anrisoftware.sscontrol.core.service.AbstractService;
 import com.anrisoftware.sscontrol.remote.user.User;
 import com.anrisoftware.sscontrol.remote.user.UserFactory;
 
 /**
  * Remote access service.
- * 
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
@@ -54,6 +59,12 @@ public class RemoteServiceImpl extends AbstractService implements RemoteService 
 
     @Inject
     private UserFactory userFactory;
+
+    @Inject
+    private Binding binding;
+
+    @Inject
+    private BindingArgs bindingArgs;
 
     RemoteServiceImpl() {
         this.users = new ArrayList<User>();
@@ -83,11 +94,37 @@ public class RemoteServiceImpl extends AbstractService implements RemoteService 
     }
 
     /**
+     * Sets the IP addresses or host names to where to bind the remote service.
+     *
+     * @see BindingFactory#create(Map, String...)
+     */
+    public void bind(Map<String, Object> args) throws ServiceException {
+        List<Address> addresses = bindingArgs.createAddress(this, args);
+        binding.addAddress(addresses);
+        log.bindingSet(this, binding);
+    }
+
+    /**
+     * Sets the IP addresses or host names to where to bind the remote service.
+     *
+     * @see BindingFactory#create(BindingAddress)
+     */
+    public void bind(BindingAddress address) throws ServiceException {
+        binding.addAddress(address);
+        log.bindingSet(this, binding);
+    }
+
+    @Override
+    public Binding getBinding() {
+        return binding;
+    }
+
+    /**
      * Entry point for the remote access service script.
-     * 
+     *
      * @param statements
      *            the remote access statements.
-     * 
+     *
      * @return this {@link Service}.
      */
     public Service remote(Object statements) {
@@ -109,6 +146,20 @@ public class RemoteServiceImpl extends AbstractService implements RemoteService 
     @Override
     public List<User> getUsers() {
         return users;
+    }
+
+    /**
+     * @see BindingAddress#local
+     */
+    public BindingAddress getLocal() {
+        return BindingAddress.local;
+    }
+
+    /**
+     * @see BindingAddress#all
+     */
+    public BindingAddress getAll() {
+        return BindingAddress.all;
     }
 
     @Override

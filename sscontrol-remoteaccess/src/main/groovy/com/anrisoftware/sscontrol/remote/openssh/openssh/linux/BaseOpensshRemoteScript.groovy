@@ -22,7 +22,9 @@ import static org.apache.commons.io.FileUtils.*
 
 import javax.inject.Inject
 
-import com.anrisoftware.resources.templates.api.Templates
+import org.joda.time.Duration
+
+import com.anrisoftware.sscontrol.core.bindings.BindingFactory
 import com.anrisoftware.sscontrol.core.service.LinuxScript
 import com.anrisoftware.sscontrol.remote.api.RemoteScript
 import com.anrisoftware.sscontrol.remote.service.RemoteService
@@ -38,10 +40,14 @@ abstract class BaseOpensshRemoteScript extends LinuxScript {
     @Inject
     Map<String, RemoteScript> remoteScript
 
+    @Inject
+    private BindingFactory bindingFactory
+
     @Override
     def run() {
         setupParentScript()
         super.run()
+        setupDefaultBinding()
         beforeConfiguration()
         remoteScript.users.deployRemoteScript service
         remoteScript.userkey.deployRemoteScript service
@@ -57,6 +63,19 @@ abstract class BaseOpensshRemoteScript extends LinuxScript {
      * Deploys the configuration before the script configuration.
      */
     void beforeConfiguration() {
+    }
+
+    /**
+     * Returns the default bind addresses and ports.
+     *
+     * <ul>
+     * <li>profile property {@code "default_binding"}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    List getDefaultBinding() {
+        profileListProperty "default_binding", defaultProperties
     }
 
     /**
@@ -139,6 +158,143 @@ abstract class BaseOpensshRemoteScript extends LinuxScript {
      */
     String getKeyGenCommand() {
         profileProperty "key_gen_command", defaultProperties
+    }
+
+    /**
+     * Returns the SSHD configuration file, for
+     * example {@code "sshd_config".} If the path is not absolute then the
+     * file is assumed under the SSHD configuration directory.
+     *
+     * <ul>
+     * <li>profile property {@code "sshd_configuration_file"}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     * @see #getSshdConfigDir()
+     */
+    File getSshdConfigFile() {
+        profileFileProperty "sshd_configuration_file", sshdConfigDir, defaultProperties
+    }
+
+    /**
+     * Returns the SSHD configuration directory, for
+     * example {@code "/etc/ssh".}
+     *
+     * <ul>
+     * <li>profile property {@code "sshd_configuration_directory"}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    File getSshdConfigDir() {
+        profileProperty("sshd_configuration_directory", defaultProperties) as File
+    }
+
+    /**
+     * Returns SSH protocols, for
+     * example {@code "2".}
+     *
+     * <ul>
+     * <li>profile property {@code "protocols"}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    List getProtocols() {
+        profileListProperty "protocols", defaultProperties
+    }
+
+    /**
+     * Returns SSH duration grace time, for
+     * example {@code "PT60S".}
+     *
+     * <ul>
+     * <li>profile property {@code "login_grace_time"}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    Duration getLoginGraceTime() {
+        profileDurationProperty "login_grace_time", defaultProperties
+    }
+
+    /**
+     * Returns that the user root can log-in, for
+     * example {@code "false".}
+     *
+     * <ul>
+     * <li>profile property {@code "permit_root_login"}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    boolean getPermitRootLogin() {
+        profileBooleanProperty "permit_root_login", defaultProperties
+    }
+
+    /**
+     * Returns that access modes for user's files and directories should
+     * be checked, for example {@code "true".}
+     *
+     * <ul>
+     * <li>profile property {@code "strict_modes"}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    boolean getStrictModes() {
+        profileBooleanProperty "strict_modes", defaultProperties
+    }
+
+    /**
+     * Returns the authorized keys file string, for
+     * example {@code "%h/.ssh/authorized_keys".}
+     *
+     * <ul>
+     * <li>profile property {@code "authorized_keys_file_config"}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    String getAuthorizedKeysFile() {
+        profileProperty "authorized_keys_file_config", defaultProperties
+    }
+
+    /**
+     * Returns that authentication per password should be
+     * allowed, for example {@code "false".}
+     *
+     * <ul>
+     * <li>profile property {@code "password_authentication"}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    boolean getPasswordAuthentication() {
+        profileBooleanProperty "password_authentication", defaultProperties
+    }
+
+    /**
+     * Returns that X11 forwarding should be* allowed, for
+     * example {@code "false".}
+     *
+     * <ul>
+     * <li>profile property {@code "x_forwarding"}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    boolean getXForwarding() {
+        profileBooleanProperty "x_forwarding", defaultProperties
+    }
+
+    /**
+     * Setups the default binding addresses and ports.
+     */
+    void setupDefaultBinding() {
+        if (service.binding.size() == 0) {
+            defaultBinding.each { service.binding.addAddress(it) }
+        }
     }
 
     @Override

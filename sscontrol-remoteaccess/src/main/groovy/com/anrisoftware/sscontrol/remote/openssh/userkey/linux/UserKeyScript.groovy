@@ -31,6 +31,7 @@ import com.anrisoftware.sscontrol.remote.user.GroupFactory
 import com.anrisoftware.sscontrol.remote.user.Require
 import com.anrisoftware.sscontrol.remote.user.User
 import com.anrisoftware.sscontrol.remote.user.UserFactory
+import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokenTemplate
 
 /**
  * Local users SSH/keys script.
@@ -59,10 +60,16 @@ abstract class UserKeyScript implements RemoteScript {
      */
     TemplateResource createKeyTemplate
 
+    /**
+     * Resource to configuration for SSH.
+     */
+    TemplateResource configTemplate
+
     LinuxScript script
 
     @Override
     void deployRemoteScript(RemoteService service) {
+        deploySshdConfiguration service
         createSshkeys()
     }
 
@@ -117,11 +124,104 @@ abstract class UserKeyScript implements RemoteScript {
         log.sshkeyCreated script, user, worker
     }
 
+    /**
+     * Deploys the SSHD configuration.
+     */
+    void deploySshdConfiguration(RemoteService service) {
+        def file = sshdConfigFile
+        def config = currentConfiguration file
+        deployConfiguration configurationTokens(), config, sshdConfigurations(service), file
+    }
+
+    /**
+     * Returns the SSHD configurations.
+     */
+    List sshdConfigurations(RemoteService service) {
+        [
+            configPorts(service),
+            configAddresses(service),
+            configProtocol(protocols),
+            configLoginGraceTime(loginGraceTime.standardSeconds),
+            configPermitRootLogin(permitRootLogin),
+            configStrictModes(strictModes),
+            configAuthorizedKeysFile(authorizedKeysFile),
+            configPasswordAuthenticationFile(passwordAuthentication),
+            configXForwardingConfig(XForwarding),
+        ]
+    }
+
+    List configPorts(RemoteService service) {
+        service.binding.addresses.inject([]) { acc, val ->
+            val.port ? acc << configPort(val.port) : acc
+        }
+    }
+
+    def configPort(int port) {
+        def search = configTemplate.getText(true, "portConfig_search")
+        def replace = configTemplate.getText(true, "portConfig", "port", port)
+        new TokenTemplate(search, replace)
+    }
+
+    List configAddresses(RemoteService service) {
+        service.binding.addresses.inject([]) { acc, val ->
+            val.address ? acc << configAddress(val.address) : acc
+        }
+    }
+
+    def configAddress(String address) {
+        def search = configTemplate.getText(true, "addressConfig_search")
+        def replace = configTemplate.getText(true, "addressConfig", "address", address)
+        new TokenTemplate(search, replace)
+    }
+
+    def configProtocol(List protocols) {
+        def search = configTemplate.getText(true, "protocolConfig_search")
+        def replace = configTemplate.getText(true, "protocolConfig", "protocols", protocols)
+        new TokenTemplate(search, replace)
+    }
+
+    def configLoginGraceTime(long time) {
+        def search = configTemplate.getText(true, "loginGraceTimeConfig_search")
+        def replace = configTemplate.getText(true, "loginGraceTimeConfig", "time", time)
+        new TokenTemplate(search, replace)
+    }
+
+    def configPermitRootLogin(boolean enabled) {
+        def search = configTemplate.getText(true, "permitRootLoginConfig_search")
+        def replace = configTemplate.getText(true, "permitRootLoginConfig", "enabled", enabled)
+        new TokenTemplate(search, replace)
+    }
+
+    def configStrictModes(boolean enabled) {
+        def search = configTemplate.getText(true, "strictModesConfig_search")
+        def replace = configTemplate.getText(true, "strictModesConfig", "enabled", enabled)
+        new TokenTemplate(search, replace)
+    }
+
+    def configAuthorizedKeysFile(String file) {
+        def search = configTemplate.getText(true, "authorizedKeysFileConfig_search")
+        def replace = configTemplate.getText(true, "authorizedKeysFileConfig", "file", file)
+        new TokenTemplate(search, replace)
+    }
+
+    def configPasswordAuthenticationFile(boolean enabled) {
+        def search = configTemplate.getText(true, "passwordAuthenticationConfig_search")
+        def replace = configTemplate.getText(true, "passwordAuthenticationConfig", "enabled", enabled)
+        new TokenTemplate(search, replace)
+    }
+
+    def configXForwardingConfig(boolean enabled) {
+        def search = configTemplate.getText(true, "xForwardingConfig_search")
+        def replace = configTemplate.getText(true, "xForwardingConfig", "enabled", enabled)
+        new TokenTemplate(search, replace)
+    }
+
     @Override
     void setScript(LinuxScript script) {
         this.script = script
         this.scriptTemplates = templatesFactory.create "UserKeyScript"
         this.createKeyTemplate = scriptTemplates.getResource "createkey"
+        this.configTemplate = scriptTemplates.getResource "config"
     }
 
     @Override

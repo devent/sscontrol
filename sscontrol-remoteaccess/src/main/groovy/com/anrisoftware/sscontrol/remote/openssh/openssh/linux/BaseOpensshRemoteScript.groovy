@@ -16,34 +16,43 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-hostname. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.remote.users.ubuntu_10_04
+package com.anrisoftware.sscontrol.remote.openssh.openssh.linux
+
+import static org.apache.commons.io.FileUtils.*
 
 import javax.inject.Inject
 
-import com.anrisoftware.propertiesutils.ContextProperties
-import com.anrisoftware.sscontrol.remote.users.linux.LocalUsersScript
+import com.anrisoftware.resources.templates.api.Templates
+import com.anrisoftware.sscontrol.core.service.LinuxScript
+import com.anrisoftware.sscontrol.remote.api.RemoteScript
+import com.anrisoftware.sscontrol.remote.service.RemoteService
 
 /**
- * Local users script for Ubuntu 10.04.
+ * Base OpenSSH remote script.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class Ubuntu_10_04_Script extends LocalUsersScript {
+abstract class BaseOpensshRemoteScript extends LinuxScript {
 
     @Inject
-    Ubuntu_10_04_ScriptLogger log
-
-    @Inject
-    Ubuntu_10_04_PropertiesProvider ubuntuProperties
+    Map<String, RemoteScript> remoteScript
 
     @Override
-    ContextProperties getDefaultProperties() {
-        ubuntuProperties.get()
+    def run() {
+        setupParentScript()
+        super.run()
+        remoteScript.users.deployRemoteScript service
+    }
+
+    void setupParentScript() {
+        remoteScript.each { key, RemoteScript value ->
+            value.setScript this
+        }
     }
 
     @Override
-    void distributionSpecificConfiguration() {
-        installPackages()
+    RemoteService getService() {
+        super.getService();
     }
 }

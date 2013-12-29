@@ -18,4 +18,4 @@
  */
 package com.anrisoftware.sscontrol.firewall.service
 
-profile "ubuntu_10_04", { remote { } }
+profile "ubuntu_10_04", { remote { service "openssh" } }

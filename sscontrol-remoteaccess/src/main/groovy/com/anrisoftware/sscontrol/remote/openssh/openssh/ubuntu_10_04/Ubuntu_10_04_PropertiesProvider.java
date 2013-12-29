@@ -16,35 +16,27 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-hostname. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.remote.users.ubuntu_10_04
+package com.anrisoftware.sscontrol.remote.openssh.openssh.ubuntu_10_04;
 
-import javax.inject.Singleton
+import java.net.URL;
 
-import com.anrisoftware.globalpom.log.AbstractLogger
-import com.anrisoftware.sscontrol.workers.command.script.ScriptCommandWorker
+import com.anrisoftware.propertiesutils.AbstractContextPropertiesProvider;
 
 /**
- * Logging messages for {@link Ubuntu_10_04Script}.
- *
+ * Provides the properties from {@code /openssh_ubuntu_10_04.properties}.
+ * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-@Singleton
-class Ubuntu_10_04_ScriptLogger extends AbstractLogger {
+@SuppressWarnings("serial")
+public class Ubuntu_10_04_PropertiesProvider extends
+        AbstractContextPropertiesProvider {
 
-    /**
-     * Creates a logger for {@link Ubuntu_10_04ScriptLogger}.
-     */
-    public Ubuntu_10_04_ScriptLogger() {
-        super(Ubuntu_10_04_Script.class)
+    private static final URL RESOURCE = Ubuntu_10_04_PropertiesProvider.class
+            .getResource("/openssh_ubuntu_10_04.properties");
+
+    Ubuntu_10_04_PropertiesProvider() {
+        super(Ubuntu_10_04_PropertiesProvider.class, RESOURCE);
     }
 
-    void restartServiceDone(Ubuntu_10_04_Script script, ScriptCommandWorker worker) {
-        if (log.debugEnabled) {
-            log.debug "Restarted service {}, worker {}.", script, worker
-        } else {
-            log.info "Restarted service {}.", script.name
-        }
-    }
 }
-

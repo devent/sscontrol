@@ -16,34 +16,30 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-hostname. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.remote.users.ubuntu_10_04;
+package com.anrisoftware.sscontrol.remote.openssh.openssh.ubuntu_10_04
 
-import static com.anrisoftware.sscontrol.remote.users.ubuntu_10_04.Ubuntu_10_04_ScriptFactory.NAME;
-import static com.anrisoftware.sscontrol.remote.users.ubuntu_10_04.Ubuntu_10_04_ScriptFactory.PROFILE;
-import static com.google.inject.multibindings.MapBinder.newMapBinder;
-import static java.lang.String.format;
-import groovy.lang.Script;
+import javax.inject.Inject
 
-import com.google.inject.AbstractModule;
-import com.google.inject.multibindings.MapBinder;
+import com.anrisoftware.propertiesutils.ContextProperties
+import com.anrisoftware.sscontrol.remote.openssh.openssh.linux.BaseOpensshRemoteScript
 
 /**
- * Installs the Remote Access/Ubuntu 10.04 script.
- * 
+ * Remote script for OpenSSH/Ubuntu 10.04.
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-public class UbuntuModule extends AbstractModule {
+class Ubuntu_10_04_Script extends BaseOpensshRemoteScript {
+
+    @Inject
+    Ubuntu_10_04_PropertiesProvider ubuntuProperties
 
     @Override
-    protected void configure() {
-        bindScripts();
+    ContextProperties getDefaultProperties() {
+        ubuntuProperties.get()
     }
 
-    private void bindScripts() {
-        MapBinder<String, Script> binder;
-        binder = newMapBinder(binder(), String.class, Script.class);
-        binder.addBinding(format("%s.%s", NAME, PROFILE)).to(
-                Ubuntu_10_04_Script.class);
+    @Override
+    void distributionSpecificConfiguration() {
     }
 }

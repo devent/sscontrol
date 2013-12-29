@@ -16,27 +16,30 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-hostname. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.remote.users.ubuntu_10_04;
+package com.anrisoftware.sscontrol.remote.openssh.users.ubuntu_10_04;
 
-import java.net.URL;
+import static com.google.inject.multibindings.MapBinder.newMapBinder;
 
-import com.anrisoftware.propertiesutils.AbstractContextPropertiesProvider;
+import com.anrisoftware.sscontrol.remote.api.RemoteScript;
+import com.google.inject.AbstractModule;
+import com.google.inject.multibindings.MapBinder;
 
 /**
- * Provides the properties from {@code /remote_users_ubuntu_10_04.properties}.
+ * Installs the Remote Access/Ubuntu 10.04 script.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-@SuppressWarnings("serial")
-public class Ubuntu_10_04_PropertiesProvider extends
-        AbstractContextPropertiesProvider {
+public class Ubuntu_10_04_Module extends AbstractModule {
 
-    private static final URL RESOURCE = Ubuntu_10_04_PropertiesProvider.class
-            .getResource("/remote_users_ubuntu_10_04.properties");
-
-    Ubuntu_10_04_PropertiesProvider() {
-        super(Ubuntu_10_04_PropertiesProvider.class, RESOURCE);
+    @Override
+    protected void configure() {
+        bindScripts();
     }
 
+    private void bindScripts() {
+        MapBinder<String, RemoteScript> binder;
+        binder = newMapBinder(binder(), String.class, RemoteScript.class);
+        binder.addBinding("users").to(Ubuntu_10_04_Script.class);
+    }
 }

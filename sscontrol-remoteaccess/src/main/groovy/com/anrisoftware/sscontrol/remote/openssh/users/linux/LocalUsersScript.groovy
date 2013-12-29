@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-hostname. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.remote.users.linux
+package com.anrisoftware.sscontrol.remote.openssh.users.linux
 
 import static org.apache.commons.io.FileUtils.*
 
@@ -26,6 +26,7 @@ import org.apache.commons.lang3.StringUtils
 
 import com.anrisoftware.resources.templates.api.Templates
 import com.anrisoftware.sscontrol.core.service.LinuxScript
+import com.anrisoftware.sscontrol.remote.api.RemoteScript;
 import com.anrisoftware.sscontrol.remote.service.RemoteService
 import com.anrisoftware.sscontrol.remote.user.Group
 import com.anrisoftware.sscontrol.remote.user.GroupFactory
@@ -39,7 +40,7 @@ import com.anrisoftware.sscontrol.remote.user.UserFactory
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-abstract class LocalUsersScript extends LinuxScript {
+abstract class LocalUsersScript implements RemoteScript {
 
     @Inject
     UserFactory userFactory
@@ -49,23 +50,13 @@ abstract class LocalUsersScript extends LinuxScript {
 
     Templates localUsersTemplates
 
+    LinuxScript script
+
     @Override
-    def run() {
-        super.run()
-        distributionSpecificConfiguration()
+    void deployRemoteScript(RemoteService service) {
         createLocalGroups()
         createLocalUsers()
     }
-
-    @Override
-    RemoteService getService() {
-        super.getService();
-    }
-
-    /**
-     * Do some distribution specific configuration.
-     */
-    abstract void distributionSpecificConfiguration()
 
     /**
      * Create local user group.
@@ -242,5 +233,23 @@ abstract class LocalUsersScript extends LinuxScript {
             def group = groupFactory.create service, ["name": name, "gid": gid]
             acc << group
         }
+    }
+
+    @Override
+    void setScript(LinuxScript script) {
+        this.script = script
+    }
+
+    @Override
+    LinuxScript getScript() {
+        script
+    }
+
+    def propertyMissing(String name) {
+        script.getProperty name
+    }
+
+    def methodMissing(String name, def args) {
+        script.invokeMethod name, args
     }
 }

@@ -27,6 +27,7 @@ def passwdfile = UbuntuResources.passwdFile.asFile(tmp)
 
 profile "ubuntu_10_04", {
     remote {
+        service "openssh"
         install_command "export DEBIAN_FRONTEND=noninteractive\n$aptitude update && $aptitude -y install"
         user_add_command useradd
         group_add_command groupadd

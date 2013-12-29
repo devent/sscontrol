@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd-apache. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.remote.users.ubuntu_10_04;
+package com.anrisoftware.sscontrol.remote.openssh.openssh.ubuntu_10_04;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.mangosdk.spi.ProviderFor;
@@ -28,7 +28,7 @@ import com.google.inject.Injector;
 import com.google.inject.Module;
 
 /**
- * Provides the Apache script for Ubuntu 10.04 server.
+ * Provides script for OpenSSH/Ubuntu 10.04 server.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
@@ -39,7 +39,7 @@ public class Ubuntu_10_04_ScriptFactory implements ServiceScriptFactory {
 	/**
 	 * Name of the service.
 	 */
-    public static final String NAME = "remote";
+    public static final String NAME = "openssh";
 
 	/**
 	 * Name of the profile.

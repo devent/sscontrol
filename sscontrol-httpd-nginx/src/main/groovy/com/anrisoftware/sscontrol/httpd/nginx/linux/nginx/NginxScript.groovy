@@ -26,6 +26,7 @@ import javax.measure.unit.NonSI
 
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.sscontrol.core.bindings.BindingFactory
+import com.anrisoftware.sscontrol.core.debuglogging.DebugLoggingProperty
 import com.anrisoftware.sscontrol.core.service.LinuxScript
 import com.anrisoftware.sscontrol.httpd.service.HttpdService
 import com.anrisoftware.sscontrol.httpd.statements.domain.Domain
@@ -44,10 +45,41 @@ abstract class NginxScript extends LinuxScript {
     @Inject
     private BindingFactory bindingFactory
 
+    @Inject
+    private DebugLoggingProperty debugLoggingProperty
+
     /**
      * Returns the template resource containing commands.
      */
     abstract TemplateResource getNginxCommandsTemplate()
+
+    @Override
+    def run() {
+        super.run()
+        setupDefaultBinding()
+        setupDefaultLogging()
+    }
+
+    /**
+     * Setups the default binding addresses.
+     */
+    void setupDefaultBinding() {
+        if (service.binding.size() == 0) {
+            defaultBinding.each { service.binding.addAddress(it) }
+        }
+    }
+
+    /**
+     * Setups the default debug logging.
+     */
+    void setupDefaultLogging() {
+        if (service.debug == null) {
+            service.debug = debugLoggingProperty.defaultDebug this
+        }
+        if (!service.debug.args.containsKey("storage")) {
+            service.debug.args.storage = loggingStorage
+        }
+    }
 
     @Override
     HttpdService getService() {

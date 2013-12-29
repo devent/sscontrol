@@ -26,9 +26,8 @@ import static com.anrisoftware.sscontrol.mail.service.MailServiceImplLogger._.ce
 import static com.anrisoftware.sscontrol.mail.service.MailServiceImplLogger._.certificate_set_info;
 import static com.anrisoftware.sscontrol.mail.service.MailServiceImplLogger._.database_set_debug;
 import static com.anrisoftware.sscontrol.mail.service.MailServiceImplLogger._.database_set_info;
-import static com.anrisoftware.sscontrol.mail.service.MailServiceImplLogger._.debug_level_null;
-import static com.anrisoftware.sscontrol.mail.service.MailServiceImplLogger._.debug_level_set_debug;
-import static com.anrisoftware.sscontrol.mail.service.MailServiceImplLogger._.debug_level_set_info;
+import static com.anrisoftware.sscontrol.mail.service.MailServiceImplLogger._.debugging_set_debug;
+import static com.anrisoftware.sscontrol.mail.service.MailServiceImplLogger._.debugging_set_info;
 import static com.anrisoftware.sscontrol.mail.service.MailServiceImplLogger._.destination_add;
 import static com.anrisoftware.sscontrol.mail.service.MailServiceImplLogger._.destination_add_info;
 import static com.anrisoftware.sscontrol.mail.service.MailServiceImplLogger._.destination_null;
@@ -51,6 +50,7 @@ import static org.apache.commons.lang3.Validate.notNull;
 import java.util.List;
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
+import com.anrisoftware.sscontrol.core.debuglogging.DebugLogging;
 import com.anrisoftware.sscontrol.mail.resetdomains.ResetDomains;
 import com.anrisoftware.sscontrol.mail.statements.BindAddresses;
 import com.anrisoftware.sscontrol.mail.statements.CertificateFile;
@@ -65,178 +65,172 @@ import com.anrisoftware.sscontrol.mail.statements.Domain;
  */
 class MailServiceImplLogger extends AbstractLogger {
 
-	enum _ {
+    enum _ {
 
-		destination_null("Need at least one destination."),
+        destination_null("Need at least one destination."),
 
-		domain_name_set_info("Domain name '{}' set for mail service."),
+        domain_name_set_info("Domain name '{}' set for mail service."),
 
-		domain_name_set("Domain name '{}' set for {}."),
+        domain_name_set("Domain name '{}' set for {}."),
 
-		bind_addresses_null("Bind addresses cannot be empty or null."),
+        bind_addresses_null("Bind addresses cannot be empty or null."),
 
-		bind_addresses_set_info("Bind addresses set {} for mail service."),
+        bind_addresses_set_info("Bind addresses set {} for mail service."),
 
-		bind_addresses_set("Bind addresses set {} for {}."),
+        bind_addresses_set("Bind addresses set {} for {}."),
 
-		bind_address_null("Bind address cannot be null."),
+        bind_address_null("Bind address cannot be null."),
 
-		domain_null("Domain name can not be empty or null."),
+        domain_null("Domain name can not be empty or null."),
 
-		origin_set("Origin '{}' set for {}."),
+        origin_set("Origin '{}' set for {}."),
 
-		origin_set_info("Origin '{}' set for mail service."),
+        origin_set_info("Origin '{}' set for mail service."),
 
-		certificate_set("Certificate set {} for {}."),
+        certificate_set("Certificate set {} for {}."),
 
-		certificate_set_info("Certificate set {} for mail service."),
+        certificate_set_info("Certificate set {} for mail service."),
 
-		domain_added("Domain added {} to {}."),
+        domain_added("Domain added {} to {}."),
 
-		domain_added_info("Domain added '{}' to mail service."),
+        domain_added_info("Domain added '{}' to mail service."),
 
-		relay_set("Relay host '{}' set for {}."),
+        relay_set("Relay host '{}' set for {}."),
 
-		relay_set_info("Relay host '{}' set for mail service."),
+        relay_set_info("Relay host '{}' set for mail service."),
 
-		destination_add("Destination added '{}' to {}."),
+        destination_add("Destination added '{}' to {}."),
 
-		destination_add_info("Destination added '{}' to mail service."),
+        destination_add_info("Destination added '{}' to mail service."),
 
-		reset_domain_set_debug("Reset domains {} set for {}."),
+        reset_domain_set_debug("Reset domains {} set for {}."),
 
-		reset_domain_set_info(
-				"Reset domains {}, users {}, aliases {} set for {}."),
+        reset_domain_set_info(
+                "Reset domains {}, users {}, aliases {} set for {}."),
 
-		debug_level_null("Debug level must not be null for {}."),
+        debugging_set_info("Debugging {} for service '{}'."),
 
-		debug_level_set_debug("Debug level {} set for {}."),
+        debugging_set_debug("Debugging {} set for {}."),
 
-		debug_level_set_info("Debug level {} set for mail service."),
+        database_set_debug("Database {} set for {}."),
 
-		database_set_debug("Database {} set for {}."),
+        database_set_info("Database '{}', user '{}' set for mail service.");
 
-		database_set_info("Database '{}', user '{}' set for mail service.");
+        private String name;
 
-		private String name;
+        private _(String name) {
+            this.name = name;
+        }
 
-		private _(String name) {
-			this.name = name;
-		}
+        @Override
+        public String toString() {
+            return name;
+        }
+    }
 
-		@Override
-		public String toString() {
-			return name;
-		}
-	}
+    /**
+     * Create logger for {@link MailServiceImpl}.
+     */
+    MailServiceImplLogger() {
+        super(MailServiceImpl.class);
+    }
 
-	/**
-	 * Create logger for {@link MailServiceImpl}.
-	 */
-	MailServiceImplLogger() {
-		super(MailServiceImpl.class);
-	}
+    void checkBindAddress(MailServiceImpl service, BindAddresses address) {
+        notNull(address, bind_address_null.toString());
+    }
 
-	void checkBindAddress(MailServiceImpl service, BindAddresses address) {
-		notNull(address, bind_address_null.toString());
-	}
+    void bindAddressesSet(MailServiceImpl service, BindAddresses address) {
+        if (isDebugEnabled()) {
+            debug(bind_addresses_set, address, service);
+        } else {
+            info(bind_addresses_set_info, join(address.getAddresses(), ','));
+        }
+    }
 
-	void bindAddressesSet(MailServiceImpl service, BindAddresses address) {
-		if (isDebugEnabled()) {
-			debug(bind_addresses_set, address, service);
-		} else {
-			info(bind_addresses_set_info, join(address.getAddresses(), ','));
-		}
-	}
+    void checkBindAddresses(MailServiceImpl service, String addresses) {
+        notBlank(addresses, bind_addresses_null.toString());
+    }
 
-	void checkBindAddresses(MailServiceImpl service, String addresses) {
-		notBlank(addresses, bind_addresses_null.toString());
-	}
+    void checkDomainName(MailServiceImpl service, String name) {
+        notBlank(name, domain_null.toString());
+    }
 
-	void checkDomainName(MailServiceImpl service, String name) {
-		notBlank(name, domain_null.toString());
-	}
+    void domainNameSet(MailServiceImpl service, String name) {
+        if (isDebugEnabled()) {
+            debug(domain_name_set, name, service);
+        } else {
+            info(domain_name_set_info, name);
+        }
+    }
 
-	void domainNameSet(MailServiceImpl service, String name) {
-		if (isDebugEnabled()) {
-			debug(domain_name_set, name, service);
-		} else {
-			info(domain_name_set_info, name);
-		}
-	}
+    void originSet(MailServiceImpl service, String name) {
+        if (isDebugEnabled()) {
+            debug(origin_set, name, service);
+        } else {
+            info(origin_set_info, name);
+        }
+    }
 
-	void originSet(MailServiceImpl service, String name) {
-		if (isDebugEnabled()) {
-			debug(origin_set, name, service);
-		} else {
-			info(origin_set_info, name);
-		}
-	}
+    void certificateSet(MailServiceImpl service, CertificateFile ca) {
+        if (isDebugEnabled()) {
+            debug(certificate_set, ca, service);
+        } else {
+            info(certificate_set_info, ca);
+        }
+    }
 
-	void certificateSet(MailServiceImpl service, CertificateFile ca) {
-		if (isDebugEnabled()) {
-			debug(certificate_set, ca, service);
-		} else {
-			info(certificate_set_info, ca);
-		}
-	}
+    void domainAdded(MailServiceImpl service, Domain domain) {
+        if (isDebugEnabled()) {
+            debug(domain_added, domain, service);
+        } else {
+            info(domain_added_info, domain.getName());
+        }
+    }
 
-	void domainAdded(MailServiceImpl service, Domain domain) {
-		if (isDebugEnabled()) {
-			debug(domain_added, domain, service);
-		} else {
-			info(domain_added_info, domain.getName());
-		}
-	}
+    void relayHostSet(MailServiceImpl service, String host) {
+        if (isDebugEnabled()) {
+            debug(relay_set, host, service);
+        } else {
+            info(relay_set_info, host);
+        }
+    }
 
-	void relayHostSet(MailServiceImpl service, String host) {
-		if (isDebugEnabled()) {
-			debug(relay_set, host, service);
-		} else {
-			info(relay_set_info, host);
-		}
-	}
+    void checkDestinations(MailServiceImpl service, List<?> list) {
+        isTrue(list.size() > 0, destination_null.toString());
+    }
 
-	void checkDestinations(MailServiceImpl service, List<?> list) {
-		isTrue(list.size() > 0, destination_null.toString());
-	}
+    void destinationAdded(MailServiceImpl service, String destination) {
+        if (isDebugEnabled()) {
+            debug(destination_add, destination, service);
+        } else {
+            info(destination_add_info, destination);
+        }
+    }
 
-	void destinationAdded(MailServiceImpl service, String destination) {
-		if (isDebugEnabled()) {
-			debug(destination_add, destination, service);
-		} else {
-			info(destination_add_info, destination);
-		}
-	}
+    void resetDomainSet(MailServiceImpl service, ResetDomains reset) {
+        if (isDebugEnabled()) {
+            debug(reset_domain_set_debug, reset, service);
+        } else {
+            info(reset_domain_set_info, reset.isResetDomains(),
+                    reset.isResetUsers(), reset.isResetAliases(),
+                    service.getName());
+        }
+    }
 
-	void resetDomainSet(MailServiceImpl service, ResetDomains reset) {
-		if (isDebugEnabled()) {
-			debug(reset_domain_set_debug, reset, service);
-		} else {
-			info(reset_domain_set_info, reset.isResetDomains(),
-					reset.isResetUsers(), reset.isResetAliases(),
-					service.getName());
-		}
-	}
+    void debugLoggingSet(MailServiceImpl service, DebugLogging logging) {
+        if (isDebugEnabled()) {
+            debug(debugging_set_debug, logging, service);
+        } else {
+            info(debugging_set_info, logging.getLevel(), service.getName());
+        }
+    }
 
-	void checkDebugLevel(MailServiceImpl service, Integer level) {
-		notNull(level, debug_level_null.toString(), service);
-	}
-
-	void debugLevelSet(MailServiceImpl service, Integer level) {
-		if (isDebugEnabled()) {
-			debug(debug_level_set_debug, level, service);
-		} else {
-			info(debug_level_set_info, level);
-		}
-	}
-
-	void databaseSet(MailServiceImpl service, Database database) {
-		if (isDebugEnabled()) {
-			debug(database_set_debug, database, service);
-		} else {
-			info(database_set_info, database.getDatabase(), database.getUser());
-		}
-	}
+    void databaseSet(MailServiceImpl service, Database database) {
+        if (isDebugEnabled()) {
+            debug(database_set_debug, database, service);
+        } else {
+            info(database_set_info, database.getDatabase(), database.getUser());
+        }
+    }
 
 }

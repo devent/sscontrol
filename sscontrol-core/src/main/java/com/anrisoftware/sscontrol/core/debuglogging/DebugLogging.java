@@ -43,22 +43,30 @@ public class DebugLogging extends Number {
 
     private final Map<String, Object> args;
 
+    /**
+     * @see DebugLoggingFactory#createOff()
+     */
     @AssistedInject
     DebugLogging() {
         this.args = new HashMap<String, Object>();
         setLevel(0);
     }
 
+    /**
+     * @see DebugLoggingFactory#create(int)
+     */
     @AssistedInject
     DebugLogging(@Assisted int level) {
         this();
         setLevel(level);
     }
 
+    /**
+     * @see DebugLoggingFactory#create(Map)
+     */
     @AssistedInject
     DebugLogging(DebugLoggingArgs aargs, @Assisted Map<String, Object> args) {
-        this();
-        setLevel(aargs.level(args));
+        this.args = new HashMap<String, Object>(args);
         if (aargs.haveModule(args)) {
             setModule(aargs.module(args));
         }
@@ -72,7 +80,12 @@ public class DebugLogging extends Number {
     }
 
     public int getLevel() {
-        return (Integer) args.get(LEVEL);
+        Object level = args.get(LEVEL);
+        if (level instanceof Number) {
+            return ((Number) level).intValue();
+        } else {
+            return Integer.valueOf(args.get(LEVEL).toString());
+        }
     }
 
     public void setModule(String module) {

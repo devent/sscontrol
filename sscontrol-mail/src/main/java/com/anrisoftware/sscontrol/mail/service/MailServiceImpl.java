@@ -41,9 +41,10 @@ import com.anrisoftware.sscontrol.core.api.Service;
 import com.anrisoftware.sscontrol.core.api.ServiceException;
 import com.anrisoftware.sscontrol.core.api.ServiceScriptFactory;
 import com.anrisoftware.sscontrol.core.api.ServiceScriptInfo;
+import com.anrisoftware.sscontrol.core.debuglogging.DebugLogging;
+import com.anrisoftware.sscontrol.core.debuglogging.DebugLoggingFactory;
 import com.anrisoftware.sscontrol.core.service.AbstractService;
 import com.anrisoftware.sscontrol.core.yesno.YesNoFlag;
-import com.anrisoftware.sscontrol.mail.debuglogging.DebugLoggingLevel;
 import com.anrisoftware.sscontrol.mail.resetdomains.ResetDomains;
 import com.anrisoftware.sscontrol.mail.resetdomains.ResetDomainsFactory;
 import com.anrisoftware.sscontrol.mail.statements.BindAddresses;
@@ -58,388 +59,397 @@ import com.anrisoftware.sscontrol.mail.statements.MasqueradeDomains;
 
 /**
  * Mail service.
- * 
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
 @SuppressWarnings("serial")
 public class MailServiceImpl extends AbstractService {
 
-	private final MailServiceImplLogger log;
+    private final MailServiceImplLogger log;
 
-	private final BindAddressesFactory bindAddressesFactory;
+    private final BindAddressesFactory bindAddressesFactory;
 
-	private final CertificateFileFactory certificateFileFactory;
+    private final CertificateFileFactory certificateFileFactory;
 
-	private DebugLoggingLevel debugLogging;
+    @Inject
+    private DebugLoggingFactory debugLoggingFactory;
 
-	private String domainName;
+    private DebugLogging debug;
 
-	private String origin;
+    private String domainName;
 
-	private String relayHost;
+    private String origin;
 
-	private BindAddresses bindAddresses;
+    private String relayHost;
 
-	private final MasqueradeDomains masqueradeDomains;
+    private BindAddresses bindAddresses;
 
-	private final List<Domain> domains;
+    private final MasqueradeDomains masqueradeDomains;
 
-	private CertificateFile certificateFile;
+    private final List<Domain> domains;
 
-	private final DomainFactory domainFactory;
+    private CertificateFile certificateFile;
 
-	private final Set<String> destinations;
+    private final DomainFactory domainFactory;
 
-	private ResetDomainsFactory resetDomainsFactory;
+    private final Set<String> destinations;
 
-	private ResetDomains resetDomains;
+    private ResetDomainsFactory resetDomainsFactory;
 
-	@Inject
-	private DatabaseFactory databaseFactory;
+    private ResetDomains resetDomains;
 
-	private Database database;
+    @Inject
+    private DatabaseFactory databaseFactory;
 
-	/**
-	 * @see MailFactory#create(ProfileService)
-	 */
-	@Inject
-	MailServiceImpl(MailServiceImplLogger logger,
-			BindAddressesFactory bindAddressesFactory,
-			MasqueradeDomains masqueradeDomains,
-			CertificateFileFactory certificateFileFactory,
-			DomainFactory domainFactory) {
-		this.log = logger;
-		this.debugLogging = DebugLoggingLevel.OFF;
-		this.bindAddressesFactory = bindAddressesFactory;
-		this.masqueradeDomains = masqueradeDomains;
-		this.certificateFileFactory = certificateFileFactory;
-		this.domains = new ArrayList<Domain>();
-		this.domainFactory = domainFactory;
-		this.relayHost = null;
-		this.destinations = new HashSet<String>();
-	}
+    private Database database;
 
-	@Inject
-	void setResetDomainsFactory(ResetDomainsFactory factory) {
-		this.resetDomainsFactory = factory;
-		this.resetDomains = resetDomainsFactory
-				.create(new HashMap<String, Object>());
-	}
+    /**
+     * @see MailFactory#create(ProfileService)
+     */
+    @Inject
+    MailServiceImpl(MailServiceImplLogger logger,
+            BindAddressesFactory bindAddressesFactory,
+            MasqueradeDomains masqueradeDomains,
+            CertificateFileFactory certificateFileFactory,
+            DomainFactory domainFactory) {
+        this.log = logger;
+        this.bindAddressesFactory = bindAddressesFactory;
+        this.masqueradeDomains = masqueradeDomains;
+        this.certificateFileFactory = certificateFileFactory;
+        this.domains = new ArrayList<Domain>();
+        this.domainFactory = domainFactory;
+        this.relayHost = null;
+        this.destinations = new HashSet<String>();
+    }
 
-	@Override
-	protected Script getScript(String profileName) throws ServiceException {
-		ServiceScriptFactory scriptFactory = findScriptFactory(NAME);
-		return (Script) scriptFactory.getScript();
-	}
+    @Inject
+    void setResetDomainsFactory(ResetDomainsFactory factory) {
+        this.resetDomainsFactory = factory;
+        this.resetDomains = resetDomainsFactory
+                .create(new HashMap<String, Object>());
+    }
 
-	@Override
-	protected boolean serviceScriptCompare(ServiceScriptInfo info,
-			String serviceName, ProfileService profile) {
-		boolean found = super.serviceScriptCompare(info, serviceName, profile);
-		if (info instanceof MailServiceScriptInfo) {
-			MailServiceScriptInfo mail = (MailServiceScriptInfo) info;
-			Object storage = getProfile().getEntry(serviceName).get("storage");
-			found = mail.getStorage().equals(storage);
-		}
-		return found;
-	}
+    @Override
+    protected Script getScript(String profileName) throws ServiceException {
+        ServiceScriptFactory scriptFactory = findScriptFactory(NAME);
+        return (Script) scriptFactory.getScript();
+    }
 
-	/**
-	 * Because we load the script from a script service the dependencies are
-	 * already injected.
-	 */
-	@Override
-	protected void injectScript(Script script) {
-	}
+    @Override
+    protected boolean serviceScriptCompare(ServiceScriptInfo info,
+            String serviceName, ProfileService profile) {
+        boolean found = super.serviceScriptCompare(info, serviceName, profile);
+        if (info instanceof MailServiceScriptInfo) {
+            MailServiceScriptInfo mail = (MailServiceScriptInfo) info;
+            Object storage = getProfile().getEntry(serviceName).get("storage");
+            found = mail.getStorage().equals(storage);
+        }
+        return found;
+    }
 
-	/**
-	 * Returns the mail service name.
-	 */
-	@Override
-	public String getName() {
-		return NAME;
-	}
+    /**
+     * Because we load the script from a script service the dependencies are
+     * already injected.
+     */
+    @Override
+    protected void injectScript(Script script) {
+    }
 
-	/**
-	 * Entry point for the mail service script.
-	 * 
-	 * @param statements
-	 *            the mail script statements.
-	 * 
-	 * @return this {@link Service}.
-	 */
-	public Service mail(Object statements) {
-		return this;
-	}
+    /**
+     * Returns the mail service name.
+     */
+    @Override
+    public String getName() {
+        return NAME;
+    }
 
-	public void debug(Map<String, Object> args) {
-		Integer level = (Integer) args.get("logging");
-		log.checkDebugLevel(this, level);
-		this.debugLogging = new DebugLoggingLevel(level);
-		log.debugLevelSet(this, level);
-	}
+    /**
+     * Entry point for the mail service script.
+     * 
+     * @param statements
+     *            the mail script statements.
+     * 
+     * @return this {@link Service}.
+     */
+    public Service mail(Object statements) {
+        return this;
+    }
 
-	public DebugLoggingLevel getDebugLogging() {
-		return debugLogging;
-	}
+    /**
+     * Sets the debug logging for the database server.
+     * 
+     * @see DebugLoggingFactory#create(Map)
+     */
+    public void debug(Map<String, Object> args) {
+        debug = debugLoggingFactory.create(args);
+        log.debugLoggingSet(this, debug);
+    }
 
-	/**
-	 * Sets the network interfaces addresses that this mail system receives mail
-	 * on.
-	 * 
-	 * @param address
-	 *            the {@link BindAddresses}.
-	 * 
-	 * @throws NullPointerException
-	 *             if the specified addresses are {@code null}.
-	 * 
-	 * @see BindAddresses#ALL
-	 * @see BindAddresses#LOOPBACK
-	 */
-	public void bind_addresses(BindAddresses address) {
-		log.checkBindAddress(this, address);
-		this.bindAddresses = address;
-		log.bindAddressesSet(this, address);
-	}
+    public void setDebug(DebugLogging debug) {
+        this.debug = debug;
+    }
 
-	/**
-	 * Sets the network interfaces addresses that this mail system receives mail
-	 * on.
-	 * 
-	 * @param address
-	 *            the {@link BindAddresses}.
-	 * 
-	 * @throws NullPointerException
-	 *             if the specified addresses are {@code null}.
-	 * 
-	 * @throws IllegalArgumentException
-	 *             if the specified addresses are empty.
-	 */
-	public void bind_addresses(String addresses) {
-		log.checkBindAddresses(this, addresses);
-		this.bindAddresses = bindAddressesFactory.create(addresses);
-		log.bindAddressesSet(this, bindAddresses);
-	}
+    public DebugLogging getDebug() {
+        return debug;
+    }
 
-	/**
-	 * Sets the relay host.
-	 * 
-	 * @param host
-	 *            the host {@link String}, can be empty or {@code null}.
-	 */
-	public void relay(String host) {
-		this.relayHost = host;
-		log.relayHostSet(this, host);
-	}
+    /**
+     * Sets the network interfaces addresses that this mail system receives mail
+     * on.
+     * 
+     * @param address
+     *            the {@link BindAddresses}.
+     * 
+     * @throws NullPointerException
+     *             if the specified addresses are {@code null}.
+     * 
+     * @see BindAddresses#ALL
+     * @see BindAddresses#LOOPBACK
+     */
+    public void bind_addresses(BindAddresses address) {
+        log.checkBindAddress(this, address);
+        this.bindAddresses = address;
+        log.bindAddressesSet(this, address);
+    }
 
-	/**
-	 * Returns the relay host.
-	 * 
-	 * @return the relay host {@link String} or {@code null}.
-	 */
-	public String getRelayHost() {
-		return relayHost;
-	}
+    /**
+     * Sets the network interfaces addresses that this mail system receives mail
+     * on.
+     * 
+     * @param address
+     *            the {@link BindAddresses}.
+     * 
+     * @throws NullPointerException
+     *             if the specified addresses are {@code null}.
+     * 
+     * @throws IllegalArgumentException
+     *             if the specified addresses are empty.
+     */
+    public void bind_addresses(String addresses) {
+        log.checkBindAddresses(this, addresses);
+        this.bindAddresses = bindAddressesFactory.create(addresses);
+        log.bindAddressesSet(this, bindAddresses);
+    }
 
-	/**
-	 * Returns the domain name of the server.
-	 * 
-	 * @return the domain name of the server.
-	 */
-	public String getDomainName() {
-		return domainName;
-	}
+    /**
+     * Sets the relay host.
+     * 
+     * @param host
+     *            the host {@link String}, can be empty or {@code null}.
+     */
+    public void relay(String host) {
+        this.relayHost = host;
+        log.relayHostSet(this, host);
+    }
 
-	/**
-	 * Sets the domain name of the server.
-	 * 
-	 * @param name
-	 *            the domain {@link String} name.
-	 */
-	public void name(String name) {
-		log.checkDomainName(this, name);
-		this.domainName = name;
-		log.domainNameSet(this, name);
-	}
+    /**
+     * Returns the relay host.
+     * 
+     * @return the relay host {@link String} or {@code null}.
+     */
+    public String getRelayHost() {
+        return relayHost;
+    }
 
-	/**
-	 * The domain name that locally-posted mail appears to come from, and that
-	 * locally posted mail is delivered to.
-	 * 
-	 * @return the origin domain name.
-	 */
-	public String getOrigin() {
-		return origin;
-	}
+    /**
+     * Returns the domain name of the server.
+     * 
+     * @return the domain name of the server.
+     */
+    public String getDomainName() {
+        return domainName;
+    }
 
-	/**
-	 * Sets domain name that locally-posted mail appears to come from, and that
-	 * locally posted mail is delivered to.
-	 * 
-	 * @param name
-	 *            the domain {@link String} name.
-	 */
-	public void origin(String name) {
-		log.checkDomainName(this, name);
-		this.origin = name;
-		log.originSet(this, name);
-	}
+    /**
+     * Sets the domain name of the server.
+     * 
+     * @param name
+     *            the domain {@link String} name.
+     */
+    public void name(String name) {
+        log.checkDomainName(this, name);
+        this.domainName = name;
+        log.domainNameSet(this, name);
+    }
 
-	/**
-	 * Additional list of domains that are delivered to local mail users.
-	 * 
-	 * @param list
-	 *            the list of the domains.
-	 */
-	public void destinations(Object... list) {
-		destinations(Arrays.asList(list));
-	}
+    /**
+     * The domain name that locally-posted mail appears to come from, and that
+     * locally posted mail is delivered to.
+     * 
+     * @return the origin domain name.
+     */
+    public String getOrigin() {
+        return origin;
+    }
 
-	/**
-	 * Additional list of domains that are delivered to local mail users.
-	 * 
-	 * @param list
-	 *            the list of the domains.
-	 */
-	public void destinations(List<?> list) {
-		log.checkDestinations(this, list);
-		for (Object object : list) {
-			String destination = object.toString().trim();
-			destinations.add(destination);
-			log.destinationAdded(this, destination);
-		}
-	}
+    /**
+     * Sets domain name that locally-posted mail appears to come from, and that
+     * locally posted mail is delivered to.
+     * 
+     * @param name
+     *            the domain {@link String} name.
+     */
+    public void origin(String name) {
+        log.checkDomainName(this, name);
+        this.origin = name;
+        log.originSet(this, name);
+    }
 
-	/**
-	 * Returns the list of additional domains that are delivered to local mail
-	 * users.
-	 * 
-	 * @return the {@link Collection} of domains.
-	 */
-	public Collection<String> getDestinations() {
-		return unmodifiableCollection(destinations);
-	}
+    /**
+     * Additional list of domains that are delivered to local mail users.
+     * 
+     * @param list
+     *            the list of the domains.
+     */
+    public void destinations(Object... list) {
+        destinations(Arrays.asList(list));
+    }
 
-	/**
-	 * Sets the masquerade domains.
-	 * 
-	 * @param statements
-	 *            the script statements of the masquerade domains.
-	 * 
-	 * @return the {@link MasqueradeDomains}.
-	 */
-	public MasqueradeDomains masquerade(Object statements) {
-		return masqueradeDomains;
-	}
+    /**
+     * Additional list of domains that are delivered to local mail users.
+     * 
+     * @param list
+     *            the list of the domains.
+     */
+    public void destinations(List<?> list) {
+        log.checkDestinations(this, list);
+        for (Object object : list) {
+            String destination = object.toString().trim();
+            destinations.add(destination);
+            log.destinationAdded(this, destination);
+        }
+    }
 
-	/**
-	 * Returns the domains that should be stripped of the sub-domains.
-	 * 
-	 * @return the {@link MasqueradeDomains}.
-	 */
-	public MasqueradeDomains getMasqueradeDomains() {
-		return masqueradeDomains;
-	}
+    /**
+     * Returns the list of additional domains that are delivered to local mail
+     * users.
+     * 
+     * @return the {@link Collection} of domains.
+     */
+    public Collection<String> getDestinations() {
+        return unmodifiableCollection(destinations);
+    }
 
-	/**
-	 * Sets the location of the certificate, certificate key and CA file.
-	 * 
-	 * @param args
-	 *            the {@link Map} arguments of the statement.
-	 * 
-	 * @throws ServiceException
-	 *             if one the specified locations could not be parsed in a valid
-	 *             URL.
-	 */
-	public void certificate(Map<String, Object> args) throws ServiceException {
-		Object file = args.get("file");
-		Object keyFile = args.get("key");
-		Object caFile = args.get("ca");
-		this.certificateFile = certificateFileFactory.create(file, keyFile,
-				caFile);
-		log.certificateSet(this, certificateFile);
-	}
+    /**
+     * Sets the masquerade domains.
+     * 
+     * @param statements
+     *            the script statements of the masquerade domains.
+     * 
+     * @return the {@link MasqueradeDomains}.
+     */
+    public MasqueradeDomains masquerade(Object statements) {
+        return masqueradeDomains;
+    }
 
-	/**
-	 * Returns the network interface addresses that this mail system receives
-	 * mail on.
-	 * 
-	 * @return the {@link BindAddresses}.
-	 */
-	public BindAddresses getBindAddresses() {
-		return bindAddresses;
-	}
+    /**
+     * Returns the domains that should be stripped of the sub-domains.
+     * 
+     * @return the {@link MasqueradeDomains}.
+     */
+    public MasqueradeDomains getMasqueradeDomains() {
+        return masqueradeDomains;
+    }
 
-	/**
-	 * Returns the certificate file for TLS.
-	 * 
-	 * @return the {@link CertificateFile}.
-	 */
-	public CertificateFile getCertificateFile() {
-		return certificateFile;
-	}
+    /**
+     * Sets the location of the certificate, certificate key and CA file.
+     * 
+     * @param args
+     *            the {@link Map} arguments of the statement.
+     * 
+     * @throws ServiceException
+     *             if one the specified locations could not be parsed in a valid
+     *             URL.
+     */
+    public void certificate(Map<String, Object> args) throws ServiceException {
+        Object file = args.get("file");
+        Object keyFile = args.get("key");
+        Object caFile = args.get("ca");
+        this.certificateFile = certificateFileFactory.create(file, keyFile,
+                caFile);
+        log.certificateSet(this, certificateFile);
+    }
 
-	public void domain(String name) {
-		domain(name, null);
-	}
+    /**
+     * Returns the network interface addresses that this mail system receives
+     * mail on.
+     * 
+     * @return the {@link BindAddresses}.
+     */
+    public BindAddresses getBindAddresses() {
+        return bindAddresses;
+    }
 
-	public Domain domain(String name, Object statements) {
-		log.checkDomainName(this, name);
-		Domain domain = domainFactory.create(name);
-		domains.add(domain);
-		log.domainAdded(this, domain);
-		return domain;
-	}
+    /**
+     * Returns the certificate file for TLS.
+     * 
+     * @return the {@link CertificateFile}.
+     */
+    public CertificateFile getCertificateFile() {
+        return certificateFile;
+    }
 
-	/**
-	 * Returns the to the mail service known domains list.
-	 * 
-	 * @return an unmodifiable {@link List} of {@link Domain} domains.
-	 */
-	public List<Domain> getDomains() {
-		return unmodifiableList(domains);
-	}
+    public void domain(String name) {
+        domain(name, null);
+    }
 
-	public void reset(Map<String, Object> args) {
-		ResetDomains reset = resetDomainsFactory.create(args);
-		this.resetDomains = reset;
-		log.resetDomainSet(this, reset);
-	}
+    public Domain domain(String name, Object statements) {
+        log.checkDomainName(this, name);
+        Domain domain = domainFactory.create(name);
+        domains.add(domain);
+        log.domainAdded(this, domain);
+        return domain;
+    }
 
-	public ResetDomains getResetDomains() {
-		return resetDomains;
-	}
+    /**
+     * Returns the to the mail service known domains list.
+     * 
+     * @return an unmodifiable {@link List} of {@link Domain} domains.
+     */
+    public List<Domain> getDomains() {
+        return unmodifiableList(domains);
+    }
 
-	public void database(Map<String, Object> args, String name) {
-		this.database = databaseFactory.create(args, name);
-		log.databaseSet(this, database);
-	}
+    public void reset(Map<String, Object> args) {
+        ResetDomains reset = resetDomainsFactory.create(args);
+        this.resetDomains = reset;
+        log.resetDomainSet(this, reset);
+    }
 
-	public Database getDatabase() {
-		return database;
-	}
+    public ResetDomains getResetDomains() {
+        return resetDomains;
+    }
 
-	public YesNoFlag getYes() {
-		return YesNoFlag.yes;
-	}
+    public void database(Map<String, Object> args, String name) {
+        this.database = databaseFactory.create(args, name);
+        log.databaseSet(this, database);
+    }
 
-	public YesNoFlag getNo() {
-		return YesNoFlag.no;
-	}
+    public Database getDatabase() {
+        return database;
+    }
 
-	public BindAddresses getAll() {
-		return BindAddresses.ALL;
-	}
+    public YesNoFlag getYes() {
+        return YesNoFlag.yes;
+    }
 
-	public BindAddresses getLoopback() {
-		return BindAddresses.LOOPBACK;
-	}
+    public YesNoFlag getNo() {
+        return YesNoFlag.no;
+    }
 
-	@Override
-	public String toString() {
-		return new ToStringBuilder(this).appendSuper(super.toString())
-				.toString();
-	}
+    public BindAddresses getAll() {
+        return BindAddresses.ALL;
+    }
+
+    public BindAddresses getLoopback() {
+        return BindAddresses.LOOPBACK;
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this).appendSuper(super.toString())
+                .toString();
+    }
 
 }

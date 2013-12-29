@@ -47,104 +47,104 @@ import com.google.inject.Injector
 @Slf4j
 class MailServiceTest {
 
-	@Test
-	void "service"() {
-		loader.loadService ubuntu1004Profile, null
-		def profile = registry.getService("profile")[0]
-		loader.loadService mailService, profile
-		def service = assertService registry.getService("mail")[0], tmpdir
-		assert service.debugLogging.level == 1
-		assert service.resetDomains.resetDomains == true
-		assert service.resetDomains.resetUsers == false
-		assert service.resetDomains.resetAliases == false
-	}
+    @Test
+    void "service"() {
+        loader.loadService ubuntu1004Profile, null
+        def profile = registry.getService("profile")[0]
+        loader.loadService mailService, profile
+        def service = assertService registry.getService("mail")[0], tmpdir
+        assert service.debug.level == 1
+        assert service.resetDomains.resetDomains == true
+        assert service.resetDomains.resetUsers == false
+        assert service.resetDomains.resetAliases == false
+    }
 
-	@Test
-	void "service mysql"() {
-		loader.loadService ubuntu1004Profile, null
-		def profile = registry.getService("profile")[0]
-		loader.loadService mailMysqlService, profile
-		def service = registry.getService("mail")[0]
-		assert service.database.database == "maildb"
-		assert service.database.user == "root"
-		assert service.database.password == "password"
-		assert service.database.server == "localhost"
-		assert service.database.port == 663
-	}
+    @Test
+    void "service mysql"() {
+        loader.loadService ubuntu1004Profile, null
+        def profile = registry.getService("profile")[0]
+        loader.loadService mailMysqlService, profile
+        def service = registry.getService("mail")[0]
+        assert service.database.database == "maildb"
+        assert service.database.user == "root"
+        assert service.database.password == "password"
+        assert service.database.server == "localhost"
+        assert service.database.port == 663
+    }
 
-	static ubuntu1004Profile = MailServiceTest.class.getResource("Ubuntu_10_04Profile.groovy")
+    static ubuntu1004Profile = MailServiceTest.class.getResource("Ubuntu_10_04Profile.groovy")
 
-	static mailService = MailServiceTest.class.getResource("MailService.groovy")
+    static mailService = MailServiceTest.class.getResource("MailService.groovy")
 
-	static mailMysqlService = MailServiceTest.class.getResource("MailMysqlService.groovy")
+    static mailMysqlService = MailServiceTest.class.getResource("MailMysqlService.groovy")
 
-	static Injector injector
+    static Injector injector
 
-	static ServiceLoaderFactory loaderFactory
+    static ServiceLoaderFactory loaderFactory
 
-	@Rule
-	public TemporaryFolder tmp = new TemporaryFolder()
+    @Rule
+    public TemporaryFolder tmp = new TemporaryFolder()
 
-	ServicesRegistry registry
+    ServicesRegistry registry
 
-	SscontrolServiceLoader loader
+    SscontrolServiceLoader loader
 
-	Map variables
+    Map variables
 
-	File tmpdir
+    File tmpdir
 
-	File mail
+    File mail
 
-	@Before
-	void createTemp() {
-		tmpdir = tmp.newFolder("mail-service")
-		mail = new File(tmpdir, "/etc/mail")
-		variables = [tmp: tmpdir.absoluteFile]
-	}
+    @Before
+    void createTemp() {
+        tmpdir = tmp.newFolder("mail-service")
+        mail = new File(tmpdir, "/etc/mail")
+        variables = [tmp: tmpdir.absoluteFile]
+    }
 
-	@Before
-	void createRegistry() {
-		registry = injector.getInstance ServicesRegistry
-		loader = loaderFactory.create registry, variables
-		loader.setParent injector
-	}
+    @Before
+    void createRegistry() {
+        registry = injector.getInstance ServicesRegistry
+        loader = loaderFactory.create registry, variables
+        loader.setParent injector
+    }
 
-	@BeforeClass
-	static void createFactories() {
-		injector = createInjector()
-		loaderFactory = injector.getInstance ServiceLoaderFactory
-	}
+    @BeforeClass
+    static void createFactories() {
+        injector = createInjector()
+        loaderFactory = injector.getInstance ServiceLoaderFactory
+    }
 
-	static Injector createInjector() {
-		Guice.createInjector(
-				new CoreModule(), new CoreResourcesModule(), new ServiceModule())
-	}
+    static Injector createInjector() {
+        Guice.createInjector(
+                new CoreModule(), new CoreResourcesModule(), new ServiceModule())
+    }
 
-	@BeforeClass
-	static void setupToStringStyle() {
-		toStringStyle
-	}
+    @BeforeClass
+    static void setupToStringStyle() {
+        toStringStyle
+    }
 
-	static MailServiceImpl assertService(MailServiceImpl service, File tmpdir) {
-		assert service.bindAddresses == BindAddresses.ALL
-		assert service.relayHost == "smtp.relayhost.com"
-		assert service.domainName == "mail.example.com"
-		assert service.origin == "example.com"
-		assert service.masqueradeDomains.domains.contains("mail.example.com")
-		assert service.masqueradeDomains.userExceptions.contains("root")
-		assert service.destinations.contains("foo.bar")
-		assert service.destinations.contains("bar.bar")
-		assert service.certificateFile.file.path == "$tmpdir/example-com.crt"
-		assert service.certificateFile.keyFile.path == "$tmpdir/example-com.insecure.key"
-		assert service.certificateFile.caFile.path == "$tmpdir/example-com-ca.crt"
-		assert service.domains.size() == 6
-		assert service.domains[0].name == "example.com"
-		assert service.domains[1].name == "mail.blobber.org"
-		assert service.domains[1].aliases.size() == 1
-		assert service.domains[1].aliases[0].name == ""
-		assert service.domains[1].aliases[0].destination == "@blobber.org"
-		assert service.domains[2].name == "blobber.org"
-		assert service.domains[2].users.size() == 3
-		service
-	}
+    static MailServiceImpl assertService(MailServiceImpl service, File tmpdir) {
+        assert service.bindAddresses == BindAddresses.ALL
+        assert service.relayHost == "smtp.relayhost.com"
+        assert service.domainName == "mail.example.com"
+        assert service.origin == "example.com"
+        assert service.masqueradeDomains.domains.contains("mail.example.com")
+        assert service.masqueradeDomains.userExceptions.contains("root")
+        assert service.destinations.contains("foo.bar")
+        assert service.destinations.contains("bar.bar")
+        assert service.certificateFile.file.path == "$tmpdir/example-com.crt"
+        assert service.certificateFile.keyFile.path == "$tmpdir/example-com.insecure.key"
+        assert service.certificateFile.caFile.path == "$tmpdir/example-com-ca.crt"
+        assert service.domains.size() == 6
+        assert service.domains[0].name == "example.com"
+        assert service.domains[1].name == "mail.blobber.org"
+        assert service.domains[1].aliases.size() == 1
+        assert service.domains[1].aliases[0].name == ""
+        assert service.domains[1].aliases[0].destination == "@blobber.org"
+        assert service.domains[2].name == "blobber.org"
+        assert service.domains[2].users.size() == 3
+        service
+    }
 }

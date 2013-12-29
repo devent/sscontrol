@@ -38,6 +38,7 @@ import com.anrisoftware.sscontrol.core.bindings.Address;
 import com.anrisoftware.sscontrol.core.bindings.Binding;
 import com.anrisoftware.sscontrol.core.bindings.BindingAddress;
 import com.anrisoftware.sscontrol.core.bindings.BindingArgs;
+import com.anrisoftware.sscontrol.core.bindings.BindingFactory;
 import com.anrisoftware.sscontrol.core.debuglogging.DebugLogging;
 import com.anrisoftware.sscontrol.core.debuglogging.DebugLoggingFactory;
 import com.anrisoftware.sscontrol.core.service.AbstractService;
@@ -82,9 +83,9 @@ class DatabaseServiceImpl extends AbstractService {
     @Inject
     private BindingArgs bindingArgs;
 
-    private Admin admin;
+    private DebugLogging debug;
 
-    private DebugLogging debugLogging;
+    private Admin admin;
 
     @Inject
     DatabaseServiceImpl() {
@@ -127,17 +128,21 @@ class DatabaseServiceImpl extends AbstractService {
     }
 
     /**
-     * Sets the debug logging for the database server.
+     * Sets the debug logging for the mail server.
      * 
      * @see DebugLoggingFactory#create(Map)
      */
     public void debug(Map<String, Object> args) {
-        debugLogging = debugLoggingFactory.create(args);
-        log.debugLoggingSet(this, debugLogging);
+        debug = debugLoggingFactory.create(args);
+        log.debugLoggingSet(this, debug);
     }
 
-    public DebugLogging getDebugLogging() {
-        return debugLogging;
+    public void setDebug(DebugLogging debug) {
+        this.debug = debug;
+    }
+
+    public DebugLogging getDebug() {
+        return debug;
     }
 
     /**

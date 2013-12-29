@@ -32,55 +32,57 @@ import com.anrisoftware.sscontrol.database.mysql.ubuntu.UbuntuResources
  */
 enum MysqlUbuntuResources {
 
-	profile("UbuntuProfile.groovy", MysqlUbuntuResources.class.getResource("UbuntuProfile.groovy")),
-	databaseScript("Database.groovy", MysqlUbuntuResources.class.getResource("Database.groovy")),
-	mysqlCommand("/usr/bin/mysql", UbuntuResources.class.getResource("echo_command.txt")),
-	mysqladminCommand("/usr/bin/mysqladmin", UbuntuResources.class.getResource("echo_command.txt")),
-	sscontrolMysqld("/etc/mysql/conf.d/sscontrol_mysqld.cnf", MysqlUbuntuResources.class.getResource("sscontrol_mysqld_cnf.txt")),
-	confDir("/etc/mysql/conf.d", null),
-	mysqlOut("/usr/bin/mysql.out", MysqlUbuntuResources.class.getResource("mysql_out.txt")),
-	mysqlIn("/usr/bin/mysql.in", MysqlUbuntuResources.class.getResource("mysql_in.txt")),
-	restartOut("/sbin/restart.out", MysqlUbuntuResources.class.getResource("restart_out.txt")),
-	aptitudeOut("/usr/bin/aptitude.out", MysqlUbuntuResources.class.getResource("aptitude_out.txt")),
-	postfixtables("/tmp/postfixtables.sql", MysqlUbuntuResources.class.getResource("postfixtables.txt")),
+    profile("UbuntuProfile.groovy", MysqlUbuntuResources.class.getResource("UbuntuProfile.groovy")),
+    databaseScript("Database.groovy", MysqlUbuntuResources.class.getResource("Database.groovy")),
+    databaseNonLoggingScript("Database.groovy", MysqlUbuntuResources.class.getResource("DatabaseNonLogging.groovy")),
+    mysqlCommand("/usr/bin/mysql", UbuntuResources.class.getResource("echo_command.txt")),
+    mysqladminCommand("/usr/bin/mysqladmin", UbuntuResources.class.getResource("echo_command.txt")),
+    mysqldExpected("/etc/mysql/conf.d/sscontrol_mysqld.cnf", MysqlUbuntuResources.class.getResource("mysqld_cnf_expected.txt")),
+    mysqldNonLoggingExpected("/etc/mysql/conf.d/sscontrol_mysqld.cnf", MysqlUbuntuResources.class.getResource("mysqld_cnf_nonlogging_expected.txt")),
+    confDir("/etc/mysql/conf.d", null),
+    mysqlOut("/usr/bin/mysql.out", MysqlUbuntuResources.class.getResource("mysql_out.txt")),
+    mysqlIn("/usr/bin/mysql.in", MysqlUbuntuResources.class.getResource("mysql_in.txt")),
+    restartOut("/sbin/restart.out", MysqlUbuntuResources.class.getResource("restart_out.txt")),
+    aptitudeOut("/usr/bin/aptitude.out", MysqlUbuntuResources.class.getResource("aptitude_out.txt")),
+    postfixtables("/tmp/postfixtables.sql", MysqlUbuntuResources.class.getResource("postfixtables.txt")),
 
-	static copyMysqlFiles(File parent) {
-		mysqlCommand.createCommand parent
-		mysqladminCommand.createCommand parent
-		confDir.asFile parent mkdirs()
-	}
+    static copyMysqlFiles(File parent) {
+        mysqlCommand.createCommand parent
+        mysqladminCommand.createCommand parent
+        confDir.asFile parent mkdirs()
+    }
 
-	ResourcesUtils resources
+    ResourcesUtils resources
 
-	MysqlUbuntuResources(String path, URL resource) {
-		this.resources = new ResourcesUtils(path: path, resource: resource)
-	}
+    MysqlUbuntuResources(String path, URL resource) {
+        this.resources = new ResourcesUtils(path: path, resource: resource)
+    }
 
-	String getPath() {
-		resources.path
-	}
+    String getPath() {
+        resources.path
+    }
 
-	URL getResource() {
-		resources.resource
-	}
+    URL getResource() {
+        resources.resource
+    }
 
-	File asFile(File parent) {
-		resources.asFile parent
-	}
+    File asFile(File parent) {
+        resources.asFile parent
+    }
 
-	void createFile(File parent) {
-		resources.createFile parent
-	}
+    void createFile(File parent) {
+        resources.createFile parent
+    }
 
-	void createCommand(File parent) {
-		resources.createCommand parent
-	}
+    void createCommand(File parent) {
+        resources.createCommand parent
+    }
 
-	String replaced(File parent, def search, def replace) {
-		resources.replaced parent, search, replace
-	}
+    String replaced(File parent, def search, def replace) {
+        resources.replaced parent, search, replace
+    }
 
-	String toString() {
-		resources.toString()
-	}
+    String toString() {
+        resources.toString()
+    }
 }

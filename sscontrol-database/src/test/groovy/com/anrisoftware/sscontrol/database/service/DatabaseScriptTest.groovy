@@ -43,7 +43,7 @@ class DatabaseScriptTest extends DatabaseServiceBase {
     }
 
     void assertService(DatabaseServiceImpl database) {
-        assert database.debugLogging.level == 1
+        assert database.debug.level == 1
         assertStringContent database.admin.password, "mysqladminpassword"
         assert database.binding.addresses.size() == 1
         assert database.binding.addresses[0].address == "0.0.0.0"

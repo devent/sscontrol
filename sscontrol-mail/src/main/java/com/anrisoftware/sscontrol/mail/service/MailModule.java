@@ -18,6 +18,8 @@
  */
 package com.anrisoftware.sscontrol.mail.service;
 
+import com.anrisoftware.sscontrol.core.debuglogging.DebugLoggingModule;
+import com.anrisoftware.sscontrol.core.list.ListModule;
 import com.anrisoftware.sscontrol.mail.resetdomains.ResetDomainModule;
 import com.anrisoftware.sscontrol.mail.statements.StatementsModule;
 import com.google.inject.AbstractModule;
@@ -34,5 +36,7 @@ class MailModule extends AbstractModule {
 	protected void configure() {
 		install(new StatementsModule());
 		install(new ResetDomainModule());
+        install(new DebugLoggingModule());
+        install(new ListModule());
 	}
 }

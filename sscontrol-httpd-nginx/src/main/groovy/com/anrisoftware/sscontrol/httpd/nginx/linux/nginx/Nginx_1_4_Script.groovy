@@ -80,16 +80,14 @@ abstract class Nginx_1_4_Script extends NginxScript {
 
     @Override
     def run() {
+        super.run()
         nginxTemplates = templatesFactory.create "Nginx_1_4", ["renderers": [debugLoggingRenderer]]
         nginxConfigTemplate = nginxTemplates.getResource "config"
         nginxCommandsTemplate = nginxTemplates.getResource "commands"
         domainConfig.script = this
         sslDomainConfig.script = this
         serviceConfigs.values().each { it.script = this }
-        super.run()
         beforeConfiguration()
-        setupDefaultBinding()
-        setupDefaultLogging()
         createSitesDirectories()
         deployNginxConfig()
         deployIncludedConfig()
@@ -101,18 +99,6 @@ abstract class Nginx_1_4_Script extends NginxScript {
      * Called before the configuration.
      */
     abstract void beforeConfiguration()
-
-    void setupDefaultBinding() {
-        if (service.binding.size() == 0) {
-            defaultBinding.each { service.binding.addAddress(it) }
-        }
-    }
-
-    void setupDefaultLogging() {
-        if (!service.debug.args.containsKey("storage")) {
-            service.debug.args.storage = loggingStorage
-        }
-    }
 
     /**
      * Creates sites configuration directories.

@@ -62,9 +62,17 @@ public interface HttpdService extends Service {
     Set<Domain> getVirtualDomains();
 
     /**
+     * Sets the debug logging.
+     * 
+     * @param debug
+     *            the {@link DebugLogging}.
+     */
+    void setDebug(DebugLogging debug);
+
+    /**
      * Returns debug logging.
      * 
-     * @return the {@link DebugLogging}.
+     * @return the {@link DebugLogging} or {@code null}.
      */
     DebugLogging getDebug();
 

@@ -23,7 +23,7 @@ import static org.apache.commons.io.FileUtils.*
 import javax.inject.Inject
 
 import com.anrisoftware.resources.templates.api.TemplateResource
-import com.anrisoftware.sscontrol.core.bindings.BindingFactory
+import com.anrisoftware.sscontrol.core.debuglogging.DebugLoggingProperty
 import com.anrisoftware.sscontrol.core.service.LinuxScript
 import com.anrisoftware.sscontrol.httpd.service.HttpdService
 import com.anrisoftware.sscontrol.httpd.statements.auth.AuthProvider
@@ -42,7 +42,7 @@ abstract class ApacheScript extends LinuxScript {
     private ApacheScriptLogger log
 
     @Inject
-    private BindingFactory bindingFactory
+    private DebugLoggingProperty debugLoggingProperty
 
     @Inject
     Map<String, ServiceConfig> serviceConfigs
@@ -55,6 +55,8 @@ abstract class ApacheScript extends LinuxScript {
         authConfigs.each { it.value.script = this }
         serviceConfigs.each { it.value.script = this }
         super.run()
+        setupDefaultBinding()
+        setupDefaultDebug()
         distributionSpecificConfiguration()
     }
 
@@ -68,9 +70,22 @@ abstract class ApacheScript extends LinuxScript {
      */
     abstract TemplateResource getApacheCommandsTemplate()
 
-    @Override
-    HttpdService getService() {
-        super.getService();
+    /**
+     * Setups the default binding addresses.
+     */
+    void setupDefaultBinding() {
+        if (service.binding.size() == 0) {
+            defaultBinding.each { service.binding.addAddress(it) }
+        }
+    }
+
+    /**
+     * Setups the default debug logging.
+     */
+    void setupDefaultDebug() {
+        if (service.debug == null) {
+            service.debug = debugLoggingProperty.defaultDebug this
+        }
     }
 
     /**
@@ -540,5 +555,10 @@ abstract class ApacheScript extends LinuxScript {
      */
     List modPackages(String mod) {
         profileListProperty "${mod}_packages", defaultProperties
+    }
+
+    @Override
+    HttpdService getService() {
+        super.getService();
     }
 }

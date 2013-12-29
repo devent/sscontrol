@@ -75,10 +75,9 @@ class HttpdServiceImpl extends AbstractService implements HttpdService {
     private BindingArgs bindingArgs;
 
     @Inject
-    private DebugLogging debug;
-
-    @Inject
     private DebugLoggingFactory debugFactory;
+
+    private DebugLogging debug;
 
     HttpdServiceImpl() {
         this.domains = new ArrayList<Domain>();
@@ -196,6 +195,11 @@ class HttpdServiceImpl extends AbstractService implements HttpdService {
     public void debug(Map<String, Object> args) {
         this.debug = debugFactory.create(args);
         log.debugSet(this, debug);
+    }
+
+    @Override
+    public void setDebug(DebugLogging debug) {
+        this.debug = debug;
     }
 
     @Override

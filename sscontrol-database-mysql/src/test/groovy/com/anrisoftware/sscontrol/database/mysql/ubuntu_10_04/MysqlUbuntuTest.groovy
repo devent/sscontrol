@@ -37,22 +37,37 @@ import com.anrisoftware.sscontrol.database.mysql.ubuntu.UbuntuTestUtil
 @Slf4j
 class MysqlUbuntuTest extends UbuntuTestUtil {
 
-	@Test
-	void "database script"() {
-		copyUbuntuFiles tmpdir
-		copyMysqlFiles tmpdir
-		postfixtables.createFile tmpdir
-		loader.loadService profile.resource, null
-		def profile = registry.getService("profile")[0]
-		loader.loadService databaseScript.resource, profile
+    @Test
+    void "database script"() {
+        copyUbuntuFiles tmpdir
+        copyMysqlFiles tmpdir
+        postfixtables.createFile tmpdir
+        loader.loadService profile.resource, null
+        def profile = registry.getService("profile")[0]
+        loader.loadService databaseScript.resource, profile
 
-		registry.allServices.each { it.call() }
-		log.info "Run service again to ensure that configuration is not set double."
-		registry.allServices.each { it.call() }
-		assertFileContent sscontrolMysqld.asFile(tmpdir), sscontrolMysqld
-		assertFileContent restartOut.asFile(tmpdir), restartOut
-		assertFileContent aptitudeOut.asFile(tmpdir), aptitudeOut
-		assertFileContent mysqlOut.asFile(tmpdir), mysqlOut
-		assertFileContent mysqlIn.asFile(tmpdir), mysqlIn
-	}
+        registry.allServices.each { it.call() }
+        log.info "Run service again to ensure that configuration is not set double."
+        registry.allServices.each { it.call() }
+        assertFileContent mysqldExpected.asFile(tmpdir), mysqldExpected
+        assertFileContent restartOut.asFile(tmpdir), restartOut
+        assertFileContent aptitudeOut.asFile(tmpdir), aptitudeOut
+        assertFileContent mysqlOut.asFile(tmpdir), mysqlOut
+        assertFileContent mysqlIn.asFile(tmpdir), mysqlIn
+    }
+
+    @Test
+    void "database non-logging script"() {
+        copyUbuntuFiles tmpdir
+        copyMysqlFiles tmpdir
+        postfixtables.createFile tmpdir
+        loader.loadService profile.resource, null
+        def profile = registry.getService("profile")[0]
+        loader.loadService databaseNonLoggingScript.resource, profile
+
+        registry.allServices.each { it.call() }
+        log.info "Run service again to ensure that configuration is not set double."
+        registry.allServices.each { it.call() }
+        assertFileContent mysqldNonLoggingExpected.asFile(tmpdir), mysqldNonLoggingExpected
+    }
 }

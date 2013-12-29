@@ -84,19 +84,12 @@ abstract class Apache_2_2Script extends ApacheScript {
         deployRedirectToWwwHttp.script = this
         deployRedirectToWwwHttps.script = this
         super.run()
-        setupDefaultBinding()
         deployPortsConfig()
         deployDefaultConfig()
         deployDomainsConfig()
         enableDefaultMods()
         deployConfig()
         restartServices()
-    }
-
-    def setupDefaultBinding() {
-        if (service.binding.size() == 0) {
-            defaultBinding.each { service.binding.addAddress(it) }
-        }
     }
 
     def deployPortsConfig() {

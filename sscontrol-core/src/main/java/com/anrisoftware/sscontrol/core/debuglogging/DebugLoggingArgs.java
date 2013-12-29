@@ -35,8 +35,6 @@ class DebugLoggingArgs {
 
     private static final String MODULE = "module";
 
-    private static final String LEVEL = "logging";
-
     private static final String MODULES = "modules";
 
     @Inject
@@ -44,12 +42,6 @@ class DebugLoggingArgs {
 
     @Inject
     private StringToListFactory toListFactory;
-
-    int level(Map<String, Object> args) {
-        Object level = args.get(LEVEL);
-        log.checkLevel(level);
-        return (Integer) level;
-    }
 
     boolean haveModule(Map<String, Object> args) {
         return args.containsKey(MODULE);

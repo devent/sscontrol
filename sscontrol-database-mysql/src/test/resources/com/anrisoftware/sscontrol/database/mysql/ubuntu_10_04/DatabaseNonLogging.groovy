@@ -20,43 +20,10 @@ package com.anrisoftware.sscontrol.database.mysql.ubuntu_10_04
 
 database {
 
-    // enable debugging output
-    debug level: 1
-
     // bind the database server to all addresses
     bind address: "0.0.0.0"
 
     // set the administrator password
     admin password: "mysqladminpassword"
 
-    // add new database with default character set and collate
-    database "wordpressdb"
-
-    // add new database
-    database "drupal6db", charset: "latin1", collate: "latin1_swedish_ci"
-
-    // add new database and import tables
-    database "maildb", {
-        //.
-        script execute: "${tmp}/tmp/postfixtables.sql" //.
-    }
-
-    // add new database and import tables
-    database "postfixdb", charset: "latin1", collate: "latin1_swedish_ci", {
-        //.
-        script execute: "${tmp}/tmp/postfixtables.sql" //.
-    }
-
-    // add a new user
-    user "test1", password: "test1password", server: "srv1"
-
-    // add a new user, grand all privileges on database
-    user "drupal6", password: "drupal6password", server: "srv2", { //.
-        access database: "drupal6db" //.
-    }
-
-    // add a new user on default host, grand all privileges on database
-    user "drupal6", password: "drupal6password", { //.
-        access database: "drupal6db" //.
-    }
 }

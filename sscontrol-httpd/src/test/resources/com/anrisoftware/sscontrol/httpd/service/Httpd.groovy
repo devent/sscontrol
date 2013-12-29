@@ -22,7 +22,7 @@ def certFile = ServicesResources.class.getResource "cert_crt.txt"
 def certKeyFile = ServicesResources.class.getResource "cert_key.txt"
 
 httpd {
-    debug logging: 1
+    debug level: 1
 	domain "test1.com", address: "192.168.0.50", port: 80, {
 		redirect to_www
 		redirect http_to_https

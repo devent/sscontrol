@@ -30,6 +30,7 @@ import org.stringtemplate.v4.ST
 
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.Templates
+import com.anrisoftware.sscontrol.core.debuglogging.DebugLoggingProperty
 import com.anrisoftware.sscontrol.core.service.LinuxScript
 import com.anrisoftware.sscontrol.mail.postfix.linux.BasePostfixScriptLogger
 import com.anrisoftware.sscontrol.mail.postfix.linux.BindAddressesRenderer
@@ -51,6 +52,9 @@ abstract class BasePostfixScript extends LinuxScript {
 
     @Inject
     BasePostfixScriptLogger log
+
+    @Inject
+    private DebugLoggingProperty debugLoggingProperty
 
     /**
      * The {@link Templates} for the Postfix/base script.
@@ -117,6 +121,7 @@ abstract class BasePostfixScript extends LinuxScript {
         postaliasCommandTemplate = basePostfixTemplates.getResource "postalias_command"
         postmapCommandTemplate = basePostfixTemplates.getResource "postmap_command"
         super.run()
+        setupDefaultDebug()
         runDistributionSpecific()
         appendDefaultDestinations()
         deployMailname()
@@ -124,6 +129,15 @@ abstract class BasePostfixScript extends LinuxScript {
         reconfigureFiles()
         deployStorage()
         deployDelivery()
+    }
+
+    /**
+     * Setups the default debug logging.
+     */
+    void setupDefaultDebug() {
+        if (service.debug == null) {
+            service.debug = debugLoggingProperty.defaultDebug this
+        }
     }
 
     /**

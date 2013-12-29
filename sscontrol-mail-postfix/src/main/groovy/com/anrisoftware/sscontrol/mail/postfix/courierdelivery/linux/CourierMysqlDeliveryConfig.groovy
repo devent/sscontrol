@@ -42,9 +42,6 @@ abstract class CourierMysqlDeliveryConfig extends BaseDelivery implements Delive
     @Inject
     CourierMysqlDeliveryConfigLogger log
 
-    @Inject
-    DebugLoggingLevelRenderer debugLoggingLevelRenderer
-
     /**
      * The {@link Templates} for the script.
      */
@@ -59,7 +56,7 @@ abstract class CourierMysqlDeliveryConfig extends BaseDelivery implements Delive
 
     @Override
     void deployDelivery() {
-        courierTemplates = templatesFactory.create "CourierMysqlDeliveryConfig", templatesAttributes
+        courierTemplates = templatesFactory.create "CourierMysqlDeliveryConfig"
         authTemplate = courierTemplates.getResource "auth_configuration"
         installPackages courierPackages
         deployConfig()
@@ -95,15 +92,6 @@ abstract class CourierMysqlDeliveryConfig extends BaseDelivery implements Delive
         log.configurationDeployed this, authmysqlFile
     }
 
-    /**
-     * Returns additional template attributes.
-     */
-    Map getTemplatesAttributes() {
-        ["renderers": [
-                debugLoggingLevelRenderer
-            ]]
-    }
-
     String getModuleListSearchTemplate() {
         authTemplate.getText(true, "moduleListSearch")
     }
@@ -117,7 +105,7 @@ abstract class CourierMysqlDeliveryConfig extends BaseDelivery implements Delive
     }
 
     String getDebugLoggingTemplate() {
-        authTemplate.getText(true, "debugLogging", "level", service.debugLogging)
+        authTemplate.getText(true, "debugLogging", "level", service.debug.level)
     }
 
     String getMysqlServerSearchTemplate() {

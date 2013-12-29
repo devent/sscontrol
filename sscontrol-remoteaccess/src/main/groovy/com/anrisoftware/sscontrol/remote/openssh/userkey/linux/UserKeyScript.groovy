@@ -147,6 +147,8 @@ abstract class UserKeyScript implements RemoteScript {
             configAuthorizedKeysFile(authorizedKeysFile),
             configPasswordAuthenticationFile(passwordAuthentication),
             configXForwardingConfig(XForwarding),
+            syslogFacilityConfig(service.debug.args.facility),
+            logLevelConfig(service.debug.level),
         ]
     }
 
@@ -213,6 +215,39 @@ abstract class UserKeyScript implements RemoteScript {
     def configXForwardingConfig(boolean enabled) {
         def search = configTemplate.getText(true, "xForwardingConfig_search")
         def replace = configTemplate.getText(true, "xForwardingConfig", "enabled", enabled)
+        new TokenTemplate(search, replace)
+    }
+
+    def syslogFacilityConfig(String facility) {
+        def search = configTemplate.getText(true, "syslogFacilityConfig_search")
+        def replace = configTemplate.getText(true, "syslogFacilityConfig", "facility", facility)
+        new TokenTemplate(search, replace)
+    }
+
+    def logLevelConfig(int level) {
+        def levelstr
+        switch (level) {
+            case 0:
+                levelstr = "QUIET"
+                break
+            case 1:
+                levelstr = "FATAL"
+                break
+            case 2:
+                levelstr = "ERROR"
+                break
+            case 3:
+                levelstr = "INFO"
+                break
+            case 4:
+                levelstr = "VERBOSE"
+                break
+            default:
+                levelstr = "DEBUG"
+                break
+        }
+        def search = configTemplate.getText(true, "logLevelConfig_search")
+        def replace = configTemplate.getText(true, "logLevelConfig", "level", levelstr)
         new TokenTemplate(search, replace)
     }
 

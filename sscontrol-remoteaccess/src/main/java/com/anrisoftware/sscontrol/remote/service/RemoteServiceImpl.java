@@ -37,6 +37,8 @@ import com.anrisoftware.sscontrol.core.bindings.Binding;
 import com.anrisoftware.sscontrol.core.bindings.BindingAddress;
 import com.anrisoftware.sscontrol.core.bindings.BindingArgs;
 import com.anrisoftware.sscontrol.core.bindings.BindingFactory;
+import com.anrisoftware.sscontrol.core.debuglogging.DebugLogging;
+import com.anrisoftware.sscontrol.core.debuglogging.DebugLoggingFactory;
 import com.anrisoftware.sscontrol.core.service.AbstractService;
 import com.anrisoftware.sscontrol.remote.user.User;
 import com.anrisoftware.sscontrol.remote.user.UserFactory;
@@ -65,6 +67,11 @@ public class RemoteServiceImpl extends AbstractService implements RemoteService 
 
     @Inject
     private BindingArgs bindingArgs;
+
+    @Inject
+    private DebugLoggingFactory debugFactory;
+
+    private DebugLogging debug;
 
     RemoteServiceImpl() {
         this.users = new ArrayList<User>();
@@ -160,6 +167,26 @@ public class RemoteServiceImpl extends AbstractService implements RemoteService 
      */
     public BindingAddress getAll() {
         return BindingAddress.all;
+    }
+
+    /**
+     * Sets the debug logging for the database server.
+     *
+     * @see DebugLoggingFactory#create(Map)
+     */
+    public void debug(Map<String, Object> args) {
+        this.debug = debugFactory.create(args);
+        log.debugSet(this, debug);
+    }
+
+    @Override
+    public void setDebug(DebugLogging debug) {
+        this.debug = debug;
+    }
+
+    @Override
+    public DebugLogging getDebug() {
+        return debug;
     }
 
     @Override

@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.anrisoftware.sscontrol.core.api.Service;
 import com.anrisoftware.sscontrol.core.bindings.Binding;
+import com.anrisoftware.sscontrol.core.debuglogging.DebugLogging;
 import com.anrisoftware.sscontrol.remote.user.User;
 
 /**
@@ -33,5 +34,20 @@ public interface RemoteService extends Service {
      * @return the {@link Binding}.
      */
     Binding getBinding();
+
+    /**
+     * Sets the debug logging.
+     * 
+     * @param debug
+     *            the {@link DebugLogging}.
+     */
+    void setDebug(DebugLogging debug);
+
+    /**
+     * Returns debug logging.
+     * 
+     * @return the {@link DebugLogging} or {@code null}.
+     */
+    DebugLogging getDebug();
 
 }

@@ -19,6 +19,7 @@
 package com.anrisoftware.sscontrol.remote.service;
 
 import com.anrisoftware.sscontrol.core.bindings.BindingsModule;
+import com.anrisoftware.sscontrol.core.debuglogging.DebugLoggingModule;
 import com.anrisoftware.sscontrol.core.list.ListModule;
 import com.anrisoftware.sscontrol.remote.user.UserModule;
 import com.google.inject.AbstractModule;
@@ -34,6 +35,7 @@ class RemoteModule extends AbstractModule {
     @Override
     protected void configure() {
         install(new UserModule());
+        install(new DebugLoggingModule());
         install(new BindingsModule());
         install(new ListModule());
     }

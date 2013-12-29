@@ -25,6 +25,8 @@ import javax.inject.Inject
 import org.joda.time.Duration
 
 import com.anrisoftware.sscontrol.core.bindings.BindingFactory
+import com.anrisoftware.sscontrol.core.debuglogging.DebugLogging
+import com.anrisoftware.sscontrol.core.debuglogging.DebugLoggingProperty
 import com.anrisoftware.sscontrol.core.service.LinuxScript
 import com.anrisoftware.sscontrol.remote.api.RemoteScript
 import com.anrisoftware.sscontrol.remote.service.RemoteService
@@ -43,10 +45,14 @@ abstract class BaseOpensshRemoteScript extends LinuxScript {
     @Inject
     private BindingFactory bindingFactory
 
+    @Inject
+    private DebugLoggingProperty debugLoggingProperty
+
     @Override
     def run() {
         setupParentScript()
         super.run()
+        setupDefaultDebug()
         setupDefaultBinding()
         beforeConfiguration()
         remoteScript.users.deployRemoteScript service
@@ -76,6 +82,25 @@ abstract class BaseOpensshRemoteScript extends LinuxScript {
      */
     List getDefaultBinding() {
         profileListProperty "default_binding", defaultProperties
+    }
+
+    /**
+     * Returns the default debug logging.
+     *
+     * <ul>
+     * <li>profile property {@code "default_debug"}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    DebugLogging getDefaultDebug() {
+        def str = profileProperty "default_debug", defaultProperties
+        def args = str.split(",").inject([:]) { acc, val ->
+            def nameAndValue = val.split(":")
+            acc[nameAndValue[0].trim()] = nameAndValue[1].trim()
+            acc
+        }
+        debugLoggingFactory.create args
     }
 
     /**
@@ -294,6 +319,15 @@ abstract class BaseOpensshRemoteScript extends LinuxScript {
     void setupDefaultBinding() {
         if (service.binding.size() == 0) {
             defaultBinding.each { service.binding.addAddress(it) }
+        }
+    }
+
+    /**
+     * Setups the default debug logging.
+     */
+    void setupDefaultDebug() {
+        if (service.debug == null) {
+            service.debug = debugLoggingProperty.defaultDebug this
         }
     }
 

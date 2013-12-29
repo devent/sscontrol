@@ -27,8 +27,14 @@ KeyRegenerationInterval 3600
 ServerKeyBits 768
 
 # Logging
+# SSCONTROL-remote
 SyslogFacility AUTH
+# SSCONTROL-remote-END
+
+# SSCONTROL-remote
 LogLevel INFO
+# SSCONTROL-remote-END
+
 
 # Authentication:
 # SSCONTROL-remote

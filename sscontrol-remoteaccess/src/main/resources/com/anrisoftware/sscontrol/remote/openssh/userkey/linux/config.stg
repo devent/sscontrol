@@ -69,3 +69,19 @@ X11Forwarding <if(enabled)>yes<else>no<endif>
 xForwardingConfig_search() ::= <%
 #?X11Forwarding.*
 %>
+
+syslogFacilityConfig(facility) ::= <%
+SyslogFacility <facility>
+%>
+
+syslogFacilityConfig_search() ::= <%
+#?SyslogFacility.*
+%>
+
+logLevelConfig(level) ::= <%
+LogLevel <level>
+%>
+
+logLevelConfig_search() ::= <%
+#?LogLevel.*
+%>

@@ -20,11 +20,14 @@ package com.anrisoftware.sscontrol.remote.service;
 
 import static com.anrisoftware.sscontrol.remote.service.RemoteServiceImplLogger._.binding_set_debug;
 import static com.anrisoftware.sscontrol.remote.service.RemoteServiceImplLogger._.binding_set_info;
+import static com.anrisoftware.sscontrol.remote.service.RemoteServiceImplLogger._.debug_set_debug;
+import static com.anrisoftware.sscontrol.remote.service.RemoteServiceImplLogger._.debug_set_info;
 import static com.anrisoftware.sscontrol.remote.service.RemoteServiceImplLogger._.user_added_debug;
 import static com.anrisoftware.sscontrol.remote.service.RemoteServiceImplLogger._.user_added_info;
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
 import com.anrisoftware.sscontrol.core.bindings.Binding;
+import com.anrisoftware.sscontrol.core.debuglogging.DebugLogging;
 import com.anrisoftware.sscontrol.remote.user.User;
 
 /**
@@ -43,7 +46,11 @@ class RemoteServiceImplLogger extends AbstractLogger {
 
         binding_set_debug("Binding address {} set {}."),
 
-        binding_set_info("Binding address {} set for service '{}'.");
+        binding_set_info("Binding address {} set for service '{}'."),
+
+        debug_set_debug("Debug logging {} set for {}."),
+
+        debug_set_info("Debug level {} set for service '{}'.");
 
         private String name;
 
@@ -77,6 +84,14 @@ class RemoteServiceImplLogger extends AbstractLogger {
             debug(binding_set_debug, binding, service);
         } else {
             info(binding_set_info, binding.getAddresses(), service.getName());
+        }
+    }
+
+    void debugSet(RemoteService service, DebugLogging debug) {
+        if (isDebugEnabled()) {
+            debug(debug_set_debug, debug, service);
+        } else {
+            info(debug_set_info, debug.getLevel(), service.getName());
         }
     }
 }

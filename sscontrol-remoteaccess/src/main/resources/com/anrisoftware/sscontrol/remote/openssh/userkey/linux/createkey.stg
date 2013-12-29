@@ -1,0 +1,4 @@
+createKey(args) ::= <<
+#!/bin/sh
+<args.command> -N "<args.passphrase>" -f "<args.keyFile>"
+>>

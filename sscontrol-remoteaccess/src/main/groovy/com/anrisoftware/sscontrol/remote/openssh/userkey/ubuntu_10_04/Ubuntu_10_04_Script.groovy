@@ -16,23 +16,21 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-hostname. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.remote.openssh.openssh.ubuntu_10_04;
+package com.anrisoftware.sscontrol.remote.openssh.userkey.ubuntu_10_04
 
-import com.anrisoftware.sscontrol.remote.openssh.userkey.ubuntu_10_04.UserKeyUbuntu_10_04_Module;
-import com.anrisoftware.sscontrol.remote.openssh.users.ubuntu_10_04.UsersUbuntu_10_04_Module;
-import com.google.inject.AbstractModule;
+import com.anrisoftware.sscontrol.remote.openssh.userkey.linux.UserKeyScript
+import com.anrisoftware.sscontrol.remote.service.RemoteService
 
 /**
- * Installs the Remote Access/Ubuntu 10.04 script.
- * 
+ * Local users SSH/keys script for Ubuntu 10.04.
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-public class UbuntuModule extends AbstractModule {
+class Ubuntu_10_04_Script extends UserKeyScript {
 
     @Override
-    protected void configure() {
-        install(new UsersUbuntu_10_04_Module());
-        install(new UserKeyUbuntu_10_04_Module());
+    void deployRemoteScript(RemoteService service) {
+        super.deployRemoteScript service
     }
 }

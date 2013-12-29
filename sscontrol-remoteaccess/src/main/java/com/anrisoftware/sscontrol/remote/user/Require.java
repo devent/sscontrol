@@ -11,5 +11,10 @@ public enum Require {
     /**
      * Require user password.
      */
-    password;
+    password,
+
+    /**
+     * Require user key passphrase.
+     */
+    passphrase;
 }

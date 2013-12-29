@@ -37,6 +37,7 @@ enum UbuntuResources {
     useraddCommand("/usr/sbin/useradd", UbuntuResources.class.getResource("echo_command.txt")),
     groupaddCommand("/usr/sbin/groupadd", UbuntuResources.class.getResource("echo_command.txt")),
     passwdCommand("/usr/bin/passwd", UbuntuResources.class.getResource("echo_command.txt")),
+    sshkeygenCommand("/usr/bin/ssh-keygen", UbuntuResources.class.getResource("echo_command.txt")),
     groupsFile("/etc/group", UbuntuResources.class.getResource("group.txt")),
     passwdFile("/etc/passwd", UbuntuResources.class.getResource("passwd.txt")),
     fooRemotePub("fooremote.pub", UbuntuResources.class.getResource("fooremote_pub.txt")),
@@ -46,12 +47,14 @@ enum UbuntuResources {
     groupaddOutExpected("/usr/sbin/groupadd.out", UbuntuResources.class.getResource("groupadd_out_excepted.txt")),
     passwdOutExpected("/usr/bin/passwd.out", UbuntuResources.class.getResource("passwd_out_excepted.txt")),
     passwdInExpected("/usr/bin/passwd.in", UbuntuResources.class.getResource("passwd_in_excepted.txt")),
+    sshkeygenOutExpected("/usr/bin/ssh-keygen.out", UbuntuResources.class.getResource("sshkeygen_out_expected.txt")),
 
     static copyUbuntuFiles(File parent) {
         aptitudeCommand.createCommand parent
         useraddCommand.createCommand parent
         groupaddCommand.createCommand parent
         passwdCommand.createCommand parent
+        sshkeygenCommand.createCommand parent
         groupsFile.createFile parent
         passwdFile.createFile parent
     }

@@ -1,4 +1,4 @@
 update
--y install passwd
+-y install passwd openssh-server
 update
--y install passwd
+-y install passwd openssh-server

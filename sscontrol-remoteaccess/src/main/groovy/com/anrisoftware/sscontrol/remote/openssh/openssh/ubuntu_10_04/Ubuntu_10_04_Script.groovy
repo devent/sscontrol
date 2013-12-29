@@ -40,6 +40,7 @@ class Ubuntu_10_04_Script extends BaseOpensshRemoteScript {
     }
 
     @Override
-    void distributionSpecificConfiguration() {
+    void beforeConfiguration() {
+        installPackages()
     }
 }

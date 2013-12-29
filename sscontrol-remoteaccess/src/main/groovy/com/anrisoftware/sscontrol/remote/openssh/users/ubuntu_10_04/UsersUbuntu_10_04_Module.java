@@ -25,12 +25,12 @@ import com.google.inject.AbstractModule;
 import com.google.inject.multibindings.MapBinder;
 
 /**
- * Installs the Remote Access/Ubuntu 10.04 script.
+ * Installs the local users script for Ubuntu 10.04.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-public class Ubuntu_10_04_Module extends AbstractModule {
+public class UsersUbuntu_10_04_Module extends AbstractModule {
 
     @Override
     protected void configure() {

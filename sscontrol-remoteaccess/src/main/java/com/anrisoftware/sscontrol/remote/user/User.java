@@ -157,11 +157,17 @@ public class User {
         keys.add(key);
     }
 
-    public void require(Object s) {
+    public void require(Object... s) {
     }
 
     public void password() {
         Require require = Require.password;
+        requires.add(require);
+        log.addRequire(this, service, require);
+    }
+
+    public void passphrase() {
+        Require require = Require.passphrase;
         requires.add(require);
         log.addRequire(this, service, require);
     }

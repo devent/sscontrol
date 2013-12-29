@@ -42,13 +42,103 @@ abstract class BaseOpensshRemoteScript extends LinuxScript {
     def run() {
         setupParentScript()
         super.run()
+        beforeConfiguration()
         remoteScript.users.deployRemoteScript service
+        remoteScript.userkey.deployRemoteScript service
     }
 
     void setupParentScript() {
         remoteScript.each { key, RemoteScript value ->
             value.setScript this
         }
+    }
+
+    /**
+     * Deploys the configuration before the script configuration.
+     */
+    void beforeConfiguration() {
+    }
+
+    /**
+     * Returns minimal user ID, for example {@code "1000".}
+     *
+     * <ul>
+     * <li>profile property {@code "minimum_uid"}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    int getMinimumUid() {
+        profileNumberProperty "minimum_uid", defaultProperties
+    }
+
+    /**
+     * Returns minimal group ID, for example {@code "1000".}
+     *
+     * <ul>
+     * <li>profile property {@code "minimum_gid"}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    int getMinimumGid() {
+        profileNumberProperty "minimum_gid", defaultProperties
+    }
+
+    /**
+     * Returns the user home directory pattern, for
+     * example {@code "/home/%1$s".}
+     *
+     * <ul>
+     * <li>profile property {@code "home_pattern"}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    String getHomePattern() {
+        profileProperty "home_pattern", defaultProperties
+    }
+
+    /**
+     * Returns the user SSH/key pattern, for
+     * example {@code "/home/%1$s/.ssh/id_rsa".}
+     *
+     * <ul>
+     * <li>profile property {@code "ssh_key_pattern"}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    String getSshkeyPattern() {
+        profileProperty "ssh_key_pattern", defaultProperties
+    }
+
+    /**
+     * Returns the default log-in shell, for
+     * example {@code "/bin/bash".}
+     *
+     * <ul>
+     * <li>profile property {@code "default_login_shell"}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    String getDefaultLoginShell() {
+        profileProperty "default_login_shell", defaultProperties
+    }
+
+    /**
+     * Returns SSH/key generation command, for
+     * example {@code "/usr/bin/ssh-keygen".}
+     *
+     * <ul>
+     * <li>profile property {@code "key_gen_command"}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    String getKeyGenCommand() {
+        profileProperty "key_gen_command", defaultProperties
     }
 
     @Override

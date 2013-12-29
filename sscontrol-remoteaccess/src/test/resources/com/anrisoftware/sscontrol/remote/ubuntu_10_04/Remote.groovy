@@ -22,7 +22,7 @@ remote {
     user "devent", password: "foopass", {
         passphrase "somepass"
         access key: UbuntuResources.fooRemotePub.resource
-        require password
+        require password, passphrase
     }
     user "bar", password: "barpass", uid: 2001
     user "baz", password: "bazpass", {

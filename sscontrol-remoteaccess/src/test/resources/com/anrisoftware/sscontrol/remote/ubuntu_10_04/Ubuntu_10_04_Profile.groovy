@@ -22,6 +22,7 @@ def aptitude = UbuntuResources.aptitudeCommand.asFile(tmp)
 def useradd = UbuntuResources.useraddCommand.asFile(tmp)
 def groupadd = UbuntuResources.groupaddCommand.asFile(tmp)
 def passwd = UbuntuResources.passwdCommand.asFile(tmp)
+def sshkeygen = UbuntuResources.sshkeygenCommand.asFile(tmp)
 def groupfile = UbuntuResources.groupsFile.asFile(tmp)
 def passwdfile = UbuntuResources.passwdFile.asFile(tmp)
 
@@ -31,6 +32,7 @@ profile "ubuntu_10_04", {
         install_command "export DEBIAN_FRONTEND=noninteractive\n$aptitude update && $aptitude -y install"
         user_add_command useradd
         group_add_command groupadd
+        key_gen_command sshkeygen
         groups_file groupfile
         users_file passwdfile
         change_password_command passwd

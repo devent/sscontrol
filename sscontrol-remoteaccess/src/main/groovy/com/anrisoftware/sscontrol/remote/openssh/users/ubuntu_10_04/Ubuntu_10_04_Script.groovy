@@ -31,7 +31,6 @@ class Ubuntu_10_04_Script extends LocalUsersScript {
 
     @Override
     void deployRemoteScript(RemoteService service) {
-        installPackages()
         super.deployRemoteScript service
     }
 }

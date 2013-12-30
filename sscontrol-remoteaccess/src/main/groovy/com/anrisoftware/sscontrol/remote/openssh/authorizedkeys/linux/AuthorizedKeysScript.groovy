@@ -29,6 +29,7 @@ import com.anrisoftware.sscontrol.core.service.LinuxScript
 import com.anrisoftware.sscontrol.remote.api.RemoteScript
 import com.anrisoftware.sscontrol.remote.service.RemoteService
 import com.anrisoftware.sscontrol.remote.user.Key
+import com.anrisoftware.sscontrol.remote.user.Require
 import com.anrisoftware.sscontrol.remote.user.User
 import com.anrisoftware.sscontrol.remote.user.UserFactory
 
@@ -56,7 +57,17 @@ abstract class AuthorizedKeysScript implements RemoteScript {
     void deployAuthorizedKeys(List users) {
         users.each { User user ->
             def file = authorizedKeysFile user
+            removeOldAuthorizedKeys user, file
             copyAuthorizedKeys user, file
+        }
+    }
+
+    void removeOldAuthorizedKeys(User user, File file) {
+        if (!file.isFile()) {
+            return
+        }
+        if (user.requires.contains(Require.accesskeys)) {
+            file.delete()
         }
     }
 

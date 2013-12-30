@@ -173,6 +173,12 @@ public class User {
         log.addRequire(this, service, require);
     }
 
+    public void accesskeys() {
+        Require require = Require.accesskeys;
+        requires.add(require);
+        log.addRequire(this, service, require);
+    }
+
     public List<Key> getKeys() {
         return keys;
     }

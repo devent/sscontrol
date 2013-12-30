@@ -138,7 +138,20 @@ abstract class LocalUsersScript implements RemoteScript {
         if (!user.requires.contains(Require.password)) {
             return
         }
-        changePassword "userName": user.name, "password": user.password
+        changePassword "name": distributionName, "userName": user.name, "password": user.password
+    }
+
+    /**
+     * Returns distribution name, for example {@code "debian", "ubuntu", "redhat".}
+     *
+     * <ul>
+     * <li>profile property {@code "distribution_name"}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    String getDistributionName() {
+        profileProperty "distribution_name", defaultProperties
     }
 
     /**

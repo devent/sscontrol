@@ -98,6 +98,7 @@ class LinuxScriptLogger extends AbstractLogger {
     private static final String COMMAND = "command";
     private static final String FILES = "files";
     private static final String PASSWORD = "password";
+    private static final String DISTRBUTION_NAME = "name";
 
     enum _ {
 
@@ -407,6 +408,8 @@ class LinuxScriptLogger extends AbstractLogger {
     void checkChangePasswordArgs(Map<String, Object> args) {
         isTrue(args.containsKey(USER_NAME),
                 change_password_args_missing.toString(), USER_NAME);
+        isTrue(args.containsKey(DISTRBUTION_NAME),
+                change_password_args_missing.toString(), DISTRBUTION_NAME);
         isTrue(args.containsKey(PASSWORD),
                 change_password_args_missing.toString(), PASSWORD);
         isTrue(args.containsKey(SYSTEM),

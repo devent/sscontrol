@@ -1,5 +1,17 @@
 unix(args) ::= <<
 #!/bin/sh
-echo "<args.password>" | <args.command> --stdin "<args.userName>"
+<(args.name)(args)>
 
 >>
+
+ubuntu(args) ::= <%
+<debian(args)>
+%>
+
+debian(args) ::= <%
+echo "<args.userName>:<args.password>" | <args.command>
+%>
+
+redhat(args) ::= <%
+echo "<args.password>" | <args.command> --stdin "<args.userName>"
+%>

@@ -545,6 +545,7 @@ abstract class LinuxScript extends Script {
      * <ul>
      * <li>{@code userName:} the user name;
      * <li>{@code password:} the new password;
+     * <li>{@code name:} the distribution of the server, for example {@code "redhat", "debian"};
      * <li>{@code system:} optionally, the system of the server;
      * <li>{@code command:} optionally, the change password command;
      * </ul>

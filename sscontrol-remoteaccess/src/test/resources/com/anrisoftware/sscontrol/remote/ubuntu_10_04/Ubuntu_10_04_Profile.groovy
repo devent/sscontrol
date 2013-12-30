@@ -21,7 +21,7 @@ package com.anrisoftware.sscontrol.remote.ubuntu_10_04
 def aptitude = UbuntuResources.aptitudeCommand.asFile(tmp)
 def useradd = UbuntuResources.useraddCommand.asFile(tmp)
 def groupadd = UbuntuResources.groupaddCommand.asFile(tmp)
-def passwd = UbuntuResources.passwdCommand.asFile(tmp)
+def chpasswd = UbuntuResources.chpasswdCommand.asFile(tmp)
 def sshkeygen = UbuntuResources.sshkeygenCommand.asFile(tmp)
 def groupfile = UbuntuResources.groupsFile.asFile(tmp)
 def passwdfile = UbuntuResources.passwdFile.asFile(tmp)
@@ -36,7 +36,7 @@ profile "ubuntu_10_04", {
         key_gen_command sshkeygen
         groups_file groupfile
         users_file passwdfile
-        change_password_command passwd
+        change_password_command chpasswd
         sshd_configuration_directory sshdconfigFile.parentFile
         authorized_keys_file_pattern "$tmp/<user.home>/.ssh/authorized_keys"
     }

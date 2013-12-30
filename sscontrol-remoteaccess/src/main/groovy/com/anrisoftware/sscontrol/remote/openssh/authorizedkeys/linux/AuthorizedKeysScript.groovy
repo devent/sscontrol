@@ -76,11 +76,15 @@ abstract class AuthorizedKeysScript implements RemoteScript {
             return
         }
         def log = log
+        def oldkeys = file.isFile() ? FileUtils.lineIterator(file, charset.name()) : []
         user.keys.each { Key key ->
             def res = key.resource.toURL()
             def str = IOUtils.toString res
-            FileUtils.writeStringToFile file, str, charset, true
-            log.deployAuthorizedKey script, key, user
+            def found = oldkeys.find { it == str.trim() }
+            if (!found) {
+                FileUtils.writeStringToFile file, str, charset, true
+                log.deployAuthorizedKey script, key, user
+            }
         }
     }
 

@@ -59,7 +59,7 @@ class RemoteServiceTest extends RemoteTestUtil {
         assert user.uid == null
         assert user.keys.size() == 0
         assert user.passphrase == "somepass"
-        assert user.home == "/var/home/baz"
+        assert user.home == new File("/var/home/baz")
         assert user.group.name == "baz"
         assert user.group.gid == null
 

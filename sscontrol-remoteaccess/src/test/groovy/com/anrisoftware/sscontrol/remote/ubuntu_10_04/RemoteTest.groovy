@@ -49,6 +49,7 @@ class RemoteTest extends RemoteTestUtil {
         registry.allServices.each { it.call() }
 
         assertFileContent aptitudeOutExpected.asFile(tmpdir), aptitudeOutExpected
+        assertFileContent restartOutExpected.asFile(tmpdir), restartOutExpected
         assertFileContent groupaddOutExpected.asFile(tmpdir), groupaddOutExpected
         assertStringContent useraddOutExpected.replaced(tmpdir, tmpdir, "/tmp"), useraddOutExpected.toString()
         assertStringContent chownOutExpected.replaced(tmpdir, tmpdir, "/tmp"), chownOutExpected.toString()

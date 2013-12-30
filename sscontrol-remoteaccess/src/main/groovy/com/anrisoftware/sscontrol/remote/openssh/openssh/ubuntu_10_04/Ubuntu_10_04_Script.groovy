@@ -40,6 +40,12 @@ class Ubuntu_10_04_Script extends BaseOpensshRemoteScript {
     }
 
     @Override
+    def run() {
+        super.run()
+        restartServices()
+    }
+
+    @Override
     void beforeConfiguration() {
         installPackages()
     }

@@ -19,6 +19,7 @@
 package com.anrisoftware.sscontrol.remote.ubuntu_10_04
 
 def aptitude = UbuntuResources.aptitudeCommand.asFile(tmp)
+def restart = UbuntuResources.restartCommand.asFile(tmp)
 def useradd = UbuntuResources.useraddCommand.asFile(tmp)
 def groupadd = UbuntuResources.groupaddCommand.asFile(tmp)
 def chown = UbuntuResources.chownCommand.asFile(tmp)
@@ -32,6 +33,7 @@ profile "ubuntu_10_04", {
     remote {
         service "openssh"
         install_command "export DEBIAN_FRONTEND=noninteractive\n$aptitude update && $aptitude -y install"
+        restart_command restart
         user_add_command useradd
         group_add_command groupadd
         chown_command chown

@@ -34,6 +34,7 @@ enum UbuntuResources {
     profile("UbuntuProfile.groovy", UbuntuResources.class.getResource("Ubuntu_10_04_Profile.groovy")),
     remoteService("Remote.groovy", UbuntuResources.class.getResource("Remote.groovy")),
     aptitudeCommand("/usr/bin/aptitude", UbuntuResources.class.getResource("echo_command.txt")),
+    restartCommand("/sbin/restart", UbuntuResources.class.getResource("echo_command.txt")),
     useraddCommand("/usr/sbin/useradd", UbuntuResources.class.getResource("echo_command.txt")),
     groupaddCommand("/usr/sbin/groupadd", UbuntuResources.class.getResource("echo_command.txt")),
     chownCommand("/bin/chown", UbuntuResources.class.getResource("echo_command.txt")),
@@ -45,6 +46,7 @@ enum UbuntuResources {
     fooRemotePub("fooremote.pub", UbuntuResources.class.getResource("fooremote_pub.txt")),
     barRemotePub("barremote.pub", UbuntuResources.class.getResource("barremote_pub.txt")),
     aptitudeOutExpected("/usr/bin/aptitude.out", UbuntuResources.class.getResource("aptitude_out_excepted.txt")),
+    restartOutExpected("/sbin/restart.out", UbuntuResources.class.getResource("restart_out_excepted.txt")),
     useraddOutExpected("/usr/sbin/useradd.out", UbuntuResources.class.getResource("useradd_out_excepted.txt")),
     groupaddOutExpected("/usr/sbin/groupadd.out", UbuntuResources.class.getResource("groupadd_out_excepted.txt")),
     chownOutExpected("/bin/chown.out", UbuntuResources.class.getResource("chown_out_excepted.txt")),
@@ -58,6 +60,7 @@ enum UbuntuResources {
 
     static copyUbuntuFiles(File parent) {
         aptitudeCommand.createCommand parent
+        restartCommand.createCommand parent
         useraddCommand.createCommand parent
         groupaddCommand.createCommand parent
         chownCommand.createCommand parent

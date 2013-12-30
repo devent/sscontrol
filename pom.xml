@@ -29,6 +29,7 @@
         <module>sscontrol-mail-postfix</module>
         <module>sscontrol-parent</module>
         <module>sscontrol-profile</module>
+        <module>sscontrol-remoteaccess</module>
         <module>sscontrol-workers</module>
         <module>sscontrol-workers-command</module>
         <module>sscontrol-workers-text</module>

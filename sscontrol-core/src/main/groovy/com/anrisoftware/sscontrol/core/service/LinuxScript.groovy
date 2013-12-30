@@ -336,6 +336,19 @@ abstract class LinuxScript extends Script {
     }
 
     /**
+     * Returns the change owner command.
+     *
+     * <ul>
+     * <li>property key {@code chown_command}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    String getChownCommand() {
+        profileProperty "chown_command", defaultProperties
+    }
+
+    /**
      * Returns the configuration on the server.
      */
     String currentConfiguration(File file) {
@@ -683,19 +696,6 @@ abstract class LinuxScript extends Script {
 
     def getJavaTmpDirectory() {
         new File(System.getProperty("java.io.tmpdir"))
-    }
-
-    /**
-     * Returns the change owner command.
-     *
-     * <ul>
-     * <li>property key {@code chown_command}</li>
-     * </ul>
-     *
-     * @see #getDefaultProperties()
-     */
-    String getChownCommand() {
-        profileProperty "chown_command", defaultProperties
     }
 
     /**

@@ -36,6 +36,7 @@ enum UbuntuResources {
     aptitudeCommand("/usr/bin/aptitude", UbuntuResources.class.getResource("echo_command.txt")),
     useraddCommand("/usr/sbin/useradd", UbuntuResources.class.getResource("echo_command.txt")),
     groupaddCommand("/usr/sbin/groupadd", UbuntuResources.class.getResource("echo_command.txt")),
+    chownCommand("/bin/chown", UbuntuResources.class.getResource("echo_command.txt")),
     chpasswdCommand("/usr/sbin/chpasswd", UbuntuResources.class.getResource("echo_command.txt")),
     sshkeygenCommand("/usr/bin/ssh-keygen", UbuntuResources.class.getResource("echo_command.txt")),
     groupsFile("/etc/group", UbuntuResources.class.getResource("group.txt")),
@@ -46,6 +47,7 @@ enum UbuntuResources {
     aptitudeOutExpected("/usr/bin/aptitude.out", UbuntuResources.class.getResource("aptitude_out_excepted.txt")),
     useraddOutExpected("/usr/sbin/useradd.out", UbuntuResources.class.getResource("useradd_out_excepted.txt")),
     groupaddOutExpected("/usr/sbin/groupadd.out", UbuntuResources.class.getResource("groupadd_out_excepted.txt")),
+    chownOutExpected("/bin/chown.out", UbuntuResources.class.getResource("chown_out_excepted.txt")),
     chpasswdOutExpected("/usr/sbin/chpasswd.out", UbuntuResources.class.getResource("chpasswd_out_excepted.txt")),
     chpasswdInExpected("/usr/sbin/chpasswd.in", UbuntuResources.class.getResource("chpasswd_in_excepted.txt")),
     sshkeygenOutExpected("/usr/bin/ssh-keygen.out", UbuntuResources.class.getResource("sshkeygen_out_expected.txt")),
@@ -58,6 +60,7 @@ enum UbuntuResources {
         aptitudeCommand.createCommand parent
         useraddCommand.createCommand parent
         groupaddCommand.createCommand parent
+        chownCommand.createCommand parent
         chpasswdCommand.createCommand parent
         sshkeygenCommand.createCommand parent
         groupsFile.createFile parent

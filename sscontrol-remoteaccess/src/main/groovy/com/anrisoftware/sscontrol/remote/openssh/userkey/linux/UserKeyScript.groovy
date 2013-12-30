@@ -118,10 +118,22 @@ abstract class UserKeyScript implements RemoteScript {
         if (!user.passphrase) {
             return
         }
+        createSshDir user, keyfile.parentFile
         def args = ["command": keyGenCommand, "passphrase": user.passphrase, "keyFile": keyfile]
         def worker = scriptCommandFactory.create(createKeyTemplate,
                 "createKey", "args", args)()
         log.sshkeyCreated script, user, worker
+    }
+
+    /**
+     * Creates the user SSH/key directory.
+     */
+    void createSshDir(User user, File dir) {
+        if (dir.isDirectory()) {
+            return
+        }
+        dir.mkdirs()
+        changeOwner "owner": user.uid, "ownerGroup": user.group.gid, "files": dir
     }
 
     /**

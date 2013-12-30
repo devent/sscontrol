@@ -21,6 +21,7 @@ package com.anrisoftware.sscontrol.remote.ubuntu_10_04
 def aptitude = UbuntuResources.aptitudeCommand.asFile(tmp)
 def useradd = UbuntuResources.useraddCommand.asFile(tmp)
 def groupadd = UbuntuResources.groupaddCommand.asFile(tmp)
+def chown = UbuntuResources.chownCommand.asFile(tmp)
 def chpasswd = UbuntuResources.chpasswdCommand.asFile(tmp)
 def sshkeygen = UbuntuResources.sshkeygenCommand.asFile(tmp)
 def groupfile = UbuntuResources.groupsFile.asFile(tmp)
@@ -33,6 +34,7 @@ profile "ubuntu_10_04", {
         install_command "export DEBIAN_FRONTEND=noninteractive\n$aptitude update && $aptitude -y install"
         user_add_command useradd
         group_add_command groupadd
+        chown_command chown
         key_gen_command sshkeygen
         groups_file groupfile
         users_file passwdfile

@@ -1,0 +1,56 @@
+shelltitleConfig() ::= <%
+shelltitle ''
+%>
+
+shelltitleConfig_search() ::= <%
+#?shelltitle.*
+%>
+
+vbellConfig() ::= <%
+vbell on
+%>
+
+vbellConfig_search() ::= <%
+#?vbell.*
+%>
+
+autodetachConfig() ::= <%
+autodetach on
+%>
+
+autodetachConfig_search() ::= <%
+#?autodetach.*
+%>
+
+startupMessageConfig() ::= <%
+startup_message off
+%>
+
+startupMessageConfig_search() ::= <%
+#?startup_message.*
+%>
+
+defScrollbackConfig() ::= <%
+defscrollback 2048
+%>
+
+defScrollbackConfig_search() ::= <%
+#?defscrollback.*
+%>
+
+hardstatusAlwaysLastlineConfig() ::= <%
+hardstatus alwayslastline "<\u0025>-Lw<\u0025>{= BW}<\u0025>50><\u0025>n<\u0025>f* <\u0025>t<\u0025>{-}<\u0025>+Lw<\u0025>\< <\u0025>=<\u0025>D <\u0025>M <\u0025>d <\u0025>c"
+%>
+
+hardstatusAlwaysLastlineConfig_search() ::= <%
+#?hardstatus alwayslastline.*
+%>
+
+hardstatusStringConfig() ::= <%
+hardstatus string '<\u0025>{= kK}<\u0025>-Lw<\u0025>{= KW}<\u0025>50><\u0025>n<\u0025>f <\u0025>t<\u0025>{= kK}<\u0025>+Lw<\u0025>\< <\u0025>{=kG}<\u0025>-= <\u0025>d<\u0025>M <\u0025>c:<\u0025>s<\u0025>{-}'
+%>
+
+hardstatusStringConfig_search() ::= <%
+#?hardstatus string.*
+%>
+

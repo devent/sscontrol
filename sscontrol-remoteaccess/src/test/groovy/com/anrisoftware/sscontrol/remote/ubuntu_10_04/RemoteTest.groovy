@@ -53,6 +53,7 @@ class RemoteTest extends RemoteTestUtil {
         assertFileContent groupaddOutExpected.asFile(tmpdir), groupaddOutExpected
         assertStringContent useraddOutExpected.replaced(tmpdir, tmpdir, "/tmp"), useraddOutExpected.toString()
         assertStringContent chownOutExpected.replaced(tmpdir, tmpdir, "/tmp"), chownOutExpected.toString()
+        assertStringContent chmodOutExpected.replaced(tmpdir, tmpdir, "/tmp"), chmodOutExpected.toString()
         assertFileContent chpasswdOutExpected.asFile(tmpdir), chpasswdOutExpected
         assertFileContent chpasswdInExpected.asFile(tmpdir), chpasswdInExpected
         assertStringContent sshkeygenOutExpected.replaced(tmpdir, tmpdir, "/tmp"), sshkeygenOutExpected.toString()
@@ -60,5 +61,8 @@ class RemoteTest extends RemoteTestUtil {
         //assertFileContent deventAuthorizedkeysExpected.asFile(tmpdir), deventAuthorizedkeysExpected
         assertFileContent fooAuthorizedkeysExpected.asFile(tmpdir), fooAuthorizedkeysExpected
         assertFileContent foobarAuthorizedkeysExpected.asFile(tmpdir), foobarAuthorizedkeysExpected
+        assertFileContent autoScreenExpected.asFile(tmpdir), autoScreenExpected
+        assertStringContent autoScreenSessionExpected.replaced(tmpdir, tmpdir, "/tmp"), autoScreenSessionExpected.toString()
+        assertFileContent screenrcExpected.asFile(tmpdir), screenrcExpected
     }
 }

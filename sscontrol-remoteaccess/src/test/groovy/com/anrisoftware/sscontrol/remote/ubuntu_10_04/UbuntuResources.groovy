@@ -38,8 +38,10 @@ enum UbuntuResources {
     useraddCommand("/usr/sbin/useradd", UbuntuResources.class.getResource("echo_command.txt")),
     groupaddCommand("/usr/sbin/groupadd", UbuntuResources.class.getResource("echo_command.txt")),
     chownCommand("/bin/chown", UbuntuResources.class.getResource("echo_command.txt")),
+    chmodCommand("/bin/chmod", UbuntuResources.class.getResource("echo_command.txt")),
     chpasswdCommand("/usr/sbin/chpasswd", UbuntuResources.class.getResource("echo_command.txt")),
     sshkeygenCommand("/usr/bin/ssh-keygen", UbuntuResources.class.getResource("echo_command.txt")),
+    localBinDirectory("/usr/local/bin", null),
     groupsFile("/etc/group", UbuntuResources.class.getResource("group.txt")),
     passwdFile("/etc/passwd", UbuntuResources.class.getResource("passwd.txt")),
     sshdconfigFile("/etc/ssh/sshd_config", UbuntuResources.class.getResource("sshd_config.txt")),
@@ -50,6 +52,7 @@ enum UbuntuResources {
     useraddOutExpected("/usr/sbin/useradd.out", UbuntuResources.class.getResource("useradd_out_excepted.txt")),
     groupaddOutExpected("/usr/sbin/groupadd.out", UbuntuResources.class.getResource("groupadd_out_excepted.txt")),
     chownOutExpected("/bin/chown.out", UbuntuResources.class.getResource("chown_out_excepted.txt")),
+    chmodOutExpected("/bin/chmod.out", UbuntuResources.class.getResource("chmod_out_excepted.txt")),
     chpasswdOutExpected("/usr/sbin/chpasswd.out", UbuntuResources.class.getResource("chpasswd_out_excepted.txt")),
     chpasswdInExpected("/usr/sbin/chpasswd.in", UbuntuResources.class.getResource("chpasswd_in_excepted.txt")),
     sshkeygenOutExpected("/usr/bin/ssh-keygen.out", UbuntuResources.class.getResource("sshkeygen_out_expected.txt")),
@@ -57,6 +60,9 @@ enum UbuntuResources {
     deventAuthorizedkeysExpected("/tmp/home/devent/.ssh/authorized_keys", UbuntuResources.class.getResource("devent_authorizedkeys_expected.txt")),
     fooAuthorizedkeysExpected("/home/foo/.ssh/authorized_keys", UbuntuResources.class.getResource("foo_authorizedkeys_expected.txt")),
     foobarAuthorizedkeysExpected("/home/foobar/.ssh/authorized_keys", UbuntuResources.class.getResource("foobar_authorizedkeys_expected.txt")),
+    autoScreenExpected("/usr/local/bin/auto_screen.sh", UbuntuResources.class.getResource("auto_screen_expected.txt")),
+    autoScreenSessionExpected("/home/foo/.bashrc", UbuntuResources.class.getResource("auto_screen_session_expected.txt")),
+    screenrcExpected("/home/foo/.screenrc", UbuntuResources.class.getResource("screenrc_expected.txt")),
 
     static copyUbuntuFiles(File parent) {
         aptitudeCommand.createCommand parent
@@ -64,6 +70,7 @@ enum UbuntuResources {
         useraddCommand.createCommand parent
         groupaddCommand.createCommand parent
         chownCommand.createCommand parent
+        chmodCommand.createCommand parent
         chpasswdCommand.createCommand parent
         sshkeygenCommand.createCommand parent
         groupsFile.createFile parent

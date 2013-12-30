@@ -1,0 +1,6 @@
+
+# - robobee -
+# create screen session
+if [ -f /tmp/usr/local/bin/auto_screen.sh ]; then
+    . /tmp/usr/local/bin/auto_screen.sh
+fi

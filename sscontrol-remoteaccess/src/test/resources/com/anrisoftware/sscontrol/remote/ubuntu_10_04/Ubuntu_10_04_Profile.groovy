@@ -23,11 +23,13 @@ def restart = UbuntuResources.restartCommand.asFile(tmp)
 def useradd = UbuntuResources.useraddCommand.asFile(tmp)
 def groupadd = UbuntuResources.groupaddCommand.asFile(tmp)
 def chown = UbuntuResources.chownCommand.asFile(tmp)
+def chmod = UbuntuResources.chmodCommand.asFile(tmp)
 def chpasswd = UbuntuResources.chpasswdCommand.asFile(tmp)
 def sshkeygen = UbuntuResources.sshkeygenCommand.asFile(tmp)
 def groupfile = UbuntuResources.groupsFile.asFile(tmp)
 def passwdfile = UbuntuResources.passwdFile.asFile(tmp)
 def sshdconfigFile = UbuntuResources.sshdconfigFile.asFile(tmp)
+def localBinDirectory = UbuntuResources.localBinDirectory.asFile(tmp)
 
 profile "ubuntu_10_04", {
     remote {
@@ -37,9 +39,11 @@ profile "ubuntu_10_04", {
         user_add_command useradd
         group_add_command groupadd
         chown_command chown
+        chmod_command chmod
         key_gen_command sshkeygen
         change_password_command chpasswd
         sshd_configuration_directory sshdconfigFile.parentFile
+        local_bin_directory localBinDirectory
         groups_file groupfile
         users_file passwdfile
         home_pattern "$tmp/home/<user.name>"

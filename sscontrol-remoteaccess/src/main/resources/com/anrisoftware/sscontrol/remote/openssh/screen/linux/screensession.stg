@@ -1,0 +1,10 @@
+bashrc(file) ::= <<
+
+
+# - robobee -
+# create screen session
+if [ -f <file> ]; then
+    . <file>
+fi
+
+>>

@@ -24,7 +24,6 @@ import javax.inject.Inject
 
 import org.apache.commons.lang3.StringUtils
 
-import com.anrisoftware.resources.templates.api.Templates
 import com.anrisoftware.sscontrol.core.service.LinuxScript
 import com.anrisoftware.sscontrol.remote.api.RemoteScript
 import com.anrisoftware.sscontrol.remote.service.RemoteService
@@ -47,8 +46,6 @@ abstract class LocalUsersScript implements RemoteScript {
 
     @Inject
     GroupFactory groupFactory
-
-    Templates localUsersTemplates
 
     LinuxScript script
 

@@ -36,10 +36,11 @@ profile "ubuntu_10_04", {
         group_add_command groupadd
         chown_command chown
         key_gen_command sshkeygen
-        groups_file groupfile
-        users_file passwdfile
         change_password_command chpasswd
         sshd_configuration_directory sshdconfigFile.parentFile
-        authorized_keys_file_pattern "$tmp/<user.home>/.ssh/authorized_keys"
+        groups_file groupfile
+        users_file passwdfile
+        home_pattern "$tmp/home/<user.name>"
+        ssh_key_pattern "$tmp/home/<user.name>/.ssh/id_rsa"
     }
 }

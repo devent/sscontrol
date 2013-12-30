@@ -69,6 +69,7 @@ abstract class LocalUsersScript implements RemoteScript {
             Group found = groups.find { Group it -> it.name == user.group.name }
             if (found) {
                 groupHaveId found, id, { id++ }
+                user.group.gid = found.gid
             }
             if (!found) {
                 updateGroupId user.group, id, { id++ }
@@ -103,6 +104,7 @@ abstract class LocalUsersScript implements RemoteScript {
             if (found) {
                 user.home = found.home
                 userHaveId found, id, { id++ }
+                user.uid = found.uid
                 updateUserPassword user
             }
             if (!found) {

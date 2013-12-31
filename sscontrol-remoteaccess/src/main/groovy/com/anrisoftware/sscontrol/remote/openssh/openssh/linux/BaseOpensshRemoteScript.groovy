@@ -61,6 +61,7 @@ abstract class BaseOpensshRemoteScript extends LinuxScript {
         remoteScript.userkey.deployRemoteScript service
         remoteScript.authorizedkeys.deployRemoteScript service
         remoteScript.screen.deployRemoteScript service
+        remoteScript.fail2ban.deployRemoteScript service
     }
 
     void setupParentScript() {
@@ -385,19 +386,6 @@ abstract class BaseOpensshRemoteScript extends LinuxScript {
     }
 
     /**
-     * Returns the screen packages, for example {@code "screen".}
-     *
-     * <ul>
-     * <li>profile property {@code "screen_packages"}</li>
-     * </ul>
-     *
-     * @see #getDefaultProperties()
-     */
-    List getScreenPackages() {
-        profileListProperty "screen_packages", defaultProperties
-    }
-
-    /**
      * Returns local scripts directory, for example {@code "/usr/local/bin".}
      *
      * <ul>
@@ -411,35 +399,17 @@ abstract class BaseOpensshRemoteScript extends LinuxScript {
     }
 
     /**
-     * Returns auto-screen script file, for example {@code "auto_script.sh".}
-     * If the file path is not absolute it is assumed under the local scripts
-     * directory.
+     * Returns that fail2ban configuration should be deployed for local
+     * users, for example {@code "true".}
      *
      * <ul>
-     * <li>profile property {@code "auto_screen_file"}</li>
+     * <li>profile property {@code "deploy_fail2ban"}</li>
      * </ul>
      *
      * @see #getDefaultProperties()
-     * @see #getLocalBinDirectory()
      */
-    File getAutoScreenFile() {
-        profileFileProperty "auto_screen_file", localBinDirectory, defaultProperties
-    }
-
-    /**
-     * Returns screen-rc file for the specified user, for
-     * example {@code ".screenrc".}
-     *
-     * <ul>
-     * <li>profile property {@code "screen_configuration_file"}</li>
-     * </ul>
-     *
-     * @see #homeDir(User)
-     * @see #getDefaultProperties()
-     */
-    File screenConfigFile(User user) {
-        def file = profileProperty "screen_configuration_file", defaultProperties
-        new File(homeDir(user), file)
+    boolean getDeployFail2ban() {
+        profileBooleanProperty "deploy_fail2ban", defaultProperties
     }
 
     /**

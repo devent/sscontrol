@@ -16,29 +16,30 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-remoteaccess. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.remote.openssh.openssh.ubuntu_10_04;
+package com.anrisoftware.sscontrol.remote.openssh.fail2ban.ufw_ubuntu_10_04;
 
-import com.anrisoftware.sscontrol.remote.openssh.authorizedkeys.ubuntu_10_04.AuthorizedKeysUbuntu_10_04_Module;
-import com.anrisoftware.sscontrol.remote.openssh.fail2ban.ubuntu_10_04.Fail2BanUbuntu_10_04_Module;
-import com.anrisoftware.sscontrol.remote.openssh.screen.ubuntu_10_04.ScreenUbuntu_10_04_Module;
-import com.anrisoftware.sscontrol.remote.openssh.userkey.ubuntu_10_04.UserKeyUbuntu_10_04_Module;
-import com.anrisoftware.sscontrol.remote.openssh.users.ubuntu_10_04.UsersUbuntu_10_04_Module;
+import static com.google.inject.multibindings.MapBinder.newMapBinder;
+
+import com.anrisoftware.sscontrol.remote.openssh.fail2ban.linux.Fail2BanScript;
 import com.google.inject.AbstractModule;
+import com.google.inject.multibindings.MapBinder;
 
 /**
- * Installs the Remote Access/Ubuntu 10.04 script.
+ * Installs the UFW firewall fail2ban script for Ubuntu 10.04.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-public class UbuntuModule extends AbstractModule {
+public class UfwFail2BanUbuntu_10_04_Module extends AbstractModule {
 
     @Override
     protected void configure() {
-        install(new UsersUbuntu_10_04_Module());
-        install(new UserKeyUbuntu_10_04_Module());
-        install(new AuthorizedKeysUbuntu_10_04_Module());
-        install(new ScreenUbuntu_10_04_Module());
-        install(new Fail2BanUbuntu_10_04_Module());
+        bindScripts();
+    }
+
+    private void bindScripts() {
+        MapBinder<String, Fail2BanScript> binder;
+        binder = newMapBinder(binder(), String.class, Fail2BanScript.class);
+        binder.addBinding("fail2ban.ufw").to(Ubuntu_10_04_Script.class);
     }
 }

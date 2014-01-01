@@ -19,7 +19,6 @@
 package com.anrisoftware.sscontrol.dhclient.ubuntu_10_04
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
-import static com.anrisoftware.sscontrol.dhclient.ubuntu.UbuntuResources.*
 import static com.anrisoftware.sscontrol.dhclient.ubuntu_10_04.DhclientResources.*
 import groovy.util.logging.Slf4j
 
@@ -36,32 +35,32 @@ import com.anrisoftware.sscontrol.dhclient.ubuntu.UbuntuTestUtil
 @Slf4j
 class DhclientServiceTest extends UbuntuTestUtil {
 
-	@Test
-	void "empty dhcp configuration"() {
-		copyUbuntuFiles tmpdir
-		loader.loadService profile.resource, null
-		def profile = registry.getService("profile")[0]
-		loader.loadService dhclientScript.resource, profile
+    @Test
+    void "empty dhcp configuration"() {
+        copyUbuntuFiles tmpdir
+        loader.loadService profile.resource, null
+        def profile = registry.getService("profile")[0]
+        loader.loadService dhclientScript.resource, profile
 
-		registry.allServices.each { it.call() }
-		log.info "Run service again to ensure that configuration is not set double."
-		registry.allServices.each { it.call() }
+        registry.allServices.each { it.call() }
+        log.info "Run service again to ensure that configuration is not set double."
+        registry.allServices.each { it.call() }
 
-		assertFileContent dhclientEmptyExpected.asFile(tmpdir), dhclientEmptyExpected
-	}
+        assertFileContent dhclientEmptyExpected.asFile(tmpdir), dhclientEmptyExpected
+    }
 
-	@Test
-	void "distribution default dhcp configuration"() {
-		copyUbuntuFiles tmpdir
-		dhclient.createFile tmpdir
-		loader.loadService profile.resource, null
-		def profile = registry.getService("profile")[0]
-		loader.loadService dhclientScript.resource, profile
+    @Test
+    void "distribution default dhcp configuration"() {
+        copyUbuntuFiles tmpdir
+        dhclient.createFile tmpdir
+        loader.loadService profile.resource, null
+        def profile = registry.getService("profile")[0]
+        loader.loadService dhclientScript.resource, profile
 
-		registry.allServices.each { it.call() }
-		log.info "Run service again to ensure that configuration is not set double."
-		registry.allServices.each { it.call() }
+        registry.allServices.each { it.call() }
+        log.info "Run service again to ensure that configuration is not set double."
+        registry.allServices.each { it.call() }
 
-		assertFileContent dhclientNonEmptyExpected.asFile(tmpdir), dhclientNonEmptyExpected
-	}
+        assertFileContent dhclientNonEmptyExpected.asFile(tmpdir), dhclientNonEmptyExpected
+    }
 }

@@ -22,15 +22,11 @@ import static java.util.Collections.unmodifiableList;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.inject.Inject;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
-
-import com.anrisoftware.propertiesutils.ContextProperties;
-import com.anrisoftware.sscontrol.dhclient.service.DhclientPropertiesProvider;
 
 /**
  * Collection of request declarations.
@@ -39,66 +35,71 @@ import com.anrisoftware.sscontrol.dhclient.service.DhclientPropertiesProvider;
  * @since 1.0
  */
 @SuppressWarnings("serial")
-public class RequestDeclarations implements Serializable, Iterable<Declaration> {
+public class RequestDeclarations implements Serializable {
 
-	private final List<Declaration> requests;
+    private final List<Declaration> requests;
 
-	private final DeclarationFactory declarationFactory;
+    private final List<Declaration> removedRequests;
 
-	private final RequestDeclarationsLogger log;
+    @Inject
+    private RequestDeclarationsLogger log;
 
-	@Inject
-	RequestDeclarations(RequestDeclarationsLogger logger,
-			DeclarationFactory declarationFactory, DhclientPropertiesProvider p) {
-		this.log = logger;
-		this.declarationFactory = declarationFactory;
-		this.requests = new ArrayList<Declaration>();
-		addDefaultRequests(p.get());
-	}
+    @Inject
+    private DeclarationFactory declarationFactory;
 
-	private void addDefaultRequests(ContextProperties p) {
-		for (String req : p.getListProperty("default_requests")) {
-			requests.add(declarationFactory.create(req));
-		}
-	}
+    @Inject
+    RequestDeclarations() {
+        this.requests = new ArrayList<Declaration>();
+        this.removedRequests = new ArrayList<Declaration>();
+    }
 
-	/**
-	 * Adds new request.
-	 * 
-	 * @param decl
-	 *            the request declaration.
-	 */
-	public void add(String decl) {
-		if (decl.startsWith("!")) {
-			remove(decl.substring(1));
-		} else {
-			Declaration declaration = declarationFactory.create(decl);
-			log.reguestAdded(this, declaration);
-		}
-	}
+    /**
+     * Adds new request.
+     * 
+     * @param decl
+     *            the request declaration.
+     */
+    public void add(String decl) {
+        if (decl.startsWith("!")) {
+            remove(decl.substring(1));
+        } else {
+            Declaration request = declarationFactory.create(decl);
+            requests.add(request);
+            log.reguestAdded(this, request);
+        }
+    }
 
-	/**
-	 * Removes the specified request name.
-	 * 
-	 * @param decl
-	 *            the request declaration.
-	 */
-	public void remove(String decl) {
-		Declaration req = declarationFactory.create(decl);
-		if (requests.remove(req)) {
-			log.reguestRemoved(this, req);
-		} else {
-			log.noRequestFoundForRemoval(this, req);
-		}
-	}
+    public void add(Declaration request) {
+        if (!removedRequests.contains(request)) {
+            if (!requests.contains(request)) {
+                requests.add(request);
+            }
+        }
+    }
 
-	@Override
-	public Iterator<Declaration> iterator() {
-		return unmodifiableList(requests).iterator();
-	}
+    /**
+     * Removes the specified request name.
+     * 
+     * @param decl
+     *            the request declaration.
+     */
+    public void remove(String decl) {
+        Declaration req = declarationFactory.create(decl);
+        removedRequests.add(req);
+        if (requests.remove(req)) {
+            log.reguestRemoved(this, req);
+        } else {
+            log.noRequestFoundForRemoval(this, req);
+        }
+    }
 
-	@Override
-	public String toString() {
-		return new ToStringBuilder(this).append(requests).toString();
-	}
+    public List<Declaration> getRequests() {
+        return unmodifiableList(requests);
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this).append(requests).toString();
+    }
+
 }

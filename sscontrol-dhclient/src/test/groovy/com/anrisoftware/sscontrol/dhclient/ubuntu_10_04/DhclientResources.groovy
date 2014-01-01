@@ -31,43 +31,52 @@ import com.anrisoftware.sscontrol.dhclient.resources.ResourcesUtils
  */
 enum DhclientResources {
 
-	profile("UbuntuProfile.groovy", DhclientResources.class.getResource("UbuntuProfile.groovy")),
-	dhclientScript("Dhclient.groovy", DhclientResources.class.getResource("Dhclient.groovy")),
-	dhclient("/etc/dhcp3/dhclient.conf", DhclientResources.class.getResource("dhclient.txt")),
-	dhclientEmptyExpected("/etc/dhcp3/dhclient.conf", DhclientResources.class.getResource("dhclient_empty_expected.txt")),
-	dhclientNonEmptyExpected("/etc/dhcp3/dhclient.conf", DhclientResources.class.getResource("dhclient_nonempty_expected.txt")),
+    profile("UbuntuProfile.groovy", DhclientResources.class.getResource("UbuntuProfile.groovy")),
+    dhclientScript("Dhclient.groovy", DhclientResources.class.getResource("Dhclient.groovy")),
+    aptitudeCommand("/usr/bin/aptitude", DhclientResources.class.getResource("echo_command.txt")),
+    restartCommand("/etc/init.d/networking", DhclientResources.class.getResource("echo_command.txt")),
+    confDir("/etc/dhcp3", null),
+    dhclient("/etc/dhcp3/dhclient.conf", DhclientResources.class.getResource("dhclient.txt")),
+    dhclientEmptyExpected("/etc/dhcp3/dhclient.conf", DhclientResources.class.getResource("dhclient_empty_expected.txt")),
+    dhclientNonEmptyExpected("/etc/dhcp3/dhclient.conf", DhclientResources.class.getResource("dhclient_nonempty_expected.txt")),
 
-	ResourcesUtils resources
+    static copyUbuntuFiles(File parent) {
+        aptitudeCommand.createCommand parent
+        restartCommand.createCommand parent
+        confDir.asFile parent mkdirs()
+    }
 
-	DhclientResources(String path, URL resource) {
-		this.resources = new ResourcesUtils(path: path, resource: resource)
-	}
+    ResourcesUtils resources
 
-	String getPath() {
-		resources.path
-	}
+    DhclientResources(String path, URL resource) {
+        this.resources = new ResourcesUtils(path: path, resource: resource)
+    }
 
-	URL getResource() {
-		resources.resource
-	}
+    String getPath() {
+        resources.path
+    }
 
-	File asFile(File parent) {
-		resources.asFile parent
-	}
+    URL getResource() {
+        resources.resource
+    }
 
-	void createFile(File parent) {
-		resources.createFile parent
-	}
+    File asFile(File parent) {
+        resources.asFile parent
+    }
 
-	void createCommand(File parent) {
-		resources.createCommand parent
-	}
+    void createFile(File parent) {
+        resources.createFile parent
+    }
 
-	String replaced(File parent, def search, def replace) {
-		resources.replaced parent, search, replace
-	}
+    void createCommand(File parent) {
+        resources.createCommand parent
+    }
 
-	String toString() {
-		resources.toString()
-	}
+    String replaced(File parent, def search, def replace) {
+        resources.replaced parent, search, replace
+    }
+
+    String toString() {
+        resources.toString()
+    }
 }

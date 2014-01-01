@@ -20,9 +20,16 @@ package com.anrisoftware.sscontrol.dhclient.ubuntu
 
 import static java.util.regex.Pattern.*
 
+import javax.inject.Inject
+
+import org.apache.commons.lang3.StringUtils
+
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.Templates
 import com.anrisoftware.sscontrol.core.service.LinuxScript
+import com.anrisoftware.sscontrol.dhclient.service.DhclientService
+import com.anrisoftware.sscontrol.dhclient.statements.DeclarationFactory
+import com.anrisoftware.sscontrol.dhclient.statements.OptionDeclarationFactory
 import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokenTemplate
 
 /**
@@ -33,102 +40,167 @@ import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokenTemplate
  */
 abstract class UbuntuScript extends LinuxScript {
 
-	Templates dhclientTemplates
+    Templates dhclientTemplates
 
-	TemplateResource dhclientConfiguration
+    TemplateResource dhclientConfiguration
 
-	@Override
-	def run() {
-		super.run()
-		dhclientTemplates = templatesFactory.create "DhclientUbuntu"
-		dhclientConfiguration = dhclientTemplates.getResource "configuration"
-		distributionSpecificConfiguration()
-		deployConfiguration()
-		restartServices()
-	}
+    @Inject
+    DeclarationFactory declarationFactory
 
-	/**
-	 * Do the distribution specific configuration.
-	 */
-	abstract distributionSpecificConfiguration()
+    @Inject
+    OptionDeclarationFactory optionDeclarationFactory
 
-	/**
-	 * Deploys the dhclient/configuration.
-	 */
-	def deployConfiguration() {
-		deployConfiguration configurationTokens(), currentConfiguration, configurations, configurationFile
-	}
+    @Override
+    def run() {
+        super.run()
+        dhclientTemplates = templatesFactory.create "DhclientUbuntu"
+        dhclientConfiguration = dhclientTemplates.getResource "configuration"
+        setupDefaultOption service
+        setupDefaultSends service
+        setupDefaultRequests service
+        distributionSpecificConfiguration()
+        deployConfiguration()
+        restartServices()
+    }
 
-	/**
-	 * Returns the dhclient/configurations.
-	 */
-	List getConfigurations() {
-		[
-			new TokenTemplate(optionSearch, optionConf),
-			{
-				service.sends.inject([]) { list, send ->
-					list << new TokenTemplate(sendSearch, sendConf(send))
-				}
-			}(),
-			new TokenTemplate(requestSearch, requestConf, DOTALL),
-			{
-				service.prepends.inject([]) { list, prepend ->
-					list << new TokenTemplate(prependSearch, prependConf(prepend))
-				}
-			}()
-		]
-	}
+    /**
+     * Setups default option.
+     */
+    void setupDefaultOption(DhclientService service) {
+        if (service.getOption() != null) {
+            return
+        }
+        service.setOption declarationFactory.create(defaultOption)
+    }
 
-	/**
-	 * Returns the dhclient/configuration file {@code dhclient.conf}.
-	 *
-	 * <ul>
-	 * <li>profile property key {@code configuration_file}</li>
-	 * </ul>
-	 *
-	 * @see #getDefaultProperties()
-	 * @see #getConfigurationDir()
-	 */
-	File getConfigurationFile() {
-		profileFileProperty "configuration_file", configurationDir, defaultProperties
-	}
+    /**
+     * Setups default sends.
+     */
+    void setupDefaultSends(DhclientService service) {
+        defaultSends.each {
+            String[] str = StringUtils.split it, " "
+            service.addSend optionDeclarationFactory.create(str[0], str[1])
+        }
+    }
 
-	/**
-	 * Returns the current dhclient/configuration.
-	 */
-	String getCurrentConfiguration() {
-		currentConfiguration configurationFile
-	}
+    /**
+     * Setups default requests.
+     */
+    void setupDefaultRequests(DhclientService service) {
+        defaultRequests.each {
+            service.addRequest declarationFactory.create(it)
+        }
+    }
 
-	String getPrependSearch() {
-		dhclientConfiguration.getText true, "prependSearch"
-	}
+    /**
+     * Do the distribution specific configuration.
+     */
+    abstract distributionSpecificConfiguration()
 
-	String prependConf(def prepend) {
-		dhclientConfiguration.getText true, "prepend", "declaration", prepend
-	}
+    /**
+     * Deploys the dhclient/configuration.
+     */
+    def deployConfiguration() {
+        deployConfiguration configurationTokens(), currentConfiguration, configurations, configurationFile
+    }
 
-	String getRequestSearch() {
-		dhclientConfiguration.getText true, "requestSearch"
-	}
+    /**
+     * Returns the dhclient/configurations.
+     */
+    List getConfigurations() {
+        [
+            openConfig(service),
+            sendsConfig(service),
+            requestConfig(service),
+            prependsConfig(service),
+        ]
+    }
 
-	String getRequestConf() {
-		dhclientConfiguration.getText true, "request", "requests", service.requests
-	}
+    def openConfig(DhclientService service) {
+        def search = dhclientConfiguration.getText true, "optionSearch"
+        def conf = dhclientConfiguration.getText true, "option", "declaration", service.option
+        new TokenTemplate(search, conf)
+    }
 
-	String getOptionSearch() {
-		dhclientConfiguration.getText true, "optionSearch"
-	}
+    def sendsConfig(DhclientService service) {
+        def search = dhclientConfiguration.getText true, "sendSearch"
+        service.sends.inject([]) { list, send ->
+            def conf = dhclientConfiguration.getText true, "send", "declaration", send
+            list << new TokenTemplate(search, conf)
+        }
+    }
 
-	String getOptionConf() {
-		dhclientConfiguration.getText true, "option", "declaration", service.option
-	}
+    def requestConfig(DhclientService service) {
+        def search = dhclientConfiguration.getText true, "requestSearch"
+        def conf = dhclientConfiguration.getText true, "request", "requests", service.requests
+        new TokenTemplate(search, conf, DOTALL)
+    }
 
-	String getSendSearch() {
-		dhclientConfiguration.getText true, "sendSearch"
-	}
+    def prependsConfig(DhclientService service) {
+        def search = dhclientConfiguration.getText true, "prependSearch"
+        service.prepends.inject([]) { list, prepend ->
+            def conf = dhclientConfiguration.getText true, "prepend", "declaration", prepend
+            list << new TokenTemplate(search, conf)
+        }
+    }
 
-	String sendConf(def send) {
-		dhclientConfiguration.getText true, "send", "declaration", send
-	}
+    /**
+     * Returns the dhclient/configuration file {@code dhclient.conf}.
+     *
+     * <ul>
+     * <li>profile property key {@code configuration_file}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     * @see #getConfigurationDir()
+     */
+    File getConfigurationFile() {
+        profileFileProperty "configuration_file", configurationDir, defaultProperties
+    }
+
+    /**
+     * Returns the default dhclient option.
+     *
+     * <ul>
+     * <li>profile property key {@code default_option}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    String getDefaultOption() {
+        profileProperty "default_option", defaultProperties
+    }
+
+    /**
+     * Returns the default dhclient sends.
+     *
+     * <ul>
+     * <li>profile property key {@code default_sends}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    List getDefaultSends() {
+        profileListProperty "default_sends", ",", defaultProperties
+    }
+
+    /**
+     * Returns the default dhclient requests.
+     *
+     * <ul>
+     * <li>profile property key {@code default_requests}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    List getDefaultRequests() {
+        profileListProperty "default_requests", defaultProperties
+    }
+
+    /**
+     * Returns the current dhclient/configuration.
+     */
+    String getCurrentConfiguration() {
+        currentConfiguration configurationFile
+    }
 }

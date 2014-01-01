@@ -20,169 +20,138 @@ package com.anrisoftware.sscontrol.dhclient.service;
 
 import static com.anrisoftware.sscontrol.dhclient.service.DhclientServiceFactory.NAME;
 import static java.util.Collections.unmodifiableList;
-import static org.apache.commons.lang3.StringUtils.split;
 import groovy.lang.Script;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
 
-import com.anrisoftware.propertiesutils.ContextProperties;
 import com.anrisoftware.sscontrol.core.api.Service;
 import com.anrisoftware.sscontrol.core.service.AbstractService;
 import com.anrisoftware.sscontrol.dhclient.statements.Declaration;
-import com.anrisoftware.sscontrol.dhclient.statements.DeclarationFactory;
 import com.anrisoftware.sscontrol.dhclient.statements.OptionDeclaration;
 import com.anrisoftware.sscontrol.dhclient.statements.OptionDeclarationFactory;
 import com.anrisoftware.sscontrol.dhclient.statements.RequestDeclarations;
 import com.google.inject.Provider;
 
 /**
- * The Dhclient service.
+ * Dhclient service.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
 @SuppressWarnings("serial")
-class DhclientServiceImpl extends AbstractService {
+class DhclientServiceImpl extends AbstractService implements DhclientService {
 
-	private final DhclientServiceImplLogger log;
+    private final List<OptionDeclaration> sends;
 
-	private final DeclarationFactory declarationFactory;
+    private final List<OptionDeclaration> prepends;
 
-	private final OptionDeclarationFactory optionDeclarationFactory;
+    @Inject
+    private DhclientServiceImplLogger log;
 
-	private Declaration option;
+    @Inject
+    private Map<String, Provider<Script>> scripts;
 
-	private final List<OptionDeclaration> sends;
+    @Inject
+    private OptionDeclarationFactory optionDeclarationFactory;
 
-	private final RequestDeclarations requests;
+    @Inject
+    private RequestDeclarations requests;
 
-	private final List<OptionDeclaration> prepends;
+    private Declaration option;
 
-	private final Map<String, Provider<Script>> scripts;
+    @Inject
+    DhclientServiceImpl() {
+        this.sends = new ArrayList<OptionDeclaration>();
+        this.prepends = new ArrayList<OptionDeclaration>();
+    }
 
-	@Inject
-	DhclientServiceImpl(DhclientServiceImplLogger logger,
-			DeclarationFactory declarationFactory,
-			OptionDeclarationFactory optionDeclarationFactory,
-			RequestDeclarations requests,
-			Map<String, Provider<Script>> scripts, DhclientPropertiesProvider p) {
-		this.scripts = scripts;
-		this.log = logger;
-		this.declarationFactory = declarationFactory;
-		this.optionDeclarationFactory = optionDeclarationFactory;
-		this.sends = new ArrayList<OptionDeclaration>();
-		this.requests = requests;
-		this.prepends = new ArrayList<OptionDeclaration>();
-		setDefaultOption(p.get());
-		setDefaultSends(p.get());
-	}
+    @Override
+    protected Script getScript(String profileName) {
+        return scripts.get(profileName).get();
+    }
 
-	private void setDefaultOption(ContextProperties p) {
-		option = declarationFactory.create(p.getProperty("default_option"));
-	}
+    @Override
+    public String getName() {
+        return NAME;
+    }
 
-	private void setDefaultSends(ContextProperties p) {
-		for (String decl : p.getListProperty("default_sends", ";,")) {
-			String[] option = split(decl.trim(), " ");
-			sends.add(optionDeclarationFactory.create(option[0], option[1]));
-		}
-	}
+    /**
+     * Entry point in the Dhclient script.
+     * 
+     * @return this {@link Service}.
+     */
+    public Service dhclient(Object closure) {
+        return this;
+    }
 
-	@Override
-	protected Script getScript(String profileName) {
-		return scripts.get(profileName).get();
-	}
+    /**
+     * Adds a new request.
+     * 
+     * @param decl
+     *            the request declaration.
+     */
+    public void requests(String decl) {
+        requests.add(decl);
+    }
 
-	/**
-	 * Returns the dhclient service name.
-	 */
-	@Override
-	public String getName() {
-		return NAME;
-	}
+    @Override
+    public void addRequest(Declaration request) {
+        requests.add(request);
+    }
 
-	/**
-	 * Entry point in the Dhclient script.
-	 * 
-	 * @return this {@link Service}.
-	 */
-	public Service dhclient(Object closure) {
-		return this;
-	}
+    @Override
+    public List<Declaration> getRequests() {
+        return requests.getRequests();
+    }
 
-	/**
-	 * Adds a new request.
-	 * 
-	 * @param decl
-	 *            the request declaration.
-	 */
-	public void requests(String decl) {
-		requests.add(decl);
-	}
+    /**
+     * Adds a new prepend.
+     * 
+     * @param option
+     *            the prepend option.
+     * 
+     * @param decl
+     *            the prepend declaration.
+     */
+    public void prepend(String option, String decl) {
+        OptionDeclaration declaration;
+        declaration = optionDeclarationFactory.create(option, decl);
+        prepends.add(declaration);
+        log.prependAdded(this, declaration);
+    }
 
-	/**
-	 * Adds a new prepend.
-	 * 
-	 * @param option
-	 *            the prepend option.
-	 * 
-	 * @param decl
-	 *            the prepend declaration.
-	 */
-	public void prepend(String option, String decl) {
-		OptionDeclaration declaration;
-		declaration = optionDeclarationFactory.create(option, decl);
-		prepends.add(declaration);
-		log.prependAdded(this, declaration);
-	}
+    @Override
+    public void setOption(Declaration option) {
+        this.option = option;
+    }
 
-	/**
-	 * Returns the option declaration.
-	 * 
-	 * @return the {@link Declaration} option declaration.
-	 */
-	public Declaration getOption() {
-		return option;
-	}
+    @Override
+    public Declaration getOption() {
+        return option;
+    }
 
-	/**
-	 * Returns the prepend declarations.
-	 * 
-	 * @return an unmodifiable {@link List} of the {@link OptionDeclaration}
-	 *         prepend declarations.
-	 */
-	public List<OptionDeclaration> getPrepends() {
-		return unmodifiableList(prepends);
-	}
+    @Override
+    public void addPrepend(OptionDeclaration declaration) {
+        prepends.add(declaration);
+    }
 
-	/**
-	 * Returns the request declarations.
-	 * 
-	 * @return an unmodifiable {@link List} of the {@link Declaration} request
-	 *         declarations.
-	 */
-	public List<Declaration> getRequests() {
-		List<Declaration> list = new ArrayList<Declaration>();
-		Iterator<Declaration> i = requests.iterator();
-		while (i.hasNext()) {
-			list.add(i.next());
-		}
-		return unmodifiableList(list);
-	}
+    @Override
+    public List<OptionDeclaration> getPrepends() {
+        return unmodifiableList(prepends);
+    }
 
-	/**
-	 * Returns the send declarations.
-	 * 
-	 * @return an unmodifiable {@link List} of the {@link OptionDeclaration}
-	 *         send declarations.
-	 */
-	public List<OptionDeclaration> getSends() {
-		return unmodifiableList(sends);
-	}
+    @Override
+    public void addSend(OptionDeclaration declaration) {
+        sends.add(declaration);
+    }
+
+    @Override
+    public List<OptionDeclaration> getSends() {
+        return unmodifiableList(sends);
+    }
 
 }

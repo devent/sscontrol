@@ -18,13 +18,14 @@
  */
 package com.anrisoftware.sscontrol.dhclient.ubuntu_10_04
 
-import com.anrisoftware.sscontrol.dhclient.ubuntu.UbuntuResources
+def aptitudeCommand = DhclientResources.aptitudeCommand.asFile(tmp)
+def restartCommand = DhclientResources.restartCommand.asFile(tmp)
+def confDir = DhclientResources.confDir.asFile(tmp)
 
 profile "ubuntu_10_04", {
-	dhclient {
-		install_command "${UbuntuResources.aptitudeCommand.asFile(tmp)} update && ${UbuntuResources.aptitudeCommand.asFile(tmp)} install"
-		restart_command "${UbuntuResources.restartCommand.asFile(tmp)} restart"
-		packages "dhcp3-client"
-		configuration_directory "${UbuntuResources.confDir.asFile(tmp)}"
-	}
+    dhclient {
+        install_command "$aptitudeCommand update && $aptitudeCommand install"
+        restart_command "$restartCommand restart"
+        configuration_directory confDir
+    }
 }

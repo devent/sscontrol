@@ -31,7 +31,7 @@ import com.anrisoftware.sscontrol.dhclient.ubuntu.UbuntuScript
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class Ubuntu_10_04Script extends UbuntuScript {
+class Ubuntu_10_04_Script extends UbuntuScript {
 
 	@Inject
 	UbuntuPropertiesProvider ubuntuProperties

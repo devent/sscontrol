@@ -40,8 +40,8 @@ class DebugLoggingProperty {
      *
      * @see #getDefaultProperties()
      */
-    DebugLogging defaultDebug(Object script) {
-        def str = script.profileProperty "default_debug", script.defaultProperties
+    DebugLogging defaultDebug(Object script, String profile = "default_debug") {
+        def str = script.profileProperty profile, script.defaultProperties
         def args = str.split(",").inject([:]) { acc, val ->
             def nameAndValue = val.split(":")
             acc[nameAndValue[0].trim()] = nameAndValue[1].trim()

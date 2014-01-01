@@ -1,0 +1,16 @@
+loglevelConfig(level) ::= <%
+loglevel = <level>
+%>
+
+loglevelConfig_search() ::= <%
+#?loglevel\\s*=.*
+%>
+
+logtargetConfig(target) ::= <%
+logtarget = <target>
+%>
+
+logtargetConfig_search() ::= <%
+#?logtarget\\s*=.*
+%>
+

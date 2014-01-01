@@ -67,6 +67,8 @@ enum UbuntuResources {
     fail2banRestartCommand("/etc/init.d/fail2ban", UbuntuResources.class.getResource("echo_command.txt")),
     fail2banRestartOutExpected("/etc/init.d/fail2ban.out", UbuntuResources.class.getResource("fail2ban_out_expected.txt")),
     fail2banDirectory("/etc/fail2ban", null),
+    fail2banConf("/etc/fail2ban/fail2ban.conf", UbuntuResources.class.getResource("fail2ban_conf.txt")),
+    fail2banConfExpected("/etc/fail2ban/fail2ban.local", UbuntuResources.class.getResource("fail2ban_local_expected.txt")),
     fail2banJailConf("/etc/fail2ban/jail.conf", UbuntuResources.class.getResource("jail_conf.txt")),
     ufwConfExpected("/etc/fail2ban/action.d/ufw-ssh.conf", UbuntuResources.class.getResource("ufw_ssh_conf_expected.txt")),
     jailConfExpected("/etc/fail2ban/jail.local", UbuntuResources.class.getResource("jail_local_expected.txt")),
@@ -85,6 +87,7 @@ enum UbuntuResources {
         sshdconfigFile.createFile parent
         // fail2ban
         fail2banDirectory.asFile parent mkdirs()
+        fail2banConf.createFile parent
         fail2banJailConf.createFile parent
         fail2banRestartCommand.createCommand parent
     }

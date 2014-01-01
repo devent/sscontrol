@@ -67,6 +67,7 @@ class RemoteTest extends RemoteTestUtil {
         assertFileContent screenrcExpected.asFile(tmpdir), screenrcExpected
         // fail2ban
         assertFileContent ufwConfExpected.asFile(tmpdir), ufwConfExpected
+        assertFileContent fail2banConfExpected.asFile(tmpdir), fail2banConfExpected
         assertFileContent jailConfExpected.asFile(tmpdir), jailConfExpected
         assertFileContent fail2banRestartOutExpected.asFile(tmpdir), fail2banRestartOutExpected
     }

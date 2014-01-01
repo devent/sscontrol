@@ -22,11 +22,17 @@ import static org.apache.commons.io.FileUtils.*
 
 import javax.inject.Inject
 
+import org.apache.commons.io.FileUtils
 import org.joda.time.Duration
 
+import com.anrisoftware.resources.templates.api.TemplateResource
+import com.anrisoftware.resources.templates.api.Templates
+import com.anrisoftware.sscontrol.core.debuglogging.DebugLogging
+import com.anrisoftware.sscontrol.core.debuglogging.DebugLoggingProperty
 import com.anrisoftware.sscontrol.core.service.LinuxScript
 import com.anrisoftware.sscontrol.remote.api.RemoteScript
 import com.anrisoftware.sscontrol.remote.service.RemoteService
+import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokenTemplate
 
 /**
  * fail2ban script.
@@ -36,10 +42,23 @@ import com.anrisoftware.sscontrol.remote.service.RemoteService
  */
 abstract class BaseFail2BanScript implements RemoteScript {
 
+    /**
+     * The {@link Templates} for the script.
+     */
+    Templates scriptTemplates
+
+    /**
+     * Resource create fail2ban configuration.
+     */
+    TemplateResource configTemplate
+
     @Inject
     Map<String, Fail2BanScript> fail2banScript
 
     LinuxScript script
+
+    @Inject
+    private DebugLoggingProperty debugLoggingProperty
 
     @Override
     final void deployRemoteScript(RemoteService service) {
@@ -47,6 +66,7 @@ abstract class BaseFail2BanScript implements RemoteScript {
             return
         }
         setupParentScript()
+        deployConfig()
         deployFail2banScript service
     }
 
@@ -54,6 +74,41 @@ abstract class BaseFail2BanScript implements RemoteScript {
         fail2banScript.each { key, Fail2BanScript value ->
             value.setScript this
         }
+    }
+
+    /**
+     * Setups the default debug logging.
+     */
+    void setupDefaultLogging(RemoteService service) {
+        if (service.debug == null) {
+            service.debug = debugLoggingProperty.defaultDebug this
+        }
+        if (!service.debug.args.containsKey("storage")) {
+            service.debug.args.storage = loggingStorage
+        }
+    }
+
+    /**
+     * Deploys the fail2ban configuration.
+     */
+    void deployConfig() {
+        if (!fail2banLocalConfigFile.isFile()) {
+            FileUtils.copyFile fail2banConfigFile, fail2banLocalConfigFile
+        }
+        def file = fail2banLocalConfigFile
+        def config = currentConfiguration file
+        def debug = debugLoggingProperty.defaultDebug this, "fail2ban_default_debug"
+        deployConfiguration configurationTokens(), config, fail2banLoggingConfigs(debug), file
+    }
+
+    /**
+     * Returns the logging configurations.
+     */
+    List fail2banLoggingConfigs(DebugLogging debug) {
+        [
+            new TokenTemplate(configTemplate.getText(true, "loglevelConfig_search"), configTemplate.getText(true, "loglevelConfig", "level", debug.level)),
+            new TokenTemplate(configTemplate.getText(true, "logtargetConfig_search"), configTemplate.getText(true, "logtargetConfig", "target", debug.args.target)),
+        ]
     }
 
     /**
@@ -121,6 +176,38 @@ abstract class BaseFail2BanScript implements RemoteScript {
      */
     File getFail2banUfwActionFile() {
         profileFileProperty "fail2ban_ufw_action_file", fail2banConfigDir, defaultProperties
+    }
+
+    /**
+     * Returns the fail2ban configuration file, for
+     * example {@code "fail2ban.conf".} If the file path is not absolute
+     * then the file is assumed to be under the fail2ban configuration
+     * directory.
+     *
+     * <ul>
+     * <li>profile property {@code "fail2ban_configuration_file"}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    File getFail2banConfigFile() {
+        profileFileProperty "fail2ban_configuration_file", fail2banConfigDir, defaultProperties
+    }
+
+    /**
+     * Returns the local fail2ban configuration file, for
+     * example {@code "fail2ban.local".} If the file path is not absolute
+     * then the file is assumed to be under the fail2ban configuration
+     * directory.
+     *
+     * <ul>
+     * <li>profile property {@code "fail2ban_local_configuration_file"}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    File getFail2banLocalConfigFile() {
+        profileFileProperty "fail2ban_local_configuration_file", fail2banConfigDir, defaultProperties
     }
 
     /**
@@ -293,6 +380,8 @@ abstract class BaseFail2BanScript implements RemoteScript {
     @Override
     void setScript(LinuxScript script) {
         this.script = script
+        this.scriptTemplates = templatesFactory.create "BaseFail2BanScript"
+        this.configTemplate = scriptTemplates.getResource "config"
     }
 
     @Override

@@ -18,10 +18,14 @@
  */
 package com.anrisoftware.sscontrol.hostname.ubuntu_10_04
 
+def aptitudeCommand = UbuntuResources.aptitudeCommand.asFile tmp
+def restartCommand = UbuntuResources.restartCommand.asFile tmp
+def configDir = UbuntuResources.configDir.asFile tmp
+
 profile "ubuntu_10_04", {
-	hostname {
-		install_command "${tmp}/usr/bin/aptitude update && ${tmp}/usr/bin/aptitude install"
-		restart_command "${tmp}/etc/init.d/hostname restart"
-		configuration_directory "${tmp}/etc"
-	}
+    hostname {
+        install_command "$aptitudeCommand update && $aptitudeCommand install"
+        restart_command "$restartCommand restart"
+        configuration_directory configDir
+    }
 }

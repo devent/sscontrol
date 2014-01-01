@@ -1,18 +1,18 @@
 /*
  * Copyright 2012-2013 Erwin Müller <erwin.mueller@deventm.org>
- * 
+ *
  * This file is part of sscontrol-hostname.
- * 
+ *
  * sscontrol-hostname is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published by the
  * Free Software Foundation, either version 3 of the License, or (at your
  * option) any later version.
- * 
+ *
  * sscontrol-hostname is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
  * for more details.
- * 
+ *
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-hostname. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -56,7 +56,9 @@ class HostnameServiceImpl extends AbstractService {
 
 	@Override
 	protected Script getScript(String profileName) throws ServiceException {
-		return scripts.get(profileName).get();
+		Provider<Script> provider = scripts.get(profileName);
+        log.checkScript(this, provider, profileName);
+        return provider.get();
 	}
 
 	/**
@@ -67,32 +69,32 @@ class HostnameServiceImpl extends AbstractService {
 		return NAME;
 	}
 
-	/**
-	 * Entry point for the hostname service script.
-	 * 
-	 * @return this {@link Service}.
-	 */
+	    /**
+     * Entry point for the hostname service script.
+     * 
+     * @return this {@link Service}.
+     */
 	public Service hostname(Object closure) {
 		return this;
 	}
 
-	/**
-	 * Sets the host name.
-	 * 
-	 * @param name
-	 *            the host name.
-	 */
+	    /**
+     * Sets the host name.
+     * 
+     * @param name
+     *            the host name.
+     */
 	public void set(String name) {
 		log.checkHostname(this, name);
 		hostname = name;
 		log.hostnameSet(this, name);
 	}
 
-	/**
-	 * Returns the host name.
-	 * 
-	 * @return the host name.
-	 */
+	    /**
+     * Returns the host name.
+     * 
+     * @return the host name.
+     */
 	public String getHostname() {
 		return hostname;
 	}

@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-hostname. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.hostname.ubuntu_10_04
+package com.anrisoftware.sscontrol.hostname.ubuntu_12_04
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static org.apache.commons.io.FileUtils.*
@@ -24,7 +24,7 @@ import static org.apache.commons.io.FileUtils.*
 import com.anrisoftware.sscontrol.hostname.core.ResourcesUtils
 
 /**
- * Hostname/Ubuntu 10.04 resources.
+ * Hostname/Ubuntu 12.04 resources.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
@@ -33,17 +33,17 @@ enum UbuntuResources {
 
     profile("UbuntuProfile.groovy", UbuntuResources.class.getResource("UbuntuProfile.groovy")),
     hostnameService("Hostname.groovy", UbuntuResources.class.getResource("HostnameService.groovy")),
-    hostnameNullService("Hostname.groovy", UbuntuResources.class.getResource("HostnameNullService.groovy")),
     restartCommand("/etc/init.d/hostname", UbuntuResources.class.getResource("echo_command.txt")),
     aptitudeCommand("/usr/bin/aptitude", UbuntuResources.class.getResource("echo_command.txt")),
     configDir("/etc", null),
-    localhostHostnameFile("/etc/hostname", UbuntuResources.class.getResource("localhost_hostname.txt")),
+    hostname("/etc/hostname", UbuntuResources.class.getResource("hostname.txt")),
     hostnameExpected("/etc/hostname", UbuntuResources.class.getResource("hostname_expected.txt")),
 
     static copyUbuntuFiles(File parent) {
         configDir.asFile(parent).mkdirs()
         aptitudeCommand.createCommand parent
         restartCommand.createCommand parent
+        hostnameExpected.createFile parent
     }
 
     ResourcesUtils resources

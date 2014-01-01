@@ -16,12 +16,12 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-hostname. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.hostname.ubuntu
+package com.anrisoftware.sscontrol.hostname.ubuntu_10_04
 
 import javax.inject.Inject
 
 import com.anrisoftware.propertiesutils.ContextProperties
-import com.anrisoftware.sscontrol.hostname.linux.HostnameScript
+import com.anrisoftware.sscontrol.hostname.linux.BaseHostnameScript
 
 /**
  * Deploys the hostname on the Ubuntu 10.04 Linux system.
@@ -29,34 +29,18 @@ import com.anrisoftware.sscontrol.hostname.linux.HostnameScript
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class Ubuntu_10_04Script extends HostnameScript {
+class UbuntuScript extends BaseHostnameScript {
 
-	@Inject
-	Ubuntu_10_04ScriptLogger log
+    @Inject
+    UbuntuPropertiesProvider ubuntuProperties
 
-	@Inject
-	Ubuntu10_04PropertiesProvider ubuntuProperties
+    @Override
+    void distributionSpecificConfiguration() {
+        installPackages()
+    }
 
-	@Override
-	ContextProperties getDefaultProperties() {
-		ubuntuProperties.get()
-	}
-
-	@Override
-	void distributionSpecificConfiguration() {
-		installPackages()
-	}
-
-	@Override
-	String getConfigurationFile() {
-		profileProperty "configuration_file", defaultProperties
-	}
-
-	void restartServices(List services = restartServices) {
-		def template = commandTemplates.getResource("restart")
-		def worker = scriptCommandFactory.create(template,
-				"restartCommand", restartCommand,
-				"services", services)()
-		log.restartServiceDone this, worker
-	}
+    @Override
+    ContextProperties getDefaultProperties() {
+        ubuntuProperties.get()
+    }
 }

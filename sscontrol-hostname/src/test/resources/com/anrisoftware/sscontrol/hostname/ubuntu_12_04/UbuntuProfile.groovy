@@ -1,36 +1,32 @@
 /*
  * Copyright 2012-2013 Erwin Müller <erwin.mueller@deventm.org>
- * 
+ *
  * This file is part of sscontrol-hostname.
- * 
+ *
  * sscontrol-hostname is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published by the
  * Free Software Foundation, either version 3 of the License, or (at your
  * option) any later version.
- * 
+ *
  * sscontrol-hostname is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
  * for more details.
- * 
+ *
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-hostname. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.hostname.service;
+package com.anrisoftware.sscontrol.hostname.ubuntu_12_04
 
-import com.anrisoftware.sscontrol.hostname.ubuntu_10_04.Ubuntu_10_04_Module;
-import com.google.inject.AbstractModule;
+import com.anrisoftware.sscontrol.hostname.ubuntu_10_04.UbuntuResources
 
-/**
- * Hostname service module.
- * 
- * @author Erwin Mueller, erwin.mueller@deventm.org
- * @since 1.0
- */
-class HostnameModule extends AbstractModule {
+def aptitudeCommand = UbuntuResources.aptitudeCommand.asFile tmp
+def restartCommand = UbuntuResources.restartCommand.asFile tmp
 
-	@Override
-	protected void configure() {
-		install(new Ubuntu_10_04_Module());
-	}
+profile "ubuntu_12_04", {
+    hostname {
+        install_command "${tmp}/usr/bin/aptitude update && ${tmp}/usr/bin/aptitude install"
+        restart_command "${tmp}/etc/init.d/hostname restart"
+        configuration_directory "${tmp}/etc"
+    }
 }

@@ -18,49 +18,93 @@
  */
 package com.anrisoftware.sscontrol.hostname.service;
 
+import static com.anrisoftware.sscontrol.hostname.service.HostnameServiceImplLogger._.hostname_empty_null;
+import static com.anrisoftware.sscontrol.hostname.service.HostnameServiceImplLogger._.hostname_provider_found;
+import static com.anrisoftware.sscontrol.hostname.service.HostnameServiceImplLogger._.hostname_provider_found_message;
+import static com.anrisoftware.sscontrol.hostname.service.HostnameServiceImplLogger._.hostname_set;
+import static com.anrisoftware.sscontrol.hostname.service.HostnameServiceImplLogger._.hostname_set_info;
+import static com.anrisoftware.sscontrol.hostname.service.HostnameServiceImplLogger._.provider_name;
+import static com.anrisoftware.sscontrol.hostname.service.HostnameServiceImplLogger._.set_profile;
+import static com.anrisoftware.sscontrol.hostname.service.HostnameServiceImplLogger._.set_profile_info;
 import static org.apache.commons.lang3.Validate.notEmpty;
+import groovy.lang.Script;
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
 import com.anrisoftware.sscontrol.core.api.ProfileService;
+import com.anrisoftware.sscontrol.core.api.ServiceException;
+import com.google.inject.Provider;
 
 /**
  * Logging messages for {@link HostnameServiceImpl}.
- * 
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
 class HostnameServiceImplLogger extends AbstractLogger {
 
-	private static final String HOSTNAME_EMPTY_NULL = "Hostname must not be empty or null for %s.";
-	private static final String HOSTNAME_SET_INFO = "Hostname '{}' set.";
-	private static final String HOSTNAME_SET = "Hostname '{}' set for {}.";
-	private static final String SET_PROFILE_INFO = "Set profile {} for hostname service.";
-	private static final String SET_PROFILE = "Set profile {} for {}.";
+    enum _ {
 
-	/**
-	 * Create logger for {@link HostnameServiceImpl}.
-	 */
-	HostnameServiceImplLogger() {
-		super(HostnameServiceImpl.class);
-	}
+        hostname_empty_null("Hostname must not be empty or null for %s."),
 
-	void profileSet(HostnameServiceImpl service, ProfileService profile) {
-		if (log.isDebugEnabled()) {
-			log.debug(SET_PROFILE, profile, service);
-		} else {
-			log.info(SET_PROFILE_INFO, profile.getProfileName());
-		}
-	}
+        hostname_set_info("Hostname '{}' set."),
 
-	void hostnameSet(HostnameServiceImpl service, String name) {
-		if (log.isDebugEnabled()) {
-			log.debug(HOSTNAME_SET, name, service);
-		} else {
-			log.info(HOSTNAME_SET_INFO, name);
-		}
-	}
+        hostname_set("Hostname '{}' set for {}."),
 
-	void checkHostname(HostnameServiceImpl service, String name) {
-		notEmpty(name, HOSTNAME_EMPTY_NULL, service);
-	}
+        set_profile_info("Set profile {} for hostname service."),
+
+        set_profile("Set profile {} for {}."),
+
+        hostname_provider_found("Hostname provider not found"),
+
+        hostname_provider_found_message("Hostname provider '{}' not found."),
+
+        provider_name("name");
+
+        private String name;
+
+        private _(String name) {
+            this.name = name;
+        }
+
+        @Override
+        public String toString() {
+            return name;
+        }
+    }
+
+    /**
+     * Create logger for {@link HostnameServiceImpl}.
+     */
+    HostnameServiceImplLogger() {
+        super(HostnameServiceImpl.class);
+    }
+
+    void profileSet(HostnameServiceImpl service, ProfileService profile) {
+        if (isDebugEnabled()) {
+            debug(set_profile, profile, service);
+        } else {
+            info(set_profile_info, profile.getProfileName());
+        }
+    }
+
+    void hostnameSet(HostnameServiceImpl service, String name) {
+        if (isDebugEnabled()) {
+            debug(hostname_set, name, service);
+        } else {
+            info(hostname_set_info, name);
+        }
+    }
+
+    void checkHostname(HostnameServiceImpl service, String name) {
+        notEmpty(name, hostname_empty_null.toString(), service);
+    }
+
+    void checkScript(HostnameServiceImpl service, Provider<Script> provider,
+            String name) throws ServiceException {
+        if (provider != null) {
+            return;
+        }
+        throw logException(new ServiceException(hostname_provider_found).add(
+                provider_name, name), hostname_provider_found_message, name);
+    }
 }

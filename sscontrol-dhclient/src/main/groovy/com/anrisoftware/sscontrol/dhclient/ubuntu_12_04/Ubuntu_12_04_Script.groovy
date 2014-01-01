@@ -16,25 +16,32 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-dhclient. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.dhclient.service;
+package com.anrisoftware.sscontrol.dhclient.ubuntu_12_04
 
-import com.anrisoftware.sscontrol.dhclient.statements.StatementsModule;
-import com.anrisoftware.sscontrol.dhclient.ubuntu_10_04.Ubuntu_10_04_Module;
-import com.anrisoftware.sscontrol.dhclient.ubuntu_12_04.Ubuntu_12_04_Module;
-import com.google.inject.AbstractModule;
+import static java.util.regex.Pattern.*
+
+import javax.inject.Inject
+
+import com.anrisoftware.propertiesutils.ContextProperties
+import com.anrisoftware.sscontrol.dhclient.ubuntu.UbuntuScript
 
 /**
- * Binds the Dhclient service scripts.
- * 
+ * Dhclient/Ubuntu 10.04.
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class DhclientModule extends AbstractModule {
+class Ubuntu_12_04_Script extends UbuntuScript {
+
+	@Inject
+	UbuntuPropertiesProvider ubuntuProperties
+
+	def distributionSpecificConfiguration() {
+		installPackages()
+	}
 
 	@Override
-	protected void configure() {
-		install(new StatementsModule());
-		install(new Ubuntu_10_04_Module());
-        install(new Ubuntu_12_04_Module());
+	ContextProperties getDefaultProperties() {
+		ubuntuProperties.get()
 	}
 }

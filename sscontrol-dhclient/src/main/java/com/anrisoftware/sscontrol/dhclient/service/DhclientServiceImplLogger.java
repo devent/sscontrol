@@ -18,10 +18,19 @@
  */
 package com.anrisoftware.sscontrol.dhclient.service;
 
+import static com.anrisoftware.sscontrol.dhclient.service.DhclientServiceImplLogger._.dhclient_provider_found;
+import static com.anrisoftware.sscontrol.dhclient.service.DhclientServiceImplLogger._.dhclient_provider_found_message;
+import static com.anrisoftware.sscontrol.dhclient.service.DhclientServiceImplLogger._.prepend_added_debug;
+import static com.anrisoftware.sscontrol.dhclient.service.DhclientServiceImplLogger._.prepend_added_info;
+import static com.anrisoftware.sscontrol.dhclient.service.DhclientServiceImplLogger._.provider_name;
+import groovy.lang.Script;
+
 import javax.inject.Singleton;
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
+import com.anrisoftware.sscontrol.core.api.ServiceException;
 import com.anrisoftware.sscontrol.dhclient.statements.OptionDeclaration;
+import com.google.inject.Provider;
 
 /**
  * Logging messages for {@link DhclientServiceImpl}.
@@ -32,22 +41,52 @@ import com.anrisoftware.sscontrol.dhclient.statements.OptionDeclaration;
 @Singleton
 class DhclientServiceImplLogger extends AbstractLogger {
 
-	private static final String PREPEND_INFO = "Prepend '{}' added for dhclient.";
-	private static final String PREPEND = "Prepend '{}' added for {}.";
+    enum _ {
 
-	/**
-	 * Create logger for {@link DhclientServiceImpl}.
-	 */
-	DhclientServiceImplLogger() {
-		super(DhclientServiceImpl.class);
-	}
+        prepend_added_info("Prepend '{}' added for dhclient."),
 
-	public void prependAdded(DhclientServiceImpl service,
-			OptionDeclaration declaration) {
-		if (log.isDebugEnabled()) {
-			log.debug(PREPEND, declaration, service);
-		} else {
-			log.info(PREPEND_INFO, declaration);
-		}
-	}
+        prepend_added_debug("Prepend '{}' added for {}."),
+
+        dhclient_provider_found("Dhclient provider not found"),
+
+        dhclient_provider_found_message("Dhclient provider '{}' not found."),
+
+        provider_name("name");
+
+        private String name;
+
+        private _(String name) {
+            this.name = name;
+        }
+
+        @Override
+        public String toString() {
+            return name;
+        }
+    }
+
+    /**
+     * Create logger for {@link DhclientServiceImpl}.
+     */
+    DhclientServiceImplLogger() {
+        super(DhclientServiceImpl.class);
+    }
+
+    public void prependAdded(DhclientService service,
+            OptionDeclaration declaration) {
+        if (isDebugEnabled()) {
+            debug(prepend_added_debug, declaration, service);
+        } else {
+            info(prepend_added_info, declaration);
+        }
+    }
+
+    void checkScript(DhclientService service, Provider<Script> provider,
+            String name) throws ServiceException {
+        if (provider != null) {
+            return;
+        }
+        throw logException(new ServiceException(dhclient_provider_found).add(
+                provider_name, name), dhclient_provider_found_message, name);
+    }
 }

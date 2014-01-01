@@ -16,25 +16,9 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-dhclient. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.dhclient.service;
+package com.anrisoftware.sscontrol.dhclient.ubuntu_12_04
 
-import com.anrisoftware.sscontrol.dhclient.statements.StatementsModule;
-import com.anrisoftware.sscontrol.dhclient.ubuntu_10_04.Ubuntu_10_04_Module;
-import com.anrisoftware.sscontrol.dhclient.ubuntu_12_04.Ubuntu_12_04_Module;
-import com.google.inject.AbstractModule;
-
-/**
- * Binds the Dhclient service scripts.
- * 
- * @author Erwin Mueller, erwin.mueller@deventm.org
- * @since 1.0
- */
-class DhclientModule extends AbstractModule {
-
-	@Override
-	protected void configure() {
-		install(new StatementsModule());
-		install(new Ubuntu_10_04_Module());
-        install(new Ubuntu_12_04_Module());
-	}
+dhclient {
+	requests "!domain-name-servers"
+	prepend "domain_name_servers", "127.0.0.1"
 }

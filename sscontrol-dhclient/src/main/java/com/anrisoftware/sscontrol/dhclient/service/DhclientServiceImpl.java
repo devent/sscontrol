@@ -29,6 +29,7 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import com.anrisoftware.sscontrol.core.api.Service;
+import com.anrisoftware.sscontrol.core.api.ServiceException;
 import com.anrisoftware.sscontrol.core.service.AbstractService;
 import com.anrisoftware.sscontrol.dhclient.statements.Declaration;
 import com.anrisoftware.sscontrol.dhclient.statements.OptionDeclaration;
@@ -70,8 +71,10 @@ class DhclientServiceImpl extends AbstractService implements DhclientService {
     }
 
     @Override
-    protected Script getScript(String profileName) {
-        return scripts.get(profileName).get();
+    protected Script getScript(String profileName) throws ServiceException {
+        Provider<Script> provider = scripts.get(profileName);
+        log.checkScript(this, provider, profileName);
+        return provider.get();
     }
 
     @Override

@@ -23,7 +23,7 @@ send <declaration.option> <declaration.declaration>;
 >>
 
 requestSearch() ::= <<
-#?request ([\w\-,\s]?)*;
+#?request ([\w\d\.\-,\s]?)*;
 >>
 
 request(requests) ::= <<

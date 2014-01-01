@@ -11,19 +11,26 @@
 #   few changes must be made to this file, if any.
 #
 
+# SSCONTROL-dhclient
 option rfc3442-classless-static-routes code 121 = array of unsigned integer 8;
+# SSCONTROL-dhclient-END
 
+
+# SSCONTROL-dhclient
 send host-name "<hostname>";
+# SSCONTROL-dhclient-END
+
 #send dhcp-client-identifier 1:0:a0:24:ab:fb:9c;
 #send dhcp-lease-time 3600;
 #supersede domain-name "fugue.com home.vix.com";
-#prepend domain-name-servers 127.0.0.1;
-request subnet-mask, broadcast-address, time-offset, routers,
-    domain-name, domain-name-servers, domain-search, host-name,
-    netbios-name-servers, netbios-scope, interface-mtu,
-    rfc3442-classless-static-routes, ntp-servers,
-    dhcp6.domain-search, dhcp6.fqdn,
-    dhcp6.name-servers, dhcp6.sntp-servers;
+# SSCONTROL-dhclient
+prepend domain_name_servers 127.0.0.1;
+# SSCONTROL-dhclient-END
+
+# SSCONTROL-dhclient
+request subnet-mask, broadcast-address, time-offset, routers, domain-name, domain-search, host-name, netbios-name-servers, netbios-scope, interface-mtu, rfc3442-classless-static-routes, ntp-servers, dhcp6.domain-search, dhcp6.fqdn, dhcp6.name-servers, dhcp6.sntp-servers;
+# SSCONTROL-dhclient-END
+
 #require subnet-mask, domain-name-servers;
 #timeout 60;
 #retry 60;

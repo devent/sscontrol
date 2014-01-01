@@ -16,25 +16,30 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-dhclient. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.dhclient.service;
+package com.anrisoftware.sscontrol.dhclient.ubuntu_12_04;
 
-import com.anrisoftware.sscontrol.dhclient.statements.StatementsModule;
-import com.anrisoftware.sscontrol.dhclient.ubuntu_10_04.Ubuntu_10_04_Module;
-import com.anrisoftware.sscontrol.dhclient.ubuntu_12_04.Ubuntu_12_04_Module;
+import static com.google.inject.multibindings.MapBinder.newMapBinder;
+import groovy.lang.Script;
+
 import com.google.inject.AbstractModule;
+import com.google.inject.multibindings.MapBinder;
 
 /**
- * Binds the Dhclient service scripts.
+ * Dhclient/Ubuntu 10.04.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class DhclientModule extends AbstractModule {
+public class Ubuntu_12_04_Module extends AbstractModule {
 
 	@Override
 	protected void configure() {
-		install(new StatementsModule());
-		install(new Ubuntu_10_04_Module());
-        install(new Ubuntu_12_04_Module());
+		bindScripts();
+	}
+
+	private void bindScripts() {
+		MapBinder<String, Script> binder;
+		binder = newMapBinder(binder(), String.class, Script.class);
+        binder.addBinding("ubuntu_12_04").to(Ubuntu_12_04_Script.class);
 	}
 }

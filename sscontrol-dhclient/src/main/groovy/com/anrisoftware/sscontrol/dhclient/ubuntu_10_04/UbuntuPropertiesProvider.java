@@ -32,7 +32,7 @@ import com.anrisoftware.propertiesutils.AbstractContextPropertiesProvider;
 @SuppressWarnings("serial")
 class UbuntuPropertiesProvider extends AbstractContextPropertiesProvider {
 
-	private static final URL RESOURCE = UbuntuModule.class
+	private static final URL RESOURCE = Ubuntu_10_04_Module.class
 			.getResource("/dhclient_ubuntu_10_04.properties");
 
 	UbuntuPropertiesProvider() {

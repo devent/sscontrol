@@ -16,25 +16,27 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-dhclient. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.dhclient.service;
+package com.anrisoftware.sscontrol.dhclient.ubuntu_12_04;
 
-import com.anrisoftware.sscontrol.dhclient.statements.StatementsModule;
-import com.anrisoftware.sscontrol.dhclient.ubuntu_10_04.Ubuntu_10_04_Module;
-import com.anrisoftware.sscontrol.dhclient.ubuntu_12_04.Ubuntu_12_04_Module;
-import com.google.inject.AbstractModule;
+import java.net.URL;
+
+import com.anrisoftware.propertiesutils.AbstractContextPropertiesProvider;
 
 /**
- * Binds the Dhclient service scripts.
+ * Provides Dhclient/Ubuntu 12.04 properties from
+ * {@code /dhclient_ubuntu_12_04.properties}.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class DhclientModule extends AbstractModule {
+@SuppressWarnings("serial")
+class UbuntuPropertiesProvider extends AbstractContextPropertiesProvider {
 
-	@Override
-	protected void configure() {
-		install(new StatementsModule());
-		install(new Ubuntu_10_04_Module());
-        install(new Ubuntu_12_04_Module());
+	private static final URL RESOURCE = Ubuntu_12_04_Module.class
+            .getResource("/dhclient_ubuntu_12_04.properties");
+
+	UbuntuPropertiesProvider() {
+		super(UbuntuPropertiesProvider.class, RESOURCE);
 	}
+
 }

@@ -32,7 +32,7 @@ SyslogFacility AUTH
 # SSCONTROL-remote-END
 
 # SSCONTROL-remote
-LogLevel INFO
+LogLevel VERBOSE
 # SSCONTROL-remote-END
 
 

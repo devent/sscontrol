@@ -16,30 +16,31 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-hostname. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.hostname.ubuntu_10_04;
+package com.anrisoftware.sscontrol.hostname.ubuntu_12_04
 
-import static com.google.inject.multibindings.MapBinder.newMapBinder;
-import groovy.lang.Script;
+import javax.inject.Inject
 
-import com.google.inject.AbstractModule;
-import com.google.inject.multibindings.MapBinder;
+import com.anrisoftware.propertiesutils.ContextProperties
+import com.anrisoftware.sscontrol.hostname.linux.BaseHostnameScript
 
 /**
- * Installs the hostname script for Ubuntu 10.04.
- * 
+ * Deploys the hostname on the Ubuntu 10.04 Linux system.
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-public class Ubuntu_10_04_Module extends AbstractModule {
+class UbuntuScript extends BaseHostnameScript {
 
-	@Override
-	protected void configure() {
-		bindScripts();
-	}
+    @Inject
+    UbuntuPropertiesProvider ubuntuProperties
 
-	private void bindScripts() {
-		MapBinder<String, Script> binder;
-		binder = newMapBinder(binder(), String.class, Script.class);
-		binder.addBinding("ubuntu_10_04").to(UbuntuScript.class);
-	}
+    @Override
+    void distributionSpecificConfiguration() {
+        installPackages()
+    }
+
+    @Override
+    ContextProperties getDefaultProperties() {
+        ubuntuProperties.get()
+    }
 }

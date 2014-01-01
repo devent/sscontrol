@@ -276,6 +276,20 @@ abstract class BaseFail2BanScript implements RemoteScript {
         profileListProperty "fail2ban_restart_services", defaultProperties
     }
 
+    /**
+     * Returns the application name to ban, for
+     * example {@code "OpenSSH".}
+     *
+     * <ul>
+     * <li>profile property {@code "fail2ban_application"}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    String getFail2banApp() {
+        profileProperty "fail2ban_application", defaultProperties
+    }
+
     @Override
     void setScript(LinuxScript script) {
         this.script = script

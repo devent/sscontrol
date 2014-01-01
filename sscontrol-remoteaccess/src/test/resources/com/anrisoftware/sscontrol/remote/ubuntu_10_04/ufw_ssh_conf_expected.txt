@@ -13,9 +13,9 @@ actionstop =
 
 actioncheck =
 
-actionban = [ -n "<application>" ] && app="app <application>" ; ufw insert <insertpos> <blocktype> from <ip> to <destination> $app
+actionban = ufw insert <insertpos> <blocktype> from <ip> to <destination> app <application>
 
-actionunban = [ -n "<application>" ] && app="app <application>" ; ufw delete <blocktype> from <ip> to <destination> $app
+actionunban = ufw delete <blocktype> from <ip> to <destination> app <application>
 
 [Init]
 # Option: insertpos
@@ -32,7 +32,7 @@ destination = any
 
 # Option: application
 # Notes.: application from sudo ufw app list
-application =
+application = OpenSSH
 
 # DEV NOTES:
 #

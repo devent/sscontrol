@@ -68,7 +68,7 @@ enum UbuntuResources {
     fail2banRestartOutExpected("/etc/init.d/fail2ban.out", UbuntuResources.class.getResource("fail2ban_out_expected.txt")),
     fail2banDirectory("/etc/fail2ban", null),
     fail2banJailConf("/etc/fail2ban/jail.conf", UbuntuResources.class.getResource("jail_conf.txt")),
-    ufwConfExpected("/etc/fail2ban/action.d/ufw.conf", UbuntuResources.class.getResource("ufw_conf_expected.txt")),
+    ufwConfExpected("/etc/fail2ban/action.d/ufw-ssh.conf", UbuntuResources.class.getResource("ufw_ssh_conf_expected.txt")),
     jailConfExpected("/etc/fail2ban/jail.local", UbuntuResources.class.getResource("jail_local_expected.txt")),
 
     static copyUbuntuFiles(File parent) {

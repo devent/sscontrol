@@ -14,9 +14,9 @@ actionstop =
 
 actioncheck =
 
-actionban = [ -n "\<application>" ] && app="app \<application>" ; ufw insert \<insertpos> \<blocktype> from \<ip> to \<destination> $app
+actionban = ufw insert \<insertpos> \<blocktype> from \<ip> to \<destination> <if(strlen(properties.fail2banApp))>app \<application><endif>
 
-actionunban = [ -n "\<application>" ] && app="app \<application>" ; ufw delete \<blocktype> from \<ip> to \<destination> $app
+actionunban = ufw delete \<blocktype> from \<ip> to \<destination> <if(strlen(properties.fail2banApp))>app \<application><endif>
 
 [Init]
 # Option: insertpos
@@ -33,7 +33,7 @@ destination = any
 
 # Option: application
 # Notes.: application from sudo ufw app list
-application =
+application = <properties.fail2banApp>
 
 # DEV NOTES:
 #

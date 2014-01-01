@@ -248,6 +248,34 @@ abstract class BaseFail2BanScript implements RemoteScript {
         profileProperty "fail2ban_block_type", defaultProperties
     }
 
+    /**
+     * Returns the fail2ban restart command, for
+     * example {@code "/etc/init.d/fail2ban restart".}
+     *
+     * <ul>
+     * <li>profile property {@code "fail2ban_restart_command"}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    String getFail2banRestartCommand() {
+        profileProperty "fail2ban_restart_command", defaultProperties
+    }
+
+    /**
+     * Returns the list of fail2ban services to restart, for
+     * example {@code "".}
+     *
+     * <ul>
+     * <li>profile property {@code "fail2ban_restart_services"}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    List getFail2banRestartServices() {
+        profileListProperty "fail2ban_restart_services", defaultProperties
+    }
+
     @Override
     void setScript(LinuxScript script) {
         this.script = script

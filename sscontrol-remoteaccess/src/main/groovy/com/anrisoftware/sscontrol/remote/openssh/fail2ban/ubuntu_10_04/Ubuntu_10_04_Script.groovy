@@ -33,5 +33,6 @@ class Ubuntu_10_04_Script extends BaseFail2BanScript {
     void deployFail2banScript(RemoteService service) {
         installPackages fail2banPackages
         super.deployFail2banScript service
+        restartServices restartCommand: fail2banRestartCommand, services: fail2banRestartServices
     }
 }

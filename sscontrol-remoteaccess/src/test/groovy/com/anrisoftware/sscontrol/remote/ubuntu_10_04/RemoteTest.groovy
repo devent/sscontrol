@@ -61,10 +61,13 @@ class RemoteTest extends RemoteTestUtil {
         //assertFileContent deventAuthorizedkeysExpected.asFile(tmpdir), deventAuthorizedkeysExpected
         assertFileContent fooAuthorizedkeysExpected.asFile(tmpdir), fooAuthorizedkeysExpected
         assertFileContent foobarAuthorizedkeysExpected.asFile(tmpdir), foobarAuthorizedkeysExpected
+        // screen
         assertFileContent autoScreenExpected.asFile(tmpdir), autoScreenExpected
         assertStringContent autoScreenSessionExpected.replaced(tmpdir, tmpdir, "/tmp"), autoScreenSessionExpected.toString()
         assertFileContent screenrcExpected.asFile(tmpdir), screenrcExpected
+        // fail2ban
         assertFileContent ufwConfExpected.asFile(tmpdir), ufwConfExpected
         assertFileContent jailConfExpected.asFile(tmpdir), jailConfExpected
+        assertFileContent fail2banRestartOutExpected.asFile(tmpdir), fail2banRestartOutExpected
     }
 }

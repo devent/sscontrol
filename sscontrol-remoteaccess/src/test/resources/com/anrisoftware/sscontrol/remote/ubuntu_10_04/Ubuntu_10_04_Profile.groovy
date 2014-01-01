@@ -31,6 +31,7 @@ def passwdfile = UbuntuResources.passwdFile.asFile(tmp)
 def sshdconfigFile = UbuntuResources.sshdconfigFile.asFile(tmp)
 def localBinDirectory = UbuntuResources.localBinDirectory.asFile(tmp)
 def fail2banDir = UbuntuResources.fail2banDirectory.asFile(tmp)
+def fail2banRestartCommand = UbuntuResources.fail2banRestartCommand.asFile(tmp)
 
 profile "ubuntu_10_04", {
     remote {
@@ -50,5 +51,6 @@ profile "ubuntu_10_04", {
         home_pattern "$tmp/home/<user.name>"
         ssh_key_pattern "$tmp/home/<user.name>/.ssh/id_rsa"
         fail2ban_configuration_directory fail2banDir
+        fail2ban_restart_command "$fail2banRestartCommand restart"
     }
 }

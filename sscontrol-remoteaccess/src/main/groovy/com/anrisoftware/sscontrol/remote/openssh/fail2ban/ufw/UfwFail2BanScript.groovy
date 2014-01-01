@@ -20,7 +20,16 @@ package com.anrisoftware.sscontrol.remote.openssh.fail2ban.ufw
 
 import static org.apache.commons.io.FileUtils.*
 
-import com.anrisoftware.sscontrol.core.service.LinuxScript
+import javax.inject.Inject
+
+import org.apache.commons.io.FileUtils
+
+import com.anrisoftware.globalpom.initfileparser.DefaultInitFileAttributesFactory
+import com.anrisoftware.globalpom.initfileparser.InitFileParserFactory
+import com.anrisoftware.globalpom.initfileparser.Section
+import com.anrisoftware.globalpom.initfileparser.SectionFormatterFactory
+import com.anrisoftware.resources.templates.api.TemplateResource
+import com.anrisoftware.resources.templates.api.Templates
 import com.anrisoftware.sscontrol.remote.openssh.fail2ban.linux.Fail2BanScript
 import com.anrisoftware.sscontrol.remote.service.RemoteService
 
@@ -32,19 +41,79 @@ import com.anrisoftware.sscontrol.remote.service.RemoteService
  */
 abstract class UfwFail2BanScript implements Fail2BanScript {
 
-    LinuxScript script
+    @Inject
+    InitFileParserFactory initFileParserFactory
+
+    @Inject
+    DefaultInitFileAttributesFactory initFileAttributesFactory
+
+    @Inject
+    SectionFormatterFactory sectionFormatterFactory
+
+    /**
+     * The {@link Templates} for the script.
+     */
+    Templates scriptTemplates
+
+    /**
+     * Resource create UFW fail2ban action.
+     */
+    TemplateResource ufwactionTemplate
+
+    /**
+     * Parent script.
+     */
+    Object script
 
     @Override
     void deployFail2banScript(RemoteService service) {
+        createUfwAction()
+        createUfwSection()
+    }
+
+    void createUfwAction() {
+        if (fail2banUfwActionFile.isFile()) {
+            return
+        }
+        def str = ufwactionTemplate.getText("properties", script)
+        FileUtils.write fail2banUfwActionFile, str, charset
+    }
+
+    void createUfwSection() {
+        if (!fail2banJailLocalConfigFile.isFile()) {
+            FileUtils.copyFile fail2banJailConfigFile, fail2banJailLocalConfigFile
+        }
+        def attributes = initFileAttributesFactory.create()
+        def parser = initFileParserFactory.create(fail2banJailLocalConfigFile, attributes)()
+        def sections = parser.inject([]) { acc, val -> acc << val }
+        def defaultSection = sections.find { Section section -> section.name == "DEFAULT" }
+        def sshSection = sections.find { Section section -> section.name == "ssh" }
+        def formatter = sectionFormatterFactory.create attributes
+        sshSection.properties.setProperty "enabled", "true"
+        sshSection.properties.setProperty "ignoreip", fail2banIgnoreAddresses.join(" ")
+        sshSection.properties.setProperty "bantime", Long.toString(fail2banBanTime.standardSeconds)
+        sshSection.properties.setProperty "maxretry", Integer.toString(fail2banMaxRetries)
+        sshSection.properties.setProperty "backend", fail2banBackend
+        sshSection.properties.setProperty "destemail", fail2banDestinationEmail
+        sshSection.properties.setProperty "banaction", fail2banBanAction
+        def builder = new StringBuilder()
+        formatter.format defaultSection, builder
+        sections.findAll { Section section -> section.properties.getProperty("enabled") == "true" }.each {
+            builder.append attributes.newLine
+            formatter.format it, builder
+        }
+        FileUtils.write fail2banJailLocalConfigFile, builder.toString(), charset
     }
 
     @Override
-    void setScript(LinuxScript script) {
+    void setScript(Object script) {
         this.script = script
+        this.scriptTemplates = templatesFactory.create "UfwFail2BanScript"
+        this.ufwactionTemplate = scriptTemplates.getResource "ufwaction"
     }
 
     @Override
-    LinuxScript getScript() {
+    Object getScript() {
         script
     }
 

@@ -22,6 +22,8 @@ import static org.apache.commons.io.FileUtils.*
 
 import javax.inject.Inject
 
+import org.joda.time.Duration
+
 import com.anrisoftware.sscontrol.core.service.LinuxScript
 import com.anrisoftware.sscontrol.remote.api.RemoteScript
 import com.anrisoftware.sscontrol.remote.service.RemoteService
@@ -50,7 +52,7 @@ abstract class BaseFail2BanScript implements RemoteScript {
 
     void setupParentScript() {
         fail2banScript.each { key, Fail2BanScript value ->
-            value.setScript script
+            value.setScript this
         }
     }
 
@@ -89,6 +91,161 @@ abstract class BaseFail2BanScript implements RemoteScript {
      */
     List getFail2banPackages() {
         profileListProperty "fail2ban_packages", defaultProperties
+    }
+
+    /**
+     * Returns the fail2ban configuration directory, for
+     * example {@code "/etc/fail2ban"}.
+     *
+     * <ul>
+     * <li>profile property {@code "fail2ban_configuration_directory"}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    File getFail2banConfigDir() {
+        profileProperty("fail2ban_configuration_directory", defaultProperties) as File
+    }
+
+    /**
+     * Returns the fail2ban UFW action file, for
+     * example {@code "action.d/ufw.conf".} If the file path is not absolute
+     * then the file is assumed to be under the fail2ban configuration
+     * directory.
+     *
+     * <ul>
+     * <li>profile property {@code "fail2ban_ufw_action_file"}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    File getFail2banUfwActionFile() {
+        profileFileProperty "fail2ban_ufw_action_file", fail2banConfigDir, defaultProperties
+    }
+
+    /**
+     * Returns the fail2ban jail configuration file, for
+     * example {@code "jail.conf".} If the file path is not absolute
+     * then the file is assumed to be under the fail2ban configuration
+     * directory.
+     *
+     * <ul>
+     * <li>profile property {@code "fail2ban_jail_configuration_file"}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    File getFail2banJailConfigFile() {
+        profileFileProperty "fail2ban_jail_configuration_file", fail2banConfigDir, defaultProperties
+    }
+
+    /**
+     * Returns the local fail2ban jail configuration file, for
+     * example {@code "jail.local".} If the file path is not absolute
+     * then the file is assumed to be under the fail2ban configuration
+     * directory.
+     *
+     * <ul>
+     * <li>profile property {@code "fail2ban_jail_local_configuration_file"}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    File getFail2banJailLocalConfigFile() {
+        profileFileProperty "fail2ban_jail_local_configuration_file", fail2banConfigDir, defaultProperties
+    }
+
+    /**
+     * Returns list of ignored addresses, for
+     * example {@code "127.0.0.1".}
+     *
+     * <ul>
+     * <li>profile property {@code "fail2ban_ignore_addresses"}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    List getFail2banIgnoreAddresses() {
+        profileListProperty "fail2ban_ignore_addresses", defaultProperties
+    }
+
+    /**
+     * Returns banning time duration, for
+     * example {@code "PT10M"} for 10 minutes.
+     *
+     * <ul>
+     * <li>profile property {@code "fail2ban_ban_time"}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    Duration getFail2banBanTime() {
+        profileDurationProperty "fail2ban_ban_time", defaultProperties
+    }
+
+    /**
+     * Returns the maximum retries, for example {@code "3".}
+     *
+     * <ul>
+     * <li>profile property {@code "fail2ban_max_retries"}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    int getFail2banMaxRetries() {
+        profileNumberProperty "fail2ban_max_retries", defaultProperties
+    }
+
+    /**
+     * Returns the back-end name, for example {@code "polling".}
+     *
+     * <ul>
+     * <li>profile property {@code "fail2ban_backend"}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    String getFail2banBackend() {
+        profileProperty "fail2ban_backend", defaultProperties
+    }
+
+    /**
+     * Returns the back-end name, for example {@code "root@localhost".}
+     *
+     * <ul>
+     * <li>profile property {@code "fail2ban_destination_email"}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    String getFail2banDestinationEmail() {
+        profileProperty "fail2ban_destination_email", defaultProperties
+    }
+
+    /**
+     * Returns the ban-action name, for example {@code "ufw".}
+     *
+     * <ul>
+     * <li>profile property {@code "fail2ban_ban_action"}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    String getFail2banBanAction() {
+        profileProperty "fail2ban_ban_action", defaultProperties
+    }
+
+    /**
+     * Returns the block type name, for example {@code "reject", "deny".}
+     *
+     * <ul>
+     * <li>profile property {@code "fail2ban_block_type"}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    String getFail2banBlockType() {
+        profileProperty "fail2ban_block_type", defaultProperties
     }
 
     @Override

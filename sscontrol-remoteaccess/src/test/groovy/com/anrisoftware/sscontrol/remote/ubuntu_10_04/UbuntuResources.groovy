@@ -63,6 +63,11 @@ enum UbuntuResources {
     autoScreenExpected("/usr/local/bin/auto_screen.sh", UbuntuResources.class.getResource("auto_screen_expected.txt")),
     autoScreenSessionExpected("/home/foo/.bashrc", UbuntuResources.class.getResource("auto_screen_session_expected.txt")),
     screenrcExpected("/home/foo/.screenrc", UbuntuResources.class.getResource("screenrc_expected.txt")),
+    // fail2ban
+    fail2banDirectory("/etc/fail2ban", null),
+    fail2banJailConf("/etc/fail2ban/jail.conf", UbuntuResources.class.getResource("jail_conf.txt")),
+    ufwConfExpected("/etc/fail2ban/action.d/ufw.conf", UbuntuResources.class.getResource("ufw_conf_expected.txt")),
+    jailConfExpected("/etc/fail2ban/jail.local", UbuntuResources.class.getResource("jail_local_expected.txt")),
 
     static copyUbuntuFiles(File parent) {
         aptitudeCommand.createCommand parent
@@ -76,6 +81,9 @@ enum UbuntuResources {
         groupsFile.createFile parent
         passwdFile.createFile parent
         sshdconfigFile.createFile parent
+        // fail2ban
+        fail2banDirectory.asFile parent mkdirs()
+        fail2banJailConf.createFile parent
     }
 
     ResourcesUtils resources

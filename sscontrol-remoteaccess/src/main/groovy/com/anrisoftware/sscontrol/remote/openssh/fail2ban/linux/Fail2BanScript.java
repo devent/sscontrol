@@ -18,7 +18,6 @@
  */
 package com.anrisoftware.sscontrol.remote.openssh.fail2ban.linux;
 
-import com.anrisoftware.sscontrol.core.service.LinuxScript;
 import com.anrisoftware.sscontrol.remote.service.RemoteService;
 
 /**
@@ -33,16 +32,16 @@ public interface Fail2BanScript {
      * Sets the parent script with the properties.
      * 
      * @param script
-     *            the {@link LinuxScript}.
+     *            the script.
      */
-    void setScript(LinuxScript script);
+    void setScript(Object script);
 
     /**
      * Returns the parent script with the properties.
      * 
-     * @return the {@link LinuxScript}.
+     * @return the parent script.
      */
-    LinuxScript getScript();
+    Object getScript();
 
     /**
      * Deploys the fail2ban script.

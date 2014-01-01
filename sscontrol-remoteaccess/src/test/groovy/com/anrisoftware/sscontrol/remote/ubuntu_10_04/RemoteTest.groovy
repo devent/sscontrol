@@ -64,5 +64,7 @@ class RemoteTest extends RemoteTestUtil {
         assertFileContent autoScreenExpected.asFile(tmpdir), autoScreenExpected
         assertStringContent autoScreenSessionExpected.replaced(tmpdir, tmpdir, "/tmp"), autoScreenSessionExpected.toString()
         assertFileContent screenrcExpected.asFile(tmpdir), screenrcExpected
+        assertFileContent ufwConfExpected.asFile(tmpdir), ufwConfExpected
+        assertFileContent jailConfExpected.asFile(tmpdir), jailConfExpected
     }
 }

@@ -22,7 +22,6 @@ import static org.apache.commons.io.FileUtils.*
 
 import javax.inject.Inject
 
-import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.Templates
 import com.anrisoftware.sscontrol.core.service.LinuxScript
@@ -35,48 +34,52 @@ import com.anrisoftware.sscontrol.core.service.LinuxScript
  */
 abstract class UfwScript extends LinuxScript {
 
-	@Inject
-	UfwScriptLogger log
+    @Inject
+    UfwScriptLogger log
 
-	/**
-	 * The {@link Templates} for the script.
-	 */
-	Templates ufwTemplates
+    /**
+     * The {@link Templates} for the script.
+     */
+    Templates ufwTemplates
 
-	/**
-	 * Resource containing the MaraDNS configuration templates.
-	 */
-	TemplateResource rules
+    /**
+     * Resource containing the MaraDNS configuration templates.
+     */
+    TemplateResource rules
 
-	@Override
-	def run() {
-		super.run()
-		ufwTemplates = templatesFactory.create "Ufw"
-		rules = ufwTemplates.getResource "rules"
-		distributionSpecificConfiguration()
-		deployRules()
-	}
+    @Override
+    def run() {
+        super.run()
+        ufwTemplates = templatesFactory.create "Ufw"
+        rules = ufwTemplates.getResource "rules"
+        distributionSpecificConfiguration()
+        deployRules()
+    }
 
-	/**
-	 * Run the distribution specific configuration.
-	 */
-	abstract distributionSpecificConfiguration()
+    /**
+     * Run the distribution specific configuration.
+     */
+    abstract distributionSpecificConfiguration()
 
-	/**
-	 * Deploys the firewall rules.
-	 */
-	void deployRules() {
-		def worker = scriptCommandFactory.create(rules,
-				"service", service, "ufwCommand", ufwCommand)()
-		log.deployedRules this, worker
-	}
+    /**
+     * Deploys the firewall rules.
+     */
+    void deployRules() {
+        def worker = scriptCommandFactory.create(rules,
+                "service", service, "ufwCommand", ufwCommand)()
+        log.deployedRules this, worker
+    }
 
-	/**
-	 * Returns the ufw tool command.
-	 *
-	 * <ul>
-	 * <li>profile property {@code "ufw_command"}</li>
-	 * </ul>
-	 */
-	abstract String getUfwCommand()
+    /**
+     * Returns the ufw tool command.
+     *
+     * <ul>
+     * <li>profile property {@code "ufw_command"}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    String getUfwCommand() {
+        profileProperty "ufw_command", defaultProperties
+    }
 }

@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-firewall-ufw. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.firewall.ufw.ubuntu
+package com.anrisoftware.sscontrol.firewall.ufw.ubuntu_10_04
 firewall {
 
 	// allow from all ports, all addresses to all ports to all addresses

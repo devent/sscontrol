@@ -16,12 +16,27 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-firewall-ufw. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.firewall.ufw.ubuntu
+package com.anrisoftware.sscontrol.firewall.ufw.ubuntu_10_04;
 
-profile "ubuntu_10_04", {
-    firewall {
-        service "ufw"
-        install_command "export DEBIAN_FRONTEND=noninteractive\n ${tmp}/usr/bin/aptitude update && ${tmp}/usr/bin/aptitude -y install"
-        ufw_command "${tmp}/usr/sbin/ufw"
-    }
+import java.net.URL;
+
+import com.anrisoftware.propertiesutils.AbstractContextPropertiesProvider;
+
+/**
+ * Provides the UFW Ubuntu 10.04 properties from
+ * {@code "/ufw_ubuntu_10_04.properties"}.
+ * 
+ * @author Erwin Mueller, erwin.mueller@deventm.org
+ * @since 1.0
+ */
+@SuppressWarnings("serial")
+public class UbuntuPropertiesProvider extends AbstractContextPropertiesProvider {
+
+	private static final URL RESOURCE = UbuntuPropertiesProvider.class
+			.getResource("/ufw_ubuntu_10_04.properties");
+
+	UbuntuPropertiesProvider() {
+		super(UbuntuPropertiesProvider.class, RESOURCE);
+	}
+
 }

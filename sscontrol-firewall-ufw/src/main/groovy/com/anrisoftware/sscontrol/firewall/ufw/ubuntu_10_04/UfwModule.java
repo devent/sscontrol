@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-firewall-ufw. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.firewall.ufw.ubuntu;
+package com.anrisoftware.sscontrol.firewall.ufw.ubuntu_10_04;
 
 import static com.google.inject.multibindings.MapBinder.newMapBinder;
 import groovy.lang.Script;
@@ -54,14 +54,14 @@ class UfwModule extends AbstractModule {
 	private void bindScripts() {
 		MapBinder<String, Script> binder;
 		binder = newMapBinder(binder(), String.class, Script.class);
-		binder.addBinding("ufw.ubuntu_10_04").to(Ubuntu_10_04Script.class);
+		binder.addBinding("ufw.ubuntu_10_04").to(UbuntuScript.class);
 	}
 
 	@Provides
 	@Singleton
 	@Named("ufw-ubuntu-10_04-properties")
 	ContextProperties getUbuntu_10_04Properties() throws IOException {
-		return new ContextPropertiesFactory(Ubuntu_10_04Script.class)
+		return new ContextPropertiesFactory(UbuntuScript.class)
 				.withProperties(System.getProperties()).fromResource(
 						UBUNTU_10_04_PROPERTIES_RESOURCE);
 	}

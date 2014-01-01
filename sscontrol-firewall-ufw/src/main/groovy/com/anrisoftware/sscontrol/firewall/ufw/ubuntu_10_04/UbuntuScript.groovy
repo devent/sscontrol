@@ -16,41 +16,31 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-firewall-ufw. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.firewall.ufw.ubuntu;
+package com.anrisoftware.sscontrol.firewall.ufw.ubuntu_10_04
 
-import java.net.URL;
+import javax.inject.Inject
 
-import com.anrisoftware.propertiesutils.AbstractContextPropertiesProvider;
+import com.anrisoftware.propertiesutils.ContextProperties
+import com.anrisoftware.sscontrol.firewall.ufw.linux.UfwScript
 
 /**
- * Provides the default UFW Ubuntu 10.04 properties from
- * {@code ufw_ubuntu_10_04.properties}.
- * <p>
- * <h2>Properties</h2>
- * <p>
- * 
- * <dl>
- * <dt>{@code install_command}</dt>
- * <dd>the default packages installation command;</dd>
- * 
- * <dt>{@code ufw_command}</dt>
- * <dd>the UFW command;</dd>
- * 
- * <dt>{@code packages}</dt>
- * <dd>the list of needed packages for the service.</dd>
- * </dl>
- * 
+ * Uses the UFW service for Ubuntu 10.04.
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-@SuppressWarnings("serial")
-public class Ubuntu10_04PropertiesProvider extends AbstractContextPropertiesProvider {
+class UbuntuScript extends UfwScript {
 
-	private static final URL RESOURCE = Ubuntu10_04PropertiesProvider.class
-			.getResource("/ufw_ubuntu_10_04.properties");
+    @Inject
+    UbuntuPropertiesProvider ubuntuProperties
 
-	Ubuntu10_04PropertiesProvider() {
-		super(Ubuntu10_04PropertiesProvider.class, RESOURCE);
-	}
+    @Override
+    def distributionSpecificConfiguration() {
+        installPackages()
+    }
 
+    @Override
+    ContextProperties getDefaultProperties() {
+        ubuntuProperties.get()
+    }
 }

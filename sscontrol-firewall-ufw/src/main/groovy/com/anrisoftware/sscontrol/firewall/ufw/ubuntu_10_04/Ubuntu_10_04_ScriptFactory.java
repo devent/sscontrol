@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-firewall-ufw. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.firewall.ufw.ubuntu;
+package com.anrisoftware.sscontrol.firewall.ufw.ubuntu_10_04;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.mangosdk.spi.ProviderFor;
@@ -34,7 +34,7 @@ import com.google.inject.Module;
  * @since 1.0
  */
 @ProviderFor(ServiceScriptFactory.class)
-public class Ubuntu10_04ScriptFactory implements ServiceScriptFactory {
+public class Ubuntu_10_04_ScriptFactory implements ServiceScriptFactory {
 
 	/**
 	 * Name of the service.
@@ -73,7 +73,7 @@ public class Ubuntu10_04ScriptFactory implements ServiceScriptFactory {
 
 	@Override
 	public Object getScript() throws ServiceException {
-		return injector.getInstance(Ubuntu_10_04Script.class);
+		return injector.getInstance(UbuntuScript.class);
 	}
 
 	@Override

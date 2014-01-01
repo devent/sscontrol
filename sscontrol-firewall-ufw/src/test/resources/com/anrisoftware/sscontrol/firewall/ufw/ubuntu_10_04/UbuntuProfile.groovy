@@ -16,36 +16,15 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-firewall-ufw. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.firewall.ufw.ubuntu
+package com.anrisoftware.sscontrol.firewall.ufw.ubuntu_10_04
 
-import javax.inject.Inject
+def aptitudeCommand = UbuntuResources.aptitudeCommand.asFile(tmp)
+def ufwCommand = UbuntuResources.ufwCommand.asFile(tmp)
 
-import com.anrisoftware.propertiesutils.ContextProperties
-import com.anrisoftware.sscontrol.firewall.ufw.linux.UfwScript
-
-/**
- * Uses the UFW service on the Ubuntu 10.04 Linux system.
- *
- * @author Erwin Mueller, erwin.mueller@deventm.org
- * @since 1.0
- */
-class Ubuntu_10_04Script extends UfwScript {
-
-	@Inject
-	Ubuntu10_04PropertiesProvider ubuntuProperties
-
-	@Override
-	def distributionSpecificConfiguration() {
-		installPackages()
-	}
-
-	@Override
-	ContextProperties getDefaultProperties() {
-		ubuntuProperties.get()
-	}
-
-	@Override
-	String getUfwCommand() {
-		profileProperty "ufw_command", defaultProperties
-	}
+profile "ubuntu_10_04", {
+    firewall {
+        service "ufw"
+        install_command "export DEBIAN_FRONTEND=noninteractive\n${aptitudeCommand} update && ${aptitudeCommand} -y install"
+        ufw_command ufwCommand
+    }
 }

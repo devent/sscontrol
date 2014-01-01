@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-firewall-ufw. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.firewall.ufw.ubuntu
+package com.anrisoftware.sscontrol.firewall.ufw.resources
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import groovy.util.logging.Slf4j

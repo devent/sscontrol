@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-firewall-ufw. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.firewall.ufw.ubuntu
+package com.anrisoftware.sscontrol.firewall.ufw.ubuntu_10_04
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static org.apache.commons.io.FileUtils.*
@@ -29,19 +29,27 @@ import com.anrisoftware.sscontrol.firewall.ufw.resources.ResourcesUtils
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-enum Ubuntu_10_04_Resources {
+enum UbuntuResources {
 
-    profile("Ubuntu_10_04Profile.groovy", UfwLinuxBase.class.getResource("Ubuntu_10_04Profile.groovy")),
-    aptitudeInExpected("/usr/bin/aptitude.in", UfwLinuxBase.class.getResource("aptitude_in.txt")),
-    aptitudeOutExpected("/usr/bin/aptitude.out", UfwLinuxBase.class.getResource("aptitude_out.txt")),
-    ufwInAllowExpected("/usr/sbin/ufw.in", UfwLinuxBase.class.getResource("ufw_allow_in.txt")),
-    ufwOutAllowExpected("/usr/sbin/ufw.out", UfwLinuxBase.class.getResource("ufw_allow_out.txt")),
-    ufwInDenyExpected("/usr/sbin/ufw.in", UfwLinuxBase.class.getResource("ufw_deny_in.txt")),
-    ufwOutDenyExpected("/usr/sbin/ufw.out", UfwLinuxBase.class.getResource("ufw_deny_out.txt")),
+    profile("UbuntuProfile.groovy", UbuntuResources.class.getResource("UbuntuProfile.groovy")),
+    aptitudeCommand("/usr/bin/aptitude", UbuntuResources.class.getResource("echo_command.txt")),
+    ufwCommand("/usr/sbin/ufw", UbuntuResources.class.getResource("echo_command.txt")),
+    allowService("FirewallAllow.groovy", UbuntuResources.class.getResource("FirewallAllow.groovy")),
+    denyService("FirewallDeny.groovy", UbuntuResources.class.getResource("FirewallDeny.groovy")),
+    aptitudeOutExpected("/usr/bin/aptitude.out", UbuntuResources.class.getResource("aptitude_out.txt")),
+    ufwInAllowExpected("/usr/sbin/ufw.in", UbuntuResources.class.getResource("ufw_allow_in.txt")),
+    ufwOutAllowExpected("/usr/sbin/ufw.out", UbuntuResources.class.getResource("ufw_allow_out.txt")),
+    ufwInDenyExpected("/usr/sbin/ufw.in", UbuntuResources.class.getResource("ufw_deny_in.txt")),
+    ufwOutDenyExpected("/usr/sbin/ufw.out", UbuntuResources.class.getResource("ufw_deny_out.txt")),
+
+    static void copyUbuntuFiles(def parent) {
+        aptitudeCommand.createCommand parent
+        ufwCommand.createCommand parent
+    }
 
     ResourcesUtils resources
 
-    Ubuntu_10_04_Resources(String path, URL resource) {
+    UbuntuResources(String path, URL resource) {
         this.resources = new ResourcesUtils(path: path, resource: resource)
     }
 

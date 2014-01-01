@@ -1,18 +1,18 @@
 /*
  * Copyright 2012-2013 Erwin Müller <erwin.mueller@deventm.org>
- * 
+ *
  * This file is part of sscontrol-hosts.
- * 
+ *
  * sscontrol-hosts is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published by the
  * Free Software Foundation, either version 3 of the License, or (at your
  * option) any later version.
- * 
+ *
  * sscontrol-hosts is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
  * for more details.
- * 
+ *
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-hosts. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -31,10 +31,8 @@ import javax.inject.Inject;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import com.anrisoftware.sscontrol.core.api.ProfileService;
 import com.anrisoftware.sscontrol.core.api.ServiceException;
 import com.anrisoftware.sscontrol.core.api.ServiceScriptFactory;
-import com.anrisoftware.sscontrol.core.api.ServiceScriptInfo;
 import com.anrisoftware.sscontrol.core.service.AbstractService;
 import com.anrisoftware.sscontrol.hosts.utils.HostFormatFactory;
 
@@ -79,12 +77,6 @@ public class HostsServiceImpl extends AbstractService {
 		return (Script) scriptFactory.getScript();
 	}
 
-	@Override
-	protected boolean serviceScriptCompare(ServiceScriptInfo info,
-			String serviceName, ProfileService profile) {
-		return info.getProfileName().equals(profile.getProfileName());
-	}
-
 	/**
 	 * Because we load the script from a script service the dependencies are
 	 * already injected.
@@ -101,29 +93,29 @@ public class HostsServiceImpl extends AbstractService {
 		return NAME;
 	}
 
-	/**
-	 * Starts the hosts configuration.
-	 * 
-	 * @return this {@link HostsServiceImpl}.
-	 */
+	    /**
+     * Starts the hosts configuration.
+     * 
+     * @return this {@link HostsServiceImpl}.
+     */
 	public Object hosts(Object closure) {
 		return this;
 	}
 
-	/**
-	 * Adds a new host entry with the specified IP address.
-	 * 
-	 * @param address
-	 *            the IP address of the host.
-	 * 
-	 * @return the {@link Host}.
-	 * 
-	 * @throws NullPointerException
-	 *             if the specified address is {@code null}.
-	 * 
-	 * @throws IllegalArgumentException
-	 *             if the specified address is empty.
-	 */
+	    /**
+     * Adds a new host entry with the specified IP address.
+     * 
+     * @param address
+     *            the IP address of the host.
+     * 
+     * @return the {@link Host}.
+     * 
+     * @throws NullPointerException
+     *             if the specified address is {@code null}.
+     * 
+     * @throws IllegalArgumentException
+     *             if the specified address is empty.
+     */
 	public Host ip(String address) {
 		log.checkAddress(this, address);
 		Host host = hostFactory.create(address);
@@ -132,22 +124,22 @@ public class HostsServiceImpl extends AbstractService {
 		return host;
 	}
 
-	/**
-	 * Returns the host entries.
-	 * 
-	 * @return a {@link List} of {@link Host} entries.
-	 */
+	    /**
+     * Returns the host entries.
+     * 
+     * @return a {@link List} of {@link Host} entries.
+     */
 	public List<Host> getHosts() {
 		return hosts;
 	}
 
-	/**
-	 * Adds all hosts from the specified collection in front of the current
-	 * hosts.
-	 * 
-	 * @param hosts
-	 *            the {@link Collection}.
-	 */
+	    /**
+     * Adds all hosts from the specified collection in front of the current
+     * hosts.
+     * 
+     * @param hosts
+     *            the {@link Collection}.
+     */
 	public void addHostsHead(Collection<? extends Host> hosts) {
 		int index = 0;
 		for (Host host : hosts) {

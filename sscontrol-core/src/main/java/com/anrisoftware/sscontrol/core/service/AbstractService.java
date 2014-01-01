@@ -140,15 +140,12 @@ public abstract class AbstractService implements Service {
      */
     protected final ServiceScriptFactory findScriptFactory(String name)
             throws ServiceException {
-        return findScriptFactory0(name);
-    }
-
-    private ServiceScriptFactory findScriptFactory0(String name)
-            throws ServiceException {
+        log.searchScriptFactory(this, name);
         ProfileService profile = getProfile();
         ServiceLoader<ServiceScriptFactory> loader = load(ServiceScriptFactory.class);
         for (ServiceScriptFactory scriptFactory : loader) {
             ServiceScriptInfo info = scriptFactory.getInfo();
+            log.foundServiceScript(this, info);
             if (serviceScriptCompare(info, name, profile)) {
                 scriptFactory.setParent(injector);
                 return scriptFactory;
@@ -181,6 +178,7 @@ public abstract class AbstractService implements Service {
 
     private Object findService(ProfileProperties entry) {
         Object service = entry.get("service");
+        service = service == null ? getName() : service;
         if (getRefservice() != null) {
             Map<String, String> map = asServicesMap(entry);
             service = map.get(getRefservice());

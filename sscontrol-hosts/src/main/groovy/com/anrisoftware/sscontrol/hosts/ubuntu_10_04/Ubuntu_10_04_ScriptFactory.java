@@ -34,7 +34,7 @@ import com.google.inject.Module;
  * @since 1.0
  */
 @ProviderFor(ServiceScriptFactory.class)
-public class Ubuntu1004ScriptFactory implements ServiceScriptFactory {
+public class Ubuntu_10_04_ScriptFactory implements ServiceScriptFactory {
 
 	/**
 	 * Name of the service.
@@ -73,7 +73,7 @@ public class Ubuntu1004ScriptFactory implements ServiceScriptFactory {
 
 	@Override
 	public Object getScript() throws ServiceException {
-		return injector.getInstance(Ubuntu1004Script.class);
+		return injector.getInstance(UbuntuScript.class);
 	}
 
 	@Override

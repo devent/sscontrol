@@ -16,31 +16,27 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-hosts. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.hosts.ubuntu_12_04
+package com.anrisoftware.sscontrol.hosts.ubuntu_10_04;
 
-import javax.inject.Inject
+import java.net.URL;
 
-import com.anrisoftware.propertiesutils.ContextProperties
-import com.anrisoftware.sscontrol.hosts.linux.HostsScript
+import com.anrisoftware.propertiesutils.AbstractContextPropertiesProvider;
 
 /**
- * Deploys the hosts on the Ubuntu 12.04 Linux system.
- *
+ * Provides the Hosts/Ubuntu 10.04 properties from
+ * {@code hosts_ubuntu_10_04.properties}.
+ * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class Ubuntu_12_04_Script extends HostsScript {
+@SuppressWarnings("serial")
+public class UbuntuPropertiesProvider extends AbstractContextPropertiesProvider {
 
-    @Inject
-    Ubuntu_12_04_PropertiesProvider ubuntuProperties
+    private static final URL RESOURCE = UbuntuPropertiesProvider.class
+            .getResource("/hosts_ubuntu_10_04.properties");
 
-    @Override
-    ContextProperties getDefaultProperties() {
-        ubuntuProperties.get()
+    UbuntuPropertiesProvider() {
+        super(UbuntuPropertiesProvider.class, RESOURCE);
     }
 
-    @Override
-    String getConfigurationFile() {
-        profileProperty "configuration_file", defaultProperties
-    }
 }

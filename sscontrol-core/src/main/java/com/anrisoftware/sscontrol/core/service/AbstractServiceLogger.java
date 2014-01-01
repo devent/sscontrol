@@ -20,11 +20,13 @@ package com.anrisoftware.sscontrol.core.service;
 
 import static com.anrisoftware.sscontrol.core.service.AbstractServiceLogger._.find_service;
 import static com.anrisoftware.sscontrol.core.service.AbstractServiceLogger._.find_service_message;
+import static com.anrisoftware.sscontrol.core.service.AbstractServiceLogger._.found_service_script_trace;
 import static com.anrisoftware.sscontrol.core.service.AbstractServiceLogger._.loadTexts;
 import static com.anrisoftware.sscontrol.core.service.AbstractServiceLogger._.profile_set_debug;
 import static com.anrisoftware.sscontrol.core.service.AbstractServiceLogger._.profile_set_info;
 import static com.anrisoftware.sscontrol.core.service.AbstractServiceLogger._.refservice_set_debug;
 import static com.anrisoftware.sscontrol.core.service.AbstractServiceLogger._.refservice_set_info;
+import static com.anrisoftware.sscontrol.core.service.AbstractServiceLogger._.search_script_factory_trace;
 import static com.anrisoftware.sscontrol.core.service.AbstractServiceLogger._.service_name;
 
 import javax.inject.Inject;
@@ -34,6 +36,7 @@ import com.anrisoftware.resources.texts.api.Texts;
 import com.anrisoftware.resources.texts.api.TextsFactory;
 import com.anrisoftware.sscontrol.core.api.ProfileService;
 import com.anrisoftware.sscontrol.core.api.ServiceException;
+import com.anrisoftware.sscontrol.core.api.ServiceScriptInfo;
 
 /**
  * Logging messages for {@link AbstractService}.
@@ -61,7 +64,11 @@ class AbstractServiceLogger extends AbstractLogger {
 
         refservice_set_debug,
 
-        refservice_set_info;
+        refservice_set_info,
+
+        search_script_factory_trace,
+
+        found_service_script_trace;
 
         public static void loadTexts(TextsFactory factory) {
             String name = AbstractServiceLogger.class.getSimpleName();
@@ -114,6 +121,14 @@ class AbstractServiceLogger extends AbstractLogger {
         } else {
             info(refservice_set_info, refservice, service.getName());
         }
+    }
+
+    void searchScriptFactory(AbstractService service, String name) {
+        trace(search_script_factory_trace, name, service);
+    }
+
+    void foundServiceScript(AbstractService service, ServiceScriptInfo info) {
+        trace(found_service_script_trace, info, service);
     }
 
 }

@@ -18,28 +18,25 @@
  */
 package com.anrisoftware.sscontrol.hosts.ubuntu_12_04;
 
-import static com.google.inject.multibindings.MapBinder.newMapBinder;
-import groovy.lang.Script;
+import java.net.URL;
 
-import com.google.inject.AbstractModule;
-import com.google.inject.multibindings.MapBinder;
+import com.anrisoftware.propertiesutils.AbstractContextPropertiesProvider;
 
 /**
- * Hosts/Ubuntu 12.04 module.
+ * Provides the Hosts/Ubuntu 12.04 properties from
+ * {@code hosts_ubuntu_12_04.properties}.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class Ubuntu_12_04_Module extends AbstractModule {
+@SuppressWarnings("serial")
+public class UbuntuPropertiesProvider extends AbstractContextPropertiesProvider {
 
-	@Override
-	protected void configure() {
-		bindScripts();
-	}
+    private static final URL RESOURCE = UbuntuPropertiesProvider.class
+            .getResource("/hosts_ubuntu_12_04.properties");
 
-	private void bindScripts() {
-		MapBinder<String, Script> binder;
-		binder = newMapBinder(binder(), String.class, Script.class);
-        binder.addBinding("ubuntu_12_04").to(Ubuntu_12_04_Script.class);
-	}
+    UbuntuPropertiesProvider() {
+        super(UbuntuPropertiesProvider.class, RESOURCE);
+    }
+
 }

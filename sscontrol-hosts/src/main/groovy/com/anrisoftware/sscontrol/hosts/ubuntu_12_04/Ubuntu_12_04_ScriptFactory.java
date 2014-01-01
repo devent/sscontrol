@@ -62,7 +62,7 @@ public class Ubuntu_12_04_ScriptFactory implements ServiceScriptFactory {
         }
     };
 
-    private static final Module[] MODULES = new Module[] { new Ubuntu_12_04_Module() };
+    private static final Module[] MODULES = new Module[] { new UbuntuModule() };
 
     private Injector injector;
 
@@ -73,7 +73,7 @@ public class Ubuntu_12_04_ScriptFactory implements ServiceScriptFactory {
 
     @Override
     public Object getScript() throws ServiceException {
-        return injector.getInstance(Ubuntu_12_04_Script.class);
+        return injector.getInstance(UbuntuScript.class);
     }
 
     @Override

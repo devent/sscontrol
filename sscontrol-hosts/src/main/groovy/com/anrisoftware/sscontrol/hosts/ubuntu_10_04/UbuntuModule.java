@@ -40,6 +40,6 @@ class UbuntuModule extends AbstractModule {
 	private void bindScripts() {
 		MapBinder<String, Script> binder;
 		binder = newMapBinder(binder(), String.class, Script.class);
-		binder.addBinding("ubuntu_10_04").to(Ubuntu1004Script.class);
+		binder.addBinding("ubuntu_10_04").to(UbuntuScript.class);
 	}
 }

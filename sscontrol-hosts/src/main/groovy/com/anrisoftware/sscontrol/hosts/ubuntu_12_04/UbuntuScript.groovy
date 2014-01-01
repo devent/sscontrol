@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-hosts. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.hosts.ubuntu_10_04
+package com.anrisoftware.sscontrol.hosts.ubuntu_12_04
 
 import javax.inject.Inject
 
@@ -24,23 +24,23 @@ import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.sscontrol.hosts.linux.HostsScript
 
 /**
- * Deploys the hosts on the Ubuntu 10.04 Linux system.
+ * Deploys the hosts on the Ubuntu 12.04 Linux system.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class Ubuntu1004Script extends HostsScript {
+class UbuntuScript extends HostsScript {
 
-	@Inject
-	Ubuntu1004PropertiesProvider ubuntuProperties
+    @Inject
+    UbuntuPropertiesProvider ubuntuProperties
 
-	@Override
-	ContextProperties getDefaultProperties() {
-		ubuntuProperties.get()
-	}
+    @Override
+    ContextProperties getDefaultProperties() {
+        ubuntuProperties.get()
+    }
 
-	@Override
-	String getConfigurationFile() {
-		profileProperty "configuration_file", defaultProperties
-	}
+    @Override
+    String getConfigurationFile() {
+        profileProperty "configuration_file", defaultProperties
+    }
 }

@@ -16,32 +16,15 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-firewall-ufw. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.firewall.ufw.ubuntu_10_04;
+package com.anrisoftware.sscontrol.firewall.ufw.ubuntu_12_04
 
-import static com.google.inject.multibindings.MapBinder.newMapBinder;
-import groovy.lang.Script;
+def aptitudeCommand = UbuntuResources.aptitudeCommand.asFile(tmp)
+def ufwCommand = UbuntuResources.ufwCommand.asFile(tmp)
 
-import com.anrisoftware.sscontrol.firewall.ufw.linux.UfwScriptModule;
-import com.google.inject.AbstractModule;
-import com.google.inject.multibindings.MapBinder;
-
-/**
- * Binds the UFW service for Ubuntu 10.04.
- * 
- * @author Erwin Mueller, erwin.mueller@deventm.org
- * @since 1.0
- */
-class UfwModule extends AbstractModule {
-
-	@Override
-	protected void configure() {
-		bindScripts();
-		install(new UfwScriptModule());
-	}
-
-	private void bindScripts() {
-		MapBinder<String, Script> binder;
-		binder = newMapBinder(binder(), String.class, Script.class);
-		binder.addBinding("ufw.ubuntu_10_04").to(UbuntuScript.class);
-	}
+profile "ubuntu_12_04", {
+    firewall {
+        service "ufw"
+        install_command "export DEBIAN_FRONTEND=noninteractive\n${aptitudeCommand} update && ${aptitudeCommand} -y install"
+        ufw_command ufwCommand
+    }
 }

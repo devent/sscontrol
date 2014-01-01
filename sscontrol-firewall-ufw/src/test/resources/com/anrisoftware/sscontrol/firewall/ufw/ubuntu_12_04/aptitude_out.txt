@@ -1,0 +1,4 @@
+update
+-y install ufw
+update
+-y install ufw

@@ -16,32 +16,27 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-firewall-ufw. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.firewall.ufw.ubuntu_10_04;
+package com.anrisoftware.sscontrol.firewall.ufw.ubuntu_12_04;
 
-import static com.google.inject.multibindings.MapBinder.newMapBinder;
-import groovy.lang.Script;
+import java.net.URL;
 
-import com.anrisoftware.sscontrol.firewall.ufw.linux.UfwScriptModule;
-import com.google.inject.AbstractModule;
-import com.google.inject.multibindings.MapBinder;
+import com.anrisoftware.propertiesutils.AbstractContextPropertiesProvider;
 
 /**
- * Binds the UFW service for Ubuntu 10.04.
+ * Provides the UFW Ubuntu 12.04 properties from
+ * {@code "/ufw_ubuntu_12_04.properties"}.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class UfwModule extends AbstractModule {
+@SuppressWarnings("serial")
+public class UbuntuPropertiesProvider extends AbstractContextPropertiesProvider {
 
-	@Override
-	protected void configure() {
-		bindScripts();
-		install(new UfwScriptModule());
+	private static final URL RESOURCE = UbuntuPropertiesProvider.class
+            .getResource("/ufw_ubuntu_12_04.properties");
+
+	UbuntuPropertiesProvider() {
+		super(UbuntuPropertiesProvider.class, RESOURCE);
 	}
 
-	private void bindScripts() {
-		MapBinder<String, Script> binder;
-		binder = newMapBinder(binder(), String.class, Script.class);
-		binder.addBinding("ufw.ubuntu_10_04").to(UbuntuScript.class);
-	}
 }

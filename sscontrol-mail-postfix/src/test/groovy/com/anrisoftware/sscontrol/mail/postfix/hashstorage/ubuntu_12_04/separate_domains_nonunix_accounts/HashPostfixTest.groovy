@@ -16,31 +16,31 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-mail-postfix. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.mail.postfix.mysqlstorage.ubuntu_10_04
+package com.anrisoftware.sscontrol.mail.postfix.hashstorage.ubuntu_12_04.separate_domains_nonunix_accounts
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
-import static com.anrisoftware.sscontrol.mail.postfix.mysqlstorage.ubuntu_10_04.MysqlResources.*
-import static com.anrisoftware.sscontrol.mail.postfix.script.ubuntu_10_04.UbuntuResources.*
+import static com.anrisoftware.sscontrol.mail.postfix.hashstorage.ubuntu_12_04.separate_domains_nonunix_accounts.HashUbuntuResources.*
+import static com.anrisoftware.sscontrol.mail.postfix.script.ubuntu_12_04.UbuntuResources.*
 import static org.apache.commons.io.FileUtils.*
 import groovy.util.logging.Slf4j
 
 import org.junit.Test
 
-import com.anrisoftware.sscontrol.mail.postfix.script.ubuntu_10_04.UbuntuTestUtil
+import com.anrisoftware.sscontrol.mail.postfix.script.ubuntu_12_04.UbuntuTestUtil
 
 /**
- * Postfix/MySQL/storage Ubuntu 10.04.
+ * Postfix/Hash/storage Ubuntu 12.04 for
+ * shared domains, unix accounts.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
 @Slf4j
-class MysqlPostfixTest extends UbuntuTestUtil {
+class HashPostfixTest extends UbuntuTestUtil {
 
     @Test
-    void "virtual mysql"() {
+    void "separate domains, nonunix accounts"() {
         copyUbuntuFiles tmpdir
-        mysqlCommand.createCommand tmpdir
 
         loader.loadService profile.resource, null
         def profile = registry.getService("profile")[0]
@@ -51,35 +51,32 @@ class MysqlPostfixTest extends UbuntuTestUtil {
         registry.allServices.each { it.call() }
 
         assertFileContent mailnameExpected.asFile(tmpdir), mailnameExpected
-        assertStringContent mainConfigExpected.replaced(tmpdir, tmpdir, "/tmp"), mainConfigExpected.toString()
-        assertFileContent mailboxExpected.asFile(tmpdir), mailboxExpected
-        assertFileContent aliasExpected.asFile(tmpdir), aliasExpected
-        assertFileContent domainsExpected.asFile(tmpdir), domainsExpected
-        assertFileContent aptitudeOut.asFile(tmpdir), aptitudeOut
-        assertFileContent mysqlOut.asFile(tmpdir), mysqlOut
-        assertStringContent mysqlIn.replaced(tmpdir, tmpdir, "/tmp"), mysqlIn.toString()
-        assertFileContent aliases.asFile(tmpdir), aliases
+        assertStringContent maincfExpected.replaced(tmpdir, tmpdir, "/tmp"), maincfExpected.toString()
+        assertFileContent aliasDomainsExpected.asFile(tmpdir), aliasDomainsExpected
+        assertFileContent aliasMapsExpected.asFile(tmpdir), aliasMapsExpected
+        assertFileContent mailboxMapsExpected.asFile(tmpdir), mailboxMapsExpected
+        assertStringContent chownOut.replaced(tmpdir, tmpdir, "/tmp"), chownOut.toString()
         assertFileContent useraddOut.asFile(tmpdir), useraddOut
         assertFileContent groupaddOut.asFile(tmpdir), groupaddOut
         assertStringContent postaliasOut.replaced(tmpdir, tmpdir, "/tmp"), postaliasOut.toString()
-        assertStringContent chownOut.replaced(tmpdir, tmpdir, "/tmp"), chownOut.toString()
         assert mailboxBaseDir.asFile(tmpdir).isDirectory()
     }
 
     @Test
-    void "virtual mysql, reset domains"() {
+    void "separate domains, nonunix accounts, reset domains"() {
         copyUbuntuFiles tmpdir
-        mysqlCommand.createCommand tmpdir
 
         loader.loadService profile.resource, null
         def profile = registry.getService("profile")[0]
-        loader.loadService mailResetScript.resource, profile
+        loader.loadService mailResetDomainsScript.resource, profile
 
         registry.allServices.each { it.call() }
         log.info "Run service again to ensure that configuration is not set double."
         registry.allServices.each { it.call() }
 
-        assertStringContent mysqlResetDomainsIn.replaced(tmpdir, tmpdir, "/tmp"), mysqlResetDomainsIn.toString()
-        assertStringContent mysqlResetDomainsOut.replaced(tmpdir, tmpdir, "/tmp"), mysqlResetDomainsOut.toString()
+        assertFileContent aliasDomainsExpected.asFile(tmpdir), aliasDomainsExpected
+        assertFileContent aliasMapsExpected.asFile(tmpdir), aliasMapsExpected
+        assertFileContent mailboxMapsExpected.asFile(tmpdir), mailboxMapsExpected
+        assertStringContent postaliasOut.replaced(tmpdir, tmpdir, "/tmp"), postaliasOut.toString()
     }
 }

@@ -18,11 +18,14 @@
  */
 package com.anrisoftware.sscontrol.ldap.openldap.core.ubuntu_10_04
 
+def aptitudeCommand = UbuntuResources.aptitudeCommand.asFile(tmp)
+def restartCommand = UbuntuResources.restartCommand.asFile(tmp)
+
 profile "ubuntu_10_04", {
 	ldap {
 		service "openldap"
-		install_command "export DEBIAN_FRONTEND=noninteractive; ${UbuntuResources.aptitudeCommand.asFile(tmp)} update && ${UbuntuResources.aptitudeCommand.asFile(tmp)} install"
-		restart_command "${UbuntuResources.restartCommand.asFile(tmp)} restart"
+		install_command "$aptitudeCommand update && $aptitudeCommand install"
+		restart_command "$restartCommand restart"
 		chmod_command UbuntuResources.chmodCommand.asFile(tmp)
 		ldapadd_command UbuntuResources.ldapaddCommand.asFile(tmp)
 		ldapmodify_command UbuntuResources.ldapmodifyCommand.asFile(tmp)

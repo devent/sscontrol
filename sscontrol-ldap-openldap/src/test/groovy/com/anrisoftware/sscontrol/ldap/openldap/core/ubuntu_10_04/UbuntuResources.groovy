@@ -21,6 +21,8 @@ package com.anrisoftware.sscontrol.ldap.openldap.core.ubuntu_10_04
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static org.apache.commons.io.FileUtils.*
 
+import com.anrisoftware.sscontrol.ldap.openldap.core.resources.ResourcesUtils;
+
 /**
  * Loads the resources.
  *

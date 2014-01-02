@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-database-mysql. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.database.mysql.ubuntu_10_04
+package com.anrisoftware.sscontrol.database.mysql.ubuntu_12_04
 
 def aptitudeCommand = MysqlUbuntuResources.aptitudeCommand.asFile(tmp)
 def restartCommand = MysqlUbuntuResources.restartCommand.asFile(tmp)
@@ -24,7 +24,7 @@ def mysqladminCommand = MysqlUbuntuResources.mysqladminCommand.asFile(tmp)
 def mysqlCommand = MysqlUbuntuResources.mysqlCommand.asFile(tmp)
 def confDir = MysqlUbuntuResources.confDir.asFile(tmp)
 
-profile "ubuntu_10_04", {
+profile "ubuntu_12_04", {
     database {
         service "mysql"
         install_command "$aptitudeCommand update && $aptitudeCommand install"

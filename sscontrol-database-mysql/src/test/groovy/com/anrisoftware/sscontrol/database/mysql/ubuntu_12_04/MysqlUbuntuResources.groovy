@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-database-mysql. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.database.mysql.ubuntu_10_04
+package com.anrisoftware.sscontrol.database.mysql.ubuntu_12_04
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static org.apache.commons.io.FileUtils.*
@@ -24,7 +24,7 @@ import static org.apache.commons.io.FileUtils.*
 import com.anrisoftware.sscontrol.database.mysql.resource.ResourcesUtils
 
 /**
- * MySQL/Ubuntu 10.04 resources.
+ * MySQL/Ubuntu 12.04 resources.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0

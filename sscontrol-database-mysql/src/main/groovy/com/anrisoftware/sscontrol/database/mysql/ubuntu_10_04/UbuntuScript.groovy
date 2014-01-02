@@ -18,20 +18,29 @@
  */
 package com.anrisoftware.sscontrol.database.mysql.ubuntu_10_04
 
-def aptitudeCommand = MysqlUbuntuResources.aptitudeCommand.asFile(tmp)
-def restartCommand = MysqlUbuntuResources.restartCommand.asFile(tmp)
-def mysqladminCommand = MysqlUbuntuResources.mysqladminCommand.asFile(tmp)
-def mysqlCommand = MysqlUbuntuResources.mysqlCommand.asFile(tmp)
-def confDir = MysqlUbuntuResources.confDir.asFile(tmp)
+import javax.inject.Inject
 
-profile "ubuntu_10_04", {
-    database {
-        service "mysql"
-        install_command "$aptitudeCommand update && $aptitudeCommand install"
-        restart_command restartCommand
-        packages "mysql-server, mysql-client"
-        configuration_directory confDir
-        mysqladmin_command mysqladminCommand
-        mysql_command mysqlCommand
-    }
+import com.anrisoftware.propertiesutils.ContextProperties
+import com.anrisoftware.sscontrol.database.mysql.mysql_5_1.Mysql51Script;
+
+/**
+ * MySQL/Ubuntu 10.04 service script.
+ *
+ * @author Erwin Mueller, erwin.mueller@deventm.org
+ * @since 1.0
+ */
+class UbuntuScript extends Mysql51Script {
+
+	@Inject
+	UbuntuPropertiesProvider ubuntuProperties
+
+	@Override
+	void beforeConfiguration() {
+		installPackages()
+	}
+
+	@Override
+	ContextProperties getDefaultProperties() {
+		ubuntuProperties.get()
+	}
 }

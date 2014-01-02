@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-database-mysql. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.database.mysql.ubuntu;
+package com.anrisoftware.sscontrol.database.mysql.ubuntu_10_04;
 
 import org.mangosdk.spi.ProviderFor;
 
@@ -33,7 +33,7 @@ import com.google.inject.Module;
  * @since 1.0
  */
 @ProviderFor(ServiceScriptFactory.class)
-public class Ubuntu1004ScriptFactory implements ServiceScriptFactory {
+public class Ubuntu_10_04_ScriptFactory implements ServiceScriptFactory {
 
 	/**
 	 * The name of the MySQL script service.
@@ -72,7 +72,7 @@ public class Ubuntu1004ScriptFactory implements ServiceScriptFactory {
 
 	@Override
 	public Object getScript() throws ServiceException {
-		return injector.getInstance(Ubuntu1004Script.class);
+		return injector.getInstance(UbuntuScript.class);
 	}
 
 	@Override

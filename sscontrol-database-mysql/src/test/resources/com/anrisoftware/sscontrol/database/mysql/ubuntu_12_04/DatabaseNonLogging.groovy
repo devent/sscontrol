@@ -16,31 +16,14 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-database-mysql. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.database.mysql.ubuntu
+package com.anrisoftware.sscontrol.database.mysql.ubuntu_12_04
 
-import javax.inject.Inject
+database {
 
-import com.anrisoftware.propertiesutils.ContextProperties
-import com.anrisoftware.sscontrol.database.mysql.mysql_5_1.Mysql51Script;
+    // bind the database server to all addresses
+    bind address: "0.0.0.0"
 
-/**
- * MySQL/Ubuntu 10.04 service script.
- *
- * @author Erwin Mueller, erwin.mueller@deventm.org
- * @since 1.0
- */
-class Ubuntu1004Script extends Mysql51Script {
+    // set the administrator password
+    admin password: "mysqladminpassword"
 
-	@Inject
-	Ubuntu1004PropertiesProvider ubuntuProperties
-
-	@Override
-	void beforeConfiguration() {
-		installPackages()
-	}
-
-	@Override
-	ContextProperties getDefaultProperties() {
-		ubuntuProperties.get()
-	}
 }

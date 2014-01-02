@@ -1,0 +1,134 @@
+# create database "wordpressdb"
+CREATE DATABASE IF NOT EXISTS `wordpressdb` CHARACTER SET `utf8` COLLATE `utf8_general_ci`;
+# create database "drupal6db"
+CREATE DATABASE IF NOT EXISTS `drupal6db` CHARACTER SET `latin1` COLLATE `latin1_swedish_ci`;
+# create database "maildb"
+CREATE DATABASE IF NOT EXISTS `maildb` CHARACTER SET `utf8` COLLATE `utf8_general_ci`;
+# create database "postfixdb"
+CREATE DATABASE IF NOT EXISTS `postfixdb` CHARACTER SET `latin1` COLLATE `latin1_swedish_ci`;
+
+\q
+# create temporary database to add users
+CREATE DATABASE IF NOT EXISTS createusertmp;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ANSI';
+USE createusertmp;
+DROP PROCEDURE IF EXISTS createusertmp.create_update_user;
+DELIMITER $$
+CREATE PROCEDURE createusertmp.create_update_user()
+BEGIN
+    DECLARE userexists BIGINT DEFAULT 0;
+    # user test1@srv1
+    SELECT COUNT(*) INTO userexists FROM mysql.user
+        WHERE User='test1' and  Host='srv1';
+    IF userexists=0 THEN
+        CREATE USER 'test1'@'srv1' IDENTIFIED BY 'test1password';
+    ELSEIF userexists=1 THEN
+        SET PASSWORD FOR 'test1'@'srv1' = PASSWORD('test1password');
+    END IF;
+    # user drupal6@srv2
+    SELECT COUNT(*) INTO userexists FROM mysql.user
+        WHERE User='drupal6' and  Host='srv2';
+    IF userexists=0 THEN
+        CREATE USER 'drupal6'@'srv2' IDENTIFIED BY 'drupal6password';
+    ELSEIF userexists=1 THEN
+        SET PASSWORD FOR 'drupal6'@'srv2' = PASSWORD('drupal6password');
+    END IF;
+    # user drupal6@localhost
+    SELECT COUNT(*) INTO userexists FROM mysql.user
+        WHERE User='drupal6' and  Host='localhost';
+    IF userexists=0 THEN
+        CREATE USER 'drupal6'@'localhost' IDENTIFIED BY 'drupal6password';
+    ELSEIF userexists=1 THEN
+        SET PASSWORD FOR 'drupal6'@'localhost' = PASSWORD('drupal6password');
+    END IF;
+
+END ;$$
+DELIMITER ;
+CALL createusertmp.create_update_user();
+DROP PROCEDURE IF EXISTS createusertmp.create_update_user;
+DROP DATABASE IF EXISTS createusertmp;
+SET SQL_MODE=@OLD_SQL_MODE;
+# grand access "drupal6@srv2" to "drupal6db.*"
+GRANT ALL ON drupal6db.* TO 'drupal6'@'srv2';# grand access "drupal6@localhost" to "drupal6db.*"
+GRANT ALL ON drupal6db.* TO 'drupal6'@'localhost';
+FLUSH PRIVILEGES;
+\q
+USE maildb;
+CREATE TABLE `aliases` ( `pkid` smallint(3) NOT NULL auto_increment, `mail` varchar(120) NOT NULL default '', `destination` varchar(120) NOT NULL default '', `enabled` tinyint(1) NOT NULL default '1', PRIMARY KEY (`pkid`), UNIQUE KEY `mail` (`mail`) ) ;
+CREATE TABLE `domains` ( `pkid` smallint(6) NOT NULL auto_increment, `domain` varchar(120) NOT NULL default '', `transport` varchar(120) NOT NULL default 'virtual:', `enabled` tinyint(1) NOT NULL default '1', PRIMARY KEY (`pkid`) ) ;
+CREATE TABLE `users` ( `id` varchar(128) NOT NULL default '', `name` varchar(128) NOT NULL default '', `uid` smallint(5) unsigned NOT NULL default '5000', `gid` smallint(5) unsigned NOT NULL default '5000', `home` varchar(255) NOT NULL default '/var/spool/mail/virtual', `maildir` varchar(255) NOT NULL default 'blah/', `enabled` tinyint(3) unsigned NOT NULL default '1', `change_password` tinyint(3) unsigned NOT NULL default '1', `clear` varchar(128) NOT NULL default 'ChangeMe', `crypt` varchar(128) NOT NULL default 'sdtrusfX0Jj66', `quota` varchar(255) NOT NULL default '', `procmailrc` varchar(128) NOT NULL default '', `spamassassinrc` varchar(128) NOT NULL default '', PRIMARY KEY (`id`), UNIQUE KEY `id` (`id`) ) ;
+
+\q
+USE postfixdb;
+CREATE TABLE `aliases` ( `pkid` smallint(3) NOT NULL auto_increment, `mail` varchar(120) NOT NULL default '', `destination` varchar(120) NOT NULL default '', `enabled` tinyint(1) NOT NULL default '1', PRIMARY KEY (`pkid`), UNIQUE KEY `mail` (`mail`) ) ;
+CREATE TABLE `domains` ( `pkid` smallint(6) NOT NULL auto_increment, `domain` varchar(120) NOT NULL default '', `transport` varchar(120) NOT NULL default 'virtual:', `enabled` tinyint(1) NOT NULL default '1', PRIMARY KEY (`pkid`) ) ;
+CREATE TABLE `users` ( `id` varchar(128) NOT NULL default '', `name` varchar(128) NOT NULL default '', `uid` smallint(5) unsigned NOT NULL default '5000', `gid` smallint(5) unsigned NOT NULL default '5000', `home` varchar(255) NOT NULL default '/var/spool/mail/virtual', `maildir` varchar(255) NOT NULL default 'blah/', `enabled` tinyint(3) unsigned NOT NULL default '1', `change_password` tinyint(3) unsigned NOT NULL default '1', `clear` varchar(128) NOT NULL default 'ChangeMe', `crypt` varchar(128) NOT NULL default 'sdtrusfX0Jj66', `quota` varchar(255) NOT NULL default '', `procmailrc` varchar(128) NOT NULL default '', `spamassassinrc` varchar(128) NOT NULL default '', PRIMARY KEY (`id`), UNIQUE KEY `id` (`id`) ) ;
+
+\q
+# create database "wordpressdb"
+CREATE DATABASE IF NOT EXISTS `wordpressdb` CHARACTER SET `utf8` COLLATE `utf8_general_ci`;
+# create database "drupal6db"
+CREATE DATABASE IF NOT EXISTS `drupal6db` CHARACTER SET `latin1` COLLATE `latin1_swedish_ci`;
+# create database "maildb"
+CREATE DATABASE IF NOT EXISTS `maildb` CHARACTER SET `utf8` COLLATE `utf8_general_ci`;
+# create database "postfixdb"
+CREATE DATABASE IF NOT EXISTS `postfixdb` CHARACTER SET `latin1` COLLATE `latin1_swedish_ci`;
+
+\q
+# create temporary database to add users
+CREATE DATABASE IF NOT EXISTS createusertmp;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ANSI';
+USE createusertmp;
+DROP PROCEDURE IF EXISTS createusertmp.create_update_user;
+DELIMITER $$
+CREATE PROCEDURE createusertmp.create_update_user()
+BEGIN
+    DECLARE userexists BIGINT DEFAULT 0;
+    # user test1@srv1
+    SELECT COUNT(*) INTO userexists FROM mysql.user
+        WHERE User='test1' and  Host='srv1';
+    IF userexists=0 THEN
+        CREATE USER 'test1'@'srv1' IDENTIFIED BY 'test1password';
+    ELSEIF userexists=1 THEN
+        SET PASSWORD FOR 'test1'@'srv1' = PASSWORD('test1password');
+    END IF;
+    # user drupal6@srv2
+    SELECT COUNT(*) INTO userexists FROM mysql.user
+        WHERE User='drupal6' and  Host='srv2';
+    IF userexists=0 THEN
+        CREATE USER 'drupal6'@'srv2' IDENTIFIED BY 'drupal6password';
+    ELSEIF userexists=1 THEN
+        SET PASSWORD FOR 'drupal6'@'srv2' = PASSWORD('drupal6password');
+    END IF;
+    # user drupal6@localhost
+    SELECT COUNT(*) INTO userexists FROM mysql.user
+        WHERE User='drupal6' and  Host='localhost';
+    IF userexists=0 THEN
+        CREATE USER 'drupal6'@'localhost' IDENTIFIED BY 'drupal6password';
+    ELSEIF userexists=1 THEN
+        SET PASSWORD FOR 'drupal6'@'localhost' = PASSWORD('drupal6password');
+    END IF;
+
+END ;$$
+DELIMITER ;
+CALL createusertmp.create_update_user();
+DROP PROCEDURE IF EXISTS createusertmp.create_update_user;
+DROP DATABASE IF EXISTS createusertmp;
+SET SQL_MODE=@OLD_SQL_MODE;
+# grand access "drupal6@srv2" to "drupal6db.*"
+GRANT ALL ON drupal6db.* TO 'drupal6'@'srv2';# grand access "drupal6@localhost" to "drupal6db.*"
+GRANT ALL ON drupal6db.* TO 'drupal6'@'localhost';
+FLUSH PRIVILEGES;
+\q
+USE maildb;
+CREATE TABLE `aliases` ( `pkid` smallint(3) NOT NULL auto_increment, `mail` varchar(120) NOT NULL default '', `destination` varchar(120) NOT NULL default '', `enabled` tinyint(1) NOT NULL default '1', PRIMARY KEY (`pkid`), UNIQUE KEY `mail` (`mail`) ) ;
+CREATE TABLE `domains` ( `pkid` smallint(6) NOT NULL auto_increment, `domain` varchar(120) NOT NULL default '', `transport` varchar(120) NOT NULL default 'virtual:', `enabled` tinyint(1) NOT NULL default '1', PRIMARY KEY (`pkid`) ) ;
+CREATE TABLE `users` ( `id` varchar(128) NOT NULL default '', `name` varchar(128) NOT NULL default '', `uid` smallint(5) unsigned NOT NULL default '5000', `gid` smallint(5) unsigned NOT NULL default '5000', `home` varchar(255) NOT NULL default '/var/spool/mail/virtual', `maildir` varchar(255) NOT NULL default 'blah/', `enabled` tinyint(3) unsigned NOT NULL default '1', `change_password` tinyint(3) unsigned NOT NULL default '1', `clear` varchar(128) NOT NULL default 'ChangeMe', `crypt` varchar(128) NOT NULL default 'sdtrusfX0Jj66', `quota` varchar(255) NOT NULL default '', `procmailrc` varchar(128) NOT NULL default '', `spamassassinrc` varchar(128) NOT NULL default '', PRIMARY KEY (`id`), UNIQUE KEY `id` (`id`) ) ;
+
+\q
+USE postfixdb;
+CREATE TABLE `aliases` ( `pkid` smallint(3) NOT NULL auto_increment, `mail` varchar(120) NOT NULL default '', `destination` varchar(120) NOT NULL default '', `enabled` tinyint(1) NOT NULL default '1', PRIMARY KEY (`pkid`), UNIQUE KEY `mail` (`mail`) ) ;
+CREATE TABLE `domains` ( `pkid` smallint(6) NOT NULL auto_increment, `domain` varchar(120) NOT NULL default '', `transport` varchar(120) NOT NULL default 'virtual:', `enabled` tinyint(1) NOT NULL default '1', PRIMARY KEY (`pkid`) ) ;
+CREATE TABLE `users` ( `id` varchar(128) NOT NULL default '', `name` varchar(128) NOT NULL default '', `uid` smallint(5) unsigned NOT NULL default '5000', `gid` smallint(5) unsigned NOT NULL default '5000', `home` varchar(255) NOT NULL default '/var/spool/mail/virtual', `maildir` varchar(255) NOT NULL default 'blah/', `enabled` tinyint(3) unsigned NOT NULL default '1', `change_password` tinyint(3) unsigned NOT NULL default '1', `clear` varchar(128) NOT NULL default 'ChangeMe', `crypt` varchar(128) NOT NULL default 'sdtrusfX0Jj66', `quota` varchar(255) NOT NULL default '', `procmailrc` varchar(128) NOT NULL default '', `spamassassinrc` varchar(128) NOT NULL default '', PRIMARY KEY (`id`), UNIQUE KEY `id` (`id`) ) ;
+
+\q

@@ -16,30 +16,31 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-database-mysql. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.database.mysql.ubuntu;
+package com.anrisoftware.sscontrol.database.mysql.ubuntu_12_04
 
-import static com.google.inject.multibindings.MapBinder.newMapBinder;
-import groovy.lang.Script;
+import javax.inject.Inject
 
-import com.google.inject.AbstractModule;
-import com.google.inject.multibindings.MapBinder;
+import com.anrisoftware.propertiesutils.ContextProperties
+import com.anrisoftware.sscontrol.database.mysql.mysql_5_1.Mysql51Script
 
 /**
- * MySQL/Ubuntu 10.04 service script module.
- * 
+ * MySQL/Ubuntu 12.04 service script.
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-public class UbuntuModule extends AbstractModule {
+class UbuntuScript extends Mysql51Script {
 
-	@Override
-	protected void configure() {
-		bindScripts();
-	}
+    @Inject
+    UbuntuPropertiesProvider ubuntuProperties
 
-	private void bindScripts() {
-		MapBinder<String, Script> binder;
-		binder = newMapBinder(binder(), String.class, Script.class);
-		binder.addBinding("mysql.ubuntu_10_04").to(Ubuntu1004Script.class);
-	}
+    @Override
+    void beforeConfiguration() {
+        installPackages()
+    }
+
+    @Override
+    ContextProperties getDefaultProperties() {
+        ubuntuProperties.get()
+    }
 }

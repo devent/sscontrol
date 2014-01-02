@@ -16,22 +16,27 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-database-mysql. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.database.mysql.ubuntu_10_04
+package com.anrisoftware.sscontrol.database.mysql.ubuntu_12_04;
 
-def aptitudeCommand = MysqlUbuntuResources.aptitudeCommand.asFile(tmp)
-def restartCommand = MysqlUbuntuResources.restartCommand.asFile(tmp)
-def mysqladminCommand = MysqlUbuntuResources.mysqladminCommand.asFile(tmp)
-def mysqlCommand = MysqlUbuntuResources.mysqlCommand.asFile(tmp)
-def confDir = MysqlUbuntuResources.confDir.asFile(tmp)
+import java.net.URL;
 
-profile "ubuntu_10_04", {
-    database {
-        service "mysql"
-        install_command "$aptitudeCommand update && $aptitudeCommand install"
-        restart_command restartCommand
-        packages "mysql-server, mysql-client"
-        configuration_directory confDir
-        mysqladmin_command mysqladminCommand
-        mysql_command mysqlCommand
-    }
+import com.anrisoftware.propertiesutils.AbstractContextPropertiesProvider;
+
+/**
+ * MySQL/Ubuntu 12.04 service script properties provider. Provides the script
+ * properties from the {@code "/mysql_ubuntu_12_04.properties"} file.
+ * 
+ * @author Erwin Mueller, erwin.mueller@deventm.org
+ * @since 1.0
+ */
+@SuppressWarnings("serial")
+class UbuntuPropertiesProvider extends AbstractContextPropertiesProvider {
+
+	private static final URL RESOURCE = UbuntuPropertiesProvider.class
+            .getResource("/mysql_ubuntu_12_04.properties");
+
+	UbuntuPropertiesProvider() {
+		super(UbuntuPropertiesProvider.class, RESOURCE);
+	}
+
 }

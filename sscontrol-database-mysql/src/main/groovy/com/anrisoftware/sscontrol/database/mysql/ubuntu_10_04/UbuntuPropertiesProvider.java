@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-database-mysql. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.database.mysql.ubuntu;
+package com.anrisoftware.sscontrol.database.mysql.ubuntu_10_04;
 
 import java.net.URL;
 
@@ -24,19 +24,19 @@ import com.anrisoftware.propertiesutils.AbstractContextPropertiesProvider;
 
 /**
  * MySQL/Ubuntu 10.04 service script properties provider. Provides the script
- * properties from the {@code /mysql_ubuntu_10_04.properties} file.
+ * properties from the {@code "/mysql_ubuntu_10_04.properties"} file.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
 @SuppressWarnings("serial")
-class Ubuntu1004PropertiesProvider extends AbstractContextPropertiesProvider {
+class UbuntuPropertiesProvider extends AbstractContextPropertiesProvider {
 
-	private static final URL RESOURCE = Ubuntu1004PropertiesProvider.class
+	private static final URL RESOURCE = UbuntuPropertiesProvider.class
 			.getResource("/mysql_ubuntu_10_04.properties");
 
-	Ubuntu1004PropertiesProvider() {
-		super(Ubuntu1004PropertiesProvider.class, RESOURCE);
+	UbuntuPropertiesProvider() {
+		super(UbuntuPropertiesProvider.class, RESOURCE);
 	}
 
 }

@@ -1,0 +1,8 @@
+--password=mysqladminpassword -t
+--password=mysqladminpassword -t
+--password=mysqladminpassword -t
+--password=mysqladminpassword -t
+--password=mysqladminpassword -t
+--password=mysqladminpassword -t
+--password=mysqladminpassword -t
+--password=mysqladminpassword -t

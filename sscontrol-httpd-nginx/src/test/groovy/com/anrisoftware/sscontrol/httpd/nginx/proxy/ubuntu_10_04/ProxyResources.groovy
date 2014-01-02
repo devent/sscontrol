@@ -21,7 +21,7 @@ package com.anrisoftware.sscontrol.httpd.nginx.proxy.ubuntu_10_04
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static org.apache.commons.io.FileUtils.*
 
-import com.anrisoftware.sscontrol.httpd.nginx.core.ubuntu_10_04.ResourcesUtils
+import com.anrisoftware.sscontrol.httpd.nginx.resources.ResourcesUtils
 
 /**
  * Proxy Nginx resources.
@@ -31,16 +31,16 @@ import com.anrisoftware.sscontrol.httpd.nginx.core.ubuntu_10_04.ResourcesUtils
  */
 enum ProxyResources {
 
+    profile("UbuntuProfile.groovy", ProxyResources.class.getResource("UbuntuProfile.groovy")),
     httpdScript("Httpd.groovy", ProxyResources.class.getResource("HttpdProxy.groovy")),
+    certCrt("cert.crt", ProxyResources.class.getResource("cert_crt.txt")),
+    certKey("cert.key", ProxyResources.class.getResource("cert_key.txt")),
     proxyConf("/etc/nginx/conf.d/010-robobee_proxy.conf", ProxyResources.class.getResource("proxy_conf_expected.txt")),
     test1comConf("/etc/nginx/sites-available/100-robobee-test1.com.conf", ProxyResources.class.getResource("test1_com_conf.txt")),
     test1comSslConf("/etc/nginx/sites-available/100-robobee-test1.com-ssl.conf", ProxyResources.class.getResource("test1_com_ssl_conf.txt")),
     wwwtest1comConf("/etc/nginx/sites-available/100-robobee-www.test1.com.conf", ProxyResources.class.getResource("www_test1_com_conf.txt")),
     wwwtest1comSslConf("/etc/nginx/sites-available/100-robobee-www.test1.com-ssl.conf", ProxyResources.class.getResource("www_test1_com_ssl_conf.txt")),
     wordpress3ProxyConf("/etc/nginx/conf.d/020-robobee-wordpress3-proxy.conf", ProxyResources.class.getResource("wordpress3_proxy_conf.txt")),
-
-    static copyProxyFiles(File parent) {
-    }
 
     ResourcesUtils resources
 

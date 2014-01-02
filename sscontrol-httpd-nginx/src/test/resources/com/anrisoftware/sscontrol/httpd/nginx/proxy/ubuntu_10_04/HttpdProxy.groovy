@@ -18,8 +18,6 @@
  */
 package com.anrisoftware.sscontrol.httpd.nginx.proxy.ubuntu_10_04
 
-import com.anrisoftware.sscontrol.httpd.nginx.core.ubuntu_10_04.UbuntuResources
-
 httpd {
     // domain test1.com
     domain "test1.com", address: "192.168.0.50", {
@@ -28,8 +26,8 @@ httpd {
     // SSL/domain test1.com
     ssl_domain "test1.com", address: "192.168.0.50", {
         redirect to_www
-        certification_file UbuntuResources.certCrt.resource
-        certification_key_file UbuntuResources.certKey.resource
+        certification_file ProxyResources.certCrt.resource
+        certification_key_file ProxyResources.certKey.resource
     }
     // domain www.test1.com
     domain "www.test1.com", address: "192.168.0.51", {
@@ -38,7 +36,7 @@ httpd {
     // SSL/domain www.test1.com
     ssl_domain "www.test1.com", address: "192.168.0.51", {
         setup "proxy", service: "wordpress", alias: "wordpress3", proxyname: "wordpress3", address: "https://127.0.0.1:8082"
-        certification_file UbuntuResources.certCrt.resource
-        certification_key_file UbuntuResources.certKey.resource
+        certification_file ProxyResources.certCrt.resource
+        certification_key_file ProxyResources.certKey.resource
     }
 }

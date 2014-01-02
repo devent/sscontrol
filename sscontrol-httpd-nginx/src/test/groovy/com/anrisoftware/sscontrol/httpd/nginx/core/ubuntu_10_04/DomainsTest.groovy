@@ -20,7 +20,8 @@ package com.anrisoftware.sscontrol.httpd.nginx.core.ubuntu_10_04
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.httpd.nginx.core.ubuntu_10_04.DomainsResources.*
-import static com.anrisoftware.sscontrol.httpd.nginx.core.ubuntu_10_04.UbuntuResources.*
+import static com.anrisoftware.sscontrol.httpd.nginx.ubuntu.UbuntuResources.*
+import static com.anrisoftware.sscontrol.httpd.nginx.ubuntu_10_04.Ubuntu_10_04_Resources.*
 import static org.apache.commons.io.FileUtils.*
 import groovy.util.logging.Slf4j
 
@@ -40,10 +41,11 @@ class DomainsTest extends UbuntuTestUtil {
     @Test
     void "domains"() {
         copyUbuntuFiles tmpdir
-        copyDomainsFiles tmpdir
+        copyUbuntu_10_04_Files tmpdir
 
         loader.loadService profile.resource, null
         def profile = registry.getService("profile")[0]
+        setupUbuntu_10_04_Properties profile, tmpdir
         loader.loadService httpdScript.resource, profile
 
         registry.allServices.each { it.call() }

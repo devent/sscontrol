@@ -21,6 +21,8 @@ package com.anrisoftware.sscontrol.httpd.nginx.core.ubuntu_10_04
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static org.apache.commons.io.FileUtils.*
 
+import com.anrisoftware.sscontrol.httpd.nginx.resources.ResourcesUtils
+
 /**
  * Loads the resources.
  *
@@ -29,7 +31,10 @@ import static org.apache.commons.io.FileUtils.*
  */
 enum DomainsResources {
 
+    profile("UbuntuProfile.groovy", DomainsResources.class.getResource("UbuntuProfile.groovy")),
     httpdScript("Httpd.groovy", DomainsResources.class.getResource("Httpd.groovy")),
+    certCrt("cert.crt", DomainsResources.class.getResource("cert_crt.txt")),
+    certKey("cert.key", DomainsResources.class.getResource("cert_key.txt")),
     test1comConf("/etc/nginx/sites-available/100-robobee-test1.com.conf", DomainsResources.class.getResource("test1_com_conf.txt")),
     test1comSslConf("/etc/nginx/sites-available/100-robobee-test1.com-ssl.conf", DomainsResources.class.getResource("test1_com_ssl_conf.txt")),
     nginxConfExpected("/etc/nginx/nginx.conf", DomainsResources.class.getResource("nginx_conf_expected.txt")),
@@ -44,9 +49,6 @@ enum DomainsResources {
     groupaddOutExpected("/usr/sbin/groupadd.out", DomainsResources.class.getResource("groupadd_out_expected.txt")),
     chownOutExpected("/bin/chown.out", DomainsResources.class.getResource("chown_out_expected.txt")),
     chmodOutExpected("/bin/chmod.out", DomainsResources.class.getResource("chmod_out_expected.txt")),
-
-    static copyDomainsFiles(File parent) {
-    }
 
     ResourcesUtils resources
 

@@ -16,9 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd-nginx. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.nginx.proxy.ubuntu_10_04
-
-import com.anrisoftware.sscontrol.httpd.nginx.core.ubuntu_10_04.UbuntuResources
+package com.anrisoftware.sscontrol.httpd.nginx.redirectwww.ubuntu_10_04
 
 httpd {
     // domain test1.com
@@ -28,15 +26,15 @@ httpd {
     // SSL/domain test1.com
     ssl_domain "test1.com", address: "192.168.0.50", {
         redirect to_www
-        certification_file UbuntuResources.certCrt.resource
-        certification_key_file UbuntuResources.certKey.resource
+        certification_file RedirectWwwResources.certCrt.resource
+        certification_key_file RedirectWwwResources.certKey.resource
     }
     // domain www.test1.com
     domain "www.test1.com", address: "192.168.0.51", {
     }
     // SSL/domain www.test1.com
     ssl_domain "www.test1.com", address: "192.168.0.51", {
-        certification_file UbuntuResources.certCrt.resource
-        certification_key_file UbuntuResources.certKey.resource
+        certification_file RedirectWwwResources.certCrt.resource
+        certification_key_file RedirectWwwResources.certKey.resource
     }
 }

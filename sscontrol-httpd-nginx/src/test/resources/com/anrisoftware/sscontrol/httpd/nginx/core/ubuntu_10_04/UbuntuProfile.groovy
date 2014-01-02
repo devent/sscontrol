@@ -18,11 +18,14 @@
  */
 package com.anrisoftware.sscontrol.httpd.nginx.core.ubuntu_10_04
 
+import com.anrisoftware.sscontrol.httpd.nginx.ubuntu.UbuntuResources
+
+def aptitudeCommand = UbuntuResources.aptitudeCommand.asFile(tmp)
+
 profile "ubuntu_10_04", {
     httpd {
         service "nginx"
-        install_command "export DEBIAN_FRONTEND=noninteractive\n${UbuntuResources.aptitudeCommand.asFile(tmp)} update && ${UbuntuResources.aptitudeCommand.asFile(tmp)} install"
-        restart_command "${UbuntuResources.restartCommand.asFile(tmp)} restart"
+        install_command "$aptitudeCommand update && $aptitudeCommand install"
         apt_key_command UbuntuResources.aptKeyCommand.asFile(tmp)
         chmod_command UbuntuResources.chmodCommand.asFile(tmp)
         chown_command UbuntuResources.chownCommand.asFile(tmp)
@@ -30,11 +33,5 @@ profile "ubuntu_10_04", {
         user_add_command UbuntuResources.useraddCommand.asFile(tmp)
         link_command UbuntuResources.lnCommand.asFile(tmp)
         temp_directory UbuntuResources.tmpDir.asFile(tmp)
-        configuration_directory UbuntuResources.configurationDir.asFile(tmp)
-        packages_sources_file UbuntuResources.packagesSourcesFile.asFile(tmp)
-        groups_file UbuntuResources.groups.asFile(tmp)
-        users_file UbuntuResources.users.asFile(tmp)
-        sites_directory UbuntuResources.sitesDir.asFile(tmp)
-        nginx_signing_key UbuntuResources.nginxSigningKeyFile.asFile(tmp)
     }
 }

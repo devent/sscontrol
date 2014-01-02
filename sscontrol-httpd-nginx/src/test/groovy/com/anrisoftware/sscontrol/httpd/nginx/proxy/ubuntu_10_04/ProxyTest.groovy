@@ -19,8 +19,9 @@
 package com.anrisoftware.sscontrol.httpd.nginx.proxy.ubuntu_10_04
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
-import static com.anrisoftware.sscontrol.httpd.nginx.core.ubuntu_10_04.UbuntuResources.*
 import static com.anrisoftware.sscontrol.httpd.nginx.proxy.ubuntu_10_04.ProxyResources.*
+import static com.anrisoftware.sscontrol.httpd.nginx.ubuntu.UbuntuResources.*
+import static com.anrisoftware.sscontrol.httpd.nginx.ubuntu_10_04.Ubuntu_10_04_Resources.*
 import static org.apache.commons.io.FileUtils.*
 import groovy.util.logging.Slf4j
 
@@ -40,10 +41,12 @@ class ProxyTest extends UbuntuTestUtil {
     @Test
     void "proxy"() {
         copyUbuntuFiles tmpdir
-        copyProxyFiles tmpdir
+        copyUbuntu_10_04_Files tmpdir
 
         loader.loadService profile.resource, null
         def profile = registry.getService("profile")[0]
+        setupUbuntuProperties profile, tmpdir
+        setupUbuntu_10_04_Properties profile, tmpdir
         loader.loadService httpdScript.resource, profile
 
         registry.allServices.each { it.call() }

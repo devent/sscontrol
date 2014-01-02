@@ -16,15 +16,10 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd-nginx. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.nginx.core.ubuntu_10_04
+package com.anrisoftware.sscontrol.httpd.nginx.redirectwww.ubuntu_10_04
 
-httpd {
-    // domain test1.com
-    domain "test1.com", address: "192.168.0.50", {
-    }
-    // SSL/domain test1.com
-    ssl_domain "test1.com", address: "192.168.0.50", {
-        certification_file DomainsResources.certCrt.resource
-        certification_key_file DomainsResources.certKey.resource
+profile "ubuntu_10_04", {
+    httpd {
+        service "nginx"
     }
 }

@@ -18,8 +18,6 @@
  */
 package com.anrisoftware.sscontrol.remote.service
 
-import com.anrisoftware.sscontrol.remote.ubuntu_10_04.UbuntuResources
-
 remote {
     user "bar", password: "barpass", uid: 2001
     user "baz", password: "bazpass", {

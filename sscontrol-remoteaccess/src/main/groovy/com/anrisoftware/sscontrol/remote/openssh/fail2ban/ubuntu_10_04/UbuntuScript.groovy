@@ -30,8 +30,12 @@ import com.anrisoftware.sscontrol.remote.service.RemoteService
 class UbuntuScript extends BaseFail2BanScript {
 
     @Override
-    void deployFail2banScript(RemoteService service) {
+    void beforeFail2banConfiguration(RemoteService service) {
         installPackages fail2banPackages
+    }
+
+    @Override
+    void deployFail2banScript(RemoteService service) {
         super.deployFail2banScript service
         restartServices restartCommand: fail2banRestartCommand, services: fail2banRestartServices
     }

@@ -66,6 +66,7 @@ abstract class BaseFail2BanScript implements RemoteScript {
             return
         }
         setupParentScript()
+        beforeFail2banConfiguration service
         deployConfig()
         deployFail2banScript service
     }
@@ -74,6 +75,15 @@ abstract class BaseFail2BanScript implements RemoteScript {
         fail2banScript.each { key, Fail2BanScript value ->
             value.setScript this
         }
+    }
+
+    /**
+     * Called before the fail2ban configuration.
+     *
+     * @param service
+     *            the {@link RemoteService}
+     */
+    void beforeFail2banConfiguration(RemoteService service) {
     }
 
     /**

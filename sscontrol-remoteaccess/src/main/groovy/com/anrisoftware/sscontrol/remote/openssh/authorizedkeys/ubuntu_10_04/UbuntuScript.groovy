@@ -27,7 +27,7 @@ import com.anrisoftware.sscontrol.remote.service.RemoteService
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class Ubuntu_10_04_Script extends AuthorizedKeysScript {
+class UbuntuScript extends AuthorizedKeysScript {
 
     @Override
     void deployRemoteScript(RemoteService service) {

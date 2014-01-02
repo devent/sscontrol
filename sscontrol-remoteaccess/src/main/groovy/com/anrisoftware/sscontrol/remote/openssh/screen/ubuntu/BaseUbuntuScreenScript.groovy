@@ -16,19 +16,19 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-remoteaccess. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.remote.openssh.screen.ubuntu_10_04
+package com.anrisoftware.sscontrol.remote.openssh.screen.ubuntu
 
 import com.anrisoftware.sscontrol.remote.openssh.screen.linux.ScreenScript
 import com.anrisoftware.sscontrol.remote.service.RemoteService
 import com.anrisoftware.sscontrol.remote.user.User
 
 /**
- * Screen script for local users for Ubuntu 10.04.
+ * Screen script for local users for Ubuntu.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class Ubuntu_10_04_Script extends ScreenScript {
+abstract class BaseUbuntuScreenScript extends ScreenScript {
 
     @Override
     void deployScreenScript(RemoteService service) {

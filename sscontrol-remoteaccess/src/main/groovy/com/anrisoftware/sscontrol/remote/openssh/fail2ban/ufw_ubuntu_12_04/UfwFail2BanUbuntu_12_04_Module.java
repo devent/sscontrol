@@ -16,21 +16,21 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-remoteaccess. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.remote.openssh.users.ubuntu_10_04;
+package com.anrisoftware.sscontrol.remote.openssh.fail2ban.ufw_ubuntu_12_04;
 
 import static com.google.inject.multibindings.MapBinder.newMapBinder;
 
-import com.anrisoftware.sscontrol.remote.api.RemoteScript;
+import com.anrisoftware.sscontrol.remote.openssh.fail2ban.linux.Fail2BanScript;
 import com.google.inject.AbstractModule;
 import com.google.inject.multibindings.MapBinder;
 
 /**
- * Installs the local users script for Ubuntu 10.04.
+ * Installs the UFW firewall fail2ban script for Ubuntu 12.04.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-public class UsersUbuntu_10_04_Module extends AbstractModule {
+public class UfwFail2BanUbuntu_12_04_Module extends AbstractModule {
 
     @Override
     protected void configure() {
@@ -38,8 +38,8 @@ public class UsersUbuntu_10_04_Module extends AbstractModule {
     }
 
     private void bindScripts() {
-        MapBinder<String, RemoteScript> binder;
-        binder = newMapBinder(binder(), String.class, RemoteScript.class);
-        binder.addBinding("users").to(UbuntuScript.class);
+        MapBinder<String, Fail2BanScript> binder;
+        binder = newMapBinder(binder(), String.class, Fail2BanScript.class);
+        binder.addBinding("fail2ban.ufw").to(UbuntuScript.class);
     }
 }

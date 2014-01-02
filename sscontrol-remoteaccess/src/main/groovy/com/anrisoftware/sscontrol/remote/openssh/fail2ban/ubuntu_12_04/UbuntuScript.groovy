@@ -16,21 +16,23 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-remoteaccess. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.remote.openssh.users.ubuntu_10_04
+package com.anrisoftware.sscontrol.remote.openssh.fail2ban.ubuntu_12_04
 
-import com.anrisoftware.sscontrol.remote.openssh.users.linux.LocalUsersScript
+import com.anrisoftware.sscontrol.remote.openssh.fail2ban.linux.BaseFail2BanScript
 import com.anrisoftware.sscontrol.remote.service.RemoteService
 
 /**
- * Local users script for Ubuntu 10.04.
+ * fail2ban script for Ubuntu 12.04.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class Ubuntu_10_04_Script extends LocalUsersScript {
+class UbuntuScript extends BaseFail2BanScript {
 
     @Override
-    void deployRemoteScript(RemoteService service) {
-        super.deployRemoteScript service
+    void deployFail2banScript(RemoteService service) {
+        installPackages fail2banPackages
+        super.deployFail2banScript service
+        restartServices restartCommand: fail2banRestartCommand, services: fail2banRestartServices
     }
 }

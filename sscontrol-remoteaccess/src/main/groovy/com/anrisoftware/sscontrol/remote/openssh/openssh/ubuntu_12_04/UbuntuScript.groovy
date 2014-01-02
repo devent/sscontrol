@@ -16,21 +16,37 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-remoteaccess. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.remote.openssh.fail2ban.ufw_ubuntu_10_04
+package com.anrisoftware.sscontrol.remote.openssh.openssh.ubuntu_12_04
 
-import com.anrisoftware.sscontrol.remote.openssh.fail2ban.ufw.UfwFail2BanScript
-import com.anrisoftware.sscontrol.remote.service.RemoteService
+import javax.inject.Inject
+
+import com.anrisoftware.propertiesutils.ContextProperties
+import com.anrisoftware.sscontrol.remote.openssh.openssh.linux.BaseOpensshRemoteScript
 
 /**
- * Ufw firewall fail2ban script for Ubuntu 10.04.
+ * Remote script for OpenSSH/Ubuntu 12.04.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class Ubuntu_10_04_Script extends UfwFail2BanScript {
+class UbuntuScript extends BaseOpensshRemoteScript {
+
+    @Inject
+    UbuntuPropertiesProvider ubuntuProperties
 
     @Override
-    void deployFail2banScript(RemoteService service) {
-        super.deployFail2banScript service
+    ContextProperties getDefaultProperties() {
+        ubuntuProperties.get()
+    }
+
+    @Override
+    def run() {
+        super.run()
+        restartServices()
+    }
+
+    @Override
+    void beforeConfiguration() {
+        installPackages()
     }
 }

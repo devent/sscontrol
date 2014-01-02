@@ -57,11 +57,11 @@ abstract class BaseOpensshRemoteScript extends LinuxScript {
         setupDefaultDebug()
         setupDefaultBinding()
         beforeConfiguration()
-        remoteScript.users.deployRemoteScript service
-        remoteScript.userkey.deployRemoteScript service
-        remoteScript.authorizedkeys.deployRemoteScript service
-        remoteScript.screen.deployRemoteScript service
-        remoteScript.fail2ban.deployRemoteScript service
+        remoteScript.users?.deployRemoteScript service
+        remoteScript.userkey?.deployRemoteScript service
+        remoteScript.authorizedkeys?.deployRemoteScript service
+        remoteScript.screen?.deployRemoteScript service
+        remoteScript.fail2ban?.deployRemoteScript service
     }
 
     void setupParentScript() {

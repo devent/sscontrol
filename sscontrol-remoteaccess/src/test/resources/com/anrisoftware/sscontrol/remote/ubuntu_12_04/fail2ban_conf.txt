@@ -2,7 +2,7 @@
 #
 # Author: Cyril Jaquier
 #
-# $Revision: 629 $
+# $Revision$
 #
 
 [Definition]
@@ -15,7 +15,7 @@
 #          4 = DEBUG
 # Values:  NUM  Default:  3
 #
-loglevel = 4
+loglevel = 3
 
 # Option:  logtarget
 # Notes.:  Set the log target. This could be a file, SYSLOG, STDERR or STDOUT.

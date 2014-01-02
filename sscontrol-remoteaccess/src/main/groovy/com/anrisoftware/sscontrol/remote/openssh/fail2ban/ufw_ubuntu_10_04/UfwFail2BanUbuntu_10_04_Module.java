@@ -40,6 +40,6 @@ public class UfwFail2BanUbuntu_10_04_Module extends AbstractModule {
     private void bindScripts() {
         MapBinder<String, Fail2BanScript> binder;
         binder = newMapBinder(binder(), String.class, Fail2BanScript.class);
-        binder.addBinding("fail2ban.ufw").to(Ubuntu_10_04_Script.class);
+        binder.addBinding("fail2ban.ufw").to(UbuntuScript.class);
     }
 }

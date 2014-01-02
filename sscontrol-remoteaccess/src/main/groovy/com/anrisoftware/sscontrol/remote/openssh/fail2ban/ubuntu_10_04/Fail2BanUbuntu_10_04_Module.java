@@ -42,6 +42,6 @@ public class Fail2BanUbuntu_10_04_Module extends AbstractModule {
     private void bindScripts() {
         MapBinder<String, RemoteScript> binder;
         binder = newMapBinder(binder(), String.class, RemoteScript.class);
-        binder.addBinding("fail2ban").to(Ubuntu_10_04_Script.class);
+        binder.addBinding("fail2ban").to(UbuntuScript.class);
     }
 }

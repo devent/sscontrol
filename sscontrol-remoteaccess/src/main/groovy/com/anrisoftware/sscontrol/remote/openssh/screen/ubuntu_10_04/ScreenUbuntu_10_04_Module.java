@@ -40,6 +40,6 @@ public class ScreenUbuntu_10_04_Module extends AbstractModule {
     private void bindScripts() {
         MapBinder<String, RemoteScript> binder;
         binder = newMapBinder(binder(), String.class, RemoteScript.class);
-        binder.addBinding("screen").to(Ubuntu_10_04_Script.class);
+        binder.addBinding("screen").to(UbuntuScript.class);
     }
 }

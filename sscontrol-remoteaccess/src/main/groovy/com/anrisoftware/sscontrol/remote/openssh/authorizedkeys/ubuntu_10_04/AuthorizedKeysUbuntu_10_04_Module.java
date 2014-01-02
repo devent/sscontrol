@@ -40,6 +40,6 @@ public class AuthorizedKeysUbuntu_10_04_Module extends AbstractModule {
     private void bindScripts() {
         MapBinder<String, RemoteScript> binder;
         binder = newMapBinder(binder(), String.class, RemoteScript.class);
-        binder.addBinding("authorizedkeys").to(Ubuntu_10_04_Script.class);
+        binder.addBinding("authorizedkeys").to(UbuntuScript.class);
     }
 }

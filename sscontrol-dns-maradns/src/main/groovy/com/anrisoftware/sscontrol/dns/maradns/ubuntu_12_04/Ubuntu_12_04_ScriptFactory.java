@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-dns-maradns. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.dns.maradns.ubuntu_10_04;
+package com.anrisoftware.sscontrol.dns.maradns.ubuntu_12_04;
 
 import org.mangosdk.spi.ProviderFor;
 
@@ -27,17 +27,17 @@ import com.google.inject.Injector;
 import com.google.inject.Module;
 
 /**
- * MaraDNS/Ubuntu 10.04 service script factory.
+ * MaraDNS/Ubuntu 12.04 service script factory.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
 @ProviderFor(ServiceScriptFactory.class)
-public class Ubuntu1004ScriptFactory implements ServiceScriptFactory {
+public class Ubuntu_12_04_ScriptFactory implements ServiceScriptFactory {
 
 	public static final String NAME = "maradns";
 
-	public static final String PROFILE_NAME = "ubuntu_10_04";
+    public static final String PROFILE_NAME = "ubuntu_12_04";
 
 	public static ServiceScriptInfo INFO = new ServiceScriptInfo() {
 
@@ -63,7 +63,7 @@ public class Ubuntu1004ScriptFactory implements ServiceScriptFactory {
 
 	@Override
 	public Object getScript() throws ServiceException {
-		return injector.getInstance(Ubuntu1004Script.class);
+		return injector.getInstance(UbuntuScript.class);
 	}
 
 	@Override

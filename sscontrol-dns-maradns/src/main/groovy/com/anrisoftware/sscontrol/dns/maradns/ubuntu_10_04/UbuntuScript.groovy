@@ -16,19 +16,37 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-dns-maradns. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.dns.maradns.ubuntu_10_04;
+package com.anrisoftware.sscontrol.dns.maradns.ubuntu_10_04
 
-import com.google.inject.AbstractModule;
+import javax.inject.Inject
+
+import com.anrisoftware.propertiesutils.ContextProperties
+import com.anrisoftware.sscontrol.dns.maradns.maradns12.Maradns12Script
 
 /**
- * MaraDNS/Ubuntu 12.04 service script module.
- * 
+ * MaraDNS/Ubuntu 10.04 service script.
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class UbuntuModule extends AbstractModule {
+class UbuntuScript extends Maradns12Script {
 
-	@Override
-	protected void configure() {
-	}
+    @Inject
+    UbuntuPropertiesProvider ubuntuProperties
+
+    def run() {
+        super.run()
+        restartServices()
+    }
+
+    @Override
+    void beforeConfiguration() {
+        enableDebRepositories()
+        installPackages packages
+    }
+
+    @Override
+    ContextProperties getDefaultProperties() {
+        ubuntuProperties.get()
+    }
 }

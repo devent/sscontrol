@@ -16,10 +16,10 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-dns-maradns. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.dns.maradns.ubuntu_10_04
+package com.anrisoftware.sscontrol.dns.maradns.ubuntu_12_04
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
-import static com.anrisoftware.sscontrol.dns.maradns.ubuntu_10_04.MaradnsResources.*
+import static com.anrisoftware.sscontrol.dns.maradns.ubuntu_12_04.MaradnsResources.*
 import static org.apache.commons.io.FileUtils.*
 import groovy.util.logging.Slf4j
 
@@ -28,7 +28,7 @@ import org.junit.Test
 import com.anrisoftware.sscontrol.dns.maradns.ubuntu.UbuntuTestUtil
 
 /**
- * MaraDNS/Ubuntu 10.04.
+ * MaraDNS/Ubuntu 12.04.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
@@ -39,7 +39,6 @@ class MaraDnsTest extends UbuntuTestUtil {
     @Test
     void "maradns service"() {
         copyUbuntuFiles tmpdir
-        mararc.createFile tmpdir
 
         loader.loadService profile.resource, null
         def profile = registry.getService("profile")[0]

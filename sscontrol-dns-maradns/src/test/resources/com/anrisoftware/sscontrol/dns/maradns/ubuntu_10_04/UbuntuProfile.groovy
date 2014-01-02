@@ -18,15 +18,19 @@
  */
 package com.anrisoftware.sscontrol.dns.maradns.ubuntu_10_04
 
-import com.anrisoftware.sscontrol.dns.maradns.ubuntu.UbuntuResources
+def aptitudeCommand = MaradnsResources.aptitudeCommand.asFile(tmp)
+def restartCommand = MaradnsResources.restartCommand.asFile(tmp)
+def addRepositoryCommand = MaradnsResources.addRepositoryCommand.asFile(tmp)
+def confDir = MaradnsResources.confDir.asFile(tmp)
+def packagesSourcesFile = MaradnsResources.packagesSourcesFile.asFile(tmp)
 
 profile "ubuntu_10_04", {
     dns {
         service "maradns"
-        install_command "${UbuntuResources.aptitudeCommand.asFile(tmp)} update && ${UbuntuResources.aptitudeCommand.asFile(tmp)} install"
-        restart_command "${UbuntuResources.restartCommand.asFile(tmp)} restart"
-        enable_repository_command UbuntuResources.addRepositoryCommand.asFile(tmp)
-        configuration_directory UbuntuResources.confDir.asFile(tmp)
-        packages_sources_file UbuntuResources.packagesSourcesFile.asFile(tmp)
+        install_command "$aptitudeCommand update && $aptitudeCommand install"
+        restart_command "$restartCommand restart"
+        enable_repository_command addRepositoryCommand
+        configuration_directory confDir
+        packages_sources_file packagesSourcesFile
     }
 }

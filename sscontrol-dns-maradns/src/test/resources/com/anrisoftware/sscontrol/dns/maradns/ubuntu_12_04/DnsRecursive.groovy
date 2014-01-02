@@ -16,19 +16,23 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-dns-maradns. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.dns.maradns.ubuntu_10_04;
+package com.anrisoftware.sscontrol.dns.maradns.ubuntu_12_04
+dns {
+	serial 1, generate: false
 
-import com.google.inject.AbstractModule;
+	// bind the dns server to address only
+	bind address: "127.0.0.1"
 
-/**
- * MaraDNS/Ubuntu 12.04 service script module.
- * 
- * @author Erwin Mueller, erwin.mueller@deventm.org
- * @since 1.0
- */
-class UbuntuModule extends AbstractModule {
+	// adds IPv4 address alias
+	alias "localhost" address "127.0.0.1"
+	alias "vbox" address "10.0.2.2"
 
-	@Override
-	protected void configure() {
-	}
+	// sets the group to the root servers
+	roots { servers "icann" }
+
+	// sets recursive host
+	recursive { servers "localhost" }
+
+	// soa entry
+	zone "example1.com", primary: "ns.example1.com", email: "hostmaster@example1.com"
 }

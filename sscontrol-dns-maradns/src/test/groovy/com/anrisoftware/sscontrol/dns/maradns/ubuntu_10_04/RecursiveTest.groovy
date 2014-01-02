@@ -19,7 +19,6 @@
 package com.anrisoftware.sscontrol.dns.maradns.ubuntu_10_04
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
-import static com.anrisoftware.sscontrol.dns.maradns.ubuntu.UbuntuResources.*
 import static com.anrisoftware.sscontrol.dns.maradns.ubuntu_10_04.MaradnsResources.*
 import static org.apache.commons.io.FileUtils.*
 import groovy.util.logging.Slf4j

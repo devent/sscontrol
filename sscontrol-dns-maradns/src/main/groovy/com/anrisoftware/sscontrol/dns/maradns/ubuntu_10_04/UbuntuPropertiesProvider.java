@@ -16,37 +16,27 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-dns-maradns. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.dns.maradns.ubuntu_10_04
+package com.anrisoftware.sscontrol.dns.maradns.ubuntu_10_04;
 
-import javax.inject.Inject
+import java.net.URL;
 
-import com.anrisoftware.propertiesutils.ContextProperties
-import com.anrisoftware.sscontrol.dns.maradns.maradns12.Maradns12Script
+import com.anrisoftware.propertiesutils.AbstractContextPropertiesProvider;
 
 /**
- * MaraDNS/Ubuntu 10.04 service script.
- *
+ * MaraDNS/Ubuntu 10.04 service script properties provider. Provides the script
+ * properties from the {@code "/maradns_ubuntu_10_04.properties"} file.
+ * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class Ubuntu1004Script extends Maradns12Script {
+@SuppressWarnings("serial")
+class UbuntuPropertiesProvider extends AbstractContextPropertiesProvider {
 
-    @Inject
-    Ubuntu1004PropertiesProvider ubuntuProperties
+    private static final URL RESOURCE = UbuntuPropertiesProvider.class
+            .getResource("/maradns_ubuntu_10_04.properties");
 
-    def run() {
-        super.run()
-        restartServices()
+    UbuntuPropertiesProvider() {
+        super(UbuntuPropertiesProvider.class, RESOURCE);
     }
 
-    @Override
-    void beforeConfiguration() {
-        enableDebRepositories()
-        installPackages packages
-    }
-
-    @Override
-    ContextProperties getDefaultProperties() {
-        ubuntuProperties.get()
-    }
 }

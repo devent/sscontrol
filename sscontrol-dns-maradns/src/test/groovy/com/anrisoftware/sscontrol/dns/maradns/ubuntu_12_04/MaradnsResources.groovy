@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-dns-maradns. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.dns.maradns.ubuntu_10_04
+package com.anrisoftware.sscontrol.dns.maradns.ubuntu_12_04
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static org.apache.commons.io.FileUtils.*
@@ -32,30 +32,30 @@ import com.anrisoftware.sscontrol.dns.maradns.resources.ResourcesUtils
 enum MaradnsResources {
 
     profile("UbuntuProfile.groovy", MaradnsResources.class.getResource("UbuntuProfile.groovy")),
-    sourcesListExpected("/etc/apt/sources.list", MaradnsResources.class.getResource("sources_list_expected.txt")),
+    maradnsScript("Dns.groovy", MaradnsResources.class.getResource("Dns.groovy")),
+    maradnsRecursiveScript("Dns.groovy", MaradnsResources.class.getResource("DnsRecursive.groovy")),
     aptitudeCommand("/usr/bin/aptitude", MaradnsResources.class.getResource("echo_command.txt")),
     restartCommand("/etc/init.d/maradns", MaradnsResources.class.getResource("echo_command.txt")),
     addRepositoryCommand("/usr/bin/add-apt-repository", MaradnsResources.class.getResource("echo_command.txt")),
     confDir("/etc/maradns", null),
-    packagesSourcesFile("/etc/apt/sources.list", MaradnsResources.class.getResource("sources_list.txt")),
-    maradnsScript("Dns.groovy", MaradnsResources.class.getResource("Dns.groovy")),
-    maradnsRecursiveScript("Dns.groovy", MaradnsResources.class.getResource("DnsRecursive.groovy")),
+    sourcesListFile("/etc/apt/sources.list", MaradnsResources.class.getResource("sources_list.txt")),
+    sourcesListExpected("/etc/apt/sources.list", MaradnsResources.class.getResource("sources_list_expected.txt")),
     mararc("/etc/maradns/mararc", MaradnsResources.class.getResource("mararc.txt")),
     mararcExpected("/etc/maradns/mararc", MaradnsResources.class.getResource("mararc_expected.txt")),
     mararcRecursiveExpected("/etc/maradns/mararc", MaradnsResources.class.getResource("mararc_recursive_expected.txt")),
-    dbAnrisoftwareExpected("/etc/maradns/db.anrisoftware.com", MaradnsResources.class.getResource("db.anrisoftware.com.txt")),
-    dbExample1Expected("/etc/maradns/db.example1.com", MaradnsResources.class.getResource("db.example1.com.txt")),
-    dbExample2Expected("/etc/maradns/db.example2.com", MaradnsResources.class.getResource("db.example2.com.txt")),
-    aptitudeOutExpected("/usr/bin/aptitude.out", MaradnsResources.class.getResource("aptitude_expected.txt")),
-    restartOutExpected("/etc/init.d/maradns.out", MaradnsResources.class.getResource("restart_out.txt")),
-    aptSources("/etc/apt/sources.list", MaradnsResources.class.getResource("sources.list")),
+    dbAnrisoftwareExpected("/etc/maradns/db.anrisoftware.com", MaradnsResources.class.getResource("db_anrisoftware_com_expected.txt")),
+    dbExample1Expected("/etc/maradns/db.example1.com", MaradnsResources.class.getResource("db_example1_com_expected.txt")),
+    dbExample2Expected("/etc/maradns/db.example2.com", MaradnsResources.class.getResource("db_example2_com_expected.txt")),
+    aptitudeOutExpected("/usr/bin/aptitude.out", MaradnsResources.class.getResource("aptitude_out_expected.txt")),
+    restartOutExpected("/etc/init.d/maradns.out", MaradnsResources.class.getResource("restart_out_expected.txt")),
 
     static copyUbuntuFiles(File parent) {
         aptitudeCommand.createCommand parent
         restartCommand.createCommand parent
         addRepositoryCommand.createCommand parent
         confDir.asFile parent mkdirs()
-        packagesSourcesFile.createFile parent
+        sourcesListFile.createFile parent
+        mararc.createFile parent
     }
 
     ResourcesUtils resources

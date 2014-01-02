@@ -1,0 +1,294 @@
+USE maildb;
+CREATE TABLE IF NOT EXISTS `aliases` (
+`pkid` smallint(3) NOT NULL auto_increment,
+`mail` varchar(120) NOT NULL default '',
+`destination` varchar(120) NOT NULL default '',
+`enabled` tinyint(1) NOT NULL default '1',
+PRIMARY KEY (`pkid`));
+
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ANSI';
+DROP PROCEDURE IF EXISTS create_index;
+DELIMITER $$
+CREATE PROCEDURE create_index()
+BEGIN
+    DECLARE indexexists BIGINT DEFAULT 0;
+    SELECT COUNT(*) INTO indexexists FROM information_schema.statistics
+        WHERE TABLE_SCHEMA = DATABASE()
+        AND table_name = 'aliases' AND index_name = 'mail_aliases_index';
+    IF indexexists = 0 THEN
+        CREATE UNIQUE INDEX `mail_aliases_index`
+        ON `aliases` (`mail`);
+    END IF;
+END ;$$
+DELIMITER ;
+CALL create_index();
+DROP PROCEDURE IF EXISTS create_index;
+SET SQL_MODE=@OLD_SQL_MODE;
+\q
+USE maildb;
+CREATE TABLE IF NOT EXISTS `domains` (
+`pkid` smallint(6) NOT NULL auto_increment,
+`domain` varchar(120) NOT NULL default '',
+`transport` varchar(120) NOT NULL default 'virtual:',
+`enabled` tinyint(1) NOT NULL default '1',
+PRIMARY KEY (`pkid`) ) ;
+
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ANSI';
+DROP PROCEDURE IF EXISTS create_index;
+DELIMITER $$
+CREATE PROCEDURE create_index()
+BEGIN
+    DECLARE indexexists BIGINT DEFAULT 0;
+    SELECT COUNT(*) INTO indexexists FROM information_schema.statistics
+        WHERE TABLE_SCHEMA = DATABASE()
+        AND table_name = 'domains' AND index_name = 'domain_domains_index';
+    IF indexexists = 0 THEN
+        CREATE UNIQUE INDEX `domain_domains_index`
+        ON `domains` (`domain`);
+    END IF;
+END ;$$
+DELIMITER ;
+CALL create_index();
+DROP PROCEDURE IF EXISTS create_index;
+SET SQL_MODE=@OLD_SQL_MODE;
+\q
+USE maildb;
+CREATE TABLE IF NOT EXISTS `users` (
+`pkid` smallint(6) NOT NULL auto_increment,
+`login` varchar(128) NOT NULL default '',
+`name` varchar(128) NOT NULL default '',
+`uid` smallint(5) unsigned NOT NULL default '5000',
+`gid` smallint(5) unsigned NOT NULL default '5000',
+`home` varchar(255) NOT NULL default '/tmp/var/mail/vhosts',
+`maildir` varchar(255) NOT NULL,
+`enabled` tinyint(3) unsigned NOT NULL default '1',
+`changePassword` tinyint(3) unsigned NOT NULL default '1',
+`clear` varchar(128) NOT NULL default 'ChangeMe',
+`crypt` varchar(128) NOT NULL default 'sdtrusfX0Jj66',
+`quota` varchar(255) NOT NULL default '',
+`procmailrc` varchar(128) NOT NULL default '',
+`spamassassinrc` varchar(128) NOT NULL default '',
+PRIMARY KEY (`pkid`));
+
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ANSI';
+DROP PROCEDURE IF EXISTS create_index;
+DELIMITER $$
+CREATE PROCEDURE create_index()
+BEGIN
+    DECLARE indexexists BIGINT DEFAULT 0;
+    SELECT COUNT(*) INTO indexexists FROM information_schema.statistics
+        WHERE TABLE_SCHEMA = DATABASE()
+        AND table_name = 'users' AND index_name = 'login_users_index';
+    IF indexexists = 0 THEN
+        CREATE UNIQUE INDEX `login_users_index`
+        ON `users` (`login`);
+    END IF;
+END ;$$
+DELIMITER ;
+CALL create_index();
+DROP PROCEDURE IF EXISTS create_index;
+SET SQL_MODE=@OLD_SQL_MODE;
+\q
+USE maildb;
+INSERT INTO `domains` (`domain`, `enabled`) VALUES
+('localhost.localdomain', 1)
+ON DUPLICATE KEY UPDATE
+`enabled`=1;
+INSERT INTO `domains` (`domain`, `enabled`) VALUES
+('localhost', 1)
+ON DUPLICATE KEY UPDATE
+`enabled`=1;
+\q
+USE maildb;
+INSERT INTO `aliases` (`mail`, `destination`, `enabled`) VALUES
+('@localhost.localdomain', '@localhost', 1)
+ON DUPLICATE KEY UPDATE
+`destination`='@localhost',
+`enabled`=1;
+\q
+USE maildb;
+INSERT INTO `aliases` (`mail`, `destination`, `enabled`) VALUES
+('postmaster@localhost', 'root@localhost', 1)
+ON DUPLICATE KEY UPDATE
+`destination`='root@localhost',
+`enabled`=1;
+INSERT INTO `aliases` (`mail`, `destination`, `enabled`) VALUES
+('sysadmin@localhost', 'root@localhost', 1)
+ON DUPLICATE KEY UPDATE
+`destination`='root@localhost',
+`enabled`=1;
+INSERT INTO `aliases` (`mail`, `destination`, `enabled`) VALUES
+('webmaster@localhost', 'root@localhost', 1)
+ON DUPLICATE KEY UPDATE
+`destination`='root@localhost',
+`enabled`=1;
+INSERT INTO `aliases` (`mail`, `destination`, `enabled`) VALUES
+('abuse@localhost', 'root@localhost', 1)
+ON DUPLICATE KEY UPDATE
+`destination`='root@localhost',
+`enabled`=1;
+INSERT INTO `aliases` (`mail`, `destination`, `enabled`) VALUES
+('root@localhost', 'root@localhost', 1)
+ON DUPLICATE KEY UPDATE
+`destination`='root@localhost',
+`enabled`=1;
+INSERT INTO `aliases` (`mail`, `destination`, `enabled`) VALUES
+('@localhost', 'root@localhost', 1)
+ON DUPLICATE KEY UPDATE
+`destination`='root@localhost',
+`enabled`=1;
+\q
+USE maildb;
+INSERT INTO `users` (`login`, `name`, `maildir`, `enabled`, `crypt`) VALUES
+('root@localhost', 'root', 'root/', 1, encrypt('rootpasswd'))
+ON DUPLICATE KEY UPDATE
+`enabled`=1,
+`crypt`=encrypt('rootpasswd');
+\q
+USE maildb;
+CREATE TABLE IF NOT EXISTS `aliases` (
+`pkid` smallint(3) NOT NULL auto_increment,
+`mail` varchar(120) NOT NULL default '',
+`destination` varchar(120) NOT NULL default '',
+`enabled` tinyint(1) NOT NULL default '1',
+PRIMARY KEY (`pkid`));
+
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ANSI';
+DROP PROCEDURE IF EXISTS create_index;
+DELIMITER $$
+CREATE PROCEDURE create_index()
+BEGIN
+    DECLARE indexexists BIGINT DEFAULT 0;
+    SELECT COUNT(*) INTO indexexists FROM information_schema.statistics
+        WHERE TABLE_SCHEMA = DATABASE()
+        AND table_name = 'aliases' AND index_name = 'mail_aliases_index';
+    IF indexexists = 0 THEN
+        CREATE UNIQUE INDEX `mail_aliases_index`
+        ON `aliases` (`mail`);
+    END IF;
+END ;$$
+DELIMITER ;
+CALL create_index();
+DROP PROCEDURE IF EXISTS create_index;
+SET SQL_MODE=@OLD_SQL_MODE;
+\q
+USE maildb;
+CREATE TABLE IF NOT EXISTS `domains` (
+`pkid` smallint(6) NOT NULL auto_increment,
+`domain` varchar(120) NOT NULL default '',
+`transport` varchar(120) NOT NULL default 'virtual:',
+`enabled` tinyint(1) NOT NULL default '1',
+PRIMARY KEY (`pkid`) ) ;
+
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ANSI';
+DROP PROCEDURE IF EXISTS create_index;
+DELIMITER $$
+CREATE PROCEDURE create_index()
+BEGIN
+    DECLARE indexexists BIGINT DEFAULT 0;
+    SELECT COUNT(*) INTO indexexists FROM information_schema.statistics
+        WHERE TABLE_SCHEMA = DATABASE()
+        AND table_name = 'domains' AND index_name = 'domain_domains_index';
+    IF indexexists = 0 THEN
+        CREATE UNIQUE INDEX `domain_domains_index`
+        ON `domains` (`domain`);
+    END IF;
+END ;$$
+DELIMITER ;
+CALL create_index();
+DROP PROCEDURE IF EXISTS create_index;
+SET SQL_MODE=@OLD_SQL_MODE;
+\q
+USE maildb;
+CREATE TABLE IF NOT EXISTS `users` (
+`pkid` smallint(6) NOT NULL auto_increment,
+`login` varchar(128) NOT NULL default '',
+`name` varchar(128) NOT NULL default '',
+`uid` smallint(5) unsigned NOT NULL default '5000',
+`gid` smallint(5) unsigned NOT NULL default '5000',
+`home` varchar(255) NOT NULL default '/tmp/var/mail/vhosts',
+`maildir` varchar(255) NOT NULL,
+`enabled` tinyint(3) unsigned NOT NULL default '1',
+`changePassword` tinyint(3) unsigned NOT NULL default '1',
+`clear` varchar(128) NOT NULL default 'ChangeMe',
+`crypt` varchar(128) NOT NULL default 'sdtrusfX0Jj66',
+`quota` varchar(255) NOT NULL default '',
+`procmailrc` varchar(128) NOT NULL default '',
+`spamassassinrc` varchar(128) NOT NULL default '',
+PRIMARY KEY (`pkid`));
+
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ANSI';
+DROP PROCEDURE IF EXISTS create_index;
+DELIMITER $$
+CREATE PROCEDURE create_index()
+BEGIN
+    DECLARE indexexists BIGINT DEFAULT 0;
+    SELECT COUNT(*) INTO indexexists FROM information_schema.statistics
+        WHERE TABLE_SCHEMA = DATABASE()
+        AND table_name = 'users' AND index_name = 'login_users_index';
+    IF indexexists = 0 THEN
+        CREATE UNIQUE INDEX `login_users_index`
+        ON `users` (`login`);
+    END IF;
+END ;$$
+DELIMITER ;
+CALL create_index();
+DROP PROCEDURE IF EXISTS create_index;
+SET SQL_MODE=@OLD_SQL_MODE;
+\q
+USE maildb;
+INSERT INTO `domains` (`domain`, `enabled`) VALUES
+('localhost.localdomain', 1)
+ON DUPLICATE KEY UPDATE
+`enabled`=1;
+INSERT INTO `domains` (`domain`, `enabled`) VALUES
+('localhost', 1)
+ON DUPLICATE KEY UPDATE
+`enabled`=1;
+\q
+USE maildb;
+INSERT INTO `aliases` (`mail`, `destination`, `enabled`) VALUES
+('@localhost.localdomain', '@localhost', 1)
+ON DUPLICATE KEY UPDATE
+`destination`='@localhost',
+`enabled`=1;
+\q
+USE maildb;
+INSERT INTO `aliases` (`mail`, `destination`, `enabled`) VALUES
+('postmaster@localhost', 'root@localhost', 1)
+ON DUPLICATE KEY UPDATE
+`destination`='root@localhost',
+`enabled`=1;
+INSERT INTO `aliases` (`mail`, `destination`, `enabled`) VALUES
+('sysadmin@localhost', 'root@localhost', 1)
+ON DUPLICATE KEY UPDATE
+`destination`='root@localhost',
+`enabled`=1;
+INSERT INTO `aliases` (`mail`, `destination`, `enabled`) VALUES
+('webmaster@localhost', 'root@localhost', 1)
+ON DUPLICATE KEY UPDATE
+`destination`='root@localhost',
+`enabled`=1;
+INSERT INTO `aliases` (`mail`, `destination`, `enabled`) VALUES
+('abuse@localhost', 'root@localhost', 1)
+ON DUPLICATE KEY UPDATE
+`destination`='root@localhost',
+`enabled`=1;
+INSERT INTO `aliases` (`mail`, `destination`, `enabled`) VALUES
+('root@localhost', 'root@localhost', 1)
+ON DUPLICATE KEY UPDATE
+`destination`='root@localhost',
+`enabled`=1;
+INSERT INTO `aliases` (`mail`, `destination`, `enabled`) VALUES
+('@localhost', 'root@localhost', 1)
+ON DUPLICATE KEY UPDATE
+`destination`='root@localhost',
+`enabled`=1;
+\q
+USE maildb;
+INSERT INTO `users` (`login`, `name`, `maildir`, `enabled`, `crypt`) VALUES
+('root@localhost', 'root', 'root/', 1, encrypt('rootpasswd'))
+ON DUPLICATE KEY UPDATE
+`enabled`=1,
+`crypt`=encrypt('rootpasswd');
+\q

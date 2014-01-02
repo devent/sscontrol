@@ -1,0 +1,14 @@
+--user=root --password=password -t
+--user=root --password=password -t
+--user=root --password=password -t
+--user=root --password=password -t
+--user=root --password=password -t
+--user=root --password=password -t
+--user=root --password=password -t
+--user=root --password=password -t
+--user=root --password=password -t
+--user=root --password=password -t
+--user=root --password=password -t
+--user=root --password=password -t
+--user=root --password=password -t
+--user=root --password=password -t

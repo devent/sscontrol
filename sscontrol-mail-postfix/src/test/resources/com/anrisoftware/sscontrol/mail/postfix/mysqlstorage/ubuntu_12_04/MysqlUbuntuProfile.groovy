@@ -16,13 +16,13 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-mail-postfix. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.mail.postfix.mysqlstorage.ubuntu_10_04
+package com.anrisoftware.sscontrol.mail.postfix.mysqlstorage.ubuntu_12_04
 
-import com.anrisoftware.sscontrol.mail.postfix.script.ubuntu_10_04.UbuntuResources
+import com.anrisoftware.sscontrol.mail.postfix.script.ubuntu_12_04.UbuntuResources
 
 def aptitudeCommand = UbuntuResources.aptitudeCommand.asFile(tmp)
 
-profile "ubuntu_10_04", {
+profile "ubuntu_12_04", {
     mail {
         service "postfix"
         storage "mysql"

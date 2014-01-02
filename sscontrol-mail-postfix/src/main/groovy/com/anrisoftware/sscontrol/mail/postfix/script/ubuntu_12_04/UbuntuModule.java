@@ -21,6 +21,7 @@ package com.anrisoftware.sscontrol.mail.postfix.script.ubuntu_12_04;
 import static com.google.inject.multibindings.MapBinder.newMapBinder;
 import groovy.lang.Script;
 
+import com.anrisoftware.sscontrol.mail.postfix.courierdelivery.ubuntu_12_04.UbuntuCourierMysqlDeliveryConfig;
 import com.anrisoftware.sscontrol.mail.postfix.hashstorage.ubuntu_12_04.UbuntuHashStorageConfig;
 import com.anrisoftware.sscontrol.mail.postfix.linux.DeliveryConfig;
 import com.anrisoftware.sscontrol.mail.postfix.linux.StorageConfig;
@@ -61,7 +62,7 @@ class UbuntuModule extends AbstractModule {
     private void bindDelivery() {
         MapBinder<String, DeliveryConfig> binder;
         binder = newMapBinder(binder(), String.class, DeliveryConfig.class);
-        // binder.addBinding("courier.mysql.ubuntu_12_04").to(
-        // UbuntuCourierMysqlDeliveryConfig.class);
+        binder.addBinding("courier.mysql.ubuntu_12_04").to(
+                UbuntuCourierMysqlDeliveryConfig.class);
     }
 }

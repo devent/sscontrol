@@ -1,0 +1,2 @@
++x /tmp/usr/local/bin/auto_screen.sh
++x /tmp/usr/local/bin/auto_screen.sh

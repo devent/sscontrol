@@ -16,11 +16,11 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-remoteaccess. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.remote.ubuntu_10_04
+package com.anrisoftware.sscontrol.remote.ubuntu_12_04
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.remote.ubuntu.UbuntuResources.*
-import static com.anrisoftware.sscontrol.remote.ubuntu_10_04.Ubuntu_10_04_Resources.*
+import static com.anrisoftware.sscontrol.remote.ubuntu_12_04.Ubuntu_12_04_Resources.*
 import static org.apache.commons.io.FileUtils.*
 import groovy.util.logging.Slf4j
 
@@ -29,7 +29,7 @@ import org.junit.Test
 import com.anrisoftware.sscontrol.remote.resources.RemoteTestUtil
 
 /**
- * Remote Access/Ubuntu 10.04
+ * Remote Access/Ubuntu 12.04
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
@@ -40,7 +40,7 @@ class RemoteTest extends RemoteTestUtil {
     @Test
     void "remote access script"() {
         copyUbuntuFiles tmpdir
-        copyUbuntu_10_04_Files tmpdir
+        copyUbuntu_12_04_Files tmpdir
 
         loader.loadService profile.resource, null
         def profile = registry.getService("profile")[0]

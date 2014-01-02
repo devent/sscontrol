@@ -1,0 +1,12 @@
+update
+-y install passwd openssh-server
+update
+-y install screen
+update
+-y install fail2ban ufw
+update
+-y install passwd openssh-server
+update
+-y install screen
+update
+-y install fail2ban ufw

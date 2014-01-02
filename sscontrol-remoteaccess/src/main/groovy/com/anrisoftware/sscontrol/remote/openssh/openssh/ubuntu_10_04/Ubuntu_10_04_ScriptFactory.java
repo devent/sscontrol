@@ -73,7 +73,7 @@ public class Ubuntu_10_04_ScriptFactory implements ServiceScriptFactory {
 
 	@Override
 	public Object getScript() throws ServiceException {
-        return injector.getInstance(Ubuntu_10_04_Script.class);
+        return injector.getInstance(UbuntuScript.class);
 	}
 
 	@Override

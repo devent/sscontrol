@@ -16,27 +16,37 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-remoteaccess. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.remote.openssh.openssh.ubuntu_10_04;
+package com.anrisoftware.sscontrol.remote.openssh.openssh.ubuntu_10_04
 
-import java.net.URL;
+import javax.inject.Inject
 
-import com.anrisoftware.propertiesutils.AbstractContextPropertiesProvider;
+import com.anrisoftware.propertiesutils.ContextProperties
+import com.anrisoftware.sscontrol.remote.openssh.openssh.linux.BaseOpensshRemoteScript
 
 /**
- * Provides the properties from {@code /openssh_ubuntu_10_04.properties}.
- * 
+ * Remote script for OpenSSH/Ubuntu 10.04.
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-@SuppressWarnings("serial")
-public class Ubuntu_10_04_PropertiesProvider extends
-        AbstractContextPropertiesProvider {
+class UbuntuScript extends BaseOpensshRemoteScript {
 
-    private static final URL RESOURCE = Ubuntu_10_04_PropertiesProvider.class
-            .getResource("/openssh_ubuntu_10_04.properties");
+    @Inject
+    UbuntuPropertiesProvider ubuntuProperties
 
-    Ubuntu_10_04_PropertiesProvider() {
-        super(Ubuntu_10_04_PropertiesProvider.class, RESOURCE);
+    @Override
+    ContextProperties getDefaultProperties() {
+        ubuntuProperties.get()
     }
 
+    @Override
+    def run() {
+        super.run()
+        restartServices()
+    }
+
+    @Override
+    void beforeConfiguration() {
+        installPackages()
+    }
 }

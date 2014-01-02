@@ -16,16 +16,16 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-remoteaccess. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.remote.ubuntu_10_04
+package com.anrisoftware.sscontrol.remote.ubuntu_12_04
 
-def sshkeygen = Ubuntu_10_04_Resources.sshkeygenCommand.asFile(tmp)
-def groupfile = Ubuntu_10_04_Resources.groupsFile.asFile(tmp)
-def passwdfile = Ubuntu_10_04_Resources.passwdFile.asFile(tmp)
-def sshdconfigFile = Ubuntu_10_04_Resources.sshdconfigFile.asFile(tmp)
-def fail2banDir = Ubuntu_10_04_Resources.fail2banDirectory.asFile(tmp)
-def fail2banRestartCommand = Ubuntu_10_04_Resources.fail2banRestartCommand.asFile(tmp)
+def sshkeygen = Ubuntu_12_04_Resources.sshkeygenCommand.asFile(tmp)
+def groupfile = Ubuntu_12_04_Resources.groupsFile.asFile(tmp)
+def passwdfile = Ubuntu_12_04_Resources.passwdFile.asFile(tmp)
+def sshdconfigFile = Ubuntu_12_04_Resources.sshdconfigFile.asFile(tmp)
+def fail2banDir = Ubuntu_12_04_Resources.fail2banDirectory.asFile(tmp)
+def fail2banRestartCommand = Ubuntu_12_04_Resources.fail2banRestartCommand.asFile(tmp)
 
-profile "ubuntu_10_04", {
+profile "ubuntu_12_04", {
     remote {
         service "openssh"
         key_gen_command sshkeygen

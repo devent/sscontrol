@@ -21,7 +21,7 @@ package com.anrisoftware.sscontrol.httpd.apache.roundcube.ubuntu_10_04
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static org.apache.commons.io.FileUtils.*
 
-import com.anrisoftware.sscontrol.httpd.apache.core.ubuntu_10_04.ResourcesUtils
+import com.anrisoftware.sscontrol.httpd.apache.resources.ResourcesUtils
 
 /**
  * Roundcube webmail resources.
@@ -31,6 +31,7 @@ import com.anrisoftware.sscontrol.httpd.apache.core.ubuntu_10_04.ResourcesUtils
  */
 enum RoundcubeResources {
 
+    profile("UbuntuProfile.groovy", RoundcubeResources.class.getResource("Ubuntu_10_04Profile.groovy")),
     httpdScript("Httpd.groovy", RoundcubeResources.class.getResource("HttpdRoundcube.groovy")),
     roundcubeArchive("/tmp/web-roundcubemail-0.9.5.tar.gz", RoundcubeResources.class.getResource("roundcubemail-0.9.5.tar.gz")),
     domainsConf("/etc/apache2/conf.d/000-robobee-domains.conf", RoundcubeResources.class.getResource("domains_conf.txt")),

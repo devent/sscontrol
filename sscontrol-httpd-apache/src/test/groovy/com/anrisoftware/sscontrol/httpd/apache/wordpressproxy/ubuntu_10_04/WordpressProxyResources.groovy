@@ -21,7 +21,8 @@ package com.anrisoftware.sscontrol.httpd.apache.wordpressproxy.ubuntu_10_04
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static org.apache.commons.io.FileUtils.*
 
-import com.anrisoftware.sscontrol.httpd.apache.core.ubuntu_10_04.ResourcesUtils
+import com.anrisoftware.sscontrol.httpd.apache.resources.ResourcesUtils
+import com.anrisoftware.sscontrol.httpd.apache.ubuntu_10_04.Ubuntu_10_04_Resources
 
 /**
  * Wordpress with Nginx proxy resources.
@@ -31,6 +32,7 @@ import com.anrisoftware.sscontrol.httpd.apache.core.ubuntu_10_04.ResourcesUtils
  */
 enum WordpressProxyResources {
 
+    profile("UbuntuProfile.groovy", WordpressProxyResources.class.getResource("Ubuntu_10_04Profile.groovy")),
     wordpressArchive("/tmp/web-wordpress-3.8.tar.gz", WordpressProxyResources.class.getResource("wordpress-3.8.tar.gz")),
     wordpress_3_8_config("/var/www/www.test1.com/wordpress-3.8/wp-config-sample.php", WordpressProxyResources.class.getResource("wordpress_3_8_config_sample_php.txt")),
     wordpress_3_8_config_expected("/var/www/www.test1.com/wordpress-3.8/wp-config.php", WordpressProxyResources.class.getResource("wordpress_3_8_config_php_expected.txt")),
@@ -56,11 +58,28 @@ enum WordpressProxyResources {
     nginxRestartCommand("/etc/init.d/nginx", WordpressProxyResources.class.getResource("echo_command.txt")),
     nginxSigningKeyFile("/tmp/web-nginx_signing.key", WordpressProxyResources.class.getResource("nginx_signing_key.txt")),
 
-    static copyWordpressProxyFiles(File parent) {
+    static void copyWordpressProxyFiles(File parent) {
         wordpressArchive.createFile parent
         wordpress_3_8_config.createFile parent
         nginxRestartCommand.createCommand parent
         nginxSigningKeyFile.createFile parent
+    }
+
+    static void setupWordpressProxyProperties(def profile, File parent) {
+        def entry = profile.getEntry("httpd")
+        entry.service(["idapache2": "apache", "idproxy": "nginx"])
+        entry.additional_mods "rpaf"
+        entry.apache_restart_command "${Ubuntu_10_04_Resources.restartCommand.asFile(parent)} restart"
+        entry.nginx_restart_command "${nginxRestartCommand.asFile(parent)} restart"
+        entry.apache_configuration_directory Ubuntu_10_04_Resources.confDir.asFile(parent)
+        entry.nginx_configuration_directory nginxConfigurationDir.asFile(parent)
+        entry.apache_sites_available_directory Ubuntu_10_04_Resources.sitesAvailableDir.asFile(parent)
+        entry.nginx_sites_available_directory nginxSitesAvailableDir.asFile(parent)
+        entry.apache_sites_enabled_directory Ubuntu_10_04_Resources.sitesEnabledDir.asFile(parent)
+        entry.nginx_sites_enabled_directory nginxSitesEnabledDir.asFile(parent)
+        entry.apache_config_include_directory Ubuntu_10_04_Resources.configIncludeDir.asFile(parent)
+        entry.nginx_config_include_directory nginxConfigIncludeDir.asFile(parent)
+        entry.nginx_signing_key nginxSigningKeyFile.asFile(parent)
     }
 
     ResourcesUtils resources

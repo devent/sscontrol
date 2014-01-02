@@ -21,7 +21,7 @@ package com.anrisoftware.sscontrol.httpd.apache.authfilebasic.ubuntu_10_04
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static org.apache.commons.io.FileUtils.*
 
-import com.anrisoftware.sscontrol.httpd.apache.core.ubuntu_10_04.ResourcesUtils
+import com.anrisoftware.sscontrol.httpd.apache.resources.ResourcesUtils
 
 /**
  * Auth/file/basic resources.
@@ -31,54 +31,51 @@ import com.anrisoftware.sscontrol.httpd.apache.core.ubuntu_10_04.ResourcesUtils
  */
 enum AuthFileBasicResources {
 
-	httpdScript("Httpd.groovy", AuthFileBasicResources.class.getResource("HttpdAuthFileBasic.groovy")),
-	httpdAppendingScript("Httpd.groovy", AuthFileBasicResources.class.getResource("HttpdAuthFileBasicAppending.groovy")),
-	// AuthFile
-	htpasswdCommand("/usr/bin/htpasswd", AuthFileBasicResources.class.getResource("htpasswd_command.txt")),
-	domainsConf("/etc/apache2/conf.d/000-robobee-domains.conf", AuthFileBasicResources.class.getResource("domains_conf.txt")),
-	test1comConf("/etc/apache2/sites-available/100-robobee-test1.com.conf", AuthFileBasicResources.class.getResource("test1_com_conf.txt")),
-	test1comSslConf("/etc/apache2/sites-available/100-robobee-test1.com-ssl.conf", AuthFileBasicResources.class.getResource("test1_com_ssl_conf.txt")),
-	privatepasswd("/var/www/test1.com/auth/private.passwd", AuthFileBasicResources.class.getResource("privatepasswd.txt")),
-	groupOut("/var/www/test1.com/auth/private.group", AuthFileBasicResources.class.getResource("private_group.txt")),
-	enmodOut("/usr/sbin/a2enmod.out", AuthFileBasicResources.class.getResource("enmod_out.txt")),
-	// Appending
-	appendingPrivatepasswd("/var/www/test1.com/auth/private.passwd", AuthFileBasicResources.class.getResource("appending-privatepasswd.txt")),
+    profile("UbuntuProfile.groovy", AuthFileBasicResources.class.getResource("Ubuntu_10_04Profile.groovy")),
+    httpdScript("Httpd.groovy", AuthFileBasicResources.class.getResource("HttpdAuthFileBasic.groovy")),
+    httpdAppendingScript("Httpd.groovy", AuthFileBasicResources.class.getResource("HttpdAuthFileBasicAppending.groovy")),
+    htpasswdCommand("/usr/bin/htpasswd", AuthFileBasicResources.class.getResource("htpasswd_command.txt")),
+    // AuthFile
+    domainsConf("/etc/apache2/conf.d/000-robobee-domains.conf", AuthFileBasicResources.class.getResource("domains_conf.txt")),
+    test1comConf("/etc/apache2/sites-available/100-robobee-test1.com.conf", AuthFileBasicResources.class.getResource("test1_com_conf.txt")),
+    test1comSslConf("/etc/apache2/sites-available/100-robobee-test1.com-ssl.conf", AuthFileBasicResources.class.getResource("test1_com_ssl_conf.txt")),
+    privatepasswd("/var/www/test1.com/auth/private.passwd", AuthFileBasicResources.class.getResource("privatepasswd.txt")),
+    groupOut("/var/www/test1.com/auth/private.group", AuthFileBasicResources.class.getResource("private_group.txt")),
+    enmodOut("/usr/sbin/a2enmod.out", AuthFileBasicResources.class.getResource("enmod_out.txt")),
+    // Appending
+    appendingPrivatepasswd("/var/www/test1.com/auth/private.passwd", AuthFileBasicResources.class.getResource("appending-privatepasswd.txt")),
 
-	static copyAuthFileBasicFiles(File parent) {
-		htpasswdCommand.createCommand parent
-	}
+    ResourcesUtils resources
 
-	ResourcesUtils resources
+    AuthFileBasicResources(String path, URL resource) {
+        this.resources = new ResourcesUtils(path: path, resource: resource)
+    }
 
-	AuthFileBasicResources(String path, URL resource) {
-		this.resources = new ResourcesUtils(path: path, resource: resource)
-	}
+    String getPath() {
+        resources.path
+    }
 
-	String getPath() {
-		resources.path
-	}
+    URL getResource() {
+        resources.resource
+    }
 
-	URL getResource() {
-		resources.resource
-	}
+    File asFile(File parent) {
+        resources.asFile parent
+    }
 
-	File asFile(File parent) {
-		resources.asFile parent
-	}
+    void createFile(File parent) {
+        resources.createFile parent
+    }
 
-	void createFile(File parent) {
-		resources.createFile parent
-	}
+    void createCommand(File parent) {
+        resources.createCommand parent
+    }
 
-	void createCommand(File parent) {
-		resources.createCommand parent
-	}
+    String replaced(File parent, def search, def replace) {
+        resources.replaced parent, search, replace
+    }
 
-	String replaced(File parent, def search, def replace) {
-		resources.replaced parent, search, replace
-	}
-
-	String toString() {
-		resources.toString()
-	}
+    String toString() {
+        resources.toString()
+    }
 }

@@ -19,7 +19,8 @@
 package com.anrisoftware.sscontrol.httpd.apache.wordpressproxy.ubuntu_10_04
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
-import static com.anrisoftware.sscontrol.httpd.apache.core.ubuntu_10_04.UbuntuResources.*
+import static com.anrisoftware.sscontrol.httpd.apache.ubuntu.UbuntuResources.*
+import static com.anrisoftware.sscontrol.httpd.apache.ubuntu_10_04.Ubuntu_10_04_Resources.*
 import static com.anrisoftware.sscontrol.httpd.apache.wordpressproxy.ubuntu_10_04.WordpressProxyResources.*
 import static org.apache.commons.io.FileUtils.*
 import groovy.util.logging.Slf4j
@@ -40,23 +41,13 @@ class WordpressProxyTest extends UbuntuTestUtil {
     @Test
     void "wordpress reverse proxy"() {
         copyUbuntuFiles tmpdir
+        copyUbuntu_10_04_Files tmpdir
         copyWordpressProxyFiles tmpdir
 
         loader.loadService profile.resource, null
         def profile = registry.getService("profile")[0]
-        profile.getEntry("httpd").service(["idapache2": "apache", "idproxy": "nginx"])
-        profile.getEntry("httpd").additional_mods "rpaf"
-        profile.getEntry("httpd").apache_restart_command "${restartCommand.asFile(tmpdir)} restart"
-        profile.getEntry("httpd").nginx_restart_command "${nginxRestartCommand.asFile(tmpdir)} restart"
-        profile.getEntry("httpd").apache_configuration_directory configurationDir.asFile(tmpdir)
-        profile.getEntry("httpd").nginx_configuration_directory nginxConfigurationDir.asFile(tmpdir)
-        profile.getEntry("httpd").apache_sites_available_directory sitesAvailableDir.asFile(tmpdir)
-        profile.getEntry("httpd").nginx_sites_available_directory nginxSitesAvailableDir.asFile(tmpdir)
-        profile.getEntry("httpd").apache_sites_enabled_directory sitesEnabledDir.asFile(tmpdir)
-        profile.getEntry("httpd").nginx_sites_enabled_directory nginxSitesEnabledDir.asFile(tmpdir)
-        profile.getEntry("httpd").apache_config_include_directory configIncludeDir.asFile(tmpdir)
-        profile.getEntry("httpd").nginx_config_include_directory nginxConfigIncludeDir.asFile(tmpdir)
-        profile.getEntry("httpd").nginx_signing_key nginxSigningKeyFile.asFile(tmpdir)
+        setupUbuntu_10_04_Properties profile, tmpdir
+        setupWordpressProxyProperties profile, tmpdir
         loader.loadService httpdProxyDomainsScript.resource, profile
         loader.loadService httpdProxyScript.resource, profile
 

@@ -21,7 +21,7 @@ package com.anrisoftware.sscontrol.httpd.apache.phpmyadmin.ubuntu_10_04
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static org.apache.commons.io.FileUtils.*
 
-import com.anrisoftware.sscontrol.httpd.apache.core.ubuntu_10_04.ResourcesUtils
+import com.anrisoftware.sscontrol.httpd.apache.resources.ResourcesUtils
 
 /**
  * Loads the resources.
@@ -31,31 +31,34 @@ import com.anrisoftware.sscontrol.httpd.apache.core.ubuntu_10_04.ResourcesUtils
  */
 enum PhpmyadminResources {
 
+    profile("UbuntuProfile.groovy", PhpmyadminResources.class.getResource("Ubuntu_10_04Profile.groovy")),
     httpdScript("Httpd.groovy", PhpmyadminResources.class.getResource("HttpdPhpmyadmin.groovy")),
-    domainsConf("/etc/apache2/conf.d/000-robobee-domains.conf", PhpmyadminResources.class.getResource("domains_conf.txt")),
-    ubuntutestcomConf("/etc/apache2/sites-available/100-robobee-ubuntutest.com.conf", PhpmyadminResources.class.getResource("ubuntutest_com_conf.txt")),
-    ubuntutestcomSslConf("/etc/apache2/sites-available/100-robobee-ubuntutest.com-ssl.conf", PhpmyadminResources.class.getResource("ubuntutest_com_ssl_conf.txt")),
-    wwwUbuntutestcomConf("/etc/apache2/sites-available/100-robobee-www.ubuntutest.com.conf", PhpmyadminResources.class.getResource("www_ubuntutest_com_conf.txt")),
-    wwwUbuntutestcomSslConf("/etc/apache2/sites-available/100-robobee-www.ubuntutest.com-ssl.conf", PhpmyadminResources.class.getResource("www_ubuntutest_com_ssl_conf.txt")),
-    phpadminTest1comSslFcgiScript("/var/www/php-fcgi-scripts/ubuntutest.com/php-fcgi-starter", PhpmyadminResources.class.getResource("php_fcgi_starter.txt")),
-    chownOut("/bin/chown.out", PhpmyadminResources.class.getResource("chown_out.txt")),
-    chmodOut("/bin/chmod.out", PhpmyadminResources.class.getResource("chmod_out.txt")),
-    useraddOut("/usr/sbin/useradd.out", PhpmyadminResources.class.getResource("useradd_out.txt")),
-    groupaddOut("/usr/sbin/groupadd.out", PhpmyadminResources.class.getResource("groupadd_out.txt")),
-    config("/etc/dbconfig-common/phpmyadmin.conf", PhpmyadminResources.class.getResource("phpmyadmin_conf.txt")),
-    configExpected("/etc/dbconfig-common/phpmyadmin.conf", PhpmyadminResources.class.getResource("phpmyadmin_conf_expecting.txt")),
+    mysqlCommand("/usr/bin/mysql", PhpmyadminResources.class.getResource("echo_command.txt")),
+    domainsConf("/etc/apache2/conf.d/000-robobee-domains.conf", PhpmyadminResources.class.getResource("domains_conf_expected.txt")),
+    ubuntutestcomConf("/etc/apache2/sites-available/100-robobee-ubuntutest.com.conf", PhpmyadminResources.class.getResource("ubuntutest_com_conf_expected.txt")),
+    ubuntutestcomSslConf("/etc/apache2/sites-available/100-robobee-ubuntutest.com-ssl.conf", PhpmyadminResources.class.getResource("ubuntutest_com_ssl_conf_expected.txt")),
+    wwwUbuntutestcomConf("/etc/apache2/sites-available/100-robobee-www.ubuntutest.com.conf", PhpmyadminResources.class.getResource("www_ubuntutest_com_conf_expected.txt")),
+    wwwUbuntutestcomSslConf("/etc/apache2/sites-available/100-robobee-www.ubuntutest.com-ssl.conf", PhpmyadminResources.class.getResource("www_ubuntutest_com_ssl_conf_expected.txt")),
+    phpadminTest1comSslFcgiScript("/var/www/php-fcgi-scripts/ubuntutest.com/php-fcgi-starter", PhpmyadminResources.class.getResource("php_fcgi_starter_expected.txt")),
+    chownOut("/bin/chown.out", PhpmyadminResources.class.getResource("chown_out_expected.txt")),
+    chmodOut("/bin/chmod.out", PhpmyadminResources.class.getResource("chmod_out_expected.txt")),
+    useraddOut("/usr/sbin/useradd.out", PhpmyadminResources.class.getResource("useradd_out_expected.txt")),
+    groupaddOut("/usr/sbin/groupadd.out", PhpmyadminResources.class.getResource("groupadd_out_expected.txt")),
+    configFile("/etc/dbconfig-common/phpmyadmin.conf", PhpmyadminResources.class.getResource("phpmyadmin_conf.txt")),
+    configFileExpected("/etc/dbconfig-common/phpmyadmin.conf", PhpmyadminResources.class.getResource("phpmyadmin_conf_expecting.txt")),
     createTablesSql("/usr/share/doc/phpmyadmin/examples/create_tables.sql.gz", PhpmyadminResources.class.getResource("create_tables.sql.gz")),
-    localConfig("/var/lib/phpmyadmin/config.inc.php", PhpmyadminResources.class.getResource("config_inc_php.txt")),
-    localBlowfish("/var/lib/phpmyadmin/blowfish_secret.inc.php", PhpmyadminResources.class.getResource("blowfish_secret_inc_php.txt")),
-    localDbConfig("/etc/phpmyadmin/config-db.php", PhpmyadminResources.class.getResource("config_db_php.txt")),
-    aptitudeOut("/usr/bin/aptitude.out", PhpmyadminResources.class.getResource("aptitude_out.txt")),
+    localConfigFile("/var/lib/phpmyadmin/config.inc.php", PhpmyadminResources.class.getResource("config_inc_php.txt")),
+    localBlowfishFile("/var/lib/phpmyadmin/blowfish_secret.inc.php", PhpmyadminResources.class.getResource("blowfish_secret_inc_php.txt")),
+    localDbConfigFile("/etc/phpmyadmin/config-db.php", PhpmyadminResources.class.getResource("config_db_php.txt")),
+    aptitudeOut("/usr/bin/aptitude.out", PhpmyadminResources.class.getResource("aptitude_out_expected.txt")),
 
     static copyPhpmyadminFiles(File parent) {
+        mysqlCommand.createCommand parent
         createTablesSql.createFile parent
-        config.createFile parent
-        localConfig.createFile parent
-        localBlowfish.createFile parent
-        localDbConfig.createFile parent
+        configFile.createFile parent
+        localConfigFile.createFile parent
+        localBlowfishFile.createFile parent
+        localDbConfigFile.createFile parent
     }
 
     ResourcesUtils resources

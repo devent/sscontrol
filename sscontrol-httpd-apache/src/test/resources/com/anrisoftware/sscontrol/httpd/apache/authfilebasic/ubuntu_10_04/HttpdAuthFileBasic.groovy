@@ -18,7 +18,7 @@
  */
 package com.anrisoftware.sscontrol.httpd.apache.authfilebasic.ubuntu_10_04
 
-import com.anrisoftware.sscontrol.httpd.apache.core.ubuntu_10_04.UbuntuResources
+import com.anrisoftware.sscontrol.httpd.apache.ubuntu.UbuntuResources;
 
 httpd {
 	domain "test1.com", address: "192.168.0.50", {

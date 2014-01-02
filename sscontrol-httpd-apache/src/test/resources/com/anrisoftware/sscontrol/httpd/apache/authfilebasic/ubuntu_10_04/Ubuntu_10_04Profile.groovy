@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd-apache. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.apache.core.ubuntu_10_04
+package com.anrisoftware.sscontrol.httpd.apache.authfilebasic.ubuntu_10_04
 
 import com.anrisoftware.sscontrol.httpd.apache.ubuntu.UbuntuResources
 
@@ -36,6 +36,7 @@ profile "ubuntu_10_04", {
         tar_command UbuntuResources.tarCommand.asFile(tmp)
         unzip_command UbuntuResources.unzipCommand.asFile(tmp)
         link_command UbuntuResources.lnCommand.asFile(tmp)
+        htpasswd_command AuthFileBasicResources.htpasswdCommand.asFile(tmp)
         temp_directory UbuntuResources.tmpDir.asFile(tmp)
         packaging_configuration_directory UbuntuResources.packagingConfigurationDirectory.asFile(tmp)
     }

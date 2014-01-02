@@ -21,6 +21,8 @@ package com.anrisoftware.sscontrol.httpd.apache.core.ubuntu_10_04
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static org.apache.commons.io.FileUtils.*
 
+import com.anrisoftware.sscontrol.httpd.apache.resources.ResourcesUtils
+
 /**
  * Loads the resources.
  *
@@ -29,51 +31,52 @@ import static org.apache.commons.io.FileUtils.*
  */
 enum CoreResources {
 
-	httpdScript("Httpd.groovy", CoreResources.class.getResource("Httpd.groovy")),
-	defaultConf("/etc/apache2/sites-available/000-robobee-default.conf", CoreResources.class.getResource("default_conf.txt")),
-	domainsConf("/etc/apache2/conf.d/000-robobee-domains.conf", CoreResources.class.getResource("domains_conf.txt")),
-	test1comConf("/etc/apache2/sites-available/100-robobee-test1.com.conf", UbuntuResources.class.getResource("test1_com_conf.txt")),
-	test1comSslConf("/etc/apache2/sites-available/100-robobee-test1.com-ssl.conf", UbuntuResources.class.getResource("test1_com_ssl_conf.txt")),
-	test1comWeb("/var/www/test1.com/web", null),
-	test1comCrt("/var/www/test1.com/ssl/cert_crt.txt", UbuntuResources.class.getResource("cert_crt.txt")),
-	test1comKey("/var/www/test1.com/ssl/cert_key.txt", UbuntuResources.class.getResource("cert_key.txt")),
-	ensiteOut("/usr/sbin/a2ensite.out", UbuntuResources.class.getResource("ensite_out.txt")),
-	enmodOut("/usr/sbin/a2enmod.out", UbuntuResources.class.getResource("enmod_out.txt")),
-	useraddOut("/usr/sbin/useradd.out", UbuntuResources.class.getResource("useradd_out.txt")),
-	groupaddOut("/usr/sbin/groupadd.out", UbuntuResources.class.getResource("groupadd_out.txt")),
-	chownOut("/bin/chown.out", UbuntuResources.class.getResource("chown_out.txt")),
+    profile("UbuntuProfile.groovy", CoreResources.class.getResource("Ubuntu_10_04Profile.groovy")),
+    httpdScript("Httpd.groovy", CoreResources.class.getResource("Httpd.groovy")),
+    robobeeDefaultConfExpected("/etc/apache2/sites-available/000-robobee-default.conf", CoreResources.class.getResource("default_conf_expected.txt")),
+    domainsConfExpected("/etc/apache2/conf.d/000-robobee-domains.conf", CoreResources.class.getResource("domains_conf_expected.txt")),
+    test1comConfExpected("/etc/apache2/sites-available/100-robobee-test1.com.conf", CoreResources.class.getResource("test1_com_conf_expected.txt")),
+    test1comSslConfExpected("/etc/apache2/sites-available/100-robobee-test1.com-ssl.conf", CoreResources.class.getResource("test1_com_ssl_conf_expected.txt")),
+    test1comWeb("/var/www/test1.com/web", null),
+    test1comCrt("/var/www/test1.com/ssl/cert_crt.txt", CoreResources.class.getResource("cert_crt.txt")),
+    test1comKey("/var/www/test1.com/ssl/cert_key.txt", CoreResources.class.getResource("cert_key.txt")),
+    ensiteOutExpected("/usr/sbin/a2ensite.out", CoreResources.class.getResource("ensite_out_expected.txt")),
+    enmodOutExpected("/usr/sbin/a2enmod.out", CoreResources.class.getResource("enmod_out_expected.txt")),
+    useraddOutExpected("/usr/sbin/useradd.out", CoreResources.class.getResource("useradd_out_expected.txt")),
+    groupaddOutExpected("/usr/sbin/groupadd.out", CoreResources.class.getResource("groupadd_out_expected.txt")),
+    chownOutExpected("/bin/chown.out", CoreResources.class.getResource("chown_out_expected.txt")),
 
-	ResourcesUtils resources
+    ResourcesUtils resources
 
-	CoreResources(String path, URL resource) {
-		this.resources = new ResourcesUtils(path: path, resource: resource)
-	}
+    CoreResources(String path, URL resource) {
+        this.resources = new ResourcesUtils(path: path, resource: resource)
+    }
 
-	String getPath() {
-		resources.path
-	}
+    String getPath() {
+        resources.path
+    }
 
-	URL getResource() {
-		resources.resource
-	}
+    URL getResource() {
+        resources.resource
+    }
 
-	File asFile(File parent) {
-		resources.asFile parent
-	}
+    File asFile(File parent) {
+        resources.asFile parent
+    }
 
-	void createFile(File parent) {
-		resources.createFile parent
-	}
+    void createFile(File parent) {
+        resources.createFile parent
+    }
 
-	void createCommand(File parent) {
-		resources.createCommand parent
-	}
+    void createCommand(File parent) {
+        resources.createCommand parent
+    }
 
-	String replaced(File parent, def search, def replace) {
-		resources.replaced parent, search, replace
-	}
+    String replaced(File parent, def search, def replace) {
+        resources.replaced parent, search, replace
+    }
 
-	String toString() {
-		resources.toString()
-	}
+    String toString() {
+        resources.toString()
+    }
 }

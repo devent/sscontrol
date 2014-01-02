@@ -20,7 +20,8 @@ package com.anrisoftware.sscontrol.httpd.apache.core.ubuntu_10_04
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.httpd.apache.core.ubuntu_10_04.CoreResources.*
-import static com.anrisoftware.sscontrol.httpd.apache.core.ubuntu_10_04.UbuntuResources.*
+import static com.anrisoftware.sscontrol.httpd.apache.ubuntu.UbuntuResources.*
+import static com.anrisoftware.sscontrol.httpd.apache.ubuntu_10_04.Ubuntu_10_04_Resources.*
 import static org.apache.commons.io.FileUtils.*
 import groovy.util.logging.Slf4j
 
@@ -37,28 +38,30 @@ import com.anrisoftware.sscontrol.httpd.apache.ubuntu.UbuntuTestUtil
 @Slf4j
 class DomainsTest extends UbuntuTestUtil {
 
-	@Test
-	void "apache domains"() {
-		copyUbuntuFiles tmpdir
-		loader.loadService profile.resource, null
-		def profile = registry.getService("profile")[0]
-		loader.loadService httpdScript.resource, profile
+    @Test
+    void "apache domains"() {
+        copyUbuntuFiles tmpdir
+        copyUbuntu_10_04_Files tmpdir
+        loader.loadService profile.resource, null
+        def profile = registry.getService("profile")[0]
+        setupUbuntu_10_04_Properties profile, tmpdir
+        loader.loadService httpdScript.resource, profile
 
-		registry.allServices.each { it.call() }
-		log.info "Run service again to ensure that configuration is not set double."
-		registry.allServices.each { it.call() }
+        registry.allServices.each { it.call() }
+        log.info "Run service again to ensure that configuration is not set double."
+        registry.allServices.each { it.call() }
 
-		assertFileContent defaultConf.asFile(tmpdir), defaultConf
-		assertFileContent domainsConf.asFile(tmpdir), domainsConf
-		assertStringContent test1comConf.replaced(tmpdir, tmpdir, "/tmp"), test1comConf.toString()
-		assertStringContent test1comSslConf.replaced(tmpdir, tmpdir, "/tmp"), test1comSslConf.toString()
-		assert test1comWeb.asFile(tmpdir).isDirectory()
-		assertFileContent test1comCrt.asFile(tmpdir), test1comCrt
-		assertFileContent test1comKey.asFile(tmpdir), test1comKey
-		assertFileContent ensiteOut.asFile(tmpdir), ensiteOut
-		assertFileContent enmodOut.asFile(tmpdir), enmodOut
-		assertStringContent useraddOut.replaced(tmpdir, tmpdir, "/tmp"), useraddOut.toString()
-		assertStringContent groupaddOut.replaced(tmpdir, tmpdir, "/tmp"), groupaddOut.toString()
-		assertStringContent chownOut.replaced(tmpdir, tmpdir, "/tmp"), chownOut.toString()
-	}
+        assertFileContent robobeeDefaultConfExpected.asFile(tmpdir), robobeeDefaultConfExpected
+        assertFileContent domainsConfExpected.asFile(tmpdir), domainsConfExpected
+        assertStringContent test1comConfExpected.replaced(tmpdir, tmpdir, "/tmp"), test1comConfExpected.toString()
+        assertStringContent test1comSslConfExpected.replaced(tmpdir, tmpdir, "/tmp"), test1comSslConfExpected.toString()
+        assert test1comWeb.asFile(tmpdir).isDirectory()
+        assertFileContent test1comCrt.asFile(tmpdir), test1comCrt
+        assertFileContent test1comKey.asFile(tmpdir), test1comKey
+        assertFileContent ensiteOutExpected.asFile(tmpdir), ensiteOutExpected
+        assertFileContent enmodOutExpected.asFile(tmpdir), enmodOutExpected
+        assertStringContent useraddOutExpected.replaced(tmpdir, tmpdir, "/tmp"), useraddOutExpected.toString()
+        assertStringContent groupaddOutExpected.replaced(tmpdir, tmpdir, "/tmp"), groupaddOutExpected.toString()
+        assertStringContent chownOutExpected.replaced(tmpdir, tmpdir, "/tmp"), chownOutExpected.toString()
+    }
 }

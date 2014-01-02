@@ -21,7 +21,7 @@ package com.anrisoftware.sscontrol.httpd.apache.phpldapadmin.ubuntu_10_04
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static org.apache.commons.io.FileUtils.*
 
-import com.anrisoftware.sscontrol.httpd.apache.core.ubuntu_10_04.ResourcesUtils
+import com.anrisoftware.sscontrol.httpd.apache.resources.ResourcesUtils
 
 /**
  * Loads phpldapadmin/resources.
@@ -31,57 +31,54 @@ import com.anrisoftware.sscontrol.httpd.apache.core.ubuntu_10_04.ResourcesUtils
  */
 enum PhpldapadminResources {
 
-	httpdScript("Httpd.groovy", PhpldapadminResources.class.getResource("HttpdPhpldapadmin.groovy")),
-	domainsConf("/etc/apache2/conf.d/000-robobee-domains.conf", PhpldapadminResources.class.getResource("domains_conf.txt")),
-	test1comConf("/etc/apache2/sites-available/100-robobee-test1.com.conf", PhpldapadminResources.class.getResource("test1_com_conf.txt")),
-	test1comSslConf("/etc/apache2/sites-available/100-robobee-test1.com-ssl.conf", PhpldapadminResources.class.getResource("test1_com_ssl_conf.txt")),
-	ldapadminTest1comSslConf("/etc/apache2/sites-available/100-robobee-ldapadmin.test1.com-ssl.conf", PhpldapadminResources.class.getResource("ldapadmin_test1_com_ssl_conf.txt")),
-	ldapadminTest1comSslFcgiScript("/var/www/php-fcgi-scripts/ldapadmin.test1.com/php-fcgi-starter", PhpldapadminResources.class.getResource("php_fcgi_starter.txt")),
-	tarOut("/bin/tar.out", PhpldapadminResources.class.getResource("tar_out.txt")),
-	lnOut("/bin/ln.out", PhpldapadminResources.class.getResource("ln_out.txt")),
-	chmodOut("/bin/chmod.out", PhpldapadminResources.class.getResource("chmod_out.txt")),
-	phpldapadminTgz("/tmp/phpldapadmin-1.2.3.tgz", PhpldapadminResources.class.getResource("phpldapadmin-1.2.3.tgz")),
-	configDir("/var/www/ldapadmin.test1.com/phpldapadmin-1.2.3", null),
-	linkedConfigDir("/var/www/ldapadmin.test1.com/phpldapadmin", null),
-	linkedExampleConfig("/var/www/ldapadmin.test1.com/phpldapadmin/config/config.php.example", PhpldapadminResources.class.getResource("config_php_example.txt")),
-	linkedExpectedConfig("/var/www/ldapadmin.test1.com/phpldapadmin/config/config.php", PhpldapadminResources.class.getResource("config_php_expected.txt")),
-	robobeeServers("/var/www/ldapadmin.test1.com/phpldapadmin/config/robobee-servers.php", PhpldapadminResources.class.getResource("robobee_servers_php.txt")),
+    profile("UbuntuProfile.groovy", PhpldapadminResources.class.getResource("Ubuntu_10_04Profile.groovy")),
+    httpdScript("Httpd.groovy", PhpldapadminResources.class.getResource("HttpdPhpldapadmin.groovy")),
+    domainsConf("/etc/apache2/conf.d/000-robobee-domains.conf", PhpldapadminResources.class.getResource("domains_conf.txt")),
+    test1comConf("/etc/apache2/sites-available/100-robobee-test1.com.conf", PhpldapadminResources.class.getResource("test1_com_conf.txt")),
+    test1comSslConf("/etc/apache2/sites-available/100-robobee-test1.com-ssl.conf", PhpldapadminResources.class.getResource("test1_com_ssl_conf.txt")),
+    ldapadminTest1comSslConf("/etc/apache2/sites-available/100-robobee-ldapadmin.test1.com-ssl.conf", PhpldapadminResources.class.getResource("ldapadmin_test1_com_ssl_conf.txt")),
+    ldapadminTest1comSslFcgiScript("/var/www/php-fcgi-scripts/ldapadmin.test1.com/php-fcgi-starter", PhpldapadminResources.class.getResource("php_fcgi_starter.txt")),
+    tarOut("/bin/tar.out", PhpldapadminResources.class.getResource("tar_out.txt")),
+    lnOut("/bin/ln.out", PhpldapadminResources.class.getResource("ln_out.txt")),
+    chmodOut("/bin/chmod.out", PhpldapadminResources.class.getResource("chmod_out.txt")),
+    phpldapadminTgz("/tmp/phpldapadmin-1.2.3.tgz", PhpldapadminResources.class.getResource("phpldapadmin-1.2.3.tgz")),
+    configDir("/var/www/ldapadmin.test1.com/phpldapadmin-1.2.3", null),
+    linkedConfigDir("/var/www/ldapadmin.test1.com/phpldapadmin", null),
+    linkedExampleConfig("/var/www/ldapadmin.test1.com/phpldapadmin/config/config.php.example", PhpldapadminResources.class.getResource("config_php_example.txt")),
+    linkedExpectedConfig("/var/www/ldapadmin.test1.com/phpldapadmin/config/config.php", PhpldapadminResources.class.getResource("config_php_expected.txt")),
+    robobeeServers("/var/www/ldapadmin.test1.com/phpldapadmin/config/robobee-servers.php", PhpldapadminResources.class.getResource("robobee_servers_php.txt")),
 
-	static copyUbuntuFiles(File parent) {
-		linkedExampleConfig.createFile parent
-	}
+    ResourcesUtils resources
 
-	ResourcesUtils resources
+    PhpldapadminResources(String path, URL resource) {
+        this.resources = new ResourcesUtils(path: path, resource: resource)
+    }
 
-	PhpldapadminResources(String path, URL resource) {
-		this.resources = new ResourcesUtils(path: path, resource: resource)
-	}
+    String getPath() {
+        resources.path
+    }
 
-	String getPath() {
-		resources.path
-	}
+    URL getResource() {
+        resources.resource
+    }
 
-	URL getResource() {
-		resources.resource
-	}
+    File asFile(File parent) {
+        resources.asFile parent
+    }
 
-	File asFile(File parent) {
-		resources.asFile parent
-	}
+    void createFile(File parent) {
+        resources.createFile parent
+    }
 
-	void createFile(File parent) {
-		resources.createFile parent
-	}
+    void createCommand(File parent) {
+        resources.createCommand parent
+    }
 
-	void createCommand(File parent) {
-		resources.createCommand parent
-	}
+    String replaced(File parent, def search, def replace) {
+        resources.replaced parent, search, replace
+    }
 
-	String replaced(File parent, def search, def replace) {
-		resources.replaced parent, search, replace
-	}
-
-	String toString() {
-		resources.toString()
-	}
+    String toString() {
+        resources.toString()
+    }
 }

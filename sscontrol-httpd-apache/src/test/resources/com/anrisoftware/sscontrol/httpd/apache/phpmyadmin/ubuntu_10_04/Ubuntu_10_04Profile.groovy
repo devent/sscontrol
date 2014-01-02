@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd-apache. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.apache.core.ubuntu_10_04
+package com.anrisoftware.sscontrol.httpd.apache.phpmyadmin.ubuntu_10_04
 
 import com.anrisoftware.sscontrol.httpd.apache.ubuntu.UbuntuResources
 
@@ -38,5 +38,11 @@ profile "ubuntu_10_04", {
         link_command UbuntuResources.lnCommand.asFile(tmp)
         temp_directory UbuntuResources.tmpDir.asFile(tmp)
         packaging_configuration_directory UbuntuResources.packagingConfigurationDirectory.asFile(tmp)
+        phpmyadmin_configuration_file PhpmyadminResources.configFile.asFile(tmp)
+        phpmyadmin_database_script_file PhpmyadminResources.createTablesSql.asFile(tmp)
+        phpmyadmin_local_config_file PhpmyadminResources.localConfigFile.asFile(tmp)
+        phpmyadmin_local_blowfish_secret_file PhpmyadminResources.localBlowfishFile.asFile(tmp)
+        phpmyadmin_local_database_config_file PhpmyadminResources.localDbConfigFile.asFile(tmp)
+        mysql_command PhpmyadminResources.mysqlCommand.asFile(tmp)
     }
 }

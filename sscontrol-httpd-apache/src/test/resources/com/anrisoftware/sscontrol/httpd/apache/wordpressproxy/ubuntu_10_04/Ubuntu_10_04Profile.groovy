@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd-apache. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.apache.core.ubuntu_10_04
+package com.anrisoftware.sscontrol.httpd.apache.wordpressproxy.ubuntu_10_04
 
 import com.anrisoftware.sscontrol.httpd.apache.ubuntu.UbuntuResources
 
@@ -38,5 +38,14 @@ profile "ubuntu_10_04", {
         link_command UbuntuResources.lnCommand.asFile(tmp)
         temp_directory UbuntuResources.tmpDir.asFile(tmp)
         packaging_configuration_directory UbuntuResources.packagingConfigurationDirectory.asFile(tmp)
+        wordpress_auth_key "auth-key"
+        wordpress_secure_auth_key "secure-auth-key"
+        wordpress_logged_in_key "logged-in-key"
+        wordpress_nonce_key "nonce-key"
+        wordpress_auth_salt "auth-salt"
+        wordpress_secure_auth_salt "secure-auth-salt"
+        wordpress_logged_in_salt "logged-in-salt"
+        wordpress_nonce_salt "nonce-salt"
+        wordpress_archive WordpressProxyResources.wordpressArchive.resource
     }
 }

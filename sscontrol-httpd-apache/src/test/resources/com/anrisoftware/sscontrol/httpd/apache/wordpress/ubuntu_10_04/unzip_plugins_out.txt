@@ -1,8 +1,8 @@
--uo /tmp/tmp/web-picochic.zip
--uo /tmp/tmp/web-tagebuch.zip
--uo /tmp/tmp/web-hyphenator.zip
--uo /tmp/tmp/web-broken-link-checker.zip
--uo /tmp/tmp/web-picochic.zip
--uo /tmp/tmp/web-tagebuch.zip
--uo /tmp/tmp/web-hyphenator.zip
--uo /tmp/tmp/web-broken-link-checker.zip
+-uo /tmp/tmp/picochic.zip
+-uo /tmp/tmp/tagebuch.zip
+-uo /tmp/tmp/hyphenator.zip
+-uo /tmp/tmp/broken-link-checker.zip
+-uo /tmp/tmp/picochic.zip
+-uo /tmp/tmp/tagebuch.zip
+-uo /tmp/tmp/hyphenator.zip
+-uo /tmp/tmp/broken-link-checker.zip

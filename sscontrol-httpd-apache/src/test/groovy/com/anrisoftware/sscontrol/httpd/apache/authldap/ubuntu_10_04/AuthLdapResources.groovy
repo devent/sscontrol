@@ -21,7 +21,7 @@ package com.anrisoftware.sscontrol.httpd.apache.authldap.ubuntu_10_04
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static org.apache.commons.io.FileUtils.*
 
-import com.anrisoftware.sscontrol.httpd.apache.core.ubuntu_10_04.ResourcesUtils
+import com.anrisoftware.sscontrol.httpd.apache.resources.ResourcesUtils
 
 /**
  * Loads the resources.
@@ -31,47 +31,48 @@ import com.anrisoftware.sscontrol.httpd.apache.core.ubuntu_10_04.ResourcesUtils
  */
 enum AuthLdapResources {
 
-	// Auth/ldap
-	httpdScript("Httpd.groovy", AuthLdapResources.class.getResource("HttpdAuthLdap.groovy")),
-	domainsConf("/etc/apache2/conf.d/000-robobee-domains.conf", AuthLdapResources.class.getResource("domains_conf.txt")),
-	test1comConf("/etc/apache2/sites-available/100-robobee-test1.com.conf", AuthLdapResources.class.getResource("test1_com_conf.txt")),
-	test1comSslConf("/etc/apache2/sites-available/100-robobee-test1.com-ssl.conf", AuthLdapResources.class.getResource("test1_com_ssl_conf.txt")),
-	enmodOut("/usr/sbin/a2enmod.out", AuthLdapResources.class.getResource("enmod_out.txt")),
-	// Auth file/ldap
-	fileldapScript("Httpd.groovy", AuthLdapResources.class.getResource("HttpdAuthFileLdap.groovy")),
-	authFileLdapTest1comSslConf("/etc/apache2/sites-available/100-robobee-test1.com-ssl.conf", AuthLdapResources.class.getResource("authfileldap_test1_com_ssl_conf.txt")),
+    // Auth/ldap
+    profile("UbuntuProfile.groovy", AuthLdapResources.class.getResource("Ubuntu_10_04Profile.groovy")),
+    httpdScript("Httpd.groovy", AuthLdapResources.class.getResource("HttpdAuthLdap.groovy")),
+    domainsConf("/etc/apache2/conf.d/000-robobee-domains.conf", AuthLdapResources.class.getResource("domains_conf.txt")),
+    test1comConf("/etc/apache2/sites-available/100-robobee-test1.com.conf", AuthLdapResources.class.getResource("test1_com_conf.txt")),
+    test1comSslConf("/etc/apache2/sites-available/100-robobee-test1.com-ssl.conf", AuthLdapResources.class.getResource("test1_com_ssl_conf.txt")),
+    enmodOut("/usr/sbin/a2enmod.out", AuthLdapResources.class.getResource("enmod_out.txt")),
+    // Auth file/ldap
+    fileldapScript("Httpd.groovy", AuthLdapResources.class.getResource("HttpdAuthFileLdap.groovy")),
+    authFileLdapTest1comSslConf("/etc/apache2/sites-available/100-robobee-test1.com-ssl.conf", AuthLdapResources.class.getResource("authfileldap_test1_com_ssl_conf.txt")),
 
-	ResourcesUtils resources
+    ResourcesUtils resources
 
-	AuthLdapResources(String path, URL resource) {
-		this.resources = new ResourcesUtils(path: path, resource: resource)
-	}
+    AuthLdapResources(String path, URL resource) {
+        this.resources = new ResourcesUtils(path: path, resource: resource)
+    }
 
-	String getPath() {
-		resources.path
-	}
+    String getPath() {
+        resources.path
+    }
 
-	URL getResource() {
-		resources.resource
-	}
+    URL getResource() {
+        resources.resource
+    }
 
-	File asFile(File parent) {
-		resources.asFile parent
-	}
+    File asFile(File parent) {
+        resources.asFile parent
+    }
 
-	void createFile(File parent) {
-		resources.createFile parent
-	}
+    void createFile(File parent) {
+        resources.createFile parent
+    }
 
-	void createCommand(File parent) {
-		resources.createCommand parent
-	}
+    void createCommand(File parent) {
+        resources.createCommand parent
+    }
 
-	String replaced(File parent, def search, def replace) {
-		resources.replaced parent, search, replace
-	}
+    String replaced(File parent, def search, def replace) {
+        resources.replaced parent, search, replace
+    }
 
-	String toString() {
-		resources.toString()
-	}
+    String toString() {
+        resources.toString()
+    }
 }

@@ -99,12 +99,12 @@ class PhpldapadminConfig extends BasePhpldapadminConfig implements ServiceConfig
     }
 
     void downloadPhpldapadmin(Domain domain) {
-        def name = new File(adminSource.toURI()).name
+        def name = new File(adminArchive.toURI()).name
         def target = new File(tmpDirectory, name)
         def extension = FilenameUtils.getExtension target.absolutePath
         def outputDir = adminConfigurationDir(domain)
         def linkTarget = adminLinkedConfigurationDir(domain)
-        FileUtils.copyURLToFile adminSource, target
+        FileUtils.copyURLToFile adminArchive, target
         unpack([file: target, type: extension, output: outputDir, command: tarCommand, override: true])
         linkTarget.delete()
         link([files: outputDir, targets: linkTarget])
@@ -197,7 +197,7 @@ class PhpldapadminConfig extends BasePhpldapadminConfig implements ServiceConfig
      *            the domain for which the directory is returned.
      */
     File adminConfigurationDir(def domain) {
-        String path = profileProperty "phpldapadmin_configuration_directory"
+        String path = profileProperty "phpldapadmin_configuration_directory", defaultProperties
         new File(String.format(path, domainDir(domain)))
     }
 
@@ -214,7 +214,7 @@ class PhpldapadminConfig extends BasePhpldapadminConfig implements ServiceConfig
      *            the domain for which the directory is returned.
      */
     File adminLinkedConfigurationDir(def domain) {
-        String path = profileProperty "phpldapadmin_linked_configuration_directory"
+        String path = profileProperty "phpldapadmin_linked_configuration_directory", defaultProperties
         new File(String.format(path, domainDir(domain)))
     }
 
@@ -278,10 +278,10 @@ class PhpldapadminConfig extends BasePhpldapadminConfig implements ServiceConfig
      * example {@code "http://downloads.sourceforge.net/project/phpldapadmin/phpldapadmin-php5/1.2.3/phpldapadmin-1.2.3.tgz"}.
      *
      * <ul>
-     * <li>profile property {@code "phpldapadmin_source"}</li>
+     * <li>profile property {@code "phpldapadmin_archive"}</li>
      * </ul>
      */
-    URL getAdminSource() {
-        script.profileProperty("phpldapadmin_source") as URL
+    URL getAdminArchive() {
+        script.profileProperty("phpldapadmin_archive") as URL
     }
 }

@@ -18,10 +18,10 @@
  */
 package com.anrisoftware.sscontrol.httpd.apache.roundcube.ubuntu_10_04
 
-import static com.anrisoftware.sscontrol.httpd.apache.roundcube.ubuntu_10_04.RoundcubeResources.*
 import static com.anrisoftware.globalpom.utils.TestUtils.*
-import static com.anrisoftware.sscontrol.httpd.apache.core.ubuntu_10_04.UbuntuResources.*
 import static com.anrisoftware.sscontrol.httpd.apache.roundcube.ubuntu_10_04.RoundcubeResources.*
+import static com.anrisoftware.sscontrol.httpd.apache.ubuntu.UbuntuResources.*
+import static com.anrisoftware.sscontrol.httpd.apache.ubuntu_10_04.Ubuntu_10_04_Resources.*
 import static org.apache.commons.io.FileUtils.*
 import groovy.util.logging.Slf4j
 

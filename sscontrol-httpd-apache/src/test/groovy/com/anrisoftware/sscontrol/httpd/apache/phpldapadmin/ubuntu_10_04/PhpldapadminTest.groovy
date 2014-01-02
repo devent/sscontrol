@@ -19,18 +19,18 @@
 package com.anrisoftware.sscontrol.httpd.apache.phpldapadmin.ubuntu_10_04
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
-import static com.anrisoftware.sscontrol.httpd.apache.core.ubuntu_10_04.UbuntuResources.*
 import static com.anrisoftware.sscontrol.httpd.apache.phpldapadmin.ubuntu_10_04.PhpldapadminResources.*
+import static com.anrisoftware.sscontrol.httpd.apache.ubuntu.UbuntuResources.*
+import static com.anrisoftware.sscontrol.httpd.apache.ubuntu_10_04.Ubuntu_10_04_Resources.*
 import static org.apache.commons.io.FileUtils.*
 import groovy.util.logging.Slf4j
 
 import org.junit.Test
 
-import com.anrisoftware.sscontrol.httpd.apache.core.ubuntu_10_04.UbuntuResources
 import com.anrisoftware.sscontrol.httpd.apache.ubuntu.UbuntuTestUtil
 
 /**
- * Test Apache on a Ubuntu 10.04 server.
+ * Test PhpLDAPAdmin on a Ubuntu 10.04 server.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
@@ -38,42 +38,46 @@ import com.anrisoftware.sscontrol.httpd.apache.ubuntu.UbuntuTestUtil
 @Slf4j
 class PhpldapadminTest extends UbuntuTestUtil {
 
-	@Test
-	void "unpack phpldapadmin"() {
-		UbuntuResources.copyUbuntuFiles tmpdir
-		PhpldapadminResources.copyUbuntuFiles tmpdir
+    @Test
+    void "unpack phpldapadmin"() {
+        copyUbuntuFiles tmpdir
+        copyUbuntu_10_04_Files tmpdir
+        linkedExampleConfig.createFile tmpdir
 
-		loader.loadService profile.resource, null
-		def profile = registry.getService("profile")[0]
-		loader.loadService httpdScript.resource, profile
+        loader.loadService profile.resource, null
+        def profile = registry.getService("profile")[0]
+        setupUbuntu_10_04_Properties profile, tmpdir
+        loader.loadService httpdScript.resource, profile
 
-		registry.allServices.each { it.call() }
-		assert phpldapadminTgz.asFile(tmpdir).isFile()
-		assertStringContent tarOut.replaced(tmpdir, tmpdir, "/tmp"), tarOut.toString()
-		assertStringContent lnOut.replaced(tmpdir, tmpdir, "/tmp"), lnOut.toString()
-	}
+        registry.allServices.each { it.call() }
+        assert phpldapadminTgz.asFile(tmpdir).isFile()
+        assertStringContent tarOut.replaced(tmpdir, tmpdir, "/tmp"), tarOut.toString()
+        assertStringContent lnOut.replaced(tmpdir, tmpdir, "/tmp"), lnOut.toString()
+    }
 
-	@Test
-	void "phpldapadmin"() {
-		UbuntuResources.copyUbuntuFiles tmpdir
-		PhpldapadminResources.copyUbuntuFiles tmpdir
+    @Test
+    void "phpldapadmin"() {
+        copyUbuntuFiles tmpdir
+        copyUbuntu_10_04_Files tmpdir
+        linkedExampleConfig.createFile tmpdir
 
-		loader.loadService profile.resource, null
-		def profile = registry.getService("profile")[0]
-		loader.loadService httpdScript.resource, profile
+        loader.loadService profile.resource, null
+        def profile = registry.getService("profile")[0]
+        setupUbuntu_10_04_Properties profile, tmpdir
+        loader.loadService httpdScript.resource, profile
 
-		registry.allServices.each { it.call() }
-		log.info "Run service again to ensure that configuration is not set double."
-		registry.allServices.each { it.call() }
+        registry.allServices.each { it.call() }
+        log.info "Run service again to ensure that configuration is not set double."
+        registry.allServices.each { it.call() }
 
-		assertFileContent linkedExpectedConfig.asFile(tmpdir), linkedExpectedConfig
-		assertFileContent robobeeServers.asFile(tmpdir), robobeeServers
-		assertFileContent defaultConf.asFile(tmpdir), defaultConf
-		assertFileContent domainsConf.asFile(tmpdir), PhpldapadminResources.domainsConf
-		assertStringContent test1comConf.replaced(tmpdir, tmpdir, "/tmp"), test1comConf.toString()
-		assertStringContent test1comSslConf.replaced(tmpdir, tmpdir, "/tmp"), test1comSslConf.toString()
-		assertStringContent ldapadminTest1comSslConf.replaced(tmpdir, tmpdir, "/tmp"), ldapadminTest1comSslConf.toString()
-		assertFileContent ldapadminTest1comSslFcgiScript.asFile(tmpdir), ldapadminTest1comSslFcgiScript
-		assertStringContent chmodOut.replaced(tmpdir, tmpdir, "/tmp"), chmodOut.toString()
-	}
+        assertFileContent linkedExpectedConfig.asFile(tmpdir), linkedExpectedConfig
+        assertFileContent robobeeServers.asFile(tmpdir), robobeeServers
+        assertFileContent defaultConf.asFile(tmpdir), defaultConf
+        assertFileContent domainsConf.asFile(tmpdir), PhpldapadminResources.domainsConf
+        assertStringContent test1comConf.replaced(tmpdir, tmpdir, "/tmp"), test1comConf.toString()
+        assertStringContent test1comSslConf.replaced(tmpdir, tmpdir, "/tmp"), test1comSslConf.toString()
+        assertStringContent ldapadminTest1comSslConf.replaced(tmpdir, tmpdir, "/tmp"), ldapadminTest1comSslConf.toString()
+        assertFileContent ldapadminTest1comSslFcgiScript.asFile(tmpdir), ldapadminTest1comSslFcgiScript
+        assertStringContent chmodOut.replaced(tmpdir, tmpdir, "/tmp"), chmodOut.toString()
+    }
 }

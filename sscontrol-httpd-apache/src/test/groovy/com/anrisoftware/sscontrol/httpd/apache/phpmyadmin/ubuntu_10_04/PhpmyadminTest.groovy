@@ -19,8 +19,9 @@
 package com.anrisoftware.sscontrol.httpd.apache.phpmyadmin.ubuntu_10_04
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
-import static com.anrisoftware.sscontrol.httpd.apache.core.ubuntu_10_04.UbuntuResources.*
 import static com.anrisoftware.sscontrol.httpd.apache.phpmyadmin.ubuntu_10_04.PhpmyadminResources.*
+import static com.anrisoftware.sscontrol.httpd.apache.ubuntu.UbuntuResources.*
+import static com.anrisoftware.sscontrol.httpd.apache.ubuntu_10_04.Ubuntu_10_04_Resources.*
 import static org.apache.commons.io.FileUtils.*
 import groovy.util.logging.Slf4j
 
@@ -40,10 +41,12 @@ class PhpmyadminTest extends UbuntuTestUtil {
     @Test
     void "phpmyadmin"() {
         copyUbuntuFiles tmpdir
+        copyUbuntu_10_04_Files tmpdir
         copyPhpmyadminFiles tmpdir
 
         loader.loadService profile.resource, null
         def profile = registry.getService("profile")[0]
+        setupUbuntu_10_04_Properties profile, tmpdir
         loader.loadService httpdScript.resource, profile
 
         registry.allServices.each { it.call() }
@@ -62,6 +65,6 @@ class PhpmyadminTest extends UbuntuTestUtil {
         assertStringContent groupaddOut.replaced(tmpdir, tmpdir, "/tmp"), groupaddOut.toString()
         assertStringContent useraddOut.replaced(tmpdir, tmpdir, "/tmp"), useraddOut.toString()
         assertFileContent aptitudeOut.asFile(tmpdir), aptitudeOut
-        assertFileContent configExpected.asFile(tmpdir), configExpected
+        assertFileContent configFileExpected.asFile(tmpdir), configFileExpected
     }
 }

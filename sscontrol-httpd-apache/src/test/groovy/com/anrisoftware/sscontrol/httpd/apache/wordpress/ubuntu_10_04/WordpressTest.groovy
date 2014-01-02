@@ -19,7 +19,8 @@
 package com.anrisoftware.sscontrol.httpd.apache.wordpress.ubuntu_10_04
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
-import static com.anrisoftware.sscontrol.httpd.apache.core.ubuntu_10_04.UbuntuResources.*
+import static com.anrisoftware.sscontrol.httpd.apache.ubuntu.UbuntuResources.*
+import static com.anrisoftware.sscontrol.httpd.apache.ubuntu_10_04.Ubuntu_10_04_Resources.*
 import static com.anrisoftware.sscontrol.httpd.apache.wordpress.ubuntu_10_04.WordpressResources.*
 import static org.apache.commons.io.FileUtils.*
 import groovy.util.logging.Slf4j
@@ -40,10 +41,12 @@ class WordpressTest extends UbuntuTestUtil {
     @Test
     void "wordpress"() {
         copyUbuntuFiles tmpdir
-        copyRoundcubeFiles tmpdir
+        copyUbuntu_10_04_Files tmpdir
+        copyWordpressFiles tmpdir
 
         loader.loadService profile.resource, null
         def profile = registry.getService("profile")[0]
+        setupUbuntu_10_04_Properties profile, tmpdir
         loader.loadService httpdScript.resource, profile
 
         registry.allServices.each { it.call() }
@@ -75,10 +78,12 @@ class WordpressTest extends UbuntuTestUtil {
     @Test
     void "wordpress ref"() {
         copyUbuntuFiles tmpdir
-        copyRoundcubeFiles tmpdir
+        copyUbuntu_10_04_Files tmpdir
+        copyWordpressFiles tmpdir
 
         loader.loadService profile.resource, null
         def profile = registry.getService("profile")[0]
+        setupUbuntu_10_04_Properties profile, tmpdir
         loader.loadService httpdRefScript.resource, profile
 
         registry.allServices.each { it.call() }
@@ -109,10 +114,12 @@ class WordpressTest extends UbuntuTestUtil {
     @Test
     void "wordpress de_DE"() {
         copyUbuntuFiles tmpdir
-        copyRoundcubeFiles tmpdir
+        copyUbuntu_10_04_Files tmpdir
+        copyWordpressFiles tmpdir
 
         loader.loadService profile.resource, null
         def profile = registry.getService("profile")[0]
+        setupUbuntu_10_04_Properties profile, tmpdir
         profile.getEntry("httpd").wordpress_language Locale.GERMANY
         loader.loadService httpdScript.resource, profile
 
@@ -135,10 +142,12 @@ class WordpressTest extends UbuntuTestUtil {
     @Test
     void "wordpress debug"() {
         copyUbuntuFiles tmpdir
-        copyRoundcubeFiles tmpdir
+        copyUbuntu_10_04_Files tmpdir
+        copyWordpressFiles tmpdir
 
         loader.loadService profile.resource, null
         def profile = registry.getService("profile")[0]
+        setupUbuntu_10_04_Properties profile, tmpdir
         loader.loadService httpdDebugScript.resource, profile
 
         registry.allServices.each { it.call() }
@@ -160,10 +169,12 @@ class WordpressTest extends UbuntuTestUtil {
     @Test
     void "wordpress root alias"() {
         copyUbuntuFiles tmpdir
-        copyRoundcubeFiles tmpdir
+        copyUbuntu_10_04_Files tmpdir
+        copyWordpressFiles tmpdir
 
         loader.loadService profile.resource, null
         def profile = registry.getService("profile")[0]
+        setupUbuntu_10_04_Properties profile, tmpdir
         loader.loadService httpdRootScript.resource, profile
 
         registry.allServices.each { it.call() }
@@ -177,10 +188,12 @@ class WordpressTest extends UbuntuTestUtil {
     @Test
     void "wordpress ms subdirectory"() {
         copyUbuntuFiles tmpdir
-        copyRoundcubeFiles tmpdir
+        copyUbuntu_10_04_Files tmpdir
+        copyWordpressFiles tmpdir
 
         loader.loadService profile.resource, null
         def profile = registry.getService("profile")[0]
+        setupUbuntu_10_04_Properties profile, tmpdir
         loader.loadService httpdMsSubdirectoryScript.resource, profile
 
         registry.allServices.each { it.call() }
@@ -201,10 +214,12 @@ class WordpressTest extends UbuntuTestUtil {
     @Test
     void "wordpress themes, plugins"() {
         copyUbuntuFiles tmpdir
-        copyRoundcubeFiles tmpdir
+        copyUbuntu_10_04_Files tmpdir
+        copyWordpressFiles tmpdir
 
         loader.loadService profile.resource, null
         def profile = registry.getService("profile")[0]
+        setupUbuntu_10_04_Properties profile, tmpdir
         loader.loadService httpdPluginsScript.resource, profile
 
         registry.allServices.each { it.call() }

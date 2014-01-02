@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd-apache. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.apache.core.ubuntu_10_04
+package com.anrisoftware.sscontrol.httpd.apache.phpldapadmin.ubuntu_10_04
 
 import com.anrisoftware.sscontrol.httpd.apache.ubuntu.UbuntuResources
 
@@ -38,5 +38,8 @@ profile "ubuntu_10_04", {
         link_command UbuntuResources.lnCommand.asFile(tmp)
         temp_directory UbuntuResources.tmpDir.asFile(tmp)
         packaging_configuration_directory UbuntuResources.packagingConfigurationDirectory.asFile(tmp)
+        phpldapadmin_archive PhpldapadminResources.phpldapadminTgz.resource
+        phpldapadmin_configuration_directory PhpldapadminResources.configDir.asFile(tmp)
+        phpldapadmin_linked_configuration_directory PhpldapadminResources.linkedConfigDir.asFile(tmp)
     }
 }

@@ -21,7 +21,7 @@ package com.anrisoftware.sscontrol.httpd.apache.wordpress.ubuntu_10_04
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static org.apache.commons.io.FileUtils.*
 
-import com.anrisoftware.sscontrol.httpd.apache.core.ubuntu_10_04.ResourcesUtils
+import com.anrisoftware.sscontrol.httpd.apache.resources.ResourcesUtils
 
 /**
  * Roundcube webmail resources.
@@ -31,10 +31,11 @@ import com.anrisoftware.sscontrol.httpd.apache.core.ubuntu_10_04.ResourcesUtils
  */
 enum WordpressResources {
 
+    profile("UbuntuProfile.groovy", WordpressResources.class.getResource("Ubuntu_10_04Profile.groovy")),
     httpdScript("Httpd.groovy", WordpressResources.class.getResource("HttpdWordpress.groovy")),
     httpdDebugScript("Httpd.groovy", WordpressResources.class.getResource("HttpdWordpressDebug.groovy")),
     wordpressArchive("/tmp/web-wordpress-3.8.tar.gz", WordpressResources.class.getResource("wordpress-3.8.tar.gz")),
-    wordpressArchive_de_DE("/tmp/web-wordpress-3.8_de_DE.tar.gz", WordpressResources.class.getResource("wordpress-3.8.tar.gz")),
+    wordpressArchive_de_DE("/tmp/web-wordpress-3.8_de_DE.tar.gz", WordpressResources.class.getResource("wordpress-3.8_de_DE.tar.gz")),
     portsConf("/etc/apache2/ports.conf", WordpressResources.class.getResource("ports_conf.txt")),
     portsConfExpected("/etc/apache2/ports.conf", WordpressResources.class.getResource("ports_conf_expected.txt")),
     domainsConf("/etc/apache2/conf.d/000-robobee-domains.conf", WordpressResources.class.getResource("domains_conf.txt")),
@@ -90,7 +91,7 @@ enum WordpressResources {
     tagebuchArchive("/tmp/web-tagebuch.zip", WordpressResources.class.getResource("tagebuch.zip")),
     unzipPluginsOut("/usr/bin/unzip.out", WordpressResources.class.getResource("unzip_plugins_out.txt")),
 
-    static copyRoundcubeFiles(File parent) {
+    static copyWordpressFiles(File parent) {
         portsConf.createFile parent
         wordpressArchive.createFile parent
         wordpressArchive_de_DE.createFile parent

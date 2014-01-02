@@ -18,7 +18,7 @@
  */
 package com.anrisoftware.sscontrol.httpd.apache.wordpressproxy.ubuntu_10_04
 
-import com.anrisoftware.sscontrol.httpd.apache.core.ubuntu_10_04.UbuntuResources
+import com.anrisoftware.sscontrol.httpd.apache.ubuntu.UbuntuResources;
 
 httpd {
     // reference service with id "idproxy"

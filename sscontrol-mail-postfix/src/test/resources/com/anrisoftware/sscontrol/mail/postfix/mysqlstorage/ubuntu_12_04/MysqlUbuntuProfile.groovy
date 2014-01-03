@@ -21,19 +21,23 @@ package com.anrisoftware.sscontrol.mail.postfix.mysqlstorage.ubuntu_12_04
 import com.anrisoftware.sscontrol.mail.postfix.script.ubuntu_12_04.UbuntuResources
 
 def aptitudeCommand = UbuntuResources.aptitudeCommand.asFile(tmp)
+def restartCommand = UbuntuResources.restartCommand.asFile(tmp)
 
 profile "ubuntu_12_04", {
     mail {
         service "postfix"
         storage "mysql"
         install_command "$aptitudeCommand update && $aptitudeCommand install"
-        restart_command UbuntuResources.restartCommand.asFile(tmp)
+        restart_command "$restartCommand restart"
         chown_command UbuntuResources.chownCommand.asFile(tmp)
+        chmod_command UbuntuResources.chmodCommand.asFile(tmp)
         group_add_command UbuntuResources.groupaddCommand.asFile(tmp)
         user_add_command UbuntuResources.useraddCommand.asFile(tmp)
         mysql_command UbuntuResources.mysqlCommand.asFile(tmp)
         postalias_command UbuntuResources.postaliasCommand.asFile(tmp)
         postmap_command UbuntuResources.postmapCommand.asFile(tmp)
+        certificates_directory UbuntuResources.certsDir.asFile(tmp)
+        certificates_keys_directory UbuntuResources.certKeysDir.asFile(tmp)
         groups_file UbuntuResources.group.asFile(tmp)
         users_file UbuntuResources.passwd.asFile(tmp)
         mailname_file UbuntuResources.mailname.asFile(tmp)

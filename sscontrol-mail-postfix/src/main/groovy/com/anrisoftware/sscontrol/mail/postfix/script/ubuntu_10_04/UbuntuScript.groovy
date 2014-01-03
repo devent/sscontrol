@@ -31,24 +31,30 @@ import com.anrisoftware.sscontrol.mail.postfix.script.linux.BasePostfixScript
  */
 class UbuntuScript extends BasePostfixScript {
 
-	@Inject
-	UbuntuPropertiesProvider ubuntuProperties
+    @Inject
+    UbuntuPropertiesProvider ubuntuProperties
 
-	@Override
-	String getProfileName() {
-		Ubuntu_10_04_ScriptFactory.PROFILE_NAME
-	}
+    @Override
+    def run() {
+        super.run()
+        restartServices()
+    }
 
-	/**
-	 * @see #ubuntuProperties
-	 */
-	@Override
-	ContextProperties getDefaultProperties() {
-		ubuntuProperties.get()
-	}
+    @Override
+    def runDistributionSpecific() {
+        installPackages()
+    }
 
-	@Override
-	def runDistributionSpecific() {
-		installPackages()
-	}
+    @Override
+    String getProfileName() {
+        Ubuntu_10_04_ScriptFactory.PROFILE_NAME
+    }
+
+    /**
+     * @see #ubuntuProperties
+     */
+    @Override
+    ContextProperties getDefaultProperties() {
+        ubuntuProperties.get()
+    }
 }

@@ -31,55 +31,60 @@ import com.anrisoftware.sscontrol.mail.postfix.resources.ResourcesUtils
  */
 enum MysqlResources {
 
-	mailScript("Mail.groovy", MysqlResources.class.getResource("MailMysql.groovy")),
-	mailResetScript("Mail.groovy", MysqlResources.class.getResource("MailMysqlReset.groovy")),
-	profile("UbuntuProfile.groovy", MysqlResources.class.getResource("MysqlUbuntuProfile.groovy")),
-	mainConfigExpected("/etc/postfix/main.cf", MysqlResources.class.getResource("main_cf_expected.txt")),
-	mailnameExpected("/etc/mailname", MysqlResources.class.getResource("mailname_expected.txt")),
-	mailboxExpected("/etc/postfix/mysql_mailbox.cf", MysqlResources.class.getResource("mysql_mailbox_cf_expected.txt")),
-	aliasExpected("/etc/postfix/mysql_alias.cf", MysqlResources.class.getResource("mysql_alias_cf_expected.txt")),
-	domainsExpected("/etc/postfix/mysql_domains.cf", MysqlResources.class.getResource("mysql_domains_cf_expected.txt")),
-	aptitudeOut("/usr/bin/aptitude.out", MysqlResources.class.getResource("aptitude_out.txt")),
-	chownOut("bin/chown.out", MysqlResources.class.getResource("chown_out.txt")),
-	mysqlOut("/usr/bin/mysql.out", MysqlResources.class.getResource("mysql_out.txt")),
-	mysqlIn("/usr/bin/mysql.in", MysqlResources.class.getResource("mysql_in.txt")),
-	mysqlResetDomainsOut("/usr/bin/mysql.out", MysqlResources.class.getResource("mysql_resetdomains_out.txt")),
-	mysqlResetDomainsIn("/usr/bin/mysql.in", MysqlResources.class.getResource("mysql_resetdomains_in.txt")),
-	postaliasOut("/usr/sbin/postalias.out", MysqlResources.class.getResource("postalias_out.txt")),
-	useraddOut("/sbin/useradd.out", MysqlResources.class.getResource("useradd_out.txt")),
-	groupaddOut("/sbin/groupadd.out", MysqlResources.class.getResource("groupadd_out.txt")),
+    mailScript("Mail.groovy", MysqlResources.class.getResource("MailMysql.groovy")),
+    mailResetScript("Mail.groovy", MysqlResources.class.getResource("MailMysqlReset.groovy")),
+    profile("UbuntuProfile.groovy", MysqlResources.class.getResource("MysqlUbuntuProfile.groovy")),
+    cert("", MysqlResources.class.getResource("cert_crt.txt")),
+    key("", MysqlResources.class.getResource("cert_key.txt")),
+    ca("", MysqlResources.class.getResource("cert_ca.txt")),
+    mainConfigExpected("/etc/postfix/main.cf", MysqlResources.class.getResource("main_cf_expected.txt")),
+    masterConfigExpected("/etc/postfix/master.cf", MysqlResources.class.getResource("master_cf_expected.txt")),
+    mailnameExpected("/etc/mailname", MysqlResources.class.getResource("mailname_expected.txt")),
+    mailboxExpected("/etc/postfix/mysql_mailbox.cf", MysqlResources.class.getResource("mysql_mailbox_cf_expected.txt")),
+    aliasExpected("/etc/postfix/mysql_alias.cf", MysqlResources.class.getResource("mysql_alias_cf_expected.txt")),
+    domainsExpected("/etc/postfix/mysql_domains.cf", MysqlResources.class.getResource("mysql_domains_cf_expected.txt")),
+    aptitudeOut("/usr/bin/aptitude.out", MysqlResources.class.getResource("aptitude_out.txt")),
+    chownOut("bin/chown.out", MysqlResources.class.getResource("chown_out.txt")),
+    chmodOut("bin/chmod.out", MysqlResources.class.getResource("chmod_out.txt")),
+    mysqlOut("/usr/bin/mysql.out", MysqlResources.class.getResource("mysql_out.txt")),
+    mysqlIn("/usr/bin/mysql.in", MysqlResources.class.getResource("mysql_in.txt")),
+    mysqlResetDomainsOut("/usr/bin/mysql.out", MysqlResources.class.getResource("mysql_resetdomains_out.txt")),
+    mysqlResetDomainsIn("/usr/bin/mysql.in", MysqlResources.class.getResource("mysql_resetdomains_in.txt")),
+    postaliasOut("/usr/sbin/postalias.out", MysqlResources.class.getResource("postalias_out.txt")),
+    useraddOut("/sbin/useradd.out", MysqlResources.class.getResource("useradd_out.txt")),
+    groupaddOut("/sbin/groupadd.out", MysqlResources.class.getResource("groupadd_out.txt")),
 
-	ResourcesUtils resources
+    ResourcesUtils resources
 
-	MysqlResources(String path, URL resource) {
-		this.resources = new ResourcesUtils(path: path, resource: resource)
-	}
+    MysqlResources(String path, URL resource) {
+        this.resources = new ResourcesUtils(path: path, resource: resource)
+    }
 
-	String getPath() {
-		resources.path
-	}
+    String getPath() {
+        resources.path
+    }
 
-	URL getResource() {
-		resources.resource
-	}
+    URL getResource() {
+        resources.resource
+    }
 
-	File asFile(File parent) {
-		resources.asFile parent
-	}
+    File asFile(File parent) {
+        resources.asFile parent
+    }
 
-	void createFile(File parent) {
-		resources.createFile parent
-	}
+    void createFile(File parent) {
+        resources.createFile parent
+    }
 
-	void createCommand(File parent) {
-		resources.createCommand parent
-	}
+    void createCommand(File parent) {
+        resources.createCommand parent
+    }
 
-	String replaced(File parent, def search, def replace) {
-		resources.replaced parent, search, replace
-	}
+    String replaced(File parent, def search, def replace) {
+        resources.replaced parent, search, replace
+    }
 
-	String toString() {
-		resources.toString()
-	}
+    String toString() {
+        resources.toString()
+    }
 }

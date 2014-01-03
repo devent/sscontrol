@@ -31,71 +31,75 @@ import com.anrisoftware.sscontrol.mail.postfix.resources.ResourcesUtils
  */
 enum UbuntuResources {
 
-	aptitudeCommand("/usr/bin/aptitude", UbuntuResources.class.getResource("echo_command.txt")),
-	restartCommand("/etc/init.d/slapd", UbuntuResources.class.getResource("echo_command.txt")),
-	chmodCommand("/bin/chmod", UbuntuResources.class.getResource("echo_command.txt")),
-	chownCommand("/bin/chown", UbuntuResources.class.getResource("echo_command.txt")),
-	useraddCommand("/sbin/useradd", UbuntuResources.class.getResource("echo_command.txt")),
-	groupaddCommand("/sbin/groupadd", UbuntuResources.class.getResource("echo_command.txt")),
-	postmapCommand("/usr/sbin/postmap", UbuntuResources.class.getResource("echo_command.txt")),
-	postaliasCommand("/usr/sbin/postalias", UbuntuResources.class.getResource("echo_command.txt")),
-	mysqlCommand("/usr/bin/mysql", UbuntuResources.class.getResource("echo_command.txt")),
-	group("/etc/group", UbuntuResources.class.getResource("group.txt")),
-	passwd("/etc/passwd", UbuntuResources.class.getResource("passwd.txt")),
-	mainConfig("/etc/postfix/main.cf", UbuntuResources.class.getResource("main_cf.txt")),
-	masterConfig("/etc/postfix/master.cf", UbuntuResources.class.getResource("master_cf.txt")),
-	mailname("/etc/mailname", UbuntuResources.class.getResource("mailname.txt")),
-	aliases("/etc/postfix/aliases", UbuntuResources.class.getResource("aliases.txt")),
-	confDir("/etc/postfix", null),
-	mailboxBaseDir("/var/mail/vhosts", null),
+    aptitudeCommand("/usr/bin/aptitude", UbuntuResources.class.getResource("echo_command.txt")),
+    restartCommand("/etc/init.d/postfix", UbuntuResources.class.getResource("echo_command.txt")),
+    chmodCommand("/bin/chmod", UbuntuResources.class.getResource("echo_command.txt")),
+    chownCommand("/bin/chown", UbuntuResources.class.getResource("echo_command.txt")),
+    useraddCommand("/sbin/useradd", UbuntuResources.class.getResource("echo_command.txt")),
+    groupaddCommand("/sbin/groupadd", UbuntuResources.class.getResource("echo_command.txt")),
+    postmapCommand("/usr/sbin/postmap", UbuntuResources.class.getResource("echo_command.txt")),
+    postaliasCommand("/usr/sbin/postalias", UbuntuResources.class.getResource("echo_command.txt")),
+    mysqlCommand("/usr/bin/mysql", UbuntuResources.class.getResource("echo_command.txt")),
+    certsDir("/etc/ssl/certs", null),
+    certKeysDir("/etc/ssl/private", null),
+    group("/etc/group", UbuntuResources.class.getResource("group.txt")),
+    passwd("/etc/passwd", UbuntuResources.class.getResource("passwd.txt")),
+    mainConfig("/etc/postfix/main.cf", UbuntuResources.class.getResource("main_cf.txt")),
+    masterConfig("/etc/postfix/master.cf", UbuntuResources.class.getResource("master_cf.txt")),
+    mailname("/etc/mailname", UbuntuResources.class.getResource("mailname.txt")),
+    aliases("/etc/postfix/aliases", UbuntuResources.class.getResource("aliases.txt")),
+    confDir("/etc/postfix", null),
+    mailboxBaseDir("/var/mail/vhosts", null),
 
-	static copyUbuntuFiles(File parent) {
-		aptitudeCommand.createCommand parent
-		restartCommand.createCommand parent
-		chmodCommand.createCommand parent
-		chownCommand.createCommand parent
-		useraddCommand.createCommand parent
-		groupaddCommand.createCommand parent
-		postmapCommand.createCommand parent
-		postaliasCommand.createCommand parent
-		group.createFile parent
-		passwd.createFile parent
-		mainConfig.createFile parent
-		masterConfig.createFile parent
-		mailname.createFile parent
-	}
+    static copyUbuntuFiles(File parent) {
+        aptitudeCommand.createCommand parent
+        restartCommand.createCommand parent
+        chmodCommand.createCommand parent
+        chownCommand.createCommand parent
+        useraddCommand.createCommand parent
+        groupaddCommand.createCommand parent
+        postmapCommand.createCommand parent
+        postaliasCommand.createCommand parent
+        certsDir.asFile parent mkdirs()
+        certKeysDir.asFile parent mkdirs()
+        group.createFile parent
+        passwd.createFile parent
+        mainConfig.createFile parent
+        masterConfig.createFile parent
+        mailname.createFile parent
+    }
 
-	ResourcesUtils resources
+    ResourcesUtils resources
 
-	UbuntuResources(String path, URL resource) {
-		this.resources = new ResourcesUtils(path: path, resource: resource)
-	}
+    UbuntuResources(String path, URL resource) {
+        this.resources = new ResourcesUtils(path: path, resource: resource)
+    }
 
-	String getPath() {
-		resources.path
-	}
+    String getPath() {
+        resources.path
+    }
 
-	URL getResource() {
-		resources.resource
-	}
+    URL getResource() {
+        resources.resource
+    }
 
-	File asFile(File parent) {
-		resources.asFile parent
-	}
+    File asFile(File parent) {
+        resources.asFile parent
+    }
 
-	void createFile(File parent) {
-		resources.createFile parent
-	}
+    void createFile(File parent) {
+        resources.createFile parent
+    }
 
-	void createCommand(File parent) {
-		resources.createCommand parent
-	}
+    void createCommand(File parent) {
+        resources.createCommand parent
+    }
 
-	String replaced(File parent, def search, def replace) {
-		resources.replaced parent, search, replace
-	}
+    String replaced(File parent, def search, def replace) {
+        resources.replaced parent, search, replace
+    }
 
-	String toString() {
-		resources.toString()
-	}
+    String toString() {
+        resources.toString()
+    }
 }

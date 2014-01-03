@@ -1,2 +1,8 @@
+root.root /tmp/etc/ssl/certs/cert_crt.txt
+root.root /tmp/etc/ssl/private/cert_key.txt
+root.root /tmp/etc/ssl/certs/cert_ca.txt
 5000.5000 /tmp/var/mail/vhosts
+root.root /tmp/etc/ssl/certs/cert_crt.txt
+root.root /tmp/etc/ssl/private/cert_key.txt
+root.root /tmp/etc/ssl/certs/cert_ca.txt
 5000.5000 /tmp/var/mail/vhosts

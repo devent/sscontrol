@@ -24,6 +24,7 @@ mail {
     name "mail.example.com"
     origin "example.com"
     database "maildb", user: "root", password: "password"
+    certificate cert: MysqlResources.cert.resource, key: MysqlResources.key.resource, ca: MysqlResources.ca.resource
 
     masquerade {
         domains "mail.example.com"

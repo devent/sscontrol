@@ -27,8 +27,14 @@ delay_warning_time = 4h
 readme_directory = no
 
 # TLS parameters
-smtpd_tls_cert_file=/etc/ssl/certs/ssl-cert-snakeoil.pem
-smtpd_tls_key_file=/etc/ssl/private/ssl-cert-snakeoil.key
+# SSCONTROL-mail
+smtpd_tls_cert_file = /tmp/etc/ssl/certs/cert_crt.txt
+# SSCONTROL-mail-END
+
+# SSCONTROL-mail
+smtpd_tls_key_file = /tmp/etc/ssl/private/cert_key.txt
+# SSCONTROL-mail-END
+
 smtpd_use_tls=yes
 smtpd_tls_session_cache_database = btree:${data_directory}/smtpd_scache
 smtp_tls_session_cache_database = btree:${data_directory}/smtp_scache
@@ -66,6 +72,27 @@ inet_interfaces = all
 
 # SSCONTROL-mail
 masquerade_domains = mail.example.com
+# SSCONTROL-mail-END
+# SSCONTROL-mail
+smtpd_tls_security_level = may
+# SSCONTROL-mail-END
+# SSCONTROL-mail
+smtp_tls_note_starttls_offer = yes
+# SSCONTROL-mail-END
+# SSCONTROL-mail
+smtpd_tls_loglevel = 0
+# SSCONTROL-mail-END
+# SSCONTROL-mail
+smtpd_tls_received_header = yes
+# SSCONTROL-mail-END
+# SSCONTROL-mail
+smtpd_tls_session_cache_timeout = 3600s
+# SSCONTROL-mail-END
+# SSCONTROL-mail
+tls_random_source = dev:/dev/urandom
+# SSCONTROL-mail-END
+# SSCONTROL-mail
+smtp_tls_CAfile = /tmp/etc/ssl/certs/cert_ca.txt
 # SSCONTROL-mail-END
 # SSCONTROL-mail
 unknown_local_recipient_reject_code = 550
@@ -132,4 +159,7 @@ virtual_uid_maps = static:5000
 # SSCONTROL-mail-END
 # SSCONTROL-mail
 virtual_gid_maps = static:5000
+# SSCONTROL-mail-END
+# SSCONTROL-mail
+smtpd_tls_security_level = may
 # SSCONTROL-mail-END

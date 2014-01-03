@@ -35,6 +35,17 @@ class UbuntuScript extends BasePostfixScript {
     UbuntuPropertiesProvider ubuntuProperties
 
     @Override
+    def run() {
+        super.run()
+        restartServices()
+    }
+
+    @Override
+    def runDistributionSpecific() {
+        installPackages()
+    }
+
+    @Override
     String getProfileName() {
         Ubuntu_12_04_ScriptFactory.PROFILE_NAME
     }
@@ -45,10 +56,5 @@ class UbuntuScript extends BasePostfixScript {
     @Override
     ContextProperties getDefaultProperties() {
         ubuntuProperties.get()
-    }
-
-    @Override
-    def runDistributionSpecific() {
-        installPackages()
     }
 }

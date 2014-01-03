@@ -52,6 +52,7 @@ class MysqlPostfixTest extends UbuntuTestUtil {
 
         assertFileContent mailnameExpected.asFile(tmpdir), mailnameExpected
         assertStringContent mainConfigExpected.replaced(tmpdir, tmpdir, "/tmp"), mainConfigExpected.toString()
+        assertFileContent masterConfigExpected.asFile(tmpdir), masterConfigExpected
         assertFileContent mailboxExpected.asFile(tmpdir), mailboxExpected
         assertFileContent aliasExpected.asFile(tmpdir), aliasExpected
         assertFileContent domainsExpected.asFile(tmpdir), domainsExpected
@@ -63,6 +64,7 @@ class MysqlPostfixTest extends UbuntuTestUtil {
         assertFileContent groupaddOut.asFile(tmpdir), groupaddOut
         assertStringContent postaliasOut.replaced(tmpdir, tmpdir, "/tmp"), postaliasOut.toString()
         assertStringContent chownOut.replaced(tmpdir, tmpdir, "/tmp"), chownOut.toString()
+        assertStringContent chmodOut.replaced(tmpdir, tmpdir, "/tmp"), chmodOut.toString()
         assert mailboxBaseDir.asFile(tmpdir).isDirectory()
     }
 

@@ -1,0 +1,6 @@
+o-rw /tmp/etc/ssl/certs/cert_crt.txt
+o-rw /tmp/etc/ssl/private/cert_key.txt
+o-rw /tmp/etc/ssl/certs/cert_ca.txt
+o-rw /tmp/etc/ssl/certs/cert_crt.txt
+o-rw /tmp/etc/ssl/private/cert_key.txt
+o-rw /tmp/etc/ssl/certs/cert_ca.txt

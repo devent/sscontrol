@@ -32,7 +32,7 @@ import com.anrisoftware.sscontrol.mail.postfix.resources.ResourcesUtils
 enum UbuntuResources {
 
     aptitudeCommand("/usr/bin/aptitude", UbuntuResources.class.getResource("echo_command.txt")),
-    restartCommand("/etc/init.d/slapd", UbuntuResources.class.getResource("echo_command.txt")),
+    restartCommand("/etc/init.d/postfix", UbuntuResources.class.getResource("echo_command.txt")),
     chmodCommand("/bin/chmod", UbuntuResources.class.getResource("echo_command.txt")),
     chownCommand("/bin/chown", UbuntuResources.class.getResource("echo_command.txt")),
     useraddCommand("/sbin/useradd", UbuntuResources.class.getResource("echo_command.txt")),
@@ -40,6 +40,8 @@ enum UbuntuResources {
     postmapCommand("/usr/sbin/postmap", UbuntuResources.class.getResource("echo_command.txt")),
     postaliasCommand("/usr/sbin/postalias", UbuntuResources.class.getResource("echo_command.txt")),
     mysqlCommand("/usr/bin/mysql", UbuntuResources.class.getResource("echo_command.txt")),
+    certsDir("/etc/ssl/certs", null),
+    certKeysDir("/etc/ssl/private", null),
     group("/etc/group", UbuntuResources.class.getResource("group.txt")),
     passwd("/etc/passwd", UbuntuResources.class.getResource("passwd.txt")),
     mainConfig("/etc/postfix/main.cf", UbuntuResources.class.getResource("main_cf.txt")),
@@ -58,6 +60,8 @@ enum UbuntuResources {
         groupaddCommand.createCommand parent
         postmapCommand.createCommand parent
         postaliasCommand.createCommand parent
+        certsDir.asFile parent mkdirs()
+        certKeysDir.asFile parent mkdirs()
         group.createFile parent
         passwd.createFile parent
         mainConfig.createFile parent

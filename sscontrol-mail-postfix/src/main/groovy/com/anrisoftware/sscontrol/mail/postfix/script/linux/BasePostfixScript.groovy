@@ -25,13 +25,16 @@ import static org.apache.commons.io.FileUtils.*
 import javax.inject.Inject
 
 import org.apache.commons.io.FileUtils
+import org.apache.commons.io.FilenameUtils
 import org.joda.time.Duration
 import org.stringtemplate.v4.ST
 
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.Templates
+import com.anrisoftware.sscontrol.core.debuglogging.DebugLogging
 import com.anrisoftware.sscontrol.core.debuglogging.DebugLoggingProperty
 import com.anrisoftware.sscontrol.core.service.LinuxScript
+import com.anrisoftware.sscontrol.mail.certificate.Certificate
 import com.anrisoftware.sscontrol.mail.postfix.linux.BasePostfixScriptLogger
 import com.anrisoftware.sscontrol.mail.postfix.linux.BindAddressesRenderer
 import com.anrisoftware.sscontrol.mail.postfix.linux.DeliveryConfig
@@ -65,6 +68,11 @@ abstract class BasePostfixScript extends LinuxScript {
      * {@code main.cf} configuration templates.
      */
     TemplateResource mainConfigurationTemplate
+
+    /**
+     * {@code master.cf} configuration templates.
+     */
+    TemplateResource masterConfigurationTemplate
 
     /**
      * {@code /etc/mailname} configuration templates.
@@ -117,6 +125,7 @@ abstract class BasePostfixScript extends LinuxScript {
     def run() {
         basePostfixTemplates = templatesFactory.create "BasePostfixScript", templatesAttributes
         mainConfigurationTemplate = basePostfixTemplates.getResource "main_configuration"
+        masterConfigurationTemplate = basePostfixTemplates.getResource "master_configuration"
         mailnameConfigurationTemplate = basePostfixTemplates.getResource("mailname_configuration")
         postaliasCommandTemplate = basePostfixTemplates.getResource "postalias_command"
         postmapCommandTemplate = basePostfixTemplates.getResource "postmap_command"
@@ -126,6 +135,7 @@ abstract class BasePostfixScript extends LinuxScript {
         appendDefaultDestinations()
         deployMailname()
         deployMain()
+        deployMaster()
         reconfigureFiles()
         deployStorage()
         deployDelivery()
@@ -225,6 +235,16 @@ abstract class BasePostfixScript extends LinuxScript {
             masqueradeDomainsConf(),
             aliasMapsConf(),
             aliasDatabaseConf(),
+            smtpTlsSecurityLevelConf(),
+            smtpdTlsSecurityLevelConf(),
+            smtpTlsNoteStarttlsOfferConf(),
+            smtpdTlsLoglevelConf(),
+            smtpdTlsReceivedHeaderConf(),
+            smtpdTlsSessionCacheTimeoutConf(),
+            randomSourceConf(),
+            certFileConf(),
+            keyFileConf(),
+            caFileConf(),
             unknownLocalRecipientRejectCodeConf(),
             delayWarningTimeConf(),
             maximalQueueLifetimeConf(),
@@ -247,133 +267,473 @@ abstract class BasePostfixScript extends LinuxScript {
     }
 
     def myHostnameConf() {
-        def replace = mainConfigurationTemplate.getText(true, "hostname", "mail", service)
-        new TokenTemplate("(?m)^\\#?myhostname.*", replace, escape: false)
+        def replace = mainConfigurationTemplate.getText(true, "hostnameConfig", "mail", service)
+        def search = mainConfigurationTemplate.getText(true, "hostnameConfig_search")
+        new TokenTemplate(search, replace, escape: false)
     }
 
     def myOriginConf() {
-        def replace = mainConfigurationTemplate.getText(true, "origin", "mail", service)
-        new TokenTemplate("(?m)^\\#?myorigin.*", replace, escape: false)
+        def replace = mainConfigurationTemplate.getText(true, "originConfig", "mail", service)
+        def search = mainConfigurationTemplate.getText(true, "originConfig_search")
+        new TokenTemplate(search, replace, escape: false)
     }
 
     def smtpdBannerConf() {
-        def replace = mainConfigurationTemplate.getText(true, "banner", "banner", banner)
-        new TokenTemplate("(?m)^\\#?smtpd_banner.*", replace, escape: false)
+        def replace = mainConfigurationTemplate.getText(true, "bannerConfig", "banner", banner)
+        def search = mainConfigurationTemplate.getText(true, "bannerConfig_search")
+        new TokenTemplate(search, replace, escape: false)
     }
 
     def relayhostConf() {
-        def replace = mainConfigurationTemplate.getText(true, "relayhost", "mail", service)
-        new TokenTemplate("(?m)^\\#?relayhost.*", replace, escape: false)
+        def replace = mainConfigurationTemplate.getText(true, "relayhostConfig", "mail", service)
+        def search = mainConfigurationTemplate.getText(true, "relayhostConfig_search")
+        new TokenTemplate(search, replace, escape: false)
     }
 
     def inetInterfacesConf() {
-        def replace = mainConfigurationTemplate.getText(true, "interfaces", "mail", service)
-        new TokenTemplate("(?m)^\\#?inet_interfaces.*", replace, escape: false)
+        def replace = mainConfigurationTemplate.getText(true, "interfacesConfig", "mail", service)
+        def search = mainConfigurationTemplate.getText(true, "interfacesConfig_search")
+        new TokenTemplate(search, replace, escape: false)
     }
 
     def myDestinationConf() {
-        def replace = mainConfigurationTemplate.getText(true, "destinations", "mail", service)
-        new TokenTemplate("(?m)^\\#?mydestination.*", replace, escape: false)
+        def replace = mainConfigurationTemplate.getText(true, "destinationsConfig", "mail", service)
+        def search = mainConfigurationTemplate.getText(true, "destinationsConfig_search")
+        new TokenTemplate(search, replace, escape: false)
     }
 
     def masqueradeDomainsConf() {
-        def replace = mainConfigurationTemplate.getText(true, "masqueradeDomains", "mail", service)
-        new TokenTemplate("(?m)^\\#?masquerade_domains.*", replace, escape: false)
+        def replace = mainConfigurationTemplate.getText(true, "masqueradeDomainsConfig", "mail", service)
+        def search = mainConfigurationTemplate.getText(true, "masqueradeDomainsConfig_search")
+        new TokenTemplate(search, replace, escape: false)
     }
 
     def aliasMapsConf() {
-        def replace = mainConfigurationTemplate.getText(true, "aliasMaps", "file", aliasesMapsFile)
-        new TokenTemplate("(?m)^\\#?alias_maps.*", replace, escape: false)
+        def replace = mainConfigurationTemplate.getText(true, "aliasMapsConfig", "file", aliasesMapsFile)
+        def search = mainConfigurationTemplate.getText(true, "aliasMapsConfig_search")
+        new TokenTemplate(search, replace, escape: false)
     }
 
     def aliasDatabaseConf() {
-        def replace = mainConfigurationTemplate.getText(true, "aliasDatabase", "file", aliasesDatabaseFile)
-        new TokenTemplate("(?m)^\\#?alias_database.*", replace, escape: false)
+        def replace = mainConfigurationTemplate.getText(true, "aliasDatabaseConfig", "file", aliasesDatabaseFile)
+        def search = mainConfigurationTemplate.getText(true, "aliasDatabaseConfig_search")
+        new TokenTemplate(search, replace, escape: false)
+    }
+
+    def smtpTlsSecurityLevelConf() {
+        if (service.certificate == null) {
+            return []
+        }
+        def replace = mainConfigurationTemplate.getText(true, "smtpTlsSecurityLevelConfig", "level", smtpTlsSecurityLevel)
+        def search = mainConfigurationTemplate.getText(true, "smtpTlsSecurityLevelConfig_search")
+        new TokenTemplate(search, replace, escape: false)
+    }
+
+    /**
+     * Returns the SMTP TLS security level, for example {@code "may"}, see
+     * <a href="http://www.postfix.org/postconf.5.html#smtp_tls_security_level">smtp_tls_security_level [postfix.org].</a>
+     *
+     * <ul>
+     * <li>profile property {@code "smtp_tls_security_level"}</li>
+     * </ul>
+     *
+     * @see #getPostfixProperties()
+     */
+    String getSmtpTlsSecurityLevel() {
+        profileProperty "smtp_tls_security_level", defaultProperties
+    }
+
+    def smtpdTlsSecurityLevelConf() {
+        if (service.certificate == null) {
+            return []
+        }
+        def replace = mainConfigurationTemplate.getText(true, "smtpdTlsSecurityLevelConfig", "level", smtpdTlsSecurityLevel)
+        def search = mainConfigurationTemplate.getText(true, "smtpdTlsSecurityLevelConfig_search")
+        new TokenTemplate(search, replace, escape: false)
+    }
+
+    /**
+     * Returns the SMTPD TLS security level, for example {@code "may"}, see
+     * <a href="http://www.postfix.org/postconf.5.html#smtpd_tls_security_level">smtpd_tls_security_level [postfix.org].</a>
+     *
+     * <ul>
+     * <li>profile property {@code "smtpd_tls_security_level"}</li>
+     * </ul>
+     *
+     * @see #getPostfixProperties()
+     */
+    String getSmtpdTlsSecurityLevel() {
+        profileProperty "smtpd_tls_security_level", defaultProperties
+    }
+
+    def smtpTlsNoteStarttlsOfferConf() {
+        if (service.certificate == null) {
+            return []
+        }
+        def replace = mainConfigurationTemplate.getText(true, "smtpTlsNoteStarttlsOfferConfig", "enabled", smtpTlsNoteStarttlsOffer)
+        def search = mainConfigurationTemplate.getText(true, "smtpTlsNoteStarttlsOfferConfig_search")
+        new TokenTemplate(search, replace, escape: false)
+    }
+
+    /**
+     * Returns to log the hostname of a remote SMTP server that offers STARTTLS, for example {@code "true"}, see
+     * <a href="http://www.postfix.org/postconf.5.html#smtp_tls_note_starttls_offer">smtp_tls_note_starttls_offer [postfix.org].</a>
+     *
+     * <ul>
+     * <li>profile property {@code "tls_note_starttls_offer"}</li>
+     * </ul>
+     *
+     * @see #getPostfixProperties()
+     */
+    boolean getSmtpTlsNoteStarttlsOffer() {
+        profileBooleanProperty "tls_note_starttls_offer", defaultProperties
+    }
+
+    def smtpdTlsLoglevelConf() {
+        if (service.certificate == null) {
+            return []
+        }
+        DebugLogging debug = service.debug
+        def tlslevel = debug.args.tlslevel == null ? defaultTlsLevel : debug.args.tlslevel
+        def replace = mainConfigurationTemplate.getText(true, "smtpdTlsLoglevelConfig", "level", tlslevel)
+        def search = mainConfigurationTemplate.getText(true, "smtpdTlsLoglevelConfig_search")
+        new TokenTemplate(search, replace, escape: false)
+    }
+
+    /**
+     * Returns default TLS logging level, for example {@code "0"}, see
+     * <a href="http://www.postfix.org/postconf.5.html#smtpd_tls_loglevel">smtpd_tls_loglevel [postfix.org].</a>
+     *
+     * <ul>
+     * <li>profile property {@code "default_tls_loglevel"}</li>
+     * </ul>
+     *
+     * @see #getPostfixProperties()
+     */
+    int getDefaultTlsLevel() {
+        profileNumberProperty "default_tls_loglevel", defaultProperties
+    }
+
+    def smtpdTlsReceivedHeaderConf() {
+        if (service.certificate == null) {
+            return []
+        }
+        def replace = mainConfigurationTemplate.getText(true, "smtpdTlsReceivedHeaderConfig", "enabled", smtpdTlsReceivedHeader)
+        def search = mainConfigurationTemplate.getText(true, "smtpdTlsReceivedHeaderConfig_search")
+        new TokenTemplate(search, replace, escape: false)
+    }
+
+    /**
+     * Returns that the Postfix SMTP server produces Received: message headers, for example {@code "true"}, see
+     * <a href="http://www.postfix.org/postconf.5.html#smtpd_tls_received_header">smtpd_tls_received_header [postfix.org].</a>
+     *
+     * <ul>
+     * <li>profile property {@code "tls_received_header"}</li>
+     * </ul>
+     *
+     * @see #getPostfixProperties()
+     */
+    boolean getSmtpdTlsReceivedHeader() {
+        profileBooleanProperty "tls_received_header", defaultProperties
+    }
+
+    def smtpdTlsSessionCacheTimeoutConf() {
+        if (service.certificate == null) {
+            return []
+        }
+        def replace = mainConfigurationTemplate.getText(true, "smtpdTlsSessionCacheTimeoutConfig", "time", smtpdTlsSessionCacheTimeout.standardSeconds)
+        def search = mainConfigurationTemplate.getText(true, "smtpdTlsSessionCacheTimeoutConfig_search")
+        new TokenTemplate(search, replace, escape: false)
+    }
+
+    /**
+     * Returns the expiration time of Postfix SMTP server TLS session cache information, for example {@code "PT1H"}, see
+     * <a href="http://www.postfix.org/postconf.5.html#smtpd_tls_session_cache_timeout">smtpd_tls_session_cache_timeout [postfix.org].</a>
+     *
+     * <ul>
+     * <li>profile property {@code "tls_session_cache_timeout"}</li>
+     * </ul>
+     *
+     * @see #getPostfixProperties()
+     */
+    Duration getSmtpdTlsSessionCacheTimeout() {
+        profileDurationProperty "tls_session_cache_timeout", defaultProperties
+    }
+
+    def randomSourceConf() {
+        if (service.certificate == null) {
+            return []
+        }
+        def replace = mainConfigurationTemplate.getText(true, "randomSourceConfig", "source", randomSource)
+        def search = mainConfigurationTemplate.getText(true, "randomSourceConfig_search")
+        new TokenTemplate(search, replace, escape: false)
+    }
+
+    /**
+     * Returns the external entropy source for the pseudo random number generator pool, for example {@code "dev:/dev/urandom"}, see
+     * <a href="http://www.postfix.org/postconf.5.html#tls_random_source">tls_random_source [postfix.org].</a>
+     *
+     * <ul>
+     * <li>profile property {@code "random_source"}</li>
+     * </ul>
+     *
+     * @see #getPostfixProperties()
+     */
+    String getRandomSource() {
+        profileProperty "random_source", defaultProperties
+    }
+
+    def certFileConf() {
+        Certificate cert = service.certificate
+        if (cert == null) {
+            return []
+        }
+        def name = FilenameUtils.getName cert.cert.path
+        def file = new File(certsDir, name)
+        FileUtils.copyURLToFile cert.cert.toURL(), file
+        changeOwner owner: rootUser, ownerGroup: rootGroup, files: file
+        changeMod mod: "o-rw", files: file
+        def replace = mainConfigurationTemplate.getText(true, "certFileConfig", "file", file)
+        def search = mainConfigurationTemplate.getText(true, "certFileConfig_search")
+        new TokenTemplate(search, replace, escape: false)
+    }
+
+    def keyFileConf() {
+        Certificate cert = service.certificate
+        if (cert == null) {
+            return []
+        }
+        def name = FilenameUtils.getName cert.key.path
+        def file = new File(certKeysDir, name)
+        FileUtils.copyURLToFile cert.key.toURL(), file
+        changeOwner owner: rootUser, ownerGroup: rootGroup, files: file
+        changeMod mod: "o-rw", files: file
+        def replace = mainConfigurationTemplate.getText(true, "keyFileConfig", "file", file)
+        def search = mainConfigurationTemplate.getText(true, "keyFileConfig_search")
+        new TokenTemplate(search, replace, escape: false)
+    }
+
+    def caFileConf() {
+        Certificate cert = service.certificate
+        if (cert == null || cert.ca == null) {
+            return []
+        }
+        def name = FilenameUtils.getName cert.ca.path
+        def file = new File(certsDir, name)
+        FileUtils.copyURLToFile cert.ca.toURL(), file
+        changeOwner owner: rootUser, ownerGroup: rootGroup, files: file
+        changeMod mod: "o-rw", files: file
+        def replace = mainConfigurationTemplate.getText(true, "caFileConfig", "file", file)
+        def search = mainConfigurationTemplate.getText(true, "caFileConfig_search")
+        new TokenTemplate(search, replace, escape: false)
+    }
+
+    /**
+     * Returns the certification files directory, for
+     * example {@code "/etc/ssl/certs".}
+     *
+     * <ul>
+     * <li>profile property {@code "certificates_directory"}</li>
+     * </ul>
+     *
+     * @see #getPostfixProperties()
+     */
+    File getCertsDir() {
+        profileDirProperty "certificates_directory", defaultProperties
+    }
+
+    /**
+     * Returns the certification keys files directory, for
+     * example {@code "/etc/ssl/private".}
+     *
+     * <ul>
+     * <li>profile property {@code "certificates_keys_directory"}</li>
+     * </ul>
+     *
+     * @see #getPostfixProperties()
+     */
+    File getCertKeysDir() {
+        profileDirProperty "certificates_keys_directory", defaultProperties
+    }
+
+    /**
+     * Returns the name of the root user, for example {@code "root".}
+     *
+     * <ul>
+     * <li>profile property {@code "root_user"}</li>
+     * </ul>
+     *
+     * @see #getPostfixProperties()
+     */
+    String getRootUser() {
+        profileProperty "root_user", defaultProperties
+    }
+
+    /**
+     * Returns the name of the root group, for example {@code "root".}
+     *
+     * <ul>
+     * <li>profile property {@code "root_group"}</li>
+     * </ul>
+     *
+     * @see #getPostfixProperties()
+     */
+    String getRootGroup() {
+        profileProperty "root_group", defaultProperties
     }
 
     def unknownLocalRecipientRejectCodeConf() {
-        def replace = mainConfigurationTemplate.getText(true, "unknownLocalRecipientRejectCode", "code", unknownLocalRecipientRejectCode)
-        new TokenTemplate("(?m)^\\#?unknown_local_recipient_reject_code.*", replace, escape: false)
+        def replace = mainConfigurationTemplate.getText(true, "unknownLocalRecipientRejectCodeConfig", "code", unknownLocalRecipientRejectCode)
+        def search = mainConfigurationTemplate.getText(true, "unknownLocalRecipientRejectCodeConfig_search")
+        new TokenTemplate(search, replace, escape: false)
     }
 
     def delayWarningTimeConf() {
-        def replace = mainConfigurationTemplate.getText(true, "delayWarningTime", "time", delayWarningTime)
-        new TokenTemplate("(?m)^\\#?delay_warning_time.*", replace, escape: false)
+        def replace = mainConfigurationTemplate.getText(true, "delayWarningTimeConfig", "time", delayWarningTime)
+        def search = mainConfigurationTemplate.getText(true, "delayWarningTimeConfig_search")
+        new TokenTemplate(search, replace, escape: false)
     }
 
     def maximalQueueLifetimeConf() {
-        def replace = mainConfigurationTemplate.getText(true, "maximalQueueLifetime", "time", maximalQueueLifetime)
-        new TokenTemplate("(?m)^\\#?maximal_queue_lifetime.*", replace, escape: false)
+        def replace = mainConfigurationTemplate.getText(true, "maximalQueueLifetimeConfig", "time", maximalQueueLifetime)
+        def search = mainConfigurationTemplate.getText(true, "maximalQueueLifetimeConfig_search")
+        new TokenTemplate(search, replace, escape: false)
     }
 
     def minimalRetriesDelayConf() {
-        def replace = mainConfigurationTemplate.getText(true, "minimalRetriesDelay", "time", minimalRetriesDelay)
-        new TokenTemplate("(?m)^\\#?minimal_backoff_time.*", replace, escape: false)
+        def replace = mainConfigurationTemplate.getText(true, "minimalRetriesDelayConfig", "time", minimalRetriesDelay)
+        def search = mainConfigurationTemplate.getText(true, "minimalRetriesDelayConfig_search")
+        new TokenTemplate(search, replace, escape: false)
     }
 
     def maximumRetriesDelayConf() {
-        def replace = mainConfigurationTemplate.getText(true, "maximumRetriesDelay", "time", maximalRetriesDelay)
-        new TokenTemplate("(?m)^\\#?maximal_backoff_time.*", replace, escape: false)
+        def replace = mainConfigurationTemplate.getText(true, "maximumRetriesDelayConfig", "time", maximalRetriesDelay)
+        def search = mainConfigurationTemplate.getText(true, "maximumRetriesDelayConfig_search")
+        new TokenTemplate(search, replace, escape: false)
     }
 
     def heloTimeoutConf() {
-        def replace = mainConfigurationTemplate.getText(true, "heloTimeout", "time", heloTimeout)
-        new TokenTemplate("(?m)^\\#?smtp_helo_timeout.*", replace, escape: false)
+        def replace = mainConfigurationTemplate.getText(true, "heloTimeoutConfig", "time", heloTimeout)
+        def search = mainConfigurationTemplate.getText(true, "heloTimeoutConfig_search")
+        new TokenTemplate(search, replace, escape: false)
     }
 
     def recipientLimitConf() {
-        def replace = mainConfigurationTemplate.getText(true, "recipientLimit", "limit", recipientLimit)
-        new TokenTemplate("(?m)^\\#?smtpd_recipient_limit.*", replace, escape: false)
+        def replace = mainConfigurationTemplate.getText(true, "recipientLimitConfig", "limit", recipientLimit)
+        def search = mainConfigurationTemplate.getText(true, "recipientLimitConfig_search")
+        new TokenTemplate(search, replace, escape: false)
     }
 
     def backOffErrorLimitConf() {
-        def replace = mainConfigurationTemplate.getText(true, "backOffErrorLimit", "limit", backOffErrorLimit)
-        new TokenTemplate("(?m)^\\#?smtpd_soft_error_limit.*", replace, escape: false)
+        def replace = mainConfigurationTemplate.getText(true, "backOffErrorLimitConfig", "limit", backOffErrorLimit)
+        def search = mainConfigurationTemplate.getText(true, "backOffErrorLimitConfig_search")
+        new TokenTemplate(search, replace, escape: false)
     }
 
     def blockingErrorLimitConf() {
-        def replace = mainConfigurationTemplate.getText(true, "blockingErrorLimit", "limit", blockingErrorLimit)
-        new TokenTemplate("(?m)^\\#?smtpd_hard_error_limit.*", replace, escape: false)
+        def replace = mainConfigurationTemplate.getText(true, "blockingErrorLimitConfig", "limit", blockingErrorLimit)
+        def search = mainConfigurationTemplate.getText(true, "blockingErrorLimitConfig_search")
+        new TokenTemplate(search, replace, escape: false)
     }
 
     def heloRestrictionsConf() {
-        def replace = mainConfigurationTemplate.getText(true, "heloRestrictions", "restrictions", heloRestrictions)
-        new TokenTemplate("(?m)^\\#?smtpd_helo_restrictions.*", replace, escape: false)
+        def replace = mainConfigurationTemplate.getText(true, "heloRestrictionsConfig", "restrictions", heloRestrictions)
+        def search = mainConfigurationTemplate.getText(true, "heloRestrictionsConfig_search")
+        new TokenTemplate(search, replace, escape: false)
     }
 
     def senderRestrictionsConf() {
-        def replace = mainConfigurationTemplate.getText(true, "senderRestrictions", "restrictions", senderRestrictions)
-        new TokenTemplate("(?m)^\\#?smtpd_sender_restrictions.*", replace, escape: false)
+        def replace = mainConfigurationTemplate.getText(true, "senderRestrictionsConfig", "restrictions", senderRestrictions)
+        def search = mainConfigurationTemplate.getText(true, "senderRestrictionsConfig_search")
+        new TokenTemplate(search, replace, escape: false)
     }
 
     def clientRestrictionsConf() {
-        def replace = mainConfigurationTemplate.getText(true, "clientRestrictions", "restrictions", clientRestrictions)
-        new TokenTemplate("(?m)^\\#?smtpd_client_restrictions.*", replace, escape: false)
+        def replace = mainConfigurationTemplate.getText(true, "clientRestrictionsConfig", "restrictions", clientRestrictions)
+        def search = mainConfigurationTemplate.getText(true, "clientRestrictionsConfig_search")
+        new TokenTemplate(search, replace, escape: false)
     }
 
     def recipientRestrictionsConf() {
-        def replace = mainConfigurationTemplate.getText(true, "recipientRestrictions", "restrictions", recipientRestrictions)
-        new TokenTemplate("(?m)^\\#?smtpd_recipient_restrictions.*", replace, escape: false)
+        def replace = mainConfigurationTemplate.getText(true, "recipientRestrictionsConfig", "restrictions", recipientRestrictions)
+        def search = mainConfigurationTemplate.getText(true, "recipientRestrictionsConfig_search")
+        new TokenTemplate(search, replace, escape: false)
     }
 
     def dataRestrictionsConf() {
-        def replace = mainConfigurationTemplate.getText(true, "dataRestrictions", "restrictions", dataRestrictions)
-        new TokenTemplate("(?m)^\\#?smtpd_data_restrictions.*", replace, escape: false)
+        def replace = mainConfigurationTemplate.getText(true, "dataRestrictionsConfig", "restrictions", dataRestrictions)
+        def search = mainConfigurationTemplate.getText(true, "dataRestrictionsConfig_search")
+        new TokenTemplate(search, replace, escape: false)
     }
 
     def heloRequiredConf() {
-        def replace = mainConfigurationTemplate.getText(true, "heloRequired", "flag", heloRequired)
-        new TokenTemplate("(?m)^\\#?smtpd_helo_required.*", replace, escape: false)
+        def replace = mainConfigurationTemplate.getText(true, "heloRequiredConfig", "flag", heloRequired)
+        def search = mainConfigurationTemplate.getText(true, "heloRequiredConfig_search")
+        new TokenTemplate(search, replace, escape: false)
     }
 
     def delayRejectConf() {
-        def replace = mainConfigurationTemplate.getText(true, "delayReject", "flag", delayReject)
-        new TokenTemplate("(?m)^\\#?smtpd_delay_reject.*", replace, escape: false)
+        def replace = mainConfigurationTemplate.getText(true, "delayRejectConfig", "flag", delayReject)
+        def search = mainConfigurationTemplate.getText(true, "delayRejectConfig_search")
+        new TokenTemplate(search, replace, escape: false)
     }
 
     def disableVrfyCommandConf() {
-        def replace = mainConfigurationTemplate.getText(true, "disableVrfyCommand", "flag", disableVrfyCommand)
-        new TokenTemplate("(?m)^\\#?disable_vrfy_command.*", replace, escape: false)
+        def replace = mainConfigurationTemplate.getText(true, "disableVrfyCommandConfig", "flag", disableVrfyCommand)
+        def search = mainConfigurationTemplate.getText(true, "disableVrfyCommandConfig_search")
+        new TokenTemplate(search, replace, escape: false)
+    }
+
+    /**
+     * Sets the main configuration of the mail server. This is done usually in
+     * the {@code /etc/postfix/main.cf} file.
+     *
+     * @see #getMasterFile()
+     */
+    void deployMaster() {
+        def configuration = [
+            submissionConf(),
+            smtpsConf(),
+        ]
+        deployConfiguration configurationTokens(), currentMasterConfiguration, configuration, masterFile
+    }
+
+    /**
+     * Returns the current {@code master.cf} configuration. This is usually the
+     * configuration file {@code /etc/postfix/master.cf}.
+     *
+     * @see #getMasterFile()
+     */
+    String getCurrentMasterConfiguration() {
+        currentConfiguration masterFile
+    }
+
+    def submissionConf() {
+        boolean enabled = service.certificate != null && submissionEnabled
+        def replace = masterConfigurationTemplate.getText(true, "submissionConfig", "enabled", enabled)
+        def search = masterConfigurationTemplate.getText(true, "submissionConfig_search")
+        new TokenTemplate(search, replace, enclose: false, escape: false)
+    }
+
+    /**
+     * Returns to enable submission port, for
+     * example {@code "true".}
+     *
+     * <ul>
+     * <li>profile property {@code "submission_enabled"}</li>
+     * </ul>
+     *
+     * @see #getPostfixProperties()
+     */
+    boolean getSubmissionEnabled() {
+        profileBooleanProperty "submission_enabled", defaultProperties
+    }
+
+    def smtpsConf() {
+        boolean enabled = service.certificate != null
+        def replace = masterConfigurationTemplate.getText(true, "smtpsConfig", "enabled", enabled)
+        def search = masterConfigurationTemplate.getText(true, "smtpsConfig_search")
+        new TokenTemplate(search, replace, enclose: false, escape: false)
     }
 
     /**
@@ -467,6 +827,21 @@ abstract class BasePostfixScript extends LinuxScript {
      */
     File getMainFile() {
         profileFileProperty "main_file", configurationDir, defaultProperties
+    }
+
+    /**
+     * Returns the {@code master.cf} file. If the path is not absolute then it
+     * is assume to be under the configuration directory.
+     *
+     * <ul>
+     * <li>property {@code "master_file"}</li>
+     * </ul>
+     *
+     * @see #getConfigurationDir()
+     * @see #getDefaultProperties()
+     */
+    File getMasterFile() {
+        profileFileProperty "master_file", configurationDir, defaultProperties
     }
 
     /**

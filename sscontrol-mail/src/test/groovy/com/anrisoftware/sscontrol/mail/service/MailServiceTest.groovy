@@ -31,10 +31,10 @@ import org.junit.rules.TemporaryFolder
 import com.anrisoftware.sscontrol.core.api.ServiceLoader as SscontrolServiceLoader
 import com.anrisoftware.sscontrol.core.api.ServiceLoaderFactory
 import com.anrisoftware.sscontrol.core.api.ServicesRegistry
+import com.anrisoftware.sscontrol.core.bindings.BindingAddress
 import com.anrisoftware.sscontrol.core.modules.CoreModule
 import com.anrisoftware.sscontrol.core.modules.CoreResourcesModule
 import com.anrisoftware.sscontrol.core.service.ServiceModule
-import com.anrisoftware.sscontrol.mail.statements.BindAddresses
 import com.google.inject.Guice
 import com.google.inject.Injector
 
@@ -74,7 +74,7 @@ class MailServiceTest {
 
     static ubuntu1004Profile = MailServiceTest.class.getResource("Ubuntu_10_04Profile.groovy")
 
-    static mailService = MailServiceTest.class.getResource("MailService.groovy")
+    static mailService = MailServiceTest.class.getResource("Mail.groovy")
 
     static mailMysqlService = MailServiceTest.class.getResource("MailMysqlService.groovy")
 
@@ -125,8 +125,9 @@ class MailServiceTest {
         toStringStyle
     }
 
-    static MailServiceImpl assertService(MailServiceImpl service, File tmpdir) {
-        assert service.bindAddresses == BindAddresses.ALL
+    static MailServiceImpl assertService(MailService service, File tmpdir) {
+        assert service.binding.addresses.size() == 1
+        assert service.binding.addresses[0].address == BindingAddress.all
         assert service.relayHost == "smtp.relayhost.com"
         assert service.domainName == "mail.example.com"
         assert service.origin == "example.com"

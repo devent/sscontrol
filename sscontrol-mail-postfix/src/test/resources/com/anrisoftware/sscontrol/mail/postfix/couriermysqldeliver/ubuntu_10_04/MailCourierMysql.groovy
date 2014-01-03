@@ -20,7 +20,7 @@ package com.anrisoftware.sscontrol.mail.postfix.couriermysqldeliver.ubuntu_10_04
 
 mail {
     debug level: 2
-    bind_addresses all
+    bind address: all
     relay "smtp.relayhost.com"
     name "mail.example.com"
     origin "example.com"

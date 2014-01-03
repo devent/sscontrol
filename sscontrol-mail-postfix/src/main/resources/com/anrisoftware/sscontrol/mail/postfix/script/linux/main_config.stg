@@ -15,7 +15,7 @@ relayhost(mail) ::= <<
 >>
 
 interfaces(mail) ::= <<
-inet_interfaces = <mail.bindAddresses>
+inet_interfaces = <mail.binding.addresses;separator=",">
 >>
 
 destinations(mail) ::= <<

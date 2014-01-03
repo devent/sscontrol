@@ -19,14 +19,14 @@
 package com.anrisoftware.sscontrol.mail.postfix.hashstorage.ubuntu_10_04.shared_domains_unix_accounts
 
 mail {
-	bind_addresses all
-	relay "smtp.relayhost.com"
-	name "mail.example.com"
-	origin "example.com"
-	destinations "foo.bar", "bar.bar"
+    bind address: all
+    relay "smtp.relayhost.com"
+    name "mail.example.com"
+    origin "example.com"
+    destinations "foo.bar", "bar.bar"
 
-	masquerade {
-		domains "mail.example.com"
-		users "root"
-	}
+    masquerade {
+        domains "mail.example.com"
+        users "root"
+    }
 }

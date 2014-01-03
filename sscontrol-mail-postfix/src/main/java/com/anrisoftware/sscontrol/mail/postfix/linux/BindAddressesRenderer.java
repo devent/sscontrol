@@ -18,20 +18,14 @@
  */
 package com.anrisoftware.sscontrol.mail.postfix.linux;
 
-import static com.anrisoftware.sscontrol.mail.statements.BindAddresses.ALL;
-import static com.anrisoftware.sscontrol.mail.statements.BindAddresses.LOOPBACK;
-import static org.apache.commons.lang3.StringUtils.join;
-
 import java.util.Locale;
 
 import com.anrisoftware.resources.templates.api.AttributeRenderer;
-import com.anrisoftware.sscontrol.mail.statements.BindAddresses;
+import com.anrisoftware.sscontrol.core.bindings.Address;
+import com.anrisoftware.sscontrol.core.bindings.BindingAddress;
 
 /**
  * Renderer for postfix bind addresses.
- * 
- * @see BindAddresses#ALL
- * @see BindAddresses#LOOPBACK
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
@@ -39,24 +33,36 @@ import com.anrisoftware.sscontrol.mail.statements.BindAddresses;
 @SuppressWarnings("serial")
 public class BindAddressesRenderer implements AttributeRenderer {
 
-	@Override
-	public String toString(Object o, String formatString, Locale locale) {
-		return format((BindAddresses) o);
-	}
+    private static final String ALL = "all";
 
-	private String format(BindAddresses addresses) {
-		if (addresses == ALL) {
-			return "all";
-		}
-		if (addresses == LOOPBACK) {
-			return "loopback-only";
-		}
-		return join(addresses.getAddresses(), ',');
-	}
+    private static final String LOOPBACK_ONLY = "loopback-only";
 
-	@Override
-	public Class<?> getAttributeType() {
-		return BindAddresses.class;
-	}
+    @Override
+    public String toString(Object o, String formatString, Locale locale) {
+        return format((Address) o);
+    }
+
+    private String format(Address address) {
+        if (address.getAddress() instanceof BindingAddress) {
+            return format((BindingAddress) address.getAddress());
+        } else {
+            return address.getAddress().toString();
+        }
+    }
+
+    private String format(BindingAddress address) {
+        switch (address) {
+        case local:
+        case loopback:
+            return LOOPBACK_ONLY;
+        default:
+            return ALL;
+        }
+    }
+
+    @Override
+    public Class<?> getAttributeType() {
+        return Address.class;
+    }
 
 }

@@ -41,14 +41,17 @@ import com.anrisoftware.sscontrol.core.api.Service;
 import com.anrisoftware.sscontrol.core.api.ServiceException;
 import com.anrisoftware.sscontrol.core.api.ServiceScriptFactory;
 import com.anrisoftware.sscontrol.core.api.ServiceScriptInfo;
+import com.anrisoftware.sscontrol.core.bindings.Address;
+import com.anrisoftware.sscontrol.core.bindings.Binding;
+import com.anrisoftware.sscontrol.core.bindings.BindingAddress;
+import com.anrisoftware.sscontrol.core.bindings.BindingArgs;
+import com.anrisoftware.sscontrol.core.bindings.BindingFactory;
 import com.anrisoftware.sscontrol.core.debuglogging.DebugLogging;
 import com.anrisoftware.sscontrol.core.debuglogging.DebugLoggingFactory;
 import com.anrisoftware.sscontrol.core.service.AbstractService;
 import com.anrisoftware.sscontrol.core.yesno.YesNoFlag;
 import com.anrisoftware.sscontrol.mail.resetdomains.ResetDomains;
 import com.anrisoftware.sscontrol.mail.resetdomains.ResetDomainsFactory;
-import com.anrisoftware.sscontrol.mail.statements.BindAddresses;
-import com.anrisoftware.sscontrol.mail.statements.BindAddressesFactory;
 import com.anrisoftware.sscontrol.mail.statements.CertificateFile;
 import com.anrisoftware.sscontrol.mail.statements.CertificateFileFactory;
 import com.anrisoftware.sscontrol.mail.statements.Database;
@@ -64,16 +67,35 @@ import com.anrisoftware.sscontrol.mail.statements.MasqueradeDomains;
  * @since 1.0
  */
 @SuppressWarnings("serial")
-public class MailServiceImpl extends AbstractService {
+class MailServiceImpl extends AbstractService implements MailService {
 
-    private final MailServiceImplLogger log;
+    private final List<Domain> domains;
 
-    private final BindAddressesFactory bindAddressesFactory;
+    private final Set<String> destinations;
 
-    private final CertificateFileFactory certificateFileFactory;
+    @Inject
+    private MailServiceImplLogger log;
+
+    @Inject
+    private CertificateFileFactory certificateFileFactory;
 
     @Inject
     private DebugLoggingFactory debugLoggingFactory;
+
+    @Inject
+    private Binding binding;
+
+    @Inject
+    private BindingArgs bindingArgs;
+
+    @Inject
+    private MasqueradeDomains masqueradeDomains;
+
+    @Inject
+    private DomainFactory domainFactory;
+
+    @Inject
+    private DatabaseFactory databaseFactory;
 
     private DebugLogging debug;
 
@@ -83,24 +105,11 @@ public class MailServiceImpl extends AbstractService {
 
     private String relayHost;
 
-    private BindAddresses bindAddresses;
-
-    private final MasqueradeDomains masqueradeDomains;
-
-    private final List<Domain> domains;
-
     private CertificateFile certificateFile;
-
-    private final DomainFactory domainFactory;
-
-    private final Set<String> destinations;
 
     private ResetDomainsFactory resetDomainsFactory;
 
     private ResetDomains resetDomains;
-
-    @Inject
-    private DatabaseFactory databaseFactory;
 
     private Database database;
 
@@ -108,17 +117,8 @@ public class MailServiceImpl extends AbstractService {
      * @see MailFactory#create(ProfileService)
      */
     @Inject
-    MailServiceImpl(MailServiceImplLogger logger,
-            BindAddressesFactory bindAddressesFactory,
-            MasqueradeDomains masqueradeDomains,
-            CertificateFileFactory certificateFileFactory,
-            DomainFactory domainFactory) {
-        this.log = logger;
-        this.bindAddressesFactory = bindAddressesFactory;
-        this.masqueradeDomains = masqueradeDomains;
-        this.certificateFileFactory = certificateFileFactory;
+    MailServiceImpl() {
         this.domains = new ArrayList<Domain>();
-        this.domainFactory = domainFactory;
         this.relayHost = null;
         this.destinations = new HashSet<String>();
     }
@@ -186,50 +186,40 @@ public class MailServiceImpl extends AbstractService {
         log.debugLoggingSet(this, debug);
     }
 
+    @Override
     public void setDebug(DebugLogging debug) {
         this.debug = debug;
     }
 
+    @Override
     public DebugLogging getDebug() {
         return debug;
     }
 
     /**
-     * Sets the network interfaces addresses that this mail system receives mail
-     * on.
+     * Sets the IP addresses or host names to where to bind the mail service.
      * 
-     * @param address
-     *            the {@link BindAddresses}.
-     * 
-     * @throws NullPointerException
-     *             if the specified addresses are {@code null}.
-     * 
-     * @see BindAddresses#ALL
-     * @see BindAddresses#LOOPBACK
+     * @see BindingFactory#create(Map, String...)
      */
-    public void bind_addresses(BindAddresses address) {
-        log.checkBindAddress(this, address);
-        this.bindAddresses = address;
-        log.bindAddressesSet(this, address);
+    public void bind(Map<String, Object> args) throws ServiceException {
+        List<Address> addresses = bindingArgs.createAddress(this, args);
+        binding.addAddress(addresses);
+        log.bindingSet(this, binding);
     }
 
     /**
-     * Sets the network interfaces addresses that this mail system receives mail
-     * on.
+     * Sets the IP addresses or host names to where to bind the mail service.
      * 
-     * @param address
-     *            the {@link BindAddresses}.
-     * 
-     * @throws NullPointerException
-     *             if the specified addresses are {@code null}.
-     * 
-     * @throws IllegalArgumentException
-     *             if the specified addresses are empty.
+     * @see BindingFactory#create(BindingAddress)
      */
-    public void bind_addresses(String addresses) {
-        log.checkBindAddresses(this, addresses);
-        this.bindAddresses = bindAddressesFactory.create(addresses);
-        log.bindAddressesSet(this, bindAddresses);
+    public void bind(BindingAddress address) throws ServiceException {
+        binding.addAddress(address);
+        log.bindingSet(this, binding);
+    }
+
+    @Override
+    public Binding getBinding() {
+        return binding;
     }
 
     /**
@@ -243,20 +233,12 @@ public class MailServiceImpl extends AbstractService {
         log.relayHostSet(this, host);
     }
 
-    /**
-     * Returns the relay host.
-     * 
-     * @return the relay host {@link String} or {@code null}.
-     */
+    @Override
     public String getRelayHost() {
         return relayHost;
     }
 
-    /**
-     * Returns the domain name of the server.
-     * 
-     * @return the domain name of the server.
-     */
+    @Override
     public String getDomainName() {
         return domainName;
     }
@@ -273,12 +255,7 @@ public class MailServiceImpl extends AbstractService {
         log.domainNameSet(this, name);
     }
 
-    /**
-     * The domain name that locally-posted mail appears to come from, and that
-     * locally posted mail is delivered to.
-     * 
-     * @return the origin domain name.
-     */
+    @Override
     public String getOrigin() {
         return origin;
     }
@@ -321,12 +298,7 @@ public class MailServiceImpl extends AbstractService {
         }
     }
 
-    /**
-     * Returns the list of additional domains that are delivered to local mail
-     * users.
-     * 
-     * @return the {@link Collection} of domains.
-     */
+    @Override
     public Collection<String> getDestinations() {
         return unmodifiableCollection(destinations);
     }
@@ -343,11 +315,7 @@ public class MailServiceImpl extends AbstractService {
         return masqueradeDomains;
     }
 
-    /**
-     * Returns the domains that should be stripped of the sub-domains.
-     * 
-     * @return the {@link MasqueradeDomains}.
-     */
+    @Override
     public MasqueradeDomains getMasqueradeDomains() {
         return masqueradeDomains;
     }
@@ -371,21 +339,7 @@ public class MailServiceImpl extends AbstractService {
         log.certificateSet(this, certificateFile);
     }
 
-    /**
-     * Returns the network interface addresses that this mail system receives
-     * mail on.
-     * 
-     * @return the {@link BindAddresses}.
-     */
-    public BindAddresses getBindAddresses() {
-        return bindAddresses;
-    }
-
-    /**
-     * Returns the certificate file for TLS.
-     * 
-     * @return the {@link CertificateFile}.
-     */
+    @Override
     public CertificateFile getCertificateFile() {
         return certificateFile;
     }
@@ -402,11 +356,7 @@ public class MailServiceImpl extends AbstractService {
         return domain;
     }
 
-    /**
-     * Returns the to the mail service known domains list.
-     * 
-     * @return an unmodifiable {@link List} of {@link Domain} domains.
-     */
+    @Override
     public List<Domain> getDomains() {
         return unmodifiableList(domains);
     }
@@ -417,6 +367,7 @@ public class MailServiceImpl extends AbstractService {
         log.resetDomainSet(this, reset);
     }
 
+    @Override
     public ResetDomains getResetDomains() {
         return resetDomains;
     }
@@ -426,24 +377,44 @@ public class MailServiceImpl extends AbstractService {
         log.databaseSet(this, database);
     }
 
+    @Override
     public Database getDatabase() {
         return database;
     }
 
+    /**
+     * @see YesNoFlag#yes
+     */
     public YesNoFlag getYes() {
         return YesNoFlag.yes;
     }
 
+    /**
+     * @see YesNoFlag#no
+     */
     public YesNoFlag getNo() {
         return YesNoFlag.no;
     }
 
-    public BindAddresses getAll() {
-        return BindAddresses.ALL;
+    /**
+     * @see BindingAddress#all
+     */
+    public BindingAddress getAll() {
+        return BindingAddress.all;
     }
 
-    public BindAddresses getLoopback() {
-        return BindAddresses.LOOPBACK;
+    /**
+     * @see BindingAddress#loopback
+     */
+    public BindingAddress getLoopback() {
+        return BindingAddress.loopback;
+    }
+
+    /**
+     * @see BindingAddress#local
+     */
+    public BindingAddress getLocal() {
+        return BindingAddress.local;
     }
 
     @Override

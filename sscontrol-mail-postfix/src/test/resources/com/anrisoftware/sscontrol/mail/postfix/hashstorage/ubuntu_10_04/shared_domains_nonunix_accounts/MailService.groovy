@@ -19,16 +19,16 @@
 package com.anrisoftware.sscontrol.mail.postfix.hashstorage.ubuntu_10_04.shared_domains_nonunix_accounts
 
 mail {
-	bind_addresses all
-	relay "smtp.relayhost.com"
-	name "mail.example.com"
-	origin "example.com"
-	certificate file: "$tmp/example-com.crt", key: "$tmp/example-com.insecure.key", ca: "$tmp/example-com-ca.crt"
+    bind address: all
+    relay "smtp.relayhost.com"
+    name "mail.example.com"
+    origin "example.com"
+    certificate file: "$tmp/example-com.crt", key: "$tmp/example-com.insecure.key", ca: "$tmp/example-com-ca.crt"
 
-	masquerade {
-		domains "mail.example.com"
-		users "root"
-	}
+    masquerade {
+        domains "mail.example.com"
+        users "root"
+    }
 
-	destinations "foo.bar", "bar.bar"
+    destinations "foo.bar", "bar.bar"
 }

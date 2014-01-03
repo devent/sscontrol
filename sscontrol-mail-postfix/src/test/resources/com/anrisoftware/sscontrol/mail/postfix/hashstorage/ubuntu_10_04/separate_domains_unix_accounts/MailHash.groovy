@@ -19,19 +19,19 @@
 package com.anrisoftware.sscontrol.mail.postfix.hashstorage.ubuntu_10_04.separate_domains_unix_accounts
 
 mail {
-	bind_addresses all
-	relay "smtp.relayhost.com"
-	name "mail.example.com"
-	origin "example.com"
+    bind address: all
+    relay "smtp.relayhost.com"
+    name "mail.example.com"
+    origin "example.com"
 
-	masquerade {
-		domains "mail.example.com"
-		users "root"
-	}
+    masquerade {
+        domains "mail.example.com"
+        users "root"
+    }
 
-	domain "example.com", {
-		alias "info", destination: "joe"
-		alias "sales", destination: "jane"
-		catchall destination: "jim"
-	}
+    domain "example.com", {
+        alias "info", destination: "joe"
+        alias "sales", destination: "jane"
+        catchall destination: "jim"
+    }
 }

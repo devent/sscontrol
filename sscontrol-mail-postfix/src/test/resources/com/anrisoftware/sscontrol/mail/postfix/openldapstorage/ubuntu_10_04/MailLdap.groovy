@@ -19,25 +19,25 @@
 package com.anrisoftware.sscontrol.mail.postfix.openldapstorage.ubuntu_10_04
 
 mail {
-	bind_addresses all
-	relay "smtp.relayhost.com"
-	name "mail.example.com"
-	origin "ubuntutest.com"
-	database "ubuntutest.com", user: "vmail", password: "YdBqff7H5GIwwlTQrL3TTAbQeYi2Xm"
+    bind address: all
+    relay "smtp.relayhost.com"
+    name "mail.example.com"
+    origin "ubuntutest.com"
+    database "ubuntutest.com", user: "vmail", password: "YdBqff7H5GIwwlTQrL3TTAbQeYi2Xm"
 
-	masquerade {
-		domains "mail.ubuntutest.com"
-		users "root"
-	}
+    masquerade {
+        domains "mail.ubuntutest.com"
+        users "root"
+    }
 
-	domain "localhost.localdomain", { catchall destination: "@localhost" }
-	domain "localhost", {
-		alias "postmaster", destination: "root"
-		alias "sysadmin", destination: "root"
-		alias "webmaster", destination: "root"
-		alias "abuse", destination: "root"
-		alias "root", destination: "root"
-		catchall destination: "root"
-		user "root", password: "rootpasswd"
-	}
+    domain "localhost.localdomain", { catchall destination: "@localhost" }
+    domain "localhost", {
+        alias "postmaster", destination: "root"
+        alias "sysadmin", destination: "root"
+        alias "webmaster", destination: "root"
+        alias "abuse", destination: "root"
+        alias "root", destination: "root"
+        catchall destination: "root"
+        user "root", password: "rootpasswd"
+    }
 }

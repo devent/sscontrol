@@ -19,7 +19,7 @@
 package com.anrisoftware.sscontrol.mail.postfix.hashstorage.ubuntu_12_04.shared_domains_unix_accounts
 
 mail {
-    bind_addresses all
+    bind address: all
     relay "smtp.relayhost.com"
     name "mail.example.com"
     origin "example.com"

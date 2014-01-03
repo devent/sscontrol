@@ -19,7 +19,7 @@
 package com.anrisoftware.sscontrol.mail.postfix.mysqlstorage.ubuntu_12_04
 
 mail {
-    bind_addresses all
+    bind address: all
     relay "smtp.relayhost.com"
     name "mail.example.com"
     origin "example.com"

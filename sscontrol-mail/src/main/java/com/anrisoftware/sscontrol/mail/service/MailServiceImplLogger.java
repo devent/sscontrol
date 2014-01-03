@@ -18,10 +18,8 @@
  */
 package com.anrisoftware.sscontrol.mail.service;
 
-import static com.anrisoftware.sscontrol.mail.service.MailServiceImplLogger._.bind_address_null;
-import static com.anrisoftware.sscontrol.mail.service.MailServiceImplLogger._.bind_addresses_null;
-import static com.anrisoftware.sscontrol.mail.service.MailServiceImplLogger._.bind_addresses_set;
-import static com.anrisoftware.sscontrol.mail.service.MailServiceImplLogger._.bind_addresses_set_info;
+import static com.anrisoftware.sscontrol.mail.service.MailServiceImplLogger._.binding_set_debug;
+import static com.anrisoftware.sscontrol.mail.service.MailServiceImplLogger._.binding_set_info;
 import static com.anrisoftware.sscontrol.mail.service.MailServiceImplLogger._.certificate_set;
 import static com.anrisoftware.sscontrol.mail.service.MailServiceImplLogger._.certificate_set_info;
 import static com.anrisoftware.sscontrol.mail.service.MailServiceImplLogger._.database_set_debug;
@@ -42,17 +40,15 @@ import static com.anrisoftware.sscontrol.mail.service.MailServiceImplLogger._.re
 import static com.anrisoftware.sscontrol.mail.service.MailServiceImplLogger._.relay_set_info;
 import static com.anrisoftware.sscontrol.mail.service.MailServiceImplLogger._.reset_domain_set_debug;
 import static com.anrisoftware.sscontrol.mail.service.MailServiceImplLogger._.reset_domain_set_info;
-import static org.apache.commons.lang3.StringUtils.join;
 import static org.apache.commons.lang3.Validate.isTrue;
 import static org.apache.commons.lang3.Validate.notBlank;
-import static org.apache.commons.lang3.Validate.notNull;
 
 import java.util.List;
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
+import com.anrisoftware.sscontrol.core.bindings.Binding;
 import com.anrisoftware.sscontrol.core.debuglogging.DebugLogging;
 import com.anrisoftware.sscontrol.mail.resetdomains.ResetDomains;
-import com.anrisoftware.sscontrol.mail.statements.BindAddresses;
 import com.anrisoftware.sscontrol.mail.statements.CertificateFile;
 import com.anrisoftware.sscontrol.mail.statements.Database;
 import com.anrisoftware.sscontrol.mail.statements.Domain;
@@ -73,13 +69,9 @@ class MailServiceImplLogger extends AbstractLogger {
 
         domain_name_set("Domain name '{}' set for {}."),
 
-        bind_addresses_null("Bind addresses cannot be empty or null."),
+        binding_set_debug("Binding address {} set {}."),
 
-        bind_addresses_set_info("Bind addresses set {} for mail service."),
-
-        bind_addresses_set("Bind addresses set {} for {}."),
-
-        bind_address_null("Bind address cannot be null."),
+        binding_set_info("Binding address {} set for the service '{}'."),
 
         domain_null("Domain name can not be empty or null."),
 
@@ -135,20 +127,12 @@ class MailServiceImplLogger extends AbstractLogger {
         super(MailServiceImpl.class);
     }
 
-    void checkBindAddress(MailServiceImpl service, BindAddresses address) {
-        notNull(address, bind_address_null.toString());
-    }
-
-    void bindAddressesSet(MailServiceImpl service, BindAddresses address) {
+    void bindingSet(MailService service, Binding binding) {
         if (isDebugEnabled()) {
-            debug(bind_addresses_set, address, service);
+            debug(binding_set_debug, binding, service);
         } else {
-            info(bind_addresses_set_info, join(address.getAddresses(), ','));
+            info(binding_set_info, binding.getAddresses(), service.getName());
         }
-    }
-
-    void checkBindAddresses(MailServiceImpl service, String addresses) {
-        notBlank(addresses, bind_addresses_null.toString());
     }
 
     void checkDomainName(MailServiceImpl service, String name) {

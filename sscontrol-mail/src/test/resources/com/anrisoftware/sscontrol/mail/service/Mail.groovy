@@ -21,7 +21,7 @@ package com.anrisoftware.sscontrol.mail.service
 mail {
     reset domains: yes, users: no, aliases: no
     debug level: 1
-    bind_addresses all
+    bind address: all
     relay "smtp.relayhost.com"
     name "mail.example.com"
     origin "example.com"

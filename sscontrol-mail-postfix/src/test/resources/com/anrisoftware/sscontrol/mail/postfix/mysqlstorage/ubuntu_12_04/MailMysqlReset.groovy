@@ -21,7 +21,7 @@ package com.anrisoftware.sscontrol.mail.postfix.mysqlstorage.ubuntu_12_04
 mail {
     reset domains: yes
 
-    bind_addresses all
+    bind address: all
     relay "smtp.relayhost.com"
     name "mail.example.com"
     origin "example.com"

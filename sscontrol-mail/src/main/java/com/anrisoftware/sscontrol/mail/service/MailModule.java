@@ -18,6 +18,7 @@
  */
 package com.anrisoftware.sscontrol.mail.service;
 
+import com.anrisoftware.sscontrol.core.bindings.BindingsModule;
 import com.anrisoftware.sscontrol.core.debuglogging.DebugLoggingModule;
 import com.anrisoftware.sscontrol.core.list.ListModule;
 import com.anrisoftware.sscontrol.mail.resetdomains.ResetDomainModule;
@@ -38,5 +39,6 @@ class MailModule extends AbstractModule {
 		install(new ResetDomainModule());
         install(new DebugLoggingModule());
         install(new ListModule());
+        install(new BindingsModule());
 	}
 }

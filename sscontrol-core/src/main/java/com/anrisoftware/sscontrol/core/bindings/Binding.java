@@ -57,6 +57,13 @@ public class Binding implements Serializable {
         return addresses.size();
     }
 
+    /**
+     * Adds the address. The address must have the format
+     * {@code <address>[:<port>]}
+     * 
+     * @param address
+     *            the address {@link String}.
+     */
     public void addAddress(String address) {
         String[] split = split(address, PORT_SEP);
         String addr = null;
@@ -88,7 +95,7 @@ public class Binding implements Serializable {
     }
 
     public void addAddress(BindingAddress address) {
-        addresses.add(addressFactory.create(address.toString()));
+        addresses.add(addressFactory.create(address));
     }
 
     public List<Address> getAddresses() {

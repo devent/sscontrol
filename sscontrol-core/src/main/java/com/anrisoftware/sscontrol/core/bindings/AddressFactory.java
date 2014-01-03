@@ -58,4 +58,14 @@ public interface AddressFactory {
      * @return the {@link Address}.
      */
     Address create(String address, int port);
+
+    /**
+     * Creates the address.
+     * 
+     * @param address
+     *            the {@link BindingAddress}.
+     * 
+     * @return the {@link Address}.
+     */
+    Address create(BindingAddress address);
 }

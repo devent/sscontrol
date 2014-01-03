@@ -31,7 +31,7 @@ import com.google.inject.assistedinject.AssistedInject;
  */
 public class Address {
 
-    private final String address;
+    private final Object address;
 
     private final Integer port;
 
@@ -40,6 +40,15 @@ public class Address {
      */
     @AssistedInject
     Address(@Assisted String address) {
+        this.address = address;
+        this.port = null;
+    }
+
+    /**
+     * @see AddressFactory#create(BindingAddress)
+     */
+    @AssistedInject
+    Address(@Assisted BindingAddress address) {
         this.address = address;
         this.port = null;
     }
@@ -65,9 +74,10 @@ public class Address {
     /**
      * Returns the host name or IP address.
      * 
-     * @return the {@link String} address or {@code null}.
+     * @return the {@link String} address or the {@link BindingAddress} or
+     *         {@code null}.
      */
-    public String getAddress() {
+    public Object getAddress() {
         return address;
     }
 
@@ -83,7 +93,7 @@ public class Address {
     @Override
     public String toString() {
         if (port == null) {
-            return address;
+            return address.toString();
         }
         if (address == null) {
             return Integer.toString(port);

@@ -18,8 +18,6 @@
  */
 package com.anrisoftware.sscontrol.core.bindings;
 
-import static org.apache.commons.lang3.StringUtils.trim;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -55,11 +53,21 @@ public class BindingArgs {
     public List<Address> createAddress(Object service, Map<String, Object> args) {
         List<Address> list = new ArrayList<Address>();
         if (haveAddress(args)) {
-            String address = address(service, args);
+            Object address = address(service, args);
+            Object addressObj = address;
+            if (!(address instanceof BindingAddress)) {
+                addressObj = address.toString().trim();
+            }
             if (havePort(args)) {
-                list.add(addressFactory.create(address, port(service, args)));
+                String addressStr = addressObj.toString();
+                list.add(addressFactory.create(addressStr, port(service, args)));
             } else {
-                list.add(addressFactory.create(address));
+                if (address instanceof BindingAddress) {
+                    BindingAddress addressEnum = (BindingAddress) address;
+                    list.add(addressFactory.create(addressEnum));
+                } else {
+                    list.add(addressFactory.create(address.toString()));
+                }
             }
         }
         if (haveAddresses(args)) {
@@ -77,10 +85,10 @@ public class BindingArgs {
         return args.containsKey(ADDRESS);
     }
 
-    public String address(Object service, Map<String, Object> args) {
+    public Object address(Object service, Map<String, Object> args) {
         Object object = args.get(ADDRESS);
         log.checkAddress(service, object);
-        return trim(object.toString());
+        return object;
     }
 
     public boolean haveAddresses(Map<String, Object> args) {

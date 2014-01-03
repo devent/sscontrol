@@ -48,8 +48,9 @@ import java.util.List;
 import com.anrisoftware.globalpom.log.AbstractLogger;
 import com.anrisoftware.sscontrol.core.bindings.Binding;
 import com.anrisoftware.sscontrol.core.debuglogging.DebugLogging;
+import com.anrisoftware.sscontrol.mail.api.MailService;
+import com.anrisoftware.sscontrol.mail.certificate.Certificate;
 import com.anrisoftware.sscontrol.mail.resetdomains.ResetDomains;
-import com.anrisoftware.sscontrol.mail.statements.CertificateFile;
 import com.anrisoftware.sscontrol.mail.statements.Database;
 import com.anrisoftware.sscontrol.mail.statements.Domain;
 
@@ -79,9 +80,9 @@ class MailServiceImplLogger extends AbstractLogger {
 
         origin_set_info("Origin '{}' set for mail service."),
 
-        certificate_set("Certificate set {} for {}."),
+        certificate_set("Certificate files set {} for {}."),
 
-        certificate_set_info("Certificate set {} for mail service."),
+        certificate_set_info("Certificate files set {} for service '{}'."),
 
         domain_added("Domain added {} to {}."),
 
@@ -155,11 +156,11 @@ class MailServiceImplLogger extends AbstractLogger {
         }
     }
 
-    void certificateSet(MailServiceImpl service, CertificateFile ca) {
+    void certificateSet(MailServiceImpl service, Certificate ca) {
         if (isDebugEnabled()) {
             debug(certificate_set, ca, service);
         } else {
-            info(certificate_set_info, ca);
+            info(certificate_set_info, ca, service.getName());
         }
     }
 

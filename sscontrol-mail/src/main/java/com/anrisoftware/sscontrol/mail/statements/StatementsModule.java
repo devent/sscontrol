@@ -31,8 +31,6 @@ public class StatementsModule extends AbstractModule {
 
 	@Override
 	protected void configure() {
-		install(new FactoryModuleBuilder().implement(CertificateFile.class,
-				CertificateFile.class).build(CertificateFileFactory.class));
 		install(new FactoryModuleBuilder()
 				.implement(Domain.class, Domain.class).build(
 						DomainFactory.class));

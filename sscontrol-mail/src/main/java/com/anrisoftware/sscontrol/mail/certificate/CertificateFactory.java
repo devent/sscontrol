@@ -16,31 +16,30 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-mail. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.mail.service;
+package com.anrisoftware.sscontrol.mail.certificate;
 
-import com.anrisoftware.sscontrol.core.bindings.BindingsModule;
-import com.anrisoftware.sscontrol.core.debuglogging.DebugLoggingModule;
-import com.anrisoftware.sscontrol.core.list.ListModule;
-import com.anrisoftware.sscontrol.mail.certificate.CertificateModule;
-import com.anrisoftware.sscontrol.mail.resetdomains.ResetDomainModule;
-import com.anrisoftware.sscontrol.mail.statements.StatementsModule;
-import com.google.inject.AbstractModule;
+import java.util.Map;
+
+import com.anrisoftware.sscontrol.mail.api.MailService;
 
 /**
- * Binds the mail service.
+ * Factory to create the certificate files.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class MailModule extends AbstractModule {
+public interface CertificateFactory {
 
-	@Override
-	protected void configure() {
-		install(new StatementsModule());
-        install(new CertificateModule());
-		install(new ResetDomainModule());
-        install(new DebugLoggingModule());
-        install(new ListModule());
-        install(new BindingsModule());
-	}
+    /**
+     * Sets the arguments for the certificate files.
+     * 
+     * @param service
+     *            the {@link MailService}.
+     * 
+     * @param args
+     *            the {@link Map} arguments.
+     * 
+     * @return the {@link Certificate}.
+     */
+    Certificate create(MailService service, Map<String, Object> args);
 }

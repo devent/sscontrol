@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-mail. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.mail.service;
+package com.anrisoftware.sscontrol.mail.api;
 
 import java.util.Collection;
 import java.util.List;
@@ -24,8 +24,8 @@ import java.util.List;
 import com.anrisoftware.sscontrol.core.api.Service;
 import com.anrisoftware.sscontrol.core.bindings.Binding;
 import com.anrisoftware.sscontrol.core.debuglogging.DebugLogging;
+import com.anrisoftware.sscontrol.mail.certificate.Certificate;
 import com.anrisoftware.sscontrol.mail.resetdomains.ResetDomains;
-import com.anrisoftware.sscontrol.mail.statements.CertificateFile;
 import com.anrisoftware.sscontrol.mail.statements.Database;
 import com.anrisoftware.sscontrol.mail.statements.Domain;
 import com.anrisoftware.sscontrol.mail.statements.MasqueradeDomains;
@@ -88,11 +88,11 @@ public interface MailService extends Service {
     MasqueradeDomains getMasqueradeDomains();
 
     /**
-     * Returns the certificate file for TLS.
+     * Returns the certificate files for TLS.
      * 
-     * @return the {@link CertificateFile}.
+     * @return the {@link Certificate}.
      */
-    CertificateFile getCertificateFile();
+    Certificate getCertificate();
 
     /**
      * Returns the to the mail service known domains list.

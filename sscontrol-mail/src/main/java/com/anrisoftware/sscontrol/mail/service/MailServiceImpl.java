@@ -50,10 +50,11 @@ import com.anrisoftware.sscontrol.core.debuglogging.DebugLogging;
 import com.anrisoftware.sscontrol.core.debuglogging.DebugLoggingFactory;
 import com.anrisoftware.sscontrol.core.service.AbstractService;
 import com.anrisoftware.sscontrol.core.yesno.YesNoFlag;
+import com.anrisoftware.sscontrol.mail.api.MailService;
+import com.anrisoftware.sscontrol.mail.certificate.Certificate;
+import com.anrisoftware.sscontrol.mail.certificate.CertificateFactory;
 import com.anrisoftware.sscontrol.mail.resetdomains.ResetDomains;
 import com.anrisoftware.sscontrol.mail.resetdomains.ResetDomainsFactory;
-import com.anrisoftware.sscontrol.mail.statements.CertificateFile;
-import com.anrisoftware.sscontrol.mail.statements.CertificateFileFactory;
 import com.anrisoftware.sscontrol.mail.statements.Database;
 import com.anrisoftware.sscontrol.mail.statements.DatabaseFactory;
 import com.anrisoftware.sscontrol.mail.statements.Domain;
@@ -77,7 +78,7 @@ class MailServiceImpl extends AbstractService implements MailService {
     private MailServiceImplLogger log;
 
     @Inject
-    private CertificateFileFactory certificateFileFactory;
+    private CertificateFactory certificateFactory;
 
     @Inject
     private DebugLoggingFactory debugLoggingFactory;
@@ -105,7 +106,7 @@ class MailServiceImpl extends AbstractService implements MailService {
 
     private String relayHost;
 
-    private CertificateFile certificateFile;
+    private Certificate certificate;
 
     private ResetDomainsFactory resetDomainsFactory;
 
@@ -331,17 +332,14 @@ class MailServiceImpl extends AbstractService implements MailService {
      *             URL.
      */
     public void certificate(Map<String, Object> args) throws ServiceException {
-        Object file = args.get("file");
-        Object keyFile = args.get("key");
-        Object caFile = args.get("ca");
-        this.certificateFile = certificateFileFactory.create(file, keyFile,
-                caFile);
-        log.certificateSet(this, certificateFile);
+        Certificate files = certificateFactory.create(this, args);
+        log.certificateSet(this, files);
+        this.certificate = files;
     }
 
     @Override
-    public CertificateFile getCertificateFile() {
-        return certificateFile;
+    public Certificate getCertificate() {
+        return certificate;
     }
 
     public void domain(String name) {

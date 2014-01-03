@@ -35,6 +35,7 @@ import com.anrisoftware.sscontrol.core.bindings.BindingAddress
 import com.anrisoftware.sscontrol.core.modules.CoreModule
 import com.anrisoftware.sscontrol.core.modules.CoreResourcesModule
 import com.anrisoftware.sscontrol.core.service.ServiceModule
+import com.anrisoftware.sscontrol.mail.api.MailService
 import com.google.inject.Guice
 import com.google.inject.Injector
 
@@ -81,6 +82,12 @@ class MailServiceTest {
     static Injector injector
 
     static ServiceLoaderFactory loaderFactory
+
+    static cert = MailServiceTest.class.getResource("cert_crt.txt")
+
+    static key = MailServiceTest.class.getResource("cert_key.txt")
+
+    static ca = MailServiceTest.class.getResource("cert_ca.txt")
 
     @Rule
     public TemporaryFolder tmp = new TemporaryFolder()
@@ -135,9 +142,9 @@ class MailServiceTest {
         assert service.masqueradeDomains.userExceptions.contains("root")
         assert service.destinations.contains("foo.bar")
         assert service.destinations.contains("bar.bar")
-        assert service.certificateFile.file.path == "$tmpdir/example-com.crt"
-        assert service.certificateFile.keyFile.path == "$tmpdir/example-com.insecure.key"
-        assert service.certificateFile.caFile.path == "$tmpdir/example-com-ca.crt"
+        assert service.certificate.cert == cert.toURI()
+        assert service.certificate.key == key.toURI()
+        assert service.certificate.ca == ca.toURI()
         assert service.domains.size() == 6
         assert service.domains[0].name == "example.com"
         assert service.domains[1].name == "mail.blobber.org"

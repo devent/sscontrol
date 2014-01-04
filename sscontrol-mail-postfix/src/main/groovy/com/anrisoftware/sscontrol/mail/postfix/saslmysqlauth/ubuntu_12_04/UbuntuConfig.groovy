@@ -36,6 +36,26 @@ class UbuntuConfig extends BaseSaslMysqlAuth {
     UbuntuPropertiesProvider ubuntuProperties
 
     @Override
+    public void deployAuth() {
+        installPackages saslPackages
+        super.deployAuth()
+    }
+
+    /**
+     * Returns the list of packages to install, for
+     * example {@code "libsasl2-modules, libsasl2-modules-sql, libgsasl7, libauthen-sasl-cyrus-perl, sasl2-bin, libpam-mysql".}
+     *
+     * <ul>
+     * <li>profile property {@code "sasl_packages"}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    List getSaslPackages() {
+        profileListProperty "sasl_packages", authProperties
+    }
+
+    @Override
     String getProfile() {
         Ubuntu_12_04_ScriptFactory.PROFILE_NAME
     }

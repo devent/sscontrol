@@ -46,6 +46,7 @@ profile "ubuntu_12_04", {
         mailname_file UbuntuResources.mailname.asFile(tmp)
         configuration_directory UbuntuResources.confDir.asFile(tmp)
         mailbox_base_directory UbuntuResources.mailboxBaseDir.asFile(tmp)
+        chroot_saslauthd_directory MysqlResources.chrootSaslauthdDirectory.asFile(tmp)
         sasl_authd_file MysqlResources.saslauthdFile.asFile(tmp)
         sasl_smtpd_file "$saslSmtpdDir/smtpd.conf"
     }

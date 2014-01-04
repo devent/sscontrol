@@ -39,6 +39,7 @@ enum MysqlResources {
     ca("", MysqlResources.class.getResource("cert_ca.txt")),
     saslauthdFile("/etc/default/saslauthd", MysqlResources.class.getResource("saslauthd.txt")),
     saslSmtpdDir("/etc/postfix/sasl", null),
+    chrootSaslauthdDirectory("/var/spool/postfix/var/run/saslauthd", null),
     mainConfigExpected("/etc/postfix/main.cf", MysqlResources.class.getResource("main_cf_expected.txt")),
     masterConfigExpected("/etc/postfix/master.cf", MysqlResources.class.getResource("master_cf_expected.txt")),
     mailnameExpected("/etc/mailname", MysqlResources.class.getResource("mailname_expected.txt")),

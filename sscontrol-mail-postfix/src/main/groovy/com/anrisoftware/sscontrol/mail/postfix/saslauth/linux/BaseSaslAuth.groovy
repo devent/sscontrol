@@ -58,6 +58,7 @@ abstract class BaseSaslAuth extends BaseAuth implements AuthConfig {
         mainSaslConfTemplate = salsTemplates.getResource "mainconf"
         saslAuthConfTemplate = salsTemplates.getResource "saslauthconf"
         updatePostfixUser()
+        makeChrootDirectory()
         deployMain()
         deploySaslauthd()
     }
@@ -93,6 +94,27 @@ abstract class BaseSaslAuth extends BaseAuth implements AuthConfig {
      */
     String getPostfixUser() {
         profileProperty "postfix_user", authProperties
+    }
+
+    /**
+     * Creates the Postfix chroot {@code saslauthd} directory.
+     */
+    void makeChrootDirectory() {
+        chrootSaslauthdDirectory.mkdirs()
+    }
+
+    /**
+     * Returns the Postfix chroot {@code saslauthd} directory, for
+     * example {@code "/var/spool/postfix/var/run/saslauthd".}
+     *
+     * <ul>
+     * <li>profile property {@code "chroot_saslauthd_directory"}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    File getChrootSaslauthdDirectory() {
+        profileDirProperty "chroot_saslauthd_directory", authProperties
     }
 
     /**

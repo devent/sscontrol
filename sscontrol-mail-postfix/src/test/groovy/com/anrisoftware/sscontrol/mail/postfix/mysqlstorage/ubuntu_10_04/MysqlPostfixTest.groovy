@@ -69,6 +69,7 @@ class MysqlPostfixTest extends UbuntuTestUtil {
         assertStringContent chownOut.replaced(tmpdir, tmpdir, "/tmp"), chownOut.toString()
         assertStringContent chmodOut.replaced(tmpdir, tmpdir, "/tmp"), chmodOut.toString()
         assert mailboxBaseDir.asFile(tmpdir).isDirectory()
+        assert chrootSaslauthdDirectory.asFile(tmpdir).isDirectory()
         assertFileContent saslauthdExpected.asFile(tmpdir), saslauthdExpected
         assertFileContent smtpdConfExpected.asFile(tmpdir), smtpdConfExpected
     }

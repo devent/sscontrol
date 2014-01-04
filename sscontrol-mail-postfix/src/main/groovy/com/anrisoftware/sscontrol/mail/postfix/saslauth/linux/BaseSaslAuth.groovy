@@ -57,8 +57,42 @@ abstract class BaseSaslAuth extends BaseAuth implements AuthConfig {
         salsTemplates = templatesFactory.create "BaseSalsAuth"
         mainSaslConfTemplate = salsTemplates.getResource "mainconf"
         saslAuthConfTemplate = salsTemplates.getResource "saslauthconf"
+        updatePostfixUser()
         deployMain()
         deploySaslauthd()
+    }
+
+    /**
+     * Update the Postfix user.
+     */
+    void updatePostfixUser() {
+        changeUser userName: postfixUser, groups: [saslGroup]
+    }
+
+    /**
+     * Returns the SASL local group, for example {@code "sasl"}.
+     *
+     * <ul>
+     * <li>profile property {@code "sasl_group"}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    String getSaslGroup() {
+        profileProperty "sasl_group", authProperties
+    }
+
+    /**
+     * Returns the Postfix local user, for example {@code "postfix"}.
+     *
+     * <ul>
+     * <li>profile property {@code "postfix_user"}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    String getPostfixUser() {
+        profileProperty "postfix_user", authProperties
     }
 
     /**

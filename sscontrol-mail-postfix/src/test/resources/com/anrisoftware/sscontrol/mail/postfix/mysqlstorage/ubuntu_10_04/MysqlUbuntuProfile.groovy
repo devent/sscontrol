@@ -35,6 +35,7 @@ profile "ubuntu_10_04", {
         chmod_command UbuntuResources.chmodCommand.asFile(tmp)
         group_add_command UbuntuResources.groupaddCommand.asFile(tmp)
         user_add_command UbuntuResources.useraddCommand.asFile(tmp)
+        user_mod_command UbuntuResources.usermodCommand.asFile(tmp)
         mysql_command UbuntuResources.mysqlCommand.asFile(tmp)
         postalias_command UbuntuResources.postaliasCommand.asFile(tmp)
         postmap_command UbuntuResources.postmapCommand.asFile(tmp)

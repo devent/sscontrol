@@ -56,6 +56,7 @@ enum MysqlResources {
     mysqlResetDomainsIn("/usr/bin/mysql.in", MysqlResources.class.getResource("mysql_resetdomains_in.txt")),
     postaliasOut("/usr/sbin/postalias.out", MysqlResources.class.getResource("postalias_out.txt")),
     useraddOut("/sbin/useradd.out", MysqlResources.class.getResource("useradd_out.txt")),
+    usermodOut("/sbin/usermod.out", MysqlResources.class.getResource("usermod_out.txt")),
     groupaddOut("/sbin/groupadd.out", MysqlResources.class.getResource("groupadd_out.txt")),
 
     ResourcesUtils resources

@@ -63,6 +63,7 @@ class MysqlPostfixTest extends UbuntuTestUtil {
         assertStringContent mysqlIn.replaced(tmpdir, tmpdir, "/tmp"), mysqlIn.toString()
         assertFileContent aliases.asFile(tmpdir), aliases
         assertFileContent useraddOut.asFile(tmpdir), useraddOut
+        assertFileContent usermodOut.asFile(tmpdir), usermodOut
         assertFileContent groupaddOut.asFile(tmpdir), groupaddOut
         assertStringContent postaliasOut.replaced(tmpdir, tmpdir, "/tmp"), postaliasOut.toString()
         assertStringContent chownOut.replaced(tmpdir, tmpdir, "/tmp"), chownOut.toString()

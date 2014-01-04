@@ -36,6 +36,7 @@ enum UbuntuResources {
     chmodCommand("/bin/chmod", UbuntuResources.class.getResource("echo_command.txt")),
     chownCommand("/bin/chown", UbuntuResources.class.getResource("echo_command.txt")),
     useraddCommand("/sbin/useradd", UbuntuResources.class.getResource("echo_command.txt")),
+    usermodCommand("/sbin/usermod", UbuntuResources.class.getResource("echo_command.txt")),
     groupaddCommand("/sbin/groupadd", UbuntuResources.class.getResource("echo_command.txt")),
     postmapCommand("/usr/sbin/postmap", UbuntuResources.class.getResource("echo_command.txt")),
     postaliasCommand("/usr/sbin/postalias", UbuntuResources.class.getResource("echo_command.txt")),
@@ -57,6 +58,7 @@ enum UbuntuResources {
         chmodCommand.createCommand parent
         chownCommand.createCommand parent
         useraddCommand.createCommand parent
+        usermodCommand.createCommand parent
         groupaddCommand.createCommand parent
         postmapCommand.createCommand parent
         postaliasCommand.createCommand parent

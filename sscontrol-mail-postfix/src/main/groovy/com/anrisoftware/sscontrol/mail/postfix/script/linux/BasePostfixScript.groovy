@@ -35,6 +35,7 @@ import com.anrisoftware.sscontrol.core.debuglogging.DebugLogging
 import com.anrisoftware.sscontrol.core.debuglogging.DebugLoggingProperty
 import com.anrisoftware.sscontrol.core.service.LinuxScript
 import com.anrisoftware.sscontrol.mail.certificate.Certificate
+import com.anrisoftware.sscontrol.mail.postfix.linux.AuthConfig
 import com.anrisoftware.sscontrol.mail.postfix.linux.BasePostfixScriptLogger
 import com.anrisoftware.sscontrol.mail.postfix.linux.BindAddressesRenderer
 import com.anrisoftware.sscontrol.mail.postfix.linux.DeliveryConfig
@@ -117,6 +118,12 @@ abstract class BasePostfixScript extends LinuxScript {
     Map<String, Provider<DeliveryConfig>> deliveries
 
     /**
+     * Authentication configurations.
+     */
+    @Inject
+    Map<String, Provider<AuthConfig>> authentications
+
+    /**
      * Returns the profile name of the script.
      */
     abstract String getProfileName()
@@ -139,6 +146,7 @@ abstract class BasePostfixScript extends LinuxScript {
         reconfigureFiles()
         deployStorage()
         deployDelivery()
+        deployAuth()
     }
 
     /**
@@ -179,6 +187,20 @@ abstract class BasePostfixScript extends LinuxScript {
         def config = provider.get()
         config.script = this
         config.deployDelivery()
+    }
+
+    /**
+     * Deploy authentication configuration.
+     */
+    def deployAuth() {
+        if (authName == null) {
+            return
+        }
+        def provider = authentications["${authName}.${storageName}.${profileName}"]
+        log.checkAuthConfig provider, this, authName, storageName, profileName
+        def config = provider.get()
+        config.script = this
+        config.deployAuth()
     }
 
     /**
@@ -756,6 +778,17 @@ abstract class BasePostfixScript extends LinuxScript {
      */
     String getDeliveryName() {
         containsKey("delivery") ? profileProperty("delivery") : null
+    }
+
+    /**
+     * Returns the delivery method.
+     *
+     * <ul>
+     * <li>profile property {@code "auth"}</li>
+     * </ul>
+     */
+    String getAuthName() {
+        containsKey("auth") ? profileProperty("auth") : null
     }
 
     /**

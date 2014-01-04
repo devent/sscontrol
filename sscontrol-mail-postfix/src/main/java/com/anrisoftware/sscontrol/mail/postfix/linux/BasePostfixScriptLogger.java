@@ -18,6 +18,7 @@
  */
 package com.anrisoftware.sscontrol.mail.postfix.linux;
 
+import static com.anrisoftware.sscontrol.mail.postfix.linux.BasePostfixScriptLogger._.auth_config_null;
 import static com.anrisoftware.sscontrol.mail.postfix.linux.BasePostfixScriptLogger._.delivery_config_null;
 import static com.anrisoftware.sscontrol.mail.postfix.linux.BasePostfixScriptLogger._.realias_file_debug;
 import static com.anrisoftware.sscontrol.mail.postfix.linux.BasePostfixScriptLogger._.realias_file_info;
@@ -43,71 +44,80 @@ import com.anrisoftware.sscontrol.mail.postfix.script.linux.BasePostfixScript;
 @Singleton
 class BasePostfixScriptLogger extends AbstractLogger {
 
-	enum _ {
+    enum _ {
 
-		rehash_file_trace("Rehash file '{}' for {}, {}."),
+        rehash_file_trace("Rehash file '{}' for {}, {}."),
 
-		rehash_file_debug("Rehash file '{}' for {}."),
+        rehash_file_debug("Rehash file '{}' for {}."),
 
-		rehash_file_info("Rehash file '{}'."),
+        rehash_file_info("Rehash file '{}'."),
 
-		realias_file_trace("Realias file '{}' for {}, {}."),
+        realias_file_trace("Realias file '{}' for {}, {}."),
 
-		realias_file_debug("Realias file '{}' for {}."),
+        realias_file_debug("Realias file '{}' for {}."),
 
-		realias_file_info("Realias file '{}'."),
+        realias_file_info("Realias file '{}'."),
 
-		storage_config_null("Storage configuration '%s.%s' null for %s."),
+        storage_config_null("Storage configuration '%s.%s' null for %s."),
 
-		delivery_config_null("Delivery configuration '%s.%s.%s' null for %s.");
+        delivery_config_null("Delivery configuration '%s.%s.%s' null for %s."),
 
-		private String name;
+        auth_config_null(
+                "Authentications configuration '%s.%s.%s' null for %s.");
 
-		private _(String name) {
-			this.name = name;
-		}
+        private String name;
 
-		@Override
-		public String toString() {
-			return name;
-		}
-	}
+        private _(String name) {
+            this.name = name;
+        }
 
-	/**
-	 * Creates a logger for {@link BasePostfixScript}.
-	 */
-	public BasePostfixScriptLogger() {
-		super(BasePostfixScript.class);
-	}
+        @Override
+        public String toString() {
+            return name;
+        }
+    }
 
-	void rehashFileDone(LinuxScript script, Object file, Object worker) {
-		if (isTraceEnabled()) {
-			trace(rehash_file_trace, file, worker, script);
-		} else if (isDebugEnabled()) {
-			debug(rehash_file_debug, file, script);
-		} else {
-			info(rehash_file_info, file);
-		}
-	}
+    /**
+     * Creates a logger for {@link BasePostfixScript}.
+     */
+    public BasePostfixScriptLogger() {
+        super(BasePostfixScript.class);
+    }
 
-	void realiasFileDone(LinuxScript script, Object file, Object worker) {
-		if (isTraceEnabled()) {
-			debug(realias_file_trace, file, worker, script);
-		} else if (isDebugEnabled()) {
-			debug(realias_file_debug, file, worker, script);
-		} else {
-			info(realias_file_info, file);
-		}
-	}
+    void rehashFileDone(LinuxScript script, Object file, Object worker) {
+        if (isTraceEnabled()) {
+            trace(rehash_file_trace, file, worker, script);
+        } else if (isDebugEnabled()) {
+            debug(rehash_file_debug, file, script);
+        } else {
+            info(rehash_file_info, file);
+        }
+    }
 
-	void checkStorageConfig(Object config, LinuxScript script, String profile,
-			String name) {
-		notNull(config, storage_config_null.toString(), profile, name, script);
-	}
+    void realiasFileDone(LinuxScript script, Object file, Object worker) {
+        if (isTraceEnabled()) {
+            debug(realias_file_trace, file, worker, script);
+        } else if (isDebugEnabled()) {
+            debug(realias_file_debug, file, worker, script);
+        } else {
+            info(realias_file_info, file);
+        }
+    }
 
-	void checkDeliveryConfig(Object config, LinuxScript script, String profile,
-			String storage, String name) {
-		notNull(config, delivery_config_null.toString(), profile, storage,
-				name, script);
-	}
+    void checkStorageConfig(Object config, LinuxScript script, String profile,
+            String name) {
+        notNull(config, storage_config_null.toString(), profile, name, script);
+    }
+
+    void checkDeliveryConfig(Object config, LinuxScript script, String profile,
+            String storage, String name) {
+        notNull(config, delivery_config_null.toString(), profile, storage,
+                name, script);
+    }
+
+    void checkAuthConfig(Object config, LinuxScript script, String name,
+            String storageName, String profile) {
+        notNull(config, auth_config_null.toString(), profile, storageName,
+                name, script);
+    }
 }

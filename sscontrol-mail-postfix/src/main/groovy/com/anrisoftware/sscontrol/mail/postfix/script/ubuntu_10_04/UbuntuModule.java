@@ -26,6 +26,7 @@ import com.anrisoftware.sscontrol.mail.postfix.hashstorage.ubuntu_10_04.UbuntuHa
 import com.anrisoftware.sscontrol.mail.postfix.linux.DeliveryConfig;
 import com.anrisoftware.sscontrol.mail.postfix.linux.StorageConfig;
 import com.anrisoftware.sscontrol.mail.postfix.mysqlstorage.ubuntu_10_04.UbuntuMysqlStorageConfig;
+import com.anrisoftware.sscontrol.mail.postfix.saslmysqlauth.ubuntu_10_04.Ubuntu_10_04_SaslMysqlAuthModule;
 import com.google.inject.AbstractModule;
 import com.google.inject.multibindings.MapBinder;
 
@@ -42,6 +43,7 @@ class UbuntuModule extends AbstractModule {
 		bindScripts();
 		bindStorage();
 		bindDelivery();
+        install(new Ubuntu_10_04_SaslMysqlAuthModule());
 	}
 
 	private void bindScripts() {

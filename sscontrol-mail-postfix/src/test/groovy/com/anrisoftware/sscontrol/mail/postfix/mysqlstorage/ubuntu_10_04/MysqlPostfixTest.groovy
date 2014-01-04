@@ -41,6 +41,8 @@ class MysqlPostfixTest extends UbuntuTestUtil {
     void "virtual mysql"() {
         copyUbuntuFiles tmpdir
         mysqlCommand.createCommand tmpdir
+        saslauthdFile.createFile tmpdir
+        saslSmtpdDir.asFile tmpdir mkdirs()
 
         loader.loadService profile.resource, null
         def profile = registry.getService("profile")[0]
@@ -66,6 +68,8 @@ class MysqlPostfixTest extends UbuntuTestUtil {
         assertStringContent chownOut.replaced(tmpdir, tmpdir, "/tmp"), chownOut.toString()
         assertStringContent chmodOut.replaced(tmpdir, tmpdir, "/tmp"), chmodOut.toString()
         assert mailboxBaseDir.asFile(tmpdir).isDirectory()
+        assertFileContent saslauthdExpected.asFile(tmpdir), saslauthdExpected
+        assertFileContent smtpdConfExpected.asFile(tmpdir), smtpdConfExpected
     }
 
     @Test

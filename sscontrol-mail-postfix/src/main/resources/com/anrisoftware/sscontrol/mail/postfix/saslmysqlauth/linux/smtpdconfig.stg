@@ -1,0 +1,18 @@
+saslSmtpdConfig(properties, service) ::= <<
+pwcheck_method: saslauthd
+mech_list: <properties.saslMechList;separator=" ">
+log_level: <properties.saslLogLevel>
+allow_plaintext: <properties.saslAllowPlaintext>
+auxprop_plugin: sql
+sql_engine: mysql
+sql_hostnames: <databaseHost(service)>
+sql_user: <service.database.user>
+sql_passwd: <service.database.password>
+sql_database: <service.database.database>
+sql_select: select <properties.cryptField> from <properties.usersTable> where <properties.loginField>='%u@%r' and <properties.enabledField> = 1
+
+>>
+
+databaseHost(service) ::= <%
+<if(service.database.server)><service.database.server><else>127.0.0.1<endif><if(service.database.port)>:<service.database.port><endif>
+%>

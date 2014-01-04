@@ -1,0 +1,15 @@
+saslStartEnableConfig(enabled) ::= <%
+START=<if(enabled)>yes<else>no<endif>
+%>
+
+saslStartEnableConfig_search() ::= <%
+#?START\\s*=.*
+%>
+
+saslOptionsConfig(options) ::= <%
+OPTIONS="<options>"
+%>
+
+saslOptionsConfig_search() ::= <%
+^#?OPTIONS\\s*=.*
+%>

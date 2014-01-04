@@ -22,11 +22,13 @@ import com.anrisoftware.sscontrol.mail.postfix.script.ubuntu_12_04.UbuntuResourc
 
 def aptitudeCommand = UbuntuResources.aptitudeCommand.asFile(tmp)
 def restartCommand = UbuntuResources.restartCommand.asFile(tmp)
+def saslSmtpdDir = MysqlResources.saslSmtpdDir.asFile(tmp)
 
 profile "ubuntu_12_04", {
     mail {
         service "postfix"
         storage "mysql"
+        auth "sasl"
         install_command "$aptitudeCommand update && $aptitudeCommand install"
         restart_command "$restartCommand restart"
         chown_command UbuntuResources.chownCommand.asFile(tmp)
@@ -43,5 +45,7 @@ profile "ubuntu_12_04", {
         mailname_file UbuntuResources.mailname.asFile(tmp)
         configuration_directory UbuntuResources.confDir.asFile(tmp)
         mailbox_base_directory UbuntuResources.mailboxBaseDir.asFile(tmp)
+        sasl_authd_file MysqlResources.saslauthdFile.asFile(tmp)
+        sasl_smtpd_file "$saslSmtpdDir/smtpd.conf"
     }
 }

@@ -1,0 +1,32 @@
+authEnableConfig(enabled) ::= <%
+smtpd_sasl_auth_enable = <if(enabled)>yes<else>no<endif>
+%>
+
+authEnableConfig_search() ::= <%
+#?smtpd_sasl_auth_enable\\s*=.*
+%>
+
+allowBrokenSaslAuthClientsConfig(enabled) ::= <%
+broken_sasl_auth_clients = <if(enabled)>yes<else>no<endif>
+%>
+
+allowBrokenSaslAuthClientsConfig_search() ::= <%
+#?broken_sasl_auth_clients\\s*=.*
+%>
+
+saslSecurityOptionsConfig(options) ::= <%
+smtpd_sasl_security_options = <options;separator=",">
+%>
+
+saslSecurityOptionsConfig_search() ::= <%
+#?smtpd_sasl_security_options\\s*=.*
+%>
+
+saslLocalDomainConfig(config) ::= <%
+smtpd_sasl_local_domain = <config>
+%>
+
+saslLocalDomainConfig_search() ::= <%
+#?smtpd_sasl_local_domain\\s*=.*
+%>
+

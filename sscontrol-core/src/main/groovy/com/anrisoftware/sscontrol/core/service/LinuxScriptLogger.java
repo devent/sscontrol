@@ -50,6 +50,7 @@ import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.link_a
 import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.link_files_done_debug;
 import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.link_files_done_info;
 import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.link_files_done_trace;
+import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.moduser_args_missing;
 import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.properties_null;
 import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.property_file_null;
 import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.property_not_set;
@@ -195,9 +196,17 @@ class LinuxScriptLogger extends AbstractLogger {
 
         change_password_args_missing("Change password argument '%s' missing."),
 
+        moduser_args_missing("Modify user argument '%s' missing."),
+
         script1("script"),
 
-        args1("arguments");
+        args1("arguments"),
+
+        mod_user_done_trace("Modify user {} done in {}, {}."),
+
+        mod_user_done_debug("Modify user {} done in {}."),
+
+        mod_user_done_info("Modify user {} done in service '{}'.");
 
         private String name;
 
@@ -425,6 +434,21 @@ class LinuxScriptLogger extends AbstractLogger {
             debug(change_password_done_debug, args, script);
         } else {
             info(change_password_done_info, args, script.getName());
+        }
+    }
+
+    void checkModUserArgs(Map<String, Object> args) {
+        isTrue(args.containsKey(USER_NAME), moduser_args_missing.toString(),
+                USER_NAME);
+    }
+
+    void modifyUserDone(LinuxScript script, Object worker, Object args) {
+        if (isTraceEnabled()) {
+            trace(_.mod_user_done_trace, args, script, worker);
+        } else if (isDebugEnabled()) {
+            debug(_.mod_user_done_debug, args, script);
+        } else {
+            info(_.mod_user_done_info, args, script.getName());
         }
     }
 

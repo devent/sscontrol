@@ -816,6 +816,43 @@ abstract class LinuxScript extends Script {
     }
 
     /**
+     * Modifies the specified local user.
+     *
+     * @param args
+     *            the arguments:
+     * <ul>
+     * <li>{@code userName:} the name of the user;
+     * <li>{@code groups:} optionally, the list of the user groups;
+     * <li>{@code append:} optionally, set to {@code true} to append the specified groups;
+     * <li>{@code shell:} optionally, the shell for the user;
+     * <li>{@code system:} the system of the server, defaults to {@code unix};
+     * <li>{@code command:} the link command, defaults to {@link #getUserModCommand()};
+     * </ul>
+     */
+    void changeUser(Map args) {
+        args.system = args.containsKey("system") ? args.system : "unix"
+        args.command = args.containsKey("command") ? args.command : userModCommand
+        log.checkModUserArgs args
+        def template = commandTemplates.getResource("usermod")
+        def worker = scriptCommandFactory.create(template, args.system, "args", args)()
+        log.modifyUserDone this, worker, args
+    }
+
+    /**
+     * Returns the command to modify a local user, for
+     * example {@code "/usr/sbin/usermod"}.
+     *
+     * <ul>
+     * <li>property key {@code user_mod_command}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    String getUserModCommand() {
+        profileProperty "user_mod_command", defaultProperties
+    }
+
+    /**
      * Returns the reconfigure command, for
      * example {@code "/usr/sbin/dpkg-reconfigure"}.
      *

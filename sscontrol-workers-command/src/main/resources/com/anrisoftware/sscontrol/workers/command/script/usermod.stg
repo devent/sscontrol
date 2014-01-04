@@ -1,0 +1,12 @@
+unix(args) ::= <<
+<args.command> <unixGroups(args)> <unixAppendGroups(args)> <args.userName>
+
+>>
+
+unixGroups(args) ::= <%
+<if(args.groups)>-G <args.groups;separator=","><endif>
+%>
+
+unixAppendGroups(args) ::= <%
+<if(args.append)>-a<endif>
+%>

@@ -51,6 +51,7 @@ abstract class BaseSaslMysqlAuth extends BaseSaslAuth {
         salsMysqlTemplates = templatesFactory.create "BaseSaslMysqlAuth"
         smtpdConfTemplate = salsMysqlTemplates.getResource "smtpdconfig"
         deploySmtpd()
+        deploySmtpdPam()
     }
 
     /**
@@ -108,6 +109,32 @@ abstract class BaseSaslMysqlAuth extends BaseSaslAuth {
      */
     boolean getSaslAllowPlaintext() {
         script.profileBooleanProperty "sasl_allow_plaintext", authProperties
+    }
+
+    /**
+     * Configures the SMTPD PAM {@code "/etc/pam.d/smtp"} configuration.
+     *
+     * @see #getSaslSmtpdFile()
+     */
+    void deploySmtpdPam() {
+        def config = smtpdConfTemplate.getText(
+                true, "smtpdPamConfig",
+                "properties", this,
+                "service", script.service)
+        FileUtils.write smtpdPamFile, config, charset
+    }
+
+    /**
+     * Returns the PAM SMTPD {@code "/etc/pam.d/smtp"} file.
+     *
+     * <ul>
+     * <li>profile property {@code "smtpd_pam_file"}</li>
+     * </ul>
+     *
+     * @see #getAuthProperties()
+     */
+    File getSmtpdPamFile() {
+        profileProperty("smtpd_pam_file", authProperties) as File
     }
 
     /**

@@ -13,6 +13,36 @@ sql_select: select <properties.cryptField> from <properties.usersTable> where <p
 
 >>
 
+smtpdPamConfig(properties, service) ::= <<
+<smtpdPamConfigAuthRequiredConfig(properties, service)>
+<smtpdPamAccountSufficientConfig(properties, service)>
+
+>>
+
+smtpdPamConfigAuthRequiredConfig(properties, service) ::= <%
+auth required pam_mysql.so
+<\ >user=<service.database.user>
+<\ >passwd=<service.database.password>
+<\ >host=<databaseHost(service)>
+<\ >db=<service.database.database>
+<\ >table=<properties.usersTable>
+<\ >usercolumn=<properties.loginField>
+<\ >passwdcolumn=<properties.cryptField>
+<\ >crypt=1
+%>
+
+smtpdPamAccountSufficientConfig(properties, service) ::= <%
+account sufficient pam_mysql.so
+<\ >user=<service.database.user>
+<\ >passwd=<service.database.password>
+<\ >host=<databaseHost(service)>
+<\ >db=<service.database.database>
+<\ >table=<properties.usersTable>
+<\ >usercolumn=<properties.loginField>
+<\ >passwdcolumn=<properties.cryptField>
+<\ >crypt=1
+%>
+
 databaseHost(service) ::= <%
 <if(service.database.server)><service.database.server><else>127.0.0.1<endif><if(service.database.port)>:<service.database.port><endif>
 %>

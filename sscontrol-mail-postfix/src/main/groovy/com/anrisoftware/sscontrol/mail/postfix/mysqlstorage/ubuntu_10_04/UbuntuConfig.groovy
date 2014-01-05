@@ -16,32 +16,32 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-mail-postfix. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.mail.postfix.hashstorage.ubuntu_12_04
+package com.anrisoftware.sscontrol.mail.postfix.mysqlstorage.ubuntu_10_04
 
 import javax.inject.Inject
 
 import com.anrisoftware.propertiesutils.ContextProperties
-import com.anrisoftware.sscontrol.mail.postfix.hashstorage.linux.BaseHashStorageConfig
-import com.anrisoftware.sscontrol.mail.postfix.script.ubuntu_12_04.Ubuntu_12_04_ScriptFactory
+import com.anrisoftware.sscontrol.mail.postfix.mysqlstorage.linux.MysqlStorageConfig
+import com.anrisoftware.sscontrol.mail.postfix.script.ubuntu_10_04.Ubuntu_10_04_ScriptFactory
 
 /**
- * Hash/Ubuntu 12.04 storage.
+ * MySQL/Ubuntu 10.04 storage.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class UbuntuHashStorageConfig extends BaseHashStorageConfig {
+class UbuntuConfig extends MysqlStorageConfig {
 
-    @Inject
-    UbuntuHashStoragePropertiesProvider ubuntuHashStorageProperties
+	@Inject
+	UbuntuPropertiesProvider mysqlStoragePropertiesProperties
 
-    @Override
-    String getProfile() {
-        Ubuntu_12_04_ScriptFactory.PROFILE_NAME
-    }
+	@Override
+	String getProfile() {
+		Ubuntu_10_04_ScriptFactory.PROFILE_NAME
+	}
 
-    @Override
-    ContextProperties getStorageProperties() {
-        ubuntuHashStorageProperties.get()
-    }
+	@Override
+	ContextProperties getStorageProperties() {
+		mysqlStoragePropertiesProperties.get()
+	}
 }

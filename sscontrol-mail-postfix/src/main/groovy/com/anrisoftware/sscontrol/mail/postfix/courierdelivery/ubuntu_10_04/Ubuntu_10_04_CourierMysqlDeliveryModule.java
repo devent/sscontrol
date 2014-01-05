@@ -16,38 +16,30 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-mail-postfix. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.mail.postfix.script.ubuntu_10_04;
+package com.anrisoftware.sscontrol.mail.postfix.courierdelivery.ubuntu_10_04;
 
 import static com.google.inject.multibindings.MapBinder.newMapBinder;
-import groovy.lang.Script;
 
-import com.anrisoftware.sscontrol.mail.postfix.courierdelivery.ubuntu_10_04.Ubuntu_10_04_CourierMysqlDeliveryModule;
-import com.anrisoftware.sscontrol.mail.postfix.hashstorage.ubuntu_10_04.Ubuntu_10_04_HashStorageModule;
-import com.anrisoftware.sscontrol.mail.postfix.mysqlstorage.ubuntu_10_04.Ubuntu_10_04_MysqlStorageModule;
-import com.anrisoftware.sscontrol.mail.postfix.saslmysqlauth.ubuntu_10_04.Ubuntu_10_04_SaslMysqlAuthModule;
+import com.anrisoftware.sscontrol.mail.postfix.linux.DeliveryConfig;
 import com.google.inject.AbstractModule;
 import com.google.inject.multibindings.MapBinder;
 
 /**
- * Binds Postfix/Ubuntu 10.04 scripts.
+ * Binds Courier/Mysql Ubuntu 10.04 delivery.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class UbuntuModule extends AbstractModule {
+public class Ubuntu_10_04_CourierMysqlDeliveryModule extends AbstractModule {
 
     @Override
     protected void configure() {
         bindScripts();
-        install(new Ubuntu_10_04_HashStorageModule());
-        install(new Ubuntu_10_04_MysqlStorageModule());
-        install(new Ubuntu_10_04_CourierMysqlDeliveryModule());
-        install(new Ubuntu_10_04_SaslMysqlAuthModule());
     }
 
     private void bindScripts() {
-        MapBinder<String, Script> binder;
-        binder = newMapBinder(binder(), String.class, Script.class);
-        binder.addBinding("postfix.ubuntu_10_04").to(UbuntuScript.class);
+        MapBinder<String, DeliveryConfig> binder;
+        binder = newMapBinder(binder(), String.class, DeliveryConfig.class);
+        binder.addBinding("courier.mysql.ubuntu_10_04").to(UbuntuConfig.class);
     }
 }

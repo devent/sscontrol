@@ -16,33 +16,32 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-mail-postfix. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.mail.postfix.courierdelivery.ubuntu_12_04;
+package com.anrisoftware.sscontrol.mail.postfix.hashstorage.ubuntu_10_04
 
-import java.net.URL;
+import javax.inject.Inject
 
-import javax.inject.Singleton;
-
-import com.anrisoftware.propertiesutils.AbstractContextPropertiesProvider;
+import com.anrisoftware.propertiesutils.ContextProperties
+import com.anrisoftware.sscontrol.mail.postfix.hashstorage.linux.HashStorageConfig
+import com.anrisoftware.sscontrol.mail.postfix.script.ubuntu_10_04.Ubuntu_10_04_ScriptFactory
 
 /**
- * Courier/MySQL/delivery Ubuntu 12.04 properties provider.
- * 
- * <ul>
- * <li>{@code "/postfix_couriermysqldelivery_ubuntu_12_04.properties"}
- * </ul>
- * 
+ * Hash/Ubuntu 10.04 storage.
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-@Singleton
-@SuppressWarnings("serial")
-public class CourierMysqlDeliveryPropertiesProvider extends
-		AbstractContextPropertiesProvider {
+class UbuntuConfig extends HashStorageConfig {
 
-	private static final URL RESOURCE = CourierMysqlDeliveryPropertiesProvider.class
-            .getResource("/postfix_couriermysqldelivery_ubuntu_12_04.properties");
+	@Inject
+	UbuntuPropertiesProvider ubuntuHashStorageProperties
 
-	CourierMysqlDeliveryPropertiesProvider() {
-		super(CourierMysqlDeliveryPropertiesProvider.class, RESOURCE);
+	@Override
+	String getProfile() {
+		Ubuntu_10_04_ScriptFactory.PROFILE_NAME
+	}
+
+	@Override
+	ContextProperties getStorageProperties() {
+		ubuntuHashStorageProperties.get()
 	}
 }

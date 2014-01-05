@@ -36,13 +36,13 @@ import com.anrisoftware.propertiesutils.AbstractContextPropertiesProvider;
  */
 @Singleton
 @SuppressWarnings("serial")
-public class MysqlStoragePropertiesProvider extends
+public class UbuntuPropertiesProvider extends
 		AbstractContextPropertiesProvider {
 
-	private static final URL RESOURCE = MysqlStoragePropertiesProvider.class
+	private static final URL RESOURCE = UbuntuPropertiesProvider.class
 			.getResource("/postfix_mysqlstorage_ubuntu_10_04.properties");
 
-	MysqlStoragePropertiesProvider() {
-		super(MysqlStoragePropertiesProvider.class, RESOURCE);
+	UbuntuPropertiesProvider() {
+		super(UbuntuPropertiesProvider.class, RESOURCE);
 	}
 }

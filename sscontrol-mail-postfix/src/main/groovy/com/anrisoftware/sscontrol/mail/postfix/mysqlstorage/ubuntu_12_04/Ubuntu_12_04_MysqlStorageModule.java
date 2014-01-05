@@ -18,31 +18,28 @@
  */
 package com.anrisoftware.sscontrol.mail.postfix.mysqlstorage.ubuntu_12_04;
 
-import java.net.URL;
+import static com.google.inject.multibindings.MapBinder.newMapBinder;
 
-import javax.inject.Singleton;
-
-import com.anrisoftware.propertiesutils.AbstractContextPropertiesProvider;
+import com.anrisoftware.sscontrol.mail.postfix.linux.StorageConfig;
+import com.google.inject.AbstractModule;
+import com.google.inject.multibindings.MapBinder;
 
 /**
- * MySQL/storage Ubuntu 12.04 properties provider.
- * 
- * <ul>
- * <li>{@code "/postfix_mysql_ubuntu_12_04.properties"}
- * </ul>
+ * Binds MySQL storage Ubuntu 12.04.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-@Singleton
-@SuppressWarnings("serial")
-public class MysqlStoragePropertiesProvider extends
-		AbstractContextPropertiesProvider {
+public class Ubuntu_12_04_MysqlStorageModule extends AbstractModule {
 
-	private static final URL RESOURCE = MysqlStoragePropertiesProvider.class
-            .getResource("/postfix_mysqlstorage_ubuntu_12_04.properties");
+    @Override
+    protected void configure() {
+        bindScripts();
+    }
 
-	MysqlStoragePropertiesProvider() {
-		super(MysqlStoragePropertiesProvider.class, RESOURCE);
-	}
+    private void bindScripts() {
+        MapBinder<String, StorageConfig> binder;
+        binder = newMapBinder(binder(), String.class, StorageConfig.class);
+        binder.addBinding("mysql.ubuntu_12_04").to(UbuntuConfig.class);
+    }
 }

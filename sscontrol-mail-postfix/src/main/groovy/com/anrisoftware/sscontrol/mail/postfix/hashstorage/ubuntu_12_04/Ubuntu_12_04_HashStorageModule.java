@@ -25,22 +25,21 @@ import com.google.inject.AbstractModule;
 import com.google.inject.multibindings.MapBinder;
 
 /**
- * Binds hash/storage/Ubuntu 12.04.
+ * Binds MySQL storage Ubuntu 12.04.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class UbuntuHashStorageModule extends AbstractModule {
+public class Ubuntu_12_04_HashStorageModule extends AbstractModule {
 
-	@Override
-	protected void configure() {
-		bindScripts();
-	}
+    @Override
+    protected void configure() {
+        bindScripts();
+    }
 
-	private void bindScripts() {
-		MapBinder<String, StorageConfig> binder;
-		binder = newMapBinder(binder(), String.class, StorageConfig.class);
-        binder.addBinding("hash.ubuntu_12_04")
-				.to(UbuntuHashStorageConfig.class);
-	}
+    private void bindScripts() {
+        MapBinder<String, StorageConfig> binder;
+        binder = newMapBinder(binder(), String.class, StorageConfig.class);
+        binder.addBinding("hash.ubuntu_12_04").to(UbuntuConfig.class);
+    }
 }

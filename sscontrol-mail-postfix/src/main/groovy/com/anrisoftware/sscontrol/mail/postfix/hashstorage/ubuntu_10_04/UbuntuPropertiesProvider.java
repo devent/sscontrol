@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-mail-postfix. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.mail.postfix.hashstorage.ubuntu_12_04;
+package com.anrisoftware.sscontrol.mail.postfix.hashstorage.ubuntu_10_04;
 
 import java.net.URL;
 
@@ -25,10 +25,10 @@ import javax.inject.Singleton;
 import com.anrisoftware.propertiesutils.AbstractContextPropertiesProvider;
 
 /**
- * Hash/Ubuntu 12.04 storage properties provider.
+ * Hash/Ubuntu 10.04 storage properties provider.
  * 
  * <ul>
- * <li>{@code "/postfix_hash_ubuntu_12_04.properties"}
+ * <li>{@code /postfix_mysqlstorage_ubuntu_10_04.properties}
  * </ul>
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
@@ -36,13 +36,13 @@ import com.anrisoftware.propertiesutils.AbstractContextPropertiesProvider;
  */
 @Singleton
 @SuppressWarnings("serial")
-public class UbuntuHashStoragePropertiesProvider extends
+public class UbuntuPropertiesProvider extends
 		AbstractContextPropertiesProvider {
 
-	private static final URL RESOURCE = UbuntuHashStoragePropertiesProvider.class
-            .getResource("/postfix_hash_ubuntu_12_04.properties");
+	private static final URL RESOURCE = UbuntuPropertiesProvider.class
+			.getResource("/postfix_hash_ubuntu_10_04.properties");
 
-	UbuntuHashStoragePropertiesProvider() {
-		super(UbuntuHashStoragePropertiesProvider.class, RESOURCE);
+	UbuntuPropertiesProvider() {
+		super(UbuntuPropertiesProvider.class, RESOURCE);
 	}
 }

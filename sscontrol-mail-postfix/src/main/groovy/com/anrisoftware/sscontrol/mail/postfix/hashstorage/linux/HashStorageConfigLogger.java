@@ -18,12 +18,12 @@
  */
 package com.anrisoftware.sscontrol.mail.postfix.hashstorage.linux;
 
-import static com.anrisoftware.sscontrol.mail.postfix.hashstorage.linux.BaseHashStorageConfigLogger._.aliases_reseted_debug;
-import static com.anrisoftware.sscontrol.mail.postfix.hashstorage.linux.BaseHashStorageConfigLogger._.aliases_reseted_info;
-import static com.anrisoftware.sscontrol.mail.postfix.hashstorage.linux.BaseHashStorageConfigLogger._.domains_reseted_debug;
-import static com.anrisoftware.sscontrol.mail.postfix.hashstorage.linux.BaseHashStorageConfigLogger._.domains_reseted_info;
-import static com.anrisoftware.sscontrol.mail.postfix.hashstorage.linux.BaseHashStorageConfigLogger._.users_reseted_debug;
-import static com.anrisoftware.sscontrol.mail.postfix.hashstorage.linux.BaseHashStorageConfigLogger._.users_reseted_info;
+import static com.anrisoftware.sscontrol.mail.postfix.hashstorage.linux.HashStorageConfigLogger._.aliases_reseted_debug;
+import static com.anrisoftware.sscontrol.mail.postfix.hashstorage.linux.HashStorageConfigLogger._.aliases_reseted_info;
+import static com.anrisoftware.sscontrol.mail.postfix.hashstorage.linux.HashStorageConfigLogger._.domains_reseted_debug;
+import static com.anrisoftware.sscontrol.mail.postfix.hashstorage.linux.HashStorageConfigLogger._.domains_reseted_info;
+import static com.anrisoftware.sscontrol.mail.postfix.hashstorage.linux.HashStorageConfigLogger._.users_reseted_debug;
+import static com.anrisoftware.sscontrol.mail.postfix.hashstorage.linux.HashStorageConfigLogger._.users_reseted_info;
 
 import java.io.File;
 
@@ -32,13 +32,13 @@ import javax.inject.Singleton;
 import com.anrisoftware.globalpom.log.AbstractLogger;
 
 /**
- * Logging messages for {@link BaseHashStorageConfig}.
+ * Logging messages for {@link HashStorageConfig}.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
 @Singleton
-class BaseHashStorageConfigLogger extends AbstractLogger {
+class HashStorageConfigLogger extends AbstractLogger {
 
 	enum _ {
 
@@ -69,13 +69,13 @@ class BaseHashStorageConfigLogger extends AbstractLogger {
 	}
 
 	/**
-	 * Create logger for {@link BaseHashStorageConfig}.
+	 * Create logger for {@link HashStorageConfig}.
 	 */
-	BaseHashStorageConfigLogger() {
-		super(BaseHashStorageConfig.class);
+	HashStorageConfigLogger() {
+		super(HashStorageConfig.class);
 	}
 
-	void domainsReseted(BaseHashStorageConfig config, File file) {
+	void domainsReseted(HashStorageConfig config, File file) {
 		if (isDebugEnabled()) {
 			debug(domains_reseted_debug, file, config.getScript());
 		} else {
@@ -83,7 +83,7 @@ class BaseHashStorageConfigLogger extends AbstractLogger {
 		}
 	}
 
-	void aliasesReseted(BaseHashStorageConfig config, File file) {
+	void aliasesReseted(HashStorageConfig config, File file) {
 		if (isDebugEnabled()) {
 			debug(aliases_reseted_debug, file, config.getScript());
 		} else {
@@ -91,7 +91,7 @@ class BaseHashStorageConfigLogger extends AbstractLogger {
 		}
 	}
 
-	void usersReseted(BaseHashStorageConfig config, File file) {
+	void usersReseted(HashStorageConfig config, File file) {
 		if (isDebugEnabled()) {
 			debug(users_reseted_debug, file, config.getScript());
 		} else {

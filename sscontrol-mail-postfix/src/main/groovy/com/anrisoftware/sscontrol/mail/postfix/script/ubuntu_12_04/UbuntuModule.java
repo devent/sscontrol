@@ -21,11 +21,9 @@ package com.anrisoftware.sscontrol.mail.postfix.script.ubuntu_12_04;
 import static com.google.inject.multibindings.MapBinder.newMapBinder;
 import groovy.lang.Script;
 
-import com.anrisoftware.sscontrol.mail.postfix.courierdelivery.ubuntu_12_04.UbuntuCourierMysqlDeliveryConfig;
-import com.anrisoftware.sscontrol.mail.postfix.hashstorage.ubuntu_12_04.UbuntuHashStorageConfig;
-import com.anrisoftware.sscontrol.mail.postfix.linux.DeliveryConfig;
-import com.anrisoftware.sscontrol.mail.postfix.linux.StorageConfig;
-import com.anrisoftware.sscontrol.mail.postfix.mysqlstorage.ubuntu_12_04.UbuntuMysqlStorageConfig;
+import com.anrisoftware.sscontrol.mail.postfix.courierdelivery.ubuntu_12_04.Ubuntu_12_04_CourierMysqlDeliveryModule;
+import com.anrisoftware.sscontrol.mail.postfix.hashstorage.ubuntu_12_04.Ubuntu_12_04_HashStorageModule;
+import com.anrisoftware.sscontrol.mail.postfix.mysqlstorage.ubuntu_12_04.Ubuntu_12_04_MysqlStorageModule;
 import com.anrisoftware.sscontrol.mail.postfix.saslmysqlauth.ubuntu_12_04.Ubuntu_12_04_SaslMysqlAuthModule;
 import com.google.inject.AbstractModule;
 import com.google.inject.multibindings.MapBinder;
@@ -41,30 +39,15 @@ class UbuntuModule extends AbstractModule {
     @Override
     protected void configure() {
         bindScripts();
-        bindStorage();
-        bindDelivery();
+        install(new Ubuntu_12_04_HashStorageModule());
+        install(new Ubuntu_12_04_MysqlStorageModule());
         install(new Ubuntu_12_04_SaslMysqlAuthModule());
+        install(new Ubuntu_12_04_CourierMysqlDeliveryModule());
     }
 
     private void bindScripts() {
         MapBinder<String, Script> binder;
         binder = newMapBinder(binder(), String.class, Script.class);
         binder.addBinding("postfix.ubuntu_12_04").to(UbuntuScript.class);
-    }
-
-    private void bindStorage() {
-        MapBinder<String, StorageConfig> binder;
-        binder = newMapBinder(binder(), String.class, StorageConfig.class);
-        binder.addBinding("hash.ubuntu_12_04")
-                .to(UbuntuHashStorageConfig.class);
-        binder.addBinding("mysql.ubuntu_12_04").to(
-                UbuntuMysqlStorageConfig.class);
-    }
-
-    private void bindDelivery() {
-        MapBinder<String, DeliveryConfig> binder;
-        binder = newMapBinder(binder(), String.class, DeliveryConfig.class);
-        binder.addBinding("courier.mysql.ubuntu_12_04").to(
-                UbuntuCourierMysqlDeliveryConfig.class);
     }
 }

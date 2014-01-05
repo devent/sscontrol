@@ -16,30 +16,32 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-mail-postfix. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.mail.postfix.saslmysqlauth.ubuntu_12_04;
+package com.anrisoftware.sscontrol.mail.postfix.mysqlstorage.ubuntu_12_04
 
-import static com.google.inject.multibindings.MapBinder.newMapBinder;
+import javax.inject.Inject
 
-import com.anrisoftware.sscontrol.mail.postfix.linux.AuthConfig;
-import com.google.inject.AbstractModule;
-import com.google.inject.multibindings.MapBinder;
+import com.anrisoftware.propertiesutils.ContextProperties
+import com.anrisoftware.sscontrol.mail.postfix.mysqlstorage.linux.MysqlStorageConfig
+import com.anrisoftware.sscontrol.mail.postfix.script.ubuntu_12_04.Ubuntu_12_04_ScriptFactory
 
 /**
- * Binds SASL/MySQL/authentication Ubuntu 12.04.
- * 
+ * MySQL/Ubuntu 12.04 storage.
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-public class Ubuntu_12_04_SaslMysqlAuthModule extends AbstractModule {
+class UbuntuConfig extends MysqlStorageConfig {
+
+    @Inject
+    UbuntuPropertiesProvider mysqlStoragePropertiesProperties
 
     @Override
-    protected void configure() {
-        bindScripts();
+    String getProfile() {
+        Ubuntu_12_04_ScriptFactory.PROFILE_NAME
     }
 
-    private void bindScripts() {
-        MapBinder<String, AuthConfig> binder;
-        binder = newMapBinder(binder(), String.class, AuthConfig.class);
-        binder.addBinding("sasl.mysql.ubuntu_12_04").to(UbuntuConfig.class);
+    @Override
+    ContextProperties getStorageProperties() {
+        mysqlStoragePropertiesProperties.get()
     }
 }

@@ -16,32 +16,33 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-mail-postfix. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.mail.postfix.mysqlstorage.ubuntu_12_04
+package com.anrisoftware.sscontrol.mail.postfix.courierdelivery.ubuntu_12_04;
 
-import javax.inject.Inject
+import java.net.URL;
 
-import com.anrisoftware.propertiesutils.ContextProperties
-import com.anrisoftware.sscontrol.mail.postfix.mysqlstorage.linux.MysqlStorageConfig
-import com.anrisoftware.sscontrol.mail.postfix.script.ubuntu_12_04.Ubuntu_12_04_ScriptFactory
+import javax.inject.Singleton;
+
+import com.anrisoftware.propertiesutils.AbstractContextPropertiesProvider;
 
 /**
- * MySQL/Ubuntu 12.04 storage.
- *
+ * Courier/MySQL/delivery Ubuntu 12.04 properties provider.
+ * 
+ * <ul>
+ * <li>{@code "/postfix_couriermysqldelivery_ubuntu_12_04.properties"}
+ * </ul>
+ * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class UbuntuMysqlStorageConfig extends MysqlStorageConfig {
+@Singleton
+@SuppressWarnings("serial")
+public class UbuntuPropertiesProvider extends
+		AbstractContextPropertiesProvider {
 
-    @Inject
-    MysqlStoragePropertiesProvider mysqlStoragePropertiesProperties
+	private static final URL RESOURCE = UbuntuPropertiesProvider.class
+            .getResource("/postfix_couriermysqldelivery_ubuntu_12_04.properties");
 
-    @Override
-    String getProfile() {
-        Ubuntu_12_04_ScriptFactory.PROFILE_NAME
-    }
-
-    @Override
-    ContextProperties getStorageProperties() {
-        mysqlStoragePropertiesProperties.get()
-    }
+	UbuntuPropertiesProvider() {
+		super(UbuntuPropertiesProvider.class, RESOURCE);
+	}
 }

@@ -36,12 +36,12 @@ import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokenTemplate
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-abstract class BaseHashStorageConfig extends BaseStorage implements StorageConfig {
+abstract class HashStorageConfig extends BaseStorage implements StorageConfig {
 
 	public static final String NAME = "hash"
 
 	@Inject
-	BaseHashStorageConfigLogger log
+	HashStorageConfigLogger log
 
 	/**
 	 * Renderer for {@code inet_interfaces}.

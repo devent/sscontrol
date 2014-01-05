@@ -16,33 +16,30 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-mail-postfix. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.mail.postfix.courierdelivery.ubuntu_10_04;
+package com.anrisoftware.sscontrol.mail.postfix.mysqlstorage.ubuntu_10_04;
 
-import java.net.URL;
+import static com.google.inject.multibindings.MapBinder.newMapBinder;
 
-import javax.inject.Singleton;
-
-import com.anrisoftware.propertiesutils.AbstractContextPropertiesProvider;
+import com.anrisoftware.sscontrol.mail.postfix.linux.StorageConfig;
+import com.google.inject.AbstractModule;
+import com.google.inject.multibindings.MapBinder;
 
 /**
- * Courier/MySQL/delivery Ubuntu 10.04 properties provider.
- * 
- * <ul>
- * <li>{@code /postfix_couriermysqldelivery_ubuntu_10_04.properties}
- * </ul>
+ * Binds MySQL storage Ubuntu 10.04.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-@Singleton
-@SuppressWarnings("serial")
-public class CourierMysqlDeliveryPropertiesProvider extends
-		AbstractContextPropertiesProvider {
+public class Ubuntu_10_04_MysqlStorageModule extends AbstractModule {
 
-	private static final URL RESOURCE = CourierMysqlDeliveryPropertiesProvider.class
-			.getResource("/postfix_couriermysqldelivery_ubuntu_10_04.properties");
+    @Override
+    protected void configure() {
+        bindScripts();
+    }
 
-	CourierMysqlDeliveryPropertiesProvider() {
-		super(CourierMysqlDeliveryPropertiesProvider.class, RESOURCE);
-	}
+    private void bindScripts() {
+        MapBinder<String, StorageConfig> binder;
+        binder = newMapBinder(binder(), String.class, StorageConfig.class);
+        binder.addBinding("mysql.ubuntu_10_04").to(UbuntuConfig.class);
+    }
 }

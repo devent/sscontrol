@@ -16,32 +16,30 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-mail-postfix. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.mail.postfix.courierdelivery.ubuntu_12_04
+package com.anrisoftware.sscontrol.mail.postfix.hashstorage.ubuntu_10_04;
 
-import javax.inject.Inject
+import static com.google.inject.multibindings.MapBinder.newMapBinder;
 
-import com.anrisoftware.propertiesutils.ContextProperties
-import com.anrisoftware.sscontrol.mail.postfix.courierdelivery.linux.CourierMysqlDeliveryConfig
-import com.anrisoftware.sscontrol.mail.postfix.script.ubuntu_12_04.Ubuntu_12_04_ScriptFactory
+import com.anrisoftware.sscontrol.mail.postfix.linux.StorageConfig;
+import com.google.inject.AbstractModule;
+import com.google.inject.multibindings.MapBinder;
 
 /**
- * Courier/Mysql Ubuntu 12.04 delivery.
- *
+ * Binds hash storage Ubuntu 10.04.
+ * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class UbuntuCourierMysqlDeliveryConfig extends CourierMysqlDeliveryConfig {
-
-    @Inject
-    CourierMysqlDeliveryPropertiesProvider courierMysqlProperties
+public class Ubuntu_10_04_HashStorageModule extends AbstractModule {
 
     @Override
-    String getProfile() {
-        Ubuntu_12_04_ScriptFactory.PROFILE_NAME
+    protected void configure() {
+        bindScripts();
     }
 
-    @Override
-    ContextProperties getDeliveryProperties() {
-        courierMysqlProperties.get()
+    private void bindScripts() {
+        MapBinder<String, StorageConfig> binder;
+        binder = newMapBinder(binder(), String.class, StorageConfig.class);
+        binder.addBinding("hash.ubuntu_10_04").to(UbuntuConfig.class);
     }
 }

@@ -32,15 +32,14 @@ import com.google.inject.multibindings.MapBinder;
  */
 public class Ubuntu_10_04_SaslMysqlAuthModule extends AbstractModule {
 
-	@Override
-	protected void configure() {
-		bindScripts();
-	}
+    @Override
+    protected void configure() {
+        bindScripts();
+    }
 
-	private void bindScripts() {
+    private void bindScripts() {
         MapBinder<String, AuthConfig> binder;
         binder = newMapBinder(binder(), String.class, AuthConfig.class);
-        binder.addBinding("sasl.mysql.ubuntu_10_04")
-				.to(UbuntuConfig.class);
-	}
+        binder.addBinding("sasl.mysql.ubuntu_10_04").to(UbuntuConfig.class);
+    }
 }

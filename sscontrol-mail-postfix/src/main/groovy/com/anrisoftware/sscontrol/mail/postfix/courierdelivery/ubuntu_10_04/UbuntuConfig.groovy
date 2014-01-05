@@ -32,16 +32,48 @@ import com.anrisoftware.sscontrol.mail.postfix.script.ubuntu_10_04.Ubuntu_10_04_
  */
 class UbuntuConfig extends CourierMysqlDeliveryConfig {
 
-	@Inject
-	UbuntuPropertiesProvider courierMysqlProperties
+    @Inject
+    UbuntuPropertiesProvider courierMysqlProperties
 
-	@Override
-	String getProfile() {
-		Ubuntu_10_04_ScriptFactory.PROFILE_NAME
-	}
+    @Override
+    void deployDelivery() {
+        super.deployDelivery();
+        restartServices restartCommand: courierRestartCommand, services: courierServices
+    }
 
-	@Override
-	ContextProperties getDeliveryProperties() {
-		courierMysqlProperties.get()
-	}
+    /**
+     * Returns the restart command.
+     *
+     * <ul>
+     * <li>property {@code "courier_restart_command"}</li>
+     * </ul>
+     *
+     * @see #getDeliveryProperties()
+     */
+    String getCourierRestartCommand() {
+        profileProperty "courier_restart_command", deliveryProperties
+    }
+
+    /**
+     * Returns the services to restart.
+     *
+     * <ul>
+     * <li>property {@code "courier_restart_services"}</li>
+     * </ul>
+     *
+     * @see #getDeliveryProperties()
+     */
+    List getCourierServices() {
+        profileListProperty "courier_restart_services", deliveryProperties
+    }
+
+    @Override
+    String getProfile() {
+        Ubuntu_10_04_ScriptFactory.PROFILE_NAME
+    }
+
+    @Override
+    ContextProperties getDeliveryProperties() {
+        courierMysqlProperties.get()
+    }
 }

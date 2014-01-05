@@ -38,6 +38,33 @@ class UbuntuDeliveryConfig extends CourierMysqlDeliveryConfig {
     @Override
     void deployDelivery() {
         super.deployDelivery();
+        restartServices restartCommand: courierRestartCommand, services: courierServices
+    }
+
+    /**
+     * Returns the restart command.
+     *
+     * <ul>
+     * <li>property {@code "courier_restart_command"}</li>
+     * </ul>
+     *
+     * @see #getDeliveryProperties()
+     */
+    String getCourierRestartCommand() {
+        profileProperty "courier_restart_command", deliveryProperties
+    }
+
+    /**
+     * Returns the services to restart.
+     *
+     * <ul>
+     * <li>property {@code "courier_restart_services"}</li>
+     * </ul>
+     *
+     * @see #getDeliveryProperties()
+     */
+    List getCourierServices() {
+        profileListProperty "courier_restart_services", deliveryProperties
     }
 
     @Override

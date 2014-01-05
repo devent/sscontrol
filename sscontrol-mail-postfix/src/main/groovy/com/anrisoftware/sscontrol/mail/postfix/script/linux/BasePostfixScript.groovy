@@ -606,6 +606,28 @@ abstract class BasePostfixScript extends LinuxScript {
     }
 
     /**
+     * Deploys the certificate PEM file to the server.
+     *
+     * @param service
+     *            the {@link MailService} service.
+     *
+     * @return the certificate {@code File} or {@code null}.
+     */
+    File deployCertPemFile(MailService service) {
+        Certificate cert = service.certificate
+        File file = null
+        if (cert == null || cert.pem == null) {
+            return file
+        }
+        def name = FilenameUtils.getName cert.pem.path
+        file = new File(certsDir, name)
+        FileUtils.copyURLToFile cert.pem.toURL(), file
+        changeOwner owner: rootUser, ownerGroup: rootGroup, files: file
+        changeMod mod: "o-rw", files: file
+        return file
+    }
+
+    /**
      * Returns the certification files directory, for
      * example {@code "/etc/ssl/certs".}
      *

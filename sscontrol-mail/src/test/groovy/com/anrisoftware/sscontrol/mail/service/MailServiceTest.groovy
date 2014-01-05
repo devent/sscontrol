@@ -89,6 +89,8 @@ class MailServiceTest {
 
     static ca = MailServiceTest.class.getResource("cert_ca.txt")
 
+    static pem = MailServiceTest.class.getResource("cert_pem.txt")
+
     @Rule
     public TemporaryFolder tmp = new TemporaryFolder()
 
@@ -145,6 +147,7 @@ class MailServiceTest {
         assert service.certificate.cert == cert.toURI()
         assert service.certificate.key == key.toURI()
         assert service.certificate.ca == ca.toURI()
+        assert service.certificate.pem == pem.toURI()
         assert service.domains.size() == 6
         assert service.domains[0].name == "example.com"
         assert service.domains[1].name == "mail.blobber.org"

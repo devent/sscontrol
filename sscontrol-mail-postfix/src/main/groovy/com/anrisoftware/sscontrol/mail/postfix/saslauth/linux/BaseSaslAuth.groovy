@@ -20,6 +20,8 @@ package com.anrisoftware.sscontrol.mail.postfix.saslauth.linux
 
 import java.util.regex.Pattern
 
+import javax.inject.Inject
+
 import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.Templates
@@ -36,6 +38,9 @@ import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokenTemplate
 abstract class BaseSaslAuth extends BaseAuth implements AuthConfig {
 
     public static final String NAME = "sasl"
+
+    @Inject
+    private BaseSaslAuthLogger log
 
     /**
      * SASL/authentication templates.
@@ -101,6 +106,7 @@ abstract class BaseSaslAuth extends BaseAuth implements AuthConfig {
      */
     void makeChrootDirectory() {
         chrootSaslauthdDirectory.mkdirs()
+        log.chrootDirectoryCreated script, chrootSaslauthdDirectory
     }
 
     /**

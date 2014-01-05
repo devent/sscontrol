@@ -256,7 +256,7 @@ abstract class CourierMysqlDeliveryConfig extends BaseDelivery implements Delive
     }
 
     def certFileConfig() {
-        def file = deployCertFile(service)
+        def file = deployCertPemFile(service)
         if (!file) {
             return []
         }

@@ -37,6 +37,8 @@ import com.anrisoftware.sscontrol.mail.api.MailService;
  */
 class CertificateArgs {
 
+    private static final String PEM = "pem";
+
     private static final String CERT = "cert";
 
     private static final String KEY = "key";
@@ -71,8 +73,18 @@ class CertificateArgs {
         return toURI(service, file);
     }
 
-    private URI toURI(MailService service, Object cert)
+    boolean havePem(Map<String, Object> args) {
+        return args.containsKey(PEM);
+    }
+
+    URI pem(MailService service, Map<String, Object> args)
             throws ServiceException {
+        Object file = args.get(PEM);
+        log.checkCa(service, file);
+        return toURI(service, file);
+    }
+
+    private URI toURI(MailService service, Object cert) throws ServiceException {
         if (cert instanceof URI) {
             return fromURI(cert);
         } else if (cert instanceof URL) {

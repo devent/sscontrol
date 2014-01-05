@@ -264,7 +264,7 @@ TLS_CERTS=X509
 # This is an experimental feature.
 
 # SSCONTROL-mail
-TLS_CERTFILE=/tmp/etc/ssl/certs/cert_crt.txt
+TLS_CERTFILE=/tmp/etc/ssl/certs/cert_pem.txt
 # SSCONTROL-mail-END
 
 

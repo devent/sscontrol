@@ -25,7 +25,7 @@ mail {
     relay "smtp.relayhost.com"
     name "mail.example.com"
     origin "example.com"
-    certificate cert: MailServiceTest.cert, key: MailServiceTest.key, ca: MailServiceTest.ca
+    certificate cert: MailServiceTest.cert, key: MailServiceTest.key, ca: MailServiceTest.ca, pem: MailServiceTest.pem
 
     masquerade {
         domains "mail.example.com"

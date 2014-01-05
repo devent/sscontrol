@@ -18,6 +18,8 @@
  */
 package com.anrisoftware.sscontrol.mail.postfix.saslmysqlauth.linux
 
+import javax.inject.Inject
+
 import org.apache.commons.io.FileUtils
 
 import com.anrisoftware.resources.templates.api.TemplateResource
@@ -34,6 +36,9 @@ import com.anrisoftware.sscontrol.mail.postfix.saslauth.linux.BaseSaslAuth
 abstract class BaseSaslMysqlAuth extends BaseSaslAuth {
 
     public static final String STORAGE_NAME = "mysql"
+
+    @Inject
+    private BaseSaslMysqlAuthLogger log
 
     /**
      * SASL/authentication templates.
@@ -65,6 +70,7 @@ abstract class BaseSaslMysqlAuth extends BaseSaslAuth {
                 "properties", this,
                 "service", script.service)
         FileUtils.write saslSmtpdFile, config, charset
+        log.smtpdDeployed script, saslSmtpdFile, config
     }
 
     /**
@@ -122,6 +128,7 @@ abstract class BaseSaslMysqlAuth extends BaseSaslAuth {
                 "properties", this,
                 "service", script.service)
         FileUtils.write smtpdPamFile, config, charset
+        log.smtpdPamDeployed script, smtpdPamFile, config
     }
 
     /**

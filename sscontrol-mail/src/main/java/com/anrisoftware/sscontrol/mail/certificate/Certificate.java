@@ -37,6 +37,8 @@ import com.google.inject.assistedinject.Assisted;
  */
 public class Certificate {
 
+    private static final String PEM = "pem";
+
     private static final String CA = "ca";
 
     private static final String KEY = "key";
@@ -49,6 +51,8 @@ public class Certificate {
 
     private URI ca;
 
+    private URI pem;
+
     @Inject
     Certificate(CertificateArgs aargs, @Assisted MailService service,
             @Assisted Map<String, Object> args) throws ServiceException {
@@ -56,6 +60,9 @@ public class Certificate {
         this.key = aargs.key(service, args);
         if (aargs.haveCa(args)) {
             this.ca = aargs.ca(service, args);
+        }
+        if (aargs.havePem(args)) {
+            this.pem = aargs.pem(service, args);
         }
     }
 
@@ -71,12 +78,19 @@ public class Certificate {
         return ca;
     }
 
+    public URI getPem() {
+        return pem;
+    }
+
     @Override
     public String toString() {
         ToStringBuilder builder = new ToStringBuilder(this);
         builder.append(CERT, cert).append(KEY, key);
         if (ca != null) {
             builder.append(CA, ca);
+        }
+        if (pem != null) {
+            builder.append(PEM, pem);
         }
         return builder.toString();
     }

@@ -27,7 +27,7 @@ mail {
     name "mail.example.com"
     origin "example.com"
     database "maildb", user: "root", password: "password"
-    certificate cert: cert.resource, key: key.resource, ca: ca.resource
+    certificate cert: cert.resource, key: key.resource, ca: ca.resource, pem: pem.resource
 
     masquerade {
         domains "mail.example.com"

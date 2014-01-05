@@ -46,6 +46,7 @@ enum UbuntuResources {
     cert("", UbuntuResources.class.getResource("cert_crt.txt")),
     key("", UbuntuResources.class.getResource("cert_key.txt")),
     ca("", UbuntuResources.class.getResource("cert_ca.txt")),
+    pem("", UbuntuResources.class.getResource("cert_pem.txt")),
     group("/etc/group", UbuntuResources.class.getResource("group.txt")),
     passwd("/etc/passwd", UbuntuResources.class.getResource("passwd.txt")),
     mainConfig("/etc/postfix/main.cf", UbuntuResources.class.getResource("main_cf.txt")),

@@ -39,6 +39,7 @@ class UbuntuConfig extends BaseSaslMysqlAuth {
     public void deployAuth() {
         installPackages saslPackages
         super.deployAuth()
+        restartServices restartCommand: saslRestartCommand, services: []
     }
 
     /**
@@ -53,6 +54,20 @@ class UbuntuConfig extends BaseSaslMysqlAuth {
      */
     List getSaslPackages() {
         profileListProperty "sasl_packages", authProperties
+    }
+
+    /**
+     * Returns SASL restart command, for
+     * example {@code "/etc/init.d/saslauthd restart".}
+     *
+     * <ul>
+     * <li>profile property {@code "sasl_restart_command"}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    String getSaslRestartCommand() {
+        profileProperty "sasl_restart_command", authProperties
     }
 
     @Override

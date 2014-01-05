@@ -66,8 +66,8 @@ class UbuntuConfig extends BaseSaslMysqlAuth {
      *
      * @see #getDefaultProperties()
      */
-    List getSaslRestartCommand() {
-        profileListProperty "sasl_restart_command", authProperties
+    String getSaslRestartCommand() {
+        profileProperty "sasl_restart_command", authProperties
     }
 
     @Override

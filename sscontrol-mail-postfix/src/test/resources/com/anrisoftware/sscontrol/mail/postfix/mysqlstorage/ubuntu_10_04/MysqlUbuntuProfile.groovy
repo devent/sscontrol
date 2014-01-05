@@ -24,6 +24,7 @@ def aptitudeCommand = UbuntuResources.aptitudeCommand.asFile(tmp)
 def restartCommand = UbuntuResources.restartCommand.asFile(tmp)
 def saslSmtpdDir = MysqlResources.saslSmtpdDir.asFile(tmp)
 def smtpPamDirectory = MysqlResources.smtpPamDirectory.asFile(tmp)
+def saslRestartCommand = MysqlResources.saslRestartCommand.asFile(tmp)
 
 profile "ubuntu_10_04", {
     mail {
@@ -40,6 +41,7 @@ profile "ubuntu_10_04", {
         mysql_command UbuntuResources.mysqlCommand.asFile(tmp)
         postalias_command UbuntuResources.postaliasCommand.asFile(tmp)
         postmap_command UbuntuResources.postmapCommand.asFile(tmp)
+        sasl_restart_command "$saslRestartCommand restart"
         certificates_directory UbuntuResources.certsDir.asFile(tmp)
         certificates_keys_directory UbuntuResources.certKeysDir.asFile(tmp)
         groups_file UbuntuResources.group.asFile(tmp)

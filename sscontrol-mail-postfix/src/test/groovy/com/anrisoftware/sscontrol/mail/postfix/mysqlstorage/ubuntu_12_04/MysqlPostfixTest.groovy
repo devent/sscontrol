@@ -41,6 +41,7 @@ class MysqlPostfixTest extends UbuntuTestUtil {
     void "virtual mysql"() {
         copyUbuntuFiles tmpdir
         mysqlCommand.createCommand tmpdir
+        saslRestartCommand.createCommand tmpdir
         saslauthdFile.createFile tmpdir
         saslSmtpdDir.asFile tmpdir mkdirs()
         smtpPamDirectory.asFile tmpdir mkdirs()

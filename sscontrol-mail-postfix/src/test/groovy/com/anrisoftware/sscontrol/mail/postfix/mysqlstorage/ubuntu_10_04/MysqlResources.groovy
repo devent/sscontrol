@@ -37,6 +37,7 @@ enum MysqlResources {
     cert("", MysqlResources.class.getResource("cert_crt.txt")),
     key("", MysqlResources.class.getResource("cert_key.txt")),
     ca("", MysqlResources.class.getResource("cert_ca.txt")),
+    saslRestartCommand("/etc/init.d/saslauthd", MysqlResources.class.getResource("echo_command.txt")),
     saslauthdFile("/etc/default/saslauthd", MysqlResources.class.getResource("saslauthd.txt")),
     saslSmtpdDir("/etc/postfix/sasl", null),
     chrootSaslauthdDirectory("/var/spool/postfix/var/run/saslauthd", null),

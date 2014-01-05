@@ -1,0 +1,7 @@
+imapCapabilitySearch() ::= <%
+^#?IMAP_CAPABILITY\\s*=\\s*".*"
+%>
+
+imapCapability(properties) ::= <%
+IMAP_CAPABILITY="<properties.ImapCapabilities;separator=" ">"
+%>

@@ -34,6 +34,7 @@ import com.anrisoftware.resources.templates.api.Templates
 import com.anrisoftware.sscontrol.core.debuglogging.DebugLogging
 import com.anrisoftware.sscontrol.core.debuglogging.DebugLoggingProperty
 import com.anrisoftware.sscontrol.core.service.LinuxScript
+import com.anrisoftware.sscontrol.mail.api.MailService
 import com.anrisoftware.sscontrol.mail.certificate.Certificate
 import com.anrisoftware.sscontrol.mail.postfix.linux.AuthConfig
 import com.anrisoftware.sscontrol.mail.postfix.linux.BasePostfixScriptLogger
@@ -506,48 +507,99 @@ abstract class BasePostfixScript extends LinuxScript {
     }
 
     def certFileConf() {
-        Certificate cert = service.certificate
-        if (cert == null) {
+        def file = deployCertFile(service)
+        if (!file) {
             return []
         }
-        def name = FilenameUtils.getName cert.cert.path
-        def file = new File(certsDir, name)
-        FileUtils.copyURLToFile cert.cert.toURL(), file
-        changeOwner owner: rootUser, ownerGroup: rootGroup, files: file
-        changeMod mod: "o-rw", files: file
         def replace = mainConfigurationTemplate.getText(true, "certFileConfig", "file", file)
         def search = mainConfigurationTemplate.getText(true, "certFileConfig_search")
         new TokenTemplate(search, replace, escape: false)
     }
 
-    def keyFileConf() {
+    /**
+     * Deploys the certificate file to the server.
+     *
+     * @param service
+     *            the {@link MailService} service.
+     *
+     * @return the certificate {@code File} or {@code null}.
+     */
+    File deployCertFile(MailService service) {
         Certificate cert = service.certificate
+        File file = null
         if (cert == null) {
-            return []
+            return file
         }
-        def name = FilenameUtils.getName cert.key.path
-        def file = new File(certKeysDir, name)
-        FileUtils.copyURLToFile cert.key.toURL(), file
+        def name = FilenameUtils.getName cert.cert.path
+        file = new File(certsDir, name)
+        FileUtils.copyURLToFile cert.cert.toURL(), file
         changeOwner owner: rootUser, ownerGroup: rootGroup, files: file
         changeMod mod: "o-rw", files: file
+        return file
+    }
+
+    def keyFileConf() {
+        def file = deployCertKeyFile(service)
+        if (!file) {
+            return []
+        }
         def replace = mainConfigurationTemplate.getText(true, "keyFileConfig", "file", file)
         def search = mainConfigurationTemplate.getText(true, "keyFileConfig_search")
         new TokenTemplate(search, replace, escape: false)
     }
 
-    def caFileConf() {
+    /**
+     * Deploys the certificate key file to the server.
+     *
+     * @param service
+     *            the {@link MailService} service.
+     *
+     * @return the certificate {@code File} or {@code null}.
+     */
+    File deployCertKeyFile(MailService service) {
         Certificate cert = service.certificate
-        if (cert == null || cert.ca == null) {
-            return []
+        File file = null
+        if (cert == null) {
+            return file
         }
-        def name = FilenameUtils.getName cert.ca.path
-        def file = new File(certsDir, name)
-        FileUtils.copyURLToFile cert.ca.toURL(), file
+        def name = FilenameUtils.getName cert.key.path
+        file = new File(certKeysDir, name)
+        FileUtils.copyURLToFile cert.key.toURL(), file
         changeOwner owner: rootUser, ownerGroup: rootGroup, files: file
         changeMod mod: "o-rw", files: file
+        return file
+    }
+
+    def caFileConf() {
+        def file = deployCertCaFile(service)
+        if (!file) {
+            return []
+        }
         def replace = mainConfigurationTemplate.getText(true, "caFileConfig", "file", file)
         def search = mainConfigurationTemplate.getText(true, "caFileConfig_search")
         new TokenTemplate(search, replace, escape: false)
+    }
+
+    /**
+     * Deploys the certificate CA file to the server.
+     *
+     * @param service
+     *            the {@link MailService} service.
+     *
+     * @return the certificate {@code File} or {@code null}.
+     */
+    File deployCertCaFile(MailService service) {
+        Certificate cert = service.certificate
+        File file = null
+        if (cert == null || cert.ca == null) {
+            return file
+        }
+        def name = FilenameUtils.getName cert.ca.path
+        file = new File(certsDir, name)
+        FileUtils.copyURLToFile cert.ca.toURL(), file
+        changeOwner owner: rootUser, ownerGroup: rootGroup, files: file
+        changeMod mod: "o-rw", files: file
+        return file
     }
 
     /**

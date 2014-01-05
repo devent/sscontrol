@@ -18,118 +18,118 @@ mysqlServerSearch() ::= <%
 ^#?\s*MYSQL_SERVER\s*\w*$
 %>
 
-mysqlServer(server) ::= <%
-MYSQL_SERVER <if(server)><server><else>localhost<endif>
+mysqlServer(service) ::= <%
+MYSQL_SERVER <if(service.database.server)><service.database.server><else>localhost<endif>
 %>
 
 mysqlPortSearch() ::= <%
 ^#?\s*MYSQL_PORT\s*\d*$
 %>
 
-mysqlPort(port) ::= <%
-MYSQL_PORT <if(port)><port><else>0<endif>
+mysqlPort(service) ::= <%
+MYSQL_PORT <if(service.database.port)><service.database.port><else>0<endif>
 %>
 
 mysqlDatabaseSearch() ::= <%
 ^#?\s*MYSQL_DATABASE\s*\w*$
 %>
 
-mysqlDatabase(name) ::= <%
-MYSQL_DATABASE <name>
+mysqlDatabase(service) ::= <%
+MYSQL_DATABASE <service.database.database>
 %>
 
 mysqlUsernameSearch() ::= <%
 ^#?\s*MYSQL_USERNAME\s*\w*$
 %>
 
-mysqlUsername(name) ::= <%
-MYSQL_USERNAME <name>
+mysqlUsername(service) ::= <%
+MYSQL_USERNAME <service.database.user>
 %>
 
 mysqlPasswordSearch() ::= <%
 ^#?\s*MYSQL_PASSWORD\s*\w*$
 %>
 
-mysqlPassword(password) ::= <%
-MYSQL_PASSWORD <password>
+mysqlPassword(service) ::= <%
+MYSQL_PASSWORD <service.database.password>
 %>
 
 mysqlUserTableSearch() ::= <%
 ^#?\s*MYSQL_USER_TABLE\s*\w*$
 %>
 
-mysqlUserTable(table) ::= <%
-MYSQL_USER_TABLE <table>
+mysqlUserTable(properties) ::= <%
+MYSQL_USER_TABLE <properties.usersTable>
 %>
 
 mysqlCryptPwfieldSearch() ::= <%
 ^#?\s*MYSQL_CRYPT_PWFIELD\s*\w*$
 %>
 
-mysqlCryptPwfield(field) ::= <%
-MYSQL_CRYPT_PWFIELD <field>
+mysqlCryptPwfield(properties) ::= <%
+MYSQL_CRYPT_PWFIELD <properties.cryptField>
 %>
 
 mysqlClearPwfieldSearch() ::= <%
 ^#?\s*MYSQL_CLEAR_PWFIELD\s*\w*$
 %>
 
-mysqlClearPwfield() ::= <%
-# MYSQL_CLEAR_PWFIELD clear
+mysqlClearPwfield(properties) ::= <%
+# MYSQL_CLEAR_PWFIELD <properties.clearField>
 %>
 
 mysqlUidFieldSearch() ::= <%
 ^#?\s*MYSQL_UID_FIELD\s*\w*$
 %>
 
-mysqlUidField(field) ::= <%
-MYSQL_UID_FIELD <field>
+mysqlUidField(properties) ::= <%
+MYSQL_UID_FIELD <properties.uidField>
 %>
 
 mysqlGidFieldSearch() ::= <%
 ^#?\s*MYSQL_GID_FIELD\s*\w*$
 %>
 
-mysqlGidField(field) ::= <%
-MYSQL_GID_FIELD <field>
+mysqlGidField(properties) ::= <%
+MYSQL_GID_FIELD <properties.gidField>
 %>
 
 mysqlLoginFieldSearch() ::= <%
 ^#?\s*MYSQL_LOGIN_FIELD\s*\w*$
 %>
 
-mysqlLoginField(field) ::= <%
-MYSQL_LOGIN_FIELD <field>
+mysqlLoginField(properties) ::= <%
+MYSQL_LOGIN_FIELD <properties.loginField>
 %>
 
 mysqlHomeFieldSearch() ::= <%
 ^#?\s*MYSQL_HOME_FIELD\s*\w*$
 %>
 
-mysqlHomeField(field) ::= <%
-MYSQL_HOME_FIELD <field>
+mysqlHomeField(properties) ::= <%
+MYSQL_HOME_FIELD <properties.homeField>
 %>
 
 mysqlNameFieldSearch() ::= <%
 ^#?\s*MYSQL_NAME_FIELD\s*\w*$
 %>
 
-mysqlNameField(field) ::= <%
-MYSQL_NAME_FIELD <field>
+mysqlNameField(properties) ::= <%
+MYSQL_NAME_FIELD <properties.nameField>
 %>
 
 mysqlMaildirFieldSearch() ::= <%
 ^#?\s*MYSQL_MAILDIR_FIELD\s*[\w\(\),'/]*$
 %>
 
-mysqlMaildirField(field) ::= <%
-MYSQL_MAILDIR_FIELD <field>
+mysqlMaildirField(properties) ::= <%
+MYSQL_MAILDIR_FIELD concat(<properties.homeField>,'/',<properties.maildirField>)
 %>
 
 mysqlWhereClauseSearch() ::= <%
 ^#?\s*MYSQL_WHERE_CLAUSE\s*[\w=\d]*$
 %>
 
-mysqlWhereClause(clause) ::= <%
-MYSQL_WHERE_CLAUSE <clause>
+mysqlWhereClause(properties) ::= <%
+MYSQL_WHERE_CLAUSE <properties.enabledField>=1
 %>

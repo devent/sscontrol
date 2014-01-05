@@ -16,13 +16,13 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-mail-postfix. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.mail.postfix.couriermysqldeliver.ubuntu_10_04
+package com.anrisoftware.sscontrol.mail.postfix.couriermysqldeliver.ubuntu_12_04
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static org.apache.commons.io.FileUtils.*
 
 import com.anrisoftware.sscontrol.mail.postfix.resources.ResourcesUtils
-import com.anrisoftware.sscontrol.mail.postfix.script.ubuntu_10_04.UbuntuResources
+import com.anrisoftware.sscontrol.mail.postfix.script.ubuntu_12_04.UbuntuResources
 
 /**
  * Courier/MySQL delivery Ubuntu 10.04 resources.

@@ -16,15 +16,15 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-mail-postfix. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.mail.postfix.couriermysqldeliver.ubuntu_10_04
+package com.anrisoftware.sscontrol.mail.postfix.couriermysqldeliver.ubuntu_12_04
 
-import com.anrisoftware.sscontrol.mail.postfix.script.ubuntu_10_04.UbuntuResources
+import com.anrisoftware.sscontrol.mail.postfix.script.ubuntu_12_04.UbuntuResources
 
 def aptitudeCommand = UbuntuResources.aptitudeCommand.asFile(tmp)
 def courierImapRestartCommand = CourierMysqlResources.courierImapRestartCommand.asFile(tmp)
 def courierAuthdaemonRestartCommand = CourierMysqlResources.courierAuthdaemonRestartCommand.asFile(tmp)
 
-profile "ubuntu_10_04", {
+profile "ubuntu_12_04", {
     mail {
         service "postfix"
         storage "mysql"

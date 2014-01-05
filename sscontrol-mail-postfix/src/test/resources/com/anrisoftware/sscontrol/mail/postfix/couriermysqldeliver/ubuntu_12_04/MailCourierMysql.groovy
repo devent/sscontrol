@@ -16,19 +16,32 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-mail-postfix. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.mail.postfix.hashstorage.ubuntu_10_04.shared_domains_nonunix_accounts
+package com.anrisoftware.sscontrol.mail.postfix.couriermysqldeliver.ubuntu_12_04
+
+import static com.anrisoftware.sscontrol.mail.postfix.script.ubuntu_10_04.UbuntuResources.*
 
 mail {
+    debug level: 2
     bind address: all
     relay "smtp.relayhost.com"
     name "mail.example.com"
     origin "example.com"
-    certificate file: "$tmp/example-com.crt", key: "$tmp/example-com.insecure.key", ca: "$tmp/example-com-ca.crt"
+    database "maildb", user: "root", password: "password"
+    certificate cert: cert.resource, key: key.resource, ca: ca.resource
 
     masquerade {
         domains "mail.example.com"
         users "root"
     }
 
-    destinations "foo.bar", "bar.bar"
+    domain "localhost.localdomain", { catchall destination: "@localhost" }
+    domain "localhost", {
+        alias "postmaster", destination: "root"
+        alias "sysadmin", destination: "root"
+        alias "webmaster", destination: "root"
+        alias "abuse", destination: "root"
+        alias "root", destination: "root"
+        catchall destination: "root"
+        user "root", password: "rootpasswd"
+    }
 }

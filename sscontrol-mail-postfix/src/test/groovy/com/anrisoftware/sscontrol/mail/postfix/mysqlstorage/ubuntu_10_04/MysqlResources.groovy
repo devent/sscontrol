@@ -22,6 +22,7 @@ import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static org.apache.commons.io.FileUtils.*
 
 import com.anrisoftware.sscontrol.mail.postfix.resources.ResourcesUtils
+import com.anrisoftware.sscontrol.mail.postfix.script.ubuntu_10_04.UbuntuResources
 
 /**
  * Postfix/MySQL storage Ubuntu 10.04 resources.
@@ -34,9 +35,6 @@ enum MysqlResources {
     mailScript("Mail.groovy", MysqlResources.class.getResource("MailMysql.groovy")),
     mailResetScript("Mail.groovy", MysqlResources.class.getResource("MailMysqlReset.groovy")),
     profile("UbuntuProfile.groovy", MysqlResources.class.getResource("MysqlUbuntuProfile.groovy")),
-    cert("", MysqlResources.class.getResource("cert_crt.txt")),
-    key("", MysqlResources.class.getResource("cert_key.txt")),
-    ca("", MysqlResources.class.getResource("cert_ca.txt")),
     saslRestartCommand("/etc/init.d/saslauthd", MysqlResources.class.getResource("echo_command.txt")),
     saslauthdFile("/etc/default/saslauthd", MysqlResources.class.getResource("saslauthd.txt")),
     saslSmtpdDir("/etc/postfix/sasl", null),
@@ -62,6 +60,14 @@ enum MysqlResources {
     useraddOut("/sbin/useradd.out", MysqlResources.class.getResource("useradd_out.txt")),
     usermodOut("/sbin/usermod.out", MysqlResources.class.getResource("usermod_out.txt")),
     groupaddOut("/sbin/groupadd.out", MysqlResources.class.getResource("groupadd_out.txt")),
+
+    static void copyMysqlFiles(File parent) {
+        UbuntuResources.mysqlCommand.createCommand parent
+        saslRestartCommand.createCommand parent
+        saslauthdFile.createFile parent
+        saslSmtpdDir.asFile parent mkdirs()
+        smtpPamDirectory.asFile parent mkdirs()
+    }
 
     ResourcesUtils resources
 

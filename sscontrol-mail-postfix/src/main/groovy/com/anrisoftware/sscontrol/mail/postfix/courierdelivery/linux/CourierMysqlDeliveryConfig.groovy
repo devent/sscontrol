@@ -25,6 +25,7 @@ import javax.inject.Inject
 
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.Templates
+import com.anrisoftware.sscontrol.mail.api.MailService
 import com.anrisoftware.sscontrol.mail.postfix.linux.DeliveryConfig
 import com.anrisoftware.sscontrol.mail.postfix.script.linux.BaseDelivery
 import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokenTemplate
@@ -47,7 +48,11 @@ abstract class CourierMysqlDeliveryConfig extends BaseDelivery implements Delive
      */
     Templates courierTemplates
 
-    TemplateResource authTemplate
+    TemplateResource authConfigTemplate
+
+    TemplateResource imapdConfigTemplate
+
+    TemplateResource imapdSslConfigTemplate
 
     @Override
     String getDeliveryName() {
@@ -57,175 +62,232 @@ abstract class CourierMysqlDeliveryConfig extends BaseDelivery implements Delive
     @Override
     void deployDelivery() {
         courierTemplates = templatesFactory.create "CourierMysqlDeliveryConfig"
-        authTemplate = courierTemplates.getResource "auth_configuration"
+        authConfigTemplate = courierTemplates.getResource "authconfig"
+        imapdConfigTemplate = courierTemplates.getResource "imapdconfig"
+        imapdSslConfigTemplate = courierTemplates.getResource "imapdsslconfig"
         installPackages courierPackages
-        deployConfig()
+        deployAuthdaemonConfig()
+        deployAuthmysqlConfig()
+        deployImapdConfig()
+        deployImapdSslConfig()
         restartServices restartCommand: courierRestartCommand
     }
 
     /**
-     * Sets the configuration.
+     * Deploys the Courier {@code "authdaemonrc"} configuration.
      */
-    void deployConfig() {
-        def configuration = []
-        configuration << new TokenTemplate(moduleListSearchTemplate, moduleListTemplate, MULTILINE)
-        configuration << new TokenTemplate(debugLoggingSearchTemplate, debugLoggingTemplate, MULTILINE)
-        deployConfiguration configurationTokens(), currentAuthdaemonConfiguration, configuration, authdaemonFile
+    void deployAuthdaemonConfig() {
+        def config = []
+        config << moduleListConfig()
+        config << debugLoggingConfig(service)
+        def current = currentConfiguration authdaemonFile
+        deployConfiguration configurationTokens(), current, config, authdaemonFile
         log.configurationDeployed this, authdaemonFile
-        configuration = []
-        configuration << new TokenTemplate(mysqlServerSearchTemplate, mysqlServerTemplate, MULTILINE)
-        configuration << new TokenTemplate(mysqlPortSearchTemplate, mysqlPortTemplate, MULTILINE)
-        configuration << new TokenTemplate(mysqlDatabaseSearchTemplate, mysqlDatabaseTemplate, MULTILINE)
-        configuration << new TokenTemplate(mysqlUsernameSearchTemplate, mysqlUsernameTemplate, MULTILINE)
-        configuration << new TokenTemplate(mysqlPasswordSearchTemplate, mysqlPasswordTemplate, MULTILINE)
-        configuration << new TokenTemplate(mysqlUserTableSearchTemplate, mysqlUserTableTemplate, MULTILINE)
-        configuration << new TokenTemplate(mysqlCryptPwfieldSearchTemplate, mysqlCryptPwfieldTemplate, MULTILINE)
-        configuration << new TokenTemplate(mysqlClearPwfieldSearchTemplate, mysqlClearPwfieldTemplate, MULTILINE)
-        configuration << new TokenTemplate(mysqlUidFieldSearchTemplate, mysqlUidFieldTemplate, MULTILINE)
-        configuration << new TokenTemplate(mysqlGidFieldSearchTemplate, mysqlGidFieldTemplate, MULTILINE)
-        configuration << new TokenTemplate(mysqlLoginFieldSearchTemplate, mysqlLoginFieldTemplate, MULTILINE)
-        configuration << new TokenTemplate(mysqlHomeFieldSearchTemplate, mysqlHomeFieldTemplate, MULTILINE)
-        configuration << new TokenTemplate(mysqlNameFieldSearchTemplate, mysqlNameFieldTemplate, MULTILINE)
-        configuration << new TokenTemplate(mysqlMaildirFieldSearchTemplate, mysqlMaildirFieldTemplate, MULTILINE)
-        configuration << new TokenTemplate(mysqlWhereClauseSearchTemplate, mysqlWhereClauseTemplate, MULTILINE)
-        deployConfiguration configurationTokens(), currentAuthmysqlConfiguration, configuration, authmysqlFile
+    }
+
+    def moduleListConfig() {
+        def search = authConfigTemplate.getText(true, "moduleListSearch")
+        def replace = authConfigTemplate.getText(true, "moduleList", "modules", authModules)
+        new TokenTemplate(search, replace, MULTILINE)
+    }
+
+    def debugLoggingConfig(MailService service) {
+        def search = authConfigTemplate.getText(true, "debugLoggingSearch")
+        def replace = authConfigTemplate.getText(true, "debugLogging", "level", service.debug.level)
+        new TokenTemplate(search, replace, MULTILINE)
+    }
+
+    /**
+     * Deploys the Courier {@code "authmysqlrc"} configuration.
+     */
+    void deployAuthmysqlConfig() {
+        def conf = []
+        conf << mysqlServerConfig(service)
+        conf << mysqlPortConfig(service)
+        conf << mysqlDatabaseConfig(service)
+        conf << mysqlUsernameConfig(service)
+        conf << mysqlPasswordConfig(service)
+        conf << mysqlUserTableConfig(service)
+        conf << mysqlCryptPwfieldConfig(service)
+        conf << mysqlClearPwfieldConfig()
+        conf << mysqlUidFieldConfig()
+        conf << mysqlGidFieldConfig()
+        conf << mysqlLoginFieldConfig()
+        conf << mysqlHomeFieldConfig()
+        conf << mysqlNameFieldConfig()
+        conf << mysqlMaildirFieldConfig()
+        conf << mysqlWhereClauseConfig()
+        def current = currentConfiguration authmysqlFile
+        deployConfiguration configurationTokens(), current, conf, authmysqlFile
         log.configurationDeployed this, authmysqlFile
     }
 
-    String getModuleListSearchTemplate() {
-        authTemplate.getText(true, "moduleListSearch")
+    def mysqlServerConfig(MailService service) {
+        def search = authConfigTemplate.getText(true, "mysqlServerSearch")
+        def config = authConfigTemplate.getText(true, "mysqlServer", "service", service)
+        new TokenTemplate(search, config, MULTILINE)
     }
 
-    String getModuleListTemplate() {
-        authTemplate.getText(true, "moduleList", "modules", authModules)
+    def mysqlPortConfig(MailService service) {
+        def search = authConfigTemplate.getText(true, "mysqlPortSearch")
+        def config = authConfigTemplate.getText(true, "mysqlPort", "service", service)
+        new TokenTemplate(search, config, MULTILINE)
     }
 
-    String getDebugLoggingSearchTemplate() {
-        authTemplate.getText(true, "debugLoggingSearch")
+    def mysqlDatabaseConfig(MailService service) {
+        def search = authConfigTemplate.getText(true, "mysqlDatabaseSearch")
+        def config = authConfigTemplate.getText(true, "mysqlDatabase", "service", service)
+        new TokenTemplate(search, config, MULTILINE)
     }
 
-    String getDebugLoggingTemplate() {
-        authTemplate.getText(true, "debugLogging", "level", service.debug.level)
+    def mysqlUsernameConfig(MailService service) {
+        def search = authConfigTemplate.getText(true, "mysqlUsernameSearch")
+        def config = authConfigTemplate.getText(true, "mysqlUsername", "service", service)
+        new TokenTemplate(search, config, MULTILINE)
     }
 
-    String getMysqlServerSearchTemplate() {
-        authTemplate.getText(true, "mysqlServerSearch")
+    def mysqlPasswordConfig(MailService service) {
+        def search = authConfigTemplate.getText(true, "mysqlPasswordSearch")
+        def config = authConfigTemplate.getText(true, "mysqlPassword", "service", service)
+        new TokenTemplate(search, config, MULTILINE)
     }
 
-    String getMysqlServerTemplate() {
-        authTemplate.getText(true, "mysqlServer", "server", service.database.server)
+    def mysqlUserTableConfig(MailService service) {
+        def search = authConfigTemplate.getText(true, "mysqlUserTableSearch")
+        def config = authConfigTemplate.getText(true, "mysqlUserTable", "properties", this)
+        new TokenTemplate(search, config, MULTILINE)
     }
 
-    String getMysqlPortSearchTemplate() {
-        authTemplate.getText(true, "mysqlPortSearch")
+    def mysqlCryptPwfieldConfig(MailService service) {
+        def search = authConfigTemplate.getText(true, "mysqlCryptPwfieldSearch")
+        def config = authConfigTemplate.getText(true, "mysqlCryptPwfield", "properties", this)
+        new TokenTemplate(search, config, MULTILINE)
     }
 
-    String getMysqlPortTemplate() {
-        authTemplate.getText(true, "mysqlPort", "port", service.database.port)
+    def mysqlClearPwfieldConfig() {
+        def search = authConfigTemplate.getText(true, "mysqlClearPwfieldSearch")
+        def config = authConfigTemplate.getText(true, "mysqlClearPwfield", "properties", this)
+        new TokenTemplate(search, config, MULTILINE)
     }
 
-    String getMysqlDatabaseSearchTemplate() {
-        authTemplate.getText(true, "mysqlDatabaseSearch")
+    def mysqlUidFieldConfig() {
+        def search = authConfigTemplate.getText(true, "mysqlUidFieldSearch")
+        def config = authConfigTemplate.getText(true, "mysqlUidField", "properties", this)
+        new TokenTemplate(search, config, MULTILINE)
     }
 
-    String getMysqlDatabaseTemplate() {
-        authTemplate.getText(true, "mysqlDatabase", "name", service.database.database)
+    def mysqlGidFieldConfig() {
+        def search = authConfigTemplate.getText(true, "mysqlGidFieldSearch")
+        def config = authConfigTemplate.getText(true, "mysqlGidField", "properties", this)
+        new TokenTemplate(search, config, MULTILINE)
     }
 
-    String getMysqlUsernameSearchTemplate() {
-        authTemplate.getText(true, "mysqlUsernameSearch")
+    def mysqlLoginFieldConfig() {
+        def search = authConfigTemplate.getText(true, "mysqlLoginFieldSearch")
+        def config = authConfigTemplate.getText(true, "mysqlLoginField", "properties", this)
+        new TokenTemplate(search, config, MULTILINE)
     }
 
-    String getMysqlUsernameTemplate() {
-        authTemplate.getText(true, "mysqlUsername", "name", service.database.user)
+    def mysqlHomeFieldConfig() {
+        def search = authConfigTemplate.getText(true, "mysqlHomeFieldSearch")
+        def config = authConfigTemplate.getText(true, "mysqlHomeField", "properties", this)
+        new TokenTemplate(search, config, MULTILINE)
     }
 
-    String getMysqlPasswordSearchTemplate() {
-        authTemplate.getText(true, "mysqlPasswordSearch")
+    def mysqlNameFieldConfig() {
+        def search = authConfigTemplate.getText(true, "mysqlNameFieldSearch")
+        def config = authConfigTemplate.getText(true, "mysqlNameField", "properties", this)
+        new TokenTemplate(search, config, MULTILINE)
     }
 
-    String getMysqlPasswordTemplate() {
-        authTemplate.getText(true, "mysqlPassword", "password", service.database.password)
+    def mysqlMaildirFieldConfig() {
+        def search = authConfigTemplate.getText(true, "mysqlMaildirFieldSearch")
+        def config = authConfigTemplate.getText(true, "mysqlMaildirField", "properties", this)
+        new TokenTemplate(search, config, MULTILINE)
     }
 
-    String getMysqlUserTableSearchTemplate() {
-        authTemplate.getText(true, "mysqlUserTableSearch")
+    def mysqlWhereClauseConfig() {
+        def search = authConfigTemplate.getText(true, "mysqlWhereClauseSearch")
+        def config = authConfigTemplate.getText(true, "mysqlWhereClause", "properties", this)
+        new TokenTemplate(search, config, MULTILINE)
     }
 
-    String getMysqlUserTableTemplate() {
-        authTemplate.getText(true, "mysqlUserTable", "table", usersTable)
+    /**
+     * Deploys the Courier {@code "imapd"} configuration.
+     */
+    void deployImapdConfig() {
+        def conf = []
+        conf << imapCapabilityConfig()
+        def current = currentConfiguration imapdFile
+        deployConfiguration configurationTokens(), current, conf, imapdFile
+        log.configurationDeployed this, imapdFile
     }
 
-    String getMysqlCryptPwfieldSearchTemplate() {
-        authTemplate.getText(true, "mysqlCryptPwfieldSearch")
+    def imapCapabilityConfig() {
+        def search = imapdConfigTemplate.getText(true, "imapCapabilitySearch")
+        def config = imapdConfigTemplate.getText(true, "imapCapability", "properties", this)
+        new TokenTemplate(search, config, MULTILINE)
     }
 
-    String getMysqlCryptPwfieldTemplate() {
-        authTemplate.getText(true, "mysqlCryptPwfield", "field", cryptField)
+    /**
+     * Returns the list of Courier IMAP capabilities.
+     *
+     * <ul>
+     * <li>property {@code "courier_imap_capabilities"}</li>
+     * </ul>
+     *
+     * @see #getDeliveryProperties()
+     */
+    List getImapCapabilities() {
+        profileListProperty "courier_imap_capabilities", deliveryProperties
     }
 
-    String getMysqlClearPwfieldSearchTemplate() {
-        authTemplate.getText(true, "mysqlClearPwfieldSearch")
+    /**
+     * Deploys the Courier {@code "imapd-ssl"} configuration.
+     */
+    void deployImapdSslConfig() {
+        def conf = []
+        conf << certFileConfig()
+        conf << trustCertsConfig()
+        conf << tlsRequiredConfig()
+        def current = currentConfiguration imapdSslFile
+        deployConfiguration configurationTokens(), current, conf, imapdSslFile
+        log.configurationDeployed this, imapdSslFile
     }
 
-    String getMysqlClearPwfieldTemplate() {
-        authTemplate.getText(true, "mysqlClearPwfield")
+    def certFileConfig() {
+        def file = deployCertFile(service)
+        if (!file) {
+            return []
+        }
+        def search = imapdSslConfigTemplate.getText(true, "certFileSearch")
+        def config = imapdSslConfigTemplate.getText(true, "certFile", "file", file)
+        new TokenTemplate(search, config, MULTILINE)
     }
 
-    String getMysqlUidFieldSearchTemplate() {
-        authTemplate.getText(true, "mysqlUidFieldSearch")
+    def trustCertsConfig() {
+        def search = imapdSslConfigTemplate.getText(true, "trustCertsSearch")
+        def config = imapdSslConfigTemplate.getText(true, "trustCerts", "dir", certsDir)
+        new TokenTemplate(search, config, MULTILINE)
     }
 
-    String getMysqlUidFieldTemplate() {
-        authTemplate.getText(true, "mysqlUidField", "field", uidField)
+    def tlsRequiredConfig() {
+        def search = imapdSslConfigTemplate.getText(true, "tlsRequiredSearch")
+        def config = imapdSslConfigTemplate.getText(true, "tlsRequired", "enabled", tlsRequiredEnabled)
+        new TokenTemplate(search, config, MULTILINE)
     }
 
-    String getMysqlGidFieldSearchTemplate() {
-        authTemplate.getText(true, "mysqlGidFieldSearch")
-    }
-
-    String getMysqlGidFieldTemplate() {
-        authTemplate.getText(true, "mysqlGidField", "field", gidField)
-    }
-
-    String getMysqlLoginFieldSearchTemplate() {
-        authTemplate.getText(true, "mysqlLoginFieldSearch")
-    }
-
-    String getMysqlLoginFieldTemplate() {
-        authTemplate.getText(true, "mysqlLoginField", "field", loginField)
-    }
-
-    String getMysqlHomeFieldSearchTemplate() {
-        authTemplate.getText(true, "mysqlHomeFieldSearch")
-    }
-
-    String getMysqlHomeFieldTemplate() {
-        authTemplate.getText(true, "mysqlHomeField", "field", homeField)
-    }
-
-    String getMysqlNameFieldSearchTemplate() {
-        authTemplate.getText(true, "mysqlNameFieldSearch")
-    }
-
-    String getMysqlNameFieldTemplate() {
-        authTemplate.getText(true, "mysqlNameField", "field", nameField)
-    }
-
-    String getMysqlMaildirFieldSearchTemplate() {
-        authTemplate.getText(true, "mysqlMaildirFieldSearch")
-    }
-
-    String getMysqlMaildirFieldTemplate() {
-        authTemplate.getText(true, "mysqlMaildirField", "field", "concat(${homeField},'/',${maildirField})")
-    }
-
-    String getMysqlWhereClauseSearchTemplate() {
-        authTemplate.getText(true, "mysqlWhereClauseSearch")
-    }
-
-    String getMysqlWhereClauseTemplate() {
-        authTemplate.getText(true, "mysqlWhereClause", "clause", "${enabledField}=1")
+    /**
+     * Returns to require TLS.
+     *
+     * <ul>
+     * <li>property {@code "courier_tls_required_enabled"}</li>
+     * </ul>
+     *
+     * @see #getDeliveryProperties()
+     */
+    boolean getTlsRequiredEnabled() {
+        profileBooleanProperty "courier_tls_required_enabled", deliveryProperties
     }
 
     String getUsersTable() {
@@ -266,26 +328,6 @@ abstract class CourierMysqlDeliveryConfig extends BaseDelivery implements Delive
 
     String getCryptField() {
         script.profileProperty "crypt_field", deliveryProperties
-    }
-
-    /**
-     * Returns the current {@code authdaemonrc} configuration. This is usually
-     * the configuration file {@code /etc/courier/authdaemonrc}.
-     *
-     * @see #getMainFile()
-     */
-    String getCurrentAuthdaemonConfiguration() {
-        currentConfiguration authdaemonFile
-    }
-
-    /**
-     * Returns the current {@code authmysqlrc} configuration. This is usually
-     * the configuration file {@code /etc/courier/authmysqlrc}.
-     *
-     * @see #getMainFile()
-     */
-    String getCurrentAuthmysqlConfiguration() {
-        currentConfiguration authmysqlFile
     }
 
     /**
@@ -381,5 +423,35 @@ abstract class CourierMysqlDeliveryConfig extends BaseDelivery implements Delive
      */
     File getAuthmysqlFile() {
         profileFileProperty "courier_authmysql_file", courierConfigurationDir, deliveryProperties
+    }
+
+    /**
+     * Returns the {@code imapd} file. If the path is not absolute
+     * then it is assume to be under the configuration directory.
+     *
+     * <ul>
+     * <li>property {@code "courier_imapd_file"}</li>
+     * </ul>
+     *
+     * @see #getCourierConfigurationDir()
+     * @see #getDeliveryProperties()
+     */
+    File getImapdFile() {
+        profileFileProperty "courier_imapd_file", courierConfigurationDir, deliveryProperties
+    }
+
+    /**
+     * Returns the {@code imapd-ssl} file. If the path is not absolute
+     * then it is assume to be under the configuration directory.
+     *
+     * <ul>
+     * <li>property {@code "courier_imapd_ssl_file"}</li>
+     * </ul>
+     *
+     * @see #getCourierConfigurationDir()
+     * @see #getDeliveryProperties()
+     */
+    File getImapdSslFile() {
+        profileFileProperty "courier_imapd_ssl_file", courierConfigurationDir, deliveryProperties
     }
 }

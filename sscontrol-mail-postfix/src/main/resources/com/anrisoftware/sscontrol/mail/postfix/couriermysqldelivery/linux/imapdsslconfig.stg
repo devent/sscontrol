@@ -1,0 +1,23 @@
+certFileSearch() ::= <%
+^#?TLS_CERTFILE\\s*=\\s*.*
+%>
+
+certFile(file) ::= <%
+TLS_CERTFILE=<file>
+%>
+
+trustCertsSearch() ::= <%
+^#?TLS_TRUSTCERTS\\s*=\\s*.*
+%>
+
+trustCerts(dir) ::= <%
+TLS_TRUSTCERTS=<dir>
+%>
+
+tlsRequiredSearch() ::= <%
+^#?IMAP_TLS_REQUIRED\\s*=\\s*.*
+%>
+
+tlsRequired(enabled) ::= <%
+IMAP_TLS_REQUIRED=<if(enabled)>1<else>0<endif>
+%>

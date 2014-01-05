@@ -18,13 +18,15 @@
  */
 package com.anrisoftware.sscontrol.mail.postfix.mysqlstorage.ubuntu_12_04
 
+import static com.anrisoftware.sscontrol.mail.postfix.script.ubuntu_12_04.UbuntuResources.*
+
 mail {
     bind address: all
     relay "smtp.relayhost.com"
     name "mail.example.com"
     origin "example.com"
     database "maildb", user: "root", password: "password"
-    certificate cert: MysqlResources.cert.resource, key: MysqlResources.key.resource, ca: MysqlResources.ca.resource
+    certificate cert: cert.resource, key: key.resource, ca: ca.resource
 
     masquerade {
         domains "mail.example.com"

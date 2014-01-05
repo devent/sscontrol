@@ -18,6 +18,8 @@
  */
 package com.anrisoftware.sscontrol.mail.postfix.couriermysqldeliver.ubuntu_10_04
 
+import static com.anrisoftware.sscontrol.mail.postfix.script.ubuntu_10_04.UbuntuResources.*
+
 mail {
     debug level: 2
     bind address: all
@@ -25,6 +27,7 @@ mail {
     name "mail.example.com"
     origin "example.com"
     database "maildb", user: "root", password: "password"
+    certificate cert: cert.resource, key: key.resource, ca: ca.resource
 
     masquerade {
         domains "mail.example.com"

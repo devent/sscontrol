@@ -43,6 +43,9 @@ enum UbuntuResources {
     mysqlCommand("/usr/bin/mysql", UbuntuResources.class.getResource("echo_command.txt")),
     certsDir("/etc/ssl/certs", null),
     certKeysDir("/etc/ssl/private", null),
+    cert("", UbuntuResources.class.getResource("cert_crt.txt")),
+    key("", UbuntuResources.class.getResource("cert_key.txt")),
+    ca("", UbuntuResources.class.getResource("cert_ca.txt")),
     group("/etc/group", UbuntuResources.class.getResource("group.txt")),
     passwd("/etc/passwd", UbuntuResources.class.getResource("passwd.txt")),
     mainConfig("/etc/postfix/main.cf", UbuntuResources.class.getResource("main_cf.txt")),
@@ -52,7 +55,7 @@ enum UbuntuResources {
     confDir("/etc/postfix", null),
     mailboxBaseDir("/var/mail/vhosts", null),
 
-    static copyUbuntuFiles(File parent) {
+    static void copyUbuntuFiles(File parent) {
         aptitudeCommand.createCommand parent
         restartCommand.createCommand parent
         chmodCommand.createCommand parent

@@ -40,11 +40,7 @@ class MysqlPostfixTest extends UbuntuTestUtil {
     @Test
     void "virtual mysql"() {
         copyUbuntuFiles tmpdir
-        mysqlCommand.createCommand tmpdir
-        saslRestartCommand.createCommand tmpdir
-        saslauthdFile.createFile tmpdir
-        saslSmtpdDir.asFile tmpdir mkdirs()
-        smtpPamDirectory.asFile tmpdir mkdirs()
+        copyMysqlFiles tmpdir
 
         loader.loadService profile.resource, null
         def profile = registry.getService("profile")[0]
@@ -80,7 +76,7 @@ class MysqlPostfixTest extends UbuntuTestUtil {
     @Test
     void "virtual mysql, reset domains"() {
         copyUbuntuFiles tmpdir
-        mysqlCommand.createCommand tmpdir
+        copyMysqlFiles tmpdir
 
         loader.loadService profile.resource, null
         def profile = registry.getService("profile")[0]

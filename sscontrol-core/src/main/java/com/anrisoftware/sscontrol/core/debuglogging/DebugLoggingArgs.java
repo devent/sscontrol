@@ -33,6 +33,8 @@ import com.anrisoftware.sscontrol.core.list.StringToListFactory;
  */
 class DebugLoggingArgs {
 
+    private static final String LEVEL = "level";
+
     private static final String MODULE = "module";
 
     private static final String MODULES = "modules";
@@ -61,6 +63,10 @@ class DebugLoggingArgs {
         Object modules = args.get(MODULES);
         log.checkModules(modules);
         return toListFactory.create(modules.toString()).getList();
+    }
+
+    boolean haveLevel(Map<String, Object> args) {
+        return args.containsKey(LEVEL);
     }
 
 }

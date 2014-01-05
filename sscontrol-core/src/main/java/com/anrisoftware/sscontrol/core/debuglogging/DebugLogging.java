@@ -67,6 +67,9 @@ public class DebugLogging extends Number {
     @AssistedInject
     DebugLogging(DebugLoggingArgs aargs, @Assisted Map<String, Object> args) {
         this.args = new HashMap<String, Object>(args);
+        if (!aargs.haveLevel(args)) {
+            setLevel(0);
+        }
         if (aargs.haveModule(args)) {
             setModule(aargs.module(args));
         }

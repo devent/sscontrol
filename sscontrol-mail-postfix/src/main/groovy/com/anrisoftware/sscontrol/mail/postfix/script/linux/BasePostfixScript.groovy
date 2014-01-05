@@ -157,6 +157,9 @@ abstract class BasePostfixScript extends LinuxScript {
         if (service.debug == null) {
             service.debug = debugLoggingProperty.defaultDebug this
         }
+        if (service.debug.level == null) {
+            service.debug.level = 0
+        }
     }
 
     /**

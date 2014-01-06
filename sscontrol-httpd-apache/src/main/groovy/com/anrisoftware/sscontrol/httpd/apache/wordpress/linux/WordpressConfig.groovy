@@ -26,24 +26,35 @@ import javax.inject.Inject
 
 import org.apache.commons.lang3.RandomStringUtils
 
-import com.anrisoftware.sscontrol.httpd.apache.apache.linux.ApacheScript;
+import com.anrisoftware.propertiesutils.ContextProperties
+import com.anrisoftware.sscontrol.core.service.LinuxScript
 import com.anrisoftware.sscontrol.httpd.statements.domain.Domain
 import com.anrisoftware.sscontrol.httpd.statements.webservice.WebService
 
 /**
- * Returns roundcube/properties.
+ * Wordpress.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class BaseWordpressConfig {
+abstract class WordpressConfig {
 
     public static final String NAME = "wordpress"
 
     @Inject
-    private BaseWordpressConfigLogger log
+    private WordpressConfigLogger log
 
-    private ApacheScript script
+    private LinuxScript script
+
+    /**
+     * @see ServiceConfig#deployDomain(Domain, Domain, WebService, List)
+     */
+    abstract void deployDomain(Domain domain, Domain refDomain, WebService service, List config)
+
+    /**
+     * @see ServiceConfig#deployService(Domain, WebService, List)
+     */
+    abstract void deployService(Domain domain, WebService service, List config)
 
     /**
      * Returns the Wordpress web mail distribution archive.
@@ -52,20 +63,25 @@ class BaseWordpressConfig {
      * <li>profile property {@code "wordpress_archive[_<language>]"}</li>
      * </ul>
      *
-     * @see ApacheScript#getDefaultProperties()
+     * @see #getWordpressProperties()
      */
     URI getWordpressArchive() {
         String lang = language.toString()
+        String property
+        URI uri
         switch (lang) {
             case "":
-                return profileURIProperty("wordpress_archive", defaultProperties)
+                property = "wordpress_archive"
+                break
             default:
-                if (containsKey("wordpress_archive_$lang")) {
-                    return profileURIProperty("wordpress_archive_$lang", defaultProperties)
-                } else {
-                    return profileURIProperty("wordpress_archive", defaultProperties)
+                property = "wordpress_archive_$lang"
+                if (!containsKey(property)) {
+                    property = "wordpress_archive"
                 }
         }
+        uri = profileURIProperty property, wordpressProperties
+        log.returnsWordpressArchive script, lang, uri
+        return uri
     }
 
     /**
@@ -75,20 +91,25 @@ class BaseWordpressConfig {
      * <li>profile property {@code "wordpress_strip_archive[_<language>]"}</li>
      * </ul>
      *
-     * @see ApacheScript#getDefaultProperties()
+     * @see #getWordpressProperties()
      */
     boolean getStripArchive() {
         String lang = language.toString()
+        String property
+        boolean strip
         switch (lang) {
             case "":
-                return profileBooleanProperty("wordpress_strip_archive", defaultProperties)
+                property = "wordpress_strip_archive"
+                break
             default:
-                if (containsKey("wordpress_strip_archive_$lang")) {
-                    return profileBooleanProperty("wordpress_strip_archive_$lang", defaultProperties)
-                } else {
-                    return profileBooleanProperty("wordpress_strip_archive", defaultProperties)
+                property = "wordpress_strip_archive_$lang"
+                if (!containsKey(property)) {
+                    property = "wordpress_strip_archive"
                 }
         }
+        strip = profileBooleanProperty property, wordpressProperties
+        log.returnsStripArchive script, lang, strip
+        return strip
     }
 
     /**
@@ -98,10 +119,10 @@ class BaseWordpressConfig {
      * <li>profile property {@code "wordpress_packages"}</li>
      * </ul>
      *
-     * @see ApacheScript#getDefaultProperties()
+     * @see #getWordpressProperties()
      */
     List getWordpressPackages() {
-        profileListProperty "wordpress_packages", defaultProperties
+        profileListProperty "wordpress_packages", wordpressProperties
     }
 
     /**
@@ -111,10 +132,10 @@ class BaseWordpressConfig {
      * <li>profile property {@code "wordpress_mods"}</li>
      * </ul>
      *
-     * @see ApacheScript#getDefaultProperties()
+     * @see #getWordpressProperties()
      */
     List getWordpressMods() {
-        profileListProperty "wordpress_mods", defaultProperties
+        profileListProperty "wordpress_mods", wordpressProperties
     }
 
     /**
@@ -128,9 +149,11 @@ class BaseWordpressConfig {
      *
      * @param domain
      *            the {@link Domain} for which the directory is returned.
+     *
+     * @see #getWordpressProperties()
      */
     File wordpressDir(Domain domain) {
-        profileFileProperty "wordpress_directory", domainDir(domain), defaultProperties
+        profileFileProperty "wordpress_directory", domainDir(domain), wordpressProperties
     }
 
     /**
@@ -144,9 +167,11 @@ class BaseWordpressConfig {
      *
      * @param domain
      *            the domain for which the directory is returned.
+     *
+     * @see #getWordpressProperties()
      */
     File wordpressLinkedDir(def domain) {
-        profileFileProperty "wordpress_linked_directory", domainDir(domain), defaultProperties
+        profileFileProperty "wordpress_linked_directory", domainDir(domain), wordpressProperties
     }
 
     /**
@@ -161,11 +186,11 @@ class BaseWordpressConfig {
      * @param domain
      *            the domain for which the directory is returned.
      *
-     * @see ApacheScript#getDefaultProperties()
+     * @see #getWordpressProperties()
      * @see #wordpressDir(Object)
      */
     File wordpressContentCacheDir(def domain) {
-        profileFileProperty "wordpress_content_cache_directory", wordpressDir(domain), defaultProperties
+        profileFileProperty "wordpress_content_cache_directory", wordpressDir(domain), wordpressProperties
     }
 
     /**
@@ -180,11 +205,11 @@ class BaseWordpressConfig {
      * @param domain
      *            the domain for which the directory is returned.
      *
-     * @see ApacheScript#getDefaultProperties()
+     * @see #getWordpressProperties()
      * @see #wordpressDir(Object)
      */
     File wordpressContentPluginsDir(def domain) {
-        profileFileProperty "wordpress_content_plugins_directory", wordpressDir(domain), defaultProperties
+        profileFileProperty "wordpress_content_plugins_directory", wordpressDir(domain), wordpressProperties
     }
 
     /**
@@ -199,11 +224,11 @@ class BaseWordpressConfig {
      * @param domain
      *            the domain for which the directory is returned.
      *
-     * @see ApacheScript#getDefaultProperties()
+     * @see #getWordpressProperties()
      * @see #wordpressDir(Object)
      */
     File wordpressContentThemesDir(def domain) {
-        profileFileProperty "wordpress_content_themes_directory", wordpressDir(domain), defaultProperties
+        profileFileProperty "wordpress_content_themes_directory", wordpressDir(domain), wordpressProperties
     }
 
     /**
@@ -218,11 +243,11 @@ class BaseWordpressConfig {
      * @param domain
      *            the domain for which the directory is returned.
      *
-     * @see ApacheScript#getDefaultProperties()
+     * @see #getWordpressProperties()
      * @see #wordpressDir(Object)
      */
     File wordpressContentUploadsDir(def domain) {
-        profileFileProperty "wordpress_content_uploads_directory", wordpressDir(domain), defaultProperties
+        profileFileProperty "wordpress_content_uploads_directory", wordpressDir(domain), wordpressProperties
     }
 
     /**
@@ -267,10 +292,10 @@ class BaseWordpressConfig {
      * <li>profile property {@code "wordpress_block_no_referrer_requests"}</li>
      * </ul>
      *
-     * @see ApacheScript#getDefaultProperties()
+     * @see #getWordpressProperties()
      */
     boolean getBlockNoReferrerRequests() {
-        profileBooleanProperty "wordpress_block_no_referrer_requests", defaultProperties
+        profileBooleanProperty "wordpress_block_no_referrer_requests", wordpressProperties
     }
 
     /**
@@ -280,10 +305,10 @@ class BaseWordpressConfig {
      * <li>profile property {@code "wordpress_database_default_charset"}</li>
      * </ul>
      *
-     * @see ApacheScript#getDefaultProperties()
+     * @see #getWordpressProperties()
      */
     String getDatabaseDefaultCharset() {
-        profileProperty("wordpress_database_default_charset", defaultProperties)
+        profileProperty "wordpress_database_default_charset", wordpressProperties
     }
 
     /**
@@ -293,10 +318,10 @@ class BaseWordpressConfig {
      * <li>profile property {@code "wordpress_database_default_collate"}</li>
      * </ul>
      *
-     * @see ApacheScript#getDefaultProperties()
+     * @see #getWordpressProperties()
      */
     String getDatabaseDefaultCollate() {
-        profileProperty("wordpress_database_default_collate", defaultProperties)
+        profileProperty "wordpress_database_default_collate", wordpressProperties
     }
 
     /**
@@ -306,10 +331,10 @@ class BaseWordpressConfig {
      * <li>profile property {@code "wordpress_database_default_table_prefix"}</li>
      * </ul>
      *
-     * @see ApacheScript#getDefaultProperties()
+     * @see #getWordpressProperties()
      */
     String getDatabaseDefaultTablePrefix() {
-        profileProperty("wordpress_database_default_table_prefix", defaultProperties)
+        profileProperty "wordpress_database_default_table_prefix", wordpressProperties
     }
 
     /**
@@ -319,10 +344,10 @@ class BaseWordpressConfig {
      * <li>profile property {@code "wordpress_force_secure_login"}</li>
      * </ul>
      *
-     * @see ApacheScript#getDefaultProperties()
+     * @see #getWordpressProperties()
      */
     boolean getForceSecureLogin() {
-        profileBooleanProperty("wordpress_force_secure_login", defaultProperties)
+        profileBooleanProperty "wordpress_force_secure_login", wordpressProperties
     }
 
     /**
@@ -332,10 +357,10 @@ class BaseWordpressConfig {
      * <li>profile property {@code "wordpress_force_secure_admin"}</li>
      * </ul>
      *
-     * @see ApacheScript#getDefaultProperties()
+     * @see #getWordpressProperties()
      */
     boolean getForceSecureAdmin() {
-        profileBooleanProperty("wordpress_force_secure_admin", defaultProperties)
+        profileBooleanProperty "wordpress_force_secure_admin", wordpressProperties
     }
 
     /**
@@ -346,10 +371,10 @@ class BaseWordpressConfig {
      * <li>profile property {@code "wordpress_config_file_charset"}</li>
      * </ul>
      *
-     * @see ApacheScript#getDefaultProperties()
+     * @see #getWordpressProperties()
      */
     Charset getConfigFileCharset() {
-        profileCharsetProperty("wordpress_config_file_charset", defaultProperties)
+        profileCharsetProperty "wordpress_config_file_charset", wordpressProperties
     }
 
     /**
@@ -359,10 +384,10 @@ class BaseWordpressConfig {
      * <li>profile property {@code "wordpress_language"}</li>
      * </ul>
      *
-     * @see ApacheScript#getDefaultProperties()
+     * @see #getWordpressProperties()
      */
     Locale getLanguage() {
-        profileLocaleProperty("wordpress_language", defaultProperties)
+        profileLocaleProperty "wordpress_language", wordpressProperties
     }
 
     /**
@@ -373,10 +398,10 @@ class BaseWordpressConfig {
      * </ul>
      *
      * @see <a href="https://api.wordpress.org/secret-key/1.1/salt/">Secret key salt [wordpress.org]</a>
-     * @see ApacheScript#getDefaultProperties()
+     * @see #getWordpressProperties()
      */
     String getAuthKey() {
-        def key = profileProperty("wordpress_auth_key", defaultProperties)
+        def key = profileProperty "wordpress_auth_key", wordpressProperties
         key.empty ? RandomStringUtils.randomAlphanumeric(64) : key
     }
 
@@ -388,10 +413,10 @@ class BaseWordpressConfig {
      * </ul>
      *
      * @see <a href="https://api.wordpress.org/secret-key/1.1/salt/">Secret key salt [wordpress.org]</a>
-     * @see ApacheScript#getDefaultProperties()
+     * @see #getWordpressProperties()
      */
     String getSecureAuthKey() {
-        def key = profileProperty("wordpress_secure_auth_key", defaultProperties)
+        def key = profileProperty "wordpress_secure_auth_key", wordpressProperties
         key.empty ? RandomStringUtils.randomAlphanumeric(64) : key
     }
 
@@ -403,10 +428,10 @@ class BaseWordpressConfig {
      * </ul>
      *
      * @see <a href="https://api.wordpress.org/secret-key/1.1/salt/">Secret key salt [wordpress.org]</a>
-     * @see ApacheScript#getDefaultProperties()
+     * @see #getWordpressProperties()
      */
     String getLoggedInKey() {
-        def key = profileProperty("wordpress_logged_in_key", defaultProperties)
+        def key = profileProperty "wordpress_logged_in_key", wordpressProperties
         key.empty ? RandomStringUtils.randomAlphanumeric(64) : key
     }
 
@@ -418,10 +443,10 @@ class BaseWordpressConfig {
      * </ul>
      *
      * @see <a href="https://api.wordpress.org/secret-key/1.1/salt/">Secret key salt [wordpress.org]</a>
-     * @see ApacheScript#getDefaultProperties()
+     * @see #getWordpressProperties()
      */
     String getNonceKey() {
-        def key = profileProperty("wordpress_nonce_key", defaultProperties)
+        def key = profileProperty "wordpress_nonce_key", wordpressProperties
         key.empty ? RandomStringUtils.randomAlphanumeric(64) : key
     }
 
@@ -433,10 +458,10 @@ class BaseWordpressConfig {
      * </ul>
      *
      * @see <a href="https://api.wordpress.org/secret-key/1.1/salt/">Secret key salt [wordpress.org]</a>
-     * @see ApacheScript#getDefaultProperties()
+     * @see #getWordpressProperties()
      */
     String getAuthSalt() {
-        def key = profileProperty("wordpress_auth_salt", defaultProperties)
+        def key = profileProperty "wordpress_auth_salt", wordpressProperties
         key.empty ? RandomStringUtils.randomAlphanumeric(64) : key
     }
 
@@ -448,10 +473,10 @@ class BaseWordpressConfig {
      * </ul>
      *
      * @see <a href="https://api.wordpress.org/secret-key/1.1/salt/">Secret key salt [wordpress.org]</a>
-     * @see ApacheScript#getDefaultProperties()
+     * @see #getWordpressProperties()
      */
     String getSecureAuthSalt() {
-        def key = profileProperty("wordpress_secure_auth_salt", defaultProperties)
+        def key = profileProperty "wordpress_secure_auth_salt", wordpressProperties
         key.empty ? RandomStringUtils.randomAlphanumeric(64) : key
     }
 
@@ -463,10 +488,10 @@ class BaseWordpressConfig {
      * </ul>
      *
      * @see <a href="https://api.wordpress.org/secret-key/1.1/salt/">Secret key salt [wordpress.org]</a>
-     * @see ApacheScript#getDefaultProperties()
+     * @see #getWordpressProperties()
      */
     String getLoggedInSalt() {
-        def key = profileProperty("wordpress_logged_in_salt", defaultProperties)
+        def key = profileProperty "wordpress_logged_in_salt", wordpressProperties
         key.empty ? RandomStringUtils.randomAlphanumeric(64) : key
     }
 
@@ -478,10 +503,10 @@ class BaseWordpressConfig {
      * </ul>
      *
      * @see <a href="https://api.wordpress.org/secret-key/1.1/salt/">Secret key salt [wordpress.org]</a>
-     * @see ApacheScript#getDefaultProperties()
+     * @see #getWordpressProperties()
      */
     String getNonceSalt() {
-        def key = profileProperty("wordpress_nonce_salt", defaultProperties)
+        def key = profileProperty "wordpress_nonce_salt", wordpressProperties
         key.empty ? RandomStringUtils.randomAlphanumeric(64) : key
     }
 
@@ -492,11 +517,13 @@ class BaseWordpressConfig {
      *            the name of the theme.
      *
      * @return the {@link URI} of the theme.
+     *
+     * @see #getWordpressProperties()
      */
     URI themeArchive(String name) {
         name = replace(name, "-", "_")
         name = replace(name, " ", "_")
-        profileURIProperty "wordpress_$name", defaultProperties
+        profileURIProperty "wordpress_$name", wordpressProperties
     }
 
     /**
@@ -506,15 +533,22 @@ class BaseWordpressConfig {
      *            the name of the plug-in.
      *
      * @return the {@link URI} of the plug-in.
+     *
+     * @see #getWordpressProperties()
      */
     URI pluginArchive(String name) {
         name = replace(name, "-", "_")
         name = replace(name, " ", "_")
-        profileURIProperty "wordpress_$name", defaultProperties
+        profileURIProperty "wordpress_$name", wordpressProperties
     }
 
     /**
-     * Returns the service name {@code "roundcube".}
+     * Returns the default Wordpress properties.
+     */
+    abstract ContextProperties getWordpressProperties()
+
+    /**
+     * Returns the service name {@code "wordpress".}
      */
     String getServiceName() {
         NAME
@@ -524,18 +558,18 @@ class BaseWordpressConfig {
      * Sets the parent script with the properties.
      *
      * @param script
-     *            the {@link ApacheScript}.
+     *            the {@link LinuxScript}.
      */
-    void setScript(ApacheScript script) {
+    void setScript(LinuxScript script) {
         this.script = script
     }
 
     /**
      * Returns the parent script with the properties.
      *
-     * @return the {@link ApacheScript}.
+     * @return the {@link LinuxScript}.
      */
-    ApacheScript getScript() {
+    LinuxScript getScript() {
         script
     }
 

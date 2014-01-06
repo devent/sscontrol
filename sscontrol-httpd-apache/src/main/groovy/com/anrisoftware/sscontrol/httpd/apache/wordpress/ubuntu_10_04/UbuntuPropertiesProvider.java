@@ -18,17 +18,25 @@
  */
 package com.anrisoftware.sscontrol.httpd.apache.wordpress.ubuntu_10_04;
 
-import com.google.inject.AbstractModule;
+import java.net.URL;
+
+import com.anrisoftware.propertiesutils.AbstractContextPropertiesProvider;
 
 /**
- * Wordpress web service module.
+ * Provides the default Wordpress Ubuntu 10.04 properties from
+ * {@code "/apache_wordpress_ubuntu_10_04.properties"}.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-public class WordpressModule extends AbstractModule {
+@SuppressWarnings("serial")
+class UbuntuPropertiesProvider extends AbstractContextPropertiesProvider {
 
-    @Override
-    protected void configure() {
+    private static final URL RESOURCE = UbuntuPropertiesProvider.class
+            .getResource("/apache_wordpress_ubuntu_10_04.properties");
+
+    UbuntuPropertiesProvider() {
+        super(UbuntuPropertiesProvider.class, RESOURCE);
     }
+
 }

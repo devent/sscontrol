@@ -30,6 +30,7 @@ import com.anrisoftware.sscontrol.httpd.apache.apache.api.AuthConfig;
 import com.anrisoftware.sscontrol.httpd.apache.linux.roundcube.RoundcubeModule;
 import com.anrisoftware.sscontrol.httpd.apache.phpldapadmin.ubuntu_10_04.Ubuntu_10_04_PhpldapadminModule;
 import com.anrisoftware.sscontrol.httpd.apache.phpmyadmin.ubuntu_10_04.Ubuntu_10_04_PhpmyadminModule;
+import com.anrisoftware.sscontrol.httpd.apache.wordpress.ubuntu_10_04.Ubuntu_10_04_WordpressModule;
 import com.google.inject.AbstractModule;
 import com.google.inject.multibindings.MapBinder;
 
@@ -46,6 +47,7 @@ class UbuntuModule extends AbstractModule {
         install(new RoundcubeModule());
         install(new Ubuntu_10_04_PhpldapadminModule());
         install(new Ubuntu_10_04_PhpmyadminModule());
+        install(new Ubuntu_10_04_WordpressModule());
 		bindScripts();
 		bindAuthConfig();
 	}

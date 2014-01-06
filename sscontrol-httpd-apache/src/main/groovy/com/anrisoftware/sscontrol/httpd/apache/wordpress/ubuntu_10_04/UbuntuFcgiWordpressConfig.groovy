@@ -16,38 +16,26 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd-apache. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.apache.wordpress.linux;
+package com.anrisoftware.sscontrol.httpd.apache.wordpress.ubuntu_10_04
 
-import javax.inject.Singleton;
+import javax.inject.Inject
 
-import com.anrisoftware.globalpom.log.AbstractLogger;
+import com.anrisoftware.propertiesutils.ContextProperties
+import com.anrisoftware.sscontrol.httpd.apache.wordpress.apache_2_2.FcgiWordpressConfig
 
 /**
- * Logging messages for {@link BaseWordpressConfig}.
+ * Ubuntu 10.04 fcgi Wordpress.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-@Singleton
-class BaseWordpressConfigLogger extends AbstractLogger {
+class UbuntuFcgiWordpressConfig extends FcgiWordpressConfig {
 
-    enum _ {
+    @Inject
+    private UbuntuPropertiesProvider ubuntuPropertiesProvider
 
-        message("message");
-
-        private String name;
-
-        private _(String name) {
-            this.name = name;
-        }
-
-        @Override
-        public String toString() {
-            return name;
-        }
-    }
-
-    BaseWordpressConfigLogger() {
-        super(BaseWordpressConfig.class);
+    @Override
+    ContextProperties getWordpressProperties() {
+        ubuntuPropertiesProvider.get()
     }
 }

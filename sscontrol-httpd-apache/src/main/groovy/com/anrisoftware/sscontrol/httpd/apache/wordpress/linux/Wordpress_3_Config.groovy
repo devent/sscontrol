@@ -24,7 +24,7 @@ import org.apache.commons.io.FilenameUtils
 
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.Templates
-import com.anrisoftware.sscontrol.httpd.apache.apache.linux.ApacheScript;
+import com.anrisoftware.sscontrol.httpd.apache.apache.linux.ApacheScript
 import com.anrisoftware.sscontrol.httpd.statements.domain.Domain
 import com.anrisoftware.sscontrol.httpd.statements.wordpress.MultiSite
 import com.anrisoftware.sscontrol.httpd.statements.wordpress.WordpressService
@@ -36,7 +36,7 @@ import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokenTemplate
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class BaseWordpress_3_Config extends BaseWordpressConfig {
+abstract class Wordpress_3_Config extends WordpressConfig {
 
     Templates wordpressTemplates
 
@@ -374,11 +374,11 @@ class BaseWordpress_3_Config extends BaseWordpressConfig {
      * @param domain
      *            the domain for which the directory is returned.
      *
-     * @see ApacheScript#getDefaultProperties()
+     * @see #getWordpressProperties()
      * @see #wordpressDir(Object)
      */
     File configurationFile(def domain) {
-        profileFileProperty "wordpress_main_file", wordpressDir(domain), defaultProperties
+        profileFileProperty "wordpress_main_file", wordpressDir(domain), wordpressProperties
     }
 
     /**
@@ -393,11 +393,11 @@ class BaseWordpress_3_Config extends BaseWordpressConfig {
      * @param domain
      *            the domain for which the directory is returned.
      *
-     * @see ApacheScript#getDefaultProperties()
+     * @see #getWordpressProperties()
      * @see #wordpressDir(Object)
      */
     File configurationDistFile(def domain) {
-        profileFileProperty "wordpress_main_dist_file", wordpressDir(domain), defaultProperties
+        profileFileProperty "wordpress_main_dist_file", wordpressDir(domain), wordpressProperties
     }
 
     /**

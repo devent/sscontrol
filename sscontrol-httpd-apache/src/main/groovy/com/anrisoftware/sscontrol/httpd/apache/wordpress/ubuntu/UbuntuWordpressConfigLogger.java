@@ -16,10 +16,10 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd-apache. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.apache.wordpress.ubuntu_10_04;
+package com.anrisoftware.sscontrol.httpd.apache.wordpress.ubuntu;
 
-import static com.anrisoftware.sscontrol.httpd.apache.wordpress.ubuntu_10_04.WordpressConfigLogger._.download_archive_info;
-import static com.anrisoftware.sscontrol.httpd.apache.wordpress.ubuntu_10_04.WordpressConfigLogger._.download_archive_trace;
+import static com.anrisoftware.sscontrol.httpd.apache.wordpress.ubuntu.UbuntuWordpressConfigLogger._.download_archive_info;
+import static com.anrisoftware.sscontrol.httpd.apache.wordpress.ubuntu.UbuntuWordpressConfigLogger._.download_archive_trace;
 
 import java.net.URI;
 
@@ -36,7 +36,7 @@ import com.anrisoftware.sscontrol.httpd.apache.phpmyadmin.ubuntu_10_04.UbuntuCon
  * @since 1.0
  */
 @Singleton
-class WordpressConfigLogger extends AbstractLogger {
+class UbuntuWordpressConfigLogger extends AbstractLogger {
 
     enum _ {
 
@@ -60,7 +60,7 @@ class WordpressConfigLogger extends AbstractLogger {
     /**
      * Creates a logger for {@link UbuntuConfig}.
      */
-    public WordpressConfigLogger() {
+    public UbuntuWordpressConfigLogger() {
         super(UbuntuConfig.class);
     }
 

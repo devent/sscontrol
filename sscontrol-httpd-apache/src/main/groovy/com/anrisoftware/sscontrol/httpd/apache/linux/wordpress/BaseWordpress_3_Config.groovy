@@ -57,9 +57,11 @@ class BaseWordpress_3_Config extends BaseWordpressConfig {
         def tmp = new File(name, tmpDirectory)
         if (!file.isFile()) {
             copyFile configurationDistFile(domain), tmp
+        } else {
+            copyFile configurationFile(domain), tmp
         }
         List lines = readLines(tmp, configFileCharset)
-        writeLines configurationFile(domain), configFileCharset.toString(), lines[0..-10]
+        writeLines file, configFileCharset.toString(), lines[0..-10]
     }
 
     /**

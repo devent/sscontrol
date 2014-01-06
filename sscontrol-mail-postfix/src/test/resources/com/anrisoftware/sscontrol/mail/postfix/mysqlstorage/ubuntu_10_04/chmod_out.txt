@@ -4,9 +4,13 @@ o-rw /tmp/etc/ssl/certs/cert_ca.txt
 o-r /tmp/etc/postfix/mysql_mailbox.cf
 o-r /tmp/etc/postfix/mysql_alias.cf
 o-r /tmp/etc/postfix/mysql_domains.cf
+o-r /tmp/etc/postfix/sasl/smtpd.conf
+o-r /tmp/etc/pam.d/smtp
 o-rw /tmp/etc/ssl/certs/cert_crt.txt
 o-rw /tmp/etc/ssl/private/cert_key.txt
 o-rw /tmp/etc/ssl/certs/cert_ca.txt
 o-r /tmp/etc/postfix/mysql_mailbox.cf
 o-r /tmp/etc/postfix/mysql_alias.cf
 o-r /tmp/etc/postfix/mysql_domains.cf
+o-r /tmp/etc/postfix/sasl/smtpd.conf
+o-r /tmp/etc/pam.d/smtp

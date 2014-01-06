@@ -89,19 +89,6 @@ abstract class BaseSaslAuth extends BaseAuth implements AuthConfig {
     }
 
     /**
-     * Returns the Postfix local user, for example {@code "postfix"}.
-     *
-     * <ul>
-     * <li>profile property {@code "postfix_user"}</li>
-     * </ul>
-     *
-     * @see #getDefaultProperties()
-     */
-    String getPostfixUser() {
-        profileProperty "postfix_user", authProperties
-    }
-
-    /**
      * Creates the Postfix chroot {@code saslauthd} directory.
      */
     void makeChrootDirectory() {

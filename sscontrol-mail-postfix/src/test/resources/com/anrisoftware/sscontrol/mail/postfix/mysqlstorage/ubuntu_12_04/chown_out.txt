@@ -5,6 +5,7 @@ postfix.postfix /tmp/etc/postfix/mysql_mailbox.cf
 postfix.postfix /tmp/etc/postfix/mysql_alias.cf
 postfix.postfix /tmp/etc/postfix/mysql_domains.cf
 5000.5000 /tmp/var/mail/vhosts
+postfix.postfix /tmp/etc/postfix/sasl/smtpd.conf
 root.root /tmp/etc/ssl/certs/cert_crt.txt
 root.root /tmp/etc/ssl/private/cert_key.txt
 root.root /tmp/etc/ssl/certs/cert_ca.txt
@@ -12,3 +13,4 @@ postfix.postfix /tmp/etc/postfix/mysql_mailbox.cf
 postfix.postfix /tmp/etc/postfix/mysql_alias.cf
 postfix.postfix /tmp/etc/postfix/mysql_domains.cf
 5000.5000 /tmp/var/mail/vhosts
+postfix.postfix /tmp/etc/postfix/sasl/smtpd.conf

@@ -70,6 +70,8 @@ abstract class BaseSaslMysqlAuth extends BaseSaslAuth {
                 "properties", this,
                 "service", script.service)
         FileUtils.write saslSmtpdFile, config, charset
+        changeOwner owner: postfixUser, ownerGroup: postfixGroup, files: [saslSmtpdFile]
+        changeMod mod: "o-r", files: [saslSmtpdFile]
         log.smtpdDeployed script, saslSmtpdFile, config
     }
 
@@ -128,6 +130,7 @@ abstract class BaseSaslMysqlAuth extends BaseSaslAuth {
                 "properties", this,
                 "service", script.service)
         FileUtils.write smtpdPamFile, config, charset
+        changeMod mod: "o-r", files: [smtpdPamFile]
         log.smtpdPamDeployed script, smtpdPamFile, config
     }
 

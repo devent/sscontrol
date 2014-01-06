@@ -93,13 +93,13 @@ abstract class MysqlStorageConfig extends BaseStorage implements StorageConfig {
         def worker
         worker = scriptCommandFactory.create(tablesTemplate, "createAliasesTable",
                 "properties", this, "service", service)()
-        log.deployedAliasesTable this, worker
+        log.deployedAliasesTable script, worker
         worker = scriptCommandFactory.create(tablesTemplate, "createDomainsTable",
                 "properties", this, "service", service)()
-        log.deployedDomainsTable this, worker
+        log.deployedDomainsTable script, worker
         worker = scriptCommandFactory.create(tablesTemplate, "createUsersTable",
                 "properties", this, "service", service, "profile", script)()
-        log.deployedUsersTable this, worker
+        log.deployedUsersTable script, worker
     }
 
     /**
@@ -170,10 +170,18 @@ abstract class MysqlStorageConfig extends BaseStorage implements StorageConfig {
     void deployVirtualMailboxFile() {
         def string = configTemplate.getText(true, "mailbox", "properties", this, "service", service)
         FileUtils.write mailboxMapsFile, string
+        log.mailboxMapsDeployed script, mailboxMapsFile, string
         string = configTemplate.getText(true, "alias", "properties", this, "service", service)
         FileUtils.write aliasMapsFile, string
+        log.aliasMapsDeployed script, mailboxMapsFile, string
         string = configTemplate.getText(true, "domains", "properties", this, "service", service)
         FileUtils.write mailboxDomainsFile, string
+        log.mailboxDomainsDeployed script, mailboxMapsFile, string
+        changeMod mod: "o-r", files: [
+            mailboxMapsFile,
+            aliasMapsFile,
+            mailboxDomainsFile
+        ]
     }
 
     /**
@@ -183,7 +191,7 @@ abstract class MysqlStorageConfig extends BaseStorage implements StorageConfig {
         service.resetDomains.resetDomains ? resetDomains() : false
         def worker = scriptCommandFactory.create(dataTemplate, "insertDomains",
                 "properties", this, "service", service)()
-        log.deployedDomainsData this, worker
+        log.deployedDomainsData script, worker
     }
 
     /**
@@ -192,7 +200,7 @@ abstract class MysqlStorageConfig extends BaseStorage implements StorageConfig {
     void resetDomains() {
         def worker = scriptCommandFactory.create(dataTemplate, "resetDomains",
                 "properties", this, "service", service)()
-        log.resetDomainsData this, worker
+        log.resetDomainsData script, worker
     }
 
     /**
@@ -206,7 +214,7 @@ abstract class MysqlStorageConfig extends BaseStorage implements StorageConfig {
             }
             def worker = scriptCommandFactory.create(dataTemplate, "insertAliases",
                     "properties", this, "service", service, "domain", domain)()
-            log.deployedAliasesData this, worker
+            log.deployedAliasesData script, worker
         }
     }
 
@@ -216,7 +224,7 @@ abstract class MysqlStorageConfig extends BaseStorage implements StorageConfig {
     void resetAliases() {
         def worker = scriptCommandFactory.create(dataTemplate, "resetAliases",
                 "properties", this, "service", service)()
-        log.resetAliasesData this, worker
+        log.resetAliasesData script, worker
     }
 
     /**
@@ -230,7 +238,7 @@ abstract class MysqlStorageConfig extends BaseStorage implements StorageConfig {
             }
             def worker = scriptCommandFactory.create(dataTemplate, "insertUsers",
                     "properties", this, "service", service, "domain", domain)()
-            log.deployedUsersData this, worker
+            log.deployedUsersData script, worker
         }
     }
 
@@ -240,7 +248,7 @@ abstract class MysqlStorageConfig extends BaseStorage implements StorageConfig {
     void resetUsers() {
         def worker = scriptCommandFactory.create(dataTemplate, "resetUsers",
                 "properties", this, "service", service)()
-        log.resetUsersData this, worker
+        log.resetUsersData script, worker
     }
 
     /**

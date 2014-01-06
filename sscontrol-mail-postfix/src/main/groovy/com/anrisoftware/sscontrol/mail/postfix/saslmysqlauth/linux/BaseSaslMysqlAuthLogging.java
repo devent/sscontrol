@@ -41,7 +41,7 @@ class BaseSaslMysqlAuthLogger extends AbstractLogger {
     enum _ {
 
         smtpd_deployed_trace(
-                "SMTPD configuration deployed to {} for {}: <<<\n{}<<<"),
+                "SMTPD configuration deployed to {} for {}: \n>>>\n{}<<<"),
 
         smtpd_deployed_debug("SMTPD configuration deployed to {} for {}."),
 
@@ -49,7 +49,7 @@ class BaseSaslMysqlAuthLogger extends AbstractLogger {
                 "SMTPD configuration deployed to {} for service '{}'."),
 
         smtpd_pam_deployed_trace(
-                "SMTPD PAM configuration deployed to {} for {}: <<<\n{}<<<"),
+                "SMTPD PAM configuration deployed to {} for {}: \n>>>n{}<<<"),
 
         smtpd_pam_deployed_debug(
                 "SMTPD PAM configuration deployed to {} for {}."),

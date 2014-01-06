@@ -349,6 +349,32 @@ abstract class LinuxScript extends Script {
     }
 
     /**
+     * Returns the name of the root user, for example {@code "root".}
+     *
+     * <ul>
+     * <li>profile property {@code "root_user"}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    String getRootUser() {
+        profileProperty "root_user", defaultProperties
+    }
+
+    /**
+     * Returns the name of the root group, for example {@code "root".}
+     *
+     * <ul>
+     * <li>profile property {@code "root_group"}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    String getRootGroup() {
+        profileProperty "root_group", defaultProperties
+    }
+
+    /**
      * Returns the configuration on the server.
      */
     String currentConfiguration(File file) {

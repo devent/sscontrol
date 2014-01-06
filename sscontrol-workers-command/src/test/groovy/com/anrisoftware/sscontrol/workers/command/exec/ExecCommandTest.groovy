@@ -1,3 +1,6 @@
+
+
+
 /*
  * Copyright 2012-2013 Erwin Müller <erwin.mueller@deventm.org>
  *
@@ -24,6 +27,8 @@ import org.junit.Before
 import org.junit.BeforeClass
 import org.junit.Test
 
+import com.anrisoftware.resources.texts.defaults.TextsResourcesDefaultModule
+import com.anrisoftware.sscontrol.workers.api.WorkerException
 import com.google.inject.Guice
 import com.google.inject.Injector
 
@@ -35,49 +40,62 @@ import com.google.inject.Injector
  */
 class ExecCommandTest {
 
-	static echoCommand
+    @Test
+    void "execute echo command"() {
+        def string = "Test"
+        def worker = factory.create(String.format(echoCommand, string))
+        worker()
+        assertStringContent worker.out, string
+    }
 
-	Injector injector
+    @Test
+    void "execute error command"() {
+        def string = "Test"
+        def worker = factory.create(String.format(errorCommand, string))
+        shouldFailWith(WorkerException) { worker() }
+    }
 
-	ExecCommandWorkerFactory factory
+    @Test
+    void "serialize and execute echo command"() {
+        def string = "Test"
+        def worker = factory.create(String.format(echoCommand, string))
+        def workerB = reserialize(worker)
+        workerB()
+        assertStringContent workerB.out, string
+    }
 
-	@Test
-	void "execute echo command"() {
-		def string = "Test"
-		def worker = factory.create(String.format(echoCommand, string))
-		worker()
-		assertStringContent worker.out, string
-	}
+    static String echoCommand
 
-	@Test
-	void "serialize and execute echo command"() {
-		def string = "Test"
-		def worker = factory.create(String.format(echoCommand, string))
-		def workerB = reserialize(worker)
-		workerB()
-		assertStringContent workerB.out, string
-	}
+    static String errorCommand
 
-	@BeforeClass
-	static void setupCommands() {
-		switch (System.getProperty("os.name")) {
-			case { (it.indexOf("nix") >= 0 || it.indexOf("nux") >= 0) }:
-				echoCommand = "echo -n %s"
-				break
-		}
-	}
+    Injector injector
 
-	@Before
-	void createFactories() {
-		injector = createInjector()
-		factory = injector.getInstance ExecCommandWorkerFactory
-	}
+    ExecCommandWorkerFactory factory
 
-	Injector createInjector() {
-		Guice.createInjector(new ExecCommandWorkerModule())
-	}
+    @BeforeClass
+    static void setupCommands() {
+        switch (System.getProperty("os.name")) {
+            case {
+                (it.indexOf("nix") >= 0 || it.indexOf("nux") >= 0)
+            }:
+                echoCommand = "echo -n %s"
+                errorCommand = 'bash -c "echo Hello"'
+                break
+        }
+    }
 
-	static {
-		toStringStyle
-	}
+    @Before
+    void createFactories() {
+        injector = createInjector()
+        factory = injector.getInstance ExecCommandWorkerFactory
+    }
+
+    Injector createInjector() {
+        Guice.createInjector(new ExecCommandWorkerModule(),
+                new TextsResourcesDefaultModule())
+    }
+
+    static {
+        toStringStyle
+    }
 }

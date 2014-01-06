@@ -655,32 +655,6 @@ abstract class BasePostfixScript extends LinuxScript {
         profileDirProperty "certificates_keys_directory", defaultProperties
     }
 
-    /**
-     * Returns the name of the root user, for example {@code "root".}
-     *
-     * <ul>
-     * <li>profile property {@code "root_user"}</li>
-     * </ul>
-     *
-     * @see #getPostfixProperties()
-     */
-    String getRootUser() {
-        profileProperty "root_user", defaultProperties
-    }
-
-    /**
-     * Returns the name of the root group, for example {@code "root".}
-     *
-     * <ul>
-     * <li>profile property {@code "root_group"}</li>
-     * </ul>
-     *
-     * @see #getPostfixProperties()
-     */
-    String getRootGroup() {
-        profileProperty "root_group", defaultProperties
-    }
-
     def unknownLocalRecipientRejectCodeConf() {
         def replace = mainConfigurationTemplate.getText(true, "unknownLocalRecipientRejectCodeConfig", "code", unknownLocalRecipientRejectCode)
         def search = mainConfigurationTemplate.getText(true, "unknownLocalRecipientRejectCodeConfig_search")

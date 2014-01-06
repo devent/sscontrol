@@ -25,6 +25,7 @@ import static java.lang.String.format;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.Arrays;
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -52,197 +53,223 @@ import com.google.inject.assistedinject.AssistedInject;
 @SuppressWarnings("serial")
 public class ScriptCommandWorker implements Worker {
 
-	private final TemplateResource template;
+    private static final String WORKER = "worker";
 
-	private final Map<String, String> environment;
+    private static final String SCRIPT = "script";
 
-	private final Object[] attributes;
+    private static final String ATTRIBUTES = "attributes";
 
-	@Inject
-	private transient ExecCommandWorkerFactory executeFactory;
+    private static final String TEMPLATE = "template";
 
-	@Inject
-	private ScriptCommandWorkerLogger log;
+    private final TemplateResource template;
 
-	private ExecCommandWorker commandWorker;
+    private final Map<String, String> environment;
 
-	private String shell;
+    private final Object[] attributes;
 
-	private String scriptString;
+    @Inject
+    private transient ExecCommandWorkerFactory executeFactory;
 
-	private File scriptFile;
+    @Inject
+    private ScriptCommandWorkerLogger log;
 
-	private boolean valuesSet;
+    private ExecCommandWorker commandWorker;
 
-	private int[] values;
+    private String shell;
 
-	private long timeoutMs;
+    private String scriptString;
 
-	/**
-	 * @see ScriptCommandWorkerFactory#create(TemplateResource, Object...)
-	 */
-	@AssistedInject
-	ScriptCommandWorker(@Assisted TemplateResource template,
-			@Assisted Object... attributes) {
-		this(template, null, attributes);
-	}
+    private File scriptFile;
 
-	/**
-	 * @see ScriptCommandWorkerFactory#create(TemplateResource, Map, Object...)
-	 */
-	@AssistedInject
-	ScriptCommandWorker(@Assisted TemplateResource template,
-			@Assisted Map<String, String> environment,
-			@Assisted Object... attributes) {
-		this(template, environment, DEFAULT_TIMEOUT_MS, attributes);
-	}
+    private boolean valuesSet;
 
-	/**
-	 * @see ScriptCommandWorkerFactory#create(TemplateResource, Map, long,
-	 *      Object...)
-	 */
-	@AssistedInject
-	ScriptCommandWorker(@Assisted TemplateResource template,
-			@Assisted Map<String, String> environment,
-			@Assisted long timeoutMs, @Assisted Object... attributes) {
-		this.template = template;
-		this.environment = environment;
-		this.timeoutMs = timeoutMs;
-		this.attributes = attributes;
-		this.valuesSet = false;
-		this.values = null;
-	}
+    private int[] values;
 
-	/**
-	 * Sets the script command worker properties.
-	 * 
-	 * @param provider
-	 *            the {@link PropertiesProvider}.
-	 */
-	@Inject
-	void setProperties(PropertiesProvider provider) {
-		ContextProperties p = provider.get();
-		this.shell = p.getProperty("shell");
-	}
+    private long timeoutMs;
 
-	@Override
-	public Worker call() throws WorkerException {
-		scriptString = createScript(template, attributes);
-		scriptFile = copyScript();
-		try {
-			commandWorker = createCommandWorker();
-			log.startScript(this);
-			commandWorker.call();
-			log.finishedScript(this);
-		} finally {
-			scriptFile.delete();
-		}
-		return this;
-	}
+    /**
+     * @see ScriptCommandWorkerFactory#create(TemplateResource, Object...)
+     */
+    @AssistedInject
+    ScriptCommandWorker(@Assisted TemplateResource template,
+            @Assisted Object... attributes) {
+        this(template, null, attributes);
+    }
 
-	private ExecCommandWorker createCommandWorker() throws WorkerException {
-		ExecCommandWorker worker = executeFactory.create(
-				format("%s %s", shell, scriptFile.getAbsolutePath()),
-				environment, timeoutMs);
-		worker.setQuotation(false);
-		if (valuesSet) {
-			worker.setExitValues(values);
-		}
-		worker.setTimeoutMs(timeoutMs);
-		return worker;
-	}
+    /**
+     * @see ScriptCommandWorkerFactory#create(TemplateResource, Map, Object...)
+     */
+    @AssistedInject
+    ScriptCommandWorker(@Assisted TemplateResource template,
+            @Assisted Map<String, String> environment,
+            @Assisted Object... attributes) {
+        this(template, environment, DEFAULT_TIMEOUT_MS, attributes);
+    }
 
-	private File copyScript() throws WorkerException {
-		try {
-			File file = createTempFile("script", ".sh");
-			FileUtils.write(file, scriptString);
-			return file;
-		} catch (IOException e) {
-			throw log.errorCopyScript(this, e);
-		}
-	}
+    /**
+     * @see ScriptCommandWorkerFactory#create(TemplateResource, Map, long,
+     *      Object...)
+     */
+    @AssistedInject
+    ScriptCommandWorker(@Assisted TemplateResource template,
+            @Assisted Map<String, String> environment,
+            @Assisted long timeoutMs, @Assisted Object... attributes) {
+        this.template = template;
+        this.environment = environment;
+        this.timeoutMs = timeoutMs;
+        this.attributes = attributes;
+        this.valuesSet = false;
+        this.values = null;
+    }
 
-	private String createScript(TemplateResource template, Object[] attributes)
-			throws WorkerException {
-		try {
-			return template.getText(true, attributes);
-		} catch (ResourcesException e) {
-			throw log.errorProcessTemplate(this, e);
-		}
-	}
+    /**
+     * Sets the script command worker properties.
+     * 
+     * @param provider
+     *            the {@link PropertiesProvider}.
+     */
+    @Inject
+    void setProperties(PropertiesProvider provider) {
+        ContextProperties p = provider.get();
+        this.shell = p.getProperty("shell");
+    }
 
-	public Map<String, String> getEnvironment() {
-		return environment;
-	}
+    @Override
+    public Worker call() throws WorkerException {
+        scriptString = createScript(template, attributes);
+        scriptFile = copyScript();
+        try {
+            commandWorker = createCommandWorker();
+            log.startScript(this);
+            commandWorker.call();
+            log.finishedScript(this);
+        } finally {
+            scriptFile.delete();
+        }
+        return this;
+    }
 
-	public void setTimeoutMs(long timeoutMs) {
-		this.timeoutMs = timeoutMs;
-	}
+    private ExecCommandWorker createCommandWorker() throws WorkerException {
+        ExecCommandWorker worker = executeFactory.create(
+                format("%s %s", shell, scriptFile.getAbsolutePath()),
+                environment, timeoutMs);
+        worker.setQuotation(false);
+        if (valuesSet) {
+            worker.setExitValues(values);
+        }
+        worker.setTimeoutMs(timeoutMs);
+        return worker;
+    }
 
-	public void setExitValue(int value) {
-		setExitValues(new int[] { value });
-	}
+    private File copyScript() throws WorkerException {
+        try {
+            File file = createTempFile(SCRIPT, ".sh");
+            FileUtils.write(file, scriptString);
+            return file;
+        } catch (IOException e) {
+            throw log.errorCopyScript(this, e);
+        }
+    }
 
-	/**
-	 * Sets the list of valid exit values for the process.
-	 * 
-	 * @param values
-	 *            the integer array of exit values or {@code null} to skip
-	 *            checking of exit codes.
-	 * 
-	 * @see Executor#setExitValues(int[])
-	 */
-	public void setExitValues(int[] values) {
-		this.valuesSet = true;
-		this.values = values;
-	}
+    private String createScript(TemplateResource template, Object[] attributes)
+            throws WorkerException {
+        try {
+            return template.getText(true, attributes);
+        } catch (ResourcesException e) {
+            throw log.errorProcessTemplate(this, e);
+        }
+    }
 
-	/**
-	 * Sets to skip the checking of the exit codes.
-	 * 
-	 * @param skip
-	 *            set to {@code true} to skip the checking.
-	 */
-	public void setSkipExitValue(boolean skip) {
-		if (skip) {
-			setExitValues(null);
-		}
-	}
+    public TemplateResource getTemplate() {
+        return template;
+    }
 
-	public int getExitCode() {
-		return commandWorker.getExitCode();
-	}
+    public Map<String, String> getEnvironment() {
+        return environment;
+    }
 
-	public String getOut() {
-		return commandWorker.getOut();
-	}
+    public void setTimeoutMs(long timeoutMs) {
+        this.timeoutMs = timeoutMs;
+    }
 
-	public String getOut(String charsetName)
-			throws UnsupportedEncodingException {
-		return commandWorker.getOut(charsetName);
-	}
+    public void setExitValue(int value) {
+        setExitValues(new int[] { value });
+    }
 
-	public String getErr() {
-		return commandWorker.getErr();
-	}
+    /**
+     * Sets the list of valid exit values for the process.
+     * 
+     * @param values
+     *            the integer array of exit values or {@code null} to skip
+     *            checking of exit codes.
+     * 
+     * @see Executor#setExitValues(int[])
+     */
+    public void setExitValues(int[] values) {
+        this.valuesSet = true;
+        this.values = values;
+    }
 
-	public String getErr(String charsetName)
-			throws UnsupportedEncodingException {
-		return commandWorker.getErr(charsetName);
-	}
+    /**
+     * Sets to skip the checking of the exit codes.
+     * 
+     * @param skip
+     *            set to {@code true} to skip the checking.
+     */
+    public void setSkipExitValue(boolean skip) {
+        if (skip) {
+            setExitValues(null);
+        }
+    }
 
-	public String getCommand() {
-		return scriptString;
-	}
+    public int getExitCode() {
+        return commandWorker.getExitCode();
+    }
 
-	public File getScriptFile() {
-		return scriptFile;
-	}
+    public String getOut() {
+        return commandWorker.getOut();
+    }
 
-	@Override
-	public String toString() {
-		return commandWorker != null ? commandWorker.toString()
-				: new ToStringBuilder(this).toString();
-	}
+    public String getOut(String charsetName)
+            throws UnsupportedEncodingException {
+        return commandWorker.getOut(charsetName);
+    }
+
+    public String getErr() {
+        return commandWorker.getErr();
+    }
+
+    public String getErr(String charsetName)
+            throws UnsupportedEncodingException {
+        return commandWorker.getErr(charsetName);
+    }
+
+    public String getCommand() {
+        return scriptString;
+    }
+
+    public String getCommandName() {
+        return commandWorker.getCommandName();
+    }
+
+    public File getScriptFile() {
+        return scriptFile;
+    }
+
+    public String getScript() {
+        return scriptString;
+    }
+
+    @Override
+    public String toString() {
+        ToStringBuilder builder = new ToStringBuilder(this);
+        builder = commandWorker != null ? builder.append(WORKER, commandWorker)
+                : builder;
+        builder.append(TEMPLATE, template);
+        builder.append(ATTRIBUTES, Arrays.toString(attributes));
+        builder = scriptFile != null ? builder.append(SCRIPT, scriptFile)
+                : builder;
+        return builder.toString();
+    }
 
 }

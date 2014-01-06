@@ -32,6 +32,7 @@ import com.anrisoftware.resources.templates.maps.TemplatesDefaultMapsModule
 import com.anrisoftware.resources.templates.templates.TemplatesResourcesModule
 import com.anrisoftware.resources.templates.worker.STDefaultPropertiesModule
 import com.anrisoftware.resources.templates.worker.STWorkerModule
+import com.anrisoftware.resources.texts.defaults.TextsResourcesDefaultModule
 import com.anrisoftware.sscontrol.workers.command.exec.ExecCommandWorkerModule
 import com.anrisoftware.sscontrol.workers.command.utils.SystemSelector
 import com.google.inject.Guice
@@ -45,77 +46,78 @@ import com.google.inject.Injector
  */
 class ScriptCommandTest {
 
-	@Test
-	void "chmod files"() {
-		def mod = "-w"
-		def worker = factory.create templates.getResource("chmod"),
-				system, "args", ["command": "chmod", "mod": mod, "files": files]
-		worker()
-		assert files[0].canWrite() == false
-		assert files[1].canWrite() == false
-	}
+    @Test
+    void "chmod files"() {
+        def mod = "-w"
+        def worker = factory.create templates.getResource("chmod"),
+                system, "args", ["command": "chmod", "mod": mod, "files": files]
+        worker()
+        assert files[0].canWrite() == false
+        assert files[1].canWrite() == false
+    }
 
-	@Test
-	void "serialize and chmod files"() {
-		def mod = "-w"
-		def worker = factory.create templates.getResource("chmod"),
-				system, "args", ["command": "chmod", "mod": mod, "files": files]
-		def workerB = reserialize worker
-		injector.injectMembers workerB
-		workerB()
-		assert files[0].canWrite() == false
-		assert files[1].canWrite() == false
-	}
+    @Test
+    void "serialize and chmod files"() {
+        def mod = "-w"
+        def worker = factory.create templates.getResource("chmod"),
+                system, "args", ["command": "chmod", "mod": mod, "files": files]
+        def workerB = reserialize worker
+        injector.injectMembers workerB
+        workerB()
+        assert files[0].canWrite() == false
+        assert files[1].canWrite() == false
+    }
 
-	File tmpdir
+    File tmpdir
 
-	List files
+    List files
 
-	@Before
-	void createTmpDir() {
-		tmpdir = File.createTempDir("ScriptCommandTest", null)
-		files = [
-			new File(tmpdir, "one"),
-			new File(tmpdir, "two")
-		]
-		files.each { FileUtils.touch(it) }
-	}
+    @Before
+    void createTmpDir() {
+        tmpdir = File.createTempDir("ScriptCommandTest", null)
+        files = [
+            new File(tmpdir, "one"),
+            new File(tmpdir, "two")
+        ]
+        files.each { FileUtils.touch(it) }
+    }
 
-	@After
-	void deleteTmpDir() {
-		tmpdir.deleteDir()
-	}
+    @After
+    void deleteTmpDir() {
+        tmpdir.deleteDir()
+    }
 
-	static system = SystemSelector.system.name
+    static system = SystemSelector.system.name
 
-	static Injector injector
+    static Injector injector
 
-	static ScriptCommandWorkerFactory factory
+    static ScriptCommandWorkerFactory factory
 
-	static TemplatesFactory templatesFactory
+    static TemplatesFactory templatesFactory
 
-	static Templates templates
+    static Templates templates
 
-	@BeforeClass
-	static void createFactories() {
-		toStringStyle
-		injector = createInjector()
-		factory = injector.getInstance ScriptCommandWorkerFactory
-		templatesFactory = injector.getInstance TemplatesFactory
-		templates = templatesFactory.create("ScriptCommandTemplates")
-	}
+    @BeforeClass
+    static void createFactories() {
+        toStringStyle
+        injector = createInjector()
+        factory = injector.getInstance ScriptCommandWorkerFactory
+        templatesFactory = injector.getInstance TemplatesFactory
+        templates = templatesFactory.create("ScriptCommandTemplates")
+    }
 
-	static Injector createInjector() {
-		Guice.createInjector(
-				new ScriptCommandWorkerModule(),
-				new ExecCommandWorkerModule(),
-				new TemplatesResourcesModule(),
-				new STWorkerModule(),
-				new TemplatesDefaultMapsModule(),
-				new STDefaultPropertiesModule())
-	}
+    static Injector createInjector() {
+        Guice.createInjector(
+                new ScriptCommandWorkerModule(),
+                new ExecCommandWorkerModule(),
+                new TextsResourcesDefaultModule(),
+                new TemplatesResourcesModule(),
+                new STWorkerModule(),
+                new TemplatesDefaultMapsModule(),
+                new STDefaultPropertiesModule())
+    }
 
-	static {
-		toStringStyle
-	}
+    static {
+        toStringStyle
+    }
 }

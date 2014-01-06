@@ -30,6 +30,7 @@ import org.apache.commons.exec.ExecuteStreamHandler;
 import org.apache.commons.exec.ExecuteWatchdog;
 import org.apache.commons.exec.Executor;
 import org.apache.commons.exec.PumpStreamHandler;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.anrisoftware.sscontrol.workers.api.Worker;
@@ -47,186 +48,185 @@ import com.google.inject.assistedinject.AssistedInject;
 @SuppressWarnings("serial")
 public class ExecCommandWorker implements Worker {
 
-	/**
-	 * The default timeout time in milliseconds.
-	 */
-	public static final int DEFAULT_TIMEOUT_MS = 60 * 1000;
+    private static final String QUOTATION = "quotation";
 
-	private final ExecCommandWorkerLogger log;
+    private static final String TIME_OUT = "time out [ms]";
 
-	private final String command;
+    private static final String ENVIRONMENT = "environment";
 
-	private final Map<String, String> environment;
+    private static final String COMMAND = "command";
 
-	private int exitCode;
+    /**
+     * The default timeout time in milliseconds.
+     */
+    public static final int DEFAULT_TIMEOUT_MS = 60 * 1000;
 
-	private transient ByteArrayOutputStream out;
+    private final ExecCommandWorkerLogger log;
 
-	private transient ByteArrayOutputStream err;
+    private final String command;
 
-	private long timeoutMs;
+    private final Map<String, String> environment;
 
-	private String output;
+    private int exitCode;
 
-	private String error;
+    private transient ByteArrayOutputStream out;
 
-	private boolean quatation;
+    private transient ByteArrayOutputStream err;
 
-	private int[] exitValues;
+    private long timeoutMs;
 
-	/**
-	 * @see ExecCommandWorkerFactory#create(String)
-	 */
-	@AssistedInject
-	ExecCommandWorker(ExecCommandWorkerLogger logger, @Assisted String command) {
-		this(logger, command, new HashMap<String, String>(), DEFAULT_TIMEOUT_MS);
-	}
+    private boolean quotation;
 
-	/**
-	 * @see ExecCommandWorkerFactory#create(String, Map)
-	 */
-	@AssistedInject
-	ExecCommandWorker(ExecCommandWorkerLogger logger, @Assisted String command,
-			@Assisted @Nullable Map<String, String> environment) {
-		this(logger, command, environment, DEFAULT_TIMEOUT_MS);
-	}
+    private int[] exitValues;
 
-	/**
-	 * @see ExecCommandWorkerFactory#create(String, Map, long)
-	 */
-	@AssistedInject
-	ExecCommandWorker(ExecCommandWorkerLogger logger, @Assisted String command,
-			@Assisted @Nullable Map<String, String> environment,
-			@Assisted long timeoutMs) {
-		this.log = logger;
-		this.environment = createEnvironment(environment);
-		this.command = command;
-		this.timeoutMs = timeoutMs;
-		this.quatation = true;
-		setExitValue(0);
-		readResolve();
-	}
+    /**
+     * @see ExecCommandWorkerFactory#create(String)
+     */
+    @AssistedInject
+    ExecCommandWorker(ExecCommandWorkerLogger logger, @Assisted String command) {
+        this(logger, command, new HashMap<String, String>(), DEFAULT_TIMEOUT_MS);
+    }
 
-	private Map<String, String> createEnvironment(
-			Map<String, String> environment) {
-		if (environment != null) {
-			return new HashMap<String, String>(environment);
-		} else {
-			return null;
-		}
-	}
+    /**
+     * @see ExecCommandWorkerFactory#create(String, Map)
+     */
+    @AssistedInject
+    ExecCommandWorker(ExecCommandWorkerLogger logger, @Assisted String command,
+            @Assisted @Nullable Map<String, String> environment) {
+        this(logger, command, environment, DEFAULT_TIMEOUT_MS);
+    }
 
-	private Object readResolve() {
-		this.out = new ByteArrayOutputStream();
-		this.err = new ByteArrayOutputStream();
-		return this;
-	}
+    /**
+     * @see ExecCommandWorkerFactory#create(String, Map, long)
+     */
+    @AssistedInject
+    ExecCommandWorker(ExecCommandWorkerLogger logger, @Assisted String command,
+            @Assisted @Nullable Map<String, String> environment,
+            @Assisted long timeoutMs) {
+        this.log = logger;
+        this.environment = createEnvironment(environment);
+        this.command = command;
+        this.timeoutMs = timeoutMs;
+        this.quotation = true;
+        setExitValue(0);
+        readResolve();
+    }
 
-	@Override
-	public ExecCommandWorker call() throws WorkerException {
-		CommandLine cmdline = CommandLine.parse(command);
-		cmdline = quatation ? cmdline : new CommandLineWithoutQuote(cmdline);
-		ExecuteStreamHandler streamHandler = new PumpStreamHandler(out, err);
-		DefaultExecutor executor = new DefaultExecutor();
-		executor.setExitValues(exitValues);
-		ExecuteWatchdog watchdog = new ExecuteWatchdog(timeoutMs);
-		executor.setWatchdog(watchdog);
-		executor.setStreamHandler(streamHandler);
-		startProcess(executor, cmdline);
-		log.finishedProcess(this);
-		return this;
-	}
+    private Map<String, String> createEnvironment(
+            Map<String, String> environment) {
+        if (environment != null) {
+            return new HashMap<String, String>(environment);
+        } else {
+            return null;
+        }
+    }
 
-	private void startProcess(DefaultExecutor executor, CommandLine cmdline)
-			throws WorkerException {
-		try {
-			log.startProcess(this);
-			exitCode = executor.execute(cmdline, environment);
-		} catch (IOException e) {
-			throw log.errorExecuteCommand(this, e);
-		}
-	}
+    private Object readResolve() {
+        this.out = new ByteArrayOutputStream();
+        this.err = new ByteArrayOutputStream();
+        return this;
+    }
 
-	/**
-	 * Sets if the parameter should be quoted in double quotes or not.
-	 * 
-	 * @param haveQuotation
-	 *            set to {@code true} to automatically quote arguments in double
-	 *            quotes or to {@code false} if not.
-	 */
-	public void setQuotation(boolean haveQuotation) {
-		quatation = haveQuotation;
-	}
+    @Override
+    public ExecCommandWorker call() throws WorkerException {
+        CommandLine cmdline = CommandLine.parse(command);
+        cmdline = quotation ? cmdline : new CommandLineWithoutQuote(cmdline);
+        ExecuteStreamHandler streamHandler = new PumpStreamHandler(out, err);
+        DefaultExecutor executor = new DefaultExecutor();
+        executor.setExitValues(exitValues);
+        ExecuteWatchdog watchdog = new ExecuteWatchdog(timeoutMs);
+        executor.setWatchdog(watchdog);
+        executor.setStreamHandler(streamHandler);
+        startProcess(executor, cmdline);
+        log.finishedProcess(this);
+        return this;
+    }
 
-	public Map<String, String> getEnvironment() {
-		return environment;
-	}
+    private void startProcess(DefaultExecutor executor, CommandLine cmdline)
+            throws WorkerException {
+        try {
+            log.startProcess(this);
+            exitCode = executor.execute(cmdline, environment);
+        } catch (IOException e) {
+            throw log.errorExecuteCommand(this, e);
+        }
+    }
 
-	public void setTimeoutMs(long newTimeoutMs) {
-		timeoutMs = newTimeoutMs;
-	}
+    /**
+     * Sets if the parameter should be quoted in double quotes or not.
+     * 
+     * @param haveQuotation
+     *            set to {@code true} to automatically quote arguments in double
+     *            quotes or to {@code false} if not.
+     */
+    public void setQuotation(boolean haveQuotation) {
+        quotation = haveQuotation;
+    }
 
-	public void setExitValue(int value) {
-		this.exitValues = new int[] { value };
-	}
+    public Map<String, String> getEnvironment() {
+        return environment;
+    }
 
-	/**
-	 * Sets the list of valid exit values for the process.
-	 * 
-	 * @param values
-	 *            the integer array of exit values or {@code null} to skip
-	 *            checking of exit codes.
-	 * 
-	 * @see Executor#setExitValues(int[])
-	 */
-	public void setExitValues(int[] values) {
-		this.exitValues = values;
-	}
+    public void setTimeoutMs(long newTimeoutMs) {
+        timeoutMs = newTimeoutMs;
+    }
 
-	public int getExitCode() {
-		return exitCode;
-	}
+    public void setExitValue(int value) {
+        this.exitValues = new int[] { value };
+    }
 
-	public String getOut() {
-		if (output == null) {
-			output = out.toString();
-		}
-		return output;
-	}
+    /**
+     * Sets the list of valid exit values for the process.
+     * 
+     * @param values
+     *            the integer array of exit values or {@code null} to skip
+     *            checking of exit codes.
+     * 
+     * @see Executor#setExitValues(int[])
+     */
+    public void setExitValues(int[] values) {
+        this.exitValues = values;
+    }
 
-	public String getOut(String charsetName)
-			throws UnsupportedEncodingException {
-		if (output == null) {
-			output = out.toString(charsetName);
-		}
-		return output;
-	}
+    public int getExitCode() {
+        return exitCode;
+    }
 
-	public String getErr() {
-		if (error == null) {
-			error = err.toString();
-		}
-		return error;
-	}
+    public String getOut() {
+        return out.toString();
+    }
 
-	public String getErr(String charsetName)
-			throws UnsupportedEncodingException {
-		if (error == null) {
-			error = err.toString(charsetName);
-		}
-		return error;
-	}
+    public String getOut(String charsetName)
+            throws UnsupportedEncodingException {
+        return out.toString(charsetName);
+    }
 
-	public String getCommand() {
-		return command;
-	}
+    public String getErr() {
+        return err.toString();
+    }
 
-	@Override
-	public String toString() {
-		ToStringBuilder builder = new ToStringBuilder(this);
-		if (environment != null) {
-			builder.append("environment", environment);
-		}
-		return builder.toString();
-	}
+    public String getErr(String charsetName)
+            throws UnsupportedEncodingException {
+        return err.toString(charsetName);
+    }
+
+    public String getCommand() {
+        return command;
+    }
+
+    public String getCommandName() {
+        return StringUtils.split(command, " ")[0];
+    }
+
+    @Override
+    public String toString() {
+        ToStringBuilder builder = new ToStringBuilder(this);
+        builder.append(COMMAND, command);
+        builder.append(TIME_OUT, timeoutMs);
+        builder.append(QUOTATION, quotation);
+        if (environment != null) {
+            builder.append(ENVIRONMENT, environment);
+        }
+        return builder.toString();
+    }
 }

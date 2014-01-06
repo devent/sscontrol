@@ -49,6 +49,14 @@
 		</dependency>
 
 		<!-- compile dependencies -->
+        <dependency>
+            <groupId>com.anrisoftware.resources</groupId>
+            <artifactId>resources-texts</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.anrisoftware.resources</groupId>
+            <artifactId>resources-templates</artifactId>
+        </dependency>
 		<dependency>
 			<groupId>com.google.inject.extensions</groupId>
 			<artifactId>guice-assistedinject</artifactId>
@@ -66,20 +74,12 @@
 			<artifactId>globalpom-log</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>com.anrisoftware.resources</groupId>
-			<artifactId>resources-api</artifactId>
-		</dependency>
-		<dependency>
 			<groupId>com.anrisoftware.propertiesutils</groupId>
 			<artifactId>propertiesutils-contextproperties</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.google.inject.extensions</groupId>
 			<artifactId>guice-multibindings</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.anrisoftware.resources</groupId>
-			<artifactId>resources-templates</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>commons-io</groupId>

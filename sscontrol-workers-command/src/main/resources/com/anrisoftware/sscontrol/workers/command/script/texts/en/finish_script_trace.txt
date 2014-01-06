@@ -1,0 +1,7 @@
+Finish script {}, exit code {}, script:
+>>>
+{}<<<, output:
+>>>
+{}<<<, error output:
+>>>
+{}<<<

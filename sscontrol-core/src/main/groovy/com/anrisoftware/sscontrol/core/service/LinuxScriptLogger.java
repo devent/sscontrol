@@ -38,6 +38,7 @@ import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.conf_f
 import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.conf_file_found_info;
 import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.deployed_conf_debug;
 import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.deployed_conf_info;
+import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.deployed_conf_trace;
 import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.enabled_repository_debug;
 import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.enabled_repository_info;
 import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.group_add_debug;
@@ -117,9 +118,11 @@ class LinuxScriptLogger extends AbstractLogger {
 
         conf_file_found_info("No configuration file found '{}'."),
 
-        deployed_conf_debug("Deploy configuration to '{}' in {}: '{}'."),
+        deployed_conf_trace("Deploy configuration to '{}' for {}: \n>>>n{}<<<."),
 
-        deployed_conf_info("Deploy configuration to '{}'."),
+        deployed_conf_debug("Deploy configuration to '{}' for {}."),
+
+        deployed_conf_info("Deploy configuration to '{}' for script '{}'."),
 
         restarted_service_trace("Restarted service {}, {}."),
 
@@ -267,10 +270,12 @@ class LinuxScriptLogger extends AbstractLogger {
 
     void deployConfigurationDone(LinuxScript script, File file,
             String configuration) {
-        if (isDebugEnabled()) {
-            debug(deployed_conf_debug, file, script, configuration);
+        if (isTraceEnabled()) {
+            debug(deployed_conf_trace, file, script, configuration);
+        } else if (isDebugEnabled()) {
+            debug(deployed_conf_debug, file, script);
         } else {
-            info(deployed_conf_info, file);
+            info(deployed_conf_info, file, script.getName());
         }
     }
 

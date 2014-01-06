@@ -18,9 +18,24 @@
  */
 package com.anrisoftware.sscontrol.workers.command.exec;
 
+import static com.anrisoftware.sscontrol.workers.command.exec.ExecCommandWorkerLogger._.command;
+import static com.anrisoftware.sscontrol.workers.command.exec.ExecCommandWorkerLogger._.error_execute_command;
+import static com.anrisoftware.sscontrol.workers.command.exec.ExecCommandWorkerLogger._.error_execute_command_message;
+import static com.anrisoftware.sscontrol.workers.command.exec.ExecCommandWorkerLogger._.exit_code;
+import static com.anrisoftware.sscontrol.workers.command.exec.ExecCommandWorkerLogger._.finish_command_debug;
+import static com.anrisoftware.sscontrol.workers.command.exec.ExecCommandWorkerLogger._.finish_command_info;
+import static com.anrisoftware.sscontrol.workers.command.exec.ExecCommandWorkerLogger._.finish_command_trace;
+import static com.anrisoftware.sscontrol.workers.command.exec.ExecCommandWorkerLogger._.loadTexts;
+import static com.anrisoftware.sscontrol.workers.command.exec.ExecCommandWorkerLogger._.start_command_trace;
+import static com.anrisoftware.sscontrol.workers.command.exec.ExecCommandWorkerLogger._.worker_name;
+
 import java.io.IOException;
 
+import javax.inject.Inject;
+
 import com.anrisoftware.globalpom.log.AbstractLogger;
+import com.anrisoftware.resources.texts.api.Texts;
+import com.anrisoftware.resources.texts.api.TextsFactory;
 import com.anrisoftware.sscontrol.workers.api.WorkerException;
 
 /**
@@ -31,38 +46,84 @@ import com.anrisoftware.sscontrol.workers.api.WorkerException;
  */
 class ExecCommandWorkerLogger extends AbstractLogger {
 
-	private static final String EXECUTE_COMMAND = "Execute command {} <<<\n{}<<<EOL";
-	private static final String FINISH_EXECUTE_COMMAND = "Finished execute command {} code={}, <<<\n{}\n<<<EOL, out= <<<\n{}<<<EOL, err= <<<\n{}<<<EOL";
-	private static final String ERROR_EXECUTE_COMMAND_MESSAGE = "Error execute command <<<\n{}\n<<<EOL";
-	private static final String WORKER = "worker";
-	private static final String ERROR_EXECUTE_COMMAND = "Error execute command, error: '%s'";
-	private static final String EXIT_CODE = "exit code";
-	private static final String OUT = "output";
-	private static final String ERR = "error output";
-	private static final String COMMAND = "command";
+    enum _ {
 
-	/**
-	 * Create logger for {@link ExecCommandWorker}.
-	 */
-	public ExecCommandWorkerLogger() {
-		super(ExecCommandWorker.class);
-	}
+        error_execute_command,
 
-	WorkerException errorExecuteCommand(ExecCommandWorker worker, IOException e) {
-		return logException(
-				new WorkerException(ERROR_EXECUTE_COMMAND, e, worker.getErr())
-						.add(WORKER, worker).add(COMMAND, worker.getCommand())
-						.add(EXIT_CODE, worker.getExitCode())
-						.add(OUT, worker.getOut()).add(ERR, worker.getErr()),
-				ERROR_EXECUTE_COMMAND_MESSAGE, worker.getCommand());
-	}
+        worker_name,
 
-	void finishedProcess(ExecCommandWorker worker) {
-		log.debug(FINISH_EXECUTE_COMMAND, worker, worker.getExitCode(),
-				worker.getCommand(), worker.getOut(), worker.getErr());
-	}
+        command,
 
-	void startProcess(ExecCommandWorker worker) {
-		log.debug(EXECUTE_COMMAND, worker, worker.getCommand());
-	}
+        exit_code,
+
+        out,
+
+        err,
+
+        error_execute_command_message,
+
+        finish_command_trace,
+
+        finish_command_debug,
+
+        finish_command_info,
+
+        start_command_trace;
+
+        public static void loadTexts(TextsFactory factory) {
+            String name = ExecCommandWorkerLogger.class.getSimpleName();
+            Texts texts = factory.create(name);
+            for (_ value : values()) {
+                value.text = texts.getResource(value.name()).getText();
+            }
+        }
+
+        private String text;
+
+        @Override
+        public String toString() {
+            return text;
+        }
+    }
+
+    /**
+     * Create logger for {@link ExecCommandWorker}.
+     */
+    public ExecCommandWorkerLogger() {
+        super(ExecCommandWorker.class);
+    }
+
+    @Inject
+    void setTextsFactory(TextsFactory factory) {
+        loadTexts(factory);
+    }
+
+    WorkerException errorExecuteCommand(ExecCommandWorker worker, IOException e) {
+        String out = worker.getOut();
+        String err = worker.getErr();
+        return logException(
+                new WorkerException(error_execute_command, e,
+                        worker.getCommand(), out, err).add(worker_name, worker)
+                        .add(command, worker.getCommand())
+                        .add(exit_code, worker.getExitCode()).add(out, out)
+                        .add(err, err), error_execute_command_message,
+                worker.getCommand());
+    }
+
+    void finishedProcess(ExecCommandWorker worker) {
+        int exitCode = worker.getExitCode();
+        if (isTraceEnabled()) {
+            String out = worker.getOut();
+            String err = worker.getErr();
+            trace(finish_command_trace, worker, exitCode, out, err);
+        } else if (isDebugEnabled()) {
+            debug(finish_command_debug, worker, exitCode);
+        } else {
+            info(finish_command_info, worker.getCommandName(), exitCode);
+        }
+    }
+
+    void startProcess(ExecCommandWorker worker) {
+        trace(start_command_trace, worker);
+    }
 }

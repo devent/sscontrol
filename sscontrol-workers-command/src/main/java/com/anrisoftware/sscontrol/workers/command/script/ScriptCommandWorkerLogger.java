@@ -18,12 +18,26 @@
  */
 package com.anrisoftware.sscontrol.workers.command.script;
 
+import static com.anrisoftware.sscontrol.workers.command.script.ScriptCommandWorkerLogger._.error_copy;
+import static com.anrisoftware.sscontrol.workers.command.script.ScriptCommandWorkerLogger._.error_copy_message;
+import static com.anrisoftware.sscontrol.workers.command.script.ScriptCommandWorkerLogger._.error_processing;
+import static com.anrisoftware.sscontrol.workers.command.script.ScriptCommandWorkerLogger._.error_processing_message;
+import static com.anrisoftware.sscontrol.workers.command.script.ScriptCommandWorkerLogger._.finish_script_debug;
+import static com.anrisoftware.sscontrol.workers.command.script.ScriptCommandWorkerLogger._.finish_script_info;
+import static com.anrisoftware.sscontrol.workers.command.script.ScriptCommandWorkerLogger._.finish_script_trace;
+import static com.anrisoftware.sscontrol.workers.command.script.ScriptCommandWorkerLogger._.loadTexts;
+import static com.anrisoftware.sscontrol.workers.command.script.ScriptCommandWorkerLogger._.start_script_trace;
+import static com.anrisoftware.sscontrol.workers.command.script.ScriptCommandWorkerLogger._.worker_name;
+
 import java.io.IOException;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
 import com.anrisoftware.resources.api.ResourcesException;
+import com.anrisoftware.resources.texts.api.Texts;
+import com.anrisoftware.resources.texts.api.TextsFactory;
 import com.anrisoftware.sscontrol.workers.api.WorkerException;
 
 /**
@@ -35,41 +49,82 @@ import com.anrisoftware.sscontrol.workers.api.WorkerException;
 @Singleton
 class ScriptCommandWorkerLogger extends AbstractLogger {
 
-	private static final String WORKER = "worker";
-	private static final String ERROR_PROCESSING2 = "Error processing template {}#{}.";
-	private static final String ERROR_PROCESSING = "Error processing template";
-	private static final String ERROR_COPY = "Error copy script";
-	private static final String ERROR_COPY2 = "Error copy script <<<\n{}\n<<<EOL";
-	private static final String EXECUTE_COMMAND = "Execute script {}: '{}' <<<\n{}<<<EOL";
-	private static final String FINISH_EXECUTE_COMMAND = "Finished execute script {}: '{}' <<<\n{}\n<<<EOL";
+    enum _ {
 
-	/**
-	 * Create logger for {@link ScriptCommandWorker}.
-	 */
-	public ScriptCommandWorkerLogger() {
-		super(ScriptCommandWorker.class);
-	}
+        error_processing,
 
-	WorkerException errorProcessTemplate(ScriptCommandWorker worker,
-			ResourcesException e) {
-		return logException(
-				new WorkerException(ERROR_PROCESSING, e).add(WORKER, worker),
-				ERROR_PROCESSING2, e.getClassName(), e.getKey());
-	}
+        worker_name,
 
-	WorkerException errorCopyScript(ScriptCommandWorker worker, IOException e) {
-		return logException(
-				new WorkerException(ERROR_COPY, e).add(WORKER, worker),
-				ERROR_COPY2, worker.getCommand());
-	}
+        error_processing_message,
 
-	void finishedScript(ScriptCommandWorker worker) {
-		log.debug(FINISH_EXECUTE_COMMAND, worker, worker.getScriptFile(),
-				worker.getCommand());
-	}
+        error_copy,
 
-	void startScript(ScriptCommandWorker worker) {
-		log.debug(EXECUTE_COMMAND, worker, worker.getScriptFile(),
-				worker.getCommand());
-	}
+        error_copy_message,
+
+        finish_script_trace,
+
+        finish_script_debug,
+
+        finish_script_info,
+
+        start_script_trace;
+
+        public static void loadTexts(TextsFactory factory) {
+            String name = ScriptCommandWorkerLogger.class.getSimpleName();
+            Texts texts = factory.create(name);
+            for (_ value : values()) {
+                value.text = texts.getResource(value.name()).getText();
+            }
+        }
+
+        private String text;
+
+        @Override
+        public String toString() {
+            return text;
+        }
+    }
+
+    /**
+     * Create logger for {@link ScriptCommandWorker}.
+     */
+    public ScriptCommandWorkerLogger() {
+        super(ScriptCommandWorker.class);
+    }
+
+    @Inject
+    void setTextsFactory(TextsFactory factory) {
+        loadTexts(factory);
+    }
+
+    WorkerException errorProcessTemplate(ScriptCommandWorker worker,
+            ResourcesException e) {
+        return logException(new WorkerException(error_processing, e).add(
+                worker_name, worker), error_processing_message, worker
+                .getTemplate().getName());
+    }
+
+    WorkerException errorCopyScript(ScriptCommandWorker worker, IOException e) {
+        return logException(
+                new WorkerException(error_copy, e).add(worker_name, worker),
+                error_copy_message, worker.getTemplate().getName());
+    }
+
+    void finishedScript(ScriptCommandWorker worker) {
+        int exitCode = worker.getExitCode();
+        if (isTraceEnabled()) {
+            String out = worker.getOut();
+            String err = worker.getErr();
+            trace(finish_script_trace, worker, exitCode, worker.getScript(),
+                    out, err);
+        } else if (isDebugEnabled()) {
+            debug(finish_script_debug, worker, exitCode);
+        } else {
+            info(finish_script_info, worker.getCommandName(), exitCode);
+        }
+    }
+
+    void startScript(ScriptCommandWorker worker) {
+        trace(start_script_trace, worker, worker.getScript());
+    }
 }

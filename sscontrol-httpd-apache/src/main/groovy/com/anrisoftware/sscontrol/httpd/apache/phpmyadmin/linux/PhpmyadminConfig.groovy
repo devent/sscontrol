@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd-apache. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.apache.phpldapadmin.linux
+package com.anrisoftware.sscontrol.httpd.apache.phpmyadmin.linux
 
 import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.sscontrol.core.service.LinuxScript
@@ -24,12 +24,12 @@ import com.anrisoftware.sscontrol.httpd.statements.domain.Domain
 import com.anrisoftware.sscontrol.httpd.statements.webservice.WebService
 
 /**
- * phpLDAPAdmin.
+ * phpMyAdmin.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-abstract class PhpldapadminConfig {
+abstract class PhpmyadminConfig {
 
     LinuxScript script
 
@@ -38,9 +38,9 @@ abstract class PhpldapadminConfig {
     abstract void deployService(Domain domain, WebService service, List config)
 
     /**
-     * Returns the default phpLDAPAdmin properties.
+     * Returns the default phpMyAdmin properties.
      */
-    abstract ContextProperties getPhpldapadminProperties()
+    abstract ContextProperties getMyadminProperties()
 
     void setScript(LinuxScript script) {
         this.script = script

@@ -16,41 +16,37 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd-apache. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.apache.phpldapadmin.linux
+package com.anrisoftware.sscontrol.httpd.apache.phpmyadmin.apache_2_2
 
-import com.anrisoftware.propertiesutils.ContextProperties
-import com.anrisoftware.sscontrol.core.service.LinuxScript
+import javax.inject.Inject
+
+import com.anrisoftware.sscontrol.httpd.apache.apache.linux.ApacheScript
+import com.anrisoftware.sscontrol.httpd.apache.apache.linux.FcgiConfig
+import com.anrisoftware.sscontrol.httpd.apache.phpmyadmin.linux.PhpmyadminConfig
 import com.anrisoftware.sscontrol.httpd.statements.domain.Domain
 import com.anrisoftware.sscontrol.httpd.statements.webservice.WebService
 
 /**
- * phpLDAPAdmin.
+ * Fcgi phpMyAdmin.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-abstract class PhpldapadminConfig {
+abstract class FcgiPhpmyadminConfig extends PhpmyadminConfig {
 
-    LinuxScript script
+    @Inject
+    FcgiConfig fcgiConfig
 
-    abstract void deployDomain(Domain domain, Domain refDomain, WebService service, List config)
-
-    abstract void deployService(Domain domain, WebService service, List config)
-
-    /**
-     * Returns the default phpLDAPAdmin properties.
-     */
-    abstract ContextProperties getPhpldapadminProperties()
-
-    void setScript(LinuxScript script) {
-        this.script = script
+    @Override
+    void deployDomain(Domain domain, Domain refDomain, WebService service, List config) {
+        fcgiConfig.script = script
+        fcgiConfig.deployConfig domain
     }
 
-    def propertyMissing(String name) {
-        script.getProperty name
-    }
-
-    def methodMissing(String name, def args) {
-        script.invokeMethod name, args
+    @Override
+    void deployService(Domain domain, WebService service, List config) {
+        fcgiConfig.script = script
+        fcgiConfig.enableFcgi()
+        fcgiConfig.deployConfig domain
     }
 }

@@ -33,10 +33,10 @@ import javax.inject.Singleton;
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
 import com.anrisoftware.sscontrol.core.service.LinuxScript;
-import com.anrisoftware.sscontrol.httpd.apache.phpmyadmin.ubuntu_10_04.PhpmyadminConfig;
+import com.anrisoftware.sscontrol.httpd.apache.phpmyadmin.ubuntu_10_04.UbuntuConfig;
 
 /**
- * Logging messages for {@link PhpmyadminConfig}.
+ * Logging messages for {@link UbuntuConfig}.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
@@ -76,10 +76,10 @@ class RoundcubeConfigLogger extends AbstractLogger {
 	}
 
 	/**
-	 * Creates a logger for {@link PhpmyadminConfig}.
+	 * Creates a logger for {@link UbuntuConfig}.
 	 */
 	public RoundcubeConfigLogger() {
-		super(PhpmyadminConfig.class);
+		super(UbuntuConfig.class);
 	}
 
 	void reconfigureService(LinuxScript script, Object worker) {

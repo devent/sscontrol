@@ -16,36 +16,32 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd-apache. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.apache.phpmyadmin.ubuntu_10_04
+package com.anrisoftware.sscontrol.httpd.apache.phpmyadmin.ubuntu
 
-import static com.anrisoftware.sscontrol.httpd.apache.apache.ubuntu_10_04.Ubuntu_10_04_ScriptFactory.PROFILE;
+import static com.anrisoftware.sscontrol.httpd.apache.apache.ubuntu_10_04.Ubuntu_10_04_ScriptFactory.PROFILE
 
 import javax.inject.Inject
 
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.Templates
-import com.anrisoftware.sscontrol.httpd.apache.apache.api.ServiceConfig;
-import com.anrisoftware.sscontrol.httpd.apache.apache.linux.ApacheScript;
-import com.anrisoftware.sscontrol.httpd.apache.apache.linux.FcgiConfig;
-import com.anrisoftware.sscontrol.httpd.apache.apache.ubuntu_10_04.Ubuntu_10_04_ScriptFactory;
-import com.anrisoftware.sscontrol.httpd.apache.phpmyadmin.linux.BasePhpmyadminConfig;
+import com.anrisoftware.sscontrol.core.service.LinuxScript
+import com.anrisoftware.sscontrol.httpd.apache.apache.linux.FcgiConfig
+import com.anrisoftware.sscontrol.httpd.apache.phpmyadmin.apache_2_2.FcgiPhpmyadminConfig
 import com.anrisoftware.sscontrol.httpd.statements.domain.Domain
 import com.anrisoftware.sscontrol.httpd.statements.phpmyadmin.PhpmyadminService
 import com.anrisoftware.sscontrol.httpd.statements.webservice.WebService
 import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokenTemplate
 
 /**
- * Configures the phpmyadmin/service.
+ * Ubuntu fcgi phpMyAdmin.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class PhpmyadminConfig extends BasePhpmyadminConfig implements ServiceConfig {
-
-    public static final String NAME = "phpmyadmin"
+abstract class UbuntuPhpmyadminConfig extends FcgiPhpmyadminConfig {
 
     @Inject
-    PhpmyadminConfigLogger log
+    UbuntuPhpmyadminConfigLogger log
 
     Templates phpmyadminTemplates
 
@@ -53,39 +49,15 @@ class PhpmyadminConfig extends BasePhpmyadminConfig implements ServiceConfig {
 
     TemplateResource phpmyadminCommandsTemplate
 
-    @Inject
-    FcgiConfig fcgiConfig
-
-    @Override
-    String getProfile() {
-        PROFILE
-    }
-
-    @Override
-    String getServiceName() {
-        NAME
-    }
-
-    @Override
-    void setScript(ApacheScript script) {
-        super.setScript script
-        phpmyadminTemplates = templatesFactory.create "Apache_2_2_Phpmyadmin"
-        phpmyadminConfigTemplate = phpmyadminTemplates.getResource "config"
-        phpmyadminCommandsTemplate = phpmyadminTemplates.getResource "commands"
-    }
-
     @Override
     void deployDomain(Domain domain, Domain refDomain, WebService service, List config) {
-        fcgiConfig.script = script
-        fcgiConfig.deployConfig domain
+        super.deployDomain domain, refDomain, service, config
         createDomainConfig domain, service, config
     }
 
     @Override
     void deployService(Domain domain, WebService service, List config) {
-        fcgiConfig.script = script
-        fcgiConfig.enableFcgi()
-        fcgiConfig.deployConfig domain
+        super.deployService domain, service, config
         installPackages phpmyadminPackages
         deployConfiguration service
         reconfigureService()
@@ -94,15 +66,32 @@ class PhpmyadminConfig extends BasePhpmyadminConfig implements ServiceConfig {
         createDomainConfig domain, service, config
     }
 
+    /**
+     * Returns the list of needed packages for phpMyAdmin.
+     *
+     * <ul>
+     * <li>profile property {@code "phpmyadmin_packages"}</li>
+     * </ul>
+     *
+     * @see #getMyadminProperties()
+     */
+    List getPhpmyadminPackages() {
+        profileListProperty "phpmyadmin_packages", myadminProperties
+    }
+
     void createDomainConfig(Domain domain, PhpmyadminService service, List serviceConfig) {
         def config = phpmyadminConfigTemplate.getText(true, "domainConfig",
                 "domain", domain,
                 "service", service,
                 "properties", script,
                 "fcgiProperties", fcgiConfig)
+        log.domainConfigCreated script, domain, config
         serviceConfig << config
     }
 
+    /**
+     * Imports the phpMyAdmin tables.
+     */
     void importTables(PhpmyadminService service) {
         def worker = scriptCommandFactory.create(
                 phpmyadminCommandsTemplate, "importTables",
@@ -111,18 +100,60 @@ class PhpmyadminConfig extends BasePhpmyadminConfig implements ServiceConfig {
                 "admin", service.adminUser,
                 "user", service.controlUser,
                 "script", databaseScriptFile)()
-        log.importTables script, worker
+        log.importTables script, worker, databaseScriptFile
     }
 
     /**
-     * Deploys the phpmyadmin configuration.
+     * phpMyAdmin database script file, for
+     * example {@code "/usr/share/doc/phpmyadmin/examples/create_tables.sql.gz"}.
+     *
+     * <ul>
+     * <li>profile property {@code "phpmyadmin_database_script_file"}</li>
+     * </ul>
+     *
+     * @see #getMyadminProperties()
+     */
+    File getDatabaseScriptFile() {
+        profileDirProperty "phpmyadmin_database_script_file", configurationFile
+    }
+
+    /**
+     * Returns the MySQL client command, for example {@code /usr/bin/mysql}.
+     *
+     * <ul>
+     * <li>profile property {@code "mysql_command"}</li>
+     * </ul>
+     *
+     * @see #getMyadminProperties()
+     */
+    String getMysqlCommand() {
+        profileProperty "mysql_command", myadminProperties
+    }
+
+    /**
+     * Deploys the phpMyAdmin configuration.
      */
     void deployConfiguration(PhpmyadminService service) {
-        deployConfiguration configurationTokens(), phpmyadminConfiguration, phpmyadminConfigurations(service), configurationFile
+        def current = currentConfiguration configurationFile
+        deployConfiguration configurationTokens(), current, phpmyadminConfigurations(service), configurationFile
     }
 
     /**
-     * Returns the phpmyadmin configurations.
+     * phpMyAdmin configuration file, for
+     * example {@code "/etc/dbconfig-common/phpmyadmin.conf"}.
+     *
+     * <ul>
+     * <li>profile property {@code "phpmyadmin_configuration_file"}</li>
+     * </ul>
+     *
+     * @see #getMyadminProperties()
+     */
+    File getConfigurationFile() {
+        profileDirProperty "phpmyadmin_configuration_file", myadminProperties
+    }
+
+    /**
+     * Returns the phpMyAdmin configurations.
      */
     List phpmyadminConfigurations(PhpmyadminService service) {
         [
@@ -180,10 +211,63 @@ class PhpmyadminConfig extends BasePhpmyadminConfig implements ServiceConfig {
         ]
     }
 
-    def reconfigureService() {
+    /**
+     * phpMyAdmin local configuration file, for
+     * example {@code "/var/lib/phpmyadmin/config.inc.php"}.
+     *
+     * <ul>
+     * <li>profile property {@code "phpmyadmin_local_config_file"}</li>
+     * </ul>
+     *
+     * @see #getMyadminProperties()
+     */
+    File getLocalConfigFile() {
+        profileDirProperty "phpmyadmin_local_config_file", myadminProperties
+    }
+
+    /**
+     * phpMyAdmin local blowfish secret file, for
+     * example {@code "/var/lib/phpmyadmin/blowfish_secret.inc.php"}.
+     *
+     * <ul>
+     * <li>profile property {@code "phpmyadmin_local_blowfish_secret_file"}</li>
+     * </ul>
+     *
+     * @see #getMyadminProperties()
+     */
+    File getLocalBlowfishFile() {
+        profileDirProperty "phpmyadmin_local_blowfish_secret_file", myadminProperties
+    }
+
+    /**
+     * phpMyAdmin local database configuration file, for
+     * example {@code "/etc/phpmyadmin/config-db.php"}.
+     *
+     * <ul>
+     * <li>profile property {@code "phpmyadmin_local_database_config_file"}</li>
+     * </ul>
+     *
+     * @see #getMyadminProperties()
+     */
+    File getLocalDatabaseConfigFile() {
+        profileDirProperty "phpmyadmin_local_database_config_file", myadminProperties
+    }
+
+    /**
+     * Reconfigure phpMyAdmin.
+     */
+    void reconfigureService() {
         def worker = scriptCommandFactory.create(
                 phpmyadminCommandsTemplate, "reconfigure",
                 "command", reconfigureCommand)()
         log.reconfigureService script, worker
+    }
+
+    @Override
+    void setScript(LinuxScript script) {
+        super.setScript script
+        phpmyadminTemplates = templatesFactory.create "UbuntuPhpmyadmin"
+        phpmyadminConfigTemplate = phpmyadminTemplates.getResource "config"
+        phpmyadminCommandsTemplate = phpmyadminTemplates.getResource "commands"
     }
 }

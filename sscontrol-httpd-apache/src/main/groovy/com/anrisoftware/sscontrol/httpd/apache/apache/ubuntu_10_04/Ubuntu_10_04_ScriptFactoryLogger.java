@@ -18,9 +18,9 @@
  */
 package com.anrisoftware.sscontrol.httpd.apache.apache.ubuntu_10_04;
 
-import static com.anrisoftware.sscontrol.httpd.apache.apache.ubuntu_10_04.Ubuntu10_04ScriptFactoryLogger._.errorCreateScript;
-import static com.anrisoftware.sscontrol.httpd.apache.apache.ubuntu_10_04.Ubuntu10_04ScriptFactoryLogger._.errorCreateScript1;
-import static com.anrisoftware.sscontrol.httpd.apache.apache.ubuntu_10_04.Ubuntu10_04ScriptFactoryLogger._.scriptFactory;
+import static com.anrisoftware.sscontrol.httpd.apache.apache.ubuntu_10_04.Ubuntu_10_04_ScriptFactoryLogger._.errorCreateScript;
+import static com.anrisoftware.sscontrol.httpd.apache.apache.ubuntu_10_04.Ubuntu_10_04_ScriptFactoryLogger._.errorCreateScript1;
+import static com.anrisoftware.sscontrol.httpd.apache.apache.ubuntu_10_04.Ubuntu_10_04_ScriptFactoryLogger._.scriptFactory;
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
 import com.anrisoftware.sscontrol.core.api.ServiceException;
@@ -31,7 +31,7 @@ import com.anrisoftware.sscontrol.core.api.ServiceException;
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class Ubuntu10_04ScriptFactoryLogger extends AbstractLogger {
+class Ubuntu_10_04_ScriptFactoryLogger extends AbstractLogger {
 
 	enum _ {
 
@@ -56,7 +56,7 @@ class Ubuntu10_04ScriptFactoryLogger extends AbstractLogger {
 	/**
 	 * Create logger for {@link Ubuntu_10_04_ScriptFactory}.
 	 */
-	Ubuntu10_04ScriptFactoryLogger() {
+	Ubuntu_10_04_ScriptFactoryLogger() {
 		super(Ubuntu_10_04_ScriptFactory.class);
 	}
 

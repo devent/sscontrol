@@ -16,41 +16,48 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd-apache. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.apache.phpldapadmin.linux
+package com.anrisoftware.sscontrol.httpd.apache.phpmyadmin.ubuntu_10_04
+
+import static com.anrisoftware.sscontrol.httpd.apache.apache.ubuntu_10_04.Ubuntu_10_04_ScriptFactory.PROFILE
+
+import javax.inject.Inject
 
 import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.sscontrol.core.service.LinuxScript
-import com.anrisoftware.sscontrol.httpd.statements.domain.Domain
-import com.anrisoftware.sscontrol.httpd.statements.webservice.WebService
+import com.anrisoftware.sscontrol.httpd.apache.apache.api.ServiceConfig
+import com.anrisoftware.sscontrol.httpd.apache.apache.ubuntu_10_04.Ubuntu_10_04_ScriptFactory
+import com.anrisoftware.sscontrol.httpd.apache.phpmyadmin.ubuntu.UbuntuPhpmyadminConfig
 
 /**
- * phpLDAPAdmin.
+ * Ubuntu 10.04 fcgi phpMyAdmin.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-abstract class PhpldapadminConfig {
+class UbuntuConfig extends UbuntuPhpmyadminConfig implements ServiceConfig {
 
-    LinuxScript script
+    public static final String NAME = "phpmyadmin"
 
-    abstract void deployDomain(Domain domain, Domain refDomain, WebService service, List config)
+    @Inject
+    UbuntuPropertiesProvider ubuntuPropertiesProvider
 
-    abstract void deployService(Domain domain, WebService service, List config)
+    @Override
+    String getProfile() {
+        PROFILE
+    }
 
-    /**
-     * Returns the default phpLDAPAdmin properties.
-     */
-    abstract ContextProperties getPhpldapadminProperties()
+    @Override
+    String getServiceName() {
+        NAME
+    }
 
+    @Override
     void setScript(LinuxScript script) {
-        this.script = script
+        super.setScript script
     }
 
-    def propertyMissing(String name) {
-        script.getProperty name
-    }
-
-    def methodMissing(String name, def args) {
-        script.invokeMethod name, args
+    @Override
+    ContextProperties getMyadminProperties() {
+        ubuntuPropertiesProvider.get()
     }
 }

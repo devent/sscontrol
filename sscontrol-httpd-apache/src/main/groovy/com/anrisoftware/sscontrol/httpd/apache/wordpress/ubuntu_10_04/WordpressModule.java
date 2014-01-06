@@ -16,32 +16,19 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd-apache. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.apache.linux.roundcube;
+package com.anrisoftware.sscontrol.httpd.apache.wordpress.ubuntu_10_04;
 
-import static com.google.inject.multibindings.MapBinder.newMapBinder;
-
-import com.anrisoftware.sscontrol.httpd.apache.roundcube.api.RoundcubeDatabaseConfig;
-import com.anrisoftware.sscontrol.httpd.apache.roundcube.linux.RoundcubeMysqlConfig;
 import com.google.inject.AbstractModule;
-import com.google.inject.multibindings.MapBinder;
 
 /**
- * Roundcube web service module.
+ * Wordpress web service module.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-public class RoundcubeModule extends AbstractModule {
+public class WordpressModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        bindDatabaseConfig();
-    }
-
-    private void bindDatabaseConfig() {
-        MapBinder<String, RoundcubeDatabaseConfig> map = newMapBinder(binder(),
-                String.class, RoundcubeDatabaseConfig.class);
-        map.addBinding(RoundcubeMysqlConfig.NAME)
-                .to(RoundcubeMysqlConfig.class);
     }
 }

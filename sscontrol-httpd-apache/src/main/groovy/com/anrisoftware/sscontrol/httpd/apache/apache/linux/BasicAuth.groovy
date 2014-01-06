@@ -16,32 +16,29 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd-apache. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.apache.linux.roundcube;
+package com.anrisoftware.sscontrol.httpd.apache.apache.linux
 
-import static com.google.inject.multibindings.MapBinder.newMapBinder;
-
-import com.anrisoftware.sscontrol.httpd.apache.roundcube.api.RoundcubeDatabaseConfig;
-import com.anrisoftware.sscontrol.httpd.apache.roundcube.linux.RoundcubeMysqlConfig;
-import com.google.inject.AbstractModule;
-import com.google.inject.multibindings.MapBinder;
+import com.anrisoftware.sscontrol.core.service.LinuxScript
 
 /**
- * Roundcube web service module.
- * 
+ * Sets the parent script http/auth.
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-public class RoundcubeModule extends AbstractModule {
+class BasicAuth {
 
-    @Override
-    protected void configure() {
-        bindDatabaseConfig();
+    LinuxScript script
+
+    void setScript(LinuxScript script) {
+        this.script = script
     }
 
-    private void bindDatabaseConfig() {
-        MapBinder<String, RoundcubeDatabaseConfig> map = newMapBinder(binder(),
-                String.class, RoundcubeDatabaseConfig.class);
-        map.addBinding(RoundcubeMysqlConfig.NAME)
-                .to(RoundcubeMysqlConfig.class);
+    def propertyMissing(String name) {
+        script.getProperty name
+    }
+
+    def methodMissing(String name, def args) {
+        script.invokeMethod name, args
     }
 }

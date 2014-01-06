@@ -16,32 +16,31 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd-apache. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.apache.linux.roundcube;
+package com.anrisoftware.sscontrol.httpd.apache.apache.linux
 
-import static com.google.inject.multibindings.MapBinder.newMapBinder;
-
-import com.anrisoftware.sscontrol.httpd.apache.roundcube.api.RoundcubeDatabaseConfig;
-import com.anrisoftware.sscontrol.httpd.apache.roundcube.linux.RoundcubeMysqlConfig;
-import com.google.inject.AbstractModule;
-import com.google.inject.multibindings.MapBinder;
+import com.anrisoftware.sscontrol.core.service.LinuxScript
+import com.anrisoftware.sscontrol.httpd.statements.domain.Domain
+import com.anrisoftware.sscontrol.httpd.statements.redirect.Redirect
 
 /**
- * Roundcube web service module.
- * 
+ * Redirect configuration.
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-public class RoundcubeModule extends AbstractModule {
+class RedirectConfig {
 
-    @Override
-    protected void configure() {
-        bindDatabaseConfig();
+    LinuxScript script
+
+    def deployRedirect(Domain domain, Redirect redirect) {
+        enableMod "rewrite"
     }
 
-    private void bindDatabaseConfig() {
-        MapBinder<String, RoundcubeDatabaseConfig> map = newMapBinder(binder(),
-                String.class, RoundcubeDatabaseConfig.class);
-        map.addBinding(RoundcubeMysqlConfig.NAME)
-                .to(RoundcubeMysqlConfig.class);
+    def propertyMissing(String name) {
+        script.getProperty name
+    }
+
+    def methodMissing(String name, def args) {
+        script.invokeMethod name, args
     }
 }

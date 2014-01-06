@@ -16,32 +16,42 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd-apache. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.apache.linux.roundcube;
+package com.anrisoftware.sscontrol.httpd.apache.phpldapadmin.ubuntu_10_04;
 
-import static com.google.inject.multibindings.MapBinder.newMapBinder;
+import javax.inject.Singleton;
 
-import com.anrisoftware.sscontrol.httpd.apache.roundcube.api.RoundcubeDatabaseConfig;
-import com.anrisoftware.sscontrol.httpd.apache.roundcube.linux.RoundcubeMysqlConfig;
-import com.google.inject.AbstractModule;
-import com.google.inject.multibindings.MapBinder;
+import com.anrisoftware.globalpom.log.AbstractLogger;
 
 /**
- * Roundcube web service module.
+ * Logging messages for {@link UbuntuConfig}.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-public class RoundcubeModule extends AbstractModule {
+@Singleton
+class UbuntuConfigLogger extends AbstractLogger {
 
-    @Override
-    protected void configure() {
-        bindDatabaseConfig();
+    enum _ {
+
+        message("");
+
+        private String name;
+
+        private _(String name) {
+            this.name = name;
+        }
+
+        @Override
+        public String toString() {
+            return name;
+        }
     }
 
-    private void bindDatabaseConfig() {
-        MapBinder<String, RoundcubeDatabaseConfig> map = newMapBinder(binder(),
-                String.class, RoundcubeDatabaseConfig.class);
-        map.addBinding(RoundcubeMysqlConfig.NAME)
-                .to(RoundcubeMysqlConfig.class);
+    /**
+     * Creates a logger for {@link UbuntuConfig}.
+     */
+    public UbuntuConfigLogger() {
+        super(UbuntuConfig.class);
     }
+
 }

@@ -1,0 +1,44 @@
+serversConfig(service) ::= <<
+<service.servers:serverConfig();separator="\n">
+>>
+
+serverConfig(server) ::= <<
+// Server "<server.name>"
+$servers->newServer('ldap_pla');
+$servers->setValue('server','name','<server.name>');
+$servers->setValue('server','host','<server.host>');
+<if(server.port)>$servers->setValue('server','port',<server.port>);<endif>
+$servers->setValue('server','base',array(''));
+$servers->setValue('login','auth_type','session');
+$servers->setValue('login','bind_id','');
+$servers->setValue('login','bind_pass','');
+$servers->setValue('server','tls',false);
+
+>>
+
+firstNewServer() ::= <<
+//   declaration. */
+// $servers->newServer('ldap_pla');
+>>
+
+firstNewServer_search() ::= <%
+   declaration\\. \\*/\n\\$servers->newServer\\('ldap_pla'\\);
+%>
+
+firstNewServerName() ::= <<
+//   phpLDAPadmin to identify this LDAP server to users. *
+// $servers->setValue('server','name','My LDAP Server');
+>>
+
+firstNewServerName_search() ::= <%
+   phpLDAPadmin to identify this LDAP server to users\\. \\*/\n\\$servers->setValue\\('server','name','My LDAP Server'\\);
+%>
+
+includeServersConfig(file) ::= <<
+include "<file>";
+?\>
+>>
+
+includeServersConfig_search(file) ::= <%
+(include "<file>";\n)?\\?>
+%>

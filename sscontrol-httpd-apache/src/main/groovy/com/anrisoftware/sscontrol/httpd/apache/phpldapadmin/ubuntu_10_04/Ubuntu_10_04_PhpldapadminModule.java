@@ -16,32 +16,33 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd-apache. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.apache.linux.roundcube;
+package com.anrisoftware.sscontrol.httpd.apache.phpldapadmin.ubuntu_10_04;
 
+import static com.anrisoftware.sscontrol.httpd.apache.apache.ubuntu_10_04.Ubuntu_10_04_ScriptFactory.PROFILE;
 import static com.google.inject.multibindings.MapBinder.newMapBinder;
+import static java.lang.String.format;
 
-import com.anrisoftware.sscontrol.httpd.apache.roundcube.api.RoundcubeDatabaseConfig;
-import com.anrisoftware.sscontrol.httpd.apache.roundcube.linux.RoundcubeMysqlConfig;
+import com.anrisoftware.sscontrol.httpd.apache.apache.api.ServiceConfig;
 import com.google.inject.AbstractModule;
 import com.google.inject.multibindings.MapBinder;
 
 /**
- * Roundcube web service module.
- * 
+ * Binds the phpLDAPAdmin Ubuntu 10.04.
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-public class RoundcubeModule extends AbstractModule {
+public class Ubuntu_10_04_PhpldapadminModule extends AbstractModule {
 
-    @Override
-    protected void configure() {
-        bindDatabaseConfig();
-    }
+	@Override
+	protected void configure() {
+		bindServiceConfig();
+	}
 
-    private void bindDatabaseConfig() {
-        MapBinder<String, RoundcubeDatabaseConfig> map = newMapBinder(binder(),
-                String.class, RoundcubeDatabaseConfig.class);
-        map.addBinding(RoundcubeMysqlConfig.NAME)
-                .to(RoundcubeMysqlConfig.class);
-    }
+	private void bindServiceConfig() {
+		MapBinder<String, ServiceConfig> map = newMapBinder(binder(),
+				String.class, ServiceConfig.class);
+		map.addBinding(format("%s.%s", PROFILE, UbuntuConfig.NAME)).to(
+				UbuntuConfig.class);
+	}
 }

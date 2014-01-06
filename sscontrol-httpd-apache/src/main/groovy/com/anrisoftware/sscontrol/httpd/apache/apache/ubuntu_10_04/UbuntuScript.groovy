@@ -16,32 +16,31 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd-apache. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.apache.linux.roundcube;
+package com.anrisoftware.sscontrol.httpd.apache.apache.ubuntu_10_04
 
-import static com.google.inject.multibindings.MapBinder.newMapBinder;
+import javax.inject.Inject
 
-import com.anrisoftware.sscontrol.httpd.apache.roundcube.api.RoundcubeDatabaseConfig;
-import com.anrisoftware.sscontrol.httpd.apache.roundcube.linux.RoundcubeMysqlConfig;
-import com.google.inject.AbstractModule;
-import com.google.inject.multibindings.MapBinder;
+import com.anrisoftware.propertiesutils.ContextProperties
+import com.anrisoftware.sscontrol.httpd.apache.apache.apache_2_2.Apache_2_2_Script
 
 /**
- * Roundcube web service module.
- * 
+ * Uses the Apache service on the Ubuntu 10.04 Linux system.
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-public class RoundcubeModule extends AbstractModule {
+class UbuntuScript extends Apache_2_2_Script {
+
+    @Inject
+    UbuntuPropertiesProvider ubuntuProperties
 
     @Override
-    protected void configure() {
-        bindDatabaseConfig();
+    def distributionSpecificConfiguration() {
+        installPackages()
     }
 
-    private void bindDatabaseConfig() {
-        MapBinder<String, RoundcubeDatabaseConfig> map = newMapBinder(binder(),
-                String.class, RoundcubeDatabaseConfig.class);
-        map.addBinding(RoundcubeMysqlConfig.NAME)
-                .to(RoundcubeMysqlConfig.class);
+    @Override
+    ContextProperties getDefaultProperties() {
+        ubuntuProperties.get()
     }
 }

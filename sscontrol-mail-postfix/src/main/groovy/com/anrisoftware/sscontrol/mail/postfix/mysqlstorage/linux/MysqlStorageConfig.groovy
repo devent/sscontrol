@@ -177,6 +177,11 @@ abstract class MysqlStorageConfig extends BaseStorage implements StorageConfig {
         string = configTemplate.getText(true, "domains", "properties", this, "service", service)
         FileUtils.write mailboxDomainsFile, string
         log.mailboxDomainsDeployed script, mailboxMapsFile, string
+        changeOwner owner: postfixUser, ownerGroup: postfixGroup, files: [
+            mailboxMapsFile,
+            aliasMapsFile,
+            mailboxDomainsFile
+        ]
         changeMod mod: "o-r", files: [
             mailboxMapsFile,
             aliasMapsFile,

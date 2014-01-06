@@ -1396,4 +1396,30 @@ abstract class BasePostfixScript extends LinuxScript {
         ST st = new ST(mailboxPattern).add("domain", user.domain.name).add("user", user.name)
         st.render()
     }
+
+    /**
+     * Returns the Postfix user, for example {@code "postfix"}.
+     *
+     * <ul>
+     * <li>profile property {@code "postfix_user"}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    String getPostfixUser() {
+        profileProperty "postfix_user", defaultProperties
+    }
+
+    /**
+     * Returns the Postfix group, for example {@code "postfix"}.
+     *
+     * <ul>
+     * <li>profile property {@code "postfix_group"}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    String getPostfixGroup() {
+        profileProperty "postfix_group", defaultProperties
+    }
 }

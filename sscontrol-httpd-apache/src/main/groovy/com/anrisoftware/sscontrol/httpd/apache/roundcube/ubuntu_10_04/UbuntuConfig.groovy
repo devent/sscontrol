@@ -18,45 +18,39 @@
  */
 package com.anrisoftware.sscontrol.httpd.apache.roundcube.ubuntu_10_04
 
-import static com.anrisoftware.sscontrol.httpd.apache.apache.ubuntu_10_04.Ubuntu_10_04_ScriptFactory.PROFILE;
+import static com.anrisoftware.sscontrol.httpd.apache.apache.ubuntu_10_04.Ubuntu_10_04_ScriptFactory.PROFILE
 import static org.apache.commons.io.FileUtils.*
 
 import javax.inject.Inject
 
+import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.resources.templates.api.TemplateResource
-import com.anrisoftware.sscontrol.httpd.apache.apache.api.ServiceConfig;
-import com.anrisoftware.sscontrol.httpd.apache.apache.linux.ApacheScript;
-import com.anrisoftware.sscontrol.httpd.apache.apache.linux.FcgiConfig;
-import com.anrisoftware.sscontrol.httpd.apache.apache.ubuntu_10_04.Ubuntu_10_04_ScriptFactory;
-import com.anrisoftware.sscontrol.httpd.apache.roundcube.linux.BaseRoundcube_0_9_Config;
+import com.anrisoftware.sscontrol.httpd.apache.apache.api.ServiceConfig
+import com.anrisoftware.sscontrol.httpd.apache.apache.linux.ApacheScript
+import com.anrisoftware.sscontrol.httpd.apache.apache.linux.FcgiConfig
+import com.anrisoftware.sscontrol.httpd.apache.apache.ubuntu_10_04.Ubuntu_10_04_ScriptFactory
+import com.anrisoftware.sscontrol.httpd.apache.roundcube.roundcube_3.Roundcube_0_9_Config
 import com.anrisoftware.sscontrol.httpd.statements.domain.Domain
 import com.anrisoftware.sscontrol.httpd.statements.phpmyadmin.PhpmyadminService
 import com.anrisoftware.sscontrol.httpd.statements.webservice.WebService
 import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokenTemplate
 
 /**
- * Configures the roundcube service for Ubuntu 10.04.
+ * Ubuntu 10.04 Roundcube.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class RoundcubeConfig extends BaseRoundcube_0_9_Config implements ServiceConfig {
+class UbuntuConfig extends Roundcube_0_9_Config implements ServiceConfig {
 
     @Inject
-    private RoundcubeConfigLogger log
+    private UbuntuConfigLogger log
+
+    @Inject
+    private UbuntuPropertiesProvider ubuntuPropertiesProvider
 
     @Inject
     private FcgiConfig fcgiConfig
-
-    @Override
-    void setScript(ApacheScript script) {
-        super.setScript script
-    }
-
-    @Override
-    String getProfile() {
-        PROFILE
-    }
 
     @Override
     void deployDomain(Domain domain, Domain refDomain, WebService service, List config) {
@@ -167,5 +161,20 @@ class RoundcubeConfig extends BaseRoundcube_0_9_Config implements ServiceConfig 
                 roundcubeCommandsTemplate, "reconfigure",
                 "command", reconfigureCommand)()
         log.reconfigureService script, worker
+    }
+
+    @Override
+    ContextProperties getRoundcubeProperties() {
+        ubuntuPropertiesProvider.get()
+    }
+
+    @Override
+    void setScript(ApacheScript script) {
+        super.setScript script
+    }
+
+    @Override
+    String getProfile() {
+        PROFILE
     }
 }

@@ -16,24 +16,25 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd-apache. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.apache.roundcube.linux
+package com.anrisoftware.sscontrol.httpd.apache.roundcube.roundcube_3
 
 import static org.apache.commons.io.FileUtils.*
 
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.Templates
-import com.anrisoftware.sscontrol.httpd.apache.apache.linux.ApacheScript;
+import com.anrisoftware.sscontrol.httpd.apache.apache.linux.ApacheScript
+import com.anrisoftware.sscontrol.httpd.apache.roundcube.linux.RoundcubeConfig
 import com.anrisoftware.sscontrol.httpd.statements.roundcube.Host
 import com.anrisoftware.sscontrol.httpd.statements.roundcube.RoundcubeService
 import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokenTemplate
 
 /**
- * Roundcube 0.9 configuration.
+ * Roundcube 0.9.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class BaseRoundcube_0_9_Config extends BaseRoundcubeConfig {
+abstract class Roundcube_0_9_Config extends RoundcubeConfig {
 
     Templates roundcubeTemplates
 

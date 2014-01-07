@@ -20,12 +20,13 @@ package com.anrisoftware.sscontrol.httpd.apache.roundcube.linux;
 
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.Templates
-import com.anrisoftware.sscontrol.httpd.apache.apache.linux.ApacheScript;
-import com.anrisoftware.sscontrol.httpd.apache.roundcube.api.RoundcubeDatabaseConfig;
+import com.anrisoftware.sscontrol.core.service.LinuxScript
+import com.anrisoftware.sscontrol.httpd.apache.apache.linux.ApacheScript
+import com.anrisoftware.sscontrol.httpd.apache.roundcube.api.RoundcubeDatabaseConfig
 import com.anrisoftware.sscontrol.httpd.statements.roundcube.RoundcubeService
 
 /**
- * Roundcube MySQL database back-end.
+ * MySQL Roundcube.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
@@ -53,7 +54,7 @@ class RoundcubeMysqlConfig implements RoundcubeDatabaseConfig {
     }
 
     @Override
-    void setScript(ApacheScript script) {
+    void setScript(LinuxScript script) {
         this.script = script;
         roundcubeTemplates = templatesFactory.create "Roundcube_0_9"
         roundcubeConfigTemplate = roundcubeTemplates.getResource "config"

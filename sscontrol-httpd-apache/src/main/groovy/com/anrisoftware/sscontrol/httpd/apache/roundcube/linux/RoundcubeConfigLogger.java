@@ -18,7 +18,7 @@
  */
 package com.anrisoftware.sscontrol.httpd.apache.roundcube.linux;
 
-import static com.anrisoftware.sscontrol.httpd.apache.roundcube.linux.BaseRoundcubeConfigLogger._.database_config_null;
+import static com.anrisoftware.sscontrol.httpd.apache.roundcube.linux.RoundcubeConfigLogger._.database_config_null;
 import static org.apache.commons.lang3.Validate.notNull;
 
 import javax.inject.Singleton;
@@ -27,13 +27,13 @@ import com.anrisoftware.globalpom.log.AbstractLogger;
 import com.anrisoftware.sscontrol.httpd.apache.apache.linux.ApacheScript;
 
 /**
- * Logging messages for {@link BaseRoundcubeConfig}.
+ * Logging messages for {@link RoundcubeConfig}.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
 @Singleton
-class BaseRoundcubeConfigLogger extends AbstractLogger {
+class RoundcubeConfigLogger extends AbstractLogger {
 
     enum _ {
 
@@ -51,11 +51,11 @@ class BaseRoundcubeConfigLogger extends AbstractLogger {
         }
     }
 
-    BaseRoundcubeConfigLogger() {
-        super(BaseRoundcubeConfig.class);
+    RoundcubeConfigLogger() {
+        super(RoundcubeConfig.class);
     }
 
-    void checkDatabaseConfig(ApacheScript script, Object config, String name) {
+    void checkDatabaseConfig(Object config, ApacheScript script, String name) {
         notNull(config, database_config_null.toString(), name, script);
     }
 }

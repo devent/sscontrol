@@ -18,14 +18,14 @@
  */
 package com.anrisoftware.sscontrol.httpd.apache.roundcube.ubuntu_10_04;
 
-import static com.anrisoftware.sscontrol.httpd.apache.roundcube.ubuntu_10_04.RoundcubeConfigLogger._.download_archive_info;
-import static com.anrisoftware.sscontrol.httpd.apache.roundcube.ubuntu_10_04.RoundcubeConfigLogger._.download_archive_trace;
-import static com.anrisoftware.sscontrol.httpd.apache.roundcube.ubuntu_10_04.RoundcubeConfigLogger._.import_tables_debug;
-import static com.anrisoftware.sscontrol.httpd.apache.roundcube.ubuntu_10_04.RoundcubeConfigLogger._.import_tables_info;
-import static com.anrisoftware.sscontrol.httpd.apache.roundcube.ubuntu_10_04.RoundcubeConfigLogger._.import_tables_trace;
-import static com.anrisoftware.sscontrol.httpd.apache.roundcube.ubuntu_10_04.RoundcubeConfigLogger._.reconfigure_service_debug;
-import static com.anrisoftware.sscontrol.httpd.apache.roundcube.ubuntu_10_04.RoundcubeConfigLogger._.reconfigure_service_info;
-import static com.anrisoftware.sscontrol.httpd.apache.roundcube.ubuntu_10_04.RoundcubeConfigLogger._.reconfigure_service_trace;
+import static com.anrisoftware.sscontrol.httpd.apache.roundcube.ubuntu_10_04.UbuntuConfigLogger._.download_archive_info;
+import static com.anrisoftware.sscontrol.httpd.apache.roundcube.ubuntu_10_04.UbuntuConfigLogger._.download_archive_trace;
+import static com.anrisoftware.sscontrol.httpd.apache.roundcube.ubuntu_10_04.UbuntuConfigLogger._.import_tables_debug;
+import static com.anrisoftware.sscontrol.httpd.apache.roundcube.ubuntu_10_04.UbuntuConfigLogger._.import_tables_info;
+import static com.anrisoftware.sscontrol.httpd.apache.roundcube.ubuntu_10_04.UbuntuConfigLogger._.import_tables_trace;
+import static com.anrisoftware.sscontrol.httpd.apache.roundcube.ubuntu_10_04.UbuntuConfigLogger._.reconfigure_service_debug;
+import static com.anrisoftware.sscontrol.httpd.apache.roundcube.ubuntu_10_04.UbuntuConfigLogger._.reconfigure_service_info;
+import static com.anrisoftware.sscontrol.httpd.apache.roundcube.ubuntu_10_04.UbuntuConfigLogger._.reconfigure_service_trace;
 
 import java.net.URI;
 
@@ -42,7 +42,7 @@ import com.anrisoftware.sscontrol.httpd.apache.phpmyadmin.ubuntu_10_04.UbuntuCon
  * @since 1.0
  */
 @Singleton
-class RoundcubeConfigLogger extends AbstractLogger {
+class UbuntuConfigLogger extends AbstractLogger {
 
 	enum _ {
 
@@ -78,7 +78,7 @@ class RoundcubeConfigLogger extends AbstractLogger {
 	/**
 	 * Creates a logger for {@link UbuntuConfig}.
 	 */
-	public RoundcubeConfigLogger() {
+	public UbuntuConfigLogger() {
 		super(UbuntuConfig.class);
 	}
 

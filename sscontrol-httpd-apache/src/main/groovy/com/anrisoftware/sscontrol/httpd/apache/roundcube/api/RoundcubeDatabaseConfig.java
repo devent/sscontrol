@@ -18,7 +18,7 @@
  */
 package com.anrisoftware.sscontrol.httpd.apache.roundcube.api;
 
-import com.anrisoftware.sscontrol.httpd.apache.apache.linux.ApacheScript;
+import com.anrisoftware.sscontrol.core.service.LinuxScript;
 import com.anrisoftware.sscontrol.httpd.statements.roundcube.RoundcubeService;
 
 /**
@@ -40,16 +40,16 @@ public interface RoundcubeDatabaseConfig {
      * Sets the parent script with the properties.
      * 
      * @param script
-     *            the {@link ApacheScript}.
+     *            the {@link LinuxScript}.
      */
-    void setScript(ApacheScript script);
+    void setScript(LinuxScript script);
 
     /**
      * Returns the parent script with the properties.
      * 
-     * @return the {@link ApacheScript}.
+     * @return the {@link LinuxScript}.
      */
-    ApacheScript getScript();
+    LinuxScript getScript();
 
     /**
      * Setups the database configuration.

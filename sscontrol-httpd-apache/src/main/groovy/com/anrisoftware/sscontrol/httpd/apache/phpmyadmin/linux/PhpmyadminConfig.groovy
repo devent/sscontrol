@@ -33,8 +33,14 @@ abstract class PhpmyadminConfig {
 
     LinuxScript script
 
+    /**
+     * @see ServiceConfig#deployDomain(Domain, Domain, WebService, java.util.List)
+     */
     abstract void deployDomain(Domain domain, Domain refDomain, WebService service, List config)
 
+    /**
+     * @see ServiceConfig#deployService(Domain, WebService, java.util.List)
+     */
     abstract void deployService(Domain domain, WebService service, List config)
 
     /**
@@ -42,6 +48,9 @@ abstract class PhpmyadminConfig {
      */
     abstract ContextProperties getMyadminProperties()
 
+    /**
+     * @see ServiceConfig#setScript(LinuxScript)
+     */
     void setScript(LinuxScript script) {
         this.script = script
     }

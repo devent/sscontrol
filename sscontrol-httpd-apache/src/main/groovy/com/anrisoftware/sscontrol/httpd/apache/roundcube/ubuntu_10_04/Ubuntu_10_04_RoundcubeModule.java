@@ -23,6 +23,8 @@ import static com.google.inject.multibindings.MapBinder.newMapBinder;
 import static java.lang.String.format;
 
 import com.anrisoftware.sscontrol.httpd.apache.apache.api.ServiceConfig;
+import com.anrisoftware.sscontrol.httpd.apache.roundcube.api.RoundcubeDatabaseConfig;
+import com.anrisoftware.sscontrol.httpd.apache.roundcube.linux.RoundcubeMysqlConfig;
 import com.google.inject.AbstractModule;
 import com.google.inject.multibindings.MapBinder;
 
@@ -37,6 +39,7 @@ public class Ubuntu_10_04_RoundcubeModule extends AbstractModule {
 	@Override
 	protected void configure() {
 		bindServiceConfig();
+        bindBackendConfig();
 	}
 
 	private void bindServiceConfig() {
@@ -45,4 +48,11 @@ public class Ubuntu_10_04_RoundcubeModule extends AbstractModule {
 		map.addBinding(format("%s.%s", PROFILE, UbuntuConfig.NAME)).to(
 				UbuntuConfig.class);
 	}
+
+    private void bindBackendConfig() {
+        MapBinder<String, RoundcubeDatabaseConfig> map = newMapBinder(binder(),
+                String.class, RoundcubeDatabaseConfig.class);
+        map.addBinding(format("%s.%s", PROFILE, RoundcubeMysqlConfig.NAME)).to(
+                RoundcubeMysqlConfig.class);
+    }
 }

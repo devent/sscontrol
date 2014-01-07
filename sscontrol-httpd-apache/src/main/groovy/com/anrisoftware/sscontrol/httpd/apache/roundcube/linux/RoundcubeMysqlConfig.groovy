@@ -21,7 +21,6 @@ package com.anrisoftware.sscontrol.httpd.apache.roundcube.linux;
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.Templates
 import com.anrisoftware.sscontrol.core.service.LinuxScript
-import com.anrisoftware.sscontrol.httpd.apache.apache.linux.ApacheScript
 import com.anrisoftware.sscontrol.httpd.apache.roundcube.api.RoundcubeDatabaseConfig
 import com.anrisoftware.sscontrol.httpd.statements.roundcube.RoundcubeService
 
@@ -35,7 +34,7 @@ class RoundcubeMysqlConfig implements RoundcubeDatabaseConfig {
 
     public static final String NAME = "mysql";
 
-    private ApacheScript script;
+    private LinuxScript script;
 
     Templates roundcubeTemplates
 
@@ -61,7 +60,7 @@ class RoundcubeMysqlConfig implements RoundcubeDatabaseConfig {
     }
 
     @Override
-    ApacheScript getScript() {
+    LinuxScript getScript() {
         return script;
     }
 

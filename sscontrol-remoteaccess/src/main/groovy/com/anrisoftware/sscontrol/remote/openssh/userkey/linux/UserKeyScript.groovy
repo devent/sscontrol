@@ -101,7 +101,6 @@ abstract class UserKeyScript implements RemoteScript {
         if (!user.requires.contains(Require.passphrase)) {
             return
         }
-        println keyfile
         keyfile.delete()
         createSshkey user, keyfile
     }

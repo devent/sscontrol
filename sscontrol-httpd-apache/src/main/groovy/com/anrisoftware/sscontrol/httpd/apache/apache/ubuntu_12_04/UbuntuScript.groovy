@@ -40,6 +40,11 @@ class UbuntuScript extends Apache_2_2_Script {
     }
 
     @Override
+    String getProfileName() {
+        Ubuntu_12_04_ScriptFactory.PROFILE
+    }
+
+    @Override
     ContextProperties getDefaultProperties() {
         ubuntuProperties.get()
     }

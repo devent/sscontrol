@@ -63,6 +63,11 @@ abstract class ApacheScript extends LinuxScript {
     }
 
     /**
+     * Returns the profile name.
+     */
+    abstract String getProfileName()
+
+    /**
      * Run the distribution specific configuration.
      */
     abstract distributionSpecificConfiguration()

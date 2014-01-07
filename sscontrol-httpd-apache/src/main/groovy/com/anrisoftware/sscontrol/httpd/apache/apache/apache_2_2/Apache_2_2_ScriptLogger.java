@@ -39,37 +39,41 @@ import com.anrisoftware.sscontrol.httpd.statements.webservice.WebService;
 @Singleton
 class Apache_2_2_ScriptLogger extends AbstractLogger {
 
-	enum _ {
+    enum _ {
 
-		service_config_null("Service configuration not found for '%s'."),
+        service_config_null(
+                "Service configuration not found for '%s' profile '%s'."),
 
-		auth_config_null("Authentication configuration not found for '%s'.");
+        auth_config_null(
+                "Authentication configuration not found for '%s' profile ''%s.");
 
-		private String name;
+        private String name;
 
-		private _(String name) {
-			this.name = name;
-		}
+        private _(String name) {
+            this.name = name;
+        }
 
-		@Override
-		public String toString() {
-			return name;
-		}
-	}
+        @Override
+        public String toString() {
+            return name;
+        }
+    }
 
-	/**
-	 * Creates a logger for {@link Apache_2_2_Script}.
-	 */
-	public Apache_2_2_ScriptLogger() {
-		super(Apache_2_2_Script.class);
-	}
+    /**
+     * Creates a logger for {@link Apache_2_2_Script}.
+     */
+    public Apache_2_2_ScriptLogger() {
+        super(Apache_2_2_Script.class);
+    }
 
-	void checkServiceConfig(ServiceConfig config, WebService service) {
-		notNull(config, service_config_null.toString(), service.getName());
-	}
+    void checkServiceConfig(ServiceConfig config, WebService service,
+            String profile) {
+        String name = service.getName();
+        notNull(config, service_config_null.toString(), name, profile);
+    }
 
-	void checkAuthConfig(AuthConfig config, AbstractAuth auth) {
-		notNull(config, auth_config_null.toString(), auth.getClass()
-				.getSimpleName());
-	}
+    void checkAuthConfig(AuthConfig config, AbstractAuth auth, String profile) {
+        String name = auth.getClass().getSimpleName();
+        notNull(config, auth_config_null.toString(), name, profile);
+    }
 }

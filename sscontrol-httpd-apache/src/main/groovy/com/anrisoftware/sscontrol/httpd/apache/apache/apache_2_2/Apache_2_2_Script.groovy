@@ -18,7 +18,7 @@
  */
 package com.anrisoftware.sscontrol.httpd.apache.apache.apache_2_2
 
-import static com.anrisoftware.sscontrol.httpd.apache.apache.ubuntu_10_04.Ubuntu_10_04_ScriptFactory.PROFILE;
+import static com.anrisoftware.sscontrol.httpd.apache.apache.ubuntu_10_04.Ubuntu_10_04_ScriptFactory.PROFILE
 import static org.apache.commons.io.FileUtils.*
 
 import javax.inject.Inject
@@ -27,10 +27,10 @@ import org.apache.commons.io.FileUtils
 
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.Templates
-import com.anrisoftware.sscontrol.httpd.apache.apache.linux.ApacheScript;
-import com.anrisoftware.sscontrol.httpd.apache.apache.linux.DomainConfig;
-import com.anrisoftware.sscontrol.httpd.apache.apache.linux.RedirectConfig;
-import com.anrisoftware.sscontrol.httpd.apache.apache.linux.SslDomainConfig;
+import com.anrisoftware.sscontrol.httpd.apache.apache.linux.ApacheScript
+import com.anrisoftware.sscontrol.httpd.apache.apache.linux.DomainConfig
+import com.anrisoftware.sscontrol.httpd.apache.apache.linux.RedirectConfig
+import com.anrisoftware.sscontrol.httpd.apache.apache.linux.SslDomainConfig
 import com.anrisoftware.sscontrol.httpd.statements.auth.AbstractAuth
 import com.anrisoftware.sscontrol.httpd.statements.domain.Domain
 import com.anrisoftware.sscontrol.httpd.statements.domain.SslDomain
@@ -137,12 +137,13 @@ abstract class Apache_2_2_Script extends ApacheScript {
             service.domain == domain
         }.each { WebService service ->
             def reftarget = findReferencedService service
-            def config = serviceConfigs["${PROFILE}.${service.name}"]
+            def profile = profileName
+            def config = serviceConfigs["${profile}.${service.name}"]
             if (reftarget == null) {
-                log.checkServiceConfig config, service
+                log.checkServiceConfig config, service, profile
                 config.deployService domain, service, serviceConfig
             } else {
-                log.checkServiceConfig config, service
+                log.checkServiceConfig config, service, profile
                 def refdomain = findReferencedDomain service
                 if (refdomain == null) {
                     config.deployDomain domain, null, reftarget, serviceConfig
@@ -179,9 +180,10 @@ abstract class Apache_2_2_Script extends ApacheScript {
     }
 
     def deployAuth(Domain domain, List serviceConfig) {
+        def profile = profileName
         domain.auths.each { AbstractAuth auth ->
-            def config = authConfigs["${PROFILE}.${auth.class.simpleName}"]
-            log.checkAuthConfig config, auth
+            def config = authConfigs["${profile}.${auth.class.simpleName}"]
+            log.checkAuthConfig config, auth, profile
             config.deployAuth(domain, auth, serviceConfig)
         }
     }

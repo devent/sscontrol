@@ -114,7 +114,7 @@ abstract class UbuntuPhpmyadminConfig extends FcgiPhpmyadminConfig {
      * @see #getMyadminProperties()
      */
     File getDatabaseScriptFile() {
-        profileDirProperty "phpmyadmin_database_script_file", configurationFile
+        profileDirProperty "phpmyadmin_database_script_file", myadminProperties
     }
 
     /**

@@ -1,0 +1,14 @@
+web_001.web_001 /tmp/var/www/ubuntutest.com/web
+web_002.web_002 /tmp/var/www/www.ubuntutest.com/web
+-R web_001.web_001 /tmp/var/www/php-fcgi-scripts/ubuntutest.com
+web_001.web_001 /tmp/var/www/php-fcgi-scripts/ubuntutest.com/php-fcgi-starter
+root.web_001 /tmp/var/lib/phpmyadmin/blowfish_secret.inc.php
+root.web_001 /tmp/var/lib/phpmyadmin/config.inc.php
+root.web_001 /tmp/etc/phpmyadmin/config-db.php
+web_001.web_001 /tmp/var/www/ubuntutest.com/web
+web_002.web_002 /tmp/var/www/www.ubuntutest.com/web
+-R web_001.web_001 /tmp/var/www/php-fcgi-scripts/ubuntutest.com
+web_001.web_001 /tmp/var/www/php-fcgi-scripts/ubuntutest.com/php-fcgi-starter
+root.web_001 /tmp/var/lib/phpmyadmin/blowfish_secret.inc.php
+root.web_001 /tmp/var/lib/phpmyadmin/config.inc.php
+root.web_001 /tmp/etc/phpmyadmin/config-db.php

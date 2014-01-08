@@ -16,25 +16,25 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd-nginx. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.nginx.nginx.ubuntu_12_04;
+package com.anrisoftware.sscontrol.httpd.nginx.generalproxy.ubuntu_12_04;
 
-import static com.anrisoftware.sscontrol.httpd.nginx.nginx.linux.EmptyProxyConfig.SERVICE_NAME;
+import static com.anrisoftware.sscontrol.httpd.nginx.generalproxy.linux.GeneralProxyConfig.SERVICE_NAME;
 import static com.anrisoftware.sscontrol.httpd.nginx.nginx.ubuntu_12_04.Ubuntu_12_04_ScriptFactory.PROFILE;
+import static com.anrisoftware.sscontrol.httpd.nginx.proxy.linux.BaseProxyConfig.NAME;
 import static com.google.inject.multibindings.MapBinder.newMapBinder;
 import static java.lang.String.format;
 
 import com.anrisoftware.sscontrol.httpd.nginx.api.ServiceConfig;
-import com.anrisoftware.sscontrol.httpd.nginx.nginx.linux.EmptyProxyConfig;
 import com.google.inject.AbstractModule;
 import com.google.inject.multibindings.MapBinder;
 
 /**
- * Binds Ubuntu 10.04 Empty Proxy.
- *
+ * Binds Ubuntu 12.04 General Proxy.
+ * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class EmptyProxyModule extends AbstractModule {
+public class Ubuntu_12_04_GeneralProxyModule extends AbstractModule {
 
     @Override
     protected void configure() {
@@ -44,7 +44,7 @@ class EmptyProxyModule extends AbstractModule {
     private void bindServiceConfig() {
         MapBinder<String, ServiceConfig> map = newMapBinder(binder(),
                 String.class, ServiceConfig.class);
-        map.addBinding(format("%s.%s", PROFILE, SERVICE_NAME)).to(
-                EmptyProxyConfig.class);
+        map.addBinding(format("%s.%s.%s", PROFILE, NAME, SERVICE_NAME)).to(
+                UbuntuConfig.class);
     }
 }

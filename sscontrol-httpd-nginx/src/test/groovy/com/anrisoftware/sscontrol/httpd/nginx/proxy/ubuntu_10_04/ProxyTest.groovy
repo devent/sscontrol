@@ -58,6 +58,6 @@ class ProxyTest extends UbuntuTestUtil {
         assertStringContent test1comSslConf.replaced(tmpdir, tmpdir, "/tmp"), test1comSslConf.toString()
         assertStringContent wwwtest1comConf.replaced(tmpdir, tmpdir, "/tmp"), wwwtest1comConf.toString()
         assertStringContent wwwtest1comSslConf.replaced(tmpdir, tmpdir, "/tmp"), wwwtest1comSslConf.toString()
-        assertStringContent wordpress3ProxyConf.replaced(tmpdir, tmpdir, "/tmp"), wordpress3ProxyConf.toString()
+        assertStringContent sitefooProxyConf.replaced(tmpdir, tmpdir, "/tmp"), sitefooProxyConf.toString()
     }
 }

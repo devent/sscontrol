@@ -13,19 +13,10 @@ server {
     ssl_ciphers ALL:!ADH:!EXPORT56:RC4+RSA:+HIGH:+MEDIUM:+EXP;
     ssl_prefer_server_ciphers on;
 
-    # wordpress proxy
-    location /wordpress3 {
-        # No cache for logged-in users
-        if ($http_cookie ~* "comment_author_|wordpress_(?!test_cookie)|wp-postpass_" ) {
-            set $do_not_cache 1;
-        }
+    # proxy
+    location /sitefoo {
         proxy_cache_key "$scheme://$host$request_uri $do_not_cache";
-        proxy_cache wordpress3;
-        proxy_pass https://127.0.0.1:8082;
-    }
-
-    # No cache for admin
-    location ~* wp\-.*\.php|wp\-admin {
+        proxy_cache sitefoo;
         proxy_pass https://127.0.0.1:8082;
     }
 
@@ -33,17 +24,14 @@ server {
         proxy_cache_valid 200 7200;
         expires 864000;
         proxy_pass https://127.0.0.1:8082;
-        proxy_cache wordpress3;
+        proxy_cache sitefoo;
     }
 
     location ~* \/[^\/]+\/(feed|\.xml)\/? {
-        # Cache RSS looking feeds for 45 minutes unless logged in.
-        if ($http_cookie ~* "comment_author_|wordpress_(?!test_cookie)|wp-postpass_" ) {
-                set $do_not_cache 1;
-        }
+        # Cache RSS looking feeds
         proxy_cache_key "$scheme://$host$request_uri $do_not_cache";
         proxy_cache_valid 200 2700;
-        proxy_cache wordpress3;
+        proxy_cache sitefoo;
         proxy_pass https://127.0.0.1:8082;
     }
 

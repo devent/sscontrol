@@ -40,7 +40,7 @@ enum ProxyResources {
     test1comSslConf("/etc/nginx/sites-available/100-robobee-test1.com-ssl.conf", ProxyResources.class.getResource("test1_com_ssl_conf.txt")),
     wwwtest1comConf("/etc/nginx/sites-available/100-robobee-www.test1.com.conf", ProxyResources.class.getResource("www_test1_com_conf.txt")),
     wwwtest1comSslConf("/etc/nginx/sites-available/100-robobee-www.test1.com-ssl.conf", ProxyResources.class.getResource("www_test1_com_ssl_conf.txt")),
-    wordpress3ProxyConf("/etc/nginx/conf.d/020-robobee-wordpress3-proxy.conf", ProxyResources.class.getResource("wordpress3_proxy_conf.txt")),
+    sitefooProxyConf("/etc/nginx/conf.d/020-robobee-sitefoo-proxy.conf", ProxyResources.class.getResource("sitefoo_proxy_conf.txt")),
 
     ResourcesUtils resources
 

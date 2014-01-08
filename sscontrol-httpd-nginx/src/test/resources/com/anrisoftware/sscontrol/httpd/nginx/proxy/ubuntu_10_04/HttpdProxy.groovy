@@ -31,11 +31,11 @@ httpd {
     }
     // domain www.test1.com
     domain "www.test1.com", address: "192.168.0.51", {
-        setup "proxy", service: "wordpress", alias: "wordpress3", proxyname: "wordpress3", address: "http://127.0.0.1:8080"
+        setup "proxy", service: "general", alias: "sitefoo", proxyname: "sitefoo", address: "http://127.0.0.1:8080"
     }
     // SSL/domain www.test1.com
     ssl_domain "www.test1.com", address: "192.168.0.51", {
-        setup "proxy", service: "wordpress", alias: "wordpress3", proxyname: "wordpress3", address: "https://127.0.0.1:8082"
+        setup "proxy", service: "general", alias: "sitefoo", proxyname: "sitefoo", address: "https://127.0.0.1:8082"
         certification_file ProxyResources.certCrt.resource
         certification_key_file ProxyResources.certKey.resource
     }

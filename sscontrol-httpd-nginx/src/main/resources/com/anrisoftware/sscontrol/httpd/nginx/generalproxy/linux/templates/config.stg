@@ -1,0 +1,29 @@
+proxy(properties, script, domain, proxy, location) ::= <<
+# proxy
+location <location> {
+    proxy_cache_key "$scheme://$host$request_uri $do_not_cache";
+    proxy_cache <proxy.proxyName>;
+    proxy_pass <proxy.address>;
+}
+
+location ~* \.(jpg|png|gif|jpeg|css|js|mp3|wav|swf|mov|doc|pdf|xls|ppt|docx|pptx|xlsx)$ {
+    proxy_cache_valid 200 <properties.proxyStaticCacheTime>;
+    expires <properties.proxyExpireTime>;
+    proxy_pass <proxy.address>;
+    proxy_cache <proxy.proxyName>;
+}
+
+location ~* \/[^\/]+\/(feed|\.xml)\/? {
+    # Cache RSS looking feeds
+    proxy_cache_key "$scheme://$host$request_uri $do_not_cache";
+    proxy_cache_valid 200 <properties.proxyFeedsCacheTime>;
+    proxy_cache <proxy.proxyName>;
+    proxy_pass <proxy.address>;
+}
+
+error_page 500 502 503 504 /50x.html;
+location = /50x.html {
+    root <script.errorPagesDir>;
+}
+
+>>

@@ -35,7 +35,7 @@ import com.google.inject.Guice
 import com.google.inject.Injector
 
 /**
- * Creates the test environment for Nginx on Ubuntu system.
+ * Nginx test environment.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
@@ -59,7 +59,7 @@ class UbuntuTestUtil {
 
     @Before
     void createTemp() {
-        tmpdir = tmp.newFolder("nginx-ubuntu-10-04")
+        tmpdir = tmp.newFolder("nginx")
         variables = [tmp: tmpdir.absoluteFile]
     }
 

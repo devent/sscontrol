@@ -1,0 +1,11 @@
+server {
+    # domain test1.com
+    listen 192.168.0.50:80;
+    root /tmp/var/www/test1.com/web;
+    index index.php index.html index.htm;
+    server_name test1.com;
+
+    # redirect to www http
+    return 301 http://www.test1.com$request_uri;
+
+}

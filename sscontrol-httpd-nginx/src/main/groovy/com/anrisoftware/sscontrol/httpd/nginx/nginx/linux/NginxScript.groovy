@@ -30,6 +30,7 @@ import com.anrisoftware.sscontrol.core.debuglogging.DebugLoggingProperty
 import com.anrisoftware.sscontrol.core.service.LinuxScript
 import com.anrisoftware.sscontrol.httpd.service.HttpdService
 import com.anrisoftware.sscontrol.httpd.statements.domain.Domain
+import com.anrisoftware.sscontrol.workers.command.exec.ExecCommandWorker
 
 /**
  * Uses Nginx service on a general Linux system.
@@ -573,6 +574,55 @@ abstract class NginxScript extends LinuxScript {
         }
         link files: files, targets: targets, override: true
         log.enabledSites this, sites
+    }
+
+    /**
+     * Find the services that use the ports of the specified domains.
+     *
+     * @param domains
+     *            the list of {@link Domain} domains.
+     *
+     * @return the {@link Map} of services: {@code port:=service}.
+     *
+     * @see #checkPortsInUse(java.util.List)
+     */
+    Map findPortsServices(List domains) {
+        def ports = domains.inject([]) { acc, Domain domain -> acc << domain.port }
+        checkPortsInUse ports
+    }
+
+    /**
+     * Stops the specified service.
+     *
+     * @param service
+     *            the service name.
+     *
+     * @return the {@link ExecCommandWorker}.
+     */
+    ExecCommandWorker stopService(String service) {
+        def command = serviceStopCommand service
+        def worker = execCommandFactory.create(command)()
+        log.stopService this, service, worker
+        return worker
+    }
+
+    /**
+     * Returns the command to stop the specified service.
+     *
+     * <ul>
+     * <li>profile property {@code "<service>_stop_command"}</li>
+     * </ul>
+     *
+     * @param service
+     *            the service name.
+     *
+     * @see #getDefaultProperties()
+     */
+    String serviceStopCommand(String service) {
+        def property = "${service}_stop_command"
+        def command = profileProperty property, defaultProperties
+        log.checkServiceRestartCommand this, command, service
+        return command
     }
 
     /**

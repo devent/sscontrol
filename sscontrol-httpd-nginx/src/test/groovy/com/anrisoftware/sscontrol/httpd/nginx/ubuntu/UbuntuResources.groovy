@@ -38,6 +38,8 @@ enum UbuntuResources {
     chownCommand("/bin/chown", UbuntuResources.class.getResource("echo_command.txt")),
     useraddCommand("/usr/sbin/useradd", UbuntuResources.class.getResource("echo_command.txt")),
     groupaddCommand("/usr/sbin/groupadd", UbuntuResources.class.getResource("echo_command.txt")),
+    netstatCommand("/bin/netstat", UbuntuResources.class.getResource("netstat_command.txt")),
+    apacheStopCommand("/etc/init.d/apache", UbuntuResources.class.getResource("echo_command.txt")),
     tmpDir("/tmp", null),
     aptDirectory("/etc/apt", null),
 
@@ -45,6 +47,8 @@ enum UbuntuResources {
         aptitudeCommand.createCommand parent
         aptKeyCommand.createCommand parent
         lnCommand.createCommand parent
+        netstatCommand.createCommand parent
+        apacheStopCommand.createCommand parent
         tmpDir.asFile(parent).mkdirs()
         aptDirectory.asFile parent mkdirs()
         chmodCommand.createCommand parent

@@ -38,15 +38,15 @@ class WordpressConfigLogger extends AbstractLogger {
 
     enum _ {
 
-        returns_wordpress_archive_debug("Returns '{}' for '{}' for {}."),
+        returns_wordpress_archive_debug("Returns for '{}' the '{}' for {}."),
 
         returns_wordpress_archive_info(
-                "Returns archive '{}' for language '{}' for service '{}'."),
+                "Returns for language '{}' archive '{}' for service '{}'."),
 
-        returns_strip_archive_debug("Returns strip {} for '{}' for {}."),
+        returns_strip_archive_debug("Returns for '{}' the '{}' for {}."),
 
         returns_strip_archive_info(
-                "Returns strip {} for language '{}' for service '{}'.");
+                "Returns for language '{}' the archive '{}' for service '{}'.");
 
         private String name;
 

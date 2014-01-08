@@ -19,7 +19,6 @@
 package com.anrisoftware.sscontrol.workers.command.exec;
 
 import static com.anrisoftware.sscontrol.workers.command.exec.ExecCommandWorkerLogger._.command;
-import static com.anrisoftware.sscontrol.workers.command.exec.ExecCommandWorkerLogger._.error_execute_command;
 import static com.anrisoftware.sscontrol.workers.command.exec.ExecCommandWorkerLogger._.error_execute_command_message;
 import static com.anrisoftware.sscontrol.workers.command.exec.ExecCommandWorkerLogger._.exit_code;
 import static com.anrisoftware.sscontrol.workers.command.exec.ExecCommandWorkerLogger._.finish_command_debug;
@@ -47,8 +46,6 @@ import com.anrisoftware.sscontrol.workers.api.WorkerException;
 class ExecCommandWorkerLogger extends AbstractLogger {
 
     enum _ {
-
-        error_execute_command,
 
         worker_name,
 
@@ -102,8 +99,9 @@ class ExecCommandWorkerLogger extends AbstractLogger {
         String out = worker.getOut();
         String err = worker.getErr();
         return logException(
-                new WorkerException(error_execute_command, e,
-                        worker.getCommand(), out, err).add(worker_name, worker)
+                new CommandException(e, worker.getCommand(),
+                        worker.getExitCode(), out, err)
+                        .add(worker_name, worker)
                         .add(command, worker.getCommand())
                         .add(exit_code, worker.getExitCode()).add(out, out)
                         .add(err, err), error_execute_command_message,

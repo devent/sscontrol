@@ -1,4 +1,4 @@
 update
-install nginx
+install nginx net-tools
 update
-install nginx
+install nginx net-tools

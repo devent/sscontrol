@@ -26,6 +26,7 @@ import javax.inject.Inject
 
 import org.apache.commons.io.FileUtils
 import org.apache.commons.lang3.StringUtils
+import org.apache.commons.lang3.builder.ToStringBuilder
 import org.codehaus.groovy.runtime.InvokerHelper
 
 import com.anrisoftware.propertiesutils.ContextProperties
@@ -33,6 +34,8 @@ import com.anrisoftware.resources.templates.api.Templates
 import com.anrisoftware.resources.templates.api.TemplatesFactory
 import com.anrisoftware.sscontrol.core.api.ProfileProperties
 import com.anrisoftware.sscontrol.core.api.Service
+import com.anrisoftware.sscontrol.workers.command.exec.ExecCommandWorker
+import com.anrisoftware.sscontrol.workers.command.exec.ExecCommandWorkerFactory
 import com.anrisoftware.sscontrol.workers.command.script.ScriptCommandWorker
 import com.anrisoftware.sscontrol.workers.command.script.ScriptCommandWorkerFactory
 import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokenMarker
@@ -46,6 +49,8 @@ import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokensTemplateWorke
  * @since 1.0
  */
 abstract class LinuxScript extends Script {
+
+    private static final String SERVICE_NAME = "name"
 
     /**
      * The name of the script.
@@ -70,6 +75,9 @@ abstract class LinuxScript extends Script {
 
     @Inject
     ScriptCommandWorkerFactory scriptCommandFactory
+
+    @Inject
+    ExecCommandWorkerFactory execCommandFactory
 
     @Inject
     TokensTemplateWorkerFactory tokensTemplateFactory
@@ -420,8 +428,13 @@ abstract class LinuxScript extends Script {
      * <li>{@code restartCommand:} the restart command, defaults to {@link #getRestartCommand()}.
      * <li>{@code services:} the services to restart, defaults to {@link #getRestartServices()}.
      * </ul>
+     *
+     * @return returns the {@link ScriptCommandWorker}.
+     *
+     * @throws WorkerException
+     *            if the worker exists with an error.
      */
-    void restartServices(Map args = [:]) {
+    ScriptCommandWorker restartServices(Map args = [:]) {
         args.restartCommand = args.containsKey("restartCommand") ? args.restartCommand : restartCommand
         args.services = args.containsKey("services") ? args.services : restartServices
         def template = commandTemplates.getResource("restart")
@@ -429,6 +442,7 @@ abstract class LinuxScript extends Script {
                 "restartCommand", args.restartCommand,
                 "services", args.services)()
         log.restartServiceDone this, worker
+        return worker
     }
 
     /**
@@ -906,6 +920,55 @@ abstract class LinuxScript extends Script {
     }
 
     /**
+     * Checks if the listed ports are already in use by a service.
+     *
+     * @param ports
+     *            the {@link List} of ports.
+     *
+     * @return the {@link Map} of service names that are using the found ports.
+     */
+    Map checkPortsInUse(List ports) {
+        def command = listUsedPorts()
+        def lines = StringUtils.split command.out, "\n"
+        def found = [:]
+        lines.each { val ->
+            def port = ports.find { port -> StringUtils.contains(val, ":$port") }
+            port ? parsePortService(found, port, val) : false
+        }
+        return found
+    }
+
+    Map parsePortService(Map map, int port, String line) {
+        def split = StringUtils.split line, " "
+        def service = split.find { it =~ /\d+\/.*/ }
+        service = StringUtils.split(service, "/")[-1]
+        map[port] = service
+        return map
+    }
+
+    /**
+     * Execute the command to list ports in use.
+     *
+     * @return the {@link ExecCommandWorker}.
+     */
+    ExecCommandWorker listUsedPorts() {
+        execCommandFactory.create("$netstatCommand -pnl")()
+    }
+
+    /**
+     * Returns the {@code "netstat"} command, for example {@code "/bin/netstat"}.
+     *
+     * <ul>
+     * <li>property key {@code netstat_command}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    String getNetstatCommand() {
+        profileProperty "netstat_command", defaultProperties
+    }
+
+    /**
      * Returns the default properties for the service, as in example:
      *
      * <pre>
@@ -957,6 +1020,6 @@ abstract class LinuxScript extends Script {
 
     @Override
     String toString() {
-        "${service.toString()}: $name"
+        new ToStringBuilder(this).append(SERVICE_NAME, getName())
     }
 }

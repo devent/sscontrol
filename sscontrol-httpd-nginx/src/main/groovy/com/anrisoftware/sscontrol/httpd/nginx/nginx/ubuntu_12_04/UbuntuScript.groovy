@@ -42,13 +42,22 @@ class UbuntuScript extends Nginx_1_4_Script {
     def run() {
         nginxRepositoryScript.setScript this
         super.run()
-        restartServices()
+        restartService()
     }
 
     @Override
     void beforeConfiguration() {
         enableDebRepositories() ? nginxRepositoryScript.signRepositories() : false
         installPackages()
+    }
+
+    /**
+     * Restarts the service.
+     */
+    void restartService() {
+        def services = findPortsServices uniqueDomains
+        services.each { port, service -> stopService service }
+        restartServices()
     }
 
     @Override

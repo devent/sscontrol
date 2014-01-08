@@ -31,7 +31,9 @@ profile "ubuntu_12_04", {
         chown_command UbuntuResources.chownCommand.asFile(tmp)
         group_add_command UbuntuResources.groupaddCommand.asFile(tmp)
         user_add_command UbuntuResources.useraddCommand.asFile(tmp)
+        netstat_command UbuntuResources.netstatCommand.asFile(tmp)
         link_command UbuntuResources.lnCommand.asFile(tmp)
         temp_directory UbuntuResources.tmpDir.asFile(tmp)
+        apache2_stop_command UbuntuResources.apacheStopCommand.asFile(tmp)
     }
 }

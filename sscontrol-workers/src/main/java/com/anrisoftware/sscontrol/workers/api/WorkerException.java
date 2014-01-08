@@ -25,7 +25,7 @@ import java.util.Map;
 import com.anrisoftware.globalpom.exceptions.Context;
 
 /**
- * Indicate that some error occured while executing a worker.
+ * Indicate that some error occurred while executing a worker.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0

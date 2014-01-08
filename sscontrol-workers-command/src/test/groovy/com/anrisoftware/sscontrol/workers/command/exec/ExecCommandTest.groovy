@@ -1,6 +1,3 @@
-
-
-
 /*
  * Copyright 2012-2013 Erwin Müller <erwin.mueller@deventm.org>
  *
@@ -28,7 +25,6 @@ import org.junit.BeforeClass
 import org.junit.Test
 
 import com.anrisoftware.resources.texts.defaults.TextsResourcesDefaultModule
-import com.anrisoftware.sscontrol.workers.api.WorkerException
 import com.google.inject.Guice
 import com.google.inject.Injector
 
@@ -52,7 +48,7 @@ class ExecCommandTest {
     void "execute error command"() {
         def string = "Test"
         def worker = factory.create(String.format(errorCommand, string))
-        shouldFailWith(WorkerException) { worker() }
+        shouldFailWith(CommandException) { worker() }
     }
 
     @Test

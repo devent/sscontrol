@@ -49,6 +49,8 @@ enum DomainsResources {
     groupaddOutExpected("/usr/sbin/groupadd.out", DomainsResources.class.getResource("groupadd_out_expected.txt")),
     chownOutExpected("/bin/chown.out", DomainsResources.class.getResource("chown_out_expected.txt")),
     chmodOutExpected("/bin/chmod.out", DomainsResources.class.getResource("chmod_out_expected.txt")),
+    // used ports
+    netstatPortsCommand("/bin/netstat", DomainsResources.class.getResource("netstat_used_ports.txt")),
 
     ResourcesUtils resources
 

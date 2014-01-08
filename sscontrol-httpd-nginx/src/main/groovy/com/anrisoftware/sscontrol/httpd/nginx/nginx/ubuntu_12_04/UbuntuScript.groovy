@@ -16,15 +16,16 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd-nginx. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.nginx.nginx.ubuntu_10_04
+package com.anrisoftware.sscontrol.httpd.nginx.nginx.ubuntu_12_04
 
 import javax.inject.Inject
 
 import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.sscontrol.httpd.nginx.nginx.nginx_1_4.Nginx_1_4_Script
+import com.anrisoftware.sscontrol.httpd.nginx.nginx.ubuntu_10_04.UbuntuNginxRepositoryScript
 
 /**
- * Ubuntu 10.04 Nginx.
+ * Ubuntu 12.04 Nginx.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
@@ -57,6 +58,6 @@ class UbuntuScript extends Nginx_1_4_Script {
 
     @Override
     String getProfileName() {
-        Ubuntu_10_04_ScriptFactory.PROFILE
+        Ubuntu_12_04_ScriptFactory.PROFILE
     }
 }

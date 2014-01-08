@@ -16,11 +16,11 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd-nginx. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.nginx.nginx.ubuntu_10_04;
+package com.anrisoftware.sscontrol.httpd.nginx.nginx.debian;
 
-import static com.anrisoftware.sscontrol.httpd.nginx.nginx.ubuntu_10_04.UbuntuScriptLogger._.repository_signed_debug;
-import static com.anrisoftware.sscontrol.httpd.nginx.nginx.ubuntu_10_04.UbuntuScriptLogger._.repository_signed_info;
-import static com.anrisoftware.sscontrol.httpd.nginx.nginx.ubuntu_10_04.UbuntuScriptLogger._.repository_signed_trace;
+import static com.anrisoftware.sscontrol.httpd.nginx.nginx.debian.NginxRepositoryScriptLogger._.repository_signed_debug;
+import static com.anrisoftware.sscontrol.httpd.nginx.nginx.debian.NginxRepositoryScriptLogger._.repository_signed_info;
+import static com.anrisoftware.sscontrol.httpd.nginx.nginx.debian.NginxRepositoryScriptLogger._.repository_signed_trace;
 
 import java.net.URI;
 
@@ -30,13 +30,13 @@ import com.anrisoftware.globalpom.log.AbstractLogger;
 import com.anrisoftware.sscontrol.core.service.LinuxScript;
 
 /**
- * Logging messages for {@link UbuntuScriptLogger}.
+ * Logging messages for {@link NginxRepositoryScriptLogger}.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
 @Singleton
-class UbuntuScriptLogger extends AbstractLogger {
+class NginxRepositoryScriptLogger extends AbstractLogger {
 
     enum _ {
 
@@ -59,10 +59,10 @@ class UbuntuScriptLogger extends AbstractLogger {
     }
 
     /**
-     * Creates a logger for {@link UbuntuScriptLogger}.
+     * Creates a logger for {@link NginxRepositoryScriptLogger}.
      */
-    public UbuntuScriptLogger() {
-        super(UbuntuScriptLogger.class);
+    public NginxRepositoryScriptLogger() {
+        super(NginxRepositoryScriptLogger.class);
     }
 
     void repositorySigned(LinuxScript script, Object worker, URI key) {

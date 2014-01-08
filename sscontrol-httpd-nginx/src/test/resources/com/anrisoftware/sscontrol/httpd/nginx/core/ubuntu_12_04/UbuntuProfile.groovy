@@ -16,30 +16,22 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd-nginx. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.nginx.nginx.ubuntu_10_04;
+package com.anrisoftware.sscontrol.httpd.nginx.core.ubuntu_12_04
 
-import java.net.URL;
+import com.anrisoftware.sscontrol.httpd.nginx.ubuntu.UbuntuResources
 
-import javax.inject.Singleton;
+def aptitudeCommand = UbuntuResources.aptitudeCommand.asFile(tmp)
 
-import com.anrisoftware.propertiesutils.AbstractContextPropertiesProvider;
-
-/**
- * Provides the default Nginx Ubuntu 10.04 properties from
- * {@code /"nginx_ubuntu_10_04.properties"}.
- * 
- * @author Erwin Mueller, erwin.mueller@deventm.org
- * @since 1.0
- */
-@SuppressWarnings("serial")
-@Singleton
-public class UbuntuPropertiesProvider extends AbstractContextPropertiesProvider {
-
-    private static final URL RESOURCE = UbuntuPropertiesProvider.class
-            .getResource("/nginx_ubuntu_10_04.properties");
-
-    UbuntuPropertiesProvider() {
-        super(UbuntuPropertiesProvider.class, RESOURCE);
+profile "ubuntu_12_04", {
+    httpd {
+        service "nginx"
+        install_command "$aptitudeCommand update && $aptitudeCommand install"
+        apt_key_command UbuntuResources.aptKeyCommand.asFile(tmp)
+        chmod_command UbuntuResources.chmodCommand.asFile(tmp)
+        chown_command UbuntuResources.chownCommand.asFile(tmp)
+        group_add_command UbuntuResources.groupaddCommand.asFile(tmp)
+        user_add_command UbuntuResources.useraddCommand.asFile(tmp)
+        link_command UbuntuResources.lnCommand.asFile(tmp)
+        temp_directory UbuntuResources.tmpDir.asFile(tmp)
     }
-
 }

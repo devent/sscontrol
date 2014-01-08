@@ -1,0 +1,4 @@
+update
+install nginx
+update
+install nginx

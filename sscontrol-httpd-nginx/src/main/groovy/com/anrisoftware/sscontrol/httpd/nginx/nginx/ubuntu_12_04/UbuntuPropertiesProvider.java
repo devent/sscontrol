@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd-nginx. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.nginx.nginx.ubuntu_10_04;
+package com.anrisoftware.sscontrol.httpd.nginx.nginx.ubuntu_12_04;
 
 import java.net.URL;
 
@@ -25,18 +25,18 @@ import javax.inject.Singleton;
 import com.anrisoftware.propertiesutils.AbstractContextPropertiesProvider;
 
 /**
- * Provides the default Nginx Ubuntu 10.04 properties from
- * {@code /"nginx_ubuntu_10_04.properties"}.
+ * Provides the default Nginx Ubuntu 12.04 properties from
+ * {@code /"nginx_ubuntu_12_04.properties"}.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-@SuppressWarnings("serial")
 @Singleton
+@SuppressWarnings("serial")
 public class UbuntuPropertiesProvider extends AbstractContextPropertiesProvider {
 
     private static final URL RESOURCE = UbuntuPropertiesProvider.class
-            .getResource("/nginx_ubuntu_10_04.properties");
+            .getResource("/nginx_ubuntu_12_04.properties");
 
     UbuntuPropertiesProvider() {
         super(UbuntuPropertiesProvider.class, RESOURCE);

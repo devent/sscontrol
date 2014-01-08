@@ -35,6 +35,8 @@ import com.anrisoftware.sscontrol.core.list.StringToListFactory;
  */
 public class BindingArgs {
 
+    private static final String PORTS = "ports";
+
     public static final String PORT = "port";
 
     public static final String ADDRESS = "address";
@@ -78,7 +80,21 @@ public class BindingArgs {
         if (havePort(args)) {
             list.add(addressFactory.create(port(service, args)));
         }
+        if (havePorts(args)) {
+            for (int port : ports(service, args)) {
+                list.add(addressFactory.create(port));
+            }
+        }
         return list;
+    }
+
+    @SuppressWarnings("unchecked")
+    private List<Integer> ports(Object service, Map<String, Object> args) {
+        return (List<Integer>) args.get(PORTS);
+    }
+
+    private boolean havePorts(Map<String, Object> args) {
+        return args.containsKey(PORTS);
     }
 
     public boolean haveAddress(Map<String, Object> args) {

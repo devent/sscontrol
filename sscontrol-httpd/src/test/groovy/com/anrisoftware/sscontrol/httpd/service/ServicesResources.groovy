@@ -33,6 +33,7 @@ enum ServicesResources {
 
     profile("Ubuntu_10_04Profile.groovy", ServicesResources.class.getResource("Ubuntu_10_04Profile.groovy")),
     httpdScript("Httpd.groovy", ServicesResources.class.getResource("Httpd.groovy")),
+    httpdPortsScript("Httpd.groovy", ServicesResources.class.getResource("HttpdPorts.groovy")),
     authFileScript("Httpd.groovy", ServicesResources.class.getResource("HttpdAuthFile.groovy")),
     authLdapScript("Httpd.groovy", ServicesResources.class.getResource("HttpdAuthLdap.groovy")),
     phpmyadminScript("Httpd.groovy", ServicesResources.class.getResource("HttpdPhpmyadmin.groovy")),

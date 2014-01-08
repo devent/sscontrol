@@ -555,19 +555,14 @@ abstract class WordpressConfig {
     }
 
     /**
-     * Sets the parent script with the properties.
-     *
-     * @param script
-     *            the {@link LinuxScript}.
+     * @see ServiceConfig#setScript(LinuxScript)
      */
     void setScript(LinuxScript script) {
         this.script = script
     }
 
     /**
-     * Returns the parent script with the properties.
-     *
-     * @return the {@link LinuxScript}.
+     * @see ServiceConfig#getScript()
      */
     LinuxScript getScript() {
         script

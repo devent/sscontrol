@@ -110,7 +110,7 @@ public class ProxyService implements WebService {
 
     @Override
     public String getName() {
-        return NAME;
+        return String.format("%s.%s", NAME, getService());
     }
 
     @Override

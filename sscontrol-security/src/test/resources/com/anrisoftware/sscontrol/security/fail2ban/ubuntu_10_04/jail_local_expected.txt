@@ -1,0 +1,150 @@
+[DEFAULT]
+action_mwl = %(banaction)s[name=%(__name__)s, port="%(port)s", protocol="%(protocol)s]%(mta)s-whois-lines[name=%(__name__)s, dest="%(destemail)s", logpath=%(logpath)s]
+banaction = iptables-multiport
+mta = sendmail
+action_ = %(banaction)s[name=%(__name__)s, port="%(port)s", protocol="%(protocol)s]
+action = %(action_)s
+bantime = 600
+backend = polling
+destemail = root@localhost
+action_mw = %(banaction)s[name=%(__name__)s, port="%(port)s", protocol="%(protocol)s]%(mta)s-whois[name=%(__name__)s, dest="%(destemail)s", protocol="%(protocol)s]
+protocol = tcp
+maxretry = 3
+ignoreip = 127.0.0.1
+
+[ssh]
+banaction = ufw-ssh
+filter = sshd
+port = ssh
+bantime = 600
+enabled = true
+destemail = root@localhost
+backend = polling
+logpath = /var/log/auth.log
+maxretry = 3
+ignoreip = 192.0.0.1
+
+[pam-generic]
+port = anyport
+enabled = false
+filter = pam-generic
+banaction = iptables-allports
+maxretry = 6
+logpath = /var/log/auth.log
+
+[xinetd-fail]
+port = all
+enabled = false
+filter = xinetd-fail
+banaction = iptables-multiport-log
+maxretry = 2
+logpath = /var/log/daemon.log
+
+[ssh-ddos]
+banaction = ufw-ssh-ddos
+filter = sshd-ddos
+port = ssh
+bantime = 600
+enabled = true
+destemail = root@localhost
+logpath = /var/log/auth.log
+ignoreip = 127.0.0.1
+maxretry = 3
+
+[apache]
+banaction = ufw-apache
+filter = apache-auth
+port = http,https
+bantime = 600
+enabled = true
+destemail = root@localhost
+logpath = /var/log/apache*/*error.log
+ignoreip = 127.0.0.1
+maxretry = 3
+
+[apache-multiport]
+port = http,https
+enabled = false
+filter = apache-auth
+maxretry = 6
+logpath = /var/log/apache*/*error.log
+
+[apache-noscript]
+port = http,https
+enabled = false
+filter = apache-noscript
+maxretry = 6
+logpath = /var/log/apache*/*error.log
+
+[apache-overflows]
+port = http,https
+enabled = false
+filter = apache-overflows
+maxretry = 2
+logpath = /var/log/apache*/*error.log
+
+[vsftpd]
+port = ftp,ftp-data,ftps,ftps-data
+enabled = false
+filter = vsftpd
+maxretry = 6
+logpath = /var/log/vsftpd.log
+
+[proftpd]
+port = ftp,ftp-data,ftps,ftps-data
+enabled = false
+filter = proftpd
+maxretry = 6
+logpath = /var/log/proftpd/proftpd.log
+
+[wuftpd]
+port = ftp,ftp-data,ftps,ftps-data
+enabled = false
+filter = wuftpd
+maxretry = 6
+logpath = /var/log/auth.log
+
+[postfix]
+banaction = ufw-postfix
+filter = postfix
+port = smtp,ssmtp
+bantime = 600
+enabled = true
+destemail = root@localhost
+backend = auto
+logpath = /var/log/mail.warn
+ignoreip = 192.0.0.1 192.0.0.2
+maxretry = 3
+
+[couriersmtp]
+port = smtp,ssmtp
+enabled = false
+filter = couriersmtp
+logpath = /var/log/mail.log
+
+[courierauth]
+port = smtp,ssmtp,imap2,imap3,imaps,pop3,pop3s
+enabled = false
+filter = courierlogin
+logpath = /var/log/mail.log
+
+[sasl]
+port = smtp,ssmtp,imap2,imap3,imaps,pop3,pop3s
+enabled = false
+filter = sasl
+logpath = /var/log/mail.log
+
+[named-refused-udp]
+port = domain,953
+enabled = false
+filter = named-refused
+protocol = udp
+logpath = /var/log/named/security.log
+
+[named-refused-tcp]
+port = domain,953
+enabled = false
+filter = named-refused
+protocol = tcp
+logpath = /var/log/named/security.log
+

@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2013 Erwin Müller <erwin.mueller@deventm.org>
+ * Copyright 2013 Erwin Müller <erwin.mueller@deventm.org>
  *
  * This file is part of sscontrol-remoteaccess.
  *
@@ -18,9 +18,7 @@
  */
 package com.anrisoftware.sscontrol.remote.openssh.openssh.ubuntu_12_04;
 
-import com.anrisoftware.globalpom.initfileparser.InitFileParserModule;
 import com.anrisoftware.sscontrol.remote.openssh.authorizedkeys.ubuntu_12_04.AuthorizedKeysUbuntu_12_04_Module;
-import com.anrisoftware.sscontrol.remote.openssh.fail2ban.ubuntu_12_04.Fail2BanUbuntu_12_04_Module;
 import com.anrisoftware.sscontrol.remote.openssh.screen.ubuntu_12_04.ScreenUbuntu_12_04_Module;
 import com.anrisoftware.sscontrol.remote.openssh.userkey.ubuntu_12_04.UserKeyUbuntu_12_04_Module;
 import com.anrisoftware.sscontrol.remote.openssh.users.ubuntu_12_04.UsersUbuntu_12_04_Module;
@@ -36,11 +34,9 @@ public class UbuntuModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        install(new InitFileParserModule());
         install(new UsersUbuntu_12_04_Module());
         install(new UserKeyUbuntu_12_04_Module());
         install(new AuthorizedKeysUbuntu_12_04_Module());
         install(new ScreenUbuntu_12_04_Module());
-        install(new Fail2BanUbuntu_12_04_Module());
     }
 }

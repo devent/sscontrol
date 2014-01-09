@@ -13,8 +13,12 @@
 	<artifactId>sscontrol-remoteaccess</artifactId>
 	<name>RoboBee :: Remote Access</name>
 	<description>Remote access configuration.</description>
-	<inceptionYear>2012</inceptionYear>
+	<inceptionYear>2013</inceptionYear>
 	<url>https://www.anr-institute.com/projects/projects/sscontrol-remote</url>
+
+    <properties>
+        <project.custom.year>${project.inceptionYear}</project.custom.year>
+    </properties>
 
 	<issueManagement>
 		<system>Redmine</system>

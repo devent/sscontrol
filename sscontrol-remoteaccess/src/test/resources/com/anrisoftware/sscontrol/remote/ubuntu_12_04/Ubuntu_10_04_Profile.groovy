@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2013 Erwin Müller <erwin.mueller@deventm.org>
+ * Copyright 2013 Erwin Müller <erwin.mueller@deventm.org>
  *
  * This file is part of sscontrol-remoteaccess.
  *
@@ -22,8 +22,6 @@ def sshkeygen = Ubuntu_12_04_Resources.sshkeygenCommand.asFile(tmp)
 def groupfile = Ubuntu_12_04_Resources.groupsFile.asFile(tmp)
 def passwdfile = Ubuntu_12_04_Resources.passwdFile.asFile(tmp)
 def sshdconfigFile = Ubuntu_12_04_Resources.sshdconfigFile.asFile(tmp)
-def fail2banDir = Ubuntu_12_04_Resources.fail2banDirectory.asFile(tmp)
-def fail2banRestartCommand = Ubuntu_12_04_Resources.fail2banRestartCommand.asFile(tmp)
 
 profile "ubuntu_12_04", {
     remote {
@@ -34,7 +32,5 @@ profile "ubuntu_12_04", {
         users_file passwdfile
         home_pattern "$tmp/home/<user.name>"
         ssh_key_pattern "$tmp/home/<user.name>/.ssh/id_rsa"
-        fail2ban_configuration_directory fail2banDir
-        fail2ban_restart_command "$fail2banRestartCommand restart"
     }
 }

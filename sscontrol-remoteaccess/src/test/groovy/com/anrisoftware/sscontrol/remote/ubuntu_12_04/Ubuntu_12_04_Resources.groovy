@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2013 Erwin Müller <erwin.mueller@deventm.org>
+ * Copyright 2013 Erwin Müller <erwin.mueller@deventm.org>
  *
  * This file is part of sscontrol-remoteaccess.
  *
@@ -55,26 +55,12 @@ enum Ubuntu_12_04_Resources {
     autoScreenExpected("/usr/local/bin/auto_screen.sh", Ubuntu_12_04_Resources.class.getResource("auto_screen_expected.txt")),
     autoScreenSessionExpected("/home/foo/.bashrc", Ubuntu_12_04_Resources.class.getResource("auto_screen_session_expected.txt")),
     screenrcExpected("/home/foo/.screenrc", Ubuntu_12_04_Resources.class.getResource("screenrc_expected.txt")),
-    // fail2ban
-    fail2banRestartCommand("/etc/init.d/fail2ban", Ubuntu_12_04_Resources.class.getResource("echo_command.txt")),
-    fail2banRestartOutExpected("/etc/init.d/fail2ban.out", Ubuntu_12_04_Resources.class.getResource("fail2ban_out_expected.txt")),
-    fail2banDirectory("/etc/fail2ban", null),
-    fail2banConf("/etc/fail2ban/fail2ban.conf", Ubuntu_12_04_Resources.class.getResource("fail2ban_conf.txt")),
-    fail2banConfExpected("/etc/fail2ban/fail2ban.local", Ubuntu_12_04_Resources.class.getResource("fail2ban_local_expected.txt")),
-    fail2banJailConf("/etc/fail2ban/jail.conf", Ubuntu_12_04_Resources.class.getResource("jail_conf.txt")),
-    ufwConfExpected("/etc/fail2ban/action.d/ufw-ssh.conf", Ubuntu_12_04_Resources.class.getResource("ufw_ssh_conf_expected.txt")),
-    jailConfExpected("/etc/fail2ban/jail.local", Ubuntu_12_04_Resources.class.getResource("jail_local_expected.txt")),
 
     static void copyUbuntu_12_04_Files(File parent) {
         sshkeygenCommand.createCommand parent
         groupsFile.createFile parent
         passwdFile.createFile parent
         sshdconfigFile.createFile parent
-        // fail2ban
-        fail2banDirectory.asFile parent mkdirs()
-        fail2banConf.createFile parent
-        fail2banJailConf.createFile parent
-        fail2banRestartCommand.createCommand parent
     }
 
     ResourcesUtils resources

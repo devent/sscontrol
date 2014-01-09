@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2013 Erwin Müller <erwin.mueller@deventm.org>
+ * Copyright 2013 Erwin Müller <erwin.mueller@deventm.org>
  *
  * This file is part of sscontrol-remoteaccess.
  *
@@ -68,10 +68,5 @@ class RemoteTest extends RemoteTestUtil {
         assertFileContent autoScreenExpected.asFile(tmpdir), autoScreenExpected
         assertStringContent autoScreenSessionExpected.replaced(tmpdir, tmpdir, "/tmp"), autoScreenSessionExpected.toString()
         assertFileContent screenrcExpected.asFile(tmpdir), screenrcExpected
-        // fail2ban
-        assertFileContent ufwConfExpected.asFile(tmpdir), ufwConfExpected
-        assertFileContent fail2banConfExpected.asFile(tmpdir), fail2banConfExpected
-        assertFileContent jailConfExpected.asFile(tmpdir), jailConfExpected
-        assertFileContent fail2banRestartOutExpected.asFile(tmpdir), fail2banRestartOutExpected
     }
 }

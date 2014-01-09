@@ -1,0 +1,52 @@
+/*
+ * Copyright 2013 Erwin Müller <erwin.mueller@deventm.org>
+ *
+ * This file is part of sscontrol-security.
+ *
+ * sscontrol-security is free software: you can redistribute it and/or modify it
+ * under the terms of the GNU Affero General Public License as published by the
+ * Free Software Foundation, either version 3 of the License, or (at your
+ * option) any later version.
+ *
+ * sscontrol-security is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
+ * for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with sscontrol-security. If not, see <http://www.gnu.org/licenses/>.
+ */
+package com.anrisoftware.sscontrol.security.fail2ban.ubuntu_10_04
+
+import javax.inject.Inject
+
+import com.anrisoftware.propertiesutils.ContextProperties
+import com.anrisoftware.sscontrol.security.fail2ban.linux.Fail2BanScript
+
+/**
+ * fail2ban script for Ubuntu 10.04.
+ *
+ * @author Erwin Mueller, erwin.mueller@deventm.org
+ * @since 1.0
+ */
+class UbuntuScript extends Fail2BanScript {
+
+    @Inject
+    private UbuntuPropertiesProvider ubuntuPropertiesProvider
+
+    @Override
+    void beforeConfiguration() {
+        installPackages()
+    }
+
+    @Override
+    Object run() {
+        super.run();
+        restartServices()
+    }
+
+    @Override
+    ContextProperties getDefaultProperties() {
+        ubuntuPropertiesProvider.get()
+    }
+}

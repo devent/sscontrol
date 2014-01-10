@@ -27,7 +27,7 @@ import org.junit.Test
 
 import com.anrisoftware.sscontrol.core.api.ServiceException
 import com.anrisoftware.sscontrol.core.api.ServicesRegistry
-import com.anrisoftware.sscontrol.hosts.service.Host
+import com.anrisoftware.sscontrol.hosts.host.Host
 import com.anrisoftware.sscontrol.hosts.service.HostsServiceImpl
 import com.anrisoftware.sscontrol.hosts.ubuntu.UbuntuTestUtil
 
@@ -40,69 +40,69 @@ import com.anrisoftware.sscontrol.hosts.ubuntu.UbuntuTestUtil
 @Slf4j
 class HostsServiceTest extends UbuntuTestUtil {
 
-	@Test
-	void "empty hosts configuration"() {
-		loader.loadService profile.resource, null
-		def profile = registry.getService("profile")[0]
-		loader.loadService hostsService.resource, profile
+    @Test
+    void "empty hosts configuration"() {
+        loader.loadService profile.resource, null
+        def profile = registry.getService("profile")[0]
+        loader.loadService hostsService.resource, profile
 
-		assertService registry
+        assertService registry
 
-		registry.allServices.each { it.call() }
-		log.info "Run service again to ensure that configuration is not set double."
-		registry.allServices.each { it.call() }
-		assertFileContent hostsExpected.asFile(tmpdir), hostsExpected
-	}
+        registry.allServices.each { it.call() }
+        log.info "Run service again to ensure that configuration is not set double."
+        registry.allServices.each { it.call() }
+        assertFileContent hostsExpected.asFile(tmpdir), hostsExpected
+    }
 
-	@Test
-	void "default hosts already set"() {
-		defaultHostsFile.createFile tmpdir
+    @Test
+    void "default hosts already set"() {
+        defaultHostsFile.createFile tmpdir
 
-		loader.loadService profile.resource, null
-		def profile = registry.getService("profile")[0]
-		loader.loadService hostsService.resource, profile
+        loader.loadService profile.resource, null
+        def profile = registry.getService("profile")[0]
+        loader.loadService hostsService.resource, profile
 
-		registry.allServices.each { it.call() }
-		log.info "Run service again to ensure that configuration is not set double."
-		registry.allServices.each { it.call() }
-		assertFileContent hostsWithDefaultsExpected.asFile(tmpdir), hostsWithDefaultsExpected
-	}
+        registry.allServices.each { it.call() }
+        log.info "Run service again to ensure that configuration is not set double."
+        registry.allServices.each { it.call() }
+        assertFileContent hostsWithDefaultsExpected.asFile(tmpdir), hostsWithDefaultsExpected
+    }
 
-	@Test
-	void "custom hosts entry already set"() {
-		customHostsFile.createFile tmpdir
+    @Test
+    void "custom hosts entry already set"() {
+        customHostsFile.createFile tmpdir
 
-		loader.loadService profile.resource, null
-		def profile = registry.getService("profile")[0]
-		loader.loadService hostsService.resource, profile
+        loader.loadService profile.resource, null
+        def profile = registry.getService("profile")[0]
+        loader.loadService hostsService.resource, profile
 
-		registry.allServices.each { it.call() }
-		log.info "Run service again to ensure that configuration is not set double."
-		registry.allServices.each { it.call() }
-		assertFileContent hostsWithCustomExpected.asFile(tmpdir), hostsWithCustomExpected
-	}
+        registry.allServices.each { it.call() }
+        log.info "Run service again to ensure that configuration is not set double."
+        registry.allServices.each { it.call() }
+        assertFileContent hostsWithCustomExpected.asFile(tmpdir), hostsWithCustomExpected
+    }
 
-	@Test
-	void "with null value"() {
-		loader.loadService profile.resource, null
-		def profile = registry.getService("profile")[0]
-		shouldFailWith ServiceException, { loader.loadService hostsNullService.resource, profile }
-	}
+    @Test
+    void "with null value"() {
+        loader.loadService profile.resource, null
+        def profile = registry.getService("profile")[0]
+        shouldFailWith ServiceException, { loader.loadService hostsNullService.resource, profile }
+    }
 
-	static assertService(ServicesRegistry registry) {
-		HostsServiceImpl service = registry.getService("hosts")[0]
-		assert service.hosts.size() == 2
+    static assertService(ServicesRegistry registry) {
+        HostsServiceImpl service = registry.getService("hosts")[0]
+        assert service.hosts.size() == 4
 
-		int i = 0
-		Host host
-		host = service.hosts[i++]
-		assert host.address == "192.168.0.49"
-		assert host.hostname == "srv1.ubuntutest.com"
-		assert host.aliases == ["srv1"]
+        int i = 0
+        Host host
+        host = service.hosts[i++]
+        assert host.address == "192.168.0.49"
+        assert host.hostname == "srv1.ubuntutest.com"
+        assert host.aliases == ["srv1"]
 
-		host = service.hosts[i++]
-		assert host.address == "192.168.0.50"
-		assert host.hostname == "srv1.ubuntutest.org"
-		assert host.aliases == ["srva", "srvb"]
-	}
+        host = service.hosts[i++]
+        assert host.address == "192.168.0.50"
+        assert host.hostname == "srv1.ubuntutest.org"
+        assert host.aliases == ["srva", "srvb"]
+    }
 }

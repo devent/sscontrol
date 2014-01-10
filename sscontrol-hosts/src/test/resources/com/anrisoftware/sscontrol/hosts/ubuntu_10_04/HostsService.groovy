@@ -19,6 +19,8 @@
 package com.anrisoftware.sscontrol.hosts.ubuntu_10_04
 
 hosts {
-	ip "192.168.0.49" host "srv1.ubuntutest.com" alias "srv1"
-	ip "192.168.0.50" host "srv1.ubuntutest.org" alias "srva", "srvb"
+    ip "192.168.0.49", host: "srv1.ubuntutest.com", alias: "srv1"
+    ip "192.168.0.50", host: "srv1.ubuntutest.org", alias: "srva, srvb"
+    ip "192.168.0.51", host: "srv1.ubuntutest.me"
+    ip "192.168.0.52", host: "srv1.ubuntutest.xx"
 }

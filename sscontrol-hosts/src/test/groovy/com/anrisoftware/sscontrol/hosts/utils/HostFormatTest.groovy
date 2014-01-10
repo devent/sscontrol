@@ -27,8 +27,8 @@ import org.junit.Test
 import com.anrisoftware.sscontrol.core.modules.CoreModule
 import com.anrisoftware.sscontrol.core.modules.CoreResourcesModule
 import com.anrisoftware.sscontrol.core.service.ServiceModule
-import com.anrisoftware.sscontrol.hosts.service.Host
-import com.anrisoftware.sscontrol.hosts.service.HostFactory
+import com.anrisoftware.sscontrol.hosts.host.Host
+import com.anrisoftware.sscontrol.hosts.host.HostFactory
 import com.anrisoftware.sscontrol.hosts.service.HostsModule
 import com.google.inject.Guice
 import com.google.inject.Injector
@@ -44,59 +44,59 @@ import com.google.inject.Injector
 @Slf4j
 class HostFormatTest {
 
-	static inputsOutputsFormat = [
-		inputs: [
-			[address: "127.0.0.1", name: "localhost", aliases: [], format: 'address:"127.0.0.1";name:"localhost";aliases:[]'],
-			[address: "127.0.0.1", name: "localhost", aliases: ["localdomain"], format: 'address:"127.0.0.1";name:"localhost";aliases:["localdomain"]'],
-			[address: "127.0.0.1", name: "localhost", aliases: ["localdomain", "localhost"], format: 'address:"127.0.0.1";name:"localhost";aliases:["localdomain","localhost"]'],
-			[address: "127.0.0.1", name: "localhost", aliases: ["localdomain", "localhost"], format: 'address:"127.0.0.1";name:"localhost";aliases:["localdomain","localhost"]'],
-		],
-		outputs: [
-			'address:"127.0.0.1";name:"localhost";aliases:[]',
-			'address:"127.0.0.1";name:"localhost";aliases:["localdomain"]',
-			'address:"127.0.0.1";name:"localhost";aliases:["localdomain","localhost"]',
-			"address:'127.0.0.1';name:'localhost';aliases:['localdomain','localhost']",
-		]
-	]
+    static inputsOutputsFormat = [
+        inputs: [
+            [address: "127.0.0.1", name: "localhost", aliases: [], format: 'address:"127.0.0.1";name:"localhost";aliases:[]'],
+            [address: "127.0.0.1", name: "localhost", aliases: ["localdomain"], format: 'address:"127.0.0.1";name:"localhost";aliases:["localdomain"]'],
+            [address: "127.0.0.1", name: "localhost", aliases: ["localdomain", "localhost"], format: 'address:"127.0.0.1";name:"localhost";aliases:["localdomain","localhost"]'],
+            [address: "127.0.0.1", name: "localhost", aliases: ["localdomain", "localhost"], format: 'address:"127.0.0.1";name:"localhost";aliases:["localdomain","localhost"]'],
+        ],
+        outputs: [
+            'address:"127.0.0.1";name:"localhost";aliases:[]',
+            'address:"127.0.0.1";name:"localhost";aliases:["localdomain"]',
+            'address:"127.0.0.1";name:"localhost";aliases:["localdomain","localhost"]',
+            "address:'127.0.0.1';name:'localhost';aliases:['localdomain','localhost']",
+        ]
+    ]
 
-	@Test
-	void "format host"() {
-		inputsOutputsFormat.inputs.eachWithIndex { it, int i ->
-			def host = hostFactory.create(it.address)
-			host.host(it.name).alias(it.aliases)
-			def format = factory.create().format(host)
-			log.info "Format: '{}'.", format
-			assertStringContent format, inputsOutputsFormat.inputs[i].format
-		}
-	}
+    @Test
+    void "format host"() {
+        inputsOutputsFormat.inputs.eachWithIndex { it, int i ->
+            def host = hostFactory.create(it.name, it.address)
+            it.aliases.each { host.addAlias it }
+            def format = factory.create().format(host)
+            log.info "Format: '{}'.", format
+            assertStringContent format, inputsOutputsFormat.inputs[i].format
+        }
+    }
 
-	@Test
-	void "parse host"() {
-		inputsOutputsFormat.outputs.eachWithIndex { it, int i ->
-			Host parsed = factory.create().parse(it)
-			log.info "Parsed: '{}'.", parsed
-			assert parsed.address == inputsOutputsFormat.inputs[i].address
-			assert parsed.hostname == inputsOutputsFormat.inputs[i].name
-			assert parsed.aliases == inputsOutputsFormat.inputs[i].aliases
-		}
-	}
+    @Test
+    void "parse host"() {
+        inputsOutputsFormat.outputs.eachWithIndex { it, int i ->
+            Host parsed = factory.create().parse(it)
+            log.info "Parsed: '{}'.", parsed
+            assert parsed.address == inputsOutputsFormat.inputs[i].address
+            assert parsed.hostname == inputsOutputsFormat.inputs[i].name
+            assert parsed.aliases == inputsOutputsFormat.inputs[i].aliases
+        }
+    }
 
-	static Injector injector
+    static Injector injector
 
-	static HostFormatFactory factory
+    static HostFormatFactory factory
 
-	static HostFactory hostFactory
+    static HostFactory hostFactory
 
-	@BeforeClass
-	static void createFactory() {
-		injector = Guice.createInjector(
-				new HostsModule(), new CoreModule(),
-				new CoreResourcesModule(), new ServiceModule())
-		factory = injector.getInstance(HostFormatFactory)
-		hostFactory = injector.getInstance(HostFactory)
-	}
+    @BeforeClass
+    static void createFactory() {
+        injector = Guice.createInjector(
+                new HostsModule(), new CoreModule(),
+                new CoreResourcesModule(), new ServiceModule())
+        factory = injector.getInstance(HostFormatFactory)
+        hostFactory = injector.getInstance(HostFactory)
+    }
 
-	static {
-		toStringStyle
-	}
+    static {
+        toStringStyle
+    }
 }

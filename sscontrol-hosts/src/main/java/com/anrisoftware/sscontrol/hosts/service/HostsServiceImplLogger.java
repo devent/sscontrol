@@ -24,6 +24,7 @@ import java.text.ParseException;
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
 import com.anrisoftware.sscontrol.core.api.ProfileService;
+import com.anrisoftware.sscontrol.hosts.host.Host;
 
 /**
  * Logging messages for {@link HostsServiceImpl}.

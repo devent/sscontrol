@@ -32,8 +32,8 @@ import java.util.regex.Pattern;
 import com.anrisoftware.resources.templates.api.TemplateResource;
 import com.anrisoftware.resources.templates.api.Templates;
 import com.anrisoftware.resources.templates.api.TemplatesFactory;
-import com.anrisoftware.sscontrol.hosts.service.Host;
-import com.anrisoftware.sscontrol.hosts.service.HostFactory;
+import com.anrisoftware.sscontrol.hosts.host.Host;
+import com.anrisoftware.sscontrol.hosts.host.HostFactory;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 
@@ -58,34 +58,34 @@ public class HostFormat extends Format {
 
 	private final HostFactory hostFactory;
 
-	/**
-	 * Sets the default locale for the format.
-	 * 
-	 * @param templatesFactory
-	 *            the {@link TemplatesFactory}.
-	 * 
-	 * @param hostFactory
-	 *            the {@link HostFactory} to create a new host.
-	 * 
-	 * @see Locale#getDefault()
-	 */
+	        /**
+     * Sets the default locale for the format.
+     * 
+     * @param templatesFactory
+     *            the {@link TemplatesFactory}.
+     * 
+     * @param hostFactory
+     *            the {@link HostFactory} to create a new host.
+     * 
+     * @see Locale#getDefault()
+     */
 	@AssistedInject
 	HostFormat(TemplatesFactory templatesFactory, HostFactory hostFactory) {
 		this(templatesFactory, hostFactory, Locale.getDefault());
 	}
 
-	/**
-	 * Sets the specified locale for the format.
-	 * 
-	 * @param templatesFactory
-	 *            the {@link TemplatesFactory}.
-	 * 
-	 * @param hostFactory
-	 *            the {@link HostFactory} to create a new host.
-	 * 
-	 * @param locale
-	 *            the {@link Locale} of the format.
-	 */
+	        /**
+     * Sets the specified locale for the format.
+     * 
+     * @param templatesFactory
+     *            the {@link TemplatesFactory}.
+     * 
+     * @param hostFactory
+     *            the {@link HostFactory} to create a new host.
+     * 
+     * @param locale
+     *            the {@link Locale} of the format.
+     */
 	@AssistedInject
 	HostFormat(TemplatesFactory templatesFactory, HostFactory hostFactory,
 			@Assisted Locale locale) {
@@ -94,16 +94,16 @@ public class HostFormat extends Format {
 		this.locale = locale;
 	}
 
-	/**
-	 * Format the specified {@link Host}.
-	 * <p>
-	 * The format follows the pattern:
-	 * 
-	 * <pre>
-	 * ip:"&lt;address>";name:"&lt;hostname>";aliases:["&lt;alias>",...]
-	 * ip:'&lt;address>';name:'&lt;hostname>';aliases:['&lt;alias>',...]
-	 * </pre>
-	 */
+	        /**
+     * Format the specified {@link Host}.
+     * <p>
+     * The format follows the pattern:
+     * 
+     * <pre>
+     * ip:"&lt;address>";name:"&lt;hostname>";aliases:["&lt;alias>",...]
+     * ip:'&lt;address>';name:'&lt;hostname>';aliases:['&lt;alias>',...]
+     * </pre>
+     */
 	@Override
 	public StringBuffer format(Object obj, StringBuffer buff, FieldPosition pos) {
 		isInstanceOf(Host.class, obj);
@@ -131,11 +131,11 @@ public class HostFormat extends Format {
 		}
 		String address = matcher.group(1);
 		String name = matcher.group(2);
-		Host host = hostFactory.create(address).host(name);
+        Host host = hostFactory.create(name, address);
 		String[] aliases = split(matcher.group(3), ",");
 		for (int i = 0; i < aliases.length; i++) {
 			String alias = aliases[i].replaceAll("[\"']", "");
-			host.alias(alias);
+            host.addAlias(alias);
 		}
 		pos.setIndex(matcher.end());
 		return host;

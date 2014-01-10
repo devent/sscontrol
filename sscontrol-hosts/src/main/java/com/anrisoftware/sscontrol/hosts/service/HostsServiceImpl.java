@@ -19,13 +19,12 @@
 package com.anrisoftware.sscontrol.hosts.service;
 
 import static com.anrisoftware.sscontrol.hosts.service.HostsServiceFactory.NAME;
-import static org.apache.commons.collections.functors.NotNullPredicate.INSTANCE;
-import static org.apache.commons.collections.list.PredicatedList.decorate;
 import groovy.lang.Script;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -34,123 +33,91 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import com.anrisoftware.sscontrol.core.api.ServiceException;
 import com.anrisoftware.sscontrol.core.api.ServiceScriptFactory;
 import com.anrisoftware.sscontrol.core.service.AbstractService;
-import com.anrisoftware.sscontrol.hosts.utils.HostFormatFactory;
+import com.anrisoftware.sscontrol.hosts.api.HostsService;
+import com.anrisoftware.sscontrol.hosts.host.Host;
+import com.anrisoftware.sscontrol.hosts.host.HostFactory;
 
 /**
- * The hosts service.
- * <p>
- * The hosts service contains a mapping of an IP address to one or more host
- * names. This example will set the two hosts with their IP addresses and
- * aliases:
- * 
- * <pre>
- * hosts {
- *   ip "192.168.0.49" host "srv1.example.com" alias "srv1"
- *   ip "192.168.0.50" host "srv1.example.org" alias "srva", "srvb"
- * }
- * </pre>
+ * Hosts service.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
 @SuppressWarnings("serial")
-public class HostsServiceImpl extends AbstractService {
+public class HostsServiceImpl extends AbstractService implements HostsService {
 
-	private final HostsServiceImplLogger log;
+    private static final String HOST_ADDRESS = "address";
 
-	private final List<Host> hosts;
+    private static final String HOSTS = "hosts";
 
-	private final HostFactory hostFactory;
+    private final HostsServiceImplLogger log;
 
-	@SuppressWarnings("unchecked")
-	@Inject
-	HostsServiceImpl(HostsServiceImplLogger logger, HostFactory hostFactory,
-			HostFormatFactory hostFormatFactory) {
-		this.log = logger;
-		this.hostFactory = hostFactory;
-		this.hosts = decorate(new ArrayList<String>(), INSTANCE);
-	}
+    private final List<Host> hosts;
 
-	@Override
-	protected Script getScript(String profileName) throws ServiceException {
-		ServiceScriptFactory scriptFactory = findScriptFactory(NAME);
-		return (Script) scriptFactory.getScript();
-	}
+    @Inject
+    private HostFactory hostFactory;
 
-	/**
-	 * Because we load the script from a script service the dependencies are
-	 * already injected.
-	 */
-	@Override
-	protected void injectScript(Script script) {
-	}
+    @Inject
+    HostsServiceImpl(HostsServiceImplLogger logger) {
+        this.log = logger;
+        this.hosts = new ArrayList<Host>();
+    }
 
-	/**
-	 * Returns the hosts service name.
-	 */
-	@Override
-	public String getName() {
-		return NAME;
-	}
+    @Override
+    protected Script getScript(String profileName) throws ServiceException {
+        ServiceScriptFactory scriptFactory = findScriptFactory(NAME);
+        return (Script) scriptFactory.getScript();
+    }
 
-	    /**
+    /**
+     * Because we load the script from a script service the dependencies are
+     * already injected.
+     */
+    @Override
+    protected void injectScript(Script script) {
+    }
+
+    @Override
+    public String getName() {
+        return NAME;
+    }
+
+    /**
      * Starts the hosts configuration.
      * 
      * @return this {@link HostsServiceImpl}.
      */
-	public Object hosts(Object closure) {
-		return this;
-	}
+    public Object hosts(Object closure) {
+        return this;
+    }
 
-	    /**
+    /**
      * Adds a new host entry with the specified IP address.
-     * 
-     * @param address
-     *            the IP address of the host.
-     * 
-     * @return the {@link Host}.
-     * 
-     * @throws NullPointerException
-     *             if the specified address is {@code null}.
-     * 
-     * @throws IllegalArgumentException
-     *             if the specified address is empty.
      */
-	public Host ip(String address) {
-		log.checkAddress(this, address);
-		Host host = hostFactory.create(address);
-		hosts.add(host);
-		log.hostAdded(this, host);
-		return host;
-	}
+    public void ip(Map<String, Object> args, String address) {
+        args.put(HOST_ADDRESS, address);
+        Host host = hostFactory.create(this, args);
+        hosts.add(host);
+        log.hostAdded(this, host);
+    }
 
-	    /**
-     * Returns the host entries.
-     * 
-     * @return a {@link List} of {@link Host} entries.
-     */
-	public List<Host> getHosts() {
-		return hosts;
-	}
+    @Override
+    public List<Host> getHosts() {
+        return hosts;
+    }
 
-	    /**
-     * Adds all hosts from the specified collection in front of the current
-     * hosts.
-     * 
-     * @param hosts
-     *            the {@link Collection}.
-     */
-	public void addHostsHead(Collection<? extends Host> hosts) {
-		int index = 0;
-		for (Host host : hosts) {
-			this.hosts.add(index++, host);
-		}
-	}
+    @Override
+    public void addHostsHead(Collection<? extends Host> hosts) {
+        int index = 0;
+        for (Host host : hosts) {
+            this.hosts.add(index++, host);
+        }
+    }
 
-	@Override
-	public String toString() {
-		return new ToStringBuilder(this).appendSuper(super.toString())
-				.append("hosts", hosts).toString();
-	}
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this).appendSuper(super.toString())
+                .append(HOSTS, hosts).toString();
+    }
 
 }

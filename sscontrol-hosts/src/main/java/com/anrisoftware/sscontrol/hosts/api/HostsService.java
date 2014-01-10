@@ -16,25 +16,42 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-hosts. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.hosts.service;
+package com.anrisoftware.sscontrol.hosts.api;
 
-import com.anrisoftware.sscontrol.core.list.ListModule;
-import com.anrisoftware.sscontrol.hosts.host.HostModule;
-import com.anrisoftware.sscontrol.hosts.utils.HostsUtilsModule;
-import com.google.inject.AbstractModule;
+import java.util.Collection;
+import java.util.List;
+
+import com.anrisoftware.sscontrol.core.api.Service;
+import com.anrisoftware.sscontrol.hosts.host.Host;
 
 /**
- * Hosts service module.
+ * Hosts service.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class HostsModule extends AbstractModule {
+public interface HostsService extends Service {
 
-	@Override
-	protected void configure() {
-        install(new HostModule());
-        install(new HostsUtilsModule());
-        install(new ListModule());
-	}
+    /**
+     * Returns the hosts service name.
+     */
+    @Override
+    String getName();
+
+    /**
+     * Returns the host entries.
+     * 
+     * @return a {@link List} of {@link Host} entries.
+     */
+    List<Host> getHosts();
+
+    /**
+     * Adds all hosts from the specified collection in front of the current
+     * hosts.
+     * 
+     * @param hosts
+     *            the {@link Collection}.
+     */
+    void addHostsHead(Collection<? extends Host> hosts);
+
 }

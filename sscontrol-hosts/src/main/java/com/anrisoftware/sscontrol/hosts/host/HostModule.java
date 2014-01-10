@@ -16,9 +16,23 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-hosts. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.hosts.service;
+package com.anrisoftware.sscontrol.hosts.host;
 
-public interface HostFactory {
+import com.google.inject.AbstractModule;
+import com.google.inject.assistedinject.FactoryModuleBuilder;
 
-	Host create(String address);
+/**
+ * Installs the host factory.
+ * 
+ * @author Erwin Mueller, erwin.mueller@deventm.org
+ * @since 1.0
+ */
+public class HostModule extends AbstractModule {
+
+	@Override
+	protected void configure() {
+		install(new FactoryModuleBuilder().implement(Host.class, Host.class)
+				.build(HostFactory.class));
+	}
+
 }

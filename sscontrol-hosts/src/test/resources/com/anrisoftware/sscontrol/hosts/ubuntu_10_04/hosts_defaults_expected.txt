@@ -12,3 +12,9 @@
 # SSCONTROL-hosts
 192.168.0.50 srv1.ubuntutest.org srva srvb
 # SSCONTROL-hosts-END
+# SSCONTROL-hosts
+192.168.0.51 srv1.ubuntutest.me 
+# SSCONTROL-hosts-END
+# SSCONTROL-hosts
+192.168.0.52 srv1.ubuntutest.xx 
+# SSCONTROL-hosts-END

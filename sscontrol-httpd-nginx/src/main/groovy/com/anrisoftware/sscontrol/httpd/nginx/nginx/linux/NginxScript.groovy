@@ -548,6 +548,20 @@ abstract class NginxScript extends LinuxScript {
     }
 
     /**
+     * Returns the {@code nginx} service name that listens to the open ports,
+     * for example {@code "nginx.conf".}
+     *
+     * <ul>
+     * <li>profile property {@code "nginx_service"}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    String getNginxService() {
+        profileProperty "nginx_service", defaultProperties
+    }
+
+    /**
      * Returns unique domains. The domains are identified by their name.
      */
     List getUniqueDomains() {
@@ -587,7 +601,8 @@ abstract class NginxScript extends LinuxScript {
      * @see #checkPortsInUse(java.util.List)
      */
     Map findPortsServices(List domains) {
-        def ports = domains.inject([]) { acc, Domain domain -> acc << domain.port }
+        def ports = domains.inject(new HashSet()) { acc, Domain domain -> acc << domain.port }
+        log.checkingPorts this, ports
         checkPortsInUse ports
     }
 

@@ -18,6 +18,7 @@
  */
 package com.anrisoftware.sscontrol.httpd.nginx.nginx.linux;
 
+import static com.anrisoftware.sscontrol.httpd.nginx.nginx.linux.NginxScriptLogger._.checking_ports;
 import static com.anrisoftware.sscontrol.httpd.nginx.nginx.linux.NginxScriptLogger._.enabled_sites_debug;
 import static com.anrisoftware.sscontrol.httpd.nginx.nginx.linux.NginxScriptLogger._.enabled_sites_info;
 import static com.anrisoftware.sscontrol.httpd.nginx.nginx.linux.NginxScriptLogger._.linux_script;
@@ -28,6 +29,8 @@ import static com.anrisoftware.sscontrol.httpd.nginx.nginx.linux.NginxScriptLogg
 import static com.anrisoftware.sscontrol.httpd.nginx.nginx.linux.NginxScriptLogger._.stopped_service_info;
 import static com.anrisoftware.sscontrol.httpd.nginx.nginx.linux.NginxScriptLogger._.stopped_service_trace;
 import static org.apache.commons.lang3.StringUtils.isBlank;
+
+import java.util.Set;
 
 import javax.inject.Singleton;
 
@@ -63,7 +66,9 @@ class NginxScriptLogger extends AbstractLogger {
 
         stopped_service_debug("Stopped service '{}' for {}."),
 
-        stopped_service_info("Stopped service '{}' for service '{}'.");
+        stopped_service_info("Stopped service '{}' for service '{}'."),
+
+        checking_ports("Checking ports {} for {}.");
 
         private String name;
 
@@ -111,5 +116,10 @@ class NginxScriptLogger extends AbstractLogger {
         } else {
             info(stopped_service_info, service, script.getName());
         }
+    }
+
+    @SuppressWarnings("rawtypes")
+    void checkingPorts(LinuxScript script, Set ports) {
+        debug(checking_ports, ports, script);
     }
 }

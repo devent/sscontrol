@@ -51,6 +51,8 @@ enum DomainsResources {
     chmodOutExpected("/bin/chmod.out", DomainsResources.class.getResource("chmod_out_expected.txt")),
     // used ports
     netstatPortsCommand("/bin/netstat", DomainsResources.class.getResource("netstat_used_ports.txt")),
+    // used ports proxy
+    netstatPortsProxyCommand("/bin/netstat", DomainsResources.class.getResource("netstat_used_ports_proxy.txt")),
 
     ResourcesUtils resources
 

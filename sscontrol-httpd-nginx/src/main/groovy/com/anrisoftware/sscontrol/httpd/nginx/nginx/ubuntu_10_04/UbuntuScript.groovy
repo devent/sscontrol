@@ -55,7 +55,7 @@ class UbuntuScript extends Nginx_1_4_Script {
      */
     void restartService() {
         def services = findPortsServices uniqueDomains
-        services.each { port, service -> stopService service }
+        services.findAll { port, service -> service != nginxService }.each { port, service -> stopService service }
         restartServices()
     }
 

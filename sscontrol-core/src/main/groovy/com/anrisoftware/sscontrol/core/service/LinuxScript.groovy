@@ -923,16 +923,16 @@ abstract class LinuxScript extends Script {
      * Checks if the listed ports are already in use by a service.
      *
      * @param ports
-     *            the {@link List} of ports.
+     *            the ports.
      *
      * @return the {@link Map} of service names that are using the found ports.
      */
-    Map checkPortsInUse(List ports) {
+    Map checkPortsInUse(def ports) {
         def command = listUsedPorts()
         def lines = StringUtils.split command.out, "\n"
         def found = [:]
         lines.each { val ->
-            def port = ports.find { port -> StringUtils.contains(val, ":$port") }
+            def port = ports.find { port -> StringUtils.contains(val, ":$port ") }
             port ? parsePortService(found, port, val) : false
         }
         return found

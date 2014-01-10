@@ -22,6 +22,8 @@ import static com.anrisoftware.sscontrol.httpd.statements.wordpress.WordpressSer
 import static com.anrisoftware.sscontrol.httpd.statements.wordpress.WordpressServiceLogger._.database_set_info;
 import static com.anrisoftware.sscontrol.httpd.statements.wordpress.WordpressServiceLogger._.debug_set_debug;
 import static com.anrisoftware.sscontrol.httpd.statements.wordpress.WordpressServiceLogger._.debug_set_info;
+import static com.anrisoftware.sscontrol.httpd.statements.wordpress.WordpressServiceLogger._.force_set_debug;
+import static com.anrisoftware.sscontrol.httpd.statements.wordpress.WordpressServiceLogger._.force_set_info;
 import static com.anrisoftware.sscontrol.httpd.statements.wordpress.WordpressServiceLogger._.plugins_added_debug;
 import static com.anrisoftware.sscontrol.httpd.statements.wordpress.WordpressServiceLogger._.plugins_added_info;
 import static com.anrisoftware.sscontrol.httpd.statements.wordpress.WordpressServiceLogger._.themes_added_debug;
@@ -60,7 +62,11 @@ class WordpressServiceLogger extends AbstractLogger {
 
         plugins_added_debug("Plugins '{}' added for {}."),
 
-        plugins_added_info("Plugins '{}' added for service '{}'.");
+        plugins_added_info("Plugins '{}' added for service '{}'."),
+
+        force_set_debug("Force SSL {} set for {}."),
+
+        force_set_info("Force SSL login {}, admin {} set for service '{}'.");
 
         private String name;
 
@@ -110,6 +116,15 @@ class WordpressServiceLogger extends AbstractLogger {
             debug(plugins_added_debug, plugins, service);
         } else {
             info(plugins_added_info, plugins, service.getName());
+        }
+    }
+
+    void forceSet(WordpressService service, Force force) {
+        if (isDebugEnabled()) {
+            debug(force_set_debug, force, service);
+        } else {
+            info(force_set_info, force.isLogin(), force.isAdmin(),
+                    service.getName());
         }
     }
 

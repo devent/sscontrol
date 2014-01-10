@@ -47,6 +47,7 @@ abstract class UbuntuWordpressConfig extends Wordpress_3_Config {
         downloadArchive domain
         installPackages wordpressPackages
         enableMods wordpressMods
+        setupDefaultForce service
         deployMainConfig service, domain
         deployDatabaseConfig service, domain
         deployKeysConfig service, domain

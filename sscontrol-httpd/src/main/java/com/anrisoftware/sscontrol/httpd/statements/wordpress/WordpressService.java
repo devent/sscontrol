@@ -60,6 +60,8 @@ public class WordpressService implements WebService {
 
     private final List<String> themes;
 
+    private final List<String> plugins;
+
     @Inject
     private WordpressServiceLogger log;
 
@@ -68,6 +70,9 @@ public class WordpressService implements WebService {
 
     @Inject
     private StringToListFactory toListFactory;
+
+    @Inject
+    private ForceFactory forceFactory;
 
     private DebugLoggingFactory debugFactory;
 
@@ -85,10 +90,10 @@ public class WordpressService implements WebService {
 
     private MultiSite multiSite;
 
-    private final List<String> plugins;
+    private Force force;
 
     /**
-     * @see WordpressServiceFactory#create(Map)
+     * @see WordpressServiceFactory#create(Domain, Map)
      */
     @Inject
     WordpressService(WebServiceArgs aargs, WebServiceLogger logger,
@@ -230,6 +235,20 @@ public class WordpressService implements WebService {
 
     public List<String> getPlugins() {
         return plugins;
+    }
+
+    public void force(Map<String, Object> args) {
+        Force force = forceFactory.create(args);
+        log.forceSet(this, force);
+        this.force = force;
+    }
+
+    public void setForce(Force force) {
+        this.force = force;
+    }
+
+    public Force getForce() {
+        return force;
     }
 
     @Override

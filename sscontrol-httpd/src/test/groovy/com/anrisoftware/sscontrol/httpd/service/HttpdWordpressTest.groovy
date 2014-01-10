@@ -81,6 +81,8 @@ class HttpdWordpressTest extends HttpdTestUtil {
         assert webservice.themes.size() == 2
         assert webservice.themes.contains("picochic")
         assert webservice.themes.contains("tagebuch")
+        assert webservice.force.login == true
+        assert webservice.force.admin == true
 
         domain = service.domains[3]
         assert domain.name == "www.test1.com"

@@ -30,6 +30,8 @@ import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.sscontrol.core.service.LinuxScript
 import com.anrisoftware.sscontrol.httpd.statements.domain.Domain
 import com.anrisoftware.sscontrol.httpd.statements.webservice.WebService
+import com.anrisoftware.sscontrol.httpd.statements.wordpress.ForceFactory
+import com.anrisoftware.sscontrol.httpd.statements.wordpress.WordpressService
 
 /**
  * Wordpress.
@@ -44,6 +46,9 @@ abstract class WordpressConfig {
     @Inject
     private WordpressConfigLogger log
 
+    @Inject
+    private ForceFactory forceFactory
+
     private LinuxScript script
 
     /**
@@ -55,6 +60,19 @@ abstract class WordpressConfig {
      * @see ServiceConfig#deployService(Domain, WebService, List)
      */
     abstract void deployService(Domain domain, WebService service, List config)
+
+    /**
+     * Sets default force SSL login and admin.
+     *
+     * @param service
+     *            the {@link WordpressService} Wordpress service.
+     */
+    void setupDefaultForce(WordpressService service) {
+        if (service.force == null) {
+            def force = forceFactory.create(["login": forceSecureLogin, "admin": forceSecureAdmin])
+            service.force = force
+        }
+    }
 
     /**
      * Returns the Wordpress web mail distribution archive.

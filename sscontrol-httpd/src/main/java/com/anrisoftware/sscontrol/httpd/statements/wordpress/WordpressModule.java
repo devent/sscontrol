@@ -39,6 +39,8 @@ public class WordpressModule extends AbstractModule {
     protected void configure() {
         install(new FactoryModuleBuilder().implement(WebService.class,
                 WordpressService.class).build(WordpressServiceFactory.class));
+        install(new FactoryModuleBuilder().implement(Force.class, Force.class)
+                .build(ForceFactory.class));
         bindService();
     }
 

@@ -285,20 +285,20 @@ abstract class Wordpress_3_Config extends WordpressConfig {
      */
     List secureLoginConfigurations(WordpressService service) {
         [
-            configForceSecureLogin(),
-            configForceSecureAdmin(),
+            configForceSecureLogin(service),
+            configForceSecureAdmin(service),
         ]
     }
 
-    def configForceSecureLogin() {
+    def configForceSecureLogin(WordpressService service) {
         def search = wordpressConfigTemplate.getText(true, "configForceSecureLogin_search")
-        def replace = wordpressConfigTemplate.getText(true, "configForceSecureLogin", "enabled", forceSecureLogin)
+        def replace = wordpressConfigTemplate.getText(true, "configForceSecureLogin", "enabled", service.force.login)
         new TokenTemplate(search, replace)
     }
 
-    def configForceSecureAdmin() {
+    def configForceSecureAdmin(WordpressService service) {
         def search = wordpressConfigTemplate.getText(true, "configForceSecureAdmin_search")
-        def replace = wordpressConfigTemplate.getText(true, "configForceSecureAdmin", "enabled", forceSecureAdmin)
+        def replace = wordpressConfigTemplate.getText(true, "configForceSecureAdmin", "enabled", service.force.admin)
         new TokenTemplate(search, replace)
     }
 

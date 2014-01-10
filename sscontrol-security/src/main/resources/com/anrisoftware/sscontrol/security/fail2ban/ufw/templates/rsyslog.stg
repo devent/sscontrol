@@ -1,0 +1,7 @@
+repeatedMsgReductionConfig_search() ::= <%
+#?\$RepeatedMsgReduction.*
+%>
+
+repeatedMsgReductionConfig(enabled) ::= <%
+$RepeatedMsgReduction <if(enabled)>on<else>off<endif>
+%>

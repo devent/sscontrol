@@ -21,6 +21,8 @@ package com.anrisoftware.sscontrol.security.fail2ban.ubuntu_12_04
 def aptitudeCommand = UbuntuResources.aptitudeCommand.asFile(tmp)
 def fail2banDir = UbuntuResources.fail2banDirectory.asFile(tmp)
 def fail2banRestartCommand = UbuntuResources.fail2banRestartCommand.asFile(tmp)
+def rsyslogConfFile = UbuntuResources.rsyslogConfigFile.asFile(tmp)
+def restartCommand = UbuntuResources.restartCommand.asFile(tmp)
 
 profile "ubuntu_12_04", {
     security {
@@ -29,7 +31,9 @@ profile "ubuntu_12_04", {
         configuration_directory fail2banDir
         install_command "$aptitudeCommand update && $aptitudeCommand -y install"
         restart_command "$fail2banRestartCommand restart"
+        rsyslog_restart_command "$restartCommand rsyslog"
         ufw_command UbuntuResources.ufwCommand.asFile(tmp)
         logpath_postfix "/var/log/mail.warn"
+        rsyslog_configuration_file rsyslogConfFile
     }
 }

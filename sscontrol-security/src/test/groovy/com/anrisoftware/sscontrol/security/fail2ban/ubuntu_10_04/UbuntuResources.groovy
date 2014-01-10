@@ -46,14 +46,20 @@ enum UbuntuResources {
     jailConfExpected("/etc/fail2ban/jail.local", UbuntuResources.class.getResource("jail_local_expected.txt")),
     ufwCommand("/usr/sbin/ufw", UbuntuResources.class.getResource("echo_command.txt")),
     ufwOutExpected("/usr/sbin/ufw.out", UbuntuResources.class.getResource("ufw_out.txt")),
+    rsyslogConfigFile("/etc/rsyslog.conf", UbuntuResources.class.getResource("rsyslog_conf.txt")),
+    rsyslogConfigExpected("/etc/rsyslog.conf", UbuntuResources.class.getResource("rsyslog_conf_expected.txt")),
+    restartCommand("/sbin/restart", UbuntuResources.class.getResource("echo_command.txt")),
+    restartOutExpected("/sbin/restart.out", UbuntuResources.class.getResource("restart_out_expected.txt")),
 
     static void copyUbuntu_10_04_Files(File parent) {
         aptitudeCommand.createCommand parent
+        restartCommand.createCommand parent
         fail2banDirectory.asFile parent mkdirs()
         fail2banConf.createFile parent
         fail2banJailConf.createFile parent
         fail2banRestartCommand.createCommand parent
         ufwCommand.createCommand parent
+        rsyslogConfigFile.createFile parent
     }
 
     ResourcesUtils resources

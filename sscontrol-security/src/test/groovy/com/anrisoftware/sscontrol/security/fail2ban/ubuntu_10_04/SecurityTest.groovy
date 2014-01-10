@@ -55,5 +55,7 @@ class SecurityTest extends SecurityTestUtil {
         assertFileContent jailConfExpected.asFile(tmpdir), jailConfExpected
         assertFileContent fail2banRestartOutExpected.asFile(tmpdir), fail2banRestartOutExpected
         assertFileContent ufwOutExpected.asFile(tmpdir), ufwOutExpected
+        assertFileContent rsyslogConfigExpected.asFile(tmpdir), rsyslogConfigExpected
+        assertFileContent restartOutExpected.asFile(tmpdir), restartOutExpected
     }
 }

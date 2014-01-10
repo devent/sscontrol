@@ -38,6 +38,7 @@ import com.anrisoftware.resources.templates.api.Templates
 import com.anrisoftware.sscontrol.core.service.LinuxScript
 import com.anrisoftware.sscontrol.security.fail2ban.linux.Fail2BanFirewall
 import com.anrisoftware.sscontrol.security.services.Service
+import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokenTemplate
 
 /**
  * Ufw firewall fail2ban script.
@@ -73,6 +74,11 @@ abstract class UfwFail2BanScript implements Fail2BanFirewall {
     TemplateResource ufwactionTemplate
 
     /**
+     * Resource create {@code rsyslog} configuration.
+     */
+    TemplateResource rsyslogTemplate
+
+    /**
      * Parent script.
      */
     LinuxScript script
@@ -80,6 +86,8 @@ abstract class UfwFail2BanScript implements Fail2BanFirewall {
     @Override
     void beforeConfiguration() {
         enableFirewall()
+        deployRsyslogConfiguration()
+        restartRsyslog()
     }
 
     @Override
@@ -281,10 +289,75 @@ abstract class UfwFail2BanScript implements Fail2BanFirewall {
         profileProperty "ufw_command", firewallProperties
     }
 
+    /**
+     * Deploys the {@code rsyslog} configuration.
+     */
+    void deployRsyslogConfiguration() {
+        def file = rsyslogConfFile
+        if (file.isFile()) {
+            def config = currentConfiguration file
+            deployConfiguration configurationTokens(), config, rsyslogConfigurations(), file
+        }
+    }
+
+    /**
+     * Returns the {@code rsyslog} configurations.
+     */
+    def rsyslogConfigurations() {
+        [
+            repeatedMsgReduction(),
+        ]
+    }
+
+    /**
+     * Configures the {@code RepeatedMsgReduction} option.
+     */
+    def repeatedMsgReduction() {
+        def search = rsyslogTemplate.getText(true, "repeatedMsgReductionConfig_search")
+        def replace = rsyslogTemplate.getText(true, "repeatedMsgReductionConfig", "enabled", false)
+        new TokenTemplate(search, replace)
+    }
+
+    /**
+     * Returns the {@code rsyslog} configuration file, for
+     * example {@code "/etc/rsyslog.conf".}
+     *
+     * <ul>
+     * <li>profile property {@code "rsyslog_configuration_file"}</li>
+     * </ul>
+     *
+     * @see #getFirewallProperties()
+     */
+    File getRsyslogConfFile() {
+        profileDirProperty "rsyslog_configuration_file", firewallProperties
+    }
+
+    /**
+     * Restart {@code rsyslog} service.
+     */
+    void restartRsyslog() {
+        restartServices restartCommand: rsyslogRestartCommand, services: []
+    }
+
+    /**
+     * Returns the {@code rsyslog} service restart command, for
+     * example {@code "/sbin/restart rsyslog".}
+     *
+     * <ul>
+     * <li>profile property {@code "rsyslog_restart_command"}</li>
+     * </ul>
+     *
+     * @see #getFirewallProperties()
+     */
+    String getRsyslogRestartCommand() {
+        profileDirProperty "rsyslog_restart_command", firewallProperties
+    }
+
     @Override
     void setScript(LinuxScript script) {
         this.script = script
         this.scriptTemplates = templatesFactory.create "UfwFail2BanScript"
+        this.rsyslogTemplate = scriptTemplates.getResource "rsyslog"
         this.ufwactionTemplate = scriptTemplates.getResource "ufwaction"
     }
 

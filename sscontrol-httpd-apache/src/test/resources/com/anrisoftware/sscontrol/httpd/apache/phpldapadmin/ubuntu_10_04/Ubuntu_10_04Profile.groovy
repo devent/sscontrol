@@ -41,5 +41,6 @@ profile "ubuntu_10_04", {
         phpldapadmin_archive PhpldapadminResources.phpldapadminTgz.resource
         phpldapadmin_configuration_directory PhpldapadminResources.configDir.asFile(tmp)
         phpldapadmin_linked_configuration_directory PhpldapadminResources.linkedConfigDir.asFile(tmp)
+        php_fcgi_php_conf_directory PhpldapadminResources.phpConfDir.asFile(tmp)
     }
 }

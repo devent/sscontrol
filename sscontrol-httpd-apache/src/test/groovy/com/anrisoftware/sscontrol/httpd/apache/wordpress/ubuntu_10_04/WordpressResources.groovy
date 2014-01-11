@@ -34,6 +34,7 @@ enum WordpressResources {
     profile("UbuntuProfile.groovy", WordpressResources.class.getResource("Ubuntu_10_04Profile.groovy")),
     httpdScript("Httpd.groovy", WordpressResources.class.getResource("HttpdWordpress.groovy")),
     httpdDebugScript("Httpd.groovy", WordpressResources.class.getResource("HttpdWordpressDebug.groovy")),
+    phpConfDir("/etc/php5/cgi/conf.d", null),
     wordpressArchive("/tmp/web-wordpress-3.8.tar.gz", WordpressResources.class.getResource("wordpress-3.8.tar.gz")),
     wordpressArchive_de_DE("/tmp/web-wordpress-3.8_de_DE.tar.gz", WordpressResources.class.getResource("wordpress-3.8_de_DE.tar.gz")),
     portsConf("/etc/apache2/ports.conf", WordpressResources.class.getResource("ports_conf.txt")),
@@ -43,7 +44,8 @@ enum WordpressResources {
     test1comSslConf("/etc/apache2/sites-available/100-robobee-test1.com-ssl.conf", WordpressResources.class.getResource("test1_com_ssl_conf.txt")),
     wwwtest1comConf("/etc/apache2/sites-available/100-robobee-www.test1.com.conf", WordpressResources.class.getResource("www_test1_com_conf.txt")),
     wwwtest1comSslConf("/etc/apache2/sites-available/100-robobee-www.test1.com-ssl.conf", WordpressResources.class.getResource("www_test1_com_ssl_conf.txt")),
-    wwwtest1comSslFcgiScript("/var/www/php-fcgi-scripts/www.test1.com/php-fcgi-starter", WordpressResources.class.getResource("php_fcgi_starter.txt")),
+    wwwtest1comSslFcgiScriptExpected("/var/www/php-fcgi-scripts/www.test1.com/php-fcgi-starter", WordpressResources.class.getResource("php_fcgi_starter_expected.txt")),
+    wwwtest1comSslPhpiniExpected("/var/www/php-fcgi-scripts/www.test1.com/domain_php.ini", WordpressResources.class.getResource("php_ini_expected.txt")),
     chownOut("/bin/chown.out", WordpressResources.class.getResource("chown_out.txt")),
     chmodOut("/bin/chmod.out", WordpressResources.class.getResource("chmod_out.txt")),
     useraddOut("/usr/sbin/useradd.out", WordpressResources.class.getResource("useradd_out.txt")),
@@ -92,6 +94,7 @@ enum WordpressResources {
     unzipPluginsOut("/usr/bin/unzip.out", WordpressResources.class.getResource("unzip_plugins_out.txt")),
 
     static copyWordpressFiles(File parent) {
+        phpConfDir.asFile parent mkdirs()
         portsConf.createFile parent
         wordpressArchive.createFile parent
         wordpressArchive_de_DE.createFile parent

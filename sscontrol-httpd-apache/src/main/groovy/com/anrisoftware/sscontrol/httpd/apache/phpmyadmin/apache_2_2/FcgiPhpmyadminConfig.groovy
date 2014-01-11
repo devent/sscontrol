@@ -20,7 +20,6 @@ package com.anrisoftware.sscontrol.httpd.apache.phpmyadmin.apache_2_2
 
 import javax.inject.Inject
 
-import com.anrisoftware.sscontrol.httpd.apache.apache.linux.ApacheScript
 import com.anrisoftware.sscontrol.httpd.apache.apache.linux.FcgiConfig
 import com.anrisoftware.sscontrol.httpd.apache.phpmyadmin.linux.PhpmyadminConfig
 import com.anrisoftware.sscontrol.httpd.statements.domain.Domain
@@ -48,5 +47,6 @@ abstract class FcgiPhpmyadminConfig extends PhpmyadminConfig {
         fcgiConfig.script = script
         fcgiConfig.enableFcgi()
         fcgiConfig.deployConfig domain
+        fcgiConfig.deployService domain, service, config
     }
 }

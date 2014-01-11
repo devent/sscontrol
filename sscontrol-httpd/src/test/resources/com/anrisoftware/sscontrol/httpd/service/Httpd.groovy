@@ -26,6 +26,7 @@ httpd {
 	domain "test1.com", address: "192.168.0.50", port: 80, {
 		redirect to_www
 		redirect http_to_https
+        memory limit: "32 MB", upload: "32 MB"
 	}
 	domain "foo.test1.com", address: "192.168.0.50"
 	ssl_domain "test1.com", address: "192.168.0.50", {

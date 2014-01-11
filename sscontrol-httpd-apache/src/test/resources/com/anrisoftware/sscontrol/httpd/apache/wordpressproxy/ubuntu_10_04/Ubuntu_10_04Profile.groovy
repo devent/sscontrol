@@ -38,6 +38,7 @@ profile "ubuntu_10_04", {
         link_command UbuntuResources.lnCommand.asFile(tmp)
         temp_directory UbuntuResources.tmpDir.asFile(tmp)
         packaging_configuration_directory UbuntuResources.packagingConfigurationDirectory.asFile(tmp)
+        php_fcgi_php_conf_directory WordpressProxyResources.phpConfDir.asFile(tmp)
         wordpress_auth_key "auth-key"
         wordpress_secure_auth_key "secure-auth-key"
         wordpress_logged_in_key "logged-in-key"

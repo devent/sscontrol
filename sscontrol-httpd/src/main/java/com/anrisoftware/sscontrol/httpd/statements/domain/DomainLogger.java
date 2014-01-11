@@ -24,6 +24,7 @@ import static com.anrisoftware.sscontrol.httpd.statements.domain.DomainLogger._.
 import static com.anrisoftware.sscontrol.httpd.statements.domain.DomainLogger._.certification_resource_null;
 import static com.anrisoftware.sscontrol.httpd.statements.domain.DomainLogger._.document_root_debug;
 import static com.anrisoftware.sscontrol.httpd.statements.domain.DomainLogger._.document_root_set;
+import static com.anrisoftware.sscontrol.httpd.statements.domain.DomainLogger._.memory_set_debug;
 import static com.anrisoftware.sscontrol.httpd.statements.domain.DomainLogger._.port_set;
 import static com.anrisoftware.sscontrol.httpd.statements.domain.DomainLogger._.port_set_debug;
 import static com.anrisoftware.sscontrol.httpd.statements.domain.DomainLogger._.redirect_http_to_https_added;
@@ -41,6 +42,7 @@ import static org.apache.commons.lang3.Validate.notNull;
 import javax.inject.Singleton;
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
+import com.anrisoftware.sscontrol.httpd.statements.memory.Memory;
 import com.anrisoftware.sscontrol.httpd.statements.redirect.Redirect;
 import com.anrisoftware.sscontrol.httpd.statements.user.DomainUser;
 import com.anrisoftware.sscontrol.httpd.statements.webservice.WebService;
@@ -94,7 +96,9 @@ class DomainLogger extends AbstractLogger {
 
         user_set_debug("Domain user {} set for {}."),
 
-        user_set_info("Domain user '{}' set for domain '{}'.");
+        user_set_info("Domain user '{}' set for domain '{}'."),
+
+        memory_set_debug("Domain memory limit {} set for {}.");
 
         private String name;
 
@@ -185,9 +189,13 @@ class DomainLogger extends AbstractLogger {
 
     void userSet(Domain domain, DomainUser user) {
         if (isDebugEnabled()) {
-            debug(user_set_debug, domain, domain);
+            debug(user_set_debug, user, domain);
         } else {
             info(user_set_info, user.getName(), domain.getName());
         }
+    }
+
+    void memorySet(Domain domain, Memory memory) {
+        debug(memory_set_debug, memory, domain);
     }
 }

@@ -14,6 +14,10 @@
     SSLCertificateFile /tmp/var/www/ldapadmin.test1.com/ssl/cert_crt.txt
     SSLCertificateKeyFile /tmp/var/www/ldapadmin.test1.com/ssl/cert_key.txt
 
+    # fcgi
+
+    FcgidMaxRequestLen 2000000
+
     # phpldapadmin
 
     Alias /ldapadmin /tmp/var/www/ldapadmin.test1.com/phpldapadmin/htdocs

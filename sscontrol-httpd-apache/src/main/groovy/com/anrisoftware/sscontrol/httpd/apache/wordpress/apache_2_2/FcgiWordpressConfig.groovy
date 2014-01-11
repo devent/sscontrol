@@ -47,6 +47,7 @@ abstract class FcgiWordpressConfig extends WordpressConfig {
         fcgiConfig.script = script
         fcgiConfig.enableFcgi()
         fcgiConfig.deployConfig domain
+        fcgiConfig.deployService domain, service, config
     }
 
     /**

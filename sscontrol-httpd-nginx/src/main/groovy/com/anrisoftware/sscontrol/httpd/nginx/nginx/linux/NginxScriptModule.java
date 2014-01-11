@@ -18,7 +18,6 @@
  */
 package com.anrisoftware.sscontrol.httpd.nginx.nginx.linux;
 
-import com.anrisoftware.globalpom.format.byteformat.ByteFormatModule;
 import com.google.inject.AbstractModule;
 
 /**
@@ -31,6 +30,5 @@ public class NginxScriptModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        install(new ByteFormatModule());
     }
 }

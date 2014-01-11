@@ -61,6 +61,7 @@ class WordpressTest extends UbuntuTestUtil {
         assertStringContent wwwtest1comConf.replaced(tmpdir, tmpdir, "/tmp"), wwwtest1comConf.toString()
         assertStringContent wwwtest1comSslConf.replaced(tmpdir, tmpdir, "/tmp"), wwwtest1comSslConf.toString()
         assertStringContent wwwtest1comSslFcgiScript.replaced(tmpdir, tmpdir, "/tmp"), wwwtest1comSslFcgiScript.toString()
+        assertStringContent wwwtest1comSslPhpiniExpected.replaced(tmpdir, tmpdir, "/tmp"), wwwtest1comSslPhpiniExpected.toString()
         assertFileContent wordpress_3_8_config_expected.asFile(tmpdir), wordpress_3_8_config_expected
         assertStringContent chownOut.replaced(tmpdir, tmpdir, "/tmp"), chownOut.toString()
         assertStringContent chmodOut.replaced(tmpdir, tmpdir, "/tmp"), chmodOut.toString()

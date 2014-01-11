@@ -44,5 +44,6 @@ profile "ubuntu_12_04", {
         phpmyadmin_local_blowfish_secret_file PhpmyadminResources.localBlowfishFile.asFile(tmp)
         phpmyadmin_local_database_config_file PhpmyadminResources.localDbConfigFile.asFile(tmp)
         mysql_command PhpmyadminResources.mysqlCommand.asFile(tmp)
+        php_fcgi_php_conf_directory PhpmyadminResources.phpConfDir.asFile(tmp)
     }
 }

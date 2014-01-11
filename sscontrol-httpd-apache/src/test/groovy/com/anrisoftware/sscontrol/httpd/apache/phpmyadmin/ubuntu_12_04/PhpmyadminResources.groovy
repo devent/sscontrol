@@ -34,12 +34,14 @@ enum PhpmyadminResources {
     profile("UbuntuProfile.groovy", PhpmyadminResources.class.getResource("UbuntuProfile.groovy")),
     httpdScript("Httpd.groovy", PhpmyadminResources.class.getResource("HttpdPhpmyadmin.groovy")),
     mysqlCommand("/usr/bin/mysql", PhpmyadminResources.class.getResource("echo_command.txt")),
+    phpConfDir("/etc/php5/cgi/conf.d", null),
     domainsConf("/etc/apache2/conf.d/000-robobee-domains.conf", PhpmyadminResources.class.getResource("domains_conf_expected.txt")),
     ubuntutestcomConf("/etc/apache2/sites-available/100-robobee-ubuntutest.com.conf", PhpmyadminResources.class.getResource("ubuntutest_com_conf_expected.txt")),
     ubuntutestcomSslConf("/etc/apache2/sites-available/100-robobee-ubuntutest.com-ssl.conf", PhpmyadminResources.class.getResource("ubuntutest_com_ssl_conf_expected.txt")),
     wwwUbuntutestcomConf("/etc/apache2/sites-available/100-robobee-www.ubuntutest.com.conf", PhpmyadminResources.class.getResource("www_ubuntutest_com_conf_expected.txt")),
     wwwUbuntutestcomSslConf("/etc/apache2/sites-available/100-robobee-www.ubuntutest.com-ssl.conf", PhpmyadminResources.class.getResource("www_ubuntutest_com_ssl_conf_expected.txt")),
     phpadminTest1comSslFcgiScript("/var/www/php-fcgi-scripts/ubuntutest.com/php-fcgi-starter", PhpmyadminResources.class.getResource("php_fcgi_starter_expected.txt")),
+    phpadminTest1comSslPhpiniExpected("/var/www/php-fcgi-scripts/ubuntutest.com/domain_php.ini", PhpmyadminResources.class.getResource("php_ini_expected.txt")),
     chownOut("/bin/chown.out", PhpmyadminResources.class.getResource("chown_out_expected.txt")),
     chmodOut("/bin/chmod.out", PhpmyadminResources.class.getResource("chmod_out_expected.txt")),
     useraddOut("/usr/sbin/useradd.out", PhpmyadminResources.class.getResource("useradd_out_expected.txt")),
@@ -54,6 +56,7 @@ enum PhpmyadminResources {
 
     static copyPhpmyadminFiles(File parent) {
         mysqlCommand.createCommand parent
+        phpConfDir.asFile parent mkdirs()
         createTablesSql.createFile parent
         configFile.createFile parent
         localConfigFile.createFile parent

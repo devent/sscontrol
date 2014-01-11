@@ -42,6 +42,7 @@ class PhpldapadminTest extends UbuntuTestUtil {
     void "unpack phpldapadmin"() {
         copyUbuntuFiles tmpdir
         copyUbuntu_10_04_Files tmpdir
+        phpConfDir.asFile tmpdir mkdirs()
         linkedExampleConfig.createFile tmpdir
 
         loader.loadService profile.resource, null
@@ -59,6 +60,7 @@ class PhpldapadminTest extends UbuntuTestUtil {
     void "phpldapadmin"() {
         copyUbuntuFiles tmpdir
         copyUbuntu_10_04_Files tmpdir
+        phpConfDir.asFile tmpdir mkdirs()
         linkedExampleConfig.createFile tmpdir
 
         loader.loadService profile.resource, null
@@ -77,7 +79,7 @@ class PhpldapadminTest extends UbuntuTestUtil {
         assertStringContent test1comConf.replaced(tmpdir, tmpdir, "/tmp"), test1comConf.toString()
         assertStringContent test1comSslConf.replaced(tmpdir, tmpdir, "/tmp"), test1comSslConf.toString()
         assertStringContent ldapadminTest1comSslConf.replaced(tmpdir, tmpdir, "/tmp"), ldapadminTest1comSslConf.toString()
-        assertFileContent ldapadminTest1comSslFcgiScript.asFile(tmpdir), ldapadminTest1comSslFcgiScript
+        assertStringContent ldapadminTest1comSslFcgiScript.replaced(tmpdir, tmpdir, "/tmp"), ldapadminTest1comSslFcgiScript.toString()
         assertStringContent chmodOut.replaced(tmpdir, tmpdir, "/tmp"), chmodOut.toString()
     }
 }

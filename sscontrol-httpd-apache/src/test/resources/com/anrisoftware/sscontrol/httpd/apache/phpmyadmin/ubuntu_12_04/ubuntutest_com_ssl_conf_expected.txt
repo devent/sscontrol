@@ -14,6 +14,10 @@
     SSLCertificateFile /tmp/var/www/ubuntutest.com/ssl/cert_crt.txt
     SSLCertificateKeyFile /tmp/var/www/ubuntutest.com/ssl/cert_key.txt
 
+    # fcgi
+
+    FcgidMaxRequestLen 24000000
+
     # phpmyadmin
 
     Alias /phpmyadmin /usr/share/phpmyadmin

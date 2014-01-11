@@ -60,7 +60,8 @@ class WordpressTest extends UbuntuTestUtil {
         assertStringContent test1comSslConf.replaced(tmpdir, tmpdir, "/tmp"), test1comSslConf.toString()
         assertStringContent wwwtest1comConf.replaced(tmpdir, tmpdir, "/tmp"), wwwtest1comConf.toString()
         assertStringContent wwwtest1comSslConf.replaced(tmpdir, tmpdir, "/tmp"), wwwtest1comSslConf.toString()
-        assertStringContent wwwtest1comSslFcgiScript.replaced(tmpdir, tmpdir, "/tmp"), wwwtest1comSslFcgiScript.toString()
+        assertStringContent wwwtest1comSslFcgiScriptExpected.replaced(tmpdir, tmpdir, "/tmp"), wwwtest1comSslFcgiScriptExpected.toString()
+        assertStringContent wwwtest1comSslPhpiniExpected.replaced(tmpdir, tmpdir, "/tmp"), wwwtest1comSslPhpiniExpected.toString()
         assertFileContent wordpress_3_8_config_expected.asFile(tmpdir), wordpress_3_8_config_expected
         assertStringContent chownOut.replaced(tmpdir, tmpdir, "/tmp"), chownOut.toString()
         assertStringContent chmodOut.replaced(tmpdir, tmpdir, "/tmp"), chmodOut.toString()
@@ -96,7 +97,7 @@ class WordpressTest extends UbuntuTestUtil {
         assertStringContent test1comSslRefConf.replaced(tmpdir, tmpdir, "/tmp"), test1comSslRefConf.toString()
         assertStringContent wwwtest1comRefConf.replaced(tmpdir, tmpdir, "/tmp"), wwwtest1comRefConf.toString()
         assertStringContent wwwtest1comSslRefConf.replaced(tmpdir, tmpdir, "/tmp"), wwwtest1comSslRefConf.toString()
-        assertStringContent wwwtest1comSslFcgiScript.replaced(tmpdir, tmpdir, "/tmp"), wwwtest1comSslFcgiScript.toString()
+        assertStringContent wwwtest1comSslFcgiScriptExpected.replaced(tmpdir, tmpdir, "/tmp"), wwwtest1comSslFcgiScriptExpected.toString()
         assertFileContent wordpress_3_8_config_expected.asFile(tmpdir), wordpress_3_8_config_expected
         assertStringContent chownRetOut.replaced(tmpdir, tmpdir, "/tmp"), chownRetOut.toString()
         assertStringContent chmodRetOut.replaced(tmpdir, tmpdir, "/tmp"), chmodRetOut.toString()

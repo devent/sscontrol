@@ -55,6 +55,10 @@ class HttpdTest extends HttpdTestUtil {
         assert service.domains.size() == 5
         assert service.virtualDomains.size() == 4
         assert service.debug.level == 1
+
+        def domain = service.domains[0]
+        assert domain.memory.limit.value == 32000000
+        assert domain.memory.upload.value == 32000000
     }
 
     @Test

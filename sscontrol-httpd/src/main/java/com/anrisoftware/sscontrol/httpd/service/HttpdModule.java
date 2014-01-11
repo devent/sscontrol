@@ -18,6 +18,7 @@
  */
 package com.anrisoftware.sscontrol.httpd.service;
 
+import com.anrisoftware.globalpom.format.byteformat.ByteFormatModule;
 import com.anrisoftware.sscontrol.core.bindings.BindingsModule;
 import com.anrisoftware.sscontrol.core.database.DatabaseModule;
 import com.anrisoftware.sscontrol.core.debuglogging.DebugLoggingModule;
@@ -26,6 +27,7 @@ import com.anrisoftware.sscontrol.httpd.statements.auth.AuthModule;
 import com.anrisoftware.sscontrol.httpd.statements.authfile.AuthFileModule;
 import com.anrisoftware.sscontrol.httpd.statements.authldap.AuthLdapModule;
 import com.anrisoftware.sscontrol.httpd.statements.domain.DomainModule;
+import com.anrisoftware.sscontrol.httpd.statements.memory.MemoryModule;
 import com.anrisoftware.sscontrol.httpd.statements.phpldapadmin.PhpldapadminModule;
 import com.anrisoftware.sscontrol.httpd.statements.phpmyadmin.PhpmyadminModule;
 import com.anrisoftware.sscontrol.httpd.statements.proxy.ProxyServiceModule;
@@ -45,6 +47,7 @@ class HttpdModule extends AbstractModule {
 
 	@Override
 	protected void configure() {
+        install(new ByteFormatModule());
 		install(new DomainModule());
 		install(new RedirectModule());
 		install(new AuthModule());
@@ -60,5 +63,6 @@ class HttpdModule extends AbstractModule {
         install(new DatabaseModule());
         install(new BindingsModule());
         install(new DomainUserModule());
+        install(new MemoryModule());
 	}
 }

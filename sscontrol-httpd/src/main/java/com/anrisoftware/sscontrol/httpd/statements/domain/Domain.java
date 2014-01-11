@@ -36,6 +36,8 @@ import com.anrisoftware.sscontrol.httpd.statements.auth.AbstractAuth;
 import com.anrisoftware.sscontrol.httpd.statements.auth.AuthProvider;
 import com.anrisoftware.sscontrol.httpd.statements.authfile.AuthFileFactory;
 import com.anrisoftware.sscontrol.httpd.statements.authldap.AuthLdapFactory;
+import com.anrisoftware.sscontrol.httpd.statements.memory.Memory;
+import com.anrisoftware.sscontrol.httpd.statements.memory.MemoryFactory;
 import com.anrisoftware.sscontrol.httpd.statements.redirect.Redirect;
 import com.anrisoftware.sscontrol.httpd.statements.redirect.RedirectFactory;
 import com.anrisoftware.sscontrol.httpd.statements.redirect.RedirectToWwwHttp;
@@ -65,6 +67,14 @@ public class Domain {
     private static final String PORT = "port";
     private static final String ADDRESS = "address";
 
+    private final String name;
+
+    private final List<Redirect> redirects;
+
+    private final List<AbstractAuth> auths;
+
+    private final List<WebService> services;
+
     @Inject
     private DomainLogger log;
 
@@ -77,14 +87,6 @@ public class Domain {
     @Inject
     private AuthLdapFactory authLdapFactory;
 
-    private final String name;
-
-    private final List<Redirect> redirects;
-
-    private final List<AbstractAuth> auths;
-
-    private final List<WebService> services;
-
     @Inject
     private Map<String, WebServiceFactory> serviceFactories;
 
@@ -93,6 +95,9 @@ public class Domain {
 
     @Inject
     private DomainUser domainUser;
+
+    @Inject
+    private MemoryFactory memoryFactory;
 
     private String address;
 
@@ -103,6 +108,8 @@ public class Domain {
     private String useDomain;
 
     private String id;
+
+    private Memory memory;
 
     /**
      * @see DomainFactory#create(Map, String)
@@ -291,6 +298,20 @@ public class Domain {
 
     public List<WebService> getServices() {
         return services;
+    }
+
+    public void memory(Map<String, Object> args) {
+        Memory memory = memoryFactory.create(args);
+        log.memorySet(this, memory);
+        this.memory = memory;
+    }
+
+    public void setMemory(Memory memory) {
+        this.memory = memory;
+    }
+
+    public Memory getMemory() {
+        return memory;
     }
 
     @Override

@@ -33,6 +33,7 @@ enum PhpldapadminResources {
 
     profile("UbuntuProfile.groovy", PhpldapadminResources.class.getResource("Ubuntu_10_04Profile.groovy")),
     httpdScript("Httpd.groovy", PhpldapadminResources.class.getResource("HttpdPhpldapadmin.groovy")),
+    phpConfDir("/etc/php5/cgi/conf.d", null),
     domainsConf("/etc/apache2/conf.d/000-robobee-domains.conf", PhpldapadminResources.class.getResource("domains_conf.txt")),
     test1comConf("/etc/apache2/sites-available/100-robobee-test1.com.conf", PhpldapadminResources.class.getResource("test1_com_conf.txt")),
     test1comSslConf("/etc/apache2/sites-available/100-robobee-test1.com-ssl.conf", PhpldapadminResources.class.getResource("test1_com_ssl_conf.txt")),

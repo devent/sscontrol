@@ -18,12 +18,20 @@
  */
 package com.anrisoftware.sscontrol.httpd.apache.apache.linux
 
+import javax.inject.Inject
+import javax.measure.Measure
+import javax.measure.unit.NonSI
+
 import org.apache.commons.io.FileUtils
 
+import com.anrisoftware.globalpom.format.byteformat.ByteFormatFactory
+import com.anrisoftware.globalpom.format.byteformat.UnitMultiplier
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.Templates
 import com.anrisoftware.sscontrol.core.service.LinuxScript
 import com.anrisoftware.sscontrol.httpd.statements.domain.Domain
+import com.anrisoftware.sscontrol.httpd.statements.webservice.WebService
+import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokenTemplate
 
 /**
  * Configures php-fcgi for the domain.
@@ -32,6 +40,12 @@ import com.anrisoftware.sscontrol.httpd.statements.domain.Domain
  * @since 1.0
  */
 class FcgiConfig {
+
+    @Inject
+    private FcgiConfigLogger log
+
+    @Inject
+    ByteFormatFactory byteFormatFactory
 
     Templates fcgiTemplates
 
@@ -52,6 +66,17 @@ class FcgiConfig {
     }
 
     /**
+     * @see ServiceConfig#deployService(Domain, WebService, List)
+     */
+    void deployService(Domain domain, WebService service, List config) {
+        def configStr = fcgiConfigTemplate.getText(
+                true, "domainConfig",
+                "domain", domain,
+                "properties", this)
+        config << configStr
+    }
+
+    /**
      * Enables the {@code fcgid} Apache/mod.
      */
     void enableFcgi() {
@@ -65,24 +90,109 @@ class FcgiConfig {
      *            the {@link Domain}.
      */
     void deployConfig(Domain domain) {
+        setupDefaults domain
         createScriptDirectory domain
         deployStarterScript domain
+        deployPhpini domain
     }
 
-    private createScriptDirectory(Domain domain) {
-        def user = domain.domainUser
-        def scripts = scriptDir domain
-        scripts.mkdirs()
-        changeOwner owner: user.name, ownerGroup: user.group, files: scripts, recursive: true
+    /**
+     * Sets the defaults for the specified domain.
+     *
+     * @param domain
+     *            the {@link Domain}.
+     */
+    void setupDefaults(Domain domain) {
+        if (domain.memory == null) {
+            domain.memory limit: defaultMemoryLimit, upload: defaultMemoryUpload, post: defaultMemoryPost
+        }
+        if (domain.memory.limit == null) {
+            domain.memory.limit = defaultMemoryLimit
+        }
+        if (domain.memory.upload == null) {
+            domain.memory.upload = defaultMemoryUpload
+        }
     }
 
-    private deployStarterScript(Domain domain) {
+    void createScriptDirectory(Domain domain) {
         def user = domain.domainUser
-        def string = fcgiConfigTemplate.getText true, "fcgiStarter", "properties", this
+        def dir = scriptDir domain
+        dir.mkdirs()
+        changeOwner owner: user.name, ownerGroup: user.group, files: dir, recursive: true
+        log.scriptsDirectoryCreated domain, dir
+    }
+
+    void deployStarterScript(Domain domain) {
+        def user = domain.domainUser
+        def string = fcgiConfigTemplate.getText true, "fcgiStarter",
+                "properties", this,
+                "domain", [scriptDir: scriptDir(domain)]
         def file = scriptStarterFile(domain)
         FileUtils.write file, string
         changeOwner owner: user.name, ownerGroup: user.group, files: file
         changeMod mod: "755", files: file
+        log.starterScriptDeployed domain, file, string
+    }
+
+    /**
+     * Deploys the configuration of the domain specific {@code php.ini} file.
+     *
+     * @param domain
+     *            the {@link Domain}.
+     */
+    void deployPhpini(Domain domain) {
+        def file = phpIniFile domain
+        def conf = script.currentConfiguration file
+        deployConfiguration script.configurationTokens(";"), conf, phpiniConfigs(domain), file
+        linkPhpconf domain
+    }
+
+    /**
+     * Links PHP configurations to the domain directory.
+     */
+    void linkPhpconf(Domain domain) {
+        def targetdir = scriptDir(domain)
+        def sourcedir = phpconfDir
+        FileUtils.iterateFiles(sourcedir, null, false).each { File file ->
+            link files: file, targets: new File(targetdir, file.name), override: true
+        }
+    }
+
+    List phpiniConfigs(Domain domain) {
+        [
+            memoryLimitConfig(domain),
+            uploadMaxFilesizeConfig(domain),
+            postMaxSizeConfig(domain),
+        ]
+    }
+
+    def memoryLimitConfig(Domain domain) {
+        def search = fcgiConfigTemplate.getText(true, "memoryLimitConfig_search")
+        def replace = fcgiConfigTemplate.getText(true, "memoryLimitConfig", "size", toMegabytes(domain.memory.limit))
+        new TokenTemplate(search, replace)
+    }
+
+    def uploadMaxFilesizeConfig(Domain domain) {
+        def search = fcgiConfigTemplate.getText(true, "uploadMaxFilesizeConfig_search")
+        def replace = fcgiConfigTemplate.getText(true, "uploadMaxFilesizeConfig", "size", toMegabytes(domain.memory.upload))
+        new TokenTemplate(search, replace)
+    }
+
+    def postMaxSizeConfig(Domain domain) {
+        def search = fcgiConfigTemplate.getText(true, "postMaxSizeConfig_search")
+        def replace = fcgiConfigTemplate.getText(true, "postMaxSizeConfig", "size", toMegabytes(domain.memory.post))
+        new TokenTemplate(search, replace)
+    }
+
+    /**
+     * Returns the value converted to megabytes.
+     *
+     * @param value
+     *            the {@link Measure} value.
+     */
+    String toMegabytes(Measure value) {
+        long v = value.value / UnitMultiplier.MEGA.value
+        return "${v}M"
     }
 
     /**
@@ -118,6 +228,79 @@ class FcgiConfig {
      */
     String getScriptStarterFileName() {
         profileProperty("php_fcgi_scripts_file", defaultProperties)
+    }
+
+    /**
+     * Returns the {@code php.ini} file for the specified domain.
+     */
+    File phpIniFile(Domain domain) {
+        new File(scriptDir(domain), phpiniFileName)
+    }
+
+    /**
+     * Returns the directory for domain custom {@code php.ini} files,
+     * for example {@code "/etc/php5/cgi/conf.d"}.
+     *
+     * <ul>
+     * <li>profile property {@code "php_fcgi_php_conf_directory"}</li>
+     * </ul>
+     */
+    File getPhpconfDir() {
+        profileDirProperty "php_fcgi_php_conf_directory", defaultProperties
+    }
+
+    /**
+     * Returns the file pattern for domain custom {@code php.ini} files,
+     * for example {@code "%s_php.ini".}
+     *
+     * <ul>
+     * <li>profile property {@code "php_fcgi_domain_php_ini_file"}</li>
+     * </ul>
+     */
+    String getPhpiniFileName() {
+        profileProperty "php_fcgi_domain_php_ini_file", defaultProperties
+    }
+
+    /**
+     * Returns the default memory limit in megabytes,
+     * for example {@code "2 MB"}.
+     *
+     * <ul>
+     * <li>profile property {@code "php_fcgi_default_memory_limit"}</li>
+     * </ul>
+     */
+    Measure getDefaultMemoryLimit() {
+        def bytes = profileProperty "php_fcgi_default_memory_limit", defaultProperties
+        bytes = byteFormatFactory.create().parse(bytes)
+        Measure.valueOf(bytes, NonSI.BYTE)
+    }
+
+    /**
+     * Returns the default memory upload limit in bytes,
+     * for example {@code "2 MB"}.
+     *
+     * <ul>
+     * <li>profile property {@code "php_fcgi_default_memory_upload"}</li>
+     * </ul>
+     */
+    Measure getDefaultMemoryUpload() {
+        def bytes = profileProperty "php_fcgi_default_memory_upload", defaultProperties
+        bytes = byteFormatFactory.create().parse(bytes)
+        Measure.valueOf(bytes, NonSI.BYTE)
+    }
+
+    /**
+     * Returns the default memory post limit in bytes,
+     * for example {@code "2 MB"}.
+     *
+     * <ul>
+     * <li>profile property {@code "php_fcgi_default_memory_post"}</li>
+     * </ul>
+     */
+    Measure getDefaultMemoryPost() {
+        def bytes = profileProperty "php_fcgi_default_memory_post", defaultProperties
+        bytes = byteFormatFactory.create().parse(bytes)
+        Measure.valueOf(bytes, NonSI.BYTE)
     }
 
     /**

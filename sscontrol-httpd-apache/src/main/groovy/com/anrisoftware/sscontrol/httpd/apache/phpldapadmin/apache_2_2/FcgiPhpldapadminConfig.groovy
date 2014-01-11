@@ -22,7 +22,7 @@ import javax.inject.Inject
 
 import com.anrisoftware.sscontrol.core.service.LinuxScript
 import com.anrisoftware.sscontrol.httpd.apache.apache.linux.FcgiConfig
-import com.anrisoftware.sscontrol.httpd.apache.phpldapadmin.linux.PhpldapadminConfig;
+import com.anrisoftware.sscontrol.httpd.apache.phpldapadmin.linux.PhpldapadminConfig
 import com.anrisoftware.sscontrol.httpd.statements.domain.Domain
 import com.anrisoftware.sscontrol.httpd.statements.webservice.WebService
 
@@ -48,5 +48,6 @@ abstract class FcgiPhpldapadminConfig extends PhpldapadminConfig {
         fcgiConfig.script = script
         fcgiConfig.enableFcgi()
         fcgiConfig.deployConfig domain
+        fcgiConfig.deployService domain, service, config
     }
 }

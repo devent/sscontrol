@@ -1,39 +1,40 @@
-Domain(properties, domain, servicesConfig, proxyConfig) ::= <<
+Domain(properties) ::= <<
 server {
-    # domain <domain.name>
-    <domainBody(properties, domain)>
-    <domain.redirects:domainRedirects(domain);separator="\n">
-    <servicesConfig;separator="\n">
+    # domain <properties.domain.name>
+    <domainBody(properties)>
+    <properties.domain.redirects:domainRedirects(properties.domain);separator="\n">
+    <properties.servicesConfig;separator="\n">
 }
 
 >>
 
-SslDomain(properties, domain, servicesConfig, proxyConfig) ::= <<
+SslDomain(properties) ::= <<
 server {
-    # SSL/domain <domain.name>
-    <domainBody(properties, domain)>
-    <domainCerts(properties, domain)>
-    <domain.redirects:domainRedirects(domain);separator="\n">
-    <servicesConfig;separator="\n">
+    # SSL/domain <properties.domain.name>
+    <domainBody(properties)>
+    <domainCerts(properties)>
+    <properties.domain.redirects:domainRedirects(properties.domain);separator="\n">
+    <properties.servicesConfig;separator="\n">
 }
 
 >>
 
-domainBody(properties, domain) ::= <<
-listen <domain.address>:<domain.port>;
-root <properties.sitesDirectory>/<domain.siteDirectory>;
-index <properties.indexFiles;separator=" ">;
-server_name <domain.name>;
+domainBody(properties) ::= <<
+listen <properties.domain.address>:<properties.domain.port>;
+root <properties.script.sitesDirectory>/<properties.domain.siteDirectory>;
+index <properties.script.indexFiles;separator=" ">;
+server_name <properties.domain.name>;
+client_max_body_size <properties.upload>;
 
 >>
 
-domainCerts(properties, domain) ::= <<
+domainCerts(properties) ::= <<
 ssl on;
-ssl_certificate <properties.sitesDirectory>/<domain.name>/<properties.sslSubdirectory>/<domain.certificationFile>;
-ssl_certificate_key <properties.sitesDirectory>/<domain.name>/<properties.sslSubdirectory>/<domain.certificationKeyFile>;
-ssl_session_timeout <properties.sslSessionTimeout>;
-ssl_protocols <properties.sslProtocols;separator=" ">;
-ssl_ciphers <properties.sslCiphers;separator=":">;
+ssl_certificate <properties.script.sitesDirectory>/<properties.domain.name>/<properties.script.sslSubdirectory>/<properties.domain.certificationFile>;
+ssl_certificate_key <properties.script.sitesDirectory>/<properties.domain.name>/<properties.script.sslSubdirectory>/<properties.domain.certificationKeyFile>;
+ssl_session_timeout <properties.script.sslSessionTimeout>;
+ssl_protocols <properties.script.sslProtocols;separator=" ">;
+ssl_ciphers <properties.script.sslCiphers;separator=":">;
 ssl_prefer_server_ciphers on;
 
 >>

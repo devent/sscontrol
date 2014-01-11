@@ -22,6 +22,7 @@ import static com.anrisoftware.sscontrol.httpd.nginx.nginx.ubuntu_10_04.Ubuntu_1
 import static org.apache.commons.io.FileUtils.*
 
 import javax.inject.Inject
+import javax.measure.Measure
 
 import org.apache.commons.io.FileUtils
 
@@ -234,10 +235,14 @@ abstract class Nginx_1_4_Script extends NginxScript {
     }
 
     def deployDomainConfig(Domain domain, List servicesConfig) {
-        def string = nginxConfigTemplate.getText(true, domain.class.simpleName,
-                "properties", this,
-                "domain", domain,
-                "servicesConfig", servicesConfig)
+        setupDefaults domain
+        def string = nginxConfigTemplate.getText(
+                true, domain.class.simpleName,
+                "properties", [
+                    script: this,
+                    domain: domain,
+                    servicesConfig: servicesConfig,
+                    upload: toMegabytes(domain.memory.upload)])
         def file = new File(sitesAvailableDir, domain.fileName)
         FileUtils.write file, string
         log.deployDomainConfig this, domain, file

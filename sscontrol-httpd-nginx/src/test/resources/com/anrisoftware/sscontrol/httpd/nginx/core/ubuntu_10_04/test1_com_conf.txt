@@ -4,5 +4,6 @@ server {
     root /tmp/var/www/test1.com/web;
     index index.php index.html index.htm;
     server_name test1.com;
+    client_max_body_size 2M;
 
 }

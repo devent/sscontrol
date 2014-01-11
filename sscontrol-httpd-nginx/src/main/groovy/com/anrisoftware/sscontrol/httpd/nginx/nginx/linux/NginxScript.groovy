@@ -21,9 +21,12 @@ package com.anrisoftware.sscontrol.httpd.nginx.nginx.linux
 import static org.apache.commons.io.FileUtils.*
 
 import javax.inject.Inject
+import javax.measure.Measure
 import javax.measure.MeasureFormat
 import javax.measure.unit.NonSI
 
+import com.anrisoftware.globalpom.format.byteformat.ByteFormatFactory
+import com.anrisoftware.globalpom.format.byteformat.UnitMultiplier
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.sscontrol.core.bindings.BindingFactory
 import com.anrisoftware.sscontrol.core.debuglogging.DebugLoggingProperty
@@ -48,6 +51,9 @@ abstract class NginxScript extends LinuxScript {
 
     @Inject
     private DebugLoggingProperty debugLoggingProperty
+
+    @Inject
+    ByteFormatFactory byteFormatFactory
 
     @Override
     def run() {
@@ -638,6 +644,77 @@ abstract class NginxScript extends LinuxScript {
         def command = profileProperty property, defaultProperties
         log.checkServiceRestartCommand this, command, service
         return command
+    }
+
+    /**
+     * Sets the defaults for the specified domain.
+     *
+     * @param domain
+     *            the {@link Domain}.
+     */
+    void setupDefaults(Domain domain) {
+        if (domain.memory == null) {
+            domain.memory limit: defaultMemoryLimit, upload: defaultMemoryUpload, post: defaultMemoryPost
+        }
+        if (domain.memory.limit == null) {
+            domain.memory.limit = defaultMemoryLimit
+        }
+        if (domain.memory.upload == null) {
+            domain.memory.upload = defaultMemoryUpload
+        }
+    }
+
+    /**
+     * Returns the default memory limit in megabytes,
+     * for example {@code "2 MB"}.
+     *
+     * <ul>
+     * <li>profile property {@code "default_memory_limit"}</li>
+     * </ul>
+     */
+    Measure getDefaultMemoryLimit() {
+        def bytes = profileProperty "default_memory_limit", defaultProperties
+        bytes = byteFormatFactory.create().parse(bytes)
+        Measure.valueOf(bytes, NonSI.BYTE)
+    }
+
+    /**
+     * Returns the default memory upload limit in bytes,
+     * for example {@code "2 MB"}.
+     *
+     * <ul>
+     * <li>profile property {@code "default_memory_upload"}</li>
+     * </ul>
+     */
+    Measure getDefaultMemoryUpload() {
+        def bytes = profileProperty "default_memory_upload", defaultProperties
+        bytes = byteFormatFactory.create().parse(bytes)
+        Measure.valueOf(bytes, NonSI.BYTE)
+    }
+
+    /**
+     * Returns the default memory post limit in bytes,
+     * for example {@code "2 MB"}.
+     *
+     * <ul>
+     * <li>profile property {@code "default_memory_post"}</li>
+     * </ul>
+     */
+    Measure getDefaultMemoryPost() {
+        def bytes = profileProperty "default_memory_post", defaultProperties
+        bytes = byteFormatFactory.create().parse(bytes)
+        Measure.valueOf(bytes, NonSI.BYTE)
+    }
+
+    /**
+     * Returns the value in megabytes.
+     *
+     * @param value
+     *            the {@link Measure} value.
+     */
+    String toMegabytes(Measure value) {
+        long v = value.value / UnitMultiplier.MEGA.value
+        return "${v}M"
     }
 
     /**

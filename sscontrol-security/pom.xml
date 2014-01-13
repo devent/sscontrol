@@ -11,7 +11,7 @@
 	</parent>
 
 	<artifactId>sscontrol-security</artifactId>
-	<name>Robo Bee :: Security</name>
+	<name>RoboBee :: Security</name>
 	<description>Intrusion prevention.</description>
 	<url>https://www.anr-institute.com/projects/projects/sscontrol-security</url>
     <inceptionYear>2013</inceptionYear>

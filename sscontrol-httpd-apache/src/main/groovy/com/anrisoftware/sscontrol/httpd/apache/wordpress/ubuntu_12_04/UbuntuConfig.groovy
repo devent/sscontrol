@@ -59,6 +59,7 @@ class UbuntuConfig extends UbuntuWordpressConfig implements ServiceConfig {
     void deployService(Domain domain, WebService service, List config) {
         fcgiConfig.deployService domain, service, config
         super.deployService domain, service, config
+        fcgiConfig.linkPhpconf domain
         createDomainConfig domain, null, service, config
     }
 

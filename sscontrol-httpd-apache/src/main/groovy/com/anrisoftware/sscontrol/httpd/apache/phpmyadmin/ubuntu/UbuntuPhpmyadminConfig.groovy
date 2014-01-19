@@ -59,6 +59,7 @@ abstract class UbuntuPhpmyadminConfig extends FcgiPhpmyadminConfig {
     void deployService(Domain domain, WebService service, List config) {
         super.deployService domain, service, config
         installPackages phpmyadminPackages
+        fcgiConfig.linkPhpconf domain
         deployConfiguration service
         reconfigureService()
         changeOwnerConfiguration domain

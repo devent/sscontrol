@@ -154,7 +154,9 @@ class FcgiConfig {
         def targetdir = scriptDir(domain)
         def sourcedir = phpconfDir
         FileUtils.iterateFiles(sourcedir, null, false).each { File file ->
-            link files: file, targets: new File(targetdir, file.name), override: true
+            def target = new File(targetdir, file.name)
+            link files: file, targets: target, override: true
+            log.linkPhpconf domain, file, target
         }
     }
 

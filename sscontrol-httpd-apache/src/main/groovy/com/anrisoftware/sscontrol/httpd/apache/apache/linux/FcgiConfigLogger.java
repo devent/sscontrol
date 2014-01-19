@@ -18,6 +18,8 @@
  */
 package com.anrisoftware.sscontrol.httpd.apache.apache.linux;
 
+import static com.anrisoftware.sscontrol.httpd.apache.apache.linux.FcgiConfigLogger._.link_phpconfig_debug;
+import static com.anrisoftware.sscontrol.httpd.apache.apache.linux.FcgiConfigLogger._.link_phpconfig_info;
 import static com.anrisoftware.sscontrol.httpd.apache.apache.linux.FcgiConfigLogger._.scripts_directory_created_debug;
 import static com.anrisoftware.sscontrol.httpd.apache.apache.linux.FcgiConfigLogger._.scripts_directory_created_info;
 import static com.anrisoftware.sscontrol.httpd.apache.apache.linux.FcgiConfigLogger._.starter_script_deployed_debug;
@@ -51,7 +53,12 @@ class FcgiConfigLogger extends AbstractLogger {
         starter_script_deployed_debug("Starter script '{}' deployed for {}."),
 
         starter_script_deployed_info(
-                "Starter script '{}' deployed for domain '{}'.");
+                "Starter script '{}' deployed for domain '{}'."),
+
+        link_phpconfig_debug("PHP configuration linked '{}'->'{}' for {}."),
+
+        link_phpconfig_info(
+                "PHP configuration linked '{}'->'{}' for domain '{}'.");
 
         private String name;
 
@@ -87,6 +94,14 @@ class FcgiConfigLogger extends AbstractLogger {
             debug(starter_script_deployed_debug, file, domain);
         } else {
             info(starter_script_deployed_info, file, domain.getName());
+        }
+    }
+
+    void linkPhpconf(Domain domain, File file, File target) {
+        if (isDebugEnabled()) {
+            debug(link_phpconfig_debug, file, target, domain);
+        } else {
+            info(link_phpconfig_info, file, target, domain.getName());
         }
     }
 }

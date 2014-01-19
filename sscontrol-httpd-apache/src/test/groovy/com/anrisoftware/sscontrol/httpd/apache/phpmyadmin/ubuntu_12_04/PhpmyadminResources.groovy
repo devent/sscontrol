@@ -35,6 +35,12 @@ enum PhpmyadminResources {
     httpdScript("Httpd.groovy", PhpmyadminResources.class.getResource("HttpdPhpmyadmin.groovy")),
     mysqlCommand("/usr/bin/mysql", PhpmyadminResources.class.getResource("echo_command.txt")),
     phpConfDir("/etc/php5/cgi/conf.d", null),
+    gdIniFile("/etc/php5/cgi/conf.d/gd.ini", PhpmyadminResources.class.getResource("gd_ini.txt")),
+    mcryptIniFile("/etc/php5/cgi/conf.d/mcrypt.ini", PhpmyadminResources.class.getResource("mcrypt_ini.txt")),
+    mysqlIniFile("/etc/php5/cgi/conf.d/mysql.ini", PhpmyadminResources.class.getResource("mysql_ini.txt")),
+    mysqliIniFile("/etc/php5/cgi/conf.d/mysqli.ini", PhpmyadminResources.class.getResource("mysqli_ini.txt")),
+    pdoIniFile("/etc/php5/cgi/conf.d/pdo.ini", PhpmyadminResources.class.getResource("pdo_ini.txt")),
+    pdoMysqlIniFile("/etc/php5/cgi/conf.d/pdo_mysql.ini", PhpmyadminResources.class.getResource("pdo_mysql_ini.txt")),
     domainsConf("/etc/apache2/conf.d/000-robobee-domains.conf", PhpmyadminResources.class.getResource("domains_conf_expected.txt")),
     ubuntutestcomConf("/etc/apache2/sites-available/100-robobee-ubuntutest.com.conf", PhpmyadminResources.class.getResource("ubuntutest_com_conf_expected.txt")),
     ubuntutestcomSslConf("/etc/apache2/sites-available/100-robobee-ubuntutest.com-ssl.conf", PhpmyadminResources.class.getResource("ubuntutest_com_ssl_conf_expected.txt")),
@@ -57,6 +63,12 @@ enum PhpmyadminResources {
     static copyPhpmyadminFiles(File parent) {
         mysqlCommand.createCommand parent
         phpConfDir.asFile parent mkdirs()
+        gdIniFile.createFile parent
+        mcryptIniFile.createFile parent
+        mysqlIniFile.createFile parent
+        mysqliIniFile.createFile parent
+        pdoIniFile.createFile parent
+        pdoMysqlIniFile.createFile parent
         createTablesSql.createFile parent
         configFile.createFile parent
         localConfigFile.createFile parent

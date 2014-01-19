@@ -63,4 +63,11 @@ abstract class FcgiWordpressConfig extends WordpressConfig {
     String getScriptStarterFileName() {
         fcgiConfig.getScriptStarterFileName()
     }
+
+    /**
+     * Links PHP configurations to the domain directory.
+     */
+    void linkPhpconf(Domain domain) {
+        fcgiConfig.linkPhpconf domain
+    }
 }

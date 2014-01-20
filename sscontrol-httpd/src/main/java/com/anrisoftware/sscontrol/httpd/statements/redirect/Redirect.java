@@ -1,26 +1,31 @@
 /*
  * Copyright 2012-2013 Erwin Müller <erwin.mueller@deventm.org>
- * 
+ *
  * This file is part of sscontrol-httpd.
- * 
+ *
  * sscontrol-httpd is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published by the
  * Free Software Foundation, either version 3 of the License, or (at your
  * option) any later version.
- * 
+ *
  * sscontrol-httpd is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
  * for more details.
- * 
+ *
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd. If not, see <http://www.gnu.org/licenses/>.
  */
 package com.anrisoftware.sscontrol.httpd.statements.redirect;
 
+import java.util.Map;
+
+import javax.inject.Inject;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.anrisoftware.sscontrol.httpd.statements.domain.Domain;
+import com.google.inject.assistedinject.Assisted;
 
 /**
  * Redirect statement.
@@ -30,24 +35,33 @@ import com.anrisoftware.sscontrol.httpd.statements.domain.Domain;
  */
 public class Redirect {
 
-	private final Domain domain;
+    private static final String DESTINATION = "destination";
 
-	/**
-	 * Sets the domain of the redirect.
-	 * 
-	 * @param domain
-	 *            the {@link Domain}.
-	 */
-	protected Redirect(Domain domain) {
-		this.domain = domain;
-	}
+    private final Domain domain;
 
-	public Domain getDomain() {
-		return domain;
-	}
+    private final String destination;
 
-	@Override
-	public String toString() {
-		return new ToStringBuilder(this).toString();
-	}
+    /**
+     * @see RedirectFactory#create(Domain, Map)
+     */
+    @Inject
+    Redirect(RedirectArgs aargs, @Assisted Domain domain,
+            @Assisted Map<String, Object> args) {
+        this.domain = domain;
+        this.destination = aargs.to(domain, args);
+    }
+
+    public Domain getDomain() {
+        return domain;
+    }
+
+    public String getDestination() {
+        return destination;
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this).append(DESTINATION, destination)
+                .toString();
+    }
 }

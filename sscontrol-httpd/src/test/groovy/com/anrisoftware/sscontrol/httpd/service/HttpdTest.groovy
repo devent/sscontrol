@@ -59,6 +59,8 @@ class HttpdTest extends HttpdTestUtil {
         def domain = service.domains[0]
         assert domain.memory.limit.value == 32000000
         assert domain.memory.upload.value == 32000000
+        assert domain.redirects.size() == 1
+        assert domain.redirects[0].destination == "www.test1.com"
     }
 
     @Test
@@ -69,7 +71,7 @@ class HttpdTest extends HttpdTestUtil {
         HttpdServiceImpl service = registry.getService("httpd")[0]
         service.domains.size() == 2
 
-        def auth = service.domains[1].auths[0]
+        def auth = service.domains[0].auths[0]
         assert auth.name == "Private Directory"
         assert auth.location == "/private"
         assert auth.type == AuthType.digest
@@ -115,9 +117,9 @@ class HttpdTest extends HttpdTestUtil {
         def profile = registry.getService("profile")[0]
         loader.loadService authLdapScript.resource, profile
         HttpdServiceImpl service = registry.getService("httpd")[0]
-        service.domains.size() == 2
+        service.domains.size() == 1
 
-        def auth = service.domains[1].auths[0]
+        def auth = service.domains[0].auths[0]
         assert auth.name == "Private Directory"
         assert auth.location == "private"
         assert auth.type == AuthType.digest

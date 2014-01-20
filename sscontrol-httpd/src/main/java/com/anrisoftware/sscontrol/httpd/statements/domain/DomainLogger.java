@@ -27,12 +27,11 @@ import static com.anrisoftware.sscontrol.httpd.statements.domain.DomainLogger._.
 import static com.anrisoftware.sscontrol.httpd.statements.domain.DomainLogger._.memory_set_debug;
 import static com.anrisoftware.sscontrol.httpd.statements.domain.DomainLogger._.port_set;
 import static com.anrisoftware.sscontrol.httpd.statements.domain.DomainLogger._.port_set_debug;
-import static com.anrisoftware.sscontrol.httpd.statements.domain.DomainLogger._.redirect_http_to_https_added;
-import static com.anrisoftware.sscontrol.httpd.statements.domain.DomainLogger._.redirect_http_to_https_added_debug;
-import static com.anrisoftware.sscontrol.httpd.statements.domain.DomainLogger._.redirect_to_www_added;
-import static com.anrisoftware.sscontrol.httpd.statements.domain.DomainLogger._.redirect_to_www_added_debug;
+import static com.anrisoftware.sscontrol.httpd.statements.domain.DomainLogger._.redirect_added_debug;
+import static com.anrisoftware.sscontrol.httpd.statements.domain.DomainLogger._.redirect_added_info;
 import static com.anrisoftware.sscontrol.httpd.statements.domain.DomainLogger._.service_added_debug;
 import static com.anrisoftware.sscontrol.httpd.statements.domain.DomainLogger._.service_added_info;
+import static com.anrisoftware.sscontrol.httpd.statements.domain.DomainLogger._.service_not_found;
 import static com.anrisoftware.sscontrol.httpd.statements.domain.DomainLogger._.use_domain;
 import static com.anrisoftware.sscontrol.httpd.statements.domain.DomainLogger._.use_domain_debug;
 import static com.anrisoftware.sscontrol.httpd.statements.domain.DomainLogger._.user_set_debug;
@@ -75,13 +74,9 @@ class DomainLogger extends AbstractLogger {
 
         use_domain("Use domains '{}' set for domain '{}'."),
 
-        redirect_to_www_added("Redirect to www added for {}."),
+        redirect_added_debug("Redirect {} added for {}."),
 
-        redirect_to_www_added_debug("Redirect {} added for {}."),
-
-        redirect_http_to_https_added_debug("Redirect {} added for {}."),
-
-        redirect_http_to_https_added("Redirect http to https added for {}."),
+        redirect_added_info("Redirect added to '{}' for domain '{}'."),
 
         service_added_debug("Service {} added for {}."),
 
@@ -151,19 +146,12 @@ class DomainLogger extends AbstractLogger {
         }
     }
 
-    void redirectToWwwAdded(Domain domain, Redirect redirect) {
+    void redirectAdded(Domain domain, Redirect redirect) {
         if (isDebugEnabled()) {
-            debug(redirect_to_www_added_debug, redirect, domain);
+            debug(redirect_added_debug, redirect, domain);
         } else {
-            info(redirect_to_www_added, domain.getName());
-        }
-    }
-
-    void redirectHttpToHttpsAdded(Domain domain, Redirect redirect) {
-        if (isDebugEnabled()) {
-            debug(redirect_http_to_https_added_debug, redirect, domain);
-        } else {
-            info(redirect_http_to_https_added, domain.getName());
+            info(redirect_added_info, redirect.getDestination(),
+                    domain.getName());
         }
     }
 
@@ -184,7 +172,7 @@ class DomainLogger extends AbstractLogger {
     }
 
     void checkService(Domain domain, WebServiceFactory factory, String name) {
-        notNull(factory, _.service_not_found.toString(), name, domain);
+        notNull(factory, service_not_found.toString(), name, domain);
     }
 
     void userSet(Domain domain, DomainUser user) {
@@ -198,4 +186,5 @@ class DomainLogger extends AbstractLogger {
     void memorySet(Domain domain, Memory memory) {
         debug(memory_set_debug, memory, domain);
     }
+
 }

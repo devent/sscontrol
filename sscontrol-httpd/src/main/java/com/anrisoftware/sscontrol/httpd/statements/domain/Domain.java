@@ -19,7 +19,6 @@
 package com.anrisoftware.sscontrol.httpd.statements.domain;
 
 import static java.lang.String.format;
-import static java.util.Arrays.asList;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -40,7 +39,6 @@ import com.anrisoftware.sscontrol.httpd.statements.memory.Memory;
 import com.anrisoftware.sscontrol.httpd.statements.memory.MemoryFactory;
 import com.anrisoftware.sscontrol.httpd.statements.redirect.Redirect;
 import com.anrisoftware.sscontrol.httpd.statements.redirect.RedirectFactory;
-import com.anrisoftware.sscontrol.httpd.statements.redirect.RedirectToWwwHttp;
 import com.anrisoftware.sscontrol.httpd.statements.user.DomainUser;
 import com.anrisoftware.sscontrol.httpd.statements.user.DomainUserArgs;
 import com.anrisoftware.sscontrol.httpd.statements.user.DomainUserFactory;
@@ -59,7 +57,6 @@ public class Domain {
     private static final String USER = "user";
     private static final String AUTH_PROVIDER = "provider";
     private static final String SITE_DIR = "%s/web";
-    private static final String WWW = "www.%s";
     private static final String NAME = "name";
     private static final String ID = "id";
     private static final String USE = "use";
@@ -169,20 +166,6 @@ public class Domain {
         }
     }
 
-    /**
-     * Returns the server alias of this directive. The server alias can be a
-     * sub-domain, for example www.domain.com.
-     */
-    public String getServerAlias() {
-        boolean www = findDirective(asList(new Class<?>[] {
-                RedirectToWwwHttp.class, RedirectToWwwHttp.class }));
-        return www ? format(WWW, getName()) : getName();
-    }
-
-    private boolean findDirective(List<Class<?>> directives) {
-        return redirects.containsAll(directives);
-    }
-
     public void user(Map<String, Object> args, String name) {
         args.put(DomainUserArgs.USER, name);
         DomainUser user = domainUserFactory.create(this, args);
@@ -230,31 +213,18 @@ public class Domain {
         return useDomain;
     }
 
-    public void redirect(Object s) {
-    }
-
-    public void to_www() {
-        Redirect redirect = redirectFactory.createToWwwHttp(this);
+    public void redirect(Map<String, Object> args) {
+        Redirect redirect = redirectFactory.create(this, args);
         addRedirect(redirect);
-        log.redirectToWwwAdded(this, redirect);
-    }
-
-    public void http_to_https() {
-        Redirect redirect = redirectFactory.createHttpToHttps(this);
-        addRedirect(redirect);
-        log.redirectHttpToHttpsAdded(this, redirect);
     }
 
     public List<Redirect> getRedirects() {
         return redirects;
     }
 
-    protected final void addRedirect(Redirect redirect) {
+    public void addRedirect(Redirect redirect) {
         redirects.add(redirect);
-    }
-
-    protected final RedirectFactory getRedirectFactory() {
-        return redirectFactory;
+        log.redirectAdded(this, redirect);
     }
 
     public AbstractAuth auth(Map<String, Object> args, String name, Object s) {

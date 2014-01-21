@@ -48,17 +48,8 @@ class HttpdWordpressTest extends HttpdTestUtil {
         loader.loadService wordpressScript.resource, profile
         HttpdServiceImpl service = registry.getService("httpd")[0]
 
-        Domain domain = service.domains[0]
-        assert domain.name == "test1.com"
-        assert domain.address == "192.168.0.50"
-        assert (domain instanceof Domain)
-
-        domain = service.domains[1]
-        assert domain.name == "test1.com"
-        assert domain.address == "192.168.0.50"
-        assert (domain instanceof SslDomain)
-
-        domain = service.domains[2]
+        int d = 0
+        Domain domain = service.domains[d++]
         assert domain.name == "www.test1.com"
         assert domain.address == "192.168.0.51"
         assert (domain instanceof Domain)
@@ -84,7 +75,7 @@ class HttpdWordpressTest extends HttpdTestUtil {
         assert webservice.force.login == true
         assert webservice.force.admin == true
 
-        domain = service.domains[3]
+        domain = service.domains[d++]
         assert domain.name == "www.test1.com"
         assert domain.address == "192.168.0.51"
         assert (domain instanceof SslDomain)
@@ -97,7 +88,7 @@ class HttpdWordpressTest extends HttpdTestUtil {
         assert webservice.ref == "wordpress3"
         assert webservice.database == null
 
-        domain = service.domains[4]
+        domain = service.domains[d++]
         assert domain.name == "www.test2.com"
         assert domain.address == "192.168.0.51"
         assert (domain instanceof Domain)
@@ -106,7 +97,7 @@ class HttpdWordpressTest extends HttpdTestUtil {
         assert webservice.name == "wordpress"
         assert webservice.multiSite == MultiSite.subdir
 
-        domain = service.domains[5]
+        domain = service.domains[d++]
         assert domain.name == "www.test3.com"
         assert domain.address == "192.168.0.51"
         assert (domain instanceof Domain)
@@ -115,7 +106,7 @@ class HttpdWordpressTest extends HttpdTestUtil {
         assert webservice.name == "wordpress"
         assert webservice.multiSite == MultiSite.subdomain
 
-        domain = service.domains[6]
+        domain = service.domains[d++]
         assert domain.name == "www.testid.com"
         assert domain.address == "192.168.0.51"
         assert domain.id == "testid"
@@ -125,7 +116,7 @@ class HttpdWordpressTest extends HttpdTestUtil {
         assert webservice.name == "wordpress"
         assert webservice.id == "wordpress3"
 
-        domain = service.domains[7]
+        domain = service.domains[d++]
         assert domain.name == "www.testref.com"
         assert domain.address == "192.168.0.51"
         assert (domain instanceof Domain)

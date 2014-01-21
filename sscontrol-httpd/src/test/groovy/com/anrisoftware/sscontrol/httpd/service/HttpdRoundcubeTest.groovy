@@ -46,7 +46,7 @@ class HttpdRoundcubeTest extends HttpdTestUtil {
         loader.loadService roundcubeScript.resource, profile
         HttpdServiceImpl service = registry.getService("httpd")[0]
 
-        Domain domain = service.domains[2]
+        Domain domain = service.domains[0]
         assert domain.domainUser.name == "www-data"
         assert domain.domainUser.group == "www-data"
         WebService webservice = domain.services[0]

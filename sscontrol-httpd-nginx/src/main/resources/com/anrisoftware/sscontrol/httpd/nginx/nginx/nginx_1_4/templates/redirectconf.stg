@@ -1,0 +1,5 @@
+domainRedirects(properties) ::= <<
+# redirect to '<properties.destination>'
+return 301 <if(properties.proto)><properties.proto><endif><properties.destination>$request_uri;
+
+>>

@@ -18,7 +18,10 @@
  */
 package com.anrisoftware.sscontrol.httpd.nginx.nginx.nginx_1_4
 
-import com.anrisoftware.sscontrol.httpd.nginx.nginx.linux.NginxScript;
+import com.anrisoftware.resources.templates.api.TemplateResource
+import com.anrisoftware.resources.templates.api.Templates
+import com.anrisoftware.sscontrol.core.service.LinuxScript
+import com.anrisoftware.sscontrol.httpd.nginx.nginx.linux.NginxScript
 import com.anrisoftware.sscontrol.httpd.statements.domain.Domain
 import com.anrisoftware.sscontrol.httpd.statements.redirect.Redirect
 
@@ -30,9 +33,45 @@ import com.anrisoftware.sscontrol.httpd.statements.redirect.Redirect
  */
 class RedirectConfig {
 
+    /**
+     * The {@link Templates} for the script.
+     */
+    Templates redirectTemplates
+
+    /**
+     * Resource containing the Nginx redirects configuration templates.
+     */
+    TemplateResource redirectConfigTemplate
+
     NginxScript script
 
-    def deployRedirect(Domain domain, Redirect redirect) {
+    def deployRedirect(Domain domain, Redirect redirect, List config) {
+        deployDomainConfig domain, redirect, config
+    }
+
+    void deployDomainConfig(Domain domain, Redirect redirect, List config) {
+        def properties = [:]
+        properties.destination = redirect.destination
+        properties.proto = domainProto domain, redirect
+        def configStr = redirectConfigTemplate.getText(
+                true, "domainRedirects",
+                "properties", properties)
+        config << configStr
+    }
+
+    String domainProto(Domain domain, Redirect redirect) {
+        def dest = redirect.destination
+        def name = redirect.domain.name
+        int index = dest.indexOf("://")
+        if (index == -1) {
+            domain.proto
+        }
+    }
+
+    void setScript(LinuxScript script) {
+        this.script = script
+        redirectTemplates = script.templatesFactory.create "Nginx_1_4_Redirect"
+        redirectConfigTemplate = redirectTemplates.getResource "config"
     }
 
     def propertyMissing(String name) {

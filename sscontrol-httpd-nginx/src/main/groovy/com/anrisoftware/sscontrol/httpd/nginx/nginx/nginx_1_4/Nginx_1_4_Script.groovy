@@ -58,10 +58,7 @@ abstract class Nginx_1_4_Script extends NginxScript {
     DebugLoggingRenderer debugLoggingRenderer
 
     @Inject
-    RedirectConfig deployRedirectToWwwHttp
-
-    @Inject
-    RedirectConfig deployRedirectToWwwHttps
+    RedirectConfig redirectConfig
 
     @Inject
     Map<String, ServiceConfig> serviceConfigs
@@ -89,6 +86,7 @@ abstract class Nginx_1_4_Script extends NginxScript {
         nginxCommandsTemplate = nginxTemplates.getResource "commands"
         domainConfig.script = this
         sslDomainConfig.script = this
+        redirectConfig.script = this
         serviceConfigs.values().each { it.script = this }
         beforeConfiguration()
         createSitesDirectories()
@@ -160,7 +158,7 @@ abstract class Nginx_1_4_Script extends NginxScript {
         uniqueDomains.each { deployDomain it }
         service.domains.each { Domain domain ->
             List serviceConfig = []
-            deployRedirect domain
+            deployRedirect domain, serviceConfig
             deployAuth domain, serviceConfig
             deployService domain, serviceConfig
             deployDomainConfig domain, serviceConfig
@@ -170,23 +168,27 @@ abstract class Nginx_1_4_Script extends NginxScript {
     }
 
     def deployService(Domain domain, List serviceConfig) {
-        def llog = log
         domain.services.findAll { WebService service ->
             service.domain == domain
         }.each { WebService service ->
-            WebService reftarget = findReferencedService service
-            ServiceConfig config = serviceConfigs["${profileName}.${service.name}"]
-            if (reftarget == null) {
-                llog.checkServiceConfig config, service, profileName
-                config.deployService domain, service, serviceConfig
+            deployWebService domain, service, serviceConfig
+        }
+    }
+
+    void deployWebService(Domain domain, WebService service, List serviceConfig) {
+        def reftarget = findReferencedService service
+        def profile = profileName
+        def config = serviceConfigs["${profile}.${service.name}"]
+        if (reftarget == null) {
+            log.checkServiceConfig config, service, profile
+            config.deployService domain, service, serviceConfig
+        } else {
+            log.checkServiceConfig config, service, profile
+            def refdomain = findReferencedDomain service
+            if (refdomain == null) {
+                config.deployDomain domain, null, reftarget, serviceConfig
             } else {
-                llog.checkServiceConfig config, service
-                def refdomain = findReferencedDomain service
-                if (refdomain == null) {
-                    config.deployDomain domain, null, reftarget, serviceConfig
-                } else {
-                    config.deployDomain domain, refdomain, reftarget, serviceConfig
-                }
+                config.deployDomain domain, refdomain, reftarget, serviceConfig
             }
         }
     }
@@ -210,9 +212,9 @@ abstract class Nginx_1_4_Script extends NginxScript {
         }
     }
 
-    def deployRedirect(Domain domain) {
+    def deployRedirect(Domain domain, List serviceConfig) {
         domain.redirects.each {
-            this."deploy${it.class.simpleName}".deployRedirect(domain, it)
+            redirectConfig.deployRedirect(domain, it, serviceConfig)
         }
     }
 

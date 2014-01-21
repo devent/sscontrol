@@ -18,7 +18,7 @@
  */
 package com.anrisoftware.sscontrol.httpd.apache.wordpressproxy.ubuntu_10_04
 
-import com.anrisoftware.sscontrol.httpd.apache.ubuntu.UbuntuResources;
+import com.anrisoftware.sscontrol.httpd.apache.ubuntu.UbuntuResources
 
 httpd {
     // reference service with id "idproxy"
@@ -26,12 +26,12 @@ httpd {
     // domain test1.com
     domain "test1.com", address: "192.168.0.50", {
         user "web_001", uid: 2001, group: "web_001", gid: 2001
-        redirect to_www
+        redirect to: "www.%"
     }
     // SSL/domain test1.com
     ssl_domain "test1.com", address: "192.168.0.50", {
         user "web_001", uid: 2001, group: "web_001", gid: 2001
-        redirect to_www
+        redirect to: "www.%"
         certification_file UbuntuResources.certCrt.resource
         certification_key_file UbuntuResources.certKey.resource
     }

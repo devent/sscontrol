@@ -2,7 +2,6 @@ Domain(properties) ::= <<
 server {
     # domain <properties.domain.name>
     <domainBody(properties)>
-    <properties.domain.redirects:domainRedirects(properties.domain);separator="\n">
     <properties.servicesConfig;separator="\n">
 }
 
@@ -13,7 +12,6 @@ server {
     # SSL/domain <properties.domain.name>
     <domainBody(properties)>
     <domainCerts(properties)>
-    <properties.domain.redirects:domainRedirects(properties.domain);separator="\n">
     <properties.servicesConfig;separator="\n">
 }
 
@@ -36,30 +34,6 @@ ssl_session_timeout <properties.script.sslSessionTimeout>;
 ssl_protocols <properties.script.sslProtocols;separator=" ">;
 ssl_ciphers <properties.script.sslCiphers;separator=":">;
 ssl_prefer_server_ciphers on;
-
->>
-
-domainRedirects(redirect, domain) ::= <<
-<(redirect.class.simpleName)(redirect, domain)>
->>
-
-RedirectHttpToHttps(redirect, domain) ::= <<
-# redirect http to https
-RewriteEngine On
-RewriteCond %{HTTP_HOST} ^<domain.name>
-RewriteRule (.*) https://<domain.name>$1 [R=301,L]
-
->>
-
-RedirectToWwwHttp(redirect, domain) ::= <<
-# redirect to www http
-return 301 http://www.<domain.name>$request_uri;
-
->>
-
-RedirectToWwwHttps(redirect, domain) ::= <<
-# redirect to www https
-return 301 https://www.<domain.name>$request_uri;
 
 >>
 

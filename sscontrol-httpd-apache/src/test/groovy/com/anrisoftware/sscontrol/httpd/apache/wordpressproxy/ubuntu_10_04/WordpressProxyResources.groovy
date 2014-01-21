@@ -32,7 +32,7 @@ import com.anrisoftware.sscontrol.httpd.apache.ubuntu_10_04.Ubuntu_10_04_Resourc
  */
 enum WordpressProxyResources {
 
-    profile("UbuntuProfile.groovy", WordpressProxyResources.class.getResource("Ubuntu_10_04Profile.groovy")),
+    profile("UbuntuProfile.groovy", WordpressProxyResources.class.getResource("UbuntuProfile.groovy")),
     phpConfDir("/etc/php5/cgi/conf.d", null),
     wordpressArchive("/tmp/web-wordpress-3.8.tar.gz", WordpressProxyResources.class.getResource("wordpress-3.8.tar.gz")),
     wordpress_3_8_config("/var/www/www.test1.com/wordpress-3.8/wp-config-sample.php", WordpressProxyResources.class.getResource("wordpress_3_8_config_sample_php.txt")),

@@ -16,12 +16,12 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd-nginx. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.nginx.redirectwww.ubuntu_10_04
+package com.anrisoftware.sscontrol.httpd.nginx.redirect.ubuntu_12_04
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
-import static com.anrisoftware.sscontrol.httpd.nginx.redirectwww.ubuntu_10_04.RedirectWwwResources.*
+import static com.anrisoftware.sscontrol.httpd.nginx.redirect.ubuntu_12_04.RedirectResources.*
 import static com.anrisoftware.sscontrol.httpd.nginx.ubuntu.UbuntuResources.*
-import static com.anrisoftware.sscontrol.httpd.nginx.ubuntu_10_04.Ubuntu_10_04_Resources.*
+import static com.anrisoftware.sscontrol.httpd.nginx.ubuntu_12_04.Ubuntu_12_04_Resources.*
 import static org.apache.commons.io.FileUtils.*
 import groovy.util.logging.Slf4j
 
@@ -30,23 +30,23 @@ import org.junit.Test
 import com.anrisoftware.sscontrol.httpd.nginx.ubuntu.UbuntuTestUtil
 
 /**
- * Redirect to Www Nginx on a Ubuntu 10.04 server.
+ * Redirect Nginx on a Ubuntu 12.04 server.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
 @Slf4j
-class RedirectWwwTest extends UbuntuTestUtil {
+class RedirectTest extends UbuntuTestUtil {
 
     @Test
-    void "redirect www"() {
+    void "redirect"() {
         copyUbuntuFiles tmpdir
-        copyUbuntu_10_04_Files tmpdir
+        copyUbuntu_12_04_Files tmpdir
 
         loader.loadService profile.resource, null
         def profile = registry.getService("profile")[0]
         setupUbuntuProperties profile, tmpdir
-        setupUbuntu_10_04_Properties profile, tmpdir
+        setupUbuntu_12_04_Properties profile, tmpdir
         loader.loadService httpdScript.resource, profile
 
         registry.allServices.each { it.call() }

@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd-nginx. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.nginx.redirectwww.ubuntu_12_04
+package com.anrisoftware.sscontrol.httpd.nginx.redirect.ubuntu_10_04
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static org.apache.commons.io.FileUtils.*
@@ -24,26 +24,26 @@ import static org.apache.commons.io.FileUtils.*
 import com.anrisoftware.sscontrol.httpd.nginx.resources.ResourcesUtils
 
 /**
- * Proxy Nginx resources.
+ * Redirect Nginx resources.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-enum RedirectWwwResources {
+enum RedirectResources {
 
-    profile("UbuntuProfile.groovy", RedirectWwwResources.class.getResource("UbuntuProfile.groovy")),
-    httpdScript("Httpd.groovy", RedirectWwwResources.class.getResource("Httpd.groovy")),
-    certCrt("cert.crt", RedirectWwwResources.class.getResource("cert_crt.txt")),
-    certKey("cert.key", RedirectWwwResources.class.getResource("cert_key.txt")),
-    test1comConf("/etc/nginx/sites-available/100-robobee-test1.com.conf", RedirectWwwResources.class.getResource("test1_com_conf.txt")),
-    test1comSslConf("/etc/nginx/sites-available/100-robobee-test1.com-ssl.conf", RedirectWwwResources.class.getResource("test1_com_ssl_conf.txt")),
-    wwwtest1comConf("/etc/nginx/sites-available/100-robobee-www.test1.com.conf", RedirectWwwResources.class.getResource("www_test1_com_conf.txt")),
-    wwwtest1comSslConf("/etc/nginx/sites-available/100-robobee-www.test1.com-ssl.conf", RedirectWwwResources.class.getResource("www_test1_com_ssl_conf.txt")),
-    lnOutExpected("/bin/ln.out", RedirectWwwResources.class.getResource("ln_out_expected.txt")),
+    profile("UbuntuProfile.groovy", RedirectResources.class.getResource("UbuntuProfile.groovy")),
+    httpdScript("Httpd.groovy", RedirectResources.class.getResource("Httpd.groovy")),
+    certCrt("cert.crt", RedirectResources.class.getResource("cert_crt.txt")),
+    certKey("cert.key", RedirectResources.class.getResource("cert_key.txt")),
+    test1comConf("/etc/nginx/sites-available/100-robobee-test1.com.conf", RedirectResources.class.getResource("test1_com_conf.txt")),
+    test1comSslConf("/etc/nginx/sites-available/100-robobee-test1.com-ssl.conf", RedirectResources.class.getResource("test1_com_ssl_conf.txt")),
+    wwwtest1comConf("/etc/nginx/sites-available/100-robobee-www.test1.com.conf", RedirectResources.class.getResource("www_test1_com_conf.txt")),
+    wwwtest1comSslConf("/etc/nginx/sites-available/100-robobee-www.test1.com-ssl.conf", RedirectResources.class.getResource("www_test1_com_ssl_conf.txt")),
+    lnOutExpected("/bin/ln.out", RedirectResources.class.getResource("ln_out_expected.txt")),
 
     ResourcesUtils resources
 
-    RedirectWwwResources(String path, URL resource) {
+    RedirectResources(String path, URL resource) {
         this.resources = new ResourcesUtils(path: path, resource: resource)
     }
 

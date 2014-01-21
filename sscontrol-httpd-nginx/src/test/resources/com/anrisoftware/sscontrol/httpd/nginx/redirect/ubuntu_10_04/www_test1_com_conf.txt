@@ -6,4 +6,7 @@ server {
     server_name www.test1.com;
     client_max_body_size 2M;
 
+    # redirect to 'https://www.test1.com'
+    return 301 https://www.test1.com$request_uri;
+
 }

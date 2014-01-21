@@ -76,8 +76,6 @@ class PhpldapadminTest extends UbuntuTestUtil {
         assertFileContent robobeeServers.asFile(tmpdir), robobeeServers
         assertFileContent defaultConf.asFile(tmpdir), defaultConf
         assertFileContent domainsConf.asFile(tmpdir), PhpldapadminResources.domainsConf
-        assertStringContent test1comConf.replaced(tmpdir, tmpdir, "/tmp"), test1comConf.toString()
-        assertStringContent test1comSslConf.replaced(tmpdir, tmpdir, "/tmp"), test1comSslConf.toString()
         assertStringContent ldapadminTest1comSslConf.replaced(tmpdir, tmpdir, "/tmp"), ldapadminTest1comSslConf.toString()
         assertStringContent ldapadminTest1comSslFcgiScript.replaced(tmpdir, tmpdir, "/tmp"), ldapadminTest1comSslFcgiScript.toString()
         assertStringContent chmodOut.replaced(tmpdir, tmpdir, "/tmp"), chmodOut.toString()

@@ -22,12 +22,12 @@ import com.anrisoftware.sscontrol.httpd.apache.ubuntu.UbuntuResources
 
 httpd {
     domain "test1.com", address: "192.168.0.50", { //.
-        redirect to_www //.
+        redirect to: "www.%" //.
     }
     ssl_domain "test1.com", address: "192.168.0.50", {
         certification_file UbuntuResources.certCrt.resource
         certification_key_file UbuntuResources.certKey.resource
-        redirect to_www
+        redirect to: "www.%"
     }
     domain "www.test1.com", address: "192.168.0.51", {
         setup "wordpress", alias: "wordpress3", {

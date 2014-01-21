@@ -1,0 +1,34 @@
+domainRedirects(properties) ::= <<
+# redirect to '<properties.destination>'
+<if(properties.serverAlias)>ServerAlias <properties.serverAlias><endif>
+RewriteEngine On
+RewriteCond %{HTTP_HOST} ^<properties.namePattern>$ [NC]
+RewriteRule (.*) <if(properties.proto)><properties.proto><endif><properties.destination>$1 [R=301,L]
+
+>>
+
+RedirectHttpToHttps(redirect, domain) ::= <<
+# redirect http to https
+RewriteEngine On
+RewriteCond %{HTTP_HOST} ^<domain.name>
+RewriteRule (.*) https://<domain.name>$1 [R=301,L]
+
+>>
+
+RedirectToWwwHttp(redirect, domain) ::= <<
+# redirect to www http
+ServerAlias www.<domain.name>
+RewriteEngine On
+RewriteCond %{HTTP_HOST} ^<domain.namePattern>$ [NC]
+RewriteRule ^(.*)$ http://www.<domain.name>$1 [L,R=301]
+
+>>
+
+RedirectToWwwHttps(redirect, domain) ::= <<
+# redirect to www https
+ServerAlias www.<domain.name>
+RewriteEngine On
+RewriteCond %{HTTP_HOST} ^<domain.namePattern>$ [NC]
+RewriteRule ^(.*)$ https://www.<domain.name>$1 [L,R=301]
+
+>>

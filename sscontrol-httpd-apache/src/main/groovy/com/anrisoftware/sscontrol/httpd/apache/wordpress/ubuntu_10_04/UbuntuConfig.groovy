@@ -63,19 +63,6 @@ class UbuntuConfig extends UbuntuWordpressConfig implements ServiceConfig {
         createDomainConfig domain, null, service, config
     }
 
-    void createDomainConfig(Domain domain, Domain refDomain, WebService service, List config) {
-        def serviceAliasDir = serviceAliasDir service, domain, refDomain
-        def serviceDir = serviceDir domain, refDomain
-        def configStr = wordpressConfigTemplate.getText(
-                true, "domainConfig",
-                "domain", domain,
-                "service", service,
-                "properties", script,
-                "config", this,
-                "serviceAliasDir", serviceAliasDir,
-                "serviceDir", serviceDir)
-        config << configStr
-    }
     /**
      * @see FcgiConfig#getScriptsSubdirectory()
      */

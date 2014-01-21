@@ -55,12 +55,9 @@ class PhpmyadminTest extends UbuntuTestUtil {
 
         assertFileContent defaultConf.asFile(tmpdir), defaultConf
         assertFileContent domainsConf.asFile(tmpdir), PhpmyadminResources.domainsConf
-        assertStringContent ubuntutestcomConf.replaced(tmpdir, tmpdir, "/tmp"), ubuntutestcomConf.toString()
         assertStringContent ubuntutestcomSslConf.replaced(tmpdir, tmpdir, "/tmp"), ubuntutestcomSslConf.toString()
-        assertStringContent wwwUbuntutestcomConf.replaced(tmpdir, tmpdir, "/tmp"), wwwUbuntutestcomConf.toString()
-        assertStringContent wwwUbuntutestcomSslConf.replaced(tmpdir, tmpdir, "/tmp"), wwwUbuntutestcomSslConf.toString()
-        assertStringContent phpadminTest1comSslFcgiScript.replaced(tmpdir, tmpdir, "/tmp"), phpadminTest1comSslFcgiScript.toString()
-        assertFileContent phpadminTest1comSslPhpiniExpected.asFile(tmpdir), phpadminTest1comSslPhpiniExpected
+        assertStringContent ubuntutestcomSslFcgiScript.replaced(tmpdir, tmpdir, "/tmp"), ubuntutestcomSslFcgiScript.toString()
+        assertFileContent ubuntutestcomSslPhpiniExpected.asFile(tmpdir), ubuntutestcomSslPhpiniExpected
         assertStringContent chownOut.replaced(tmpdir, tmpdir, "/tmp"), chownOut.toString()
         assertStringContent chmodOut.replaced(tmpdir, tmpdir, "/tmp"), chmodOut.toString()
         assertStringContent groupaddOut.replaced(tmpdir, tmpdir, "/tmp"), groupaddOut.toString()

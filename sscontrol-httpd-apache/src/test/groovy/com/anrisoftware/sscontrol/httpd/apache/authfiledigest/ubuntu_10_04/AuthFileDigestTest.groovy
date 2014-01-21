@@ -54,7 +54,6 @@ class AuthFileDigestTest extends UbuntuTestUtil {
 
         assertFileContent defaultConf.asFile(tmpdir), defaultConf
         assertFileContent domainsConf.asFile(tmpdir), domainsConf
-        assertStringContent test1comConf.replaced(tmpdir, tmpdir, "/tmp"), test1comConf.toString()
         assertStringContent test1comSslConf.replaced(tmpdir, tmpdir, "/tmp"), test1comSslConf.toString()
         assertFileContent privatepasswd.asFile(tmpdir), privatepasswd
         assertFileContent groupOut.asFile(tmpdir), groupOut
@@ -77,7 +76,6 @@ class AuthFileDigestTest extends UbuntuTestUtil {
 
         assertFileContent defaultConf.asFile(tmpdir), defaultConf
         assertFileContent domainsConf.asFile(tmpdir), domainsConf
-        assertStringContent test1comConf.replaced(tmpdir, tmpdir, "/tmp"), test1comConf.toString()
         assertStringContent test1comSslConf.replaced(tmpdir, tmpdir, "/tmp"), test1comSslConf.toString()
         assertFileContent appendingPrivatepasswd.asFile(tmpdir), appendingPrivatepasswd.toString()
         assertFileContent groupOut.asFile(tmpdir), groupOut.toString()

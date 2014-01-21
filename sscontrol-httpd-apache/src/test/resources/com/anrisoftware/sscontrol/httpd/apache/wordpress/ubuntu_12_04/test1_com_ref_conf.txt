@@ -10,10 +10,10 @@
         Allow from all
     </Directory>
 
-    # redirect to www http
+    # redirect to 'www.test1.com'
     ServerAlias www.test1.com
     RewriteEngine On
     RewriteCond %{HTTP_HOST} ^test1\.com$ [NC]
-    RewriteRule ^(.*)$ http://www.test1.com$1 [L,R=301]
+    RewriteRule (.*) http://www.test1.com$1 [R=301,L]
 
 </VirtualHost>

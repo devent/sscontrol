@@ -48,7 +48,7 @@ class DomainConfig {
         createWebDir domain
     }
 
-    private setupUserGroup(Domain domain) {
+    void setupUserGroup(Domain domain) {
         def group = new DecimalFormat(groupPattern).format(domainNumber)
         def user = new DecimalFormat(userPattern).format(domainNumber)
         script.service.domains.findAll { Domain d ->
@@ -59,13 +59,13 @@ class DomainConfig {
         }
     }
 
-    private createWebDir(Domain domain) {
+    void createWebDir(Domain domain) {
         def user = domain.domainUser
         webDir(domain).mkdirs()
         script.changeOwner owner: user.name, ownerGroup: user.group, files: webDir(domain)
     }
 
-    private addSiteUser(Domain domain) {
+    void addSiteUser(Domain domain) {
         def user = domain.domainUser
         int uid = user.uid != null ? user.uid : (minimumUid + domainNumber)
         def home = domainDir domain
@@ -73,7 +73,7 @@ class DomainConfig {
         script.addUser userName: user.name, groupName: user.group, userId: uid, homeDir: home, shell: shell
     }
 
-    private addSiteGroup(Domain domain) {
+    void addSiteGroup(Domain domain) {
         def user = domain.domainUser
         int gid = user.gid != null ? user.gid : (minimumGid + domainNumber)
         addGroup groupName: domain.domainUser.group, groupId: gid

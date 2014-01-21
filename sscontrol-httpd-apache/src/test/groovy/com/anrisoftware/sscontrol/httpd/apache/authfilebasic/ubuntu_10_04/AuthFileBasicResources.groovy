@@ -31,7 +31,7 @@ import com.anrisoftware.sscontrol.httpd.apache.resources.ResourcesUtils
  */
 enum AuthFileBasicResources {
 
-    profile("UbuntuProfile.groovy", AuthFileBasicResources.class.getResource("Ubuntu_10_04Profile.groovy")),
+    profile("UbuntuProfile.groovy", AuthFileBasicResources.class.getResource("UbuntuProfile.groovy")),
     httpdScript("Httpd.groovy", AuthFileBasicResources.class.getResource("HttpdAuthFileBasic.groovy")),
     httpdAppendingScript("Httpd.groovy", AuthFileBasicResources.class.getResource("HttpdAuthFileBasicAppending.groovy")),
     htpasswdCommand("/usr/bin/htpasswd", AuthFileBasicResources.class.getResource("htpasswd_command.txt")),

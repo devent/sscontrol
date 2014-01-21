@@ -18,27 +18,23 @@
  */
 package com.anrisoftware.sscontrol.httpd.apache.authldap.ubuntu_10_04
 
-import com.anrisoftware.sscontrol.httpd.apache.ubuntu.UbuntuResources;
+import com.anrisoftware.sscontrol.httpd.apache.ubuntu.UbuntuResources
 
 httpd {
-	domain "test1.com", address: "192.168.0.50", {
-		redirect to_www
-		redirect http_to_https
-	}
-	ssl_domain "test1.com", address: "192.168.0.50", {
-		certification_file UbuntuResources.certCrt.resource
-		certification_key_file UbuntuResources.certKey.resource
-		auth "Private Directory", location: "/private", type: digest, provider: file, satisfy: any, {
-			require valid_user
-			user "admin", password: "adminpass"
-		}
-		auth "Private Directory", location: "/private", type: digest, provider: ldap, satisfy: any, {
-			host "ldap://127.0.0.1:389", url: "o=deventorg,dc=ubuntutest,dc=com?cn"
-			credentials "cn=admin,dc=ubuntutest,dc=com", password: "adminpass"
-			require valid_user
-			require group: "cn=ldapadminGroup,o=deventorg,dc=ubuntutest,dc=com", {
-				attribute "uniqueMember", dn: yes //.
-			}
-		}
-	}
+    ssl_domain "test1.com", address: "192.168.0.50", {
+        certification_file UbuntuResources.certCrt.resource
+        certification_key_file UbuntuResources.certKey.resource
+        auth "Private Directory", location: "/private", type: digest, provider: file, satisfy: any, {
+            require valid_user
+            user "admin", password: "adminpass"
+        }
+        auth "Private Directory", location: "/private", type: digest, provider: ldap, satisfy: any, {
+            host "ldap://127.0.0.1:389", url: "o=deventorg,dc=ubuntutest,dc=com?cn"
+            credentials "cn=admin,dc=ubuntutest,dc=com", password: "adminpass"
+            require valid_user
+            require group: "cn=ldapadminGroup,o=deventorg,dc=ubuntutest,dc=com", {
+                attribute "uniqueMember", dn: yes //.
+            }
+        }
+    }
 }

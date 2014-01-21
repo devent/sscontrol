@@ -18,25 +18,17 @@
  */
 package com.anrisoftware.sscontrol.httpd.apache.phpldapadmin.ubuntu_10_04
 
-import com.anrisoftware.sscontrol.httpd.apache.ubuntu.UbuntuResources;
+import com.anrisoftware.sscontrol.httpd.apache.ubuntu.UbuntuResources
 
 httpd {
-	domain "test1.com", address: "192.168.0.50", { //.
-		redirect to_www //.
-	}
-	ssl_domain "test1.com", address: "192.168.0.50", {
-		certification_file UbuntuResources.certCrt.resource
-		certification_key_file UbuntuResources.certKey.resource
-		redirect to_www
-	}
-	ssl_domain "ldapadmin.test1.com", address: "192.168.0.50", {
-		user "www-data", group: "www-data"
-		certification_file UbuntuResources.certCrt.resource
-		certification_key_file UbuntuResources.certKey.resource
-		setup "phpldapadmin", alias: "ldapadmin", {
-			server "Local LDAP/Server", host: "127.0.0.1", port: "ldap"
-			server "Example.com LDAP/Server", host: "ldap.example.com", port: 389
-			server "Secured LDAP/Server", host: "ldaps://ldap.example.com/"
-		}
-	}
+    ssl_domain "ldapadmin.test1.com", address: "192.168.0.50", {
+        user "www-data", group: "www-data"
+        certification_file UbuntuResources.certCrt.resource
+        certification_key_file UbuntuResources.certKey.resource
+        setup "phpldapadmin", alias: "ldapadmin", {
+            server "Local LDAP/Server", host: "127.0.0.1", port: "ldap"
+            server "Example.com LDAP/Server", host: "ldap.example.com", port: 389
+            server "Secured LDAP/Server", host: "ldaps://ldap.example.com/"
+        }
+    }
 }

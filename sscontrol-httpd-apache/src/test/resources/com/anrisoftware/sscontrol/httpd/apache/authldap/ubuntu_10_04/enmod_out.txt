@@ -1,12 +1,8 @@
 suexec
-rewrite
-rewrite
 authnz_ldap
 auth_basic
 ssl
 suexec
-rewrite
-rewrite
 authnz_ldap
 auth_basic
 ssl

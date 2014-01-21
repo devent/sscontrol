@@ -1,3 +1,6 @@
+# Robobee Defaults - Auto-generated
+#
+
 <Directory />
     AllowOverride None
     Order Deny,Allow

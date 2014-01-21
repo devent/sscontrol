@@ -26,6 +26,7 @@ import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.Templates
 import com.anrisoftware.sscontrol.httpd.apache.apache.linux.ApacheScript
 import com.anrisoftware.sscontrol.httpd.statements.domain.Domain
+import com.anrisoftware.sscontrol.httpd.statements.webservice.WebService
 import com.anrisoftware.sscontrol.httpd.statements.wordpress.MultiSite
 import com.anrisoftware.sscontrol.httpd.statements.wordpress.WordpressService
 import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokenTemplate
@@ -41,6 +42,40 @@ abstract class Wordpress_3_Config extends WordpressConfig {
     Templates wordpressTemplates
 
     TemplateResource wordpressConfigTemplate
+
+    /**
+     * Creates the domain configuration.
+     *
+     * @param domain
+     *            the {@link Domain}.
+     *
+     * @param refDomain
+     *            the referenced {@link Domain}.
+     *
+     * @param service
+     *            the Wordpress {@link WebService}.
+     *
+     * @param config
+     *            the {@link List} configuration.
+     */
+    void createDomainConfig(Domain domain, Domain refDomain, WebService service, List config) {
+        def serviceAliasDir = serviceAliasDir service, domain, refDomain
+        def serviceDir = serviceDir domain, refDomain
+        def properties = [:]
+        properties.domain = domain
+        properties.service = service
+        properties.script = script
+        properties.config = this
+        properties.serviceAliasDir = serviceAliasDir
+        properties.serviceDir = serviceDir
+        properties.namePattern = namePattern(domain)
+        def configStr = wordpressConfigTemplate.getText(true, "domainConfig", "properties", properties)
+        config << configStr
+    }
+
+    String namePattern(Domain domain) {
+        domain.name.replaceAll "\\.", "\\\\."
+    }
 
     /**
      * Deploys the main configuration.

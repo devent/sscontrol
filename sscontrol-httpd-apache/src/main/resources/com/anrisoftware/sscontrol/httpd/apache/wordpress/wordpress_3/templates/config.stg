@@ -1,11 +1,11 @@
-domainConfig(domain, service, properties, config, serviceAliasDir, serviceDir) ::= <<
-# <serviceDir>
+domainConfig(properties) ::= <<
+# <properties.serviceDir>
 
-<serviceAlias(service, serviceAliasDir)>
+<serviceAlias(properties)>
 
-\<Directory <serviceDir>\>
+\<Directory <properties.serviceDir>\>
     AddHandler fcgid-script .php
-    FCGIWrapper <properties.sitesDirectory>/<config.scriptsSubdirectory>/<domain.name>/<config.scriptStarterFileName> .php
+    <fcgiWrapper(properties)>
     Options +ExecCGI +FollowSymLinks
     DirectoryIndex index.php
     AllowOverride All
@@ -13,7 +13,7 @@ domainConfig(domain, service, properties, config, serviceAliasDir, serviceDir) :
     Order allow,deny
     Allow from all
 
-    <blockNoReferrerRequests(domain, config)>
+    <blockNoReferrerRequests(properties)>
     \<IfModule mod_mime.c>
         \<IfModule mod_php5.c>
             AddType application/x-httpd-php .php
@@ -41,18 +41,22 @@ domainConfig(domain, service, properties, config, serviceAliasDir, serviceDir) :
 
 >>
 
-serviceAlias(service, serviceAliasDir) ::= <<
-<if(service.alias)>Alias /<service.alias> <serviceAliasDir><endif>
+fcgiWrapper(properties) ::= <%
+FCGIWrapper <properties.script.sitesDirectory>/<properties.config.scriptsSubdirectory>/<properties.domain.name>/<properties.config.scriptStarterFileName> .php
+%>
+
+serviceAlias(properties) ::= <<
+<if(properties.service.alias)>Alias /<properties.service.alias> <properties.serviceAliasDir><endif>
 >>
 
-blockNoReferrerRequests(domain, config) ::= <<
-<if(config.blockNoReferrerRequests)>
+blockNoReferrerRequests(properties) ::= <<
+<if(properties.config.blockNoReferrerRequests)>
 \<IfModule mod_rewrite.c>
     # block comment spam by denying access to no-referrer requests
     RewriteEngine On
     RewriteCond %{REQUEST_METHOD} POST
     RewriteCond %{REQUEST_URI} .wp-comments-post\.php*
-    RewriteCond %{HTTP_REFERER} !.*<domain.namePattern>.* [OR]
+    RewriteCond %{HTTP_REFERER} !.*<properties.namePattern>.* [OR]
     RewriteCond %{HTTP_USER_AGENT} ^$
     RewriteRule ^(.*)$ ^http://%{REMOTE_ADDR}/$ [R=301,L]
 \</IfModule>

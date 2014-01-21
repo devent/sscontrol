@@ -32,10 +32,9 @@ import com.anrisoftware.sscontrol.httpd.apache.resources.ResourcesUtils
 enum AuthLdapResources {
 
     // Auth/ldap
-    profile("UbuntuProfile.groovy", AuthLdapResources.class.getResource("Ubuntu_10_04Profile.groovy")),
+    profile("UbuntuProfile.groovy", AuthLdapResources.class.getResource("UbuntuProfile.groovy")),
     httpdScript("Httpd.groovy", AuthLdapResources.class.getResource("HttpdAuthLdap.groovy")),
     domainsConf("/etc/apache2/conf.d/000-robobee-domains.conf", AuthLdapResources.class.getResource("domains_conf.txt")),
-    test1comConf("/etc/apache2/sites-available/100-robobee-test1.com.conf", AuthLdapResources.class.getResource("test1_com_conf.txt")),
     test1comSslConf("/etc/apache2/sites-available/100-robobee-test1.com-ssl.conf", AuthLdapResources.class.getResource("test1_com_ssl_conf.txt")),
     enmodOut("/usr/sbin/a2enmod.out", AuthLdapResources.class.getResource("enmod_out.txt")),
     // Auth file/ldap

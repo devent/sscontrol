@@ -54,7 +54,6 @@ class AuthLdapTest extends UbuntuTestUtil {
 
         assertFileContent defaultConf.asFile(tmpdir), defaultConf
         assertFileContent domainsConf.asFile(tmpdir), domainsConf
-        assertStringContent test1comConf.replaced(tmpdir, tmpdir, "/tmp"), test1comConf.toString()
         assertStringContent test1comSslConf.replaced(tmpdir, tmpdir, "/tmp"), test1comSslConf.toString()
         assertFileContent enmodOut.asFile(tmpdir), enmodOut
     }

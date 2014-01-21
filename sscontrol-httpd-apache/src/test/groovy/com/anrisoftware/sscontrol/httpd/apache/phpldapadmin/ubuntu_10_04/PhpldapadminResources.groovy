@@ -31,12 +31,10 @@ import com.anrisoftware.sscontrol.httpd.apache.resources.ResourcesUtils
  */
 enum PhpldapadminResources {
 
-    profile("UbuntuProfile.groovy", PhpldapadminResources.class.getResource("Ubuntu_10_04Profile.groovy")),
+    profile("UbuntuProfile.groovy", PhpldapadminResources.class.getResource("UbuntuProfile.groovy")),
     httpdScript("Httpd.groovy", PhpldapadminResources.class.getResource("HttpdPhpldapadmin.groovy")),
     phpConfDir("/etc/php5/cgi/conf.d", null),
     domainsConf("/etc/apache2/conf.d/000-robobee-domains.conf", PhpldapadminResources.class.getResource("domains_conf.txt")),
-    test1comConf("/etc/apache2/sites-available/100-robobee-test1.com.conf", PhpldapadminResources.class.getResource("test1_com_conf.txt")),
-    test1comSslConf("/etc/apache2/sites-available/100-robobee-test1.com-ssl.conf", PhpldapadminResources.class.getResource("test1_com_ssl_conf.txt")),
     ldapadminTest1comSslConf("/etc/apache2/sites-available/100-robobee-ldapadmin.test1.com-ssl.conf", PhpldapadminResources.class.getResource("ldapadmin_test1_com_ssl_conf.txt")),
     ldapadminTest1comSslFcgiScript("/var/www/php-fcgi-scripts/ldapadmin.test1.com/php-fcgi-starter", PhpldapadminResources.class.getResource("php_fcgi_starter.txt")),
     tarOut("/bin/tar.out", PhpldapadminResources.class.getResource("tar_out.txt")),

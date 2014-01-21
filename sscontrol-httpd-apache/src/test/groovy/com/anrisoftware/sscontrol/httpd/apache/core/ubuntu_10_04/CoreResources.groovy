@@ -31,7 +31,7 @@ import com.anrisoftware.sscontrol.httpd.apache.resources.ResourcesUtils
  */
 enum CoreResources {
 
-    profile("UbuntuProfile.groovy", CoreResources.class.getResource("Ubuntu_10_04Profile.groovy")),
+    profile("UbuntuProfile.groovy", CoreResources.class.getResource("UbuntuProfile.groovy")),
     httpdScript("Httpd.groovy", CoreResources.class.getResource("Httpd.groovy")),
     robobeeDefaultConfExpected("/etc/apache2/sites-available/000-robobee-default.conf", CoreResources.class.getResource("default_conf_expected.txt")),
     domainsConfExpected("/etc/apache2/conf.d/000-robobee-domains.conf", CoreResources.class.getResource("domains_conf_expected.txt")),

@@ -54,6 +54,7 @@ import com.google.inject.assistedinject.Assisted;
  */
 public class Domain {
 
+    private static final String HTTP = "http://";
     private static final String USER = "user";
     private static final String AUTH_PROVIDER = "provider";
     private static final String SITE_DIR = "%s/web";
@@ -145,10 +146,6 @@ public class Domain {
 
     public String getId() {
         return id;
-    }
-
-    public String getNamePattern() {
-        return name.replaceAll("\\.", "\\\\.");
     }
 
     public String getFileName() {
@@ -282,6 +279,15 @@ public class Domain {
 
     public Memory getMemory() {
         return memory;
+    }
+
+    /**
+     * Returns the protocol of the domain.
+     * 
+     * @return the {@link String} protocol of the domain.
+     */
+    public String getProto() {
+        return HTTP;
     }
 
     @Override

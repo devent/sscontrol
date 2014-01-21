@@ -21,9 +21,6 @@ package com.anrisoftware.sscontrol.httpd.apache.phpmyadmin.ubuntu_12_04
 import com.anrisoftware.sscontrol.httpd.apache.ubuntu.UbuntuResources
 
 httpd {
-    domain "ubuntutest.com", address: "192.168.0.100", { //.
-        redirect to_www //.
-    }
     ssl_domain "ubuntutest.com", address: "192.168.0.100", {
         certification_file UbuntuResources.certCrt.resource
         certification_key_file UbuntuResources.certKey.resource
@@ -33,11 +30,5 @@ httpd {
             control "phpmyadmin", password: "phpmyadminpassword", database: "phpmyadmin"
             server "127.0.0.1", port: 3306
         }
-    }
-    domain "www.ubuntutest.com", address: "192.168.0.110", {
-    }
-    ssl_domain "www.ubuntutest.com", address: "192.168.0.110", {
-        certification_file UbuntuResources.certCrt.resource
-        certification_key_file UbuntuResources.certKey.resource
     }
 }

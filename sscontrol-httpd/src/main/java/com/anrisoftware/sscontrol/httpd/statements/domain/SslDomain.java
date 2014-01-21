@@ -39,6 +39,8 @@ import com.google.inject.assistedinject.Assisted;
  */
 public class SslDomain extends Domain {
 
+    private static final String HTTPS = "https://";
+
     @Inject
     private DomainLogger log;
 
@@ -137,6 +139,11 @@ public class SslDomain extends Domain {
      */
     public String getCertificationKeyFile() {
         return certificationKeyFile;
+    }
+
+    @Override
+    public String getProto() {
+        return HTTPS;
     }
 
 }

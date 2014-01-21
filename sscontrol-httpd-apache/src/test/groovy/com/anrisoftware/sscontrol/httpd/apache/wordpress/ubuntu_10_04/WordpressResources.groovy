@@ -31,7 +31,7 @@ import com.anrisoftware.sscontrol.httpd.apache.resources.ResourcesUtils
  */
 enum WordpressResources {
 
-    profile("UbuntuProfile.groovy", WordpressResources.class.getResource("Ubuntu_10_04Profile.groovy")),
+    profile("UbuntuProfile.groovy", WordpressResources.class.getResource("UbuntuProfile.groovy")),
     httpdScript("Httpd.groovy", WordpressResources.class.getResource("HttpdWordpress.groovy")),
     httpdDebugScript("Httpd.groovy", WordpressResources.class.getResource("HttpdWordpressDebug.groovy")),
     phpConfDir("/etc/php5/cgi/conf.d", null),

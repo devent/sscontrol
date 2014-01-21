@@ -1,50 +1,8 @@
-portsConfiguration(service) ::= <<
-# Robobee Ports - Auto-generated
-#
-# To add custom ports add a new include directive to the Apache configuration
-# file: "Include /etc/apache2/custom-ports.conf".
-#
-
-<service.binding.addresses:listenAddress();separator="\n">
-
->>
-
-listenAddress(address) ::= <%
-Listen <if(address.address)><address.address>:<endif><listenPort(address)>
-%>
-
-listenPort(address) ::= <%
-<if(address.port)><address.port><endif>
-%>
-
-defaultConfiguration() ::= <<
-\<Directory />
-    AllowOverride None
-    Order Deny,Allow
-    Deny from all
-\</Directory>
-
-\<Directory /var/www/sites>
-    AllowOverride None
-    Order Deny,Allow
-    Deny from all
-\</Directory>
-
->>
-
-domainsConfiguration(service) ::= <<
-<trunc(service.virtualDomains):{domain | <nameVirtualHost(domain)><\n>}><last(service.virtualDomains):{domain | <nameVirtualHost(domain)>}>
-
->>
-
-nameVirtualHost(domain) ::= "NameVirtualHost <domain.address>:<domain.port>"
-
 Domain(properties, domain, servicesConfig) ::= <<
 \<VirtualHost <domain.address>:<domain.port>\>
 
     <domainBody(properties, domain)>
 
-    <domain.redirects:domainRedirects(domain);separator="\n">
     <servicesConfig;separator="\n">
 \</VirtualHost>
 
@@ -57,7 +15,6 @@ SslDomain(properties, domain, servicesConfig) ::= <<
 
     <domainCerts(properties, domain)>
 
-    <domain.redirects:domainRedirects(domain);separator="\n">
     <servicesConfig;separator="\n">
 \</VirtualHost>
 
@@ -79,36 +36,6 @@ domainCerts(properties, domain) ::= <<
 SSLEngine on
 SSLCertificateFile <properties.sitesDirectory>/<domain.name>/<properties.sslSubdirectory>/<domain.certificationFile>
 SSLCertificateKeyFile <properties.sitesDirectory>/<domain.name>/<properties.sslSubdirectory>/<domain.certificationKeyFile>
->>
-
-domainRedirects(redirect, domain) ::= <<
-<(redirect.class.simpleName)(redirect, domain)>
->>
-
-RedirectHttpToHttps(redirect, domain) ::= <<
-# redirect http to https
-RewriteEngine On
-RewriteCond %{HTTP_HOST} ^<domain.name>
-RewriteRule (.*) https://<domain.name>$1 [R=301,L]
-
->>
-
-RedirectToWwwHttp(redirect, domain) ::= <<
-# redirect to www http
-ServerAlias www.<domain.name>
-RewriteEngine On
-RewriteCond %{HTTP_HOST} ^<domain.namePattern>$ [NC]
-RewriteRule ^(.*)$ http://www.<domain.name>$1 [L,R=301]
-
->>
-
-RedirectToWwwHttps(redirect, domain) ::= <<
-# redirect to www https
-ServerAlias www.<domain.name>
-RewriteEngine On
-RewriteCond %{HTTP_HOST} ^<domain.namePattern>$ [NC]
-RewriteRule ^(.*)$ https://www.<domain.name>$1 [L,R=301]
-
 >>
 
 domainAlias(properties, domain) ::= <<

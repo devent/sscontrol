@@ -1,14 +1,17 @@
+defaultsConfiguration() ::= <<
 # Robobee Defaults - Auto-generated
 #
 
-<Directory />
+\<Directory />
     AllowOverride None
     Order Deny,Allow
     Deny from all
-</Directory>
+\</Directory>
 
-<Directory /var/www/sites>
+\<Directory /var/www/sites>
     AllowOverride None
     Order Deny,Allow
     Deny from all
-</Directory>
+\</Directory>
+
+>>

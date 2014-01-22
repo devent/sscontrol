@@ -61,4 +61,16 @@ httpd {
         user "www-data", group: "www-data"
         setup "wordpress", ref: "wordpress3", refdomain: "testid"
     }
+    domain "www.testold.com", address: "192.168.0.51", {
+        setup "wordpress", alias: "wordpress3", prefix: "wordpressold", {
+            database "wordpress3", user: "user", password: "userpass", host: "localhost"
+            override mode: no
+        }
+    }
+    domain "www.testupdate.com", address: "192.168.0.51", {
+        setup "wordpress", alias: "wordpress3", prefix: "wordpressold", {
+            database "wordpress3", user: "user", password: "userpass", host: "localhost"
+            override mode: update
+        }
+    }
 }

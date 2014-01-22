@@ -32,6 +32,8 @@ import com.anrisoftware.sscontrol.httpd.statements.webservice.WebService;
  */
 public class WebServiceArgs {
 
+    private static final String PREFIX = "prefix";
+
     private static final String PROXYNAME = "proxyname";
 
     private static final String REFDOMAIN = "refdomain";
@@ -99,6 +101,16 @@ public class WebServiceArgs {
         Object name = args.get(PROXYNAME);
         log.checkProxyName(service, name);
         return name.toString();
+    }
+
+    public boolean havePrefix(Map<String, Object> args) {
+        return args.containsKey(PREFIX);
+    }
+
+    public String prefix(WebService service, Map<String, Object> args) {
+        Object prefix = args.get(PREFIX);
+        log.checkPrefix(service, prefix);
+        return prefix.toString();
     }
 
 }

@@ -30,6 +30,7 @@ import com.anrisoftware.sscontrol.httpd.statements.domain.Domain
 import com.anrisoftware.sscontrol.httpd.statements.domain.SslDomain
 import com.anrisoftware.sscontrol.httpd.statements.webservice.WebService
 import com.anrisoftware.sscontrol.httpd.statements.wordpress.MultiSite
+import com.anrisoftware.sscontrol.httpd.statements.wordpress.OverrideMode
 import com.anrisoftware.sscontrol.httpd.statements.wordpress.WordpressService
 
 /**
@@ -125,5 +126,25 @@ class HttpdWordpressTest extends HttpdTestUtil {
         assert webservice.name == "wordpress"
         assert webservice.ref == "wordpress3"
         assert webservice.refDomain == "testid"
+
+        domain = service.domains[d++]
+        assert domain.name == "www.testold.com"
+        assert domain.address == "192.168.0.51"
+        assert (domain instanceof Domain)
+        webservice = domain.services[0]
+        assert (webservice instanceof WordpressService)
+        assert webservice.name == "wordpress"
+        assert webservice.prefix == "wordpressold"
+        assert webservice.overrideMode == OverrideMode.no
+
+        domain = service.domains[d++]
+        assert domain.name == "www.testupdate.com"
+        assert domain.address == "192.168.0.51"
+        assert (domain instanceof Domain)
+        webservice = domain.services[0]
+        assert (webservice instanceof WordpressService)
+        assert webservice.name == "wordpress"
+        assert webservice.prefix == "wordpressold"
+        assert webservice.overrideMode == OverrideMode.update
     }
 }

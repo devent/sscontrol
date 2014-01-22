@@ -24,6 +24,7 @@ import static com.anrisoftware.sscontrol.httpd.statements.webserviceargs.WebServ
 import static com.anrisoftware.sscontrol.httpd.statements.webserviceargs.WebServiceLogger._.id_null;
 import static com.anrisoftware.sscontrol.httpd.statements.webserviceargs.WebServiceLogger._.id_set_debug;
 import static com.anrisoftware.sscontrol.httpd.statements.webserviceargs.WebServiceLogger._.id_set_info;
+import static com.anrisoftware.sscontrol.httpd.statements.webserviceargs.WebServiceLogger._.prefix_null;
 import static com.anrisoftware.sscontrol.httpd.statements.webserviceargs.WebServiceLogger._.proxyname_null;
 import static com.anrisoftware.sscontrol.httpd.statements.webserviceargs.WebServiceLogger._.ref_null;
 import static com.anrisoftware.sscontrol.httpd.statements.webserviceargs.WebServiceLogger._.ref_set_debug;
@@ -65,7 +66,9 @@ public class WebServiceLogger extends AbstractLogger {
 
         refdomain_null("Domain reference cannot be null or blank for {}."),
 
-        proxyname_null("Proxy name cannot be null or blank for {}.");
+        proxyname_null("Proxy name cannot be null or blank for {}."),
+
+        prefix_null("Prefix cannot be null for {}.");
 
         private String name;
 
@@ -133,5 +136,9 @@ public class WebServiceLogger extends AbstractLogger {
     void checkProxyName(WebService service, Object name) {
         notNull(name, proxyname_null.toString(), service);
         notBlank(name.toString(), proxyname_null.toString(), service);
+    }
+
+    void checkPrefix(WebService service, Object prefix) {
+        notNull(prefix, prefix_null.toString(), service);
     }
 }

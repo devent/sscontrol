@@ -32,6 +32,7 @@ import com.anrisoftware.sscontrol.core.database.DatabaseFactory;
 import com.anrisoftware.sscontrol.core.debuglogging.DebugLogging;
 import com.anrisoftware.sscontrol.core.debuglogging.DebugLoggingFactory;
 import com.anrisoftware.sscontrol.core.list.StringToListFactory;
+import com.anrisoftware.sscontrol.core.yesno.YesNoFlag;
 import com.anrisoftware.sscontrol.httpd.statements.domain.Domain;
 import com.anrisoftware.sscontrol.httpd.statements.webservice.WebService;
 import com.anrisoftware.sscontrol.httpd.statements.webserviceargs.WebServiceArgs;
@@ -92,6 +93,10 @@ public class WordpressService implements WebService {
 
     private Force force;
 
+    private String prefix;
+
+    private OverrideMode overrideMode;
+
     /**
      * @see WordpressServiceFactory#create(Domain, Map)
      */
@@ -114,6 +119,9 @@ public class WordpressService implements WebService {
         }
         if (aargs.haveRefDomain(args)) {
             setRefDomain(aargs.refDomain(this, args));
+        }
+        if (aargs.havePrefix(args)) {
+            setPrefix(aargs.prefix(this, args));
         }
     }
 
@@ -169,6 +177,14 @@ public class WordpressService implements WebService {
     @Override
     public String getRefDomain() {
         return refDomain;
+    }
+
+    public void setPrefix(String prefix) {
+        this.prefix = prefix;
+    }
+
+    public String getPrefix() {
+        return prefix;
     }
 
     public void database(Map<String, Object> args, String name) {
@@ -249,6 +265,30 @@ public class WordpressService implements WebService {
 
     public Force getForce() {
         return force;
+    }
+
+    public void override(Map<String, Object> args) {
+        Object mode = args.get("mode");
+        if (mode instanceof YesNoFlag) {
+            YesNoFlag flag = (YesNoFlag) mode;
+            if (flag == YesNoFlag.no) {
+                setOverrideMode(OverrideMode.no);
+            }
+        } else if (mode instanceof OverrideMode) {
+            setOverrideMode((OverrideMode) mode);
+        }
+    }
+
+    public void setOverrideMode(OverrideMode mode) {
+        this.overrideMode = mode;
+    }
+
+    public OverrideMode getOverrideMode() {
+        return overrideMode;
+    }
+
+    public void update() {
+        this.overrideMode = OverrideMode.update;
     }
 
     @Override

@@ -36,6 +36,7 @@ enum WordpressResources {
     httpdDebugScript("Httpd.groovy", WordpressResources.class.getResource("HttpdWordpressDebug.groovy")),
     phpConfDir("/etc/php5/cgi/conf.d", null),
     wordpressArchive("/tmp/web-wordpress-3.8.tar.gz", WordpressResources.class.getResource("wordpress-3.8.tar.gz")),
+    wordpressArchiveHash("/tmp/web-wordpress-3.8.tar.gz", WordpressResources.class.getResource("wordpress-3.8.tar.gz.sha1")),
     wordpressArchive_de_DE("/tmp/web-wordpress-3.8_de_DE.tar.gz", WordpressResources.class.getResource("wordpress-3.8_de_DE.tar.gz")),
     portsConf("/etc/apache2/ports.conf", WordpressResources.class.getResource("ports_conf.txt")),
     portsConfExpected("/etc/apache2/ports.conf", WordpressResources.class.getResource("ports_conf_expected.txt")),

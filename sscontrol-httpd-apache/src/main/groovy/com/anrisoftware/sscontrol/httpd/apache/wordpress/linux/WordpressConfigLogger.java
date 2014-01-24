@@ -22,6 +22,8 @@ import static com.anrisoftware.sscontrol.httpd.apache.wordpress.linux.WordpressC
 import static com.anrisoftware.sscontrol.httpd.apache.wordpress.linux.WordpressConfigLogger._.returns_strip_archive_info;
 import static com.anrisoftware.sscontrol.httpd.apache.wordpress.linux.WordpressConfigLogger._.returns_wordpress_archive_debug;
 import static com.anrisoftware.sscontrol.httpd.apache.wordpress.linux.WordpressConfigLogger._.returns_wordpress_archive_info;
+import static com.anrisoftware.sscontrol.httpd.apache.wordpress.linux.WordpressConfigLogger._.returns_wordpress_hash_debug;
+import static com.anrisoftware.sscontrol.httpd.apache.wordpress.linux.WordpressConfigLogger._.returns_wordpress_hash_info;
 
 import java.net.URI;
 
@@ -46,7 +48,12 @@ class WordpressConfigLogger extends AbstractLogger {
         returns_strip_archive_debug("Returns for '{}' the '{}' for {}."),
 
         returns_strip_archive_info(
-                "Returns for language '{}' the archive '{}' for service '{}'.");
+                "Returns for language '{}' the archive '{}' for service '{}'."),
+
+        returns_wordpress_hash_debug("Returns for '{}' the '{}' for {}."),
+
+        returns_wordpress_hash_info(
+                "Returns for language '{}' archive hash file '{}' for service '{}'.");
 
         private String name;
 
@@ -72,6 +79,14 @@ class WordpressConfigLogger extends AbstractLogger {
             debug(returns_wordpress_archive_debug, lang, uri, script);
         } else {
             info(returns_wordpress_archive_info, lang, uri, script.getName());
+        }
+    }
+
+    void returnsWordpressArchiveHash(LinuxScript script, String lang, URI uri) {
+        if (isDebugEnabled()) {
+            debug(returns_wordpress_hash_debug, lang, uri, script);
+        } else {
+            info(returns_wordpress_hash_info, lang, uri, script.getName());
         }
     }
 

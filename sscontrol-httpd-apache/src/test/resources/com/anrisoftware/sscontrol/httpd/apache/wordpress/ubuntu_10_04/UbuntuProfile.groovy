@@ -48,6 +48,7 @@ profile "ubuntu_10_04", {
         wordpress_logged_in_salt "logged-in-salt"
         wordpress_nonce_salt "nonce-salt"
         wordpress_archive WordpressResources.wordpressArchive.resource
+        wordpress_archive_hash WordpressResources.wordpressArchiveHash.resource
         wordpress_archive_de_DE WordpressResources.wordpressArchive_de_DE.resource
         wordpress_broken_link_checker WordpressResources.brokenLinkCheckerArchive.resource
         wordpress_hyphenator WordpressResources.hyphenatorArchive.resource

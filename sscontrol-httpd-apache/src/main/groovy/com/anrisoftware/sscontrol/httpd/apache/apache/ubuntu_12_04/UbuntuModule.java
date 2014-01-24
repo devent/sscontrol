@@ -24,6 +24,8 @@ import static com.google.inject.multibindings.MapBinder.newMapBinder;
 import static java.lang.String.format;
 import groovy.lang.Script;
 
+import com.anrisoftware.globalpom.resources.ResourcesModule;
+import com.anrisoftware.sscontrol.core.checkfilehash.CheckFileHashModule;
 import com.anrisoftware.sscontrol.httpd.apache.apache.apache_2_2.AuthFileConfig;
 import com.anrisoftware.sscontrol.httpd.apache.apache.apache_2_2.AuthLdapConfig;
 import com.anrisoftware.sscontrol.httpd.apache.apache.api.AuthConfig;
@@ -43,6 +45,8 @@ class UbuntuModule extends AbstractModule {
 
     @Override
     protected void configure() {
+        install(new CheckFileHashModule());
+        install(new ResourcesModule());
         install(new Ubuntu_12_04_PhpmyadminModule());
         install(new Ubuntu_12_04_WordpressModule());
         bindScripts();

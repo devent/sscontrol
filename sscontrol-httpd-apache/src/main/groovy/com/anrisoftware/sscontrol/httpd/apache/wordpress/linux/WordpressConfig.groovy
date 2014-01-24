@@ -75,7 +75,7 @@ abstract class WordpressConfig {
     }
 
     /**
-     * Returns the Wordpress web mail distribution archive.
+     * Returns the Wordpress archive.
      *
      * <ul>
      * <li>profile property {@code "wordpress_archive[_<language>]"}</li>
@@ -100,6 +100,33 @@ abstract class WordpressConfig {
         uri = profileURIProperty property, wordpressProperties
         log.returnsWordpressArchive script, lang, uri
         return uri
+    }
+
+    /**
+     * Returns the Wordpress archive hash.
+     *
+     * <ul>
+     * <li>profile property {@code "wordpress_archive_hash[_<language>]"}</li>
+     * </ul>
+     *
+     * @see #getWordpressProperties()
+     */
+    URI getWordpressArchiveHash() {
+        String lang = language.toString()
+        String property
+        URI uri
+        switch (lang) {
+            case "":
+                property = "wordpress_archive_hash"
+                break
+            default:
+                property = "wordpress_archive_hash_$lang"
+        }
+        if (containsKey(property)) {
+            uri = profileURIProperty property, wordpressProperties
+            log.returnsWordpressArchiveHash script, lang, uri
+            return uri
+        }
     }
 
     /**

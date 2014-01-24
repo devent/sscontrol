@@ -30,7 +30,7 @@ import org.junit.Test
 import com.anrisoftware.sscontrol.httpd.apache.ubuntu.UbuntuTestUtil
 
 /**
- * Ubuntu 10.04 Wordpress.
+ * Ubuntu 12.04 Wordpress.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
@@ -227,5 +227,34 @@ class WordpressTest extends UbuntuTestUtil {
         log.info "Run service again to ensure that configuration is not set double."
         registry.allServices.each { it.call() }
         assertStringContent unzipPluginsOut.replaced(tmpdir, tmpdir, "/tmp"), unzipPluginsOut.toString()
+    }
+
+    @Test
+    void "wordpress prefix, no update"() {
+        copyUbuntuFiles tmpdir
+        copyUbuntu_12_04_Files tmpdir
+        copyWordpressFiles tmpdir
+
+        loader.loadService profile.resource, null
+        def profile = registry.getService("profile")[0]
+        setupUbuntu_12_04_Properties profile, tmpdir
+        loader.loadService httpdScript.resource, profile
+
+        registry.allServices.each { it.call() }
+        log.info "Run service again to ensure that configuration is not set double."
+        registry.allServices.each { it.call() }
+
+        assertStringContent wwwprefixtest1comConf.replaced(tmpdir, tmpdir, "/tmp"), wwwprefixtest1comConf.toString()
+        assertStringContent wwwprefixtest1comSslConf.replaced(tmpdir, tmpdir, "/tmp"), wwwprefixtest1comSslConf.toString()
+        assertStringContent wwwprefixtest1comSslFcgiScript.replaced(tmpdir, tmpdir, "/tmp"), wwwprefixtest1comSslFcgiScript.toString()
+        assertStringContent wwwprefixtest1comSslPhpiniExpected.replaced(tmpdir, tmpdir, "/tmp"), wwwprefixtest1comSslPhpiniExpected.toString()
+        assertFileContent prefixWordpressConfig_expected.asFile(tmpdir), prefixWordpressConfig_expected
+        assertStringContent prefixChownOut.replaced(tmpdir, tmpdir, "/tmp"), prefixChownOut.toString()
+        assertStringContent prefixChmodOut.replaced(tmpdir, tmpdir, "/tmp"), prefixChmodOut.toString()
+        assertStringContent prefixTarOut.replaced(tmpdir, tmpdir, "/tmp"), prefixTarOut.toString()
+        assert prefixWordpressCache_dir.asFile(tmpdir).isDirectory()
+        assert prefixWordpressPlugins_dir.asFile(tmpdir).isDirectory()
+        assert prefixWordpressThemes_dir.asFile(tmpdir).isDirectory()
+        assert prefixWordpressUploads_dir.asFile(tmpdir).isDirectory()
     }
 }

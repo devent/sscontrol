@@ -22,7 +22,7 @@ import static org.apache.commons.io.FileUtils.*
 
 import javax.inject.Inject
 
-import com.anrisoftware.sscontrol.core.service.LinuxScript
+import com.anrisoftware.sscontrol.core.checkfilehash.CheckFileHashFactory
 import com.anrisoftware.sscontrol.httpd.apache.wordpress.linux.Wordpress_3_Config
 import com.anrisoftware.sscontrol.httpd.statements.domain.Domain
 import com.anrisoftware.sscontrol.httpd.statements.webservice.WebService
@@ -37,6 +37,9 @@ abstract class UbuntuWordpressConfig extends Wordpress_3_Config {
 
     @Inject
     private UbuntuWordpressConfigLogger log
+
+    @Inject
+    private CheckFileHashFactory checkFileHashFactory
 
     @Override
     void deployDomain(Domain domain, Domain refDomain, WebService service, List config) {
@@ -63,16 +66,28 @@ abstract class UbuntuWordpressConfig extends Wordpress_3_Config {
     }
 
     void downloadArchive(Domain domain) {
-        def dir = wordpressDir domain
         def name = new File(wordpressArchive.path).name
         def dest = new File(tmpDirectory, "wordpress-3-8-$name")
-        def type = archiveType file: dest
-        def strip = stripArchive
+        needDownloadArchive(dest) ? copyURLToFile(wordpressArchive.toURL(), dest) : false
+        unpackArchive domain, dest
+    }
+
+    boolean needDownloadArchive(File dest) {
+        if (dest.isFile() && wordpressArchiveHash != null) {
+            def check = checkFileHashFactory.create this, file: dest, hash: wordpressArchiveHash
+            check().matching
+        } else {
+            true
+        }
+    }
+
+    void unpackArchive(Domain domain, File dest) {
+        def dir = wordpressDir domain
         if (!dir.isDirectory()) {
             dir.mkdirs()
         }
-        copyURLToFile wordpressArchive.toURL(), dest
-        unpack file: dest, type: type, output: dir, override: true, strip: strip
+        def strip = stripArchive
+        unpack file: dest, type: archiveType(file: dest), output: dir, override: true, strip: strip
         log.downloadArchive script, wordpressArchive
     }
 

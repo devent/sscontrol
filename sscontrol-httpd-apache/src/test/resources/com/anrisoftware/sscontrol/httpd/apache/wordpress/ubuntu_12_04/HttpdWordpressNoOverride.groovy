@@ -18,11 +18,20 @@
  */
 package com.anrisoftware.sscontrol.httpd.apache.wordpress.ubuntu_12_04
 
+import com.anrisoftware.sscontrol.httpd.apache.ubuntu.UbuntuResources
+
+def wordpressid = "wordpress3"
+
 httpd {
     domain "www.test1.com", address: "192.168.0.51", {
-        setup "wordpress", alias: "wordpress3", prefix: "myprefix", {
+        setup "wordpress", id: wordpressid, alias: "/", prefix: "myprefix", {
             database "wordpress3", user: "user", password: "userpass", host: "localhost"
             override mode: no
         }
+    }
+    ssl_domain "www.test1.com", address: "192.168.0.51", {
+        certification_file UbuntuResources.certCrt.resource
+        certification_key_file UbuntuResources.certKey.resource
+        setup "wordpress", ref: wordpressid
     }
 }

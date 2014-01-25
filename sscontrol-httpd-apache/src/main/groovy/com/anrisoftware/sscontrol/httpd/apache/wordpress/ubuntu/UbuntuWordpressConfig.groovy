@@ -26,6 +26,7 @@ import com.anrisoftware.sscontrol.core.checkfilehash.CheckFileHashFactory
 import com.anrisoftware.sscontrol.httpd.apache.wordpress.linux.Wordpress_3_Config
 import com.anrisoftware.sscontrol.httpd.statements.domain.Domain
 import com.anrisoftware.sscontrol.httpd.statements.webservice.WebService
+import com.anrisoftware.sscontrol.httpd.statements.wordpress.OverrideMode
 import com.anrisoftware.sscontrol.httpd.statements.wordpress.WordpressService
 
 /**
@@ -48,7 +49,8 @@ abstract class UbuntuWordpressConfig extends Wordpress_3_Config {
 
     @Override
     void deployService(Domain domain, WebService service, List config) {
-        setupPrefix service
+        setupDefaultPrefix service
+        setupDefaultOverrideMode service
         setupDefaultForce service
         installPackages wordpressPackages
         enableMods wordpressMods
@@ -67,11 +69,40 @@ abstract class UbuntuWordpressConfig extends Wordpress_3_Config {
         setupPermissions domain, service
     }
 
+    /**
+     * Downloads and unpacks the Wordpress archive.
+     *
+     * @param domain
+     *            the {@link Domain} of the Wordpress service.
+     *
+     * @param service
+     *            the {@link WebService} Wordpress service.
+     */
     void downloadArchive(Domain domain, WebService service) {
+        if (!needUnpackArchive(domain, service)) {
+            return
+        }
         def name = new File(wordpressArchive.path).name
         def dest = new File(tmpDirectory, "wordpress-3-8-$name")
         needDownloadArchive(dest) ? copyURLToFile(wordpressArchive.toURL(), dest) : false
         unpackArchive domain, service, dest
+    }
+
+    /**
+     * Returns if it needed to download and unpack the Wordpress archive.
+     *
+     * @param domain
+     *            the {@link Domain} of the Wordpress service.
+     *
+     * @param service
+     *            the {@link WebService} Wordpress service.
+     *
+     * @return {@code true} if it is needed.
+     *
+     * @see WordpressService#getOverrideMode()
+     */
+    boolean needUnpackArchive(Domain domain, WordpressService service) {
+        service.overrideMode != OverrideMode.no || !configurationDistFile(domain, service).isFile()
     }
 
     boolean needDownloadArchive(File dest) {

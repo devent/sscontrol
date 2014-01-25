@@ -31,6 +31,7 @@ import com.anrisoftware.sscontrol.core.service.LinuxScript
 import com.anrisoftware.sscontrol.httpd.statements.domain.Domain
 import com.anrisoftware.sscontrol.httpd.statements.webservice.WebService
 import com.anrisoftware.sscontrol.httpd.statements.wordpress.ForceFactory
+import com.anrisoftware.sscontrol.httpd.statements.wordpress.OverrideMode
 import com.anrisoftware.sscontrol.httpd.statements.wordpress.WordpressService
 
 /**
@@ -67,9 +68,21 @@ abstract class WordpressConfig {
      * @param service
      *            the {@link WordpressService} Wordpress service.
      */
-    void setupPrefix(WordpressService service) {
+    void setupDefaultPrefix(WordpressService service) {
         if (service.prefix == null) {
             service.prefix = wordpressDefaultPrefix
+        }
+    }
+
+    /**
+     * Sets default override mode.
+     *
+     * @param service
+     *            the {@link WordpressService} Wordpress service.
+     */
+    void setupDefaultOverrideMode(WordpressService service) {
+        if (service.overrideMode == null) {
+            service.overrideMode = wordpressDefaultOverrideMode
         }
     }
 
@@ -207,6 +220,21 @@ abstract class WordpressConfig {
      */
     String getWordpressDefaultPrefix() {
         profileProperty "wordpress_default_prefix", wordpressProperties
+    }
+
+    /**
+     * Returns the default override mode, for
+     * example {@code "update"}.
+     *
+     * <ul>
+     * <li>profile property {@code "wordpress_default_override_mode"}</li>
+     * </ul>
+     *
+     * @see #getWordpressProperties()
+     */
+    OverrideMode getWordpressDefaultOverrideMode() {
+        def mode = profileProperty "wordpress_default_override_mode", wordpressProperties
+        OverrideMode.valueOf mode
     }
 
     /**

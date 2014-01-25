@@ -1,2 +1,1 @@
 --overwrite --strip 1 -xf /tmp/tmp/wordpress-3-8-wordpress-3.8.tar.gz
---overwrite --strip 1 -xf /tmp/tmp/wordpress-3-8-wordpress-3.8.tar.gz

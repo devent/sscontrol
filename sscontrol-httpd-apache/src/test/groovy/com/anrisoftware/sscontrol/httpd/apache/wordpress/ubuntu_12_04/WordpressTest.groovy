@@ -221,9 +221,10 @@ class WordpressTest extends UbuntuTestUtil {
         registry.allServices.each { it.call() }
 
         assertStringContent nooverrideWwwTest1comConfExpected.replaced(tmpdir, tmpdir, "/tmp"), nooverrideWwwTest1comConfExpected.toString()
+        assertStringContent nooverrideWwwTest1comSslConfExpected.replaced(tmpdir, tmpdir, "/tmp"), nooverrideWwwTest1comSslConfExpected.toString()
         assertFileContent nooverrideWordpressConfigExpected.asFile(tmpdir), nooverrideWordpressConfigExpected
         assertStringContent nooverrideChownOutExpected.replaced(tmpdir, tmpdir, "/tmp"), nooverrideChownOutExpected.toString()
         assertStringContent nooverrideChmodOutExpected.replaced(tmpdir, tmpdir, "/tmp"), nooverrideChmodOutExpected.toString()
-        assertStringContent nooverrideTarOutExpected.replaced(tmpdir, tmpdir, "/tmp"), nooverrideTarOutExpected.toString()
+        assert nooverrideTarOutExpected.asFile(tmpdir).isFile() == false
     }
 }

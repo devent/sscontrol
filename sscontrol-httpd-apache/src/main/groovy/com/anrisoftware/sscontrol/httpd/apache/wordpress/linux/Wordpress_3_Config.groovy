@@ -59,8 +59,8 @@ abstract class Wordpress_3_Config extends WordpressConfig {
      *            the {@link List} configuration.
      */
     void createDomainConfig(Domain domain, Domain refDomain, WebService service, List config) {
-        def serviceAliasDir = serviceAliasDir service, domain, refDomain
-        def serviceDir = serviceDir domain, refDomain
+        def serviceAliasDir = serviceAliasDir domain, refDomain, service
+        def serviceDir = serviceDir domain, refDomain, service
         def properties = [:]
         properties.domain = domain
         properties.service = service
@@ -80,20 +80,20 @@ abstract class Wordpress_3_Config extends WordpressConfig {
     /**
      * Deploys the main configuration.
      *
-     * @param service
-     *            the {@link WordpressService}.
-     *
      * @param domain
-     *            the domain for which the configuration is returned.
+     *            the {@link Domain} if the Wordpress service.
+     *
+     * @param service
+     *            the {@link WordpressService} Wordpress service.
      */
-    void deployMainConfig(WordpressService service, def domain) {
-        def file = configurationFile domain
+    void deployMainConfig(Domain domain, WordpressService service) {
+        def file = configurationFile domain, service
         def name = file.name
         def tmp = new File(name, tmpDirectory)
         if (!file.isFile()) {
-            copyFile configurationDistFile(domain), tmp
+            copyFile configurationDistFile(domain, service), tmp
         } else {
-            copyFile configurationFile(domain), tmp
+            copyFile file, tmp
         }
         List lines = readLines(tmp, configFileCharset)
         writeLines file, configFileCharset.toString(), lines[0..-10]
@@ -102,35 +102,35 @@ abstract class Wordpress_3_Config extends WordpressConfig {
     /**
      * Deploys the main configuration end.
      *
-     * @param service
-     *            the {@link WordpressService}.
-     *
      * @param domain
      *            the domain for which the configuration is returned.
+     *
+     * @param service
+     *            the {@link WordpressService}.
      */
-    void deployMainConfigEnding(WordpressService service, def domain) {
+    void deployMainConfigEnding(Domain domain, WordpressService service) {
         def search = wordpressConfigTemplate.getText(true, "configEnding_search")
         def replace = wordpressConfigTemplate.getText(true, "configEnding")
         def temp = new TokenTemplate(search, replace)
         temp.enclose = false
         def configs = [temp]
-        def conf = mainConfiguration domain
-        def file = configurationFile domain
+        def conf = mainConfiguration domain, service
+        def file = configurationFile domain, service
         deployConfiguration configurationTokens(), conf, configs, file
     }
 
     /**
      * Deploys the database configuration.
      *
-     * @param service
-     *            the {@link WordpressService}.
-     *
      * @param domain
-     *            the domain for which the configuration is returned.
+     *            the {@link Domain} if the Wordpress service.
+     *
+     * @param service
+     *            the {@link WordpressService} Wordpress service.
      */
-    void deployDatabaseConfig(WordpressService service, def domain) {
-        def conf = mainConfiguration domain
-        def file = configurationFile domain
+    void deployDatabaseConfig(Domain domain, WordpressService service) {
+        def conf = mainConfiguration domain, service
+        def file = configurationFile domain, service
         deployConfiguration configurationTokens(), conf, databaseConfigurations(service), file
     }
 
@@ -200,9 +200,9 @@ abstract class Wordpress_3_Config extends WordpressConfig {
      * @param domain
      *            the domain for which the configuration is returned.
      */
-    void deployKeysConfig(WordpressService service, def domain) {
-        def conf = mainConfiguration domain
-        def file = configurationFile domain
+    void deployKeysConfig(Domain domain, WordpressService service) {
+        def conf = mainConfiguration domain, service
+        def file = configurationFile domain, service
         deployConfiguration configurationTokens(), conf, keysConfigurations(service), file
     }
 
@@ -279,9 +279,9 @@ abstract class Wordpress_3_Config extends WordpressConfig {
      * @param domain
      *            the domain for which the configuration is returned.
      */
-    void deployLanguageConfig(WordpressService service, def domain) {
-        def conf = mainConfiguration domain
-        def file = configurationFile domain
+    void deployLanguageConfig(Domain domain, WordpressService service) {
+        def conf = mainConfiguration domain, service
+        def file = configurationFile domain, service
         deployConfiguration configurationTokens(), conf, languageConfigurations(service), file
     }
 
@@ -309,9 +309,9 @@ abstract class Wordpress_3_Config extends WordpressConfig {
      * @param domain
      *            the domain for which the configuration is returned.
      */
-    void deploySecureLoginConfig(WordpressService service, def domain) {
-        def conf = mainConfiguration domain
-        def file = configurationFile domain
+    void deploySecureLoginConfig(Domain domain, WordpressService service) {
+        def conf = mainConfiguration domain, service
+        def file = configurationFile domain, service
         deployConfiguration configurationTokens(), conf, secureLoginConfigurations(service), file
     }
 
@@ -340,15 +340,15 @@ abstract class Wordpress_3_Config extends WordpressConfig {
     /**
      * Deploys the debug configuration.
      *
-     * @param service
-     *            the {@link WordpressService}.
-     *
      * @param domain
      *            the domain for which the configuration is returned.
+     *
+     * @param service
+     *            the {@link WordpressService}.
      */
-    void deployDebugConfig(WordpressService service, def domain) {
-        def conf = mainConfiguration domain
-        def file = configurationFile domain
+    void deployDebugConfig(Domain domain, WordpressService service) {
+        def conf = mainConfiguration domain, service
+        def file = configurationFile domain, service
         deployConfiguration configurationTokens(), conf, debugConfigurations(service), file
     }
 
@@ -370,15 +370,15 @@ abstract class Wordpress_3_Config extends WordpressConfig {
     /**
      * Deploys multi-site configuration.
      *
-     * @param service
-     *            the {@link WordpressService}.
-     *
      * @param domain
      *            the domain for which the configuration is returned.
+     *
+     * @param service
+     *            the {@link WordpressService}.
      */
-    void deployMultisiteConfig(WordpressService service, def domain) {
-        def conf = mainConfiguration domain
-        def file = configurationFile domain
+    void deployMultisiteConfig(Domain domain, WordpressService service) {
+        def conf = mainConfiguration domain, service
+        def file = configurationFile domain, service
         deployConfiguration configurationTokens(), conf, debugMultisiteConfig(service), file
     }
 
@@ -407,13 +407,16 @@ abstract class Wordpress_3_Config extends WordpressConfig {
      * </ul>
      *
      * @param domain
-     *            the domain for which the directory is returned.
+     *            the {@link Domain} of the Wordpress service.
+     *
+     * @param service
+     *            the {@link WordpressService} Wordpress service.
      *
      * @see #getWordpressProperties()
-     * @see #wordpressDir(Object)
+     * @see #wordpressDir(Domain, WordpressService)
      */
-    File configurationFile(def domain) {
-        profileFileProperty "wordpress_main_file", wordpressDir(domain), wordpressProperties
+    File configurationFile(Domain domain, WordpressService service) {
+        profileFileProperty "wordpress_main_file", wordpressDir(domain, service), wordpressProperties
     }
 
     /**
@@ -426,26 +429,34 @@ abstract class Wordpress_3_Config extends WordpressConfig {
      * </ul>
      *
      * @param domain
-     *            the domain for which the directory is returned.
+     *            the domain for which the configuration is returned.
      *
+     * @param service
+     *            the {@link WordpressService}.
+     *
+     * @see WordpressService#getPrefix()
      * @see #getWordpressProperties()
-     * @see #wordpressDir(Object)
+     * @see #domainDir(Object)
      */
-    File configurationDistFile(def domain) {
-        profileFileProperty "wordpress_main_dist_file", wordpressDir(domain), wordpressProperties
+    File configurationDistFile(Domain domain, WordpressService service) {
+        def dir = wordpressDir domain, service
+        profileFileProperty "wordpress_main_dist_file", dir, wordpressProperties
     }
 
     /**
      * Returns the current main configuration.
      *
      * @param domain
-     *            the domain for which the directory is returned.
+     *            the domain for which the configuration is returned.
+     *
+     * @param service
+     *            the {@link WordpressService}.
      *
      * @see #getConfigurationFile()
      * @see #configurationFile(Object)
      */
-    String mainConfiguration(def domain) {
-        currentConfiguration configurationFile(domain)
+    String mainConfiguration(Domain domain, WordpressService service) {
+        currentConfiguration configurationFile(domain, service)
     }
 
     /**
@@ -460,7 +471,7 @@ abstract class Wordpress_3_Config extends WordpressConfig {
      * @see #wordpressContentThemesDir(Object)
      */
     void deployThemes(Domain domain, WordpressService service) {
-        def dir = wordpressContentThemesDir domain
+        def dir = wordpressContentThemesDir domain, service
         service.themes.each { String theme ->
             def archive = themeArchive theme
             def name = new File(archive.path).name
@@ -483,7 +494,7 @@ abstract class Wordpress_3_Config extends WordpressConfig {
      * @see #wordpressContentPluginsDir(Object)
      */
     void deployPlugins(Domain domain, WordpressService service) {
-        def dir = wordpressContentPluginsDir domain
+        def dir = wordpressContentPluginsDir domain, service
         service.plugins.each { String plugin ->
             def archive = pluginArchive plugin
             def name = FilenameUtils.getName(archive.toString())

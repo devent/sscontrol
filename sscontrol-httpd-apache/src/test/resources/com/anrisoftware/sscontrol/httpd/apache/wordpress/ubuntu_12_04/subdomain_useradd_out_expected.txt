@@ -1,0 +1,6 @@
+-s /bin/false -d /tmp/var/www/www.test1.com -m -u 2001 -g web_001 web_001
+-s /bin/false -d /tmp/var/www/www.blogfoo.com -m -u 2002 -g web_001 web_001
+-s /bin/false -d /tmp/var/www/www.blogbar.com -m -u 2003 -g web_001 web_001
+-s /bin/false -d /tmp/var/www/www.test1.com -m -u 2001 -g web_001 web_001
+-s /bin/false -d /tmp/var/www/www.blogfoo.com -m -u 2002 -g web_001 web_001
+-s /bin/false -d /tmp/var/www/www.blogbar.com -m -u 2003 -g web_001 web_001

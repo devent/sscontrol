@@ -20,23 +20,18 @@ package com.anrisoftware.sscontrol.httpd.apache.wordpress.ubuntu_12_04
 
 import com.anrisoftware.sscontrol.httpd.apache.ubuntu.UbuntuResources
 
+
+def wordpressid = "wordpress3"
+
 httpd {
-    domain "test1.com", address: "192.168.0.50", { //.
-        redirect to: "www.%" //.
-    }
-    ssl_domain "test1.com", address: "192.168.0.50", {
-        certification_file UbuntuResources.certCrt.resource
-        certification_key_file UbuntuResources.certKey.resource
-        redirect to: "www.%"
-    }
     domain "www.test1.com", address: "192.168.0.51", {
-        setup "wordpress", id: "wordpress3", alias: "wordpress3", {
+        setup "wordpress", id: wordpressid, alias: "wordpress3", {
             database "wordpress3", user: "user", password: "userpass", host: "localhost"
         }
     }
     ssl_domain "www.test1.com", address: "192.168.0.51", {
         certification_file UbuntuResources.certCrt.resource
         certification_key_file UbuntuResources.certKey.resource
-        setup "wordpress", ref: "wordpress3"
+        setup "wordpress", ref: wordpressid
     }
 }

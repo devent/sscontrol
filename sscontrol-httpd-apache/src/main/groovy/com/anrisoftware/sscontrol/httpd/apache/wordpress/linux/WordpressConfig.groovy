@@ -62,6 +62,18 @@ abstract class WordpressConfig {
     abstract void deployService(Domain domain, WebService service, List config)
 
     /**
+     * Sets default prefix.
+     *
+     * @param service
+     *            the {@link WordpressService} Wordpress service.
+     */
+    void setupPrefix(WordpressService service) {
+        if (service.prefix == null) {
+            service.prefix = wordpressDefaultPrefix
+        }
+    }
+
+    /**
      * Sets default force SSL login and admin.
      *
      * @param service
@@ -184,39 +196,35 @@ abstract class WordpressConfig {
     }
 
     /**
-     * Wordpress configuration directory, for
-     * example {@code "wordpress-3.8"}. If the path is relative then
-     * the directory will be under the domain directory.
+     * Returns default Wordpress prefix, for
+     * example {@code "wordpress_3_8"}.
      *
      * <ul>
-     * <li>profile property {@code "wordpress_directory"}</li>
+     * <li>profile property {@code "wordpress_default_prefix"}</li>
      * </ul>
-     *
-     * @param domain
-     *            the {@link Domain} for which the directory is returned.
      *
      * @see #getWordpressProperties()
      */
-    File wordpressDir(Domain domain) {
-        profileFileProperty "wordpress_directory", domainDir(domain), wordpressProperties
+    String getWordpressDefaultPrefix() {
+        profileProperty "wordpress_default_prefix", wordpressProperties
     }
 
     /**
-     * Wordpress linked configuration directory, for
-     * example {@code "wordpress"}. If the path is relative then
-     * the directory will be under the domain directory.
-     *
-     * <ul>
-     * <li>profile property {@code "wordpress_linked_directory"}</li>
-     * </ul>
+     * Returns the Wordpress installation directory.
      *
      * @param domain
-     *            the domain for which the directory is returned.
+     *            the {@link Domain} domain of the service.
      *
-     * @see #getWordpressProperties()
+     * @param service
+     *            the {@link WordpressService} Wordpress service.
+     *
+     * @return the installation {@link File} directory.
+     *
+     * @see #domainDir(Domain)
+     * @see WordpressService#getPrefix()
      */
-    File wordpressLinkedDir(def domain) {
-        profileFileProperty "wordpress_linked_directory", domainDir(domain), wordpressProperties
+    File wordpressDir(Domain domain, WordpressService service) {
+        new File(domainDir(domain), service.prefix)
     }
 
     /**
@@ -229,13 +237,17 @@ abstract class WordpressConfig {
      * </ul>
      *
      * @param domain
-     *            the domain for which the directory is returned.
+     *            the {@link Domain} of the Wordpress service.
+     *
+     * @param service
+     *            the {@link WordpressService} Wordpress service.
      *
      * @see #getWordpressProperties()
-     * @see #wordpressDir(Object)
+     * @see #wordpressDir(Domain, WordpressService)
      */
-    File wordpressContentCacheDir(def domain) {
-        profileFileProperty "wordpress_content_cache_directory", wordpressDir(domain), wordpressProperties
+    File wordpressContentCacheDir(Domain domain, WordpressService service) {
+        def dir = wordpressDir(domain, service)
+        profileFileProperty "wordpress_content_cache_directory", dir, wordpressProperties
     }
 
     /**
@@ -248,13 +260,17 @@ abstract class WordpressConfig {
      * </ul>
      *
      * @param domain
-     *            the domain for which the directory is returned.
+     *            the {@link Domain} of the Wordpress service.
+     *
+     * @param service
+     *            the {@link WordpressService} Wordpress service.
      *
      * @see #getWordpressProperties()
-     * @see #wordpressDir(Object)
+     * @see #wordpressDir(Domain, WordpressService)
      */
-    File wordpressContentPluginsDir(def domain) {
-        profileFileProperty "wordpress_content_plugins_directory", wordpressDir(domain), wordpressProperties
+    File wordpressContentPluginsDir(Domain domain, WordpressService service) {
+        def dir = wordpressDir(domain, service)
+        profileFileProperty "wordpress_content_plugins_directory", dir, wordpressProperties
     }
 
     /**
@@ -267,13 +283,17 @@ abstract class WordpressConfig {
      * </ul>
      *
      * @param domain
-     *            the domain for which the directory is returned.
+     *            the {@link Domain} of the Wordpress service.
+     *
+     * @param service
+     *            the {@link WordpressService} Wordpress service.
      *
      * @see #getWordpressProperties()
-     * @see #wordpressDir(Object)
+     * @see #wordpressDir(Domain, WordpressService)
      */
-    File wordpressContentThemesDir(def domain) {
-        profileFileProperty "wordpress_content_themes_directory", wordpressDir(domain), wordpressProperties
+    File wordpressContentThemesDir(Domain domain, WordpressService service) {
+        def dir = wordpressDir(domain, service)
+        profileFileProperty "wordpress_content_themes_directory", dir, wordpressProperties
     }
 
     /**
@@ -286,20 +306,21 @@ abstract class WordpressConfig {
      * </ul>
      *
      * @param domain
-     *            the domain for which the directory is returned.
+     *            the {@link Domain} of the Wordpress service.
+     *
+     * @param service
+     *            the {@link WordpressService} Wordpress service.
      *
      * @see #getWordpressProperties()
-     * @see #wordpressDir(Object)
+     * @see #wordpressDir(Domain, WordpressService)
      */
-    File wordpressContentUploadsDir(def domain) {
-        profileFileProperty "wordpress_content_uploads_directory", wordpressDir(domain), wordpressProperties
+    File wordpressContentUploadsDir(Domain domain, WordpressService service) {
+        def dir = wordpressDir(domain, service)
+        profileFileProperty "wordpress_content_uploads_directory", dir, wordpressProperties
     }
 
     /**
      * Returns the service alias directory path.
-     *
-     * @param service
-     *            the Wordpress {@link WebService} web service.
      *
      * @param domain
      *            the {@link Domain} for which the path is returned.
@@ -307,10 +328,13 @@ abstract class WordpressConfig {
      * @param refDomain
      *            the references {@link Domain} or {@code null}.
      *
+     * @param service
+     *            the {@link WordpressService} Wordpress service.
+     *
      * @see #wordpressDir(def)
      */
-    String serviceAliasDir(WebService service, Domain domain, Domain refDomain) {
-        def serviceDir = serviceDir domain, refDomain
+    String serviceAliasDir(Domain domain, Domain refDomain, WordpressService service) {
+        def serviceDir = serviceDir domain, refDomain, service
         service.alias.empty ? "$serviceDir/" : serviceDir
     }
 
@@ -323,11 +347,14 @@ abstract class WordpressConfig {
      * @param refDomain
      *            the references {@link Domain} or {@code null}.
      *
-     * @see #wordpressDir(def)
+     * @param service
+     *            the {@link WordpressService} Wordpress service.
+     *
+     * @see #wordpressDir(Domain, WordpressService)
      */
-    String serviceDir(Domain domain, Domain refDomain) {
-        refDomain == null ? wordpressDir(domain).absolutePath :
-                wordpressDir(refDomain).absolutePath
+    String serviceDir(Domain domain, Domain refDomain, WordpressService service) {
+        refDomain == null ? wordpressDir(domain, service).absolutePath :
+                wordpressDir(refDomain, service).absolutePath
     }
 
     /**

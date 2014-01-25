@@ -18,10 +18,25 @@
  */
 package com.anrisoftware.sscontrol.httpd.apache.wordpress.ubuntu_12_04
 
+def domainid = "wwwtest1"
+def wordpressid = "wordpress3"
+def userid = "web_001"
+def groupid = "web_001"
+
 httpd {
-    domain "www.test1.com", address: "192.168.0.51", {
-        setup "wordpress", alias: "wordpress3", {
+    domain "www.test1.com", id: domainid, address: "192.168.0.51", {
+        user userid, group: groupid
+        setup "wordpress", id: wordpressid, alias: "/", {
             database "wordpress3", user: "user", password: "userpass", host: "localhost"
+            multisite "subdir"
         }
+    }
+    domain "www.blogfoo.com", address: "192.168.0.51", {
+        user userid, group: groupid
+        setup "wordpress", ref: wordpressid, refdomain: domainid
+    }
+    domain "www.blogbar.com", address: "192.168.0.51", {
+        user userid, group: groupid
+        setup "wordpress", ref: wordpressid, refdomain: domainid
     }
 }

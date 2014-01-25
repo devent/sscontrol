@@ -43,6 +43,7 @@ class WordpressTest extends UbuntuTestUtil {
         copyUbuntuFiles tmpdir
         copyUbuntu_12_04_Files tmpdir
         copyWordpressFiles tmpdir
+        basicWordpressConfigSample.createFile tmpdir
 
         loader.loadService profile.resource, null
         def profile = registry.getService("profile")[0]
@@ -53,27 +54,24 @@ class WordpressTest extends UbuntuTestUtil {
         log.info "Run service again to ensure that configuration is not set double."
         registry.allServices.each { it.call() }
 
-        assertFileContent portsConfExpected.asFile(tmpdir), portsConfExpected
         assertFileContent defaultConf.asFile(tmpdir), defaultConf
-        assertFileContent domainsConf.asFile(tmpdir), domainsConf
-        assertStringContent test1comConf.replaced(tmpdir, tmpdir, "/tmp"), test1comConf.toString()
-        assertStringContent test1comSslConf.replaced(tmpdir, tmpdir, "/tmp"), test1comSslConf.toString()
-        assertStringContent wwwtest1comConf.replaced(tmpdir, tmpdir, "/tmp"), wwwtest1comConf.toString()
-        assertStringContent wwwtest1comSslConf.replaced(tmpdir, tmpdir, "/tmp"), wwwtest1comSslConf.toString()
-        assertStringContent wwwtest1comSslFcgiScript.replaced(tmpdir, tmpdir, "/tmp"), wwwtest1comSslFcgiScript.toString()
-        assertStringContent wwwtest1comSslPhpiniExpected.replaced(tmpdir, tmpdir, "/tmp"), wwwtest1comSslPhpiniExpected.toString()
-        assertFileContent wordpress_3_8_config_expected.asFile(tmpdir), wordpress_3_8_config_expected
-        assertStringContent chownOut.replaced(tmpdir, tmpdir, "/tmp"), chownOut.toString()
-        assertStringContent chmodOut.replaced(tmpdir, tmpdir, "/tmp"), chmodOut.toString()
-        assertStringContent groupaddOut.replaced(tmpdir, tmpdir, "/tmp"), groupaddOut.toString()
-        assertStringContent useraddOut.replaced(tmpdir, tmpdir, "/tmp"), useraddOut.toString()
-        assertStringContent tarOut.replaced(tmpdir, tmpdir, "/tmp"), tarOut.toString()
-        assertFileContent aptitudeOut.asFile(tmpdir), aptitudeOut
-        assertFileContent a2enmodOut.asFile(tmpdir), a2enmodOut
-        assert wordpress_3_8_cache_dir.asFile(tmpdir).isDirectory()
-        assert wordpress_3_8_plugins_dir.asFile(tmpdir).isDirectory()
-        assert wordpress_3_8_themes_dir.asFile(tmpdir).isDirectory()
-        assert wordpress_3_8_uploads_dir.asFile(tmpdir).isDirectory()
+        assertFileContent basicPortsConfExpected.asFile(tmpdir), basicPortsConfExpected
+        assertFileContent basicDomainsConf.asFile(tmpdir), basicDomainsConf
+        assertStringContent basicWwwtest1comConfExpected.replaced(tmpdir, tmpdir, "/tmp"), basicWwwtest1comConfExpected.toString()
+        assertStringContent basicWwwtest1comFcgiScriptExpected.replaced(tmpdir, tmpdir, "/tmp"), basicWwwtest1comFcgiScriptExpected.toString()
+        assertStringContent basicWwwtest1comPhpiniExpected.replaced(tmpdir, tmpdir, "/tmp"), basicWwwtest1comPhpiniExpected.toString()
+        assertFileContent basicWordpressConfigExpected.asFile(tmpdir), basicWordpressConfigExpected
+        assertFileContent basicAptitudeOutExpected.asFile(tmpdir), basicAptitudeOutExpected
+        assertFileContent basicE2enmodOutExpected.asFile(tmpdir), basicE2enmodOutExpected
+        assertStringContent basicChownOutExpected.replaced(tmpdir, tmpdir, "/tmp"), basicChownOutExpected.toString()
+        assertStringContent basicChmodOutExpected.replaced(tmpdir, tmpdir, "/tmp"), basicChmodOutExpected.toString()
+        assertStringContent basicGroupaddOutExpected.replaced(tmpdir, tmpdir, "/tmp"), basicGroupaddOutExpected.toString()
+        assertStringContent basicUseraddOutExpected.replaced(tmpdir, tmpdir, "/tmp"), basicUseraddOutExpected.toString()
+        assertStringContent basicTarOutExpected.replaced(tmpdir, tmpdir, "/tmp"), basicTarOutExpected.toString()
+        assert basicWwwtest1comWordpressCacheDir.asFile(tmpdir).isDirectory()
+        assert basicWwwtest1comWordpressPluginsDir.asFile(tmpdir).isDirectory()
+        assert basicWwwtest1comWordpressThemesDir.asFile(tmpdir).isDirectory()
+        assert basicWwwtest1comWordpressUploadsDir.asFile(tmpdir).isDirectory()
     }
 
     @Test
@@ -81,6 +79,7 @@ class WordpressTest extends UbuntuTestUtil {
         copyUbuntuFiles tmpdir
         copyUbuntu_12_04_Files tmpdir
         copyWordpressFiles tmpdir
+        refWordpressConfigSample.createFile tmpdir
 
         loader.loadService profile.resource, null
         def profile = registry.getService("profile")[0]
@@ -92,24 +91,14 @@ class WordpressTest extends UbuntuTestUtil {
         registry.allServices.each { it.call() }
 
         assertFileContent defaultConf.asFile(tmpdir), defaultConf
-        assertFileContent domainsConf.asFile(tmpdir), domainsConf
-        assertStringContent test1comRefConf.replaced(tmpdir, tmpdir, "/tmp"), test1comRefConf.toString()
-        assertStringContent test1comSslRefConf.replaced(tmpdir, tmpdir, "/tmp"), test1comSslRefConf.toString()
-        assertStringContent wwwtest1comRefConf.replaced(tmpdir, tmpdir, "/tmp"), wwwtest1comRefConf.toString()
-        assertStringContent wwwtest1comSslRefConf.replaced(tmpdir, tmpdir, "/tmp"), wwwtest1comSslRefConf.toString()
-        assertStringContent wwwtest1comSslFcgiScript.replaced(tmpdir, tmpdir, "/tmp"), wwwtest1comSslFcgiScript.toString()
-        assertFileContent wordpress_3_8_config_expected.asFile(tmpdir), wordpress_3_8_config_expected
-        assertStringContent chownRetOut.replaced(tmpdir, tmpdir, "/tmp"), chownRetOut.toString()
-        assertStringContent chmodRetOut.replaced(tmpdir, tmpdir, "/tmp"), chmodRetOut.toString()
-        assertStringContent groupaddOut.replaced(tmpdir, tmpdir, "/tmp"), groupaddOut.toString()
-        assertStringContent useraddOut.replaced(tmpdir, tmpdir, "/tmp"), useraddOut.toString()
-        assertStringContent tarOut.replaced(tmpdir, tmpdir, "/tmp"), tarOut.toString()
-        assertFileContent aptitudeOut.asFile(tmpdir), aptitudeOut
-        assertFileContent a2enmodOut.asFile(tmpdir), a2enmodOut
-        assert wordpress_3_8_cache_dir.asFile(tmpdir).isDirectory()
-        assert wordpress_3_8_plugins_dir.asFile(tmpdir).isDirectory()
-        assert wordpress_3_8_themes_dir.asFile(tmpdir).isDirectory()
-        assert wordpress_3_8_uploads_dir.asFile(tmpdir).isDirectory()
+        assertFileContent refPortsConfExpected.asFile(tmpdir), refPortsConfExpected
+        assertFileContent refDomainsConf.asFile(tmpdir), refDomainsConf
+        assertStringContent refWwwtest1comConfExpected.replaced(tmpdir, tmpdir, "/tmp"), refWwwtest1comConfExpected.toString()
+        assertStringContent refWwwtest1comSslConfExpected.replaced(tmpdir, tmpdir, "/tmp"), refWwwtest1comSslConfExpected.toString()
+        assertStringContent refWwwtest1comFcgiScriptExpected.replaced(tmpdir, tmpdir, "/tmp"), refWwwtest1comFcgiScriptExpected.toString()
+        assertFileContent refWordpressConfigExpected.asFile(tmpdir), refWordpressConfigExpected
+        assertStringContent refChownOutExpected.replaced(tmpdir, tmpdir, "/tmp"), refChownOutExpected.toString()
+        assertStringContent refChmodRetExpected.replaced(tmpdir, tmpdir, "/tmp"), refChmodRetExpected.toString()
     }
 
     @Test
@@ -117,6 +106,7 @@ class WordpressTest extends UbuntuTestUtil {
         copyUbuntuFiles tmpdir
         copyUbuntu_12_04_Files tmpdir
         copyWordpressFiles tmpdir
+        basicdeWordpressConfigSample.createFile tmpdir
 
         loader.loadService profile.resource, null
         def profile = registry.getService("profile")[0]
@@ -128,16 +118,8 @@ class WordpressTest extends UbuntuTestUtil {
         log.info "Run service again to ensure that configuration is not set double."
         registry.allServices.each { it.call() }
 
-        assertFileContent defaultConf.asFile(tmpdir), defaultConf
-        assertFileContent domainsConf.asFile(tmpdir), domainsConf
-        assertStringContent test1comConf.replaced(tmpdir, tmpdir, "/tmp"), test1comConf.toString()
-        assertStringContent test1comSslConf.replaced(tmpdir, tmpdir, "/tmp"), test1comSslConf.toString()
-        assertFileContent wordpress_3_8_de_DE_config_expected.asFile(tmpdir), wordpress_3_8_de_DE_config_expected
-        assertStringContent chownOut.replaced(tmpdir, tmpdir, "/tmp"), chownOut.toString()
-        assertStringContent chmodOut.replaced(tmpdir, tmpdir, "/tmp"), chmodOut.toString()
-        assertStringContent groupaddOut.replaced(tmpdir, tmpdir, "/tmp"), groupaddOut.toString()
-        assertStringContent useraddOut.replaced(tmpdir, tmpdir, "/tmp"), useraddOut.toString()
-        assertStringContent tar_de_DE_Out.replaced(tmpdir, tmpdir, "/tmp"), tar_de_DE_Out.toString()
+        assertFileContent basicdeWordpressConfigExpected.asFile(tmpdir), basicdeWordpressConfigExpected
+        assertStringContent basicdeTarOutExpected.replaced(tmpdir, tmpdir, "/tmp"), basicdeTarOutExpected.toString()
     }
 
     @Test
@@ -145,6 +127,7 @@ class WordpressTest extends UbuntuTestUtil {
         copyUbuntuFiles tmpdir
         copyUbuntu_12_04_Files tmpdir
         copyWordpressFiles tmpdir
+        debugWordpressConfigSample.createFile tmpdir
 
         loader.loadService profile.resource, null
         def profile = registry.getService("profile")[0]
@@ -155,16 +138,7 @@ class WordpressTest extends UbuntuTestUtil {
         log.info "Run service again to ensure that configuration is not set double."
         registry.allServices.each { it.call() }
 
-        assertFileContent defaultConf.asFile(tmpdir), defaultConf
-        assertFileContent domainsConf.asFile(tmpdir), domainsConf
-        assertStringContent test1comConf.replaced(tmpdir, tmpdir, "/tmp"), test1comConf.toString()
-        assertStringContent test1comSslConf.replaced(tmpdir, tmpdir, "/tmp"), test1comSslConf.toString()
-        assertFileContent wordpress_3_8_debug_config_expected.asFile(tmpdir), wordpress_3_8_debug_config_expected
-        assertStringContent chownOut.replaced(tmpdir, tmpdir, "/tmp"), chownOut.toString()
-        assertStringContent chmodOut.replaced(tmpdir, tmpdir, "/tmp"), chmodOut.toString()
-        assertStringContent groupaddOut.replaced(tmpdir, tmpdir, "/tmp"), groupaddOut.toString()
-        assertStringContent useraddOut.replaced(tmpdir, tmpdir, "/tmp"), useraddOut.toString()
-        assertStringContent tarOut.replaced(tmpdir, tmpdir, "/tmp"), tarOut.toString()
+        assertFileContent debugWordpressConfigExpected.asFile(tmpdir), debugWordpressConfigExpected
     }
 
     @Test
@@ -172,6 +146,7 @@ class WordpressTest extends UbuntuTestUtil {
         copyUbuntuFiles tmpdir
         copyUbuntu_12_04_Files tmpdir
         copyWordpressFiles tmpdir
+        rootWordpressConfigSample.createFile tmpdir
 
         loader.loadService profile.resource, null
         def profile = registry.getService("profile")[0]
@@ -182,34 +157,33 @@ class WordpressTest extends UbuntuTestUtil {
         log.info "Run service again to ensure that configuration is not set double."
         registry.allServices.each { it.call() }
 
-        assertStringContent wwwtest1comRootConf.replaced(tmpdir, tmpdir, "/tmp"), wwwtest1comRootConf.toString()
-        assertStringContent wwwtest1comSslRootConf.replaced(tmpdir, tmpdir, "/tmp"), wwwtest1comSslRootConf.toString()
+        assertStringContent rootWwwtest1comConfExpected.replaced(tmpdir, tmpdir, "/tmp"), rootWwwtest1comConfExpected.toString()
     }
 
     @Test
-    void "wordpress ms subdirectory"() {
+    void "wordpress ms subdomain"() {
         copyUbuntuFiles tmpdir
         copyUbuntu_12_04_Files tmpdir
         copyWordpressFiles tmpdir
+        subdomainWordpressConfigSample.createFile tmpdir
 
         loader.loadService profile.resource, null
         def profile = registry.getService("profile")[0]
         setupUbuntu_12_04_Properties profile, tmpdir
-        loader.loadService httpdMsSubdirectoryScript.resource, profile
+        loader.loadService httpdMsSubdomainScript.resource, profile
 
         registry.allServices.each { it.call() }
         log.info "Run service again to ensure that configuration is not set double."
         registry.allServices.each { it.call() }
 
-        assertStringContent wwwtest1comMsSubdirectoryConf.replaced(tmpdir, tmpdir, "/tmp"), wwwtest1comMsSubdirectoryConf.toString()
-        assertStringContent wwwtest1comSslMsSubdirectoryConf.replaced(tmpdir, tmpdir, "/tmp"), wwwtest1comSslMsSubdirectoryConf.toString()
-        assertStringContent wwwblogfoocomMsSubdirectoryConf.replaced(tmpdir, tmpdir, "/tmp"), wwwblogfoocomMsSubdirectoryConf.toString()
-        assertStringContent wwwblogbarcomMsSubdirectoryConf.replaced(tmpdir, tmpdir, "/tmp"), wwwblogbarcomMsSubdirectoryConf.toString()
-        assertStringContent chownMsSubdirectoryOut.replaced(tmpdir, tmpdir, "/tmp"), chownMsSubdirectoryOut.toString()
-        assertStringContent chmodMsSubdirectoryOut.replaced(tmpdir, tmpdir, "/tmp"), chmodMsSubdirectoryOut.toString()
-        assertStringContent groupaddMsSubdirectoryOut.replaced(tmpdir, tmpdir, "/tmp"), groupaddMsSubdirectoryOut.toString()
-        assertStringContent useraddMsSubdirectoryOut.replaced(tmpdir, tmpdir, "/tmp"), useraddMsSubdirectoryOut.toString()
-        assertFileContent wordpress_3_8_MsSubdirectoryConfigExpected.asFile(tmpdir), wordpress_3_8_MsSubdirectoryConfigExpected
+        assertStringContent subdomainWwwtest1comConfExpected.replaced(tmpdir, tmpdir, "/tmp"), subdomainWwwtest1comConfExpected.toString()
+        assertStringContent subdomainWwwblogfoocomConfExpected.replaced(tmpdir, tmpdir, "/tmp"), subdomainWwwblogfoocomConfExpected.toString()
+        assertStringContent subdomainWwwblogbarcomConfExpected.replaced(tmpdir, tmpdir, "/tmp"), subdomainWwwblogbarcomConfExpected.toString()
+        assertStringContent subdomainChownOutExpected.replaced(tmpdir, tmpdir, "/tmp"), subdomainChownOutExpected.toString()
+        assertStringContent subdomainChmodOutExpected.replaced(tmpdir, tmpdir, "/tmp"), subdomainChmodOutExpected.toString()
+        assertStringContent subdomainGroupaddOutExpected.replaced(tmpdir, tmpdir, "/tmp"), subdomainGroupaddOutExpected.toString()
+        assertStringContent subdomainUseraddOutExpected.replaced(tmpdir, tmpdir, "/tmp"), subdomainUseraddOutExpected.toString()
+        assertFileContent subdomainWordpressConfigExpected.asFile(tmpdir), subdomainWordpressConfigExpected
     }
 
     @Test
@@ -217,6 +191,7 @@ class WordpressTest extends UbuntuTestUtil {
         copyUbuntuFiles tmpdir
         copyUbuntu_12_04_Files tmpdir
         copyWordpressFiles tmpdir
+        plguinsWordpressConfigSample.createFile tmpdir
 
         loader.loadService profile.resource, null
         def profile = registry.getService("profile")[0]
@@ -226,35 +201,29 @@ class WordpressTest extends UbuntuTestUtil {
         registry.allServices.each { it.call() }
         log.info "Run service again to ensure that configuration is not set double."
         registry.allServices.each { it.call() }
-        assertStringContent unzipPluginsOut.replaced(tmpdir, tmpdir, "/tmp"), unzipPluginsOut.toString()
+        assertStringContent pluginsUnzipOutExpected.replaced(tmpdir, tmpdir, "/tmp"), pluginsUnzipOutExpected.toString()
     }
 
     @Test
-    void "wordpress prefix, no update"() {
+    void "wordpress prefix, no override"() {
         copyUbuntuFiles tmpdir
         copyUbuntu_12_04_Files tmpdir
         copyWordpressFiles tmpdir
+        nooverrideWordpressConfig.createFile tmpdir
 
         loader.loadService profile.resource, null
         def profile = registry.getService("profile")[0]
         setupUbuntu_12_04_Properties profile, tmpdir
-        loader.loadService httpdScript.resource, profile
+        loader.loadService httpdScriptNoOverride.resource, profile
 
         registry.allServices.each { it.call() }
         log.info "Run service again to ensure that configuration is not set double."
         registry.allServices.each { it.call() }
 
-        assertStringContent wwwprefixtest1comConf.replaced(tmpdir, tmpdir, "/tmp"), wwwprefixtest1comConf.toString()
-        assertStringContent wwwprefixtest1comSslConf.replaced(tmpdir, tmpdir, "/tmp"), wwwprefixtest1comSslConf.toString()
-        assertStringContent wwwprefixtest1comSslFcgiScript.replaced(tmpdir, tmpdir, "/tmp"), wwwprefixtest1comSslFcgiScript.toString()
-        assertStringContent wwwprefixtest1comSslPhpiniExpected.replaced(tmpdir, tmpdir, "/tmp"), wwwprefixtest1comSslPhpiniExpected.toString()
-        assertFileContent prefixWordpressConfig_expected.asFile(tmpdir), prefixWordpressConfig_expected
-        assertStringContent prefixChownOut.replaced(tmpdir, tmpdir, "/tmp"), prefixChownOut.toString()
-        assertStringContent prefixChmodOut.replaced(tmpdir, tmpdir, "/tmp"), prefixChmodOut.toString()
-        assertStringContent prefixTarOut.replaced(tmpdir, tmpdir, "/tmp"), prefixTarOut.toString()
-        assert prefixWordpressCache_dir.asFile(tmpdir).isDirectory()
-        assert prefixWordpressPlugins_dir.asFile(tmpdir).isDirectory()
-        assert prefixWordpressThemes_dir.asFile(tmpdir).isDirectory()
-        assert prefixWordpressUploads_dir.asFile(tmpdir).isDirectory()
+        assertStringContent nooverrideWwwTest1comConfExpected.replaced(tmpdir, tmpdir, "/tmp"), nooverrideWwwTest1comConfExpected.toString()
+        assertFileContent nooverrideWordpressConfigExpected.asFile(tmpdir), nooverrideWordpressConfigExpected
+        assertStringContent nooverrideChownOutExpected.replaced(tmpdir, tmpdir, "/tmp"), nooverrideChownOutExpected.toString()
+        assertStringContent nooverrideChmodOutExpected.replaced(tmpdir, tmpdir, "/tmp"), nooverrideChmodOutExpected.toString()
+        assertStringContent nooverrideTarOutExpected.replaced(tmpdir, tmpdir, "/tmp"), nooverrideTarOutExpected.toString()
     }
 }

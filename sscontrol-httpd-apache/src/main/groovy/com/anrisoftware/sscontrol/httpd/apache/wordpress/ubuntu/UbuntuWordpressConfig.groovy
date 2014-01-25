@@ -26,6 +26,7 @@ import com.anrisoftware.sscontrol.core.checkfilehash.CheckFileHashFactory
 import com.anrisoftware.sscontrol.httpd.apache.wordpress.linux.Wordpress_3_Config
 import com.anrisoftware.sscontrol.httpd.statements.domain.Domain
 import com.anrisoftware.sscontrol.httpd.statements.webservice.WebService
+import com.anrisoftware.sscontrol.httpd.statements.wordpress.WordpressService
 
 /**
  * Ubuntu Wordpress 3.
@@ -47,29 +48,30 @@ abstract class UbuntuWordpressConfig extends Wordpress_3_Config {
 
     @Override
     void deployService(Domain domain, WebService service, List config) {
-        downloadArchive domain
+        setupPrefix service
+        setupDefaultForce service
         installPackages wordpressPackages
         enableMods wordpressMods
-        setupDefaultForce service
-        deployMainConfig service, domain
-        deployDatabaseConfig service, domain
-        deployKeysConfig service, domain
-        deployLanguageConfig service, domain
-        deploySecureLoginConfig service, domain
-        deployDebugConfig service, domain
-        deployMultisiteConfig service, domain
-        deployMainConfigEnding service, domain
-        createDirectories domain
+        downloadArchive domain, service
+        deployMainConfig domain, service
+        deployDatabaseConfig domain, service
+        deployKeysConfig domain, service
+        deployLanguageConfig domain, service
+        deploySecureLoginConfig domain, service
+        deployDebugConfig domain, service
+        deployMultisiteConfig domain, service
+        deployMainConfigEnding domain, service
+        createDirectories domain, service
         deployThemes domain, service
         deployPlugins domain, service
-        setupPermissions domain
+        setupPermissions domain, service
     }
 
-    void downloadArchive(Domain domain) {
+    void downloadArchive(Domain domain, WebService service) {
         def name = new File(wordpressArchive.path).name
         def dest = new File(tmpDirectory, "wordpress-3-8-$name")
         needDownloadArchive(dest) ? copyURLToFile(wordpressArchive.toURL(), dest) : false
-        unpackArchive domain, dest
+        unpackArchive domain, service, dest
     }
 
     boolean needDownloadArchive(File dest) {
@@ -81,42 +83,77 @@ abstract class UbuntuWordpressConfig extends Wordpress_3_Config {
         }
     }
 
-    void unpackArchive(Domain domain, File dest) {
-        def dir = wordpressDir domain
+    /**
+     * Unpacks the Wordpress archive.
+     *
+     * @param domain
+     *            the {@link Domain} domain of the Wordpress service.
+     *
+     * @param service
+     *            the {@link WebService} Wordpress service.
+     *
+     * @param archive
+     *            the archive {@link File} file.
+     */
+    void unpackArchive(Domain domain, WebService service, File archive) {
+        def dir = wordpressDir domain, service
         if (!dir.isDirectory()) {
             dir.mkdirs()
         }
         def strip = stripArchive
-        unpack file: dest, type: archiveType(file: dest), output: dir, override: true, strip: strip
+        unpack file: archive, type: archiveType(file: archive), output: dir, override: true, strip: strip
         log.downloadArchive script, wordpressArchive
     }
 
-    void createDirectories(Domain domain) {
-        wordpressContentCacheDir(domain).mkdirs()
-        wordpressContentPluginsDir(domain).mkdirs()
-        wordpressContentThemesDir(domain).mkdirs()
-        wordpressContentUploadsDir(domain).mkdirs()
+    /**
+     * Creates the cache, plugins, themes and upload directories.
+     *
+     * @param domain
+     *            the {@link Domain} of the Wordpress service.
+     *
+     * @param service
+     *            the {@link WordpressService} Wordpress service.
+     */
+    void createDirectories(Domain domain, WordpressService service) {
+        wordpressContentCacheDir domain, service mkdirs()
+        wordpressContentPluginsDir domain, service mkdirs()
+        wordpressContentThemesDir domain, service mkdirs()
+        wordpressContentUploadsDir domain, service mkdirs()
     }
 
-    void setupPermissions(Domain domain) {
+    /**
+     * Sets the owner and permissions of the Wordpress service.
+     *
+     * @param domain
+     *            the {@link Domain} of the Wordpress service.
+     *
+     * @param service
+     *            the {@link WordpressService} Wordpress service.
+     */
+    void setupPermissions(Domain domain, WordpressService service) {
         def user = domain.domainUser
+        def conffile = configurationFile domain, service
+        def cachedir = wordpressContentCacheDir domain, service
+        def pluginsdir = wordpressContentPluginsDir domain, service
+        def themesdir = wordpressContentThemesDir domain, service
+        def uploadsdir = wordpressContentUploadsDir domain, service
         script.changeOwner owner: "root", ownerGroup: user.group, files: [
-            configurationFile(domain),
+            conffile
         ]
         script.changeMod mod: "0440", files: [
-            configurationFile(domain),
+            conffile
         ]
         script.changeOwner owner: user.name, ownerGroup: user.group, files: [
-            wordpressContentCacheDir(domain),
-            wordpressContentPluginsDir(domain),
-            wordpressContentThemesDir(domain),
-            wordpressContentUploadsDir(domain),
+            cachedir,
+            pluginsdir,
+            themesdir,
+            uploadsdir,
         ]
         script.changeMod mod: "0775", files: [
-            wordpressContentCacheDir(domain),
-            wordpressContentPluginsDir(domain),
-            wordpressContentThemesDir(domain),
-            wordpressContentUploadsDir(domain),
+            cachedir,
+            pluginsdir,
+            themesdir,
+            uploadsdir,
         ]
     }
 }

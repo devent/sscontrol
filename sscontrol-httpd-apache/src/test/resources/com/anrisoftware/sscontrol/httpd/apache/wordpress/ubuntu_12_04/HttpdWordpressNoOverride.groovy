@@ -20,8 +20,9 @@ package com.anrisoftware.sscontrol.httpd.apache.wordpress.ubuntu_12_04
 
 httpd {
     domain "www.test1.com", address: "192.168.0.51", {
-        setup "wordpress", alias: "wordpress3", {
+        setup "wordpress", alias: "wordpress3", prefix: "myprefix", {
             database "wordpress3", user: "user", password: "userpass", host: "localhost"
+            override mode: no
         }
     }
 }

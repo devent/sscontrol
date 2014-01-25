@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd-apache. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.apache.wordpressproxy.ubuntu_10_04
+package com.anrisoftware.sscontrol.httpd.apache.wordpressproxy.ubuntu_12_04
 
 import com.anrisoftware.sscontrol.httpd.apache.ubuntu.UbuntuResources;
 

@@ -16,12 +16,12 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd-apache. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.apache.wordpressproxy.ubuntu_10_04
+package com.anrisoftware.sscontrol.httpd.apache.wordpressproxy.ubuntu_12_04
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.httpd.apache.ubuntu.UbuntuResources.*
-import static com.anrisoftware.sscontrol.httpd.apache.ubuntu_10_04.Ubuntu_10_04_Resources.*
-import static com.anrisoftware.sscontrol.httpd.apache.wordpressproxy.ubuntu_10_04.WordpressProxyResources.*
+import static com.anrisoftware.sscontrol.httpd.apache.ubuntu_12_04.Ubuntu_12_04_Resources.*
+import static com.anrisoftware.sscontrol.httpd.apache.wordpressproxy.ubuntu_12_04.WordpressProxyResources.*
 import static org.apache.commons.io.FileUtils.*
 import groovy.util.logging.Slf4j
 
@@ -30,7 +30,7 @@ import org.junit.Test
 import com.anrisoftware.sscontrol.httpd.apache.ubuntu.UbuntuTestUtil
 
 /**
- * Wordpress with Nginx proxy on a Ubuntu 10.04 server.
+ * Wordpress with Nginx proxy on a Ubuntu 12.04 server.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
@@ -41,12 +41,12 @@ class WordpressProxyTest extends UbuntuTestUtil {
     @Test
     void "wordpress reverse proxy"() {
         copyUbuntuFiles tmpdir
-        copyUbuntu_10_04_Files tmpdir
+        copyUbuntu_12_04_Files tmpdir
         copyWordpressProxyFiles tmpdir
 
         loader.loadService profile.resource, null
         def profile = registry.getService("profile")[0]
-        setupUbuntu_10_04_Properties profile, tmpdir
+        setupUbuntu_12_04_Properties profile, tmpdir
         setupWordpressProxyProperties profile, tmpdir
         loader.loadService httpdProxyDomainsScript.resource, profile
         loader.loadService httpdProxyScript.resource, profile

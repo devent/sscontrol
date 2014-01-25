@@ -14,11 +14,11 @@
 
     FcgidMaxRequestLen 2000000
 
-    # /tmp/var/www/www.test1.com/wordpress-3.8
+    # /tmp/var/www/www.test1.com/wordpress_3_8
 
-    Alias /wordpress3 /tmp/var/www/www.test1.com/wordpress-3.8
+    Alias /wordpress3 /tmp/var/www/www.test1.com/wordpress_3_8
 
-    <Directory /tmp/var/www/www.test1.com/wordpress-3.8>
+    <Directory /tmp/var/www/www.test1.com/wordpress_3_8>
         AddHandler fcgid-script .php
         FCGIWrapper /tmp/var/www/php-fcgi-scripts/www.test1.com/php-fcgi-starter .php
         Options +ExecCGI +FollowSymLinks

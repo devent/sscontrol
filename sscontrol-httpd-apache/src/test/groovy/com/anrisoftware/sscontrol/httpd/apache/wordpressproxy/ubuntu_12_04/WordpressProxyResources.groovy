@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd-apache. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.apache.wordpressproxy.ubuntu_10_04
+package com.anrisoftware.sscontrol.httpd.apache.wordpressproxy.ubuntu_12_04
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static org.apache.commons.io.FileUtils.*
@@ -35,8 +35,8 @@ enum WordpressProxyResources {
     profile("UbuntuProfile.groovy", WordpressProxyResources.class.getResource("UbuntuProfile.groovy")),
     phpConfDir("/etc/php5/cgi/conf.d", null),
     wordpressArchive("/tmp/web-wordpress-3.8.tar.gz", WordpressProxyResources.class.getResource("wordpress-3.8.tar.gz")),
-    wordpress_3_8_config("/var/www/www.test1.com/wordpress-3.8/wp-config-sample.php", WordpressProxyResources.class.getResource("wordpress_3_8_config_sample_php.txt")),
-    wordpress_3_8_config_expected("/var/www/www.test1.com/wordpress-3.8/wp-config.php", WordpressProxyResources.class.getResource("wordpress_3_8_config_php_expected.txt")),
+    wordpress_3_8_config("/var/www/www.test1.com/wordpress_3_8/wp-config-sample.php", WordpressProxyResources.class.getResource("wordpress_3_8_config_sample_php.txt")),
+    wordpress_3_8_config_expected("/var/www/www.test1.com/wordpress_3_8/wp-config.php", WordpressProxyResources.class.getResource("wordpress_3_8_config_php_expected.txt")),
     aptitudeExpectedConf("/usr/bin/aptitude.out", WordpressProxyResources.class.getResource("aptitude_out_expected.txt")),
     httpdProxyDomainsScript("Httpd.groovy", WordpressProxyResources.class.getResource("HttpdWordpressReverseProxyDomains.groovy")),
     httpdProxyScript("Httpd.groovy", WordpressProxyResources.class.getResource("HttpdWordpressReverseProxy.groovy")),

@@ -21,6 +21,7 @@ package com.anrisoftware.sscontrol.httpd.statements.user;
 import static com.anrisoftware.sscontrol.httpd.statements.user.DomainUserLogger._.gid_null;
 import static com.anrisoftware.sscontrol.httpd.statements.user.DomainUserLogger._.gid_number;
 import static com.anrisoftware.sscontrol.httpd.statements.user.DomainUserLogger._.group_null;
+import static com.anrisoftware.sscontrol.httpd.statements.user.DomainUserLogger._.ref_null;
 import static com.anrisoftware.sscontrol.httpd.statements.user.DomainUserLogger._.uid_null;
 import static com.anrisoftware.sscontrol.httpd.statements.user.DomainUserLogger._.uid_number;
 import static com.anrisoftware.sscontrol.httpd.statements.user.DomainUserLogger._.user_null;
@@ -54,7 +55,9 @@ class DomainUserLogger extends AbstractLogger {
 
         gid_null("Group ID cannot not be null for %s."),
 
-        gid_number("Group ID cannot must be a number for %s.");
+        gid_number("Group ID cannot must be a number for %s."),
+
+        ref_null("Referenced domain cannot be null or blank for %s.");
 
 		private String name;
 
@@ -93,5 +96,10 @@ class DomainUserLogger extends AbstractLogger {
     void checkGid(Domain domain, Object gid) {
         notNull(gid, gid_null.toString(), domain);
         isInstanceOf(Number.class, gid, gid_number.toString(), domain);
+    }
+
+    void checkRefDomain(Domain domain, Object ref) {
+        notNull(ref, ref_null.toString(), domain);
+        notBlank(ref.toString(), ref_null.toString(), domain);
     }
 }

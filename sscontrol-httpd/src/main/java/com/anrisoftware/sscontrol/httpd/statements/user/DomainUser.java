@@ -34,6 +34,8 @@ import com.google.inject.assistedinject.AssistedInject;
  */
 public class DomainUser {
 
+    private static final String REF = "referenced domain";
+
     private static final String GROUP = "group";
 
     private static final String GID = "gid";
@@ -50,6 +52,8 @@ public class DomainUser {
 
     private Integer gid;
 
+    private String ref;
+
     @AssistedInject
     DomainUser() {
     }
@@ -60,7 +64,12 @@ public class DomainUser {
     @AssistedInject
     DomainUser(DomainUserLogger logger, DomainUserArgs aargs,
             @Assisted Domain domain, @Assisted Map<String, Object> args) {
-        setUser(aargs.user(domain, args));
+        if (aargs.haveRefDomain(args)) {
+            setRefDomain(aargs.refDomain(domain, args));
+        }
+        if (aargs.haveUser(args)) {
+            setUser(aargs.user(domain, args));
+        }
         if (aargs.haveGroup(args)) {
             setGroup(aargs.group(domain, args));
         }
@@ -70,6 +79,14 @@ public class DomainUser {
         if (aargs.haveGid(args)) {
             setGid(aargs.gid(domain, args));
         }
+    }
+
+    public void setRefDomain(String ref) {
+        this.ref = ref;
+    }
+
+    public String getRefDomain() {
+        return ref;
     }
 
     public void setUser(String name) {
@@ -106,7 +123,9 @@ public class DomainUser {
 
     @Override
     public String toString() {
-        ToStringBuilder builder = new ToStringBuilder(this).append(USER, name);
+        ToStringBuilder builder = new ToStringBuilder(this);
+        builder = ref != null ? builder.append(REF, ref) : builder;
+        builder = name != null ? builder.append(USER, name) : builder;
         builder = uid != null ? builder.append(UID, uid) : builder;
         builder = group != null ? builder.append(GROUP, group) : builder;
         builder = gid != null ? builder.append(GID, gid) : builder;

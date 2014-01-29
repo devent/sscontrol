@@ -23,6 +23,7 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import com.anrisoftware.sscontrol.httpd.statements.domain.Domain;
+import com.anrisoftware.sscontrol.httpd.statements.proxy.ProxyService;
 
 /**
  * Parses arguments for {@link ProxyService}.
@@ -39,6 +40,8 @@ public class DomainUserArgs {
     public static final String USER = "user";
 
     public static final String GID = "gid";
+
+    public static final String REF_DOMAIN = "refdomain";
 
     @Inject
     private DomainUserLogger log;
@@ -81,5 +84,15 @@ public class DomainUserArgs {
         Object gid = args.get(GID);
         log.checkGid(domain, gid);
         return (Integer) gid;
+    }
+
+    public boolean haveRefDomain(Map<String, Object> args) {
+        return args.containsKey(REF_DOMAIN);
+    }
+
+    public String refDomain(Domain domain, Map<String, Object> args) {
+        Object ref = args.get(REF_DOMAIN);
+        log.checkRefDomain(domain, ref);
+        return ref.toString();
     }
 }

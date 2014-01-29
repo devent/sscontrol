@@ -43,6 +43,7 @@ enum ServicesResources {
     proxyScript("Httpd.groovy", ServicesResources.class.getResource("HttpdProxy.groovy")),
     proxyDomainsScript("Httpd.groovy", ServicesResources.class.getResource("HttpdProxyDomains.groovy")),
     httpdUserMapScript("Httpd.groovy", ServicesResources.class.getResource("HttpdUserMap.groovy")),
+    httpdUserRefDomainScript("Httpd.groovy", ServicesResources.class.getResource("HttpdUserRefDomain.groovy")),
 
     ResourcesUtils resources
 

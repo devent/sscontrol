@@ -174,6 +174,10 @@ public class Domain {
         this.domainUser = user;
     }
 
+    public void setDomainUser(DomainUser user) {
+        this.domainUser = user;
+    }
+
     public DomainUser getDomainUser() {
         return domainUser;
     }

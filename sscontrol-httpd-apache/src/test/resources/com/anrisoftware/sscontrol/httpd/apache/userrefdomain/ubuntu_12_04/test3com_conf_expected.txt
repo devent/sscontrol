@@ -1,0 +1,13 @@
+<VirtualHost 192.168.0.50:80>
+
+    # domain test3.com
+    ServerName test3.com
+    DocumentRoot /tmp/var/www/test3.com/web
+    SuexecUserGroup web_004 web_004
+    <Directory /tmp/var/www/test3.com/web>
+        AllowOverride None
+        Order allow,deny
+        Allow from all
+    </Directory>
+
+</VirtualHost>

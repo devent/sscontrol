@@ -1,0 +1,14 @@
+-s /bin/false -d /tmp/var/www/test1.com -m -u 2001 -g web_001 web_001
+-s /bin/false -d /tmp/var/www/www.test1.com -m -u 2002 -g web_002 web_002
+-s /bin/false -d /tmp/var/www/test2.com -m -u 2003 -g web_003 web_003
+-s /bin/false -d /tmp/var/www/test3.com -m -u 2004 -g web_004 web_004
+-s /bin/false -d /tmp/var/www/www.test3.com -m -u 2004 -g web_004 web_004
+-s /bin/false -d /tmp/var/www/test4.com -m -u 2004 -g web_004 web_004
+-s /bin/false -d /tmp/var/www/www.test4.com -m -u 2004 -g web_004 web_004
+-s /bin/false -d /tmp/var/www/test1.com -m -u 2001 -g web_001 web_001
+-s /bin/false -d /tmp/var/www/www.test1.com -m -u 2002 -g web_002 web_002
+-s /bin/false -d /tmp/var/www/test2.com -m -u 2003 -g web_003 web_003
+-s /bin/false -d /tmp/var/www/test3.com -m -u 2004 -g web_004 web_004
+-s /bin/false -d /tmp/var/www/www.test3.com -m -u 2004 -g web_004 web_004
+-s /bin/false -d /tmp/var/www/test4.com -m -u 2004 -g web_004 web_004
+-s /bin/false -d /tmp/var/www/www.test4.com -m -u 2004 -g web_004 web_004

@@ -165,6 +165,10 @@ public class Domain {
 
     public void user(Map<String, Object> args, String name) {
         args.put(DomainUserArgs.USER, name);
+        user(args);
+    }
+
+    public void user(Map<String, Object> args) {
         DomainUser user = domainUserFactory.create(this, args);
         log.userSet(this, user);
         this.domainUser = user;

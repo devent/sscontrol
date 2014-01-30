@@ -29,6 +29,7 @@ import org.apache.commons.io.FileUtils
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.Templates
 import com.anrisoftware.sscontrol.httpd.nginx.api.ServiceConfig
+import com.anrisoftware.sscontrol.httpd.nginx.nginx.linux.DomainConfig;
 import com.anrisoftware.sscontrol.httpd.nginx.nginx.linux.NginxScript
 import com.anrisoftware.sscontrol.httpd.service.HttpdService
 import com.anrisoftware.sscontrol.httpd.statements.auth.AbstractAuth

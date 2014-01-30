@@ -1,0 +1,9 @@
+server {
+    # domain test3.com
+    listen 192.168.0.50:80;
+    root /tmp/var/www/test3.com/web;
+    index index.php index.html index.htm;
+    server_name test3.com;
+    client_max_body_size 2M;
+
+}

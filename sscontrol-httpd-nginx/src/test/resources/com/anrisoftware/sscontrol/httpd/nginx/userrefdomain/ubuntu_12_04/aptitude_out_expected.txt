@@ -1,0 +1,4 @@
+update
+install nginx net-tools
+update
+install nginx net-tools

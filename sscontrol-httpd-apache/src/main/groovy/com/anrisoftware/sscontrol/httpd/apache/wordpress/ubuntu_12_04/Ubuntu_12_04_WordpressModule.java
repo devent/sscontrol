@@ -22,7 +22,7 @@ import static com.anrisoftware.sscontrol.httpd.apache.apache.ubuntu_12_04.Ubuntu
 import static com.google.inject.multibindings.MapBinder.newMapBinder;
 import static java.lang.String.format;
 
-import com.anrisoftware.sscontrol.httpd.apache.apache.api.ServiceConfig;
+import com.anrisoftware.sscontrol.httpd.webservice.ServiceConfig;
 import com.google.inject.AbstractModule;
 import com.google.inject.multibindings.MapBinder;
 

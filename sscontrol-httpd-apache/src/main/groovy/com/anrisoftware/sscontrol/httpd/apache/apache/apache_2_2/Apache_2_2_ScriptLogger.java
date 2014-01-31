@@ -25,9 +25,9 @@ import static org.apache.commons.lang3.Validate.notNull;
 import javax.inject.Singleton;
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
-import com.anrisoftware.sscontrol.httpd.apache.apache.api.AuthConfig;
-import com.anrisoftware.sscontrol.httpd.apache.apache.api.ServiceConfig;
 import com.anrisoftware.sscontrol.httpd.auth.AbstractAuth;
+import com.anrisoftware.sscontrol.httpd.auth.AuthConfig;
+import com.anrisoftware.sscontrol.httpd.webservice.ServiceConfig;
 import com.anrisoftware.sscontrol.httpd.webservice.WebService;
 
 /**

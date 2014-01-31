@@ -23,9 +23,9 @@ import static org.apache.commons.io.FileUtils.*
 import javax.inject.Inject
 
 import com.anrisoftware.propertiesutils.ContextProperties
-import com.anrisoftware.sscontrol.httpd.nginx.api.ProxyConfig
 import com.anrisoftware.sscontrol.httpd.nginx.nginx.ubuntu_10_04.Ubuntu_10_04_ScriptFactory
 import com.anrisoftware.sscontrol.httpd.nginx.wordpressproxy.linux.ProxyWordpressConfig
+import com.anrisoftware.sscontrol.httpd.proxy.ProxyConfig;
 
 /**
  * Ubuntu 10.04 Wordpress Proxy.

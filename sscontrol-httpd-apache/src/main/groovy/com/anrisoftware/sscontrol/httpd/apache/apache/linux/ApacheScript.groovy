@@ -25,12 +25,12 @@ import javax.inject.Inject
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.sscontrol.core.debuglogging.DebugLoggingProperty
 import com.anrisoftware.sscontrol.core.service.LinuxScript
-import com.anrisoftware.sscontrol.httpd.apache.apache.api.AuthConfig
-import com.anrisoftware.sscontrol.httpd.apache.apache.api.ServiceConfig
+import com.anrisoftware.sscontrol.httpd.auth.AuthConfig;
 import com.anrisoftware.sscontrol.httpd.auth.AuthProvider;
 import com.anrisoftware.sscontrol.httpd.auth.AuthType;
 import com.anrisoftware.sscontrol.httpd.domain.Domain;
 import com.anrisoftware.sscontrol.httpd.service.HttpdService
+import com.anrisoftware.sscontrol.httpd.webservice.ServiceConfig;
 
 /**
  * Uses Apache service on a general Linux system.

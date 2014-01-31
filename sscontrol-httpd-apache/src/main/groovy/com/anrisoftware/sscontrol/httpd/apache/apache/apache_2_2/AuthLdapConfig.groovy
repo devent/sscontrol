@@ -23,10 +23,10 @@ import static com.anrisoftware.sscontrol.httpd.apache.apache.ubuntu_10_04.Ubuntu
 import javax.inject.Inject
 
 import com.anrisoftware.resources.templates.api.TemplateResource
-import com.anrisoftware.sscontrol.httpd.apache.apache.api.AuthConfig
 import com.anrisoftware.sscontrol.httpd.apache.apache.linux.BasicAuth
 import com.anrisoftware.sscontrol.httpd.apache.apache.ubuntu_10_04.Ubuntu_10_04_ScriptFactory;
 import com.anrisoftware.sscontrol.httpd.auth.AbstractAuth;
+import com.anrisoftware.sscontrol.httpd.auth.AuthConfig;
 import com.anrisoftware.sscontrol.httpd.auth.AuthType;
 import com.anrisoftware.sscontrol.httpd.authldap.AuthLdap;
 import com.anrisoftware.sscontrol.httpd.domain.Domain;

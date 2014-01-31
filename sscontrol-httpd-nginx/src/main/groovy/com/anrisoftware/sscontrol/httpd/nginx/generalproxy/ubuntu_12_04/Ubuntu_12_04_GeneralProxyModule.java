@@ -24,7 +24,7 @@ import static com.anrisoftware.sscontrol.httpd.nginx.proxy.linux.BaseProxyConfig
 import static com.google.inject.multibindings.MapBinder.newMapBinder;
 import static java.lang.String.format;
 
-import com.anrisoftware.sscontrol.httpd.nginx.api.ServiceConfig;
+import com.anrisoftware.sscontrol.httpd.webservice.ServiceConfig;
 import com.google.inject.AbstractModule;
 import com.google.inject.multibindings.MapBinder;
 

@@ -22,20 +22,19 @@ import static com.anrisoftware.sscontrol.httpd.nginx.nginx.ubuntu_10_04.Ubuntu_1
 import static org.apache.commons.io.FileUtils.*
 
 import javax.inject.Inject
-import javax.measure.Measure
 
 import org.apache.commons.io.FileUtils
 
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.Templates
-import com.anrisoftware.sscontrol.httpd.auth.AbstractAuth;
-import com.anrisoftware.sscontrol.httpd.domain.Domain;
-import com.anrisoftware.sscontrol.httpd.domain.SslDomain;
-import com.anrisoftware.sscontrol.httpd.nginx.api.ServiceConfig
-import com.anrisoftware.sscontrol.httpd.nginx.nginx.linux.DomainConfig;
+import com.anrisoftware.sscontrol.httpd.auth.AbstractAuth
+import com.anrisoftware.sscontrol.httpd.domain.Domain
+import com.anrisoftware.sscontrol.httpd.domain.SslDomain
+import com.anrisoftware.sscontrol.httpd.nginx.nginx.linux.DomainConfig
 import com.anrisoftware.sscontrol.httpd.nginx.nginx.linux.NginxScript
 import com.anrisoftware.sscontrol.httpd.service.HttpdService
-import com.anrisoftware.sscontrol.httpd.webservice.WebService;
+import com.anrisoftware.sscontrol.httpd.webservice.ServiceConfig;
+import com.anrisoftware.sscontrol.httpd.webservice.WebService
 import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokenTemplate
 
 /**

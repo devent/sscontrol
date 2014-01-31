@@ -21,8 +21,8 @@ package com.anrisoftware.sscontrol.httpd.apache.apache.ubuntu_12_04;
 import java.util.List;
 
 import com.anrisoftware.sscontrol.core.service.LinuxScript;
-import com.anrisoftware.sscontrol.httpd.apache.apache.api.ServiceConfig;
 import com.anrisoftware.sscontrol.httpd.domain.Domain;
+import com.anrisoftware.sscontrol.httpd.webservice.ServiceConfig;
 import com.anrisoftware.sscontrol.httpd.webservice.WebService;
 
 /**

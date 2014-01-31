@@ -28,10 +28,10 @@ import com.anrisoftware.globalpom.resources.ResourcesModule;
 import com.anrisoftware.sscontrol.core.checkfilehash.CheckFileHashModule;
 import com.anrisoftware.sscontrol.httpd.apache.apache.apache_2_2.AuthFileConfig;
 import com.anrisoftware.sscontrol.httpd.apache.apache.apache_2_2.AuthLdapConfig;
-import com.anrisoftware.sscontrol.httpd.apache.apache.api.AuthConfig;
-import com.anrisoftware.sscontrol.httpd.apache.apache.api.ServiceConfig;
 import com.anrisoftware.sscontrol.httpd.apache.phpmyadmin.ubuntu_12_04.Ubuntu_12_04_PhpmyadminModule;
 import com.anrisoftware.sscontrol.httpd.apache.wordpress.ubuntu_12_04.Ubuntu_12_04_WordpressModule;
+import com.anrisoftware.sscontrol.httpd.auth.AuthConfig;
+import com.anrisoftware.sscontrol.httpd.webservice.ServiceConfig;
 import com.google.inject.AbstractModule;
 import com.google.inject.multibindings.MapBinder;
 

@@ -28,10 +28,10 @@ import com.anrisoftware.globalpom.resources.ResourcesModule;
 import com.anrisoftware.sscontrol.core.checkfilehash.CheckFileHashModule;
 import com.anrisoftware.sscontrol.httpd.apache.apache.apache_2_2.AuthFileConfig;
 import com.anrisoftware.sscontrol.httpd.apache.apache.apache_2_2.AuthLdapConfig;
-import com.anrisoftware.sscontrol.httpd.apache.apache.api.AuthConfig;
 import com.anrisoftware.sscontrol.httpd.apache.phpldapadmin.ubuntu_10_04.Ubuntu_10_04_PhpldapadminModule;
 import com.anrisoftware.sscontrol.httpd.apache.phpmyadmin.ubuntu_10_04.Ubuntu_10_04_PhpmyadminModule;
 import com.anrisoftware.sscontrol.httpd.apache.roundcube.ubuntu_10_04.Ubuntu_10_04_RoundcubeModule;
+import com.anrisoftware.sscontrol.httpd.auth.AuthConfig;
 import com.google.inject.AbstractModule;
 import com.google.inject.multibindings.MapBinder;
 

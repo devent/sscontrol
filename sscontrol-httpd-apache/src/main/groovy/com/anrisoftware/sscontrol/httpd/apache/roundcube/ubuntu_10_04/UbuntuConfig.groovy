@@ -30,9 +30,9 @@ import com.anrisoftware.sscontrol.httpd.apache.apache.linux.ApacheScript
 import com.anrisoftware.sscontrol.httpd.apache.apache.linux.FcgiConfig
 import com.anrisoftware.sscontrol.httpd.apache.apache.ubuntu_10_04.Ubuntu_10_04_ScriptFactory
 import com.anrisoftware.sscontrol.httpd.apache.roundcube.roundcube_3.Roundcube_0_9_Config
-import com.anrisoftware.sscontrol.httpd.statements.domain.Domain
-import com.anrisoftware.sscontrol.httpd.statements.phpmyadmin.PhpmyadminService
-import com.anrisoftware.sscontrol.httpd.statements.webservice.WebService
+import com.anrisoftware.sscontrol.httpd.domain.Domain;
+import com.anrisoftware.sscontrol.httpd.phpmyadmin.PhpmyadminService;
+import com.anrisoftware.sscontrol.httpd.webservice.WebService;
 import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokenTemplate
 
 /**

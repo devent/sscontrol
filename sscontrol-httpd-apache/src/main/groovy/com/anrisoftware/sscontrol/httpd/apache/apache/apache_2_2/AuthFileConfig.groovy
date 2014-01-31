@@ -28,11 +28,11 @@ import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.sscontrol.httpd.apache.apache.api.AuthConfig
 import com.anrisoftware.sscontrol.httpd.apache.apache.linux.BasicAuth
 import com.anrisoftware.sscontrol.httpd.apache.apache.ubuntu_10_04.Ubuntu_10_04_ScriptFactory;
-import com.anrisoftware.sscontrol.httpd.statements.auth.AbstractAuth
-import com.anrisoftware.sscontrol.httpd.statements.auth.AuthType
-import com.anrisoftware.sscontrol.httpd.statements.authfile.AuthFile
-import com.anrisoftware.sscontrol.httpd.statements.authfile.FileGroup
-import com.anrisoftware.sscontrol.httpd.statements.domain.Domain
+import com.anrisoftware.sscontrol.httpd.auth.AbstractAuth;
+import com.anrisoftware.sscontrol.httpd.auth.AuthType;
+import com.anrisoftware.sscontrol.httpd.authfile.AuthFile;
+import com.anrisoftware.sscontrol.httpd.authfile.FileGroup;
+import com.anrisoftware.sscontrol.httpd.domain.Domain;
 
 /**
  * Auth/file configuration.

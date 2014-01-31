@@ -22,8 +22,8 @@ import java.util.List;
 
 import com.anrisoftware.sscontrol.core.service.LinuxScript;
 import com.anrisoftware.sscontrol.httpd.apache.apache.api.ServiceConfig;
-import com.anrisoftware.sscontrol.httpd.statements.domain.Domain;
-import com.anrisoftware.sscontrol.httpd.statements.webservice.WebService;
+import com.anrisoftware.sscontrol.httpd.domain.Domain;
+import com.anrisoftware.sscontrol.httpd.webservice.WebService;
 
 /**
  * Empty service.

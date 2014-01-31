@@ -22,7 +22,7 @@ import static com.anrisoftware.sscontrol.httpd.apache.apache.linux.DomainConfigL
 import static org.apache.commons.lang3.Validate.notNull;
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
-import com.anrisoftware.sscontrol.httpd.statements.domain.Domain;
+import com.anrisoftware.sscontrol.httpd.domain.Domain;
 
 /**
  * Logging for {@link DomainConfig}.

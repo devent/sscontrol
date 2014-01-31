@@ -18,7 +18,7 @@
  */
 package com.anrisoftware.sscontrol.httpd.service
 
-import com.anrisoftware.sscontrol.httpd.statements.wordpress.MultiSite
+import com.anrisoftware.sscontrol.httpd.wordpress.MultiSite
 
 def certFile = ServicesResources.class.getResource "cert_crt.txt"
 def certKeyFile = ServicesResources.class.getResource "cert_key.txt"

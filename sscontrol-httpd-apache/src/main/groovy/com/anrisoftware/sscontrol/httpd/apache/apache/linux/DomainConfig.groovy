@@ -24,8 +24,8 @@ import java.text.DecimalFormat
 
 import javax.inject.Inject
 
-import com.anrisoftware.sscontrol.httpd.statements.domain.Domain
-import com.anrisoftware.sscontrol.httpd.statements.user.DomainUser
+import com.anrisoftware.sscontrol.httpd.domain.Domain;
+import com.anrisoftware.sscontrol.httpd.user.DomainUser;
 
 /**
  * Apache domain configuration.

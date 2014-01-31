@@ -24,8 +24,8 @@ import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.Templates
 import com.anrisoftware.sscontrol.httpd.apache.apache.linux.ApacheScript
 import com.anrisoftware.sscontrol.httpd.apache.roundcube.linux.RoundcubeConfig
-import com.anrisoftware.sscontrol.httpd.statements.roundcube.Host
-import com.anrisoftware.sscontrol.httpd.statements.roundcube.RoundcubeService
+import com.anrisoftware.sscontrol.httpd.roundcube.Host;
+import com.anrisoftware.sscontrol.httpd.roundcube.RoundcubeService;
 import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokenTemplate
 
 /**

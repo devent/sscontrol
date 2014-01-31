@@ -29,9 +29,9 @@ import javax.inject.Singleton;
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
 import com.anrisoftware.sscontrol.core.service.LinuxScript;
+import com.anrisoftware.sscontrol.httpd.domain.Domain;
 import com.anrisoftware.sscontrol.httpd.nginx.api.ServiceConfig;
-import com.anrisoftware.sscontrol.httpd.statements.domain.Domain;
-import com.anrisoftware.sscontrol.httpd.statements.webservice.WebService;
+import com.anrisoftware.sscontrol.httpd.webservice.WebService;
 
 /**
  * Logging messages for {@link Nginx_1_4_Script}.

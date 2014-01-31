@@ -28,9 +28,9 @@ import org.apache.commons.io.FilenameUtils
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.Templates
 import com.anrisoftware.sscontrol.core.service.LinuxScript
-import com.anrisoftware.sscontrol.httpd.statements.domain.Domain
-import com.anrisoftware.sscontrol.httpd.statements.phpldapadmin.PhpldapadminService
-import com.anrisoftware.sscontrol.httpd.statements.webservice.WebService
+import com.anrisoftware.sscontrol.httpd.domain.Domain;
+import com.anrisoftware.sscontrol.httpd.phpldapadmin.PhpldapadminService;
+import com.anrisoftware.sscontrol.httpd.webservice.WebService;
 import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokenTemplate
 
 /**

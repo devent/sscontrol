@@ -27,9 +27,9 @@ import com.anrisoftware.resources.templates.api.Templates
 import com.anrisoftware.sscontrol.core.service.LinuxScript
 import com.anrisoftware.sscontrol.httpd.apache.apache.linux.FcgiConfig
 import com.anrisoftware.sscontrol.httpd.apache.phpmyadmin.apache_2_2.FcgiPhpmyadminConfig
-import com.anrisoftware.sscontrol.httpd.statements.domain.Domain
-import com.anrisoftware.sscontrol.httpd.statements.phpmyadmin.PhpmyadminService
-import com.anrisoftware.sscontrol.httpd.statements.webservice.WebService
+import com.anrisoftware.sscontrol.httpd.domain.Domain;
+import com.anrisoftware.sscontrol.httpd.phpmyadmin.PhpmyadminService;
+import com.anrisoftware.sscontrol.httpd.webservice.WebService;
 import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokenTemplate
 
 /**

@@ -30,9 +30,9 @@ import com.anrisoftware.sscontrol.httpd.apache.apache.api.ServiceConfig
 import com.anrisoftware.sscontrol.httpd.apache.apache.linux.FcgiConfig
 import com.anrisoftware.sscontrol.httpd.apache.apache.ubuntu_10_04.Ubuntu_10_04_ScriptFactory
 import com.anrisoftware.sscontrol.httpd.apache.phpldapadmin.apache_2_2.FcgiPhpldapadminConfig
-import com.anrisoftware.sscontrol.httpd.statements.domain.Domain
-import com.anrisoftware.sscontrol.httpd.statements.phpldapadmin.PhpldapadminService
-import com.anrisoftware.sscontrol.httpd.statements.webservice.WebService
+import com.anrisoftware.sscontrol.httpd.domain.Domain;
+import com.anrisoftware.sscontrol.httpd.phpldapadmin.PhpldapadminService;
+import com.anrisoftware.sscontrol.httpd.webservice.WebService;
 
 /**
  * Ubuntu 10.04 phpLDAPAdmin.

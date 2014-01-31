@@ -21,9 +21,9 @@ package com.anrisoftware.sscontrol.httpd.nginx.nginx.nginx_1_4
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.Templates
 import com.anrisoftware.sscontrol.core.service.LinuxScript
+import com.anrisoftware.sscontrol.httpd.domain.Domain;
 import com.anrisoftware.sscontrol.httpd.nginx.nginx.linux.NginxScript
-import com.anrisoftware.sscontrol.httpd.statements.domain.Domain
-import com.anrisoftware.sscontrol.httpd.statements.redirect.Redirect
+import com.anrisoftware.sscontrol.httpd.redirect.Redirect;
 
 /**
  * Redirect configuration.

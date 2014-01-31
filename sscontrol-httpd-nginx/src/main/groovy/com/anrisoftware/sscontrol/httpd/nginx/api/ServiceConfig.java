@@ -21,8 +21,8 @@ package com.anrisoftware.sscontrol.httpd.nginx.api;
 import java.util.List;
 
 import com.anrisoftware.sscontrol.core.service.LinuxScript;
-import com.anrisoftware.sscontrol.httpd.statements.domain.Domain;
-import com.anrisoftware.sscontrol.httpd.statements.webservice.WebService;
+import com.anrisoftware.sscontrol.httpd.domain.Domain;
+import com.anrisoftware.sscontrol.httpd.webservice.WebService;
 
 /**
  * Configures a web service.

@@ -21,8 +21,8 @@ package com.anrisoftware.sscontrol.httpd.apache.apache.api;
 import java.util.List;
 
 import com.anrisoftware.sscontrol.core.service.LinuxScript;
-import com.anrisoftware.sscontrol.httpd.statements.auth.AbstractAuth;
-import com.anrisoftware.sscontrol.httpd.statements.domain.Domain;
+import com.anrisoftware.sscontrol.httpd.auth.AbstractAuth;
+import com.anrisoftware.sscontrol.httpd.domain.Domain;
 
 /**
  * HTTP/authentication.

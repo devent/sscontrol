@@ -27,8 +27,8 @@ import javax.inject.Singleton;
 import com.anrisoftware.globalpom.log.AbstractLogger;
 import com.anrisoftware.sscontrol.httpd.apache.apache.api.AuthConfig;
 import com.anrisoftware.sscontrol.httpd.apache.apache.api.ServiceConfig;
-import com.anrisoftware.sscontrol.httpd.statements.auth.AbstractAuth;
-import com.anrisoftware.sscontrol.httpd.statements.webservice.WebService;
+import com.anrisoftware.sscontrol.httpd.auth.AbstractAuth;
+import com.anrisoftware.sscontrol.httpd.webservice.WebService;
 
 /**
  * Logging messages for {@link Apache_2_2_Script}.

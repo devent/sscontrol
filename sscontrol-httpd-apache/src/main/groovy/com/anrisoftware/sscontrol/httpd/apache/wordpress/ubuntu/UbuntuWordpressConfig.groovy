@@ -24,10 +24,10 @@ import javax.inject.Inject
 
 import com.anrisoftware.sscontrol.core.checkfilehash.CheckFileHashFactory
 import com.anrisoftware.sscontrol.httpd.apache.wordpress.linux.Wordpress_3_Config
-import com.anrisoftware.sscontrol.httpd.statements.domain.Domain
-import com.anrisoftware.sscontrol.httpd.statements.webservice.WebService
-import com.anrisoftware.sscontrol.httpd.statements.wordpress.OverrideMode
-import com.anrisoftware.sscontrol.httpd.statements.wordpress.WordpressService
+import com.anrisoftware.sscontrol.httpd.domain.Domain;
+import com.anrisoftware.sscontrol.httpd.webservice.WebService;
+import com.anrisoftware.sscontrol.httpd.wordpress.OverrideMode;
+import com.anrisoftware.sscontrol.httpd.wordpress.WordpressService;
 
 /**
  * Ubuntu Wordpress 3.

@@ -25,10 +25,10 @@ import org.apache.commons.io.FilenameUtils
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.Templates
 import com.anrisoftware.sscontrol.httpd.apache.apache.linux.ApacheScript
-import com.anrisoftware.sscontrol.httpd.statements.domain.Domain
-import com.anrisoftware.sscontrol.httpd.statements.webservice.WebService
-import com.anrisoftware.sscontrol.httpd.statements.wordpress.MultiSite
-import com.anrisoftware.sscontrol.httpd.statements.wordpress.WordpressService
+import com.anrisoftware.sscontrol.httpd.domain.Domain;
+import com.anrisoftware.sscontrol.httpd.webservice.WebService;
+import com.anrisoftware.sscontrol.httpd.wordpress.MultiSite;
+import com.anrisoftware.sscontrol.httpd.wordpress.WordpressService;
 import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokenTemplate
 
 /**

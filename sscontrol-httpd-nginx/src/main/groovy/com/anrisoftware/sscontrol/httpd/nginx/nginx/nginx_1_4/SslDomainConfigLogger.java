@@ -26,7 +26,7 @@ import static com.anrisoftware.sscontrol.httpd.nginx.nginx.nginx_1_4.SslDomainCo
 import javax.inject.Singleton;
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
-import com.anrisoftware.sscontrol.httpd.statements.domain.SslDomain;
+import com.anrisoftware.sscontrol.httpd.domain.SslDomain;
 
 /**
  * Logging messages for {@link SslDomainConfig}.

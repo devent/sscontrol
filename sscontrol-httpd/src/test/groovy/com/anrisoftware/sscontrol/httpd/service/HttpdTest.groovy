@@ -26,14 +26,14 @@ import org.junit.Test
 
 import com.anrisoftware.sscontrol.core.api.ServiceLoader as SscontrolServiceLoader
 import com.anrisoftware.sscontrol.core.api.ServicesRegistry
-import com.anrisoftware.sscontrol.httpd.statements.auth.AuthProvider
-import com.anrisoftware.sscontrol.httpd.statements.auth.AuthType
-import com.anrisoftware.sscontrol.httpd.statements.auth.RequireValidGroup
-import com.anrisoftware.sscontrol.httpd.statements.auth.RequireValidUser
-import com.anrisoftware.sscontrol.httpd.statements.auth.SatisfyType
-import com.anrisoftware.sscontrol.httpd.statements.authldap.AttributeDn
-import com.anrisoftware.sscontrol.httpd.statements.authldap.Authoritative
-import com.anrisoftware.sscontrol.httpd.statements.authldap.RequireLdapValidGroup
+import com.anrisoftware.sscontrol.httpd.auth.AuthProvider;
+import com.anrisoftware.sscontrol.httpd.auth.AuthType;
+import com.anrisoftware.sscontrol.httpd.auth.RequireValidGroup;
+import com.anrisoftware.sscontrol.httpd.auth.RequireValidUser;
+import com.anrisoftware.sscontrol.httpd.auth.SatisfyType;
+import com.anrisoftware.sscontrol.httpd.authldap.AttributeDn;
+import com.anrisoftware.sscontrol.httpd.authldap.Authoritative;
+import com.anrisoftware.sscontrol.httpd.authldap.RequireLdapValidGroup;
 
 /**
  * @see HttpdServiceImpl

@@ -29,7 +29,7 @@ import static com.anrisoftware.sscontrol.httpd.apache.apache.linux.FcgiConfigLog
 import java.io.File;
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
-import com.anrisoftware.sscontrol.httpd.statements.domain.Domain;
+import com.anrisoftware.sscontrol.httpd.domain.Domain;
 
 /**
  * Logging for {@link FcgiConfig}.

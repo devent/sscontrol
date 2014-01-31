@@ -33,7 +33,7 @@ import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.Templates
 import com.anrisoftware.sscontrol.core.service.LinuxScript
-import com.anrisoftware.sscontrol.httpd.statements.proxy.ProxyService
+import com.anrisoftware.sscontrol.httpd.proxy.ProxyService;
 
 /**
  * Proxy.

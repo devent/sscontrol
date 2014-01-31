@@ -25,7 +25,7 @@ import javax.inject.Singleton;
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
 import com.anrisoftware.sscontrol.core.service.LinuxScript;
-import com.anrisoftware.sscontrol.httpd.statements.authldap.AuthLdap;
+import com.anrisoftware.sscontrol.httpd.authldap.AuthLdap;
 
 /**
  * Logging messages for {@link AuthLdapConfig}.

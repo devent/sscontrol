@@ -28,8 +28,8 @@ import com.anrisoftware.sscontrol.core.service.LinuxScript
 import com.anrisoftware.sscontrol.httpd.apache.apache.api.ServiceConfig
 import com.anrisoftware.sscontrol.httpd.apache.apache.ubuntu_12_04.Ubuntu_12_04_ScriptFactory
 import com.anrisoftware.sscontrol.httpd.apache.wordpress.ubuntu.UbuntuWordpressConfig
-import com.anrisoftware.sscontrol.httpd.statements.domain.Domain
-import com.anrisoftware.sscontrol.httpd.statements.webservice.WebService
+import com.anrisoftware.sscontrol.httpd.domain.Domain;
+import com.anrisoftware.sscontrol.httpd.webservice.WebService;
 
 /**
  * Ubuntu 12.04 Wordpress.

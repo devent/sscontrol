@@ -43,11 +43,11 @@ import com.anrisoftware.sscontrol.core.debuglogging.DebugLogging;
 import com.anrisoftware.sscontrol.core.debuglogging.DebugLoggingFactory;
 import com.anrisoftware.sscontrol.core.service.AbstractService;
 import com.anrisoftware.sscontrol.core.yesno.YesNoFlag;
-import com.anrisoftware.sscontrol.httpd.statements.auth.AuthProvider;
-import com.anrisoftware.sscontrol.httpd.statements.auth.AuthType;
-import com.anrisoftware.sscontrol.httpd.statements.auth.SatisfyType;
-import com.anrisoftware.sscontrol.httpd.statements.domain.Domain;
-import com.anrisoftware.sscontrol.httpd.statements.domain.DomainFactory;
+import com.anrisoftware.sscontrol.httpd.auth.AuthProvider;
+import com.anrisoftware.sscontrol.httpd.auth.AuthType;
+import com.anrisoftware.sscontrol.httpd.auth.SatisfyType;
+import com.anrisoftware.sscontrol.httpd.domain.Domain;
+import com.anrisoftware.sscontrol.httpd.domain.DomainFactory;
 
 /**
  * Httpd service.

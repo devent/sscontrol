@@ -19,7 +19,7 @@
 package com.anrisoftware.sscontrol.httpd.apache.roundcube.api;
 
 import com.anrisoftware.sscontrol.core.service.LinuxScript;
-import com.anrisoftware.sscontrol.httpd.statements.roundcube.RoundcubeService;
+import com.anrisoftware.sscontrol.httpd.roundcube.RoundcubeService;
 
 /**
  * Roundcube database configuration.

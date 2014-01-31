@@ -23,7 +23,7 @@ import static org.apache.commons.io.FileUtils.*
 import javax.inject.Inject
 
 import com.anrisoftware.sscontrol.core.service.LinuxScript
-import com.anrisoftware.sscontrol.httpd.statements.domain.SslDomain
+import com.anrisoftware.sscontrol.httpd.domain.SslDomain;
 
 /**
  * Deploys the SSL/domain configuration.

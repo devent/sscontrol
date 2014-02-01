@@ -18,6 +18,7 @@
  */
 package com.anrisoftware.sscontrol.httpd.service
 
+import com.anrisoftware.sscontrol.httpd.webservice.OverrideMode;
 import com.anrisoftware.sscontrol.httpd.wordpress.MultiSite
 
 def certFile = ServicesResources.class.getResource "cert_crt.txt"

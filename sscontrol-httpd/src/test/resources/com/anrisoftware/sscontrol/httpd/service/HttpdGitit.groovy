@@ -16,23 +16,17 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.wordpress;
+package com.anrisoftware.sscontrol.httpd.service
 
-/**
- * Override mode.
- *
- * @author Erwin Mueller, erwin.mueller@deventm.org
- * @since 1.0
- */
-public enum OverrideMode {
-
-    /**
-     * No override of existing service.
-     */
-    no,
-
-    /**
-     * Update the existing service.
-     */
-    update;
+httpd {
+    domain "test1.com", address: "192.168.0.51", {
+        setup "gitit", id: "gititid", alias: "/", type: git, prefix: "gitit", override: update, {
+            caching enabled: yes
+            idle gc: yes
+            override mode: update
+        }
+    }
+    domain "www.test1.com", address: "192.168.0.51", {
+        setup "gitit", ref: "gitit3", refdomain: "testid"
+    }
 }

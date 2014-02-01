@@ -28,9 +28,9 @@ import com.anrisoftware.sscontrol.core.api.ServiceLoader as SscontrolServiceLoad
 import com.anrisoftware.sscontrol.core.api.ServicesRegistry
 import com.anrisoftware.sscontrol.httpd.domain.Domain;
 import com.anrisoftware.sscontrol.httpd.domain.SslDomain;
+import com.anrisoftware.sscontrol.httpd.webservice.OverrideMode;
 import com.anrisoftware.sscontrol.httpd.webservice.WebService;
 import com.anrisoftware.sscontrol.httpd.wordpress.MultiSite;
-import com.anrisoftware.sscontrol.httpd.wordpress.OverrideMode;
 import com.anrisoftware.sscontrol.httpd.wordpress.WordpressService;
 
 /**

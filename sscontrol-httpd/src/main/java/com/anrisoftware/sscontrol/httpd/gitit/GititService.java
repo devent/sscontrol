@@ -16,43 +16,39 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.wordpress;
+package com.anrisoftware.sscontrol.httpd.gitit;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import com.anrisoftware.sscontrol.core.database.Database;
-import com.anrisoftware.sscontrol.core.database.DatabaseArgs;
-import com.anrisoftware.sscontrol.core.database.DatabaseFactory;
 import com.anrisoftware.sscontrol.core.debuglogging.DebugLogging;
 import com.anrisoftware.sscontrol.core.debuglogging.DebugLoggingFactory;
-import com.anrisoftware.sscontrol.core.list.StringToListFactory;
 import com.anrisoftware.sscontrol.httpd.domain.Domain;
 import com.anrisoftware.sscontrol.httpd.webservice.OverrideMode;
 import com.anrisoftware.sscontrol.httpd.webservice.WebService;
-import com.anrisoftware.sscontrol.httpd.webserviceargs.OverrideModeArgs;
 import com.anrisoftware.sscontrol.httpd.webserviceargs.WebServiceArgs;
 import com.anrisoftware.sscontrol.httpd.webserviceargs.WebServiceLogger;
 import com.google.inject.assistedinject.Assisted;
 
 /**
- * Wordpress service.
+ * <i>Gitit</i> service.
  * 
- * @see <a href='http://wordpress.org/">http://wordpress.org/</a>
+ * @see <a href='http://gitit.net">http://gitit.net</a>
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-public class WordpressService implements WebService {
+public class GititService implements WebService {
 
-    private static final String NAME1 = "name";
+    /**
+     * The <i>Gitit</i> service name.
+     */
+    public static final String SERVICE_NAME = "gitit";
 
-    public static final String NAME = "wordpress";
+    private static final String NAME = "name";
 
     private static final String ALIAS = "alias";
 
@@ -60,30 +56,12 @@ public class WordpressService implements WebService {
 
     private final Domain domain;
 
-    private final List<String> themes;
-
-    private final List<String> plugins;
-
     @Inject
-    private WordpressServiceLogger log;
-
-    @Inject
-    private DatabaseFactory databaseFactory;
-
-    @Inject
-    private StringToListFactory toListFactory;
-
-    @Inject
-    private ForceFactory forceFactory;
-
-    @Inject
-    private OverrideModeArgs overrideModeArgs;
+    private GititServiceLogger log;
 
     private DebugLoggingFactory debugFactory;
 
     private String alias;
-
-    private Database database;
 
     private DebugLogging debug;
 
@@ -93,25 +71,18 @@ public class WordpressService implements WebService {
 
     private String refDomain;
 
-    private MultiSite multiSite;
-
-    private Force force;
-
     private String prefix;
 
     private OverrideMode overrideMode;
 
     /**
-     * @see WordpressServiceFactory#create(Domain, Map)
+     * @see GititServiceFactory#create(Domain, Map)
      */
     @Inject
-    WordpressService(WebServiceArgs aargs, WebServiceLogger logger,
+    GititService(WebServiceArgs aargs, WebServiceLogger logger,
             @Assisted Domain domain, @Assisted Map<String, Object> args) {
         this.serviceLog = logger;
         this.domain = domain;
-        this.multiSite = MultiSite.none;
-        this.themes = new ArrayList<String>();
-        this.plugins = new ArrayList<String>();
         if (aargs.haveAlias(args)) {
             setAlias(aargs.alias(this, args));
         }
@@ -142,7 +113,7 @@ public class WordpressService implements WebService {
 
     @Override
     public String getName() {
-        return NAME;
+        return SERVICE_NAME;
     }
 
     public void setAlias(String alias) {
@@ -191,17 +162,6 @@ public class WordpressService implements WebService {
         return prefix;
     }
 
-    public void database(Map<String, Object> args, String name) {
-        args.put(DatabaseArgs.DATABASE, name);
-        Database database = databaseFactory.create(this, args);
-        log.databaseSet(this, database);
-        this.database = database;
-    }
-
-    public Database getDatabase() {
-        return database;
-    }
-
     public void debug(boolean enabled) {
         DebugLogging logging = debugFactory.create(enabled ? 1 : 0);
         log.debugSet(this, logging);
@@ -213,66 +173,6 @@ public class WordpressService implements WebService {
             this.debug = debugFactory.createOff();
         }
         return debug;
-    }
-
-    public void multisite(MultiSite type) {
-        this.multiSite = type;
-    }
-
-    public void multisite(String string) {
-        this.multiSite = MultiSite.parse(string);
-    }
-
-    public MultiSite getMultiSite() {
-        return multiSite;
-    }
-
-    public void themes(String themes) {
-        List<String> list = toListFactory.create(themes).getList();
-        log.themesAdded(this, list);
-        this.themes.addAll(list);
-    }
-
-    public void themes(List<String> themes) {
-        log.themesAdded(this, themes);
-        this.themes.addAll(themes);
-    }
-
-    public List<String> getThemes() {
-        return themes;
-    }
-
-    public void plugins(String plugins) {
-        List<String> list = toListFactory.create(plugins).getList();
-        log.pluginsAdded(this, list);
-        this.plugins.addAll(list);
-    }
-
-    public void plugins(List<String> plugins) {
-        log.pluginsAdded(this, plugins);
-        this.plugins.addAll(plugins);
-    }
-
-    public List<String> getPlugins() {
-        return plugins;
-    }
-
-    public void force(Map<String, Object> args) {
-        Force force = forceFactory.create(args);
-        log.forceSet(this, force);
-        this.force = force;
-    }
-
-    public void setForce(Force force) {
-        this.force = force;
-    }
-
-    public Force getForce() {
-        return force;
-    }
-
-    public void override(Map<String, Object> args) {
-        setOverrideMode(overrideModeArgs.override(this, args));
     }
 
     public void setOverrideMode(OverrideMode mode) {
@@ -289,7 +189,7 @@ public class WordpressService implements WebService {
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this).append(NAME1, NAME)
+        return new ToStringBuilder(this).append(NAME, SERVICE_NAME)
                 .append(ALIAS, alias).toString();
     }
 }

@@ -18,7 +18,6 @@
  */
 package com.anrisoftware.sscontrol.httpd.service
 
-import com.anrisoftware.sscontrol.httpd.webservice.OverrideMode;
 import com.anrisoftware.sscontrol.httpd.wordpress.MultiSite
 
 def certFile = ServicesResources.class.getResource "cert_crt.txt"
@@ -43,7 +42,7 @@ httpd {
     domain "www.test2.com", address: "192.168.0.51", {
         setup "wordpress", alias: "wordpress3", {
             database "wordpress3", user: "user", password: "userpass", host: "localhost"
-            multisite MultiSite.subdir
+            multisite subdir
         }
     }
     domain "www.test3.com", address: "192.168.0.51", {

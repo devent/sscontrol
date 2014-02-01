@@ -283,10 +283,6 @@ public class WordpressService implements WebService {
         return overrideMode;
     }
 
-    public void update() {
-        this.overrideMode = OverrideMode.update;
-    }
-
     @Override
     public String toString() {
         return new ToStringBuilder(this).append(NAME1, NAME)

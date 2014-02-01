@@ -28,30 +28,32 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
  */
 public abstract class ServiceScriptInfo {
 
-	/**
-	 * Returns the service name.
-	 * <p>
-	 * The service name is the name of the service implementation. For example
-	 * for a DNS service there are Bind, MaraDNS and other implementations.
-	 * 
-	 * @return the service name.
-	 */
-	public abstract String getServiceName();
+    private static final String PROFILE = "profile";
+    private static final String SERVICE = "service";
 
-	/**
-	 * Returns the profile name.
-	 * <p>
-	 * The profile name is the server type. For example there is Ubuntu 10.04
-	 * (Lucid), Debian 6.0 (Squeeze), etc.
-	 * 
-	 * @return the profile name.
-	 */
-	public abstract String getProfileName();
+    /**
+     * Returns the service name.
+     * <p>
+     * The service name is the name of the service implementation. For example
+     * for a DNS service there are Bind, MaraDNS and other implementations.
+     * 
+     * @return the service name.
+     */
+    public abstract String getServiceName();
 
-	@Override
-	public String toString() {
-		return new ToStringBuilder(this)
-				.append("service name", getServiceName())
-				.append("profile name", getProfileName()).toString();
-	}
+    /**
+     * Returns the profile name.
+     * <p>
+     * The profile name is the server type. For example there is Ubuntu 10.04
+     * (Lucid), Debian 6.0 (Squeeze), etc.
+     * 
+     * @return the profile name.
+     */
+    public abstract String getProfileName();
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this).append(SERVICE, getServiceName())
+                .append(PROFILE, getProfileName()).toString();
+    }
 }

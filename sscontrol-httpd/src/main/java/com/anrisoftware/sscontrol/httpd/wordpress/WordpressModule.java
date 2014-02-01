@@ -28,7 +28,7 @@ import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.google.inject.multibindings.MapBinder;
 
 /**
- * Installs the Wordpress service factory.
+ * Installs the <i>Wordpress</i> service factory.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0

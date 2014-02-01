@@ -42,10 +42,6 @@ import com.anrisoftware.sscontrol.core.bindings.BindingFactory;
 import com.anrisoftware.sscontrol.core.debuglogging.DebugLogging;
 import com.anrisoftware.sscontrol.core.debuglogging.DebugLoggingFactory;
 import com.anrisoftware.sscontrol.core.service.AbstractService;
-import com.anrisoftware.sscontrol.core.yesno.YesNoFlag;
-import com.anrisoftware.sscontrol.httpd.auth.AuthProvider;
-import com.anrisoftware.sscontrol.httpd.auth.AuthType;
-import com.anrisoftware.sscontrol.httpd.auth.SatisfyType;
 import com.anrisoftware.sscontrol.httpd.domain.Domain;
 import com.anrisoftware.sscontrol.httpd.domain.DomainFactory;
 
@@ -205,38 +201,6 @@ class HttpdServiceImpl extends AbstractService implements HttpdService {
     @Override
     public DebugLogging getDebug() {
         return debug;
-    }
-
-    public YesNoFlag getYes() {
-        return YesNoFlag.yes;
-    }
-
-    public YesNoFlag getNo() {
-        return YesNoFlag.no;
-    }
-
-    public AuthProvider getFile() {
-        return AuthProvider.file;
-    }
-
-    public AuthProvider getLdap() {
-        return AuthProvider.ldap;
-    }
-
-    public AuthType getDigest() {
-        return AuthType.digest;
-    }
-
-    public AuthType getBasic() {
-        return AuthType.basic;
-    }
-
-    public SatisfyType getAll() {
-        return SatisfyType.all;
-    }
-
-    public SatisfyType getAny() {
-        return SatisfyType.any;
     }
 
     @Override

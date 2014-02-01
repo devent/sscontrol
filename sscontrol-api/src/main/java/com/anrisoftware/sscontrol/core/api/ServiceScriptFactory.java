@@ -27,29 +27,29 @@ package com.anrisoftware.sscontrol.core.api;
  */
 public interface ServiceScriptFactory {
 
-	/**
-	 * Returns the service script.
-	 * 
-	 * @return the service script.
-	 * 
-	 * @throws ServiceException
-	 *             if there was an error returning the service script.
-	 */
-	Object getScript() throws ServiceException;
+    /**
+     * Returns the service script.
+     * 
+     * @return the service script.
+     * 
+     * @throws ServiceException
+     *             if there was an error returning the service script.
+     */
+    Object getScript() throws ServiceException;
 
-	/**
-	 * Returns the information by which the service script is identified.
-	 * 
-	 * @return the {@link ServiceScriptInfo}.
-	 */
-	ServiceScriptInfo getInfo();
+    /**
+     * Returns the information by which the service script is identified.
+     * 
+     * @return the {@link ServiceScriptInfo}.
+     */
+    ServiceScriptInfo getInfo();
 
-	/**
-	 * Sets the parent for the service script.
-	 * 
-	 * @param parent
-	 *            the parent.
-	 */
-	void setParent(Object parent);
+    /**
+     * Sets the parent for the service script.
+     * 
+     * @param parent
+     *            the parent.
+     */
+    void setParent(Object parent);
 
 }

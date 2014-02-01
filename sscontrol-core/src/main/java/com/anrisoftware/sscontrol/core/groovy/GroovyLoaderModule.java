@@ -34,9 +34,9 @@ import com.google.inject.assistedinject.FactoryModuleBuilder;
  */
 public class GroovyLoaderModule extends AbstractModule {
 
-	@Override
-	protected void configure() {
-		install(new FactoryModuleBuilder().implement(ServiceLoader.class,
-				GroovyLoader.class).build(ServiceLoaderFactory.class));
-	}
+    @Override
+    protected void configure() {
+        install(new FactoryModuleBuilder().implement(ServiceLoader.class,
+                GroovyLoader.class).build(ServiceLoaderFactory.class));
+    }
 }

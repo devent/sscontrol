@@ -26,12 +26,12 @@ import org.junit.Test
 
 import com.anrisoftware.sscontrol.core.api.ServiceLoader as SscontrolServiceLoader
 import com.anrisoftware.sscontrol.core.api.ServicesRegistry
-import com.anrisoftware.sscontrol.httpd.domain.Domain;
-import com.anrisoftware.sscontrol.httpd.domain.SslDomain;
-import com.anrisoftware.sscontrol.httpd.webservice.OverrideMode;
-import com.anrisoftware.sscontrol.httpd.webservice.WebService;
-import com.anrisoftware.sscontrol.httpd.wordpress.MultiSite;
-import com.anrisoftware.sscontrol.httpd.wordpress.WordpressService;
+import com.anrisoftware.sscontrol.httpd.domain.Domain
+import com.anrisoftware.sscontrol.httpd.domain.SslDomain
+import com.anrisoftware.sscontrol.httpd.webservice.OverrideMode
+import com.anrisoftware.sscontrol.httpd.webservice.WebService
+import com.anrisoftware.sscontrol.httpd.wordpress.MultiSite
+import com.anrisoftware.sscontrol.httpd.wordpress.WordpressService
 
 /**
  * @see WordpressService
@@ -44,9 +44,9 @@ class HttpdWordpressTest extends HttpdTestUtil {
 
     @Test
     void "wordpress"() {
-        loader.loadService profile.resource, null
+        loader.loadService profile.resource, null, null
         def profile = registry.getService("profile")[0]
-        loader.loadService wordpressScript.resource, profile
+        loader.loadService wordpressScript.resource, profile, preScript
         HttpdServiceImpl service = registry.getService("httpd")[0]
 
         int d = 0

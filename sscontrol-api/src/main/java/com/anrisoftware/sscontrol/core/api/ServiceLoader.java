@@ -31,48 +31,73 @@ import javax.imageio.spi.ServiceRegistry;
  */
 public interface ServiceLoader {
 
-	/**
-	 * Returns a the variables that should be injected in the script. The
-	 * variables contain entries {@code [<variable name>=<value>, ...]}.
-	 * 
-	 * @return the variables {@link Map}.
-	 */
-	Map<String, Object> getVariables();
+    /**
+     * Returns a the variables that should be injected in the script. The
+     * variables contain entries {@code [<variable name>=<value>, ...]}.
+     * 
+     * @return the variables {@link Map}.
+     */
+    Map<String, Object> getVariables();
 
-	/**
-	 * Returns the registry to which to add the service.
-	 * 
-	 * @return the {@link ServicesRegistry}.
-	 */
-	ServicesRegistry getRegistry();
+    /**
+     * Returns the registry to which to add the service.
+     * 
+     * @return the {@link ServicesRegistry}.
+     */
+    ServicesRegistry getRegistry();
 
-	/**
-	 * Sets the optional dependencies for the services.
-	 * 
-	 * @param parent
-	 *            the parent {@link Object}.
-	 */
-	void setParent(Object parent);
+    /**
+     * Sets the optional dependencies for the services.
+     * 
+     * @param parent
+     *            the parent {@link Object}.
+     */
+    void setParent(Object parent);
 
-	/**
-	 * Loads the service from the specified script file URL.
-	 * 
-	 * @param url
-	 *            the {@link URL} of the script file.
-	 * 
-	 * @param profile
-	 *            the {@link ProfileService} or {@code null} if no profile is
-	 *            set.
-	 * 
-	 * @return the {@link ServiceRegistry} that contains the service.
-	 * 
-	 * @throws NullPointerException
-	 *             if the specified script file URL or the specified services
-	 *             registry is {@code null}.
-	 * 
-	 * @throws ServiceException
-	 *             if there was an error loading the script file.
-	 */
-	ServicesRegistry loadService(URL url, ProfileService profile)
-			throws ServiceException;
+    /**
+     * Loads the service from the specified script file URL.
+     * 
+     * @param url
+     *            the {@link URL} of the script file.
+     * 
+     * @param profile
+     *            the {@link ProfileService} or {@code null} if no profile is
+     *            set.
+     * 
+     * @return the {@link ServiceRegistry} that contains the service.
+     * 
+     * @throws NullPointerException
+     *             if the specified script file URL or the specified services
+     *             registry is {@code null}.
+     * 
+     * @throws ServiceException
+     *             if there was an error loading the script file.
+     */
+    ServicesRegistry loadService(URL url, ProfileService profile)
+            throws ServiceException;
+
+    /**
+     * Loads the service from the specified script file URL.
+     * 
+     * @param url
+     *            the {@link URL} of the script file.
+     * 
+     * @param profile
+     *            the {@link ProfileService} or {@code null} if no profile is
+     *            set.
+     * 
+     * @param prescript
+     *            the {@link ServicePreScript} pre-script to be run.
+     * 
+     * @return the {@link ServiceRegistry} that contains the service.
+     * 
+     * @throws NullPointerException
+     *             if the specified script file URL or the specified services
+     *             registry is {@code null}.
+     * 
+     * @throws ServiceException
+     *             if there was an error loading the script file.
+     */
+    ServicesRegistry loadService(URL url, ProfileService profile,
+            ServicePreScript prescript) throws ServiceException;
 }

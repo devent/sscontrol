@@ -45,6 +45,8 @@ class HttpdTestUtil {
 
     static ServiceLoaderFactory loaderFactory
 
+    static HttpdPreScript preScript
+
     File tmpdir
 
     Map variables
@@ -75,11 +77,13 @@ class HttpdTestUtil {
     static void createFactories() {
         injector = createInjector()
         loaderFactory = injector.getInstance ServiceLoaderFactory
+        preScript = injector.getInstance HttpdPreScript
     }
 
     static Injector createInjector() {
-        Guice.createInjector(new CoreModule(), new CoreResourcesModule(),
-                new ServiceModule())
+        Guice.createInjector(
+                new CoreModule(), new CoreResourcesModule(),
+                new ServiceModule(), new HttpdPreScriptModule())
     }
 
     @BeforeClass

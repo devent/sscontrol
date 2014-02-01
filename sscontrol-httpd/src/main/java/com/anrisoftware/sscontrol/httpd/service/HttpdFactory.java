@@ -27,7 +27,7 @@ import com.google.inject.Injector;
 import com.google.inject.Module;
 
 /**
- * Creates the httpd service.
+ * Creates the <i>Httpd</i> service.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0

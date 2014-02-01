@@ -36,103 +36,113 @@ import com.anrisoftware.sscontrol.core.api.ProfileService;
 import com.anrisoftware.sscontrol.core.api.Service;
 import com.anrisoftware.sscontrol.core.api.ServiceException;
 import com.anrisoftware.sscontrol.core.api.ServiceLoader;
+import com.anrisoftware.sscontrol.core.api.ServicePreScript;
 import com.anrisoftware.sscontrol.core.api.ServicesRegistry;
 import com.google.inject.assistedinject.Assisted;
 
 /**
  * Loads a service from a groovy script.
- * 
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 0.1
  */
 class GroovyLoader implements ServiceLoader {
 
-	private final GroovyLoaderLogger log;
+    private final GroovyLoaderLogger log;
 
-	private final ScriptBuilderLogger scriptBuilderLogger;
+    private final ScriptBuilderLogger scriptBuilderLogger;
 
-	private final Map<String, Object> variables;
+    private final Map<String, Object> variables;
 
-	private final ServicesRegistry registry;
+    private final ServicesRegistry registry;
 
-	private Object parent;
+    private Object parent;
 
-	@Inject
-	GroovyLoader(GroovyLoaderLogger logger,
-			ScriptBuilderLogger scriptBuilderLogger,
-			ScriptUtilities scriptUtilities,
-			@Assisted ServicesRegistry registry,
-			@Assisted Map<String, Object> variables) {
-		this.log = logger;
-		this.scriptBuilderLogger = scriptBuilderLogger;
-		this.registry = registry;
-		this.variables = variables;
-	}
+    @Inject
+    GroovyLoader(GroovyLoaderLogger logger,
+            ScriptBuilderLogger scriptBuilderLogger,
+            ScriptUtilities scriptUtilities,
+            @Assisted ServicesRegistry registry,
+            @Assisted Map<String, Object> variables) {
+        this.log = logger;
+        this.scriptBuilderLogger = scriptBuilderLogger;
+        this.registry = registry;
+        this.variables = variables;
+    }
 
-	@Override
-	public ServicesRegistry getRegistry() {
-		return registry;
-	}
+    @Override
+    public ServicesRegistry getRegistry() {
+        return registry;
+    }
 
-	@Override
-	public Map<String, Object> getVariables() {
-		return variables;
-	}
+    @Override
+    public Map<String, Object> getVariables() {
+        return variables;
+    }
 
-	@Override
-	public void setParent(Object parent) {
-		this.parent = parent;
-	}
+    @Override
+    public void setParent(Object parent) {
+        this.parent = parent;
+    }
 
-	@Override
-	public ServicesRegistry loadService(URL url, ProfileService profile)
-			throws ServiceException {
-		log.checkUrl(url);
-		log.checkRegistry(registry);
-		log.loadServiceScript(url);
-		GroovyShell shell = createShell(variables, profile);
-		Reader reader = openScript(url);
-		Service service = evaluateScript(reader, shell, url);
-		registry.addService(service);
-		return registry;
-	}
+    @Override
+    public ServicesRegistry loadService(URL url, ProfileService profile)
+            throws ServiceException {
+        return loadService(url, profile, null);
+    }
 
-	private GroovyShell createShell(Map<String, Object> variables,
-			ProfileService profile) {
-		CompilerConfiguration compiler = new CompilerConfiguration();
-		compiler.setScriptBaseClass(ScriptBuilder.class.getName());
-		ClassLoader classLoader = getClass().getClassLoader();
-		Binding binding = createBinding(variables, profile);
-		return new GroovyShell(classLoader, binding, compiler);
-	}
+    @Override
+    public ServicesRegistry loadService(URL url, ProfileService profile,
+            ServicePreScript prescript) throws ServiceException {
+        log.checkUrl(url);
+        log.checkRegistry(registry);
+        log.loadServiceScript(url);
+        GroovyShell shell = createShell(variables, profile, prescript);
+        Reader reader = openScript(url);
+        Service service = evaluateScript(reader, shell, url);
+        registry.addService(service);
+        return registry;
+    }
 
-	private Binding createBinding(Map<String, Object> variables,
-			ProfileService profile) {
-		Binding binding = new Binding();
-		binding.setProperty("scriptBuilderLogger", scriptBuilderLogger);
-		binding.setProperty("profile", profile);
-		binding.setProperty("injector", parent);
-		for (Map.Entry<String, Object> entry : variables.entrySet()) {
-			binding.setProperty(entry.getKey(), entry.getValue());
-		}
-		return binding;
-	}
+    private GroovyShell createShell(Map<String, Object> variables,
+            ProfileService profile, ServicePreScript prescript) {
+        CompilerConfiguration compiler = new CompilerConfiguration();
+        if (prescript != null) {
+            prescript.configureCompiler(compiler);
+        }
+        compiler.setScriptBaseClass(ScriptBuilder.class.getName());
+        ClassLoader classLoader = getClass().getClassLoader();
+        Binding binding = createBinding(variables, profile);
+        return new GroovyShell(classLoader, binding, compiler);
+    }
 
-	private Service evaluateScript(Reader reader, GroovyShell shell, URL url)
-			throws ServiceException {
-		try {
-			Script script = (Script) shell.evaluate(reader);
-			return (Service) script.getProperty("service");
-		} catch (Throwable e) {
-			throw log.errorEvaluateScript(e, url);
-		}
-	}
+    private Binding createBinding(Map<String, Object> variables,
+            ProfileService profile) {
+        Binding binding = new Binding();
+        binding.setProperty("scriptBuilderLogger", scriptBuilderLogger);
+        binding.setProperty("profile", profile);
+        binding.setProperty("injector", parent);
+        for (Map.Entry<String, Object> entry : variables.entrySet()) {
+            binding.setProperty(entry.getKey(), entry.getValue());
+        }
+        return binding;
+    }
 
-	private InputStreamReader openScript(URL url) throws ServiceException {
-		try {
-			return new InputStreamReader(url.openStream());
-		} catch (IOException e) {
-			throw log.errorOpenScriptUrl(e, url);
-		}
-	}
+    private Service evaluateScript(Reader reader, GroovyShell shell, URL url)
+            throws ServiceException {
+        try {
+            Script script = (Script) shell.evaluate(reader);
+            return (Service) script.getProperty("service");
+        } catch (Throwable e) {
+            throw log.errorEvaluateScript(e, url);
+        }
+    }
+
+    private InputStreamReader openScript(URL url) throws ServiceException {
+        try {
+            return new InputStreamReader(url.openStream());
+        } catch (IOException e) {
+            throw log.errorOpenScriptUrl(e, url);
+        }
+    }
 }

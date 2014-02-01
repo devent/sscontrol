@@ -20,7 +20,8 @@ package com.anrisoftware.sscontrol.httpd.service
 
 httpd {
     domain "test1.com", address: "192.168.0.51", {
-        setup "gitit", id: "gititid", alias: "/", type: git, prefix: "gitit", override: update, {
+        setup "gitit", id: "gititid", alias: "/", type: git, prefix: "gitit", {
+            override mode: update
             caching enabled: yes
             idle gc: yes
             override mode: update

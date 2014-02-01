@@ -42,7 +42,7 @@ class HttpdGititTest extends HttpdTestUtil {
     void "gitit"() {
         loader.loadService profile.resource, null
         def profile = registry.getService("profile")[0]
-        loader.loadService gititScript.resource, profile
+        loader.loadService gititScript.resource, profile, preScript
         HttpdServiceImpl service = registry.getService("httpd")[0]
 
         int d = 0

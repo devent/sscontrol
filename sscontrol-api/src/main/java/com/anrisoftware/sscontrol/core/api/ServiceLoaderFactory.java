@@ -30,19 +30,19 @@ import java.util.Map;
  */
 public interface ServiceLoaderFactory {
 
-	/**
-	 * Creates the service loader.
-	 * 
-	 * @param registry
-	 *            the {@link ServicesRegistry} to which to add the service.
-	 * 
-	 * @param variables
-	 *            a {@link Map} of variables that should be injected in the
-	 *            script. The map should contain entries
-	 *            {@code [<variable name>=<value>, ...]}.
-	 * 
-	 * @return the {@link ServiceLoader}.
-	 */
-	ServiceLoader create(ServicesRegistry registry,
-			Map<String, Object> variables);
+    /**
+     * Creates the service loader.
+     * 
+     * @param registry
+     *            the {@link ServicesRegistry} to which to add the service.
+     * 
+     * @param variables
+     *            a {@link Map} of variables that should be injected in the
+     *            script. The map should contain entries
+     *            {@code [<variable name>=<value>, ...]}.
+     * 
+     * @return the {@link ServiceLoader}.
+     */
+    ServiceLoader create(ServicesRegistry registry,
+            Map<String, Object> variables);
 }

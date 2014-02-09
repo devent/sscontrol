@@ -28,6 +28,7 @@ import com.anrisoftware.sscontrol.core.api.ServiceLoader as SscontrolServiceLoad
 import com.anrisoftware.sscontrol.core.api.ServicesRegistry
 import com.anrisoftware.sscontrol.httpd.domain.Domain
 import com.anrisoftware.sscontrol.httpd.gitit.GititService
+import com.anrisoftware.sscontrol.httpd.gitit.RepositoryType
 
 /**
  * @see GititService
@@ -43,26 +44,32 @@ class HttpdGititTest extends HttpdTestUtil {
         loader.loadService profile.resource, null
         def profile = registry.getService("profile")[0]
         loader.loadService gititScript.resource, profile, preScript
-        HttpdServiceImpl service = registry.getService("httpd")[0]
+        HttpdService service = registry.getService("httpd")[0]
+
+        assert service.domains.size() == 2
 
         int d = 0
         Domain domain = service.domains[d++]
         assert domain.name == "test1.com"
         assert domain.address == "192.168.0.51"
+
         GititService webservice = domain.services[0]
-        assert (webservice instanceof GititService)
-        assert webservice.name == "wordpress"
-        assert webservice.id == "wordpress3"
+        assert webservice.name == "gitit"
+        assert webservice.id == "gititid"
         assert webservice.ref == null
-        assert webservice.alias == "wordpress3"
+        assert webservice.alias == ""
+        assert webservice.type == RepositoryType.git
+        assert webservice.caching == true
+        assert webservice.idleGc == true
 
         domain = service.domains[d++]
         assert domain.name == "www.test1.com"
         assert domain.address == "192.168.0.51"
+
         webservice = domain.services[0]
-        assert (webservice instanceof GititService)
-        assert webservice.name == "wordpress"
+        assert webservice.name == "gitit"
         assert webservice.id == null
-        assert webservice.ref == "wordpress3"
+        assert webservice.ref == "gititid"
+        assert webservice.refDomain == "testid"
     }
 }

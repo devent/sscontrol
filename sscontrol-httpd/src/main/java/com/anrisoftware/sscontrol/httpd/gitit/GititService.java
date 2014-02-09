@@ -35,9 +35,9 @@ import com.google.inject.assistedinject.Assisted;
 
 /**
  * <i>Gitit</i> service.
- * 
+ *
  * @see <a href='http://gitit.net">http://gitit.net</a>
- * 
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
@@ -48,6 +48,8 @@ public class GititService implements WebService {
      */
     public static final String SERVICE_NAME = "gitit";
 
+    private static final String REPOSITORY_TYPE = "repository type";
+
     private static final String NAME = "name";
 
     private static final String ALIAS = "alias";
@@ -56,8 +58,7 @@ public class GititService implements WebService {
 
     private final Domain domain;
 
-    @Inject
-    private GititServiceLogger log;
+    private final GititServiceLogger log;
 
     private DebugLoggingFactory debugFactory;
 
@@ -75,12 +76,20 @@ public class GititService implements WebService {
 
     private OverrideMode overrideMode;
 
+    private RepositoryType type;
+
+    private Boolean caching;
+
+    private Boolean idleGc;
+
     /**
      * @see GititServiceFactory#create(Domain, Map)
      */
     @Inject
-    GititService(WebServiceArgs aargs, WebServiceLogger logger,
-            @Assisted Domain domain, @Assisted Map<String, Object> args) {
+    GititService(GititServiceLogger log, WebServiceArgs aargs,
+            WebServiceLogger logger, @Assisted Domain domain,
+            @Assisted Map<String, Object> args) {
+        this.log = log;
         this.serviceLog = logger;
         this.domain = domain;
         if (aargs.haveAlias(args)) {
@@ -97,6 +106,9 @@ public class GititService implements WebService {
         }
         if (aargs.havePrefix(args)) {
             setPrefix(aargs.prefix(this, args));
+        }
+        if (log.haveType(args)) {
+            setType(log.type(this, args));
         }
     }
 
@@ -175,6 +187,12 @@ public class GititService implements WebService {
         return debug;
     }
 
+    public void override(Map<String, Object> args) {
+        OverrideMode mode = log.override(this, args);
+        log.overrideModeSet(this, mode);
+        this.overrideMode = mode;
+    }
+
     public void setOverrideMode(OverrideMode mode) {
         this.overrideMode = mode;
     }
@@ -183,13 +201,45 @@ public class GititService implements WebService {
         return overrideMode;
     }
 
-    public void update() {
-        this.overrideMode = OverrideMode.update;
+    public void setType(RepositoryType type) {
+        this.type = type;
+    }
+
+    public RepositoryType getType() {
+        return type;
+    }
+
+    public void caching(Map<String, Object> args) {
+        boolean caching = log.caching(this, args);
+        log.cachingSet(this, caching);
+        this.caching = caching;
+    }
+
+    public void setCaching(Boolean caching) {
+        this.caching = caching;
+    }
+
+    public Boolean getCaching() {
+        return caching;
+    }
+
+    public void idle(Map<String, Object> args) {
+        boolean gc = log.idleGc(this, args);
+        log.idleGcSet(this, gc);
+        this.idleGc = gc;
+    }
+
+    public void setIdleGc(Boolean idleGc) {
+        this.idleGc = idleGc;
+    }
+
+    public Boolean getIdleGc() {
+        return idleGc;
     }
 
     @Override
     public String toString() {
         return new ToStringBuilder(this).append(NAME, SERVICE_NAME)
-                .append(ALIAS, alias).toString();
+                .append(ALIAS, alias).append(REPOSITORY_TYPE, type).toString();
     }
 }

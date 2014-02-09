@@ -24,10 +24,9 @@ httpd {
             override mode: update
             caching enabled: yes
             idle gc: yes
-            override mode: update
         }
     }
     domain "www.test1.com", address: "192.168.0.51", {
-        setup "gitit", ref: "gitit3", refdomain: "testid"
+        setup "gitit", ref: "gititid", refdomain: "testid"
     }
 }

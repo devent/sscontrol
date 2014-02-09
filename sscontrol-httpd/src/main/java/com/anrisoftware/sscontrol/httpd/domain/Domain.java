@@ -31,10 +31,6 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import com.anrisoftware.sscontrol.httpd.auth.AbstractAuth;
-import com.anrisoftware.sscontrol.httpd.auth.AuthProvider;
-import com.anrisoftware.sscontrol.httpd.authfile.AuthFileFactory;
-import com.anrisoftware.sscontrol.httpd.authldap.AuthLdapFactory;
 import com.anrisoftware.sscontrol.httpd.memory.Memory;
 import com.anrisoftware.sscontrol.httpd.memory.MemoryFactory;
 import com.anrisoftware.sscontrol.httpd.redirect.Redirect;
@@ -56,7 +52,6 @@ public class Domain {
 
     private static final String HTTP = "http://";
     private static final String USER = "user";
-    private static final String AUTH_PROVIDER = "provider";
     private static final String SITE_DIR = "%s/web";
     private static final String NAME = "name";
     private static final String ID = "id";
@@ -69,8 +64,6 @@ public class Domain {
 
     private final List<Redirect> redirects;
 
-    private final List<AbstractAuth> auths;
-
     private final List<WebService> services;
 
     @Inject
@@ -78,12 +71,6 @@ public class Domain {
 
     @Inject
     private RedirectFactory redirectFactory;
-
-    @Inject
-    private AuthFileFactory authFactory;
-
-    @Inject
-    private AuthLdapFactory authLdapFactory;
 
     @Inject
     private Map<String, WebServiceFactory> serviceFactories;
@@ -120,7 +107,6 @@ public class Domain {
     protected Domain(Map<String, Object> args, int port, String name) {
         this.name = name;
         this.redirects = new ArrayList<Redirect>();
-        this.auths = new ArrayList<AbstractAuth>();
         this.services = new ArrayList<WebService>();
         this.port = port;
         if (args.containsKey(ADDRESS)) {
@@ -230,28 +216,6 @@ public class Domain {
     public void addRedirect(Redirect redirect) {
         redirects.add(redirect);
         log.redirectAdded(this, redirect);
-    }
-
-    public AbstractAuth auth(Map<String, Object> args, String name, Object s) {
-        AbstractAuth auth = null;
-        if (args.containsKey(AUTH_PROVIDER)) {
-            AuthProvider provider = (AuthProvider) args.get(AUTH_PROVIDER);
-            switch (provider) {
-            case file:
-                auth = authFactory.create(args, name);
-                break;
-            case ldap:
-                auth = authLdapFactory.create(args, name);
-                break;
-            }
-        }
-        auth = auth == null ? authFactory.create(args, name) : auth;
-        auths.add(auth);
-        return auth;
-    }
-
-    public List<AbstractAuth> getAuths() {
-        return auths;
     }
 
     public WebService setup(String name, Object s) {

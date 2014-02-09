@@ -25,11 +25,15 @@ import static com.anrisoftware.sscontrol.httpd.webserviceargs.WebServiceLogger._
 import static com.anrisoftware.sscontrol.httpd.webserviceargs.WebServiceLogger._.id_set_debug;
 import static com.anrisoftware.sscontrol.httpd.webserviceargs.WebServiceLogger._.id_set_info;
 import static com.anrisoftware.sscontrol.httpd.webserviceargs.WebServiceLogger._.prefix_null;
+import static com.anrisoftware.sscontrol.httpd.webserviceargs.WebServiceLogger._.prefix_set_debug;
+import static com.anrisoftware.sscontrol.httpd.webserviceargs.WebServiceLogger._.prefix_set_info;
 import static com.anrisoftware.sscontrol.httpd.webserviceargs.WebServiceLogger._.proxyname_null;
 import static com.anrisoftware.sscontrol.httpd.webserviceargs.WebServiceLogger._.ref_null;
 import static com.anrisoftware.sscontrol.httpd.webserviceargs.WebServiceLogger._.ref_set_debug;
 import static com.anrisoftware.sscontrol.httpd.webserviceargs.WebServiceLogger._.ref_set_info;
 import static com.anrisoftware.sscontrol.httpd.webserviceargs.WebServiceLogger._.refdomain_null;
+import static com.anrisoftware.sscontrol.httpd.webserviceargs.WebServiceLogger._.refdomain_set_debug;
+import static com.anrisoftware.sscontrol.httpd.webserviceargs.WebServiceLogger._.refdomain_set_info;
 import static org.apache.commons.lang3.Validate.notBlank;
 import static org.apache.commons.lang3.Validate.notNull;
 
@@ -62,13 +66,21 @@ public class WebServiceLogger extends AbstractLogger {
 
         ref_set_debug("Reference '{}' set for {}."),
 
-        ref_set_info("Identifier '{}' set for service '{}'."),
+        ref_set_info("Reference '{}' set for service '{}'."),
 
         refdomain_null("Domain reference cannot be null or blank for {}."),
 
         proxyname_null("Proxy name cannot be null or blank for {}."),
 
-        prefix_null("Prefix cannot be null for {}.");
+        prefix_null("Prefix cannot be null for {}."),
+
+        refdomain_set_debug("Referenced domain '{}' set for {}."),
+
+        refdomain_set_info("Reference domain '{}' set for service '{}'."),
+
+        prefix_set_debug("Prefix '{}' set for {}."),
+
+        prefix_set_info("Prefix '{}' set for service '{}'.");
 
         private String name;
 
@@ -133,6 +145,14 @@ public class WebServiceLogger extends AbstractLogger {
         notBlank(ref.toString(), refdomain_null.toString(), service);
     }
 
+    public void refDomainSet(WebService service, String domain) {
+        if (isDebugEnabled()) {
+            debug(refdomain_set_debug, domain, service);
+        } else {
+            info(refdomain_set_info, domain, service.getName());
+        }
+    }
+
     void checkProxyName(WebService service, Object name) {
         notNull(name, proxyname_null.toString(), service);
         notBlank(name.toString(), proxyname_null.toString(), service);
@@ -141,4 +161,13 @@ public class WebServiceLogger extends AbstractLogger {
     void checkPrefix(WebService service, Object prefix) {
         notNull(prefix, prefix_null.toString(), service);
     }
+
+    public void prefixSet(WebService service, String prefix) {
+        if (isDebugEnabled()) {
+            debug(prefix_set_debug, prefix, service);
+        } else {
+            info(prefix_set_info, prefix, service.getName());
+        }
+    }
+
 }

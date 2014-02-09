@@ -18,43 +18,48 @@
  */
 package com.anrisoftware.sscontrol.httpd.auth;
 
+import java.util.Map;
+
 import javax.inject.Inject;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import com.google.inject.assistedinject.Assisted;
+
 /**
- * Required authentication group.
+ * Required valid for authentication.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-public class AbstractRequireGroup implements AuthRequire {
+public class RequireValid implements AuthRequire {
 
-	private AbstractRequireGroupLogger log;
+    private static final String VALID = "valid";
 
-	private String name;
+    private final AuthService service;
 
-	@Inject
-	void setAbstractRequireGroupLogger(AbstractRequireGroupLogger logger) {
-		this.log = logger;
-	}
+    private final RequireValidMode validMode;
 
-	public void setName(String name) {
-		log.checkName(name);
-		this.name = name.toString();
-	}
+    /**
+     * @see RequireValidFactory#create(AuthService, Map)
+     */
+    @Inject
+    RequireValid(RequireValidLogger log, @Assisted AuthService service,
+            @Assisted Map<String, Object> args) {
+        this.service = service;
+        this.validMode = log.valid(service, args);
+    }
 
-	/**
-	 * Returns the name of the group.
-	 * 
-	 * @return the group name.
-	 */
-	public String getName() {
-		return name;
-	}
+    public AuthService getService() {
+        return service;
+    }
 
-	@Override
-	public String toString() {
-		return new ToStringBuilder(this).append("name", name).toString();
-	}
+    public RequireValidMode getValidMode() {
+        return validMode;
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this).append(VALID, validMode).toString();
+    }
 }

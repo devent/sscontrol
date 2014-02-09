@@ -18,46 +18,50 @@
  */
 package com.anrisoftware.sscontrol.httpd.auth;
 
-import static com.anrisoftware.sscontrol.httpd.auth.AbstractRequireGroupLogger._.name_null;
+import static com.anrisoftware.sscontrol.httpd.auth.GroupAttributeLogger._.name_null;
 import static org.apache.commons.lang3.Validate.notBlank;
+import static org.apache.commons.lang3.Validate.notNull;
 
-import javax.inject.Singleton;
+import java.util.Map;
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
 
 /**
- * Logging messages for {@link AbstractRequireGroup}.
+ * Logging for {@link AuthHost}.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-@Singleton
-class AbstractRequireGroupLogger extends AbstractLogger {
+class GroupAttributeLogger extends AbstractLogger {
 
-	enum _ {
+    private static final String NAME = "name";
 
-		name_null("Group name cannot be null or blank.");
+    enum _ {
 
-		private String name;
+        name_null("Credentials name cannot be null or blank for %s.");
 
-		private _(String name) {
-			this.name = name;
-		}
+        private String name;
 
-		@Override
-		public String toString() {
-			return name;
-		}
-	}
+        private _(String name) {
+            this.name = name;
+        }
 
-	/**
-	 * Creates a logger for {@link AbstractRequireGroup}.
-	 */
-	public AbstractRequireGroupLogger() {
-		super(AbstractRequireGroup.class);
-	}
+        @Override
+        public String toString() {
+            return name;
+        }
+    }
 
-	void checkName(String name) {
-		notBlank(name, name_null.toString());
-	}
+    /**
+     * Sets the context of the logger to {@link AuthHost}.
+     */
+    public GroupAttributeLogger() {
+        super(AuthHost.class);
+    }
+
+    String name(AuthService service, Map<String, Object> args) {
+        Object name = args.get(NAME);
+        notNull(name, name_null.toString(), service);
+        return notBlank(name.toString(), name_null.toString(), service);
+    }
 }

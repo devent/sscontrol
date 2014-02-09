@@ -26,14 +26,43 @@ package com.anrisoftware.sscontrol.core.yesno;
  */
 public enum YesNoFlag {
 
-	yes, no;
+    yes(true), no(false);
 
-	/**
-	 * Returns boolean value.
-	 * 
-	 * @return {@code true} if the flag is {@link #yes}.
-	 */
-	public boolean asBoolean() {
-		return this == yes ? true : false;
-	}
+    /**
+     * Returns the value of the flag.
+     * 
+     * @param flag
+     *            the {@link Object} flag.
+     * 
+     * @return the flag value.
+     */
+    public static boolean valueOf(Object flag) {
+        if (flag instanceof YesNoFlag) {
+            return ((YesNoFlag) flag).asBoolean();
+        }
+        if (flag instanceof Boolean) {
+            return (Boolean) flag;
+        } else {
+            try {
+                return YesNoFlag.valueOf(flag.toString()).asBoolean();
+            } catch (IllegalArgumentException e) {
+                return Boolean.valueOf(flag.toString());
+            }
+        }
+    }
+
+    private boolean flag;
+
+    private YesNoFlag(boolean flag) {
+        this.flag = flag;
+    }
+
+    /**
+     * Returns boolean value.
+     * 
+     * @return {@code true} if the flag is {@link #yes}.
+     */
+    public boolean asBoolean() {
+        return flag;
+    }
 }

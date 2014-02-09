@@ -23,15 +23,25 @@ def certKeyFile = ServicesResources.class.getResource "cert_key.txt"
 
 httpd {
 	ssl_domain "test1.com", address: "192.168.0.50", {
-		auth "Private Directory", location: "/private", type: digest, provider: file, appending: true, satisfy: any, {
-			domain "https://private"
-			require valid_user
-			require group: "admin"
-			group "admin", {
-				user "adminfoo", password: "adminfoopassword"
-				user "adminbar", password: "adminbarpassword"
+		setup "auth", {
+            auth "Private Directory", location: "/private"
+            type digest, provider: file, satisfy: any
+			require domain: "https://%"
+            require user: "foo", password: "foopassword"
+			require user: "bar", password: "barpassword", update: password
+            require group: "foogroup"
+            require group: "admin1", {
+                user "adminfoo1", password: "adminfoopassword"
+                user "adminbar1", password: "adminbarpassword"
+            }
+            require group: "admin2", update: rewrite, {
+                user "adminfoo2", password: "adminfoopassword"
+                user "adminbar2", password: "adminbarpassword"
+            }
+			require group: "admin3", update: append, {
+				user "adminfoo3", password: "adminfoopassword"
+				user "adminbar3", password: "adminbarpassword"
 			}
-			user "bar", password: "barpassword"
 		}
 	}
 }

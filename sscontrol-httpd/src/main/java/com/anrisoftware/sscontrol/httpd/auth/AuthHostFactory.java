@@ -16,15 +16,28 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.authldap;
+package com.anrisoftware.sscontrol.httpd.auth;
+
+import java.util.Map;
 
 /**
- * LDAP/server is authoritative.
+ * Factory to create authentication host.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-public enum Authoritative {
+public interface AuthHostFactory {
 
-	on, off
+    /**
+     * Creates the authentication host.
+     * 
+     * @param service
+     *            the {@link AuthService} service.
+     * 
+     * @param args
+     *            the {@link Map} arguments.
+     * 
+     * @return the {@link AuthHost}.
+     */
+    AuthHost create(AuthService service, Map<String, Object> args);
 }

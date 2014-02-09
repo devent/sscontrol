@@ -16,9 +16,28 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.authfile;
+package com.anrisoftware.sscontrol.httpd.auth;
 
-public interface FileGroupFactory {
+import java.util.Map;
 
-	FileGroup create(String name);
+/**
+ * Factory to create the required group.
+ * 
+ * @author Erwin Mueller, erwin.mueller@deventm.org
+ * @since 1.0
+ */
+public interface RequireGroupFactory {
+
+    /**
+     * Creates the required group
+     * 
+     * @param service
+     *            the {@link AuthService} service.
+     * 
+     * @param args
+     *            the {@link Map} arguments.
+     * 
+     * @return the {@link RequireGroup}.
+     */
+    RequireGroup create(AuthService service, Map<String, Object> map);
 }

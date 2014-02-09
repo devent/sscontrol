@@ -174,8 +174,9 @@ public class WordpressService implements WebService {
         return ref;
     }
 
-    public void setRefDomain(String refDomain) {
-        this.refDomain = refDomain;
+    public void setRefDomain(String domain) {
+        this.refDomain = domain;
+        serviceLog.refDomainSet(this, domain);
     }
 
     @Override
@@ -185,6 +186,7 @@ public class WordpressService implements WebService {
 
     public void setPrefix(String prefix) {
         this.prefix = prefix;
+        serviceLog.prefixSet(this, prefix);
     }
 
     public String getPrefix() {

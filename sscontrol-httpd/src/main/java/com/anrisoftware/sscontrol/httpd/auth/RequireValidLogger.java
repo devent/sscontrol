@@ -16,31 +16,31 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.webserviceargs;
+package com.anrisoftware.sscontrol.httpd.auth;
 
-import static com.anrisoftware.sscontrol.httpd.webserviceargs.OverrideModeArgsLogger._.invalid_mode;
-import static com.anrisoftware.sscontrol.httpd.webserviceargs.OverrideModeArgsLogger._.invalid_mode_message;
-import static com.anrisoftware.sscontrol.httpd.webserviceargs.OverrideModeArgsLogger._.mode_null;
+import static com.anrisoftware.sscontrol.httpd.auth.RequireValidLogger._.valid_mode_null;
 import static org.apache.commons.lang3.Validate.notNull;
 
+import java.util.Map;
+
+import javax.inject.Singleton;
+
 import com.anrisoftware.globalpom.log.AbstractLogger;
-import com.anrisoftware.sscontrol.httpd.webservice.WebService;
 
 /**
- * Logging for {@link OverrideModeArgs}.
+ * Logging messages for {@link RequireValid}.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class OverrideModeArgsLogger extends AbstractLogger {
+@Singleton
+class RequireValidLogger extends AbstractLogger {
+
+    private static final String VALID = "valid";
 
     enum _ {
 
-        mode_null("Override mode cannot be null for {}."),
-
-        invalid_mode("Invalid override mode"),
-
-        invalid_mode_message("Invalid override mode '{}' for {}.");
+        valid_mode_null("Valid mode cannot be null for %s.");
 
         private String name;
 
@@ -55,19 +55,20 @@ class OverrideModeArgsLogger extends AbstractLogger {
     }
 
     /**
-     * Sets the context of the logger to {@link OverrideModeArgs}.
+     * Creates a logger for {@link RequireValid}.
      */
-    public OverrideModeArgsLogger() {
-        super(OverrideModeArgs.class);
+    public RequireValidLogger() {
+        super(RequireValid.class);
     }
 
-    void checkOverrideMode(WebService service, Object mode) {
-        notNull(mode, mode_null.toString(), service);
+    RequireValidMode valid(AuthService service, Map<String, Object> args) {
+        Object valid = args.get(VALID);
+        notNull(valid, valid_mode_null.toString(), service);
+        if (valid instanceof RequireValidMode) {
+            return (RequireValidMode) valid;
+        } else {
+            return RequireValidMode.valueOf(valid.toString());
+        }
     }
 
-    IllegalArgumentException invalidOverrideMode(WebService service, Object mode) {
-        return logException(
-                new IllegalArgumentException(invalid_mode.toString()),
-                invalid_mode_message, mode, service);
-    }
 }

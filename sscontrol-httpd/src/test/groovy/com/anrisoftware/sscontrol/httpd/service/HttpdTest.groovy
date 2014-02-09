@@ -26,14 +26,16 @@ import org.junit.Test
 
 import com.anrisoftware.sscontrol.core.api.ServiceLoader as SscontrolServiceLoader
 import com.anrisoftware.sscontrol.core.api.ServicesRegistry
-import com.anrisoftware.sscontrol.httpd.auth.AuthProvider;
-import com.anrisoftware.sscontrol.httpd.auth.AuthType;
-import com.anrisoftware.sscontrol.httpd.auth.RequireValidGroup;
-import com.anrisoftware.sscontrol.httpd.auth.RequireValidUser;
-import com.anrisoftware.sscontrol.httpd.auth.SatisfyType;
-import com.anrisoftware.sscontrol.httpd.authldap.AttributeDn;
-import com.anrisoftware.sscontrol.httpd.authldap.Authoritative;
-import com.anrisoftware.sscontrol.httpd.authldap.RequireLdapValidGroup;
+import com.anrisoftware.sscontrol.core.yesno.YesNoFlag
+import com.anrisoftware.sscontrol.httpd.auth.AuthProvider
+import com.anrisoftware.sscontrol.httpd.auth.AuthService
+import com.anrisoftware.sscontrol.httpd.auth.AuthType
+import com.anrisoftware.sscontrol.httpd.auth.RequireGroup
+import com.anrisoftware.sscontrol.httpd.auth.RequireUpdate
+import com.anrisoftware.sscontrol.httpd.auth.RequireUser
+import com.anrisoftware.sscontrol.httpd.auth.RequireValid
+import com.anrisoftware.sscontrol.httpd.auth.RequireValidMode
+import com.anrisoftware.sscontrol.httpd.auth.SatisfyType
 
 /**
  * @see HttpdServiceImpl
@@ -67,73 +69,80 @@ class HttpdTest extends HttpdTestUtil {
     void "httpd auth file"() {
         loader.loadService profile.resource, null
         def profile = registry.getService("profile")[0]
-        loader.loadService authFileScript.resource, profile
+        loader.loadService authFileScript.resource, profile, preScript
         HttpdServiceImpl service = registry.getService("httpd")[0]
-        service.domains.size() == 2
 
-        def auth = service.domains[0].auths[0]
-        assert auth.name == "Private Directory"
+        assert service.domains.size() == 1
+
+        AuthService auth = service.domains[0].services[0]
+        assert auth.name == "auth"
+        assert auth.authName == "Private Directory"
         assert auth.location == "/private"
         assert auth.type == AuthType.digest
         assert auth.provider == AuthProvider.file
-        assert auth.appending == true
         assert auth.satisfy == SatisfyType.any
+        assert auth.requireDomain.domain == "https://test1.com"
+        assert auth.requires.size() == 6
 
-        def domains = auth.domains
-        assert domains.size() == 2
-        assert domains[0] == "/private"
-        assert domains[1] == "https://private"
+        RequireUser user = auth.requires[0]
+        assert user.name == "foo"
+        assert user.password == "foopassword"
+        assert user.updateMode == null
 
-        def require = auth.requires[0]
-        assert require.class == RequireValidUser
-
-        require = auth.requires[1]
-        assert require.class == RequireValidGroup
-        assert require.name == "admin"
-
-        assert auth.groups.size() == 1
-        def group = auth.groups[0]
-        assert group.name == "admin"
-        assert group.users.size() == 2
-
-        def user = group.users[0]
-        assert user.name == "adminfoo"
-        assert user.password == "adminfoopassword"
-        assert user.group == group
-
-        user = group.users[1]
-        assert user.name == "adminbar"
-        assert user.password == "adminbarpassword"
-        assert user.group == group
-
-        user = auth.users[0]
+        user = auth.requires[1]
         assert user.name == "bar"
         assert user.password == "barpassword"
+        assert user.updateMode == RequireUpdate.password
+
+        RequireGroup group = auth.requires[2]
+        assert group.name == "foogroup"
+        assert group.users.size() == 0
+
+        group = auth.requires[3]
+        assert group.name == "admin1"
+        assert group.users.size() == 2
+
+        group = auth.requires[4]
+        assert group.name == "admin2"
+        assert group.updateMode == RequireUpdate.rewrite
+        assert group.users.size() == 2
+
+        group = auth.requires[5]
+        assert group.name == "admin3"
+        assert group.updateMode == RequireUpdate.append
+        assert group.users.size() == 2
     }
 
     @Test
     void "httpd auth ldap"() {
         loader.loadService profile.resource, null
         def profile = registry.getService("profile")[0]
-        loader.loadService authLdapScript.resource, profile
+        loader.loadService authLdapScript.resource, profile, preScript
         HttpdServiceImpl service = registry.getService("httpd")[0]
-        service.domains.size() == 1
 
-        def auth = service.domains[0].auths[0]
-        assert auth.name == "Private Directory"
-        assert auth.location == "private"
+        assert service.domains.size() == 1
+
+        AuthService auth = service.domains[0].services[0]
+        assert auth.name == "auth"
+        assert auth.authName == "Private Directory"
+        assert auth.location == "/private"
         assert auth.type == AuthType.digest
         assert auth.provider == AuthProvider.ldap
         assert auth.satisfy == SatisfyType.any
-        assert auth.authoritative == Authoritative.off
+        assert auth.requireDomain == null
+        assert auth.requires.size() == 2
+        assert auth.authoritative == false
+        assert auth.credentials.name == "cn=admin,dc=ubuntutest,dc=com"
+        assert auth.credentials.password == "adminpass"
 
-        def require = auth.requires[0]
-        assert require.class == RequireValidUser
+        RequireValid valid = auth.requires[0]
+        assert valid.validMode == RequireValidMode.valid_user
 
-        require = auth.requires[1]
-        assert require.class == RequireLdapValidGroup
-        assert require.name == "cn=ldapadminGroup,o=deventorg,dc=ubuntutest,dc=com"
-        assert require.attribute.name == "uniqueMember"
-        assert require.attribute.dn == AttributeDn.off
+        RequireGroup group = auth.requires[1]
+        assert group.name == "cn=ldapadminGroup,o=deventorg,dc=ubuntutest,dc=com"
+        assert group.attributes.size() == 2
+        assert group.attributes[0].name == "uniqueMember"
+        assert group.attributes[1].name == "uniqueMember"
+        assert group.attributes[1].attributes.dn == YesNoFlag.no
     }
 }

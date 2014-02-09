@@ -16,15 +16,28 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.authldap;
+package com.anrisoftware.sscontrol.httpd.auth;
+
+import java.util.Map;
 
 /**
- * Group attribute is distinguished name.
+ * Factory to create the required valid.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-public enum AttributeDn {
+public interface RequireValidFactory {
 
-	on, off
+    /**
+     * Creates the required valid.
+     * 
+     * @param service
+     *            the {@link AuthService} service.
+     * 
+     * @param args
+     *            the {@link Map} arguments.
+     * 
+     * @return the {@link RequireValid}.
+     */
+    RequireValid create(AuthService service, Map<String, Object> map);
 }

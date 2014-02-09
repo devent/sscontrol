@@ -16,49 +16,18 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.authldap;
-
-import static com.anrisoftware.sscontrol.httpd.authldap.AuthAttributeLogger._.attribute_name_null;
-import static org.apache.commons.lang3.Validate.notBlank;
-
-import javax.inject.Singleton;
-
-import com.anrisoftware.globalpom.log.AbstractLogger;
+package com.anrisoftware.sscontrol.httpd.auth;
 
 /**
- * Logging messages for {@link AuthAttribute}.
+ * Require mode.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-@Singleton
-class AuthAttributeLogger extends AbstractLogger {
+public enum RequireValidMode {
 
-	enum _ {
-
-		attribute_name_null("Attribute name cannot be null or blank.");
-
-		private String name;
-
-		private _(String name) {
-			this.name = name;
-		}
-
-		@Override
-		public String toString() {
-			return name;
-		}
-	}
-
-	/**
-	 * Creates a logger for {@link AuthAttribute}.
-	 */
-	public AuthAttributeLogger() {
-		super(AuthAttribute.class);
-	}
-
-	void checkAttribute(String name) {
-		notBlank(name, attribute_name_null.toString());
-	}
-
+    /**
+     * Require valid user.
+     */
+    valid_user
 }

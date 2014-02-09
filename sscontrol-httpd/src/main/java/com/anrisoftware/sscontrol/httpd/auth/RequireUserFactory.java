@@ -16,13 +16,28 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.authfile;
+package com.anrisoftware.sscontrol.httpd.auth;
 
 import java.util.Map;
 
-public interface FileUserFactory {
+/**
+ * Factory to create required user.
+ * 
+ * @author Erwin Mueller, erwin.mueller@deventm.org
+ * @since 1.0
+ */
+public interface RequireUserFactory {
 
-	FileUser create(Map<String, Object> map, String name);
-
-	FileUser create(FileGroup group, Map<String, Object> map, String name);
+    /**
+     * Creates the required user.
+     * 
+     * @param service
+     *            the {@link AuthService} service.
+     * 
+     * @param args
+     *            the {@link Map} arguments.
+     * 
+     * @return the {@link RequireUser}.
+     */
+    RequireUser create(AuthService service, Map<String, Object> args);
 }

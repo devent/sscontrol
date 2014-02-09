@@ -24,8 +24,6 @@ import com.anrisoftware.sscontrol.core.database.DatabaseModule;
 import com.anrisoftware.sscontrol.core.debuglogging.DebugLoggingModule;
 import com.anrisoftware.sscontrol.core.list.ListModule;
 import com.anrisoftware.sscontrol.httpd.auth.AuthModule;
-import com.anrisoftware.sscontrol.httpd.authfile.AuthFileModule;
-import com.anrisoftware.sscontrol.httpd.authldap.AuthLdapModule;
 import com.anrisoftware.sscontrol.httpd.domain.DomainModule;
 import com.anrisoftware.sscontrol.httpd.gitit.GititModule;
 import com.anrisoftware.sscontrol.httpd.memory.MemoryModule;
@@ -52,8 +50,6 @@ class HttpdModule extends AbstractModule {
 		install(new DomainModule());
 		install(new RedirectModule());
 		install(new AuthModule());
-		install(new AuthFileModule());
-		install(new AuthLdapModule());
 		install(new PhpmyadminModule());
 		install(new PhpldapadminModule());
         install(new RoundcubeModule());

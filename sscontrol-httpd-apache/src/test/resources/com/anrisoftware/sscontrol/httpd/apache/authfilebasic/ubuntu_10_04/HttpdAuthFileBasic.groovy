@@ -18,25 +18,30 @@
  */
 package com.anrisoftware.sscontrol.httpd.apache.authfilebasic.ubuntu_10_04
 
-import com.anrisoftware.sscontrol.httpd.apache.ubuntu.UbuntuResources
-
 httpd {
-    domain "test1.com", address: "192.168.0.50", { redirect to: "https://www.%" }
-    ssl_domain "test1.com", address: "192.168.0.50", {
-        certification_file UbuntuResources.certCrt.resource
-        certification_key_file UbuntuResources.certKey.resource
-        redirect to: "www.%"
-        auth "Private Location", location: "/private", type: basic, provider: file, {
-            require valid_user
-            require group: "admin"
-            group "admin", {
-                user "adminfoo", password: "adminfoopassword"
-                user "adminbar", password: "adminbarpassword"
-                user "adminbaz", password: "adminbazpassword"
+    domain "test1.com", address: "192.168.0.50", {
+        setup "auth", id: "test1authid", {
+            auth "Private Directory", location: "/private"
+            type basic, provider: file, satisfy: any
+            require valid: valid_user
+            require user: "foo", password: "foopassword"
+            require user: "bar", password: "barpassword", update: password
+            require group: "foogroup"
+            require group: "admin1", {
+                user "adminfoo1", password: "adminfoopassword"
+                user "adminbar1", password: "adminbarpassword"
             }
-            user "foo", password: "foopassword"
-            user "bar", password: "barpassword"
-            user "baz", password: "bazpassword"
+            require group: "admin2", update: rewrite, {
+                user "adminfoo2", password: "adminfoopassword"
+                user "adminbar2", password: "adminbarpassword"
+            }
+            require group: "admin3", update: append, {
+                user "adminfoo3", password: "adminfoopassword"
+                user "adminbar3", password: "adminbarpassword"
+            }
         }
+    }
+    domain "www.test1.com", address: "192.168.0.50", {
+        setup "auth", ref: "test1authid" //
     }
 }

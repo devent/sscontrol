@@ -1,6 +1,8 @@
+adminfoo1:adminfoopassword
+adminbar1:adminbarpassword
+adminfoo2:adminfoopassword
+adminbar2:adminbarpassword
+adminfoo3:adminfoopassword
+adminbar3:adminbarpassword
 foo:foopassword
 bar:barpassword
-baz:bazpassword
-adminfoo:adminfoopassword
-adminbar:adminbarpassword
-adminbaz:adminbazpassword

@@ -1,1 +1,4 @@
-admin: adminfoo adminbar adminbaz 
+foogroup: 
+admin1: adminfoo1 adminbar1
+admin2: adminfoo2 adminbar2
+admin3: adminfoo3 adminbar3 adminfoo3 adminbar3

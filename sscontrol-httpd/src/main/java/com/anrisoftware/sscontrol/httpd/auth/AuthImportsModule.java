@@ -54,6 +54,7 @@ public class AuthImportsModule extends AbstractModule {
                 customizer.addStaticImport(AuthType, "basic");
                 customizer.addStaticImport(SatisfyType, "all");
                 customizer.addStaticImport(SatisfyType, "any");
+                customizer.addStaticImport(RequireUpdate, "nop");
                 customizer.addStaticImport(RequireUpdate, "password");
                 customizer.addStaticImport(RequireUpdate, "rewrite");
                 customizer.addStaticImport(RequireUpdate, "append");

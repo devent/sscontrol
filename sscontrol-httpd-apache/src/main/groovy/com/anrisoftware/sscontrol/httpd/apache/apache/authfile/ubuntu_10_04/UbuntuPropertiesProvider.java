@@ -16,29 +16,27 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd-apache. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.apache.apache.linux
+package com.anrisoftware.sscontrol.httpd.apache.apache.authfile.ubuntu_10_04;
 
-import com.anrisoftware.sscontrol.core.service.LinuxScript
+import java.net.URL;
+
+import com.anrisoftware.propertiesutils.AbstractContextPropertiesProvider;
 
 /**
- * Sets the parent script http/auth.
- *
+ * Provides the default auth/file Ubuntu 10.04 properties from
+ * {@code "/apache_authfile_ubuntu_10_04.properties"}.
+ * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class BasicAuth {
+@SuppressWarnings("serial")
+class UbuntuPropertiesProvider extends AbstractContextPropertiesProvider {
 
-    LinuxScript script
+    private static final URL RESOURCE = UbuntuPropertiesProvider.class
+            .getResource("/apache_authfile_ubuntu_10_04.properties");
 
-    void setScript(LinuxScript script) {
-        this.script = script
+    UbuntuPropertiesProvider() {
+        super(UbuntuPropertiesProvider.class, RESOURCE);
     }
 
-    def propertyMissing(String name) {
-        script.getProperty name
-    }
-
-    def methodMissing(String name, def args) {
-        script.invokeMethod name, args
-    }
 }

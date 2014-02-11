@@ -27,6 +27,11 @@ package com.anrisoftware.sscontrol.httpd.auth;
 public enum RequireUpdate {
 
     /**
+     * Do nothing on update.
+     */
+    nop,
+
+    /**
      * Update password of the required user.
      */
     password,

@@ -35,7 +35,7 @@ import com.google.inject.assistedinject.Assisted;
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-public class RequireGroup implements AuthRequire {
+public class RequireGroup {
 
     private static final String NAME_ARG = "name";
 

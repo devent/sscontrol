@@ -48,7 +48,7 @@ class WordpressTest extends UbuntuTestUtil {
         loader.loadService profile.resource, null
         def profile = registry.getService("profile")[0]
         setupUbuntu_12_04_Properties profile, tmpdir
-        loader.loadService httpdScript.resource, profile
+        loader.loadService httpdScript.resource, profile, preScript
 
         registry.allServices.each { it.call() }
         log.info "Run service again to ensure that configuration is not set double."
@@ -84,7 +84,7 @@ class WordpressTest extends UbuntuTestUtil {
         loader.loadService profile.resource, null
         def profile = registry.getService("profile")[0]
         setupUbuntu_12_04_Properties profile, tmpdir
-        loader.loadService httpdRefScript.resource, profile
+        loader.loadService httpdRefScript.resource, profile, preScript
 
         registry.allServices.each { it.call() }
         log.info "Run service again to ensure that configuration is not set double."
@@ -112,7 +112,7 @@ class WordpressTest extends UbuntuTestUtil {
         def profile = registry.getService("profile")[0]
         setupUbuntu_12_04_Properties profile, tmpdir
         profile.getEntry("httpd").wordpress_language Locale.GERMANY
-        loader.loadService httpdScript.resource, profile
+        loader.loadService httpdScript.resource, profile, preScript
 
         registry.allServices.each { it.call() }
         log.info "Run service again to ensure that configuration is not set double."
@@ -132,7 +132,7 @@ class WordpressTest extends UbuntuTestUtil {
         loader.loadService profile.resource, null
         def profile = registry.getService("profile")[0]
         setupUbuntu_12_04_Properties profile, tmpdir
-        loader.loadService httpdDebugScript.resource, profile
+        loader.loadService httpdDebugScript.resource, profile, preScript
 
         registry.allServices.each { it.call() }
         log.info "Run service again to ensure that configuration is not set double."
@@ -151,7 +151,7 @@ class WordpressTest extends UbuntuTestUtil {
         loader.loadService profile.resource, null
         def profile = registry.getService("profile")[0]
         setupUbuntu_12_04_Properties profile, tmpdir
-        loader.loadService httpdRootScript.resource, profile
+        loader.loadService httpdRootScript.resource, profile, preScript
 
         registry.allServices.each { it.call() }
         log.info "Run service again to ensure that configuration is not set double."
@@ -170,7 +170,7 @@ class WordpressTest extends UbuntuTestUtil {
         loader.loadService profile.resource, null
         def profile = registry.getService("profile")[0]
         setupUbuntu_12_04_Properties profile, tmpdir
-        loader.loadService httpdMsSubdomainScript.resource, profile
+        loader.loadService httpdMsSubdomainScript.resource, profile, preScript
 
         registry.allServices.each { it.call() }
         log.info "Run service again to ensure that configuration is not set double."
@@ -196,7 +196,7 @@ class WordpressTest extends UbuntuTestUtil {
         loader.loadService profile.resource, null
         def profile = registry.getService("profile")[0]
         setupUbuntu_12_04_Properties profile, tmpdir
-        loader.loadService httpdPluginsScript.resource, profile
+        loader.loadService httpdPluginsScript.resource, profile, preScript
 
         registry.allServices.each { it.call() }
         log.info "Run service again to ensure that configuration is not set double."
@@ -214,7 +214,7 @@ class WordpressTest extends UbuntuTestUtil {
         loader.loadService profile.resource, null
         def profile = registry.getService("profile")[0]
         setupUbuntu_12_04_Properties profile, tmpdir
-        loader.loadService httpdScriptNoOverride.resource, profile
+        loader.loadService httpdScriptNoOverride.resource, profile, preScript
 
         registry.allServices.each { it.call() }
         log.info "Run service again to ensure that configuration is not set double."

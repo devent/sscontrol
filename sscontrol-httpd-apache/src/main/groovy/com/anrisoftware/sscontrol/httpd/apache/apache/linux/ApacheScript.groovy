@@ -25,12 +25,11 @@ import javax.inject.Inject
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.sscontrol.core.debuglogging.DebugLoggingProperty
 import com.anrisoftware.sscontrol.core.service.LinuxScript
-import com.anrisoftware.sscontrol.httpd.auth.AuthConfig;
-import com.anrisoftware.sscontrol.httpd.auth.AuthProvider;
-import com.anrisoftware.sscontrol.httpd.auth.AuthType;
-import com.anrisoftware.sscontrol.httpd.domain.Domain;
+import com.anrisoftware.sscontrol.httpd.auth.AuthProvider
+import com.anrisoftware.sscontrol.httpd.auth.AuthType
+import com.anrisoftware.sscontrol.httpd.domain.Domain
 import com.anrisoftware.sscontrol.httpd.service.HttpdService
-import com.anrisoftware.sscontrol.httpd.webservice.ServiceConfig;
+import com.anrisoftware.sscontrol.httpd.webservice.ServiceConfig
 
 /**
  * Uses Apache service on a general Linux system.
@@ -49,12 +48,8 @@ abstract class ApacheScript extends LinuxScript {
     @Inject
     Map<String, ServiceConfig> serviceConfigs
 
-    @Inject
-    Map<String, AuthConfig> authConfigs
-
     @Override
     def run() {
-        authConfigs.each { it.value.script = this }
         serviceConfigs.each { it.value.script = this }
         super.run()
         setupDefaultBinding()

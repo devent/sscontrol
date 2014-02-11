@@ -18,9 +18,6 @@
  */
 package com.anrisoftware.sscontrol.httpd.service
 
-def certFile = ServicesResources.class.getResource "cert_crt.txt"
-def certKeyFile = ServicesResources.class.getResource "cert_key.txt"
-
 httpd {
 	ssl_domain "test1.com", address: "192.168.0.50", {
 		setup "auth", {

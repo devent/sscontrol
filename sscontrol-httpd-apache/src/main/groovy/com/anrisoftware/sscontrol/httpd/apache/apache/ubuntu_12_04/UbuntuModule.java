@@ -26,11 +26,8 @@ import groovy.lang.Script;
 
 import com.anrisoftware.globalpom.resources.ResourcesModule;
 import com.anrisoftware.sscontrol.core.checkfilehash.CheckFileHashModule;
-import com.anrisoftware.sscontrol.httpd.apache.apache.apache_2_2.AuthFileConfig;
-import com.anrisoftware.sscontrol.httpd.apache.apache.apache_2_2.AuthLdapConfig;
 import com.anrisoftware.sscontrol.httpd.apache.phpmyadmin.ubuntu_12_04.Ubuntu_12_04_PhpmyadminModule;
 import com.anrisoftware.sscontrol.httpd.apache.wordpress.ubuntu_12_04.Ubuntu_12_04_WordpressModule;
-import com.anrisoftware.sscontrol.httpd.auth.AuthConfig;
 import com.anrisoftware.sscontrol.httpd.webservice.ServiceConfig;
 import com.google.inject.AbstractModule;
 import com.google.inject.multibindings.MapBinder;
@@ -50,7 +47,6 @@ class UbuntuModule extends AbstractModule {
         install(new Ubuntu_12_04_PhpmyadminModule());
         install(new Ubuntu_12_04_WordpressModule());
         bindScripts();
-        bindAuthConfig();
         bindEmptyServiceConfig();
     }
 
@@ -59,15 +55,6 @@ class UbuntuModule extends AbstractModule {
         binder = newMapBinder(binder(), String.class, Script.class);
         binder.addBinding(format("%s.%s", NAME, PROFILE))
                 .to(UbuntuScript.class);
-    }
-
-    private void bindAuthConfig() {
-        MapBinder<String, AuthConfig> map = newMapBinder(binder(),
-                String.class, AuthConfig.class);
-        map.addBinding(format("%s.%s", PROFILE, AuthFileConfig.NAME)).to(
-                AuthFileConfig.class);
-        map.addBinding(format("%s.%s", PROFILE, AuthLdapConfig.NAME)).to(
-                AuthLdapConfig.class);
     }
 
     private void bindEmptyServiceConfig() {

@@ -1,0 +1,44 @@
+domainAuth(domain, auth, args) ::= <<
+# auth "<auth.authName>"
+\<Location <auth.location>\>
+    AuthType <auth.type>
+    AuthName "<auth.authName>"
+    <(auth.type)(auth)>
+    <auth.requireDomains:requireDomains();separator="\n">
+    <auth.requireValids:requireValids();separator="\n">
+    <requireGroups(auth.requireGroups)>
+    AuthUserFile <args.passwordFile>
+    <authGroupFile(args.requireGroups, args.groupFile)>
+\</Location>
+
+>>
+
+digest(auth) ::= <<
+AuthDigestProvider <auth.provider>
+>>
+
+basic(auth) ::= <<
+AuthBasicProvider <auth.provider>
+>>
+
+authGroupFile(requireGroups, groupFile) ::= <%
+<if(length(requireGroups))>
+AuthGroupFile <groupFile>
+<endif>
+%>
+
+requireDomains(domains) ::= <<
+AuthDigestDomain <domains:{domain | <domain.domain>};separator=" ">
+>>
+
+requireValids(valids) ::= <<
+<valids:{ valid | <(valid.validMode)()>}>
+>>
+
+requireValidUser() ::= <<
+Require valid-user
+>>
+
+requireGroups(groups) ::= <<
+Require group <groups:{ group | <group.name>};separator=" ">
+>>

@@ -71,7 +71,13 @@ public class AuthService implements WebService {
 
     private final Domain domain;
 
-    private final List<AuthRequire> requires;
+    private final List<RequireDomain> requireDomains;
+
+    private final List<RequireGroup> requireGroups;
+
+    private final List<RequireUser> requireUsers;
+
+    private final List<RequireValid> requireValids;
 
     @Inject
     private AuthServiceLogger log;
@@ -110,8 +116,6 @@ public class AuthService implements WebService {
 
     private SatisfyType satisfy;
 
-    private RequireDomain requireDomain;
-
     private Boolean authoritative;
 
     private AuthHost host;
@@ -127,7 +131,10 @@ public class AuthService implements WebService {
             @Assisted Map<String, Object> args) {
         this.serviceLog = logger;
         this.domain = domain;
-        this.requires = new ArrayList<AuthRequire>();
+        this.requireDomains = new ArrayList<RequireDomain>();
+        this.requireGroups = new ArrayList<RequireGroup>();
+        this.requireUsers = new ArrayList<RequireUser>();
+        this.requireValids = new ArrayList<RequireValid>();
         if (aargs.haveId(args)) {
             setId(aargs.id(this, args));
         }
@@ -223,25 +230,26 @@ public class AuthService implements WebService {
 
     public void require(Map<String, Object> args) {
         if (args.containsKey(DOMAIN_ARG)) {
-            this.requireDomain = requireDomainFactory.create(this, args);
-            log.requireDomainSet(this, requireDomain);
+            RequireDomain domain = requireDomainFactory.create(this, args);
+            requireDomains.add(domain);
+            log.requireDomainSet(this, domain);
             return;
         }
         if (args.containsKey(GROUP_ARG)) {
             RequireGroup group = requireGroupFactory.create(this, args);
-            requires.add(group);
+            requireGroups.add(group);
             log.groupAdded(this, group);
             return;
         }
         if (args.containsKey(USER_ARG)) {
             RequireUser user = requireUserFactory.create(this, args);
-            requires.add(user);
+            requireUsers.add(user);
             log.userAdded(this, user);
             return;
         }
         if (args.containsKey(VALID_ARGS)) {
             RequireValid valid = requireValidFactory.create(this, args);
-            requires.add(valid);
+            requireValids.add(valid);
             log.validAdded(this, valid);
             return;
         }
@@ -250,19 +258,27 @@ public class AuthService implements WebService {
     public Object require(Map<String, Object> args, Object s) {
         if (args.containsKey(GROUP_ARG)) {
             RequireGroup group = requireGroupFactory.create(this, args);
-            requires.add(group);
+            requireGroups.add(group);
             log.groupAdded(this, group);
             return group;
         }
         return null;
     }
 
-    public RequireDomain getRequireDomain() {
-        return requireDomain;
+    public List<RequireGroup> getRequireGroups() {
+        return requireGroups;
     }
 
-    public List<AuthRequire> getRequires() {
-        return requires;
+    public List<RequireUser> getRequireUsers() {
+        return requireUsers;
+    }
+
+    public List<RequireValid> getRequireValids() {
+        return requireValids;
+    }
+
+    public List<RequireDomain> getRequireDomains() {
+        return requireDomains;
     }
 
     public void setAuthoritative(boolean auth) {

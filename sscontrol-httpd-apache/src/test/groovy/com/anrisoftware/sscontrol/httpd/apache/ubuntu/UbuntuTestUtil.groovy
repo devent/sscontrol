@@ -31,6 +31,8 @@ import com.anrisoftware.sscontrol.core.api.ServicesRegistry
 import com.anrisoftware.sscontrol.core.modules.CoreModule
 import com.anrisoftware.sscontrol.core.modules.CoreResourcesModule
 import com.anrisoftware.sscontrol.core.service.ServiceModule
+import com.anrisoftware.sscontrol.httpd.service.HttpdPreScript
+import com.anrisoftware.sscontrol.httpd.service.HttpdPreScriptModule
 import com.google.inject.Guice
 import com.google.inject.Injector
 
@@ -45,6 +47,8 @@ class UbuntuTestUtil {
     static Injector injector
 
     static ServiceLoaderFactory loaderFactory
+
+    static HttpdPreScript preScript
 
     @Rule
     public TemporaryFolder tmp = new TemporaryFolder()
@@ -74,10 +78,13 @@ class UbuntuTestUtil {
     static void createFactories() {
         injector = createInjector()
         loaderFactory = injector.getInstance ServiceLoaderFactory
+        preScript = injector.getInstance HttpdPreScript
     }
 
     static Injector createInjector() {
-        Guice.createInjector(new CoreModule(), new CoreResourcesModule(), new ServiceModule())
+        Guice.createInjector(
+                new CoreModule(), new CoreResourcesModule(),
+                new ServiceModule(), new HttpdPreScriptModule())
     }
 
     @BeforeClass

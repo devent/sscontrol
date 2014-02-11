@@ -1,4 +1,4 @@
-<VirtualHost 192.168.0.50:443>
+<VirtualHost 192.168.0.50:80>
 
     # domain test1.com
     ServerName test1.com
@@ -10,25 +10,15 @@
         Allow from all
     </Directory>
 
-    SSLEngine on
-    SSLCertificateFile /tmp/var/www/test1.com/ssl/cert_crt.txt
-    SSLCertificateKeyFile /tmp/var/www/test1.com/ssl/cert_key.txt
-
-    # redirect to 'www.test1.com'
-    ServerAlias www.test1.com
-    RewriteEngine On
-    RewriteCond %{HTTP_HOST} ^test1\.com$ [NC]
-    RewriteRule (.*) https://www.test1.com$1 [R=301,L]
-
-    # auth "Private Location"
+    # auth "Private Directory"
     <Location /private>
         AuthType basic
-        AuthName "Private Location"
+        AuthName "Private Directory"
         AuthBasicProvider file
+        Require valid-user
+        Require group foogroup admin1 admin2 admin3
         AuthUserFile /tmp/var/www/test1.com/auth/private.passwd
         AuthGroupFile /tmp/var/www/test1.com/auth/private.group
-        Require valid-user
-        Require group admin
     </Location>
 
 </VirtualHost>

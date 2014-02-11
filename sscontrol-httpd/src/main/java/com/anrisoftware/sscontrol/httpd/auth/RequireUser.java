@@ -32,7 +32,7 @@ import com.google.inject.assistedinject.Assisted;
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-public class RequireUser implements AuthRequire {
+public class RequireUser {
 
     private static final String PASSWORD = "password";
 

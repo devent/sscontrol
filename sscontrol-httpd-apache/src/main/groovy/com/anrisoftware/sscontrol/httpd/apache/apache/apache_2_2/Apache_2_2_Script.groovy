@@ -30,10 +30,9 @@ import com.anrisoftware.resources.templates.api.Templates
 import com.anrisoftware.sscontrol.httpd.apache.apache.linux.ApacheScript
 import com.anrisoftware.sscontrol.httpd.apache.apache.linux.DomainConfig
 import com.anrisoftware.sscontrol.httpd.apache.apache.linux.SslDomainConfig
-import com.anrisoftware.sscontrol.httpd.auth.AbstractAuth;
-import com.anrisoftware.sscontrol.httpd.domain.Domain;
-import com.anrisoftware.sscontrol.httpd.domain.SslDomain;
-import com.anrisoftware.sscontrol.httpd.webservice.WebService;
+import com.anrisoftware.sscontrol.httpd.domain.Domain
+import com.anrisoftware.sscontrol.httpd.domain.SslDomain
+import com.anrisoftware.sscontrol.httpd.webservice.WebService
 
 /**
  * Configures Apache 2.2 service.
@@ -133,7 +132,6 @@ abstract class Apache_2_2_Script extends ApacheScript {
         service.domains.each { Domain domain ->
             List serviceConfig = []
             deployRedirect domain, serviceConfig
-            deployAuth domain, serviceConfig
             deployDomainService domain, serviceConfig
             deployDomainConfig domain, serviceConfig
             deploySslDomain domain
@@ -159,11 +157,7 @@ abstract class Apache_2_2_Script extends ApacheScript {
         } else {
             log.checkServiceConfig config, service, profile
             def refdomain = findReferencedDomain service
-            if (refdomain == null) {
-                config.deployDomain domain, null, reftarget, serviceConfig
-            } else {
-                config.deployDomain domain, refdomain, reftarget, serviceConfig
-            }
+            config.deployDomain domain, refdomain, reftarget, serviceConfig
         }
     }
 
@@ -189,15 +183,6 @@ abstract class Apache_2_2_Script extends ApacheScript {
     def deployRedirect(Domain domain, List serviceConfig) {
         domain.redirects.each {
             redirectConfig.deployRedirect(domain, it, serviceConfig)
-        }
-    }
-
-    def deployAuth(Domain domain, List serviceConfig) {
-        def profile = profileName
-        domain.auths.each { AbstractAuth auth ->
-            def config = authConfigs["${profile}.${auth.class.simpleName}"]
-            log.checkAuthConfig config, auth, profile
-            config.deployAuth(domain, auth, serviceConfig)
         }
     }
 

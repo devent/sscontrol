@@ -34,7 +34,7 @@ import com.anrisoftware.sscontrol.core.groovy.ClassImporter;
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class HttpdPreScript implements ServicePreScript {
+public class HttpdPreScript implements ServicePreScript {
 
     @Inject
     private Set<ClassImporter> classImporters;

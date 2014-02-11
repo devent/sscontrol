@@ -37,7 +37,7 @@ import com.google.inject.multibindings.Multibinder;
  */
 class HttpdPreScriptModule extends AbstractModule {
 
-    protected static final String YesNoFlag = "com.anrisoftware.sscontrol.core.yesno.YesNoFlag";
+    private static final String YesNoFlag = "com.anrisoftware.sscontrol.core.yesno.YesNoFlag";
 
     @Override
     protected void configure() {

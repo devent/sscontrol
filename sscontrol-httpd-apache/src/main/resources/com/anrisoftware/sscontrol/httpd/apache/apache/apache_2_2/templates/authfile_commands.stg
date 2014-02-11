@@ -1,9 +1,0 @@
-appendBasicPasswordFile(command, auth, file, users) ::= <<
-<users:{ user | <command> -b <file> <user.name> <user.password>};separator="\n">
-
->>
-
-appendDigestPasswordFile(command, auth, file, users) ::= <<
-<users:{ user | (echo -n "<user.name>:<auth.name>:" && echo -n "<user.name>:<auth.name>:<user.password>" | md5sum) | cut -d '-' -f 1 >\> <file>};separator="\n">
-
->>

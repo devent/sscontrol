@@ -23,10 +23,10 @@ import static com.anrisoftware.sscontrol.httpd.apache.apache.ubuntu_10_04.Ubuntu
 import javax.inject.Inject
 
 import com.anrisoftware.resources.templates.api.TemplateResource
-import com.anrisoftware.sscontrol.httpd.apache.apache.linux.BasicAuth
+import com.anrisoftware.sscontrol.httpd.apache.apache.authfile.linux.BasicAuth;
 import com.anrisoftware.sscontrol.httpd.apache.apache.ubuntu_10_04.Ubuntu_10_04_ScriptFactory;
 import com.anrisoftware.sscontrol.httpd.auth.AbstractAuth;
-import com.anrisoftware.sscontrol.httpd.auth.AuthConfig;
+import com.anrisoftware.sscontrol.httpd.auth.AuthService;
 import com.anrisoftware.sscontrol.httpd.auth.AuthType;
 import com.anrisoftware.sscontrol.httpd.authldap.AuthLdap;
 import com.anrisoftware.sscontrol.httpd.domain.Domain;
@@ -37,7 +37,7 @@ import com.anrisoftware.sscontrol.httpd.domain.Domain;
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class AuthLdapConfig extends BasicAuth implements AuthConfig {
+class AuthLdapConfig extends BasicAuth implements AuthService {
 
     public static final String NAME = "AuthLdap"
 

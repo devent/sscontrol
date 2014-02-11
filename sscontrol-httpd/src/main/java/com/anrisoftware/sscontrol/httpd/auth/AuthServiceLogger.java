@@ -24,8 +24,8 @@ import static com.anrisoftware.sscontrol.httpd.auth.AuthServiceLogger._.auth_set
 import static com.anrisoftware.sscontrol.httpd.auth.AuthServiceLogger._.auth_set_info;
 import static com.anrisoftware.sscontrol.httpd.auth.AuthServiceLogger._.credentials_set_debug;
 import static com.anrisoftware.sscontrol.httpd.auth.AuthServiceLogger._.credentials_set_info;
-import static com.anrisoftware.sscontrol.httpd.auth.AuthServiceLogger._.domain_set_debug;
-import static com.anrisoftware.sscontrol.httpd.auth.AuthServiceLogger._.domain_set_info;
+import static com.anrisoftware.sscontrol.httpd.auth.AuthServiceLogger._.domain_added_debug;
+import static com.anrisoftware.sscontrol.httpd.auth.AuthServiceLogger._.domain_added_info;
 import static com.anrisoftware.sscontrol.httpd.auth.AuthServiceLogger._.group_added_debug;
 import static com.anrisoftware.sscontrol.httpd.auth.AuthServiceLogger._.group_added_info;
 import static com.anrisoftware.sscontrol.httpd.auth.AuthServiceLogger._.host_set_debug;
@@ -74,9 +74,9 @@ class AuthServiceLogger extends AbstractLogger {
 
         user_added_info("Required user '{}' added for service '{}'."),
 
-        domain_set_debug("Required domain {} set for {}."),
+        domain_added_debug("Required domain {} added for {}."),
 
-        domain_set_info("Required domain '{}' set for service '{}'."),
+        domain_added_info("Required domain '{}' added for service '{}'."),
 
         auth_null("Authoritative flag cannot be null for %s."),
 
@@ -179,9 +179,9 @@ class AuthServiceLogger extends AbstractLogger {
 
     void requireDomainSet(AuthService service, RequireDomain domain) {
         if (isDebugEnabled()) {
-            debug(domain_set_debug, domain, service);
+            debug(domain_added_debug, domain, service);
         } else {
-            info(domain_set_info, domain.getDomain(), service.getName());
+            info(domain_added_info, domain.getDomain(), service.getName());
         }
     }
 

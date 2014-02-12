@@ -1,0 +1,29 @@
+<VirtualHost 192.168.0.50:443>
+
+    # domain test1.com
+    ServerName test1.com
+    DocumentRoot /tmp/var/www/test1.com/web
+    SuexecUserGroup web_001 web_001
+    <Directory /tmp/var/www/test1.com/web>
+        AllowOverride None
+        Order allow,deny
+        Allow from all
+    </Directory>
+
+    SSLEngine on
+    SSLCertificateFile /tmp/var/www/test1.com/ssl/cert_crt.txt
+    SSLCertificateKeyFile /tmp/var/www/test1.com/ssl/cert_key.txt
+
+    # auth "Private Location"
+    <Location /private>
+        AuthType digest
+        AuthName "Private Location"
+        AuthDigestDomain /private
+        AuthDigestProvider file
+        AuthUserFile /tmp/var/www/test1.com/auth/private-digest.passwd
+        AuthGroupFile /tmp/var/www/test1.com/auth/private.group
+        Require valid-user
+        Require group admin
+    </Location>
+
+</VirtualHost>

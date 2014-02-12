@@ -20,7 +20,6 @@ package com.anrisoftware.sscontrol.httpd.apache.apache.authfile.apache_2_2
 
 import static com.anrisoftware.sscontrol.httpd.apache.apache.ubuntu_10_04.Ubuntu_10_04_ScriptFactory.PROFILE
 import static org.apache.commons.io.FileUtils.writeLines
-import static org.apache.commons.lang3.StringUtils.replaceChars
 import static org.apache.commons.lang3.StringUtils.split
 
 import javax.inject.Inject
@@ -39,10 +38,8 @@ import com.anrisoftware.sscontrol.httpd.auth.AuthService
 import com.anrisoftware.sscontrol.httpd.auth.AuthType
 import com.anrisoftware.sscontrol.httpd.auth.RequireGroup
 import com.anrisoftware.sscontrol.httpd.auth.RequireUpdate
-import com.anrisoftware.sscontrol.httpd.auth.RequireUser
 import com.anrisoftware.sscontrol.httpd.domain.Domain
 import com.anrisoftware.sscontrol.httpd.webservice.WebService
-import com.anrisoftware.sscontrol.workers.command.script.ScriptCommandWorker
 
 /**
  * Auth/file configuration.
@@ -61,17 +58,15 @@ abstract class AuthFileConfig extends BasicAuth {
     Templates authTemplates
 
     /**
-     * File/auth configuration.
+     * Domain configuration template.
      */
-    TemplateResource authConfigTemplate
-
-    /**
-     * File/auth commands.
-     */
-    TemplateResource authCommandsTemplate
+    TemplateResource authDomainConfigTemplate
 
     @Inject
     RequireValidModeRenderer requireValidModeRenderer
+
+    @Inject
+    AuthFileBasicConfig authFileBasicConfig
 
     @Override
     void deployService(Domain domain, WebService service, List config) {
@@ -101,12 +96,13 @@ abstract class AuthFileConfig extends BasicAuth {
      *            the {@link List} of the configuration.
      */
     void createDomainConfig(Domain domain, AuthService service, List serviceConfig) {
-        def config = authConfigTemplate.getText true,
+        def file = passwordFile(service, domain)
+        def config = authDomainConfigTemplate.getText true,
                 "domainAuth",
                 "domain", domain,
                 "auth", service,
                 "args", [
-                    passwordFile: passwordFile(domain, service),
+                    passwordFile: file,
                     groupFile: groupFile(domain, service)
                 ]
         serviceConfig << config
@@ -218,88 +214,33 @@ abstract class AuthFileConfig extends BasicAuth {
      *            the {@link List} of {@link RequireUser} users.
      */
     void deployUsers(Domain domain, AuthService service, List users) {
-        def file = passwordFile(domain, service)
-        def oldusers = file.exists() ? FileUtils.readLines(file, charset) : []
-        users.each { RequireUser user ->
-            def found = findUser(oldusers, user)
-            found.found ? updateUser(domain, service, found, oldusers) : insertUser(domain, service, user, oldusers)
-        }
-        writeLines file, charset.name(), oldusers
-    }
-
-    Map findUser(List users, RequireUser user) {
-        def found = null
-        def index = -1
-        for (int i = 0; i < users.size(); i++) {
-            String str = users[i]
-            String[] s = split(str, ":")
-            if (user.name == s[0]) {
-                found = user
-                index = i
-                break
-            }
-        }
-        return [found: found, index: index]
-    }
-
-    void updateUser(Domain domain, AuthService service, Map found, List users) {
-        RequireUser userfound = found.found
-        int index = found.index
-        switch (userfound.updateMode) {
-            case RequireUpdate.password:
-                users[index] = updatePassword domain, service, userfound
-                break
-            default:
+        def oldusers
+        switch (service.type) {
+            case AuthType.basic:
+                oldusers = authFileBasicConfig.createUsers domain, service, users
                 break
         }
-    }
-
-    void insertUser(Domain domain, AuthService service, RequireUser user, List users) {
-        def worker = htpasswd user: user
-        def out = replaceChars worker.out, '\n', ''
-        users << out
-    }
-
-    String updatePassword(Domain domain, AuthService service, RequireUser user) {
-        def worker = htpasswd user: user
-        replaceChars worker.out, '\n', ''
-    }
-
-    /**
-     * Executes the {@code htpasswd} command to create the password
-     * for the user.
-     *
-     * @param args
-     *            the command {@link Map} arguments.
-     *
-     * @return the {@link ScriptCommandWorker}.
-     */
-    ScriptCommandWorker htpasswd(Map args) {
-        args.command = args.containsKey("command") ? args.command : htpasswdCommand
-        log.checkHtpasswdArgs this, args
-        scriptCommandFactory.create(authCommandsTemplate, "basicPassword", "args", args)()
+        writeLines passwordFile(service, domain), charset.name(), oldusers
     }
 
     void updatePermissions(Domain domain, AuthService service) {
     }
 
     /**
-     * Returns the users authentication file for the domain.
+     * Returns the password file for the specified service.
+     *
+     * @param service
+     *            the {@link AuthService}.
      *
      * @param domain
      *            the {@link Domain}.
      *
-     * @param service
-     *            the {@link AuthService}.
+     * @return the password {@link File}.
      */
-    File passwordFile(Domain domain, AuthService service) {
-        def location = FilenameUtils.getBaseName(service.location)
-        def dir = new File(authSubdirectory, domainDir(domain))
+    File passwordFile(AuthService service, Domain domain) {
         switch (service.type) {
             case AuthType.basic:
-                return new File("${location}.passwd", dir)
-            case AuthType.digest:
-                return new File("${location}-digest.passwd", dir)
+                return authFileBasicConfig.passwordFile(domain, service)
         }
     }
 
@@ -350,9 +291,9 @@ abstract class AuthFileConfig extends BasicAuth {
     @Override
     void setScript(LinuxScript script) {
         super.setScript script
+        authFileBasicConfig.setScript this
         this.authTemplates = templatesFactory.create "Apache_2_2_AuthFile", ["renderers": [requireValidModeRenderer]]
-        authConfigTemplate = authTemplates.getResource "config"
-        authCommandsTemplate = authTemplates.getResource "commands"
+        authDomainConfigTemplate = authTemplates.getResource "domain"
     }
 
     @Override

@@ -33,15 +33,12 @@ enum AuthFileDigestResources {
 
     profile("UbuntuProfile.groovy", AuthFileDigestResources.class.getResource("UbuntuProfile.groovy")),
     httpdScript("Httpd.groovy", AuthFileDigestResources.class.getResource("HttpdAuthFileDigest.groovy")),
-    httpdAppendingScript("Httpd.groovy", AuthFileDigestResources.class.getResource("HttpdAuthFileDigestAppending.groovy")),
-    // AuthFile
-    domainsConf("/etc/apache2/conf.d/000-robobee-domains.conf", AuthFileDigestResources.class.getResource("domains_conf.txt")),
-    test1comSslConf("/etc/apache2/sites-available/100-robobee-test1.com-ssl.conf", AuthFileDigestResources.class.getResource("test1_com_ssl_conf.txt")),
-    privatepasswd("/var/www/test1.com/auth/private-digest.passwd", AuthFileDigestResources.class.getResource("privatepasswd.txt")),
-    groupOut("/var/www/test1.com/auth/private.group", AuthFileDigestResources.class.getResource("private_group.txt")),
-    enmodOut("/usr/sbin/a2enmod.out", AuthFileDigestResources.class.getResource("enmod_out.txt")),
-    // AuthFileAppending
-    appendingPrivatepasswd("/var/www/test1.com/auth/private-digest.passwd", AuthFileDigestResources.class.getResource("appending-privatepasswd.txt")),
+    domainsConfExpected("/etc/apache2/conf.d/000-robobee-domains.conf", AuthFileDigestResources.class.getResource("domains_conf_expected.txt")),
+    test1comConfExpected("/etc/apache2/sites-available/100-robobee-test1.com.conf", AuthFileDigestResources.class.getResource("test1com_conf_expected.txt")),
+    wwwtest1comConfExpected("/etc/apache2/sites-available/100-robobee-www.test1.com.conf", AuthFileDigestResources.class.getResource("wwwtest1com_conf_expected.txt")),
+    privatePasswdExpected("/var/www/test1.com/auth/private-digest.passwd", AuthFileDigestResources.class.getResource("privatepasswd_expected.txt")),
+    privateGroupExpected("/var/www/test1.com/auth/private.group", AuthFileDigestResources.class.getResource("privategroup_expected.txt")),
+    enmodOutExpected("/usr/sbin/a2enmod.out", AuthFileDigestResources.class.getResource("enmod_out_expected.txt")),
 
     ResourcesUtils resources
 

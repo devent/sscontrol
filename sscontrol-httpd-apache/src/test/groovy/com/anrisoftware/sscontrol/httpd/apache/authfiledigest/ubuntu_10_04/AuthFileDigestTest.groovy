@@ -46,39 +46,18 @@ class AuthFileDigestTest extends UbuntuTestUtil {
         loader.loadService profile.resource, null
         def profile = registry.getService("profile")[0]
         setupUbuntu_10_04_Properties profile, tmpdir
-        loader.loadService httpdScript.resource, profile
+        loader.loadService httpdScript.resource, profile, preScript
 
         registry.allServices.each { it.call() }
         log.info "Run service again to ensure that configuration is not set double."
         registry.allServices.each { it.call() }
 
         assertFileContent defaultConf.asFile(tmpdir), defaultConf
-        assertFileContent domainsConf.asFile(tmpdir), domainsConf
-        assertStringContent test1comSslConf.replaced(tmpdir, tmpdir, "/tmp"), test1comSslConf.toString()
-        assertFileContent privatepasswd.asFile(tmpdir), privatepasswd
-        assertFileContent groupOut.asFile(tmpdir), groupOut
-        assertFileContent enmodOut.asFile(tmpdir), enmodOut
-    }
-
-    @Test
-    void "auth file appending digest"() {
-        copyUbuntuFiles tmpdir
-        copyUbuntu_10_04_Files tmpdir
-
-        loader.loadService profile.resource, null
-        def profile = registry.getService("profile")[0]
-        setupUbuntu_10_04_Properties profile, tmpdir
-        loader.loadService httpdAppendingScript.resource, profile
-
-        registry.allServices.each { it.call() }
-        log.info "Run service again to ensure that configuration is not set double."
-        registry.allServices.each { it.call() }
-
-        assertFileContent defaultConf.asFile(tmpdir), defaultConf
-        assertFileContent domainsConf.asFile(tmpdir), domainsConf
-        assertStringContent test1comSslConf.replaced(tmpdir, tmpdir, "/tmp"), test1comSslConf.toString()
-        assertFileContent appendingPrivatepasswd.asFile(tmpdir), appendingPrivatepasswd.toString()
-        assertFileContent groupOut.asFile(tmpdir), groupOut.toString()
-        assertFileContent enmodOut.asFile(tmpdir), enmodOut
+        assertFileContent domainsConfExpected.asFile(tmpdir), domainsConfExpected
+        assertStringContent test1comConfExpected.replaced(tmpdir, tmpdir, "/tmp"), test1comConfExpected.toString()
+        assertStringContent wwwtest1comConfExpected.replaced(tmpdir, tmpdir, "/tmp"), wwwtest1comConfExpected.toString()
+        assertFileContent privatePasswdExpected.asFile(tmpdir), privatePasswdExpected
+        assertFileContent privateGroupExpected.asFile(tmpdir), privateGroupExpected
+        assertFileContent enmodOutExpected.asFile(tmpdir), enmodOutExpected
     }
 }

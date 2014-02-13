@@ -9,6 +9,7 @@ domainAuth(domain, auth, args) ::= <<
     <requireGroups(auth.requireGroups)>
     AuthUserFile <args.passwordFile>
     <authGroupFile(args.requireGroups, args.groupFile)>
+    <if(auth.satisfy)>Satisfy <auth.satisfy><endif>
 \</Location>
 
 >>

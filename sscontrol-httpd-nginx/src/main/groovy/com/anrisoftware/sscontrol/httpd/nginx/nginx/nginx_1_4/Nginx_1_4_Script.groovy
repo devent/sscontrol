@@ -27,13 +27,12 @@ import org.apache.commons.io.FileUtils
 
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.Templates
-import com.anrisoftware.sscontrol.httpd.auth.AbstractAuth
 import com.anrisoftware.sscontrol.httpd.domain.Domain
 import com.anrisoftware.sscontrol.httpd.domain.SslDomain
 import com.anrisoftware.sscontrol.httpd.nginx.nginx.linux.DomainConfig
 import com.anrisoftware.sscontrol.httpd.nginx.nginx.linux.NginxScript
 import com.anrisoftware.sscontrol.httpd.service.HttpdService
-import com.anrisoftware.sscontrol.httpd.webservice.ServiceConfig;
+import com.anrisoftware.sscontrol.httpd.webservice.ServiceConfig
 import com.anrisoftware.sscontrol.httpd.webservice.WebService
 import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokenTemplate
 
@@ -154,12 +153,11 @@ abstract class Nginx_1_4_Script extends NginxScript {
         FileUtils.write file, confstr, charset
     }
 
-    def deployConfig() {
+    void deployConfig() {
         uniqueDomains.each { deployDomain it }
         service.domains.each { Domain domain ->
             List serviceConfig = []
             deployRedirect domain, serviceConfig
-            deployAuth domain, serviceConfig
             deployService domain, serviceConfig
             deployDomainConfig domain, serviceConfig
             deploySslDomain domain
@@ -167,7 +165,7 @@ abstract class Nginx_1_4_Script extends NginxScript {
         }
     }
 
-    def deployService(Domain domain, List serviceConfig) {
+    void deployService(Domain domain, List serviceConfig) {
         domain.services.findAll { WebService service ->
             service.domain == domain
         }.each { WebService service ->
@@ -215,14 +213,6 @@ abstract class Nginx_1_4_Script extends NginxScript {
     def deployRedirect(Domain domain, List serviceConfig) {
         domain.redirects.each {
             redirectConfig.deployRedirect(domain, it, serviceConfig)
-        }
-    }
-
-    def deployAuth(Domain domain, List serviceConfig) {
-        domain.auths.each { AbstractAuth auth ->
-            def config = authConfigs["${profileName}.${auth.class.simpleName}"]
-            log.checkAuthConfig config, auth, profileName
-            config.deployAuth(domain, auth, serviceConfig)
         }
     }
 

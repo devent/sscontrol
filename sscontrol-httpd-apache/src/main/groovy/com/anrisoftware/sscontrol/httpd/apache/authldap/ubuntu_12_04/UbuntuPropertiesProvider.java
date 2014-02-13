@@ -16,21 +16,27 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd-apache. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.apache.authldap.ubuntu_12_04
+package com.anrisoftware.sscontrol.httpd.apache.authldap.ubuntu_12_04;
 
-httpd {
-    domain "test1.com", address: "192.168.0.50", {
-        setup "auth-ldap", id: "test1authid", auth: "Private Directory", location: "/private", {
-            type basic, satisfy: any, authoritative: no
-            host "ldap://127.0.0.1:389", url: "o=deventorg,dc=ubuntutest,dc=com?cn"
-            credentials "cn=admin,dc=ubuntutest,dc=com", password: "adminpass"
-            require valid: valid_user
-            require group: "cn=ldapadminGroup,o=deventorg,dc=ubuntutest,dc=com"
-            require attribute: [group: "uniqueMember"]
-            require attribute: [dn: no]
-        }
+import java.net.URL;
+
+import com.anrisoftware.propertiesutils.AbstractContextPropertiesProvider;
+
+/**
+ * Provides the default auth/LDAP Ubuntu 12.04 properties from
+ * {@code "/apache_authldap_ubuntu_12_04.properties"}.
+ * 
+ * @author Erwin Mueller, erwin.mueller@deventm.org
+ * @since 1.0
+ */
+@SuppressWarnings("serial")
+class UbuntuPropertiesProvider extends AbstractContextPropertiesProvider {
+
+    private static final URL RESOURCE = UbuntuPropertiesProvider.class
+            .getResource("/apache_authldap_ubuntu_12_04.properties");
+
+    UbuntuPropertiesProvider() {
+        super(UbuntuPropertiesProvider.class, RESOURCE);
     }
-    domain "www.test1.com", address: "192.168.0.50", {
-        setup "auth-ldap", ref: "test1authid" //
-    }
+
 }

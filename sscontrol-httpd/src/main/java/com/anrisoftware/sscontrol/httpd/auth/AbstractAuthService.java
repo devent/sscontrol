@@ -215,6 +215,10 @@ public abstract class AbstractAuthService implements WebService {
         }
     }
 
+    public void setType(AuthType type) {
+        this.type = type;
+    }
+
     public AuthType getType() {
         return type;
     }

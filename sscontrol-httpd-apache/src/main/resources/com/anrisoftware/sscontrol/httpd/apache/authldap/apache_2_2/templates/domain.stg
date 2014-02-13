@@ -5,25 +5,24 @@ domainAuth(domain, auth, args) ::= <<
     AuthName "<auth.authName>"
     <(auth.type)(auth)>
     <auth.requireValids:requireValids();separator="\n">
-    AuthLDAPGroupAttribute <auth.attribute.group>
-    AuthLDAPGroupAttributeIsDN <if(auth.attribute.dn)>on<else>off<endif>
+    AuthLDAPGroupAttribute <auth.attributes.group>
+    AuthLDAPGroupAttributeIsDN <if(auth.attributes.dn)>on<else>off<endif>
     <requireGroups(auth.requireGroups)>
-    AuthzLDAPAuthoritative <auth.authoritative>
-    AuthLDAPURL <auth.host.host><auth.host.url>
+    AuthzLDAPAuthoritative <if(auth.authoritative)>on<else>off<endif>
+    AuthLDAPURL <auth.host.host>/<auth.host.url>
     AuthLDAPBindDN "<auth.credentials.name>"
     AuthLDAPBindPassword "<auth.credentials.password>"
-    <auth.requires:{requires | <(requires.class.simpleName)(requires)>};separator="\n">
-    Satisfy any
+    <if(auth.satisfy)>Satisfy <auth.satisfy><endif>
 \</Location>
 
 >>
 
 digest(auth) ::= <<
-AuthDigestProvider <auth.provider>
+AuthDigestProvider ldap
 >>
 
 basic(auth) ::= <<
-AuthBasicProvider <auth.provider>
+AuthBasicProvider ldap
 >>
 
 requireValids(valids) ::= <<

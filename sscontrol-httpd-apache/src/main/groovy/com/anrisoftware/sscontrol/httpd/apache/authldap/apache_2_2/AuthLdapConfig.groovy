@@ -37,10 +37,16 @@ import com.anrisoftware.sscontrol.httpd.webservice.WebService
  */
 abstract class AuthLdapConfig extends BasicAuth {
 
-    public static final String NAME = "AuthLdap"
+    /**
+     * Authentication service name.
+     */
+    public static final String SERVICE_NAME = "auth-ldap"
 
     @Inject
     AuthLdapConfigLogger log
+
+    @Inject
+    RequireValidModeRenderer requireValidModeRenderer
 
     /**
      * Auth/LDAP templates.
@@ -97,10 +103,7 @@ abstract class AuthLdapConfig extends BasicAuth {
                 "domainAuth",
                 "domain", domain,
                 "auth", service,
-                "args", [
-                    passwordFile: file,
-                    groupFile: groupFile(domain, service)
-                ]
+                "args", []
         log.domainConfigCreated script, service, config
         serviceConfig << config
     }
@@ -136,7 +139,16 @@ abstract class AuthLdapConfig extends BasicAuth {
     @Override
     void setScript(LinuxScript script) {
         super.setScript script
-        this.authTemplates = templatesFactory.create "Apache_2_2_AuthLdap"
+        this.authTemplates = templatesFactory.create "Apache_2_2_AuthLdap", ["renderers": [requireValidModeRenderer]]
         this.authDomainTemplate = authTemplates.getResource "domain"
+    }
+
+    /**
+     * Returns authentication service name.
+     *
+     * @return the service {@link String} name.
+     */
+    String getServiceName() {
+        SERVICE_NAME
     }
 }

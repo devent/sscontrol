@@ -1,32 +1,28 @@
-<VirtualHost 192.168.0.50:443>
+<VirtualHost 192.168.0.50:80>
 
-    # domain test1.com
-    ServerName test1.com
-    DocumentRoot /tmp/var/www/test1.com/web
-    SuexecUserGroup web_001 web_001
-    <Directory /tmp/var/www/test1.com/web>
+    # domain www.test1.com
+    ServerName www.test1.com
+    DocumentRoot /tmp/var/www/www.test1.com/web
+    SuexecUserGroup web_002 web_002
+    <Directory /tmp/var/www/www.test1.com/web>
         AllowOverride None
         Order allow,deny
         Allow from all
     </Directory>
-
-    SSLEngine on
-    SSLCertificateFile /tmp/var/www/test1.com/ssl/cert_crt.txt
-    SSLCertificateKeyFile /tmp/var/www/test1.com/ssl/cert_key.txt
 
     # auth "Private Directory"
     <Location /private>
         AuthType basic
         AuthName "Private Directory"
         AuthBasicProvider ldap
-        AuthzLDAPAuthoritative on
+        Require valid-user
+        AuthLDAPGroupAttribute uniqueMember
+        AuthLDAPGroupAttributeIsDN off
+        Require ldap-group cn=ldapadminGroup,o=deventorg,dc=ubuntutest,dc=com
+        AuthzLDAPAuthoritative off
         AuthLDAPURL ldap://127.0.0.1:389/o=deventorg,dc=ubuntutest,dc=com?cn
         AuthLDAPBindDN "cn=admin,dc=ubuntutest,dc=com"
         AuthLDAPBindPassword "adminpass"
-        Require valid-user
-        AuthLDAPGroupAttribute uniqueMember
-        AuthLDAPGroupAttributeIsDN on
-        Require ldap-group cn=ldapadminGroup,o=deventorg,dc=ubuntutest,dc=com
         Satisfy any
     </Location>
 

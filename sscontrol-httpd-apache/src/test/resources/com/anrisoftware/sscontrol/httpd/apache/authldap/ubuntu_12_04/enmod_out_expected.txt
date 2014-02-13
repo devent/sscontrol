@@ -1,8 +1,6 @@
 suexec
 authnz_ldap
 auth_basic
-ssl
 suexec
 authnz_ldap
 auth_basic
-ssl

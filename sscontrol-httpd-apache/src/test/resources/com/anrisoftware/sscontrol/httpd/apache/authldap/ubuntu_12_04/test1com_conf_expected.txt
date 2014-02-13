@@ -16,7 +16,14 @@
         AuthName "Private Directory"
         AuthBasicProvider ldap
         Require valid-user
-        Require group cn=ldapadminGroup,o=deventorg,dc=ubuntutest,dc=com
+        AuthLDAPGroupAttribute uniqueMember
+        AuthLDAPGroupAttributeIsDN off
+        Require ldap-group cn=ldapadminGroup,o=deventorg,dc=ubuntutest,dc=com
+        AuthzLDAPAuthoritative off
+        AuthLDAPURL ldap://127.0.0.1:389/o=deventorg,dc=ubuntutest,dc=com?cn
+        AuthLDAPBindDN "cn=admin,dc=ubuntutest,dc=com"
+        AuthLDAPBindPassword "adminpass"
+        Satisfy any
     </Location>
 
 </VirtualHost>

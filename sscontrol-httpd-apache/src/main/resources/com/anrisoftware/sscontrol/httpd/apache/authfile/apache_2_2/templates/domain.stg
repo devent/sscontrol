@@ -14,11 +14,11 @@ domainAuth(domain, auth, args) ::= <<
 >>
 
 digest(auth) ::= <<
-AuthDigestProvider <auth.provider>
+AuthDigestProvider file
 >>
 
 basic(auth) ::= <<
-AuthBasicProvider <auth.provider>
+AuthBasicProvider file
 >>
 
 authGroupFile(requireGroups, groupFile) ::= <%

@@ -16,28 +16,27 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.auth;
+package com.anrisoftware.sscontrol.httpd.authfile;
 
-import java.util.Map;
+import javax.inject.Inject;
+import javax.inject.Provider;
+
+import com.anrisoftware.sscontrol.httpd.webservice.WebServiceFactory;
 
 /**
- * Factory to create the required valid.
+ * Provides the HTTP/authentication file service factory.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-public interface RequireValidFactory {
+public class AuthFileServiceProvider implements Provider<WebServiceFactory> {
 
-    /**
-     * Creates the required valid.
-     * 
-     * @param service
-     *            the {@link AbstractAuthService} service.
-     * 
-     * @param args
-     *            the {@link Map} arguments.
-     * 
-     * @return the {@link RequireValid}.
-     */
-    RequireValid create(AbstractAuthService service, Map<String, Object> map);
+	@Inject
+	private AuthFileServiceFactory factory;
+
+	@Override
+	public WebServiceFactory get() {
+		return factory;
+	}
+
 }

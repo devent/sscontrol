@@ -16,50 +16,44 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.auth;
+package com.anrisoftware.sscontrol.httpd.authldap;
 
 import java.util.Map;
 
 import javax.inject.Inject;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
-
+import com.anrisoftware.sscontrol.httpd.auth.AbstractAuthService;
+import com.anrisoftware.sscontrol.httpd.auth.AuthServiceLogger;
+import com.anrisoftware.sscontrol.httpd.domain.Domain;
+import com.anrisoftware.sscontrol.httpd.webserviceargs.WebServiceArgs;
 import com.google.inject.assistedinject.Assisted;
 
 /**
- * Required valid for authentication.
+ * HTTP/authentication LDAP service.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-public class RequireValid {
-
-    private static final String VALID = "valid";
-
-    private final AbstractAuthService service;
-
-    private final RequireValidMode validMode;
+public class AuthLdapService extends AbstractAuthService {
 
     /**
-     * @see RequireValidFactory#create(AbstractAuthService, Map)
+     * HTTP/authentication service name.
+     */
+    public static final String AUTH_LDAP_NAME = "auth-ldap";
+
+    /**
+     * @see AuthLdapServiceFactory#create(Domain, Map)
      */
     @Inject
-    RequireValid(RequireValidLogger log, @Assisted AbstractAuthService service,
-            @Assisted Map<String, Object> args) {
-        this.service = service;
-        this.validMode = log.valid(service, args);
-    }
-
-    public AbstractAuthService getService() {
-        return service;
-    }
-
-    public RequireValidMode getValidMode() {
-        return validMode;
+    AuthLdapService(@Assisted Domain domain,
+            @Assisted Map<String, Object> args, WebServiceArgs aargs,
+            AuthServiceLogger log) {
+        super(domain, args, aargs, log);
     }
 
     @Override
-    public String toString() {
-        return new ToStringBuilder(this).append(VALID, validMode).toString();
+    public String getName() {
+        return AUTH_LDAP_NAME;
     }
+
 }

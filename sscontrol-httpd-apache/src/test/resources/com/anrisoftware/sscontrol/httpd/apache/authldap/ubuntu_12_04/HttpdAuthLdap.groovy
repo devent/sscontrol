@@ -16,25 +16,22 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd-apache. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.apache.authldap.ubuntu_10_04
-
-import com.anrisoftware.sscontrol.httpd.apache.ubuntu.UbuntuResources
+package com.anrisoftware.sscontrol.httpd.apache.authldap.ubuntu_12_04
 
 httpd {
-    ssl_domain "test1.com", address: "192.168.0.50", {
-        certification_file UbuntuResources.certCrt.resource
-        certification_key_file UbuntuResources.certKey.resource
-        auth "Private Directory", location: "/private", type: digest, provider: file, satisfy: any, {
-            require valid_user
-            user "admin", password: "adminpass"
-        }
-        auth "Private Directory", location: "/private", type: digest, provider: ldap, satisfy: any, {
+    domain "test1.com", address: "192.168.0.50", {
+        setup "auth-ldap", id: "test1authid", {
+            auth "Private Directory", location: "/private"
+            type basic, provider: ldap, satisfy: any, authoritative: no
             host "ldap://127.0.0.1:389", url: "o=deventorg,dc=ubuntutest,dc=com?cn"
             credentials "cn=admin,dc=ubuntutest,dc=com", password: "adminpass"
-            require valid_user
-            require group: "cn=ldapadminGroup,o=deventorg,dc=ubuntutest,dc=com", {
-                attribute "uniqueMember", dn: yes //.
-            }
+            require valid: valid_user
+            require group: "cn=ldapadminGroup,o=deventorg,dc=ubuntutest,dc=com"
+            require attribute: [group: "uniqueMember"]
+            require attribute: [dn: no]
         }
+    }
+    domain "www.test1.com", address: "192.168.0.50", {
+        setup "auth-ldap", ref: "test1authid" //
     }
 }

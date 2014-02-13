@@ -45,10 +45,10 @@ public class RequireUser {
     private RequireUpdate updateMode;
 
     /**
-     * @see RequireUserFactory#create(AuthService, Map)
+     * @see RequireUserFactory#create(AbstractAuthService, Map)
      */
     @Inject
-    RequireUser(RequireUserLogger log, @Assisted AuthService service,
+    RequireUser(RequireUserLogger log, @Assisted AbstractAuthService service,
             @Assisted Map<String, Object> args) {
         this.name = log.name(service, args);
         this.password = log.password(service, args);

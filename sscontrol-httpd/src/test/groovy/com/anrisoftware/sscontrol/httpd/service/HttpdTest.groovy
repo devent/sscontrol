@@ -26,9 +26,7 @@ import org.junit.Test
 
 import com.anrisoftware.sscontrol.core.api.ServiceLoader as SscontrolServiceLoader
 import com.anrisoftware.sscontrol.core.api.ServicesRegistry
-import com.anrisoftware.sscontrol.core.yesno.YesNoFlag
-import com.anrisoftware.sscontrol.httpd.auth.AuthProvider
-import com.anrisoftware.sscontrol.httpd.auth.AuthService
+import com.anrisoftware.sscontrol.httpd.auth.AbstractAuthService
 import com.anrisoftware.sscontrol.httpd.auth.AuthType
 import com.anrisoftware.sscontrol.httpd.auth.RequireDomain
 import com.anrisoftware.sscontrol.httpd.auth.RequireGroup
@@ -75,12 +73,11 @@ class HttpdTest extends HttpdTestUtil {
 
         assert service.domains.size() == 1
 
-        AuthService auth = service.domains[0].services[0]
-        assert auth.name == "auth"
+        AbstractAuthService auth = service.domains[0].services[0]
+        assert auth.name == "auth-file"
         assert auth.authName == "Private Directory"
         assert auth.location == "/private"
         assert auth.type == AuthType.digest
-        assert auth.provider == AuthProvider.file
         assert auth.satisfy == SatisfyType.any
 
         assert auth.requireDomains.size() == 1
@@ -127,14 +124,13 @@ class HttpdTest extends HttpdTestUtil {
 
         assert service.domains.size() == 1
 
-        AuthService auth = service.domains[0].services[0]
-        assert auth.name == "auth"
+        AbstractAuthService auth = service.domains[0].services[0]
+        assert auth.name == "auth-ldap"
         assert auth.authName == "Private Directory"
         assert auth.location == "/private"
-        assert auth.type == AuthType.digest
-        assert auth.provider == AuthProvider.ldap
+        assert auth.type == AuthType.basic
         assert auth.satisfy == SatisfyType.any
-        assert auth.authoritative == null
+        assert auth.authoritative == false
         assert auth.credentials.name == "cn=admin,dc=ubuntutest,dc=com"
         assert auth.credentials.password == "adminpass"
 
@@ -145,9 +141,10 @@ class HttpdTest extends HttpdTestUtil {
         assert auth.requireGroups.size() == 1
         RequireGroup group = auth.requireGroups[0]
         assert group.name == "cn=ldapadminGroup,o=deventorg,dc=ubuntutest,dc=com"
-        assert group.attributes.size() == 2
-        assert group.attributes[0].name == "uniqueMember"
-        assert group.attributes[1].name == "uniqueMember"
-        assert group.attributes[1].attributes.dn == YesNoFlag.no
+
+        def attr = auth.attributes
+        assert attr.size() == 2
+        assert attr.group == "uniqueMember"
+        assert attr.dn == false
     }
 }

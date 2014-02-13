@@ -20,9 +20,8 @@ package com.anrisoftware.sscontrol.httpd.service
 
 httpd {
 	ssl_domain "test1.com", address: "192.168.0.50", {
-		setup "auth", {
-            auth "Private Directory", location: "/private"
-            type digest, provider: file, satisfy: any
+		setup "auth-file", auth: "Private Directory", location: "/private", {
+            type digest, satisfy: any
 			require domain: "https://%"
             require user: "foo", password: "foopassword"
 			require user: "bar", password: "barpassword", update: password

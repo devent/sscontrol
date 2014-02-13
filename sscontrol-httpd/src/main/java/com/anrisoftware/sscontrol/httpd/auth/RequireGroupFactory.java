@@ -32,12 +32,12 @@ public interface RequireGroupFactory {
      * Creates the required group
      * 
      * @param service
-     *            the {@link AuthService} service.
+     *            the {@link AbstractAuthService} service.
      * 
      * @param args
      *            the {@link Map} arguments.
      * 
      * @return the {@link RequireGroup}.
      */
-    RequireGroup create(AuthService service, Map<String, Object> map);
+    RequireGroup create(AbstractAuthService service, Map<String, Object> map);
 }

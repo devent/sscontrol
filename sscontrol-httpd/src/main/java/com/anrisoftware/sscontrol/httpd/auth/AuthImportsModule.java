@@ -35,7 +35,6 @@ import com.google.inject.multibindings.Multibinder;
 public class AuthImportsModule extends AbstractModule {
 
     private static final String SatisfyType = "com.anrisoftware.sscontrol.httpd.auth.SatisfyType";
-    private static final String AuthProvider = "com.anrisoftware.sscontrol.httpd.auth.AuthProvider";
     private static final String AuthType = "com.anrisoftware.sscontrol.httpd.auth.AuthType";
     private static final String RequireUpdate = "com.anrisoftware.sscontrol.httpd.auth.RequireUpdate";
     private static final String RequireValidMode = "com.anrisoftware.sscontrol.httpd.auth.RequireValidMode";
@@ -48,8 +47,6 @@ public class AuthImportsModule extends AbstractModule {
 
             @Override
             public void importClass(ImportCustomizer customizer) {
-                customizer.addStaticImport(AuthProvider, "file");
-                customizer.addStaticImport(AuthProvider, "ldap");
                 customizer.addStaticImport(AuthType, "digest");
                 customizer.addStaticImport(AuthType, "basic");
                 customizer.addStaticImport(SatisfyType, "all");

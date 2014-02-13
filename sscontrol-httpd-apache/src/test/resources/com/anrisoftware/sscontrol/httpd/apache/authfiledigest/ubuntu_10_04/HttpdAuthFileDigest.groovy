@@ -20,9 +20,8 @@ package com.anrisoftware.sscontrol.httpd.apache.authfiledigest.ubuntu_10_04
 
 httpd {
     domain "test1.com", address: "192.168.0.50", {
-        setup "auth", id: "test1authid", {
-            auth "Private Directory", location: "/private"
-            type digest, provider: file, satisfy: any
+        setup "auth-file", id: "test1authid", auth: "Private Directory", location: "/private", {
+            type digest, satisfy: any
             require valid: valid_user
             require user: "foo", password: "foopassword"
             require user: "bar", password: "barpassword", update: password
@@ -42,6 +41,6 @@ httpd {
         }
     }
     domain "www.test1.com", address: "192.168.0.50", {
-        setup "auth", ref: "test1authid" //
+        setup "auth-file", ref: "test1authid" //
     }
 }

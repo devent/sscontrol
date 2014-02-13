@@ -18,10 +18,13 @@
  */
 package com.anrisoftware.sscontrol.httpd.auth;
 
+import static com.anrisoftware.sscontrol.httpd.auth.AuthServiceLogger._.attribute_added_debug;
+import static com.anrisoftware.sscontrol.httpd.auth.AuthServiceLogger._.attribute_added_info;
 import static com.anrisoftware.sscontrol.httpd.auth.AuthServiceLogger._.auth_name_null;
 import static com.anrisoftware.sscontrol.httpd.auth.AuthServiceLogger._.auth_null;
-import static com.anrisoftware.sscontrol.httpd.auth.AuthServiceLogger._.auth_set_debug;
-import static com.anrisoftware.sscontrol.httpd.auth.AuthServiceLogger._.auth_set_info;
+import static com.anrisoftware.sscontrol.httpd.auth.AuthServiceLogger._.authoritative_null;
+import static com.anrisoftware.sscontrol.httpd.auth.AuthServiceLogger._.authoritative_set_debug;
+import static com.anrisoftware.sscontrol.httpd.auth.AuthServiceLogger._.authoritative_set_info;
 import static com.anrisoftware.sscontrol.httpd.auth.AuthServiceLogger._.credentials_set_debug;
 import static com.anrisoftware.sscontrol.httpd.auth.AuthServiceLogger._.credentials_set_info;
 import static com.anrisoftware.sscontrol.httpd.auth.AuthServiceLogger._.domain_added_debug;
@@ -46,13 +49,14 @@ import com.anrisoftware.sscontrol.core.yesno.YesNoFlag;
 import com.anrisoftware.sscontrol.httpd.webservice.WebService;
 
 /**
- * Logging for {@link AuthService}.
+ * Logging for {@link AbstractAuthService}.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class AuthServiceLogger extends AbstractLogger {
+public class AuthServiceLogger extends AbstractLogger {
 
+    private static final String AUTH = "auth";
     private static final String SATISFY = "satisfy";
     private static final String PROVIDER = "provider";
     private static final String LOCATION = "location";
@@ -78,11 +82,11 @@ class AuthServiceLogger extends AbstractLogger {
 
         domain_added_info("Required domain '{}' added for service '{}'."),
 
-        auth_null("Authoritative flag cannot be null for %s."),
+        authoritative_null("Authoritative flag cannot be null for %s."),
 
-        auth_set_debug("Authoritative {} set for {}."),
+        authoritative_set_debug("Authoritative {} set for {}."),
 
-        auth_set_info("Authoritative {} set for service '{}'."),
+        authoritative_set_info("Authoritative {} set for service '{}'."),
 
         host_set_debug("Authentication host {} set for {}."),
 
@@ -95,7 +99,13 @@ class AuthServiceLogger extends AbstractLogger {
 
         valid_added_debug("Required valid {} added for {}."),
 
-        valid_added_info("Required valid {} added for service '{}'.");
+        valid_added_info("Required valid {} added for service '{}'."),
+
+        attribute_added_debug("Required attribute {} added for {}."),
+
+        attribute_added_info("Required attribute '{}' added for service '{}'."),
+
+        auth_null("Authentication name cannot be null or blank.");
 
         private String name;
 
@@ -110,13 +120,13 @@ class AuthServiceLogger extends AbstractLogger {
     }
 
     /**
-     * Sets the context of the logger to {@link AuthService}.
+     * Sets the context of the logger to {@link AbstractAuthService}.
      */
     public AuthServiceLogger() {
-        super(AuthService.class);
+        super(AbstractAuthService.class);
     }
 
-    void checkAuthName(AuthService service, String name) {
+    void checkAuthName(AbstractAuthService service, String name) {
         notBlank(name, auth_name_null.toString(), service);
     }
 
@@ -124,14 +134,14 @@ class AuthServiceLogger extends AbstractLogger {
         return args.containsKey(LOCATION);
     }
 
-    String location(AuthService service, Map<String, Object> args) {
+    String location(AbstractAuthService service, Map<String, Object> args) {
         Object location = args.get(LOCATION);
         notNull(location, location_null.toString(), service);
         notBlank(location.toString(), location_null.toString(), service);
         return location.toString();
     }
 
-    void checkType(AuthService service, AuthType type) {
+    void checkType(AbstractAuthService service, AuthType type) {
         notNull(type, type_null.toString(), service);
     }
 
@@ -139,21 +149,17 @@ class AuthServiceLogger extends AbstractLogger {
         return args.containsKey(PROVIDER);
     }
 
-    AuthProvider provider(AuthService authService, Map<String, Object> args) {
-        AuthProvider provider = (AuthProvider) args.get(PROVIDER);
-        return provider;
-    }
-
     boolean haveSatisfy(Map<String, Object> args) {
         return args.containsKey(SATISFY);
     }
 
-    SatisfyType satisfy(AuthService authService, Map<String, Object> args) {
+    SatisfyType satisfy(AbstractAuthService authService,
+            Map<String, Object> args) {
         SatisfyType type = (SatisfyType) args.get(SATISFY);
         return type;
     }
 
-    void groupAdded(AuthService service, RequireGroup group) {
+    void groupAdded(AbstractAuthService service, RequireGroup group) {
         if (isDebugEnabled()) {
             debug(group_added_debug, group, service);
         } else {
@@ -161,7 +167,7 @@ class AuthServiceLogger extends AbstractLogger {
         }
     }
 
-    void userAdded(AuthService service, RequireUser user) {
+    void userAdded(AbstractAuthService service, RequireUser user) {
         if (isDebugEnabled()) {
             debug(user_added_debug, user, service);
         } else {
@@ -169,7 +175,7 @@ class AuthServiceLogger extends AbstractLogger {
         }
     }
 
-    void validAdded(AuthService service, RequireValid valid) {
+    void validAdded(AbstractAuthService service, RequireValid valid) {
         if (isDebugEnabled()) {
             debug(valid_added_debug, valid, service);
         } else {
@@ -177,7 +183,7 @@ class AuthServiceLogger extends AbstractLogger {
         }
     }
 
-    void requireDomainSet(AuthService service, RequireDomain domain) {
+    void requireDomainSet(AbstractAuthService service, RequireDomain domain) {
         if (isDebugEnabled()) {
             debug(domain_added_debug, domain, service);
         } else {
@@ -185,25 +191,25 @@ class AuthServiceLogger extends AbstractLogger {
         }
     }
 
-    boolean haveAuth(Map<String, Object> args) {
+    boolean haveAuthoritative(Map<String, Object> args) {
         return args.containsKey(AUTHORITATIVE);
     }
 
-    boolean auth(WebService service, Map<String, Object> args) {
+    boolean authoritative(WebService service, Map<String, Object> args) {
         Object auth = args.get(AUTHORITATIVE);
-        notNull(auth, auth_null.toString(), service);
+        notNull(auth, authoritative_null.toString(), service);
         return YesNoFlag.valueOf(auth);
     }
 
-    void authSet(AuthService service, boolean auth) {
+    void authoritativeSet(AbstractAuthService service, boolean auth) {
         if (isDebugEnabled()) {
-            debug(auth_set_debug, auth, service);
+            debug(authoritative_set_debug, auth, service);
         } else {
-            info(auth_set_info, auth, service.getName());
+            info(authoritative_set_info, auth, service.getName());
         }
     }
 
-    void hostSet(AuthService service, AuthHost host) {
+    void hostSet(AbstractAuthService service, AuthHost host) {
         if (isDebugEnabled()) {
             debug(host_set_debug, host, service);
         } else {
@@ -211,11 +217,30 @@ class AuthServiceLogger extends AbstractLogger {
         }
     }
 
-    void credentialsSet(AuthService service, AuthCredentials cred) {
+    void credentialsSet(AbstractAuthService service, AuthCredentials cred) {
         if (isDebugEnabled()) {
             debug(credentials_set_debug, cred, service);
         } else {
             info(credentials_set_info, cred.getName(), service.getName());
         }
     }
+
+    void attributeAdded(AbstractAuthService service, Map<String, Object> attr) {
+        if (isDebugEnabled()) {
+            debug(attribute_added_debug, attr, service);
+        } else {
+            info(attribute_added_info, attr, service.getName());
+        }
+    }
+
+    boolean haveAuth(Map<String, Object> args) {
+        return args.containsKey(AUTH);
+    }
+
+    String auth(AbstractAuthService service, Map<String, Object> args) {
+        Object auth = args.get(AUTH);
+        notNull(auth, auth_null.toString(), service);
+        return notBlank(auth.toString(), auth_null.toString(), service);
+    }
+
 }

@@ -25,8 +25,6 @@ import javax.inject.Inject
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.sscontrol.core.debuglogging.DebugLoggingProperty
 import com.anrisoftware.sscontrol.core.service.LinuxScript
-import com.anrisoftware.sscontrol.httpd.auth.AuthProvider
-import com.anrisoftware.sscontrol.httpd.auth.AuthType
 import com.anrisoftware.sscontrol.httpd.domain.Domain
 import com.anrisoftware.sscontrol.httpd.service.HttpdService
 import com.anrisoftware.sscontrol.httpd.webservice.ServiceConfig
@@ -354,32 +352,6 @@ abstract class ApacheScript extends LinuxScript {
      */
     String getWebSubdirectory() {
         profileProperty("web_subdirectory", defaultProperties)
-    }
-
-    /**
-     * Returns the default authentication provider.
-     *
-     * <ul>
-     * <li>profile property {@code "default_auth_provider"}</li>
-     * </ul>
-     *
-     * @see #getDefaultProperties()
-     */
-    AuthProvider getDefaultAuthProvider() {
-        AuthProvider.parse profileProperty("default_auth_provider", defaultProperties)
-    }
-
-    /**
-     * Returns the default authentication type.
-     *
-     * <ul>
-     * <li>profile property {@code "default_auth_type"}</li>
-     * </ul>
-     *
-     * @see #getDefaultProperties()
-     */
-    AuthType getDefaultAuthType() {
-        AuthType.parse profileProperty("default_auth_type", defaultProperties)
     }
 
     /**

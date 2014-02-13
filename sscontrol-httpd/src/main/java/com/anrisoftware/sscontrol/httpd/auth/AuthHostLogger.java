@@ -65,7 +65,7 @@ class AuthHostLogger extends AbstractLogger {
         super(AuthHost.class);
     }
 
-    String host(AuthService service, Map<String, Object> args) {
+    String host(AbstractAuthService service, Map<String, Object> args) {
         Object host = args.get(HOST);
         notNull(host, host_null.toString(), service);
         return notBlank(host.toString(), host_null.toString(), service);
@@ -75,7 +75,7 @@ class AuthHostLogger extends AbstractLogger {
         return args.containsKey(URL);
     }
 
-    String url(AuthService service, Map<String, Object> args) {
+    String url(AbstractAuthService service, Map<String, Object> args) {
         Object url = args.get(URL);
         notNull(url, url_null.toString(), service);
         return url.toString();

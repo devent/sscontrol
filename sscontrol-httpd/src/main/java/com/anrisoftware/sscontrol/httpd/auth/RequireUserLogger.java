@@ -67,13 +67,13 @@ class RequireUserLogger extends AbstractLogger {
         super(RequireUser.class);
     }
 
-    String name(AuthService service, Map<String, Object> args) {
+    String name(AbstractAuthService service, Map<String, Object> args) {
         Object name = args.get(NAME);
         notNull(name, name_null.toString(), service);
         return notBlank(name.toString(), name_null.toString(), service);
     }
 
-    String password(AuthService service, Map<String, Object> args) {
+    String password(AbstractAuthService service, Map<String, Object> args) {
         Object password = args.get(PASSWORD);
         notNull(password, password_null.toString(), service);
         return password.toString();
@@ -83,7 +83,7 @@ class RequireUserLogger extends AbstractLogger {
         return args.containsKey(UPDATE);
     }
 
-    RequireUpdate update(AuthService service, Map<String, Object> args) {
+    RequireUpdate update(AbstractAuthService service, Map<String, Object> args) {
         Object mode = args.get(UPDATE);
         notNull(mode, update_mode_null.toString(), service);
         if (mode instanceof RequireUpdate) {

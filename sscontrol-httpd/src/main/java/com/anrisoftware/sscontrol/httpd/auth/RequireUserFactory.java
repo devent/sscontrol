@@ -32,12 +32,12 @@ public interface RequireUserFactory {
      * Creates the required user.
      * 
      * @param service
-     *            the {@link AuthService} service.
+     *            the {@link AbstractAuthService} service.
      * 
      * @param args
      *            the {@link Map} arguments.
      * 
      * @return the {@link RequireUser}.
      */
-    RequireUser create(AuthService service, Map<String, Object> args);
+    RequireUser create(AbstractAuthService service, Map<String, Object> args);
 }

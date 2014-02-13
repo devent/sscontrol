@@ -38,21 +38,21 @@ public class RequireDomain {
 
     private static final String SERVICE = "service";
 
-    private final AuthService service;
+    private final AbstractAuthService service;
 
     private final String domain;
 
     /**
-     * @see RequireDomainFactory#create(AuthService, Map)
+     * @see RequireDomainFactory#create(AbstractAuthService, Map)
      */
     @Inject
-    RequireDomain(RequireDomainLogger log, @Assisted AuthService service,
+    RequireDomain(RequireDomainLogger log, @Assisted AbstractAuthService service,
             @Assisted Map<String, Object> args) {
         this.service = service;
         this.domain = log.domain(service, args);
     }
 
-    public AuthService getService() {
+    public AbstractAuthService getService() {
         return service;
     }
 

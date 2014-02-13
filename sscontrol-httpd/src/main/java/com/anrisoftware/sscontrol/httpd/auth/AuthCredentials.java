@@ -38,17 +38,17 @@ public class AuthCredentials {
 
     private static final String NAME = "name";
 
-    private final AuthService service;
+    private final AbstractAuthService service;
 
     private final String name;
 
     private String password;
 
     /**
-     * @see RequireCredentialsFactory#create(AuthService, Map)
+     * @see RequireCredentialsFactory#create(AbstractAuthService, Map)
      */
     @Inject
-    AuthCredentials(AuthCredentialsLogger log, @Assisted AuthService service,
+    AuthCredentials(AuthCredentialsLogger log, @Assisted AbstractAuthService service,
             @Assisted Map<String, Object> args) {
         this.service = service;
         this.name = log.name(service, args);
@@ -57,7 +57,7 @@ public class AuthCredentials {
         }
     }
 
-    public AuthService getService() {
+    public AbstractAuthService getService() {
         return service;
     }
 

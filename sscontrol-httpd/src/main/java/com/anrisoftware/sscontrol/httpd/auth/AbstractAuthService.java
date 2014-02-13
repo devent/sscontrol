@@ -19,6 +19,7 @@
 package com.anrisoftware.sscontrol.httpd.auth;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -26,19 +27,21 @@ import javax.inject.Inject;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import com.anrisoftware.sscontrol.core.yesno.YesNoFlag;
 import com.anrisoftware.sscontrol.httpd.domain.Domain;
 import com.anrisoftware.sscontrol.httpd.webservice.WebService;
 import com.anrisoftware.sscontrol.httpd.webserviceargs.WebServiceArgs;
 import com.anrisoftware.sscontrol.httpd.webserviceargs.WebServiceLogger;
-import com.google.inject.assistedinject.Assisted;
 
 /**
  * HTTP/authentication service.
- * 
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-public class AuthService implements WebService {
+public abstract class AbstractAuthService implements WebService {
+
+    private static final String ATTRIBUTE_ARG = "attribute";
 
     private static final String HOST = "host";
 
@@ -62,13 +65,6 @@ public class AuthService implements WebService {
 
     private static final String NAME = "name";
 
-    /**
-     * HTTP/authentication service name.
-     */
-    public static final String SERVICE_NAME = "auth";
-
-    private final WebServiceLogger serviceLog;
-
     private final Domain domain;
 
     private final List<RequireDomain> requireDomains;
@@ -79,8 +75,12 @@ public class AuthService implements WebService {
 
     private final List<RequireValid> requireValids;
 
+    private final Map<String, Object> attributes;
+
+    private final AuthServiceLogger log;
+
     @Inject
-    private AuthServiceLogger log;
+    private WebServiceLogger serviceLog;
 
     @Inject
     private RequireDomainFactory requireDomainFactory;
@@ -112,8 +112,6 @@ public class AuthService implements WebService {
 
     private AuthType type;
 
-    private AuthProvider provider;
-
     private SatisfyType satisfy;
 
     private Boolean authoritative;
@@ -123,35 +121,44 @@ public class AuthService implements WebService {
     private AuthCredentials credentials;
 
     /**
-     * @see AuthServiceFactory#create(Domain, Map)
+     * Sets the domain for the authentication.
+     * 
+     * @param domain
+     *            the {@link Domain}.
+     * 
+     * @param args
+     *            the {@link Map} arguments.
+     * 
+     * @param aargs
+     *            the {@link WebServiceArgs}.
+     * 
+     * @param log
+     *            the {@link AuthServiceLogger}.
      */
-    @Inject
-    AuthService(AuthServiceLogger log, WebServiceArgs aargs,
-            WebServiceLogger logger, @Assisted Domain domain,
-            @Assisted Map<String, Object> args) {
-        this.serviceLog = logger;
+    protected AbstractAuthService(Domain domain, Map<String, Object> args,
+            WebServiceArgs aargs, AuthServiceLogger log) {
         this.domain = domain;
+        this.log = log;
         this.requireDomains = new ArrayList<RequireDomain>();
         this.requireGroups = new ArrayList<RequireGroup>();
         this.requireUsers = new ArrayList<RequireUser>();
         this.requireValids = new ArrayList<RequireValid>();
+        this.attributes = new HashMap<String, Object>();
         if (aargs.haveId(args)) {
-            setId(aargs.id(this, args));
+            this.id = aargs.id(this, args);
         }
         if (aargs.haveRef(args)) {
-            setRef(aargs.ref(this, args));
+            this.ref = aargs.ref(this, args);
         }
         if (aargs.haveRefDomain(args)) {
-            setRefDomain(aargs.refDomain(this, args));
+            this.refDomain = aargs.refDomain(this, args);
         }
         if (log.haveAuth(args)) {
-            setAuthoritative(log.auth(this, args));
+            this.authName = log.auth(this, args);
         }
-    }
-
-    @Override
-    public String getName() {
-        return SERVICE_NAME;
+        if (log.haveLocation(args)) {
+            this.location = log.location(this, args);
+        }
     }
 
     public void setId(String id) {
@@ -189,14 +196,6 @@ public class AuthService implements WebService {
         return refDomain;
     }
 
-    public void auth(Map<String, Object> args, String name) {
-        log.checkAuthName(this, name);
-        this.authName = name;
-        if (log.haveLocation(args)) {
-            this.location = log.location(this, args);
-        }
-    }
-
     public String getAuthName() {
         return authName;
     }
@@ -208,20 +207,16 @@ public class AuthService implements WebService {
     public void type(Map<String, Object> args, AuthType type) {
         log.checkType(this, type);
         this.type = type;
-        if (log.haveProvider(args)) {
-            this.provider = log.provider(this, args);
-        }
         if (log.haveSatisfy(args)) {
             this.satisfy = log.satisfy(this, args);
+        }
+        if (log.haveAuthoritative(args)) {
+            this.authoritative = log.authoritative(this, args);
         }
     }
 
     public AuthType getType() {
         return type;
-    }
-
-    public AuthProvider getProvider() {
-        return provider;
     }
 
     public SatisfyType getSatisfy() {
@@ -253,6 +248,26 @@ public class AuthService implements WebService {
             log.validAdded(this, valid);
             return;
         }
+        if (args.containsKey(ATTRIBUTE_ARG)) {
+            @SuppressWarnings("unchecked")
+            Map<String, Object> attr = (Map<String, Object>) args
+                    .get(ATTRIBUTE_ARG);
+            attr = convertYesNo(attr);
+            attributes.putAll(attr);
+            log.attributeAdded(this, attr);
+            return;
+        }
+    }
+
+    private Map<String, Object> convertYesNo(Map<String, Object> attr) {
+        Map<String, Object> copyattr = new HashMap<String, Object>(attr);
+        for (Map.Entry<String, Object> entry : attr.entrySet()) {
+            if (entry.getValue() instanceof YesNoFlag) {
+                copyattr.put(entry.getKey(),
+                        ((YesNoFlag) entry.getValue()).asBoolean());
+            }
+        }
+        return copyattr;
     }
 
     public Object require(Map<String, Object> args, Object s) {
@@ -283,7 +298,7 @@ public class AuthService implements WebService {
 
     public void setAuthoritative(boolean auth) {
         this.authoritative = auth;
-        log.authSet(this, auth);
+        log.authoritativeSet(this, auth);
     }
 
     public Boolean getAuthoritative() {
@@ -310,6 +325,10 @@ public class AuthService implements WebService {
         AuthCredentials cred = authCredentialsFactory.create(this, args);
         log.credentialsSet(this, cred);
         this.credentials = cred;
+    }
+
+    public Map<String, Object> getAttributes() {
+        return attributes;
     }
 
     @Override

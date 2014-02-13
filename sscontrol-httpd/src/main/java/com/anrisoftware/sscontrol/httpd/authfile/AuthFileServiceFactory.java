@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.auth;
+package com.anrisoftware.sscontrol.httpd.authfile;
 
 import java.util.Map;
 
@@ -24,13 +24,13 @@ import com.anrisoftware.sscontrol.httpd.domain.Domain;
 import com.anrisoftware.sscontrol.httpd.webservice.WebServiceFactory;
 
 /**
- * Factory to create the HTTP/authentication service.
+ * Factory to create the HTTP/authentication file service.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-public interface AuthServiceFactory extends WebServiceFactory {
+public interface AuthFileServiceFactory extends WebServiceFactory {
 
     @Override
-    AuthService create(Domain domain, Map<String, Object> map);
+    AuthFileService create(Domain domain, Map<String, Object> map);
 }

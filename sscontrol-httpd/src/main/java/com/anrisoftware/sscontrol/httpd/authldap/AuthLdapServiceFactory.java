@@ -16,28 +16,21 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.auth;
+package com.anrisoftware.sscontrol.httpd.authldap;
 
 import java.util.Map;
 
+import com.anrisoftware.sscontrol.httpd.domain.Domain;
+import com.anrisoftware.sscontrol.httpd.webservice.WebServiceFactory;
+
 /**
- * Factory to create group attribute.
+ * Factory to create the HTTP/authentication LDAP service.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-public interface GroupAttributeFactory {
+public interface AuthLdapServiceFactory extends WebServiceFactory {
 
-    /**
-     * Creates the group attribute.
-     * 
-     * @param service
-     *            the {@link AuthService} service.
-     * 
-     * @param args
-     *            the {@link Map} arguments.
-     * 
-     * @return the {@link GroupAttribute}.
-     */
-    GroupAttribute create(AuthService service, Map<String, Object> args);
+    @Override
+    AuthLdapService create(Domain domain, Map<String, Object> map);
 }

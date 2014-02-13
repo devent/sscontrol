@@ -32,12 +32,12 @@ public interface AuthHostFactory {
      * Creates the authentication host.
      * 
      * @param service
-     *            the {@link AuthService} service.
+     *            the {@link AbstractAuthService} service.
      * 
      * @param args
      *            the {@link Map} arguments.
      * 
      * @return the {@link AuthHost}.
      */
-    AuthHost create(AuthService service, Map<String, Object> args);
+    AuthHost create(AbstractAuthService service, Map<String, Object> args);
 }

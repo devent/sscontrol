@@ -32,11 +32,6 @@ import com.anrisoftware.sscontrol.httpd.webservice.WebService
 abstract class BasicAuth {
 
     /**
-     * Authentication service name.
-     */
-    public static final String SERVICE_NAME = "auth"
-
-    /**
      * @see ServiceConfig#getScript()
      */
     LinuxScript script
@@ -89,9 +84,7 @@ abstract class BasicAuth {
      *
      * @return the service {@link String} name.
      */
-    String getServiceName() {
-        SERVICE_NAME
-    }
+    abstract String getServiceName()
 
     /**
      * @see ServiceConfig#setScript(LinuxScript)

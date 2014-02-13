@@ -61,7 +61,7 @@ class RequireDomainLogger extends AbstractLogger {
         super(RequireDomain.class);
     }
 
-    String domain(AuthService service, Map<String, Object> args) {
+    String domain(AbstractAuthService service, Map<String, Object> args) {
         Object domain = args.get(DOMAIN);
         notNull(domain, domain_null.toString(), service);
         notBlank(domain.toString(), domain_null.toString(), service);

@@ -61,7 +61,7 @@ class RequireValidLogger extends AbstractLogger {
         super(RequireValid.class);
     }
 
-    RequireValidMode valid(AuthService service, Map<String, Object> args) {
+    RequireValidMode valid(AbstractAuthService service, Map<String, Object> args) {
         Object valid = args.get(VALID);
         notNull(valid, valid_mode_null.toString(), service);
         if (valid instanceof RequireValidMode) {

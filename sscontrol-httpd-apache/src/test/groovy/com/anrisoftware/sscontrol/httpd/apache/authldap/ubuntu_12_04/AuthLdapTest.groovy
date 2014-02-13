@@ -16,12 +16,12 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd-apache. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.apache.authldap.ubuntu_10_04
+package com.anrisoftware.sscontrol.httpd.apache.authldap.ubuntu_12_04
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
-import static com.anrisoftware.sscontrol.httpd.apache.authldap.ubuntu_10_04.AuthLdapResources.*
+import static com.anrisoftware.sscontrol.httpd.apache.authldap.ubuntu_12_04.AuthLdapResources.*
 import static com.anrisoftware.sscontrol.httpd.apache.ubuntu.UbuntuResources.*
-import static com.anrisoftware.sscontrol.httpd.apache.ubuntu_10_04.Ubuntu_10_04_Resources.*
+import static com.anrisoftware.sscontrol.httpd.apache.ubuntu_12_04.Ubuntu_12_04_Resources.*
 import static org.apache.commons.io.FileUtils.*
 import groovy.util.logging.Slf4j
 
@@ -30,7 +30,7 @@ import org.junit.Test
 import com.anrisoftware.sscontrol.httpd.apache.ubuntu.UbuntuTestUtil
 
 /**
- * Test Apache on a Ubuntu 10.04 server.
+ * Auth/LDAP Ubuntu 12.04.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
@@ -41,20 +41,21 @@ class AuthLdapTest extends UbuntuTestUtil {
     @Test
     void "auth ldap"() {
         copyUbuntuFiles tmpdir
-        copyUbuntu_10_04_Files tmpdir
+        copyUbuntu_12_04_Files tmpdir
 
         loader.loadService profile.resource, null
         def profile = registry.getService("profile")[0]
-        setupUbuntu_10_04_Properties profile, tmpdir
-        loader.loadService httpdScript.resource, profile
+        setupUbuntu_12_04_Properties profile, tmpdir
+        loader.loadService httpdScript.resource, profile, preScript
 
         registry.allServices.each { it.call() }
         log.info "Run service again to ensure that configuration is not set double."
         registry.allServices.each { it.call() }
 
         assertFileContent defaultConf.asFile(tmpdir), defaultConf
-        assertFileContent domainsConf.asFile(tmpdir), domainsConf
-        assertStringContent test1comSslConf.replaced(tmpdir, tmpdir, "/tmp"), test1comSslConf.toString()
-        assertFileContent enmodOut.asFile(tmpdir), enmodOut
+        assertFileContent domainsConfExpected.asFile(tmpdir), domainsConfExpected
+        assertStringContent test1comConfExpected.replaced(tmpdir, tmpdir, "/tmp"), test1comConfExpected.toString()
+        assertStringContent wwwtest1comConfExpected.replaced(tmpdir, tmpdir, "/tmp"), wwwtest1comConfExpected.toString()
+        assertFileContent enmodOutExpected.asFile(tmpdir), enmodOutExpected
     }
 }

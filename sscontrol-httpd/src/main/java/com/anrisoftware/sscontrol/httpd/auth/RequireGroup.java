@@ -19,7 +19,6 @@
 package com.anrisoftware.sscontrol.httpd.auth;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -47,31 +46,25 @@ public class RequireGroup {
 
     private final String name;
 
-    private final AuthService service;
+    private final AbstractAuthService service;
 
     private final RequireGroupLogger log;
-
-    private final List<GroupAttribute> attributes;
 
     @Inject
     private RequireUserFactory userFactory;
 
-    @Inject
-    private GroupAttributeFactory attributeFactory;
-
     private RequireUpdate updateMode;
 
     /**
-     * @see RequireGroupFactory#create(AuthService, Map)
+     * @see RequireGroupFactory#create(AbstractAuthService, Map)
      */
     @Inject
-    RequireGroup(RequireGroupLogger log, @Assisted AuthService service,
+    RequireGroup(RequireGroupLogger log, @Assisted AbstractAuthService service,
             @Assisted Map<String, Object> args) {
         this.log = log;
         this.service = service;
         this.name = log.name(service, args);
         this.users = new ArrayList<RequireUser>();
-        this.attributes = new ArrayList<GroupAttribute>();
         if (log.haveUpdate(args)) {
             this.updateMode = log.update(service, args);
         }
@@ -98,25 +91,6 @@ public class RequireGroup {
 
     public RequireUpdate getUpdateMode() {
         return updateMode;
-    }
-
-    public void attribute(String name) {
-        Map<String, Object> args = new HashMap<String, Object>();
-        args.put(NAME_ARG, name);
-        GroupAttribute attribute = attributeFactory.create(service, args);
-        attributes.add(attribute);
-        log.attributeAdded(this, service, attribute);
-    }
-
-    public void attribute(Map<String, Object> args, String name) {
-        args.put(NAME_ARG, name);
-        GroupAttribute attribute = attributeFactory.create(service, args);
-        attributes.add(attribute);
-        log.attributeAdded(this, service, attribute);
-    }
-
-    public List<GroupAttribute> getAttributes() {
-        return attributes;
     }
 
     @Override

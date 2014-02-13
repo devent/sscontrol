@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd-apache. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.apache.authldap.ubuntu_10_04
+package com.anrisoftware.sscontrol.httpd.apache.authldap.ubuntu_12_04
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static org.apache.commons.io.FileUtils.*
@@ -34,12 +34,14 @@ enum AuthLdapResources {
     // Auth/ldap
     profile("UbuntuProfile.groovy", AuthLdapResources.class.getResource("UbuntuProfile.groovy")),
     httpdScript("Httpd.groovy", AuthLdapResources.class.getResource("HttpdAuthLdap.groovy")),
-    domainsConf("/etc/apache2/conf.d/000-robobee-domains.conf", AuthLdapResources.class.getResource("domains_conf.txt")),
-    test1comSslConf("/etc/apache2/sites-available/100-robobee-test1.com-ssl.conf", AuthLdapResources.class.getResource("test1_com_ssl_conf.txt")),
-    enmodOut("/usr/sbin/a2enmod.out", AuthLdapResources.class.getResource("enmod_out.txt")),
+    domainsConfExpected("/etc/apache2/conf.d/000-robobee-domains.conf", AuthLdapResources.class.getResource("domains_conf_expected.txt")),
+    test1comConfExpected("/etc/apache2/sites-available/100-robobee-test1.com.conf", AuthLdapResources.class.getResource("test1com_conf_expected.txt")),
+    wwwtest1comConfExpected("/etc/apache2/sites-available/100-robobee-www.test1.com.conf", AuthLdapResources.class.getResource("wwwtest1com_conf_expected.txt")),
+    enmodOutExpected("/usr/sbin/a2enmod.out", AuthLdapResources.class.getResource("enmod_out_expected.txt")),
     // Auth file/ldap
     fileldapScript("Httpd.groovy", AuthLdapResources.class.getResource("HttpdAuthFileLdap.groovy")),
-    authFileLdapTest1comSslConf("/etc/apache2/sites-available/100-robobee-test1.com-ssl.conf", AuthLdapResources.class.getResource("authfileldap_test1_com_ssl_conf.txt")),
+    authFileLdaptest1comConfExpected("/etc/apache2/sites-available/100-robobee-test1.com.conf", AuthLdapResources.class.getResource("authfileldap_test1com_conf_expected.txt")),
+    authFileLdapWwwtest1comConfExpected("/etc/apache2/sites-available/100-robobee-www.test1.com.conf", AuthLdapResources.class.getResource("authfileldap_wwwtest1com_conf_expected.txt")),
 
     ResourcesUtils resources
 

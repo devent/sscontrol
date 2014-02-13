@@ -16,32 +16,36 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.auth;
+package com.anrisoftware.sscontrol.httpd.authldap;
 
+import static com.google.inject.multibindings.MapBinder.newMapBinder;
+
+import com.anrisoftware.sscontrol.httpd.webservice.WebService;
+import com.anrisoftware.sscontrol.httpd.webservice.WebServiceFactory;
 import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
+import com.google.inject.multibindings.MapBinder;
 
 /**
- * Installs the HTTP/authentication factories.
+ * Installs the HTTP/authentication LDAP factories.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-public class AuthModule extends AbstractModule {
+public class AuthLdapModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        install(new FactoryModuleBuilder().implement(RequireDomain.class,
-                RequireDomain.class).build(RequireDomainFactory.class));
-        install(new FactoryModuleBuilder().implement(RequireUser.class,
-                RequireUser.class).build(RequireUserFactory.class));
-        install(new FactoryModuleBuilder().implement(RequireGroup.class,
-                RequireGroup.class).build(RequireGroupFactory.class));
-        install(new FactoryModuleBuilder().implement(AuthHost.class,
-                AuthHost.class).build(AuthHostFactory.class));
-        install(new FactoryModuleBuilder().implement(AuthCredentials.class,
-                AuthCredentials.class).build(AuthCredentialsFactory.class));
-        install(new FactoryModuleBuilder().implement(RequireValid.class,
-                RequireValid.class).build(RequireValidFactory.class));
+        install(new FactoryModuleBuilder().implement(WebService.class,
+                AuthLdapService.class).build(AuthLdapServiceFactory.class));
+        bindService();
+    }
+
+    private void bindService() {
+        MapBinder<String, WebServiceFactory> mapbinder;
+        mapbinder = newMapBinder(binder(), String.class,
+                WebServiceFactory.class);
+        mapbinder.addBinding(AuthLdapService.AUTH_LDAP_NAME).toProvider(
+                AuthLdapServiceProvider.class);
     }
 }

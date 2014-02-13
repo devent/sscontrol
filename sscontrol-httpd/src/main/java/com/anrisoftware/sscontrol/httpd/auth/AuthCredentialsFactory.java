@@ -32,12 +32,12 @@ public interface AuthCredentialsFactory {
      * Creates the authentication credentials.
      * 
      * @param service
-     *            the {@link AuthService} service.
+     *            the {@link AbstractAuthService} service.
      * 
      * @param args
      *            the {@link Map} arguments.
      * 
      * @return the {@link AuthCredentials}.
      */
-    AuthCredentials create(AuthService service, Map<String, Object> args);
+    AuthCredentials create(AbstractAuthService service, Map<String, Object> args);
 }

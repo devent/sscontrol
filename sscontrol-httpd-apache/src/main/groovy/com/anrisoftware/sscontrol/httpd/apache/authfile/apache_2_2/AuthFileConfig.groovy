@@ -33,11 +33,7 @@ import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.Templates
 import com.anrisoftware.sscontrol.core.service.LinuxScript
 import com.anrisoftware.sscontrol.httpd.apache.apache.linux.BasicAuth
-import com.anrisoftware.sscontrol.httpd.apache.authfile.apache_2_2.AuthFileBasicConfig;
-import com.anrisoftware.sscontrol.httpd.apache.authfile.apache_2_2.AuthFileConfigLogger;
-import com.anrisoftware.sscontrol.httpd.apache.authfile.apache_2_2.AuthFileDigestConfig;
-import com.anrisoftware.sscontrol.httpd.apache.authfile.apache_2_2.RequireValidModeRenderer;
-import com.anrisoftware.sscontrol.httpd.auth.AuthService
+import com.anrisoftware.sscontrol.httpd.auth.AbstractAuthService
 import com.anrisoftware.sscontrol.httpd.auth.AuthType
 import com.anrisoftware.sscontrol.httpd.auth.RequireGroup
 import com.anrisoftware.sscontrol.httpd.auth.RequireUpdate
@@ -51,6 +47,11 @@ import com.anrisoftware.sscontrol.httpd.webservice.WebService
  * @since 1.0
  */
 abstract class AuthFileConfig extends BasicAuth {
+
+    /**
+     * Authentication service name.
+     */
+    public static final String SERVICE_NAME = "auth-file"
 
     @Inject
     AuthFileConfigLogger log
@@ -101,7 +102,7 @@ abstract class AuthFileConfig extends BasicAuth {
      * @param serviceConfig
      *            the {@link List} of the configuration.
      */
-    void createDomainConfig(Domain domain, AuthService service, List serviceConfig) {
+    void createDomainConfig(Domain domain, AbstractAuthService service, List serviceConfig) {
         def file = passwordFile(service, domain)
         def config = authDomainConfigTemplate.getText true,
                 "domainAuth",
@@ -120,7 +121,7 @@ abstract class AuthFileConfig extends BasicAuth {
      * @param service
      *            the {@link AuthService}.
      */
-    void enableMods(AuthService service) {
+    void enableMods(AbstractAuthService service) {
         switch (service.type) {
             case AuthType.basic:
                 enableMods(["authn_file", "auth_basic"])
@@ -151,7 +152,7 @@ abstract class AuthFileConfig extends BasicAuth {
      * @param service
      *            the {@link AuthService}.
      */
-    void deployGroups(Domain domain, AuthService service) {
+    void deployGroups(Domain domain, AbstractAuthService service) {
         def file = groupFile(domain, service)
         def oldgroups = file.exists() ? FileUtils.readLines(file, charset) : []
         service.requireGroups.each { RequireGroup group ->
@@ -177,7 +178,7 @@ abstract class AuthFileConfig extends BasicAuth {
         return [found: found, index: index]
     }
 
-    void updateGroup(Domain domain, AuthService service, Map found, List groups) {
+    void updateGroup(Domain domain, AbstractAuthService service, Map found, List groups) {
         RequireGroup groupfound = found.found
         int index = found.index
         switch (groupfound.updateMode) {
@@ -192,7 +193,7 @@ abstract class AuthFileConfig extends BasicAuth {
         }
     }
 
-    void insertGroup(Domain domain, AuthService service, RequireGroup group, List groups) {
+    void insertGroup(Domain domain, AbstractAuthService service, RequireGroup group, List groups) {
         groups << createGroup(group)
     }
 
@@ -219,7 +220,7 @@ abstract class AuthFileConfig extends BasicAuth {
      * @param users
      *            the {@link List} of {@link RequireUser} users.
      */
-    void deployUsers(Domain domain, AuthService service, List users) {
+    void deployUsers(Domain domain, AbstractAuthService service, List users) {
         def oldusers
         switch (service.type) {
             case AuthType.basic:
@@ -241,7 +242,7 @@ abstract class AuthFileConfig extends BasicAuth {
      * @param service
      *            the {@link AuthService}.
      */
-    void updatePermissions(Domain domain, AuthService service) {
+    void updatePermissions(Domain domain, AbstractAuthService service) {
         def owner = "root"
         def group = "root"
         def authdir = new File(authSubdirectory, domainDir(domain))
@@ -263,7 +264,7 @@ abstract class AuthFileConfig extends BasicAuth {
      *
      * @return the password {@link File}.
      */
-    File passwordFile(AuthService service, Domain domain) {
+    File passwordFile(AbstractAuthService service, Domain domain) {
         switch (service.type) {
             case AuthType.basic:
                 return authFileBasicConfig.passwordFile(domain, service)
@@ -281,7 +282,7 @@ abstract class AuthFileConfig extends BasicAuth {
      * @param service
      *            the {@link AuthService}.
      */
-    File groupFile(Domain domain, AuthService service) {
+    File groupFile(Domain domain, AbstractAuthService service) {
         def location = FilenameUtils.getBaseName(service.location)
         def dir = new File(authSubdirectory, domainDir(domain))
         return new File("${location}.group", dir)
@@ -323,5 +324,14 @@ abstract class AuthFileConfig extends BasicAuth {
         authFileDigestConfig.setScript this
         this.authTemplates = templatesFactory.create "Apache_2_2_AuthFile", ["renderers": [requireValidModeRenderer]]
         authDomainConfigTemplate = authTemplates.getResource "domain"
+    }
+
+    /**
+     * Returns authentication service name.
+     *
+     * @return the service {@link String} name.
+     */
+    String getServiceName() {
+        SERVICE_NAME
     }
 }

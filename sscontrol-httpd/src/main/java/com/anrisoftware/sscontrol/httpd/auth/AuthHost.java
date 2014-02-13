@@ -38,17 +38,17 @@ public class AuthHost {
 
     private static final String HOST = "host";
 
-    private final AuthService service;
+    private final AbstractAuthService service;
 
     private final String host;
 
     private String url;
 
     /**
-     * @see RequireDomainFactory#create(AuthService, Map)
+     * @see RequireDomainFactory#create(AbstractAuthService, Map)
      */
     @Inject
-    AuthHost(AuthHostLogger log, @Assisted AuthService service,
+    AuthHost(AuthHostLogger log, @Assisted AbstractAuthService service,
             @Assisted Map<String, Object> args) {
         this.service = service;
         this.host = log.host(service, args);
@@ -57,7 +57,7 @@ public class AuthHost {
         }
     }
 
-    public AuthService getService() {
+    public AbstractAuthService getService() {
         return service;
     }
 

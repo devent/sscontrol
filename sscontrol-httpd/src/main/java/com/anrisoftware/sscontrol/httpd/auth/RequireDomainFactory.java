@@ -32,12 +32,12 @@ public interface RequireDomainFactory {
      * Creates the required domain.
      * 
      * @param service
-     *            the {@link AuthService} service.
+     *            the {@link AbstractAuthService} service.
      * 
      * @param args
      *            the {@link Map} arguments.
      * 
      * @return the {@link RequireDomain}.
      */
-    RequireDomain create(AuthService service, Map<String, Object> args);
+    RequireDomain create(AbstractAuthService service, Map<String, Object> args);
 }

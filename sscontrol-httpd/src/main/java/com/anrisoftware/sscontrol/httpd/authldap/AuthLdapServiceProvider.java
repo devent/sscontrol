@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.auth;
+package com.anrisoftware.sscontrol.httpd.authldap;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -24,15 +24,15 @@ import javax.inject.Provider;
 import com.anrisoftware.sscontrol.httpd.webservice.WebServiceFactory;
 
 /**
- * Provides the HTTP/authentication service factory.
+ * Provides the HTTP/authentication LDAP service factory.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-public class AuthServiceProvider implements Provider<WebServiceFactory> {
+public class AuthLdapServiceProvider implements Provider<WebServiceFactory> {
 
 	@Inject
-	private AuthServiceFactory factory;
+	private AuthLdapServiceFactory factory;
 
 	@Override
 	public WebServiceFactory get() {

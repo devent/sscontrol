@@ -65,7 +65,7 @@ class AuthCredentialsLogger extends AbstractLogger {
         super(AuthHost.class);
     }
 
-    String name(AuthService service, Map<String, Object> args) {
+    String name(AbstractAuthService service, Map<String, Object> args) {
         Object name = args.get(NAME);
         notNull(name, name_null.toString(), service);
         return notBlank(name.toString(), name_null.toString(), service);
@@ -75,7 +75,7 @@ class AuthCredentialsLogger extends AbstractLogger {
         return args.containsKey(PASSWORD);
     }
 
-    String password(AuthService service, Map<String, Object> args) {
+    String password(AbstractAuthService service, Map<String, Object> args) {
         Object password = args.get(PASSWORD);
         notNull(password, password_null.toString(), service);
         return password.toString();

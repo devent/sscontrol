@@ -18,8 +18,6 @@
  */
 package com.anrisoftware.sscontrol.httpd.auth;
 
-import static com.anrisoftware.sscontrol.httpd.auth.RequireGroupLogger._.attribute_added_debug;
-import static com.anrisoftware.sscontrol.httpd.auth.RequireGroupLogger._.attribute_added_info;
 import static com.anrisoftware.sscontrol.httpd.auth.RequireGroupLogger._.name_null;
 import static com.anrisoftware.sscontrol.httpd.auth.RequireGroupLogger._.update_mode_null;
 import static com.anrisoftware.sscontrol.httpd.auth.RequireGroupLogger._.user_added_debug;
@@ -53,12 +51,7 @@ class RequireGroupLogger extends AbstractLogger {
 
         user_added_info("User '{}' added to group '{}' for service '{}'."),
 
-        update_mode_null("Update mode cannot be null for %s."),
-
-        attribute_added_debug("Group attribute {} added for {} for {}."),
-
-        attribute_added_info(
-                "Group attribute '{}' added for group '{}' for service '{}'.");
+        update_mode_null("Update mode cannot be null for %s.");
 
         private String name;
 
@@ -79,13 +72,13 @@ class RequireGroupLogger extends AbstractLogger {
         super(RequireGroup.class);
     }
 
-    String name(AuthService service, Map<String, Object> args) {
+    String name(AbstractAuthService service, Map<String, Object> args) {
         Object name = args.get(NAME);
         notNull(name, name_null.toString(), service);
         return notBlank(name.toString(), name_null.toString(), service);
     }
 
-    void userAdded(RequireGroup group, AuthService service, RequireUser user) {
+    void userAdded(RequireGroup group, AbstractAuthService service, RequireUser user) {
         if (isDebugEnabled()) {
             debug(user_added_debug, user, group, service);
         } else {
@@ -98,23 +91,13 @@ class RequireGroupLogger extends AbstractLogger {
         return args.containsKey(UPDATE);
     }
 
-    RequireUpdate update(AuthService service, Map<String, Object> args) {
+    RequireUpdate update(AbstractAuthService service, Map<String, Object> args) {
         Object mode = args.get(UPDATE);
         notNull(mode, update_mode_null.toString(), service);
         if (mode instanceof RequireUpdate) {
             return (RequireUpdate) mode;
         } else {
             return RequireUpdate.valueOf(mode.toString());
-        }
-    }
-
-    void attributeAdded(RequireGroup group, AuthService service,
-            GroupAttribute attribute) {
-        if (isDebugEnabled()) {
-            debug(attribute_added_debug, attribute, group, service);
-        } else {
-            info(attribute_added_info, attribute.getName(), group.getName(),
-                    service.getName());
         }
     }
 

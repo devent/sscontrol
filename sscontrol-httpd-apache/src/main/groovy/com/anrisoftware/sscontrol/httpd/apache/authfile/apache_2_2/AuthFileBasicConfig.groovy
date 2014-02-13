@@ -28,7 +28,7 @@ import org.apache.commons.io.FilenameUtils
 
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.Templates
-import com.anrisoftware.sscontrol.httpd.auth.AuthService
+import com.anrisoftware.sscontrol.httpd.auth.AbstractAuthService
 import com.anrisoftware.sscontrol.httpd.auth.RequireUpdate
 import com.anrisoftware.sscontrol.httpd.auth.RequireUser
 import com.anrisoftware.sscontrol.httpd.domain.Domain
@@ -79,7 +79,7 @@ class AuthFileBasicConfig {
      *
      * @return the {@link List} of the user configuration.
      */
-    List createUsers(Domain domain, AuthService service, List users) {
+    List createUsers(Domain domain, AbstractAuthService service, List users) {
         def file = passwordFile(domain, service)
         def oldusers = file.exists() ? FileUtils.readLines(file, charset) : []
         users.each { RequireUser user ->
@@ -104,7 +104,7 @@ class AuthFileBasicConfig {
         return [found: found, index: index]
     }
 
-    void updateUser(Domain domain, AuthService service, Map found, List users) {
+    void updateUser(Domain domain, AbstractAuthService service, Map found, List users) {
         RequireUser userfound = found.found
         int index = found.index
         switch (userfound.updateMode) {
@@ -116,13 +116,13 @@ class AuthFileBasicConfig {
         }
     }
 
-    void insertUser(Domain domain, AuthService service, RequireUser user, List users) {
+    void insertUser(Domain domain, AbstractAuthService service, RequireUser user, List users) {
         def worker = htpasswd user: user
         def out = replaceChars worker.out, '\n', ''
         users << out
     }
 
-    String updatePassword(Domain domain, AuthService service, RequireUser user) {
+    String updatePassword(Domain domain, AbstractAuthService service, RequireUser user) {
         def worker = htpasswd user: user
         replaceChars worker.out, '\n', ''
     }
@@ -151,7 +151,7 @@ class AuthFileBasicConfig {
      * @param service
      *            the {@link AuthService}.
      */
-    File passwordFile(Domain domain, AuthService service) {
+    File passwordFile(Domain domain, AbstractAuthService service) {
         def location = FilenameUtils.getBaseName(service.location)
         def dir = new File(authSubdirectory, domainDir(domain))
         new File("${location}.passwd", dir)

@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd-apache. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.apache.apache.authfile.ubuntu_12_04;
+package com.anrisoftware.sscontrol.httpd.apache.authfile.ubuntu_12_04;
 
 import static com.anrisoftware.sscontrol.httpd.apache.apache.ubuntu_12_04.Ubuntu_12_04_ScriptFactory.PROFILE;
 import static com.google.inject.multibindings.MapBinder.newMapBinder;

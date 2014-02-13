@@ -16,34 +16,35 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd-apache. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.apache.apache.apache_2_2;
+package com.anrisoftware.sscontrol.httpd.apache.authfile.apache_2_2;
 
-import static com.anrisoftware.sscontrol.httpd.apache.apache.apache_2_2.AuthLdapConfigLogger._.domain_config_created_debug;
-import static com.anrisoftware.sscontrol.httpd.apache.apache.apache_2_2.AuthLdapConfigLogger._.domain_config_created_info;
+import static com.anrisoftware.sscontrol.httpd.apache.authfile.apache_2_2.AuthFileConfigLogger._.auth_users_deploy1;
+import static com.anrisoftware.sscontrol.httpd.apache.authfile.apache_2_2.AuthFileConfigLogger._.auth_users_deploy2;
+import static com.anrisoftware.sscontrol.httpd.apache.authfile.apache_2_2.AuthFileConfigLogger._.auth_users_deploy3;
 
 import javax.inject.Singleton;
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
 import com.anrisoftware.sscontrol.core.service.LinuxScript;
-import com.anrisoftware.sscontrol.httpd.apache.apache.authfile.apache_2_2.AuthFileConfig;
-import com.anrisoftware.sscontrol.httpd.authldap.AuthLdap;
+import com.anrisoftware.sscontrol.httpd.auth.AuthService;
+import com.anrisoftware.sscontrol.workers.command.script.ScriptCommandWorker;
 
 /**
- * Logging messages for {@link AuthLdapConfig}.
+ * Logging messages for {@link AuthFileConfig}.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
 @Singleton
-class AuthLdapConfigLogger extends AbstractLogger {
+class AuthFileConfigLogger extends AbstractLogger {
 
     enum _ {
 
-        domain_config_created_debug(
-                "Domain configuration created for {} in {}."),
+        auth_users_deploy1("Deploy auth users {} in {}, worker {}."),
 
-        domain_config_created_info(
-                "Domain configuration created for auth '{}'.");
+        auth_users_deploy2("Deploy auth users {} in {}."),
+
+        auth_users_deploy3("Deploy auth users for auth '{}'.");
 
         private String name;
 
@@ -60,15 +61,18 @@ class AuthLdapConfigLogger extends AbstractLogger {
     /**
      * Creates a logger for {@link AuthFileConfig}.
      */
-    public AuthLdapConfigLogger() {
+    public AuthFileConfigLogger() {
         super(AuthFileConfig.class);
     }
 
-    void domainConfigCreated(LinuxScript script, AuthLdap auth) {
-        if (isDebugEnabled()) {
-            debug(domain_config_created_debug, auth, script);
+    void deployAuthUsers(LinuxScript script, ScriptCommandWorker worker,
+            AuthService auth) {
+        if (isTraceEnabled()) {
+            trace(auth_users_deploy1, auth, script, worker);
+        } else if (isDebugEnabled()) {
+            debug(auth_users_deploy2, auth, script);
         } else {
-            info(domain_config_created_info, auth.getName());
+            info(auth_users_deploy3, auth.getName());
         }
     }
 }

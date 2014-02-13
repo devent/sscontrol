@@ -16,34 +16,36 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd-apache. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.apache.apache.authfile.ubuntu_10_04
+package com.anrisoftware.sscontrol.httpd.apache.authfile.apache_2_2;
 
-import static com.anrisoftware.sscontrol.httpd.apache.apache.ubuntu_10_04.Ubuntu_10_04_ScriptFactory.PROFILE
+import java.util.Locale;
 
-import javax.inject.Inject
-
-import com.anrisoftware.propertiesutils.ContextProperties
-import com.anrisoftware.sscontrol.httpd.apache.apache.authfile.apache_2_2.AuthFileConfig;
-import com.anrisoftware.sscontrol.httpd.webservice.ServiceConfig
+import com.anrisoftware.resources.templates.api.AttributeRenderer;
+import com.anrisoftware.sscontrol.httpd.auth.RequireValidMode;
 
 /**
- * Auth/file Ubuntu 10.04 configuration.
- *
+ * Atttribute renderer for {@link RequireValidMode}.
+ * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class UbuntuConfig extends AuthFileConfig implements ServiceConfig {
-
-    @Inject
-    UbuntuPropertiesProvider authProperties
+@SuppressWarnings("serial")
+class RequireValidModeRenderer implements AttributeRenderer {
 
     @Override
-    ContextProperties getAuthProperties() {
-        authProperties.get()
+    public String toString(Object o, String formatString, Locale locale) {
+        RequireValidMode mode = (RequireValidMode) o;
+        switch (mode) {
+        case valid_user:
+            return "requireValidUser";
+        default:
+            return null;
+        }
     }
 
     @Override
-    String getProfile() {
-        PROFILE
+    public Class<?> getAttributeType() {
+        return RequireValidMode.class;
     }
+
 }

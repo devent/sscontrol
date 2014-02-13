@@ -16,34 +16,27 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd-apache. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.apache.apache.authfile.ubuntu_12_04
+package com.anrisoftware.sscontrol.httpd.apache.authfile.ubuntu_10_04;
 
-import static com.anrisoftware.sscontrol.httpd.apache.apache.ubuntu_12_04.Ubuntu_12_04_ScriptFactory.PROFILE
+import java.net.URL;
 
-import javax.inject.Inject
-
-import com.anrisoftware.propertiesutils.ContextProperties
-import com.anrisoftware.sscontrol.httpd.apache.apache.authfile.apache_2_2.AuthFileConfig
-import com.anrisoftware.sscontrol.httpd.webservice.ServiceConfig
+import com.anrisoftware.propertiesutils.AbstractContextPropertiesProvider;
 
 /**
- * Auth/file Ubuntu 12.04 configuration.
- *
+ * Provides the default auth/file Ubuntu 10.04 properties from
+ * {@code "/apache_authfile_ubuntu_10_04.properties"}.
+ * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class UbuntuConfig extends AuthFileConfig implements ServiceConfig {
+@SuppressWarnings("serial")
+class UbuntuPropertiesProvider extends AbstractContextPropertiesProvider {
 
-    @Inject
-    UbuntuPropertiesProvider authProperties
+    private static final URL RESOURCE = UbuntuPropertiesProvider.class
+            .getResource("/apache_authfile_ubuntu_10_04.properties");
 
-    @Override
-    ContextProperties getAuthProperties() {
-        authProperties.get()
+    UbuntuPropertiesProvider() {
+        super(UbuntuPropertiesProvider.class, RESOURCE);
     }
 
-    @Override
-    String getProfile() {
-        PROFILE
-    }
 }

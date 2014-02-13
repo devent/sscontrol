@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd-apache. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.apache.apache.authfile.apache_2_2
+package com.anrisoftware.sscontrol.httpd.apache.authfile.apache_2_2
 
 import static org.apache.commons.lang3.StringUtils.replaceChars
 import static org.apache.commons.lang3.StringUtils.split

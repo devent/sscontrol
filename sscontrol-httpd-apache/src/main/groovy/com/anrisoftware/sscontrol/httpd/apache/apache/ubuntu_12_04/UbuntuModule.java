@@ -26,7 +26,7 @@ import groovy.lang.Script;
 
 import com.anrisoftware.globalpom.resources.ResourcesModule;
 import com.anrisoftware.sscontrol.core.checkfilehash.CheckFileHashModule;
-import com.anrisoftware.sscontrol.httpd.apache.apache.authfile.ubuntu_12_04.Ubuntu_12_04_AuthFileModule;
+import com.anrisoftware.sscontrol.httpd.apache.authfile.ubuntu_12_04.Ubuntu_12_04_AuthFileModule;
 import com.anrisoftware.sscontrol.httpd.apache.phpmyadmin.ubuntu_12_04.Ubuntu_12_04_PhpmyadminModule;
 import com.anrisoftware.sscontrol.httpd.apache.wordpress.ubuntu_12_04.Ubuntu_12_04_WordpressModule;
 import com.anrisoftware.sscontrol.httpd.webservice.ServiceConfig;

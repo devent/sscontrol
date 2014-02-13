@@ -16,27 +16,33 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd-apache. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.apache.apache.authfile.ubuntu_12_04;
+package com.anrisoftware.sscontrol.httpd.apache.authfile.ubuntu_10_04;
 
-import java.net.URL;
+import static com.anrisoftware.sscontrol.httpd.apache.apache.ubuntu_10_04.Ubuntu_10_04_ScriptFactory.PROFILE;
+import static com.google.inject.multibindings.MapBinder.newMapBinder;
+import static java.lang.String.format;
 
-import com.anrisoftware.propertiesutils.AbstractContextPropertiesProvider;
+import com.anrisoftware.sscontrol.httpd.webservice.ServiceConfig;
+import com.google.inject.AbstractModule;
+import com.google.inject.multibindings.MapBinder;
 
 /**
- * Provides the default auth/file Ubuntu 12.04 properties from
- * {@code "/apache_authfile_ubuntu_12_04.properties"}.
+ * Binds the auth/file Ubuntu 10.04 configuration.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-@SuppressWarnings("serial")
-class UbuntuPropertiesProvider extends AbstractContextPropertiesProvider {
+public class Ubuntu_10_04_AuthFileModule extends AbstractModule {
 
-    private static final URL RESOURCE = UbuntuPropertiesProvider.class
-            .getResource("/apache_authfile_ubuntu_12_04.properties");
+	@Override
+	protected void configure() {
+		bindServiceConfig();
+	}
 
-    UbuntuPropertiesProvider() {
-        super(UbuntuPropertiesProvider.class, RESOURCE);
-    }
-
+	private void bindServiceConfig() {
+		MapBinder<String, ServiceConfig> map = newMapBinder(binder(),
+				String.class, ServiceConfig.class);
+        map.addBinding(format("%s.%s", PROFILE, UbuntuConfig.SERVICE_NAME)).to(
+				UbuntuConfig.class);
+	}
 }

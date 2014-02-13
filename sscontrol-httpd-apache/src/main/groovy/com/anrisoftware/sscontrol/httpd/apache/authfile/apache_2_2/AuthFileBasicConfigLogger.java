@@ -16,9 +16,9 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd-apache. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.apache.apache.authfile.apache_2_2;
+package com.anrisoftware.sscontrol.httpd.apache.authfile.apache_2_2;
 
-import static com.anrisoftware.sscontrol.httpd.apache.apache.authfile.apache_2_2.AuthFileBasicConfigLogger._.htpasswd_args_missing;
+import static com.anrisoftware.sscontrol.httpd.apache.authfile.apache_2_2.AuthFileBasicConfigLogger._.htpasswd_args_missing;
 import static org.apache.commons.lang3.Validate.isTrue;
 
 import java.util.Map;

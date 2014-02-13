@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd-apache. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.apache.apache.authfile.apache_2_2
+package com.anrisoftware.sscontrol.httpd.apache.authfile.apache_2_2
 
 import static com.anrisoftware.sscontrol.httpd.apache.apache.ubuntu_10_04.Ubuntu_10_04_ScriptFactory.PROFILE
 import static org.apache.commons.io.FileUtils.writeLines
@@ -32,8 +32,11 @@ import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.Templates
 import com.anrisoftware.sscontrol.core.service.LinuxScript
-import com.anrisoftware.sscontrol.httpd.apache.apache.authfile.linux.BasicAuth
-import com.anrisoftware.sscontrol.httpd.apache.apache.ubuntu_10_04.Ubuntu_10_04_ScriptFactory
+import com.anrisoftware.sscontrol.httpd.apache.apache.linux.BasicAuth
+import com.anrisoftware.sscontrol.httpd.apache.authfile.apache_2_2.AuthFileBasicConfig;
+import com.anrisoftware.sscontrol.httpd.apache.authfile.apache_2_2.AuthFileConfigLogger;
+import com.anrisoftware.sscontrol.httpd.apache.authfile.apache_2_2.AuthFileDigestConfig;
+import com.anrisoftware.sscontrol.httpd.apache.authfile.apache_2_2.RequireValidModeRenderer;
 import com.anrisoftware.sscontrol.httpd.auth.AuthService
 import com.anrisoftware.sscontrol.httpd.auth.AuthType
 import com.anrisoftware.sscontrol.httpd.auth.RequireGroup
@@ -320,10 +323,5 @@ abstract class AuthFileConfig extends BasicAuth {
         authFileDigestConfig.setScript this
         this.authTemplates = templatesFactory.create "Apache_2_2_AuthFile", ["renderers": [requireValidModeRenderer]]
         authDomainConfigTemplate = authTemplates.getResource "domain"
-    }
-
-    @Override
-    String getProfile() {
-        PROFILE
     }
 }

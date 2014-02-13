@@ -21,10 +21,6 @@ package com.anrisoftware.sscontrol.httpd.apache.apache.authfile.apache_2_2;
 import static com.anrisoftware.sscontrol.httpd.apache.apache.authfile.apache_2_2.AuthFileConfigLogger._.auth_users_deploy1;
 import static com.anrisoftware.sscontrol.httpd.apache.apache.authfile.apache_2_2.AuthFileConfigLogger._.auth_users_deploy2;
 import static com.anrisoftware.sscontrol.httpd.apache.apache.authfile.apache_2_2.AuthFileConfigLogger._.auth_users_deploy3;
-import static com.anrisoftware.sscontrol.httpd.apache.apache.authfile.apache_2_2.AuthFileConfigLogger._.htpasswd_args_missing;
-import static org.apache.commons.lang3.Validate.isTrue;
-
-import java.util.Map;
 
 import javax.inject.Singleton;
 
@@ -42,18 +38,13 @@ import com.anrisoftware.sscontrol.workers.command.script.ScriptCommandWorker;
 @Singleton
 class AuthFileConfigLogger extends AbstractLogger {
 
-    private static final String USER = "user";
-    private static final String COMMAND = "command";
-
     enum _ {
 
         auth_users_deploy1("Deploy auth users {} in {}, worker {}."),
 
         auth_users_deploy2("Deploy auth users {} in {}."),
 
-        auth_users_deploy3("Deploy auth users for auth '{}'."),
-
-        htpasswd_args_missing("Htpasswd argument '%s' missing for %s.");
+        auth_users_deploy3("Deploy auth users for auth '{}'.");
 
         private String name;
 
@@ -84,12 +75,4 @@ class AuthFileConfigLogger extends AbstractLogger {
             info(auth_users_deploy3, auth.getName());
         }
     }
-
-    void checkHtpasswdArgs(Object script, Map<String, Object> args) {
-        isTrue(args.containsKey(COMMAND), htpasswd_args_missing.toString(),
-                COMMAND, script);
-        isTrue(args.containsKey(USER), htpasswd_args_missing.toString(), USER,
-                script);
-    }
-
 }

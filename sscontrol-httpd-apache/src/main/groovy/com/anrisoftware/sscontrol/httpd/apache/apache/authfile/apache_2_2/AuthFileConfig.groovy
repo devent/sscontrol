@@ -68,6 +68,9 @@ abstract class AuthFileConfig extends BasicAuth {
     @Inject
     AuthFileBasicConfig authFileBasicConfig
 
+    @Inject
+    AuthFileDigestConfig authFileDigestConfig
+
     @Override
     void deployService(Domain domain, WebService service, List config) {
         deployDomain domain, null, service, config
@@ -219,6 +222,9 @@ abstract class AuthFileConfig extends BasicAuth {
             case AuthType.basic:
                 oldusers = authFileBasicConfig.createUsers domain, service, users
                 break
+            case AuthType.digest:
+                oldusers = authFileDigestConfig.createUsers domain, service, users
+                break
         }
         writeLines passwordFile(service, domain), charset.name(), oldusers
     }
@@ -241,6 +247,8 @@ abstract class AuthFileConfig extends BasicAuth {
         switch (service.type) {
             case AuthType.basic:
                 return authFileBasicConfig.passwordFile(domain, service)
+            case AuthType.digest:
+                return authFileDigestConfig.passwordFile(domain, service)
         }
     }
 
@@ -292,6 +300,7 @@ abstract class AuthFileConfig extends BasicAuth {
     void setScript(LinuxScript script) {
         super.setScript script
         authFileBasicConfig.setScript this
+        authFileDigestConfig.setScript this
         this.authTemplates = templatesFactory.create "Apache_2_2_AuthFile", ["renderers": [requireValidModeRenderer]]
         authDomainConfigTemplate = authTemplates.getResource "domain"
     }

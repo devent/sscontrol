@@ -3,7 +3,7 @@ basicPassword(args) ::= <<
 
 >>
 
-digestPassword(auth, user) ::= <<
-(echo -n "<user.name>:<auth.name>:" && echo -n "<user.name>:<auth.name>:<user.password>" | md5sum) | cut -d '-' -f 1
+digestPassword(args) ::= <<
+(echo -n "<args.user.name>:<args.auth.authName>:" && echo -n "<args.user.name>:<args.auth.authName>:<args.user.password>" | md5sum) | cut -d '-' -f 1
 
 >>

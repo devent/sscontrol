@@ -17,15 +17,15 @@ import com.anrisoftware.sscontrol.httpd.domain.Domain
 import com.anrisoftware.sscontrol.workers.command.script.ScriptCommandWorker
 
 /**
- * Auth/file-basic configuration.
+ * Auth/file-digest configuration.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class AuthFileBasicConfig {
+class AuthFileDigestConfig {
 
     @Inject
-    AuthFileBasicConfigLogger log
+    AuthFileDigestConfigLogger log
 
     /**
      * Auth/file templates.
@@ -48,7 +48,7 @@ class AuthFileBasicConfig {
     Object script
 
     /**
-     * Creates the required users for basic/auth.
+     * Creates the required users for auth-digest.
      *
      * @param domain
      *            the {@link Domain}.
@@ -99,29 +99,27 @@ class AuthFileBasicConfig {
     }
 
     void insertUser(Domain domain, AuthService service, RequireUser user, List users) {
-        def worker = htpasswd user: user
+        def worker = digestPassword auth: service, user: user
         def out = replaceChars worker.out, '\n', ''
         users << out
     }
 
     String updatePassword(Domain domain, AuthService service, RequireUser user) {
-        def worker = htpasswd user: user
+        def worker = digestPassword auth: service, user: user
         replaceChars worker.out, '\n', ''
     }
 
     /**
-     * Executes the {@code htpasswd} command to create the password
-     * for the user.
+     * Executes the command to create the password for the user.
      *
      * @param args
      *            the command {@link Map} arguments.
      *
      * @return the {@link ScriptCommandWorker}.
      */
-    ScriptCommandWorker htpasswd(Map args) {
-        args.command = args.containsKey("command") ? args.command : htpasswdCommand
-        log.checkHtpasswdArgs this, args
-        scriptCommandFactory.create(authCommandsTemplate, "basicPassword", "args", args)()
+    ScriptCommandWorker digestPassword(Map args) {
+        log.checkDigestPasswordArgs this, args
+        scriptCommandFactory.create(authCommandsTemplate, "digestPassword", "args", args)()
     }
 
     /**
@@ -136,7 +134,7 @@ class AuthFileBasicConfig {
     File passwordFile(Domain domain, AuthService service) {
         def location = FilenameUtils.getBaseName(service.location)
         def dir = new File(authSubdirectory, domainDir(domain))
-        new File("${location}.passwd", dir)
+        new File("${location}-digest.passwd", dir)
     }
 
     /**

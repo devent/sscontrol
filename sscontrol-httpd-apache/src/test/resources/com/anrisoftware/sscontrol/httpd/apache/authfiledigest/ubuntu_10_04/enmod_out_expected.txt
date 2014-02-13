@@ -1,8 +1,6 @@
 suexec
 authn_file
 auth_digest
-ssl
 suexec
 authn_file
 auth_digest
-ssl

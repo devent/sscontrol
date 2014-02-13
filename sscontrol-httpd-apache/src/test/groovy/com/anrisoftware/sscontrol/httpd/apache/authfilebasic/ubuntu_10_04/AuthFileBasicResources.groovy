@@ -35,12 +35,14 @@ enum AuthFileBasicResources {
     httpdScript("Httpd.groovy", AuthFileBasicResources.class.getResource("HttpdAuthFileBasic.groovy")),
     httpdAppendingScript("Httpd.groovy", AuthFileBasicResources.class.getResource("HttpdAuthFileBasicAppending.groovy")),
     htpasswdCommand("/usr/bin/htpasswd", AuthFileBasicResources.class.getResource("htpasswd_command.txt")),
-    domainsConf("/etc/apache2/conf.d/000-robobee-domains.conf", AuthFileBasicResources.class.getResource("domains_conf.txt")),
+    domainsConfExpected("/etc/apache2/conf.d/000-robobee-domains.conf", AuthFileBasicResources.class.getResource("domains_conf_expected.txt")),
     test1comConfExpected("/etc/apache2/sites-available/100-robobee-test1.com.conf", AuthFileBasicResources.class.getResource("test1com_conf_expected.txt")),
     wwwtest1comConfExpected("/etc/apache2/sites-available/100-robobee-www.test1.com.conf", AuthFileBasicResources.class.getResource("wwwtest1com_conf_expected.txt")),
-    privatepasswd("/var/www/test1.com/auth/private.passwd", AuthFileBasicResources.class.getResource("privatepasswd.txt")),
-    groupOut("/var/www/test1.com/auth/private.group", AuthFileBasicResources.class.getResource("private_group.txt")),
-    enmodOut("/usr/sbin/a2enmod.out", AuthFileBasicResources.class.getResource("enmod_out.txt")),
+    privatepasswdExpected("/var/www/test1.com/auth/private.passwd", AuthFileBasicResources.class.getResource("privatepasswd_expected.txt")),
+    privategroupExpected("/var/www/test1.com/auth/private.group", AuthFileBasicResources.class.getResource("privategroup_expected.txt")),
+    enmodOutExpected("/usr/sbin/a2enmod.out", AuthFileBasicResources.class.getResource("enmod_out_expected.txt")),
+    chmodOutExpected("/bin/chmod.out", AuthFileBasicResources.class.getResource("chmod_out_expected.txt")),
+    chownOutExpected("/bin/chown.out", AuthFileBasicResources.class.getResource("chown_out_expected.txt")),
 
     ResourcesUtils resources
 

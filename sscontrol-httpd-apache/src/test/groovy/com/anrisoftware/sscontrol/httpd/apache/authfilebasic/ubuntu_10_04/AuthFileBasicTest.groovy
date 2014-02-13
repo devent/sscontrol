@@ -54,11 +54,13 @@ class AuthFileBasicTest extends UbuntuTestUtil {
         registry.allServices.each { it.call() }
 
         assertFileContent defaultConf.asFile(tmpdir), defaultConf
-        assertFileContent domainsConf.asFile(tmpdir), domainsConf
+        assertFileContent domainsConfExpected.asFile(tmpdir), domainsConfExpected
         assertStringContent test1comConfExpected.replaced(tmpdir, tmpdir, "/tmp"), test1comConfExpected.toString()
         assertStringContent wwwtest1comConfExpected.replaced(tmpdir, tmpdir, "/tmp"), wwwtest1comConfExpected.toString()
-        assertFileContent privatepasswd.asFile(tmpdir), privatepasswd
-        assertFileContent groupOut.asFile(tmpdir), groupOut
-        assertFileContent enmodOut.asFile(tmpdir), enmodOut
+        assertFileContent privatepasswdExpected.asFile(tmpdir), privatepasswdExpected
+        assertFileContent privategroupExpected.asFile(tmpdir), privategroupExpected
+        assertFileContent enmodOutExpected.asFile(tmpdir), enmodOutExpected
+        assertStringContent chmodOutExpected.replaced(tmpdir, tmpdir, "/tmp"), chmodOutExpected.toString()
+        assertStringContent chownOutExpected.replaced(tmpdir, tmpdir, "/tmp"), chownOutExpected.toString()
     }
 }

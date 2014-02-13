@@ -229,7 +229,24 @@ abstract class AuthFileConfig extends BasicAuth {
         writeLines passwordFile(service, domain), charset.name(), oldusers
     }
 
+    /**
+     * Update permissions for authentication password files.
+     *
+     * @param domain
+     *            the {@link Domain}.
+     *
+     * @param service
+     *            the {@link AuthService}.
+     */
     void updatePermissions(Domain domain, AuthService service) {
+        def owner = "root"
+        def group = "root"
+        def authdir = new File(authSubdirectory, domainDir(domain))
+        changeOwner owner: owner, ownerGroup: group, files: authdir, recursive: true
+        changeMod mod: "o-rw", files: [
+            passwordFile(service, domain),
+            groupFile(domain, service)
+        ]
     }
 
     /**

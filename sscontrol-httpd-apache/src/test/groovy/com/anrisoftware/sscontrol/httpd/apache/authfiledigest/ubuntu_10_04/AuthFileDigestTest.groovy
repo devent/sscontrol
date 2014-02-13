@@ -59,5 +59,7 @@ class AuthFileDigestTest extends UbuntuTestUtil {
         assertFileContent privatePasswdExpected.asFile(tmpdir), privatePasswdExpected
         assertFileContent privateGroupExpected.asFile(tmpdir), privateGroupExpected
         assertFileContent enmodOutExpected.asFile(tmpdir), enmodOutExpected
+        assertStringContent chmodOutExpected.replaced(tmpdir, tmpdir, "/tmp"), chmodOutExpected.toString()
+        assertStringContent chownOutExpected.replaced(tmpdir, tmpdir, "/tmp"), chownOutExpected.toString()
     }
 }

@@ -39,6 +39,8 @@ enum AuthFileDigestResources {
     privatePasswdExpected("/var/www/test1.com/auth/private-digest.passwd", AuthFileDigestResources.class.getResource("privatepasswd_expected.txt")),
     privateGroupExpected("/var/www/test1.com/auth/private.group", AuthFileDigestResources.class.getResource("privategroup_expected.txt")),
     enmodOutExpected("/usr/sbin/a2enmod.out", AuthFileDigestResources.class.getResource("enmod_out_expected.txt")),
+    chmodOutExpected("/bin/chmod.out", AuthFileDigestResources.class.getResource("chmod_out_expected.txt")),
+    chownOutExpected("/bin/chown.out", AuthFileDigestResources.class.getResource("chown_out_expected.txt")),
 
     ResourcesUtils resources
 

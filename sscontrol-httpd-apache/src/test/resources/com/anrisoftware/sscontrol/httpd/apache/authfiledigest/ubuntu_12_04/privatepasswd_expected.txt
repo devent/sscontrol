@@ -1,0 +1,8 @@
+adminfoo1:Private Directory:99e77b63168f47df975ced2c9dec8b67  
+adminbar1:Private Directory:1e061566770d2995adfe207a38382083  
+adminfoo2:Private Directory:505abd6e96d3a084df566933cee6b807  
+adminbar2:Private Directory:3cbb0ebd67fe5938c32e24bae789ba78  
+adminfoo3:Private Directory:baad098b8400b1ebab6cf7803ad38b68  
+adminbar3:Private Directory:906285991ef0b0138777b29856f19677  
+foo:Private Directory:43ba613e00dd837aad7282aa4f56a261  
+bar:Private Directory:86d0b599488c8615c91090a94ae1e662  

@@ -1,0 +1,6 @@
+suexec
+authn_file
+auth_basic
+suexec
+authn_file
+auth_basic

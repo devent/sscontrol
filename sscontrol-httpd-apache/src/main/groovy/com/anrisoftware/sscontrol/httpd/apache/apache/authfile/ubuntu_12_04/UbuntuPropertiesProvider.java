@@ -16,36 +16,27 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd-apache. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.apache.apache.authfile.apache_2_2;
+package com.anrisoftware.sscontrol.httpd.apache.apache.authfile.ubuntu_12_04;
 
-import java.util.Locale;
+import java.net.URL;
 
-import com.anrisoftware.resources.templates.api.AttributeRenderer;
-import com.anrisoftware.sscontrol.httpd.auth.RequireValidMode;
+import com.anrisoftware.propertiesutils.AbstractContextPropertiesProvider;
 
 /**
- * Atttribute renderer for {@link RequireValidMode}.
+ * Provides the default auth/file Ubuntu 12.04 properties from
+ * {@code "/apache_authfile_ubuntu_12_04.properties"}.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
 @SuppressWarnings("serial")
-class RequireValidModeRenderer implements AttributeRenderer {
+class UbuntuPropertiesProvider extends AbstractContextPropertiesProvider {
 
-    @Override
-    public String toString(Object o, String formatString, Locale locale) {
-        RequireValidMode mode = (RequireValidMode) o;
-        switch (mode) {
-        case valid_user:
-            return "requireValidUser";
-        default:
-            return null;
-        }
-    }
+    private static final URL RESOURCE = UbuntuPropertiesProvider.class
+            .getResource("/apache_authfile_ubuntu_12_04.properties");
 
-    @Override
-    public Class<?> getAttributeType() {
-        return RequireValidMode.class;
+    UbuntuPropertiesProvider() {
+        super(UbuntuPropertiesProvider.class, RESOURCE);
     }
 
 }

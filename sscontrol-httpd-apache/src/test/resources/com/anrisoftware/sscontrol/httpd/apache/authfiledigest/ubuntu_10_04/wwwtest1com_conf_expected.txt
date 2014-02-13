@@ -19,6 +19,7 @@
         Require group foogroup admin1 admin2 admin3
         AuthUserFile /tmp/var/www/www.test1.com/auth/private-digest.passwd
         AuthGroupFile /tmp/var/www/www.test1.com/auth/private.group
+        Satisfy any
     </Location>
 
 </VirtualHost>

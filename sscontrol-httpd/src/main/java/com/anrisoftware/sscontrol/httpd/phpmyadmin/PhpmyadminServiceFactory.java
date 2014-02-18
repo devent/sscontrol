@@ -24,13 +24,18 @@ import com.anrisoftware.sscontrol.httpd.domain.Domain;
 import com.anrisoftware.sscontrol.httpd.webservice.WebServiceFactory;
 
 /**
- * Factory to create the Phpmyadmin service.
+ * Factory to create the <i>phpMyAdmin</i> service.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
 public interface PhpmyadminServiceFactory extends WebServiceFactory {
 
+    /**
+     * Creates the <i>phpMyAdmin</i> service.
+     * 
+     * @return the {@link PhpmyadminService}.
+     */
 	@Override
-    PhpmyadminService create(Domain domain, Map<String, Object> map);
+    PhpmyadminService create(Map<String, Object> map, Domain domain);
 }

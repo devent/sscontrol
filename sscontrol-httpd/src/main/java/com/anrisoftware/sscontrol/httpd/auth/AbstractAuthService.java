@@ -30,7 +30,6 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import com.anrisoftware.sscontrol.core.yesno.YesNoFlag;
 import com.anrisoftware.sscontrol.httpd.domain.Domain;
 import com.anrisoftware.sscontrol.httpd.webservice.WebService;
-import com.anrisoftware.sscontrol.httpd.webserviceargs.WebServiceArgs;
 import com.anrisoftware.sscontrol.httpd.webserviceargs.WebServiceLogger;
 
 /**
@@ -79,8 +78,7 @@ public abstract class AbstractAuthService implements WebService {
 
     private final AuthServiceLogger log;
 
-    @Inject
-    private WebServiceLogger serviceLog;
+    private final WebServiceLogger serviceLog;
 
     @Inject
     private RequireDomainFactory requireDomainFactory;
@@ -123,35 +121,36 @@ public abstract class AbstractAuthService implements WebService {
     /**
      * Sets the domain for the authentication.
      * 
-     * @param domain
-     *            the {@link Domain}.
-     * 
      * @param args
      *            the {@link Map} arguments.
      * 
-     * @param aargs
+     * @param domain
+     *            the {@link DomainImpl}.
+     * 
+     * @param serviceLog
      *            the {@link WebServiceArgs}.
      * 
      * @param log
      *            the {@link AuthServiceLogger}.
      */
-    protected AbstractAuthService(Domain domain, Map<String, Object> args,
-            WebServiceArgs aargs, AuthServiceLogger log) {
+    protected AbstractAuthService(Map<String, Object> args, Domain domain,
+            WebServiceLogger serviceLog, AuthServiceLogger log) {
         this.domain = domain;
+        this.serviceLog = serviceLog;
         this.log = log;
         this.requireDomains = new ArrayList<RequireDomain>();
         this.requireGroups = new ArrayList<RequireGroup>();
         this.requireUsers = new ArrayList<RequireUser>();
         this.requireValids = new ArrayList<RequireValid>();
         this.attributes = new HashMap<String, Object>();
-        if (aargs.haveId(args)) {
-            this.id = aargs.id(this, args);
+        if (serviceLog.haveId(args)) {
+            this.id = serviceLog.id(this, args);
         }
-        if (aargs.haveRef(args)) {
-            this.ref = aargs.ref(this, args);
+        if (serviceLog.haveRef(args)) {
+            this.ref = serviceLog.ref(this, args);
         }
-        if (aargs.haveRefDomain(args)) {
-            this.refDomain = aargs.refDomain(this, args);
+        if (serviceLog.haveRefDomain(args)) {
+            this.refDomain = serviceLog.refDomain(this, args);
         }
         if (log.haveAuth(args)) {
             this.authName = log.auth(this, args);

@@ -1,6 +1,7 @@
 package com.anrisoftware.sscontrol.httpd.gitit.ubuntu_12_04;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.mangosdk.spi.ProviderFor;
 
 import com.anrisoftware.sscontrol.core.api.ServiceException;
 import com.anrisoftware.sscontrol.httpd.webservice.ServiceConfig;
@@ -11,10 +12,11 @@ import com.google.inject.Module;
 
 /**
  * <i>Gitit</i> configuration factory for <i>Ubuntu 12.04</i>.
- * 
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
+@ProviderFor(ServiceConfigFactory.class)
 public class GititConfigFactory implements ServiceConfigFactory {
 
     /**
@@ -47,6 +49,9 @@ public class GititConfigFactory implements ServiceConfigFactory {
     private static final Module[] MODULES = new Module[] { new UbuntuModule() };
 
     private Injector injector;
+
+    public GititConfigFactory() {
+    }
 
     @Override
     public ServiceConfig getScript() throws ServiceException {

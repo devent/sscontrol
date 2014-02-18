@@ -16,50 +16,26 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.webservice;
+package com.anrisoftware.sscontrol.httpd.gitit;
+
+import java.util.Map;
 
 import com.anrisoftware.sscontrol.httpd.domain.Domain;
+import com.anrisoftware.sscontrol.httpd.webservice.WebServiceFactory;
 
 /**
- * Web service.
+ * Factory to create the <i>gitit</i> service.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-public interface WebService {
+public interface GititServiceFactory extends WebServiceFactory {
 
     /**
-     * Returns the name of the service.
+     * Creates the <i>gitit</i> service.
      * 
-     * @return the service {@link String} name.
+     * @return the {@link GititService}.
      */
-    String getName();
-
-    /**
-     * Returns the identifier of the service.
-     * 
-     * @return the service {@link String} identifier.
-     */
-    String getId();
-
-    /**
-     * Returns the reference of the service.
-     * 
-     * @return the service {@link String} reference.
-     */
-    String getRef();
-
-    /**
-     * Returns the domain for which the service is configured.
-     * 
-     * @return the {@link Domain}.
-     */
-    Domain getDomain();
-
-    /**
-     * Returns the domain reference of the service.
-     * 
-     * @return the domain {@link String} reference.
-     */
-    String getRefDomain();
+    @Override
+    GititService create(Map<String, Object> map, Domain domain);
 }

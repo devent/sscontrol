@@ -28,29 +28,16 @@ import java.util.Map;
  */
 public interface DomainFactory {
 
-	/**
-	 * Creates the domain with the specified name.
-	 * 
-	 * @param args
-	 *            the {@link Map} arguments of the domain.
-	 * 
-	 * @param name
-	 *            the {@link String} name of the domain.
-	 * 
-	 * @return the {@link Domain}.
-	 */
-	Domain create(Map<String, Object> args, String name);
-
-	/**
-	 * Creates the SSL/TLS domain with the specified name.
-	 * 
-	 * @param args
-	 *            the {@link Map} arguments of the domain.
-	 * 
-	 * @param name
-	 *            the {@link String} name of the domain.
-	 * 
-	 * @return the {@link Domain}.
-	 */
-	SslDomain createSsl(Map<String, Object> args, String name);
+    /**
+     * Creates the domain with the specified name.
+     * 
+     * @param args
+     *            the {@link Map} arguments of the domain.
+     * 
+     * @param name
+     *            the {@link String} name of the domain.
+     * 
+     * @return the {@link Domain}.
+     */
+    Domain create(Map<String, Object> args, String name);
 }

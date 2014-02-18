@@ -16,21 +16,50 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.gitit;
-
-import java.util.Map;
+package com.anrisoftware.sscontrol.httpd.webservice;
 
 import com.anrisoftware.sscontrol.httpd.domain.Domain;
-import com.anrisoftware.sscontrol.httpd.webservice.WebServiceFactory;
 
 /**
- * Factory to create the Wordpress service.
+ * Web service.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-public interface GititServiceFactory extends WebServiceFactory {
+public interface WebService {
 
-    @Override
-    GititService create(Domain domain, Map<String, Object> map);
+    /**
+     * Returns the name of the service.
+     * 
+     * @return the service {@link String} name.
+     */
+    String getName();
+
+    /**
+     * Returns the identifier of the service.
+     * 
+     * @return the service {@link String} identifier.
+     */
+    String getId();
+
+    /**
+     * Returns the reference of the service.
+     * 
+     * @return the service {@link String} reference.
+     */
+    String getRef();
+
+    /**
+     * Returns the domain for which the service is configured.
+     * 
+     * @return the {@link Domain} domain.
+     */
+    Domain getDomain();
+
+    /**
+     * Returns the domain reference of the service.
+     * 
+     * @return the domain {@link String} reference.
+     */
+    String getRefDomain();
 }

@@ -26,9 +26,9 @@ import org.junit.Test
 
 import com.anrisoftware.sscontrol.core.api.ServiceLoader as SscontrolServiceLoader
 import com.anrisoftware.sscontrol.core.api.ServicesRegistry
-import com.anrisoftware.sscontrol.httpd.domain.Domain;
-import com.anrisoftware.sscontrol.httpd.roundcube.RoundcubeService;
-import com.anrisoftware.sscontrol.httpd.webservice.WebService;
+import com.anrisoftware.sscontrol.httpd.domain.Domain
+import com.anrisoftware.sscontrol.httpd.roundcube.RoundcubeService
+import com.anrisoftware.sscontrol.httpd.webservice.WebService
 
 /**
  * @see RoundcubeService

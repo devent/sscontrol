@@ -16,30 +16,44 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.webservice;
+package com.anrisoftware.sscontrol.httpd.resources
 
-import java.util.Map;
-
-import com.anrisoftware.sscontrol.httpd.domain.Domain;
+import static com.anrisoftware.globalpom.utils.TestUtils.*
+import static org.apache.commons.io.FileUtils.*
 
 /**
- * Factory to create the web service.
- * 
+ * Loads resources.
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-public interface WebServiceFactory {
+class ResourcesUtils {
 
-    /**
-     * Creates the web service for the specified domain.
-     * 
-     * @param domain
-     *            the {@link Domain}.
-     * 
-     * @param map
-     *            the {@link Map} arguments.
-     * 
-     * @return the {@link WebService}.
-     */
-    WebService create(Domain domain, Map<String, Object> map);
+	String path
+
+	URL resource
+
+	File asFile(File parent) {
+		new File(parent, path)
+	}
+
+	void createFile(File parent) {
+		assert resource : "Resource cannot be null for ${resource}"
+		copyURLToFile resource, new File(parent, path)
+	}
+
+	void createCommand(File parent) {
+		assert resource : "Resource cannot be null for ${resource}"
+		copyResourceToCommand resource, new File(parent, path)
+	}
+
+	String replaced(File parent, def search, def replace) {
+		String text = readFileToString(this.asFile(parent))
+		text.replaceAll(search.toString(), replace)
+	}
+
+	String toString() {
+		assert resource : "Resource cannot be null for ${resource}"
+		resourceToString resource
+	}
 }

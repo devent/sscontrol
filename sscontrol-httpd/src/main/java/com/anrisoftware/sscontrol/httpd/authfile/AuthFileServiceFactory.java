@@ -31,6 +31,11 @@ import com.anrisoftware.sscontrol.httpd.webservice.WebServiceFactory;
  */
 public interface AuthFileServiceFactory extends WebServiceFactory {
 
+    /**
+     * Creates the HTTP/authentication file service.
+     * 
+     * @return the {@link AuthFileService}.
+     */
     @Override
-    AuthFileService create(Domain domain, Map<String, Object> map);
+    AuthFileService create(Map<String, Object> map, Domain domain);
 }

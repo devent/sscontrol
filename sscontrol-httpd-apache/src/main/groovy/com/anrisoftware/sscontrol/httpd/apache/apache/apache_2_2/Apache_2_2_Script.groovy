@@ -30,7 +30,7 @@ import com.anrisoftware.resources.templates.api.Templates
 import com.anrisoftware.sscontrol.httpd.apache.apache.linux.ApacheScript
 import com.anrisoftware.sscontrol.httpd.apache.apache.linux.DomainConfig
 import com.anrisoftware.sscontrol.httpd.apache.apache.linux.SslDomainConfig
-import com.anrisoftware.sscontrol.httpd.domain.Domain
+import com.anrisoftware.sscontrol.httpd.domain.Domain;
 import com.anrisoftware.sscontrol.httpd.domain.SslDomain
 import com.anrisoftware.sscontrol.httpd.webservice.WebService
 

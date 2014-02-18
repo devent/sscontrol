@@ -31,7 +31,10 @@ public interface ServicePreScript {
      * 
      * @param compiler
      *            the compiler.
+     * 
+     * @throws Exception
+     *             if some error occur.
      */
-    void configureCompiler(Object compiler);
+    void configureCompiler(Object compiler) throws Exception;
 
 }

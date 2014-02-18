@@ -37,7 +37,8 @@ import com.anrisoftware.sscontrol.httpd.auth.AbstractAuthService
 import com.anrisoftware.sscontrol.httpd.auth.AuthType
 import com.anrisoftware.sscontrol.httpd.auth.RequireGroup
 import com.anrisoftware.sscontrol.httpd.auth.RequireUpdate
-import com.anrisoftware.sscontrol.httpd.domain.Domain
+import com.anrisoftware.sscontrol.httpd.domain.DomainImpl
+import com.anrisoftware.sscontrol.httpd.domain.Domain;
 import com.anrisoftware.sscontrol.httpd.webservice.WebService
 
 /**

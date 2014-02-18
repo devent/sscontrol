@@ -31,7 +31,7 @@ import com.anrisoftware.sscontrol.httpd.resources.ResourcesUtils
  */
 enum ServicesResources {
 
-    profile("Ubuntu_10_04Profile.groovy", ServicesResources.class.getResource("Ubuntu_10_04Profile.groovy")),
+    profile("UbuntuProfile.groovy", ServicesResources.class.getResource("UbuntuProfile.groovy")),
     httpdScript("Httpd.groovy", ServicesResources.class.getResource("Httpd.groovy")),
     httpdPortsScript("Httpd.groovy", ServicesResources.class.getResource("HttpdPorts.groovy")),
     authFileScript("Httpd.groovy", ServicesResources.class.getResource("HttpdAuthFile.groovy")),

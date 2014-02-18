@@ -34,7 +34,7 @@ public interface RedirectFactory {
      * Creates the redirect.
      * 
      * @param domain
-     *            the {@link Domain} of the redirect.
+     *            the {@link DomainImpl} of the redirect.
      * 
      * @param args
      *            the {@link Map} arguments.

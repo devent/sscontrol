@@ -31,6 +31,7 @@ import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.sscontrol.core.bindings.BindingFactory
 import com.anrisoftware.sscontrol.core.debuglogging.DebugLoggingProperty
 import com.anrisoftware.sscontrol.core.service.LinuxScript
+import com.anrisoftware.sscontrol.httpd.domain.DomainImpl;
 import com.anrisoftware.sscontrol.httpd.domain.Domain;
 import com.anrisoftware.sscontrol.httpd.service.HttpdService
 import com.anrisoftware.sscontrol.workers.command.exec.ExecCommandWorker
@@ -573,7 +574,7 @@ abstract class NginxScript extends LinuxScript {
     List getUniqueDomains() {
         List domains = []
         Set names = []
-        service.domains.each { Domain domain ->
+        service.domains.each { DomainImpl domain ->
             if (!names.contains(domain.name)) {
                 names.add domain.name
                 domains.add domain
@@ -607,7 +608,7 @@ abstract class NginxScript extends LinuxScript {
      * @see #checkPortsInUse(java.util.List)
      */
     Map findPortsServices(List domains) {
-        def ports = domains.inject(new HashSet()) { acc, Domain domain -> acc << domain.port }
+        def ports = domains.inject(new HashSet()) { acc, DomainImpl domain -> acc << domain.port }
         log.checkingPorts this, ports
         checkPortsInUse ports
     }

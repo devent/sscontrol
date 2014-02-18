@@ -25,6 +25,7 @@ import org.apache.commons.io.FilenameUtils
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.Templates
 import com.anrisoftware.sscontrol.httpd.apache.apache.linux.ApacheScript
+import com.anrisoftware.sscontrol.httpd.domain.DomainImpl;
 import com.anrisoftware.sscontrol.httpd.domain.Domain;
 import com.anrisoftware.sscontrol.httpd.webservice.WebService;
 import com.anrisoftware.sscontrol.httpd.wordpress.MultiSite;

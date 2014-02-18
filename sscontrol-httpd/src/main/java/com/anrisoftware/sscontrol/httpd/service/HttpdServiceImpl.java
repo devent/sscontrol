@@ -44,6 +44,7 @@ import com.anrisoftware.sscontrol.core.debuglogging.DebugLoggingFactory;
 import com.anrisoftware.sscontrol.core.service.AbstractService;
 import com.anrisoftware.sscontrol.httpd.domain.Domain;
 import com.anrisoftware.sscontrol.httpd.domain.DomainFactory;
+import com.anrisoftware.sscontrol.httpd.domain.SslDomainFactory;
 
 /**
  * Httpd service.
@@ -63,6 +64,9 @@ class HttpdServiceImpl extends AbstractService implements HttpdService {
 
     @Inject
     private DomainFactory domainFactory;
+
+    @Inject
+    private SslDomainFactory sslDomainFactory;
 
     @Inject
     private Binding binding;
@@ -166,7 +170,7 @@ class HttpdServiceImpl extends AbstractService implements HttpdService {
      * @see DomainFactory#createSsl(Map, String)
      */
     public Domain ssl_domain(Map<String, Object> args, String name, Object s) {
-        Domain domain = domainFactory.createSsl(args, name);
+        Domain domain = sslDomainFactory.create(args, name);
         domains.add(domain);
         virtualDomains.add(domain);
         log.sslDomainAdded(this, domain);

@@ -45,7 +45,7 @@ public class AuthCredentials {
     private String password;
 
     /**
-     * @see RequireCredentialsFactory#create(AbstractAuthService, Map)
+     * @see RequireCredentialsFactory#create(Map, AbstractAuthService)
      */
     @Inject
     AuthCredentials(AuthCredentialsLogger log, @Assisted AbstractAuthService service,

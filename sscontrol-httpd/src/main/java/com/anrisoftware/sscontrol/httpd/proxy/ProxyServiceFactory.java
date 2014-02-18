@@ -34,14 +34,8 @@ public interface ProxyServiceFactory extends WebServiceFactory {
     /**
      * Creates the domain proxy.
      * 
-     * @param domain
-     *            the {@link Domain} of the proxy.
-     * 
-     * @param args
-     *            the {@link Map} arguments.
-     * 
      * @return the {@link ProxyService}.
      */
     @Override
-    ProxyService create(Domain domain, Map<String, Object> args);
+    ProxyService create(Map<String, Object> args, Domain domain);
 }

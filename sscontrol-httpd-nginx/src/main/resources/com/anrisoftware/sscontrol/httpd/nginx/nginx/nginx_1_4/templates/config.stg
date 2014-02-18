@@ -1,4 +1,4 @@
-Domain(properties) ::= <<
+DomainImpl(properties) ::= <<
 server {
     # domain <properties.domain.name>
     <domainBody(properties)>

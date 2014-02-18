@@ -25,7 +25,7 @@ import javax.inject.Inject;
 import com.anrisoftware.sscontrol.httpd.auth.AbstractAuthService;
 import com.anrisoftware.sscontrol.httpd.auth.AuthServiceLogger;
 import com.anrisoftware.sscontrol.httpd.domain.Domain;
-import com.anrisoftware.sscontrol.httpd.webserviceargs.WebServiceArgs;
+import com.anrisoftware.sscontrol.httpd.webserviceargs.WebServiceLogger;
 import com.google.inject.assistedinject.Assisted;
 
 /**
@@ -42,13 +42,13 @@ public class AuthFileService extends AbstractAuthService {
     public static final String AUTH_FILE_NAME = "auth-file";
 
     /**
-     * @see AuthFileServiceFactory#create(Domain, Map)
+     * @see AuthFileServiceFactory#create(Map, Domain)
      */
     @Inject
-    AuthFileService(@Assisted Domain domain,
-            @Assisted Map<String, Object> args, WebServiceArgs aargs,
+    AuthFileService(@Assisted Map<String, Object> args,
+            @Assisted Domain domain, WebServiceLogger serviceLog,
             AuthServiceLogger log) {
-        super(domain, args, aargs, log);
+        super(args, domain, serviceLog, log);
     }
 
     @Override

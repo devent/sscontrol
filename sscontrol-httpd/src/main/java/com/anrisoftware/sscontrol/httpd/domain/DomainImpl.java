@@ -31,24 +31,29 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import com.anrisoftware.sscontrol.core.api.ServiceException;
 import com.anrisoftware.sscontrol.httpd.memory.Memory;
 import com.anrisoftware.sscontrol.httpd.memory.MemoryFactory;
 import com.anrisoftware.sscontrol.httpd.redirect.Redirect;
 import com.anrisoftware.sscontrol.httpd.redirect.RedirectFactory;
+import com.anrisoftware.sscontrol.httpd.service.WebServicesProvider;
 import com.anrisoftware.sscontrol.httpd.user.DomainUser;
 import com.anrisoftware.sscontrol.httpd.user.DomainUserArgs;
 import com.anrisoftware.sscontrol.httpd.user.DomainUserFactory;
 import com.anrisoftware.sscontrol.httpd.webservice.WebService;
 import com.anrisoftware.sscontrol.httpd.webservice.WebServiceFactory;
+import com.anrisoftware.sscontrol.httpd.webservice.WebServiceFactoryFactory;
+import com.anrisoftware.sscontrol.httpd.webservice.WebServiceInfo;
+import com.google.inject.Injector;
 import com.google.inject.assistedinject.Assisted;
 
 /**
  * Domain entry.
- * 
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-public class Domain {
+class DomainImpl implements Domain {
 
     private static final String HTTP = "http://";
     private static final String USER = "user";
@@ -70,6 +75,9 @@ public class Domain {
     private DomainLogger log;
 
     @Inject
+    private Injector injector;
+
+    @Inject
     private RedirectFactory redirectFactory;
 
     @Inject
@@ -83,6 +91,9 @@ public class Domain {
 
     @Inject
     private MemoryFactory memoryFactory;
+
+    @Inject
+    private WebServicesProvider webServicesProvider;
 
     private String address;
 
@@ -100,11 +111,11 @@ public class Domain {
      * @see DomainFactory#create(Map, String)
      */
     @Inject
-    Domain(@Assisted Map<String, Object> args, @Assisted String name) {
+    DomainImpl(@Assisted Map<String, Object> args, @Assisted String name) {
         this(args, 80, name);
     }
 
-    protected Domain(Map<String, Object> args, int port, String name) {
+    protected DomainImpl(Map<String, Object> args, int port, String name) {
         this.name = name;
         this.redirects = new ArrayList<Redirect>();
         this.services = new ArrayList<WebService>();
@@ -126,6 +137,7 @@ public class Domain {
         }
     }
 
+    @Override
     public String getName() {
         return name;
     }
@@ -218,21 +230,44 @@ public class Domain {
         log.redirectAdded(this, redirect);
     }
 
-    public WebService setup(String name, Object s) {
+    public WebService setup(String name, Object s) throws ServiceException {
         return setup(new HashMap<String, Object>(), name, s);
     }
 
-    public void setup(Map<String, Object> map, String name) {
+    public void setup(Map<String, Object> map, String name)
+            throws ServiceException {
         setup(map, name, null);
     }
 
-    public WebService setup(Map<String, Object> map, String name, Object s) {
+    public WebService setup(Map<String, Object> map, String name, Object s)
+            throws ServiceException {
         WebServiceFactory factory = serviceFactories.get(name);
+        factory = findService(name, factory);
         log.checkService(this, factory, name);
-        WebService service = factory.create(this, map);
+        WebService service = factory.create(map, this);
         services.add(service);
         log.servicesAdded(this, service);
         return service;
+    }
+
+    private WebServiceFactory findService(final String name,
+            WebServiceFactory factory) throws ServiceException {
+        return factory != null ? factory : findService(name).getFactory();
+    }
+
+    @SuppressWarnings("serial")
+    private WebServiceFactoryFactory findService(final String name)
+            throws ServiceException {
+        WebServiceFactoryFactory find = webServicesProvider
+                .find(new WebServiceInfo() {
+
+                    @Override
+                    public String getServiceName() {
+                        return name;
+                    }
+                });
+        find.setParent(injector.getParent());
+        return find;
     }
 
     public List<WebService> getServices() {
@@ -255,7 +290,7 @@ public class Domain {
 
     /**
      * Returns the protocol of the domain.
-     * 
+     *
      * @return the {@link String} protocol of the domain.
      */
     public String getProto() {
@@ -278,7 +313,7 @@ public class Domain {
         if (obj.getClass() != getClass()) {
             return false;
         }
-        Domain rhs = (Domain) obj;
+        DomainImpl rhs = (DomainImpl) obj;
         return new EqualsBuilder().append(address, rhs.getAddress())
                 .append(port, rhs.getPort()).isEquals();
     }

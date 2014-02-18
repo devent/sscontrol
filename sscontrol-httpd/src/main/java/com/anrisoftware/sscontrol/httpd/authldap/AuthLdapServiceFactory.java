@@ -31,6 +31,11 @@ import com.anrisoftware.sscontrol.httpd.webservice.WebServiceFactory;
  */
 public interface AuthLdapServiceFactory extends WebServiceFactory {
 
+    /**
+     * Creates the HTTP/authentication LDAP service.
+     * 
+     * @return the {@link AuthLdapService}.
+     */
     @Override
-    AuthLdapService create(Domain domain, Map<String, Object> map);
+    AuthLdapService create(Map<String, Object> map, Domain domain);
 }

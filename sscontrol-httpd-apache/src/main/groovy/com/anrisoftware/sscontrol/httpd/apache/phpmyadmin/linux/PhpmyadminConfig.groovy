@@ -20,6 +20,7 @@ package com.anrisoftware.sscontrol.httpd.apache.phpmyadmin.linux
 
 import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.sscontrol.core.service.LinuxScript
+import com.anrisoftware.sscontrol.httpd.domain.DomainImpl;
 import com.anrisoftware.sscontrol.httpd.domain.Domain;
 import com.anrisoftware.sscontrol.httpd.webservice.WebService;
 

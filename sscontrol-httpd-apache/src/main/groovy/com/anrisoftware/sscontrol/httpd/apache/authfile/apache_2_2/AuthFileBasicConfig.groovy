@@ -31,7 +31,8 @@ import com.anrisoftware.resources.templates.api.Templates
 import com.anrisoftware.sscontrol.httpd.auth.AbstractAuthService
 import com.anrisoftware.sscontrol.httpd.auth.RequireUpdate
 import com.anrisoftware.sscontrol.httpd.auth.RequireUser
-import com.anrisoftware.sscontrol.httpd.domain.Domain
+import com.anrisoftware.sscontrol.httpd.domain.DomainImpl
+import com.anrisoftware.sscontrol.httpd.domain.Domain;
 import com.anrisoftware.sscontrol.workers.command.script.ScriptCommandWorker
 
 /**

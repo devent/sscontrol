@@ -59,7 +59,7 @@ public class DomainUser {
     }
 
     /**
-     * @see DomainUserFactory#create(Domain, Map)
+     * @see DomainUserFactory#create(DomainImpl, Map)
      */
     @AssistedInject
     DomainUser(DomainUserLogger logger, DomainUserArgs aargs,

@@ -36,6 +36,7 @@ import javax.inject.Inject;
 import com.anrisoftware.globalpom.log.AbstractLogger;
 import com.anrisoftware.resources.texts.api.Texts;
 import com.anrisoftware.resources.texts.api.TextsFactory;
+import com.anrisoftware.sscontrol.core.api.ProfileService;
 import com.anrisoftware.sscontrol.core.api.ServiceException;
 import com.anrisoftware.sscontrol.core.api.ServicesRegistry;
 
@@ -64,7 +65,13 @@ class GroovyLoaderLogger extends AbstractLogger {
 
         services_registry_null,
 
-        script_file_null;
+        script_file_null,
+
+        error_configure_compiler,
+
+        profile_name,
+
+        error_configure_compiler_message;
 
         public static void loadTexts(TextsFactory factory) {
             String name = GroovyLoaderLogger.class.getSimpleName();
@@ -116,5 +123,12 @@ class GroovyLoaderLogger extends AbstractLogger {
 
     void loadServiceScript(URL url) {
         info(load_script, url);
+    }
+
+    ServiceException errorConfigureCompiler(Exception e, ProfileService profile) {
+        return logException(
+                new ServiceException(_.error_configure_compiler, e).add(
+                        _.profile_name, profile),
+                _.error_configure_compiler_message, profile.getProfileName());
     }
 }

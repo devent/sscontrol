@@ -24,13 +24,18 @@ import com.anrisoftware.sscontrol.httpd.domain.Domain;
 import com.anrisoftware.sscontrol.httpd.webservice.WebServiceFactory;
 
 /**
- * Factory to create the Wordpress service.
+ * Factory to create the <i>Wordpress</i> service.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
 public interface WordpressServiceFactory extends WebServiceFactory {
 
+    /**
+     * Creates the <i>Wordpress</i> service.
+     * 
+     * @return the {@link WordpressService}.
+     */
     @Override
-    WordpressService create(Domain domain, Map<String, Object> map);
+    WordpressService create(Map<String, Object> map, Domain domain);
 }

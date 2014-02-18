@@ -37,7 +37,7 @@ import com.google.inject.assistedinject.Assisted;
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-public class SslDomain extends Domain {
+public class SslDomain extends DomainImpl {
 
     private static final String HTTPS = "https://";
 

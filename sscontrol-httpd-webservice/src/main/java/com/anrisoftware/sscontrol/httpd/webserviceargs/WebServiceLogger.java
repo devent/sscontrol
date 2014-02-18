@@ -37,16 +37,32 @@ import static com.anrisoftware.sscontrol.httpd.webserviceargs.WebServiceLogger._
 import static org.apache.commons.lang3.Validate.notBlank;
 import static org.apache.commons.lang3.Validate.notNull;
 
+import java.util.Map;
+
 import com.anrisoftware.globalpom.log.AbstractLogger;
 import com.anrisoftware.sscontrol.httpd.webservice.WebService;
 
 /**
- * Logging messages for {@link WebService}.
+ * Parses and checks arguments for {@link WebService}.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
 public class WebServiceLogger extends AbstractLogger {
+
+    private static final String PREFIX = "prefix";
+
+    private static final String PROXYNAME = "proxyname";
+
+    private static final String REFDOMAIN = "refdomain";
+
+    private static final String SLASH = "/";
+
+    private static final String REF = "ref";
+
+    private static final String ID = "id";
+
+    private static final String ALIAS = "alias";
 
     enum _ {
 
@@ -99,6 +115,70 @@ public class WebServiceLogger extends AbstractLogger {
      */
     public WebServiceLogger() {
         super(WebService.class);
+    }
+
+    public boolean haveAlias(Map<String, Object> args) {
+        return args.containsKey(ALIAS);
+    }
+
+    public String alias(WebService service, Map<String, Object> args) {
+        Object alias = args.get(ALIAS);
+        checkAlias(service, alias);
+        String str = alias.toString();
+        if (str.startsWith(SLASH)) {
+            str = str.substring(1);
+        }
+        return str;
+    }
+
+    public boolean haveId(Map<String, Object> args) {
+        return args.containsKey(ID);
+    }
+
+    public String id(WebService service, Map<String, Object> args) {
+        Object id = args.get(ID);
+        checkId(service, id);
+        return id.toString();
+    }
+
+    public boolean haveRef(Map<String, Object> args) {
+        return args.containsKey(REF);
+    }
+
+    public String ref(WebService service, Map<String, Object> args) {
+        Object ref = args.get(REF);
+        checkRef(service, ref);
+        return ref.toString();
+    }
+
+    public boolean haveRefDomain(Map<String, Object> args) {
+        return args.containsKey(REFDOMAIN);
+    }
+
+    public String refDomain(WebService service, Map<String, Object> args) {
+        Object ref = args.get(REFDOMAIN);
+        checkRefDomain(service, ref);
+        return ref.toString();
+    }
+
+    public boolean haveProxyName(Map<String, Object> args) {
+        return args.containsKey(PROXYNAME);
+    }
+
+    public String proxyName(WebService service, Map<String, Object> args) {
+        Object name = args.get(PROXYNAME);
+        checkProxyName(service, name);
+        return name.toString();
+    }
+
+    public boolean havePrefix(Map<String, Object> args) {
+        return args.containsKey(PREFIX);
+    }
+
+    public String prefix(WebService service, Map<String, Object> args) {
+        Object prefix = args.get(PREFIX);
+        checkPrefix(service, prefix);
+        return prefix.toString();
     }
 
     void checkAlias(WebService service, Object alias) {

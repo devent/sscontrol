@@ -26,7 +26,8 @@ import com.anrisoftware.sscontrol.core.service.LinuxScript
 import com.anrisoftware.sscontrol.httpd.apache.apache.linux.BasicAuth
 import com.anrisoftware.sscontrol.httpd.auth.AbstractAuthService
 import com.anrisoftware.sscontrol.httpd.auth.AuthType
-import com.anrisoftware.sscontrol.httpd.domain.Domain
+import com.anrisoftware.sscontrol.httpd.domain.DomainImpl
+import com.anrisoftware.sscontrol.httpd.domain.Domain;
 import com.anrisoftware.sscontrol.httpd.webservice.WebService
 
 /**

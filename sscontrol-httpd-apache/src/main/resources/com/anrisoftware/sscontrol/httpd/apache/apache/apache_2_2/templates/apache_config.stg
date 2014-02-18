@@ -1,4 +1,4 @@
-Domain(properties, domain, servicesConfig) ::= <<
+DomainImpl(properties, domain, servicesConfig) ::= <<
 \<VirtualHost <domain.address>:<domain.port>\>
 
     <domainBody(properties, domain)>

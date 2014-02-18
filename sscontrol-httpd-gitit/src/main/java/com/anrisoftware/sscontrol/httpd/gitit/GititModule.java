@@ -18,18 +18,13 @@
  */
 package com.anrisoftware.sscontrol.httpd.gitit;
 
-import static com.anrisoftware.sscontrol.httpd.gitit.GititService.SERVICE_NAME;
-import static com.google.inject.multibindings.MapBinder.newMapBinder;
-
 import com.anrisoftware.sscontrol.httpd.webservice.WebService;
-import com.anrisoftware.sscontrol.httpd.webservice.WebServiceFactory;
 import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
-import com.google.inject.multibindings.MapBinder;
 
 /**
  * Installs the <i>Gitit</i> service factory.
- * 
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
@@ -41,13 +36,6 @@ public class GititModule extends AbstractModule {
                 GititService.class).build(GititServiceFactory.class));
         install(new FactoryModuleBuilder().implement(Force.class, Force.class)
                 .build(ForceFactory.class));
-        bindService();
     }
 
-    private void bindService() {
-        MapBinder<String, WebServiceFactory> mapbinder;
-        mapbinder = newMapBinder(binder(), String.class,
-                WebServiceFactory.class);
-        mapbinder.addBinding(SERVICE_NAME).toProvider(GititServiceProvider.class);
-    }
 }

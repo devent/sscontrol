@@ -26,7 +26,6 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.anrisoftware.sscontrol.httpd.domain.Domain;
 import com.anrisoftware.sscontrol.httpd.webservice.WebService;
-import com.anrisoftware.sscontrol.httpd.webserviceargs.WebServiceArgs;
 import com.anrisoftware.sscontrol.httpd.webserviceargs.WebServiceLogger;
 import com.google.inject.assistedinject.Assisted;
 
@@ -67,24 +66,24 @@ public class PhpmyadminService implements WebService {
     private String refDomain;
 
     /**
-     * @see PhpmyadminServiceFactory#create(Domain, Map)
+     * @see PhpmyadminServiceFactory#create(Map, Domain)
      */
     @Inject
-    PhpmyadminService(WebServiceArgs aargs, WebServiceLogger logger,
-            @Assisted Domain domain, @Assisted Map<String, Object> args) {
-        this.serviceLog = logger;
+    PhpmyadminService(WebServiceLogger serviceLog,
+            @Assisted Map<String, Object> args, @Assisted Domain domain) {
+        this.serviceLog = serviceLog;
         this.domain = domain;
-        if (aargs.haveAlias(args)) {
-            setAlias(aargs.alias(this, args));
+        if (serviceLog.haveAlias(args)) {
+            this.alias = serviceLog.alias(this, args);
         }
-        if (aargs.haveId(args)) {
-            setId(aargs.id(this, args));
+        if (serviceLog.haveId(args)) {
+            this.id = serviceLog.id(this, args);
         }
-        if (aargs.haveRef(args)) {
-            setRef(aargs.ref(this, args));
+        if (serviceLog.haveRef(args)) {
+            this.ref = serviceLog.ref(this, args);
         }
-        if (aargs.haveRefDomain(args)) {
-            setRefDomain(aargs.refDomain(this, args));
+        if (serviceLog.haveRefDomain(args)) {
+            this.refDomain = serviceLog.refDomain(this, args);
         }
     }
 

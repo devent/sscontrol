@@ -17,11 +17,11 @@ class UbuntuConfig extends Gitit_0_10_Config implements ServiceConfig {
     private GititPropertiesProvider gititProperties
 
     @Override
-    void deployDomain(Domain domain, Domain refDomain, WebService service, List<String> config) {
+    void deployDomain(Domain domain, Domain refDomain, WebService service, List config) {
     }
 
     @Override
-    void deployService(Domain domain, WebService service, List<String> config) {
+    void deployService(Domain domain, WebService service, List config) {
         installPackages gititPackages
     }
 

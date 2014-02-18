@@ -24,7 +24,6 @@ import org.codehaus.groovy.control.customizers.ImportCustomizer;
 
 import com.anrisoftware.sscontrol.core.groovy.ClassImporter;
 import com.anrisoftware.sscontrol.httpd.auth.AuthImportsModule;
-import com.anrisoftware.sscontrol.httpd.gitit.GititImportsModule;
 import com.anrisoftware.sscontrol.httpd.wordpress.WordpressImportsModule;
 import com.google.inject.AbstractModule;
 import com.google.inject.multibindings.Multibinder;
@@ -37,13 +36,14 @@ import com.google.inject.multibindings.Multibinder;
  */
 class HttpdPreScriptModule extends AbstractModule {
 
+    private static final String NO = "no";
+    private static final String YES = "yes";
     private static final String YesNoFlag = "com.anrisoftware.sscontrol.core.yesno.YesNoFlag";
 
     @Override
     protected void configure() {
         install(new AuthImportsModule());
         install(new WordpressImportsModule());
-        install(new GititImportsModule());
         bindClassImporter();
     }
 
@@ -54,8 +54,8 @@ class HttpdPreScriptModule extends AbstractModule {
 
             @Override
             public void importClass(ImportCustomizer customizer) {
-                customizer.addStaticImport(YesNoFlag, "yes");
-                customizer.addStaticImport(YesNoFlag, "no");
+                customizer.addStaticImport(YesNoFlag, YES);
+                customizer.addStaticImport(YesNoFlag, NO);
             }
         });
     }

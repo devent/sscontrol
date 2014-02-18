@@ -49,14 +49,14 @@ public interface HttpdService extends Service {
 
     /**
      * Returns all domains of the service.
-     *
+     * 
      * @return the {@link List} of the {@link Domain} domains.
      */
     List<Domain> getDomains();
 
     /**
      * Returns a set of the virtual domains of the service.
-     *
+     * 
      * @return the {@link Set} of the virtual {@link Domain} domains.
      */
     Set<Domain> getVirtualDomains();

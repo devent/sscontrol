@@ -24,6 +24,7 @@ import javax.inject.Inject
 
 import com.anrisoftware.sscontrol.core.checkfilehash.CheckFileHashFactory
 import com.anrisoftware.sscontrol.httpd.apache.wordpress.linux.Wordpress_3_Config
+import com.anrisoftware.sscontrol.httpd.domain.DomainImpl;
 import com.anrisoftware.sscontrol.httpd.domain.Domain;
 import com.anrisoftware.sscontrol.httpd.webservice.OverrideMode;
 import com.anrisoftware.sscontrol.httpd.webservice.WebService;

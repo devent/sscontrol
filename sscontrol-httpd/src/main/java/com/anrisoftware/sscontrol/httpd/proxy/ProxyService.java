@@ -29,7 +29,6 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.anrisoftware.sscontrol.httpd.domain.Domain;
 import com.anrisoftware.sscontrol.httpd.webservice.WebService;
-import com.anrisoftware.sscontrol.httpd.webserviceargs.WebServiceArgs;
 import com.anrisoftware.sscontrol.httpd.webserviceargs.WebServiceLogger;
 import com.google.inject.assistedinject.Assisted;
 
@@ -40,6 +39,14 @@ import com.google.inject.assistedinject.Assisted;
  * @since 1.0
  */
 public class ProxyService implements WebService {
+
+    private static final String NAME_FORMAT = "%s.%s";
+
+    private static final String PROXY_NAME_FORMAT = "%s_%s";
+
+    private static final String UNDER_STR = "_";
+
+    private static final String DOT_STR = ".";
 
     public static final String NAME = "proxy";
 
@@ -68,49 +75,49 @@ public class ProxyService implements WebService {
     private String proxyName;
 
     /**
-     * @see ProxyServiceFactory#create(Domain, Map)
+     * @see ProxyServiceFactory#create(Map, Domain)
      */
     @Inject
-    ProxyService(WebServiceArgs aargs, WebServiceLogger serviceLogger,
-            ProxyServiceLogger logger, ProxyServiceArgs proxyaargs,
-            @Assisted Domain domain, @Assisted Map<String, Object> args) {
+    ProxyService(WebServiceLogger serviceLogger, ProxyServiceLogger logger,
+            ProxyServiceArgs proxyaargs, @Assisted Map<String, Object> args,
+            @Assisted Domain domain) {
         this.log = logger;
         this.serviceLog = serviceLogger;
         this.domain = domain;
         setService(proxyaargs.service(domain, args));
         setAddress(proxyaargs.address(domain, args));
-        if (aargs.haveAlias(args)) {
-            setAlias(aargs.alias(this, args));
+        if (serviceLog.haveAlias(args)) {
+            this.alias = serviceLog.alias(this, args);
         }
-        if (aargs.haveId(args)) {
-            setId(aargs.id(this, args));
+        if (serviceLog.haveId(args)) {
+            this.id = serviceLog.id(this, args);
         }
-        if (aargs.haveRef(args)) {
-            setRef(aargs.ref(this, args));
+        if (serviceLog.haveRef(args)) {
+            this.ref = serviceLog.ref(this, args);
         }
-        if (aargs.haveRefDomain(args)) {
-            setRefDomain(aargs.refDomain(this, args));
+        if (serviceLog.haveRefDomain(args)) {
+            this.refDomain = serviceLog.refDomain(this, args);
         }
-        if (aargs.haveProxyName(args)) {
-            setProxyName(aargs.proxyName(this, args));
+        if (serviceLog.haveProxyName(args)) {
+            this.proxyName = serviceLog.proxyName(this, args);
         } else {
-            setDefaultProxyName(aargs, args);
+            setDefaultProxyName(serviceLog, args);
         }
     }
 
-    private void setDefaultProxyName(WebServiceArgs aargs,
+    private void setDefaultProxyName(WebServiceLogger serviceLog,
             Map<String, Object> args) {
-        if (aargs.haveAlias(args)) {
-            setProxyName(format("%s_%s", service, alias));
+        if (serviceLog.haveAlias(args)) {
+            setProxyName(format(PROXY_NAME_FORMAT, service, alias));
         } else {
-            setProxyName(format("%s_%s", service,
-                    replace(domain.getName(), ".", "_")));
+            setProxyName(format(PROXY_NAME_FORMAT, service,
+                    replace(domain.getName(), DOT_STR, UNDER_STR)));
         }
     }
 
     @Override
     public String getName() {
-        return String.format("%s.%s", NAME, getService());
+        return String.format(NAME_FORMAT, NAME, getService());
     }
 
     @Override

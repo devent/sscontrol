@@ -24,13 +24,18 @@ import com.anrisoftware.sscontrol.httpd.domain.Domain;
 import com.anrisoftware.sscontrol.httpd.webservice.WebServiceFactory;
 
 /**
- * Factory to create the Roundcube service.
+ * Factory to create the <i>Roundcube</i> service.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
 public interface RoundcubeServiceFactory extends WebServiceFactory {
 
+    /**
+     * Creates the <i>Roundcube</i> service.
+     * 
+     * @return the {@link RoundcubeService}.
+     */
     @Override
-    RoundcubeService create(Domain domain, Map<String, Object> map);
+    RoundcubeService create(Map<String, Object> map, Domain domain);
 }

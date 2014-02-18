@@ -27,6 +27,7 @@ import org.codehaus.groovy.control.customizers.ImportCustomizer;
 
 import com.anrisoftware.sscontrol.core.api.ServicePreScript;
 import com.anrisoftware.sscontrol.core.groovy.ClassImporter;
+import com.anrisoftware.sscontrol.httpd.webservice.WebServiceFactoryFactory;
 
 /**
  * Pre-script service for <i>Httpd</i> service.
@@ -39,10 +40,16 @@ public class HttpdPreScript implements ServicePreScript {
     @Inject
     private Set<ClassImporter> classImporters;
 
+    @Inject
+    private WebServicesProvider webServicesProvider;
+
     @Override
-    public void configureCompiler(Object compiler) {
+    public void configureCompiler(Object compiler) throws Exception {
         CompilerConfiguration c = (CompilerConfiguration) compiler;
         importClasses(c);
+        for (WebServiceFactoryFactory factory : webServicesProvider.get()) {
+            factory.configureCompiler(compiler);
+        }
     }
 
     private void importClasses(CompilerConfiguration c) {

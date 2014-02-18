@@ -12,7 +12,7 @@ import com.anrisoftware.propertiesutils.AbstractContextPropertiesProvider;
  * @since 1.0
  */
 @SuppressWarnings("serial")
-public class GititPropertiesProvider extends AbstractContextPropertiesProvider {
+class GititPropertiesProvider extends AbstractContextPropertiesProvider {
 
     private static final URL URL = GititPropertiesProvider.class
             .getResource("/gitit_ubuntu_12_04.properties");

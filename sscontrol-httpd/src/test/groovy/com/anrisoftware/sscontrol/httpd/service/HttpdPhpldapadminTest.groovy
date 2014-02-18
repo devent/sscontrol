@@ -26,7 +26,7 @@ import org.junit.Test
 
 import com.anrisoftware.sscontrol.core.api.ServiceLoader as SscontrolServiceLoader
 import com.anrisoftware.sscontrol.core.api.ServicesRegistry
-import com.anrisoftware.sscontrol.httpd.domain.Domain;
+import com.anrisoftware.sscontrol.httpd.domain.DomainImpl;
 
 /**
  * @see PhpldapadminService
@@ -44,6 +44,6 @@ class HttpdPhpldapadminTest extends HttpdTestUtil {
         loader.loadService phpldapadminScript.resource, profile
         HttpdServiceImpl service = registry.getService("httpd")[0]
 
-        Domain domain = service.domains[2]
+        DomainImpl domain = service.domains[2]
     }
 }

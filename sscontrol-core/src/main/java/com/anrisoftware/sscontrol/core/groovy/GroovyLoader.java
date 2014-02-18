@@ -105,10 +105,15 @@ class GroovyLoader implements ServiceLoader {
     }
 
     private GroovyShell createShell(Map<String, Object> variables,
-            ProfileService profile, ServicePreScript prescript) {
+            ProfileService profile, ServicePreScript prescript)
+            throws ServiceException {
         CompilerConfiguration compiler = new CompilerConfiguration();
         if (prescript != null) {
-            prescript.configureCompiler(compiler);
+            try {
+                prescript.configureCompiler(compiler);
+            } catch (Exception e) {
+                throw log.errorConfigureCompiler(e, profile);
+            }
         }
         compiler.setScriptBaseClass(ScriptBuilder.class.getName());
         ClassLoader classLoader = getClass().getClassLoader();

@@ -53,11 +53,10 @@ class HttpdWordpressTest extends HttpdTestUtil {
         Domain domain = service.domains[d++]
         assert domain.name == "www.test1.com"
         assert domain.address == "192.168.0.51"
-        assert (domain instanceof Domain)
         assert domain.domainUser.name == "www-data"
         assert domain.domainUser.group == "www-data"
+
         WebService webservice = domain.services[0]
-        assert (webservice instanceof WordpressService)
         assert webservice.name == "wordpress"
         assert webservice.id == "wordpress3"
         assert webservice.ref == null
@@ -92,7 +91,7 @@ class HttpdWordpressTest extends HttpdTestUtil {
         domain = service.domains[d++]
         assert domain.name == "www.test2.com"
         assert domain.address == "192.168.0.51"
-        assert (domain instanceof Domain)
+
         webservice = domain.services[0]
         assert (webservice instanceof WordpressService)
         assert webservice.name == "wordpress"
@@ -101,7 +100,7 @@ class HttpdWordpressTest extends HttpdTestUtil {
         domain = service.domains[d++]
         assert domain.name == "www.test3.com"
         assert domain.address == "192.168.0.51"
-        assert (domain instanceof Domain)
+
         webservice = domain.services[0]
         assert (webservice instanceof WordpressService)
         assert webservice.name == "wordpress"
@@ -111,7 +110,7 @@ class HttpdWordpressTest extends HttpdTestUtil {
         assert domain.name == "www.testid.com"
         assert domain.address == "192.168.0.51"
         assert domain.id == "testid"
-        assert (domain instanceof Domain)
+
         webservice = domain.services[0]
         assert (webservice instanceof WordpressService)
         assert webservice.name == "wordpress"
@@ -120,7 +119,7 @@ class HttpdWordpressTest extends HttpdTestUtil {
         domain = service.domains[d++]
         assert domain.name == "www.testref.com"
         assert domain.address == "192.168.0.51"
-        assert (domain instanceof Domain)
+
         webservice = domain.services[0]
         assert (webservice instanceof WordpressService)
         assert webservice.name == "wordpress"
@@ -130,7 +129,7 @@ class HttpdWordpressTest extends HttpdTestUtil {
         domain = service.domains[d++]
         assert domain.name == "www.testold.com"
         assert domain.address == "192.168.0.51"
-        assert (domain instanceof Domain)
+
         webservice = domain.services[0]
         assert (webservice instanceof WordpressService)
         assert webservice.name == "wordpress"
@@ -140,7 +139,7 @@ class HttpdWordpressTest extends HttpdTestUtil {
         domain = service.domains[d++]
         assert domain.name == "www.testupdate.com"
         assert domain.address == "192.168.0.51"
-        assert (domain instanceof Domain)
+
         webservice = domain.services[0]
         assert (webservice instanceof WordpressService)
         assert webservice.name == "wordpress"

@@ -25,7 +25,8 @@ import javax.inject.Inject
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.sscontrol.core.debuglogging.DebugLoggingProperty
 import com.anrisoftware.sscontrol.core.service.LinuxScript
-import com.anrisoftware.sscontrol.httpd.domain.Domain
+import com.anrisoftware.sscontrol.httpd.domain.DomainImpl
+import com.anrisoftware.sscontrol.httpd.domain.Domain;
 import com.anrisoftware.sscontrol.httpd.service.HttpdService
 import com.anrisoftware.sscontrol.httpd.webservice.ServiceConfig
 
@@ -467,7 +468,7 @@ abstract class ApacheScript extends LinuxScript {
     List getUniqueDomains() {
         List domains = []
         Set names = []
-        service.domains.each { Domain domain ->
+        service.domains.each { DomainImpl domain ->
             if (!names.contains(domain.name)) {
                 names.add domain.name
                 domains.add domain

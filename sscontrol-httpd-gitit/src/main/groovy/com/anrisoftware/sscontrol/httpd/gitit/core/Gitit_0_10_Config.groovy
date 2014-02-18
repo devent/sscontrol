@@ -4,7 +4,9 @@ import org.apache.commons.lang3.builder.ToStringBuilder
 
 import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.sscontrol.core.service.LinuxScript
+import com.anrisoftware.sscontrol.httpd.domain.Domain
 import com.anrisoftware.sscontrol.httpd.gitit.ubuntu_12_04.GititConfigFactory
+import com.anrisoftware.sscontrol.httpd.webservice.WebService
 
 /**
  * Configures <i>Gitit 0.10.</i>
@@ -18,6 +20,16 @@ abstract class Gitit_0_10_Config {
      * @see ServiceConfig#getScript()
      */
     LinuxScript script
+
+    /**
+     * @see ServiceConfig#deployDomain(Domain, Domain, WebService, List)
+     */
+    abstract void deployDomain(Domain domain, Domain refDomain, WebService service, List config)
+
+    /**
+     * @see ServiceConfig#deployService(Domain, WebService, List)
+     */
+    abstract void deployService(Domain domain, WebService service, List config)
 
     /**
      * Returns the list of needed packages for <i>Gitit</i>.

@@ -31,10 +31,14 @@ import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.sscontrol.core.bindings.BindingFactory
 import com.anrisoftware.sscontrol.core.debuglogging.DebugLoggingProperty
 import com.anrisoftware.sscontrol.core.service.LinuxScript
-import com.anrisoftware.sscontrol.httpd.domain.DomainImpl;
-import com.anrisoftware.sscontrol.httpd.domain.Domain;
+import com.anrisoftware.sscontrol.httpd.domain.Domain
+import com.anrisoftware.sscontrol.httpd.domain.DomainImpl
 import com.anrisoftware.sscontrol.httpd.service.HttpdService
+import com.anrisoftware.sscontrol.httpd.webservice.ServiceConfig
+import com.anrisoftware.sscontrol.httpd.webservice.ServiceConfigInfo
+import com.anrisoftware.sscontrol.httpd.webservice.WebService
 import com.anrisoftware.sscontrol.workers.command.exec.ExecCommandWorker
+import com.google.inject.Injector
 
 /**
  * Uses Nginx service on a general Linux system.
@@ -54,7 +58,16 @@ abstract class NginxScript extends LinuxScript {
     private DebugLoggingProperty debugLoggingProperty
 
     @Inject
+    Injector injector
+
+    @Inject
     ByteFormatFactory byteFormatFactory
+
+    @Inject
+    Map<String, ServiceConfig> serviceConfigs
+
+    @Inject
+    WebServicesConfigProvider webServicesConfigProvider
 
     @Override
     def run() {
@@ -87,6 +100,33 @@ abstract class NginxScript extends LinuxScript {
     @Override
     HttpdService getService() {
         super.getService();
+    }
+
+    /**
+     * Finds the service configuration for the specified profile and service.
+     *
+     * @param profile
+     *            the profile {@link String} name.
+     *
+     * @param service
+     *            the {@link WebService}.
+     *
+     * @return the {@link ServiceConfig}.
+     */
+    ServiceConfig findServiceConfig(String profile, WebService service) {
+        def config = serviceConfigs["${profile}.${service.name}"]
+        config = config != null ? config : findWebServicesConfigProvider(profile, service)
+        log.checkServiceConfig config, service, profile
+        return config
+    }
+
+    private ServiceConfig findWebServicesConfigProvider(String profile, WebService service) {
+        def factory = webServicesConfigProvider.find(
+                [getServiceName: { service.name }, getProfileName: { profile }] as ServiceConfigInfo)
+        factory.setParent injector
+        def script = factory.getScript()
+        script.setScript this
+        return script
     }
 
     /**

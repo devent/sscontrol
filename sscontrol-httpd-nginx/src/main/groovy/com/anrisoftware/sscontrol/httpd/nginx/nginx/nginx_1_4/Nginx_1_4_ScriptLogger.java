@@ -20,8 +20,6 @@ package com.anrisoftware.sscontrol.httpd.nginx.nginx.nginx_1_4;
 
 import static com.anrisoftware.sscontrol.httpd.nginx.nginx.nginx_1_4.Nginx_1_4_ScriptLogger._.deploy_domain_config_debug;
 import static com.anrisoftware.sscontrol.httpd.nginx.nginx.nginx_1_4.Nginx_1_4_ScriptLogger._.deploy_domain_config_info;
-import static com.anrisoftware.sscontrol.httpd.nginx.nginx.nginx_1_4.Nginx_1_4_ScriptLogger._.service_config_null;
-import static org.apache.commons.lang3.Validate.notNull;
 
 import java.io.File;
 
@@ -30,8 +28,6 @@ import javax.inject.Singleton;
 import com.anrisoftware.globalpom.log.AbstractLogger;
 import com.anrisoftware.sscontrol.core.service.LinuxScript;
 import com.anrisoftware.sscontrol.httpd.domain.Domain;
-import com.anrisoftware.sscontrol.httpd.webservice.ServiceConfig;
-import com.anrisoftware.sscontrol.httpd.webservice.WebService;
 
 /**
  * Logging messages for {@link Nginx_1_4_Script}.
@@ -48,10 +44,7 @@ class Nginx_1_4_ScriptLogger extends AbstractLogger {
                 "Deploy domain {} configuration to '{}' for {}."),
 
         deploy_domain_config_info(
-                "Deploy domain '{}' configuration to '{}' for script '{}'."),
-
-        service_config_null(
-                "Service configuration not found for '%s' profile '%s'.");
+                "Deploy domain '{}' configuration to '{}' for script '{}'.");
 
         private String name;
 
@@ -79,11 +72,5 @@ class Nginx_1_4_ScriptLogger extends AbstractLogger {
             String name = script.getName();
             info(deploy_domain_config_info, domain.getName(), file, name);
         }
-    }
-
-    void checkServiceConfig(ServiceConfig config, WebService service,
-            String profile) {
-        String name = service.getName();
-        notNull(config, service_config_null.toString(), name, profile);
     }
 }

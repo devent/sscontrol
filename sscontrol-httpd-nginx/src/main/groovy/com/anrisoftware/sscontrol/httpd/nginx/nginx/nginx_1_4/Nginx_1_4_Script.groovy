@@ -27,12 +27,11 @@ import org.apache.commons.io.FileUtils
 
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.Templates
-import com.anrisoftware.sscontrol.httpd.domain.Domain;
+import com.anrisoftware.sscontrol.httpd.domain.Domain
 import com.anrisoftware.sscontrol.httpd.domain.SslDomain
 import com.anrisoftware.sscontrol.httpd.nginx.nginx.linux.DomainConfig
 import com.anrisoftware.sscontrol.httpd.nginx.nginx.linux.NginxScript
 import com.anrisoftware.sscontrol.httpd.service.HttpdService
-import com.anrisoftware.sscontrol.httpd.webservice.ServiceConfig
 import com.anrisoftware.sscontrol.httpd.webservice.WebService
 import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokenTemplate
 
@@ -58,9 +57,6 @@ abstract class Nginx_1_4_Script extends NginxScript {
 
     @Inject
     RedirectConfig redirectConfig
-
-    @Inject
-    Map<String, ServiceConfig> serviceConfigs
 
     /**
      * The {@link Templates} for the script.
@@ -176,18 +172,12 @@ abstract class Nginx_1_4_Script extends NginxScript {
     void deployWebService(Domain domain, WebService service, List serviceConfig) {
         def reftarget = findReferencedService service
         def profile = profileName
-        def config = serviceConfigs["${profile}.${service.name}"]
+        def config = findServiceConfig profile, service
         if (reftarget == null) {
-            log.checkServiceConfig config, service, profile
             config.deployService domain, service, serviceConfig
         } else {
-            log.checkServiceConfig config, service, profile
             def refdomain = findReferencedDomain service
-            if (refdomain == null) {
-                config.deployDomain domain, null, reftarget, serviceConfig
-            } else {
-                config.deployDomain domain, refdomain, reftarget, serviceConfig
-            }
+            config.deployDomain domain, refdomain, reftarget, serviceConfig
         }
     }
 

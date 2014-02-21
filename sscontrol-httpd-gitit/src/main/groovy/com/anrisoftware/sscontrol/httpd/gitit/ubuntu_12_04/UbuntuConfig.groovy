@@ -1,5 +1,7 @@
 package com.anrisoftware.sscontrol.httpd.gitit.ubuntu_12_04;
 
+import javax.inject.Inject
+
 import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.sscontrol.httpd.domain.Domain
 import com.anrisoftware.sscontrol.httpd.gitit.core.Gitit_0_10_Config
@@ -14,7 +16,8 @@ import com.anrisoftware.sscontrol.httpd.webservice.WebService
  */
 class UbuntuConfig extends Gitit_0_10_Config implements ServiceConfig {
 
-    private GititPropertiesProvider gititProperties
+    @Inject
+    GititPropertiesProvider gititProperties
 
     @Override
     void deployDomain(Domain domain, Domain refDomain, WebService service, List config) {

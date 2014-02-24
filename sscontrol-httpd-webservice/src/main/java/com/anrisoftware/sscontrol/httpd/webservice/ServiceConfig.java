@@ -25,7 +25,7 @@ import com.anrisoftware.sscontrol.httpd.domain.Domain;
 
 /**
  * Configures a web service.
- * 
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
@@ -33,21 +33,21 @@ public interface ServiceConfig {
 
     /**
      * Returns the profile name of the service.
-     * 
+     *
      * @return the profile {@link String} name.
      */
     String getProfile();
 
     /**
      * Returns the service name.
-     * 
+     *
      * @return the service {@link String} name.
      */
     String getServiceName();
 
     /**
      * Sets the parent script with the properties.
-     * 
+     *
      * @param script
      *            the {@link LinuxScript}.
      */
@@ -55,20 +55,20 @@ public interface ServiceConfig {
 
     /**
      * Returns the parent script with the properties.
-     * 
+     *
      * @return the {@link LinuxScript}.
      */
     LinuxScript getScript();
 
     /**
      * Creates the domain configuration and configures the service.
-     * 
+     *
      * @param domain
      *            the {@link Domain}.
-     * 
+     *
      * @param service
      *            the {@link WebService}.
-     * 
+     *
      * @param config
      *            the {@link List} of the domain configuration.
      */
@@ -76,16 +76,16 @@ public interface ServiceConfig {
 
     /**
      * Creates the domain configuration.
-     * 
+     *
      * @param domain
      *            the {@link Domain}.
-     * 
+     *
      * @param refDomain
      *            the referenced {@link Domain} or {@code null}.
-     * 
+     *
      * @param service
      *            the {@link WebService}.
-     * 
+     *
      * @param config
      *            the {@link List} of the domain configuration.
      */

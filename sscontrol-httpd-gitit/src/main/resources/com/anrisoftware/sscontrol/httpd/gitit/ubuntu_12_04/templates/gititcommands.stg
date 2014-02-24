@@ -1,0 +1,4 @@
+cabalInstallCommand(args) ::= <<
+<args.cabalCommand> update && <args.cabalCommand> install <args.packages;separator=" ">
+
+>>

@@ -1,0 +1,2 @@
+--overwrite --strip 1 -xf /tmp/tmp/gitit-0.10.3.1-gitit-0.10.3.1-archive.tar.gz
+--overwrite --strip 1 -xf /tmp/tmp/gitit-0.10.3.1-gitit-0.10.3.1-archive.tar.gz

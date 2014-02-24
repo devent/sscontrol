@@ -34,7 +34,7 @@ public interface DomainUserFactory {
      * Creates the domain user.
      * 
      * @param domain
-     *            the {@link DomainImpl} of the user.
+     *            the {@link Domain} of the user.
      * 
      * @param args
      *            the {@link Map} arguments.

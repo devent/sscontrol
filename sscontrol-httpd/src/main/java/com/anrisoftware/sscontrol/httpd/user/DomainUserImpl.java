@@ -32,7 +32,7 @@ import com.google.inject.assistedinject.AssistedInject;
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-public class DomainUser {
+class DomainUserImpl implements DomainUser {
 
     private static final String REF = "referenced domain";
 
@@ -55,14 +55,14 @@ public class DomainUser {
     private String ref;
 
     @AssistedInject
-    DomainUser() {
+    DomainUserImpl() {
     }
 
     /**
      * @see DomainUserFactory#create(DomainImpl, Map)
      */
     @AssistedInject
-    DomainUser(DomainUserLogger logger, DomainUserArgs aargs,
+    DomainUserImpl(DomainUserLogger logger, DomainUserArgs aargs,
             @Assisted Domain domain, @Assisted Map<String, Object> args) {
         if (aargs.haveRefDomain(args)) {
             setRefDomain(aargs.refDomain(domain, args));
@@ -85,6 +85,7 @@ public class DomainUser {
         this.ref = ref;
     }
 
+    @Override
     public String getRefDomain() {
         return ref;
     }
@@ -93,6 +94,7 @@ public class DomainUser {
         this.name = name;
     }
 
+    @Override
     public String getName() {
         return name;
     }
@@ -101,6 +103,7 @@ public class DomainUser {
         this.group = group;
     }
 
+    @Override
     public String getGroup() {
         return group;
     }
@@ -109,6 +112,7 @@ public class DomainUser {
         this.uid = uid;
     }
 
+    @Override
     public Integer getUid() {
         return uid;
     }
@@ -117,6 +121,7 @@ public class DomainUser {
         this.gid = gid;
     }
 
+    @Override
     public Integer getGid() {
         return gid;
     }

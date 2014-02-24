@@ -29,7 +29,7 @@ import org.junit.Test
 import com.anrisoftware.sscontrol.httpd.resources.UbuntuTestUtil
 
 /**
- * Ubuntu 12.04 Wordpress.
+ * <i>Ubuntu</i> 12.04 <i>gitit</i>.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
@@ -40,7 +40,7 @@ class GititTest extends UbuntuTestUtil {
     @Test
     void "gitit"() {
         copyUbuntuFiles tmpdir
-        copyWordpressFiles tmpdir
+        copyGititFiles tmpdir
 
         loader.loadService profile.resource, null
         def profile = registry.getService("profile")[0]
@@ -51,5 +51,12 @@ class GititTest extends UbuntuTestUtil {
         registry.allServices.each { it.call() }
 
         assertStringContent test1comConfExpected.replaced(tmpdir, tmpdir, "/tmp"), test1comConfExpected.toString()
+        assertStringContent tarOutExpected.replaced(tmpdir, tmpdir, "/tmp"), tarOutExpected.toString()
+        assertFileContent gititConfExpected.asFile(tmpdir), gititConfExpected
+        assertFileContent cabalOutExpected.asFile(tmpdir), cabalOutExpected
+        assertFileContent hsenvCabalOutExpected.asFile(tmpdir), hsenvCabalOutExpected
+        assertStringContent test1comgititdServiceExpected.replaced(tmpdir, tmpdir, "/tmp"), test1comgititdServiceExpected.toString()
+        assertStringContent test1comgititdDefaultsExpected.replaced(tmpdir, tmpdir, "/tmp"), test1comgititdDefaultsExpected.toString()
+        assertStringContent chmodOutExpected.replaced(tmpdir, tmpdir, "/tmp"), chmodOutExpected.toString()
     }
 }

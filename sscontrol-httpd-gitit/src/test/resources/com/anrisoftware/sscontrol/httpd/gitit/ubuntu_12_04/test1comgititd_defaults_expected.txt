@@ -1,0 +1,8 @@
+# Robo Bee - Auto generated
+# Configuration for /tmp/etc/init.d/test1_com_gititd
+# Author: Erwin Müller, <erwin.mueller@deventm.org>
+
+GITIT_USER="web_001"
+RUN_AT_STARTUP="YES"
+# Change this to 0 if running gitit as its own user
+UMASK=0

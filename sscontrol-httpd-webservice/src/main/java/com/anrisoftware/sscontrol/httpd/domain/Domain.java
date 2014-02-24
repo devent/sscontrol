@@ -1,5 +1,7 @@
 package com.anrisoftware.sscontrol.httpd.domain;
 
+import com.anrisoftware.sscontrol.httpd.user.DomainUser;
+
 /**
  * Domain entry.
  * 
@@ -14,5 +16,13 @@ public interface Domain {
      * @return the domain {@link String} name.
      */
     String getName();
+
+    /**
+     * Returns the domain local user.
+     * 
+     * @param user
+     *            the {@link DomainUser}.
+     */
+    DomainUser getDomainUser();
 
 }

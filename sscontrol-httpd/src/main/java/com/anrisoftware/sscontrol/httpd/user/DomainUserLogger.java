@@ -35,7 +35,7 @@ import com.anrisoftware.globalpom.log.AbstractLogger;
 import com.anrisoftware.sscontrol.httpd.domain.Domain;
 
 /**
- * Logging messages for {@link DomainUser}.
+ * Logging messages for {@link DomainUserImpl}.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
@@ -72,10 +72,10 @@ class DomainUserLogger extends AbstractLogger {
 	}
 
 	/**
-	 * Creates a logger for {@link DomainUser}.
+	 * Creates a logger for {@link DomainUserImpl}.
 	 */
 	public DomainUserLogger() {
-		super(DomainUser.class);
+		super(DomainUserImpl.class);
 	}
 
     void checkUser(Domain domain, Object name) {

@@ -33,8 +33,9 @@ public class DomainUserModule extends AbstractModule {
 
     @Override
     protected void configure() {
+        bind(DomainUser.class).to(DomainUserImpl.class);
         install(new FactoryModuleBuilder().implement(DomainUser.class,
-                DomainUser.class).build(DomainUserFactory.class));
+                DomainUserImpl.class).build(DomainUserFactory.class));
     }
 
 }

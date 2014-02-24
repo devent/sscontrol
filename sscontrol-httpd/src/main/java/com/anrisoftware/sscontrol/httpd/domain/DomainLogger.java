@@ -114,7 +114,7 @@ class DomainLogger extends AbstractLogger {
         super(DomainImpl.class);
     }
 
-    void addressSet(DomainImpl domain, String address) {
+    void addressSet(Domain domain, String address) {
         if (isDebugEnabled()) {
             debug(address_set_debug, address, domain);
         } else {
@@ -122,7 +122,7 @@ class DomainLogger extends AbstractLogger {
         }
     }
 
-    void portSet(DomainImpl domain, int port) {
+    void portSet(Domain domain, int port) {
         if (isDebugEnabled()) {
             debug(port_set_debug, port, domain);
         } else {
@@ -130,7 +130,7 @@ class DomainLogger extends AbstractLogger {
         }
     }
 
-    void documentRootSet(DomainImpl domain, String root) {
+    void documentRootSet(Domain domain, String root) {
         if (isDebugEnabled()) {
             debug(document_root_debug, root, domain);
         } else {
@@ -138,7 +138,7 @@ class DomainLogger extends AbstractLogger {
         }
     }
 
-    void useDomainSet(DomainImpl domain, String use) {
+    void useDomainSet(Domain domain, String use) {
         if (isDebugEnabled()) {
             debug(use_domain_debug, use, domain);
         } else {
@@ -146,7 +146,7 @@ class DomainLogger extends AbstractLogger {
         }
     }
 
-    void redirectAdded(DomainImpl domain, Redirect redirect) {
+    void redirectAdded(Domain domain, Redirect redirect) {
         if (isDebugEnabled()) {
             debug(redirect_added_debug, redirect, domain);
         } else {
@@ -155,7 +155,7 @@ class DomainLogger extends AbstractLogger {
         }
     }
 
-    void servicesAdded(DomainImpl domain, WebService service) {
+    void servicesAdded(Domain domain, WebService service) {
         if (isDebugEnabled()) {
             debug(service_added_debug, service, domain);
         } else {
@@ -175,7 +175,7 @@ class DomainLogger extends AbstractLogger {
         notNull(factory, service_not_found.toString(), name, domain);
     }
 
-    void userSet(DomainImpl domain, DomainUser user) {
+    void userSet(Domain domain, DomainUser user) {
         if (isDebugEnabled()) {
             debug(user_set_debug, user, domain);
         } else {

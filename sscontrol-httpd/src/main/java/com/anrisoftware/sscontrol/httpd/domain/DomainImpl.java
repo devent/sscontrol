@@ -176,6 +176,7 @@ class DomainImpl implements Domain {
         this.domainUser = user;
     }
 
+    @Override
     public DomainUser getDomainUser() {
         return domainUser;
     }

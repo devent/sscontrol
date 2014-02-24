@@ -213,7 +213,7 @@ public class GititService implements WebService {
         this.caching = caching;
     }
 
-    public void setCaching(Boolean caching) {
+    public void setCaching(boolean caching) {
         this.caching = caching;
     }
 
@@ -227,8 +227,8 @@ public class GititService implements WebService {
         this.idleGc = gc;
     }
 
-    public void setIdleGc(Boolean idleGc) {
-        this.idleGc = idleGc;
+    public void setIdleGc(boolean idle) {
+        this.idleGc = idle;
     }
 
     public Boolean getIdleGc() {

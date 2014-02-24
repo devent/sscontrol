@@ -1,0 +1,18 @@
+hsenvInstallCommand(args) ::= <<
+cd <args.gititDir>
+[[ -f .hsenv ]] && <args.hsenvCommand>
+source <args.activateCommand>
+<args.cabalCommand> update && <args.cabalCommand> install --force-reinstalls <args.packages;separator=" ">
+<args.deactivateCommand>
+
+>>
+
+hsenvCompileCommand(args) ::= <<
+cd <args.gititDir>
+[[ -f .hsenv ]] && <args.hsenvCommand>
+source <args.activateCommand>
+cd <args.gititSourceDir>
+<args.cabalCommand> install --force-reinstalls
+<args.deactivateCommand>
+
+>>

@@ -31,7 +31,7 @@ import com.anrisoftware.sscontrol.httpd.resources.ResourcesUtils
  */
 enum UbuntuResources {
 
-    restartCommand("/etc/init.d/apache2", UbuntuResources.class.getResource("echo_command.txt")),
+    restartCommand("/etc/init.d/nginx", UbuntuResources.class.getResource("echo_command.txt")),
     aptitudeCommand("/usr/bin/aptitude", UbuntuResources.class.getResource("echo_command.txt")),
     aptKeyCommand("/usr/bin/apt-key", UbuntuResources.class.getResource("echo_command.txt")),
     chmodCommand("/bin/chmod", UbuntuResources.class.getResource("echo_command.txt")),
@@ -42,6 +42,7 @@ enum UbuntuResources {
     tarCommand("/bin/tar", UbuntuResources.class.getResource("echo_command.txt")),
     unzipCommand("/usr/bin/unzip", UbuntuResources.class.getResource("echo_command.txt")),
     lnCommand("/bin/ln", UbuntuResources.class.getResource("echo_command.txt")),
+    netstatCommand("/bin/netstat", UbuntuResources.class.getResource("echo_command.txt")),
     reconfigureCommand("/usr/sbin/dpkg-reconfigure", UbuntuResources.class.getResource("echo_command.txt")),
     mysqlCommand("/usr/bin/mysql", UbuntuResources.class.getResource("echo_command.txt")),
     tmpDir("/tmp", null),
@@ -49,14 +50,6 @@ enum UbuntuResources {
     packagesSourcesFile("/etc/apt/sources.list", UbuntuResources.class.getResource("sources_list.txt")),
     certCrt("cert.crt", UbuntuResources.class.getResource("cert_crt.txt")),
     certKey("cert.key", UbuntuResources.class.getResource("cert_key.txt")),
-    a2enmodCommand("/usr/sbin/a2enmod", UbuntuResources.class.getResource("echo_command.txt")),
-    a2dismodCommand("/usr/sbin/a2dismod", UbuntuResources.class.getResource("echo_command.txt")),
-    a2ensiteCommand("/usr/sbin/a2ensite", UbuntuResources.class.getResource("echo_command.txt")),
-    a2dissiteCommand("/usr/sbin/a2dissite", UbuntuResources.class.getResource("echo_command.txt")),
-    apache2Command("/usr/sbin/apache2", UbuntuResources.class.getResource("echo_command.txt")),
-    apache2ctlCommand("/usr/sbin/apache2ctl", UbuntuResources.class.getResource("httpd_status_command.txt")),
-    htpasswdCommand("/usr/bin/htpasswd", UbuntuResources.class.getResource("echo_command.txt")),
-    htdigestCommand("/usr/bin/htdigest", UbuntuResources.class.getResource("echo_command.txt")),
     groupsFile("/etc/group", UbuntuResources.class.getResource("group.txt")),
     usersFile("/etc/passwd", UbuntuResources.class.getResource("passwd.txt")),
     confDir("/etc/apache2", null),
@@ -64,6 +57,8 @@ enum UbuntuResources {
     sitesEnabledDir("/etc/apache2/sites-enabled", null),
     configIncludeDir("/etc/apache2/conf.d", null),
     sitesDir("/var/www", null),
+    // nginx
+    nginxSigningKey("/tmp/nginx_signing.key", UbuntuResources.class.getResource("nginx_signing_key.txt")),
 
     static copyUbuntuFiles(File parent) {
         aptitudeCommand.createCommand parent
@@ -76,21 +71,17 @@ enum UbuntuResources {
         tarCommand.createCommand parent
         unzipCommand.createCommand parent
         lnCommand.createCommand parent
+        netstatCommand.createCommand parent
         reconfigureCommand.createCommand parent
         tmpDir.asFile(parent).mkdirs()
         packagingConfigurationDirectory.asFile(parent).mkdirs()
         packagesSourcesFile.createFile parent
         restartCommand.createCommand parent
-        a2enmodCommand.createCommand parent
-        a2dismodCommand.createCommand parent
-        a2dissiteCommand.createCommand parent
-        a2ensiteCommand.createCommand parent
-        apache2Command.createCommand parent
-        apache2ctlCommand.createCommand parent
-        htpasswdCommand.createCommand parent
         confDir.asFile(parent).mkdirs()
         groupsFile.createFile parent
         usersFile.createFile parent
+        // nginx
+        nginxSigningKey.createFile parent
     }
 
     ResourcesUtils resources

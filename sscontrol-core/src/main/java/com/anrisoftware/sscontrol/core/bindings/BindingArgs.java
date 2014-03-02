@@ -55,37 +55,45 @@ public class BindingArgs {
     public List<Address> createAddress(Object service, Map<String, Object> args) {
         List<Address> list = new ArrayList<Address>();
         if (haveAddress(args)) {
-            Object address = address(service, args);
-            Object addressObj = address;
-            if (!(address instanceof BindingAddress)) {
-                addressObj = address.toString().trim();
-            }
-            if (havePort(args)) {
-                String addressStr = addressObj.toString();
-                list.add(addressFactory.create(addressStr, port(service, args)));
-            } else {
-                if (address instanceof BindingAddress) {
-                    BindingAddress addressEnum = (BindingAddress) address;
-                    list.add(addressFactory.create(addressEnum));
-                } else {
-                    list.add(addressFactory.create(address.toString()));
-                }
-            }
+            list.add(parseAddress(service, args));
+            return list;
         }
         if (haveAddresses(args)) {
             for (String address : addresses(service, args)) {
                 list.add(addressFactory.create(address));
             }
+            return list;
         }
         if (havePort(args)) {
             list.add(addressFactory.create(port(service, args)));
+            return list;
         }
         if (havePorts(args)) {
             for (int port : ports(service, args)) {
                 list.add(addressFactory.create(port));
             }
+            return list;
         }
         return list;
+    }
+
+    private Address parseAddress(Object service, Map<String, Object> args) {
+        Object address = address(service, args);
+        Object addressObj = address;
+        if (!(address instanceof BindingAddress)) {
+            addressObj = address.toString().trim();
+        }
+        if (havePort(args)) {
+            String addressStr = addressObj.toString();
+            return addressFactory.create(addressStr, port(service, args));
+        } else {
+            if (address instanceof BindingAddress) {
+                BindingAddress addressEnum = (BindingAddress) address;
+                return addressFactory.create(addressEnum);
+            } else {
+                return addressFactory.create(address.toString());
+            }
+        }
     }
 
     @SuppressWarnings("unchecked")

@@ -18,12 +18,19 @@
  */
 package com.anrisoftware.sscontrol.httpd.gitit;
 
+import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import com.anrisoftware.sscontrol.core.api.ServiceException;
+import com.anrisoftware.sscontrol.core.bindings.Address;
+import com.anrisoftware.sscontrol.core.bindings.Binding;
+import com.anrisoftware.sscontrol.core.bindings.BindingAddress;
+import com.anrisoftware.sscontrol.core.bindings.BindingArgs;
+import com.anrisoftware.sscontrol.core.bindings.BindingFactory;
 import com.anrisoftware.sscontrol.core.debuglogging.DebugLogging;
 import com.anrisoftware.sscontrol.core.debuglogging.DebugLoggingFactory;
 import com.anrisoftware.sscontrol.httpd.domain.Domain;
@@ -58,6 +65,12 @@ public class GititService implements WebService {
     private final Domain domain;
 
     private final GititServiceLogger log;
+
+    @Inject
+    private Binding binding;
+
+    @Inject
+    private BindingArgs bindingArgs;
 
     private DebugLoggingFactory debugFactory;
 
@@ -170,6 +183,39 @@ public class GititService implements WebService {
 
     public String getPrefix() {
         return prefix;
+    }
+
+    /**
+     * Sets the IP addresses or host names to where to bind the <i>Gitit</i>
+     * service.
+     * 
+     * @see BindingFactory#create(Map, String...)
+     */
+    public void bind(Map<String, Object> args) throws ServiceException {
+        List<Address> addresses = bindingArgs.createAddress(this, args);
+        binding.addAddress(addresses);
+        log.bindingSet(this, binding);
+    }
+
+    /**
+     * Sets the IP addresses or host names to where to bind the <i>Gitit</i>
+     * service.
+     * 
+     * @see BindingFactory#create(BindingAddress)
+     */
+    public void bind(BindingAddress address) throws ServiceException {
+        binding.addAddress(address);
+        log.bindingSet(this, binding);
+    }
+
+    /**
+     * Returns a list of the IP addresses where to bind the <i>Gitit</i>
+     * service.
+     * 
+     * @return the {@link Binding}.
+     */
+    public Binding getBinding() {
+        return binding;
     }
 
     public void debug(boolean enabled) {

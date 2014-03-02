@@ -54,6 +54,7 @@ class HttpdGititTest extends HttpdTestUtil {
         assert domain.address == "192.168.0.51"
 
         GititService webservice = domain.services[0]
+        assert webservice.binding.size() == 1
         assert webservice.name == "gitit"
         assert webservice.id == "gititid"
         assert webservice.ref == null

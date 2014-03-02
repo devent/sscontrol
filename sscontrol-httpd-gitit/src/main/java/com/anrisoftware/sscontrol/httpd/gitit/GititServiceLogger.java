@@ -18,6 +18,8 @@
  */
 package com.anrisoftware.sscontrol.httpd.gitit;
 
+import static com.anrisoftware.sscontrol.httpd.gitit.GititServiceLogger._.binding_set_debug;
+import static com.anrisoftware.sscontrol.httpd.gitit.GititServiceLogger._.binding_set_info;
 import static com.anrisoftware.sscontrol.httpd.gitit.GititServiceLogger._.caching_null;
 import static com.anrisoftware.sscontrol.httpd.gitit.GititServiceLogger._.caching_set_debug;
 import static com.anrisoftware.sscontrol.httpd.gitit.GititServiceLogger._.caching_set_info;
@@ -37,6 +39,7 @@ import java.util.Map;
 import javax.inject.Singleton;
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
+import com.anrisoftware.sscontrol.core.bindings.Binding;
 import com.anrisoftware.sscontrol.core.debuglogging.DebugLogging;
 import com.anrisoftware.sscontrol.core.yesno.YesNoFlag;
 import com.anrisoftware.sscontrol.httpd.webservice.OverrideMode;
@@ -57,6 +60,10 @@ class GititServiceLogger extends AbstractLogger {
     private static final String MODE = "mode";
 
     enum _ {
+
+        binding_set_debug("Binding address {} set {}."),
+
+        binding_set_info("Binding address {} set for service '{}'."),
 
         debug_set_debug("Debug logging {} set for {}."),
 
@@ -166,6 +173,14 @@ class GititServiceLogger extends AbstractLogger {
             debug(idle_gc_set_debug, gc, service);
         } else {
             info(idle_gc_set_info, gc, service.getName());
+        }
+    }
+
+    void bindingSet(GititService service, Binding binding) {
+        if (isDebugEnabled()) {
+            debug(binding_set_debug, binding, service);
+        } else {
+            info(binding_set_info, binding.getAddresses(), service.getName());
         }
     }
 

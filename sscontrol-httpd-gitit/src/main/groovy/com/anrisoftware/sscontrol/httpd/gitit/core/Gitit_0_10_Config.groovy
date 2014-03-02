@@ -14,6 +14,7 @@ import com.anrisoftware.sscontrol.httpd.gitit.GititService
 import com.anrisoftware.sscontrol.httpd.gitit.ubuntu_12_04.GititConfigFactory
 import com.anrisoftware.sscontrol.httpd.webservice.WebService
 import com.anrisoftware.sscontrol.workers.command.exec.ExecCommandWorkerFactory
+import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokenTemplate
 
 /**
  * Configures <i>Gitit 0.10.</i>
@@ -46,6 +47,28 @@ abstract class Gitit_0_10_Config {
     void deployService(Domain domain, WebService service, List config) {
         createDefaultConfig domain, service
         createService domain, service
+        deployConfig domain, service
+    }
+
+    /**
+     * Deploys the <i>Gitit</i> configuration.
+     *
+     * @param domain
+     *            the service {@link Domain}.
+     *
+     * @param service
+     *            the {@link GititService}.
+     *
+     * @see #gititConfigFile(Domain, GititService)
+     */
+    void deployConfig(Domain domain, GititService service) {
+        def search = gititConfigTemplate.getText(true, "configEnding_search")
+        def replace = wordpressConfigTemplate.getText(true, "configEnding")
+        def temp = new TokenTemplate(search, replace)
+        def configs = [temp]
+        def conf = mainConfiguration domain, service
+        def file = configurationFile domain, service
+        deployConfiguration configurationTokens(), conf, configs, file
     }
 
     /**
@@ -95,6 +118,13 @@ abstract class Gitit_0_10_Config {
         log.serviceFileCreated this, serviceFile, conf
         changeMod mod: "+x", files: serviceFile
     }
+
+    /**
+     * Returns the <i>Gitit</i> service configuration template.
+     *
+     * @return the {@link TemplateResource}.
+     */
+    abstract TemplateResource getGititConfigTemplate()
 
     /**
      * Returns the <i>Gitit</i> service defaults template.

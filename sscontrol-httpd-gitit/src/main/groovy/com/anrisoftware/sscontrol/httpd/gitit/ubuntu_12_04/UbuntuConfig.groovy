@@ -30,6 +30,8 @@ class UbuntuConfig extends Gitit_0_10_Config implements ServiceConfig {
 
     TemplateResource gititCommandTemplate
 
+    TemplateResource gititConfigTemplate
+
     TemplateResource gititServiceConfigTemplate
 
     TemplateResource gititServiceDefaultsConfigTemplate
@@ -50,6 +52,11 @@ class UbuntuConfig extends Gitit_0_10_Config implements ServiceConfig {
     @Override
     String gititCommand(Domain domain, GititService service) {
         ubuntuHsenvFromSourceConfig.hsenvGititCommand domain, service
+    }
+
+    @Override
+    TemplateResource getGititConfigTemplate() {
+        gititConfigTemplate
     }
 
     @Override
@@ -78,6 +85,7 @@ class UbuntuConfig extends Gitit_0_10_Config implements ServiceConfig {
         ubuntuHsenvFromSourceConfig.setScript this
         gititTemplates = templatesFactory.create "Gitit_Ubuntu_12_04"
         gititCommandTemplate = gititTemplates.getResource "gititcommands"
+        gititConfigTemplate = gititTemplates.getResource "gititconfig"
         gititServiceConfigTemplate = gititTemplates.getResource "gititserviceconfig"
         gititServiceDefaultsConfigTemplate = gititTemplates.getResource "gititservicedefaultsconfig"
     }

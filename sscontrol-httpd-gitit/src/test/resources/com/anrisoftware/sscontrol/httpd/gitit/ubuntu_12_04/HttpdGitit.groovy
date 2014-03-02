@@ -21,6 +21,7 @@ package com.anrisoftware.sscontrol.httpd.gitit.ubuntu_12_04
 httpd {
     domain "test1.com", address: "192.168.0.51", {
         setup "gitit", id: "gititid", alias: "/", type: git, prefix: "gitit", {
+            bind address: "127.0.0.1", port: 9999
             override mode: update
             caching enabled: yes
             idle gc: yes

@@ -27,8 +27,11 @@ import org.junit.Test
 import com.anrisoftware.sscontrol.core.api.ServiceLoader as SscontrolServiceLoader
 import com.anrisoftware.sscontrol.core.api.ServicesRegistry
 import com.anrisoftware.sscontrol.httpd.domain.Domain
+import com.anrisoftware.sscontrol.httpd.gitit.AuthMethod
 import com.anrisoftware.sscontrol.httpd.gitit.GititService
+import com.anrisoftware.sscontrol.httpd.gitit.LoginRequired
 import com.anrisoftware.sscontrol.httpd.gitit.RepositoryType
+import com.anrisoftware.sscontrol.httpd.webservice.OverrideMode
 
 /**
  * @see GititService
@@ -46,8 +49,6 @@ class HttpdGititTest extends HttpdTestUtil {
         loader.loadService gititScript.resource, profile, preScript
         HttpdService service = registry.getService("httpd")[0]
 
-        assert service.domains.size() == 2
-
         int d = 0
         Domain domain = service.domains[d++]
         assert domain.name == "test1.com"
@@ -60,8 +61,31 @@ class HttpdGititTest extends HttpdTestUtil {
         assert webservice.ref == null
         assert webservice.alias == ""
         assert webservice.type == RepositoryType.git
+        assert webservice.debug.level == 2
+        assert webservice.overrideMode == OverrideMode.update
+        assert webservice.wikiTitle == "Wiki Foo"
+        assert webservice.loginRequired == LoginRequired.modify
+        assert webservice.authMethod == AuthMethod.form
+        assert webservice.pageType == "Markdown"
+        assert webservice.math == "MathML"
+        assert webservice.frontPage == "Front Page"
+        assert webservice.noDeletePages.containsAll(["Front Page", "Help"])
+        assert webservice.noEditPages.containsAll(["Help"])
+        assert webservice.defaultSummary == "Default"
+        assert webservice.tableOfContents == true
         assert webservice.caching == true
         assert webservice.idleGc == true
+        assert webservice.memoryUpload == 100
+        assert webservice.memoryPage == 100
+        assert webservice.compressResponses == true
+        assert webservice.recaptchaEnable == true
+        assert webservice.recaptchaPrivateKey == "private.key"
+        assert webservice.recaptchaPublicKey == "public.key"
+        assert webservice.accessQuestion == "Foo?"
+        assert webservice.accessAnswers == "Bar"
+        assert webservice.feedsEnabled == true
+        assert webservice.feedsDuration == 5
+        assert webservice.feedsRefresh == 60
 
         domain = service.domains[d++]
         assert domain.name == "www.test1.com"

@@ -18,6 +18,9 @@
  */
 package com.anrisoftware.sscontrol.httpd.gitit;
 
+import static com.anrisoftware.globalpom.format.byteformat.UnitMultiplier.KILO;
+
+import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
 
@@ -25,6 +28,8 @@ import javax.inject.Inject;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import com.anrisoftware.globalpom.format.byteformat.ByteFormatFactory;
+import com.anrisoftware.globalpom.format.duration.DurationFormatFactory;
 import com.anrisoftware.sscontrol.core.api.ServiceException;
 import com.anrisoftware.sscontrol.core.bindings.Address;
 import com.anrisoftware.sscontrol.core.bindings.Binding;
@@ -33,6 +38,9 @@ import com.anrisoftware.sscontrol.core.bindings.BindingArgs;
 import com.anrisoftware.sscontrol.core.bindings.BindingFactory;
 import com.anrisoftware.sscontrol.core.debuglogging.DebugLogging;
 import com.anrisoftware.sscontrol.core.debuglogging.DebugLoggingFactory;
+import com.anrisoftware.sscontrol.core.groovy.StatementsMap;
+import com.anrisoftware.sscontrol.core.groovy.StatementsMapFactory;
+import com.anrisoftware.sscontrol.core.yesno.YesNoFlag;
 import com.anrisoftware.sscontrol.httpd.domain.Domain;
 import com.anrisoftware.sscontrol.httpd.webservice.OverrideMode;
 import com.anrisoftware.sscontrol.httpd.webservice.WebService;
@@ -48,6 +56,39 @@ import com.google.inject.assistedinject.Assisted;
  * @since 1.0
  */
 public class GititService implements WebService {
+
+    private static final String FEEDS_REFRESH = "refresh";
+    private static final String FEEDS_DURATION = "duration";
+    private static final String ACCESS_ANSWER = "answer";
+    private static final String ACCESS_QUESTION = "question";
+    private static final String PUBLICKEY = "publickey";
+    private static final String PRIVATEKEY = "privatekey";
+    private static final String RESPONSES = "responses";
+    private static final String MEMORY_PAGE = "page";
+    private static final String MEMORY_UPLOAD = "upload";
+    private static final String TYPE = "type";
+    private static final String METHOD = "method";
+    private static final String REQUIRED = "required";
+    private static final String TITLE = "title";
+    private static final String GC = "gc";
+    private static final String ENABLED = "enabled";
+    private static final String FEEDS = "feeds";
+    private static final String ACCESS = "access";
+    private static final String RECAPTCHA = "recaptcha";
+    private static final String COMPRESS = "compress";
+    private static final String MEMORY = "memory";
+    private static final String IDLE = "idle";
+    private static final String CACHING = "caching";
+    private static final String TABLEOFCONTENTS = "tableofcontents";
+    private static final String DEFAULTSUMMARY = "defaultsummary";
+    private static final String NOEDIT = "noedit";
+    private static final String NODELETE = "nodelete";
+    private static final String FRONTPAGE = "frontpage";
+    private static final String MATH = "math";
+    private static final String PAGE = "page";
+    private static final String AUTH = "auth";
+    private static final String LOGIN = "login";
+    private static final String WIKI = "wiki";
 
     /**
      * The <i>Gitit</i> service name.
@@ -72,6 +113,14 @@ public class GititService implements WebService {
     @Inject
     private BindingArgs bindingArgs;
 
+    @Inject
+    private ByteFormatFactory byteFormatFactory;
+
+    @Inject
+    private DurationFormatFactory durationFormatFactory;
+
+    private StatementsMap statementsMap;
+
     private DebugLoggingFactory debugFactory;
 
     private String alias;
@@ -89,10 +138,6 @@ public class GititService implements WebService {
     private OverrideMode overrideMode;
 
     private RepositoryType type;
-
-    private Boolean caching;
-
-    private Boolean idleGc;
 
     /**
      * @see GititServiceFactory#create(Map, Domain)
@@ -127,6 +172,29 @@ public class GititService implements WebService {
     void setDebugLoggingFactory(DebugLoggingFactory factory) {
         this.debugFactory = factory;
         this.debug = factory.createOff();
+    }
+
+    @Inject
+    public void setStatementsMap(StatementsMapFactory factory) {
+        StatementsMap map = factory.create(this, getName());
+        this.statementsMap = map;
+        map.addAllowed(WIKI);
+        map.addAllowed(LOGIN);
+        map.addAllowed(AUTH);
+        map.addAllowed(PAGE);
+        map.addAllowed(MATH);
+        map.addAllowed(FRONTPAGE);
+        map.addAllowed(NODELETE);
+        map.addAllowed(NOEDIT);
+        map.addAllowed(DEFAULTSUMMARY);
+        map.addAllowed(TABLEOFCONTENTS);
+        map.addAllowed(CACHING);
+        map.addAllowed(IDLE);
+        map.addAllowed(MEMORY);
+        map.addAllowed(COMPRESS);
+        map.addAllowed(RECAPTCHA);
+        map.addAllowed(ACCESS);
+        map.addAllowed(FEEDS);
     }
 
     @Override
@@ -224,6 +292,12 @@ public class GititService implements WebService {
         this.debug = logging;
     }
 
+    public void debug(Map<String, Object> args) {
+        DebugLogging logging = debugFactory.create(args);
+        log.debugSet(this, logging);
+        this.debug = logging;
+    }
+
     public DebugLogging getDebugLogging() {
         if (debug == null) {
             this.debug = debugFactory.createOff();
@@ -253,32 +327,130 @@ public class GititService implements WebService {
         return type;
     }
 
-    public void caching(Map<String, Object> args) {
-        boolean caching = log.caching(this, args);
-        log.cachingSet(this, caching);
-        this.caching = caching;
-    }
-
-    public void setCaching(boolean caching) {
-        this.caching = caching;
-    }
-
     public Boolean getCaching() {
-        return caching;
+        Object value = statementsMap.mapValue(CACHING, ENABLED);
+        if (value instanceof YesNoFlag) {
+            return ((YesNoFlag) value).asBoolean();
+        }
+        return (Boolean) value;
     }
 
-    public void idle(Map<String, Object> args) {
-        boolean gc = log.idleGc(this, args);
-        log.idleGcSet(this, gc);
-        this.idleGc = gc;
+    public String getWikiTitle() {
+        return statementsMap.mapValue(WIKI, TITLE);
     }
 
-    public void setIdleGc(boolean idle) {
-        this.idleGc = idle;
+    public LoginRequired getLoginRequired() {
+        return statementsMap.mapValue(LOGIN, REQUIRED);
+    }
+
+    public AuthMethod getAuthMethod() {
+        return statementsMap.mapValue(AUTH, METHOD);
+    }
+
+    public String getPageType() {
+        return statementsMap.mapValue(PAGE, TYPE);
+    }
+
+    public String getMath() {
+        return statementsMap.value(MATH);
+    }
+
+    public String getFrontPage() {
+        return statementsMap.value(FRONTPAGE);
+    }
+
+    public List<String> getNoDeletePages() {
+        return statementsMap.valueAsList(NODELETE);
+    }
+
+    public List<String> getNoEditPages() {
+        return statementsMap.valueAsList(NOEDIT);
+    }
+
+    public String getDefaultSummary() {
+        return statementsMap.value(DEFAULTSUMMARY);
+    }
+
+    public Boolean getTableOfContents() {
+        Object value = statementsMap.value(TABLEOFCONTENTS);
+        if (value instanceof YesNoFlag) {
+            return ((YesNoFlag) value).asBoolean();
+        }
+        return (Boolean) value;
     }
 
     public Boolean getIdleGc() {
-        return idleGc;
+        Object value = statementsMap.mapValue(IDLE, GC);
+        if (value instanceof YesNoFlag) {
+            return ((YesNoFlag) value).asBoolean();
+        }
+        return (Boolean) value;
+    }
+
+    public long getMemoryUpload() throws ParseException {
+        String value = statementsMap.mapValue(MEMORY, MEMORY_UPLOAD);
+        return byteFormatFactory.create().parse(value, KILO);
+    }
+
+    public long getMemoryPage() throws ParseException {
+        String value = statementsMap.mapValue(MEMORY, MEMORY_PAGE);
+        return byteFormatFactory.create().parse(value, KILO);
+    }
+
+    public Boolean getCompressResponses() {
+        Object value = statementsMap.mapValue(COMPRESS, RESPONSES);
+        if (value instanceof YesNoFlag) {
+            return ((YesNoFlag) value).asBoolean();
+        }
+        return (Boolean) value;
+    }
+
+    public Boolean getRecaptchaEnable() {
+        Object value = statementsMap.mapValue(RECAPTCHA, ENABLED);
+        if (value instanceof YesNoFlag) {
+            return ((YesNoFlag) value).asBoolean();
+        }
+        return (Boolean) value;
+    }
+
+    public String getRecaptchaPrivateKey() {
+        return statementsMap.mapValue(RECAPTCHA, PRIVATEKEY);
+    }
+
+    public String getRecaptchaPublicKey() {
+        return statementsMap.mapValue(RECAPTCHA, PUBLICKEY);
+    }
+
+    public String getAccessQuestion() {
+        return statementsMap.mapValue(ACCESS, ACCESS_QUESTION);
+    }
+
+    public String getAccessAnswers() {
+        return statementsMap.mapValue(ACCESS, ACCESS_ANSWER);
+    }
+
+    public Boolean getFeedsEnabled() {
+        Object value = statementsMap.mapValue(FEEDS, ENABLED);
+        if (value instanceof YesNoFlag) {
+            return ((YesNoFlag) value).asBoolean();
+        }
+        return (Boolean) value;
+    }
+
+    public long getFeedsDuration() throws ParseException {
+        String d = statementsMap.mapValue(FEEDS, FEEDS_DURATION);
+        return durationFormatFactory.create().parse(d).getStandardDays();
+    }
+
+    public long getFeedsRefresh() throws ParseException {
+        String d = statementsMap.mapValue(FEEDS, FEEDS_REFRESH);
+        return durationFormatFactory.create().parse(d).getStandardMinutes();
+    }
+
+    public Object methodMissing(String name, Object args)
+            throws ServiceException {
+        statementsMap.methodMissing(name, args);
+        return null;
     }
 
     @Override

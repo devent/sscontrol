@@ -18,13 +18,33 @@
  */
 package com.anrisoftware.sscontrol.httpd.gitit.ubuntu_12_04
 
+import com.anrisoftware.sscontrol.httpd.gitit.AuthMethod
+import com.anrisoftware.sscontrol.httpd.gitit.LoginRequired
+import com.anrisoftware.sscontrol.httpd.gitit.RepositoryType
+
 httpd {
     domain "test1.com", address: "192.168.0.51", {
-        setup "gitit", id: "gititid", alias: "/", type: git, prefix: "gitit", {
+        setup "gitit", id: "gititid", alias: "/", type: RepositoryType.git, prefix: "gitit", {
             bind address: "127.0.0.1", port: 9999
+            debug level: 2
             override mode: update
+            wiki title: "Wiki Foo"
+            login required: LoginRequired.modify
+            auth method: AuthMethod.form
+            page type: "Markdown"
+            math "MathML"
+            frontpage "Front Page"
+            nodelete "Front Page, Help"
+            noedit "Help"
+            defaultsummary "Default"
+            tableofcontents yes
             caching enabled: yes
             idle gc: yes
+            memory upload: "100 kB", page: "100 kB"
+            compress responses: yes
+            recaptcha enabled: yes, privatekey: "private.key", publickey: "public.key"
+            access question: "Foo?", answer: "Bar"
+            feeds enabled: yes, duration: "P5D", refresh: "PT60M"
         }
     }
     domain "www.test1.com", address: "192.168.0.51", {

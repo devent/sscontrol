@@ -1,2 +1,7 @@
-gititService(args) ::= <%
+addressConfigSearch(args) ::= <%
+address:.*
+%>
+
+portConfigSearch(args) ::= <%
+port:.*
 %>

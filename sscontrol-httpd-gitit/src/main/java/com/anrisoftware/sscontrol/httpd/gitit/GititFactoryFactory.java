@@ -38,6 +38,10 @@ import com.google.inject.Module;
 @ProviderFor(WebServiceFactoryFactory.class)
 public class GititFactoryFactory implements WebServiceFactoryFactory {
 
+    private static final String AUTH_METHOD = "com.anrisoftware.sscontrol.httpd.gitit.AuthMethod";
+
+    private static final String LOGIN_REQUIRED = "com.anrisoftware.sscontrol.httpd.gitit.LoginRequired";
+
     private static final String REPOSITORY_TYPE = "com.anrisoftware.sscontrol.httpd.gitit.RepositoryType";
 
     /**
@@ -88,9 +92,9 @@ public class GititFactoryFactory implements WebServiceFactoryFactory {
 
     private void importClasses(CompilerConfiguration c) {
         ImportCustomizer customizer = new ImportCustomizer();
-        customizer.addStaticImport(REPOSITORY_TYPE, "git");
-        customizer.addStaticImport(REPOSITORY_TYPE, "darcs");
-        customizer.addStaticImport(REPOSITORY_TYPE, "mercurial");
+        customizer.addImports(LOGIN_REQUIRED);
+        customizer.addImports(AUTH_METHOD);
+        customizer.addImports(REPOSITORY_TYPE);
         c.addCompilationCustomizers(customizer);
     }
 }

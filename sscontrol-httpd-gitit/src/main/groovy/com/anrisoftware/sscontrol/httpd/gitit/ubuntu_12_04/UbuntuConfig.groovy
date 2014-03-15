@@ -9,6 +9,7 @@ import com.anrisoftware.sscontrol.core.service.LinuxScript
 import com.anrisoftware.sscontrol.httpd.domain.Domain
 import com.anrisoftware.sscontrol.httpd.gitit.GititService
 import com.anrisoftware.sscontrol.httpd.gitit.core.Gitit_0_10_Config
+import com.anrisoftware.sscontrol.httpd.gitit.core.RepositoryTypeRenderer
 import com.anrisoftware.sscontrol.httpd.webservice.ServiceConfig
 import com.anrisoftware.sscontrol.httpd.webservice.WebService
 
@@ -19,6 +20,9 @@ import com.anrisoftware.sscontrol.httpd.webservice.WebService
  * @since 1.0
  */
 class UbuntuConfig extends Gitit_0_10_Config implements ServiceConfig {
+
+    @Inject
+    private RepositoryTypeRenderer repositoryTypeRenderer
 
     @Inject
     GititPropertiesProvider gititProperties
@@ -83,7 +87,7 @@ class UbuntuConfig extends Gitit_0_10_Config implements ServiceConfig {
     public void setScript(LinuxScript script) {
         super.setScript(script)
         ubuntuHsenvFromSourceConfig.setScript this
-        gititTemplates = templatesFactory.create "Gitit_Ubuntu_12_04"
+        gititTemplates = templatesFactory.create "Gitit_Ubuntu_12_04", ["renderers": [repositoryTypeRenderer]]
         gititCommandTemplate = gititTemplates.getResource "gititcommands"
         gititConfigTemplate = gititTemplates.getResource "gititconfig"
         gititServiceConfigTemplate = gititTemplates.getResource "gititserviceconfig"

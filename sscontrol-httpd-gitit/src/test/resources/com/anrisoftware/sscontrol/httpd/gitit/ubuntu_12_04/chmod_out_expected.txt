@@ -1,2 +1,4 @@
 +x /tmp/etc/init.d/test1_com_gititd
++x /tmp/etc/init.d/test2_com_gititd
 +x /tmp/etc/init.d/test1_com_gititd
++x /tmp/etc/init.d/test2_com_gititd

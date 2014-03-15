@@ -44,10 +44,16 @@ httpd {
             compress responses: yes
             recaptcha enabled: yes, privatekey: "private.key", publickey: "public.key"
             access question: "Foo?", answer: "Bar"
-            feeds enabled: yes, duration: "P5D", refresh: "PT60M"
+            feeds enabled: yes, duration: "P5D", refresh: "PT10M"
         }
     }
     domain "www.test1.com", address: "192.168.0.51", {
         setup "gitit", ref: "gititid", refdomain: "testid"
+    }
+    domain "test2.com", address: "192.168.0.51", {
+        setup "gitit", id: "gititid", alias: "/", type: RepositoryType.git, prefix: "gitit", {
+            bind address: "127.0.0.1", port: 9999
+            wiki title: "Wiki Foo"
+        }
     }
 }

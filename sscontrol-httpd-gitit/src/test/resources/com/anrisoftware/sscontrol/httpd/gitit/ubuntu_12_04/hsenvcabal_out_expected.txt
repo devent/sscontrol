@@ -4,3 +4,9 @@ install --force-reinstalls
 update
 install --force-reinstalls pandoc -fhighlighting
 install --force-reinstalls
+update
+install --force-reinstalls pandoc -fhighlighting
+install --force-reinstalls
+update
+install --force-reinstalls pandoc -fhighlighting
+install --force-reinstalls

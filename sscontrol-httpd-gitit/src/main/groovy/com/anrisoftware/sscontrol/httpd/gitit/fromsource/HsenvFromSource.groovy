@@ -4,6 +4,7 @@ import static org.apache.commons.io.FileUtils.*
 
 import javax.inject.Inject
 
+import org.apache.commons.lang3.builder.ToStringBuilder
 import org.stringtemplate.v4.ST
 
 import com.anrisoftware.propertiesutils.ContextProperties
@@ -375,5 +376,12 @@ abstract class HsenvFromSource {
      */
     def methodMissing(String name, def args) {
         script.invokeMethod name, args
+    }
+
+    @Override
+    String toString() {
+        new ToStringBuilder(this)
+                .append("service name", getServiceName())
+                .append("profile name", getProfile()).toString();
     }
 }

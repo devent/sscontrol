@@ -8,9 +8,12 @@ import org.stringtemplate.v4.ST
 
 import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.resources.templates.api.TemplateResource
+import com.anrisoftware.sscontrol.core.debuglogging.DebugLoggingFactory
 import com.anrisoftware.sscontrol.core.service.LinuxScript
 import com.anrisoftware.sscontrol.httpd.domain.Domain
+import com.anrisoftware.sscontrol.httpd.gitit.AuthMethod
 import com.anrisoftware.sscontrol.httpd.gitit.GititService
+import com.anrisoftware.sscontrol.httpd.gitit.LoginRequired
 import com.anrisoftware.sscontrol.httpd.gitit.ubuntu_12_04.GititConfigFactory
 import com.anrisoftware.sscontrol.httpd.webservice.WebService
 import com.anrisoftware.sscontrol.workers.command.exec.ExecCommandWorkerFactory
@@ -30,6 +33,12 @@ abstract class Gitit_0_10_Config {
     @Inject
     private ExecCommandWorkerFactory execCommandWorkerFactory
 
+    @Inject
+    private DebugLoggingFactory debugLoggingFactory
+
+    @Inject
+    private DebugLevelRenderer debugLevelRenderer
+
     /**
      * @see ServiceConfig#getScript()
      */
@@ -45,9 +54,118 @@ abstract class Gitit_0_10_Config {
      * @see ServiceConfig#deployService(Domain, WebService, List)
      */
     void deployService(Domain domain, WebService service, List config) {
+        setupDefaults domain, service
         createDefaultConfig domain, service
         createService domain, service
         deployConfig domain, service
+    }
+
+    /**
+     * Setups default options.
+     *
+     * @param service
+     *            the {@link GititService}.
+     */
+    void setupDefaults(Domain domain, GititService service) {
+        setupDefaultDebug service, domain
+        def loginRequired = LoginRequired.valueOf(profileProperty("gitit_default_login_required", gititProperties))
+        def authMethod = AuthMethod.valueOf(profileProperty("gitit_default_auth_method", gititProperties))
+        def pageType = profileProperty("gitit_default_page_type", gititProperties)
+        def math = profileProperty("gitit_default_math", gititProperties)
+        def frontpage = profileProperty("gitit_default_frontpage", gititProperties)
+        def nodeletePages = profileListProperty("gitit_default_nodelete_pages", gititProperties)
+        def noeditPages = profileListProperty("gitit_default_noedit_pages", gititProperties)
+        def summary = profileProperty("gitit_default_summary", gititProperties)
+        def tableofcontents = profileProperty("gitit_default_tableofcontents", gititProperties)
+        def enableCache = profileBooleanProperty("gitit_default_enable_cache", gititProperties)
+        def allowIdlegc = profileBooleanProperty("gitit_default_allow_idle_gc", gititProperties)
+        def memoryUpload = profileProperty "gitit_default_memory_upload", gititProperties
+        def memoryPage = profileProperty "gitit_default_memory_page", gititProperties
+        def compressResponses = profileBooleanProperty("gitit_default_compress_responses", gititProperties)
+        def recaptchaEnabled = profileBooleanProperty("gitit_default_recaptcha_enabled", gititProperties)
+        def accessQuestion = profileProperty("gitit_default_access_question", gititProperties)
+        def accessAnswer = profileProperty("gitit_default_access_answer", gititProperties)
+        def feedsEnabled = profileBooleanProperty("gitit_default_feeds_enabled", gititProperties)
+        def feedsDuration = profileProperty("gitit_default_feeds_duration", gititProperties)
+        def feedsRefresh = profileProperty("gitit_default_feeds_refresh", gititProperties)
+        if (service.loginRequired == null) {
+            service.loginRequired = loginRequired
+        }
+        if (service.authMethod == null) {
+            service.authMethod = authMethod
+        }
+        if (service.pageType == null) {
+            service.pageType = pageType
+        }
+        if (service.math == null) {
+            service.math = math
+        }
+        if (service.frontPage == null) {
+            service.frontPage = frontpage
+        }
+        if (service.noDeletePages == null) {
+            service.noDeletePages = nodeletePages
+        }
+        if (service.noEditPages == null) {
+            service.noEditPages = noeditPages
+        }
+        if (service.defaultSummary == null) {
+            service.defaultSummary = summary
+        }
+        if (service.tableOfContents == null) {
+            service.tableOfContents = tableofcontents
+        }
+        if (service.caching == null) {
+            service.caching = enableCache
+        }
+        if (service.idleGc == null) {
+            service.idleGc = allowIdlegc
+        }
+        if (service.memoryUpload == null) {
+            service.memoryUpload = memoryUpload
+        }
+        if (service.memoryPage == null) {
+            service.memoryPage = memoryPage
+        }
+        if (service.compressResponses == null) {
+            service.compressResponses = compressResponses
+        }
+        if (service.recaptchaEnable == null) {
+            service.recaptchaEnable = recaptchaEnabled
+        }
+        if (service.recaptchaPrivateKey == null) {
+            service.recaptchaPrivateKey = accessQuestion
+        }
+        if (service.recaptchaPublicKey == null) {
+            service.recaptchaPublicKey = accessAnswer
+        }
+        if (service.feedsEnabled == null) {
+            service.feedsEnabled = feedsEnabled
+        }
+        if (service.feedsDuration == null) {
+            service.feedsDuration = feedsDuration
+        }
+        if (service.feedsRefresh == null) {
+            service.feedsRefresh = feedsRefresh
+        }
+    }
+
+    /**
+     * Setups the default debug.
+     *
+     * @param domain
+     *            the service {@link Domain}.
+     *
+     * @param service
+     *            the {@link GititService}.
+     */
+    void setupDefaultDebug(GititService service, Domain domain) {
+        def level = profileNumberProperty "gitit_default_debug_level", gititProperties
+        def file = gititDefaultDebugFile domain, service
+        def infoEnabled = profileBooleanProperty "gitit_default_debug_information_enabled", gititProperties
+        service.debug = service.debug == null ? debugLoggingFactory.create(level) : service.debug
+        service.debug.args.file = service.debug.args.file == null ? file : service.debug.args.file
+        service.debug.args.infoEnabled = service.debug.args.infoEnabled == null ? infoEnabled : service.debug
     }
 
     /**
@@ -62,13 +180,45 @@ abstract class Gitit_0_10_Config {
      * @see #gititConfigFile(Domain, GititService)
      */
     void deployConfig(Domain domain, GititService service) {
-        def search = gititConfigTemplate.getText(true, "configEnding_search")
-        def replace = wordpressConfigTemplate.getText(true, "configEnding")
-        def temp = new TokenTemplate(search, replace)
-        def configs = [temp]
-        def conf = mainConfiguration domain, service
-        def file = configurationFile domain, service
+        def configs = [
+            configToken("addressConfig", "address", service.binding.addresses[0].address),
+            configToken("portConfig", "port", service.binding.addresses[0].port),
+            configToken("wikititleConfig", "title", service.wikiTitle),
+            configToken("repositorytypeConfig", "type", service.type),
+            configToken("requireauthenticationConfig", "type", service.loginRequired),
+            configToken("authenticationmethodConfig", "method", service.authMethod),
+            configToken("defaultpagetypeConfig", "type", service.pageType),
+            configToken("mathConfig", "math", service.math),
+            configToken("logfileConfig", "file", service.debug.args.file),
+            configToken("loglevelConfig", "level", debugLevelRenderer.toString(service.debug.level)),
+            configToken("frontpageConfig", "page", service.frontPage),
+            configToken("nodeleteConfig", "pages", service.noDeletePages),
+            configToken("noeditConfig", "pages", service.noEditPages),
+            configToken("defaultsummaryConfig", "summary", service.defaultSummary),
+            configToken("tableofcontentsConfig", "enabled", service.tableOfContents),
+            configToken("usecacheConfig", "enabled", service.caching),
+            configToken("maxuploadsizeConfig", "size", service.memoryUpload),
+            configToken("maxpagesizeConfig", "size", service.memoryPage),
+            configToken("debugmodeConfig", "enabled", service.debug.args.infoEnabled),
+            configToken("compressresponsesConfig", "enabled", service.compressResponses),
+            configToken("userecaptchaConfig", "enabled", service.recaptchaEnable),
+            configToken("recaptchaprivatekeyConfig", "key", service.recaptchaPrivateKey),
+            configToken("recaptchapublickeyConfig", "key", service.recaptchaPublicKey),
+            configToken("accessquestionConfig", "question", service.accessQuestion),
+            configToken("accessquestionanswersConfig", "answers", service.accessAnswers),
+            configToken("usefeedConfig", "enabled", service.feedsEnabled),
+            configToken("feeddaysConfig", "days", service.feedsDuration),
+            configToken("feedrefreshtimeConfig", "minutes", service.feedsRefresh),
+        ]
+        def file = gititConfigFile domain, service
+        def conf = currentConfiguration file
         deployConfiguration configurationTokens(), conf, configs, file
+    }
+
+    TokenTemplate configToken(Object[] args) {
+        def search = gititConfigTemplate.getText(true, "${args[0]}Search")
+        def replace = gititConfigTemplate.getText(true, args)
+        new TokenTemplate(search, replace)
     }
 
     /**
@@ -309,6 +459,29 @@ abstract class Gitit_0_10_Config {
         def str = profileProperty "gitit_service_defaults_file", gititProperties
         def name = domainNameAsFileName domain
         new File(new ST(str).add("domainName", name).render())
+    }
+
+    /**
+     * Returns the <i>Gitit</i> service default debug file, for
+     * example {@code "<gititDir>/gitit.log".} The placeholder
+     * {@code "gititDir"} is replaced by the specified <i>Gitit</i> directory.
+     *
+     * @param domain
+     *            the {@link Domain} domain of the service.
+     *
+     * @param service
+     *            the {@link GititService} service.
+     *
+     * @return the default debug {@link File} file.
+     *
+     * <ul>
+     * <li>profile property {@code "gitit_default_debug_file"}</li>
+     * </ul>
+     */
+    File gititDefaultDebugFile(Domain domain, GititService service) {
+        def str = profileProperty "gitit_default_debug_file", gititProperties
+        def dir = gititDir domain, service
+        new File(new ST(str).add("gititDir", dir).render())
     }
 
     /**

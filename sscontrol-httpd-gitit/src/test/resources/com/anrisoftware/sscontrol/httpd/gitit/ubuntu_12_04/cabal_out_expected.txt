@@ -2,3 +2,7 @@ update
 install hsenv
 update
 install hsenv
+update
+install hsenv
+update
+install hsenv

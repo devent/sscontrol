@@ -11,7 +11,7 @@
 	</parent>
 
 	<artifactId>sscontrol-httpd-gitit</artifactId>
-	<name>Robo Bee :: Httpd :: Gitit</name>
+	<name>RoboBee :: Httpd :: Gitit</name>
 	<description>Wiki software Gitit - http://gitit.net</description>
     <inceptionYear>2012</inceptionYear>
     <url>https://www.anr-institute.com/projects/projects/sscontrol-httpd-gitit</url>

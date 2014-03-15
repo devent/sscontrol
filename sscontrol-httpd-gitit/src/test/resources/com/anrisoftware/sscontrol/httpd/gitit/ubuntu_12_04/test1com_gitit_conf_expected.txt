@@ -1,15 +1,27 @@
 # gitit wiki configuration file
 
-address: 0.0.0.0
+# SSCONTROL-httpd
+address: 127.0.0.1
+# SSCONTROL-httpd-END
+
 # sets the IP address on which the web server will listen.
 
-port: 5001
+# SSCONTROL-httpd
+port: 9999
+# SSCONTROL-httpd-END
+
 # sets the port on which the web server will run.
 
-wiki-title: Wiki
+# SSCONTROL-httpd
+wiki-title: Wiki Foo
+# SSCONTROL-httpd-END
+
 # the title of the wiki.
 
+# SSCONTROL-httpd
 repository-type: Git
+# SSCONTROL-httpd-END
+
 # specifies the type of repository used for wiki content.
 # Options are Git, Darcs, and Mercurial.
 
@@ -17,13 +29,19 @@ repository-path: wikidata
 # specifies the path of the repository directory.  If it does not
 # exist, gitit will create it on startup.
 
+# SSCONTROL-httpd
 require-authentication: modify
+# SSCONTROL-httpd-END
+
 # if 'none', login is never required, and pages can be edited anonymously.
 # if 'modify', login is required to modify the wiki (edit, add, delete
 # pages, upload files).
 # if 'read', login is required to see any wiki pages.
 
+# SSCONTROL-httpd
 authentication-method: form
+# SSCONTROL-httpd-END
+
 # 'form' means that users will be logged in and registered
 # using forms in the gitit web interface.  'http' means
 # that gitit will assume that HTTP authentication is in
@@ -51,7 +69,10 @@ static-dir: static
 # css, and images).  If it does not exist, gitit will create it
 # and populate it with required scripts, stylesheets, and images.
 
+# SSCONTROL-httpd
 default-page-type: Markdown
+# SSCONTROL-httpd-END
+
 # specifies the type of markup used to interpret pages in the wiki.
 # Possible values are Markdown, RST, LaTeX, HTML, Markdown+LHS, RST+LHS,
 # and LaTeX+LHS. (The +LHS variants treat the input as
@@ -62,7 +83,10 @@ default-page-type: Markdown
 # rendered correctly if RST is selected. The same goes for LaTeX and
 # HTML.
 
+# SSCONTROL-httpd
 math: MathML
+# SSCONTROL-httpd-END
+
 # specifies how LaTeX math is to be displayed.  Possible values
 # are MathML, raw, mathjax, jsMath, and google.  If mathml is selected,
 # gitit will convert LaTeX math to MathML and link in a script,
@@ -98,37 +122,58 @@ templates-dir: templates
 # Variables to be interpolated appear between $'s. Literal $'s must be
 # backslash-escaped.
 
-log-file: gitit.log
+# SSCONTROL-httpd
+log-file: /tmp/var/www/test1.com/gitit/gitit.log
+# SSCONTROL-httpd-END
+
 # specifies the path of gitit's log file.  If it does not exist,
 # gitit will create it. The log is in Apache combined log format.
 
-log-level: WARNING
+# SSCONTROL-httpd
+log-level: CRITICAL
+# SSCONTROL-httpd-END
+
 # determines how much information is logged.
 # Possible values (from most to least verbose) are DEBUG, INFO,
 # NOTICE, WARNING, ERROR, CRITICAL, ALERT, EMERGENCY.
 
+# SSCONTROL-httpd
 front-page: Front Page
+# SSCONTROL-httpd-END
+
 # specifies which wiki page is to be used as the wiki's front page.
 # Gitit creates a default front page on startup, if one does not exist
 # already.
 
-no-delete: Front Page, Help
+# SSCONTROL-httpd
+no-delete: Front Page,Help
+# SSCONTROL-httpd-END
+
 # specifies pages that cannot be deleted through the web interface.
 # (They can still be deleted directly using git or darcs.)
 # A comma-separated list of page names.  Leave blank to allow
 # every page to be deleted.
 
+# SSCONTROL-httpd
 no-edit: Help
+# SSCONTROL-httpd-END
+
 # specifies pages that cannot be edited through the web interface.
 # Leave blank to allow every page to be edited.
 
-default-summary:
+# SSCONTROL-httpd
+default-summary: Default
+# SSCONTROL-httpd-END
+
 # specifies text to be used in the change description if the author
 # leaves the "description" field blank.  If default-summary is blank
 # (the default), the author will be required to fill in the description
 # field.
 
+# SSCONTROL-httpd
 table-of-contents: yes
+# SSCONTROL-httpd-END
+
 # specifies whether to print a tables of contents (with links to
 # sections) on each wiki page.
 
@@ -142,27 +187,42 @@ plugins:
 # plugins: plugins/DotPlugin
 # plugins: Gitit.Plugin.InterwikiLinks
 
-use-cache: no
+# SSCONTROL-httpd
+use-cache: yes
+# SSCONTROL-httpd-END
+
 # specifies whether to cache rendered pages.  Note that if use-feed
 # is selected, feeds will be cached regardless of the value of use-cache.
 
 cache-dir: cache
 # directory where rendered pages will be cached
 
+# SSCONTROL-httpd
 max-upload-size: 100K
+# SSCONTROL-httpd-END
+
 # specifies an upper limit on the size (in bytes) of files uploaded
 # through the wiki's web interface.
 # To disable uploads, set this to 0K.
 # This will result in the uploads link disappearing
 # and the _upload url becoming inactive.
 
+# SSCONTROL-httpd
 max-page-size: 100K
+# SSCONTROL-httpd-END
+
 # specifies an upper limit on the size (in bytes) of pages
 
-debug-mode: no
+# SSCONTROL-httpd
+debug-mode: yes
+# SSCONTROL-httpd-END
+
 # if "yes", causes debug information to be logged while gitit is running.
 
+# SSCONTROL-httpd
 compress-responses: yes
+# SSCONTROL-httpd-END
+
 # specifies whether HTTP responses should be compressed.
 
 mime-types-file: /etc/mime.types
@@ -173,17 +233,32 @@ mime-types-file: /etc/mime.types
 # video/x-ms-wmx                    wmx
 # If the file is not found, some simple defaults will be used.
 
-use-recaptcha: no
+# SSCONTROL-httpd
+use-recaptcha: yes
+# SSCONTROL-httpd-END
+
 # if "yes", causes gitit to use the reCAPTCHA service
 # (http://recaptcha.net) to prevent bots from creating accounts.
 
-recaptcha-private-key:
-recaptcha-public-key:
+# SSCONTROL-httpd
+recaptcha-private-key: private.key
+# SSCONTROL-httpd-END
+
+# SSCONTROL-httpd
+recaptcha-public-key: public.key
+# SSCONTROL-httpd-END
+
 # specifies the public and private keys for the reCAPTCHA service.
 # To get these, you need to create an account at http://recaptcha.net.
 
-access-question:
-access-question-answers:
+# SSCONTROL-httpd
+access-question: Foo?
+# SSCONTROL-httpd-END
+
+# SSCONTROL-httpd
+access-question-answers: Bar
+# SSCONTROL-httpd-END
+
 # specifies a question that users must answer when they attempt to create
 # an account, along with a comma-separated list of acceptable answers.
 # This can be used to institute a rudimentary password for signing up as
@@ -232,7 +307,10 @@ reset-password-message:
 # http://$hostname$/path/to/wiki$resetlink$ or
 # http://gitit.$hostname$$resetlink$
 
-use-feed: no
+# SSCONTROL-httpd
+use-feed: yes
+# SSCONTROL-httpd-END
+
 # specifies whether an ATOM feed should be enabled (for the site and for
 # individual pages)
 
@@ -248,10 +326,16 @@ absolute-urls: no
 # '/wiki/Cactus' if absolute-urls is 'yes', and a relative link to 'Cactus'
 # (referring to '/wiki/Sub/Cactus') if absolute-urls is 'no'.
 
-feed-days: 14
+# SSCONTROL-httpd
+feed-days: 5
+# SSCONTROL-httpd-END
+
 # number of days to be included in feeds.
 
-feed-refresh-time: 60
+# SSCONTROL-httpd
+feed-refresh-time: 10
+# SSCONTROL-httpd-END
+
 # number of minutes to cache feeds before refreshing
 
 pdf-export: no

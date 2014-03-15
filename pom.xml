@@ -23,6 +23,7 @@
         <module>sscontrol-httpd</module>
         <module>sscontrol-httpd-apache</module>
         <module>sscontrol-httpd-nginx</module>
+        <module>sscontrol-httpd-gitit</module>
         <module>sscontrol-ldap</module>
         <module>sscontrol-ldap-openldap</module>
         <module>sscontrol-mail</module>

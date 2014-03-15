@@ -256,7 +256,7 @@ public class GititService implements WebService {
     /**
      * Sets the IP addresses or host names to where to bind the <i>Gitit</i>
      * service.
-     * 
+     *
      * @see BindingFactory#create(Map, String...)
      */
     public void bind(Map<String, Object> args) throws ServiceException {
@@ -268,7 +268,7 @@ public class GititService implements WebService {
     /**
      * Sets the IP addresses or host names to where to bind the <i>Gitit</i>
      * service.
-     * 
+     *
      * @see BindingFactory#create(BindingAddress)
      */
     public void bind(BindingAddress address) throws ServiceException {
@@ -279,7 +279,7 @@ public class GititService implements WebService {
     /**
      * Returns a list of the IP addresses where to bind the <i>Gitit</i>
      * service.
-     * 
+     *
      * @return the {@link Binding}.
      */
     public Binding getBinding() {
@@ -327,6 +327,10 @@ public class GititService implements WebService {
         return type;
     }
 
+    public void setCaching(boolean enabled) {
+        statementsMap.putMapValue(CACHING, ENABLED, enabled);
+    }
+
     public Boolean getCaching() {
         Object value = statementsMap.mapValue(CACHING, ENABLED);
         if (value instanceof YesNoFlag) {
@@ -335,40 +339,80 @@ public class GititService implements WebService {
         return (Boolean) value;
     }
 
+    public void setWikiTitle(String title) {
+        statementsMap.putMapValue(WIKI, TITLE, title);
+    }
+
     public String getWikiTitle() {
         return statementsMap.mapValue(WIKI, TITLE);
+    }
+
+    public void setLoginRequired(LoginRequired required) {
+        statementsMap.putMapValue(LOGIN, REQUIRED, required);
     }
 
     public LoginRequired getLoginRequired() {
         return statementsMap.mapValue(LOGIN, REQUIRED);
     }
 
+    public void setAuthMethod(AuthMethod method) {
+        statementsMap.putMapValue(AUTH, METHOD, method);
+    }
+
     public AuthMethod getAuthMethod() {
         return statementsMap.mapValue(AUTH, METHOD);
+    }
+
+    public void setPageType(String type) {
+        statementsMap.putMapValue(PAGE, TYPE, type);
     }
 
     public String getPageType() {
         return statementsMap.mapValue(PAGE, TYPE);
     }
 
+    public void setMath(String math) {
+        statementsMap.putValue(MATH, math);
+    }
+
     public String getMath() {
         return statementsMap.value(MATH);
+    }
+
+    public void setFrontPage(String page) {
+        statementsMap.putValue(FRONTPAGE, page);
     }
 
     public String getFrontPage() {
         return statementsMap.value(FRONTPAGE);
     }
 
+    public void setNoDeletePages(List<String> pages) {
+        statementsMap.putValue(NODELETE, pages);
+    }
+
     public List<String> getNoDeletePages() {
         return statementsMap.valueAsList(NODELETE);
+    }
+
+    public void setNoEditPages(List<String> pages) {
+        statementsMap.putValue(NOEDIT, pages);
     }
 
     public List<String> getNoEditPages() {
         return statementsMap.valueAsList(NOEDIT);
     }
 
+    public void setDefaultSummary(String summary) {
+        statementsMap.putValue(DEFAULTSUMMARY, summary);
+    }
+
     public String getDefaultSummary() {
         return statementsMap.value(DEFAULTSUMMARY);
+    }
+
+    public void setTableOfContents(boolean enabled) {
+        statementsMap.putValue(TABLEOFCONTENTS, enabled);
     }
 
     public Boolean getTableOfContents() {
@@ -379,6 +423,10 @@ public class GititService implements WebService {
         return (Boolean) value;
     }
 
+    public void setIdleGc(boolean gc) {
+        statementsMap.putMapValue(IDLE, GC, gc);
+    }
+
     public Boolean getIdleGc() {
         Object value = statementsMap.mapValue(IDLE, GC);
         if (value instanceof YesNoFlag) {
@@ -387,14 +435,34 @@ public class GititService implements WebService {
         return (Boolean) value;
     }
 
-    public long getMemoryUpload() throws ParseException {
-        String value = statementsMap.mapValue(MEMORY, MEMORY_UPLOAD);
-        return byteFormatFactory.create().parse(value, KILO);
+    public void setMemoryUpload(String kb) {
+        statementsMap.putMapValue(MEMORY, MEMORY_UPLOAD, kb);
     }
 
-    public long getMemoryPage() throws ParseException {
+    public Long getMemoryUpload() throws ParseException {
+        String value = statementsMap.mapValue(MEMORY, MEMORY_UPLOAD);
+        if (value != null) {
+            return byteFormatFactory.create().parse(value, KILO);
+        } else {
+            return null;
+        }
+    }
+
+    public void setMemoryPage(String kb) {
+        statementsMap.putMapValue(MEMORY, MEMORY_PAGE, kb);
+    }
+
+    public Long getMemoryPage() throws ParseException {
         String value = statementsMap.mapValue(MEMORY, MEMORY_PAGE);
-        return byteFormatFactory.create().parse(value, KILO);
+        if (value != null) {
+            return byteFormatFactory.create().parse(value, KILO);
+        } else {
+            return null;
+        }
+    }
+
+    public void setCompressResponses(boolean responses) {
+        statementsMap.putMapValue(COMPRESS, RESPONSES, responses);
     }
 
     public Boolean getCompressResponses() {
@@ -405,6 +473,10 @@ public class GititService implements WebService {
         return (Boolean) value;
     }
 
+    public void setRecaptchaEnable(boolean enabled) {
+        statementsMap.putMapValue(RECAPTCHA, ENABLED, enabled);
+    }
+
     public Boolean getRecaptchaEnable() {
         Object value = statementsMap.mapValue(RECAPTCHA, ENABLED);
         if (value instanceof YesNoFlag) {
@@ -413,20 +485,40 @@ public class GititService implements WebService {
         return (Boolean) value;
     }
 
+    public void setRecaptchaPrivateKey(String key) {
+        statementsMap.putMapValue(RECAPTCHA, PRIVATEKEY, key);
+    }
+
     public String getRecaptchaPrivateKey() {
         return statementsMap.mapValue(RECAPTCHA, PRIVATEKEY);
+    }
+
+    public void setRecaptchaPublicKey(String key) {
+        statementsMap.putMapValue(RECAPTCHA, PUBLICKEY, key);
     }
 
     public String getRecaptchaPublicKey() {
         return statementsMap.mapValue(RECAPTCHA, PUBLICKEY);
     }
 
+    public void setAccessQuestion(String question) {
+        statementsMap.putMapValue(ACCESS, ACCESS_QUESTION, question);
+    }
+
     public String getAccessQuestion() {
         return statementsMap.mapValue(ACCESS, ACCESS_QUESTION);
     }
 
+    public void setAccessAnswers(String answers) {
+        statementsMap.putMapValue(ACCESS, ACCESS_ANSWER, answers);
+    }
+
     public String getAccessAnswers() {
         return statementsMap.mapValue(ACCESS, ACCESS_ANSWER);
+    }
+
+    public void setFeedsEnabled(boolean enabled) {
+        statementsMap.putMapValue(FEEDS, ENABLED, enabled);
     }
 
     public Boolean getFeedsEnabled() {
@@ -437,14 +529,30 @@ public class GititService implements WebService {
         return (Boolean) value;
     }
 
-    public long getFeedsDuration() throws ParseException {
-        String d = statementsMap.mapValue(FEEDS, FEEDS_DURATION);
-        return durationFormatFactory.create().parse(d).getStandardDays();
+    public void setFeedsDuration(String days) {
+        statementsMap.putMapValue(FEEDS, FEEDS_DURATION, days);
     }
 
-    public long getFeedsRefresh() throws ParseException {
+    public Long getFeedsDuration() throws ParseException {
+        String d = statementsMap.mapValue(FEEDS, FEEDS_DURATION);
+        if (d != null) {
+            return durationFormatFactory.create().parse(d).getStandardDays();
+        } else {
+            return null;
+        }
+    }
+
+    public void setFeedsRefresh(String minutes) {
+        statementsMap.putMapValue(FEEDS, FEEDS_REFRESH, minutes);
+    }
+
+    public Long getFeedsRefresh() throws ParseException {
         String d = statementsMap.mapValue(FEEDS, FEEDS_REFRESH);
-        return durationFormatFactory.create().parse(d).getStandardMinutes();
+        if (d != null) {
+            return durationFormatFactory.create().parse(d).getStandardMinutes();
+        } else {
+            return null;
+        }
     }
 
     public Object methodMissing(String name, Object args)

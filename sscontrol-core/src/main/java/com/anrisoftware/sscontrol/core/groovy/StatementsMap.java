@@ -117,7 +117,46 @@ public class StatementsMap implements Serializable {
      * @return the {@link List} list.
      */
     public List<String> valueAsList(String name) {
-        return toListFactory.create(value(name)).getList();
+        Object value = value(name);
+        if (value != null) {
+            return toListFactory.create(value).getList();
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Puts the statement value with the specified name.
+     * 
+     * @param name
+     *            the {@link String} name.
+     * 
+     * @param key
+     *            the {@link String} key.
+     * 
+     * @param value
+     *            the {@link Object} value.
+     */
+    public void putMapValue(String name, String key, Object value) {
+        Map<String, Object> map = value(name);
+        if (map == null) {
+            map = new HashMap<String, Object>();
+            args.put(name, map);
+        }
+        map.put(key, value);
+    }
+
+    /**
+     * Puts the statement value with the specified name.
+     * 
+     * @param name
+     *            the {@link String} name.
+     * 
+     * @param value
+     *            the {@link Object} value.
+     */
+    public void putValue(String name, Object value) {
+        args.put(name, value);
     }
 
     @SuppressWarnings("rawtypes")

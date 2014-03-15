@@ -1,7 +1,223 @@
-addressConfigSearch(args) ::= <%
+addressConfigSearch() ::= <%
 address:.*
 %>
 
-portConfigSearch(args) ::= <%
+addressConfig(address) ::= <%
+address: <address>
+%>
+
+portConfigSearch() ::= <%
 port:.*
+%>
+
+portConfig(port) ::= <%
+port: <port>
+%>
+
+wikititleConfigSearch() ::= <%
+wiki-title:.*
+%>
+
+wikititleConfig(title) ::= <%
+wiki-title: <title>
+%>
+
+repositorytypeConfigSearch() ::= <%
+repository-type:.*
+%>
+
+repositorytypeConfig(type) ::= <%
+repository-type: <type>
+%>
+
+requireauthenticationConfigSearch() ::= <%
+require-authentication:.*
+%>
+
+requireauthenticationConfig(type) ::= <%
+require-authentication: <type>
+%>
+
+authenticationmethodConfigSearch() ::= <%
+authentication-method:.*
+%>
+
+authenticationmethodConfig(method) ::= <%
+authentication-method: <method>
+%>
+
+defaultpagetypeConfigSearch() ::= <%
+default-page-type:.*
+%>
+
+defaultpagetypeConfig(type) ::= <%
+default-page-type: <type>
+%>
+
+mathConfigSearch() ::= <%
+math:.*
+%>
+
+mathConfig(math) ::= <%
+math: <math>
+%>
+
+logfileConfigSearch() ::= <%
+log-file:.*
+%>
+
+logfileConfig(file) ::= <%
+log-file: <file>
+%>
+
+loglevelConfigSearch() ::= <%
+log-level:.*
+%>
+
+loglevelConfig(level) ::= <%
+log-level: <level>
+%>
+
+frontpageConfigSearch() ::= <%
+front-page:.*
+%>
+
+frontpageConfig(page) ::= <%
+front-page: <page>
+%>
+
+nodeleteConfigSearch() ::= <%
+no-delete:.*
+%>
+
+nodeleteConfig(pages) ::= <%
+no-delete: <pages;separator=",">
+%>
+
+noeditConfigSearch() ::= <%
+no-edit:.*
+%>
+
+noeditConfig(pages) ::= <%
+no-edit: <pages;separator=",">
+%>
+
+defaultsummaryConfigSearch() ::= <%
+default-summary:.*
+%>
+
+defaultsummaryConfig(summary) ::= <%
+default-summary: <summary>
+%>
+
+tableofcontentsConfigSearch() ::= <%
+table-of-contents:.*
+%>
+
+tableofcontentsConfig(enabled) ::= <%
+table-of-contents: <if(enabled)>yes<else>no<endif>
+%>
+
+usecacheConfigSearch() ::= <%
+use-cache:.*
+%>
+
+usecacheConfig(enabled) ::= <%
+use-cache: <if(enabled)>yes<else>no<endif>
+%>
+
+maxuploadsizeConfigSearch() ::= <%
+max-upload-size:.*
+%>
+
+maxuploadsizeConfig(size) ::= <%
+max-upload-size: <size>K
+%>
+
+maxpagesizeConfigSearch() ::= <%
+max-page-size:.*
+%>
+
+maxpagesizeConfig(size) ::= <%
+max-page-size: <size>K
+%>
+
+debugmodeConfigSearch() ::= <%
+debug-mode:.*
+%>
+
+debugmodeConfig(enabled) ::= <%
+debug-mode: <if(enabled)>yes<else>no<endif>
+%>
+
+compressresponsesConfigSearch() ::= <%
+compress-responses:.*
+%>
+
+compressresponsesConfig(enabled) ::= <%
+compress-responses: <if(enabled)>yes<else>no<endif>
+%>
+
+userecaptchaConfigSearch() ::= <%
+use-recaptcha:.*
+%>
+
+userecaptchaConfig(enabled) ::= <%
+use-recaptcha: <if(enabled)>yes<else>no<endif>
+%>
+
+recaptchaprivatekeyConfigSearch() ::= <%
+recaptcha-private-key:.*
+%>
+
+recaptchaprivatekeyConfig(key) ::= <%
+recaptcha-private-key: <key>
+%>
+
+recaptchapublickeyConfigSearch() ::= <%
+recaptcha-public-key:.*
+%>
+
+recaptchapublickeyConfig(key) ::= <%
+recaptcha-public-key: <key>
+%>
+
+accessquestionConfigSearch() ::= <%
+access-question:.*
+%>
+
+accessquestionConfig(question) ::= <%
+access-question: <question>
+%>
+
+accessquestionanswersConfigSearch() ::= <%
+access-question-answers:.*
+%>
+
+accessquestionanswersConfig(answers) ::= <%
+access-question-answers: <answers;separator=",">
+%>
+
+usefeedConfigSearch() ::= <%
+use-feed:.*
+%>
+
+usefeedConfig(enabled) ::= <%
+use-feed: <if(enabled)>yes<else>no<endif>
+%>
+
+feeddaysConfigSearch() ::= <%
+feed-days:.*
+%>
+
+feeddaysConfig(days) ::= <%
+feed-days: <days>
+%>
+
+feedrefreshtimeConfigSearch() ::= <%
+feed-refresh-time:.*
+%>
+
+feedrefreshtimeConfig(minutes) ::= <%
+feed-refresh-time: <minutes>
 %>

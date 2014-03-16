@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2013 Erwin Müller <erwin.mueller@deventm.org>
+ * Copyright 2012-2014 Erwin Müller <erwin.mueller@deventm.org>
  *
  * This file is part of sscontrol-workers.
  *

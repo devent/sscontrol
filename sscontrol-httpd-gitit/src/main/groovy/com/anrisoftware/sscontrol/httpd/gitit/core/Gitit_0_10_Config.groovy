@@ -508,6 +508,60 @@ abstract class Gitit_0_10_Config {
     }
 
     /**
+     * Returns the service location.
+     *
+     * @param service
+     *            the {@link GititService}.
+     *
+     * @return the location.
+     */
+    String serviceLocation(GititService service) {
+        String location = service.alias == null ? "" : service.alias
+        if (!location.startsWith("/")) {
+            location = "/$location"
+        }
+        return location
+    }
+
+    /**
+     * Returns the service alias directory path.
+     *
+     * @param domain
+     *            the {@link Domain} for which the path is returned.
+     *
+     * @param refDomain
+     *            the references {@link Domain} or {@code null}.
+     *
+     * @param service
+     *            the <i>Gitit</i> {@link GititService} service.
+     *
+     * @see #serviceDir(Domain, Domain, GititService)
+     */
+    String serviceAliasDir(Domain domain, Domain refDomain, GititService service) {
+        def serviceDir = serviceDir domain, refDomain, service
+        service.alias.empty ? "$serviceDir/" : serviceDir
+    }
+
+    /**
+     * Returns the service directory path.
+     *
+     * @param domain
+     *            the {@link Domain} for which the path is returned.
+     *
+     * @param refDomain
+     *            the references {@link Domain} or {@code null}.
+     *
+     * @param service
+     *            the <i>Gitit</i> {@link GititService} service.
+     *
+     * @see #gititDir(Domain, GititService)
+     */
+    String serviceDir(Domain domain, Domain refDomain, GititService service) {
+        refDomain == null ? gititDir(domain, service).absolutePath :
+                gititDir(refDomain, service).absolutePath
+    }
+
+    /**
      * Returns the <i>Gitit</i> command.
      *
      * @param domain

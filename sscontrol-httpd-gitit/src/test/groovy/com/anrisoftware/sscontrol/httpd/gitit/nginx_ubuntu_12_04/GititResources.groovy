@@ -47,12 +47,15 @@ enum GititResources {
     // expected
     test1comConfExpected("/etc/apache2/sites-available/100-robobee-test1.com.conf", GititResources.class.getResource("test1com_conf_expected.txt")),
     wwwtest1comConfExpected("/etc/apache2/sites-available/100-robobee-www.test1.com.conf", GititResources.class.getResource("wwwtest1com_conf_expected.txt")),
+    test2comConfExpected("/etc/apache2/sites-available/100-robobee-test2.com.conf", GititResources.class.getResource("test2com_conf_expected.txt")),
     test1comGititConfExpected("/var/www/test1.com/gitit/gitit.conf", GititResources.class.getResource("test1com_gitit_conf_expected.txt")),
     cabalOutExpected("/usr/bin/cabal.out", GititResources.class.getResource("cabal_out_expected.txt")),
     hsenvCabalOutExpected("/var/www/test1.com/gitit/.hsenv/bin/cabal.out", GititResources.class.getResource("hsenvcabal_out_expected.txt")),
     tarOutExpected("/bin/tar.out", GititResources.class.getResource("tar_out_expected.txt")),
     test1comgititdServiceExpected("/etc/init.d/test1_com_gititd", GititResources.class.getResource("test1comgititd_service_expected.txt")),
     test1comgititdDefaultsExpected("/etc/default/test1_com_gititd", GititResources.class.getResource("test1comgititd_defaults_expected.txt")),
+    test2comgititdServiceExpected("/etc/init.d/test2_com_gititd", GititResources.class.getResource("test2comgititd_service_expected.txt")),
+    test2comgititdDefaultsExpected("/etc/default/test2_com_gititd", GititResources.class.getResource("test2comgititd_defaults_expected.txt")),
     chmodOutExpected("/bin/chmod.out", GititResources.class.getResource("chmod_out_expected.txt")),
 
     static copyGititFiles(File parent) {

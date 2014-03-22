@@ -51,12 +51,16 @@ class GititTest extends UbuntuTestUtil {
         registry.allServices.each { it.call() }
 
         assertStringContent test1comConfExpected.replaced(tmpdir, tmpdir, "/tmp"), test1comConfExpected.toString()
+        assertStringContent wwwtest1comConfExpected.replaced(tmpdir, tmpdir, "/tmp"), wwwtest1comConfExpected.toString()
+        assertStringContent test2comConfExpected.replaced(tmpdir, tmpdir, "/tmp"), test2comConfExpected.toString()
         assertStringContent tarOutExpected.replaced(tmpdir, tmpdir, "/tmp"), tarOutExpected.toString()
         assertStringContent test1comGititConfExpected.replaced(tmpdir, tmpdir, "/tmp"), test1comGititConfExpected.toString()
         assertFileContent cabalOutExpected.asFile(tmpdir), cabalOutExpected
         assertFileContent hsenvCabalOutExpected.asFile(tmpdir), hsenvCabalOutExpected
         assertStringContent test1comgititdServiceExpected.replaced(tmpdir, tmpdir, "/tmp"), test1comgititdServiceExpected.toString()
         assertStringContent test1comgititdDefaultsExpected.replaced(tmpdir, tmpdir, "/tmp"), test1comgititdDefaultsExpected.toString()
+        assertStringContent test2comgititdServiceExpected.replaced(tmpdir, tmpdir, "/tmp"), test2comgititdServiceExpected.toString()
+        assertStringContent test2comgititdDefaultsExpected.replaced(tmpdir, tmpdir, "/tmp"), test2comgititdDefaultsExpected.toString()
         assertStringContent chmodOutExpected.replaced(tmpdir, tmpdir, "/tmp"), chmodOutExpected.toString()
     }
 }

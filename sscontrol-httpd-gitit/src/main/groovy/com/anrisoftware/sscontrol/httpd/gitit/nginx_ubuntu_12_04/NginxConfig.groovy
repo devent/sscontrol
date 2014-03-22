@@ -38,22 +38,50 @@ class NginxConfig extends Ubuntu_12_04_Config implements ServiceConfig {
 
     Templates gititNginxTemplates
 
-    TemplateResource gititNginxCommandTemplate
+    TemplateResource gititDomainTemplate
 
     @Override
     void deployDomain(Domain domain, Domain refDomain, WebService service, List config) {
         super.deployDomain domain, refDomain, service, config
+        createDomainConfig domain, refDomain, service, config
     }
 
     @Override
     void deployService(Domain domain, WebService service, List config) {
         super.deployService domain, service, config
+        createDomainConfig domain, null, service, config
+    }
+
+    /**
+     * Creates the domain configuration.
+     *
+     * @param domain
+     *            the {@link Domain}.
+     *
+     * @param refDomain
+     *            the referenced {@link Domain}.
+     *
+     * @param service
+     *            the <i>Gitit</i> {@link GititService} service.
+     *
+     * @param config
+     *            the {@link List} configuration.
+     */
+    void createDomainConfig(Domain domain, Domain refDomain, GititService service, List config) {
+        def serviceAliasDir = serviceAliasDir domain, refDomain, service
+        def serviceDir = serviceDir domain, refDomain, service
+        def args = [:]
+        args.address = service.binding.addresses[0].address
+        args.port = service.binding.addresses[0].port
+        properties.location = serviceAliasDir
+        def configStr = gititDomainTemplate.getText(true, "domainConfig", "args", args)
+        config << configStr
     }
 
     @Override
     public void setScript(LinuxScript script) {
         super.setScript(script)
-        //gititTemplates = templatesFactory.create "Gitit_Ubuntu_12_04", ["renderers": [repositoryTypeRenderer]]
-        //gititCommandTemplate = gititTemplates.getResource "gititcommands"
+        gititTemplates = templatesFactory.create "Gitit_Nginx_Ubuntu_12_04"
+        gititDomainTemplate = gititTemplates.getResource "domainconfig"
     }
 }

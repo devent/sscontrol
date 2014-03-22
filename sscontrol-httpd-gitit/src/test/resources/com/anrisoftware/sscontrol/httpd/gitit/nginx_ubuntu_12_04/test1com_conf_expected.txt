@@ -6,9 +6,11 @@ server {
     server_name test1.com;
     client_max_body_size 2M;
 
-    location / {
+    # gitit
+    location  {
         proxy_pass http://127.0.0.1:9999/;
         proxy_set_header X-Real-IP  $remote_addr;
         proxy_redirect off;
     }
+
 }

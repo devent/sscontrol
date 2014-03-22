@@ -1,0 +1,9 @@
+domainConfig(args) ::= <<
+# gitit
+location <args.location> {
+    proxy_pass http://<args.address>:<args.port>/;
+    proxy_set_header X-Real-IP  $remote_addr;
+    proxy_redirect off;
+}
+
+>>

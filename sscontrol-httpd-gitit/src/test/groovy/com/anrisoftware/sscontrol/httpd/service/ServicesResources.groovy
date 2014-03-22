@@ -31,8 +31,8 @@ import com.anrisoftware.sscontrol.httpd.resources.ResourcesUtils
  */
 enum ServicesResources {
 
-    profile("UbuntuProfile.groovy", ServicesResources.class.getResource("/com/anrisoftware/sscontrol/httpd/gitit/ubuntu_12_04/UbuntuProfile.groovy")),
-    gititScript("Httpd.groovy", ServicesResources.class.getResource("/com/anrisoftware/sscontrol/httpd/gitit/ubuntu_12_04/HttpdGitit.groovy")),
+    profile("UbuntuProfile.groovy", ServicesResources.class.getResource("/com/anrisoftware/sscontrol/httpd/gitit/nginx_ubuntu_12_04/UbuntuProfile.groovy")),
+    gititScript("Httpd.groovy", ServicesResources.class.getResource("/com/anrisoftware/sscontrol/httpd/gitit/nginx_ubuntu_12_04/HttpdGitit.groovy")),
 
     ResourcesUtils resources
 

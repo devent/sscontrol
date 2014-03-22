@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd-gitit. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.gitit.ubuntu_12_04;
+package com.anrisoftware.sscontrol.httpd.gitit.nginx_ubuntu_12_04;
 
 import com.google.inject.AbstractModule;
 
@@ -26,7 +26,7 @@ import com.google.inject.AbstractModule;
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class UbuntuModule extends AbstractModule {
+class NginxModule extends AbstractModule {
 
     @Override
     protected void configure() {

@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd-gitit. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.gitit.ubuntu_12_04;
+package com.anrisoftware.sscontrol.httpd.gitit.nginx_ubuntu_12_04;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.mangosdk.spi.ProviderFor;
@@ -29,8 +29,8 @@ import com.google.inject.Injector;
 import com.google.inject.Module;
 
 /**
- * <i>Gitit</i> configuration factory for <i>Ubuntu 12.04</i>.
- *
+ * <i>Gitit</i> configuration factory for <i>Nginx Ubuntu 12.04</i>.
+ * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
@@ -45,7 +45,12 @@ public class GititConfigFactory implements ServiceConfigFactory {
     /**
      * <i>Gitit</i> service name.
      */
-    public static final String SERVICE_NAME = "gitit";
+    public static final String WEB_NAME = "gitit";
+
+    /**
+     * <i>Nginx</i> service name.
+     */
+    public static final String NGINX_NAME = "nginx";
 
     /**
      * <i>Gitit</i> service information.
@@ -55,7 +60,12 @@ public class GititConfigFactory implements ServiceConfigFactory {
 
         @Override
         public String getServiceName() {
-            return SERVICE_NAME;
+            return NGINX_NAME;
+        }
+
+        @Override
+        public String getWebName() {
+            return WEB_NAME;
         }
 
         @Override
@@ -64,7 +74,7 @@ public class GititConfigFactory implements ServiceConfigFactory {
         }
     };
 
-    private static final Module[] MODULES = new Module[] { new UbuntuModule() };
+    private static final Module[] MODULES = new Module[] { new NginxModule() };
 
     private Injector injector;
 
@@ -73,7 +83,7 @@ public class GititConfigFactory implements ServiceConfigFactory {
 
     @Override
     public ServiceConfig getScript() throws ServiceException {
-        return injector.getInstance(UbuntuConfig.class);
+        return injector.getInstance(NginxConfig.class);
     }
 
     @Override

@@ -28,6 +28,7 @@ import com.anrisoftware.sscontrol.httpd.domain.Domain
 import com.anrisoftware.sscontrol.httpd.gitit.GititService
 import com.anrisoftware.sscontrol.httpd.gitit.core.Gitit_0_10_Config
 import com.anrisoftware.sscontrol.httpd.gitit.core.RepositoryTypeRenderer
+import com.anrisoftware.sscontrol.httpd.gitit.nginx_ubuntu_12_04.GititConfigFactory;
 import com.anrisoftware.sscontrol.httpd.webservice.ServiceConfig
 import com.anrisoftware.sscontrol.httpd.webservice.WebService
 
@@ -37,7 +38,7 @@ import com.anrisoftware.sscontrol.httpd.webservice.WebService
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class UbuntuConfig extends Gitit_0_10_Config implements ServiceConfig {
+class Ubuntu_12_04_Config extends Gitit_0_10_Config implements ServiceConfig {
 
     @Inject
     private RepositoryTypeRenderer repositoryTypeRenderer

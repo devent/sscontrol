@@ -32,7 +32,7 @@ import com.anrisoftware.sscontrol.httpd.domain.Domain
 import com.anrisoftware.sscontrol.httpd.gitit.AuthMethod
 import com.anrisoftware.sscontrol.httpd.gitit.GititService
 import com.anrisoftware.sscontrol.httpd.gitit.LoginRequired
-import com.anrisoftware.sscontrol.httpd.gitit.ubuntu_12_04.GititConfigFactory
+import com.anrisoftware.sscontrol.httpd.gitit.nginx_ubuntu_12_04.GititConfigFactory
 import com.anrisoftware.sscontrol.httpd.webservice.WebService
 import com.anrisoftware.sscontrol.workers.command.exec.ExecCommandWorkerFactory
 import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokenTemplate
@@ -538,7 +538,7 @@ abstract class Gitit_0_10_Config {
      * Returns the <i>Gitit</i> service name.
      */
     String getServiceName() {
-        GititConfigFactory.SERVICE_NAME
+        GititConfigFactory.WEB_NAME
     }
 
     /**

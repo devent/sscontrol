@@ -48,6 +48,8 @@ import com.google.inject.Injector
  */
 abstract class NginxScript extends LinuxScript {
 
+    private static final String NGINX_NAME = "nginx"
+
     @Inject
     private NginxScriptLogger log
 
@@ -122,7 +124,7 @@ abstract class NginxScript extends LinuxScript {
 
     private ServiceConfig findWebServicesConfigProvider(String profile, WebService service) {
         def factory = webServicesConfigProvider.find(
-                [getServiceName: { service.name }, getProfileName: { profile }] as ServiceConfigInfo)
+                [getServiceName: { NGINX_NAME }, getWebName: { service.name }, getProfileName: { profile }] as ServiceConfigInfo)
         factory.setParent injector
         def script = factory.getScript()
         script.setScript this

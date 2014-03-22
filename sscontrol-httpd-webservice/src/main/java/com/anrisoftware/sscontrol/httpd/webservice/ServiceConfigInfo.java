@@ -24,7 +24,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 /**
- * Information that identifies the service configuration.
+ * Information that identifies the web service configuration.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
@@ -32,18 +32,25 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 @SuppressWarnings("serial")
 public abstract class ServiceConfigInfo implements Serializable {
 
+    private static final String WEB = "web";
     private static final String PROFILE = "profile";
     private static final String SERVICE = "service";
 
     /**
-     * Returns the service name.
-     * <p>
-     * The service name is the name of the service implementation. For example
-     * for a DNS service there are Bind, MaraDNS and other implementations.
+     * Returns the HTTPD service name for the web service, for example
+     * <i>apache, nginx</i>.
      * 
      * @return the service name.
      */
     public abstract String getServiceName();
+
+    /**
+     * Returns the web service name, for example {@code "wordpress"} for
+     * <i>Wordpress</i>.
+     * 
+     * @return the web service name.
+     */
+    public abstract String getWebName();
 
     /**
      * Returns the profile name.
@@ -69,6 +76,7 @@ public abstract class ServiceConfigInfo implements Serializable {
         ServiceConfigInfo rhs = (ServiceConfigInfo) obj;
         return new EqualsBuilder()
                 .append(getServiceName(), rhs.getServiceName())
+                .append(getWebName(), rhs.getWebName())
                 .append(getProfileName(), rhs.getProfileName()).isEquals();
     }
 
@@ -76,6 +84,7 @@ public abstract class ServiceConfigInfo implements Serializable {
     public String toString() {
         ToStringBuilder builder = new ToStringBuilder(this);
         builder.append(SERVICE, getServiceName());
+        builder.append(WEB, getWebName());
         builder.append(PROFILE, getProfileName());
         return builder.toString();
     }

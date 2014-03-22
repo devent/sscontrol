@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd-gitit. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.gitit.ubuntu_12_04
+package com.anrisoftware.sscontrol.httpd.gitit.nginx_ubuntu_12_04
 
 import com.anrisoftware.sscontrol.httpd.gitit.AuthMethod
 import com.anrisoftware.sscontrol.httpd.gitit.LoginRequired
@@ -50,10 +50,9 @@ httpd {
     domain "www.test1.com", address: "192.168.0.51", {
         setup "gitit", ref: "gititid", refdomain: "testid"
     }
-    domain "test2.com", address: "192.168.0.51", {
-        setup "gitit", id: "gititid", alias: "/", type: RepositoryType.git, prefix: "gitit", {
-            bind address: "127.0.0.1", port: 9999
-            wiki title: "Wiki Foo"
+    domain "test2.com", address: "192.168.0.52", {
+        setup "gitit", id: "gititid", alias: "/", type: RepositoryType.git, prefix: "gitit", { //.
+            wiki title: "Wiki Foo" //.
         }
     }
 }

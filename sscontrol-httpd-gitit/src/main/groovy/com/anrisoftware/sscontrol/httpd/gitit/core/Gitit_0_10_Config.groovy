@@ -86,6 +86,8 @@ abstract class Gitit_0_10_Config {
      */
     void setupDefaults(Domain domain, GititService service) {
         setupDefaultDebug service, domain
+        def address = profileProperty("gitit_default_bind_address", gititProperties)
+        def port = profileNumberProperty("gitit_default_bind_port", gititProperties).intValue()
         def loginRequired = LoginRequired.valueOf(profileProperty("gitit_default_login_required", gititProperties))
         def authMethod = AuthMethod.valueOf(profileProperty("gitit_default_auth_method", gititProperties))
         def pageType = profileProperty("gitit_default_page_type", gititProperties)
@@ -106,6 +108,9 @@ abstract class Gitit_0_10_Config {
         def feedsEnabled = profileBooleanProperty("gitit_default_feeds_enabled", gititProperties)
         def feedsDuration = profileProperty("gitit_default_feeds_duration", gititProperties)
         def feedsRefresh = profileProperty("gitit_default_feeds_refresh", gititProperties)
+        if (service.binding.addresses.size() == 0) {
+            service.bind address: address, port: port
+        }
         if (service.loginRequired == null) {
             service.loginRequired = loginRequired
         }

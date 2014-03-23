@@ -114,11 +114,6 @@ class ProfilePropertiesImpl implements ProfileProperties {
     }
 
     @Override
-    public boolean containsKey(String key) {
-        return properties.containsKey(key);
-    }
-
-    @Override
     public Object get(String key) {
         return properties.get(key);
     }
@@ -152,6 +147,31 @@ class ProfilePropertiesImpl implements ProfileProperties {
     @Override
     public Set<String> getKeys() {
         return UnmodifiableSet.decorate(properties.keySet());
+    }
+
+    @Override
+    public boolean containsKey(String key) {
+        return properties.containsKey(key);
+    }
+
+    /**
+     * Checks that the specified profile key is known for the profile.
+     * 
+     * @param key
+     *            the property {@link String} key.
+     * 
+     * @param defaults
+     *            default {@link ContextProperties} properties.
+     * 
+     * @return {@code true} if the profile key is known in the profile or the
+     *         default properties.
+     */
+    public boolean containsKey(String key, ContextProperties defaults) {
+        if (properties.containsKey(key)) {
+            return true;
+        } else {
+            return defaults.getProperty(key) != null;
+        }
     }
 
     /**

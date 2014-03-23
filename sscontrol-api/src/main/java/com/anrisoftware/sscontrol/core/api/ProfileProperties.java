@@ -24,16 +24,16 @@ import java.util.Set;
 
 public interface ProfileProperties extends Serializable {
 
-	void put(String key, Object property);
+    void put(String key, Object property);
 
-	boolean containsKey(String key);
+    boolean containsKey(String key);
 
-	Object get(String key);
+    Object get(String key);
 
-	Object get(String key, Object... args);
+    Object get(String key, Object... args);
 
-	List<String> getList(String key);
+    List<String> getList(String key);
 
-	Set<String> getKeys();
+    Set<String> getKeys();
 
 }

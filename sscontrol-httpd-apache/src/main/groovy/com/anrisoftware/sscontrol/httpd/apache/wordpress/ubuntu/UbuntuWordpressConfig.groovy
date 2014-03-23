@@ -24,11 +24,10 @@ import javax.inject.Inject
 
 import com.anrisoftware.sscontrol.core.checkfilehash.CheckFileHashFactory
 import com.anrisoftware.sscontrol.httpd.apache.wordpress.linux.Wordpress_3_Config
-import com.anrisoftware.sscontrol.httpd.domain.DomainImpl;
-import com.anrisoftware.sscontrol.httpd.domain.Domain;
-import com.anrisoftware.sscontrol.httpd.webservice.OverrideMode;
-import com.anrisoftware.sscontrol.httpd.webservice.WebService;
-import com.anrisoftware.sscontrol.httpd.wordpress.WordpressService;
+import com.anrisoftware.sscontrol.httpd.domain.Domain
+import com.anrisoftware.sscontrol.httpd.webservice.OverrideMode
+import com.anrisoftware.sscontrol.httpd.webservice.WebService
+import com.anrisoftware.sscontrol.httpd.wordpress.WordpressService
 
 /**
  * Ubuntu Wordpress 3.
@@ -90,13 +89,13 @@ abstract class UbuntuWordpressConfig extends Wordpress_3_Config {
     }
 
     /**
-     * Returns if it needed to download and unpack the Wordpress archive.
+     * Returns if it needed to download and unpack the <i>Wordpress</i> archive.
      *
      * @param domain
-     *            the {@link Domain} of the Wordpress service.
+     *            the {@link Domain} of the service.
      *
      * @param service
-     *            the {@link WebService} Wordpress service.
+     *            the {@link WebService} service.
      *
      * @return {@code true} if it is needed.
      *
@@ -107,6 +106,7 @@ abstract class UbuntuWordpressConfig extends Wordpress_3_Config {
     }
 
     boolean needDownloadArchive(File dest) {
+        log.checkNeedDownloadArchive script, dest, wordpressArchiveHash
         if (dest.isFile() && wordpressArchiveHash != null) {
             def check = checkFileHashFactory.create this, file: dest, hash: wordpressArchiveHash
             check().matching

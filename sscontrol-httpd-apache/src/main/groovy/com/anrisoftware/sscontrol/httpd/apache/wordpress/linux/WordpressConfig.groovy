@@ -28,12 +28,11 @@ import org.apache.commons.lang3.RandomStringUtils
 
 import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.sscontrol.core.service.LinuxScript
-import com.anrisoftware.sscontrol.httpd.domain.DomainImpl;
-import com.anrisoftware.sscontrol.httpd.domain.Domain;
-import com.anrisoftware.sscontrol.httpd.webservice.OverrideMode;
-import com.anrisoftware.sscontrol.httpd.webservice.WebService;
-import com.anrisoftware.sscontrol.httpd.wordpress.ForceFactory;
-import com.anrisoftware.sscontrol.httpd.wordpress.WordpressService;
+import com.anrisoftware.sscontrol.httpd.domain.Domain
+import com.anrisoftware.sscontrol.httpd.webservice.OverrideMode
+import com.anrisoftware.sscontrol.httpd.webservice.WebService
+import com.anrisoftware.sscontrol.httpd.wordpress.ForceFactory
+import com.anrisoftware.sscontrol.httpd.wordpress.WordpressService
 
 /**
  * Wordpress.
@@ -119,7 +118,7 @@ abstract class WordpressConfig {
                 break
             default:
                 property = "wordpress_archive_$lang"
-                if (!containsKey(property)) {
+                if (!containsKey(property, wordpressProperties)) {
                     property = "wordpress_archive"
                 }
         }
@@ -148,7 +147,7 @@ abstract class WordpressConfig {
             default:
                 property = "wordpress_archive_hash_$lang"
         }
-        if (containsKey(property)) {
+        if (containsKey(property, wordpressProperties)) {
             uri = profileURIProperty property, wordpressProperties
             log.returnsWordpressArchiveHash script, lang, uri
             return uri
@@ -174,7 +173,7 @@ abstract class WordpressConfig {
                 break
             default:
                 property = "wordpress_strip_archive_$lang"
-                if (!containsKey(property)) {
+                if (!containsKey(property, wordpressProperties)) {
                     property = "wordpress_strip_archive"
                 }
         }

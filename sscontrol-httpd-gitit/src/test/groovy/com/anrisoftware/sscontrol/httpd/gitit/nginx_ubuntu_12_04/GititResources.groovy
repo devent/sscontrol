@@ -51,6 +51,7 @@ enum GititResources {
     test1comGititConfExpected("/var/www/test1.com/gitit/gitit.conf", GititResources.class.getResource("test1com_gitit_conf_expected.txt")),
     cabalOutExpected("/usr/bin/cabal.out", GititResources.class.getResource("cabal_out_expected.txt")),
     hsenvCabalOutExpected("/var/www/test1.com/gitit/.hsenv/bin/cabal.out", GititResources.class.getResource("hsenvcabal_out_expected.txt")),
+    hsenvOutExpected("/root/.cabal/bin/hsenv.out", GititResources.class.getResource("hsenv_out_expected.txt")),
     tarOutExpected("/bin/tar.out", GititResources.class.getResource("tar_out_expected.txt")),
     test1comgititdServiceExpected("/etc/init.d/test1_com_gititd", GititResources.class.getResource("test1comgititd_service_expected.txt")),
     test1comgititdDefaultsExpected("/etc/default/test1_com_gititd", GititResources.class.getResource("test1comgititd_defaults_expected.txt")),

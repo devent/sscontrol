@@ -149,7 +149,9 @@ abstract class HsenvFromSource {
         args.cabalCommand = hsenvCabalCommand domain, service
         args.activateCommand = hsenvActivateCommand domain, service
         args.packages = hsenvGititPackages
-        def worker = scriptCommandFactory.create(hsenvCommandTemplate, "hsenvInstallCommand", "args", args)()
+        def worker = scriptCommandFactory.create(hsenvCommandTemplate, "hsenvInstallCommand", "args", args)
+        worker.timeoutMs = -1
+        worker()
         log.installHsenvCabalPackagesDone this, worker, args
     }
 
@@ -170,7 +172,9 @@ abstract class HsenvFromSource {
         args.cabalCommand = hsenvCabalCommand domain, service
         args.activateCommand = hsenvActivateCommand domain, service
         args.gititSourceDir = gititSourceDir domain, service
-        def worker = scriptCommandFactory.create(hsenvCommandTemplate, "hsenvCompileCommand", "args", args)()
+        def worker = scriptCommandFactory.create(hsenvCommandTemplate, "hsenvCompileCommand", "args", args)
+        worker.timeoutMs = -1
+        worker()
         log.installGititDone this, worker, args
     }
 

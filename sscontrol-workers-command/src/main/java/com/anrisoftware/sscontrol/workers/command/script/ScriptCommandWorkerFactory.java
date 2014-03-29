@@ -20,6 +20,8 @@ package com.anrisoftware.sscontrol.workers.command.script;
 
 import java.util.Map;
 
+import org.joda.time.Duration;
+
 import com.anrisoftware.resources.templates.api.TemplateResource;
 import com.anrisoftware.sscontrol.workers.api.WorkerFactory;
 import com.anrisoftware.sscontrol.workers.command.exec.ExecCommandWorker;
@@ -33,63 +35,63 @@ import com.anrisoftware.sscontrol.workers.command.exec.ExecCommandWorker;
  */
 public interface ScriptCommandWorkerFactory extends WorkerFactory {
 
-	/**
-	 * Creates a new worker that executes a shell script. The shell script is
-	 * created from a template. The process will be terminated after
-	 * {@link ExecCommandWorker#DEFAULT_TIMEOUT_MS}.
-	 * 
-	 * @param template
-	 *            the {@link TemplateResource} template resource.
-	 * 
-	 * @param attributes
-	 *            the template attributes.
-	 * 
-	 * @return the {@link ScriptCommandWorker}.
-	 */
-	ScriptCommandWorker create(TemplateResource template, Object... attributes);
+    /**
+     * Creates a new worker that executes a shell script. The shell script is
+     * created from a template. The process will be terminated after
+     * {@link ExecCommandWorker#TIMEOUT_DEFAULT}.
+     * 
+     * @param template
+     *            the {@link TemplateResource} template resource.
+     * 
+     * @param attributes
+     *            the template attributes.
+     * 
+     * @return the {@link ScriptCommandWorker}.
+     */
+    ScriptCommandWorker create(TemplateResource template, Object... attributes);
 
-	/**
-	 * Creates a new worker that executes a shell script. The shell script is
-	 * created from a template and is executed with the specified environment
-	 * variables. The process will be terminated after
-	 * {@link ExecCommandWorker#DEFAULT_TIMEOUT_MS}.
-	 * 
-	 * @param template
-	 *            the {@link TemplateResource} template resource.
-	 * 
-	 * @param environment
-	 *            a {@link Map} of the environment variables as
-	 *            {@code [<name>=<value>]}.
-	 * 
-	 * @param attributes
-	 *            the template attributes.
-	 * 
-	 * @return the {@link ScriptCommandWorker}.
-	 */
-	ScriptCommandWorker create(TemplateResource template,
-			Map<String, String> environment, Object... attributes);
+    /**
+     * Creates a new worker that executes a shell script. The shell script is
+     * created from a template and is executed with the specified environment
+     * variables. The process will be terminated after
+     * {@link ExecCommandWorker#TIMEOUT_DEFAULT}.
+     * 
+     * @param template
+     *            the {@link TemplateResource} template resource.
+     * 
+     * @param environment
+     *            a {@link Map} of the environment variables as
+     *            {@code [<name>=<value>]}.
+     * 
+     * @param attributes
+     *            the template attributes.
+     * 
+     * @return the {@link ScriptCommandWorker}.
+     */
+    ScriptCommandWorker create(TemplateResource template,
+            Map<String, String> environment, Object... attributes);
 
-	/**
-	 * Creates a new worker that executes a shell script. The shell script is
-	 * created from a template and is executed with the specified environment
-	 * variables. The process will be terminated after the specified timeout.
-	 * 
-	 * @param template
-	 *            the {@link TemplateResource} that returns the template.
-	 * 
-	 * @param environment
-	 *            a {@link Map} of the environment variables as
-	 *            {@code [<name>=<value>]}.
-	 * 
-	 * @param timeoutMs
-	 *            the timeout in milliseconds.
-	 * 
-	 * @param attributes
-	 *            the template attributes.
-	 * 
-	 * @return the {@link ScriptCommandWorker}.
-	 */
-	ScriptCommandWorker create(TemplateResource template,
-			Map<String, String> environment, long timeoutMs,
-			Object... attributes);
+    /**
+     * Creates a new worker that executes a shell script. The shell script is
+     * created from a template and is executed with the specified environment
+     * variables. The process will be terminated after the specified timeout.
+     * 
+     * @param template
+     *            the {@link TemplateResource} that returns the template.
+     * 
+     * @param environment
+     *            a {@link Map} of the environment variables as
+     *            {@code [<name>=<value>]}.
+     * 
+     * @param timeout
+     *            the timeout {@link Duration}.
+     * 
+     * @param attributes
+     *            the template attributes.
+     * 
+     * @return the {@link ScriptCommandWorker}.
+     */
+    ScriptCommandWorker create(TemplateResource template,
+            Map<String, String> environment, Duration timeout,
+            Object... attributes);
 }

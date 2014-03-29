@@ -18,6 +18,8 @@
  */
 package com.anrisoftware.sscontrol.workers.command.exec;
 
+import static org.joda.time.Duration.standardMinutes;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -32,6 +34,7 @@ import org.apache.commons.exec.Executor;
 import org.apache.commons.exec.PumpStreamHandler;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.joda.time.Duration;
 
 import com.anrisoftware.sscontrol.workers.api.Worker;
 import com.anrisoftware.sscontrol.workers.api.WorkerException;
@@ -50,16 +53,16 @@ public class ExecCommandWorker implements Worker {
 
     private static final String QUOTATION = "quotation";
 
-    private static final String TIME_OUT = "time out [ms]";
+    private static final String TIME_OUT = "time out";
 
     private static final String ENVIRONMENT = "environment";
 
     private static final String COMMAND = "command";
 
     /**
-     * The default timeout time in milliseconds.
+     * The default timeout {@link Duration}.
      */
-    public static final int DEFAULT_TIMEOUT_MS = 60 * 1000;
+    public static final Duration TIMEOUT_DEFAULT = standardMinutes(1);
 
     private final ExecCommandWorkerLogger log;
 
@@ -73,7 +76,7 @@ public class ExecCommandWorker implements Worker {
 
     private transient ByteArrayOutputStream err;
 
-    private long timeoutMs;
+    private Duration timeout;
 
     private boolean quotation;
 
@@ -84,7 +87,7 @@ public class ExecCommandWorker implements Worker {
      */
     @AssistedInject
     ExecCommandWorker(ExecCommandWorkerLogger logger, @Assisted String command) {
-        this(logger, command, new HashMap<String, String>(), DEFAULT_TIMEOUT_MS);
+        this(logger, command, null, TIMEOUT_DEFAULT);
     }
 
     /**
@@ -93,7 +96,7 @@ public class ExecCommandWorker implements Worker {
     @AssistedInject
     ExecCommandWorker(ExecCommandWorkerLogger logger, @Assisted String command,
             @Assisted @Nullable Map<String, String> environment) {
-        this(logger, command, environment, DEFAULT_TIMEOUT_MS);
+        this(logger, command, environment, TIMEOUT_DEFAULT);
     }
 
     /**
@@ -102,11 +105,11 @@ public class ExecCommandWorker implements Worker {
     @AssistedInject
     ExecCommandWorker(ExecCommandWorkerLogger logger, @Assisted String command,
             @Assisted @Nullable Map<String, String> environment,
-            @Assisted long timeoutMs) {
+            @Assisted Duration timeout) {
         this.log = logger;
         this.environment = createEnvironment(environment);
         this.command = command;
-        this.timeoutMs = timeoutMs;
+        this.timeout = timeout;
         this.quotation = true;
         setExitValue(0);
         readResolve();
@@ -134,7 +137,7 @@ public class ExecCommandWorker implements Worker {
         ExecuteStreamHandler streamHandler = new PumpStreamHandler(out, err);
         DefaultExecutor executor = new DefaultExecutor();
         executor.setExitValues(exitValues);
-        ExecuteWatchdog watchdog = new ExecuteWatchdog(timeoutMs);
+        ExecuteWatchdog watchdog = new ExecuteWatchdog(timeout.getMillis());
         executor.setWatchdog(watchdog);
         executor.setStreamHandler(streamHandler);
         startProcess(executor, cmdline);
@@ -167,8 +170,8 @@ public class ExecCommandWorker implements Worker {
         return environment;
     }
 
-    public void setTimeoutMs(long newTimeoutMs) {
-        timeoutMs = newTimeoutMs;
+    public void setTimeout(Duration timeout) {
+        this.timeout = timeout;
     }
 
     public void setExitValue(int value) {
@@ -222,7 +225,7 @@ public class ExecCommandWorker implements Worker {
     public String toString() {
         ToStringBuilder builder = new ToStringBuilder(this);
         builder.append(COMMAND, command);
-        builder.append(TIME_OUT, timeoutMs);
+        builder.append(TIME_OUT, timeout);
         builder.append(QUOTATION, quotation);
         if (environment != null) {
             builder.append(ENVIRONMENT, environment);

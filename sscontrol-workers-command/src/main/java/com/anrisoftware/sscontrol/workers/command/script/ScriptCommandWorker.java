@@ -18,7 +18,7 @@
  */
 package com.anrisoftware.sscontrol.workers.command.script;
 
-import static com.anrisoftware.sscontrol.workers.command.exec.ExecCommandWorker.DEFAULT_TIMEOUT_MS;
+import static com.anrisoftware.sscontrol.workers.command.exec.ExecCommandWorker.TIMEOUT_DEFAULT;
 import static java.io.File.createTempFile;
 import static java.lang.String.format;
 
@@ -30,9 +30,9 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-import org.apache.commons.exec.Executor;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.joda.time.Duration;
 
 import com.anrisoftware.propertiesutils.ContextProperties;
 import com.anrisoftware.resources.api.ResourcesException;
@@ -85,7 +85,7 @@ public class ScriptCommandWorker implements Worker {
 
     private int[] values;
 
-    private long timeoutMs;
+    private Duration timeout;
 
     /**
      * @see ScriptCommandWorkerFactory#create(TemplateResource, Object...)
@@ -103,20 +103,20 @@ public class ScriptCommandWorker implements Worker {
     ScriptCommandWorker(@Assisted TemplateResource template,
             @Assisted Map<String, String> environment,
             @Assisted Object... attributes) {
-        this(template, environment, DEFAULT_TIMEOUT_MS, attributes);
+        this(template, environment, TIMEOUT_DEFAULT, attributes);
     }
 
     /**
-     * @see ScriptCommandWorkerFactory#create(TemplateResource, Map, long,
+     * @see ScriptCommandWorkerFactory#create(TemplateResource, Map, Duration,
      *      Object...)
      */
     @AssistedInject
     ScriptCommandWorker(@Assisted TemplateResource template,
             @Assisted Map<String, String> environment,
-            @Assisted long timeoutMs, @Assisted Object... attributes) {
+            @Assisted Duration timeout, @Assisted Object... attributes) {
         this.template = template;
         this.environment = environment;
-        this.timeoutMs = timeoutMs;
+        this.timeout = timeout;
         this.attributes = attributes;
         this.valuesSet = false;
         this.values = null;
@@ -152,12 +152,11 @@ public class ScriptCommandWorker implements Worker {
     private ExecCommandWorker createCommandWorker() throws WorkerException {
         ExecCommandWorker worker = executeFactory.create(
                 format("%s %s", shell, scriptFile.getAbsolutePath()),
-                environment, timeoutMs);
+                environment, timeout);
         worker.setQuotation(false);
         if (valuesSet) {
             worker.setExitValues(values);
         }
-        worker.setTimeoutMs(timeoutMs);
         return worker;
     }
 
@@ -184,26 +183,29 @@ public class ScriptCommandWorker implements Worker {
         return template;
     }
 
+    /**
+     * @see ExecCommandWorker#getEnvironment()
+     */
     public Map<String, String> getEnvironment() {
         return environment;
     }
 
-    public void setTimeoutMs(long timeoutMs) {
-        this.timeoutMs = timeoutMs;
+    /**
+     * @see ExecCommandWorker#setTimeout(Duration)
+     */
+    public void setTimeout(Duration timeout) {
+        this.timeout = timeout;
     }
 
+    /**
+     * @see ExecCommandWorker#setExitValue(int)
+     */
     public void setExitValue(int value) {
         setExitValues(new int[] { value });
     }
 
     /**
-     * Sets the list of valid exit values for the process.
-     * 
-     * @param values
-     *            the integer array of exit values or {@code null} to skip
-     *            checking of exit codes.
-     * 
-     * @see Executor#setExitValues(int[])
+     * @see ExecCommandWorker#setExitValues(int[])
      */
     public void setExitValues(int[] values) {
         this.valuesSet = true;
@@ -222,14 +224,23 @@ public class ScriptCommandWorker implements Worker {
         }
     }
 
+    /**
+     * @see ExecCommandWorker#getExitCode()
+     */
     public int getExitCode() {
         return commandWorker.getExitCode();
     }
 
+    /**
+     * @see ExecCommandWorker#getOut()
+     */
     public String getOut() {
         return commandWorker.getOut();
     }
 
+    /**
+     * @see ExecCommandWorker#getOut(String)
+     */
     public String getOut(String charsetName)
             throws UnsupportedEncodingException {
         return commandWorker.getOut(charsetName);

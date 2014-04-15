@@ -29,18 +29,14 @@ import org.apache.commons.lang3.StringUtils
 import org.apache.commons.lang3.builder.ToStringBuilder
 import org.codehaus.groovy.runtime.InvokerHelper
 
+import com.anrisoftware.globalpom.textmatch.tokentemplate.DefaultTokensTemplate
+import com.anrisoftware.globalpom.textmatch.tokentemplate.DefaultTokensTemplateFactory
+import com.anrisoftware.globalpom.textmatch.tokentemplate.TokenMarker
+import com.anrisoftware.globalpom.threads.api.Threads
 import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.resources.templates.api.Templates
-import com.anrisoftware.resources.templates.api.TemplatesFactory
 import com.anrisoftware.sscontrol.core.api.ProfileProperties
 import com.anrisoftware.sscontrol.core.api.Service
-import com.anrisoftware.sscontrol.workers.command.exec.ExecCommandWorker
-import com.anrisoftware.sscontrol.workers.command.exec.ExecCommandWorkerFactory
-import com.anrisoftware.sscontrol.workers.command.script.ScriptCommandWorker
-import com.anrisoftware.sscontrol.workers.command.script.ScriptCommandWorkerFactory
-import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokenMarker
-import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokensTemplateWorker
-import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokensTemplateWorkerFactory
 
 /**
  * Provides utilities methods for a Linux service.
@@ -67,28 +63,18 @@ abstract class LinuxScript extends Script {
      */
     Service service
 
+    /**
+     * The {@link Threads} threads pool for the script.
+     */
+    Threads threads
+
     @Inject
     private LinuxScriptLogger log
 
     @Inject
-    TemplatesFactory templatesFactory
-
-    @Inject
-    ScriptCommandWorkerFactory scriptCommandFactory
-
-    @Inject
-    ExecCommandWorkerFactory execCommandFactory
-
-    @Inject
-    TokensTemplateWorkerFactory tokensTemplateFactory
+    DefaultTokensTemplateFactory tokensTemplateFactory
 
     Templates commandTemplates
-
-    @Override
-    def run() {
-        commandTemplates = templatesFactory.create("ScriptCommandTemplates")
-        installSystemPackages()
-    }
 
     /**
      * Returns the service of the script.
@@ -239,8 +225,9 @@ abstract class LinuxScript extends Script {
     boolean containsDebRepository(String repository, String distributionName = distributionName) {
         def dir = packagesSourcesFile.parentFile
         def template = commandTemplates.getResource("list_repositories")
-        def worker = scriptCommandFactory.create(template, packagingType, "configurationDir", dir)()
-        split(worker.out, '\n').find { it.trim().endsWith "$distributionName $repository" } != null
+        def line = scriptCommandLineFactory.create(packagingType, template).addSub("configurationDir", dir)
+        def task = scriptCommandExecFactory.create(commandExecFactory).exec(line).get()
+        split(task.out, '\n').find { it.trim().endsWith "$distributionName $repository" } != null
     }
 
     /**
@@ -253,20 +240,6 @@ abstract class LinuxScript extends Script {
      */
     String getPackagingType() {
         profileProperty "packaging_type", defaultProperties
-    }
-
-    /**
-     * Installs the specified packages.
-     *
-     * @param packages
-     * 			  optionally, the {@link List} of the package names to install.
-     *
-     * @see #getPackages()
-     */
-    void installPackages(List packages = packages) {
-        def template = commandTemplates.getResource("install")
-        def worker = scriptCommandFactory.create(template, "installCommand", installCommand, "packages", packages)()
-        log.installPackagesDone this, worker, packages
     }
 
     /**
@@ -294,7 +267,6 @@ abstract class LinuxScript extends Script {
     /**
      * Change the permissions to the specified files.
      *
-     *
      * @param args
      * 			  the arguments:
      * <ul>
@@ -306,15 +278,20 @@ abstract class LinuxScript extends Script {
      * Defaults to unix;
      * </ul>
      *
-     * @return the {@link ScriptCommandWorker} worker.
+     * @return the {@link ProcessTask} process task.
      */
-    ScriptCommandWorker changeMod(Map args) {
+    def changeMod(Map args) {
         args.command = args.containsKey("command") ? args.command : chmodCommand
         args.system = args.containsKey("system") ? args.system : "unix"
         log.checkChangeModArgs args
         def template = commandTemplates.getResource("chmod")
-        def worker = scriptCommandFactory.create(template, args.system, "args", args)()
-        log.changeModDone this, worker, args
+        def line = scriptCommandLineFactory.create(args.system, template).addSub("args", args)
+        def script = scriptCommandExecFactory.create(commandExecFactory)
+        script.commandError = errorLogCommandOutputFactory.create(log, line)
+        script.commandOutput = debugLogCommandOutputFactory.create(log, line)
+        def task = script.exec(line).get()
+        log.changeModDone this, task, args
+        return task
     }
 
     /**
@@ -332,15 +309,19 @@ abstract class LinuxScript extends Script {
      * Defaults to unix;
      * </ul>
      *
-     * @return the {@link ScriptCommandWorker} worker.
+     * @return the {@link ProcessTask} process task.
      */
-    ScriptCommandWorker changeOwner(Map args) {
+    def changeOwner(Map args) {
         args.command = args.containsKey("command") ? args.command : chownCommand
         args.system = args.containsKey("system") ? args.system : "unix"
         log.checkChangeOwnerArgs args
         def template = commandTemplates.getResource("chown")
-        def worker = scriptCommandFactory.create(template, args.system, "args", args)()
-        log.changeOwnerDone this, worker, args
+        def line = scriptCommandLineFactory.create(args.system, template).addSub("args", args)
+        def script = scriptCommandExecFactory.create(commandExecFactory)
+        script.commandError = errorLogCommandOutputFactory.create(log, line)
+        script.commandOutput = debugLogCommandOutputFactory.create(log, line)
+        def task = script.exec(line).get()
+        log.changeOwnerDone this, task, args
     }
 
     /**
@@ -399,11 +380,11 @@ abstract class LinuxScript extends Script {
      */
     def deployConfiguration(TokenMarker tokenMarker, String currentConfiguration, List configurations, File file) {
         configurations = configurations.flatten()
-        TokensTemplateWorker worker
+        DefaultTokensTemplate tokens
         String configuration = currentConfiguration
         configurations.each {
-            worker = tokensTemplateFactory.create(tokenMarker, it, configuration)()
-            configuration = worker.getText()
+            tokens = tokensTemplateFactory.create(tokenMarker, it, configuration).replace()
+            configuration = tokens.text
         }
         FileUtils.write file, configuration, charset
         log.deployConfigurationDone this, file, configuration
@@ -421,32 +402,7 @@ abstract class LinuxScript extends Script {
     }
 
     /**
-     * Restart the services.
-     *
-     * @param args
-     * <ul>
-     * <li>{@code restartCommand:} the restart command, defaults to {@link #getRestartCommand()}.
-     * <li>{@code services:} the services to restart, defaults to {@link #getRestartServices()}.
-     * </ul>
-     *
-     * @return returns the {@link ScriptCommandWorker}.
-     *
-     * @throws WorkerException
-     *            if the worker exists with an error.
-     */
-    ScriptCommandWorker restartServices(Map args = [:]) {
-        args.restartCommand = args.containsKey("restartCommand") ? args.restartCommand : restartCommand
-        args.services = args.containsKey("services") ? args.services : restartServices
-        def template = commandTemplates.getResource("restart")
-        def worker = scriptCommandFactory.create(template,
-                "restartCommand", args.restartCommand,
-                "services", args.services)()
-        log.restartServiceDone this, worker
-        return worker
-    }
-
-    /**
-     * Installs the specified packages.
+     * Unpacks the specified archives.
      *
      * @param args
      * 			  the arguments:
@@ -461,16 +417,21 @@ abstract class LinuxScript extends Script {
      * defaults to what the type of the archive is;
      * </ul>
      *
-     * @return the {@link ScriptCommandWorker} worker.
+     * @return the {@link ProcessTask} process task.
      */
-    void unpack(Map args) {
+    def unpack(Map args) {
         args.system = args.containsKey("system") ? args.system : "unix"
         args.type = args.containsKey("type") ? args.type : archiveType(args)
         args.command = args.containsKey("command") ? args.command : unpackCommand(args)
         log.checkUnpackArgs args
         def template = commandTemplates.getResource("unpack")
-        def worker = scriptCommandFactory.create(template, args.system,	"args", args)()
-        log.unpackDone this, worker, args.file, args.output
+        def line = scriptCommandLineFactory.create(args.system, template).addSub("args", args)
+        def script = scriptCommandExecFactory.create(commandExecFactory)
+        script.commandError = errorLogCommandOutputFactory.create(log, line)
+        script.commandOutput = debugLogCommandOutputFactory.create(log, line)
+        def task = script.exec(line).get()
+        log.unpackDone this, task, args.file, args.output
+        return task
     }
 
     /**
@@ -566,15 +527,20 @@ abstract class LinuxScript extends Script {
      * <li>{@code override:} set to {@code true} to override existing links.
      * </ul>
      *
-     * @return the {@link ScriptCommandWorker} worker.
+     * @return the {@link ProcessTask} process task.
      */
-    void link(Map args) {
+    def link(Map args) {
         args.system = args.containsKey("system") ? args.system : "unix"
         args.command = args.containsKey("command") ? args.command : linkCommand
         log.checkLinkArgs args
         def template = commandTemplates.getResource("mkln")
-        def worker = scriptCommandFactory.create(template, args.system,	"args", args)()
-        log.linkFilesDone this, worker, args
+        def line = scriptCommandLineFactory.create(args.system, template).addSub("args", args)
+        def script = scriptCommandExecFactory.create(commandExecFactory)
+        script.commandError = errorLogCommandOutputFactory.create(log, line)
+        script.commandOutput = debugLogCommandOutputFactory.create(log, line)
+        def task = script.exec(line).get()
+        log.linkFilesDone this, task, args
+        return task
     }
 
     /**
@@ -603,17 +569,22 @@ abstract class LinuxScript extends Script {
      * <li>{@code command:} optionally, the change password command;
      * </ul>
      *
-     * @return the {@link ScriptCommandWorker} worker.
+     * @return the {@link ProcessTask} process task.
      *
      * @see #getChangePasswordCommand()
      */
-    ScriptCommandWorker changePassword(Map args) {
+    def changePassword(Map args) {
         args.command = args.containsKey("command") ? args.command : changePasswordCommand
         args.system = args.containsKey("system") ? args.system : "unix"
         log.checkChangePasswordArgs args
         def template = commandTemplates.getResource("changepass")
-        def worker = scriptCommandFactory.create(template, args.system, "args", args)()
-        log.changePasswordDone this, worker, args
+        def line = scriptCommandLineFactory.create(args.system, template).addSub("args", args)
+        def script = scriptCommandExecFactory.create(commandExecFactory)
+        script.commandError = errorLogCommandOutputFactory.create(log, line)
+        script.commandOutput = debugLogCommandOutputFactory.create(log, line)
+        def task = script.exec(line).get()
+        log.changePasswordDone this, task, args
+        return task
     }
 
     /**
@@ -949,9 +920,9 @@ abstract class LinuxScript extends Script {
     /**
      * Execute the command to list ports in use.
      *
-     * @return the {@link ExecCommandWorker}.
+     * @return the {@link ProcessTask} process task.
      */
-    ExecCommandWorker listUsedPorts() {
+    def listUsedPorts() {
         execCommandFactory.create("$netstatCommand -pnl")()
     }
 

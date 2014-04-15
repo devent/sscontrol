@@ -21,6 +21,7 @@ package com.anrisoftware.sscontrol.dhclient.service;
 import com.anrisoftware.sscontrol.dhclient.statements.StatementsModule;
 import com.anrisoftware.sscontrol.dhclient.ubuntu_10_04.Ubuntu_10_04_Module;
 import com.anrisoftware.sscontrol.dhclient.ubuntu_12_04.Ubuntu_12_04_Module;
+import com.anrisoftware.sscontrol.scripts.unix.UnixScriptsModule;
 import com.google.inject.AbstractModule;
 
 /**
@@ -33,6 +34,8 @@ class DhclientModule extends AbstractModule {
 
 	@Override
 	protected void configure() {
+        install(new UnixScriptsModule());
+        install(new UnixScriptsModule.ExecCommandModule());
 		install(new StatementsModule());
 		install(new Ubuntu_10_04_Module());
         install(new Ubuntu_12_04_Module());

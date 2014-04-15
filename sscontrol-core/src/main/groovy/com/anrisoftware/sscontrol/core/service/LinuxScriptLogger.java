@@ -44,9 +44,6 @@ import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.enable
 import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.group_add_debug;
 import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.group_add_info;
 import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.group_add_trace;
-import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.install_packages_done_debug;
-import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.install_packages_done_info;
-import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.install_packages_done_trace;
 import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.link_args_missing;
 import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.link_files_done_debug;
 import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.link_files_done_info;
@@ -55,9 +52,6 @@ import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.moduse
 import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.properties_null;
 import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.property_file_null;
 import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.property_not_set;
-import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.restarted_service_debug;
-import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.restarted_service_info;
-import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.restarted_service_trace;
 import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.script1;
 import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.unknown_archive_type;
 import static com.anrisoftware.sscontrol.core.service.LinuxScriptLogger._.unknown_archive_type_message;
@@ -108,12 +102,6 @@ class LinuxScriptLogger extends AbstractLogger {
 
         enabled_repository_info("Enabled repository '{}' for service {}."),
 
-        install_packages_done_trace("Installed packages {} in {}, {}."),
-
-        install_packages_done_debug("Installed packages {} in {}."),
-
-        install_packages_done_info("Installed service packages: {}."),
-
         conf_file_found_debug("No configuration file found '{}' in {}."),
 
         conf_file_found_info("No configuration file found '{}'."),
@@ -123,12 +111,6 @@ class LinuxScriptLogger extends AbstractLogger {
         deployed_conf_debug("Deploy configuration to '{}' for {}."),
 
         deployed_conf_info("Deploy configuration to '{}' for script '{}'."),
-
-        restarted_service_trace("Restarted service {}, {}."),
-
-        restarted_service_debug("Restarted service {}."),
-
-        restarted_service_info("Restarted service {}."),
 
         properties_null("Properties cannot be null for key '%s' in %s."),
 
@@ -230,16 +212,6 @@ class LinuxScriptLogger extends AbstractLogger {
         super(LinuxScript.class);
     }
 
-    void installPackagesDone(LinuxScript script, Object worker, Object packages) {
-        if (isTraceEnabled()) {
-            trace(install_packages_done_trace, packages, script, worker);
-        } else if (isDebugEnabled()) {
-            debug(install_packages_done_debug, packages, script);
-        } else {
-            info(install_packages_done_info, packages);
-        }
-    }
-
     void changeModDone(LinuxScript script, Object worker, Object args) {
         if (isTraceEnabled()) {
             trace(chmod_done_trace, args, script, worker);
@@ -284,16 +256,6 @@ class LinuxScriptLogger extends AbstractLogger {
             debug(enabled_repository_debug, repository, script);
         } else {
             info(enabled_repository_info, repository, script.getName());
-        }
-    }
-
-    void restartServiceDone(LinuxScript script, Object worker) {
-        if (isTraceEnabled()) {
-            trace(restarted_service_trace, script, worker);
-        } else if (isDebugEnabled()) {
-            debug(restarted_service_debug, script);
-        } else {
-            info(restarted_service_info, script.getName());
         }
     }
 

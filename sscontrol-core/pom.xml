@@ -15,10 +15,6 @@
 	<url>https://www.anr-institute.com/projects/projects/sscontrol-core</url>
 	<inceptionYear>2013</inceptionYear>
 
-	<properties>
-		<project.custom.year>${project.inceptionYear}</project.custom.year>
-	</properties>
-
 	<issueManagement>
 		<system>Redmine</system>
 		<url>https://www.anr-institute.com/projects/projects/sscontrol-core</url>
@@ -43,17 +39,6 @@
 		<dependency>
 			<groupId>com.anrisoftware.sscontrol</groupId>
 			<artifactId>sscontrol-api</artifactId>
-			<version>1.0-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>com.anrisoftware.sscontrol</groupId>
-			<artifactId>sscontrol-workers-text</artifactId>
-			<version>1.0-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>com.anrisoftware.sscontrol</groupId>
-			<artifactId>sscontrol-workers-command</artifactId>
-			<version>1.0-SNAPSHOT</version>
 		</dependency>
 
 		<!-- compile dependencies -->
@@ -73,6 +58,14 @@
 			<groupId>com.anrisoftware.globalpom</groupId>
 			<artifactId>globalpom-log</artifactId>
 		</dependency>
+        <dependency>
+            <groupId>com.anrisoftware.globalpom</groupId>
+            <artifactId>globalpomutils-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.anrisoftware.globalpom</groupId>
+            <artifactId>globalpomutils-threads</artifactId>
+        </dependency>
 		<dependency>
 			<groupId>com.anrisoftware.resources</groupId>
 			<artifactId>resources-templates</artifactId>

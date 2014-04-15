@@ -33,7 +33,7 @@
 		</dependency>
 		<dependency>
 			<groupId>com.anrisoftware.globalpom</groupId>
-			<artifactId>globalpom-utils</artifactId>
+			<artifactId>globalpom-log</artifactId>
 		</dependency>
 	</dependencies>
 

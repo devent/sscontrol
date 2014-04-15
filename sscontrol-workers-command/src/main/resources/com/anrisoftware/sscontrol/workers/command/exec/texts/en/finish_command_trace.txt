@@ -1,5 +1,0 @@
-Finish command {}, exit code {}, output: 
->>>
-{}<<<, error output: 
->>>
-{}<<<

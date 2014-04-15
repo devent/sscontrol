@@ -24,13 +24,15 @@ import javax.inject.Inject
 
 import org.apache.commons.lang3.StringUtils
 
+import com.anrisoftware.globalpom.textmatch.tokentemplate.TokenTemplate
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.Templates
+import com.anrisoftware.resources.templates.api.TemplatesFactory
 import com.anrisoftware.sscontrol.core.service.LinuxScript
 import com.anrisoftware.sscontrol.dhclient.service.DhclientService
 import com.anrisoftware.sscontrol.dhclient.statements.DeclarationFactory
 import com.anrisoftware.sscontrol.dhclient.statements.OptionDeclarationFactory
-import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokenTemplate
+import com.anrisoftware.sscontrol.scripts.unix.RestartServicesFactory
 
 /**
  * Dhclient/Ubuntu.
@@ -45,14 +47,19 @@ abstract class UbuntuScript extends LinuxScript {
     TemplateResource dhclientConfiguration
 
     @Inject
+    TemplatesFactory templatesFactory
+
+    @Inject
     DeclarationFactory declarationFactory
 
     @Inject
     OptionDeclarationFactory optionDeclarationFactory
 
+    @Inject
+    RestartServicesFactory restartServicesFactory
+
     @Override
     def run() {
-        super.run()
         dhclientTemplates = templatesFactory.create "DhclientUbuntu"
         dhclientConfiguration = dhclientTemplates.getResource "configuration"
         setupDefaultOption service
@@ -60,7 +67,7 @@ abstract class UbuntuScript extends LinuxScript {
         setupDefaultRequests service
         distributionSpecificConfiguration()
         deployConfiguration()
-        restartServices()
+        restartService()
     }
 
     /**
@@ -95,13 +102,21 @@ abstract class UbuntuScript extends LinuxScript {
     /**
      * Do the distribution specific configuration.
      */
-    abstract distributionSpecificConfiguration()
+    abstract void distributionSpecificConfiguration()
 
     /**
-     * Deploys the dhclient/configuration.
+     * Deploys the <i>dhclient</i> configuration.
      */
-    def deployConfiguration() {
+    void deployConfiguration() {
         deployConfiguration configurationTokens(), currentConfiguration, configurations, configurationFile
+    }
+
+    /**
+     * Restarts the <i>dhclient</i> service.
+     */
+    void restartService() {
+        restartServicesFactory.create(
+                log: log, command: restartCommand, services: restartServices, this, threads)()
     }
 
     /**

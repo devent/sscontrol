@@ -31,66 +31,75 @@ import com.anrisoftware.globalpom.exceptions.Context;
 @SuppressWarnings("serial")
 public class ServiceException extends Exception {
 
-	private final Context<ServiceException> context;
+    private final Context<ServiceException> context;
 
-	/**
-	 * @see Exception#Exception(String, Throwable)
-	 */
-	public ServiceException(String message) {
-		super(message);
-		this.context = new Context<ServiceException>(this);
-	}
+    /**
+     * @see Exception#Exception(String, Throwable)
+     */
+    public ServiceException(String message, Throwable cause) {
+        super(message, cause);
+        this.context = new Context<ServiceException>(this);
+    }
 
-	/**
-	 * @see Exception#Exception(String, Throwable)
-	 */
-	public ServiceException(String message, Throwable cause) {
-		super(message, cause);
-		this.context = new Context<ServiceException>(this);
-	}
+    /**
+     * @see Exception#Exception(String)
+     */
+    public ServiceException(String message) {
+        super(message);
+        this.context = new Context<ServiceException>(this);
+    }
 
-	/**
-	 * @see Exception#Exception(String, Throwable)
-	 */
-	public ServiceException(Object message, Throwable cause) {
-		super(message.toString(), cause);
-		this.context = new Context<ServiceException>(this);
-	}
+    /**
+     * @see Exception#Exception(String, Throwable)
+     */
+    public ServiceException(Object message, Throwable cause) {
+        super(message.toString(), cause);
+        this.context = new Context<ServiceException>(this);
+    }
 
-	/**
-	 * @see Exception#Exception(String)
-	 */
-	public ServiceException(Object message) {
-		super(message.toString());
-		this.context = new Context<ServiceException>(this);
-	}
+    /**
+     * @see Exception#Exception(String)
+     */
+    public ServiceException(Object message) {
+        super(message.toString());
+        this.context = new Context<ServiceException>(this);
+    }
 
-	/**
-	 * @see Context#addContext(String, Object)
-	 */
-	public ServiceException add(String name, Object value) {
-		context.addContext(name, value);
-		return this;
-	}
+    /**
+     * @see Context#addContext(String, Object)
+     */
+    public ServiceException add(String name, Object value) {
+        context.addContext(name, value);
+        return this;
+    }
 
-	/**
-	 * @see Context#addContext(String, Object)
-	 */
-	public ServiceException add(Object name, Object value) {
-		context.addContext(name.toString(), value);
-		return this;
-	}
+    /**
+     * @see Context#addContext(String, Object)
+     */
+    public ServiceException add(Object name, Object value) {
+        context.addContext(name.toString(), value);
+        return this;
+    }
 
-	/**
-	 * @see Context#getContext()
-	 */
-	public Map<String, Object> getContext() {
-		return context.getContext();
-	}
+    /**
+     * @see Context#getContext()
+     */
+    public Map<String, Object> getContext() {
+        return context.getContext();
+    }
 
-	@Override
-	public String toString() {
-		return context.toString();
-	}
+    @Override
+    public String getMessage() {
+        return context.message(super.getMessage());
+    }
 
+    @Override
+    public String getLocalizedMessage() {
+        return context.localizedMessage(super.getMessage());
+    }
+
+    @Override
+    public String toString() {
+        return context.toString();
+    }
 }

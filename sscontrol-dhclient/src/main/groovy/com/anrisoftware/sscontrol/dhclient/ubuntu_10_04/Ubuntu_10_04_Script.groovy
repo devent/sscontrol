@@ -19,11 +19,13 @@
 package com.anrisoftware.sscontrol.dhclient.ubuntu_10_04
 
 import static java.util.regex.Pattern.*
+import groovy.util.logging.Slf4j
 
 import javax.inject.Inject
 
 import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.sscontrol.dhclient.ubuntu.UbuntuScript
+import com.anrisoftware.sscontrol.scripts.unix.InstallPackagesFactory
 
 /**
  * Dhclient/Ubuntu 10.04.
@@ -31,17 +33,29 @@ import com.anrisoftware.sscontrol.dhclient.ubuntu.UbuntuScript
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
+@Slf4j
 class Ubuntu_10_04_Script extends UbuntuScript {
 
-	@Inject
-	UbuntuPropertiesProvider ubuntuProperties
+    @Inject
+    UbuntuPropertiesProvider ubuntuProperties
 
-	def distributionSpecificConfiguration() {
-		installPackages()
-	}
+    @Inject
+    InstallPackagesFactory installPackagesFactory
 
-	@Override
-	ContextProperties getDefaultProperties() {
-		ubuntuProperties.get()
-	}
+    void distributionSpecificConfiguration() {
+        installPackages()
+    }
+
+    /**
+     * Installs the <i>dhclient</i> packages.
+     */
+    void installPackages() {
+        installPackagesFactory.create(
+                log: log, command: installCommand, packages: packages, this, threads)()
+    }
+
+    @Override
+    ContextProperties getDefaultProperties() {
+        ubuntuProperties.get()
+    }
 }

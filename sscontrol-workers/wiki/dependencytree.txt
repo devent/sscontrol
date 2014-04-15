@@ -1,4 +1,0 @@
-com.anrisoftware.sscontrol:sscontrol-workers:jar:0.1-SNAPSHOT
-+- org.apache.commons:commons-lang3:jar:3.1:compile
-+- org.slf4j:slf4j-api:jar:1.6.6:compile
-+- junit:junit:jar:4.11:test

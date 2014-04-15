@@ -29,6 +29,10 @@ import javax.inject.Inject;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import com.anrisoftware.globalpom.threads.api.Threads;
+import com.anrisoftware.globalpom.threads.api.ThreadsException;
+import com.anrisoftware.globalpom.threads.properties.PropertiesThreads;
+import com.anrisoftware.globalpom.threads.properties.PropertiesThreadsFactory;
 import com.anrisoftware.sscontrol.core.api.ProfileProperties;
 import com.anrisoftware.sscontrol.core.api.ProfileService;
 import com.anrisoftware.sscontrol.core.api.Service;
@@ -45,6 +49,7 @@ import com.google.inject.Injector;
  * <li>{@code profile:} the profile properties of the script;
  * <li>{@code service:} this service;
  * <li>{@code name:} the name of the service.
+ * <li>{@code threads:} the threads pool.
  * </ul>
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
@@ -52,6 +57,14 @@ import com.google.inject.Injector;
  */
 @SuppressWarnings("serial")
 public abstract class AbstractService implements Service {
+
+    private static final String THREADS = "threads";
+
+    private static final String SERVICE = "service";
+
+    private static final String PROFILE = "profile";
+
+    private static final String NAME = "name";
 
     private Injector injector;
 
@@ -61,6 +74,8 @@ public abstract class AbstractService implements Service {
 
     private String refservice;
 
+    private PropertiesThreads threads;
+
     @Inject
     void setAbstractServiceLogger(AbstractServiceLogger logger) {
         this.log = logger;
@@ -69,6 +84,14 @@ public abstract class AbstractService implements Service {
     @Inject
     void setInjector(Injector injector) {
         this.injector = injector;
+    }
+
+    @Inject
+    void setThreads(ThreadsPropertiesProvider provider,
+            PropertiesThreadsFactory threadsFactory) throws ThreadsException {
+        this.threads = threadsFactory.create();
+        threads.setProperties(provider.get());
+        threads.setName("script");
     }
 
     /**
@@ -91,13 +114,22 @@ public abstract class AbstractService implements Service {
         return profile;
     }
 
+    /**
+     * Returns the threads pool for the service script.
+     * 
+     * @return the {@link Threads}.
+     */
+    public Threads getThreads() {
+        return threads;
+    }
+
     @Override
     public Service call() throws ServiceException {
-        String profileName = profile.getProfileName();
-        Script script = getScript(profileName);
-        script.setProperty("profile", profile.getEntry(getName()));
-        script.setProperty("service", this);
-        script.setProperty("name", getName());
+        Script script = getScript(profile.getProfileName());
+        script.setProperty(PROFILE, profile.getEntry(getName()));
+        script.setProperty(SERVICE, this);
+        script.setProperty(NAME, getName());
+        script.setProperty(THREADS, getThreads());
         injectScript(script);
         script.run();
         return this;
@@ -177,7 +209,7 @@ public abstract class AbstractService implements Service {
     }
 
     private Object findService(ProfileProperties entry) {
-        Object service = entry.get("service");
+        Object service = entry.get(SERVICE);
         service = service == null ? getName() : service;
         if (getRefservice() != null) {
             Map<String, String> map = asServicesMap(entry);
@@ -209,7 +241,7 @@ public abstract class AbstractService implements Service {
 
     @SuppressWarnings({ "unchecked" })
     private Map<String, String> asServicesMap(ProfileProperties entry) {
-        Object obj = entry.get("service");
+        Object obj = entry.get(SERVICE);
         return (Map<String, String>) obj;
     }
 
@@ -225,10 +257,10 @@ public abstract class AbstractService implements Service {
 
     @Override
     public String toString() {
-        ToStringBuilder builder = new ToStringBuilder(this).append("name",
-                getName());
+        ToStringBuilder builder;
+        builder = new ToStringBuilder(this).append(NAME, getName());
         if (profile != null) {
-            builder.append("profile", profile.getProfileName());
+            builder.append(PROFILE, profile.getProfileName());
         }
         return builder.toString();
     }

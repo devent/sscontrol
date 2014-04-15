@@ -18,10 +18,9 @@
  */
 package com.anrisoftware.sscontrol.core.service;
 
-import com.anrisoftware.sscontrol.workers.command.exec.ExecCommandWorkerModule;
-import com.anrisoftware.sscontrol.workers.command.script.ScriptCommandWorkerModule;
-import com.anrisoftware.sscontrol.workers.text.match.MatchTextWorkerModule;
-import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokensTemplateWorkerModule;
+import com.anrisoftware.globalpom.textmatch.match.MatchTextModule;
+import com.anrisoftware.globalpom.textmatch.tokentemplate.TokensTemplateModule;
+import com.anrisoftware.globalpom.threads.properties.PropertiesThreadsModule;
 import com.google.inject.AbstractModule;
 
 /**
@@ -34,13 +33,8 @@ public class ServiceModule extends AbstractModule {
 
 	@Override
 	protected void configure() {
-		installWorkers();
-	}
-
-	private void installWorkers() {
-		install(new ExecCommandWorkerModule());
-		install(new ScriptCommandWorkerModule());
-		install(new TokensTemplateWorkerModule());
-		install(new MatchTextWorkerModule());
+        install(new PropertiesThreadsModule());
+        install(new TokensTemplateModule());
+        install(new MatchTextModule());
 	}
 }

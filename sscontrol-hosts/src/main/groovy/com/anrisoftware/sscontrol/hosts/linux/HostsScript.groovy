@@ -20,11 +20,12 @@ package com.anrisoftware.sscontrol.hosts.linux
 
 import javax.inject.Inject
 
+import com.anrisoftware.globalpom.textmatch.tokentemplate.TokenTemplate
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.Templates
+import com.anrisoftware.resources.templates.api.TemplatesFactory
 import com.anrisoftware.sscontrol.core.service.LinuxScript
 import com.anrisoftware.sscontrol.hosts.utils.HostFormatFactory
-import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokenTemplate
 
 /**
  * Deploys the hosts on a general Linux system.
@@ -34,80 +35,82 @@ import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokenTemplate
  */
 abstract class HostsScript extends LinuxScript {
 
-	@Inject
-	HostFormatFactory hostsFormat
+    @Inject
+    TemplatesFactory templatesFactory
 
-	Templates hostsTemplates
+    @Inject
+    HostFormatFactory hostsFormat
 
-	TemplateResource hostsConfiguration
+    Templates hostsTemplates
 
-	@Override
-	def run() {
-		super.run()
-		hostsTemplates = templatesFactory.create "Hosts"
-		hostsConfiguration = hostsTemplates.getResource("hosts_configuration")
-		setupDefaultHosts()
-		deployHostsConfiguration()
-	}
+    TemplateResource hostsConfiguration
 
-	/**
-	 * Sets the default hosts.
-	 */
-	void setupDefaultHosts() {
-		service.addHostsHead defaultHosts
-	}
+    @Override
+    def run() {
+        hostsTemplates = templatesFactory.create "Hosts"
+        hostsConfiguration = hostsTemplates.getResource("hosts_configuration")
+        setupDefaultHosts()
+        deployHostsConfiguration()
+    }
 
-	/**
-	 * Deploys the hosts configuration.
-	 */
-	void deployHostsConfiguration() {
-		deployConfiguration configurationTokens(), currentHostsConfiguration, hostsConfigurations, hostsFile
-	}
+    /**
+     * Sets the default hosts.
+     */
+    void setupDefaultHosts() {
+        service.addHostsHead defaultHosts
+    }
 
-	/**
-	 * Returns the configuration for each host.
-	 */
-	List getHostsConfigurations() {
-		service.hosts.inject([]) { list, host ->
-			list << new TokenTemplate("${host.address}.*", hostConfiguration(host))
-		}
-	}
+    /**
+     * Deploys the <i>hosts</i> configuration.
+     */
+    void deployHostsConfiguration() {
+        deployConfiguration configurationTokens(), currentHostsConfiguration, hostsConfigurations, hostsFile
+    }
 
-	String hostConfiguration(def host) {
-		hostsConfiguration.getText(true, "host", "host", host)
-	}
+    /**
+     * Returns the configuration for each host.
+     */
+    List getHostsConfigurations() {
+        service.hosts.inject([]) { list, host ->
+            list << new TokenTemplate("${host.address}.*", hostConfiguration(host))
+        }
+    }
 
-	/**
-	 * Returns the current hosts configuration.
-	 */
-	String getCurrentHostsConfiguration() {
-		currentConfiguration hostsFile
-	}
+    String hostConfiguration(def host) {
+        hostsConfiguration.getText(true, "host", "host", host)
+    }
 
-	/**
-	 * Returns the hosts file.
-	 */
-	File getHostsFile() {
-		new File(configurationDir, configurationFile)
-	}
+    /**
+     * Returns the current <i>hosts</i> configuration.
+     */
+    String getCurrentHostsConfiguration() {
+        currentConfiguration hostsFile
+    }
 
-	/**
-	 * Returns the default hosts.
-	 * <p>
-	 * <ul>
-	 * <li>property {@code "default_hosts"}</li>
-	 * </ul>
-	 */
-	List getDefaultHosts() {
-		profileTypedListProperty "default_hosts", hostsFormat.create(), defaultProperties
-	}
+    /**
+     * Returns the hosts file.
+     */
+    File getHostsFile() {
+        new File(configurationDir, configurationFile)
+    }
 
-	/**
-	 * Returns the hosts configuration file.
-	 * <p>
-	 * <ul>
-	 * <li>property {@code "configuration_file"}</li>
-	 * </ul>
-	 */
-	abstract String getConfigurationFile()
+    /**
+     * Returns the default hosts.
+     * <p>
+     * <ul>
+     * <li>property {@code "default_hosts"}</li>
+     * </ul>
+     */
+    List getDefaultHosts() {
+        profileTypedListProperty "default_hosts", hostsFormat.create(), defaultProperties
+    }
+
+    /**
+     * Returns the <i>hosts</i> configuration file.
+     * <p>
+     * <ul>
+     * <li>property {@code "configuration_file"}</li>
+     * </ul>
+     */
+    abstract String getConfigurationFile()
 }

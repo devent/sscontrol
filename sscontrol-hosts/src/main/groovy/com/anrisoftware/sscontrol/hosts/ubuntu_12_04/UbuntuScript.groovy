@@ -24,7 +24,7 @@ import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.sscontrol.hosts.linux.HostsScript
 
 /**
- * Deploys the hosts on the Ubuntu 12.04 Linux system.
+ * Deploys the <i>hosts</i> on the <i>Ubuntu 12.04</i> Linux system.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0

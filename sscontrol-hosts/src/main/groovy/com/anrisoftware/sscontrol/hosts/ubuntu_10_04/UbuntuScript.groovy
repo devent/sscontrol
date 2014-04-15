@@ -24,23 +24,23 @@ import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.sscontrol.hosts.linux.HostsScript
 
 /**
- * Deploys the hosts on the Ubuntu 10.04 Linux system.
+ * Deploys the <i>hosts</i> on the <i>Ubuntu 10.04</i> Linux system.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
 class UbuntuScript extends HostsScript {
 
-	@Inject
-	UbuntuPropertiesProvider ubuntuProperties
+    @Inject
+    UbuntuPropertiesProvider ubuntuProperties
 
-	@Override
-	ContextProperties getDefaultProperties() {
-		ubuntuProperties.get()
-	}
+    @Override
+    ContextProperties getDefaultProperties() {
+        ubuntuProperties.get()
+    }
 
-	@Override
-	String getConfigurationFile() {
-		profileProperty "configuration_file", defaultProperties
-	}
+    @Override
+    String getConfigurationFile() {
+        profileProperty "configuration_file", defaultProperties
+    }
 }

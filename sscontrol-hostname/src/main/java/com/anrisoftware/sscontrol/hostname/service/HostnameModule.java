@@ -20,10 +20,11 @@ package com.anrisoftware.sscontrol.hostname.service;
 
 import com.anrisoftware.sscontrol.hostname.ubuntu_10_04.Ubuntu_10_04_Module;
 import com.anrisoftware.sscontrol.hostname.ubuntu_12_04.Ubuntu_12_04_Module;
+import com.anrisoftware.sscontrol.scripts.unix.UnixScriptsModule;
 import com.google.inject.AbstractModule;
 
 /**
- * Hostname service module.
+ * <i>Hostname</i> service module.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
@@ -32,6 +33,8 @@ class HostnameModule extends AbstractModule {
 
 	@Override
 	protected void configure() {
+        install(new UnixScriptsModule());
+        install(new UnixScriptsModule.ExecCommandModule());
 		install(new Ubuntu_10_04_Module());
         install(new Ubuntu_12_04_Module());
 	}

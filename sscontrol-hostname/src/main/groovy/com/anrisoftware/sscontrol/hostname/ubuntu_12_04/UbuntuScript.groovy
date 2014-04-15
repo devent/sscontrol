@@ -18,10 +18,13 @@
  */
 package com.anrisoftware.sscontrol.hostname.ubuntu_12_04
 
+import groovy.util.logging.Slf4j
+
 import javax.inject.Inject
 
 import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.sscontrol.hostname.linux.BaseHostnameScript
+import com.anrisoftware.sscontrol.scripts.unix.InstallPackagesFactory
 
 /**
  * Deploys the hostname on the Ubuntu 10.04 Linux system.
@@ -29,14 +32,26 @@ import com.anrisoftware.sscontrol.hostname.linux.BaseHostnameScript
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
+@Slf4j
 class UbuntuScript extends BaseHostnameScript {
 
     @Inject
     UbuntuPropertiesProvider ubuntuProperties
 
+    @Inject
+    InstallPackagesFactory installPackagesFactory
+
     @Override
     void distributionSpecificConfiguration() {
         installPackages()
+    }
+
+    /**
+     * Installs the <i>hostname</i> packages.
+     */
+    void installPackages() {
+        installPackagesFactory.create(
+                log: log, command: installCommand, packages: packages, this, threads)()
     }
 
     @Override

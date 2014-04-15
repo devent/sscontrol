@@ -59,6 +59,10 @@
 			<groupId>com.google.inject.extensions</groupId>
 			<artifactId>guice-multibindings</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>com.anrisoftware.sscontrol</groupId>
+			<artifactId>sscontrol-scripts-unix</artifactId>
+		</dependency>
 	</dependencies>
 
 </project>

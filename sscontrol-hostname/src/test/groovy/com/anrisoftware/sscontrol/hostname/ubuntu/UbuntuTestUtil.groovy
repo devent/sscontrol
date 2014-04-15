@@ -35,53 +35,53 @@ import com.anrisoftware.sscontrol.core.service.ServiceModule
 import com.google.inject.Injector
 
 /**
- * Creates the test environment for hostname/Ubuntu.
+ * <i>Hostname</i> <i>Ubuntu</i> test environment.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
 class UbuntuTestUtil {
 
-	static Injector injector
+    static Injector injector
 
-	static ServiceLoaderFactory loaderFactory
+    static ServiceLoaderFactory loaderFactory
 
-	@Rule
-	public TemporaryFolder tmp = new TemporaryFolder()
+    @Rule
+    public TemporaryFolder tmp = new TemporaryFolder()
 
-	ServicesRegistry registry
+    ServicesRegistry registry
 
-	SscontrolServiceLoader loader
+    SscontrolServiceLoader loader
 
-	File tmpdir
+    File tmpdir
 
-	Map variables
+    Map variables
 
-	@Before
-	void createTemp() {
-		tmpdir = tmp.newFolder("hostname-ubuntu")
-		variables = [tmp: tmpdir.absoluteFile]
-	}
+    @Before
+    void createTemp() {
+        tmpdir = tmp.newFolder("hostname-ubuntu")
+        variables = [tmp: tmpdir.absoluteFile]
+    }
 
-	@Before
-	void createRegistry() {
-		registry = injector.getInstance ServicesRegistry
-		loader = loaderFactory.create registry, variables
-		loader.setParent injector
-	}
+    @Before
+    void createRegistry() {
+        registry = injector.getInstance ServicesRegistry
+        loader = loaderFactory.create registry, variables
+        loader.setParent injector
+    }
 
-	@BeforeClass
-	static void createFactories() {
-		injector = createInjector()
-		loaderFactory = injector.getInstance ServiceLoaderFactory
-	}
+    @BeforeClass
+    static void createFactories() {
+        injector = createInjector()
+        loaderFactory = injector.getInstance ServiceLoaderFactory
+    }
 
-	static Injector createInjector() {
-		createInjector(new CoreModule(), new CoreResourcesModule(), new ServiceModule())
-	}
+    static Injector createInjector() {
+        createInjector(new CoreModule(), new CoreResourcesModule(), new ServiceModule())
+    }
 
-	@BeforeClass
-	static void setupToStringStyle() {
-		toStringStyle
-	}
+    @BeforeClass
+    static void setupToStringStyle() {
+        toStringStyle
+    }
 }

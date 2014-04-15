@@ -18,9 +18,13 @@
  */
 package com.anrisoftware.sscontrol.hostname.linux
 
+import javax.inject.Inject
+
+import com.anrisoftware.globalpom.textmatch.tokentemplate.TokenTemplate
 import com.anrisoftware.resources.templates.api.Templates
+import com.anrisoftware.resources.templates.api.TemplatesFactory
 import com.anrisoftware.sscontrol.core.service.LinuxScript
-import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokenTemplate
+import com.anrisoftware.sscontrol.scripts.unix.RestartServicesFactory
 
 /**
  * Base hostname script.
@@ -30,15 +34,20 @@ import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokenTemplate
  */
 abstract class BaseHostnameScript extends LinuxScript {
 
+    @Inject
+    TemplatesFactory templatesFactory
+
+    @Inject
+    RestartServicesFactory restartServicesFactory
+
     Templates hostnameTemplates
 
     @Override
     def run() {
-        super.run()
         hostnameTemplates = templatesFactory.create "Hostname"
         distributionSpecificConfiguration()
         deployHostnameConfiguration()
-        restartServices()
+        restartService()
     }
 
     /**
@@ -47,21 +56,29 @@ abstract class BaseHostnameScript extends LinuxScript {
     abstract void distributionSpecificConfiguration()
 
     /**
-     * Deploys the hostname configuration.
+     * Deploys the <i>hostname</i> configuration.
      */
     void deployHostnameConfiguration() {
         deployConfiguration configurationTokens(), currentHostnameConfiguration, hostnameConfiguration, hostnameFile
     }
 
     /**
-     * Returns the current hostname configuration.
+     * Restarts the <i>hostname</i> service.
+     */
+    void restartService() {
+        restartServicesFactory.create(
+                log: log, command: restartCommand, services: restartServices, this, threads)()
+    }
+
+    /**
+     * Returns the current <i>hostname</i> configuration.
      */
     String getCurrentHostnameConfiguration() {
         currentConfiguration hostnameFile
     }
 
     /**
-     * Returns the hostname configuration.
+     * Returns the <i>hostname</i> configuration.
      */
     List getHostnameConfiguration() {
         [
@@ -70,7 +87,7 @@ abstract class BaseHostnameScript extends LinuxScript {
     }
 
     /**
-     * Returns the hostname configuration file, for
+     * Returns the <i>hostname</i> configuration file, for
      * example {@code "hostname".} If the file path is not absolute then the
      * file is assumed under the configuration directory.
      *
@@ -86,7 +103,7 @@ abstract class BaseHostnameScript extends LinuxScript {
     }
 
     /**
-     * Returns the hostname configuration file, for
+     * Returns the <i>hostname</i> configuration file, for
      * example {@code "/etc".}
      *
      * <ul>

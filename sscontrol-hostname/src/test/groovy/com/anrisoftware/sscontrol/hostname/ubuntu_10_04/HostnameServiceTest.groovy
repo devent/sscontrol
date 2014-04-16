@@ -40,42 +40,44 @@ import com.anrisoftware.sscontrol.hostname.ubuntu.UbuntuTestUtil
 @Slf4j
 class HostnameServiceTest extends UbuntuTestUtil {
 
-	@Test
-	void "empty hostname configuration"() {
-		copyUbuntuFiles tmpdir
+    @Test
+    void "empty hostname configuration"() {
+        copyUbuntuFiles tmpdir
 
-		TestUtils.trimStrings = false
-		loader.loadService profile.resource, null
-		def profile = registry.getService("profile")[0]
-		loader.loadService hostnameService.resource, profile
+        TestUtils.trimStrings = false
+        loader.loadService profile.resource, null
+        def profile = registry.getService("profile")[0]
+        loader.loadService hostnameService.resource, profile
 
-		registry.allServices.each { it.call() }
-		log.info "Run service again to ensure that configuration is not set double."
-		registry.allServices.each { it.call() }
-		assertFileContent hostnameExpected.asFile(tmpdir), hostnameExpected
-	}
+        registry.allServices.each { it.call() }
+        log.info "Run service again to ensure that configuration is not set double."
+        registry.allServices.each { it.call() }
+        assertFileContent hostnameExpected.asFile(tmpdir), hostnameExpected
+        assertFileContent restartOutExpected.asFile(tmpdir), restartOutExpected
+    }
 
-	@Test
-	void "hostname already set"() {
-		copyUbuntuFiles tmpdir
-		copyURLToFile localhostHostnameFile.resource, localhostHostnameFile.asFile(tmpdir)
+    @Test
+    void "hostname already set"() {
+        copyUbuntuFiles tmpdir
+        copyURLToFile localhostHostnameFile.resource, localhostHostnameFile.asFile(tmpdir)
 
-		TestUtils.trimStrings = true
-		loader.loadService profile.resource, null
-		def profile = registry.getService("profile")[0]
-		loader.loadService hostnameService.resource, profile
+        TestUtils.trimStrings = true
+        loader.loadService profile.resource, null
+        def profile = registry.getService("profile")[0]
+        loader.loadService hostnameService.resource, profile
 
-		registry.allServices.each { it.call() }
-		log.info "Run service again to ensure that configuration is not set double."
-		registry.allServices.each { it.call() }
-		assertFileContent hostnameExpected.asFile(tmpdir), hostnameExpected
-	}
+        registry.allServices.each { it.call() }
+        log.info "Run service again to ensure that configuration is not set double."
+        registry.allServices.each { it.call() }
+        assertFileContent hostnameExpected.asFile(tmpdir), hostnameExpected
+        assertFileContent restartOutExpected.asFile(tmpdir), restartOutExpected
+    }
 
-	@Test
-	void "load hostname service with null value"() {
-		copyUbuntuFiles tmpdir
-		loader.loadService profile.resource, null
-		def profile = registry.getService("profile")[0]
-		shouldFailWith ServiceException, { loader.loadService hostnameNullService.resource, profile }
-	}
+    @Test
+    void "load hostname service with null value"() {
+        copyUbuntuFiles tmpdir
+        loader.loadService profile.resource, null
+        def profile = registry.getService("profile")[0]
+        shouldFailWith ServiceException, { loader.loadService hostnameNullService.resource, profile }
+    }
 }

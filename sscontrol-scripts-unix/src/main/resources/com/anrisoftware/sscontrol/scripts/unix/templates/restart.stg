@@ -1,7 +1,7 @@
 unix(args) ::= <<
 #!/bin/bash
-<if(args.services)><args.services:{service | <args.restartCommand> <service><\n>}>
+<if(args.services)><args.services:{service | <args.command> <service><\n>}>
 <else>
-<args.restartCommand>
+<args.command>
 <endif>
 >>

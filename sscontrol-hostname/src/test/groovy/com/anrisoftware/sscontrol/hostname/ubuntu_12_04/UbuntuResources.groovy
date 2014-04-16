@@ -38,6 +38,7 @@ enum UbuntuResources {
     configDir("/etc", null),
     hostname("/etc/hostname", UbuntuResources.class.getResource("hostname.txt")),
     hostnameExpected("/etc/hostname", UbuntuResources.class.getResource("hostname_expected.txt")),
+    restartOutExpected("/etc/init.d/hostname.out", UbuntuResources.class.getResource("hostname_out_expected.txt")),
 
     static copyUbuntuFiles(File parent) {
         configDir.asFile(parent).mkdirs()

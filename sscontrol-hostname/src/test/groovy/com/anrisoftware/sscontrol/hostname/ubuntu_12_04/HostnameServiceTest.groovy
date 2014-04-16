@@ -50,5 +50,6 @@ class HostnameServiceTest extends UbuntuTestUtil {
         log.info "Run service again to ensure that configuration is not set double."
         registry.allServices.each { it.call() }
         assertFileContent hostnameExpected.asFile(tmpdir), hostnameExpected
+        assertFileContent restartOutExpected.asFile(tmpdir), restartOutExpected
     }
 }

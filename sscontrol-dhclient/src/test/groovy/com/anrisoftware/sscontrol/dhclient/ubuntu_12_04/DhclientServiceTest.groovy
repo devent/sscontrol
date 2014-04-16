@@ -47,5 +47,6 @@ class DhclientServiceTest extends UbuntuTestUtil {
         registry.allServices.each { it.call() }
 
         assertFileContent dhclientExpected.asFile(tmpdir), dhclientExpected
+        assertFileContent restartOutExpected.asFile(tmpdir), restartOutExpected
     }
 }

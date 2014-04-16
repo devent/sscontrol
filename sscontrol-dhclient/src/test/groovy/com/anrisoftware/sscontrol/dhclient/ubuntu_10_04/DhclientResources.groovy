@@ -39,6 +39,7 @@ enum DhclientResources {
     dhclient("/etc/dhcp3/dhclient.conf", DhclientResources.class.getResource("dhclient.txt")),
     dhclientEmptyExpected("/etc/dhcp3/dhclient.conf", DhclientResources.class.getResource("dhclient_empty_expected.txt")),
     dhclientNonEmptyExpected("/etc/dhcp3/dhclient.conf", DhclientResources.class.getResource("dhclient_nonempty_expected.txt")),
+    restartOutExpected("/etc/init.d/networking.out", DhclientResources.class.getResource("networking_out_expected.txt")),
 
     static copyUbuntuFiles(File parent) {
         aptitudeCommand.createCommand parent

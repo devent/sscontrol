@@ -1,0 +1,4 @@
+echo(args) ::= <<
+#!/bin/sh
+echo "<args.text>"
+>>

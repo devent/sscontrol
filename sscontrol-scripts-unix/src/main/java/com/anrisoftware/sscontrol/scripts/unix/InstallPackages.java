@@ -1,3 +1,21 @@
+/*
+ * Copyright 2014 Erwin Müller <erwin.mueller@deventm.org>
+ *
+ * This file is part of sscontrol-scripts-unix.
+ *
+ * sscontrol-scripts-unix is free software: you can redistribute it and/or modify it
+ * under the terms of the GNU Affero General Public License as published by the
+ * Free Software Foundation, either version 3 of the License, or (at your
+ * option) any later version.
+ *
+ * sscontrol-scripts-unix is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
+ * for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with sscontrol-scripts-unix. If not, see <http://www.gnu.org/licenses/>.
+ */
 package com.anrisoftware.sscontrol.scripts.unix;
 
 import java.util.Map;
@@ -29,11 +47,12 @@ public class InstallPackages implements Callable<ProcessTask> {
 
     private final Map<String, Object> args;
 
-    private final InstallPackagesLogger log;
-
     private final Object parent;
 
     private final Threads threads;
+
+    @Inject
+    private InstallPackagesLogger log;
 
     @Inject
     private CommandTemplatesProvider commandTemplates;
@@ -59,13 +78,11 @@ public class InstallPackages implements Callable<ProcessTask> {
      * @see InstallPackagesFactory#create(Map, Object, Threads)
      */
     @Inject
-    InstallPackages(InstallPackagesLogger log, @Assisted Object parent,
-            @Assisted Threads threads, @Assisted Map<String, Object> args) {
-        this.log = log;
+    InstallPackages(@Assisted Object parent, @Assisted Threads threads,
+            @Assisted Map<String, Object> args) {
         this.parent = parent;
         this.args = args;
         this.threads = threads;
-        log.checkArgs(args);
         this.system = "unix";
     }
 
@@ -75,6 +92,7 @@ public class InstallPackages implements Callable<ProcessTask> {
 
     @Override
     public ProcessTask call() throws Exception {
+        log.checkArgs(args);
         TemplateResource template = getTemplate();
         CommandLine line = createLine(template);
         ScriptCommandExec script = createExec();

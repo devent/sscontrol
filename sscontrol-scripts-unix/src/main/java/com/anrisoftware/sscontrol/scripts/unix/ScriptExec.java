@@ -38,12 +38,12 @@ import com.anrisoftware.resources.templates.api.TemplateResource;
 import com.google.inject.assistedinject.Assisted;
 
 /**
- * Restarts the specified services on the system.
+ * Executes the script from a template.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-public class RestartServices implements Callable<ProcessTask> {
+public class ScriptExec implements Callable<ProcessTask> {
 
     private final Map<String, Object> args;
 
@@ -51,11 +51,12 @@ public class RestartServices implements Callable<ProcessTask> {
 
     private final Threads threads;
 
-    @Inject
-    private RestartServicesLogger log;
+    private final String name;
+
+    private final TemplateResource templateResource;
 
     @Inject
-    private CommandTemplatesProvider commandTemplates;
+    private ScriptExecLogger log;
 
     @Inject
     private ScriptCommandExecFactory scriptExecFactory;
@@ -72,32 +73,28 @@ public class RestartServices implements Callable<ProcessTask> {
     @Inject
     private ErrorLogCommandOutputFactory errorOutputFactory;
 
-    private String system;
-
     /**
-     * @see RestartServicesFactory#create(Map, Object, Threads)
+     * @see ScriptExecFactory#create(Object, Threads, TemplateResource, String,
+     *      Map)
      */
     @Inject
-    RestartServices(@Assisted Object parent, @Assisted Threads threads,
+    ScriptExec(@Assisted Object parent, @Assisted Threads threads,
+            @Assisted TemplateResource templateResource, @Assisted String name,
             @Assisted Map<String, Object> args) {
         this.parent = parent;
         this.args = args;
         this.threads = threads;
-        this.system = "unix";
-    }
-
-    public void setSystem(String system) {
-        this.system = system;
+        this.name = name;
+        this.templateResource = templateResource;
     }
 
     @Override
     public ProcessTask call() throws Exception {
-        log.checkArgs(args);
-        TemplateResource template = getTemplate();
-        CommandLine line = createLine(template);
+        log.checkArgs(this, args);
+        CommandLine line = createLine(templateResource);
         ScriptCommandExec script = createExec();
         ProcessTask task = exec(line, script);
-        log.installPackagesDone(parent, task, args);
+        log.scriptDone(parent, task, args);
         return task;
     }
 
@@ -117,10 +114,7 @@ public class RestartServices implements Callable<ProcessTask> {
     }
 
     private CommandLine createLine(TemplateResource template) {
-        return lineFactory.create(system, template).addSub("args", args);
+        return lineFactory.create(name, template).addSub("args", args);
     }
 
-    private TemplateResource getTemplate() {
-        return commandTemplates.get().getResource("restart");
-    }
 }

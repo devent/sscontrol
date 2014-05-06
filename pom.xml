@@ -9,6 +9,7 @@
     <name>RoboBee :: Bundle</name>
 
     <modules>
+        <module>sscontrol-parent</module>
         <module>sscontrol-api</module>
         <module>sscontrol-core</module>
         <module>sscontrol-database</module>
@@ -29,14 +30,10 @@
         <module>sscontrol-ldap-openldap</module>
         <module>sscontrol-mail</module>
         <module>sscontrol-mail-postfix</module>
-        <module>sscontrol-parent</module>
         <module>sscontrol-profile</module>
         <module>sscontrol-remoteaccess</module>
+        <module>sscontrol-scripts-unix</module>
         <module>sscontrol-security</module>
-        <module>sscontrol-workers</module>
-        <module>sscontrol-workers-command</module>
-        <module>sscontrol-workers-text</module>
     </modules>
 
 </project>
-

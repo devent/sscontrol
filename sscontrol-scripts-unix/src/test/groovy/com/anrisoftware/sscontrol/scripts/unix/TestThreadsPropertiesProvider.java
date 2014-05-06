@@ -18,32 +18,26 @@
  */
 package com.anrisoftware.sscontrol.scripts.unix;
 
-import java.util.Map;
+import java.net.URL;
 
-import com.anrisoftware.globalpom.threads.api.Threads;
+import com.anrisoftware.globalpom.threads.properties.PropertiesThreads;
+import com.anrisoftware.propertiesutils.AbstractContextPropertiesProvider;
 
 /**
- * Factory to create the restart services.
+ * Returns properties for test threads pool.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-public interface RestartServicesFactory {
+@SuppressWarnings("serial")
+public class TestThreadsPropertiesProvider extends
+        AbstractContextPropertiesProvider {
 
-    /**
-     * Create the restart services.
-     * 
-     * @param args
-     *            the {@link Map} arguments.
-     * 
-     * @param parent
-     *            the {@link Object} parent script.
-     * 
-     * @param threads
-     *            the {@link Threads} pool.
-     * 
-     * @return the {@link RestartServices}.
-     */
-    RestartServices create(Map<String, Object> args, Object parent,
-            Threads threads);
+    private static final URL RES = TestThreadsPropertiesProvider.class
+            .getResource("test_threads.properties");
+
+    TestThreadsPropertiesProvider() {
+        super(PropertiesThreads.class, RES);
+    }
+
 }

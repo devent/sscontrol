@@ -21,17 +21,18 @@ package com.anrisoftware.sscontrol.scripts.unix;
 import java.util.Map;
 
 import com.anrisoftware.globalpom.threads.api.Threads;
+import com.anrisoftware.resources.templates.api.TemplateResource;
 
 /**
- * Factory to create the restart services.
+ * Factory to create the script exec.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-public interface RestartServicesFactory {
+public interface ScriptExecFactory {
 
     /**
-     * Create the restart services.
+     * Create the script exec.
      * 
      * @param args
      *            the {@link Map} arguments.
@@ -42,8 +43,14 @@ public interface RestartServicesFactory {
      * @param threads
      *            the {@link Threads} pool.
      * 
-     * @return the {@link RestartServices}.
+     * @param templateResource
+     *            the {@link TemplateResource}.
+     * 
+     * @param name
+     *            the {@link String} name.
+     * 
+     * @return the {@link ScriptExec}.
      */
-    RestartServices create(Map<String, Object> args, Object parent,
-            Threads threads);
+    ScriptExec create(Map<String, Object> args, Object parent, Threads threads,
+            TemplateResource templateResource, String name);
 }

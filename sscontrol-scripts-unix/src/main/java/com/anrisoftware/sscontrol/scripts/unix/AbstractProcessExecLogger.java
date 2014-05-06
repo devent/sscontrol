@@ -18,30 +18,26 @@
  */
 package com.anrisoftware.sscontrol.scripts.unix;
 
-import static com.anrisoftware.sscontrol.scripts.unix.ScriptExecLogger._.script_done_debug;
-import static com.anrisoftware.sscontrol.scripts.unix.ScriptExecLogger._.script_done_info;
-import static com.anrisoftware.sscontrol.scripts.unix.ScriptExecLogger._.script_done_trace;
+import static com.anrisoftware.sscontrol.scripts.unix.AbstractProcessExecLogger._.log_null;
+import static org.apache.commons.lang3.Validate.notNull;
 
 import java.util.Map;
 
-import com.anrisoftware.globalpom.exec.api.ProcessTask;
 import com.anrisoftware.globalpom.log.AbstractLogger;
 
 /**
- * Logging for {@link ScriptExec}.
+ * Logging for {@link AbstractProcessExec}.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class ScriptExecLogger extends AbstractLogger {
+class AbstractProcessExecLogger extends AbstractLogger {
+
+    private static final String LOG_ARG = "log";
 
     enum _ {
 
-        script_done_trace("Script done {} for {}, {}."),
-
-        script_done_debug("Script done {} for {}."),
-
-        script_done_info("Script done for {}.");
+        log_null("Logger argument '%s' must be set");
 
         private String name;
 
@@ -56,20 +52,14 @@ class ScriptExecLogger extends AbstractLogger {
     }
 
     /**
-     * Sets the context of the logger to {@link ScriptExec}.
+     * Sets the context of the logger to {@link AbstractProcessExec}.
      */
-    public ScriptExecLogger() {
-        super(ScriptExec.class);
+    public AbstractProcessExecLogger() {
+        super(AbstractProcessExec.class);
     }
 
-    void scriptDone(Object parent, ProcessTask task,
-            Map<String, Object> args) {
-        if (isTraceEnabled()) {
-            trace(script_done_trace, args, parent, task);
-        } else if (isDebugEnabled()) {
-            debug(script_done_debug, args, parent);
-        } else {
-            info(script_done_info, parent);
-        }
+    void checkArgs(AbstractProcessExec exec, Map<String, Object> args) {
+        notNull(args.get(LOG_ARG), log_null.toString(), LOG_ARG);
     }
+
 }

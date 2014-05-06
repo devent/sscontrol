@@ -1,4 +1,4 @@
-unix(args) ::= <<
+restartUnix(args) ::= <<
 #!/bin/bash
 <if(args.services)><args.services:{service | <args.command> <service><\n>}>
 <else>

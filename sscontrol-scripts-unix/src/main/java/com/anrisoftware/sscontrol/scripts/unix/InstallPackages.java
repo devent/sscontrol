@@ -18,20 +18,15 @@
  */
 package com.anrisoftware.sscontrol.scripts.unix;
 
+import static java.lang.String.format;
+import static org.apache.commons.lang3.StringUtils.capitalize;
+
 import java.util.Map;
-import java.util.concurrent.Callable;
 
 import javax.inject.Inject;
 
-import org.slf4j.Logger;
-
 import com.anrisoftware.globalpom.exec.api.CommandLine;
 import com.anrisoftware.globalpom.exec.api.ProcessTask;
-import com.anrisoftware.globalpom.exec.core.DefaultCommandExecFactory;
-import com.anrisoftware.globalpom.exec.logoutputs.DebugLogCommandOutputFactory;
-import com.anrisoftware.globalpom.exec.logoutputs.ErrorLogCommandOutputFactory;
-import com.anrisoftware.globalpom.exec.script.ScriptCommandExec;
-import com.anrisoftware.globalpom.exec.script.ScriptCommandExecFactory;
 import com.anrisoftware.globalpom.exec.script.ScriptCommandLineFactory;
 import com.anrisoftware.globalpom.threads.api.Threads;
 import com.anrisoftware.resources.templates.api.TemplateResource;
@@ -43,34 +38,17 @@ import com.google.inject.assistedinject.Assisted;
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-public class InstallPackages implements Callable<ProcessTask> {
-
-    private final Map<String, Object> args;
+public class InstallPackages extends AbstractProcessExec {
 
     private final Object parent;
 
-    private final Threads threads;
+    private final Map<String, Object> args;
 
     @Inject
     private InstallPackagesLogger log;
 
     @Inject
     private CommandTemplatesProvider commandTemplates;
-
-    @Inject
-    private ScriptCommandExecFactory scriptExecFactory;
-
-    @Inject
-    private ScriptCommandLineFactory lineFactory;
-
-    @Inject
-    private DefaultCommandExecFactory execFactory;
-
-    @Inject
-    private DebugLogCommandOutputFactory debugOutputFactory;
-
-    @Inject
-    private ErrorLogCommandOutputFactory errorOutputFactory;
 
     private String system;
 
@@ -80,9 +58,9 @@ public class InstallPackages implements Callable<ProcessTask> {
     @Inject
     InstallPackages(@Assisted Object parent, @Assisted Threads threads,
             @Assisted Map<String, Object> args) {
+        super(threads, args);
         this.parent = parent;
         this.args = args;
-        this.threads = threads;
         this.system = "unix";
     }
 
@@ -91,33 +69,18 @@ public class InstallPackages implements Callable<ProcessTask> {
     }
 
     @Override
+    protected CommandLine createLine(ScriptCommandLineFactory commandLineFactory) {
+        TemplateResource template = getTemplate();
+        String name = format("%s%s", "install", capitalize(system));
+        return commandLineFactory.create(name, template).addSub("args", args);
+    }
+
+    @Override
     public ProcessTask call() throws Exception {
         log.checkArgs(args);
-        TemplateResource template = getTemplate();
-        CommandLine line = createLine(template);
-        ScriptCommandExec script = createExec();
-        ProcessTask task = exec(line, script);
+        ProcessTask task = super.call();
         log.installPackagesDone(parent, task, args);
         return task;
-    }
-
-    private ScriptCommandExec createExec() {
-        ScriptCommandExec script = scriptExecFactory.create(execFactory);
-        script.setThreads(threads);
-        return script;
-    }
-
-    private ProcessTask exec(CommandLine line, ScriptCommandExec script)
-            throws Exception {
-        Logger logger = (Logger) args.get("log");
-        script.setCommandError(errorOutputFactory.create(logger, line));
-        script.setCommandOutput(debugOutputFactory.create(logger, line));
-        ProcessTask task = script.exec(line).get();
-        return task;
-    }
-
-    private CommandLine createLine(TemplateResource template) {
-        return lineFactory.create(system, template).addSub("args", args);
     }
 
     private TemplateResource getTemplate() {

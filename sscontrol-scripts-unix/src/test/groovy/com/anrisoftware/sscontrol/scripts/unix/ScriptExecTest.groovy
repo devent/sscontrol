@@ -20,6 +20,9 @@ package com.anrisoftware.sscontrol.scripts.unix
 
 import groovy.util.logging.Slf4j
 
+import java.util.concurrent.TimeoutException
+
+import org.joda.time.Duration
 import org.junit.Before
 import org.junit.BeforeClass
 import org.junit.Test
@@ -50,6 +53,13 @@ class ScriptExecTest {
     void "exec script"() {
         def scriptExec = scriptExecFactory.create(
                 log: log, text: "foo", this, threads, echoScriptTemplate, "echo")()
+    }
+
+    @Test(expected = TimeoutException)
+    void "exec script timeout"() {
+        def scriptExec = scriptExecFactory.create(
+                log: log, text: "foo", sleep: 5, timeout: Duration.standardSeconds(1),
+                this, threads, echoScriptTemplate, "echoTimeout")()
     }
 
     static Injector injector

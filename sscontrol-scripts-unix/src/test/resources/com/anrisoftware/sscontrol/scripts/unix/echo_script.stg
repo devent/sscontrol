@@ -2,3 +2,9 @@ echo(args) ::= <<
 #!/bin/sh
 echo "<args.text>"
 >>
+
+echoTimeout(args) ::= <<
+#!/bin/sh
+echo "<args.text>"
+sleep <args.sleep>
+>>

@@ -1,4 +1,4 @@
-unix(args) ::= <<
+installUnix(args) ::= <<
 #!/bin/bash
 <args.command> <args.packages;separator=" ">
 

@@ -22,7 +22,6 @@ import static com.anrisoftware.sscontrol.scripts.unix.InstallPackagesLogger._.co
 import static com.anrisoftware.sscontrol.scripts.unix.InstallPackagesLogger._.install_packages_done_debug;
 import static com.anrisoftware.sscontrol.scripts.unix.InstallPackagesLogger._.install_packages_done_info;
 import static com.anrisoftware.sscontrol.scripts.unix.InstallPackagesLogger._.install_packages_done_trace;
-import static com.anrisoftware.sscontrol.scripts.unix.InstallPackagesLogger._.log_null;
 import static com.anrisoftware.sscontrol.scripts.unix.InstallPackagesLogger._.packages_null;
 import static org.apache.commons.lang3.Validate.notNull;
 
@@ -39,7 +38,6 @@ import com.anrisoftware.globalpom.log.AbstractLogger;
  */
 class InstallPackagesLogger extends AbstractLogger {
 
-    private static final String LOG_ARG = "log";
     private static final String PACKAGES_ARG = "packages";
     private static final String COMMAND_ARG = "command";
 
@@ -48,8 +46,6 @@ class InstallPackagesLogger extends AbstractLogger {
         command_null("Install packages command argument '%s' must be set"),
 
         packages_null("Packages argument '%s' must be set"),
-
-        log_null("Logger argument '%s' must be set"),
 
         install_packages_done_trace("Installed packages {} for {}, {}."),
 
@@ -90,6 +86,5 @@ class InstallPackagesLogger extends AbstractLogger {
     void checkArgs(Map<String, Object> args) {
         notNull(args.get(COMMAND_ARG), command_null.toString(), COMMAND_ARG);
         notNull(args.get(PACKAGES_ARG), packages_null.toString(), PACKAGES_ARG);
-        notNull(args.get(LOG_ARG), log_null.toString(), LOG_ARG);
     }
 }

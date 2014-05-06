@@ -28,7 +28,7 @@ import com.anrisoftware.sscontrol.core.api.ServicesRegistry
 import com.anrisoftware.sscontrol.firewall.ufw.resources.UfwLinuxBase
 
 /**
- * Test UFW on a Ubuntu 10.04 server.
+ * Test UFW on a Ubuntu 12.04 server.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
@@ -47,7 +47,6 @@ class UfwUbuntuTest extends UfwLinuxBase {
         log.info "Run service again to ensure that configuration is not set double."
         registry.allServices.each { it.call() }
         assertFileContent aptitudeOutExpected.asFile(tmpdir), aptitudeOutExpected
-        assertFileContent ufwInAllowExpected.asFile(tmpdir), ufwInAllowExpected
         assertFileContent ufwOutAllowExpected.asFile(tmpdir), ufwOutAllowExpected
     }
 }

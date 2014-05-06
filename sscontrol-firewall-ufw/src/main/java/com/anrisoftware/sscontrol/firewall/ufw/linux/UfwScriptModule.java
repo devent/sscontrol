@@ -18,17 +18,20 @@
  */
 package com.anrisoftware.sscontrol.firewall.ufw.linux;
 
+import com.anrisoftware.sscontrol.scripts.unix.UnixScriptsModule;
 import com.google.inject.AbstractModule;
 
 /**
- * UFW firewall service module.
+ * <i>ufw</i> firewall service module.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
 public class UfwScriptModule extends AbstractModule {
 
-	@Override
-	protected void configure() {
-	}
+    @Override
+    protected void configure() {
+        install(new UnixScriptsModule());
+        install(new UnixScriptsModule.ExecCommandModule());
+    }
 }

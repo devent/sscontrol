@@ -37,9 +37,7 @@ enum UbuntuResources {
     allowService("FirewallAllow.groovy", UbuntuResources.class.getResource("FirewallAllow.groovy")),
     denyService("FirewallDeny.groovy", UbuntuResources.class.getResource("FirewallDeny.groovy")),
     aptitudeOutExpected("/usr/bin/aptitude.out", UbuntuResources.class.getResource("aptitude_out.txt")),
-    ufwInAllowExpected("/usr/sbin/ufw.in", UbuntuResources.class.getResource("ufw_allow_in.txt")),
     ufwOutAllowExpected("/usr/sbin/ufw.out", UbuntuResources.class.getResource("ufw_allow_out.txt")),
-    ufwInDenyExpected("/usr/sbin/ufw.in", UbuntuResources.class.getResource("ufw_deny_in.txt")),
     ufwOutDenyExpected("/usr/sbin/ufw.out", UbuntuResources.class.getResource("ufw_deny_out.txt")),
 
     static void copyUbuntuFiles(def parent) {

@@ -19,12 +19,15 @@
 package com.anrisoftware.sscontrol.firewall.ufw.linux
 
 import static org.apache.commons.io.FileUtils.*
+import groovy.util.logging.Slf4j
 
 import javax.inject.Inject
 
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.Templates
+import com.anrisoftware.resources.templates.api.TemplatesFactory
 import com.anrisoftware.sscontrol.core.service.LinuxScript
+import com.anrisoftware.sscontrol.scripts.unix.ScriptExecFactory
 
 /**
  * Uses the UFW service on a general Linux system.
@@ -32,10 +35,17 @@ import com.anrisoftware.sscontrol.core.service.LinuxScript
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
+@Slf4j
 abstract class UfwScript extends LinuxScript {
 
     @Inject
-    UfwScriptLogger log
+    UfwScriptLogger logg
+
+    @Inject
+    TemplatesFactory templatesFactory
+
+    @Inject
+    ScriptExecFactory scriptExecFactory
 
     /**
      * The {@link Templates} for the script.
@@ -43,15 +53,14 @@ abstract class UfwScript extends LinuxScript {
     Templates ufwTemplates
 
     /**
-     * Resource containing the MaraDNS configuration templates.
+     * Resource containing the <i>ufw</i> rules templates,.
      */
-    TemplateResource rules
+    TemplateResource rulesTemplate
 
     @Override
     def run() {
-        super.run()
         ufwTemplates = templatesFactory.create "Ufw"
-        rules = ufwTemplates.getResource "rules"
+        rulesTemplate = ufwTemplates.getResource "rules"
         distributionSpecificConfiguration()
         deployRules()
     }
@@ -65,9 +74,10 @@ abstract class UfwScript extends LinuxScript {
      * Deploys the firewall rules.
      */
     void deployRules() {
-        def worker = scriptCommandFactory.create(rules,
-                "service", service, "ufwCommand", ufwCommand)()
-        log.deployedRules this, worker
+        def worker = scriptExecFactory.create(
+                log: log, service: service, command: ufwCommand,
+                this, threads, rulesTemplate, "rules")()
+        logg.deployedRules this, worker
     }
 
     /**

@@ -47,7 +47,6 @@ class UfwUbuntuTest extends UfwLinuxBase {
         log.info "Run service again to ensure that configuration is not set double."
         registry.allServices.each { it.call() }
         assertFileContent aptitudeOutExpected.asFile(tmpdir), aptitudeOutExpected
-        assertFileContent ufwInAllowExpected.asFile(tmpdir), ufwInAllowExpected
         assertFileContent ufwOutAllowExpected.asFile(tmpdir), ufwOutAllowExpected
     }
 
@@ -62,7 +61,6 @@ class UfwUbuntuTest extends UfwLinuxBase {
         log.info "Run service again to ensure that configuration is not set double."
         registry.allServices.each { it.call() }
         assertFileContent aptitudeOutExpected.asFile(tmpdir), aptitudeOutExpected
-        assertFileContent ufwInDenyExpected.asFile(tmpdir), ufwInDenyExpected
         assertFileContent ufwOutDenyExpected.asFile(tmpdir), ufwOutDenyExpected
     }
 }

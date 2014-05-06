@@ -18,10 +18,13 @@
  */
 package com.anrisoftware.sscontrol.firewall.ufw.ubuntu_12_04
 
+import groovy.util.logging.Slf4j
+
 import javax.inject.Inject
 
 import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.sscontrol.firewall.ufw.linux.UfwScript
+import com.anrisoftware.sscontrol.scripts.unix.InstallPackagesFactory
 
 /**
  * Uses the UFW service for Ubuntu 12.04.
@@ -29,14 +32,26 @@ import com.anrisoftware.sscontrol.firewall.ufw.linux.UfwScript
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
+@Slf4j
 class UbuntuScript extends UfwScript {
 
     @Inject
     UbuntuPropertiesProvider ubuntuProperties
 
+    @Inject
+    InstallPackagesFactory installPackagesFactory
+
     @Override
     def distributionSpecificConfiguration() {
         installPackages()
+    }
+
+    /**
+     * Installs the <i>ufw</i> packages.
+     */
+    void installPackages() {
+        installPackagesFactory.create(
+                log: log, command: installCommand, packages: packages, this, threads)()
     }
 
     @Override

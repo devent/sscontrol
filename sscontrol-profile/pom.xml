@@ -82,6 +82,10 @@
 			<groupId>joda-time</groupId>
 			<artifactId>joda-time</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>com.anrisoftware.globalpom</groupId>
+			<artifactId>globalpomutils-core</artifactId>
+		</dependency>
 	</dependencies>
 
 </project>

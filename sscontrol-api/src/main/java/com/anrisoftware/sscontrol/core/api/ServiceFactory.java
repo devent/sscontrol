@@ -18,12 +18,22 @@
  */
 package com.anrisoftware.sscontrol.core.api;
 
+import java.util.concurrent.ExecutorService;
+
 public interface ServiceFactory {
 
-	Service create(ProfileService profile);
+    Service create(ProfileService profile);
 
-	void setParent(Object injector);
+    /**
+     * Sets the threads pool.
+     * 
+     * @param threads
+     *            the {@link ExecutorService} threads pool.
+     */
+    void setThreads(ExecutorService threads);
 
-	String getName();
+    void setParent(Object injector);
+
+    String getName();
 
 }

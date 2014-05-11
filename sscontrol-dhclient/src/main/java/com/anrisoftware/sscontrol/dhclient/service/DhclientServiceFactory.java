@@ -18,6 +18,8 @@
  */
 package com.anrisoftware.sscontrol.dhclient.service;
 
+import java.util.concurrent.ExecutorService;
+
 import org.mangosdk.spi.ProviderFor;
 
 import com.anrisoftware.sscontrol.core.api.ProfileService;
@@ -27,7 +29,7 @@ import com.google.inject.Injector;
 import com.google.inject.Module;
 
 /**
- * Provides the Dhclient service.
+ * Provides the <i>dhclient</i> service.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
@@ -35,30 +37,38 @@ import com.google.inject.Module;
 @ProviderFor(ServiceFactory.class)
 public class DhclientServiceFactory implements ServiceFactory {
 
-	/**
-	 * The name of the dhclient service.
-	 */
-	public static final String NAME = "dhclient";
+    /**
+     * The name of the <i>dhclient</i> service.
+     */
+    public static final String NAME = "dhclient";
 
-	private static final Module[] MODULES = { new DhclientModule() };
+    private static final Module[] MODULES = { new DhclientModule() };
 
-	private Injector injector;
+    private Injector injector;
 
-	@Override
-	public String getName() {
-		return NAME;
-	}
+    private ExecutorService threads;
 
-	@Override
-	public Service create(ProfileService profile) {
-		DhclientServiceImpl service;
-		service = injector.getInstance(DhclientServiceImpl.class);
-		service.setProfile(profile);
-		return service;
-	}
+    @Override
+    public String getName() {
+        return NAME;
+    }
 
-	@Override
-	public void setParent(Object parent) {
-		this.injector = ((Injector) parent).createChildInjector(MODULES);
-	}
+    @Override
+    public Service create(ProfileService profile) {
+        DhclientServiceImpl service;
+        service = injector.getInstance(DhclientServiceImpl.class);
+        service.setProfile(profile);
+        service.setThreads(threads);
+        return service;
+    }
+
+    @Override
+    public void setParent(Object parent) {
+        this.injector = ((Injector) parent).createChildInjector(MODULES);
+    }
+
+    @Override
+    public void setThreads(ExecutorService threads) {
+        this.threads = threads;
+    }
 }

@@ -20,6 +20,7 @@ package com.anrisoftware.sscontrol.core.api;
 
 import java.net.URL;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
 
 import javax.imageio.spi.ServiceRegistry;
 
@@ -53,6 +54,14 @@ public interface ServiceLoader {
      *            the parent {@link Object}.
      */
     void setParent(Object parent);
+
+    /**
+     * Sets the threads pool.
+     * 
+     * @param threads
+     *            the {@link ExecutorService} threads pool.
+     */
+    void setThreads(ExecutorService threads);
 
     /**
      * Loads the service from the specified script file URL.

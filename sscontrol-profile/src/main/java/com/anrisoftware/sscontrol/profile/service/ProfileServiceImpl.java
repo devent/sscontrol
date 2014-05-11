@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
 
 import javax.inject.Inject;
 
@@ -43,42 +44,46 @@ import com.anrisoftware.sscontrol.core.api.ServiceException;
 @SuppressWarnings("serial")
 class ProfileServiceImpl implements ProfileService {
 
-	@Inject
-	private ProfileServiceImplLogger log;
+    @Inject
+    private ProfileServiceImplLogger log;
 
-	@Inject
-	private ProfilePropertiesFactory propertiesFactory;
+    @Inject
+    private ProfilePropertiesFactory propertiesFactory;
 
-	private final Map<String, ProfileProperties> entries;
+    private final Map<String, ProfileProperties> entries;
 
-	private final List<String> entrieKeys;
+    private final List<String> entrieKeys;
 
-	private String profileName;
+    private String profileName;
 
-	@Inject
-	ProfileServiceImpl() {
-		this.entries = new HashMap<String, ProfileProperties>();
-		this.entrieKeys = new ArrayList<String>();
+    @Inject
+    ProfileServiceImpl() {
+        this.entries = new HashMap<String, ProfileProperties>();
+        this.entrieKeys = new ArrayList<String>();
 
-	}
+    }
 
-	public Object methodMissing(String name, Object args) {
-		ProfileProperties properties = propertiesFactory.create();
-		addEntry(name, properties);
-		return properties;
-	}
+    public Object methodMissing(String name, Object args) {
+        ProfileProperties properties = propertiesFactory.create();
+        addEntry(name, properties);
+        return properties;
+    }
 
-	@Override
-	public String getName() {
-		return ProfileFactory.NAME;
-	}
+    @Override
+    public String getName() {
+        return ProfileFactory.NAME;
+    }
 
-	@Override
-	public String getProfileName() {
-		return profileName;
-	}
+    @Override
+    public void setThreads(ExecutorService threads) {
+    }
 
-	    /**
+    @Override
+    public String getProfileName() {
+        return profileName;
+    }
+
+    /**
      * Adds a new profile with the specified name.
      * 
      * @param name
@@ -86,48 +91,48 @@ class ProfileServiceImpl implements ProfileService {
      * 
      * @return this {@link ProfileService}.
      */
-	public Service profile(String name, Object closure) {
-		profileName = name;
-		return this;
-	}
+    public Service profile(String name, Object closure) {
+        profileName = name;
+        return this;
+    }
 
-	@Override
-	public void addEntry(String name, ProfileProperties profile) {
-		entries.put(name, profile);
-		entrieKeys.add(name);
-		log.entryAdded(this, name);
-	}
+    @Override
+    public void addEntry(String name, ProfileProperties profile) {
+        entries.put(name, profile);
+        entrieKeys.add(name);
+        log.entryAdded(this, name);
+    }
 
-	@Override
-	public ProfileProperties getEntry(String name) {
-		ProfileProperties properties = entries.get(name);
-		log.checkProfileEntry(properties, this, name);
-		return properties;
-	}
+    @Override
+    public ProfileProperties getEntry(String name) {
+        ProfileProperties properties = entries.get(name);
+        log.checkProfileEntry(properties, this, name);
+        return properties;
+    }
 
-	@Override
-	public boolean hasEntry(String name) {
-		return entries.containsKey(name);
-	}
+    @Override
+    public boolean hasEntry(String name) {
+        return entries.containsKey(name);
+    }
 
-	@Override
-	public List<String> getEntryNames() {
-		return unmodifiableList(entrieKeys);
-	}
+    @Override
+    public List<String> getEntryNames() {
+        return unmodifiableList(entrieKeys);
+    }
 
-	@Override
+    @Override
     public String getRefservice() {
         return null;
     }
 
     @Override
-	public Service call() throws ServiceException {
-		return this;
-	}
+    public Service call() throws ServiceException {
+        return this;
+    }
 
-	@Override
-	public String toString() {
-		return new ToStringBuilder(this).append(profileName)
-				.append("entries", entries.keySet()).toString();
-	}
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this).append(profileName)
+                .append("entries", entries.keySet()).toString();
+    }
 }

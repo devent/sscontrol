@@ -27,6 +27,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.URL;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
 
 import javax.inject.Inject;
 
@@ -42,9 +43,9 @@ import com.google.inject.assistedinject.Assisted;
 
 /**
  * Loads a service from a groovy script.
- *
+ * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
- * @since 0.1
+ * @since 1.0
  */
 class GroovyLoader implements ServiceLoader {
 
@@ -57,6 +58,8 @@ class GroovyLoader implements ServiceLoader {
     private final ServicesRegistry registry;
 
     private Object parent;
+
+    private ExecutorService threads;
 
     @Inject
     GroovyLoader(GroovyLoaderLogger logger,
@@ -85,6 +88,17 @@ class GroovyLoader implements ServiceLoader {
         this.parent = parent;
     }
 
+    /**
+     * Sets the threads pool.
+     * 
+     * @param threads
+     *            the {@link ExecutorService} threads pool.
+     */
+    @Override
+    public void setThreads(ExecutorService threads) {
+        this.threads = threads;
+    }
+
     @Override
     public ServicesRegistry loadService(URL url, ProfileService profile)
             throws ServiceException {
@@ -100,6 +114,7 @@ class GroovyLoader implements ServiceLoader {
         GroovyShell shell = createShell(variables, profile, prescript);
         Reader reader = openScript(url);
         Service service = evaluateScript(reader, shell, url);
+        service.setThreads(threads);
         registry.addService(service);
         return registry;
     }

@@ -20,6 +20,7 @@ package com.anrisoftware.sscontrol.core.api;
 
 import java.io.Serializable;
 import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
 
 /**
  * Configure a service on the target server.
@@ -36,6 +37,14 @@ public interface Service extends Callable<Service>, Serializable {
      * @return the name of the service.
      */
     String getName();
+
+    /**
+     * Sets the threads pool.
+     * 
+     * @param threads
+     *            the {@link ExecutorService} threads pool.
+     */
+    void setThreads(ExecutorService threads);
 
     /**
      * Returns the service reference.

@@ -24,15 +24,13 @@ import groovy.lang.Script;
 import java.util.List;
 import java.util.Map;
 import java.util.ServiceLoader;
+import java.util.concurrent.ExecutorService;
 
 import javax.inject.Inject;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.anrisoftware.globalpom.threads.api.Threads;
-import com.anrisoftware.globalpom.threads.api.ThreadsException;
-import com.anrisoftware.globalpom.threads.properties.PropertiesThreads;
-import com.anrisoftware.globalpom.threads.properties.PropertiesThreadsFactory;
 import com.anrisoftware.sscontrol.core.api.ProfileProperties;
 import com.anrisoftware.sscontrol.core.api.ProfileService;
 import com.anrisoftware.sscontrol.core.api.Service;
@@ -74,7 +72,7 @@ public abstract class AbstractService implements Service {
 
     private String refservice;
 
-    private PropertiesThreads threads;
+    private Threads threads;
 
     @Inject
     void setAbstractServiceLogger(AbstractServiceLogger logger) {
@@ -86,12 +84,14 @@ public abstract class AbstractService implements Service {
         this.injector = injector;
     }
 
-    @Inject
-    void setThreads(ThreadsPropertiesProvider provider,
-            PropertiesThreadsFactory threadsFactory) throws ThreadsException {
-        this.threads = threadsFactory.create();
-        threads.setProperties(provider.get());
-        threads.setName("script");
+    /**
+     * Sets the threads pool.
+     * 
+     * @param threads
+     *            the {@link Threads}.
+     */
+    public void setThreads(ExecutorService threads) {
+        this.threads = (Threads) threads;
     }
 
     /**

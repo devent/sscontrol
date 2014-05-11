@@ -22,13 +22,13 @@ import java.util.List;
 
 public interface ProfileService extends Service {
 
-	String getProfileName();
+    String getProfileName();
 
-	void addEntry(String name, ProfileProperties properties);
+    void addEntry(String name, ProfileProperties properties);
 
-	ProfileProperties getEntry(String name);
+    ProfileProperties getEntry(String name);
 
-	boolean hasEntry(String name);
+    boolean hasEntry(String name);
 
-	List<String> getEntryNames();
+    List<String> getEntryNames();
 }

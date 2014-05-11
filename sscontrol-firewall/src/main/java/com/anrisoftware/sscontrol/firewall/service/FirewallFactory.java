@@ -18,6 +18,8 @@
  */
 package com.anrisoftware.sscontrol.firewall.service;
 
+import java.util.concurrent.ExecutorService;
+
 import org.mangosdk.spi.ProviderFor;
 
 import com.anrisoftware.sscontrol.core.api.ProfileService;
@@ -27,7 +29,7 @@ import com.google.inject.Injector;
 import com.google.inject.Module;
 
 /**
- * Creates the firewall service.
+ * Creates the <i>firewall</i> service.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
@@ -35,30 +37,38 @@ import com.google.inject.Module;
 @ProviderFor(ServiceFactory.class)
 public class FirewallFactory implements ServiceFactory {
 
-	/**
-	 * The name of the firewall service.
-	 */
-	public static final String NAME = "firewall";
+    /**
+     * The name of the <i>firewall</i> service.
+     */
+    public static final String NAME = "firewall";
 
-	private static final Module[] MODULES = new Module[] { new FirewallModule() };
+    private static final Module[] MODULES = new Module[] { new FirewallModule() };
 
-	private Injector injector;
+    private Injector injector;
 
-	@Override
-	public String getName() {
-		return NAME;
-	}
+    private ExecutorService threads;
 
-	@Override
-	public Service create(ProfileService profile) {
-		FirewallServiceImpl service;
-		service = injector.getInstance(FirewallServiceImpl.class);
-		service.setProfile(profile);
-		return service;
-	}
+    @Override
+    public String getName() {
+        return NAME;
+    }
 
-	@Override
-	public void setParent(Object parent) {
-		this.injector = ((Injector) parent).createChildInjector(MODULES);
-	}
+    @Override
+    public Service create(ProfileService profile) {
+        FirewallServiceImpl service;
+        service = injector.getInstance(FirewallServiceImpl.class);
+        service.setProfile(profile);
+        service.setThreads(threads);
+        return service;
+    }
+
+    @Override
+    public void setParent(Object parent) {
+        this.injector = ((Injector) parent).createChildInjector(MODULES);
+    }
+
+    @Override
+    public void setThreads(ExecutorService threads) {
+        this.threads = threads;
+    }
 }

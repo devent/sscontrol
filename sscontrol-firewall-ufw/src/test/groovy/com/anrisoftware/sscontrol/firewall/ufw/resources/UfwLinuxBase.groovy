@@ -26,12 +26,15 @@ import org.junit.BeforeClass
 import org.junit.Rule
 import org.junit.rules.TemporaryFolder
 
+import com.anrisoftware.globalpom.threads.api.Threads
+import com.anrisoftware.globalpom.threads.properties.PropertiesThreadsFactory
 import com.anrisoftware.sscontrol.core.api.ServiceLoader as SscontrolServiceLoader
 import com.anrisoftware.sscontrol.core.api.ServiceLoaderFactory
 import com.anrisoftware.sscontrol.core.api.ServicesRegistry
 import com.anrisoftware.sscontrol.core.modules.CoreModule
 import com.anrisoftware.sscontrol.core.modules.CoreResourcesModule
 import com.anrisoftware.sscontrol.core.service.ServiceModule
+import com.anrisoftware.sscontrol.core.service.ThreadsPropertiesProvider
 import com.google.inject.Guice
 import com.google.inject.Injector
 
@@ -47,6 +50,12 @@ class UfwLinuxBase {
     static Injector injector
 
     static ServiceLoaderFactory loaderFactory
+
+    static ThreadsPropertiesProvider threadsPropertiesProvider
+
+    static PropertiesThreadsFactory threadsFactory
+
+    static Threads threads
 
     @Rule
     public TemporaryFolder tmp = new TemporaryFolder()
@@ -70,16 +79,29 @@ class UfwLinuxBase {
         registry = injector.getInstance ServicesRegistry
         loader = loaderFactory.create registry, variables
         loader.setParent injector
+        loader.setThreads createThreads()
     }
 
     @BeforeClass
     static void createFactories() {
         injector = createInjector()
         loaderFactory = injector.getInstance ServiceLoaderFactory
+        threadsPropertiesProvider = injector.getInstance ThreadsPropertiesProvider
+        threadsFactory = injector.getInstance PropertiesThreadsFactory
+        threads = createThreads()
+    }
+
+    static createThreads() {
+        def threads = threadsFactory.create();
+        threads.setProperties(threadsPropertiesProvider.get());
+        threads.setName("script");
+        return threads
     }
 
     static Injector createInjector() {
-        Guice.createInjector(new CoreModule(), new CoreResourcesModule(),
+        Guice.createInjector(
+                new CoreModule(),
+                new CoreResourcesModule(),
                 new ServiceModule())
     }
 

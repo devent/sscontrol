@@ -18,6 +18,8 @@
  */
 package com.anrisoftware.sscontrol.hosts.service;
 
+import java.util.concurrent.ExecutorService;
+
 import org.mangosdk.spi.ProviderFor;
 
 import com.anrisoftware.sscontrol.core.api.ProfileService;
@@ -35,30 +37,44 @@ import com.google.inject.Module;
 @ProviderFor(ServiceFactory.class)
 public class HostsServiceFactory implements ServiceFactory {
 
-	/**
-	 * The name of the hosts service.
-	 */
-	public static final String NAME = "hosts";
+    /**
+     * The name of the hosts service.
+     */
+    public static final String NAME = "hosts";
 
-	private static final Module[] MODULES = new Module[] { new HostsModule() };
+    private static final Module[] MODULES = new Module[] { new HostsModule() };
 
-	private Injector injector;
+    private Injector injector;
 
-	@Override
-	public String getName() {
-		return NAME;
-	}
+    private ExecutorService threads;
 
-	@Override
-	public Service create(ProfileService profile) {
-		HostsServiceImpl service;
-		service = injector.getInstance(HostsServiceImpl.class);
-		service.setProfile(profile);
-		return service;
-	}
+    @Override
+    public String getName() {
+        return NAME;
+    }
 
-	@Override
-	public void setParent(Object parent) {
-		this.injector = ((Injector) parent).createChildInjector(MODULES);
-	}
+    @Override
+    public Service create(ProfileService profile) {
+        HostsServiceImpl service;
+        service = injector.getInstance(HostsServiceImpl.class);
+        service.setThreads(threads);
+        service.setProfile(profile);
+        return service;
+    }
+
+    @Override
+    public void setParent(Object parent) {
+        this.injector = ((Injector) parent).createChildInjector(MODULES);
+    }
+
+    /**
+     * Sets the threads pool.
+     * 
+     * @param threads
+     *            the {@link ExecutorService} threads pool.
+     */
+    @Override
+    public void setThreads(ExecutorService threads) {
+        this.threads = threads;
+    }
 }

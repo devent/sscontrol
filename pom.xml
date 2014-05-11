@@ -12,28 +12,28 @@
         <module>sscontrol-parent</module>
         <module>sscontrol-api</module>
         <module>sscontrol-core</module>
-        <module>sscontrol-database</module>
-        <module>sscontrol-database-mysql</module>
+<!--         <module>sscontrol-database</module> -->
+<!--         <module>sscontrol-database-mysql</module> -->
         <module>sscontrol-dhclient</module>
-        <module>sscontrol-dns</module>
-        <module>sscontrol-dns-maradns</module>
+<!--         <module>sscontrol-dns</module> -->
+<!--         <module>sscontrol-dns-maradns</module> -->
         <module>sscontrol-firewall</module>
         <module>sscontrol-firewall-ufw</module>
         <module>sscontrol-hostname</module>
         <module>sscontrol-hosts</module>
-        <module>sscontrol-httpd</module>
-        <module>sscontrol-httpd-apache</module>
-        <module>sscontrol-httpd-gitit</module>
-        <module>sscontrol-httpd-nginx</module>
-        <module>sscontrol-httpd-webservice</module>
-        <module>sscontrol-ldap</module>
-        <module>sscontrol-ldap-openldap</module>
-        <module>sscontrol-mail</module>
-        <module>sscontrol-mail-postfix</module>
+<!--         <module>sscontrol-httpd</module> -->
+<!--         <module>sscontrol-httpd-apache</module> -->
+<!--         <module>sscontrol-httpd-gitit</module> -->
+<!--         <module>sscontrol-httpd-nginx</module> -->
+<!--         <module>sscontrol-httpd-webservice</module> -->
+<!--         <module>sscontrol-ldap</module> -->
+<!--         <module>sscontrol-ldap-openldap</module> -->
+<!--         <module>sscontrol-mail</module> -->
+<!--         <module>sscontrol-mail-postfix</module> -->
         <module>sscontrol-profile</module>
-        <module>sscontrol-remoteaccess</module>
+<!--         <module>sscontrol-remoteaccess</module> -->
         <module>sscontrol-scripts-unix</module>
-        <module>sscontrol-security</module>
+<!--         <module>sscontrol-security</module> -->
     </modules>
 
 </project>

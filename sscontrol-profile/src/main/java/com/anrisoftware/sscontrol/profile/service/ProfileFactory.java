@@ -18,6 +18,8 @@
  */
 package com.anrisoftware.sscontrol.profile.service;
 
+import java.util.concurrent.ExecutorService;
+
 import org.apache.commons.lang3.concurrent.ConcurrentException;
 import org.mangosdk.spi.ProviderFor;
 
@@ -35,30 +37,35 @@ import com.google.inject.Injector;
 @ProviderFor(ServiceFactory.class)
 public class ProfileFactory implements ServiceFactory {
 
-	public static final String NAME = "profile";
+    public static final String NAME = "profile";
 
-	private final LazyInjector lazyInjector;
+    private final LazyInjector lazyInjector;
 
-	public ProfileFactory() {
-		this.lazyInjector = new LazyInjector();
-	}
+    public ProfileFactory() {
+        this.lazyInjector = new LazyInjector();
+    }
 
-	@Override
-	public String getName() {
-		return NAME;
-	}
+    @Override
+    public String getName() {
+        return NAME;
+    }
 
-	@Override
-	public Service create(ProfileService profile) {
-		try {
-			return lazyInjector.get().getInstance(Service.class);
-		} catch (ConcurrentException e) {
-			throw new RuntimeException(e);
-		}
-	}
+    @Override
+    public Service create(ProfileService profile) {
+        try {
+            return lazyInjector.get().getInstance(Service.class);
+        } catch (ConcurrentException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
-	@Override
-	public void setParent(Object injector) {
-		lazyInjector.setParentInjector((Injector) injector);
-	}
+    @Override
+    public void setParent(Object injector) {
+        lazyInjector.setParentInjector((Injector) injector);
+    }
+
+    @Override
+    public void setThreads(ExecutorService threads) {
+    }
+
 }

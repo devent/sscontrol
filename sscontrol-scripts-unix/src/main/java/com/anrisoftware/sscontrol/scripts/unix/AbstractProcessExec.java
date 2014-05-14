@@ -49,13 +49,13 @@ import com.anrisoftware.globalpom.threads.api.Threads;
  */
 public abstract class AbstractProcessExec implements Callable<ProcessTask> {
 
-    private static final String TIMEOUT = "timeout";
+    public static final String TIMEOUT = "timeout";
 
-    private static final String DESTROY_ON_TIMEOUT = "destroyOnTimeout";
+    public static final String DESTROY_ON_TIMEOUT = "destroyOnTimeout";
 
-    private static final String EXIT_CODES = "exitCodes";
+    public static final String EXIT_CODES = "exitCodes";
 
-    private static final String EXIT_CODE = "exitCode";
+    public static final String EXIT_CODE = "exitCode";
 
     private final Map<String, Object> args;
 

@@ -25,6 +25,8 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
+import org.joda.time.Duration;
+
 import com.anrisoftware.globalpom.exec.api.CommandLine;
 import com.anrisoftware.globalpom.exec.api.ProcessTask;
 import com.anrisoftware.globalpom.exec.script.ScriptCommandLineFactory;
@@ -58,10 +60,17 @@ public class InstallPackages extends AbstractProcessExec {
     @Inject
     InstallPackages(@Assisted Object parent, @Assisted Threads threads,
             @Assisted Map<String, Object> args) {
-        super(threads, args);
+        super(threads, setupTimeout(args));
         this.parent = parent;
         this.args = args;
         this.system = "unix";
+    }
+
+    private static Map<String, Object> setupTimeout(Map<String, Object> args) {
+        if (!args.containsKey(TIMEOUT)) {
+            args.put(TIMEOUT, Duration.standardMinutes(60));
+        }
+        return args;
     }
 
     public void setSystem(String system) {

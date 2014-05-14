@@ -36,7 +36,6 @@ abstract class MysqlScript extends LinuxScript {
 
     @Override
     def run() {
-        super.run()
         setupDefaultDebug()
         beforeConfiguration()
     }

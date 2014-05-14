@@ -18,10 +18,13 @@
  */
 package com.anrisoftware.sscontrol.database.mysql.ubuntu_12_04
 
+import groovy.util.logging.Slf4j
+
 import javax.inject.Inject
 
 import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.sscontrol.database.mysql.mysql_5_1.Mysql51Script
+import com.anrisoftware.sscontrol.scripts.unix.InstallPackagesFactory
 
 /**
  * MySQL/Ubuntu 12.04 service script.
@@ -29,14 +32,26 @@ import com.anrisoftware.sscontrol.database.mysql.mysql_5_1.Mysql51Script
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
+@Slf4j
 class UbuntuScript extends Mysql51Script {
 
     @Inject
     UbuntuPropertiesProvider ubuntuProperties
 
+    @Inject
+    InstallPackagesFactory installPackagesFactory
+
     @Override
     void beforeConfiguration() {
         installPackages()
+    }
+
+    /**
+     * Installs the <i>mysql</i> packages.
+     */
+    void installPackages() {
+        installPackagesFactory.create(
+                log: log, command: installCommand, packages: packages, this, threads)()
     }
 
     @Override

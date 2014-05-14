@@ -18,6 +18,7 @@
  */
 package com.anrisoftware.sscontrol.database.mysql.ubuntu_12_04;
 
+import com.anrisoftware.sscontrol.database.mysql.linux.MysqlScriptModule;
 import com.google.inject.AbstractModule;
 
 /**
@@ -30,5 +31,6 @@ class UbuntuModule extends AbstractModule {
 
 	@Override
 	protected void configure() {
+        install(new MysqlScriptModule());
 	}
 }

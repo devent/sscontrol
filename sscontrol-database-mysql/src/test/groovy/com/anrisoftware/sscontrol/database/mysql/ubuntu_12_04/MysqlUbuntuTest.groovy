@@ -51,7 +51,6 @@ class MysqlUbuntuTest extends UbuntuTestUtil {
         assertFileContent restartOut.asFile(tmpdir), restartOut
         assertFileContent aptitudeOut.asFile(tmpdir), aptitudeOut
         assertFileContent mysqlOut.asFile(tmpdir), mysqlOut
-        assertFileContent mysqlIn.asFile(tmpdir), mysqlIn
     }
 
     @Test

@@ -18,6 +18,8 @@
  */
 package com.anrisoftware.sscontrol.database.service;
 
+import java.util.concurrent.ExecutorService;
+
 import org.mangosdk.spi.ProviderFor;
 
 import com.anrisoftware.sscontrol.core.api.ProfileService;
@@ -44,6 +46,8 @@ public class DatabaseServiceFactory implements ServiceFactory {
 
 	private Injector injector;
 
+    private ExecutorService threads;
+
 	@Override
 	public String getName() {
 		return NAME;
@@ -54,6 +58,7 @@ public class DatabaseServiceFactory implements ServiceFactory {
 		DatabaseServiceImpl service;
 		service = injector.getInstance(DatabaseServiceImpl.class);
 		service.setProfile(profile);
+        service.setThreads(threads);
 		return service;
 	}
 
@@ -61,4 +66,9 @@ public class DatabaseServiceFactory implements ServiceFactory {
 	public void setParent(Object parent) {
 		this.injector = ((Injector) parent).createChildInjector(MODULES);
 	}
+
+    @Override
+    public void setThreads(ExecutorService threads) {
+        this.threads = threads;
+    }
 }

@@ -1,14 +1,14 @@
-createUsers(script) ::= <<
+createUsers(args) ::= <<
 # create database users
-<script.mysqlCommand> --password=<script.service.admin.password> -t \<\<"STOP"
-<createUsersTemp(script)>
-<script.service.users:grandDatabaseToUsers(script)>
+<args.mysqlCommand> --password=<args.password> -t \<\<"STOP"
+<createUsersTemp(args)>
+<args.users:grandDatabaseToUsers(args)>
 FLUSH PRIVILEGES;
 \q
 STOP
 >>
 
-createUsersTemp(script) ::= <<
+createUsersTemp(args) ::= <<
 # create temporary database to add users
 CREATE DATABASE IF NOT EXISTS createusertmp;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ANSI';
@@ -18,7 +18,7 @@ DELIMITER $$
 CREATE PROCEDURE createusertmp.create_update_user()
 BEGIN
     DECLARE userexists BIGINT DEFAULT 0;
-    <script.service.users:createUser(script)>
+    <args.users:createUser(args)>
 
 END ;$$
 DELIMITER ;
@@ -28,29 +28,29 @@ DROP DATABASE IF EXISTS createusertmp;
 SET SQL_MODE=@OLD_SQL_MODE;
 >>
 
-createUser(user, script) ::= <<
+createUser(user, args) ::= <<
 
-# user <user.name>@<userServer(user, script)>
+# user <user.name>@<userServer(user, args)>
 SELECT COUNT(*) INTO userexists FROM mysql.user
-    WHERE User='<user.name>' and  Host='<userServer(user, script)>';
+    WHERE User='<user.name>' and  Host='<userServer(user, args)>';
 IF userexists=0 THEN
-    CREATE USER '<user.name>'@'<userServer(user, script)>' IDENTIFIED BY '<user.password>';
+    CREATE USER '<user.name>'@'<userServer(user, args)>' IDENTIFIED BY '<user.password>';
 ELSEIF userexists=1 THEN
-    SET PASSWORD FOR '<user.name>'@'<userServer(user, script)>' = PASSWORD('<user.password>');
+    SET PASSWORD FOR '<user.name>'@'<userServer(user, args)>' = PASSWORD('<user.password>');
 END IF;
 >>
 
-grandDatabaseToUsers(user, script) ::= <<
-<user.access:grandDatabase(user, script)>
+grandDatabaseToUsers(user, args) ::= <<
+<user.access:grandDatabase(user, args)>
 >>
 
 
-grandDatabase(access, user, script) ::= <<
-# grand access "<user.name>@<userServer(user, script)>" to "<access.database>.*"
-GRANT ALL ON <access.database>.* TO '<user.name>'@'<userServer(user, script)>';
+grandDatabase(access, user, args) ::= <<
+# grand access "<user.name>@<userServer(user, args)>" to "<access.database>.*"
+GRANT ALL ON <access.database>.* TO '<user.name>'@'<userServer(user, args)>';
 >>
 
-userServer(user, script) ::= <%
-<if(user.server)><user.server><else><script.defaultUserServer><endif>
+userServer(user, args) ::= <%
+<if(user.server)><user.server><else><args.defaultUserServer><endif>
 %>
 

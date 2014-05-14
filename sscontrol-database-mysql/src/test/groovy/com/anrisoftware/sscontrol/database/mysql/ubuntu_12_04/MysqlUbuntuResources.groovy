@@ -42,7 +42,6 @@ enum MysqlUbuntuResources {
     mysqldNonLoggingExpected("/etc/mysql/conf.d/sscontrol_mysqld.cnf", MysqlUbuntuResources.class.getResource("mysqld_cnf_nonlogging_expected.txt")),
     confDir("/etc/mysql/conf.d", null),
     mysqlOut("/usr/bin/mysql.out", MysqlUbuntuResources.class.getResource("mysql_out_expected.txt")),
-    mysqlIn("/usr/bin/mysql.in", MysqlUbuntuResources.class.getResource("mysql_in_expected.txt")),
     restartOut("/sbin/restart.out", MysqlUbuntuResources.class.getResource("restart_out_expected.txt")),
     aptitudeOut("/usr/bin/aptitude.out", MysqlUbuntuResources.class.getResource("aptitude_out_expected.txt")),
     postfixtables("/tmp/postfixtables.sql", MysqlUbuntuResources.class.getResource("postfixtables.txt")),

@@ -91,18 +91,18 @@ class UfwLinuxBase {
         threads = createThreads()
     }
 
-    static createThreads() {
-        def threads = threadsFactory.create();
-        threads.setProperties(threadsPropertiesProvider.get());
-        threads.setName("script");
-        return threads
-    }
-
     static Injector createInjector() {
         Guice.createInjector(
                 new CoreModule(),
                 new CoreResourcesModule(),
                 new ServiceModule())
+    }
+
+    static createThreads() {
+        def threads = threadsFactory.create();
+        threads.setProperties(threadsPropertiesProvider.get());
+        threads.setName("script");
+        return threads
     }
 
     @BeforeClass

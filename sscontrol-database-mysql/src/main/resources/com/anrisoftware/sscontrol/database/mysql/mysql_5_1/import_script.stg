@@ -1,8 +1,8 @@
-importScript(script, database, string) ::= <<
+importScript(args) ::= <<
 # import database script
-<script.mysqlCommand> --password=<script.service.admin.password> -t \<\<"STOP"
-USE <database.name>;
-<string>
+<args.mysqlCommand> --password=<args.password> -t \<\<"STOP"
+USE <args.database.name>;
+<args.string>
 \q
 STOP
 >>

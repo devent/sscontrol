@@ -19,15 +19,19 @@
 package com.anrisoftware.sscontrol.database.mysql.mysql_5_1
 
 import static org.apache.commons.io.FileUtils.*
+import groovy.util.logging.Slf4j
 
 import javax.inject.Inject
 
+import com.anrisoftware.globalpom.exec.api.ProcessTask
+import com.anrisoftware.globalpom.textmatch.tokentemplate.TokenTemplate
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.Templates
-import com.anrisoftware.sscontrol.core.service.LinuxScript
-import com.anrisoftware.sscontrol.database.mysql.linux.MysqlScript;
+import com.anrisoftware.resources.templates.api.TemplatesFactory
+import com.anrisoftware.sscontrol.database.mysql.linux.MysqlScript
 import com.anrisoftware.sscontrol.database.statements.Database
-import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokenTemplate
+import com.anrisoftware.sscontrol.scripts.unix.RestartServicesFactory
+import com.anrisoftware.sscontrol.scripts.unix.ScriptExecFactory
 
 /**
  * MySQL 5.1 service script.
@@ -35,106 +39,129 @@ import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokenTemplate
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
+@Slf4j
 abstract class Mysql51Script extends MysqlScript {
 
-	@Inject
-	Mysql51ScriptLogger log
+    @Inject
+    Mysql51ScriptLogger logg
 
-	Templates mysqlTemplates
+    @Inject
+    TemplatesFactory templatesFactory
 
-	TemplateResource mysqldConfTemplates
+    @Inject
+    ScriptExecFactory scriptExecFactory
 
-	TemplateResource adminPasswordTemplate
+    @Inject
+    RestartServicesFactory restartServicesFactory
 
-	TemplateResource createDatabasesTemplate
+    Templates mysqlTemplates
 
-	TemplateResource createUsersTemplate
+    TemplateResource mysqldConfTemplates
 
-	TemplateResource importScriptTemplate
+    TemplateResource adminPasswordTemplate
 
-	@Override
-	def run() {
-		super.run()
-		loadTemplate()
-		deployMysqldConfiguration()
-		restartServices()
-		setupAdministratorPassword()
-		createDatabases()
-		createUsers()
-		importScripts()
-	}
+    TemplateResource createDatabasesTemplate
 
-	def loadTemplate() {
-		mysqlTemplates = templatesFactory.create("Mysql51")
-		mysqldConfTemplates = mysqlTemplates.getResource("mysqld_configuration")
-		adminPasswordTemplate = mysqlTemplates.getResource("admin_password")
-		createDatabasesTemplate = mysqlTemplates.getResource("create_databases")
-		createUsersTemplate = mysqlTemplates.getResource("create_users")
-		importScriptTemplate = mysqlTemplates.getResource("import_script")
-	}
+    TemplateResource createUsersTemplate
 
-	/**
-	 * Deploys the mysqld/configuration.
-	 */
-	void deployMysqldConfiguration() {
-		def replace = mysqldConfTemplates.getText(true, "mysqldConfig", "script", this)
-		deployConfiguration configurationTokens(), currentMysqldConfiguration, [
-			new TokenTemplate("(?s).*", replace)
-		], mysqldFile
-		log.mysqldConfigurationDeployed this
-	}
+    TemplateResource importScriptTemplate
 
-	/**
-	 * Returns the current {@code mysqld} configuration.
-	 */
-	String getCurrentMysqldConfiguration() {
-		currentConfiguration mysqldFile
-	}
+    @Override
+    def run() {
+        super.run()
+        loadTemplate()
+        deployMysqldConfiguration()
+        restartService()
+        setupAdministratorPassword()
+        createDatabases()
+        createUsers()
+        importScripts()
+    }
 
-	/**
-	 * Sets the administrator password if none is set.
-	 */
-	void setupAdministratorPassword() {
-		def worker = scriptCommandFactory.create(
-				adminPasswordTemplate, "checkAdminPassword", "script", this)
-		worker.skipExitValue = true
-		worker()
-		if (worker.exitCode != 0) {
-			worker = scriptCommandFactory.create(
-					adminPasswordTemplate, "setupAdminPassword", "script", this)()
-			log.adminPasswordSet this, worker
-		}
-	}
+    def loadTemplate() {
+        mysqlTemplates = templatesFactory.create("Mysql51")
+        mysqldConfTemplates = mysqlTemplates.getResource("mysqld_configuration")
+        adminPasswordTemplate = mysqlTemplates.getResource("admin_password")
+        createDatabasesTemplate = mysqlTemplates.getResource("create_databases")
+        createUsersTemplate = mysqlTemplates.getResource("create_users")
+        importScriptTemplate = mysqlTemplates.getResource("import_script")
+    }
 
-	/**
-	 * Creates the databases from the service.
-	 */
-	void createDatabases() {
-		def worker = scriptCommandFactory.create(
-				createDatabasesTemplate, "createDatabases", "script", this)()
-		log.databasesCreated this, worker
-	}
+    /**
+     * Deploys the mysqld/configuration.
+     */
+    void deployMysqldConfiguration() {
+        def replace = mysqldConfTemplates.getText(true, "mysqldConfig", "script", this)
+        deployConfiguration configurationTokens(), currentMysqldConfiguration, [
+            new TokenTemplate("(?s).*", replace)
+        ], mysqldFile
+        logg.mysqldConfigurationDeployed this
+    }
 
-	/**
-	 * Creates the users from the service.
-	 */
-	void createUsers() {
-		def worker = scriptCommandFactory.create(
-				createUsersTemplate, "createUsers", "script", this)()
-		log.usersCreated this, worker
-	}
+    /**
+     * Restarts the <i>database</i> service.
+     */
+    void restartService() {
+        restartServicesFactory.create(
+                log: log, command: restartCommand, services: restartServices, this, threads)()
+    }
 
-	/**
-	 * Execute database scripts.
-	 */
-	void importScripts() {
-		service.databases.each { Database database ->
-			database.scripts.each {
-				def worker = scriptCommandFactory.create(
-						importScriptTemplate, "importScript",
-						"script", this, "database", database, "string", it)()
-				log.scriptExecuted this, worker
-			}
-		}
-	}
+    /**
+     * Returns the current {@code mysqld} configuration.
+     */
+    String getCurrentMysqldConfiguration() {
+        currentConfiguration mysqldFile
+    }
+
+    /**
+     * Sets the administrator password if none is set.
+     */
+    void setupAdministratorPassword() {
+        ProcessTask worker = scriptExecFactory.create(
+                log: log, mysqladminCommand: mysqladminCommand, password: service.admin.password,
+                this, threads, adminPasswordTemplate, "checkAdminPassword")()
+        if (worker.exitValue != 0) {
+            worker = scriptExecFactory.create(
+                    log: log, mysqladminCommand: mysqladminCommand, password: service.admin.password,
+                    this, threads, adminPasswordTemplate, "setupAdminPassword")()
+            logg.adminPasswordSet this, worker
+        }
+    }
+
+    /**
+     * Creates the databases from the service.
+     */
+    void createDatabases() {
+        def worker = scriptExecFactory.create(
+                log: log, mysqlCommand: mysqlCommand, password: service.admin.password,
+                defaultCharacterSet: defaultCharacterSet, defaultCollate: defaultCollate,
+                this, threads, createDatabasesTemplate, "createDatabases")()
+        logg.databasesCreated this, worker
+    }
+
+    /**
+     * Creates the users from the service.
+     */
+    void createUsers() {
+        def worker = scriptExecFactory.create(
+                log: log, mysqlCommand: mysqlCommand, password: service.admin.password,
+                users: service.users, defaultUserServer: defaultUserServer,
+                this, threads, createUsersTemplate, "createUsers")()
+        logg.usersCreated this, worker
+    }
+
+    /**
+     * Execute database scripts.
+     */
+    void importScripts() {
+        service.databases.each { Database database ->
+            database.scripts.each {
+                def worker = scriptExecFactory.create(
+                        log: log, mysqlCommand: mysqlCommand, password: service.admin.password,
+                        database: database, string: it,
+                        this, threads, importScriptTemplate, "importScript")()
+                logg.scriptExecuted this, worker
+            }
+        }
+    }
 }

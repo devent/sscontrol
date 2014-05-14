@@ -21,6 +21,8 @@ package com.anrisoftware.sscontrol.scripts.unix;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
 import java.util.Map;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 
@@ -85,6 +87,8 @@ public abstract class AbstractProcessExec implements Callable<ProcessTask> {
     @Inject
     private ErrorLogCommandOutputFactory errorOutputFactory;
 
+    private String scriptString;
+
     /**
      * Sets the threads pool and the arguments.
      * 
@@ -119,10 +123,27 @@ public abstract class AbstractProcessExec implements Callable<ProcessTask> {
     @Override
     public ProcessTask call() throws Exception {
         log.checkArgs(this, args);
-        CommandLine line = createLine(lineFactory);
+        final CommandLine line = createLine(lineFactory);
         ScriptCommandExec script = createExec();
+        script.setObserver(new Observer() {
+
+            @Override
+            public void update(Observable o, Object arg) {
+                logExecutedScript(line);
+            }
+
+        });
         ProcessTask task = exec(line, script);
         return task;
+    }
+
+    /**
+     * Returns the script that was executed.
+     * 
+     * @return the script {@link String}.
+     */
+    public String getScriptString() {
+        return scriptString;
     }
 
     /**
@@ -162,5 +183,11 @@ public abstract class AbstractProcessExec implements Callable<ProcessTask> {
         } else {
             return future.get();
         }
+    }
+
+    private void logExecutedScript(CommandLine line) {
+        String string = line.getExecutable().toString();
+        log.executedScript(this, string);
+        this.scriptString = string;
     }
 }

@@ -12,8 +12,8 @@
         <module>sscontrol-parent</module>
         <module>sscontrol-api</module>
         <module>sscontrol-core</module>
-<!--         <module>sscontrol-database</module> -->
-<!--         <module>sscontrol-database-mysql</module> -->
+        <module>sscontrol-database</module>
+        <module>sscontrol-database-mysql</module>
         <module>sscontrol-dhclient</module>
 <!--         <module>sscontrol-dns</module> -->
 <!--         <module>sscontrol-dns-maradns</module> -->

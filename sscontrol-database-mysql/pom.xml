@@ -51,6 +51,11 @@
 			<artifactId>sscontrol-database</artifactId>
 			<version>1.0-SNAPSHOT</version>
 		</dependency>
+        <dependency>
+            <groupId>com.anrisoftware.sscontrol</groupId>
+            <artifactId>sscontrol-scripts-unix</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
 
 		<!-- compile dependencies -->
 		<dependency>

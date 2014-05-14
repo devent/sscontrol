@@ -134,7 +134,7 @@ abstract class Mysql51Script extends MysqlScript {
     void createDatabases() {
         def worker = scriptExecFactory.create(
                 log: log, mysqlCommand: mysqlCommand, password: service.admin.password,
-                defaultCharacterSet: defaultCharacterSet, defaultCollate: defaultCollate,
+                databases: service.databases, defaultCharacterSet: defaultCharacterSet, defaultCollate: defaultCollate,
                 this, threads, createDatabasesTemplate, "createDatabases")()
         logg.databasesCreated this, worker
     }

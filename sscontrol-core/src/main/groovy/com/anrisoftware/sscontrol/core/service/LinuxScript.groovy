@@ -209,28 +209,6 @@ abstract class LinuxScript extends Script {
     }
 
     /**
-     * Tests if the system already have the repository enabled.
-     *
-     * @param repository
-     *            the repository name.
-     *
-     * @param distributionName
-     *            optionally, the distribution name.
-     *
-     * @return {@code true} if the repository is already enabled.
-     *
-     * @see #getPackagesSourcesFile()
-     * @see #getPackagingType()
-     */
-    boolean containsDebRepository(String repository, String distributionName = distributionName) {
-        def dir = packagesSourcesFile.parentFile
-        def template = commandTemplates.getResource("list_repositories")
-        def line = scriptCommandLineFactory.create(packagingType, template).addSub("configurationDir", dir)
-        def task = scriptCommandExecFactory.create(commandExecFactory).exec(line).get()
-        split(task.out, '\n').find { it.trim().endsWith "$distributionName $repository" } != null
-    }
-
-    /**
      * Returns the packaging type. The packaging type is the packaging system
      * used on the system, like {@code "apt", "yum".}
      *

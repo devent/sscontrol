@@ -1,5 +1,5 @@
-apt(configurationDir) ::= <<
-for APT in `find <configurationDir>/ -name \*.list`; do
+apt(args) ::= <<
+for APT in `find <args.packagesSourcesDir>/ -name \*.list`; do
     grep -Po "(?\<=^deb\s).*?(?=#|$)" $APT | while read ENTRY ; do
         HOST=`echo $ENTRY | cut -d/ -f3`
         USER=`echo $ENTRY | cut -d/ -f4`

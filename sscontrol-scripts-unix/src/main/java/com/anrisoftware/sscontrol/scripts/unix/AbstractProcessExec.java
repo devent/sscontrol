@@ -43,7 +43,7 @@ import com.anrisoftware.globalpom.threads.api.Threads;
 
 /**
  * Executes a script.
- * 
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
@@ -82,19 +82,19 @@ public abstract class AbstractProcessExec implements Callable<ProcessTask> {
     private DefaultCommandExecFactory execFactory;
 
     @Inject
-    private DebugLogCommandOutputFactory debugOutputFactory;
+    private DebugLogCommandOutputFactory outputFactory;
 
     @Inject
-    private ErrorLogCommandOutputFactory errorOutputFactory;
+    private ErrorLogCommandOutputFactory errorFactory;
 
     private String scriptString;
 
     /**
      * Sets the threads pool and the arguments.
-     * 
+     *
      * @param threads
      *            the {@link Threads} threads pool.
-     * 
+     *
      * @param args
      *            the {@link Map} arguments.
      */
@@ -139,7 +139,7 @@ public abstract class AbstractProcessExec implements Callable<ProcessTask> {
 
     /**
      * Returns the script that was executed.
-     * 
+     *
      * @return the script {@link String}.
      */
     public String getScriptString() {
@@ -148,10 +148,10 @@ public abstract class AbstractProcessExec implements Callable<ProcessTask> {
 
     /**
      * Creates the command line for the process.
-     * 
+     *
      * @param commandLineFactory
      *            the {@link ScriptCommandLineFactory}.
-     * 
+     *
      * @return the {@link CommandLine}.
      */
     protected abstract CommandLine createLine(
@@ -174,15 +174,24 @@ public abstract class AbstractProcessExec implements Callable<ProcessTask> {
 
     private ProcessTask exec(CommandLine line, ScriptCommandExec script)
             throws Exception {
-        Logger logger = (Logger) args.get("log");
-        script.setCommandError(errorOutputFactory.create(logger, line));
-        script.setCommandOutput(debugOutputFactory.create(logger, line));
+        setupCommandError(script, line);
+        setupCommandOutput(script, line);
         Future<ProcessTask> future = script.exec(line);
         if (timeout != null) {
             return future.get(timeout.getMillis(), MILLISECONDS);
         } else {
             return future.get();
         }
+    }
+
+    protected void setupCommandOutput(ScriptCommandExec script, CommandLine line) {
+        Logger logger = (Logger) args.get("log");
+        script.setCommandOutput(outputFactory.create(logger, line));
+    }
+
+    protected void setupCommandError(ScriptCommandExec script, CommandLine line) {
+        Logger logger = (Logger) args.get("log");
+        script.setCommandError(errorFactory.create(logger, line));
     }
 
     private void logExecutedScript(CommandLine line) {

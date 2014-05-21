@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-scripts-unix. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.scripts.repositoryenabled
+package com.anrisoftware.sscontrol.scripts.repositoryaptenabled
 
 import groovy.util.logging.Slf4j
 
@@ -43,13 +43,13 @@ import com.google.inject.Guice
 import com.google.inject.Injector
 
 /**
- * @see RepositoryEnabled
+ * @see RepositoryAptEnabled
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
 @Slf4j
-class RepositoryEnabledTest {
+class RepositoryAptEnabledTest {
 
     @Test
     void "not contains repository"() {
@@ -57,9 +57,8 @@ class RepositoryEnabledTest {
         def repositoryEnabled = repositoryEnabledFactory.create(
                 log: log,
                 repository: "universe",
-                packagingType: "apt",
-                packagesSourcesFile: file,
                 distributionName: "precise",
+                packagesSourcesFile: file,
                 this, threads)()
         assert repositoryEnabled.contains == false
     }
@@ -70,16 +69,15 @@ class RepositoryEnabledTest {
         def repositoryEnabled = repositoryEnabledFactory.create(
                 log: log,
                 repository: "universe",
-                packagingType: "apt",
-                packagesSourcesFile: file,
                 distributionName: "precise",
+                packagesSourcesFile: file,
                 this, threads)()
         assert repositoryEnabled.contains == true
     }
 
     static Injector injector
 
-    static RepositoryEnabledFactory repositoryEnabledFactory
+    static RepositoryAptEnabledFactory repositoryEnabledFactory
 
     static PropertiesThreadsFactory threadsFactory
 
@@ -87,9 +85,9 @@ class RepositoryEnabledTest {
 
     static TemplateResource echoScriptTemplate
 
-    static URL sourcesListResource = RepositoryEnabledTest.class.getResource("sources_list.txt")
+    static URL sourcesListResource = RepositoryAptEnabledTest.class.getResource("sources_list.txt")
 
-    static URL sourcesListResourceWithRep = RepositoryEnabledTest.class.getResource("sources_list_withrep.txt")
+    static URL sourcesListResourceWithRep = RepositoryAptEnabledTest.class.getResource("sources_list_withrep.txt")
 
     @Rule
     public TemporaryFolder tmp = new TemporaryFolder()
@@ -100,14 +98,14 @@ class RepositoryEnabledTest {
     static void createFactory() {
         injector = Guice.createInjector(
                 new UnixScriptsModule(),
-                new RepositoryEnabledModule(),
+                new RepositoryAptEnabledModule(),
                 new UnixScriptsModule.ExecCommandModule(),
                 new PropertiesThreadsModule(),
                 new TemplatesResourcesModule(),
                 new TemplatesDefaultMapsModule(),
                 new STWorkerModule(),
                 new STDefaultPropertiesModule())
-        repositoryEnabledFactory = injector.getInstance RepositoryEnabledFactory
+        repositoryEnabledFactory = injector.getInstance RepositoryAptEnabledFactory
         threadsFactory = injector.getInstance PropertiesThreadsFactory
         threadsPoolProvider = injector.getInstance TestThreadsPropertiesProvider
     }

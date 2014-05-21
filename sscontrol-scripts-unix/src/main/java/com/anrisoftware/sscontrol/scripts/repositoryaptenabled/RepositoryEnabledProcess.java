@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-scripts-unix. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.scripts.repositoryenabled;
+package com.anrisoftware.sscontrol.scripts.repositoryaptenabled;
 
 import java.util.Map;
 
@@ -28,6 +28,7 @@ import com.anrisoftware.globalpom.exec.script.ScriptCommandExec;
 import com.anrisoftware.globalpom.exec.script.ScriptCommandLineFactory;
 import com.anrisoftware.globalpom.threads.api.Threads;
 import com.anrisoftware.resources.templates.api.TemplateResource;
+import com.anrisoftware.resources.templates.api.TemplatesFactory;
 import com.anrisoftware.sscontrol.scripts.unix.AbstractProcessExec;
 import com.google.inject.assistedinject.Assisted;
 
@@ -39,13 +40,16 @@ import com.google.inject.assistedinject.Assisted;
  */
 class RepositoryEnabledProcess extends AbstractProcessExec {
 
+    private static final String TEMPLATE_NAME = "list_repositories";
+
+    private static final String TEMPLATES_NAME = "RepositoryAptEnabledTemplates";
+
     private static final String ARGS = "args";
 
     private final Map<String, Object> args;
 
-    private final String name;
-
-    private final TemplateResource templateResource;
+    @Inject
+    private TemplatesFactory templatesFactory;
 
     /**
      * @see RepositoryEnabledProcessFactory#create(Threads, TemplateResource,
@@ -53,12 +57,9 @@ class RepositoryEnabledProcess extends AbstractProcessExec {
      */
     @Inject
     RepositoryEnabledProcess(@Assisted Threads threads,
-            @Assisted TemplateResource templateResource, @Assisted String name,
             @Assisted Map<String, Object> args) {
         super(threads, args);
         this.args = args;
-        this.name = name;
-        this.templateResource = templateResource;
     }
 
     @Override
@@ -69,8 +70,10 @@ class RepositoryEnabledProcess extends AbstractProcessExec {
 
     @Override
     protected CommandLine createLine(ScriptCommandLineFactory commandLineFactory) {
-        return commandLineFactory.create(name, templateResource).addSub(ARGS,
-                args);
+        String name = "aptRepository";
+        TemplateResource template = templatesFactory.create(TEMPLATES_NAME)
+                .getResource(TEMPLATE_NAME);
+        return commandLineFactory.create(name, template).addSub(ARGS, args);
     }
 
     @Override

@@ -16,9 +16,9 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-scripts-unix. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.scripts.repositoryenabled;
+package com.anrisoftware.sscontrol.scripts.repositoryaptenabled;
 
-import static com.anrisoftware.sscontrol.scripts.repositoryenabled.RepositoryEnabledLogger._.argument_null;
+import static com.anrisoftware.sscontrol.scripts.repositoryaptenabled.RepositoryAptEnabledLogger._.argument_null;
 import static org.apache.commons.lang3.Validate.notNull;
 
 import java.io.File;
@@ -27,16 +27,14 @@ import java.util.Map;
 import com.anrisoftware.globalpom.log.AbstractLogger;
 
 /**
- * Logging for {@link RepositoryEnabled}.
- * 
+ * Logging for {@link RepositoryAptEnabled}.
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class RepositoryEnabledLogger extends AbstractLogger {
+class RepositoryAptEnabledLogger extends AbstractLogger {
 
     private static final String REPOSITORY_KEY = "repository";
-
-    private static final String PACKAGING_TYPE_KEY = "packagingType";
 
     private static final String PACKAGES_SOURCES_FILE_KEY = "packagesSourcesFile";
 
@@ -59,10 +57,10 @@ class RepositoryEnabledLogger extends AbstractLogger {
     }
 
     /**
-     * Sets the context of the logger to {@link RepositoryEnabled}.
+     * Sets the context of the logger to {@link RepositoryAptEnabled}.
      */
-    public RepositoryEnabledLogger() {
-        super(RepositoryEnabled.class);
+    public RepositoryAptEnabledLogger() {
+        super(RepositoryAptEnabled.class);
     }
 
     String distributionName(Map<String, Object> args, Object parent) {
@@ -75,12 +73,6 @@ class RepositoryEnabledLogger extends AbstractLogger {
         Object value = args.get(PACKAGES_SOURCES_FILE_KEY);
         notNull(value, argument_null.toString(), PACKAGES_SOURCES_FILE_KEY);
         return (File) value;
-    }
-
-    String packagingType(Map<String, Object> args, Object parent) {
-        Object value = args.get(PACKAGING_TYPE_KEY);
-        notNull(value, argument_null.toString(), DISTRIBUTION_NAME_KEY);
-        return value.toString();
     }
 
     String repository(Map<String, Object> args, Object parent) {

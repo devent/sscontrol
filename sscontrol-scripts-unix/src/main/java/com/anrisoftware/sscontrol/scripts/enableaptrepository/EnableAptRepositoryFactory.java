@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-scripts-unix. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.scripts.repositoryenabled;
+package com.anrisoftware.sscontrol.scripts.enableaptrepository;
 
 import java.util.Map;
 
@@ -28,7 +28,7 @@ import com.anrisoftware.globalpom.threads.api.Threads;
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-public interface RepositoryEnabledFactory {
+public interface EnableAptRepositoryFactory {
 
     /**
      * Create the check if the repository was enabled.
@@ -52,8 +52,8 @@ public interface RepositoryEnabledFactory {
      * @param threads
      *            the {@link Threads} pool.
      * 
-     * @return the {@link RepositoryEnabled}.
+     * @return the {@link EnableAptRepository}.
      */
-    RepositoryEnabled create(Map<String, Object> args, Object parent,
+    EnableAptRepository create(Map<String, Object> args, Object parent,
             Threads threads);
 }

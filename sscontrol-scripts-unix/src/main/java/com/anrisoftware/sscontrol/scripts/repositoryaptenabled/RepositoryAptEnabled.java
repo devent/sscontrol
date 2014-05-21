@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-scripts-unix. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.scripts.repositoryenabled;
+package com.anrisoftware.sscontrol.scripts.repositoryaptenabled;
 
 import static java.lang.String.format;
 import static org.apache.commons.lang3.StringUtils.split;
@@ -28,17 +28,15 @@ import javax.inject.Inject;
 
 import com.anrisoftware.globalpom.exec.api.ProcessTask;
 import com.anrisoftware.globalpom.threads.api.Threads;
-import com.anrisoftware.resources.templates.api.TemplateResource;
-import com.anrisoftware.resources.templates.api.TemplatesFactory;
 import com.google.inject.assistedinject.Assisted;
 
 /**
- * Tests if the repository is already enabled on the distribution.
- * 
+ * Tests if the APT repository is already enabled on the distribution.
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-public class RepositoryEnabled implements Callable<RepositoryEnabled> {
+public class RepositoryAptEnabled implements Callable<RepositoryAptEnabled> {
 
     private static final String SEARCH_PATTERN = ".*(%s)\\s.*(%s)";
 
@@ -47,39 +45,29 @@ public class RepositoryEnabled implements Callable<RepositoryEnabled> {
 
     private static final String PACKAGES_SOURCES_DIR_KEY = "packagesSourcesDir";
 
-    private static final String TEMPLATE_NAME = "list_repositories";
-
-    private static final String TEMPLATES_NAME = "RepositoryEnabledTemplates";
-
     private final Map<String, Object> args;
 
     private final Threads threads;
 
     private final String distributionName;
 
-    private final String packagingType;
-
     private final String repository;
 
     @Inject
     private RepositoryEnabledProcessFactory containsRepositoryProcessFactory;
 
-    @Inject
-    private TemplatesFactory templatesFactory;
-
     private boolean contains;
 
     /**
-     * @see RepositoryEnabledFactory#create(Map, Object, Threads)
+     * @see RepositoryAptEnabledFactory#create(Map, Object, Threads)
      */
     @Inject
-    RepositoryEnabled(RepositoryEnabledLogger log,
+    RepositoryAptEnabled(RepositoryAptEnabledLogger log,
             @Assisted Map<String, Object> args, @Assisted Object parent,
             @Assisted Threads threads) {
         this.args = args;
         this.threads = threads;
         this.distributionName = log.distributionName(args, parent);
-        this.packagingType = log.packagingType(args, parent);
         args.put(PACKAGES_SOURCES_DIR_KEY, log
                 .packagesSourcesFile(args, parent).getParentFile());
         this.repository = log.repository(args, parent);
@@ -87,11 +75,9 @@ public class RepositoryEnabled implements Callable<RepositoryEnabled> {
     }
 
     @Override
-    public RepositoryEnabled call() throws Exception {
-        TemplateResource template = templatesFactory.create(TEMPLATES_NAME)
-                .getResource(TEMPLATE_NAME);
-        ProcessTask task = containsRepositoryProcessFactory.create(threads,
-                template, packagingType, args).call();
+    public RepositoryAptEnabled call() throws Exception {
+        ProcessTask task;
+        task = containsRepositoryProcessFactory.create(threads, args).call();
         String out = task.getOut();
         String[] split = split(out, NEW_LINE_CHAR);
         boolean found = false;

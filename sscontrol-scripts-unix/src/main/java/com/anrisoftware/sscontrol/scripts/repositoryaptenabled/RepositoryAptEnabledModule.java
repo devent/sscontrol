@@ -16,22 +16,26 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-scripts-unix. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.scripts.repositoryenabled;
+package com.anrisoftware.sscontrol.scripts.repositoryaptenabled;
 
-import java.util.Map;
-
-import com.anrisoftware.globalpom.threads.api.Threads;
-import com.anrisoftware.resources.templates.api.TemplateResource;
+import com.google.inject.AbstractModule;
+import com.google.inject.assistedinject.FactoryModuleBuilder;
 
 /**
- * Factory to create the contains repository process.
+ * @see RepositoryAptEnabledFactory
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-interface RepositoryEnabledProcessFactory {
+public class RepositoryAptEnabledModule extends AbstractModule {
 
-    RepositoryEnabledProcess create(Threads threads,
-            TemplateResource templateResource, String name,
-            Map<String, Object> args);
+    @Override
+    protected void configure() {
+        install(new FactoryModuleBuilder().implement(RepositoryAptEnabled.class,
+                RepositoryAptEnabled.class).build(RepositoryAptEnabledFactory.class));
+        install(new FactoryModuleBuilder().implement(
+                RepositoryEnabledProcess.class, RepositoryEnabledProcess.class)
+                .build(RepositoryEnabledProcessFactory.class));
+    }
+
 }

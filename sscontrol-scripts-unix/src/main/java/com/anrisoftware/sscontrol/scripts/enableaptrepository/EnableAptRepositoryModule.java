@@ -16,26 +16,24 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-scripts-unix. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.scripts.repositoryenabled;
+package com.anrisoftware.sscontrol.scripts.enableaptrepository;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 
 /**
- * @see RepositoryEnabledFactory
+ * @see EnableAptRepositoryFactory
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-public class RepositoryEnabledModule extends AbstractModule {
+public class EnableAptRepositoryModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        install(new FactoryModuleBuilder().implement(RepositoryEnabled.class,
-                RepositoryEnabled.class).build(RepositoryEnabledFactory.class));
-        install(new FactoryModuleBuilder().implement(
-                RepositoryEnabledProcess.class, RepositoryEnabledProcess.class)
-                .build(RepositoryEnabledProcessFactory.class));
+        install(new FactoryModuleBuilder().implement(EnableAptRepository.class,
+                EnableAptRepository.class).build(
+                EnableAptRepositoryFactory.class));
     }
 
 }

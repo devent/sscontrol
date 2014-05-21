@@ -42,6 +42,13 @@
 			<groupId>com.anrisoftware.globalpom</groupId>
 			<artifactId>globalpomutils-exec</artifactId>
 		</dependency>
+
+		<!-- enableaptrepository -->
+		<dependency>
+			<groupId>org.antlr</groupId>
+			<artifactId>ST4</artifactId>
+			<optional>true</optional>
+		</dependency>
 	</dependencies>
 
 </project>

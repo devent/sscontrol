@@ -77,7 +77,7 @@ class UbuntuTestUtil {
         registry = injector.getInstance ServicesRegistry
         loader = loaderFactory.create registry, variables
         loader.setParent injector
-        loader.setThreads createThreads()
+        loader.setThreads threads
     }
 
     @BeforeClass

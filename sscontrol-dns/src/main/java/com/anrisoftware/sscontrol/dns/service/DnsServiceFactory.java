@@ -18,6 +18,8 @@
  */
 package com.anrisoftware.sscontrol.dns.service;
 
+import java.util.concurrent.ExecutorService;
+
 import org.mangosdk.spi.ProviderFor;
 
 import com.anrisoftware.sscontrol.core.api.ProfileService;
@@ -35,30 +37,38 @@ import com.google.inject.Module;
 @ProviderFor(ServiceFactory.class)
 public class DnsServiceFactory implements ServiceFactory {
 
-	/**
-	 * The name of the DNS service.
-	 */
-	public static final String NAME = "dns";
+    /**
+     * The name of the DNS service.
+     */
+    public static final String NAME = "dns";
 
-	private static final Module[] MODULES = new Module[] { new DnsModule() };
+    private static final Module[] MODULES = new Module[] { new DnsModule() };
 
-	private Injector injector;
+    private Injector injector;
 
-	@Override
-	public String getName() {
-		return NAME;
-	}
+    private ExecutorService threads;
 
-	@Override
-	public Service create(ProfileService profile) {
-		DnsServiceImpl service;
-		service = injector.getInstance(DnsServiceImpl.class);
-		service.setProfile(profile);
-		return service;
-	}
+    @Override
+    public String getName() {
+        return NAME;
+    }
 
-	@Override
-	public void setParent(Object parent) {
-		this.injector = ((Injector) parent).createChildInjector(MODULES);
-	}
+    @Override
+    public Service create(ProfileService profile) {
+        DnsServiceImpl service;
+        service = injector.getInstance(DnsServiceImpl.class);
+        service.setProfile(profile);
+        service.setThreads(threads);
+        return service;
+    }
+
+    @Override
+    public void setParent(Object parent) {
+        this.injector = ((Injector) parent).createChildInjector(MODULES);
+    }
+
+    @Override
+    public void setThreads(ExecutorService threads) {
+        this.threads = threads;
+    }
 }

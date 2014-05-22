@@ -11,7 +11,7 @@
 	</parent>
 
 	<artifactId>sscontrol-scripts-unix</artifactId>
-	<name>Robo Bee :: Scripts :: Unix</name>
+	<name>RoboBee :: Scripts :: Unix</name>
 	<description>Collection of Unix scripts.</description>
 	<inceptionYear>2014</inceptionYear>
 

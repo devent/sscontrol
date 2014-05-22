@@ -31,7 +31,6 @@ import com.anrisoftware.sscontrol.core.service.LinuxScript
 abstract class MaradnsScript extends LinuxScript {
 
     def run() {
-        super.run()
         beforeConfiguration()
     }
 

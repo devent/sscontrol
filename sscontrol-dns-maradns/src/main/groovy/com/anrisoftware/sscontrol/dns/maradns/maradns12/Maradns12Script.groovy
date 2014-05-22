@@ -20,13 +20,16 @@ package com.anrisoftware.sscontrol.dns.maradns.maradns12
 
 import static org.apache.commons.io.FileUtils.*
 
+import javax.inject.Inject
+
+import com.anrisoftware.globalpom.textmatch.tokentemplate.TokenTemplate
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.Templates
+import com.anrisoftware.resources.templates.api.TemplatesFactory
 import com.anrisoftware.sscontrol.dns.aliases.Alias
 import com.anrisoftware.sscontrol.dns.maradns.linux.MaradnsScript
 import com.anrisoftware.sscontrol.dns.roots.Roots
 import com.anrisoftware.sscontrol.dns.zone.DnsZone
-import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokenTemplate
 
 /**
  * MaraDNS 1.2 service script.
@@ -35,6 +38,9 @@ import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokenTemplate
  * @since 1.0
  */
 abstract class Maradns12Script extends MaradnsScript {
+
+    @Inject
+    TemplatesFactory templatesFactory
 
     Templates maradnsTemplates
 

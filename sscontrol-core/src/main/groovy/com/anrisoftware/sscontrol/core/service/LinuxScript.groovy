@@ -86,14 +86,6 @@ abstract class LinuxScript extends Script {
     }
 
     /**
-     * Installs the system packages.
-     */
-    void installSystemPackages() {
-        def packages = systemPackages
-        !packages.empty ? installPackages(packages) : null
-    }
-
-    /**
      * Returns the system packages to install.
      *
      * <ul>
@@ -121,16 +113,16 @@ abstract class LinuxScript extends Script {
     }
 
     /**
-     * Returns additional repositories to enable.
+     * Returns additional repository to enable.
      *
      * <ul>
-     * <li>profile property {@code additional_repositories}</li>
+     * <li>profile property {@code additional_repository}</li>
      * </ul>
      *
      * @see #getDefaultProperties()
      */
-    List getAdditionalRepositories() {
-        profileListProperty "additional_repositories", defaultProperties
+    String getAdditionalRepository() {
+        profileProperty "additional_repository", defaultProperties
     }
 
     /**
@@ -147,77 +139,17 @@ abstract class LinuxScript extends Script {
     }
 
     /**
-     * Enables the specified Debian repositories.
-     *
-     * @param repositories
-     *               the list with the repositories.
-     *
-     * @param distributionName
-     *               optionally, the name of the distribution.
-     *
-     * @return {@code true} if at least one of the repositories was enabled.
-     *
-     * @see #getDistributionName()
-     */
-    boolean enableDebRepositories(List repositories = additionalRepositories, String distributionName = distributionName) {
-        boolean enabled = false
-        repositories.each {
-            if (!containsDebRepository(it, distributionName)) {
-                enableDebRepository it, distributionName
-                enabled = true
-            }
-        }
-        return enabled
-    }
-
-    /**
-     * Enables the Debian repository.
-     *
-     * @param repository
-     *               the repository name.
-     *
-     * @param distribution
-     *               the name of the distribution.
-     *
-     * @see #getPackagesSourcesFile()
-     */
-    void enableDebRepository(String repository, String distributionName) {
-        def str = repositoryString repository, distributionName
-        FileUtils.write packagesSourcesFile, "$str\n", charset, true
-        log.enableRepositoryDone this, repository
-    }
-
-    /**
-     * Returns the repository string.
-     *
-     * @param repository
-     *            the repository name.
-     *
-     * @param distributionName
-     *            optionally, the distribution name.
+     * Returns the repository string, for
+     * example {@code "deb http://archive.ubuntu.com/ubuntu <distributionName> <repository>"}
      *
      * <ul>
      * <li>profile property {@code repository_string}</li>
      * </ul>
      *
      * @see #getDefaultProperties()
-     * @see #getDistributionName()
      */
-    String repositoryString(String repository, String distributionName = distributionName) {
-        def str = profileProperty "repository_string", defaultProperties
-        String.format str, distributionName, repository
-    }
-
-    /**
-     * Returns the packaging type. The packaging type is the packaging system
-     * used on the system, like {@code "apt", "yum".}
-     *
-     * <ul>
-     * <li>property key {@code packaging_type}
-     * </ul>
-     */
-    String getPackagingType() {
-        profileProperty "packaging_type", defaultProperties
+    String getRepositoryString() {
+        profileProperty "repository_string", defaultProperties
     }
 
     /**

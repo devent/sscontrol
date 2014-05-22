@@ -15,8 +15,8 @@
         <module>sscontrol-database</module>
         <module>sscontrol-database-mysql</module>
         <module>sscontrol-dhclient</module>
-<!--         <module>sscontrol-dns</module> -->
-<!--         <module>sscontrol-dns-maradns</module> -->
+         <module>sscontrol-dns</module>
+         <module>sscontrol-dns-maradns</module>
         <module>sscontrol-firewall</module>
         <module>sscontrol-firewall-ufw</module>
         <module>sscontrol-hostname</module>

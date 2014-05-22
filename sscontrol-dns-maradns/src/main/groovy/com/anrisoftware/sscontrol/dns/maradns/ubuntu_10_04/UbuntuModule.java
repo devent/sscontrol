@@ -18,6 +18,9 @@
  */
 package com.anrisoftware.sscontrol.dns.maradns.ubuntu_10_04;
 
+import com.anrisoftware.sscontrol.scripts.enableaptrepository.EnableAptRepositoryModule;
+import com.anrisoftware.sscontrol.scripts.repositoryaptenabled.RepositoryAptEnabledModule;
+import com.anrisoftware.sscontrol.scripts.unix.UnixScriptsModule;
 import com.google.inject.AbstractModule;
 
 /**
@@ -30,5 +33,9 @@ class UbuntuModule extends AbstractModule {
 
 	@Override
 	protected void configure() {
+        install(new EnableAptRepositoryModule());
+        install(new RepositoryAptEnabledModule());
+        install(new UnixScriptsModule());
+        install(new UnixScriptsModule.ExecCommandModule());
 	}
 }

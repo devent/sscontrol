@@ -18,10 +18,15 @@
  */
 package com.anrisoftware.sscontrol.dns.maradns.ubuntu_12_04
 
+import groovy.util.logging.Slf4j
+
 import javax.inject.Inject
 
 import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.sscontrol.dns.maradns.maradns12.Maradns12Script
+import com.anrisoftware.sscontrol.scripts.enableaptrepository.EnableAptRepositoryFactory
+import com.anrisoftware.sscontrol.scripts.unix.InstallPackagesFactory
+import com.anrisoftware.sscontrol.scripts.unix.RestartServicesFactory
 
 /**
  * MaraDNS/Ubuntu 12.04 service script.
@@ -29,20 +34,60 @@ import com.anrisoftware.sscontrol.dns.maradns.maradns12.Maradns12Script
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
+@Slf4j
 class UbuntuScript extends Maradns12Script {
 
     @Inject
     UbuntuPropertiesProvider ubuntuProperties
 
+    @Inject
+    InstallPackagesFactory installPackagesFactory
+
+    @Inject
+    EnableAptRepositoryFactory enableAptRepositoryFactory
+
+    @Inject
+    RestartServicesFactory restartServicesFactory
+
     def run() {
         super.run()
-        restartServices()
+        restartService()
     }
 
     @Override
     void beforeConfiguration() {
-        enableDebRepositories()
-        installPackages packages
+        enableRepository()
+        installPackages()
+    }
+
+    /**
+     * Installs the <i>universe</i> repository.
+     */
+    void enableRepository() {
+        enableAptRepositoryFactory.create(
+                log: log,
+                charset: charset,
+                repository: additionalRepository,
+                distributionName: distributionName,
+                repositoryString: repositoryString,
+                packagesSourcesFile: packagesSourcesFile,
+                this, threads)()
+    }
+
+    /**
+     * Installs the <i>MaraDNS</i> packages.
+     */
+    void installPackages() {
+        installPackagesFactory.create(
+                log: log, command: installCommand, packages: packages, this, threads)()
+    }
+
+    /**
+     * Restarts the <i>MaraDNS</i> service.
+     */
+    void restartService() {
+        restartServicesFactory.create(
+                log: log, command: restartCommand, services: restartServices, this, threads)()
     }
 
     @Override

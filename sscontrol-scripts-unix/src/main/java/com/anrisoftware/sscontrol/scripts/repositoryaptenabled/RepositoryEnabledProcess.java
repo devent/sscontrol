@@ -42,7 +42,7 @@ class RepositoryEnabledProcess extends AbstractProcessExec {
 
     private static final String TEMPLATE_NAME = "list_repositories";
 
-    private static final String TEMPLATES_NAME = "RepositoryAptEnabledTemplates";
+    private static final String TEMPLATES_NAME = "ScriptsUnixTemplates";
 
     private static final String ARGS = "args";
 

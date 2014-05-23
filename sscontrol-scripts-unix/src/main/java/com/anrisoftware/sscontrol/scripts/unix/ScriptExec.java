@@ -22,6 +22,8 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
 import com.anrisoftware.globalpom.exec.api.CommandLine;
 import com.anrisoftware.globalpom.exec.api.ProcessTask;
 import com.anrisoftware.globalpom.exec.script.ScriptCommandLineFactory;
@@ -78,4 +80,8 @@ public class ScriptExec extends AbstractProcessExec {
                 args);
     }
 
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this).append(args).toString();
+    }
 }

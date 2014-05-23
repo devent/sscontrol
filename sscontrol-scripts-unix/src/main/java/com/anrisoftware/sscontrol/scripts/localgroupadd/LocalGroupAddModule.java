@@ -16,38 +16,24 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-scripts-unix. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.scripts.unix;
+package com.anrisoftware.sscontrol.scripts.localgroupadd;
 
-import java.util.Map;
-
-import com.anrisoftware.globalpom.threads.api.Threads;
+import com.google.inject.AbstractModule;
+import com.google.inject.assistedinject.FactoryModuleBuilder;
 
 /**
- * Factory to create the install packages.
+ * @see LocalGroupAddFactory
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-public interface InstallPackagesFactory {
+public class LocalGroupAddModule extends AbstractModule {
 
-    /**
-     * Create the install packages.
-     * 
-     * @param args
-     *            the {@link Map} arguments.
-     *            <ul>
-     *            <li>{@code packages} the list of packages to install;</li>
-     *            <li>{@code command} the install packages command.
-     *            </ul>
-     * 
-     * @param parent
-     *            the {@link Object} parent script.
-     * 
-     * @param threads
-     *            the {@link Threads} pool.
-     * 
-     * @return the {@link InstallPackages}.
-     */
-    InstallPackages create(Map<String, Object> args, Object parent,
-            Threads threads);
+    @Override
+    protected void configure() {
+        install(new FactoryModuleBuilder().implement(LocalGroupAdd.class,
+                LocalGroupAdd.class).build(
+                LocalGroupAddFactory.class));
+    }
+
 }

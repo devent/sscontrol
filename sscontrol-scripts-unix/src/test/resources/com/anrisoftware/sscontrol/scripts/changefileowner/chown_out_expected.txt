@@ -1,0 +1,2 @@
+foo.foogroup /tmp/tmp/foo
+foo.foogroup /tmp/tmp/bar

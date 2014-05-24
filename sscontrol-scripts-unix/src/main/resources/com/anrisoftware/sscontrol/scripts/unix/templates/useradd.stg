@@ -10,7 +10,7 @@ unixUserAdd(args) ::= <%
 %>
 
 unixUserAddSystem(args) ::= <%
-<if(args.systemGroup)>-r<endif>
+<if(args.systemUser)>-r<endif>
 %>
 
 unixUserAddShell(args) ::= <%

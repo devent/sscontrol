@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Erwin Müller <erwin.mueller@deventm.org>
+ * Copyright 2013-2014 Erwin Müller <erwin.mueller@deventm.org>
  *
  * This file is part of sscontrol-remoteaccess.
  *
@@ -19,6 +19,7 @@
 package com.anrisoftware.sscontrol.remote.openssh.users.linux
 
 import static org.apache.commons.io.FileUtils.*
+import groovy.util.logging.Slf4j
 
 import javax.inject.Inject
 
@@ -32,6 +33,9 @@ import com.anrisoftware.sscontrol.remote.user.GroupFactory
 import com.anrisoftware.sscontrol.remote.user.Require
 import com.anrisoftware.sscontrol.remote.user.User
 import com.anrisoftware.sscontrol.remote.user.UserFactory
+import com.anrisoftware.sscontrol.scripts.localchangepassword.LocalChangePasswordFactory
+import com.anrisoftware.sscontrol.scripts.localgroupadd.LocalGroupAddFactory
+import com.anrisoftware.sscontrol.scripts.localuseradd.LocalUserAddFactory
 
 /**
  * Local users script.
@@ -39,6 +43,7 @@ import com.anrisoftware.sscontrol.remote.user.UserFactory
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
+@Slf4j
 abstract class LocalUsersScript implements RemoteScript {
 
     @Inject
@@ -46,6 +51,15 @@ abstract class LocalUsersScript implements RemoteScript {
 
     @Inject
     GroupFactory groupFactory
+
+    @Inject
+    LocalGroupAddFactory localGroupAddFactory
+
+    @Inject
+    LocalChangePasswordFactory localChangePasswordFactory
+
+    @Inject
+    LocalUserAddFactory localUserAddFactory
 
     LinuxScript script
 
@@ -70,8 +84,13 @@ abstract class LocalUsersScript implements RemoteScript {
             }
             if (!found) {
                 updateGroupId user.group, id, { id++ }
-                def group = user.group.name
-                addGroup "groupName": group, "groupId": user.group.gid
+                localGroupAddFactory.create(
+                        log: log,
+                        command: script.groupAddCommand,
+                        groupsFile: script.groupsFile,
+                        groupId: user.group.gid,
+                        groupName: user.group.name,
+                        this, threads)()
             }
         }
     }
@@ -109,7 +128,16 @@ abstract class LocalUsersScript implements RemoteScript {
                 user.home = homeDir user
                 def shell = user.login == null ? defaultLoginShell : user.login
                 def group = user.group.name
-                addUser "userName": user.name, "homeDir": user.home, "shell": shell, "groupName": group, "userId": user.uid
+                localUserAddFactory.create(
+                        log: log,
+                        command: script.userAddCommand,
+                        usersFile: script.usersFile,
+                        userName: user.name,
+                        homeDir: user.home,
+                        shell: shell,
+                        groupName: group,
+                        userId: user.uid,
+                        this, threads)()
             }
         }
     }
@@ -137,7 +165,10 @@ abstract class LocalUsersScript implements RemoteScript {
         if (!user.requires.contains(Require.password)) {
             return
         }
-        changePassword "name": distributionName, "userName": user.name, "password": user.password
+        localChangePasswordFactory.create(
+                log: log, command: script.changePasswordCommand,
+                name: distributionName, userName: user.name, password: user.password,
+                this, threads)()
     }
 
     /**

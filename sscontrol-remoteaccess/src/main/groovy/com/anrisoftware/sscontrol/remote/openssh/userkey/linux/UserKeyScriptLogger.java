@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Erwin Müller <erwin.mueller@deventm.org>
+ * Copyright 2013-2014 Erwin Müller <erwin.mueller@deventm.org>
  *
  * This file is part of sscontrol-remoteaccess.
  *
@@ -21,10 +21,10 @@ package com.anrisoftware.sscontrol.remote.openssh.userkey.linux;
 import static com.anrisoftware.sscontrol.remote.openssh.userkey.linux.UserKeyScriptLogger._.sshkey_created_debug;
 import static com.anrisoftware.sscontrol.remote.openssh.userkey.linux.UserKeyScriptLogger._.sshkey_created_info;
 
+import com.anrisoftware.globalpom.exec.api.ProcessTask;
 import com.anrisoftware.globalpom.log.AbstractLogger;
 import com.anrisoftware.sscontrol.core.service.LinuxScript;
 import com.anrisoftware.sscontrol.remote.user.User;
-import com.anrisoftware.sscontrol.workers.command.script.ScriptCommandWorker;
 
 /**
  * Logging for {@link UserKeyScript}.
@@ -59,10 +59,9 @@ class UserKeyScriptLogger extends AbstractLogger {
         super(UserKeyScript.class);
     }
 
-    void sshkeyCreated(LinuxScript script, User user,
-            ScriptCommandWorker worker) {
+    void sshkeyCreated(LinuxScript script, User user, ProcessTask task) {
         if (isDebugEnabled()) {
-            debug(sshkey_created_debug, user, script, worker);
+            debug(sshkey_created_debug, user, script, task);
         } else {
             info(sshkey_created_info, user.getName(), script.getName());
         }

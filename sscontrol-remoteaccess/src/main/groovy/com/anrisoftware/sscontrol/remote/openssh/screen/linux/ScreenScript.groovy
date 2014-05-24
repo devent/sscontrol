@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Erwin Müller <erwin.mueller@deventm.org>
+ * Copyright 2013-2014 Erwin Müller <erwin.mueller@deventm.org>
  *
  * This file is part of sscontrol-remoteaccess.
  *
@@ -19,20 +19,23 @@
 package com.anrisoftware.sscontrol.remote.openssh.screen.linux
 
 import static org.apache.commons.io.FileUtils.*
+import groovy.util.logging.Slf4j
 
 import javax.inject.Inject
 
 import org.apache.commons.io.FileUtils
 
+import com.anrisoftware.globalpom.textmatch.tokentemplate.TokenTemplate
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.Templates
+import com.anrisoftware.resources.templates.api.TemplatesFactory
 import com.anrisoftware.sscontrol.core.service.LinuxScript
 import com.anrisoftware.sscontrol.remote.api.RemoteScript
 import com.anrisoftware.sscontrol.remote.service.RemoteService
 import com.anrisoftware.sscontrol.remote.user.GroupFactory
 import com.anrisoftware.sscontrol.remote.user.User
 import com.anrisoftware.sscontrol.remote.user.UserFactory
-import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokenTemplate
+import com.anrisoftware.sscontrol.scripts.changefilemod.ChangeFileModFactory
 
 /**
  * screen script for local users.
@@ -40,6 +43,7 @@ import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokenTemplate
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
+@Slf4j
 abstract class ScreenScript implements RemoteScript {
 
     @Inject
@@ -47,6 +51,12 @@ abstract class ScreenScript implements RemoteScript {
 
     @Inject
     GroupFactory groupFactory
+
+    @Inject
+    TemplatesFactory templatesFactory
+
+    @Inject
+    ChangeFileModFactory changeFileModFactory
 
     LinuxScript script
 
@@ -88,7 +98,12 @@ abstract class ScreenScript implements RemoteScript {
         file.parentFile.isDirectory() == false ? file.parentFile.mkdirs() : false
         def str = autoScreenTemplate.getText()
         FileUtils.write file, str, charset
-        changeMod "mod": "+x", "files": file
+        changeFileModFactory.create(
+                log: log,
+                command: script.chmodCommand,
+                mod: "+x",
+                files: file,
+                this, threads)()
     }
 
     void appendScreenSession(String name, File sessionFile) {

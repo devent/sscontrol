@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Erwin Müller <erwin.mueller@deventm.org>
+ * Copyright 2013-2014 Erwin Müller <erwin.mueller@deventm.org>
  *
  * This file is part of sscontrol-remoteaccess.
  *
@@ -46,7 +46,6 @@ enum Ubuntu_12_04_Resources {
     chownOutExpected("/bin/chown.out", Ubuntu_12_04_Resources.class.getResource("chown_out_excepted.txt")),
     chmodOutExpected("/bin/chmod.out", Ubuntu_12_04_Resources.class.getResource("chmod_out_excepted.txt")),
     chpasswdOutExpected("/usr/sbin/chpasswd.out", Ubuntu_12_04_Resources.class.getResource("chpasswd_out_excepted.txt")),
-    chpasswdInExpected("/usr/sbin/chpasswd.in", Ubuntu_12_04_Resources.class.getResource("chpasswd_in_excepted.txt")),
     sshkeygenOutExpected("/usr/bin/ssh-keygen.out", Ubuntu_12_04_Resources.class.getResource("sshkeygen_out_expected.txt")),
     sshdconfigExpected("/etc/ssh/sshd_config", Ubuntu_12_04_Resources.class.getResource("sshd_config_expected.txt")),
     deventAuthorizedkeysExpected("/tmp/home/devent/.ssh/authorized_keys", Ubuntu_12_04_Resources.class.getResource("devent_authorizedkeys_expected.txt")),

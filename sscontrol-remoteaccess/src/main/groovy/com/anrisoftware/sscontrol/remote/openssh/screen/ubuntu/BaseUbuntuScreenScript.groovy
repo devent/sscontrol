@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Erwin Müller <erwin.mueller@deventm.org>
+ * Copyright 2013-2014 Erwin Müller <erwin.mueller@deventm.org>
  *
  * This file is part of sscontrol-remoteaccess.
  *
@@ -18,9 +18,14 @@
  */
 package com.anrisoftware.sscontrol.remote.openssh.screen.ubuntu
 
+import groovy.util.logging.Slf4j
+
+import javax.inject.Inject
+
 import com.anrisoftware.sscontrol.remote.openssh.screen.linux.ScreenScript
 import com.anrisoftware.sscontrol.remote.service.RemoteService
 import com.anrisoftware.sscontrol.remote.user.User
+import com.anrisoftware.sscontrol.scripts.unix.InstallPackagesFactory
 
 /**
  * Screen script for local users for Ubuntu.
@@ -28,15 +33,30 @@ import com.anrisoftware.sscontrol.remote.user.User
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
+@Slf4j
 abstract class BaseUbuntuScreenScript extends ScreenScript {
+
+    @Inject
+    InstallPackagesFactory installPackagesFactory
 
     @Override
     void deployScreenScript(RemoteService service) {
-        installPackages screenPackages
+        installPackages()
         super.deployScreenScript service
         service.users.each { User user ->
             appendScreenSession "bashrc", bashConfigFile(user)
         }
+    }
+
+    /**
+     * Installs the <i>screen</i> packages.
+     */
+    void installPackages() {
+        installPackagesFactory.create(
+                log: log,
+                command: script.installCommand,
+                packages: screenPackages,
+                this, threads)()
     }
 
     /**

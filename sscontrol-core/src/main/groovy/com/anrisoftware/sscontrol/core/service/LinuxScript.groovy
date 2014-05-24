@@ -175,66 +175,6 @@ abstract class LinuxScript extends Script {
     }
 
     /**
-     * Change the permissions to the specified files.
-     *
-     * @param args
-     * 			  the arguments:
-     * <ul>
-     * <li>{@code mod:} the modification;
-     * <li>{@code files:} the file or files;
-     * <li>{@code recursive:} optionally, set to {@code true} to
-     * recursively change the permissions of all files and sub-directories.
-     * <li>{@code system:} optionally, the system of the server.
-     * Defaults to unix;
-     * </ul>
-     *
-     * @return the {@link ProcessTask} process task.
-     */
-    def changeMod(Map args) {
-        args.command = args.containsKey("command") ? args.command : chmodCommand
-        args.system = args.containsKey("system") ? args.system : "unix"
-        log.checkChangeModArgs args
-        def template = commandTemplates.getResource("chmod")
-        def line = scriptCommandLineFactory.create(args.system, template).addSub("args", args)
-        def script = scriptCommandExecFactory.create(commandExecFactory)
-        script.commandError = errorLogCommandOutputFactory.create(log, line)
-        script.commandOutput = debugLogCommandOutputFactory.create(log, line)
-        def task = script.exec(line).get()
-        log.changeModDone this, task, args
-        return task
-    }
-
-    /**
-     * Change the owner to the specified files.
-     *
-     * @param args
-     * 			  the arguments:
-     * <ul>
-     * <li>{@code owner:} the owner user;
-     * <li>{@code ownerGroup:} the owner group;
-     * <li>{@code files:} the file or files;
-     * <li>{@code recursive:} optionally, set to {@code true} to
-     * recursively change the owner of all files and sub-directories.
-     * <li>{@code system:} optionally, the system of the server.
-     * Defaults to unix;
-     * </ul>
-     *
-     * @return the {@link ProcessTask} process task.
-     */
-    def changeOwner(Map args) {
-        args.command = args.containsKey("command") ? args.command : chownCommand
-        args.system = args.containsKey("system") ? args.system : "unix"
-        log.checkChangeOwnerArgs args
-        def template = commandTemplates.getResource("chown")
-        def line = scriptCommandLineFactory.create(args.system, template).addSub("args", args)
-        def script = scriptCommandExecFactory.create(commandExecFactory)
-        script.commandError = errorLogCommandOutputFactory.create(log, line)
-        script.commandOutput = debugLogCommandOutputFactory.create(log, line)
-        def task = script.exec(line).get()
-        log.changeOwnerDone this, task, args
-    }
-
-    /**
      * Returns the change owner command.
      *
      * <ul>
@@ -467,37 +407,6 @@ abstract class LinuxScript extends Script {
     }
 
     /**
-     * Changes the password of the specified user.
-     *
-     * @param args
-     *            the arguments:
-     * <ul>
-     * <li>{@code userName:} the user name;
-     * <li>{@code password:} the new password;
-     * <li>{@code name:} the distribution of the server, for example {@code "redhat", "debian"};
-     * <li>{@code system:} optionally, the system of the server;
-     * <li>{@code command:} optionally, the change password command;
-     * </ul>
-     *
-     * @return the {@link ProcessTask} process task.
-     *
-     * @see #getChangePasswordCommand()
-     */
-    def changePassword(Map args) {
-        args.command = args.containsKey("command") ? args.command : changePasswordCommand
-        args.system = args.containsKey("system") ? args.system : "unix"
-        log.checkChangePasswordArgs args
-        def template = commandTemplates.getResource("changepass")
-        def line = scriptCommandLineFactory.create(args.system, template).addSub("args", args)
-        def script = scriptCommandExecFactory.create(commandExecFactory)
-        script.commandError = errorLogCommandOutputFactory.create(log, line)
-        script.commandOutput = debugLogCommandOutputFactory.create(log, line)
-        def task = script.exec(line).get()
-        log.changePasswordDone this, task, args
-        return task
-    }
-
-    /**
      * Returns the file link command.
      *
      * <ul>
@@ -633,29 +542,6 @@ abstract class LinuxScript extends Script {
     }
 
     /**
-     * Adds the specified local group.
-     *
-     * @param args
-     * 			  the arguments:
-     * <ul>
-     * <li>{@code groupName:} the name of the group;
-     * <li>{@code groupId:} optionally, the ID of the group;
-     * <li>{@code systemGroup:} optionally, {@code true} if the group should be a system group;
-     * <li>{@code system:} the system of the server, defaults to {@code unix};
-     * <li>{@code command:} the link command, defaults to {@link #getGroupAddCommand()};
-     * </ul>
-     */
-    void addGroup(Map args) {
-        args.system = args.containsKey("system") ? args.system : "unix"
-        args.command = args.containsKey("command") ? args.command : groupAddCommand
-        args.groupsFile = args.containsKey("groupsFile") ? args.groupsFile : groupsFile
-        log.checkAddGroupArgs args
-        def template = commandTemplates.getResource("groupadd")
-        def worker = scriptCommandFactory.create(template, args.system, "args", args)()
-        log.addGroupDone this, worker, args
-    }
-
-    /**
      * Returns the command to create a new local group.
      *
      * <ul>
@@ -679,35 +565,6 @@ abstract class LinuxScript extends Script {
      */
     File getGroupsFile() {
         profileProperty("groups_file", defaultProperties) as File
-    }
-
-    /**
-     * Adds the specified local user.
-     *
-     * @param args
-     * 			  the arguments:
-     * <ul>
-     * <li>{@code userName:} the name of the user;
-     * <li>{@code groupName:} the name of the user's group;
-     * <li>{@code userId:} optionally, the ID of the user;
-     * <li>{@code systemUser:} optionally, {@code true} if the group should be a system group;
-     * <li>{@code homeDir:} optionally, the home directory for the user;
-     * <li>{@code shell:} optionally, the shell for the user;
-     * <li>{@code system:} the system of the server, defaults to {@code unix};
-     * <li>{@code command:} the link command, defaults to {@link #getUserAddCommand()};
-     * </ul>
-     */
-    void addUser(Map args) {
-        args.system = args.containsKey("system") ? args.system : "unix"
-        args.command = args.containsKey("command") ? args.command : userAddCommand
-        args.usersFile = args.containsKey("usersFile") ? args.usersFile : usersFile
-        if (args.containsKey("homeDir")) {
-            args.homeDir.parentFile.mkdirs()
-        }
-        log.checkAddUserArgs args
-        def template = commandTemplates.getResource("useradd")
-        def worker = scriptCommandFactory.create(template, args.system, "args", args)()
-        log.addUserDone this, worker, args
     }
 
     /**

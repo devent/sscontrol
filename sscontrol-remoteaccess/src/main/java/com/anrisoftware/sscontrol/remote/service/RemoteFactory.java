@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Erwin Müller <erwin.mueller@deventm.org>
+ * Copyright 2013-2014 Erwin Müller <erwin.mueller@deventm.org>
  *
  * This file is part of sscontrol-remoteaccess.
  *
@@ -17,6 +17,8 @@
  * along with sscontrol-remoteaccess. If not, see <http://www.gnu.org/licenses/>.
  */
 package com.anrisoftware.sscontrol.remote.service;
+
+import java.util.concurrent.ExecutorService;
 
 import org.mangosdk.spi.ProviderFor;
 
@@ -44,6 +46,8 @@ public class RemoteFactory implements ServiceFactory {
 
     private Injector injector;
 
+    private ExecutorService threads;
+
     @Override
     public String getName() {
         return NAME;
@@ -54,11 +58,17 @@ public class RemoteFactory implements ServiceFactory {
         RemoteServiceImpl service;
         service = injector.getInstance(RemoteServiceImpl.class);
         service.setProfile(profile);
+        service.setThreads(threads);
         return service;
     }
 
     @Override
     public void setParent(Object parent) {
         this.injector = ((Injector) parent).createChildInjector(MODULES);
+    }
+
+    @Override
+    public void setThreads(ExecutorService threads) {
+        this.threads = threads;
     }
 }

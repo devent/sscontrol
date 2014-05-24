@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Erwin Müller <erwin.mueller@deventm.org>
+ * Copyright 2013-2014 Erwin Müller <erwin.mueller@deventm.org>
  *
  * This file is part of sscontrol-remoteaccess.
  *
@@ -18,10 +18,14 @@
  */
 package com.anrisoftware.sscontrol.remote.openssh.openssh.ubuntu_10_04
 
+import groovy.util.logging.Slf4j
+
 import javax.inject.Inject
 
 import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.sscontrol.remote.openssh.openssh.linux.BaseOpensshRemoteScript
+import com.anrisoftware.sscontrol.scripts.unix.InstallPackagesFactory
+import com.anrisoftware.sscontrol.scripts.unix.RestartServicesFactory
 
 /**
  * Remote script for OpenSSH/Ubuntu 10.04.
@@ -29,10 +33,17 @@ import com.anrisoftware.sscontrol.remote.openssh.openssh.linux.BaseOpensshRemote
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
+@Slf4j
 class UbuntuScript extends BaseOpensshRemoteScript {
 
     @Inject
     UbuntuPropertiesProvider ubuntuProperties
+
+    @Inject
+    InstallPackagesFactory installPackagesFactory
+
+    @Inject
+    RestartServicesFactory restartServicesFactory
 
     @Override
     ContextProperties getDefaultProperties() {
@@ -42,11 +53,33 @@ class UbuntuScript extends BaseOpensshRemoteScript {
     @Override
     def run() {
         super.run()
-        restartServices()
+        restartService()
+    }
+
+    /**
+     * Restarts the <i>OpenSSH</i> service.
+     */
+    void restartService() {
+        restartServicesFactory.create(
+                log: log,
+                command: restartCommand,
+                services: restartServices,
+                this, threads)()
     }
 
     @Override
     void beforeConfiguration() {
         installPackages()
+    }
+
+    /**
+     * Installs the <i>OpenSSH</i> packages.
+     */
+    void installPackages() {
+        installPackagesFactory.create(
+                log: log,
+                packages: packages,
+                command: installCommand,
+                this, threads)()
     }
 }

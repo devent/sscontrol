@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Erwin Müller <erwin.mueller@deventm.org>
+ * Copyright 2013-2014 Erwin Müller <erwin.mueller@deventm.org>
  *
  * This file is part of sscontrol-remoteaccess.
  *
@@ -58,7 +58,6 @@ class RemoteTest extends RemoteTestUtil {
         assertStringContent chownOutExpected.replaced(tmpdir, tmpdir, "/tmp"), chownOutExpected.toString()
         assertStringContent chmodOutExpected.replaced(tmpdir, tmpdir, "/tmp"), chmodOutExpected.toString()
         assertFileContent chpasswdOutExpected.asFile(tmpdir), chpasswdOutExpected
-        assertFileContent chpasswdInExpected.asFile(tmpdir), chpasswdInExpected
         assertStringContent sshkeygenOutExpected.replaced(tmpdir, tmpdir, "/tmp"), sshkeygenOutExpected.toString()
         assertFileContent sshdconfigExpected.asFile(tmpdir), sshdconfigExpected
         //assertFileContent deventAuthorizedkeysExpected.asFile(tmpdir), deventAuthorizedkeysExpected

@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Erwin Müller <erwin.mueller@deventm.org>
+ * Copyright 2013-2014 Erwin Müller <erwin.mueller@deventm.org>
  *
  * This file is part of sscontrol-remoteaccess.
  *
@@ -22,6 +22,12 @@ import com.anrisoftware.sscontrol.remote.openssh.authorizedkeys.ubuntu_10_04.Aut
 import com.anrisoftware.sscontrol.remote.openssh.screen.ubuntu_10_04.ScreenUbuntu_10_04_Module;
 import com.anrisoftware.sscontrol.remote.openssh.userkey.ubuntu_10_04.UserKeyUbuntu_10_04_Module;
 import com.anrisoftware.sscontrol.remote.openssh.users.ubuntu_10_04.UsersUbuntu_10_04_Module;
+import com.anrisoftware.sscontrol.scripts.changefilemod.ChangeFileModModule;
+import com.anrisoftware.sscontrol.scripts.changefileowner.ChangeFileOwnerModule;
+import com.anrisoftware.sscontrol.scripts.localchangepassword.LocalChangePasswordModule;
+import com.anrisoftware.sscontrol.scripts.localgroupadd.LocalGroupAddModule;
+import com.anrisoftware.sscontrol.scripts.localuseradd.LocalUserAddModule;
+import com.anrisoftware.sscontrol.scripts.unix.UnixScriptsModule;
 import com.google.inject.AbstractModule;
 
 /**
@@ -34,6 +40,13 @@ public class UbuntuModule extends AbstractModule {
 
     @Override
     protected void configure() {
+        install(new LocalGroupAddModule());
+        install(new LocalChangePasswordModule());
+        install(new LocalUserAddModule());
+        install(new ChangeFileOwnerModule());
+        install(new ChangeFileModModule());
+        install(new UnixScriptsModule());
+        install(new UnixScriptsModule.ExecCommandModule());
         install(new UsersUbuntu_10_04_Module());
         install(new UserKeyUbuntu_10_04_Module());
         install(new AuthorizedKeysUbuntu_10_04_Module());

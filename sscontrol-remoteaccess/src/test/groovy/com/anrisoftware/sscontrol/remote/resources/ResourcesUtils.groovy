@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Erwin Müller <erwin.mueller@deventm.org>
+ * Copyright 2013-2014 Erwin Müller <erwin.mueller@deventm.org>
  *
  * This file is part of sscontrol-remoteaccess.
  *
@@ -53,7 +53,7 @@ class ResourcesUtils {
     }
 
     String toString() {
-        assert resource : "Resource cannot be null for ${resource}"
+        assert resource : "Resource ${resource} cannot be null for ${path}"
         resourceToString resource
     }
 }

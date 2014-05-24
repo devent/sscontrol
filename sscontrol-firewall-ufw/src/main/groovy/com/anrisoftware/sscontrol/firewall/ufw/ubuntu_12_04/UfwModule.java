@@ -21,7 +21,7 @@ package com.anrisoftware.sscontrol.firewall.ufw.ubuntu_12_04;
 import static com.google.inject.multibindings.MapBinder.newMapBinder;
 import groovy.lang.Script;
 
-import com.anrisoftware.sscontrol.firewall.ufw.linux.UfwScriptModule;
+import com.anrisoftware.sscontrol.scripts.unix.UnixScriptsModule;
 import com.google.inject.AbstractModule;
 import com.google.inject.multibindings.MapBinder;
 
@@ -36,7 +36,8 @@ class UfwModule extends AbstractModule {
 	@Override
 	protected void configure() {
 		bindScripts();
-		install(new UfwScriptModule());
+        install(new UnixScriptsModule());
+        install(new UnixScriptsModule.ExecCommandModule());
 	}
 
 	private void bindScripts() {

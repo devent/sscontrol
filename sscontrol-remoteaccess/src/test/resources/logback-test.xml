@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright 2013 Erwin Müller <erwin.mueller@deventm.org>
+    Copyright 2013-2014 Erwin Müller <erwin.mueller@deventm.org>
 
     This file is part of sscontrol-remoteaccess.
 
@@ -57,7 +57,9 @@
 	</root>
 
 	<logger name="com.anrisoftware" level="INFO" />
+	<logger name="com.anrisoftware.globalpom.exec" level="DEBUG" />
 	<logger name="com.anrisoftware.sscontrol" level="DEBUG" />
+	<logger name="com.anrisoftware.sscontrol.scripts" level="TRACE" />
 	<logger name="com.anrisoftware.sscontrol.firewall" level="ALL" />
 
 </configuration>

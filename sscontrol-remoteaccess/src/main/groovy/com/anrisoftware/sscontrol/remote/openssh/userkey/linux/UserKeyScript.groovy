@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Erwin Müller <erwin.mueller@deventm.org>
+ * Copyright 2013-2014 Erwin Müller <erwin.mueller@deventm.org>
  *
  * This file is part of sscontrol-remoteaccess.
  *
@@ -19,11 +19,14 @@
 package com.anrisoftware.sscontrol.remote.openssh.userkey.linux
 
 import static org.apache.commons.io.FileUtils.*
+import groovy.util.logging.Slf4j
 
 import javax.inject.Inject
 
+import com.anrisoftware.globalpom.textmatch.tokentemplate.TokenTemplate
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.Templates
+import com.anrisoftware.resources.templates.api.TemplatesFactory
 import com.anrisoftware.sscontrol.core.service.LinuxScript
 import com.anrisoftware.sscontrol.remote.api.RemoteScript
 import com.anrisoftware.sscontrol.remote.service.RemoteService
@@ -31,7 +34,8 @@ import com.anrisoftware.sscontrol.remote.user.GroupFactory
 import com.anrisoftware.sscontrol.remote.user.Require
 import com.anrisoftware.sscontrol.remote.user.User
 import com.anrisoftware.sscontrol.remote.user.UserFactory
-import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokenTemplate
+import com.anrisoftware.sscontrol.scripts.changefileowner.ChangeFileOwnerFactory
+import com.anrisoftware.sscontrol.scripts.unix.ScriptExecFactory
 
 /**
  * Local users SSH/keys script.
@@ -39,16 +43,26 @@ import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokenTemplate
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
+@Slf4j
 abstract class UserKeyScript implements RemoteScript {
 
     @Inject
-    private UserKeyScriptLogger log
+    private UserKeyScriptLogger logg
 
     @Inject
     UserFactory userFactory
 
     @Inject
     GroupFactory groupFactory
+
+    @Inject
+    ScriptExecFactory scriptExecFactory
+
+    @Inject
+    ChangeFileOwnerFactory changeFileOwnerFactory
+
+    @Inject
+    TemplatesFactory templatesFactory
 
     /**
      * The {@link Templates} for the script.
@@ -119,10 +133,14 @@ abstract class UserKeyScript implements RemoteScript {
             return
         }
         createSshDir user, keyfile.parentFile
-        def args = ["command": keyGenCommand, "passphrase": user.passphrase, "keyFile": keyfile]
-        def worker = scriptCommandFactory.create(createKeyTemplate,
-                "createKey", "args", args)()
-        log.sshkeyCreated script, user, worker
+        def tasks = scriptExecFactory.create(
+                log: log,
+                command: keyGenCommand,
+                passphrase: user.passphrase,
+                keyFile: keyfile,
+                this, threads,
+                createKeyTemplate, "createKey")()
+        logg.sshkeyCreated script, user, tasks
     }
 
     /**
@@ -133,7 +151,14 @@ abstract class UserKeyScript implements RemoteScript {
             return
         }
         dir.mkdirs()
-        changeOwner "owner": user.uid, "ownerGroup": user.group.gid, "files": dir
+        changeFileOwnerFactory.create(
+                log: log,
+                command: script.chownCommand,
+                owner: user.uid,
+                ownerGroup:
+                user.group.gid,
+                files: dir,
+                this, threads)()
     }
 
     /**

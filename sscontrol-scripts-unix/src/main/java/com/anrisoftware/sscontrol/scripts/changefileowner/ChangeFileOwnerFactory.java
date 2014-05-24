@@ -31,18 +31,22 @@ import com.anrisoftware.globalpom.threads.api.Threads;
 public interface ChangeFileOwnerFactory {
 
     /**
-     * Create the check if the repository was enabled.
+     * Create to change the owner.
      * 
      * @param args
      *            the {@link Map} arguments:
      *            <ul>
      *            <li>{@code command} the change file owner command, for example
      *            {@code "/bin/chown".}
+     * 
      *            <li>{@code files} the list of files.
+     * 
      *            <li>{@code owner} the user name of the owner, for example
      *            {@code "foo".}
+     * 
      *            <li>{@code ownerGroup} the group name of the owner, for
      *            example {@code "foo".}
+     * 
      *            <li>{@code recursive} optionally, set to {@code true} to
      *            change files recursive.
      *            </ul>

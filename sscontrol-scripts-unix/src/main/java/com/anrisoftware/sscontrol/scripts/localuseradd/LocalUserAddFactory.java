@@ -31,7 +31,7 @@ import com.anrisoftware.globalpom.threads.api.Threads;
 public interface LocalUserAddFactory {
 
     /**
-     * Create the check if the repository was enabled.
+     * Create to add local group.
      * 
      * @param args
      *            the {@link Map} arguments:

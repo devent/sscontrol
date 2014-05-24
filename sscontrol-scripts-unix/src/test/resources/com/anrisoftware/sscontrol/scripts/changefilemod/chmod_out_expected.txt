@@ -1,0 +1,2 @@
++w /tmp/tmp/foo
++w /tmp/tmp/bar

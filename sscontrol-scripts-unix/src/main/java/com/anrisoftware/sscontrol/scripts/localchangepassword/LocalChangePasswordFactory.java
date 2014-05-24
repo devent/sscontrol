@@ -31,7 +31,7 @@ import com.anrisoftware.globalpom.threads.api.Threads;
 public interface LocalChangePasswordFactory {
 
     /**
-     * Create the check if the repository was enabled.
+     * Create the change the password of the local user.
      * 
      * @param args
      *            the {@link Map} arguments:

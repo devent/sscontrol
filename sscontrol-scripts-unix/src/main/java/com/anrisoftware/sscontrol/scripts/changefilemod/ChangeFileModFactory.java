@@ -16,35 +16,36 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-scripts-unix. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.scripts.localgroupadd;
+package com.anrisoftware.sscontrol.scripts.changefilemod;
 
 import java.util.Map;
 
 import com.anrisoftware.globalpom.threads.api.Threads;
 
 /**
- * Factory to create to add local group.
+ * Factory to create to change the mode.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-public interface LocalGroupAddFactory {
+public interface ChangeFileModFactory {
 
     /**
-     * Create to add local group.
+     * Creates to change the mode.
      * 
      * @param args
      *            the {@link Map} arguments:
      *            <ul>
-     *            <li>{@code command} the group add command, for example
-     *            {@code "/usr/sbin/groupadd".}
-     *            <li>{@code systemGroup} optionally, set to {@code true} to add
-     *            a new system group.
-     *            <li>{@code groupsFile} the path to the groups file, for
-     *            example {@code "/etc/group".}
-     *            <li>{@code groupId} the group ID, for example {@code "100".}
-     *            <li>{@code groupName} the group name, for example
-     *            {@code "test".}
+     *            <li>{@code command} the change file owner command, for example
+     *            {@code "/bin/chmod".}
+     * 
+     *            <li>{@code files} the list of files.
+     * 
+     *            <li>{@code mod} the mode of the file, for example
+     *            {@code "+w".}
+     * 
+     *            <li>{@code recursive} optionally, set to {@code true} to
+     *            change files recursive.
      *            </ul>
      * 
      * @param parent
@@ -53,8 +54,8 @@ public interface LocalGroupAddFactory {
      * @param threads
      *            the {@link Threads} pool.
      * 
-     * @return the {@link LocalGroupAdd}.
+     * @return the {@link ChangeFileMod}.
      */
-    LocalGroupAdd create(Map<String, Object> args, Object parent,
+    ChangeFileMod create(Map<String, Object> args, Object parent,
             Threads threads);
 }

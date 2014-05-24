@@ -34,7 +34,12 @@ public interface RestartServicesFactory {
      * Create the restart services.
      * 
      * @param args
-     *            the {@link Map} arguments.
+     *            the {@link Map} arguments:
+     *            <ul>
+     *            <li>{@code command} the restart service command;
+     * 
+     *            <li>{@code services} the services to restart;
+     *            </ul>
      * 
      * @param parent
      *            the {@link Object} parent script.

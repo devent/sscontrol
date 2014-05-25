@@ -28,8 +28,8 @@
 <!--         <module>sscontrol-httpd-webservice</module> -->
 <!--         <module>sscontrol-ldap</module> -->
 <!--         <module>sscontrol-ldap-openldap</module> -->
-<!--         <module>sscontrol-mail</module> -->
-<!--         <module>sscontrol-mail-postfix</module> -->
+        <module>sscontrol-mail</module>
+        <module>sscontrol-mail-postfix</module>
         <module>sscontrol-profile</module>
 <!--         <module>sscontrol-remoteaccess</module> -->
         <module>sscontrol-scripts-unix</module>

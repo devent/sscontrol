@@ -1,5 +1,5 @@
 unix(args) ::= <<
-<args.command> <unixGroups(args)> <unixAppendGroups(args)> <args.userName>
+<args.command> <unixGroups(args)> <unixAppendGroups(args)> <unixShell(args)> <args.userName>
 
 >>
 
@@ -9,4 +9,8 @@ unixGroups(args) ::= <%
 
 unixAppendGroups(args) ::= <%
 <if(args.append)>-a<endif>
+%>
+
+unixShell(args) ::= <%
+<if(args.shell)>-s "<args.shell>"<endif>
 %>

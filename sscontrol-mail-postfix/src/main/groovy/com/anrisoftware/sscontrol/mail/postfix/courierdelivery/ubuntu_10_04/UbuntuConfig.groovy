@@ -18,11 +18,14 @@
  */
 package com.anrisoftware.sscontrol.mail.postfix.courierdelivery.ubuntu_10_04
 
+import groovy.util.logging.Slf4j
+
 import javax.inject.Inject
 
 import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.sscontrol.mail.postfix.courierdelivery.linux.CourierMysqlDeliveryConfig
 import com.anrisoftware.sscontrol.mail.postfix.script.ubuntu_10_04.Ubuntu_10_04_ScriptFactory
+import com.anrisoftware.sscontrol.scripts.unix.RestartServicesFactory
 
 /**
  * Courier/Mysql Ubuntu 10.04 delivery.
@@ -30,15 +33,30 @@ import com.anrisoftware.sscontrol.mail.postfix.script.ubuntu_10_04.Ubuntu_10_04_
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
+@Slf4j
 class UbuntuConfig extends CourierMysqlDeliveryConfig {
 
     @Inject
     UbuntuPropertiesProvider courierMysqlProperties
 
+    @Inject
+    RestartServicesFactory restartServicesFactory
+
     @Override
     void deployDelivery() {
         super.deployDelivery();
-        restartServices restartCommand: courierRestartCommand, services: courierServices
+        restartServices()
+    }
+
+    /**
+     * Restarts the Courier/Mysql services.
+     */
+    void restartServices() {
+        restartServicesFactory.create(
+                log: log,
+                command: courierRestartCommand,
+                services: courierServices,
+                this, threads)()
     }
 
     /**

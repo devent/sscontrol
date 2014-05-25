@@ -19,18 +19,24 @@
 package com.anrisoftware.sscontrol.mail.postfix.openldapstorage.linux
 
 import static org.apache.commons.io.FileUtils.*
+import groovy.util.logging.Slf4j
 
 import javax.inject.Inject
 
 import org.apache.commons.io.FileUtils
 
+import com.anrisoftware.globalpom.textmatch.tokentemplate.TokenTemplate
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.Templates
+import com.anrisoftware.resources.templates.api.TemplatesFactory
 import com.anrisoftware.sscontrol.mail.postfix.linux.BindAddressesRenderer
 import com.anrisoftware.sscontrol.mail.postfix.linux.StorageConfig
 import com.anrisoftware.sscontrol.mail.postfix.script.linux.BaseStorage
-import com.anrisoftware.sscontrol.mail.statements.Domain
-import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokenTemplate
+import com.anrisoftware.sscontrol.scripts.changefileowner.ChangeFileOwnerFactory
+import com.anrisoftware.sscontrol.scripts.localgroupadd.LocalGroupAddFactory
+import com.anrisoftware.sscontrol.scripts.localuseradd.LocalUserAddFactory
+import com.anrisoftware.sscontrol.scripts.unix.InstallPackagesFactory
+import com.anrisoftware.sscontrol.scripts.unix.ScriptExecFactory
 
 /**
  * OpenLDAP/storage.
@@ -38,364 +44,309 @@ import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokenTemplate
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
+@Slf4j
 abstract class OpenldapStorageConfig extends BaseStorage implements StorageConfig {
 
-	public static final String NAME = "openldap"
+    public static final String NAME = "openldap"
 
-	@Inject
-	OpenldapStorageConfigLogger log
+    @Inject
+    OpenldapStorageConfigLogger logg
 
-	/**
-	 * Renderer for {@code inet_interfaces}.
-	 */
-	@Inject
-	BindAddressesRenderer bindAddressesRenderer
+    @Inject
+    TemplatesFactory templatesFactory
 
-	/**
-	 * The {@link Templates} for the script.
-	 */
-	Templates mysqlTemplates
+    @Inject
+    InstallPackagesFactory installPackagesFactory
 
-	TemplateResource tablesTemplate
+    @Inject
+    ScriptExecFactory scriptExecFactory
 
-	TemplateResource mainTemplate
+    @Inject
+    ChangeFileOwnerFactory changeFileOwnerFactory
 
-	TemplateResource configTemplate
+    @Inject
+    LocalUserAddFactory localUserAddFactory
 
-	TemplateResource dataTemplate
+    @Inject
+    LocalGroupAddFactory localGroupAddFactory
 
-	@Override
-	String getStorageName() {
-		NAME
-	}
+    /**
+     * Renderer for {@code inet_interfaces}.
+     */
+    @Inject
+    BindAddressesRenderer bindAddressesRenderer
 
-	@Override
-	void deployStorage() {
-		mysqlTemplates = templatesFactory.create "OpenldapStorageConfig"
-		mainTemplate = mysqlTemplates.getResource "main_configuration"
-		installPackages openldapStoragePackages
-		deployDatabaseTables()
-		deployMain()
-		deployVirtualMailboxFile()
-		deployDomains()
-		deployAliases()
-		deployUsers()
-		createVirtualDirectory()
-	}
+    /**
+     * The {@link Templates} for the script.
+     */
+    Templates openldapTemplates
 
-	/**
-	 * Creates the tables in the database for virtual domains and users.
-	 */
-	void deployDatabaseTables() {
-		def worker
-		worker = scriptCommandFactory.create(tablesTemplate, "createAliasesTable",
-				"properties", this, "service", service)()
-		log.deployedAliasesTable this, worker
-		worker = scriptCommandFactory.create(tablesTemplate, "createDomainsTable",
-				"properties", this, "service", service)()
-		log.deployedDomainsTable this, worker
-		worker = scriptCommandFactory.create(tablesTemplate, "createUsersTable",
-				"properties", this, "service", service, "profile", script)()
-		log.deployedUsersTable this, worker
-	}
+    TemplateResource mainTemplate
 
-	/**
-	 * Sets the virtual aliases and mailboxes.
-	 */
-	void deployMain() {
-		def configuration = []
-		configuration << new TokenTemplate(mailboxBaseSearch, mailboxBase)
-		configuration << new TokenTemplate(mailboxMapsSearch, mailboxMaps)
-		configuration << new TokenTemplate(aliasesMapsSearch, aliasesMaps)
-		configuration << new TokenTemplate(mailboxDomainsSearch, mailboxDomains)
-		configuration << new TokenTemplate(uidMapsSearch, uidMaps)
-		configuration << new TokenTemplate(gidMapsSearch, gidMaps)
-		deployConfiguration configurationTokens(), currentMainConfiguration, configuration, mainFile
-	}
+    TemplateResource configTemplate
 
-	String getMailboxBaseSearch() {
-		mainTemplate.getText(true, "mailboxBaseSearch")
-	}
+    @Override
+    String getStorageName() {
+        NAME
+    }
 
-	String getMailboxBase() {
-		mainTemplate.getText(true, "mailboxBase", "dir", script.mailboxBaseDir)
-	}
+    @Override
+    void deployStorage() {
+        openldapTemplates = templatesFactory.create "OpenldapStorageConfig"
+        mainTemplate = openldapTemplates.getResource "main_configuration"
+        installPackages()
+        deployMain()
+        deployVirtualMailboxFile()
+        createVirtualDirectory()
+    }
 
-	String getMailboxMapsSearch() {
-		mainTemplate.getText(true, "mailboxMapsSearch")
-	}
+    /**
+     * Installs the OpenLDAP/storage packages.
+     */
+    void installPackages() {
+        installPackagesFactory.create(
+                log: log,
+                command: script.installCommand,
+                packages: openldapStoragePackages,
+                this, threads)
+    }
 
-	String getMailboxMaps() {
-		mainTemplate.getText(true, "mailboxMaps", "file", mailboxMapsFile)
-	}
+    /**
+     * Sets the virtual aliases and mailboxes.
+     */
+    void deployMain() {
+        def configuration = []
+        configuration << new TokenTemplate(mailboxBaseSearch, mailboxBase)
+        configuration << new TokenTemplate(mailboxMapsSearch, mailboxMaps)
+        configuration << new TokenTemplate(aliasesMapsSearch, aliasesMaps)
+        configuration << new TokenTemplate(mailboxDomainsSearch, mailboxDomains)
+        configuration << new TokenTemplate(uidMapsSearch, uidMaps)
+        configuration << new TokenTemplate(gidMapsSearch, gidMaps)
+        deployConfiguration configurationTokens(), currentMainConfiguration, configuration, mainFile
+    }
 
-	String getAliasesMapsSearch() {
-		mainTemplate.getText(true, "aliasesMapsSearch")
-	}
+    String getMailboxBaseSearch() {
+        mainTemplate.getText(true, "mailboxBaseSearch")
+    }
 
-	String getAliasesMaps() {
-		mainTemplate.getText(true, "aliasMaps", "file", aliasMapsFile)
-	}
+    String getMailboxBase() {
+        mainTemplate.getText(true, "mailboxBase", "dir", script.mailboxBaseDir)
+    }
 
-	String getMailboxDomainsSearch() {
-		mainTemplate.getText(true, "mailboxDomainsSearch")
-	}
+    String getMailboxMapsSearch() {
+        mainTemplate.getText(true, "mailboxMapsSearch")
+    }
 
-	String getMailboxDomains() {
-		mainTemplate.getText(true, "mailboxDomains", "file", mailboxDomainsFile)
-	}
+    String getMailboxMaps() {
+        mainTemplate.getText(true, "mailboxMaps", "file", mailboxMapsFile)
+    }
 
-	String getUidMapsSearch() {
-		mainTemplate.getText(true, "uidMapsSearch")
-	}
+    String getAliasesMapsSearch() {
+        mainTemplate.getText(true, "aliasesMapsSearch")
+    }
 
-	String getUidMaps() {
-		mainTemplate.getText(true, "uidMaps", "uid", script.virtualUid)
-	}
+    String getAliasesMaps() {
+        mainTemplate.getText(true, "aliasMaps", "file", aliasMapsFile)
+    }
 
-	String getGidMapsSearch() {
-		mainTemplate.getText(true, "gidMapsSearch")
-	}
+    String getMailboxDomainsSearch() {
+        mainTemplate.getText(true, "mailboxDomainsSearch")
+    }
 
-	String getGidMaps() {
-		mainTemplate.getText(true, "gidMaps", "gid", script.virtualGid)
-	}
+    String getMailboxDomains() {
+        mainTemplate.getText(true, "mailboxDomains", "file", mailboxDomainsFile)
+    }
 
-	/**
-	 * Deploys the virtual mailbox database configuration.
-	 */
-	void deployVirtualMailboxFile() {
-		def string = configTemplate.getText(true, "mailbox", "properties", this, "service", service)
-		FileUtils.write mailboxMapsFile, string
-		string = configTemplate.getText(true, "alias", "properties", this, "service", service)
-		FileUtils.write aliasMapsFile, string
-		string = configTemplate.getText(true, "domains", "properties", this, "service", service)
-		FileUtils.write mailboxDomainsFile, string
-	}
+    String getUidMapsSearch() {
+        mainTemplate.getText(true, "uidMapsSearch")
+    }
 
-	/**
-	 * Deploys the virtual domains.
-	 */
-	void deployDomains() {
-		service.resetDomains.resetDomains ? resetDomains() : false
-		def worker = scriptCommandFactory.create(dataTemplate, "insertDomains",
-				"properties", this, "service", service)()
-		log.deployedDomainsData this, worker
-	}
+    String getUidMaps() {
+        mainTemplate.getText(true, "uidMaps", "uid", script.virtualUid)
+    }
 
-	/**
-	 * Resets virtual domains.
-	 */
-	void resetDomains() {
-		def worker = scriptCommandFactory.create(dataTemplate, "resetDomains",
-				"properties", this, "service", service)()
-		log.resetDomainsData this, worker
-	}
+    String getGidMapsSearch() {
+        mainTemplate.getText(true, "gidMapsSearch")
+    }
 
-	/**
-	 * Deploys the virtual aliases.
-	 */
-	void deployAliases() {
-		service.resetDomains.resetAliases ? resetAliases() : false
-		for (Domain domain : service.domains) {
-			if (domain.aliases.empty) {
-				continue
-			}
-			def worker = scriptCommandFactory.create(dataTemplate, "insertAliases",
-					"properties", this, "service", service, "domain", domain)()
-			log.deployedAliasesData this, worker
-		}
-	}
+    String getGidMaps() {
+        mainTemplate.getText(true, "gidMaps", "gid", script.virtualGid)
+    }
 
-	/**
-	 * Resets aliases.
-	 */
-	void resetAliases() {
-		def worker = scriptCommandFactory.create(dataTemplate, "resetAliases",
-				"properties", this, "service", service)()
-		log.resetAliasesData this, worker
-	}
+    /**
+     * Deploys the virtual mailbox database configuration.
+     */
+    void deployVirtualMailboxFile() {
+        def string = configTemplate.getText(true, "mailbox", "properties", this, "service", service)
+        FileUtils.write mailboxMapsFile, string
+        string = configTemplate.getText(true, "alias", "properties", this, "service", service)
+        FileUtils.write aliasMapsFile, string
+        string = configTemplate.getText(true, "domains", "properties", this, "service", service)
+        FileUtils.write mailboxDomainsFile, string
+    }
 
-	/**
-	 * Deploys the virtual users.
-	 */
-	void deployUsers() {
-		service.resetDomains.resetUsers ? resetUsers() : false
-		for (Domain domain : service.domains) {
-			if (domain.users.empty) {
-				continue
-			}
-			def worker = scriptCommandFactory.create(dataTemplate, "insertUsers",
-					"properties", this, "service", service, "domain", domain)()
-			log.deployedUsersData this, worker
-		}
-	}
+    /**
+     * Creates the virtual mail box directory and set the owner.
+     */
+    void createVirtualDirectory() {
+        File dir = script.mailboxBaseDir
+        dir.exists() ? null : dir.mkdirs()
+        localGroupAddFactory.create(
+                log: log,
+                command: script.groupAddCommand,
+                groupsFile: script.groupsFile,
+                groupName: virtualGroupName,
+                groupId: virtualGid,
+                systemGroup: true,
+                this, threads)()
+        localUserAddFactory.create(
+                log: log,
+                command: script.userAddCommand,
+                groupsFile: script.usersFile,
+                userName: virtualUserName,
+                groupName: virtualGroupName,
+                userId: virtualUid,
+                systemUser: true,
+                this, threads)()
+        changeFileOwnerFactory.create(
+                log: log,
+                command: script.chownCommand,
+                owner: virtualUid,
+                ownerGroup: virtualGid,
+                files: [dir],
+                this, threads)()
+    }
 
-	/**
-	 * Resets users.
-	 */
-	void resetUsers() {
-		def worker = scriptCommandFactory.create(dataTemplate, "resetUsers",
-				"properties", this, "service", service)()
-		log.resetUsersData this, worker
-	}
+    /**
+     * Returns list of needed packages.
+     */
+    List getOpenldapStoragePackages() {
+        profileListProperty "storage_packages", storageProperties
+    }
 
-	/**
-	 * Creates the virtual mail box directory and set the owner.
-	 */
-	void createVirtualDirectory() {
-		File dir = script.mailboxBaseDir
-		dir.exists() ? null : dir.mkdirs()
-		addGroup groupName: virtualGroupName, groupId: virtualGid, systemGroup: true
-		addUser userName: virtualUserName, groupName: virtualGroupName, userId: virtualUid, systemGroup: true
-		changeOwner owner: virtualUid, ownerGroup: virtualGid, files: dir
-	}
+    /**
+     * Returns the absolute path of the mailbox maps file.
+     *
+     * <ul>
+     * <li>profile property {@code "mailbox_maps_file"}</li>
+     * </ul>
+     *
+     * @see #getConfigurationDir()
+     * @see #getStorageProperties()
+     */
+    File getMailboxMapsFile() {
+        script.propertyFile "mailbox_maps_file", storageProperties
+    }
 
-	/**
-	 * Returns the command for the MySQL server. Can be a full
-	 * path or just the command name that can be found in the current
-	 * search path.
-	 *
-	 * <ul>
-	 * <li>profile property {@code "mysql_command"}</li>
-	 * </ul>
-	 *
-	 * @see #getDefaultProperties()
-	 */
-	String getMysqlCommand() {
-		profileProperty "mysql_command", storageProperties
-	}
+    /**
+     * Returns the absolute path of the alias maps file.
+     *
+     * <ul>
+     * <li>profile property {@code "alias_maps_file"}</li>
+     * </ul>
+     *
+     * @see #getConfigurationDir()
+     * @see #getStorageProperties()
+     */
+    File getAliasMapsFile() {
+        propertyFile "alias_maps_file", storageProperties
+    }
 
-	/**
-	 * Returns list of needed packages.
-	 */
-	List getOpenldapStoragePackages() {
-		profileListProperty "storage_packages", storageProperties
-	}
+    /**
+     * Returns the absolute path of the mailbox domains maps file.
+     *
+     * <ul>
+     * <li>profile property {@code "mailbox_domains_file"}</li>
+     * </ul>
+     *
+     * @see #getConfigurationDir()
+     * @see #getStorageProperties()
+     */
+    File getMailboxDomainsFile() {
+        propertyFile "mailbox_domains_file", storageProperties
+    }
 
-	/**
-	 * Returns the absolute path of the mailbox maps file.
-	 *
-	 * <ul>
-	 * <li>profile property {@code "mailbox_maps_file"}</li>
-	 * </ul>
-	 *
-	 * @see #getConfigurationDir()
-	 * @see #getStorageProperties()
-	 */
-	File getMailboxMapsFile() {
-		script.propertyFile "mailbox_maps_file", storageProperties
-	}
+    String getAliasesTable() {
+        script.profileProperty "aliases_table", storageProperties
+    }
 
-	/**
-	 * Returns the absolute path of the alias maps file.
-	 *
-	 * <ul>
-	 * <li>profile property {@code "alias_maps_file"}</li>
-	 * </ul>
-	 *
-	 * @see #getConfigurationDir()
-	 * @see #getStorageProperties()
-	 */
-	File getAliasMapsFile() {
-		propertyFile "alias_maps_file", storageProperties
-	}
+    String getIdField() {
+        script.profileProperty "id_field", storageProperties
+    }
 
-	/**
-	 * Returns the absolute path of the mailbox domains maps file.
-	 *
-	 * <ul>
-	 * <li>profile property {@code "mailbox_domains_file"}</li>
-	 * </ul>
-	 *
-	 * @see #getConfigurationDir()
-	 * @see #getStorageProperties()
-	 */
-	File getMailboxDomainsFile() {
-		propertyFile "mailbox_domains_file", storageProperties
-	}
+    String getMailField() {
+        script.profileProperty "mail_field", storageProperties
+    }
 
-	String getAliasesTable() {
-		script.profileProperty "aliases_table", storageProperties
-	}
+    String getDestinationField() {
+        script.profileProperty "destination_field", storageProperties
+    }
 
-	String getIdField() {
-		script.profileProperty "id_field", storageProperties
-	}
+    String getEnabledField() {
+        script.profileProperty "enabled_field", storageProperties
+    }
 
-	String getMailField() {
-		script.profileProperty "mail_field", storageProperties
-	}
+    String getDomainsTable() {
+        script.profileProperty "domains_table", storageProperties
+    }
 
-	String getDestinationField() {
-		script.profileProperty "destination_field", storageProperties
-	}
+    String getDomainField() {
+        script.profileProperty "domain_field", storageProperties
+    }
 
-	String getEnabledField() {
-		script.profileProperty "enabled_field", storageProperties
-	}
+    String getTransportField() {
+        script.profileProperty "transport_field", storageProperties
+    }
 
-	String getDomainsTable() {
-		script.profileProperty "domains_table", storageProperties
-	}
+    String getUsersTable() {
+        script.profileProperty "users_table", storageProperties
+    }
 
-	String getDomainField() {
-		script.profileProperty "domain_field", storageProperties
-	}
+    String getLoginField() {
+        script.profileProperty "login_field", storageProperties
+    }
 
-	String getTransportField() {
-		script.profileProperty "transport_field", storageProperties
-	}
+    String getNameField() {
+        script.profileProperty "name_field", storageProperties
+    }
 
-	String getUsersTable() {
-		script.profileProperty "users_table", storageProperties
-	}
+    String getUidField() {
+        script.profileProperty "uid_field", storageProperties
+    }
 
-	String getLoginField() {
-		script.profileProperty "login_field", storageProperties
-	}
+    String getGidField() {
+        script.profileProperty "gid_field", storageProperties
+    }
 
-	String getNameField() {
-		script.profileProperty "name_field", storageProperties
-	}
+    String getHomeField() {
+        script.profileProperty "home_field", storageProperties
+    }
 
-	String getUidField() {
-		script.profileProperty "uid_field", storageProperties
-	}
+    String getMaildirField() {
+        script.profileProperty "maildir_field", storageProperties
+    }
 
-	String getGidField() {
-		script.profileProperty "gid_field", storageProperties
-	}
+    String getChangePasswordField() {
+        script.profileProperty "change_password_field", storageProperties
+    }
 
-	String getHomeField() {
-		script.profileProperty "home_field", storageProperties
-	}
+    String getClearField() {
+        script.profileProperty "clear_field", storageProperties
+    }
 
-	String getMaildirField() {
-		script.profileProperty "maildir_field", storageProperties
-	}
+    String getCryptField() {
+        script.profileProperty "crypt_field", storageProperties
+    }
 
-	String getChangePasswordField() {
-		script.profileProperty "change_password_field", storageProperties
-	}
+    String getQuotaField() {
+        script.profileProperty "quota_field", storageProperties
+    }
 
-	String getClearField() {
-		script.profileProperty "clear_field", storageProperties
-	}
+    String getProcmailrcField() {
+        script.profileProperty "procmailrc_field", storageProperties
+    }
 
-	String getCryptField() {
-		script.profileProperty "crypt_field", storageProperties
-	}
-
-	String getQuotaField() {
-		script.profileProperty "quota_field", storageProperties
-	}
-
-	String getProcmailrcField() {
-		script.profileProperty "procmailrc_field", storageProperties
-	}
-
-	String getSpamassassinrcField() {
-		script.profileProperty "spamassassinrc_field", storageProperties
-	}
+    String getSpamassassinrcField() {
+        script.profileProperty "spamassassinrc_field", storageProperties
+    }
 }

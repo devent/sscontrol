@@ -18,11 +18,15 @@
  */
 package com.anrisoftware.sscontrol.mail.postfix.saslmysqlauth.ubuntu_10_04
 
+import groovy.util.logging.Slf4j
+
 import javax.inject.Inject
 
 import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.sscontrol.mail.postfix.saslmysqlauth.linux.BaseSaslMysqlAuth
 import com.anrisoftware.sscontrol.mail.postfix.script.ubuntu_10_04.Ubuntu_10_04_ScriptFactory
+import com.anrisoftware.sscontrol.scripts.unix.InstallPackagesFactory
+import com.anrisoftware.sscontrol.scripts.unix.RestartServicesFactory
 
 /**
  * SASL/authentication Ubuntu 10.04.
@@ -30,16 +34,45 @@ import com.anrisoftware.sscontrol.mail.postfix.script.ubuntu_10_04.Ubuntu_10_04_
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
+@Slf4j
 class UbuntuConfig extends BaseSaslMysqlAuth {
 
     @Inject
     UbuntuPropertiesProvider ubuntuProperties
 
+    @Inject
+    InstallPackagesFactory installPackagesFactory
+
+    @Inject
+    RestartServicesFactory restartServicesFactory
+
     @Override
     public void deployAuth() {
-        installPackages saslPackages
+        installPackages()
         super.deployAuth()
-        restartServices restartCommand: saslRestartCommand, services: []
+        restartServices()
+    }
+
+    /**
+     * Installs the <i>SASL</i> packages.
+     */
+    void installPackages() {
+        installPackagesFactory.create(
+                log: log,
+                command: script.installCommand,
+                packages: saslPackages,
+                this, threads)()
+    }
+
+    /**
+     * Restarts the <i>SASL</i> services.
+     */
+    void restartServices() {
+        restartServicesFactory.create(
+                log: log,
+                command: saslRestartCommand,
+                services: [],
+                this, threads)()
     }
 
     /**

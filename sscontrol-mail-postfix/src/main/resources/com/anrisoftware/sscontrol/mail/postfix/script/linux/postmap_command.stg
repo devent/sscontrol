@@ -1,4 +1,6 @@
-postmap_command(postmapCommand, file) ::= <<
-#!/bin/sh
-<postmapCommand> <file>
+postmap(args) ::= <<
+<! - args.command - !>
+<! - args.file - !>
+<args.command> <args.file>
+
 >>

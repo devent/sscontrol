@@ -1,4 +1,2 @@
 theCommand="$0"
-stdin=$(cat)
 echo "$@" >> $theCommand.out
-echo "$stdin" >> $theCommand.in

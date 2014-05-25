@@ -25,6 +25,12 @@ import com.anrisoftware.sscontrol.mail.postfix.courierdelivery.ubuntu_10_04.Ubun
 import com.anrisoftware.sscontrol.mail.postfix.hashstorage.ubuntu_10_04.Ubuntu_10_04_HashStorageModule;
 import com.anrisoftware.sscontrol.mail.postfix.mysqlstorage.ubuntu_10_04.Ubuntu_10_04_MysqlStorageModule;
 import com.anrisoftware.sscontrol.mail.postfix.saslmysqlauth.ubuntu_10_04.Ubuntu_10_04_SaslMysqlAuthModule;
+import com.anrisoftware.sscontrol.scripts.changefilemod.ChangeFileModModule;
+import com.anrisoftware.sscontrol.scripts.changefileowner.ChangeFileOwnerModule;
+import com.anrisoftware.sscontrol.scripts.localchangeuser.LocalChangeUserModule;
+import com.anrisoftware.sscontrol.scripts.localgroupadd.LocalGroupAddModule;
+import com.anrisoftware.sscontrol.scripts.localuseradd.LocalUserAddModule;
+import com.anrisoftware.sscontrol.scripts.unix.UnixScriptsModule;
 import com.google.inject.AbstractModule;
 import com.google.inject.multibindings.MapBinder;
 
@@ -39,10 +45,17 @@ class UbuntuModule extends AbstractModule {
     @Override
     protected void configure() {
         bindScripts();
+        install(new UnixScriptsModule());
+        install(new UnixScriptsModule.ExecCommandModule());
+        install(new ChangeFileOwnerModule());
+        install(new ChangeFileModModule());
+        install(new LocalChangeUserModule());
+        install(new LocalGroupAddModule());
+        install(new LocalUserAddModule());
         install(new Ubuntu_10_04_HashStorageModule());
         install(new Ubuntu_10_04_MysqlStorageModule());
-        install(new Ubuntu_10_04_CourierMysqlDeliveryModule());
         install(new Ubuntu_10_04_SaslMysqlAuthModule());
+        install(new Ubuntu_10_04_CourierMysqlDeliveryModule());
     }
 
     private void bindScripts() {

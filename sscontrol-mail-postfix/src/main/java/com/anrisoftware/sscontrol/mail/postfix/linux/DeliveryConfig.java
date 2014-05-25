@@ -28,38 +28,38 @@ import com.anrisoftware.sscontrol.mail.postfix.script.linux.BasePostfixScript;
  */
 public interface DeliveryConfig {
 
-	/**
-	 * Returns the profile name of the storage.
-	 * 
-	 * @return the profile {@link String} name.
-	 */
-	String getProfile();
+    /**
+     * Returns the profile name of the storage.
+     * 
+     * @return the profile {@link String} name.
+     */
+    String getProfile();
 
-	/**
-	 * Returns the delivery name.
-	 * 
-	 * @return the delivery {@link String} name.
-	 */
-	String getDeliveryName();
+    /**
+     * Returns the delivery name.
+     * 
+     * @return the delivery {@link String} name.
+     */
+    String getDeliveryName();
 
-	/**
-	 * Sets the parent script with the properties.
-	 * 
-	 * @param script
-	 *            the {@link BasePostfixScript}.
-	 */
-	void setScript(BasePostfixScript script);
+    /**
+     * Sets the parent script with the properties.
+     * 
+     * @param script
+     *            the {@link BasePostfixScript}.
+     */
+    void setScript(BasePostfixScript script);
 
-	/**
-	 * Returns the parent script with the properties.
-	 * 
-	 * @return the {@link BasePostfixScript}.
-	 */
-	BasePostfixScript getScript();
+    /**
+     * Returns the parent script with the properties.
+     * 
+     * @return the {@link BasePostfixScript}.
+     */
+    BasePostfixScript getScript();
 
-	/**
-	 * Creates the configuration.
-	 */
-	void deployDelivery();
+    /**
+     * Creates the configuration.
+     */
+    void deployDelivery();
 
 }

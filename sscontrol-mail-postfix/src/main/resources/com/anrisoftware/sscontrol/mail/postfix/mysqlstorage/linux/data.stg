@@ -1,41 +1,54 @@
-insertDomains(properties, service) ::= <<
-#!/bin/sh
-<properties.mysqlCommand> --user=<service.database.user> --password=<service.database.password> -t \<\<'STOP'
-USE <service.database.database>;
-<service.domains:domainRow(properties)>\q
+insertDomains(args) ::= <<
+<! - args.mysqlCommand - !>
+<! - args.database - !>
+<! - args.domains - !>
+<args.mysqlCommand> --user=<args.database.user> --password=<args.database.password> -t \<\<'STOP'
+USE <args.database.database>;
+<args.domains:domainRow(args)>\q
 STOP
 >>
 
-domainRow(domain, properties) ::= <<
-INSERT INTO `<properties.domainsTable>` (`<properties.domainField>`, `<properties.enabledField>`) VALUES
+domainRow(domain, args) ::= <<
+<! - args.domainsTable - !>
+<! - args.domainField - !>
+<! - args.enabledField - !>
+INSERT INTO `<args.domainsTable>` (`<args.domainField>`, `<args.enabledField>`) VALUES
 ('<domain.name>', <enabledStr(domain.enabled)>)
 ON DUPLICATE KEY UPDATE
-`<properties.enabledField>`=<enabledStr(domain.enabled)>;
+`<args.enabledField>`=<enabledStr(domain.enabled)>;
 
 >>
 
-resetDomains(properties, service) ::= <<
-#!/bin/sh
-<properties.mysqlCommand> --user=<service.database.user> --password=<service.database.password> -t \<\<'STOP'
-USE <service.database.database>;
-TRUNCATE TABLE `<properties.domainsTable>`;
+resetDomains(args) ::= <<
+<! - args.mysqlCommand - !>
+<! - args.database - !>
+<! - args.domainsTable - !>
+<args.mysqlCommand> --user=<args.database.user> --password=<args.database.password> -t \<\<'STOP'
+USE <args.database.database>;
+TRUNCATE TABLE `<args.domainsTable>`;
 STOP
 >>
 
-insertAliases(properties, service, domain) ::= <<
-#!/bin/sh
-<properties.mysqlCommand> --user=<service.database.user> --password=<service.database.password> -t \<\<'STOP'
-USE <service.database.database>;
-<domain.aliases:aliasRow(properties)>\q
+insertAliases(args) ::= <<
+<! - args.mysqlCommand - !>
+<! - args.database - !>
+<! - args.domain - !>
+<args.mysqlCommand> --user=<args.database.user> --password=<args.database.password> -t \<\<'STOP'
+USE <args.database.database>;
+<args.domain.aliases:aliasRow(args)>\q
 STOP
 >>
 
-aliasRow(alias, properties) ::= <<
-INSERT INTO `<properties.aliasesTable>` (`<properties.mailField>`, `<properties.destinationField>`, `<properties.enabledField>`) VALUES
+aliasRow(alias, args) ::= <<
+<! - args.aliasesTable - !>
+<! - args.mailField - !>
+<! - args.destinationField - !>
+<! - args.enabledField - !>
+INSERT INTO `<args.aliasesTable>` (`<args.mailField>`, `<args.destinationField>`, `<args.enabledField>`) VALUES
 ('<aliasName(alias)>', '<aliasDestination(alias)>', <enabledStr(alias.enabled)>)
 ON DUPLICATE KEY UPDATE
-`<properties.destinationField>`='<aliasDestination(alias)>',
-`<properties.enabledField>`=<enabledStr(alias.enabled)>;
+`<args.destinationField>`='<aliasDestination(alias)>',
+`<args.enabledField>`=<enabledStr(alias.enabled)>;
 
 >>
 
@@ -47,36 +60,48 @@ aliasDestination(alias) ::= <%
 <if(alias.destinationDomain)><alias.destination><else><alias.destination>@<alias.domain.name><endif>
 %>
 
-resetAliases(properties, service) ::= <<
-#!/bin/sh
-<properties.mysqlCommand> --user=<service.database.user> --password=<service.database.password> -t \<\<'STOP'
-USE <service.database.database>;
-TRUNCATE TABLE `<properties.aliasesTable>`;
+resetAliases(args) ::= <<
+<! - args.mysqlCommand - !>
+<! - args.database - !>
+<! - args.aliasesTable - !>
+<args.mysqlCommand> --user=<args.database.user> --password=<args.database.password> -t \<\<'STOP'
+USE <args.database.database>;
+TRUNCATE TABLE `<args.aliasesTable>`;
 STOP
 >>
 
-insertUsers(properties, service, domain) ::= <<
-#!/bin/sh
-<properties.mysqlCommand> --user=<service.database.user> --password=<service.database.password> -t \<\<'STOP'
-USE <service.database.database>;
-<domain.users:userRow(properties)>\q
+insertUsers(args) ::= <<
+<! - args.mysqlCommand - !>
+<! - args.database - !>
+<! - args.domain - !>
+<args.mysqlCommand> --user=<args.database.user> --password=<args.database.password> -t \<\<'STOP'
+USE <args.database.database>;
+<args.domain.users:userRow(args)>\q
 STOP
 >>
 
-userRow(user, properties) ::= <<
-INSERT INTO `<properties.usersTable>` (`<properties.loginField>`, `<properties.nameField>`, `<properties.maildirField>`, `<properties.enabledField>`, `<properties.cryptField>`) VALUES
+userRow(user, args) ::= <<
+<! - args.usersTable - !>
+<! - args.loginField - !>
+<! - args.nameField - !>
+<! - args.maildirField - !>
+<! - args.enabledField - !>
+<! - args.cryptField - !>
+INSERT INTO `<args.usersTable>` (`<args.loginField>`, `<args.nameField>`, `<args.maildirField>`, `<args.enabledField>`, `<args.cryptField>`) VALUES
 ('<user.name>@<user.domain.name>', '<user.name>', '<user.name>/', <enabledStr(user.enabled)>, encrypt('<user.password>'))
 ON DUPLICATE KEY UPDATE
-`<properties.enabledField>`=<enabledStr(user.enabled)>,
-`<properties.cryptField>`=encrypt('<user.password>');
+`<args.enabledField>`=<enabledStr(user.enabled)>,
+`<args.cryptField>`=encrypt('<user.password>');
 
 >>
 
-resetUsers(properties, service) ::= <<
-#!/bin/sh
-<properties.mysqlCommand> --user=<service.database.user> --password=<service.database.password> -t \<\<'STOP'
-USE <service.database.database>;
-TRUNCATE TABLE `<properties.usersTable>`;
+resetUsers(args) ::= <<
+<! - args.mysqlCommand - !>
+<! - args.database - !>
+<! - args.usersTable - !>
+<args.mysqlCommand> --user=<args.database.user> --password=<args.database.password> -t \<\<'STOP'
+USE <args.database.database>;
+TRUNCATE TABLE `<args.usersTable>`;
 STOP
 >>
 

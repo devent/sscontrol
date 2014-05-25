@@ -1,60 +1,91 @@
-createAliasesTable(properties, service) ::= <<
+createAliasesTable(args) ::= <<
 <! creates the aliases table !>
-#!/bin/sh
-<properties.mysqlCommand> --user=<service.database.user> --password=<service.database.password> -t \<\<'STOP'
-USE <service.database.database>;
-CREATE TABLE IF NOT EXISTS `<properties.aliasesTable>` (
-`<properties.idField>` smallint(3) NOT NULL auto_increment,
-`<properties.mailField>` varchar(120) NOT NULL default '',
-`<properties.destinationField>` varchar(120) NOT NULL default '',
-`<properties.enabledField>` tinyint(1) NOT NULL default '1',
-PRIMARY KEY (`<properties.idField>`));
+<! - args.database - !>
+<! - args.mysqlCommand - !>
+<! - args.aliasesTable - !>
+<! - args.idField - !>
+<! - args.mailField - !>
+<! - args.destinationField - !>
+<! - args.enabledField - !>
+<args.mysqlCommand> --user=<args.database.user> --password=<args.database.password> -t \<\<'STOP'
+USE <args.database.database>;
+CREATE TABLE IF NOT EXISTS `<args.aliasesTable>` (
+`<args.idField>` smallint(3) NOT NULL auto_increment,
+`<args.mailField>` varchar(120) NOT NULL default '',
+`<args.destinationField>` varchar(120) NOT NULL default '',
+`<args.enabledField>` tinyint(1) NOT NULL default '1',
+PRIMARY KEY (`<args.idField>`));
 
-<createIndexIfNotExists(properties.aliasesTable, properties.mailField)>
+<createIndexIfNotExists(args.aliasesTable, args.mailField)>
 \q
 STOP
 >>
 
-createDomainsTable(properties, service) ::= <<
+createDomainsTable(args) ::= <<
 <! creates the domains table !>
-#!/bin/sh
-<properties.mysqlCommand> --user=<service.database.user> --password=<service.database.password> -t \<\<'STOP'
-USE <service.database.database>;
-CREATE TABLE IF NOT EXISTS `<properties.domainsTable>` (
-`<properties.idField>` smallint(6) NOT NULL auto_increment,
-`<properties.domainField>` varchar(120) NOT NULL default '',
-`<properties.transportField>` varchar(120) NOT NULL default 'virtual:',
-`<properties.enabledField>` tinyint(1) NOT NULL default '1',
-PRIMARY KEY (`<properties.idField>`) ) ;
+<! - args.database - !>
+<! - args.mysqlCommand - !>
+<! - args.domainsTable - !>
+<! - args.idField - !>
+<! - args.domainField - !>
+<! - args.transportField - !>
+<! - args.enabledField - !>
+<args.mysqlCommand> --user=<args.database.user> --password=<args.database.password> -t \<\<'STOP'
+USE <args.database.database>;
+CREATE TABLE IF NOT EXISTS `<args.domainsTable>` (
+`<args.idField>` smallint(6) NOT NULL auto_increment,
+`<args.domainField>` varchar(120) NOT NULL default '',
+`<args.transportField>` varchar(120) NOT NULL default 'virtual:',
+`<args.enabledField>` tinyint(1) NOT NULL default '1',
+PRIMARY KEY (`<args.idField>`) ) ;
 
-<createIndexIfNotExists(properties.domainsTable, properties.domainField)>
+<createIndexIfNotExists(args.domainsTable, args.domainField)>
 \q
 STOP
 >>
 
-createUsersTable(properties, service, profile) ::= <<
+createUsersTable(args) ::= <<
 <! creates the users table !>
-#!/bin/sh
-<properties.mysqlCommand> --user=<service.database.user> --password=<service.database.password> -t \<\<'STOP'
-USE <service.database.database>;
-CREATE TABLE IF NOT EXISTS `<properties.usersTable>` (
-`<properties.idField>` smallint(6) NOT NULL auto_increment,
-`<properties.loginField>` varchar(128) NOT NULL default '',
-`<properties.nameField>` varchar(128) NOT NULL default '',
-`<properties.uidField>` smallint(5) unsigned NOT NULL default '<profile.virtualUid>',
-`<properties.gidField>` smallint(5) unsigned NOT NULL default '<profile.virtualGid>',
-`<properties.homeField>` varchar(255) NOT NULL default '<profile.mailboxBaseDir>',
-`<properties.maildirField>` varchar(255) NOT NULL,
-`<properties.enabledField>` tinyint(3) unsigned NOT NULL default '1',
-`<properties.changePasswordField>` tinyint(3) unsigned NOT NULL default '1',
-`<properties.clearField>` varchar(128) NOT NULL default 'ChangeMe',
-`<properties.cryptField>` varchar(128) NOT NULL default 'sdtrusfX0Jj66',
-`<properties.quotaField>` varchar(255) NOT NULL default '',
-`<properties.procmailrcField>` varchar(128) NOT NULL default '',
-`<properties.spamassassinrcField>` varchar(128) NOT NULL default '',
-PRIMARY KEY (`<properties.idField>`));
+<! - args.database - !>
+<! - args.mysqlCommand - !>
+<! - args.usersTable - !>
+<! - args.idField - !>
+<! - args.loginField - !>
+<! - args.nameField - !>
+<! - args.uidField - !>
+<! - args.gidField - !>
+<! - args.homeField - !>
+<! - args.maildirField - !>
+<! - args.enabledField - !>
+<! - args.changePasswordField - !>
+<! - args.clearField - !>
+<! - args.cryptField - !>
+<! - args.quotaField - !>
+<! - args.procmailrcField - !>
+<! - args.spamassassinrcField - !>
+<! - args.virtualUid - !>
+<! - args.virtualGid - !>
+<! - args.mailboxBaseDir - !>
+<args.mysqlCommand> --user=<args.database.user> --password=<args.database.password> -t \<\<'STOP'
+USE <args.database.database>;
+CREATE TABLE IF NOT EXISTS `<args.usersTable>` (
+`<args.idField>` smallint(6) NOT NULL auto_increment,
+`<args.loginField>` varchar(128) NOT NULL default '',
+`<args.nameField>` varchar(128) NOT NULL default '',
+`<args.uidField>` smallint(5) unsigned NOT NULL default '<args.virtualUid>',
+`<args.gidField>` smallint(5) unsigned NOT NULL default '<args.virtualGid>',
+`<args.homeField>` varchar(255) NOT NULL default '<args.mailboxBaseDir>',
+`<args.maildirField>` varchar(255) NOT NULL,
+`<args.enabledField>` tinyint(3) unsigned NOT NULL default '1',
+`<args.changePasswordField>` tinyint(3) unsigned NOT NULL default '1',
+`<args.clearField>` varchar(128) NOT NULL default 'ChangeMe',
+`<args.cryptField>` varchar(128) NOT NULL default 'sdtrusfX0Jj66',
+`<args.quotaField>` varchar(255) NOT NULL default '',
+`<args.procmailrcField>` varchar(128) NOT NULL default '',
+`<args.spamassassinrcField>` varchar(128) NOT NULL default '',
+PRIMARY KEY (`<args.idField>`));
 
-<createIndexIfNotExists(properties.usersTable, properties.loginField)>
+<createIndexIfNotExists(args.usersTable, args.loginField)>
 \q
 STOP
 >>

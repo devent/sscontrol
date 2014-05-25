@@ -18,10 +18,14 @@
  */
 package com.anrisoftware.sscontrol.mail.postfix.script.ubuntu_10_04
 
+import groovy.util.logging.Slf4j
+
 import javax.inject.Inject
 
 import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.sscontrol.mail.postfix.script.linux.BasePostfixScript
+import com.anrisoftware.sscontrol.scripts.unix.InstallPackagesFactory
+import com.anrisoftware.sscontrol.scripts.unix.RestartServicesFactory
 
 /**
  * Postfix/Ubuntu 10.04.
@@ -29,10 +33,17 @@ import com.anrisoftware.sscontrol.mail.postfix.script.linux.BasePostfixScript
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
+@Slf4j
 class UbuntuScript extends BasePostfixScript {
 
     @Inject
     UbuntuPropertiesProvider ubuntuProperties
+
+    @Inject
+    InstallPackagesFactory installPackagesFactory
+
+    @Inject
+    RestartServicesFactory restartServicesFactory
 
     @Override
     def run() {
@@ -43,6 +54,28 @@ class UbuntuScript extends BasePostfixScript {
     @Override
     def runDistributionSpecific() {
         installPackages()
+    }
+
+    /**
+     * Installs the <i>Postfix</i> packages.
+     */
+    void installPackages() {
+        installPackagesFactory.create(
+                log: log,
+                command: installCommand,
+                packages: packages,
+                this, threads)()
+    }
+
+    /**
+     * Restarts the <i>Postfix</i> services.
+     */
+    void restartServices() {
+        restartServicesFactory.create(
+                log: log,
+                command: restartCommand,
+                services: restartServices,
+                this, threads)()
     }
 
     @Override

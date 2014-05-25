@@ -1,4 +1,6 @@
-postalias_command(command, file) ::= <<
-#!/bin/sh
-<command> <file>
+postalias(args) ::= <<
+<! - args.command - !>
+<! - args.file - !>
+<args.command> <args.file>
+
 >>

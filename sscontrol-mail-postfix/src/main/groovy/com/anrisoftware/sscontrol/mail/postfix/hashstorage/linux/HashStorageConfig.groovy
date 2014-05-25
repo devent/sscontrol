@@ -18,17 +18,23 @@
  */
 package com.anrisoftware.sscontrol.mail.postfix.hashstorage.linux
 
+import groovy.util.logging.Slf4j
+
 import javax.inject.Inject
 
+import com.anrisoftware.globalpom.textmatch.tokentemplate.TokenTemplate
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.Templates
+import com.anrisoftware.resources.templates.api.TemplatesFactory
 import com.anrisoftware.sscontrol.mail.postfix.linux.BindAddressesRenderer
 import com.anrisoftware.sscontrol.mail.postfix.linux.StorageConfig
 import com.anrisoftware.sscontrol.mail.postfix.script.linux.BaseStorage
 import com.anrisoftware.sscontrol.mail.statements.Alias
 import com.anrisoftware.sscontrol.mail.statements.Domain
 import com.anrisoftware.sscontrol.mail.statements.User
-import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokenTemplate
+import com.anrisoftware.sscontrol.scripts.changefileowner.ChangeFileOwnerFactory
+import com.anrisoftware.sscontrol.scripts.localgroupadd.LocalGroupAddFactory
+import com.anrisoftware.sscontrol.scripts.localuseradd.LocalUserAddFactory
 
 /**
  * Hash/storage.
@@ -36,174 +42,208 @@ import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokenTemplate
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
+@Slf4j
 abstract class HashStorageConfig extends BaseStorage implements StorageConfig {
 
-	public static final String NAME = "hash"
+    public static final String NAME = "hash"
 
-	@Inject
-	HashStorageConfigLogger log
+    @Inject
+    HashStorageConfigLogger logg
 
-	/**
-	 * Renderer for {@code inet_interfaces}.
-	 */
-	@Inject
-	BindAddressesRenderer bindAddressesRenderer
+    @Inject
+    TemplatesFactory templatesFactory
 
-	/**
-	 * Hash/storage templates.
-	 */
-	Templates hashStorageTemplates
+    @Inject
+    LocalGroupAddFactory localGroupAddFactory
 
-	/**
-	 * {@code main.cf} configuration templates.
-	 */
-	TemplateResource hashMainConfigurationTemplate
+    @Inject
+    LocalUserAddFactory localUserAddFactory
 
-	/**
-	 * Virtual domain and users configuration templates.
-	 */
-	TemplateResource postmapsConfigurationTemplate
+    @Inject
+    ChangeFileOwnerFactory changeFileOwnerFactory
 
-	@Override
-	String getStorageName() {
-		NAME
-	}
+    /**
+     * Renderer for {@code inet_interfaces}.
+     */
+    @Inject
+    BindAddressesRenderer bindAddressesRenderer
 
-	@Override
-	void deployStorage() {
-		hashStorageTemplates = templatesFactory.create "BaseHashStorageConfig", templatesAttributes
-		hashMainConfigurationTemplate = hashStorageTemplates.getResource "main_hash_configuration"
-		postmapsConfigurationTemplate = hashStorageTemplates.getResource "postmaps_configuration"
-		if (service.domains.size() > 0) {
-			deployMain()
-			deployVirtualDomains()
-			deployAliases()
-			deployMailbox()
-			createVirtualDirectory()
-		}
-	}
+    /**
+     * Hash/storage templates.
+     */
+    Templates hashStorageTemplates
 
-	/**
-	 * Returns additional template attributes.
-	 */
-	Map getTemplatesAttributes() {
-		["renderers": [bindAddressesRenderer]]
-	}
+    /**
+     * {@code main.cf} configuration templates.
+     */
+    TemplateResource hashMainConfigurationTemplate
 
-	/**
-	 * Sets the virtual aliases and mailboxes.
-	 *
-	 * @see #getMainFile()
-	 * @see #getAliasMapsFile()
-	 */
-	void deployMain() {
-		def configuration = []
-		configuration << new TokenTemplate("(?m)^\\#?virtual_alias_domains.*", hashMainConfigurationTemplate.getText(true, "aliasDomains", "file", virtualDomainsFile))
-		configuration << new TokenTemplate("(?m)^\\#?virtual_alias_maps.*", hashMainConfigurationTemplate.getText(true, "aliasMaps", "file", virtualAliasFile))
-		configuration << new TokenTemplate("(?m)^\\#?virtual_mailbox_base.*", hashMainConfigurationTemplate.getText(true, "mailboxBase", "dir", script.mailboxBaseDir))
-		configuration << new TokenTemplate("(?m)^\\#?virtual_mailbox_maps.*", hashMainConfigurationTemplate.getText(true, "mailboxMaps", "file", virtualMailboxFile))
-		configuration << new TokenTemplate("(?m)^\\#?virtual_minimum_uid.*", hashMainConfigurationTemplate.getText(true, "minimumUid", "uid", script.minimumUid))
-		configuration << new TokenTemplate("(?m)^\\#?virtual_uid_maps.*", hashMainConfigurationTemplate.getText(true, "uidMaps", "uid", script.virtualUid))
-		configuration << new TokenTemplate("(?m)^\\#?virtual_gid_maps.*", hashMainConfigurationTemplate.getText(true, "gidMaps", "gid", script.virtualGid))
-		deployConfiguration configurationTokens(), currentMainConfiguration, configuration, script.mainFile
-	}
+    /**
+     * Virtual domain and users configuration templates.
+     */
+    TemplateResource postmapsConfigurationTemplate
 
-	/**
-	 * Deploys the list of virtual domains.
-	 *
-	 * @see #getAliasDomainsFile()
-	 */
-	void deployVirtualDomains() {
-		def configuration = service.domains.inject([]) { list, Domain domain ->
-			if (domain.enabled) {
-				list << new TokenTemplate("(?m)^\\#?${domain.name}.*", postmapsConfigurationTemplate.getText(true, "domain", "domain", domain))
-			} else {
-				list
-			}
-		}
-		service.resetDomains.resetDomains ? resetDomains() : false
-		def currentConfiguration = currentConfiguration virtualDomainsFile
-		deployConfiguration configurationTokens(), currentConfiguration, configuration, virtualDomainsFile
-		rehashFile virtualDomainsFile
-	}
+    @Override
+    String getStorageName() {
+        NAME
+    }
 
-	/**
-	 * Removes the old domains file.
-	 */
-	void resetDomains() {
-		virtualDomainsFile.delete()
-		log.domainsReseted this, virtualDomainsFile
-	}
+    @Override
+    void deployStorage() {
+        hashStorageTemplates = templatesFactory.create "BaseHashStorageConfig", templatesAttributes
+        hashMainConfigurationTemplate = hashStorageTemplates.getResource "main_hash_configuration"
+        postmapsConfigurationTemplate = hashStorageTemplates.getResource "postmaps_configuration"
+        if (service.domains.size() > 0) {
+            deployMain()
+            deployVirtualDomains()
+            deployAliases()
+            deployMailbox()
+            createVirtualDirectory()
+        }
+    }
 
-	/**
-	 * Deploys the list of virtual aliases.
-	 *
-	 * @see #getAliasMapsFile()
-	 */
-	void deployAliases() {
-		def configuration = service.domains.inject([]) { list, domain ->
-			list << domain.aliases.inject([]) { aliases, Alias alias ->
-				if (alias.enabled) {
-					def text = postmapsConfigurationTemplate.getText(true, "alias", "alias", alias)
-					aliases << new TokenTemplate("(?m)^\\#?${alias.name}@${alias.domain.name}.*", text)
-				} else {
-					aliases
-				}
-			}
-		}
-		service.resetDomains.resetAliases ? resetAliases() : false
-		def currentConfiguration = currentConfiguration virtualAliasFile
-		deployConfiguration configurationTokens(), currentConfiguration, configuration, virtualAliasFile
-		rehashFile virtualAliasFile
-	}
+    /**
+     * Returns additional template attributes.
+     */
+    Map getTemplatesAttributes() {
+        ["renderers": [bindAddressesRenderer]]
+    }
 
-	/**
-	 * Removes the old aliases file.
-	 */
-	void resetAliases() {
-		virtualAliasFile.delete()
-		log.aliasesReseted this, virtualAliasFile
-	}
+    /**
+     * Sets the virtual aliases and mailboxes.
+     *
+     * @see #getMainFile()
+     * @see #getAliasMapsFile()
+     */
+    void deployMain() {
+        def configuration = []
+        configuration << new TokenTemplate("(?m)^\\#?virtual_alias_domains.*", hashMainConfigurationTemplate.getText(true, "aliasDomains", "file", virtualDomainsFile))
+        configuration << new TokenTemplate("(?m)^\\#?virtual_alias_maps.*", hashMainConfigurationTemplate.getText(true, "aliasMaps", "file", virtualAliasFile))
+        configuration << new TokenTemplate("(?m)^\\#?virtual_mailbox_base.*", hashMainConfigurationTemplate.getText(true, "mailboxBase", "dir", script.mailboxBaseDir))
+        configuration << new TokenTemplate("(?m)^\\#?virtual_mailbox_maps.*", hashMainConfigurationTemplate.getText(true, "mailboxMaps", "file", virtualMailboxFile))
+        configuration << new TokenTemplate("(?m)^\\#?virtual_minimum_uid.*", hashMainConfigurationTemplate.getText(true, "minimumUid", "uid", script.minimumUid))
+        configuration << new TokenTemplate("(?m)^\\#?virtual_uid_maps.*", hashMainConfigurationTemplate.getText(true, "uidMaps", "uid", script.virtualUid))
+        configuration << new TokenTemplate("(?m)^\\#?virtual_gid_maps.*", hashMainConfigurationTemplate.getText(true, "gidMaps", "gid", script.virtualGid))
+        deployConfiguration configurationTokens(), currentMainConfiguration, configuration, script.mainFile
+    }
 
-	/**
-	 * Deploys the list of virtual mailbox.
-	 *
-	 * @see #getMailboxMapsFile()
-	 */
-	void deployMailbox() {
-		def configuration = service.domains.inject([]) { list, domain ->
-			list << domain.users.inject([]) { users, User user ->
-				if (user.enabled) {
-					def path = script.createMailboxPath(user)
-					def text = postmapsConfigurationTemplate.getText(true, "user", "user", user, "path", path)
-					users << new TokenTemplate("(?m)^\\#?${user.name}@${user.domain.name}.*", text)
-				} else {
-					users
-				}
-			}
-		}
-		service.resetDomains.resetUsers ? resetUsers() : false
-		def currentConfiguration = currentConfiguration virtualMailboxFile
-		deployConfiguration configurationTokens(), currentConfiguration, configuration, virtualMailboxFile
-		rehashFile virtualMailboxFile
-	}
+    /**
+     * Deploys the list of virtual domains.
+     *
+     * @see #getAliasDomainsFile()
+     */
+    void deployVirtualDomains() {
+        def configuration = service.domains.inject([]) { list, Domain domain ->
+            if (domain.enabled) {
+                list << new TokenTemplate("(?m)^\\#?${domain.name}.*", postmapsConfigurationTemplate.getText(true, "domain", "domain", domain))
+            } else {
+                list
+            }
+        }
+        service.resetDomains.resetDomains ? resetDomains() : false
+        def currentConfiguration = currentConfiguration virtualDomainsFile
+        deployConfiguration configurationTokens(), currentConfiguration, configuration, virtualDomainsFile
+        rehashFile virtualDomainsFile
+    }
 
-	/**
-	 * Removes the old mailbox file.
-	 */
-	void resetUsers() {
-		virtualMailboxFile.delete()
-		log.usersReseted this, virtualMailboxFile
-	}
+    /**
+     * Removes the old domains file.
+     */
+    void resetDomains() {
+        virtualDomainsFile.delete()
+        logg.domainsReseted this, virtualDomainsFile
+    }
 
-	/**
-	 * Creates the virtual mail box directory and set the owner.
-	 */
-	void createVirtualDirectory() {
-		File dir = script.mailboxBaseDir
-		dir.exists() ? null : dir.mkdirs()
-		addGroup groupName: virtualGroupName, groupId: virtualGid, systemGroup: true
-		addUser userName: virtualUserName, groupName: virtualGroupName, userId: virtualUid, systemGroup: true
-		changeOwner owner: virtualUid, ownerGroup: virtualGid, files: dir
-	}
+    /**
+     * Deploys the list of virtual aliases.
+     *
+     * @see #getAliasMapsFile()
+     */
+    void deployAliases() {
+        def configuration = service.domains.inject([]) { list, domain ->
+            list << domain.aliases.inject([]) { aliases, Alias alias ->
+                if (alias.enabled) {
+                    def text = postmapsConfigurationTemplate.getText(true, "alias", "alias", alias)
+                    aliases << new TokenTemplate("(?m)^\\#?${alias.name}@${alias.domain.name}.*", text)
+                } else {
+                    aliases
+                }
+            }
+        }
+        service.resetDomains.resetAliases ? resetAliases() : false
+        def currentConfiguration = currentConfiguration virtualAliasFile
+        deployConfiguration configurationTokens(), currentConfiguration, configuration, virtualAliasFile
+        rehashFile virtualAliasFile
+    }
+
+    /**
+     * Removes the old aliases file.
+     */
+    void resetAliases() {
+        virtualAliasFile.delete()
+        logg.aliasesReseted this, virtualAliasFile
+    }
+
+    /**
+     * Deploys the list of virtual mailbox.
+     *
+     * @see #getMailboxMapsFile()
+     */
+    void deployMailbox() {
+        def configuration = service.domains.inject([]) { list, domain ->
+            list << domain.users.inject([]) { users, User user ->
+                if (user.enabled) {
+                    def path = script.createMailboxPath(user)
+                    def text = postmapsConfigurationTemplate.getText(true, "user", "user", user, "path", path)
+                    users << new TokenTemplate("(?m)^\\#?${user.name}@${user.domain.name}.*", text)
+                } else {
+                    users
+                }
+            }
+        }
+        service.resetDomains.resetUsers ? resetUsers() : false
+        def currentConfiguration = currentConfiguration virtualMailboxFile
+        deployConfiguration configurationTokens(), currentConfiguration, configuration, virtualMailboxFile
+        rehashFile virtualMailboxFile
+    }
+
+    /**
+     * Removes the old mailbox file.
+     */
+    void resetUsers() {
+        virtualMailboxFile.delete()
+        logg.usersReseted this, virtualMailboxFile
+    }
+
+    /**
+     * Creates the virtual mail box directory and set the owner.
+     */
+    void createVirtualDirectory() {
+        File dir = script.mailboxBaseDir
+        dir.exists() ? null : dir.mkdirs()
+        localGroupAddFactory.create(
+                log: log,
+                groupName: virtualGroupName,
+                groupId: virtualGid,
+                systemGroup: true,
+                command: script.groupAddCommand,
+                groupsFile: script.groupsFile,
+                this, threads)()
+        localUserAddFactory.create(
+                log: log,
+                userName: virtualUserName,
+                groupName: virtualGroupName,
+                userId: virtualUid,
+                systemUser: true,
+                command: script.userAddCommand,
+                usersFile: script.usersFile,
+                this, threads)()
+        changeFileOwnerFactory.create(
+                log: log,
+                owner: virtualUid,
+                ownerGroup: virtualGid,
+                files: [dir],
+                command: script.chownCommand,
+                this, threads)()
+    }
 }

@@ -29,8 +29,11 @@ import static com.anrisoftware.sscontrol.mail.postfix.linux.BasePostfixScriptLog
 import static com.anrisoftware.sscontrol.mail.postfix.linux.BasePostfixScriptLogger._.storage_config_null;
 import static org.apache.commons.lang3.Validate.notNull;
 
+import java.io.File;
+
 import javax.inject.Singleton;
 
+import com.anrisoftware.globalpom.exec.api.ProcessTask;
 import com.anrisoftware.globalpom.log.AbstractLogger;
 import com.anrisoftware.sscontrol.core.service.LinuxScript;
 import com.anrisoftware.sscontrol.mail.postfix.script.linux.BasePostfixScript;
@@ -84,9 +87,9 @@ class BasePostfixScriptLogger extends AbstractLogger {
         super(BasePostfixScript.class);
     }
 
-    void rehashFileDone(LinuxScript script, Object file, Object worker) {
+    void rehashFileDone(LinuxScript script, File file, ProcessTask task) {
         if (isTraceEnabled()) {
-            trace(rehash_file_trace, file, worker, script);
+            trace(rehash_file_trace, file, script, task);
         } else if (isDebugEnabled()) {
             debug(rehash_file_debug, file, script);
         } else {
@@ -94,11 +97,11 @@ class BasePostfixScriptLogger extends AbstractLogger {
         }
     }
 
-    void realiasFileDone(LinuxScript script, Object file, Object worker) {
+    void realiasFileDone(LinuxScript script, File file, ProcessTask task) {
         if (isTraceEnabled()) {
-            debug(realias_file_trace, file, worker, script);
+            debug(realias_file_trace, file, script, task);
         } else if (isDebugEnabled()) {
-            debug(realias_file_debug, file, worker, script);
+            debug(realias_file_debug, file, script);
         } else {
             info(realias_file_info, file);
         }

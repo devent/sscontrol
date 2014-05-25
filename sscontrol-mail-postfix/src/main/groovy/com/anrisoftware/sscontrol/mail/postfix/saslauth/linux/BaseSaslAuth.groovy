@@ -18,16 +18,20 @@
  */
 package com.anrisoftware.sscontrol.mail.postfix.saslauth.linux
 
+import groovy.util.logging.Slf4j
+
 import java.util.regex.Pattern
 
 import javax.inject.Inject
 
+import com.anrisoftware.globalpom.textmatch.tokentemplate.TokenTemplate
 import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.Templates
+import com.anrisoftware.resources.templates.api.TemplatesFactory
 import com.anrisoftware.sscontrol.mail.postfix.linux.AuthConfig
 import com.anrisoftware.sscontrol.mail.postfix.script.linux.BaseAuth
-import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokenTemplate
+import com.anrisoftware.sscontrol.scripts.localchangeuser.LocalChangeUserFactory
 
 /**
  * SASL/authentication.
@@ -35,27 +39,34 @@ import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokenTemplate
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
+@Slf4j
 abstract class BaseSaslAuth extends BaseAuth implements AuthConfig {
 
     public static final String NAME = "sasl"
 
     @Inject
-    private BaseSaslAuthLogger log
+    private BaseSaslAuthLogger logg
+
+    @Inject
+    private TemplatesFactory templatesFactory
+
+    @Inject
+    private LocalChangeUserFactory localChangeUserFactory
 
     /**
      * SASL/authentication templates.
      */
-    Templates salsTemplates
+    private Templates salsTemplates
 
     /**
      * The {@code "main.cf"} configuration templates.
      */
-    TemplateResource mainSaslConfTemplate
+    private TemplateResource mainSaslConfTemplate
 
     /**
      * The {@code "saslauthd"} configuration templates.
      */
-    TemplateResource saslAuthConfTemplate
+    private TemplateResource saslAuthConfTemplate
 
     @Override
     void deployAuth() {
@@ -72,7 +83,11 @@ abstract class BaseSaslAuth extends BaseAuth implements AuthConfig {
      * Update the Postfix user.
      */
     void updatePostfixUser() {
-        changeUser userName: postfixUser, groups: [saslGroup]
+        localChangeUserFactory.create(
+                log: log,
+                command: script.userModCommand,
+                userName: postfixUser, groups: [saslGroup],
+                this, threads)()
     }
 
     /**
@@ -93,7 +108,7 @@ abstract class BaseSaslAuth extends BaseAuth implements AuthConfig {
      */
     void makeChrootDirectory() {
         chrootSaslauthdDirectory.mkdirs()
-        log.chrootDirectoryCreated script, chrootSaslauthdDirectory
+        logg.chrootDirectoryCreated script, chrootSaslauthdDirectory
     }
 
     /**

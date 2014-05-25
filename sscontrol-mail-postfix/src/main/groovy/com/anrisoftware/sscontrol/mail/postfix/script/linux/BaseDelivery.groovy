@@ -28,22 +28,22 @@ import com.anrisoftware.propertiesutils.ContextProperties
  */
 abstract class BaseDelivery {
 
-	BasePostfixScript script
+    BasePostfixScript script
 
-	void setScript(BasePostfixScript script) {
-		this.script = script
-	}
+    void setScript(BasePostfixScript script) {
+        this.script = script
+    }
 
-	def propertyMissing(String name) {
-		script.getProperty name
-	}
+    def propertyMissing(String name) {
+        script.getProperty name
+    }
 
-	def methodMissing(String name, def args) {
-		script.invokeMethod name, args
-	}
+    def methodMissing(String name, def args) {
+        script.invokeMethod name, args
+    }
 
-	/**
-	 * Returns the delivery/properties.
-	 */
-	abstract ContextProperties getDeliveryProperties()
+    /**
+     * Returns the delivery/properties.
+     */
+    abstract ContextProperties getDeliveryProperties()
 }

@@ -18,14 +18,19 @@
  */
 package com.anrisoftware.sscontrol.mail.postfix.saslmysqlauth.linux
 
+import groovy.util.logging.Slf4j
+
 import javax.inject.Inject
 
 import org.apache.commons.io.FileUtils
 
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.Templates
+import com.anrisoftware.resources.templates.api.TemplatesFactory
 import com.anrisoftware.sscontrol.mail.api.MailService
 import com.anrisoftware.sscontrol.mail.postfix.saslauth.linux.BaseSaslAuth
+import com.anrisoftware.sscontrol.scripts.changefilemod.ChangeFileModFactory
+import com.anrisoftware.sscontrol.scripts.changefileowner.ChangeFileOwnerFactory
 
 /**
  * SASL/MySQL/authentication.
@@ -33,22 +38,32 @@ import com.anrisoftware.sscontrol.mail.postfix.saslauth.linux.BaseSaslAuth
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
+@Slf4j
 abstract class BaseSaslMysqlAuth extends BaseSaslAuth {
 
     public static final String STORAGE_NAME = "mysql"
 
     @Inject
-    private BaseSaslMysqlAuthLogger log
+    private BaseSaslMysqlAuthLogger logg
+
+    @Inject
+    private TemplatesFactory templatesFactory
+
+    @Inject
+    ChangeFileModFactory changeFileModFactory
+
+    @Inject
+    ChangeFileOwnerFactory changeFileOwnerFactory
 
     /**
      * SASL/authentication templates.
      */
-    Templates salsMysqlTemplates
+    private Templates salsMysqlTemplates
 
     /**
      * The {@code "smtpd.conf"} configuration templates.
      */
-    TemplateResource smtpdConfTemplate
+    private TemplateResource smtpdConfTemplate
 
     @Override
     void deployAuth() {
@@ -70,9 +85,20 @@ abstract class BaseSaslMysqlAuth extends BaseSaslAuth {
                 "properties", this,
                 "service", script.service)
         FileUtils.write saslSmtpdFile, config, charset
-        changeOwner owner: postfixUser, ownerGroup: postfixGroup, files: [saslSmtpdFile]
-        changeMod mod: "o-r", files: [saslSmtpdFile]
-        log.smtpdDeployed script, saslSmtpdFile, config
+        changeFileOwnerFactory.create(
+                log: log,
+                command: script.chownCommand,
+                owner: postfixUser,
+                ownerGroup: postfixGroup,
+                files: [saslSmtpdFile],
+                this, threads)()
+        changeFileModFactory.create(
+                log: log,
+                command: script.chmodCommand,
+                mod: "o-r",
+                files: [saslSmtpdFile],
+                this, threads)()
+        logg.smtpdDeployed script, saslSmtpdFile, config
     }
 
     /**
@@ -130,8 +156,13 @@ abstract class BaseSaslMysqlAuth extends BaseSaslAuth {
                 "properties", this,
                 "service", script.service)
         FileUtils.write smtpdPamFile, config, charset
-        changeMod mod: "o-r", files: [smtpdPamFile]
-        log.smtpdPamDeployed script, smtpdPamFile, config
+        changeFileModFactory.create(
+                log: log,
+                command: script.chmodCommand,
+                mod: "o-r",
+                files: [smtpdPamFile],
+                this, threads)()
+        logg.smtpdPamDeployed script, smtpdPamFile, config
     }
 
     /**

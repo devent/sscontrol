@@ -19,18 +19,26 @@
 package com.anrisoftware.sscontrol.mail.postfix.mysqlstorage.linux
 
 import static org.apache.commons.io.FileUtils.*
+import groovy.util.logging.Slf4j
 
 import javax.inject.Inject
 
 import org.apache.commons.io.FileUtils
 
+import com.anrisoftware.globalpom.textmatch.tokentemplate.TokenTemplate
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.Templates
+import com.anrisoftware.resources.templates.api.TemplatesFactory
 import com.anrisoftware.sscontrol.mail.postfix.linux.BindAddressesRenderer
 import com.anrisoftware.sscontrol.mail.postfix.linux.StorageConfig
 import com.anrisoftware.sscontrol.mail.postfix.script.linux.BaseStorage
 import com.anrisoftware.sscontrol.mail.statements.Domain
-import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokenTemplate
+import com.anrisoftware.sscontrol.scripts.changefilemod.ChangeFileModFactory
+import com.anrisoftware.sscontrol.scripts.changefileowner.ChangeFileOwnerFactory
+import com.anrisoftware.sscontrol.scripts.localgroupadd.LocalGroupAddFactory
+import com.anrisoftware.sscontrol.scripts.localuseradd.LocalUserAddFactory
+import com.anrisoftware.sscontrol.scripts.unix.InstallPackagesFactory
+import com.anrisoftware.sscontrol.scripts.unix.ScriptExecFactory
 
 /**
  * Mysql/storage.
@@ -38,12 +46,34 @@ import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokenTemplate
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
+@Slf4j
 abstract class MysqlStorageConfig extends BaseStorage implements StorageConfig {
 
     public static final String NAME = "mysql"
 
     @Inject
-    MysqlStorageConfigLogger log
+    private MysqlStorageConfigLogger logg
+
+    @Inject
+    TemplatesFactory templatesFactory
+
+    @Inject
+    InstallPackagesFactory installPackagesFactory
+
+    @Inject
+    ScriptExecFactory scriptExecFactory
+
+    @Inject
+    ChangeFileOwnerFactory changeFileOwnerFactory
+
+    @Inject
+    ChangeFileModFactory changeFileModFactory
+
+    @Inject
+    LocalUserAddFactory localUserAddFactory
+
+    @Inject
+    LocalGroupAddFactory localGroupAddFactory
 
     /**
      * Renderer for {@code inet_interfaces}.
@@ -76,7 +106,7 @@ abstract class MysqlStorageConfig extends BaseStorage implements StorageConfig {
         mainTemplate = mysqlTemplates.getResource "main_configuration"
         configTemplate = mysqlTemplates.getResource "database_configuration"
         dataTemplate = mysqlTemplates.getResource "database_data"
-        installPackages mysqlStoragePackages
+        installPackages()
         deployDatabaseTables()
         deployMain()
         deployVirtualMailboxFile()
@@ -87,19 +117,67 @@ abstract class MysqlStorageConfig extends BaseStorage implements StorageConfig {
     }
 
     /**
+     * Installs the packages for <i>MySQL</i> storage.
+     */
+    void installPackages() {
+        installPackagesFactory.create(
+                log: log,
+                command: script.installCommand,
+                packages: mysqlStoragePackages,
+                this, threads)()
+    }
+
+    /**
      * Creates the tables in the database for virtual domains and users.
      */
     void deployDatabaseTables() {
-        def worker
-        worker = scriptCommandFactory.create(tablesTemplate, "createAliasesTable",
-                "properties", this, "service", service)()
-        log.deployedAliasesTable script, worker
-        worker = scriptCommandFactory.create(tablesTemplate, "createDomainsTable",
-                "properties", this, "service", service)()
-        log.deployedDomainsTable script, worker
-        worker = scriptCommandFactory.create(tablesTemplate, "createUsersTable",
-                "properties", this, "service", service, "profile", script)()
-        log.deployedUsersTable script, worker
+        def task
+        task = scriptExecFactory.create(
+                log: log,
+                database: service.database,
+                mysqlCommand: mysqlCommand,
+                aliasesTable: aliasesTable,
+                idField: idField,
+                mailField: mailField,
+                destinationField: destinationField,
+                enabledField: enabledField,
+                this, threads, tablesTemplate, "createAliasesTable")()
+        logg.deployedAliasesTable script, task
+        task = scriptExecFactory.create(
+                log: log,
+                database: service.database,
+                mysqlCommand: mysqlCommand,
+                domainsTable: domainsTable,
+                idField: idField,
+                domainField: domainField,
+                transportField: transportField,
+                enabledField: enabledField,
+                this, threads, tablesTemplate, "createDomainsTable")()
+        logg.deployedDomainsTable script, task
+        task = scriptExecFactory.create(
+                log: log,
+                database: service.database,
+                mysqlCommand: mysqlCommand,
+                usersTable: usersTable,
+                idField: idField,
+                loginField: loginField,
+                nameField: nameField,
+                uidField: uidField,
+                gidField: gidField,
+                homeField: homeField,
+                maildirField: maildirField,
+                enabledField: enabledField,
+                changePasswordField: changePasswordField,
+                clearField: clearField,
+                cryptField: cryptField,
+                quotaField: quotaField,
+                procmailrcField: procmailrcField,
+                spamassassinrcField: spamassassinrcField,
+                virtualUid: virtualUid,
+                virtualGid: virtualGid,
+                mailboxBaseDir: mailboxBaseDir,
+                this, threads, tablesTemplate, "createUsersTable")()
+        logg.deployedUsersTable script, task
     }
 
     /**
@@ -170,23 +248,33 @@ abstract class MysqlStorageConfig extends BaseStorage implements StorageConfig {
     void deployVirtualMailboxFile() {
         def string = configTemplate.getText(true, "mailbox", "properties", this, "service", service)
         FileUtils.write mailboxMapsFile, string
-        log.mailboxMapsDeployed script, mailboxMapsFile, string
+        logg.mailboxMapsDeployed script, mailboxMapsFile, string
         string = configTemplate.getText(true, "alias", "properties", this, "service", service)
         FileUtils.write aliasMapsFile, string
-        log.aliasMapsDeployed script, mailboxMapsFile, string
+        logg.aliasMapsDeployed script, mailboxMapsFile, string
         string = configTemplate.getText(true, "domains", "properties", this, "service", service)
         FileUtils.write mailboxDomainsFile, string
-        log.mailboxDomainsDeployed script, mailboxMapsFile, string
-        changeOwner owner: postfixUser, ownerGroup: postfixGroup, files: [
-            mailboxMapsFile,
-            aliasMapsFile,
-            mailboxDomainsFile
-        ]
-        changeMod mod: "o-r", files: [
-            mailboxMapsFile,
-            aliasMapsFile,
-            mailboxDomainsFile
-        ]
+        logg.mailboxDomainsDeployed script, mailboxMapsFile, string
+        changeFileOwnerFactory.create(
+                log: log,
+                command: script.chownCommand,
+                owner: postfixUser,
+                ownerGroup: postfixGroup,
+                files: [
+                    mailboxMapsFile,
+                    aliasMapsFile,
+                    mailboxDomainsFile
+                ],
+                this, threads)()
+        changeFileModFactory.create(
+                log: log,
+                command: script.chmodCommand,
+                mod: "o-r", files: [
+                    mailboxMapsFile,
+                    aliasMapsFile,
+                    mailboxDomainsFile
+                ],
+                this, threads)()
     }
 
     /**
@@ -194,18 +282,29 @@ abstract class MysqlStorageConfig extends BaseStorage implements StorageConfig {
      */
     void deployDomains() {
         service.resetDomains.resetDomains ? resetDomains() : false
-        def worker = scriptCommandFactory.create(dataTemplate, "insertDomains",
-                "properties", this, "service", service)()
-        log.deployedDomainsData script, worker
+        def task = scriptExecFactory.create(
+                log: log,
+                mysqlCommand: mysqlCommand,
+                database: service.database,
+                domains: service.domains,
+                domainsTable: domainsTable,
+                domainField: domainField,
+                enabledField: enabledField,
+                this, threads, dataTemplate, "insertDomains")()
+        logg.deployedDomainsData script, task
     }
 
     /**
      * Resets virtual domains.
      */
     void resetDomains() {
-        def worker = scriptCommandFactory.create(dataTemplate, "resetDomains",
-                "properties", this, "service", service)()
-        log.resetDomainsData script, worker
+        def task = scriptExecFactory.create(
+                log: log,
+                mysqlCommand: mysqlCommand,
+                database: service.database,
+                domainsTable: domainsTable,
+                this, threads, dataTemplate, "resetDomains")()
+        logg.resetDomainsData script, task
     }
 
     /**
@@ -217,9 +316,17 @@ abstract class MysqlStorageConfig extends BaseStorage implements StorageConfig {
             if (domain.aliases.empty) {
                 continue
             }
-            def worker = scriptCommandFactory.create(dataTemplate, "insertAliases",
-                    "properties", this, "service", service, "domain", domain)()
-            log.deployedAliasesData script, worker
+            def task = scriptExecFactory.create(
+                    log: log,
+                    mysqlCommand: mysqlCommand,
+                    database: service.database,
+                    domain: domain,
+                    aliasesTable: aliasesTable,
+                    mailField: mailField,
+                    destinationField: destinationField,
+                    enabledField: enabledField,
+                    this, threads, dataTemplate, "insertAliases")()
+            logg.deployedAliasesData script, task
         }
     }
 
@@ -227,9 +334,13 @@ abstract class MysqlStorageConfig extends BaseStorage implements StorageConfig {
      * Resets aliases.
      */
     void resetAliases() {
-        def worker = scriptCommandFactory.create(dataTemplate, "resetAliases",
-                "properties", this, "service", service)()
-        log.resetAliasesData script, worker
+        def task = scriptExecFactory.create(
+                log: log,
+                mysqlCommand: mysqlCommand,
+                database: service.database,
+                aliasesTable: aliasesTable,
+                this, threads, dataTemplate, "resetAliases")()
+        logg.resetAliasesData script, task
     }
 
     /**
@@ -241,9 +352,19 @@ abstract class MysqlStorageConfig extends BaseStorage implements StorageConfig {
             if (domain.users.empty) {
                 continue
             }
-            def worker = scriptCommandFactory.create(dataTemplate, "insertUsers",
-                    "properties", this, "service", service, "domain", domain)()
-            log.deployedUsersData script, worker
+            def task = scriptExecFactory.create(
+                    log: log,
+                    mysqlCommand: mysqlCommand,
+                    database: service.database,
+                    domain: domain,
+                    usersTable: usersTable,
+                    loginField: loginField,
+                    nameField: nameField,
+                    maildirField: maildirField,
+                    enabledField: enabledField,
+                    cryptField: cryptField,
+                    this, threads, dataTemplate, "insertUsers")()
+            logg.deployedUsersData script, task
         }
     }
 
@@ -251,9 +372,13 @@ abstract class MysqlStorageConfig extends BaseStorage implements StorageConfig {
      * Resets users.
      */
     void resetUsers() {
-        def worker = scriptCommandFactory.create(dataTemplate, "resetUsers",
-                "properties", this, "service", service)()
-        log.resetUsersData script, worker
+        def task = scriptExecFactory.create(
+                log: log,
+                mysqlCommand: mysqlCommand,
+                database: service.database,
+                usersTable: usersTable,
+                this, threads, dataTemplate, "resetUsers")()
+        logg.resetUsersData script, task
     }
 
     /**
@@ -262,9 +387,30 @@ abstract class MysqlStorageConfig extends BaseStorage implements StorageConfig {
     void createVirtualDirectory() {
         File dir = script.mailboxBaseDir
         dir.exists() ? null : dir.mkdirs()
-        addGroup groupName: virtualGroupName, groupId: virtualGid, systemGroup: true
-        addUser userName: virtualUserName, groupName: virtualGroupName, userId: virtualUid, systemGroup: true
-        changeOwner owner: virtualUid, ownerGroup: virtualGid, files: dir
+        localGroupAddFactory.create(
+                log: log,
+                command: script.groupAddCommand,
+                groupsFile: script.groupsFile,
+                groupName: virtualGroupName,
+                groupId: virtualGid,
+                systemGroup: true,
+                this, threads)()
+        localUserAddFactory.create(
+                log: log,
+                command: script.userAddCommand,
+                usersFile: script.usersFile,
+                userName: virtualUserName,
+                groupName: virtualGroupName,
+                userId: virtualUid,
+                systemUser: true,
+                this, threads)()
+        changeFileOwnerFactory.create(
+                log: log,
+                command: script.chownCommand,
+                owner: virtualUid,
+                ownerGroup: virtualGid,
+                files: [dir],
+                this, threads)()
     }
 
     /**

@@ -1,5 +1,3 @@
-
-
 /*
  * Copyright 2013 Erwin Müller <erwin.mueller@deventm.org>
  *
@@ -21,6 +19,7 @@
 package com.anrisoftware.sscontrol.mail.postfix.script.linux
 
 import static org.apache.commons.io.FileUtils.*
+import groovy.util.logging.Slf4j
 
 import javax.inject.Inject
 
@@ -29,8 +28,10 @@ import org.apache.commons.io.FilenameUtils
 import org.joda.time.Duration
 import org.stringtemplate.v4.ST
 
+import com.anrisoftware.globalpom.textmatch.tokentemplate.TokenTemplate
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.Templates
+import com.anrisoftware.resources.templates.api.TemplatesFactory
 import com.anrisoftware.sscontrol.core.debuglogging.DebugLogging
 import com.anrisoftware.sscontrol.core.debuglogging.DebugLoggingProperty
 import com.anrisoftware.sscontrol.core.service.LinuxScript
@@ -44,7 +45,9 @@ import com.anrisoftware.sscontrol.mail.postfix.linux.DurationRenderer
 import com.anrisoftware.sscontrol.mail.postfix.linux.PostfixPropertiesProvider
 import com.anrisoftware.sscontrol.mail.postfix.linux.StorageConfig
 import com.anrisoftware.sscontrol.mail.statements.User
-import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokenTemplate
+import com.anrisoftware.sscontrol.scripts.changefilemod.ChangeFileModFactory
+import com.anrisoftware.sscontrol.scripts.changefileowner.ChangeFileOwnerFactory
+import com.anrisoftware.sscontrol.scripts.unix.ScriptExecFactory
 import com.google.inject.Provider
 
 /**
@@ -53,13 +56,26 @@ import com.google.inject.Provider
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
+@Slf4j
 abstract class BasePostfixScript extends LinuxScript {
 
     @Inject
-    BasePostfixScriptLogger log
+    BasePostfixScriptLogger logg
 
     @Inject
     private DebugLoggingProperty debugLoggingProperty
+
+    @Inject
+    TemplatesFactory templatesFactory
+
+    @Inject
+    ScriptExecFactory scriptExecFactory
+
+    @Inject
+    ChangeFileModFactory changeFileModFactory
+
+    @Inject
+    ChangeFileOwnerFactory changeFileOwnerFactory
 
     /**
      * The {@link Templates} for the Postfix/base script.
@@ -137,7 +153,6 @@ abstract class BasePostfixScript extends LinuxScript {
         mailnameConfigurationTemplate = basePostfixTemplates.getResource("mailname_configuration")
         postaliasCommandTemplate = basePostfixTemplates.getResource "postalias_command"
         postmapCommandTemplate = basePostfixTemplates.getResource "postmap_command"
-        super.run()
         setupDefaultDebug()
         runDistributionSpecific()
         appendDefaultDestinations()
@@ -173,7 +188,7 @@ abstract class BasePostfixScript extends LinuxScript {
      */
     def deployStorage() {
         def provider = storages["${storageName}.${profileName}"]
-        log.checkStorageConfig provider, this, storageName, profileName
+        logg.checkStorageConfig provider, this, storageName, profileName
         def config = provider.get()
         config.script = this
         config.deployStorage()
@@ -187,7 +202,7 @@ abstract class BasePostfixScript extends LinuxScript {
             return
         }
         def provider = deliveries["${deliveryName}.${storageName}.${profileName}"]
-        log.checkDeliveryConfig provider, this, deliveryName, storageName, profileName
+        logg.checkDeliveryConfig provider, this, deliveryName, storageName, profileName
         def config = provider.get()
         config.script = this
         config.deployDelivery()
@@ -201,7 +216,7 @@ abstract class BasePostfixScript extends LinuxScript {
             return
         }
         def provider = authentications["${authName}.${storageName}.${profileName}"]
-        log.checkAuthConfig provider, this, authName, storageName, profileName
+        logg.checkAuthConfig provider, this, authName, storageName, profileName
         def config = provider.get()
         config.script = this
         config.deployAuth()
@@ -536,8 +551,12 @@ abstract class BasePostfixScript extends LinuxScript {
         def name = FilenameUtils.getName cert.cert.path
         file = new File(certsDir, name)
         FileUtils.copyURLToFile cert.cert.toURL(), file
-        changeOwner owner: rootUser, ownerGroup: rootGroup, files: file
-        changeMod mod: "o-rw", files: file
+        changeFileOwnerFactory.create(
+                log: log, owner: rootUser, ownerGroup: rootGroup, files: [file],
+                command: chownCommand, this, threads)()
+        changeFileModFactory.create(
+                log: log, mod: "o-rw", files: [file],
+                command: chmodCommand, this, threads)()
         return file
     }
 
@@ -568,8 +587,12 @@ abstract class BasePostfixScript extends LinuxScript {
         def name = FilenameUtils.getName cert.key.path
         file = new File(certKeysDir, name)
         FileUtils.copyURLToFile cert.key.toURL(), file
-        changeOwner owner: rootUser, ownerGroup: rootGroup, files: file
-        changeMod mod: "o-rw", files: file
+        changeFileOwnerFactory.create(
+                log: log, owner: rootUser, ownerGroup: rootGroup, files: [file],
+                command: chownCommand, this, threads)()
+        changeFileModFactory.create(
+                log: log, mod: "o-rw", files: [file],
+                command: chmodCommand, this, threads)()
         return file
     }
 
@@ -600,8 +623,12 @@ abstract class BasePostfixScript extends LinuxScript {
         def name = FilenameUtils.getName cert.ca.path
         file = new File(certsDir, name)
         FileUtils.copyURLToFile cert.ca.toURL(), file
-        changeOwner owner: rootUser, ownerGroup: rootGroup, files: file
-        changeMod mod: "o-rw", files: file
+        changeFileOwnerFactory.create(
+                log: log, owner: rootUser, ownerGroup: rootGroup, files: [file],
+                command: chownCommand, this, threads)()
+        changeFileModFactory.create(
+                log: log, mod: "o-rw", files: [file],
+                command: chmodCommand, this, threads)()
         return file
     }
 
@@ -622,8 +649,12 @@ abstract class BasePostfixScript extends LinuxScript {
         def name = FilenameUtils.getName cert.pem.path
         file = new File(certsDir, name)
         FileUtils.copyURLToFile cert.pem.toURL(), file
-        changeOwner owner: rootUser, ownerGroup: rootGroup, files: file
-        changeMod mod: "o-rw", files: file
+        changeFileOwnerFactory.create(
+                log: log, owner: rootUser, ownerGroup: rootGroup, files: [file],
+                command: chownCommand, this, threads)()
+        changeFileModFactory.create(
+                log: log, mod: "o-rw", files: [file],
+                command: chmodCommand, this, threads)()
         return file
     }
 
@@ -1368,8 +1399,12 @@ abstract class BasePostfixScript extends LinuxScript {
      * @see #getPostmapCommand()
      */
     void rehashFile(File file) {
-        def worker = scriptCommandFactory.create(postmapCommandTemplate, "postmapCommand", postmapCommand, "file", file)()
-        log.rehashFileDone this, file, worker
+        def task = scriptExecFactory.create(
+                log: log,
+                command: postmapCommand,
+                file: file,
+                this, threads, postmapCommandTemplate, "postmap")()
+        logg.rehashFileDone this, file, task
     }
 
     /**
@@ -1378,8 +1413,12 @@ abstract class BasePostfixScript extends LinuxScript {
      * @see #getPostmapCommand()
      */
     void realiasFile(File file) {
-        def worker = scriptCommandFactory.create(postaliasCommandTemplate, "command", postaliasCommand, "file", file)()
-        log.realiasFileDone this, file, worker
+        def task = scriptExecFactory.create(
+                log: log,
+                command: postaliasCommand,
+                file: file,
+                this, threads, postaliasCommandTemplate, "postalias")()
+        logg.realiasFileDone this, file, task
     }
 
     /**

@@ -58,7 +58,6 @@ class MysqlPostfixTest extends UbuntuTestUtil {
         assertFileContent domainsExpected.asFile(tmpdir), domainsExpected
         assertFileContent aptitudeOut.asFile(tmpdir), aptitudeOut
         assertFileContent mysqlOut.asFile(tmpdir), mysqlOut
-        assertStringContent mysqlIn.replaced(tmpdir, tmpdir, "/tmp"), mysqlIn.toString()
         assertFileContent aliases.asFile(tmpdir), aliases
         assertFileContent useraddOut.asFile(tmpdir), useraddOut
         assertFileContent usermodOut.asFile(tmpdir), usermodOut
@@ -86,7 +85,6 @@ class MysqlPostfixTest extends UbuntuTestUtil {
         log.info "Run service again to ensure that configuration is not set double."
         registry.allServices.each { it.call() }
 
-        assertStringContent mysqlResetDomainsIn.replaced(tmpdir, tmpdir, "/tmp"), mysqlResetDomainsIn.toString()
         assertStringContent mysqlResetDomainsOut.replaced(tmpdir, tmpdir, "/tmp"), mysqlResetDomainsOut.toString()
     }
 }

@@ -25,12 +25,15 @@ import org.junit.BeforeClass
 import org.junit.Rule
 import org.junit.rules.TemporaryFolder
 
+import com.anrisoftware.globalpom.threads.api.Threads
+import com.anrisoftware.globalpom.threads.properties.PropertiesThreadsFactory
 import com.anrisoftware.sscontrol.core.api.ServiceLoader as SscontrolServiceLoader
 import com.anrisoftware.sscontrol.core.api.ServiceLoaderFactory
 import com.anrisoftware.sscontrol.core.api.ServicesRegistry
 import com.anrisoftware.sscontrol.core.modules.CoreModule
 import com.anrisoftware.sscontrol.core.modules.CoreResourcesModule
 import com.anrisoftware.sscontrol.core.service.ServiceModule
+import com.anrisoftware.sscontrol.core.service.ThreadsPropertiesProvider
 import com.google.inject.Guice
 import com.google.inject.Injector
 
@@ -42,46 +45,63 @@ import com.google.inject.Injector
  */
 class UbuntuTestUtil {
 
-	static Injector injector
+    static Injector injector
 
-	static ServiceLoaderFactory loaderFactory
+    static ServiceLoaderFactory loaderFactory
 
-	@Rule
-	public TemporaryFolder tmp = new TemporaryFolder()
+    static ThreadsPropertiesProvider threadsPropertiesProvider
 
-	ServicesRegistry registry
+    static PropertiesThreadsFactory threadsFactory
 
-	SscontrolServiceLoader loader
+    static Threads threads
 
-	File tmpdir
+    @Rule
+    public TemporaryFolder tmp = new TemporaryFolder()
 
-	Map variables
+    ServicesRegistry registry
 
-	@Before
-	void createTemp() {
-		tmpdir = tmp.newFolder("postfix-ubuntu-10-04")
-		variables = [tmp: tmpdir.absoluteFile]
-	}
+    SscontrolServiceLoader loader
 
-	@Before
-	void createRegistry() {
-		registry = injector.getInstance ServicesRegistry
-		loader = loaderFactory.create registry, variables
-		loader.setParent injector
-	}
+    File tmpdir
 
-	@BeforeClass
-	static void createFactories() {
-		injector = createInjector()
-		loaderFactory = injector.getInstance ServiceLoaderFactory
-	}
+    Map variables
 
-	static Injector createInjector() {
-		Guice.createInjector(new CoreModule(), new CoreResourcesModule(), new ServiceModule())
-	}
+    @Before
+    void createTemp() {
+        tmpdir = tmp.newFolder("postfix-ubuntu-10-04")
+        variables = [tmp: tmpdir.absoluteFile]
+    }
 
-	@BeforeClass
-	static void setupToStringStyle() {
-		toStringStyle
-	}
+    @Before
+    void createRegistry() {
+        registry = injector.getInstance ServicesRegistry
+        loader = loaderFactory.create registry, variables
+        loader.setParent injector
+        loader.setThreads threads
+    }
+
+    @BeforeClass
+    static void createFactories() {
+        injector = createInjector()
+        loaderFactory = injector.getInstance ServiceLoaderFactory
+        threadsPropertiesProvider = injector.getInstance ThreadsPropertiesProvider
+        threadsFactory = injector.getInstance PropertiesThreadsFactory
+        threads = createThreads()
+    }
+
+    static createThreads() {
+        def threads = threadsFactory.create();
+        threads.setProperties(threadsPropertiesProvider.get());
+        threads.setName("script");
+        return threads
+    }
+
+    static Injector createInjector() {
+        Guice.createInjector(new CoreModule(), new CoreResourcesModule(), new ServiceModule())
+    }
+
+    @BeforeClass
+    static void setupToStringStyle() {
+        toStringStyle
+    }
 }

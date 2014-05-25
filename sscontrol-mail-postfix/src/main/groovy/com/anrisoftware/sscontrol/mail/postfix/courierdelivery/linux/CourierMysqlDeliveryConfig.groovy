@@ -20,15 +20,18 @@ package com.anrisoftware.sscontrol.mail.postfix.courierdelivery.linux
 
 import static java.util.regex.Pattern.*
 import static org.apache.commons.io.FileUtils.*
+import groovy.util.logging.Slf4j
 
 import javax.inject.Inject
 
+import com.anrisoftware.globalpom.textmatch.tokentemplate.TokenTemplate
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.Templates
+import com.anrisoftware.resources.templates.api.TemplatesFactory
 import com.anrisoftware.sscontrol.mail.api.MailService
 import com.anrisoftware.sscontrol.mail.postfix.linux.DeliveryConfig
 import com.anrisoftware.sscontrol.mail.postfix.script.linux.BaseDelivery
-import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokenTemplate
+import com.anrisoftware.sscontrol.scripts.unix.InstallPackagesFactory
 
 /**
  * Courier/Mysql delivery.
@@ -36,12 +39,19 @@ import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokenTemplate
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
+@Slf4j
 abstract class CourierMysqlDeliveryConfig extends BaseDelivery implements DeliveryConfig {
 
     public static final String NAME = "courier.mysql"
 
     @Inject
-    CourierMysqlDeliveryConfigLogger log
+    private CourierMysqlDeliveryConfigLogger logg
+
+    @Inject
+    TemplatesFactory templatesFactory
+
+    @Inject
+    InstallPackagesFactory installPackagesFactory
 
     /**
      * The {@link Templates} for the script.
@@ -65,11 +75,22 @@ abstract class CourierMysqlDeliveryConfig extends BaseDelivery implements Delive
         authConfigTemplate = courierTemplates.getResource "authconfig"
         imapdConfigTemplate = courierTemplates.getResource "imapdconfig"
         imapdSslConfigTemplate = courierTemplates.getResource "imapdsslconfig"
-        installPackages courierPackages
+        installPackages()
         deployAuthdaemonConfig()
         deployAuthmysqlConfig()
         deployImapdConfig()
         deployImapdSslConfig()
+    }
+
+    /**
+     * Installs the packages for Courier/Mysql delivery.
+     */
+    void installPackages() {
+        installPackagesFactory.create(
+                log: log,
+                command: script.installCommand,
+                packages: courierPackages,
+                this, threads)()
     }
 
     /**
@@ -81,7 +102,7 @@ abstract class CourierMysqlDeliveryConfig extends BaseDelivery implements Delive
         config << debugLoggingConfig(service)
         def current = currentConfiguration authdaemonFile
         deployConfiguration configurationTokens(), current, config, authdaemonFile
-        log.configurationDeployed this, authdaemonFile
+        logg.configurationDeployed this, authdaemonFile
     }
 
     def moduleListConfig() {
@@ -118,7 +139,7 @@ abstract class CourierMysqlDeliveryConfig extends BaseDelivery implements Delive
         conf << mysqlWhereClauseConfig()
         def current = currentConfiguration authmysqlFile
         deployConfiguration configurationTokens(), current, conf, authmysqlFile
-        log.configurationDeployed this, authmysqlFile
+        logg.configurationDeployed this, authmysqlFile
     }
 
     def mysqlServerConfig(MailService service) {
@@ -219,7 +240,7 @@ abstract class CourierMysqlDeliveryConfig extends BaseDelivery implements Delive
         conf << imapCapabilityConfig()
         def current = currentConfiguration imapdFile
         deployConfiguration configurationTokens(), current, conf, imapdFile
-        log.configurationDeployed this, imapdFile
+        logg.configurationDeployed this, imapdFile
     }
 
     def imapCapabilityConfig() {
@@ -251,7 +272,7 @@ abstract class CourierMysqlDeliveryConfig extends BaseDelivery implements Delive
         conf << tlsRequiredConfig()
         def current = currentConfiguration imapdSslFile
         deployConfiguration configurationTokens(), current, conf, imapdSslFile
-        log.configurationDeployed this, imapdSslFile
+        logg.configurationDeployed this, imapdSslFile
     }
 
     def certFileConfig() {

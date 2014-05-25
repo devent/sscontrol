@@ -18,6 +18,8 @@
  */
 package com.anrisoftware.sscontrol.mail.service;
 
+import java.util.concurrent.ExecutorService;
+
 import org.mangosdk.spi.ProviderFor;
 
 import com.anrisoftware.sscontrol.core.api.ProfileService;
@@ -35,30 +37,38 @@ import com.google.inject.Module;
 @ProviderFor(ServiceFactory.class)
 public class MailFactory implements ServiceFactory {
 
-	/**
-	 * The name of the mail service.
-	 */
-	public static final String NAME = "mail";
+    /**
+     * The name of the mail service.
+     */
+    public static final String NAME = "mail";
 
-	private static final Module[] MODULES = new Module[] { new MailModule() };
+    private static final Module[] MODULES = new Module[] { new MailModule() };
 
-	private Injector injector;
+    private Injector injector;
 
-	@Override
-	public String getName() {
-		return NAME;
-	}
+    private ExecutorService threads;
 
-	@Override
-	public Service create(ProfileService profile) {
-		MailServiceImpl service;
-		service = injector.getInstance(MailServiceImpl.class);
-		service.setProfile(profile);
-		return service;
-	}
+    @Override
+    public String getName() {
+        return NAME;
+    }
 
-	@Override
-	public void setParent(Object parent) {
-		this.injector = ((Injector) parent).createChildInjector(MODULES);
-	}
+    @Override
+    public Service create(ProfileService profile) {
+        MailServiceImpl service;
+        service = injector.getInstance(MailServiceImpl.class);
+        service.setProfile(profile);
+        service.setThreads(threads);
+        return service;
+    }
+
+    @Override
+    public void setParent(Object parent) {
+        this.injector = ((Injector) parent).createChildInjector(MODULES);
+    }
+
+    @Override
+    public void setThreads(ExecutorService threads) {
+        this.threads = threads;
+    }
 }

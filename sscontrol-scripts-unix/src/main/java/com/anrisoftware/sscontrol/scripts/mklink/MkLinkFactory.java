@@ -16,37 +16,39 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-scripts-unix. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.scripts.repositoryaptenabled;
+package com.anrisoftware.sscontrol.scripts.mklink;
 
+import java.io.File;
+import java.util.List;
 import java.util.Map;
 
 import com.anrisoftware.globalpom.threads.api.Threads;
 
 /**
- * Factory to create the check if the repository was enabled.
+ * Factory to create links to files.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-public interface RepositoryAptEnabledFactory {
+public interface MkLinkFactory {
 
     /**
-     * Create the check if the repository was enabled.
+     * Creates to links to files.
      * 
      * @param args
      *            the {@link Map} arguments:
      *            <ul>
-     *            <li>{@code repository} the repository name that is checked,
-     *            for example {@code "universe".}
+     *            <li>{@code command} the create link command, for example
+     *            {@code "/usr/bin/ln".}
      * 
-     *            <li>{@code packagingType} the packaging type of the
-     *            distributions, for example {@code "apt".}
+     *            <li>{@code files} the source {@link File} or {@link List} of
+     *            files, each source file must have a corresponding target.
      * 
-     *            <li>{@code packagesSourcesFile} the packages source file of
-     *            the distribution, for example {@code "/etc/apt/sources.list".}
+     *            <li>{@code targets} the target {@link File} or {@link List} of
+     *            files.
      * 
-     *            <li>{@code distributionName} the name of the distribution, for
-     *            example {@code "lucid".}
+     *            <li>{@code override} optionally, set to {@code true} to
+     *            override the targets.
      *            </ul>
      * 
      * @param parent
@@ -55,8 +57,7 @@ public interface RepositoryAptEnabledFactory {
      * @param threads
      *            the {@link Threads} pool.
      * 
-     * @return the {@link RepositoryAptEnabled}.
+     * @return the {@link MkLink}.
      */
-    RepositoryAptEnabled create(Map<String, Object> args, Object parent,
-            Threads threads);
+    MkLink create(Map<String, Object> args, Object parent, Threads threads);
 }

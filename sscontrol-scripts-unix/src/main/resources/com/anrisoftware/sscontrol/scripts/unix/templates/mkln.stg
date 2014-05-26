@@ -1,7 +1,5 @@
 unix(args) ::= <<
-#!/bin/sh
 <args.files,args.targets:{file,target|<args.command> <unixOverride(args)> -s <file> <target><\n>}>
-
 >>
 
 unixOverride(args) ::= <%

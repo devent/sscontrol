@@ -1,0 +1,2 @@
+-s /tmp/tmp/source_a /tmp/tmp/source_a_target
+-s /tmp/tmp/source_b /tmp/tmp/source_b_target

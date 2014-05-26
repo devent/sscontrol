@@ -365,35 +365,6 @@ abstract class LinuxScript extends Script {
     }
 
     /**
-     * Link files and directories.
-     *
-     * @param args
-     * 			  the arguments:
-     * <ul>
-     * <li>{@code files:} the source {@link File} or files.
-     * <li>{@code targets:} the target {@link File} or files;
-     * <li>{@code system:} the system of the server, defaults to {@code unix};
-     * <li>{@code command:} the link command, defaults to {@link #getLinkCommand()}.
-     * <li>{@code override:} set to {@code true} to override existing links.
-     * </ul>
-     *
-     * @return the {@link ProcessTask} process task.
-     */
-    def link(Map args) {
-        args.system = args.containsKey("system") ? args.system : "unix"
-        args.command = args.containsKey("command") ? args.command : linkCommand
-        log.checkLinkArgs args
-        def template = commandTemplates.getResource("mkln")
-        def line = scriptCommandLineFactory.create(args.system, template).addSub("args", args)
-        def script = scriptCommandExecFactory.create(commandExecFactory)
-        script.commandError = errorLogCommandOutputFactory.create(log, line)
-        script.commandOutput = debugLogCommandOutputFactory.create(log, line)
-        def task = script.exec(line).get()
-        log.linkFilesDone this, task, args
-        return task
-    }
-
-    /**
      * Returns the file link command.
      *
      * <ul>

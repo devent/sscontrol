@@ -622,7 +622,7 @@ abstract class LinuxScript extends Script {
     }
 
     /**
-     * Returns the zcat command, for example {@code "/bin/zcat"}.
+     * Returns the <i>zcat</i> command, for example {@code "/bin/zcat"}.
      *
      * <ul>
      * <li>property key {@code zcat_command}</li>
@@ -635,43 +635,7 @@ abstract class LinuxScript extends Script {
     }
 
     /**
-     * Checks if the listed ports are already in use by a service.
-     *
-     * @param ports
-     *            the ports.
-     *
-     * @return the {@link Map} of service names that are using the found ports.
-     */
-    Map checkPortsInUse(def ports) {
-        def command = listUsedPorts()
-        def lines = StringUtils.split command.out, "\n"
-        def found = [:]
-        lines.each { val ->
-            def port = ports.find { port -> StringUtils.contains(val, ":$port ") }
-            port ? parsePortService(found, port, val) : false
-        }
-        return found
-    }
-
-    Map parsePortService(Map map, int port, String line) {
-        def split = StringUtils.split line, " "
-        def service = split.find { it =~ /\d+\/.*/ }
-        service = StringUtils.split(service, "/")[-1]
-        map[port] = service
-        return map
-    }
-
-    /**
-     * Execute the command to list ports in use.
-     *
-     * @return the {@link ProcessTask} process task.
-     */
-    def listUsedPorts() {
-        execCommandFactory.create("$netstatCommand -pnl")()
-    }
-
-    /**
-     * Returns the {@code "netstat"} command, for example {@code "/bin/netstat"}.
+     * Returns the <i>netstat</i> command, for example {@code "/bin/netstat"}.
      *
      * <ul>
      * <li>property key {@code netstat_command}</li>

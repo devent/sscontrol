@@ -1,0 +1,5 @@
+netstat(args) ::= <<
+<! - args.command - !>
+<args.command> -pnl
+
+>>

@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-scripts-unix. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.scripts.repositoryaptenabled;
+package com.anrisoftware.sscontrol.scripts.findusedport;
 
 import java.util.Map;
 
@@ -33,14 +33,14 @@ import com.anrisoftware.sscontrol.scripts.unix.AbstractProcessExec;
 import com.google.inject.assistedinject.Assisted;
 
 /**
- * Starts the process to determine if the repository was enabled.
+ * Starts the <i>netstat</i> process to list the used ports and services.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class RepositoryEnabledProcess extends AbstractProcessExec {
+class FindUsedPortProcess extends AbstractProcessExec {
 
-    private static final String TEMPLATE_NAME = "list_repositories";
+    private static final String TEMPLATE_NAME = "listports";
 
     private static final String TEMPLATES_NAME = "ScriptsUnixTemplates";
 
@@ -52,10 +52,10 @@ class RepositoryEnabledProcess extends AbstractProcessExec {
     private TemplatesFactory templatesFactory;
 
     /**
-     * @see RepositoryEnabledProcessFactory#create(Threads, Map)
+     * @see FindUsedPortProcessFactory#create(Threads, Map)
      */
     @Inject
-    RepositoryEnabledProcess(@Assisted Threads threads,
+    FindUsedPortProcess(@Assisted Threads threads,
             @Assisted Map<String, Object> args) {
         super(threads, args);
         this.args = args;
@@ -69,7 +69,7 @@ class RepositoryEnabledProcess extends AbstractProcessExec {
 
     @Override
     protected CommandLine createLine(ScriptCommandLineFactory commandLineFactory) {
-        String name = "aptRepository";
+        String name = "netstat";
         TemplateResource template = templatesFactory.create(TEMPLATES_NAME)
                 .getResource(TEMPLATE_NAME);
         return commandLineFactory.create(name, template).addSub(ARGS, args);

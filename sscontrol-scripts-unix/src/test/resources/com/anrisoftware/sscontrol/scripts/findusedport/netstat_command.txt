@@ -1,0 +1,32 @@
+cat <<EOF
+Active Internet connections (only servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name
+tcp        0      0 0.0.0.0:111             0.0.0.0:*               LISTEN      701/rpcbind
+tcp        0      0 127.0.0.1:53            0.0.0.0:*               LISTEN      2539/pdnsd
+tcp        0      0 127.0.0.1:631           0.0.0.0:*               LISTEN      2977/cupsd
+tcp        0      0 127.0.0.1:25            0.0.0.0:*               LISTEN      9897/sendmail: acce
+tcp6       0      0 127.0.0.1:59565         :::*                    LISTEN      3219/java
+tcp6       0      0 :::111                  :::*                    LISTEN      701/rpcbind
+tcp6       0      0 ::1:631                 :::*                    LISTEN      2977/cupsd
+udp        0      0 127.0.0.1:53            0.0.0.0:*                           2539/pdnsd
+udp        0      0 0.0.0.0:68              0.0.0.0:*                           9856/dhclient
+udp        0      0 0.0.0.0:111             0.0.0.0:*                           701/rpcbind
+udp        0      0 0.0.0.0:123             0.0.0.0:*                           666/chronyd
+udp        0      0 127.0.0.1:323           0.0.0.0:*                           666/chronyd
+udp        0      0 0.0.0.0:57973           0.0.0.0:*                           652/avahi-daemon: r
+udp        0      0 0.0.0.0:827             0.0.0.0:*                           701/rpcbind
+udp        0      0 0.0.0.0:5353            0.0.0.0:*                           652/avahi-daemon: r
+udp        0      0 0.0.0.0:64925           0.0.0.0:*                           9856/dhclient
+udp6       0      0 :::111                  :::*                                701/rpcbind
+udp6       0      0 :::123                  :::*                                666/chronyd
+udp6       0      0 ::1:323                 :::*                                666/chronyd
+udp6       0      0 :::827                  :::*                                701/rpcbind
+udp6       0      0 :::5182                 :::*                                9856/dhclient
+raw        0      0 0.0.0.0:1               0.0.0.0:*               7           12698/VirtualBox
+Active UNIX domain sockets (only servers)
+Proto RefCnt Flags       Type       State         I-Node   PID/Program name     Path
+unix  2      [ ACC ]     STREAM     LISTENING     26883    2879/pulseaudio      /tmp/.esd-1000/socket
+unix  2      [ ACC ]     STREAM     LISTENING     25065    2900/dbus-daemon     @/tmp/dbus-EbvIG4YESD
+unix  2      [ ACC ]     STREAM     LISTENING     23978    2774/ksmserver       @/tmp/.ICE-unix/2774
+unix  2      [ ACC ]     STREAM     LISTENING     26886    2879/pulseaudio      /run/user/1000/pulse/native
+EOF

@@ -18,6 +18,7 @@
  */
 package com.anrisoftware.sscontrol.scripts.enableaptrepository;
 
+import java.nio.charset.Charset;
 import java.util.Map;
 
 import com.anrisoftware.globalpom.threads.api.Threads;
@@ -39,14 +40,17 @@ public interface EnableAptRepositoryFactory {
      *            <li>{@code repository} the repository name that is checked,
      *            for example {@code "universe".}
      * 
-     *            <li>{@code packagingType} the packaging type of the
-     *            distributions, for example {@code "apt".}
-     * 
      *            <li>{@code packagesSourcesFile} the packages source file of
      *            the distribution, for example {@code "/etc/apt/sources.list".}
      * 
      *            <li>{@code distributionName} the name of the distribution, for
      *            example {@code "lucid".}
+     * 
+     *            <li>{@code repositoryString} the repository {@link String},
+     *            for example
+     *            {@code "deb http://archive.ubuntu.com/ubuntu <distributionName> <repository>".}
+     * 
+     *            <li>{@code charset} the {@link Charset} of the sources file.
      *            </ul>
      * 
      * @param parent

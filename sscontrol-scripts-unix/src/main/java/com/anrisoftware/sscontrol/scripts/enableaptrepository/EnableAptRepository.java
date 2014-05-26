@@ -69,6 +69,8 @@ public class EnableAptRepository implements Callable<EnableAptRepository> {
     @Inject
     private RepositoryAptEnabledFactory repositoryEnabledFactory;
 
+    private boolean enabled;
+
     /**
      * @see EnableAptRepositoryFactory#create(Map, Object, Threads)
      */
@@ -85,6 +87,16 @@ public class EnableAptRepository implements Callable<EnableAptRepository> {
         this.repository = log.repository(args, parent);
         this.repositoryString = log.repositoryString(args, parent);
         this.charset = log.charset(args, parent);
+        this.enabled = false;
+    }
+
+    /**
+     * Returns if the repository was enabled.
+     * 
+     * @return {@code true} if the repository was enabled.
+     */
+    public boolean isEnabled() {
+        return enabled;
     }
 
     @Override
@@ -95,6 +107,7 @@ public class EnableAptRepository implements Callable<EnableAptRepository> {
             String str = repositoryString();
             write(packagesSourcesFile, format(REP_FORMAT, str), charset, true);
             log.enableRepositoryDone(parent, repository);
+            this.enabled = true;
         }
         return this;
     }

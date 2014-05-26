@@ -66,6 +66,7 @@ class EnableAptRepositoryTest {
                 packagesSourcesFile: file,
                 this, threads)()
         assertStringContent fileToString(file), IOUtils.toString(sourcesListExpectedResource)
+        assert repositoryEnabled.enabled == true
     }
 
     @Test
@@ -79,6 +80,7 @@ class EnableAptRepositoryTest {
                 repositoryString: "deb http://archive.ubuntu.com/ubuntu <distributionName> <repository>",
                 packagesSourcesFile: file,
                 this, threads)()
+        assert repositoryEnabled.enabled == false
     }
 
     static Injector injector

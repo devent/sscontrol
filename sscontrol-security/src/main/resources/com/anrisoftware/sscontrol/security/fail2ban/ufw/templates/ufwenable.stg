@@ -1,0 +1,4 @@
+ufwenable(args) ::= <<
+<args.command> enable
+
+>>

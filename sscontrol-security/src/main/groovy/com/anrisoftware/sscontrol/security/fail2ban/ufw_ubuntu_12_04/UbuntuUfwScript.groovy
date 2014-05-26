@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Erwin Müller <erwin.mueller@deventm.org>
+ * Copyright 2013-2014 Erwin Müller <erwin.mueller@deventm.org>
  *
  * This file is part of sscontrol-security.
  *
@@ -18,32 +18,50 @@
  */
 package com.anrisoftware.sscontrol.security.fail2ban.ufw_ubuntu_12_04
 
+import groovy.util.logging.Slf4j
+
 import javax.inject.Inject
 
 import com.anrisoftware.propertiesutils.ContextProperties
+import com.anrisoftware.sscontrol.scripts.unix.InstallPackagesFactory
 import com.anrisoftware.sscontrol.security.fail2ban.ufw.UfwFail2BanScript
 import com.anrisoftware.sscontrol.security.services.Service
 
 /**
- * Ufw firewall fail2ban script for Ubuntu 12.04.
+ * <i>Ufw</i> firewall <i>fail2ban</i> script for <i>Ubuntu 12.04.</i>
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
+@Slf4j
 class UbuntuUfwScript extends UfwFail2BanScript {
 
     @Inject
     private UbuntuPropertiesProvider ubuntuPropertiesProvider
 
+    @Inject
+    InstallPackagesFactory installPackagesFactory
+
     @Override
     void beforeConfiguration() {
-        installPackages packages
+        installPackages()
         super.beforeConfiguration()
     }
 
     @Override
     void deployFirewallScript(Service service) {
         super.deployFirewallScript service
+    }
+
+    /**
+     * Installs the <i>UFW</i> packages.
+     */
+    void installPackages() {
+        installPackagesFactory.create(
+                log: log,
+                command: installCommand,
+                packages: packages,
+                this, threads)()
     }
 
     /**

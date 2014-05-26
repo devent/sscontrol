@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Erwin Müller <erwin.mueller@deventm.org>
+ * Copyright 2013-2014 Erwin Müller <erwin.mueller@deventm.org>
  *
  * This file is part of sscontrol-security.
  *
@@ -27,10 +27,10 @@ import static com.anrisoftware.sscontrol.security.fail2ban.ufw.UfwFail2BanScript
 
 import java.io.File;
 
+import com.anrisoftware.globalpom.exec.api.ProcessTask;
 import com.anrisoftware.globalpom.log.AbstractLogger;
 import com.anrisoftware.sscontrol.core.service.LinuxScript;
 import com.anrisoftware.sscontrol.security.services.Service;
-import com.anrisoftware.sscontrol.workers.command.exec.ExecCommandWorker;
 
 /**
  * Logging for {@link UfwFail2BanScript}.
@@ -42,11 +42,11 @@ class UfwFail2BanScriptLogger extends AbstractLogger {
 
     enum _ {
 
-        enabled_firewall_trace("Enable firewall for {}: {}."),
+        enabled_firewall_trace("Enable firewall for {}, {}."),
 
-        enabled_firewall_debug("Enable firewall for {}, exit code {}."),
+        enabled_firewall_debug("Enable firewall for {}."),
 
-        enabled_firewall_info("Enable firewall for service '{}', exit code {}."),
+        enabled_firewall_info("Enable firewall for service '{}'."),
 
         action_file_created_trace(
                 "Action file '{}' created for {} for {}:\n>>>\n{}<<<"),
@@ -75,13 +75,13 @@ class UfwFail2BanScriptLogger extends AbstractLogger {
         super(UfwFail2BanScript.class);
     }
 
-    void enabledFirewall(LinuxScript script, ExecCommandWorker worker) {
+    void enabledFirewall(LinuxScript script, ProcessTask task) {
         if (isTraceEnabled()) {
-            trace(enabled_firewall_trace, script, worker);
+            trace(enabled_firewall_trace, script, task);
         } else if (isDebugEnabled()) {
-            debug(enabled_firewall_debug, script, worker.getExitCode());
+            debug(enabled_firewall_debug, script);
         } else {
-            info(enabled_firewall_info, script.getName(), worker.getExitCode());
+            info(enabled_firewall_info, script.getName());
         }
     }
 

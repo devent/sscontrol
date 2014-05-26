@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Erwin Müller <erwin.mueller@deventm.org>
+ * Copyright 2013-2014 Erwin Müller <erwin.mueller@deventm.org>
  *
  * This file is part of sscontrol-security.
  *
@@ -17,6 +17,8 @@
  * along with sscontrol-security. If not, see <http://www.gnu.org/licenses/>.
  */
 package com.anrisoftware.sscontrol.security.service;
+
+import java.util.concurrent.ExecutorService;
 
 import org.mangosdk.spi.ProviderFor;
 
@@ -44,6 +46,8 @@ public class SecurityFactory implements ServiceFactory {
 
     private Injector injector;
 
+    private ExecutorService threads;
+
     @Override
     public String getName() {
         return NAME;
@@ -54,11 +58,17 @@ public class SecurityFactory implements ServiceFactory {
         SecurityServiceImpl service;
         service = injector.getInstance(SecurityServiceImpl.class);
         service.setProfile(profile);
+        service.setThreads(threads);
         return service;
     }
 
     @Override
     public void setParent(Object parent) {
         this.injector = ((Injector) parent).createChildInjector(MODULES);
+    }
+
+    @Override
+    public void setThreads(ExecutorService threads) {
+        this.threads = threads;
     }
 }

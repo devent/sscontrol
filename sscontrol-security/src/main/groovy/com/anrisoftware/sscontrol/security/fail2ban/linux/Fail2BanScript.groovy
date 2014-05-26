@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Erwin Müller <erwin.mueller@deventm.org>
+ * Copyright 2013-2014 Erwin Müller <erwin.mueller@deventm.org>
  *
  * This file is part of sscontrol-security.
  *
@@ -25,8 +25,10 @@ import javax.inject.Inject
 import org.apache.commons.io.FileUtils
 import org.joda.time.Duration
 
+import com.anrisoftware.globalpom.textmatch.tokentemplate.TokenTemplate
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.Templates
+import com.anrisoftware.resources.templates.api.TemplatesFactory
 import com.anrisoftware.sscontrol.core.debuglogging.DebugLoggingProperty
 import com.anrisoftware.sscontrol.core.service.LinuxScript
 import com.anrisoftware.sscontrol.security.banning.Backend
@@ -34,7 +36,6 @@ import com.anrisoftware.sscontrol.security.banning.BanningFactory
 import com.anrisoftware.sscontrol.security.banning.Type
 import com.anrisoftware.sscontrol.security.ignoring.IgnoringFactory
 import com.anrisoftware.sscontrol.security.services.Service
-import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokenTemplate
 
 /**
  * fail2ban script.
@@ -48,7 +49,10 @@ abstract class Fail2BanScript extends LinuxScript {
     private Fail2BanScriptLogger log
 
     @Inject
-    private Map<String, Fail2BanFirewall> fail2BanFirewalls;
+    private Map<String, Fail2BanFirewall> fail2BanFirewalls
+
+    @Inject
+    TemplatesFactory templatesFactory
 
     @Inject
     DebugLoggingProperty debugLoggingProperty
@@ -71,7 +75,6 @@ abstract class Fail2BanScript extends LinuxScript {
 
     @Override
     def run() {
-        super.run()
         this.scriptTemplates = templatesFactory.create "Fail2BanScript"
         this.configTemplate = scriptTemplates.getResource "config"
         setupDefaultLogging()

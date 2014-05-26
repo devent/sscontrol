@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Erwin Müller <erwin.mueller@deventm.org>
+ * Copyright 2013-2014 Erwin Müller <erwin.mueller@deventm.org>
  *
  * This file is part of sscontrol-security.
  *
@@ -19,6 +19,7 @@
 package com.anrisoftware.sscontrol.security.fail2ban.ubuntu_10_04;
 
 import com.anrisoftware.globalpom.initfileparser.InitFileParserModule;
+import com.anrisoftware.sscontrol.scripts.unix.UnixScriptsModule;
 import com.anrisoftware.sscontrol.security.fail2ban.ufw_ubuntu_10_04.UfwFail2BanUbuntu_10_04_Module;
 import com.google.inject.AbstractModule;
 
@@ -32,6 +33,8 @@ public class UbuntuModule extends AbstractModule {
 
     @Override
     protected void configure() {
+        install(new UnixScriptsModule());
+        install(new UnixScriptsModule.ExecCommandModule());
         install(new InitFileParserModule());
         install(new UfwFail2BanUbuntu_10_04_Module());
     }

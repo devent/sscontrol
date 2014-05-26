@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Erwin Müller <erwin.mueller@deventm.org>
+ * Copyright 2013-2014 Erwin Müller <erwin.mueller@deventm.org>
  *
  * This file is part of sscontrol-security.
  *
@@ -18,21 +18,32 @@
  */
 package com.anrisoftware.sscontrol.security.fail2ban.ubuntu_10_04
 
+import groovy.util.logging.Slf4j
+
 import javax.inject.Inject
 
 import com.anrisoftware.propertiesutils.ContextProperties
+import com.anrisoftware.sscontrol.scripts.unix.InstallPackagesFactory
+import com.anrisoftware.sscontrol.scripts.unix.RestartServicesFactory
 import com.anrisoftware.sscontrol.security.fail2ban.linux.Fail2BanScript
 
 /**
- * fail2ban script for Ubuntu 10.04.
+ * <i>fail2ban</i> script for <i>Ubuntu 10.04.</i>
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
+@Slf4j
 class UbuntuScript extends Fail2BanScript {
 
     @Inject
     private UbuntuPropertiesProvider ubuntuPropertiesProvider
+
+    @Inject
+    InstallPackagesFactory installPackagesFactory
+
+    @Inject
+    RestartServicesFactory restartServicesFactory
 
     @Override
     void beforeConfiguration() {
@@ -43,6 +54,28 @@ class UbuntuScript extends Fail2BanScript {
     Object run() {
         super.run();
         restartServices()
+    }
+
+    /**
+     * Installs the <i>fail2ban</i> packages.
+     */
+    void installPackages() {
+        installPackagesFactory.create(
+                log: log,
+                command: installCommand,
+                packages: packages,
+                this, threads)()
+    }
+
+    /**
+     * Restarts the <i>fail2ban</i> services.
+     */
+    void restartServices() {
+        restartServicesFactory.create(
+                log: log,
+                command: restartCommand,
+                services: restartServices,
+                this, threads)()
     }
 
     @Override

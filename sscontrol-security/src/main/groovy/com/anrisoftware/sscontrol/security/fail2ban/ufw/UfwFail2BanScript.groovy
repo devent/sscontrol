@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Erwin Müller <erwin.mueller@deventm.org>
+ * Copyright 2013-2014 Erwin Müller <erwin.mueller@deventm.org>
  *
  * This file is part of sscontrol-security.
  *
@@ -19,6 +19,7 @@
 package com.anrisoftware.sscontrol.security.fail2ban.ufw
 
 import static org.apache.commons.io.FileUtils.*
+import groovy.util.logging.Slf4j
 
 import javax.inject.Inject
 
@@ -32,13 +33,16 @@ import com.anrisoftware.globalpom.initfileparser.InitFileParserFactory
 import com.anrisoftware.globalpom.initfileparser.Section
 import com.anrisoftware.globalpom.initfileparser.SectionFactory
 import com.anrisoftware.globalpom.initfileparser.SectionFormatterFactory
+import com.anrisoftware.globalpom.textmatch.tokentemplate.TokenTemplate
 import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.Templates
+import com.anrisoftware.resources.templates.api.TemplatesFactory
 import com.anrisoftware.sscontrol.core.service.LinuxScript
+import com.anrisoftware.sscontrol.scripts.unix.RestartServicesFactory
+import com.anrisoftware.sscontrol.scripts.unix.ScriptExecFactory
 import com.anrisoftware.sscontrol.security.fail2ban.linux.Fail2BanFirewall
 import com.anrisoftware.sscontrol.security.services.Service
-import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokenTemplate
 
 /**
  * Ufw firewall fail2ban script.
@@ -46,10 +50,11 @@ import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokenTemplate
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
+@Slf4j
 abstract class UfwFail2BanScript implements Fail2BanFirewall {
 
     @Inject
-    private UfwFail2BanScriptLogger log
+    private UfwFail2BanScriptLogger logg
 
     @Inject
     InitFileParserFactory initFileParserFactory
@@ -63,10 +68,24 @@ abstract class UfwFail2BanScript implements Fail2BanFirewall {
     @Inject
     SectionFactory sectionFactory
 
+    @Inject
+    ScriptExecFactory scriptExecFactory
+
+    @Inject
+    TemplatesFactory templatesFactory
+
+    @Inject
+    RestartServicesFactory restartServicesFactory
+
     /**
      * The {@link Templates} for the script.
      */
     Templates scriptTemplates
+
+    /**
+     * Resource enable the firewall.
+     */
+    TemplateResource ufwenableTemplate
 
     /**
      * Resource create UFW fail2ban action.
@@ -100,8 +119,11 @@ abstract class UfwFail2BanScript implements Fail2BanFirewall {
      * Enables the Firewall.
      */
     void enableFirewall() {
-        def worker = script.execCommandFactory.create("$ufwCommand enable")()
-        log.enabledFirewall script, worker
+        def task = scriptExecFactory.create(
+                log: log,
+                command: ufwCommand,
+                this, threads, ufwenableTemplate, "ufwenable")()
+        logg.enabledFirewall script, task
     }
 
     /**
@@ -113,7 +135,7 @@ abstract class UfwFail2BanScript implements Fail2BanFirewall {
         def file = ufwActionFile service
         def str = ufwactionTemplate.getText(true, "properties", script, "service", service)
         FileUtils.write file, str, charset
-        log.actionFileCreated script, service, file, str
+        logg.actionFileCreated script, service, file, str
     }
 
     /**
@@ -333,10 +355,14 @@ abstract class UfwFail2BanScript implements Fail2BanFirewall {
     }
 
     /**
-     * Restart {@code rsyslog} service.
+     * Restart the <i>rsyslog</i> service.
      */
     void restartRsyslog() {
-        restartServices restartCommand: rsyslogRestartCommand, services: []
+        restartServicesFactory.create(
+                log: log,
+                command: rsyslogRestartCommand,
+                services: [],
+                this, threads)()
     }
 
     /**
@@ -359,6 +385,7 @@ abstract class UfwFail2BanScript implements Fail2BanFirewall {
         this.scriptTemplates = templatesFactory.create "UfwFail2BanScript"
         this.rsyslogTemplate = scriptTemplates.getResource "rsyslog"
         this.ufwactionTemplate = scriptTemplates.getResource "ufwaction"
+        this.ufwenableTemplate = scriptTemplates.getResource "ufwenable"
     }
 
     @Override

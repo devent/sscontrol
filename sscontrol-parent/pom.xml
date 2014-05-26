@@ -89,6 +89,11 @@
 				<artifactId>globalpomutils-threads</artifactId>
 				<version>2.0</version>
 			</dependency>
+            <dependency>
+                <groupId>com.anrisoftware.globalpom</groupId>
+                <artifactId>globalpomutils-initfileparser</artifactId>
+                <version>2.0</version>
+            </dependency>
 
 			<!-- resources -->
 			<dependency>

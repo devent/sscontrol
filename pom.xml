@@ -33,7 +33,7 @@
         <module>sscontrol-profile</module>
 <!--         <module>sscontrol-remoteaccess</module> -->
         <module>sscontrol-scripts-unix</module>
-<!--         <module>sscontrol-security</module> -->
+        <module>sscontrol-security</module>
     </modules>
 
 </project>

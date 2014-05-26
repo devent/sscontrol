@@ -13,7 +13,7 @@
 	<artifactId>sscontrol-httpd-webservice</artifactId>
 	<name>Robo Bee :: Httpd :: Web service</name>
 	<description>Web service public interface.</description>
-	<inceptionYear>2013</inceptionYear>
+	<inceptionYear>2014</inceptionYear>
 	<url>https://www.anr-institute.com/projects/projects/sscontrol-httpd-webservice</url>
 
 	<properties>

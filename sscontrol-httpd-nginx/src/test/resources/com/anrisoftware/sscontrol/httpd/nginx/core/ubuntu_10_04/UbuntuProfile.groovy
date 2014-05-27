@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Erwin Müller <erwin.mueller@deventm.org>
+ * Copyright 2013-2014 Erwin Müller <erwin.mueller@deventm.org>
  *
  * This file is part of sscontrol-httpd-nginx.
  *
@@ -32,6 +32,7 @@ profile "ubuntu_10_04", {
         group_add_command UbuntuResources.groupaddCommand.asFile(tmp)
         user_add_command UbuntuResources.useraddCommand.asFile(tmp)
         link_command UbuntuResources.lnCommand.asFile(tmp)
+        netstat_command DomainsResources.netstatPortsCommand.asFile(tmp)
         temp_directory UbuntuResources.tmpDir.asFile(tmp)
     }
 }

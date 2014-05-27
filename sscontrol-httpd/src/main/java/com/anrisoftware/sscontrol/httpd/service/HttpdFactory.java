@@ -18,6 +18,8 @@
  */
 package com.anrisoftware.sscontrol.httpd.service;
 
+import java.util.concurrent.ExecutorService;
+
 import org.mangosdk.spi.ProviderFor;
 
 import com.anrisoftware.sscontrol.core.api.ProfileService;
@@ -35,30 +37,38 @@ import com.google.inject.Module;
 @ProviderFor(ServiceFactory.class)
 public class HttpdFactory implements ServiceFactory {
 
-	/**
-	 * The name of the httpd service.
-	 */
-	public static final String NAME = "httpd";
+    /**
+     * The name of the httpd service.
+     */
+    public static final String NAME = "httpd";
 
-	private static final Module[] MODULES = new Module[] { new HttpdModule() };
+    private static final Module[] MODULES = new Module[] { new HttpdModule() };
 
-	private Injector injector;
+    private Injector injector;
 
-	@Override
-	public String getName() {
-		return NAME;
-	}
+    private ExecutorService threads;
 
-	@Override
-	public Service create(ProfileService profile) {
-		HttpdServiceImpl service;
-		service = injector.getInstance(HttpdServiceImpl.class);
-		service.setProfile(profile);
-		return service;
-	}
+    @Override
+    public String getName() {
+        return NAME;
+    }
 
-	@Override
-	public void setParent(Object parent) {
-		this.injector = ((Injector) parent).createChildInjector(MODULES);
-	}
+    @Override
+    public Service create(ProfileService profile) {
+        HttpdServiceImpl service;
+        service = injector.getInstance(HttpdServiceImpl.class);
+        service.setProfile(profile);
+        service.setThreads(threads);
+        return service;
+    }
+
+    @Override
+    public void setParent(Object parent) {
+        this.injector = ((Injector) parent).createChildInjector(MODULES);
+    }
+
+    @Override
+    public void setThreads(ExecutorService threads) {
+        this.threads = threads;
+    }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Erwin Müller <erwin.mueller@deventm.org>
+ * Copyright 2013-2014 Erwin Müller <erwin.mueller@deventm.org>
  *
  * This file is part of sscontrol-httpd-nginx.
  *
@@ -18,22 +18,29 @@
  */
 package com.anrisoftware.sscontrol.httpd.nginx.nginx.debian
 
+import groovy.util.logging.Slf4j
+
 import javax.inject.Inject
 
 import org.apache.commons.io.FileUtils
 
 import com.anrisoftware.sscontrol.core.service.LinuxScript
+import com.anrisoftware.sscontrol.scripts.unix.ScriptExecFactory
 
 /**
- * Nginx from official repository.
+ * <i>Nginx</i> from official repository.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
+@Slf4j
 abstract class NginxRepositoryScript {
 
     @Inject
-    private NginxRepositoryScriptLogger log
+    private NginxRepositoryScriptLogger logg
+
+    @Inject
+    private ScriptExecFactory scriptExecFactory
 
     private LinuxScript script
 
@@ -43,8 +50,10 @@ abstract class NginxRepositoryScript {
     void signRepositories() {
         def keyFile = new File(tmpDirectory, "nginx_signing.key")
         FileUtils.copyURLToFile nginxSigningKey.toURL(), keyFile
-        def worker = scriptCommandFactory.create(nginxCommandsTemplate, "aptKey", "command", aptKeyCommand, "key", keyFile)()
-        log.repositorySigned script, worker, nginxSigningKey
+        def task = scriptExecFactory.create(
+                log: log, command: aptKeyCommand, key: keyFile,
+                this, threads, nginxCommandsTemplate, "aptKey")()
+        logg.repositorySigned script, task, nginxSigningKey
     }
 
     /**

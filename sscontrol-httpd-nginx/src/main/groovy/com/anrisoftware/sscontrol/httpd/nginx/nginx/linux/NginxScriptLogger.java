@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Erwin Müller <erwin.mueller@deventm.org>
+ * Copyright 2013-2014 Erwin Müller <erwin.mueller@deventm.org>
  *
  * This file is part of sscontrol-httpd-nginx.
  *
@@ -36,12 +36,12 @@ import java.util.Set;
 
 import javax.inject.Singleton;
 
+import com.anrisoftware.globalpom.exec.api.ProcessTask;
 import com.anrisoftware.globalpom.log.AbstractLogger;
 import com.anrisoftware.sscontrol.core.api.ServiceException;
 import com.anrisoftware.sscontrol.core.service.LinuxScript;
 import com.anrisoftware.sscontrol.httpd.webservice.ServiceConfig;
 import com.anrisoftware.sscontrol.httpd.webservice.WebService;
-import com.anrisoftware.sscontrol.workers.command.exec.ExecCommandWorker;
 
 /**
  * Logging messages for {@link LinuxScript}.
@@ -120,10 +120,9 @@ class NginxScriptLogger extends AbstractLogger {
         }
     }
 
-    void stopService(LinuxScript script, String service,
-            ExecCommandWorker worker) {
+    void stopService(LinuxScript script, String service, ProcessTask task) {
         if (isTraceEnabled()) {
-            trace(stopped_service_trace, service, script, worker);
+            trace(stopped_service_trace, service, script, task);
         } else if (isDebugEnabled()) {
             debug(stopped_service_debug, service, script);
         } else {

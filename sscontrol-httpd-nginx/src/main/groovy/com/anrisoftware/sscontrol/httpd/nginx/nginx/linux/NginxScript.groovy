@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Erwin Müller <erwin.mueller@deventm.org>
+ * Copyright 2013-2014 Erwin Müller <erwin.mueller@deventm.org>
  *
  * This file is part of sscontrol-httpd-nginx.
  *
@@ -19,15 +19,19 @@
 package com.anrisoftware.sscontrol.httpd.nginx.nginx.linux
 
 import static org.apache.commons.io.FileUtils.*
+import groovy.util.logging.Slf4j
 
 import javax.inject.Inject
 import javax.measure.Measure
 import javax.measure.MeasureFormat
 import javax.measure.unit.NonSI
 
+import com.anrisoftware.globalpom.exec.api.ProcessTask
 import com.anrisoftware.globalpom.format.byteformat.ByteFormatFactory
 import com.anrisoftware.globalpom.format.byteformat.UnitMultiplier
 import com.anrisoftware.resources.templates.api.TemplateResource
+import com.anrisoftware.resources.templates.api.Templates
+import com.anrisoftware.resources.templates.api.TemplatesFactory
 import com.anrisoftware.sscontrol.core.bindings.BindingFactory
 import com.anrisoftware.sscontrol.core.debuglogging.DebugLoggingProperty
 import com.anrisoftware.sscontrol.core.service.LinuxScript
@@ -37,7 +41,9 @@ import com.anrisoftware.sscontrol.httpd.service.HttpdService
 import com.anrisoftware.sscontrol.httpd.webservice.ServiceConfig
 import com.anrisoftware.sscontrol.httpd.webservice.ServiceConfigInfo
 import com.anrisoftware.sscontrol.httpd.webservice.WebService
-import com.anrisoftware.sscontrol.workers.command.exec.ExecCommandWorker
+import com.anrisoftware.sscontrol.scripts.findusedport.FindUsedPortFactory
+import com.anrisoftware.sscontrol.scripts.mklink.MkLinkFactory
+import com.anrisoftware.sscontrol.scripts.unix.ScriptExecFactory
 import com.google.inject.Injector
 
 /**
@@ -46,12 +52,13 @@ import com.google.inject.Injector
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
+@Slf4j
 abstract class NginxScript extends LinuxScript {
 
     private static final String NGINX_NAME = "nginx"
 
     @Inject
-    private NginxScriptLogger log
+    private NginxScriptLogger logg
 
     @Inject
     private BindingFactory bindingFactory
@@ -63,7 +70,19 @@ abstract class NginxScript extends LinuxScript {
     Injector injector
 
     @Inject
+    TemplatesFactory templatesFactory
+
+    @Inject
     ByteFormatFactory byteFormatFactory
+
+    @Inject
+    FindUsedPortFactory findUsedPortFactory
+
+    @Inject
+    ScriptExecFactory scriptExecFactory
+
+    @Inject
+    MkLinkFactory mkLinkFactory
 
     @Inject
     Map<String, ServiceConfig> serviceConfigs
@@ -71,9 +90,14 @@ abstract class NginxScript extends LinuxScript {
     @Inject
     WebServicesConfigProvider webServicesConfigProvider
 
+    Templates nginxTemplates
+
+    TemplateResource stopServiceTemplate
+
     @Override
     def run() {
-        super.run()
+        this.nginxTemplates = templatesFactory.create "NginxScript"
+        this.stopServiceTemplate = nginxTemplates.getResource "stop_service"
         setupDefaultBinding()
         setupDefaultLogging()
     }
@@ -118,7 +142,7 @@ abstract class NginxScript extends LinuxScript {
     ServiceConfig findServiceConfig(String profile, WebService service) {
         def config = serviceConfigs["${profile}.${service.name}"]
         config = config != null ? config : findWebServicesConfigProvider(profile, service)
-        log.checkServiceConfig config, service, profile
+        logg.checkServiceConfig config, service, profile
         return config
     }
 
@@ -635,8 +659,12 @@ abstract class NginxScript extends LinuxScript {
         def targets = sites.inject([]) { acc, val ->
             acc << new File(sitesEnabledDir, val)
         }
-        link files: files, targets: targets, override: true
-        log.enabledSites this, sites
+        mkLinkFactory.create(
+                log: log,
+                command: linkCommand,
+                files: files, targets: targets, override: true,
+                this, threads)()
+        logg.enabledSites this, sites
     }
 
     /**
@@ -646,13 +674,14 @@ abstract class NginxScript extends LinuxScript {
      *            the list of {@link Domain} domains.
      *
      * @return the {@link Map} of services: {@code port:=service}.
-     *
-     * @see #checkPortsInUse(java.util.List)
      */
     Map findPortsServices(List domains) {
         def ports = domains.inject(new HashSet()) { acc, DomainImpl domain -> acc << domain.port }
-        log.checkingPorts this, ports
-        checkPortsInUse ports
+        logg.checkingPorts this, ports
+        findUsedPortFactory.create(
+                log: log,
+                command: netstatCommand, ports: ports,
+                this, threads)().services
     }
 
     /**
@@ -661,13 +690,16 @@ abstract class NginxScript extends LinuxScript {
      * @param service
      *            the service name.
      *
-     * @return the {@link ExecCommandWorker}.
+     * @return the {@link ProcessTask}.
      */
-    ExecCommandWorker stopService(String service) {
+    ProcessTask stopService(String service) {
         def command = serviceStopCommand service
-        def worker = execCommandFactory.create(command)()
-        log.stopService this, service, worker
-        return worker
+        def task = scriptExecFactory.create(
+                log: log,
+                command: command,
+                this, threads, stopServiceTemplate, "stopService")()
+        logg.stopService this, service, task
+        return task
     }
 
     /**
@@ -685,7 +717,7 @@ abstract class NginxScript extends LinuxScript {
     String serviceStopCommand(String service) {
         def property = "${service}_stop_command"
         def command = profileProperty property, defaultProperties
-        log.checkServiceRestartCommand this, command, service
+        logg.checkServiceRestartCommand this, command, service
         return command
     }
 

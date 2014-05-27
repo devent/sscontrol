@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Erwin Müller <erwin.mueller@deventm.org>
+ * Copyright 2013-2014 Erwin Müller <erwin.mueller@deventm.org>
  *
  * This file is part of sscontrol-httpd-nginx.
  *
@@ -18,10 +18,19 @@
  */
 package com.anrisoftware.sscontrol.httpd.nginx.nginx.linux;
 
+import com.anrisoftware.sscontrol.scripts.changefilemod.ChangeFileModModule;
+import com.anrisoftware.sscontrol.scripts.changefileowner.ChangeFileOwnerModule;
+import com.anrisoftware.sscontrol.scripts.enableaptrepository.EnableAptRepositoryModule;
+import com.anrisoftware.sscontrol.scripts.findusedport.FindUsedPortModule;
+import com.anrisoftware.sscontrol.scripts.localgroupadd.LocalGroupAddModule;
+import com.anrisoftware.sscontrol.scripts.localuseradd.LocalUserAddModule;
+import com.anrisoftware.sscontrol.scripts.mklink.MkLinkModule;
+import com.anrisoftware.sscontrol.scripts.repositoryaptenabled.RepositoryAptEnabledModule;
+import com.anrisoftware.sscontrol.scripts.unix.UnixScriptsModule;
 import com.google.inject.AbstractModule;
 
 /**
- * Nginx service module.
+ * <i>Nginx</i> service module.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
@@ -30,5 +39,15 @@ public class NginxScriptModule extends AbstractModule {
 
     @Override
     protected void configure() {
+        install(new UnixScriptsModule());
+        install(new UnixScriptsModule.ExecCommandModule());
+        install(new ChangeFileOwnerModule());
+        install(new ChangeFileModModule());
+        install(new LocalGroupAddModule());
+        install(new LocalUserAddModule());
+        install(new FindUsedPortModule());
+        install(new EnableAptRepositoryModule());
+        install(new RepositoryAptEnabledModule());
+        install(new MkLinkModule());
     }
 }

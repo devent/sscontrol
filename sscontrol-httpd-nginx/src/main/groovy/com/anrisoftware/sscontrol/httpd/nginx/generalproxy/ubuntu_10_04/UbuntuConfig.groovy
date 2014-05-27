@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Erwin Müller <erwin.mueller@deventm.org>
+ * Copyright 2013-2014 Erwin Müller <erwin.mueller@deventm.org>
  *
  * This file is part of sscontrol-httpd-nginx.
  *
@@ -25,10 +25,10 @@ import javax.inject.Inject
 import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.sscontrol.httpd.nginx.generalproxy.linux.GeneralProxyConfig
 import com.anrisoftware.sscontrol.httpd.nginx.nginx.ubuntu_10_04.Ubuntu_10_04_ScriptFactory
-import com.anrisoftware.sscontrol.httpd.proxy.ProxyConfig;
+import com.anrisoftware.sscontrol.httpd.proxy.ProxyConfig
 
 /**
- * Ubuntu 10.04 General Proxy.
+ * <i>Ubuntu 10.04</i> general proxy.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0

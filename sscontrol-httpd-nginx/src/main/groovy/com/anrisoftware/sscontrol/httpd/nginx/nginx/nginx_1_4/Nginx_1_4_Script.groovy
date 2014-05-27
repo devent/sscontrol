@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Erwin Müller <erwin.mueller@deventm.org>
+ * Copyright 2013-2014 Erwin Müller <erwin.mueller@deventm.org>
  *
  * This file is part of sscontrol-httpd-nginx.
  *
@@ -25,6 +25,7 @@ import javax.inject.Inject
 
 import org.apache.commons.io.FileUtils
 
+import com.anrisoftware.globalpom.textmatch.tokentemplate.TokenTemplate
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.Templates
 import com.anrisoftware.sscontrol.httpd.domain.Domain
@@ -33,10 +34,9 @@ import com.anrisoftware.sscontrol.httpd.nginx.nginx.linux.DomainConfig
 import com.anrisoftware.sscontrol.httpd.nginx.nginx.linux.NginxScript
 import com.anrisoftware.sscontrol.httpd.service.HttpdService
 import com.anrisoftware.sscontrol.httpd.webservice.WebService
-import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokenTemplate
 
 /**
- * Configures Nginx 1.4 service.
+ * Configures <i>Nginx 1.4</i> service.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0

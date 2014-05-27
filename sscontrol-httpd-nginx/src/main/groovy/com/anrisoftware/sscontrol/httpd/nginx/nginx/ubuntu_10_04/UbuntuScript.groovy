@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Erwin Müller <erwin.mueller@deventm.org>
+ * Copyright 2013-2014 Erwin Müller <erwin.mueller@deventm.org>
  *
  * This file is part of sscontrol-httpd-nginx.
  *
@@ -18,10 +18,15 @@
  */
 package com.anrisoftware.sscontrol.httpd.nginx.nginx.ubuntu_10_04
 
+import groovy.util.logging.Slf4j
+
 import javax.inject.Inject
 
 import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.sscontrol.httpd.nginx.nginx.nginx_1_4.Nginx_1_4_Script
+import com.anrisoftware.sscontrol.scripts.enableaptrepository.EnableAptRepositoryFactory
+import com.anrisoftware.sscontrol.scripts.unix.InstallPackagesFactory
+import com.anrisoftware.sscontrol.scripts.unix.RestartServicesFactory
 
 /**
  * Ubuntu 10.04 Nginx.
@@ -29,6 +34,7 @@ import com.anrisoftware.sscontrol.httpd.nginx.nginx.nginx_1_4.Nginx_1_4_Script
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
+@Slf4j
 class UbuntuScript extends Nginx_1_4_Script {
 
     @Inject
@@ -36,6 +42,15 @@ class UbuntuScript extends Nginx_1_4_Script {
 
     @Inject
     private UbuntuPropertiesProvider ubuntuProperties
+
+    @Inject
+    InstallPackagesFactory installPackagesFactory
+
+    @Inject
+    RestartServicesFactory restartServicesFactory
+
+    @Inject
+    EnableAptRepositoryFactory enableAptRepositoryFactory
 
     @Override
     def run() {
@@ -51,12 +66,45 @@ class UbuntuScript extends Nginx_1_4_Script {
     }
 
     /**
+     * Installs the repositories for <i>nginx</i>.
+     */
+    boolean enableDebRepositories() {
+        def worker = enableAptRepositoryFactory.create(
+                log: log,
+                repository: additionalRepository,
+                packagesSourcesFile: packagesSourcesFile,
+                distributionName: distributionName,
+                repositoryString: repositoryString,
+                charset: charset,
+                this, threads)()
+        worker.enabled
+    }
+
+    /**
+     * Installs the <i>nginx</i> packages.
+     */
+    void installPackages() {
+        installPackagesFactory.create(
+                log: log, command: installCommand, packages: packages,
+                this, threads)()
+    }
+
+    /**
      * Restarts the service.
      */
     void restartService() {
         def services = findPortsServices uniqueDomains
         services.findAll { port, service -> service != nginxService }.each { port, service -> stopService service }
         restartServices()
+    }
+
+    /**
+     * Restarts the <i>nginx</i> services.
+     */
+    void restartServices() {
+        restartServicesFactory.create(
+                log: log, command: restartCommand, services: restartServices,
+                this, threads)()
     }
 
     @Override

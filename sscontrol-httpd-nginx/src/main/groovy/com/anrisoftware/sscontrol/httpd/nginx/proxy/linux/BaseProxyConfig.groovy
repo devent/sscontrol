@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Erwin Müller <erwin.mueller@deventm.org>
+ * Copyright 2013-2014 Erwin Müller <erwin.mueller@deventm.org>
  *
  * This file is part of sscontrol-httpd-nginx.
  *
@@ -32,8 +32,9 @@ import com.anrisoftware.globalpom.format.byteformat.UnitMultiplier
 import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.Templates
+import com.anrisoftware.resources.templates.api.TemplatesFactory
 import com.anrisoftware.sscontrol.core.service.LinuxScript
-import com.anrisoftware.sscontrol.httpd.proxy.ProxyService;
+import com.anrisoftware.sscontrol.httpd.proxy.ProxyService
 
 /**
  * Proxy.
@@ -50,6 +51,9 @@ abstract class BaseProxyConfig {
 
     @Inject
     ByteFormatFactory byteFormat
+
+    @Inject
+    TemplatesFactory templatesFactory
 
     /**
      * The {@link Templates} for the proxy configuration.

@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Erwin Müller <erwin.mueller@deventm.org>
+ * Copyright 2013-2014 Erwin Müller <erwin.mueller@deventm.org>
  *
  * This file is part of sscontrol-httpd-nginx.
  *
@@ -24,14 +24,15 @@ import javax.inject.Inject
 
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.Templates
+import com.anrisoftware.resources.templates.api.TemplatesFactory
 import com.anrisoftware.sscontrol.core.service.LinuxScript
-import com.anrisoftware.sscontrol.httpd.domain.Domain;
+import com.anrisoftware.sscontrol.httpd.domain.Domain
 import com.anrisoftware.sscontrol.httpd.nginx.proxy.linux.BaseProxyConfig
-import com.anrisoftware.sscontrol.httpd.proxy.ProxyService;
-import com.anrisoftware.sscontrol.httpd.webservice.WebService;
+import com.anrisoftware.sscontrol.httpd.proxy.ProxyService
+import com.anrisoftware.sscontrol.httpd.webservice.WebService
 
 /**
- * General Proxy.
+ * General proxy.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
@@ -45,6 +46,9 @@ abstract class GeneralProxyConfig extends BaseProxyConfig {
 
     @Inject
     private GeneralProxyConfigLogger log
+
+    @Inject
+    TemplatesFactory templatesFactory
 
     /**
      * The {@link Templates} for the proxy configuration.

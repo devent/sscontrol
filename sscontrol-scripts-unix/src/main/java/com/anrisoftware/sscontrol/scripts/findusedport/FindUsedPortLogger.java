@@ -21,7 +21,7 @@ package com.anrisoftware.sscontrol.scripts.findusedport;
 import static com.anrisoftware.sscontrol.scripts.findusedport.FindUsedPortLogger._.argument_null;
 import static org.apache.commons.lang3.Validate.notNull;
 
-import java.util.List;
+import java.util.Collection;
 import java.util.Map;
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
@@ -67,8 +67,8 @@ class FindUsedPortLogger extends AbstractLogger {
     }
 
     @SuppressWarnings("unchecked")
-    List<Integer> ports(Map<String, Object> args, Object parent) {
+    Collection<Integer> ports(Map<String, Object> args, Object parent) {
         Object value = args.get(PORTS_KEY);
-        return (List<Integer>) value;
+        return (Collection<Integer>) value;
     }
 }

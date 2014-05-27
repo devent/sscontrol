@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Erwin Müller <erwin.mueller@deventm.org>
+ * Copyright 2013-2014 Erwin Müller <erwin.mueller@deventm.org>
  *
  * This file is part of sscontrol-httpd-nginx.
  *
@@ -42,6 +42,7 @@ class DomainsTest extends UbuntuTestUtil {
     void "domains"() {
         copyUbuntuFiles tmpdir
         copyUbuntu_10_04_Files tmpdir
+        netstatPortsCommand.createCommand tmpdir
 
         loader.loadService profile.resource, null
         def profile = registry.getService("profile")[0]

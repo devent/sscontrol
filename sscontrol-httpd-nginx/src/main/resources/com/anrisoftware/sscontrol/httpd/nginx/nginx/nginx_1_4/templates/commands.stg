@@ -1,4 +1,6 @@
-aptKey(command, key) ::= <<
-<command> add <key>
+aptKey(args) ::= <<
+<! - args.command - !>
+<! - args.key - !>
+<args.command> add <args.key>
 
 >>

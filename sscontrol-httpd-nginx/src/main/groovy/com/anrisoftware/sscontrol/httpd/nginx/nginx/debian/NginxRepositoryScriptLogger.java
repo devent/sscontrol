@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Erwin Müller <erwin.mueller@deventm.org>
+ * Copyright 2013-2014 Erwin Müller <erwin.mueller@deventm.org>
  *
  * This file is part of sscontrol-httpd-nginx.
  *
@@ -26,6 +26,7 @@ import java.net.URI;
 
 import javax.inject.Singleton;
 
+import com.anrisoftware.globalpom.exec.api.ProcessTask;
 import com.anrisoftware.globalpom.log.AbstractLogger;
 import com.anrisoftware.sscontrol.core.service.LinuxScript;
 
@@ -65,9 +66,9 @@ class NginxRepositoryScriptLogger extends AbstractLogger {
         super(NginxRepositoryScriptLogger.class);
     }
 
-    void repositorySigned(LinuxScript script, Object worker, URI key) {
+    void repositorySigned(LinuxScript script, ProcessTask task, URI key) {
         if (isTraceEnabled()) {
-            trace(repository_signed_trace, key, script, worker);
+            trace(repository_signed_trace, key, script, task);
         } else if (isDebugEnabled()) {
             debug(repository_signed_debug, key, script);
         } else {

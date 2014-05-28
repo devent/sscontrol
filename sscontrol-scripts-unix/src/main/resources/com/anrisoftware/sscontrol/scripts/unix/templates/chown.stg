@@ -1,5 +1,4 @@
 unix(args) ::= <<
-#!/bin/sh
 <args.files:unixChown(args);separator="\n">
 
 >>

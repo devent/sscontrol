@@ -1,5 +1,4 @@
 unix(args) ::= <<
-#!/bin/sh
 <(args.name)(args)>
 
 >>

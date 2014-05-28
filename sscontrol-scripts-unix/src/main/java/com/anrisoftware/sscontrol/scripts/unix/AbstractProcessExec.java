@@ -49,6 +49,10 @@ import com.anrisoftware.globalpom.threads.api.Threads;
  */
 public abstract class AbstractProcessExec implements Callable<ProcessTask> {
 
+    private static final String LOG_KEY = "log";
+
+    private static final String OUT_STRING = "outString";
+
     public static final String TIMEOUT = "timeout";
 
     public static final String DESTROY_ON_TIMEOUT = "destroyOnTimeout";
@@ -68,6 +72,8 @@ public abstract class AbstractProcessExec implements Callable<ProcessTask> {
     private final Boolean destroyOnTimeout;
 
     private final Duration timeout;
+
+    private final boolean outString;
 
     @Inject
     private AbstractProcessExecLogger log;
@@ -105,6 +111,7 @@ public abstract class AbstractProcessExec implements Callable<ProcessTask> {
         this.exitCodes = getArg(EXIT_CODES, args);
         this.destroyOnTimeout = getArg(DESTROY_ON_TIMEOUT, args);
         this.timeout = getTimeout(args);
+        this.outString = getArg(OUT_STRING, args, false);
     }
 
     private Duration getTimeout(Map<String, Object> args2) {
@@ -118,6 +125,11 @@ public abstract class AbstractProcessExec implements Callable<ProcessTask> {
     @SuppressWarnings("unchecked")
     private <T> T getArg(String name, Map<String, Object> args) {
         return (T) (args.containsKey(name) ? args.get(name) : null);
+    }
+
+    @SuppressWarnings("unchecked")
+    private <T> T getArg(String name, Map<String, Object> args, T defaultValue) {
+        return (T) (args.containsKey(name) ? args.get(name) : defaultValue);
     }
 
     @Override
@@ -185,12 +197,15 @@ public abstract class AbstractProcessExec implements Callable<ProcessTask> {
     }
 
     protected void setupCommandOutput(ScriptCommandExec script, CommandLine line) {
-        Logger logger = (Logger) args.get("log");
+        if (outString) {
+            return;
+        }
+        Logger logger = (Logger) args.get(LOG_KEY);
         script.setCommandOutput(outputFactory.create(logger, line));
     }
 
     protected void setupCommandError(ScriptCommandExec script, CommandLine line) {
-        Logger logger = (Logger) args.get("log");
+        Logger logger = (Logger) args.get(LOG_KEY);
         script.setCommandError(errorFactory.create(logger, line));
     }
 

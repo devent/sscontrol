@@ -62,8 +62,7 @@ class ScriptExecLogger extends AbstractLogger {
         super(ScriptExec.class);
     }
 
-    void scriptDone(Object parent, ProcessTask task,
-            Map<String, Object> args) {
+    void scriptDone(Object parent, ProcessTask task, Map<String, Object> args) {
         if (isTraceEnabled()) {
             trace(script_done_trace, args, parent, task);
         } else if (isDebugEnabled()) {
@@ -72,4 +71,5 @@ class ScriptExecLogger extends AbstractLogger {
             info(script_done_info, parent);
         }
     }
+
 }

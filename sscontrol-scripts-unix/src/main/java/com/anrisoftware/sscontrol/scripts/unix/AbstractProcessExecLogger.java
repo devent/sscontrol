@@ -44,7 +44,7 @@ class AbstractProcessExecLogger extends AbstractLogger {
 
         log_null("Logger argument '%s' must be set"),
 
-        executed_script("Executed script {}: {}"),
+        executed_script("Executed script {}: \n{}"),
 
         executed_script_error("Error read script for {}.");
 

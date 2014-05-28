@@ -18,8 +18,12 @@
  */
 package com.anrisoftware.sscontrol.scripts.unix;
 
+import java.util.List;
 import java.util.Map;
 
+import org.joda.time.Duration;
+
+import com.anrisoftware.globalpom.exec.api.ProcessTask;
 import com.anrisoftware.globalpom.threads.api.Threads;
 import com.anrisoftware.resources.templates.api.TemplateResource;
 
@@ -35,7 +39,27 @@ public interface ScriptExecFactory {
      * Create the script exec.
      * 
      * @param args
-     *            the {@link Map} arguments.
+     *            the {@link Map} arguments:
+     * 
+     *            <ul>
+     *            <li>{@code log} the logger that logs the command output;
+     * 
+     *            <li>{@code outString} optionally, set to {@code true} to save
+     *            the output in a {@link String} for later parsing, see
+     *            {@link ProcessTask#getOut()};
+     * 
+     *            <li>{@code timeout} optionally, set the timeout
+     *            {@link Duration};
+     * 
+     *            <li>{@code destroyOnTimeout} optionally, set to {@code true}
+     *            to destroy the process on timeout;
+     * 
+     *            <li>{@code exitCodes} optionally, set a {@link List} of
+     *            success exit codes;
+     * 
+     *            <li>{@code exitCode} optionally, set the success exit code of
+     *            the process;
+     *            </ul>
      * 
      * @param parent
      *            the {@link Object} parent script.

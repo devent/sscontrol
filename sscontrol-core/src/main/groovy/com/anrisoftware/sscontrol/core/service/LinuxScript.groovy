@@ -252,90 +252,13 @@ abstract class LinuxScript extends Script {
     }
 
     /**
-     * Unpacks the specified archives.
+     * Returns the unpack commands for the archive types.
      *
-     * @param args
-     * 			  the arguments:
-     * <ul>
-     * <li>{@code file:} the archive {@link File};
-     * <li>{@code type:} the type of the archive, for example {@code tar, zip}.
-     * If not set then the type is determined from the archive file name;
-     * <li>{@code output:} the output {@link File} directory;
-     * <li>{@code override:} set to {@code true} to override existing files;
-     * <li>{@code system:} the system of the server, defaults to {@code unix};
-     * <li>{@code command:} the command to unpack the archive,
-     * defaults to what the type of the archive is;
-     * </ul>
-     *
-     * @return the {@link ProcessTask} process task.
+     * @see #getTarCommand()
+     * @see #getUnzipCommand()
      */
-    def unpack(Map args) {
-        args.system = args.containsKey("system") ? args.system : "unix"
-        args.type = args.containsKey("type") ? args.type : archiveType(args)
-        args.command = args.containsKey("command") ? args.command : unpackCommand(args)
-        log.checkUnpackArgs args
-        def template = commandTemplates.getResource("unpack")
-        def line = scriptCommandLineFactory.create(args.system, template).addSub("args", args)
-        def script = scriptCommandExecFactory.create(commandExecFactory)
-        script.commandError = errorLogCommandOutputFactory.create(log, line)
-        script.commandOutput = debugLogCommandOutputFactory.create(log, line)
-        def task = script.exec(line).get()
-        log.unpackDone this, task, args.file, args.output
-        return task
-    }
-
-    /**
-     * Returns the type for the specified archive.
-     *
-     * @param args
-     *            the arguments:
-     * <ul>
-     * <li>{@code file:} the archive {@link File};
-     * </ul>
-     *
-     * @return the archive type.
-     *
-     * throws ServiceException
-     *          if the archive type is unknown.
-     */
-    String archiveType(Map args) {
-        def name = args.file
-        if (args.file instanceof File) {
-            name = args.file.getName()
-        }
-        switch (name) {
-            case ~/.*tar\.gz$/:
-                return "tgz"
-            case ~/.*\.zip$/:
-                return "zip"
-            default:
-                throw log.unknownArchiveType(this, args)
-        }
-    }
-
-    /**
-     * Returns the unpack command for the specified archive.
-     *
-     * @param args
-     *            the arguments:
-     * <ul>
-     * <li>{@code type:} the archive type;
-     * </ul>
-     *
-     * @return the archive type.
-     *
-     * throws ServiceException
-     *          if the archive type is unknown.
-     */
-    String unpackCommand(Map args) {
-        switch (args.type) {
-            case 'tgz':
-                return tarCommand
-            case 'zip':
-                return unzipCommand
-            default:
-                throw log.unknownArchiveType(this, args)
-        }
+    Map getUnpackCommands() {
+        [tgz: tarCommand, zip: unzipCommand]
     }
 
     /**

@@ -1,4 +1,9 @@
 unix(args) ::= <<
+<! - args.type - !>
+<! - args.output - !>
+<! - args.command - !>
+<! - args.override - !>
+<! - args.strip - !>
 <(args.type)(args)>
 
 >>
@@ -10,7 +15,6 @@ tgz(args) ::= <<
 tar(args) ::= <<
 cd <args.output>
 <args.command> <overrideTar(args)> <stripTar(args)> -xf <args.file>
-
 >>
 
 overrideTar(args) ::= <%
@@ -24,7 +28,6 @@ stripTar(args) ::= <%
 zip(args) ::= <<
 cd <args.output>
 <args.command> <overrideZip(args)> <stripZip(args)> <args.file>
-
 >>
 
 overrideZip(args) ::= <%

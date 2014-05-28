@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Erwin Müller <erwin.mueller@deventm.org>
+ * Copyright 2013-2014 Erwin Müller <erwin.mueller@deventm.org>
  *
  * This file is part of sscontrol-httpd-apache.
  *
@@ -18,11 +18,6 @@
  */
 package com.anrisoftware.sscontrol.httpd.apache.authfile.apache_2_2;
 
-import static com.anrisoftware.sscontrol.httpd.apache.authfile.apache_2_2.AuthFileDigestConfigLogger._.digest_password_args_missing;
-import static org.apache.commons.lang3.Validate.isTrue;
-
-import java.util.Map;
-
 import com.anrisoftware.globalpom.log.AbstractLogger;
 
 /**
@@ -32,9 +27,6 @@ import com.anrisoftware.globalpom.log.AbstractLogger;
  * @since 1.0
  */
 class AuthFileDigestConfigLogger extends AbstractLogger {
-
-    private static final String USER = "user";
-    private static final String AUTH = "auth";
 
     enum _ {
 
@@ -58,13 +50,6 @@ class AuthFileDigestConfigLogger extends AbstractLogger {
      */
     public AuthFileDigestConfigLogger() {
         super(AuthFileBasicConfig.class);
-    }
-
-    void checkDigestPasswordArgs(Object script, Map<String, Object> args) {
-        isTrue(args.containsKey(AUTH), digest_password_args_missing.toString(),
-                AUTH, script);
-        isTrue(args.containsKey(USER), digest_password_args_missing.toString(),
-                USER, script);
     }
 
 }

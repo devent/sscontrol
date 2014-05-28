@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Erwin Müller <erwin.mueller@deventm.org>
+ * Copyright 2013-2014 Erwin Müller <erwin.mueller@deventm.org>
  *
  * This file is part of sscontrol-httpd-apache.
  *
@@ -18,6 +18,8 @@
  */
 package com.anrisoftware.sscontrol.httpd.apache.phpldapadmin.linux
 
+import groovy.util.logging.Slf4j
+
 import java.util.regex.Pattern
 
 import javax.inject.Inject
@@ -25,25 +27,41 @@ import javax.inject.Inject
 import org.apache.commons.io.FileUtils
 import org.apache.commons.io.FilenameUtils
 
+import com.anrisoftware.globalpom.textmatch.tokentemplate.TokenTemplate
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.Templates
+import com.anrisoftware.resources.templates.api.TemplatesFactory
 import com.anrisoftware.sscontrol.core.service.LinuxScript
-import com.anrisoftware.sscontrol.httpd.domain.DomainImpl;
-import com.anrisoftware.sscontrol.httpd.domain.Domain;
-import com.anrisoftware.sscontrol.httpd.phpldapadmin.PhpldapadminService;
-import com.anrisoftware.sscontrol.httpd.webservice.WebService;
-import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokenTemplate
+import com.anrisoftware.sscontrol.httpd.domain.Domain
+import com.anrisoftware.sscontrol.httpd.phpldapadmin.PhpldapadminService
+import com.anrisoftware.sscontrol.httpd.webservice.WebService
+import com.anrisoftware.sscontrol.scripts.changefilemod.ChangeFileModFactory
+import com.anrisoftware.sscontrol.scripts.mklink.MkLinkFactory
+import com.anrisoftware.sscontrol.scripts.unpack.UnpackFactory
 
 /**
- * phpLDAPAdmin from archive.
+ * <i>phpLDAPAdmin</i> from archive.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
+@Slf4j
 abstract class PhpldapadminFromArchiveConfig extends PhpldapadminConfig {
 
     @Inject
-    private PhpldapadminFromArchiveConfigLogger log
+    private PhpldapadminFromArchiveConfigLogger logg
+
+    @Inject
+    TemplatesFactory templatesFactory
+
+    @Inject
+    UnpackFactory unpackFactory
+
+    @Inject
+    MkLinkFactory mkLinkFactory
+
+    @Inject
+    ChangeFileModFactory changeFileModFactory
 
     Templates phpldapadminTemplates
 
@@ -69,14 +87,19 @@ abstract class PhpldapadminFromArchiveConfig extends PhpldapadminConfig {
     void downloadPhpldapadmin(Domain domain) {
         def name = FilenameUtils.getName adminArchive.path
         def target = new File(tmpDirectory, name)
-        def extension = FilenameUtils.getExtension target.absolutePath
         def outputDir = adminConfigurationDir(domain)
         def linkTarget = adminLinkedConfigurationDir(domain)
         FileUtils.copyURLToFile adminArchive.toURL(), target
-        unpack file: target, type: extension, output: outputDir, command: tarCommand, override: true
+        unpackFactory.create(
+                log: log, file: target, output: outputDir, override: true,
+                commands: script.unpackCommands,
+                this, threads)()
         linkTarget.delete()
-        link files: outputDir, targets: linkTarget
-        log.archiveDownloaded script, adminArchive, outputDir
+        mkLinkFactory.create(
+                log: log, files: outputDir, targets: linkTarget,
+                command: script.linkCommand,
+                this, threads)()
+        logg.archiveDownloaded script, adminArchive, outputDir
     }
 
     /**
@@ -103,7 +126,10 @@ abstract class PhpldapadminFromArchiveConfig extends PhpldapadminConfig {
         }
         def configs = adminConfigurations(domain, service)
         script.deployConfiguration configurationTokens("//"), adminConfiguration(domain), configs, configFile
-        changeMod mod: "o-r", files: configFile
+        changeFileModFactory.create(
+                log: log, mod: "o-r", files: configFile,
+                command: script.chmodCommand,
+                this, threads)()
     }
 
     /**
@@ -150,8 +176,11 @@ abstract class PhpldapadminFromArchiveConfig extends PhpldapadminConfig {
         def string = phpldapadminConfigTemplate.getText true, "serversConfig", "service", service
         def file = adminServersConfigFile(domain)
         FileUtils.write file, string
-        changeMod mod: "o-r", files: file
-        log.serverConfigDeployed script, file, string
+        changeFileModFactory.create(
+                log: log, mod: "o-r", files: file,
+                command: script.chmodCommand,
+                this, threads)()
+        logg.serverConfigDeployed script, file, string
     }
 
     /**
@@ -254,7 +283,7 @@ abstract class PhpldapadminFromArchiveConfig extends PhpldapadminConfig {
 
     void setScript(LinuxScript script) {
         super.setScript script
-        phpldapadminTemplates = templatesFactory.create "PhpldapadminFromArchiveConfig"
-        phpldapadminConfigTemplate = phpldapadminTemplates.getResource "config"
+        this.phpldapadminTemplates = templatesFactory.create "PhpldapadminFromArchiveConfig"
+        this.phpldapadminConfigTemplate = phpldapadminTemplates.getResource "config"
     }
 }

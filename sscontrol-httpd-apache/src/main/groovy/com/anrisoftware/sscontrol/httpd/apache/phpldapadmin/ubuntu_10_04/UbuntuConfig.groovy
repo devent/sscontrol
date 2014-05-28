@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Erwin Müller <erwin.mueller@deventm.org>
+ * Copyright 2013-2014 Erwin Müller <erwin.mueller@deventm.org>
  *
  * This file is part of sscontrol-httpd-apache.
  *
@@ -19,36 +19,46 @@
 package com.anrisoftware.sscontrol.httpd.apache.phpldapadmin.ubuntu_10_04
 
 import static com.anrisoftware.sscontrol.httpd.apache.apache.ubuntu_10_04.Ubuntu_10_04_ScriptFactory.PROFILE
+import groovy.util.logging.Slf4j
 
 import javax.inject.Inject
 
 import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.Templates
+import com.anrisoftware.resources.templates.api.TemplatesFactory
 import com.anrisoftware.sscontrol.core.service.LinuxScript
 import com.anrisoftware.sscontrol.httpd.apache.apache.linux.FcgiConfig
 import com.anrisoftware.sscontrol.httpd.apache.apache.ubuntu_10_04.Ubuntu_10_04_ScriptFactory
 import com.anrisoftware.sscontrol.httpd.apache.phpldapadmin.apache_2_2.FcgiPhpldapadminConfig
-import com.anrisoftware.sscontrol.httpd.domain.Domain;
-import com.anrisoftware.sscontrol.httpd.phpldapadmin.PhpldapadminService;
-import com.anrisoftware.sscontrol.httpd.webservice.ServiceConfig;
-import com.anrisoftware.sscontrol.httpd.webservice.WebService;
+import com.anrisoftware.sscontrol.httpd.domain.Domain
+import com.anrisoftware.sscontrol.httpd.phpldapadmin.PhpldapadminService
+import com.anrisoftware.sscontrol.httpd.webservice.ServiceConfig
+import com.anrisoftware.sscontrol.httpd.webservice.WebService
+import com.anrisoftware.sscontrol.scripts.unix.InstallPackagesFactory
 
 /**
- * Ubuntu 10.04 phpLDAPAdmin.
+ * <i>Ubuntu 10.04 phpLDAPAdmin.</i>
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
+@Slf4j
 class UbuntuConfig extends FcgiPhpldapadminConfig implements ServiceConfig {
 
     public static final String NAME = "phpldapadmin"
 
     @Inject
-    UbuntuConfigLogger log
+    UbuntuConfigLogger logg
 
     @Inject
-    UbuntuPropertiesProvider phpldapadminProperties
+    TemplatesFactory templatesFactory
+
+    @Inject
+    InstallPackagesFactory installPackagesFactory
+
+    @Inject
+    UbuntuPropertiesProvider phpldapadminPropertiesProvider
 
     @Inject
     UbuntuFromArchiveConfig phpldapadminConfig
@@ -65,10 +75,19 @@ class UbuntuConfig extends FcgiPhpldapadminConfig implements ServiceConfig {
 
     @Override
     void deployService(Domain domain, WebService service, List config) {
-        installPackages adminPackages
+        installPackages()
         super.deployService domain, service, config
         phpldapadminConfig.deployService domain, service, config
         createDomainConfig domain, service, config
+    }
+
+    /**
+     * Installs the <i>phpLDAPAdmin</i> packages.
+     */
+    void installPackages() {
+        installPackagesFactory.create(
+                log: log, command: script.installCommand, packages: adminPackages,
+                this, threads)()
     }
 
     /**
@@ -86,7 +105,7 @@ class UbuntuConfig extends FcgiPhpldapadminConfig implements ServiceConfig {
     }
 
     /**
-     * Returns the list of needed phpldapadmin/packages.
+     * Returns the list of needed <i>phpLDAPAdmin</i> packages.
      *
      * <ul>
      * <li>profile property {@code "phpldapadmin_packages"}</li>
@@ -100,15 +119,15 @@ class UbuntuConfig extends FcgiPhpldapadminConfig implements ServiceConfig {
 
     @Override
     ContextProperties getPhpldapadminProperties() {
-        phpldapadminProperties.get()
+        phpldapadminPropertiesProvider.get()
     }
 
     @Override
     void setScript(LinuxScript script) {
         super.setScript(script);
-        phpldapadminConfig.script = script
-        phpldapadminTemplates = templatesFactory.create "Ubuntu_10_04_Phpldapadmin"
-        phpldapadminConfigTemplate = phpldapadminTemplates.getResource "config"
+        this.phpldapadminConfig.script = script
+        this.phpldapadminTemplates = templatesFactory.create "Ubuntu_10_04_Phpldapadmin"
+        this.phpldapadminConfigTemplate = phpldapadminTemplates.getResource "config"
     }
 
     @Override

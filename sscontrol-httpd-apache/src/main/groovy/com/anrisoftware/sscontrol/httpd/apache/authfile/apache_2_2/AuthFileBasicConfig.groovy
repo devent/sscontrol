@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Erwin Müller <erwin.mueller@deventm.org>
+ * Copyright 2013-2014 Erwin Müller <erwin.mueller@deventm.org>
  *
  * This file is part of sscontrol-httpd-apache.
  *
@@ -20,31 +20,40 @@ package com.anrisoftware.sscontrol.httpd.apache.authfile.apache_2_2
 
 import static org.apache.commons.lang3.StringUtils.replaceChars
 import static org.apache.commons.lang3.StringUtils.split
+import groovy.util.logging.Slf4j
 
 import javax.inject.Inject
 
 import org.apache.commons.io.FileUtils
 import org.apache.commons.io.FilenameUtils
 
+import com.anrisoftware.globalpom.exec.api.ProcessTask
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.Templates
+import com.anrisoftware.resources.templates.api.TemplatesFactory
 import com.anrisoftware.sscontrol.httpd.auth.AbstractAuthService
 import com.anrisoftware.sscontrol.httpd.auth.RequireUpdate
 import com.anrisoftware.sscontrol.httpd.auth.RequireUser
-import com.anrisoftware.sscontrol.httpd.domain.DomainImpl
-import com.anrisoftware.sscontrol.httpd.domain.Domain;
-import com.anrisoftware.sscontrol.workers.command.script.ScriptCommandWorker
+import com.anrisoftware.sscontrol.httpd.domain.Domain
+import com.anrisoftware.sscontrol.scripts.unix.ScriptExecFactory
 
 /**
- * Auth/file-basic configuration.
+ * <i>Auth/file-basic</i> configuration.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
+@Slf4j
 class AuthFileBasicConfig {
 
     @Inject
-    AuthFileBasicConfigLogger log
+    AuthFileBasicConfigLogger logg
+
+    @Inject
+    TemplatesFactory templatesFactory
+
+    @Inject
+    ScriptExecFactory scriptExecFactory
 
     /**
      * Auth/file templates.
@@ -118,29 +127,30 @@ class AuthFileBasicConfig {
     }
 
     void insertUser(Domain domain, AbstractAuthService service, RequireUser user, List users) {
-        def worker = htpasswd user: user
-        def out = replaceChars worker.out, '\n', ''
+        def task = htpasswd user
+        def out = replaceChars task.out, '\n', ''
         users << out
     }
 
     String updatePassword(Domain domain, AbstractAuthService service, RequireUser user) {
-        def worker = htpasswd user: user
+        def worker = htpasswd user
         replaceChars worker.out, '\n', ''
     }
 
     /**
-     * Executes the {@code htpasswd} command to create the password
+     * Executes the <i>htpasswd</i> command to create the password
      * for the user.
      *
-     * @param args
-     *            the command {@link Map} arguments.
+     * @param user
+     *            the {@link RequireUser} user.
      *
-     * @return the {@link ScriptCommandWorker}.
+     * @return the {@link ProcessTask}.
      */
-    ScriptCommandWorker htpasswd(Map args) {
-        args.command = args.containsKey("command") ? args.command : htpasswdCommand
-        log.checkHtpasswdArgs this, args
-        scriptCommandFactory.create(authCommandsTemplate, "basicPassword", "args", args)()
+    ProcessTask htpasswd(RequireUser user) {
+        logg.checkHtpasswdArgs this, user
+        scriptExecFactory.create(
+                log: log, command: htpasswdCommand, user: user, outString: true,
+                this, threads, authCommandsTemplate, "basicPassword")()
     }
 
     /**
@@ -164,7 +174,7 @@ class AuthFileBasicConfig {
     void setScript(Object script) {
         this.script = script
         this.authTemplates = templatesFactory.create "Apache_2_2_AuthFile"
-        authCommandsTemplate = authTemplates.getResource "commands"
+        this.authCommandsTemplate = authTemplates.getResource "commands"
     }
 
     def propertyMissing(String name) {

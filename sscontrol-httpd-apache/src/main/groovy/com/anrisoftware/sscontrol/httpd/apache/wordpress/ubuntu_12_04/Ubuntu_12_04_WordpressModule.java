@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Erwin Müller <erwin.mueller@deventm.org>
+ * Copyright 2013-2014 Erwin Müller <erwin.mueller@deventm.org>
  *
  * This file is part of sscontrol-httpd-apache.
  *
@@ -28,7 +28,7 @@ import com.google.inject.multibindings.MapBinder;
 
 /**
  * Installs Ubuntu 12.04 Wordpress.
- * 
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */

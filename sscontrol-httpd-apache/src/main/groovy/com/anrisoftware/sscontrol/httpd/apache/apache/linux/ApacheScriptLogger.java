@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Erwin Müller <erwin.mueller@deventm.org>
+ * Copyright 2013-2014 Erwin Müller <erwin.mueller@deventm.org>
  *
  * This file is part of sscontrol-httpd-apache.
  *
@@ -27,6 +27,7 @@ import static com.anrisoftware.sscontrol.httpd.apache.apache.linux.ApacheScriptL
 
 import javax.inject.Singleton;
 
+import com.anrisoftware.globalpom.exec.api.ProcessTask;
 import com.anrisoftware.globalpom.log.AbstractLogger;
 import com.anrisoftware.sscontrol.core.service.LinuxScript;
 
@@ -72,9 +73,9 @@ class ApacheScriptLogger extends AbstractLogger {
 		super(ApacheScript.class);
 	}
 
-	void enabledMods(ApacheScript script, Object worker, Object mods) {
+    void enabledMods(ApacheScript script, ProcessTask task, Object mods) {
 		if (isTraceEnabled()) {
-			trace(enabled_mods_trace, mods, script, worker);
+            trace(enabled_mods_trace, mods, script, task);
 		} else if (isDebugEnabled()) {
 			debug(enabled_mods_debug, mods, script);
 		} else {
@@ -82,9 +83,9 @@ class ApacheScriptLogger extends AbstractLogger {
 		}
 	}
 
-	void enabledSites(ApacheScript script, Object worker, Object sites) {
+    void enabledSites(ApacheScript script, ProcessTask task, Object sites) {
 		if (isTraceEnabled()) {
-			trace(enabled_sites_trace, sites, script, worker);
+            trace(enabled_sites_trace, sites, script, task);
 		} else if (isDebugEnabled()) {
 			debug(enabled_sites_debug, sites, script);
 		} else {

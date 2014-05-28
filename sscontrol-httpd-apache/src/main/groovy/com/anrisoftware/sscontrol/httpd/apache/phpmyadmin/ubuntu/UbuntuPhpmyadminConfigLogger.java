@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Erwin Müller <erwin.mueller@deventm.org>
+ * Copyright 2013-2014 Erwin Müller <erwin.mueller@deventm.org>
  *
  * This file is part of sscontrol-httpd-apache.
  *
@@ -32,6 +32,7 @@ import java.io.File;
 
 import javax.inject.Singleton;
 
+import com.anrisoftware.globalpom.exec.api.ProcessTask;
 import com.anrisoftware.globalpom.log.AbstractLogger;
 import com.anrisoftware.sscontrol.core.service.LinuxScript;
 import com.anrisoftware.sscontrol.httpd.domain.Domain;
@@ -96,9 +97,9 @@ class UbuntuPhpmyadminConfigLogger extends AbstractLogger {
         }
     }
 
-    void reconfigureService(LinuxScript script, Object worker) {
+    void reconfigureService(LinuxScript script, ProcessTask task) {
         if (isTraceEnabled()) {
-            trace(reconfigure_service_trace, script, worker);
+            trace(reconfigure_service_trace, script, task);
         } else if (isDebugEnabled()) {
             debug(reconfigure_service_debug, script);
         } else {
@@ -106,9 +107,9 @@ class UbuntuPhpmyadminConfigLogger extends AbstractLogger {
         }
     }
 
-    void importTables(LinuxScript script, Object worker, File file) {
+    void importTables(LinuxScript script, ProcessTask task, File file) {
         if (isTraceEnabled()) {
-            trace(import_tables_trace, file, script, worker);
+            trace(import_tables_trace, file, script, task);
         } else if (isDebugEnabled()) {
             debug(import_tables_debug, file, script);
         } else {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Erwin Müller <erwin.mueller@deventm.org>
+ * Copyright 2013-2014 Erwin Müller <erwin.mueller@deventm.org>
  *
  * This file is part of sscontrol-httpd-apache.
  *
@@ -18,6 +18,8 @@
  */
 package com.anrisoftware.sscontrol.httpd.apache.apache.linux
 
+import groovy.util.logging.Slf4j
+
 import javax.inject.Inject
 import javax.measure.Measure
 import javax.measure.unit.NonSI
@@ -26,27 +28,43 @@ import org.apache.commons.io.FileUtils
 
 import com.anrisoftware.globalpom.format.byteformat.ByteFormatFactory
 import com.anrisoftware.globalpom.format.byteformat.UnitMultiplier
+import com.anrisoftware.globalpom.textmatch.tokentemplate.TokenTemplate
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.Templates
+import com.anrisoftware.resources.templates.api.TemplatesFactory
 import com.anrisoftware.sscontrol.core.service.LinuxScript
-import com.anrisoftware.sscontrol.httpd.domain.DomainImpl;
-import com.anrisoftware.sscontrol.httpd.domain.Domain;
-import com.anrisoftware.sscontrol.httpd.webservice.WebService;
-import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokenTemplate
+import com.anrisoftware.sscontrol.httpd.domain.Domain
+import com.anrisoftware.sscontrol.httpd.webservice.WebService
+import com.anrisoftware.sscontrol.scripts.changefilemod.ChangeFileModFactory
+import com.anrisoftware.sscontrol.scripts.changefileowner.ChangeFileOwnerFactory
+import com.anrisoftware.sscontrol.scripts.mklink.MkLinkFactory
 
 /**
- * Configures php-fcgi for the domain.
+ * Configures <i>php-fcgi</i> for the domain.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
+@Slf4j
 class FcgiConfig {
 
     @Inject
-    private FcgiConfigLogger log
+    private FcgiConfigLogger logg
 
     @Inject
     ByteFormatFactory byteFormatFactory
+
+    @Inject
+    TemplatesFactory templatesFactory
+
+    @Inject
+    ChangeFileModFactory changeFileModFactory
+
+    @Inject
+    ChangeFileOwnerFactory changeFileOwnerFactory
+
+    @Inject
+    MkLinkFactory mkLinkFactory
 
     Templates fcgiTemplates
 
@@ -55,7 +73,7 @@ class FcgiConfig {
     LinuxScript script
 
     /**
-     * Sets the parent Apache script.
+     * Sets the parent <i>Apache</i> script.
      *
      * @param script
      *            the {@link LinuxScript}.
@@ -119,8 +137,12 @@ class FcgiConfig {
         def user = domain.domainUser
         def dir = scriptDir domain
         dir.mkdirs()
-        changeOwner owner: user.name, ownerGroup: user.group, files: dir, recursive: true
-        log.scriptsDirectoryCreated domain, dir
+        changeFileOwnerFactory.create(
+                log: log,
+                command: script.chownCommand,
+                owner: user.name, ownerGroup: user.group, files: dir, recursive: true,
+                this, threads)()
+        logg.scriptsDirectoryCreated domain, dir
     }
 
     void deployStarterScript(Domain domain) {
@@ -130,9 +152,17 @@ class FcgiConfig {
                 "domain", [scriptDir: scriptDir(domain)]
         def file = scriptStarterFile(domain)
         FileUtils.write file, string
-        changeOwner owner: user.name, ownerGroup: user.group, files: file
-        changeMod mod: "755", files: file
-        log.starterScriptDeployed domain, file, string
+        changeFileOwnerFactory.create(
+                log: log,
+                command: script.chownCommand,
+                owner: user.name, ownerGroup: user.group, files: file,
+                this, threads)()
+        changeFileModFactory.create(
+                log: log,
+                command: script.chmodCommand,
+                mod: "755", files: file,
+                this, threads)()
+        logg.starterScriptDeployed domain, file, string
     }
 
     /**
@@ -156,8 +186,11 @@ class FcgiConfig {
         def sourcedir = phpconfDir
         FileUtils.iterateFiles(sourcedir, null, false).each { File file ->
             def target = new File(targetdir, file.name)
-            link files: file, targets: target, override: true
-            log.linkPhpconf domain, file, target
+            mkLinkFactory.create(
+                    log: log, files: file, targets: target, override: true,
+                    command: script.linkCommand,
+                    this, threads)()
+            logg.linkPhpconf domain, file, target
         }
     }
 

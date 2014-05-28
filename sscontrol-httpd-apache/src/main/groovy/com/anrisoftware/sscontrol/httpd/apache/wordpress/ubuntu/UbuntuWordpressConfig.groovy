@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Erwin Müller <erwin.mueller@deventm.org>
+ * Copyright 2013-2014 Erwin Müller <erwin.mueller@deventm.org>
  *
  * This file is part of sscontrol-httpd-apache.
  *
@@ -19,6 +19,7 @@
 package com.anrisoftware.sscontrol.httpd.apache.wordpress.ubuntu
 
 import static org.apache.commons.io.FileUtils.*
+import groovy.util.logging.Slf4j
 
 import javax.inject.Inject
 
@@ -28,20 +29,37 @@ import com.anrisoftware.sscontrol.httpd.domain.Domain
 import com.anrisoftware.sscontrol.httpd.webservice.OverrideMode
 import com.anrisoftware.sscontrol.httpd.webservice.WebService
 import com.anrisoftware.sscontrol.httpd.wordpress.WordpressService
+import com.anrisoftware.sscontrol.scripts.changefilemod.ChangeFileModFactory
+import com.anrisoftware.sscontrol.scripts.changefileowner.ChangeFileOwnerFactory
+import com.anrisoftware.sscontrol.scripts.unix.InstallPackagesFactory
+import com.anrisoftware.sscontrol.scripts.unpack.UnpackFactory
 
 /**
- * Ubuntu Wordpress 3.
+ * <i>Ubuntu</i> <i>Wordpress 3.</i>
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
+@Slf4j
 abstract class UbuntuWordpressConfig extends Wordpress_3_Config {
 
     @Inject
-    private UbuntuWordpressConfigLogger log
+    private UbuntuWordpressConfigLogger logg
 
     @Inject
     private CheckFileHashFactory checkFileHashFactory
+
+    @Inject
+    InstallPackagesFactory installPackagesFactory
+
+    @Inject
+    ChangeFileModFactory changeFileModFactory
+
+    @Inject
+    ChangeFileOwnerFactory changeFileOwnerFactory
+
+    @Inject
+    UnpackFactory unpackFactory
 
     @Override
     void deployDomain(Domain domain, Domain refDomain, WebService service, List config) {
@@ -52,7 +70,7 @@ abstract class UbuntuWordpressConfig extends Wordpress_3_Config {
         setupDefaultPrefix service
         setupDefaultOverrideMode service
         setupDefaultForce service
-        installPackages wordpressPackages
+        installPackages()
         enableMods wordpressMods
         downloadArchive domain, service
         deployMainConfig domain, service
@@ -70,7 +88,16 @@ abstract class UbuntuWordpressConfig extends Wordpress_3_Config {
     }
 
     /**
-     * Downloads and unpacks the Wordpress archive.
+     * Installs the <i>Wordpress</i> packages.
+     */
+    void installPackages() {
+        installPackagesFactory.create(
+                log: log, command: script.installCommand, packages: wordpressPackages,
+                this, threads)()
+    }
+
+    /**
+     * Downloads and unpacks the <i>Wordpress</i> archive.
      *
      * @param domain
      *            the {@link Domain} of the Wordpress service.
@@ -106,7 +133,7 @@ abstract class UbuntuWordpressConfig extends Wordpress_3_Config {
     }
 
     boolean needDownloadArchive(File dest) {
-        log.checkNeedDownloadArchive script, dest, wordpressArchiveHash
+        logg.checkNeedDownloadArchive script, dest, wordpressArchiveHash
         if (dest.isFile() && wordpressArchiveHash != null) {
             def check = checkFileHashFactory.create this, file: dest, hash: wordpressArchiveHash
             check().matching
@@ -116,13 +143,13 @@ abstract class UbuntuWordpressConfig extends Wordpress_3_Config {
     }
 
     /**
-     * Unpacks the Wordpress archive.
+     * Unpacks the <i>Wordpress</i> archive.
      *
      * @param domain
-     *            the {@link Domain} domain of the Wordpress service.
+     *            the {@link Domain} domain of the <i>Wordpress</i> service.
      *
      * @param service
-     *            the {@link WebService} Wordpress service.
+     *            the {@link WebService} <i>Wordpress</i> service.
      *
      * @param archive
      *            the archive {@link File} file.
@@ -133,8 +160,11 @@ abstract class UbuntuWordpressConfig extends Wordpress_3_Config {
             dir.mkdirs()
         }
         def strip = stripArchive
-        unpack file: archive, type: archiveType(file: archive), output: dir, override: true, strip: strip
-        log.downloadArchive script, wordpressArchive
+        unpackFactory.create(
+                log: log, file: archive, output: dir, override: true, strip: strip,
+                commands: script.unpackCommands,
+                this, threads)()
+        logg.downloadArchive script, wordpressArchive
     }
 
     /**
@@ -169,23 +199,31 @@ abstract class UbuntuWordpressConfig extends Wordpress_3_Config {
         def pluginsdir = wordpressContentPluginsDir domain, service
         def themesdir = wordpressContentThemesDir domain, service
         def uploadsdir = wordpressContentUploadsDir domain, service
-        script.changeOwner owner: "root", ownerGroup: user.group, files: [
-            conffile
-        ]
-        script.changeMod mod: "0440", files: [
-            conffile
-        ]
-        script.changeOwner owner: user.name, ownerGroup: user.group, files: [
-            cachedir,
-            pluginsdir,
-            themesdir,
-            uploadsdir,
-        ]
-        script.changeMod mod: "0775", files: [
-            cachedir,
-            pluginsdir,
-            themesdir,
-            uploadsdir,
-        ]
+        changeFileOwnerFactory.create(
+                log: log, command: script.chownCommand,
+                owner: "root", ownerGroup: user.group, files: conffile,
+                this, threads)()
+        changeFileModFactory.create(
+                log: log, command: script.chmodCommand,
+                mod: "0440", files: conffile,
+                this, threads)()
+        changeFileOwnerFactory.create(
+                log: log, command: script.chownCommand,
+                owner: user.name, ownerGroup: user.group, files: [
+                    cachedir,
+                    pluginsdir,
+                    themesdir,
+                    uploadsdir,
+                ],
+                this, threads)()
+        changeFileModFactory.create(
+                log: log, command: script.chmodCommand,
+                mod: "0775", files: [
+                    cachedir,
+                    pluginsdir,
+                    themesdir,
+                    uploadsdir,
+                ],
+                this, threads)()
     }
 }

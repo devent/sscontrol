@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Erwin Müller <erwin.mueller@deventm.org>
+ * Copyright 2013-2014 Erwin Müller <erwin.mueller@deventm.org>
  *
  * This file is part of sscontrol-httpd-apache.
  *
@@ -19,11 +19,13 @@
 package com.anrisoftware.sscontrol.httpd.apache.apache.linux
 
 import static org.apache.commons.io.FileUtils.*
+import groovy.util.logging.Slf4j
 
 import javax.inject.Inject
 
 import com.anrisoftware.sscontrol.core.service.LinuxScript
-import com.anrisoftware.sscontrol.httpd.domain.SslDomain;
+import com.anrisoftware.sscontrol.httpd.domain.SslDomain
+import com.anrisoftware.sscontrol.scripts.changefilemod.ChangeFileModFactory
 
 /**
  * Deploys the SSL/domain configuration.
@@ -31,10 +33,14 @@ import com.anrisoftware.sscontrol.httpd.domain.SslDomain;
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
+@Slf4j
 class SslDomainConfig {
 
     @Inject
-    SslDomainConfigLogger log
+    SslDomainConfigLogger logg
+
+    @Inject
+    ChangeFileModFactory changeFileModFactory
 
     LinuxScript script
 
@@ -43,15 +49,19 @@ class SslDomainConfig {
      */
     void deployCertificates(SslDomain domain) {
         copyURLToFile domain.certificationResource, certFile(domain)
-        log.deployedCert domain
+        logg.deployedCert domain
         copyURLToFile domain.certificationKeyResource, certKeyFile(domain)
-        log.deployedCertKey domain
+        logg.deployedCertKey domain
         changePermissions(domain)
     }
 
     void changePermissions(SslDomain domain) {
         def dir = script.sslDir(domain)
-        changeMod mod: "go-r", files: "$dir.absolutePath/*"
+        changeFileModFactory.create(
+                log: log,
+                command: script.chmodCommand,
+                mod: "go-r", files: "${dir.absolutePath}/*",
+                this, threads)()
     }
 
     File certFile(SslDomain domain) {

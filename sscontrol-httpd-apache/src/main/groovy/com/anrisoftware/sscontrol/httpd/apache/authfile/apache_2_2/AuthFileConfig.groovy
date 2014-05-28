@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Erwin Müller <erwin.mueller@deventm.org>
+ * Copyright 2013-2014 Erwin Müller <erwin.mueller@deventm.org>
  *
  * This file is part of sscontrol-httpd-apache.
  *
@@ -21,6 +21,7 @@ package com.anrisoftware.sscontrol.httpd.apache.authfile.apache_2_2
 import static com.anrisoftware.sscontrol.httpd.apache.apache.ubuntu_10_04.Ubuntu_10_04_ScriptFactory.PROFILE
 import static org.apache.commons.io.FileUtils.writeLines
 import static org.apache.commons.lang3.StringUtils.split
+import groovy.util.logging.Slf4j
 
 import javax.inject.Inject
 
@@ -31,15 +32,17 @@ import org.stringtemplate.v4.ST
 import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.Templates
+import com.anrisoftware.resources.templates.api.TemplatesFactory
 import com.anrisoftware.sscontrol.core.service.LinuxScript
 import com.anrisoftware.sscontrol.httpd.apache.apache.linux.BasicAuth
 import com.anrisoftware.sscontrol.httpd.auth.AbstractAuthService
 import com.anrisoftware.sscontrol.httpd.auth.AuthType
 import com.anrisoftware.sscontrol.httpd.auth.RequireGroup
 import com.anrisoftware.sscontrol.httpd.auth.RequireUpdate
-import com.anrisoftware.sscontrol.httpd.domain.DomainImpl
-import com.anrisoftware.sscontrol.httpd.domain.Domain;
+import com.anrisoftware.sscontrol.httpd.domain.Domain
 import com.anrisoftware.sscontrol.httpd.webservice.WebService
+import com.anrisoftware.sscontrol.scripts.changefilemod.ChangeFileModFactory
+import com.anrisoftware.sscontrol.scripts.changefileowner.ChangeFileOwnerFactory
 
 /**
  * Auth/file configuration.
@@ -47,6 +50,7 @@ import com.anrisoftware.sscontrol.httpd.webservice.WebService
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
+@Slf4j
 abstract class AuthFileConfig extends BasicAuth {
 
     /**
@@ -55,7 +59,25 @@ abstract class AuthFileConfig extends BasicAuth {
     public static final String SERVICE_NAME = "auth-file"
 
     @Inject
-    AuthFileConfigLogger log
+    AuthFileConfigLogger logg
+
+    @Inject
+    TemplatesFactory templatesFactory
+
+    @Inject
+    ChangeFileModFactory changeFileModFactory
+
+    @Inject
+    ChangeFileOwnerFactory changeFileOwnerFactory
+
+    @Inject
+    RequireValidModeRenderer requireValidModeRenderer
+
+    @Inject
+    AuthFileBasicConfig authFileBasicConfig
+
+    @Inject
+    AuthFileDigestConfig authFileDigestConfig
 
     /**
      * Auth/file templates.
@@ -66,15 +88,6 @@ abstract class AuthFileConfig extends BasicAuth {
      * Domain configuration template.
      */
     TemplateResource authDomainConfigTemplate
-
-    @Inject
-    RequireValidModeRenderer requireValidModeRenderer
-
-    @Inject
-    AuthFileBasicConfig authFileBasicConfig
-
-    @Inject
-    AuthFileDigestConfig authFileDigestConfig
 
     @Override
     void deployService(Domain domain, WebService service, List config) {
@@ -247,11 +260,19 @@ abstract class AuthFileConfig extends BasicAuth {
         def owner = "root"
         def group = "root"
         def authdir = new File(authSubdirectory, domainDir(domain))
-        changeOwner owner: owner, ownerGroup: group, files: authdir, recursive: true
-        changeMod mod: "o-rw", files: [
-            passwordFile(service, domain),
-            groupFile(domain, service)
-        ]
+        changeFileOwnerFactory.create(
+                log: log,
+                command: script.chownCommand,
+                owner: owner, ownerGroup: group, files: authdir, recursive: true,
+                this, threads)()
+        changeFileModFactory.create(
+                log: log,
+                command: script.chmodCommand,
+                mod: "o-rw", files: [
+                    passwordFile(service, domain),
+                    groupFile(domain, service)
+                ],
+                this, threads)()
     }
 
     /**
@@ -324,7 +345,7 @@ abstract class AuthFileConfig extends BasicAuth {
         authFileBasicConfig.setScript this
         authFileDigestConfig.setScript this
         this.authTemplates = templatesFactory.create "Apache_2_2_AuthFile", ["renderers": [requireValidModeRenderer]]
-        authDomainConfigTemplate = authTemplates.getResource "domain"
+        this.authDomainConfigTemplate = authTemplates.getResource "domain"
     }
 
     /**

@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Erwin Müller <erwin.mueller@deventm.org>
+ * Copyright 2013-2014 Erwin Müller <erwin.mueller@deventm.org>
  *
  * This file is part of sscontrol-httpd-apache.
  *
@@ -18,25 +18,38 @@
  */
 package com.anrisoftware.sscontrol.httpd.apache.apache.ubuntu_10_04
 
+import groovy.util.logging.Slf4j
+
 import javax.inject.Inject
 
 import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.sscontrol.httpd.apache.apache.apache_2_2.Apache_2_2_Script
+import com.anrisoftware.sscontrol.scripts.unix.InstallPackagesFactory
 
 /**
- * Uses the Apache service on the Ubuntu 10.04 Linux system.
+ * Uses the <i>Apache</i> service on the <i>Ubuntu 10.04</i> Linux system.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
+@Slf4j
 class UbuntuScript extends Apache_2_2_Script {
 
     @Inject
     UbuntuPropertiesProvider ubuntuProperties
 
+    @Inject
+    InstallPackagesFactory installPackagesFactory
+
     @Override
     def distributionSpecificConfiguration() {
         installPackages()
+    }
+
+    void installPackages() {
+        installPackagesFactory.create(
+                log: log, command: installCommand, packages: packages,
+                this, threads)()
     }
 
     @Override

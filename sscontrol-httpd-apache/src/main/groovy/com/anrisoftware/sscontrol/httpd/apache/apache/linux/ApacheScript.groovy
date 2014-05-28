@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Erwin Müller <erwin.mueller@deventm.org>
+ * Copyright 2013-2014 Erwin Müller <erwin.mueller@deventm.org>
  *
  * This file is part of sscontrol-httpd-apache.
  *
@@ -19,30 +19,40 @@
 package com.anrisoftware.sscontrol.httpd.apache.apache.linux
 
 import static org.apache.commons.io.FileUtils.*
+import groovy.util.logging.Slf4j
 
 import javax.inject.Inject
 
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.sscontrol.core.debuglogging.DebugLoggingProperty
 import com.anrisoftware.sscontrol.core.service.LinuxScript
+import com.anrisoftware.sscontrol.httpd.domain.Domain
 import com.anrisoftware.sscontrol.httpd.domain.DomainImpl
-import com.anrisoftware.sscontrol.httpd.domain.Domain;
 import com.anrisoftware.sscontrol.httpd.service.HttpdService
 import com.anrisoftware.sscontrol.httpd.webservice.ServiceConfig
+import com.anrisoftware.sscontrol.scripts.unix.InstallPackagesFactory
+import com.anrisoftware.sscontrol.scripts.unix.ScriptExecFactory
 
 /**
- * Uses Apache service on a general Linux system.
+ * Uses <i>Apache</i> service on a general Linux system.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
+@Slf4j
 abstract class ApacheScript extends LinuxScript {
 
     @Inject
-    private ApacheScriptLogger log
+    private ApacheScriptLogger logg
 
     @Inject
     private DebugLoggingProperty debugLoggingProperty
+
+    @Inject
+    ScriptExecFactory scriptExecFactory
+
+    @Inject
+    InstallPackagesFactory installPackagesFactory
 
     @Inject
     Map<String, ServiceConfig> serviceConfigs
@@ -50,7 +60,6 @@ abstract class ApacheScript extends LinuxScript {
     @Override
     def run() {
         serviceConfigs.each { it.value.script = this }
-        super.run()
         setupDefaultBinding()
         setupDefaultDebug()
         distributionSpecificConfiguration()
@@ -497,27 +506,25 @@ abstract class ApacheScript extends LinuxScript {
         mods.each {
             def packages = modPackages it
             if (packages.size() > 0) {
-                installPackages packages
+                installPackagesFactory.create(
+                        log: log, command: installCommand, packages: packages,
+                        this, threads)()
             }
         }
-        def worker = scriptCommandFactory.create apacheCommandsTemplate,
-                "enableMods",
-                "command", enableModCommand,
-                "mods", mods
-        worker()
-        log.enabledMods this, worker, mods
+        def task = scriptExecFactory.create(
+                log: log, command: enableModCommand, mods: mods,
+                this, threads, apacheCommandsTemplate, "enableMods")()
+        logg.enabledMods this, task, mods
     }
 
     /**
      * Enable the specified sites.
      */
     def enableSites(def sites) {
-        def worker = scriptCommandFactory.create apacheCommandsTemplate,
-                "enableSites",
-                "command", enableSiteCommand,
-                "sites", sites
-        worker()
-        log.enabledSites this, worker, sites
+        def task = scriptExecFactory.create(
+                log: log, command: enableSiteCommand, sites: sites,
+                this, threads, apacheCommandsTemplate, "enableSites")()
+        logg.enabledSites this, task, sites
     }
 
     /**

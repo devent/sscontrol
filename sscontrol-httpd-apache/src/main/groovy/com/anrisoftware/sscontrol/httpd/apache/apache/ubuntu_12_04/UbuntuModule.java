@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Erwin Müller <erwin.mueller@deventm.org>
+ * Copyright 2013-2014 Erwin Müller <erwin.mueller@deventm.org>
  *
  * This file is part of sscontrol-httpd-apache.
  *
@@ -31,6 +31,13 @@ import com.anrisoftware.sscontrol.httpd.apache.authldap.ubuntu_12_04.Ubuntu_12_0
 import com.anrisoftware.sscontrol.httpd.apache.phpmyadmin.ubuntu_12_04.Ubuntu_12_04_PhpmyadminModule;
 import com.anrisoftware.sscontrol.httpd.apache.wordpress.ubuntu_12_04.Ubuntu_12_04_WordpressModule;
 import com.anrisoftware.sscontrol.httpd.webservice.ServiceConfig;
+import com.anrisoftware.sscontrol.scripts.changefilemod.ChangeFileModModule;
+import com.anrisoftware.sscontrol.scripts.changefileowner.ChangeFileOwnerModule;
+import com.anrisoftware.sscontrol.scripts.localgroupadd.LocalGroupAddModule;
+import com.anrisoftware.sscontrol.scripts.localuseradd.LocalUserAddModule;
+import com.anrisoftware.sscontrol.scripts.mklink.MkLinkModule;
+import com.anrisoftware.sscontrol.scripts.unix.UnixScriptsModule;
+import com.anrisoftware.sscontrol.scripts.unpack.UnpackModule;
 import com.google.inject.AbstractModule;
 import com.google.inject.multibindings.MapBinder;
 
@@ -44,6 +51,14 @@ class UbuntuModule extends AbstractModule {
 
     @Override
     protected void configure() {
+        install(new UnixScriptsModule());
+        install(new UnixScriptsModule.ExecCommandModule());
+        install(new ChangeFileOwnerModule());
+        install(new ChangeFileModModule());
+        install(new LocalGroupAddModule());
+        install(new LocalUserAddModule());
+        install(new MkLinkModule());
+        install(new UnpackModule());
         install(new CheckFileHashModule());
         install(new ResourcesModule());
         install(new Ubuntu_12_04_AuthFileModule());

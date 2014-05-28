@@ -1,9 +1,13 @@
 basicPassword(args) ::= <<
+<! - args.command - !>
+<! - args.user - !>
 <args.command> -nb "<args.user.name>" "<args.user.password>"
 
 >>
 
 digestPassword(args) ::= <<
+<! - args.auth - !>
+<! - args.user - !>
 (echo -n "<args.user.name>:<args.auth.authName>:" && echo -n "<args.user.name>:<args.auth.authName>:<args.user.password>" | md5sum) | cut -d '-' -f 1
 
 >>

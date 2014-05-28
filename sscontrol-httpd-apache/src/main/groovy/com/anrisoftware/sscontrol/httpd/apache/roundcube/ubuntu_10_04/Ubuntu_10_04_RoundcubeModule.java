@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Erwin Müller <erwin.mueller@deventm.org>
+ * Copyright 2013-2014 Erwin Müller <erwin.mueller@deventm.org>
  *
  * This file is part of sscontrol-httpd-apache.
  *
@@ -29,7 +29,7 @@ import com.google.inject.AbstractModule;
 import com.google.inject.multibindings.MapBinder;
 
 /**
- * Binds the Roundcube Ubuntu 10.04.
+ * Binds the <i>Roundcube</i> <i>Ubuntu 10.04.</i>
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0

@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Erwin Müller <erwin.mueller@deventm.org>
+ * Copyright 2013-2014 Erwin Müller <erwin.mueller@deventm.org>
  *
  * This file is part of sscontrol-httpd-apache.
  *
@@ -19,26 +19,37 @@
 package com.anrisoftware.sscontrol.httpd.apache.wordpress.linux
 
 import static org.apache.commons.io.FileUtils.*
+import groovy.util.logging.Slf4j
+
+import javax.inject.Inject
 
 import org.apache.commons.io.FilenameUtils
 
+import com.anrisoftware.globalpom.textmatch.tokentemplate.TokenTemplate
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.Templates
+import com.anrisoftware.resources.templates.api.TemplatesFactory
 import com.anrisoftware.sscontrol.httpd.apache.apache.linux.ApacheScript
-import com.anrisoftware.sscontrol.httpd.domain.DomainImpl;
-import com.anrisoftware.sscontrol.httpd.domain.Domain;
-import com.anrisoftware.sscontrol.httpd.webservice.WebService;
-import com.anrisoftware.sscontrol.httpd.wordpress.MultiSite;
-import com.anrisoftware.sscontrol.httpd.wordpress.WordpressService;
-import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokenTemplate
+import com.anrisoftware.sscontrol.httpd.domain.Domain
+import com.anrisoftware.sscontrol.httpd.webservice.WebService
+import com.anrisoftware.sscontrol.httpd.wordpress.MultiSite
+import com.anrisoftware.sscontrol.httpd.wordpress.WordpressService
+import com.anrisoftware.sscontrol.scripts.unpack.UnpackFactory
 
 /**
- * Wordpress 3 configuration.
+ * <i>Wordpress 3</i> configuration.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
+@Slf4j
 abstract class Wordpress_3_Config extends WordpressConfig {
+
+    @Inject
+    TemplatesFactory templatesFactory
+
+    @Inject
+    UnpackFactory unpackFactory
 
     Templates wordpressTemplates
 
@@ -477,9 +488,11 @@ abstract class Wordpress_3_Config extends WordpressConfig {
             def archive = themeArchive theme
             def name = new File(archive.path).name
             def dest = new File(tmpDirectory, name)
-            def type = archiveType file: dest
             copyURLToFile archive.toURL(), dest
-            unpack file: dest, type: type, output: dir, override: true, strip: false
+            unpackFactory.create(
+                    log: log, file: dest, output: dir, override: true, strip: false,
+                    commands: script.unpackCommands,
+                    this, threads)()
         }
     }
 
@@ -500,16 +513,18 @@ abstract class Wordpress_3_Config extends WordpressConfig {
             def archive = pluginArchive plugin
             def name = FilenameUtils.getName(archive.toString())
             def dest = new File(tmpDirectory, name)
-            def type = archiveType file: dest
             copyURLToFile archive.toURL(), dest
-            unpack file: dest, type: type, output: dir, override: true, strip: false
+            unpackFactory.create(
+                    log: log, file: dest, output: dir, override: true, strip: false,
+                    commands: script.unpackCommands,
+                    this, threads)()
         }
     }
 
     @Override
     void setScript(ApacheScript script) {
         super.setScript script
-        wordpressTemplates = templatesFactory.create "Wordpress_3"
-        wordpressConfigTemplate = wordpressTemplates.getResource "config"
+        this.wordpressTemplates = templatesFactory.create "Wordpress_3"
+        this.wordpressConfigTemplate = wordpressTemplates.getResource "config"
     }
 }

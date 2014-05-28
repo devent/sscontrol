@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Erwin Müller <erwin.mueller@deventm.org>
+ * Copyright 2013-2014 Erwin Müller <erwin.mueller@deventm.org>
  *
  * This file is part of sscontrol-httpd-apache.
  *
@@ -20,6 +20,7 @@ package com.anrisoftware.sscontrol.httpd.apache.apache.apache_2_2
 
 import static com.anrisoftware.sscontrol.httpd.apache.apache.ubuntu_10_04.Ubuntu_10_04_ScriptFactory.PROFILE
 import static org.apache.commons.io.FileUtils.*
+import groovy.util.logging.Slf4j
 
 import javax.inject.Inject
 
@@ -27,23 +28,26 @@ import org.apache.commons.io.FileUtils
 
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.Templates
+import com.anrisoftware.resources.templates.api.TemplatesFactory
 import com.anrisoftware.sscontrol.httpd.apache.apache.linux.ApacheScript
 import com.anrisoftware.sscontrol.httpd.apache.apache.linux.DomainConfig
 import com.anrisoftware.sscontrol.httpd.apache.apache.linux.SslDomainConfig
-import com.anrisoftware.sscontrol.httpd.domain.Domain;
+import com.anrisoftware.sscontrol.httpd.domain.Domain
 import com.anrisoftware.sscontrol.httpd.domain.SslDomain
 import com.anrisoftware.sscontrol.httpd.webservice.WebService
+import com.anrisoftware.sscontrol.scripts.unix.RestartServicesFactory
 
 /**
- * Configures Apache 2.2 service.
+ * Configures <i>Apache 2.2</i> service.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
+@Slf4j
 abstract class Apache_2_2_Script extends ApacheScript {
 
     @Inject
-    Apache_2_2_ScriptLogger log
+    Apache_2_2_ScriptLogger logg
 
     @Inject
     DomainConfig domainConfig
@@ -53,6 +57,12 @@ abstract class Apache_2_2_Script extends ApacheScript {
 
     @Inject
     RedirectConfig redirectConfig
+
+    @Inject
+    TemplatesFactory templatesFactory
+
+    @Inject
+    RestartServicesFactory restartServicesFactory
 
     /**
      * The {@link Templates} for the script.
@@ -104,30 +114,39 @@ abstract class Apache_2_2_Script extends ApacheScript {
         restartServices()
     }
 
-    def deployPortsConfig() {
+    void deployPortsConfig() {
         def string = portsConfigTemplate.getText true, "portsConfiguration", "service", service
         FileUtils.write portsConfigFile, string
     }
 
-    def deployDefaultConfig() {
+    void deployDefaultConfig() {
         def string = defaultsConfigTemplate.getText true, "defaultsConfiguration"
         FileUtils.write defaultConfigFile, string
     }
 
-    def deployDomainsConfig() {
+    void deployDomainsConfig() {
         def string = domainsConfiguration.getText true, "domainsConfiguration", "service", service
         FileUtils.write domainsConfigFile, string
     }
 
     /**
-     * Enables default Apache/mods.
+     * Enables default <i>Apache/mods.</i>
      */
     void enableDefaultMods() {
         enableMod "suexec"
         enableMods additionalMods
     }
 
-    def deployConfig() {
+    /**
+     * Restarts the <i>Apache</i> services.
+     */
+    void restartServices() {
+        restartServicesFactory.create(
+                log: log, command: restartCommand, services: restartServices,
+                this, threads)()
+    }
+
+    void deployConfig() {
         uniqueDomains.each { deployDomain it }
         service.domains.each { Domain domain ->
             List serviceConfig = []
@@ -139,7 +158,7 @@ abstract class Apache_2_2_Script extends ApacheScript {
         }
     }
 
-    def deployDomainService(Domain domain, List serviceConfig) {
+    void deployDomainService(Domain domain, List serviceConfig) {
         domain.services.findAll { WebService service ->
             service.domain == domain
         }.each { WebService service ->
@@ -152,10 +171,10 @@ abstract class Apache_2_2_Script extends ApacheScript {
         def profile = profileName
         def config = serviceConfigs["${profile}.${service.name}"]
         if (reftarget == null) {
-            log.checkServiceConfig config, service, profile
+            logg.checkServiceConfig config, service, profile
             config.deployService domain, service, serviceConfig
         } else {
-            log.checkServiceConfig config, service, profile
+            logg.checkServiceConfig config, service, profile
             def refdomain = findReferencedDomain service
             config.deployDomain domain, refdomain, reftarget, serviceConfig
         }

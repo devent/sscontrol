@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Erwin Müller <erwin.mueller@deventm.org>
+ * Copyright 2013-2014 Erwin Müller <erwin.mueller@deventm.org>
  *
  * This file is part of sscontrol-httpd-apache.
  *
@@ -19,24 +19,38 @@
 package com.anrisoftware.sscontrol.httpd.apache.apache.linux
 
 import static java.lang.String.format
+import groovy.util.logging.Slf4j
 
 import java.text.DecimalFormat
 
 import javax.inject.Inject
 
-import com.anrisoftware.sscontrol.httpd.domain.Domain;
-import com.anrisoftware.sscontrol.httpd.user.DomainUser;
+import com.anrisoftware.sscontrol.httpd.domain.Domain
+import com.anrisoftware.sscontrol.httpd.user.DomainUser
+import com.anrisoftware.sscontrol.scripts.changefileowner.ChangeFileOwnerFactory
+import com.anrisoftware.sscontrol.scripts.localgroupadd.LocalGroupAddFactory
+import com.anrisoftware.sscontrol.scripts.localuseradd.LocalUserAddFactory
 
 /**
- * Apache domain configuration.
+ * <i>Apache</i> domain configuration.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
+@Slf4j
 class DomainConfig {
 
     @Inject
-    private DomainConfigLogger log
+    private DomainConfigLogger logg
+
+    @Inject
+    ChangeFileOwnerFactory changeFileOwnerFactory
+
+    @Inject
+    LocalGroupAddFactory localGroupAddFactory
+
+    @Inject
+    LocalUserAddFactory localUserAddFactory
 
     int domainNumber
 
@@ -76,7 +90,7 @@ class DomainConfig {
         def refname = domain.domainUser.ref
         if (refname != null) {
             def ref = script.service.domains.find { Domain d -> d.id == refname }
-            log.checkRef domain, ref, refname
+            logg.checkRef domain, ref, refname
             return ref
         } else {
             return null
@@ -97,7 +111,11 @@ class DomainConfig {
     void createWebDir(Domain domain) {
         def user = domain.domainUser
         webDir(domain).mkdirs()
-        script.changeOwner owner: user.name, ownerGroup: user.group, files: webDir(domain)
+        changeFileOwnerFactory.create(
+                log: log,
+                command: script.chownCommand,
+                owner: user.name, ownerGroup: user.group, files: webDir(domain),
+                this, threads)()
     }
 
     void addSiteUser(Domain domain) {
@@ -105,13 +123,21 @@ class DomainConfig {
         int uid = user.uid
         def home = domainDir domain
         def shell = "/bin/false"
-        script.addUser userName: user.name, groupName: user.group, userId: uid, homeDir: home, shell: shell
+        localUserAddFactory.create(
+                log: log,
+                command: script.userAddCommand, usersFile: script.usersFile,
+                userName: user.name, groupName: user.group, userId: uid, homeDir: home, shell: shell,
+                this, threads)()
     }
 
     void addSiteGroup(Domain domain) {
         def user = domain.domainUser
         int gid = user.gid
-        addGroup groupName: domain.domainUser.group, groupId: gid
+        localGroupAddFactory.create(
+                log: log,
+                command: script.groupAddCommand, groupsFile: script.groupsFile,
+                groupName: domain.domainUser.group, groupId: gid,
+                this, threads)()
     }
 
     def propertyMissing(String name) {

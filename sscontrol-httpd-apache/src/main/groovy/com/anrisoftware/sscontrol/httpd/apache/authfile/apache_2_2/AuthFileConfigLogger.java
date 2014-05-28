@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Erwin Müller <erwin.mueller@deventm.org>
+ * Copyright 2013-2014 Erwin Müller <erwin.mueller@deventm.org>
  *
  * This file is part of sscontrol-httpd-apache.
  *
@@ -18,16 +18,9 @@
  */
 package com.anrisoftware.sscontrol.httpd.apache.authfile.apache_2_2;
 
-import static com.anrisoftware.sscontrol.httpd.apache.authfile.apache_2_2.AuthFileConfigLogger._.auth_users_deploy1;
-import static com.anrisoftware.sscontrol.httpd.apache.authfile.apache_2_2.AuthFileConfigLogger._.auth_users_deploy2;
-import static com.anrisoftware.sscontrol.httpd.apache.authfile.apache_2_2.AuthFileConfigLogger._.auth_users_deploy3;
-
 import javax.inject.Singleton;
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
-import com.anrisoftware.sscontrol.core.service.LinuxScript;
-import com.anrisoftware.sscontrol.httpd.auth.AbstractAuthService;
-import com.anrisoftware.sscontrol.workers.command.script.ScriptCommandWorker;
 
 /**
  * Logging messages for {@link AuthFileConfig}.
@@ -65,14 +58,4 @@ class AuthFileConfigLogger extends AbstractLogger {
         super(AuthFileConfig.class);
     }
 
-    void deployAuthUsers(LinuxScript script, ScriptCommandWorker worker,
-            AbstractAuthService auth) {
-        if (isTraceEnabled()) {
-            trace(auth_users_deploy1, auth, script, worker);
-        } else if (isDebugEnabled()) {
-            debug(auth_users_deploy2, auth, script);
-        } else {
-            info(auth_users_deploy3, auth.getName());
-        }
-    }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Erwin Müller <erwin.mueller@deventm.org>
+ * Copyright 2013-2014 Erwin Müller <erwin.mueller@deventm.org>
  *
  * This file is part of sscontrol-httpd-apache.
  *
@@ -19,9 +19,7 @@
 package com.anrisoftware.sscontrol.httpd.apache.authfile.apache_2_2;
 
 import static com.anrisoftware.sscontrol.httpd.apache.authfile.apache_2_2.AuthFileBasicConfigLogger._.htpasswd_args_missing;
-import static org.apache.commons.lang3.Validate.isTrue;
-
-import java.util.Map;
+import static org.apache.commons.lang3.Validate.notNull;
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
 
@@ -34,7 +32,6 @@ import com.anrisoftware.globalpom.log.AbstractLogger;
 class AuthFileBasicConfigLogger extends AbstractLogger {
 
     private static final String USER = "user";
-    private static final String COMMAND = "command";
 
     enum _ {
 
@@ -59,11 +56,8 @@ class AuthFileBasicConfigLogger extends AbstractLogger {
         super(AuthFileBasicConfig.class);
     }
 
-    void checkHtpasswdArgs(Object script, Map<String, Object> args) {
-        isTrue(args.containsKey(COMMAND), htpasswd_args_missing.toString(),
-                COMMAND, script);
-        isTrue(args.containsKey(USER), htpasswd_args_missing.toString(), USER,
-                script);
+    void checkHtpasswdArgs(Object script, Object arg) {
+        notNull(arg, htpasswd_args_missing.toString(), USER, script);
     }
 
 }

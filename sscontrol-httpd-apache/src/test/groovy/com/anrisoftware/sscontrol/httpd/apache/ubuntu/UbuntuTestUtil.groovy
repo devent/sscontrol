@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Erwin Müller <erwin.mueller@deventm.org>
+ * Copyright 2013-2014 Erwin Müller <erwin.mueller@deventm.org>
  *
  * This file is part of sscontrol-httpd-apache.
  *
@@ -25,12 +25,15 @@ import org.junit.BeforeClass
 import org.junit.Rule
 import org.junit.rules.TemporaryFolder
 
+import com.anrisoftware.globalpom.threads.api.Threads
+import com.anrisoftware.globalpom.threads.properties.PropertiesThreadsFactory
 import com.anrisoftware.sscontrol.core.api.ServiceLoader as SscontrolServiceLoader
 import com.anrisoftware.sscontrol.core.api.ServiceLoaderFactory
 import com.anrisoftware.sscontrol.core.api.ServicesRegistry
 import com.anrisoftware.sscontrol.core.modules.CoreModule
 import com.anrisoftware.sscontrol.core.modules.CoreResourcesModule
 import com.anrisoftware.sscontrol.core.service.ServiceModule
+import com.anrisoftware.sscontrol.core.service.ThreadsPropertiesProvider
 import com.anrisoftware.sscontrol.httpd.service.HttpdPreScript
 import com.anrisoftware.sscontrol.httpd.service.HttpdPreScriptModule
 import com.google.inject.Guice
@@ -49,6 +52,12 @@ class UbuntuTestUtil {
     static ServiceLoaderFactory loaderFactory
 
     static HttpdPreScript preScript
+
+    static ThreadsPropertiesProvider threadsPropertiesProvider
+
+    static PropertiesThreadsFactory threadsFactory
+
+    static Threads threads
 
     @Rule
     public TemporaryFolder tmp = new TemporaryFolder()
@@ -72,6 +81,7 @@ class UbuntuTestUtil {
         registry = injector.getInstance ServicesRegistry
         loader = loaderFactory.create registry, variables
         loader.setParent injector
+        loader.setThreads threads
     }
 
     @BeforeClass
@@ -79,6 +89,16 @@ class UbuntuTestUtil {
         injector = createInjector()
         loaderFactory = injector.getInstance ServiceLoaderFactory
         preScript = injector.getInstance HttpdPreScript
+        threadsPropertiesProvider = injector.getInstance ThreadsPropertiesProvider
+        threadsFactory = injector.getInstance PropertiesThreadsFactory
+        threads = createThreads()
+    }
+
+    static createThreads() {
+        def threads = threadsFactory.create();
+        threads.setProperties(threadsPropertiesProvider.get());
+        threads.setName("script");
+        return threads
     }
 
     static Injector createInjector() {

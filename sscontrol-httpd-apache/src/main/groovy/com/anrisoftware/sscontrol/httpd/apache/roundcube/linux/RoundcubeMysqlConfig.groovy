@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Erwin Müller <erwin.mueller@deventm.org>
+ * Copyright 2013-2014 Erwin Müller <erwin.mueller@deventm.org>
  *
  * This file is part of sscontrol-httpd-apache.
  *
@@ -18,11 +18,14 @@
  */
 package com.anrisoftware.sscontrol.httpd.apache.roundcube.linux;
 
+import javax.inject.Inject
+
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.Templates
+import com.anrisoftware.resources.templates.api.TemplatesFactory
 import com.anrisoftware.sscontrol.core.service.LinuxScript
 import com.anrisoftware.sscontrol.httpd.apache.roundcube.api.RoundcubeDatabaseConfig
-import com.anrisoftware.sscontrol.httpd.roundcube.RoundcubeService;
+import com.anrisoftware.sscontrol.httpd.roundcube.RoundcubeService
 
 /**
  * MySQL Roundcube.
@@ -35,6 +38,9 @@ class RoundcubeMysqlConfig implements RoundcubeDatabaseConfig {
     public static final String NAME = "mysql";
 
     private LinuxScript script;
+
+    @Inject
+    TemplatesFactory templatesFactory
 
     Templates roundcubeTemplates
 
@@ -55,8 +61,8 @@ class RoundcubeMysqlConfig implements RoundcubeDatabaseConfig {
     @Override
     void setScript(LinuxScript script) {
         this.script = script;
-        roundcubeTemplates = templatesFactory.create "Roundcube_0_9"
-        roundcubeConfigTemplate = roundcubeTemplates.getResource "config"
+        this.roundcubeTemplates = templatesFactory.create "Roundcube_0_9"
+        this.roundcubeConfigTemplate = roundcubeTemplates.getResource "config"
     }
 
     @Override

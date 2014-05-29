@@ -23,6 +23,6 @@ proxyDomainConf(proxy, properties) ::= <<
 # - Auto-generated -
 #
 
-proxy_cache_path <properties.proxyCacheDir> levels=1:2 keys_zone=<proxy.proxyName>:<properties.proxyCacheSize> max_size=<properties.proxyCacheMaximumSize>;
+proxy_cache_path <properties.proxyCacheDir>/<proxy.proxyName> levels=1:2 keys_zone=<proxy.proxyName>:<properties.proxyCacheSize> max_size=<properties.proxyCacheMaximumSize>;
 
 >>

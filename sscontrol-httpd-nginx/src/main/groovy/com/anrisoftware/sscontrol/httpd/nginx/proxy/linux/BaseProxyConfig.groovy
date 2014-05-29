@@ -81,10 +81,16 @@ abstract class BaseProxyConfig {
 
     /**
      * Deploys the domain specific proxy configuration.
+     *
+     * @param service
+     *            the {@link ProxyService}.
      */
     void deployProxyDomainConfig(ProxyService service) {
         def file = proxyDomainConfigFile service
-        def confstr = proxyConfigTemplate.getText(true, "proxyDomainConf", "proxy", service, "properties", this)
+        def confstr = proxyConfigTemplate.getText(
+                true, "proxyDomainConf",
+                "proxy", service,
+                "properties", this)
         FileUtils.write file, confstr, charset
     }
 

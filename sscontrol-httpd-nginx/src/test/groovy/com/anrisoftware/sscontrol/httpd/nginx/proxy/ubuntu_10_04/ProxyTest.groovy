@@ -30,7 +30,7 @@ import org.junit.Test
 import com.anrisoftware.sscontrol.httpd.nginx.ubuntu.UbuntuTestUtil
 
 /**
- * Proxy Nginx on a Ubuntu 10.04 server.
+ * Proxy <i>Nginx</i> on a <i>Ubuntu 10.04</i> server.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0

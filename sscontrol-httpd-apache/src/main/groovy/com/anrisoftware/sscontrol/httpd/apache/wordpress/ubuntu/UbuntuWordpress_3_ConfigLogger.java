@@ -18,9 +18,9 @@
  */
 package com.anrisoftware.sscontrol.httpd.apache.wordpress.ubuntu;
 
-import static com.anrisoftware.sscontrol.httpd.apache.wordpress.ubuntu.UbuntuWordpressConfigLogger._.check_need_download;
-import static com.anrisoftware.sscontrol.httpd.apache.wordpress.ubuntu.UbuntuWordpressConfigLogger._.download_archive_info;
-import static com.anrisoftware.sscontrol.httpd.apache.wordpress.ubuntu.UbuntuWordpressConfigLogger._.download_archive_trace;
+import static com.anrisoftware.sscontrol.httpd.apache.wordpress.ubuntu.UbuntuWordpress_3_ConfigLogger._.check_need_download;
+import static com.anrisoftware.sscontrol.httpd.apache.wordpress.ubuntu.UbuntuWordpress_3_ConfigLogger._.download_archive_info;
+import static com.anrisoftware.sscontrol.httpd.apache.wordpress.ubuntu.UbuntuWordpress_3_ConfigLogger._.download_archive_trace;
 
 import java.io.File;
 import java.net.URI;
@@ -38,7 +38,7 @@ import com.anrisoftware.sscontrol.httpd.apache.phpmyadmin.ubuntu_10_04.UbuntuCon
  * @since 1.0
  */
 @Singleton
-class UbuntuWordpressConfigLogger extends AbstractLogger {
+class UbuntuWordpress_3_ConfigLogger extends AbstractLogger {
 
     enum _ {
 
@@ -64,7 +64,7 @@ class UbuntuWordpressConfigLogger extends AbstractLogger {
     /**
      * Creates a logger for {@link UbuntuConfig}.
      */
-    public UbuntuWordpressConfigLogger() {
+    public UbuntuWordpress_3_ConfigLogger() {
         super(UbuntuConfig.class);
     }
 

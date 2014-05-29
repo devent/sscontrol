@@ -26,7 +26,7 @@ import javax.inject.Inject
 import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.sscontrol.core.service.LinuxScript
 import com.anrisoftware.sscontrol.httpd.apache.apache.ubuntu_12_04.Ubuntu_12_04_ScriptFactory
-import com.anrisoftware.sscontrol.httpd.apache.wordpress.ubuntu.UbuntuWordpressConfig
+import com.anrisoftware.sscontrol.httpd.apache.wordpress.ubuntu.UbuntuWordpress_3_Config
 import com.anrisoftware.sscontrol.httpd.domain.Domain;
 import com.anrisoftware.sscontrol.httpd.webservice.ServiceConfig;
 import com.anrisoftware.sscontrol.httpd.webservice.WebService;
@@ -37,7 +37,7 @@ import com.anrisoftware.sscontrol.httpd.webservice.WebService;
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class UbuntuConfig extends UbuntuWordpressConfig implements ServiceConfig {
+class UbuntuConfig extends UbuntuWordpress_3_Config implements ServiceConfig {
 
     @Inject
     private UbuntuConfigLogger log

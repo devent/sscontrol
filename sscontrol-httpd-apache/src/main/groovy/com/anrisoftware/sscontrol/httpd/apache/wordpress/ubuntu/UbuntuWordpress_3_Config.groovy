@@ -41,10 +41,10 @@ import com.anrisoftware.sscontrol.scripts.unpack.UnpackFactory
  * @since 1.0
  */
 @Slf4j
-abstract class UbuntuWordpressConfig extends Wordpress_3_Config {
+abstract class UbuntuWordpress_3_Config extends Wordpress_3_Config {
 
     @Inject
-    private UbuntuWordpressConfigLogger logg
+    private UbuntuWordpress_3_ConfigLogger logg
 
     @Inject
     private CheckFileHashFactory checkFileHashFactory
@@ -110,7 +110,7 @@ abstract class UbuntuWordpressConfig extends Wordpress_3_Config {
             return
         }
         def name = new File(wordpressArchive.path).name
-        def dest = new File(tmpDirectory, "wordpress-3-8-$name")
+        def dest = new File(tmpDirectory, "wordpress-3-$name")
         needDownloadArchive(dest) ? copyURLToFile(wordpressArchive.toURL(), dest) : false
         unpackArchive domain, service, dest
     }

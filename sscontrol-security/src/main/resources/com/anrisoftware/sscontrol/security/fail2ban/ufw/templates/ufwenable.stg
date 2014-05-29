@@ -1,4 +1,4 @@
 ufwenable(args) ::= <<
-<args.command> enable
+<args.command> -f enable
 
 >>

@@ -1,2 +1,2 @@
-enable
-enable
+-f enable
+-f enable

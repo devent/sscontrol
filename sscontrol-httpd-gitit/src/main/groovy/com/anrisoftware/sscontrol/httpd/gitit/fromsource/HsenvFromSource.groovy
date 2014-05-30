@@ -19,6 +19,7 @@
 package com.anrisoftware.sscontrol.httpd.gitit.fromsource
 
 import static org.apache.commons.io.FileUtils.*
+import groovy.util.logging.Slf4j
 
 import javax.inject.Inject
 
@@ -28,21 +29,35 @@ import org.stringtemplate.v4.ST
 import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.Templates
+import com.anrisoftware.resources.templates.api.TemplatesFactory
 import com.anrisoftware.sscontrol.httpd.domain.Domain
 import com.anrisoftware.sscontrol.httpd.gitit.GititService
 import com.anrisoftware.sscontrol.httpd.webservice.OverrideMode
 import com.anrisoftware.sscontrol.httpd.webservice.WebService
+import com.anrisoftware.sscontrol.scripts.unix.ScriptExecFactory
+import com.anrisoftware.sscontrol.scripts.unpack.UnpackFactory
 
 /**
- * Installs and configures <i>Gitit</i> with the help of <i>hsenv</i> from source.
+ * Installs and configures <i>Gitit</i> with the help of <i>hsenv</i>
+ * from source.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
+@Slf4j
 abstract class HsenvFromSource {
 
     @Inject
-    private HsenvFromSourceLogger log
+    private HsenvFromSourceLogger logg
+
+    @Inject
+    TemplatesFactory templatesFactory
+
+    @Inject
+    UnpackFactory unpackFactory
+
+    @Inject
+    ScriptExecFactory scriptExecFactory
 
     Object script
 
@@ -120,16 +135,19 @@ abstract class HsenvFromSource {
     void unpackArchive(Domain domain, WebService service, File archive) {
         def dir = gititSourceDir domain, service
         dir.isDirectory() ? false : dir.mkdirs()
-        unpack file: archive, type: archiveType(file: archive), output: dir, override: true, strip: true
-        log.unpackArchiveDone this, gititArchive
+        unpackFactory.create(
+                log: log, file: archive, output: dir, override: true, strip: true,
+                commands: script.unpackCommands,
+                this, threads)()
+        logg.unpackArchiveDone this, gititArchive
     }
 
     /**
      * Installs <i>hsenv</i>.
      */
     void installHsenv() {
-        installCabalPackages packages: hsenvCabalPackages
-        log.installHsenvDone this, hsenvCabalPackages
+        installCabalPackages hsenvCabalPackages
+        logg.installHsenvDone this, hsenvCabalPackages
     }
 
     /**
@@ -141,18 +159,23 @@ abstract class HsenvFromSource {
      * @param service
      *            the {@link GititService} service.
      *
+     * @see #getHsenvCommand()
+     * @see #getHsenvGititPackages()
+     * @see #getHsenvCabalInstallTimeout()
      */
     void installHsenvCabalPackages(Domain domain, GititService service) {
-        def args = [:]
-        args.gititDir = gititDir domain, service
-        args.hsenvCommand = hsenvCommand
-        args.cabalCommand = hsenvCabalCommand domain, service
-        args.activateCommand = hsenvActivateCommand domain, service
-        args.packages = hsenvGititPackages
-        def worker = scriptCommandFactory.create(hsenvCommandTemplate, "hsenvInstallCommand", "args", args)
-        worker.timeoutMs = -1
-        worker()
-        log.installHsenvCabalPackagesDone this, worker, args
+        def gititDir = gititDir domain, service
+        def hsenvCommand = hsenvCommand
+        def cabalCommand = hsenvCabalCommand domain, service
+        def activateCommand = hsenvActivateCommand domain, service
+        def packages = hsenvGititPackages
+        def task = scriptExecFactory.create(
+                log: log, gititDir: gititDir, hsenvCommand: hsenvCommand,
+                activateCommand: activateCommand, cabalCommand: cabalCommand,
+                deactivateCommand: hsenvDeactivateCommand, packages: packages,
+                timeout: cabalInstallTimeout,
+                this, threads, hsenvCommandTemplate, "hsenvInstallCommand")()
+        logg.installHsenvCabalPackagesDone this, task, packages
     }
 
     /**
@@ -166,16 +189,18 @@ abstract class HsenvFromSource {
      *
      */
     void installGitit(Domain domain, GititService service) {
-        def args = [:]
-        args.gititDir = gititDir domain, service
-        args.hsenvCommand = hsenvCommand
-        args.cabalCommand = hsenvCabalCommand domain, service
-        args.activateCommand = hsenvActivateCommand domain, service
-        args.gititSourceDir = gititSourceDir domain, service
-        def worker = scriptCommandFactory.create(hsenvCommandTemplate, "hsenvCompileCommand", "args", args)
-        worker.timeoutMs = -1
-        worker()
-        log.installGititDone this, worker, args
+        def gititDir = gititDir domain, service
+        def hsenvCommand = hsenvCommand
+        def cabalCommand = hsenvCabalCommand domain, service
+        def activateCommand = hsenvActivateCommand domain, service
+        def gititSourceDir = gititSourceDir domain, service
+        def task = scriptExecFactory.create(
+                log: log, gititDir: gititDir, hsenvCommand: hsenvCommand,
+                activateCommand: activateCommand, cabalCommand: cabalCommand,
+                deactivateCommand: hsenvDeactivateCommand, gititSourceDir: gititSourceDir,
+                bashCommand: bashCommand, timeout: cabalInstallTimeout,
+                this, threads, hsenvCommandTemplate, "hsenvCompileCommand")()
+        logg.installGititDone this, task
     }
 
     /**
@@ -375,8 +400,8 @@ abstract class HsenvFromSource {
      */
     void setScript(Object script) {
         this.script = script
-        hsenvTemplates = templatesFactory.create "HsenvFromSource"
-        hsenvCommandTemplate = hsenvTemplates.getResource "hsenvcommands"
+        this.hsenvTemplates = templatesFactory.create "HsenvFromSource"
+        this.hsenvCommandTemplate = hsenvTemplates.getResource "hsenvcommands"
     }
 
     /**

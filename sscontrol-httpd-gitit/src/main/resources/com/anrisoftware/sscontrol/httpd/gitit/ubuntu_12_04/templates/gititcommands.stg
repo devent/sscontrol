@@ -1,4 +1,12 @@
 cabalInstallCommand(args) ::= <<
-<args.cabalCommand> update && <args.cabalCommand> install <args.packages;separator=" ">
+<! - args.command - !>
+<! - args.packages - !>
+<args.command> update && <args.command> install <args.packages;separator=" ">
+
+>>
+
+printDefaultConfigCommand(args) ::= <<
+<! - args.command - !>
+<args.command> --print-default-config
 
 >>

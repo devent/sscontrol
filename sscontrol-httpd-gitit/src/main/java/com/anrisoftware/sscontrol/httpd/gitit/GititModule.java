@@ -20,6 +20,7 @@ package com.anrisoftware.sscontrol.httpd.gitit;
 
 import com.anrisoftware.sscontrol.core.groovy.StatementsMapModule;
 import com.anrisoftware.sscontrol.httpd.webservice.WebService;
+import com.anrisoftware.sscontrol.scripts.unix.UnixScriptsModule;
 import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 
@@ -33,6 +34,8 @@ public class GititModule extends AbstractModule {
 
     @Override
     protected void configure() {
+        install(new UnixScriptsModule());
+        install(new UnixScriptsModule.ExecCommandModule());
         install(new FactoryModuleBuilder().implement(WebService.class,
                 GititService.class).build(GititServiceFactory.class));
         install(new FactoryModuleBuilder().implement(Force.class, Force.class)

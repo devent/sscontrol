@@ -18,19 +18,23 @@
  */
 package com.anrisoftware.sscontrol.httpd.gitit.ubuntu_12_04;
 
+import groovy.util.logging.Slf4j
+
 import javax.inject.Inject
 
 import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.Templates
+import com.anrisoftware.resources.templates.api.TemplatesFactory
 import com.anrisoftware.sscontrol.core.service.LinuxScript
 import com.anrisoftware.sscontrol.httpd.domain.Domain
 import com.anrisoftware.sscontrol.httpd.gitit.GititService
 import com.anrisoftware.sscontrol.httpd.gitit.core.Gitit_0_10_Config
 import com.anrisoftware.sscontrol.httpd.gitit.core.RepositoryTypeRenderer
-import com.anrisoftware.sscontrol.httpd.gitit.nginx_ubuntu_12_04.GititConfigFactory;
+import com.anrisoftware.sscontrol.httpd.gitit.nginx_ubuntu_12_04.GititConfigFactory
 import com.anrisoftware.sscontrol.httpd.webservice.ServiceConfig
 import com.anrisoftware.sscontrol.httpd.webservice.WebService
+import com.anrisoftware.sscontrol.scripts.unix.InstallPackagesFactory
 
 /**
  * <i>Gitit</i> configuration for <i>Ubuntu 12.04</i>.
@@ -38,6 +42,7 @@ import com.anrisoftware.sscontrol.httpd.webservice.WebService
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
+@Slf4j
 class Ubuntu_12_04_Config extends Gitit_0_10_Config implements ServiceConfig {
 
     @Inject
@@ -48,6 +53,12 @@ class Ubuntu_12_04_Config extends Gitit_0_10_Config implements ServiceConfig {
 
     @Inject
     UbuntuHsenvFromSourceConfig ubuntuHsenvFromSourceConfig
+
+    @Inject
+    InstallPackagesFactory installPackagesFactory
+
+    @Inject
+    TemplatesFactory templatesFactory
 
     Templates gititTemplates
 
@@ -67,9 +78,18 @@ class Ubuntu_12_04_Config extends Gitit_0_10_Config implements ServiceConfig {
 
     @Override
     void deployService(Domain domain, WebService service, List config) {
-        installPackages gititPackages
+        installPackages()
         ubuntuHsenvFromSourceConfig.deployService domain, service, config
         super.deployService domain, service, config
+    }
+
+    /**
+     * Installs the <i>Gitit</i> packages.
+     */
+    void installPackages() {
+        installPackagesFactory.create(
+                log: log, command: script.installCommand, packages: gititPackages,
+                this, threads)()
     }
 
     @Override

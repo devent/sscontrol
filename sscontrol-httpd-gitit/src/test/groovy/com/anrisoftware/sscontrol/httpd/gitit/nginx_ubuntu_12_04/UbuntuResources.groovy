@@ -34,6 +34,7 @@ enum UbuntuResources {
     restartCommand("/etc/init.d/nginx", UbuntuResources.class.getResource("echo_command.txt")),
     aptitudeCommand("/usr/bin/aptitude", UbuntuResources.class.getResource("echo_command.txt")),
     aptKeyCommand("/usr/bin/apt-key", UbuntuResources.class.getResource("echo_command.txt")),
+    bashCommand("/bin/bash", UbuntuResources.class.getResource("echo_command.txt")),
     chmodCommand("/bin/chmod", UbuntuResources.class.getResource("echo_command.txt")),
     chownCommand("/bin/chown", UbuntuResources.class.getResource("echo_command.txt")),
     useraddCommand("/usr/sbin/useradd", UbuntuResources.class.getResource("echo_command.txt")),
@@ -63,6 +64,7 @@ enum UbuntuResources {
     static copyUbuntuFiles(File parent) {
         aptitudeCommand.createCommand parent
         aptKeyCommand.createCommand parent
+        bashCommand.createCommand parent
         chmodCommand.createCommand parent
         chownCommand.createCommand parent
         groupaddCommand.createCommand parent

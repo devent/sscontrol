@@ -32,10 +32,9 @@ import static com.anrisoftware.sscontrol.httpd.gitit.core.Gitit_0_10_ConfigLogge
 import static com.anrisoftware.sscontrol.httpd.gitit.core.Gitit_0_10_ConfigLogger._.service_file_created_trace;
 
 import java.io.File;
-import java.util.Map;
 
+import com.anrisoftware.globalpom.exec.api.ProcessTask;
 import com.anrisoftware.globalpom.log.AbstractLogger;
-import com.anrisoftware.sscontrol.workers.command.script.ScriptCommandWorker;
 
 /**
  * Logging for {@link Gitit_0_10_Config}.
@@ -47,11 +46,11 @@ class Gitit_0_10_ConfigLogger extends AbstractLogger {
 
     enum _ {
 
-        install_packages_done_trace("Install packages done {} in {}, {}."),
+        install_packages_done_trace("Install packages {} done in {}, {}."),
 
-        install_packages_done_debug("Install packages done {} in {}."),
+        install_packages_done_debug("Install packages {} done in {}."),
 
-        install_packages_done_info("Install packages done {}."),
+        install_packages_done_info("Install packages {} done."),
 
         default_config_created_trace(
                 "Default configuration '{}' created for {}: \n>>>\n{}<<<"),
@@ -98,14 +97,14 @@ class Gitit_0_10_ConfigLogger extends AbstractLogger {
         super(Gitit_0_10_Config.class);
     }
 
-    void installCabalPackagesDone(Gitit_0_10_Config config,
-            ScriptCommandWorker worker, @SuppressWarnings("rawtypes") Map args) {
+    void installCabalPackagesDone(Gitit_0_10_Config config, ProcessTask task,
+            Object packages) {
         if (isTraceEnabled()) {
-            trace(install_packages_done_trace, args, config, worker);
+            trace(install_packages_done_trace, packages, config, task);
         } else if (isDebugEnabled()) {
-            debug(install_packages_done_debug, args, config);
+            debug(install_packages_done_debug, packages, config);
         } else {
-            info(install_packages_done_info, args);
+            info(install_packages_done_info, packages);
         }
     }
 

@@ -18,12 +18,16 @@
  */
 package com.anrisoftware.sscontrol.httpd.gitit.core
 
+import groovy.util.logging.Slf4j
+
 import javax.inject.Inject
 
 import org.apache.commons.io.FileUtils
 import org.apache.commons.lang3.builder.ToStringBuilder
+import org.joda.time.Duration
 import org.stringtemplate.v4.ST
 
+import com.anrisoftware.globalpom.textmatch.tokentemplate.TokenTemplate
 import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.sscontrol.core.debuglogging.DebugLoggingFactory
@@ -34,8 +38,8 @@ import com.anrisoftware.sscontrol.httpd.gitit.GititService
 import com.anrisoftware.sscontrol.httpd.gitit.LoginRequired
 import com.anrisoftware.sscontrol.httpd.gitit.nginx_ubuntu_12_04.GititConfigFactory
 import com.anrisoftware.sscontrol.httpd.webservice.WebService
-import com.anrisoftware.sscontrol.workers.command.exec.ExecCommandWorkerFactory
-import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokenTemplate
+import com.anrisoftware.sscontrol.scripts.changefilemod.ChangeFileModFactory
+import com.anrisoftware.sscontrol.scripts.unix.ScriptExecFactory
 
 /**
  * Configures <i>Gitit 0.10.</i>
@@ -43,19 +47,23 @@ import com.anrisoftware.sscontrol.workers.text.tokentemplate.TokenTemplate
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
+@Slf4j
 abstract class Gitit_0_10_Config {
 
     @Inject
-    private Gitit_0_10_ConfigLogger log
+    private Gitit_0_10_ConfigLogger logg
 
     @Inject
-    private ExecCommandWorkerFactory execCommandWorkerFactory
+    ScriptExecFactory scriptExecFactory
 
     @Inject
-    private DebugLoggingFactory debugLoggingFactory
+    ChangeFileModFactory changeFileModFactory
 
     @Inject
-    private DebugLevelRenderer debugLevelRenderer
+    DebugLoggingFactory debugLoggingFactory
+
+    @Inject
+    DebugLevelRenderer debugLevelRenderer
 
     /**
      * @see ServiceConfig#getScript()
@@ -258,7 +266,7 @@ abstract class Gitit_0_10_Config {
         def file = gititConfigFile domain, service
         if (!file.isFile()) {
             FileUtils.write file, config, charset
-            log.defaultConfigCreated this, file, config
+            logg.defaultConfigCreated this, file, config
         }
     }
 
@@ -281,15 +289,18 @@ abstract class Gitit_0_10_Config {
         args.userName = domain.domainUser.name
         def conf = gititServiceDefaultsTemplate.getText(true, "gititDefaults", "args", args)
         FileUtils.write defaultsFile, conf, charset
-        log.serviceDefaultsFileCreated this, defaultsFile, conf
+        logg.serviceDefaultsFileCreated this, defaultsFile, conf
         args.domainName = domainNameAsFileName domain
         args.gititCommand = gititCommand domain, service
         args.gititConfig = gititConfigFile domain, service
         args.gititDir = gititDir domain, service
         conf = gititServiceTemplate.getText(true, "gititService", "args", args)
         FileUtils.write serviceFile, conf, charset
-        log.serviceFileCreated this, serviceFile, conf
-        changeMod mod: "+x", files: serviceFile
+        logg.serviceFileCreated this, serviceFile, conf
+        changeFileModFactory.create(
+                log: log, mod: "+x", files: serviceFile,
+                command: script.chmodCommand,
+                this, threads)()
     }
 
     /**
@@ -342,18 +353,14 @@ abstract class Gitit_0_10_Config {
     /**
      * Installs the <i>cabal</i> packages.
      *
-     * @param args the {@link Map} arguments;
-     * <ul>
-     * <li>{@code packages} the {@link List} of the packages to install.</li>
-     * <ul>
-     *
      * @see #getCabalCommand()
-     * @see #getGititProperties()
      */
-    void installCabalPackages(Map args) {
-        args.cabalCommand = args.containsKey("cabalCommand") ? args.cabalCommand : cabalCommand
-        def worker = scriptCommandFactory.create(gititCommandTemplate, "cabalInstallCommand", "args", args)()
-        log.installCabalPackagesDone this, worker, args
+    void installCabalPackages(def packages) {
+        def task = scriptExecFactory.create(
+                log: log, command: cabalCommand, packages: packages,
+                bashCommand: bashCommand, timeout: cabalInstallTimeout,
+                this, threads, gititCommandTemplate, "cabalInstallCommand")()
+        logg.installCabalPackagesDone this, task, packages
     }
 
     /**
@@ -387,8 +394,10 @@ abstract class Gitit_0_10_Config {
      */
     String defaultConfig(Domain domain, GititService service) {
         def command = gititCommand domain, service
-        def worker = execCommandWorkerFactory.create("$command --print-default-config")()
-        worker.out
+        def task = scriptExecFactory.create(
+                log: log, command: command, outString: true,
+                this, threads, gititCommandTemplate, "printDefaultConfigCommand")()
+        return task.out
     }
 
     /**
@@ -559,6 +568,34 @@ abstract class Gitit_0_10_Config {
     String serviceDir(Domain domain, Domain refDomain, GititService service) {
         refDomain == null ? gititDir(domain, service).absolutePath :
                 gititDir(refDomain, service).absolutePath
+    }
+
+    /**
+     * Returns the timeout duration to install <i>cabal</i> packages, for
+     * example {@code "PT4H".}
+     *
+     * <ul>
+     * <li>profile property {@code "hsenv_cabal_install_timeout"}</li>
+     * </ul>
+     *
+     * @see #getGititProperties()
+     */
+    Duration getCabalInstallTimeout() {
+        profileDurationProperty "cabal_install_timeout", gititProperties
+    }
+
+    /**
+     * Returns the <i>bash</i> command, for
+     * example {@code "/bin/bash".}
+     *
+     * <ul>
+     * <li>profile property {@code "bash_command"}</li>
+     * </ul>
+     *
+     * @see #getGititProperties()
+     */
+    String getBashCommand() {
+        profileProperty "bash_command", gititProperties
     }
 
     /**

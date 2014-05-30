@@ -35,8 +35,8 @@
 
 	<logger name="com.anrisoftware" level="INFO" />
 	<logger name="com.anrisoftware.sscontrol" level="DEBUG" />
-	<logger name="com.anrisoftware.sscontrol.workers.command" level="DEBUG" />
-    <logger name="com.anrisoftware.sscontrol.workers.command.script" level="TRACE" />
-	<logger name="com.anrisoftware.sscontrol.httpd" level="ALL" />
+    <logger name="com.anrisoftware.globalpom.exec" level="DEBUG" />
+    <logger name="com.anrisoftware.sscontrol.scripts" level="TRACE" />
+	<logger name="com.anrisoftware.sscontrol.httpd" level="TRACE" />
 
 </configuration>

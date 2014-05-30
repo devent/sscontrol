@@ -18,9 +18,11 @@
  */
 package com.anrisoftware.sscontrol.httpd.gitit.nginx_ubuntu_12_04;
 
-import com.anrisoftware.propertiesutils.ContextProperties
+import javax.inject.Inject
+
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.Templates
+import com.anrisoftware.resources.templates.api.TemplatesFactory
 import com.anrisoftware.sscontrol.core.service.LinuxScript
 import com.anrisoftware.sscontrol.httpd.domain.Domain
 import com.anrisoftware.sscontrol.httpd.gitit.GititService
@@ -35,6 +37,9 @@ import com.anrisoftware.sscontrol.httpd.webservice.WebService
  * @since 1.0
  */
 class NginxConfig extends Ubuntu_12_04_Config implements ServiceConfig {
+
+    @Inject
+    TemplatesFactory templatesFactory
 
     Templates gititNginxTemplates
 
@@ -81,7 +86,7 @@ class NginxConfig extends Ubuntu_12_04_Config implements ServiceConfig {
     @Override
     public void setScript(LinuxScript script) {
         super.setScript(script)
-        gititTemplates = templatesFactory.create "Gitit_Nginx_Ubuntu_12_04"
-        gititDomainTemplate = gititTemplates.getResource "domainconfig"
+        this.gititTemplates = templatesFactory.create "Gitit_Nginx_Ubuntu_12_04"
+        this.gititDomainTemplate = gititTemplates.getResource "domainconfig"
     }
 }

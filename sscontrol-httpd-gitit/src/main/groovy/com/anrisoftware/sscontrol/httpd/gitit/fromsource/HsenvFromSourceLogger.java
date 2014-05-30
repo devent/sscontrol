@@ -31,10 +31,9 @@ import static com.anrisoftware.sscontrol.httpd.gitit.fromsource.HsenvFromSourceL
 
 import java.net.URI;
 import java.util.List;
-import java.util.Map;
 
+import com.anrisoftware.globalpom.exec.api.ProcessTask;
 import com.anrisoftware.globalpom.log.AbstractLogger;
-import com.anrisoftware.sscontrol.workers.command.script.ScriptCommandWorker;
 
 /**
  * Logging for {@link HsenvFromSource}.
@@ -46,11 +45,11 @@ class HsenvFromSourceLogger extends AbstractLogger {
 
     enum _ {
 
-        install_packages_done_trace("Install packages done {} for {}, {}."),
+        install_packages_done_trace("Install packages {} done for {}, {}."),
 
-        install_packages_done_debug("Install packages done {} for {}."),
+        install_packages_done_debug("Install packages {} done for {}."),
 
-        install_packages_done_info("Install packages done {} for service '{}'."),
+        install_packages_done_info("Install packages {} done for service '{}'."),
 
         unpack_archive_debug("Unpack archive '{}' done for {}."),
 
@@ -60,11 +59,11 @@ class HsenvFromSourceLogger extends AbstractLogger {
 
         install_hsenv_info("Install hsenv packages {} done for service '{}'."),
 
-        install_gitit_trace("Install Gitit done {} for {}, {}."),
+        install_gitit_trace("Install Gitit done for {}, {}."),
 
-        install_gitit_debug("Install Gitit done {} for {}."),
+        install_gitit_debug("Install Gitit done for {}."),
 
-        install_gitit_info("Install Gitit done {} for service '{}'.");
+        install_gitit_info("Install Gitit done for service '{}'.");
 
         private String name;
 
@@ -86,13 +85,13 @@ class HsenvFromSourceLogger extends AbstractLogger {
     }
 
     void installHsenvCabalPackagesDone(HsenvFromSource config,
-            ScriptCommandWorker worker, @SuppressWarnings("rawtypes") Map args) {
+            ProcessTask task, Object packages) {
         if (isTraceEnabled()) {
-            trace(install_packages_done_trace, args, config, worker);
+            trace(install_packages_done_trace, packages, config, task);
         } else if (isDebugEnabled()) {
-            debug(install_packages_done_debug, args, config);
+            debug(install_packages_done_debug, packages, config);
         } else {
-            info(install_packages_done_info, args, config.getName());
+            info(install_packages_done_info, packages, config.getName());
         }
     }
 
@@ -113,14 +112,13 @@ class HsenvFromSourceLogger extends AbstractLogger {
         }
     }
 
-    void installGititDone(HsenvFromSource config, ScriptCommandWorker worker,
-            @SuppressWarnings("rawtypes") Map args) {
+    void installGititDone(HsenvFromSource config, ProcessTask task) {
         if (isTraceEnabled()) {
-            trace(install_gitit_trace, args, config, worker);
+            trace(install_gitit_trace, config, task);
         } else if (isDebugEnabled()) {
-            debug(install_gitit_debug, args, config);
+            debug(install_gitit_debug, config);
         } else {
-            info(install_gitit_info, args, config.getName());
+            info(install_gitit_info, config.getName());
         }
     }
 

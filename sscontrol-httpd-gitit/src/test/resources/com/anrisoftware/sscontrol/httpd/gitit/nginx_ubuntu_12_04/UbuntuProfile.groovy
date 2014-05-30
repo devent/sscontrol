@@ -18,9 +18,6 @@
  */
 package com.anrisoftware.sscontrol.httpd.gitit.nginx_ubuntu_12_04
 
-import com.anrisoftware.sscontrol.httpd.gitit.nginx_ubuntu_12_04.GititResources;
-import com.anrisoftware.sscontrol.httpd.gitit.nginx_ubuntu_12_04.UbuntuResources;
-
 def aptitudeCommand = UbuntuResources.aptitudeCommand.asFile(tmp)
 
 profile "ubuntu_12_04", {
@@ -28,6 +25,7 @@ profile "ubuntu_12_04", {
         service "nginx"
         install_command "$aptitudeCommand update && $aptitudeCommand install"
         apt_key_command UbuntuResources.aptKeyCommand.asFile(tmp)
+        bash_command UbuntuResources.bashCommand.asFile(tmp)
         chmod_command UbuntuResources.chmodCommand.asFile(tmp)
         chown_command UbuntuResources.chownCommand.asFile(tmp)
         group_add_command UbuntuResources.groupaddCommand.asFile(tmp)

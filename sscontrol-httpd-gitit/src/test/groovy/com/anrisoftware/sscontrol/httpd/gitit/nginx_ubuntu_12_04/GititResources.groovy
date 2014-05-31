@@ -58,6 +58,7 @@ enum GititResources {
     test2comgititdServiceExpected("/etc/init.d/test2_com_gititd", GititResources.class.getResource("test2comgititd_service_expected.txt")),
     test2comgititdDefaultsExpected("/etc/default/test2_com_gititd", GititResources.class.getResource("test2comgititd_defaults_expected.txt")),
     chmodOutExpected("/bin/chmod.out", GititResources.class.getResource("chmod_out_expected.txt")),
+    aptitudeOutExpected("/usr/bin/aptitude.out", GititResources.class.getResource("aptitude_out_expected.txt")),
 
     static copyGititFiles(File parent) {
         gititDir.asFile(parent).mkdirs()

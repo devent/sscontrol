@@ -36,9 +36,11 @@ import com.anrisoftware.sscontrol.httpd.domain.Domain
 import com.anrisoftware.sscontrol.httpd.gitit.AuthMethod
 import com.anrisoftware.sscontrol.httpd.gitit.GititService
 import com.anrisoftware.sscontrol.httpd.gitit.LoginRequired
+import com.anrisoftware.sscontrol.httpd.gitit.RepositoryType
 import com.anrisoftware.sscontrol.httpd.gitit.nginx_ubuntu_12_04.GititConfigFactory
 import com.anrisoftware.sscontrol.httpd.webservice.WebService
 import com.anrisoftware.sscontrol.scripts.changefilemod.ChangeFileModFactory
+import com.anrisoftware.sscontrol.scripts.unix.InstallPackagesFactory
 import com.anrisoftware.sscontrol.scripts.unix.ScriptExecFactory
 
 /**
@@ -52,6 +54,9 @@ abstract class Gitit_0_10_Config {
 
     @Inject
     private Gitit_0_10_ConfigLogger logg
+
+    @Inject
+    InstallPackagesFactory installPackagesFactory
 
     @Inject
     ScriptExecFactory scriptExecFactory
@@ -81,6 +86,7 @@ abstract class Gitit_0_10_Config {
      */
     void deployService(Domain domain, WebService service, List config) {
         setupDefaults domain, service
+        installPackages service
         createDefaultConfig domain, service
         createService domain, service
         deployConfig domain, service
@@ -197,6 +203,30 @@ abstract class Gitit_0_10_Config {
         service.debug = service.debug == null ? debugLoggingFactory.create(level) : service.debug
         service.debug.args.file = service.debug.args.file == null ? file : service.debug.args.file
         service.debug.args.infoEnabled = service.debug.args.infoEnabled == null ? infoEnabled : service.debug
+    }
+
+    /**
+     * Installs the needed <i>Gitit</i> repository type packages.
+     *
+     * @param service
+     *            the {@link GititService}.
+     */
+    void installPackages(GititService service) {
+        def packages
+        switch (service.type) {
+            case RepositoryType.git:
+                packages = gitPackages
+                break
+            case RepositoryType.darcs:
+                packages = darcsPackages
+                break
+            case RepositoryType.mercurial:
+                packages = mercurialPackages
+                break
+        }
+        installPackagesFactory.create(
+                log: log, command: script.installCommand, packages: packages,
+                this, threads)()
     }
 
     /**
@@ -596,6 +626,48 @@ abstract class Gitit_0_10_Config {
      */
     String getBashCommand() {
         profileProperty "bash_command", gititProperties
+    }
+
+    /**
+     * Returns the <i>git</i> packages, for
+     * example {@code "git".}
+     *
+     * <ul>
+     * <li>profile property {@code "gitit_git_packages"}</li>
+     * </ul>
+     *
+     * @see #getGititProperties()
+     */
+    List getGitPackages() {
+        profileListProperty "gitit_git_packages", gititProperties
+    }
+
+    /**
+     * Returns the <i>darcs</i> packages, for
+     * example {@code "darcs".}
+     *
+     * <ul>
+     * <li>profile property {@code "gitit_darcs_packages"}</li>
+     * </ul>
+     *
+     * @see #getGititProperties()
+     */
+    List getDarcsPackages() {
+        profileListProperty "gitit_darcs_packages", gititProperties
+    }
+
+    /**
+     * Returns the <i>mercurial</i> packages, for
+     * example {@code "mercurial".}
+     *
+     * <ul>
+     * <li>profile property {@code "gitit_mercurial_packages"}</li>
+     * </ul>
+     *
+     * @see #getGititProperties()
+     */
+    List getMercurialPackages() {
+        profileListProperty "gitit_mercurial_packages", gititProperties
     }
 
     /**

@@ -170,10 +170,10 @@ abstract class HsenvFromSource {
         def activateCommand = hsenvActivateCommand domain, service
         def packages = hsenvGititPackages
         def task = scriptExecFactory.create(
-                log: log, gititDir: gititDir, hsenvCommand: hsenvCommand,
-                activateCommand: activateCommand, cabalCommand: cabalCommand,
-                deactivateCommand: hsenvDeactivateCommand, packages: packages,
-                timeout: cabalInstallTimeout,
+                log: log, gititDir: gititDir, bashCommand: bashCommand,
+                hsenvCommand: hsenvCommand, activateCommand: activateCommand,
+                cabalCommand: cabalCommand, deactivateCommand: hsenvDeactivateCommand,
+                packages: packages, timeout: cabalInstallTimeout,
                 this, threads, hsenvCommandTemplate, "hsenvInstallCommand")()
         logg.installHsenvCabalPackagesDone this, task, packages
     }
@@ -195,10 +195,10 @@ abstract class HsenvFromSource {
         def activateCommand = hsenvActivateCommand domain, service
         def gititSourceDir = gititSourceDir domain, service
         def task = scriptExecFactory.create(
-                log: log, gititDir: gititDir, hsenvCommand: hsenvCommand,
-                activateCommand: activateCommand, cabalCommand: cabalCommand,
-                deactivateCommand: hsenvDeactivateCommand, gititSourceDir: gititSourceDir,
-                bashCommand: bashCommand, timeout: cabalInstallTimeout,
+                log: log, gititDir: gititDir, bashCommand: bashCommand,
+                hsenvCommand: hsenvCommand, activateCommand: activateCommand,
+                cabalCommand: cabalCommand, deactivateCommand: hsenvDeactivateCommand,
+                gititSourceDir: gititSourceDir, timeout: cabalInstallTimeout,
                 this, threads, hsenvCommandTemplate, "hsenvCompileCommand")()
         logg.installGititDone this, task
     }

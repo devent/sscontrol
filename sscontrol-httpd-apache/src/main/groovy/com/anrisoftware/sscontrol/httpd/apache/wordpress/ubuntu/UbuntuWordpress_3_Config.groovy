@@ -100,10 +100,10 @@ abstract class UbuntuWordpress_3_Config extends Wordpress_3_Config {
      * Downloads and unpacks the <i>Wordpress</i> archive.
      *
      * @param domain
-     *            the {@link Domain} of the Wordpress service.
+     *            the {@link Domain} of the <i>Wordpress</i> service.
      *
      * @param service
-     *            the {@link WebService} Wordpress service.
+     *            the {@link WebService} <i>Wordpress</i> service.
      */
     void downloadArchive(Domain domain, WebService service) {
         if (!needUnpackArchive(domain, service)) {
@@ -111,7 +111,7 @@ abstract class UbuntuWordpress_3_Config extends Wordpress_3_Config {
         }
         def name = new File(wordpressArchive.path).name
         def dest = new File(tmpDirectory, "wordpress-3-$name")
-        needDownloadArchive(dest) ? copyURLToFile(wordpressArchive.toURL(), dest) : false
+        needDownloadArchive(dest) ? downloadArchive(dest) : false
         unpackArchive domain, service, dest
     }
 
@@ -135,11 +135,23 @@ abstract class UbuntuWordpress_3_Config extends Wordpress_3_Config {
     boolean needDownloadArchive(File dest) {
         logg.checkNeedDownloadArchive script, dest, wordpressArchiveHash
         if (dest.isFile() && wordpressArchiveHash != null) {
-            def check = checkFileHashFactory.create this, file: dest, hash: wordpressArchiveHash
-            check().matching
+            def check = checkFileHashFactory.create(this, file: dest, hash: wordpressArchiveHash)()
+            return !check.matching
         } else {
-            true
+            return true
         }
+    }
+
+    /**
+     * Downloads the <i>Wordpress</i> archive.
+     *
+     * @param dest
+     *            the {@link File} destination.
+     */
+    void downloadArchive(File dest) {
+        logg.startDownload script, wordpressArchive, dest
+        copyURLToFile(wordpressArchive.toURL(), dest)
+        logg.finishDownload script, wordpressArchive, dest
     }
 
     /**

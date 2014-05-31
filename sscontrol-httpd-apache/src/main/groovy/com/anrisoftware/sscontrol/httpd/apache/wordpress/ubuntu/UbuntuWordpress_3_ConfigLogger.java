@@ -21,6 +21,8 @@ package com.anrisoftware.sscontrol.httpd.apache.wordpress.ubuntu;
 import static com.anrisoftware.sscontrol.httpd.apache.wordpress.ubuntu.UbuntuWordpress_3_ConfigLogger._.check_need_download;
 import static com.anrisoftware.sscontrol.httpd.apache.wordpress.ubuntu.UbuntuWordpress_3_ConfigLogger._.download_archive_info;
 import static com.anrisoftware.sscontrol.httpd.apache.wordpress.ubuntu.UbuntuWordpress_3_ConfigLogger._.download_archive_trace;
+import static com.anrisoftware.sscontrol.httpd.apache.wordpress.ubuntu.UbuntuWordpress_3_ConfigLogger._.finish_download;
+import static com.anrisoftware.sscontrol.httpd.apache.wordpress.ubuntu.UbuntuWordpress_3_ConfigLogger._.start_download;
 
 import java.io.File;
 import java.net.URI;
@@ -47,7 +49,11 @@ class UbuntuWordpress_3_ConfigLogger extends AbstractLogger {
         download_archive_info(
                 "Downloaded and unpack archive '{}' for service '{}'."),
 
-        check_need_download("Check archive file '{}' for hash '{}' for {}.");
+        check_need_download("Check archive file '{}' for hash '{}' for {}."),
+
+        start_download("Downloading of archive '{}' to '{}' for {}..."),
+
+        finish_download("Finish download of archive '{}' to '{}' for {}.");
 
         private String name;
 
@@ -78,5 +84,13 @@ class UbuntuWordpress_3_ConfigLogger extends AbstractLogger {
 
     void checkNeedDownloadArchive(LinuxScript script, File dest, URI hash) {
         debug(check_need_download, dest, hash, script);
+    }
+
+    void startDownload(LinuxScript script, URI source, File dest) {
+        debug(start_download, source, dest, script);
+    }
+
+    void finishDownload(LinuxScript script, URI source, File dest) {
+        debug(finish_download, source, dest, script);
     }
 }

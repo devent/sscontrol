@@ -45,6 +45,7 @@ enum UbuntuResources {
     lnCommand("/bin/ln", UbuntuResources.class.getResource("echo_command.txt")),
     netstatCommand("/bin/netstat", UbuntuResources.class.getResource("echo_command.txt")),
     reconfigureCommand("/usr/sbin/dpkg-reconfigure", UbuntuResources.class.getResource("echo_command.txt")),
+    updateRcCommand("/usr/sbin/update-rc.d", UbuntuResources.class.getResource("echo_command.txt")),
     mysqlCommand("/usr/bin/mysql", UbuntuResources.class.getResource("echo_command.txt")),
     tmpDir("/tmp", null),
     packagingConfigurationDirectory("/etc/apt", null),
@@ -75,6 +76,7 @@ enum UbuntuResources {
         lnCommand.createCommand parent
         netstatCommand.createCommand parent
         reconfigureCommand.createCommand parent
+        updateRcCommand.createCommand parent
         tmpDir.asFile(parent).mkdirs()
         packagingConfigurationDirectory.asFile(parent).mkdirs()
         packagesSourcesFile.createFile parent

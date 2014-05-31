@@ -49,7 +49,7 @@ class Ubuntu_12_04_Config extends Gitit_0_10_Config implements ServiceConfig {
     private RepositoryTypeRenderer repositoryTypeRenderer
 
     @Inject
-    GititPropertiesProvider gititProperties
+    GititPropertiesProvider gititPropertiesProvider
 
     @Inject
     UbuntuHsenvFromSourceConfig ubuntuHsenvFromSourceConfig
@@ -81,6 +81,7 @@ class Ubuntu_12_04_Config extends Gitit_0_10_Config implements ServiceConfig {
         ubuntuHsenvFromSourceConfig.deployService domain, service, config
         systemvService.createService domain, service
         super.deployService domain, service, config
+        systemvService.activateService domain, service
     }
 
     /**
@@ -91,6 +92,21 @@ class Ubuntu_12_04_Config extends Gitit_0_10_Config implements ServiceConfig {
                 log: log, command: script.installCommand, packages: gititPackages,
                 this, threads)()
     }
+
+    /**
+     * Returns the <i>update-rc.d</i> command, for
+     * example {@code "/usr/sbin/update-rc.d".}
+     *
+     * <ul>
+     * <li>profile property {@code "update_rc_command"}</li>
+     * </ul>
+     *
+     * @see #getGititProperties()
+     */
+    String getUpdateRcCommand() {
+        profileProperty "update_rc_command", gititProperties
+    }
+
 
     @Override
     String gititCommand(Domain domain, GititService service) {
@@ -104,7 +120,7 @@ class Ubuntu_12_04_Config extends Gitit_0_10_Config implements ServiceConfig {
 
     @Override
     ContextProperties getGititProperties() {
-        gititProperties.get()
+        gititPropertiesProvider.get()
     }
 
     @Override

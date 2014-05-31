@@ -63,5 +63,6 @@ class GititTest extends UbuntuTestUtil {
         assertStringContent test2comgititdDefaultsExpected.replaced(tmpdir, tmpdir, "/tmp"), test2comgititdDefaultsExpected.toString()
         assertStringContent chmodOutExpected.replaced(tmpdir, tmpdir, "/tmp"), chmodOutExpected.toString()
         assertFileContent aptitudeOutExpected.asFile(tmpdir), aptitudeOutExpected
+        assertFileContent updateRcOutExpected.asFile(tmpdir), updateRcOutExpected
     }
 }

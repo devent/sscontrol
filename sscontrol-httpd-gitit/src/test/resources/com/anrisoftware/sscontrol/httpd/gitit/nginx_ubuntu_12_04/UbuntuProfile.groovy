@@ -19,6 +19,7 @@
 package com.anrisoftware.sscontrol.httpd.gitit.nginx_ubuntu_12_04
 
 def aptitudeCommand = UbuntuResources.aptitudeCommand.asFile(tmp)
+def updateRcCommand = UbuntuResources.updateRcCommand.asFile(tmp)
 
 profile "ubuntu_12_04", {
     httpd {
@@ -36,6 +37,7 @@ profile "ubuntu_12_04", {
         unzip_command UbuntuResources.unzipCommand.asFile(tmp)
         link_command UbuntuResources.lnCommand.asFile(tmp)
         netstat_command UbuntuResources.netstatCommand.asFile(tmp)
+        update_rc_command updateRcCommand
         temp_directory UbuntuResources.tmpDir.asFile(tmp)
         packaging_configuration_directory UbuntuResources.packagingConfigurationDirectory.asFile(tmp)
         packages_sources_file UbuntuResources.packagesSourcesFile.asFile(tmp)

@@ -30,6 +30,7 @@ import com.anrisoftware.sscontrol.httpd.domain.Domain
 import com.anrisoftware.sscontrol.httpd.gitit.GititService
 import com.anrisoftware.sscontrol.httpd.gitit.nginx_ubuntu_12_04.GititConfigFactory
 import com.anrisoftware.sscontrol.scripts.changefilemod.ChangeFileModFactory
+import com.anrisoftware.sscontrol.scripts.unix.ScriptExecFactory
 
 /**
  * <i>SystemV</i> <i>Gitit</i> service configuration.
@@ -45,6 +46,9 @@ abstract class SystemvService {
 
     @Inject
     ChangeFileModFactory changeFileModFactory
+
+    @Inject
+    ScriptExecFactory scriptExecFactory
 
     /**
      * The parent script that returns the properties.
@@ -85,6 +89,22 @@ abstract class SystemvService {
     }
 
     /**
+     * Activates the <i>Gitit</i> service.
+     *
+     * @param domain
+     *            the service {@link Domain}.
+     *
+     * @param service
+     *            the {@link GititService}.
+     */
+    void activateService(Domain domain, GititService service) {
+        def name = gititServiceFile(domain).name
+        scriptExecFactory.create(
+                log: log, command: updateRcCommand, service: name,
+                this, threads, activateServiceTemplate, "activateService")()
+    }
+
+    /**
      * Returns the <i>Gitit</i> service name.
      */
     String getServiceName() {
@@ -113,6 +133,13 @@ abstract class SystemvService {
      * @return the {@link TemplateResource}.
      */
     abstract TemplateResource getGititServiceTemplate()
+
+    /**
+     * Returns the resources containing to activate a service template.
+     *
+     * @return the {@link TemplateResource}.
+     */
+    abstract TemplateResource getActivateServiceTemplate()
 
     /**
      * Delegates missing properties to {@link LinuxScript}.

@@ -40,6 +40,7 @@ import com.anrisoftware.sscontrol.httpd.gitit.RepositoryType
 import com.anrisoftware.sscontrol.httpd.gitit.nginx_ubuntu_12_04.GititConfigFactory
 import com.anrisoftware.sscontrol.httpd.webservice.WebService
 import com.anrisoftware.sscontrol.scripts.changefilemod.ChangeFileModFactory
+import com.anrisoftware.sscontrol.scripts.changefileowner.ChangeFileOwnerFactory
 import com.anrisoftware.sscontrol.scripts.unix.InstallPackagesFactory
 import com.anrisoftware.sscontrol.scripts.unix.ScriptExecFactory
 
@@ -63,6 +64,9 @@ abstract class Gitit_0_10_Config {
 
     @Inject
     ChangeFileModFactory changeFileModFactory
+
+    @Inject
+    ChangeFileOwnerFactory changeFileOwnerFactory
 
     @Inject
     DebugLoggingFactory debugLoggingFactory
@@ -89,6 +93,7 @@ abstract class Gitit_0_10_Config {
         installPackages service
         createDefaultConfig domain, service
         deployConfig domain, service
+        setupPermissions domain, service
     }
 
     /**
@@ -297,6 +302,24 @@ abstract class Gitit_0_10_Config {
             FileUtils.write file, config, charset
             logg.defaultConfigCreated this, file, config
         }
+    }
+
+    /**
+     * Sets the owner of <i>gitit</i> directory.
+     *
+     * @param domain
+     *            the service {@link Domain}.
+     *
+     * @param service
+     *            the {@link GititService}.
+     */
+    void setupPermissions(Domain domain, GititService service) {
+        def dir = gititDir domain, service
+        def user = domain.domainUser
+        changeFileOwnerFactory.create(
+                log: log, files: dir, command: script.chownCommand,
+                owner: user.name, ownerGroup: user.group,
+                this, threads)()
     }
 
     /**

@@ -105,6 +105,25 @@ abstract class SystemvService {
     }
 
     /**
+     * Restarts the <i>Gitit</i> service.
+     *
+     * @param domain
+     *            the service {@link Domain}.
+     *
+     * @param service
+     *            the {@link GititService}.
+     */
+    void restartService(Domain domain, GititService service) {
+        File command = gititServiceFile(domain)
+        if (!command.canExecute()) {
+            command.setExecutable true
+        }
+        scriptExecFactory.create(
+                log: log, command: command,
+                this, threads, restartServiceTemplate, "restartService")()
+    }
+
+    /**
      * Returns the <i>Gitit</i> service name.
      */
     String getServiceName() {
@@ -140,6 +159,13 @@ abstract class SystemvService {
      * @return the {@link TemplateResource}.
      */
     abstract TemplateResource getActivateServiceTemplate()
+
+    /**
+     * Returns the resources containing to restart the service template.
+     *
+     * @return the {@link TemplateResource}.
+     */
+    abstract TemplateResource getRestartServiceTemplate()
 
     /**
      * Delegates missing properties to {@link LinuxScript}.

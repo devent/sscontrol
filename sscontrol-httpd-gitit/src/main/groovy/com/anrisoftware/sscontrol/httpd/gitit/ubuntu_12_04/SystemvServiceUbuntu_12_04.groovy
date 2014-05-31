@@ -44,6 +44,8 @@ class SystemvServiceUbuntu_12_04 extends SystemvService {
 
     TemplateResource activateServiceTemplate
 
+    TemplateResource restartServiceTemplate
+
     @Override
     TemplateResource getGititServiceDefaultsTemplate() {
         return serviceDefaultsTemplate
@@ -60,11 +62,17 @@ class SystemvServiceUbuntu_12_04 extends SystemvService {
     }
 
     @Override
+    TemplateResource getRestartServiceTemplate() {
+        return restartServiceTemplate
+    }
+
+    @Override
     void setScript(Object script) {
         super.setScript(script);
         this.templates = templatesFactory.create "Gitit_Ubuntu_12_04"
         this.serviceDefaultsTemplate = templates.getResource "gitit_service_defaults"
         this.serviceTemplate = templates.getResource "gitit_service"
         this.activateServiceTemplate = templates.getResource "activate_service"
+        this.restartServiceTemplate = templates.getResource "restart_service"
     }
 }

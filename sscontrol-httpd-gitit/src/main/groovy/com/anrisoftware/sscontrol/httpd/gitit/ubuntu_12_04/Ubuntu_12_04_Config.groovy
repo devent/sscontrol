@@ -82,6 +82,7 @@ class Ubuntu_12_04_Config extends Gitit_0_10_Config implements ServiceConfig {
         systemvService.createService domain, service
         super.deployService domain, service, config
         systemvService.activateService domain, service
+        systemvService.restartService domain, service
     }
 
     /**

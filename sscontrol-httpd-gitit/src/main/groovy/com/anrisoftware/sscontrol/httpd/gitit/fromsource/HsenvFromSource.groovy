@@ -23,6 +23,7 @@ import groovy.util.logging.Slf4j
 
 import javax.inject.Inject
 
+import org.apache.commons.lang3.StringUtils
 import org.apache.commons.lang3.builder.ToStringBuilder
 import org.stringtemplate.v4.ST
 
@@ -98,7 +99,7 @@ abstract class HsenvFromSource {
             return
         }
         def name = new File(gititArchive.path).name
-        def dest = new File(tmpDirectory, "gitit-0.10.3.1-$name")
+        def dest = new File(tmpDirectory, "gitit-$name")
         copyURLToFile gititArchive.toURL(), dest
         unpackArchive domain, service, dest
     }
@@ -164,6 +165,9 @@ abstract class HsenvFromSource {
      * @see #getHsenvCabalInstallTimeout()
      */
     void installHsenvCabalPackages(Domain domain, GititService service) {
+        if (!needRecompile && checkGititVersion(domain, service)) {
+            return
+        }
         def gititDir = gititDir domain, service
         def hsenvCommand = hsenvCommand
         def cabalCommand = hsenvCabalCommand domain, service
@@ -189,6 +193,9 @@ abstract class HsenvFromSource {
      *
      */
     void installGitit(Domain domain, GititService service) {
+        if (!needRecompile && checkGititVersion(domain, service)) {
+            return
+        }
         def gititDir = gititDir domain, service
         def hsenvCommand = hsenvCommand
         def cabalCommand = hsenvCabalCommand domain, service
@@ -204,7 +211,7 @@ abstract class HsenvFromSource {
     }
 
     /**
-     * Checks the installed <i>gitit</i> service inside 
+     * Checks the installed <i>gitit</i> service version inside
      * the <i>hsenv</i> environment.
      *
      * @param domain
@@ -213,20 +220,24 @@ abstract class HsenvFromSource {
      * @param service
      *            the {@link GititService} service.
      *
+     * @return {@code true} if the version matches the set version.
      */
-    void checkGitit(Domain domain, GititService service) {
-        def gititDir = gititDir domain, service
-        def hsenvCommand = hsenvCommand
-        def cabalCommand = hsenvCabalCommand domain, service
-        def activateCommand = hsenvActivateCommand domain, service
-        def gititCommand = gititC domain, service
+    boolean checkGititVersion(Domain domain, GititService service) {
+        def command = gititCommand domain, service
+        if (!new File(command).isFile()) {
+            return false
+        }
+        def config = gititConfigFile domain, service
         def task = scriptExecFactory.create(
-                log: log, gititDir: gititDir, bashCommand: bashCommand,
-                hsenvCommand: hsenvCommand, activateCommand: activateCommand,
-                cabalCommand: cabalCommand, deactivateCommand: hsenvDeactivateCommand,
-                gititSourceDir: gititSourceDir, timeout: cabalInstallTimeout,
-                this, threads, hsenvCommandTemplate, "hsenvCompileCommand")()
-        logg.installGititDone this, task
+                log: log, gititCommand: command,
+                bashCommand: bashCommand,
+                gititConfig: config,
+                outString: true,
+                this, threads, hsenvCommandTemplate, "gititVersionCommand")()
+        def split = StringUtils.split(task.out, '\n')
+        def version = StringUtils.split(split[0], ' ')[2].trim()
+        logg.checkGititVersion this, version, gititVersion
+        return StringUtils.startsWith(version, gititVersion)
     }
 
     /**
@@ -315,6 +326,20 @@ abstract class HsenvFromSource {
      */
     boolean getNeedRecompile() {
         profileBooleanProperty "hsenv_need_recompile", hsenvProperties
+    }
+
+    /**
+     * Returns the <i>gitit</i> version, for
+     * example {@code "0.10.3.1"}
+     *
+     * <ul>
+     * <li>profile property {@code "hsenv_gitit_version"}</li>
+     * </ul>
+     *
+     * @see #getHsenvProperties()
+     */
+    String getGititVersion() {
+        profileProperty "hsenv_gitit_version", hsenvProperties
     }
 
     /**

@@ -18,6 +18,7 @@
  */
 package com.anrisoftware.sscontrol.httpd.gitit.fromsource;
 
+import static com.anrisoftware.sscontrol.httpd.gitit.fromsource.HsenvFromSourceLogger._.compare_gitit_versions;
 import static com.anrisoftware.sscontrol.httpd.gitit.fromsource.HsenvFromSourceLogger._.install_gitit_debug;
 import static com.anrisoftware.sscontrol.httpd.gitit.fromsource.HsenvFromSourceLogger._.install_gitit_info;
 import static com.anrisoftware.sscontrol.httpd.gitit.fromsource.HsenvFromSourceLogger._.install_gitit_trace;
@@ -63,7 +64,10 @@ class HsenvFromSourceLogger extends AbstractLogger {
 
         install_gitit_debug("Install Gitit done for {}."),
 
-        install_gitit_info("Install Gitit done for service '{}'.");
+        install_gitit_info("Install Gitit done for service '{}'."),
+
+        compare_gitit_versions(
+                "Compare installed Gitit version '{}' to expected '{}' for {}.");
 
         private String name;
 
@@ -122,4 +126,8 @@ class HsenvFromSourceLogger extends AbstractLogger {
         }
     }
 
+    void checkGititVersion(HsenvFromSource config, String version,
+            String gititVersion) {
+        debug(compare_gitit_versions, version, gititVersion, config);
+    }
 }

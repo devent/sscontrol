@@ -1,4 +1,30 @@
-cat <<EOF
+
+## change the directory to the start directory of the script.
+function changeBinDirectory() {
+    symlink=`find "$0" -printf "%l"`
+    cd "`dirname "${symlink:-$0}"`"
+}
+
+changeBinDirectory
+
+if [ -f ../../../gitit.conf ]; then
+    while test $# -gt 0
+    do
+        case "$1" in
+            --version)
+            cat <<EOF
+gitit version 0.10.3.1 +plugins
+Copyright (C) 2008 John MacFarlane
+This is free software; see the source for copying conditions.  There is no
+warranty, not even for merchantability or fitness for a particular purpose.
+EOF
+            exit 0
+                ;;
+        esac
+        shift
+    done
+else
+    cat <<EOF
 # gitit wiki configuration file
 
 address: 0.0.0.0
@@ -273,3 +299,4 @@ xss-sanitize: yes
 # through xss-sanitize.  Set to no only if you trust all of your users.
 
 EOF
+fi

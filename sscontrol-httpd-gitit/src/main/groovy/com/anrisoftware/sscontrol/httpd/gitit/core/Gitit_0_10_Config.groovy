@@ -530,7 +530,7 @@ abstract class Gitit_0_10_Config {
      */
     String serviceAliasDir(Domain domain, Domain refDomain, GititService service) {
         def serviceDir = serviceDir domain, refDomain, service
-        service.alias.empty ? "$serviceDir/" : serviceDir
+        service.alias.empty ? "/" : serviceDir
     }
 
     /**

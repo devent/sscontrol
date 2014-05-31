@@ -32,3 +32,10 @@ cd <args.gititSourceDir>; \
 <args.deactivateCommand>;"
 
 >>
+
+gititVersionCommand(args) ::= <<
+<! - args.gititCommand - !>
+<! - args.gititConfig - !>
+<args.gititCommand> --version -f "<args.gititConfig>"
+
+>>

@@ -24,12 +24,6 @@ import static com.anrisoftware.sscontrol.httpd.gitit.core.Gitit_0_10_ConfigLogge
 import static com.anrisoftware.sscontrol.httpd.gitit.core.Gitit_0_10_ConfigLogger._.install_packages_done_debug;
 import static com.anrisoftware.sscontrol.httpd.gitit.core.Gitit_0_10_ConfigLogger._.install_packages_done_info;
 import static com.anrisoftware.sscontrol.httpd.gitit.core.Gitit_0_10_ConfigLogger._.install_packages_done_trace;
-import static com.anrisoftware.sscontrol.httpd.gitit.core.Gitit_0_10_ConfigLogger._.service_defaults_file_created_debug;
-import static com.anrisoftware.sscontrol.httpd.gitit.core.Gitit_0_10_ConfigLogger._.service_defaults_file_created_info;
-import static com.anrisoftware.sscontrol.httpd.gitit.core.Gitit_0_10_ConfigLogger._.service_defaults_file_created_trace;
-import static com.anrisoftware.sscontrol.httpd.gitit.core.Gitit_0_10_ConfigLogger._.service_file_created_debug;
-import static com.anrisoftware.sscontrol.httpd.gitit.core.Gitit_0_10_ConfigLogger._.service_file_created_info;
-import static com.anrisoftware.sscontrol.httpd.gitit.core.Gitit_0_10_ConfigLogger._.service_file_created_trace;
 
 import java.io.File;
 
@@ -59,24 +53,7 @@ class Gitit_0_10_ConfigLogger extends AbstractLogger {
                 "Default configuration '{}' created for {}."),
 
         default_config_created_info(
-                "Default configuration '{}' created for service '{}'."),
-
-        service_defaults_file_created_trace(
-                "Service defaults configuration '{}' created for {}: \n>>>\n{}<<<"),
-
-        service_defaults_file_created_debug(
-                "Service defaults configuration '{}' created for {}."),
-
-        service_defaults_file_created_info(
-                "Service defaults configuration '{}' created for service '{}'."),
-
-        service_file_created_trace(
-                "Service configuration '{}' created for {}: \n>>>\n{}<<<"),
-
-        service_file_created_debug("Service configuration '{}' created for {}."),
-
-        service_file_created_info(
-                "Service configuration '{}' created for service '{}'.");
+                "Default configuration '{}' created for service '{}'.");
 
         private String name;
 
@@ -119,26 +96,4 @@ class Gitit_0_10_ConfigLogger extends AbstractLogger {
         }
     }
 
-    void serviceDefaultsFileCreated(Gitit_0_10_Config config, File file,
-            String configstr) {
-        if (isTraceEnabled()) {
-            trace(service_defaults_file_created_trace, file, config, configstr);
-        } else if (isDebugEnabled()) {
-            debug(service_defaults_file_created_debug, file, config);
-        } else {
-            info(service_defaults_file_created_info, file,
-                    config.getServiceName());
-        }
-    }
-
-    void serviceFileCreated(Gitit_0_10_Config config, File file,
-            String configstr) {
-        if (isTraceEnabled()) {
-            trace(service_file_created_trace, file, config, configstr);
-        } else if (isDebugEnabled()) {
-            debug(service_file_created_debug, file, config);
-        } else {
-            info(service_file_created_info, file, config.getServiceName());
-        }
-    }
 }

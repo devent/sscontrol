@@ -204,6 +204,32 @@ abstract class HsenvFromSource {
     }
 
     /**
+     * Checks the installed <i>gitit</i> service inside 
+     * the <i>hsenv</i> environment.
+     *
+     * @param domain
+     *            the {@link Domain} domain of the service.
+     *
+     * @param service
+     *            the {@link GititService} service.
+     *
+     */
+    void checkGitit(Domain domain, GititService service) {
+        def gititDir = gititDir domain, service
+        def hsenvCommand = hsenvCommand
+        def cabalCommand = hsenvCabalCommand domain, service
+        def activateCommand = hsenvActivateCommand domain, service
+        def gititCommand = gititC domain, service
+        def task = scriptExecFactory.create(
+                log: log, gititDir: gititDir, bashCommand: bashCommand,
+                hsenvCommand: hsenvCommand, activateCommand: activateCommand,
+                cabalCommand: cabalCommand, deactivateCommand: hsenvDeactivateCommand,
+                gititSourceDir: gititSourceDir, timeout: cabalInstallTimeout,
+                this, threads, hsenvCommandTemplate, "hsenvCompileCommand")()
+        logg.installGititDone this, task
+    }
+
+    /**
      * Returns the <i>Gitit</i> archive.
      *
      * <ul>
@@ -275,6 +301,20 @@ abstract class HsenvFromSource {
      */
     String getHsenvDeactivateCommand() {
         profileProperty "hsenv_deactivate_command", hsenvProperties
+    }
+
+    /**
+     * Returns the if need to recompile <i>gitit</i> even if the version of
+     * the installed service match, for example {@code "true".}
+     *
+     * <ul>
+     * <li>profile property {@code "hsenv_need_recompile"}</li>
+     * </ul>
+     *
+     * @see #getHsenvProperties()
+     */
+    boolean getNeedRecompile() {
+        profileBooleanProperty "hsenv_need_recompile", hsenvProperties
     }
 
     /**

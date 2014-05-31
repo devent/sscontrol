@@ -88,7 +88,6 @@ abstract class Gitit_0_10_Config {
         setupDefaults domain, service
         installPackages service
         createDefaultConfig domain, service
-        createService domain, service
         deployConfig domain, service
     }
 
@@ -301,58 +300,11 @@ abstract class Gitit_0_10_Config {
     }
 
     /**
-     * Creates the <i>Gitit</i> service file.
-     *
-     * @param domain
-     *            the service {@link Domain}.
-     *
-     * @param service
-     *            the {@link GititService}.
-     */
-    void createService(Domain domain, GititService service) {
-        def gitit = gititCommand domain, service
-        def config = gititConfigFile domain, service
-        def serviceFile = gititServiceFile domain
-        def defaultsFile = gititServiceDefaultsFile domain
-        def args = [:]
-        args.gititScript = serviceFile
-        args.userName = domain.domainUser.name
-        def conf = gititServiceDefaultsTemplate.getText(true, "gititDefaults", "args", args)
-        FileUtils.write defaultsFile, conf, charset
-        logg.serviceDefaultsFileCreated this, defaultsFile, conf
-        args.domainName = domainNameAsFileName domain
-        args.gititCommand = gititCommand domain, service
-        args.gititConfig = gititConfigFile domain, service
-        args.gititDir = gititDir domain, service
-        conf = gititServiceTemplate.getText(true, "gititService", "args", args)
-        FileUtils.write serviceFile, conf, charset
-        logg.serviceFileCreated this, serviceFile, conf
-        changeFileModFactory.create(
-                log: log, mod: "+x", files: serviceFile,
-                command: script.chmodCommand,
-                this, threads)()
-    }
-
-    /**
      * Returns the <i>Gitit</i> service configuration template.
      *
      * @return the {@link TemplateResource}.
      */
     abstract TemplateResource getGititConfigTemplate()
-
-    /**
-     * Returns the <i>Gitit</i> service defaults template.
-     *
-     * @return the {@link TemplateResource}.
-     */
-    abstract TemplateResource getGititServiceDefaultsTemplate()
-
-    /**
-     * Returns the <i>Gitit</i> service template.
-     *
-     * @return the {@link TemplateResource}.
-     */
-    abstract TemplateResource getGititServiceTemplate()
 
     /**
      * Returns the list of needed packages for <i>Gitit</i>.

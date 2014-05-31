@@ -60,15 +60,14 @@ class Ubuntu_12_04_Config extends Gitit_0_10_Config implements ServiceConfig {
     @Inject
     TemplatesFactory templatesFactory
 
+    @Inject
+    SystemvServiceUbuntu_12_04 systemvService
+
     Templates gititTemplates
 
     TemplateResource gititCommandTemplate
 
     TemplateResource gititConfigTemplate
-
-    TemplateResource gititServiceConfigTemplate
-
-    TemplateResource gititServiceDefaultsConfigTemplate
 
     @Override
     void deployDomain(Domain domain, Domain refDomain, WebService service, List config) {
@@ -80,6 +79,7 @@ class Ubuntu_12_04_Config extends Gitit_0_10_Config implements ServiceConfig {
     void deployService(Domain domain, WebService service, List config) {
         installPackages()
         ubuntuHsenvFromSourceConfig.deployService domain, service, config
+        systemvService.createService domain, service
         super.deployService domain, service, config
     }
 
@@ -103,16 +103,6 @@ class Ubuntu_12_04_Config extends Gitit_0_10_Config implements ServiceConfig {
     }
 
     @Override
-    TemplateResource getGititServiceTemplate() {
-        gititServiceConfigTemplate
-    }
-
-    @Override
-    TemplateResource getGititServiceDefaultsTemplate() {
-        gititServiceDefaultsConfigTemplate
-    }
-
-    @Override
     ContextProperties getGititProperties() {
         gititProperties.get()
     }
@@ -125,11 +115,10 @@ class Ubuntu_12_04_Config extends Gitit_0_10_Config implements ServiceConfig {
     @Override
     public void setScript(LinuxScript script) {
         super.setScript(script)
+        systemvService.setScript this
         ubuntuHsenvFromSourceConfig.setScript this
         gititTemplates = templatesFactory.create "Gitit_Ubuntu_12_04", ["renderers": [repositoryTypeRenderer]]
         gititCommandTemplate = gititTemplates.getResource "gititcommands"
         gititConfigTemplate = gititTemplates.getResource "gititconfig"
-        gititServiceConfigTemplate = gititTemplates.getResource "gititserviceconfig"
-        gititServiceDefaultsConfigTemplate = gititTemplates.getResource "gititservicedefaultsconfig"
     }
 }

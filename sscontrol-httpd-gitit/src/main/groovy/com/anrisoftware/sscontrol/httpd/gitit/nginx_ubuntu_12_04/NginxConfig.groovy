@@ -78,7 +78,7 @@ class NginxConfig extends Ubuntu_12_04_Config implements ServiceConfig {
         def args = [:]
         args.address = service.binding.addresses[0].address
         args.port = service.binding.addresses[0].port
-        properties.location = serviceAliasDir
+        args.location = serviceAliasDir
         def configStr = gititDomainTemplate.getText(true, "domainConfig", "args", args)
         config << configStr
     }

@@ -18,8 +18,12 @@
  */
 package com.anrisoftware.sscontrol.scripts.unix;
 
+import java.util.List;
 import java.util.Map;
 
+import org.joda.time.Duration;
+
+import com.anrisoftware.globalpom.exec.api.ProcessTask;
 import com.anrisoftware.globalpom.threads.api.Threads;
 
 /**
@@ -36,9 +40,31 @@ public interface RestartServicesFactory {
      * @param args
      *            the {@link Map} arguments:
      *            <ul>
+     *            <li>{@code log} the logger that logs the command output;
+     * 
      *            <li>{@code command} the restart service command;
      * 
      *            <li>{@code services} the services to restart;
+     * 
+     *            <li>{@code outString} optionally, set to {@code true} to save
+     *            the output in a {@link String} for later parsing, see
+     *            {@link ProcessTask#getOut()}. Per default it is set to
+     *            {@link AbstractProcessExec#OUT_STRING_DEFAULT}.
+     * 
+     *            <li>{@code timeout} optionally, set the timeout
+     *            {@link Duration}. Per default it is set to
+     *            {@link AbstractProcessExec#TIMEOUT_DEFAULT}.
+     * 
+     *            <li>{@code destroyOnTimeout} optionally, set to {@code true}
+     *            to destroy the process on timeout. Per default it is set to
+     *            {@link AbstractProcessExec#DESTROY_ON_TIMEOUT_DEFAULT}.
+     * 
+     *            <li>{@code exitCodes} optionally, set a {@link List} of
+     *            success exit codes;
+     * 
+     *            <li>{@code exitCode} optionally, set the success exit code of
+     *            the process. Per default it is set to
+     *            {@link AbstractProcessExec#EXIT_CODE_DEFAULT}.
      *            </ul>
      * 
      * @param parent

@@ -49,6 +49,26 @@ import com.anrisoftware.globalpom.threads.api.Threads;
  */
 public abstract class AbstractProcessExec implements Callable<ProcessTask> {
 
+    /**
+     * Default {@code outString} value, set to {@code false}.
+     */
+    public static final boolean OUT_STRING_DEFAULT = false;
+
+    /**
+     * Default {@code destroyOnTimeout} value, set to {@code true}.
+     */
+    public static final boolean DESTROY_ON_TIMEOUT_DEFAULT = true;
+
+    /**
+     * Default {@code exitCode} value, set to {@code 0}.
+     */
+    public static final int EXIT_CODE_DEFAULT = 0;
+
+    /**
+     * Default {@code timeout} duration, set to 60 seconds.
+     */
+    public static final Duration TIMEOUT_DEFAULT = Duration.standardSeconds(60);
+
     private static final String LOG_KEY = "log";
 
     private static final String OUT_STRING = "outString";
@@ -107,19 +127,12 @@ public abstract class AbstractProcessExec implements Callable<ProcessTask> {
     protected AbstractProcessExec(Threads threads, Map<String, Object> args) {
         this.args = args;
         this.threads = threads;
-        this.exitCode = getArg(EXIT_CODE, args);
+        this.exitCode = getArg(EXIT_CODE, args, EXIT_CODE_DEFAULT);
         this.exitCodes = getArg(EXIT_CODES, args);
-        this.destroyOnTimeout = getArg(DESTROY_ON_TIMEOUT, args);
-        this.timeout = getTimeout(args);
-        this.outString = getArg(OUT_STRING, args, false);
-    }
-
-    private Duration getTimeout(Map<String, Object> args2) {
-        Duration timeout = getArg(TIMEOUT, args);
-        if (timeout == null) {
-            timeout = Duration.standardSeconds(60);
-        }
-        return timeout;
+        this.destroyOnTimeout = getArg(DESTROY_ON_TIMEOUT, args,
+                DESTROY_ON_TIMEOUT_DEFAULT);
+        this.timeout = getArg(TIMEOUT, args, TIMEOUT_DEFAULT);
+        this.outString = getArg(OUT_STRING, args, OUT_STRING_DEFAULT);
     }
 
     @SuppressWarnings("unchecked")

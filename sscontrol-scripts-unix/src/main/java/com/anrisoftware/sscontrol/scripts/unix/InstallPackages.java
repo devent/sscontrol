@@ -42,6 +42,11 @@ import com.google.inject.assistedinject.Assisted;
  */
 public class InstallPackages extends AbstractProcessExec {
 
+    /**
+     * Default {@code timeout} duration, set to 60 minutes.
+     */
+    public static final Duration TIMEOUT_DEFAULT = Duration.standardMinutes(60);
+
     private final Object parent;
 
     private final Map<String, Object> args;
@@ -68,7 +73,7 @@ public class InstallPackages extends AbstractProcessExec {
 
     private static Map<String, Object> setupTimeout(Map<String, Object> args) {
         if (!args.containsKey(TIMEOUT)) {
-            args.put(TIMEOUT, Duration.standardMinutes(60));
+            args.put(TIMEOUT, TIMEOUT_DEFAULT);
         }
         return args;
     }

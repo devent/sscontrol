@@ -49,6 +49,7 @@ enum GititResources {
     wwwtest1comConfExpected("/etc/apache2/sites-available/100-robobee-www.test1.com.conf", GititResources.class.getResource("wwwtest1com_conf_expected.txt")),
     test2comConfExpected("/etc/apache2/sites-available/100-robobee-test2.com.conf", GititResources.class.getResource("test2com_conf_expected.txt")),
     test1comGititConfExpected("/var/www/test1.com/gitit/gitit.conf", GititResources.class.getResource("test1com_gitit_conf_expected.txt")),
+    test2comGititConfExpected("/var/www/test2.com/gitit/gitit.conf", GititResources.class.getResource("test2com_gitit_conf_expected.txt")),
     cabalOutExpected("/usr/bin/cabal.out", GititResources.class.getResource("cabal_out_expected.txt")),
     bashOutExpected("/bin/bash.out", GititResources.class.getResource("bash_out_expected.txt")),
     hsenvOutExpected("/root/.cabal/bin/hsenv.out", GititResources.class.getResource("hsenv_out_expected.txt")),

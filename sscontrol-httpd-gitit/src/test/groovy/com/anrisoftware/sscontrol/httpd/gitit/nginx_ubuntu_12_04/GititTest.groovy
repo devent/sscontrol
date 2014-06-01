@@ -55,6 +55,7 @@ class GititTest extends UbuntuTestUtil {
         assertStringContent test2comConfExpected.replaced(tmpdir, tmpdir, "/tmp"), test2comConfExpected.toString()
         assertStringContent tarOutExpected.replaced(tmpdir, tmpdir, "/tmp"), tarOutExpected.toString()
         assertStringContent test1comGititConfExpected.replaced(tmpdir, tmpdir, "/tmp"), test1comGititConfExpected.toString()
+        assertStringContent test2comGititConfExpected.replaced(tmpdir, tmpdir, "/tmp"), test2comGititConfExpected.toString()
         assertFileContent cabalOutExpected.asFile(tmpdir), cabalOutExpected
         assertStringContent bashOutExpected.replaced(tmpdir, tmpdir, "/tmp"), bashOutExpected.toString()
         assertStringContent test1comgititdServiceExpected.replaced(tmpdir, tmpdir, "/tmp"), test1comgititdServiceExpected.toString()

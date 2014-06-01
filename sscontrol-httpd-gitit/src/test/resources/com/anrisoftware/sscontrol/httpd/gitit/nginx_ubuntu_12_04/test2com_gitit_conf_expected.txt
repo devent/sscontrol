@@ -1,0 +1,84 @@
+# SSCONTROL-httpd
+address: 127.0.0.1
+# SSCONTROL-httpd-END
+# SSCONTROL-httpd
+port: 5001
+# SSCONTROL-httpd-END
+# SSCONTROL-httpd
+wiki-title: Wiki Foo
+# SSCONTROL-httpd-END
+# SSCONTROL-httpd
+repository-type: Git
+# SSCONTROL-httpd-END
+# SSCONTROL-httpd
+require-authentication: modify
+# SSCONTROL-httpd-END
+# SSCONTROL-httpd
+authentication-method: form
+# SSCONTROL-httpd-END
+# SSCONTROL-httpd
+default-page-type: Markdown
+# SSCONTROL-httpd-END
+# SSCONTROL-httpd
+math: MathML
+# SSCONTROL-httpd-END
+# SSCONTROL-httpd
+log-file: /tmp/var/www/test2.com/gitit/gitit.log
+# SSCONTROL-httpd-END
+# SSCONTROL-httpd
+log-level: EMERGENCY
+# SSCONTROL-httpd-END
+# SSCONTROL-httpd
+front-page: Front Page
+# SSCONTROL-httpd-END
+# SSCONTROL-httpd
+no-delete: Front Page, Help
+# SSCONTROL-httpd-END
+# SSCONTROL-httpd
+no-edit: Help
+# SSCONTROL-httpd-END
+# SSCONTROL-httpd
+default-summary: 
+# SSCONTROL-httpd-END
+# SSCONTROL-httpd
+table-of-contents: yes
+# SSCONTROL-httpd-END
+# SSCONTROL-httpd
+use-cache: yes
+# SSCONTROL-httpd-END
+# SSCONTROL-httpd
+max-upload-size: 100K
+# SSCONTROL-httpd-END
+# SSCONTROL-httpd
+max-page-size: 100K
+# SSCONTROL-httpd-END
+# SSCONTROL-httpd
+debug-mode: yes
+# SSCONTROL-httpd-END
+# SSCONTROL-httpd
+compress-responses: yes
+# SSCONTROL-httpd-END
+# SSCONTROL-httpd
+use-recaptcha: no
+# SSCONTROL-httpd-END
+# SSCONTROL-httpd
+recaptcha-private-key: 
+# SSCONTROL-httpd-END
+# SSCONTROL-httpd
+recaptcha-public-key: 
+# SSCONTROL-httpd-END
+# SSCONTROL-httpd
+access-question: 
+# SSCONTROL-httpd-END
+# SSCONTROL-httpd
+access-question-answers: 
+# SSCONTROL-httpd-END
+# SSCONTROL-httpd
+use-feed: no
+# SSCONTROL-httpd-END
+# SSCONTROL-httpd
+feed-days: 14
+# SSCONTROL-httpd-END
+# SSCONTROL-httpd
+feed-refresh-time: 60
+# SSCONTROL-httpd-END

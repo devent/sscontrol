@@ -21,6 +21,7 @@ package com.anrisoftware.sscontrol.httpd.nginx.core.ubuntu_10_04
 import com.anrisoftware.sscontrol.httpd.nginx.ubuntu.UbuntuResources
 
 def aptitudeCommand = UbuntuResources.aptitudeCommand.asFile(tmp)
+def apacheStopCommand = UbuntuResources.apacheStopCommand.asFile(tmp)
 
 profile "ubuntu_10_04", {
     httpd {
@@ -33,6 +34,7 @@ profile "ubuntu_10_04", {
         user_add_command UbuntuResources.useraddCommand.asFile(tmp)
         link_command UbuntuResources.lnCommand.asFile(tmp)
         netstat_command DomainsResources.netstatPortsCommand.asFile(tmp)
+        apache2_stop_command "$apacheStopCommand stop"
         temp_directory UbuntuResources.tmpDir.asFile(tmp)
     }
 }

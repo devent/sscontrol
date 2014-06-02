@@ -34,6 +34,7 @@ enum Ubuntu_10_04_Resources {
     groupsFile("/etc/group", Ubuntu_10_04_Resources.class.getResource("group.txt")),
     usersFile("/etc/passwd", Ubuntu_10_04_Resources.class.getResource("passwd.txt")),
     restartCommand("/etc/init.d/nginx", Ubuntu_10_04_Resources.class.getResource("echo_command.txt")),
+    apacheRestartCommand("/etc/init.d/apache2", Ubuntu_10_04_Resources.class.getResource("echo_command.txt")),
     sitesDir("/var/www", null),
     confDir("/etc/nginx", null),
     sitesAvailableDir("/etc/nginx/sites-available", null),
@@ -51,6 +52,7 @@ enum Ubuntu_10_04_Resources {
         sourcesListFile.createFile parent
         nginxConfFile.createFile parent
         nginxSigningKeyFile.createFile parent
+        apacheRestartCommand.createCommand parent
     }
 
     static void setupUbuntu_10_04_Properties(def profile, File parent) {

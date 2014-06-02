@@ -88,7 +88,7 @@ userRow(user, args) ::= <<
 <! - args.enabledField - !>
 <! - args.cryptField - !>
 INSERT INTO `<args.usersTable>` (`<args.loginField>`, `<args.nameField>`, `<args.maildirField>`, `<args.enabledField>`, `<args.cryptField>`) VALUES
-('<user.name>@<user.domain.name>', '<user.name>', '<user.name>/', <enabledStr(user.enabled)>, encrypt('<user.password>'))
+('<user.name>@<user.domain.name>', '<user.name>', '<user.domain.name>/<user.name>/', <enabledStr(user.enabled)>, encrypt('<user.password>'))
 ON DUPLICATE KEY UPDATE
 `<args.enabledField>`=<enabledStr(user.enabled)>,
 `<args.cryptField>`=encrypt('<user.password>');

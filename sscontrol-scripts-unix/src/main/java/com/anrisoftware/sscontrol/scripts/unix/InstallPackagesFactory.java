@@ -59,6 +59,9 @@ public interface InstallPackagesFactory {
      *            to destroy the process on timeout. Per default it is set to
      *            {@link AbstractProcessExec#DESTROY_ON_TIMEOUT_DEFAULT}.
      * 
+     *            <li>{@code checkExitCodes} optionally, set to {@code true} to
+     *            check the exit code(s) of the process;
+     * 
      *            <li>{@code exitCodes} optionally, set a {@link List} of
      *            success exit codes;
      * 

@@ -119,7 +119,7 @@ abstract class Mysql51Script extends MysqlScript {
     void setupAdministratorPassword() {
         ProcessTask worker = scriptExecFactory.create(
                 log: log, mysqladminCommand: mysqladminCommand, password: service.admin.password,
-                this, threads, adminPasswordTemplate, "checkAdminPassword")()
+                checkExitCodes: false, this, threads, adminPasswordTemplate, "checkAdminPassword")()
         if (worker.exitValue != 0) {
             worker = scriptExecFactory.create(
                     log: log, mysqladminCommand: mysqladminCommand, password: service.admin.password,

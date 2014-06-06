@@ -54,6 +54,9 @@ public interface ScriptExecFactory {
      *            <li>{@code destroyOnTimeout} optionally, set to {@code true}
      *            to destroy the process on timeout;
      * 
+     *            <li>{@code checkExitCodes} optionally, set to {@code true} to
+     *            check the exit code(s) of the process;
+     * 
      *            <li>{@code exitCodes} optionally, set a {@link List} of
      *            success exit codes;
      * 

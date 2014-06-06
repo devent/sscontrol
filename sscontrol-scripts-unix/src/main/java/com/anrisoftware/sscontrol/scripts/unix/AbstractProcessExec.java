@@ -95,6 +95,8 @@ public abstract class AbstractProcessExec implements Callable<ProcessTask> {
 
     private final boolean outString;
 
+    private final boolean checkExitCodes;
+
     @Inject
     private AbstractProcessExecLogger log;
 
@@ -129,6 +131,7 @@ public abstract class AbstractProcessExec implements Callable<ProcessTask> {
         this.threads = threads;
         this.exitCode = getArg(EXIT_CODE, args, EXIT_CODE_DEFAULT);
         this.exitCodes = getArg(EXIT_CODES, args);
+        this.checkExitCodes = getArg("checkExitCodes", args, true);
         this.destroyOnTimeout = getArg(DESTROY_ON_TIMEOUT, args,
                 DESTROY_ON_TIMEOUT_DEFAULT);
         this.timeout = getArg(TIMEOUT, args, TIMEOUT_DEFAULT);
@@ -185,10 +188,10 @@ public abstract class AbstractProcessExec implements Callable<ProcessTask> {
     private ScriptCommandExec createExec() {
         ScriptCommandExec script = scriptExecFactory.create(execFactory);
         script.setThreads(threads);
-        if (exitCode != null) {
+        if (exitCode != null && checkExitCodes) {
             script.setExitCode(exitCode);
         }
-        if (exitCodes != null) {
+        if (exitCodes != null && checkExitCodes) {
             script.setExitCode(exitCodes);
         }
         if (destroyOnTimeout != null) {

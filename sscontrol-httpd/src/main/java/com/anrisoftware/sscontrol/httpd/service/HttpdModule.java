@@ -19,9 +19,11 @@
 package com.anrisoftware.sscontrol.httpd.service;
 
 import com.anrisoftware.globalpom.format.byteformat.ByteFormatModule;
+import com.anrisoftware.globalpom.resources.ResourcesModule;
 import com.anrisoftware.sscontrol.core.bindings.BindingsModule;
 import com.anrisoftware.sscontrol.core.database.DatabaseModule;
 import com.anrisoftware.sscontrol.core.debuglogging.DebugLoggingModule;
+import com.anrisoftware.sscontrol.core.groovy.StatementsMapModule;
 import com.anrisoftware.sscontrol.core.list.ListModule;
 import com.anrisoftware.sscontrol.httpd.auth.AuthModule;
 import com.anrisoftware.sscontrol.httpd.authfile.AuthFileModule;
@@ -38,7 +40,7 @@ import com.anrisoftware.sscontrol.httpd.wordpress.WordpressModule;
 import com.google.inject.AbstractModule;
 
 /**
- * Installs the httpd script statements.
+ * Installs the <i>httpd</i> script statements.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
@@ -47,6 +49,8 @@ class HttpdModule extends AbstractModule {
 
 	@Override
 	protected void configure() {
+        install(new StatementsMapModule());
+        install(new ResourcesModule());
         install(new ByteFormatModule());
 		install(new DomainModule());
 		install(new RedirectModule());

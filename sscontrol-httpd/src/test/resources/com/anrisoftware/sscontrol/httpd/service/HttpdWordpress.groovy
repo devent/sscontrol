@@ -28,6 +28,7 @@ httpd {
         user "www-data", group: "www-data"
         setup "wordpress", id: "wordpress3", alias: "wordpress3", {
             database "wordpress3", user: "user", password: "userpass", host: "localhost"
+            backup target: "/var/backups"
             force login: true, admin: true
             plugins "wp-typography, link-indication, broken-link-checker"
             themes "picochic, tagebuch"

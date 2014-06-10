@@ -18,7 +18,7 @@
  */
 package com.anrisoftware.sscontrol.httpd.wordpress;
 
-import static com.anrisoftware.sscontrol.httpd.wordpress.WordpressService.NAME;
+import static com.anrisoftware.sscontrol.httpd.wordpress.WordpressService.SERVICE_NAME;
 import static com.google.inject.multibindings.MapBinder.newMapBinder;
 
 import com.anrisoftware.sscontrol.httpd.webservice.WebService;
@@ -48,6 +48,7 @@ public class WordpressModule extends AbstractModule {
         MapBinder<String, WebServiceFactory> mapbinder;
         mapbinder = newMapBinder(binder(), String.class,
                 WebServiceFactory.class);
-        mapbinder.addBinding(NAME).toProvider(WordpressServiceProvider.class);
+        mapbinder.addBinding(SERVICE_NAME).toProvider(
+                WordpressServiceProvider.class);
     }
 }

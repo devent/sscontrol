@@ -18,6 +18,7 @@
  */
 package com.anrisoftware.sscontrol.httpd.wordpress;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -26,11 +27,15 @@ import javax.inject.Inject;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import com.anrisoftware.globalpom.resources.ToURIFactory;
+import com.anrisoftware.sscontrol.core.api.ServiceException;
 import com.anrisoftware.sscontrol.core.database.Database;
 import com.anrisoftware.sscontrol.core.database.DatabaseArgs;
 import com.anrisoftware.sscontrol.core.database.DatabaseFactory;
 import com.anrisoftware.sscontrol.core.debuglogging.DebugLogging;
 import com.anrisoftware.sscontrol.core.debuglogging.DebugLoggingFactory;
+import com.anrisoftware.sscontrol.core.groovy.StatementsMap;
+import com.anrisoftware.sscontrol.core.groovy.StatementsMapFactory;
 import com.anrisoftware.sscontrol.core.list.StringToListFactory;
 import com.anrisoftware.sscontrol.httpd.domain.Domain;
 import com.anrisoftware.sscontrol.httpd.webservice.OverrideMode;
@@ -49,11 +54,23 @@ import com.google.inject.assistedinject.Assisted;
  */
 public class WordpressService implements WebService {
 
-    private static final String NAME1 = "name";
+    private static final String TARGET_KEY = "target";
 
-    public static final String NAME = "wordpress";
+    private static final String BACKUP_KEY = "backup";
 
-    private static final String ALIAS = "alias";
+    private static final String PREFIX_KEY = "prefix";
+
+    private static final String REF_DOMAIN_KEY = "refDomain";
+
+    private static final String REF_KEY = "ref";
+
+    private static final String ID_KEY = "id";
+
+    private static final String NAME = "name";
+
+    public static final String SERVICE_NAME = "wordpress";
+
+    private static final String ALIAS_KEY = "alias";
 
     private final WebServiceLogger serviceLog;
 
@@ -62,6 +79,8 @@ public class WordpressService implements WebService {
     private final List<String> themes;
 
     private final List<String> plugins;
+
+    private final StatementsMap statementsMap;
 
     @Inject
     private WordpressServiceLogger log;
@@ -78,25 +97,18 @@ public class WordpressService implements WebService {
     @Inject
     private OverrideModeArgs overrideModeArgs;
 
-    private DebugLoggingFactory debugFactory;
+    @Inject
+    private ToURIFactory toURIFactory;
 
-    private String alias;
+    private DebugLoggingFactory debugFactory;
 
     private Database database;
 
     private DebugLogging debug;
 
-    private String id;
-
-    private String ref;
-
-    private String refDomain;
-
     private MultiSite multiSite;
 
     private Force force;
-
-    private String prefix;
 
     private OverrideMode overrideMode;
 
@@ -105,26 +117,35 @@ public class WordpressService implements WebService {
      */
     @Inject
     WordpressService(WebServiceLogger serviceLog,
+            StatementsMapFactory mapFactory,
             @Assisted Map<String, Object> args, @Assisted Domain domain) {
         this.serviceLog = serviceLog;
         this.domain = domain;
         this.multiSite = MultiSite.none;
         this.themes = new ArrayList<String>();
         this.plugins = new ArrayList<String>();
+        this.statementsMap = mapFactory.create(this, SERVICE_NAME);
+        statementsMap.addAllowed(ALIAS_KEY);
+        statementsMap.addAllowed(ID_KEY);
+        statementsMap.addAllowed(REF_KEY);
+        statementsMap.addAllowed(REF_DOMAIN_KEY);
+        statementsMap.addAllowed(PREFIX_KEY);
+        statementsMap.addAllowed(BACKUP_KEY);
         if (serviceLog.haveAlias(args)) {
-            this.alias = serviceLog.alias(this, args);
+            statementsMap.putValue(ALIAS_KEY, serviceLog.alias(this, args));
         }
         if (serviceLog.haveId(args)) {
-            this.id = serviceLog.id(this, args);
+            statementsMap.putValue(ID_KEY, serviceLog.id(this, args));
         }
         if (serviceLog.haveRef(args)) {
-            this.ref = serviceLog.ref(this, args);
+            statementsMap.putValue(REF_KEY, serviceLog.ref(this, args));
         }
         if (serviceLog.haveRefDomain(args)) {
-            this.refDomain = serviceLog.refDomain(this, args);
+            statementsMap.putValue(REF_DOMAIN_KEY,
+                    serviceLog.refDomain(this, args));
         }
         if (serviceLog.havePrefix(args)) {
-            this.prefix = serviceLog.prefix(this, args);
+            statementsMap.putValue(PREFIX_KEY, serviceLog.prefix(this, args));
         }
     }
 
@@ -141,55 +162,55 @@ public class WordpressService implements WebService {
 
     @Override
     public String getName() {
-        return NAME;
+        return SERVICE_NAME;
     }
 
     public void setAlias(String alias) {
-        this.alias = alias;
+        statementsMap.putValue(ALIAS_KEY, alias);
         serviceLog.aliasSet(this, alias);
     }
 
     public String getAlias() {
-        return alias;
+        return statementsMap.value(ALIAS_KEY);
     }
 
     public void setId(String id) {
-        this.id = id;
+        statementsMap.putValue(ID_KEY, id);
         serviceLog.idSet(this, id);
     }
 
     @Override
     public String getId() {
-        return id;
+        return statementsMap.value(ID_KEY);
     }
 
     public void setRef(String ref) {
-        this.ref = ref;
+        statementsMap.putValue(REF_KEY, ref);
         serviceLog.refSet(this, ref);
     }
 
     @Override
     public String getRef() {
-        return ref;
+        return statementsMap.value(REF_KEY);
     }
 
     public void setRefDomain(String domain) {
-        this.refDomain = domain;
+        statementsMap.putValue(REF_DOMAIN_KEY, domain);
         serviceLog.refDomainSet(this, domain);
     }
 
     @Override
     public String getRefDomain() {
-        return refDomain;
+        return statementsMap.value(REF_DOMAIN_KEY);
     }
 
     public void setPrefix(String prefix) {
-        this.prefix = prefix;
+        statementsMap.putValue(PREFIX_KEY, prefix);
         serviceLog.prefixSet(this, prefix);
     }
 
     public String getPrefix() {
-        return prefix;
+        return statementsMap.value(PREFIX_KEY);
     }
 
     public void database(Map<String, Object> args, String name) {
@@ -284,9 +305,24 @@ public class WordpressService implements WebService {
         return overrideMode;
     }
 
+    public void setBackupTarget(URI uri) {
+        statementsMap.putMapValue(BACKUP_KEY, TARGET_KEY, uri);
+    }
+
+    public URI getBackupTarget() {
+        Object path = statementsMap.mapValue(BACKUP_KEY, TARGET_KEY);
+        return toURIFactory.create().convert(path);
+    }
+
+    public Object methodMissing(String name, Object args)
+            throws ServiceException {
+        statementsMap.methodMissing(name, args);
+        return null;
+    }
+
     @Override
     public String toString() {
-        return new ToStringBuilder(this).append(NAME1, NAME)
-                .append(ALIAS, alias).toString();
+        return new ToStringBuilder(this).append(NAME, SERVICE_NAME)
+                .append(ALIAS_KEY, getAlias()).toString();
     }
 }

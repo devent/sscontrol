@@ -74,6 +74,7 @@ class HttpdWordpressTest extends HttpdTestUtil {
         assert webservice.themes.contains("tagebuch")
         assert webservice.force.login == true
         assert webservice.force.admin == true
+        assert webservice.backupTarget.toString() == "file:///var/backups"
 
         domain = service.domains[d++]
         assert domain.name == "www.test1.com"

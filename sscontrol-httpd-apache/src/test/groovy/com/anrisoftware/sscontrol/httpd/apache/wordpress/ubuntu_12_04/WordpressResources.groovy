@@ -39,6 +39,7 @@ enum WordpressResources {
     portsConf("/etc/apache2/ports.conf", WordpressResources.class.getResource("ports_conf.txt")),
     // basic
     httpdScript("Httpd.groovy", WordpressResources.class.getResource("HttpdWordpress.groovy")),
+    httpdBackupScript("Httpd.groovy", WordpressResources.class.getResource("HttpdWordpressBackup.groovy")),
     httpdDebugScript("Httpd.groovy", WordpressResources.class.getResource("HttpdWordpressDebug.groovy")),
     basicPortsConfExpected("/etc/apache2/ports.conf", WordpressResources.class.getResource("basic_ports_conf_expected.txt")),
     basicDomainsConf("/etc/apache2/conf.d/000-robobee-domains.conf", WordpressResources.class.getResource("basic_domains_conf.txt")),

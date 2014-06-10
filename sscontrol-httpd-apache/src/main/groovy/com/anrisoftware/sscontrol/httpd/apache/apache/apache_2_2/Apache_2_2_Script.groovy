@@ -36,6 +36,7 @@ import com.anrisoftware.sscontrol.httpd.domain.Domain
 import com.anrisoftware.sscontrol.httpd.domain.SslDomain
 import com.anrisoftware.sscontrol.httpd.webservice.WebService
 import com.anrisoftware.sscontrol.scripts.unix.RestartServicesFactory
+import com.anrisoftware.sscontrol.scripts.unix.StopServicesFactory
 
 /**
  * Configures <i>Apache 2.2</i> service.
@@ -63,6 +64,9 @@ abstract class Apache_2_2_Script extends ApacheScript {
 
     @Inject
     RestartServicesFactory restartServicesFactory
+
+    @Inject
+    StopServicesFactory stopServicesFactory
 
     /**
      * The {@link Templates} for the script.
@@ -105,6 +109,7 @@ abstract class Apache_2_2_Script extends ApacheScript {
         domainConfig.script = this
         sslDomainConfig.script = this
         redirectConfig.script = this
+        stopServices()
         super.run()
         deployPortsConfig()
         deployDefaultConfig()
@@ -135,6 +140,16 @@ abstract class Apache_2_2_Script extends ApacheScript {
     void enableDefaultMods() {
         enableMod "suexec"
         enableMods additionalMods
+    }
+
+    /**
+     * Stops the <i>Apache</i> services.
+     */
+    void stopServices() {
+        stopServicesFactory.create(
+                log: log, command: stopCommand, services: stopServices,
+                exitCode: null,
+                this, threads)()
     }
 
     /**

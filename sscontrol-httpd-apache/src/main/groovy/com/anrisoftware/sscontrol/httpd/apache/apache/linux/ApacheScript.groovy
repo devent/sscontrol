@@ -118,6 +118,25 @@ abstract class ApacheScript extends LinuxScript {
     }
 
     /**
+     * Returns the stop command for the <i>Apache</i> service.
+     *
+     * <ul>
+     * <li>property key {@code apache_stop_command}</li>
+     * <li>property key {@code stop_command}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    @Override
+    String getStopCommand() {
+        if (containsKey("apache_stop_command")) {
+            profileProperty "apache_stop_command", defaultProperties
+        } else {
+            profileProperty "stop_command", defaultProperties
+        }
+    }
+
+    /**
      * Returns the enable mod command {@code a2enmod}.
      *
      * <ul>

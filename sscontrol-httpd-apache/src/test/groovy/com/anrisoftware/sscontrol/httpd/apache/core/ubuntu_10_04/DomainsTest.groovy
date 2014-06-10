@@ -51,6 +51,7 @@ class DomainsTest extends UbuntuTestUtil {
         log.info "Run service again to ensure that configuration is not set double."
         registry.allServices.each { it.call() }
 
+        assertFileContent apacheOutExpected.asFile(tmpdir), apacheOutExpected
         assertFileContent robobeeDefaultConfExpected.asFile(tmpdir), robobeeDefaultConfExpected
         assertFileContent domainsConfExpected.asFile(tmpdir), domainsConfExpected
         assertStringContent test1comConfExpected.replaced(tmpdir, tmpdir, "/tmp"), test1comConfExpected.toString()

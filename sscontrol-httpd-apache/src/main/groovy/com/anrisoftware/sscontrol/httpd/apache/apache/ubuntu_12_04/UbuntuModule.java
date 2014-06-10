@@ -24,7 +24,6 @@ import static com.google.inject.multibindings.MapBinder.newMapBinder;
 import static java.lang.String.format;
 import groovy.lang.Script;
 
-import com.anrisoftware.globalpom.resources.ResourcesModule;
 import com.anrisoftware.sscontrol.core.checkfilehash.CheckFileHashModule;
 import com.anrisoftware.sscontrol.httpd.apache.authfile.ubuntu_12_04.Ubuntu_12_04_AuthFileModule;
 import com.anrisoftware.sscontrol.httpd.apache.authldap.ubuntu_12_04.Ubuntu_12_04_AuthLdapModule;
@@ -36,6 +35,7 @@ import com.anrisoftware.sscontrol.scripts.changefileowner.ChangeFileOwnerModule;
 import com.anrisoftware.sscontrol.scripts.localgroupadd.LocalGroupAddModule;
 import com.anrisoftware.sscontrol.scripts.localuseradd.LocalUserAddModule;
 import com.anrisoftware.sscontrol.scripts.mklink.MkLinkModule;
+import com.anrisoftware.sscontrol.scripts.pack.PackModule;
 import com.anrisoftware.sscontrol.scripts.unix.UnixScriptsModule;
 import com.anrisoftware.sscontrol.scripts.unpack.UnpackModule;
 import com.google.inject.AbstractModule;
@@ -59,8 +59,8 @@ class UbuntuModule extends AbstractModule {
         install(new LocalUserAddModule());
         install(new MkLinkModule());
         install(new UnpackModule());
+        install(new PackModule());
         install(new CheckFileHashModule());
-        install(new ResourcesModule());
         install(new Ubuntu_12_04_AuthFileModule());
         install(new Ubuntu_12_04_AuthLdapModule());
         install(new Ubuntu_12_04_PhpmyadminModule());

@@ -33,6 +33,7 @@ enum CoreResources {
 
     profile("UbuntuProfile.groovy", CoreResources.class.getResource("UbuntuProfile.groovy")),
     httpdScript("Httpd.groovy", CoreResources.class.getResource("Httpd.groovy")),
+    apacheOutExpected("/etc/init.d/apache2.out", CoreResources.class.getResource("apache_out_expected.txt")),
     robobeeDefaultConfExpected("/etc/apache2/sites-available/000-robobee-default.conf", CoreResources.class.getResource("default_conf_expected.txt")),
     domainsConfExpected("/etc/apache2/conf.d/000-robobee-domains.conf", CoreResources.class.getResource("domains_conf_expected.txt")),
     test1comConfExpected("/etc/apache2/sites-available/100-robobee-test1.com.conf", CoreResources.class.getResource("test1_com_conf_expected.txt")),

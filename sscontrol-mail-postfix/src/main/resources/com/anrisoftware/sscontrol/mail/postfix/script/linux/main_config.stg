@@ -3,7 +3,7 @@ myhostname = <mail.domainName>
 %>
 
 hostnameConfig_search() ::= <%
-#?myhostname\\s*=.*
+(?m)^#?myhostname\\s*=.*
 %>
 
 originConfig(mail) ::= <%
@@ -11,7 +11,7 @@ myorigin = <mail.origin>
 %>
 
 originConfig_search() ::= <%
-#?myorigin\\s*=.*
+(?m)^#?myorigin\\s*=.*
 %>
 
 bannerConfig(banner) ::= <%
@@ -19,7 +19,7 @@ smtpd_banner = <banner>
 %>
 
 bannerConfig_search() ::= <%
-#?smtpd_banner\\s*=.*
+(?m)^#?smtpd_banner\\s*=.*
 %>
 
 relayhostConfig(mail) ::= <%
@@ -27,7 +27,7 @@ relayhostConfig(mail) ::= <%
 %>
 
 relayhostConfig_search() ::= <%
-#?relayhost\\s*=.*
+(?m)^#?relayhost\\s*=.*
 %>
 
 interfacesConfig(mail) ::= <%
@@ -35,7 +35,7 @@ inet_interfaces = <mail.binding.addresses;separator=",">
 %>
 
 interfacesConfig_search() ::= <%
-#?inet_interfaces\\s*=.*
+(?m)^#?inet_interfaces\\s*=.*
 %>
 
 destinationsConfig(mail) ::= <%
@@ -43,7 +43,7 @@ mydestination = <mail.destinations;separator=",">
 %>
 
 destinationsConfig_search() ::= <%
-#?mydestination\\s*=.*
+(?m)^#?mydestination\\s*=.*
 %>
 
 masqueradeDomainsConfig(mail) ::= <%
@@ -51,7 +51,7 @@ masquerade_domains = <mail.masqueradeDomains.domains;separator=" ">
 %>
 
 masqueradeDomainsConfig_search() ::= <%
-#?masquerade_domains\\s*=.*
+(?m)^#?masquerade_domains\\s*=.*
 %>
 
 masqueradeExceptionsConfig(mail) ::= <%
@@ -66,7 +66,7 @@ alias_maps = hash:<file>
 %>
 
 aliasMapsConfig_search() ::= <%
-#?alias_maps\\s*=.*
+(?m)^#?alias_maps\\s*=.*
 %>
 
 aliasDatabaseConfig(file) ::= <%
@@ -74,7 +74,7 @@ alias_database = hash:<file>
 %>
 
 aliasDatabaseConfig_search() ::= <%
-#?alias_database\\s*=.*
+(?m)^#?alias_database\\s*=.*
 %>
 
 unknownLocalRecipientRejectCodeConfig(code) ::= <%
@@ -82,7 +82,7 @@ unknown_local_recipient_reject_code = <code>
 %>
 
 unknownLocalRecipientRejectCodeConfig_search() ::= <%
-#?unknown_local_recipient_reject_code\\s*=.*
+(?m)^#?unknown_local_recipient_reject_code\\s*=.*
 %>
 
 delayWarningTimeConfig(time) ::= <%
@@ -90,7 +90,7 @@ delay_warning_time = <time>
 %>
 
 delayWarningTimeConfig_search() ::= <%
-#?delay_warning_time\\s*=.*
+(?m)^#?delay_warning_time\\s*=.*
 %>
 
 maximalQueueLifetimeConfig(time) ::= <%
@@ -98,7 +98,7 @@ maximal_queue_lifetime = <time>
 %>
 
 maximalQueueLifetimeConfig_search() ::= <%
-#?maximal_queue_lifetime\\s*=.*
+(?m)^#?maximal_queue_lifetime\\s*=.*
 %>
 
 minimalRetriesDelayConfig(time) ::= <%
@@ -106,7 +106,7 @@ minimal_backoff_time = <time>
 %>
 
 minimalRetriesDelayConfig_search() ::= <%
-#?minimal_backoff_time\\s*=.*
+(?m)^#?minimal_backoff_time\\s*=.*
 %>
 
 maximumRetriesDelayConfig(time) ::= <%
@@ -114,7 +114,7 @@ maximal_backoff_time = <time>
 %>
 
 maximumRetriesDelayConfig_search() ::= <%
-#?maximal_backoff_time\\s*=.*
+(?m)^#?maximal_backoff_time\\s*=.*
 %>
 
 heloTimeoutConfig(time) ::= <%
@@ -122,7 +122,7 @@ smtp_helo_timeout = <time>
 %>
 
 heloTimeoutConfig_search() ::= <%
-#?smtp_helo_timeout\\s*=.*
+(?m)^#?smtp_helo_timeout\\s*=.*
 %>
 
 recipientLimitConfig(limit) ::= <%
@@ -130,7 +130,7 @@ smtpd_recipient_limit = <limit>
 %>
 
 recipientLimitConfig_search() ::= <%
-#?smtpd_recipient_limit\\s*=.*
+(?m)^#?smtpd_recipient_limit\\s*=.*
 %>
 
 backOffErrorLimitConfig(limit) ::= <%
@@ -138,7 +138,7 @@ smtpd_soft_error_limit = <limit>
 %>
 
 backOffErrorLimitConfig_search() ::= <%
-#?smtpd_soft_error_limit\\s*=.*
+(?m)^#?smtpd_soft_error_limit\\s*=.*
 %>
 
 blockingErrorLimitConfig(limit) ::= <%
@@ -146,7 +146,7 @@ smtpd_hard_error_limit = <limit>
 %>
 
 blockingErrorLimitConfig_search() ::= <%
-#?smtpd_hard_error_limit\\s*=.*
+(?m)^#?smtpd_hard_error_limit\\s*=.*
 %>
 
 heloRestrictionsConfig(restrictions) ::= <%
@@ -154,7 +154,7 @@ smtpd_helo_restrictions = <restrictions>
 %>
 
 heloRestrictionsConfig_search() ::= <%
-#?smtpd_helo_restrictions\\s*=.*
+(?m)^#?smtpd_helo_restrictions\\s*=.*
 %>
 
 senderRestrictionsConfig(restrictions) ::= <%
@@ -162,7 +162,7 @@ smtpd_sender_restrictions = <restrictions>
 %>
 
 senderRestrictionsConfig_search() ::= <%
-#?smtpd_sender_restrictions\\s*=.*
+(?m)^#?smtpd_sender_restrictions\\s*=.*
 %>
 
 clientRestrictionsConfig(restrictions) ::= <%
@@ -170,7 +170,7 @@ smtpd_client_restrictions = <restrictions>
 %>
 
 clientRestrictionsConfig_search() ::= <%
-#?smtpd_client_restrictions\\s*=.*
+(?m)^#?smtpd_client_restrictions\\s*=.*
 %>
 
 recipientRestrictionsConfig(restrictions) ::= <%
@@ -178,7 +178,7 @@ smtpd_recipient_restrictions = <restrictions>
 %>
 
 recipientRestrictionsConfig_search() ::= <%
-#?smtpd_recipient_restrictions\\s*=.*
+(?m)^#?smtpd_recipient_restrictions\\s*=.*
 %>
 
 dataRestrictionsConfig(restrictions) ::= <%
@@ -186,7 +186,7 @@ smtpd_data_restrictions = <restrictions>
 %>
 
 dataRestrictionsConfig_search() ::= <%
-#?smtpd_data_restrictions\\s*=.*
+(?m)^#?smtpd_data_restrictions\\s*=.*
 %>
 
 heloRequiredConfig(flag) ::= <%
@@ -194,7 +194,7 @@ smtpd_helo_required = <if(flag)>yes<else>no<endif>
 %>
 
 heloRequiredConfig_search() ::= <%
-#?smtpd_helo_required\\s*=.*
+(?m)^#?smtpd_helo_required\\s*=.*
 %>
 
 delayRejectConfig(flag) ::= <%
@@ -202,7 +202,7 @@ smtpd_delay_reject = <if(flag)>yes<else>no<endif>
 %>
 
 delayRejectConfig_search() ::= <%
-#?smtpd_delay_reject\\s*=.*
+(?m)^#?smtpd_delay_reject\\s*=.*
 %>
 
 disableVrfyCommandConfig(flag) ::= <%
@@ -210,7 +210,7 @@ disable_vrfy_command = <if(flag)>yes<else>no<endif>
 %>
 
 disableVrfyCommandConfig_search() ::= <%
-#?disable_vrfy_command\\s*=.*
+(?m)^#?disable_vrfy_command\\s*=.*
 %>
 
 smtpTlsSecurityLevelConfig(level) ::= <%
@@ -218,7 +218,7 @@ smtp_tls_security_level = <level>
 %>
 
 smtpTlsSecurityLevelConfig_search() ::= <%
-#?smtp_tls_security_level\\s*=.*
+(?m)^#?smtp_tls_security_level\\s*=.*
 %>
 
 smtpdTlsSecurityLevelConfig(level) ::= <%
@@ -226,7 +226,7 @@ smtpd_tls_security_level = <level>
 %>
 
 smtpdTlsSecurityLevelConfig_search() ::= <%
-#?smtp_tls_security_level\\s*=.*
+(?m)^#?smtp_tls_security_level\\s*=.*
 %>
 
 smtpTlsNoteStarttlsOfferConfig(enabled) ::= <%
@@ -234,7 +234,7 @@ smtp_tls_note_starttls_offer = <if(enabled)>yes<else>no<endif>
 %>
 
 smtpTlsNoteStarttlsOfferConfig_search() ::= <%
-#?smtp_tls_note_starttls_offer\\s*=.*
+(?m)^#?smtp_tls_note_starttls_offer\\s*=.*
 %>
 
 smtpdTlsLoglevelConfig(level) ::= <%
@@ -242,7 +242,7 @@ smtpd_tls_loglevel = <level>
 %>
 
 smtpdTlsLoglevelConfig_search() ::= <%
-#?smtpd_tls_loglevel\\s*=.*
+(?m)^#?smtpd_tls_loglevel\\s*=.*
 %>
 
 smtpdTlsReceivedHeaderConfig(enabled) ::= <%
@@ -250,7 +250,7 @@ smtpd_tls_received_header = <if(enabled)>yes<else>no<endif>
 %>
 
 smtpdTlsReceivedHeaderConfig_search() ::= <%
-#?smtpd_tls_received_header\\s*=.*
+(?m)^#?smtpd_tls_received_header\\s*=.*
 %>
 
 smtpdTlsSessionCacheTimeoutConfig(time) ::= <%
@@ -258,7 +258,7 @@ smtpd_tls_session_cache_timeout = <time>s
 %>
 
 smtpdTlsSessionCacheTimeoutConfig_search() ::= <%
-#?smtpd_tls_session_cache_timeout\\s*=.*
+(?m)^#?smtpd_tls_session_cache_timeout\\s*=.*
 %>
 
 randomSourceConfig(source) ::= <%
@@ -266,7 +266,7 @@ tls_random_source = <source>
 %>
 
 randomSourceConfig_search() ::= <%
-#?tls_random_source\\s*=.*
+(?m)^#?tls_random_source\\s*=.*
 %>
 
 certFileConfig(file) ::= <%
@@ -274,7 +274,7 @@ smtpd_tls_cert_file = <file>
 %>
 
 certFileConfig_search() ::= <%
-#?smtpd_tls_cert_file\\s*=.*
+(?m)^#?smtpd_tls_cert_file\\s*=.*
 %>
 
 keyFileConfig(file) ::= <%
@@ -282,7 +282,7 @@ smtpd_tls_key_file = <file>
 %>
 
 keyFileConfig_search() ::= <%
-#?smtpd_tls_key_file\\s*=.*
+(?m)^#?smtpd_tls_key_file\\s*=.*
 %>
 
 caFileConfig(file) ::= <%
@@ -290,5 +290,5 @@ smtp_tls_CAfile = <file>
 %>
 
 caFileConfig_search() ::= <%
-#?smtp_tls_CAfile\\s*=.*
+(?m)^#?smtp_tls_CAfile\\s*=.*
 %>

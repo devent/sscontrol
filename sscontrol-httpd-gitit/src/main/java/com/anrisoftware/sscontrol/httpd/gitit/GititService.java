@@ -49,9 +49,9 @@ import com.google.inject.assistedinject.Assisted;
 
 /**
  * <i>Gitit</i> service.
- *
- * @see <a href='http://gitit.net">http://gitit.net</a>
- *
+ * 
+ * @see <a href="http://gitit.net">http://gitit.net</a>
+ * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */

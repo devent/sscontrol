@@ -24,6 +24,7 @@ import groovy.util.logging.Slf4j
 import javax.inject.Inject
 
 import com.anrisoftware.sscontrol.core.checkfilehash.CheckFileHashFactory
+import com.anrisoftware.sscontrol.httpd.apache.wordpress.linux.WordpressBackup
 import com.anrisoftware.sscontrol.httpd.apache.wordpress.linux.Wordpress_3_Config
 import com.anrisoftware.sscontrol.httpd.domain.Domain
 import com.anrisoftware.sscontrol.httpd.webservice.OverrideMode
@@ -70,6 +71,7 @@ abstract class UbuntuWordpress_3_Config extends Wordpress_3_Config {
         setupDefaultPrefix service
         setupDefaultOverrideMode service
         setupDefaultForce service
+        backupService domain, service
         installPackages()
         enableMods wordpressMods
         downloadArchive domain, service
@@ -86,6 +88,26 @@ abstract class UbuntuWordpress_3_Config extends Wordpress_3_Config {
         deployPlugins domain, service
         setupPermissions domain, service
     }
+
+    /**
+     * Backups the <i>Wordpress</i> service is configured.
+     *
+     * @param domain
+     *            the {@link Domain}.
+     *
+     * @param service
+     *            the {@link WordpressService}.
+     */
+    void backupService(Domain domain, WordpressService service) {
+        wordpressBackup.backup domain, service
+    }
+
+    /**
+     * Returns the backup script.
+     *
+     * @return the {@link WordpressBackup}.
+     */
+    abstract WordpressBackup getWordpressBackup()
 
     /**
      * Installs the <i>Wordpress</i> packages.

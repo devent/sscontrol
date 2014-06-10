@@ -26,10 +26,11 @@ import javax.inject.Inject
 import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.sscontrol.core.service.LinuxScript
 import com.anrisoftware.sscontrol.httpd.apache.apache.ubuntu_12_04.Ubuntu_12_04_ScriptFactory
+import com.anrisoftware.sscontrol.httpd.apache.wordpress.linux.WordpressBackup
 import com.anrisoftware.sscontrol.httpd.apache.wordpress.ubuntu.UbuntuWordpress_3_Config
-import com.anrisoftware.sscontrol.httpd.domain.Domain;
-import com.anrisoftware.sscontrol.httpd.webservice.ServiceConfig;
-import com.anrisoftware.sscontrol.httpd.webservice.WebService;
+import com.anrisoftware.sscontrol.httpd.domain.Domain
+import com.anrisoftware.sscontrol.httpd.webservice.ServiceConfig
+import com.anrisoftware.sscontrol.httpd.webservice.WebService
 
 /**
  * Ubuntu 12.04 Wordpress.
@@ -48,6 +49,9 @@ class UbuntuConfig extends UbuntuWordpress_3_Config implements ServiceConfig {
     @Inject
     private UbuntuFcgiWordpressConfig fcgiConfig
 
+    @Inject
+    UbuntuWordpressBackup ubuntuWordpressBackup
+
     @Override
     void deployDomain(Domain domain, Domain refDomain, WebService service, List config) {
         fcgiConfig.deployDomain domain, refDomain, service, config
@@ -61,6 +65,11 @@ class UbuntuConfig extends UbuntuWordpress_3_Config implements ServiceConfig {
         super.deployService domain, service, config
         fcgiConfig.linkPhpconf domain
         createDomainConfig domain, null, service, config
+    }
+
+    @Override
+    WordpressBackup getWordpressBackup() {
+        ubuntuWordpressBackup
     }
 
     /**
@@ -81,6 +90,7 @@ class UbuntuConfig extends UbuntuWordpress_3_Config implements ServiceConfig {
     void setScript(LinuxScript script) {
         super.setScript script
         fcgiConfig.setScript script
+        ubuntuWordpressBackup.setScript this
     }
 
     @Override

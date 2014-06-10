@@ -109,6 +109,9 @@ enum WordpressResources {
     nooverrideChownOutExpected("/bin/chown.out", WordpressResources.class.getResource("nooverride_chown_out_expected.txt")),
     nooverrideChmodOutExpected("/bin/chmod.out", WordpressResources.class.getResource("nooverride_chmod_out_expected.txt")),
     nooverrideTarOutExpected("/bin/tar.out", WordpressResources.class.getResource("nooverride_tar_out_expected.txt")),
+    // backup
+    test1WordpressDir("/var/www/www.test1.com/wordpress_3_8", null),
+    backupTarOutExpected("/bin/tar.out", WordpressResources.class.getResource("backup_tar_out_expected.txt")),
 
     static copyWordpressFiles(File parent) {
         phpConfDir.asFile parent mkdirs()

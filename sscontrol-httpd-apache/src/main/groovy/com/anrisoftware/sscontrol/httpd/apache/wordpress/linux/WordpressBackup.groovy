@@ -19,10 +19,14 @@
 package com.anrisoftware.sscontrol.httpd.apache.wordpress.linux
 
 import static org.apache.commons.lang3.StringUtils.*
+import groovy.util.logging.Slf4j
 
 import javax.inject.Inject
 
-import com.anrisoftware.sscontrol.core.service.LinuxScript
+import org.joda.time.DateTime
+import org.joda.time.format.ISODateTimeFormat
+import org.stringtemplate.v4.ST
+
 import com.anrisoftware.sscontrol.httpd.domain.Domain
 import com.anrisoftware.sscontrol.httpd.wordpress.WordpressService
 import com.anrisoftware.sscontrol.scripts.pack.PackFactory
@@ -33,15 +37,16 @@ import com.anrisoftware.sscontrol.scripts.pack.PackFactory
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
+@Slf4j
 abstract class WordpressBackup {
 
     @Inject
-    private WordpressBackupLogger log
+    private WordpressBackupLogger logg
 
     @Inject
     PackFactory packFactory
 
-    LinuxScript script
+    Object parent
 
     /**
      * Backups the <i>Wordpress</i> service.
@@ -53,7 +58,9 @@ abstract class WordpressBackup {
      *            the {@link WordpressService} <i>Wordpress</i> service.
      */
     void backup(Domain domain, WordpressService service) {
-        backupWordpress domain, service
+        if (service.backupTarget != null) {
+            backupWordpress domain, service
+        }
     }
 
     /**
@@ -66,21 +73,65 @@ abstract class WordpressBackup {
      *            the {@link WordpressService} <i>Wordpress</i> service.
      */
     void backupWordpress(Domain domain, WordpressService service) {
-        def dir = wordpressDir domain, service
+        File dir = wordpressDir domain, service
+        if (dir.exists()) {
+            def output = createArchiveFile domain, service
+            packFactory.create(
+                    log: log, files: dir, commands: unpackCommands, output: output,
+                    parent, threads)()
+        }
     }
 
     /**
-     * @see ServiceConfig#setScript(LinuxScript)
+     * Returns the backup archive file.
+     *
+     * @param domain
+     *            the {@link Domain}.
+     *
+     * @param service
+     *            the {@link WordpressService} <i>Wordpress</i> service.
+     *
+     * @return the archive {@link File} file.
      */
-    void setScript(LinuxScript script) {
-        this.script = script
+    File createArchiveFile(Domain domain, WordpressService service) {
+        def parent = new File(service.backupTarget)
+        def st = new ST(backupArchive)
+        st.add "args", [domain: domain, timestamp: timestamp]
+        new File(parent, st.render())
+    }
+
+    /**
+     * Returns the timestamp for the archive file.
+     */
+    String getTimestamp() {
+        def date = ISODateTimeFormat.dateHourMinuteSecondMillis().print DateTime.now()
+        def time = replaceChars(date, ':', '-')
+        replaceChars(time, '.', '-')
+    }
+
+    /**
+     * <i>Wordpress</i> backup archive template, for
+     * example {@code "wordpress_<args.domain.name>_<args.timestamp>.tar.gz"}.
+     *
+     * <ul>
+     * <li>profile property {@code "wordpress_backup_archive"}</li>
+     * </ul>
+     *
+     * @see #getWordpressProperties()
+     */
+    String getBackupArchive() {
+        profileProperty "wordpress_backup_archive", wordpressProperties
+    }
+
+    void setScript(Object parent) {
+        this.parent = parent
     }
 
     def propertyMissing(String name) {
-        script.getProperty name
+        parent.getProperty name
     }
 
     def methodMissing(String name, def args) {
-        script.invokeMethod name, args
+        parent.invokeMethod name, args
     }
 }

@@ -80,6 +80,7 @@ class WordpressTest extends UbuntuTestUtil {
         copyUbuntu_12_04_Files tmpdir
         copyWordpressFiles tmpdir
         basicWordpressConfigSample.createFile tmpdir
+        test1WordpressDir.asFile tmpdir mkdirs()
 
         loader.loadService profile.resource, null
         def profile = registry.getService("profile")[0]
@@ -89,6 +90,8 @@ class WordpressTest extends UbuntuTestUtil {
         registry.allServices.each { it.call() }
         log.info "Run service again to ensure that configuration is not set double."
         registry.allServices.each { it.call() }
+
+        assertStringContent backupTarOutExpected.replaced(tmpdir, tmpdir, "/tmp"), backupTarOutExpected.toString()
     }
 
     @Test

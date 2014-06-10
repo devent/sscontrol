@@ -112,6 +112,8 @@ enum WordpressResources {
     // backup
     test1WordpressDir("/var/www/www.test1.com/wordpress_3_8", null),
     backupTarOutExpected("/bin/tar.out", WordpressResources.class.getResource("backup_tar_out_expected.txt")),
+    mysqldumpOutExpected("/usr/bin/mysqldump.out", WordpressResources.class.getResource("backup_mysqldump_out_expected.txt")),
+    backupTarget("/var/backups", null),
 
     static copyWordpressFiles(File parent) {
         phpConfDir.asFile parent mkdirs()

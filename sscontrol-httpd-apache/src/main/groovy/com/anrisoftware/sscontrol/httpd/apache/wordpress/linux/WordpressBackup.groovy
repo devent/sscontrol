@@ -27,9 +27,13 @@ import org.joda.time.DateTime
 import org.joda.time.format.ISODateTimeFormat
 import org.stringtemplate.v4.ST
 
+import com.anrisoftware.resources.templates.api.TemplateResource
+import com.anrisoftware.resources.templates.api.Templates
+import com.anrisoftware.resources.templates.api.TemplatesFactory
 import com.anrisoftware.sscontrol.httpd.domain.Domain
 import com.anrisoftware.sscontrol.httpd.wordpress.WordpressService
 import com.anrisoftware.sscontrol.scripts.pack.PackFactory
+import com.anrisoftware.sscontrol.scripts.unix.ScriptExecFactory
 
 /**
  * Backups the <i>Wordpress</i> service.
@@ -44,7 +48,17 @@ abstract class WordpressBackup {
     private WordpressBackupLogger logg
 
     @Inject
+    TemplatesFactory templatesFactory
+
+    @Inject
     PackFactory packFactory
+
+    @Inject
+    ScriptExecFactory scriptExecFactory
+
+    Templates backupTemplates
+
+    TemplateResource backupTemplate
 
     Object parent
 
@@ -60,6 +74,7 @@ abstract class WordpressBackup {
     void backup(Domain domain, WordpressService service) {
         if (service.backupTarget != null) {
             backupWordpress domain, service
+            backupDatabase domain, service
         }
     }
 
@@ -76,9 +91,36 @@ abstract class WordpressBackup {
         File dir = wordpressDir domain, service
         if (dir.exists()) {
             def output = createArchiveFile domain, service
+            output.parentFile.mkdirs()
             packFactory.create(
                     log: log, files: dir, commands: unpackCommands, output: output,
                     parent, threads)()
+        }
+    }
+
+    /**
+     * Backups the <i>Wordpress</i> database.
+     *
+     * @param domain
+     *            the {@link Domain}.
+     *
+     * @param service
+     *            the {@link WordpressService} <i>Wordpress</i> service.
+     */
+    void backupDatabase(Domain domain, WordpressService service) {
+        File dir = wordpressDir domain, service
+        if (dir.exists() && new File(mysqldumpCommand).exists()) {
+            def archiveFile = createDatabaseArchiveFile domain, service
+            archiveFile.parentFile.mkdirs()
+            scriptExecFactory.create(
+                    log: log,
+                    mysqldumpCommand: mysqldumpCommand,
+                    gzipCommand: gzipCommand,
+                    archiveFile: archiveFile,
+                    user: service.database.user,
+                    password: service.database.password,
+                    database: service.database.database,
+                    parent, threads, backupTemplate, "backupDatabase")()
         }
     }
 
@@ -96,6 +138,24 @@ abstract class WordpressBackup {
     File createArchiveFile(Domain domain, WordpressService service) {
         def parent = new File(service.backupTarget)
         def st = new ST(backupArchive)
+        st.add "args", [domain: domain, timestamp: timestamp]
+        new File(parent, st.render())
+    }
+
+    /**
+     * Returns the database backup archive file.
+     *
+     * @param domain
+     *            the {@link Domain}.
+     *
+     * @param service
+     *            the {@link WordpressService} <i>Wordpress</i> service.
+     *
+     * @return the archive {@link File} file.
+     */
+    File createDatabaseArchiveFile(Domain domain, WordpressService service) {
+        def parent = new File(service.backupTarget)
+        def st = new ST(backupDatabaseArchive)
         st.add "args", [domain: domain, timestamp: timestamp]
         new File(parent, st.render())
     }
@@ -123,8 +183,52 @@ abstract class WordpressBackup {
         profileProperty "wordpress_backup_archive", wordpressProperties
     }
 
+    /**
+     * <i>Wordpress</i> backup database archive template, for
+     * example {@code "wordpress_database_<args.domain.name>_<args.timestamp>.gz"}.
+     *
+     * <ul>
+     * <li>profile property {@code "wordpress_backup_database_archive"}</li>
+     * </ul>
+     *
+     * @see #getWordpressProperties()
+     */
+    String getBackupDatabaseArchive() {
+        profileProperty "wordpress_backup_database_archive", wordpressProperties
+    }
+
+    /**
+     * <i>mysqldump</i> command, for
+     * example {@code "/usr/bin/mysqldump"}.
+     *
+     * <ul>
+     * <li>profile property {@code "wordpress_mysqldump_command"}</li>
+     * </ul>
+     *
+     * @see #getWordpressProperties()
+     */
+    String getMysqldumpCommand() {
+        profileProperty "wordpress_mysqldump_command", wordpressProperties
+    }
+
+    /**
+     * <i>gzip</i> command, for
+     * example {@code "/bin/gzip"}.
+     *
+     * <ul>
+     * <li>profile property {@code "wordpress_gzip_command"}</li>
+     * </ul>
+     *
+     * @see #getWordpressProperties()
+     */
+    String getGzipCommand() {
+        profileProperty "wordpress_gzip_command", wordpressProperties
+    }
+
     void setScript(Object parent) {
         this.parent = parent
+        this.backupTemplates = templatesFactory.create("Wordpress_3")
+        this.backupTemplate = backupTemplates.getResource("backup")
     }
 
     def propertyMissing(String name) {

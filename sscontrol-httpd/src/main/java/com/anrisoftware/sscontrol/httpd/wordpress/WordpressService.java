@@ -311,7 +311,11 @@ public class WordpressService implements WebService {
 
     public URI getBackupTarget() {
         Object path = statementsMap.mapValue(BACKUP_KEY, TARGET_KEY);
-        return toURIFactory.create().convert(path);
+        if (path == null) {
+            return null;
+        } else {
+            return toURIFactory.create().convert(path);
+        }
     }
 
     public Object methodMissing(String name, Object args)

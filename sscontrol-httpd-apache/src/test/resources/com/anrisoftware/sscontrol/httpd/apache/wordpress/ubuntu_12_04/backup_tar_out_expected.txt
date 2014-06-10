@@ -1,4 +1,4 @@
--czf /var/backups/wordpress_www.test1.com_2014-06-10T23-07-43-242.tar.gz /tmp/var/www/www.test1.com/wordpress_3_8
+-czf /tmp/var/backups/wordpress_www.test1.com/wordpress_www.test1.com_000T00.tar.gz /tmp/var/www/www.test1.com/wordpress_3_8
 --overwrite --strip 1 -xf /tmp/tmp/wordpress-3-wordpress-3.8.tar.gz
--czf /var/backups/wordpress_www.test1.com_2014-06-10T23-07-44-320.tar.gz /tmp/var/www/www.test1.com/wordpress_3_8
+-czf /tmp/var/backups/wordpress_www.test1.com/wordpress_www.test1.com_000T00.tar.gz /tmp/var/www/www.test1.com/wordpress_3_8
 --overwrite --strip 1 -xf /tmp/tmp/wordpress-3-wordpress-3.8.tar.gz

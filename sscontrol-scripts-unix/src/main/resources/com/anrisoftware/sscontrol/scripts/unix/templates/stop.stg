@@ -1,0 +1,7 @@
+stopUnix(args) ::= <<
+<if(args.services)><args.services:{service | <args.command> <service><\n>}>
+<else>
+<args.command>
+<endif>
+
+>>

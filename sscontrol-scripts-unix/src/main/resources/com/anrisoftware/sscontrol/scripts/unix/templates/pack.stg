@@ -1,0 +1,16 @@
+unix(args) ::= <<
+<! - args.type - !>
+<! - args.command - !>
+<! - args.files - !>
+<! - args.output - !>
+<(args.type)(args)>
+
+>>
+
+tgz(args) ::= <<
+<tar(args)>
+>>
+
+tar(args) ::= <<
+<args.command> -czf <args.output> <args.files; separator=" ">
+>>

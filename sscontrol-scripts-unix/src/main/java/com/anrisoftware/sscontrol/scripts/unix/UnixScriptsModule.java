@@ -29,6 +29,7 @@ import com.google.inject.assistedinject.FactoryModuleBuilder;
 /**
  * @see InstallPackagesFactory
  * @see RestartServicesFactory
+ * @see StopServicesFactory
  * @see ScriptExecFactory
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
@@ -63,6 +64,8 @@ public class UnixScriptsModule extends AbstractModule {
                 RestartServices.class).build(RestartServicesFactory.class));
         install(new FactoryModuleBuilder().implement(ScriptExec.class,
                 ScriptExec.class).build(ScriptExecFactory.class));
+        install(new FactoryModuleBuilder().implement(StopServices.class,
+                StopServices.class).build(StopServicesFactory.class));
     }
 
 }

@@ -1,0 +1,1 @@
+-czf /tmp/tmp/archive.tar.gz /tmp/tmp/a.txt /tmp/tmp/b.txt

@@ -24,6 +24,7 @@ import groovy.util.logging.Slf4j
 import javax.inject.Inject
 
 import org.joda.time.DateTime
+import org.joda.time.Duration
 import org.joda.time.format.ISODateTimeFormat
 import org.stringtemplate.v4.ST
 
@@ -93,7 +94,11 @@ abstract class WordpressBackup {
             def output = createArchiveFile domain, service
             output.parentFile.mkdirs()
             packFactory.create(
-                    log: log, files: dir, commands: unpackCommands, output: output,
+                    log: log,
+                    files: dir,
+                    commands: unpackCommands,
+                    output: output,
+                    timeout: backupWordpressTimeout,
                     parent, threads)()
         }
     }
@@ -120,6 +125,7 @@ abstract class WordpressBackup {
                     user: service.database.user,
                     password: service.database.password,
                     database: service.database.database,
+                    timeout: backupWordpressTimeout,
                     parent, threads, backupTemplate, "backupDatabase")()
         }
     }
@@ -223,6 +229,20 @@ abstract class WordpressBackup {
      */
     String getGzipCommand() {
         profileProperty "wordpress_gzip_command", wordpressProperties
+    }
+
+    /**
+     * The timeout to backup the <i>Wordpress</i> service, for
+     * example {@code "PT1H"}.
+     *
+     * <ul>
+     * <li>profile property {@code "wordpress_backup_timeout"}</li>
+     * </ul>
+     *
+     * @see #getWordpressProperties()
+     */
+    Duration getBackupWordpressTimeout() {
+        profileDurationProperty "wordpress_backup_timeout", wordpressProperties
     }
 
     void setScript(Object parent) {

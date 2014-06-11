@@ -19,9 +19,15 @@
 package com.anrisoftware.sscontrol.scripts.pack;
 
 import java.io.File;
+import java.util.List;
 import java.util.Map;
 
+import org.joda.time.Duration;
+
+import com.anrisoftware.globalpom.exec.api.ProcessTask;
 import com.anrisoftware.globalpom.threads.api.Threads;
+import com.anrisoftware.sscontrol.scripts.unix.AbstractProcessExec;
+import com.anrisoftware.sscontrol.scripts.unix.InstallPackages;
 
 /**
  * Factory to create the archive from specified files.
@@ -47,6 +53,29 @@ public interface PackFactory {
      *            <li>{@code tgz} tar/gz archive for extension {@code .tar.gz}
      *            <li>{@code zip} Zip archive for extension {@code .zip}
      *            </ul>
+     * 
+     *            <li>{@code outString} optionally, set to {@code true} to save
+     *            the output in a {@link String} for later parsing, see
+     *            {@link ProcessTask#getOut()}. Per default it is set to
+     *            {@link AbstractProcessExec#OUT_STRING_DEFAULT}.
+     * 
+     *            <li>{@code timeout} optionally, set the timeout
+     *            {@link Duration}. Per default it is set to
+     *            {@link InstallPackages#TIMEOUT_DEFAULT}.
+     * 
+     *            <li>{@code destroyOnTimeout} optionally, set to {@code true}
+     *            to destroy the process on timeout. Per default it is set to
+     *            {@link AbstractProcessExec#DESTROY_ON_TIMEOUT_DEFAULT}.
+     * 
+     *            <li>{@code checkExitCodes} optionally, set to {@code true} to
+     *            check the exit code(s) of the process;
+     * 
+     *            <li>{@code exitCodes} optionally, set a {@link List} of
+     *            success exit codes;
+     * 
+     *            <li>{@code exitCode} optionally, set the success exit code of
+     *            the process. Per default it is set to
+     *            {@link AbstractProcessExec#EXIT_CODE_DEFAULT}.
      *            </ul>
      * 
      * @param parent

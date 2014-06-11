@@ -65,4 +65,27 @@ class DomainsTest extends UbuntuTestUtil {
         assertStringContent groupaddOutExpected.replaced(tmpdir, tmpdir, "/tmp"), groupaddOutExpected.toString()
         assertStringContent chownOutExpected.replaced(tmpdir, tmpdir, "/tmp"), chownOutExpected.toString()
     }
+
+    @Test
+    void "apache domains users"() {
+        copyUbuntuFiles tmpdir
+        copyUbuntu_12_04_Files tmpdir
+        loader.loadService profile.resource, null
+        def profile = registry.getService("profile")[0]
+        setupUbuntu_12_04_Properties profile, tmpdir
+        loader.loadService httpdDomainsScript.resource, profile
+
+        registry.allServices.each { it.call() }
+        log.info "Run service again to ensure that configuration is not set double."
+        registry.allServices.each { it.call() }
+
+        assertFileContent apacheOutExpected.asFile(tmpdir), apacheOutExpected
+        assertFileContent robobeeDefaultConfExpected.asFile(tmpdir), robobeeDefaultConfExpected
+        assertFileContent usersDomainsConfExpected.asFile(tmpdir), usersDomainsConfExpected
+        assertFileContent usersEnsiteOutExpected.asFile(tmpdir), usersEnsiteOutExpected
+        assertFileContent usersEnmodOutExpected.asFile(tmpdir), usersEnmodOutExpected
+        assertStringContent usersUseraddOutExpected.replaced(tmpdir, tmpdir, "/tmp"), usersUseraddOutExpected.toString()
+        assertStringContent usersGroupaddOutExpected.replaced(tmpdir, tmpdir, "/tmp"), usersGroupaddOutExpected.toString()
+        assertStringContent usersChownOutExpected.replaced(tmpdir, tmpdir, "/tmp"), usersChownOutExpected.toString()
+    }
 }

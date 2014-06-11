@@ -1,0 +1,8 @@
+web_001.web_001 /tmp/var/www/anr-institute.com/web
+web_002.web_002 /tmp/var/www/www.anr-institute.com/web
+web_003.web_003 /tmp/var/www/anrisoftware.com/web
+web_004.web_004 /tmp/var/www/www.mueller-public.de/web
+web_001.web_001 /tmp/var/www/anr-institute.com/web
+web_002.web_002 /tmp/var/www/www.anr-institute.com/web
+web_003.web_003 /tmp/var/www/anrisoftware.com/web
+web_004.web_004 /tmp/var/www/www.mueller-public.de/web

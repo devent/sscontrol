@@ -33,6 +33,7 @@ enum CoreResources {
 
     profile("UbuntuProfile.groovy", CoreResources.class.getResource("UbuntuProfile.groovy")),
     httpdScript("Httpd.groovy", CoreResources.class.getResource("Httpd.groovy")),
+    httpdDomainsScript("Httpd.groovy", CoreResources.class.getResource("HttpdDomains.groovy")),
     apacheOutExpected("/etc/init.d/apache2.out", CoreResources.class.getResource("apache_out_expected.txt")),
     robobeeDefaultConfExpected("/etc/apache2/sites-available/000-robobee-default.conf", CoreResources.class.getResource("default_conf_expected.txt")),
     domainsConfExpected("/etc/apache2/conf.d/000-robobee-domains.conf", CoreResources.class.getResource("domains_conf_expected.txt")),
@@ -46,6 +47,13 @@ enum CoreResources {
     useraddOutExpected("/usr/sbin/useradd.out", CoreResources.class.getResource("useradd_out_expected.txt")),
     groupaddOutExpected("/usr/sbin/groupadd.out", CoreResources.class.getResource("groupadd_out_expected.txt")),
     chownOutExpected("/bin/chown.out", CoreResources.class.getResource("chown_out_expected.txt")),
+    // domains users
+    usersDomainsConfExpected("/etc/apache2/conf.d/000-robobee-domains.conf", CoreResources.class.getResource("users_conf_expected.txt")),
+    usersEnsiteOutExpected("/usr/sbin/a2ensite.out", CoreResources.class.getResource("users_ensite_out_expected.txt")),
+    usersEnmodOutExpected("/usr/sbin/a2enmod.out", CoreResources.class.getResource("users_enmod_out_expected.txt")),
+    usersUseraddOutExpected("/usr/sbin/useradd.out", CoreResources.class.getResource("users_useradd_out_expected.txt")),
+    usersGroupaddOutExpected("/usr/sbin/groupadd.out", CoreResources.class.getResource("users_groupadd_out_expected.txt")),
+    usersChownOutExpected("/bin/chown.out", CoreResources.class.getResource("users_chown_out_expected.txt")),
 
     ResourcesUtils resources
 

@@ -41,6 +41,12 @@ import com.google.inject.assistedinject.Assisted;
  */
 public class LocalUserAdd implements Callable<LocalUserAdd> {
 
+    private static final String UNIX = "unix";
+
+    private static final String TEMPLATE_NAME = "useradd";
+
+    private static final String TEMPLATES_NAME = "ScriptsUnixTemplates";
+
     private final LocalUserAddLogger log;
 
     private final Map<String, Object> args;
@@ -55,6 +61,8 @@ public class LocalUserAdd implements Callable<LocalUserAdd> {
     @Inject
     private TemplatesFactory templatesFactory;
 
+    private boolean userAdded;
+
     /**
      * @see LocalUserAddFactory#create(Map, Object, Threads)
      */
@@ -65,6 +73,8 @@ public class LocalUserAdd implements Callable<LocalUserAdd> {
         this.args = args;
         this.parent = parent;
         this.threads = threads;
+        args.put("outString", true);
+        args.put("errString", true);
         log.userName(args, parent);
         log.groupName(args, parent);
         log.userId(args, parent);
@@ -77,12 +87,28 @@ public class LocalUserAdd implements Callable<LocalUserAdd> {
 
     @Override
     public LocalUserAdd call() throws Exception {
-        Templates templates = templatesFactory.create("ScriptsUnixTemplates");
-        TemplateResource templateResource = templates.getResource("useradd");
+        Templates templates = templatesFactory.create(TEMPLATES_NAME);
+        TemplateResource templateResource = templates
+                .getResource(TEMPLATE_NAME);
         ProcessTask task = scriptExecFactory.create(args, parent, threads,
-                templateResource, "unix").call();
-        log.userAdded(parent, task, args);
+                templateResource, UNIX).call();
+        checkUserAdded(task);
         return this;
+    }
+
+    private void checkUserAdded(ProcessTask task) {
+        String out = task.getOut().trim();
+        if (out.endsWith("added.")) {
+            userAdded = true;
+            log.userAdded(parent, task, args);
+        } else if (out.endsWith("already exists.")) {
+            userAdded = false;
+            log.userAlreadyExist(parent, task, args);
+        }
+    }
+
+    public boolean isUserAdded() {
+        return userAdded;
     }
 
     @Override

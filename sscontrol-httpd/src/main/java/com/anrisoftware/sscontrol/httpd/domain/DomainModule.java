@@ -36,8 +36,8 @@ public class DomainModule extends AbstractModule {
     protected void configure() {
         install(new FactoryModuleBuilder().implement(Domain.class,
                 DomainImpl.class).build(DomainFactory.class));
-        install(new FactoryModuleBuilder().implement(Domain.class,
-                SslDomain.class).build(SslDomainFactory.class));
+        install(new FactoryModuleBuilder().implement(SslDomain.class,
+                SslDomainImpl.class).build(SslDomainFactory.class));
     }
 
 }

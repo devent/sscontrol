@@ -32,6 +32,8 @@ import com.anrisoftware.sscontrol.httpd.apache.wordpress.ubuntu_12_04.Ubuntu_12_
 import com.anrisoftware.sscontrol.httpd.webservice.ServiceConfig;
 import com.anrisoftware.sscontrol.scripts.changefilemod.ChangeFileModModule;
 import com.anrisoftware.sscontrol.scripts.changefileowner.ChangeFileOwnerModule;
+import com.anrisoftware.sscontrol.scripts.localchangegroup.LocalChangeGroupModule;
+import com.anrisoftware.sscontrol.scripts.localchangeuser.LocalChangeUserModule;
 import com.anrisoftware.sscontrol.scripts.localgroupadd.LocalGroupAddModule;
 import com.anrisoftware.sscontrol.scripts.localuseradd.LocalUserAddModule;
 import com.anrisoftware.sscontrol.scripts.mklink.MkLinkModule;
@@ -57,6 +59,8 @@ class UbuntuModule extends AbstractModule {
         install(new ChangeFileModModule());
         install(new LocalGroupAddModule());
         install(new LocalUserAddModule());
+        install(new LocalChangeGroupModule());
+        install(new LocalChangeUserModule());
         install(new MkLinkModule());
         install(new UnpackModule());
         install(new PackModule());

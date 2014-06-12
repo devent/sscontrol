@@ -1,0 +1,8 @@
+unix(args) ::= <<
+<args.command> <unixId(args)> <args.groupName>
+
+>>
+
+unixId(args) ::= <%
+<if(args.groupId)>-g <args.groupId><endif>
+%>

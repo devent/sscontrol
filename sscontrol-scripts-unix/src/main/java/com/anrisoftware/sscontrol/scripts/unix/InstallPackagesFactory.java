@@ -51,6 +51,11 @@ public interface InstallPackagesFactory {
      *            {@link ProcessTask#getOut()}. Per default it is set to
      *            {@link AbstractProcessExec#OUT_STRING_DEFAULT}.
      * 
+     *            <li>{@code errString} optionally, set to {@code true} to save
+     *            the error output in a {@link String} for later parsing, see
+     *            {@link ProcessTask#getErr()}. Per default it is set to
+     *            {@link AbstractProcessExec#ERR_STRING_DEFAULT}.
+     * 
      *            <li>{@code timeout} optionally, set the timeout
      *            {@link Duration}. Per default it is set to
      *            {@link InstallPackages#TIMEOUT_DEFAULT}.

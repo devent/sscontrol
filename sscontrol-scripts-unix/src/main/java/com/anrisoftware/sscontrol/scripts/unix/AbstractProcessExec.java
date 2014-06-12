@@ -50,6 +50,11 @@ import com.anrisoftware.globalpom.threads.api.Threads;
 public abstract class AbstractProcessExec implements Callable<ProcessTask> {
 
     /**
+     * Default {@code errString} value, set to {@code false}.
+     */
+    public static final Boolean ERR_STRING_DEFAULT = false;
+
+    /**
      * Default {@code outString} value, set to {@code false}.
      */
     public static final boolean OUT_STRING_DEFAULT = false;
@@ -70,6 +75,8 @@ public abstract class AbstractProcessExec implements Callable<ProcessTask> {
     public static final Duration TIMEOUT_DEFAULT = Duration.standardSeconds(60);
 
     private static final String LOG_KEY = "log";
+
+    private static final String ERR_STRING = "errString";
 
     private static final String OUT_STRING = "outString";
 
@@ -94,6 +101,8 @@ public abstract class AbstractProcessExec implements Callable<ProcessTask> {
     private final Duration timeout;
 
     private final boolean outString;
+
+    private final boolean errString;
 
     private final boolean checkExitCodes;
 
@@ -136,6 +145,7 @@ public abstract class AbstractProcessExec implements Callable<ProcessTask> {
                 DESTROY_ON_TIMEOUT_DEFAULT);
         this.timeout = getArg(TIMEOUT, args, TIMEOUT_DEFAULT);
         this.outString = getArg(OUT_STRING, args, OUT_STRING_DEFAULT);
+        this.errString = getArg(ERR_STRING, args, ERR_STRING_DEFAULT);
     }
 
     @SuppressWarnings("unchecked")
@@ -221,6 +231,9 @@ public abstract class AbstractProcessExec implements Callable<ProcessTask> {
     }
 
     protected void setupCommandError(ScriptCommandExec script, CommandLine line) {
+        if (errString) {
+            return;
+        }
         Logger logger = (Logger) args.get(LOG_KEY);
         script.setCommandError(errorFactory.create(logger, line));
     }

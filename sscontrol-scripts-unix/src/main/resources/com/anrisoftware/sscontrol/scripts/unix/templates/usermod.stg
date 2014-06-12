@@ -1,5 +1,5 @@
 unix(args) ::= <<
-<args.command> <unixGroups(args)> <unixAppendGroups(args)> <unixShell(args)> <args.userName>
+<args.command> <unixGroups(args)> <unixId(args)> <unixGroup(args)> <unixHomeDir(args)> <unixShell(args)> <unixAppendGroups(args)> <args.userName>
 
 >>
 
@@ -13,4 +13,16 @@ unixAppendGroups(args) ::= <%
 
 unixShell(args) ::= <%
 <if(args.shell)>-s "<args.shell>"<endif>
+%>
+
+unixHomeDir(args) ::= <%
+<if(args.home)>-d "<args.home>"<endif>
+%>
+
+unixGroup(args) ::= <%
+<if(args.groupName)>-g "<args.groupName>"<else><if(args.groupId)>-g <args.groupId><endif><endif>
+%>
+
+unixId(args) ::= <%
+<if(args.userId)>-u <args.userId><endif>
 %>

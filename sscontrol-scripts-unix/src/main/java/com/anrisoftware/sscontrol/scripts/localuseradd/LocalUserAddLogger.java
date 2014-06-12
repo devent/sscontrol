@@ -23,6 +23,9 @@ import static com.anrisoftware.sscontrol.scripts.localuseradd.LocalUserAddLogger
 import static com.anrisoftware.sscontrol.scripts.localuseradd.LocalUserAddLogger._.user_added_debug;
 import static com.anrisoftware.sscontrol.scripts.localuseradd.LocalUserAddLogger._.user_added_info;
 import static com.anrisoftware.sscontrol.scripts.localuseradd.LocalUserAddLogger._.user_added_trace;
+import static com.anrisoftware.sscontrol.scripts.localuseradd.LocalUserAddLogger._.user_already_exist_debug;
+import static com.anrisoftware.sscontrol.scripts.localuseradd.LocalUserAddLogger._.user_already_exist_info;
+import static com.anrisoftware.sscontrol.scripts.localuseradd.LocalUserAddLogger._.user_already_exist_trace;
 import static org.apache.commons.lang3.Validate.isInstanceOf;
 import static org.apache.commons.lang3.Validate.notNull;
 
@@ -60,7 +63,13 @@ class LocalUserAddLogger extends AbstractLogger {
 
         user_added_debug("User added '{}' for {}."),
 
-        user_added_info("User added '{}' for script {}.");
+        user_added_info("User added '{}' for script {}."),
+
+        user_already_exist_trace("User already exist '{}' for {}, {}."),
+
+        user_already_exist_debug("User already exist '{}' for {}."),
+
+        user_already_exist_info("User already exist '{}' for script {}.");
 
         private String name;
 
@@ -134,6 +143,18 @@ class LocalUserAddLogger extends AbstractLogger {
             debug(user_added_debug, group, parent);
         } else {
             info(user_added_info, group, parent);
+        }
+    }
+
+    void userAlreadyExist(Object parent, ProcessTask task,
+            Map<String, Object> args) {
+        Object group = args.get(USER_NAME_KEY);
+        if (isTraceEnabled()) {
+            trace(user_already_exist_trace, group, parent, task);
+        } else if (isDebugEnabled()) {
+            debug(user_already_exist_debug, group, parent);
+        } else {
+            info(user_already_exist_info, group, parent);
         }
     }
 

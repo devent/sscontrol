@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-scripts-unix. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.scripts.localchangeuser;
+package com.anrisoftware.sscontrol.scripts.localchangegroup;
 
 import java.util.Map;
 import java.util.concurrent.Callable;
@@ -34,20 +34,20 @@ import com.anrisoftware.sscontrol.scripts.unix.ScriptExecFactory;
 import com.google.inject.assistedinject.Assisted;
 
 /**
- * Modifies the local user.
+ * Modifies the local group.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-public class LocalChangeUser implements Callable<LocalChangeUser> {
+public class LocalChangeGroup implements Callable<LocalChangeGroup> {
 
     private static final String UNIX = "unix";
 
-    private static final String TEMPLATE_NAME = "usermod";
+    private static final String TEMPLATE_NAME = "groupmod";
 
     private static final String TEMPLATES_NAME = "ScriptsUnixTemplates";
 
-    private final LocalChangeUserLogger log;
+    private final LocalChangeGroupLogger log;
 
     private final Map<String, Object> args;
 
@@ -62,24 +62,23 @@ public class LocalChangeUser implements Callable<LocalChangeUser> {
     private TemplatesFactory templatesFactory;
 
     /**
-     * @see LocalChangeUserFactory#create(Map, Object, Threads)
+     * @see LocalChangeGroupFactory#create(Map, Object, Threads)
      */
     @Inject
-    LocalChangeUser(LocalChangeUserLogger log, @Assisted Map<String, Object> args,
-            @Assisted Object parent, @Assisted Threads threads) {
+    LocalChangeGroup(LocalChangeGroupLogger log,
+            @Assisted Map<String, Object> args, @Assisted Object parent,
+            @Assisted Threads threads) {
         this.log = log;
         this.args = args;
         this.parent = parent;
         this.threads = threads;
         log.command(args, parent);
-        log.userName(args, parent);
-        log.groups(args, parent);
-        log.append(args, parent);
-        log.shell(args, parent);
+        log.groupName(args, parent);
+        log.groupId(args, parent);
     }
 
     @Override
-    public LocalChangeUser call() throws Exception {
+    public LocalChangeGroup call() throws Exception {
         Templates templates = templatesFactory.create(TEMPLATES_NAME);
         TemplateResource templateResource = templates
                 .getResource(TEMPLATE_NAME);

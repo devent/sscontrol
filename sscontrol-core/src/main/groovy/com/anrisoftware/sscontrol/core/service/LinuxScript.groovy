@@ -515,6 +515,20 @@ abstract class LinuxScript extends Script {
     }
 
     /**
+     * Returns the command to modify a local group, for
+     * example {@code "/usr/sbin/groupmod"}.
+     *
+     * <ul>
+     * <li>property key {@code group_mod_command}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    String getGroupModCommand() {
+        profileProperty "group_mod_command", defaultProperties
+    }
+
+    /**
      * Returns the reconfigure command, for
      * example {@code "/usr/sbin/dpkg-reconfigure"}.
      *

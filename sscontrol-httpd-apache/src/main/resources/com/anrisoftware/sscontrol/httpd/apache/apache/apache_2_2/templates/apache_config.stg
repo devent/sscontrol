@@ -8,7 +8,7 @@ DomainImpl(properties, domain, servicesConfig) ::= <<
 
 >>
 
-SslDomain(properties, domain, servicesConfig) ::= <<
+SslDomainImpl(properties, domain, servicesConfig) ::= <<
 \<VirtualHost <domain.address>:<domain.port>\>
 
     <domainBody(properties, domain)>

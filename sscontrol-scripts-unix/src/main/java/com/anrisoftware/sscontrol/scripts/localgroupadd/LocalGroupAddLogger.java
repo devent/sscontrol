@@ -22,6 +22,9 @@ import static com.anrisoftware.sscontrol.scripts.localgroupadd.LocalGroupAddLogg
 import static com.anrisoftware.sscontrol.scripts.localgroupadd.LocalGroupAddLogger._.group_added_debug;
 import static com.anrisoftware.sscontrol.scripts.localgroupadd.LocalGroupAddLogger._.group_added_info;
 import static com.anrisoftware.sscontrol.scripts.localgroupadd.LocalGroupAddLogger._.group_added_trace;
+import static com.anrisoftware.sscontrol.scripts.localgroupadd.LocalGroupAddLogger._.group_already_exist_debug;
+import static com.anrisoftware.sscontrol.scripts.localgroupadd.LocalGroupAddLogger._.group_already_exist_info;
+import static com.anrisoftware.sscontrol.scripts.localgroupadd.LocalGroupAddLogger._.group_already_exist_trace;
 import static com.anrisoftware.sscontrol.scripts.localgroupadd.LocalGroupAddLogger._.system_group_boolean;
 import static org.apache.commons.lang3.Validate.isInstanceOf;
 import static org.apache.commons.lang3.Validate.isTrue;
@@ -58,7 +61,13 @@ class LocalGroupAddLogger extends AbstractLogger {
 
         group_added_debug("Group added '{}' for {}."),
 
-        group_added_info("Group added '{}' for script {}.");
+        group_added_info("Group added '{}' for script {}."),
+
+        group_already_exist_trace("Group already exist '{}' for {}, {}."),
+
+        group_already_exist_debug("Group already exist '{}' for {}."),
+
+        group_already_exist_info("Group already exist '{}' for script {}.");
 
         private String name;
 
@@ -121,6 +130,18 @@ class LocalGroupAddLogger extends AbstractLogger {
             debug(group_added_debug, group, parent);
         } else {
             info(group_added_info, group, parent);
+        }
+    }
+
+    void groupAlreadyExists(Object parent, ProcessTask task,
+            Map<String, Object> args) {
+        Object group = args.get(GROUP_NAME_KEY);
+        if (isTraceEnabled()) {
+            trace(group_already_exist_trace, group, parent, task);
+        } else if (isDebugEnabled()) {
+            debug(group_already_exist_debug, group, parent);
+        } else {
+            info(group_already_exist_info, group, parent);
         }
     }
 

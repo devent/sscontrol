@@ -48,6 +48,11 @@ public interface ScriptExecFactory {
      *            the output in a {@link String} for later parsing, see
      *            {@link ProcessTask#getOut()};
      * 
+     *            <li>{@code errString} optionally, set to {@code true} to save
+     *            the error output in a {@link String} for later parsing, see
+     *            {@link ProcessTask#getErr()}. Per default it is set to
+     *            {@link AbstractProcessExec#ERR_STRING_DEFAULT}.
+     * 
      *            <li>{@code timeout} optionally, set the timeout
      *            {@link Duration};
      * 

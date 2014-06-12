@@ -41,6 +41,12 @@ import com.google.inject.assistedinject.Assisted;
  */
 public class LocalGroupAdd implements Callable<LocalGroupAdd> {
 
+    private static final String UNIX = "unix";
+
+    private static final String TEMPLATE_NAME = "groupadd";
+
+    private static final String TEMPLATES_NAME = "ScriptsUnixTemplates";
+
     private final LocalGroupAddLogger log;
 
     private final Map<String, Object> args;
@@ -55,6 +61,8 @@ public class LocalGroupAdd implements Callable<LocalGroupAdd> {
     @Inject
     private TemplatesFactory templatesFactory;
 
+    private boolean groupAdded;
+
     /**
      * @see LocalGroupAddFactory#create(Map, Object, Threads)
      */
@@ -65,6 +73,8 @@ public class LocalGroupAdd implements Callable<LocalGroupAdd> {
         this.args = args;
         this.parent = parent;
         this.threads = threads;
+        args.put("outString", true);
+        args.put("errString", true);
         log.groupName(args, parent);
         log.groupId(args, parent);
         log.groupsFile(args, parent);
@@ -74,12 +84,28 @@ public class LocalGroupAdd implements Callable<LocalGroupAdd> {
 
     @Override
     public LocalGroupAdd call() throws Exception {
-        Templates templates = templatesFactory.create("ScriptsUnixTemplates");
-        TemplateResource templateResource = templates.getResource("groupadd");
+        Templates templates = templatesFactory.create(TEMPLATES_NAME);
+        TemplateResource templateResource = templates
+                .getResource(TEMPLATE_NAME);
         ProcessTask task = scriptExecFactory.create(args, parent, threads,
-                templateResource, "unix").call();
-        log.groupAdded(parent, task, args);
+                templateResource, UNIX).call();
+        checkGroupAdded(task);
         return this;
+    }
+
+    private void checkGroupAdded(ProcessTask task) {
+        String out = task.getOut().trim();
+        if (out.endsWith("added.")) {
+            groupAdded = true;
+            log.groupAdded(parent, task, args);
+        } else if (out.endsWith("already exists.")) {
+            groupAdded = false;
+            log.groupAlreadyExists(parent, task, args);
+        }
+    }
+
+    public boolean isGroupAdded() {
+        return groupAdded;
     }
 
     @Override

@@ -42,14 +42,25 @@ public interface LocalChangeUserFactory {
      * 
      *            <li>{@code userName} the local user name.
      * 
+     *            <li>{@code userId} optionally, the new user ID, for example
+     *            {@code 100}.
+     * 
+     *            <li>{@code groupName} optionally, the new group name, for
+     *            example {@code "foo"}.
+     * 
+     *            <li>{@code groupId} optionally, the new group ID, for example
+     *            {@code 100}.
+     * 
+     *            <li>{@code home} optionally, the new user home directory.
+     * 
+     *            <li>{@code shell} optionally, set the new local user login
+     *            shell, for example {@code "/bin/bash".}
+     * 
      *            <li>{@code groups} optionally, {@link List} of the local user
      *            groups, for example {@code "[foo, bar]".}
      * 
      *            <li>{@code append} optionally, set to {@code true} to append
      *            the listed groups instead of replacing them.
-     * 
-     *            <li>{@code shell} optionally, set the local user login shell,
-     *            for example {@code "/bin/bash".}
      *            </ul>
      * 
      * @param parent

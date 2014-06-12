@@ -46,6 +46,13 @@ enum CoreResources {
     useraddOutExpected("/usr/sbin/useradd.out", CoreResources.class.getResource("useradd_out_expected.txt")),
     groupaddOutExpected("/usr/sbin/groupadd.out", CoreResources.class.getResource("groupadd_out_expected.txt")),
     chownOutExpected("/bin/chown.out", CoreResources.class.getResource("chown_out_expected.txt")),
+    // users existing
+    usersExistingGroupsFile("/etc/group", CoreResources.class.getResource("usersexist_group.txt")),
+    usersExistingUsersFile("/etc/passwd", CoreResources.class.getResource("usersexist_passwd.txt")),
+    usersExistingGroupModOutExpected("/usr/sbin/groupmod.out", CoreResources.class.getResource("usersexist_groupmod_out_expected.txt")),
+    usersExistingUserModOutExpected("/usr/sbin/usermod.out", CoreResources.class.getResource("usersexist_usermod_out_expected.txt")),
+    usersExistingUseraddOutExpected("/usr/sbin/useradd.out", CoreResources.class.getResource("usersexist_useradd_out_expected.txt")),
+    usersExistingGroupaddOutExpected("/usr/sbin/groupadd.out", CoreResources.class.getResource("usersexist_groupadd_out_expected.txt")),
 
     ResourcesUtils resources
 

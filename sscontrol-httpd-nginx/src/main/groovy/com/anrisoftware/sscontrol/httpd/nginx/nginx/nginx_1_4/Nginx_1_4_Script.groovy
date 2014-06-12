@@ -29,8 +29,8 @@ import com.anrisoftware.globalpom.textmatch.tokentemplate.TokenTemplate
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.Templates
 import com.anrisoftware.sscontrol.httpd.domain.Domain
-import com.anrisoftware.sscontrol.httpd.domain.SslDomain
-import com.anrisoftware.sscontrol.httpd.nginx.nginx.linux.DomainConfig
+import com.anrisoftware.sscontrol.httpd.domain.SslDomainImpl
+import com.anrisoftware.sscontrol.httpd.domain.linux.DomainConfig
 import com.anrisoftware.sscontrol.httpd.nginx.nginx.linux.NginxScript
 import com.anrisoftware.sscontrol.httpd.service.HttpdService
 import com.anrisoftware.sscontrol.httpd.webservice.WebService
@@ -207,7 +207,7 @@ abstract class Nginx_1_4_Script extends NginxScript {
     }
 
     def deploySslDomain(Domain domain) {
-        if (domain.class == SslDomain) {
+        if (domain.class == SslDomainImpl) {
             sslDomainConfig.deployCertificates(domain)
         }
     }

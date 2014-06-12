@@ -21,7 +21,7 @@ package com.anrisoftware.sscontrol.httpd.apache.ubuntu
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static org.apache.commons.io.FileUtils.*
 
-import com.anrisoftware.sscontrol.httpd.apache.resources.ResourcesUtils;
+import com.anrisoftware.sscontrol.httpd.apache.resources.ResourcesUtils
 
 /**
  * Loads the resources.
@@ -36,7 +36,9 @@ enum UbuntuResources {
     chmodCommand("/bin/chmod", UbuntuResources.class.getResource("echo_command.txt")),
     chownCommand("/bin/chown", UbuntuResources.class.getResource("echo_command.txt")),
     useraddCommand("/usr/sbin/useradd", UbuntuResources.class.getResource("echo_command.txt")),
+    usermodCommand("/usr/sbin/usermod", UbuntuResources.class.getResource("echo_command.txt")),
     groupaddCommand("/usr/sbin/groupadd", UbuntuResources.class.getResource("echo_command.txt")),
+    groupmodCommand("/usr/sbin/groupmod", UbuntuResources.class.getResource("echo_command.txt")),
     zcatCommand("/bin/zcat", UbuntuResources.class.getResource("echo_command.txt")),
     tarCommand("/bin/tar", UbuntuResources.class.getResource("echo_command.txt")),
     unzipCommand("/usr/bin/unzip", UbuntuResources.class.getResource("echo_command.txt")),
@@ -54,7 +56,9 @@ enum UbuntuResources {
         chmodCommand.createCommand parent
         chownCommand.createCommand parent
         groupaddCommand.createCommand parent
+        groupmodCommand.createCommand parent
         useraddCommand.createCommand parent
+        usermodCommand.createCommand parent
         zcatCommand.createCommand parent
         tarCommand.createCommand parent
         unzipCommand.createCommand parent

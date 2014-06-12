@@ -37,7 +37,7 @@ import com.google.inject.assistedinject.Assisted;
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-public class SslDomain extends DomainImpl {
+public class SslDomainImpl extends DomainImpl implements SslDomain {
 
     private static final String HTTPS = "https://";
 
@@ -53,7 +53,7 @@ public class SslDomain extends DomainImpl {
     private String certificationKeyFile;
 
     @Inject
-    SslDomain(@Assisted Map<String, Object> args, @Assisted String name) {
+    SslDomainImpl(@Assisted Map<String, Object> args, @Assisted String name) {
         super(args, 443, name);
     }
 
@@ -82,21 +82,13 @@ public class SslDomain extends DomainImpl {
         this.certificationFile = new File(url.getPath()).getName();
     }
 
-    /**
-     * Returns the certificate resource.
-     * 
-     * @return the the certificate {@link URL} resource.
-     */
+    @Override
     public URL getCertificationResource() {
         log.checkCertificationResource(this, certificationResource);
         return certificationResource;
     }
 
-    /**
-     * Returns the certificate file name.
-     * 
-     * @return the the certificate file name.
-     */
+    @Override
     public String getCertificationFile() {
         log.checkCertificationResource(this, certificationFile);
         return certificationFile;
@@ -122,21 +114,13 @@ public class SslDomain extends DomainImpl {
         this.certificationKeyFile = new File(url.getPath()).getName();
     }
 
-    /**
-     * Returns the certificate key resource.
-     * 
-     * @return the the certificate key {@link URL} resource.
-     */
+    @Override
     public URL getCertificationKeyResource() {
         log.checkCertificationResource(this, certificationKeyResource);
         return certificationKeyResource;
     }
 
-    /**
-     * Returns the certificate key file path.
-     * 
-     * @return the the certificate key path.
-     */
+    @Override
     public String getCertificationKeyFile() {
         return certificationKeyFile;
     }

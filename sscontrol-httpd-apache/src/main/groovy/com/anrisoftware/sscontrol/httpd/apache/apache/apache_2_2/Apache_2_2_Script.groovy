@@ -30,10 +30,10 @@ import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.Templates
 import com.anrisoftware.resources.templates.api.TemplatesFactory
 import com.anrisoftware.sscontrol.httpd.apache.apache.linux.ApacheScript
-import com.anrisoftware.sscontrol.httpd.apache.apache.linux.DomainConfig
-import com.anrisoftware.sscontrol.httpd.apache.apache.linux.SslDomainConfig
 import com.anrisoftware.sscontrol.httpd.domain.Domain
-import com.anrisoftware.sscontrol.httpd.domain.SslDomain
+import com.anrisoftware.sscontrol.httpd.domain.SslDomainImpl
+import com.anrisoftware.sscontrol.httpd.domain.linux.DomainConfig
+import com.anrisoftware.sscontrol.httpd.domain.linux.SslDomainConfig
 import com.anrisoftware.sscontrol.httpd.webservice.WebService
 import com.anrisoftware.sscontrol.scripts.unix.RestartServicesFactory
 import com.anrisoftware.sscontrol.scripts.unix.StopServicesFactory
@@ -221,8 +221,8 @@ abstract class Apache_2_2_Script extends ApacheScript {
     }
 
     def deploySslDomain(Domain domain) {
-        if (domain.class == SslDomain) {
-            sslDomainConfig.enableSsl()
+        if (domain.class == SslDomainImpl) {
+            enableMod "ssl"
             sslDomainConfig.deployCertificates(domain)
         }
     }

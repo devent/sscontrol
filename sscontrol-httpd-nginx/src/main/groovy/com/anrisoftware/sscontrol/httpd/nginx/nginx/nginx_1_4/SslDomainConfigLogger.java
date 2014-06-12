@@ -26,7 +26,7 @@ import static com.anrisoftware.sscontrol.httpd.nginx.nginx.nginx_1_4.SslDomainCo
 import javax.inject.Singleton;
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
-import com.anrisoftware.sscontrol.httpd.domain.SslDomain;
+import com.anrisoftware.sscontrol.httpd.domain.SslDomainImpl;
 
 /**
  * Logging messages for {@link SslDomainConfig}.
@@ -66,7 +66,7 @@ class SslDomainConfigLogger extends AbstractLogger {
 		super(SslDomainConfig.class);
 	}
 
-	void deployedCert(SslDomain domain) {
+	void deployedCert(SslDomainImpl domain) {
 		if (isDebugEnabled()) {
 			debug(deployed_cert, domain);
 		} else {
@@ -75,7 +75,7 @@ class SslDomainConfigLogger extends AbstractLogger {
 		}
 	}
 
-	void deployedCertKey(SslDomain domain) {
+	void deployedCertKey(SslDomainImpl domain) {
 		if (isDebugEnabled()) {
 			debug(deployed_cert_key, domain);
 		} else {

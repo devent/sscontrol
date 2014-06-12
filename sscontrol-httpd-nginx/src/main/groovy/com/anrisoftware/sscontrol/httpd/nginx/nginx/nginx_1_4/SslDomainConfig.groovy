@@ -24,7 +24,7 @@ import groovy.util.logging.Slf4j
 import javax.inject.Inject
 
 import com.anrisoftware.sscontrol.core.service.LinuxScript
-import com.anrisoftware.sscontrol.httpd.domain.SslDomain
+import com.anrisoftware.sscontrol.httpd.domain.SslDomainImpl
 import com.anrisoftware.sscontrol.scripts.changefilemod.ChangeFileModFactory
 
 /**
@@ -47,7 +47,7 @@ class SslDomainConfig {
     /**
      * Copies the certificates to the server.
      */
-    void deployCertificates(SslDomain domain) {
+    void deployCertificates(SslDomainImpl domain) {
         copyURLToFile domain.certificationResource, certFile(domain)
         logg.deployedCert domain
         copyURLToFile domain.certificationKeyResource, certKeyFile(domain)
@@ -55,7 +55,7 @@ class SslDomainConfig {
         changePermissions(domain)
     }
 
-    void changePermissions(SslDomain domain) {
+    void changePermissions(SslDomainImpl domain) {
         def dir = script.sslDir(domain)
         changeFileModFactory.create(
                 command: script.chmodCommand,
@@ -63,11 +63,11 @@ class SslDomainConfig {
                 this, threads)()
     }
 
-    File certFile(SslDomain domain) {
+    File certFile(SslDomainImpl domain) {
         new File(sslDir(domain), domain.certificationFile)
     }
 
-    File certKeyFile(SslDomain domain) {
+    File certKeyFile(SslDomainImpl domain) {
         new File(sslDir(domain), domain.certificationKeyFile)
     }
 

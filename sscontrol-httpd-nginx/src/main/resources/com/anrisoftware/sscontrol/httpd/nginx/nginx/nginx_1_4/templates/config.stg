@@ -7,7 +7,7 @@ server {
 
 >>
 
-SslDomain(properties) ::= <<
+SslDomainImpl(properties) ::= <<
 server {
     # SSL/domain <properties.domain.name>
     <domainBody(properties)>

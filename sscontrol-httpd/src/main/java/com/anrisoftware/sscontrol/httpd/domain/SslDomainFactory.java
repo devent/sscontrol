@@ -37,7 +37,7 @@ public interface SslDomainFactory {
      * @param name
      *            the {@link String} name of the domain.
      * 
-     * @return the {@link DomainImpl}.
+     * @return the {@link SslDomain}.
      */
     SslDomain create(Map<String, Object> args, String name);
 }

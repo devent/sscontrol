@@ -1,6 +1,14 @@
 unix(args) ::= <<
 if [ -z "`grep <args.userName> <args.usersFile> | cut -d ':' -f 3`" ]; then
     <unixUserAdd(args)>
+    ret=$?
+    if [ $ret=0 ]; then
+        echo "User '<args.userName>' added."
+    else
+        exit $?
+    fi
+else
+    echo "User '<args.userName>' already exists."
 fi
 
 >>

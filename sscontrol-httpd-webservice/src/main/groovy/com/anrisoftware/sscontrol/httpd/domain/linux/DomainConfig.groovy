@@ -1,22 +1,22 @@
 /*
- * Copyright 2013-2014 Erwin Müller <erwin.mueller@deventm.org>
+ * Copyright 2014 Erwin Müller <erwin.mueller@deventm.org>
  *
- * This file is part of sscontrol-httpd-nginx.
+ * This file is part of sscontrol-httpd-webservice.
  *
- * sscontrol-httpd-nginx is free software: you can redistribute it and/or modify it
+ * sscontrol-httpd-webservice is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published by the
  * Free Software Foundation, either version 3 of the License, or (at your
  * option) any later version.
  *
- * sscontrol-httpd-nginx is distributed in the hope that it will be useful, but
+ * sscontrol-httpd-webservice is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
  * for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with sscontrol-httpd-nginx. If not, see <http://www.gnu.org/licenses/>.
+ * along with sscontrol-httpd-webservice. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.nginx.nginx.linux
+package com.anrisoftware.sscontrol.httpd.domain.linux
 
 import static java.lang.String.format
 import groovy.util.logging.Slf4j
@@ -25,15 +25,17 @@ import java.text.DecimalFormat
 
 import javax.inject.Inject
 
+import com.anrisoftware.sscontrol.core.service.LinuxScript
 import com.anrisoftware.sscontrol.httpd.domain.Domain
 import com.anrisoftware.sscontrol.httpd.user.DomainUser
-import com.anrisoftware.sscontrol.scripts.changefilemod.ChangeFileModFactory
 import com.anrisoftware.sscontrol.scripts.changefileowner.ChangeFileOwnerFactory
+import com.anrisoftware.sscontrol.scripts.localchangegroup.LocalChangeGroupFactory
+import com.anrisoftware.sscontrol.scripts.localchangeuser.LocalChangeUserFactory
 import com.anrisoftware.sscontrol.scripts.localgroupadd.LocalGroupAddFactory
 import com.anrisoftware.sscontrol.scripts.localuseradd.LocalUserAddFactory
 
 /**
- * <i>Nginx</i> domain configuration.
+ * Domain configuration.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
@@ -42,28 +44,37 @@ import com.anrisoftware.sscontrol.scripts.localuseradd.LocalUserAddFactory
 class DomainConfig {
 
     @Inject
-    DomainConfigLogger logg
+    private DomainConfigLogger logg
 
     @Inject
-    LocalUserAddFactory localUserAddFactory
+    ChangeFileOwnerFactory changeFileOwnerFactory
 
     @Inject
     LocalGroupAddFactory localGroupAddFactory
 
     @Inject
-    ChangeFileModFactory changeFileModFactory
+    LocalUserAddFactory localUserAddFactory
 
     @Inject
-    ChangeFileOwnerFactory changeFileOwnerFactory
+    LocalChangeUserFactory localChangeUserFactory
+
+    @Inject
+    LocalChangeGroupFactory localChangeGroupFactory
 
     int domainNumber
 
-    NginxScript script
+    LinuxScript script
 
     DomainConfig() {
         this.domainNumber = 0
     }
 
+    /**
+     * Deploys the domain.
+     *
+     * @param domain
+     *            the {@link Domain}.
+     */
     void deployDomain(Domain domain) {
         setupUserGroup domain
         addSiteGroup domain
@@ -72,7 +83,13 @@ class DomainConfig {
     }
 
     void setupUserGroup(Domain domain) {
-        setupDomainUser domain
+        def ref = findUserRefDomain(domain)
+        if (ref) {
+            ref.domainUser = createDomainUser ref.domainUser
+            domain.setDomainUser ref.domainUser
+        } else {
+            domain.domainUser = createDomainUser domain.domainUser
+        }
         script.service.domains.findAll { Domain d ->
             d != domain && d.name == domain.name
         }.each { Domain d ->
@@ -81,16 +98,6 @@ class DomainConfig {
             user.group = user.group != null ? user.group : domain.domainUser.group
             user.uid = user.uid != null ? user.uid : domain.domainUser.uid
             user.gid = user.gid != null ? user.gid : domain.domainUser.gid
-        }
-    }
-
-    void setupDomainUser(Domain domain) {
-        def ref = findUserRefDomain(domain)
-        if (ref) {
-            ref.domainUser = createDomainUser ref.domainUser
-            domain.setDomainUser ref.domainUser
-        } else {
-            domain.domainUser = createDomainUser domain.domainUser
         }
     }
 
@@ -121,37 +128,55 @@ class DomainConfig {
         webDir(domain).mkdirs()
         changeFileOwnerFactory.create(
                 log: log,
-                owner: user.name, ownerGroup: user.group, files: webDir(domain),
                 command: script.chownCommand,
+                owner: user.name, ownerGroup: user.group, files: webDir(domain),
                 this, threads)()
     }
 
     void addSiteUser(Domain domain) {
         def user = domain.domainUser
-        int uid = user.uid
         def home = domainDir domain
         def shell = "/bin/false"
-        localUserAddFactory.create(
+        def userAdded = localUserAddFactory.create(
                 log: log,
+                command: script.userAddCommand,
+                usersFile: script.usersFile,
                 userName: user.name,
                 groupName: user.group,
-                userId: uid,
+                userId: user.uid,
                 homeDir: home,
                 shell: shell,
-                usersFile: script.usersFile,
-                command: script.userAddCommand,
-                this, threads)()
+                this, threads)().userAdded
+        if (!userAdded) {
+            localChangeUserFactory.create(
+                    log: log,
+                    command: script.userModCommand,
+                    userName: user.name,
+                    userId: user.uid,
+                    groupId: user.gid,
+                    home: home,
+                    shell: shell,
+                    this, threads)()
+        }
     }
 
     void addSiteGroup(Domain domain) {
         def user = domain.domainUser
-        int gid = user.gid
-        localGroupAddFactory.create(
+        def groupAdded = localGroupAddFactory.create(
                 log: log,
-                groupName: domain.domainUser.group, groupId: gid,
-                groupsFile: script.groupsFile,
                 command: script.groupAddCommand,
-                this, threads)()
+                groupsFile: script.groupsFile,
+                groupName: user.group,
+                groupId: user.gid,
+                this, threads)().groupAdded
+        if (!groupAdded) {
+            localChangeGroupFactory.create(
+                    log: log,
+                    command: script.groupModCommand,
+                    groupName: user.group,
+                    groupId: user.gid,
+                    this, threads)()
+        }
     }
 
     def propertyMissing(String name) {

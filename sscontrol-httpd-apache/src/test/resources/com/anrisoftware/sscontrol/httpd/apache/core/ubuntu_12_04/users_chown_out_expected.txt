@@ -2,7 +2,11 @@ web_001.web_001 /tmp/var/www/anr-institute.com/web
 web_002.web_002 /tmp/var/www/www.anr-institute.com/web
 web_003.web_003 /tmp/var/www/anrisoftware.com/web
 web_004.web_004 /tmp/var/www/www.mueller-public.de/web
+root.root /tmp/var/www/anr-institute.com/ssl/cert_crt.txt /tmp/var/www/anr-institute.com/ssl/cert_key.txt
+root.root /tmp/var/www/anrisoftware.com/ssl/cert_crt.txt /tmp/var/www/anrisoftware.com/ssl/cert_key.txt
 web_001.web_001 /tmp/var/www/anr-institute.com/web
 web_002.web_002 /tmp/var/www/www.anr-institute.com/web
 web_003.web_003 /tmp/var/www/anrisoftware.com/web
 web_004.web_004 /tmp/var/www/www.mueller-public.de/web
+root.root /tmp/var/www/anr-institute.com/ssl/cert_crt.txt /tmp/var/www/anr-institute.com/ssl/cert_key.txt
+root.root /tmp/var/www/anrisoftware.com/ssl/cert_crt.txt /tmp/var/www/anrisoftware.com/ssl/cert_key.txt

@@ -26,13 +26,17 @@ stripTar(args) ::= <%
 %>
 
 zip(args) ::= <<
-cd <args.output>
-<args.command> <overrideZip(args)> <stripZip(args)> <args.file>
+export dest="<args.output>"
+export zip="<args.file>"
+<if(args.strip)>
+<args.bashCommand> -c '\
+shopt -s dotglob; \
+<args.command> <overrideZip(args)> -d "$dest" "$zip" && f=("$dest"/*) && <args.mvCommand> "$dest"/*/* "$dest" && <args.rmdirCommand> "${f[@]}";'
+<else>
+<args.command> <overrideZip(args)> -d "$dest" "$zip"
+<endif>
 >>
 
 overrideZip(args) ::= <%
 <if(args.override)>-uo<endif>
-%>
-
-stripZip(args) ::= <%
 %>

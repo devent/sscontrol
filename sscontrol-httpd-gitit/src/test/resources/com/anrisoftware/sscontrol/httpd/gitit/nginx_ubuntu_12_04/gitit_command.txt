@@ -13,7 +13,7 @@ if [ -f ../../../gitit.conf ]; then
         case "$1" in
             --version)
             cat <<EOF
-gitit version 0.10.3.1 +plugins
+gitit version 0.10.4 +plugins
 Copyright (C) 2008 John MacFarlane
 This is free software; see the source for copying conditions.  There is no
 warranty, not even for merchantability or fitness for a particular purpose.

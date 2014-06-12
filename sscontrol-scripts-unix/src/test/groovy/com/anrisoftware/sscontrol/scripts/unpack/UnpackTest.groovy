@@ -90,6 +90,22 @@ class UnpackTest {
         assertStringContent unzipOutExpected.replaced(tmpdir, tmpdir, "/tmp"), unzipOutExpected.toString()
     }
 
+    @Test
+    void "unpack zip override strip"() {
+        def tmpdir = tmp.newFolder()
+        copyUbuntu_10_04_Files tmpdir
+        unpackFactory.create(
+                log: log,
+                file: zipFile.asFile(tmpdir),
+                output: outputDir.asFile(tmpdir),
+                commands: [tgz: targzCommand.asFile(tmpdir), zip: unzipCommand.asFile(tmpdir)],
+                bashCommand: bashCommand.asFile(tmpdir),
+                override: true,
+                strip: true,
+                this, threads)()
+        assertStringContent bashOverrideStripOutExpected.replaced(tmpdir, tmpdir, "/tmp"), bashOverrideStripOutExpected.toString()
+    }
+
     static Injector injector
 
     static UnpackFactory unpackFactory

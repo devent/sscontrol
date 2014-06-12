@@ -1,0 +1,3 @@
+-c \
+shopt -s dotglob; \
+/tmp/usr/bin/unzip -uo -d "$dest" "$zip" && f=("$dest"/*) && mv "$dest"/*/* "$dest" && rmdir "${f[@]}";

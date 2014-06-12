@@ -41,6 +41,14 @@ import com.google.inject.assistedinject.Assisted;
  */
 public class Unpack implements Callable<Unpack> {
 
+    private static final String RMDIR_COMMAND_DEFAULT = "rmdir";
+
+    private static final String RMDIR_COMMAND_KEY = "rmdirCommand";
+
+    private static final String MV_COMMAND_DEFAULT = "mv";
+
+    private static final String MV_COMMAND_KEY = "mvCommand";
+
     private static final String TGZ_EXTENSION = ".tgz";
 
     private static final String ZIP_TYPE = "zip";
@@ -54,6 +62,10 @@ public class Unpack implements Callable<Unpack> {
     private static final String FILE_KEY = "file";
 
     private static final String TYPE_KEY = "type";
+
+    private static final String BASH_COMMAND_KEY = "bashCommand";
+
+    private static final String BASH_COMMAND_DEFAULT = "bash";
 
     private final Map<String, Object> args;
 
@@ -84,6 +96,15 @@ public class Unpack implements Callable<Unpack> {
         log.commands(args, parent);
         log.override(args, parent);
         log.strip(args, parent);
+        if (!args.containsKey(BASH_COMMAND_KEY)) {
+            args.put(BASH_COMMAND_KEY, BASH_COMMAND_DEFAULT);
+        }
+        if (!args.containsKey(MV_COMMAND_KEY)) {
+            args.put(MV_COMMAND_KEY, MV_COMMAND_DEFAULT);
+        }
+        if (!args.containsKey(RMDIR_COMMAND_KEY)) {
+            args.put(RMDIR_COMMAND_KEY, RMDIR_COMMAND_DEFAULT);
+        }
         setupType(args);
     }
 

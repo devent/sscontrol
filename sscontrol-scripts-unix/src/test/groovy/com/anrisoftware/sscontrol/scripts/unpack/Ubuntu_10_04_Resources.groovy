@@ -31,16 +31,19 @@ enum Ubuntu_10_04_Resources {
 
     targzCommand("/usr/bin/tar", Ubuntu_10_04_Resources.class.getResource("echo_command.txt")),
     unzipCommand("/usr/bin/unzip", Ubuntu_10_04_Resources.class.getResource("echo_command.txt")),
+    bashCommand("/bin/bash", Ubuntu_10_04_Resources.class.getResource("echo_command.txt")),
     targzFile("/tmp/foo.tar.gz", Ubuntu_10_04_Resources.class.getResource("targz_file.txt")),
     zipFile("/tmp/foo.zip", Ubuntu_10_04_Resources.class.getResource("zip_file.txt")),
     targzOutExpected("/usr/bin/tar.out", Ubuntu_10_04_Resources.class.getResource("targz_out_expected.txt")),
     targzStripOutExpected("/usr/bin/tar.out", Ubuntu_10_04_Resources.class.getResource("targz_strip_out_expected.txt")),
     unzipOutExpected("/usr/bin/unzip.out", Ubuntu_10_04_Resources.class.getResource("unzip_out_expected.txt")),
+    bashOverrideStripOutExpected("/bin/bash.out", Ubuntu_10_04_Resources.class.getResource("unzip_override_strip_out_expected.txt")),
     outputDir("/output", null),
 
     static void copyUbuntu_10_04_Files(File parent) {
         targzCommand.createCommand parent
         unzipCommand.createCommand parent
+        bashCommand.createCommand parent
         outputDir.asFile parent mkdirs()
         targzFile.createFile parent
         zipFile.createFile parent

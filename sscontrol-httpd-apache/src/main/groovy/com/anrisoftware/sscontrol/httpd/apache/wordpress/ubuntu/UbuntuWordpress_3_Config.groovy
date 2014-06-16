@@ -250,6 +250,13 @@ abstract class UbuntuWordpress_3_Config extends Wordpress_3_Config {
                     uploadsdir,
                 ],
                 this, threads)()
+        changeFileOwnerFactory.create(
+                log: log, command: script.chownCommand, recursive: true,
+                owner: user.name, ownerGroup: user.group, files: [
+                    cachedir,
+                    uploadsdir,
+                ],
+                this, threads)()
         changeFileModFactory.create(
                 log: log, command: script.chmodCommand,
                 mod: "0775", files: [

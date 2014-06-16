@@ -6,6 +6,8 @@ web_001.web_001 /tmp/var/www/www.test1.com/myprefix/wp-content/cache
 web_001.web_001 /tmp/var/www/www.test1.com/myprefix/wp-content/plugins
 web_001.web_001 /tmp/var/www/www.test1.com/myprefix/wp-content/themes
 web_001.web_001 /tmp/var/www/www.test1.com/myprefix/wp-content/uploads
+-R web_001.web_001 /tmp/var/www/www.test1.com/myprefix/wp-content/cache
+-R web_001.web_001 /tmp/var/www/www.test1.com/myprefix/wp-content/uploads
 -R web_001.web_001 /tmp/var/www/php-fcgi-scripts/www.test1.com
 web_001.web_001 /tmp/var/www/php-fcgi-scripts/www.test1.com/php-fcgi-starter
 root.root /tmp/var/www/www.test1.com/ssl/cert_crt.txt /tmp/var/www/www.test1.com/ssl/cert_key.txt
@@ -17,6 +19,8 @@ web_001.web_001 /tmp/var/www/www.test1.com/myprefix/wp-content/cache
 web_001.web_001 /tmp/var/www/www.test1.com/myprefix/wp-content/plugins
 web_001.web_001 /tmp/var/www/www.test1.com/myprefix/wp-content/themes
 web_001.web_001 /tmp/var/www/www.test1.com/myprefix/wp-content/uploads
+-R web_001.web_001 /tmp/var/www/www.test1.com/myprefix/wp-content/cache
+-R web_001.web_001 /tmp/var/www/www.test1.com/myprefix/wp-content/uploads
 -R web_001.web_001 /tmp/var/www/php-fcgi-scripts/www.test1.com
 web_001.web_001 /tmp/var/www/php-fcgi-scripts/www.test1.com/php-fcgi-starter
 root.root /tmp/var/www/www.test1.com/ssl/cert_crt.txt /tmp/var/www/www.test1.com/ssl/cert_key.txt

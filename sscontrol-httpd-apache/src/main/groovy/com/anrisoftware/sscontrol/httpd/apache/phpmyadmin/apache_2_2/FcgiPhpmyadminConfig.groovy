@@ -20,13 +20,13 @@ package com.anrisoftware.sscontrol.httpd.apache.phpmyadmin.apache_2_2
 
 import javax.inject.Inject
 
-import com.anrisoftware.sscontrol.httpd.apache.apache.linux.FcgiConfig
 import com.anrisoftware.sscontrol.httpd.apache.phpmyadmin.linux.PhpmyadminConfig
-import com.anrisoftware.sscontrol.httpd.domain.Domain;
-import com.anrisoftware.sscontrol.httpd.webservice.WebService;
+import com.anrisoftware.sscontrol.httpd.domain.Domain
+import com.anrisoftware.sscontrol.httpd.fcgi.FcgiConfig
+import com.anrisoftware.sscontrol.httpd.webservice.WebService
 
 /**
- * Fcgi phpMyAdmin.
+ * <i>php-fcgi phpMyAdmin</i> configuration.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0

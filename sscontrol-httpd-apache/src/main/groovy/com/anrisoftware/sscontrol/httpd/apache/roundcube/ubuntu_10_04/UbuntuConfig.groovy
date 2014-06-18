@@ -27,7 +27,7 @@ import com.anrisoftware.globalpom.textmatch.tokentemplate.TokenTemplate
 import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.sscontrol.httpd.apache.apache.linux.ApacheScript
-import com.anrisoftware.sscontrol.httpd.apache.apache.linux.FcgiConfig
+import com.anrisoftware.sscontrol.httpd.apache.apache.linux.ApacheFcgiConfig
 import com.anrisoftware.sscontrol.httpd.apache.apache.ubuntu_10_04.Ubuntu_10_04_ScriptFactory
 import com.anrisoftware.sscontrol.httpd.apache.roundcube.roundcube_3.Roundcube_0_9_Config
 import com.anrisoftware.sscontrol.httpd.domain.Domain
@@ -50,7 +50,7 @@ class UbuntuConfig extends Roundcube_0_9_Config implements ServiceConfig {
     private UbuntuPropertiesProvider ubuntuPropertiesProvider
 
     @Inject
-    private FcgiConfig fcgiConfig
+    private ApacheFcgiConfig fcgiConfig
 
     @Override
     void deployDomain(Domain domain, Domain refDomain, WebService service, List config) {

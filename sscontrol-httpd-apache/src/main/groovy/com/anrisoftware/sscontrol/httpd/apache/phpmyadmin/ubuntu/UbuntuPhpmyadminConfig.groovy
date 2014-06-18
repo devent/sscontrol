@@ -28,7 +28,7 @@ import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.Templates
 import com.anrisoftware.resources.templates.api.TemplatesFactory
 import com.anrisoftware.sscontrol.core.service.LinuxScript
-import com.anrisoftware.sscontrol.httpd.apache.apache.linux.FcgiConfig
+import com.anrisoftware.sscontrol.httpd.apache.apache.linux.ApacheFcgiConfig
 import com.anrisoftware.sscontrol.httpd.apache.phpmyadmin.apache_2_2.FcgiPhpmyadminConfig
 import com.anrisoftware.sscontrol.httpd.domain.Domain
 import com.anrisoftware.sscontrol.httpd.phpmyadmin.PhpmyadminService

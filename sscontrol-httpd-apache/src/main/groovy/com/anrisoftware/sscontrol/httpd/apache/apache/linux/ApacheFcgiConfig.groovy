@@ -34,6 +34,7 @@ import com.anrisoftware.resources.templates.api.Templates
 import com.anrisoftware.resources.templates.api.TemplatesFactory
 import com.anrisoftware.sscontrol.core.service.LinuxScript
 import com.anrisoftware.sscontrol.httpd.domain.Domain
+import com.anrisoftware.sscontrol.httpd.fcgi.FcgiConfig
 import com.anrisoftware.sscontrol.httpd.webservice.WebService
 import com.anrisoftware.sscontrol.scripts.changefilemod.ChangeFileModFactory
 import com.anrisoftware.sscontrol.scripts.changefileowner.ChangeFileOwnerFactory
@@ -46,10 +47,10 @@ import com.anrisoftware.sscontrol.scripts.mklink.MkLinkFactory
  * @since 1.0
  */
 @Slf4j
-class FcgiConfig {
+class ApacheFcgiConfig implements FcgiConfig {
 
     @Inject
-    private FcgiConfigLogger logg
+    private ApacheFcgiConfigLogger logg
 
     @Inject
     ByteFormatFactory byteFormatFactory

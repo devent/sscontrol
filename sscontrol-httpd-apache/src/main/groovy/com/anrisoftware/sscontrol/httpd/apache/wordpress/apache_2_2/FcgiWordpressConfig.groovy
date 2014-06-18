@@ -20,13 +20,13 @@ package com.anrisoftware.sscontrol.httpd.apache.wordpress.apache_2_2
 
 import javax.inject.Inject
 
-import com.anrisoftware.sscontrol.httpd.apache.apache.linux.FcgiConfig
 import com.anrisoftware.sscontrol.httpd.apache.wordpress.linux.WordpressConfig
-import com.anrisoftware.sscontrol.httpd.domain.Domain;
-import com.anrisoftware.sscontrol.httpd.webservice.WebService;
+import com.anrisoftware.sscontrol.httpd.domain.Domain
+import com.anrisoftware.sscontrol.httpd.fcgi.FcgiConfig
+import com.anrisoftware.sscontrol.httpd.webservice.WebService
 
 /**
- * Fcgi Wordpress.
+ * <i>Wordpress php-fcgi</i> configuration.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0

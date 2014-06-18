@@ -18,13 +18,13 @@
  */
 package com.anrisoftware.sscontrol.httpd.apache.apache.linux;
 
-import static com.anrisoftware.sscontrol.httpd.apache.apache.linux.FcgiConfigLogger._.link_phpconfig_debug;
-import static com.anrisoftware.sscontrol.httpd.apache.apache.linux.FcgiConfigLogger._.link_phpconfig_info;
-import static com.anrisoftware.sscontrol.httpd.apache.apache.linux.FcgiConfigLogger._.scripts_directory_created_debug;
-import static com.anrisoftware.sscontrol.httpd.apache.apache.linux.FcgiConfigLogger._.scripts_directory_created_info;
-import static com.anrisoftware.sscontrol.httpd.apache.apache.linux.FcgiConfigLogger._.starter_script_deployed_debug;
-import static com.anrisoftware.sscontrol.httpd.apache.apache.linux.FcgiConfigLogger._.starter_script_deployed_info;
-import static com.anrisoftware.sscontrol.httpd.apache.apache.linux.FcgiConfigLogger._.starter_script_deployed_trace;
+import static com.anrisoftware.sscontrol.httpd.apache.apache.linux.ApacheFcgiConfigLogger._.link_phpconfig_debug;
+import static com.anrisoftware.sscontrol.httpd.apache.apache.linux.ApacheFcgiConfigLogger._.link_phpconfig_info;
+import static com.anrisoftware.sscontrol.httpd.apache.apache.linux.ApacheFcgiConfigLogger._.scripts_directory_created_debug;
+import static com.anrisoftware.sscontrol.httpd.apache.apache.linux.ApacheFcgiConfigLogger._.scripts_directory_created_info;
+import static com.anrisoftware.sscontrol.httpd.apache.apache.linux.ApacheFcgiConfigLogger._.starter_script_deployed_debug;
+import static com.anrisoftware.sscontrol.httpd.apache.apache.linux.ApacheFcgiConfigLogger._.starter_script_deployed_info;
+import static com.anrisoftware.sscontrol.httpd.apache.apache.linux.ApacheFcgiConfigLogger._.starter_script_deployed_trace;
 
 import java.io.File;
 
@@ -32,12 +32,12 @@ import com.anrisoftware.globalpom.log.AbstractLogger;
 import com.anrisoftware.sscontrol.httpd.domain.Domain;
 
 /**
- * Logging for {@link FcgiConfig}.
+ * Logging for {@link ApacheFcgiConfig}.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class FcgiConfigLogger extends AbstractLogger {
+class ApacheFcgiConfigLogger extends AbstractLogger {
 
     enum _ {
 
@@ -73,10 +73,10 @@ class FcgiConfigLogger extends AbstractLogger {
     }
 
     /**
-     * Sets the context of the logger to {@link FcgiConfig}.
+     * Sets the context of the logger to {@link ApacheFcgiConfig}.
      */
-    public FcgiConfigLogger() {
-        super(FcgiConfig.class);
+    public ApacheFcgiConfigLogger() {
+        super(ApacheFcgiConfig.class);
     }
 
     void scriptsDirectoryCreated(Domain domain, File dir) {

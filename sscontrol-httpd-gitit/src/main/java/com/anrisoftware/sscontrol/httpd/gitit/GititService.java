@@ -26,8 +26,6 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
-
 import com.anrisoftware.globalpom.format.byteformat.ByteFormatFactory;
 import com.anrisoftware.globalpom.format.duration.DurationFormatFactory;
 import com.anrisoftware.sscontrol.core.api.ServiceException;
@@ -39,12 +37,12 @@ import com.anrisoftware.sscontrol.core.bindings.BindingFactory;
 import com.anrisoftware.sscontrol.core.debuglogging.DebugLogging;
 import com.anrisoftware.sscontrol.core.debuglogging.DebugLoggingFactory;
 import com.anrisoftware.sscontrol.core.groovy.StatementsMap;
-import com.anrisoftware.sscontrol.core.groovy.StatementsMapFactory;
 import com.anrisoftware.sscontrol.core.yesno.YesNoFlag;
 import com.anrisoftware.sscontrol.httpd.domain.Domain;
 import com.anrisoftware.sscontrol.httpd.webservice.OverrideMode;
 import com.anrisoftware.sscontrol.httpd.webservice.WebService;
-import com.anrisoftware.sscontrol.httpd.webserviceargs.WebServiceLogger;
+import com.anrisoftware.sscontrol.httpd.webserviceargs.DefaultWebService;
+import com.anrisoftware.sscontrol.httpd.webserviceargs.DefaultWebServiceFactory;
 import com.google.inject.assistedinject.Assisted;
 
 /**
@@ -95,17 +93,11 @@ public class GititService implements WebService {
      */
     public static final String SERVICE_NAME = "gitit";
 
-    private static final String REPOSITORY_TYPE = "repository type";
-
-    private static final String NAME = "name";
-
-    private static final String ALIAS = "alias";
-
-    private final WebServiceLogger serviceLog;
-
-    private final Domain domain;
+    private final DefaultWebService service;
 
     private final GititServiceLogger log;
+
+    private final StatementsMap statementsMap;
 
     @Inject
     private Binding binding;
@@ -119,21 +111,9 @@ public class GititService implements WebService {
     @Inject
     private DurationFormatFactory durationFormatFactory;
 
-    private StatementsMap statementsMap;
-
     private DebugLoggingFactory debugFactory;
 
-    private String alias;
-
     private DebugLogging debug;
-
-    private String id;
-
-    private String ref;
-
-    private String refDomain;
-
-    private String prefix;
 
     private OverrideMode overrideMode;
 
@@ -143,41 +123,23 @@ public class GititService implements WebService {
      * @see GititServiceFactory#create(Map, Domain)
      */
     @Inject
-    GititService(GititServiceLogger log, WebServiceLogger serviceLog,
-            @Assisted Map<String, Object> args, @Assisted Domain domain) {
+    GititService(DefaultWebServiceFactory webServiceFactory,
+            GititServiceLogger log, @Assisted Map<String, Object> args,
+            @Assisted Domain domain) {
         this.log = log;
-        this.serviceLog = serviceLog;
-        this.domain = domain;
-        if (serviceLog.haveAlias(args)) {
-            this.alias = serviceLog.alias(this, args);
-        }
-        if (serviceLog.haveId(args)) {
-            this.id = serviceLog.id(this, args);
-        }
-        if (serviceLog.haveRef(args)) {
-            this.ref = serviceLog.ref(this, args);
-        }
-        if (serviceLog.haveRefDomain(args)) {
-            this.refDomain = serviceLog.refDomain(this, args);
-        }
-        if (serviceLog.havePrefix(args)) {
-            this.prefix = serviceLog.prefix(this, args);
-        }
+        this.service = webServiceFactory.create(SERVICE_NAME, args, domain);
+        this.statementsMap = service.getStatementsMap();
+        setupStatements(service.getStatementsMap());
+        parseArgs(log, args);
+    }
+
+    private void parseArgs(GititServiceLogger log, Map<String, Object> args) {
         if (log.haveType(args)) {
             this.type = log.type(this, args);
         }
     }
 
-    @Inject
-    void setDebugLoggingFactory(DebugLoggingFactory factory) {
-        this.debugFactory = factory;
-        this.debug = factory.createOff();
-    }
-
-    @Inject
-    public void setStatementsMap(StatementsMapFactory factory) {
-        StatementsMap map = factory.create(this, getName());
-        this.statementsMap = map;
+    private void setupStatements(StatementsMap map) {
         map.addAllowed(WIKI);
         map.addAllowed(LOGIN);
         map.addAllowed(AUTH);
@@ -197,9 +159,15 @@ public class GititService implements WebService {
         map.addAllowed(FEEDS);
     }
 
+    @Inject
+    public void setDebugLoggingFactory(DebugLoggingFactory factory) {
+        this.debugFactory = factory;
+        this.debug = factory.createOff();
+    }
+
     @Override
     public Domain getDomain() {
-        return domain;
+        return service.getDomain();
     }
 
     @Override
@@ -208,49 +176,48 @@ public class GititService implements WebService {
     }
 
     public void setAlias(String alias) {
-        this.alias = alias;
-        serviceLog.aliasSet(this, alias);
+        service.setAlias(alias);
     }
 
+    @Override
     public String getAlias() {
-        return alias;
+        return service.getAlias();
     }
 
     public void setId(String id) {
-        this.id = id;
-        serviceLog.idSet(this, id);
+        service.setId(id);
     }
 
     @Override
     public String getId() {
-        return id;
+        return service.getId();
     }
 
     public void setRef(String ref) {
-        this.ref = ref;
-        serviceLog.refSet(this, ref);
+        service.setRef(ref);
     }
 
     @Override
     public String getRef() {
-        return ref;
+        return service.getRef();
     }
 
-    public void setRefDomain(String refDomain) {
-        this.refDomain = refDomain;
+    public void setRefDomain(String ref) {
+        service.setRefDomain(ref);
     }
 
     @Override
     public String getRefDomain() {
-        return refDomain;
+        return service.getRefDomain();
     }
 
     public void setPrefix(String prefix) {
-        this.prefix = prefix;
+        service.setPrefix(prefix);
     }
 
+    @Override
     public String getPrefix() {
-        return prefix;
+        return service.getPrefix();
     }
 
     /**
@@ -557,13 +524,11 @@ public class GititService implements WebService {
 
     public Object methodMissing(String name, Object args)
             throws ServiceException {
-        statementsMap.methodMissing(name, args);
-        return null;
+        return service.methodMissing(name, args);
     }
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this).append(NAME, SERVICE_NAME)
-                .append(ALIAS, alias).append(REPOSITORY_TYPE, type).toString();
+        return service.toString();
     }
 }

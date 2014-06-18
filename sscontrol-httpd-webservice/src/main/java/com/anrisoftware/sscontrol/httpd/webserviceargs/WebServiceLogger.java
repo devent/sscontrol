@@ -50,19 +50,19 @@ import com.anrisoftware.sscontrol.httpd.webservice.WebService;
  */
 public class WebServiceLogger extends AbstractLogger {
 
-    private static final String PREFIX = "prefix";
+    public static final String PREFIX = "prefix";
 
-    private static final String PROXYNAME = "proxyname";
+    public static final String PROXYNAME = "proxyname";
 
-    private static final String REFDOMAIN = "refdomain";
+    public static final String REFDOMAIN = "refdomain";
 
-    private static final String SLASH = "/";
+    public static final String SLASH = "/";
 
-    private static final String REF = "ref";
+    public static final String REF = "ref";
 
-    private static final String ID = "id";
+    public static final String ID = "id";
 
-    private static final String ALIAS = "alias";
+    public static final String ALIAS = "alias";
 
     enum _ {
 

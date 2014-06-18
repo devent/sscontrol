@@ -22,28 +22,23 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
-
 import com.anrisoftware.sscontrol.httpd.domain.Domain;
 import com.anrisoftware.sscontrol.httpd.webservice.WebService;
-import com.anrisoftware.sscontrol.httpd.webserviceargs.WebServiceLogger;
+import com.anrisoftware.sscontrol.httpd.webserviceargs.DefaultWebService;
+import com.anrisoftware.sscontrol.httpd.webserviceargs.DefaultWebServiceFactory;
 import com.google.inject.assistedinject.Assisted;
 
 /**
- * Phpmyadmin service.
+ * <i>Phpmyadmin</i> service.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
 public class PhpmyadminService implements WebService {
 
-    private static final String ALIAS = "alias";
+    public static final String SERVICE_NAME = "phpmyadmin";
 
-    public static final String NAME = "phpmyadmin";
-
-    private final Domain domain;
-
-    private final WebServiceLogger serviceLog;
+    private final DefaultWebService service;
 
     @Inject
     private PhpmyadminServiceLogger log;
@@ -57,82 +52,68 @@ public class PhpmyadminService implements WebService {
     @Inject
     private Server server;
 
-    private String alias;
-
-    private String id;
-
-    private String ref;
-
-    private String refDomain;
-
     /**
      * @see PhpmyadminServiceFactory#create(Map, Domain)
      */
     @Inject
-    PhpmyadminService(WebServiceLogger serviceLog,
+    PhpmyadminService(DefaultWebServiceFactory webServiceFactory,
             @Assisted Map<String, Object> args, @Assisted Domain domain) {
-        this.serviceLog = serviceLog;
-        this.domain = domain;
-        if (serviceLog.haveAlias(args)) {
-            this.alias = serviceLog.alias(this, args);
-        }
-        if (serviceLog.haveId(args)) {
-            this.id = serviceLog.id(this, args);
-        }
-        if (serviceLog.haveRef(args)) {
-            this.ref = serviceLog.ref(this, args);
-        }
-        if (serviceLog.haveRefDomain(args)) {
-            this.refDomain = serviceLog.refDomain(this, args);
-        }
+        this.service = webServiceFactory.create(SERVICE_NAME, args, domain);
     }
 
     @Override
     public Domain getDomain() {
-        return domain;
+        return service.getDomain();
     }
 
     @Override
     public String getName() {
-        return NAME;
+        return SERVICE_NAME;
     }
 
     public void setAlias(String alias) {
-        this.alias = alias;
-        serviceLog.aliasSet(this, alias);
+        service.setAlias(alias);
     }
 
+    @Override
     public String getAlias() {
-        return alias;
+        return service.getAlias();
     }
 
     public void setId(String id) {
-        this.id = id;
-        serviceLog.idSet(this, id);
+        service.setId(id);
     }
 
     @Override
     public String getId() {
-        return id;
+        return service.getId();
     }
 
     public void setRef(String ref) {
-        this.ref = ref;
-        serviceLog.refSet(this, ref);
+        service.setRef(ref);
     }
 
     @Override
     public String getRef() {
-        return ref;
+        return service.getRef();
     }
 
     public void setRefDomain(String ref) {
-        this.refDomain = ref;
+        service.setRefDomain(ref);
     }
 
     @Override
     public String getRefDomain() {
-        return refDomain;
+        return service.getRefDomain();
+    }
+
+    public void setPrefix(String prefix) {
+        service.setPrefix(prefix);
+    }
+
+    @Override
+    public String getPrefix() {
+        return service.getPrefix();
     }
 
     public void admin(Map<String, Object> map, String admin) {
@@ -168,8 +149,6 @@ public class PhpmyadminService implements WebService {
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this).append(NAME).append(ALIAS, alias)
-                .append(adminUser).append(controlUser).append(server)
-                .toString();
+        return server.toString();
     }
 }

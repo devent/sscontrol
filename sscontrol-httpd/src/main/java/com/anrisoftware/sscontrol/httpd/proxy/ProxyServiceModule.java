@@ -18,7 +18,7 @@
  */
 package com.anrisoftware.sscontrol.httpd.proxy;
 
-import static com.anrisoftware.sscontrol.httpd.proxy.ProxyService.NAME;
+import static com.anrisoftware.sscontrol.httpd.proxy.ProxyService.SERVICE_NAME;
 import static com.google.inject.multibindings.MapBinder.newMapBinder;
 
 import com.anrisoftware.sscontrol.httpd.webservice.WebService;
@@ -48,7 +48,7 @@ public class ProxyServiceModule extends AbstractModule {
         MapBinder<String, WebServiceFactory> mapbinder;
         mapbinder = newMapBinder(binder(), String.class,
                 WebServiceFactory.class);
-        mapbinder.addBinding(NAME).toProvider(ProxyServiceProvider.class);
+        mapbinder.addBinding(SERVICE_NAME).toProvider(ProxyServiceProvider.class);
     }
 
 }

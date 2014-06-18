@@ -18,7 +18,7 @@
  */
 package com.anrisoftware.sscontrol.httpd.phpmyadmin;
 
-import static com.anrisoftware.sscontrol.httpd.phpmyadmin.PhpmyadminService.NAME;
+import static com.anrisoftware.sscontrol.httpd.phpmyadmin.PhpmyadminService.SERVICE_NAME;
 import static com.google.inject.multibindings.MapBinder.newMapBinder;
 
 import com.anrisoftware.sscontrol.httpd.webservice.WebService;
@@ -46,6 +46,6 @@ public class PhpmyadminModule extends AbstractModule {
 		MapBinder<String, WebServiceFactory> mapbinder;
 		mapbinder = newMapBinder(binder(), String.class,
 				WebServiceFactory.class);
-		mapbinder.addBinding(NAME).toProvider(PhpmyadminServiceProvider.class);
+		mapbinder.addBinding(SERVICE_NAME).toProvider(PhpmyadminServiceProvider.class);
 	}
 }

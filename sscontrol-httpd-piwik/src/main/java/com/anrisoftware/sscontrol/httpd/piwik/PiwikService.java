@@ -1,91 +1,76 @@
 /*
  * Copyright 2012-2014 Erwin Müller <erwin.mueller@deventm.org>
  *
- * This file is part of sscontrol-httpd.
+ * This file is part of sscontrol-httpd-gitit.
  *
- * sscontrol-httpd is free software: you can redistribute it and/or modify it
+ * sscontrol-httpd-gitit is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published by the
  * Free Software Foundation, either version 3 of the License, or (at your
  * option) any later version.
  *
- * sscontrol-httpd is distributed in the hope that it will be useful, but
+ * sscontrol-httpd-gitit is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
  * for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with sscontrol-httpd. If not, see <http://www.gnu.org/licenses/>.
+ * along with sscontrol-httpd-gitit. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.roundcube;
+package com.anrisoftware.sscontrol.httpd.piwik;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
 
-import com.anrisoftware.sscontrol.core.database.Database;
-import com.anrisoftware.sscontrol.core.database.DatabaseArgs;
-import com.anrisoftware.sscontrol.core.database.DatabaseFactory;
+import com.anrisoftware.sscontrol.core.api.ServiceException;
 import com.anrisoftware.sscontrol.core.debuglogging.DebugLogging;
 import com.anrisoftware.sscontrol.core.debuglogging.DebugLoggingFactory;
 import com.anrisoftware.sscontrol.httpd.domain.Domain;
+import com.anrisoftware.sscontrol.httpd.webservice.OverrideMode;
 import com.anrisoftware.sscontrol.httpd.webservice.WebService;
 import com.anrisoftware.sscontrol.httpd.webserviceargs.DefaultWebService;
 import com.anrisoftware.sscontrol.httpd.webserviceargs.DefaultWebServiceFactory;
 import com.google.inject.assistedinject.Assisted;
 
 /**
- * Roundcube service.
+ * <i>Piwik</i> service.
  * 
- * @see <a href=http://roundcube.net/>http://roundcube.net/</a>
+ * @see <a href="http://piwik.org/">http://piwik.org/</a>
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-public class RoundcubeService implements WebService {
+public class PiwikService implements WebService {
 
-    public static final String SERVICE_NAME = "roundcube";
+    /**
+     * The <i>Piwik</i> service name.
+     */
+    public static final String SERVICE_NAME = "piwik";
 
     private final DefaultWebService service;
 
-    private final List<Host> hosts;
-
     @Inject
-    private RoundcubeServiceLogger log;
+    private PiwikServiceLogger log;
 
-    @Inject
-    private DatabaseFactory databaseFactory;
-
-    @Inject
-    private HostFactory hostFactory;
-
-    @Inject
     private DebugLoggingFactory debugFactory;
-
-    private SmtpServerFactory smtpFactory;
-
-    private Database database;
 
     private DebugLogging debug;
 
-    private SmtpServer smtp;
+    private OverrideMode overrideMode;
 
     /**
-     * @see RoundcubeServiceFactory#create(Map, Domain)
+     * @see PiwikServiceFactory#create(Map, Domain)
      */
     @Inject
-    RoundcubeService(DefaultWebServiceFactory webServiceFactory,
+    PiwikService(DefaultWebServiceFactory webServiceFactory,
             @Assisted Map<String, Object> args, @Assisted Domain domain) {
         this.service = webServiceFactory.create(SERVICE_NAME, args, domain);
-        this.hosts = new ArrayList<Host>();
     }
 
     @Inject
-    void setSmtpServerFactory(SmtpServerFactory factory) {
-        this.smtp = factory.createDefault();
-        this.smtpFactory = factory;
+    void setDebugLoggingFactory(DebugLoggingFactory factory) {
+        this.debugFactory = factory;
+        this.debug = factory.createOff();
     }
 
     @Override
@@ -143,40 +128,14 @@ public class RoundcubeService implements WebService {
         return service.getPrefix();
     }
 
-    public void database(Map<String, Object> args, String name) {
-        args.put(DatabaseArgs.DATABASE, name);
-        Database database = databaseFactory.create(this, args);
-        log.databaseSet(this, database);
-        this.database = database;
-    }
-
-    public Database getDatabase() {
-        return database;
-    }
-
-    public void host(String name) {
-        host(new HashMap<String, Object>(), name);
-    }
-
-    public void host(Map<String, Object> args, String name) {
-        args.put(HostArgs.HOST, name);
-        Host host = hostFactory.create(this, args);
-        log.hostAdded(this, host);
-        hosts.add(host);
-    }
-
-    public List<Host> getHosts() {
-        return hosts;
-    }
-
-    public void debug(Map<String, Object> args) {
-        DebugLogging logging = debugFactory.create(args);
+    public void debug(boolean enabled) {
+        DebugLogging logging = debugFactory.create(enabled ? 1 : 0);
         log.debugSet(this, logging);
         this.debug = logging;
     }
 
-    public void debug(int level) {
-        DebugLogging logging = debugFactory.create(level);
+    public void debug(Map<String, Object> args) {
+        DebugLogging logging = debugFactory.create(args);
         log.debugSet(this, logging);
         this.debug = logging;
     }
@@ -188,19 +147,23 @@ public class RoundcubeService implements WebService {
         return debug;
     }
 
-    public void smtp(String host) {
-        smtp(new HashMap<String, Object>(), host);
+    public void override(Map<String, Object> args) {
+        OverrideMode mode = log.override(this, args);
+        log.overrideModeSet(this, mode);
+        this.overrideMode = mode;
     }
 
-    public void smtp(Map<String, Object> args, String host) {
-        args.put(SmtpServerArgs.HOST, host);
-        SmtpServer smtp = smtpFactory.create(this, args);
-        log.smtpSet(this, smtp);
-        this.smtp = smtp;
+    public void setOverrideMode(OverrideMode mode) {
+        this.overrideMode = mode;
     }
 
-    public SmtpServer getSmtp() {
-        return smtp;
+    public OverrideMode getOverrideMode() {
+        return overrideMode;
+    }
+
+    public Object methodMissing(String name, Object args)
+            throws ServiceException {
+        return service.methodMissing(name, args);
     }
 
     @Override

@@ -36,6 +36,7 @@ import com.anrisoftware.sscontrol.httpd.proxy.ProxyServiceModule;
 import com.anrisoftware.sscontrol.httpd.redirect.RedirectModule;
 import com.anrisoftware.sscontrol.httpd.roundcube.RoundcubeModule;
 import com.anrisoftware.sscontrol.httpd.user.DomainUserModule;
+import com.anrisoftware.sscontrol.httpd.webserviceargs.WebServiceArgsModule;
 import com.anrisoftware.sscontrol.httpd.wordpress.WordpressModule;
 import com.google.inject.AbstractModule;
 
@@ -49,6 +50,7 @@ class HttpdModule extends AbstractModule {
 
 	@Override
 	protected void configure() {
+        install(new WebServiceArgsModule());
         install(new StatementsMapModule());
         install(new ResourcesModule());
         install(new ByteFormatModule());

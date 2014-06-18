@@ -18,7 +18,7 @@
  */
 package com.anrisoftware.sscontrol.httpd.roundcube;
 
-import static com.anrisoftware.sscontrol.httpd.roundcube.RoundcubeService.NAME;
+import static com.anrisoftware.sscontrol.httpd.roundcube.RoundcubeService.SERVICE_NAME;
 import static com.google.inject.multibindings.MapBinder.newMapBinder;
 
 import com.anrisoftware.sscontrol.httpd.webservice.WebService;
@@ -50,6 +50,6 @@ public class RoundcubeModule extends AbstractModule {
         MapBinder<String, WebServiceFactory> mapbinder;
         mapbinder = newMapBinder(binder(), String.class,
                 WebServiceFactory.class);
-        mapbinder.addBinding(NAME).toProvider(RoundcubeServiceProvider.class);
+        mapbinder.addBinding(SERVICE_NAME).toProvider(RoundcubeServiceProvider.class);
     }
 }

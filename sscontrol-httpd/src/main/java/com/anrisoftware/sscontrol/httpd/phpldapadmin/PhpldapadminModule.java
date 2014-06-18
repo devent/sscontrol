@@ -18,7 +18,7 @@
  */
 package com.anrisoftware.sscontrol.httpd.phpldapadmin;
 
-import static com.anrisoftware.sscontrol.httpd.phpldapadmin.PhpldapadminService.NAME;
+import static com.anrisoftware.sscontrol.httpd.phpldapadmin.PhpldapadminService.SERVICE_NAME;
 import static com.google.inject.multibindings.MapBinder.newMapBinder;
 
 import com.anrisoftware.sscontrol.httpd.webservice.WebService;
@@ -28,28 +28,28 @@ import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.google.inject.multibindings.MapBinder;
 
 /**
- * Installs the Phpldapadmin service factory.
+ * Installs the <i>Phpldapadmin</i> service factory.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
 public class PhpldapadminModule extends AbstractModule {
 
-	@Override
-	protected void configure() {
-		install(new FactoryModuleBuilder().implement(WebService.class,
-				PhpldapadminService.class).build(
-				PhpldapadminServiceFactory.class));
-		install(new FactoryModuleBuilder().implement(LdapServer.class,
-				LdapServer.class).build(LdapServerFactory.class));
-		bindService();
-	}
+    @Override
+    protected void configure() {
+        install(new FactoryModuleBuilder().implement(WebService.class,
+                PhpldapadminService.class).build(
+                PhpldapadminServiceFactory.class));
+        install(new FactoryModuleBuilder().implement(LdapServer.class,
+                LdapServer.class).build(LdapServerFactory.class));
+        bindService();
+    }
 
-	private void bindService() {
-		MapBinder<String, WebServiceFactory> mapbinder;
-		mapbinder = newMapBinder(binder(), String.class,
-				WebServiceFactory.class);
-		mapbinder.addBinding(NAME)
-				.toProvider(PhpldapadminServiceProvider.class);
-	}
+    private void bindService() {
+        MapBinder<String, WebServiceFactory> mapbinder;
+        mapbinder = newMapBinder(binder(), String.class,
+                WebServiceFactory.class);
+        mapbinder.addBinding(SERVICE_NAME).toProvider(
+                PhpldapadminServiceProvider.class);
+    }
 }

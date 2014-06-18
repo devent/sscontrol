@@ -25,12 +25,11 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
-
 import com.anrisoftware.sscontrol.core.yesno.YesNoFlag;
 import com.anrisoftware.sscontrol.httpd.domain.Domain;
 import com.anrisoftware.sscontrol.httpd.webservice.WebService;
 import com.anrisoftware.sscontrol.httpd.webserviceargs.WebServiceLogger;
+import com.anrisoftware.sscontrol.httpd.webserviceargs.WebServiceToString;
 
 /**
  * HTTP/authentication service.
@@ -53,16 +52,6 @@ public abstract class AbstractAuthService implements WebService {
     private static final String VALID_ARGS = "valid";
 
     private static final String NAME_ARG = "name";
-
-    private static final String REFERENCED_DOMAIN = "referenced domain";
-
-    private static final String REFERENCE = "reference";
-
-    private static final String ID = "id";
-
-    private static final String DOMAIN = "domain";
-
-    private static final String NAME = "name";
 
     private final Domain domain;
 
@@ -98,6 +87,9 @@ public abstract class AbstractAuthService implements WebService {
     @Inject
     private RequireValidFactory requireValidFactory;
 
+    @Inject
+    private WebServiceToString serviceToString;
+
     private String id;
 
     private String ref;
@@ -117,6 +109,10 @@ public abstract class AbstractAuthService implements WebService {
     private AuthHost host;
 
     private AuthCredentials credentials;
+
+    private String alias;
+
+    private String prefix;
 
     /**
      * Sets the domain for the authentication.
@@ -145,6 +141,12 @@ public abstract class AbstractAuthService implements WebService {
         this.attributes = new HashMap<String, Object>();
         if (serviceLog.haveId(args)) {
             this.id = serviceLog.id(this, args);
+        }
+        if (serviceLog.haveAlias(args)) {
+            this.alias = serviceLog.alias(this, args);
+        }
+        if (serviceLog.havePrefix(args)) {
+            this.prefix = serviceLog.prefix(this, args);
         }
         if (serviceLog.haveRef(args)) {
             this.ref = serviceLog.ref(this, args);
@@ -201,6 +203,16 @@ public abstract class AbstractAuthService implements WebService {
 
     public String getLocation() {
         return location;
+    }
+
+    @Override
+    public String getAlias() {
+        return alias;
+    }
+
+    @Override
+    public String getPrefix() {
+        return prefix;
     }
 
     public void type(Map<String, Object> args, AuthType type) {
@@ -336,13 +348,6 @@ public abstract class AbstractAuthService implements WebService {
 
     @Override
     public String toString() {
-        ToStringBuilder builder = new ToStringBuilder(this);
-        builder.append(NAME, getName());
-        builder.append(DOMAIN, getDomain());
-        builder = id != null ? builder.append(ID, getName()) : builder;
-        builder = ref != null ? builder.append(REFERENCE, getRef()) : builder;
-        builder = refDomain != null ? builder.append(REFERENCED_DOMAIN,
-                getRefDomain()) : builder;
-        return builder.toString();
+        return serviceToString.toString(this);
     }
 }

@@ -25,10 +25,10 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
-
 import com.anrisoftware.sscontrol.httpd.domain.Domain;
 import com.anrisoftware.sscontrol.httpd.webservice.WebService;
+import com.anrisoftware.sscontrol.httpd.webserviceargs.DefaultWebService;
+import com.anrisoftware.sscontrol.httpd.webserviceargs.DefaultWebServiceFactory;
 import com.anrisoftware.sscontrol.httpd.webserviceargs.WebServiceLogger;
 import com.google.inject.assistedinject.Assisted;
 
@@ -48,29 +48,16 @@ public class ProxyService implements WebService {
 
     private static final String DOT_STR = ".";
 
-    public static final String NAME = "proxy";
+    public static final String SERVICE_NAME = "proxy";
 
-    private static final String SERVICE = "service";
+    private final DefaultWebService webService;
 
-    private static final String ADDRESS = "address";
-
-    private final Domain domain;
-
-    private final ProxyServiceLogger log;
-
-    private final WebServiceLogger serviceLog;
+    @Inject
+    private ProxyServiceLogger log;
 
     private String service;
 
     private String address;
-
-    private String alias;
-
-    private String id;
-
-    private String ref;
-
-    private String refDomain;
 
     private String proxyName;
 
@@ -78,94 +65,86 @@ public class ProxyService implements WebService {
      * @see ProxyServiceFactory#create(Map, Domain)
      */
     @Inject
-    ProxyService(WebServiceLogger serviceLogger, ProxyServiceLogger logger,
-            ProxyServiceArgs proxyaargs, @Assisted Map<String, Object> args,
-            @Assisted Domain domain) {
-        this.log = logger;
-        this.serviceLog = serviceLogger;
-        this.domain = domain;
-        setService(proxyaargs.service(domain, args));
-        setAddress(proxyaargs.address(domain, args));
-        if (serviceLog.haveAlias(args)) {
-            this.alias = serviceLog.alias(this, args);
-        }
-        if (serviceLog.haveId(args)) {
-            this.id = serviceLog.id(this, args);
-        }
-        if (serviceLog.haveRef(args)) {
-            this.ref = serviceLog.ref(this, args);
-        }
-        if (serviceLog.haveRefDomain(args)) {
-            this.refDomain = serviceLog.refDomain(this, args);
-        }
-        if (serviceLog.haveProxyName(args)) {
-            this.proxyName = serviceLog.proxyName(this, args);
-        } else {
-            setDefaultProxyName(serviceLog, args);
-        }
+    ProxyService(DefaultWebServiceFactory webServiceFactory,
+            ProxyServiceArgs proxyaargs, WebServiceLogger webServiceLogger,
+            @Assisted Map<String, Object> args, @Assisted Domain domain) {
+        this.webService = webServiceFactory.create(SERVICE_NAME, args, domain);
+        this.service = proxyaargs.service(domain, args);
+        this.address = proxyaargs.address(domain, args);
+        setDefaultProxyName(webServiceLogger, args);
     }
 
     private void setDefaultProxyName(WebServiceLogger serviceLog,
             Map<String, Object> args) {
-        if (serviceLog.haveAlias(args)) {
-            setProxyName(format(PROXY_NAME_FORMAT, service, alias));
+        if (serviceLog.haveProxyName(args)) {
+            this.proxyName = serviceLog.proxyName(this, args);
+        } else if (serviceLog.haveAlias(args)) {
+            this.proxyName = format(PROXY_NAME_FORMAT, service, getAlias());
         } else {
-            setProxyName(format(PROXY_NAME_FORMAT, service,
-                    replace(domain.getName(), DOT_STR, UNDER_STR)));
+            String domain = webService.getDomain().getName();
+            this.proxyName = format(PROXY_NAME_FORMAT, service,
+                    replace(domain, DOT_STR, UNDER_STR));
         }
     }
 
     @Override
     public String getName() {
-        return String.format(NAME_FORMAT, NAME, getService());
+        return format(NAME_FORMAT, SERVICE_NAME, getService());
     }
 
     @Override
     public Domain getDomain() {
-        return domain;
+        return webService.getDomain();
     }
 
     public void setAlias(String alias) {
-        this.alias = alias;
-        serviceLog.aliasSet(this, alias);
+        webService.setAlias(alias);
     }
 
+    @Override
     public String getAlias() {
-        return alias;
+        return webService.getAlias();
     }
 
     public void setId(String id) {
-        this.id = id;
-        serviceLog.idSet(this, id);
+        webService.setId(id);
     }
 
     @Override
     public String getId() {
-        return id;
+        return webService.getId();
     }
 
     public void setRef(String ref) {
-        this.ref = ref;
-        serviceLog.refSet(this, ref);
+        webService.setRef(ref);
     }
 
     @Override
     public String getRef() {
-        return ref;
+        return webService.getRef();
     }
 
-    public void setRefDomain(String refDomain) {
-        this.refDomain = refDomain;
+    public void setRefDomain(String ref) {
+        webService.setRefDomain(ref);
     }
 
     @Override
     public String getRefDomain() {
-        return refDomain;
+        return webService.getRefDomain();
+    }
+
+    public void setPrefix(String prefix) {
+        webService.setPrefix(prefix);
+    }
+
+    @Override
+    public String getPrefix() {
+        return webService.getPrefix();
     }
 
     public void setService(String service) {
         this.service = service;
-        log.serviceSet(domain, service);
+        log.serviceSet(getDomain(), service);
     }
 
     public String getService() {
@@ -174,7 +153,7 @@ public class ProxyService implements WebService {
 
     public void setAddress(String address) {
         this.address = address;
-        log.addressSet(domain, address);
+        log.addressSet(getDomain(), address);
     }
 
     public String getAddress() {
@@ -183,7 +162,7 @@ public class ProxyService implements WebService {
 
     public void setProxyName(String proxyName) {
         this.proxyName = proxyName;
-        log.proxyNameSet(domain, proxyName);
+        log.proxyNameSet(getDomain(), proxyName);
     }
 
     public String getProxyName() {
@@ -192,7 +171,6 @@ public class ProxyService implements WebService {
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this).append(SERVICE, service)
-                .append(ADDRESS, address).toString();
+        return webService.toString();
     }
 }

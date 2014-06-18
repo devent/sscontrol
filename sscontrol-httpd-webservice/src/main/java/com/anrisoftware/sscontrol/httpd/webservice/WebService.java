@@ -43,6 +43,20 @@ public interface WebService {
     String getId();
 
     /**
+     * Returns the alias of the service.
+     * 
+     * @return the service {@link String} alias.
+     */
+    String getAlias();
+
+    /**
+     * Returns the prefix of the service.
+     * 
+     * @return the service {@link String} prefix.
+     */
+    String getPrefix();
+
+    /**
      * Returns the reference of the service.
      * 
      * @return the service {@link String} reference.

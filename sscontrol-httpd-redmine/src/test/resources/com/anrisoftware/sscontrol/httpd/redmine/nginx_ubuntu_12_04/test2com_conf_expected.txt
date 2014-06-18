@@ -1,0 +1,16 @@
+server {
+    # domain test2.com
+    listen 192.168.0.52:80;
+    root /tmp/var/www/test2.com/web;
+    index index.php index.html index.htm;
+    server_name test2.com;
+    client_max_body_size 2M;
+
+    # gitit
+    location / {
+        proxy_pass http://127.0.0.1:5001/;
+        proxy_set_header X-Real-IP  $remote_addr;
+        proxy_redirect off;
+    }
+
+}

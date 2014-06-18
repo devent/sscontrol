@@ -1,0 +1,10 @@
+web_001.web_001 /tmp/var/www/test1.com/web
+web_002.web_002 /tmp/var/www/www.test1.com/web
+web_003.web_003 /tmp/var/www/test2.com/web
+web_001.web_001 /tmp/var/www/test1.com/gitit
+web_003.web_003 /tmp/var/www/test2.com/gitit
+web_001.web_001 /tmp/var/www/test1.com/web
+web_002.web_002 /tmp/var/www/www.test1.com/web
+web_003.web_003 /tmp/var/www/test2.com/web
+web_001.web_001 /tmp/var/www/test1.com/gitit
+web_003.web_003 /tmp/var/www/test2.com/gitit

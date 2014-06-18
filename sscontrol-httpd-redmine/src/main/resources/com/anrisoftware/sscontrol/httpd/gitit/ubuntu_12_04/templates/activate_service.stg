@@ -1,0 +1,6 @@
+activateService(args) ::= <<
+<! - args.command - !>
+<! - args.service - !>
+<args.command> <args.service> defaults
+
+>>

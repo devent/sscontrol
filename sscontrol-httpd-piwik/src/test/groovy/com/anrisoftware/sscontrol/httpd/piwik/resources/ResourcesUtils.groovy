@@ -38,12 +38,12 @@ class ResourcesUtils {
     }
 
     void createFile(File parent) {
-        assert resource : "Resource ${resource} cannot be null for ${path}"
+        assert resource : "Resource '${resource}' cannot be null for '${path}'"
         copyURLToFile resource, new File(parent, path)
     }
 
     void createCommand(File parent) {
-        assert resource : "Resource cannot be null for ${resource}"
+        assert resource : "Resource '${resource}' cannot be null for '${path}'"
         copyResourceToCommand resource, new File(parent, path)
     }
 
@@ -53,7 +53,7 @@ class ResourcesUtils {
     }
 
     String toString() {
-        assert resource : "Resource cannot be null for ${resource}"
+        assert resource : "Resource '${resource}' cannot be null for '${path}'"
         resourceToString resource
     }
 }

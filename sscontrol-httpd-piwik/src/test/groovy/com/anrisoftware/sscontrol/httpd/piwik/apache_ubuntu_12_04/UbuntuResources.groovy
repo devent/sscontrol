@@ -50,10 +50,7 @@ enum UbuntuResources {
     certKey("cert.key", UbuntuResources.class.getResource("cert_key.txt")),
     groupsFile("/etc/group", UbuntuResources.class.getResource("group.txt")),
     usersFile("/etc/passwd", UbuntuResources.class.getResource("passwd.txt")),
-    sitesAvailableDir("/etc/apache2/sites-available", null),
-    sitesEnabledDir("/etc/apache2/sites-enabled", null),
-    configIncludeDir("/etc/apache2/conf.d", null),
-    sitesDir("/var/www", null),
+    sourcesListFile("/etc/apt/sources.list", UbuntuResources.class.getResource("sources_list.txt")),
 
     static copyUbuntuFiles(File parent) {
         aptitudeCommand.createCommand parent
@@ -72,6 +69,7 @@ enum UbuntuResources {
         restartCommand.createCommand parent
         groupsFile.createFile parent
         usersFile.createFile parent
+        sourcesListFile.createFile parent
     }
 
     ResourcesUtils resources

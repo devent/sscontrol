@@ -70,7 +70,7 @@ public class PiwikService implements WebService {
     @Inject
     void setDebugLoggingFactory(DebugLoggingFactory factory) {
         this.debugFactory = factory;
-        this.debug = factory.createOff();
+        this.debug = factory.create(-1);
     }
 
     @Override

@@ -1,0 +1,23 @@
+debugLogWritersSearch() ::= <%
+log_writers\[\]\s*=.*
+%>
+
+debugLogWriters(debug) ::= <%
+log_writers[] = <debug.args.writer>
+%>
+
+debugLogLevelSearch() ::= <%
+log_level\s*=.*
+%>
+
+debugLogLevel(debug) ::= <%
+log_level = <debug>
+%>
+
+debugLogFileSearch() ::= <%
+logger_file_path\s*=.*
+%>
+
+debugLogFile(debug) ::= <%
+logger_file_path = <debug.args.file>
+%>

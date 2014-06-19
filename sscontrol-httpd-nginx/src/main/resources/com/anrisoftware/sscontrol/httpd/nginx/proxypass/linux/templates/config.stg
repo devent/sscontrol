@@ -1,0 +1,7 @@
+proxy(properties, script, domain, proxy, location) ::= <<
+# proxy
+location <location> {
+    proxy_pass <proxy.address>;
+}
+
+>>

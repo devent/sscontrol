@@ -16,43 +16,35 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd-nginx. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.nginx.nginx.ubuntu_12_04;
+package com.anrisoftware.sscontrol.httpd.nginx.proxypass.ubuntu_12_04;
 
-import static com.anrisoftware.sscontrol.httpd.nginx.nginx.ubuntu_12_04.Ubuntu_12_04_ScriptFactory.NAME;
 import static com.anrisoftware.sscontrol.httpd.nginx.nginx.ubuntu_12_04.Ubuntu_12_04_ScriptFactory.PROFILE;
+import static com.anrisoftware.sscontrol.httpd.nginx.proxypass.linux.ProxyPassConfig.SERVICE_NAME;
+import static com.anrisoftware.sscontrol.httpd.proxy.linux.AbstractProxyConfig.NAME;
 import static com.google.inject.multibindings.MapBinder.newMapBinder;
 import static java.lang.String.format;
-import groovy.lang.Script;
 
-import com.anrisoftware.sscontrol.httpd.nginx.generalproxy.ubuntu_12_04.Ubuntu_12_04_GeneralProxyModule;
-import com.anrisoftware.sscontrol.httpd.nginx.nginx.linux.NginxScriptModule;
-import com.anrisoftware.sscontrol.httpd.nginx.proxypass.ubuntu_12_04.Ubuntu_12_04_ProxyPassModule;
-import com.anrisoftware.sscontrol.httpd.nginx.wordpressproxy.ubuntu_12_04.Ubuntu_12_04_WordpressProxyModule;
+import com.anrisoftware.sscontrol.httpd.webservice.ServiceConfig;
 import com.google.inject.AbstractModule;
 import com.google.inject.multibindings.MapBinder;
 
 /**
- * Binds the Nginx/Ubuntu 12.04 services.
+ * Binds <i>Ubuntu 12.04</i> proxy pass.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class UbuntuModule extends AbstractModule {
+public class Ubuntu_12_04_ProxyPassModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        install(new NginxScriptModule());
-        install(new Ubuntu_12_04_GeneralProxyModule());
-        install(new Ubuntu_12_04_ProxyPassModule());
-        install(new Ubuntu_12_04_WordpressProxyModule());
-        bindScripts();
+        bindServiceConfig();
     }
 
-    private void bindScripts() {
-        MapBinder<String, Script> binder;
-        binder = newMapBinder(binder(), String.class, Script.class);
-        binder.addBinding(format("%s.%s", NAME, PROFILE))
-                .to(UbuntuScript.class);
+    private void bindServiceConfig() {
+        MapBinder<String, ServiceConfig> map = newMapBinder(binder(),
+                String.class, ServiceConfig.class);
+        map.addBinding(format("%s.%s.%s", PROFILE, NAME, SERVICE_NAME)).to(
+                UbuntuConfig.class);
     }
-
 }

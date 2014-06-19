@@ -32,15 +32,20 @@ import com.anrisoftware.sscontrol.httpd.nginx.resources.ResourcesUtils
 enum ProxyResources {
 
     profile("UbuntuProfile.groovy", ProxyResources.class.getResource("UbuntuProfile.groovy")),
-    httpdScript("Httpd.groovy", ProxyResources.class.getResource("HttpdProxy.groovy")),
     certCrt("cert.crt", ProxyResources.class.getResource("cert_crt.txt")),
     certKey("cert.key", ProxyResources.class.getResource("cert_key.txt")),
-    proxyConf("/etc/nginx/conf.d/010-robobee_proxy.conf", ProxyResources.class.getResource("proxy_conf_expected.txt")),
-    test1comConf("/etc/nginx/sites-available/100-robobee-test1.com.conf", ProxyResources.class.getResource("test1_com_conf.txt")),
-    test1comSslConf("/etc/nginx/sites-available/100-robobee-test1.com-ssl.conf", ProxyResources.class.getResource("test1_com_ssl_conf.txt")),
-    wwwtest1comConf("/etc/nginx/sites-available/100-robobee-www.test1.com.conf", ProxyResources.class.getResource("www_test1_com_conf.txt")),
-    wwwtest1comSslConf("/etc/nginx/sites-available/100-robobee-www.test1.com-ssl.conf", ProxyResources.class.getResource("www_test1_com_ssl_conf.txt")),
-    sitefooProxyConf("/etc/nginx/conf.d/020-robobee-sitefoo-proxy.conf", ProxyResources.class.getResource("sitefoo_proxy_conf.txt")),
+    // general proxy
+    httpdGeneralProxyScript("Httpd.groovy", ProxyResources.class.getResource("HttpdGeneralProxy.groovy")),
+    generalProxyConf("/etc/nginx/conf.d/010-robobee_proxy.conf", ProxyResources.class.getResource("generalproxy_proxy_conf_expected.txt")),
+    generalProxyTest1comConf("/etc/nginx/sites-available/100-robobee-test1.com.conf", ProxyResources.class.getResource("generalproxy_test1com_conf_expected.txt")),
+    generalProxyTest1comSslConf("/etc/nginx/sites-available/100-robobee-test1.com-ssl.conf", ProxyResources.class.getResource("generalproxy_test1com_ssl_conf_expected.txt")),
+    generalProxySitefooProxyConf("/etc/nginx/conf.d/020-robobee-sitefoo-proxy.conf", ProxyResources.class.getResource("generalproxy_sitefoo_proxy_conf_expected.txt")),
+    // proxy pass
+    httpdProxyPassScript("Httpd.groovy", ProxyResources.class.getResource("HttpdProxyPass.groovy")),
+    proxyPassConf("/etc/nginx/conf.d/010-robobee_proxy.conf", ProxyResources.class.getResource("proxypass_proxy_conf_expected.txt")),
+    proxyPassTest1comConf("/etc/nginx/sites-available/100-robobee-test1.com.conf", ProxyResources.class.getResource("proxypass_test1com_conf_expected.txt")),
+    proxyPassTest1comSslConf("/etc/nginx/sites-available/100-robobee-test1.com-ssl.conf", ProxyResources.class.getResource("proxypass_test1com_ssl_conf_expected.txt")),
+    proxyPassSitefooProxyConf("/etc/nginx/conf.d/020-robobee-sitefoo-proxy.conf", ProxyResources.class.getResource("proxypass_sitefoo_proxy_conf_expected.txt")),
 
     ResourcesUtils resources
 

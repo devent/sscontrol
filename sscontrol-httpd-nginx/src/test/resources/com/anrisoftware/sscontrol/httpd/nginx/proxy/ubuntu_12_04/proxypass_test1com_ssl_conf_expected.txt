@@ -14,7 +14,9 @@ server {
     ssl_ciphers ALL:!ADH:!EXPORT56:RC4+RSA:+HIGH:+MEDIUM:+EXP;
     ssl_prefer_server_ciphers on;
 
-    # redirect to 'www.test1.com'
-    return 301 https://www.test1.com$request_uri;
+    # proxy
+    location /sitefoo {
+        proxy_pass https://127.0.0.1:8082;
+    }
 
 }

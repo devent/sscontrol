@@ -30,16 +30,16 @@ import org.junit.Test
 import com.anrisoftware.sscontrol.httpd.nginx.ubuntu.UbuntuTestUtil
 
 /**
- * Proxy <i>Nginx</i> on a <i>Ubuntu 12.04</i> server.
+ * Proxy pass <i>Nginx</i> on a <i>Ubuntu 12.04</i> server.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
 @Slf4j
-class ProxyTest extends UbuntuTestUtil {
+class ProxyPassTest extends UbuntuTestUtil {
 
     @Test
-    void "proxy"() {
+    void "proxy pass"() {
         copyUbuntuFiles tmpdir
         copyUbuntu_12_04_Files tmpdir
 
@@ -47,17 +47,15 @@ class ProxyTest extends UbuntuTestUtil {
         def profile = registry.getService("profile")[0]
         setupUbuntuProperties profile, tmpdir
         setupUbuntu_12_04_Properties profile, tmpdir
-        loader.loadService httpdScript.resource, profile
+        loader.loadService httpdProxyPassScript.resource, profile
 
         registry.allServices.each { it.call() }
         log.info "Run service again to ensure that configuration is not set double."
         registry.allServices.each { it.call() }
 
-        assertStringContent proxyConf.replaced(tmpdir, tmpdir, "/tmp"), proxyConf.toString()
-        assertStringContent test1comConf.replaced(tmpdir, tmpdir, "/tmp"), test1comConf.toString()
-        assertStringContent test1comSslConf.replaced(tmpdir, tmpdir, "/tmp"), test1comSslConf.toString()
-        assertStringContent wwwtest1comConf.replaced(tmpdir, tmpdir, "/tmp"), wwwtest1comConf.toString()
-        assertStringContent wwwtest1comSslConf.replaced(tmpdir, tmpdir, "/tmp"), wwwtest1comSslConf.toString()
-        assertStringContent sitefooProxyConf.replaced(tmpdir, tmpdir, "/tmp"), sitefooProxyConf.toString()
+        //assertStringContent proxyPassConf.replaced(tmpdir, tmpdir, "/tmp"), proxyPassConf.toString()
+        assertStringContent proxyPassTest1comConf.replaced(tmpdir, tmpdir, "/tmp"), proxyPassTest1comConf.toString()
+        assertStringContent proxyPassTest1comSslConf.replaced(tmpdir, tmpdir, "/tmp"), proxyPassTest1comSslConf.toString()
+        //assertStringContent proxyPassSitefooProxyConf.replaced(tmpdir, tmpdir, "/tmp"), proxyPassSitefooProxyConf.toString()
     }
 }

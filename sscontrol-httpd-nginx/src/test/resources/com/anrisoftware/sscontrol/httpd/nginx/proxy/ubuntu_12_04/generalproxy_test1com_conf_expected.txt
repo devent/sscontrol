@@ -1,9 +1,9 @@
 server {
-    # domain www.test1.com
-    listen 192.168.0.51:80;
-    root /tmp/var/www/www.test1.com/web;
+    # domain test1.com
+    listen 192.168.0.50:80;
+    root /tmp/var/www/test1.com/web;
     index index.php index.html index.htm;
-    server_name www.test1.com;
+    server_name test1.com;
     client_max_body_size 2M;
 
     # proxy

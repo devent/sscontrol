@@ -57,7 +57,7 @@ class HttpdProxyTest extends HttpdTestUtil {
 
         Domain domain = service.domains[0]
         WebService webservice = domain.services[0]
-        assert webservice.class == ProxyService
+        assert webservice instanceof ProxyService
         assert webservice.name == "proxy.servicefoo"
         assert webservice.id == null
         assert webservice.ref == null
@@ -68,7 +68,7 @@ class HttpdProxyTest extends HttpdTestUtil {
 
         domain = service.domains[1]
         webservice = domain.services[0]
-        assert webservice.class == ProxyService
+        assert webservice instanceof ProxyService
         assert webservice.name == "proxy.servicebar"
         assert webservice.id == null
         assert webservice.ref == null

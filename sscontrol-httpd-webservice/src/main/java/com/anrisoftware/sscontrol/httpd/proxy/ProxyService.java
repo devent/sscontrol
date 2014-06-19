@@ -18,25 +18,20 @@
  */
 package com.anrisoftware.sscontrol.httpd.proxy;
 
-import java.util.Map;
-
-import com.anrisoftware.sscontrol.httpd.domain.Domain;
 import com.anrisoftware.sscontrol.httpd.webservice.WebService;
-import com.anrisoftware.sscontrol.httpd.webservice.WebServiceFactory;
 
 /**
- * Factory to create domain proxy.
+ * Domain proxy service.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-public interface ProxyServiceFactory extends WebServiceFactory {
+public interface ProxyService extends WebService {
 
-    /**
-     * Creates the domain proxy.
-     * 
-     * @return the {@link WebService}.
-     */
-    @Override
-    WebService create(Map<String, Object> args, Domain domain);
+    String getService();
+
+    String getAddress();
+
+    String getProxyName();
+
 }

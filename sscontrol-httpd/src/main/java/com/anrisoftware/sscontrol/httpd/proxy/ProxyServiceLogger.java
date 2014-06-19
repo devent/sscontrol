@@ -33,7 +33,7 @@ import com.anrisoftware.globalpom.log.AbstractLogger;
 import com.anrisoftware.sscontrol.httpd.domain.Domain;
 
 /**
- * Logging for {@link ProxyService}.
+ * Logging for {@link ProxyServiceImpl}.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
@@ -71,10 +71,10 @@ class ProxyServiceLogger extends AbstractLogger {
     }
 
     /**
-     * Sets the context of the logger to {@link ProxyService}.
+     * Sets the context of the logger to {@link ProxyServiceImpl}.
      */
     public ProxyServiceLogger() {
-        super(ProxyService.class);
+        super(ProxyServiceImpl.class);
     }
 
     void checkAddress(Domain domain, Object address) {

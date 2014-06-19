@@ -26,7 +26,7 @@ import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.Templates
 import com.anrisoftware.sscontrol.core.service.LinuxScript
 import com.anrisoftware.sscontrol.httpd.domain.Domain
-import com.anrisoftware.sscontrol.httpd.nginx.proxy.linux.BaseProxyConfig
+import com.anrisoftware.sscontrol.httpd.nginx.proxy.linux.AbstractNginxProxyConfig
 import com.anrisoftware.sscontrol.httpd.proxy.ProxyService
 import com.anrisoftware.sscontrol.httpd.webservice.WebService
 
@@ -36,7 +36,7 @@ import com.anrisoftware.sscontrol.httpd.webservice.WebService
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-abstract class ProxyWordpressConfig extends BaseProxyConfig {
+abstract class ProxyWordpressConfig extends AbstractNginxProxyConfig {
 
     /**
      * Wordpress Proxy name.

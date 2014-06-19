@@ -18,7 +18,7 @@
  */
 package com.anrisoftware.sscontrol.httpd.proxy;
 
-import static com.anrisoftware.sscontrol.httpd.proxy.ProxyService.SERVICE_NAME;
+import static com.anrisoftware.sscontrol.httpd.proxy.ProxyServiceImpl.SERVICE_NAME;
 import static com.google.inject.multibindings.MapBinder.newMapBinder;
 
 import com.anrisoftware.sscontrol.httpd.webservice.WebService;
@@ -40,7 +40,7 @@ public class ProxyServiceModule extends AbstractModule {
     @Override
     protected void configure() {
         install(new FactoryModuleBuilder().implement(WebService.class,
-                ProxyService.class).build(ProxyServiceFactory.class));
+                ProxyServiceImpl.class).build(ProxyServiceFactory.class));
         bindService();
     }
 

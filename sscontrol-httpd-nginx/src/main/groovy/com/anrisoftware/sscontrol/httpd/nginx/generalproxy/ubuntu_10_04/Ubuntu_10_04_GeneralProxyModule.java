@@ -20,7 +20,7 @@ package com.anrisoftware.sscontrol.httpd.nginx.generalproxy.ubuntu_10_04;
 
 import static com.anrisoftware.sscontrol.httpd.nginx.generalproxy.linux.GeneralProxyConfig.SERVICE_NAME;
 import static com.anrisoftware.sscontrol.httpd.nginx.nginx.ubuntu_10_04.Ubuntu_10_04_ScriptFactory.PROFILE;
-import static com.anrisoftware.sscontrol.httpd.nginx.proxy.linux.BaseProxyConfig.NAME;
+import static com.anrisoftware.sscontrol.httpd.proxy.linux.AbstractProxyConfig.NAME;
 import static com.google.inject.multibindings.MapBinder.newMapBinder;
 import static java.lang.String.format;
 

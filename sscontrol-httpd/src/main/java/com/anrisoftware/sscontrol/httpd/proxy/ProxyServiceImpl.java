@@ -26,7 +26,6 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import com.anrisoftware.sscontrol.httpd.domain.Domain;
-import com.anrisoftware.sscontrol.httpd.webservice.WebService;
 import com.anrisoftware.sscontrol.httpd.webserviceargs.DefaultWebService;
 import com.anrisoftware.sscontrol.httpd.webserviceargs.DefaultWebServiceFactory;
 import com.anrisoftware.sscontrol.httpd.webserviceargs.WebServiceLogger;
@@ -38,7 +37,7 @@ import com.google.inject.assistedinject.Assisted;
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-public class ProxyService implements WebService {
+public class ProxyServiceImpl implements ProxyService {
 
     private static final String NAME_FORMAT = "%s.%s";
 
@@ -65,7 +64,7 @@ public class ProxyService implements WebService {
      * @see ProxyServiceFactory#create(Map, Domain)
      */
     @Inject
-    ProxyService(DefaultWebServiceFactory webServiceFactory,
+    ProxyServiceImpl(DefaultWebServiceFactory webServiceFactory,
             ProxyServiceArgs proxyaargs, WebServiceLogger webServiceLogger,
             @Assisted Map<String, Object> args, @Assisted Domain domain) {
         this.webService = webServiceFactory.create(SERVICE_NAME, args, domain);
@@ -147,6 +146,7 @@ public class ProxyService implements WebService {
         log.serviceSet(getDomain(), service);
     }
 
+    @Override
     public String getService() {
         return service;
     }
@@ -156,6 +156,7 @@ public class ProxyService implements WebService {
         log.addressSet(getDomain(), address);
     }
 
+    @Override
     public String getAddress() {
         return address;
     }
@@ -165,6 +166,7 @@ public class ProxyService implements WebService {
         log.proxyNameSet(getDomain(), proxyName);
     }
 
+    @Override
     public String getProxyName() {
         return proxyName;
     }

@@ -27,8 +27,8 @@ import com.anrisoftware.resources.templates.api.Templates
 import com.anrisoftware.resources.templates.api.TemplatesFactory
 import com.anrisoftware.sscontrol.core.service.LinuxScript
 import com.anrisoftware.sscontrol.httpd.domain.Domain
-import com.anrisoftware.sscontrol.httpd.nginx.proxy.linux.BaseProxyConfig
-import com.anrisoftware.sscontrol.httpd.proxy.ProxyService
+import com.anrisoftware.sscontrol.httpd.nginx.proxy.linux.AbstractNginxProxyConfig
+import com.anrisoftware.sscontrol.httpd.proxy.ProxyServiceImpl
 import com.anrisoftware.sscontrol.httpd.webservice.WebService
 
 /**
@@ -37,7 +37,7 @@ import com.anrisoftware.sscontrol.httpd.webservice.WebService
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-abstract class GeneralProxyConfig extends BaseProxyConfig {
+abstract class GeneralProxyConfig extends AbstractNginxProxyConfig {
 
     /**
      * General Proxy name.
@@ -72,7 +72,7 @@ abstract class GeneralProxyConfig extends BaseProxyConfig {
         config.addAll createDomainConfig(domain, null, service)
     }
 
-    List createDomainConfig(Domain domain, Domain refDomain, ProxyService service) {
+    List createDomainConfig(Domain domain, Domain refDomain, ProxyServiceImpl service) {
         List list = []
         def configstr = generalProxyConfigTemplate.getText(
                 true,

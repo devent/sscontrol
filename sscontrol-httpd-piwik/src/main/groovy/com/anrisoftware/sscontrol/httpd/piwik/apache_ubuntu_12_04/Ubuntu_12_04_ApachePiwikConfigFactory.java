@@ -35,7 +35,7 @@ import com.google.inject.Module;
  * @since 1.0
  */
 @ProviderFor(ServiceConfigFactory.class)
-public class PiwikConfigFactory implements ServiceConfigFactory {
+public class Ubuntu_12_04_ApachePiwikConfigFactory implements ServiceConfigFactory {
 
     /**
      * <i>Ubuntu 12.04</i> profile name.
@@ -78,7 +78,7 @@ public class PiwikConfigFactory implements ServiceConfigFactory {
 
     private Injector injector;
 
-    public PiwikConfigFactory() {
+    public Ubuntu_12_04_ApachePiwikConfigFactory() {
     }
 
     @Override

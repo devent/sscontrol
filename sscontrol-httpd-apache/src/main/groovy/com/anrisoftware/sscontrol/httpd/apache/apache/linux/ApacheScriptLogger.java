@@ -24,12 +24,16 @@ import static com.anrisoftware.sscontrol.httpd.apache.apache.linux.ApacheScriptL
 import static com.anrisoftware.sscontrol.httpd.apache.apache.linux.ApacheScriptLogger._.enabled_sites_debug;
 import static com.anrisoftware.sscontrol.httpd.apache.apache.linux.ApacheScriptLogger._.enabled_sites_info;
 import static com.anrisoftware.sscontrol.httpd.apache.apache.linux.ApacheScriptLogger._.enabled_sites_trace;
+import static com.anrisoftware.sscontrol.httpd.apache.apache.linux.ApacheScriptLogger._.service_config_null;
+import static org.apache.commons.lang3.Validate.notNull;
 
 import javax.inject.Singleton;
 
 import com.anrisoftware.globalpom.exec.api.ProcessTask;
 import com.anrisoftware.globalpom.log.AbstractLogger;
 import com.anrisoftware.sscontrol.core.service.LinuxScript;
+import com.anrisoftware.sscontrol.httpd.webservice.ServiceConfig;
+import com.anrisoftware.sscontrol.httpd.webservice.WebService;
 
 /**
  * Logging messages for {@link LinuxScript}.
@@ -41,6 +45,9 @@ import com.anrisoftware.sscontrol.core.service.LinuxScript;
 class ApacheScriptLogger extends AbstractLogger {
 
 	enum _ {
+
+        service_config_null(
+                "Service configuration not found for '%s' profile '%s'."),
 
 		enabled_mods_trace("Enabled Mods/{} for {}, {}."),
 
@@ -92,4 +99,10 @@ class ApacheScriptLogger extends AbstractLogger {
 			info(enabled_sites_info, sites);
 		}
 	}
+
+    void checkServiceConfig(ServiceConfig config, WebService service,
+            String profile) {
+        String name = service.getName();
+        notNull(config, service_config_null.toString(), name, profile);
+    }
 }

@@ -184,12 +184,10 @@ abstract class Apache_2_2_Script extends ApacheScript {
     void deployWebService(Domain domain, WebService service, List serviceConfig) {
         def reftarget = findReferencedService service
         def profile = profileName
-        def config = serviceConfigs["${profile}.${service.name}"]
+        def config = findServiceConfig profile, service
         if (reftarget == null) {
-            logg.checkServiceConfig config, service, profile
             config.deployService domain, service, serviceConfig
         } else {
-            logg.checkServiceConfig config, service, profile
             def refdomain = findReferencedDomain service
             config.deployDomain domain, refdomain, reftarget, serviceConfig
         }

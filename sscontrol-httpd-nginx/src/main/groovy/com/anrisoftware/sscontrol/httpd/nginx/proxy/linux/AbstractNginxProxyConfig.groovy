@@ -20,39 +20,20 @@ package com.anrisoftware.sscontrol.httpd.nginx.proxy.linux
 
 import static org.apache.commons.io.FileUtils.*
 
-import javax.inject.Inject
-
 import org.apache.commons.math3.util.FastMath
 
 import com.anrisoftware.globalpom.format.byteformat.ByteFormatFactory
 import com.anrisoftware.globalpom.format.byteformat.UnitMultiplier
-import com.anrisoftware.resources.templates.api.TemplateResource
-import com.anrisoftware.resources.templates.api.Templates
-import com.anrisoftware.resources.templates.api.TemplatesFactory
 import com.anrisoftware.sscontrol.core.service.LinuxScript
-import com.anrisoftware.sscontrol.httpd.proxy.ProxyServiceImpl
 import com.anrisoftware.sscontrol.httpd.proxy.linux.AbstractProxyConfig
 
 /**
- * Proxy.
+ * <i>Nginx</i> proxy.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
 abstract class AbstractNginxProxyConfig extends AbstractProxyConfig {
-
-    @Inject
-    TemplatesFactory templatesFactory
-
-    /**
-     * The {@link Templates} for the proxy configuration.
-     */
-    Templates proxyTemplates
-
-    /**
-     * Resource containing the proxy configuration templates.
-     */
-    TemplateResource proxyConfigTemplate
 
     @Override
     String sizeValue(long value) {
@@ -66,18 +47,5 @@ abstract class AbstractNginxProxyConfig extends AbstractProxyConfig {
             u = "k"
         }
         "$value$u"
-    }
-
-    /**
-     * Resource containing the proxy configuration templates.
-     */
-    TemplateResource getProxyConfigTemplate() {
-        proxyConfigTemplate
-    }
-
-    void setScript(LinuxScript script) {
-        super.setScript script
-        this.proxyTemplates = templatesFactory.create "ProxyConfig"
-        this.proxyConfigTemplate = proxyTemplates.getResource "config"
     }
 }

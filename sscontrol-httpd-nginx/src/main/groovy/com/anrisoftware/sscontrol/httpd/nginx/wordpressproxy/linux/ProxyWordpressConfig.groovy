@@ -24,6 +24,7 @@ import javax.inject.Inject
 
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.Templates
+import com.anrisoftware.resources.templates.api.TemplatesFactory
 import com.anrisoftware.sscontrol.core.service.LinuxScript
 import com.anrisoftware.sscontrol.httpd.domain.Domain
 import com.anrisoftware.sscontrol.httpd.nginx.proxy.linux.AbstractNginxProxyConfig
@@ -46,15 +47,18 @@ abstract class ProxyWordpressConfig extends AbstractNginxProxyConfig {
     @Inject
     private ProxyWordpressConfigLogger log
 
+    @Inject
+    TemplatesFactory templatesFactory
+
     /**
      * The {@link Templates} for the proxy configuration.
      */
-    Templates wordpressProxyTemplates
+    Templates proxyTemplates
 
     /**
      * Resource containing the proxy configuration templates.
      */
-    TemplateResource wordpressProxyConfigTemplate
+    TemplateResource proxyConfigTemplate
 
     @Override
     void deployDomain(Domain domain, Domain refDomain, WebService service, List config) {
@@ -63,14 +67,13 @@ abstract class ProxyWordpressConfig extends AbstractNginxProxyConfig {
 
     @Override
     void deployService(Domain domain, WebService service, List config) {
-        deployProxyConfiguration()
         deployProxyDomainConfig(service)
         config.addAll createDomainConfig(domain, null, service)
     }
 
     List createDomainConfig(Domain domain, Domain refDomain, ProxyService service) {
         List list = []
-        def configstr = wordpressProxyConfigTemplate.getText(
+        def configstr = proxyConfigTemplate.getText(
                 true,
                 "wordpressProxy",
                 "properties", this,
@@ -81,10 +84,15 @@ abstract class ProxyWordpressConfig extends AbstractNginxProxyConfig {
         list << configstr
     }
 
+    @Override
+    TemplateResource getProxyConfigTemplate() {
+        proxyConfigTemplate
+    }
+
     void setScript(LinuxScript script) {
         super.setScript script
-        this.wordpressProxyTemplates = templatesFactory.create "ProxyWordpressConfig"
-        this.wordpressProxyConfigTemplate = wordpressProxyTemplates.getResource "config"
+        this.proxyTemplates = templatesFactory.create "ProxyWordpressConfig"
+        this.proxyConfigTemplate = proxyTemplates.getResource "config"
     }
 
     @Override

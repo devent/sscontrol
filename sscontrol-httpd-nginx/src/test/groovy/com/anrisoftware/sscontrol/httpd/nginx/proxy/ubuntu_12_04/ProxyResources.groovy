@@ -36,7 +36,6 @@ enum ProxyResources {
     certKey("cert.key", ProxyResources.class.getResource("cert_key.txt")),
     // general proxy
     httpdGeneralProxyScript("Httpd.groovy", ProxyResources.class.getResource("HttpdGeneralProxy.groovy")),
-    generalProxyConf("/etc/nginx/conf.d/010-robobee_proxy.conf", ProxyResources.class.getResource("generalproxy_proxy_conf_expected.txt")),
     generalProxyTest1comConf("/etc/nginx/sites-available/100-robobee-test1.com.conf", ProxyResources.class.getResource("generalproxy_test1com_conf_expected.txt")),
     generalProxyTest1comSslConf("/etc/nginx/sites-available/100-robobee-test1.com-ssl.conf", ProxyResources.class.getResource("generalproxy_test1com_ssl_conf_expected.txt")),
     generalProxySitefooProxyConf("/etc/nginx/conf.d/020-robobee-sitefoo-proxy.conf", ProxyResources.class.getResource("generalproxy_sitefoo_proxy_conf_expected.txt")),

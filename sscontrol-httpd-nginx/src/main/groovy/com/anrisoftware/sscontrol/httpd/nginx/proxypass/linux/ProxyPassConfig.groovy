@@ -53,12 +53,12 @@ abstract class ProxyPassConfig extends AbstractNginxProxyConfig {
     /**
      * The {@link Templates} for the proxy configuration.
      */
-    Templates generalProxyTemplates
+    Templates proxyTemplates
 
     /**
      * Resource containing the proxy configuration templates.
      */
-    TemplateResource generalProxyConfigTemplate
+    TemplateResource proxyConfigTemplate
 
     @Override
     void deployDomain(Domain domain, Domain refDomain, WebService service, List config) {
@@ -72,7 +72,7 @@ abstract class ProxyPassConfig extends AbstractNginxProxyConfig {
 
     List createDomainConfig(Domain domain, Domain refDomain, ProxyServiceImpl service) {
         List list = []
-        def configstr = generalProxyConfigTemplate.getText(
+        def configstr = proxyConfigTemplate.getText(
                 true,
                 "proxy",
                 "properties", this,
@@ -84,10 +84,15 @@ abstract class ProxyPassConfig extends AbstractNginxProxyConfig {
         list << configstr
     }
 
+    @Override
+    TemplateResource getProxyConfigTemplate() {
+        proxyConfigTemplate
+    }
+
     void setScript(LinuxScript script) {
         super.setScript script
-        this.generalProxyTemplates = templatesFactory.create "ProxyPassConfig"
-        this.generalProxyConfigTemplate = generalProxyTemplates.getResource "config"
+        this.proxyTemplates = templatesFactory.create "ProxyPassConfig"
+        this.proxyConfigTemplate = proxyTemplates.getResource "config"
     }
 
     @Override

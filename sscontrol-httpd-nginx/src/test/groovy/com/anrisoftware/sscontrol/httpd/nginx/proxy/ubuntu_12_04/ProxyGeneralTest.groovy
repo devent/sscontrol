@@ -53,7 +53,6 @@ class ProxyGeneralTest extends UbuntuTestUtil {
         log.info "Run service again to ensure that configuration is not set double."
         registry.allServices.each { it.call() }
 
-        assertStringContent generalProxyConf.replaced(tmpdir, tmpdir, "/tmp"), generalProxyConf.toString()
         assertStringContent generalProxyTest1comConf.replaced(tmpdir, tmpdir, "/tmp"), generalProxyTest1comConf.toString()
         assertStringContent generalProxyTest1comSslConf.replaced(tmpdir, tmpdir, "/tmp"), generalProxyTest1comSslConf.toString()
         assertStringContent generalProxySitefooProxyConf.replaced(tmpdir, tmpdir, "/tmp"), generalProxySitefooProxyConf.toString()

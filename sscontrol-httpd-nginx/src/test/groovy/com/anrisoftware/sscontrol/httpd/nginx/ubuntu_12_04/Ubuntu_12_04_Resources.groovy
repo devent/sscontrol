@@ -64,6 +64,7 @@ enum Ubuntu_12_04_Resources {
         entry.config_include_directory configIncludeDir.asFile(parent)
         entry.sites_directory sitesDir.asFile(parent)
         entry.packages_sources_file sourcesListFile.asFile(parent)
+        entry.nginx_signing_key nginxSigningKeyFile.asFile(parent)
     }
 
     ResourcesUtils resources

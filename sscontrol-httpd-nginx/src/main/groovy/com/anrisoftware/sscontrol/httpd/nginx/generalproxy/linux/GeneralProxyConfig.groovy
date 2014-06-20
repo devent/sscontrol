@@ -53,12 +53,12 @@ abstract class GeneralProxyConfig extends AbstractNginxProxyConfig {
     /**
      * The {@link Templates} for the proxy configuration.
      */
-    Templates generalProxyTemplates
+    Templates proxyTemplates
 
     /**
      * Resource containing the proxy configuration templates.
      */
-    TemplateResource generalProxyConfigTemplate
+    TemplateResource proxyConfigTemplate
 
     @Override
     void deployDomain(Domain domain, Domain refDomain, WebService service, List config) {
@@ -67,29 +67,38 @@ abstract class GeneralProxyConfig extends AbstractNginxProxyConfig {
 
     @Override
     void deployService(Domain domain, WebService service, List config) {
-        deployProxyConfiguration()
-        deployProxyDomainConfig(service)
+        deployProxyDomainConfig service
         config.addAll createDomainConfig(domain, null, service)
     }
 
     List createDomainConfig(Domain domain, Domain refDomain, ProxyServiceImpl service) {
         List list = []
-        def configstr = generalProxyConfigTemplate.getText(
+        def configstr = proxyConfigTemplate.getText(
                 true,
-                "proxy",
-                "properties", this,
-                "script", script,
-                "domain", domain,
-                "proxy", service,
-                "location", proxyLocation(service))
+                "domainConfig",
+                "args",
+                [
+                    properties: this,
+                    domain: domain,
+                    proxyName: service.proxyName,
+                    proxyAddress: service.address,
+                    location: proxyLocation(service),
+                    errorPagesDir: errorPagesDir])
         log.domainConfigCreated script, domain, configstr
         list << configstr
     }
 
+    /**
+     * Resource containing the proxy configuration templates.
+     */
+    TemplateResource getProxyConfigTemplate() {
+        proxyConfigTemplate
+    }
+
     void setScript(LinuxScript script) {
         super.setScript script
-        this.generalProxyTemplates = templatesFactory.create "GeneralProxyConfig"
-        this.generalProxyConfigTemplate = generalProxyTemplates.getResource "config"
+        this.proxyTemplates = templatesFactory.create "GeneralProxyConfig"
+        this.proxyConfigTemplate = proxyTemplates.getResource "config"
     }
 
     @Override

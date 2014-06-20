@@ -12,6 +12,7 @@ proxy_read_timeout <args.properties.proxyReadTimeout>;
 proxy_send_timeout <args.properties.proxySendTimeout>;
 
 <({proxySetHeaders<args.domain.class.simpleName>})(args.properties)>
+proxy_redirect <if(args.properties.proxyRedirect)>on<else>off<endif>;
 
 location <args.location> {
     proxy_cache_key "$scheme://$host$request_uri $do_not_cache";

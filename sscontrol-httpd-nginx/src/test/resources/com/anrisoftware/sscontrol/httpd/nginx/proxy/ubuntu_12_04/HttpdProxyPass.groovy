@@ -29,4 +29,10 @@ httpd {
         certification_key_file ProxyResources.certKey.resource
         setup "proxy", service: "pass", alias: "sitefoo", proxyname: "sitefoo", address: "https://127.0.0.1:8082"
     }
+    // SSL/domain test2.com
+    ssl_domain "test2.com", address: "192.168.0.51", {
+        certification_file ProxyResources.certCrt.resource
+        certification_key_file ProxyResources.certKey.resource
+        setup "proxy", service: "pass", alias: "sitefoo", target: "piwik/", proxyname: "sitefoo", address: "https://127.0.0.1:8082"
+    }
 }

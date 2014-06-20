@@ -56,7 +56,9 @@ class ProxyServiceLogger extends AbstractLogger {
 
         proxyname_set_debug("Proxy name '{}' set for {}."),
 
-        proxyname_set_info("Proxy name '{}' set for domain '{}'.");
+        proxyname_set_info("Proxy name '{}' set for domain '{}'."),
+
+        target_null("Proxy target cannot be null or empty for %s.");
 
         private String name;
 
@@ -109,5 +111,10 @@ class ProxyServiceLogger extends AbstractLogger {
         } else {
             info(proxyname_set_info, name, domain.getName());
         }
+    }
+
+    void checkTarget(Domain domain, Object service) {
+        notNull(service, _.target_null.toString(), domain);
+        notBlank(service.toString(), _.target_null.toString(), domain);
     }
 }

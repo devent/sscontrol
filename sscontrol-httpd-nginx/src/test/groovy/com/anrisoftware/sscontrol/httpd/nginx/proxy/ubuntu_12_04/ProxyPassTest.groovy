@@ -55,5 +55,6 @@ class ProxyPassTest extends UbuntuTestUtil {
 
         assertStringContent proxyPassTest1comConf.replaced(tmpdir, tmpdir, "/tmp"), proxyPassTest1comConf.toString()
         assertStringContent proxyPassTest1comSslConf.replaced(tmpdir, tmpdir, "/tmp"), proxyPassTest1comSslConf.toString()
+        assertStringContent proxyPassTest2comSslConf.replaced(tmpdir, tmpdir, "/tmp"), proxyPassTest2comSslConf.toString()
     }
 }

@@ -76,11 +76,14 @@ abstract class ProxyWordpressConfig extends AbstractNginxProxyConfig {
         def configstr = proxyConfigTemplate.getText(
                 true,
                 "wordpressProxy",
-                "properties", this,
-                "script", script,
-                "domain", domain,
-                "proxy", service,
-                "location", proxyLocation(service))
+                "args", [
+                    properties: this,
+                    script: script,
+                    domain: domain,
+                    proxy: service,
+                    location: proxyLocation(service),
+                    errorPagesDir: errorPagesDir
+                ])
         list << configstr
     }
 

@@ -42,6 +42,7 @@ enum Ubuntu_12_04_Resources {
     htpasswdCommand("/usr/bin/htpasswd", Ubuntu_12_04_Resources.class.getResource("echo_command.txt")),
     htdigestCommand("/usr/bin/htdigest", Ubuntu_12_04_Resources.class.getResource("echo_command.txt")),
     mysqldumpCommand("/usr/bin/mysqldump", Ubuntu_12_04_Resources.class.getResource("echo_command.txt")),
+    netstatCommand("/bin/netstat", Ubuntu_12_04_Resources.class.getResource("netstat_command.txt")),
     gzipCommand("/bin/gzip", Ubuntu_12_04_Resources.class.getResource("echo_command.txt")),
     groupsFile("/etc/group", Ubuntu_12_04_Resources.class.getResource("group.txt")),
     usersFile("/etc/passwd", Ubuntu_12_04_Resources.class.getResource("passwd.txt")),
@@ -65,6 +66,7 @@ enum Ubuntu_12_04_Resources {
         apache2ctlCommand.createCommand parent
         htpasswdCommand.createCommand parent
         mysqldumpCommand.createCommand parent
+        netstatCommand.createCommand parent
         gzipCommand.createCommand parent
         confDir.asFile(parent).mkdirs()
         groupsFile.createFile parent
@@ -85,6 +87,7 @@ enum Ubuntu_12_04_Resources {
         entry.apache_command apache2Command.asFile(parent)
         entry.apache_control_command apache2ctlCommand.asFile(parent)
         entry.htpasswd_command htpasswdCommand.asFile(parent)
+        entry.netstat_command netstatCommand.asFile(parent)
         entry.wordpress_mysqldump_command mysqldumpCommand.asFile(parent)
         entry.wordpress_gzip_command gzipCommand.asFile(parent)
         entry.configuration_directory confDir.asFile(parent)

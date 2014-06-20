@@ -1,8 +1,8 @@
 domainConfig(args) ::= <<
 <! - args.properties - !>
+<! - args.script - !>
 <! - args.domain - !>
-<! - args.proxyName - !>
-<! - args.proxyAddress - !>
+<! - args.proxy - !>
 <! - args.location - !>
 <! - args.errorPagesDir - !>
 # proxy
@@ -15,7 +15,8 @@ proxy_send_timeout <args.properties.proxySendTimeout>;
 proxy_redirect <if(args.properties.proxyRedirect)>on<else>off<endif>;
 
 location <args.location> {
-    proxy_pass <args.proxyAddress>;
+    proxy_pass <args.proxy.address>;
+    <aliasTarget(args)>
 }
 
 >>
@@ -30,5 +31,9 @@ proxySetHeadersSslDomainImpl(properties) ::= <<
 
 proxyHeaders(header) ::= <%
 proxy_set_header <header>;
+%>
+
+aliasTarget(args) ::= <%
+<if(args.proxy.target)>alias <args.script.sitesDirectory>/<args.domain.name>/<args.proxy.target>;<endif>
 %>
 

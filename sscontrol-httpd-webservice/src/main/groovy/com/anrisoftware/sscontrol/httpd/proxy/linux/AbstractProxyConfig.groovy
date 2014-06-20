@@ -1,20 +1,20 @@
 /*
- * Copyright 2013-2014 Erwin Müller <erwin.mueller@deventm.org>
+ * Copyright 2014 Erwin Müller <erwin.mueller@deventm.org>
  *
- * This file is part of sscontrol-httpd-nginx.
+ * This file is part of sscontrol-httpd-webservice.
  *
- * sscontrol-httpd-nginx is free software: you can redistribute it and/or modify it
+ * sscontrol-httpd-webservice is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published by the
  * Free Software Foundation, either version 3 of the License, or (at your
  * option) any later version.
  *
- * sscontrol-httpd-nginx is distributed in the hope that it will be useful, but
+ * sscontrol-httpd-webservice is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
  * for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with sscontrol-httpd-nginx. If not, see <http://www.gnu.org/licenses/>.
+ * along with sscontrol-httpd-webservice. If not, see <http://www.gnu.org/licenses/>.
  */
 package com.anrisoftware.sscontrol.httpd.proxy.linux
 
@@ -54,17 +54,6 @@ abstract class AbstractProxyConfig {
     LinuxScript script
 
     /**
-     * Deploys the proxy configuration to {@code proxy.conf}.
-     */
-    void deployProxyConfiguration() {
-        def file = proxyConfFile
-        def confstr = proxyConfigTemplate.getText(
-                true, "proxyConf",
-                "properties", this)
-        FileUtils.write file, confstr, charset
-    }
-
-    /**
      * Deploys the domain specific proxy configuration.
      *
      * @param service
@@ -73,7 +62,8 @@ abstract class AbstractProxyConfig {
     void deployProxyDomainConfig(ProxyService service) {
         def file = proxyDomainConfigFile service
         def confstr = proxyConfigTemplate.getText(
-                true, "proxyDomainConf",
+                true,
+                "proxyCacheConf",
                 "proxy", service,
                 "properties", this)
         FileUtils.write file, confstr, charset
@@ -206,6 +196,20 @@ abstract class AbstractProxyConfig {
     }
 
     /**
+     * Returns the proxy headers to set for SSL-domain, for
+     * example {@code "X-Real-IP $remote_addr, X-Forwarded-For $proxy_add_x_forwarded_for, Host $host, X-Forwarded-Ssl on, X-Forwarded-Proto https".}
+     *
+     * <ul>
+     * <li>profile property {@code "proxy_set_headers"}</li>
+     * </ul>
+     *
+     * @see #getProxyProperties()
+     */
+    List getProxySetSslHeaders() {
+        profileListProperty "proxy_set_ssl_headers", ",", proxyProperties
+    }
+
+    /**
      * Returns the time for caching different replies, for
      * example {@code "20 min".}
      *
@@ -263,6 +267,20 @@ abstract class AbstractProxyConfig {
     long getProxyFeedsCacheTime() {
         def str = profileProperty "proxy_feeds_cache_time", proxyProperties
         MeasureFormat.getInstance().parseObject(str).longValue SI.SECOND
+    }
+
+    /**
+     * Returns is proxy redirect enabled, for
+     * example {@code "false".}
+     *
+     * <ul>
+     * <li>profile property {@code "proxy_redirect"}</li>
+     * </ul>
+     *
+     * @see #getProxyProperties()
+     */
+    boolean getProxyRedirect() {
+        profileBooleanProperty "proxy_redirect", proxyProperties
     }
 
     /**

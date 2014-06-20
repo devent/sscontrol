@@ -43,6 +43,7 @@ enum ProxyResources {
     httpdProxyPassScript("Httpd.groovy", ProxyResources.class.getResource("HttpdProxyPass.groovy")),
     proxyPassTest1comConf("/etc/nginx/sites-available/100-robobee-test1.com.conf", ProxyResources.class.getResource("proxypass_test1com_conf_expected.txt")),
     proxyPassTest1comSslConf("/etc/nginx/sites-available/100-robobee-test1.com-ssl.conf", ProxyResources.class.getResource("proxypass_test1com_ssl_conf_expected.txt")),
+    proxyPassTest2comSslConf("/etc/nginx/sites-available/100-robobee-test2.com-ssl.conf", ProxyResources.class.getResource("proxypass_test2com_ssl_conf_expected.txt")),
 
     ResourcesUtils resources
 

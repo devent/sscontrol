@@ -78,9 +78,9 @@ abstract class ProxyPassConfig extends AbstractNginxProxyConfig {
                 "args",
                 [
                     properties: this,
+                    script: script,
                     domain: domain,
-                    proxyName: service.proxyName,
-                    proxyAddress: service.address,
+                    proxy: service,
                     location: proxyLocation(service),
                     errorPagesDir: errorPagesDir])
         log.domainConfigCreated script, domain, configstr

@@ -60,6 +60,8 @@ public class ProxyServiceImpl implements ProxyService {
 
     private String proxyName;
 
+    private String target;
+
     /**
      * @see ProxyServiceFactory#create(Map, Domain)
      */
@@ -70,6 +72,9 @@ public class ProxyServiceImpl implements ProxyService {
         this.webService = webServiceFactory.create(SERVICE_NAME, args, domain);
         this.service = proxyaargs.service(domain, args);
         this.address = proxyaargs.address(domain, args);
+        if (proxyaargs.haveTarget(args)) {
+            this.target = proxyaargs.target(domain, args);
+        }
         setDefaultProxyName(webServiceLogger, args);
     }
 
@@ -169,6 +174,11 @@ public class ProxyServiceImpl implements ProxyService {
     @Override
     public String getProxyName() {
         return proxyName;
+    }
+
+    @Override
+    public String getTarget() {
+        return target;
     }
 
     @Override

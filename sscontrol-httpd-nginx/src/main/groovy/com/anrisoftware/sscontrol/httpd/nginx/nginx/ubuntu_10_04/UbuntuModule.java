@@ -25,7 +25,6 @@ import static java.lang.String.format;
 import groovy.lang.Script;
 
 import com.anrisoftware.sscontrol.httpd.nginx.nginx.linux.NginxScriptModule;
-import com.anrisoftware.sscontrol.httpd.nginx.wordpressproxy.ubuntu_10_04.Ubuntu_10_04_WordpressProxyModule;
 import com.google.inject.AbstractModule;
 import com.google.inject.multibindings.MapBinder;
 
@@ -40,7 +39,6 @@ class UbuntuModule extends AbstractModule {
     @Override
     protected void configure() {
         install(new NginxScriptModule());
-        install(new Ubuntu_10_04_WordpressProxyModule());
         bindScripts();
     }
 

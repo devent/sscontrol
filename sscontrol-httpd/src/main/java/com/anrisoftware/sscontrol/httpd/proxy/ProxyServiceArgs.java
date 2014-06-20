@@ -32,6 +32,8 @@ import com.anrisoftware.sscontrol.httpd.domain.Domain;
  */
 public class ProxyServiceArgs {
 
+    private static final String TARGET = "target";
+
     public static final String ALIAS = "alias";
 
     public static final String SERVICE = "service";
@@ -51,6 +53,16 @@ public class ProxyServiceArgs {
         Object service = args.get(SERVICE);
         log.checkService(domain, service);
         return service.toString();
+    }
+
+    String target(Domain domain, Map<String, Object> args) {
+        Object service = args.get(TARGET);
+        log.checkTarget(domain, service);
+        return service.toString();
+    }
+
+    boolean haveTarget(Map<String, Object> args) {
+        return args.containsKey(TARGET);
     }
 
 }

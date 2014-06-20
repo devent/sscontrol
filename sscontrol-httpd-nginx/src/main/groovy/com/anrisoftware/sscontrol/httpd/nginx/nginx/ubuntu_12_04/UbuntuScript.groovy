@@ -24,7 +24,6 @@ import javax.inject.Inject
 
 import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.sscontrol.httpd.nginx.nginx.nginx_1_4.Nginx_1_4_Script
-import com.anrisoftware.sscontrol.httpd.nginx.nginx.ubuntu_10_04.UbuntuNginxRepositoryScript
 import com.anrisoftware.sscontrol.scripts.enableaptrepository.EnableAptRepositoryFactory
 import com.anrisoftware.sscontrol.scripts.unix.InstallPackagesFactory
 import com.anrisoftware.sscontrol.scripts.unix.RestartServicesFactory

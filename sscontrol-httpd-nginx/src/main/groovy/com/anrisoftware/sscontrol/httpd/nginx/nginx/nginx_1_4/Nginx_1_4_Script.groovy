@@ -18,7 +18,6 @@
  */
 package com.anrisoftware.sscontrol.httpd.nginx.nginx.nginx_1_4
 
-import static com.anrisoftware.sscontrol.httpd.nginx.nginx.ubuntu_10_04.Ubuntu_10_04_ScriptFactory.PROFILE
 import static org.apache.commons.io.FileUtils.*
 
 import javax.inject.Inject

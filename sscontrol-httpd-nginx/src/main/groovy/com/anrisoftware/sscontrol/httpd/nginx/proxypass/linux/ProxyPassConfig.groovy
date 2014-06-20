@@ -74,12 +74,15 @@ abstract class ProxyPassConfig extends AbstractNginxProxyConfig {
         List list = []
         def configstr = proxyConfigTemplate.getText(
                 true,
-                "proxy",
-                "properties", this,
-                "script", script,
-                "domain", domain,
-                "proxy", service,
-                "location", proxyLocation(service))
+                "domainConfig",
+                "args",
+                [
+                    properties: this,
+                    domain: domain,
+                    proxyName: service.proxyName,
+                    proxyAddress: service.address,
+                    location: proxyLocation(service),
+                    errorPagesDir: errorPagesDir])
         log.domainConfigCreated script, domain, configstr
         list << configstr
     }

@@ -41,10 +41,8 @@ enum ProxyResources {
     generalProxySitefooProxyConf("/etc/nginx/conf.d/020-robobee-sitefoo-proxy.conf", ProxyResources.class.getResource("generalproxy_sitefoo_proxy_conf_expected.txt")),
     // proxy pass
     httpdProxyPassScript("Httpd.groovy", ProxyResources.class.getResource("HttpdProxyPass.groovy")),
-    proxyPassConf("/etc/nginx/conf.d/010-robobee_proxy.conf", ProxyResources.class.getResource("proxypass_proxy_conf_expected.txt")),
     proxyPassTest1comConf("/etc/nginx/sites-available/100-robobee-test1.com.conf", ProxyResources.class.getResource("proxypass_test1com_conf_expected.txt")),
     proxyPassTest1comSslConf("/etc/nginx/sites-available/100-robobee-test1.com-ssl.conf", ProxyResources.class.getResource("proxypass_test1com_ssl_conf_expected.txt")),
-    proxyPassSitefooProxyConf("/etc/nginx/conf.d/020-robobee-sitefoo-proxy.conf", ProxyResources.class.getResource("proxypass_sitefoo_proxy_conf_expected.txt")),
 
     ResourcesUtils resources
 

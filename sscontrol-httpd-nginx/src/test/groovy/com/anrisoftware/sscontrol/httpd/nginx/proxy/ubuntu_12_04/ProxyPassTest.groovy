@@ -53,9 +53,7 @@ class ProxyPassTest extends UbuntuTestUtil {
         log.info "Run service again to ensure that configuration is not set double."
         registry.allServices.each { it.call() }
 
-        //assertStringContent proxyPassConf.replaced(tmpdir, tmpdir, "/tmp"), proxyPassConf.toString()
         assertStringContent proxyPassTest1comConf.replaced(tmpdir, tmpdir, "/tmp"), proxyPassTest1comConf.toString()
         assertStringContent proxyPassTest1comSslConf.replaced(tmpdir, tmpdir, "/tmp"), proxyPassTest1comSslConf.toString()
-        //assertStringContent proxyPassSitefooProxyConf.replaced(tmpdir, tmpdir, "/tmp"), proxyPassSitefooProxyConf.toString()
     }
 }

@@ -1,7 +1,33 @@
-proxy(properties, script, domain, proxy, location) ::= <<
+domainConfig(args) ::= <<
+<! - args.properties - !>
+<! - args.domain - !>
+<! - args.proxyName - !>
+<! - args.proxyAddress - !>
+<! - args.location - !>
+<! - args.errorPagesDir - !>
 # proxy
-location <location> {
-    proxy_pass <proxy.address>;
+
+proxy_connect_timeout <args.properties.proxyConnectTimeout>;
+proxy_read_timeout <args.properties.proxyReadTimeout>;
+proxy_send_timeout <args.properties.proxySendTimeout>;
+
+<({proxySetHeaders<args.domain.class.simpleName>})(args.properties)>
+
+location <args.location> {
+    proxy_pass <args.proxyAddress>;
 }
 
 >>
+
+proxySetHeadersDomainImpl(properties) ::= <<
+<properties.proxySetHeaders:proxyHeaders();separator="\n">
+>>
+
+proxySetHeadersSslDomainImpl(properties) ::= <<
+<properties.proxySetSslHeaders:proxyHeaders();separator="\n">
+>>
+
+proxyHeaders(header) ::= <%
+proxy_set_header <header>;
+%>
+

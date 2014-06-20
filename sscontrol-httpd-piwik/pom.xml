@@ -16,6 +16,10 @@
 	<inceptionYear>2014</inceptionYear>
 	<url>https://www.anr-institute.com/projects/projects/sscontrol-httpd-piwik</url>
 
+	<properties>
+		<project.custom.year>${project.inceptionYear}</project.custom.year>
+	</properties>
+
 	<issueManagement>
 		<system>Redmine</system>
 		<url>https://www.anr-institute.com/projects/projects/sscontrol-httpd-piwik</url>
@@ -48,12 +52,12 @@
 			<version>1.0-SNAPSHOT</version>
 			<scope>test</scope>
 		</dependency>
-        <dependency>
-            <groupId>com.anrisoftware.sscontrol</groupId>
-            <artifactId>sscontrol-httpd-apache</artifactId>
-            <version>1.0-SNAPSHOT</version>
-            <scope>test</scope>
-        </dependency>
+		<dependency>
+			<groupId>com.anrisoftware.sscontrol</groupId>
+			<artifactId>sscontrol-httpd-apache</artifactId>
+			<version>1.0-SNAPSHOT</version>
+			<scope>test</scope>
+		</dependency>
 		<dependency>
 			<groupId>com.anrisoftware.globalpom</groupId>
 			<artifactId>globalpom-groovytestutils</artifactId>

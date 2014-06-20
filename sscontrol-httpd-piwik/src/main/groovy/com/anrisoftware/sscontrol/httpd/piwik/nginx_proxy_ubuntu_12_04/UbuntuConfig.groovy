@@ -1,20 +1,20 @@
 /*
- * Copyright 2013-2014 Erwin Müller <erwin.mueller@deventm.org>
+ * Copyright 2014 Erwin Müller <erwin.mueller@deventm.org>
  *
- * This file is part of sscontrol-httpd-nginx.
+ * This file is part of sscontrol-httpd-piwik.
  *
- * sscontrol-httpd-nginx is free software: you can redistribute it and/or modify it
+ * sscontrol-httpd-piwik is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published by the
  * Free Software Foundation, either version 3 of the License, or (at your
  * option) any later version.
  *
- * sscontrol-httpd-nginx is distributed in the hope that it will be useful, but
+ * sscontrol-httpd-piwik is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
  * for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with sscontrol-httpd-nginx. If not, see <http://www.gnu.org/licenses/>.
+ * along with sscontrol-httpd-piwik. If not, see <http://www.gnu.org/licenses/>.
  */
 package com.anrisoftware.sscontrol.httpd.piwik.nginx_proxy_ubuntu_12_04
 
@@ -28,7 +28,6 @@ import com.anrisoftware.resources.templates.api.Templates
 import com.anrisoftware.resources.templates.api.TemplatesFactory
 import com.anrisoftware.sscontrol.core.service.LinuxScript
 import com.anrisoftware.sscontrol.httpd.domain.Domain
-import com.anrisoftware.sscontrol.httpd.nginx.nginx.ubuntu_12_04.Ubuntu_12_04_ScriptFactory
 import com.anrisoftware.sscontrol.httpd.piwik.nginx_proxy.AbstractNginxProxyConfig
 import com.anrisoftware.sscontrol.httpd.proxy.ProxyConfig
 import com.anrisoftware.sscontrol.httpd.proxy.ProxyService
@@ -67,7 +66,6 @@ class UbuntuConfig extends AbstractNginxProxyConfig implements ProxyConfig {
 
     @Override
     void deployService(Domain domain, WebService service, List config) {
-        deployProxyConfiguration()
         deployProxyDomainConfig(service)
         config.addAll createDomainConfig(domain, null, service)
     }
@@ -77,11 +75,14 @@ class UbuntuConfig extends AbstractNginxProxyConfig implements ProxyConfig {
         def configstr = proxyConfigTemplate.getText(
                 true,
                 "piwikProxy",
-                "properties", this,
-                "script", script,
-                "domain", domain,
-                "proxy", service,
-                "location", proxyLocation(service))
+                "args", [
+                    properties: this,
+                    script: script,
+                    domain: domain,
+                    proxy: service,
+                    location: proxyLocation(service),
+                    errorPagesDir: errorPagesDir
+                ])
         list << configstr
     }
 
@@ -92,7 +93,7 @@ class UbuntuConfig extends AbstractNginxProxyConfig implements ProxyConfig {
 
     @Override
     String getProfile() {
-        Ubuntu_12_04_ScriptFactory.PROFILE
+        Ubuntu_12_04_NginxProxyPiwikConfigFactory.PROFILE_NAME
     }
 
     /**

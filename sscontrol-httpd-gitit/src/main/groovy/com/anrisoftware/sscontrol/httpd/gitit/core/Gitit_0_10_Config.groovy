@@ -317,9 +317,38 @@ abstract class Gitit_0_10_Config {
         def dir = gititDir domain, service
         def user = domain.domainUser
         changeFileOwnerFactory.create(
-                log: log, files: dir, command: script.chownCommand,
+                log: log,
+                files: dir,
+                command: script.chownCommand,
                 owner: user.name, ownerGroup: user.group,
                 this, threads)()
+        def cacheDir = new File(dir, gititCacheDir)
+        def staticDir = new File(dir, gititStaticDir)
+        def templatesDir = new File(dir, gititTemplatesDir)
+        def wikidataDir = new File(dir, gititWikidataDir)
+        if (cacheDir.isDirectory()) {
+            changeFileOwnerFactory.create(
+                    log: log,
+                    files: [
+                        cacheDir,
+                        staticDir,
+                        templatesDir,
+                        wikidataDir
+                    ],
+                    command: script.chownCommand,
+                    recursive: true,
+                    owner: user.name, ownerGroup: user.group,
+                    this, threads)()
+        }
+        def logFile = gititDefaultDebugFile domain, service
+        if (logFile.isFile()) {
+            changeFileOwnerFactory.create(
+                    log: log,
+                    files: logFile,
+                    command: script.chownCommand,
+                    owner: user.name, ownerGroup: user.group,
+                    this, threads)()
+        }
     }
 
     /**
@@ -369,7 +398,8 @@ abstract class Gitit_0_10_Config {
     }
 
     /**
-     * Returns the <i>Gitit</i> installation directory.
+     * Returns the <i>Gitit</i> installation directory, for example
+     * {@code "/var/www/www.robobee-server.com/gitit"}.
      *
      * @param domain
      *            the {@link Domain} domain of the service.
@@ -428,22 +458,72 @@ abstract class Gitit_0_10_Config {
      * Returns the <i>Gitit</i> configuration file property, for
      * example {@code "gitit.conf".}
      *
-     * @param domain
-     *            the {@link Domain} domain of the service.
-     *
-     * @param service
-     *            the {@link GititService} service.
-     *
      * @return the configuration {@link File} file.
      *
      * <ul>
      * <li>profile property {@code "gitit_configuration_file"}</li>
      * </ul>
      *
-     * @see #gititDir(Domain, GititService)
+     * @see #getGititProperties()
      */
     String getGititConfigFileName() {
         profileProperty "gitit_configuration_file_name", gititProperties
+    }
+
+    /**
+     * Returns the <i>Gitit</i> cache directory property, for
+     * example {@code "cache".}
+     *
+     * <ul>
+     * <li>profile property {@code "gitit_cache_directory"}</li>
+     * </ul>
+     *
+     * @see #getGititProperties()
+     */
+    String getGititCacheDir() {
+        profileProperty "gitit_cache_directory", gititProperties
+    }
+
+    /**
+     * Returns the <i>Gitit</i> static files directory property, for
+     * example {@code "static".}
+     *
+     * <ul>
+     * <li>profile property {@code "gitit_static_directory"}</li>
+     * </ul>
+     *
+     * @see #getGititProperties()
+     */
+    String getGititStaticDir() {
+        profileProperty "gitit_static_directory", gititProperties
+    }
+
+    /**
+     * Returns the <i>Gitit</i> templates files directory property, for
+     * example {@code "templates".}
+     *
+     * <ul>
+     * <li>profile property {@code "gitit_templates_directory"}</li>
+     * </ul>
+     *
+     * @see #getGititProperties()
+     */
+    String getGititTemplatesDir() {
+        profileProperty "gitit_templates_directory", gititProperties
+    }
+
+    /**
+     * Returns the <i>Gitit</i> wikidata files directory property, for
+     * example {@code "templates".}
+     *
+     * <ul>
+     * <li>profile property {@code "gitit_wikidata_directory"}</li>
+     * </ul>
+     *
+     * @see #getGititProperties()
+     */
+    String getGititWikidataDir() {
+        profileProperty "gitit_wikidata_directory", gititProperties
     }
 
     /**

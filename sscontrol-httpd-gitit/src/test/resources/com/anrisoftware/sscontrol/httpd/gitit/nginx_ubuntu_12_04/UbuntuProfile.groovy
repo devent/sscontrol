@@ -61,5 +61,6 @@ profile "ubuntu_12_04", {
         hsenv_gitit_archive GititResources.gititArchive.asFile(tmp)
         gitit_service_file "${GititResources.gititServiceDir.asFile(tmp)}/<domainName>_gititd"
         gitit_service_defaults_file "${GititResources.gititServiceDefaultsDir.asFile(tmp)}/<domainName>_gititd"
+        force_remove_old_archive_directory false
     }
 }

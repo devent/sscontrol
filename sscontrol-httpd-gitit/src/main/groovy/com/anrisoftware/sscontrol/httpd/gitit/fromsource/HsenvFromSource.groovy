@@ -23,6 +23,7 @@ import groovy.util.logging.Slf4j
 
 import javax.inject.Inject
 
+import org.apache.commons.io.FileUtils
 import org.apache.commons.lang3.StringUtils
 import org.apache.commons.lang3.builder.ToStringBuilder
 import org.stringtemplate.v4.ST
@@ -95,7 +96,7 @@ abstract class HsenvFromSource {
      * @see LinuxScript#getTmpDirectory()
      */
     void unpackGititArchive(Domain domain, GititService service) {
-        if (!needUnpackArchive(domain, service)) {
+        if (!needUnpackArchive(domain, service) && !needRecompile && checkGititVersion(domain, service)) {
             return
         }
         def name = new File(gititArchive.path).name
@@ -135,6 +136,7 @@ abstract class HsenvFromSource {
      */
     void unpackArchive(Domain domain, WebService service, File archive) {
         def dir = gititSourceDir domain, service
+        forceRemoveOldArchiveDirectory ? FileUtils.forceDelete(dir) : false
         dir.isDirectory() ? false : dir.mkdirs()
         unpackFactory.create(
                 log: log, file: archive, output: dir, override: true, strip: true,
@@ -326,6 +328,20 @@ abstract class HsenvFromSource {
      */
     boolean getNeedRecompile() {
         profileBooleanProperty "hsenv_need_recompile", hsenvProperties
+    }
+
+    /**
+     * Returns the if need to remove the old <i>gitit</i> archive directory,
+     * for example {@code "true".}
+     *
+     * <ul>
+     * <li>profile property {@code "force_remove_old_archive_directory"}</li>
+     * </ul>
+     *
+     * @see #getHsenvProperties()
+     */
+    boolean getForceRemoveOldArchiveDirectory() {
+        profileBooleanProperty "force_remove_old_archive_directory", hsenvProperties
     }
 
     /**

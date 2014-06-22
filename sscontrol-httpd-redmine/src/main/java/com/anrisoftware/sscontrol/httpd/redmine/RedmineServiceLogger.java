@@ -18,6 +18,7 @@
  */
 package com.anrisoftware.sscontrol.httpd.redmine;
 
+import static com.anrisoftware.sscontrol.httpd.redmine.RedmineServiceLogger._.backend_null;
 import static com.anrisoftware.sscontrol.httpd.redmine.RedmineServiceLogger._.database_set_debug;
 import static com.anrisoftware.sscontrol.httpd.redmine.RedmineServiceLogger._.database_set_info;
 import static com.anrisoftware.sscontrol.httpd.redmine.RedmineServiceLogger._.debug_set_debug;
@@ -25,6 +26,7 @@ import static com.anrisoftware.sscontrol.httpd.redmine.RedmineServiceLogger._.de
 import static com.anrisoftware.sscontrol.httpd.redmine.RedmineServiceLogger._.override_mode_null;
 import static com.anrisoftware.sscontrol.httpd.redmine.RedmineServiceLogger._.override_mode_set_debug;
 import static com.anrisoftware.sscontrol.httpd.redmine.RedmineServiceLogger._.override_mode_set_info;
+import static org.apache.commons.lang3.Validate.notBlank;
 import static org.apache.commons.lang3.Validate.notNull;
 
 import java.util.Map;
@@ -62,7 +64,9 @@ class RedmineServiceLogger extends AbstractLogger {
 
         override_mode_set_debug("Override mode {} set for {}."),
 
-        override_mode_set_info("Override mode {} set for service '{}'.");
+        override_mode_set_info("Override mode {} set for service '{}'."),
+
+        backend_null("Backend cannot be null or blank for %s.");
 
         private String name;
 
@@ -115,6 +119,14 @@ class RedmineServiceLogger extends AbstractLogger {
         } else {
             info(database_set_info, database.getDatabase(), service.getName());
         }
+    }
+
+    String backend(RedmineService service, Map<String, Object> args) {
+        Object v = args.get("backend");
+        notNull(v, backend_null.toString(), service);
+        String backend = v.toString();
+        notBlank(v.toString(), backend_null.toString(), service);
+        return backend;
     }
 
 }

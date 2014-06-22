@@ -54,6 +54,7 @@ class RedmineServiceTest extends HttpdTestUtil {
         RedmineService webservice = domain.services[0]
         assert webservice.name == "redmine"
         assert webservice.id == "redmineid"
+        assert webservice.backend == "thin"
         assert webservice.ref == null
         assert webservice.alias == null
         assert webservice.prefix == null
@@ -73,6 +74,7 @@ class RedmineServiceTest extends HttpdTestUtil {
         webservice = domain.services[0]
         assert webservice.name == "redmine"
         assert webservice.id == null
+        assert webservice.backend == "thin"
         assert webservice.alias == null
         assert webservice.prefix == null
         assert webservice.ref == "redmineid"
@@ -86,6 +88,7 @@ class RedmineServiceTest extends HttpdTestUtil {
         webservice = domain.services[0]
         assert webservice.name == "redmine"
         assert webservice.id == "redmineid"
+        assert webservice.backend == "thin"
         assert webservice.alias == "redmine"
         assert webservice.prefix == "test2redmine"
         assert webservice.ref == null

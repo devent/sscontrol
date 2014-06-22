@@ -51,8 +51,9 @@ public class RedmineService implements WebService {
 
     private final DefaultWebService service;
 
-    @Inject
-    private RedmineServiceLogger log;
+    private final RedmineServiceLogger log;
+
+    private final String backend;
 
     @Inject
     private DebugLoggingFactory debugFactory;
@@ -70,8 +71,11 @@ public class RedmineService implements WebService {
      * @see RedmineServiceFactory#create(Map, Domain)
      */
     @Inject
-    RedmineService(DefaultWebServiceFactory webServiceFactory,
+    RedmineService(RedmineServiceLogger log,
+            DefaultWebServiceFactory webServiceFactory,
             @Assisted Map<String, Object> args, @Assisted Domain domain) {
+        this.log = log;
+        this.backend = log.backend(this, args);
         this.service = webServiceFactory.create(SERVICE_NAME, args, domain);
     }
 
@@ -128,6 +132,10 @@ public class RedmineService implements WebService {
     @Override
     public String getPrefix() {
         return service.getPrefix();
+    }
+
+    public String getBackend() {
+        return backend;
     }
 
     public void database(Map<String, Object> args, String name) {

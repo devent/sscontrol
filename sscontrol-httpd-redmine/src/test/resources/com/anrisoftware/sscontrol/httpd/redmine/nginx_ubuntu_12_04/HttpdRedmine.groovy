@@ -20,7 +20,7 @@ package com.anrisoftware.sscontrol.httpd.redmine.nginx_ubuntu_12_04
 
 httpd {
     domain "test1.com", address: "192.168.0.51", {
-        setup "redmine", id: "redmineid", {
+        setup "redmine", id: "redmineid", backend: "thin", {
             database "redmine2", user: "user", password: "userpass", host: "localhost"
             debug level: 4
             override mode: update
@@ -29,10 +29,10 @@ httpd {
     ssl_domain "test1.com", address: "192.168.0.51", {
         certification_file UbuntuResources.certCrt.resource
         certification_key_file UbuntuResources.certKey.resource
-        setup "redmine", ref: "redmineid"
+        setup "redmine", ref: "redmineid", backend: "thin"
     }
     domain "test2.com", address: "192.168.0.52", {
-        setup "redmine", id: "redmineid", alias: "/redmine", prefix: "test2redmine", {
+        setup "redmine", id: "redmineid", backend: "thin", alias: "/redmine", prefix: "test2redmine", {
             database "redmine2", user: "user", password: "userpass", host: "localhost"
         }
     }

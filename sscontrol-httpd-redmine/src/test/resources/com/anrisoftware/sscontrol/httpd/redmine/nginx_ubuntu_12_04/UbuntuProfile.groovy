@@ -50,5 +50,12 @@ profile "ubuntu_12_04", {
         nginx_signing_key UbuntuResources.nginxSigningKey.asFile(tmp)
         // redmine
         redmine_archive RedmineResources.redmineArchive.asFile(tmp)
+        redmine_archive_hash "md5:6a2f5df554a287191580529be885cf53"
+        // thin
+        redmine_thin_command RedmineResources.thinCommand.asFile(tmp)
+        redmine_thin_script_file RedmineResources.thinScriptFile.asFile(tmp)
+        redmine_thin_configuration_directory RedmineResources.thinConfDir.asFile(tmp)
+        redmine_thin_log_directory RedmineResources.thinLogDir.asFile(tmp)
+        redmine_thin_run_directory RedmineResources.thinRunDir.asFile(tmp)
     }
 }

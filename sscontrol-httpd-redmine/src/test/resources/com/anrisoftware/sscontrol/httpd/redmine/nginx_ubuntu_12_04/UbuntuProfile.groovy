@@ -18,7 +18,6 @@
  */
 package com.anrisoftware.sscontrol.httpd.redmine.nginx_ubuntu_12_04
 
-import com.anrisoftware.sscontrol.httpd.gitit.nginx_ubuntu_12_04.GititResources
 
 def aptitudeCommand = UbuntuResources.aptitudeCommand.asFile(tmp)
 def updateRcCommand = UbuntuResources.updateRcCommand.asFile(tmp)
@@ -50,14 +49,6 @@ profile "ubuntu_12_04", {
         // nginx
         nginx_signing_key UbuntuResources.nginxSigningKey.asFile(tmp)
         // redmine
-        cabal_command GititResources.cabalCommand.asFile(tmp)
-        hsenv_command GititResources.hsenvCommand.asFile(tmp)
-        hsenv_activate_command GititResources.hsenvActivateCommand.asFile(tmp).absolutePath
-        hsenv_cabal_command GititResources.hsenvCabalCommand.asFile(tmp).absolutePath
-        hsenv_gitit_command GititResources.hsenvGititCommand.asFile(tmp).absolutePath
-        hsenv_deactivate_command GititResources.hsenvDeactivateCommand.asFile(tmp).absolutePath
-        hsenv_gitit_archive GititResources.gititArchive.asFile(tmp)
-        gitit_service_file "${GititResources.gititServiceDir.asFile(tmp)}/<domainName>_gititd"
-        gitit_service_defaults_file "${GititResources.gititServiceDefaultsDir.asFile(tmp)}/<domainName>_gititd"
+        redmine_archive RedmineResources.redmineArchive.asFile(tmp)
     }
 }

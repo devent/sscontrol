@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd-gitit. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.gitit.nginx_ubuntu_12_04
+package com.anrisoftware.sscontrol.httpd.redmine.nginx_ubuntu_12_04
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.httpd.gitit.nginx_ubuntu_12_04.GititResources.*
@@ -35,7 +35,7 @@ import com.anrisoftware.sscontrol.httpd.resources.UbuntuTestUtil
  * @since 1.0
  */
 @Slf4j
-class GititTest extends UbuntuTestUtil {
+class RedmineTest extends UbuntuTestUtil {
 
     @Test
     void "gitit"() {

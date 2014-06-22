@@ -38,12 +38,6 @@ import com.google.inject.Module;
 @ProviderFor(WebServiceFactoryFactory.class)
 public class RedmineFactoryFactory implements WebServiceFactoryFactory {
 
-    private static final String AUTH_METHOD = "com.anrisoftware.sscontrol.httpd.gitit.AuthMethod";
-
-    private static final String LOGIN_REQUIRED = "com.anrisoftware.sscontrol.httpd.gitit.LoginRequired";
-
-    private static final String REPOSITORY_TYPE = "com.anrisoftware.sscontrol.httpd.gitit.RepositoryType";
-
     /**
      * <i>Redmine</i> service name.
      */
@@ -92,9 +86,6 @@ public class RedmineFactoryFactory implements WebServiceFactoryFactory {
 
     private void importClasses(CompilerConfiguration c) {
         ImportCustomizer customizer = new ImportCustomizer();
-        customizer.addImports(LOGIN_REQUIRED);
-        customizer.addImports(AUTH_METHOD);
-        customizer.addImports(REPOSITORY_TYPE);
         c.addCompilationCustomizers(customizer);
     }
 }

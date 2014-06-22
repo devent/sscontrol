@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd-gitit. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.service
+package com.anrisoftware.sscontrol.httpd.redmine.nginx_ubuntu_12_04
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static org.apache.commons.io.FileUtils.*
@@ -24,19 +24,34 @@ import static org.apache.commons.io.FileUtils.*
 import com.anrisoftware.sscontrol.httpd.resources.ResourcesUtils
 
 /**
- * Loads the resources.
+ * <i>Ubuntu</i> 12.04 <i>gitit</i> resources.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-enum ServicesResources {
+enum RedmineResources {
 
-    profile("UbuntuProfile.groovy", ServicesResources.class.getResource("/com/anrisoftware/sscontrol/httpd/redmine/nginx_ubuntu_12_04/UbuntuProfile.groovy")),
-    redmineScript("Httpd.groovy", ServicesResources.class.getResource("/com/anrisoftware/sscontrol/httpd/redmine/nginx_ubuntu_12_04/HttpdRedmine.groovy")),
+    profile("UbuntuProfile.groovy", RedmineResources.class.getResource("UbuntuProfile.groovy")),
+    httpdScript("Httpd.groovy", RedmineResources.class.getResource("HttpdGitit.groovy")),
+    // redmine
+    redmineArchive("/tmp/redmine-2.5.1.tar.gz", UbuntuResources.class.getResource("redmine-2.5.1.tar.gz")),
+    test1comRedmineDir("/var/www/test1.com/gitit", null),
+    test1comRedmineDatabaseYml("/var/www/test1.com/redmine2/config/database.yml.example", RedmineResources.class.getResource("database_yml_example.txt")),
+    // expected
+    test1comConfExpected("/etc/nginx/sites-available/100-robobee-test1.com.conf", RedmineResources.class.getResource("test1com_conf_expected.txt")),
+    wwwtest1comConfExpected("/etc/nginx/sites-available/100-robobee-test1.com-ssl.conf", RedmineResources.class.getResource("test1com_ssl_conf_expected.txt")),
+    test1comRedmineDatabaseYmlExpected("/var/www/test1.com/redmine2/config/database.yml", RedmineResources.class.getResource("test1com_database_yml_expected.txt")),
+    chmodOutExpected("/bin/chmod.out", RedmineResources.class.getResource("chmod_out_expected.txt")),
+    chownOutExpected("/bin/chown.out", RedmineResources.class.getResource("chown_out_expected.txt")),
+    aptitudeOutExpected("/usr/bin/aptitude.out", RedmineResources.class.getResource("aptitude_out_expected.txt")),
+
+    static copyGititFiles(File parent) {
+        redmineArchive.createFile parent
+    }
 
     ResourcesUtils resources
 
-    ServicesResources(String path, URL resource) {
+    RedmineResources(String path, URL resource) {
         this.resources = new ResourcesUtils(path: path, resource: resource)
     }
 

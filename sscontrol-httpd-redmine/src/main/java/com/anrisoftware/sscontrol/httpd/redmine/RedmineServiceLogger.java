@@ -18,20 +18,13 @@
  */
 package com.anrisoftware.sscontrol.httpd.redmine;
 
-import static com.anrisoftware.sscontrol.httpd.redmine.RedmineServiceLogger._.binding_set_debug;
-import static com.anrisoftware.sscontrol.httpd.redmine.RedmineServiceLogger._.binding_set_info;
-import static com.anrisoftware.sscontrol.httpd.redmine.RedmineServiceLogger._.caching_null;
-import static com.anrisoftware.sscontrol.httpd.redmine.RedmineServiceLogger._.caching_set_debug;
-import static com.anrisoftware.sscontrol.httpd.redmine.RedmineServiceLogger._.caching_set_info;
+import static com.anrisoftware.sscontrol.httpd.redmine.RedmineServiceLogger._.database_set_debug;
+import static com.anrisoftware.sscontrol.httpd.redmine.RedmineServiceLogger._.database_set_info;
 import static com.anrisoftware.sscontrol.httpd.redmine.RedmineServiceLogger._.debug_set_debug;
 import static com.anrisoftware.sscontrol.httpd.redmine.RedmineServiceLogger._.debug_set_info;
-import static com.anrisoftware.sscontrol.httpd.redmine.RedmineServiceLogger._.gc_null;
-import static com.anrisoftware.sscontrol.httpd.redmine.RedmineServiceLogger._.idle_gc_set_debug;
-import static com.anrisoftware.sscontrol.httpd.redmine.RedmineServiceLogger._.idle_gc_set_info;
 import static com.anrisoftware.sscontrol.httpd.redmine.RedmineServiceLogger._.override_mode_null;
 import static com.anrisoftware.sscontrol.httpd.redmine.RedmineServiceLogger._.override_mode_set_debug;
 import static com.anrisoftware.sscontrol.httpd.redmine.RedmineServiceLogger._.override_mode_set_info;
-import static com.anrisoftware.sscontrol.httpd.redmine.RedmineServiceLogger._.repository_type_null;
 import static org.apache.commons.lang3.Validate.notNull;
 
 import java.util.Map;
@@ -39,10 +32,8 @@ import java.util.Map;
 import javax.inject.Singleton;
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
-import com.anrisoftware.sscontrol.core.bindings.Binding;
+import com.anrisoftware.sscontrol.core.database.Database;
 import com.anrisoftware.sscontrol.core.debuglogging.DebugLogging;
-import com.anrisoftware.sscontrol.core.yesno.YesNoFlag;
-import com.anrisoftware.sscontrol.httpd.gitit.RepositoryType;
 import com.anrisoftware.sscontrol.httpd.webservice.OverrideMode;
 import com.anrisoftware.sscontrol.httpd.webservice.WebService;
 
@@ -55,16 +46,13 @@ import com.anrisoftware.sscontrol.httpd.webservice.WebService;
 @Singleton
 class RedmineServiceLogger extends AbstractLogger {
 
-    private static final String GC = "gc";
-    private static final String ENABLED = "enabled";
-    private static final String TYPE = "type";
     private static final String MODE = "mode";
 
     enum _ {
 
-        binding_set_debug("Binding address {} set {}."),
+        database_set_debug("Database {} set for {}."),
 
-        binding_set_info("Binding address {} set for service '{}'."),
+        database_set_info("Database '{}' set for service '{}'."),
 
         debug_set_debug("Debug logging {} set for {}."),
 
@@ -74,21 +62,7 @@ class RedmineServiceLogger extends AbstractLogger {
 
         override_mode_set_debug("Override mode {} set for {}."),
 
-        override_mode_set_info("Override mode {} set for service '{}'."),
-
-        repository_type_null("Repository type cannot be null for %s."),
-
-        caching_null("Caching cannot be null for %s."),
-
-        caching_set_debug("Caching {} set for {}."),
-
-        caching_set_info("Caching {} set for service '{}'."),
-
-        gc_null("Idle garbage collection cannot be null for %s."),
-
-        idle_gc_set_debug("Idle garbage collection {} set for {}."),
-
-        idle_gc_set_info("Idle garbage collection {} set for service '{}'.");
+        override_mode_set_info("Override mode {} set for service '{}'.");
 
         private String name;
 
@@ -135,53 +109,11 @@ class RedmineServiceLogger extends AbstractLogger {
         }
     }
 
-    boolean haveType(Map<String, Object> args) {
-        return args.containsKey(TYPE);
-    }
-
-    RepositoryType type(RedmineService service, Map<String, Object> args) {
-        Object type = args.get(TYPE);
-        notNull(type, repository_type_null.toString(), service);
-        if (type instanceof RepositoryType) {
-            return (RepositoryType) type;
-        } else {
-            return RepositoryType.valueOf(type.toString());
-        }
-    }
-
-    boolean caching(RedmineService service, Map<String, Object> args) {
-        Object caching = args.get(ENABLED);
-        notNull(caching, caching_null.toString(), service);
-        return YesNoFlag.valueOf(caching);
-    }
-
-    void cachingSet(RedmineService service, boolean caching) {
+    void databaseSet(RedmineService service, Database database) {
         if (isDebugEnabled()) {
-            debug(caching_set_debug, caching, service);
+            debug(database_set_debug, database, service);
         } else {
-            info(caching_set_info, caching, service.getName());
-        }
-    }
-
-    boolean idleGc(RedmineService service, Map<String, Object> args) {
-        Object gc = args.get(GC);
-        notNull(gc, gc_null.toString(), service);
-        return YesNoFlag.valueOf(gc);
-    }
-
-    void idleGcSet(RedmineService service, boolean gc) {
-        if (isDebugEnabled()) {
-            debug(idle_gc_set_debug, gc, service);
-        } else {
-            info(idle_gc_set_info, gc, service.getName());
-        }
-    }
-
-    void bindingSet(RedmineService service, Binding binding) {
-        if (isDebugEnabled()) {
-            debug(binding_set_debug, binding, service);
-        } else {
-            info(binding_set_info, binding.getAddresses(), service.getName());
+            info(database_set_info, database.getDatabase(), service.getName());
         }
     }
 

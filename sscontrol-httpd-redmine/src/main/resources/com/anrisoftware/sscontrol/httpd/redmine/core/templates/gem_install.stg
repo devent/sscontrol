@@ -1,0 +1,4 @@
+gemInstall(args) ::= <<
+<args.gems:{gem|<args.gemCommand> install <gem>};separator="\n">
+
+>>

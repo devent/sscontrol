@@ -64,6 +64,7 @@ class RedmineTest extends UbuntuTestUtil {
         assertStringContent test2comConfExpected.replaced(tmpdir, tmpdir, "/tmp"), test2comConfExpected.toString()
         assertStringContent test2comRedmineDatabaseYmlExpected.replaced(tmpdir, tmpdir, "/tmp"), test2comRedmineDatabaseYmlExpected.toString()
         assertStringContent test2comRedmineConfigurationYmlExpected.replaced(tmpdir, tmpdir, "/tmp"), test2comRedmineConfigurationYmlExpected.toString()
+        assertFileContent gemOutExpected.asFile(tmpdir), gemOutExpected
         assertStringContent tarOutExpected.replaced(tmpdir, tmpdir, "/tmp"), tarOutExpected.toString()
         assertStringContent chmodOutExpected.replaced(tmpdir, tmpdir, "/tmp"), chmodOutExpected.toString()
         assertStringContent chownOutExpected.replaced(tmpdir, tmpdir, "/tmp"), chownOutExpected.toString()

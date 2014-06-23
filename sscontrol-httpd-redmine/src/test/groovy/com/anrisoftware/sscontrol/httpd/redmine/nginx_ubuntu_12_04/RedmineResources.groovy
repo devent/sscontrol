@@ -35,6 +35,7 @@ enum RedmineResources {
     httpdScript("Httpd.groovy", RedmineResources.class.getResource("HttpdRedmine.groovy")),
     // redmine
     redmineArchive("/tmp/redmine-2.5.1.tar.gz", UbuntuResources.class.getResource("redmine-2.5.1.tar.gz")),
+    gemCommand("/usr/bin/gem", UbuntuResources.class.getResource("echo_command.txt")),
     test1comRedmineDir("/var/www/test1.com/redmine2", null),
     test1comRedmineDatabaseYml("/var/www/test1.com/redmine2/config/database.yml.example", RedmineResources.class.getResource("database_yml_example.txt")),
     test1comRedmineConfigurationYml("/var/www/test1.com/redmine2/config/configuration.yml.example", RedmineResources.class.getResource("configuration_yml_example.txt")),
@@ -55,6 +56,7 @@ enum RedmineResources {
     test2comConfExpected("/etc/nginx/sites-available/100-robobee-test2.com.conf", RedmineResources.class.getResource("test2com_conf_expected.txt")),
     test2comRedmineDatabaseYmlExpected("/var/www/test2.com/test2redmine/config/database.yml", RedmineResources.class.getResource("test2com_database_yml_expected.txt")),
     test2comRedmineConfigurationYmlExpected("/var/www/test2.com/test2redmine/config/configuration.yml", RedmineResources.class.getResource("test2com_configuration_yml_expected.txt")),
+    gemOutExpected("/usr/bin/gem.out", RedmineResources.class.getResource("gem_out_expected.txt")),
     tarOutExpected("/bin/tar.out", RedmineResources.class.getResource("tar_out_expected.txt")),
     chmodOutExpected("/bin/chmod.out", RedmineResources.class.getResource("chmod_out_expected.txt")),
     chownOutExpected("/bin/chown.out", RedmineResources.class.getResource("chown_out_expected.txt")),
@@ -62,6 +64,7 @@ enum RedmineResources {
 
     static copyRedmineFiles(File parent) {
         redmineArchive.createFile parent
+        gemCommand.createCommand(parent)
         thinCommand.createCommand(parent)
         thinScriptFile.createCommand(parent)
         thinConfDir.asFile(parent).mkdirs()

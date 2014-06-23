@@ -88,6 +88,8 @@ abstract class Redmine_2_5_Config {
 
     TemplateResource redmineConfigTemplate
 
+    TemplateResource redmineGemInstallTemplate
+
     /**
      * @see ServiceConfig#getScript()
      */
@@ -103,6 +105,7 @@ abstract class Redmine_2_5_Config {
      * @see ServiceConfig#deployService(Domain, WebService, List)
      */
     void deployService(Domain domain, WebService service, List config) {
+        installGems domain, service
         deployDatabase domain, service
         deployConfig domain, service
         setupPermissions domain, service
@@ -224,6 +227,23 @@ abstract class Redmine_2_5_Config {
     }
 
     /**
+     * Installs the <i>Ruby</i> gems.
+     *
+     * @param domain
+     *            the service {@link Domain}.
+     *
+     * @param service
+     *            the {@link RedmineService}.
+     */
+    void installGems(Domain domain, RedmineService service) {
+        scriptExecFactory.create(
+                log: log,
+                gemCommand: gemCommand,
+                gems: redmineGems,
+                this, threads, redmineGemInstallTemplate, "gemInstall")()
+    }
+
+    /**
      * Deploys the <i>Redmine</i> database configuration.
      *
      * @param domain
@@ -273,7 +293,6 @@ abstract class Redmine_2_5_Config {
                 break
             }
         }
-        res.each { println it }
         FileUtils.writeLines file, charset.name(), res
         logg.configCreated this, file, conf
     }
@@ -581,6 +600,20 @@ abstract class Redmine_2_5_Config {
     }
 
     /**
+     * Returns the <i>Redmine</i> packages, for
+     * example {@code "sass, compass, bundler".}
+     *
+     * <ul>
+     * <li>profile property {@code "redmine_gems"}</li>
+     * </ul>
+     *
+     * @see #getRedminePackages()
+     */
+    List getRedmineGems() {
+        profileListProperty "redmine_gems", redmineProperties
+    }
+
+    /**
      * Returns the default mail port, for
      * example {@code "25".}
      *
@@ -649,6 +682,7 @@ abstract class Redmine_2_5_Config {
                     ]])
         this.redmineDatabaseConfigTemplate = redmineConfigTemplates.getResource("database_config")
         this.redmineConfigTemplate = redmineConfigTemplates.getResource("config")
+        this.redmineGemInstallTemplate = redmineConfigTemplates.getResource("gem_install")
     }
 
     /**

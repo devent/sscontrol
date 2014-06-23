@@ -22,11 +22,13 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
+import com.anrisoftware.sscontrol.core.api.ServiceException;
 import com.anrisoftware.sscontrol.core.database.Database;
 import com.anrisoftware.sscontrol.core.database.DatabaseArgs;
 import com.anrisoftware.sscontrol.core.database.DatabaseFactory;
 import com.anrisoftware.sscontrol.core.debuglogging.DebugLogging;
 import com.anrisoftware.sscontrol.core.debuglogging.DebugLoggingFactory;
+import com.anrisoftware.sscontrol.core.groovy.StatementsMap;
 import com.anrisoftware.sscontrol.httpd.domain.Domain;
 import com.anrisoftware.sscontrol.httpd.webservice.OverrideMode;
 import com.anrisoftware.sscontrol.httpd.webservice.WebService;
@@ -44,6 +46,22 @@ import com.google.inject.assistedinject.Assisted;
  */
 public class RedmineService implements WebService {
 
+    private static final String PASSWORD_KEY = "password";
+
+    private static final String USER_KEY = "user";
+
+    private static final String AUTH_KEY = "auth";
+
+    private static final String DOMAIN_KEY = "domain";
+
+    private static final String METHOD_KEY = "method";
+
+    private static final String PORT_KEY = "port";
+
+    private static final String HOST_KEY = "host";
+
+    private static final String MAIL_KEY = "mail";
+
     /**
      * The <i>Redmine</i> service name.
      */
@@ -54,6 +72,8 @@ public class RedmineService implements WebService {
     private final RedmineServiceLogger log;
 
     private final String backend;
+
+    private final StatementsMap statementsMap;
 
     @Inject
     private DebugLoggingFactory debugFactory;
@@ -77,6 +97,12 @@ public class RedmineService implements WebService {
         this.log = log;
         this.backend = log.backend(this, args);
         this.service = webServiceFactory.create(SERVICE_NAME, args, domain);
+        this.statementsMap = service.getStatementsMap();
+        setupStatements(statementsMap);
+    }
+
+    private void setupStatements(StatementsMap map) {
+        map.addAllowed(MAIL_KEY);
     }
 
     @Override
@@ -177,6 +203,39 @@ public class RedmineService implements WebService {
 
     public OverrideMode getOverrideMode() {
         return overrideMode;
+    }
+
+    public String getMailHost() {
+        return statementsMap.mapValue(MAIL_KEY, HOST_KEY);
+    }
+
+    public Integer getMailPort() {
+        return statementsMap.mapValue(MAIL_KEY, PORT_KEY);
+    }
+
+    public DeliveryMethod getMailDeliveryMethod() {
+        return statementsMap.mapValue(MAIL_KEY, METHOD_KEY);
+    }
+
+    public String getMailDomain() {
+        return statementsMap.mapValue(MAIL_KEY, DOMAIN_KEY);
+    }
+
+    public AuthenticationMethod getMailAuthMethod() {
+        return statementsMap.mapValue(MAIL_KEY, AUTH_KEY);
+    }
+
+    public String getMailUser() {
+        return statementsMap.mapValue(MAIL_KEY, USER_KEY);
+    }
+
+    public String getMailPassword() {
+        return statementsMap.mapValue(MAIL_KEY, PASSWORD_KEY);
+    }
+
+    public Object methodMissing(String name, Object args)
+            throws ServiceException {
+        return service.methodMissing(name, args);
     }
 
     @Override

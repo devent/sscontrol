@@ -27,6 +27,8 @@ import org.junit.Test
 import com.anrisoftware.sscontrol.core.api.ServiceLoader as SscontrolServiceLoader
 import com.anrisoftware.sscontrol.core.api.ServicesRegistry
 import com.anrisoftware.sscontrol.httpd.domain.Domain
+import com.anrisoftware.sscontrol.httpd.redmine.AuthenticationMethod
+import com.anrisoftware.sscontrol.httpd.redmine.DeliveryMethod
 import com.anrisoftware.sscontrol.httpd.redmine.RedmineService
 import com.anrisoftware.sscontrol.httpd.webservice.OverrideMode
 
@@ -66,6 +68,13 @@ class RedmineServiceTest extends HttpdTestUtil {
         assert webservice.database.user == "user"
         assert webservice.database.password == "userpass"
         assert webservice.database.host == "localhost"
+        assert webservice.mailHost == "smtp.test1.com"
+        assert webservice.mailPort == 25
+        assert webservice.mailDeliveryMethod == DeliveryMethod.smtp
+        assert webservice.mailDomain == "example.net"
+        assert webservice.mailAuthMethod == AuthenticationMethod.login
+        assert webservice.mailUser == "redmine@example.net"
+        assert webservice.mailPassword == "redminepass"
 
         domain = service.domains[d++]
         assert domain.name == "test1.com"
@@ -80,6 +89,13 @@ class RedmineServiceTest extends HttpdTestUtil {
         assert webservice.ref == "redmineid"
         assert webservice.refDomain == null
         assert webservice.overrideMode == null
+        assert webservice.mailHost == null
+        assert webservice.mailPort == null
+        assert webservice.mailDeliveryMethod == null
+        assert webservice.mailDomain == null
+        assert webservice.mailAuthMethod == null
+        assert webservice.mailUser == null
+        assert webservice.mailPassword == null
 
         domain = service.domains[d++]
         assert domain.name == "test2.com"
@@ -94,5 +110,12 @@ class RedmineServiceTest extends HttpdTestUtil {
         assert webservice.ref == null
         assert webservice.refDomain == null
         assert webservice.overrideMode == null
+        assert webservice.mailHost == null
+        assert webservice.mailPort == null
+        assert webservice.mailDeliveryMethod == null
+        assert webservice.mailDomain == null
+        assert webservice.mailAuthMethod == null
+        assert webservice.mailUser == "redmine@example.net"
+        assert webservice.mailPassword == "redminepass"
     }
 }

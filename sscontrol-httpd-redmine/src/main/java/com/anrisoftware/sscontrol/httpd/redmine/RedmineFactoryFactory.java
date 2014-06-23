@@ -38,6 +38,10 @@ import com.google.inject.Module;
 @ProviderFor(WebServiceFactoryFactory.class)
 public class RedmineFactoryFactory implements WebServiceFactoryFactory {
 
+    private static final String AUTHENTICATION_METHOD = "com.anrisoftware.sscontrol.httpd.redmine.AuthenticationMethod";
+
+    private static final String DELIVERY_METHOD = "com.anrisoftware.sscontrol.httpd.redmine.DeliveryMethod";
+
     /**
      * <i>Redmine</i> service name.
      */
@@ -86,6 +90,7 @@ public class RedmineFactoryFactory implements WebServiceFactoryFactory {
 
     private void importClasses(CompilerConfiguration c) {
         ImportCustomizer customizer = new ImportCustomizer();
+        customizer.addImports(DELIVERY_METHOD, AUTHENTICATION_METHOD);
         c.addCompilationCustomizers(customizer);
     }
 }

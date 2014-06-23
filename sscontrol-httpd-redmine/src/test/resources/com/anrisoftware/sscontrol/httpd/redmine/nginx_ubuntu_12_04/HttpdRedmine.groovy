@@ -18,10 +18,14 @@
  */
 package com.anrisoftware.sscontrol.httpd.redmine.nginx_ubuntu_12_04
 
+import com.anrisoftware.sscontrol.httpd.redmine.AuthenticationMethod
+import com.anrisoftware.sscontrol.httpd.redmine.DeliveryMethod
+
 httpd {
     domain "test1.com", address: "192.168.0.51", {
         setup "redmine", id: "redmineid", backend: "thin", {
             database "redmine2", user: "user", password: "userpass", host: "localhost"
+            mail host: "smtp.test1.com", port: 25, method: DeliveryMethod.smtp, domain: "example.net", auth: AuthenticationMethod.login, user: "redmine@example.net", password: "redminepass"
             debug level: 4
             override mode: update
         }
@@ -34,6 +38,7 @@ httpd {
     domain "test2.com", address: "192.168.0.52", {
         setup "redmine", id: "redmineid", backend: "thin", alias: "/redmine", prefix: "test2redmine", {
             database "redmine2", user: "user", password: "userpass", host: "localhost"
+            mail user: "redmine@example.net", password: "redminepass"
         }
     }
 }

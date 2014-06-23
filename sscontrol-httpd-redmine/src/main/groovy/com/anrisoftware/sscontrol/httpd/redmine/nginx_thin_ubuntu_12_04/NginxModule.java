@@ -16,26 +16,24 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd-gitit. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.redmine.ubuntu_12_04;
+package com.anrisoftware.sscontrol.httpd.redmine.nginx_thin_ubuntu_12_04;
 
-import java.net.URL;
-
-import com.anrisoftware.propertiesutils.AbstractContextPropertiesProvider;
+import com.anrisoftware.sscontrol.core.checkfilehash.CheckFileHashModule;
+import com.anrisoftware.sscontrol.scripts.unpack.UnpackModule;
+import com.google.inject.AbstractModule;
 
 /**
- * Returns <i>hsenv</i> <i>Gitit</i> properties for <i>Ubuntu 12.04</i> from
- * {@code /gitit_hsenvfromsource_ubuntu_12_04.properties}
+ * Binds <i>Redmine</i> configuration for <i>Ubuntu 12.04</i>.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-@SuppressWarnings("serial")
-class HsenvPropertiesProvider extends AbstractContextPropertiesProvider {
+class NginxModule extends AbstractModule {
 
-    private static final URL URL = HsenvPropertiesProvider.class
-            .getResource("/gitit_hsenvfromsource_ubuntu_12_04.properties");
-
-    HsenvPropertiesProvider() {
-        super(HsenvPropertiesProvider.class, URL);
+    @Override
+    protected void configure() {
+        install(new UnpackModule());
+        install(new CheckFileHashModule());
     }
+
 }

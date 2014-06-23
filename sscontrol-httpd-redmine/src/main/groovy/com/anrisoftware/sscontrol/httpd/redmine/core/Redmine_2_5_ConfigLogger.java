@@ -18,16 +18,17 @@
  */
 package com.anrisoftware.sscontrol.httpd.redmine.core;
 
-import static com.anrisoftware.sscontrol.httpd.gitit.core.Gitit_0_10_ConfigLogger._.default_config_created_debug;
-import static com.anrisoftware.sscontrol.httpd.gitit.core.Gitit_0_10_ConfigLogger._.default_config_created_info;
-import static com.anrisoftware.sscontrol.httpd.gitit.core.Gitit_0_10_ConfigLogger._.default_config_created_trace;
-import static com.anrisoftware.sscontrol.httpd.gitit.core.Gitit_0_10_ConfigLogger._.install_packages_done_debug;
-import static com.anrisoftware.sscontrol.httpd.gitit.core.Gitit_0_10_ConfigLogger._.install_packages_done_info;
-import static com.anrisoftware.sscontrol.httpd.gitit.core.Gitit_0_10_ConfigLogger._.install_packages_done_trace;
+import static com.anrisoftware.sscontrol.httpd.redmine.core.Redmine_2_5_ConfigLogger._.config_debug;
+import static com.anrisoftware.sscontrol.httpd.redmine.core.Redmine_2_5_ConfigLogger._.config_info;
+import static com.anrisoftware.sscontrol.httpd.redmine.core.Redmine_2_5_ConfigLogger._.config_trace;
+import static com.anrisoftware.sscontrol.httpd.redmine.core.Redmine_2_5_ConfigLogger._.database_config_debug;
+import static com.anrisoftware.sscontrol.httpd.redmine.core.Redmine_2_5_ConfigLogger._.database_config_info;
+import static com.anrisoftware.sscontrol.httpd.redmine.core.Redmine_2_5_ConfigLogger._.database_config_trace;
+import static org.apache.commons.lang3.StringUtils.join;
 
 import java.io.File;
+import java.util.List;
 
-import com.anrisoftware.globalpom.exec.api.ProcessTask;
 import com.anrisoftware.globalpom.log.AbstractLogger;
 
 /**
@@ -40,20 +41,19 @@ class Redmine_2_5_ConfigLogger extends AbstractLogger {
 
     enum _ {
 
-        install_packages_done_trace("Install packages {} done in {}, {}."),
+        database_config_trace(
+                "Database configuration '{}' created for {}: \n>>>\n{}<<<"),
 
-        install_packages_done_debug("Install packages {} done in {}."),
+        database_config_debug("Database configuration '{}' created for {}."),
 
-        install_packages_done_info("Install packages {} done."),
+        database_config_info(
+                "Database configuration '{}' created for service '{}'."),
 
-        default_config_created_trace(
-                "Default configuration '{}' created for {}: \n>>>\n{}<<<"),
+        config_trace("Configuration '{}' created for {}: \n>>>\n{}<<<"),
 
-        default_config_created_debug(
-                "Default configuration '{}' created for {}."),
+        config_debug("Configuration '{}' created for {}."),
 
-        default_config_created_info(
-                "Default configuration '{}' created for service '{}'.");
+        config_info("Configuration '{}' created for service '{}'.");
 
         private String name;
 
@@ -74,26 +74,24 @@ class Redmine_2_5_ConfigLogger extends AbstractLogger {
         super(Redmine_2_5_Config.class);
     }
 
-    void installCabalPackagesDone(Redmine_2_5_Config config, ProcessTask task,
-            Object packages) {
-        if (isTraceEnabled()) {
-            trace(install_packages_done_trace, packages, config, task);
-        } else if (isDebugEnabled()) {
-            debug(install_packages_done_debug, packages, config);
-        } else {
-            info(install_packages_done_info, packages);
-        }
-    }
-
-    void defaultConfigCreated(Redmine_2_5_Config config, File file,
+    void databaseConfigCreated(Redmine_2_5_Config config, File file,
             String configstr) {
         if (isTraceEnabled()) {
-            trace(default_config_created_trace, file, config, configstr);
+            trace(database_config_trace, file, config, configstr);
         } else if (isDebugEnabled()) {
-            debug(default_config_created_debug, file, config);
+            debug(database_config_debug, file, config);
         } else {
-            info(default_config_created_info, file, config.getServiceName());
+            info(database_config_info, file, config.getServiceName());
         }
     }
 
+    void configCreated(Redmine_2_5_Config config, File file, List<?> configstr) {
+        if (isTraceEnabled()) {
+            trace(config_trace, file, config, join(configstr, "\n"));
+        } else if (isDebugEnabled()) {
+            debug(config_debug, file, config);
+        } else {
+            info(config_info, file, config.getServiceName());
+        }
+    }
 }

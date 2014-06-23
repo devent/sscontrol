@@ -16,77 +16,85 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd-gitit. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.redmine.nginx_ubuntu_12_04;
+package com.anrisoftware.sscontrol.httpd.redmine.nginx_thin_ubuntu_12_04;
+
+import groovy.util.logging.Slf4j
 
 import javax.inject.Inject
 
+import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.Templates
 import com.anrisoftware.resources.templates.api.TemplatesFactory
 import com.anrisoftware.sscontrol.core.service.LinuxScript
 import com.anrisoftware.sscontrol.httpd.domain.Domain
-import com.anrisoftware.sscontrol.httpd.gitit.ubuntu_12_04.Ubuntu_12_04_Config
-import com.anrisoftware.sscontrol.httpd.redmine.RedmineService;
+import com.anrisoftware.sscontrol.httpd.redmine.RedmineService
+import com.anrisoftware.sscontrol.httpd.redmine.core.Redmine_2_5_Config
 import com.anrisoftware.sscontrol.httpd.webservice.ServiceConfig
 import com.anrisoftware.sscontrol.httpd.webservice.WebService
+import com.anrisoftware.sscontrol.scripts.unix.InstallPackagesFactory
 
 /**
- * <i>Gitit</i> configuration for <i>Nginx Ubuntu 12.04</i>.
+ * <i>Redmine</i> configuration for <i>Ubuntu 12.04</i>.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class NginxConfig extends Ubuntu_12_04_Config implements ServiceConfig {
+@Slf4j
+class Ubuntu_12_04_Config extends Redmine_2_5_Config implements ServiceConfig {
 
     @Inject
-    TemplatesFactory templatesFactory
+    RedminePropertiesProvider propertiesProvider
 
-    Templates gititNginxTemplates
+    @Inject
+    InstallPackagesFactory installPackagesFactory
 
-    TemplateResource gititDomainTemplate
+    @Inject
+    UbuntuRedmineFromArchive redmineFromArchive
+
+    @Inject
+    UbuntuThinConfig thinConfig
 
     @Override
     void deployDomain(Domain domain, Domain refDomain, WebService service, List config) {
+        redmineFromArchive.deployDomain domain, refDomain, service, config
+        thinConfig.deployDomain domain, refDomain, service, config
         super.deployDomain domain, refDomain, service, config
-        createDomainConfig domain, refDomain, service, config
     }
 
     @Override
     void deployService(Domain domain, WebService service, List config) {
+        installPackages()
+        redmineFromArchive.deployService domain, service, config
+        thinConfig.deployService domain, service, config
         super.deployService domain, service, config
-        createDomainConfig domain, null, service, config
     }
 
     /**
-     * Creates the domain configuration.
-     *
-     * @param domain
-     *            the {@link Domain}.
-     *
-     * @param refDomain
-     *            the referenced {@link Domain}.
-     *
-     * @param service
-     *            the <i>Gitit</i> {@link GititService} service.
-     *
-     * @param config
-     *            the {@link List} configuration.
+     * Installs the <i>Redmine</i> packages.
      */
-    void createDomainConfig(Domain domain, Domain refDomain, RedmineService service, List config) {
-        def serviceAliasDir = serviceAliasDir domain, refDomain, service
-        def serviceDir = serviceDir domain, refDomain, service
-        def args = [:]
-        args.address = service.binding.addresses[0].address
-        args.port = service.binding.addresses[0].port
-        args.location = serviceAliasDir
-        def configStr = gititDomainTemplate.getText(true, "domainConfig", "args", args)
-        config << configStr
+    void installPackages() {
+        installPackagesFactory.create(
+                log: log,
+                command: script.installCommand,
+                packages: redminePackages,
+                this, threads)()
+    }
+
+    @Override
+    ContextProperties getRedmineProperties() {
+        propertiesProvider.get()
+    }
+
+    @Override
+    String getProfile() {
+        RedmineConfigFactory.PROFILE_NAME
     }
 
     @Override
     public void setScript(LinuxScript script) {
         super.setScript(script)
-        this.gititTemplates = templatesFactory.create "Gitit_Nginx_Ubuntu_12_04"
-        this.gititDomainTemplate = gititTemplates.getResource "domainconfig"
+        redmineFromArchive.setScript this
+        thinConfig.setScript this
     }
 }

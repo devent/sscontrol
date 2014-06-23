@@ -1,10 +1,24 @@
 web_001.web_001 /tmp/var/www/test1.com/web
-web_002.web_002 /tmp/var/www/www.test1.com/web
-web_003.web_003 /tmp/var/www/test2.com/web
-web_001.web_001 /tmp/var/www/test1.com/gitit
-web_003.web_003 /tmp/var/www/test2.com/gitit
+web_002.web_002 /tmp/var/www/test2.com/web
+-R web_001.web_001 /tmp/var/www/test1.com/redmine2/files
+-R web_001.web_001 /tmp/var/www/test1.com/redmine2/log
+-R web_001.web_001 /tmp/var/www/test1.com/redmine2/tmp
+-R web_001.web_001 /tmp/var/www/test1.com/redmine2/tmp/pdf
+-R web_001.web_001 /tmp/var/www/test1.com/redmine2/public/plugin_assets
+-R web_002.web_002 /tmp/var/www/test2.com/test2redmine/files
+-R web_002.web_002 /tmp/var/www/test2.com/test2redmine/log
+-R web_002.web_002 /tmp/var/www/test2.com/test2redmine/tmp
+-R web_002.web_002 /tmp/var/www/test2.com/test2redmine/tmp/pdf
+-R web_002.web_002 /tmp/var/www/test2.com/test2redmine/public/plugin_assets
 web_001.web_001 /tmp/var/www/test1.com/web
-web_002.web_002 /tmp/var/www/www.test1.com/web
-web_003.web_003 /tmp/var/www/test2.com/web
-web_001.web_001 /tmp/var/www/test1.com/gitit
-web_003.web_003 /tmp/var/www/test2.com/gitit
+web_002.web_002 /tmp/var/www/test2.com/web
+-R web_001.web_001 /tmp/var/www/test1.com/redmine2/files
+-R web_001.web_001 /tmp/var/www/test1.com/redmine2/log
+-R web_001.web_001 /tmp/var/www/test1.com/redmine2/tmp
+-R web_001.web_001 /tmp/var/www/test1.com/redmine2/tmp/pdf
+-R web_001.web_001 /tmp/var/www/test1.com/redmine2/public/plugin_assets
+-R web_002.web_002 /tmp/var/www/test2.com/test2redmine/files
+-R web_002.web_002 /tmp/var/www/test2.com/test2redmine/log
+-R web_002.web_002 /tmp/var/www/test2.com/test2redmine/tmp
+-R web_002.web_002 /tmp/var/www/test2.com/test2redmine/tmp/pdf
+-R web_002.web_002 /tmp/var/www/test2.com/test2redmine/public/plugin_assets

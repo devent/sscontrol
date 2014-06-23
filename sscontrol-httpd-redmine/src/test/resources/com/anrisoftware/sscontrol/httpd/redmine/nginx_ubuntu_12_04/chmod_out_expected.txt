@@ -1,4 +1,2 @@
-+x /tmp/etc/init.d/test1_com_gititd
-+x /tmp/etc/init.d/test2_com_gititd
-+x /tmp/etc/init.d/test1_com_gititd
-+x /tmp/etc/init.d/test2_com_gititd
+go-r /tmp/var/www/test1.com/ssl/cert_crt.txt /tmp/var/www/test1.com/ssl/cert_key.txt
+go-r /tmp/var/www/test1.com/ssl/cert_crt.txt /tmp/var/www/test1.com/ssl/cert_key.txt

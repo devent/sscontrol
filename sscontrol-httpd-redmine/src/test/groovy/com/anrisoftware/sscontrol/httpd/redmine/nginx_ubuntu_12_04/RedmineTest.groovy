@@ -19,8 +19,8 @@
 package com.anrisoftware.sscontrol.httpd.redmine.nginx_ubuntu_12_04
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
-import static com.anrisoftware.sscontrol.httpd.gitit.nginx_ubuntu_12_04.GititResources.*
-import static com.anrisoftware.sscontrol.httpd.gitit.nginx_ubuntu_12_04.UbuntuResources.*
+import static com.anrisoftware.sscontrol.httpd.redmine.nginx_ubuntu_12_04.RedmineResources.*
+import static com.anrisoftware.sscontrol.httpd.redmine.nginx_ubuntu_12_04.UbuntuResources.*
 import static org.apache.commons.io.FileUtils.*
 import groovy.util.logging.Slf4j
 
@@ -29,7 +29,7 @@ import org.junit.Test
 import com.anrisoftware.sscontrol.httpd.resources.UbuntuTestUtil
 
 /**
- * <i>Ubuntu</i> 12.04 <i>gitit</i>.
+ * <i>Ubuntu</i> 12.04 <i>Redmine</i>.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
@@ -38,33 +38,35 @@ import com.anrisoftware.sscontrol.httpd.resources.UbuntuTestUtil
 class RedmineTest extends UbuntuTestUtil {
 
     @Test
-    void "gitit"() {
+    void "redmine"() {
         copyUbuntuFiles tmpdir
-        copyGititFiles tmpdir
+        copyRedmineFiles tmpdir
 
         loader.loadService profile.resource, null
         def profile = registry.getService("profile")[0]
         loader.loadService httpdScript.resource, profile, preScript
+
+        test1comRedmineDir.asFile(tmpdir).mkdirs()
+        test1comRedmineDatabaseYml.createFile(tmpdir)
+        test1comRedmineConfigurationYml.createFile(tmpdir)
+        test2comRedmineDir.asFile(tmpdir).mkdirs()
+        test2comRedmineDatabaseYml.createFile(tmpdir)
+        test2comRedmineConfigurationYml.createFile(tmpdir)
 
         registry.allServices.each { it.call() }
         log.info "Run service again to ensure that configuration is not set double."
         registry.allServices.each { it.call() }
 
         assertStringContent test1comConfExpected.replaced(tmpdir, tmpdir, "/tmp"), test1comConfExpected.toString()
-        assertStringContent wwwtest1comConfExpected.replaced(tmpdir, tmpdir, "/tmp"), wwwtest1comConfExpected.toString()
+        assertStringContent test1comSslConfExpected.replaced(tmpdir, tmpdir, "/tmp"), test1comSslConfExpected.toString()
+        assertStringContent test1comRedmineDatabaseYmlExpected.replaced(tmpdir, tmpdir, "/tmp"), test1comRedmineDatabaseYmlExpected.toString()
+        assertStringContent test1comRedmineConfigurationYmlExpected.replaced(tmpdir, tmpdir, "/tmp"), test1comRedmineConfigurationYmlExpected.toString()
         assertStringContent test2comConfExpected.replaced(tmpdir, tmpdir, "/tmp"), test2comConfExpected.toString()
+        assertStringContent test2comRedmineDatabaseYmlExpected.replaced(tmpdir, tmpdir, "/tmp"), test2comRedmineDatabaseYmlExpected.toString()
+        assertStringContent test2comRedmineConfigurationYmlExpected.replaced(tmpdir, tmpdir, "/tmp"), test2comRedmineConfigurationYmlExpected.toString()
         assertStringContent tarOutExpected.replaced(tmpdir, tmpdir, "/tmp"), tarOutExpected.toString()
-        assertStringContent test1comGititConfExpected.replaced(tmpdir, tmpdir, "/tmp"), test1comGititConfExpected.toString()
-        assertStringContent test2comGititConfExpected.replaced(tmpdir, tmpdir, "/tmp"), test2comGititConfExpected.toString()
-        assertFileContent cabalOutExpected.asFile(tmpdir), cabalOutExpected
-        assertStringContent bashOutExpected.replaced(tmpdir, tmpdir, "/tmp"), bashOutExpected.toString()
-        assertStringContent test1comgititdServiceExpected.replaced(tmpdir, tmpdir, "/tmp"), test1comgititdServiceExpected.toString()
-        assertStringContent test1comgititdDefaultsExpected.replaced(tmpdir, tmpdir, "/tmp"), test1comgititdDefaultsExpected.toString()
-        assertStringContent test2comgititdServiceExpected.replaced(tmpdir, tmpdir, "/tmp"), test2comgititdServiceExpected.toString()
-        assertStringContent test2comgititdDefaultsExpected.replaced(tmpdir, tmpdir, "/tmp"), test2comgititdDefaultsExpected.toString()
         assertStringContent chmodOutExpected.replaced(tmpdir, tmpdir, "/tmp"), chmodOutExpected.toString()
         assertStringContent chownOutExpected.replaced(tmpdir, tmpdir, "/tmp"), chownOutExpected.toString()
         assertFileContent aptitudeOutExpected.asFile(tmpdir), aptitudeOutExpected
-        assertFileContent updateRcOutExpected.asFile(tmpdir), updateRcOutExpected
     }
 }

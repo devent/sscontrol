@@ -16,27 +16,26 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd-gitit. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.redmine.ubuntu_12_04;
+package com.anrisoftware.sscontrol.httpd.redmine.nginx_thin_ubuntu_12_04;
 
-import javax.inject.Inject
+import java.net.URL;
 
-import com.anrisoftware.propertiesutils.ContextProperties
-import com.anrisoftware.sscontrol.httpd.gitit.fromsource.HsenvFromSource
+import com.anrisoftware.propertiesutils.AbstractContextPropertiesProvider;
 
 /**
- * Installs and configures <i>Gitit</i> with the help of <i>hsenv</i>
- * from source for <i>Ubuntu</i> 12.04.
- *
+ * Returns <i>Redmine</i> from archive properties for <i>Ubuntu 12.04</i> from
+ * {@code /redmine_fromarchive_ubuntu_12_04.properties}
+ * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class UbuntuHsenvFromSourceConfig extends HsenvFromSource {
+@SuppressWarnings("serial")
+class RedmineFromArchivePropertiesProvider extends AbstractContextPropertiesProvider {
 
-    @Inject
-    HsenvPropertiesProvider hsenvProperties
+    private static final URL URL = RedmineFromArchivePropertiesProvider.class
+            .getResource("/redmine_fromarchive_ubuntu_12_04.properties");
 
-    @Override
-    ContextProperties getHsenvProperties() {
-        hsenvProperties.get()
+    RedmineFromArchivePropertiesProvider() {
+        super(RedmineFromArchivePropertiesProvider.class, URL);
     }
 }

@@ -23,24 +23,23 @@ import groovy.util.logging.Slf4j
 
 import javax.inject.Inject
 
+import org.apache.commons.io.FileUtils
 import org.apache.commons.lang3.StringUtils
 import org.apache.commons.lang3.builder.ToStringBuilder
-import org.stringtemplate.v4.ST
 
 import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.Templates
 import com.anrisoftware.resources.templates.api.TemplatesFactory
+import com.anrisoftware.sscontrol.core.checkfilehash.CheckFileHashFactory
 import com.anrisoftware.sscontrol.httpd.domain.Domain
-import com.anrisoftware.sscontrol.httpd.redmine.RedmineService;
+import com.anrisoftware.sscontrol.httpd.redmine.RedmineService
 import com.anrisoftware.sscontrol.httpd.webservice.OverrideMode
 import com.anrisoftware.sscontrol.httpd.webservice.WebService
-import com.anrisoftware.sscontrol.scripts.unix.ScriptExecFactory
 import com.anrisoftware.sscontrol.scripts.unpack.UnpackFactory
 
 /**
- * Installs and configures <i>Gitit</i> with the help of <i>hsenv</i>
- * from source.
+ * Installs and configures <i>Redmine</i> from archive.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
@@ -58,7 +57,7 @@ abstract class RedmineFromArchive {
     UnpackFactory unpackFactory
 
     @Inject
-    ScriptExecFactory scriptExecFactory
+    CheckFileHashFactory checkFileHashFactory
 
     Object script
 
@@ -76,53 +75,122 @@ abstract class RedmineFromArchive {
      * @see ServiceConfig#deployService(Domain, WebService, List)
      */
     void deployService(Domain domain, WebService service, List config) {
-        unpackGititArchive domain, service
-        installHsenv()
-        installHsenvCabalPackages domain, service
-        installGitit domain, service
+        unpackRedmineArchive domain, service
+        saveVersionFile domain, service
     }
 
     /**
-     * Downloads and unpacks the <i>Gitit</i> source archive.
+     * Downloads and unpacks the <i>Redmine</i> archive.
      *
      * @param domain
      *            the {@link Domain} domain of the service.
      *
      * @param service
-     *            the {@link GititService} service.
+     *            the {@link RedmineService} service.
      *
-     * @see #getGititArchive()
+     * @see #getRedmineArchive()
      * @see LinuxScript#getTmpDirectory()
      */
-    void unpackGititArchive(Domain domain, RedmineService service) {
+    void unpackRedmineArchive(Domain domain, RedmineService service) {
         if (!needUnpackArchive(domain, service)) {
             return
         }
-        def name = new File(gititArchive.path).name
-        def dest = new File(tmpDirectory, "gitit-$name")
-        copyURLToFile gititArchive.toURL(), dest
+        def name = new File(redmineArchive.path).name
+        def dest = new File(tmpDirectory, "redmine-$name")
+        downloadArchive redmineArchive, dest, service
         unpackArchive domain, service, dest
     }
 
     /**
-     * Returns if it needed to download and unpack the <i>Gitit</i> archive.
+     * Saves the <i>Redmine</i> version file.
+     *
+     * @param domain
+     *            the {@link Domain} domain of the service.
+     *
+     * @param service
+     *            the {@link RedmineService} service.
+     *
+     * @see #redmineVersionFile(Domain, RedmineService)
+     */
+    void saveVersionFile(Domain domain, RedmineService service) {
+        def file = redmineVersionFile domain, service
+        FileUtils.writeStringToFile file, redmineVersion, charset
+    }
+
+    /**
+     * Downloads the <i>Redmine</i> archive.
+     *
+     * @param archive
+     *            the archive {@link URI} domain of the service.
+     *
+     * @param dest
+     *            the destination {@link File} file.
+     *
+     * @param service
+     *            the {@link RedmineService} service.
+     *
+     * @see #getRedmineArchive()
+     */
+    void downloadArchive(URI archive, File dest, RedmineService service) {
+        if (dest.isFile() && !checkArchiveHash(dest, service)) {
+            copyURLToFile archive.toURL(), dest
+        } else if (!dest.isFile()) {
+            copyURLToFile archive.toURL(), dest
+        }
+        if (!checkArchiveHash(dest, service)) {
+            throw logg.errorArchiveHash(service, redmineArchive)
+        }
+    }
+
+    /**
+     * Checks the <i>Redmine</i> archive hash.
+     *
+     * @param archive
+     *            the archive {@link File} file.
+     *
+     * @param service
+     *            the {@link RedmineService} service.
+     *
+     * @see #getRedmineArchive()
+     * @see #getRedmineArchiveHash()
+     */
+    boolean checkArchiveHash(File archive, RedmineService service) {
+        def hash = redmineArchiveHash
+        if (hash.scheme == "md5") {
+            def hashFile = new File(tmpDirectory, "redmine-hash.md5")
+            FileUtils.writeStringToFile hashFile, "${hash.schemeSpecificPart}\n", charset
+            def check = checkFileHashFactory.create(this, file: archive, hash: hashFile.toURI())()
+            hashFile.delete()
+            return check.matching
+        }
+    }
+
+    /**
+     * Returns if it needed to download and unpack the <i>Redmine</i> archive.
      *
      * @param domain
      *            the {@link Domain} of the service.
      *
      * @param service
-     *            the {@link GititService} service.
+     *            the {@link RedmineService} service.
      *
      * @return {@code true} if it is needed.
      *
      * @see WordpressService#getOverrideMode()
      */
     boolean needUnpackArchive(Domain domain, RedmineService service) {
-        service.overrideMode != OverrideMode.no || !gititCommandExist(domain, service)
+        switch (service.overrideMode) {
+            case OverrideMode.no:
+                return false
+            case OverrideMode.yes:
+                return true
+            case OverrideMode.update:
+                return checkRedmineVersion(domain, service) == false
+        }
     }
 
     /**
-     * Unpacks the <i>Gitit</i> archive.
+     * Unpacks the <i>Redmine</i> archive.
      *
      * @param domain
      *            the {@link Domain} domain of the service.
@@ -134,339 +202,119 @@ abstract class RedmineFromArchive {
      *            the archive {@link File} file.
      */
     void unpackArchive(Domain domain, WebService service, File archive) {
-        def dir = gititSourceDir domain, service
+        def dir = redmineDir domain, service
         dir.isDirectory() ? false : dir.mkdirs()
         unpackFactory.create(
-                log: log, file: archive, output: dir, override: true, strip: true,
+                log: log,
+                file: archive,
+                output: dir,
+                override: true,
+                strip: true,
                 commands: script.unpackCommands,
                 this, threads)()
-        logg.unpackArchiveDone this, gititArchive
+        logg.unpackArchiveDone this, redmineArchive
     }
 
     /**
-     * Installs <i>hsenv</i>.
-     */
-    void installHsenv() {
-        installCabalPackages hsenvCabalPackages
-        logg.installHsenvDone this, hsenvCabalPackages
-    }
-
-    /**
-     * Installs the <i>cabal</i> packages inside the <i>hsenv</i> environment.
+     * Checks the installed <i>Redmine</i> version.
      *
      * @param domain
      *            the {@link Domain} domain of the service.
      *
      * @param service
-     *            the {@link GititService} service.
-     *
-     * @see #getHsenvCommand()
-     * @see #getHsenvGititPackages()
-     * @see #getHsenvCabalInstallTimeout()
-     */
-    void installHsenvCabalPackages(Domain domain, RedmineService service) {
-        if (!needRecompile && checkGititVersion(domain, service)) {
-            return
-        }
-        def gititDir = gititDir domain, service
-        def hsenvCommand = hsenvCommand
-        def cabalCommand = hsenvCabalCommand domain, service
-        def activateCommand = hsenvActivateCommand domain, service
-        def packages = hsenvGititPackages
-        def task = scriptExecFactory.create(
-                log: log, gititDir: gititDir, bashCommand: bashCommand,
-                hsenvCommand: hsenvCommand, activateCommand: activateCommand,
-                cabalCommand: cabalCommand, deactivateCommand: hsenvDeactivateCommand,
-                packages: packages, timeout: cabalInstallTimeout,
-                this, threads, hsenvCommandTemplate, "hsenvInstallCommand")()
-        logg.installHsenvCabalPackagesDone this, task, packages
-    }
-
-    /**
-     * Installs <i>gitit</i> inside the <i>hsenv</i> environment.
-     *
-     * @param domain
-     *            the {@link Domain} domain of the service.
-     *
-     * @param service
-     *            the {@link GititService} service.
-     *
-     */
-    void installGitit(Domain domain, RedmineService service) {
-        if (!needRecompile && checkGititVersion(domain, service)) {
-            return
-        }
-        def gititDir = gititDir domain, service
-        def hsenvCommand = hsenvCommand
-        def cabalCommand = hsenvCabalCommand domain, service
-        def activateCommand = hsenvActivateCommand domain, service
-        def gititSourceDir = gititSourceDir domain, service
-        def task = scriptExecFactory.create(
-                log: log, gititDir: gititDir, bashCommand: bashCommand,
-                hsenvCommand: hsenvCommand, activateCommand: activateCommand,
-                cabalCommand: cabalCommand, deactivateCommand: hsenvDeactivateCommand,
-                gititSourceDir: gititSourceDir, timeout: cabalInstallTimeout,
-                this, threads, hsenvCommandTemplate, "hsenvCompileCommand")()
-        logg.installGititDone this, task
-    }
-
-    /**
-     * Checks the installed <i>gitit</i> service version inside
-     * the <i>hsenv</i> environment.
-     *
-     * @param domain
-     *            the {@link Domain} domain of the service.
-     *
-     * @param service
-     *            the {@link GititService} service.
+     *            the {@link RedmineService} service.
      *
      * @return {@code true} if the version matches the set version.
      */
-    boolean checkGititVersion(Domain domain, RedmineService service) {
-        def command = gititCommand domain, service
-        if (!new File(command).isFile()) {
+    boolean checkRedmineVersion(Domain domain, RedmineService service) {
+        def versionFile = redmineVersionFile domain, service
+        if (!versionFile.isFile()) {
             return false
         }
-        def config = gititConfigFile domain, service
-        def task = scriptExecFactory.create(
-                log: log, gititCommand: command,
-                bashCommand: bashCommand,
-                gititConfig: config,
-                outString: true,
-                this, threads, hsenvCommandTemplate, "gititVersionCommand")()
-        def split = StringUtils.split(task.out, '\n')
-        def version = StringUtils.split(split[0], ' ')[2].trim()
-        logg.checkGititVersion this, version, gititVersion
-        return StringUtils.startsWith(version, gititVersion)
+        def version = FileUtils.readFileToString versionFile
+        logg.checkRedmineVersion this, version, redmineVersion
+        return StringUtils.startsWith(version, redmineVersion)
     }
 
     /**
-     * Returns the <i>Gitit</i> archive.
+     * Returns the <i>Redmine</i> archive.
      *
      * <ul>
-     * <li>profile property {@code "hsenv_gitit_archive"}</li>
+     * <li>profile property {@code "redmine_archive"}</li>
      * </ul>
      *
-     * @see #getHsenvProperties()
+     * @see #getRedmineFromArchiveProperties()
      */
-    URI getGititArchive() {
-        profileURIProperty "hsenv_gitit_archive", hsenvProperties
+    URI getRedmineArchive() {
+        profileURIProperty "redmine_archive", redmineFromArchiveProperties
     }
 
     /**
-     * Returns the <i>cabal</i> packages to install <i>hsenv</i>, for example
-     * {@code "hsenv".}
+     * Returns the <i>Redmine</i> archive hash, for
+     * example {@code "md5:d88ebfdb565489862fc62b4a2a575517"}
      *
      * <ul>
-     * <li>profile property {@code hsenv_cabal_packages}</li>
+     * <li>profile property {@code "redmine_archive_hash"}</li>
      * </ul>
      *
-     * @return the {@link List} of packages.
-     *
-     * @see #getHsenvProperties()
+     * @see #getRedmineFromArchiveProperties()
      */
-    List getHsenvCabalPackages() {
-        profileListProperty "hsenv_cabal_packages", hsenvProperties
+    URI getRedmineArchiveHash() {
+        profileURIProperty "redmine_archive_hash", redmineFromArchiveProperties
     }
 
     /**
-     * Returns the <i>cabal</i> packages to install <i>Gitit</i> inside
-     * the <i>hsenv</i> environment, for
-     * example {@code "pandoc -fhighlighting".}
+     * Returns the <i>Redmine</i> version, for
+     * example {@code "2.5"}
      *
      * <ul>
-     * <li>profile property {@code hsenv_gitit_packages}</li>
+     * <li>profile property {@code "redmine_version"}</li>
      * </ul>
      *
-     * @return the {@link List} of packages.
-     *
-     * @see #getHsenvProperties()
+     * @see #getRedmineFromArchiveProperties()
      */
-    List getHsenvGititPackages() {
-        profileListProperty "hsenv_gitit_packages", hsenvProperties
+    String getRedmineVersion() {
+        profileProperty "redmine_version", redmineFromArchiveProperties
     }
 
     /**
-     * Returns the <i>hsenv</i> command, for
-     * example {@code "/root/.cabal/bin/hsenv".}
+     * Returns the <i>Redmine</i> version file, for example
+     * {@code /var/www/domain.com/redmineprefix/version.txt}
      *
      * <ul>
-     * <li>profile property {@code "hsenv_command"}</li>
-     * </ul>
-     *
-     * @see #getHsenvProperties()
-     */
-    String getHsenvCommand() {
-        profileProperty "hsenv_command", hsenvProperties
-    }
-
-    /**
-     * Returns the <i>deactivate</i> command, for
-     * example {@code "deactivate_hsenv".}
-     *
-     * <ul>
-     * <li>profile property {@code "hsenv_deactivate_command"}</li>
-     * </ul>
-     *
-     * @see #getHsenvProperties()
-     */
-    String getHsenvDeactivateCommand() {
-        profileProperty "hsenv_deactivate_command", hsenvProperties
-    }
-
-    /**
-     * Returns the if need to recompile <i>gitit</i> even if the version of
-     * the installed service match, for example {@code "true".}
-     *
-     * <ul>
-     * <li>profile property {@code "hsenv_need_recompile"}</li>
-     * </ul>
-     *
-     * @see #getHsenvProperties()
-     */
-    boolean getNeedRecompile() {
-        profileBooleanProperty "hsenv_need_recompile", hsenvProperties
-    }
-
-    /**
-     * Returns the <i>gitit</i> version, for
-     * example {@code "0.10.3.1"}
-     *
-     * <ul>
-     * <li>profile property {@code "hsenv_gitit_version"}</li>
-     * </ul>
-     *
-     * @see #getHsenvProperties()
-     */
-    String getGititVersion() {
-        profileProperty "hsenv_gitit_version", hsenvProperties
-    }
-
-    /**
-     * Returns the <i>cabal</i> command inside the <i>hsenv</i>
-     * environment, for example {@code "<gititDir>/.hsenv/bin/cabal".}
-     * The placeholder {@code "<gititDir>"} is replaced by the <i>Gitit</i>
-     * service domain directory.
-     *
-     * <ul>
-     * <li>profile property {@code "hsenv_cabal_command"}</li>
+     * <li>profile property {@code "redmine_version_file"}</li>
      * </ul>
      *
      * @param domain
      *            the {@link Domain} domain of the service.
      *
      * @param service
-     *            the {@link GititService} service.
-     *
-     * @see #getHsenvProperties()
-     */
-    String hsenvCabalCommand(Domain domain, RedmineService service) {
-        def dir = gititDir domain, service
-        def p = profileProperty "hsenv_cabal_command", hsenvProperties
-        new ST(p).add("gititDir", dir).render()
-    }
-
-    /**
-     * Returns the <i>activate</i> command inside the <i>hsenv</i>
-     * environment, for example {@code "<gititDir>/.hsenv/bin/activate".}
-     * The placeholder {@code "<gititDir>"} is replaced by the <i>Gitit</i>
-     * service domain directory.
-     *
-     * <ul>
-     * <li>profile property {@code "hsenv_activate_command"}</li>
-     * </ul>
-     *
-     * @param domain
-     *            the {@link Domain} domain of the service.
-     *
-     * @param service
-     *            the {@link GititService} service.
-     *
-     * @see #getHsenvProperties()
-     */
-    String hsenvActivateCommand(Domain domain, RedmineService service) {
-        def dir = gititDir domain, service
-        def p = profileProperty "hsenv_activate_command", hsenvProperties
-        new ST(p).add("gititDir", dir).render()
-    }
-
-    /**
-     * Returns the <i>gitit</i> command inside the <i>hsenv</i>
-     * environment, for example {@code "<gititDir>/.hsenv/cabal/bin/gitit".}
-     * The placeholder {@code "<gititDir>"} is replaced by the <i>Gitit</i>
-     * service domain directory.
-     *
-     * <ul>
-     * <li>profile property {@code "hsenv_gitit_command"}</li>
-     * </ul>
-     *
-     * @param domain
-     *            the {@link Domain} domain of the service.
-     *
-     * @param service
-     *            the {@link GititService} service.
-     *
-     * @see #getHsenvProperties()
-     */
-    String hsenvGititCommand(Domain domain, RedmineService service) {
-        def dir = gititDir domain, service
-        def p = profileProperty "hsenv_gitit_command", hsenvProperties
-        new ST(p).add("gititDir", dir).render()
-    }
-
-    /**
-     * Returns if the <i>gitit</i> command exist, i.e. the <i>Gitit</i>
-     * web service is already installed.
-     *
-     * @return {@code true} if the command exist.
-     *
-     * @see #hsenvGititCommand(Domain, GititService)
-     */
-    boolean gititCommandExist(Domain domain, RedmineService service) {
-        new File(hsenvGititCommand(domain, service)).isFile()
-    }
-
-    /**
-     * Returns the <i>Gitit</i> source directory inside the <i>hsenv</i>
-     * environment, for example {@code "<gititDir>/gitit-0.10.3.1".}
-     * The placeholder {@code "<gititDir>"} is replaced by the <i>Gitit</i>
-     * service domain directory.
-     *
-     * <ul>
-     * <li>profile property {@code "hsenv_gitit_source_directory"}</li>
-     * </ul>
-     *
-     * @param domain
-     *            the {@link Domain} domain of the service.
-     *
-     * @param service
-     *            the {@link GititService} service.
+     *            the {@link RedmineService} service.
      *
      * @return the installation {@link File} directory.
      *
-     * @see #gititDir(Domain, GititService)
-     * @see #getGititArchive()
+     * @see #domainDir(Domain)
+     * @see RedmineService#getPrefix()
+     * @see #getRedmineFromArchiveProperties()
      */
-    File gititSourceDir(Domain domain, RedmineService service) {
-        def dir = gititDir domain, service
-        def p = profileProperty "hsenv_gitit_source_directory", hsenvProperties
-        new File(new ST(p).add("gititDir", dir).render())
+    File redmineVersionFile(Domain domain, RedmineService service) {
+        def dir = new File(domainDir(domain), service.prefix)
+        def name = profileProperty "redmine_version_file", redmineFromArchiveProperties
+        new File(dir, name)
     }
 
     /**
-     * Returns the default <i>hsenv</i> <i>Gitit</i> properties.
+     * Returns the <i>Redmine</i> archive properties.
      *
      * @return the {@link ContextProperties} properties.
      */
-    abstract ContextProperties getHsenvProperties()
+    abstract ContextProperties getRedmineFromArchiveProperties()
 
     /**
      * @see ServiceConfig#setScript(LinuxScript)
      */
     void setScript(Object script) {
         this.script = script
-        this.hsenvTemplates = templatesFactory.create "HsenvFromSource"
-        this.hsenvCommandTemplate = hsenvTemplates.getResource "hsenvcommands"
     }
 
     /**

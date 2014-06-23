@@ -205,20 +205,40 @@ public class RedmineService implements WebService {
         return overrideMode;
     }
 
+    public void setMailHost(String host) {
+        statementsMap.putMapValue(MAIL_KEY, HOST_KEY, host);
+    }
+
     public String getMailHost() {
         return statementsMap.mapValue(MAIL_KEY, HOST_KEY);
+    }
+
+    public void setMailPort(int port) {
+        statementsMap.putMapValue(MAIL_KEY, PORT_KEY, port);
     }
 
     public Integer getMailPort() {
         return statementsMap.mapValue(MAIL_KEY, PORT_KEY);
     }
 
+    public void setMailDeliveryMethod(DeliveryMethod method) {
+        statementsMap.putMapValue(MAIL_KEY, METHOD_KEY, method);
+    }
+
     public DeliveryMethod getMailDeliveryMethod() {
         return statementsMap.mapValue(MAIL_KEY, METHOD_KEY);
     }
 
+    public void setMailDomain(String domain) {
+        statementsMap.putMapValue(MAIL_KEY, DOMAIN_KEY, domain);
+    }
+
     public String getMailDomain() {
         return statementsMap.mapValue(MAIL_KEY, DOMAIN_KEY);
+    }
+
+    public void setMailAuthMethod(AuthenticationMethod method) {
+        statementsMap.putMapValue(MAIL_KEY, AUTH_KEY, method);
     }
 
     public AuthenticationMethod getMailAuthMethod() {

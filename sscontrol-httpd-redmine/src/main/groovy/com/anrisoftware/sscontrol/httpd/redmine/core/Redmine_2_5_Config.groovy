@@ -20,24 +20,26 @@ package com.anrisoftware.sscontrol.httpd.redmine.core
 
 import groovy.util.logging.Slf4j
 
+import java.util.regex.Pattern
+
 import javax.inject.Inject
 
 import org.apache.commons.io.FileUtils
+import org.apache.commons.lang3.StringUtils
 import org.apache.commons.lang3.builder.ToStringBuilder
-import org.joda.time.Duration
-import org.stringtemplate.v4.ST
 
-import com.anrisoftware.globalpom.textmatch.tokentemplate.TokenTemplate
 import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.resources.templates.api.TemplateResource
+import com.anrisoftware.resources.templates.api.Templates
+import com.anrisoftware.resources.templates.api.TemplatesFactory
 import com.anrisoftware.sscontrol.core.debuglogging.DebugLoggingFactory
 import com.anrisoftware.sscontrol.core.service.LinuxScript
 import com.anrisoftware.sscontrol.httpd.domain.Domain
-import com.anrisoftware.sscontrol.httpd.gitit.AuthMethod
-import com.anrisoftware.sscontrol.httpd.gitit.LoginRequired
-import com.anrisoftware.sscontrol.httpd.gitit.RepositoryType
-import com.anrisoftware.sscontrol.httpd.gitit.nginx_ubuntu_12_04.GititConfigFactory
-import com.anrisoftware.sscontrol.httpd.redmine.RedmineService;
+import com.anrisoftware.sscontrol.httpd.redmine.AuthenticationMethod
+import com.anrisoftware.sscontrol.httpd.redmine.DeliveryMethod
+import com.anrisoftware.sscontrol.httpd.redmine.RedmineService
+import com.anrisoftware.sscontrol.httpd.redmine.nginx_thin_ubuntu_12_04.RedmineConfigFactory
+import com.anrisoftware.sscontrol.httpd.webservice.OverrideMode
 import com.anrisoftware.sscontrol.httpd.webservice.WebService
 import com.anrisoftware.sscontrol.scripts.changefilemod.ChangeFileModFactory
 import com.anrisoftware.sscontrol.scripts.changefileowner.ChangeFileOwnerFactory
@@ -45,7 +47,7 @@ import com.anrisoftware.sscontrol.scripts.unix.InstallPackagesFactory
 import com.anrisoftware.sscontrol.scripts.unix.ScriptExecFactory
 
 /**
- * Configures <i>Gitit 0.10.</i>
+ * Configures <i>Redmine 2.5</i>
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
@@ -55,6 +57,12 @@ abstract class Redmine_2_5_Config {
 
     @Inject
     private Redmine_2_5_ConfigLogger logg
+
+    @Inject
+    AuthenticationMethodAttributeRenderer authenticationMethodAttributeRenderer
+
+    @Inject
+    DeliveryMethodAttributeRenderer deliveryMethodAttributeRenderer
 
     @Inject
     InstallPackagesFactory installPackagesFactory
@@ -72,7 +80,13 @@ abstract class Redmine_2_5_Config {
     DebugLoggingFactory debugLoggingFactory
 
     @Inject
-    DebugLevelRenderer debugLevelRenderer
+    TemplatesFactory templatesFactory
+
+    Templates redmineConfigTemplates
+
+    TemplateResource redmineDatabaseConfigTemplate
+
+    TemplateResource redmineConfigTemplate
 
     /**
      * @see ServiceConfig#getScript()
@@ -89,9 +103,7 @@ abstract class Redmine_2_5_Config {
      * @see ServiceConfig#deployService(Domain, WebService, List)
      */
     void deployService(Domain domain, WebService service, List config) {
-        setupDefaults domain, service
-        installPackages service
-        createDefaultConfig domain, service
+        deployDatabase domain, service
         deployConfig domain, service
         setupPermissions domain, service
     }
@@ -100,95 +112,15 @@ abstract class Redmine_2_5_Config {
      * Setups default options.
      *
      * @param service
-     *            the {@link GititService}.
+     *            the {@link RedmineService}.
      */
     void setupDefaults(Domain domain, RedmineService service) {
+        setupDefaultOverrideMode service, domain
         setupDefaultDebug service, domain
-        def address = profileProperty("gitit_default_bind_address", gititProperties)
-        def port = profileNumberProperty("gitit_default_bind_port", gititProperties).intValue()
-        def loginRequired = LoginRequired.valueOf(profileProperty("gitit_default_login_required", gititProperties))
-        def authMethod = AuthMethod.valueOf(profileProperty("gitit_default_auth_method", gititProperties))
-        def pageType = profileProperty("gitit_default_page_type", gititProperties)
-        def math = profileProperty("gitit_default_math", gititProperties)
-        def frontpage = profileProperty("gitit_default_frontpage", gititProperties)
-        def nodeletePages = profileListProperty("gitit_default_nodelete_pages", ',', gititProperties)
-        def noeditPages = profileListProperty("gitit_default_noedit_pages", ',', gititProperties)
-        def summary = profileProperty("gitit_default_summary", gititProperties)
-        def tableofcontents = profileProperty("gitit_default_tableofcontents", gititProperties)
-        def enableCache = profileBooleanProperty("gitit_default_enable_cache", gititProperties)
-        def allowIdlegc = profileBooleanProperty("gitit_default_allow_idle_gc", gititProperties)
-        def memoryUpload = profileProperty "gitit_default_memory_upload", gititProperties
-        def memoryPage = profileProperty "gitit_default_memory_page", gititProperties
-        def compressResponses = profileBooleanProperty("gitit_default_compress_responses", gititProperties)
-        def recaptchaEnabled = profileBooleanProperty("gitit_default_recaptcha_enabled", gititProperties)
-        def accessQuestion = profileProperty("gitit_default_access_question", gititProperties)
-        def accessAnswer = profileProperty("gitit_default_access_answer", gititProperties)
-        def feedsEnabled = profileBooleanProperty("gitit_default_feeds_enabled", gititProperties)
-        def feedsDuration = profileProperty("gitit_default_feeds_duration", gititProperties)
-        def feedsRefresh = profileProperty("gitit_default_feeds_refresh", gititProperties)
-        if (service.binding.addresses.size() == 0) {
-            service.bind address: address, port: port
-        }
-        if (service.loginRequired == null) {
-            service.loginRequired = loginRequired
-        }
-        if (service.authMethod == null) {
-            service.authMethod = authMethod
-        }
-        if (service.pageType == null) {
-            service.pageType = pageType
-        }
-        if (service.math == null) {
-            service.math = math
-        }
-        if (service.frontPage == null) {
-            service.frontPage = frontpage
-        }
-        if (service.noDeletePages == null) {
-            service.noDeletePages = nodeletePages
-        }
-        if (service.noEditPages == null) {
-            service.noEditPages = noeditPages
-        }
-        if (service.defaultSummary == null) {
-            service.defaultSummary = summary
-        }
-        if (service.tableOfContents == null) {
-            service.tableOfContents = tableofcontents
-        }
-        if (service.caching == null) {
-            service.caching = enableCache
-        }
-        if (service.idleGc == null) {
-            service.idleGc = allowIdlegc
-        }
-        if (service.memoryUpload == null) {
-            service.memoryUpload = memoryUpload
-        }
-        if (service.memoryPage == null) {
-            service.memoryPage = memoryPage
-        }
-        if (service.compressResponses == null) {
-            service.compressResponses = compressResponses
-        }
-        if (service.recaptchaEnable == null) {
-            service.recaptchaEnable = recaptchaEnabled
-        }
-        if (service.recaptchaPrivateKey == null) {
-            service.recaptchaPrivateKey = accessQuestion
-        }
-        if (service.recaptchaPublicKey == null) {
-            service.recaptchaPublicKey = accessAnswer
-        }
-        if (service.feedsEnabled == null) {
-            service.feedsEnabled = feedsEnabled
-        }
-        if (service.feedsDuration == null) {
-            service.feedsDuration = feedsDuration
-        }
-        if (service.feedsRefresh == null) {
-            service.feedsRefresh = feedsRefresh
-        }
+        setupDefaultDatabase service, domain
+        setupDefaultPrefix service, domain
+        setupDefaultAlias service, domain
+        setupDefaultMail service, domain
     }
 
     /**
@@ -198,272 +130,250 @@ abstract class Redmine_2_5_Config {
      *            the service {@link Domain}.
      *
      * @param service
-     *            the {@link GititService}.
+     *            the {@link RedmineService}.
      */
     void setupDefaultDebug(RedmineService service, Domain domain) {
-        def level = profileNumberProperty "gitit_default_debug_level", gititProperties
-        def file = gititDefaultDebugFile domain, service
-        def infoEnabled = profileBooleanProperty "gitit_default_debug_information_enabled", gititProperties
+        int level = profileNumberProperty "redmine_default_debug_level", redmineProperties
         service.debug = service.debug == null ? debugLoggingFactory.create(level) : service.debug
-        service.debug.args.file = service.debug.args.file == null ? file : service.debug.args.file
-        service.debug.args.infoEnabled = service.debug.args.infoEnabled == null ? infoEnabled : service.debug
     }
 
     /**
-     * Installs the needed <i>Gitit</i> repository type packages.
-     *
-     * @param service
-     *            the {@link GititService}.
-     */
-    void installPackages(RedmineService service) {
-        def packages
-        switch (service.type) {
-            case RepositoryType.git:
-                packages = gitPackages
-                break
-            case RepositoryType.darcs:
-                packages = darcsPackages
-                break
-            case RepositoryType.mercurial:
-                packages = mercurialPackages
-                break
-        }
-        installPackagesFactory.create(
-                log: log, command: script.installCommand, packages: packages,
-                this, threads)()
-    }
-
-    /**
-     * Deploys the <i>Gitit</i> configuration.
+     * Setups the default override mode.
      *
      * @param domain
      *            the service {@link Domain}.
      *
      * @param service
-     *            the {@link GititService}.
+     *            the {@link RedmineService}.
+     */
+    void setupDefaultOverrideMode(RedmineService service, Domain domain) {
+        if (service.overrideMode == null) {
+            OverrideMode mode = OverrideMode.valueOf profileProperty("redmine_default_override_mode", redmineProperties)
+            service.overrideMode = mode
+        }
+    }
+
+    /**
+     * Setups the default database.
      *
-     * @see #gititConfigFile(Domain, GititService)
+     * @param domain
+     *            the service {@link Domain}.
+     *
+     * @param service
+     *            the {@link RedmineService}.
+     */
+    void setupDefaultDatabase(RedmineService service, Domain domain) {
+        def provider = profileProperty "redmine_default_database_provider", redmineProperties
+        def encoding = profileProperty "redmine_default_database_encoding", redmineProperties
+        service.database.provider = service.database.provider == null ? provider : service.database.provider
+        service.database.encoding = service.database.encoding == null ? encoding : service.database.encoding
+    }
+
+    /**
+     * Setups the default prefix.
+     *
+     * @param domain
+     *            the service {@link Domain}.
+     *
+     * @param service
+     *            the {@link RedmineService}.
+     */
+    void setupDefaultPrefix(RedmineService service, Domain domain) {
+        def prefix = profileProperty "redmine_default_prefix", redmineProperties
+        service.prefix = service.prefix == null ? prefix : service.prefix
+    }
+
+    /**
+     * Setups the default alias.
+     *
+     * @param domain
+     *            the service {@link Domain}.
+     *
+     * @param service
+     *            the {@link RedmineService}.
+     */
+    void setupDefaultAlias(RedmineService service, Domain domain) {
+        service.alias = service.alias == null ? "" : service.alias
+    }
+
+    /**
+     * Setups the default mail.
+     *
+     * @param domain
+     *            the service {@link Domain}.
+     *
+     * @param service
+     *            the {@link RedmineService}.
+     */
+    void setupDefaultMail(RedmineService service, Domain domain) {
+        if (service.mailHost == null) {
+            service.mailHost = domain.name
+        }
+        if (service.mailDomain == null) {
+            service.mailDomain = domain.name
+        }
+        if (service.mailPort == null) {
+            service.mailPort = defaultMailPort
+        }
+        if (service.mailDeliveryMethod == null) {
+            service.mailDeliveryMethod = defaultMailDeliveryMethod
+        }
+        if (service.mailAuthMethod == null) {
+            service.mailAuthMethod = defaultMailAuthenticationMethod
+        }
+    }
+
+    /**
+     * Deploys the <i>Redmine</i> database configuration.
+     *
+     * @param domain
+     *            the service {@link Domain}.
+     *
+     * @param service
+     *            the {@link RedmineService}.
+     *
+     * @see #getRedmineDatabaseConfigExampleFile()
+     * @see #getRedmineDatabaseConfigFile()
+     */
+    void deployDatabase(Domain domain, RedmineService service) {
+        def exampleFile = redmineConfigFile domain, service, redmineDatabaseConfigExampleFile
+        def file = redmineConfigFile domain, service, redmineDatabaseConfigFile
+        file.isFile() == false ? FileUtils.copyFile(exampleFile, file) : false
+        def conf = currentConfiguration file
+        def search = redmineDatabaseConfigTemplate.getText(true, "productionDatabaseSearch")
+        def replace = redmineDatabaseConfigTemplate.getText(true, "productionDatabase", "database", service.database)
+        def matcher = Pattern.compile(search).matcher(conf)
+        conf = matcher.replaceAll(replace)
+        FileUtils.writeStringToFile file, conf, charset
+        logg.databaseConfigCreated this, file, conf
+    }
+
+    /**
+     * Deploys the <i>Redmine</i> configuration.
+     *
+     * @param domain
+     *            the service {@link Domain}.
+     *
+     * @param service
+     *            the {@link RedmineService}.
+     *
+     * @see #getRedmineConfigExampleFile()
+     * @see #getRedmineConfigFile()
      */
     void deployConfig(Domain domain, RedmineService service) {
-        def configs = [
-            configToken("addressConfig", "address", service.binding.addresses[0].address),
-            configToken("portConfig", "port", service.binding.addresses[0].port),
-            configToken("wikititleConfig", "title", service.wikiTitle),
-            configToken("repositorytypeConfig", "type", service.type),
-            configToken("requireauthenticationConfig", "type", service.loginRequired),
-            configToken("authenticationmethodConfig", "method", service.authMethod),
-            configToken("defaultpagetypeConfig", "type", service.pageType),
-            configToken("mathConfig", "math", service.math),
-            configToken("logfileConfig", "file", service.debug.args.file),
-            configToken("loglevelConfig", "level", debugLevelRenderer.toString(service.debug.level)),
-            configToken("frontpageConfig", "page", service.frontPage),
-            configToken("nodeleteConfig", "pages", service.noDeletePages),
-            configToken("noeditConfig", "pages", service.noEditPages),
-            configToken("defaultsummaryConfig", "summary", service.defaultSummary),
-            configToken("tableofcontentsConfig", "enabled", service.tableOfContents),
-            configToken("usecacheConfig", "enabled", service.caching),
-            configToken("maxuploadsizeConfig", "size", service.memoryUpload),
-            configToken("maxpagesizeConfig", "size", service.memoryPage),
-            configToken("debugmodeConfig", "enabled", service.debug.args.infoEnabled),
-            configToken("compressresponsesConfig", "enabled", service.compressResponses),
-            configToken("userecaptchaConfig", "enabled", service.recaptchaEnable),
-            configToken("recaptchaprivatekeyConfig", "key", service.recaptchaPrivateKey),
-            configToken("recaptchapublickeyConfig", "key", service.recaptchaPublicKey),
-            configToken("accessquestionConfig", "question", service.accessQuestion),
-            configToken("accessquestionanswersConfig", "answers", service.accessAnswers),
-            configToken("usefeedConfig", "enabled", service.feedsEnabled),
-            configToken("feeddaysConfig", "days", service.feedsDuration),
-            configToken("feedrefreshtimeConfig", "minutes", service.feedsRefresh),
-        ]
-        def file = gititConfigFile domain, service
-        def conf = currentConfiguration file
-        deployConfiguration configurationTokens(), conf, configs, file
-    }
-
-    TokenTemplate configToken(Object[] args) {
-        def search = gititConfigTemplate.getText(true, "${args[0]}Search")
-        def replace = gititConfigTemplate.getText(true, args)
-        new TokenTemplate(search, replace)
-    }
-
-    /**
-     * Creates the default <i>Gitit</i> configuration file.
-     *
-     * @param domain
-     *            the service {@link Domain}.
-     *
-     * @param service
-     *            the {@link GititService}.
-     */
-    void createDefaultConfig(Domain domain, RedmineService service) {
-        def config = defaultConfig domain, service
-        def file = gititConfigFile domain, service
-        if (!file.isFile()) {
-            FileUtils.write file, config, charset
-            logg.defaultConfigCreated this, file, config
+        def exampleFile = redmineConfigFile domain, service, redmineConfigExampleFile
+        def file = redmineConfigFile domain, service, redmineConfigFile
+        file.isFile() == false ? FileUtils.copyFile(exampleFile, file) : false
+        def conf = new ArrayList(StringUtils.splitPreserveAllTokens(currentConfiguration(file), '\n') as List)
+        int i = 0
+        def res
+        for (i; i < conf.size(); i++) {
+            if (conf[i].startsWith("production:")) {
+                res = parseConfig domain, service, conf, ++i
+                break
+            }
         }
+        res.each { println it }
+        FileUtils.writeLines file, charset.name(), res
+        logg.configCreated this, file, conf
+    }
+
+    List parseConfig(Domain domain, RedmineService service, List conf, int i) {
+        def res = new LinkedList(conf)
+        for (i; i < conf.size(); i++) {
+            if (conf[i].empty) {
+                def str = StringUtils.splitPreserveAllTokens redmineConfigTemplate.getText(true, "productionEmail", "service", service), '\n'
+                str.eachWithIndex { it, int k ->
+                    res.add i + k, it
+                }
+                return res
+            }
+            if (conf[i].startsWith("  email_delivery:")) {
+                return updateEmailDelivery(domain, service, conf, i)
+            }
+        }
+        return res
+    }
+
+    List updateEmailDelivery(Domain domain, RedmineService service, List conf, int i) {
+        for (i; i < conf.size(); i++) {
+            if (conf[i].startsWith("    delivery_method:")) {
+                conf[i] = redmineConfigTemplate.getText(true, "emailDeliveryMethod", "service", service)
+            }
+            if (conf[i].startsWith("      address:")) {
+                conf[i] = redmineConfigTemplate.getText(true, "emailAddress", "service", service)
+            }
+            if (conf[i].startsWith("      port:")) {
+                conf[i] = redmineConfigTemplate.getText(true, "emailPort", "service", service)
+            }
+            if (conf[i].startsWith("      domain:")) {
+                conf[i] = redmineConfigTemplate.getText(true, "emailDomain", "service", service)
+            }
+            if (conf[i].startsWith("      authentication:")) {
+                conf[i] = redmineConfigTemplate.getText(true, "emailAuthentication", "service", service)
+            }
+            if (conf[i].startsWith("      user_name:")) {
+                conf[i] = redmineConfigTemplate.getText(true, "emailUser", "service", service)
+            }
+            if (conf[i].startsWith("      password:")) {
+                conf[i] = redmineConfigTemplate.getText(true, "emailPassword", "service", service)
+            }
+        }
+        return conf
     }
 
     /**
-     * Sets the owner of <i>gitit</i> directory.
+     * Sets the permissions of the <i>Redmine</i> directories.
      *
      * @param domain
      *            the service {@link Domain}.
      *
      * @param service
-     *            the {@link GititService}.
+     *            the {@link RedmineService}.
      */
     void setupPermissions(Domain domain, RedmineService service) {
-        def dir = gititDir domain, service
+        def dir = redmineDir domain, service
         def user = domain.domainUser
+        def filesDir = new File(dir, "files")
+        def logDir = new File(dir, "log")
+        def tmpDir = new File(dir, "tmp")
+        def tmpPdfDir = new File(dir, "tmp/pdf")
+        def pluginAssetsDir = new File(dir, "public/plugin_assets")
+        tmpDir.mkdirs()
+        tmpPdfDir.mkdirs()
+        pluginAssetsDir.mkdirs()
         changeFileOwnerFactory.create(
-                log: log, files: dir, command: script.chownCommand,
+                log: log,
+                files: [
+                    filesDir,
+                    logDir,
+                    tmpDir,
+                    tmpPdfDir,
+                    pluginAssetsDir
+                ],
+                recursive: true,
+                command: script.chownCommand,
                 owner: user.name, ownerGroup: user.group,
                 this, threads)()
     }
 
     /**
-     * Returns the <i>Gitit</i> service configuration template.
-     *
-     * @return the {@link TemplateResource}.
-     */
-    abstract TemplateResource getGititConfigTemplate()
-
-    /**
-     * Returns the list of needed packages for <i>Gitit</i>.
-     *
-     * <ul>
-     * <li>profile property {@code "gitit_packages"}</li>
-     * </ul>
-     *
-     * @see #getGititProperties()
-     */
-    List getGititPackages() {
-        profileListProperty "gitit_packages", gititProperties
-    }
-
-    /**
-     * Returns the <i>cabal</i> command, for example {@code "/usr/bin/cabal".}
-     *
-     * <ul>
-     * <li>profile property {@code "cabal_command"}</li>
-     * </ul>
-     *
-     * @see #getGititProperties()
-     */
-    String getCabalCommand() {
-        profileProperty "cabal_command", gititProperties
-    }
-
-    /**
-     * Installs the <i>cabal</i> packages.
-     *
-     * @see #getCabalCommand()
-     */
-    void installCabalPackages(def packages) {
-        def task = scriptExecFactory.create(
-                log: log, command: cabalCommand, packages: packages,
-                bashCommand: bashCommand, timeout: cabalInstallTimeout,
-                this, threads, gititCommandTemplate, "cabalInstallCommand")()
-        logg.installCabalPackagesDone this, task, packages
-    }
-
-    /**
-     * Returns the <i>Gitit</i> installation directory.
+     * Returns the <i>Redmine</i> installation directory, for example
+     * {@code /var/www/domain.com/redmineprefix}
      *
      * @param domain
      *            the {@link Domain} domain of the service.
      *
      * @param service
-     *            the {@link GititService} service.
+     *            the {@link RedmineService} service.
      *
      * @return the installation {@link File} directory.
      *
      * @see #domainDir(Domain)
-     * @see GititService#getPrefix()
+     * @see RedmineService#getPrefix()
      */
-    File gititDir(Domain domain, RedmineService service) {
+    File redmineDir(Domain domain, RedmineService service) {
         new File(domainDir(domain), service.prefix)
-    }
-
-    /**
-     * Creates the default <i>Gitit</i> configuration file.
-     *
-     * @param domain
-     *            the service {@link Domain}.
-     *
-     * @param service
-     *            the {@link GititService}.
-     *
-     * @return the {@link String} configuration.
-     */
-    String defaultConfig(Domain domain, RedmineService service) {
-        def command = gititCommand domain, service
-        def task = scriptExecFactory.create(
-                log: log, command: command, outString: true,
-                this, threads, gititCommandTemplate, "printDefaultConfigCommand")()
-        return task.out
-    }
-
-    /**
-     * Returns the <i>Gitit</i> configuration file inside the domain, for
-     * example {@code "/var/www/domain.com/gitit/gitit.conf".}
-     *
-     * @param domain
-     *            the {@link Domain} domain of the service.
-     *
-     * @param service
-     *            the {@link GititService} service.
-     *
-     * @return the configuration {@link File} file.
-     *
-     * @see #gititDir(Domain, GititService)
-     */
-    File gititConfigFile(Domain domain, RedmineService service) {
-        def dir = gititDir domain, service
-        new File(gititConfigFileName, dir)
-    }
-
-    /**
-     * Returns the <i>Gitit</i> configuration file property, for
-     * example {@code "gitit.conf".}
-     *
-     * @param domain
-     *            the {@link Domain} domain of the service.
-     *
-     * @param service
-     *            the {@link GititService} service.
-     *
-     * @return the configuration {@link File} file.
-     *
-     * <ul>
-     * <li>profile property {@code "gitit_configuration_file"}</li>
-     * </ul>
-     *
-     * @see #gititDir(Domain, GititService)
-     */
-    String getGititConfigFileName() {
-        profileProperty "gitit_configuration_file_name", gititProperties
-    }
-
-    /**
-     * Returns the <i>Gitit</i> service file, for
-     * example {@code "/etc/init.d/<domainName>_gititd".} The placeholder
-     * {@code "domainName"} is replaced by the specified domain name.
-     *
-     * @param domain
-     *            the {@link Domain} domain of the service.
-     *
-     * @return the configuration {@link File} file.
-     *
-     * <ul>
-     * <li>profile property {@code "gitit_service_file"}</li>
-     * </ul>
-     */
-    File gititServiceFile(Domain domain) {
-        def str = profileProperty "gitit_service_file", gititProperties
-        def name = domainNameAsFileName domain
-        new File(new ST(str).add("domainName", name).render())
     }
 
     /**
@@ -479,53 +389,10 @@ abstract class Redmine_2_5_Config {
     }
 
     /**
-     * Returns the <i>Gitit</i> service defaults file, for
-     * example {@code "/etc/default/<domainName>_gititd".} The placeholder
-     * {@code "domainName"} is replaced by the specified domain name.
-     *
-     * @param domain
-     *            the {@link Domain} domain of the service.
-     *
-     * @return the configuration {@link File} file.
-     *
-     * <ul>
-     * <li>profile property {@code "gitit_service_defaults_file"}</li>
-     * </ul>
-     */
-    File gititServiceDefaultsFile(Domain domain) {
-        def str = profileProperty "gitit_service_defaults_file", gititProperties
-        def name = domainNameAsFileName domain
-        new File(new ST(str).add("domainName", name).render())
-    }
-
-    /**
-     * Returns the <i>Gitit</i> service default debug file, for
-     * example {@code "<gititDir>/gitit.log".} The placeholder
-     * {@code "gititDir"} is replaced by the specified <i>Gitit</i> directory.
-     *
-     * @param domain
-     *            the {@link Domain} domain of the service.
-     *
-     * @param service
-     *            the {@link GititService} service.
-     *
-     * @return the default debug {@link File} file.
-     *
-     * <ul>
-     * <li>profile property {@code "gitit_default_debug_file"}</li>
-     * </ul>
-     */
-    File gititDefaultDebugFile(Domain domain, RedmineService service) {
-        def str = profileProperty "gitit_default_debug_file", gititProperties
-        def dir = gititDir domain, service
-        new File(new ST(str).add("gititDir", dir).render())
-    }
-
-    /**
      * Returns the service location.
      *
      * @param service
-     *            the {@link GititService}.
+     *            the {@link RedmineService}.
      *
      * @return the location.
      */
@@ -547,13 +414,13 @@ abstract class Redmine_2_5_Config {
      *            the references {@link Domain} or {@code null}.
      *
      * @param service
-     *            the <i>Gitit</i> {@link GititService} service.
+     *            the <i>Redmine</i> {@link RedmineService} service.
      *
-     * @see #serviceDir(Domain, Domain, GititService)
+     * @see #serviceDir(Domain, Domain, RedmineService)
      */
     String serviceAliasDir(Domain domain, Domain refDomain, RedmineService service) {
         def serviceDir = serviceDir domain, refDomain, service
-        service.alias.empty ? "/" : serviceDir
+        service.alias.empty ? "/" : "/${service.alias}"
     }
 
     /**
@@ -566,118 +433,204 @@ abstract class Redmine_2_5_Config {
      *            the references {@link Domain} or {@code null}.
      *
      * @param service
-     *            the <i>Gitit</i> {@link GititService} service.
+     *            the <i>Redmine</i> {@link RedmineService} service.
      *
-     * @see #gititDir(Domain, GititService)
+     * @see #gititDir(Domain, RedmineService)
      */
     String serviceDir(Domain domain, Domain refDomain, RedmineService service) {
-        refDomain == null ? gititDir(domain, service).absolutePath :
-                gititDir(refDomain, service).absolutePath
+        refDomain == null ? redmineDir(domain, service).absolutePath :
+                redmineDir(refDomain, service).absolutePath
     }
 
     /**
-     * Returns the timeout duration to install <i>cabal</i> packages, for
-     * example {@code "PT4H".}
+     * Returns the <i>bundle</i> command, for
+     * example {@code "/usr/local/bin/bundle".}
      *
      * <ul>
-     * <li>profile property {@code "hsenv_cabal_install_timeout"}</li>
+     * <li>profile property {@code "redmine_bundle_command"}</li>
      * </ul>
      *
-     * @see #getGititProperties()
+     * @see #getRedmineProperties()
      */
-    Duration getCabalInstallTimeout() {
-        profileDurationProperty "cabal_install_timeout", gititProperties
+    String getBundleCommand() {
+        profileProperty "redmine_bundle_command", redmineProperties
     }
 
     /**
-     * Returns the <i>bash</i> command, for
-     * example {@code "/bin/bash".}
+     * Returns the <i>rake</i> command, for
+     * example {@code "/usr/local/bin/rake".}
      *
      * <ul>
-     * <li>profile property {@code "bash_command"}</li>
+     * <li>profile property {@code "redmine_rake_command"}</li>
      * </ul>
      *
-     * @see #getGititProperties()
+     * @see #getRedmineProperties()
      */
-    String getBashCommand() {
-        profileProperty "bash_command", gititProperties
+    String getRakeCommand() {
+        profileProperty "redmine_rake_command", redmineProperties
     }
 
     /**
-     * Returns the <i>git</i> packages, for
-     * example {@code "git".}
+     * Returns the <i>gem</i> command, for
+     * example {@code "/usr/bin/gem".}
      *
      * <ul>
-     * <li>profile property {@code "gitit_git_packages"}</li>
+     * <li>profile property {@code "redmine_gem_command"}</li>
      * </ul>
      *
-     * @see #getGititProperties()
+     * @see #getRedmineProperties()
      */
-    List getGitPackages() {
-        profileListProperty "gitit_git_packages", gititProperties
+    String getGemCommand() {
+        profileProperty "redmine_gem_command", redmineProperties
     }
 
     /**
-     * Returns the <i>darcs</i> packages, for
-     * example {@code "darcs".}
-     *
-     * <ul>
-     * <li>profile property {@code "gitit_darcs_packages"}</li>
-     * </ul>
-     *
-     * @see #getGititProperties()
-     */
-    List getDarcsPackages() {
-        profileListProperty "gitit_darcs_packages", gititProperties
-    }
-
-    /**
-     * Returns the <i>mercurial</i> packages, for
-     * example {@code "mercurial".}
-     *
-     * <ul>
-     * <li>profile property {@code "gitit_mercurial_packages"}</li>
-     * </ul>
-     *
-     * @see #getGititProperties()
-     */
-    List getMercurialPackages() {
-        profileListProperty "gitit_mercurial_packages", gititProperties
-    }
-
-    /**
-     * Returns the <i>Gitit</i> command.
+     * Returns the <i>Redmine</i> configuration file inside the
+     * domain, for example {@code "/var/www/domain.com/redmineprefix/config/file.yml".}
      *
      * @param domain
      *            the {@link Domain} domain of the service.
      *
      * @param service
-     *            the {@link GititService} service.
+     *            the {@link RedmineService} service.
      *
-     * @return the {@link String} command.
+     * @param file
+     *            the {@link String} file.
+     *
+     * @return the configuration {@link File} file.
+     *
+     * @see #redmineDir(Domain, RedmineService)
+     * @see #getRedmineDatabaseConfigFile()
+     * @see #getRedmineDatabaseConfigExampleFile()
+     * @see #getRedmineConfigFile()
+     * @see #getRedmineConfigExampleFile()
      */
-    abstract String gititCommand(Domain domain, RedmineService service)
+    File redmineConfigFile(Domain domain, RedmineService service, String file) {
+        def dir = redmineDir domain, service
+        new File(file, dir)
+    }
 
     /**
-     * Returns the <i>Gitit</i> commands template.
+     * Returns the <i>Redmine</i> database configuration file property, for
+     * example {@code "config/database.yml".}
      *
-     * @return the {@link TemplateResource}.
+     * <ul>
+     * <li>profile property {@code "redmine_database_configuration_file"}</li>
+     * </ul>
+     *
+     * @see #gititDir(Domain, RedmineService)
      */
-    abstract TemplateResource getGititCommandTemplate()
+    String getRedmineDatabaseConfigFile() {
+        profileProperty "redmine_database_configuration_file", redmineProperties
+    }
 
     /**
-     * Returns the default <i>Gitit</i> properties.
+     * Returns the <i>Redmine</i> database example configuration file
+     * property, for example {@code "config/database.yml.example".}
      *
-     * @return the <i>Gitit</i> {@link ContextProperties} properties.
+     * <ul>
+     * <li>profile property {@code "redmine_database_configuration_example_file"}</li>
+     * </ul>
+     *
+     * @see #gititDir(Domain, RedmineService)
      */
-    abstract ContextProperties getGititProperties()
+    String getRedmineDatabaseConfigExampleFile() {
+        profileProperty "redmine_database_configuration_example_file", redmineProperties
+    }
 
     /**
-     * Returns the <i>Gitit</i> service name.
+     * Returns the <i>Redmine</i> configuration file property, for
+     * example {@code "config/configuration.yml".}
+     *
+     * <ul>
+     * <li>profile property {@code "redmine_configuration_file"}</li>
+     * </ul>
+     *
+     * @see #gititDir(Domain, RedmineService)
+     */
+    String getRedmineConfigFile() {
+        profileProperty "redmine_configuration_file", redmineProperties
+    }
+
+    /**
+     * Returns the <i>Redmine</i> example configuration file property, for
+     * example {@code "config/configuration.yml.example".}
+     *
+     * <ul>
+     * <li>profile property {@code "redmine_configuration_example_file"}</li>
+     * </ul>
+     *
+     * @see #gititDir(Domain, RedmineService)
+     */
+    String getRedmineConfigExampleFile() {
+        profileProperty "redmine_configuration_example_file", redmineProperties
+    }
+
+    /**
+     * Returns the <i>Redmine</i> packages, for
+     * example {@code "ruby, rake, rubygems, libopenssl-ruby, libmysql-ruby, ruby-dev, libmysqlclient-dev, libmagick-dev, curl, libmagickwand-dev".}
+     *
+     * <ul>
+     * <li>profile property {@code "redmine_packages"}</li>
+     * </ul>
+     *
+     * @see #getRedminePackages()
+     */
+    List getRedminePackages() {
+        profileListProperty "redmine_packages", redmineProperties
+    }
+
+    /**
+     * Returns the default mail port, for
+     * example {@code "25".}
+     *
+     * <ul>
+     * <li>profile property {@code "redmine_default_mail_port"}</li>
+     * </ul>
+     */
+    int getDefaultMailPort() {
+        profileNumberProperty "redmine_default_mail_port", redmineProperties
+    }
+
+    /**
+     * Returns the default mail delivery method, for
+     * example {@code "smtp".}
+     *
+     * <ul>
+     * <li>profile property {@code "redmine_default_mail_delivery_method"}</li>
+     * </ul>
+     */
+    DeliveryMethod getDefaultMailDeliveryMethod() {
+        def p = profileProperty "redmine_default_mail_delivery_method", redmineProperties
+        DeliveryMethod.valueOf(p)
+    }
+
+    /**
+     * Returns the default mail authentication method, for
+     * example {@code "login".}
+     *
+     * <ul>
+     * <li>profile property {@code "redmine_default_mail_authentication_method"}</li>
+     * </ul>
+     */
+    AuthenticationMethod getDefaultMailAuthenticationMethod() {
+        def p = profileProperty "redmine_default_mail_authentication_method", redmineProperties
+        AuthenticationMethod.valueOf(p)
+    }
+
+    /**
+     * Returns the <i>Redmine</i> service name.
      */
     String getServiceName() {
-        GititConfigFactory.WEB_NAME
+        RedmineConfigFactory.WEB_NAME
     }
+
+    /**
+     * Returns the <i>Redmine</i> properties.
+     *
+     * @return the {@link ContextProperties} properties.
+     */
+    abstract ContextProperties getRedmineProperties()
 
     /**
      * Returns the profile name.
@@ -689,6 +642,13 @@ abstract class Redmine_2_5_Config {
      */
     void setScript(LinuxScript script) {
         this.script = script
+        this.redmineConfigTemplates = templatesFactory.create("Redmine_2_5_Config",
+                [renderers: [
+                        deliveryMethodAttributeRenderer,
+                        authenticationMethodAttributeRenderer
+                    ]])
+        this.redmineDatabaseConfigTemplate = redmineConfigTemplates.getResource("database_config")
+        this.redmineConfigTemplate = redmineConfigTemplates.getResource("config")
     }
 
     /**

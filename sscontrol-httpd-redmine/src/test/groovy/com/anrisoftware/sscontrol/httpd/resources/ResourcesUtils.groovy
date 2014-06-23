@@ -29,31 +29,31 @@ import static org.apache.commons.io.FileUtils.*
  */
 class ResourcesUtils {
 
-	String path
+    String path
 
-	URL resource
+    URL resource
 
-	File asFile(File parent) {
-		new File(parent, path)
-	}
+    File asFile(File parent) {
+        new File(parent, path)
+    }
 
-	void createFile(File parent) {
-		assert resource : "Resource cannot be null for ${resource}"
-		copyURLToFile resource, new File(parent, path)
-	}
+    void createFile(File parent) {
+        assert resource : "Resource ${resource} cannot be null for ${path}"
+        copyURLToFile resource, new File(parent, path)
+    }
 
-	void createCommand(File parent) {
-		assert resource : "Resource cannot be null for ${resource}"
-		copyResourceToCommand resource, new File(parent, path)
-	}
+    void createCommand(File parent) {
+        assert resource : "Resource ${resource} cannot be null for ${path}"
+        copyResourceToCommand resource, new File(parent, path)
+    }
 
-	String replaced(File parent, def search, def replace) {
-		String text = readFileToString(this.asFile(parent))
-		text.replaceAll(search.toString(), replace)
-	}
+    String replaced(File parent, def search, def replace) {
+        String text = readFileToString(this.asFile(parent))
+        text.replaceAll(search.toString(), replace)
+    }
 
-	String toString() {
-		assert resource : "Resource cannot be null for ${resource}"
-		resourceToString resource
-	}
+    String toString() {
+        assert resource : "Resource ${resource} cannot be null for ${path}"
+        resourceToString resource
+    }
 }

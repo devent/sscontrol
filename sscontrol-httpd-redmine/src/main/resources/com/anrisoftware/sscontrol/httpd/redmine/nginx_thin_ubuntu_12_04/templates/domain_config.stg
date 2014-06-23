@@ -1,0 +1,31 @@
+domainConfig(args) ::= <<
+<! - args.domain - !>
+<! - args.alias - !>
+<! - args.domainName - !>
+<! - args.prefix - !>
+# Redmine "<args.prefix>", Domain <args.domain.name>
+location <args.alias> {
+    try_files $uri @cluster_<args.domainName>_<args.prefix>;
+}
+
+location @cluster_<args.domainName> {
+    proxy_pass http://thin_<args.domainName>_<args.prefix>;
+}
+
+>>
+
+upstreamConfig(args) ::= <<
+<! - args.domain - !>
+<! - args.sockets - !>
+<! - args.domainName - !>
+<! - args.prefix - !>
+# Thin "<args.prefix>", Domain <args.domain.name>
+upstream thin_<args.domainName>_<args.prefix> {
+    <args.sockets:upstreamServer();separator="\n">
+}
+
+>>
+
+upstreamServer(socket) ::= <%
+server unix:<socket>;
+%>

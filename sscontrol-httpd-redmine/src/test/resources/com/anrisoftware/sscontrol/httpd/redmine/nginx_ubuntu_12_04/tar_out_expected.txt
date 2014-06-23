@@ -1,4 +1,2 @@
---overwrite --strip 1 -xf /tmp/tmp/gitit-gitit-0.10.3.1-archive.tar.gz
---overwrite --strip 1 -xf /tmp/tmp/gitit-gitit-0.10.3.1-archive.tar.gz
---overwrite --strip 1 -xf /tmp/tmp/gitit-gitit-0.10.3.1-archive.tar.gz
---overwrite --strip 1 -xf /tmp/tmp/gitit-gitit-0.10.3.1-archive.tar.gz
+--overwrite --strip 1 -xf /tmp/tmp/redmine-redmine-2.5.1.tar.gz
+--overwrite --strip 1 -xf /tmp/tmp/redmine-redmine-2.5.1.tar.gz

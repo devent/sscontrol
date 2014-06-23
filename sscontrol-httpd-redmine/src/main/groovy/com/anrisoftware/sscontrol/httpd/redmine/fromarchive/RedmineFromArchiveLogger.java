@@ -18,23 +18,19 @@
  */
 package com.anrisoftware.sscontrol.httpd.redmine.fromarchive;
 
-import static com.anrisoftware.sscontrol.httpd.gitit.fromsource.HsenvFromSourceLogger._.compare_gitit_versions;
-import static com.anrisoftware.sscontrol.httpd.gitit.fromsource.HsenvFromSourceLogger._.install_gitit_debug;
-import static com.anrisoftware.sscontrol.httpd.gitit.fromsource.HsenvFromSourceLogger._.install_gitit_info;
-import static com.anrisoftware.sscontrol.httpd.gitit.fromsource.HsenvFromSourceLogger._.install_gitit_trace;
-import static com.anrisoftware.sscontrol.httpd.gitit.fromsource.HsenvFromSourceLogger._.install_hsenv_debug;
-import static com.anrisoftware.sscontrol.httpd.gitit.fromsource.HsenvFromSourceLogger._.install_hsenv_info;
-import static com.anrisoftware.sscontrol.httpd.gitit.fromsource.HsenvFromSourceLogger._.install_packages_done_debug;
-import static com.anrisoftware.sscontrol.httpd.gitit.fromsource.HsenvFromSourceLogger._.install_packages_done_info;
-import static com.anrisoftware.sscontrol.httpd.gitit.fromsource.HsenvFromSourceLogger._.install_packages_done_trace;
-import static com.anrisoftware.sscontrol.httpd.gitit.fromsource.HsenvFromSourceLogger._.unpack_archive_debug;
-import static com.anrisoftware.sscontrol.httpd.gitit.fromsource.HsenvFromSourceLogger._.unpack_archive_info;
+import static com.anrisoftware.sscontrol.httpd.redmine.fromarchive.RedmineFromArchiveLogger._.archive_name;
+import static com.anrisoftware.sscontrol.httpd.redmine.fromarchive.RedmineFromArchiveLogger._.compare_redmine_versions;
+import static com.anrisoftware.sscontrol.httpd.redmine.fromarchive.RedmineFromArchiveLogger._.error_archive_hash;
+import static com.anrisoftware.sscontrol.httpd.redmine.fromarchive.RedmineFromArchiveLogger._.error_archive_hash_message;
+import static com.anrisoftware.sscontrol.httpd.redmine.fromarchive.RedmineFromArchiveLogger._.service_name;
+import static com.anrisoftware.sscontrol.httpd.redmine.fromarchive.RedmineFromArchiveLogger._.unpack_archive_debug;
+import static com.anrisoftware.sscontrol.httpd.redmine.fromarchive.RedmineFromArchiveLogger._.unpack_archive_info;
 
 import java.net.URI;
-import java.util.List;
 
-import com.anrisoftware.globalpom.exec.api.ProcessTask;
 import com.anrisoftware.globalpom.log.AbstractLogger;
+import com.anrisoftware.sscontrol.core.api.ServiceException;
+import com.anrisoftware.sscontrol.httpd.redmine.RedmineService;
 
 /**
  * Logging for {@link RedmineFromArchive}.
@@ -46,28 +42,21 @@ class RedmineFromArchiveLogger extends AbstractLogger {
 
     enum _ {
 
-        install_packages_done_trace("Install packages {} done for {}, {}."),
-
-        install_packages_done_debug("Install packages {} done for {}."),
-
-        install_packages_done_info("Install packages {} done for service '{}'."),
-
         unpack_archive_debug("Unpack archive '{}' done for {}."),
 
-        unpack_archive_info("Unpack Gitit archive '{}' done for service '{}'."),
+        unpack_archive_info(
+                "Unpack Redmine archive '{}' done for service '{}'."),
 
-        install_hsenv_debug("Install hsenv packages {} done for {}."),
+        compare_redmine_versions(
+                "Compare installed Redmine version '{}' to expected '{}' for {}."),
 
-        install_hsenv_info("Install hsenv packages {} done for service '{}'."),
+        error_archive_hash("Redmine archive hash not match"),
 
-        install_gitit_trace("Install Gitit done for {}, {}."),
+        error_archive_hash_message("Redmine archive '{}' hash not match for {}"),
 
-        install_gitit_debug("Install Gitit done for {}."),
+        service_name("service"),
 
-        install_gitit_info("Install Gitit done for service '{}'."),
-
-        compare_gitit_versions(
-                "Compare installed Gitit version '{}' to expected '{}' for {}.");
+        archive_name("archive");
 
         private String name;
 
@@ -88,17 +77,6 @@ class RedmineFromArchiveLogger extends AbstractLogger {
         super(RedmineFromArchive.class);
     }
 
-    void installHsenvCabalPackagesDone(RedmineFromArchive config,
-            ProcessTask task, Object packages) {
-        if (isTraceEnabled()) {
-            trace(install_packages_done_trace, packages, config, task);
-        } else if (isDebugEnabled()) {
-            debug(install_packages_done_debug, packages, config);
-        } else {
-            info(install_packages_done_info, packages, config.getName());
-        }
-    }
-
     void unpackArchiveDone(RedmineFromArchive config, URI archive) {
         if (isDebugEnabled()) {
             debug(unpack_archive_debug, archive, config);
@@ -107,27 +85,15 @@ class RedmineFromArchiveLogger extends AbstractLogger {
         }
     }
 
-    @SuppressWarnings("rawtypes")
-    void installHsenvDone(RedmineFromArchive config, List packages) {
-        if (isDebugEnabled()) {
-            debug(install_hsenv_debug, packages, config);
-        } else {
-            info(install_hsenv_info, packages, config.getName());
-        }
+    void checkRedmineVersion(RedmineFromArchive config, String version,
+            String expectedVersion) {
+        debug(compare_redmine_versions, version, expectedVersion, config);
     }
 
-    void installGititDone(RedmineFromArchive config, ProcessTask task) {
-        if (isTraceEnabled()) {
-            trace(install_gitit_trace, config, task);
-        } else if (isDebugEnabled()) {
-            debug(install_gitit_debug, config);
-        } else {
-            info(install_gitit_info, config.getName());
-        }
-    }
-
-    void checkGititVersion(RedmineFromArchive config, String version,
-            String gititVersion) {
-        debug(compare_gitit_versions, version, gititVersion, config);
+    ServiceException errorArchiveHash(RedmineService service, URI archive) {
+        return logException(
+                new ServiceException(error_archive_hash).add(service_name,
+                        service).add(archive_name, archive),
+                error_archive_hash_message, archive, service);
     }
 }

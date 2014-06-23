@@ -1,20 +1,12 @@
 update
 install nginx net-tools
 update
-install ghc cabal-install libghc-pcre-light-dev alex zlib1g-dev happy
+install ruby rake rubygems libopenssl-ruby libmysql-ruby ruby-dev libmysqlclient-dev libmagick-dev curl libmagickwand-dev
 update
-install git
-update
-install ghc cabal-install libghc-pcre-light-dev alex zlib1g-dev happy
-update
-install git
+install ruby rake rubygems libopenssl-ruby libmysql-ruby ruby-dev libmysqlclient-dev libmagick-dev curl libmagickwand-dev
 update
 install nginx net-tools
 update
-install ghc cabal-install libghc-pcre-light-dev alex zlib1g-dev happy
+install ruby rake rubygems libopenssl-ruby libmysql-ruby ruby-dev libmysqlclient-dev libmagick-dev curl libmagickwand-dev
 update
-install git
-update
-install ghc cabal-install libghc-pcre-light-dev alex zlib1g-dev happy
-update
-install git
+install ruby rake rubygems libopenssl-ruby libmysql-ruby ruby-dev libmysqlclient-dev libmagick-dev curl libmagickwand-dev

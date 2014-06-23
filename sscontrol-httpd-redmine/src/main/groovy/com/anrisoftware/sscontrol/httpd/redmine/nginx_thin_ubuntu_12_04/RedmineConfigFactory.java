@@ -16,21 +16,24 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd-gitit. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.redmine.nginx_ubuntu_12_04;
+package com.anrisoftware.sscontrol.httpd.redmine.nginx_thin_ubuntu_12_04;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.mangosdk.spi.ProviderFor;
 
 import com.anrisoftware.sscontrol.core.api.ServiceException;
+import com.anrisoftware.sscontrol.httpd.redmine.RedmineService;
 import com.anrisoftware.sscontrol.httpd.webservice.ServiceConfig;
 import com.anrisoftware.sscontrol.httpd.webservice.ServiceConfigFactory;
 import com.anrisoftware.sscontrol.httpd.webservice.ServiceConfigInfo;
+import com.anrisoftware.sscontrol.httpd.webservice.WebService;
 import com.google.inject.Injector;
 import com.google.inject.Module;
 
 /**
- * <i>Gitit</i> configuration factory for <i>Nginx Ubuntu 12.04</i>.
- * 
+ * <i>Redmine</i> configuration factory for <i>Nginx Ubuntu 12.04</i>.
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
@@ -43,9 +46,9 @@ public class RedmineConfigFactory implements ServiceConfigFactory {
     public static final String PROFILE_NAME = "ubuntu_12_04";
 
     /**
-     * <i>Gitit</i> service name.
+     * <i>Redmine</i> service name.
      */
-    public static final String WEB_NAME = "gitit";
+    public static final String WEB_NAME = "redmine";
 
     /**
      * <i>Nginx</i> service name.
@@ -53,7 +56,12 @@ public class RedmineConfigFactory implements ServiceConfigFactory {
     public static final String NGINX_NAME = "nginx";
 
     /**
-     * <i>Gitit</i> service information.
+     * <i>Thin</i> backend name.
+     */
+    public static final String BACKEND_NAME = "thin";
+
+    /**
+     * <i>Redmine</i> service information.
      */
     @SuppressWarnings("serial")
     public static final ServiceConfigInfo INFO = new ServiceConfigInfo() {
@@ -71,6 +79,28 @@ public class RedmineConfigFactory implements ServiceConfigFactory {
         @Override
         public String getProfileName() {
             return PROFILE_NAME;
+        }
+
+        @Override
+        public WebService getWebService() {
+            return null;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (obj == null) {
+                return false;
+            }
+            if (obj == this) {
+                return true;
+            }
+            if (!(obj instanceof ServiceConfigInfo)) {
+                return false;
+            }
+            ServiceConfigInfo rhs = (ServiceConfigInfo) obj;
+            RedmineService service = (RedmineService) rhs.getWebService();
+            return new EqualsBuilder().appendSuper(super.equals(obj))
+                    .append(service.getBackend(), BACKEND_NAME).isEquals();
         }
     };
 

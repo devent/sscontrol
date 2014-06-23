@@ -14,5 +14,9 @@ public enum AuthenticationMethod {
 
     login,
 
-    cram_md5
+    cram_md5;
+
+    public String getName() {
+        return name();
+    }
 }

@@ -1,0 +1,25 @@
+
+domainServiceConfig(args) ::= <<
+<! - args.properties - !>
+<! - args.chdir - !>
+<! - args.logFile - !>
+<! - args.pidFile - !>
+<! - args.socketFile - !>
+---
+chdir: <args.chdir>
+environment: production
+timeout: <args.properties.timeoutDuration>
+log: <args.logFile>
+pid: <args.pidFile>
+max_conns: <args.properties.maxConnections>
+max_persistent_conns: <args.properties.maxPersistentConnections>
+require: []
+wait: <args.properties.waitDuration>
+socket: <args.socketFile>
+daemonize: true
+user: <args.properties.thinUser>
+group: <args.domain.domainUser.group>
+servers: <args.properties.serversCount>
+prefix: /
+
+>>

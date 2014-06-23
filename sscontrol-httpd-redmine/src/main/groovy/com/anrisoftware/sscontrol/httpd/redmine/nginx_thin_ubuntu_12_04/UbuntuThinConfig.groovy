@@ -16,22 +16,31 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd-gitit. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.redmine.nginx_ubuntu_12_04;
+package com.anrisoftware.sscontrol.httpd.redmine.nginx_thin_ubuntu_12_04
 
-import com.anrisoftware.sscontrol.scripts.unpack.UnpackModule;
-import com.google.inject.AbstractModule;
+import javax.inject.Inject
+
+import com.anrisoftware.propertiesutils.ContextProperties
+import com.anrisoftware.sscontrol.httpd.redmine.thin.Thin_1_3_Config
 
 /**
- * Binds <i>Gitit</i> configuration for <i>Ubuntu 12.04</i>.
- * 
+ * <i>Thin Ubuntu 12.04</i> <i>Redmine</i> service configuration.
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class NginxModule extends AbstractModule {
+class UbuntuThinConfig extends Thin_1_3_Config {
+
+    @Inject
+    UbuntuThinPropertiesProvider propertiesProvider
 
     @Override
-    protected void configure() {
-        install(new UnpackModule());
+    ContextProperties getThinProperties() {
+        propertiesProvider.get()
     }
 
+    @Override
+    String getProfile() {
+        RedmineConfigFactory.PROFILE_NAME
+    }
 }

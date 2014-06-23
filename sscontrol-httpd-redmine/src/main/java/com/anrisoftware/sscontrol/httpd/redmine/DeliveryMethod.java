@@ -14,5 +14,9 @@ public enum DeliveryMethod {
 
     async_smtp,
 
-    async_sendmail
+    async_sendmail;
+
+    public String getName() {
+        return name();
+    }
 }

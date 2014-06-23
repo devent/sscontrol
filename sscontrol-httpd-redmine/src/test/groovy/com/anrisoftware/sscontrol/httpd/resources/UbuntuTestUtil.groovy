@@ -72,7 +72,7 @@ class UbuntuTestUtil {
 
     @Before
     void createTemp() {
-        tmpdir = tmp.newFolder("gitit")
+        tmpdir = tmp.newFolder("redmine")
         variables = [tmp: tmpdir.absoluteFile]
     }
 

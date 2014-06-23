@@ -6,11 +6,13 @@ server {
     server_name test2.com;
     client_max_body_size 2M;
 
-    # gitit
-    location / {
-        proxy_pass http://127.0.0.1:5001/;
-        proxy_set_header X-Real-IP  $remote_addr;
-        proxy_redirect off;
+    # Redmine "test2redmine", Domain test2.com
+    location /redmine {
+        try_files $uri @cluster_test2_com_test2redmine;
+    }
+
+    location @cluster_test2_com {
+        proxy_pass http://thin_test2_com_test2redmine;
     }
 
 }

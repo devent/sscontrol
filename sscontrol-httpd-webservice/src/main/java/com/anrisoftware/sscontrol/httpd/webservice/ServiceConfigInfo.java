@@ -62,6 +62,13 @@ public abstract class ServiceConfigInfo implements Serializable {
      */
     public abstract String getProfileName();
 
+    /**
+     * Returns the web service.
+     * 
+     * @return the {@link WebService}.
+     */
+    public abstract WebService getWebService();
+
     @Override
     public boolean equals(Object obj) {
         if (obj == null) {

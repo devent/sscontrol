@@ -34,5 +34,10 @@ public enum OverrideMode {
     /**
      * Update the existing service.
      */
+    yes,
+
+    /**
+     * Update the existing service, only if the version limits allow it.
+     */
     update;
 }

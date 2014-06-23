@@ -148,7 +148,11 @@ abstract class NginxScript extends LinuxScript {
 
     private ServiceConfig findWebServicesConfigProvider(String profile, WebService service) {
         def factory = webServicesConfigProvider.find(
-                [getServiceName: { NGINX_NAME }, getWebName: { service.name }, getProfileName: { profile }] as ServiceConfigInfo)
+                [
+                    getServiceName: { NGINX_NAME },
+                    getWebName: { service.name },
+                    getProfileName: { profile },
+                    getWebService: { service }] as ServiceConfigInfo)
         factory.setParent injector
         def script = factory.getScript()
         script.setScript this

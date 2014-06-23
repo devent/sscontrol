@@ -25,6 +25,7 @@ import com.anrisoftware.sscontrol.core.api.ServiceException;
 import com.anrisoftware.sscontrol.httpd.webservice.ServiceConfig;
 import com.anrisoftware.sscontrol.httpd.webservice.ServiceConfigFactory;
 import com.anrisoftware.sscontrol.httpd.webservice.ServiceConfigInfo;
+import com.anrisoftware.sscontrol.httpd.webservice.WebService;
 import com.google.inject.Injector;
 import com.google.inject.Module;
 
@@ -71,6 +72,11 @@ public class GititConfigFactory implements ServiceConfigFactory {
         @Override
         public String getProfileName() {
             return PROFILE_NAME;
+        }
+
+        @Override
+        public WebService getWebService() {
+            return null;
         }
     };
 

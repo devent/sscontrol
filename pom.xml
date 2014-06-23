@@ -26,6 +26,7 @@
         <module>sscontrol-httpd-gitit</module>
         <module>sscontrol-httpd-nginx</module>
         <module>sscontrol-httpd-piwik</module>
+        <module>sscontrol-httpd-redmine</module>
         <module>sscontrol-httpd-webservice</module>
 <!--         <module>sscontrol-ldap</module> -->
 <!--         <module>sscontrol-ldap-openldap</module> -->

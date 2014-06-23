@@ -13,8 +13,12 @@
 	<artifactId>sscontrol-httpd-gitit</artifactId>
 	<name>RoboBee :: Httpd :: Gitit</name>
 	<description>Wiki software Gitit - http://gitit.net</description>
-	<inceptionYear>2012</inceptionYear>
+	<inceptionYear>2014</inceptionYear>
 	<url>https://www.anr-institute.com/projects/projects/sscontrol-httpd-gitit</url>
+
+	<properties>
+		<project.custom.year>${project.inceptionYear}</project.custom.year>
+	</properties>
 
 	<issueManagement>
 		<system>Redmine</system>

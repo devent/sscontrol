@@ -30,6 +30,7 @@ import javax.inject.Inject;
  */
 public class DatabaseArgs {
 
+    public static final String ENCODING = "encoding";
     public static final String PROVIDER = "provider";
     public static final String HOST = "host";
     public static final String PASSWORD = "password";
@@ -79,6 +80,16 @@ public class DatabaseArgs {
         Object provider = args.get(PROVIDER);
         log.checkProvider(service, provider);
         return provider.toString();
+    }
+
+    boolean haveEncoding(Map<String, Object> args) {
+        return args.containsKey(ENCODING);
+    }
+
+    String encoding(Object service, Map<String, Object> args) {
+        Object encoding = args.get(ENCODING);
+        log.checkEncoding(service, encoding);
+        return encoding.toString();
     }
 
 }

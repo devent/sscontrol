@@ -18,6 +18,7 @@
  */
 package com.anrisoftware.sscontrol.core.database;
 
+import static com.anrisoftware.sscontrol.core.database.DatabaseLogger._.encoding_null;
 import static com.anrisoftware.sscontrol.core.database.DatabaseLogger._.provider_null;
 import static org.apache.commons.lang3.Validate.notBlank;
 import static org.apache.commons.lang3.Validate.notNull;
@@ -37,7 +38,9 @@ class DatabaseLogger extends AbstractLogger {
 
     enum _ {
 
-        provider_null("Database provider cannot be null or blank for %s.");
+        provider_null("Database provider cannot be null or blank for %s."),
+
+        encoding_null("Database encoding cannot be null or blank for %s.");
 
         private String name;
 
@@ -61,5 +64,10 @@ class DatabaseLogger extends AbstractLogger {
     void checkProvider(Object service, Object provider) {
         notNull(provider, provider_null.toString(), service);
         notBlank(provider.toString(), provider_null.toString(), service);
+    }
+
+    void checkEncoding(Object service, Object encoding) {
+        notNull(encoding, encoding_null.toString(), service);
+        notBlank(encoding.toString(), encoding_null.toString(), service);
     }
 }

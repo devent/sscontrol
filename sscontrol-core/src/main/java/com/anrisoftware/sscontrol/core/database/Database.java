@@ -50,6 +50,8 @@ public class Database {
 
     private String host;
 
+    private String encoding;
+
     /**
      * @see DatabaseFactory#create(Object, Map)
      */
@@ -57,19 +59,22 @@ public class Database {
     Database(DatabaseArgs argss, @Assisted Object service,
             @Assisted Map<String, Object> args) {
         if (argss.haveProvider(args)) {
-            setProvider(argss.provider(this, args));
+            this.provider = argss.provider(this, args);
         }
         if (argss.haveUser(args)) {
-            setUser(argss.user(args));
+            this.user = argss.user(args);
         }
         if (argss.havePassword(args)) {
-            setPassword(argss.password(args));
+            this.password = argss.password(args);
         }
         if (argss.haveHost(args)) {
-            setHost(argss.host(args));
+            this.host = argss.host(args);
         }
         if (argss.haveDatabase(args)) {
-            setDatabase(argss.database(args));
+            this.database = argss.database(args);
+        }
+        if (argss.haveEncoding(args)) {
+            this.encoding = argss.encoding(service, args);
         }
     }
 
@@ -111,6 +116,14 @@ public class Database {
 
     public void setHost(String host) {
         this.host = host;
+    }
+
+    public void setEncoding(String encoding) {
+        this.encoding = encoding;
+    }
+
+    public String getEncoding() {
+        return encoding;
     }
 
     @Override

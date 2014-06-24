@@ -456,6 +456,7 @@ abstract class Redmine_2_5_Config {
                 log: log,
                 rakeCommand: rakeCommand,
                 workDir: dir,
+                rails: railsProduction,
                 language: service.languageName,
                 this, threads, rakeCommandsTemplate, "rakeMigrateDb")()
     }
@@ -494,6 +495,7 @@ abstract class Redmine_2_5_Config {
                 rakeCommand: rakeCommand,
                 workDir: dir,
                 language: service.languageName,
+                rails: railsProduction,
                 this, threads, rakeCommandsTemplate, "rakeLoadDefaultData")()
     }
 
@@ -746,6 +748,20 @@ abstract class Redmine_2_5_Config {
      */
     List getProductionExcludedBundles() {
         profileListProperty "redmine_production_excluded_bundles", redmineProperties
+    }
+
+    /**
+     * Returns the <i>Rails</i> production environment name, for
+     * example {@code "production".}
+     *
+     * <ul>
+     * <li>profile property {@code "redmine_rails_production"}</li>
+     * </ul>
+     *
+     * @see #getRedmineProperties()
+     */
+    String getRailsProduction() {
+        profileProperty "redmine_rails_production", redmineProperties
     }
 
     /**

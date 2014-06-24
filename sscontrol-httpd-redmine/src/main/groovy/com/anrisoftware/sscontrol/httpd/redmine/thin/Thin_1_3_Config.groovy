@@ -30,6 +30,7 @@ import com.anrisoftware.resources.templates.api.TemplatesFactory
 import com.anrisoftware.sscontrol.httpd.domain.Domain
 import com.anrisoftware.sscontrol.httpd.redmine.RedmineService
 import com.anrisoftware.sscontrol.httpd.webservice.WebService
+import com.anrisoftware.sscontrol.scripts.localgroupadd.LocalGroupAddFactory
 import com.anrisoftware.sscontrol.scripts.localuseradd.LocalUserAddFactory
 
 /**
@@ -49,6 +50,9 @@ abstract class Thin_1_3_Config extends AbstractThinConfig {
 
     @Inject
     LocalUserAddFactory localUserAddFactory
+
+    @Inject
+    LocalGroupAddFactory localGroupAddFactory
 
     @Inject
     DurationAttributeRenderer durationAttributeRenderer
@@ -85,6 +89,13 @@ abstract class Thin_1_3_Config extends AbstractThinConfig {
      *            the {@link GititService}.
      */
     void createThinUser(Domain domain, RedmineService service) {
+        localGroupAddFactory.create(
+                log: log,
+                command: groupAddCommand,
+                systemGroup: true,
+                groupsFile: groupsFile,
+                groupName: thinGroup,
+                this, threads)()
         localUserAddFactory.create(
                 log: log,
                 userName: thinUser,

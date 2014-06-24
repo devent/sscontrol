@@ -37,18 +37,25 @@ public interface LocalUserAddFactory {
      *            the {@link Map} arguments:
      *            <ul>
      *            <li>{@code command} the group add command, for example
-     *            {@code "/usr/sbin/groupadd".}
+     *            {@code "/usr/sbin/useradd".}
      * 
-     *            <li>{@code systemGroup} optionally, set to {@code true} to add
-     *            a new system group.
+     *            <li>{@code usersFile} the path to the users file, for example
+     *            {@code "/etc/passwd".}
      * 
-     *            <li>{@code groupsFile} the path to the groups file, for
-     *            example {@code "/etc/group".}
+     *            <li>{@code userId} the user ID, for example {@code "100".}
      * 
-     *            <li>{@code groupId} the group ID, for example {@code "100".}
-     * 
-     *            <li>{@code groupName} the group name, for example
+     *            <li>{@code userName} the user name, for example
      *            {@code "test".}
+     * 
+     *            <li>{@code groupName} optionally, the user group name, for
+     *            example {@code "test".}
+     * 
+     *            <li>{@code systemUser} optionally, set to {@code true} to add
+     *            a new system user.
+     * 
+     *            <li>{@code shell} optionally, set to the login shell.
+     * 
+     *            <li>{@code homeDir} optionally, set to the home directories.
      *            </ul>
      * 
      * @param parent

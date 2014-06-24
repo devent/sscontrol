@@ -27,6 +27,7 @@ import static com.anrisoftware.sscontrol.scripts.localuseradd.LocalUserAddLogger
 import static com.anrisoftware.sscontrol.scripts.localuseradd.LocalUserAddLogger._.user_already_exist_info;
 import static com.anrisoftware.sscontrol.scripts.localuseradd.LocalUserAddLogger._.user_already_exist_trace;
 import static org.apache.commons.lang3.Validate.isInstanceOf;
+import static org.apache.commons.lang3.Validate.notBlank;
 import static org.apache.commons.lang3.Validate.notNull;
 
 import java.util.Map;
@@ -97,7 +98,9 @@ class LocalUserAddLogger extends AbstractLogger {
 
     void userId(Map<String, Object> args, Object parent) {
         Object object = args.get(USER_ID_KEY);
-        notNull(object, argument_null.toString(), USER_ID_KEY);
+        if (object != null) {
+            notBlank(object.toString(), argument_null.toString(), USER_ID_KEY);
+        }
     }
 
     void usersFile(Map<String, Object> args, Object parent) {
@@ -120,7 +123,10 @@ class LocalUserAddLogger extends AbstractLogger {
 
     void groupName(Map<String, Object> args, Object parent) {
         Object object = args.get(GROUP_NAME_KEY);
-        notNull(object, argument_null.toString(), GROUP_NAME_KEY);
+        if (object != null) {
+            notBlank(object.toString(), argument_null.toString(),
+                    GROUP_NAME_KEY);
+        }
     }
 
     void homeDir(Map<String, Object> args, Object parent) {

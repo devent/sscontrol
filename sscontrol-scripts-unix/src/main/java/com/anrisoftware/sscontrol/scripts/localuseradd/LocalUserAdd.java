@@ -74,7 +74,6 @@ public class LocalUserAdd implements Callable<LocalUserAdd> {
         this.parent = parent;
         this.threads = threads;
         args.put("outString", true);
-        args.put("errString", true);
         log.userName(args, parent);
         log.groupName(args, parent);
         log.userId(args, parent);

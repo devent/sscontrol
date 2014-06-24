@@ -28,6 +28,7 @@ import static com.anrisoftware.sscontrol.scripts.localgroupadd.LocalGroupAddLogg
 import static com.anrisoftware.sscontrol.scripts.localgroupadd.LocalGroupAddLogger._.system_group_boolean;
 import static org.apache.commons.lang3.Validate.isInstanceOf;
 import static org.apache.commons.lang3.Validate.isTrue;
+import static org.apache.commons.lang3.Validate.notBlank;
 import static org.apache.commons.lang3.Validate.notNull;
 
 import java.util.Map;
@@ -96,9 +97,10 @@ class LocalGroupAddLogger extends AbstractLogger {
     }
 
     void groupId(Map<String, Object> args, Object parent) {
-        isTrue(args.containsKey(GROUP_ID_KEY), argument_null.toString(),
-                GROUP_ID_KEY);
-        notNull(args.get(GROUP_ID_KEY), argument_null.toString(), GROUP_ID_KEY);
+        Object object = args.get(GROUP_ID_KEY);
+        if (object != null) {
+            notBlank(object.toString(), argument_null.toString(), GROUP_ID_KEY);
+        }
     }
 
     void groupsFile(Map<String, Object> args, Object parent) {

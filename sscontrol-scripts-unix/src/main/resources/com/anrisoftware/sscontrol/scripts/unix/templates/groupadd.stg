@@ -2,10 +2,10 @@ unix(args) ::= <<
 if [ -z "`grep <args.groupName> <args.groupsFile> | cut -d ":" -f 3`" ]; then
     <unixGroupAdd(args)>
     ret=$?
-    if [ $ret=0 ]; then
+    if [ $ret = 0 ]; then
         echo "Group '<args.groupName>' added."
     else
-        exit $?
+        exit $ret
     fi
 else
     echo "Group '<args.groupName>' already exists."

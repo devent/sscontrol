@@ -74,7 +74,6 @@ public class LocalGroupAdd implements Callable<LocalGroupAdd> {
         this.parent = parent;
         this.threads = threads;
         args.put("outString", true);
-        args.put("errString", true);
         log.groupName(args, parent);
         log.groupId(args, parent);
         log.groupsFile(args, parent);

@@ -39,16 +39,17 @@ public interface LocalGroupAddFactory {
      *            <li>{@code command} the group add command, for example
      *            {@code "/usr/sbin/groupadd".}
      * 
-     *            <li>{@code systemGroup} optionally, set to {@code true} to add
-     *            a new system group.
-     * 
      *            <li>{@code groupsFile} the path to the groups file, for
      *            example {@code "/etc/group".}
      * 
-     *            <li>{@code groupId} the group ID, for example {@code "100".}
-     * 
      *            <li>{@code groupName} the group name, for example
      *            {@code "test".}
+     * 
+     *            <li>{@code systemGroup} optionally, set to {@code true} to add
+     *            a new system group.
+     * 
+     *            <li>{@code groupId} optionally, the group ID, for example
+     *            {@code "100".}
      *            </ul>
      * 
      * @param parent

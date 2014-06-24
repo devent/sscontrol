@@ -36,6 +36,7 @@ import com.anrisoftware.sscontrol.httpd.domain.Domain
 import com.anrisoftware.sscontrol.httpd.redmine.RedmineService
 import com.anrisoftware.sscontrol.httpd.webservice.OverrideMode
 import com.anrisoftware.sscontrol.httpd.webservice.WebService
+import com.anrisoftware.sscontrol.scripts.changefileowner.ChangeFileOwnerFactory
 import com.anrisoftware.sscontrol.scripts.unpack.UnpackFactory
 
 /**
@@ -59,6 +60,9 @@ abstract class RedmineFromArchive {
     @Inject
     CheckFileHashFactory checkFileHashFactory
 
+    @Inject
+    ChangeFileOwnerFactory changeFileOwnerFactory
+
     Object script
 
     Templates hsenvTemplates
@@ -76,6 +80,7 @@ abstract class RedmineFromArchive {
      */
     void deployService(Domain domain, WebService service, List config) {
         unpackRedmineArchive domain, service
+        setupPermissions domain, service
         saveVersionFile domain, service
     }
 
@@ -99,6 +104,26 @@ abstract class RedmineFromArchive {
         def dest = new File(tmpDirectory, "redmine-$name")
         downloadArchive redmineArchive, dest, service
         unpackArchive domain, service, dest
+    }
+
+    /**
+     * Sets the permissions of the <i>Redmine</i> directories.
+     *
+     * @param domain
+     *            the service {@link Domain}.
+     *
+     * @param service
+     *            the {@link RedmineService}.
+     */
+    void setupPermissions(Domain domain, RedmineService service) {
+        def dir = redmineDir domain, service
+        changeFileOwnerFactory.create(
+                log: log,
+                files: dir,
+                recursive: true,
+                command: script.chownCommand,
+                owner: "root", ownerGroup: "root",
+                this, threads)()
     }
 
     /**

@@ -18,7 +18,7 @@ server {
     proxy_redirect off;
 
     location /sitefoo {
-        proxy_cache_key "$scheme://$host$request_uri $do_not_cache";
+        proxy_cache_key "$scheme://$host$request_uri";
         proxy_cache sitefoo;
         proxy_pass http://127.0.0.1:8080;
     }
@@ -32,7 +32,7 @@ server {
 
     location ~* \/[^\/]+\/(feed|\.xml)\/? {
         # Cache RSS looking feeds
-        proxy_cache_key "$scheme://$host$request_uri $do_not_cache";
+        proxy_cache_key "$scheme://$host$request_uri";
         proxy_cache_valid 200 2700;
         proxy_cache sitefoo;
         proxy_pass http://127.0.0.1:8080;

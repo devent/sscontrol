@@ -15,7 +15,7 @@ proxy_send_timeout <args.properties.proxySendTimeout>;
 proxy_redirect <if(args.properties.proxyRedirect)>on<else>off<endif>;
 
 location <args.location> {
-    proxy_cache_key "$scheme://$host$request_uri $do_not_cache";
+    proxy_cache_key "$scheme://$host$request_uri";
     proxy_cache <args.proxyName>;
     proxy_pass <args.proxyAddress>;
 }
@@ -29,7 +29,7 @@ location ~* \.(jpg|png|gif|jpeg|css|js|mp3|wav|swf|mov|doc|pdf|xls|ppt|docx|pptx
 
 location ~* \/[^\/]+\/(feed|\.xml)\/? {
     # Cache RSS looking feeds
-    proxy_cache_key "$scheme://$host$request_uri $do_not_cache";
+    proxy_cache_key "$scheme://$host$request_uri";
     proxy_cache_valid 200 <args.properties.proxyFeedsCacheTime>;
     proxy_cache <args.proxyName>;
     proxy_pass <args.proxyAddress>;

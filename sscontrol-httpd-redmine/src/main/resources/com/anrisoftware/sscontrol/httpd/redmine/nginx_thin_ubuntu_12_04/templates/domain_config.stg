@@ -8,7 +8,7 @@ location <args.alias> {
     try_files $uri @cluster_<args.domainName>_<args.prefix>;
 }
 
-location @cluster_<args.domainName> {
+location @cluster_<args.domainName>_<args.prefix> {
     proxy_pass http://thin_<args.domainName>_<args.prefix>;
 }
 

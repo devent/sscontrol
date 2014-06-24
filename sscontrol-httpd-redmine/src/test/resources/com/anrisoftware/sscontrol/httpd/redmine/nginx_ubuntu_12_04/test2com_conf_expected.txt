@@ -11,7 +11,7 @@ server {
         try_files $uri @cluster_test2_com_test2redmine;
     }
 
-    location @cluster_test2_com {
+    location @cluster_test2_com_test2redmine {
         proxy_pass http://thin_test2_com_test2redmine;
     }
 

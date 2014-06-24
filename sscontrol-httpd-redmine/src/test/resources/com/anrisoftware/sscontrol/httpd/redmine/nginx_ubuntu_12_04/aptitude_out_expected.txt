@@ -1,12 +1,12 @@
 update
 install nginx net-tools
 update
-install ruby rake rubygems libopenssl-ruby libmysql-ruby ruby-dev libmysqlclient-dev curl libmagickcore-dev libmagickwand-dev
+install thin ruby rake rubygems libopenssl-ruby libmysql-ruby ruby-dev libmysqlclient-dev curl libmagickcore-dev libmagickwand-dev
 update
-install ruby rake rubygems libopenssl-ruby libmysql-ruby ruby-dev libmysqlclient-dev curl libmagickcore-dev libmagickwand-dev
+install thin ruby rake rubygems libopenssl-ruby libmysql-ruby ruby-dev libmysqlclient-dev curl libmagickcore-dev libmagickwand-dev
 update
 install nginx net-tools
 update
-install ruby rake rubygems libopenssl-ruby libmysql-ruby ruby-dev libmysqlclient-dev curl libmagickcore-dev libmagickwand-dev
+install thin ruby rake rubygems libopenssl-ruby libmysql-ruby ruby-dev libmysqlclient-dev curl libmagickcore-dev libmagickwand-dev
 update
-install ruby rake rubygems libopenssl-ruby libmysql-ruby ruby-dev libmysqlclient-dev curl libmagickcore-dev libmagickwand-dev
+install thin ruby rake rubygems libopenssl-ruby libmysql-ruby ruby-dev libmysqlclient-dev curl libmagickcore-dev libmagickwand-dev

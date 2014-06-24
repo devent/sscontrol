@@ -73,6 +73,7 @@ class Ubuntu_12_04_Config extends Redmine_2_5_Config implements ServiceConfig {
 
     @Override
     void deployService(Domain domain, WebService service, List config) {
+        thinConfig.thinScriptFile.delete()
         installPackages()
         redmineFromArchive.deployService domain, service, config
         thinConfig.deployService domain, service, config

@@ -175,6 +175,30 @@ abstract class AbstractThinConfig {
     }
 
     /**
+     * Returns the <i>thin</i> command, for
+     * example {@code "/etc/init.d/thin restart".}
+     *
+     * <ul>
+     * <li>profile property {@code "redmine_thin_restart_command"}</li>
+     * </ul>
+     */
+    String getThinRestartCommand() {
+        profileProperty "redmine_thin_restart_command", thinProperties
+    }
+
+    /**
+     * Returns the <i>thin</i> command, for
+     * example {@code "".}
+     *
+     * <ul>
+     * <li>profile property {@code "redmine_thin_restart_services"}</li>
+     * </ul>
+     */
+    List getThinRestartServices() {
+        profileListProperty "redmine_thin_restart_services", thinProperties
+    }
+
+    /**
      * Returns the <i>Thin</i> script, for example {@code "/etc/init.d/thin".}
      *
      * <ul>

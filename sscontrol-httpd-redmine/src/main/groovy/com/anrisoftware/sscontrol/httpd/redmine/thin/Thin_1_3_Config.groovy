@@ -30,8 +30,10 @@ import com.anrisoftware.resources.templates.api.TemplatesFactory
 import com.anrisoftware.sscontrol.httpd.domain.Domain
 import com.anrisoftware.sscontrol.httpd.redmine.RedmineService
 import com.anrisoftware.sscontrol.httpd.webservice.WebService
+import com.anrisoftware.sscontrol.scripts.changefilemod.ChangeFileModFactory
 import com.anrisoftware.sscontrol.scripts.localgroupadd.LocalGroupAddFactory
 import com.anrisoftware.sscontrol.scripts.localuseradd.LocalUserAddFactory
+import com.anrisoftware.sscontrol.scripts.unix.RestartServicesFactory
 
 /**
  * <i>Thin 1.3</i> <i>Redmine</i> service configuration.
@@ -55,7 +57,13 @@ abstract class Thin_1_3_Config extends AbstractThinConfig {
     LocalGroupAddFactory localGroupAddFactory
 
     @Inject
+    ChangeFileModFactory changeFileModFactory
+
+    @Inject
     DurationAttributeRenderer durationAttributeRenderer
+
+    @Inject
+    RestartServicesFactory restartServicesFactory
 
     Templates thinConfigTemplates
 
@@ -77,6 +85,17 @@ abstract class Thin_1_3_Config extends AbstractThinConfig {
         createThinDefaults domain, service
         createThinScript domain, service
         createDomainServiceConfig domain, service
+    }
+
+    /**
+     * Restarts <i>Thin</i> services.
+     */
+    void restartServices() {
+        restartServicesFactory.create(
+                log: log,
+                command: thinRestartCommand,
+                services: thinRestartServices,
+                this, threads)()
     }
 
     /**
@@ -164,6 +183,12 @@ abstract class Thin_1_3_Config extends AbstractThinConfig {
         ])
         FileUtils.write file, conf, charset
         logg.serviceFileCreated this, file, conf
+        changeFileModFactory.create(
+                log: log,
+                command: chmodCommand,
+                files: file,
+                mod: "+x",
+                this, threads)()
     }
 
     @Override

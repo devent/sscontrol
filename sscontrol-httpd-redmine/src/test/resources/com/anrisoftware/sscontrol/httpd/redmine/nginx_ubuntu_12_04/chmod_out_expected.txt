@@ -1,3 +1,4 @@
++x /tmp/etc/init.d/thin
 -R 755 /tmp/var/www/test1.com/redmine2/files
 -R 755 /tmp/var/www/test1.com/redmine2/log
 -R 755 /tmp/var/www/test1.com/redmine2/tmp
@@ -9,11 +10,13 @@
 -R 755 /tmp/var/www/test1.com/redmine2/tmp/pdf
 -R 755 /tmp/var/www/test1.com/redmine2/public/plugin_assets
 go-r /tmp/var/www/test1.com/ssl/cert_crt.txt /tmp/var/www/test1.com/ssl/cert_key.txt
++x /tmp/etc/init.d/thin
 -R 755 /tmp/var/www/test2.com/test2redmine/files
 -R 755 /tmp/var/www/test2.com/test2redmine/log
 -R 755 /tmp/var/www/test2.com/test2redmine/tmp
 -R 755 /tmp/var/www/test2.com/test2redmine/tmp/pdf
 -R 755 /tmp/var/www/test2.com/test2redmine/public/plugin_assets
++x /tmp/etc/init.d/thin
 -R 755 /tmp/var/www/test1.com/redmine2/files
 -R 755 /tmp/var/www/test1.com/redmine2/log
 -R 755 /tmp/var/www/test1.com/redmine2/tmp
@@ -25,6 +28,7 @@ go-r /tmp/var/www/test1.com/ssl/cert_crt.txt /tmp/var/www/test1.com/ssl/cert_key
 -R 755 /tmp/var/www/test1.com/redmine2/tmp/pdf
 -R 755 /tmp/var/www/test1.com/redmine2/public/plugin_assets
 go-r /tmp/var/www/test1.com/ssl/cert_crt.txt /tmp/var/www/test1.com/ssl/cert_key.txt
++x /tmp/etc/init.d/thin
 -R 755 /tmp/var/www/test2.com/test2redmine/files
 -R 755 /tmp/var/www/test2.com/test2redmine/log
 -R 755 /tmp/var/www/test2.com/test2redmine/tmp

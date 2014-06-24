@@ -46,6 +46,7 @@ enum RedmineResources {
     test2comRedmineConfigurationYml("/var/www/test2.com/test2redmine/config/configuration.yml.example", RedmineResources.class.getResource("configuration_yml_example.txt")),
     // thin
     thinCommand("/usr/bin/thin", UbuntuResources.class.getResource("echo_command.txt")),
+    thinRestartCommand("/etc/init.d/thinRestart", UbuntuResources.class.getResource("echo_command.txt")),
     thinScriptFile("/etc/init.d/thin", null),
     thinDefaultsFile("/etc/default/thin", null),
     thinConfDir("/etc/thin1.8", null),
@@ -75,6 +76,7 @@ enum RedmineResources {
     chownOutExpected("/bin/chown.out", RedmineResources.class.getResource("chown_out_expected.txt")),
     aptitudeOutExpected("/usr/bin/aptitude.out", RedmineResources.class.getResource("aptitude_out_expected.txt")),
     lnOutExpected("/bin/ln.out", RedmineResources.class.getResource("ln_out_expected.txt")),
+    thinRestartOutExpected("/etc/init.d/thinRestart.out", RedmineResources.class.getResource("thin_restart_out_expected.txt")),
 
     static copyRedmineFiles(File parent) {
         redmineArchive.createFile parent
@@ -82,6 +84,7 @@ enum RedmineResources {
         bundleCommand.createCommand(parent)
         rakeCommand.createCommand(parent)
         thinCommand.createCommand(parent)
+        thinRestartCommand.createCommand(parent)
         thinScriptFile.asFile(parent).parentFile.mkdirs()
         thinDefaultsFile.asFile(parent).parentFile.mkdirs()
         thinConfDir.asFile(parent).mkdirs()

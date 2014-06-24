@@ -56,6 +56,7 @@ profile "ubuntu_12_04", {
         redmine_archive_hash "md5:6a2f5df554a287191580529be885cf53"
         // thin
         redmine_thin_command RedmineResources.thinCommand.asFile(tmp)
+        redmine_thin_restart_command "${RedmineResources.thinRestartCommand.asFile(tmp)} restart"
         redmine_thin_script_file RedmineResources.thinScriptFile.asFile(tmp)
         redmine_thin_defaults_file RedmineResources.thinDefaultsFile.asFile(tmp)
         redmine_thin_configuration_directory RedmineResources.thinConfDir.asFile(tmp)

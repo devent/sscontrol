@@ -74,6 +74,14 @@ class NginxConfig extends Ubuntu_12_04_Config implements ServiceConfig {
         createDomainConfig domain, null, service, config
         createDomainUpstreamConfig domain, null, service
         enableDomainUpstreamConfig domain, null, service
+        restartServices()
+    }
+
+    /**
+     * Restarts services.
+     */
+    void restartServices() {
+        thinConfig.restartServices()
     }
 
     /**

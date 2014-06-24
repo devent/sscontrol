@@ -80,5 +80,6 @@ class RedmineTest extends UbuntuTestUtil {
         assertStringContent chownOutExpected.replaced(tmpdir, tmpdir, "/tmp"), chownOutExpected.toString()
         assertFileContent aptitudeOutExpected.asFile(tmpdir), aptitudeOutExpected
         assertStringContent lnOutExpected.replaced(tmpdir, tmpdir, "/tmp"), lnOutExpected.toString()
+        assertFileContent thinRestartOutExpected.asFile(tmpdir), thinRestartOutExpected
     }
 }

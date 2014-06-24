@@ -175,6 +175,29 @@ abstract class AbstractThinConfig {
     }
 
     /**
+     * Returns the <i>Thin</i> script, for example {@code "/etc/init.d/thin".}
+     *
+     * <ul>
+     * <li>profile property {@code "redmine_thin_script_file"}</li>
+     * </ul>
+     */
+    File getThinScriptFile() {
+        profileProperty("redmine_thin_script_file", thinProperties) as File
+    }
+
+    /**
+     * Returns the <i>Thin</i> defaults file, for
+     * example {@code "/etc/default/thin".}
+     *
+     * <ul>
+     * <li>profile property {@code "redmine_thin_defaults_file"}</li>
+     * </ul>
+     */
+    File getThinDefaultsFile() {
+        profileProperty("redmine_thin_defaults_file", thinProperties) as File
+    }
+
+    /**
      * Returns the <i>Thin</i> configuration directory, for
      * example {@code "/etc/thin1.8".}
      *

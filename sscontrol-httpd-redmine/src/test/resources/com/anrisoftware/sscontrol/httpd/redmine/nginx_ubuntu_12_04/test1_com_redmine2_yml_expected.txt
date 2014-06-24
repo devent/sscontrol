@@ -1,0 +1,16 @@
+---
+chdir: /tmp/var/www/test1.com/redmine2
+environment: production
+timeout: 30
+log: /tmp/var/log/thin/test1_com_redmine2.log
+pid: /tmp/var/run/thin/test1_com_redmine2.pid
+max_conns: 1024
+max_persistent_conns: 512
+require: []
+wait: 30
+socket: /tmp/var/run/thin/test1_com_redmine2.sock
+daemonize: true
+user: thin
+group: web_001
+servers: 1
+prefix: /

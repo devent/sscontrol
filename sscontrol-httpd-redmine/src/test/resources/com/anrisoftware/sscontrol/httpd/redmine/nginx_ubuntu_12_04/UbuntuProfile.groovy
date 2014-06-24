@@ -55,6 +55,7 @@ profile "ubuntu_12_04", {
         // thin
         redmine_thin_command RedmineResources.thinCommand.asFile(tmp)
         redmine_thin_script_file RedmineResources.thinScriptFile.asFile(tmp)
+        redmine_thin_defaults_file RedmineResources.thinDefaultsFile.asFile(tmp)
         redmine_thin_configuration_directory RedmineResources.thinConfDir.asFile(tmp)
         redmine_thin_log_directory RedmineResources.thinLogDir.asFile(tmp)
         redmine_thin_run_directory RedmineResources.thinRunDir.asFile(tmp)

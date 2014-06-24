@@ -1,8 +1,7 @@
-# Robo Bee - Auto generated
-# Configuration for /tmp/etc/init.d/test1_com_gititd
+# RoboBee Auto Generated
+# Configuration for /tmp/etc/init.d/thin
 # Author: Erwin Müller, <erwin.mueller@deventm.org>
 
-GITIT_USER="web_001"
+THIN_USER="thin"
+THIN_GROUP="thin"
 RUN_AT_STARTUP="YES"
-# Change this to 0 if running gitit as its own user
-UMASK=0

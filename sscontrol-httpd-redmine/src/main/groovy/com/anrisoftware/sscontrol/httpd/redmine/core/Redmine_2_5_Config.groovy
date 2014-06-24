@@ -27,6 +27,7 @@ import javax.inject.Inject
 import org.apache.commons.io.FileUtils
 import org.apache.commons.lang3.StringUtils
 import org.apache.commons.lang3.builder.ToStringBuilder
+import org.joda.time.Duration
 
 import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.resources.templates.api.TemplateResource
@@ -265,6 +266,7 @@ abstract class Redmine_2_5_Config {
                 log: log,
                 gemCommand: gemCommand,
                 gems: redmineGems,
+                timeout: gemInstallTimeout,
                 this, threads, gemInstallTemplate, "gemInstall")()
     }
 
@@ -743,6 +745,20 @@ abstract class Redmine_2_5_Config {
      */
     List getProductionExcludedBundles() {
         profileListProperty "redmine_production_excluded_bundles", redmineProperties
+    }
+
+    /**
+     * Returns the <i>gem</i> install timeout duration, for
+     * example {@code "PT1H".}
+     *
+     * <ul>
+     * <li>profile property {@code "redmine_gem_install_timeout"}</li>
+     * </ul>
+     *
+     * @see #getRedmineProperties()
+     */
+    Duration getGemInstallTimeout() {
+        profileDurationProperty "redmine_gem_install_timeout", redmineProperties
     }
 
     /**

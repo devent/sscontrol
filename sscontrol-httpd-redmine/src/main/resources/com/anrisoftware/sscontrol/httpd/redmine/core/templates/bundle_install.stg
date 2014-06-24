@@ -1,0 +1,8 @@
+bundleInstall(args) ::= <<
+<! - args.bundleCommand - !>
+<! - args.workDir - !>
+<! - args.excludedBundles - !>
+cd <args.workDir>
+<args.bundleCommand> install <if(args.excludedBundles)>--without <args.excludedBundles;separator=" "><endif>
+
+>>

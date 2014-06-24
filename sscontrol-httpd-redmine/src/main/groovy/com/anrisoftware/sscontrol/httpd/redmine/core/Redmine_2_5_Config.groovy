@@ -82,13 +82,17 @@ abstract class Redmine_2_5_Config {
     @Inject
     TemplatesFactory templatesFactory
 
-    Templates redmineConfigTemplates
+    Templates configTemplates
 
-    TemplateResource redmineDatabaseConfigTemplate
+    TemplateResource databaseConfigTemplate
 
-    TemplateResource redmineConfigTemplate
+    TemplateResource configTemplate
 
-    TemplateResource redmineGemInstallTemplate
+    TemplateResource gemInstallTemplate
+
+    TemplateResource bundleInstallTemplate
+
+    TemplateResource rakeCommandsTemplate
 
     /**
      * @see ServiceConfig#getScript()
@@ -109,6 +113,11 @@ abstract class Redmine_2_5_Config {
         deployDatabase domain, service
         deployConfig domain, service
         setupPermissions domain, service
+        installBundle domain, service
+        generateSecretTokens domain, service
+        migrateDb domain, service
+        loadDefaultData domain, service
+        clearTemps domain, service
     }
 
     /**
@@ -124,6 +133,7 @@ abstract class Redmine_2_5_Config {
         setupDefaultPrefix service, domain
         setupDefaultAlias service, domain
         setupDefaultMail service, domain
+        setupDefaultLanguage service, domain
     }
 
     /**
@@ -227,6 +237,21 @@ abstract class Redmine_2_5_Config {
     }
 
     /**
+     * Setups the default language.
+     *
+     * @param domain
+     *            the service {@link Domain}.
+     *
+     * @param service
+     *            the {@link RedmineService}.
+     */
+    void setupDefaultLanguage(RedmineService service, Domain domain) {
+        if (service.languageName == null) {
+            service.languageName = defaultLanguageName
+        }
+    }
+
+    /**
      * Installs the <i>Ruby</i> gems.
      *
      * @param domain
@@ -240,7 +265,7 @@ abstract class Redmine_2_5_Config {
                 log: log,
                 gemCommand: gemCommand,
                 gems: redmineGems,
-                this, threads, redmineGemInstallTemplate, "gemInstall")()
+                this, threads, gemInstallTemplate, "gemInstall")()
     }
 
     /**
@@ -260,8 +285,8 @@ abstract class Redmine_2_5_Config {
         def file = redmineConfigFile domain, service, redmineDatabaseConfigFile
         file.isFile() == false ? FileUtils.copyFile(exampleFile, file) : false
         def conf = currentConfiguration file
-        def search = redmineDatabaseConfigTemplate.getText(true, "productionDatabaseSearch")
-        def replace = redmineDatabaseConfigTemplate.getText(true, "productionDatabase", "database", service.database)
+        def search = databaseConfigTemplate.getText(true, "productionDatabaseSearch")
+        def replace = databaseConfigTemplate.getText(true, "productionDatabase", "database", service.database)
         def matcher = Pattern.compile(search).matcher(conf)
         conf = matcher.replaceAll(replace)
         FileUtils.writeStringToFile file, conf, charset
@@ -301,7 +326,7 @@ abstract class Redmine_2_5_Config {
         def res = new LinkedList(conf)
         for (i; i < conf.size(); i++) {
             if (conf[i].empty) {
-                def str = StringUtils.splitPreserveAllTokens redmineConfigTemplate.getText(true, "productionEmail", "service", service), '\n'
+                def str = StringUtils.splitPreserveAllTokens configTemplate.getText(true, "productionEmail", "service", service), '\n'
                 str.eachWithIndex { it, int k ->
                     res.add i + k, it
                 }
@@ -317,25 +342,25 @@ abstract class Redmine_2_5_Config {
     List updateEmailDelivery(Domain domain, RedmineService service, List conf, int i) {
         for (i; i < conf.size(); i++) {
             if (conf[i].startsWith("    delivery_method:")) {
-                conf[i] = redmineConfigTemplate.getText(true, "emailDeliveryMethod", "service", service)
+                conf[i] = configTemplate.getText(true, "emailDeliveryMethod", "service", service)
             }
             if (conf[i].startsWith("      address:")) {
-                conf[i] = redmineConfigTemplate.getText(true, "emailAddress", "service", service)
+                conf[i] = configTemplate.getText(true, "emailAddress", "service", service)
             }
             if (conf[i].startsWith("      port:")) {
-                conf[i] = redmineConfigTemplate.getText(true, "emailPort", "service", service)
+                conf[i] = configTemplate.getText(true, "emailPort", "service", service)
             }
             if (conf[i].startsWith("      domain:")) {
-                conf[i] = redmineConfigTemplate.getText(true, "emailDomain", "service", service)
+                conf[i] = configTemplate.getText(true, "emailDomain", "service", service)
             }
             if (conf[i].startsWith("      authentication:")) {
-                conf[i] = redmineConfigTemplate.getText(true, "emailAuthentication", "service", service)
+                conf[i] = configTemplate.getText(true, "emailAuthentication", "service", service)
             }
             if (conf[i].startsWith("      user_name:")) {
-                conf[i] = redmineConfigTemplate.getText(true, "emailUser", "service", service)
+                conf[i] = configTemplate.getText(true, "emailUser", "service", service)
             }
             if (conf[i].startsWith("      password:")) {
-                conf[i] = redmineConfigTemplate.getText(true, "emailPassword", "service", service)
+                conf[i] = configTemplate.getText(true, "emailPassword", "service", service)
             }
         }
         return conf
@@ -374,6 +399,99 @@ abstract class Redmine_2_5_Config {
                 command: script.chownCommand,
                 owner: user.name, ownerGroup: user.group,
                 this, threads)()
+    }
+
+    /**
+     * Installs the <i>Redmine</i> bundle.
+     *
+     * @param domain
+     *            the service {@link Domain}.
+     *
+     * @param service
+     *            the {@link RedmineService}.
+     */
+    void installBundle(Domain domain, RedmineService service) {
+        def dir = redmineDir domain, service
+        scriptExecFactory.create(
+                log: log,
+                bundleCommand: bundleCommand,
+                workDir: dir,
+                excludedBundles: productionExcludedBundles,
+                this, threads, bundleInstallTemplate, "bundleInstall")()
+    }
+
+    /**
+     * Generates the secret tokens.
+     *
+     * @param domain
+     *            the service {@link Domain}.
+     *
+     * @param service
+     *            the {@link RedmineService}.
+     */
+    void generateSecretTokens(Domain domain, RedmineService service) {
+        def dir = redmineDir domain, service
+        scriptExecFactory.create(
+                log: log,
+                rakeCommand: rakeCommand,
+                workDir: dir,
+                this, threads, rakeCommandsTemplate, "rakeGenerateSecretTokens")()
+    }
+
+    /**
+     * Create database schema objects.
+     *
+     * @param domain
+     *            the service {@link Domain}.
+     *
+     * @param service
+     *            the {@link RedmineService}.
+     */
+    void migrateDb(Domain domain, RedmineService service) {
+        def dir = redmineDir domain, service
+        scriptExecFactory.create(
+                log: log,
+                rakeCommand: rakeCommand,
+                workDir: dir,
+                language: service.languageName,
+                this, threads, rakeCommandsTemplate, "rakeMigrateDb")()
+    }
+
+    /**
+     * Clears the temp data.
+     *
+     * @param domain
+     *            the service {@link Domain}.
+     *
+     * @param service
+     *            the {@link RedmineService}.
+     */
+    void clearTemps(Domain domain, RedmineService service) {
+        def dir = redmineDir domain, service
+        scriptExecFactory.create(
+                log: log,
+                rakeCommand: rakeCommand,
+                workDir: dir,
+                this, threads, rakeCommandsTemplate, "rakeClearTemps")()
+    }
+
+    /**
+     * Load database default data set.
+     *
+     * @param domain
+     *            the service {@link Domain}.
+     *
+     * @param service
+     *            the {@link RedmineService}.
+     */
+    void loadDefaultData(Domain domain, RedmineService service) {
+        def dir = redmineDir domain, service
+        scriptExecFactory.create(
+                log: log,
+                rakeCommand: rakeCommand,
+                workDir: dir,
+                language: service.languageName,
+                this, threads, rakeCommandsTemplate, "rakeLoadDefaultData")()
     }
 
     /**
@@ -593,7 +711,7 @@ abstract class Redmine_2_5_Config {
      * <li>profile property {@code "redmine_packages"}</li>
      * </ul>
      *
-     * @see #getRedminePackages()
+     * @see #getRedmineProperties()
      */
     List getRedminePackages() {
         profileListProperty "redmine_packages", redmineProperties
@@ -607,10 +725,24 @@ abstract class Redmine_2_5_Config {
      * <li>profile property {@code "redmine_gems"}</li>
      * </ul>
      *
-     * @see #getRedminePackages()
+     * @see #getRedmineProperties()
      */
     List getRedmineGems() {
         profileListProperty "redmine_gems", redmineProperties
+    }
+
+    /**
+     * Returns the <i>Redmine</i> packages, for
+     * example {@code "development, test".}
+     *
+     * <ul>
+     * <li>profile property {@code "redmine_production_excluded_bundles"}</li>
+     * </ul>
+     *
+     * @see #getRedmineProperties()
+     */
+    List getProductionExcludedBundles() {
+        profileListProperty "redmine_production_excluded_bundles", redmineProperties
     }
 
     /**
@@ -620,6 +752,8 @@ abstract class Redmine_2_5_Config {
      * <ul>
      * <li>profile property {@code "redmine_default_mail_port"}</li>
      * </ul>
+     *
+     * @see #getRedmineProperties()
      */
     int getDefaultMailPort() {
         profileNumberProperty "redmine_default_mail_port", redmineProperties
@@ -632,6 +766,8 @@ abstract class Redmine_2_5_Config {
      * <ul>
      * <li>profile property {@code "redmine_default_mail_delivery_method"}</li>
      * </ul>
+     *
+     * @see #getRedmineProperties()
      */
     DeliveryMethod getDefaultMailDeliveryMethod() {
         def p = profileProperty "redmine_default_mail_delivery_method", redmineProperties
@@ -645,10 +781,26 @@ abstract class Redmine_2_5_Config {
      * <ul>
      * <li>profile property {@code "redmine_default_mail_authentication_method"}</li>
      * </ul>
+     *
+     * @see #getRedmineProperties()
      */
     AuthenticationMethod getDefaultMailAuthenticationMethod() {
         def p = profileProperty "redmine_default_mail_authentication_method", redmineProperties
         AuthenticationMethod.valueOf(p)
+    }
+
+    /**
+     * Returns the default language, for
+     * example {@code "en".}
+     *
+     * <ul>
+     * <li>profile property {@code "redmine_default_language_name"}</li>
+     * </ul>
+     *
+     * @see #getRedmineProperties()
+     */
+    String getDefaultLanguageName() {
+        profileProperty "redmine_default_language_name", redmineProperties
     }
 
     /**
@@ -675,14 +827,16 @@ abstract class Redmine_2_5_Config {
      */
     void setScript(LinuxScript script) {
         this.script = script
-        this.redmineConfigTemplates = templatesFactory.create("Redmine_2_5_Config",
+        this.configTemplates = templatesFactory.create("Redmine_2_5_Config",
                 [renderers: [
                         deliveryMethodAttributeRenderer,
                         authenticationMethodAttributeRenderer
                     ]])
-        this.redmineDatabaseConfigTemplate = redmineConfigTemplates.getResource("database_config")
-        this.redmineConfigTemplate = redmineConfigTemplates.getResource("config")
-        this.redmineGemInstallTemplate = redmineConfigTemplates.getResource("gem_install")
+        this.databaseConfigTemplate = configTemplates.getResource("database_config")
+        this.configTemplate = configTemplates.getResource("config")
+        this.gemInstallTemplate = configTemplates.getResource("gem_install")
+        this.bundleInstallTemplate = configTemplates.getResource("bundle_install")
+        this.rakeCommandsTemplate = configTemplates.getResource("rake_commands")
     }
 
     /**

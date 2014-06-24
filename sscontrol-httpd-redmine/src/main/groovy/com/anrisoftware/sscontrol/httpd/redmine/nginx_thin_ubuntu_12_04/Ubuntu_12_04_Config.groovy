@@ -32,6 +32,8 @@ import com.anrisoftware.sscontrol.httpd.redmine.RedmineService
 import com.anrisoftware.sscontrol.httpd.redmine.core.Redmine_2_5_Config
 import com.anrisoftware.sscontrol.httpd.webservice.ServiceConfig
 import com.anrisoftware.sscontrol.httpd.webservice.WebService
+import com.anrisoftware.sscontrol.scripts.changefilemod.ChangeFileModFactory
+import com.anrisoftware.sscontrol.scripts.changefileowner.ChangeFileOwnerFactory
 import com.anrisoftware.sscontrol.scripts.unix.InstallPackagesFactory
 
 /**
@@ -55,11 +57,18 @@ class Ubuntu_12_04_Config extends Redmine_2_5_Config implements ServiceConfig {
     @Inject
     UbuntuThinConfig thinConfig
 
+    @Inject
+    ChangeFileOwnerFactory changeFileOwnerFactory
+
+    @Inject
+    ChangeFileModFactory changeFileModFactory
+
     @Override
     void deployDomain(Domain domain, Domain refDomain, WebService service, List config) {
         redmineFromArchive.deployDomain domain, refDomain, service, config
         thinConfig.deployDomain domain, refDomain, service, config
         super.deployDomain domain, refDomain, service, config
+        setupThinPermissions domain, service
     }
 
     @Override
@@ -68,6 +77,7 @@ class Ubuntu_12_04_Config extends Redmine_2_5_Config implements ServiceConfig {
         redmineFromArchive.deployService domain, service, config
         thinConfig.deployService domain, service, config
         super.deployService domain, service, config
+        setupThinPermissions domain, service
     }
 
     /**
@@ -78,6 +88,52 @@ class Ubuntu_12_04_Config extends Redmine_2_5_Config implements ServiceConfig {
                 log: log,
                 command: script.installCommand,
                 packages: redminePackages,
+                this, threads)()
+    }
+
+    /**
+     * Setup <i>Thin</i> permissions for <i>Redmine</i>.
+     *
+     * @param domain
+     *            the {@link Domain} domain of the service.
+     *
+     * @param service
+     *            the {@link RedmineService} service.
+     *
+     */
+    void setupThinPermissions(Domain domain, RedmineService service) {
+        def dir = redmineDir domain, service
+        def filesDir = new File(dir, 'files')
+        def logDir = new File(dir, 'log')
+        def tmpDir = new File(dir, 'tmp')
+        def tmpPdfDir = new File(dir, 'tmp/pdf')
+        def pluginAssetsDir = new File(dir, 'public/plugin_assets')
+        changeFileOwnerFactory.create(
+                log: log,
+                command: chownCommand,
+                files: [
+                    filesDir,
+                    logDir,
+                    tmpDir,
+                    tmpPdfDir,
+                    pluginAssetsDir
+                ],
+                owner: thinConfig.thinUser,
+                ownerGroup: domain.domainUser.group,
+                recursive: true,
+                this, threads)()
+        changeFileModFactory.create(
+                log: log,
+                command: chmodCommand,
+                files: [
+                    filesDir,
+                    logDir,
+                    tmpDir,
+                    tmpPdfDir,
+                    pluginAssetsDir
+                ],
+                mod: "755",
+                recursive: true,
                 this, threads)()
     }
 

@@ -1,0 +1,35 @@
+rakeGenerateSecretTokens(args) ::= <<
+<! - args.rakeCommand - !>
+<! - args.workDir - !>
+cd <args.workDir>
+<args.rakeCommand> generate_secret_token
+
+>>
+
+rakeMigrateDb(args) ::= <<
+<! - args.rakeCommand - !>
+<! - args.workDir - !>
+<! - args.rails - !>
+cd <args.workDir>
+RAILS_ENV=<args.rails> <args.rakeCommand> db:migrate
+
+>>
+
+rakeLoadDefaultData(args) ::= <<
+<! - args.rakeCommand - !>
+<! - args.workDir - !>
+<! - args.rails - !>
+<! - args.language - !>
+cd <args.workDir>
+RAILS_ENV=<args.rails> REDMINE_LANG=<args.language> <args.rakeCommand> redmine:load_default_data
+
+>>
+
+rakeClearTemps(args) ::= <<
+<! - args.rakeCommand - !>
+<! - args.workDir - !>
+cd <args.workDir>
+<args.rakeCommand> tmp:cache:clear
+<args.rakeCommand> tmp:sessions:clear
+
+>>

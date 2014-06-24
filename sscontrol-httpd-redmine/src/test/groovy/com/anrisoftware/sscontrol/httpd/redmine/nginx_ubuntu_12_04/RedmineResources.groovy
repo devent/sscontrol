@@ -36,6 +36,8 @@ enum RedmineResources {
     // redmine
     redmineArchive("/tmp/redmine-2.5.1.tar.gz", UbuntuResources.class.getResource("redmine-2.5.1.tar.gz")),
     gemCommand("/usr/bin/gem", UbuntuResources.class.getResource("echo_command.txt")),
+    bundleCommand("/usr/local/bin/bundle", UbuntuResources.class.getResource("echo_command.txt")),
+    rakeCommand("/usr/local/bin/rake", UbuntuResources.class.getResource("echo_command.txt")),
     test1comRedmineDir("/var/www/test1.com/redmine2", null),
     test1comRedmineDatabaseYml("/var/www/test1.com/redmine2/config/database.yml.example", RedmineResources.class.getResource("database_yml_example.txt")),
     test1comRedmineConfigurationYml("/var/www/test1.com/redmine2/config/configuration.yml.example", RedmineResources.class.getResource("configuration_yml_example.txt")),
@@ -61,6 +63,8 @@ enum RedmineResources {
     thinDefaultExpected("/etc/default/thin", RedmineResources.class.getResource("thin_default_expected.txt")),
     thinScriptExpected("/etc/init.d/thin", RedmineResources.class.getResource("thin_script_expected.txt")),
     gemOutExpected("/usr/bin/gem.out", RedmineResources.class.getResource("gem_out_expected.txt")),
+    bundleOutExpected("/usr/local/bin/bundle.out", RedmineResources.class.getResource("bundle_out_expected.txt")),
+    rakeOutExpected("/usr/local/bin/rake.out", RedmineResources.class.getResource("rake_out_expected.txt")),
     tarOutExpected("/bin/tar.out", RedmineResources.class.getResource("tar_out_expected.txt")),
     useraddOutExpected("/usr/sbin/useradd.out", RedmineResources.class.getResource("useradd_out_expected.txt")),
     groupaddOutExpected("/usr/sbin/groupadd.out", RedmineResources.class.getResource("groupadd_out_expected.txt")),
@@ -71,6 +75,8 @@ enum RedmineResources {
     static copyRedmineFiles(File parent) {
         redmineArchive.createFile parent
         gemCommand.createCommand(parent)
+        bundleCommand.createCommand(parent)
+        rakeCommand.createCommand(parent)
         thinCommand.createCommand(parent)
         thinScriptFile.asFile(parent).parentFile.mkdirs()
         thinDefaultsFile.asFile(parent).parentFile.mkdirs()

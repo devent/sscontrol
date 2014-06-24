@@ -28,6 +28,7 @@ httpd {
             mail host: "smtp.test1.com", port: 25, method: DeliveryMethod.smtp, domain: "example.net", auth: AuthenticationMethod.login, user: "redmine@example.net", password: "redminepass"
             debug level: 4
             override mode: update
+            language name: "de"
         }
     }
     ssl_domain "test1.com", address: "192.168.0.51", {

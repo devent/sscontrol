@@ -46,6 +46,10 @@ import com.google.inject.assistedinject.Assisted;
  */
 public class RedmineService implements WebService {
 
+    private static final String NAME_KEY = "name";
+
+    private static final String LANGUAGE_KEY = "language";
+
     private static final String PASSWORD_KEY = "password";
 
     private static final String USER_KEY = "user";
@@ -103,6 +107,7 @@ public class RedmineService implements WebService {
 
     private void setupStatements(StatementsMap map) {
         map.addAllowed(MAIL_KEY);
+        map.addAllowed(LANGUAGE_KEY);
     }
 
     @Override
@@ -251,6 +256,14 @@ public class RedmineService implements WebService {
 
     public String getMailPassword() {
         return statementsMap.mapValue(MAIL_KEY, PASSWORD_KEY);
+    }
+
+    public void setLanguageName(String name) {
+        statementsMap.putMapValue(LANGUAGE_KEY, NAME_KEY, name);
+    }
+
+    public String getLanguageName() {
+        return statementsMap.mapValue(LANGUAGE_KEY, NAME_KEY);
     }
 
     public Object methodMissing(String name, Object args)

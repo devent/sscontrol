@@ -75,6 +75,7 @@ class RedmineServiceTest extends HttpdTestUtil {
         assert webservice.mailAuthMethod == AuthenticationMethod.login
         assert webservice.mailUser == "redmine@example.net"
         assert webservice.mailPassword == "redminepass"
+        assert webservice.languageName == "de"
 
         domain = service.domains[d++]
         assert domain.name == "test1.com"
@@ -96,6 +97,7 @@ class RedmineServiceTest extends HttpdTestUtil {
         assert webservice.mailAuthMethod == null
         assert webservice.mailUser == null
         assert webservice.mailPassword == null
+        assert webservice.languageName == null
 
         domain = service.domains[d++]
         assert domain.name == "test2.com"
@@ -117,5 +119,6 @@ class RedmineServiceTest extends HttpdTestUtil {
         assert webservice.mailAuthMethod == null
         assert webservice.mailUser == "redmine@example.net"
         assert webservice.mailPassword == "redminepass"
+        assert webservice.languageName == null
     }
 }

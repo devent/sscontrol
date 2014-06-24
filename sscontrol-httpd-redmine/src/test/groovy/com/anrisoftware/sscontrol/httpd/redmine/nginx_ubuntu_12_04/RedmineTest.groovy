@@ -68,6 +68,8 @@ class RedmineTest extends UbuntuTestUtil {
         assertStringContent thinDefaultExpected.replaced(tmpdir, tmpdir, "/tmp"), thinDefaultExpected.toString()
         assertStringContent thinScriptExpected.replaced(tmpdir, tmpdir, "/tmp"), thinScriptExpected.toString()
         assertFileContent gemOutExpected.asFile(tmpdir), gemOutExpected
+        assertFileContent bundleOutExpected.asFile(tmpdir), bundleOutExpected
+        assertFileContent rakeOutExpected.asFile(tmpdir), rakeOutExpected
         assertStringContent tarOutExpected.replaced(tmpdir, tmpdir, "/tmp"), tarOutExpected.toString()
         assertFileContent groupaddOutExpected.asFile(tmpdir), groupaddOutExpected
         assertStringContent useraddOutExpected.replaced(tmpdir, tmpdir, "/tmp"), useraddOutExpected.toString()

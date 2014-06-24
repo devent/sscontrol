@@ -12,5 +12,5 @@ socket: /tmp/var/run/thin/test1_com_redmine2.sock
 daemonize: true
 user: thin
 group: web_001
-servers: 1
+servers: 2
 prefix: /

@@ -52,14 +52,17 @@ enum RedmineResources {
     thinLogDir("/var/log/thin", null),
     thinRunDir("/var/run/thin", null),
     // expected
+    test1comRedmine2UpstreamConfExpected("/etc/nginx/sites-available/100-robobee-test1.com_redmine2-upstream.conf", RedmineResources.class.getResource("test1com_redmine2_upstream_conf_expected.txt")),
     test1comConfExpected("/etc/nginx/sites-available/100-robobee-test1.com.conf", RedmineResources.class.getResource("test1com_conf_expected.txt")),
     test1comSslConfExpected("/etc/nginx/sites-available/100-robobee-test1.com-ssl.conf", RedmineResources.class.getResource("test1com_ssl_conf_expected.txt")),
     test1comRedmineDatabaseYmlExpected("/var/www/test1.com/redmine2/config/database.yml", RedmineResources.class.getResource("test1com_database_yml_expected.txt")),
     test1comRedmineConfigurationYmlExpected("/var/www/test1.com/redmine2/config/configuration.yml", RedmineResources.class.getResource("test1com_configuration_yml_expected.txt")),
     test1comThinRedmine2YmlExpected("/etc/thin1.8/test1_com_redmine2.yml", RedmineResources.class.getResource("test1_com_redmine2_yml_expected.txt")),
+    test2comTest2redmineUpstreamConfExpected("/etc/nginx/sites-available/100-robobee-test2.com_test2redmine-upstream.conf", RedmineResources.class.getResource("test2com_test2redmine_upstream_conf_expected.txt")),
     test2comConfExpected("/etc/nginx/sites-available/100-robobee-test2.com.conf", RedmineResources.class.getResource("test2com_conf_expected.txt")),
     test2comRedmineDatabaseYmlExpected("/var/www/test2.com/test2redmine/config/database.yml", RedmineResources.class.getResource("test2com_database_yml_expected.txt")),
     test2comRedmineConfigurationYmlExpected("/var/www/test2.com/test2redmine/config/configuration.yml", RedmineResources.class.getResource("test2com_configuration_yml_expected.txt")),
+    test2comThinTest2redmineYmlExpected("/etc/thin1.8/test2_com_test2redmine.yml", RedmineResources.class.getResource("test2_com_test2redmine_yml_expected.txt")),
     thinDefaultExpected("/etc/default/thin", RedmineResources.class.getResource("thin_default_expected.txt")),
     thinScriptExpected("/etc/init.d/thin", RedmineResources.class.getResource("thin_script_expected.txt")),
     gemOutExpected("/usr/bin/gem.out", RedmineResources.class.getResource("gem_out_expected.txt")),
@@ -71,6 +74,7 @@ enum RedmineResources {
     chmodOutExpected("/bin/chmod.out", RedmineResources.class.getResource("chmod_out_expected.txt")),
     chownOutExpected("/bin/chown.out", RedmineResources.class.getResource("chown_out_expected.txt")),
     aptitudeOutExpected("/usr/bin/aptitude.out", RedmineResources.class.getResource("aptitude_out_expected.txt")),
+    lnOutExpected("/bin/ln.out", RedmineResources.class.getResource("ln_out_expected.txt")),
 
     static copyRedmineFiles(File parent) {
         redmineArchive.createFile parent

@@ -419,6 +419,7 @@ abstract class Redmine_2_5_Config {
                 bundleCommand: bundleCommand,
                 workDir: dir,
                 excludedBundles: productionExcludedBundles,
+                timeout: bundleInstallTimeout,
                 this, threads, bundleInstallTemplate, "bundleInstall")()
     }
 
@@ -759,6 +760,20 @@ abstract class Redmine_2_5_Config {
      */
     Duration getGemInstallTimeout() {
         profileDurationProperty "redmine_gem_install_timeout", redmineProperties
+    }
+
+    /**
+     * Returns the <i>bundle</i> install timeout duration, for
+     * example {@code "PT1H".}
+     *
+     * <ul>
+     * <li>profile property {@code "redmine_bundle_install_timeout"}</li>
+     * </ul>
+     *
+     * @see #getRedmineProperties()
+     */
+    Duration getBundleInstallTimeout() {
+        profileDurationProperty "redmine_bundle_install_timeout", redmineProperties
     }
 
     /**

@@ -18,6 +18,8 @@
  */
 package com.anrisoftware.sscontrol.httpd.redmine;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -45,6 +47,10 @@ import com.google.inject.assistedinject.Assisted;
  * @since 1.0
  */
 public class RedmineService implements WebService {
+
+    private static final String INSTALL_KEY = "install";
+
+    private static final String SCM_KEY = "scm";
 
     private static final String NAME_KEY = "name";
 
@@ -108,6 +114,7 @@ public class RedmineService implements WebService {
     private void setupStatements(StatementsMap map) {
         map.addAllowed(MAIL_KEY);
         map.addAllowed(LANGUAGE_KEY);
+        map.addAllowed(SCM_KEY);
     }
 
     @Override
@@ -264,6 +271,25 @@ public class RedmineService implements WebService {
 
     public String getLanguageName() {
         return statementsMap.mapValue(LANGUAGE_KEY, NAME_KEY);
+    }
+
+    public void setScmInstall(List<ScmInstall> list) {
+        statementsMap.putMapValue(SCM_KEY, INSTALL_KEY, list);
+    }
+
+    @SuppressWarnings("unchecked")
+    public List<ScmInstall> getScmInstall() {
+        Object v = statementsMap.mapValue(SCM_KEY, INSTALL_KEY);
+        if (v == null) {
+            return null;
+        }
+        if (v instanceof List) {
+            return (List<ScmInstall>) v;
+        } else {
+            List<ScmInstall> list = new ArrayList<ScmInstall>();
+            list.add((ScmInstall) v);
+            return list;
+        }
     }
 
     public Object methodMissing(String name, Object args)

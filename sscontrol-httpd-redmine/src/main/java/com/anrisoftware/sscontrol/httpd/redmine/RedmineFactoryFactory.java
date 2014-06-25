@@ -42,6 +42,8 @@ public class RedmineFactoryFactory implements WebServiceFactoryFactory {
 
     private static final String DELIVERY_METHOD = "com.anrisoftware.sscontrol.httpd.redmine.DeliveryMethod";
 
+    private static final String SCM_INSTALL = "com.anrisoftware.sscontrol.httpd.redmine.ScmInstall";
+
     /**
      * <i>Redmine</i> service name.
      */
@@ -90,7 +92,8 @@ public class RedmineFactoryFactory implements WebServiceFactoryFactory {
 
     private void importClasses(CompilerConfiguration c) {
         ImportCustomizer customizer = new ImportCustomizer();
-        customizer.addImports(DELIVERY_METHOD, AUTHENTICATION_METHOD);
+        customizer.addImports(DELIVERY_METHOD, AUTHENTICATION_METHOD,
+                SCM_INSTALL);
         c.addCompilationCustomizers(customizer);
     }
 }

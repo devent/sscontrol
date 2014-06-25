@@ -29,6 +29,7 @@ import com.anrisoftware.resources.templates.api.TemplatesFactory
 import com.anrisoftware.sscontrol.core.service.LinuxScript
 import com.anrisoftware.sscontrol.httpd.domain.Domain
 import com.anrisoftware.sscontrol.httpd.redmine.RedmineService
+import com.anrisoftware.sscontrol.httpd.redmine.ScmInstall
 import com.anrisoftware.sscontrol.httpd.redmine.core.Redmine_2_5_Config
 import com.anrisoftware.sscontrol.httpd.webservice.ServiceConfig
 import com.anrisoftware.sscontrol.httpd.webservice.WebService
@@ -75,6 +76,7 @@ class Ubuntu_12_04_Config extends Redmine_2_5_Config implements ServiceConfig {
     void deployService(Domain domain, WebService service, List config) {
         thinConfig.thinScriptFile.delete()
         installPackages()
+        installScmPackages service
         redmineFromArchive.deployService domain, service, config
         thinConfig.deployService domain, service, config
         super.deployService domain, service, config
@@ -89,6 +91,40 @@ class Ubuntu_12_04_Config extends Redmine_2_5_Config implements ServiceConfig {
                 log: log,
                 command: script.installCommand,
                 packages: redminePackages,
+                this, threads)()
+    }
+
+    /**
+     * Installs the <i>Scm</i> packages.
+     *
+     * @param service
+     *            the {@link RedmineService} service.
+     *
+     */
+    void installScmPackages(RedmineService service) {
+        if (!service.scmInstall) {
+            service.scmInstall = defaultScmInstall
+        }
+        def list = []
+        service.scmInstall.each {
+            switch (it) {
+                case ScmInstall.all:
+                    list.addAll scmPackages(ScmInstall.subversion)
+                    list.addAll scmPackages(ScmInstall.darcs)
+                    list.addAll scmPackages(ScmInstall.mercurial)
+                    list.addAll scmPackages(ScmInstall.cvs)
+                    list.addAll scmPackages(ScmInstall.bazaar)
+                    list.addAll scmPackages(ScmInstall.git)
+                    break
+                default:
+                    list.addAll scmPackages(it)
+                    break
+            }
+        }
+        installPackagesFactory.create(
+                log: log,
+                command: script.installCommand,
+                packages: list,
                 this, threads)()
     }
 

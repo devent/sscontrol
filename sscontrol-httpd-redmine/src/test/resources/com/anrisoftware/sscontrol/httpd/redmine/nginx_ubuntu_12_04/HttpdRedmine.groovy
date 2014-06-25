@@ -20,6 +20,7 @@ package com.anrisoftware.sscontrol.httpd.redmine.nginx_ubuntu_12_04
 
 import com.anrisoftware.sscontrol.httpd.redmine.AuthenticationMethod
 import com.anrisoftware.sscontrol.httpd.redmine.DeliveryMethod
+import com.anrisoftware.sscontrol.httpd.redmine.ScmInstall
 
 httpd {
     domain "test1.com", address: "192.168.0.51", {
@@ -29,6 +30,10 @@ httpd {
             debug level: 4
             override mode: update
             language name: "de"
+            scm install: [
+                ScmInstall.subversion,
+                ScmInstall.mercurial
+            ]
         }
     }
     ssl_domain "test1.com", address: "192.168.0.51", {

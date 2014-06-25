@@ -40,6 +40,7 @@ import com.anrisoftware.sscontrol.httpd.domain.Domain
 import com.anrisoftware.sscontrol.httpd.redmine.AuthenticationMethod
 import com.anrisoftware.sscontrol.httpd.redmine.DeliveryMethod
 import com.anrisoftware.sscontrol.httpd.redmine.RedmineService
+import com.anrisoftware.sscontrol.httpd.redmine.ScmInstall
 import com.anrisoftware.sscontrol.httpd.redmine.nginx_thin_ubuntu_12_04.RedmineConfigFactory
 import com.anrisoftware.sscontrol.httpd.webservice.OverrideMode
 import com.anrisoftware.sscontrol.httpd.webservice.WebService
@@ -932,6 +933,38 @@ abstract class Redmine_2_5_Config {
     AuthenticationMethod getDefaultMailAuthenticationMethod() {
         def p = profileProperty "redmine_default_mail_authentication_method", redmineProperties
         AuthenticationMethod.valueOf(p)
+    }
+
+    /**
+     * Returns the default mail authentication method, for
+     * example {@code "all".}
+     *
+     * <ul>
+     * <li>profile property {@code "redmine_default_scm_install"}</li>
+     * </ul>
+     *
+     * @see #getRedmineProperties()
+     */
+    List getDefaultScmInstall() {
+        def list = profileListProperty "redmine_default_scm_install", redmineProperties
+        def res = []
+        list.each {
+            res << ScmInstall.valueOf(it)
+        }
+        return res
+    }
+
+    /**
+     * Returns the packages for the specified <i>Scm</i>.
+     *
+     * <ul>
+     * <li>profile property {@code "redmine_scm_<scm-name>_packages"}</li>
+     * </ul>
+     *
+     * @see #getRedmineProperties()
+     */
+    List scmPackages(ScmInstall scm) {
+        profileListProperty "redmine_scm_${scm.name()}_packages", redmineProperties
     }
 
     /**

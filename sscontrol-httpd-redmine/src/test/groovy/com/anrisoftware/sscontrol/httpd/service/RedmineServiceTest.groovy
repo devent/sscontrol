@@ -30,6 +30,7 @@ import com.anrisoftware.sscontrol.httpd.domain.Domain
 import com.anrisoftware.sscontrol.httpd.redmine.AuthenticationMethod
 import com.anrisoftware.sscontrol.httpd.redmine.DeliveryMethod
 import com.anrisoftware.sscontrol.httpd.redmine.RedmineService
+import com.anrisoftware.sscontrol.httpd.redmine.ScmInstall
 import com.anrisoftware.sscontrol.httpd.webservice.OverrideMode
 
 /**
@@ -76,6 +77,10 @@ class RedmineServiceTest extends HttpdTestUtil {
         assert webservice.mailUser == "redmine@example.net"
         assert webservice.mailPassword == "redminepass"
         assert webservice.languageName == "de"
+        assert webservice.scmInstall == [
+            ScmInstall.subversion,
+            ScmInstall.mercurial
+        ]
 
         domain = service.domains[d++]
         assert domain.name == "test1.com"
@@ -98,6 +103,7 @@ class RedmineServiceTest extends HttpdTestUtil {
         assert webservice.mailUser == null
         assert webservice.mailPassword == null
         assert webservice.languageName == null
+        assert webservice.scmInstall == null
 
         domain = service.domains[d++]
         assert domain.name == "test2.com"
@@ -120,5 +126,6 @@ class RedmineServiceTest extends HttpdTestUtil {
         assert webservice.mailUser == "redmine@example.net"
         assert webservice.mailPassword == "redminepass"
         assert webservice.languageName == null
+        assert webservice.scmInstall == null
     }
 }

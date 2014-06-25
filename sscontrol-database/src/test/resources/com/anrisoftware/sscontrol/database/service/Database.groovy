@@ -36,12 +36,13 @@ database {
 
     // add new database and import tables
     database "maildb", { //.
-        script execute: "postfixtables.sql" //.
+        script importing: "postfixtables.sql" //.
     }
 
     // add new database and import tables
-    database "postfixdb", charset: "latin1", collate: "latin1_swedish_ci", { //.
-        script execute: "postfixtables.sql" //.
+    database "postfixdb", charset: "latin1", collate: "latin1_swedish_ci", {
+        script importing: "postfixtables.sql"
+        script importing: "postfixtables.sql.gz"
     }
 
     // add a new user

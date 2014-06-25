@@ -18,6 +18,8 @@
  */
 package com.anrisoftware.sscontrol.database.statements;
 
+import java.util.Map;
+
 /**
  * Factory to create a new database.
  * 
@@ -26,13 +28,13 @@ package com.anrisoftware.sscontrol.database.statements;
  */
 public interface DatabaseFactory {
 
-	/**
-	 * Creates a new database with the specified name.
-	 * 
-	 * @param name
-	 *            the name of the database.
-	 * 
-	 * @return the {@link Database}.
-	 */
-	Database create(String name);
+    /**
+     * Creates a new database with the specified name.
+     * 
+     * @param args
+     *            the {@link Map} arguments of the database.
+     * 
+     * @return the {@link Database}.
+     */
+    Database create(Map<String, Object> args);
 }

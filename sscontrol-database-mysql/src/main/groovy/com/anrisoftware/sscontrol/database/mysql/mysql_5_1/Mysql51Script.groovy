@@ -23,6 +23,9 @@ import groovy.util.logging.Slf4j
 
 import javax.inject.Inject
 
+import org.apache.commons.io.FilenameUtils
+import org.apache.commons.io.IOUtils
+
 import com.anrisoftware.globalpom.exec.api.ProcessTask
 import com.anrisoftware.globalpom.textmatch.tokentemplate.TokenTemplate
 import com.anrisoftware.resources.templates.api.TemplateResource
@@ -155,11 +158,21 @@ abstract class Mysql51Script extends MysqlScript {
      */
     void importScripts() {
         service.databases.each { Database database ->
-            database.scripts.each {
+            database.importingScripts.each { URI it ->
+                def unpackCommand = unpackCommand(it.path)
+                def file = new File(tmpDirectory, FilenameUtils.getBaseName(it.path))
+                def input = it.toURL().openStream()
+                IOUtils.copy input, new FileOutputStream(file)
                 def worker = scriptExecFactory.create(
-                        log: log, mysqlCommand: mysqlCommand, password: service.admin.password,
-                        database: database, string: it,
+                        log: log,
+                        mysqlCommand: mysqlCommand,
+                        password: service.admin.password,
+                        database: database,
+                        file: file,
+                        unpackCommand: unpackCommand,
+                        archiveType: archiveType(it.path),
                         this, threads, importScriptTemplate, "importScript")()
+                file.delete()
                 logg.scriptExecuted this, worker
             }
         }

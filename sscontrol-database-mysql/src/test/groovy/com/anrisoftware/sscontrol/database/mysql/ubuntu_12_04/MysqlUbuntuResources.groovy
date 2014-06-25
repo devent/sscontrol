@@ -34,17 +34,22 @@ enum MysqlUbuntuResources {
     profile("UbuntuProfile.groovy", MysqlUbuntuResources.class.getResource("UbuntuProfile.groovy")),
     databaseScript("Database.groovy", MysqlUbuntuResources.class.getResource("Database.groovy")),
     databaseNonLoggingScript("Database.groovy", MysqlUbuntuResources.class.getResource("DatabaseNonLogging.groovy")),
+    // commands
     aptitudeCommand("/usr/bin/aptitude", MysqlUbuntuResources.class.getResource("echo_command.txt")),
     restartCommand("/sbin/restart", MysqlUbuntuResources.class.getResource("echo_command.txt")),
     mysqlCommand("/usr/bin/mysql", MysqlUbuntuResources.class.getResource("echo_command.txt")),
     mysqladminCommand("/usr/bin/mysqladmin", MysqlUbuntuResources.class.getResource("echo_command.txt")),
     mysqldExpected("/etc/mysql/conf.d/sscontrol_mysqld.cnf", MysqlUbuntuResources.class.getResource("mysqld_cnf_expected.txt")),
+    // expected
     mysqldNonLoggingExpected("/etc/mysql/conf.d/sscontrol_mysqld.cnf", MysqlUbuntuResources.class.getResource("mysqld_cnf_nonlogging_expected.txt")),
+    mysqlOutExpected("/usr/bin/mysql.out", MysqlUbuntuResources.class.getResource("mysql_out_expected.txt")),
+    restartOutExpected("/sbin/restart.out", MysqlUbuntuResources.class.getResource("restart_out_expected.txt")),
+    aptitudeOutExpected("/usr/bin/aptitude.out", MysqlUbuntuResources.class.getResource("aptitude_out_expected.txt")),
+    // database
     confDir("/etc/mysql/conf.d", null),
-    mysqlOut("/usr/bin/mysql.out", MysqlUbuntuResources.class.getResource("mysql_out_expected.txt")),
-    restartOut("/sbin/restart.out", MysqlUbuntuResources.class.getResource("restart_out_expected.txt")),
-    aptitudeOut("/usr/bin/aptitude.out", MysqlUbuntuResources.class.getResource("aptitude_out_expected.txt")),
     postfixtables("/tmp/postfixtables.sql", MysqlUbuntuResources.class.getResource("postfixtables.txt")),
+    postfixtablesGz("/tmp/postfixtables.gz", MysqlUbuntuResources.class.getResource("postfixtables.gz")),
+    postfixtablesZip("/tmp/postfixtables.zip", MysqlUbuntuResources.class.getResource("postfixtables.zip")),
 
     static copyMysqlFiles(File parent) {
         aptitudeCommand.createCommand parent

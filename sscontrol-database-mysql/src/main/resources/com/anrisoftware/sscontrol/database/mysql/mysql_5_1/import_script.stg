@@ -1,8 +1,17 @@
 importScript(args) ::= <<
 # import database script
-<args.mysqlCommand> --password=<args.password> -t \<\<"STOP"
-USE <args.database.name>;
-<args.string>
-\q
-STOP
+<({unpackScript_<args.archiveType>})(args)> | <args.mysqlCommand> --password="<args.password>" <args.database.name>
+
 >>
+
+unpackScript_unknown(args) ::= <%
+cat <args.file>
+%>
+
+unpackScript_gz(args) ::= <%
+<args.unpackCommand> \< <args.file>
+%>
+
+unpackScript_zip(args) ::= <%
+<args.unpackCommand> \< <args.file>
+%>

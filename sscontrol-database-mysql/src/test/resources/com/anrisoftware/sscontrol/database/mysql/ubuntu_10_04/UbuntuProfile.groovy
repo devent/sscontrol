@@ -29,7 +29,6 @@ profile "ubuntu_10_04", {
         service "mysql"
         install_command "$aptitudeCommand update && $aptitudeCommand install"
         restart_command restartCommand
-        packages "mysql-server, mysql-client"
         configuration_directory confDir
         mysqladmin_command mysqladminCommand
         mysql_command mysqlCommand

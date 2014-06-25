@@ -18,14 +18,20 @@
  */
 package com.anrisoftware.sscontrol.database.statements;
 
-import static com.anrisoftware.sscontrol.database.statements.DatabaseLogger._.character_set;
-import static com.anrisoftware.sscontrol.database.statements.DatabaseLogger._.characterset_set_debug;
-import static com.anrisoftware.sscontrol.database.statements.DatabaseLogger._.characterset_set_info;
+import static com.anrisoftware.sscontrol.database.statements.DatabaseLogger._.charset_null;
+import static com.anrisoftware.sscontrol.database.statements.DatabaseLogger._.charset_set_debug;
+import static com.anrisoftware.sscontrol.database.statements.DatabaseLogger._.charset_set_info;
 import static com.anrisoftware.sscontrol.database.statements.DatabaseLogger._.collate_null;
 import static com.anrisoftware.sscontrol.database.statements.DatabaseLogger._.collate_set_debug;
 import static com.anrisoftware.sscontrol.database.statements.DatabaseLogger._.collate_set_info;
+import static com.anrisoftware.sscontrol.database.statements.DatabaseLogger._.importing_script_added_debug;
+import static com.anrisoftware.sscontrol.database.statements.DatabaseLogger._.importing_script_added_info;
 import static com.anrisoftware.sscontrol.database.statements.DatabaseLogger._.name_empty;
-import static org.apache.commons.lang3.Validate.notEmpty;
+import static org.apache.commons.lang3.Validate.isTrue;
+import static org.apache.commons.lang3.Validate.notBlank;
+
+import java.net.URI;
+import java.util.Map;
 
 import javax.inject.Singleton;
 
@@ -40,68 +46,118 @@ import com.anrisoftware.globalpom.log.AbstractLogger;
 @Singleton
 class DatabaseLogger extends AbstractLogger {
 
-	enum _ {
+    private static final String IMPORTING_KEY = "importing";
+    private static final String COLLATE_KEY = "collate";
+    private static final String CHARSET_KEY = "charset";
+    private static final String NAME_KEY = "name";
 
-		name_empty("Name must not be empty for database '%s'."),
+    enum _ {
 
-		collate_set_info("Default collate set '{}' for database '{}'."),
+        name_empty("Name cannot be null or empty for %s."),
 
-		collate_set_debug("Default collate set '{}' for {}."),
+        collate_null("Collate must not be null for %s."),
 
-		collate_null("Collate must not be null for %s."),
+        charset_null("Character set must not be null for %s."),
 
-		characterset_set_info(
-				"Default character set set '{}' for database '{}'."),
+        charset_set_debug("Character set '{}' set for {}."),
 
-		characterset_set_debug("Default character set set '{}' for {}."),
+        charset_set_info("Character set '{}' set for database '{}'."),
 
-		character_set("Character set must not be null for %s.");
+        collate_set_debug("Collate set '{}' set for {}."),
 
-		private String name;
+        collate_set_info("Collate set '{}' set for database '{}'."),
 
-		private _(String name) {
-			this.name = name;
-		}
+        importing_script_added_debug("Importing script '{}' added for {}."),
 
-		@Override
-		public String toString() {
-			return name;
-		}
-	}
+        importing_script_added_info(
+                "Importing script '{}' added for database '{}'.");
 
-	/**
-	 * Create logger for {@link Database}.
-	 */
-	DatabaseLogger() {
-		super(Database.class);
-	}
+        private String name;
 
-	void checkCharacterSet(Database database, String set) {
-		notEmpty(set, character_set.toString(), database);
-	}
+        private _(String name) {
+            this.name = name;
+        }
 
-	void characterSetSet(Database database, String set) {
-		if (isDebugEnabled()) {
-			debug(characterset_set_debug, set, database);
-		} else {
-			info(characterset_set_info, set, database.getName());
-		}
-	}
+        @Override
+        public String toString() {
+            return name;
+        }
+    }
 
-	void checkCollate(Database database, String collate) {
-		notEmpty(collate, collate_null.toString(), database);
-	}
+    /**
+     * Create logger for {@link Database}.
+     */
+    DatabaseLogger() {
+        super(Database.class);
+    }
 
-	void collateSet(Database database, String collate) {
-		if (isDebugEnabled()) {
-			debug(collate_set_debug, collate, database);
-		} else {
-			info(collate_set_info, collate, database.getName());
-		}
-	}
+    String name(Database database, Map<String, Object> args) {
+        isTrue(args.containsKey(NAME_KEY), name_empty.toString(), database);
+        String v = args.get(NAME_KEY).toString();
+        notBlank(v, name_empty.toString(), database);
+        return v;
+    }
 
-	void checkName(Database database, String name) {
-		notEmpty(name, name_empty.toString(), database);
-	}
+    boolean charset(Map<String, Object> args) {
+        return args.containsKey(CHARSET_KEY);
+    }
+
+    String charset(Database database, Map<String, Object> args) {
+        isTrue(args.containsKey(CHARSET_KEY), charset_null.toString(), database);
+        String v = args.get(CHARSET_KEY).toString();
+        checkCharacterSet(database, v);
+        return v;
+    }
+
+    boolean collate(Map<String, Object> args) {
+        return args.containsKey(COLLATE_KEY);
+    }
+
+    String collate(Database database, Map<String, Object> args) {
+        isTrue(args.containsKey(COLLATE_KEY), collate_null.toString(), database);
+        String v = args.get(COLLATE_KEY).toString();
+        notBlank(v, charset_null.toString(), database);
+        return v;
+    }
+
+    void checkCharacterSet(Database database, String character) {
+        notBlank(character, charset_null.toString(), database);
+    }
+
+    void characterSetSet(Database database, String charset) {
+        if (isDebugEnabled()) {
+            debug(charset_set_debug, charset, database);
+        } else {
+            info(charset_set_info, charset, database.getName());
+        }
+    }
+
+    void checkCollate(Database database, String collate) {
+        notBlank(collate, collate_null.toString(), database);
+    }
+
+    void collateSet(Database database, String collate) {
+        if (isDebugEnabled()) {
+            debug(collate_set_debug, collate, database);
+        } else {
+            info(collate_set_info, collate, database.getName());
+        }
+    }
+
+    boolean haveScriptImporting(Map<String, Object> args) {
+        return args.containsKey(IMPORTING_KEY);
+    }
+
+    Object scriptImporting(Map<String, Object> args) {
+        return args.get(IMPORTING_KEY);
+    }
+
+    void addImportingScript(Database database, URI uri) {
+        if (isDebugEnabled()) {
+            debug(importing_script_added_debug, uri, database);
+        } else {
+            info(importing_script_added_info, uri, database.getName());
+        }
+    }
 
 }

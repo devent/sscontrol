@@ -50,6 +50,22 @@ class DatabaseScriptTest extends DatabaseServiceBase {
         assert database.databases.size() == 4
         assert database.users.size() == 2
 
+        com.anrisoftware.sscontrol.database.statements.Database db = database.databases[0]
+        assert db.name == "wordpressdb"
+        assert db.characterSet == null
+        assert db.collate == null
+
+        db = database.databases[1]
+        assert db.name == "drupal6db"
+        assert db.characterSet == "latin1"
+        assert db.collate == "latin1_swedish_ci"
+
+        db = database.databases[2]
+        assert db.name == "maildb"
+        assert db.characterSet == null
+        assert db.collate == null
+        assert db.importingScripts[0].toString() == "file://postfixtables.sql"
+
         def user = database.users[0]
         assert user.name == "test1"
         assert user.password == "test1password"

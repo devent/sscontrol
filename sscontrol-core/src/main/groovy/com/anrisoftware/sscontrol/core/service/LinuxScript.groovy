@@ -25,6 +25,7 @@ import java.nio.charset.Charset
 import javax.inject.Inject
 
 import org.apache.commons.io.FileUtils
+import org.apache.commons.io.FilenameUtils
 import org.apache.commons.lang3.StringUtils
 import org.apache.commons.lang3.builder.ToStringBuilder
 import org.codehaus.groovy.runtime.InvokerHelper
@@ -252,13 +253,39 @@ abstract class LinuxScript extends Script {
     }
 
     /**
+     * Returns the unpack commands for the archive.
+     */
+    String unpackCommand(String archive) {
+        def name = FilenameUtils.getName(archive)
+        return unpackCommands[archiveType(archive)]
+    }
+
+    /**
+     * Returns the type of the archive.
+     */
+    String archiveType(String archive) {
+        def name = FilenameUtils.getName(archive)
+        switch (name) {
+            case ~/.*\.tar\.gz$/:
+                return "tgz"
+            case ~/.*\.zip$/:
+                return "zip"
+            case ~/.*\.gz$/:
+                return "gz"
+            default:
+                return "unknown"
+        }
+    }
+
+    /**
      * Returns the unpack commands for the archive types.
      *
      * @see #getTarCommand()
      * @see #getUnzipCommand()
+     * @see #getGunzipCommand()
      */
     Map getUnpackCommands() {
-        [tgz: tarCommand, zip: unzipCommand]
+        [tgz: tarCommand, zip: unzipCommand, gz: gunzipCommand]
     }
 
     /**
@@ -285,6 +312,19 @@ abstract class LinuxScript extends Script {
      */
     String getUnzipCommand() {
         profileProperty "unzip_command", defaultProperties
+    }
+
+    /**
+     * Returns the {@code gunzip} command.
+     *
+     * <ul>
+     * <li>property key {@code gunzip_command}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    String getGunzipCommand() {
+        profileProperty "gunzip_command", defaultProperties
     }
 
     /**

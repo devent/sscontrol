@@ -29,18 +29,15 @@ import com.google.inject.assistedinject.FactoryModuleBuilder;
  */
 public class StatementsModule extends AbstractModule {
 
-	@Override
-	protected void configure() {
-		install(new FactoryModuleBuilder().implement(Admin.class, Admin.class)
-				.build(AdminFactory.class));
-		install(new FactoryModuleBuilder().implement(Database.class,
-				Database.class).build(DatabaseFactory.class));
-		install(new FactoryModuleBuilder().implement(User.class, User.class)
-				.build(UserFactory.class));
-		install(new FactoryModuleBuilder()
-				.implement(Script.class, Script.class).build(
-						ScriptFactory.class));
-		install(new FactoryModuleBuilder().implement(UserAccess.class,
-				UserAccess.class).build(UserAccessFactory.class));
-	}
+    @Override
+    protected void configure() {
+        install(new FactoryModuleBuilder().implement(Admin.class, Admin.class)
+                .build(AdminFactory.class));
+        install(new FactoryModuleBuilder().implement(Database.class,
+                Database.class).build(DatabaseFactory.class));
+        install(new FactoryModuleBuilder().implement(User.class, User.class)
+                .build(UserFactory.class));
+        install(new FactoryModuleBuilder().implement(UserAccess.class,
+                UserAccess.class).build(UserAccessFactory.class));
+    }
 }

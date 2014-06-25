@@ -40,6 +40,8 @@ class MysqlUbuntuTest extends UbuntuTestUtil {
     void "database script"() {
         copyMysqlFiles tmpdir
         postfixtables.createFile tmpdir
+        postfixtablesGz.createFile tmpdir
+        postfixtablesZip.createFile tmpdir
         loader.loadService profile.resource, null
         def profile = registry.getService("profile")[0]
         loader.loadService databaseScript.resource, profile
@@ -48,9 +50,9 @@ class MysqlUbuntuTest extends UbuntuTestUtil {
         log.info "Run service again to ensure that configuration is not set double."
         registry.allServices.each { it.call() }
         assertFileContent mysqldExpected.asFile(tmpdir), mysqldExpected
-        assertFileContent restartOut.asFile(tmpdir), restartOut
-        assertFileContent aptitudeOut.asFile(tmpdir), aptitudeOut
-        assertFileContent mysqlOut.asFile(tmpdir), mysqlOut
+        assertFileContent restartOutExpected.asFile(tmpdir), restartOutExpected
+        assertFileContent aptitudeOutExpected.asFile(tmpdir), aptitudeOutExpected
+        assertFileContent mysqlOutExpected.asFile(tmpdir), mysqlOutExpected
     }
 
     @Test

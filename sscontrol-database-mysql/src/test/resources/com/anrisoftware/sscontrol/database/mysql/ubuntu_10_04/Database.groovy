@@ -38,13 +38,13 @@ database {
     // add new database and import tables
     database "maildb", {
         //.
-        script execute: "${tmp}/tmp/postfixtables.sql" //.
+        script importing: "${tmp}/tmp/postfixtables.sql" //.
     }
 
     // add new database and import tables
     database "postfixdb", charset: "latin1", collate: "latin1_swedish_ci", {
         //.
-        script execute: "${tmp}/tmp/postfixtables.sql" //.
+        script importing: "${tmp}/tmp/postfixtables.sql" //.
     }
 
     // add a new user

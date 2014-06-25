@@ -24,6 +24,7 @@ import groovy.lang.Script;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -57,6 +58,8 @@ import com.anrisoftware.sscontrol.database.statements.UserFactory;
  */
 @SuppressWarnings("serial")
 class DatabaseServiceImpl extends AbstractService {
+
+    private static final String DATABASE_NAME_KEY = "name";
 
     private final List<Database> databases;
 
@@ -192,16 +195,15 @@ class DatabaseServiceImpl extends AbstractService {
     }
 
     public void database(String name) {
-        database(Collections.<String, String> emptyMap(), name);
+        database(new HashMap<String, Object>(), name);
     }
 
-    public void database(Map<String, String> args, String name) {
+    public void database(Map<String, Object> args, String name) {
         database(args, name, null);
     }
 
     public Database database(String name, Object statements) {
-        return database(Collections.<String, String> emptyMap(), name,
-                statements);
+        return database(new HashMap<String, Object>(), name, statements);
     }
 
     /**
@@ -221,10 +223,10 @@ class DatabaseServiceImpl extends AbstractService {
      * @throws IllegalArgumentException
      *             if the specified name is empty.
      */
-    public Database database(Map<String, String> args, String name,
+    public Database database(Map<String, Object> args, String name,
             Object statements) {
-        Database database = databaseFactory.create(name);
-        database.setArguments(args);
+        args.put(DATABASE_NAME_KEY, name);
+        Database database = databaseFactory.create(args);
         databases.add(database);
         log.databaseAdd(this, database);
         return database;

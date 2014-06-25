@@ -1,8 +1,10 @@
 --password=mysqladminpassword -t
 --password=mysqladminpassword -t
+--password=mysqladminpassword maildb
+--password=mysqladminpassword postfixdb
+--password=mysqladminpassword postfixdb
 --password=mysqladminpassword -t
 --password=mysqladminpassword -t
---password=mysqladminpassword -t
---password=mysqladminpassword -t
---password=mysqladminpassword -t
---password=mysqladminpassword -t
+--password=mysqladminpassword maildb
+--password=mysqladminpassword postfixdb
+--password=mysqladminpassword postfixdb

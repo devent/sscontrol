@@ -1,4 +1,4 @@
 update
-install mysql-server mysql-client
+install mysql-server mysql-client unzip gzip
 update
-install mysql-server mysql-client
+install mysql-server mysql-client unzip gzip

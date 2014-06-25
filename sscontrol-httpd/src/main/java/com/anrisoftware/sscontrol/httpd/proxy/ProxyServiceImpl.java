@@ -25,6 +25,8 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
+import com.anrisoftware.sscontrol.core.api.ServiceException;
+import com.anrisoftware.sscontrol.core.groovy.StatementsMap;
 import com.anrisoftware.sscontrol.httpd.domain.Domain;
 import com.anrisoftware.sscontrol.httpd.webserviceargs.DefaultWebService;
 import com.anrisoftware.sscontrol.httpd.webserviceargs.DefaultWebServiceFactory;
@@ -39,6 +41,12 @@ import com.google.inject.assistedinject.Assisted;
  */
 public class ProxyServiceImpl implements ProxyService {
 
+    private static final String FEEDS_KEY = "feeds";
+
+    private static final String STATIC_FILES_KEY = "staticFiles";
+
+    private static final String CACHE_KEY = "cache";
+
     private static final String NAME_FORMAT = "%s.%s";
 
     private static final String PROXY_NAME_FORMAT = "%s_%s";
@@ -50,6 +58,8 @@ public class ProxyServiceImpl implements ProxyService {
     public static final String SERVICE_NAME = "proxy";
 
     private final DefaultWebService webService;
+
+    private final StatementsMap statementsMap;
 
     @Inject
     private ProxyServiceLogger log;
@@ -70,12 +80,14 @@ public class ProxyServiceImpl implements ProxyService {
             ProxyServiceArgs proxyaargs, WebServiceLogger webServiceLogger,
             @Assisted Map<String, Object> args, @Assisted Domain domain) {
         this.webService = webServiceFactory.create(SERVICE_NAME, args, domain);
+        this.statementsMap = webService.getStatementsMap();
         this.service = proxyaargs.service(domain, args);
         this.address = proxyaargs.address(domain, args);
         if (proxyaargs.haveTarget(args)) {
             this.target = proxyaargs.target(domain, args);
         }
         setDefaultProxyName(webServiceLogger, args);
+        setupAllowedStatements(statementsMap);
     }
 
     private void setDefaultProxyName(WebServiceLogger serviceLog,
@@ -89,6 +101,10 @@ public class ProxyServiceImpl implements ProxyService {
             this.proxyName = format(PROXY_NAME_FORMAT, service,
                     replace(domain, DOT_STR, UNDER_STR));
         }
+    }
+
+    private void setupAllowedStatements(StatementsMap map) {
+        map.addAllowed(CACHE_KEY);
     }
 
     @Override
@@ -179,6 +195,27 @@ public class ProxyServiceImpl implements ProxyService {
     @Override
     public String getTarget() {
         return target;
+    }
+
+    public void setCacheStaticFiles(boolean cache) {
+        statementsMap.putMapValue(CACHE_KEY, STATIC_FILES_KEY, cache);
+    }
+
+    public Boolean isCacheStaticFiles() {
+        return statementsMap.mapValue(CACHE_KEY, STATIC_FILES_KEY);
+    }
+
+    public void setCacheFeeds(boolean cache) {
+        statementsMap.putMapValue(CACHE_KEY, FEEDS_KEY, cache);
+    }
+
+    public Boolean isCacheFeeds() {
+        return statementsMap.mapValue(CACHE_KEY, FEEDS_KEY);
+    }
+
+    public Object methodMissing(String name, Object args)
+            throws ServiceException {
+        return webService.methodMissing(name, args);
     }
 
     @Override

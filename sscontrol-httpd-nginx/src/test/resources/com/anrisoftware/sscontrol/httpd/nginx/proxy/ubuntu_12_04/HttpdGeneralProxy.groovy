@@ -27,6 +27,8 @@ httpd {
     ssl_domain "test1.com", address: "192.168.0.50", {
         certification_file ProxyResources.certCrt.resource
         certification_key_file ProxyResources.certKey.resource
-        setup "proxy", service: "general", alias: "sitefoo", proxyname: "sitefoo", address: "https://127.0.0.1:8082"
+        setup "proxy", service: "general", alias: "sitefoo", proxyname: "sitefoo", address: "https://127.0.0.1:8082", {
+            cache staticFiles: true, feeds: true
+        }
     }
 }

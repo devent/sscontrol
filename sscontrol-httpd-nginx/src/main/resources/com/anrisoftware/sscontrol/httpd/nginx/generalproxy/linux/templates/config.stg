@@ -1,8 +1,7 @@
 domainConfig(args) ::= <<
 <! - args.properties - !>
 <! - args.domain - !>
-<! - args.proxyName - !>
-<! - args.proxyAddress - !>
+<! - args.proxy - !>
 <! - args.location - !>
 <! - args.errorPagesDir - !>
 # proxy
@@ -16,24 +15,28 @@ proxy_redirect <if(args.properties.proxyRedirect)>on<else>off<endif>;
 
 location <args.location> {
     proxy_cache_key "$scheme://$host$request_uri";
-    proxy_cache <args.proxyName>;
-    proxy_pass <args.proxyAddress>;
+    proxy_cache <args.proxy.proxyName>;
+    proxy_pass <args.proxy.address>;
 }
 
-location ~* \.(jpg|png|gif|jpeg|css|js|mp3|wav|swf|mov|doc|pdf|xls|ppt|docx|pptx|xlsx)$ {
+<if(args.proxy.cacheStaticFiles)>
+location ~* <args.location>/.*\.(<args.properties.staticFiles;separator="|">)$ {
     proxy_cache_valid 200 <args.properties.proxyStaticCacheTime>;
     expires <args.properties.proxyExpireTime>;
-    proxy_pass <args.proxyAddress>;
-    proxy_cache <args.proxyName>;
+    proxy_pass <args.proxy.address>;
+    proxy_cache <args.proxy.proxyName>;
 }
+<endif>
 
-location ~* \/[^\/]+\/(feed|\.xml)\/? {
+<if(args.proxy.cacheFeeds)>
+location ~* <args.location>/.*\/[^\/]+\/(feed|\.xml)\/? {
     # Cache RSS looking feeds
     proxy_cache_key "$scheme://$host$request_uri";
     proxy_cache_valid 200 <args.properties.proxyFeedsCacheTime>;
-    proxy_cache <args.proxyName>;
-    proxy_pass <args.proxyAddress>;
+    proxy_cache <args.proxy.proxyName>;
+    proxy_pass <args.proxy.address>;
 }
+<endif>
 
 error_page 500 502 503 504 /50x.html;
 location = /50x.html {

@@ -65,6 +65,8 @@ class HttpdProxyTest extends HttpdTestUtil {
         assert webservice.address == "http://127.0.0.1:8080"
         assert webservice.alias == "fooalias"
         assert webservice.proxyName == "servicefoo_fooalias"
+        assert webservice.cacheStaticFiles == null
+        assert webservice.cacheFeeds == null
 
         domain = service.domains[1]
         webservice = domain.services[0]
@@ -75,5 +77,7 @@ class HttpdProxyTest extends HttpdTestUtil {
         assert webservice.service == "servicebar"
         assert webservice.address == "http://127.0.0.1:8080"
         assert webservice.proxyName == "bar"
+        assert webservice.cacheStaticFiles == true
+        assert webservice.cacheFeeds == true
     }
 }

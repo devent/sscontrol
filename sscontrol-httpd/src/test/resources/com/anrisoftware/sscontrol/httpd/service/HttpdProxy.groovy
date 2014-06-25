@@ -28,9 +28,11 @@ httpd {
     domain "test1.com", address: "192.168.0.50", {
         setup "proxy", service: "servicefoo", alias: "fooalias", address: "http://127.0.0.1:8080"
     }
-    // SSL/domain "test1.com"
+    // domain "test1.com"
     ssl_domain "test1.com", address: "192.168.0.50", {
-        setup "proxy", service: "servicebar", proxyname: "bar", address: "http://127.0.0.1:8080"
+        setup "proxy", service: "servicebar", proxyname: "bar", address: "http://127.0.0.1:8080", {
+            cache staticFiles: true, feeds: true
+        }
         certification_file certFile
         certification_key_file certKeyFile
     }

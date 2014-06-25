@@ -80,12 +80,25 @@ abstract class GeneralProxyConfig extends AbstractNginxProxyConfig {
                 [
                     properties: this,
                     domain: domain,
-                    proxyName: service.proxyName,
-                    proxyAddress: service.address,
+                    proxy: service,
                     location: proxyLocation(service),
                     errorPagesDir: errorPagesDir])
         log.domainConfigCreated script, domain, configstr
         list << configstr
+    }
+
+    /**
+     * Returns the list of static files, for
+     * example {@code "jpg, png, gif, jpeg, css, js, mp3, wav, swf, mov, doc, pdf, xls, ppt, docx, pptx, xlsx".}
+     *
+     * <ul>
+     * <li>profile property {@code "proxy_static_files"}</li>
+     * </ul>
+     *
+     * @see #getProxyProperties()
+     */
+    List getStaticFiles() {
+        profileListProperty "proxy_static_files", proxyProperties
     }
 
     /**

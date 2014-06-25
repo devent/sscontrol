@@ -33,14 +33,14 @@ server {
         proxy_pass https://127.0.0.1:8082;
     }
 
-    location ~* \.(jpg|png|gif|jpeg|css|js|mp3|wav|swf|mov|doc|pdf|xls|ppt|docx|pptx|xlsx)$ {
+    location ~* /sitefoo/.*\.(jpg|png|gif|jpeg|css|js|mp3|wav|swf|mov|doc|pdf|xls|ppt|docx|pptx|xlsx)$ {
         proxy_cache_valid 200 7200;
         expires 864000;
         proxy_pass https://127.0.0.1:8082;
         proxy_cache sitefoo;
     }
 
-    location ~* \/[^\/]+\/(feed|\.xml)\/? {
+    location ~* /sitefoo/.*\/[^\/]+\/(feed|\.xml)\/? {
         # Cache RSS looking feeds
         proxy_cache_key "$scheme://$host$request_uri";
         proxy_cache_valid 200 2700;

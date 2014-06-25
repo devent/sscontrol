@@ -257,8 +257,8 @@ abstract class RedmineFromArchive {
             return false
         }
         def version = FileUtils.readFileToString versionFile
-        logg.checkRedmineVersion this, version, redmineVersion
-        return StringUtils.startsWith(version, redmineVersion)
+        logg.checkRedmineVersion this, version, redmineUpperVersion
+        return StringUtils.startsWith(version, redmineUpperVersion)
     }
 
     /**
@@ -290,7 +290,7 @@ abstract class RedmineFromArchive {
 
     /**
      * Returns the <i>Redmine</i> version, for
-     * example {@code "2.5"}
+     * example {@code "2.5.1"}
      *
      * <ul>
      * <li>profile property {@code "redmine_version"}</li>
@@ -300,6 +300,20 @@ abstract class RedmineFromArchive {
      */
     String getRedmineVersion() {
         profileProperty "redmine_version", redmineFromArchiveProperties
+    }
+
+    /**
+     * Returns the upper <i>Redmine</i> version, for
+     * example {@code "2.5"}
+     *
+     * <ul>
+     * <li>profile property {@code "redmine_upper_version"}</li>
+     * </ul>
+     *
+     * @see #getRedmineFromArchiveProperties()
+     */
+    String getRedmineUpperVersion() {
+        profileProperty "redmine_upper_version", redmineFromArchiveProperties
     }
 
     /**

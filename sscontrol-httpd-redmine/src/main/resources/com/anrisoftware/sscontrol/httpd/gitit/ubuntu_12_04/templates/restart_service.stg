@@ -1,5 +1,0 @@
-restartService(args) ::= <<
-<! - args.command - !>
-<args.command> restart
-
->>

@@ -102,12 +102,15 @@ class NginxConfig extends Ubuntu_12_04_Config implements ServiceConfig {
     void createDomainConfig(Domain domain, Domain refDomain, RedmineService service, List config) {
         def serviceAliasDir = serviceAliasDir domain, refDomain, service
         def serviceDir = serviceDir domain, refDomain, service
+        def aliasTarget = service.alias.isEmpty() ? null : service.alias;
         def configStr = domainConfigTemplate.getText(
                 true, "domainConfig", "args", [
                     domain: domain,
                     prefix: service.prefix,
                     alias: serviceAliasDir,
                     domainName: domainNameAsFileName(domain),
+                    aliasTarget: aliasTarget,
+                    redminePublicDirectory: redminePublicDir(domain, service),
                 ])
         config << configStr
     }

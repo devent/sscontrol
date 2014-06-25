@@ -7,7 +7,8 @@ server {
     client_max_body_size 2M;
 
     # Redmine "test2redmine", Domain test2.com
-    location /redmine {
+    location /projects {
+        alias /tmp/var/www/test2.com/test2redmine/public;
         try_files $uri @cluster_test2_com_test2redmine;
     }
 

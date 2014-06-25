@@ -37,7 +37,7 @@ httpd {
         setup "redmine", ref: "redmineid", backend: "thin"
     }
     domain "test2.com", address: "192.168.0.52", {
-        setup "redmine", id: "redmineid", backend: "thin", alias: "/redmine", prefix: "test2redmine", {
+        setup "redmine", id: "redmineid", backend: "thin", alias: "/projects", prefix: "test2redmine", {
             database "redmine2", user: "user", password: "userpass", host: "localhost"
             mail user: "redmine@example.net", password: "redminepass"
         }

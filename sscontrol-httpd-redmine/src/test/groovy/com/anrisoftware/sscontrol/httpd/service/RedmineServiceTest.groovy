@@ -107,7 +107,7 @@ class RedmineServiceTest extends HttpdTestUtil {
         assert webservice.name == "redmine"
         assert webservice.id == "redmineid"
         assert webservice.backend == "thin"
-        assert webservice.alias == "redmine"
+        assert webservice.alias == "projects"
         assert webservice.prefix == "test2redmine"
         assert webservice.ref == null
         assert webservice.refDomain == null

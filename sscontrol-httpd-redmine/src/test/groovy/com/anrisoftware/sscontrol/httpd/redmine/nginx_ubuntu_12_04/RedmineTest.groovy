@@ -49,9 +49,11 @@ class RedmineTest extends UbuntuTestUtil {
         test1comRedmineDir.asFile(tmpdir).mkdirs()
         test1comRedmineDatabaseYml.createFile(tmpdir)
         test1comRedmineConfigurationYml.createFile(tmpdir)
+        test1comRedmineEnvironmentRb.createFile(tmpdir)
         test2comRedmineDir.asFile(tmpdir).mkdirs()
         test2comRedmineDatabaseYml.createFile(tmpdir)
         test2comRedmineConfigurationYml.createFile(tmpdir)
+        test2comRedmineEnvironmentRb.createFile(tmpdir)
 
         registry.allServices.each { it.call() }
         log.info "Run service again to ensure that configuration is not set double."
@@ -62,11 +64,13 @@ class RedmineTest extends UbuntuTestUtil {
         assertStringContent test1comSslConfExpected.replaced(tmpdir, tmpdir, "/tmp"), test1comSslConfExpected.toString()
         assertStringContent test1comRedmineDatabaseYmlExpected.replaced(tmpdir, tmpdir, "/tmp"), test1comRedmineDatabaseYmlExpected.toString()
         assertStringContent test1comRedmineConfigurationYmlExpected.replaced(tmpdir, tmpdir, "/tmp"), test1comRedmineConfigurationYmlExpected.toString()
+        assertFileContent test1comRedmineEnvironmentRbExpected.asFile(tmpdir), test1comRedmineEnvironmentRbExpected
         assertStringContent test1comThinRedmine2YmlExpected.replaced(tmpdir, tmpdir, "/tmp"), test1comThinRedmine2YmlExpected.toString()
         assertStringContent test2comTest2redmineUpstreamConfExpected.replaced(tmpdir, tmpdir, "/tmp"), test2comTest2redmineUpstreamConfExpected.toString()
         assertStringContent test2comConfExpected.replaced(tmpdir, tmpdir, "/tmp"), test2comConfExpected.toString()
         assertStringContent test2comRedmineDatabaseYmlExpected.replaced(tmpdir, tmpdir, "/tmp"), test2comRedmineDatabaseYmlExpected.toString()
         assertStringContent test2comRedmineConfigurationYmlExpected.replaced(tmpdir, tmpdir, "/tmp"), test2comRedmineConfigurationYmlExpected.toString()
+        assertFileContent test2comRedmineEnvironmentRbExpected.asFile(tmpdir), test2comRedmineEnvironmentRbExpected
         assertStringContent test2comThinTest2redmineYmlExpected.replaced(tmpdir, tmpdir, "/tmp"), test2comThinTest2redmineYmlExpected.toString()
         assertStringContent thinDefaultExpected.replaced(tmpdir, tmpdir, "/tmp"), thinDefaultExpected.toString()
         assertStringContent thinScriptExpected.replaced(tmpdir, tmpdir, "/tmp"), thinScriptExpected.toString()

@@ -1,0 +1,19 @@
+redmineAppConfigSearch(service) ::= <%
+<if(strlen(trim(service.alias)))>
+(RedmineApp::Application\.routes\.default_scope = \{ :path => '/<service.alias>', :shallow_path => '/<service.alias>' \}\n)?
+RedmineApp::Application\.initialize!\n
+(Redmine::Utils::relative_url_root = '/<service.alias>'\n)?
+<else>
+RedmineApp::Application\.initialize!
+<endif>
+%>
+
+redmineAppConfig(service) ::= <<
+<if(strlen(trim(service.alias)))>
+RedmineApp::Application.routes.default_scope = { :path => '/<service.alias>', :shallow_path => '/<service.alias>' }
+RedmineApp::Application.initialize!
+Redmine::Utils::relative_url_root = '/<service.alias>'
+<else>
+RedmineApp::Application.initialize!
+<endif>
+>>

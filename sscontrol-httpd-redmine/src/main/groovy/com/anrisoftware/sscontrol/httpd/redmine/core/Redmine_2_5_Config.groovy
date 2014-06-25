@@ -29,6 +29,7 @@ import org.apache.commons.lang3.StringUtils
 import org.apache.commons.lang3.builder.ToStringBuilder
 import org.joda.time.Duration
 
+import com.anrisoftware.globalpom.textmatch.tokentemplate.TokenTemplate
 import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.Templates
@@ -94,6 +95,8 @@ abstract class Redmine_2_5_Config {
     TemplateResource bundleInstallTemplate
 
     TemplateResource rakeCommandsTemplate
+
+    TemplateResource environmentConfigTemplate
 
     /**
      * @see ServiceConfig#getScript()
@@ -303,11 +306,56 @@ abstract class Redmine_2_5_Config {
      *
      * @param service
      *            the {@link RedmineService}.
+     */
+    void deployConfig(Domain domain, RedmineService service) {
+        deployProductionConfig domain, service
+        deployEnvironmentConfig domain, service
+    }
+
+    /**
+     * Deploys the <i>Redmine</i> environment configuration.
+     *
+     * @param domain
+     *            the service {@link Domain}.
+     *
+     * @param service
+     *            the {@link RedmineService}.
+     *
+     * @see #getRedmineEnvironmentFile()
+     */
+    void deployEnvironmentConfig(Domain domain, RedmineService service) {
+        def configs = [
+            redmineAppConfigToken(domain, service),
+        ]
+        def file = redmineConfigFile domain, service, redmineEnvironmentFile
+        def conf = currentConfiguration file
+        deployConfiguration configurationTokens(), conf, configs, file
+    }
+
+    List redmineAppConfigToken(Domain domain, RedmineService service) {
+        if (service.alias.empty) {
+            return []
+        }
+        def search = environmentConfigTemplate.getText(true, "redmineAppConfigSearch", "service", service)
+        def replace = environmentConfigTemplate.getText(true, "redmineAppConfig", "service", service)
+        [
+            new TokenTemplate(search, replace)
+        ]
+    }
+
+    /**
+     * Deploys the <i>Redmine</i> production configuration.
+     *
+     * @param domain
+     *            the service {@link Domain}.
+     *
+     * @param service
+     *            the {@link RedmineService}.
      *
      * @see #getRedmineConfigExampleFile()
      * @see #getRedmineConfigFile()
      */
-    void deployConfig(Domain domain, RedmineService service) {
+    void deployProductionConfig(Domain domain, RedmineService service) {
         def exampleFile = redmineConfigFile domain, service, redmineConfigExampleFile
         def file = redmineConfigFile domain, service, redmineConfigFile
         file.isFile() == false ? FileUtils.copyFile(exampleFile, file) : false
@@ -320,8 +368,21 @@ abstract class Redmine_2_5_Config {
                 break
             }
         }
+        res = removeEmptyLastLines res
         FileUtils.writeLines file, charset.name(), res
         logg.configCreated this, file, conf
+    }
+
+    List removeEmptyLastLines(List list) {
+        def res = new ArrayList(list)
+        for (int i = list.size() - 1; i > 0; i--) {
+            if (list[i].trim().empty) {
+                res.remove(i)
+            } else {
+                break
+            }
+        }
+        return res
     }
 
     List parseConfig(Domain domain, RedmineService service, List conf, int i) {
@@ -519,6 +580,28 @@ abstract class Redmine_2_5_Config {
     }
 
     /**
+     * Returns the <i>Redmine</i> public directory, for example
+     * {@code /var/www/domain.com/redmineprefix/public}
+     *
+     * @param domain
+     *            the {@link Domain} domain of the service.
+     *
+     * @param service
+     *            the {@link RedmineService} service.
+     *
+     * @return the installation {@link File} directory.
+     *
+     * @see #domainDir(Domain)
+     * @see RedmineService#getPrefix()
+     * @see #getRedmineProperties()
+     */
+    File redminePublicDir(Domain domain, RedmineService service) {
+        def dir = new File(domainDir(domain), service.prefix)
+        def publicDir = profileProperty "redmine_public_directory", redmineProperties
+        new File(dir, publicDir)
+    }
+
+    /**
      * Returns the domain name as a file name.
      *
      * @param domain
@@ -646,6 +729,7 @@ abstract class Redmine_2_5_Config {
      * @see #getRedmineDatabaseConfigExampleFile()
      * @see #getRedmineConfigFile()
      * @see #getRedmineConfigExampleFile()
+     * @see #getRedmineEnvironmentFile()
      */
     File redmineConfigFile(Domain domain, RedmineService service, String file) {
         def dir = redmineDir domain, service
@@ -660,7 +744,7 @@ abstract class Redmine_2_5_Config {
      * <li>profile property {@code "redmine_database_configuration_file"}</li>
      * </ul>
      *
-     * @see #gititDir(Domain, RedmineService)
+     * @see #getRedmineProperties()
      */
     String getRedmineDatabaseConfigFile() {
         profileProperty "redmine_database_configuration_file", redmineProperties
@@ -674,7 +758,7 @@ abstract class Redmine_2_5_Config {
      * <li>profile property {@code "redmine_database_configuration_example_file"}</li>
      * </ul>
      *
-     * @see #gititDir(Domain, RedmineService)
+     * @see #getRedmineProperties()
      */
     String getRedmineDatabaseConfigExampleFile() {
         profileProperty "redmine_database_configuration_example_file", redmineProperties
@@ -688,7 +772,7 @@ abstract class Redmine_2_5_Config {
      * <li>profile property {@code "redmine_configuration_file"}</li>
      * </ul>
      *
-     * @see #gititDir(Domain, RedmineService)
+     * @see #getRedmineProperties()
      */
     String getRedmineConfigFile() {
         profileProperty "redmine_configuration_file", redmineProperties
@@ -702,10 +786,24 @@ abstract class Redmine_2_5_Config {
      * <li>profile property {@code "redmine_configuration_example_file"}</li>
      * </ul>
      *
-     * @see #gititDir(Domain, RedmineService)
+     * @see #getRedmineProperties()
      */
     String getRedmineConfigExampleFile() {
         profileProperty "redmine_configuration_example_file", redmineProperties
+    }
+
+    /**
+     * Returns the <i>Redmine</i> environment file, for
+     * example {@code "config/environment.rb".}
+     *
+     * <ul>
+     * <li>profile property {@code "redmine_environment_file"}</li>
+     * </ul>
+     *
+     * @see #getRedmineProperties()
+     */
+    String getRedmineEnvironmentFile() {
+        profileProperty "redmine_environment_file", redmineProperties
     }
 
     /**
@@ -884,6 +982,7 @@ abstract class Redmine_2_5_Config {
         this.gemInstallTemplate = configTemplates.getResource("gem_install")
         this.bundleInstallTemplate = configTemplates.getResource("bundle_install")
         this.rakeCommandsTemplate = configTemplates.getResource("rake_commands")
+        this.environmentConfigTemplate = configTemplates.getResource("environment_config")
     }
 
     /**

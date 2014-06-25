@@ -219,5 +219,3 @@ production:
 # specific configuration options for development environment
 # that overrides the default ones
 development:
-
-

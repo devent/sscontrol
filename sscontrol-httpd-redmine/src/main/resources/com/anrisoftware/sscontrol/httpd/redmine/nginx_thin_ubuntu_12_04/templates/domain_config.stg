@@ -3,8 +3,11 @@ domainConfig(args) ::= <<
 <! - args.alias - !>
 <! - args.domainName - !>
 <! - args.prefix - !>
+<! - args.aliasTarget - !>
+<! - args.redminePublicDirectory - !>
 # Redmine "<args.prefix>", Domain <args.domain.name>
 location <args.alias> {
+    <aliasTarget(args)>
     try_files $uri @cluster_<args.domainName>_<args.prefix>;
 }
 
@@ -13,6 +16,10 @@ location @cluster_<args.domainName>_<args.prefix> {
 }
 
 >>
+
+aliasTarget(args) ::= <%
+<if(args.aliasTarget)>alias <args.redminePublicDirectory>;<endif>
+%>
 
 upstreamConfig(args) ::= <<
 <! - args.domain - !>

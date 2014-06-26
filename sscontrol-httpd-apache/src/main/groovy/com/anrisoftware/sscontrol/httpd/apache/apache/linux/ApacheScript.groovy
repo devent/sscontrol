@@ -129,7 +129,12 @@ abstract class ApacheScript extends LinuxScript {
 
     private ServiceConfig findWebServicesConfigProvider(String profile, WebService service) {
         def factory = webServicesConfigProvider.find(
-                [getServiceName: { APACHE_NAME }, getWebName: { service.name }, getProfileName: { profile }] as ServiceConfigInfo)
+                [
+                    getServiceName: { APACHE_NAME },
+                    getWebName: { service.name },
+                    getProfileName: { profile },
+                    getWebService: { service }
+                ] as ServiceConfigInfo)
         factory.setParent injector
         def script = factory.getScript()
         script.setScript this

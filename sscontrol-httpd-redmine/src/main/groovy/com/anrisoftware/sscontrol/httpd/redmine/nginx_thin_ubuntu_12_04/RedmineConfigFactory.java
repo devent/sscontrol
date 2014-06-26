@@ -98,9 +98,14 @@ public class RedmineConfigFactory implements ServiceConfigFactory {
                 return false;
             }
             ServiceConfigInfo rhs = (ServiceConfigInfo) obj;
-            RedmineService service = (RedmineService) rhs.getWebService();
-            return new EqualsBuilder().appendSuper(super.equals(obj))
-                    .append(service.getBackend(), BACKEND_NAME).isEquals();
+            WebService webService = rhs.getWebService();
+            if (webService instanceof RedmineService) {
+                RedmineService service = (RedmineService) webService;
+                return new EqualsBuilder().appendSuper(super.equals(obj))
+                        .append(service.getBackend(), BACKEND_NAME).isEquals();
+            } else {
+                return false;
+            }
         }
     };
 

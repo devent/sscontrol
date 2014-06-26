@@ -152,7 +152,8 @@ abstract class NginxScript extends LinuxScript {
                     getServiceName: { NGINX_NAME },
                     getWebName: { service.name },
                     getProfileName: { profile },
-                    getWebService: { service }] as ServiceConfigInfo)
+                    getWebService: { service }
+                ] as ServiceConfigInfo)
         factory.setParent injector
         def script = factory.getScript()
         script.setScript this

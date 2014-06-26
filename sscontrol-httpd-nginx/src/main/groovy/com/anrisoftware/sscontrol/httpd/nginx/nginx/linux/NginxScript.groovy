@@ -408,6 +408,20 @@ abstract class NginxScript extends LinuxScript {
     }
 
     /**
+     * Returns the number of <i>Nginx</i> worker processes, for
+     * example {@code "2".}
+     *
+     * <ul>
+     * <li>profile property {@code "worker_processes"}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    int getWorkerProcesses() {
+        profileNumberProperty "worker_processes", defaultProperties
+    }
+
+    /**
      * Returns the index files for
      * example {@code "index.php,index.html,index.htm".}
      *

@@ -121,12 +121,19 @@ abstract class Nginx_1_4_Script extends NginxScript {
     List mainConfigurations(HttpdService service) {
         [
             configErrorLog(service),
+            configWorkerProcesses(service),
         ]
     }
 
     def configErrorLog(HttpdService service) {
         def search = nginxConfigTemplate.getText(true, "errorLog_search")
         def replace = nginxConfigTemplate.getText(true, "errorLog", "debug", service.debug)
+        new TokenTemplate(search, replace)
+    }
+
+    def configWorkerProcesses(HttpdService service) {
+        def search = nginxConfigTemplate.getText(true, "workerProcesses_search")
+        def replace = nginxConfigTemplate.getText(true, "workerProcesses", "processes", workerProcesses)
         new TokenTemplate(search, replace)
     }
 

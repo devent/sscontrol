@@ -69,3 +69,11 @@ errorLog(debug) ::= <%
 error_log <debug>;
 %>
 
+workerProcesses_search() ::= <%
+worker_processes\s+\d+;
+%>
+
+workerProcesses(processes) ::= <%
+worker_processes <processes>;
+%>
+

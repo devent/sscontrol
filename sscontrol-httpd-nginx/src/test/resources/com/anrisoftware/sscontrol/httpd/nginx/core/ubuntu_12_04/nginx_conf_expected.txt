@@ -1,6 +1,9 @@
 
 user  nginx;
-worker_processes  1;
+# SSCONTROL-httpd
+worker_processes 2;
+# SSCONTROL-httpd-END
+
 
 # SSCONTROL-httpd
 error_log /var/log/nginx/error.log emerg;

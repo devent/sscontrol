@@ -1,9 +1,9 @@
 server {
-    # domain test1.com
+    # domain test3.com
     listen 192.168.0.50:80;
-    root /tmp/var/www/test1.com/web;
+    root /tmp/var/www/test3.com/web;
     index index.php index.html index.htm;
-    server_name test1.com;
+    server_name test3.com;
     client_max_body_size 2M;
 
     # proxy timeouts
@@ -19,13 +19,17 @@ server {
 
     location /sitefoo {
         proxy_cache_key "$scheme://$host$request_uri";
-        proxy_cache sitefoo;
+        proxy_cache general_sitefoo;
         proxy_pass http://127.0.0.1:8080;
     }
 
     error_page 500 502 503 504 /50x.html;
     location = /50x.html {
         root /usr/share/nginx/html;
+    }
+
+    location /sitefoo {
+        proxy_pass http://127.0.0.1:8080;
     }
 
 }

@@ -28,7 +28,7 @@ import com.anrisoftware.resources.templates.api.TemplatesFactory
 import com.anrisoftware.sscontrol.core.service.LinuxScript
 import com.anrisoftware.sscontrol.httpd.domain.Domain
 import com.anrisoftware.sscontrol.httpd.nginx.proxy.linux.AbstractNginxProxyConfig
-import com.anrisoftware.sscontrol.httpd.proxy.ProxyServiceImpl
+import com.anrisoftware.sscontrol.httpd.proxy.ProxyService
 import com.anrisoftware.sscontrol.httpd.webservice.WebService
 
 /**
@@ -62,16 +62,21 @@ abstract class ProxyPassConfig extends AbstractNginxProxyConfig {
 
     @Override
     void deployDomain(Domain domain, Domain refDomain, WebService service, List config) {
-        config.addAll createDomainConfig(domain, refDomain, service)
+        createDomainConfig domain, refDomain, service, config
     }
 
     @Override
     void deployService(Domain domain, WebService service, List config) {
-        config.addAll createDomainConfig(domain, null, service)
+        createDomainConfig domain, null, service, config
     }
 
-    List createDomainConfig(Domain domain, Domain refDomain, ProxyServiceImpl service) {
-        List list = []
+    List createDomainConfig(Domain domain, Domain refDomain, ProxyService service, List config) {
+        def setupProxyTimeouts = config.find { String it ->
+            it.contains("# proxy timeouts\n")
+        }
+        def setupProxyHeaders = config.find { String it ->
+            it.contains("# proxy headers\n")
+        }
         def configstr = proxyConfigTemplate.getText(
                 true,
                 "domainConfig",
@@ -82,9 +87,12 @@ abstract class ProxyPassConfig extends AbstractNginxProxyConfig {
                     domain: domain,
                     proxy: service,
                     location: proxyLocation(service),
-                    errorPagesDir: errorPagesDir])
+                    errorPagesDir: errorPagesDir,
+                    setupProxyTimeouts: setupProxyTimeouts == null,
+                    setupProxyHeaders: setupProxyHeaders == null,
+                ])
         log.domainConfigCreated script, domain, configstr
-        list << configstr
+        config << configstr
     }
 
     @Override

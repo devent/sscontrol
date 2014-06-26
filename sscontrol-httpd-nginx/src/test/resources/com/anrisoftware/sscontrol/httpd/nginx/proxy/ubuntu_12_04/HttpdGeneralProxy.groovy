@@ -31,4 +31,9 @@ httpd {
             cache staticFiles: true, feeds: true
         }
     }
+    // domain test2.com
+    domain "test2.com", address: "192.168.0.52", {
+        setup "proxy", service: "pass", alias: "sitefoo", proxyname: "sitefoo", address: "http://127.0.0.1:8080"
+        setup "proxy", service: "general", alias: "sitefoo", proxyname: "sitefoo", address: "http://127.0.0.1:8080"
+    }
 }

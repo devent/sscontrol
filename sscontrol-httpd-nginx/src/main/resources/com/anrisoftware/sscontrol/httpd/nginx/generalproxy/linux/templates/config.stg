@@ -4,15 +4,10 @@ domainConfig(args) ::= <<
 <! - args.proxy - !>
 <! - args.location - !>
 <! - args.errorPagesDir - !>
-# proxy
-
-proxy_connect_timeout <args.properties.proxyConnectTimeout>;
-proxy_read_timeout <args.properties.proxyReadTimeout>;
-proxy_send_timeout <args.properties.proxySendTimeout>;
-
-<({proxySetHeaders<args.domain.class.simpleName>})(args.properties)>
-proxy_redirect <if(args.properties.proxyRedirect)>on<else>off<endif>;
-
+<! - args.setupProxyTimeouts - !>
+<! - args.setupProxyHeaders - !>
+<if(args.setupProxyTimeouts)><proxyTimeouts(args)><endif>
+<if(args.setupProxyHeaders)><proxyHeaders(args)><endif>
 location <args.location> {
     proxy_cache_key "$scheme://$host$request_uri";
     proxy_cache <args.proxy.proxyName>;
@@ -45,15 +40,30 @@ location = /50x.html {
 
 >>
 
+proxyTimeouts(args) ::= <<
+# proxy timeouts
+proxy_connect_timeout <args.properties.proxyConnectTimeout>;
+proxy_read_timeout <args.properties.proxyReadTimeout>;
+proxy_send_timeout <args.properties.proxySendTimeout>;
+
+>>
+
+proxyHeaders(args) ::= <<
+# proxy headers
+<({proxySetHeaders<args.domain.class.simpleName>})(args.properties)>
+proxy_redirect <if(args.properties.proxyRedirect)>on<else>off<endif>;
+
+>>
+
 proxySetHeadersDomainImpl(properties) ::= <<
-<properties.proxySetHeaders:proxyHeaders();separator="\n">
+<properties.proxySetHeaders:proxySetHeaders();separator="\n">
 >>
 
 proxySetHeadersSslDomainImpl(properties) ::= <<
-<properties.proxySetSslHeaders:proxyHeaders();separator="\n">
+<properties.proxySetSslHeaders:proxySetHeaders();separator="\n">
 >>
 
-proxyHeaders(header) ::= <%
+proxySetHeaders(header) ::= <%
 proxy_set_header <header>;
 %>
 

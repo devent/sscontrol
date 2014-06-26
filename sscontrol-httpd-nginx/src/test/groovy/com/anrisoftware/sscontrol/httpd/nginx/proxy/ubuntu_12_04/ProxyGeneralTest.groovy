@@ -55,6 +55,7 @@ class ProxyGeneralTest extends UbuntuTestUtil {
 
         assertStringContent generalProxyTest1comConf.replaced(tmpdir, tmpdir, "/tmp"), generalProxyTest1comConf.toString()
         assertStringContent generalProxyTest1comSslConf.replaced(tmpdir, tmpdir, "/tmp"), generalProxyTest1comSslConf.toString()
+        assertStringContent generalProxyTest2comConf.replaced(tmpdir, tmpdir, "/tmp"), generalProxyTest2comConf.toString()
         assertStringContent generalProxySitefooProxyConf.replaced(tmpdir, tmpdir, "/tmp"), generalProxySitefooProxyConf.toString()
     }
 }

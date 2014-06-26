@@ -1,20 +1,20 @@
 update
 install nginx net-tools
 update
-install thin ruby rake rubygems libopenssl-ruby libmysql-ruby ruby-dev libmysqlclient-dev curl libmagickcore-dev libmagickwand-dev
+install build-essential thin ruby rake rubygems libopenssl-ruby libmysql-ruby ruby-dev libmysqlclient-dev curl libmagickcore-dev libmagickwand-dev
 update
 install subversion mercurial
 update
-install thin ruby rake rubygems libopenssl-ruby libmysql-ruby ruby-dev libmysqlclient-dev curl libmagickcore-dev libmagickwand-dev
+install build-essential thin ruby rake rubygems libopenssl-ruby libmysql-ruby ruby-dev libmysqlclient-dev curl libmagickcore-dev libmagickwand-dev
 update
 install subversion darcs mercurial cvs bzr git
 update
 install nginx net-tools
 update
-install thin ruby rake rubygems libopenssl-ruby libmysql-ruby ruby-dev libmysqlclient-dev curl libmagickcore-dev libmagickwand-dev
+install build-essential thin ruby rake rubygems libopenssl-ruby libmysql-ruby ruby-dev libmysqlclient-dev curl libmagickcore-dev libmagickwand-dev
 update
 install subversion mercurial
 update
-install thin ruby rake rubygems libopenssl-ruby libmysql-ruby ruby-dev libmysqlclient-dev curl libmagickcore-dev libmagickwand-dev
+install build-essential thin ruby rake rubygems libopenssl-ruby libmysql-ruby ruby-dev libmysqlclient-dev curl libmagickcore-dev libmagickwand-dev
 update
 install subversion darcs mercurial cvs bzr git

@@ -20,11 +20,7 @@ package com.anrisoftware.sscontrol.httpd.domain;
 
 import static java.lang.String.format;
 
-import java.io.File;
-import java.net.MalformedURLException;
 import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -32,7 +28,7 @@ import javax.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
 /**
- * SSL/TLS domain.
+ * SSL/domain.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
@@ -42,16 +38,11 @@ public class SslDomainImpl extends DomainImpl implements SslDomain {
     private static final String HTTPS = "https://";
 
     @Inject
-    private DomainLogger log;
+    private DomainCertificate certificate;
 
-    private URL certificationResource;
-
-    private URL certificationKeyResource;
-
-    private String certificationFile;
-
-    private String certificationKeyFile;
-
+    /**
+     * @see SslDomainFactory#create(Map, String)
+     */
     @Inject
     SslDomainImpl(@Assisted Map<String, Object> args, @Assisted String name) {
         super(args, 443, name);
@@ -62,67 +53,25 @@ public class SslDomainImpl extends DomainImpl implements SslDomain {
         return format("100-robobee-%s-ssl.conf", getName());
     }
 
-    public void certification_file(Object path) throws MalformedURLException,
-            URISyntaxException {
-        certification_file(path.toString());
-    }
-
-    public void certification_file(String path) throws URISyntaxException,
-            MalformedURLException {
-        URI uri = new URI(path);
-        if (!uri.isAbsolute()) {
-            certification_file(new File(path).toURI().toURL());
-        } else {
-            certification_file(uri.toURL());
-        }
-    }
-
-    public void certification_file(URL url) throws URISyntaxException {
-        this.certificationResource = url;
-        this.certificationFile = new File(url.getPath()).getName();
+    public void certificate(Map<String, Object> args) {
+        certificate.certFile(this, args);
+        certificate.keyFile(this, args);
+        certificate.caFile(this, args);
     }
 
     @Override
-    public URL getCertificationResource() {
-        log.checkCertificationResource(this, certificationResource);
-        return certificationResource;
+    public URI getCertResource() {
+        return certificate.getCertResource();
     }
 
     @Override
-    public String getCertificationFile() {
-        log.checkCertificationResource(this, certificationFile);
-        return certificationFile;
-    }
-
-    public void certification_key_file(Object path)
-            throws MalformedURLException, URISyntaxException {
-        certification_file(path.toString());
-    }
-
-    public void certification_key_file(String path) throws URISyntaxException,
-            MalformedURLException {
-        URI uri = new URI(path);
-        if (!uri.isAbsolute()) {
-            certification_key_file(new File(path).toURI().toURL());
-        } else {
-            certification_key_file(uri.toURL());
-        }
-    }
-
-    public void certification_key_file(URL url) throws URISyntaxException {
-        this.certificationKeyResource = url;
-        this.certificationKeyFile = new File(url.getPath()).getName();
+    public URI getKeyResource() {
+        return certificate.getKeyResource();
     }
 
     @Override
-    public URL getCertificationKeyResource() {
-        log.checkCertificationResource(this, certificationKeyResource);
-        return certificationKeyResource;
-    }
-
-    @Override
-    public String getCertificationKeyFile() {
-        return certificationKeyFile;
+    public URI getCaResource() {
+        return certificate.getCaResource();
     }
 
     @Override

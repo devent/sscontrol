@@ -51,7 +51,7 @@ class HttpdTest extends HttpdTestUtil {
         loader.loadService profile.resource, null
         def profile = registry.getService("profile")[0]
         loader.loadService httpdScript.resource, profile
-        HttpdServiceImpl service = registry.getService("httpd")[0]
+        HttpdService service = registry.getService("httpd")[0]
 
         assert service.domains.size() == 5
         assert service.virtualDomains.size() == 4
@@ -62,6 +62,24 @@ class HttpdTest extends HttpdTestUtil {
         assert domain.memory.upload.value == 32000000
         assert domain.redirects.size() == 1
         assert domain.redirects[0].destination == "www.test1.com"
+
+        domain = service.domains[2]
+        assert domain.name == "test1.com"
+        assert domain.address == "192.168.0.50"
+        assert domain.redirects.size() == 1
+        assert domain.redirects[0].destination == "www.test1.com"
+        assert domain.certResource.toString().endsWith("cert_crt.txt")
+        assert domain.keyResource.toString().endsWith("cert_key.txt")
+        assert domain.caResource == null
+
+        domain = service.domains[4]
+        assert domain.name == "test2.com"
+        assert domain.address == "192.168.0.51"
+        assert domain.redirects.size() == 1
+        assert domain.redirects[0].destination == "www.test2.com"
+        assert domain.certResource.toString().endsWith("cert_crt.txt")
+        assert domain.keyResource.toString().endsWith("cert_key.txt")
+        assert domain.caResource.toString().endsWith("cert_ca.txt")
     }
 
     @Test
@@ -69,7 +87,7 @@ class HttpdTest extends HttpdTestUtil {
         loader.loadService profile.resource, null
         def profile = registry.getService("profile")[0]
         loader.loadService authFileScript.resource, profile, preScript
-        HttpdServiceImpl service = registry.getService("httpd")[0]
+        HttpdService service = registry.getService("httpd")[0]
 
         assert service.domains.size() == 1
 
@@ -120,7 +138,7 @@ class HttpdTest extends HttpdTestUtil {
         loader.loadService profile.resource, null
         def profile = registry.getService("profile")[0]
         loader.loadService authLdapScript.resource, profile, preScript
-        HttpdServiceImpl service = registry.getService("httpd")[0]
+        HttpdService service = registry.getService("httpd")[0]
 
         assert service.domains.size() == 1
 

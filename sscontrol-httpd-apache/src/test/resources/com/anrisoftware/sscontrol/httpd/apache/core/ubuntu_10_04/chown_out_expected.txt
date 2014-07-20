@@ -1,8 +1,8 @@
 web_001.web_001 /tmp/var/www/test1.com/web
 web_002.web_002 /tmp/var/www/test2.com/web
 root.root /tmp/var/www/test1.com/ssl/cert_crt.txt /tmp/var/www/test1.com/ssl/cert_key.txt
-root.root /tmp/var/www/test2.com/ssl/cert_crt.txt /tmp/var/www/test2.com/ssl/cert_key.txt
+root.root /tmp/var/www/test2.com/ssl/cert_ca.txt /tmp/var/www/test2.com/ssl/cert_crt.txt /tmp/var/www/test2.com/ssl/cert_key.txt
 web_001.web_001 /tmp/var/www/test1.com/web
 web_002.web_002 /tmp/var/www/test2.com/web
 root.root /tmp/var/www/test1.com/ssl/cert_crt.txt /tmp/var/www/test1.com/ssl/cert_key.txt
-root.root /tmp/var/www/test2.com/ssl/cert_crt.txt /tmp/var/www/test2.com/ssl/cert_key.txt
+root.root /tmp/var/www/test2.com/ssl/cert_ca.txt /tmp/var/www/test2.com/ssl/cert_crt.txt /tmp/var/www/test2.com/ssl/cert_key.txt

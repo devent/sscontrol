@@ -68,6 +68,9 @@ abstract class Apache_2_2_Script extends ApacheScript {
     @Inject
     StopServicesFactory stopServicesFactory
 
+    @Inject
+    ResourceURIAttributeRenderer resourceURIAttributeRenderer
+
     /**
      * The {@link Templates} for the script.
      */
@@ -100,7 +103,7 @@ abstract class Apache_2_2_Script extends ApacheScript {
 
     @Override
     def run() {
-        apacheTemplates = templatesFactory.create "Apache_2_2"
+        apacheTemplates = templatesFactory.create "Apache_2_2", [renderers: [resourceURIAttributeRenderer]]
         portsConfigTemplate = apacheTemplates.getResource "portsconf"
         defaultsConfigTemplate = apacheTemplates.getResource "defaultsconf"
         domainsConfiguration = apacheTemplates.getResource "domainsconf"

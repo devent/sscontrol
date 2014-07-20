@@ -33,14 +33,12 @@ httpd {
     domain "anr-institute.com", address: ip1, port: http, {
     }
     ssl_domain "anr-institute.com", id: anrinstituteId, address: ip1, port: https1, {
-        certification_file UbuntuResources.certCrt.resource
-        certification_key_file UbuntuResources.certKey.resource
+        certificate file: UbuntuResources.certCrt.resource, key: UbuntuResources.certKey.resource
     }
     domain "www.anr-institute.com", address: ip1, port: http, {
     }
     ssl_domain "anrisoftware.com", address: ip1, port: https2, {
-        certification_file UbuntuResources.certCrt.resource
-        certification_key_file UbuntuResources.certKey.resource
+        certificate file: UbuntuResources.certCrt.resource, key: UbuntuResources.certKey.resource, ca: UbuntuResources.certCa.resource
     }
     domain "www.mueller-public.de", address: ip1, port: http, {
     }

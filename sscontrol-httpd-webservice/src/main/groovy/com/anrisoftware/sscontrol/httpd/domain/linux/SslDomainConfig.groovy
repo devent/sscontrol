@@ -52,10 +52,14 @@ class SslDomainConfig {
      * Copies the certificates to the server.
      */
     void deployCertificates(SslDomain domain) {
-        copyURLToFile domain.certificationResource, certFile(domain)
+        copyURLToFile domain.certResource.toURL(), certFile(domain)
         logg.deployedCert domain
-        copyURLToFile domain.certificationKeyResource, certKeyFile(domain)
+        copyURLToFile domain.keyResource.toURL(), certKeyFile(domain)
         logg.deployedCertKey domain
+        if (domain.caResource) {
+            copyURLToFile domain.caResource.toURL(), certCaFile(domain)
+        }
+        logg.deployedCa domain
         changePermissions(domain)
     }
 
@@ -69,16 +73,23 @@ class SslDomainConfig {
         changeFileModFactory.create(
                 log: log,
                 command: script.chmodCommand,
-                mod: "go-r", files: "${dir.absolutePath}/*",
+                mod: "400", files: "${dir.absolutePath}/*",
                 this, threads)()
     }
 
     File certFile(SslDomain domain) {
-        new File(sslDir(domain), domain.certificationFile)
+        def name = new File(domain.certResource).name
+        new File(sslDir(domain), name)
     }
 
     File certKeyFile(SslDomain domain) {
-        new File(sslDir(domain), domain.certificationKeyFile)
+        def name = new File(domain.keyResource).name
+        new File(sslDir(domain), name)
+    }
+
+    File certCaFile(SslDomain domain) {
+        def name = new File(domain.caResource).name
+        new File(sslDir(domain), name)
     }
 
     def propertyMissing(String name) {

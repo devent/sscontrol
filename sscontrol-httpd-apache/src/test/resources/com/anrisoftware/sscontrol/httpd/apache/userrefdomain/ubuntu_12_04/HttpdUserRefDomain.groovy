@@ -28,16 +28,14 @@ httpd {
     }
     ssl_domain "test1.com", address: "192.168.0.50", {
         // web_001
-        certification_file UbuntuResources.certCrt.resource
-        certification_key_file UbuntuResources.certKey.resource
+        certificate file: UbuntuResources.certCrt.resource, key: UbuntuResources.certKey.resource
     }
     domain "www.test1.com", address: "192.168.0.50", {
         // web_002
     }
     ssl_domain "test2.com", address: "192.168.0.50", {
         // web_003
-        certification_file UbuntuResources.certCrt.resource
-        certification_key_file UbuntuResources.certKey.resource
+        certificate file: UbuntuResources.certCrt.resource, key: UbuntuResources.certKey.resource
     }
     domain "test3.com", id: domain3id, address: "192.168.0.50", {
         // web_004

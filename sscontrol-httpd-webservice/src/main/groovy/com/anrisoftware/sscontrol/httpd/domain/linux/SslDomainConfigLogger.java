@@ -18,10 +18,14 @@
  */
 package com.anrisoftware.sscontrol.httpd.domain.linux;
 
-import static com.anrisoftware.sscontrol.httpd.domain.linux.SslDomainConfigLogger._.deployed_cert;
-import static com.anrisoftware.sscontrol.httpd.domain.linux.SslDomainConfigLogger._.deployed_cert1;
-import static com.anrisoftware.sscontrol.httpd.domain.linux.SslDomainConfigLogger._.deployed_cert_key;
-import static com.anrisoftware.sscontrol.httpd.domain.linux.SslDomainConfigLogger._.deployed_cert_key1;
+import static com.anrisoftware.sscontrol.httpd.domain.linux.SslDomainConfigLogger._.deployed_ca_debug;
+import static com.anrisoftware.sscontrol.httpd.domain.linux.SslDomainConfigLogger._.deployed_ca_info;
+import static com.anrisoftware.sscontrol.httpd.domain.linux.SslDomainConfigLogger._.deployed_cert_debug;
+import static com.anrisoftware.sscontrol.httpd.domain.linux.SslDomainConfigLogger._.deployed_cert_info;
+import static com.anrisoftware.sscontrol.httpd.domain.linux.SslDomainConfigLogger._.deployed_key_debug;
+import static com.anrisoftware.sscontrol.httpd.domain.linux.SslDomainConfigLogger._.deployed_key_info;
+
+import java.net.URI;
 
 import javax.inject.Singleton;
 
@@ -39,13 +43,17 @@ class SslDomainConfigLogger extends AbstractLogger {
 
     enum _ {
 
-        deployed_cert("Deployed certificate for {}."),
+        deployed_cert_debug("Deployed certificate for {}."),
 
-        deployed_cert1("Deployed certificate '{}' for domain '{}'."),
+        deployed_cert_info("Deployed certificate '{}' for domain '{}'."),
 
-        deployed_cert_key("Deployed certificate key for {}."),
+        deployed_key_debug("Deployed certificate key for {}."),
 
-        deployed_cert_key1("Deployed certificate key '{}' for domain '{}'.");
+        deployed_key_info("Deployed certificate key '{}' for domain '{}'."),
+
+        deployed_ca_debug("Deployed CA for {}."),
+
+        deployed_ca_info("Deployed CA file '{}' for domain '{}'.");
 
         private String name;
 
@@ -68,19 +76,28 @@ class SslDomainConfigLogger extends AbstractLogger {
 
     void deployedCert(SslDomain domain) {
         if (isDebugEnabled()) {
-            debug(deployed_cert, domain);
+            debug(deployed_cert_debug, domain);
         } else {
-            String file = domain.getCertificationFile();
-            info(deployed_cert1, file, domain.getName());
+            URI file = domain.getCertResource();
+            info(deployed_cert_info, file, domain.getName());
         }
     }
 
     void deployedCertKey(SslDomain domain) {
         if (isDebugEnabled()) {
-            debug(deployed_cert_key, domain);
+            debug(deployed_key_debug, domain);
         } else {
-            String file = domain.getCertificationKeyFile();
-            info(deployed_cert_key1, file, domain.getName());
+            URI file = domain.getKeyResource();
+            info(deployed_key_info, file, domain.getName());
+        }
+    }
+
+    void deployedCa(SslDomain domain) {
+        if (isDebugEnabled()) {
+            debug(deployed_ca_debug, domain);
+        } else {
+            URI file = domain.getCaResource();
+            info(deployed_ca_info, file, domain.getName());
         }
     }
 }

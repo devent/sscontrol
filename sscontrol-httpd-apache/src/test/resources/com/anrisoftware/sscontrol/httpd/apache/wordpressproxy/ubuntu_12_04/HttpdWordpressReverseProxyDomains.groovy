@@ -37,8 +37,7 @@ httpd {
     // SSL/domain www.test1.com
     ssl_domain "www.test1.com", address: "192.168.0.51", port: 8082, {
         user "web_002", uid: 2002, group: "web_002", gid: 2002
-        certification_file UbuntuResources.certCrt.resource
-        certification_key_file UbuntuResources.certKey.resource
+        certificate file: UbuntuResources.certCrt.resource, key: UbuntuResources.certKey.resource
         setup "wordpress", ref: "test1wordpress"
     }
 }

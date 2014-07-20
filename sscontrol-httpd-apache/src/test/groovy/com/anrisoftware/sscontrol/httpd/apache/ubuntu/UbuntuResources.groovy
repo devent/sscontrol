@@ -49,6 +49,7 @@ enum UbuntuResources {
     packagingConfigurationDirectory("/etc/apt", null),
     certCrt("cert.crt", UbuntuResources.class.getResource("cert_crt.txt")),
     certKey("cert.key", UbuntuResources.class.getResource("cert_key.txt")),
+    certCa("cert.ca", UbuntuResources.class.getResource("cert_ca.txt")),
 
     static copyUbuntuFiles(File parent) {
         aptitudeCommand.createCommand parent

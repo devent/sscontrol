@@ -22,8 +22,7 @@ import com.anrisoftware.sscontrol.httpd.apache.ubuntu.UbuntuResources
 
 httpd {
     ssl_domain "ubuntutest.com", address: "192.168.0.100", {
-        certification_file UbuntuResources.certCrt.resource
-        certification_key_file UbuntuResources.certKey.resource
+        certificate file: UbuntuResources.certCrt.resource, key: UbuntuResources.certKey.resource
         memory limit: "24 MB", upload: "24 MB", post: "24 MB"
         setup "phpmyadmin", alias: "phpmyadmin", {
             admin "root", password: "mysqladminpassword"

@@ -5,7 +5,7 @@
 0775 /tmp/var/www/www.test1.com/wordpress_3_8/wp-content/themes
 0775 /tmp/var/www/www.test1.com/wordpress_3_8/wp-content/uploads
 755 /tmp/var/www/php-fcgi-scripts/www.test1.com/php-fcgi-starter
-go-r /tmp/var/www/www.test1.com/ssl/cert_crt.txt /tmp/var/www/www.test1.com/ssl/cert_key.txt
+400 /tmp/var/www/www.test1.com/ssl/cert_crt.txt /tmp/var/www/www.test1.com/ssl/cert_key.txt
 755 /tmp/var/www/php-fcgi-scripts/www.test1.com/php-fcgi-starter
 0440 /tmp/var/www/www.test1.com/wordpress_3_8/wp-config.php
 0775 /tmp/var/www/www.test1.com/wordpress_3_8/wp-content/cache
@@ -13,4 +13,4 @@ go-r /tmp/var/www/www.test1.com/ssl/cert_crt.txt /tmp/var/www/www.test1.com/ssl/
 0775 /tmp/var/www/www.test1.com/wordpress_3_8/wp-content/themes
 0775 /tmp/var/www/www.test1.com/wordpress_3_8/wp-content/uploads
 755 /tmp/var/www/php-fcgi-scripts/www.test1.com/php-fcgi-starter
-go-r /tmp/var/www/www.test1.com/ssl/cert_crt.txt /tmp/var/www/www.test1.com/ssl/cert_key.txt
+400 /tmp/var/www/www.test1.com/ssl/cert_crt.txt /tmp/var/www/www.test1.com/ssl/cert_key.txt

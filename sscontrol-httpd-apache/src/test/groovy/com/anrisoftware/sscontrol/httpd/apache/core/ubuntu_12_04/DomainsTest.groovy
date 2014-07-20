@@ -57,13 +57,17 @@ class DomainsTest extends UbuntuTestUtil {
         assertStringContent test1comConfExpected.replaced(tmpdir, tmpdir, "/tmp"), test1comConfExpected.toString()
         assertStringContent test1comSslConfExpected.replaced(tmpdir, tmpdir, "/tmp"), test1comSslConfExpected.toString()
         assert test1comWeb.asFile(tmpdir).isDirectory()
-        assertFileContent test1comCrt.asFile(tmpdir), test1comCrt
-        assertFileContent test1comKey.asFile(tmpdir), test1comKey
+        assertFileContent test1comCrtExpected.asFile(tmpdir), test1comCrtExpected
+        assertFileContent test1comKeyExpected.asFile(tmpdir), test1comKeyExpected
+        assertFileContent test2comCrtExpected.asFile(tmpdir), test2comCrtExpected
+        assertFileContent test2comKeyExpected.asFile(tmpdir), test2comKeyExpected
+        assertFileContent test2comCaExpected.asFile(tmpdir), test2comCaExpected
         assertFileContent ensiteOutExpected.asFile(tmpdir), ensiteOutExpected
         assertFileContent enmodOutExpected.asFile(tmpdir), enmodOutExpected
         assertStringContent useraddOutExpected.replaced(tmpdir, tmpdir, "/tmp"), useraddOutExpected.toString()
         assertStringContent groupaddOutExpected.replaced(tmpdir, tmpdir, "/tmp"), groupaddOutExpected.toString()
         assertStringContent chownOutExpected.replaced(tmpdir, tmpdir, "/tmp"), chownOutExpected.toString()
+        assertStringContent chmodOutExpected.replaced(tmpdir, tmpdir, "/tmp"), chmodOutExpected.toString()
     }
 
     @Test

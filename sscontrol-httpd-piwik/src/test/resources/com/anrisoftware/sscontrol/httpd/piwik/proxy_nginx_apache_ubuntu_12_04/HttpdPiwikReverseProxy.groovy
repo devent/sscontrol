@@ -28,8 +28,7 @@ httpd {
     }
     // SSL/domain test1.com
     ssl_domain "test1.com", address: "192.168.0.50", {
-        certification_file UbuntuResources.certCrt.resource
-        certification_key_file UbuntuResources.certKey.resource
+        certificate file: UbuntuResources.certCrt.resource, key: UbuntuResources.certKey.resource
         setup "proxy", service: "piwik", alias: "piwik", address: "https://127.0.0.1:8082"
     }
 }

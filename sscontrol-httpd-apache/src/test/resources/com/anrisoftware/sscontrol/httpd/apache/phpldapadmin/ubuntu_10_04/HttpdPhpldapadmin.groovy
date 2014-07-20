@@ -23,8 +23,7 @@ import com.anrisoftware.sscontrol.httpd.apache.ubuntu.UbuntuResources
 httpd {
     ssl_domain "ldapadmin.test1.com", address: "192.168.0.50", {
         user "www-data", group: "www-data"
-        certification_file UbuntuResources.certCrt.resource
-        certification_key_file UbuntuResources.certKey.resource
+        certificate file: UbuntuResources.certCrt.resource, key: UbuntuResources.certKey.resource
         setup "phpldapadmin", alias: "ldapadmin", {
             server "Local LDAP/Server", host: "127.0.0.1", port: "ldap"
             server "Example.com LDAP/Server", host: "ldap.example.com", port: 389

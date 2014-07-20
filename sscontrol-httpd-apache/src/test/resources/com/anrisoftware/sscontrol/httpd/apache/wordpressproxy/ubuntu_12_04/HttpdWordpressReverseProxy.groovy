@@ -32,8 +32,7 @@ httpd {
     ssl_domain "test1.com", address: "192.168.0.50", {
         user "web_001", uid: 2001, group: "web_001", gid: 2001
         redirect to: "www.%"
-        certification_file UbuntuResources.certCrt.resource
-        certification_key_file UbuntuResources.certKey.resource
+        certificate file: UbuntuResources.certCrt.resource, key: UbuntuResources.certKey.resource
     }
     // domain www.test1.com
     domain "www.test1.com", address: "192.168.0.51", {
@@ -44,7 +43,6 @@ httpd {
     ssl_domain "www.test1.com", address: "192.168.0.51", {
         user "web_002", uid: 2002, group: "web_002", gid: 2002
         setup "proxy", service: "wordpress", alias: "wordpress3", address: "https://127.0.0.1:8082" //.
-        certification_file UbuntuResources.certCrt.resource
-        certification_key_file UbuntuResources.certKey.resource
+        certificate file: UbuntuResources.certCrt.resource, key: UbuntuResources.certKey.resource
     }
 }

@@ -1,0 +1,4 @@
+400 /tmp/var/www/test1.com/ssl/cert_crt.txt /tmp/var/www/test1.com/ssl/cert_key.txt
+400 /tmp/var/www/test2.com/ssl/cert_ca.txt /tmp/var/www/test2.com/ssl/cert_crt.txt /tmp/var/www/test2.com/ssl/cert_key.txt
+400 /tmp/var/www/test1.com/ssl/cert_crt.txt /tmp/var/www/test1.com/ssl/cert_key.txt
+400 /tmp/var/www/test2.com/ssl/cert_ca.txt /tmp/var/www/test2.com/ssl/cert_crt.txt /tmp/var/www/test2.com/ssl/cert_key.txt

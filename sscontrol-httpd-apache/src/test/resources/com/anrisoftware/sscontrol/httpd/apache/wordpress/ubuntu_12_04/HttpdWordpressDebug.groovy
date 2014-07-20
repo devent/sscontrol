@@ -25,8 +25,7 @@ httpd {
         redirect to: "www.%" //.
     }
     ssl_domain "test1.com", address: "192.168.0.50", {
-        certification_file UbuntuResources.certCrt.resource
-        certification_key_file UbuntuResources.certKey.resource
+        certificate file: UbuntuResources.certCrt.resource, key: UbuntuResources.certKey.resource
         redirect to: "www.%"
     }
     domain "www.test1.com", address: "192.168.0.51", {
@@ -36,7 +35,6 @@ httpd {
         }
     }
     ssl_domain "www.test1.com", address: "192.168.0.51", {
-        certification_file UbuntuResources.certCrt.resource
-        certification_key_file UbuntuResources.certKey.resource
+        certificate file: UbuntuResources.certCrt.resource, key: UbuntuResources.certKey.resource
     }
 }

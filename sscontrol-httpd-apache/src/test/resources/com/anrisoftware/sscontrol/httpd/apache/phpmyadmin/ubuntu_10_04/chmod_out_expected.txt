@@ -1,4 +1,4 @@
 755 /tmp/var/www/php-fcgi-scripts/ubuntutest.com/php-fcgi-starter
-go-r /tmp/var/www/ubuntutest.com/ssl/cert_crt.txt /tmp/var/www/ubuntutest.com/ssl/cert_key.txt
+400 /tmp/var/www/ubuntutest.com/ssl/cert_crt.txt /tmp/var/www/ubuntutest.com/ssl/cert_key.txt
 755 /tmp/var/www/php-fcgi-scripts/ubuntutest.com/php-fcgi-starter
-go-r /tmp/var/www/ubuntutest.com/ssl/cert_crt.txt /tmp/var/www/ubuntutest.com/ssl/cert_key.txt
+400 /tmp/var/www/ubuntutest.com/ssl/cert_crt.txt /tmp/var/www/ubuntutest.com/ssl/cert_key.txt

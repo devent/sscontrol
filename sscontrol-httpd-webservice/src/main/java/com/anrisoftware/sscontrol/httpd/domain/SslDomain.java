@@ -18,7 +18,7 @@
  */
 package com.anrisoftware.sscontrol.httpd.domain;
 
-import java.net.URL;
+import java.net.URI;
 
 /**
  * SSL/TLS domain.
@@ -31,29 +31,22 @@ public interface SslDomain extends Domain {
     /**
      * Returns the certificate resource.
      * 
-     * @return the the certificate {@link URL} resource.
+     * @return the the certificate {@link URI} resource.
      */
-    URL getCertificationResource();
-
-    /**
-     * Returns the certificate file name.
-     * 
-     * @return the the certificate file name.
-     */
-    String getCertificationFile();
+    URI getCertResource();
 
     /**
      * Returns the certificate key resource.
      * 
-     * @return the the certificate key {@link URL} resource.
+     * @return the the certificate key {@link URI} resource.
      */
-    URL getCertificationKeyResource();
+    URI getKeyResource();
 
     /**
-     * Returns the certificate key file path.
+     * Returns the certificate CA resource.
      * 
-     * @return the the certificate key path.
+     * @return the the certificate CA {@link URI} resource.
      */
-    String getCertificationKeyFile();
+    URI getCaResource();
 
 }

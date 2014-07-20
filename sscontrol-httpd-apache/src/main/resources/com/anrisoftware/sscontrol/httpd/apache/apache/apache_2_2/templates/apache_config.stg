@@ -34,9 +34,13 @@ SuexecUserGroup <domain.domainUser.name> <domain.domainUser.group>
 
 domainCerts(properties, domain) ::= <<
 SSLEngine on
-SSLCertificateFile <properties.sitesDirectory>/<domain.name>/<properties.sslSubdirectory>/<domain.certificationFile>
-SSLCertificateKeyFile <properties.sitesDirectory>/<domain.name>/<properties.sslSubdirectory>/<domain.certificationKeyFile>
+SSLCertificateFile <properties.sitesDirectory>/<domain.name>/<properties.sslSubdirectory>/<domain.certResource;format="fileName">
+SSLCertificateKeyFile <properties.sitesDirectory>/<domain.name>/<properties.sslSubdirectory>/<domain.keyResource;format="fileName"><domainCA(properties, domain)>
 >>
+
+domainCA(properties, domain) ::= <%
+<if(domain.caResource)><\n>SSLCACertificateFile <properties.sitesDirectory>/<domain.name>/<properties.sslSubdirectory>/<domain.caResource;format="fileName"><endif>
+%>
 
 domainAlias(properties, domain) ::= <<
 Alias / <documentRoot(properties, domain)><domain.documentRoot>/

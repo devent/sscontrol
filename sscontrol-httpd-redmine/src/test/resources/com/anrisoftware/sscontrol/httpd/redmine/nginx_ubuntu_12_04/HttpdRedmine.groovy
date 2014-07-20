@@ -37,8 +37,7 @@ httpd {
         }
     }
     ssl_domain "test1.com", address: "192.168.0.51", {
-        certification_file UbuntuResources.certCrt.resource
-        certification_key_file UbuntuResources.certKey.resource
+        certificate file: UbuntuResources.certCrt.resource, key: UbuntuResources.certKey.resource
         setup "redmine", ref: "redmineid", backend: "thin"
     }
     domain "test2.com", address: "192.168.0.52", {

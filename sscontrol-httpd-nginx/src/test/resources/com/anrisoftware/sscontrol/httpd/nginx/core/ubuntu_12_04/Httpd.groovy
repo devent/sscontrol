@@ -24,7 +24,6 @@ httpd {
     }
     // SSL/domain test1.com
     ssl_domain "test1.com", address: "192.168.0.50", {
-        certification_file DomainsResources.certCrt.resource
-        certification_key_file DomainsResources.certKey.resource
+        certificate file: DomainsResources.certCrt.resource, key: DomainsResources.certKey.resource
     }
 }

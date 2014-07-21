@@ -36,8 +36,7 @@ httpd {
     }
     ssl_domain "www.test1.com", address: "192.168.0.51", {
         user "www-data", group: "www-data"
-        certification_file certFile
-        certification_key_file certKeyFile
+        certificate file: certFile, key: certKeyFile
         setup "wordpress", ref: "wordpress3"
     }
     domain "www.test2.com", address: "192.168.0.51", {

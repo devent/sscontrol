@@ -23,8 +23,7 @@ def certKeyFile = ServicesResources.class.getResource "cert_key.txt"
 
 httpd {
 	ssl_domain "ldapadmin.test1.com", address: "192.168.0.50", {
-		certification_file certFile
-		certification_key_file certKeyFile
+        certificate file: certFile, key: certKeyFile
 		setup "phpldapadmin", alias: "phpldapadmin", {
 			server "Local LDAP/Server", host: "127.0.0.1", port: "ldap"
 			server "Example.com LDAP/Server", host: "ldap.example.com", port: 389

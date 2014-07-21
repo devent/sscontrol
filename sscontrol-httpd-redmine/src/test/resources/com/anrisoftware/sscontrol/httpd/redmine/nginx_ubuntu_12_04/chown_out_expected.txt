@@ -16,6 +16,7 @@ web_002.web_002 /tmp/var/www/test2.com/web
 -R thin.web_001 /tmp/var/www/test1.com/redmine2/tmp
 -R thin.web_001 /tmp/var/www/test1.com/redmine2/tmp/pdf
 -R thin.web_001 /tmp/var/www/test1.com/redmine2/public/plugin_assets
+root.root /tmp/var/www/test1.com/ssl/cert_crt.txt /tmp/var/www/test1.com/ssl/cert_key.txt
 -R root.root /tmp/var/www/test2.com/test2redmine
 -R web_002.web_002 /tmp/var/www/test2.com/test2redmine/files
 -R web_002.web_002 /tmp/var/www/test2.com/test2redmine/log
@@ -45,6 +46,7 @@ web_002.web_002 /tmp/var/www/test2.com/web
 -R thin.web_001 /tmp/var/www/test1.com/redmine2/tmp
 -R thin.web_001 /tmp/var/www/test1.com/redmine2/tmp/pdf
 -R thin.web_001 /tmp/var/www/test1.com/redmine2/public/plugin_assets
+root.root /tmp/var/www/test1.com/ssl/cert_crt.txt /tmp/var/www/test1.com/ssl/cert_key.txt
 -R root.root /tmp/var/www/test2.com/test2redmine
 -R web_002.web_002 /tmp/var/www/test2.com/test2redmine/files
 -R web_002.web_002 /tmp/var/www/test2.com/test2redmine/log

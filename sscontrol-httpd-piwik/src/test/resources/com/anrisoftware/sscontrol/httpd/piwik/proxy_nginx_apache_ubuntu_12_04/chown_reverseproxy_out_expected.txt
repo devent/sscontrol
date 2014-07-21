@@ -8,6 +8,7 @@ web_001.web_001 /tmp/var/www/php-fcgi-scripts/test1.com/php-fcgi-starter
 web_001.web_001 /tmp/var/www/php-fcgi-scripts/test1.com/php-fcgi-starter
 root.root /tmp/var/www/test1.com/ssl/cert_crt.txt /tmp/var/www/test1.com/ssl/cert_key.txt
 web_001.web_001 /tmp/var/www/test1.com/web
+root.root /tmp/var/www/test1.com/ssl/cert_crt.txt /tmp/var/www/test1.com/ssl/cert_key.txt
 web_001.web_001 /tmp/var/www/test1.com/web
 -R root.root /tmp/var/www/test1.com/piwik_2
 -R web_001.web_001 /tmp/var/www/test1.com/piwik_2/tmp
@@ -18,3 +19,4 @@ web_001.web_001 /tmp/var/www/php-fcgi-scripts/test1.com/php-fcgi-starter
 web_001.web_001 /tmp/var/www/php-fcgi-scripts/test1.com/php-fcgi-starter
 root.root /tmp/var/www/test1.com/ssl/cert_crt.txt /tmp/var/www/test1.com/ssl/cert_key.txt
 web_001.web_001 /tmp/var/www/test1.com/web
+root.root /tmp/var/www/test1.com/ssl/cert_crt.txt /tmp/var/www/test1.com/ssl/cert_key.txt

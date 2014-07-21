@@ -30,6 +30,7 @@ import com.anrisoftware.resources.templates.api.Templates
 import com.anrisoftware.sscontrol.httpd.domain.Domain
 import com.anrisoftware.sscontrol.httpd.domain.SslDomainImpl
 import com.anrisoftware.sscontrol.httpd.domain.linux.DomainConfig
+import com.anrisoftware.sscontrol.httpd.domain.linux.SslDomainConfig
 import com.anrisoftware.sscontrol.httpd.nginx.nginx.linux.NginxScript
 import com.anrisoftware.sscontrol.httpd.service.HttpdService
 import com.anrisoftware.sscontrol.httpd.webservice.WebService
@@ -57,6 +58,9 @@ abstract class Nginx_1_4_Script extends NginxScript {
     @Inject
     RedirectConfig redirectConfig
 
+    @Inject
+    ResourceURIAttributeRenderer resourceURIAttributeRenderer
+
     /**
      * The {@link Templates} for the script.
      */
@@ -75,7 +79,10 @@ abstract class Nginx_1_4_Script extends NginxScript {
     @Override
     def run() {
         super.run()
-        nginxTemplates = templatesFactory.create "Nginx_1_4", ["renderers": [debugLoggingRenderer]]
+        nginxTemplates = templatesFactory.create "Nginx_1_4", ["renderers": [
+                debugLoggingRenderer,
+                resourceURIAttributeRenderer
+            ]]
         nginxConfigTemplate = nginxTemplates.getResource "config"
         nginxCommandsTemplate = nginxTemplates.getResource "commands"
         domainConfig.script = this

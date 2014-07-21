@@ -24,8 +24,7 @@ def certKeyFile = ServicesResources.class.getResource "cert_key.txt"
 httpd {
 	ssl_domain "phpadmin.test1.com", address: "192.168.0.50", {
 		user "www-data", group: "www-data"
-		certification_file certFile
-		certification_key_file certKeyFile
+        certificate file: certFile, key: certKeyFile
 		setup "phpmyadmin", alias: "phpmyadmin", {
 			admin "root", password: "rootpass"
 			control "phpmyadmin", password: "somepass", database: "phpmyadmin"

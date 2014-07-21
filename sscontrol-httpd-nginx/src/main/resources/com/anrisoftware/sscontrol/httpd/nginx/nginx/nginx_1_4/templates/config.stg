@@ -28,8 +28,8 @@ client_max_body_size <properties.upload>;
 
 domainCerts(properties) ::= <<
 ssl on;
-ssl_certificate <properties.script.sitesDirectory>/<properties.domain.name>/<properties.script.sslSubdirectory>/<properties.domain.certificationFile>;
-ssl_certificate_key <properties.script.sitesDirectory>/<properties.domain.name>/<properties.script.sslSubdirectory>/<properties.domain.certificationKeyFile>;
+ssl_certificate <properties.script.sitesDirectory>/<properties.domain.name>/<properties.script.sslSubdirectory>/<properties.domain.certResource;format="fileName">;
+ssl_certificate_key <properties.script.sitesDirectory>/<properties.domain.name>/<properties.script.sslSubdirectory>/<properties.domain.keyResource;format="fileName">;
 ssl_session_timeout <properties.script.sslSessionTimeout>;
 ssl_protocols <properties.script.sslProtocols;separator=" ">;
 ssl_ciphers <properties.script.sslCiphers;separator=":">;

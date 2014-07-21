@@ -33,7 +33,6 @@ httpd {
         setup "proxy", service: "servicebar", proxyname: "bar", address: "http://127.0.0.1:8080", {
             cache staticFiles: true, feeds: true
         }
-        certification_file certFile
-        certification_key_file certKeyFile
+        certificate file: certFile, key: certKeyFile
     }
 }

@@ -24,8 +24,7 @@ def certKeyFile = ServicesResources.class.getResource "cert_key.txt"
 httpd {
     ssl_domain "mail.test1.com", address: "192.168.0.50", {
         user "www-data", group: "www-data"
-        certification_file certFile
-        certification_key_file certKeyFile
+        certificate file: certFile, key: certKeyFile
         setup "roundcube", alias: "roundcube", {
             database "roundcube", provider: "mysql", user: "user", password: "userpass", host: "localhost"
             smtp "localhost", user: "smtpuser", password: "smtppass"

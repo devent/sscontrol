@@ -24,15 +24,13 @@ httpd {
     // SSL/domain test1.com
     ssl_domain "test1.com", address: "192.168.0.50", {
         redirect to: "www.%"
-        certification_file RedirectResources.certCrt.resource
-        certification_key_file RedirectResources.certKey.resource
+        certificate file: RedirectResources.certCrt.resource, key: RedirectResources.certKey.resource
     }
     // domain www.test1.com
     domain "www.test1.com", address: "192.168.0.51", { redirect to: "https://%" }
     // SSL/domain www.test1.com
     ssl_domain "www.test1.com", address: "192.168.0.51", {
         redirect to: "https://%"
-        certification_file RedirectResources.certCrt.resource
-        certification_key_file RedirectResources.certKey.resource
+        certificate file: RedirectResources.certCrt.resource, key: RedirectResources.certKey.resource
     }
 }

@@ -33,7 +33,6 @@ httpd {
 	}
     // SSL/domain "test1.com"
 	ssl_domain "test1.com", address: "192.168.0.50", port: 8082, {
-		certification_file certFile
-		certification_key_file certKeyFile
+        certificate file: certFile, key: certKeyFile
 	}
 }

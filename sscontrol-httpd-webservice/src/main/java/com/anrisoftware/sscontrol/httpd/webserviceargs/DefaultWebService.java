@@ -62,41 +62,45 @@ public final class DefaultWebService implements WebService {
     DefaultWebService(WebServiceLogger serviceLog,
             StatementsMapFactory statementsMapFactory,
             @Assisted String serviceName, @Assisted Map<String, Object> args,
-            @Assisted Domain domain) {
+            @Assisted Domain domain) throws ServiceException {
         this.serviceLog = serviceLog;
         this.domain = domain;
         this.serviceName = serviceName;
-        this.statementsMap = statementsMapFactory.create(this, serviceName);
-        statementsMap.addAllowed(ALIAS);
-        statementsMap.addAllowed(ID);
-        statementsMap.addAllowed(REF);
-        statementsMap.addAllowed(REFDOMAIN);
-        statementsMap.addAllowed(PREFIX);
-        statementsMap.addAllowed(PROXYNAME);
+        this.statementsMap = createStatementsMap(serviceLog,
+                statementsMapFactory, serviceName, args);
+    }
+
+    private StatementsMap createStatementsMap(WebServiceLogger serviceLog,
+            StatementsMapFactory statementsMapFactory, String serviceName,
+            Map<String, Object> args) throws ServiceException {
+        StatementsMap map = statementsMapFactory.create(this, serviceName);
+        map.addAllowed(ALIAS, ID, REF, REFDOMAIN, PREFIX, PROXYNAME);
+        map.setAllowValue(true, ALIAS, ID, REF, REFDOMAIN, PREFIX, PROXYNAME);
         if (serviceLog.haveAlias(args)) {
             String value = serviceLog.alias(this, args);
-            statementsMap.putValue(ALIAS, value);
+            map.putValue(ALIAS, value);
         }
         if (serviceLog.haveId(args)) {
             String value = serviceLog.id(this, args);
-            statementsMap.putValue(ID, value);
+            map.putValue(ID, value);
         }
         if (serviceLog.haveRef(args)) {
             String value = serviceLog.ref(this, args);
-            statementsMap.putValue(REF, value);
+            map.putValue(REF, value);
         }
         if (serviceLog.haveRefDomain(args)) {
             String value = serviceLog.refDomain(this, args);
-            statementsMap.putValue(REFDOMAIN, value);
+            map.putValue(REFDOMAIN, value);
         }
         if (serviceLog.havePrefix(args)) {
             String value = serviceLog.prefix(this, args);
-            statementsMap.putValue(PREFIX, value);
+            map.putValue(PREFIX, value);
         }
         if (serviceLog.haveProxyName(args)) {
             String value = serviceLog.proxyName(this, args);
-            statementsMap.putValue(PROXYNAME, value);
+            map.putValue(PROXYNAME, value);
         }
+        return map;
     }
 
     public StatementsMap getStatementsMap() {
@@ -113,7 +117,7 @@ public final class DefaultWebService implements WebService {
         return serviceName;
     }
 
-    public void setAlias(String alias) {
+    public void setAlias(String alias) throws ServiceException {
         statementsMap.putValue(ALIAS, alias);
         serviceLog.aliasSet(this, alias);
     }
@@ -123,7 +127,7 @@ public final class DefaultWebService implements WebService {
         return statementsMap.value(ALIAS);
     }
 
-    public void setId(String id) {
+    public void setId(String id) throws ServiceException {
         statementsMap.putValue(ID, id);
         serviceLog.idSet(this, id);
     }
@@ -133,7 +137,7 @@ public final class DefaultWebService implements WebService {
         return statementsMap.value(ID);
     }
 
-    public void setRef(String ref) {
+    public void setRef(String ref) throws ServiceException {
         statementsMap.putValue(REF, ref);
         serviceLog.refSet(this, ref);
     }
@@ -143,7 +147,7 @@ public final class DefaultWebService implements WebService {
         return statementsMap.value(REF);
     }
 
-    public void setRefDomain(String ref) {
+    public void setRefDomain(String ref) throws ServiceException {
         statementsMap.putValue(REFDOMAIN, ref);
     }
 
@@ -152,7 +156,7 @@ public final class DefaultWebService implements WebService {
         return statementsMap.value(REFDOMAIN);
     }
 
-    public void setPrefix(String prefix) {
+    public void setPrefix(String prefix) throws ServiceException {
         statementsMap.putValue(PREFIX, prefix);
     }
 

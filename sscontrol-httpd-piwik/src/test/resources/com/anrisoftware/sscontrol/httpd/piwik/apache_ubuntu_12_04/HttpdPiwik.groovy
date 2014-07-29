@@ -18,11 +18,13 @@
  */
 package com.anrisoftware.sscontrol.httpd.piwik.apache_ubuntu_12_04
 
+import com.anrisoftware.sscontrol.httpd.webservice.OverrideMode;
+
 httpd {
     domain "test1.com", address: "192.168.0.51", {
         setup "piwik", id: "piwikid", {
             debug level: 4
-            override mode: update
+            override mode: OverrideMode.update
         }
     }
     ssl_domain "test1.com", address: "192.168.0.51", {

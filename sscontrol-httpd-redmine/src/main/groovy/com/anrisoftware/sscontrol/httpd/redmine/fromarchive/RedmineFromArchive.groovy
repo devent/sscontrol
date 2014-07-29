@@ -207,7 +207,7 @@ abstract class RedmineFromArchive {
         switch (service.overrideMode) {
             case OverrideMode.no:
                 return false
-            case OverrideMode.yes:
+            case OverrideMode.override:
                 return true
             case OverrideMode.update:
                 return checkRedmineVersion(domain, service) == false

@@ -27,14 +27,14 @@ package com.anrisoftware.sscontrol.httpd.webservice;
 public enum OverrideMode {
 
     /**
-     * No override of existing service.
+     * No update the existing service.
      */
     no,
 
     /**
      * Update the existing service.
      */
-    yes,
+    override,
 
     /**
      * Update the existing service, only if the version limits allow it.

@@ -55,6 +55,7 @@ import com.google.inject.assistedinject.Assisted;
  */
 public class GititService implements WebService {
 
+    private static final String UPLOAD = "upload";
     private static final String FEEDS_REFRESH = "refresh";
     private static final String FEEDS_DURATION = "duration";
     private static final String ACCESS_ANSWER = "answer";
@@ -63,7 +64,7 @@ public class GititService implements WebService {
     private static final String PRIVATEKEY = "privatekey";
     private static final String RESPONSES = "responses";
     private static final String MEMORY_PAGE = "page";
-    private static final String MEMORY_UPLOAD = "upload";
+    private static final String MEMORY_UPLOAD = UPLOAD;
     private static final String TYPE = "type";
     private static final String METHOD = "method";
     private static final String REQUIRED = "required";
@@ -140,23 +141,22 @@ public class GititService implements WebService {
     }
 
     private void setupStatements(StatementsMap map) {
-        map.addAllowed(WIKI);
-        map.addAllowed(LOGIN);
-        map.addAllowed(AUTH);
-        map.addAllowed(PAGE);
-        map.addAllowed(MATH);
-        map.addAllowed(FRONTPAGE);
-        map.addAllowed(NODELETE);
-        map.addAllowed(NOEDIT);
-        map.addAllowed(DEFAULTSUMMARY);
-        map.addAllowed(TABLEOFCONTENTS);
-        map.addAllowed(CACHING);
-        map.addAllowed(IDLE);
-        map.addAllowed(MEMORY);
-        map.addAllowed(COMPRESS);
-        map.addAllowed(RECAPTCHA);
-        map.addAllowed(ACCESS);
-        map.addAllowed(FEEDS);
+        map.addAllowed(WIKI, LOGIN, AUTH, PAGE, MATH, FRONTPAGE, NODELETE,
+                NOEDIT, DEFAULTSUMMARY, TABLEOFCONTENTS, CACHING, IDLE, MEMORY,
+                COMPRESS, RECAPTCHA, ACCESS, FEEDS);
+        map.setAllowValue(true, MATH, FRONTPAGE, NODELETE, NOEDIT,
+                DEFAULTSUMMARY, TABLEOFCONTENTS);
+        map.addAllowedKeys(WIKI, TITLE);
+        map.addAllowedKeys(LOGIN, REQUIRED);
+        map.addAllowedKeys(AUTH, METHOD);
+        map.addAllowedKeys(PAGE, TYPE);
+        map.addAllowedKeys(CACHING, ENABLED);
+        map.addAllowedKeys(IDLE, GC);
+        map.addAllowedKeys(MEMORY, UPLOAD, PAGE);
+        map.addAllowedKeys(COMPRESS, RESPONSES);
+        map.addAllowedKeys(RECAPTCHA, ENABLED, PRIVATEKEY, PUBLICKEY);
+        map.addAllowedKeys(ACCESS, ACCESS_QUESTION, ACCESS_ANSWER);
+        map.addAllowedKeys(FEEDS, ENABLED, FEEDS_DURATION, FEEDS_REFRESH);
     }
 
     @Inject
@@ -175,7 +175,7 @@ public class GititService implements WebService {
         return SERVICE_NAME;
     }
 
-    public void setAlias(String alias) {
+    public void setAlias(String alias) throws ServiceException {
         service.setAlias(alias);
     }
 
@@ -184,7 +184,7 @@ public class GititService implements WebService {
         return service.getAlias();
     }
 
-    public void setId(String id) {
+    public void setId(String id) throws ServiceException {
         service.setId(id);
     }
 
@@ -193,7 +193,7 @@ public class GititService implements WebService {
         return service.getId();
     }
 
-    public void setRef(String ref) {
+    public void setRef(String ref) throws ServiceException {
         service.setRef(ref);
     }
 
@@ -202,7 +202,7 @@ public class GititService implements WebService {
         return service.getRef();
     }
 
-    public void setRefDomain(String ref) {
+    public void setRefDomain(String ref) throws ServiceException {
         service.setRefDomain(ref);
     }
 
@@ -211,7 +211,7 @@ public class GititService implements WebService {
         return service.getRefDomain();
     }
 
-    public void setPrefix(String prefix) {
+    public void setPrefix(String prefix) throws ServiceException {
         service.setPrefix(prefix);
     }
 
@@ -223,7 +223,7 @@ public class GititService implements WebService {
     /**
      * Sets the IP addresses or host names to where to bind the <i>Gitit</i>
      * service.
-     *
+     * 
      * @see BindingFactory#create(Map, String...)
      */
     public void bind(Map<String, Object> args) throws ServiceException {
@@ -235,7 +235,7 @@ public class GititService implements WebService {
     /**
      * Sets the IP addresses or host names to where to bind the <i>Gitit</i>
      * service.
-     *
+     * 
      * @see BindingFactory#create(BindingAddress)
      */
     public void bind(BindingAddress address) throws ServiceException {
@@ -246,7 +246,7 @@ public class GititService implements WebService {
     /**
      * Returns a list of the IP addresses where to bind the <i>Gitit</i>
      * service.
-     *
+     * 
      * @return the {@link Binding}.
      */
     public Binding getBinding() {
@@ -294,7 +294,7 @@ public class GititService implements WebService {
         return type;
     }
 
-    public void setCaching(boolean enabled) {
+    public void setCaching(boolean enabled) throws ServiceException {
         statementsMap.putMapValue(CACHING, ENABLED, enabled);
     }
 
@@ -306,7 +306,7 @@ public class GititService implements WebService {
         return (Boolean) value;
     }
 
-    public void setWikiTitle(String title) {
+    public void setWikiTitle(String title) throws ServiceException {
         statementsMap.putMapValue(WIKI, TITLE, title);
     }
 
@@ -314,7 +314,8 @@ public class GititService implements WebService {
         return statementsMap.mapValue(WIKI, TITLE);
     }
 
-    public void setLoginRequired(LoginRequired required) {
+    public void setLoginRequired(LoginRequired required)
+            throws ServiceException {
         statementsMap.putMapValue(LOGIN, REQUIRED, required);
     }
 
@@ -322,7 +323,7 @@ public class GititService implements WebService {
         return statementsMap.mapValue(LOGIN, REQUIRED);
     }
 
-    public void setAuthMethod(AuthMethod method) {
+    public void setAuthMethod(AuthMethod method) throws ServiceException {
         statementsMap.putMapValue(AUTH, METHOD, method);
     }
 
@@ -330,7 +331,7 @@ public class GititService implements WebService {
         return statementsMap.mapValue(AUTH, METHOD);
     }
 
-    public void setPageType(String type) {
+    public void setPageType(String type) throws ServiceException {
         statementsMap.putMapValue(PAGE, TYPE, type);
     }
 
@@ -338,7 +339,7 @@ public class GititService implements WebService {
         return statementsMap.mapValue(PAGE, TYPE);
     }
 
-    public void setMath(String math) {
+    public void setMath(String math) throws ServiceException {
         statementsMap.putValue(MATH, math);
     }
 
@@ -346,7 +347,7 @@ public class GititService implements WebService {
         return statementsMap.value(MATH);
     }
 
-    public void setFrontPage(String page) {
+    public void setFrontPage(String page) throws ServiceException {
         statementsMap.putValue(FRONTPAGE, page);
     }
 
@@ -354,7 +355,7 @@ public class GititService implements WebService {
         return statementsMap.value(FRONTPAGE);
     }
 
-    public void setNoDeletePages(List<String> pages) {
+    public void setNoDeletePages(List<String> pages) throws ServiceException {
         statementsMap.putValue(NODELETE, pages);
     }
 
@@ -362,7 +363,7 @@ public class GititService implements WebService {
         return statementsMap.valueAsList(NODELETE);
     }
 
-    public void setNoEditPages(List<String> pages) {
+    public void setNoEditPages(List<String> pages) throws ServiceException {
         statementsMap.putValue(NOEDIT, pages);
     }
 
@@ -370,7 +371,7 @@ public class GititService implements WebService {
         return statementsMap.valueAsList(NOEDIT);
     }
 
-    public void setDefaultSummary(String summary) {
+    public void setDefaultSummary(String summary) throws ServiceException {
         statementsMap.putValue(DEFAULTSUMMARY, summary);
     }
 
@@ -378,7 +379,7 @@ public class GititService implements WebService {
         return statementsMap.value(DEFAULTSUMMARY);
     }
 
-    public void setTableOfContents(boolean enabled) {
+    public void setTableOfContents(boolean enabled) throws ServiceException {
         statementsMap.putValue(TABLEOFCONTENTS, enabled);
     }
 
@@ -390,7 +391,7 @@ public class GititService implements WebService {
         return (Boolean) value;
     }
 
-    public void setIdleGc(boolean gc) {
+    public void setIdleGc(boolean gc) throws ServiceException {
         statementsMap.putMapValue(IDLE, GC, gc);
     }
 
@@ -402,7 +403,7 @@ public class GititService implements WebService {
         return (Boolean) value;
     }
 
-    public void setMemoryUpload(String kb) {
+    public void setMemoryUpload(String kb) throws ServiceException {
         statementsMap.putMapValue(MEMORY, MEMORY_UPLOAD, kb);
     }
 
@@ -415,7 +416,7 @@ public class GititService implements WebService {
         }
     }
 
-    public void setMemoryPage(String kb) {
+    public void setMemoryPage(String kb) throws ServiceException {
         statementsMap.putMapValue(MEMORY, MEMORY_PAGE, kb);
     }
 
@@ -428,7 +429,7 @@ public class GititService implements WebService {
         }
     }
 
-    public void setCompressResponses(boolean responses) {
+    public void setCompressResponses(boolean responses) throws ServiceException {
         statementsMap.putMapValue(COMPRESS, RESPONSES, responses);
     }
 
@@ -440,7 +441,7 @@ public class GititService implements WebService {
         return (Boolean) value;
     }
 
-    public void setRecaptchaEnable(boolean enabled) {
+    public void setRecaptchaEnable(boolean enabled) throws ServiceException {
         statementsMap.putMapValue(RECAPTCHA, ENABLED, enabled);
     }
 
@@ -452,7 +453,7 @@ public class GititService implements WebService {
         return (Boolean) value;
     }
 
-    public void setRecaptchaPrivateKey(String key) {
+    public void setRecaptchaPrivateKey(String key) throws ServiceException {
         statementsMap.putMapValue(RECAPTCHA, PRIVATEKEY, key);
     }
 
@@ -460,7 +461,7 @@ public class GititService implements WebService {
         return statementsMap.mapValue(RECAPTCHA, PRIVATEKEY);
     }
 
-    public void setRecaptchaPublicKey(String key) {
+    public void setRecaptchaPublicKey(String key) throws ServiceException {
         statementsMap.putMapValue(RECAPTCHA, PUBLICKEY, key);
     }
 
@@ -468,7 +469,7 @@ public class GititService implements WebService {
         return statementsMap.mapValue(RECAPTCHA, PUBLICKEY);
     }
 
-    public void setAccessQuestion(String question) {
+    public void setAccessQuestion(String question) throws ServiceException {
         statementsMap.putMapValue(ACCESS, ACCESS_QUESTION, question);
     }
 
@@ -476,7 +477,7 @@ public class GititService implements WebService {
         return statementsMap.mapValue(ACCESS, ACCESS_QUESTION);
     }
 
-    public void setAccessAnswers(String answers) {
+    public void setAccessAnswers(String answers) throws ServiceException {
         statementsMap.putMapValue(ACCESS, ACCESS_ANSWER, answers);
     }
 
@@ -484,7 +485,7 @@ public class GititService implements WebService {
         return statementsMap.mapValue(ACCESS, ACCESS_ANSWER);
     }
 
-    public void setFeedsEnabled(boolean enabled) {
+    public void setFeedsEnabled(boolean enabled) throws ServiceException {
         statementsMap.putMapValue(FEEDS, ENABLED, enabled);
     }
 
@@ -496,7 +497,7 @@ public class GititService implements WebService {
         return (Boolean) value;
     }
 
-    public void setFeedsDuration(String days) {
+    public void setFeedsDuration(String days) throws ServiceException {
         statementsMap.putMapValue(FEEDS, FEEDS_DURATION, days);
     }
 
@@ -509,7 +510,7 @@ public class GititService implements WebService {
         }
     }
 
-    public void setFeedsRefresh(String minutes) {
+    public void setFeedsRefresh(String minutes) throws ServiceException {
         statementsMap.putMapValue(FEEDS, FEEDS_REFRESH, minutes);
     }
 

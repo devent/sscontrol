@@ -21,13 +21,14 @@ package com.anrisoftware.sscontrol.httpd.gitit.nginx_ubuntu_12_04
 import com.anrisoftware.sscontrol.httpd.gitit.AuthMethod
 import com.anrisoftware.sscontrol.httpd.gitit.LoginRequired
 import com.anrisoftware.sscontrol.httpd.gitit.RepositoryType
+import com.anrisoftware.sscontrol.httpd.webservice.OverrideMode
 
 httpd {
     domain "test1.com", address: "192.168.0.51", {
         setup "gitit", id: "gititid", alias: "/", type: RepositoryType.git, prefix: "gitit", {
             bind address: "127.0.0.1", port: 9999
             debug level: 2
-            override mode: update
+            override mode: OverrideMode.update
             wiki title: "Wiki Foo"
             login required: LoginRequired.modify
             auth method: AuthMethod.form

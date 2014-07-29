@@ -41,11 +41,11 @@ import com.google.inject.assistedinject.Assisted;
  */
 public class ProxyServiceImpl implements ProxyService {
 
-    private static final String FEEDS_KEY = "feeds";
-
     private static final String STATIC_FILES_KEY = "staticFiles";
 
     private static final String CACHE_KEY = "cache";
+
+    private static final String FEEDS_KEY = "feeds";
 
     private static final String NAME_FORMAT = "%s.%s";
 
@@ -86,8 +86,13 @@ public class ProxyServiceImpl implements ProxyService {
         if (proxyaargs.haveTarget(args)) {
             this.target = proxyaargs.target(domain, args);
         }
+        setupStatementsMap(statementsMap);
         setDefaultProxyName(webServiceLogger, args);
-        setupAllowedStatements(statementsMap);
+    }
+
+    private void setupStatementsMap(StatementsMap map) {
+        map.addAllowed(CACHE_KEY);
+        map.addAllowedKeys(CACHE_KEY, STATIC_FILES_KEY, FEEDS_KEY);
     }
 
     private void setDefaultProxyName(WebServiceLogger serviceLog,
@@ -103,10 +108,6 @@ public class ProxyServiceImpl implements ProxyService {
         }
     }
 
-    private void setupAllowedStatements(StatementsMap map) {
-        map.addAllowed(CACHE_KEY);
-    }
-
     @Override
     public String getName() {
         return format(NAME_FORMAT, SERVICE_NAME, getService());
@@ -117,7 +118,7 @@ public class ProxyServiceImpl implements ProxyService {
         return webService.getDomain();
     }
 
-    public void setAlias(String alias) {
+    public void setAlias(String alias) throws ServiceException {
         webService.setAlias(alias);
     }
 
@@ -126,7 +127,7 @@ public class ProxyServiceImpl implements ProxyService {
         return webService.getAlias();
     }
 
-    public void setId(String id) {
+    public void setId(String id) throws ServiceException {
         webService.setId(id);
     }
 
@@ -135,7 +136,7 @@ public class ProxyServiceImpl implements ProxyService {
         return webService.getId();
     }
 
-    public void setRef(String ref) {
+    public void setRef(String ref) throws ServiceException {
         webService.setRef(ref);
     }
 
@@ -144,7 +145,7 @@ public class ProxyServiceImpl implements ProxyService {
         return webService.getRef();
     }
 
-    public void setRefDomain(String ref) {
+    public void setRefDomain(String ref) throws ServiceException {
         webService.setRefDomain(ref);
     }
 
@@ -153,7 +154,7 @@ public class ProxyServiceImpl implements ProxyService {
         return webService.getRefDomain();
     }
 
-    public void setPrefix(String prefix) {
+    public void setPrefix(String prefix) throws ServiceException {
         webService.setPrefix(prefix);
     }
 
@@ -197,7 +198,7 @@ public class ProxyServiceImpl implements ProxyService {
         return target;
     }
 
-    public void setCacheStaticFiles(boolean cache) {
+    public void setCacheStaticFiles(boolean cache) throws ServiceException {
         statementsMap.putMapValue(CACHE_KEY, STATIC_FILES_KEY, cache);
     }
 
@@ -205,7 +206,7 @@ public class ProxyServiceImpl implements ProxyService {
         return statementsMap.mapValue(CACHE_KEY, STATIC_FILES_KEY);
     }
 
-    public void setCacheFeeds(boolean cache) {
+    public void setCacheFeeds(boolean cache) throws ServiceException {
         statementsMap.putMapValue(CACHE_KEY, FEEDS_KEY, cache);
     }
 

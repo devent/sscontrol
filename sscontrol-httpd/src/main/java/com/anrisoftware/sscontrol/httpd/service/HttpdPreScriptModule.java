@@ -24,7 +24,6 @@ import org.codehaus.groovy.control.customizers.ImportCustomizer;
 
 import com.anrisoftware.sscontrol.core.groovy.ClassImporter;
 import com.anrisoftware.sscontrol.httpd.auth.AuthImportsModule;
-import com.anrisoftware.sscontrol.httpd.wordpress.WordpressImportsModule;
 import com.google.inject.AbstractModule;
 import com.google.inject.multibindings.Multibinder;
 
@@ -43,7 +42,6 @@ class HttpdPreScriptModule extends AbstractModule {
     @Override
     protected void configure() {
         install(new AuthImportsModule());
-        install(new WordpressImportsModule());
         bindClassImporter();
     }
 

@@ -25,6 +25,7 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
+import com.anrisoftware.sscontrol.core.api.ServiceException;
 import com.anrisoftware.sscontrol.core.database.Database;
 import com.anrisoftware.sscontrol.core.database.DatabaseArgs;
 import com.anrisoftware.sscontrol.core.database.DatabaseFactory;
@@ -98,7 +99,7 @@ public class RoundcubeService implements WebService {
         return SERVICE_NAME;
     }
 
-    public void setAlias(String alias) {
+    public void setAlias(String alias) throws ServiceException {
         service.setAlias(alias);
     }
 
@@ -107,7 +108,7 @@ public class RoundcubeService implements WebService {
         return service.getAlias();
     }
 
-    public void setId(String id) {
+    public void setId(String id) throws ServiceException {
         service.setId(id);
     }
 
@@ -116,7 +117,7 @@ public class RoundcubeService implements WebService {
         return service.getId();
     }
 
-    public void setRef(String ref) {
+    public void setRef(String ref) throws ServiceException {
         service.setRef(ref);
     }
 
@@ -125,7 +126,7 @@ public class RoundcubeService implements WebService {
         return service.getRef();
     }
 
-    public void setRefDomain(String ref) {
+    public void setRefDomain(String ref) throws ServiceException {
         service.setRefDomain(ref);
     }
 
@@ -134,7 +135,7 @@ public class RoundcubeService implements WebService {
         return service.getRefDomain();
     }
 
-    public void setPrefix(String prefix) {
+    public void setPrefix(String prefix) throws ServiceException {
         service.setPrefix(prefix);
     }
 

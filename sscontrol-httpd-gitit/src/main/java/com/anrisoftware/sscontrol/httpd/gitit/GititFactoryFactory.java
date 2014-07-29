@@ -44,6 +44,8 @@ public class GititFactoryFactory implements WebServiceFactoryFactory {
 
     private static final String REPOSITORY_TYPE = "com.anrisoftware.sscontrol.httpd.gitit.RepositoryType";
 
+    private static final String OVERRIDE_MODE = "com.anrisoftware.sscontrol.httpd.webservice.OverrideMode";
+
     /**
      * <i>Gitit</i> service name.
      */
@@ -92,9 +94,8 @@ public class GititFactoryFactory implements WebServiceFactoryFactory {
 
     private void importClasses(CompilerConfiguration c) {
         ImportCustomizer customizer = new ImportCustomizer();
-        customizer.addImports(LOGIN_REQUIRED);
-        customizer.addImports(AUTH_METHOD);
-        customizer.addImports(REPOSITORY_TYPE);
+        customizer.addImports(LOGIN_REQUIRED, AUTH_METHOD, REPOSITORY_TYPE,
+                OVERRIDE_MODE);
         c.addCompilationCustomizers(customizer);
     }
 }

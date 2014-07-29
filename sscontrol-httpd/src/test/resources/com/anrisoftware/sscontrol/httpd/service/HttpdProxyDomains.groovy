@@ -18,9 +18,6 @@
  */
 package com.anrisoftware.sscontrol.httpd.service
 
-def certFile = ServicesResources.class.getResource "cert_crt.txt"
-def certKeyFile = ServicesResources.class.getResource "cert_key.txt"
-
 httpd {
     // reference service with id "idapache2"
     refservice "idapache2"
@@ -31,8 +28,13 @@ httpd {
     // domain "test1.com"
 	domain "test1.com", address: "192.168.0.50", port: 8080, {
 	}
-    // SSL/domain "test1.com"
-	ssl_domain "test1.com", address: "192.168.0.50", port: 8082, {
-        certificate file: certFile, key: certKeyFile
+    // domain "test2.com"
+	domain "test2.com", address: "192.168.0.50", port: 8082, {
 	}
+    // domain "test3.com"
+    domain "test3.com", address: "192.168.0.50", port: 8082, {
+    }
+    // domain "test4.com"
+    domain "test4.com", address: "192.168.0.50", port: 8082, {
+    }
 }

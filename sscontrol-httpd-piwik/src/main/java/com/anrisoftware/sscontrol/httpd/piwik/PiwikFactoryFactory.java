@@ -43,6 +43,8 @@ public class PiwikFactoryFactory implements WebServiceFactoryFactory {
      */
     public static final String SERVICE_NAME = "piwik";
 
+    private static final String OVERRIDE_MODE = "com.anrisoftware.sscontrol.httpd.webservice.OverrideMode";
+
     /**
      * <i>Piwik</i> service information.
      */
@@ -86,6 +88,7 @@ public class PiwikFactoryFactory implements WebServiceFactoryFactory {
 
     private void importClasses(CompilerConfiguration c) {
         ImportCustomizer customizer = new ImportCustomizer();
+        customizer.addImports(OVERRIDE_MODE);
         c.addCompilationCustomizers(customizer);
     }
 }

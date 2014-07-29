@@ -68,6 +68,9 @@ public class OverrideModeArgs {
             if (flag == YesNoFlag.no) {
                 return OverrideMode.no;
             }
+            if (flag == YesNoFlag.yes) {
+                return OverrideMode.override;
+            }
         }
         if (mode instanceof OverrideMode) {
             return (OverrideMode) mode;

@@ -28,7 +28,6 @@ import com.anrisoftware.sscontrol.core.api.ServiceLoader as SscontrolServiceLoad
 import com.anrisoftware.sscontrol.core.api.ServicesRegistry
 import com.anrisoftware.sscontrol.httpd.domain.Domain
 import com.anrisoftware.sscontrol.httpd.proxy.ProxyService
-import com.anrisoftware.sscontrol.httpd.webservice.WebService
 
 /**
  * @see WordpressService
@@ -47,37 +46,64 @@ class HttpdProxyTest extends HttpdTestUtil {
         loader.loadService proxyDomainsScript.resource, profile
         loader.loadService proxyScript.resource, profile
 
-        HttpdServiceImpl service = registry.getService("httpd")[0]
-        assert service.domains.size() == 2
+        HttpdService service = registry.getService("httpd")[0]
+        assert service.domains.size() == 4
         assert service.virtualDomains.size() == 2
 
         service = registry.getService("httpd")[1]
-        assert service.domains.size() == 2
-        assert service.virtualDomains.size() == 2
+        assert service.domains.size() == 4
+        assert service.virtualDomains.size() == 1
 
         Domain domain = service.domains[0]
-        WebService webservice = domain.services[0]
-        assert webservice instanceof ProxyService
+        ProxyService webservice = domain.services[0]
         assert webservice.name == "proxy.servicefoo"
         assert webservice.id == null
+        assert webservice.alias == null
         assert webservice.ref == null
+        assert webservice.refDomain == null
+        assert webservice.proxyName == "servicefoo_test1_com"
         assert webservice.service == "servicefoo"
         assert webservice.address == "http://127.0.0.1:8080"
-        assert webservice.alias == "fooalias"
-        assert webservice.proxyName == "servicefoo_fooalias"
         assert webservice.cacheStaticFiles == null
         assert webservice.cacheFeeds == null
 
         domain = service.domains[1]
         webservice = domain.services[0]
-        assert webservice instanceof ProxyService
+        assert webservice.name == "proxy.servicefoo"
+        assert webservice.id == null
+        assert webservice.alias == "fooalias"
+        assert webservice.ref == null
+        assert webservice.refDomain == null
+        assert webservice.proxyName == "servicefoo_fooalias"
+        assert webservice.service == "servicefoo"
+        assert webservice.address == "http://127.0.0.1:8080"
+        assert webservice.cacheStaticFiles == null
+        assert webservice.cacheFeeds == null
+
+        domain = service.domains[2]
+        webservice = domain.services[0]
         assert webservice.name == "proxy.servicebar"
         assert webservice.id == null
+        assert webservice.alias == null
         assert webservice.ref == null
+        assert webservice.refDomain == null
+        assert webservice.proxyName == "bar"
         assert webservice.service == "servicebar"
         assert webservice.address == "http://127.0.0.1:8080"
-        assert webservice.proxyName == "bar"
         assert webservice.cacheStaticFiles == true
         assert webservice.cacheFeeds == true
+
+        domain = service.domains[3]
+        webservice = domain.services[0]
+        assert webservice.name == "proxy.servicebar"
+        assert webservice.id == "proxyid"
+        assert webservice.alias == null
+        assert webservice.ref == "refproxyid"
+        assert webservice.refDomain == "refdomain"
+        assert webservice.proxyName == "bar"
+        assert webservice.service == "servicebar"
+        assert webservice.address == "http://127.0.0.1:8080"
+        assert webservice.cacheStaticFiles == null
+        assert webservice.cacheFeeds == null
     }
 }

@@ -48,6 +48,10 @@ import com.google.inject.assistedinject.Assisted;
  */
 public class RedmineService implements WebService {
 
+    private static final String MODE_KEY = "mode";
+
+    private static final String OVERRIDE_KEY = "override";
+
     private static final String INSTALL_KEY = "install";
 
     private static final String SCM_KEY = "scm";
@@ -86,14 +90,12 @@ public class RedmineService implements WebService {
     private final StatementsMap statementsMap;
 
     @Inject
-    private DebugLoggingFactory debugFactory;
-
-    @Inject
     private DatabaseFactory databaseFactory;
 
-    private DebugLogging debug;
+    @Inject
+    private DebugLoggingFactory debugFactory;
 
-    private OverrideMode overrideMode;
+    private DebugLogging debug;
 
     private Database database;
 
@@ -112,9 +114,12 @@ public class RedmineService implements WebService {
     }
 
     private void setupStatements(StatementsMap map) {
-        map.addAllowed(MAIL_KEY);
-        map.addAllowed(LANGUAGE_KEY);
-        map.addAllowed(SCM_KEY);
+        map.addAllowed(MAIL_KEY, LANGUAGE_KEY, SCM_KEY, OVERRIDE_KEY);
+        map.addAllowedKeys(MAIL_KEY, HOST_KEY, PORT_KEY, METHOD_KEY,
+                DOMAIN_KEY, AUTH_KEY, USER_KEY, PASSWORD_KEY);
+        map.addAllowedKeys(SCM_KEY, INSTALL_KEY);
+        map.addAllowedKeys(OVERRIDE_KEY, MODE_KEY);
+        map.addAllowedKeys(LANGUAGE_KEY, NAME_KEY);
     }
 
     @Override
@@ -127,7 +132,7 @@ public class RedmineService implements WebService {
         return SERVICE_NAME;
     }
 
-    public void setAlias(String alias) {
+    public void setAlias(String alias) throws ServiceException {
         service.setAlias(alias);
     }
 
@@ -136,7 +141,7 @@ public class RedmineService implements WebService {
         return service.getAlias();
     }
 
-    public void setId(String id) {
+    public void setId(String id) throws ServiceException {
         service.setId(id);
     }
 
@@ -145,7 +150,7 @@ public class RedmineService implements WebService {
         return service.getId();
     }
 
-    public void setRef(String ref) {
+    public void setRef(String ref) throws ServiceException {
         service.setRef(ref);
     }
 
@@ -154,7 +159,7 @@ public class RedmineService implements WebService {
         return service.getRef();
     }
 
-    public void setRefDomain(String ref) {
+    public void setRefDomain(String ref) throws ServiceException {
         service.setRefDomain(ref);
     }
 
@@ -163,7 +168,7 @@ public class RedmineService implements WebService {
         return service.getRefDomain();
     }
 
-    public void setPrefix(String prefix) {
+    public void setPrefix(String prefix) throws ServiceException {
         service.setPrefix(prefix);
     }
 
@@ -203,21 +208,15 @@ public class RedmineService implements WebService {
         return debug;
     }
 
-    public void override(Map<String, Object> args) {
-        OverrideMode mode = log.override(this, args);
-        log.overrideModeSet(this, mode);
-        this.overrideMode = mode;
-    }
-
-    public void setOverrideMode(OverrideMode mode) {
-        this.overrideMode = mode;
+    public void setOverrideMode(OverrideMode mode) throws ServiceException {
+        statementsMap.putMapValue(OVERRIDE_KEY, MODE_KEY, mode);
     }
 
     public OverrideMode getOverrideMode() {
-        return overrideMode;
+        return statementsMap.mapValue(OVERRIDE_KEY, MODE_KEY);
     }
 
-    public void setMailHost(String host) {
+    public void setMailHost(String host) throws ServiceException {
         statementsMap.putMapValue(MAIL_KEY, HOST_KEY, host);
     }
 
@@ -225,7 +224,7 @@ public class RedmineService implements WebService {
         return statementsMap.mapValue(MAIL_KEY, HOST_KEY);
     }
 
-    public void setMailPort(int port) {
+    public void setMailPort(int port) throws ServiceException {
         statementsMap.putMapValue(MAIL_KEY, PORT_KEY, port);
     }
 
@@ -233,7 +232,8 @@ public class RedmineService implements WebService {
         return statementsMap.mapValue(MAIL_KEY, PORT_KEY);
     }
 
-    public void setMailDeliveryMethod(DeliveryMethod method) {
+    public void setMailDeliveryMethod(DeliveryMethod method)
+            throws ServiceException {
         statementsMap.putMapValue(MAIL_KEY, METHOD_KEY, method);
     }
 
@@ -241,7 +241,7 @@ public class RedmineService implements WebService {
         return statementsMap.mapValue(MAIL_KEY, METHOD_KEY);
     }
 
-    public void setMailDomain(String domain) {
+    public void setMailDomain(String domain) throws ServiceException {
         statementsMap.putMapValue(MAIL_KEY, DOMAIN_KEY, domain);
     }
 
@@ -249,7 +249,8 @@ public class RedmineService implements WebService {
         return statementsMap.mapValue(MAIL_KEY, DOMAIN_KEY);
     }
 
-    public void setMailAuthMethod(AuthenticationMethod method) {
+    public void setMailAuthMethod(AuthenticationMethod method)
+            throws ServiceException {
         statementsMap.putMapValue(MAIL_KEY, AUTH_KEY, method);
     }
 
@@ -265,7 +266,7 @@ public class RedmineService implements WebService {
         return statementsMap.mapValue(MAIL_KEY, PASSWORD_KEY);
     }
 
-    public void setLanguageName(String name) {
+    public void setLanguageName(String name) throws ServiceException {
         statementsMap.putMapValue(LANGUAGE_KEY, NAME_KEY, name);
     }
 
@@ -273,7 +274,7 @@ public class RedmineService implements WebService {
         return statementsMap.mapValue(LANGUAGE_KEY, NAME_KEY);
     }
 
-    public void setScmInstall(List<ScmInstall> list) {
+    public void setScmInstall(List<ScmInstall> list) throws ServiceException {
         statementsMap.putMapValue(SCM_KEY, INSTALL_KEY, list);
     }
 

@@ -21,19 +21,20 @@ package com.anrisoftware.sscontrol.httpd.redmine.nginx_ubuntu_12_04
 import com.anrisoftware.sscontrol.httpd.redmine.AuthenticationMethod
 import com.anrisoftware.sscontrol.httpd.redmine.DeliveryMethod
 import com.anrisoftware.sscontrol.httpd.redmine.ScmInstall
+import com.anrisoftware.sscontrol.httpd.webservice.OverrideMode;
 
 httpd {
     domain "test1.com", address: "192.168.0.51", {
         setup "redmine", id: "redmineid", backend: "thin", {
             database "redmine2", user: "user", password: "userpass", host: "localhost"
             mail host: "smtp.test1.com", port: 25, method: DeliveryMethod.smtp, domain: "example.net", auth: AuthenticationMethod.login, user: "redmine@example.net", password: "redminepass"
-            debug level: 4
-            override mode: update
             language name: "de"
             scm install: [
                 ScmInstall.subversion,
                 ScmInstall.mercurial
             ]
+            debug level: 4
+            override mode: OverrideMode.update
         }
     }
     ssl_domain "test1.com", address: "192.168.0.51", {

@@ -21,9 +21,16 @@ package com.anrisoftware.sscontrol.core.groovy;
 import static com.anrisoftware.sscontrol.core.groovy.StatementsMapLogger._.allowed_name;
 import static com.anrisoftware.sscontrol.core.groovy.StatementsMapLogger._.invalid_statement;
 import static com.anrisoftware.sscontrol.core.groovy.StatementsMapLogger._.invalid_statement_message;
+import static com.anrisoftware.sscontrol.core.groovy.StatementsMapLogger._.key_not_allowed;
+import static com.anrisoftware.sscontrol.core.groovy.StatementsMapLogger._.key_not_allowed_message;
+import static com.anrisoftware.sscontrol.core.groovy.StatementsMapLogger._.name_value_error;
+import static com.anrisoftware.sscontrol.core.groovy.StatementsMapLogger._.name_value_error_message;
 import static com.anrisoftware.sscontrol.core.groovy.StatementsMapLogger._.statement_added_debug;
 import static com.anrisoftware.sscontrol.core.groovy.StatementsMapLogger._.statement_added_info;
+import static com.anrisoftware.sscontrol.core.groovy.StatementsMapLogger._.statement_key;
+import static com.anrisoftware.sscontrol.core.groovy.StatementsMapLogger._.statements;
 
+import java.util.Map;
 import java.util.Set;
 
 import javax.inject.Inject;
@@ -51,7 +58,19 @@ class StatementsMapLogger extends AbstractLogger {
 
         statement_added_debug,
 
-        statement_added_info;
+        statement_added_info,
+
+        statements,
+
+        name_value_error,
+
+        name_value_error_message,
+
+        key_not_allowed,
+
+        statement_key,
+
+        key_not_allowed_message;
 
         public static void loadTexts(TextsFactory factory) {
             String name = StatementsMapLogger.class.getSimpleName();
@@ -81,8 +100,9 @@ class StatementsMapLogger extends AbstractLogger {
         _.loadTexts(factory);
     }
 
-    void checkName(Set<String> allowed, String name) throws ServiceException {
-        if (!allowed.contains(name)) {
+    void checkName(Map<String, Set<String>> allowed, String name)
+            throws ServiceException {
+        if (!allowed.containsKey(name)) {
             throw logException(new ServiceException(invalid_statement).add(
                     allowed_name, name), invalid_statement_message, name);
         }
@@ -94,5 +114,27 @@ class StatementsMapLogger extends AbstractLogger {
         } else {
             info(statement_added_info, name, value, statements.getName());
         }
+    }
+
+    void checkNameValueAllowed(StatementsMap map, Set<String> allowedKeys,
+            String name) throws ServiceException {
+        if (allowedKeys.contains(StatementsMap.NAME_KEY)) {
+            return;
+        }
+        throw logException(
+                new ServiceException(name_value_error).add(statements, map)
+                        .add(allowed_name, name), name_value_error_message,
+                name, map.getName());
+    }
+
+    void checkKey(StatementsMap map, Set<String> allowedKeys, String name,
+            String key) throws ServiceException {
+        if (allowedKeys.contains(key)) {
+            return;
+        }
+        throw logException(
+                new ServiceException(key_not_allowed).add(statements, map)
+                        .add(allowed_name, name).add(statement_key, key),
+                key_not_allowed_message, key, name, map.getName());
     }
 }

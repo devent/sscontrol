@@ -29,7 +29,6 @@ import com.anrisoftware.sscontrol.httpd.apache.apache.linux.ApacheFcgiConfig;
 import com.anrisoftware.sscontrol.httpd.apache.authfile.ubuntu_12_04.Ubuntu_12_04_AuthFileModule;
 import com.anrisoftware.sscontrol.httpd.apache.authldap.ubuntu_12_04.Ubuntu_12_04_AuthLdapModule;
 import com.anrisoftware.sscontrol.httpd.apache.phpmyadmin.ubuntu_12_04.Ubuntu_12_04_PhpmyadminModule;
-import com.anrisoftware.sscontrol.httpd.apache.wordpress.ubuntu_12_04.Ubuntu_12_04_WordpressModule;
 import com.anrisoftware.sscontrol.httpd.fcgi.FcgiConfig;
 import com.anrisoftware.sscontrol.httpd.webservice.ServiceConfig;
 import com.anrisoftware.sscontrol.scripts.changefilemod.ChangeFileModModule;
@@ -70,7 +69,6 @@ class UbuntuModule extends AbstractModule {
         install(new Ubuntu_12_04_AuthFileModule());
         install(new Ubuntu_12_04_AuthLdapModule());
         install(new Ubuntu_12_04_PhpmyadminModule());
-        install(new Ubuntu_12_04_WordpressModule());
         bind(FcgiConfig.class).to(ApacheFcgiConfig.class);
         bindScripts();
         bindEmptyServiceConfig();

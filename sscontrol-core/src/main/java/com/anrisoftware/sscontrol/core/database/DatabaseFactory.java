@@ -29,10 +29,10 @@ import java.util.Map;
 public interface DatabaseFactory {
 
     /**
-     * Creates Roundcube database credentials from the specified arguments.
+     * Creates database credentials from the specified arguments.
      * 
      * @param service
-     *            the Roundcube service.
+     *            the {@link Object} service.
      * 
      * @param args
      *            the {@link Map} arguments.

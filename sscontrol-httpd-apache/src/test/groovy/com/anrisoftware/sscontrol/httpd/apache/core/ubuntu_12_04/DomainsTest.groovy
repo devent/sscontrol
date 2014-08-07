@@ -85,7 +85,11 @@ class DomainsTest extends UbuntuTestUtil {
 
         assertFileContent apacheOutExpected.asFile(tmpdir), apacheOutExpected
         assertFileContent robobeeDefaultConfExpected.asFile(tmpdir), robobeeDefaultConfExpected
-        assertFileContent usersDomainsConfExpected.asFile(tmpdir), usersDomainsConfExpected
+        try {
+            assertFileContent usersDomainsConfExpected.asFile(tmpdir), usersDomainsConfExpected
+        } catch (AssertionError e) {
+            assertFileContent usersDomainsConfExpected2.asFile(tmpdir), usersDomainsConfExpected2
+        }
         assertFileContent usersEnsiteOutExpected.asFile(tmpdir), usersEnsiteOutExpected
         assertFileContent usersEnmodOutExpected.asFile(tmpdir), usersEnmodOutExpected
         assertStringContent usersUseraddOutExpected.replaced(tmpdir, tmpdir, "/tmp"), usersUseraddOutExpected.toString()

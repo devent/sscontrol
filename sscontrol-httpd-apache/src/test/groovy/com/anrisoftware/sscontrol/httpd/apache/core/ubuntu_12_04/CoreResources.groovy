@@ -53,6 +53,7 @@ enum CoreResources {
     chmodOutExpected("/bin/chmod.out", CoreResources.class.getResource("chmod_out_expected.txt")),
     // domains users
     usersDomainsConfExpected("/etc/apache2/conf.d/000-robobee-domains.conf", CoreResources.class.getResource("users_conf_expected.txt")),
+    usersDomainsConfExpected2("/etc/apache2/conf.d/000-robobee-domains.conf", CoreResources.class.getResource("users_conf_expected2.txt")),
     usersEnsiteOutExpected("/usr/sbin/a2ensite.out", CoreResources.class.getResource("users_ensite_out_expected.txt")),
     usersEnmodOutExpected("/usr/sbin/a2enmod.out", CoreResources.class.getResource("users_enmod_out_expected.txt")),
     usersUseraddOutExpected("/usr/sbin/useradd.out", CoreResources.class.getResource("users_useradd_out_expected.txt")),

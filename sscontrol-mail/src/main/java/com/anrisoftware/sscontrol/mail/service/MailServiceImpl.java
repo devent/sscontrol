@@ -72,7 +72,9 @@ class MailServiceImpl extends AbstractService implements MailService {
 
     private final List<Domain> domains;
 
-    private final Set<String> destinations;
+    private final List<String> destinations;
+
+    private final Set<String> uniqueDestinations;
 
     @Inject
     private MailServiceImplLogger log;
@@ -121,7 +123,8 @@ class MailServiceImpl extends AbstractService implements MailService {
     MailServiceImpl() {
         this.domains = new ArrayList<Domain>();
         this.relayHost = null;
-        this.destinations = new HashSet<String>();
+        this.destinations = new ArrayList<String>();
+        this.uniqueDestinations = new HashSet<String>();
     }
 
     @Inject
@@ -294,7 +297,9 @@ class MailServiceImpl extends AbstractService implements MailService {
         log.checkDestinations(this, list);
         for (Object object : list) {
             String destination = object.toString().trim();
-            destinations.add(destination);
+            if (uniqueDestinations.add(destination)) {
+                destinations.add(destination);
+            }
             log.destinationAdded(this, destination);
         }
     }

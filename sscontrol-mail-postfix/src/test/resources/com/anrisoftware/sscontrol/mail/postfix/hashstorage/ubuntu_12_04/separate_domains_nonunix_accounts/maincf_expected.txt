@@ -50,7 +50,7 @@ alias_database = hash:/tmp/etc/postfix/aliases
 
 myorigin = /etc/mailname
 # SSCONTROL-mail
-mydestination = localhost.$mydomain,$myhostname
+mydestination = $myhostname,localhost.$mydomain
 # SSCONTROL-mail-END
 
 # SSCONTROL-mail

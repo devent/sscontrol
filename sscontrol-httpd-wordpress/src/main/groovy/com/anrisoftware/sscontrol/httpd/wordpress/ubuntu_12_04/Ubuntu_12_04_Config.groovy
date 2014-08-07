@@ -18,7 +18,7 @@
  */
 package com.anrisoftware.sscontrol.httpd.wordpress.ubuntu_12_04
 
-import static com.anrisoftware.sscontrol.httpd.apache.apache.ubuntu_12_04.Ubuntu_12_04_ScriptFactory.PROFILE
+import static com.anrisoftware.sscontrol.httpd.wordpress.apache_ubuntu_12_04.Ubuntu_12_04_ApacheWordpressConfigFactory.PROFILE_NAME
 import static org.apache.commons.io.FileUtils.*
 import groovy.util.logging.Slf4j
 
@@ -26,9 +26,7 @@ import javax.inject.Inject
 
 import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.sscontrol.core.service.LinuxScript
-import com.anrisoftware.sscontrol.httpd.apache.apache.ubuntu_12_04.Ubuntu_12_04_ScriptFactory
 import com.anrisoftware.sscontrol.httpd.domain.Domain
-import com.anrisoftware.sscontrol.httpd.webservice.WebService
 import com.anrisoftware.sscontrol.httpd.wordpress.apache_ubuntu_12_04.UbuntuPropertiesProvider
 import com.anrisoftware.sscontrol.httpd.wordpress.core.Wordpress_3_Config
 import com.anrisoftware.sscontrol.scripts.unix.InstallPackagesFactory
@@ -67,7 +65,7 @@ class Ubuntu_12_04_Config extends Wordpress_3_Config {
 
     @Override
     String getProfile() {
-        PROFILE
+        PROFILE_NAME
     }
 
     @Override

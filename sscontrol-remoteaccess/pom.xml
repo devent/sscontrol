@@ -14,11 +14,11 @@
 	<name>RoboBee :: Remote Access</name>
 	<description>Remote access configuration.</description>
 	<inceptionYear>2013</inceptionYear>
-	<url>https://www.anr-institute.com/projects/projects/sscontrol-remote</url>
+	<url>https://anrisoftware.com/projects/projects/sscontrol-remote</url>
 
 	<issueManagement>
 		<system>Redmine</system>
-		<url>https://www.anr-institute.com/projects/projects/sscontrol-remote</url>
+		<url>https://anrisoftware.com/projects/projects/sscontrol-remote</url>
 	</issueManagement>
 
 	<scm>
@@ -56,7 +56,7 @@
 
 		<!-- compile dependencies -->
 		<dependency>
-			<groupId>org.mangosdk</groupId>
+			<groupId>org.mangosdk.spi</groupId>
 			<artifactId>spi</artifactId>
 			<optional>true</optional>
 		</dependency>

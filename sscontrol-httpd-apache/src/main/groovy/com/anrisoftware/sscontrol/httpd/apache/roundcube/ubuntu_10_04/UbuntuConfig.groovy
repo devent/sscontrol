@@ -26,7 +26,7 @@ import javax.inject.Inject
 import com.anrisoftware.globalpom.textmatch.tokentemplate.TokenTemplate
 import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.resources.templates.api.TemplateResource
-import com.anrisoftware.sscontrol.httpd.apache.apache.linux.ApacheScript
+import com.anrisoftware.sscontrol.core.service.LinuxScript
 import com.anrisoftware.sscontrol.httpd.apache.apache.linux.ApacheFcgiConfig
 import com.anrisoftware.sscontrol.httpd.apache.apache.ubuntu_10_04.Ubuntu_10_04_ScriptFactory
 import com.anrisoftware.sscontrol.httpd.apache.roundcube.roundcube_3.Roundcube_0_9_Config
@@ -169,7 +169,7 @@ class UbuntuConfig extends Roundcube_0_9_Config implements ServiceConfig {
     }
 
     @Override
-    void setScript(ApacheScript script) {
+    void setScript(LinuxScript script) {
         super.setScript script
     }
 

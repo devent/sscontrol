@@ -13,7 +13,7 @@
 	<artifactId>sscontrol-dns-maradns</artifactId>
 	<name>RoboBee :: DNS :: MaraDNS</name>
 	<description>Setups MaraDNS as the DNS service.</description>
-	<url>https://www.anr-institute.com/projects/projects/sscontrol-dns-maradns</url>
+	<url>https://anrisoftware.com/projects/projects/sscontrol-dns-maradns</url>
 	<inceptionYear>2013</inceptionYear>
 
 	<properties>
@@ -22,7 +22,7 @@
 
 	<issueManagement>
 		<system>Redmine</system>
-		<url>https://www.anr-institute.com/projects/projects/sscontrol-dns-maradns</url>
+		<url>https://anrisoftware.com/projects/projects/sscontrol-dns-maradns</url>
 	</issueManagement>
 
 	<scm>
@@ -59,7 +59,7 @@
 
 		<!-- compile dependencies -->
 		<dependency>
-			<groupId>org.mangosdk</groupId>
+			<groupId>org.mangosdk.spi</groupId>
 			<artifactId>spi</artifactId>
 			<optional>true</optional>
 		</dependency>

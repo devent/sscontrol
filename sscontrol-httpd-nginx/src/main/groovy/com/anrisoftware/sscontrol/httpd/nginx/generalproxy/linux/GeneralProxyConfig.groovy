@@ -60,12 +60,10 @@ abstract class GeneralProxyConfig extends AbstractNginxProxyConfig {
      */
     TemplateResource proxyConfigTemplate
 
-    @Override
     void deployDomain(Domain domain, Domain refDomain, WebService service, List config) {
         createDomainConfig domain, refDomain, service, config
     }
 
-    @Override
     void deployService(Domain domain, WebService service, List config) {
         deployProxyDomainConfig service
         createDomainConfig domain, null, service, config

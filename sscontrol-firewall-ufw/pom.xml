@@ -13,7 +13,7 @@
 	<artifactId>sscontrol-firewall-ufw</artifactId>
 	<name>RoboBee :: Firewall :: UFW</name>
 	<description>Uncomplicated FireWall service.</description>
-	<url>https://www.anr-institute.com/projects/projects/robobee-firewall-ufw</url>
+	<url>https://anrisoftware.com/projects/projects/robobee-firewall-ufw</url>
 	<inceptionYear>2013</inceptionYear>
 
 	<properties>
@@ -22,7 +22,7 @@
 
 	<issueManagement>
 		<system>Redmine</system>
-		<url>https://www.anr-institute.com/projects/projects/robobee-firewall-ufw</url>
+		<url>https://anrisoftware.com/projects/projects/robobee-firewall-ufw</url>
 	</issueManagement>
 
 	<scm>
@@ -58,11 +58,11 @@
 		</dependency>
 
 		<!-- compile dependencies -->
-		<dependency>
-			<groupId>org.mangosdk</groupId>
-			<artifactId>spi</artifactId>
-			<optional>true</optional>
-		</dependency>
+        <dependency>
+            <groupId>org.mangosdk.spi</groupId>
+            <artifactId>spi</artifactId>
+            <optional>true</optional>
+        </dependency>
 	</dependencies>
 
 </project>

@@ -35,13 +35,11 @@ class FcgiPiwikConfig {
     @Inject
     FcgiConfig fcgiConfig
 
-    @Override
     void deployDomain(Domain domain, Domain refDomain, WebService service, List config) {
         fcgiConfig.script = script
         fcgiConfig.deployConfig domain
     }
 
-    @Override
     void deployService(Domain domain, WebService service, List config) {
         fcgiConfig.script = script
         fcgiConfig.enableFcgi()

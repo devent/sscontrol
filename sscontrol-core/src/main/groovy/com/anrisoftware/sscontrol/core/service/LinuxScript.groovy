@@ -393,6 +393,19 @@ abstract class LinuxScript extends Script {
     }
 
     /**
+     * Returns the stop command for the service.
+     *
+     * <ul>
+     * <li>property key {@code stop_command}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    String getStopCommand() {
+        profileProperty "stop_command", defaultProperties
+    }
+
+    /**
      * Returns the services to stop.
      *
      * <ul>

@@ -14,7 +14,7 @@
 	<name>RoboBee :: Database :: MySQL</name>
 	<description>Setups MySQL as the database server.</description>
 	<inceptionYear>2013</inceptionYear>
-	<url>https://www.anr-institute.com/projects/projects/robobee-database-mysql</url>
+	<url>https://anrisoftware.com/projects/projects/robobee-database-mysql</url>
 
 	<properties>
 		<project.custom.year>${project.inceptionYear}</project.custom.year>
@@ -22,7 +22,7 @@
 
 	<issueManagement>
 		<system>Redmine</system>
-		<url>https://www.anr-institute.com/projects/projects/robobee-database-mysql</url>
+		<url>https://anrisoftware.com/projects/projects/robobee-database-mysql</url>
 	</issueManagement>
 
 	<scm>
@@ -59,7 +59,7 @@
 
 		<!-- compile dependencies -->
 		<dependency>
-			<groupId>org.mangosdk</groupId>
+			<groupId>org.mangosdk.spi</groupId>
 			<artifactId>spi</artifactId>
 			<optional>true</optional>
 		</dependency>

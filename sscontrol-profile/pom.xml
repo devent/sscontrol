@@ -13,12 +13,12 @@
 	<artifactId>sscontrol-profile</artifactId>
 	<name>RoboBee :: Profile</name>
 	<description>Profile of a server.</description>
-	<url>https://www.anr-institute.com/projects/projects/sscontrol-profile2</url>
+	<url>https://anrisoftware.com/projects/projects/sscontrol-profile2</url>
 	<inceptionYear>2012</inceptionYear>
 
 	<issueManagement>
 		<system>Redmine</system>
-		<url>https://www.anr-institute.com/projects/projects/sscontrol-profile2</url>
+		<url>https://anrisoftware.com/projects/projects/sscontrol-profile2</url>
 	</issueManagement>
 
 	<scm>
@@ -49,11 +49,11 @@
 		</dependency>
 
 		<!-- compile dependencies -->
-		<dependency>
-			<groupId>org.mangosdk</groupId>
-			<artifactId>spi</artifactId>
-			<optional>true</optional>
-		</dependency>
+        <dependency>
+            <groupId>org.mangosdk.spi</groupId>
+            <artifactId>spi</artifactId>
+            <optional>true</optional>
+        </dependency>
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>

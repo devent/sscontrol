@@ -321,6 +321,11 @@ abstract class AbstractProxyConfig {
     abstract ContextProperties getProxyProperties()
 
     /**
+     * Returns the name of the proxy service.
+     */
+    abstract String getProxyService()
+
+    /**
      * Returns the service name {@code "proxy".}
      */
     String getServiceName() {

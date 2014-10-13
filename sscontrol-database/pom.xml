@@ -51,7 +51,7 @@
 
 		<!-- compile dependencies -->
 		<dependency>
-			<groupId>org.mangosdk</groupId>
+			<groupId>org.mangosdk.spi</groupId>
 			<artifactId>spi</artifactId>
 			<optional>true</optional>
 		</dependency>

@@ -34,12 +34,10 @@ class UbuntuNginxRepositoryScript extends NginxRepositoryScript {
     @Inject
     UbuntuPropertiesProvider ubuntuProperties
 
-    @Override
     ContextProperties getDefaultProperties() {
         ubuntuProperties.get()
     }
 
-    @Override
     String getProfileName() {
         Ubuntu_12_04_ScriptFactory.PROFILE
     }

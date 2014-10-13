@@ -14,7 +14,7 @@
 	<name>RoboBee :: Httpd :: Web service</name>
 	<description>Web service public interface.</description>
 	<inceptionYear>2014</inceptionYear>
-	<url>https://www.anr-institute.com/projects/projects/sscontrol-httpd-webservice</url>
+	<url>https://anrisoftware.com/projects/projects/sscontrol-httpd-webservice</url>
 
 	<properties>
 		<project.custom.year>${project.inceptionYear}</project.custom.year>
@@ -22,7 +22,7 @@
 
 	<issueManagement>
 		<system>Redmine</system>
-		<url>https://www.anr-institute.com/projects/projects/sscontrol-httpd-webservice</url>
+		<url>https://anrisoftware.com/projects/projects/sscontrol-httpd-webservice</url>
 	</issueManagement>
 
 	<scm>
@@ -47,7 +47,7 @@
 
 		<!-- compile dependencies -->
 		<dependency>
-			<groupId>org.mangosdk</groupId>
+			<groupId>org.mangosdk.spi</groupId>
 			<artifactId>spi</artifactId>
 			<optional>true</optional>
 		</dependency>

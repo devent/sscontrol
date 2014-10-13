@@ -13,12 +13,12 @@
 	<artifactId>sscontrol-dhclient</artifactId>
 	<name>RoboBee :: Dhclient</name>
 	<description>Sets the DHCP client configuration file.</description>
-	<url>https://www.anr-institute.com/projects/projects/sscontrol-dhclient</url>
+	<url>https://anrisoftware.com/projects/projects/sscontrol-dhclient</url>
 	<inceptionYear>2012</inceptionYear>
 
 	<issueManagement>
 		<system>Redmine</system>
-		<url>https://www.anr-institute.com/projects/projects/sscontrol-dhclient</url>
+		<url>https://anrisoftware.com/projects/projects/sscontrol-dhclient</url>
 	</issueManagement>
 
 	<scm>
@@ -56,7 +56,7 @@
 
 		<!-- compile dependencies -->
 		<dependency>
-			<groupId>org.mangosdk</groupId>
+			<groupId>org.mangosdk.spi</groupId>
 			<artifactId>spi</artifactId>
 			<optional>true</optional>
 		</dependency>

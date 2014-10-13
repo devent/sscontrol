@@ -13,12 +13,12 @@
 	<artifactId>sscontrol-httpd-apache</artifactId>
 	<name>RoboBee :: Httpd :: Apache</name>
 	<description>Apache HTTP server.</description>
-	<url>https://www.anr-institute.com/projects/projects/sscontrol-httpd-apache</url>
+	<url>https://anrisoftware.com/projects/projects/sscontrol-httpd-apache</url>
 	<inceptionYear>2013</inceptionYear>
 
 	<issueManagement>
 		<system>Redmine</system>
-		<url>https://www.anr-institute.com/projects/projects/sscontrol-httpd-apache</url>
+		<url>https://anrisoftware.com/projects/projects/sscontrol-httpd-apache</url>
 	</issueManagement>
 
 	<scm>
@@ -71,7 +71,7 @@
 
 		<!-- compile dependencies -->
 		<dependency>
-			<groupId>org.mangosdk</groupId>
+			<groupId>org.mangosdk.spi</groupId>
 			<artifactId>spi</artifactId>
 			<optional>true</optional>
 		</dependency>

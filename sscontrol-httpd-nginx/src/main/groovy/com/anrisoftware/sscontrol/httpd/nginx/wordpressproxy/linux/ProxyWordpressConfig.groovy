@@ -60,12 +60,10 @@ abstract class ProxyWordpressConfig extends AbstractNginxProxyConfig {
      */
     TemplateResource proxyConfigTemplate
 
-    @Override
     void deployDomain(Domain domain, Domain refDomain, WebService service, List config) {
         config.addAll createDomainConfig(domain, refDomain, service)
     }
 
-    @Override
     void deployService(Domain domain, WebService service, List config) {
         deployProxyDomainConfig(service)
         config.addAll createDomainConfig(domain, null, service)

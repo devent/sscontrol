@@ -26,7 +26,7 @@ import com.anrisoftware.globalpom.textmatch.tokentemplate.TokenTemplate
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.Templates
 import com.anrisoftware.resources.templates.api.TemplatesFactory
-import com.anrisoftware.sscontrol.httpd.apache.apache.linux.ApacheScript
+import com.anrisoftware.sscontrol.core.service.LinuxScript
 import com.anrisoftware.sscontrol.httpd.apache.roundcube.linux.RoundcubeConfig
 import com.anrisoftware.sscontrol.httpd.roundcube.Host
 import com.anrisoftware.sscontrol.httpd.roundcube.RoundcubeService
@@ -407,7 +407,7 @@ abstract class Roundcube_0_9_Config extends RoundcubeConfig {
     }
 
     @Override
-    void setScript(ApacheScript script) {
+    void setScript(LinuxScript script) {
         super.setScript script
         this.roundcubeTemplates = templatesFactory.create "Roundcube_0_9"
         this.roundcubeConfigTemplate = roundcubeTemplates.getResource "config"

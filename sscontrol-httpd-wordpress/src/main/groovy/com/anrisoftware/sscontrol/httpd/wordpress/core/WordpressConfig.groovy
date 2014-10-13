@@ -672,6 +672,11 @@ abstract class WordpressConfig {
     }
 
     /**
+     * Returns the profile name for the configuration.
+     */
+    abstract String getProfile()
+
+    /**
      * @see ServiceConfig#setScript(LinuxScript)
      */
     void setScript(LinuxScript script) {

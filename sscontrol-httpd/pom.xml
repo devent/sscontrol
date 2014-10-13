@@ -14,11 +14,11 @@
 	<name>RoboBee :: Httpd</name>
 	<description>Setups the Http server.</description>
 	<inceptionYear>2012</inceptionYear>
-	<url>https://www.anr-institute.com/projects/projects/sscontrol-httpd</url>
+	<url>https://anrisoftware.com/projects/projects/sscontrol-httpd</url>
 
 	<issueManagement>
 		<system>Redmine</system>
-		<url>https://www.anr-institute.com/projects/projects/sscontrol-httpd</url>
+		<url>https://anrisoftware.com/projects/projects/sscontrol-httpd</url>
 	</issueManagement>
 
 	<scm>
@@ -55,11 +55,11 @@
 		</dependency>
 
 		<!-- compile dependencies -->
-		<dependency>
-			<groupId>org.mangosdk</groupId>
-			<artifactId>spi</artifactId>
-			<optional>true</optional>
-		</dependency>
+        <dependency>
+            <groupId>org.mangosdk.spi</groupId>
+            <artifactId>spi</artifactId>
+            <optional>true</optional>
+        </dependency>
 		<dependency>
 			<groupId>com.google.inject.extensions</groupId>
 			<artifactId>guice-multibindings</artifactId>

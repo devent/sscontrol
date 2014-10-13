@@ -14,11 +14,11 @@
 	<name>RoboBee :: Firewall</name>
 	<description>Configuration of rules for the firewall service.</description>
 	<inceptionYear>2012</inceptionYear>
-	<url>https://www.anr-institute.com/projects/projects/sscontrol-firewall</url>
+	<url>https://anrisoftware.com/projects/projects/sscontrol-firewall</url>
 
 	<issueManagement>
 	<system>Redmine</system>
-	<url>https://www.anr-institute.com/projects/projects/sscontrol-firewall</url>
+	<url>https://anrisoftware.com/projects/projects/sscontrol-firewall</url>
 	</issueManagement>
 
     <scm>
@@ -51,7 +51,7 @@
 
 		<!-- compile dependencies -->
 		<dependency>
-			<groupId>org.mangosdk</groupId>
+            <groupId>org.mangosdk.spi</groupId>
 			<artifactId>spi</artifactId>
 			<optional>true</optional>
 		</dependency>

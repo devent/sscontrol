@@ -13,12 +13,12 @@
 	<artifactId>sscontrol-httpd-nginx</artifactId>
 	<name>RoboBee :: Httpd :: Nginx</name>
 	<description>Nginx HTTP server.</description>
-	<url>https://www.anr-institute.com/projects/projects/sscontrol-httpd-nginx</url>
+	<url>https://anrisoftware.com/projects/projects/sscontrol-httpd-nginx</url>
 	<inceptionYear>2013</inceptionYear>
 
 	<issueManagement>
 		<system>Redmine</system>
-		<url>https://www.anr-institute.com/projects/projects/sscontrol-httpd-nginx</url>
+		<url>https://anrisoftware.com/projects/projects/sscontrol-httpd-nginx</url>
 	</issueManagement>
 
 	<scm>
@@ -65,7 +65,7 @@
 
 		<!-- compile dependencies -->
 		<dependency>
-			<groupId>org.mangosdk</groupId>
+			<groupId>org.mangosdk.spi</groupId>
 			<artifactId>spi</artifactId>
 			<optional>true</optional>
 		</dependency>

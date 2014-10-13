@@ -14,7 +14,7 @@
 	<name>RoboBee :: Httpd :: Wordpress</name>
 	<description>Web software to create websites or blogs. - http://wordpress.org/</description>
 	<inceptionYear>2014</inceptionYear>
-	<url>https://www.anr-institute.com/projects/projects/sscontrol-httpd-piwik</url>
+	<url>https://anrisoftware.com/projects/projects/sscontrol-httpd-wordpress</url>
 
 	<properties>
 		<project.custom.year>${project.inceptionYear}</project.custom.year>
@@ -22,7 +22,7 @@
 
 	<issueManagement>
 		<system>Redmine</system>
-		<url>https://www.anr-institute.com/projects/projects/sscontrol-httpd-wordpress</url>
+		<url>https://anrisoftware.com/projects/projects/sscontrol-httpd-wordpress</url>
 	</issueManagement>
 
 	<scm>
@@ -83,7 +83,7 @@
 
 		<!-- compile dependencies -->
 		<dependency>
-			<groupId>org.mangosdk</groupId>
+			<groupId>org.mangosdk.spi</groupId>
 			<artifactId>spi</artifactId>
 			<optional>true</optional>
 		</dependency>

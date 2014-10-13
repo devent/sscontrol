@@ -13,12 +13,12 @@
 	<artifactId>sscontrol-hostname</artifactId>
 	<name>RoboBee :: Hostname</name>
 	<description>Sets the host name of the server.</description>
-	<url>https://www.anr-institute.com/projects/projects/sscontrol-hostname</url>
+	<url>https://anrisoftware.com/projects/projects/sscontrol-hostname</url>
 	<inceptionYear>2012</inceptionYear>
 
 	<issueManagement>
 		<system>Redmine</system>
-		<url>https://www.anr-institute.com/projects/projects/sscontrol-hostname</url>
+		<url>https://anrisoftware.com/projects/projects/sscontrol-hostname</url>
 	</issueManagement>
 
 	<scm>
@@ -55,11 +55,11 @@
 		</dependency>
 
 		<!-- compile dependencies -->
-		<dependency>
-			<groupId>org.mangosdk</groupId>
-			<artifactId>spi</artifactId>
-			<optional>true</optional>
-		</dependency>
+        <dependency>
+            <groupId>org.mangosdk.spi</groupId>
+            <artifactId>spi</artifactId>
+            <optional>true</optional>
+        </dependency>
 		<dependency>
 			<groupId>com.google.inject.extensions</groupId>
 			<artifactId>guice-multibindings</artifactId>

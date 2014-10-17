@@ -34,6 +34,7 @@ enum MysqlUbuntuResources {
     profile("UbuntuProfile.groovy", MysqlUbuntuResources.class.getResource("UbuntuProfile.groovy")),
     databaseScript("Database.groovy", MysqlUbuntuResources.class.getResource("Database.groovy")),
     databaseNonLoggingScript("Database.groovy", MysqlUbuntuResources.class.getResource("DatabaseNonLogging.groovy")),
+    databaseMaxUserNameLengthScript("Database.groovy", MysqlUbuntuResources.class.getResource("DatabaseMaxUserNameLength.groovy")),
     // commands
     aptitudeCommand("/usr/bin/aptitude", MysqlUbuntuResources.class.getResource("echo_command.txt")),
     restartCommand("/sbin/restart", MysqlUbuntuResources.class.getResource("echo_command.txt")),

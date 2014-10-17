@@ -25,6 +25,7 @@ import groovy.util.logging.Slf4j
 
 import org.junit.Test
 
+import com.anrisoftware.sscontrol.core.api.ServiceException
 import com.anrisoftware.sscontrol.database.mysql.ubuntu.UbuntuTestUtil
 
 /**
@@ -67,5 +68,15 @@ class MysqlUbuntuTest extends UbuntuTestUtil {
         log.info "Run service again to ensure that configuration is not set double."
         registry.allServices.each { it.call() }
         assertFileContent mysqldNonLoggingExpected.asFile(tmpdir), mysqldNonLoggingExpected
+    }
+
+    @Test(expected=ServiceException)
+    void "database max user name length"() {
+        copyMysqlFiles tmpdir
+        postfixtables.createFile tmpdir
+        loader.loadService profile.resource, null
+        def profile = registry.getService("profile")[0]
+        loader.loadService databaseMaxUserNameLengthScript.resource, profile
+        registry.allServices.each { it.call() }
     }
 }

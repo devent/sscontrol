@@ -18,6 +18,8 @@
  */
 package com.anrisoftware.sscontrol.database.mysql.mysql_5_1;
 
+import static com.anrisoftware.sscontrol.database.mysql.mysql_5_1.Mysql51ScriptLogger._.admin_password_null;
+import static com.anrisoftware.sscontrol.database.mysql.mysql_5_1.Mysql51ScriptLogger._.admin_password_null_message;
 import static com.anrisoftware.sscontrol.database.mysql.mysql_5_1.Mysql51ScriptLogger._.databases_created_debug;
 import static com.anrisoftware.sscontrol.database.mysql.mysql_5_1.Mysql51ScriptLogger._.databases_created_info;
 import static com.anrisoftware.sscontrol.database.mysql.mysql_5_1.Mysql51ScriptLogger._.mysqld_deployed_debug;
@@ -26,6 +28,11 @@ import static com.anrisoftware.sscontrol.database.mysql.mysql_5_1.Mysql51ScriptL
 import static com.anrisoftware.sscontrol.database.mysql.mysql_5_1.Mysql51ScriptLogger._.password_set_info;
 import static com.anrisoftware.sscontrol.database.mysql.mysql_5_1.Mysql51ScriptLogger._.script_executed_debug;
 import static com.anrisoftware.sscontrol.database.mysql.mysql_5_1.Mysql51ScriptLogger._.script_executed_info;
+import static com.anrisoftware.sscontrol.database.mysql.mysql_5_1.Mysql51ScriptLogger._.the_admin;
+import static com.anrisoftware.sscontrol.database.mysql.mysql_5_1.Mysql51ScriptLogger._.the_length;
+import static com.anrisoftware.sscontrol.database.mysql.mysql_5_1.Mysql51ScriptLogger._.the_script;
+import static com.anrisoftware.sscontrol.database.mysql.mysql_5_1.Mysql51ScriptLogger._.user_name_length;
+import static com.anrisoftware.sscontrol.database.mysql.mysql_5_1.Mysql51ScriptLogger._.user_name_length_message;
 import static com.anrisoftware.sscontrol.database.mysql.mysql_5_1.Mysql51ScriptLogger._.users_created_debug;
 import static com.anrisoftware.sscontrol.database.mysql.mysql_5_1.Mysql51ScriptLogger._.users_created_info;
 
@@ -33,11 +40,14 @@ import javax.inject.Singleton;
 
 import com.anrisoftware.globalpom.exec.api.ProcessTask;
 import com.anrisoftware.globalpom.log.AbstractLogger;
+import com.anrisoftware.sscontrol.core.api.ServiceException;
 import com.anrisoftware.sscontrol.database.mysql.linux.MysqlScript;
+import com.anrisoftware.sscontrol.database.statements.Admin;
+import com.anrisoftware.sscontrol.database.statements.User;
 
 /**
  * Logging messages for {@link Mysql_5_1Script}.
- * 
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
@@ -68,7 +78,23 @@ class Mysql51ScriptLogger extends AbstractLogger {
 
         mysqld_deployed_debug("Mysqld configuration set for {}."),
 
-        mysqld_deployed_info("Mysqld configuration set for script '{}'.");
+        mysqld_deployed_info("Mysqld configuration set for script '{}'."),
+
+        user_name_length("User name is greater then allowed"),
+
+        user_name_length_message(
+                "User name is greater then the allowed {} characters for script '{}'."),
+
+        the_script("script"),
+
+        the_length("length"),
+
+        admin_password_null("Administrator password must be set"),
+
+        admin_password_null_message(
+                "Administrator password must be set for script '{}'."),
+
+        the_admin("admin");
 
         private String name;
 
@@ -126,6 +152,26 @@ class Mysql51ScriptLogger extends AbstractLogger {
             debug(script_executed_debug, script, worker);
         } else {
             info(script_executed_info);
+        }
+    }
+
+    void checkAdministratorPassword(MysqlScript script, Admin admin)
+            throws ServiceException {
+        if (admin == null || admin.getPassword() == null) {
+            throw logException(
+                    new ServiceException(admin_password_null).add(the_script,
+                            script).add(the_admin, admin),
+                    admin_password_null_message, script.getName());
+        }
+    }
+
+    void checkUserNameLength(MysqlScript script, User user, int length)
+            throws ServiceException {
+        if (user.getName().length() > length) {
+            throw logException(
+                    new ServiceException(user_name_length).add(the_script,
+                            script).add(the_length, length),
+                    user_name_length_message, length, script.getName());
         }
     }
 }

@@ -33,6 +33,7 @@ import com.anrisoftware.resources.templates.api.Templates
 import com.anrisoftware.resources.templates.api.TemplatesFactory
 import com.anrisoftware.sscontrol.database.mysql.linux.MysqlScript
 import com.anrisoftware.sscontrol.database.statements.Database
+import com.anrisoftware.sscontrol.database.statements.User
 import com.anrisoftware.sscontrol.scripts.unix.RestartServicesFactory
 import com.anrisoftware.sscontrol.scripts.unix.ScriptExecFactory
 
@@ -120,6 +121,7 @@ abstract class Mysql51Script extends MysqlScript {
      * Sets the administrator password if none is set.
      */
     void setupAdministratorPassword() {
+        logg.checkAdministratorPassword this, service.admin
         ProcessTask worker = scriptExecFactory.create(
                 log: log, mysqladminCommand: mysqladminCommand, password: service.admin.password,
                 checkExitCodes: false, this, threads, adminPasswordTemplate, "checkAdminPassword")()
@@ -146,11 +148,22 @@ abstract class Mysql51Script extends MysqlScript {
      * Creates the users from the service.
      */
     void createUsers() {
+        checkUsers service.users
         def worker = scriptExecFactory.create(
                 log: log, mysqlCommand: mysqlCommand, password: service.admin.password,
                 users: service.users, defaultUserServer: defaultUserServer,
                 this, threads, createUsersTemplate, "createUsers")()
         logg.usersCreated this, worker
+    }
+
+    /**
+     * Checks the database users.
+     */
+    void checkUsers(List users) {
+        int maxuserLength = maxUserNameLength
+        users.each { User user ->
+            logg.checkUserNameLength this, user, maxuserLength
+        }
     }
 
     /**
@@ -176,5 +189,18 @@ abstract class Mysql51Script extends MysqlScript {
                 logg.scriptExecuted this, worker
             }
         }
+    }
+
+    /**
+     * Returns maximum user name length, for example: {@code "16"}.
+     *
+     * <ul>
+     * <li>profile property key {@code max_user_name_length}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    int getMaxUserNameLength() {
+        profileNumberProperty "max_user_name_length", defaultProperties
     }
 }

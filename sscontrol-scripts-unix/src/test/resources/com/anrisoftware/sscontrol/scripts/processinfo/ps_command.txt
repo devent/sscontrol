@@ -1,0 +1,3 @@
+theCommand="$0"
+echo "$@" >> $theCommand.out
+echo "Sl   web_004  web_004   2004  2004  3795 gitit"

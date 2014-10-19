@@ -27,11 +27,6 @@
 			<artifactId>globalpom-groovytestutils</artifactId>
 			<scope>test</scope>
 		</dependency>
-		<dependency>
-			<groupId>com.anrisoftware.resources</groupId>
-			<artifactId>resources-st</artifactId>
-			<scope>test</scope>
-		</dependency>
 
 		<!-- compile dependencies -->
 		<dependency>
@@ -42,6 +37,10 @@
 			<groupId>com.anrisoftware.globalpom</groupId>
 			<artifactId>globalpomutils-exec</artifactId>
 		</dependency>
+        <dependency>
+            <groupId>com.anrisoftware.resources</groupId>
+            <artifactId>resources-st</artifactId>
+        </dependency>
 
 		<!-- enableaptrepository -->
 		<dependency>

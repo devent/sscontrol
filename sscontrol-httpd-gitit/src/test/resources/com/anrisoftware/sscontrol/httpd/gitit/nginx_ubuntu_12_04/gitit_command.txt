@@ -7,22 +7,14 @@ function changeBinDirectory() {
 
 changeBinDirectory
 
-if [ -f ../../../gitit.conf ]; then
-    while test $# -gt 0
-    do
-        case "$1" in
-            --version)
-            cat <<EOF
-gitit version 0.10.4 +plugins
+if [ -f ../../../gitit.conf -a "$1" == "--version" ]; then
+    cat <<EOF
+gitit version 0.10.5 +plugins
 Copyright (C) 2008 John MacFarlane
 This is free software; see the source for copying conditions.  There is no
 warranty, not even for merchantability or fitness for a particular purpose.
 EOF
-            exit 0
-                ;;
-        esac
-        shift
-    done
+    exit 0
 else
     cat <<EOF
 # gitit wiki configuration file

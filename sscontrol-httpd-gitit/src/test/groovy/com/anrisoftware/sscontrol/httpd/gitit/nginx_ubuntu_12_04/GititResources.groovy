@@ -41,7 +41,7 @@ enum GititResources {
     hsenvGititCommand("/var/www/test1.com/gitit/.hsenv/cabal/bin/gitit", UbuntuResources.class.getResource("gitit_command.txt")),
     hsenvDeactivateCommand("/var/www/test1.com/gitit/.hsenv/bin/deactivate_hsenv", UbuntuResources.class.getResource("echo_command.txt")),
     gititDir("/var/www/test1.com/gitit", null),
-    gititArchive("/tmp/gitit-0.10.3.1-archive.tar.gz", UbuntuResources.class.getResource("gitit-0.10.3.1.tar.gz")),
+    gititArchive("/tmp/gitit-0.10.4-archive.tar.gz", UbuntuResources.class.getResource("gitit-0.10.4.tar.gz")),
     gititServiceDir("/etc/init.d", null),
     gititServiceDefaultsDir("/etc/default", null),
     // expected

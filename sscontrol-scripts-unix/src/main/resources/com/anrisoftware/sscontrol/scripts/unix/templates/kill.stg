@@ -1,4 +1,4 @@
 unix(args) ::= <<
-<args.command> -<args.type> <args.process>
+LANG=en_US <args.command> -<args.type> <args.process>
 
 >>

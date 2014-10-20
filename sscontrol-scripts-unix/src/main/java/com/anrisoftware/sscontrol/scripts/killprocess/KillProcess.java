@@ -25,11 +25,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Callable;
+import java.util.regex.Pattern;
 
 import javax.inject.Inject;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import com.anrisoftware.globalpom.exec.api.ProcessTask;
 import com.anrisoftware.globalpom.threads.api.Threads;
 import com.anrisoftware.resources.templates.api.AttributeRenderer;
 import com.anrisoftware.resources.templates.api.TemplateResource;
@@ -50,6 +52,9 @@ public class KillProcess implements Callable<KillProcess> {
 
     private static final String SCRIPTS_UNIX_TEMPLATES = "ScriptsUnixTemplates";
 
+    private static final Pattern NO_SUCH_PROCESS_PATTERN = Pattern
+            .compile("kill: kill (\\d+) failed: no such process");
+
     private final Map<String, Object> args;
 
     private final Threads threads;
@@ -66,6 +71,8 @@ public class KillProcess implements Callable<KillProcess> {
     private KillTypeRenderer killTypeRenderer;
 
     private TemplateResource templateResource;
+
+    private boolean processKilled;
 
     /**
      * @see KillProcessFactory#create(Map, Object, Threads)
@@ -100,9 +107,21 @@ public class KillProcess implements Callable<KillProcess> {
     public KillProcess call() throws Exception {
         log.checkCommand(args, parent);
         log.checkProcess(args, parent);
-        scriptExecFactory.create(args, parent, threads, templateResource,
-                "unix").call();
+        args.put("checkExitCodes", false);
+        args.put("exitCodes", new int[] { 0, 1 });
+        args.put("errString", true);
+        ProcessTask process = scriptExecFactory.create(args, parent, threads,
+                templateResource, "unix").call();
+        if (process.getExitValue() == 0) {
+            this.processKilled = true;
+        } else if (NO_SUCH_PROCESS_PATTERN.matcher(process.getErr()).matches()) {
+            this.processKilled = false;
+        }
         return this;
+    }
+
+    public boolean isProcessKilled() {
+        return processKilled;
     }
 
     @Override

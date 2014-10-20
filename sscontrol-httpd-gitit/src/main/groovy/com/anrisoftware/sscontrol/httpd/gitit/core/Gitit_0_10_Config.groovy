@@ -387,11 +387,17 @@ abstract class Gitit_0_10_Config {
     /**
      * Installs the <i>cabal</i> packages.
      *
+     * @param packages
+     *            the {@link List} of packages to install.
+     *
+     * @param extras
+     *            optionally, the {@link List} of extra parameters for <i>cabal</i>.
+     *
      * @see #getCabalCommand()
      */
-    void installCabalPackages(def packages) {
+    void installCabalPackages(def packages, def extras = []) {
         def task = scriptExecFactory.create(
-                log: log, command: cabalCommand, packages: packages,
+                log: log, command: cabalCommand, packages: packages, extras: extras,
                 bashCommand: bashCommand, timeout: cabalInstallTimeout,
                 this, threads, gititCommandTemplate, "cabalInstallCommand")()
         logg.installCabalPackagesDone this, task, packages

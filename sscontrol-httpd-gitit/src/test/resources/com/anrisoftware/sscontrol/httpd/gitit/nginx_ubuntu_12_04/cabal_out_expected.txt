@@ -1,8 +1,8 @@
 update
-install hsenv
+install --constraint=io-streams==1.2.0.0 hsenv
 update
-install hsenv
+install --constraint=io-streams==1.2.0.0 hsenv
 update
-install hsenv
+install --constraint=io-streams==1.2.0.0 hsenv
 update
-install hsenv
+install --constraint=io-streams==1.2.0.0 hsenv

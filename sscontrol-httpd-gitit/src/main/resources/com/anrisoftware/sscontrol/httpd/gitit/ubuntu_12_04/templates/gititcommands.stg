@@ -1,7 +1,8 @@
 cabalInstallCommand(args) ::= <<
 <! - args.command - !>
 <! - args.packages - !>
-<args.command> update && <args.command> install <args.packages;separator=" ">
+<! - args.extras - !>
+<args.command> update && <args.command> install <args.extras;separator=" "> <args.packages;separator=" ">
 
 >>
 

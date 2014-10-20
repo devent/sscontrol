@@ -149,7 +149,7 @@ abstract class HsenvFromSource {
      * Installs <i>hsenv</i>.
      */
     void installHsenv() {
-        installCabalPackages hsenvCabalPackages
+        installCabalPackages hsenvCabalPackages, hsenvCabalExtras
         logg.installHsenvDone this, hsenvCabalPackages
     }
 
@@ -269,6 +269,23 @@ abstract class HsenvFromSource {
      */
     List getHsenvCabalPackages() {
         profileListProperty "hsenv_cabal_packages", hsenvProperties
+    }
+
+    /**
+     * Returns the extra parameters for the <i>cabal</i> command to
+     * install <i>hsenv</i>, for
+     * example {@code "--constraint=io-streams==1.2.0.0"}.
+     *
+     * <ul>
+     * <li>profile property {@code hsenv_cabal_extra}</li>
+     * </ul>
+     *
+     * @return the {@link List} of packages.
+     *
+     * @see #getHsenvProperties()
+     */
+    List getHsenvCabalExtras() {
+        profileListProperty "hsenv_cabal_extra", hsenvProperties
     }
 
     /**

@@ -22,18 +22,20 @@ import com.anrisoftware.sscontrol.scripts.changefilemod.ChangeFileModModule;
 import com.anrisoftware.sscontrol.scripts.changefileowner.ChangeFileOwnerModule;
 import com.anrisoftware.sscontrol.scripts.enableaptrepository.EnableAptRepositoryModule;
 import com.anrisoftware.sscontrol.scripts.findusedport.FindUsedPortModule;
+import com.anrisoftware.sscontrol.scripts.killprocess.KillProcessModule;
 import com.anrisoftware.sscontrol.scripts.localchangegroup.LocalChangeGroupModule;
 import com.anrisoftware.sscontrol.scripts.localchangeuser.LocalChangeUserModule;
 import com.anrisoftware.sscontrol.scripts.localgroupadd.LocalGroupAddModule;
 import com.anrisoftware.sscontrol.scripts.localuseradd.LocalUserAddModule;
 import com.anrisoftware.sscontrol.scripts.mklink.MkLinkModule;
+import com.anrisoftware.sscontrol.scripts.processinfo.ProcessInfoModule;
 import com.anrisoftware.sscontrol.scripts.repositoryaptenabled.RepositoryAptEnabledModule;
 import com.anrisoftware.sscontrol.scripts.unix.UnixScriptsModule;
 import com.google.inject.AbstractModule;
 
 /**
  * <i>Nginx</i> service module.
- * 
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
@@ -53,5 +55,7 @@ public class NginxScriptModule extends AbstractModule {
         install(new EnableAptRepositoryModule());
         install(new RepositoryAptEnabledModule());
         install(new MkLinkModule());
+        install(new ProcessInfoModule());
+        install(new KillProcessModule());
     }
 }

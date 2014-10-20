@@ -53,6 +53,15 @@ enum DomainsResources {
     netstatPortsCommand("/bin/netstat", DomainsResources.class.getResource("netstat_used_ports.txt")),
     // used ports proxy
     netstatPortsProxyCommand("/bin/netstat", DomainsResources.class.getResource("netstat_used_ports_proxy.txt")),
+    // users existing
+    usersExistingGroupsFile("/etc/group", DomainsResources.class.getResource("usersexist_group.txt")),
+    usersExistingUsersFile("/etc/passwd", DomainsResources.class.getResource("usersexist_passwd.txt")),
+    usersExistingGroupModOutExpected("/usr/sbin/groupmod.out", DomainsResources.class.getResource("usersexist_groupmod_out_expected.txt")),
+    usersExistingUserModOutExpected("/usr/sbin/usermod.out", DomainsResources.class.getResource("usersexist_usermod_out_expected.txt")),
+    usersExistingUseraddOutExpected("/usr/sbin/useradd.out", DomainsResources.class.getResource("usersexist_useradd_out_expected.txt")),
+    usersExistingGroupaddOutExpected("/usr/sbin/groupadd.out", DomainsResources.class.getResource("usersexist_groupadd_out_expected.txt")),
+    usersExistingPsOutExpected("/bin/ps.out", DomainsResources.class.getResource("usersexist_ps_out_expected.txt")),
+    usersExistingKillOutExpected("/usr/bin/kill.out", DomainsResources.class.getResource("usersexist_kill_out_expected.txt")),
 
     ResourcesUtils resources
 

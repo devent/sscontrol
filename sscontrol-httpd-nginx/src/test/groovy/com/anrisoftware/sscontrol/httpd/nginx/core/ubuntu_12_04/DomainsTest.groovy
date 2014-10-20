@@ -71,6 +71,44 @@ class DomainsTest extends UbuntuTestUtil {
     }
 
     @Test
+    void "users existing"() {
+        copyUbuntuFiles tmpdir
+        copyUbuntu_12_04_Files tmpdir
+        usersExistingGroupsFile.createFile tmpdir
+        usersExistingUsersFile.createFile tmpdir
+
+        loader.loadService profile.resource, null
+        def profile = registry.getService("profile")[0]
+        setupUbuntu_12_04_Properties profile, tmpdir
+        loader.loadService httpdScript.resource, profile
+
+        registry.allServices.each { it.call() }
+        log.info "Run service again to ensure that configuration is not set double."
+        registry.allServices.each { it.call() }
+
+        assertStringContent nginxConfExpected.replaced(tmpdir, tmpdir, "/tmp"), nginxConfExpected.toString()
+        assertStringContent robobeeConfExpected.replaced(tmpdir, tmpdir, "/tmp"), robobeeConfExpected.toString()
+        assertStringContent robobeeSitesConfExpected.replaced(tmpdir, tmpdir, "/tmp"), robobeeSitesConfExpected.toString()
+        assert sitesAvailableDir.asFile(tmpdir).isDirectory()
+        assert sitesEnabledDir.asFile(tmpdir).isDirectory()
+        assertStringContent test1comConf.replaced(tmpdir, tmpdir, "/tmp"), test1comConf.toString()
+        assertStringContent test1comSslConf.replaced(tmpdir, tmpdir, "/tmp"), test1comSslConf.toString()
+        assertStringContent lnOutExpected.replaced(tmpdir, tmpdir, "/tmp"), lnOutExpected.toString()
+        assertFileContent restartOutExpected.asFile(tmpdir), restartOutExpected
+        assertFileContent sourcesListExpected.asFile(tmpdir), sourcesListExpected
+        assertStringContent aptKeyOutExpected.replaced(tmpdir, tmpdir, "/tmp"), aptKeyOutExpected.toString()
+        assertFileContent aptitudeOutExpected.asFile(tmpdir), aptitudeOutExpected
+
+        assertStringContent usersExistingGroupModOutExpected.replaced(tmpdir, tmpdir, "/tmp"), usersExistingGroupModOutExpected.toString()
+        assertStringContent usersExistingUserModOutExpected.replaced(tmpdir, tmpdir, "/tmp"), usersExistingUserModOutExpected.toString()
+        assert usersExistingUseraddOutExpected.asFile(tmpdir).isFile() == false
+        assert usersExistingGroupaddOutExpected.asFile(tmpdir).isFile() == false
+        assertStringContent chownOutExpected.replaced(tmpdir, tmpdir, "/tmp"), chownOutExpected.toString()
+        assertFileContent usersExistingPsOutExpected.asFile(tmpdir), usersExistingPsOutExpected
+        assert usersExistingKillOutExpected.asFile(tmpdir).isFile() == false
+    }
+
+    @Test
     void "used ports"() {
         copyUbuntuFiles tmpdir
         copyUbuntu_12_04_Files tmpdir

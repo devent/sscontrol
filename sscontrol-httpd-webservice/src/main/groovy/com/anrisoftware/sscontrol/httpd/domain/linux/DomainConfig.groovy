@@ -29,10 +29,12 @@ import com.anrisoftware.sscontrol.core.service.LinuxScript
 import com.anrisoftware.sscontrol.httpd.domain.Domain
 import com.anrisoftware.sscontrol.httpd.user.DomainUser
 import com.anrisoftware.sscontrol.scripts.changefileowner.ChangeFileOwnerFactory
+import com.anrisoftware.sscontrol.scripts.killprocess.KillProcessFactory
 import com.anrisoftware.sscontrol.scripts.localchangegroup.LocalChangeGroupFactory
 import com.anrisoftware.sscontrol.scripts.localchangeuser.LocalChangeUserFactory
 import com.anrisoftware.sscontrol.scripts.localgroupadd.LocalGroupAddFactory
 import com.anrisoftware.sscontrol.scripts.localuseradd.LocalUserAddFactory
+import com.anrisoftware.sscontrol.scripts.processinfo.ProcessInfoFactory
 
 /**
  * Domain configuration.
@@ -60,6 +62,12 @@ class DomainConfig {
 
     @Inject
     LocalChangeGroupFactory localChangeGroupFactory
+
+    @Inject
+    ProcessInfoFactory processInfoFactory
+
+    @Inject
+    KillProcessFactory killProcessFactory
 
     int domainNumber
 
@@ -148,6 +156,7 @@ class DomainConfig {
                 shell: shell,
                 this, threads)().userAdded
         if (!userAdded) {
+            terminateUserProcesses user
             localChangeUserFactory.create(
                     log: log,
                     command: script.userModCommand,
@@ -156,6 +165,26 @@ class DomainConfig {
                     groupId: user.gid,
                     home: home,
                     shell: shell,
+                    this, threads)()
+        }
+    }
+
+    void terminateUserProcesses(DomainUser user) {
+        def process
+        while (true) {
+            process = processInfoFactory.create(
+                    log: log,
+                    command: script.psCommand,
+                    search: /.*${user.name}.*/,
+                    this, threads)()
+            if (!process.processFound) {
+                break
+            }
+            killProcessFactory.create(
+                    log: log,
+                    command: script.killCommand,
+                    process: process.processId,
+                    search: user,
                     this, threads)()
         }
     }

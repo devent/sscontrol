@@ -50,6 +50,8 @@ enum CoreResources {
     groupaddOutExpected("/usr/sbin/groupadd.out", CoreResources.class.getResource("groupadd_out_expected.txt")),
     chownOutExpected("/bin/chown.out", CoreResources.class.getResource("chown_out_expected.txt")),
     chownModExpected("/bin/chmod.out", CoreResources.class.getResource("chmod_out_expected.txt")),
+    psOutExpected("/bin/ps.out", CoreResources.class.getResource("ps_out_expected.txt")),
+    killOutExpected("/usr/bin/kill.out", CoreResources.class.getResource("kill_out_expected.txt")),
     // users existing
     usersExistingGroupsFile("/etc/group", CoreResources.class.getResource("usersexist_group.txt")),
     usersExistingUsersFile("/etc/passwd", CoreResources.class.getResource("usersexist_passwd.txt")),
@@ -57,6 +59,8 @@ enum CoreResources {
     usersExistingUserModOutExpected("/usr/sbin/usermod.out", CoreResources.class.getResource("usersexist_usermod_out_expected.txt")),
     usersExistingUseraddOutExpected("/usr/sbin/useradd.out", CoreResources.class.getResource("usersexist_useradd_out_expected.txt")),
     usersExistingGroupaddOutExpected("/usr/sbin/groupadd.out", CoreResources.class.getResource("usersexist_groupadd_out_expected.txt")),
+    usersExistingPsOutExpected("/bin/ps.out", CoreResources.class.getResource("usersexist_ps_out_expected.txt")),
+    usersExistingKillOutExpected("/usr/bin/kill.out", CoreResources.class.getResource("usersexist_kill_out_expected.txt")),
 
     ResourcesUtils resources
 

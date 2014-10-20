@@ -68,12 +68,15 @@ class DomainsTest extends UbuntuTestUtil {
         assertStringContent groupaddOutExpected.replaced(tmpdir, tmpdir, "/tmp"), groupaddOutExpected.toString()
         assertStringContent chownOutExpected.replaced(tmpdir, tmpdir, "/tmp"), chownOutExpected.toString()
         assertStringContent chmodOutExpected.replaced(tmpdir, tmpdir, "/tmp"), chmodOutExpected.toString()
+        assert psOutExpected.asFile(tmpdir).isFile() == false
+        assert killOutExpected.asFile(tmpdir).isFile() == false
     }
 
     @Test
     void "apache domains users"() {
         copyUbuntuFiles tmpdir
         copyUbuntu_12_04_Files tmpdir
+
         loader.loadService profile.resource, null
         def profile = registry.getService("profile")[0]
         setupUbuntu_12_04_Properties profile, tmpdir
@@ -95,5 +98,7 @@ class DomainsTest extends UbuntuTestUtil {
         assertStringContent usersUseraddOutExpected.replaced(tmpdir, tmpdir, "/tmp"), usersUseraddOutExpected.toString()
         assertStringContent usersGroupaddOutExpected.replaced(tmpdir, tmpdir, "/tmp"), usersGroupaddOutExpected.toString()
         assertStringContent usersChownOutExpected.replaced(tmpdir, tmpdir, "/tmp"), usersChownOutExpected.toString()
+        assert psOutExpected.asFile(tmpdir).isFile() == false
+        assert killOutExpected.asFile(tmpdir).isFile() == false
     }
 }

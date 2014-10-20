@@ -37,7 +37,11 @@ enum UbuntuResources {
     chmodCommand("/bin/chmod", UbuntuResources.class.getResource("echo_command.txt")),
     chownCommand("/bin/chown", UbuntuResources.class.getResource("echo_command.txt")),
     useraddCommand("/usr/sbin/useradd", UbuntuResources.class.getResource("echo_command.txt")),
+    usermodCommand("/usr/sbin/usermod", UbuntuResources.class.getResource("echo_command.txt")),
     groupaddCommand("/usr/sbin/groupadd", UbuntuResources.class.getResource("echo_command.txt")),
+    groupmodCommand("/usr/sbin/groupmod", UbuntuResources.class.getResource("echo_command.txt")),
+    psCommand("/bin/ps", UbuntuResources.class.getResource("echo_command.txt")),
+    killCommand("/usr/bin/kill", UbuntuResources.class.getResource("echo_command.txt")),
     netstatCommand("/bin/netstat", UbuntuResources.class.getResource("netstat_command.txt")),
     apacheStopCommand("/etc/init.d/apache", UbuntuResources.class.getResource("echo_command.txt")),
     tmpDir("/tmp", null),
@@ -54,20 +58,11 @@ enum UbuntuResources {
         chmodCommand.createCommand parent
         chownCommand.createCommand parent
         groupaddCommand.createCommand parent
+        groupmodCommand.createCommand parent
         useraddCommand.createCommand parent
-    }
-
-    static void setupUbuntuProperties(def profile, File parent) {
-        def aptitudeCommand = aptitudeCommand.asFile(parent)
-        def entry = profile.getEntry("httpd")
-        entry.install_command "$aptitudeCommand update && $aptitudeCommand install"
-        entry.apt_key_command aptKeyCommand.asFile(parent)
-        entry.chmod_command chmodCommand.asFile(parent)
-        entry.chown_command chownCommand.asFile(parent)
-        entry.group_add_command groupaddCommand.asFile(parent)
-        entry.user_add_command useraddCommand.asFile(parent)
-        entry.link_command lnCommand.asFile(parent)
-        entry.temp_directory tmpDir.asFile(parent)
+        usermodCommand.createCommand parent
+        killCommand.createCommand parent
+        psCommand.createCommand parent
     }
 
     ResourcesUtils resources

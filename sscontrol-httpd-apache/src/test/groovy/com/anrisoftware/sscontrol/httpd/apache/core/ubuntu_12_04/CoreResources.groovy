@@ -51,6 +51,8 @@ enum CoreResources {
     groupaddOutExpected("/usr/sbin/groupadd.out", CoreResources.class.getResource("groupadd_out_expected.txt")),
     chownOutExpected("/bin/chown.out", CoreResources.class.getResource("chown_out_expected.txt")),
     chmodOutExpected("/bin/chmod.out", CoreResources.class.getResource("chmod_out_expected.txt")),
+    psOutExpected("/bin/ps.out", CoreResources.class.getResource("ps_out_expected.txt")),
+    killOutExpected("/usr/bin/kill.out", CoreResources.class.getResource("kill_out_expected.txt")),
     // domains users
     usersDomainsConfExpected("/etc/apache2/conf.d/000-robobee-domains.conf", CoreResources.class.getResource("users_conf_expected.txt")),
     usersDomainsConfExpected2("/etc/apache2/conf.d/000-robobee-domains.conf", CoreResources.class.getResource("users_conf_expected2.txt")),
@@ -59,6 +61,8 @@ enum CoreResources {
     usersUseraddOutExpected("/usr/sbin/useradd.out", CoreResources.class.getResource("users_useradd_out_expected.txt")),
     usersGroupaddOutExpected("/usr/sbin/groupadd.out", CoreResources.class.getResource("users_groupadd_out_expected.txt")),
     usersChownOutExpected("/bin/chown.out", CoreResources.class.getResource("users_chown_out_expected.txt")),
+    usersExistingPsOutExpected("/bin/ps.out", CoreResources.class.getResource("usersexist_ps_out_expected.txt")),
+    usersExistingKillOutExpected("/usr/bin/kill.out", CoreResources.class.getResource("usersexist_kill_out_expected.txt")),
 
     ResourcesUtils resources
 

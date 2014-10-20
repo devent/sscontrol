@@ -582,6 +582,34 @@ abstract class LinuxScript extends Script {
     }
 
     /**
+     * Returns the command to show the running processes, for
+     * example {@code "/bin/ps"}.
+     *
+     * <ul>
+     * <li>property key {@code ps_command}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    String getPsCommand() {
+        profileProperty "ps_command", defaultProperties
+    }
+
+    /**
+     * Returns the command to terminate a process, for
+     * example {@code "/usr/bin/kill"}.
+     *
+     * <ul>
+     * <li>property key {@code kill_command}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    String getKillCommand() {
+        profileProperty "kill_command", defaultProperties
+    }
+
+    /**
      * Returns the reconfigure command, for
      * example {@code "/usr/sbin/dpkg-reconfigure"}.
      *

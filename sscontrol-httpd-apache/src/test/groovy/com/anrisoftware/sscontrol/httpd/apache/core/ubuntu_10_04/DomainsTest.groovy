@@ -68,6 +68,8 @@ class DomainsTest extends UbuntuTestUtil {
         assertStringContent groupaddOutExpected.replaced(tmpdir, tmpdir, "/tmp"), groupaddOutExpected.toString()
         assertStringContent chownOutExpected.replaced(tmpdir, tmpdir, "/tmp"), chownOutExpected.toString()
         assertStringContent chownModExpected.replaced(tmpdir, tmpdir, "/tmp"), chownModExpected.toString()
+        assert psOutExpected.asFile(tmpdir).isFile() == false
+        assert killOutExpected.asFile(tmpdir).isFile() == false
     }
 
     @Test
@@ -91,5 +93,7 @@ class DomainsTest extends UbuntuTestUtil {
         assertStringContent usersExistingUseraddOutExpected.replaced(tmpdir, tmpdir, "/tmp"), usersExistingUseraddOutExpected.toString()
         assertStringContent usersExistingGroupaddOutExpected.replaced(tmpdir, tmpdir, "/tmp"), usersExistingGroupaddOutExpected.toString()
         assertStringContent chownOutExpected.replaced(tmpdir, tmpdir, "/tmp"), chownOutExpected.toString()
+        assertFileContent usersExistingPsOutExpected.asFile(tmpdir), usersExistingPsOutExpected
+        assert usersExistingKillOutExpected.asFile(tmpdir).isFile() == false
     }
 }

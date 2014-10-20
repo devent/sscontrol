@@ -31,6 +31,8 @@ profile "ubuntu_10_04", {
         chown_command UbuntuResources.chownCommand.asFile(tmp)
         group_add_command UbuntuResources.groupaddCommand.asFile(tmp)
         user_add_command UbuntuResources.useraddCommand.asFile(tmp)
+        ps_command UbuntuResources.psCommand.asFile(tmp)
+        kill_command UbuntuResources.killCommand.asFile(tmp)
         reconfigure_command UbuntuResources.reconfigureCommand.asFile(tmp)
         zcat_command UbuntuResources.zcatCommand.asFile(tmp)
         tar_command UbuntuResources.tarCommand.asFile(tmp)

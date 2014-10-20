@@ -33,12 +33,14 @@ import com.anrisoftware.sscontrol.httpd.apache.roundcube.ubuntu_10_04.Ubuntu_10_
 import com.anrisoftware.sscontrol.httpd.fcgi.FcgiConfig;
 import com.anrisoftware.sscontrol.scripts.changefilemod.ChangeFileModModule;
 import com.anrisoftware.sscontrol.scripts.changefileowner.ChangeFileOwnerModule;
+import com.anrisoftware.sscontrol.scripts.killprocess.KillProcessModule;
 import com.anrisoftware.sscontrol.scripts.localchangegroup.LocalChangeGroupModule;
 import com.anrisoftware.sscontrol.scripts.localchangeuser.LocalChangeUserModule;
 import com.anrisoftware.sscontrol.scripts.localgroupadd.LocalGroupAddModule;
 import com.anrisoftware.sscontrol.scripts.localuseradd.LocalUserAddModule;
 import com.anrisoftware.sscontrol.scripts.mklink.MkLinkModule;
 import com.anrisoftware.sscontrol.scripts.pack.PackModule;
+import com.anrisoftware.sscontrol.scripts.processinfo.ProcessInfoModule;
 import com.anrisoftware.sscontrol.scripts.unix.UnixScriptsModule;
 import com.anrisoftware.sscontrol.scripts.unpack.UnpackModule;
 import com.google.inject.AbstractModule;
@@ -46,7 +48,7 @@ import com.google.inject.multibindings.MapBinder;
 
 /**
  * Binds the Apache/Ubuntu 10.04 services.
- * 
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
@@ -66,6 +68,8 @@ class UbuntuModule extends AbstractModule {
         install(new UnpackModule());
         install(new PackModule());
         install(new CheckFileHashModule());
+        install(new ProcessInfoModule());
+        install(new KillProcessModule());
         install(new Ubuntu_10_04_AuthFileModule());
         install(new Ubuntu_10_04_PhpldapadminModule());
         install(new Ubuntu_10_04_PhpmyadminModule());

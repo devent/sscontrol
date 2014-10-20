@@ -39,6 +39,8 @@ enum UbuntuResources {
     usermodCommand("/usr/sbin/usermod", UbuntuResources.class.getResource("echo_command.txt")),
     groupaddCommand("/usr/sbin/groupadd", UbuntuResources.class.getResource("echo_command.txt")),
     groupmodCommand("/usr/sbin/groupmod", UbuntuResources.class.getResource("echo_command.txt")),
+    psCommand("/bin/ps", UbuntuResources.class.getResource("echo_command.txt")),
+    killCommand("/usr/bin/kill", UbuntuResources.class.getResource("echo_command.txt")),
     zcatCommand("/bin/zcat", UbuntuResources.class.getResource("echo_command.txt")),
     tarCommand("/bin/tar", UbuntuResources.class.getResource("echo_command.txt")),
     unzipCommand("/usr/bin/unzip", UbuntuResources.class.getResource("echo_command.txt")),
@@ -60,6 +62,8 @@ enum UbuntuResources {
         groupmodCommand.createCommand parent
         useraddCommand.createCommand parent
         usermodCommand.createCommand parent
+        psCommand.createCommand parent
+        killCommand.createCommand parent
         zcatCommand.createCommand parent
         tarCommand.createCommand parent
         unzipCommand.createCommand parent

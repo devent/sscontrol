@@ -45,7 +45,6 @@ class ProxyPassTest extends UbuntuTestUtil {
 
         loader.loadService profile.resource, null
         def profile = registry.getService("profile")[0]
-        setupUbuntuProperties profile, tmpdir
         setupUbuntu_12_04_Properties profile, tmpdir
         loader.loadService httpdProxyPassScript.resource, profile
 

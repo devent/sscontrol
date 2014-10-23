@@ -52,6 +52,7 @@ profile "ubuntu_12_04", {
         wordpress_archive_de_DE WordpressResources.wordpressArchive_de_DE.resource
         wordpress_broken_link_checker WordpressResources.brokenLinkCheckerArchive.resource
         wordpress_hyphenator WordpressResources.hyphenatorArchive.resource
+        wordpress_hyper_cache WordpressResources.hypercacheArchive.resource
         wordpress_picochic WordpressResources.picochicArchive.resource
         wordpress_tagebuch WordpressResources.tagebuchArchive.resource
     }

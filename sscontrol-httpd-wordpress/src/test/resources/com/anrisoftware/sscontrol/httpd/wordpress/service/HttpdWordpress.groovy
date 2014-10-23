@@ -32,6 +32,7 @@ httpd {
             database "wordpress3", user: "user", password: "userpass", host: "localhost"
             backup target: "/var/backups"
             force login: true, admin: true
+            cache enabled: YesNoFlag.yes, plugin: "hyper-cache"
             plugins "wp-typography, link-indication, broken-link-checker"
             themes "picochic, tagebuch"
         }

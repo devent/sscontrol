@@ -18,8 +18,6 @@
  */
 package com.anrisoftware.sscontrol.httpd.service
 
-import com.anrisoftware.sscontrol.httpd.wordpress.MultiSite
-
 def certFile = ServicesResources.class.getResource "cert_crt.txt"
 def certKeyFile = ServicesResources.class.getResource "cert_key.txt"
 
@@ -71,6 +69,14 @@ httpd {
         setup "wordpress", alias: "wordpress3", prefix: "wordpressold", {
             database "wordpress3", user: "user", password: "userpass", host: "localhost"
             override mode: update
+        }
+    }
+    domain "www.testhypercache.com", address: "192.168.0.51", {
+        setup "wordpress", id: "wordpress3", alias: "wordpress3", {
+            database "wordpress3", user: "user", password: "userpass", host: "localhost"
+            cache enabled: yes, plugin: "hyper-cache"
+            plugins "wp-typography, link-indication, broken-link-checker"
+            themes "picochic, tagebuch"
         }
     }
 }

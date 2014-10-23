@@ -75,6 +75,8 @@ class HttpdWordpressTest extends HttpdTestUtil {
         assert webservice.force.login == true
         assert webservice.force.admin == true
         assert webservice.backupTarget.toString() == "file:///var/backups"
+        assert webservice.cacheEnabled == true
+        assert webservice.cachePlugin == "hyper-cache"
 
         domain = service.domains[d++]
         assert domain.name == "www.test1.com"
@@ -88,6 +90,7 @@ class HttpdWordpressTest extends HttpdTestUtil {
         assert webservice.id == null
         assert webservice.ref == "wordpress3"
         assert webservice.database == null
+        assert webservice.cacheEnabled == false
 
         domain = service.domains[d++]
         assert domain.name == "www.test2.com"
@@ -96,6 +99,7 @@ class HttpdWordpressTest extends HttpdTestUtil {
         assert (webservice instanceof WordpressService)
         assert webservice.name == "wordpress"
         assert webservice.multiSite == MultiSite.subdir
+        assert webservice.cacheEnabled == false
 
         domain = service.domains[d++]
         assert domain.name == "www.test3.com"
@@ -104,6 +108,7 @@ class HttpdWordpressTest extends HttpdTestUtil {
         assert (webservice instanceof WordpressService)
         assert webservice.name == "wordpress"
         assert webservice.multiSite == MultiSite.subdomain
+        assert webservice.cacheEnabled == false
 
         domain = service.domains[d++]
         assert domain.name == "www.testid.com"
@@ -113,6 +118,7 @@ class HttpdWordpressTest extends HttpdTestUtil {
         assert (webservice instanceof WordpressService)
         assert webservice.name == "wordpress"
         assert webservice.id == "wordpress3"
+        assert webservice.cacheEnabled == false
 
         domain = service.domains[d++]
         assert domain.name == "www.testref.com"
@@ -122,6 +128,7 @@ class HttpdWordpressTest extends HttpdTestUtil {
         assert webservice.name == "wordpress"
         assert webservice.ref == "wordpress3"
         assert webservice.refDomain == "testid"
+        assert webservice.cacheEnabled == false
 
         domain = service.domains[d++]
         assert domain.name == "www.testold.com"
@@ -131,6 +138,7 @@ class HttpdWordpressTest extends HttpdTestUtil {
         assert webservice.name == "wordpress"
         assert webservice.prefix == "wordpressold"
         assert webservice.overrideMode == OverrideMode.no
+        assert webservice.cacheEnabled == false
 
         domain = service.domains[d++]
         assert domain.name == "www.testupdate.com"
@@ -140,5 +148,6 @@ class HttpdWordpressTest extends HttpdTestUtil {
         assert webservice.name == "wordpress"
         assert webservice.prefix == "wordpressold"
         assert webservice.overrideMode == OverrideMode.update
+        assert webservice.cacheEnabled == false
     }
 }

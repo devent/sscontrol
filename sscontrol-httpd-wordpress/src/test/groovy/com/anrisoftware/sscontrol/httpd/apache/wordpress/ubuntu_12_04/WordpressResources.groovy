@@ -114,6 +114,16 @@ enum WordpressResources {
     backupTarOutExpected("/bin/tar.out", WordpressResources.class.getResource("backup_tar_out_expected.txt")),
     mysqldumpOutExpected("/usr/bin/mysqldump.out", WordpressResources.class.getResource("backup_mysqldump_out_expected.txt")),
     backupTarget("/var/backups", null),
+    // hypercache
+    hypercacheHttpdScript("Httpd.groovy", WordpressResources.class.getResource("HttpdWordpressHypercache.groovy")),
+    hypercacheArchive("/tmp/hyper-cache.zip", WordpressResources.class.getResource("hyper-cache.zip")),
+    hypercacheWwwTest1comConfExpected("/etc/apache2/sites-available/100-robobee-www.test1.com.conf", WordpressResources.class.getResource("hypercache_wwwtest1com_expected.txt")),
+    hypercacheWordpressConfig("/var/www/www.test1.com/wordpress_3_8/wp-config-sample.php", WordpressResources.class.getResource("wordpress_config_sample_php.txt")),
+    hypercacheWordpressConfigExpected("/var/www/www.test1.com/myprefix/wp-config.php", WordpressResources.class.getResource("hypercache_wordpress_config_expected.txt")),
+    hypercacheChownOutExpected("/bin/chown.out", WordpressResources.class.getResource("hypercache_chown_out_expected.txt")),
+    hypercacheChmodOutExpected("/bin/chmod.out", WordpressResources.class.getResource("hypercache_chmod_out_expected.txt")),
+    hypercacheTarOutExpected("/bin/tar.out", WordpressResources.class.getResource("hypercache_tar_out_expected.txt")),
+    hypercacheUnzipOutExpected("/usr/bin/unzip.out", WordpressResources.class.getResource("hypercache_unzip_out_expected.txt")),
 
     static copyWordpressFiles(File parent) {
         phpConfDir.asFile parent mkdirs()

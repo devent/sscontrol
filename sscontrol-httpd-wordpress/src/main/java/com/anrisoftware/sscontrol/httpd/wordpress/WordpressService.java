@@ -34,6 +34,7 @@ import com.anrisoftware.sscontrol.core.database.DatabaseFactory;
 import com.anrisoftware.sscontrol.core.debuglogging.DebugLogging;
 import com.anrisoftware.sscontrol.core.debuglogging.DebugLoggingFactory;
 import com.anrisoftware.sscontrol.core.groovy.StatementsMap;
+import com.anrisoftware.sscontrol.core.yesno.YesNoFlag;
 import com.anrisoftware.sscontrol.httpd.domain.Domain;
 import com.anrisoftware.sscontrol.httpd.webservice.OverrideMode;
 import com.anrisoftware.sscontrol.httpd.webservice.WebService;
@@ -44,13 +45,19 @@ import com.google.inject.assistedinject.Assisted;
 
 /**
  * Wordpress service.
- * 
+ *
  * @see <a href='http://wordpress.org/">http://wordpress.org/</a>
- * 
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
 public class WordpressService implements WebService {
+
+    private static final String PLUGIN_KEY = "plugin";
+
+    private static final String ENABLED_KEY = "enabled";
+
+    private static final String CACHE_KEY = "cache";
 
     private static final String SETUP_KEY = "setup";
 
@@ -131,11 +138,12 @@ public class WordpressService implements WebService {
     private void setupStatements(StatementsMap map, Map<String, Object> args)
             throws ServiceException {
         map.addAllowed(BACKUP_KEY, DATABASE_KEY, FORCE_KEY, PLUGINS_KEY,
-                THEMES_KEY, MULTISITE_KEY);
+                THEMES_KEY, MULTISITE_KEY, CACHE_KEY);
         map.addAllowedKeys(DATABASE_KEY, USER_KEY, PASSWORD_KEY, HOST_KEY);
         map.addAllowedKeys(BACKUP_KEY, TARGET_KEY);
         map.addAllowedKeys(FORCE_KEY, LOGIN_KEY, ADMIN_KEY);
         map.addAllowedKeys(MULTISITE_KEY, SETUP_KEY);
+        map.addAllowedKeys(CACHE_KEY, ENABLED_KEY, PLUGIN_KEY);
         map.setAllowValue(DATABASE_KEY, true);
         map.setAllowValue(PLUGINS_KEY, true);
         map.setAllowValue(THEMES_KEY, true);
@@ -282,6 +290,19 @@ public class WordpressService implements WebService {
 
     public OverrideMode getOverrideMode() {
         return overrideMode;
+    }
+
+    public boolean getCacheEnabled() {
+        YesNoFlag flag = statementsMap.mapValue(CACHE_KEY, ENABLED_KEY);
+        if (flag != null) {
+            return flag.asBoolean();
+        } else {
+            return false;
+        }
+    }
+
+    public String getCachePlugin() {
+        return statementsMap.mapValue(CACHE_KEY, PLUGIN_KEY);
     }
 
     public void setBackupTarget(URI uri) throws ServiceException {

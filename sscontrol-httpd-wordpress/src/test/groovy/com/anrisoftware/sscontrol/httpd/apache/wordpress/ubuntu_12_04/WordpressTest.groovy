@@ -249,4 +249,22 @@ class WordpressTest extends UbuntuTestUtil {
         assertStringContent nooverrideChmodOutExpected.replaced(tmpdir, tmpdir, "/tmp"), nooverrideChmodOutExpected.toString()
         assert nooverrideTarOutExpected.asFile(tmpdir).isFile() == false
     }
+
+    @Test
+    void "wordpress hyper-cache"() {
+        copyUbuntuFiles tmpdir
+        copyUbuntu_12_04_Files tmpdir
+        copyWordpressFiles tmpdir
+        hypercacheWordpressConfig.createFile tmpdir
+
+        loader.loadService profile.resource, null
+        def profile = registry.getService("profile")[0]
+        setupUbuntu_12_04_Properties profile, tmpdir
+        loader.loadService hypercacheHttpdScript.resource, profile, preScript
+
+        registry.allServices.each { it.call() }
+        log.info "Run service again to ensure that configuration is not set double."
+        registry.allServices.each { it.call() }
+        assertStringContent hypercacheUnzipOutExpected.replaced(tmpdir, tmpdir, "/tmp"), hypercacheUnzipOutExpected.toString()
+    }
 }

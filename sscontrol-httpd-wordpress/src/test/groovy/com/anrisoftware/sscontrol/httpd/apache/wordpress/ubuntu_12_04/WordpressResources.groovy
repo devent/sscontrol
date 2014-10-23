@@ -33,7 +33,7 @@ enum WordpressResources {
 
     profile("UbuntuProfile.groovy", WordpressResources.class.getResource("UbuntuProfile.groovy")),
     wordpressArchive("/tmp/web-wordpress-3.8.tar.gz", WordpressResources.class.getResource("wordpress-3.8.tar.gz")),
-    wordpressArchiveHash("/tmp/web-wordpress-3.8.tar.gz", WordpressResources.class.getResource("wordpress-3.8.tar.gz.sha1")),
+    wordpressArchiveHash("/tmp/web-wordpress-3.8.tar.gz.sha1", WordpressResources.class.getResource("wordpress-3.8.tar.gz.sha1")),
     wordpressArchive_de_DE("/tmp/web-wordpress-3.8_de_DE.tar.gz", WordpressResources.class.getResource("wordpress-3.8_de_DE.tar.gz")),
     phpConfDir("/etc/php5/cgi/conf.d", null),
     portsConf("/etc/apache2/ports.conf", WordpressResources.class.getResource("ports_conf.txt")),
@@ -119,7 +119,7 @@ enum WordpressResources {
     hypercacheArchive("/tmp/hyper-cache.zip", WordpressResources.class.getResource("hyper-cache.zip")),
     hypercacheWwwTest1comConfExpected("/etc/apache2/sites-available/100-robobee-www.test1.com.conf", WordpressResources.class.getResource("hypercache_wwwtest1com_expected.txt")),
     hypercacheWordpressConfig("/var/www/www.test1.com/wordpress_3_8/wp-config-sample.php", WordpressResources.class.getResource("wordpress_config_sample_php.txt")),
-    hypercacheWordpressConfigExpected("/var/www/www.test1.com/myprefix/wp-config.php", WordpressResources.class.getResource("hypercache_wordpress_config_expected.txt")),
+    hypercacheWordpressConfigExpected("/var/www/www.test1.com/wordpress_3_8/wp-config.php", WordpressResources.class.getResource("hypercache_wordpress_config_expected.txt")),
     hypercacheChownOutExpected("/bin/chown.out", WordpressResources.class.getResource("hypercache_chown_out_expected.txt")),
     hypercacheChmodOutExpected("/bin/chmod.out", WordpressResources.class.getResource("hypercache_chmod_out_expected.txt")),
     hypercacheTarOutExpected("/bin/tar.out", WordpressResources.class.getResource("hypercache_tar_out_expected.txt")),

@@ -139,6 +139,9 @@ define('FORCE_SSL_ADMIN', true);
 # SSCONTROL-httpd
 define('WP_ALLOW_MULTISITE', false);
 # SSCONTROL-httpd-END
+# SSCONTROL-httpd
+define('WP_CACHE', true);
+# SSCONTROL-httpd-END
 
 /* That's all, stop editing! Happy blogging. */
 

@@ -628,6 +628,23 @@ abstract class WordpressConfig {
     }
 
     /**
+     * Returns the advanced cache configuration file path, for example
+     * {@code "wp-content/advanced-cache.php"}
+     *
+     * <ul>
+     * <li>profile property {@code "wordpress_advanced_cache_config_file"}</li>
+     * </ul>
+     *
+     * @param parent
+     *                the {@link File} parent directory.
+     *
+     * @see #getWordpressProperties()
+     */
+    File advancedCacheConfigFile(File parent) {
+        profileFileProperty "wordpress_advanced_cache_config_file", parent, wordpressProperties
+    }
+
+    /**
      * Returns the theme archive for the specified name.
      *
      * @param name

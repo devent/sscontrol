@@ -48,5 +48,6 @@ profile "ubuntu_12_04", {
         wordpress_logged_in_salt "logged-in-salt"
         wordpress_nonce_salt "nonce-salt"
         wordpress_archive WordpressProxyResources.wordpressArchive.resource
+        wordpress_archive_hash WordpressProxyResources.wordpressArchiveHash.resource
     }
 }

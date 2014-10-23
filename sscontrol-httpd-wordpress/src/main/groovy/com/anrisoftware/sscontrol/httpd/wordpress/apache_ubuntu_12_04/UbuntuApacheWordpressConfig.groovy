@@ -72,10 +72,12 @@ class UbuntuApacheWordpressConfig extends Ubuntu_12_04_Config implements Service
         deploySecureLoginConfig domain, service
         deployDebugConfig domain, service
         deployMultisiteConfig domain, service
+        deployCacheConfig domain, service
         deployMainConfigEnding domain, service
         fromArchiveConfig.createDirectories domain, service
         deployThemes domain, service
         deployPlugins domain, service
+        deployCache domain, service
         fromArchiveConfig.setupPermissions domain, service
     }
 

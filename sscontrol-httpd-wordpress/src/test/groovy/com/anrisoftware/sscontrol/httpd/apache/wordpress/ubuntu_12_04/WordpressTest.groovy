@@ -265,6 +265,10 @@ class WordpressTest extends UbuntuTestUtil {
         registry.allServices.each { it.call() }
         log.info "Run service again to ensure that configuration is not set double."
         registry.allServices.each { it.call() }
+        assertStringContent hypercacheWwwTest1comConfExpected.replaced(tmpdir, tmpdir, "/tmp"), hypercacheWwwTest1comConfExpected.toString()
+        assertFileContent hypercacheWordpressConfigExpected.asFile(tmpdir), hypercacheWordpressConfigExpected
         assertStringContent hypercacheUnzipOutExpected.replaced(tmpdir, tmpdir, "/tmp"), hypercacheUnzipOutExpected.toString()
+        assertStringContent hypercacheChownOutExpected.replaced(tmpdir, tmpdir, "/tmp"), hypercacheChownOutExpected.toString()
+        assertStringContent hypercacheChmodOutExpected.replaced(tmpdir, tmpdir, "/tmp"), hypercacheChmodOutExpected.toString()
     }
 }

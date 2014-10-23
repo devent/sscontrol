@@ -174,3 +174,11 @@ define('WP_ALLOW_MULTISITE', <if(enabled)>true<else>false<endif>);
 configAllowMultisite_search() ::= <%
 define\\('WP_ALLOW_MULTISITE',.*?\\);
 %>
+
+configCacheEnabled(enabled) ::= <%
+define('WP_CACHE', <if(enabled)>true<else>false<endif>);
+%>
+
+configCacheEnabled_search() ::= <%
+define\\('WP_CACHE',.*?\\);
+%>

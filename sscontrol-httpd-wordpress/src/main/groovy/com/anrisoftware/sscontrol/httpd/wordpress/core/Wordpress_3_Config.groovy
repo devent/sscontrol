@@ -33,6 +33,8 @@ import com.anrisoftware.sscontrol.core.service.LinuxScript
 import com.anrisoftware.sscontrol.httpd.domain.Domain
 import com.anrisoftware.sscontrol.httpd.wordpress.MultiSite
 import com.anrisoftware.sscontrol.httpd.wordpress.WordpressService
+import com.anrisoftware.sscontrol.scripts.changefilemod.ChangeFileModFactory
+import com.anrisoftware.sscontrol.scripts.changefileowner.ChangeFileOwnerFactory
 import com.anrisoftware.sscontrol.scripts.unpack.UnpackFactory
 
 /**
@@ -49,6 +51,12 @@ abstract class Wordpress_3_Config extends WordpressConfig {
 
     @Inject
     UnpackFactory unpackFactory
+
+    @Inject
+    ChangeFileModFactory changeFileModFactory
+
+    @Inject
+    ChangeFileOwnerFactory changeFileOwnerFactory
 
     Templates wordpressTemplates
 
@@ -377,6 +385,135 @@ abstract class Wordpress_3_Config extends WordpressConfig {
     }
 
     /**
+     * Deploys the cache configuration.
+     *
+     * @param domain
+     *            the domain for which the configuration is returned.
+     *
+     * @param service
+     *            the {@link WordpressService}.
+     */
+    void deployCacheConfig(Domain domain, WordpressService service) {
+        def conf = mainConfiguration domain, service
+        def file = configurationFile domain, service
+        deployConfiguration configurationTokens(), conf, cacheConfig(service), file
+    }
+
+    /**
+     * Returns the cache configurations.
+     */
+    List cacheConfig(WordpressService service) {
+        [
+            configCacheEnabled(service),
+        ]
+    }
+
+    def configCacheEnabled(WordpressService service) {
+        def search = wordpressConfigTemplate.getText(true, "configCacheEnabled_search")
+        def replace = wordpressConfigTemplate.getText(true, "configCacheEnabled", "enabled", service.cacheEnabled)
+        new TokenTemplate(search, replace)
+    }
+
+    /**
+     * Downloads and unpacks the themes.
+     *
+     * @param domain
+     *            the {@link Domain} where the themes are unpacked.
+     *
+     * @param service
+     *            the {@link WordpressService} service.
+     *
+     * @see #wordpressContentThemesDir(Object)
+     */
+    void deployThemes(Domain domain, WordpressService service) {
+        def dir = wordpressContentThemesDir domain, service
+        service.themes.each { String theme ->
+            def archive = themeArchive theme
+            def name = new File(archive.path).name
+            def dest = new File(tmpDirectory, name)
+            copyURLToFile archive.toURL(), dest
+            unpackFactory.create(
+                    log: log, file: dest, output: dir, override: true, strip: false,
+                    commands: script.unpackCommands,
+                    this, threads)()
+        }
+    }
+
+    /**
+     * Downloads and unpacks the plug-ins.
+     *
+     * @param domain
+     *            the {@link Domain} where the plug-ins are unpacked.
+     *
+     * @param service
+     *            the {@link WordpressService} service.
+     *
+     * @see #wordpressContentPluginsDir(Object)
+     */
+    void deployPlugins(Domain domain, WordpressService service) {
+        def dir = wordpressContentPluginsDir domain, service
+        service.plugins.each { String plugin ->
+            installPlugin plugin, dir
+        }
+    }
+
+    /**
+     * Downloads and installs the cache plug-in.
+     *
+     * @param domain
+     *            the {@link Domain} where the plug-ins are unpacked.
+     *
+     * @param service
+     *            the {@link WordpressService} service.
+     *
+     * @see #wordpressContentPluginsDir(Object)
+     */
+    void deployCache(Domain domain, WordpressService service) {
+        if (!service.cacheEnabled) {
+            return
+        }
+        def dir = wordpressContentPluginsDir domain, service
+        installPlugin service.cachePlugin, dir
+        def advancedCacheConfigFile = advancedCacheConfigFile wordpressDir(domain, service)
+        if (advancedCacheConfigFile) {
+            advancedCacheConfigFile.createNewFile()
+            changeFileModFactory.create(
+                    log: log,
+                    command: script.chmodCommand,
+                    files: advancedCacheConfigFile,
+                    mod: "644",
+                    this, threads)()
+            changeFileOwnerFactory.create(
+                    log: log,
+                    command: script.chownCommand,
+                    files: advancedCacheConfigFile,
+                    owner: domain.domainUser.name,
+                    ownerGroup: domain.domainUser.group,
+                    this, threads)()
+        }
+    }
+
+    /**
+     * Installs the specified plug-in.
+     *
+     * @param plugin
+     *            the plug-in name.
+     *
+     * @param directory
+     *            the plug-ins directory.
+     */
+    void installPlugin(def plugin, def directory) {
+        def archive = pluginArchive plugin
+        def name = FilenameUtils.getName(archive.toString())
+        def dest = new File(tmpDirectory, name)
+        copyURLToFile archive.toURL(), dest
+        unpackFactory.create(
+                log: log, file: dest, output: directory, override: true, strip: false,
+                commands: script.unpackCommands,
+                this, threads)()
+    }
+
+    /**
      * Wordpress main configuration file, for
      * example {@code "config/wp-config.php"}. If the path is relative then
      * the file will be under the Wordpress installation directory.
@@ -436,56 +573,6 @@ abstract class Wordpress_3_Config extends WordpressConfig {
      */
     String mainConfiguration(Domain domain, WordpressService service) {
         currentConfiguration configurationFile(domain, service)
-    }
-
-    /**
-     * Downloads and unpacks the themes.
-     *
-     * @param domain
-     *            the {@link Domain} where the themes are unpacked.
-     *
-     * @param service
-     *            the {@link WordpressService} service.
-     *
-     * @see #wordpressContentThemesDir(Object)
-     */
-    void deployThemes(Domain domain, WordpressService service) {
-        def dir = wordpressContentThemesDir domain, service
-        service.themes.each { String theme ->
-            def archive = themeArchive theme
-            def name = new File(archive.path).name
-            def dest = new File(tmpDirectory, name)
-            copyURLToFile archive.toURL(), dest
-            unpackFactory.create(
-                    log: log, file: dest, output: dir, override: true, strip: false,
-                    commands: script.unpackCommands,
-                    this, threads)()
-        }
-    }
-
-    /**
-     * Downloads and unpacks the plug-ins.
-     *
-     * @param domain
-     *            the {@link Domain} where the plug-ins are unpacked.
-     *
-     * @param service
-     *            the {@link WordpressService} service.
-     *
-     * @see #wordpressContentPluginsDir(Object)
-     */
-    void deployPlugins(Domain domain, WordpressService service) {
-        def dir = wordpressContentPluginsDir domain, service
-        service.plugins.each { String plugin ->
-            def archive = pluginArchive plugin
-            def name = FilenameUtils.getName(archive.toString())
-            def dest = new File(tmpDirectory, name)
-            copyURLToFile archive.toURL(), dest
-            unpackFactory.create(
-                    log: log, file: dest, output: dir, override: true, strip: false,
-                    commands: script.unpackCommands,
-                    this, threads)()
-        }
     }
 
     /**

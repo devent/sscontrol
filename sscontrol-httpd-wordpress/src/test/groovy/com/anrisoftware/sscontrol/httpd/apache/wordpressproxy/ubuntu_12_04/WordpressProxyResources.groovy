@@ -21,7 +21,7 @@ package com.anrisoftware.sscontrol.httpd.apache.wordpressproxy.ubuntu_12_04
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static org.apache.commons.io.FileUtils.*
 
-import com.anrisoftware.sscontrol.httpd.apache.wordpress.ubuntu_12_04.Ubuntu_12_04_Resources;
+import com.anrisoftware.sscontrol.httpd.apache.wordpress.ubuntu_12_04.Ubuntu_12_04_Resources
 import com.anrisoftware.sscontrol.httpd.wordpress.resources.ResourcesUtils
 
 /**
@@ -35,6 +35,7 @@ enum WordpressProxyResources {
     profile("UbuntuProfile.groovy", WordpressProxyResources.class.getResource("UbuntuProfile.groovy")),
     phpConfDir("/etc/php5/cgi/conf.d", null),
     wordpressArchive("/tmp/web-wordpress-3.8.tar.gz", WordpressProxyResources.class.getResource("wordpress-3.8.tar.gz")),
+    wordpressArchiveHash("/tmp/web-wordpress-3.8.tar.gz.sha1", WordpressProxyResources.class.getResource("wordpress-3.8.tar.gz.sha1")),
     wordpress_3_8_config("/var/www/www.test1.com/wordpress_3_8/wp-config-sample.php", WordpressProxyResources.class.getResource("wordpress_3_8_config_sample_php.txt")),
     wordpress_3_8_config_expected("/var/www/www.test1.com/wordpress_3_8/wp-config.php", WordpressProxyResources.class.getResource("wordpress_3_8_config_php_expected.txt")),
     aptitudeExpectedConf("/usr/bin/aptitude.out", WordpressProxyResources.class.getResource("aptitude_out_expected.txt")),

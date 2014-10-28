@@ -41,6 +41,8 @@ class GititTest extends UbuntuTestUtil {
     void "gitit"() {
         copyUbuntuFiles tmpdir
         copyGititFiles tmpdir
+        copyTest1comFiles tmpdir
+        copyTest2comFiles tmpdir
 
         loader.loadService profile.resource, null
         def profile = registry.getService("profile")[0]

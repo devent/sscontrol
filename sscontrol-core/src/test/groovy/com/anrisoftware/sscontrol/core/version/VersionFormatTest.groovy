@@ -73,6 +73,8 @@ class VersionFormatTest {
             [version: versionFactory.create(0, 1, 0), format: "0.1.0"],
             [version: versionFactory.create(0, 0, 1), format: "0.0.1"],
             [version: versionFactory.create(1, 10, 0), format: "1.10.0"],
+            [version: versionFactory.create(1, 10, Integer.MAX_VALUE), format: "1.10"],
+            [version: versionFactory.create(1, Integer.MAX_VALUE, Integer.MAX_VALUE), format: "1"],
         ]
     }
 }

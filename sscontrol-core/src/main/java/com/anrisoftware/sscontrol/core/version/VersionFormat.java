@@ -65,9 +65,16 @@ public class VersionFormat extends Format {
     }
 
     private void formatDuration(StringBuffer buff, Version version) {
-        buff.append(version.getMajor()).append(VERSION_SEP)
-                .append(version.getMinor()).append(VERSION_SEP)
-                .append(version.getRevision());
+        int major = version.getMajor();
+        int minor = version.getMinor();
+        int revision = version.getRevision();
+        buff.append(major);
+        if (minor != Integer.MAX_VALUE) {
+            buff.append(VERSION_SEP).append(minor);
+        }
+        if (revision != Integer.MAX_VALUE) {
+            buff.append(VERSION_SEP).append(revision);
+        }
     }
 
     /**
@@ -123,8 +130,8 @@ public class VersionFormat extends Format {
     private Version decodeVersion(String source, ParsePosition pos) {
         String[] str = StringUtils.split(source, VERSION_SEP);
         int major = Integer.valueOf(str[0]);
-        int minor = 0;
-        int rev = 0;
+        int minor = Integer.MAX_VALUE;
+        int rev = Integer.MAX_VALUE;
         if (str.length > 1) {
             minor = Integer.valueOf(str[1]);
         }

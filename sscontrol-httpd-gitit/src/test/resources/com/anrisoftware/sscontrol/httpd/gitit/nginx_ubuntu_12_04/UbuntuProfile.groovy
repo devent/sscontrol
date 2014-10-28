@@ -54,10 +54,6 @@ profile "ubuntu_12_04", {
         // gitit
         cabal_command GititResources.cabalCommand.asFile(tmp)
         hsenv_command GititResources.hsenvCommand.asFile(tmp)
-        hsenv_activate_command GititResources.hsenvActivateCommand.asFile(tmp).absolutePath
-        hsenv_cabal_command GititResources.hsenvCabalCommand.asFile(tmp).absolutePath
-        hsenv_gitit_command GititResources.hsenvGititCommand.asFile(tmp).absolutePath
-        hsenv_deactivate_command GititResources.hsenvDeactivateCommand.asFile(tmp).absolutePath
         hsenv_gitit_archive GititResources.gititArchive.asFile(tmp)
         gitit_service_file "${GititResources.gititServiceDir.asFile(tmp)}/<domainName>_gititd"
         gitit_service_defaults_file "${GititResources.gititServiceDefaultsDir.asFile(tmp)}/<domainName>_gititd"

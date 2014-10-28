@@ -36,14 +36,21 @@ enum GititResources {
     // gitit
     cabalCommand("/usr/bin/cabal", UbuntuResources.class.getResource("echo_command.txt")),
     hsenvCommand("/root/.cabal/bin/hsenv", UbuntuResources.class.getResource("echo_command.txt")),
-    hsenvActivateCommand("/var/www/test1.com/gitit/.hsenv/bin/activate", UbuntuResources.class.getResource("echo_command.txt")),
-    hsenvCabalCommand("/var/www/test1.com/gitit/.hsenv/bin/cabal", UbuntuResources.class.getResource("echo_command.txt")),
-    hsenvGititCommand("/var/www/test1.com/gitit/.hsenv/cabal/bin/gitit", UbuntuResources.class.getResource("gitit_command.txt")),
-    hsenvDeactivateCommand("/var/www/test1.com/gitit/.hsenv/bin/deactivate_hsenv", UbuntuResources.class.getResource("echo_command.txt")),
-    gititDir("/var/www/test1.com/gitit", null),
     gititArchive("/tmp/gitit-0.10.4-archive.tar.gz", UbuntuResources.class.getResource("gitit-0.10.4.tar.gz")),
     gititServiceDir("/etc/init.d", null),
     gititServiceDefaultsDir("/etc/default", null),
+    // test1.com
+    test1comHsenvActivateCommand("/var/www/test1.com/gitit/.hsenv/bin/activate", UbuntuResources.class.getResource("echo_command.txt")),
+    test1comHsenvCabalCommand("/var/www/test1.com/gitit/.hsenv/bin/cabal", UbuntuResources.class.getResource("echo_command.txt")),
+    test1comHsenvGititCommand("/var/www/test1.com/gitit/.hsenv/cabal/bin/gitit", UbuntuResources.class.getResource("gitit_command.txt")),
+    test1comHsenvDeactivateCommand("/var/www/test1.com/gitit/.hsenv/bin/deactivate_hsenv", UbuntuResources.class.getResource("echo_command.txt")),
+    test1comGititDir("/var/www/test1.com/gitit", null),
+    // test2.com
+    test2comHsenvActivateCommand("/var/www/test2.com/gitit/.hsenv/bin/activate", UbuntuResources.class.getResource("echo_command.txt")),
+    test2comHsenvCabalCommand("/var/www/test2.com/gitit/.hsenv/bin/cabal", UbuntuResources.class.getResource("echo_command.txt")),
+    test2comHsenvGititCommand("/var/www/test2.com/gitit/.hsenv/cabal/bin/gitit", UbuntuResources.class.getResource("gitit_command.txt")),
+    test2comHsenvDeactivateCommand("/var/www/test2.com/gitit/.hsenv/bin/deactivate_hsenv", UbuntuResources.class.getResource("echo_command.txt")),
+    test2comGititDir("/var/www/test2.com/gitit", null),
     // expected
     test1comConfExpected("/etc/apache2/sites-available/100-robobee-test1.com.conf", GititResources.class.getResource("test1com_conf_expected.txt")),
     wwwtest1comConfExpected("/etc/apache2/sites-available/100-robobee-www.test1.com.conf", GititResources.class.getResource("wwwtest1com_conf_expected.txt")),
@@ -64,16 +71,27 @@ enum GititResources {
     updateRcOutExpected("/usr/sbin/update-rc.d.out", GititResources.class.getResource("updaterc_out_expected.txt")),
 
     static copyGititFiles(File parent) {
-        gititDir.asFile(parent).mkdirs()
         cabalCommand.createCommand parent
         hsenvCommand.createCommand parent
-        hsenvActivateCommand.createCommand parent
-        hsenvCabalCommand.createCommand parent
-        hsenvGititCommand.createCommand parent
-        hsenvDeactivateCommand.createCommand parent
         gititArchive.createFile parent
         gititServiceDir.asFile parent mkdirs()
         gititServiceDefaultsDir.asFile parent mkdirs()
+    }
+
+    static copyTest1comFiles(File parent) {
+        test1comGititDir.asFile(parent).mkdirs()
+        test1comHsenvActivateCommand.createCommand parent
+        test1comHsenvCabalCommand.createCommand parent
+        test1comHsenvGititCommand.createCommand parent
+        test1comHsenvDeactivateCommand.createCommand parent
+    }
+
+    static copyTest2comFiles(File parent) {
+        test2comGititDir.asFile(parent).mkdirs()
+        test2comHsenvActivateCommand.createCommand parent
+        test2comHsenvCabalCommand.createCommand parent
+        test2comHsenvGititCommand.createCommand parent
+        test2comHsenvDeactivateCommand.createCommand parent
     }
 
     ResourcesUtils resources

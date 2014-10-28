@@ -123,7 +123,13 @@ public class Version implements Comparable<Version> {
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this).append(MAJOR, major)
-                .append(MINOR, minor).append(REVISION, rev).toString();
+        ToStringBuilder b = new ToStringBuilder(this).append(MAJOR, major);
+        if (minor != Integer.MAX_VALUE) {
+            b.append(MINOR, minor);
+        }
+        if (rev != Integer.MAX_VALUE) {
+            b.append(MINOR, rev);
+        }
+        return b.toString();
     }
 }

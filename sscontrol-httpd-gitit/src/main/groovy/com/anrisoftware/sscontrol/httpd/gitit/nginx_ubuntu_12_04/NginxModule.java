@@ -18,6 +18,7 @@
  */
 package com.anrisoftware.sscontrol.httpd.gitit.nginx_ubuntu_12_04;
 
+import com.anrisoftware.sscontrol.core.version.VersionModule;
 import com.anrisoftware.sscontrol.scripts.unpack.UnpackModule;
 import com.google.inject.AbstractModule;
 
@@ -32,6 +33,7 @@ class NginxModule extends AbstractModule {
     @Override
     protected void configure() {
         install(new UnpackModule());
+        install(new VersionModule());
     }
 
 }

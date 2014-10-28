@@ -20,9 +20,12 @@ package com.anrisoftware.sscontrol.httpd.gitit.core
 
 import groovy.util.logging.Slf4j
 
+import java.util.regex.Pattern
+
 import javax.inject.Inject
 
 import org.apache.commons.io.FileUtils
+import org.apache.commons.lang3.StringUtils
 import org.apache.commons.lang3.builder.ToStringBuilder
 import org.joda.time.Duration
 import org.stringtemplate.v4.ST
@@ -32,6 +35,8 @@ import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.sscontrol.core.debuglogging.DebugLoggingFactory
 import com.anrisoftware.sscontrol.core.service.LinuxScript
+import com.anrisoftware.sscontrol.core.version.Version
+import com.anrisoftware.sscontrol.core.version.VersionFormatFactory
 import com.anrisoftware.sscontrol.httpd.domain.Domain
 import com.anrisoftware.sscontrol.httpd.gitit.AuthMethod
 import com.anrisoftware.sscontrol.httpd.gitit.GititService
@@ -73,6 +78,9 @@ abstract class Gitit_0_10_Config {
 
     @Inject
     DebugLevelRenderer debugLevelRenderer
+
+    @Inject
+    VersionFormatFactory versionFormatFactory
 
     /**
      * @see ServiceConfig#getScript()
@@ -662,6 +670,38 @@ abstract class Gitit_0_10_Config {
     }
 
     /**
+     * Returns the version of the installed <i>Gitit</i> version.
+     *
+     * @param domain
+     *            the {@link Domain} for which the path is returned.
+     *
+     * @param service
+     *            the <i>Gitit</i> {@link GititService} service.
+     *
+     * @return the {@link Version} or {@code null}.
+     */
+    Version gititVersion(Domain domain, GititService service) {
+        def command = gititCommand domain, service
+        if (!new File(command).isFile()) {
+            return null
+        }
+        def config = gititConfigFile domain, service
+        def task = scriptExecFactory.create(
+                log: log,
+                gititCommand: command,
+                gititConfig: config,
+                outString: true,
+                this, threads, gititCommandTemplate, "gititVersionCommand")()
+        def split = StringUtils.split(task.out, '\n')
+        def matcher = gititVersionPattern.matcher(split[0])
+        if (matcher.matches()) {
+            return versionFormatFactory.create().parse(matcher.group(1))
+        } else {
+            return null
+        }
+    }
+
+    /**
      * Returns the timeout duration to install <i>cabal</i> packages, for
      * example {@code "PT4H".}
      *
@@ -729,6 +769,20 @@ abstract class Gitit_0_10_Config {
      */
     List getMercurialPackages() {
         profileListProperty "gitit_mercurial_packages", gititProperties
+    }
+
+    /**
+     * Returns the pattern to match the <i>Gitit</i> version, for
+     * example {@code ".*?(\\d+(\\.\\d+)?(\\.\\d+)?).*"}
+     *
+     * <ul>
+     * <li>profile property {@code "gitit_version_pattern"}</li>
+     * </ul>
+     *
+     * @see #getGititProperties()
+     */
+    Pattern getGititVersionPattern() {
+        Pattern.compile profileProperty("gitit_version_pattern", gititProperties)
     }
 
     /**

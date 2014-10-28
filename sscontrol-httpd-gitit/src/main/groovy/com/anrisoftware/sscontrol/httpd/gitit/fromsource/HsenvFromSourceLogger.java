@@ -18,7 +18,8 @@
  */
 package com.anrisoftware.sscontrol.httpd.gitit.fromsource;
 
-import static com.anrisoftware.sscontrol.httpd.gitit.fromsource.HsenvFromSourceLogger._.compare_gitit_versions;
+import static com.anrisoftware.sscontrol.httpd.gitit.fromsource.HsenvFromSourceLogger._.compare_gitit_versions_debug;
+import static com.anrisoftware.sscontrol.httpd.gitit.fromsource.HsenvFromSourceLogger._.compare_gitit_versions_info;
 import static com.anrisoftware.sscontrol.httpd.gitit.fromsource.HsenvFromSourceLogger._.install_gitit_debug;
 import static com.anrisoftware.sscontrol.httpd.gitit.fromsource.HsenvFromSourceLogger._.install_gitit_info;
 import static com.anrisoftware.sscontrol.httpd.gitit.fromsource.HsenvFromSourceLogger._.install_gitit_trace;
@@ -33,12 +34,17 @@ import static com.anrisoftware.sscontrol.httpd.gitit.fromsource.HsenvFromSourceL
 import java.net.URI;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import com.anrisoftware.globalpom.exec.api.ProcessTask;
 import com.anrisoftware.globalpom.log.AbstractLogger;
+import com.anrisoftware.sscontrol.core.version.Version;
+import com.anrisoftware.sscontrol.core.version.VersionFormat;
+import com.anrisoftware.sscontrol.core.version.VersionFormatFactory;
 
 /**
  * Logging for {@link HsenvFromSource}.
- * 
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
@@ -66,8 +72,11 @@ class HsenvFromSourceLogger extends AbstractLogger {
 
         install_gitit_info("Install Gitit done for service '{}'."),
 
-        compare_gitit_versions(
-                "Compare installed Gitit version '{}' to expected '{}' for {}.");
+        compare_gitit_versions_info(
+                "Compare installed Gitit version {} <= archive version {} <= version limit {} for script '{}'."),
+
+        compare_gitit_versions_debug(
+                "Compare Gitit versions current {}, archive {}, limit {} for {}.");
 
         private String name;
 
@@ -80,6 +89,9 @@ class HsenvFromSourceLogger extends AbstractLogger {
             return name;
         }
     }
+
+    @Inject
+    private VersionFormatFactory versionFormatFactory;
 
     /**
      * Sets the context of the logger to {@link HsenvFromSource}.
@@ -126,8 +138,16 @@ class HsenvFromSourceLogger extends AbstractLogger {
         }
     }
 
-    void checkGititVersion(HsenvFromSource config, String version,
-            String gititVersion) {
-        debug(compare_gitit_versions, version, gititVersion, config);
+    void checkGititVersion(HsenvFromSource config, Version currentVersion,
+            Version archiveVersion, Version versionLimit) {
+        if (isDebugEnabled()) {
+            debug(compare_gitit_versions_debug, currentVersion, archiveVersion,
+                    versionLimit, config);
+        } else {
+            VersionFormat format = versionFormatFactory.create();
+            info(compare_gitit_versions_info, format.format(currentVersion),
+                    format.format(archiveVersion), format.format(versionLimit),
+                    config.getName());
+        }
     }
 }

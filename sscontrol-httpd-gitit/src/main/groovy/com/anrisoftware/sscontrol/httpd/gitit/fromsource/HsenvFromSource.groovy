@@ -24,7 +24,6 @@ import groovy.util.logging.Slf4j
 import javax.inject.Inject
 
 import org.apache.commons.io.FileUtils
-import org.apache.commons.lang3.StringUtils
 import org.apache.commons.lang3.builder.ToStringBuilder
 import org.stringtemplate.v4.ST
 
@@ -32,9 +31,10 @@ import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.Templates
 import com.anrisoftware.resources.templates.api.TemplatesFactory
+import com.anrisoftware.sscontrol.core.version.Version
+import com.anrisoftware.sscontrol.core.version.VersionFormatFactory
 import com.anrisoftware.sscontrol.httpd.domain.Domain
 import com.anrisoftware.sscontrol.httpd.gitit.GititService
-import com.anrisoftware.sscontrol.httpd.webservice.OverrideMode
 import com.anrisoftware.sscontrol.httpd.webservice.WebService
 import com.anrisoftware.sscontrol.scripts.unix.ScriptExecFactory
 import com.anrisoftware.sscontrol.scripts.unpack.UnpackFactory
@@ -61,6 +61,11 @@ abstract class HsenvFromSource {
     @Inject
     ScriptExecFactory scriptExecFactory
 
+    @Inject
+    VersionFormatFactory versionFormatFactory
+
+    Version currentGititVersion
+
     Object script
 
     Templates hsenvTemplates
@@ -77,6 +82,7 @@ abstract class HsenvFromSource {
      * @see ServiceConfig#deployService(Domain, WebService, List)
      */
     void deployService(Domain domain, WebService service, List config) {
+        this.currentGititVersion = gititVersion domain, service
         unpackGititArchive domain, service
         installHsenv()
         installHsenvCabalPackages domain, service
@@ -96,30 +102,15 @@ abstract class HsenvFromSource {
      * @see LinuxScript#getTmpDirectory()
      */
     void unpackGititArchive(Domain domain, GititService service) {
-        if (!needUnpackArchive(domain, service) && !needRecompile && checkGititVersion(domain, service)) {
-            return
+        if (!needRecompile) {
+            if (!checkGititVersion(domain, service)) {
+                return
+            }
         }
         def name = new File(gititArchive.path).name
         def dest = new File(tmpDirectory, "gitit-$name")
         copyURLToFile gititArchive.toURL(), dest
         unpackArchive domain, service, dest
-    }
-
-    /**
-     * Returns if it needed to download and unpack the <i>Gitit</i> archive.
-     *
-     * @param domain
-     *            the {@link Domain} of the service.
-     *
-     * @param service
-     *            the {@link GititService} service.
-     *
-     * @return {@code true} if it is needed.
-     *
-     * @see WordpressService#getOverrideMode()
-     */
-    boolean needUnpackArchive(Domain domain, GititService service) {
-        service.overrideMode != OverrideMode.no || !gititCommandExist(domain, service)
     }
 
     /**
@@ -167,8 +158,10 @@ abstract class HsenvFromSource {
      * @see #getHsenvCabalInstallTimeout()
      */
     void installHsenvCabalPackages(Domain domain, GititService service) {
-        if (!needRecompile && checkGititVersion(domain, service)) {
-            return
+        if (!needRecompile) {
+            if (!checkGititVersion(domain, service)) {
+                return
+            }
         }
         def gititDir = gititDir domain, service
         def hsenvCommand = hsenvCommand
@@ -195,8 +188,10 @@ abstract class HsenvFromSource {
      *
      */
     void installGitit(Domain domain, GititService service) {
-        if (!needRecompile && checkGititVersion(domain, service)) {
-            return
+        if (!needRecompile) {
+            if (!checkGititVersion(domain, service)) {
+                return
+            }
         }
         def gititDir = gititDir domain, service
         def hsenvCommand = hsenvCommand
@@ -213,8 +208,9 @@ abstract class HsenvFromSource {
     }
 
     /**
-     * Checks the installed <i>gitit</i> service version inside
-     * the <i>hsenv</i> environment.
+     * Checks that the installed <i>gitit</i> service version is smaller then
+     * the archive version, and that the archive version is in bounds the
+     * version limit.
      *
      * @param domain
      *            the {@link Domain} domain of the service.
@@ -222,24 +218,15 @@ abstract class HsenvFromSource {
      * @param service
      *            the {@link GititService} service.
      *
-     * @return {@code true} if the version matches the set version.
+     * @return {@code true} if all of those conditions are true.
      */
     boolean checkGititVersion(Domain domain, GititService service) {
-        def command = gititCommand domain, service
-        if (!new File(command).isFile()) {
-            return false
-        }
-        def config = gititConfigFile domain, service
-        def task = scriptExecFactory.create(
-                log: log, gititCommand: command,
-                bashCommand: bashCommand,
-                gititConfig: config,
-                outString: true,
-                this, threads, hsenvCommandTemplate, "gititVersionCommand")()
-        def split = StringUtils.split(task.out, '\n')
-        def version = StringUtils.split(split[0], ' ')[2].trim()
-        logg.checkGititVersion this, version, gititVersion
-        return StringUtils.startsWith(version, gititVersion)
+        def archiveVersion = gititArchiveVersion
+        def versionLimit = gititVersionLimit
+        logg.checkGititVersion this, currentGititVersion, archiveVersion, versionLimit
+        boolean different = currentGititVersion == null ? true : currentGititVersion.compareTo(archiveVersion) > 0
+        boolean bounds = archiveVersion.compareTo(versionLimit) <= 0
+        return different && bounds
     }
 
     /**
@@ -362,20 +349,6 @@ abstract class HsenvFromSource {
     }
 
     /**
-     * Returns the <i>gitit</i> version, for
-     * example {@code "0.10.3.1"}
-     *
-     * <ul>
-     * <li>profile property {@code "hsenv_gitit_version"}</li>
-     * </ul>
-     *
-     * @see #getHsenvProperties()
-     */
-    String getGititVersion() {
-        profileProperty "hsenv_gitit_version", hsenvProperties
-    }
-
-    /**
      * Returns the <i>cabal</i> command inside the <i>hsenv</i>
      * environment, for example {@code "<gititDir>/.hsenv/bin/cabal".}
      * The placeholder {@code "<gititDir>"} is replaced by the <i>Gitit</i>
@@ -484,6 +457,36 @@ abstract class HsenvFromSource {
         def dir = gititDir domain, service
         def p = profileProperty "hsenv_gitit_source_directory", hsenvProperties
         new File(new ST(p).add("gititDir", dir).render())
+    }
+
+    /**
+     * Returns if the <i>Gitit</i> version limit, for example
+     * {@code "0.10"}
+     *
+     * <ul>
+     * <li>profile property {@code "hsenv_gitit_version_limit"}</li>
+     * </ul>
+     *
+     * @see #getHsenvProperties()
+     */
+    Version getGititVersionLimit() {
+        def p = profileProperty "hsenv_gitit_version_limit", hsenvProperties
+        versionFormatFactory.create().parse p
+    }
+
+    /**
+     * Returns if the <i>Gitit</i> version of the archive, for example
+     * {@code "0.10.5"}
+     *
+     * <ul>
+     * <li>profile property {@code "hsenv_gitit_archive_version"}</li>
+     * </ul>
+     *
+     * @see #getHsenvProperties()
+     */
+    Version getGititArchiveVersion() {
+        def p = profileProperty "hsenv_gitit_archive_version", hsenvProperties
+        versionFormatFactory.create().parse p
     }
 
     /**

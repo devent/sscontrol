@@ -11,3 +11,10 @@ printDefaultConfigCommand(args) ::= <<
 <args.command> --print-default-config
 
 >>
+
+gititVersionCommand(args) ::= <<
+<! - args.gititCommand - !>
+<! - args.gititConfig - !>
+<args.gititCommand> --version -f "<args.gititConfig>" 2>&1
+
+>>

@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Erwin Müller <erwin.mueller@deventm.org>
+ * Copyright 2013-2014 Erwin Müller <erwin.mueller@deventm.org>
  *
  * This file is part of sscontrol-firewall-ufw.
  *
@@ -27,7 +27,7 @@ import com.anrisoftware.sscontrol.firewall.ufw.linux.UfwScript
 import com.anrisoftware.sscontrol.scripts.unix.InstallPackagesFactory
 
 /**
- * Uses the UFW service for Ubuntu 12.04.
+ * Uses the UFW service for Ubuntu 14.04.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0

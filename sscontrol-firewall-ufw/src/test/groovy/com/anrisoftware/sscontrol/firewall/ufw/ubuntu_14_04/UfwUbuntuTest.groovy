@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Erwin Müller <erwin.mueller@deventm.org>
+ * Copyright 2013-2014 Erwin Müller <erwin.mueller@deventm.org>
  *
  * This file is part of sscontrol-firewall-ufw.
  *
@@ -19,7 +19,7 @@
 package com.anrisoftware.sscontrol.firewall.ufw.ubuntu_14_04
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
-import static com.anrisoftware.sscontrol.firewall.ufw.ubuntu_12_04.UbuntuResources.*
+import static com.anrisoftware.sscontrol.firewall.ufw.ubuntu_14_04.UbuntuResources.*
 import groovy.util.logging.Slf4j
 
 import org.junit.Test
@@ -28,7 +28,7 @@ import com.anrisoftware.sscontrol.core.api.ServicesRegistry
 import com.anrisoftware.sscontrol.firewall.ufw.resources.UfwLinuxBase
 
 /**
- * Test UFW on a Ubuntu 12.04 server.
+ * Test UFW on a Ubuntu 14.04 server.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0

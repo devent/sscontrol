@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Erwin Müller <erwin.mueller@deventm.org>
+ * Copyright 2013-2014 Erwin Müller <erwin.mueller@deventm.org>
  *
  * This file is part of sscontrol-firewall-ufw.
  *
@@ -16,12 +16,12 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-firewall-ufw. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.firewall.ufw.ubuntu_12_04
+package com.anrisoftware.sscontrol.firewall.ufw.ubuntu_14_04
 
 def aptitudeCommand = UbuntuResources.aptitudeCommand.asFile(tmp)
 def ufwCommand = UbuntuResources.ufwCommand.asFile(tmp)
 
-profile "ubuntu_12_04", {
+profile "ubuntu_14_04", {
     firewall {
         service "ufw"
         install_command "export DEBIAN_FRONTEND=noninteractive\n${aptitudeCommand} update && ${aptitudeCommand} -y install"

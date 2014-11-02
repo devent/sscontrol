@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Erwin Müller <erwin.mueller@deventm.org>
+ * Copyright 2013-2014 Erwin Müller <erwin.mueller@deventm.org>
  *
  * This file is part of sscontrol-firewall-ufw.
  *
@@ -23,9 +23,9 @@ import java.net.URL;
 import com.anrisoftware.propertiesutils.AbstractContextPropertiesProvider;
 
 /**
- * Provides the UFW Ubuntu 12.04 properties from
- * {@code "/ufw_ubuntu_12_04.properties"}.
- * 
+ * Provides the UFW Ubuntu 14.04 properties from
+ * {@code "/ufw_ubuntu_14_04.properties"}.
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
@@ -33,7 +33,7 @@ import com.anrisoftware.propertiesutils.AbstractContextPropertiesProvider;
 public class UbuntuPropertiesProvider extends AbstractContextPropertiesProvider {
 
 	private static final URL RESOURCE = UbuntuPropertiesProvider.class
-            .getResource("/ufw_ubuntu_12_04.properties");
+            .getResource("/ufw_ubuntu_14_04.properties");
 
 	UbuntuPropertiesProvider() {
 		super(UbuntuPropertiesProvider.class, RESOURCE);

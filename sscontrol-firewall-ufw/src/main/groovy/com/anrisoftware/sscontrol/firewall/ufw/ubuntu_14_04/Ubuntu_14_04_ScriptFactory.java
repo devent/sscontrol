@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Erwin Müller <erwin.mueller@deventm.org>
+ * Copyright 2013-2014 Erwin Müller <erwin.mueller@deventm.org>
  *
  * This file is part of sscontrol-firewall-ufw.
  *
@@ -28,8 +28,8 @@ import com.google.inject.Injector;
 import com.google.inject.Module;
 
 /**
- * Provides the UFW script for Ubuntu 12.04 server.
- * 
+ * Provides the UFW script for Ubuntu 14.04 server.
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
@@ -44,7 +44,7 @@ public class Ubuntu_14_04_ScriptFactory implements ServiceScriptFactory {
 	/**
 	 * Name of the profile.
 	 */
-    public static final String PROFILE_NAME = "ubuntu_12_04";
+    public static final String PROFILE_NAME = "ubuntu_14_04";
 
 	/**
 	 * {@link ServiceScriptInfo} information identifying this service.

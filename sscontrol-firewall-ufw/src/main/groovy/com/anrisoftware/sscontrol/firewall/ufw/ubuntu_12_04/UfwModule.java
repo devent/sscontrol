@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Erwin Müller <erwin.mueller@deventm.org>
+ * Copyright 2013-2014 Erwin Müller <erwin.mueller@deventm.org>
  *
  * This file is part of sscontrol-firewall-ufw.
  *
@@ -18,16 +18,12 @@
  */
 package com.anrisoftware.sscontrol.firewall.ufw.ubuntu_12_04;
 
-import static com.google.inject.multibindings.MapBinder.newMapBinder;
-import groovy.lang.Script;
-
 import com.anrisoftware.sscontrol.scripts.unix.UnixScriptsModule;
 import com.google.inject.AbstractModule;
-import com.google.inject.multibindings.MapBinder;
 
 /**
  * Binds the UFW service for Ubuntu 12.04.
- * 
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
@@ -35,14 +31,7 @@ class UfwModule extends AbstractModule {
 
 	@Override
 	protected void configure() {
-		bindScripts();
         install(new UnixScriptsModule());
         install(new UnixScriptsModule.ExecCommandModule());
-	}
-
-	private void bindScripts() {
-		MapBinder<String, Script> binder;
-		binder = newMapBinder(binder(), String.class, Script.class);
-        binder.addBinding("ufw.ubuntu_12_04").to(UbuntuScript.class);
 	}
 }

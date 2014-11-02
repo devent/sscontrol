@@ -1,0 +1,34 @@
+# SSCONTROL-hosts
+127.0.0.1 srv1 localhost
+# SSCONTROL-hosts-END
+
+# SSCONTROL-hosts
+127.0.1.1 srv1 
+# SSCONTROL-hosts-END
+
+
+# The following lines are desirable for IPv6 capable hosts
+# SSCONTROL-hosts
+::1 localhost ip6-localhost ip6-loopback
+# SSCONTROL-hosts-END
+
+# SSCONTROL-hosts
+ff02::1 ip6-allnodes 
+# SSCONTROL-hosts-END
+
+# SSCONTROL-hosts
+ff02::2 ip6-allrouters 
+# SSCONTROL-hosts-END
+
+# SSCONTROL-hosts
+192.168.0.49 srv1.ubuntutest.com srv1
+# SSCONTROL-hosts-END
+# SSCONTROL-hosts
+192.168.0.50 srv1.ubuntutest.org srva srvb
+# SSCONTROL-hosts-END
+# SSCONTROL-hosts
+192.168.0.51 srv1.ubuntutest.me 
+# SSCONTROL-hosts-END
+# SSCONTROL-hosts
+192.168.0.52 srv1.ubuntutest.xx 
+# SSCONTROL-hosts-END

@@ -1,5 +1,5 @@
 restartUnix(args) ::= <<
-<if(args.services)><args.services:{service | <args.command> <service><\n>}>
+<if(args.services)><args.services:{service | <args.command> <service> <args.flags><\n>}>
 <else>
 <args.command>
 <endif>

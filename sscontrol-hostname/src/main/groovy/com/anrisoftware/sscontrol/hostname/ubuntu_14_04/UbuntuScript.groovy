@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-hostname. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.hostname.ubuntu_12_04
+package com.anrisoftware.sscontrol.hostname.ubuntu_14_04
 
 import groovy.util.logging.Slf4j
 
@@ -27,7 +27,7 @@ import com.anrisoftware.sscontrol.hostname.linux.BaseHostnameScript
 import com.anrisoftware.sscontrol.scripts.unix.InstallPackagesFactory
 
 /**
- * Deploys the hostname on the Ubuntu 12.04 Linux system.
+ * Deploys the hostname on the Ubuntu 14.04 Linux system.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0

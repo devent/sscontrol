@@ -67,7 +67,11 @@ abstract class BaseHostnameScript extends LinuxScript {
      */
     void restartService() {
         restartServicesFactory.create(
-                log: log, command: restartCommand, services: restartServices, this, threads)()
+                log: log,
+                command: restartCommand,
+                services: restartServices,
+                flags: restartCommandFlags,
+                this, threads)()
     }
 
     /**

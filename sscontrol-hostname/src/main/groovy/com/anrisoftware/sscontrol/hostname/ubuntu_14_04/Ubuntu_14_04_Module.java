@@ -16,17 +16,30 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-hostname. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.hostname.ubuntu_12_04
+package com.anrisoftware.sscontrol.hostname.ubuntu_14_04;
 
-import com.anrisoftware.sscontrol.hostname.ubuntu_12_04.UbuntuResources
+import static com.google.inject.multibindings.MapBinder.newMapBinder;
+import groovy.lang.Script;
 
-def aptitudeCommand = UbuntuResources.aptitudeCommand.asFile tmp
-def restartCommand = UbuntuResources.restartCommand.asFile tmp
+import com.google.inject.AbstractModule;
+import com.google.inject.multibindings.MapBinder;
 
-profile "ubuntu_12_04", {
-    hostname {
-        install_command "${tmp}/usr/bin/aptitude update && ${tmp}/usr/bin/aptitude install"
-        restart_command "${tmp}/etc/init.d/hostname restart"
-        configuration_directory "${tmp}/etc"
-    }
+/**
+ * Installs the hostname script for Ubuntu 12.04.
+ *
+ * @author Erwin Mueller, erwin.mueller@deventm.org
+ * @since 1.0
+ */
+public class Ubuntu_14_04_Module extends AbstractModule {
+
+	@Override
+	protected void configure() {
+		bindScripts();
+	}
+
+	private void bindScripts() {
+		MapBinder<String, Script> binder;
+		binder = newMapBinder(binder(), String.class, Script.class);
+        binder.addBinding("ubuntu_14_04").to(UbuntuScript.class);
+	}
 }

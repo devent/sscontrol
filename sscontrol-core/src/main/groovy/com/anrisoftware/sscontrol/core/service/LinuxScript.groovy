@@ -393,6 +393,23 @@ abstract class LinuxScript extends Script {
     }
 
     /**
+     * Returns the restart command flags.
+     *
+     * <ul>
+     * <li>profile property {@code restart_command_flags}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    List getRestartCommandFlags() {
+        if (containsKey("restart_command_flags", defaultProperties)) {
+            profileListProperty "restart_command_flags", defaultProperties
+        } else {
+            return []
+        }
+    }
+
+    /**
      * Returns the stop command for the service.
      *
      * <ul>

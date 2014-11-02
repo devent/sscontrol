@@ -16,17 +16,17 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-hostname. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.hostname.ubuntu_12_04
+package com.anrisoftware.sscontrol.hostname.ubuntu_14_04
 
-import com.anrisoftware.sscontrol.hostname.ubuntu_12_04.UbuntuResources
+import com.anrisoftware.sscontrol.hostname.ubuntu_14_04.UbuntuResources
 
 def aptitudeCommand = UbuntuResources.aptitudeCommand.asFile tmp
 def restartCommand = UbuntuResources.restartCommand.asFile tmp
 
-profile "ubuntu_12_04", {
+profile "ubuntu_14_04", {
     hostname {
         install_command "${tmp}/usr/bin/aptitude update && ${tmp}/usr/bin/aptitude install"
-        restart_command "${tmp}/etc/init.d/hostname restart"
+        restart_command "${tmp}/usr/bin/service"
         configuration_directory "${tmp}/etc"
     }
 }

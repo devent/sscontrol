@@ -16,17 +16,28 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-hostname. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.hostname.ubuntu_12_04
+package com.anrisoftware.sscontrol.hostname.ubuntu_14_04;
 
-import com.anrisoftware.sscontrol.hostname.ubuntu_12_04.UbuntuResources
+import java.net.URL;
 
-def aptitudeCommand = UbuntuResources.aptitudeCommand.asFile tmp
-def restartCommand = UbuntuResources.restartCommand.asFile tmp
+import com.anrisoftware.propertiesutils.AbstractContextPropertiesProvider;
 
-profile "ubuntu_12_04", {
-    hostname {
-        install_command "${tmp}/usr/bin/aptitude update && ${tmp}/usr/bin/aptitude install"
-        restart_command "${tmp}/etc/init.d/hostname restart"
-        configuration_directory "${tmp}/etc"
+/**
+ * Provides the Ubuntu 14.04 hostname properties from
+ * {@code "/hostname_ubuntu_14_04.properties"}.
+ *
+ * @author Erwin Mueller, erwin.mueller@deventm.org
+ * @since 1.0
+ */
+@SuppressWarnings("serial")
+public class UbuntuPropertiesProvider extends
+        AbstractContextPropertiesProvider {
+
+    private static final URL RESOURCE = UbuntuPropertiesProvider.class
+            .getResource("/hostname_ubuntu_14_04.properties");
+
+    UbuntuPropertiesProvider() {
+        super(UbuntuPropertiesProvider.class, RESOURCE);
     }
+
 }

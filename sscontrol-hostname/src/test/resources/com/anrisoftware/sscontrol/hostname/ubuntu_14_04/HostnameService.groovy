@@ -18,15 +18,4 @@
  */
 package com.anrisoftware.sscontrol.hostname.ubuntu_12_04
 
-import com.anrisoftware.sscontrol.hostname.ubuntu_12_04.UbuntuResources
-
-def aptitudeCommand = UbuntuResources.aptitudeCommand.asFile tmp
-def restartCommand = UbuntuResources.restartCommand.asFile tmp
-
-profile "ubuntu_12_04", {
-    hostname {
-        install_command "${tmp}/usr/bin/aptitude update && ${tmp}/usr/bin/aptitude install"
-        restart_command "${tmp}/etc/init.d/hostname restart"
-        configuration_directory "${tmp}/etc"
-    }
-}
+hostname { set "ubuntutest" }

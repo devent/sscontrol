@@ -1,0 +1,8 @@
+update
+-y install passwd openssh-server
+update
+-y install screen
+update
+-y install passwd openssh-server
+update
+-y install screen

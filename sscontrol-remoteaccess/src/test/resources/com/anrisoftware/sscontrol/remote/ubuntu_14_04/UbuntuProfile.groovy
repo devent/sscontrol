@@ -16,30 +16,21 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-remoteaccess. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.remote.openssh.screen.ubuntu_12_04;
+package com.anrisoftware.sscontrol.remote.ubuntu_14_04
 
-import static com.google.inject.multibindings.MapBinder.newMapBinder;
+def sshkeygen = Ubuntu_14_04_Resources.sshkeygenCommand.asFile(tmp)
+def groupfile = Ubuntu_14_04_Resources.groupsFile.asFile(tmp)
+def passwdfile = Ubuntu_14_04_Resources.passwdFile.asFile(tmp)
+def sshdconfigFile = Ubuntu_14_04_Resources.sshdconfigFile.asFile(tmp)
 
-import com.anrisoftware.sscontrol.remote.api.RemoteScript;
-import com.google.inject.AbstractModule;
-import com.google.inject.multibindings.MapBinder;
-
-/**
- * Installs the screen script for local users for Ubuntu 12.04.
- *
- * @author Erwin Mueller, erwin.mueller@deventm.org
- * @since 1.0
- */
-public class ScreenUbuntu_12_04_Module extends AbstractModule {
-
-    @Override
-    protected void configure() {
-        bindScripts();
-    }
-
-    private void bindScripts() {
-        MapBinder<String, RemoteScript> binder;
-        binder = newMapBinder(binder(), String.class, RemoteScript.class);
-        binder.addBinding("screen").to(UbuntuScript.class);
+profile "ubuntu_14_04", {
+    remote {
+        service "openssh"
+        key_gen_command sshkeygen
+        sshd_configuration_directory sshdconfigFile.parentFile
+        groups_file groupfile
+        users_file passwdfile
+        home_pattern "$tmp/home/<user.name>"
+        ssh_key_pattern "$tmp/home/<user.name>/.ssh/id_rsa"
     }
 }

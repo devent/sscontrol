@@ -1,0 +1,10 @@
+-s /bin/bash -d /tmp/home/bar -m -u 2001 -g bar bar
+-s /bin/bash -d /tmp/home/baz -m -u 1001 -g baz baz
+-s /bin/bash -d /tmp/home/foo -m -u 1002 -g foo foo
+-s /bin/bash -d /tmp/home/foobar -m -u 1003 -g foob foobar
+-s /bin/bash -d /tmp/home/foobaz -m -u 1004 -g foobaz foobaz
+-s /bin/bash -d /tmp/home/bar -m -u 2001 -g bar bar
+-s /bin/bash -d /tmp/home/baz -m -u 1001 -g baz baz
+-s /bin/bash -d /tmp/home/foo -m -u 1002 -g foo foo
+-s /bin/bash -d /tmp/home/foobar -m -u 1003 -g foob foobar
+-s /bin/bash -d /tmp/home/foobaz -m -u 1004 -g foobaz foobaz

@@ -16,30 +16,21 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-remoteaccess. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.remote.openssh.screen.ubuntu_12_04;
+package com.anrisoftware.sscontrol.remote.openssh.authorizedkeys.ubuntu_14_04
 
-import static com.google.inject.multibindings.MapBinder.newMapBinder;
-
-import com.anrisoftware.sscontrol.remote.api.RemoteScript;
-import com.google.inject.AbstractModule;
-import com.google.inject.multibindings.MapBinder;
+import com.anrisoftware.sscontrol.remote.openssh.authorizedkeys.linux.AuthorizedKeysScript
+import com.anrisoftware.sscontrol.remote.service.RemoteService
 
 /**
- * Installs the screen script for local users for Ubuntu 12.04.
+ * Deploys authorized keys to local users for Ubuntu 14.04.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-public class ScreenUbuntu_12_04_Module extends AbstractModule {
+class UbuntuScript extends AuthorizedKeysScript {
 
     @Override
-    protected void configure() {
-        bindScripts();
-    }
-
-    private void bindScripts() {
-        MapBinder<String, RemoteScript> binder;
-        binder = newMapBinder(binder(), String.class, RemoteScript.class);
-        binder.addBinding("screen").to(UbuntuScript.class);
+    void deployRemoteScript(RemoteService service) {
+        super.deployRemoteScript service
     }
 }

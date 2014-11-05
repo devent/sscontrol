@@ -31,7 +31,7 @@ import com.anrisoftware.sscontrol.remote.resources.ResourcesUtils
  */
 enum Ubuntu_12_04_Resources {
 
-    profile("UbuntuProfile.groovy", Ubuntu_12_04_Resources.class.getResource("Ubuntu_10_04_Profile.groovy")),
+    profile("UbuntuProfile.groovy", Ubuntu_12_04_Resources.class.getResource("UbuntuProfile.groovy")),
     remoteService("Remote.groovy", Ubuntu_12_04_Resources.class.getResource("Remote.groovy")),
     sshkeygenCommand("/usr/bin/ssh-keygen", Ubuntu_12_04_Resources.class.getResource("echo_command.txt")),
     groupsFile("/etc/group", Ubuntu_12_04_Resources.class.getResource("group.txt")),

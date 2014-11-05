@@ -16,30 +16,26 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-remoteaccess. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.remote.openssh.screen.ubuntu_12_04;
+package com.anrisoftware.sscontrol.remote.openssh.openssh.ubuntu_14_04;
 
-import static com.google.inject.multibindings.MapBinder.newMapBinder;
+import java.net.URL;
 
-import com.anrisoftware.sscontrol.remote.api.RemoteScript;
-import com.google.inject.AbstractModule;
-import com.google.inject.multibindings.MapBinder;
+import com.anrisoftware.propertiesutils.AbstractContextPropertiesProvider;
 
 /**
- * Installs the screen script for local users for Ubuntu 12.04.
+ * Provides the properties from {@code "/openssh_ubuntu_14_04.properties"}.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-public class ScreenUbuntu_12_04_Module extends AbstractModule {
+@SuppressWarnings("serial")
+class UbuntuPropertiesProvider extends AbstractContextPropertiesProvider {
 
-    @Override
-    protected void configure() {
-        bindScripts();
+    private static final URL RESOURCE = UbuntuPropertiesProvider.class
+            .getResource("/openssh_ubuntu_14_04.properties");
+
+    UbuntuPropertiesProvider() {
+        super(UbuntuPropertiesProvider.class, RESOURCE);
     }
 
-    private void bindScripts() {
-        MapBinder<String, RemoteScript> binder;
-        binder = newMapBinder(binder(), String.class, RemoteScript.class);
-        binder.addBinding("screen").to(UbuntuScript.class);
-    }
 }

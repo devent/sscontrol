@@ -16,10 +16,10 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-dhclient. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.dhclient.ubuntu_12_04
+package com.anrisoftware.sscontrol.dhclient.ubuntu_14_04
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
-import static com.anrisoftware.sscontrol.dhclient.ubuntu_12_04.DhclientResources.*
+import static com.anrisoftware.sscontrol.dhclient.ubuntu_14_04.DhclientResources.*
 import groovy.util.logging.Slf4j
 
 import org.junit.Test
@@ -27,7 +27,7 @@ import org.junit.Test
 import com.anrisoftware.sscontrol.dhclient.ubuntu.UbuntuTestUtil
 
 /**
- * Dhclient/Ubuntu 12.04.
+ * Dhclient/Ubuntu 14.04.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0

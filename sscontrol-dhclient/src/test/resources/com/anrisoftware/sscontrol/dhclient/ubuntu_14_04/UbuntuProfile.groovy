@@ -16,30 +16,16 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-dhclient. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.dhclient.ubuntu_12_04;
+package com.anrisoftware.sscontrol.dhclient.ubuntu_14_04
 
-import static com.google.inject.multibindings.MapBinder.newMapBinder;
-import groovy.lang.Script;
+def aptitudeCommand = DhclientResources.aptitudeCommand.asFile(tmp)
+def restartCommand = DhclientResources.restartCommand.asFile(tmp)
+def confDir = DhclientResources.confDir.asFile(tmp)
 
-import com.google.inject.AbstractModule;
-import com.google.inject.multibindings.MapBinder;
-
-/**
- * Dhclient/Ubuntu 12.04.
- *
- * @author Erwin Mueller, erwin.mueller@deventm.org
- * @since 1.0
- */
-public class Ubuntu_12_04_Module extends AbstractModule {
-
-	@Override
-	protected void configure() {
-		bindScripts();
-	}
-
-	private void bindScripts() {
-		MapBinder<String, Script> binder;
-		binder = newMapBinder(binder(), String.class, Script.class);
-        binder.addBinding("ubuntu_12_04").to(Ubuntu_12_04_Script.class);
-	}
+profile "ubuntu_14_04", {
+    dhclient {
+        install_command "$aptitudeCommand update && $aptitudeCommand install"
+        restart_command "$restartCommand restart"
+        configuration_directory confDir
+    }
 }

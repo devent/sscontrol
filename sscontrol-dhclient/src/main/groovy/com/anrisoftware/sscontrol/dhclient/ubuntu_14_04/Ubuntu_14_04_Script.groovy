@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-dhclient. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.dhclient.ubuntu_12_04
+package com.anrisoftware.sscontrol.dhclient.ubuntu_14_04
 
 import static java.util.regex.Pattern.*
 import groovy.util.logging.Slf4j
@@ -28,13 +28,13 @@ import com.anrisoftware.sscontrol.dhclient.ubuntu.UbuntuScript
 import com.anrisoftware.sscontrol.scripts.unix.InstallPackagesFactory
 
 /**
- * Dhclient/Ubuntu 12.04.
+ * Dhclient/Ubuntu 14.04.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
 @Slf4j
-class Ubuntu_12_04_Script extends UbuntuScript {
+class Ubuntu_14_04_Script extends UbuntuScript {
 
     @Inject
     UbuntuPropertiesProvider ubuntuProperties

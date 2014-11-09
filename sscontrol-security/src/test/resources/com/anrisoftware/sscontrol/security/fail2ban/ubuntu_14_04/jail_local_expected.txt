@@ -1,0 +1,255 @@
+[DEFAULT]
+chain = INPUT
+action_mwl = %(banaction)s[name=%(__name__)s, port="%(port)s", protocol="%(protocol)s", chain="%(chain)s"]%(mta)s-whois-lines[name=%(__name__)s, dest="%(destemail)s", logpath=%(logpath)s, chain="%(chain)s", sendername="%(sendername)s"]
+banaction = iptables-multiport
+mta = sendmail
+action_ = %(banaction)s[name=%(__name__)s, port="%(port)s", protocol="%(protocol)s", chain="%(chain)s"]
+action = %(action_)s
+bantime = 600
+sendername = Fail2Ban
+backend = auto
+destemail = root@localhost
+action_mw = %(banaction)s[name=%(__name__)s, port="%(port)s", protocol="%(protocol)s", chain="%(chain)s"]%(mta)s-whois[name=%(__name__)s, dest="%(destemail)s", protocol="%(protocol)s", chain="%(chain)s", sendername="%(sendername)s"]
+findtime = 600
+protocol = tcp
+maxretry = 3
+ignoreip = 127.0.0.1/8
+usedns = warn
+
+[ssh]
+banaction = ufw-ssh
+filter = sshd
+port = ssh
+bantime = 600
+enabled = true
+destemail = root@localhost
+backend = polling
+logpath = /var/log/auth.log
+maxretry = 3
+ignoreip = 192.0.0.1
+
+[dropbear]
+port = ssh
+enabled = false
+filter = dropbear
+maxretry = 6
+logpath = /var/log/auth.log
+
+[pam-generic]
+port = anyport
+enabled = false
+filter = pam-generic
+banaction = iptables-allports
+maxretry = 6
+logpath = /var/log/auth.log
+
+[xinetd-fail]
+port = all
+enabled = false
+filter = xinetd-fail
+banaction = iptables-multiport-log
+maxretry = 2
+logpath = /var/log/daemon.log
+
+[ssh-ddos]
+banaction = ufw-ssh-ddos
+filter = sshd-ddos
+port = ssh
+bantime = 600
+enabled = true
+destemail = root@localhost
+logpath = /var/log/auth.log
+ignoreip = 127.0.0.1
+maxretry = 3
+
+[ssh-route]
+enabled = false
+filter = sshd
+action = route
+maxretry = 6
+logpath = /var/log/sshd.log
+
+[ssh-iptables-ipset4]
+port = ssh
+enabled = false
+filter = sshd
+banaction = iptables-ipset-proto4
+maxretry = 6
+logpath = /var/log/sshd.log
+
+[ssh-iptables-ipset6]
+port = ssh
+enabled = false
+filter = sshd
+banaction = iptables-ipset-proto6
+maxretry = 6
+logpath = /var/log/sshd.log
+
+[apache]
+banaction = ufw-apache
+filter = apache-auth
+port = http,https
+bantime = 600
+enabled = true
+destemail = root@localhost
+logpath = /var/log/apache*/*error.log
+ignoreip = 127.0.0.1
+maxretry = 3
+
+[apache-multiport]
+port = http,https
+enabled = false
+filter = apache-auth
+maxretry = 6
+logpath = /var/log/apache*/*error.log
+
+[apache-noscript]
+port = http,https
+enabled = false
+filter = apache-noscript
+maxretry = 6
+logpath = /var/log/apache*/*error.log
+
+[apache-overflows]
+port = http,https
+enabled = false
+filter = apache-overflows
+maxretry = 2
+logpath = /var/log/apache*/*error.log
+
+[php-url-fopen]
+port = http,https
+enabled = false
+filter = php-url-fopen
+logpath = /var/www/*/logs/access_log
+
+[lighttpd-fastcgi]
+port = http,https
+enabled = false
+filter = lighttpd-fastcgi
+logpath = /var/log/lighttpd/error.log
+
+[lighttpd-auth]
+port = http,https
+enabled = false
+filter = suhosin
+logpath = /var/log/lighttpd/error.log
+
+[nginx-http-auth]
+port = http,https
+enabled = false
+filter = nginx-http-auth
+logpath = /var/log/nginx/error.log
+
+[roundcube-auth]
+port = http,https
+enabled = false
+filter = roundcube-auth
+logpath = /var/log/roundcube/userlogins
+
+[sogo-auth]
+port = http, https
+enabled = false
+filter = sogo-auth
+logpath = /var/log/sogo/sogo.log
+
+[vsftpd]
+port = ftp,ftp-data,ftps,ftps-data
+enabled = false
+filter = vsftpd
+maxretry = 6
+logpath = /var/log/vsftpd.log
+
+[proftpd]
+port = ftp,ftp-data,ftps,ftps-data
+enabled = false
+filter = proftpd
+maxretry = 6
+logpath = /var/log/proftpd/proftpd.log
+
+[pure-ftpd]
+port = ftp,ftp-data,ftps,ftps-data
+enabled = false
+filter = pure-ftpd
+maxretry = 6
+logpath = /var/log/syslog
+
+[wuftpd]
+port = ftp,ftp-data,ftps,ftps-data
+enabled = false
+filter = wuftpd
+maxretry = 6
+logpath = /var/log/syslog
+
+[postfix]
+banaction = ufw-postfix
+filter = postfix
+port = smtp,ssmtp,submission
+bantime = 600
+enabled = true
+destemail = root@localhost
+backend = auto
+logpath = /var/log/mail.warn
+ignoreip = 192.0.0.1 192.0.0.2
+maxretry = 3
+
+[couriersmtp]
+port = smtp,ssmtp,submission
+enabled = false
+filter = couriersmtp
+logpath = /var/log/mail.log
+
+[courierauth]
+port = smtp,ssmtp,submission,imap2,imap3,imaps,pop3,pop3s
+enabled = false
+filter = courierlogin
+logpath = /var/log/mail.log
+
+[sasl]
+port = smtp,ssmtp,submission,imap2,imap3,imaps,pop3,pop3s
+enabled = false
+filter = postfix-sasl
+logpath = /var/log/mail.log
+
+[dovecot]
+port = smtp,ssmtp,submission,imap2,imap3,imaps,pop3,pop3s
+enabled = false
+filter = dovecot
+logpath = /var/log/mail.log
+
+[mysqld-auth]
+port = 3306
+enabled = false
+filter = mysqld-auth
+logpath = /var/log/mysqld.log
+
+[named-refused-tcp]
+port = domain,953
+enabled = false
+filter = named-refused
+protocol = tcp
+logpath = /var/log/named/security.log
+
+[asterisk-tcp]
+port = 5060,5061
+enabled = false
+filter = asterisk
+protocol = tcp
+logpath = /var/log/asterisk/messages
+
+[asterisk-udp]
+port = 5060,5061
+enabled = false
+filter = asterisk
+protocol = udp
+logpath = /var/log/asterisk/messages
+
+[recidive]
+bantime = 604800  ; 1 week
+enabled = false
+filter = recidive
+action = iptables-allports[name=recidive]sendmail-whois-lines[name=recidive, logpath=/var/log/fail2ban.log]
+maxretry = 5
+logpath = /var/log/fail2ban.log
+findtime = 86400   ; 1 day
+

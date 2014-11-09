@@ -3,7 +3,7 @@ loglevel = <level>
 %>
 
 loglevelConfig_search() ::= <%
-#?loglevel\\s*=.*
+(?m)^loglevel\\s*=.*
 %>
 
 logtargetConfig(target) ::= <%
@@ -11,6 +11,6 @@ logtarget = <target>
 %>
 
 logtargetConfig_search() ::= <%
-#?logtarget\\s*=.*
+(?m)^logtarget\\s*=.*
 %>
 

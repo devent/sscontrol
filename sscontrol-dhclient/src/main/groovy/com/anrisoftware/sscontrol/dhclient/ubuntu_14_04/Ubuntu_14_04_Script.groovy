@@ -23,6 +23,8 @@ import groovy.util.logging.Slf4j
 
 import javax.inject.Inject
 
+import org.stringtemplate.v4.ST
+
 import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.sscontrol.dhclient.ubuntu.UbuntuScript
 import com.anrisoftware.sscontrol.scripts.unix.InstallPackagesFactory
@@ -52,6 +54,44 @@ class Ubuntu_14_04_Script extends UbuntuScript {
     void installPackages() {
         installPackagesFactory.create(
                 log: log, command: installCommand, packages: packages, this, threads)()
+    }
+
+    /**
+     * Restarts the <i>dhclient</i> service.
+     */
+    void restartService() {
+        restartServicesFactory.create(
+                log: log,
+                command: restartCommand,
+                services: restartServices,
+                this, threads)()
+    }
+
+    /**
+     * Returns the restart command for the service.
+     *
+     * <ul>
+     * <li>property key {@code restart_command}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    String getRestartCommand() {
+        def command = profileProperty("restart_command", defaultProperties)
+        new ST(command).add("interfaces", restartInterfaces).render()
+    }
+
+    /**
+     * Returns the interfaces to restart.
+     *
+     * <ul>
+     * <li>profile property key {@code restart_interfaces}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    List getRestartInterfaces() {
+        profileListProperty "restart_interfaces", defaultProperties
     }
 
     @Override

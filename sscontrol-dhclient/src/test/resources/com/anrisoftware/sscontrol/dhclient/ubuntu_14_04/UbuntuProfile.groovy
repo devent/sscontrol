@@ -19,13 +19,14 @@
 package com.anrisoftware.sscontrol.dhclient.ubuntu_14_04
 
 def aptitudeCommand = DhclientResources.aptitudeCommand.asFile(tmp)
-def restartCommand = DhclientResources.restartCommand.asFile(tmp)
+def ifdownCommand = DhclientResources.ifdownCommand.asFile(tmp)
+def ifupCommand = DhclientResources.ifupCommand.asFile(tmp)
 def confDir = DhclientResources.confDir.asFile(tmp)
 
 profile "ubuntu_14_04", {
     dhclient {
         install_command "$aptitudeCommand update && $aptitudeCommand install"
-        restart_command "$restartCommand restart"
+        restart_command "<interfaces:{inet|$ifdownCommand <inet> && $ifupCommand <inet>}>"
         configuration_directory confDir
     }
 }

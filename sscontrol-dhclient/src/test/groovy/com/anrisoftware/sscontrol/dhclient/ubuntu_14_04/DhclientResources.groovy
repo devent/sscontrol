@@ -34,15 +34,18 @@ enum DhclientResources {
     profile("UbuntuProfile.groovy", DhclientResources.class.getResource("UbuntuProfile.groovy")),
     dhclientScript("Dhclient.groovy", DhclientResources.class.getResource("Dhclient.groovy")),
     aptitudeCommand("/usr/bin/aptitude", DhclientResources.class.getResource("echo_command.txt")),
-    restartCommand("/etc/init.d/networking", DhclientResources.class.getResource("echo_command.txt")),
+    ifdownCommand("/sbin/ifdown", DhclientResources.class.getResource("echo_command.txt")),
+    ifupCommand("/sbin/ifup", DhclientResources.class.getResource("echo_command.txt")),
     confDir("/etc/dhcp", null),
     dhclient("/etc/dhcp/dhclient.conf", DhclientResources.class.getResource("dhclient_conf.txt")),
     dhclientExpected("/etc/dhcp/dhclient.conf", DhclientResources.class.getResource("dhclient_expected.txt")),
-    restartOutExpected("/etc/init.d/networking.out", DhclientResources.class.getResource("networking_out_expected.txt")),
+    ifdownOutExpected("/sbin/ifdown.out", DhclientResources.class.getResource("ifdown_out_expected.txt")),
+    ifupOutExpected("/sbin/ifup.out", DhclientResources.class.getResource("ifup_out_expected.txt")),
 
     static copyUbuntuFiles(File parent) {
         aptitudeCommand.createCommand parent
-        restartCommand.createCommand parent
+        ifdownCommand.createCommand parent
+        ifupCommand.createCommand parent
         confDir.asFile parent mkdirs()
         dhclient.createFile parent
     }

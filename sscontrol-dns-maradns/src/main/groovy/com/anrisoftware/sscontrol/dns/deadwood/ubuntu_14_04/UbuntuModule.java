@@ -18,26 +18,24 @@
  */
 package com.anrisoftware.sscontrol.dns.deadwood.ubuntu_14_04;
 
-import java.net.URL;
-
-import com.anrisoftware.propertiesutils.AbstractContextPropertiesProvider;
+import com.anrisoftware.sscontrol.scripts.enableaptrepository.EnableAptRepositoryModule;
+import com.anrisoftware.sscontrol.scripts.repositoryaptenabled.RepositoryAptEnabledModule;
+import com.anrisoftware.sscontrol.scripts.unix.UnixScriptsModule;
+import com.google.inject.AbstractModule;
 
 /**
- * <i>Deadwood 3.2.x Ubuntu 14.04</i> service script properties provider.
- * Provides the script properties from the
- * {@code "/deadwood_ubuntu_14_04.properties"} file.
+ * <i>Deadwood Ubuntu 14.04</i> service script module.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-@SuppressWarnings("serial")
-class UbuntuPropertiesProvider extends AbstractContextPropertiesProvider {
+class UbuntuModule extends AbstractModule {
 
-    private static final URL RESOURCE = UbuntuPropertiesProvider.class
-            .getResource("/deadwood_ubuntu_14_04.properties");
-
-    UbuntuPropertiesProvider() {
-        super(UbuntuPropertiesProvider.class, RESOURCE);
+    @Override
+    protected void configure() {
+        install(new EnableAptRepositoryModule());
+        install(new RepositoryAptEnabledModule());
+        install(new UnixScriptsModule());
+        install(new UnixScriptsModule.ExecCommandModule());
     }
-
 }

@@ -21,10 +21,10 @@ package com.anrisoftware.sscontrol.dns.maradns.ubuntu_12_04
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static org.apache.commons.io.FileUtils.*
 
-import com.anrisoftware.sscontrol.dns.maradns.resources.ResourcesUtils
+import com.anrisoftware.sscontrol.dns.core.resources.ResourcesUtils
 
 /**
- * MaraDNS/Ubuntu 10.04 resources.
+ * <i>MaraDNS Ubuntu 10.04</i> resources.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0

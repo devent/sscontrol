@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-dns-maradns. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.dns.maradns.resources
+package com.anrisoftware.sscontrol.dns.core.resources
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static org.apache.commons.io.FileUtils.*
@@ -29,31 +29,31 @@ import static org.apache.commons.io.FileUtils.*
  */
 class ResourcesUtils {
 
-	String path
+    String path
 
-	URL resource
+    URL resource
 
-	File asFile(File parent) {
-		new File(parent, path)
-	}
+    File asFile(File parent) {
+        new File(parent, path)
+    }
 
-	void createFile(File parent) {
-		assert resource : "Resource cannot be null for ${resource}"
-		copyURLToFile resource, new File(parent, path)
-	}
+    void createFile(File parent) {
+        assert resource : "Resource cannot be null for ${path}"
+        copyURLToFile resource, new File(parent, path)
+    }
 
-	void createCommand(File parent) {
-		assert resource : "Resource cannot be null for ${resource}"
-		copyResourceToCommand resource, new File(parent, path)
-	}
+    void createCommand(File parent) {
+        assert resource : "Resource cannot be null for ${path}"
+        copyResourceToCommand resource, new File(parent, path)
+    }
 
-	String replaced(File parent, def search, def replace) {
-		String text = readFileToString(this.asFile(parent))
-		text.replaceAll(search.toString(), replace)
-	}
+    String replaced(File parent, def search, def replace) {
+        String text = readFileToString(this.asFile(parent))
+        text.replaceAll(search.toString(), replace)
+    }
 
-	String toString() {
-		assert resource : "Resource cannot be null for ${resource}"
-		resourceToString resource
-	}
+    String toString() {
+        assert resource : "Resource cannot be null for ${path}"
+        resourceToString resource
+    }
 }

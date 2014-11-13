@@ -25,10 +25,10 @@ import groovy.util.logging.Slf4j
 
 import org.junit.Test
 
-import com.anrisoftware.sscontrol.dns.maradns.ubuntu.UbuntuTestUtil
+import com.anrisoftware.sscontrol.dns.core.ubuntu.UbuntuTestUtil
 
 /**
- * MaraDNS/Ubuntu 14.04.
+ * <i>MaraDNS Ubuntu 14.04</i> recursive service test.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0

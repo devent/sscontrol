@@ -16,41 +16,41 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-dns-maradns. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.dns.maradns.ubuntu_14_04
+package com.anrisoftware.sscontrol.dns.deadwood.ubuntu_14_04
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
-import static com.anrisoftware.sscontrol.dns.maradns.ubuntu_14_04.MaradnsResources.*
+import static com.anrisoftware.sscontrol.dns.deadwood.ubuntu_14_04.DeadwoodResources.*
 import static org.apache.commons.io.FileUtils.*
 import groovy.util.logging.Slf4j
 
 import org.junit.Test
 
-import com.anrisoftware.sscontrol.dns.maradns.ubuntu.UbuntuTestUtil
+import com.anrisoftware.sscontrol.dns.core.ubuntu.UbuntuTestUtil
 
 /**
- * MaraDNS/Ubuntu 14.04.
+ * <i>Deadwood Ubuntu 14.04</i> recursive service test.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
 @Slf4j
-class RecursiveTest extends UbuntuTestUtil {
+class DeadwoodTest extends UbuntuTestUtil {
 
     @Test
-    void "maradns recursive"() {
+    void "deadwood service"() {
         copyUbuntuFiles tmpdir
 
         loader.loadService profile.resource, null
         def profile = registry.getService("profile")[0]
-        loader.loadService maradnsRecursiveScript.resource, profile
+        loader.loadService deadwoodScript.resource, profile
 
         registry.allServices.each { it.call() }
         log.info "Run service again to ensure that configuration is not set double."
         registry.allServices.each { it.call() }
 
         assertFileContent restartOutExpected.asFile(tmpdir), restartOutExpected
+        assertFileContent sourcesListExpected.asFile(tmpdir), sourcesListExpected
         assertFileContent aptitudeOutExpected.asFile(tmpdir), aptitudeOutExpected
-        assertFileContent mararcRecursiveExpected.asFile(tmpdir), mararcRecursiveExpected
-        assertFileContent dbExample1Expected.asFile(tmpdir), dbExample1Expected
+        assertFileContent deadwoodrcExpected.asFile(tmpdir), deadwoodrcExpected
     }
 }

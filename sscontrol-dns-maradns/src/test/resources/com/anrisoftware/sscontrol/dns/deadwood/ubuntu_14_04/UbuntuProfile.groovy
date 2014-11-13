@@ -17,33 +17,20 @@
  * along with sscontrol-dns-maradns. If not, see <http://www.gnu.org/licenses/>.
  */
 package com.anrisoftware.sscontrol.dns.maradns.ubuntu_14_04
-dns {
 
-    // set zone serial
-	serial 1, generate: false
+def aptitudeCommand = MaradnsResources.aptitudeCommand.asFile(tmp)
+def restartCommand = MaradnsResources.restartCommand.asFile(tmp)
+def addRepositoryCommand = MaradnsResources.addRepositoryCommand.asFile(tmp)
+def confDir = MaradnsResources.confDir.asFile(tmp)
+def sourcesListFile = MaradnsResources.sourcesListFile.asFile(tmp)
 
-	// bind the dns server to address only
-	bind address: "127.0.0.2"
-
-	// sets recursive lookup
-	recursive {
-
-        // binds recursive lookup
-        bind address: "127.0.0.1"
-
-        // sets the group to the root servers
-        roots {
-            // adds icann root servers
-            servers group: "icann"
-
-            // adds named root server
-            server name: "example1.com", address: "127.0.0.2"
-        }
-
-        // sets
-        acls "127.0.0.1"
+profile "ubuntu_14_04", {
+    dns {
+        service "deadwood"
+        install_command "$aptitudeCommand update && $aptitudeCommand install"
+        restart_command "$restartCommand restart"
+        enable_repository_command addRepositoryCommand
+        configuration_directory confDir
+        packages_sources_file sourcesListFile
     }
-
-	// soa entry
-	zone "example1.com", primary: "ns.example1.com", email: "hostmaster@example1.com"
 }

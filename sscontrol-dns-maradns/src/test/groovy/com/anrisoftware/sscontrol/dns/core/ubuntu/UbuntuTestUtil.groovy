@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-dns-maradns. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.dns.maradns.ubuntu
+package com.anrisoftware.sscontrol.dns.core.ubuntu
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 
@@ -38,7 +38,7 @@ import com.google.inject.Guice
 import com.google.inject.Injector
 
 /**
- * MaraDNS/Ubuntu test environment.
+ * Test environment.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
@@ -68,7 +68,7 @@ class UbuntuTestUtil {
 
     @Before
     void createTemp() {
-        tmpdir = tmp.newFolder("postfix-ubuntu-10-04")
+        tmpdir = tmp.newFolder("dns-environment")
         variables = [tmp: tmpdir.absoluteFile]
     }
 

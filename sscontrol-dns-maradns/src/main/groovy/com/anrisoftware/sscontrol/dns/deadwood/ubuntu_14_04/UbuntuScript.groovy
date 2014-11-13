@@ -29,13 +29,13 @@ import com.anrisoftware.sscontrol.scripts.unix.InstallPackagesFactory
 import com.anrisoftware.sscontrol.scripts.unix.RestartServicesFactory
 
 /**
- * <i>MaraDNS-Deadwood 3.2.x</i> service script for <i>Ubuntu 14.04</i>
+ * <i>Deadwood 3.2.x Ubuntu 14.04</i> service script.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
 @Slf4j
-class Deadwood_Ubuntu_14_04_Script extends Deadwood_3_2_Script {
+class UbuntuScript extends Deadwood_3_2_Script {
 
     @Inject
     UbuntuPropertiesProvider ubuntuProperties

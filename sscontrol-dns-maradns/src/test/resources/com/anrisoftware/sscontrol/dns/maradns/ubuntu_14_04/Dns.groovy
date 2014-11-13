@@ -18,6 +18,8 @@
  */
 package com.anrisoftware.sscontrol.dns.maradns.ubuntu_14_04
 dns {
+
+    // set zone serial
 	serial 1, generate: false
 
 	// bind the dns server to address only

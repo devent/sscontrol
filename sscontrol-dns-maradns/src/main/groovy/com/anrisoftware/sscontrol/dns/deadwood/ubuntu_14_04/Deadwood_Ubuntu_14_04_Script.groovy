@@ -16,26 +16,26 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-dns-maradns. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.dns.maradns.ubuntu_14_04
+package com.anrisoftware.sscontrol.dns.deadwood.ubuntu_14_04
 
 import groovy.util.logging.Slf4j
 
 import javax.inject.Inject
 
 import com.anrisoftware.propertiesutils.ContextProperties
-import com.anrisoftware.sscontrol.dns.maradns.maradns_1_2.Maradns_1_2_Script
+import com.anrisoftware.sscontrol.dns.deadwood.deadwood_3_2.Deadwood_3_2_Script
 import com.anrisoftware.sscontrol.scripts.enableaptrepository.EnableAptRepositoryFactory
 import com.anrisoftware.sscontrol.scripts.unix.InstallPackagesFactory
 import com.anrisoftware.sscontrol.scripts.unix.RestartServicesFactory
 
 /**
- * MaraDNS/Ubuntu 14.04 service script.
+ * <i>MaraDNS-Deadwood 3.2.x</i> service script for <i>Ubuntu 14.04</i>
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
 @Slf4j
-class UbuntuScript extends Maradns_1_2_Script {
+class Deadwood_Ubuntu_14_04_Script extends Deadwood_3_2_Script {
 
     @Inject
     UbuntuPropertiesProvider ubuntuProperties
@@ -52,8 +52,7 @@ class UbuntuScript extends Maradns_1_2_Script {
     def run() {
         enableRepository()
         installPackages()
-        deployMaraDnsConfiguration()
-        deployZoneDbConfigurations()
+        deployDeadwoodConfiguration()
         restartService()
     }
 
@@ -87,7 +86,6 @@ class UbuntuScript extends Maradns_1_2_Script {
                 log: log, command: restartCommand, services: restartServices, this, threads)()
     }
 
-    @Override
     ContextProperties getDefaultProperties() {
         ubuntuProperties.get()
     }

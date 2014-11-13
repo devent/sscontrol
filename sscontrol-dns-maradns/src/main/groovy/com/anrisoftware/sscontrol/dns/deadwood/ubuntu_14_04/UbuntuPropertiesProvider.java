@@ -16,34 +16,28 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-dns-maradns. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.dns.maradns.ubuntu_14_04
-dns {
+package com.anrisoftware.sscontrol.dns.deadwood.ubuntu_14_04;
 
-    // set zone serial
-	serial 1, generate: false
+import java.net.URL;
 
-	// bind the dns server to address only
-	bind address: "127.0.0.2"
+import com.anrisoftware.propertiesutils.AbstractContextPropertiesProvider;
 
-	// sets recursive lookup
-	recursive {
+/**
+ * <i>MaraDNS-Deadwood 3.2.x Ubuntu 14.04</i> service script properties
+ * provider. Provides the script properties from the
+ * {@code "/deadwood_ubuntu_14_04.properties"} file.
+ *
+ * @author Erwin Mueller, erwin.mueller@deventm.org
+ * @since 1.0
+ */
+@SuppressWarnings("serial")
+class UbuntuPropertiesProvider extends AbstractContextPropertiesProvider {
 
-        // binds recursive lookup
-        bind address: "127.0.0.1"
+    private static final URL RESOURCE = UbuntuPropertiesProvider.class
+            .getResource("/deadwood_ubuntu_14_04.properties");
 
-        // sets the group to the root servers
-        roots {
-            // adds icann root servers
-            servers group: "icann"
-
-            // adds named root server
-            server name: "example1.com", address: "127.0.0.2"
-        }
-
-        // sets
-        acls "127.0.0.1"
+    UbuntuPropertiesProvider() {
+        super(UbuntuPropertiesProvider.class, RESOURCE);
     }
 
-	// soa entry
-	zone "example1.com", primary: "ns.example1.com", email: "hostmaster@example1.com"
 }

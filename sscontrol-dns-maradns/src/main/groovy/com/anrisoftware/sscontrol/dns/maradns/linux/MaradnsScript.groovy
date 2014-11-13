@@ -30,16 +30,6 @@ import com.anrisoftware.sscontrol.core.service.LinuxScript
  */
 abstract class MaradnsScript extends LinuxScript {
 
-    def run() {
-        beforeConfiguration()
-    }
-
-    /**
-     * Runs distribution specific configuration before
-     * the MaraDNS/configuration.
-     */
-    abstract void beforeConfiguration()
-
     /**
      * Returns the file of the {@code mararc} configuration file.
      *

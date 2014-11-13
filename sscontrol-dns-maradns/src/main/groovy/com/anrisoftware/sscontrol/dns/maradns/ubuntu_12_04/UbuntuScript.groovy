@@ -23,7 +23,7 @@ import groovy.util.logging.Slf4j
 import javax.inject.Inject
 
 import com.anrisoftware.propertiesutils.ContextProperties
-import com.anrisoftware.sscontrol.dns.maradns.maradns12.Maradns12Script
+import com.anrisoftware.sscontrol.dns.maradns.maradns_1_2.Maradns_1_2_Script
 import com.anrisoftware.sscontrol.scripts.enableaptrepository.EnableAptRepositoryFactory
 import com.anrisoftware.sscontrol.scripts.unix.InstallPackagesFactory
 import com.anrisoftware.sscontrol.scripts.unix.RestartServicesFactory
@@ -35,7 +35,7 @@ import com.anrisoftware.sscontrol.scripts.unix.RestartServicesFactory
  * @since 1.0
  */
 @Slf4j
-class UbuntuScript extends Maradns12Script {
+class UbuntuScript extends Maradns_1_2_Script {
 
     @Inject
     UbuntuPropertiesProvider ubuntuProperties
@@ -50,14 +50,11 @@ class UbuntuScript extends Maradns12Script {
     RestartServicesFactory restartServicesFactory
 
     def run() {
-        super.run()
-        restartService()
-    }
-
-    @Override
-    void beforeConfiguration() {
         enableRepository()
         installPackages()
+        deployMaraDnsConfiguration()
+        deployZoneDbConfigurations()
+        restartService()
     }
 
     /**

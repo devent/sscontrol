@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-dns-maradns. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.dns.maradns.maradns12
+package com.anrisoftware.sscontrol.dns.maradns.maradns_1_2
 
 import static org.apache.commons.io.FileUtils.*
 
@@ -37,10 +37,7 @@ import com.anrisoftware.sscontrol.dns.zone.DnsZone
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-abstract class Maradns12Script extends MaradnsScript {
-
-    @Inject
-    TemplatesFactory templatesFactory
+abstract class Maradns_1_2_Script extends MaradnsScript {
 
     Templates maradnsTemplates
 
@@ -48,15 +45,11 @@ abstract class Maradns12Script extends MaradnsScript {
 
     TemplateResource zoneConfiguration
 
-    @Override
-    def run() {
-        commandTemplates = templatesFactory.create("ScriptCommandTemplates")
-        maradnsTemplates = templatesFactory.create("Maradns12")
-        maradnsConfiguration = maradnsTemplates.getResource("configuration")
-        zoneConfiguration = maradnsTemplates.getResource("zonedb")
-        super.run()
-        deployMaraDnsConfiguration()
-        deployZoneDbConfigurations()
+    @Inject
+    void setTemplatesFactory(TemplatesFactory factory) {
+        this.maradnsTemplates = factory.create("Maradns_1_2")
+        this.maradnsConfiguration = maradnsTemplates.getResource("configuration")
+        this.zoneConfiguration = maradnsTemplates.getResource("zonedb")
     }
 
     /**

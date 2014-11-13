@@ -1,0 +1,56 @@
+
+bind_address(service) ::= <%
+#bind_address = "127.0.0.1"
+%>
+
+bind_address_search() ::= <%
+#?bind_address.*
+%>
+
+ip4_bind_address(service, properties) ::= <%
+ipv4_bind_addresses = "<bindAddress(service, properties)>"
+%>
+
+bindAddress(service, properties) ::= <%
+<if(strip(service.binding.addresses))>
+<service.binding.addresses; separator=",">
+<else>
+<properties.defaultBinding; separator=",">
+<endif>
+%>
+
+ip4_bind_address_search() ::= <%
+#?\s*ipv4_bind_addresses\s*=\s*.*
+%>
+
+root_servers_search() ::= <%
+#?\s*root_servers\s*=\s*\{\s*\}.*
+%>
+
+root_servers() ::= <%
+root_servers = {}
+%>
+
+root_servers_list_search(roots) ::= <%
+#?\s*root_servers\["."\]\s*=\s*"<roots.servers;separator=",">".*
+%>
+
+root_servers_list(roots) ::= <%
+root_servers["."] = "<roots.servers;separator=",">"
+%>
+
+recursive_acl_search() ::= <%
+#?\s*recursive_acl\s*=\s*".*?".*
+%>
+
+recursive_acl(recursive) ::= <%
+recursive_acl = "<recursive.servers;separator=",">"
+%>
+
+packagesSources_search(repository) ::= <%
+<repository>
+%>
+
+packagesSources(repository) ::= <%
+<repository>
+%>

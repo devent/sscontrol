@@ -37,180 +37,186 @@ import com.anrisoftware.sscontrol.dns.zone.DnsZone
 @Slf4j
 class DnsServiceTest extends DnsServiceBase {
 
-	@Test
-	void "fixed serial"() {
-		loader.loadService ubuntu1004Profile, null
-		def profile = registry.getService("profile")[0]
-		loader.loadService serialFixed, profile
-		assertService registry.getService("dns")[0], generate: false, serial: 99
-	}
+    @Test
+    void "fixed serial"() {
+        loader.loadService ubuntu1004Profile, null
+        def profile = registry.getService("profile")[0]
+        loader.loadService serialFixed, profile
 
-	@Test
-	void "generated serial"() {
-		loader.loadService ubuntu1004Profile, null
-		def profile = registry.getService("profile")[0]
-		loader.loadService serialGenerated, profile
-		assertServiceGeneratedSerial registry.getService("dns")[0], generate: true, serial: 2003
-	}
+        DnsServiceImpl service = registry.getService("dns")[0]
+        assert service.serialNumber == 99
+        assert service.serialGenerate == false
+    }
 
-	@Test
-	void "bind one address"() {
-		loader.loadService ubuntu1004Profile, null
-		def profile = registry.getService("profile")[0]
-		loader.loadService bindOneAddress, profile
-		assertService registry.getService("dns")[0], binding: ["127.0.0.1"]
-	}
+    @Test
+    void "generated serial"() {
+        loader.loadService ubuntu1004Profile, null
+        def profile = registry.getService("profile")[0]
+        loader.loadService serialGenerated, profile
 
-	@Test
-	void "bind multiple address string"() {
-		loader.loadService ubuntu1004Profile, null
-		def profile = registry.getService("profile")[0]
-		loader.loadService bindMultipleAddressString, profile
-		assertService registry.getService("dns")[0], binding: [
-			"127.0.0.3",
-			"127.0.0.2",
-			"127.0.0.4",
-			"127.0.0.1"
-		]
-	}
+        DnsServiceImpl service = registry.getService("dns")[0]
+        assert service.serialNumber > 99
+        assert service.serialGenerate == true
+    }
 
-	@Test
-	void "bind multiple address array"() {
-		loader.loadService ubuntu1004Profile, null
-		def profile = registry.getService("profile")[0]
-		loader.loadService bindMultipleAddressArray, profile
-		assertService registry.getService("dns")[0], binding: [
-			"127.0.0.3",
-			"127.0.0.2",
-			"127.0.0.4",
-			"127.0.0.1"
-		]
-	}
+    @Test
+    void "bind one address"() {
+        loader.loadService ubuntu1004Profile, null
+        def profile = registry.getService("profile")[0]
+        loader.loadService bindOneAddress, profile
+        assertService registry.getService("dns")[0], binding: ["127.0.0.1"]
+    }
 
-	@Test
-	void "bind local"() {
-		loader.loadService ubuntu1004Profile, null
-		def profile = registry.getService("profile")[0]
-		loader.loadService bindLocal, profile
-		assertService registry.getService("dns")[0], binding: ["127.0.0.1"]
-	}
+    @Test
+    void "bind multiple address string"() {
+        loader.loadService ubuntu1004Profile, null
+        def profile = registry.getService("profile")[0]
+        loader.loadService bindMultipleAddressString, profile
+        assertService registry.getService("dns")[0], binding: [
+            "127.0.0.3",
+            "127.0.0.2",
+            "127.0.0.4",
+            "127.0.0.1"
+        ]
+    }
 
-	@Test
-	void "bind all"() {
-		loader.loadService ubuntu1004Profile, null
-		def profile = registry.getService("profile")[0]
-		loader.loadService bindAll, profile
-		assertService registry.getService("dns")[0], binding: ["0.0.0.0"]
-	}
+    @Test
+    void "bind multiple address array"() {
+        loader.loadService ubuntu1004Profile, null
+        def profile = registry.getService("profile")[0]
+        loader.loadService bindMultipleAddressArray, profile
+        assertService registry.getService("dns")[0], binding: [
+            "127.0.0.3",
+            "127.0.0.2",
+            "127.0.0.4",
+            "127.0.0.1"
+        ]
+    }
 
-	@Test
-	void "a-records"() {
-		loader.loadService ubuntu1004Profile, null
-		def profile = registry.getService("profile")[0]
-		loader.loadService aRecords, profile
-		DnsServiceImpl service = registry.getService("dns")[0]
-		DnsZone zone = service.zones[0]
-		assertARecord zone.records[0], name: "testa.com", address: "192.168.0.49", ttl: 1000
-		assertARecord zone.records[1], name: "testb.com", address: "192.168.0.50", ttl: 86400000
-		assertARecord zone.records[2], name: "testc.com", address: "192.168.0.51"
-	}
+    @Test
+    void "bind local"() {
+        loader.loadService ubuntu1004Profile, null
+        def profile = registry.getService("profile")[0]
+        loader.loadService bindLocal, profile
+        assertService registry.getService("dns")[0], binding: ["127.0.0.1"]
+    }
 
-	@Test
-	void "cname-records"() {
-		loader.loadService ubuntu1004Profile, null
-		def profile = registry.getService("profile")[0]
-		loader.loadService cnameRecords, profile
-		DnsServiceImpl service = registry.getService("dns")[0]
-		DnsZone zone = service.zones[0]
-		assertCnameRecord zone.records[0], name: "www.testa.com", alias: "testa.com"
-		assertCnameRecord zone.records[1], name: "www.testb.com", alias: "testb.com", ttl: 1000
-	}
+    @Test
+    void "bind all"() {
+        loader.loadService ubuntu1004Profile, null
+        def profile = registry.getService("profile")[0]
+        loader.loadService bindAll, profile
+        assertService registry.getService("dns")[0], binding: ["0.0.0.0"]
+    }
 
-	@Test
-	void "mx-records with a-records"() {
-		loader.loadService ubuntu1004Profile, null
-		def profile = registry.getService("profile")[0]
-		loader.loadService mxRecordsWithARecords, profile
-		DnsServiceImpl service = registry.getService("dns")[0]
-		DnsZone zone = service.zones[0]
-		assertMxRecord zone.records[1], name: "mx1.testa.com", arecord: zone.records[0]
-		assertMxRecord zone.records[3], name: "mx2.testa.com", priority: 20, arecord: zone.records[2]
-		assertMxRecord zone.records[5], name: "mx3.testa.com", ttl: 1000, arecord: zone.records[4]
-	}
+    @Test
+    void "a-records"() {
+        loader.loadService ubuntu1004Profile, null
+        def profile = registry.getService("profile")[0]
+        loader.loadService aRecords, profile
+        DnsServiceImpl service = registry.getService("dns")[0]
+        DnsZone zone = service.zones[0]
+        assertARecord zone.records[0], name: "testa.com", address: "192.168.0.49", ttl: 1000
+        assertARecord zone.records[1], name: "testb.com", address: "192.168.0.50", ttl: 86400000
+        assertARecord zone.records[2], name: "testc.com", address: "192.168.0.51"
+    }
 
-	@Test
-	void "mx-records"() {
-		loader.loadService ubuntu1004Profile, null
-		def profile = registry.getService("profile")[0]
-		loader.loadService mxRecords, profile
-		DnsServiceImpl service = registry.getService("dns")[0]
-		DnsZone zone = service.zones[0]
-		assertMxRecord zone.records[0], name: "mx1.testa.com"
-		assertMxRecord zone.records[1], name: "mx2.testa.com", priority: 20
-		assertMxRecord zone.records[2], name: "mx3.testa.com", ttl: 1000
-	}
+    @Test
+    void "cname-records"() {
+        loader.loadService ubuntu1004Profile, null
+        def profile = registry.getService("profile")[0]
+        loader.loadService cnameRecords, profile
+        DnsServiceImpl service = registry.getService("dns")[0]
+        DnsZone zone = service.zones[0]
+        assertCnameRecord zone.records[0], name: "www.testa.com", alias: "testa.com"
+        assertCnameRecord zone.records[1], name: "www.testb.com", alias: "testb.com", ttl: 1000
+    }
 
-	@Test
-	void "ns-records with a-records"() {
-		loader.loadService ubuntu1004Profile, null
-		def profile = registry.getService("profile")[0]
-		loader.loadService nsRecordsWithARecords, profile
-		DnsServiceImpl service = registry.getService("dns")[0]
-		DnsZone zone = service.zones[0]
-		assertNsRecord zone.records[1], name: "ns1.testa.com", arecord: zone.records[0]
-		assertNsRecord zone.records[3], name: "ns2.testa.com", ttl: 1000, arecord: zone.records[2]
-	}
+    @Test
+    void "mx-records with a-records"() {
+        loader.loadService ubuntu1004Profile, null
+        def profile = registry.getService("profile")[0]
+        loader.loadService mxRecordsWithARecords, profile
+        DnsServiceImpl service = registry.getService("dns")[0]
+        DnsZone zone = service.zones[0]
+        assertMxRecord zone.records[1], name: "mx1.testa.com", arecord: zone.records[0]
+        assertMxRecord zone.records[3], name: "mx2.testa.com", priority: 20, arecord: zone.records[2]
+        assertMxRecord zone.records[5], name: "mx3.testa.com", ttl: 1000, arecord: zone.records[4]
+    }
 
-	@Test
-	void "ns-records"() {
-		loader.loadService ubuntu1004Profile, null
-		def profile = registry.getService("profile")[0]
-		loader.loadService nsRecords, profile
-		DnsServiceImpl service = registry.getService("dns")[0]
-		DnsZone zone = service.zones[0]
-		assertNsRecord zone.records[0], name: "ns1.testa.com"
-		assertNsRecord zone.records[1], name: "ns2.testa.com", ttl: 1000
-	}
+    @Test
+    void "mx-records"() {
+        loader.loadService ubuntu1004Profile, null
+        def profile = registry.getService("profile")[0]
+        loader.loadService mxRecords, profile
+        DnsServiceImpl service = registry.getService("dns")[0]
+        DnsZone zone = service.zones[0]
+        assertMxRecord zone.records[0], name: "mx1.testa.com"
+        assertMxRecord zone.records[1], name: "mx2.testa.com", priority: 20
+        assertMxRecord zone.records[2], name: "mx3.testa.com", ttl: 1000
+    }
 
-	@Test
-	void "zone automatic a-record"() {
-		loader.loadService ubuntu1004Profile, null
-		def profile = registry.getService("profile")[0]
-		loader.loadService zoneARecord, profile
+    @Test
+    void "ns-records with a-records"() {
+        loader.loadService ubuntu1004Profile, null
+        def profile = registry.getService("profile")[0]
+        loader.loadService nsRecordsWithARecords, profile
+        DnsServiceImpl service = registry.getService("dns")[0]
+        DnsZone zone = service.zones[0]
+        assertNsRecord zone.records[1], name: "ns1.testa.com", arecord: zone.records[0]
+        assertNsRecord zone.records[3], name: "ns2.testa.com", ttl: 1000, arecord: zone.records[2]
+    }
 
-		DnsServiceImpl service = registry.getService("dns")[0]
-		def zone = assertZone service.zones[0], name: "testa.com", primary: "ns1.testa.com", email: "hostmaster@testa.com"
-		assertARecord zone.records[0], name: "testa.com", address: "192.168.0.49"
-		zone = assertZone service.zones[1], name: "testb.com", primary: "ns1.testb.com", email: "hostmaster@testb.com", serial: 1
-		assertARecord zone.records[0], name: "testb.com", address: "192.168.0.50", ttl: 1000
-	}
+    @Test
+    void "ns-records"() {
+        loader.loadService ubuntu1004Profile, null
+        def profile = registry.getService("profile")[0]
+        loader.loadService nsRecords, profile
+        DnsServiceImpl service = registry.getService("dns")[0]
+        DnsZone zone = service.zones[0]
+        assertNsRecord zone.records[0], name: "ns1.testa.com"
+        assertNsRecord zone.records[1], name: "ns2.testa.com", ttl: 1000
+    }
 
-	@Test
-	void "origin shortcut"() {
-		loader.loadService ubuntu1004Profile, null
-		def profile = registry.getService("profile")[0]
-		loader.loadService originShortcutScript, profile
-		DnsServiceImpl service = registry.getService("dns")[0]
-		def zone = assertZone service.zones[0], name: "testa.com", primary: "ns1.testa.com", email: "hostmaster@testa.com"
-		assertARecord zone.records[0], name: "testa.com", address: "192.168.0.49"
-		assertARecord zone.records[1], name: "ns1.testa.com", address: "192.168.0.49"
-		assertNsRecord zone.records[2], name: "ns1.testa.com", arecord: zone.records[1]
-		assertARecord zone.records[3], name: "mx1.testa.com", address: "192.168.0.49"
-		assertMxRecord zone.records[4], name: "mx1.testa.com", arecord: zone.records[3]
-		assertCnameRecord zone.records[5], name: "www.testa.com", alias: "testa.com"
-	}
+    @Test
+    void "zone automatic a-record"() {
+        loader.loadService ubuntu1004Profile, null
+        def profile = registry.getService("profile")[0]
+        loader.loadService zoneARecord, profile
 
-	@Test
-	void "recursive"() {
-		loader.loadService ubuntu1004Profile, null
-		def profile = registry.getService("profile")[0]
-		loader.loadService recursive, profile
-		DnsServiceImpl service = registry.getService("dns")[0]
-		DnsZone zone = service.zones[0]
-		assert service.aliases.aliases.size() == 1
-		assert service.aliases.aliases[0].name == "localhost"
-		assert service.aliases.aliases[0].addresses[0] == "127.0.0.1"
-		assert service.roots.servers[0] == "icann"
-		assert service.recursive.servers[0] == "localhost"
-	}
+        DnsServiceImpl service = registry.getService("dns")[0]
+        def zone = assertZone service.zones[0], name: "testa.com", primary: "ns1.testa.com", email: "hostmaster@testa.com"
+        assertARecord zone.records[0], name: "testa.com", address: "192.168.0.49"
+        zone = assertZone service.zones[1], name: "testb.com", primary: "ns1.testb.com", email: "hostmaster@testb.com", serial: 1
+        assertARecord zone.records[0], name: "testb.com", address: "192.168.0.50", ttl: 1000
+    }
+
+    @Test
+    void "origin shortcut"() {
+        loader.loadService ubuntu1004Profile, null
+        def profile = registry.getService("profile")[0]
+        loader.loadService originShortcutScript, profile
+        DnsServiceImpl service = registry.getService("dns")[0]
+        def zone = assertZone service.zones[0], name: "testa.com", primary: "ns1.testa.com", email: "hostmaster@testa.com"
+        assertARecord zone.records[0], name: "testa.com", address: "192.168.0.49"
+        assertARecord zone.records[1], name: "ns1.testa.com", address: "192.168.0.49"
+        assertNsRecord zone.records[2], name: "ns1.testa.com", arecord: zone.records[1]
+        assertARecord zone.records[3], name: "mx1.testa.com", address: "192.168.0.49"
+        assertMxRecord zone.records[4], name: "mx1.testa.com", arecord: zone.records[3]
+        assertCnameRecord zone.records[5], name: "www.testa.com", alias: "testa.com"
+    }
+
+    @Test
+    void "recursive"() {
+        loader.loadService ubuntu1004Profile, null
+        def profile = registry.getService("profile")[0]
+        loader.loadService recursive, profile
+        DnsServiceImpl service = registry.getService("dns")[0]
+        DnsZone zone = service.zones[0]
+        assert service.aliases.aliases.size() == 1
+        assert service.aliases.aliases[0].name == "localhost"
+        assert service.aliases.aliases[0].addresses[0] == "127.0.0.1"
+        assert service.roots.servers[0] == "icann"
+        assert service.recursive.servers[0] == "localhost"
+    }
 }

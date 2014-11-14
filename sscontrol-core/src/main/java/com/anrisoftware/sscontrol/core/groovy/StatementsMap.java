@@ -37,7 +37,16 @@ import com.google.inject.assistedinject.Assisted;
 
 /**
  * Stored allowed script statements.
- * 
+ * <p>
+ *
+ * <pre>
+ * public Object methodMissing(String name, Object args) throws ServiceException {
+ *     statementsMap.methodMissing(name, args);
+ *     return null;
+ * }
+ *
+ * </pre>
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
@@ -72,7 +81,7 @@ public class StatementsMap implements Serializable {
 
     /**
      * Adds allowed script statements.
-     * 
+     *
      * @param names
      *            the array with script statement {@link String} names.
      */
@@ -84,14 +93,14 @@ public class StatementsMap implements Serializable {
 
     /**
      * Sets the statement have a value as the first argument.
-     * 
+     *
      * @param haveName
      *            set to {@code true} if the statement have a value as the first
      *            argument.
-     * 
+     *
      * @param names
      *            the statement {@link String} names.
-     * 
+     *
      * @see #value(String)
      * @see #valueAsList(String)
      */
@@ -103,14 +112,14 @@ public class StatementsMap implements Serializable {
 
     /**
      * Sets the statement have a value as the first argument.
-     * 
+     *
      * @param name
      *            the statement {@link String} name.
-     * 
+     *
      * @param haveName
      *            set to {@code true} if the statement have a value as the first
      *            argument.
-     * 
+     *
      * @see #value(String)
      * @see #valueAsList(String)
      */
@@ -125,13 +134,13 @@ public class StatementsMap implements Serializable {
 
     /**
      * Adds allowed statement keys.
-     * 
+     *
      * @param name
      *            the statement {@link String} name.
-     * 
+     *
      * @param keys
      *            the array with allowed {@link String} keys.
-     * 
+     *
      * @see #mapValue(String, String)
      */
     public void addAllowedKeys(String name, String... keys) {
@@ -141,10 +150,10 @@ public class StatementsMap implements Serializable {
 
     /**
      * Returns the statement value with the specified name.
-     * 
+     *
      * @param name
      *            the {@link String} name.
-     * 
+     *
      * @return the {@link Object} value.
      */
     @SuppressWarnings("unchecked")
@@ -159,13 +168,13 @@ public class StatementsMap implements Serializable {
 
     /**
      * Returns the statement value with the specified name.
-     * 
+     *
      * @param name
      *            the {@link String} name.
-     * 
+     *
      * @param key
      *            the {@link String} key.
-     * 
+     *
      * @return the {@link Object} value.
      */
     @SuppressWarnings("unchecked")
@@ -176,10 +185,10 @@ public class StatementsMap implements Serializable {
 
     /**
      * Returns the statement value with the specified name as a list.
-     * 
+     *
      * @param name
      *            the {@link String} name.
-     * 
+     *
      * @return the {@link List} list.
      */
     public List<String> valueAsList(String name) {
@@ -193,16 +202,16 @@ public class StatementsMap implements Serializable {
 
     /**
      * Puts the statement value with the specified name.
-     * 
+     *
      * @param name
      *            the {@link String} name.
-     * 
+     *
      * @param key
      *            the {@link String} key.
-     * 
+     *
      * @param value
      *            the {@link Object} value.
-     * 
+     *
      * @throws ServiceException
      *             if the statement is now allowed.
      */
@@ -217,13 +226,13 @@ public class StatementsMap implements Serializable {
 
     /**
      * Puts the statement value with the specified name.
-     * 
+     *
      * @param name
      *            the {@link String} name.
-     * 
+     *
      * @param value
      *            the {@link Object} value.
-     * 
+     *
      * @throws ServiceException
      *             if the statement is now allowed.
      */
@@ -247,7 +256,14 @@ public class StatementsMap implements Serializable {
                 putMapValues(name, list, allowedKeys, map);
             } else {
                 log.checkNameValueAllowed(this, allowedKeys, name);
-                putNameValue(list, map);
+                putNameValue(list, 0, map);
+            }
+        }
+        if (list.size() == 2) {
+            log.checkNameValueAllowed(this, allowedKeys, name);
+            putNameValue(list, 1, map);
+            if (list.get(0) instanceof Map) {
+                putMapValues(name, list, allowedKeys, map);
             }
         }
         args.put(name, map);
@@ -255,9 +271,9 @@ public class StatementsMap implements Serializable {
         return null;
     }
 
-    private void putNameValue(List<?> list, Map<String, Object> map) {
+    private void putNameValue(List<?> list, int i, Map<String, Object> map) {
         Object value;
-        value = list.get(0);
+        value = list.get(i);
         map.put(NAME_KEY, value);
     }
 
@@ -294,4 +310,5 @@ public class StatementsMap implements Serializable {
         return new ToStringBuilder(this).append(SERVICE, service.toString())
                 .toString();
     }
+
 }

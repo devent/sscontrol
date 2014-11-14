@@ -19,6 +19,7 @@
 package com.anrisoftware.sscontrol.dns.service;
 
 import com.anrisoftware.sscontrol.core.bindings.BindingsModule;
+import com.anrisoftware.sscontrol.core.groovy.StatementsMapModule;
 import com.anrisoftware.sscontrol.core.list.ListModule;
 import com.anrisoftware.sscontrol.dns.aliases.AliasesModule;
 import com.anrisoftware.sscontrol.dns.arecord.ARecordModule;
@@ -48,5 +49,6 @@ class DnsModule extends AbstractModule {
 		install(new NsRecordModule());
 		install(new MxRecordModule());
 		install(new TimeModule());
+        install(new StatementsMapModule());
 	}
 }

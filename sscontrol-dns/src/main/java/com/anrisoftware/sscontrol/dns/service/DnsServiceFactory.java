@@ -40,7 +40,7 @@ public class DnsServiceFactory implements ServiceFactory {
     /**
      * The name of the DNS service.
      */
-    public static final String NAME = "dns";
+    public static final String SERVICE_NAME = "dns";
 
     private static final Module[] MODULES = new Module[] { new DnsModule() };
 
@@ -50,7 +50,7 @@ public class DnsServiceFactory implements ServiceFactory {
 
     @Override
     public String getName() {
-        return NAME;
+        return SERVICE_NAME;
     }
 
     @Override

@@ -92,6 +92,18 @@ class StatementsMapTest {
     }
 
     @Test
+    void "statement map with name"() {
+        Bean bean = injector.getInstance Bean
+        bean.map.addAllowed "beanMap"
+        bean.map.setAllowValue "beanMap", true
+        bean.map.addAllowedKeys "beanMap", "aaa", "bbb"
+        bean.beanMap aaa: "foo", bbb: "bar", "value"
+        assert bean.map.value("beanMap") == "value"
+        assert bean.map.mapValue("beanMap", "aaa") == "foo"
+        assert bean.map.mapValue("beanMap", "bbb") == "bar"
+    }
+
+    @Test
     void "set statement map"() {
         Bean bean = injector.getInstance Bean
         bean.map.addAllowed "beanMap"

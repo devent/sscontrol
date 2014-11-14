@@ -18,6 +18,7 @@
  */
 package com.anrisoftware.sscontrol.dns.service;
 
+import static com.anrisoftware.sscontrol.dns.service.DnsServiceFactory.SERVICE_NAME;
 import static java.lang.String.format;
 import static java.util.Collections.unmodifiableList;
 import groovy.lang.Script;
@@ -40,6 +41,9 @@ import com.anrisoftware.sscontrol.core.bindings.Address;
 import com.anrisoftware.sscontrol.core.bindings.Binding;
 import com.anrisoftware.sscontrol.core.bindings.BindingAddress;
 import com.anrisoftware.sscontrol.core.bindings.BindingArgs;
+import com.anrisoftware.sscontrol.core.bindings.BindingFactory;
+import com.anrisoftware.sscontrol.core.groovy.StatementsMap;
+import com.anrisoftware.sscontrol.core.groovy.StatementsMapFactory;
 import com.anrisoftware.sscontrol.core.service.AbstractService;
 import com.anrisoftware.sscontrol.dns.aliases.Alias;
 import com.anrisoftware.sscontrol.dns.aliases.AliasFactory;
@@ -60,6 +64,10 @@ import com.anrisoftware.sscontrol.dns.zone.ZoneRecord;
 @SuppressWarnings("serial")
 class DnsServiceImpl extends AbstractService {
 
+    private static final String GENERATE_KEY = "generate";
+
+    private static final String SERIAL_KEY = "serial";
+
     private static final String DURATION = "duration";
 
     private static final String TTL = "ttl";
@@ -67,10 +75,6 @@ class DnsServiceImpl extends AbstractService {
     private static final String ADDRESS = "address";
 
     private static final String NAME = "name";
-
-    private static final String BINDINGS = "bindings";
-
-    private static final String SERIAL = "serial";
 
     private final List<DnsZone> zones;
 
@@ -98,18 +102,28 @@ class DnsServiceImpl extends AbstractService {
     @Inject
     private Recursive recursive;
 
-    private int serial;
-
-    private boolean generate;
+    private StatementsMap statementsMap;
 
     DnsServiceImpl() {
         this.zones = new ArrayList<DnsZone>();
-        this.generate = true;
+    }
+
+    @Inject
+    public void setStatementsMapFactory(StatementsMapFactory factory) {
+        StatementsMap map = factory.create(this, SERVICE_NAME);
+        this.statementsMap = map;
+        map.addAllowed(SERIAL_KEY);
+        map.setAllowValue(true, SERIAL_KEY);
+        map.addAllowedKeys(SERIAL_KEY, GENERATE_KEY);
+        try {
+            map.putMapValue(SERIAL_KEY, GENERATE_KEY, true);
+        } catch (ServiceException e) {
+        }
     }
 
     @Override
     protected Script getScript(String profileName) throws ServiceException {
-        ServiceScriptFactory scriptFactory = findScriptFactory(DnsServiceFactory.NAME);
+        ServiceScriptFactory scriptFactory = findScriptFactory(SERVICE_NAME);
         return (Script) scriptFactory.getScript();
     }
 
@@ -126,15 +140,15 @@ class DnsServiceImpl extends AbstractService {
      */
     @Override
     public String getName() {
-        return DnsServiceFactory.NAME;
+        return SERVICE_NAME;
     }
 
     /**
      * Entry point for the DNS service script.
-     * 
+     *
      * @param statements
      *            the DNS service statements.
-     * 
+     *
      * @return this {@link Service}.
      */
     public Service dns(Object statements) {
@@ -142,76 +156,39 @@ class DnsServiceImpl extends AbstractService {
     }
 
     /**
-     * Sets the serial number of the zone records.
-     * 
-     * @param serial
-     *            the serial.
-     * 
-     * @param args
-     *            the {@link Map} of additional named parameter:
-     *            <dl>
-     *            <dt>generate</dt>
-     *            <dd>if set to {@code true} then the serial number is added to
-     *            the automatically generated serial. The DNS service needs the
-     *            serial number to be updated for all records that have been
-     *            changed. The service can create serial numbers based on the
-     *            current date but the user needs to update this serial number
-     *            if the records are changed more then once in a day. If set to
-     *            {@code false} then the serial number is used as specified.</dd>
-     *            </dl>
-     * 
-     */
-    public void serial(Map<String, Object> args, int serial) {
-        if (args.containsKey("generate")) {
-            setGenerate((Boolean) args.get("generate"));
-        }
-        serial(serial);
-    }
-
-    /**
-     * Sets the serial number of the zone records.
+     * Returns the serial number.
      * <p>
      * The serial number can be any number, it is added to the automatically
      * generated serial. The DNS service needs the serial number to be updated
      * for all records that have been changed. The service can create serial
      * numbers based on the current date but the user needs to update this
      * serial number if the records are changed more then once in a day.
-     * 
-     * @param serial
-     *            the serial.
      */
-    public void serial(int serial) {
-        this.serial = serial;
-        log.serialSet(this, serial, generate);
-    }
-
-    /**
-     * Sets whether the serial should be generated.
-     * <p>
-     * The service can create serial numbers based on the current date but the
-     * user needs to update this serial number if the records are changed more
-     * then once in a day.
-     * 
-     * @param generate
-     *            {@code true} if the serial number should be generated.
-     */
-    public void setGenerate(boolean generate) {
-        this.generate = generate;
-        log.generateSet(this, generate);
+    public int getSerialNumber() {
+        int serial = statementsMap.value(SERIAL_KEY);
+        return isSerialGenerate() ? generateSerial(serial) : serial;
     }
 
     /**
      * Returns whether the serial is generated.
-     * 
+     * <p>
+     * If returns {@code true} then the serial number is added to the
+     * automatically generated serial. The DNS service needs the serial number
+     * to be updated for all records that have been changed. The service can
+     * create serial numbers based on the current date but the user needs to
+     * update this serial number if the records are changed more then once in a
+     * day. If set to {@code false} then the serial number is used as
+     * specified.</dd>
+     *
      * @return {@code true} if the serial number is generated.
      */
-    public boolean isGenerate() {
-        return generate;
+    public boolean isSerialGenerate() {
+        return statementsMap.mapValue(SERIAL_KEY, GENERATE_KEY);
     }
 
     /**
      * Sets the IP addresses or host names to where to bind the DNS service.
-     * 
+     *
      * @see BindingFactory#create(Map, String...)
      */
     public void bind(Map<String, Object> args) throws ServiceException {
@@ -222,7 +199,7 @@ class DnsServiceImpl extends AbstractService {
 
     /**
      * Sets the IP addresses or host names to where to bind the DNS service.
-     * 
+     *
      * @see BindingFactory#create(BindingAddress)
      */
     public void bind(BindingAddress address) throws ServiceException {
@@ -232,7 +209,7 @@ class DnsServiceImpl extends AbstractService {
 
     /**
      * Returns a list of the IP addresses where to bind the DNS service.
-     * 
+     *
      * @return the {@link Binding}.
      */
     public Binding getBinding() {
@@ -241,11 +218,11 @@ class DnsServiceImpl extends AbstractService {
 
     /**
      * Adds a new DNS zone.
-     * 
+     *
      * @see DnsZoneFactory#create(Map, String)
-     * 
+     *
      * @return the {@link DnsZone}.
-     * 
+     *
      * @throws ParseException
      *             if the TTL duration of the automatic A-record could not be
      *             parsed.
@@ -257,19 +234,19 @@ class DnsServiceImpl extends AbstractService {
 
     /**
      * Adds a new DNS zone.
-     * 
+     *
      * @see DnsZoneFactory#create(Map, String)
-     * 
+     *
      * @return the {@link DnsZone}.
-     * 
+     *
      * @throws ParseException
      *             if the TTL duration of the automatic A-record could not be
      *             parsed.
      */
     public DnsZone zone(Map<String, Object> args, String name, Object statements)
             throws ParseException {
-        if (!args.containsKey(SERIAL)) {
-            args.put(SERIAL, getSerial());
+        if (!args.containsKey(SERIAL_KEY)) {
+            args.put(SERIAL_KEY, getSerialNumber());
         }
         DnsZone zone = zoneFactory.create(args, name);
         zones.add(zone);
@@ -292,13 +269,6 @@ class DnsServiceImpl extends AbstractService {
         }
     }
 
-    /**
-     * Returns the serial number.
-     */
-    public int getSerial() {
-        return generate ? generateSerial(serial) : serial;
-    }
-
     private int generateSerial(int serial) {
         DateTime date = new DateTime();
         String string = format("%d%d%d%02d", date.getYear(),
@@ -308,7 +278,7 @@ class DnsServiceImpl extends AbstractService {
 
     /**
      * Returns a list of the DNS zones.
-     * 
+     *
      * @return an unmodifiable {@link List} of {@link DnsZone} DNS zones.
      */
     public List<DnsZone> getZones() {
@@ -317,10 +287,10 @@ class DnsServiceImpl extends AbstractService {
 
     /**
      * Adds a new alias.
-     * 
+     *
      * @param name
      *            the name of the alias.
-     * 
+     *
      * @return the {@link Alias}.
      */
     public Alias alias(String name) {
@@ -332,7 +302,7 @@ class DnsServiceImpl extends AbstractService {
 
     /**
      * Returns the aliases.
-     * 
+     *
      * @return the {@link Aliases}.
      */
     public Aliases getAliases() {
@@ -341,10 +311,10 @@ class DnsServiceImpl extends AbstractService {
 
     /**
      * Returns the root servers.
-     * 
+     *
      * @param statements
      *            the roots statements.
-     * 
+     *
      * @return the {@link Roots}.
      */
     public Roots roots(Object statements) {
@@ -353,7 +323,7 @@ class DnsServiceImpl extends AbstractService {
 
     /**
      * Returns the root servers.
-     * 
+     *
      * @return the {@link Roots}.
      */
     public Roots getRoots() {
@@ -362,10 +332,10 @@ class DnsServiceImpl extends AbstractService {
 
     /**
      * Returns the recursive servers.
-     * 
+     *
      * @param statements
      *            the recursive statements.
-     * 
+     *
      * @return the {@link Recursive}.
      */
     public Recursive recursive(Object statements) {
@@ -374,7 +344,7 @@ class DnsServiceImpl extends AbstractService {
 
     /**
      * Returns the recursive servers.
-     * 
+     *
      * @return the {@link Recursive}.
      */
     public Recursive getRecursive() {
@@ -423,10 +393,16 @@ class DnsServiceImpl extends AbstractService {
         return Record.ns;
     }
 
+    public Object methodMissing(String name, Object args)
+            throws ServiceException {
+        statementsMap.methodMissing(name, args);
+        return null;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this).appendSuper(super.toString())
-                .append(SERIAL, serial).append(BINDINGS, binding).toString();
+                .toString();
     }
 
 }

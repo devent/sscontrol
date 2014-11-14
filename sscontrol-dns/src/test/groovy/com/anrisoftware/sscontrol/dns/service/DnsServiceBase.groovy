@@ -104,10 +104,10 @@ class DnsServiceBase {
     DnsServiceImpl assertService(Map args, DnsServiceImpl service) {
         assert service != null
         if (args.containsKey("generate")) {
-            assert service.generate == args.generate
+            assert service.serialGenerate == args.generate
         }
         if (args.containsKey("serial")) {
-            assert service.serial == args.serial
+            assert service.serialNumber == args.serialNumber
         }
         if (args.containsKey("binding")) {
             def bindings = args["binding"]
@@ -141,10 +141,10 @@ class DnsServiceBase {
     def DnsServiceImpl assertServiceGeneratedSerial(Map args, DnsServiceImpl service) {
         assert service != null
         if (args.containsKey("generate")) {
-            assert service.generate == args.generate
+            assert service.serialGenerate == args.generate
         }
         if (args.containsKey("serial")) {
-            assert service.serial > args.serial
+            assert service.serialNumber > args.serial
         }
         if (args.containsKey("binding")) {
             assert service.binding.addresses.containsAll(args.binding)

@@ -25,7 +25,6 @@ import org.junit.Test
 
 import com.anrisoftware.globalpom.resources.ResourcesModule
 import com.anrisoftware.resources.texts.defaults.TextsResourcesDefaultModule
-import com.anrisoftware.sscontrol.core.api.ServiceException
 import com.anrisoftware.sscontrol.core.list.ListModule
 import com.google.inject.Guice
 import com.google.inject.Injector
@@ -61,7 +60,7 @@ class StatementsMapTest {
         Bean bean = injector.getInstance Bean
         bean.map.addAllowed "beanName"
         bean.map.setAllowValue "beanName", false
-        shouldFailWith(ServiceException) { bean.beanName "bean name" }
+        shouldFailWith(StatementsException) { bean.beanName "bean name" }
     }
 
     @Test
@@ -69,7 +68,7 @@ class StatementsMapTest {
         Bean bean = injector.getInstance Bean
         bean.map.addAllowed "beanName"
         bean.map.setAllowValue "beanName", false
-        shouldFailWith(ServiceException) { bean.map.putValue "beanName", "bean name" }
+        shouldFailWith(StatementsException) { bean.map.putValue "beanName", "bean name" }
     }
 
     @Test
@@ -104,6 +103,19 @@ class StatementsMapTest {
     }
 
     @Test
+    void "statement map with name, multi"() {
+        Bean bean = injector.getInstance Bean
+        bean.map.addAllowed "beanMap"
+        bean.map.setAllowMultiValue "beanMap", true
+        bean.map.addAllowedMultiKeys "beanMap", "aaa", "bbb"
+        bean.beanMap aaa: "foo1", bbb: "bar1", "value1"
+        bean.beanMap aaa: "foo2", bbb: "bar2", "value2"
+        assert bean.map.value("beanMap").containsAll(["value1", "value2"])
+        assert bean.map.mapValue("beanMap", "aaa").containsAll(["foo1", "foo2"])
+        assert bean.map.mapValue("beanMap", "bbb").containsAll(["bar1", "bar2"])
+    }
+
+    @Test
     void "set statement map"() {
         Bean bean = injector.getInstance Bean
         bean.map.addAllowed "beanMap"
@@ -112,7 +124,7 @@ class StatementsMapTest {
         bean.map.putMapValue "beanMap", "bbb", "bar"
         assert bean.map.mapValue("beanMap", "aaa") == "foo"
         assert bean.map.mapValue("beanMap", "bbb") == "bar"
-        shouldFailWith(ServiceException) { bean.map.putMapValue "beanMap", "ccc", "baz" }
+        shouldFailWith(StatementsException) { bean.map.putMapValue "beanMap", "ccc", "baz" }
     }
 
     @Test
@@ -121,7 +133,7 @@ class StatementsMapTest {
         bean.map.addAllowed "beanMap"
         bean.map.addAllowedKeys "beanMap", "aaa"
         bean.map.putMapValue "beanMap", "aaa", "foo"
-        shouldFailWith(ServiceException) { bean.map.putMapValue "beanMap", "bbb", "bar" }
+        shouldFailWith(StatementsException) { bean.map.putMapValue "beanMap", "bbb", "bar" }
         assert bean.map.mapValue("beanMap", "aaa") == "foo"
     }
 

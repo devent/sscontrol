@@ -38,6 +38,18 @@ import com.anrisoftware.sscontrol.dns.zone.DnsZone
 class DnsServiceTest extends DnsServiceBase {
 
     @Test
+    void "aliases"() {
+        loader.loadService ubuntu1004Profile, null
+        def profile = registry.getService("profile")[0]
+        loader.loadService aliases, profile
+
+        DnsServiceImpl service = registry.getService("dns")[0]
+        assert service.aliases.size() == 2
+        assert service.aliases["localhost"].containsAll(["127.0.0.1"])
+        assert service.aliases["vbox"].containsAll(["10.0.2.2", "10.0.2.3"])
+    }
+
+    @Test
     void "fixed serial"() {
         loader.loadService ubuntu1004Profile, null
         def profile = registry.getService("profile")[0]
@@ -211,12 +223,19 @@ class DnsServiceTest extends DnsServiceBase {
         loader.loadService ubuntu1004Profile, null
         def profile = registry.getService("profile")[0]
         loader.loadService recursive, profile
+
         DnsServiceImpl service = registry.getService("dns")[0]
         DnsZone zone = service.zones[0]
-        assert service.aliases.aliases.size() == 1
-        assert service.aliases.aliases[0].name == "localhost"
-        assert service.aliases.aliases[0].addresses[0] == "127.0.0.1"
-        assert service.roots.servers[0] == "icann"
-        assert service.recursive.servers[0] == "localhost"
+        assert service.upstreamServers.size() == 1
+        assert service.upstreamServers.containsAll("8.8.8.8")
+        assert service.servers.size() == 2
+        assert service.servers["example1.com"] == "127.0.0.2"
+        assert service.servers["example2.com"] == "127.0.0.3"
+        assert service.acls.size() == 3
+        assert service.acls.containsAll([
+            "127.0.0.1",
+            "192.168.0.1",
+            "192.168.0.2"
+        ])
     }
 }

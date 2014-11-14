@@ -35,7 +35,6 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.joda.time.Duration;
 
 import com.anrisoftware.globalpom.format.duration.DurationFormatFactory;
-import com.anrisoftware.sscontrol.dns.recursive.RecordFactory;
 import com.anrisoftware.sscontrol.dns.time.TimeDuration;
 import com.anrisoftware.sscontrol.dns.time.TimeDurationFactory;
 import com.google.inject.assistedinject.Assisted;

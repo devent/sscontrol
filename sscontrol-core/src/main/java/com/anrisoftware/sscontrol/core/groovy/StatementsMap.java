@@ -19,6 +19,7 @@
 package com.anrisoftware.sscontrol.core.groovy;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -31,7 +32,6 @@ import javax.inject.Inject;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.codehaus.groovy.runtime.InvokerHelper;
 
-import com.anrisoftware.sscontrol.core.api.ServiceException;
 import com.anrisoftware.sscontrol.core.list.StringToListFactory;
 import com.google.inject.assistedinject.Assisted;
 
@@ -65,22 +65,32 @@ public class StatementsMap implements Serializable {
 
     private final Map<String, Set<String>> allowed;
 
+    private final Map<String, Map<String, Boolean>> multiValued;
+
     @Inject
     private StatementsMapLogger log;
 
     @Inject
     private StringToListFactory toListFactory;
 
+    /**
+     * @see StatementsMapFactory#create(Object, String)
+     */
     @Inject
     StatementsMap(@Assisted Object service, @Assisted String name) {
         this.service = service;
         this.name = name;
         this.args = new HashMap<String, Map<String, Object>>();
         this.allowed = new HashMap<String, Set<String>>();
+        this.multiValued = new HashMap<String, Map<String, Boolean>>();
     }
 
     /**
      * Adds allowed script statements.
+     *
+     * <pre>
+     * statement "value", key: "value"
+     * </pre>
      *
      * @param names
      *            the array with script statement {@link String} names.
@@ -88,11 +98,16 @@ public class StatementsMap implements Serializable {
     public void addAllowed(String... names) {
         for (String name : names) {
             allowed.put(name, new HashSet<String>());
+            multiValued.put(name, new HashMap<String, Boolean>());
         }
     }
 
     /**
      * Sets the statement have a value as the first argument.
+     *
+     * <pre>
+     * statement "value"
+     * </pre>
      *
      * @param haveName
      *            set to {@code true} if the statement have a value as the first
@@ -111,7 +126,35 @@ public class StatementsMap implements Serializable {
     }
 
     /**
+     * Sets the statement have a multi-value as the first argument.
+     *
+     * <pre>
+     * statement "value1"
+     * statement "value2"
+     * </pre>
+     *
+     * @param haveName
+     *            set to {@code true} if the statement have a value as the first
+     *            argument.
+     *
+     * @param names
+     *            the statement {@link String} names.
+     *
+     * @see #value(String)
+     * @see #valueAsList(String)
+     */
+    public void setAllowMultiValue(boolean haveName, String... names) {
+        for (String name : names) {
+            setAllowMultiValue(name, haveName);
+        }
+    }
+
+    /**
      * Sets the statement have a value as the first argument.
+     *
+     * <pre>
+     * statement "value"
+     * </pre>
      *
      * @param name
      *            the statement {@link String} name.
@@ -125,15 +168,52 @@ public class StatementsMap implements Serializable {
      */
     public void setAllowValue(String name, boolean haveName) {
         Set<String> set = allowed.get(name);
+        Map<String, Boolean> multi = multiValued.get(name);
         if (haveName) {
             set.add(NAME_KEY);
+            multi.put(NAME_KEY, false);
         } else {
             set.remove(NAME_KEY);
+            multi.remove(NAME_KEY);
+        }
+    }
+
+    /**
+     * Sets the statement have a value as the first argument.
+     *
+     * <pre>
+     * statement "value1"
+     * statement "value2"
+     * </pre>
+     *
+     * @param name
+     *            the statement {@link String} name.
+     *
+     * @param haveName
+     *            set to {@code true} if the statement have a value as the first
+     *            argument.
+     *
+     * @see #value(String)
+     * @see #valueAsList(String)
+     */
+    public void setAllowMultiValue(String name, boolean haveName) {
+        Set<String> set = allowed.get(name);
+        Map<String, Boolean> multi = multiValued.get(name);
+        if (haveName) {
+            set.add(NAME_KEY);
+            multi.put(NAME_KEY, true);
+        } else {
+            set.remove(NAME_KEY);
+            multi.remove(NAME_KEY);
         }
     }
 
     /**
      * Adds allowed statement keys.
+     *
+     * <pre>
+     * statement key: "value"
+     * </pre>
      *
      * @param name
      *            the statement {@link String} name.
@@ -144,17 +224,71 @@ public class StatementsMap implements Serializable {
      * @see #mapValue(String, String)
      */
     public void addAllowedKeys(String name, String... keys) {
+        addAllowedKeys(name, false, keys);
+    }
+
+    /**
+     * Adds allowed statement keys with multi-values.
+     *
+     * <pre>
+     * statement key: "value1"
+     * statement key: "value2"
+     * </pre>
+     *
+     * @param name
+     *            the statement {@link String} name.
+     *
+     * @param keys
+     *            the array with allowed {@link String} keys.
+     *
+     * @see #mapValue(String, String)
+     */
+    public void addAllowedMultiKeys(String name, String... keys) {
+        addAllowedKeys(name, true, keys);
+    }
+
+    /**
+     * Adds allowed statement keys.
+     *
+     * <pre>
+     * statement key: "value1"
+     * statement key: "value2"
+     * </pre>
+     *
+     * @param name
+     *            the statement {@link String} name.
+     *
+     * @param isMulti
+     *            set to {@code true} for multi-values.
+     *
+     * @param keys
+     *            the array with allowed {@link String} keys.
+     *
+     * @see #mapValue(String, String)
+     */
+    public void addAllowedKeys(String name, boolean isMulti, String... keys) {
         Set<String> set = allowed.get(name);
+        Map<String, Boolean> multi = multiValued.get(name);
         set.addAll(Arrays.asList(keys));
+        for (String key : keys) {
+            multi.put(key, isMulti);
+        }
     }
 
     /**
      * Returns the statement value with the specified name.
+     * <p>
+     *
+     * The following statement returns "value":
+     *
+     * <pre>
+     * statement "value"
+     * </pre>
      *
      * @param name
      *            the {@link String} name.
      *
-     * @return the {@link Object} value.
+     * @return the {@link Object} value or {@code null}.
      */
     @SuppressWarnings("unchecked")
     public <T> T value(String name) {
@@ -167,7 +301,64 @@ public class StatementsMap implements Serializable {
     }
 
     /**
+     * Returns the statement value with the specified name as a list.
+     * <p>
+     *
+     * The following statement returns ["value1", "value2"]:
+     *
+     * <pre>
+     * statement "value1, value2"
+     * </pre>
+     *
+     * @param name
+     *            the {@link String} name.
+     *
+     * @return the {@link List} list or {@code null}.
+     */
+    public List<String> valueAsList(String name) {
+        Object value = value(name);
+        if (value != null) {
+            return toListFactory.create(value).getList();
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Returns the statement multi-value with the specified name.
+     * <p>
+     *
+     * The following statements returns ["value1", "value2"]:
+     *
+     * <pre>
+     * statement "value1"
+     * statement "value2"
+     * </pre>
+     *
+     * @param name
+     *            the {@link String} name.
+     *
+     * @return the {@link List} values.
+     */
+    @SuppressWarnings("unchecked")
+    public <T> List<T> multiValue(String name) {
+        Map<String, Object> map = args.get(name);
+        if (map != null) {
+            return (List<T>) map.get(NAME_KEY);
+        } else {
+            return null;
+        }
+    }
+
+    /**
      * Returns the statement value with the specified name.
+     * <p>
+     *
+     * The following statement returns "value":
+     *
+     * <pre>
+     * statement key: "value"
+     * </pre>
      *
      * @param name
      *            the {@link String} name.
@@ -184,20 +375,55 @@ public class StatementsMap implements Serializable {
     }
 
     /**
-     * Returns the statement value with the specified name as a list.
+     * Returns the statement values with the specified name.
+     * <p>
+     *
+     * The following statement returns {@code ["value1", "value2"]}
+     *
+     * <pre>
+     * statement key: "value1, value2"
+     * </pre>
      *
      * @param name
      *            the {@link String} name.
      *
-     * @return the {@link List} list.
+     * @param key
+     *            the {@link String} key.
+     *
+     * @return the {@link List} values.
      */
-    public List<String> valueAsList(String name) {
-        Object value = value(name);
+    public List<String> mapValueAsList(String name, String key) {
+        Object value = mapValue(name, key);
         if (value != null) {
             return toListFactory.create(value).getList();
         } else {
             return null;
         }
+    }
+
+    /**
+     * Returns the statement multi-value with the specified name.
+     * <p>
+     *
+     * The following statements returns ["value1", "value2"]:
+     *
+     * <pre>
+     * statement key: "value1"
+     * statement key: "value2"
+     * </pre>
+     *
+     * @param name
+     *            the {@link String} name.
+     *
+     * @param key
+     *            the {@link String} key.
+     *
+     * @return the {@link Object} value.
+     */
+    @SuppressWarnings("unchecked")
+    public <T> List<T> mapMultiValue(String name, String key) {
+        Map<String, Object> map = args.get(name);
+        return map == null ? null : (List<T>) map.get(key);
     }
 
     /**
@@ -212,16 +438,31 @@ public class StatementsMap implements Serializable {
      * @param value
      *            the {@link Object} value.
      *
-     * @throws ServiceException
+     * @throws StatementsException
      *             if the statement is now allowed.
      */
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void putMapValue(String name, String key, Object value)
-            throws ServiceException {
+            throws StatementsException {
         log.checkName(allowed, name);
         Set<String> allowedKeys = allowed.get(name);
+        Map<String, Boolean> multi = multiValued.get(name);
         log.checkKey(this, allowedKeys, name, key);
         Map<String, Object> map = getArgsMap(name);
-        map.put(key, value);
+        if (multi.get(key) == true) {
+            Object oldValue = map.get(key);
+            if (oldValue == null) {
+                oldValue = new ArrayList();
+                map.put(key, oldValue);
+            }
+            if (oldValue instanceof List) {
+                List list = (List) oldValue;
+                list.add(value);
+            }
+        } else {
+            map.put(key, value);
+        }
+        log.statementValueAdded(this, name, key, value);
     }
 
     /**
@@ -233,59 +474,37 @@ public class StatementsMap implements Serializable {
      * @param value
      *            the {@link Object} value.
      *
-     * @throws ServiceException
+     * @throws StatementsException
      *             if the statement is now allowed.
      */
-    public void putValue(String name, Object value) throws ServiceException {
-        log.checkName(allowed, name);
-        Set<String> allowedKeys = allowed.get(name);
-        log.checkNameValueAllowed(this, allowedKeys, name);
-        Map<String, Object> map = getArgsMap(name);
-        map.put(NAME_KEY, value);
+    public void putValue(String name, Object value) throws StatementsException {
+        putMapValue(name, NAME_KEY, value);
     }
 
     public Object methodMissing(String name, Object obj)
-            throws ServiceException {
-        log.checkName(allowed, name);
+            throws StatementsException {
         @SuppressWarnings("rawtypes")
         List list = InvokerHelper.asList(obj);
-        Set<String> allowedKeys = allowed.get(name);
-        Map<String, Object> map = getArgsMap(name);
         if (list.size() == 1) {
             if (list.get(0) instanceof Map) {
-                putMapValues(name, list, allowedKeys, map);
+                @SuppressWarnings("unchecked")
+                Map<String, Object> map = (Map<String, Object>) list.get(0);
+                for (Map.Entry<String, Object> entry : map.entrySet()) {
+                    putMapValue(name, entry.getKey(), entry.getValue());
+                }
             } else {
-                log.checkNameValueAllowed(this, allowedKeys, name);
-                putNameValue(list, 0, map);
+                putValue(name, list.get(0));
             }
         }
         if (list.size() == 2) {
-            log.checkNameValueAllowed(this, allowedKeys, name);
-            putNameValue(list, 1, map);
-            if (list.get(0) instanceof Map) {
-                putMapValues(name, list, allowedKeys, map);
+            putValue(name, list.get(1));
+            @SuppressWarnings("unchecked")
+            Map<String, Object> map = (Map<String, Object>) list.get(0);
+            for (Map.Entry<String, Object> entry : map.entrySet()) {
+                putMapValue(name, entry.getKey(), entry.getValue());
             }
         }
-        args.put(name, map);
-        log.statementValueAdded(this, name, map);
         return null;
-    }
-
-    private void putNameValue(List<?> list, int i, Map<String, Object> map) {
-        Object value;
-        value = list.get(i);
-        map.put(NAME_KEY, value);
-    }
-
-    private void putMapValues(String name, List<?> list,
-            Set<String> allowedKeys, Map<String, Object> map)
-            throws ServiceException {
-        @SuppressWarnings("unchecked")
-        Map<String, Object> vmap = (Map<String, Object>) list.get(0);
-        for (Map.Entry<String, Object> entry : vmap.entrySet()) {
-            log.checkKey(this, allowedKeys, name, entry.getKey());
-            map.put(entry.getKey(), entry.getValue());
-        }
     }
 
     private Map<String, Object> getArgsMap(String name) {

@@ -1,1 +1,1 @@
-Script statement '{}' value '{}' added for script '{}'.
+Script statement '{}' '{}' := '{}' added for script '{}'.

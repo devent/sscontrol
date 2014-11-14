@@ -18,25 +18,27 @@
  */
 package com.anrisoftware.sscontrol.core.groovy;
 
-import com.google.inject.AbstractModule;
-import com.google.inject.assistedinject.FactoryModuleBuilder;
+import javax.inject.Inject;
+
+import com.anrisoftware.sscontrol.core.api.ServiceException;
 
 /**
- * Installs the Groovy script statements storage map.
- *
- * @see StatementsMapFactory
- * @see StatementsTableFactory
+ * @see StatementsTableTest
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-public class StatementsMapModule extends AbstractModule {
+class BeanTable {
 
-    @Override
-    protected void configure() {
-        install(new FactoryModuleBuilder().implement(StatementsMap.class,
-                StatementsMap.class).build(StatementsMapFactory.class));
-        install(new FactoryModuleBuilder().implement(StatementsTable.class,
-                StatementsTable.class).build(StatementsTableFactory.class));
+    final StatementsTable map;
+
+    @Inject
+    BeanTable(StatementsTableFactory factory) {
+        this.map = factory.create(this, "bean");
+    }
+
+    Object methodMissing(String name, Object args) throws ServiceException {
+        map.methodMissing(name, args);
+        return null;
     }
 }

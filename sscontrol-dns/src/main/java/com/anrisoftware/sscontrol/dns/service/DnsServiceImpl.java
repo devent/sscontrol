@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.inject.Inject;
 
@@ -42,14 +43,13 @@ import com.anrisoftware.sscontrol.core.bindings.Binding;
 import com.anrisoftware.sscontrol.core.bindings.BindingAddress;
 import com.anrisoftware.sscontrol.core.bindings.BindingArgs;
 import com.anrisoftware.sscontrol.core.bindings.BindingFactory;
+import com.anrisoftware.sscontrol.core.groovy.StatementsException;
 import com.anrisoftware.sscontrol.core.groovy.StatementsMap;
 import com.anrisoftware.sscontrol.core.groovy.StatementsMapFactory;
+import com.anrisoftware.sscontrol.core.groovy.StatementsTable;
+import com.anrisoftware.sscontrol.core.groovy.StatementsTableFactory;
+import com.anrisoftware.sscontrol.core.list.StringToListFactory;
 import com.anrisoftware.sscontrol.core.service.AbstractService;
-import com.anrisoftware.sscontrol.dns.aliases.Alias;
-import com.anrisoftware.sscontrol.dns.aliases.AliasFactory;
-import com.anrisoftware.sscontrol.dns.aliases.Aliases;
-import com.anrisoftware.sscontrol.dns.recursive.Recursive;
-import com.anrisoftware.sscontrol.dns.roots.Roots;
 import com.anrisoftware.sscontrol.dns.zone.DnsZone;
 import com.anrisoftware.sscontrol.dns.zone.DnsZoneFactory;
 import com.anrisoftware.sscontrol.dns.zone.Record;
@@ -64,6 +64,22 @@ import com.anrisoftware.sscontrol.dns.zone.ZoneRecord;
 @SuppressWarnings("serial")
 class DnsServiceImpl extends AbstractService {
 
+    private static final String ALIAS_KEY = "alias";
+
+    private static final String ADDRESS_KEY = "address";
+
+    private static final String ADDRESSES_KEY = "addresses";
+
+    private static final String ROOT_KEY = "root";
+
+    private static final String UPSTREAM_KEY = "upstream";
+
+    private static final String ACLS_KEY = "acls";
+
+    private static final String SERVER_KEY = "server";
+
+    private static final String SERVERS_KEY = "servers";
+
     private static final String GENERATE_KEY = "generate";
 
     private static final String SERIAL_KEY = "serial";
@@ -71,8 +87,6 @@ class DnsServiceImpl extends AbstractService {
     private static final String DURATION = "duration";
 
     private static final String TTL = "ttl";
-
-    private static final String ADDRESS = "address";
 
     private static final String NAME = "name";
 
@@ -82,10 +96,10 @@ class DnsServiceImpl extends AbstractService {
     private DnsServiceImplLogger log;
 
     @Inject
-    private DnsZoneFactory zoneFactory;
+    private StringToListFactory toListFactory;
 
     @Inject
-    private AliasFactory aliasFactory;
+    private DnsZoneFactory zoneFactory;
 
     @Inject
     private Binding binding;
@@ -93,16 +107,9 @@ class DnsServiceImpl extends AbstractService {
     @Inject
     private BindingArgs bindingArgs;
 
-    @Inject
-    private Aliases aliases;
-
-    @Inject
-    private Roots roots;
-
-    @Inject
-    private Recursive recursive;
-
     private StatementsMap statementsMap;
+
+    private StatementsTable statementsTable;
 
     DnsServiceImpl() {
         this.zones = new ArrayList<DnsZone>();
@@ -112,13 +119,22 @@ class DnsServiceImpl extends AbstractService {
     public void setStatementsMapFactory(StatementsMapFactory factory) {
         StatementsMap map = factory.create(this, SERVICE_NAME);
         this.statementsMap = map;
-        map.addAllowed(SERIAL_KEY);
+        map.addAllowed(SERIAL_KEY, SERVERS_KEY, ACLS_KEY);
         map.setAllowValue(true, SERIAL_KEY);
+        map.setAllowMultiValue(true, ACLS_KEY);
         map.addAllowedKeys(SERIAL_KEY, GENERATE_KEY);
-        try {
-            map.putMapValue(SERIAL_KEY, GENERATE_KEY, true);
-        } catch (ServiceException e) {
-        }
+        map.addAllowedKeys(SERVERS_KEY, UPSTREAM_KEY, ROOT_KEY);
+        map.putValue(SERIAL_KEY, 0);
+        map.putMapValue(SERIAL_KEY, GENERATE_KEY, true);
+    }
+
+    @Inject
+    public void setStatementsTableFactory(StatementsTableFactory factory) {
+        StatementsTable table = factory.create(this, SERVICE_NAME);
+        this.statementsTable = table;
+        table.addAllowed(SERVER_KEY, ALIAS_KEY);
+        table.addAllowedKeys(SERVER_KEY, ADDRESS_KEY);
+        table.addAllowedKeys(ALIAS_KEY, ADDRESS_KEY, ADDRESSES_KEY);
     }
 
     @Override
@@ -217,6 +233,103 @@ class DnsServiceImpl extends AbstractService {
     }
 
     /**
+     * Returns the list of upstream servers.
+     *
+     * @return the {@link List} of {@link String} addresses or {@code null}.
+     */
+    public List<String> getUpstreamServers() {
+        List<String> list;
+        list = statementsMap.mapValueAsList(SERVERS_KEY, UPSTREAM_KEY);
+        if (list == null) {
+            list = new ArrayList<String>();
+        }
+        return list;
+    }
+
+    /**
+     * Returns the list of root servers.
+     *
+     * @return the {@link List} of {@link String} addresses or names of the root
+     *         servers, or {@code null}.
+     */
+    public List<String> getRootServers() {
+        List<String> list;
+        list = statementsMap.mapValueAsList(SERVERS_KEY, ROOT_KEY);
+        if (list == null) {
+            list = new ArrayList<String>();
+        }
+        return list;
+    }
+
+    /**
+     * Returns the list of root servers.
+     *
+     * @return the {@link Map} of named root servers and the address, or
+     *         {@code null}.
+     */
+    public Map<String, String> getServers() {
+        Map<String, String> map;
+        map = statementsTable.tableKeys(SERVER_KEY, ADDRESS_KEY);
+        if (map == null) {
+            map = new HashMap<String, String>();
+        }
+        return map;
+    }
+
+    /**
+     * Returns the list of aliases.
+     *
+     * @return the {@link Map} of aliases and the addresses, or {@code null}.
+     */
+    public Map<String, List<String>> getAliases() {
+        Map<String, List<String>> amap = new HashMap<String, List<String>>();
+        List<String> alist;
+        Map<String, List<String>> address;
+        address = statementsTable.tableKeysAsList(ALIAS_KEY, ADDRESS_KEY);
+        Map<String, List<String>> addresses;
+        addresses = statementsTable.tableKeysAsList(ALIAS_KEY, ADDRESSES_KEY);
+        if (address != null) {
+            for (Entry<String, List<String>> entry : address.entrySet()) {
+                alist = amap.get(entry.getKey());
+                if (alist == null) {
+                    alist = new ArrayList<String>();
+                    amap.put(entry.getKey(), alist);
+                }
+                alist.addAll(entry.getValue());
+            }
+        }
+        if (addresses != null) {
+            for (Entry<String, List<String>> entry : addresses.entrySet()) {
+                alist = amap.get(entry.getKey());
+                if (alist == null) {
+                    alist = new ArrayList<String>();
+                    amap.put(entry.getKey(), alist);
+                }
+                alist.addAll(entry.getValue());
+            }
+        }
+        return amap;
+    }
+
+    /**
+     * Returns the list of the ACLs servers.
+     *
+     * @return the {@link List} of {@link String} addresses or names of the ACLs
+     *         servers, or {@code null}.
+     */
+    public List<String> getAcls() {
+        List<Object> list = statementsMap.value(ACLS_KEY);
+        if (list == null) {
+            return new ArrayList<String>();
+        }
+        List<String> result = new ArrayList<String>();
+        for (Object object : list) {
+            result.addAll(toListFactory.create(object).getList());
+        }
+        return result;
+    }
+
+    /**
      * Adds a new DNS zone.
      *
      * @see DnsZoneFactory#create(Map, String)
@@ -250,7 +363,7 @@ class DnsServiceImpl extends AbstractService {
         }
         DnsZone zone = zoneFactory.create(args, name);
         zones.add(zone);
-        if (args.containsKey(ADDRESS)) {
+        if (args.containsKey(ADDRESS_KEY)) {
             automaticARecord(args, name, zone);
         }
         log.zoneAdded(this, zone);
@@ -261,7 +374,7 @@ class DnsServiceImpl extends AbstractService {
             DnsZone zone) throws ParseException {
         Map<String, Object> aargs = new HashMap<String, Object>();
         aargs.put(NAME, name);
-        aargs.put(ADDRESS, args.get(ADDRESS));
+        aargs.put(ADDRESS_KEY, args.get(ADDRESS_KEY));
         ZoneRecord record = zone.record(aargs, Record.a, (Object) null);
         if (args.containsKey(TTL)) {
             aargs.put(DURATION, args.get(TTL));
@@ -283,72 +396,6 @@ class DnsServiceImpl extends AbstractService {
      */
     public List<DnsZone> getZones() {
         return unmodifiableList(zones);
-    }
-
-    /**
-     * Adds a new alias.
-     *
-     * @param name
-     *            the name of the alias.
-     *
-     * @return the {@link Alias}.
-     */
-    public Alias alias(String name) {
-        Alias alias = aliasFactory.create();
-        alias.setName(name);
-        aliases.addAlias(alias);
-        return alias;
-    }
-
-    /**
-     * Returns the aliases.
-     *
-     * @return the {@link Aliases}.
-     */
-    public Aliases getAliases() {
-        return aliases;
-    }
-
-    /**
-     * Returns the root servers.
-     *
-     * @param statements
-     *            the roots statements.
-     *
-     * @return the {@link Roots}.
-     */
-    public Roots roots(Object statements) {
-        return roots;
-    }
-
-    /**
-     * Returns the root servers.
-     *
-     * @return the {@link Roots}.
-     */
-    public Roots getRoots() {
-        return roots;
-    }
-
-    /**
-     * Returns the recursive servers.
-     *
-     * @param statements
-     *            the recursive statements.
-     *
-     * @return the {@link Recursive}.
-     */
-    public Recursive recursive(Object statements) {
-        return recursive;
-    }
-
-    /**
-     * Returns the recursive servers.
-     *
-     * @return the {@link Recursive}.
-     */
-    public Recursive getRecursive() {
-        return recursive;
     }
 
     /**
@@ -395,7 +442,11 @@ class DnsServiceImpl extends AbstractService {
 
     public Object methodMissing(String name, Object args)
             throws ServiceException {
-        statementsMap.methodMissing(name, args);
+        try {
+            statementsMap.methodMissing(name, args);
+        } catch (StatementsException e) {
+            statementsTable.methodMissing(name, args);
+        }
         return null;
     }
 

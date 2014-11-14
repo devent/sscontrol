@@ -18,14 +18,13 @@
  */
 package com.anrisoftware.sscontrol.core.groovy;
 
-import static com.anrisoftware.sscontrol.core.groovy.StatementsMapLogger._.allowed_name;
-import static com.anrisoftware.sscontrol.core.groovy.StatementsMapLogger._.invalid_statement;
-import static com.anrisoftware.sscontrol.core.groovy.StatementsMapLogger._.key_not_allowed;
-import static com.anrisoftware.sscontrol.core.groovy.StatementsMapLogger._.name_value_error;
-import static com.anrisoftware.sscontrol.core.groovy.StatementsMapLogger._.statement_added_debug;
-import static com.anrisoftware.sscontrol.core.groovy.StatementsMapLogger._.statement_added_info;
-import static com.anrisoftware.sscontrol.core.groovy.StatementsMapLogger._.statement_key;
-import static com.anrisoftware.sscontrol.core.groovy.StatementsMapLogger._.statements;
+import static com.anrisoftware.sscontrol.core.groovy.StatementsTableLogger._.allowed_name;
+import static com.anrisoftware.sscontrol.core.groovy.StatementsTableLogger._.invalid_statement;
+import static com.anrisoftware.sscontrol.core.groovy.StatementsTableLogger._.key_not_allowed;
+import static com.anrisoftware.sscontrol.core.groovy.StatementsTableLogger._.name_value_error;
+import static com.anrisoftware.sscontrol.core.groovy.StatementsTableLogger._.statement_added_debug;
+import static com.anrisoftware.sscontrol.core.groovy.StatementsTableLogger._.statement_added_info;
+import static com.anrisoftware.sscontrol.core.groovy.StatementsTableLogger._.statement_key;
 
 import java.util.Map;
 import java.util.Set;
@@ -37,12 +36,12 @@ import com.anrisoftware.resources.texts.api.Texts;
 import com.anrisoftware.resources.texts.api.TextsFactory;
 
 /**
- * Logging for {@link StatementsMap}.
+ * Logging for {@link StatementsTable}.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class StatementsMapLogger extends AbstractLogger {
+class StatementsTableLogger extends AbstractLogger {
 
     enum _ {
 
@@ -69,7 +68,7 @@ class StatementsMapLogger extends AbstractLogger {
         key_not_allowed_message;
 
         public static void loadTexts(TextsFactory factory) {
-            String name = StatementsMapLogger.class.getSimpleName();
+            String name = StatementsTableLogger.class.getSimpleName();
             Texts texts = factory.create(name);
             for (_ value : values()) {
                 value.text = texts.getResource(value.name()).getText();
@@ -85,10 +84,10 @@ class StatementsMapLogger extends AbstractLogger {
     }
 
     /**
-     * Sets the context of the logger to {@link StatementsMap}.
+     * Sets the context of the logger to {@link StatementsTable}.
      */
-    public StatementsMapLogger() {
-        super(StatementsMap.class);
+    public StatementsTableLogger() {
+        super(StatementsTable.class);
     }
 
     @Inject
@@ -98,18 +97,14 @@ class StatementsMapLogger extends AbstractLogger {
 
     void checkName(Map<String, Set<String>> allowed, String name)
             throws StatementsException {
-        if (!isNameValid(allowed, name)) {
+        if (!allowed.containsKey(name)) {
             throw new StatementsException(invalid_statement).add(allowed_name,
                     name);
         }
     }
 
-    boolean isNameValid(Map<String, Set<String>> allowed, String name) {
-        return allowed.containsKey(name);
-    }
-
-    void statementValueAdded(StatementsMap statements, String name, Object key,
-            Object value) {
+    void statementValueAdded(StatementsTable statements, String name,
+            Object key, Object value) {
         if (isDebugEnabled()) {
             debug(statement_added_debug, name, key, value, statements);
         } else {
@@ -117,25 +112,22 @@ class StatementsMapLogger extends AbstractLogger {
         }
     }
 
-    void checkNameValueAllowed(StatementsMap map, Set<String> allowedKeys,
-            String name) throws StatementsException {
+    void checkNameValueAllowed(StatementsTable statements,
+            Set<String> allowedKeys, String name) throws StatementsException {
         if (allowedKeys.contains(StatementsMap.NAME_KEY)) {
             return;
         }
-        throw new StatementsException(name_value_error).add(statements, map)
-                .add(allowed_name, name);
+        throw new StatementsException(name_value_error).add(statements,
+                statements).add(allowed_name, name);
     }
 
-    void checkKey(StatementsMap map, Set<String> allowedKeys, String name,
-            String key) throws StatementsException {
-        if (isKeyValid(allowedKeys, key)) {
+    void checkKey(StatementsTable statements, Set<String> allowedKeys,
+            String name, String key) throws StatementsException {
+        if (allowedKeys.contains(key)) {
             return;
         }
-        throw new StatementsException(key_not_allowed).add(statements, map)
-                .add(allowed_name, name).add(statement_key, key);
-    }
-
-    boolean isKeyValid(Set<String> allowedKeys, String key) {
-        return allowedKeys.contains(key);
+        throw new StatementsException(key_not_allowed)
+                .add(statements, statements).add(allowed_name, name)
+                .add(statement_key, key);
     }
 }

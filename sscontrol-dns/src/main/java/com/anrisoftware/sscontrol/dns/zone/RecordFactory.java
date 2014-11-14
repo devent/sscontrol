@@ -16,37 +16,30 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-dns. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.dns.roots;
+package com.anrisoftware.sscontrol.dns.zone;
 
-import javax.inject.Singleton;
+import java.util.Map;
 
-import com.anrisoftware.globalpom.log.AbstractLogger;
+import com.anrisoftware.sscontrol.dns.arecord.ARecord;
 
 /**
- * Logging messages for {@link Roots}.
+ * Factory to create a new DNS/zone record.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-@Singleton
-class RootsLogger extends AbstractLogger {
-
-	private static final String SERVERS_GROUP_ADDED2 = "Servers group '{}' added to dns service.";
-	private static final String SERVERS_GROUP_ADDED = "Servers group '{}' added to {}.";
+public interface RecordFactory {
 
 	/**
-	 * Creates a logger for {@link Roots}.
+	 * Creates a new DNS/zone record.
+	 * 
+	 * @param zone
+	 *            the {@link DnsZone} to which the record belongs to.
+	 * 
+	 * @param args
+	 *            the {@link Map} arguments for the record.
+	 * 
+	 * @return the {@link ARecord}.
 	 */
-	public RootsLogger() {
-		super(Roots.class);
-	}
-
-	void serversGroupAdded(Roots roots, String name) {
-		if (log.isDebugEnabled()) {
-			log.debug(SERVERS_GROUP_ADDED, name, roots);
-		} else {
-			log.info(SERVERS_GROUP_ADDED2, name);
-		}
-	}
-
+	ZoneRecord create(DnsZone zone, Map<String, Object> args);
 }

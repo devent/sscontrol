@@ -20,8 +20,8 @@ package com.anrisoftware.sscontrol.dns.nsrecord;
 
 import static com.google.inject.multibindings.MapBinder.newMapBinder;
 
-import com.anrisoftware.sscontrol.dns.recursive.RecordFactory;
 import com.anrisoftware.sscontrol.dns.zone.Record;
+import com.anrisoftware.sscontrol.dns.zone.RecordFactory;
 import com.anrisoftware.sscontrol.dns.zone.ZoneRecord;
 import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;

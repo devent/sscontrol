@@ -16,22 +16,14 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-dns. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.dns.aliases;
+package com.anrisoftware.sscontrol.dns.service
+dns {
+	serial 1
 
-import com.google.inject.AbstractModule;
-import com.google.inject.assistedinject.FactoryModuleBuilder;
+	// bind the dns server to localhost only
+	bind address: "127.0.0.1"
 
-/**
- * Installs the aliases.
- * 
- * @author Erwin Mueller, erwin.mueller@deventm.org
- * @since 1.0
- */
-public class AliasesModule extends AbstractModule {
-
-	@Override
-	protected void configure() {
-		install(new FactoryModuleBuilder().implement(Alias.class, Alias.class)
-				.build(AliasFactory.class));
-	}
+    // adds IPv4 address alias
+    alias "localhost", address: "127.0.0.1"
+    alias "vbox", addresses: "10.0.2.2, 10.0.2.3"
 }

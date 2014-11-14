@@ -241,7 +241,7 @@ root_servers = {}
 ipv4_bind_addresses = "127.0.0.1"
 # SSCONTROL-dns-END
 # SSCONTROL-dns
-ipv4_alias["vbox"] = "10.0.2.2"
+ipv4_alias["vbox"] = "10.0.2.2,10.0.2.3"
 # SSCONTROL-dns-END
 # SSCONTROL-dns
 root_servers["."] = "icann"

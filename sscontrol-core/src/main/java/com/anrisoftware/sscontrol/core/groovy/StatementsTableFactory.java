@@ -18,25 +18,24 @@
  */
 package com.anrisoftware.sscontrol.core.groovy;
 
-import com.google.inject.AbstractModule;
-import com.google.inject.assistedinject.FactoryModuleBuilder;
-
 /**
- * Installs the Groovy script statements storage map.
- *
- * @see StatementsMapFactory
- * @see StatementsTableFactory
+ * Factory to create the storage for allowed script statements table.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-public class StatementsMapModule extends AbstractModule {
+public interface StatementsTableFactory {
 
-    @Override
-    protected void configure() {
-        install(new FactoryModuleBuilder().implement(StatementsMap.class,
-                StatementsMap.class).build(StatementsMapFactory.class));
-        install(new FactoryModuleBuilder().implement(StatementsTable.class,
-                StatementsTable.class).build(StatementsTableFactory.class));
-    }
+    /**
+     * Creates the storage table.
+     *
+     * @param service
+     *            the {@link Object} service.
+     *
+     * @param name
+     *            the {@link String} the service name.
+     *
+     * @return the {@link StatementsTable}.
+     */
+    StatementsTable create(Object service, String name);
 }

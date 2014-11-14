@@ -18,7 +18,7 @@
  */
 package com.anrisoftware.sscontrol.dns.cnamerecord;
 
-import com.anrisoftware.sscontrol.dns.recursive.RecordFactory;
+import com.anrisoftware.sscontrol.dns.zone.RecordFactory;
 
 /**
  * Factory to create a new CNAME/record.

@@ -26,9 +26,7 @@ import com.anrisoftware.globalpom.textmatch.tokentemplate.TokenTemplate
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.Templates
 import com.anrisoftware.resources.templates.api.TemplatesFactory
-import com.anrisoftware.sscontrol.dns.aliases.Alias
 import com.anrisoftware.sscontrol.dns.maradns.linux.MaradnsScript
-import com.anrisoftware.sscontrol.dns.roots.Roots
 import com.anrisoftware.sscontrol.dns.zone.DnsZone
 
 /**
@@ -56,7 +54,7 @@ abstract class Maradns_1_2_Script extends MaradnsScript {
      * Deploys the MaraDNS configuration.
      */
     void deployMaraDnsConfiguration() {
-        deployConfiguration configurationTokens(), mararcConfiguration, mararcConfigurations, mararcFile
+        deployConfiguration configurationTokens(), mararcCurrentConfiguration, mararcConfigurations, mararcFile
     }
 
     /**
@@ -68,7 +66,7 @@ abstract class Maradns_1_2_Script extends MaradnsScript {
             ipv4BindAddressConfiguration,
             ipv4AliasesConfiguration,
             rootServersConfiguration,
-            recursiveConfiguration,
+            aclsConfiguration,
             csvHashConfiguration,
             zonesConfiguration
         ]
@@ -100,17 +98,18 @@ abstract class Maradns_1_2_Script extends MaradnsScript {
         def search = maradnsConfiguration.getText(true, "ip4_aliases_search")
         def replace = maradnsConfiguration.getText(true, "ip4_aliases")
         list << new TokenTemplate(search, replace)
-        service.aliases.aliases.inject(list) { l, Alias alias ->
-            list << getIpv4AliasConfiguration(alias)
+        service.aliases.each { k, v ->
+            list << getIpv4AliasConfiguration(k, v)
         }
+        return list
     }
 
     /**
      * Adds the IP alias to the configuration.
      */
-    def getIpv4AliasConfiguration(Alias alias) {
-        def search = maradnsConfiguration.getText(true, "ip4_alias_search", "alias", alias)
-        def replace = maradnsConfiguration.getText(true, "ip4_alias", "alias", alias)
+    def getIpv4AliasConfiguration(String name, List addresses) {
+        def search = maradnsConfiguration.getText(true, "ip4_alias_search", "name", name, "addresses", addresses)
+        def replace = maradnsConfiguration.getText(true, "ip4_alias", "name", name, "addresses", addresses)
         new TokenTemplate(search, replace)
     }
 
@@ -118,35 +117,35 @@ abstract class Maradns_1_2_Script extends MaradnsScript {
      * Activates and sets the root servers.
      */
     def getRootServersConfiguration() {
-        if (service.roots.servers.empty) {
+        if (service.rootServers.empty) {
             return []
         }
         def list = []
         def search = maradnsConfiguration.getText(true, "root_servers_search")
         def replace = maradnsConfiguration.getText(true, "root_servers")
         list << new TokenTemplate(search, replace)
-        list << getRootServerConfiguration(service.roots)
+        list << getRootServerConfiguration(service.rootServers)
     }
 
     /**
      * Sets the root servers.
      */
-    def getRootServerConfiguration(Roots roots) {
+    def getRootServerConfiguration(List roots) {
         def search = maradnsConfiguration.getText(true, "root_servers_list_search", "roots", roots)
         def replace = maradnsConfiguration.getText(true, "root_servers_list", "roots", roots)
         new TokenTemplate(search, replace)
     }
 
     /**
-     * Sets recursive ACLs.
+     * Sets ACLs.
      */
-    def getRecursiveConfiguration() {
-        if (service.recursive.servers.empty) {
+    def getAclsConfiguration() {
+        if (service.acls.empty) {
             return []
         }
         def list = []
         def search = maradnsConfiguration.getText(true, "recursive_acl_search")
-        def replace = maradnsConfiguration.getText(true, "recursive_acl", "recursive", service.recursive)
+        def replace = maradnsConfiguration.getText(true, "recursive_acl", "recursive", service.acls)
         new TokenTemplate(search, replace)
     }
 
@@ -182,7 +181,7 @@ abstract class Maradns_1_2_Script extends MaradnsScript {
     /**
      * Returns the current {@code mararc} configuration.
      */
-    String getMararcConfiguration() {
+    String getMararcCurrentConfiguration() {
         currentConfiguration mararcFile
     }
 }

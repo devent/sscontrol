@@ -38,12 +38,12 @@ ip4_aliases() ::= <%
 ipv4_alias = {}
 %>
 
-ip4_alias_search(alias) ::= <%
-#?\s*ipv4_alias\["<alias.name>"\]\s*=\s*".*".*
+ip4_alias_search(name, addresses) ::= <%
+#?\s*ipv4_alias\["<name>"\]\s*=\s*".*".*
 %>
 
-ip4_alias(alias) ::= <%
-ipv4_alias["<alias.name>"] = "<alias.address;separator=",">"
+ip4_alias(name, addresses) ::= <%
+ipv4_alias["<name>"] = "<addresses;separator=",">"
 %>
 
 root_servers_search() ::= <%
@@ -55,11 +55,11 @@ root_servers = {}
 %>
 
 root_servers_list_search(roots) ::= <%
-#?\s*root_servers\["."\]\s*=\s*"<roots.servers;separator=",">".*
+#?\s*root_servers\["."\]\s*=\s*"<roots;separator=",">".*
 %>
 
 root_servers_list(roots) ::= <%
-root_servers["."] = "<roots.servers;separator=",">"
+root_servers["."] = "<roots;separator=",">"
 %>
 
 recursive_acl_search() ::= <%
@@ -67,7 +67,7 @@ recursive_acl_search() ::= <%
 %>
 
 recursive_acl(recursive) ::= <%
-recursive_acl = "<recursive.servers;separator=",">"
+recursive_acl = "<recursive;separator=",">"
 %>
 
 zone(zone) ::= <%

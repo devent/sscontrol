@@ -23,15 +23,15 @@ dns {
 	// bind the dns server to address only
 	bind address: "127.0.0.1"
 
-	// adds IPv4 address alias
-	alias "localhost" address "127.0.0.1"
-	alias "vbox" address "10.0.2.2"
+    // adds IPv4 address alias
+    alias "localhost", address: "127.0.0.1"
+    alias "vbox", addresses: "10.0.2.2, 10.0.2.3"
 
-	// sets the group to the root servers
-	roots { servers "icann" }
+    // sets the group to the root servers
+    servers root: "icann"
 
-	// sets recursive host
-	recursive { servers "localhost" }
+    // sets allowed recursive hosts
+    acls "localhost"
 
 	// soa entry
 	zone "example1.com", primary: "ns.example1.com", email: "hostmaster@example1.com"

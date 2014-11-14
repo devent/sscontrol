@@ -21,7 +21,6 @@ package com.anrisoftware.sscontrol.dns.service;
 import com.anrisoftware.sscontrol.core.bindings.BindingsModule;
 import com.anrisoftware.sscontrol.core.groovy.StatementsMapModule;
 import com.anrisoftware.sscontrol.core.list.ListModule;
-import com.anrisoftware.sscontrol.dns.aliases.AliasesModule;
 import com.anrisoftware.sscontrol.dns.arecord.ARecordModule;
 import com.anrisoftware.sscontrol.dns.cnamerecord.CnameRecordModule;
 import com.anrisoftware.sscontrol.dns.mxrecord.MxRecordModule;
@@ -32,7 +31,7 @@ import com.google.inject.AbstractModule;
 
 /**
  * Binds the DNS service.
- * 
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
@@ -42,7 +41,6 @@ class DnsModule extends AbstractModule {
 	protected void configure() {
 		install(new ZoneModule());
 		install(new ListModule());
-		install(new AliasesModule());
 		install(new BindingsModule());
 		install(new ARecordModule());
 		install(new CnameRecordModule());

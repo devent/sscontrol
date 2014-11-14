@@ -18,7 +18,7 @@
  */
 package com.anrisoftware.sscontrol.dns.arecord;
 
-import com.anrisoftware.sscontrol.dns.recursive.RecordFactory;
+import com.anrisoftware.sscontrol.dns.zone.RecordFactory;
 
 /**
  * Factory to create a new A/record.

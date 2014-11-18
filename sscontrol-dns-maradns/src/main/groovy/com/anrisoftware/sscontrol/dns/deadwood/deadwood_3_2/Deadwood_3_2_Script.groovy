@@ -58,6 +58,7 @@ abstract class Deadwood_3_2_Script extends DeadwoodScript {
      * Deploys the <i>Deadwood</i> configuration.
      */
     void deployDeadwoodConfiguration() {
+        configurationDir.mkdirs()
         deployConfiguration configurationTokens(), currentDeadwoodConfiguration, deadwoodConfigurations, deadwoodrcFile
     }
 

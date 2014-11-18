@@ -73,7 +73,7 @@ import com.anrisoftware.sscontrol.core.api.ServiceException;
 
 /**
  * Logging messages for {@link LinuxScript}.
- * 
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
@@ -243,7 +243,7 @@ class LinuxScriptLogger extends AbstractLogger {
     void deployConfigurationDone(LinuxScript script, File file,
             String configuration) {
         if (isTraceEnabled()) {
-            debug(deployed_conf_trace, file, script, configuration);
+            trace(deployed_conf_trace, file, script, configuration);
         } else if (isDebugEnabled()) {
             debug(deployed_conf_debug, file, script);
         } else {

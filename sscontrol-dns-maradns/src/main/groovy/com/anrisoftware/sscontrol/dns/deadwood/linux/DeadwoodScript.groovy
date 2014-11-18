@@ -74,6 +74,19 @@ abstract class DeadwoodScript extends LinuxScript {
     }
 
     /**
+     * Returns the startup script file of the <i>Deadwood</i> service.
+     *
+     * <ul>
+     * <li>profile property key {@code deadwood_script_file}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    File getDeadwoodScriptFile() {
+        profileProperty("deadwood_script_file", defaultProperties) as File
+    }
+
+    /**
      * Returns the user name under which <i>Deadwood</i> is run.
      *
      * <ul>
@@ -214,5 +227,33 @@ abstract class DeadwoodScript extends LinuxScript {
      */
     Pattern getIpv6Pattern() {
         Pattern.compile profileProperty("ipv6_pattern", defaultProperties)
+    }
+
+    /**
+     * Returns path of the <i>Deadwood</i> command, for
+     * example {@code /usr/sbin/deadwood}.
+     *
+     * <ul>
+     * <li>profile property key {@code deadwood_command}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    String getDeadwoodCommand() {
+        profileProperty "deadwood_command", defaultProperties
+    }
+
+    /**
+     * Returns path of the <i>Duende</i> command, for
+     * example {@code /usr/sbin/duende}.
+     *
+     * <ul>
+     * <li>profile property key {@code duende_command}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    String getDuendeCommand() {
+        profileProperty "duende_command", defaultProperties
     }
 }

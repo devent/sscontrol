@@ -22,7 +22,12 @@ import groovy.util.logging.Slf4j
 
 import javax.inject.Inject
 
+import org.apache.commons.io.FileUtils
+
 import com.anrisoftware.propertiesutils.ContextProperties
+import com.anrisoftware.resources.templates.api.TemplateResource
+import com.anrisoftware.resources.templates.api.Templates
+import com.anrisoftware.resources.templates.api.TemplatesFactory
 import com.anrisoftware.sscontrol.dns.deadwood.deadwood_3_2.Deadwood_3_2_Script
 import com.anrisoftware.sscontrol.scripts.enableaptrepository.EnableAptRepositoryFactory
 import com.anrisoftware.sscontrol.scripts.localgroupadd.LocalGroupAddFactory
@@ -30,6 +35,7 @@ import com.anrisoftware.sscontrol.scripts.localuseradd.LocalUserAddFactory
 import com.anrisoftware.sscontrol.scripts.localuserinfo.LocalUserInfoFactory
 import com.anrisoftware.sscontrol.scripts.unix.InstallPackagesFactory
 import com.anrisoftware.sscontrol.scripts.unix.RestartServicesFactory
+import com.anrisoftware.sscontrol.scripts.unix.ScriptExecFactory
 
 /**
  * <i>Deadwood 3.2.x Ubuntu 14.04</i> service script.
@@ -39,6 +45,9 @@ import com.anrisoftware.sscontrol.scripts.unix.RestartServicesFactory
  */
 @Slf4j
 class UbuntuScript extends Deadwood_3_2_Script {
+
+    @Inject
+    UbuntuScriptLogger logg
 
     @Inject
     UbuntuPropertiesProvider ubuntuProperties
@@ -61,13 +70,31 @@ class UbuntuScript extends Deadwood_3_2_Script {
     @Inject
     LocalUserInfoFactory localUserInfoFactory
 
+    @Inject
+    ScriptExecFactory scriptExecFactory
+
+    Templates deadwoodUbuntuTemplates
+
+    TemplateResource deadwoodRun
+
+    TemplateResource activateService
+
     def run() {
         enableRepository()
         installPackages()
         deployDeadwoodConfiguration()
         createDeadwoodUser()
         createDeadwoodCacheFile()
+        deployDeadwoodRunScript()
+        activateDeadwoodService()
         restartService()
+    }
+
+    @Inject
+    void setUbuntuScriptTemplatesFactory(TemplatesFactory factory) {
+        this.deadwoodUbuntuTemplates = factory.create("Deadwood_Ubuntu_14_04")
+        this.deadwoodRun = deadwoodUbuntuTemplates.getResource("deadwoodrun")
+        this.activateService = deadwoodUbuntuTemplates.getResource("activate_service")
     }
 
     /**
@@ -127,6 +154,40 @@ class UbuntuScript extends Deadwood_3_2_Script {
     void restartService() {
         restartServicesFactory.create(
                 log: log, command: restartCommand, services: restartServices, this, threads)()
+    }
+
+    /**
+     * Deploys the <i>Deadwood</i> run script.
+     */
+    void deployDeadwoodRunScript() {
+        def configuration = deadwoodRun.getText("deadwoodrun", "args", this)
+        FileUtils.write deadwoodScriptFile, configuration, charset
+        deadwoodScriptFile.setExecutable(true)
+        logg.deployRunScriptDone this, deadwoodScriptFile, configuration
+    }
+
+    /**
+     * Activates the <i>Deadwood</i> service.
+     */
+    void activateDeadwoodService() {
+        def name = "deadwood"
+        scriptExecFactory.create(
+                log: log, command: updateRcCommand, service: name,
+                this, threads, activateService, "activateService")()
+    }
+
+    /**
+     * Returns path of the <i>update-rc.d</i> command, for
+     * example {@code /usr/sbin/update-rc.d}.
+     *
+     * <ul>
+     * <li>profile property key {@code update_rc_command}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    String getUpdateRcCommand() {
+        profileProperty "update_rc_command", defaultProperties
     }
 
     ContextProperties getDefaultProperties() {

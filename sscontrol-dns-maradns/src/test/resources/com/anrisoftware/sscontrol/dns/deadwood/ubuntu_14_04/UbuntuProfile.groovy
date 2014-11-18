@@ -25,10 +25,14 @@ def userAddCommand = DeadwoodResources.userAddCommand.asFile(tmp)
 def userIdCommand = DeadwoodResources.userIdCommand.asFile(tmp)
 def chmodCommand = DeadwoodResources.chmodCommand.asFile(tmp)
 def chownCommand = DeadwoodResources.chownCommand.asFile(tmp)
+def updateRcCommand = DeadwoodResources.updateRcCommand.asFile(tmp)
+def deadwoodCommand = DeadwoodResources.deadwoodCommand.asFile(tmp)
+def duendeCommand = DeadwoodResources.duendeCommand.asFile(tmp)
 def groupsFile = DeadwoodResources.groupsFile.asFile(tmp)
 def usersFile = DeadwoodResources.usersFile.asFile(tmp)
 def confDir = DeadwoodResources.confDir.asFile(tmp)
 def sourcesListFile = DeadwoodResources.sourcesListFile.asFile(tmp)
+def scriptFile = DeadwoodResources.scriptFile.asFile(tmp)
 
 profile "ubuntu_14_04", {
     dns {
@@ -40,9 +44,13 @@ profile "ubuntu_14_04", {
         user_id_command userIdCommand
         chmod_command chmodCommand
         chown_command chownCommand
+        update_rc_command updateRcCommand
+        deadwood_command deadwoodCommand
+        duende_command duendeCommand
         groups_file groupsFile
         users_file usersFile
         configuration_directory confDir
         packages_sources_file sourcesListFile
+        deadwood_script_file scriptFile
     }
 }

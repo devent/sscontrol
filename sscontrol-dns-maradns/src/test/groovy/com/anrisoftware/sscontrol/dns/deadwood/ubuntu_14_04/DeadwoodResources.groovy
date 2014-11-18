@@ -40,16 +40,23 @@ enum DeadwoodResources {
     userIdCommand("/usr/bin/id", DeadwoodResources.class.getResource("id_command.txt")),
     chmodCommand("/bin/chmod", DeadwoodResources.class.getResource("echo_command.txt")),
     chownCommand("/bin/chown", DeadwoodResources.class.getResource("echo_command.txt")),
+    updateRcCommand("/usr/sbin/update-rc.d", DeadwoodResources.class.getResource("echo_command.txt")),
+    deadwoodCommand("/usr/sbin/deadwood", DeadwoodResources.class.getResource("echo_command.txt")),
+    duendeCommand("/usr/sbin/duende", DeadwoodResources.class.getResource("echo_command.txt")),
     groupsFile("/etc/group", DeadwoodResources.class.getResource("group.txt")),
     usersFile("/etc/passwd", DeadwoodResources.class.getResource("passwd.txt")),
     confDir("/etc/maradns/deadwood", null),
     sourcesListFile("/etc/apt/sources.list", DeadwoodResources.class.getResource("sources_list.txt")),
     sourcesListExpected("/etc/apt/sources.list", DeadwoodResources.class.getResource("sources_list_expected.txt")),
     deadwoodrc("/etc/maradns/deadwood/dwood3rc", DeadwoodResources.class.getResource("dwood3rc.txt")),
+    scriptFile("/etc/init.d/deadwood", null),
     // expected
     deadwoodrcExpected("/etc/maradns/deadwood/dwood3rc", DeadwoodResources.class.getResource("dwood3rc_expected.txt")),
+    deadwoodRunScriptExpected("/etc/init.d/deadwood", DeadwoodResources.class.getResource("deadwood_run_script_expected.txt")),
+    updateRcOutExpected("/usr/sbin/update-rc.d.out", DeadwoodResources.class.getResource("updaterc_out_expected.txt")),
     aptitudeOutExpected("/usr/bin/aptitude.out", DeadwoodResources.class.getResource("aptitude_out_expected.txt")),
-    restartOutExpected("/etc/init.d/deadwood.out", DeadwoodResources.class.getResource("restart_out_expected.txt")),
+    deadwoodOutExpected("/etc/sbin/deadwood.out", DeadwoodResources.class.getResource("deadwood_out_expected.txt")),
+    duendeOutExpected("/usr/sbin/duende.out", DeadwoodResources.class.getResource("duende_out_expected.txt")),
     groupAddOutExpected("/usr/sbin/groupadd.out", DeadwoodResources.class.getResource("groupadd_out_expected.txt")),
     userAddOutExpected("/usr/sbin/useradd.out", DeadwoodResources.class.getResource("useradd_out_expected.txt")),
     chmodOutExpected("/bin/chmod.out", DeadwoodResources.class.getResource("chmod_out_expected.txt")),
@@ -63,6 +70,9 @@ enum DeadwoodResources {
         userIdCommand.createCommand parent
         chmodCommand.createCommand parent
         chownCommand.createCommand parent
+        updateRcCommand.createCommand parent
+        deadwoodCommand.createCommand parent
+        duendeCommand.createCommand parent
         groupsFile.createFile parent
         usersFile.createFile parent
         confDir.asFile parent mkdirs()

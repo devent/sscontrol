@@ -48,7 +48,7 @@ class DeadwoodTest extends UbuntuTestUtil {
         log.info "Run service again to ensure that configuration is not set double."
         registry.allServices.each { it.call() }
 
-        assertFileContent restartOutExpected.asFile(tmpdir), restartOutExpected
+        assertStringContent duendeOutExpected.replaced(tmpdir, tmpdir, "/tmp"), duendeOutExpected.toString()
         assertFileContent sourcesListExpected.asFile(tmpdir), sourcesListExpected
         assertFileContent aptitudeOutExpected.asFile(tmpdir), aptitudeOutExpected
         assertStringContent deadwoodrcExpected.replaced(tmpdir, tmpdir, "/tmp"), deadwoodrcExpected.toString()
@@ -56,5 +56,7 @@ class DeadwoodTest extends UbuntuTestUtil {
         assertFileContent userAddOutExpected.asFile(tmpdir), userAddOutExpected
         assertStringContent chmodOutExpected.replaced(tmpdir, tmpdir, "/tmp"), chmodOutExpected.toString()
         assertStringContent chownOutExpected.replaced(tmpdir, tmpdir, "/tmp"), chownOutExpected.toString()
+        assertFileContent updateRcOutExpected.asFile(tmpdir), updateRcOutExpected
+        assertStringContent deadwoodRunScriptExpected.replaced(tmpdir, tmpdir, "/tmp"), deadwoodRunScriptExpected.toString()
     }
 }

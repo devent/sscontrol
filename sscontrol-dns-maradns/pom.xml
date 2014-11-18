@@ -16,10 +16,6 @@
 	<url>https://anrisoftware.com/projects/projects/sscontrol-dns-maradns</url>
 	<inceptionYear>2013</inceptionYear>
 
-	<properties>
-		<project.custom.year>${project.inceptionYear}</project.custom.year>
-	</properties>
-
 	<issueManagement>
 		<system>Redmine</system>
 		<url>https://anrisoftware.com/projects/projects/sscontrol-dns-maradns</url>

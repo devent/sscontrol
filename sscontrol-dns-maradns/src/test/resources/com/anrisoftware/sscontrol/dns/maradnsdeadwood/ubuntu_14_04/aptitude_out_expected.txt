@@ -1,0 +1,8 @@
+update
+install maradns
+update
+install maradns-deadwood duende
+update
+install maradns
+update
+install maradns-deadwood duende

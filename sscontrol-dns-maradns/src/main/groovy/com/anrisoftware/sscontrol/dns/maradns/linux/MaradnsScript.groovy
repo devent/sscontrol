@@ -31,9 +31,48 @@ import com.anrisoftware.sscontrol.core.service.LinuxScript
 abstract class MaradnsScript extends LinuxScript {
 
     /**
+     * Returns the path of the configuration directory.
+     *
+     * <ul>
+     * <li>profile property {@code "maradns_configuration_directory"}</li>
+     * <li>profile property {@code "configuration_directory"}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    @Override
+    File getConfigurationDir() {
+        if (containsKey("maradns_configuration_directory", defaultProperties)) {
+            profileDirProperty "maradns_configuration_directory", defaultProperties
+        } else {
+            profileDirProperty "configuration_directory", defaultProperties
+        }
+    }
+
+    /**
+     * Returns the restart command for the service.
+     *
+     * <ul>
+     * <li>profile property {@code "maradns_restart_command"}</li>
+     * <li>property key {@code restart_command}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    @Override
+    String getRestartCommand() {
+        if (containsKey("maradns_restart_command", defaultProperties)) {
+            profileProperty "maradns_restart_command", defaultProperties
+        } else {
+            profileProperty "restart_command", defaultProperties
+        }
+    }
+
+    /**
      * Returns the file of the {@code mararc} configuration file.
      *
      * <ul>
+     * <li>profile property key {@code maradns_configuration_file}</li>
      * <li>profile property key {@code configuration_file}</li>
      * </ul>
      *
@@ -41,7 +80,11 @@ abstract class MaradnsScript extends LinuxScript {
      * @see #getDefaultProperties()
      */
     File getMararcFile() {
-        profileFileProperty "configuration_file", configurationDir, defaultProperties
+        if (containsKey("maradns_configuration_file", defaultProperties)) {
+            profileFileProperty "maradns_configuration_file", configurationDir, defaultProperties
+        } else {
+            profileFileProperty "configuration_file", configurationDir, defaultProperties
+        }
     }
 
     /**

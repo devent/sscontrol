@@ -1,0 +1,1 @@
+echo "uid=99(deadwood) gid=99(deadwood) groups=99(deadwood)"

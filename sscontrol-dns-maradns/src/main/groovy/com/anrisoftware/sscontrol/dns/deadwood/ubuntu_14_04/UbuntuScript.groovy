@@ -83,6 +83,7 @@ class UbuntuScript extends Deadwood_3_2_Script {
         enableRepository()
         installPackages()
         deployDeadwoodConfiguration()
+        createDeadwoodDirectories()
         createDeadwoodUser()
         createDeadwoodCacheFile()
         deployDeadwoodRunScript()
@@ -149,11 +150,18 @@ class UbuntuScript extends Deadwood_3_2_Script {
     }
 
     /**
-     * Restarts the <i>MaraDNS</i> service.
+     * Restarts the <i>Deadwood</i> service.
      */
     void restartService() {
         restartServicesFactory.create(
                 log: log, command: restartCommand, services: restartServices, this, threads)()
+    }
+
+    /**
+     * Creates the <i>Deadwood</i> service directories.
+     */
+    void createDeadwoodDirectories() {
+        duendeLoggerDir.mkdirs()
     }
 
     /**
@@ -188,6 +196,20 @@ class UbuntuScript extends Deadwood_3_2_Script {
      */
     String getUpdateRcCommand() {
         profileProperty "update_rc_command", defaultProperties
+    }
+
+    /**
+     * Returns path of the <i>Duende</i> logging directory, for
+     * example {@code /etc/maradns/logger}.
+     *
+     * <ul>
+     * <li>profile property key {@code duende_logging_directory}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    File getDuendeLoggerDir() {
+        profileProperty("duende_logging_directory", defaultProperties) as File
     }
 
     ContextProperties getDefaultProperties() {

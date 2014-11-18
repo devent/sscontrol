@@ -31,6 +31,7 @@ def duendeCommand = DeadwoodResources.duendeCommand.asFile(tmp)
 def groupsFile = DeadwoodResources.groupsFile.asFile(tmp)
 def usersFile = DeadwoodResources.usersFile.asFile(tmp)
 def confDir = DeadwoodResources.confDir.asFile(tmp)
+def duendeLoggingDir = DeadwoodResources.duendeLoggingDir.asFile(tmp)
 def sourcesListFile = DeadwoodResources.sourcesListFile.asFile(tmp)
 def scriptFile = DeadwoodResources.scriptFile.asFile(tmp)
 
@@ -50,6 +51,7 @@ profile "ubuntu_14_04", {
         groups_file groupsFile
         users_file usersFile
         configuration_directory confDir
+        duende_logging_directory duendeLoggingDir
         packages_sources_file sourcesListFile
         deadwood_script_file scriptFile
     }

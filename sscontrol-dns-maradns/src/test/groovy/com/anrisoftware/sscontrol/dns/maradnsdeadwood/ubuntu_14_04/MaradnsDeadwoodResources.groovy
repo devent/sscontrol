@@ -51,6 +51,7 @@ enum MaradnsDeadwoodResources {
     deadwoodCommand("/usr/sbin/deadwood", MaradnsDeadwoodResources.class.getResource("echo_command.txt")),
     duendeCommand("/usr/sbin/duende", MaradnsDeadwoodResources.class.getResource("echo_command.txt")),
     deadwoodConfDir("/etc/maradns/deadwood", null),
+    duendeLoggingDir("/etc/maradns/logger", null),
     deadwoodrc("/etc/maradns/deadwood/dwood3rc", MaradnsDeadwoodResources.class.getResource("dwood3rc.txt")),
     // MaraDNS
     maradnsRestartCommand("/etc/init.d/maradns", MaradnsDeadwoodResources.class.getResource("echo_command.txt")),
@@ -84,7 +85,6 @@ enum MaradnsDeadwoodResources {
         deadwoodRestartCommand.createCommand parent
         deadwoodCommand.createCommand parent
         duendeCommand.createCommand parent
-        deadwoodConfDir.asFile parent mkdirs()
         deadwoodrc.createFile parent
         // MaraDNS
         maradnsRestartCommand.createCommand parent

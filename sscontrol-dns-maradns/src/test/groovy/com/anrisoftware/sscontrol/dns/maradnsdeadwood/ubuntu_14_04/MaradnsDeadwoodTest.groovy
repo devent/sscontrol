@@ -49,6 +49,7 @@ class MaradnsDeadwoodTest extends UbuntuTestUtil {
         log.info "Run service again to ensure that configuration is not set double."
         registry.allServices.each { it.call() }
 
+        assert duendeLoggingDir.asFile(tmpdir).isDirectory()
         assertStringContent deadwoodrcExpected.replaced(tmpdir, tmpdir, "/tmp"), deadwoodrcExpected.toString()
         assertStringContent mararcExpected.replaced(tmpdir, tmpdir, "/tmp"), mararcExpected.toString()
         assertStringContent duendeOutExpected.replaced(tmpdir, tmpdir, "/tmp"), duendeOutExpected.toString()

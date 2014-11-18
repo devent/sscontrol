@@ -58,10 +58,13 @@ maxprocs = 8
 # SSCONTROL-dns
 handle_overload = 1
 # SSCONTROL-dns-END
+# SSCONTROL-dns
+maradns_uid = 99
+# SSCONTROL-dns-END
+# SSCONTROL-dns
+maradns_gid = 99
+# SSCONTROL-dns-END
 
-
-maradns_uid = 99 # UID Deadwood runs as
-maradns_gid = 99 # GID Deadwood runs as
 # SSCONTROL-dns
 maximum_cache_elements = 60000
 # SSCONTROL-dns-END

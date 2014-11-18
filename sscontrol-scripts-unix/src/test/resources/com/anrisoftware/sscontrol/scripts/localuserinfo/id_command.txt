@@ -1,0 +1,2 @@
+echo "uid=1000(devent) gid=1000(devent) groups=1000(devent),10(wheel)"
+exit 0

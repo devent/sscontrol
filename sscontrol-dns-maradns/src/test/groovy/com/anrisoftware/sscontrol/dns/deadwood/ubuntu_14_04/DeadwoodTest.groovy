@@ -52,5 +52,9 @@ class DeadwoodTest extends UbuntuTestUtil {
         assertFileContent sourcesListExpected.asFile(tmpdir), sourcesListExpected
         assertFileContent aptitudeOutExpected.asFile(tmpdir), aptitudeOutExpected
         assertStringContent deadwoodrcExpected.replaced(tmpdir, tmpdir, "/tmp"), deadwoodrcExpected.toString()
+        assertFileContent groupAddOutExpected.asFile(tmpdir), groupAddOutExpected
+        assertFileContent userAddOutExpected.asFile(tmpdir), userAddOutExpected
+        assertStringContent chmodOutExpected.replaced(tmpdir, tmpdir, "/tmp"), chmodOutExpected.toString()
+        assertStringContent chownOutExpected.replaced(tmpdir, tmpdir, "/tmp"), chownOutExpected.toString()
     }
 }

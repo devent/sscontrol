@@ -25,6 +25,9 @@ import javax.inject.Inject
 import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.sscontrol.dns.deadwood.deadwood_3_2.Deadwood_3_2_Script
 import com.anrisoftware.sscontrol.scripts.enableaptrepository.EnableAptRepositoryFactory
+import com.anrisoftware.sscontrol.scripts.localgroupadd.LocalGroupAddFactory
+import com.anrisoftware.sscontrol.scripts.localuseradd.LocalUserAddFactory
+import com.anrisoftware.sscontrol.scripts.localuserinfo.LocalUserInfoFactory
 import com.anrisoftware.sscontrol.scripts.unix.InstallPackagesFactory
 import com.anrisoftware.sscontrol.scripts.unix.RestartServicesFactory
 
@@ -49,10 +52,21 @@ class UbuntuScript extends Deadwood_3_2_Script {
     @Inject
     RestartServicesFactory restartServicesFactory
 
+    @Inject
+    LocalUserAddFactory localUserAddFactory
+
+    @Inject
+    LocalGroupAddFactory localGroupAddFactory
+
+    @Inject
+    LocalUserInfoFactory localUserInfoFactory
+
     def run() {
         enableRepository()
         installPackages()
         deployDeadwoodConfiguration()
+        createDeadwoodUser()
+        createDeadwoodCacheFile()
         restartService()
     }
 
@@ -68,6 +82,35 @@ class UbuntuScript extends Deadwood_3_2_Script {
                 repositoryString: repositoryString,
                 packagesSourcesFile: packagesSourcesFile,
                 this, threads)()
+    }
+
+    /**
+     * Creates the <i>Deadwood</i> user.
+     */
+    void createDeadwoodUser() {
+        localUserAddFactory.create(
+                log: log,
+                command: userAddCommand,
+                usersFile: usersFile,
+                userName: deadwoodUser,
+                groupName: deadwoodGroup,
+                systemUser: true,
+                this, threads)()
+        localGroupAddFactory.create(
+                log: log,
+                command: groupAddCommand,
+                groupsFile: groupsFile,
+                groupName: deadwoodGroup,
+                systemGroup: true,
+                this, threads)()
+        def info = localUserInfoFactory.create(
+                log: log,
+                command: userIdCommand,
+                userName: deadwoodUser,
+                this, threads)()
+        def uid = info.uid
+        def gid = info.gid
+        deployDeadwoodUserConfiguration uid, gid
     }
 
     /**

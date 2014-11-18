@@ -20,11 +20,15 @@ package com.anrisoftware.sscontrol.dns.deadwood.deadwood_3_2
 
 import javax.inject.Inject
 
+import org.apache.commons.lang3.StringUtils
+
 import com.anrisoftware.globalpom.textmatch.tokentemplate.TokenTemplate
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.Templates
 import com.anrisoftware.resources.templates.api.TemplatesFactory
 import com.anrisoftware.sscontrol.dns.deadwood.linux.DeadwoodScript
+import com.anrisoftware.sscontrol.scripts.changefilemod.ChangeFileModFactory
+import com.anrisoftware.sscontrol.scripts.changefileowner.ChangeFileOwnerFactory
 
 /**
  * <i>MaraDNS-Deadwood 3.2.x</i> service script.
@@ -33,6 +37,12 @@ import com.anrisoftware.sscontrol.dns.deadwood.linux.DeadwoodScript
  * @since 1.0
  */
 abstract class Deadwood_3_2_Script extends DeadwoodScript {
+
+    @Inject
+    ChangeFileOwnerFactory changeFileOwnerFactory
+
+    @Inject
+    ChangeFileModFactory changeFileModFactory
 
     Templates deadwoodTemplates
 
@@ -70,6 +80,47 @@ abstract class Deadwood_3_2_Script extends DeadwoodScript {
             resurrectionsConfiguration,
             filterRfc1918Configuration,
         ]
+    }
+
+    /**
+     * Deploys the <i>Deadwood</i> user configuration.
+     */
+    void deployDeadwoodUserConfiguration(int uid, int gid) {
+        deployConfiguration configurationTokens(), currentDeadwoodConfiguration, getDeadwoodUserConfigurations(uid, gid), deadwoodrcFile
+    }
+
+    /**
+     * Returns the <i>Deadwood</i> user configurations.
+     */
+    List getDeadwoodUserConfigurations(int uid, int gid) {
+        [
+            userConfiguration(uid),
+            groupConfiguration(gid),
+        ]
+    }
+
+    /**
+     * Creates the <i>Deadwood</i> cache file.
+     */
+    def createDeadwoodCacheFile() {
+        if (StringUtils.isBlank(cacheFile)) {
+            return
+        }
+        File cacheFile = new File(configurationDir, cacheFile)
+        cacheFile.isFile() == false ? cacheFile.createNewFile() : false
+        changeFileOwnerFactory.create(
+                log: log,
+                command: chownCommand,
+                files: cacheFile,
+                owner: deadwoodUser,
+                ownerGroup: deadwoodGroup,
+                this, threads)()
+        changeFileModFactory.create(
+                log: log,
+                command: chmodCommand,
+                files: cacheFile,
+                mod: "o-rw",
+                this, threads)()
     }
 
     def getBindAddressConfiguration() {
@@ -230,6 +281,24 @@ abstract class Deadwood_3_2_Script extends DeadwoodScript {
     def getFilterRfc1918Configuration() {
         def search = deadwoodConfiguration.getText(true, "filter_rfc1918_search")
         def replace = deadwoodConfiguration.getText(true, "filter_rfc1918", "enabled", filterRfc1918)
+        new TokenTemplate(search, replace)
+    }
+
+    /**
+     * Sets the user uid.
+     */
+    def userConfiguration(int uid) {
+        def search = deadwoodConfiguration.getText(true, "maradns_uid_search")
+        def replace = deadwoodConfiguration.getText(true, "maradns_uid", "uid", uid)
+        new TokenTemplate(search, replace)
+    }
+
+    /**
+     * Sets the group gid.
+     */
+    def groupConfiguration(int gid) {
+        def search = deadwoodConfiguration.getText(true, "maradns_gid_search")
+        def replace = deadwoodConfiguration.getText(true, "maradns_gid", "gid", gid)
         new TokenTemplate(search, replace)
     }
 }

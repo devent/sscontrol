@@ -127,3 +127,18 @@ filter_rfc1918(enabled) ::= <%
 filter_rfc1918 = <if(enabled)>1<else>0<endif>
 %>
 
+maradns_uid_search() ::= <%
+(?m)^#?\s*maradns_uid\s*=\s*\d*.*
+%>
+
+maradns_uid(uid) ::= <%
+maradns_uid = <uid>
+%>
+
+maradns_gid_search() ::= <%
+(?m)^#?\s*maradns_gid\s*=\s*\d*.*
+%>
+
+maradns_gid(gid) ::= <%
+maradns_gid = <gid>
+%>

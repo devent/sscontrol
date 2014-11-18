@@ -1,0 +1,2 @@
+echo "id: aa: no such user"
+exit 1

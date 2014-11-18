@@ -1,0 +1,6 @@
+unix(args) ::= <<
+<args.command> <args.userName>
+
+>>
+
+idPattern() ::= "uid=(\d+)\((.*)\)\s+gid=(\d+)\((.*)\)\s+groups=(.*)"

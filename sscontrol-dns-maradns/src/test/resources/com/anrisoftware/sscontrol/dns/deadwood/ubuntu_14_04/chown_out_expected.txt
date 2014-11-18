@@ -1,0 +1,2 @@
+deadwood.deadwood /tmp/etc/maradns/deadwood/dw_cache
+deadwood.deadwood /tmp/etc/maradns/deadwood/dw_cache

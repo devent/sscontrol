@@ -20,7 +20,13 @@ package com.anrisoftware.sscontrol.dns.deadwood.ubuntu_14_04
 
 def aptitudeCommand = DeadwoodResources.aptitudeCommand.asFile(tmp)
 def restartCommand = DeadwoodResources.restartCommand.asFile(tmp)
-def addRepositoryCommand = DeadwoodResources.addRepositoryCommand.asFile(tmp)
+def groupAddCommand = DeadwoodResources.groupAddCommand.asFile(tmp)
+def userAddCommand = DeadwoodResources.userAddCommand.asFile(tmp)
+def userIdCommand = DeadwoodResources.userIdCommand.asFile(tmp)
+def chmodCommand = DeadwoodResources.chmodCommand.asFile(tmp)
+def chownCommand = DeadwoodResources.chownCommand.asFile(tmp)
+def groupsFile = DeadwoodResources.groupsFile.asFile(tmp)
+def usersFile = DeadwoodResources.usersFile.asFile(tmp)
 def confDir = DeadwoodResources.confDir.asFile(tmp)
 def sourcesListFile = DeadwoodResources.sourcesListFile.asFile(tmp)
 
@@ -29,7 +35,13 @@ profile "ubuntu_14_04", {
         service "deadwood"
         install_command "$aptitudeCommand update && $aptitudeCommand install"
         restart_command "$restartCommand restart"
-        enable_repository_command addRepositoryCommand
+        group_add_command groupAddCommand
+        user_add_command userAddCommand
+        user_id_command userIdCommand
+        chmod_command chmodCommand
+        chown_command chownCommand
+        groups_file groupsFile
+        users_file usersFile
         configuration_directory confDir
         packages_sources_file sourcesListFile
     }

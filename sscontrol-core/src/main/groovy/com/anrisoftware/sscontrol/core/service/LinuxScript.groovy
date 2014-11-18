@@ -599,6 +599,20 @@ abstract class LinuxScript extends Script {
     }
 
     /**
+     * Returns the command to returns information about local users, for
+     * example {@code "/usr/bin/id"}.
+     *
+     * <ul>
+     * <li>property key {@code user_id_command}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    String getUserIdCommand() {
+        profileProperty "user_id_command", defaultProperties
+    }
+
+    /**
      * Returns the command to show the running processes, for
      * example {@code "/bin/ps"}.
      *

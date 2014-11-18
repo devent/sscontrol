@@ -1,0 +1,2 @@
+o-rw /tmp/etc/maradns/deadwood/dw_cache
+o-rw /tmp/etc/maradns/deadwood/dw_cache

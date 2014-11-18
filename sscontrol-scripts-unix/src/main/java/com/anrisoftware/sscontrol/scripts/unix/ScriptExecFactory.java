@@ -18,7 +18,6 @@
  */
 package com.anrisoftware.sscontrol.scripts.unix;
 
-import java.util.List;
 import java.util.Map;
 
 import org.joda.time.Duration;
@@ -29,7 +28,7 @@ import com.anrisoftware.resources.templates.api.TemplateResource;
 
 /**
  * Factory to create the script exec.
- * 
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
@@ -37,50 +36,50 @@ public interface ScriptExecFactory {
 
     /**
      * Create the script exec.
-     * 
+     *
      * @param args
      *            the {@link Map} arguments:
-     * 
+     *
      *            <ul>
      *            <li>{@code log} the logger that logs the command output;
-     * 
+     *
      *            <li>{@code outString} optionally, set to {@code true} to save
      *            the output in a {@link String} for later parsing, see
      *            {@link ProcessTask#getOut()};
-     * 
+     *
      *            <li>{@code errString} optionally, set to {@code true} to save
      *            the error output in a {@link String} for later parsing, see
      *            {@link ProcessTask#getErr()}. Per default it is set to
      *            {@link AbstractProcessExec#ERR_STRING_DEFAULT}.
-     * 
+     *
      *            <li>{@code timeout} optionally, set the timeout
      *            {@link Duration};
-     * 
+     *
      *            <li>{@code destroyOnTimeout} optionally, set to {@code true}
      *            to destroy the process on timeout;
-     * 
+     *
      *            <li>{@code checkExitCodes} optionally, set to {@code true} to
      *            check the exit code(s) of the process;
-     * 
-     *            <li>{@code exitCodes} optionally, set a {@link List} of
-     *            success exit codes;
-     * 
+     *
+     *            <li>{@code exitCodes} optionally, set an int-array of success
+     *            exit codes;
+     *
      *            <li>{@code exitCode} optionally, set the success exit code of
      *            the process;
      *            </ul>
-     * 
+     *
      * @param parent
      *            the {@link Object} parent script.
-     * 
+     *
      * @param threads
      *            the {@link Threads} pool.
-     * 
+     *
      * @param templateResource
      *            the {@link TemplateResource}.
-     * 
+     *
      * @param name
      *            the {@link String} name.
-     * 
+     *
      * @return the {@link ScriptExec}.
      */
     ScriptExec create(Map<String, Object> args, Object parent, Threads threads,

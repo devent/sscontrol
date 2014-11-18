@@ -29,6 +29,8 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
 import com.anrisoftware.sscontrol.core.api.ServiceException;
 import com.anrisoftware.sscontrol.core.groovy.StatementsMap;
 import com.anrisoftware.sscontrol.core.groovy.StatementsMapFactory;
@@ -38,11 +40,15 @@ import com.google.inject.assistedinject.Assisted;
 
 /**
  * Parses the web service arguments.
- * 
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
 public final class DefaultWebService implements WebService {
+
+    private static final String DOMAIN = "domain";
+
+    private static final String SERVICE_NAME = "service name";
 
     private final WebServiceLogger serviceLog;
 
@@ -51,9 +57,6 @@ public final class DefaultWebService implements WebService {
     private final String serviceName;
 
     private final StatementsMap statementsMap;
-
-    @Inject
-    private WebServiceToString serviceToString;
 
     /**
      * @see DefaultWebServiceFactory#create(String, Map, Domain)
@@ -173,7 +176,8 @@ public final class DefaultWebService implements WebService {
 
     @Override
     public String toString() {
-        return serviceToString.toString(this);
+        return new ToStringBuilder(this).append(SERVICE_NAME, serviceName)
+                .append(DOMAIN, domain).toString();
     }
 
 }

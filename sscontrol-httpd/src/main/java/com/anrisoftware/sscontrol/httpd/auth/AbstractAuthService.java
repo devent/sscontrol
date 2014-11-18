@@ -25,11 +25,12 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
 import com.anrisoftware.sscontrol.core.yesno.YesNoFlag;
 import com.anrisoftware.sscontrol.httpd.domain.Domain;
 import com.anrisoftware.sscontrol.httpd.webservice.WebService;
 import com.anrisoftware.sscontrol.httpd.webserviceargs.WebServiceLogger;
-import com.anrisoftware.sscontrol.httpd.webserviceargs.WebServiceToString;
 
 /**
  * HTTP/authentication service.
@@ -39,6 +40,8 @@ import com.anrisoftware.sscontrol.httpd.webserviceargs.WebServiceToString;
  */
 public abstract class AbstractAuthService implements WebService {
 
+    private static final String DOMAIN = "domain";
+
     private static final String ATTRIBUTE_ARG = "attribute";
 
     private static final String HOST = "host";
@@ -47,7 +50,7 @@ public abstract class AbstractAuthService implements WebService {
 
     private static final String GROUP_ARG = "group";
 
-    private static final String DOMAIN_ARG = "domain";
+    private static final String DOMAIN_ARG = DOMAIN;
 
     private static final String VALID_ARGS = "valid";
 
@@ -87,9 +90,6 @@ public abstract class AbstractAuthService implements WebService {
     @Inject
     private RequireValidFactory requireValidFactory;
 
-    @Inject
-    private WebServiceToString serviceToString;
-
     private String id;
 
     private String ref;
@@ -116,16 +116,16 @@ public abstract class AbstractAuthService implements WebService {
 
     /**
      * Sets the domain for the authentication.
-     * 
+     *
      * @param args
      *            the {@link Map} arguments.
-     * 
+     *
      * @param domain
      *            the {@link DomainImpl}.
-     * 
+     *
      * @param serviceLog
      *            the {@link WebServiceArgs}.
-     * 
+     *
      * @param log
      *            the {@link AuthServiceLogger}.
      */
@@ -348,6 +348,6 @@ public abstract class AbstractAuthService implements WebService {
 
     @Override
     public String toString() {
-        return serviceToString.toString(this);
+        return new ToStringBuilder(this).append(DOMAIN, domain).toString();
     }
 }

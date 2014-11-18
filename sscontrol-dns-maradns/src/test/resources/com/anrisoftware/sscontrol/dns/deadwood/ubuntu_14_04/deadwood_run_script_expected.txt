@@ -67,12 +67,12 @@ fi
 # If invoked as stop or restart, kill *all* MaraDNS processes
 if [ $1 = "stop" -o $1 = "restart" ] ; then
     echo Sending all Deadwood processes the TERM signal
-    ps -e | awk '{print $1":"$NF}' | grep Deadwood | grep -v $$ | \
+    ps -e | awk '{print $1":"$NF}' | grep `basename $DEADWOOD` | grep -v $$ | \
       cut -f1 -d: | xargs kill > /dev/null 2>&1
     echo waiting 5 seconds
     sleep 5
     echo Sending all Deadwood processes the KILL signal
-    ps -e | awk '{print $1":"$NF}' | grep Deadwood | grep -v $$ | \
+    ps -e | awk '{print $1":"$NF}' | grep `basename $DEADWOOD` | grep -v $$ | \
       cut -f1 -d: | xargs kill -9 > /dev/null 2>&1
     echo MaraDNS should have been stopped
     if [ $1 = "stop" ] ; then

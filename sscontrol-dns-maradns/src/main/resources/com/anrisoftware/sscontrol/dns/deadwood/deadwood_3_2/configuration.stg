@@ -4,7 +4,7 @@ bind_address(service) ::= <%
 %>
 
 bind_address_search() ::= <%
-#?bind_address.*
+(?m)^#?\s*bind_address.*
 %>
 
 ip4_bind_address(service, properties) ::= <%
@@ -20,11 +20,35 @@ bindAddress(service, properties) ::= <%
 %>
 
 ip4_bind_address_search() ::= <%
-#?\s*ipv4_bind_addresses\s*=\s*.*
+(?m)^#?\s*ipv4_bind_addresses\s*=\s*.*
+%>
+
+chroot_search(service) ::= <%
+chroot_dir\s*=\s*".*?"
+%>
+
+chroot(directory) ::= <%
+chroot_dir = "<directory>"
+%>
+
+upstream_servers_search() ::= <%
+(?m)^#?\s*upstream_servers\s*=\s*\{\s*\}.*
+%>
+
+upstream_servers() ::= <%
+upstream_servers = {}
+%>
+
+upstream_servers_list_search(servers) ::= <%
+(?m)^#?\s*upstream_servers\["\."\]\s*=\s*"<servers;separator=",">".*
+%>
+
+upstream_servers_list(servers) ::= <%
+upstream_servers["."] = "<servers;separator=",">"
 %>
 
 root_servers_search() ::= <%
-#?\s*root_servers\s*=\s*\{\s*\}.*
+(?m)^#?\s*root_servers\s*=\s*\{\s*\}.*
 %>
 
 root_servers() ::= <%
@@ -32,25 +56,74 @@ root_servers = {}
 %>
 
 root_servers_list_search(roots) ::= <%
-#?\s*root_servers\["."\]\s*=\s*"<roots.servers;separator=",">".*
+(?m)^#?\s*root_servers\["\."\]\s*=\s*"<roots;separator=",">".*
 %>
 
 root_servers_list(roots) ::= <%
-root_servers["."] = "<roots.servers;separator=",">"
+root_servers["."] = "<roots;separator=",">"
+%>
+
+named_root_servers_list_search(name, address) ::= <%
+(?m)^#?\s*root_servers\["<name>\."\]\s*=\s*"<address>".*
+%>
+
+named_root_servers_list(name, address) ::= <%
+root_servers["<name>."] = "<address>"
 %>
 
 recursive_acl_search() ::= <%
-#?\s*recursive_acl\s*=\s*".*?".*
+(?m)^#?\s*recursive_acl\s*=\s*".*?".*
 %>
 
-recursive_acl(recursive) ::= <%
-recursive_acl = "<recursive.servers;separator=",">"
+recursive_acl(acls) ::= <%
+recursive_acl = "<acls;separator=",">"
 %>
 
-packagesSources_search(repository) ::= <%
-<repository>
+maxprocs_search() ::= <%
+(?m)^#?\s*maxprocs\s*=\s*\d*.*
 %>
 
-packagesSources(repository) ::= <%
-<repository>
+maxprocs(requests) ::= <%
+maxprocs = <requests>
 %>
+
+handle_overload_search() ::= <%
+(?m)^#?\s*handle_overload\s*=\s*\d*.*
+%>
+
+handle_overload(enabled) ::= <%
+handle_overload = <if(enabled)>1<else>0<endif>
+%>
+
+maximum_cache_elements_search() ::= <%
+(?m)^#?\s*maximum_cache_elements\s*=\s*\d*.*
+%>
+
+maximum_cache_elements(max) ::= <%
+maximum_cache_elements = <max>
+%>
+
+cache_file_search() ::= <%
+(?m)^#?\s*cache_file\s*=\s*".*?".*
+%>
+
+cache_file(file) ::= <%
+cache_file = "<file>"
+%>
+
+resurrections_search() ::= <%
+(?m)^#?\s*resurrections\s*=\s*\d*.*
+%>
+
+resurrections(enabled) ::= <%
+resurrections = <if(enabled)>1<else>0<endif>
+%>
+
+filter_rfc1918_search() ::= <%
+(?m)^#?\s*filter_rfc1918\s*=\s*\d*.*
+%>
+
+filter_rfc1918(enabled) ::= <%
+filter_rfc1918 = <if(enabled)>1<else>0<endif>
+%>
+

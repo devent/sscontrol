@@ -24,8 +24,7 @@ import com.anrisoftware.globalpom.textmatch.tokentemplate.TokenTemplate
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.Templates
 import com.anrisoftware.resources.templates.api.TemplatesFactory
-import com.anrisoftware.sscontrol.core.api.Service
-import com.anrisoftware.sscontrol.core.service.LinuxScript
+import com.anrisoftware.sscontrol.dns.deadwood.linux.DeadwoodScript
 
 /**
  * <i>MaraDNS-Deadwood 3.2.x</i> service script.
@@ -33,12 +32,7 @@ import com.anrisoftware.sscontrol.core.service.LinuxScript
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-abstract class Deadwood_3_2_Script {
-
-    /**
-     * The {@link Service} of the script.
-     */
-    Service service
+abstract class Deadwood_3_2_Script extends DeadwoodScript {
 
     Templates deadwoodTemplates
 
@@ -53,7 +47,7 @@ abstract class Deadwood_3_2_Script {
     /**
      * Deploys the <i>Deadwood</i> configuration.
      */
-    void deployMaraDnsConfiguration() {
+    void deployDeadwoodConfiguration() {
         deployConfiguration configurationTokens(), currentDeadwoodConfiguration, deadwoodConfigurations, deadwoodrcFile
     }
 
@@ -64,8 +58,17 @@ abstract class Deadwood_3_2_Script {
         [
             bindAddressConfiguration,
             ipv4BindAddressConfiguration,
+            chrootConfiguration,
+            upstreamServersConfiguration,
             rootServersConfiguration,
-            recursiveConfiguration,
+            namedRootServersConfiguration,
+            aclsConfiguration,
+            maxprocsConfiguration,
+            handleOverloadConfiguration,
+            maximumCacheElementsConfiguration,
+            cacheFileConfiguration,
+            resurrectionsConfiguration,
+            filterRfc1918Configuration,
         ]
     }
 
@@ -81,152 +84,152 @@ abstract class Deadwood_3_2_Script {
         new TokenTemplate(search, replace)
     }
 
-    /**
-     * Returns the current <i>Deadwood</i> configuration.
-     */
-    String getCurrentDeadwoodConfiguration() {
-        currentConfiguration deadwoodrcFile
+    def getChrootConfiguration() {
+        def search = deadwoodConfiguration.getText(true, "chroot_search")
+        def replace = deadwoodConfiguration.getText(true, "chroot", "directory", configurationDir)
+        new TokenTemplate(search, replace)
     }
 
     /**
-     * Returns the file of the Deadwood configuration file.
-     *
-     * <ul>
-     * <li>profile property key {@code configuration_file}</li>
-     * </ul>
-     *
-     * @see #getConfigurationDir()
-     * @see #getDefaultProperties()
+     * Activates and sets the upstream servers.
      */
-    File getDeadwoodrcFile() {
-        profileFileProperty "configuration_file", configurationDir, defaultProperties
+    def getUpstreamServersConfiguration() {
+        if (service.upstreamServers.empty) {
+            return []
+        }
+        def list = []
+        def search = deadwoodConfiguration.getText(true, "upstream_servers_search")
+        def replace = deadwoodConfiguration.getText(true, "upstream_servers")
+        list << new TokenTemplate(search, replace)
+        list << getUpstreamServerConfiguration(service.upstreamServers)
     }
 
     /**
-     * Returns the user name under which <i>Deadwood</i> is run.
-     *
-     * <ul>
-     * <li>profile property key {@code deadwood_user}</li>
-     * </ul>
-     *
-     * @see #getDefaultProperties()
+     * Sets the upstream servers.
      */
-    String getDeadwoodUser() {
-        profileProperty "deadwood_user", defaultProperties
+    def getUpstreamServerConfiguration(List servers) {
+        def search = deadwoodConfiguration.getText(true, "upstream_servers_list_search", "servers", servers)
+        def replace = deadwoodConfiguration.getText(true, "upstream_servers_list", "servers", servers)
+        new TokenTemplate(search, replace)
     }
 
     /**
-     * Returns the user name under which <i>Deadwood</i> is run.
-     *
-     * <ul>
-     * <li>profile property key {@code deadwood_group}</li>
-     * </ul>
-     *
-     * @see #getDefaultProperties()
+     * Activates and sets the root servers.
      */
-    String getDeadwoodGroup() {
-        profileProperty "deadwood_group", defaultProperties
+    def getRootServersConfiguration() {
+        if (service.rootServers.empty) {
+            return []
+        }
+        def list = []
+        def search = deadwoodConfiguration.getText(true, "root_servers_search")
+        def replace = deadwoodConfiguration.getText(true, "root_servers")
+        list << new TokenTemplate(search, replace)
+        list << getRootServerConfiguration(service.rootServers)
     }
 
     /**
-     * Returns the default binding addresses, for example {@code "127.0.0.1"}.
-     *
-     * <ul>
-     * <li>profile property key {@code default_binding_addresses}</li>
-     * </ul>
-     *
-     * @see #getDefaultProperties()
+     * Sets the root servers.
      */
-    List getDefaultBindingAddresses() {
-        profileListProperty "default_binding_addresses", defaultProperties
+    def getRootServerConfiguration(List roots) {
+        roots.inject([]) { l, root ->
+            def servers = lookupServersGroup(root)
+            def search = deadwoodConfiguration.getText(true, "root_servers_list_search", "roots", servers)
+            def replace = deadwoodConfiguration.getText(true, "root_servers_list", "roots", servers)
+            l << new TokenTemplate(search, replace)
+        }
     }
 
     /**
-     * Returns the default maximum requests, for example {@code 8}.
-     *
-     * <ul>
-     * <li>profile property key {@code default_max_requests}</li>
-     * </ul>
-     *
-     * @see #getDefaultProperties()
+     * Activates and sets the named root servers.
      */
-    int getDefaultMaxRequests() {
-        profileNumberProperty "default_max_requests", defaultProperties
+    def getNamedRootServersConfiguration() {
+        if (service.rootServers.empty) {
+            return []
+        }
+        def list = []
+        def search = deadwoodConfiguration.getText(true, "root_servers_search")
+        def replace = deadwoodConfiguration.getText(true, "root_servers")
+        list << new TokenTemplate(search, replace)
+        list << getNamedRootServerConfiguration(service.servers)
     }
 
     /**
-     * Returns default handle overload enabled, for example {@code true}.
-     *
-     * <ul>
-     * <li>profile property key {@code default_handle_overload}</li>
-     * </ul>
-     *
-     * @see #getDefaultProperties()
+     * Sets the named root servers.
      */
-    boolean getDefaultHandleOverload() {
-        profileBooleanProperty "default_handle_overload", defaultProperties
+    def getNamedRootServerConfiguration(Map servers) {
+        def list = []
+        servers.each { name, address ->
+            def search = deadwoodConfiguration.getText(true, "named_root_servers_list_search", "name", name, "address", address)
+            def replace = deadwoodConfiguration.getText(true, "named_root_servers_list", "name", name, "address", address)
+            list << new TokenTemplate(search, replace)
+        }
+        return list
     }
 
     /**
-     * Returns the default maximum cache, for example {@code 60000}.
-     *
-     * <ul>
-     * <li>profile property key {@code default_max_cache}</li>
-     * </ul>
-     *
-     * @see #getDefaultProperties()
+     * Sets ACLs.
      */
-    long getDefaultMaxCache() {
-        profileNumberProperty "default_max_cache", defaultProperties
+    def getAclsConfiguration() {
+        if (service.acls.empty) {
+            return []
+        }
+        def list = []
+        def search = deadwoodConfiguration.getText(true, "recursive_acl_search")
+        def replace = deadwoodConfiguration.getText(true, "recursive_acl", "acls", service.acls)
+        new TokenTemplate(search, replace)
     }
 
     /**
-     * Returns the default cache file name.
-     *
-     * <ul>
-     * <li>profile property key {@code default_cache_file}</li>
-     * </ul>
-     *
-     * @see #getDefaultProperties()
+     * Sets maximum requests.
      */
-    String getDefaultCacheFile() {
-        profileProperty "default_cache_file", defaultProperties
+    def getMaxprocsConfiguration() {
+        def search = deadwoodConfiguration.getText(true, "maxprocs_search")
+        def replace = deadwoodConfiguration.getText(true, "maxprocs", "requests", maxRequests)
+        new TokenTemplate(search, replace)
     }
 
     /**
-     * Returns default fetch expired records enabled, for example {@code true}.
-     *
-     * <ul>
-     * <li>profile property key {@code default_resurrections}</li>
-     * </ul>
-     *
-     * @see #getDefaultProperties()
+     * Sets handle overload.
      */
-    boolean getDefaultResurrection() {
-        profileBooleanProperty "default_resurrections", defaultProperties
+    def getHandleOverloadConfiguration() {
+        def search = deadwoodConfiguration.getText(true, "handle_overload_search")
+        def replace = deadwoodConfiguration.getText(true, "handle_overload", "enabled", handleOverload)
+        new TokenTemplate(search, replace)
     }
 
     /**
-     * Sets the parent script.
-     *
-     * @param script
-     *            the {@link LinuxScript} parent script.
+     * Sets maximum cache elements.
      */
-    void setScript(LinuxScript script) {
-        this.script = script
+    def getMaximumCacheElementsConfiguration() {
+        def search = deadwoodConfiguration.getText(true, "maximum_cache_elements_search")
+        def replace = deadwoodConfiguration.getText(true, "maximum_cache_elements", "max", maxCache)
+        new TokenTemplate(search, replace)
     }
 
     /**
-     * Delegates missing properties to {@link LinuxScript}.
+     * Sets the cache file.
      */
-    def propertyMissing(String name) {
-        script.getProperty name
+    def getCacheFileConfiguration() {
+        def search = deadwoodConfiguration.getText(true, "cache_file_search")
+        def replace = deadwoodConfiguration.getText(true, "cache_file", "file", cacheFile)
+        new TokenTemplate(search, replace)
     }
 
     /**
-     * Delegates missing methods to {@link LinuxScript}.
+     * Sets the resurrections.
      */
-    def methodMissing(String name, def args) {
-        script.invokeMethod name, args
+    def getResurrectionsConfiguration() {
+        def search = deadwoodConfiguration.getText(true, "resurrections_search")
+        def replace = deadwoodConfiguration.getText(true, "resurrections", "enabled", resurrection)
+        new TokenTemplate(search, replace)
+    }
+
+    /**
+     * Sets the filter rfc1918.
+     */
+    def getFilterRfc1918Configuration() {
+        def search = deadwoodConfiguration.getText(true, "filter_rfc1918_search")
+        def replace = deadwoodConfiguration.getText(true, "filter_rfc1918", "enabled", filterRfc1918)
+        new TokenTemplate(search, replace)
     }
 }

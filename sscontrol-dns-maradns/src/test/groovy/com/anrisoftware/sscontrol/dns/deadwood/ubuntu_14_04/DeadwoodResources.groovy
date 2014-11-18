@@ -34,15 +34,15 @@ enum DeadwoodResources {
     profile("UbuntuProfile.groovy", DeadwoodResources.class.getResource("UbuntuProfile.groovy")),
     deadwoodScript("Dns.groovy", DeadwoodResources.class.getResource("Dns.groovy")),
     aptitudeCommand("/usr/bin/aptitude", DeadwoodResources.class.getResource("echo_command.txt")),
-    restartCommand("/etc/init.d/maradns", DeadwoodResources.class.getResource("echo_command.txt")),
+    restartCommand("/etc/init.d/deadwood", DeadwoodResources.class.getResource("echo_command.txt")),
     addRepositoryCommand("/usr/bin/add-apt-repository", DeadwoodResources.class.getResource("echo_command.txt")),
-    confDir("/etc/maradns", null),
+    confDir("/etc/maradns/deadwood", null),
     sourcesListFile("/etc/apt/sources.list", DeadwoodResources.class.getResource("sources_list.txt")),
     sourcesListExpected("/etc/apt/sources.list", DeadwoodResources.class.getResource("sources_list_expected.txt")),
     deadwoodrc("/etc/maradns/deadwood/dwood3rc", DeadwoodResources.class.getResource("dwood3rc.txt")),
     deadwoodrcExpected("/etc/maradns/deadwood/dwood3rc", DeadwoodResources.class.getResource("dwood3rc_expected.txt")),
     aptitudeOutExpected("/usr/bin/aptitude.out", DeadwoodResources.class.getResource("aptitude_out_expected.txt")),
-    restartOutExpected("/etc/init.d/maradns.out", DeadwoodResources.class.getResource("restart_out_expected.txt")),
+    restartOutExpected("/etc/init.d/deadwood.out", DeadwoodResources.class.getResource("restart_out_expected.txt")),
 
     static copyUbuntuFiles(File parent) {
         aptitudeCommand.createCommand parent

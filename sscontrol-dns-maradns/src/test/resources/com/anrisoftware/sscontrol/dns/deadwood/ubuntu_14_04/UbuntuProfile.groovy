@@ -16,13 +16,13 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-dns-maradns. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.dns.maradns.ubuntu_14_04
+package com.anrisoftware.sscontrol.dns.deadwood.ubuntu_14_04
 
-def aptitudeCommand = MaradnsResources.aptitudeCommand.asFile(tmp)
-def restartCommand = MaradnsResources.restartCommand.asFile(tmp)
-def addRepositoryCommand = MaradnsResources.addRepositoryCommand.asFile(tmp)
-def confDir = MaradnsResources.confDir.asFile(tmp)
-def sourcesListFile = MaradnsResources.sourcesListFile.asFile(tmp)
+def aptitudeCommand = DeadwoodResources.aptitudeCommand.asFile(tmp)
+def restartCommand = DeadwoodResources.restartCommand.asFile(tmp)
+def addRepositoryCommand = DeadwoodResources.addRepositoryCommand.asFile(tmp)
+def confDir = DeadwoodResources.confDir.asFile(tmp)
+def sourcesListFile = DeadwoodResources.sourcesListFile.asFile(tmp)
 
 profile "ubuntu_14_04", {
     dns {

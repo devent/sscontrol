@@ -115,6 +115,13 @@ class UbuntuScript extends Deadwood_3_2_Script {
      * Creates the <i>Deadwood</i> user.
      */
     void createDeadwoodUser() {
+        localGroupAddFactory.create(
+                log: log,
+                command: groupAddCommand,
+                groupsFile: groupsFile,
+                groupName: deadwoodGroup,
+                systemGroup: true,
+                this, threads)()
         localUserAddFactory.create(
                 log: log,
                 command: userAddCommand,
@@ -122,13 +129,6 @@ class UbuntuScript extends Deadwood_3_2_Script {
                 userName: deadwoodUser,
                 groupName: deadwoodGroup,
                 systemUser: true,
-                this, threads)()
-        localGroupAddFactory.create(
-                log: log,
-                command: groupAddCommand,
-                groupsFile: groupsFile,
-                groupName: deadwoodGroup,
-                systemGroup: true,
                 this, threads)()
         def info = localUserInfoFactory.create(
                 log: log,

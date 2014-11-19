@@ -195,7 +195,7 @@ abstract class Deadwood_3_2_Script extends DeadwoodScript {
      * Activates and sets the named root servers.
      */
     def getNamedRootServersConfiguration() {
-        if (service.rootServers.empty) {
+        if (service.servers.empty) {
             return []
         }
         def list = []

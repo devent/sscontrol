@@ -55,7 +55,7 @@ enum DeadwoodResources {
     deadwoodRunScriptExpected("/etc/init.d/deadwood", DeadwoodResources.class.getResource("deadwood_run_script_expected.txt")),
     updateRcOutExpected("/usr/sbin/update-rc.d.out", DeadwoodResources.class.getResource("updaterc_out_expected.txt")),
     aptitudeOutExpected("/usr/bin/aptitude.out", DeadwoodResources.class.getResource("aptitude_out_expected.txt")),
-    deadwoodOutExpected("/etc/sbin/deadwood.out", DeadwoodResources.class.getResource("deadwood_out_expected.txt")),
+    deadwoodOutExpected("/etc/init.d/deadwood.out", DeadwoodResources.class.getResource("deadwood_out_expected.txt")),
     groupAddOutExpected("/usr/sbin/groupadd.out", DeadwoodResources.class.getResource("groupadd_out_expected.txt")),
     userAddOutExpected("/usr/sbin/useradd.out", DeadwoodResources.class.getResource("useradd_out_expected.txt")),
     chmodOutExpected("/bin/chmod.out", DeadwoodResources.class.getResource("chmod_out_expected.txt")),

@@ -38,7 +38,7 @@ profile "ubuntu_14_04", {
     dns {
         service "deadwood"
         install_command "$aptitudeCommand update && $aptitudeCommand install"
-        restart_command "$restartCommand restart"
+        restart_command "$restartCommand recache"
         group_add_command groupAddCommand
         user_add_command userAddCommand
         user_id_command userIdCommand

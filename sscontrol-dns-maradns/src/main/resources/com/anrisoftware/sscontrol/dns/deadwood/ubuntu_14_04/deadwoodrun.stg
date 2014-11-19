@@ -32,29 +32,20 @@ DAEMON_OPTS=""
 USER=<args.deadwoodUser>
 GROUP=<args.deadwoodGroup>
 CHROOT=<args.configurationDir>
+CACHE_FILE="<args.cacheFile>"
+START_STOP_ARGS="--quiet -m -b --chdir $CHROOT --pidfile $PIDFILE --exec $DAEMON -- $DAEMON_OPTS"
 
 export PATH="${PATH:+$PATH:}/usr/sbin:/sbin"
 
-START_STOP_ARGS="--quiet -m -b --chdir $CHROOT --pidfile $PIDFILE --exec $DAEMON -- $DAEMON_OPTS"
+function startDaemon() {
+    start-stop-daemon --start $START_STOP_ARGS
+}
 
-case "$1" in
-    start)
-    echo -n "Starting daemon: "$NAME
-    start-stop-daemon --start $START_STOP_ARGS
-    echo "."
-    ;;
-    stop)
-    echo -n "Stopping daemon: "$NAME
-    start-stop-daemon --stop --oknodo --retry 30 --pidfile $PIDFILE
-    echo "."
-    ;;
-    restart)
-    echo -n "Restarting daemon: "$NAME
+function stopDaemon() {
     start-stop-daemon --stop --oknodo --retry 30 --quiet --pidfile $PIDFILE --exec $DAEMON
-    start-stop-daemon --start $START_STOP_ARGS
-    echo "."
-    ;;
-    status)
+}
+
+function statusDaemon() {
     start-stop-daemon --status --pidfile $PIDFILE --exec $DAEMON
     ret=$?
     if [ $ret -ge 0 ] && [ $ret -lt 5 ]; then
@@ -64,9 +55,44 @@ case "$1" in
         fi
     echo ", LSB return $ret."
     exit $ret
+}
+
+function reacheDaemon() {
+    if [ -n "$CACHE_FILE" ]; then
+        rm $CHROOT/$CACHE_FILE
+        touch $CHROOT/$CACHE_FILE
+        chown $GROUP.$USER $CHROOT/$CACHE_FILE
+        chmod o-rw $CHROOT/$CACHE_FILE
+    fi
+}
+
+case "$1" in
+    start)
+    echo -n "Starting daemon: "$NAME
+    startDaemon
+    echo "."
+    ;;
+    stop)
+    echo -n "Stopping daemon: "$NAME
+    stopDaemon
+    echo "."
+    ;;
+    restart)
+    echo -n "Restarting daemon: "$NAME
+    startDaemon
+    stopDaemon
+    echo "."
+    ;;
+    status)
+    statusDaemon
+    ;;
+    recache)
+    stopDaemon
+    reacheDaemon
+    startDaemon
     ;;
      *)
-    echo "Usage: "$1" {start|stop|restart|status}"
+    echo "Usage: "$1" {start|stop|restart|status|recache}"
     exit 1
 esac
 

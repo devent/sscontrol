@@ -42,7 +42,7 @@ profile "ubuntu_14_04", {
             "idrecursive": "deadwood"
         ])
         install_command "$aptitudeCommand update && $aptitudeCommand install"
-        deadwood_restart_command "$deadwoodRestartCommand restart"
+        deadwood_restart_command "$deadwoodRestartCommand recache"
         maradns_restart_command "$maradnsRestartCommand restart"
         group_add_command groupAddCommand
         user_add_command userAddCommand

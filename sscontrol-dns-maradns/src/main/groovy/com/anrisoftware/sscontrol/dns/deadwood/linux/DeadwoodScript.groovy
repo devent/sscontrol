@@ -285,18 +285,4 @@ abstract class DeadwoodScript extends LinuxScript {
     String getDeadwoodCommand() {
         profileProperty "deadwood_command", defaultProperties
     }
-
-    /**
-     * Returns path of the <i>Duende</i> command, for
-     * example {@code /usr/sbin/duende}.
-     *
-     * <ul>
-     * <li>profile property key {@code duende_command}</li>
-     * </ul>
-     *
-     * @see #getDefaultProperties()
-     */
-    String getDuendeCommand() {
-        profileProperty "duende_command", defaultProperties
-    }
 }

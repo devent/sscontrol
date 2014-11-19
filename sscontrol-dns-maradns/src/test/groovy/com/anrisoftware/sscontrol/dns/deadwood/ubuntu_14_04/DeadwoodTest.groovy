@@ -49,7 +49,6 @@ class DeadwoodTest extends UbuntuTestUtil {
         registry.allServices.each { it.call() }
 
         assert duendeLoggingDir.asFile(tmpdir).isDirectory()
-        assertStringContent duendeOutExpected.replaced(tmpdir, tmpdir, "/tmp"), duendeOutExpected.toString()
         assertFileContent sourcesListExpected.asFile(tmpdir), sourcesListExpected
         assertFileContent aptitudeOutExpected.asFile(tmpdir), aptitudeOutExpected
         assertStringContent deadwoodrcExpected.replaced(tmpdir, tmpdir, "/tmp"), deadwoodrcExpected.toString()

@@ -49,9 +49,7 @@ enum MaradnsDeadwoodResources {
     // Deadwood
     deadwoodRestartCommand("/etc/init.d/deadwood", MaradnsDeadwoodResources.class.getResource("echo_command.txt")),
     deadwoodCommand("/usr/sbin/deadwood", MaradnsDeadwoodResources.class.getResource("echo_command.txt")),
-    duendeCommand("/usr/sbin/duende", MaradnsDeadwoodResources.class.getResource("echo_command.txt")),
     deadwoodConfDir("/etc/maradns/deadwood", null),
-    duendeLoggingDir("/etc/maradns/logger", null),
     deadwoodrc("/etc/maradns/deadwood/dwood3rc", MaradnsDeadwoodResources.class.getResource("dwood3rc.txt")),
     // MaraDNS
     maradnsRestartCommand("/etc/init.d/maradns", MaradnsDeadwoodResources.class.getResource("echo_command.txt")),
@@ -64,7 +62,6 @@ enum MaradnsDeadwoodResources {
     updateRcOutExpected("/usr/sbin/update-rc.d.out", MaradnsDeadwoodResources.class.getResource("updaterc_out_expected.txt")),
     aptitudeOutExpected("/usr/bin/aptitude.out", MaradnsDeadwoodResources.class.getResource("aptitude_out_expected.txt")),
     deadwoodOutExpected("/etc/sbin/deadwood.out", MaradnsDeadwoodResources.class.getResource("deadwood_out_expected.txt")),
-    duendeOutExpected("/usr/sbin/duende.out", MaradnsDeadwoodResources.class.getResource("duende_out_expected.txt")),
     groupAddOutExpected("/usr/sbin/groupadd.out", MaradnsDeadwoodResources.class.getResource("groupadd_out_expected.txt")),
     userAddOutExpected("/usr/sbin/useradd.out", MaradnsDeadwoodResources.class.getResource("useradd_out_expected.txt")),
     chmodOutExpected("/bin/chmod.out", MaradnsDeadwoodResources.class.getResource("chmod_out_expected.txt")),
@@ -84,7 +81,6 @@ enum MaradnsDeadwoodResources {
         // Deadwood
         deadwoodRestartCommand.createCommand parent
         deadwoodCommand.createCommand parent
-        duendeCommand.createCommand parent
         deadwoodrc.createFile parent
         // MaraDNS
         maradnsRestartCommand.createCommand parent

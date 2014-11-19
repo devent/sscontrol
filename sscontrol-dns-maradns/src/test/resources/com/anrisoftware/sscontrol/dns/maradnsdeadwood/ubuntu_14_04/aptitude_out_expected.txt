@@ -1,8 +1,8 @@
 update
 install maradns
 update
-install maradns-deadwood duende
+install maradns-deadwood dpkg
 update
 install maradns
 update
-install maradns-deadwood duende
+install maradns-deadwood dpkg

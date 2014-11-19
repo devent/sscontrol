@@ -28,11 +28,9 @@ def chmodCommand = MaradnsDeadwoodResources.chmodCommand.asFile(tmp)
 def chownCommand = MaradnsDeadwoodResources.chownCommand.asFile(tmp)
 def updateRcCommand = MaradnsDeadwoodResources.updateRcCommand.asFile(tmp)
 def deadwoodCommand = MaradnsDeadwoodResources.deadwoodCommand.asFile(tmp)
-def duendeCommand = MaradnsDeadwoodResources.duendeCommand.asFile(tmp)
 def groupsFile = MaradnsDeadwoodResources.groupsFile.asFile(tmp)
 def usersFile = MaradnsDeadwoodResources.usersFile.asFile(tmp)
 def deadwoodConfDir = MaradnsDeadwoodResources.deadwoodConfDir.asFile(tmp)
-def duendeLoggingDir = MaradnsDeadwoodResources.duendeLoggingDir.asFile(tmp)
 def maradnsConfDir = MaradnsDeadwoodResources.maradnsConfDir.asFile(tmp)
 def sourcesListFile = MaradnsDeadwoodResources.sourcesListFile.asFile(tmp)
 def scriptFile = MaradnsDeadwoodResources.scriptFile.asFile(tmp)
@@ -53,11 +51,9 @@ profile "ubuntu_14_04", {
         chown_command chownCommand
         update_rc_command updateRcCommand
         deadwood_command deadwoodCommand
-        duende_command duendeCommand
         groups_file groupsFile
         users_file usersFile
         deadwood_configuration_directory deadwoodConfDir
-        duende_logging_directory duendeLoggingDir
         maradns_configuration_directory maradnsConfDir
         deadwood_configuration_file "dwood3rc"
         maradns_configuration_file "mararc"

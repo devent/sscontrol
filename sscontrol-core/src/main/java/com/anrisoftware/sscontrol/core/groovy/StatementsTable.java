@@ -120,6 +120,32 @@ public class StatementsTable implements Serializable {
     }
 
     /**
+     * Returns the statement value with the specified name.
+     * <p>
+     *
+     * The following statement returns ["foo", "bar"]:
+     *
+     * <pre>
+     * statement "foo"
+     * statement "bar"
+     * </pre>
+     *
+     * @param name
+     *            the {@link String} name.
+     *
+     * @return the {@link Set} of values or {@code null}.
+     */
+    @SuppressWarnings("unchecked")
+    public <T> Set<T> tableValues(String name) {
+        Map<String, Map<String, Object>> map = args.get(name);
+        if (map != null) {
+            return (Set<T>) map.keySet();
+        } else {
+            return null;
+        }
+    }
+
+    /**
      * Returns the statement table values with the specified name.
      * <p>
      *
@@ -251,6 +277,10 @@ public class StatementsTable implements Serializable {
             for (Map.Entry<String, Object> entry : map.entrySet()) {
                 putMapValue(name, table, entry.getKey(), entry.getValue());
             }
+        }
+        if (list.size() == 1) {
+            String table = list.get(0).toString();
+            putTable(name, table);
         }
         return null;
     }

@@ -43,6 +43,7 @@ class StatementsMapTest {
         bean.map.addAllowed "beanName"
         bean.map.setAllowValue "beanName", true
         bean.beanName "bean name"
+        assert bean.map.isAllowedKey("beanName")
         assert bean.map.value("beanName") == "bean name"
     }
 

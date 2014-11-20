@@ -19,6 +19,7 @@
 package com.anrisoftware.sscontrol.core.groovy;
 
 import java.io.Serializable;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -32,6 +33,8 @@ import javax.inject.Inject;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.codehaus.groovy.runtime.InvokerHelper;
 
+import com.anrisoftware.globalpom.resources.ConvertException;
+import com.anrisoftware.globalpom.resources.ToURIFactory;
 import com.anrisoftware.sscontrol.core.list.StringToListFactory;
 import com.google.inject.assistedinject.Assisted;
 
@@ -72,6 +75,9 @@ public class StatementsMap implements Serializable {
 
     @Inject
     private StringToListFactory toListFactory;
+
+    @Inject
+    private ToURIFactory toURIFactory;
 
     /**
      * @see StatementsMapFactory#create(Object, String)
@@ -276,6 +282,18 @@ public class StatementsMap implements Serializable {
     }
 
     /**
+     * Checks if the key is allowed statement.
+     *
+     * @param name
+     *            the {@link String} name of the key.
+     *
+     * @return {@code true} if the key is allowed.
+     */
+    public boolean isAllowedKey(String name) {
+        return allowed.containsKey(name);
+    }
+
+    /**
      * Returns the statement value with the specified name.
      * <p>
      *
@@ -372,6 +390,33 @@ public class StatementsMap implements Serializable {
     public <T> T mapValue(String name, String key) {
         Map<String, Object> map = args.get(name);
         return map == null ? null : (T) map.get(key);
+    }
+
+    /**
+     * Returns the statement value with the specified name as URI.
+     * <p>
+     *
+     * The following statement returns "value":
+     *
+     * <pre>
+     * statement key: "http://address.com/file"
+     * </pre>
+     *
+     * @param name
+     *            the {@link String} name.
+     *
+     * @param key
+     *            the {@link String} key.
+     *
+     * @return the {@link URI} or {@code null}.
+     *
+     * @throws ConvertException
+     *             if there were errors converting the path to the URI.
+     */
+    public URI mapValueAsURI(String name, String key) {
+        Map<String, Object> map = args.get(name);
+        return map == null ? null : toURIFactory.create().convert(
+                map.get(key).toString());
     }
 
     /**

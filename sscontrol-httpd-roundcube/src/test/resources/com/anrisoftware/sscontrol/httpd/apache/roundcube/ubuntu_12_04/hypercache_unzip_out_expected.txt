@@ -1,0 +1,2 @@
+-uo -d /tmp/var/www/www.test1.com/wordpress_3_8/wp-content/plugins /tmp/tmp/hyper-cache.zip
+-uo -d /tmp/var/www/www.test1.com/wordpress_3_8/wp-content/plugins /tmp/tmp/hyper-cache.zip

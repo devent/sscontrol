@@ -32,6 +32,7 @@ import javax.inject.Inject;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.anrisoftware.sscontrol.core.api.ServiceException;
+import com.anrisoftware.sscontrol.core.groovy.StatementsException;
 import com.anrisoftware.sscontrol.core.groovy.StatementsMap;
 import com.anrisoftware.sscontrol.core.groovy.StatementsMapFactory;
 import com.anrisoftware.sscontrol.httpd.domain.Domain;
@@ -168,8 +169,12 @@ public final class DefaultWebService implements WebService {
         return statementsMap.value(PREFIX);
     }
 
+    public boolean isStatement(String name) {
+        return statementsMap.isAllowedKey(name);
+    }
+
     public Object methodMissing(String name, Object args)
-            throws ServiceException {
+            throws StatementsException {
         statementsMap.methodMissing(name, args);
         return null;
     }

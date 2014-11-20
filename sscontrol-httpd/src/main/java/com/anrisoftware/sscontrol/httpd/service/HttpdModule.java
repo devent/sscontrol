@@ -34,14 +34,13 @@ import com.anrisoftware.sscontrol.httpd.phpldapadmin.PhpldapadminModule;
 import com.anrisoftware.sscontrol.httpd.phpmyadmin.PhpmyadminModule;
 import com.anrisoftware.sscontrol.httpd.proxy.ProxyServiceModule;
 import com.anrisoftware.sscontrol.httpd.redirect.RedirectModule;
-import com.anrisoftware.sscontrol.httpd.roundcube.RoundcubeModule;
 import com.anrisoftware.sscontrol.httpd.user.DomainUserModule;
 import com.anrisoftware.sscontrol.httpd.webserviceargs.WebServiceArgsModule;
 import com.google.inject.AbstractModule;
 
 /**
  * Installs the <i>httpd</i> script statements.
- * 
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
@@ -60,7 +59,6 @@ class HttpdModule extends AbstractModule {
         install(new AuthLdapModule());
 		install(new PhpmyadminModule());
 		install(new PhpldapadminModule());
-        install(new RoundcubeModule());
         install(new ProxyServiceModule());
         install(new DebugLoggingModule());
         install(new ListModule());

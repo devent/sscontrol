@@ -1,0 +1,2 @@
+-u user -puserpass wordpress3
+-u user -puserpass wordpress3

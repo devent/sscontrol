@@ -1,0 +1,67 @@
+
+configDefaultImapHost_search() ::= <%
+(?m)^\$config\['default_host'\]\s+=\s+'.*?';
+%>
+
+configDefaultImapHost(host) ::= <%
+$config['default_host'] = '<host>';
+%>
+
+configDefaultImapPort_search() ::= <%
+(?m)^\$config\['default_port'\]\s+=\s+\d+;
+%>
+
+configDefaultImapPort(port) ::= <%
+$config['default_port'] = <port>;
+%>
+
+configImapHosts_search() ::= <%
+(?ms)^\$config\['default_host'\]\s+=\s+.*?\;
+%>
+
+configImapHosts(hosts) ::= <<
+$config['default_host'] = array(
+<hosts:{host|'host.host' => 'host.name',};separator="\n">
+);
+>>
+
+configImapAuthType_search() ::= <%
+(?m)^\$config\['imap_auth_type'\]\s+=\s+.*?;
+%>
+
+configImapAuthType(type) ::= <%
+$config['imap_auth_type'] = <if(type)><type><else>null<endif>;
+%>
+
+configImapDelimiter_search() ::= <%
+(?m)^\$config\['imap_delimiter'\]\s+=\s+.*?;
+%>
+
+configImapDelimiter(delimiter) ::= <%
+$config['imap_delimiter'] = <if(delimiter)><delimiter><else>null<endif>;
+%>
+
+configImapNsPersonal_search() ::= <%
+(?m)^\$config\['imap_ns_personal'\]\s+=\s+.*?;
+%>
+
+configImapNsPersonal(ns) ::= <%
+$config['imap_ns_personal'] = <if(ns)><ns><else>null<endif>;
+%>
+
+configImapNsOther_search() ::= <%
+(?m)^\$config\['imap_ns_other'\]\s+=\s+.*?;
+%>
+
+configImapNsOther(ns) ::= <%
+$config['imap_ns_other'] = <if(ns)><ns><else>null<endif>;
+%>
+
+configImapNsShared_search() ::= <%
+(?m)^\$config\['imap_ns_shared'\]\s+=\s+.*?;
+%>
+
+configImapNsShared(ns) ::= <%
+$config['imap_ns_shared'] = <if(ns)><ns><else>null<endif>;
+%>
+

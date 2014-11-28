@@ -33,7 +33,7 @@ import com.anrisoftware.globalpom.resources.ToURIFactory;
 
 /**
  * Logging for {@link CheckFileHash}.
- * 
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
@@ -81,7 +81,7 @@ class CheckFileHashLogger extends AbstractLogger {
     URI hash(Object script, Map<String, Object> args) {
         Object resource = args.get(HASH);
         notNull(resource, resource_null.toString(), script);
-        return toURI.create().convert(resource.toString());
+        return toURI.create().convert(resource);
     }
 
     void hashMatching(CheckFileHash check, String expected, String hashstr,

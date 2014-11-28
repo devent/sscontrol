@@ -1,0 +1,16 @@
+
+configDatabase_search() ::= <%
+(?m)^\$config\['db_dsnw'\]\s+=\s+'.*?';
+%>
+
+configDatabase(database) ::= <%
+$config['db_dsnw'] = '<database.driver>://<database.user>:<database.password>@<database.host>/<database.database>';
+%>
+
+configDatabasePrefix_search() ::= <%
+(?m)^\$config\['db_prefix'\]\s+=\s+'.*?';
+%>
+
+configDatabasePrefix(prefix) ::= <%
+$config['db_prefix'] = '<prefix>';
+%>

@@ -18,10 +18,10 @@
  */
 package com.anrisoftware.sscontrol.httpd.roundcube.ubuntu_12_04;
 
-import static com.anrisoftware.sscontrol.httpd.roundcube.ubuntu_12_04.Ubuntu_12_04_ConfigLogger._.download_archive_info;
-import static com.anrisoftware.sscontrol.httpd.roundcube.ubuntu_12_04.Ubuntu_12_04_ConfigLogger._.download_archive_trace;
+import static com.anrisoftware.sscontrol.httpd.roundcube.ubuntu_12_04.Ubuntu_12_04_ConfigLogger._.installed_packages_info;
+import static com.anrisoftware.sscontrol.httpd.roundcube.ubuntu_12_04.Ubuntu_12_04_ConfigLogger._.installed_packages_trace;
 
-import java.net.URI;
+import java.util.List;
 
 import javax.inject.Singleton;
 
@@ -30,7 +30,7 @@ import com.anrisoftware.sscontrol.core.service.LinuxScript;
 
 /**
  * Logging messages for {@link Ubuntu_12_04_Config}.
- * 
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
@@ -39,10 +39,9 @@ class Ubuntu_12_04_ConfigLogger extends AbstractLogger {
 
     enum _ {
 
-        download_archive_trace("Downloaded and unpack archive '{}' for {}."),
+        installed_packages_trace("Installed packages '{}' for {}."),
 
-        download_archive_info(
-                "Downloaded and unpack archive '{}' for service '{}'.");
+        installed_packages_info("Installed packages '{}' for service '{}'.");
 
         private String name;
 
@@ -63,11 +62,11 @@ class Ubuntu_12_04_ConfigLogger extends AbstractLogger {
         super(Ubuntu_12_04_Config.class);
     }
 
-    void downloadArchive(LinuxScript script, URI archive) {
+    void installedPackages(LinuxScript script, List<?> packages) {
         if (isDebugEnabled()) {
-            debug(download_archive_trace, archive, script);
+            debug(installed_packages_trace, packages, script);
         } else {
-            info(download_archive_info, archive, script.getName());
+            info(installed_packages_info, packages, script.getName());
         }
     }
 }

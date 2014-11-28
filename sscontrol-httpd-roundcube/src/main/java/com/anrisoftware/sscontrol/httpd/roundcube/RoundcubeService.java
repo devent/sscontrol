@@ -53,6 +53,8 @@ import com.google.inject.assistedinject.Assisted;
  */
 public class RoundcubeService implements WebService {
 
+    private static final String PORT_KEY = "port";
+
     private static final String DOMAIN_KEY = "domain";
 
     private static final String SERVER_KEY = "server";
@@ -124,7 +126,7 @@ public class RoundcubeService implements WebService {
         StatementsTable table = factory.create(factory, SERVICE_NAME);
         table.addAllowed(DEBUG_KEY, SERVER_KEY, HOST_KEY);
         table.addAllowedKeys(DEBUG_KEY, LEVEL_KEY);
-        table.addAllowedKeys(SERVER_KEY, HOST_KEY);
+        table.addAllowedKeys(SERVER_KEY, HOST_KEY, PORT_KEY);
         table.addAllowedKeys(HOST_KEY, DOMAIN_KEY);
         this.statementsTable = table;
     }
@@ -199,8 +201,15 @@ public class RoundcubeService implements WebService {
      *
      * <pre>
      * setup "roundcube", {
-     *      debug "php", level: 1
      *      debug "roundcube", level: 1
+     *      debug "smtplog", level: 1
+     *      debug "logins", level: 1
+     *      debug "session", level: 1
+     *      debug "sql", level: 1
+     *      debug "imap", level: 1
+     *      debug "ldap", level: 1
+     *      debug "smtp", level: 1
+     *      debug "php", level: 1
      * }
      * </pre>
      *
@@ -352,6 +361,29 @@ public class RoundcubeService implements WebService {
         Map<String, Object> map = tmap.tableKeys(SERVER_KEY, HOST_KEY);
         if (map != null) {
             return (String) map.get("default");
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Returns the default IMAP port.
+     *
+     * Example:
+     *
+     * <pre>
+     * setup "roundcube", {
+     *      server "default", port: 143
+     * }
+     * </pre>
+     *
+     * @return the {@link Integer} host or {@code null}.
+     */
+    public Integer getImapPort() {
+        StatementsTable tmap = statementsTable;
+        Map<String, Object> map = tmap.tableKeys(SERVER_KEY, PORT_KEY);
+        if (map != null) {
+            return (Integer) map.get("default");
         } else {
             return null;
         }

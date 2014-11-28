@@ -19,41 +19,15 @@
 package com.anrisoftware.sscontrol.httpd.apache.roundcube.ubuntu_12_04
 
 import com.anrisoftware.sscontrol.httpd.apache.roundcube.ubuntu.UbuntuResources
+import com.anrisoftware.sscontrol.httpd.apache.roundcube.ubuntu_12_04.RoundcubeResources
 
 def aptitudeCommand = UbuntuResources.aptitudeCommand.asFile(tmp)
 
 profile "ubuntu_12_04", {
     httpd {
         service "apache"
-        install_command "$aptitudeCommand update && $aptitudeCommand install"
-        apt_key_command UbuntuResources.aptKeyCommand.asFile(tmp)
-        chmod_command UbuntuResources.chmodCommand.asFile(tmp)
-        chown_command UbuntuResources.chownCommand.asFile(tmp)
-        group_add_command UbuntuResources.groupaddCommand.asFile(tmp)
-        user_add_command UbuntuResources.useraddCommand.asFile(tmp)
-        reconfigure_command UbuntuResources.reconfigureCommand.asFile(tmp)
-        zcat_command UbuntuResources.zcatCommand.asFile(tmp)
-        tar_command UbuntuResources.tarCommand.asFile(tmp)
-        unzip_command UbuntuResources.unzipCommand.asFile(tmp)
-        link_command UbuntuResources.lnCommand.asFile(tmp)
-        temp_directory UbuntuResources.tmpDir.asFile(tmp)
-        packaging_configuration_directory UbuntuResources.packagingConfigurationDirectory.asFile(tmp)
-        php_fcgi_php_conf_directory WordpressResources.phpConfDir.asFile(tmp)
-        wordpress_auth_key "auth-key"
-        wordpress_secure_auth_key "secure-auth-key"
-        wordpress_logged_in_key "logged-in-key"
-        wordpress_nonce_key "nonce-key"
-        wordpress_auth_salt "auth-salt"
-        wordpress_secure_auth_salt "secure-auth-salt"
-        wordpress_logged_in_salt "logged-in-salt"
-        wordpress_nonce_salt "nonce-salt"
-        wordpress_archive WordpressResources.wordpressArchive.resource
-        wordpress_archive_hash WordpressResources.wordpressArchiveHash.resource
-        wordpress_archive_de_DE WordpressResources.wordpressArchive_de_DE.resource
-        wordpress_broken_link_checker WordpressResources.brokenLinkCheckerArchive.resource
-        wordpress_hyphenator WordpressResources.hyphenatorArchive.resource
-        wordpress_hyper_cache WordpressResources.hypercacheArchive.resource
-        wordpress_picochic WordpressResources.picochicArchive.resource
-        wordpress_tagebuch WordpressResources.tagebuchArchive.resource
+        // roundcube
+        roundcube_archive RoundcubeResources.roundcubeArchive.asFile(tmp)
+        roundcube_archive_hash "md5://a5a128c99d006f03363437544bca7d4e"
     }
 }

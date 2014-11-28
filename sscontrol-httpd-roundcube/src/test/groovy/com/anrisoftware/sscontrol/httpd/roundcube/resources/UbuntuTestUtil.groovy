@@ -72,7 +72,7 @@ class UbuntuTestUtil {
 
     @Before
     void createTemp() {
-        tmpdir = tmp.newFolder("wordpress")
+        tmpdir = tmp.newFolder("roundcube")
         variables = [tmp: tmpdir.absoluteFile]
     }
 

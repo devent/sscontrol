@@ -23,9 +23,9 @@ import java.net.URL;
 import com.anrisoftware.propertiesutils.AbstractContextPropertiesProvider;
 
 /**
- * Provides the default Wordpress Ubuntu 12.04 properties from
- * {@code "/apache_wordpress_ubuntu_12_04.properties"}.
- * 
+ * Provides the <i>Roundcube Ubuntu 12.04</i> properties from
+ * {@code "/apache_roundcube_ubuntu_12_04.properties"}.
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
@@ -33,7 +33,7 @@ import com.anrisoftware.propertiesutils.AbstractContextPropertiesProvider;
 class UbuntuPropertiesProvider extends AbstractContextPropertiesProvider {
 
     private static final URL RESOURCE = UbuntuPropertiesProvider.class
-            .getResource("/apache_wordpress_ubuntu_12_04.properties");
+            .getResource("/apache_roundcube_ubuntu_12_04.properties");
 
     UbuntuPropertiesProvider() {
         super(UbuntuPropertiesProvider.class, RESOURCE);

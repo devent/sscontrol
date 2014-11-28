@@ -44,7 +44,7 @@ httpd {
     }
     domain "www.testone.com", address: "192.168.0.51", {
         setup "roundcube", alias: "roundcube", prefix: "roundcubeone", {
-            server "default", host: "localhost"
+            server "default", host: "localhost", port: 99
             host "example.com"
         }
     }

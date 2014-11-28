@@ -228,6 +228,20 @@ abstract class LinuxScript extends Script {
 
     /**
      * Deploys the configuration to the configuration file.
+     *
+     * <h5>Example</h5>
+     *
+     * <pre>
+     * def configFoo(Service service) {
+     *      def search = configTemplate.getText(true, "config_search")
+     *      def replace = configTemplate.getText(true, "configName", "args", args...)
+     *      new TokenTemplate(search, replace)
+     * }
+     *
+     * def current = currentConfiguration file
+     * def configs = [configFoo(service), ...]
+     * deployConfiguration configurationTokens(), current, configs, file
+     * </pre>
      */
     def deployConfiguration(TokenMarker tokenMarker, String currentConfiguration, List configurations, File file) {
         configurations = configurations.flatten()

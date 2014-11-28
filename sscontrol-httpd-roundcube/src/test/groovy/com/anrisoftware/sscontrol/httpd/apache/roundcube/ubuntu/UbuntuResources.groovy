@@ -21,7 +21,7 @@ package com.anrisoftware.sscontrol.httpd.apache.roundcube.ubuntu
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static org.apache.commons.io.FileUtils.*
 
-import com.anrisoftware.sscontrol.httpd.wordpress.resources.ResourcesUtils
+import com.anrisoftware.sscontrol.httpd.roundcube.resources.ResourcesUtils
 
 /**
  * Loads the resources.
@@ -43,10 +43,9 @@ enum UbuntuResources {
     tarCommand("/bin/tar", UbuntuResources.class.getResource("echo_command.txt")),
     unzipCommand("/usr/bin/unzip", UbuntuResources.class.getResource("echo_command.txt")),
     lnCommand("/bin/ln", UbuntuResources.class.getResource("echo_command.txt")),
-    reconfigureCommand("/usr/sbin/dpkg-reconfigure", UbuntuResources.class.getResource("echo_command.txt")),
-    mysqlCommand("/usr/bin/mysql", UbuntuResources.class.getResource("echo_command.txt")),
+    mysqldumpCommand("/usr/bin/mysqldump", UbuntuResources.class.getResource("echo_command.txt")),
+    gzipCommand("/bin/gzip", UbuntuResources.class.getResource("echo_command.txt")),
     tmpDir("/tmp", null),
-    packagingConfigurationDirectory("/etc/apt", null),
     certCrt("cert.crt", UbuntuResources.class.getResource("cert_crt.txt")),
     certKey("cert.key", UbuntuResources.class.getResource("cert_key.txt")),
     certCa("cert.ca", UbuntuResources.class.getResource("cert_ca.txt")),
@@ -62,12 +61,29 @@ enum UbuntuResources {
         usermodCommand.createCommand parent
         zcatCommand.createCommand parent
         tarCommand.createCommand parent
-        unzipCommand.createCommand parent
         lnCommand.createCommand parent
-        reconfigureCommand.createCommand parent
+        mysqldumpCommand.createCommand parent
+        gzipCommand.createCommand parent
         tmpDir.asFile(parent).mkdirs()
-        packagingConfigurationDirectory.asFile(parent).mkdirs()
-        mysqlCommand.createCommand parent
+    }
+
+    static void setupUbuntuProperties(def profile, File parent) {
+        def entry = profile.getEntry("httpd")
+        // commands
+        entry.install_command "${aptitudeCommand.asFile(parent)} update && ${aptitudeCommand.asFile(parent)} install"
+        entry.apt_key_command aptKeyCommand.asFile(parent)
+        entry.chmod_command chmodCommand.asFile(parent)
+        entry.chown_command chownCommand.asFile(parent)
+        entry.group_add_command groupaddCommand.asFile(parent)
+        entry.group_mod_command groupmodCommand.asFile(parent)
+        entry.user_add_command useraddCommand.asFile(parent)
+        entry.user_mod_command usermodCommand.asFile(parent)
+        entry.zcat_command zcatCommand.asFile(parent)
+        entry.tar_command tarCommand.asFile(parent)
+        entry.link_command lnCommand.asFile(parent)
+        entry.mysqldump_command mysqldumpCommand.asFile(parent)
+        entry.gzip_command gzipCommand.asFile(parent)
+        // files
     }
 
     ResourcesUtils resources

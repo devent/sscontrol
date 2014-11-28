@@ -18,11 +18,12 @@
  */
 package com.anrisoftware.sscontrol.httpd.roundcube.apache_ubuntu_12_04;
 
+import com.anrisoftware.sscontrol.core.version.VersionModule;
 import com.anrisoftware.sscontrol.httpd.roundcube.RoundcubeModule;
 import com.google.inject.AbstractModule;
 
 /**
- * Installs Ubuntu 12.04 Wordpress.
+ * Installs <i>Roundcube Ubuntu 12.04.</i>
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
@@ -32,5 +33,6 @@ public class ApacheModule extends AbstractModule {
     @Override
     protected void configure() {
         install(new RoundcubeModule());
+        install(new VersionModule());
     }
 }

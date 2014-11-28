@@ -29,7 +29,7 @@ import com.anrisoftware.sscontrol.httpd.webservice.WebServiceFactory;
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-public interface RoundcubeServiceFactory extends WebServiceFactory {
+interface RoundcubeServiceFactory extends WebServiceFactory {
 
     /**
      * Creates the <i>Roundcube</i> service.

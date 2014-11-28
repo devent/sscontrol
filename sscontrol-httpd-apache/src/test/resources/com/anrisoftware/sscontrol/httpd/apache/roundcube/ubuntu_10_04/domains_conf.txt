@@ -1,2 +1,0 @@
-NameVirtualHost 192.168.0.50:80
-NameVirtualHost 192.168.0.50:443

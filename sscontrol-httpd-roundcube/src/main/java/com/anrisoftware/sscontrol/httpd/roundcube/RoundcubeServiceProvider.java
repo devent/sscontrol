@@ -29,7 +29,7 @@ import com.anrisoftware.sscontrol.httpd.webservice.WebServiceFactory;
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-public class RoundcubeServiceProvider implements Provider<WebServiceFactory> {
+class RoundcubeServiceProvider implements Provider<WebServiceFactory> {
 
 	@Inject
 	private RoundcubeServiceFactory factory;

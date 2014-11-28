@@ -18,7 +18,7 @@
  */
 package com.anrisoftware.sscontrol.httpd.roundcube.ubuntu_12_04
 
-import static com.anrisoftware.sscontrol.httpd.wordpress.apache_ubuntu_12_04.Ubuntu_12_04_ApacheWordpressConfigFactory.PROFILE_NAME
+import static com.anrisoftware.sscontrol.httpd.roundcube.apache_ubuntu_12_04.Ubuntu_12_04_ApacheRoundcubeConfigFactory.PROFILE_NAME
 import static org.apache.commons.io.FileUtils.*
 import groovy.util.logging.Slf4j
 
@@ -27,18 +27,19 @@ import javax.inject.Inject
 import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.sscontrol.core.service.LinuxScript
 import com.anrisoftware.sscontrol.httpd.domain.Domain
-import com.anrisoftware.sscontrol.httpd.wordpress.apache_ubuntu_12_04.UbuntuPropertiesProvider
-import com.anrisoftware.sscontrol.httpd.wordpress.core.Wordpress_3_Config
+import com.anrisoftware.sscontrol.httpd.roundcube.RoundcubeService
+import com.anrisoftware.sscontrol.httpd.roundcube.apache_ubuntu_12_04.UbuntuPropertiesProvider
+import com.anrisoftware.sscontrol.httpd.roundcube.core.Roundcube_1_0_Config
 import com.anrisoftware.sscontrol.scripts.unix.InstallPackagesFactory
 
 /**
- * <i>Ubuntu 12.04</i> <i>Wordpress</i>.
+ * <i>Roundcube Ubuntu 12.04</i> configuration.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
 @Slf4j
-class Ubuntu_12_04_Config extends Wordpress_3_Config {
+class Ubuntu_12_04_Config extends Roundcube_1_0_Config {
 
     @Inject
     private Ubuntu_12_04_ConfigLogger logg
@@ -50,17 +51,31 @@ class Ubuntu_12_04_Config extends Wordpress_3_Config {
     InstallPackagesFactory installPackagesFactory
 
     /**
-     * Installs the <i>Wordpress</i> packages.
+     * Installs the <i>Roundcube</i> packages.
      */
     void installPackages() {
         installPackagesFactory.create(
-                log: log, command: script.installCommand, packages: wordpressPackages,
+                log: log,
+                command: installCommand,
+                packages: roundcubePackages,
                 this, threads)()
+        logg.installedPackages script, roundcubePackages
     }
 
-    @Override
-    void setScript(LinuxScript script) {
-        super.setScript script
+    /**
+     * Installs the database packages.
+     *
+     * @param service
+     *            the {@link RoundcubeService} service.
+     */
+    void installDatabasePackages(RoundcubeService service) {
+        def packages = roundcubeDatabasePackages service.database.driver
+        installPackagesFactory.create(
+                log: log,
+                command: installCommand,
+                packages: packages,
+                this, threads)()
+        logg.installedPackages script, packages
     }
 
     @Override
@@ -69,7 +84,7 @@ class Ubuntu_12_04_Config extends Wordpress_3_Config {
     }
 
     @Override
-    ContextProperties getWordpressProperties() {
+    ContextProperties getRoundcubeProperties() {
         ubuntuPropertiesProvider.get()
     }
 }

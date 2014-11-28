@@ -21,7 +21,7 @@ package com.anrisoftware.sscontrol.httpd.apache.roundcube.ubuntu_12_04
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static org.apache.commons.io.FileUtils.*
 
-import com.anrisoftware.sscontrol.httpd.wordpress.resources.ResourcesUtils
+import com.anrisoftware.sscontrol.httpd.roundcube.resources.ResourcesUtils
 
 /**
  * Loads Ubuntu 12.04 resources.
@@ -51,12 +51,13 @@ enum Ubuntu_12_04_Resources {
     sitesEnabledDir("/etc/apache2/sites-enabled", null),
     configIncludeDir("/etc/apache2/conf.d", null),
     sitesDir("/var/www", null),
+    phpConfDir("/etc/php5/cgi/conf.d", null),
     defaultConf("/etc/apache2/sites-available/default", Ubuntu_12_04_Resources.class.getResource("default.txt")),
     defaultSslConf("/etc/apache2/sites-available/default-ssl", Ubuntu_12_04_Resources.class.getResource("default_ssl.txt")),
-    sourcesListFile("/etc/apt/sources.list", Ubuntu_12_04_Resources.class.getResource("sources_list.txt")),
     apacheConf("/etc/apache2/apache2.conf", Ubuntu_12_04_Resources.class.getResource("apache2_conf.txt")),
 
     static copyUbuntu_12_04_Files(File parent) {
+        // apache commands
         restartCommand.createCommand parent
         a2enmodCommand.createCommand parent
         a2dismodCommand.createCommand parent
@@ -65,19 +66,23 @@ enum Ubuntu_12_04_Resources {
         apache2Command.createCommand parent
         apache2ctlCommand.createCommand parent
         htpasswdCommand.createCommand parent
+        // ubuntu commands
         mysqldumpCommand.createCommand parent
         netstatCommand.createCommand parent
         gzipCommand.createCommand parent
+        // apache files
         confDir.asFile(parent).mkdirs()
-        groupsFile.createFile parent
-        usersFile.createFile parent
         defaultConf.createFile parent
         defaultSslConf.createFile parent
-        sourcesListFile.createFile parent
+        phpConfDir.asFile parent mkdirs()
+        // ubuntu files
+        groupsFile.createFile parent
+        usersFile.createFile parent
     }
 
     static void setupUbuntu_12_04_Properties(def profile, File parent) {
         def entry = profile.getEntry("httpd")
+        // apache commands
         entry.restart_command "${restartCommand.asFile(parent)} restart"
         entry.stop_command "${stopCommand.asFile(parent)} stop"
         entry.enable_mod_command a2enmodCommand.asFile(parent)
@@ -87,17 +92,18 @@ enum Ubuntu_12_04_Resources {
         entry.apache_command apache2Command.asFile(parent)
         entry.apache_control_command apache2ctlCommand.asFile(parent)
         entry.htpasswd_command htpasswdCommand.asFile(parent)
+        // ubuntu commands
+        entry.php_fcgi_php_conf_directory phpConfDir.asFile(parent)
         entry.netstat_command netstatCommand.asFile(parent)
-        entry.wordpress_mysqldump_command mysqldumpCommand.asFile(parent)
-        entry.wordpress_gzip_command gzipCommand.asFile(parent)
+        // apache files
         entry.configuration_directory confDir.asFile(parent)
-        entry.groups_file groupsFile.asFile(parent)
-        entry.users_file usersFile.asFile(parent)
         entry.sites_available_directory sitesAvailableDir.asFile(parent)
         entry.sites_enabled_directory sitesEnabledDir.asFile(parent)
         entry.config_include_directory configIncludeDir.asFile(parent)
         entry.sites_directory sitesDir.asFile(parent)
-        entry.packages_sources_file sourcesListFile.asFile(parent)
+        // ubuntu files
+        entry.groups_file groupsFile.asFile(parent)
+        entry.users_file usersFile.asFile(parent)
     }
 
     ResourcesUtils resources

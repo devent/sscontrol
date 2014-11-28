@@ -32,7 +32,7 @@ import com.google.inject.multibindings.Multibinder;
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-public class RoundcubeImportsModule extends AbstractModule {
+class RoundcubeImportsModule extends AbstractModule {
 
     private static final String OVERRIDE_MODE = "com.anrisoftware.sscontrol.httpd.webservice.OverrideMode";
 

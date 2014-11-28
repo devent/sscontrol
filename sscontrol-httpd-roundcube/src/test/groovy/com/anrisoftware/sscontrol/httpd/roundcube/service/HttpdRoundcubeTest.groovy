@@ -76,6 +76,7 @@ class HttpdRoundcubeTest extends HttpdTestUtil {
         assert webservice.imapServers["Default Server"] == "mail.example.com"
         assert webservice.imapServers["Webmail Server"] == "webmail.example.com"
         assert webservice.imapServer == null
+        assert webservice.imapPort == null
         assert webservice.imapDomains["example.com"] == "mail.example.com"
         assert webservice.imapDomains["otherdomain.com"] == "othermail.example.com"
 
@@ -108,6 +109,7 @@ class HttpdRoundcubeTest extends HttpdTestUtil {
         assert webservice.alias == "roundcube"
         assert webservice.prefix == "roundcubeone"
         assert webservice.imapServer == "localhost"
+        assert webservice.imapPort == 99
         assert webservice.imapDomain == "example.com"
 
         domain = service.domains[d++]

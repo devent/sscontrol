@@ -1,6 +1,0 @@
-go-r /tmp/var/www/test1.com/ssl/cert_crt.txt /tmp/var/www/test1.com/ssl/cert_key.txt
-755 /tmp/var/www/php-fcgi-scripts/mail.test1.com/php-fcgi-starter
-go-r /tmp/var/www/mail.test1.com/ssl/cert_crt.txt /tmp/var/www/mail.test1.com/ssl/cert_key.txt
-go-r /tmp/var/www/test1.com/ssl/cert_crt.txt /tmp/var/www/test1.com/ssl/cert_key.txt
-755 /tmp/var/www/php-fcgi-scripts/mail.test1.com/php-fcgi-starter
-go-r /tmp/var/www/mail.test1.com/ssl/cert_crt.txt /tmp/var/www/mail.test1.com/ssl/cert_key.txt

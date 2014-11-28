@@ -69,6 +69,24 @@ class CheckFileHashTest {
         assert check.matching == false
     }
 
+    @Test
+    void "check md5 hash as URI"() {
+        def file = file
+        def hash = new URI("md5:f371147726ecbcb506e3dfe4a0fd4815")
+        def check = factory.create this, file: file, hash: hash
+        check = check()
+        assert check.matching == true
+    }
+
+    @Test
+    void "check sha1 hash as URI"() {
+        def file = file
+        def hash = new URI("sha1:6043cedeee89e9a2ff29c04b00b9a2c40f46439a")
+        def check = factory.create this, file: file, hash: hash
+        check = check()
+        assert check.matching == true
+    }
+
     static Injector injector
 
     static CheckFileHashFactory factory

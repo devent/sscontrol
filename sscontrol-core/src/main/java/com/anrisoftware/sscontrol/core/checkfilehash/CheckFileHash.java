@@ -18,6 +18,9 @@
  */
 package com.anrisoftware.sscontrol.core.checkfilehash;
 
+import static org.apache.commons.io.FilenameUtils.getExtension;
+import static org.apache.commons.io.IOUtils.readLines;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -29,8 +32,6 @@ import java.util.concurrent.Callable;
 
 import javax.inject.Inject;
 
-import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
@@ -38,7 +39,7 @@ import com.google.inject.assistedinject.Assisted;
 
 /**
  * Checks the hash of the specified file.
- * 
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
@@ -56,6 +57,8 @@ public class CheckFileHash implements Callable<CheckFileHash> {
 
     private final URI hashResource;
 
+    private final HashName hashName;
+
     private boolean matching;
 
     /**
@@ -67,11 +70,23 @@ public class CheckFileHash implements Callable<CheckFileHash> {
         this.log = log;
         this.file = log.file(script, args);
         this.hashResource = log.hash(script, args);
+        this.hashName = hashName(hashResource);
+    }
+
+    private HashName hashName(URI hashResource) {
+        if (StringUtils.equals(hashResource.getScheme(), "md5")) {
+            return HashName.forExtension("md5");
+        } else if (StringUtils.equals(hashResource.getScheme(), "sha1")) {
+            return HashName.forExtension("sha1");
+        } else {
+            String ex = getExtension(hashResource.getPath());
+            return HashName.forExtension(ex);
+        }
     }
 
     @Override
     public CheckFileHash call() throws Exception {
-        String hashstr = readHash();
+        String hashstr = readHash(hashResource, hashName);
         String expectedHashstr = readExpectedHash(hashResource);
         this.matching = hashstr.equals(expectedHashstr);
         log.hashMatching(this, expectedHashstr, hashstr, matching);
@@ -80,28 +95,32 @@ public class CheckFileHash implements Callable<CheckFileHash> {
 
     /**
      * Returns if the hash of the file and the specified hash is matching.
-     * 
+     *
      * @return {@code true} if the hashes is matching.
      */
     public boolean isMatching() {
         return matching;
     }
 
-    private String readHash() throws NoSuchAlgorithmException, IOException,
-            MalformedURLException {
-        String ex = FilenameUtils.getExtension(hashResource.getPath());
-        HashName hash = HashName.forExtension(ex);
-        MessageDigest md = MessageDigest.getInstance(hash.getHashName());
+    private String readHash(URI hashResource, HashName hashName)
+            throws NoSuchAlgorithmException, IOException, MalformedURLException {
+        MessageDigest md = MessageDigest.getInstance(hashName.getHashName());
         InputStream fis = file.toURL().openStream();
         byte[] mdbytes = readFile(md, fis);
         String hashstr = toHexString(mdbytes);
         return hashstr;
     }
 
-    private String readExpectedHash(URI file) throws Exception {
-        String line = IOUtils.readLines(file.toURL().openStream()).get(0);
-        String hash = StringUtils.split(line, SEP)[0];
-        return hash;
+    private String readExpectedHash(URI hashResource) throws Exception {
+        if (StringUtils.equals(hashResource.getScheme(), "md5")) {
+            return hashResource.getSchemeSpecificPart();
+        } else if (StringUtils.equals(hashResource.getScheme(), "sha1")) {
+            return hashResource.getSchemeSpecificPart();
+        } else {
+            String line = readLines(hashResource.toURL().openStream()).get(0);
+            String hash = StringUtils.split(line, SEP)[0];
+            return hash;
+        }
     }
 
     private String toHexString(byte[] mdbytes) {

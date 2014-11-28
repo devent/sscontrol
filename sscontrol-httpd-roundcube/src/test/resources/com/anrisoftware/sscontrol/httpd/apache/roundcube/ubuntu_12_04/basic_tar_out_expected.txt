@@ -1,2 +1,4 @@
---overwrite --strip 1 -xf /tmp/tmp/wordpress-3-wordpress-3.8.tar.gz
---overwrite --strip 1 -xf /tmp/tmp/wordpress-3-wordpress-3.8.tar.gz
+-czf /tmp/var/backups/www.test1.com/roundcube_www.test1.com_timestamp.tar.gz /tmp/var/www/www.test1.com/roundcube_1_0
+--overwrite --strip 1 -xf /tmp/roundcube_1_0_web-roundcubemail-1.0.3.tar.gz
+-czf /tmp/var/backups/www.test1.com/roundcube_www.test1.com_timestamp.tar.gz /tmp/var/www/www.test1.com/roundcube_1_0
+--overwrite --strip 1 -xf /tmp/roundcube_1_0_web-roundcubemail-1.0.3.tar.gz

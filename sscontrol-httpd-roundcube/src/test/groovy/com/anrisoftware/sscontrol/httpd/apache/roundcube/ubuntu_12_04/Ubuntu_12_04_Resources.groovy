@@ -31,6 +31,7 @@ import com.anrisoftware.sscontrol.httpd.roundcube.resources.ResourcesUtils
  */
 enum Ubuntu_12_04_Resources {
 
+    // commands
     restartCommand("/etc/init.d/apache2", Ubuntu_12_04_Resources.class.getResource("echo_command.txt")),
     stopCommand("/etc/init.d/apache2", Ubuntu_12_04_Resources.class.getResource("echo_command.txt")),
     a2enmodCommand("/usr/sbin/a2enmod", Ubuntu_12_04_Resources.class.getResource("echo_command.txt")),
@@ -46,6 +47,8 @@ enum Ubuntu_12_04_Resources {
     gzipCommand("/bin/gzip", Ubuntu_12_04_Resources.class.getResource("echo_command.txt")),
     groupsFile("/etc/group", Ubuntu_12_04_Resources.class.getResource("group.txt")),
     usersFile("/etc/passwd", Ubuntu_12_04_Resources.class.getResource("passwd.txt")),
+    // files
+    packagesSourcesFile("/etc/apt/sources.list", Ubuntu_12_04_Resources.class.getResource("sources_list.txt")),
     confDir("/etc/apache2", null),
     sitesAvailableDir("/etc/apache2/sites-available", null),
     sitesEnabledDir("/etc/apache2/sites-enabled", null),
@@ -76,6 +79,7 @@ enum Ubuntu_12_04_Resources {
         defaultSslConf.createFile parent
         phpConfDir.asFile parent mkdirs()
         // ubuntu files
+        packagesSourcesFile.createFile parent
         groupsFile.createFile parent
         usersFile.createFile parent
     }
@@ -102,6 +106,7 @@ enum Ubuntu_12_04_Resources {
         entry.config_include_directory configIncludeDir.asFile(parent)
         entry.sites_directory sitesDir.asFile(parent)
         // ubuntu files
+        entry.packages_sources_file packagesSourcesFile.asFile(parent)
         entry.groups_file groupsFile.asFile(parent)
         entry.users_file usersFile.asFile(parent)
     }

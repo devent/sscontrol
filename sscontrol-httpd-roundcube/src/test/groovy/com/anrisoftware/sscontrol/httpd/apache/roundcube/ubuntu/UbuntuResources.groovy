@@ -31,6 +31,7 @@ import com.anrisoftware.sscontrol.httpd.roundcube.resources.ResourcesUtils
  */
 enum UbuntuResources {
 
+    // commands
     aptitudeCommand("/usr/bin/aptitude", UbuntuResources.class.getResource("echo_command.txt")),
     aptKeyCommand("/usr/bin/apt-key", UbuntuResources.class.getResource("echo_command.txt")),
     chmodCommand("/bin/chmod", UbuntuResources.class.getResource("echo_command.txt")),
@@ -45,6 +46,7 @@ enum UbuntuResources {
     lnCommand("/bin/ln", UbuntuResources.class.getResource("echo_command.txt")),
     mysqldumpCommand("/usr/bin/mysqldump", UbuntuResources.class.getResource("echo_command.txt")),
     gzipCommand("/bin/gzip", UbuntuResources.class.getResource("echo_command.txt")),
+    // files
     tmpDir("/tmp", null),
     certCrt("cert.crt", UbuntuResources.class.getResource("cert_crt.txt")),
     certKey("cert.key", UbuntuResources.class.getResource("cert_key.txt")),

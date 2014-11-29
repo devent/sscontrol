@@ -37,12 +37,12 @@ httpd {
     // domain www.test1.com
     domain "www.test1.com", address: "192.168.0.51", {
         user "web_002", uid: 2002, group: "web_002", gid: 2002
-        setup "proxy", service: "wordpress", alias: "wordpress3", address: "http://127.0.0.1:8080" //.
+        setup "proxy", service: "roundcube", alias: "roundcube", address: "http://127.0.0.1:8080" //.
     }
     // SSL/domain www.test1.com
     ssl_domain "www.test1.com", address: "192.168.0.51", {
         user "web_002", uid: 2002, group: "web_002", gid: 2002
-        setup "proxy", service: "wordpress", alias: "wordpress3", address: "https://127.0.0.1:8082" //.
+        setup "proxy", service: "roundcube", alias: "roundcube", address: "https://127.0.0.1:8082" //.
         certificate file: UbuntuResources.certCrt.resource, key: UbuntuResources.certKey.resource
     }
 }

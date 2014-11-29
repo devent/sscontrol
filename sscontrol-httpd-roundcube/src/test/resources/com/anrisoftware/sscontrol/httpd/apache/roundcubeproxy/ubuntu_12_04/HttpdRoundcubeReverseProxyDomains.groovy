@@ -30,14 +30,20 @@ httpd {
     // domain www.test1.com
     domain "www.test1.com", address: "192.168.0.51", port: 8080, {
         user "web_002", uid: 2002, group: "web_002", gid: 2002
-        setup "wordpress", id: "test1wordpress", alias: "wordpress3", {
-            database "wordpress3", user: "user", password: "userpass", host: "localhost"
+        setup "roundcube", id: "idroundcube", alias: "roundcube", {
+            database "roundcubedb", user: "userdb", password: "userpassdb", host: "localhost", driver: "mysql"
+            smtp "tls://%h", user: "usersmtp", password: "passwordsmtp"
+            backup target: "$tmp/var/backups"
+            server "Default Server", host: "mail.example.com"
+            server "Webmail Server", host: "webmail.example.com"
+            host "example.com", domain: "mail.example.com"
+            host "otherdomain.com", domain: "othermail.example.com"
         }
     }
     // SSL/domain www.test1.com
     ssl_domain "www.test1.com", address: "192.168.0.51", port: 8082, {
         user "web_002", uid: 2002, group: "web_002", gid: 2002
         certificate file: UbuntuResources.certCrt.resource, key: UbuntuResources.certKey.resource
-        setup "wordpress", ref: "test1wordpress"
+        setup "roundcube", ref: "idroundcube"
     }
 }

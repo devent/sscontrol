@@ -14,11 +14,11 @@
 
     FcgidMaxRequestLen 2000000
 
-    # /tmp/var/www/www.test1.com/wordpress_3_8
+    # /tmp/var/www/www.test1.com/roundcube_1_0
 
-    Alias /wordpress3 /tmp/var/www/www.test1.com/wordpress_3_8
+    Alias /roundcube /tmp/var/www/www.test1.com/roundcube_1_0
 
-    <Directory /tmp/var/www/www.test1.com/wordpress_3_8>
+    <Directory /tmp/var/www/www.test1.com/roundcube_1_0>
         AddHandler fcgid-script .php
         FCGIWrapper /tmp/var/www/php-fcgi-scripts/www.test1.com/php-fcgi-starter .php
         Options +ExecCGI +FollowSymLinks
@@ -27,16 +27,6 @@
 
         Order allow,deny
         Allow from all
-
-        <IfModule mod_rewrite.c>
-            # block comment spam by denying access to no-referrer requests
-            RewriteEngine On
-            RewriteCond %{REQUEST_METHOD} POST
-            RewriteCond %{REQUEST_URI} .wp-comments-post\.php*
-            RewriteCond %{HTTP_REFERER} !.*www\.test1\.com.* [OR]
-            RewriteCond %{HTTP_USER_AGENT} ^$
-            RewriteRule ^(.*)$ ^http://%{REMOTE_ADDR}/$ [R=301,L]
-        </IfModule>
 
         <IfModule !mod_php5.c>
             <IfModule mod_actions.c>
@@ -50,6 +40,19 @@
                 </IfModule>
             </IfModule>
         </IfModule>
+
+        <IfModule mod_rewrite.c\>
+            RewriteEngine On
+            # security rules:
+            # - deny access to files not containing a dot or starting with a dot
+            #   in all locations except installer directory
+            RewriteRule ^(?!installer)(\.?[^\.]+)$ - [F]
+            # - deny access to some locations
+            RewriteRule ^/?(\.git|\.tx|SQL|bin|config|logs|temp|tests|program\/(include|lib|localization|steps)) - [F]
+            # - deny access to some documentation files
+            RewriteRule /?(README\.md|composer\.json-dist|composer\.json|package\.xml)$ - [F]
+        </IfModule\>
+
     </Directory>
 
 </VirtualHost>

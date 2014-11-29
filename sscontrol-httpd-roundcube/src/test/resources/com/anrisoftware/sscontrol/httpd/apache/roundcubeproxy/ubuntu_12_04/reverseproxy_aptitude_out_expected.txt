@@ -5,7 +5,9 @@ install libapache2-mod-rpaf
 update
 install apache2-suexec libapache2-mod-fcgid php5-cgi
 update
-install php5 php5-mysql mysql-client mysql-server unzip
+install php5 php5-mcrypt php5-pspell
+update
+install php5-mysql mysql-client mysql-server
 update
 install nginx net-tools
 update
@@ -15,6 +17,8 @@ install libapache2-mod-rpaf
 update
 install apache2-suexec libapache2-mod-fcgid php5-cgi
 update
-install php5 php5-mysql mysql-client mysql-server unzip
+install php5 php5-mcrypt php5-pspell
+update
+install php5-mysql mysql-client mysql-server
 update
 install nginx net-tools

@@ -1,20 +1,20 @@
 /*
  * Copyright 2014 Erwin Müller <erwin.mueller@deventm.org>
  *
- * This file is part of sscontrol-httpd-wordpress.
+ * This file is part of sscontrol-httpd-roundcube.
  *
- * sscontrol-httpd-wordpress is free software: you can redistribute it and/or modify it
+ * sscontrol-httpd-roundcube is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published by the
  * Free Software Foundation, either version 3 of the License, or (at your
  * option) any later version.
  *
- * sscontrol-httpd-wordpress is distributed in the hope that it will be useful, but
+ * sscontrol-httpd-roundcube is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
  * for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with sscontrol-httpd-wordpress. If not, see <http://www.gnu.org/licenses/>.
+ * along with sscontrol-httpd-roundcube. If not, see <http://www.gnu.org/licenses/>.
  */
 package com.anrisoftware.sscontrol.httpd.apache.roundcubeproxy.ubuntu_12_04
 
@@ -37,12 +37,12 @@ httpd {
     // domain www.test1.com
     domain "www.test1.com", address: "192.168.0.51", {
         user "web_002", uid: 2002, group: "web_002", gid: 2002
-        setup "proxy", service: "roundcube", alias: "roundcube", address: "http://127.0.0.1:8080" //.
+        setup "proxy", service: "general", alias: "roundcube", address: "http://127.0.0.1:8080"
     }
     // SSL/domain www.test1.com
     ssl_domain "www.test1.com", address: "192.168.0.51", {
         user "web_002", uid: 2002, group: "web_002", gid: 2002
-        setup "proxy", service: "roundcube", alias: "roundcube", address: "https://127.0.0.1:8082" //.
+        setup "proxy", service: "general", alias: "roundcube", address: "https://127.0.0.1:8082"
         certificate file: UbuntuResources.certCrt.resource, key: UbuntuResources.certKey.resource
     }
 }

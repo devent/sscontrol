@@ -1,20 +1,20 @@
 /*
  * Copyright 2014 Erwin Müller <erwin.mueller@deventm.org>
  *
- * This file is part of sscontrol-httpd-wordpress.
+ * This file is part of sscontrol-httpd-roundcube.
  *
- * sscontrol-httpd-wordpress is free software: you can redistribute it and/or modify it
+ * sscontrol-httpd-roundcube is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published by the
  * Free Software Foundation, either version 3 of the License, or (at your
  * option) any later version.
  *
- * sscontrol-httpd-wordpress is distributed in the hope that it will be useful, but
+ * sscontrol-httpd-roundcube is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
  * for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with sscontrol-httpd-wordpress. If not, see <http://www.gnu.org/licenses/>.
+ * along with sscontrol-httpd-roundcube. If not, see <http://www.gnu.org/licenses/>.
  */
 package com.anrisoftware.sscontrol.httpd.apache.roundcubeproxy.ubuntu_12_04
 
@@ -40,24 +40,21 @@ enum RoundcubeProxyResources {
     proxySampleConf("/var/www/www.test1.com/roundcube_1_0/config/config.inc.php.sample", RoundcubeProxyResources.class.getResource("config_inc_php_sample.txt")),
     proxyPortsConfExpected("/etc/apache2/ports.conf", RoundcubeProxyResources.class.getResource("proxy_ports_conf_expected.txt")),
     proxyDomainsConfExpected("/etc/apache2/conf.d/000-robobee-domains.conf", RoundcubeProxyResources.class.getResource("proxy_domains_conf.txt")),
-    proxyConfigIncExpected("/var/www/www.test1.com/roundcube_1_0/config/config.inc.php", RoundcubeProxyResources.class.getResource("proxy_config_inc_php_expected.txt")),
-    proxyAptitudeOutExpected("/usr/bin/aptitude.out", RoundcubeProxyResources.class.getResource("proxy_aptitude_out_expected.txt")),
-    proxyA2enmodOutExpected("/usr/sbin/a2enmod.out", RoundcubeProxyResources.class.getResource("proxy_a2enmod_out_expected.txt")),
-    proxyChownOutExpected("/bin/chown.out", RoundcubeProxyResources.class.getResource("proxy_chown_out_expected.txt")),
-    proxyChmodOutExpected("/bin/chmod.out", RoundcubeProxyResources.class.getResource("proxy_chmod_out_expected.txt")),
-    proxyGroupaddOutExpected("/usr/sbin/groupadd.out", RoundcubeProxyResources.class.getResource("proxy_groupadd_out_expected.txt")),
-    proxyUseraddOutExpected("/usr/sbin/useradd.out", RoundcubeProxyResources.class.getResource("proxy_useradd_out_expected.txt")),
-    proxyTarOutExpected("/bin/tar.out", RoundcubeProxyResources.class.getResource("proxy_tar_out_expected.txt")),
-    proxyGzipOutExpected("/bin/gzip.out", RoundcubeProxyResources.class.getResource("proxy_gzip_out_expected.txt")),
-    proxyMysqldumpOutExpected("/usr/bin/mysqldump.out", RoundcubeProxyResources.class.getResource("proxy_mysqldump_out_expected.txt")),
+    proxyConfigIncExpected("/var/www/www.test1.com/roundcube_1_0/config/config.inc.php", RoundcubeProxyResources.class.getResource("reverseproxy_config_inc_php_expected.txt")),
+    proxyAptitudeOutExpected("/usr/bin/aptitude.out", RoundcubeProxyResources.class.getResource("reverseproxy_aptitude_out_expected.txt")),
+    proxyA2enmodOutExpected("/usr/sbin/a2enmod.out", RoundcubeProxyResources.class.getResource("reverseproxy_a2enmod_out_expected.txt")),
+    proxyChownOutExpected("/bin/chown.out", RoundcubeProxyResources.class.getResource("reverseproxy_chown_out_expected.txt")),
+    proxyChmodOutExpected("/bin/chmod.out", RoundcubeProxyResources.class.getResource("reverseproxy_chmod_out_expected.txt")),
+    proxyGroupaddOutExpected("/usr/sbin/groupadd.out", RoundcubeProxyResources.class.getResource("reverseproxy_groupadd_out.txt")),
+    proxyUseraddOutExpected("/usr/sbin/useradd.out", RoundcubeProxyResources.class.getResource("reverseproxy_useradd_out_expected.txt")),
     proxyLogsDir("/var/www/www.test1.com/roundcube_1_0/logs", new URL("file://")),
     proxyTempDir("/var/www/www.test1.com/roundcube_1_0/temp", new URL("file://")),
-    proxyTest1comProxyConfExpected("/etc/nginx/sites-available/100-robobee-test1.com.conf", RoundcubeProxyResources.class.getResource("test1_com_reverseproxy_conf.txt")),
-    proxyTest1comSslProxyConfExpected("/etc/nginx/sites-available/100-robobee-test1.com-ssl.conf", RoundcubeProxyResources.class.getResource("test1_com_ssl_reverseproxy_conf.txt")),
-    proxyWwwtest1comDomainProxyConfExpected("/etc/apache2/sites-available/100-robobee-www.test1.com.conf", RoundcubeProxyResources.class.getResource("www_test1_com_reverseproxydomain_conf.txt")),
-    proxyWwwtest1comSslDomainProxyConfExpected("/etc/apache2/sites-available/100-robobee-www.test1.com-ssl.conf", RoundcubeProxyResources.class.getResource("www_test1_com_ssl_reverseproxydomain_conf.txt")),
-    proxyWwwtest1comProxyConfExpected("/etc/nginx/sites-available/100-robobee-www.test1.com.conf", RoundcubeProxyResources.class.getResource("www_test1_com_reverseproxy_conf.txt")),
-    proxywwwtest1comSslProxyConfExpected("/etc/nginx/sites-available/100-robobee-www.test1.com-ssl.conf", RoundcubeProxyResources.class.getResource("www_test1_com_ssl_reverseproxy_conf.txt")),
+    proxyTest1comProxyConfExpected("/etc/nginx/sites-available/100-robobee-test1.com.conf", RoundcubeProxyResources.class.getResource("reverseproxy_test1com_conf_expected.txt")),
+    proxyTest1comSslProxyConfExpected("/etc/nginx/sites-available/100-robobee-test1.com-ssl.conf", RoundcubeProxyResources.class.getResource("reverseproxy_test1comssl_conf_expected.txt")),
+    proxyWwwtest1comDomainProxyConfExpected("/etc/apache2/sites-available/100-robobee-www.test1.com.conf", RoundcubeProxyResources.class.getResource("reverseproxydomain_wwwtest1com_conf_expected.txt")),
+    proxyWwwtest1comSslDomainProxyConfExpected("/etc/apache2/sites-available/100-robobee-www.test1.com-ssl.conf", RoundcubeProxyResources.class.getResource("reverseproxydomain_wwwtest1comssl_conf_expected.txt")),
+    proxyWwwtest1comProxyConfExpected("/etc/nginx/sites-available/100-robobee-www.test1.com.conf", RoundcubeProxyResources.class.getResource("reverseproxy_wwwtest1com_conf_expected.txt")),
+    proxywwwtest1comSslProxyConfExpected("/etc/nginx/sites-available/100-robobee-www.test1.com-ssl.conf", RoundcubeProxyResources.class.getResource("reverseproxy_wwwtest1comssl_conf_expected.txt")),
     // nginx
     nginxConfigurationDir("/etc/nginx", null),
     nginxSitesAvailableDir("/etc/nginx/sites-available", null),

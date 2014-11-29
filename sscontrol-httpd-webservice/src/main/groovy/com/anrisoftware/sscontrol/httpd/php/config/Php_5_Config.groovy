@@ -229,6 +229,13 @@ abstract class Php_5_Config {
         new File(scriptDir(domain), phpiniFileName)
     }
 
+    /**
+     * Returns the scripts directory for the specified domain.
+     */
+    File scriptDir(Domain domain) {
+        new File(sitesDirectory, "$scriptsSubdirectory/$domain.name")
+    }
+
     @Inject
     final void setPhp_5_ConfigTemplatesFactory(TemplatesFactory factory) {
         def templates = factory.create("Php_5_Config")
@@ -251,6 +258,18 @@ abstract class Php_5_Config {
      * for example {@code "%s_php.ini".}
      */
     abstract String getPhpiniFileName()
+
+    /**
+     * Returns the sub-directory to save the php/fcgi scripts.
+     * For example {@code "php-fcgi-scripts"}.
+     */
+    abstract String getScriptsSubdirectory()
+
+    /**
+     * Returns the path for the parent directory containing the sites.
+     * For example {@code "/var/www"}.
+     */
+    abstract File getSitesDirectory()
 
     /**
      * Returns the default memory limit,

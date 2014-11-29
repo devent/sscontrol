@@ -169,6 +169,20 @@ class ApacheFcgiConfig extends Php_5_Config implements FcgiConfig {
     }
 
     /**
+     * Returns the path for the parent directory containing the sites.
+     * For example {@code /var/www}.
+     *
+     * <ul>
+     * <li>profile property {@code "sites_directory"}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    File getSitesDirectory() {
+        profileProperty("sites_directory", defaultProperties) as File
+    }
+
+    /**
      * Returns the maximum requests for php/fcgi.
      *
      * <ul>
@@ -225,13 +239,6 @@ class ApacheFcgiConfig extends Php_5_Config implements FcgiConfig {
      */
     String getPhpiniFileName() {
         profileProperty "php_fcgi_domain_php_ini_file", defaultProperties
-    }
-
-    /**
-     * Returns the scripts directory for the specified domain.
-     */
-    File scriptDir(Domain domain) {
-        new File(sitesDirectory, "$scriptsSubdirectory/$domain.name")
     }
 
     /**

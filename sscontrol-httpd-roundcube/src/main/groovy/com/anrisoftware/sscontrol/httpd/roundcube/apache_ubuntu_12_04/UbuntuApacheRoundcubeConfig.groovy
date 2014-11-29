@@ -44,6 +44,9 @@ class UbuntuApacheRoundcubeConfig extends Ubuntu_12_04_Config implements Service
     @Inject
     UbuntuRoundcubeBackup roundcubeBackup
 
+    @Inject
+    UbuntuRoundcubePhp_5_Config roundcubePhpConfig
+
     @Override
     void deployDomain(Domain domain, Domain refDomain, WebService service, List config) {
         fcgiConfig.deployDomain domain, refDomain, service, config
@@ -54,6 +57,7 @@ class UbuntuApacheRoundcubeConfig extends Ubuntu_12_04_Config implements Service
         setupDefaultPrefix service
         setupDefaultOverrideMode service
         fcgiConfig.deployService domain, service, config
+        roundcubePhpConfig.deployPhpini domain
         roundcubeBackup.backupService domain, service
         installPackages()
         installDatabasePackages service
@@ -84,5 +88,6 @@ class UbuntuApacheRoundcubeConfig extends Ubuntu_12_04_Config implements Service
         fcgiConfig.setScript this
         fromArchiveConfig.setScript this
         roundcubeBackup.setScript this
+        roundcubePhpConfig.setScript this
     }
 }

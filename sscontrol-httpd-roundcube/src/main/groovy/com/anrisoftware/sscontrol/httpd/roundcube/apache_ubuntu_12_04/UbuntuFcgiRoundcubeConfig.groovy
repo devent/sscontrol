@@ -42,7 +42,7 @@ class UbuntuFcgiRoundcubeConfig extends ApacheFcgiRoundcubeConfig {
     }
 
     @Inject
-    void setTemplatesFactory(TemplatesFactory factory) {
+    final void setUbuntuTemplatesFactory(TemplatesFactory factory) {
         this.domainConfigTemplates = factory.create("Roundcube_1_0")
         this.domainConfigTemplate = domainConfigTemplates.getResource("domain")
     }

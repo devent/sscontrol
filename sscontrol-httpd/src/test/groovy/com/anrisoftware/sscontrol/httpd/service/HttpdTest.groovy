@@ -60,6 +60,7 @@ class HttpdTest extends HttpdTestUtil {
         def domain = service.domains[0]
         assert domain.memory.limit.value == 32000000
         assert domain.memory.upload.value == 32000000
+        assert domain.debug.php == 1
         assert domain.redirects.size() == 1
         assert domain.redirects[0].destination == "www.test1.com"
 

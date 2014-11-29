@@ -16,16 +16,15 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd-wordpress. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.backups.mysql;
+package com.anrisoftware.sscontrol.httpd.php.config;
 
-import static com.anrisoftware.sscontrol.httpd.backups.mysql.DatabaseMysqlLogger._.database_backup_debug;
-import static com.anrisoftware.sscontrol.httpd.backups.mysql.DatabaseMysqlLogger._.database_backup_info;
+import static com.anrisoftware.sscontrol.httpd.php.config.Php_5_ConfigLogger._.phpinit_deployed_debug;
+import static com.anrisoftware.sscontrol.httpd.php.config.Php_5_ConfigLogger._.phpinit_deployed_info;
 
 import java.io.File;
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
-import com.anrisoftware.sscontrol.httpd.backups.archive.ArchiveServiceBackup;
-import com.anrisoftware.sscontrol.httpd.webservice.WebService;
+import com.anrisoftware.sscontrol.httpd.domain.Domain;
 
 /**
  * Logging for {@link Php_5_Config}.
@@ -33,15 +32,13 @@ import com.anrisoftware.sscontrol.httpd.webservice.WebService;
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class DatabaseMysqlLogger extends AbstractLogger {
+class Php_5_ConfigLogger extends AbstractLogger {
 
     enum _ {
 
-        database_backup_debug(
-                "Service database backup source '{}' to '{}' for {}"),
+        phpinit_deployed_debug("Deployed php.ini '{}' for {}"),
 
-        database_backup_info(
-                "Service database backup source '{}' to '{}' for service '{}'.");
+        phpinit_deployed_info("Deployed php.ini '{}' for service '{}'.");
 
         private String name;
 
@@ -58,15 +55,15 @@ class DatabaseMysqlLogger extends AbstractLogger {
     /**
      * Sets the context of the logger to {@link Php_5_Config}.
      */
-    public DatabaseMysqlLogger() {
-        super(DatabaseMysqlBackup.class);
+    public Php_5_ConfigLogger() {
+        super(Php_5_Config.class);
     }
 
-    void databaseBackup(WebService service, File source, File archiveFile) {
+    void phpinitDeployed(Domain domain, File file) {
         if (isDebugEnabled()) {
-            debug(database_backup_debug, source, archiveFile, service);
+            debug(phpinit_deployed_debug, file, domain);
         } else {
-            info(database_backup_info, source, archiveFile, service.getName());
+            info(phpinit_deployed_info, file, domain.getName());
         }
     }
 }

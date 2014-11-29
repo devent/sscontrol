@@ -16,27 +16,3 @@ domainConfig(properties, domain) ::= <<
 FcgidMaxRequestLen <domain.memory.upload.value>
 
 >>
-
-memoryLimitConfig(size) ::= <%
-memory_limit = <size>
-%>
-
-memoryLimitConfig_search(size) ::= <%
-;?memory_limit\\s*=.*
-%>
-
-uploadMaxFilesizeConfig(size) ::= <%
-upload_max_filesize = <size>
-%>
-
-uploadMaxFilesizeConfig_search(size) ::= <%
-;?upload_max_filesize\\s*=.*
-%>
-
-postMaxSizeConfig(size) ::= <%
-post_max_size = <size>
-%>
-
-postMaxSizeConfig_search(size) ::= <%
-;?post_max_size\\s*=.*
-%>

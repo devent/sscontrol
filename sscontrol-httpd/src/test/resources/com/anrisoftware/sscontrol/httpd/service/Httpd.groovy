@@ -27,6 +27,7 @@ httpd {
     domain "test1.com", address: "192.168.0.50", port: 80, {
         redirect to: "www.%"
         memory limit: "32 MB", upload: "32 MB"
+        debug "php", level: 1
     }
     domain "foo.test1.com", address: "192.168.0.50"
     ssl_domain "test1.com", address: "192.168.0.50", {

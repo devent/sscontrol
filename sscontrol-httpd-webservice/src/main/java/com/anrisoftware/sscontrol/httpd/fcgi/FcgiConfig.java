@@ -27,7 +27,7 @@ import com.anrisoftware.sscontrol.httpd.webservice.WebService;
 
 /**
  * Configures the <i>php-fcgi</i>.
- * 
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
@@ -35,11 +35,11 @@ public interface FcgiConfig {
 
     /**
      * Sets the parent script.
-     * 
+     *
      * @param script
      *            the {@link LinuxScript}.
      */
-    void setScript(LinuxScript script);
+    void setScript(Object parent);
 
     /**
      * @see ServiceConfig#deployService(Domain, WebService, List)
@@ -53,7 +53,7 @@ public interface FcgiConfig {
 
     /**
      * Setups the domain for <i>php-fcgi</i>.
-     * 
+     *
      * @param domain
      *            the {@link Domain}.
      */

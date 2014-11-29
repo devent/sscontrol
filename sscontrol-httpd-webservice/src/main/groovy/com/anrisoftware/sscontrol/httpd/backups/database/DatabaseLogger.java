@@ -28,7 +28,7 @@ import com.anrisoftware.sscontrol.httpd.backups.archive.ArchiveServiceBackup;
 import com.anrisoftware.sscontrol.httpd.webservice.WebService;
 
 /**
- * Logging for {@link ArchiveServiceBackup}.
+ * Logging for {@link Php_5_Config}.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
@@ -56,7 +56,7 @@ class DatabaseLogger extends AbstractLogger {
     }
 
     /**
-     * Sets the context of the logger to {@link ArchiveServiceBackup}.
+     * Sets the context of the logger to {@link Php_5_Config}.
      */
     public DatabaseLogger() {
         super(DatabaseBackup.class);

@@ -32,6 +32,9 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.anrisoftware.sscontrol.core.api.ServiceException;
+import com.anrisoftware.sscontrol.core.groovy.StatementsException;
+import com.anrisoftware.sscontrol.core.groovy.StatementsTable;
+import com.anrisoftware.sscontrol.core.groovy.StatementsTableFactory;
 import com.anrisoftware.sscontrol.httpd.memory.Memory;
 import com.anrisoftware.sscontrol.httpd.memory.MemoryFactory;
 import com.anrisoftware.sscontrol.httpd.redirect.Redirect;
@@ -55,6 +58,9 @@ import com.google.inject.assistedinject.Assisted;
  */
 class DomainImpl implements Domain {
 
+    private static final String SERVICE_NAME = "domain";
+    private static final String LEVEL_KEY = "level";
+    private static final String DEBUG_KEY = "debug";
     private static final String HTTP = "http://";
     private static final String USER = "user";
     private static final String SITE_DIR = "%s/web";
@@ -107,6 +113,8 @@ class DomainImpl implements Domain {
 
     private Memory memory;
 
+    private StatementsTable statementsTable;
+
     /**
      * @see DomainFactory#create(Map, String)
      */
@@ -135,6 +143,14 @@ class DomainImpl implements Domain {
         if (args.containsKey(ID)) {
             this.id = (String) args.get(ID);
         }
+    }
+
+    @Inject
+    public final void setStatementsTable(StatementsTableFactory factory) {
+        StatementsTable table = factory.create(factory, SERVICE_NAME);
+        table.addAllowed(DEBUG_KEY);
+        table.addAllowedKeys(DEBUG_KEY, LEVEL_KEY);
+        this.statementsTable = table;
     }
 
     @Override
@@ -289,6 +305,11 @@ class DomainImpl implements Domain {
         return memory;
     }
 
+    @Override
+    public Map<String, Object> getDebug() {
+        return statementsTable.tableKeys(DEBUG_KEY, LEVEL_KEY);
+    }
+
     /**
      * Returns the protocol of the domain.
      *
@@ -296,6 +317,12 @@ class DomainImpl implements Domain {
      */
     public String getProto() {
         return HTTP;
+    }
+
+    public Object methodMissing(String name, Object args)
+            throws StatementsException {
+        statementsTable.methodMissing(name, args);
+        return null;
     }
 
     @Override

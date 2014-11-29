@@ -1,0 +1,91 @@
+
+memoryLimitConfig_search(size) ::= <%
+;?memory_limit\\s*=.*
+%>
+memoryLimitConfig(size) ::= <%
+memory_limit = <size>
+%>
+
+uploadMaxFilesizeConfig_search(size) ::= <%
+;?upload_max_filesize\\s*=.*
+%>
+uploadMaxFilesizeConfig(size) ::= <%
+upload_max_filesize = <size>
+%>
+
+postMaxSizeConfig_search(size) ::= <%
+;?post_max_size\\s*=.*
+%>
+postMaxSizeConfig(size) ::= <%
+post_max_size = <size>
+%>
+
+logErrorsConfig_search() ::= <%
+;?\\s*log_errors\\s*=.*
+%>
+logErrorsConfig(enabled) ::= <%
+log_errors = <if(enabled)>On<else>Off<endif>
+%>
+
+errorReportingConfig_search() ::= <%
+;?\\s*error_reporting\\s*=.*
+%>
+errorReportingConfig(level) ::= <%
+error_reporting = <level>
+%>
+
+magicQuotesGpcConfig_search() ::= <%
+;?\\s*magic_quotes_gpc\\s*=.*
+%>
+magicQuotesGpcConfig(enabled) ::= <%
+magic_quotes_gpc = <if(enabled)>On<else>Off<endif>
+%>
+
+magicQuotesRuntimeConfig_search() ::= <%
+;?\\s*magic_quotes_runtime\\s*=.*
+%>
+magicQuotesRuntimeConfig(enabled) ::= <%
+magic_quotes_runtime = <if(enabled)>On<else>Off<endif>
+%>
+
+magicQuotesSybaseConfig_search() ::= <%
+;?\\s*magic_quotes_sybase\\s*=.*
+%>
+magicQuotesSybaseConfig(enabled) ::= <%
+magic_quotes_sybase = <if(enabled)>On<else>Off<endif>
+%>
+
+fileUploadsConfig_search() ::= <%
+;?\\s*file_uploads\\s*=.*
+%>
+fileUploadsConfig(enabled) ::= <%
+file_uploads = <if(enabled)>On<else>Off<endif>
+%>
+
+sessionAutoStartConfig_search() ::= <%
+;?\\s*session\\.auto_start\\s*=.*
+%>
+sessionAutoStartConfig(enabled) ::= <%
+session.auto_start = <if(enabled)>On<else>Off<endif>
+%>
+
+zendZe1CompatibilityModeConfig_search() ::= <%
+;?\\s*zend\\.ze1_compatibility_mode\\s*=.*
+%>
+zendZe1CompatibilityModeConfig(enabled) ::= <%
+zend.ze1_compatibility_mode = <if(enabled)>On<else>Off<endif>
+%>
+
+suhosinSessionEncryptConfig_search() ::= <%
+;?\\s*suhosin\\.session\\.encrypt\\s*=.*
+%>
+suhosinSessionEncryptConfig(enabled) ::= <%
+suhosin.session.encrypt = <if(enabled)>On<else>Off<endif>
+%>
+
+mbstringFuncOverloadConfig_search() ::= <%
+;?\\s*mbstring\\.func_overload\\s*=.*
+%>
+mbstringFuncOverloadConfig(value) ::= <%
+mbstring.func_overload = <value>
+%>

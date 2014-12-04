@@ -27,6 +27,7 @@ import org.apache.commons.io.FileUtils
 import com.anrisoftware.globalpom.textmatch.tokentemplate.TokenTemplate
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.Templates
+import com.anrisoftware.resources.templates.api.TemplatesFactory
 import com.anrisoftware.sscontrol.httpd.domain.Domain
 import com.anrisoftware.sscontrol.httpd.domain.SslDomainImpl
 import com.anrisoftware.sscontrol.httpd.domain.linux.DomainConfig
@@ -53,38 +54,21 @@ abstract class Nginx_1_4_Script extends NginxScript {
     SslDomainConfig sslDomainConfig
 
     @Inject
-    DebugLoggingRenderer debugLoggingRenderer
-
-    @Inject
     RedirectConfig redirectConfig
 
-    @Inject
-    ResourceURIAttributeRenderer resourceURIAttributeRenderer
-
     /**
-     * The {@link Templates} for the script.
-     */
-    Templates nginxTemplates
-
-    /**
-     * Resource containing the Nginx configuration templates.
+     * Resource containing the <i>Nginx</i> configuration templates.
      */
     TemplateResource nginxConfigTemplate
 
     /**
-     * Resource containing the Nginx commands templates.
+     * Resource containing the <i>Nginx</i> commands templates.
      */
     TemplateResource nginxCommandsTemplate
 
     @Override
     def run() {
         super.run()
-        nginxTemplates = templatesFactory.create "Nginx_1_4", ["renderers": [
-                debugLoggingRenderer,
-                resourceURIAttributeRenderer
-            ]]
-        nginxConfigTemplate = nginxTemplates.getResource "config"
-        nginxCommandsTemplate = nginxTemplates.getResource "commands"
         domainConfig.script = this
         sslDomainConfig.script = this
         redirectConfig.script = this
@@ -97,6 +81,19 @@ abstract class Nginx_1_4_Script extends NginxScript {
         deployConfig()
     }
 
+    @Inject
+    final void setNginx14ScriptTemplates(
+            TemplatesFactory factory,
+            DebugLoggingRenderer debugLoggingRenderer,
+            ResourceURIAttributeRenderer resourceURIAttributeRenderer) {
+        def templates = factory.create "Nginx_1_4", ["renderers": [
+                debugLoggingRenderer,
+                resourceURIAttributeRenderer
+            ]]
+        this.nginxConfigTemplate = templates.getResource "config"
+        this.nginxCommandsTemplate = templates.getResource "commands"
+    }
+
     /**
      * Called before the configuration.
      */
@@ -105,10 +102,12 @@ abstract class Nginx_1_4_Script extends NginxScript {
     /**
      * Creates sites configuration directories.
      *
+     * @see #getSitesDirectory()
      * @see #getSitesAvailableDir()
      * @see #getSitesEnabledDir()
      */
     void createSitesDirectories() {
+        sitesDirectory.mkdirs()
         sitesAvailableDir.mkdirs()
         sitesEnabledDir.mkdirs()
     }

@@ -70,9 +70,6 @@ abstract class NginxScript extends LinuxScript {
     Injector injector
 
     @Inject
-    TemplatesFactory templatesFactory
-
-    @Inject
     ByteFormatFactory byteFormatFactory
 
     @Inject
@@ -96,8 +93,6 @@ abstract class NginxScript extends LinuxScript {
 
     @Override
     def run() {
-        this.nginxTemplates = templatesFactory.create "NginxScript"
-        this.stopServiceTemplate = nginxTemplates.getResource "stop_service"
         setupDefaultBinding()
         setupDefaultLogging()
     }
@@ -121,6 +116,12 @@ abstract class NginxScript extends LinuxScript {
         if (!service.debug.args.containsKey("storage")) {
             service.debug.args.storage = loggingStorage
         }
+    }
+
+    @Inject
+    final void setNginxScriptTemplates(TemplatesFactory factory) {
+        def templates = factory.create "NginxScript"
+        this.stopServiceTemplate = templates.getResource "stop_service"
     }
 
     @Override

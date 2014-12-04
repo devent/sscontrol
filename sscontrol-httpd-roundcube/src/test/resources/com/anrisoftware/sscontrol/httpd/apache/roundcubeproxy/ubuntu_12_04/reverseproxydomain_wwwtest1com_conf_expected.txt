@@ -41,7 +41,7 @@
             </IfModule>
         </IfModule>
 
-        <IfModule mod_rewrite.c\>
+        <IfModule mod_rewrite.c>
             RewriteEngine On
             # security rules:
             # - deny access to files not containing a dot or starting with a dot
@@ -51,7 +51,7 @@
             RewriteRule ^/?(\.git|\.tx|SQL|bin|config|logs|temp|tests|program\/(include|lib|localization|steps)) - [F]
             # - deny access to some documentation files
             RewriteRule /?(README\.md|composer\.json-dist|composer\.json|package\.xml)$ - [F]
-        </IfModule\>
+        </IfModule>
 
     </Directory>
 

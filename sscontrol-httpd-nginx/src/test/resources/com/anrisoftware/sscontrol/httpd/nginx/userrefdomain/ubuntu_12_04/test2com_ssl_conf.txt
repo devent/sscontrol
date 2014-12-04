@@ -14,4 +14,12 @@ server {
     ssl_ciphers ALL:!ADH:!EXPORT56:RC4+RSA:+HIGH:+MEDIUM:+EXP;
     ssl_prefer_server_ciphers on;
 
+    # error page
+    error_page 500 502 503 504 /50x.html;
+
+    # error page location
+    location = /50x.html {
+        root /usr/share/nginx/html;
+    }
+
 }

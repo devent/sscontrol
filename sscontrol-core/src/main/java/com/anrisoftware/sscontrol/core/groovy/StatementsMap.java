@@ -384,7 +384,7 @@ public class StatementsMap implements Serializable {
      * @param key
      *            the {@link String} key.
      *
-     * @return the {@link Object} value.
+     * @return the {@link Object} value or {@code null}.
      */
     @SuppressWarnings("unchecked")
     public <T> T mapValue(String name, String key) {

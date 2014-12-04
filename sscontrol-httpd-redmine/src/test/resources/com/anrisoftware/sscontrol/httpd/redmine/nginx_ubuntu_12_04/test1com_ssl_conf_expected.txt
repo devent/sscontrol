@@ -23,4 +23,12 @@ server {
         proxy_pass http://thin_test1_com_redmine2;
     }
 
+    # error page
+    error_page 500 502 503 504 /50x.html;
+
+    # error page location
+    location = /50x.html {
+        root /usr/share/nginx/html;
+    }
+
 }

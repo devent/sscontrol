@@ -57,4 +57,23 @@ class ProxyGeneralTest extends UbuntuTestUtil {
         assertStringContent generalProxyTest2comConf.replaced(tmpdir, tmpdir, "/tmp"), generalProxyTest2comConf.toString()
         assertStringContent generalProxySitefooProxyConf.replaced(tmpdir, tmpdir, "/tmp"), generalProxySitefooProxyConf.toString()
     }
+
+    @Test
+    void "general two proxies"() {
+        copyUbuntuFiles tmpdir
+        copyUbuntu_12_04_Files tmpdir
+
+        loader.loadService profile.resource, null
+        def profile = registry.getService("profile")[0]
+        setupUbuntu_12_04_Properties profile, tmpdir
+        loader.loadService httpdGeneralTwoProxiesScript.resource, profile
+
+        registry.allServices.each { it.call() }
+        log.info "Run service again to ensure that configuration is not set double."
+        registry.allServices.each { it.call() }
+
+        assertStringContent generalTwoProxiesTest1comConf.replaced(tmpdir, tmpdir, "/tmp"), generalTwoProxiesTest1comConf.toString()
+        assertStringContent generalTwoProxiesSitefooProxyConf.replaced(tmpdir, tmpdir, "/tmp"), generalTwoProxiesSitefooProxyConf.toString()
+        assertStringContent generalTwoProxiesSitebarProxyConf.replaced(tmpdir, tmpdir, "/tmp"), generalTwoProxiesSitebarProxyConf.toString()
+    }
 }

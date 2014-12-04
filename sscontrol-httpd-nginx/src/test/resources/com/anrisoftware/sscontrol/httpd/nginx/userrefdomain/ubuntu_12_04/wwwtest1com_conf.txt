@@ -6,4 +6,12 @@ server {
     server_name test1.com;
     client_max_body_size 2M;
 
+    # error page
+    error_page 500 502 503 504 /50x.html;
+
+    # error page location
+    location = /50x.html {
+        root /usr/share/nginx/html;
+    }
+
 }

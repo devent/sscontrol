@@ -27,11 +27,6 @@ location ~* \.(jpg|png|gif|jpeg|css|js|mp3|wav|swf|mov|doc|pdf|xls|ppt|docx|pptx
     proxy_cache <args.proxy.proxyName>;
 }
 
-error_page 500 502 503 504 /50x.html;
-location = /50x.html {
-    root <args.errorPagesDir>;
-}
-
 >>
 
 proxySetHeadersDomainImpl(properties) ::= <<

@@ -757,6 +757,15 @@ abstract class NginxScript extends LinuxScript {
         if (domain.memory.upload == null) {
             domain.memory.upload = defaultMemoryUpload
         }
+        if (domain.errorPage == null) {
+            domain.error page: defaultErrorPage
+        }
+        if (domain.errorRoot == null) {
+            domain.error root: defaultErrorRoot
+        }
+        if (domain.errorCodes == null) {
+            domain.error codes: defaultErrorCodes.join(",")
+        }
     }
 
     /**
@@ -799,6 +808,42 @@ abstract class NginxScript extends LinuxScript {
         def bytes = profileProperty "default_memory_post", defaultProperties
         bytes = byteFormatFactory.create().parse(bytes)
         Measure.valueOf(bytes, NonSI.BYTE)
+    }
+
+    /**
+     * Returns the default error page,
+     * for example {@code "/50x.html"}.
+     *
+     * <ul>
+     * <li>profile property {@code "default_error_page_uri"}</li>
+     * </ul>
+     */
+    String getDefaultErrorPage() {
+        profileProperty "default_error_page_uri", defaultProperties
+    }
+
+    /**
+     * Returns the default error root,
+     * for example {@code "/usr/share/nginx/html"}.
+     *
+     * <ul>
+     * <li>profile property {@code "default_error_page_root"}</li>
+     * </ul>
+     */
+    String getDefaultErrorRoot() {
+        profileProperty "default_error_page_root", defaultProperties
+    }
+
+    /**
+     * Returns the default error codes,
+     * for example {@code "500, 502, 503, 504"}.
+     *
+     * <ul>
+     * <li>profile property {@code "default_error_page_codes"}</li>
+     * </ul>
+     */
+    List getDefaultErrorCodes() {
+        profileListProperty "default_error_page_codes", defaultProperties
     }
 
     /**

@@ -40,6 +40,11 @@ enum ProxyResources {
     generalProxyTest1comSslConf("/etc/nginx/sites-available/100-robobee-test1.com-ssl.conf", ProxyResources.class.getResource("generalproxy_test1com_ssl_conf_expected.txt")),
     generalProxyTest2comConf("/etc/nginx/sites-available/100-robobee-test2.com.conf", ProxyResources.class.getResource("generalproxy_test2com_conf_expected.txt")),
     generalProxySitefooProxyConf("/etc/nginx/conf.d/020-robobee-sitefoo-proxy.conf", ProxyResources.class.getResource("generalproxy_sitefoo_proxy_conf_expected.txt")),
+    // general two proxies
+    httpdGeneralTwoProxiesScript("Httpd.groovy", ProxyResources.class.getResource("HttpdGeneralTwoProxies.groovy")),
+    generalTwoProxiesTest1comConf("/etc/nginx/sites-available/100-robobee-test1.com.conf", ProxyResources.class.getResource("generaltwoproxies_test1com_conf_expected.txt")),
+    generalTwoProxiesSitefooProxyConf("/etc/nginx/conf.d/020-robobee-sitefoo-proxy.conf", ProxyResources.class.getResource("generaltwoproxies_sitefoo_proxy_conf_expected.txt")),
+    generalTwoProxiesSitebarProxyConf("/etc/nginx/conf.d/020-robobee-sitebar-proxy.conf", ProxyResources.class.getResource("generaltwoproxies_sitebar_proxy_conf_expected.txt")),
     // proxy pass
     httpdProxyPassScript("Httpd.groovy", ProxyResources.class.getResource("HttpdProxyPass.groovy")),
     proxyPassTest1comConf("/etc/nginx/sites-available/100-robobee-test1.com.conf", ProxyResources.class.getResource("proxypass_test1com_conf_expected.txt")),

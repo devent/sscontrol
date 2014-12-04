@@ -1,0 +1,21 @@
+errorPage(args) ::= <%
+<if(args.domain.errorCodes&&args.domain.errorPage)><doErrorPage(args)><endif>
+%>
+
+doErrorPage(args) ::= <<
+# error page
+error_page <args.domain.errorCodes;separator=" "> <args.domain.errorPage>;
+
+>>
+
+errorLocation(args) ::= <%
+<if(args.domain.errorPage&&args.domain.errorRoot)><doErrorLocation(args)><endif>
+%>
+
+doErrorLocation(args) ::= <<
+# error page location
+location = <args.domain.errorPage> {
+    root <args.domain.errorRoot>;
+}
+
+>>

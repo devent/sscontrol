@@ -56,6 +56,9 @@ abstract class Nginx_1_4_Script extends NginxScript {
     @Inject
     RedirectConfig redirectConfig
 
+    @Inject
+    ErrorPageConfig errorPageConfig
+
     /**
      * Resource containing the <i>Nginx</i> configuration templates.
      */
@@ -72,6 +75,7 @@ abstract class Nginx_1_4_Script extends NginxScript {
         domainConfig.script = this
         sslDomainConfig.script = this
         redirectConfig.script = this
+        errorPageConfig.script = this
         serviceConfigs.values().each { it.script = this }
         beforeConfiguration()
         createSitesDirectories()
@@ -165,8 +169,10 @@ abstract class Nginx_1_4_Script extends NginxScript {
         uniqueDomains.each { deployDomain it }
         service.domains.each { Domain domain ->
             List serviceConfig = []
+            setupDefaults domain
             deployRedirect domain, serviceConfig
             deployService domain, serviceConfig
+            deployErrorPage domain, serviceConfig
             deployDomainConfig domain, serviceConfig
             deploySslDomain domain
             enableSites([domain.fileName])
@@ -218,6 +224,10 @@ abstract class Nginx_1_4_Script extends NginxScript {
         }
     }
 
+    void deployErrorPage(Domain domain, List serviceConfig) {
+        errorPageConfig.deployConfig domain, serviceConfig
+    }
+
     def deploySslDomain(Domain domain) {
         if (domain.class == SslDomainImpl) {
             sslDomainConfig.deployCertificates(domain)
@@ -229,7 +239,6 @@ abstract class Nginx_1_4_Script extends NginxScript {
     }
 
     def deployDomainConfig(Domain domain, List servicesConfig) {
-        setupDefaults domain
         def string = nginxConfigTemplate.getText(
                 true, domain.class.simpleName,
                 "properties", [

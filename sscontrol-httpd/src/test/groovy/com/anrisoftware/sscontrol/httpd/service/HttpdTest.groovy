@@ -63,6 +63,10 @@ class HttpdTest extends HttpdTestUtil {
         assert domain.debug.php == 1
         assert domain.redirects.size() == 1
         assert domain.redirects[0].destination == "www.test1.com"
+        assert domain.errorPage == "/50x.html"
+        assert domain.errorCodes.size() == 4
+        assert domain.errorCodes.containsAll(["500", "502", "503", "504"])
+        assert domain.errorRoot == "/usr/share/nginx/html"
 
         domain = service.domains[2]
         assert domain.name == "test1.com"
@@ -72,6 +76,9 @@ class HttpdTest extends HttpdTestUtil {
         assert domain.certResource.toString().endsWith("cert_crt.txt")
         assert domain.keyResource.toString().endsWith("cert_key.txt")
         assert domain.caResource == null
+        assert domain.errorPage == null
+        assert domain.errorCodes == null
+        assert domain.errorRoot == null
 
         domain = service.domains[4]
         assert domain.name == "test2.com"

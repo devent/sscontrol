@@ -33,6 +33,8 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.anrisoftware.sscontrol.core.api.ServiceException;
 import com.anrisoftware.sscontrol.core.groovy.StatementsException;
+import com.anrisoftware.sscontrol.core.groovy.StatementsMap;
+import com.anrisoftware.sscontrol.core.groovy.StatementsMapFactory;
 import com.anrisoftware.sscontrol.core.groovy.StatementsTable;
 import com.anrisoftware.sscontrol.core.groovy.StatementsTableFactory;
 import com.anrisoftware.sscontrol.httpd.memory.Memory;
@@ -58,6 +60,10 @@ import com.google.inject.assistedinject.Assisted;
  */
 class DomainImpl implements Domain {
 
+    private static final String ROOT_KEY = "root";
+    private static final String CODES_KEY = "codes";
+    private static final String PAGE_KEY = "page";
+    private static final String ERROR_KEY = "error";
     private static final String SERVICE_NAME = "domain";
     private static final String LEVEL_KEY = "level";
     private static final String DEBUG_KEY = "debug";
@@ -115,6 +121,8 @@ class DomainImpl implements Domain {
 
     private StatementsTable statementsTable;
 
+    private StatementsMap statementsMap;
+
     /**
      * @see DomainFactory#create(Map, String)
      */
@@ -146,7 +154,15 @@ class DomainImpl implements Domain {
     }
 
     @Inject
-    public final void setStatementsTable(StatementsTableFactory factory) {
+    public final void setupDomainStatements(StatementsMapFactory factory) {
+        StatementsMap map = factory.create(this, SERVICE_NAME);
+        map.addAllowed(ERROR_KEY);
+        map.addAllowedKeys(ERROR_KEY, PAGE_KEY, CODES_KEY, ROOT_KEY);
+        this.statementsMap = map;
+    }
+
+    @Inject
+    public final void setDomainStatementsTable(StatementsTableFactory factory) {
         StatementsTable table = factory.create(factory, SERVICE_NAME);
         table.addAllowed(DEBUG_KEY);
         table.addAllowedKeys(DEBUG_KEY, LEVEL_KEY);
@@ -311,6 +327,57 @@ class DomainImpl implements Domain {
     }
 
     /**
+     * Returns the error page for the domain.
+     * <p>
+     * <h4>Examples</h4>
+     *
+     * <pre>
+     * domain "test1.com", address: "192.168.0.50", {
+     *     error page: "/50x.html"
+     * }
+     * </pre>
+     *
+     * @return the error {@link String} page or {@code null}.
+     */
+    public String getErrorPage() {
+        return statementsMap.mapValue(ERROR_KEY, PAGE_KEY);
+    }
+
+    /**
+     * Returns the error root location for the domain.
+     * <p>
+     * <h4>Examples</h4>
+     *
+     * <pre>
+     * domain "test1.com", address: "192.168.0.50", {
+     *     error root: "/usr/share/nginx/html"
+     * }
+     * </pre>
+     *
+     * @return the error {@link String} root or {@code null}.
+     */
+    public String getErrorRoot() {
+        return statementsMap.mapValue(ERROR_KEY, ROOT_KEY);
+    }
+
+    /**
+     * Returns the error codes for the domain.
+     * <p>
+     * <h4>Examples</h4>
+     *
+     * <pre>
+     * domain "test1.com", address: "192.168.0.50", {
+     *     error codes: "500, 502, 503, 504"
+     * }
+     * </pre>
+     *
+     * @return the error {@link List} codes or {@code null}.
+     */
+    public List<String> getErrorCodes() {
+        return statementsMap.mapValueAsList(ERROR_KEY, CODES_KEY);
+    }
+
+    /**
      * Returns the protocol of the domain.
      *
      * @return the {@link String} protocol of the domain.
@@ -319,9 +386,19 @@ class DomainImpl implements Domain {
         return HTTP;
     }
 
+    /**
+     * Redirects to the statements map and table.
+     *
+     * @see StatementsMap#methodMissing(String, Object)
+     * @see StatementsTable#methodMissing(String, Object)
+     */
     public Object methodMissing(String name, Object args)
             throws StatementsException {
-        statementsTable.methodMissing(name, args);
+        try {
+            statementsMap.methodMissing(name, args);
+        } catch (StatementsException e) {
+            statementsTable.methodMissing(name, args);
+        }
         return null;
     }
 

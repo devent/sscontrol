@@ -28,6 +28,7 @@ httpd {
         redirect to: "www.%"
         memory limit: "32 MB", upload: "32 MB"
         debug "php", level: 1
+        error page: "/50x.html", codes: "500, 502, 503, 504", root: "/usr/share/nginx/html"
     }
     domain "foo.test1.com", address: "192.168.0.50"
     ssl_domain "test1.com", address: "192.168.0.50", {

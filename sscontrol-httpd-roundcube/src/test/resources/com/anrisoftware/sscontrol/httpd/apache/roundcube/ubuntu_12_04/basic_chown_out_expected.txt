@@ -1,4 +1,5 @@
 web_001.web_001 /tmp/var/www/www.test1.com/web
+web_002.web_002 /tmp/var/www/www.test2.com/web
 -R web_001.web_001 /tmp/var/www/php-fcgi-scripts/www.test1.com
 web_001.web_001 /tmp/var/www/php-fcgi-scripts/www.test1.com/php-fcgi-starter
 -R root.web_001 /tmp/var/www/www.test1.com/roundcube_1_0
@@ -7,7 +8,13 @@ web_001.web_001 /tmp/var/www/www.test1.com/roundcube_1_0/temp
 -R web_001.web_001 /tmp/var/www/php-fcgi-scripts/www.test1.com
 web_001.web_001 /tmp/var/www/php-fcgi-scripts/www.test1.com/php-fcgi-starter
 root.root /tmp/var/www/www.test1.com/ssl/cert_crt.txt /tmp/var/www/www.test1.com/ssl/cert_key.txt
+-R web_002.web_002 /tmp/var/www/php-fcgi-scripts/www.test2.com
+web_002.web_002 /tmp/var/www/php-fcgi-scripts/www.test2.com/php-fcgi-starter
+-R root.web_002 /tmp/var/www/www.test2.com/roundcube_1_0
+web_002.web_002 /tmp/var/www/www.test2.com/roundcube_1_0/logs
+web_002.web_002 /tmp/var/www/www.test2.com/roundcube_1_0/temp
 web_001.web_001 /tmp/var/www/www.test1.com/web
+web_002.web_002 /tmp/var/www/www.test2.com/web
 -R web_001.web_001 /tmp/var/www/php-fcgi-scripts/www.test1.com
 web_001.web_001 /tmp/var/www/php-fcgi-scripts/www.test1.com/php-fcgi-starter
 -R root.web_001 /tmp/var/www/www.test1.com/roundcube_1_0
@@ -16,3 +23,8 @@ web_001.web_001 /tmp/var/www/www.test1.com/roundcube_1_0/temp
 -R web_001.web_001 /tmp/var/www/php-fcgi-scripts/www.test1.com
 web_001.web_001 /tmp/var/www/php-fcgi-scripts/www.test1.com/php-fcgi-starter
 root.root /tmp/var/www/www.test1.com/ssl/cert_crt.txt /tmp/var/www/www.test1.com/ssl/cert_key.txt
+-R web_002.web_002 /tmp/var/www/php-fcgi-scripts/www.test2.com
+web_002.web_002 /tmp/var/www/php-fcgi-scripts/www.test2.com/php-fcgi-starter
+-R root.web_002 /tmp/var/www/www.test2.com/roundcube_1_0
+web_002.web_002 /tmp/var/www/www.test2.com/roundcube_1_0/logs
+web_002.web_002 /tmp/var/www/www.test2.com/roundcube_1_0/temp

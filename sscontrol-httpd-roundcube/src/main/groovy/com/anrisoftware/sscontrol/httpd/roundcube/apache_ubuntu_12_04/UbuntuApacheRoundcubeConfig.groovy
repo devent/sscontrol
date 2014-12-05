@@ -56,6 +56,9 @@ class UbuntuApacheRoundcubeConfig extends Ubuntu_12_04_Config implements Service
     void deployService(Domain domain, WebService service, List config) {
         setupDefaultPrefix service
         setupDefaultOverrideMode service
+        setupDefaultDebugLevels service
+        setupDefaultDatabase service
+        setupDefaultSmtp service
         fcgiConfig.deployService domain, service, config
         roundcubePhpConfig.deployPhpini domain
         roundcubeBackup.backupService domain, service

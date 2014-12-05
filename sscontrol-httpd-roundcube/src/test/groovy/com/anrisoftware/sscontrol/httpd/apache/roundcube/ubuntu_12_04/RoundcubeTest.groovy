@@ -60,7 +60,11 @@ class RoundcubeTest extends UbuntuTestUtil {
         assertStringContent basicWwwtest1comConfExpected.replaced(tmpdir, tmpdir, "/tmp"), basicWwwtest1comConfExpected.toString()
         assertStringContent basicWwwtest1comFcgiScriptExpected.replaced(tmpdir, tmpdir, "/tmp"), basicWwwtest1comFcgiScriptExpected.toString()
         assertStringContent basicWwwtest1comPhpiniExpected.replaced(tmpdir, tmpdir, "/tmp"), basicWwwtest1comPhpiniExpected.toString()
-        assertFileContent basicConfigIncExpected.asFile(tmpdir), basicConfigIncExpected
+        assertFileContent basicWwwtest1comConfigIncExpected.asFile(tmpdir), basicWwwtest1comConfigIncExpected
+        assertStringContent basicWwwtest2comConfExpected.replaced(tmpdir, tmpdir, "/tmp"), basicWwwtest2comConfExpected.toString()
+        assertStringContent basicWwwtest2comFcgiScriptExpected.replaced(tmpdir, tmpdir, "/tmp"), basicWwwtest2comFcgiScriptExpected.toString()
+        assertStringContent basicWwwtest2comPhpiniExpected.replaced(tmpdir, tmpdir, "/tmp"), basicWwwtest2comPhpiniExpected.toString()
+        assertFileContent basicWwwtest2comConfigIncExpected.asFile(tmpdir), basicWwwtest2comConfigIncExpected
         assertFileContent basicAptitudeOutExpected.asFile(tmpdir), basicAptitudeOutExpected
         assertFileContent basicA2enmodOutExpected.asFile(tmpdir), basicA2enmodOutExpected
         assertStringContent basicChownOutExpected.replaced(tmpdir, tmpdir, "/tmp"), basicChownOutExpected.toString()

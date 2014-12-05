@@ -129,8 +129,9 @@ abstract class RoundcubeConfig {
         def smtpUser = profileProperty "roundcube_default_smtp_user", roundcubeProperties
         def smtpPassword = profileProperty "roundcube_default_smtp_password", roundcubeProperties
         // smtp "tls://%h", user: "usersmtp", password: "passwordsmtp"
+        service.smtpServer == null ? service.smtp(smtpHost) : false
         service.smtpServer.server == null ? service.smtp(smtpHost) : false
-        def smtpServer = service.smtpServer.servers
+        def smtpServer = service.smtpServer.server
         service.smtpServer.user == null ? service.smtp(smtpServer, user: smtpUser) : false
         service.smtpServer.password == null ? service.smtp(smtpServer, password: smtpPassword) : false
     }

@@ -35,13 +35,18 @@ enum RoundcubeResources {
     roundcubeArchive("/tmp/web-roundcubemail-1.0.3.tar.gz", RoundcubeResources.class.getResource("roundcubemail-1.0.3.tar.gz")),
     // basic
     basicHttpdScript("Httpd.groovy", RoundcubeResources.class.getResource("BasicHttpdRoundube.groovy")),
-    basicSampleConf("/var/www/www.test1.com/roundcube_1_0/config/config.inc.php.sample", RoundcubeResources.class.getResource("config_inc_php_sample.txt")),
+    basicWwwtest1comSampleConf("/var/www/www.test1.com/roundcube_1_0/config/config.inc.php.sample", RoundcubeResources.class.getResource("config_inc_php_sample.txt")),
+    basicWwwtest2comSampleConf("/var/www/www.test2.com/roundcube_1_0/config/config.inc.php.sample", RoundcubeResources.class.getResource("config_inc_php_sample.txt")),
     basicPortsConfExpected("/etc/apache2/ports.conf", RoundcubeResources.class.getResource("basic_ports_conf_expected.txt")),
     basicDomainsConfExpected("/etc/apache2/conf.d/000-robobee-domains.conf", RoundcubeResources.class.getResource("basic_domains_conf.txt")),
     basicWwwtest1comConfExpected("/etc/apache2/sites-available/100-robobee-www.test1.com.conf", RoundcubeResources.class.getResource("basic_wwwtest1com_conf_expected.txt")),
-    basicWwwtest1comFcgiScriptExpected("/var/www/php-fcgi-scripts/www.test1.com/php-fcgi-starter", RoundcubeResources.class.getResource("basic_php_fcgi_starter_expected.txt")),
-    basicWwwtest1comPhpiniExpected("/var/www/php-fcgi-scripts/www.test1.com/domain_php.ini", RoundcubeResources.class.getResource("basic_php_ini_expected.txt")),
-    basicConfigIncExpected("/var/www/www.test1.com/roundcube_1_0/config/config.inc.php", RoundcubeResources.class.getResource("basic_config_inc_php_expected.txt")),
+    basicWwwtest1comFcgiScriptExpected("/var/www/php-fcgi-scripts/www.test1.com/php-fcgi-starter", RoundcubeResources.class.getResource("basic_wwwtest1com_phpfcgistarter_expected.txt")),
+    basicWwwtest1comPhpiniExpected("/var/www/php-fcgi-scripts/www.test1.com/domain_php.ini", RoundcubeResources.class.getResource("basic_wwwtest1com_phpini_expected.txt")),
+    basicWwwtest1comConfigIncExpected("/var/www/www.test1.com/roundcube_1_0/config/config.inc.php", RoundcubeResources.class.getResource("basic_wwwtest1com_configincphp_expected.txt")),
+    basicWwwtest2comConfExpected("/etc/apache2/sites-available/100-robobee-www.test2.com.conf", RoundcubeResources.class.getResource("basic_wwwtest2com_conf_expected.txt")),
+    basicWwwtest2comFcgiScriptExpected("/var/www/php-fcgi-scripts/www.test2.com/php-fcgi-starter", RoundcubeResources.class.getResource("basic_wwwtest2com_phpfcgistarter_expected.txt")),
+    basicWwwtest2comPhpiniExpected("/var/www/php-fcgi-scripts/www.test2.com/domain_php.ini", RoundcubeResources.class.getResource("basic_wwwtest2com_phpini_expected.txt")),
+    basicWwwtest2comConfigIncExpected("/var/www/www.test2.com/roundcube_1_0/config/config.inc.php", RoundcubeResources.class.getResource("basic_wwwtest2com_configincphp_expected.txt")),
     basicAptitudeOutExpected("/usr/bin/aptitude.out", RoundcubeResources.class.getResource("basic_aptitude_out_expected.txt")),
     basicA2enmodOutExpected("/usr/sbin/a2enmod.out", RoundcubeResources.class.getResource("basic_a2enmod_out_expected.txt")),
     basicChownOutExpected("/bin/chown.out", RoundcubeResources.class.getResource("basic_chown_out_expected.txt")),
@@ -56,7 +61,8 @@ enum RoundcubeResources {
 
     static copyBasicRoundcubeFiles(File parent) {
         roundcubeArchive.createFile parent
-        basicSampleConf.createFile parent
+        basicWwwtest1comSampleConf.createFile parent
+        basicWwwtest2comSampleConf.createFile parent
     }
 
     ResourcesUtils resources

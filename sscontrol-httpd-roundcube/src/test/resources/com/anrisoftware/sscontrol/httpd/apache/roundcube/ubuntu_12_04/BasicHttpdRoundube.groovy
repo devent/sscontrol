@@ -40,4 +40,13 @@ httpd {
         certificate file: certFile, key: certKeyFile
         setup "roundcube", ref: "idroundcube"
     }
+    domain "www.test2.com", address: "192.168.0.51", {
+        setup "roundcube", id: "idroundcube", alias: "roundcubemin", {
+            database "roundcubedb", user: "userdb", password: "userpassdb"
+            server "Default Server", host: "mail.example.com"
+            server "Webmail Server", host: "webmail.example.com"
+            host "example.com", domain: "mail.example.com"
+            host "otherdomain.com", domain: "othermail.example.com"
+        }
+    }
 }

@@ -42,9 +42,7 @@ enum Ubuntu_12_04_Resources {
     apache2ctlCommand("/usr/sbin/apache2ctl", Ubuntu_12_04_Resources.class.getResource("httpd_status_command.txt")),
     htpasswdCommand("/usr/bin/htpasswd", Ubuntu_12_04_Resources.class.getResource("echo_command.txt")),
     htdigestCommand("/usr/bin/htdigest", Ubuntu_12_04_Resources.class.getResource("echo_command.txt")),
-    mysqldumpCommand("/usr/bin/mysqldump", Ubuntu_12_04_Resources.class.getResource("echo_command.txt")),
     netstatCommand("/bin/netstat", Ubuntu_12_04_Resources.class.getResource("netstat_command.txt")),
-    gzipCommand("/bin/gzip", Ubuntu_12_04_Resources.class.getResource("echo_command.txt")),
     groupsFile("/etc/group", Ubuntu_12_04_Resources.class.getResource("group.txt")),
     usersFile("/etc/passwd", Ubuntu_12_04_Resources.class.getResource("passwd.txt")),
     // files
@@ -70,9 +68,7 @@ enum Ubuntu_12_04_Resources {
         apache2ctlCommand.createCommand parent
         htpasswdCommand.createCommand parent
         // ubuntu commands
-        mysqldumpCommand.createCommand parent
         netstatCommand.createCommand parent
-        gzipCommand.createCommand parent
         // apache files
         confDir.asFile(parent).mkdirs()
         defaultConf.createFile parent

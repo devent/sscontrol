@@ -219,7 +219,21 @@ abstract class RoundcubeFromArchiveConfig {
         changeFileModFactory.create(
                 log: log,
                 command: chmodCommand,
-                mod: "0640",
+                mod: "u=rwX",
+                files: dir,
+                recursive: true,
+                this, threads)()
+        changeFileModFactory.create(
+                log: log,
+                command: chmodCommand,
+                mod: "g=rX",
+                files: dir,
+                recursive: true,
+                this, threads)()
+        changeFileModFactory.create(
+                log: log,
+                command: chmodCommand,
+                mod: "o=rX",
                 files: dir,
                 recursive: true,
                 this, threads)()

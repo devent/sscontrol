@@ -60,6 +60,8 @@ abstract class Roundcube_1_0_Config extends RoundcubeConfig {
 
     TemplateResource databaseConfigTemplate
 
+    TemplateResource smtpConfigTemplate
+
     /**
      * Deploys the IMAP servers configuration.
      *
@@ -174,6 +176,60 @@ abstract class Roundcube_1_0_Config extends RoundcubeConfig {
     def configDatabasePrefix(RoundcubeService service) {
         def search = databaseConfigTemplate.getText(true, "configDatabasePrefix_search")
         def replace = databaseConfigTemplate.getText(true, "configDatabasePrefix", "prefix", roundcubeDatabaseTablePrefix)
+        new TokenTemplate(search, replace)
+    }
+
+    /**
+     * Deploys the SMTP configuration.
+     *
+     * @param domain
+     *            the {@link Domain} domain.
+     *
+     * @param service
+     *            the {@link RoundcubeService} service.
+     */
+    void deploySmtpConfig(Domain domain, RoundcubeService service) {
+        def sampleConfig = sampleConfigurationFile domain, service
+        def config = configurationFile domain, service
+        config.isFile() == false ? FileUtils.copyFile(sampleConfig, config) : false
+        def current = currentConfiguration config
+        def configs = [
+            configSmtpServer(service),
+            configSmtpPort(service),
+            configSmtpUser(service),
+            configSmtpPass(service),
+            configSmtpAuthType(service),
+        ]
+        deployConfiguration configurationTokens(), current, configs, config
+    }
+
+    def configSmtpServer(RoundcubeService service) {
+        def search = smtpConfigTemplate.getText(true, "configSmtpServer_search")
+        def replace = smtpConfigTemplate.getText(true, "configSmtpServer", "server", service.smtpServer.server)
+        new TokenTemplate(search, replace)
+    }
+
+    def configSmtpPort(RoundcubeService service) {
+        def search = smtpConfigTemplate.getText(true, "configSmtpPort_search")
+        def replace = smtpConfigTemplate.getText(true, "configSmtpPort", "port", smtpServerPort)
+        new TokenTemplate(search, replace)
+    }
+
+    def configSmtpUser(RoundcubeService service) {
+        def search = smtpConfigTemplate.getText(true, "configSmtpUser_search")
+        def replace = smtpConfigTemplate.getText(true, "configSmtpUser", "user", service.smtpServer.user)
+        new TokenTemplate(search, replace)
+    }
+
+    def configSmtpPass(RoundcubeService service) {
+        def search = smtpConfigTemplate.getText(true, "configSmtpPass_search")
+        def replace = smtpConfigTemplate.getText(true, "configSmtpPass", "pass", service.smtpServer.password)
+        new TokenTemplate(search, replace)
+    }
+
+    def configSmtpAuthType(RoundcubeService service) {
+        def search = smtpConfigTemplate.getText(true, "configSmtpAuthType_search")
+        def replace = smtpConfigTemplate.getText(true, "configSmtpAuthType", "type", smtpServerAuthType)
         new TokenTemplate(search, replace)
     }
 
@@ -420,5 +476,6 @@ abstract class Roundcube_1_0_Config extends RoundcubeConfig {
         this.roundcubeTemplates = factory.create "Roundcube_1_0"
         this.imapConfigTemplate = roundcubeTemplates.getResource "imapconfig"
         this.databaseConfigTemplate = roundcubeTemplates.getResource "databaseconfig"
+        this.smtpConfigTemplate = roundcubeTemplates.getResource "smtpconfig"
     }
 }

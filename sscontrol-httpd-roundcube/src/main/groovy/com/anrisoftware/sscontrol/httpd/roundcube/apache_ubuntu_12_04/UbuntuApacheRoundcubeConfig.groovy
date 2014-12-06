@@ -68,6 +68,7 @@ class UbuntuApacheRoundcubeConfig extends Ubuntu_12_04_Config implements Service
         fromArchiveConfig.downloadArchive domain, service
         deployImapConfig domain, service
         deployDatabaseConfig domain, service
+        deploySmtpConfig domain, service
         fromArchiveConfig.setupPermissions domain, service
     }
 

@@ -1,0 +1,40 @@
+
+configSmtpServer_search() ::= <%
+(?m)^\$config\['smtp_server'\]\s+=\s+'.*?';
+%>
+
+configSmtpServer(server) ::= <%
+$config['smtp_server'] = '<server>';
+%>
+
+configSmtpPort_search() ::= <%
+(?m)^\$config\['smtp_port'\]\s+=\s+\d+;
+%>
+
+configSmtpPort(port) ::= <%
+$config['smtp_port'] = <port>;
+%>
+
+configSmtpUser_search() ::= <%
+(?m)^\$config\['smtp_user'\]\s+=\s+'.*?';
+%>
+
+configSmtpUser(user) ::= <%
+$config['smtp_user'] = '<user>';
+%>
+
+configSmtpPass_search() ::= <%
+(?m)^\$config\['smtp_pass'\]\s+=\s+'.*?';
+%>
+
+configSmtpPass(pass) ::= <%
+$config['smtp_pass'] = '<pass>';
+%>
+
+configSmtpAuthType_search() ::= <%
+(?m)^\$config\['smtp_auth_type'\]\s+=\s+'.*?';
+%>
+
+configSmtpAuthType(type) ::= <%
+$config['smtp_auth_type'] = '<type>';
+%>

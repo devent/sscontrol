@@ -274,6 +274,32 @@ abstract class RoundcubeConfig {
     }
 
     /**
+     * Returns the SMTP server port, for example {@code "25"}.
+     *
+     * <ul>
+     * <li>profile property {@code "roundcube_smtp_server_port"}</li>
+     * </ul>
+     *
+     * @see #getRoundcubeProperties()
+     */
+    int getSmtpServerPort() {
+        profileNumberProperty "roundcube_smtp_server_port", roundcubeProperties
+    }
+
+    /**
+     * Returns the SMTP authentication type, for example {@code ""}, empty.
+     *
+     * <ul>
+     * <li>profile property {@code "roundcube_smtp_server_auth_type"}</li>
+     * </ul>
+     *
+     * @see #getRoundcubeProperties()
+     */
+    String getSmtpServerAuthType() {
+        profileProperty "roundcube_smtp_server_auth_type", roundcubeProperties
+    }
+
+    /**
      * Returns the <i>Roundcube</i> properties.
      */
     abstract ContextProperties getRoundcubeProperties()

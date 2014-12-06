@@ -57,19 +57,31 @@ $config['default_host'] = array(
 // %d - domain (http hostname $_SERVER['HTTP_HOST'] without the first part)
 // %z - IMAP domain (IMAP hostname without the first part)
 // For example %n = mail.domain.tld, %t = domain.tld
-$config['smtp_server'] = '';
+# SSCONTROL-httpd
+$config['smtp_server'] = '%h';
+# SSCONTROL-httpd-END
+
 
 // SMTP port (default is 25; use 587 for STARTTLS or 465 for the
 // deprecated SSL over SMTP (aka SMTPS))
+# SSCONTROL-httpd
 $config['smtp_port'] = 25;
+# SSCONTROL-httpd-END
+
 
 // SMTP username (if required) if you use %u as the username Roundcube
 // will use the current username for login
-$config['smtp_user'] = '';
+# SSCONTROL-httpd
+$config['smtp_user'] = '%u';
+# SSCONTROL-httpd-END
+
 
 // SMTP password (if required) if you use %p as the password Roundcube
 // will use the current user's password for login
-$config['smtp_pass'] = '';
+# SSCONTROL-httpd
+$config['smtp_pass'] = '%p';
+# SSCONTROL-httpd-END
+
 
 // provide an URL where a user can get support for this Roundcube installation
 // PLEASE DO NOT LINK TO THE ROUNDCUBE.NET WEBSITE HERE!
@@ -108,5 +120,8 @@ $config['imap_ns_other'] = null;
 $config['imap_ns_shared'] = null;
 # SSCONTROL-httpd-END
 # SSCONTROL-httpd
-$config['db_prefix'] = 'mysql';
+$config['db_prefix'] = '';
+# SSCONTROL-httpd-END
+# SSCONTROL-httpd
+$config['smtp_auth_type'] = '';
 # SSCONTROL-httpd-END

@@ -73,6 +73,7 @@ class RoundcubeTest extends UbuntuTestUtil {
         assertStringContent basicUseraddOutExpected.replaced(tmpdir, tmpdir, "/tmp"), basicUseraddOutExpected.toString()
         assertStringContent basicTarOutExpected.replaced(tmpdir, tmpdir, "/tmp").replaceAll(/\d+-\d+-\d+T\d+-\d+-\d+-\d+/, "timestamp"), basicTarOutExpected.toString()
         assertFileContent basicGzipOutExpected.asFile(tmpdir), basicGzipOutExpected
+        assertStringContent basicMysqlOutExpected.replaced(tmpdir, tmpdir, "/tmp"), basicMysqlOutExpected.toString()
         assertFileContent basicMysqldumpOutExpected.asFile(tmpdir), basicMysqldumpOutExpected
         assert basicLogsDir.asFile(tmpdir).isDirectory()
         assert basicTempDir.asFile(tmpdir).isDirectory()

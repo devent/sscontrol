@@ -66,10 +66,11 @@ class UbuntuApacheRoundcubeConfig extends Ubuntu_12_04_Config implements Service
         installDatabasePackages service
         enableMods roundcubeMods
         fromArchiveConfig.downloadArchive domain, service
+        fromArchiveConfig.setupPermissions domain, service
+        setupDatabase domain, service
         deployImapConfig domain, service
         deployDatabaseConfig domain, service
         deploySmtpConfig domain, service
-        fromArchiveConfig.setupPermissions domain, service
     }
 
     /**

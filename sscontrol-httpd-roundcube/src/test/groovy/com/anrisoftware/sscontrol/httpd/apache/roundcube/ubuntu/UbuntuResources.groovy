@@ -45,6 +45,7 @@ enum UbuntuResources {
     unzipCommand("/usr/bin/unzip", UbuntuResources.class.getResource("echo_command.txt")),
     lnCommand("/bin/ln", UbuntuResources.class.getResource("echo_command.txt")),
     mysqldumpCommand("/usr/bin/mysqldump", UbuntuResources.class.getResource("echo_command.txt")),
+    mysqlCommand("/usr/bin/mysql", UbuntuResources.class.getResource("echo_command.txt")),
     gzipCommand("/bin/gzip", UbuntuResources.class.getResource("echo_command.txt")),
     // files
     tmpDir("/tmp", null),
@@ -65,6 +66,7 @@ enum UbuntuResources {
         tarCommand.createCommand parent
         lnCommand.createCommand parent
         mysqldumpCommand.createCommand parent
+        mysqlCommand.createCommand parent
         gzipCommand.createCommand parent
         tmpDir.asFile(parent).mkdirs()
     }
@@ -84,6 +86,7 @@ enum UbuntuResources {
         entry.tar_command tarCommand.asFile(parent)
         entry.link_command lnCommand.asFile(parent)
         entry.mysqldump_command mysqldumpCommand.asFile(parent)
+        entry.mysql_command mysqlCommand.asFile(parent)
         entry.gzip_command gzipCommand.asFile(parent)
         // files
     }

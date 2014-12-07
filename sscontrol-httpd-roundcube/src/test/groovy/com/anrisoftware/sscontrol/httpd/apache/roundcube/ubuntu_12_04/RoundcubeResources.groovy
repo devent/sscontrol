@@ -36,7 +36,9 @@ enum RoundcubeResources {
     // basic
     basicHttpdScript("Httpd.groovy", RoundcubeResources.class.getResource("BasicHttpdRoundube.groovy")),
     basicWwwtest1comSampleConf("/var/www/www.test1.com/roundcube_1_0/config/config.inc.php.sample", RoundcubeResources.class.getResource("config_inc_php_sample.txt")),
+    basicWwwtest1comMysqlinitialsql("/var/www/www.test1.com/roundcube_1_0/SQL/mysql.initial.sql", RoundcubeResources.class.getResource("mysql_initial_sql.txt")),
     basicWwwtest2comSampleConf("/var/www/www.test2.com/roundcube_1_0/config/config.inc.php.sample", RoundcubeResources.class.getResource("config_inc_php_sample.txt")),
+    basicWwwtest2comMysqlinitialsql("/var/www/www.test2.com/roundcube_1_0/SQL/mysql.initial.sql", RoundcubeResources.class.getResource("mysql_initial_sql.txt")),
     basicPortsConfExpected("/etc/apache2/ports.conf", RoundcubeResources.class.getResource("basic_ports_conf_expected.txt")),
     basicDomainsConfExpected("/etc/apache2/conf.d/000-robobee-domains.conf", RoundcubeResources.class.getResource("basic_domains_conf.txt")),
     basicWwwtest1comConfExpected("/etc/apache2/sites-available/100-robobee-www.test1.com.conf", RoundcubeResources.class.getResource("basic_wwwtest1com_conf_expected.txt")),
@@ -56,13 +58,16 @@ enum RoundcubeResources {
     basicTarOutExpected("/bin/tar.out", RoundcubeResources.class.getResource("basic_tar_out_expected.txt")),
     basicGzipOutExpected("/bin/gzip.out", RoundcubeResources.class.getResource("basic_gzip_out_expected.txt")),
     basicMysqldumpOutExpected("/usr/bin/mysqldump.out", RoundcubeResources.class.getResource("basic_mysqldump_out_expected.txt")),
+    basicMysqlOutExpected("/usr/bin/mysql.out", RoundcubeResources.class.getResource("basic_mysql_out_expected.txt")),
     basicLogsDir("/var/www/www.test1.com/roundcube_1_0/logs", new URL("file://")),
     basicTempDir("/var/www/www.test1.com/roundcube_1_0/temp", new URL("file://")),
 
     static copyBasicRoundcubeFiles(File parent) {
         roundcubeArchive.createFile parent
         basicWwwtest1comSampleConf.createFile parent
+        basicWwwtest1comMysqlinitialsql.createFile parent
         basicWwwtest2comSampleConf.createFile parent
+        basicWwwtest2comMysqlinitialsql.createFile parent
     }
 
     ResourcesUtils resources

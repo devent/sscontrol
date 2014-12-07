@@ -38,6 +38,7 @@ enum RoundcubeProxyResources {
     proxyHttpdScript("Httpd.groovy", RoundcubeProxyResources.class.getResource("HttpdRoundcubeReverseProxy.groovy")),
     proxyDomainsHttpdScript("Httpd.groovy", RoundcubeProxyResources.class.getResource("HttpdRoundcubeReverseProxyDomains.groovy")),
     proxySampleConf("/var/www/www.test1.com/roundcube_1_0/config/config.inc.php.sample", RoundcubeProxyResources.class.getResource("config_inc_php_sample.txt")),
+    proxyMysqlinitialsql("/var/www/www.test1.com/roundcube_1_0/SQL/mysql.initial.sql", RoundcubeProxyResources.class.getResource("mysql_initial_sql.txt")),
     proxyPortsConfExpected("/etc/apache2/ports.conf", RoundcubeProxyResources.class.getResource("proxy_ports_conf_expected.txt")),
     proxyDomainsConfExpected("/etc/apache2/conf.d/000-robobee-domains.conf", RoundcubeProxyResources.class.getResource("proxy_domains_conf.txt")),
     proxyConfigIncExpected("/var/www/www.test1.com/roundcube_1_0/config/config.inc.php", RoundcubeProxyResources.class.getResource("reverseproxy_config_inc_php_expected.txt")),
@@ -66,6 +67,7 @@ enum RoundcubeProxyResources {
     static void copyProxyFiles(File parent) {
         roundcubeArchive.createFile parent
         proxySampleConf.createFile parent
+        proxyMysqlinitialsql.createFile parent
         nginxRestartCommand.createCommand parent
         nginxSigningKeyFile.createFile parent
     }

@@ -254,10 +254,29 @@ abstract class RoundcubeConfig {
      * <li>profile property {@code "roundcube_${driver}_packages"}</li>
      * </ul>
      *
+     * @param driver
+     *            the database {@link String} driver.
+     *
      * @see #getRoundcubeProperties()
      */
     List roundcubeDatabasePackages(String driver) {
         profileListProperty "roundcube_${driver}_packages", roundcubeProperties
+    }
+
+    /**
+     * Returns the database command for the specified database driver.
+     *
+     * <ul>
+     * <li>profile property {@code "${driver}_command"}</li>
+     * </ul>
+     *
+     * @param driver
+     *            the database {@link String} driver.
+     *
+     * @see #getDefaultProperties()
+     */
+    String roundcubeDatabaseCommand(String driver) {
+        profileProperty "${driver}_command", defaultProperties
     }
 
     /**

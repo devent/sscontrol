@@ -34,6 +34,7 @@ import com.anrisoftware.sscontrol.httpd.domain.Domain
 import com.anrisoftware.sscontrol.httpd.roundcube.RoundcubeService
 import com.anrisoftware.sscontrol.scripts.changefilemod.ChangeFileModFactory
 import com.anrisoftware.sscontrol.scripts.changefileowner.ChangeFileOwnerFactory
+import com.anrisoftware.sscontrol.scripts.importdb.ImportDatabaseFactory
 import com.anrisoftware.sscontrol.scripts.unpack.UnpackFactory
 
 /**
@@ -53,6 +54,9 @@ abstract class Roundcube_1_0_Config extends RoundcubeConfig {
 
     @Inject
     ChangeFileOwnerFactory changeFileOwnerFactory
+
+    @Inject
+    ImportDatabaseFactory importDatabaseFactory
 
     Templates roundcubeTemplates
 
@@ -234,6 +238,34 @@ abstract class Roundcube_1_0_Config extends RoundcubeConfig {
     }
 
     /**
+     * Setups the databases tables.
+     *
+     * @param domain
+     *            the {@link Domain} domain.
+     *
+     * @param service
+     *            the {@link RoundcubeService} service.
+     */
+    void setupDatabase(Domain domain, RoundcubeService service) {
+        def config = configurationFile domain, service
+        if (config.isFile()) {
+            return
+        }
+        def driver = service.database.driver
+        def command = roundcubeDatabaseCommand driver
+        def script = databaseInitialFile domain, service
+        importDatabaseFactory.create(
+                log: log,
+                driver: driver,
+                command: command,
+                user: service.database.user,
+                password: service.database.password,
+                database: service.database.database,
+                script: script,
+                this, threads)()
+    }
+
+    /**
      * Returns the <i>Roundcube</i> configuration file.
      * The placeholder variable are replaced:
      * <ul>
@@ -283,6 +315,35 @@ abstract class Roundcube_1_0_Config extends RoundcubeConfig {
      */
     File sampleConfigurationFile(Domain domain, RoundcubeService service) {
         def name = new ST(roundcubeSampleConfigFile).
+                add("domainDir", domainDir(domain)).
+                add("prefix", service.prefix).
+                render()
+        new File(name)
+    }
+
+    /**
+     * Returns the <i>Roundcube</i> initial database script file.
+     * The placeholder variable are replaced:
+     * <ul>
+     * <li>"&lt;domainDir>" with the directory of the domain;</li>
+     * <li>"&lt;prefix>" with the directory of the service prefix;</li>
+     * </ul>
+     *
+     * @param domain
+     *            the {@link Domain} domain.
+     *
+     * @param service
+     *            the {@link RoundcubeService} service.
+     *
+     * @return the installation {@link File} directory.
+     *
+     * @see #getRoundcubeDatabaseInitialFile()
+     * @see #domainDir(Domain)
+     * @see RoundcubeService#getPrefix()
+     */
+    File databaseInitialFile(Domain domain, RoundcubeService service) {
+        def driver = service.database.driver
+        def name = new ST(roundcubeDatabaseInitialFile(driver)).
                 add("domainDir", domainDir(domain)).
                 add("prefix", service.prefix).
                 render()
@@ -371,6 +432,23 @@ abstract class Roundcube_1_0_Config extends RoundcubeConfig {
      */
     String getRoundcubeSampleConfigFile() {
         profileProperty "roundcube_sample_config_file", roundcubeProperties
+    }
+
+    /**
+     * Returns <i>Roundcube</i> database initial script file, for
+     * example {@code "<domainDir>/<prefix>/SQL/mysql.initial.sql"}.
+     *
+     * <ul>
+     * <li>profile property {@code "roundcube_${driver}_initial_file"}</li>
+     * </ul>
+     *
+     * @param driver
+     *            the database {@link String} driver.
+     *
+     * @see #getRoundcubeProperties()
+     */
+    String roundcubeDatabaseInitialFile(String driver) {
+        profileProperty "roundcube_${driver}_initial_file", roundcubeProperties
     }
 
     /**

@@ -1,0 +1,3 @@
+theCommand="$0"
+echo "table_name\naliases\ndomains\nusers"
+echo "$@" >> $theCommand.out

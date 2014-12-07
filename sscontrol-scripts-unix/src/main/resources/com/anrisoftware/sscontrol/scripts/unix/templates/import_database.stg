@@ -1,0 +1,9 @@
+mysql(args) ::= <<
+[[ -n "`echo "SELECT table_name FROM information_schema.tables WHERE table_schema = '<args.database>'" | <args.command> -u '<args.user>' -p'<args.password>' '<args.database>'`" ]]
+dbempty=$?
+
+if [ $dbempty=1 ]; then
+    <args.command> -u "<args.user>" -p"<args.password>" "<args.database>" \< "<args.script>"
+fi
+
+>>

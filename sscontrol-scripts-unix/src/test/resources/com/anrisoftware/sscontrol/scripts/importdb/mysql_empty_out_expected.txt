@@ -1,0 +1,2 @@
+-u userfoo -ppass db
+-u userfoo -ppass db

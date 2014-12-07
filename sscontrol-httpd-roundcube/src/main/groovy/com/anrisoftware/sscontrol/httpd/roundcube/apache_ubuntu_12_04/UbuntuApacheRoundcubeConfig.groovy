@@ -59,6 +59,7 @@ class UbuntuApacheRoundcubeConfig extends Ubuntu_12_04_Config implements Service
         setupDefaultDebugLevels service
         setupDefaultDatabase service
         setupDefaultSmtp service
+        setupDefaultImap service
         fcgiConfig.deployService domain, service, config
         roundcubePhpConfig.deployPhpini domain
         roundcubeBackup.backupService domain, service

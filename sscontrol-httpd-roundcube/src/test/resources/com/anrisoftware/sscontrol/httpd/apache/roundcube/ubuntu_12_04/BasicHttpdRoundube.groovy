@@ -30,6 +30,7 @@ httpd {
             database "roundcubedb", user: "userdb", password: "userpassdb", host: "localhost", driver: "mysql"
             smtp "tls://%h", user: "usersmtp", password: "passwordsmtp"
             backup target: "$tmp/var/backups"
+            server "default", port: 981
             server "Default Server", host: "mail.example.com"
             server "Webmail Server", host: "webmail.example.com"
             host "example.com", domain: "mail.example.com"

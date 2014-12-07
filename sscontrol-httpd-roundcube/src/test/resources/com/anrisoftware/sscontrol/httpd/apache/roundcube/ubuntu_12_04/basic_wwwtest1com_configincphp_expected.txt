@@ -105,6 +105,9 @@ $config['plugins'] = array(
 // skin name: folder from skins/
 $config['skin'] = 'larry';
 # SSCONTROL-httpd
+$config['default_port'] = 981;
+# SSCONTROL-httpd-END
+# SSCONTROL-httpd
 $config['imap_auth_type'] = null;
 # SSCONTROL-httpd-END
 # SSCONTROL-httpd

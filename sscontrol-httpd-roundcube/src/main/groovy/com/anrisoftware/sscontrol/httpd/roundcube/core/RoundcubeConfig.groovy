@@ -137,6 +137,18 @@ abstract class RoundcubeConfig {
     }
 
     /**
+     * Sets default IMAP settings.
+     *
+     * @param service
+     *            the {@link RoundcubeService} service.
+     */
+    void setupDefaultImap(RoundcubeService service) {
+        int imapPort = profileNumberProperty "roundcube_default_imap_port", roundcubeProperties
+        // server "default", port: 143
+        service.imapPort == null ? service.server("default", port: imapPort) : false
+    }
+
+    /**
      * Returns the list of needed packages for the <i>Roundcube</i> service.
      *
      * <ul>

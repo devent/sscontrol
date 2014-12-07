@@ -21,7 +21,7 @@ configImapHosts_search() ::= <%
 
 configImapHosts(hosts) ::= <<
 $config['default_host'] = array(
-<hosts:{host|'<host>' => '<hosts.(host)>',};separator="\n">
+<hosts:{host|'<hosts.(host)>' => '<host>',};separator="\n">
 );
 >>
 

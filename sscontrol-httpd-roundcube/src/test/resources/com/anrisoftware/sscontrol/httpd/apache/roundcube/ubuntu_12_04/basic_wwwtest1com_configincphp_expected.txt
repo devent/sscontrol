@@ -41,8 +41,8 @@ $config['db_dsnw'] = 'mysql://userdb:userpassdb@localhost/roundcubedb';
 // For example %n = mail.domain.tld, %t = domain.tld
 # SSCONTROL-httpd
 $config['default_host'] = array(
-'Webmail Server' => 'webmail.example.com',
-'Default Server' => 'mail.example.com',
+'webmail.example.com' => 'Webmail Server',
+'mail.example.com' => 'Default Server',
 );
 # SSCONTROL-httpd-END
 

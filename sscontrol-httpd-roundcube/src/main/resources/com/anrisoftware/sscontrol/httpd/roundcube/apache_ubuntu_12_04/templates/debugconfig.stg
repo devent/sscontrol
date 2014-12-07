@@ -1,0 +1,104 @@
+
+configDebugLevel_search() ::= <%
+(?m)^\$config\['debug_level'\]\s+=\s+\d+;
+%>
+
+configDebugLevel(level) ::= <%
+$config['debug_level'] = <level>;
+%>
+
+configSmtpLog_search() ::= <%
+(?m)^\$config\['smtp_log'\]\s+=\s+.*?;
+%>
+
+configSmtpLog(enabled) ::= <%
+$config['smtp_port'] = <if(enabled)>true<else>false<endif>;
+%>
+
+configLogLogins_search() ::= <%
+(?m)^\$config\['log_logins'\]\s+=\s+.*?;
+%>
+
+configLogLogins(enabled) ::= <%
+$config['log_logins'] = <if(enabled)>true<else>false<endif>;
+%>
+
+configLogSession_search() ::= <%
+(?m)^\$config\['log_session'\]\s+=\s+.*?;
+%>
+
+configLogSession(enabled) ::= <%
+$config['log_session'] = <if(enabled)>true<else>false<endif>;
+%>
+
+configSqlDebug_search() ::= <%
+(?m)^\$config\['sql_debug'\]\s+=\s+.*?;
+%>
+
+configSqlDebug(enabled) ::= <%
+$config['sql_debug'] = <if(enabled)>true<else>false<endif>;
+%>
+
+configImapDebug_search() ::= <%
+(?m)^\$config\['imap_debug'\]\s+=\s+.*?;
+%>
+
+configImapDebug(enabled) ::= <%
+$config['imap_debug'] = <if(enabled)>true<else>false<endif>;
+%>
+
+configLdapDebug_search() ::= <%
+(?m)^\$config\['ldap_debug'\]\s+=\s+.*?;
+%>
+
+configLdapDebug(enabled) ::= <%
+$config['ldap_debug'] = <if(enabled)>true<else>false<endif>;
+%>
+
+configSmtpDebug_search() ::= <%
+(?m)^\$config\['smtp_debug'\]\s+=\s+.*?;
+%>
+
+configSmtpDebug(enabled) ::= <%
+$config['smtp_debug'] = <if(enabled)>true<else>false<endif>;
+%>
+
+configLogDriver_search() ::= <%
+(?m)^\$config\['log_driver'\]\s+=\s+'.*?';
+%>
+
+configLogDriver(driver) ::= <%
+$config['log_driver'] = '<driver>';
+%>
+
+configLogDateFormat_search() ::= <%
+(?m)^\$config\['log_date_format'\]\s+=\s+'.*?';
+%>
+
+configLogDateFormat(format) ::= <%
+$config['log_date_format'] = '<format>';
+%>
+
+configSyslogId_search() ::= <%
+(?m)^\$config\['syslog_id'\]\s+=\s+'.*?';
+%>
+
+configSyslogId(id) ::= <%
+$config['syslog_id'] = '<id>';
+%>
+
+configSyslogFacility_search() ::= <%
+(?m)^\$config\['syslog_facility'\]\s+=\s+.*?;
+%>
+
+configSyslogFacility(facility) ::= <%
+$config['syslog_facility'] = <facility>;
+%>
+
+configPerUserLogging_search() ::= <%
+(?m)^\$config\['per_user_logging'\]\s+=\s+.*?;
+%>
+
+configPerUserLogging(enabled) ::= <%
+$config['per_user_logging'] = <if(enabled)>true<else>false<endif>;
+%>

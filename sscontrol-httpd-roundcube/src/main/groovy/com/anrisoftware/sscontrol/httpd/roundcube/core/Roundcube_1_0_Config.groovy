@@ -66,6 +66,8 @@ abstract class Roundcube_1_0_Config extends RoundcubeConfig {
 
     TemplateResource smtpConfigTemplate
 
+    TemplateResource debugConfigTemplate
+
     /**
      * Deploys the IMAP servers configuration.
      *
@@ -234,6 +236,116 @@ abstract class Roundcube_1_0_Config extends RoundcubeConfig {
     def configSmtpAuthType(RoundcubeService service) {
         def search = smtpConfigTemplate.getText(true, "configSmtpAuthType_search")
         def replace = smtpConfigTemplate.getText(true, "configSmtpAuthType", "type", smtpServerAuthType)
+        new TokenTemplate(search, replace)
+    }
+
+    /**
+     * Deploys the debug configuration.
+     *
+     * @param domain
+     *            the {@link Domain} domain.
+     *
+     * @param service
+     *            the {@link RoundcubeService} service.
+     */
+    void deployDebugConfig(Domain domain, RoundcubeService service) {
+        def sampleConfig = sampleConfigurationFile domain, service
+        def config = configurationFile domain, service
+        config.isFile() == false ? FileUtils.copyFile(sampleConfig, config) : false
+        def current = currentConfiguration config
+        def configs = [
+            configDebugLevel(service),
+            configSmtpLog(service),
+            configLogLogins(service),
+            configLogSession(service),
+            configSqlDebug(service),
+            configImapDebug(service),
+            configLdapDebug(service),
+            configSmtpDebug(service),
+            configLogDriver(service),
+            configLogDateFormat(service),
+            configSyslogId(service),
+            configSyslogFacility(service),
+            configPerUserLogging(service),
+        ]
+        deployConfiguration configurationTokens(), current, configs, config
+    }
+
+    def configDebugLevel(RoundcubeService service) {
+        def search = debugConfigTemplate.getText(true, "configDebugLevel_search")
+        def replace = debugConfigTemplate.getText(true, "configDebugLevel", "level", service.debug.roundcube)
+        new TokenTemplate(search, replace)
+    }
+
+    def configSmtpLog(RoundcubeService service) {
+        def search = debugConfigTemplate.getText(true, "configSmtpLog_search")
+        def replace = debugConfigTemplate.getText(true, "configSmtpLog", "enabled", service.debug.smtplog > 0)
+        new TokenTemplate(search, replace)
+    }
+
+    def configLogLogins(RoundcubeService service) {
+        def search = debugConfigTemplate.getText(true, "configLogLogins_search")
+        def replace = debugConfigTemplate.getText(true, "configLogLogins", "enabled", service.debug.logins > 0)
+        new TokenTemplate(search, replace)
+    }
+
+    def configLogSession(RoundcubeService service) {
+        def search = debugConfigTemplate.getText(true, "configLogSession_search")
+        def replace = debugConfigTemplate.getText(true, "configLogSession", "enabled", service.debug.session > 0)
+        new TokenTemplate(search, replace)
+    }
+
+    def configSqlDebug(RoundcubeService service) {
+        def search = debugConfigTemplate.getText(true, "configSqlDebug_search")
+        def replace = debugConfigTemplate.getText(true, "configSqlDebug", "enabled", service.debug.sql > 0)
+        new TokenTemplate(search, replace)
+    }
+
+    def configImapDebug(RoundcubeService service) {
+        def search = debugConfigTemplate.getText(true, "configImapDebug_search")
+        def replace = debugConfigTemplate.getText(true, "configImapDebug", "enabled", service.debug.imap > 0)
+        new TokenTemplate(search, replace)
+    }
+
+    def configLdapDebug(RoundcubeService service) {
+        def search = debugConfigTemplate.getText(true, "configLdapDebug_search")
+        def replace = debugConfigTemplate.getText(true, "configLdapDebug", "enabled", service.debug.ldap > 0)
+        new TokenTemplate(search, replace)
+    }
+
+    def configSmtpDebug(RoundcubeService service) {
+        def search = debugConfigTemplate.getText(true, "configSmtpDebug_search")
+        def replace = debugConfigTemplate.getText(true, "configSmtpDebug", "enabled", service.debug.smtp > 0)
+        new TokenTemplate(search, replace)
+    }
+
+    def configLogDriver(RoundcubeService service) {
+        def search = debugConfigTemplate.getText(true, "configLogDriver_search")
+        def replace = debugConfigTemplate.getText(true, "configLogDriver", "driver", debugDriver)
+        new TokenTemplate(search, replace)
+    }
+
+    def configLogDateFormat(RoundcubeService service) {
+        def search = debugConfigTemplate.getText(true, "configLogDateFormat_search")
+        def replace = debugConfigTemplate.getText(true, "configLogDateFormat", "format", debugDateFormat)
+        new TokenTemplate(search, replace)
+    }
+
+    def configSyslogId(RoundcubeService service) {
+        def search = debugConfigTemplate.getText(true, "configSyslogId_search")
+        def replace = debugConfigTemplate.getText(true, "configSyslogId", "id", debugSyslogId)
+        new TokenTemplate(search, replace)
+    }
+
+    def configSyslogFacility(RoundcubeService service) {
+        def search = debugConfigTemplate.getText(true, "configSyslogFacility_search")
+        def replace = debugConfigTemplate.getText(true, "configSyslogFacility", "facility", debugSyslogFacility)
+        new TokenTemplate(search, replace)
+    }
+
+    def configPerUserLogging(RoundcubeService service) {
+        def search = debugConfigTemplate.getText(true, "configPerUserLogging_search")
+        def replace = debugConfigTemplate.getText(true, "configPerUserLogging", "enabled", debugPerUserLogging)
         new TokenTemplate(search, replace)
     }
 
@@ -555,5 +667,6 @@ abstract class Roundcube_1_0_Config extends RoundcubeConfig {
         this.imapConfigTemplate = roundcubeTemplates.getResource "imapconfig"
         this.databaseConfigTemplate = roundcubeTemplates.getResource "databaseconfig"
         this.smtpConfigTemplate = roundcubeTemplates.getResource "smtpconfig"
+        this.debugConfigTemplate = roundcubeTemplates.getResource "debugconfig"
     }
 }

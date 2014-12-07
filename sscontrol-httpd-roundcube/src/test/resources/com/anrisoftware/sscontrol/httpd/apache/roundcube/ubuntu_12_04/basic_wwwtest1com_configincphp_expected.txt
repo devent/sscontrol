@@ -128,3 +128,45 @@ $config['db_prefix'] = '';
 # SSCONTROL-httpd
 $config['smtp_auth_type'] = '';
 # SSCONTROL-httpd-END
+# SSCONTROL-httpd
+$config['debug_level'] = 1;
+# SSCONTROL-httpd-END
+# SSCONTROL-httpd
+$config['smtp_port'] = false;
+# SSCONTROL-httpd-END
+# SSCONTROL-httpd
+$config['log_logins'] = false;
+# SSCONTROL-httpd-END
+# SSCONTROL-httpd
+$config['log_session'] = false;
+# SSCONTROL-httpd-END
+# SSCONTROL-httpd
+$config['sql_debug'] = false;
+# SSCONTROL-httpd-END
+# SSCONTROL-httpd
+$config['imap_debug'] = false;
+# SSCONTROL-httpd-END
+# SSCONTROL-httpd
+$config['ldap_debug'] = false;
+# SSCONTROL-httpd-END
+# SSCONTROL-httpd
+$config['smtp_debug'] = false;
+# SSCONTROL-httpd-END
+# SSCONTROL-httpd
+$config['log_driver'] = 'syslog';
+# SSCONTROL-httpd-END
+# SSCONTROL-httpd
+$config['log_date_format'] = 'd-M-Y H:i:s O';
+# SSCONTROL-httpd-END
+# SSCONTROL-httpd
+$config['syslog_id'] = 'roundcube';
+# SSCONTROL-httpd-END
+# SSCONTROL-httpd
+$config['syslog_facility'] = LOG_USER;
+# SSCONTROL-httpd-END
+# SSCONTROL-httpd
+$config['per_user_logging'] = true;
+# SSCONTROL-httpd-END
+# SSCONTROL-httpd
+$config['smtp_port'] = false;
+# SSCONTROL-httpd-END

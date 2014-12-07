@@ -91,6 +91,7 @@ abstract class RoundcubeConfig {
             service.debug "sql", level: sqlLevel
             service.debug "imap", level: imapLevel
             service.debug "ldap", level: ldapLevel
+            service.debug "smtp", level: smtpLevel
             service.debug "php", level: phpLevel
         }
         service.debug.roundcube == null ? service.debug("roundcube", level: roundcubeLevel) : false
@@ -100,6 +101,7 @@ abstract class RoundcubeConfig {
         service.debug.sql == null ? service.debug("sql", level: sqlLevel) : false
         service.debug.imap == null ? service.debug("imap", level: imapLevel) : false
         service.debug.ldap == null ? service.debug("ldap", level: ldapLevel) : false
+        service.debug.smtp == null ? service.debug("smtp", level: smtpLevel) : false
         service.debug.php == null ? service.debug("php", level: phpLevel) : false
     }
 
@@ -328,6 +330,71 @@ abstract class RoundcubeConfig {
      */
     String getSmtpServerAuthType() {
         profileProperty "roundcube_smtp_server_auth_type", roundcubeProperties
+    }
+
+    /**
+     * Returns the debug driver, for example {@code "syslog"}.
+     *
+     * <ul>
+     * <li>profile property {@code "roundcube_debug_driver"}</li>
+     * </ul>
+     *
+     * @see #getRoundcubeProperties()
+     */
+    String getDebugDriver() {
+        profileProperty "roundcube_debug_driver", roundcubeProperties
+    }
+
+    /**
+     * Returns the debug date format, for example {@code "d-M-Y H:i:s O"}.
+     *
+     * <ul>
+     * <li>profile property {@code "roundcube_debug_date_format"}</li>
+     * </ul>
+     *
+     * @see #getRoundcubeProperties()
+     */
+    String getDebugDateFormat() {
+        profileProperty "roundcube_debug_date_format", roundcubeProperties
+    }
+
+    /**
+     * Returns the debug syslog ID, for example {@code "roundcube"}.
+     *
+     * <ul>
+     * <li>profile property {@code "roundcube_debug_syslog_id"}</li>
+     * </ul>
+     *
+     * @see #getRoundcubeProperties()
+     */
+    String getDebugSyslogId() {
+        profileProperty "roundcube_debug_syslog_id", roundcubeProperties
+    }
+
+    /**
+     * Returns the debug syslog facility, for example {@code "LOG_USER"}.
+     *
+     * <ul>
+     * <li>profile property {@code "roundcube_debug_syslog_facility"}</li>
+     * </ul>
+     *
+     * @see #getRoundcubeProperties()
+     */
+    String getDebugSyslogFacility() {
+        profileProperty "roundcube_debug_syslog_facility", roundcubeProperties
+    }
+
+    /**
+     * Returns enabled the debug per user logging, for example {@code "false"}.
+     *
+     * <ul>
+     * <li>profile property {@code "roundcube_debug_per_user_logging"}</li>
+     * </ul>
+     *
+     * @see #getRoundcubeProperties()
+     */
+    boolean getDebugPerUserLogging() {
+        profileProperty "roundcube_debug_per_user_logging", roundcubeProperties
     }
 
     /**

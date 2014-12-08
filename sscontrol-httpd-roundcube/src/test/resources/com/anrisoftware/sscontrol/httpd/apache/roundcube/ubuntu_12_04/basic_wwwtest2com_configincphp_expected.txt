@@ -108,7 +108,7 @@ $config['skin'] = 'larry';
 $config['default_port'] = 143;
 # SSCONTROL-httpd-END
 # SSCONTROL-httpd
-$config['imap_auth_type'] = null;
+$config['imap_auth_type'] = PLAIN;
 # SSCONTROL-httpd-END
 # SSCONTROL-httpd
 $config['imap_delimiter'] = null;
@@ -126,7 +126,7 @@ $config['imap_ns_shared'] = null;
 $config['db_prefix'] = '';
 # SSCONTROL-httpd-END
 # SSCONTROL-httpd
-$config['smtp_auth_type'] = '';
+$config['smtp_auth_type'] = 'PLAIN';
 # SSCONTROL-httpd-END
 # SSCONTROL-httpd
 $config['debug_level'] = 1;

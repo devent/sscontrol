@@ -43,7 +43,8 @@ import com.google.inject.assistedinject.Assisted;
  * <p>
  *
  * <pre>
- * public Object methodMissing(String name, Object args) throws ServiceException {
+ * public Object methodMissing(String name, Object args)
+ *         throws StatementsException {
  *     statementsMap.methodMissing(name, args);
  *     return null;
  * }

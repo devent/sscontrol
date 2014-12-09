@@ -36,6 +36,7 @@
         <module>sscontrol-mail-postfix</module>
         <module>sscontrol-profile</module>
         <module>sscontrol-remoteaccess</module>
+        <module>sscontrol-repo</module>
         <module>sscontrol-scripts-unix</module>
         <module>sscontrol-security</module>
     </modules>

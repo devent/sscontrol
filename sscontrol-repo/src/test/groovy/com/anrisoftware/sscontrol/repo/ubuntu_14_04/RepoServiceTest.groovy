@@ -29,7 +29,7 @@ import com.anrisoftware.sscontrol.core.api.ServicesRegistry
 import com.anrisoftware.sscontrol.repo.ubuntu.UbuntuTestUtil
 
 /**
- * <i>Hosts Ubuntu 14.04</i>
+ * <i>Repo Ubuntu 14.04</i>
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
@@ -38,17 +38,17 @@ import com.anrisoftware.sscontrol.repo.ubuntu.UbuntuTestUtil
 class RepoServiceTest extends UbuntuTestUtil {
 
     @Test
-    void "hosts"() {
-        hostsFile.createFile tmpdir
-
+    void "repo service"() {
+        copyRepoFiles tmpdir
         loader.loadService profile.resource, null
         def profile = registry.getService("profile")[0]
-        loader.loadService hostsService.resource, profile
+        setupRepoProperties profile, tmpdir
+        loader.loadService repoService.resource, profile
 
         registry.allServices.each { it.call() }
         log.info "Run service again to ensure that configuration is not set double."
         registry.allServices.each { it.call() }
 
-        assertFileContent hostsExpected.asFile(tmpdir), hostsExpected
+        assertFileContent sourcesListExpected.asFile(tmpdir), sourcesListExpected
     }
 }

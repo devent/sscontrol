@@ -24,7 +24,7 @@ import static org.apache.commons.io.FileUtils.*
 import com.anrisoftware.sscontrol.repo.resources.ResourcesUtils
 
 /**
- * <i>Repo Ubuntu 12.04</i> resources.
+ * <i>Repo Ubuntu 14.04</i> resources.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
@@ -32,9 +32,26 @@ import com.anrisoftware.sscontrol.repo.resources.ResourcesUtils
 enum RepoResources {
 
     profile("UbuntuProfile.groovy", RepoResources.class.getResource("UbuntuProfile.groovy")),
-    hostsService("Hosts.groovy", RepoResources.class.getResource("RepoService.groovy")),
-    hostsExpected("/etc/hosts", RepoResources.class.getResource("hosts_expected.txt")),
-    hostsFile("/etc/hosts", RepoResources.class.getResource("hosts.txt")),
+    repoService("Repo.groovy", RepoResources.class.getResource("RepoService.groovy")),
+    // commands
+    aptitudeCommand("/usr/bin/aptitude", RepoResources.class.getResource("echo_command.txt")),
+    // files
+    confDir("/etc/apt", new URL("file://")),
+    sourcesList("/etc/apt/sources.list", RepoResources.class.getResource("sources_list.txt")),
+    // expected
+    sourcesListExpected("/etc/apt/sources.list", RepoResources.class.getResource("sources_list_expected.txt")),
+
+    static copyRepoFiles(File parent) {
+        confDir.asFile(parent).mkdirs()
+        sourcesList.createFile parent
+        aptitudeCommand.createCommand parent
+    }
+
+    static void setupRepoProperties(def profile, File parent) {
+        def entry = profile.getEntry("repo")
+        entry.aptitude_command aptitudeCommand.asFile(parent)
+        entry.configuration_directory confDir.asFile(parent)
+    }
 
     ResourcesUtils resources
 

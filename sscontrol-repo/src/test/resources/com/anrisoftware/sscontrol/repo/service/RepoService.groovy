@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-repo. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.repo.ubuntu_12_04
+package com.anrisoftware.sscontrol.repo.service
 
 repo {
     proxy "http://proxy.ubuntu.net"

@@ -16,8 +16,21 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-repo. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.repo.ubuntu_12_04
+package com.anrisoftware.sscontrol.repo.ubuntu_14_04;
 
-profile "ubuntu_12_04", {
-    repo { }
+import com.anrisoftware.sscontrol.repo.apt.RepoAptModule;
+import com.google.inject.AbstractModule;
+
+/**
+ * <i>Repo Ubuntu 14.04</i> module.
+ *
+ * @author Erwin Mueller, erwin.mueller@deventm.org
+ * @since 1.0
+ */
+class UbuntuModule extends AbstractModule {
+
+	@Override
+	protected void configure() {
+        install(new RepoAptModule());
+	}
 }

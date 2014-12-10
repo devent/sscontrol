@@ -16,13 +16,10 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-repo. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.repo.ubuntu_14_04
+package com.anrisoftware.sscontrol.repo.ubuntu_12_04
 
-hosts {
-    ip "127.0.0.1", host: "srv1", alias: "localhost"
-    ip "127.0.1.1", host: "srv1"
-    ip "192.168.0.49", host: "srv1.ubuntutest.com", alias: "srv1"
-    ip "192.168.0.50", host: "srv1.ubuntutest.org", alias: "srva, srvb"
-    ip "192.168.0.51", host: "srv1.ubuntutest.me"
-    ip "192.168.0.52", host: "srv1.ubuntutest.xx"
+repo {
+    proxy "http://proxy.ubuntu.net"
+    repository "http://foo.archive.ubuntu.com/ubuntu/"
+    repository "http://nginx.org/packages/ubuntu/", distribution: "trusty", components: "nginx"
 }

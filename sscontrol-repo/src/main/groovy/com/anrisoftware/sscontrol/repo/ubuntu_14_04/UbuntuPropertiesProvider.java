@@ -16,8 +16,27 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-repo. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.repo.ubuntu_12_04
+package com.anrisoftware.sscontrol.repo.ubuntu_14_04;
 
-profile "ubuntu_12_04", {
-    repo { }
+import java.net.URL;
+
+import com.anrisoftware.propertiesutils.AbstractContextPropertiesProvider;
+
+/**
+ * <i>Repo Ubuntu 14.04</i> properties provider from
+ * {@code repo_ubuntu_14_04.properties}.
+ *
+ * @author Erwin Mueller, erwin.mueller@deventm.org
+ * @since 1.0
+ */
+@SuppressWarnings("serial")
+public class UbuntuPropertiesProvider extends AbstractContextPropertiesProvider {
+
+    private static final URL RESOURCE = UbuntuPropertiesProvider.class
+            .getResource("/repo_ubuntu_14_04.properties");
+
+    UbuntuPropertiesProvider() {
+        super(UbuntuPropertiesProvider.class, RESOURCE);
+    }
+
 }

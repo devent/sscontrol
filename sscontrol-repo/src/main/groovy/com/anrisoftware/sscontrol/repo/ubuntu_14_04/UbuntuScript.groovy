@@ -18,6 +18,39 @@
  */
 package com.anrisoftware.sscontrol.repo.ubuntu_14_04
 
-profile "ubuntu_14_04", {
-    repo { }
+import javax.inject.Inject
+
+import com.anrisoftware.propertiesutils.ContextProperties
+import com.anrisoftware.sscontrol.repo.ubuntu.RepoScript
+
+/**
+ * <i>Repo Ubuntu 14.04</i> configuration script.
+ *
+ * @author Erwin Mueller, erwin.mueller@deventm.org
+ * @since 1.0
+ */
+class UbuntuScript extends RepoScript {
+
+    @Inject
+    UbuntuPropertiesProvider ubuntuProperties
+
+    UbuntuAptConfig aptConfig
+
+    @Override
+    def run() {
+        aptConfig.setupDefaults(service)
+        def sources = aptConfig.readSources(service)
+        aptConfig.deploySources(service, sources)
+    }
+
+    @Inject
+    void setUbuntuAptConfig(UbuntuAptConfig config) {
+        config.setScript this
+        this.aptConfig = config
+    }
+
+    @Override
+    ContextProperties getDefaultProperties() {
+        ubuntuProperties.get()
+    }
 }

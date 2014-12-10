@@ -1,0 +1,7 @@
+aptRepository(args) ::= <%
+<args.type> <args.repo> <args.dist> <args.comps;separator=" ">
+%>
+
+aptRepositoryComment(args) ::= <%
+# RoboBee <args.repo> <args.dist>
+%>

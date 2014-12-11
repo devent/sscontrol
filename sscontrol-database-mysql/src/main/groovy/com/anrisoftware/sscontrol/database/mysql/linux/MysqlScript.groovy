@@ -24,7 +24,7 @@ import com.anrisoftware.sscontrol.core.debuglogging.DebugLoggingProperty
 import com.anrisoftware.sscontrol.core.service.LinuxScript
 
 /**
- * MySQL/service script.
+ * <i>MySQL</i> service script.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
@@ -42,7 +42,7 @@ abstract class MysqlScript extends LinuxScript {
 
     /**
      * Runs distribution specific configuration before
-     * the MySQL/configuration.
+     * the <i>MySQL</i> configuration.
      */
     abstract void beforeConfiguration()
 

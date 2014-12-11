@@ -27,7 +27,7 @@ def confDir = MysqlUbuntuResources.confDir.asFile(tmp)
 profile "ubuntu_12_04", {
     database {
         service "mysql"
-        install_command "$aptitudeCommand update && $aptitudeCommand install"
+        install_command aptitudeCommand
         restart_command restartCommand
         configuration_directory confDir
         mysqladmin_command mysqladminCommand

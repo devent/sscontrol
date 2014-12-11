@@ -38,7 +38,7 @@ import com.anrisoftware.sscontrol.scripts.unix.RestartServicesFactory
 import com.anrisoftware.sscontrol.scripts.unix.ScriptExecFactory
 
 /**
- * MySQL 5.1 service script.
+ * <i>MySQL 5.1</i> service script.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
@@ -50,15 +50,10 @@ abstract class Mysql51Script extends MysqlScript {
     Mysql51ScriptLogger logg
 
     @Inject
-    TemplatesFactory templatesFactory
-
-    @Inject
     ScriptExecFactory scriptExecFactory
 
     @Inject
     RestartServicesFactory restartServicesFactory
-
-    Templates mysqlTemplates
 
     TemplateResource mysqldConfTemplates
 
@@ -73,7 +68,6 @@ abstract class Mysql51Script extends MysqlScript {
     @Override
     def run() {
         super.run()
-        loadTemplate()
         deployMysqldConfiguration()
         restartService()
         setupAdministratorPassword()
@@ -82,17 +76,18 @@ abstract class Mysql51Script extends MysqlScript {
         importScripts()
     }
 
-    def loadTemplate() {
-        mysqlTemplates = templatesFactory.create("Mysql51")
-        mysqldConfTemplates = mysqlTemplates.getResource("mysqld_configuration")
-        adminPasswordTemplate = mysqlTemplates.getResource("admin_password")
-        createDatabasesTemplate = mysqlTemplates.getResource("create_databases")
-        createUsersTemplate = mysqlTemplates.getResource("create_users")
-        importScriptTemplate = mysqlTemplates.getResource("import_script")
+    @Inject
+    final void setTemplatesFactory(TemplatesFactory factory) {
+        def templates = factory.create("Mysql51")
+        mysqldConfTemplates = templates.getResource("mysqld_configuration")
+        adminPasswordTemplate = templates.getResource("admin_password")
+        createDatabasesTemplate = templates.getResource("create_databases")
+        createUsersTemplate = templates.getResource("create_users")
+        importScriptTemplate = templates.getResource("import_script")
     }
 
     /**
-     * Deploys the mysqld/configuration.
+     * Deploys the <i>mysqld</i> configuration.
      */
     void deployMysqldConfiguration() {
         def replace = mysqldConfTemplates.getText(true, "mysqldConfig", "script", this)
@@ -107,11 +102,14 @@ abstract class Mysql51Script extends MysqlScript {
      */
     void restartService() {
         restartServicesFactory.create(
-                log: log, command: restartCommand, services: restartServices, this, threads)()
+                log: log,
+                command: restartCommand,
+                services: restartServices,
+                this, threads)()
     }
 
     /**
-     * Returns the current {@code mysqld} configuration.
+     * Returns the current <i>mysqld</i> configuration.
      */
     String getCurrentMysqldConfiguration() {
         currentConfiguration mysqldFile
@@ -123,12 +121,19 @@ abstract class Mysql51Script extends MysqlScript {
     void setupAdministratorPassword() {
         logg.checkAdministratorPassword this, service.admin
         ProcessTask worker = scriptExecFactory.create(
-                log: log, mysqladminCommand: mysqladminCommand, password: service.admin.password,
-                checkExitCodes: false, this, threads, adminPasswordTemplate, "checkAdminPassword")()
+                log: log,
+                mysqladminCommand: mysqladminCommand,
+                password: service.admin.password,
+                checkExitCodes: false,
+                this, threads,
+                adminPasswordTemplate, "checkAdminPassword")()
         if (worker.exitValue != 0) {
             worker = scriptExecFactory.create(
-                    log: log, mysqladminCommand: mysqladminCommand, password: service.admin.password,
-                    this, threads, adminPasswordTemplate, "setupAdminPassword")()
+                    log: log,
+                    mysqladminCommand: mysqladminCommand,
+                    password: service.admin.password,
+                    this, threads,
+                    adminPasswordTemplate, "setupAdminPassword")()
             logg.adminPasswordSet this, worker
         }
     }
@@ -138,9 +143,14 @@ abstract class Mysql51Script extends MysqlScript {
      */
     void createDatabases() {
         def worker = scriptExecFactory.create(
-                log: log, mysqlCommand: mysqlCommand, password: service.admin.password,
-                databases: service.databases, defaultCharacterSet: defaultCharacterSet, defaultCollate: defaultCollate,
-                this, threads, createDatabasesTemplate, "createDatabases")()
+                log: log,
+                mysqlCommand: mysqlCommand,
+                password: service.admin.password,
+                databases: service.databases,
+                defaultCharacterSet: defaultCharacterSet,
+                defaultCollate: defaultCollate,
+                this, threads,
+                createDatabasesTemplate, "createDatabases")()
         logg.databasesCreated this, worker
     }
 
@@ -150,9 +160,13 @@ abstract class Mysql51Script extends MysqlScript {
     void createUsers() {
         checkUsers service.users
         def worker = scriptExecFactory.create(
-                log: log, mysqlCommand: mysqlCommand, password: service.admin.password,
-                users: service.users, defaultUserServer: defaultUserServer,
-                this, threads, createUsersTemplate, "createUsers")()
+                log: log,
+                mysqlCommand: mysqlCommand,
+                password: service.admin.password,
+                users: service.users,
+                defaultUserServer: defaultUserServer,
+                this, threads,
+                createUsersTemplate, "createUsers")()
         logg.usersCreated this, worker
     }
 
@@ -172,23 +186,27 @@ abstract class Mysql51Script extends MysqlScript {
     void importScripts() {
         service.databases.each { Database database ->
             database.importingScripts.each { URI it ->
-                def unpackCommand = unpackCommand(it.path)
-                def file = new File(tmpDirectory, FilenameUtils.getBaseName(it.path))
-                def input = it.toURL().openStream()
-                IOUtils.copy input, new FileOutputStream(file)
-                def worker = scriptExecFactory.create(
-                        log: log,
-                        mysqlCommand: mysqlCommand,
-                        password: service.admin.password,
-                        database: database,
-                        file: file,
-                        unpackCommand: unpackCommand,
-                        archiveType: archiveType(it.path),
-                        this, threads, importScriptTemplate, "importScript")()
-                file.delete()
-                logg.scriptExecuted this, worker
+                importScript database, it
             }
         }
+    }
+
+    final void importScript(Database database, URI uri) {
+        def unpackCommand = unpackCommand(uri.path)
+        def file = new File(tmpDirectory, FilenameUtils.getBaseName(uri.path))
+        def input = uri.toURL().openStream()
+        IOUtils.copy input, new FileOutputStream(file)
+        def worker = scriptExecFactory.create(
+                log: log,
+                mysqlCommand: mysqlCommand,
+                password: service.admin.password,
+                database: database,
+                file: file,
+                unpackCommand: unpackCommand,
+                archiveType: archiveType(uri.path),
+                this, threads, importScriptTemplate, "importScript")()
+        file.delete()
+        logg.scriptExecuted this, worker
     }
 
     /**

@@ -24,7 +24,7 @@ def confDir = DhclientResources.confDir.asFile(tmp)
 
 profile "ubuntu_12_04", {
     dhclient {
-        install_command "$aptitudeCommand update && $aptitudeCommand install"
+        install_command aptitudeCommand
         restart_command "$restartCommand restart"
         configuration_directory confDir
     }

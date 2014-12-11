@@ -19,15 +19,14 @@
 package com.anrisoftware.sscontrol.dhclient.service;
 
 import com.anrisoftware.sscontrol.dhclient.statements.StatementsModule;
-import com.anrisoftware.sscontrol.dhclient.ubuntu_10_04.Ubuntu_10_04_Module;
 import com.anrisoftware.sscontrol.dhclient.ubuntu_12_04.Ubuntu_12_04_Module;
 import com.anrisoftware.sscontrol.dhclient.ubuntu_14_04.Ubuntu_14_04_Module;
 import com.anrisoftware.sscontrol.scripts.unix.UnixScriptsModule;
 import com.google.inject.AbstractModule;
 
 /**
- * Binds the Dhclient service scripts.
- * 
+ * Binds the <i>Dhclient</i> service scripts.
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
@@ -38,7 +37,6 @@ class DhclientModule extends AbstractModule {
         install(new UnixScriptsModule());
         install(new UnixScriptsModule.ExecCommandModule());
 		install(new StatementsModule());
-		install(new Ubuntu_10_04_Module());
         install(new Ubuntu_12_04_Module());
         install(new Ubuntu_14_04_Module());
 	}

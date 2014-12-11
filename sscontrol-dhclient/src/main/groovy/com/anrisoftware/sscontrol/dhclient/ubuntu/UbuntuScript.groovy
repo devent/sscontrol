@@ -35,19 +35,12 @@ import com.anrisoftware.sscontrol.dhclient.statements.OptionDeclarationFactory
 import com.anrisoftware.sscontrol.scripts.unix.RestartServicesFactory
 
 /**
- * Dhclient/Ubuntu.
+ * <i>Dhclient Ubuntu</i> service script.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
 abstract class UbuntuScript extends LinuxScript {
-
-    Templates dhclientTemplates
-
-    TemplateResource dhclientConfiguration
-
-    @Inject
-    TemplatesFactory templatesFactory
 
     @Inject
     DeclarationFactory declarationFactory
@@ -58,16 +51,22 @@ abstract class UbuntuScript extends LinuxScript {
     @Inject
     RestartServicesFactory restartServicesFactory
 
+    TemplateResource dhclientConfiguration
+
     @Override
     def run() {
-        dhclientTemplates = templatesFactory.create "DhclientUbuntu"
-        dhclientConfiguration = dhclientTemplates.getResource "configuration"
         setupDefaultOption service
         setupDefaultSends service
         setupDefaultRequests service
         distributionSpecificConfiguration()
         deployConfiguration()
         restartService()
+    }
+
+    @Inject
+    final void setTemplatesFactory(TemplatesFactory factory) {
+        def templates = factory.create "DhclientUbuntu"
+        dhclientConfiguration = templates.getResource "configuration"
     }
 
     /**
@@ -116,7 +115,10 @@ abstract class UbuntuScript extends LinuxScript {
      */
     void restartService() {
         restartServicesFactory.create(
-                log: log, command: restartCommand, services: restartServices, this, threads)()
+                log: log,
+                command: restartCommand,
+                services: restartServices,
+                this, threads)()
     }
 
     /**
@@ -160,7 +162,7 @@ abstract class UbuntuScript extends LinuxScript {
     }
 
     /**
-     * Returns the dhclient/configuration file {@code dhclient.conf}.
+     * Returns the <i>dhclient</i> configuration file {@code dhclient.conf}.
      *
      * <ul>
      * <li>profile property key {@code configuration_file}</li>
@@ -174,7 +176,7 @@ abstract class UbuntuScript extends LinuxScript {
     }
 
     /**
-     * Returns the default dhclient option.
+     * Returns the default <i>dhclient</i> option.
      *
      * <ul>
      * <li>profile property key {@code default_option}</li>
@@ -187,7 +189,7 @@ abstract class UbuntuScript extends LinuxScript {
     }
 
     /**
-     * Returns the default dhclient sends.
+     * Returns the default <i>dhclient</i> sends.
      *
      * <ul>
      * <li>profile property key {@code default_sends}</li>
@@ -200,7 +202,7 @@ abstract class UbuntuScript extends LinuxScript {
     }
 
     /**
-     * Returns the default dhclient requests.
+     * Returns the default <i>dhclient</i> requests.
      *
      * <ul>
      * <li>profile property key {@code default_requests}</li>
@@ -213,7 +215,7 @@ abstract class UbuntuScript extends LinuxScript {
     }
 
     /**
-     * Returns the current dhclient/configuration.
+     * Returns the current <i>dhclient</i> configuration.
      */
     String getCurrentConfiguration() {
         currentConfiguration configurationFile

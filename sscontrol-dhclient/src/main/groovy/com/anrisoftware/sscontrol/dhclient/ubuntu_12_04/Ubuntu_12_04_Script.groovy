@@ -28,7 +28,7 @@ import com.anrisoftware.sscontrol.dhclient.ubuntu.UbuntuScript
 import com.anrisoftware.sscontrol.scripts.unix.InstallPackagesFactory
 
 /**
- * Dhclient/Ubuntu 12.04.
+ * <i>Dhclient Ubuntu 12.04</i> service script.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
@@ -51,7 +51,11 @@ class Ubuntu_12_04_Script extends UbuntuScript {
      */
     void installPackages() {
         installPackagesFactory.create(
-                log: log, command: installCommand, packages: packages, this, threads)()
+                log: log,
+                command: installCommand,
+                packages: packages,
+                system: systemName,
+                this, threads)()
     }
 
     @Override

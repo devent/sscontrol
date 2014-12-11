@@ -25,7 +25,7 @@ import com.anrisoftware.sscontrol.dhclient.statements.Declaration;
 import com.anrisoftware.sscontrol.dhclient.statements.OptionDeclaration;
 
 /**
- * Dhclient service.
+ * <i>Dhclient</i> service.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
@@ -40,7 +40,7 @@ public interface DhclientService extends Service {
 
     /**
      * Sets the option declaration.
-     * 
+     *
      * @param option
      *            the {@link Declaration} option declaration.
      */
@@ -48,14 +48,14 @@ public interface DhclientService extends Service {
 
     /**
      * Returns the option declaration.
-     * 
+     *
      * @return the {@link Declaration} option declaration.
      */
     Declaration getOption();
 
     /**
      * Adds the prepend declaration.
-     * 
+     *
      * @param declaration
      *            the prepend {@link OptionDeclaration}.
      */
@@ -63,7 +63,7 @@ public interface DhclientService extends Service {
 
     /**
      * Returns the prepend declarations.
-     * 
+     *
      * @return an unmodifiable {@link List} of the {@link OptionDeclaration}
      *         prepend declarations.
      */
@@ -71,7 +71,7 @@ public interface DhclientService extends Service {
 
     /**
      * Adds the request declaration.
-     * 
+     *
      * @param declaration
      *            the request {@link Declaration}.
      */
@@ -79,7 +79,7 @@ public interface DhclientService extends Service {
 
     /**
      * Returns the request declarations.
-     * 
+     *
      * @return an unmodifiable {@link List} of the {@link Declaration} request
      *         declarations.
      */
@@ -87,7 +87,7 @@ public interface DhclientService extends Service {
 
     /**
      * Adds the send declaration.
-     * 
+     *
      * @param declaration
      *            the send {@link OptionDeclaration}.
      */
@@ -95,7 +95,7 @@ public interface DhclientService extends Service {
 
     /**
      * Returns the send declarations.
-     * 
+     *
      * @return an unmodifiable {@link List} of the {@link OptionDeclaration}
      *         send declarations.
      */

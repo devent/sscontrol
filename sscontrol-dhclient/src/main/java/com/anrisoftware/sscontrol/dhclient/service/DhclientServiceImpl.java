@@ -38,8 +38,8 @@ import com.anrisoftware.sscontrol.dhclient.statements.RequestDeclarations;
 import com.google.inject.Provider;
 
 /**
- * Dhclient service.
- * 
+ * <i>Dhclient</i> service.
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
@@ -84,7 +84,7 @@ class DhclientServiceImpl extends AbstractService implements DhclientService {
 
     /**
      * Entry point in the Dhclient script.
-     * 
+     *
      * @return this {@link Service}.
      */
     public Service dhclient(Object closure) {
@@ -93,7 +93,7 @@ class DhclientServiceImpl extends AbstractService implements DhclientService {
 
     /**
      * Adds a new request.
-     * 
+     *
      * @param decl
      *            the request declaration.
      */
@@ -113,10 +113,10 @@ class DhclientServiceImpl extends AbstractService implements DhclientService {
 
     /**
      * Adds a new prepend.
-     * 
+     *
      * @param option
      *            the prepend option.
-     * 
+     *
      * @param decl
      *            the prepend declaration.
      */

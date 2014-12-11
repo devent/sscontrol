@@ -29,8 +29,8 @@ import com.google.inject.Injector;
 import com.google.inject.Module;
 
 /**
- * Provides the <i>dhclient</i> service.
- * 
+ * <i>Dhclient</i> service provider.
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */

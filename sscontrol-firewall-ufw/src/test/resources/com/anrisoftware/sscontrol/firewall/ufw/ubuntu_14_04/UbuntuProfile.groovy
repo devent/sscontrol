@@ -24,7 +24,7 @@ def ufwCommand = UbuntuResources.ufwCommand.asFile(tmp)
 profile "ubuntu_14_04", {
     firewall {
         service "ufw"
-        install_command "export DEBIAN_FRONTEND=noninteractive\n${aptitudeCommand} update && ${aptitudeCommand} -y install"
+        install_command aptitudeCommand
         ufw_command ufwCommand
     }
 }

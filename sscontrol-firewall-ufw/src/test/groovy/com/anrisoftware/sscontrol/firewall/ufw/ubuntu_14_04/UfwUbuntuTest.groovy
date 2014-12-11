@@ -28,7 +28,7 @@ import com.anrisoftware.sscontrol.core.api.ServicesRegistry
 import com.anrisoftware.sscontrol.firewall.ufw.resources.UfwLinuxBase
 
 /**
- * Test UFW on a Ubuntu 14.04 server.
+ * <i>Ufw Ubuntu 14.04</i> test.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0

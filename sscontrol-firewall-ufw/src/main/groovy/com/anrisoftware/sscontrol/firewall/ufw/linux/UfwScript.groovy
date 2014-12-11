@@ -30,7 +30,7 @@ import com.anrisoftware.sscontrol.core.service.LinuxScript
 import com.anrisoftware.sscontrol.scripts.unix.ScriptExecFactory
 
 /**
- * Uses the UFW service on a general Linux system.
+ * <i>UFW</i> service on a general Linux system.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
@@ -42,15 +42,7 @@ abstract class UfwScript extends LinuxScript {
     UfwScriptLogger logg
 
     @Inject
-    TemplatesFactory templatesFactory
-
-    @Inject
     ScriptExecFactory scriptExecFactory
-
-    /**
-     * The {@link Templates} for the script.
-     */
-    Templates ufwTemplates
 
     /**
      * Resource containing the <i>ufw</i> rules templates,.
@@ -59,10 +51,14 @@ abstract class UfwScript extends LinuxScript {
 
     @Override
     def run() {
-        ufwTemplates = templatesFactory.create "Ufw"
-        rulesTemplate = ufwTemplates.getResource "rules"
         distributionSpecificConfiguration()
         deployRules()
+    }
+
+    @Inject
+    void setTemplatesFactory(TemplatesFactory factory) {
+        def templates = factory.create "Ufw"
+        rulesTemplate = templates.getResource "rules"
     }
 
     /**
@@ -71,17 +67,20 @@ abstract class UfwScript extends LinuxScript {
     abstract distributionSpecificConfiguration()
 
     /**
-     * Deploys the firewall rules.
+     * Deploys the <i>firewall</i> rules.
      */
     void deployRules() {
         def worker = scriptExecFactory.create(
-                log: log, service: service, command: ufwCommand,
-                this, threads, rulesTemplate, "rules")()
+                log: log,
+                service: service,
+                command: ufwCommand,
+                this, threads,
+                rulesTemplate, "rules")()
         logg.deployedRules this, worker
     }
 
     /**
-     * Returns the ufw tool command.
+     * Returns the <i>ufw</i> tool command.
      *
      * <ul>
      * <li>profile property {@code "ufw_command"}</li>

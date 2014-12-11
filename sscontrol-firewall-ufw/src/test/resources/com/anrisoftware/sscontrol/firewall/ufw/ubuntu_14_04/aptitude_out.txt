@@ -1,4 +1,2 @@
-update
--y install ufw
-update
--y install ufw
+-q -y install ufw
+-q -y install ufw

@@ -27,7 +27,7 @@ import com.anrisoftware.sscontrol.firewall.ufw.linux.UfwScript
 import com.anrisoftware.sscontrol.scripts.unix.InstallPackagesFactory
 
 /**
- * Uses the UFW service for Ubuntu 12.04.
+ * <i>UFW Ubuntu 12.04</i> service script.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
@@ -51,7 +51,11 @@ class UbuntuScript extends UfwScript {
      */
     void installPackages() {
         installPackagesFactory.create(
-                log: log, command: installCommand, packages: packages, this, threads)()
+                log: log,
+                command: installCommand,
+                packages: packages,
+                system: systemName,
+                this, threads)()
     }
 
     @Override

@@ -25,7 +25,7 @@ def restartCommand = UbuntuResources.restartCommand.asFile tmp
 
 profile "ubuntu_14_04", {
     hostname {
-        install_command "${tmp}/usr/bin/aptitude update && ${tmp}/usr/bin/aptitude install"
+        install_command aptitudeCommand
         restart_command "${tmp}/usr/bin/service"
         configuration_directory "${tmp}/etc"
     }

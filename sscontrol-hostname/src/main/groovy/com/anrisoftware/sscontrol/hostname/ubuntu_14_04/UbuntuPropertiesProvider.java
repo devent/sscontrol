@@ -23,7 +23,7 @@ import java.net.URL;
 import com.anrisoftware.propertiesutils.AbstractContextPropertiesProvider;
 
 /**
- * Provides the Ubuntu 14.04 hostname properties from
+ * <i>Hostname Ubuntu 14.04</i> properties provider from
  * {@code "/hostname_ubuntu_14_04.properties"}.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org

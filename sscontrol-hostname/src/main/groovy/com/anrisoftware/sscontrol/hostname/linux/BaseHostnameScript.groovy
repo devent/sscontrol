@@ -21,13 +21,14 @@ package com.anrisoftware.sscontrol.hostname.linux
 import javax.inject.Inject
 
 import com.anrisoftware.globalpom.textmatch.tokentemplate.TokenTemplate
+import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.Templates
 import com.anrisoftware.resources.templates.api.TemplatesFactory
 import com.anrisoftware.sscontrol.core.service.LinuxScript
 import com.anrisoftware.sscontrol.scripts.unix.RestartServicesFactory
 
 /**
- * Base hostname script.
+ * <i>Hostname</i> script.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
@@ -35,19 +36,21 @@ import com.anrisoftware.sscontrol.scripts.unix.RestartServicesFactory
 abstract class BaseHostnameScript extends LinuxScript {
 
     @Inject
-    TemplatesFactory templatesFactory
-
-    @Inject
     RestartServicesFactory restartServicesFactory
 
-    Templates hostnameTemplates
+    TemplateResource hostnameConfigTemplate
 
     @Override
     def run() {
-        hostnameTemplates = templatesFactory.create "Hostname"
         distributionSpecificConfiguration()
         deployHostnameConfiguration()
         restartService()
+    }
+
+    @Inject
+    final void setTemplatesFactory(TemplatesFactory factory) {
+        def templates = factory.create "Hostname"
+        hostnameConfigTemplate = templates.getResource("hostname_configuration")
     }
 
     /**
@@ -86,7 +89,7 @@ abstract class BaseHostnameScript extends LinuxScript {
      */
     List getHostnameConfiguration() {
         [
-            new TokenTemplate(".*", hostnameTemplates.getResource("hostname_configuration").getText(true, "hostname", service.hostname))
+            new TokenTemplate(".*", hostnameConfigTemplate.getText(true, "hostname", service.hostname))
         ]
     }
 

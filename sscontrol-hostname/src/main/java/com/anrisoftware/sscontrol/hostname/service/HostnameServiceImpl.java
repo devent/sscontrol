@@ -34,75 +34,75 @@ import com.google.inject.Provider;
 
 /**
  * Hostname service.
- * 
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
 @SuppressWarnings("serial")
 class HostnameServiceImpl extends AbstractService {
 
-	private final HostnameServiceImplLogger log;
+    private final HostnameServiceImplLogger log;
 
-	private final Map<String, Provider<Script>> scripts;
+    private final Map<String, Provider<Script>> scripts;
 
-	private String hostname;
+    private String hostname;
 
-	@Inject
-	HostnameServiceImpl(HostnameServiceImplLogger logger,
-			Map<String, Provider<Script>> scripts) {
-		this.log = logger;
-		this.scripts = scripts;
-	}
+    @Inject
+    HostnameServiceImpl(HostnameServiceImplLogger logger,
+            Map<String, Provider<Script>> scripts) {
+        this.log = logger;
+        this.scripts = scripts;
+    }
 
-	@Override
-	protected Script getScript(String profileName) throws ServiceException {
-		Provider<Script> provider = scripts.get(profileName);
+    @Override
+    protected Script getScript(String profileName) throws ServiceException {
+        Provider<Script> provider = scripts.get(profileName);
         log.checkScript(this, provider, profileName);
         return provider.get();
-	}
+    }
 
-	/**
-	 * Returns the hostname service name.
-	 */
-	@Override
-	public String getName() {
-		return NAME;
-	}
+    /**
+     * Returns the hostname service name.
+     */
+    @Override
+    public String getName() {
+        return NAME;
+    }
 
-	    /**
+    /**
      * Entry point for the hostname service script.
-     * 
+     *
      * @return this {@link Service}.
      */
-	public Service hostname(Object closure) {
-		return this;
-	}
+    public Service hostname(Object closure) {
+        return this;
+    }
 
-	    /**
+    /**
      * Sets the host name.
-     * 
+     *
      * @param name
      *            the host name.
      */
-	public void set(String name) {
-		log.checkHostname(this, name);
-		hostname = name;
-		log.hostnameSet(this, name);
-	}
+    public void set(String name) {
+        log.checkHostname(this, name);
+        hostname = name;
+        log.hostnameSet(this, name);
+    }
 
-	    /**
+    /**
      * Returns the host name.
-     * 
+     *
      * @return the host name.
      */
-	public String getHostname() {
-		return hostname;
-	}
+    public String getHostname() {
+        return hostname;
+    }
 
-	@Override
-	public String toString() {
-		return new ToStringBuilder(this).appendSuper(super.toString())
-				.append("hostname", hostname).toString();
-	}
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this).appendSuper(super.toString())
+                .append("hostname", hostname).toString();
+    }
 
 }

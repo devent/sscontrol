@@ -23,9 +23,9 @@ import java.net.URL;
 import com.anrisoftware.propertiesutils.AbstractContextPropertiesProvider;
 
 /**
- * Provides the Ubuntu 12.04 hostname properties from
+ * <i>Ubuntu 12.04 Hostname</i> properties provider from
  * {@code "/hostname_ubuntu_12_04.properties"}.
- * 
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */

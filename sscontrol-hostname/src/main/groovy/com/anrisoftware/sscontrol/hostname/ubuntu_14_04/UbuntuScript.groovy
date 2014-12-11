@@ -27,7 +27,7 @@ import com.anrisoftware.sscontrol.hostname.linux.BaseHostnameScript
 import com.anrisoftware.sscontrol.scripts.unix.InstallPackagesFactory
 
 /**
- * Deploys the hostname on the Ubuntu 14.04 Linux system.
+ * <i>Hostname Ubuntu 14.04</i> service script.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
@@ -51,7 +51,11 @@ class UbuntuScript extends BaseHostnameScript {
      */
     void installPackages() {
         installPackagesFactory.create(
-                log: log, command: installCommand, packages: packages, this, threads)()
+                log: log,
+                command: installCommand,
+                packages: packages,
+                system: systemName,
+                this, threads)()
     }
 
     @Override

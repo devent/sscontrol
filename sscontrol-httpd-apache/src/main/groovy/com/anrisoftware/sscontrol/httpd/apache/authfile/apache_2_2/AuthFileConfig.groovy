@@ -18,7 +18,6 @@
  */
 package com.anrisoftware.sscontrol.httpd.apache.authfile.apache_2_2
 
-import static com.anrisoftware.sscontrol.httpd.apache.apache.ubuntu_10_04.Ubuntu_10_04_ScriptFactory.PROFILE
 import static org.apache.commons.io.FileUtils.writeLines
 import static org.apache.commons.lang3.StringUtils.split
 import groovy.util.logging.Slf4j
@@ -31,7 +30,6 @@ import org.stringtemplate.v4.ST
 
 import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.resources.templates.api.TemplateResource
-import com.anrisoftware.resources.templates.api.Templates
 import com.anrisoftware.resources.templates.api.TemplatesFactory
 import com.anrisoftware.sscontrol.core.service.LinuxScript
 import com.anrisoftware.sscontrol.httpd.apache.apache.linux.BasicAuth
@@ -62,9 +60,6 @@ abstract class AuthFileConfig extends BasicAuth {
     AuthFileConfigLogger logg
 
     @Inject
-    TemplatesFactory templatesFactory
-
-    @Inject
     ChangeFileModFactory changeFileModFactory
 
     @Inject
@@ -78,11 +73,6 @@ abstract class AuthFileConfig extends BasicAuth {
 
     @Inject
     AuthFileDigestConfig authFileDigestConfig
-
-    /**
-     * Auth/file templates.
-     */
-    Templates authTemplates
 
     /**
      * Domain configuration template.
@@ -339,13 +329,17 @@ abstract class AuthFileConfig extends BasicAuth {
         profileProperty "auth_subdirectory", authProperties
     }
 
+    @Inject
+    final void TemplatesFactory(TemplatesFactory factory) {
+        def templates = factory.create "Apache_2_2_AuthFile", ["renderers": [requireValidModeRenderer]]
+        this.authDomainConfigTemplate = templates.getResource "domain"
+    }
+
     @Override
     void setScript(LinuxScript script) {
         super.setScript script
         authFileBasicConfig.setScript this
         authFileDigestConfig.setScript this
-        this.authTemplates = templatesFactory.create "Apache_2_2_AuthFile", ["renderers": [requireValidModeRenderer]]
-        this.authDomainConfigTemplate = authTemplates.getResource "domain"
     }
 
     /**

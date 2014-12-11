@@ -1,6 +1,0 @@
-suexec
-authn_file
-auth_digest
-suexec
-authn_file
-auth_digest

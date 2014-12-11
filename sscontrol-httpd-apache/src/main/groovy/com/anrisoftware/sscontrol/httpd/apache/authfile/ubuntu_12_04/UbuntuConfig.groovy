@@ -27,7 +27,7 @@ import com.anrisoftware.sscontrol.httpd.apache.authfile.apache_2_2.AuthFileConfi
 import com.anrisoftware.sscontrol.httpd.webservice.ServiceConfig
 
 /**
- * Auth/file Ubuntu 12.04 configuration.
+ * <i>Auth-file Ubuntu 12.04</i> configuration.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0

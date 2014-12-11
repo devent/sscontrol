@@ -20,12 +20,11 @@ package com.anrisoftware.sscontrol.httpd.apache.authldap.ubuntu_12_04
 
 import com.anrisoftware.sscontrol.httpd.apache.ubuntu.UbuntuResources
 
-def aptitudeCommand = UbuntuResources.aptitudeCommand.asFile(tmp)
 
 profile "ubuntu_12_04", {
     httpd {
         service "apache"
-        install_command "$aptitudeCommand update && $aptitudeCommand install"
+        install_command UbuntuResources.aptitudeCommand.asFile(tmp)
         apt_key_command UbuntuResources.aptKeyCommand.asFile(tmp)
         chmod_command UbuntuResources.chmodCommand.asFile(tmp)
         chown_command UbuntuResources.chownCommand.asFile(tmp)

@@ -1,2 +1,0 @@
--u 2001 -g 2001 -d /tmp/var/www/test1.com -s /bin/false web_001
--u 2001 -g 2001 -d /tmp/var/www/test1.com -s /bin/false web_001

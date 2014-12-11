@@ -1,12 +1,6 @@
-update
-install apache2 apache2-suexec
-update
-install apache2-suexec libapache2-mod-fcgid php5-cgi
-update
-install phpmyadmin
-update
-install apache2 apache2-suexec
-update
-install apache2-suexec libapache2-mod-fcgid php5-cgi
-update
-install phpmyadmin
+-q -y install apache2 apache2-suexec
+-q -y install apache2-suexec libapache2-mod-fcgid php5-cgi
+-q -y install phpmyadmin
+-q -y install apache2 apache2-suexec
+-q -y install apache2-suexec libapache2-mod-fcgid php5-cgi
+-q -y install phpmyadmin

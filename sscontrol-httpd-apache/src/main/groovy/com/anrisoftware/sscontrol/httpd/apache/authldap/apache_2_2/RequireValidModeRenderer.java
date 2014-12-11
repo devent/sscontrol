@@ -24,8 +24,8 @@ import com.anrisoftware.resources.templates.api.AttributeRenderer;
 import com.anrisoftware.sscontrol.httpd.auth.RequireValidMode;
 
 /**
- * Atttribute renderer for {@link RequireValidMode}.
- * 
+ * Attribute renderer for {@link RequireValidMode}.
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */

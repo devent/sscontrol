@@ -1,4 +1,0 @@
-o-rw /tmp/var/www/test1.com/auth/private.passwd
-o-rw /tmp/var/www/test1.com/auth/private.group
-o-rw /tmp/var/www/test1.com/auth/private.passwd
-o-rw /tmp/var/www/test1.com/auth/private.group

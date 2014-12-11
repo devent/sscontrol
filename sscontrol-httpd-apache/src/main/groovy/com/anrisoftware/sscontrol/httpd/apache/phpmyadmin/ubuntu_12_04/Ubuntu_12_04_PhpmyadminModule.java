@@ -27,22 +27,22 @@ import com.google.inject.AbstractModule;
 import com.google.inject.multibindings.MapBinder;
 
 /**
- * Binds the phpMyAdmin Ubuntu 12.04.
+ * <i>phpMyAdmin Ubuntu 12.04</i> module.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
 public class Ubuntu_12_04_PhpmyadminModule extends AbstractModule {
 
-	@Override
-	protected void configure() {
-		bindServiceConfig();
-	}
+    @Override
+    protected void configure() {
+        bindServiceConfig();
+    }
 
-	private void bindServiceConfig() {
-		MapBinder<String, ServiceConfig> map = newMapBinder(binder(),
-				String.class, ServiceConfig.class);
-		map.addBinding(format("%s.%s", PROFILE, UbuntuConfig.NAME)).to(
-				UbuntuConfig.class);
-	}
+    private void bindServiceConfig() {
+        MapBinder<String, ServiceConfig> map = newMapBinder(binder(),
+                String.class, ServiceConfig.class);
+        map.addBinding(format("%s.%s", PROFILE, UbuntuConfig.NAME)).to(
+                UbuntuConfig.class);
+    }
 }

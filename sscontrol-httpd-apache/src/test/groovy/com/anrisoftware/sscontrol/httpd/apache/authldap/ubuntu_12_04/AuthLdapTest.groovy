@@ -30,7 +30,7 @@ import org.junit.Test
 import com.anrisoftware.sscontrol.httpd.apache.ubuntu.UbuntuTestUtil
 
 /**
- * Auth/LDAP Ubuntu 12.04.
+ * <i>Auth-LDAP Ubuntu 12.04</i> service test.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0

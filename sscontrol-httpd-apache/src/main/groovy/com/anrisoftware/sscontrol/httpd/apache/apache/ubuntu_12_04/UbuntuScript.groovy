@@ -27,7 +27,7 @@ import com.anrisoftware.sscontrol.httpd.apache.apache.apache_2_2.Apache_2_2_Scri
 import com.anrisoftware.sscontrol.scripts.unix.InstallPackagesFactory
 
 /**
- * Uses the <i>Apache</i> service on the <i>Ubuntu 12.04</i> Linux system.
+ * <i>Apache Ubuntu 12.04</i> .
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
@@ -48,7 +48,10 @@ class UbuntuScript extends Apache_2_2_Script {
 
     void installPackages() {
         installPackagesFactory.create(
-                log: log, command: installCommand, packages: packages,
+                log: log,
+                command: installCommand,
+                packages: packages,
+                system: systemName,
                 this, threads)()
     }
 

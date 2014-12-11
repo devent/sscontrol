@@ -30,7 +30,7 @@ import org.junit.Test
 import com.anrisoftware.sscontrol.httpd.apache.ubuntu.UbuntuTestUtil
 
 /**
- * Auth/file/digest
+ * <i>Auth-file-digest Ubuntu 12.04</i> service test.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0

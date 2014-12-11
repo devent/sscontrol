@@ -18,17 +18,14 @@
  */
 package com.anrisoftware.sscontrol.httpd.apache.phpmyadmin.ubuntu
 
-import static com.anrisoftware.sscontrol.httpd.apache.apache.ubuntu_10_04.Ubuntu_10_04_ScriptFactory.PROFILE
 import groovy.util.logging.Slf4j
 
 import javax.inject.Inject
 
 import com.anrisoftware.globalpom.textmatch.tokentemplate.TokenTemplate
 import com.anrisoftware.resources.templates.api.TemplateResource
-import com.anrisoftware.resources.templates.api.Templates
 import com.anrisoftware.resources.templates.api.TemplatesFactory
 import com.anrisoftware.sscontrol.core.service.LinuxScript
-import com.anrisoftware.sscontrol.httpd.apache.apache.linux.ApacheFcgiConfig
 import com.anrisoftware.sscontrol.httpd.apache.phpmyadmin.apache_2_2.FcgiPhpmyadminConfig
 import com.anrisoftware.sscontrol.httpd.domain.Domain
 import com.anrisoftware.sscontrol.httpd.phpmyadmin.PhpmyadminService
@@ -38,7 +35,7 @@ import com.anrisoftware.sscontrol.scripts.unix.InstallPackagesFactory
 import com.anrisoftware.sscontrol.scripts.unix.ScriptExecFactory
 
 /**
- * Ubuntu fcgi phpMyAdmin.
+ * <i>Ubuntu Fcgi phpMyAdmin</i> service configuration.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
@@ -50,9 +47,6 @@ abstract class UbuntuPhpmyadminConfig extends FcgiPhpmyadminConfig {
     UbuntuPhpmyadminConfigLogger logg
 
     @Inject
-    TemplatesFactory templatesFactory
-
-    @Inject
     InstallPackagesFactory installPackagesFactory
 
     @Inject
@@ -60,8 +54,6 @@ abstract class UbuntuPhpmyadminConfig extends FcgiPhpmyadminConfig {
 
     @Inject
     ChangeFileOwnerFactory changeFileOwnerFactory
-
-    Templates phpmyadminTemplates
 
     TemplateResource phpmyadminConfigTemplate
 
@@ -85,12 +77,22 @@ abstract class UbuntuPhpmyadminConfig extends FcgiPhpmyadminConfig {
         createDomainConfig domain, service, config
     }
 
+    @Inject
+    final void TemplatesFactory(TemplatesFactory factory) {
+        def templates = factory.create "UbuntuPhpmyadmin"
+        this.phpmyadminConfigTemplate = templates.getResource "config"
+        this.phpmyadminCommandsTemplate = templates.getResource "commands"
+    }
+
     /**
      * Installs the <i>phpLDAPAdmin</i> packages.
      */
     void installPackages() {
         installPackagesFactory.create(
-                log: log, command: script.installCommand, packages: phpmyadminPackages,
+                log: log,
+                command: installCommand,
+                packages: phpmyadminPackages,
+                system: systemName,
                 this, threads)()
     }
 
@@ -108,7 +110,8 @@ abstract class UbuntuPhpmyadminConfig extends FcgiPhpmyadminConfig {
     }
 
     void createDomainConfig(Domain domain, PhpmyadminService service, List serviceConfig) {
-        def config = phpmyadminConfigTemplate.getText(true, "domainConfig",
+        def config = phpmyadminConfigTemplate.getText(
+                true, "domainConfig",
                 "domain", domain,
                 "service", service,
                 "properties", script,
@@ -295,15 +298,8 @@ abstract class UbuntuPhpmyadminConfig extends FcgiPhpmyadminConfig {
         def task = scriptExecFactory.create(
                 log: log,
                 command: reconfigureCommand,
-                this, threads, phpmyadminCommandsTemplate, "reconfigure")()
+                this, threads,
+                phpmyadminCommandsTemplate, "reconfigure")()
         logg.reconfigureService script, task
-    }
-
-    @Override
-    void setScript(LinuxScript script) {
-        super.setScript script
-        this.phpmyadminTemplates = templatesFactory.create "UbuntuPhpmyadmin"
-        this.phpmyadminConfigTemplate = phpmyadminTemplates.getResource "config"
-        this.phpmyadminCommandsTemplate = phpmyadminTemplates.getResource "commands"
     }
 }

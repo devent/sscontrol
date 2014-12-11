@@ -27,7 +27,7 @@ import com.anrisoftware.sscontrol.httpd.apache.authldap.apache_2_2.AuthLdapConfi
 import com.anrisoftware.sscontrol.httpd.webservice.ServiceConfig
 
 /**
- * Auth/LDAP Ubuntu 12.04 configuration.
+ * <i>Auth-LDAP Ubuntu 12.04</i> configuration.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0

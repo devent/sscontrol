@@ -27,8 +27,8 @@ import com.google.inject.AbstractModule;
 import com.google.inject.multibindings.MapBinder;
 
 /**
- * Binds the auth/LDAP Ubuntu 12.04 configuration.
- * 
+ * <i>Auth-LDAP Ubuntu 12.04</i> configuration.
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */

@@ -569,7 +569,10 @@ abstract class ApacheScript extends LinuxScript {
             def packages = modPackages it
             if (packages.size() > 0) {
                 installPackagesFactory.create(
-                        log: log, command: installCommand, packages: packages,
+                        log: log,
+                        command: installCommand,
+                        packages: packages,
+                        system: systemName,
                         this, threads)()
             }
         }

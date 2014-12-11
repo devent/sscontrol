@@ -29,7 +29,6 @@ import org.apache.commons.io.FilenameUtils
 
 import com.anrisoftware.globalpom.exec.api.ProcessTask
 import com.anrisoftware.resources.templates.api.TemplateResource
-import com.anrisoftware.resources.templates.api.Templates
 import com.anrisoftware.resources.templates.api.TemplatesFactory
 import com.anrisoftware.sscontrol.httpd.auth.AbstractAuthService
 import com.anrisoftware.sscontrol.httpd.auth.RequireUpdate
@@ -50,20 +49,7 @@ class AuthFileDigestConfig {
     AuthFileDigestConfigLogger logg
 
     @Inject
-    TemplatesFactory templatesFactory
-
-    @Inject
     ScriptExecFactory scriptExecFactory
-
-    /**
-     * Auth/file templates.
-     */
-    Templates authTemplates
-
-    /**
-     * File/auth configuration.
-     */
-    TemplateResource authConfigTemplate
 
     /**
      * File/auth commands.
@@ -150,8 +136,12 @@ class AuthFileDigestConfig {
      */
     ProcessTask digestPassword(AbstractAuthService auth, RequireUser user) {
         scriptExecFactory.create(
-                log: log, auth: auth, user: user, outString: true,
-                this, threads, authCommandsTemplate, "digestPassword")()
+                log: log,
+                auth: auth,
+                user: user,
+                outString: true,
+                this, threads,
+                authCommandsTemplate, "digestPassword")()
     }
 
     /**
@@ -169,13 +159,17 @@ class AuthFileDigestConfig {
         new File("${location}-digest.passwd", dir)
     }
 
+    @Inject
+    final void setTemplatesFactory(TemplatesFactory factory) {
+        def templates = factory.create "Apache_2_2_AuthFile"
+        this.authCommandsTemplate = templates.getResource "commands"
+    }
+
     /**
      * @see ServiceConfig#setScript(LinuxScript)
      */
     void setScript(Object script) {
         this.script = script
-        this.authTemplates = templatesFactory.create "Apache_2_2_AuthFile"
-        this.authCommandsTemplate = authTemplates.getResource "commands"
     }
 
     def propertyMissing(String name) {

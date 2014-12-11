@@ -18,7 +18,6 @@
  */
 package com.anrisoftware.sscontrol.httpd.apache.apache.apache_2_2
 
-import static com.anrisoftware.sscontrol.httpd.apache.apache.ubuntu_10_04.Ubuntu_10_04_ScriptFactory.PROFILE
 import static org.apache.commons.io.FileUtils.*
 import groovy.util.logging.Slf4j
 
@@ -39,7 +38,7 @@ import com.anrisoftware.sscontrol.scripts.unix.RestartServicesFactory
 import com.anrisoftware.sscontrol.scripts.unix.StopServicesFactory
 
 /**
- * Configures <i>Apache 2.2</i> service.
+ * <i>Apache 2.2</i> service script.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
@@ -60,9 +59,6 @@ abstract class Apache_2_2_Script extends ApacheScript {
     RedirectConfig redirectConfig
 
     @Inject
-    TemplatesFactory templatesFactory
-
-    @Inject
     RestartServicesFactory restartServicesFactory
 
     @Inject
@@ -70,11 +66,6 @@ abstract class Apache_2_2_Script extends ApacheScript {
 
     @Inject
     ResourceURIAttributeRenderer resourceURIAttributeRenderer
-
-    /**
-     * The {@link Templates} for the script.
-     */
-    Templates apacheTemplates
 
     /**
      * Resource containing the Apache ports configuration templates.
@@ -103,12 +94,6 @@ abstract class Apache_2_2_Script extends ApacheScript {
 
     @Override
     def run() {
-        apacheTemplates = templatesFactory.create "Apache_2_2", [renderers: [resourceURIAttributeRenderer]]
-        portsConfigTemplate = apacheTemplates.getResource "portsconf"
-        defaultsConfigTemplate = apacheTemplates.getResource "defaultsconf"
-        domainsConfiguration = apacheTemplates.getResource "domainsconf"
-        configTemplate = apacheTemplates.getResource "config"
-        apacheCommandsTemplate = apacheTemplates.getResource "commands"
         domainConfig.script = this
         sslDomainConfig.script = this
         redirectConfig.script = this
@@ -120,6 +105,16 @@ abstract class Apache_2_2_Script extends ApacheScript {
         enableDefaultMods()
         deployConfig()
         restartServices()
+    }
+
+    @Inject
+    final void setTemplatesFactory(TemplatesFactory factory) {
+        def templates = factory.create "Apache_2_2", [renderers: [resourceURIAttributeRenderer]]
+        portsConfigTemplate = templates.getResource "portsconf"
+        defaultsConfigTemplate = templates.getResource "defaultsconf"
+        domainsConfiguration = templates.getResource "domainsconf"
+        configTemplate = templates.getResource "config"
+        apacheCommandsTemplate = templates.getResource "commands"
     }
 
     void deployPortsConfig() {
@@ -150,7 +145,9 @@ abstract class Apache_2_2_Script extends ApacheScript {
      */
     void stopServices() {
         stopServicesFactory.create(
-                log: log, command: stopCommand, services: stopServices,
+                log: log,
+                command: stopCommand,
+                services: stopServices,
                 exitCode: null,
                 this, threads)()
     }
@@ -160,7 +157,9 @@ abstract class Apache_2_2_Script extends ApacheScript {
      */
     void restartServices() {
         restartServicesFactory.create(
-                log: log, command: restartCommand, services: restartServices,
+                log: log,
+                command: restartCommand,
+                services: restartServices,
                 this, threads)()
     }
 
@@ -233,7 +232,8 @@ abstract class Apache_2_2_Script extends ApacheScript {
     }
 
     def deployDomainConfig(Domain domain, List servicesConfig) {
-        def string = configTemplate.getText(true, domain.class.simpleName,
+        def string = configTemplate.getText(
+                true, domain.class.simpleName,
                 "properties", this,
                 "domain", domain,
                 "servicesConfig", servicesConfig)

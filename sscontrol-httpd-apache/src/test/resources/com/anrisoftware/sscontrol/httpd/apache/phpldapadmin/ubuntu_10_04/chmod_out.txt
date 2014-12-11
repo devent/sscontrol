@@ -1,8 +1,0 @@
-755 /tmp/var/www/php-fcgi-scripts/ldapadmin.test1.com/php-fcgi-starter
-o-r /tmp/var/www/ldapadmin.test1.com/phpldapadmin/config/config.php
-o-r /tmp/var/www/ldapadmin.test1.com/phpldapadmin/config/robobee-servers.php
-400 /tmp/var/www/ldapadmin.test1.com/ssl/cert_crt.txt /tmp/var/www/ldapadmin.test1.com/ssl/cert_key.txt
-755 /tmp/var/www/php-fcgi-scripts/ldapadmin.test1.com/php-fcgi-starter
-o-r /tmp/var/www/ldapadmin.test1.com/phpldapadmin/config/config.php
-o-r /tmp/var/www/ldapadmin.test1.com/phpldapadmin/config/robobee-servers.php
-400 /tmp/var/www/ldapadmin.test1.com/ssl/cert_crt.txt /tmp/var/www/ldapadmin.test1.com/ssl/cert_key.txt

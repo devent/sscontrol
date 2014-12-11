@@ -26,10 +26,10 @@ import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.sscontrol.core.service.LinuxScript
 import com.anrisoftware.sscontrol.httpd.apache.apache.ubuntu_12_04.Ubuntu_12_04_ScriptFactory
 import com.anrisoftware.sscontrol.httpd.apache.phpmyadmin.ubuntu.UbuntuPhpmyadminConfig
-import com.anrisoftware.sscontrol.httpd.webservice.ServiceConfig;
+import com.anrisoftware.sscontrol.httpd.webservice.ServiceConfig
 
 /**
- * Ubuntu 12.04 fcgi phpMyAdmin.
+ * <i>Ubuntu 12.04 Fcgi phpMyAdmin</i> service configuration.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0

@@ -21,17 +21,16 @@ package com.anrisoftware.sscontrol.httpd.apache.authldap.apache_2_2
 import javax.inject.Inject
 
 import com.anrisoftware.resources.templates.api.TemplateResource
-import com.anrisoftware.resources.templates.api.Templates
+import com.anrisoftware.resources.templates.api.TemplatesFactory
 import com.anrisoftware.sscontrol.core.service.LinuxScript
 import com.anrisoftware.sscontrol.httpd.apache.apache.linux.BasicAuth
 import com.anrisoftware.sscontrol.httpd.auth.AbstractAuthService
 import com.anrisoftware.sscontrol.httpd.auth.AuthType
-import com.anrisoftware.sscontrol.httpd.domain.DomainImpl
-import com.anrisoftware.sscontrol.httpd.domain.Domain;
+import com.anrisoftware.sscontrol.httpd.domain.Domain
 import com.anrisoftware.sscontrol.httpd.webservice.WebService
 
 /**
- * Auth/LDAP configuration.
+ * <i>Auth-LDAP</i> configuration.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
@@ -48,11 +47,6 @@ abstract class AuthLdapConfig extends BasicAuth {
 
     @Inject
     RequireValidModeRenderer requireValidModeRenderer
-
-    /**
-     * Auth/LDAP templates.
-     */
-    Templates authTemplates
 
     /**
      * Auth/ldap configuration.
@@ -74,6 +68,12 @@ abstract class AuthLdapConfig extends BasicAuth {
     @Override
     void deployDomain(Domain domain, Domain refDomain, WebService service, List config) {
         createDomainConfig domain, service, config
+    }
+
+    @Inject
+    final void setTemplatesFactory(TemplatesFactory factory) {
+        def templates = factory.create "Apache_2_2_AuthLdap", ["renderers": [requireValidModeRenderer]]
+        this.authDomainTemplate = templates.getResource "domain"
     }
 
     /**
@@ -135,13 +135,6 @@ abstract class AuthLdapConfig extends BasicAuth {
      */
     boolean getDefaultAuthoritative() {
         profileBooleanProperty "default_authoritative", authProperties
-    }
-
-    @Override
-    void setScript(LinuxScript script) {
-        super.setScript script
-        this.authTemplates = templatesFactory.create "Apache_2_2_AuthLdap", ["renderers": [requireValidModeRenderer]]
-        this.authDomainTemplate = authTemplates.getResource "domain"
     }
 
     /**

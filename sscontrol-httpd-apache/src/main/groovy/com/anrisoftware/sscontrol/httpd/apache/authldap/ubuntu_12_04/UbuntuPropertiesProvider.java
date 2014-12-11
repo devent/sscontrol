@@ -23,9 +23,9 @@ import java.net.URL;
 import com.anrisoftware.propertiesutils.AbstractContextPropertiesProvider;
 
 /**
- * Provides the default auth/LDAP Ubuntu 12.04 properties from
+ * <i>Auth-LDAP Ubuntu 12.04</i> properties provider from
  * {@code "/apache_authldap_ubuntu_12_04.properties"}.
- * 
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */

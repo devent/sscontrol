@@ -1,2 +1,0 @@
--s /bin/false -d /tmp/var/www/ubuntutest.com -m -u 2001 -g web_001 web_001
--s /bin/false -d /tmp/var/www/ubuntutest.com -m -u 2001 -g web_001 web_001

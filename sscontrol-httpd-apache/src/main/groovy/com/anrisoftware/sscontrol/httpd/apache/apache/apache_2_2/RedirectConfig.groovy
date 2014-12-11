@@ -18,11 +18,13 @@
  */
 package com.anrisoftware.sscontrol.httpd.apache.apache.apache_2_2
 
+import javax.inject.Inject
+
 import com.anrisoftware.resources.templates.api.TemplateResource
-import com.anrisoftware.resources.templates.api.Templates
+import com.anrisoftware.resources.templates.api.TemplatesFactory
 import com.anrisoftware.sscontrol.core.service.LinuxScript
-import com.anrisoftware.sscontrol.httpd.domain.Domain;
-import com.anrisoftware.sscontrol.httpd.redirect.Redirect;
+import com.anrisoftware.sscontrol.httpd.domain.Domain
+import com.anrisoftware.sscontrol.httpd.redirect.Redirect
 
 /**
  * Redirect configuration.
@@ -31,11 +33,6 @@ import com.anrisoftware.sscontrol.httpd.redirect.Redirect;
  * @since 1.0
  */
 class RedirectConfig {
-
-    /**
-     * The {@link Templates} for the script.
-     */
-    Templates redirectTemplates
 
     /**
      * Resource containing the Apache redirects configuration templates.
@@ -84,10 +81,14 @@ class RedirectConfig {
         name.replaceAll("\\.", "\\\\.");
     }
 
+    @Inject
+    final void setTemplatesFactory(TemplatesFactory factory) {
+        def templates = factory.create "Apache_2_2_Redirect"
+        redirectConfigTemplate = templates.getResource "config"
+    }
+
     void setScript(LinuxScript script) {
         this.script = script
-        redirectTemplates = script.templatesFactory.create "Apache_2_2_Redirect"
-        redirectConfigTemplate = redirectTemplates.getResource "config"
     }
 
     def propertyMissing(String name) {

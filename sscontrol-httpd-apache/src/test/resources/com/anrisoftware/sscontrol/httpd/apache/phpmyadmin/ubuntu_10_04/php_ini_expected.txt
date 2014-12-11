@@ -1,9 +1,0 @@
-; SSCONTROL-httpd
-memory_limit = 24M
-; SSCONTROL-httpd-END
-; SSCONTROL-httpd
-upload_max_filesize = 24M
-; SSCONTROL-httpd-END
-; SSCONTROL-httpd
-post_max_size = 24M
-; SSCONTROL-httpd-END

@@ -1,4 +1,2 @@
-update
-install maradns
-update
-install maradns
+-q -y install maradns
+-q -y install maradns

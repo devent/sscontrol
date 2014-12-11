@@ -41,7 +41,7 @@ profile "ubuntu_14_04", {
             "idzones": "maradns",
             "idrecursive": "deadwood"
         ])
-        install_command "$aptitudeCommand update && $aptitudeCommand install"
+        install_command aptitudeCommand
         deadwood_restart_command "$deadwoodRestartCommand recache"
         maradns_restart_command "$maradnsRestartCommand restart"
         group_add_command groupAddCommand

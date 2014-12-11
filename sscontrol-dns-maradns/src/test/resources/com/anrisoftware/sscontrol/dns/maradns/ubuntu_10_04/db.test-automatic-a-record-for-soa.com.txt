@@ -1,3 +1,0 @@
-test-automatic-a-record-for-soa.com. SOA ns1.test-automatic-a-record-for-soa.com. hostmaster@test-automatic-a-record-for-soa.com. /serial 28800 3600 604800 86400 ~
-test-automatic-a-record-for-soa.com. +86400 A 192.168.0.49 ~
-

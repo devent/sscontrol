@@ -27,7 +27,7 @@ def sourcesListFile = MaradnsResources.sourcesListFile.asFile(tmp)
 profile "ubuntu_14_04", {
     dns {
         service "maradns"
-        install_command "$aptitudeCommand update && $aptitudeCommand install"
+        install_command aptitudeCommand
         restart_command "$restartCommand restart"
         enable_repository_command addRepositoryCommand
         configuration_directory confDir

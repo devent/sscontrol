@@ -1,9 +1,0 @@
-test-no-automatic-records.com. SOA ns1.test-no-automatic-records.com. hostmaster@test-no-automatic-records.com. /serial 28800 3600 604800 86400 ~
-test-no-automatic-records.com. +86400 NS ns2.test-no-automatic-records.com. ~
-
-test-no-automatic-records.com. MX 10 mx1.test-no-automatic-records.com. ~
-
-www.test-no-automatic-records.com. +86400 CNAME test-no-automatic-records.com. ~
-
-test-no-automatic-records.com. +86400 A 192.168.0.49 ~
-

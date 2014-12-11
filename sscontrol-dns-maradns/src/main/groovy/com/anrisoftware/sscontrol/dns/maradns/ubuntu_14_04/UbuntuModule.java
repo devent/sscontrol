@@ -18,13 +18,11 @@
  */
 package com.anrisoftware.sscontrol.dns.maradns.ubuntu_14_04;
 
-import com.anrisoftware.sscontrol.scripts.enableaptrepository.EnableAptRepositoryModule;
-import com.anrisoftware.sscontrol.scripts.repositoryaptenabled.RepositoryAptEnabledModule;
 import com.anrisoftware.sscontrol.scripts.unix.UnixScriptsModule;
 import com.google.inject.AbstractModule;
 
 /**
- * MaraDNS/Ubuntu 14.04 service script module.
+ * <i>MaraDNS Ubuntu 14.04</i> service script module.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
@@ -33,8 +31,6 @@ class UbuntuModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        install(new EnableAptRepositoryModule());
-        install(new RepositoryAptEnabledModule());
         install(new UnixScriptsModule());
         install(new UnixScriptsModule.ExecCommandModule());
     }

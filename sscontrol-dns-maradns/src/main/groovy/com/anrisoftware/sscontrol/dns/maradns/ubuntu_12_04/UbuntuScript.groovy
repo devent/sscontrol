@@ -24,12 +24,11 @@ import javax.inject.Inject
 
 import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.sscontrol.dns.maradns.maradns_1_2.Maradns_1_2_Script
-import com.anrisoftware.sscontrol.scripts.enableaptrepository.EnableAptRepositoryFactory
 import com.anrisoftware.sscontrol.scripts.unix.InstallPackagesFactory
 import com.anrisoftware.sscontrol.scripts.unix.RestartServicesFactory
 
 /**
- * MaraDNS/Ubuntu 12.04 service script.
+ * <i>MaraDNS Ubuntu 12.04</i> service script.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
@@ -44,13 +43,9 @@ class UbuntuScript extends Maradns_1_2_Script {
     InstallPackagesFactory installPackagesFactory
 
     @Inject
-    EnableAptRepositoryFactory enableAptRepositoryFactory
-
-    @Inject
     RestartServicesFactory restartServicesFactory
 
     def run() {
-        enableRepository()
         installPackages()
         deployMaraDnsConfiguration()
         deployZoneDbConfigurations()
@@ -58,25 +53,15 @@ class UbuntuScript extends Maradns_1_2_Script {
     }
 
     /**
-     * Installs the <i>universe</i> repository.
-     */
-    void enableRepository() {
-        enableAptRepositoryFactory.create(
-                log: log,
-                charset: charset,
-                repository: additionalRepository,
-                distributionName: distributionName,
-                repositoryString: repositoryString,
-                packagesSourcesFile: packagesSourcesFile,
-                this, threads)()
-    }
-
-    /**
      * Installs the <i>MaraDNS</i> packages.
      */
     void installPackages() {
         installPackagesFactory.create(
-                log: log, command: installCommand, packages: packages, this, threads)()
+                log: log,
+                command: installCommand,
+                packages: packages,
+                system: systemName,
+                this, threads)()
     }
 
     /**
@@ -84,7 +69,10 @@ class UbuntuScript extends Maradns_1_2_Script {
      */
     void restartService() {
         restartServicesFactory.create(
-                log: log, command: restartCommand, services: restartServices, this, threads)()
+                log: log,
+                command: restartCommand,
+                services: restartServices,
+                this, threads)()
     }
 
     @Override

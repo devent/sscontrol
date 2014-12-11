@@ -29,7 +29,6 @@ import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.Templates
 import com.anrisoftware.resources.templates.api.TemplatesFactory
 import com.anrisoftware.sscontrol.dns.deadwood.deadwood_3_2.Deadwood_3_2_Script
-import com.anrisoftware.sscontrol.scripts.enableaptrepository.EnableAptRepositoryFactory
 import com.anrisoftware.sscontrol.scripts.localgroupadd.LocalGroupAddFactory
 import com.anrisoftware.sscontrol.scripts.localuseradd.LocalUserAddFactory
 import com.anrisoftware.sscontrol.scripts.localuserinfo.LocalUserInfoFactory
@@ -56,9 +55,6 @@ class UbuntuScript extends Deadwood_3_2_Script {
     InstallPackagesFactory installPackagesFactory
 
     @Inject
-    EnableAptRepositoryFactory enableAptRepositoryFactory
-
-    @Inject
     RestartServicesFactory restartServicesFactory
 
     @Inject
@@ -73,14 +69,11 @@ class UbuntuScript extends Deadwood_3_2_Script {
     @Inject
     ScriptExecFactory scriptExecFactory
 
-    Templates deadwoodUbuntuTemplates
-
     TemplateResource deadwoodRun
 
     TemplateResource activateService
 
     def run() {
-        enableRepository()
         installPackages()
         deployDeadwoodConfiguration()
         createDeadwoodDirectories()
@@ -92,24 +85,10 @@ class UbuntuScript extends Deadwood_3_2_Script {
     }
 
     @Inject
-    void setUbuntuScriptTemplatesFactory(TemplatesFactory factory) {
-        this.deadwoodUbuntuTemplates = factory.create("Deadwood_Ubuntu_14_04")
-        this.deadwoodRun = deadwoodUbuntuTemplates.getResource("deadwoodrun")
-        this.activateService = deadwoodUbuntuTemplates.getResource("activate_service")
-    }
-
-    /**
-     * Installs the <i>universe</i> repository.
-     */
-    void enableRepository() {
-        enableAptRepositoryFactory.create(
-                log: log,
-                charset: charset,
-                repository: additionalRepository,
-                distributionName: distributionName,
-                repositoryString: repositoryString,
-                packagesSourcesFile: packagesSourcesFile,
-                this, threads)()
+    final void setUbuntuScriptTemplatesFactory(TemplatesFactory factory) {
+        def templates = factory.create("Deadwood_Ubuntu_14_04")
+        this.deadwoodRun = templates.getResource("deadwoodrun")
+        this.activateService = templates.getResource("activate_service")
     }
 
     /**
@@ -146,7 +125,11 @@ class UbuntuScript extends Deadwood_3_2_Script {
      */
     void installPackages() {
         installPackagesFactory.create(
-                log: log, command: installCommand, packages: packages, this, threads)()
+                log: log,
+                command: installCommand,
+                packages: packages,
+                system: systemName,
+                this, threads)()
     }
 
     /**
@@ -154,7 +137,10 @@ class UbuntuScript extends Deadwood_3_2_Script {
      */
     void restartService() {
         restartServicesFactory.create(
-                log: log, command: restartCommand, services: restartServices, this, threads)()
+                log: log,
+                command: restartCommand,
+                services: restartServices,
+                this, threads)()
     }
 
     /**
@@ -179,8 +165,11 @@ class UbuntuScript extends Deadwood_3_2_Script {
     void activateDeadwoodService() {
         def name = "deadwood"
         scriptExecFactory.create(
-                log: log, command: updateRcCommand, service: name,
-                this, threads, activateService, "activateService")()
+                log: log,
+                command: updateRcCommand,
+                service: name,
+                this, threads,
+                activateService, "activateService")()
     }
 
     /**

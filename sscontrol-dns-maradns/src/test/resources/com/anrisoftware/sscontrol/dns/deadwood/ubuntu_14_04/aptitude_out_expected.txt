@@ -1,4 +1,2 @@
-update
-install maradns-deadwood dpkg
-update
-install maradns-deadwood dpkg
+-q -y install maradns-deadwood dpkg
+-q -y install maradns-deadwood dpkg

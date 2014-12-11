@@ -1,1 +1,0 @@
-Sexample1.com.|86400|ns.example1.com.|hostmaster@example1.com.|1|28800|7200|345600|86400

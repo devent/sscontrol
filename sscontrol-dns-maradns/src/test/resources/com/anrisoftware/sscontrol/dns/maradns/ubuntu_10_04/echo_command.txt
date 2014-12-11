@@ -1,2 +1,0 @@
-theCommand="$0"
-echo "$@" >> $theCommand.out

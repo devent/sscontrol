@@ -18,15 +18,11 @@
  */
 package com.anrisoftware.sscontrol.hosts.ubuntu_12_04;
 
-import static com.google.inject.multibindings.MapBinder.newMapBinder;
-import groovy.lang.Script;
-
 import com.google.inject.AbstractModule;
-import com.google.inject.multibindings.MapBinder;
 
 /**
- * Hosts/Ubuntu 12.04 module.
- * 
+ * <i>Hosts Ubuntu 12.04</i> module.
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
@@ -34,12 +30,5 @@ class UbuntuModule extends AbstractModule {
 
 	@Override
 	protected void configure() {
-		bindScripts();
-	}
-
-	private void bindScripts() {
-		MapBinder<String, Script> binder;
-		binder = newMapBinder(binder(), String.class, Script.class);
-        binder.addBinding("ubuntu_12_04").to(UbuntuScript.class);
 	}
 }

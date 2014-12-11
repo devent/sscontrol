@@ -28,7 +28,7 @@ import com.google.inject.Injector;
 import com.google.inject.Module;
 
 /**
- * Provides Hosts/Ubuntu 14.04.
+ * <i>Hosts Ubuntu 14.04</i> service provider.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0

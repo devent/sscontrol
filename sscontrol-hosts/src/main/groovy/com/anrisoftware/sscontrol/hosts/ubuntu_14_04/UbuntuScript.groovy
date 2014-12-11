@@ -24,7 +24,7 @@ import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.sscontrol.hosts.linux.HostsScript
 
 /**
- * Deploys the <i>hosts</i> on the <i>Ubuntu 14.04</i> Linux system.
+ * <i>Hosts Ubuntu 14.04</i> service script.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0

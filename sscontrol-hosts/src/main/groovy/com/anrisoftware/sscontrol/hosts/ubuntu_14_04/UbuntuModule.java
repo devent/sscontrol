@@ -21,7 +21,7 @@ package com.anrisoftware.sscontrol.hosts.ubuntu_14_04;
 import com.google.inject.AbstractModule;
 
 /**
- * Hosts/Ubuntu 14.04 module.
+ * <i>Hosts Ubuntu 14.04</i> module.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0

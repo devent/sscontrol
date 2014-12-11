@@ -65,5 +65,8 @@ deb-src http://security.ubuntu.com/ubuntu precise-security multiverse
 # deb http://extras.ubuntu.com/ubuntu precise main
 # deb-src http://extras.ubuntu.com/ubuntu precise main
 
-# RoboBee http://nginx.org/packages/ubuntu/ precise
+# RoboBee nginx
 deb http://nginx.org/packages/ubuntu/ precise nginx
+
+# RoboBee extra
+deb http://archive.ubuntu.com/ubuntu/ precise extra

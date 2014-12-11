@@ -71,6 +71,21 @@ public interface RepoService extends Service {
     Set<String> getRepositories();
 
     /**
+     * Returns the list of to enable repository components.
+     * <p>
+     * Example returns the list {@code ["foo", "bar"]}
+     *
+     * <pre>
+     * repo {
+     *     enable components: "foo, bar"
+     * }
+     * </pre>
+     *
+     * @return the repositories {@link List} set or {@code null}.
+     */
+    List<String> getEnableComponents();
+
+    /**
      * Returns the repositories distribution.
      * <p>
      * Example returns the map

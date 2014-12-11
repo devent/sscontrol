@@ -69,7 +69,9 @@ abstract class AptConfig {
      *            the {@link Map} sources.
      */
     void deploySources(RepoService service, Map sources) {
-        deployAptSourcesListFactory.create(service, sources, script).deploySources()
+        def deployApt = deployAptSourcesListFactory.create(service, sources, script)
+        deployApt.deploySources()
+        deployApt.deployEnableComponents()
     }
 
     void setScript(Object script) {

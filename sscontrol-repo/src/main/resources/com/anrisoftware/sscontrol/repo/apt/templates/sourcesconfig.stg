@@ -3,5 +3,5 @@ aptRepository(args) ::= <%
 %>
 
 aptRepositoryComment(args) ::= <%
-# RoboBee <args.repo> <args.dist>
+# RoboBee <args.comps;separator=" ">
 %>

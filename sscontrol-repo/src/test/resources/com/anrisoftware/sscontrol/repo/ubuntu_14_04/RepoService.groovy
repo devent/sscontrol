@@ -20,6 +20,7 @@ package com.anrisoftware.sscontrol.repo.ubuntu_12_04
 
 repo {
     proxy "http://proxy.ubuntu.net"
+    enable components: "extra"
     repository "http://foo.archive.ubuntu.com/ubuntu/"
     repository "http://nginx.org/packages/ubuntu/", distribution: "trusty", components: "nginx"
 }

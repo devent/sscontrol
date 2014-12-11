@@ -50,6 +50,8 @@ class RedoServiceTest extends RedoServiceBase {
             "http://bar.archive.ubuntu.com/ubuntu/",
             "http://baz.archive.ubuntu.com/ubuntu/"
         ])
+        assert service.enableComponents.size() == 2
+        assert service.enableComponents.containsAll(["foo", "bar"])
         assert service.repositoriesDistribution.size() == 1
         assert service.repositoriesDistribution["http://baz.archive.ubuntu.com/ubuntu/"] == "precise"
         assert service.repositoriesComponents.size() == 1

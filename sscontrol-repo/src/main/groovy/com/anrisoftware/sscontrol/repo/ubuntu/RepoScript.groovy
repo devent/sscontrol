@@ -240,4 +240,18 @@ abstract class RepoScript extends LinuxScript {
     List getDefaultBackportsComponents() {
         profileListProperty "default_backports_components", defaultProperties
     }
+
+    /**
+     * Returns the default repository, for
+     * example {@code "http://archive.ubuntu.com/ubuntu/"}.
+     *
+     * <ul>
+     * <li>property {@code "default_repository"}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    String getDefaultRepository() {
+        profileProperty "default_repository", defaultProperties
+    }
 }

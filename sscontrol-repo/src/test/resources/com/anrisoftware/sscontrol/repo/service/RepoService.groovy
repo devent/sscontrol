@@ -20,6 +20,7 @@ package com.anrisoftware.sscontrol.repo.service
 
 repo {
     proxy "http://proxy.ubuntu.net"
+    enable components: "foo, bar"
     repository "http://foo.archive.ubuntu.com/ubuntu/"
     repository "http://bar.archive.ubuntu.com/ubuntu/"
     repository "http://baz.archive.ubuntu.com/ubuntu/", distribution: "precise", components: "universe, multiverse"

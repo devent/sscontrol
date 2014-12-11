@@ -37,42 +37,28 @@ class ParseAptSourcesList {
         def file = sourcesFile
         readLines(file, charset).eachWithIndex { value, index ->
             if (!value.matches(/#.*/) && !value.empty) {
-                parseRepository value, index, "distribution", "distributionName", "defaultComponents"
-                parseRepository value, index, "security", "securityDistributionName", "defaultSecurityComponents"
-                parseRepository value, index, "updates", "updatesDistributionName", "defaultUpdatesComponents"
-                parseRepository value, index, "backports", "backportsDistributionName", "defaultBackportsComponents"
+                parseRepository value, index, "distribution", "distributionName"
+                parseRepository value, index, "security", "securityDistributionName"
+                parseRepository value, index, "updates", "updatesDistributionName"
+                parseRepository value, index, "backports", "backportsDistributionName"
             }
         }
         return sources
     }
 
-    Map parseRepository(String value, int index, String name, String distributionName, String defaultComponents) {
-        def list = parseRepository0(value, index, distributionName, defaultComponents, [])
+    Map parseRepository(String value, int index, String name, String distributionName) {
+        def list = parseRepository0(value, index, distributionName, [])
         if (!list.empty) {
             sources[name].addAll(list)
         }
         return sources
     }
 
-    List parseRepository0(String value, int index, String distributionName, String defaultComponents, List sources) {
-        def type = repositoryType
-        service.repositories?.each { String repo ->
-            def dist = null
-            def comps = null
-            if (service.repositoriesDistribution != null) {
-                dist = service.repositoriesDistribution[repo]
-            }
-            dist = dist == null ? script."$distributionName" : dist
-            if (service.repositoriesComponents != null) {
-                comps = service.repositoriesComponents[repo]
-            }
-            comps = comps == null ? script."$defaultComponents" : comps
-            comps.each { String comp ->
-                def line = StringUtils.split(value, ' ')
-                if (line[2] == dist && line[3] == comp) {
-                    sources << [line: index, type: line[0], repo: line[1], dist: line[2], comps: line[3..-1]]
-                }
-            }
+    List parseRepository0(String value, int index, String distributionName, List sources) {
+        def dist = script."$distributionName"
+        def line = StringUtils.split(value, ' ')
+        if (line[2] == dist) {
+            sources << [line: index, type: line[0], repo: line[1], dist: line[2], comps: line[3..-1]]
         }
         return sources
     }

@@ -61,5 +61,8 @@ deb-src http://security.ubuntu.com/ubuntu trusty-security multiverse
 # deb http://extras.ubuntu.com/ubuntu trusty main
 # deb-src http://extras.ubuntu.com/ubuntu trusty main
 
-# RoboBee http://nginx.org/packages/ubuntu/ trusty
+# RoboBee nginx
 deb http://nginx.org/packages/ubuntu/ trusty nginx
+
+# RoboBee extra
+deb http://archive.ubuntu.com/ubuntu/ trusty extra

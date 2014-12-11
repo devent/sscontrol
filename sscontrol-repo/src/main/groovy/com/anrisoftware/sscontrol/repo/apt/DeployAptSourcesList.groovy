@@ -48,6 +48,25 @@ class DeployAptSourcesList {
         writeLines file, charset.name(), config
     }
 
+    /**
+     * Deploys the set enabled components.
+     */
+    void deployEnableComponents() {
+        def file = sourcesFile
+        this.config = readLines(file, charset)
+        def type = repositoryType
+        def dist = distributionName
+        def repo = defaultRepository
+        service.enableComponents?.each { String comp ->
+            def found = sources.distribution.find { it.comps.contains(comp) } != null
+            if (!found) {
+                deployRepositoryComment type: type, repo: repo, dist: dist, comps: comp, line: -1
+                deployRepository type: type, repo: repo, dist: dist, comps: comp, line: -1
+            }
+        }
+        writeLines file, charset.name(), config
+    }
+
     final void deployRepositories(boolean useDefaults, String name, String distributionName, String defaultComponents) {
         def type = repositoryType
         def lines = []

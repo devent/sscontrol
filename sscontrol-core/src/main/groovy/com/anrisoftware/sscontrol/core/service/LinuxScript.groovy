@@ -127,6 +127,19 @@ abstract class LinuxScript extends Script {
     }
 
     /**
+     * Returns the system name, for example {@code "ubuntu"}.
+     *
+     * <ul>
+     * <li>profile property {@code system_name}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    String getSystemName() {
+        profileProperty "system_name", defaultProperties
+    }
+
+    /**
      * Returns the distribution name, for example {@code "lucid"}.
      *
      * <ul>

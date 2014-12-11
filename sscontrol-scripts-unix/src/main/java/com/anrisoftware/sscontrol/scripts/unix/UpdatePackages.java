@@ -35,12 +35,12 @@ import com.anrisoftware.resources.templates.api.TemplateResource;
 import com.google.inject.assistedinject.Assisted;
 
 /**
- * Installs specified packages on the system.
+ * Update local packages on the system.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-public class InstallPackages extends AbstractProcessExec {
+public class UpdatePackages extends AbstractProcessExec {
 
     /**
      * Default {@code timeout} duration, set to 60 minutes.
@@ -52,16 +52,16 @@ public class InstallPackages extends AbstractProcessExec {
     private final Map<String, Object> args;
 
     @Inject
-    private InstallPackagesLogger log;
+    private UpdatePackagesLogger log;
 
     @Inject
     private CommandTemplatesProvider commandTemplates;
 
     /**
-     * @see InstallPackagesFactory#create(Map, Object, Threads)
+     * @see UpdatePackagesFactory#create(Map, Object, Threads)
      */
     @Inject
-    InstallPackages(@Assisted Object parent, @Assisted Threads threads,
+    UpdatePackages(@Assisted Object parent, @Assisted Threads threads,
             @Assisted Map<String, Object> args) {
         super(threads, setupTimeout(args));
         this.parent = parent;
@@ -79,7 +79,7 @@ public class InstallPackages extends AbstractProcessExec {
     protected CommandLine createLine(ScriptCommandLineFactory commandLineFactory) {
         TemplateResource template = getTemplate();
         String system = args.get("system").toString();
-        String name = format("%s%s", "install", capitalize(system));
+        String name = format("%s%s", "update", capitalize(system));
         return commandLineFactory.create(name, template).addSub("args", args);
     }
 
@@ -87,11 +87,11 @@ public class InstallPackages extends AbstractProcessExec {
     public ProcessTask call() throws Exception {
         log.checkArgs(args);
         ProcessTask task = super.call();
-        log.installPackagesDone(parent, task, args);
+        log.updatedPackagesDone(parent, task, args);
         return task;
     }
 
     private TemplateResource getTemplate() {
-        return commandTemplates.get().getResource("install");
+        return commandTemplates.get().getResource("update");
     }
 }

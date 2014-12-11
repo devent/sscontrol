@@ -19,6 +19,7 @@
 package com.anrisoftware.sscontrol.repo.ubuntu_14_04
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
+import static com.anrisoftware.sscontrol.repo.ubuntu.UbuntuResources.*
 import static com.anrisoftware.sscontrol.repo.ubuntu_14_04.RepoResources.*
 import static org.apache.commons.io.FileUtils.*
 import groovy.util.logging.Slf4j
@@ -39,9 +40,11 @@ class RepoServiceTest extends UbuntuTestUtil {
 
     @Test
     void "repo service"() {
+        copyUbuntuFiles tmpdir
         copyRepoFiles tmpdir
         loader.loadService profile.resource, null
         def profile = registry.getService("profile")[0]
+        setupUbuntuProperties profile, tmpdir
         setupRepoProperties profile, tmpdir
         loader.loadService repoService.resource, profile
 
@@ -50,5 +53,6 @@ class RepoServiceTest extends UbuntuTestUtil {
         registry.allServices.each { it.call() }
 
         assertFileContent sourcesListExpected.asFile(tmpdir), sourcesListExpected
+        assertFileContent aptitudeOutExpected.asFile(tmpdir), aptitudeOutExpected
     }
 }

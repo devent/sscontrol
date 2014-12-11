@@ -18,9 +18,9 @@
  */
 package com.anrisoftware.sscontrol.scripts.unix;
 
-import static com.anrisoftware.sscontrol.scripts.unix.InstallPackagesLogger._.command_null;
-import static com.anrisoftware.sscontrol.scripts.unix.InstallPackagesLogger._.install_packages_done;
-import static com.anrisoftware.sscontrol.scripts.unix.InstallPackagesLogger._.packages_null;
+import static com.anrisoftware.sscontrol.scripts.unix.UpdatePackagesLogger._.command_null;
+import static com.anrisoftware.sscontrol.scripts.unix.UpdatePackagesLogger._.packages_null;
+import static com.anrisoftware.sscontrol.scripts.unix.UpdatePackagesLogger._.update_packages_done;
 import static org.apache.commons.lang3.Validate.notNull;
 
 import java.util.Map;
@@ -29,15 +29,14 @@ import com.anrisoftware.globalpom.exec.api.ProcessTask;
 import com.anrisoftware.globalpom.log.AbstractLogger;
 
 /**
- * Logging for {@link InstallPackages}.
+ * Logging for {@link UpdatePackages}.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class InstallPackagesLogger extends AbstractLogger {
+class UpdatePackagesLogger extends AbstractLogger {
 
     private static final String SYSTEM_ARG = "system";
-    private static final String PACKAGES_ARG = "packages";
     private static final String COMMAND_ARG = "command";
 
     enum _ {
@@ -46,7 +45,7 @@ class InstallPackagesLogger extends AbstractLogger {
 
         packages_null("Packages argument '%s' must be set"),
 
-        install_packages_done("Installed packages {} for {}, {}.");
+        update_packages_done("Updated packages for {}.");
 
         private String name;
 
@@ -61,20 +60,19 @@ class InstallPackagesLogger extends AbstractLogger {
     }
 
     /**
-     * Sets the context of the logger to {@link InstallPackages}.
+     * Sets the context of the logger to {@link UpdatePackages}.
      */
-    public InstallPackagesLogger() {
-        super(InstallPackages.class);
+    public UpdatePackagesLogger() {
+        super(UpdatePackages.class);
     }
 
-    void installPackagesDone(Object parent, ProcessTask task,
+    void updatedPackagesDone(Object parent, ProcessTask task,
             Map<String, Object> args) {
-        debug(install_packages_done, args, parent, task);
+        debug(update_packages_done, args, parent);
     }
 
     void checkArgs(Map<String, Object> args) {
         notNull(args.get(COMMAND_ARG), command_null.toString(), COMMAND_ARG);
-        notNull(args.get(PACKAGES_ARG), packages_null.toString(), PACKAGES_ARG);
         notNull(args.get(SYSTEM_ARG), packages_null.toString(), SYSTEM_ARG);
     }
 }

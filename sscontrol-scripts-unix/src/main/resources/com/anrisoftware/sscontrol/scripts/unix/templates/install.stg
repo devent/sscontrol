@@ -1,4 +1,5 @@
-installUnix(args) ::= <<
-<args.command> <args.packages;separator=" ">
+installUbuntu(args) ::= <<
+export DEBIAN_FRONTEND=noninteractive
+<args.command> -q -y install <args.packages;separator=" ">
 
 >>

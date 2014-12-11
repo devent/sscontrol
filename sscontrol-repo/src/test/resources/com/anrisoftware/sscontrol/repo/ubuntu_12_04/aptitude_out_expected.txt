@@ -1,0 +1,6 @@
+update
+-q -y install apt aptitude
+update
+update
+-q -y install apt aptitude
+update

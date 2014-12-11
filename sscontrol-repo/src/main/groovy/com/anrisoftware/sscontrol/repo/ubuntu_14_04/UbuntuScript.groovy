@@ -38,9 +38,12 @@ class UbuntuScript extends RepoScript {
 
     @Override
     def run() {
+        updatePackages()
+        installPackages()
         aptConfig.setupDefaults(service)
         def sources = aptConfig.readSources(service)
         aptConfig.deploySources(service, sources)
+        updatePackages()
     }
 
     @Inject

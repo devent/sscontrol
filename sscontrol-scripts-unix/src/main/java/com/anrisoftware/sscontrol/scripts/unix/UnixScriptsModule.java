@@ -28,10 +28,11 @@ import com.google.inject.assistedinject.FactoryModuleBuilder;
 
 /**
  * @see InstallPackagesFactory
+ * @see UpdatePackagesFactory
  * @see RestartServicesFactory
  * @see StopServicesFactory
  * @see ScriptExecFactory
- * 
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
@@ -39,7 +40,7 @@ public class UnixScriptsModule extends AbstractModule {
 
     /**
      * Installs needed command exec modules.
-     * 
+     *
      * @author Erwin Mueller, erwin.mueller@deventm.org
      * @since 1.0
      */
@@ -66,6 +67,8 @@ public class UnixScriptsModule extends AbstractModule {
                 ScriptExec.class).build(ScriptExecFactory.class));
         install(new FactoryModuleBuilder().implement(StopServices.class,
                 StopServices.class).build(StopServicesFactory.class));
+        install(new FactoryModuleBuilder().implement(UpdatePackages.class,
+                UpdatePackages.class).build(UpdatePackagesFactory.class));
     }
 
 }

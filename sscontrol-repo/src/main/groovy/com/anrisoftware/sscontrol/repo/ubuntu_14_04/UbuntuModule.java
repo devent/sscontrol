@@ -19,6 +19,7 @@
 package com.anrisoftware.sscontrol.repo.ubuntu_14_04;
 
 import com.anrisoftware.sscontrol.repo.apt.RepoAptModule;
+import com.anrisoftware.sscontrol.scripts.unix.UnixScriptsModule;
 import com.google.inject.AbstractModule;
 
 /**
@@ -32,5 +33,7 @@ class UbuntuModule extends AbstractModule {
 	@Override
 	protected void configure() {
         install(new RepoAptModule());
+        install(new UnixScriptsModule());
+        install(new UnixScriptsModule.ExecCommandModule());
 	}
 }

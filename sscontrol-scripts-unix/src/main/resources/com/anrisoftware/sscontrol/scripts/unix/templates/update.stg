@@ -1,0 +1,4 @@
+updateUbuntu(args) ::= <<
+<args.command> update
+
+>>

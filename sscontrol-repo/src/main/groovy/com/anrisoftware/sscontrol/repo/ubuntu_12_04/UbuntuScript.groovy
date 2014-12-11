@@ -22,6 +22,7 @@ import javax.inject.Inject
 
 import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.sscontrol.repo.ubuntu.RepoScript
+import com.anrisoftware.sscontrol.scripts.unix.InstallPackagesFactory
 
 /**
  * <i>Repo Ubuntu 12.04</i> configuration script.
@@ -38,9 +39,12 @@ class UbuntuScript extends RepoScript {
 
     @Override
     def run() {
+        updatePackages()
+        installPackages()
         aptConfig.setupDefaults(service)
         def sources = aptConfig.readSources(service)
         aptConfig.deploySources(service, sources)
+        updatePackages()
     }
 
     @Inject

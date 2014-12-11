@@ -27,12 +27,12 @@ import com.anrisoftware.globalpom.exec.api.ProcessTask;
 import com.anrisoftware.globalpom.threads.api.Threads;
 
 /**
- * Factory to create the install packages.
+ * Factory to create the update packages worker.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-public interface InstallPackagesFactory {
+public interface UpdatePackagesFactory {
 
     /**
      * Create the install packages.
@@ -41,8 +41,6 @@ public interface InstallPackagesFactory {
      *            the {@link Map} arguments.
      *            <ul>
      *            <li>{@code log} the logger that logs the command output;
-     *
-     *            <li>{@code packages} the list of packages to install;
      *
      *            <li>{@code command} the install packages command.
      *
@@ -84,8 +82,8 @@ public interface InstallPackagesFactory {
      * @param threads
      *            the {@link Threads} pool.
      *
-     * @return the {@link InstallPackages}.
+     * @return the {@link UpdatePackages}.
      */
-    InstallPackages create(Map<String, Object> args, Object parent,
+    UpdatePackages create(Map<String, Object> args, Object parent,
             Threads threads);
 }

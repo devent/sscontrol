@@ -32,9 +32,16 @@ import com.anrisoftware.sscontrol.repo.resources.ResourcesUtils
 enum UbuntuResources {
 
     confDir("/etc", null),
+    aptitudeCommand("/usr/bin/aptitude", UbuntuResources.class.getResource("echo_command.txt")),
 
     static copyUbuntuFiles(File parent) {
         confDir.asFile parent mkdirs()
+        aptitudeCommand.createCommand parent
+    }
+
+    static void setupUbuntuProperties(def profile, File parent) {
+        def entry = profile.getEntry("repo")
+        entry.install_command aptitudeCommand.asFile(parent)
     }
 
     ResourcesUtils resources

@@ -18,8 +18,13 @@
  */
 package com.anrisoftware.sscontrol.repo.ubuntu
 
-import com.anrisoftware.resources.templates.api.Templates
+import groovy.util.logging.Slf4j
+
+import javax.inject.Inject
+
 import com.anrisoftware.sscontrol.core.service.LinuxScript
+import com.anrisoftware.sscontrol.scripts.unix.InstallPackagesFactory
+import com.anrisoftware.sscontrol.scripts.unix.UpdatePackagesFactory
 
 /**
  * Deploys the repository on a general Linux system.
@@ -27,13 +32,63 @@ import com.anrisoftware.sscontrol.core.service.LinuxScript
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
+@Slf4j
 abstract class RepoScript extends LinuxScript {
+
+    @Inject
+    InstallPackagesFactory installPackagesFactory
+
+    @Inject
+    UpdatePackagesFactory updatePackagesFactory
+
+    /**
+     * Installs the repository service packages.
+     *
+     * @see #getPackages()
+     * @see #getInstallCommand()
+     * @see #getSystemName()
+     */
+    void installPackages() {
+        installPackagesFactory.create(
+                log: log,
+                packages: packages,
+                command: installCommand,
+                system: systemName,
+                this, threads)()
+    }
+
+    /**
+     * Updates the local cache of the packages.
+     *
+     * @see #getAptitudeCommand()
+     * @see #getSystemName()
+     */
+    void updatePackages() {
+        updatePackagesFactory.create(
+                log: log,
+                command: aptitudeCommand,
+                system: systemName,
+                this, threads)()
+    }
 
     /**
      * Returns the sources file.
      */
     File getSourcesFile() {
         new File(configurationDir, sourcesFileName)
+    }
+
+    /**
+     * Returns the <i>aptitude</i> command, for example {@code "/usr/bin/aptitude"}.
+     *
+     * <ul>
+     * <li>property {@code "aptitude_command"}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    String getAptitudeCommand() {
+        profileProperty "aptitude_command", defaultProperties
     }
 
     /**

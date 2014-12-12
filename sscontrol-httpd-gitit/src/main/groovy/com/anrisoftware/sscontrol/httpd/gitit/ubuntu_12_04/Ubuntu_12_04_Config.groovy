@@ -24,7 +24,6 @@ import javax.inject.Inject
 
 import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.resources.templates.api.TemplateResource
-import com.anrisoftware.resources.templates.api.Templates
 import com.anrisoftware.resources.templates.api.TemplatesFactory
 import com.anrisoftware.sscontrol.core.service.LinuxScript
 import com.anrisoftware.sscontrol.httpd.domain.Domain
@@ -58,12 +57,7 @@ class Ubuntu_12_04_Config extends Gitit_0_10_Config implements ServiceConfig {
     InstallPackagesFactory installPackagesFactory
 
     @Inject
-    TemplatesFactory templatesFactory
-
-    @Inject
     SystemvServiceUbuntu_12_04 systemvService
-
-    Templates gititTemplates
 
     TemplateResource gititCommandTemplate
 
@@ -85,12 +79,22 @@ class Ubuntu_12_04_Config extends Gitit_0_10_Config implements ServiceConfig {
         systemvService.restartService domain, service
     }
 
+    @Inject
+    final void setTemplatesFactory(TemplatesFactory factory) {
+        def templates = factory.create "Gitit_Ubuntu_12_04", ["renderers": [repositoryTypeRenderer]]
+        gititCommandTemplate = templates.getResource "gititcommands"
+        gititConfigTemplate = templates.getResource "gititconfig"
+    }
+
     /**
      * Installs the <i>Gitit</i> packages.
      */
     void installPackages() {
         installPackagesFactory.create(
-                log: log, command: script.installCommand, packages: gititPackages,
+                log: log,
+                command: installCommand,
+                packages: gititPackages,
+                system: systemName,
                 this, threads)()
     }
 
@@ -134,8 +138,5 @@ class Ubuntu_12_04_Config extends Gitit_0_10_Config implements ServiceConfig {
         super.setScript(script)
         systemvService.setScript this
         ubuntuHsenvFromSourceConfig.setScript this
-        gititTemplates = templatesFactory.create "Gitit_Ubuntu_12_04", ["renderers": [repositoryTypeRenderer]]
-        gititCommandTemplate = gititTemplates.getResource "gititcommands"
-        gititConfigTemplate = gititTemplates.getResource "gititconfig"
     }
 }

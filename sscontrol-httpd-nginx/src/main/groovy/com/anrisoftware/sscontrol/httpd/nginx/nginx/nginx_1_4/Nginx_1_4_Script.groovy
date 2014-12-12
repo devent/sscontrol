@@ -64,11 +64,6 @@ abstract class Nginx_1_4_Script extends NginxScript {
      */
     TemplateResource nginxConfigTemplate
 
-    /**
-     * Resource containing the <i>Nginx</i> commands templates.
-     */
-    TemplateResource nginxCommandsTemplate
-
     @Override
     def run() {
         super.run()
@@ -95,7 +90,6 @@ abstract class Nginx_1_4_Script extends NginxScript {
                 resourceURIAttributeRenderer
             ]]
         this.nginxConfigTemplate = templates.getResource "config"
-        this.nginxCommandsTemplate = templates.getResource "commands"
     }
 
     /**

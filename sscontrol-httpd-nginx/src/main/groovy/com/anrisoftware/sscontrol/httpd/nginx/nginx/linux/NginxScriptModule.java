@@ -20,7 +20,6 @@ package com.anrisoftware.sscontrol.httpd.nginx.nginx.linux;
 
 import com.anrisoftware.sscontrol.scripts.changefilemod.ChangeFileModModule;
 import com.anrisoftware.sscontrol.scripts.changefileowner.ChangeFileOwnerModule;
-import com.anrisoftware.sscontrol.scripts.enableaptrepository.EnableAptRepositoryModule;
 import com.anrisoftware.sscontrol.scripts.findusedport.FindUsedPortModule;
 import com.anrisoftware.sscontrol.scripts.killprocess.KillProcessModule;
 import com.anrisoftware.sscontrol.scripts.localchangegroup.LocalChangeGroupModule;
@@ -29,7 +28,6 @@ import com.anrisoftware.sscontrol.scripts.localgroupadd.LocalGroupAddModule;
 import com.anrisoftware.sscontrol.scripts.localuseradd.LocalUserAddModule;
 import com.anrisoftware.sscontrol.scripts.mklink.MkLinkModule;
 import com.anrisoftware.sscontrol.scripts.processinfo.ProcessInfoModule;
-import com.anrisoftware.sscontrol.scripts.repositoryaptenabled.RepositoryAptEnabledModule;
 import com.anrisoftware.sscontrol.scripts.unix.UnixScriptsModule;
 import com.google.inject.AbstractModule;
 
@@ -52,8 +50,6 @@ public class NginxScriptModule extends AbstractModule {
         install(new LocalChangeGroupModule());
         install(new LocalChangeUserModule());
         install(new FindUsedPortModule());
-        install(new EnableAptRepositoryModule());
-        install(new RepositoryAptEnabledModule());
         install(new MkLinkModule());
         install(new ProcessInfoModule());
         install(new KillProcessModule());

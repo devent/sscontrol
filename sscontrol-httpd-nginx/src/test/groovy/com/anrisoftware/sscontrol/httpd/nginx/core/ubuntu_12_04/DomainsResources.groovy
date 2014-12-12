@@ -40,8 +40,6 @@ enum DomainsResources {
     nginxConfExpected("/etc/nginx/nginx.conf", DomainsResources.class.getResource("nginx_conf_expected.txt")),
     robobeeConfExpected("/etc/nginx/conf.d/000-robobee_defaults.conf", DomainsResources.class.getResource("robobee_conf_expected.txt")),
     robobeeSitesConfExpected("/etc/nginx/conf.d/999-robobee_sites.conf", DomainsResources.class.getResource("robobee_sites_conf_expected.txt")),
-    sourcesListExpected("/etc/apt/sources.list", DomainsResources.class.getResource("sources_list_expected.txt")),
-    aptKeyOutExpected("/usr/bin/apt-key.out", DomainsResources.class.getResource("apt_key_out_expected.txt")),
     aptitudeOutExpected("/usr/bin/aptitude.out", DomainsResources.class.getResource("aptitude_out_expected.txt")),
     restartOutExpected("/etc/init.d/nginx.out", DomainsResources.class.getResource("restart_out_expected.txt")),
     lnOutExpected("/bin/ln.out", DomainsResources.class.getResource("ln_out_expected.txt")),

@@ -66,8 +66,6 @@ class UserRefDomainTest extends UbuntuTestUtil {
         assertStringContent wwwtest4comConf.replaced(tmpdir, tmpdir, "/tmp"), wwwtest4comConf.toString()
         assertStringContent lnOutExpected.replaced(tmpdir, tmpdir, "/tmp"), lnOutExpected.toString()
         assertFileContent restartOutExpected.asFile(tmpdir), restartOutExpected
-        assertFileContent sourcesListExpected.asFile(tmpdir), sourcesListExpected
-        assertStringContent aptKeyOutExpected.replaced(tmpdir, tmpdir, "/tmp"), aptKeyOutExpected.toString()
         assertFileContent aptitudeOutExpected.asFile(tmpdir), aptitudeOutExpected
         assertStringContent useraddOutExpected.replaced(tmpdir, tmpdir, "/tmp"), useraddOutExpected.toString()
         assertStringContent groupaddOutExpected.replaced(tmpdir, tmpdir, "/tmp"), groupaddOutExpected.toString()

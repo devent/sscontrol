@@ -20,13 +20,11 @@ package com.anrisoftware.sscontrol.httpd.nginx.redirect.ubuntu_12_04
 
 import com.anrisoftware.sscontrol.httpd.nginx.ubuntu.UbuntuResources
 
-def aptitudeCommand = UbuntuResources.aptitudeCommand.asFile(tmp)
 
 profile "ubuntu_12_04", {
     httpd {
         service "nginx"
-        install_command "$aptitudeCommand update && $aptitudeCommand install"
-        apt_key_command UbuntuResources.aptKeyCommand.asFile(tmp)
+        install_command UbuntuResources.aptitudeCommand.asFile(tmp)
         chmod_command UbuntuResources.chmodCommand.asFile(tmp)
         chown_command UbuntuResources.chownCommand.asFile(tmp)
         group_add_command UbuntuResources.groupaddCommand.asFile(tmp)

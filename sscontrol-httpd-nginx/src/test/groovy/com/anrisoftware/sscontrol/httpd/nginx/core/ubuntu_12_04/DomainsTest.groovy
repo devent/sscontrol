@@ -61,8 +61,6 @@ class DomainsTest extends UbuntuTestUtil {
         assertStringContent test1comSslConf.replaced(tmpdir, tmpdir, "/tmp"), test1comSslConf.toString()
         assertStringContent lnOutExpected.replaced(tmpdir, tmpdir, "/tmp"), lnOutExpected.toString()
         assertFileContent restartOutExpected.asFile(tmpdir), restartOutExpected
-        assertFileContent sourcesListExpected.asFile(tmpdir), sourcesListExpected
-        assertStringContent aptKeyOutExpected.replaced(tmpdir, tmpdir, "/tmp"), aptKeyOutExpected.toString()
         assertFileContent aptitudeOutExpected.asFile(tmpdir), aptitudeOutExpected
         assertStringContent useraddOutExpected.replaced(tmpdir, tmpdir, "/tmp"), useraddOutExpected.toString()
         assertStringContent groupaddOutExpected.replaced(tmpdir, tmpdir, "/tmp"), groupaddOutExpected.toString()
@@ -95,8 +93,6 @@ class DomainsTest extends UbuntuTestUtil {
         assertStringContent test1comSslConf.replaced(tmpdir, tmpdir, "/tmp"), test1comSslConf.toString()
         assertStringContent lnOutExpected.replaced(tmpdir, tmpdir, "/tmp"), lnOutExpected.toString()
         assertFileContent restartOutExpected.asFile(tmpdir), restartOutExpected
-        assertFileContent sourcesListExpected.asFile(tmpdir), sourcesListExpected
-        assertStringContent aptKeyOutExpected.replaced(tmpdir, tmpdir, "/tmp"), aptKeyOutExpected.toString()
         assertFileContent aptitudeOutExpected.asFile(tmpdir), aptitudeOutExpected
 
         assertStringContent usersExistingGroupModOutExpected.replaced(tmpdir, tmpdir, "/tmp"), usersExistingGroupModOutExpected.toString()

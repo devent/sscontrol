@@ -45,8 +45,6 @@ enum UserRefDomainResources {
     nginxConfExpected("/etc/nginx/nginx.conf", UserRefDomainResources.class.getResource("nginx_conf_expected.txt")),
     robobeeConfExpected("/etc/nginx/conf.d/000-robobee_defaults.conf", UserRefDomainResources.class.getResource("robobee_conf_expected.txt")),
     robobeeSitesConfExpected("/etc/nginx/conf.d/999-robobee_sites.conf", UserRefDomainResources.class.getResource("robobee_sites_conf_expected.txt")),
-    sourcesListExpected("/etc/apt/sources.list", UserRefDomainResources.class.getResource("sources_list_expected.txt")),
-    aptKeyOutExpected("/usr/bin/apt-key.out", UserRefDomainResources.class.getResource("apt_key_out_expected.txt")),
     aptitudeOutExpected("/usr/bin/aptitude.out", UserRefDomainResources.class.getResource("aptitude_out_expected.txt")),
     restartOutExpected("/etc/init.d/nginx.out", UserRefDomainResources.class.getResource("restart_out_expected.txt")),
     lnOutExpected("/bin/ln.out", UserRefDomainResources.class.getResource("ln_out_expected.txt")),

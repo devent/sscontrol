@@ -1,4 +1,2 @@
-update
-install nginx net-tools
-update
-install nginx net-tools
+-q -y install nginx net-tools
+-q -y install nginx net-tools

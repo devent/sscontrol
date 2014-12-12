@@ -1,6 +1,0 @@
-aptKey(args) ::= <<
-<! - args.command - !>
-<! - args.key - !>
-<args.command> add <args.key>
-
->>

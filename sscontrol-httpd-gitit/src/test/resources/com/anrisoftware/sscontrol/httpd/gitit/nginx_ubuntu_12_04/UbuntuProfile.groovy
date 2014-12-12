@@ -18,14 +18,10 @@
  */
 package com.anrisoftware.sscontrol.httpd.gitit.nginx_ubuntu_12_04
 
-def aptitudeCommand = UbuntuResources.aptitudeCommand.asFile(tmp)
-def updateRcCommand = UbuntuResources.updateRcCommand.asFile(tmp)
-
 profile "ubuntu_12_04", {
     httpd {
         service "nginx"
-        install_command "$aptitudeCommand update && $aptitudeCommand install"
-        apt_key_command UbuntuResources.aptKeyCommand.asFile(tmp)
+        install_command UbuntuResources.aptitudeCommand.asFile(tmp)
         bash_command UbuntuResources.bashCommand.asFile(tmp)
         chmod_command UbuntuResources.chmodCommand.asFile(tmp)
         chown_command UbuntuResources.chownCommand.asFile(tmp)
@@ -37,10 +33,8 @@ profile "ubuntu_12_04", {
         unzip_command UbuntuResources.unzipCommand.asFile(tmp)
         link_command UbuntuResources.lnCommand.asFile(tmp)
         netstat_command UbuntuResources.netstatCommand.asFile(tmp)
-        update_rc_command updateRcCommand
+        update_rc_command UbuntuResources.updateRcCommand.asFile(tmp)
         temp_directory UbuntuResources.tmpDir.asFile(tmp)
-        packaging_configuration_directory UbuntuResources.packagingConfigurationDirectory.asFile(tmp)
-        packages_sources_file UbuntuResources.packagesSourcesFile.asFile(tmp)
         restart_command UbuntuResources.restartCommand.asFile(tmp)
         configuration_directory UbuntuResources.confDir.asFile(tmp)
         groups_file UbuntuResources.groupsFile.asFile(tmp)
@@ -49,8 +43,7 @@ profile "ubuntu_12_04", {
         sites_enabled_directory UbuntuResources.sitesEnabledDir.asFile(tmp)
         config_include_directory UbuntuResources.configIncludeDir.asFile(tmp)
         sites_directory UbuntuResources.sitesDir.asFile(tmp)
-        // nginx
-        nginx_signing_key UbuntuResources.nginxSigningKey.asFile(tmp)
+        system_name "ubuntu"
         // gitit
         cabal_command GititResources.cabalCommand.asFile(tmp)
         hsenv_command GititResources.hsenvCommand.asFile(tmp)

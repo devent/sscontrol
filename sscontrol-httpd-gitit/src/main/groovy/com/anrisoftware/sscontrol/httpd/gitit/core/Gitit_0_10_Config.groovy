@@ -237,7 +237,10 @@ abstract class Gitit_0_10_Config {
                 break
         }
         installPackagesFactory.create(
-                log: log, command: script.installCommand, packages: packages,
+                log: log,
+                command: installCommand,
+                packages: packages,
+                system: systemName,
                 this, threads)()
     }
 

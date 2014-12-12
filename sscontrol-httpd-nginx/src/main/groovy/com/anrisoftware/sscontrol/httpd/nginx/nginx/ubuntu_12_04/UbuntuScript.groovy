@@ -24,21 +24,17 @@ import javax.inject.Inject
 
 import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.sscontrol.httpd.nginx.nginx.nginx_1_4.Nginx_1_4_Script
-import com.anrisoftware.sscontrol.scripts.enableaptrepository.EnableAptRepositoryFactory
 import com.anrisoftware.sscontrol.scripts.unix.InstallPackagesFactory
 import com.anrisoftware.sscontrol.scripts.unix.RestartServicesFactory
 
 /**
- * Ubuntu 12.04 Nginx.
+ * <i>Nginx Ubuntu 12.04</i> service script.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
 @Slf4j
 class UbuntuScript extends Nginx_1_4_Script {
-
-    @Inject
-    private UbuntuNginxRepositoryScript nginxRepositoryScript
 
     @Inject
     private UbuntuPropertiesProvider ubuntuProperties
@@ -49,35 +45,15 @@ class UbuntuScript extends Nginx_1_4_Script {
     @Inject
     RestartServicesFactory restartServicesFactory
 
-    @Inject
-    EnableAptRepositoryFactory enableAptRepositoryFactory
-
     @Override
     def run() {
-        nginxRepositoryScript.setScript this
         super.run()
         restartService()
     }
 
     @Override
     void beforeConfiguration() {
-        enableDebRepositories() ? nginxRepositoryScript.signRepositories() : false
         installPackages()
-    }
-
-    /**
-     * Installs the repositories for <i>nginx</i>.
-     */
-    boolean enableDebRepositories() {
-        def worker = enableAptRepositoryFactory.create(
-                log: log,
-                repository: additionalRepository,
-                packagesSourcesFile: packagesSourcesFile,
-                distributionName: distributionName,
-                repositoryString: repositoryString,
-                charset: charset,
-                this, threads)()
-        worker.enabled
     }
 
     /**
@@ -85,7 +61,10 @@ class UbuntuScript extends Nginx_1_4_Script {
      */
     void installPackages() {
         installPackagesFactory.create(
-                log: log, command: installCommand, packages: packages,
+                log: log,
+                command: installCommand,
+                packages: packages,
+                system: systemName,
                 this, threads)()
     }
 
@@ -103,7 +82,9 @@ class UbuntuScript extends Nginx_1_4_Script {
      */
     void restartServices() {
         restartServicesFactory.create(
-                log: log, command: restartCommand, services: restartServices,
+                log: log,
+                command: restartCommand,
+                services: restartServices,
                 this, threads)()
     }
 

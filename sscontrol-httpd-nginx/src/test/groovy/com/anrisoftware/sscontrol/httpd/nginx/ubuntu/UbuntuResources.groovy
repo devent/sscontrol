@@ -32,7 +32,6 @@ import com.anrisoftware.sscontrol.httpd.nginx.resources.ResourcesUtils
 enum UbuntuResources {
 
     aptitudeCommand("/usr/bin/aptitude", UbuntuResources.class.getResource("echo_command.txt")),
-    aptKeyCommand("/usr/bin/apt-key", UbuntuResources.class.getResource("echo_command.txt")),
     lnCommand("/bin/ln", UbuntuResources.class.getResource("echo_command.txt")),
     chmodCommand("/bin/chmod", UbuntuResources.class.getResource("echo_command.txt")),
     chownCommand("/bin/chown", UbuntuResources.class.getResource("echo_command.txt")),
@@ -49,7 +48,6 @@ enum UbuntuResources {
 
     static void copyUbuntuFiles(File parent) {
         aptitudeCommand.createCommand parent
-        aptKeyCommand.createCommand parent
         lnCommand.createCommand parent
         netstatCommand.createCommand parent
         apacheStopCommand.createCommand parent

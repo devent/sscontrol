@@ -21,7 +21,6 @@ package com.anrisoftware.sscontrol.httpd.gitit.nginx_ubuntu_12_04;
 import javax.inject.Inject
 
 import com.anrisoftware.resources.templates.api.TemplateResource
-import com.anrisoftware.resources.templates.api.Templates
 import com.anrisoftware.resources.templates.api.TemplatesFactory
 import com.anrisoftware.sscontrol.core.service.LinuxScript
 import com.anrisoftware.sscontrol.httpd.domain.Domain
@@ -38,11 +37,6 @@ import com.anrisoftware.sscontrol.httpd.webservice.WebService
  */
 class NginxConfig extends Ubuntu_12_04_Config implements ServiceConfig {
 
-    @Inject
-    TemplatesFactory templatesFactory
-
-    Templates gititNginxTemplates
-
     TemplateResource gititDomainTemplate
 
     @Override
@@ -55,6 +49,12 @@ class NginxConfig extends Ubuntu_12_04_Config implements ServiceConfig {
     void deployService(Domain domain, WebService service, List config) {
         super.deployService domain, service, config
         createDomainConfig domain, null, service, config
+    }
+
+    @Inject
+    final void setNginxTemplatesFactory(TemplatesFactory factory) {
+        def templates = factory.create "Gitit_Nginx_Ubuntu_12_04"
+        this.gititDomainTemplate = templates.getResource "domainconfig"
     }
 
     /**
@@ -81,12 +81,5 @@ class NginxConfig extends Ubuntu_12_04_Config implements ServiceConfig {
         args.location = serviceAliasDir
         def configStr = gititDomainTemplate.getText(true, "domainConfig", "args", args)
         config << configStr
-    }
-
-    @Override
-    public void setScript(LinuxScript script) {
-        super.setScript(script)
-        this.gititTemplates = templatesFactory.create "Gitit_Nginx_Ubuntu_12_04"
-        this.gititDomainTemplate = gititTemplates.getResource "domainconfig"
     }
 }

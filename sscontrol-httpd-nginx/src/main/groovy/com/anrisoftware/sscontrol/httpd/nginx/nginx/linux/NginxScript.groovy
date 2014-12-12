@@ -858,11 +858,6 @@ abstract class NginxScript extends LinuxScript {
     }
 
     /**
-     * Returns the template resource containing commands.
-     */
-    abstract TemplateResource getNginxCommandsTemplate()
-
-    /**
      * Returns the profile name.
      */
     abstract String getProfileName()

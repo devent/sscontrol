@@ -44,6 +44,9 @@ class RedoServiceTest extends RedoServiceBase {
 
         RepoService service = registry.getService("repo")[0]
         assert service.proxy == "http://proxy.ubuntu.net"
+        assert service.signKeys.size() == 2
+        assert service.signKeys["foo signing key"].toString().matches(/.*key\.txt$/)
+        assert service.signKeys["bar signing key"].toString().matches(/.*key\.txt$/)
         assert service.repositories.size() == 3
         assert service.repositories.containsAll([
             "http://foo.archive.ubuntu.com/ubuntu/",

@@ -92,6 +92,19 @@ abstract class RepoScript extends LinuxScript {
     }
 
     /**
+     * Returns the <i>apt-key</i> command, for example {@code "/usr/bin/apt-key"}.
+     *
+     * <ul>
+     * <li>property {@code "aptkey_command"}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    String getAptkeyCommand() {
+        profileProperty "aptkey_command", defaultProperties
+    }
+
+    /**
      * Returns the sources file name, for example {@code "sources.list"}.
      *
      * <ul>

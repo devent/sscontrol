@@ -19,10 +19,13 @@
 package com.anrisoftware.sscontrol.repo.apt
 
 import static org.apache.commons.io.FileUtils.*
+import groovy.util.logging.Slf4j
 
 import javax.inject.Inject
 
+import com.anrisoftware.globalpom.resources.ToURLFactory
 import com.anrisoftware.sscontrol.repo.service.RepoService
+import com.anrisoftware.sscontrol.scripts.signrepo.SignRepoFactory
 
 /**
  * Deploys the repository on an <i>apt</i> system.
@@ -30,6 +33,7 @@ import com.anrisoftware.sscontrol.repo.service.RepoService
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
+@Slf4j
 abstract class AptConfig {
 
     private Object script
@@ -40,13 +44,30 @@ abstract class AptConfig {
     @Inject
     DeployAptSourcesListFactory deployAptSourcesListFactory
 
+    @Inject
+    SignRepoFactory signRepoFactory
+
+    @Inject
+    ToURLFactory toURLFactory
+
     /**
-     * Setups the default settings for the service.
+     * Signs the repositories.
      *
      * @param service
      *            the {@link RepoService} service.
      */
-    void setupDefaults(RepoService service) {
+    void signRepositories(RepoService service) {
+        service.signKeys?.each { name, key ->
+            def resource = toURLFactory.create().convert(key)
+            signRepoFactory.create(
+                    log: log,
+                    command: aptkeyCommand,
+                    key: resource,
+                    name: name,
+                    system: systemName,
+                    tmp: tmpDirectory,
+                    this, threads)()
+        }
     }
 
     /**

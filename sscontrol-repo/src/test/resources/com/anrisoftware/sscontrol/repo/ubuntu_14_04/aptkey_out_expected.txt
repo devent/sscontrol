@@ -1,0 +1,8 @@
+list
+add /tmp/signingkey
+list
+add /tmp/signingkey
+list
+add /tmp/signingkey
+list
+add /tmp/signingkey

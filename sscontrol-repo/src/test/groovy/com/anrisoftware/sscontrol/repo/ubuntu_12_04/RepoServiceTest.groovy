@@ -54,5 +54,6 @@ class RepoServiceTest extends UbuntuTestUtil {
 
         assertFileContent sourcesListExpected.asFile(tmpdir), sourcesListExpected
         assertFileContent aptitudeOutExpected.asFile(tmpdir), aptitudeOutExpected
+        assertStringContent aptkeyOutExpected.replaced(tmpdir, tmpdir, "/tmp").replaceAll(/signing\d+key/, "signingkey"), aptkeyOutExpected.toString()
     }
 }

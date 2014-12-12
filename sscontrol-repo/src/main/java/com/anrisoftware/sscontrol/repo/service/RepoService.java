@@ -54,6 +54,29 @@ public interface RepoService extends Service {
     String getProxy();
 
     /**
+     * Returns the signing keys.
+     * <p>
+     * Example returns the map
+     * 
+     * <pre>
+     * [
+     *      ["foo signing key": "http://keyserver.net/key-foo"],
+     *      ["bar signing key": "http://keyserver.net/key-bar"],
+     * ]
+     * </pre>
+     *
+     * <pre>
+     * repo {
+     *     sign "foo signing key", key: "http://keyserver.net/key-foo"
+     *     sign "bar signing key", key: "http://keyserver.net/key-bar"
+     * }
+     * </pre>
+     *
+     * @return the repositories {@link Set} set or {@code null}.
+     */
+    Map<String, Object> getSignKeys();
+
+    /**
      * Returns the repositories.
      * <p>
      * Example returns the set

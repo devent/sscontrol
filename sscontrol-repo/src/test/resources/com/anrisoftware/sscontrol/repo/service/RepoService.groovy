@@ -18,9 +18,15 @@
  */
 package com.anrisoftware.sscontrol.repo.service
 
+import com.anrisoftware.sscontrol.repo.ubuntu.UbuntuResources
+
+def key = UbuntuResources.keyFile.asFile tmp
+
 repo {
     proxy "http://proxy.ubuntu.net"
     enable components: "foo, bar"
+    sign "foo signing key", key: key
+    sign "bar signing key", key: key
     repository "http://foo.archive.ubuntu.com/ubuntu/"
     repository "http://bar.archive.ubuntu.com/ubuntu/"
     repository "http://baz.archive.ubuntu.com/ubuntu/", distribution: "precise", components: "universe, multiverse"

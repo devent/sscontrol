@@ -1,57 +1,43 @@
 /*
  * Copyright 2014 Erwin Müller <erwin.mueller@deventm.org>
  *
- * This file is part of sscontrol-repo.
+ * This file is part of sscontrol-scripts-unix.
  *
- * sscontrol-repo is free software: you can redistribute it and/or modify it
+ * sscontrol-scripts-unix is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published by the
  * Free Software Foundation, either version 3 of the License, or (at your
  * option) any later version.
  *
- * sscontrol-repo is distributed in the hope that it will be useful, but
+ * sscontrol-scripts-unix is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
  * for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with sscontrol-repo. If not, see <http://www.gnu.org/licenses/>.
+ * along with sscontrol-scripts-unix. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.repo.ubuntu
+package com.anrisoftware.sscontrol.scripts.signrepo
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static org.apache.commons.io.FileUtils.*
 
-import com.anrisoftware.sscontrol.repo.resources.ResourcesUtils
-
 /**
- * Hosts/Ubuntu resources.
+ * <i>Ubuntu 10.04</i> resources.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-enum UbuntuResources {
+enum Ubuntu_10_04_Resources {
 
-    confDir("/etc", null),
-    aptitudeCommand("/usr/bin/aptitude", UbuntuResources.class.getResource("echo_command.txt")),
-    aptkeyCommand("/usr/bin/apt-key", UbuntuResources.class.getResource("echo_command.txt")),
-    keyFile("/tmp/the_key.txt", UbuntuResources.class.getResource("key.txt")),
-
-    static copyUbuntuFiles(File parent) {
-        confDir.asFile parent mkdirs()
-        aptitudeCommand.createCommand parent
-        aptkeyCommand.createCommand parent
-        keyFile.createFile parent
-    }
-
-    static void setupUbuntuProperties(def profile, File parent) {
-        def entry = profile.getEntry("repo")
-        entry.install_command aptitudeCommand.asFile(parent)
-        entry.aptkey_command aptkeyCommand.asFile(parent)
-    }
+    aptkeyCommand("/usr/bin/apt-key", Ubuntu_10_04_Resources.class.getResource("aptkey_command.txt")),
+    aptkeyNginxCommand("/usr/bin/apt-key", Ubuntu_10_04_Resources.class.getResource("aptkey_nginx_command.txt")),
+    key("/tmp/the_key.txt", Ubuntu_10_04_Resources.class.getResource("key.txt")),
+    aptkeyOutExpected("/usr/bin/apt-key.out", Ubuntu_10_04_Resources.class.getResource("aptkey_out_expected.txt")),
+    aptkeyNginxOutExpected("/usr/bin/apt-key.out", Ubuntu_10_04_Resources.class.getResource("aptkey_nginx_out_expected.txt")),
 
     ResourcesUtils resources
 
-    UbuntuResources(String path, URL resource) {
+    Ubuntu_10_04_Resources(String path, URL resource) {
         this.resources = new ResourcesUtils(path: path, resource: resource)
     }
 

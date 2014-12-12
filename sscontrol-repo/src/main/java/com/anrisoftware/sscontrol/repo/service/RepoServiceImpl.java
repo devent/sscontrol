@@ -46,6 +46,10 @@ import com.anrisoftware.sscontrol.core.service.AbstractService;
 @SuppressWarnings("serial")
 class RepoServiceImpl extends AbstractService implements RepoService {
 
+    private static final String KEY_KEY = "key";
+
+    private static final String SIGN_KEY = "sign";
+
     private static final String ENABLE_KEY = "enable";
 
     private static final String COMPONENTS_KEY = "components";
@@ -86,8 +90,9 @@ class RepoServiceImpl extends AbstractService implements RepoService {
     @Inject
     public final void setStatementsTable(StatementsTableFactory factory) {
         StatementsTable table = factory.create(this, NAME);
-        table.addAllowed(REPOSITORY_KEY);
+        table.addAllowed(REPOSITORY_KEY, SIGN_KEY);
         table.addAllowedKeys(REPOSITORY_KEY, DISTRIBUTION_KEY, COMPONENTS_KEY);
+        table.addAllowedKeys(SIGN_KEY, KEY_KEY);
         this.statementsTable = table;
     }
 
@@ -106,6 +111,11 @@ class RepoServiceImpl extends AbstractService implements RepoService {
     @Override
     public String getProxy() {
         return statementsMap.value(PROXY_KEY);
+    }
+
+    @Override
+    public Map<String, Object> getSignKeys() {
+        return statementsTable.tableKeys(SIGN_KEY, KEY_KEY);
     }
 
     @Override

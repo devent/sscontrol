@@ -41,6 +41,7 @@ enum RepoResources {
     // expected
     sourcesListExpected("/etc/apt/sources.list", RepoResources.class.getResource("sources_list_expected.txt")),
     aptitudeOutExpected("/usr/bin/aptitude.out", RepoResources.class.getResource("aptitude_out_expected.txt")),
+    aptkeyOutExpected("/usr/bin/apt-key.out", RepoResources.class.getResource("aptkey_out_expected.txt")),
 
     static copyRepoFiles(File parent) {
         confDir.asFile(parent).mkdirs()

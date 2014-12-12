@@ -1,0 +1,12 @@
+listUbuntu(args) ::= <<
+<! - args.command - !>
+<args.command> list
+
+>>
+
+signUbuntu(args) ::= <<
+<! - args.command - !>
+<! - args.key - !>
+<args.command> add <args.key>
+
+>>

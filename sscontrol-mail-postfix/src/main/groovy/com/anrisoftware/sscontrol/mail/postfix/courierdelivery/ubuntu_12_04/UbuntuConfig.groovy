@@ -1,3 +1,5 @@
+package com.anrisoftware.sscontrol.mail.postfix.courierdelivery.ubuntu_12_04
+
 /*
  * Copyright 2013-2014 Erwin Müller <erwin.mueller@deventm.org>
  *
@@ -16,7 +18,6 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-mail-postfix. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.mail.postfix.courierdelivery.ubuntu_10_04
 
 import groovy.util.logging.Slf4j
 
@@ -24,11 +25,11 @@ import javax.inject.Inject
 
 import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.sscontrol.mail.postfix.courierdelivery.linux.CourierMysqlDeliveryConfig
-import com.anrisoftware.sscontrol.mail.postfix.script.ubuntu_10_04.Ubuntu_10_04_ScriptFactory
+import com.anrisoftware.sscontrol.mail.postfix.script.ubuntu_12_04.Ubuntu_12_04_ScriptFactory
 import com.anrisoftware.sscontrol.scripts.unix.RestartServicesFactory
 
 /**
- * Courier/Mysql Ubuntu 10.04 delivery.
+ * <i>Courier MySql Ubuntu 12.04</i> delivery.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
@@ -87,7 +88,7 @@ class UbuntuConfig extends CourierMysqlDeliveryConfig {
 
     @Override
     String getProfile() {
-        Ubuntu_10_04_ScriptFactory.PROFILE_NAME
+        Ubuntu_12_04_ScriptFactory.PROFILE_NAME
     }
 
     @Override
@@ -95,3 +96,4 @@ class UbuntuConfig extends CourierMysqlDeliveryConfig {
         courierMysqlProperties.get()
     }
 }
+

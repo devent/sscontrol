@@ -29,7 +29,7 @@ import org.junit.Test
 import com.anrisoftware.sscontrol.mail.postfix.script.ubuntu_12_04.UbuntuTestUtil
 
 /**
- * Courier/MySQL/delivery Ubuntu 12.04.
+ * <i>Courier MySQL delivery Ubuntu 12.04</i> test.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0

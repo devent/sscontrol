@@ -25,7 +25,7 @@ import com.anrisoftware.sscontrol.mail.postfix.resources.ResourcesUtils
 import com.anrisoftware.sscontrol.mail.postfix.script.ubuntu_12_04.UbuntuResources
 
 /**
- * Courier/MySQL delivery Ubuntu 10.04 resources.
+ * <i>Courier MySQL delivery Ubuntu 10.04</i> resources.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0

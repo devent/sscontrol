@@ -18,7 +18,7 @@
  */
 package com.anrisoftware.sscontrol.mail.postfix.couriermysqldeliver.ubuntu_12_04
 
-import static com.anrisoftware.sscontrol.mail.postfix.script.ubuntu_10_04.UbuntuResources.*
+import static com.anrisoftware.sscontrol.mail.postfix.script.ubuntu_12_04.UbuntuResources.*
 
 mail {
     debug level: 2

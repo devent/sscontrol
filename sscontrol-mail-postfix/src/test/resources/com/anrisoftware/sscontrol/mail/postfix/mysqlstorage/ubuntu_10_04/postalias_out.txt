@@ -1,2 +1,0 @@
-/tmp/etc/postfix/aliases
-/tmp/etc/postfix/aliases

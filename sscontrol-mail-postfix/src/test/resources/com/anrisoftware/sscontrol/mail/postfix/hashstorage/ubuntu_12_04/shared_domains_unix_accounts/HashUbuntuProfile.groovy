@@ -20,13 +20,12 @@ package com.anrisoftware.sscontrol.mail.postfix.hashstorage.ubuntu_12_04.shared_
 
 import com.anrisoftware.sscontrol.mail.postfix.script.ubuntu_12_04.UbuntuResources
 
-def aptitudeCommand = UbuntuResources.aptitudeCommand.asFile(tmp)
 
 profile "ubuntu_12_04", {
     mail {
         service "postfix"
         storage "hash"
-        install_command "$aptitudeCommand update && $aptitudeCommand install"
+        install_command UbuntuResources.aptitudeCommand.asFile(tmp)
         restart_command UbuntuResources.restartCommand.asFile(tmp)
         chown_command UbuntuResources.chownCommand.asFile(tmp)
         postalias_command UbuntuResources.postaliasCommand.asFile(tmp)

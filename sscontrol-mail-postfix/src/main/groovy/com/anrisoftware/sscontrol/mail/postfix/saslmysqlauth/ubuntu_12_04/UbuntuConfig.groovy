@@ -61,6 +61,7 @@ class UbuntuConfig extends BaseSaslMysqlAuth {
                 log: log,
                 command: script.installCommand,
                 packages: saslPackages,
+                system: systemName,
                 this, threads)()
     }
 

@@ -1,2 +1,0 @@
--r -g 5000 virtualmail
--r -g 5000 virtualmail

@@ -20,7 +20,6 @@ package com.anrisoftware.sscontrol.mail.postfix.couriermysqldeliver.ubuntu_12_04
 
 import com.anrisoftware.sscontrol.mail.postfix.script.ubuntu_12_04.UbuntuResources
 
-def aptitudeCommand = UbuntuResources.aptitudeCommand.asFile(tmp)
 def courierImapRestartCommand = CourierMysqlResources.courierImapRestartCommand.asFile(tmp)
 def courierAuthdaemonRestartCommand = CourierMysqlResources.courierAuthdaemonRestartCommand.asFile(tmp)
 
@@ -29,7 +28,7 @@ profile "ubuntu_12_04", {
         service "postfix"
         storage "mysql"
         delivery "courier"
-        install_command "$aptitudeCommand update && $aptitudeCommand -y install"
+        install_command UbuntuResources.aptitudeCommand.asFile(tmp)
         restart_command UbuntuResources.restartCommand.asFile(tmp)
         chown_command UbuntuResources.chownCommand.asFile(tmp)
         group_add_command UbuntuResources.groupaddCommand.asFile(tmp)

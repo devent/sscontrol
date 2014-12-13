@@ -1,2 +1,0 @@
-5000.5000 /tmp/var/mail/vhosts
-5000.5000 /tmp/var/mail/vhosts

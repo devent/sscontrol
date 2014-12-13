@@ -20,7 +20,7 @@ package com.anrisoftware.sscontrol.mail.postfix.courierdelivery.ubuntu_12_04;
 
 import static com.google.inject.multibindings.MapBinder.newMapBinder;
 
-import com.anrisoftware.sscontrol.mail.postfix.courierdelivery.ubuntu_10_04.UbuntuConfig;
+import com.anrisoftware.sscontrol.mail.postfix.courierdelivery.ubuntu_12_04.UbuntuConfig;
 import com.anrisoftware.sscontrol.mail.postfix.linux.DeliveryConfig;
 import com.google.inject.AbstractModule;
 import com.google.inject.multibindings.MapBinder;

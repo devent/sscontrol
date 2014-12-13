@@ -20,7 +20,6 @@ package com.anrisoftware.sscontrol.mail.postfix.mysqlstorage.ubuntu_12_04
 
 import com.anrisoftware.sscontrol.mail.postfix.script.ubuntu_12_04.UbuntuResources
 
-def aptitudeCommand = UbuntuResources.aptitudeCommand.asFile(tmp)
 def restartCommand = UbuntuResources.restartCommand.asFile(tmp)
 def saslSmtpdDir = MysqlResources.saslSmtpdDir.asFile(tmp)
 def smtpPamDirectory = MysqlResources.smtpPamDirectory.asFile(tmp)
@@ -31,7 +30,7 @@ profile "ubuntu_12_04", {
         service "postfix"
         storage "mysql"
         auth "sasl"
-        install_command "$aptitudeCommand update && $aptitudeCommand install"
+        install_command UbuntuResources.aptitudeCommand.asFile(tmp)
         restart_command "$restartCommand restart"
         chown_command UbuntuResources.chownCommand.asFile(tmp)
         chmod_command UbuntuResources.chmodCommand.asFile(tmp)

@@ -90,6 +90,7 @@ abstract class CourierMysqlDeliveryConfig extends BaseDelivery implements Delive
                 log: log,
                 command: script.installCommand,
                 packages: courierPackages,
+                system: systemName,
                 this, threads)()
     }
 

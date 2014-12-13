@@ -1,3 +1,0 @@
-# SSCONTROL-mail
-example.com
-# SSCONTROL-mail-END

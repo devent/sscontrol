@@ -64,6 +64,7 @@ class UbuntuScript extends BasePostfixScript {
                 log: log,
                 command: installCommand,
                 packages: packages,
+                system: systemName,
                 this, threads)()
     }
 

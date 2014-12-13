@@ -1,8 +1,0 @@
-hosts=127.0.0.1
-user=root
-password=password
-dbname=maildb
-table=aliases
-select_field=destination
-where_field=mail
-additional_conditions = and enabled = 1

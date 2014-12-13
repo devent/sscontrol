@@ -124,6 +124,7 @@ abstract class MysqlStorageConfig extends BaseStorage implements StorageConfig {
                 log: log,
                 command: script.installCommand,
                 packages: mysqlStoragePackages,
+                system: systemName,
                 this, threads)()
     }
 

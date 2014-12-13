@@ -32,7 +32,6 @@ import com.anrisoftware.sscontrol.httpd.wordpress.resources.ResourcesUtils
 enum UbuntuResources {
 
     aptitudeCommand("/usr/bin/aptitude", UbuntuResources.class.getResource("echo_command.txt")),
-    aptKeyCommand("/usr/bin/apt-key", UbuntuResources.class.getResource("echo_command.txt")),
     chmodCommand("/bin/chmod", UbuntuResources.class.getResource("echo_command.txt")),
     chownCommand("/bin/chown", UbuntuResources.class.getResource("echo_command.txt")),
     useraddCommand("/usr/sbin/useradd", UbuntuResources.class.getResource("echo_command.txt")),
@@ -46,14 +45,12 @@ enum UbuntuResources {
     reconfigureCommand("/usr/sbin/dpkg-reconfigure", UbuntuResources.class.getResource("echo_command.txt")),
     mysqlCommand("/usr/bin/mysql", UbuntuResources.class.getResource("echo_command.txt")),
     tmpDir("/tmp", null),
-    packagingConfigurationDirectory("/etc/apt", null),
     certCrt("cert.crt", UbuntuResources.class.getResource("cert_crt.txt")),
     certKey("cert.key", UbuntuResources.class.getResource("cert_key.txt")),
     certCa("cert.ca", UbuntuResources.class.getResource("cert_ca.txt")),
 
     static copyUbuntuFiles(File parent) {
         aptitudeCommand.createCommand parent
-        aptKeyCommand.createCommand parent
         chmodCommand.createCommand parent
         chownCommand.createCommand parent
         groupaddCommand.createCommand parent
@@ -66,7 +63,6 @@ enum UbuntuResources {
         lnCommand.createCommand parent
         reconfigureCommand.createCommand parent
         tmpDir.asFile(parent).mkdirs()
-        packagingConfigurationDirectory.asFile(parent).mkdirs()
         mysqlCommand.createCommand parent
     }
 

@@ -20,13 +20,11 @@ package com.anrisoftware.sscontrol.httpd.apache.wordpressproxy.ubuntu_12_04
 
 import com.anrisoftware.sscontrol.httpd.apache.wordpress.ubuntu.UbuntuResources
 
-def aptitudeCommand = UbuntuResources.aptitudeCommand.asFile(tmp)
 
 profile "ubuntu_12_04", {
     httpd {
         service "apache"
-        install_command "$aptitudeCommand update && $aptitudeCommand install"
-        apt_key_command UbuntuResources.aptKeyCommand.asFile(tmp)
+        install_command UbuntuResources.aptitudeCommand.asFile(tmp)
         chmod_command UbuntuResources.chmodCommand.asFile(tmp)
         chown_command UbuntuResources.chownCommand.asFile(tmp)
         group_add_command UbuntuResources.groupaddCommand.asFile(tmp)
@@ -37,7 +35,6 @@ profile "ubuntu_12_04", {
         unzip_command UbuntuResources.unzipCommand.asFile(tmp)
         link_command UbuntuResources.lnCommand.asFile(tmp)
         temp_directory UbuntuResources.tmpDir.asFile(tmp)
-        packaging_configuration_directory UbuntuResources.packagingConfigurationDirectory.asFile(tmp)
         php_fcgi_php_conf_directory WordpressProxyResources.phpConfDir.asFile(tmp)
         wordpress_auth_key "auth-key"
         wordpress_secure_auth_key "secure-auth-key"

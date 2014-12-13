@@ -58,14 +58,12 @@ enum WordpressProxyResources {
     nginxSitesEnabledDir("/etc/nginx/sites-enabled", null),
     nginxConfigIncludeDir("/etc/nginx/conf.d", null),
     nginxRestartCommand("/etc/init.d/nginx", WordpressProxyResources.class.getResource("echo_command.txt")),
-    nginxSigningKeyFile("/tmp/web-nginx_signing.key", WordpressProxyResources.class.getResource("nginx_signing_key.txt")),
 
     static void copyWordpressProxyFiles(File parent) {
         phpConfDir.asFile parent mkdirs()
         wordpressArchive.createFile parent
         wordpress_3_8_config.createFile parent
         nginxRestartCommand.createCommand parent
-        nginxSigningKeyFile.createFile parent
     }
 
     static void setupWordpressProxyProperties(def profile, File parent) {
@@ -82,7 +80,6 @@ enum WordpressProxyResources {
         entry.nginx_sites_enabled_directory nginxSitesEnabledDir.asFile(parent)
         entry.apache_config_include_directory Ubuntu_12_04_Resources.configIncludeDir.asFile(parent)
         entry.nginx_config_include_directory nginxConfigIncludeDir.asFile(parent)
-        entry.nginx_signing_key nginxSigningKeyFile.asFile(parent)
     }
 
     ResourcesUtils resources

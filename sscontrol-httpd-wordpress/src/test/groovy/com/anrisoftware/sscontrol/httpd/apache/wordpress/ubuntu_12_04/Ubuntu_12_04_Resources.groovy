@@ -53,7 +53,6 @@ enum Ubuntu_12_04_Resources {
     sitesDir("/var/www", null),
     defaultConf("/etc/apache2/sites-available/default", Ubuntu_12_04_Resources.class.getResource("default.txt")),
     defaultSslConf("/etc/apache2/sites-available/default-ssl", Ubuntu_12_04_Resources.class.getResource("default_ssl.txt")),
-    sourcesListFile("/etc/apt/sources.list", Ubuntu_12_04_Resources.class.getResource("sources_list.txt")),
     apacheConf("/etc/apache2/apache2.conf", Ubuntu_12_04_Resources.class.getResource("apache2_conf.txt")),
 
     static copyUbuntu_12_04_Files(File parent) {
@@ -73,7 +72,6 @@ enum Ubuntu_12_04_Resources {
         usersFile.createFile parent
         defaultConf.createFile parent
         defaultSslConf.createFile parent
-        sourcesListFile.createFile parent
     }
 
     static void setupUbuntu_12_04_Properties(def profile, File parent) {
@@ -97,7 +95,6 @@ enum Ubuntu_12_04_Resources {
         entry.sites_enabled_directory sitesEnabledDir.asFile(parent)
         entry.config_include_directory configIncludeDir.asFile(parent)
         entry.sites_directory sitesDir.asFile(parent)
-        entry.packages_sources_file sourcesListFile.asFile(parent)
     }
 
     ResourcesUtils resources

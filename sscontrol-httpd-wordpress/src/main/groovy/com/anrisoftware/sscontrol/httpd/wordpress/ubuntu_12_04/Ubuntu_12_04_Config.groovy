@@ -54,7 +54,10 @@ class Ubuntu_12_04_Config extends Wordpress_3_Config {
      */
     void installPackages() {
         installPackagesFactory.create(
-                log: log, command: script.installCommand, packages: wordpressPackages,
+                log: log,
+                command: installCommand,
+                packages: wordpressPackages,
+                system: systemName,
                 this, threads)()
     }
 

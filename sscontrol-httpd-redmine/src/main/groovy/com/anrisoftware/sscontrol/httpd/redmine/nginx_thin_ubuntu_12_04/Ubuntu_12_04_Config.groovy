@@ -89,8 +89,9 @@ class Ubuntu_12_04_Config extends Redmine_2_5_Config implements ServiceConfig {
     void installPackages() {
         installPackagesFactory.create(
                 log: log,
-                command: script.installCommand,
+                command: installCommand,
                 packages: redminePackages,
+                system: systemName,
                 this, threads)()
     }
 
@@ -123,8 +124,9 @@ class Ubuntu_12_04_Config extends Redmine_2_5_Config implements ServiceConfig {
         }
         installPackagesFactory.create(
                 log: log,
-                command: script.installCommand,
+                command: installCommand,
                 packages: list,
+                system: systemName,
                 this, threads)()
     }
 

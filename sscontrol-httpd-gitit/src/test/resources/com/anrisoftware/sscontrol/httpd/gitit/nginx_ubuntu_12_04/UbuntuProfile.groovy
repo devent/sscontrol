@@ -43,7 +43,6 @@ profile "ubuntu_12_04", {
         sites_enabled_directory UbuntuResources.sitesEnabledDir.asFile(tmp)
         config_include_directory UbuntuResources.configIncludeDir.asFile(tmp)
         sites_directory UbuntuResources.sitesDir.asFile(tmp)
-        system_name "ubuntu"
         // gitit
         cabal_command GititResources.cabalCommand.asFile(tmp)
         hsenv_command GititResources.hsenvCommand.asFile(tmp)

@@ -34,8 +34,6 @@ profile "ubuntu_12_04", {
         // files and directories
         temp_directory UbuntuResources.tmpDir.asFile(tmp)
         php_fcgi_php_conf_directory PiwikResources.phpConfDir.asFile(tmp)
-        // others
-        system_name "ubuntu"
         // piwik
         piwik_archive PiwikResources.piwikArchive.asFile(tmp)
     }

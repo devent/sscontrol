@@ -29,7 +29,7 @@ import org.junit.Test
 import com.anrisoftware.sscontrol.httpd.resources.UbuntuTestUtil
 
 /**
- * <i>Ubuntu</i> 12.04 <i>Redmine</i>.
+ * <i>Ubuntu 12.04 Redmine</i> test.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0

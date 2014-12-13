@@ -20,13 +20,11 @@ package com.anrisoftware.sscontrol.httpd.redmine.nginx_ubuntu_12_04
 
 
 def aptitudeCommand = UbuntuResources.aptitudeCommand.asFile(tmp)
-def updateRcCommand = UbuntuResources.updateRcCommand.asFile(tmp)
 
 profile "ubuntu_12_04", {
     httpd {
         service "nginx"
-        install_command "$aptitudeCommand update && $aptitudeCommand install"
-        apt_key_command UbuntuResources.aptKeyCommand.asFile(tmp)
+        install_command UbuntuResources.aptitudeCommand.asFile(tmp)
         chmod_command UbuntuResources.chmodCommand.asFile(tmp)
         chown_command UbuntuResources.chownCommand.asFile(tmp)
         group_add_command UbuntuResources.groupaddCommand.asFile(tmp)
@@ -37,7 +35,6 @@ profile "ubuntu_12_04", {
         netstat_command UbuntuResources.netstatCommand.asFile(tmp)
         temp_directory UbuntuResources.tmpDir.asFile(tmp)
         packaging_configuration_directory UbuntuResources.packagingConfigurationDirectory.asFile(tmp)
-        packages_sources_file UbuntuResources.packagesSourcesFile.asFile(tmp)
         restart_command UbuntuResources.restartCommand.asFile(tmp)
         configuration_directory UbuntuResources.confDir.asFile(tmp)
         groups_file UbuntuResources.groupsFile.asFile(tmp)
@@ -46,8 +43,6 @@ profile "ubuntu_12_04", {
         sites_enabled_directory UbuntuResources.sitesEnabledDir.asFile(tmp)
         config_include_directory UbuntuResources.configIncludeDir.asFile(tmp)
         sites_directory UbuntuResources.sitesDir.asFile(tmp)
-        // nginx
-        nginx_signing_key UbuntuResources.nginxSigningKey.asFile(tmp)
         // redmine
         redmine_gem_command RedmineResources.gemCommand.asFile(tmp)
         redmine_bundle_command RedmineResources.bundleCommand.asFile(tmp)

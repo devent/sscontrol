@@ -31,9 +31,9 @@ import com.anrisoftware.sscontrol.httpd.resources.ResourcesUtils
  */
 enum UbuntuResources {
 
+    // commands
     restartCommand("/etc/init.d/nginx", UbuntuResources.class.getResource("echo_command.txt")),
     aptitudeCommand("/usr/bin/aptitude", UbuntuResources.class.getResource("echo_command.txt")),
-    aptKeyCommand("/usr/bin/apt-key", UbuntuResources.class.getResource("echo_command.txt")),
     bashCommand("/bin/bash", UbuntuResources.class.getResource("echo_command.txt")),
     chmodCommand("/bin/chmod", UbuntuResources.class.getResource("echo_command.txt")),
     chownCommand("/bin/chown", UbuntuResources.class.getResource("echo_command.txt")),
@@ -47,9 +47,9 @@ enum UbuntuResources {
     reconfigureCommand("/usr/sbin/dpkg-reconfigure", UbuntuResources.class.getResource("echo_command.txt")),
     updateRcCommand("/usr/sbin/update-rc.d", UbuntuResources.class.getResource("echo_command.txt")),
     mysqlCommand("/usr/bin/mysql", UbuntuResources.class.getResource("echo_command.txt")),
+    // files and directory
     tmpDir("/tmp", null),
     packagingConfigurationDirectory("/etc/apt", null),
-    packagesSourcesFile("/etc/apt/sources.list", UbuntuResources.class.getResource("sources_list.txt")),
     certCrt("cert.crt", UbuntuResources.class.getResource("cert_crt.txt")),
     certKey("cert.key", UbuntuResources.class.getResource("cert_key.txt")),
     groupsFile("/etc/group", UbuntuResources.class.getResource("group.txt")),
@@ -59,12 +59,9 @@ enum UbuntuResources {
     sitesEnabledDir("/etc/nginx/sites-enabled", null),
     configIncludeDir("/etc/nginx/conf.d", null),
     sitesDir("/var/www", null),
-    // nginx
-    nginxSigningKey("/tmp/nginx_signing.key", UbuntuResources.class.getResource("nginx_signing_key.txt")),
 
     static copyUbuntuFiles(File parent) {
         aptitudeCommand.createCommand parent
-        aptKeyCommand.createCommand parent
         bashCommand.createCommand parent
         chmodCommand.createCommand parent
         chownCommand.createCommand parent
@@ -79,13 +76,10 @@ enum UbuntuResources {
         updateRcCommand.createCommand parent
         tmpDir.asFile(parent).mkdirs()
         packagingConfigurationDirectory.asFile(parent).mkdirs()
-        packagesSourcesFile.createFile parent
         restartCommand.createCommand parent
         confDir.asFile(parent).mkdirs()
         groupsFile.createFile parent
         usersFile.createFile parent
-        // nginx
-        nginxSigningKey.createFile parent
     }
 
     ResourcesUtils resources

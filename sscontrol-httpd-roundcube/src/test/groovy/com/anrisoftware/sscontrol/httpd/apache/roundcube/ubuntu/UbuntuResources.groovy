@@ -33,7 +33,6 @@ enum UbuntuResources {
 
     // commands
     aptitudeCommand("/usr/bin/aptitude", UbuntuResources.class.getResource("echo_command.txt")),
-    aptKeyCommand("/usr/bin/apt-key", UbuntuResources.class.getResource("echo_command.txt")),
     chmodCommand("/bin/chmod", UbuntuResources.class.getResource("echo_command.txt")),
     chownCommand("/bin/chown", UbuntuResources.class.getResource("echo_command.txt")),
     useraddCommand("/usr/sbin/useradd", UbuntuResources.class.getResource("echo_command.txt")),
@@ -55,7 +54,6 @@ enum UbuntuResources {
 
     static copyUbuntuFiles(File parent) {
         aptitudeCommand.createCommand parent
-        aptKeyCommand.createCommand parent
         chmodCommand.createCommand parent
         chownCommand.createCommand parent
         groupaddCommand.createCommand parent
@@ -74,8 +72,7 @@ enum UbuntuResources {
     static void setupUbuntuProperties(def profile, File parent) {
         def entry = profile.getEntry("httpd")
         // commands
-        entry.install_command "${aptitudeCommand.asFile(parent)} update && ${aptitudeCommand.asFile(parent)} install"
-        entry.apt_key_command aptKeyCommand.asFile(parent)
+        entry.install_command aptitudeCommand.asFile(parent)
         entry.chmod_command chmodCommand.asFile(parent)
         entry.chown_command chownCommand.asFile(parent)
         entry.group_add_command groupaddCommand.asFile(parent)

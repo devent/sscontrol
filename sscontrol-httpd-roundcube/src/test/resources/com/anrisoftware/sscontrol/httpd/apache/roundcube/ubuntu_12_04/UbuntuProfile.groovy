@@ -28,6 +28,6 @@ profile "ubuntu_12_04", {
         service "apache"
         // roundcube
         roundcube_archive RoundcubeResources.roundcubeArchive.asFile(tmp)
-        roundcube_archive_hash "md5://a5a128c99d006f03363437544bca7d4e"
+        roundcube_archive_hash "md5:a5a128c99d006f03363437544bca7d4e"
     }
 }

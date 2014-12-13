@@ -46,7 +46,6 @@ enum Ubuntu_12_04_Resources {
     groupsFile("/etc/group", Ubuntu_12_04_Resources.class.getResource("group.txt")),
     usersFile("/etc/passwd", Ubuntu_12_04_Resources.class.getResource("passwd.txt")),
     // files
-    packagesSourcesFile("/etc/apt/sources.list", Ubuntu_12_04_Resources.class.getResource("sources_list.txt")),
     confDir("/etc/apache2", null),
     sitesAvailableDir("/etc/apache2/sites-available", null),
     sitesEnabledDir("/etc/apache2/sites-enabled", null),
@@ -75,7 +74,6 @@ enum Ubuntu_12_04_Resources {
         defaultSslConf.createFile parent
         phpConfDir.asFile parent mkdirs()
         // ubuntu files
-        packagesSourcesFile.createFile parent
         groupsFile.createFile parent
         usersFile.createFile parent
     }
@@ -102,7 +100,6 @@ enum Ubuntu_12_04_Resources {
         entry.config_include_directory configIncludeDir.asFile(parent)
         entry.sites_directory sitesDir.asFile(parent)
         // ubuntu files
-        entry.packages_sources_file packagesSourcesFile.asFile(parent)
         entry.groups_file groupsFile.asFile(parent)
         entry.users_file usersFile.asFile(parent)
     }

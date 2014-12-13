@@ -58,6 +58,7 @@ class Ubuntu_12_04_Config extends Roundcube_1_0_Config {
                 log: log,
                 command: installCommand,
                 packages: roundcubePackages,
+                system: systemName,
                 this, threads)()
         logg.installedPackages script, roundcubePackages
     }
@@ -74,6 +75,7 @@ class Ubuntu_12_04_Config extends Roundcube_1_0_Config {
                 log: log,
                 command: installCommand,
                 packages: packages,
+                system: systemName,
                 this, threads)()
         logg.installedPackages script, packages
     }

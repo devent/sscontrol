@@ -18,13 +18,11 @@
  */
 package com.anrisoftware.sscontrol.httpd.piwik.apache_ubuntu_12_04
 
-def aptitudeCommand = UbuntuResources.aptitudeCommand.asFile(tmp)
-
 profile "ubuntu_12_04", {
     httpd {
         service "apache"
         // commands
-        install_command "$aptitudeCommand update && $aptitudeCommand install"
+        install_command UbuntuResources.aptitudeCommand.asFile(tmp)
         chmod_command UbuntuResources.chmodCommand.asFile(tmp)
         chown_command UbuntuResources.chownCommand.asFile(tmp)
         group_add_command UbuntuResources.groupaddCommand.asFile(tmp)
@@ -36,6 +34,8 @@ profile "ubuntu_12_04", {
         // files and directories
         temp_directory UbuntuResources.tmpDir.asFile(tmp)
         php_fcgi_php_conf_directory PiwikResources.phpConfDir.asFile(tmp)
+        // others
+        system_name "ubuntu"
         // piwik
         piwik_archive PiwikResources.piwikArchive.asFile(tmp)
     }

@@ -30,7 +30,7 @@ import org.junit.Test
 import com.anrisoftware.sscontrol.httpd.piwik.resources.UbuntuTestUtil
 
 /**
- * <i>Apache Ubuntu 12.04 Piwik</i>.
+ * <i>Piwik Apache Ubuntu 12.04</i> test.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0

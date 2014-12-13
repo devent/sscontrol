@@ -20,13 +20,12 @@ package com.anrisoftware.sscontrol.httpd.piwik.proxy_nginx_apache_ubuntu_12_04
 
 import com.anrisoftware.sscontrol.httpd.piwik.apache_ubuntu_12_04.UbuntuResources
 
-def aptitudeCommand = UbuntuResources.aptitudeCommand.asFile(tmp)
 
 profile "ubuntu_12_04", {
     httpd {
         service "apache"
         // commands
-        install_command "$aptitudeCommand update && $aptitudeCommand install"
+        install_command UbuntuResources.aptitudeCommand.asFile(tmp)
         chmod_command UbuntuResources.chmodCommand.asFile(tmp)
         chown_command UbuntuResources.chownCommand.asFile(tmp)
         group_add_command UbuntuResources.groupaddCommand.asFile(tmp)
@@ -35,11 +34,11 @@ profile "ubuntu_12_04", {
         tar_command UbuntuResources.tarCommand.asFile(tmp)
         unzip_command UbuntuResources.unzipCommand.asFile(tmp)
         link_command UbuntuResources.lnCommand.asFile(tmp)
-        apt_key_command UbuntuResources.aptKeyCommand.asFile(tmp)
         // files and directories
         temp_directory UbuntuResources.tmpDir.asFile(tmp)
         php_fcgi_php_conf_directory PiwikProxyResources.phpConfDir.asFile(tmp)
-        packages_sources_file UbuntuResources.sourcesListFile.asFile(tmp)
+        // others
+        system_name "ubuntu"
         // piwik
         piwik_archive PiwikProxyResources.piwikArchive.asFile(tmp)
     }

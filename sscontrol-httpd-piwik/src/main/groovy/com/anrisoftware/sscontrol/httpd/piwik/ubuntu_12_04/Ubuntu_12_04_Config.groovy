@@ -24,7 +24,6 @@ import javax.inject.Inject
 
 import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.resources.templates.api.TemplateResource
-import com.anrisoftware.resources.templates.api.Templates
 import com.anrisoftware.resources.templates.api.TemplatesFactory
 import com.anrisoftware.sscontrol.core.service.LinuxScript
 import com.anrisoftware.sscontrol.httpd.domain.Domain
@@ -36,7 +35,7 @@ import com.anrisoftware.sscontrol.httpd.webservice.WebService
 import com.anrisoftware.sscontrol.scripts.unix.InstallPackagesFactory
 
 /**
- * <i>Piwik</i> configuration for <i>Ubuntu 12.04</i>.
+ * <i>Piwik Ubuntu 12.04</i> service configuration.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
@@ -52,11 +51,6 @@ class Ubuntu_12_04_Config extends Piwik_2_3_Config implements ServiceConfig {
 
     @Inject
     InstallPackagesFactory installPackagesFactory
-
-    @Inject
-    TemplatesFactory templatesFactory
-
-    Templates piwikTemplates
 
     TemplateResource piwikConfigTemplate
 
@@ -74,12 +68,21 @@ class Ubuntu_12_04_Config extends Piwik_2_3_Config implements ServiceConfig {
         deployConfig domain, service
     }
 
+    @Inject
+    final void setTemplatesFactory(TemplatesFactory factory) {
+        def templates = factory.create "Piwik_Ubuntu_12_04", ["renderers": [debugLevelRenderer]]
+        piwikConfigTemplate = templates.getResource "config"
+    }
+
     /**
      * Installs the <i>Piwik</i> packages.
      */
     void installPackages() {
         installPackagesFactory.create(
-                log: log, command: script.installCommand, packages: piwikPackages,
+                log: log,
+                command: installCommand,
+                packages: piwikPackages,
+                system: systemName,
                 this, threads)()
     }
 
@@ -102,7 +105,5 @@ class Ubuntu_12_04_Config extends Piwik_2_3_Config implements ServiceConfig {
     public void setScript(LinuxScript script) {
         super.setScript(script)
         ubuntuPiwikFromArchive.setScript this
-        piwikTemplates = templatesFactory.create "Piwik_Ubuntu_12_04", ["renderers": [debugLevelRenderer]]
-        piwikConfigTemplate = piwikTemplates.getResource "config"
     }
 }

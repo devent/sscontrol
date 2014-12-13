@@ -21,7 +21,6 @@ package com.anrisoftware.sscontrol.httpd.piwik.apache_ubuntu_12_04;
 import javax.inject.Inject
 
 import com.anrisoftware.resources.templates.api.TemplateResource
-import com.anrisoftware.resources.templates.api.Templates
 import com.anrisoftware.resources.templates.api.TemplatesFactory
 import com.anrisoftware.sscontrol.core.service.LinuxScript
 import com.anrisoftware.sscontrol.httpd.domain.Domain
@@ -40,13 +39,6 @@ class UbuntuApachePiwikConfig extends Ubuntu_12_04_Config implements ServiceConf
 
     @Inject
     UbuntuApacheFcgiPiwikConfig apacheFcgiPiwikConfig
-
-    @Inject
-    TemplatesFactory templatesFactory
-
-    Templates piwikNginxTemplates
-
-    TemplateResource piwikDomainTemplate
 
     @Override
     void deployDomain(Domain domain, Domain refDomain, WebService service, List config) {

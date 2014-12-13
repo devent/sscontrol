@@ -21,7 +21,6 @@ package com.anrisoftware.sscontrol.httpd.piwik.nginx_ubuntu_12_04;
 import javax.inject.Inject
 
 import com.anrisoftware.resources.templates.api.TemplateResource
-import com.anrisoftware.resources.templates.api.Templates
 import com.anrisoftware.resources.templates.api.TemplatesFactory
 import com.anrisoftware.sscontrol.core.service.LinuxScript
 import com.anrisoftware.sscontrol.httpd.domain.Domain
@@ -37,11 +36,6 @@ import com.anrisoftware.sscontrol.httpd.webservice.WebService
  * @since 1.0
  */
 class NginxConfig extends Ubuntu_12_04_Config implements ServiceConfig {
-
-    @Inject
-    TemplatesFactory templatesFactory
-
-    Templates piwikNginxTemplates
 
     TemplateResource piwikDomainTemplate
 
@@ -84,10 +78,9 @@ class NginxConfig extends Ubuntu_12_04_Config implements ServiceConfig {
         config << configStr
     }
 
-    @Override
-    public void setScript(LinuxScript script) {
-        super.setScript(script)
-        this.piwikNginxTemplates = templatesFactory.create "Piwik_Nginx_Ubuntu_12_04"
-        this.piwikDomainTemplate = piwikTemplates.getResource "domainconfig"
+    @Inject
+    final void setNginxTemplatesFactory(TemplatesFactory factory) {
+        def templates = factory.create "Piwik_Nginx_Ubuntu_12_04"
+        this.piwikDomainTemplate = templates.getResource "domainconfig"
     }
 }

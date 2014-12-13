@@ -31,6 +31,7 @@ import com.anrisoftware.sscontrol.httpd.piwik.resources.ResourcesUtils
  */
 enum ApacheUbuntuResources {
 
+    // commands
     restartCommand("/etc/init.d/apache2", ApacheUbuntuResources.class.getResource("echo_command.txt")),
     stopCommand("/etc/init.d/apache2", ApacheUbuntuResources.class.getResource("echo_command.txt")),
     a2enmodCommand("/usr/sbin/a2enmod", ApacheUbuntuResources.class.getResource("echo_command.txt")),
@@ -45,6 +46,7 @@ enum ApacheUbuntuResources {
     gzipCommand("/bin/gzip", ApacheUbuntuResources.class.getResource("echo_command.txt")),
     groupsFile("/etc/group", ApacheUbuntuResources.class.getResource("group.txt")),
     usersFile("/etc/passwd", ApacheUbuntuResources.class.getResource("passwd.txt")),
+    // files and directory
     confDir("/etc/apache2", null),
     sitesAvailableDir("/etc/apache2/sites-available", null),
     sitesEnabledDir("/etc/apache2/sites-enabled", null),
@@ -52,7 +54,6 @@ enum ApacheUbuntuResources {
     sitesDir("/var/www", null),
     defaultConf("/etc/apache2/sites-available/default", ApacheUbuntuResources.class.getResource("default.txt")),
     defaultSslConf("/etc/apache2/sites-available/default-ssl", ApacheUbuntuResources.class.getResource("default_ssl.txt")),
-    sourcesListFile("/etc/apt/sources.list", ApacheUbuntuResources.class.getResource("sources_list.txt")),
     apacheConf("/etc/apache2/apache2.conf", ApacheUbuntuResources.class.getResource("apache2_conf.txt")),
 
     static copyApacheUbuntuFiles(File parent) {
@@ -71,7 +72,6 @@ enum ApacheUbuntuResources {
         usersFile.createFile parent
         defaultConf.createFile parent
         defaultSslConf.createFile parent
-        sourcesListFile.createFile parent
     }
 
     static void setupApacheUbuntuProperties(def profile, File parent) {
@@ -94,7 +94,6 @@ enum ApacheUbuntuResources {
         entry.sites_enabled_directory sitesEnabledDir.asFile(parent)
         entry.config_include_directory configIncludeDir.asFile(parent)
         entry.sites_directory sitesDir.asFile(parent)
-        entry.packages_sources_file sourcesListFile.asFile(parent)
     }
 
     ResourcesUtils resources

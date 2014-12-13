@@ -1,20 +1,10 @@
-update
-install apache2 apache2-suexec
-update
-install php5 php5-gd php5-mysql mysql-client mysql-server
-update
-install apache2-suexec libapache2-mod-fcgid php5-cgi
-update
-install php5 php5-gd php5-mysql mysql-client mysql-server
-update
-install apache2-suexec libapache2-mod-fcgid php5-cgi
-update
-install apache2 apache2-suexec
-update
-install php5 php5-gd php5-mysql mysql-client mysql-server
-update
-install apache2-suexec libapache2-mod-fcgid php5-cgi
-update
-install php5 php5-gd php5-mysql mysql-client mysql-server
-update
-install apache2-suexec libapache2-mod-fcgid php5-cgi
+-q -y install apache2 apache2-suexec
+-q -y install php5 php5-gd php5-mysql mysql-client mysql-server
+-q -y install apache2-suexec libapache2-mod-fcgid php5-cgi
+-q -y install php5 php5-gd php5-mysql mysql-client mysql-server
+-q -y install apache2-suexec libapache2-mod-fcgid php5-cgi
+-q -y install apache2 apache2-suexec
+-q -y install php5 php5-gd php5-mysql mysql-client mysql-server
+-q -y install apache2-suexec libapache2-mod-fcgid php5-cgi
+-q -y install php5 php5-gd php5-mysql mysql-client mysql-server
+-q -y install apache2-suexec libapache2-mod-fcgid php5-cgi

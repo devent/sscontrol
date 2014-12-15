@@ -1,8 +1,4 @@
-update
--y install fail2ban
-update
--y install ufw
-update
--y install fail2ban
-update
--y install ufw
+-q -y install fail2ban
+-q -y install ufw
+-q -y install fail2ban
+-q -y install ufw

@@ -1,8 +1,0 @@
-update
--y install fail2ban
-update
--y install ufw
-update
--y install fail2ban
-update
--y install ufw

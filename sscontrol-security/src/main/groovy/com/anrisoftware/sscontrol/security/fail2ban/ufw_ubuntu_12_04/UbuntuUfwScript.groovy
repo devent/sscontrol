@@ -61,6 +61,7 @@ class UbuntuUfwScript extends UfwFail2BanScript {
                 log: log,
                 command: installCommand,
                 packages: packages,
+                system: systemName,
                 this, threads)()
     }
 

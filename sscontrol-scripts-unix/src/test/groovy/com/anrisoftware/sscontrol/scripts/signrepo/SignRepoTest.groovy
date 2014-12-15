@@ -62,7 +62,7 @@ class SignRepoTest {
                 tmp: tmpdir,
                 system: "ubuntu",
                 this, threads)()
-        assertStringContent aptkeyOutExpected.replaced(tmpdir, tmpdir, "/tmp"), aptkeyOutExpected.toString()
+        assertStringContent aptkeyOutExpected.replaced(tmpdir, tmpdir, "/tmp").replaceAll(/\d+/, "numbers"), aptkeyOutExpected.toString()
     }
 
     @Test
@@ -78,7 +78,7 @@ class SignRepoTest {
                 tmp: tmpdir,
                 system: "ubuntu",
                 this, threads)()
-        assertStringContent aptkeyNginxOutExpected.replaced(tmpdir, tmpdir, "/tmp"), aptkeyNginxOutExpected.toString()
+        assertStringContent aptkeyNginxOutExpected.replaced(tmpdir, tmpdir, "/tmp").replaceAll(/\d+/, "numbers"), aptkeyNginxOutExpected.toString()
     }
 
     static Injector injector

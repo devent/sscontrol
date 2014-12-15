@@ -54,9 +54,8 @@ enum UbuntuResources {
     }
 
     static void setupUbuntuProperties(def profile, File parent) {
-        def aptitudeCommand = aptitudeCommand.asFile(parent)
         def entry = profile.getEntry("remote")
-        entry.install_command "$aptitudeCommand update && $aptitudeCommand -y install"
+        entry.install_command aptitudeCommand.asFile(parent)
         entry.restart_command restartCommand.asFile(parent)
         entry.group_add_command groupaddCommand.asFile(parent)
         entry.user_add_command useraddCommand.asFile(parent)

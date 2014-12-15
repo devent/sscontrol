@@ -56,6 +56,7 @@ abstract class BaseUbuntuScreenScript extends ScreenScript {
                 log: log,
                 command: script.installCommand,
                 packages: screenPackages,
+                system: systemName,
                 this, threads)()
     }
 

@@ -80,6 +80,7 @@ class UbuntuScript extends BaseOpensshRemoteScript {
                 log: log,
                 packages: packages,
                 command: installCommand,
+                system: systemName,
                 this, threads)()
     }
 }

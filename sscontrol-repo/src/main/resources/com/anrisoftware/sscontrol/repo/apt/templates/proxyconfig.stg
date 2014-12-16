@@ -1,0 +1,7 @@
+configHeader() ::= <<
+// RoboBee Auto Generated
+>>
+
+proxyConfig(proxy) ::= <<
+Acquire::http { Proxy "<proxy>"; };
+>>

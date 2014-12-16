@@ -1,0 +1,2 @@
+// RoboBee Auto Generated
+Acquire::http { Proxy "http://proxy.ubuntu.net"; };

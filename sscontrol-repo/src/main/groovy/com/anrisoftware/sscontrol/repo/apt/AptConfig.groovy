@@ -50,6 +50,9 @@ abstract class AptConfig {
     @Inject
     ToURLFactory toURLFactory
 
+    @Inject
+    DeployAptProxyFactory deployAptProxyFactory
+
     /**
      * Signs the repositories.
      *
@@ -93,6 +96,17 @@ abstract class AptConfig {
         def deployApt = deployAptSourcesListFactory.create(service, sources, script)
         deployApt.deploySources()
         deployApt.deployEnableComponents()
+    }
+
+    /**
+     * Deploys the proxy.
+     *
+     * @param service
+     *            the {@link RepoService} service.
+     */
+    void deployProxy(RepoService service) {
+        def deployApt = deployAptProxyFactory.create(service, script)
+        deployApt.deployProxy()
     }
 
     void setScript(Object script) {

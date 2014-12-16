@@ -40,9 +40,10 @@ class UbuntuScript extends RepoScript {
     def run() {
         updatePackages()
         installPackages()
-        aptConfig.signRepositories(service)
-        def sources = aptConfig.readSources(service)
-        aptConfig.deploySources(service, sources)
+        aptConfig.signRepositories service
+        def sources = aptConfig.readSources service
+        aptConfig.deploySources service, sources
+        aptConfig.deployProxy service
         updatePackages()
     }
 

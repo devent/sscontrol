@@ -118,6 +118,20 @@ abstract class RepoScript extends LinuxScript {
     }
 
     /**
+     * Returns the proxy file name, for
+     * example {@code "conf.d/01proxy-robobee"}.
+     *
+     * <ul>
+     * <li>property {@code "proxy_file_name"}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    String getProxyFileName() {
+        profileProperty "proxy_file_name", defaultProperties
+    }
+
+    /**
      * Returns the repository type, for example {@code "deb"}.
      *
      * <ul>

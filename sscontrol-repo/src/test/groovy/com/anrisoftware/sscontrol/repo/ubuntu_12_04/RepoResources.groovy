@@ -40,6 +40,7 @@ enum RepoResources {
     sourcesList("/etc/apt/sources.list", RepoResources.class.getResource("sources_list.txt")),
     // expected
     sourcesListExpected("/etc/apt/sources.list", RepoResources.class.getResource("sources_list_expected.txt")),
+    proxyExpected("/etc/apt/apt.conf.d/01proxy-robobee", RepoResources.class.getResource("proxyrobobee_expected.txt")),
     aptitudeOutExpected("/usr/bin/aptitude.out", RepoResources.class.getResource("aptitude_out_expected.txt")),
     aptkeyOutExpected("/usr/bin/apt-key.out", RepoResources.class.getResource("aptkey_out_expected.txt")),
 

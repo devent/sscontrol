@@ -18,29 +18,15 @@
  */
 package com.anrisoftware.sscontrol.repo.apt;
 
-import com.anrisoftware.sscontrol.scripts.signrepo.SignRepoModule;
-import com.google.inject.AbstractModule;
-import com.google.inject.assistedinject.FactoryModuleBuilder;
+import com.anrisoftware.sscontrol.repo.service.RepoService;
 
 /**
- * <i>Apt</i> configuration module.
+ * Factory to create the <i>Apt</i> proxy deployer.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-public class RepoAptModule extends AbstractModule {
+interface DeployAptProxyFactory {
 
-    @Override
-    protected void configure() {
-        install(new SignRepoModule());
-        install(new FactoryModuleBuilder().implement(ParseAptSourcesList.class,
-                ParseAptSourcesList.class).build(
-                ParseAptSourcesListFactory.class));
-        install(new FactoryModuleBuilder().implement(
-                DeployAptSourcesList.class, DeployAptSourcesList.class).build(
-                DeployAptSourcesListFactory.class));
-        install(new FactoryModuleBuilder().implement(DeployAptProxy.class,
-                DeployAptProxy.class).build(DeployAptProxyFactory.class));
-    }
-
+    DeployAptProxy create(RepoService service, Object script);
 }

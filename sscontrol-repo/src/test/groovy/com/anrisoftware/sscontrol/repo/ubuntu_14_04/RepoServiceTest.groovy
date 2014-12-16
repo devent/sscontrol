@@ -53,6 +53,7 @@ class RepoServiceTest extends UbuntuTestUtil {
         registry.allServices.each { it.call() }
 
         assertFileContent sourcesListExpected.asFile(tmpdir), sourcesListExpected
+        assertFileContent proxyExpected.asFile(tmpdir), proxyExpected
         assertFileContent aptitudeOutExpected.asFile(tmpdir), aptitudeOutExpected
         assertStringContent aptkeyOutExpected.replaced(tmpdir, tmpdir, "/tmp").replaceAll(/signing\d+key/, "signingkey"), aptkeyOutExpected.toString()
     }

@@ -32,8 +32,9 @@ import com.anrisoftware.sscontrol.database.mysql.resource.ResourcesUtils
 enum MysqlUbuntuResources {
 
     profile("UbuntuProfile.groovy", MysqlUbuntuResources.class.getResource("UbuntuProfile.groovy")),
-    databaseScript("Database.groovy", MysqlUbuntuResources.class.getResource("Database.groovy")),
-    databaseNonLoggingScript("Database.groovy", MysqlUbuntuResources.class.getResource("DatabaseNonLogging.groovy")),
+    databaseMinimalScript("Database.groovy", MysqlUbuntuResources.class.getResource("DatabaseMinimal.groovy")),
+    databaseDebugScript("Database.groovy", MysqlUbuntuResources.class.getResource("DatabaseDebug.groovy")),
+    databaseBindScript("Database.groovy", MysqlUbuntuResources.class.getResource("DatabaseBind.groovy")),
     databaseMaxUserNameLengthScript("Database.groovy", MysqlUbuntuResources.class.getResource("DatabaseMaxUserNameLength.groovy")),
     // commands
     aptitudeCommand("/usr/bin/aptitude", MysqlUbuntuResources.class.getResource("echo_command.txt")),
@@ -42,7 +43,9 @@ enum MysqlUbuntuResources {
     mysqladminCommand("/usr/bin/mysqladmin", MysqlUbuntuResources.class.getResource("echo_command.txt")),
     mysqldExpected("/etc/mysql/conf.d/sscontrol_mysqld.cnf", MysqlUbuntuResources.class.getResource("mysqld_cnf_expected.txt")),
     // expected
-    mysqldNonLoggingExpected("/etc/mysql/conf.d/sscontrol_mysqld.cnf", MysqlUbuntuResources.class.getResource("mysqld_cnf_nonlogging_expected.txt")),
+    mysqldCnfMinimalExpected("/etc/mysql/conf.d/sscontrol_mysqld.cnf", MysqlUbuntuResources.class.getResource("minimal_mysqld_cnf_expected.txt")),
+    mysqldCnfDebugExpected("/etc/mysql/conf.d/sscontrol_mysqld.cnf", MysqlUbuntuResources.class.getResource("debug_mysqld_cnf_expected.txt")),
+    mysqldCnfBindExpected("/etc/mysql/conf.d/sscontrol_mysqld.cnf", MysqlUbuntuResources.class.getResource("bind_mysqld_cnf_expected.txt")),
     mysqlOutExpected("/usr/bin/mysql.out", MysqlUbuntuResources.class.getResource("mysql_out_expected.txt")),
     restartOutExpected("/sbin/restart.out", MysqlUbuntuResources.class.getResource("restart_out_expected.txt")),
     aptitudeOutExpected("/usr/bin/aptitude.out", MysqlUbuntuResources.class.getResource("aptitude_out_expected.txt")),

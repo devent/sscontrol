@@ -20,7 +20,6 @@ package com.anrisoftware.sscontrol.database.statements;
 
 import java.io.Serializable;
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -28,143 +27,132 @@ import javax.inject.Inject;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import com.anrisoftware.globalpom.resources.ToURIFactory;
-import com.anrisoftware.sscontrol.core.api.ServiceException;
 import com.anrisoftware.sscontrol.core.groovy.StatementsMap;
 import com.anrisoftware.sscontrol.core.groovy.StatementsMapFactory;
 import com.google.inject.assistedinject.Assisted;
 
 /**
  * Defines the database name, character set and collate.
- * 
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
 @SuppressWarnings("serial")
 public class Database implements Serializable {
 
-    private static final String STATEMENTS_NAME = "database";
-    private static final String COLLATE = "collate";
-    private static final String CHARACTER_SET = "character set";
     private static final String NAME = "name";
+    private static final String IMPORTING_KEY = "importing";
+    private static final String SCRIPT_KEY = "script";
+    private static final String DATABASE_KEY = "database";
+    private static final String COLLATE_KEY = "collate";
+    private static final String CHARSET_KEY = "charset";
 
     private final DatabaseLogger log;
 
-    private final String name;
-
-    private final List<URI> importingScripts;
-
-    @Inject
-    private ToURIFactory toURIFactory;
-
-    private String characterSet;
-
-    private String collate;
-
-    private StatementsMap statementsMap;
+    private final StatementsMap statementsMap;
 
     /**
-     * @see DatabaseFactory#create(String)
+     * @see DatabaseFactory#create(Map)
      */
     @Inject
-    Database(DatabaseLogger logger, @Assisted Map<String, Object> args) {
-        this.log = logger;
-        this.importingScripts = new ArrayList<URI>();
-        this.name = log.name(this, args);
-        if (log.charset(args)) {
-            this.characterSet = log.charset(this, args);
-        }
-        if (log.collate(args)) {
-            this.collate = log.collate(this, args);
-        }
+    Database(DatabaseLogger log, StatementsMapFactory statementsMapFactory,
+            @Assisted Map<String, Object> args) {
+        this.log = log;
+        this.statementsMap = createStatementsMap(statementsMapFactory);
+        setupArgs(statementsMap, args);
     }
 
-    @Inject
-    public void setStatementsMapFactory(StatementsMapFactory factory) {
-        StatementsMap map = factory.create(this, STATEMENTS_NAME);
-        this.statementsMap = map;
+    private StatementsMap createStatementsMap(StatementsMapFactory factory) {
+        StatementsMap map = factory.create(this, DATABASE_KEY);
+        map.addAllowed(DATABASE_KEY, SCRIPT_KEY);
+        map.setAllowValue(true, DATABASE_KEY);
+        map.addAllowedKeys(DATABASE_KEY, CHARSET_KEY, COLLATE_KEY);
+        map.addAllowedKeys(SCRIPT_KEY, IMPORTING_KEY);
+        map.addAllowedMultiKeys(SCRIPT_KEY, IMPORTING_KEY);
+        return map;
+    }
+
+    private void setupArgs(StatementsMap map, Map<String, Object> args) {
+        map.putValue(DATABASE_KEY, log.name(this, args));
+        if (args.containsKey(CHARSET_KEY)) {
+            map.putMapValue(DATABASE_KEY, CHARSET_KEY, args.get(CHARSET_KEY));
+        }
+        if (args.containsKey(COLLATE_KEY)) {
+            map.putMapValue(DATABASE_KEY, COLLATE_KEY, args.get(COLLATE_KEY));
+        }
     }
 
     /**
      * Returns the name of the database.
+     *
+     * <pre>
+     * database {
+     *     database "postfixdb"
+     * }
+     * </pre>
+     *
+     * @return the database {@link String} name.
      */
     public String getName() {
-        return name;
-    }
-
-    /**
-     * Sets the default character set for the database.
-     * 
-     * @param set
-     *            the character set.
-     * 
-     * @throws NullPointerException
-     *             if the specified character set is {@code null}.
-     * 
-     * @throws IllegalArgumentException
-     *             if the specified character set is empty.
-     */
-    public void setCharacterSet(String set) {
-        log.checkCharacterSet(this, set);
-        this.characterSet = set;
-        log.characterSetSet(this, set);
+        return statementsMap.value(DATABASE_KEY);
     }
 
     /**
      * Returns the default character set for the database.
+     *
+     * <pre>
+     * database {
+     *     database "postfixdb", charset: "latin1"
+     * }
+     * </pre>
+     *
+     * @return the character set {@link String} name or {@code null}.
      */
     public String getCharacterSet() {
-        return characterSet;
+        return statementsMap.mapValue(DATABASE_KEY, CHARSET_KEY);
     }
 
     /**
-     * Sets the default collate for the database.
-     * 
-     * @param set
-     *            the collate.
-     * 
-     * @throws NullPointerException
-     *             if the specified collate is {@code null}.
-     * 
-     * @throws IllegalArgumentException
-     *             if the specified collate is empty.
-     */
-    public void setCollate(String collate) {
-        log.checkCollate(this, collate);
-        this.collate = collate;
-        log.collateSet(this, collate);
-    }
-
-    /**
-     * Returns the default collate for the database.
+     * Returns the default collate set for the database.
+     *
+     * <pre>
+     * database {
+     *     database "postfixdb", collate: "latin1_swedish_ci"
+     * }
+     * </pre>
+     *
+     * @return the collate {@link String} name or {@code null}.
      */
     public String getCollate() {
-        return collate;
+        return statementsMap.mapValue(DATABASE_KEY, COLLATE_KEY);
     }
 
-    public void script(Map<String, Object> args) {
-        if (log.haveScriptImporting(args)) {
-            Object v = log.scriptImporting(args);
-            URI uri = toURIFactory.create().convert(v);
-            importingScripts.add(uri);
-            log.addImportingScript(this, uri);
-        }
+    /**
+     * Returns the script resources to import into the database.
+     *
+     * <pre>
+     * database {
+     *     database "postfixdb", {
+     *         script importing: "postfixtables.sql"
+     *         script importing: "postfixtables.sql.gz"
+     *     }
+     * }
+     * </pre>
+     *
+     * @return the script {@link URI} resources {@link List} list or
+     *         {@code null}.
+     */
+    public List<URI> getScriptImportings() {
+        return statementsMap.mapMultiValueAsURI(SCRIPT_KEY, IMPORTING_KEY);
     }
 
-    public List<URI> getImportingScripts() {
-        return importingScripts;
-    }
-
-    public Object methodMissing(String name, Object args)
-            throws ServiceException {
+    public Object methodMissing(String name, Object args) {
         return statementsMap.methodMissing(name, args);
     }
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this).append(NAME, name)
-                .append(CHARACTER_SET, characterSet).append(COLLATE, collate)
-                .toString();
+        return new ToStringBuilder(this).append(NAME, getName()).toString();
     }
 
 }

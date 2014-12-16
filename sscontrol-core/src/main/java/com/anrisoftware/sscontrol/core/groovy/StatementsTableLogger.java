@@ -22,9 +22,8 @@ import static com.anrisoftware.sscontrol.core.groovy.StatementsTableLogger._.all
 import static com.anrisoftware.sscontrol.core.groovy.StatementsTableLogger._.invalid_statement;
 import static com.anrisoftware.sscontrol.core.groovy.StatementsTableLogger._.key_not_allowed;
 import static com.anrisoftware.sscontrol.core.groovy.StatementsTableLogger._.name_value_error;
-import static com.anrisoftware.sscontrol.core.groovy.StatementsTableLogger._.statement_added_debug;
-import static com.anrisoftware.sscontrol.core.groovy.StatementsTableLogger._.statement_added_info;
 import static com.anrisoftware.sscontrol.core.groovy.StatementsTableLogger._.statement_key;
+import static com.anrisoftware.sscontrol.core.groovy.StatementsTableLogger._.statement_table_added;
 
 import java.util.Map;
 import java.util.Set;
@@ -51,9 +50,7 @@ class StatementsTableLogger extends AbstractLogger {
 
         invalid_statement_message,
 
-        statement_added_debug,
-
-        statement_added_info,
+        statement_table_added,
 
         statements,
 
@@ -104,12 +101,8 @@ class StatementsTableLogger extends AbstractLogger {
     }
 
     void statementValueAdded(StatementsTable statements, String name,
-            Object key, Object value) {
-        if (isDebugEnabled()) {
-            debug(statement_added_debug, name, key, value, statements);
-        } else {
-            info(statement_added_info, name, key, value, statements.getName());
-        }
+            String table, Object key, Object value) {
+        debug(statement_table_added, name, table, key, value, statements);
     }
 
     void checkNameValueAllowed(StatementsTable statements,

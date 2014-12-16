@@ -1,0 +1,39 @@
+configHeader() ::= <<
+## RoboBee Auto Generated
+>>
+
+mysqldConfigHeader() ::= <<
+[mysqld]
+>>
+
+bindAddressConfig(address) ::= <<
+<if(address)>bind-address = <address><endif>
+>>
+
+bindPortConfig(port) ::= <<
+<if(port)>port = <port><endif>
+>>
+
+generalLogConfig(level) ::= <<
+general_log = <level>
+>>
+
+generalLogFileConfig(file) ::= <<
+general_log_file = <file>
+>>
+
+logErrorConfig(level) ::= <<
+log_error
+>>
+
+logErrorFileConfig(file) ::= <<
+log_error = <file>
+>>
+
+logSlowQueriesConfig(level) ::= <<
+log_slow_queries
+>>
+
+logSlowQueriesFileConfig(file) ::= <<
+log_slow_queries = <file>
+>>

@@ -1,5 +1,0 @@
-# SSCONTROL-database
-[mysqld]
-bind-address = 0.0.0.0
-general_log = 1
-# SSCONTROL-database-END

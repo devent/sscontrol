@@ -23,7 +23,7 @@ import groovy.util.logging.Slf4j
 import javax.inject.Inject
 
 import com.anrisoftware.propertiesutils.ContextProperties
-import com.anrisoftware.sscontrol.database.mysql.mysql_5_1.Mysql51Script
+import com.anrisoftware.sscontrol.database.mysql.mysql_5_5.Mysql_5_5_Script
 import com.anrisoftware.sscontrol.scripts.unix.InstallPackagesFactory
 
 /**
@@ -33,7 +33,7 @@ import com.anrisoftware.sscontrol.scripts.unix.InstallPackagesFactory
  * @since 1.0
  */
 @Slf4j
-class UbuntuScript extends Mysql51Script {
+class UbuntuScript extends Mysql_5_5_Script {
 
     @Inject
     UbuntuPropertiesProvider ubuntuProperties
@@ -42,8 +42,16 @@ class UbuntuScript extends Mysql51Script {
     InstallPackagesFactory installPackagesFactory
 
     @Override
-    void beforeConfiguration() {
+    def run() {
+        setupDefaultDebug service
+        setupDefaultBinding service
         installPackages()
+        deployMysqldConfiguration service
+        restartService()
+        setupAdministratorPassword service
+        createDatabases service
+        createUsers service
+        importScripts service
     }
 
     /**

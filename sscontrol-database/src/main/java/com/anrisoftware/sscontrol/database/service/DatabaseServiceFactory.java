@@ -40,7 +40,7 @@ public class DatabaseServiceFactory implements ServiceFactory {
 	/**
 	 * The name of the database service.
 	 */
-	public static final String NAME = "database";
+	public static final String SERVICE_NAME = "database";
 
 	private static final Module[] MODULES = new Module[] { new DatabaseModule() };
 
@@ -50,7 +50,7 @@ public class DatabaseServiceFactory implements ServiceFactory {
 
 	@Override
 	public String getName() {
-		return NAME;
+		return SERVICE_NAME;
 	}
 
 	@Override

@@ -22,9 +22,8 @@ import static com.anrisoftware.sscontrol.core.groovy.StatementsMapLogger._.allow
 import static com.anrisoftware.sscontrol.core.groovy.StatementsMapLogger._.invalid_statement;
 import static com.anrisoftware.sscontrol.core.groovy.StatementsMapLogger._.key_not_allowed;
 import static com.anrisoftware.sscontrol.core.groovy.StatementsMapLogger._.name_value_error;
-import static com.anrisoftware.sscontrol.core.groovy.StatementsMapLogger._.statement_added_debug;
-import static com.anrisoftware.sscontrol.core.groovy.StatementsMapLogger._.statement_added_info;
 import static com.anrisoftware.sscontrol.core.groovy.StatementsMapLogger._.statement_key;
+import static com.anrisoftware.sscontrol.core.groovy.StatementsMapLogger._.statement_map_added;
 import static com.anrisoftware.sscontrol.core.groovy.StatementsMapLogger._.statements;
 
 import java.util.Map;
@@ -52,9 +51,7 @@ class StatementsMapLogger extends AbstractLogger {
 
         invalid_statement_message,
 
-        statement_added_debug,
-
-        statement_added_info,
+        statement_map_added,
 
         statements,
 
@@ -110,11 +107,7 @@ class StatementsMapLogger extends AbstractLogger {
 
     void statementValueAdded(StatementsMap statements, String name, Object key,
             Object value) {
-        if (isDebugEnabled()) {
-            debug(statement_added_debug, name, key, value, statements);
-        } else {
-            info(statement_added_info, name, key, value, statements.getName());
-        }
+        debug(statement_map_added, name, key, value, statements);
     }
 
     void checkNameValueAllowed(StatementsMap map, Set<String> allowedKeys,

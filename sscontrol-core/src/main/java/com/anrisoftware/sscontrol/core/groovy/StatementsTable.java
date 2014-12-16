@@ -244,7 +244,7 @@ public class StatementsTable implements Serializable {
         log.checkKey(this, allowedKeys, name, key);
         Map<String, Map<String, Object>> map = getArgsMap(name);
         map.get(table).put(key, value);
-        log.statementValueAdded(this, name, key, value);
+        log.statementValueAdded(this, name, table, key, value);
     }
 
     /**
@@ -262,7 +262,9 @@ public class StatementsTable implements Serializable {
     public void putTable(String name, String table) throws StatementsException {
         log.checkName(allowed, name);
         Map<String, Map<String, Object>> map = getArgsMap(name);
-        map.put(table, new HashMap<String, Object>());
+        if (!map.containsKey(table)) {
+            map.put(table, new HashMap<String, Object>());
+        }
     }
 
     public Object methodMissing(String name, Object obj)

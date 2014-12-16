@@ -39,14 +39,18 @@ class DatabaseScriptTest extends DatabaseServiceBase {
         loader.loadService ubuntu1004Profile, null
         def profile = registry.getService("profile")[0]
         loader.loadService databaseScript, profile
-        assertService registry.getService("database")[0]
-    }
+        DatabaseService database = registry.getService("database")[0]
 
-    void assertService(DatabaseServiceImpl database) {
-        assert database.debug.level == 1
-        assertStringContent database.admin.password, "mysqladminpassword"
-        assert database.binding.addresses.size() == 1
-        assert database.binding.addresses[0].address == "0.0.0.0"
+        assert database.debugLevels.size() == 3
+        assert database.debugLevels["general"] == 1
+        assert database.debugLevels["error"] == 1
+        assert database.debugLevels["slow-queries"] == 1
+        assert database.debugFiles.size() == 2
+        assert database.debugFiles["error"] == "/var/log/mysql/error.log"
+        assert database.debugFiles["slow-queries"] == "/var/log/mysql/mysql-slow.log"
+        assert database.bindingAddress == "192.168.0.1"
+        assert database.bindingPort == 3306
+        assert database.adminPassword == "mysqladminpassword"
         assert database.databases.size() == 4
         assert database.users.size() == 2
 
@@ -59,12 +63,22 @@ class DatabaseScriptTest extends DatabaseServiceBase {
         assert db.name == "drupal6db"
         assert db.characterSet == "latin1"
         assert db.collate == "latin1_swedish_ci"
+        assert db.scriptImportings == null
 
         db = database.databases[2]
         assert db.name == "maildb"
         assert db.characterSet == null
         assert db.collate == null
-        assert db.importingScripts[0].toString() == "file://postfixtables.sql"
+        assert db.scriptImportings.size() == 1
+        assert db.scriptImportings[0].toString().endsWith("postfixtables.sql")
+
+        db = database.databases[3]
+        assert db.name == "postfixdb"
+        assert db.characterSet == "latin1"
+        assert db.collate == "latin1_swedish_ci"
+        assert db.scriptImportings.size() == 2
+        assert db.scriptImportings[0].toString().endsWith("postfixtables.sql")
+        assert db.scriptImportings[1].toString().endsWith("postfixtables.sql.gz")
 
         def user = database.users[0]
         assert user.name == "test1"
@@ -76,8 +90,16 @@ class DatabaseScriptTest extends DatabaseServiceBase {
         assert user.password == "drupal6password"
         assert user.server == "srv2"
         assert user.access.size() == 1
+        assert user.access[0] == "drupal6db"
+    }
 
-        def access = user.access[0]
-        assert access.database == "drupal6db"
+    @Test
+    void "database script bind local"() {
+        loader.loadService ubuntu1004Profile, null
+        def profile = registry.getService("profile")[0]
+        loader.loadService databaseBindLocalScript, profile
+        DatabaseService database = registry.getService("database")[0]
+
+        assert database.bindingAddress == "127.0.0.1"
     }
 }

@@ -18,8 +18,6 @@
  */
 package com.anrisoftware.sscontrol.database.service;
 
-import static com.anrisoftware.sscontrol.database.service.DatabaseServiceImplLogger._.admin_set_debug;
-import static com.anrisoftware.sscontrol.database.service.DatabaseServiceImplLogger._.admin_set_info;
 import static com.anrisoftware.sscontrol.database.service.DatabaseServiceImplLogger._.binding_set_debug;
 import static com.anrisoftware.sscontrol.database.service.DatabaseServiceImplLogger._.binding_set_info;
 import static com.anrisoftware.sscontrol.database.service.DatabaseServiceImplLogger._.database_add_debug;
@@ -28,19 +26,16 @@ import static com.anrisoftware.sscontrol.database.service.DatabaseServiceImplLog
 import static com.anrisoftware.sscontrol.database.service.DatabaseServiceImplLogger._.debugging_set_info;
 import static com.anrisoftware.sscontrol.database.service.DatabaseServiceImplLogger._.user_add_debug;
 import static com.anrisoftware.sscontrol.database.service.DatabaseServiceImplLogger._.user_add_info;
-import static org.apache.commons.lang3.StringUtils.repeat;
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
-import com.anrisoftware.sscontrol.core.api.Service;
 import com.anrisoftware.sscontrol.core.bindings.Binding;
 import com.anrisoftware.sscontrol.core.debuglogging.DebugLogging;
-import com.anrisoftware.sscontrol.database.statements.Admin;
 import com.anrisoftware.sscontrol.database.statements.Database;
 import com.anrisoftware.sscontrol.database.statements.User;
 
 /**
  * Logging messages for {@link DatabaseServiceImpl}.
- * 
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
@@ -59,10 +54,6 @@ class DatabaseServiceImplLogger extends AbstractLogger {
         database_add_info("Database '{}' add for database service."),
 
         database_add_debug("Database {} add for {}."),
-
-        admin_set_info("Administrator password '{}' set for database service."),
-
-        admin_set_debug("Administrator password {} set for {}."),
 
         debugging_set_info("Debugging {} for database service."),
 
@@ -100,14 +91,6 @@ class DatabaseServiceImplLogger extends AbstractLogger {
             debug(binding_set_debug, binding, service);
         } else {
             info(binding_set_info, binding.getAddresses(), service.getName());
-        }
-    }
-
-    void adminSet(Service service, Admin admin) {
-        if (isDebugEnabled()) {
-            debug(admin_set_debug, admin, service);
-        } else {
-            info(admin_set_info, repeat('*', admin.getPassword().length()));
         }
     }
 

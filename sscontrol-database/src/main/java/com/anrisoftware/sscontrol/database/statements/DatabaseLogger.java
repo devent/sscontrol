@@ -19,18 +19,11 @@
 package com.anrisoftware.sscontrol.database.statements;
 
 import static com.anrisoftware.sscontrol.database.statements.DatabaseLogger._.charset_null;
-import static com.anrisoftware.sscontrol.database.statements.DatabaseLogger._.charset_set_debug;
-import static com.anrisoftware.sscontrol.database.statements.DatabaseLogger._.charset_set_info;
 import static com.anrisoftware.sscontrol.database.statements.DatabaseLogger._.collate_null;
-import static com.anrisoftware.sscontrol.database.statements.DatabaseLogger._.collate_set_debug;
-import static com.anrisoftware.sscontrol.database.statements.DatabaseLogger._.collate_set_info;
-import static com.anrisoftware.sscontrol.database.statements.DatabaseLogger._.importing_script_added_debug;
-import static com.anrisoftware.sscontrol.database.statements.DatabaseLogger._.importing_script_added_info;
 import static com.anrisoftware.sscontrol.database.statements.DatabaseLogger._.name_empty;
 import static org.apache.commons.lang3.Validate.isTrue;
 import static org.apache.commons.lang3.Validate.notBlank;
 
-import java.net.URI;
 import java.util.Map;
 
 import javax.inject.Singleton;
@@ -39,14 +32,13 @@ import com.anrisoftware.globalpom.log.AbstractLogger;
 
 /**
  * Logging messages for {@link Database}.
- * 
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
 @Singleton
 class DatabaseLogger extends AbstractLogger {
 
-    private static final String IMPORTING_KEY = "importing";
     private static final String COLLATE_KEY = "collate";
     private static final String CHARSET_KEY = "charset";
     private static final String NAME_KEY = "name";
@@ -57,20 +49,7 @@ class DatabaseLogger extends AbstractLogger {
 
         collate_null("Collate must not be null for %s."),
 
-        charset_null("Character set must not be null for %s."),
-
-        charset_set_debug("Character set '{}' set for {}."),
-
-        charset_set_info("Character set '{}' set for database '{}'."),
-
-        collate_set_debug("Collate set '{}' set for {}."),
-
-        collate_set_info("Collate set '{}' set for database '{}'."),
-
-        importing_script_added_debug("Importing script '{}' added for {}."),
-
-        importing_script_added_info(
-                "Importing script '{}' added for database '{}'.");
+        charset_null("Character set must not be null for %s.");
 
         private String name;
 
@@ -98,19 +77,11 @@ class DatabaseLogger extends AbstractLogger {
         return v;
     }
 
-    boolean charset(Map<String, Object> args) {
-        return args.containsKey(CHARSET_KEY);
-    }
-
     String charset(Database database, Map<String, Object> args) {
         isTrue(args.containsKey(CHARSET_KEY), charset_null.toString(), database);
         String v = args.get(CHARSET_KEY).toString();
         checkCharacterSet(database, v);
         return v;
-    }
-
-    boolean collate(Map<String, Object> args) {
-        return args.containsKey(COLLATE_KEY);
     }
 
     String collate(Database database, Map<String, Object> args) {
@@ -124,40 +95,8 @@ class DatabaseLogger extends AbstractLogger {
         notBlank(character, charset_null.toString(), database);
     }
 
-    void characterSetSet(Database database, String charset) {
-        if (isDebugEnabled()) {
-            debug(charset_set_debug, charset, database);
-        } else {
-            info(charset_set_info, charset, database.getName());
-        }
-    }
-
     void checkCollate(Database database, String collate) {
         notBlank(collate, collate_null.toString(), database);
-    }
-
-    void collateSet(Database database, String collate) {
-        if (isDebugEnabled()) {
-            debug(collate_set_debug, collate, database);
-        } else {
-            info(collate_set_info, collate, database.getName());
-        }
-    }
-
-    boolean haveScriptImporting(Map<String, Object> args) {
-        return args.containsKey(IMPORTING_KEY);
-    }
-
-    Object scriptImporting(Map<String, Object> args) {
-        return args.get(IMPORTING_KEY);
-    }
-
-    void addImportingScript(Database database, URI uri) {
-        if (isDebugEnabled()) {
-            debug(importing_script_added_debug, uri, database);
-        } else {
-            info(importing_script_added_info, uri, database.getName());
-        }
     }
 
 }

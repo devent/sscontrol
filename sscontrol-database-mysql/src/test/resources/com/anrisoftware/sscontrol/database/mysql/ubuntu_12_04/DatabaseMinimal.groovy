@@ -20,12 +20,6 @@ package com.anrisoftware.sscontrol.database.mysql.ubuntu_12_04
 
 database {
 
-    // enable debugging output
-    debug level: 1
-
-    // bind the database server to all addresses
-    bind address: "0.0.0.0"
-
     // set the administrator password
     admin password: "mysqladminpassword"
 

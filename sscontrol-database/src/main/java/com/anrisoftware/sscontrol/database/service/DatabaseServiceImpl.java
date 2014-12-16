@@ -18,12 +18,11 @@
  */
 package com.anrisoftware.sscontrol.database.service;
 
-import static com.anrisoftware.sscontrol.database.service.DatabaseServiceFactory.NAME;
+import static com.anrisoftware.sscontrol.database.service.DatabaseServiceFactory.SERVICE_NAME;
 import static java.util.Collections.unmodifiableList;
 import groovy.lang.Script;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,16 +34,13 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import com.anrisoftware.sscontrol.core.api.Service;
 import com.anrisoftware.sscontrol.core.api.ServiceException;
 import com.anrisoftware.sscontrol.core.api.ServiceScriptFactory;
-import com.anrisoftware.sscontrol.core.bindings.Address;
-import com.anrisoftware.sscontrol.core.bindings.Binding;
 import com.anrisoftware.sscontrol.core.bindings.BindingAddress;
-import com.anrisoftware.sscontrol.core.bindings.BindingArgs;
-import com.anrisoftware.sscontrol.core.bindings.BindingFactory;
-import com.anrisoftware.sscontrol.core.debuglogging.DebugLogging;
-import com.anrisoftware.sscontrol.core.debuglogging.DebugLoggingFactory;
+import com.anrisoftware.sscontrol.core.groovy.StatementsException;
+import com.anrisoftware.sscontrol.core.groovy.StatementsMap;
+import com.anrisoftware.sscontrol.core.groovy.StatementsMapFactory;
+import com.anrisoftware.sscontrol.core.groovy.StatementsTable;
+import com.anrisoftware.sscontrol.core.groovy.StatementsTableFactory;
 import com.anrisoftware.sscontrol.core.service.AbstractService;
-import com.anrisoftware.sscontrol.database.statements.Admin;
-import com.anrisoftware.sscontrol.database.statements.AdminFactory;
 import com.anrisoftware.sscontrol.database.statements.Database;
 import com.anrisoftware.sscontrol.database.statements.DatabaseFactory;
 import com.anrisoftware.sscontrol.database.statements.User;
@@ -52,14 +48,30 @@ import com.anrisoftware.sscontrol.database.statements.UserFactory;
 
 /**
  * Database service.
- * 
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
 @SuppressWarnings("serial")
-class DatabaseServiceImpl extends AbstractService {
+class DatabaseServiceImpl extends AbstractService implements DatabaseService {
 
-    private static final String DATABASE_NAME_KEY = "name";
+    private static final String USER_KEY = "name";
+
+    private static final String PASSWORD_KEY = "password";
+
+    private static final String PORT_KEY = "port";
+
+    private static final String ADMIN_KEY = "admin";
+
+    private static final String BIND_KEY = "bind";
+
+    private static final String FILE_KEY = "file";
+
+    private static final String LEVEL_KEY = "level";
+
+    private static final String DEBUG_KEY = "debug";
+
+    private static final String DATABASE_KEY = "name";
 
     private final List<Database> databases;
 
@@ -74,21 +86,9 @@ class DatabaseServiceImpl extends AbstractService {
     @Inject
     private UserFactory userFactory;
 
-    @Inject
-    private DebugLoggingFactory debugLoggingFactory;
+    private StatementsTable statementsTable;
 
-    @Inject
-    private AdminFactory adminFactory;
-
-    @Inject
-    private Binding binding;
-
-    @Inject
-    private BindingArgs bindingArgs;
-
-    private DebugLogging debug;
-
-    private Admin admin;
+    private StatementsMap statementsMap;
 
     @Inject
     DatabaseServiceImpl() {
@@ -98,7 +98,7 @@ class DatabaseServiceImpl extends AbstractService {
 
     @Override
     protected Script getScript(String profileName) throws ServiceException {
-        ServiceScriptFactory scriptFactory = findScriptFactory(NAME);
+        ServiceScriptFactory scriptFactory = findScriptFactory(SERVICE_NAME);
         return (Script) scriptFactory.getScript();
     }
 
@@ -110,88 +110,74 @@ class DatabaseServiceImpl extends AbstractService {
     protected void injectScript(Script script) {
     }
 
+    @Inject
+    public final void setStatementsMap(StatementsMapFactory factory) {
+        StatementsMap map = factory.create(factory, SERVICE_NAME);
+        map.addAllowed(BIND_KEY, ADMIN_KEY);
+        map.setAllowValue(true, BIND_KEY);
+        map.addAllowedKeys(BIND_KEY, PORT_KEY);
+        map.addAllowedKeys(ADMIN_KEY, PASSWORD_KEY);
+        this.statementsMap = map;
+    }
+
+    @Inject
+    public final void setStatementsTable(StatementsTableFactory factory) {
+        StatementsTable table = factory.create(factory, SERVICE_NAME);
+        table.addAllowed(DEBUG_KEY);
+        table.addAllowedKeys(DEBUG_KEY, LEVEL_KEY, FILE_KEY);
+        this.statementsTable = table;
+    }
+
     /**
      * Returns the database service name.
      */
     @Override
     public String getName() {
-        return NAME;
+        return SERVICE_NAME;
     }
 
     /**
      * Entry point for the database service script.
-     * 
+     *
      * @param statements
      *            the database service statements.
-     * 
+     *
      * @return this {@link Service}.
      */
     public Service database(Object statements) {
         return this;
     }
 
-    /**
-     * Sets the debug logging for the mail server.
-     * 
-     * @see DebugLoggingFactory#create(Map)
-     */
-    public void debug(Map<String, Object> args) {
-        debug = debugLoggingFactory.create(args);
-        log.debugLoggingSet(this, debug);
+    @Override
+    public Map<String, Object> getDebugLevels() {
+        return statementsTable.tableKeys(DEBUG_KEY, LEVEL_KEY);
     }
 
-    public void setDebug(DebugLogging debug) {
-        this.debug = debug;
+    @Override
+    public Map<String, Object> getDebugFiles() {
+        return statementsTable.tableKeys(DEBUG_KEY, FILE_KEY);
     }
 
-    public DebugLogging getDebug() {
-        return debug;
+    @Override
+    public String getBindingAddress() {
+        Object value = statementsMap.value(BIND_KEY);
+        if (value instanceof BindingAddress) {
+            return ((BindingAddress) value).getAddress();
+        } else if (value != null) {
+            return value.toString();
+        } else {
+            return null;
+        }
     }
 
-    /**
-     * Sets the IP addresses or host names to where to bind the database
-     * service.
-     * 
-     * @see BindingFactory#create(Map, String...)
-     */
-    public void bind(Map<String, Object> args) throws ServiceException {
-        List<Address> addresses = bindingArgs.createAddress(this, args);
-        binding.addAddress(addresses);
-        log.bindingSet(this, binding);
+    @Override
+    public Integer getBindingPort() {
+        return statementsMap.mapValue(BIND_KEY, PORT_KEY);
     }
 
-    /**
-     * Sets the IP addresses or host names to where to bind the database
-     * service.
-     * 
-     * @see BindingFactory#create(BindingAddress)
-     */
-    public void bind(BindingAddress address) throws ServiceException {
-        binding.addAddress(address);
-        log.bindingSet(this, binding);
-    }
-
-    /**
-     * Returns a list of the IP addresses where to bind the database service.
-     * 
-     * @return the {@link Binding}.
-     */
-    public Binding getBinding() {
-        return binding;
-    }
-
-    /**
-     * The administrator password for the database server.
-     * 
-     * @see AdminFactory#create(Map)
-     */
-    public void admin(Map<String, Object> args) {
-        this.admin = adminFactory.create(args);
-        log.adminSet(this, admin);
-    }
-
-    public Admin getAdmin() {
-        return admin;
+    @Override
+    public String getAdminPassword() {
+        return statementsMap.mapValue(ADMIN_KEY, PASSWORD_KEY);
     }
 
     public void database(String name) {
@@ -208,121 +194,73 @@ class DatabaseServiceImpl extends AbstractService {
 
     /**
      * Creates a new database with the specified name.
-     * 
+     *
      * @param args
      *            additional parameter {@link Map}.
-     * 
+     *
      * @param name
      *            the database name.
-     * 
+     *
      * @param statements
      *            database statements.
-     * 
+     *
      * @return the new {@link Database}.
-     * 
+     *
      * @throws IllegalArgumentException
      *             if the specified name is empty.
      */
     public Database database(Map<String, Object> args, String name,
             Object statements) {
-        args.put(DATABASE_NAME_KEY, name);
+        args.put(DATABASE_KEY, name);
         Database database = databaseFactory.create(args);
         databases.add(database);
         log.databaseAdd(this, database);
         return database;
     }
 
-    public void user(String name) {
-        user(Collections.<String, String> emptyMap(), name, null);
-    }
-
-    public void user(Map<String, String> args, String name) {
-        user(args, name, null);
-    }
-
-    public User user(String name, Object statements) {
-        return user(Collections.<String, String> emptyMap(), name, statements);
-    }
-
-    /**
-     * Creates a new database user with the specified name.
-     * 
-     * @param args
-     *            additional parameter {@link Map}.
-     * 
-     * @param name
-     *            the user name.
-     * 
-     * @param statements
-     *            user statements.
-     * 
-     * @return the {@link User}.
-     * 
-     * @throws IllegalArgumentException
-     *             if the specified name is empty.
-     */
-    public User user(Map<String, String> args, String name, Object statements) {
-        User user = userFactory.create(name);
-        users.add(user);
-        user.setArguments(args);
-        log.userAdd(this, user);
-        return user;
-    }
-
-    /**
-     * Returns the databases of the server.
-     * 
-     * @return an unmodifiable {@link List}.
-     */
+    @Override
     public List<Database> getDatabases() {
         return unmodifiableList(databases);
     }
 
-    /**
-     * Sets the default character set for databases.
-     * 
-     * @param set
-     *            the character set.
-     * 
-     * @throws NullPointerException
-     *             if the specified character set is {@code null}.
-     * 
-     * @throws IllegalArgumentException
-     *             if the specified character set is empty.
-     */
-    public void setDefaultCharacterSet(String set) {
-        for (Database database : databases) {
-            if (database.getCharacterSet() == null) {
-                database.setCharacterSet(set);
-            }
-        }
+    public void user(String name) {
+        user(new HashMap<String, Object>(), name, null);
+    }
+
+    public void user(Map<String, Object> args, String name) {
+        user(args, name, null);
+    }
+
+    public User user(String name, Object statements) {
+        return user(new HashMap<String, Object>(), name, statements);
     }
 
     /**
-     * Sets the default collate for databases.
-     * 
-     * @param collate
-     *            the collate.
-     * 
-     * @throws NullPointerException
-     *             if the specified collate is {@code null}.
-     * 
+     * Creates a new database user with the specified name.
+     *
+     * @param args
+     *            additional parameter {@link Map}.
+     *
+     * @param name
+     *            the user name.
+     *
+     * @param statements
+     *            user statements.
+     *
+     * @return the {@link User}.
+     *
      * @throws IllegalArgumentException
-     *             if the specified collate is empty.
+     *             if the specified name is empty.
      */
-    public void setDefaultCollate(String collate) {
-        for (Database database : databases) {
-            if (database.getCollate() == null) {
-                database.setCollate(collate);
-            }
-        }
+    public User user(Map<String, Object> args, String name, Object statements) {
+        args.put(USER_KEY, name);
+        User user = userFactory.create(args);
+        users.add(user);
+        log.userAdd(this, user);
+        return user;
     }
 
-    /**
-     * Returns the users of the server.
-     * 
-     * @return an unmodifiable {@link List}.
-     */
+    @Override
     public List<User> getUsers() {
         return unmodifiableList(users);
     }
@@ -339,6 +277,14 @@ class DatabaseServiceImpl extends AbstractService {
      */
     public BindingAddress getAll() {
         return BindingAddress.all;
+    }
+
+    public Object methodMissing(String name, Object args) {
+        try {
+            return statementsMap.methodMissing(name, args);
+        } catch (StatementsException e) {
+            return statementsTable.methodMissing(name, args);
+        }
     }
 
     @Override

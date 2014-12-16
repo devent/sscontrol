@@ -19,7 +19,6 @@
 package com.anrisoftware.sscontrol.database.statements;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -27,6 +26,8 @@ import javax.inject.Inject;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import com.anrisoftware.sscontrol.core.groovy.StatementsMap;
+import com.anrisoftware.sscontrol.core.groovy.StatementsMapFactory;
 import com.google.inject.assistedinject.Assisted;
 
 /**
@@ -38,155 +39,103 @@ import com.google.inject.assistedinject.Assisted;
 @SuppressWarnings("serial")
 public class User implements Serializable {
 
-    private static final String SERVER_ARG = "server";
+    private static final String NAME = "name";
+    private static final String DATABASE_KEY = "database";
+    private static final String ACCESS_KEY = "access";
+    private static final String SERVER_KEY = "server";
+    private static final String PASSWORD_KEY = "password";
+    private static final String USER_KEY = "user";
 
-    private static final String PASSWORD_ARG = "password";
-
-    @Inject
-    private transient UserAccessFactory accessFactory;
+    private final StatementsMap statementsMap;
 
     private final UserLogger log;
 
-    private final String name;
-
-    private String password;
-
-    private String server;
-
     /**
-     * The databases to which the user have access.
-     */
-    private final List<UserAccess> access;
-
-    /**
-     * @see UserFactory#create(String)
+     * @see UserFactory#create(Map)
      */
     @Inject
-    User(UserLogger logger, @Assisted String name) {
-        this.log = logger;
-        this.name = name;
-        this.access = new ArrayList<UserAccess>();
+    User(UserLogger log, StatementsMapFactory statementsMapFactory,
+            @Assisted Map<String, Object> args) {
+        this.log = log;
+        this.statementsMap = createStatementsMap(statementsMapFactory);
+        setupArgs(statementsMap, args);
     }
 
-    /**
-     * Sets additional arguments for the user.
-     *
-     * @param args
-     *            the arguments {@link Map}.
-     *
-     * @see #setPassword(String)
-     * @see #setServer(String)
-     */
-    public void setArguments(Map<String, String> args) {
-        if (args.containsKey(PASSWORD_ARG)) {
-            setPassword(args.get(PASSWORD_ARG));
+    private StatementsMap createStatementsMap(StatementsMapFactory factory) {
+        StatementsMap map = factory.create(this, USER_KEY);
+        map.addAllowed(USER_KEY, ACCESS_KEY);
+        map.setAllowValue(true, USER_KEY);
+        map.addAllowedKeys(USER_KEY, PASSWORD_KEY, SERVER_KEY);
+        map.addAllowedKeys(ACCESS_KEY, DATABASE_KEY);
+        map.addAllowedMultiKeys(ACCESS_KEY, DATABASE_KEY);
+        return map;
+    }
+
+    private void setupArgs(StatementsMap map, Map<String, Object> args) {
+        map.putValue(USER_KEY, log.name(this, args));
+        if (args.containsKey(PASSWORD_KEY)) {
+            map.putMapValue(USER_KEY, PASSWORD_KEY, args.get(PASSWORD_KEY));
         }
-        if (args.containsKey(SERVER_ARG)) {
-            setServer(args.get(SERVER_ARG));
+        if (args.containsKey(SERVER_KEY)) {
+            map.putMapValue(USER_KEY, SERVER_KEY, args.get(SERVER_KEY));
         }
     }
 
     /**
      * Returns the name of the user.
+     *
+     * <pre>
+     *     user "test1", password: "test1password", server: "srv1"
+     * </pre>
+     *
+     * @return the user {@link String} name.
      */
     public String getName() {
-        return name;
-    }
-
-    /**
-     * Sets the user password.
-     *
-     * @param password
-     *            the user password.
-     *
-     * @throws NullPointerException
-     *             if the specified password is {@code null}.
-     *
-     * @throws IllegalArgumentException
-     *             if the specified password is empty.
-     */
-    void setPassword(String password) {
-        log.checkPassword(this, password);
-        this.password = password;
-        log.passwordSet(this, getSavePassword());
+        return statementsMap.value(USER_KEY);
     }
 
     /**
      * Returns the user password.
+     *
+     * <pre>
+     *     user "test1", password: "test1password", server: "srv1"
+     * </pre>
+     *
+     * @return the user {@link String} password or {@code null}.
      */
     public String getPassword() {
-        return password;
-    }
-
-    /**
-     * Returns the user password as stars.
-     */
-    public String getSavePassword() {
-        return password != null ? password.replaceAll(".", "*") : String
-                .valueOf(password);
-    }
-
-    /**
-     * Sets the user server host.
-     *
-     * @param server
-     *            the user server host.
-     *
-     * @throws NullPointerException
-     *             if the specified server host is {@code null}.
-     *
-     * @throws IllegalArgumentException
-     *             if the specified server host is empty.
-     */
-    void setServer(String server) {
-        log.checkServer(this, server);
-        this.server = server;
-        log.serverSet(this, server);
+        return statementsMap.mapValue(USER_KEY, PASSWORD_KEY);
     }
 
     /**
      * Returns on which server host the user can connect.
+     *
+     * <pre>
+     *     user "test1", password: "test1password", server: "srv1"
+     * </pre>
+     *
+     * @return the server {@link String} name or {@code null}.
      */
     public String getServer() {
-        return server;
-    }
-
-    /**
-     * Sets the access of the user.
-     *
-     * @param args
-     *            the {@link Map} arguments:
-     *            <ul>
-     *            <li>{@code database:} the database name;
-     *            </ul>
-     *
-     * @throws NullPointerException
-     *             if the database name is {@code null}.
-     *
-     * @throws IllegalArgumentException
-     *             if the database name is empty.
-     */
-    void access(Map<String, Object> args) {
-        log.checkDatabase(this, name);
-        UserAccess access = accessFactory.create(args);
-        this.access.add(access);
-        log.databaseAdd(this, name);
+        return statementsMap.mapValue(USER_KEY, SERVER_KEY);
     }
 
     /**
      * Returns the user access for databases.
      *
-     * @return the {@link List} of the user access.
+     * @return the {@link List} of the user access or {@code null}.
      */
-    public List<UserAccess> getAccess() {
-        return access;
+    public List<String> getAccess() {
+        return statementsMap.mapMultiValue(ACCESS_KEY, DATABASE_KEY);
+    }
+
+    public Object methodMissing(String name, Object args) {
+        return statementsMap.methodMissing(name, args);
     }
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this).append("name", name)
-                .append(PASSWORD_ARG, getSavePassword())
-                .append(SERVER_ARG, server).append("access", access).toString();
+        return new ToStringBuilder(this).append(NAME, getName()).toString();
     }
 
 }

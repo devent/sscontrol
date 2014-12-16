@@ -38,36 +38,50 @@ import com.anrisoftware.sscontrol.database.mysql.ubuntu.UbuntuTestUtil
 class MysqlUbuntuTest extends UbuntuTestUtil {
 
     @Test
-    void "database script"() {
+    void "minimal database script"() {
         copyMysqlFiles tmpdir
         postfixtables.createFile tmpdir
         postfixtablesGz.createFile tmpdir
         postfixtablesZip.createFile tmpdir
         loader.loadService profile.resource, null
         def profile = registry.getService("profile")[0]
-        loader.loadService databaseScript.resource, profile
+        loader.loadService databaseMinimalScript.resource, profile
 
         registry.allServices.each { it.call() }
         log.info "Run service again to ensure that configuration is not set double."
         registry.allServices.each { it.call() }
-        assertFileContent mysqldExpected.asFile(tmpdir), mysqldExpected
+        assertFileContent mysqldCnfMinimalExpected.asFile(tmpdir), mysqldCnfMinimalExpected
         assertFileContent restartOutExpected.asFile(tmpdir), restartOutExpected
         assertFileContent aptitudeOutExpected.asFile(tmpdir), aptitudeOutExpected
         assertFileContent mysqlOutExpected.asFile(tmpdir), mysqlOutExpected
     }
 
     @Test
-    void "database non-logging script"() {
+    void "database debug script"() {
         copyMysqlFiles tmpdir
         postfixtables.createFile tmpdir
         loader.loadService profile.resource, null
         def profile = registry.getService("profile")[0]
-        loader.loadService databaseNonLoggingScript.resource, profile
+        loader.loadService databaseDebugScript.resource, profile
 
         registry.allServices.each { it.call() }
         log.info "Run service again to ensure that configuration is not set double."
         registry.allServices.each { it.call() }
-        assertFileContent mysqldNonLoggingExpected.asFile(tmpdir), mysqldNonLoggingExpected
+        assertFileContent mysqldCnfDebugExpected.asFile(tmpdir), mysqldCnfDebugExpected
+    }
+
+    @Test
+    void "database bind script"() {
+        copyMysqlFiles tmpdir
+        postfixtables.createFile tmpdir
+        loader.loadService profile.resource, null
+        def profile = registry.getService("profile")[0]
+        loader.loadService databaseBindScript.resource, profile
+
+        registry.allServices.each { it.call() }
+        log.info "Run service again to ensure that configuration is not set double."
+        registry.allServices.each { it.call() }
+        assertFileContent mysqldCnfBindExpected.asFile(tmpdir), mysqldCnfBindExpected
     }
 
     @Test(expected=ServiceException)

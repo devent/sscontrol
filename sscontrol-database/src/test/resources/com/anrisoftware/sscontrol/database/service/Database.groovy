@@ -19,11 +19,13 @@
 package com.anrisoftware.sscontrol.database.service
 database {
 
-    // enable debugging output
-    debug level: 1
+    // enable debugging logging
+    debug "general", level: 1
+    debug "error", level: 1, file: "/var/log/mysql/error.log"
+    debug "slow-queries", level: 1, file: "/var/log/mysql/mysql-slow.log"
 
-    // bind the database server to all addresses
-    bind address: "0.0.0.0"
+    // database server binding address
+    bind "192.168.0.1", port: 3306
 
     // set the administrator password
     admin password: "mysqladminpassword"

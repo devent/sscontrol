@@ -102,16 +102,14 @@ public class RoundcubeService implements WebService {
      */
     @Inject
     RoundcubeService(DefaultWebServiceFactory webServiceFactory,
-            @Assisted Map<String, Object> args, @Assisted Domain domain)
-            throws ServiceException {
+            @Assisted Map<String, Object> args, @Assisted Domain domain) {
         this.service = webServiceFactory.create(SERVICE_NAME, args, domain);
         this.statementsMap = service.getStatementsMap();
         this.domain = domain;
         setupStatements(statementsMap, args);
     }
 
-    private void setupStatements(StatementsMap map, Map<String, Object> args)
-            throws ServiceException {
+    private void setupStatements(StatementsMap map, Map<String, Object> args) {
         map.addAllowed(OVERRIDE_KEY, BACKUP_KEY, DATABASE_KEY, SMTP_KEY);
         map.addAllowedKeys(OVERRIDE_KEY, MODE_KEY);
         map.addAllowedKeys(DATABASE_KEY, USER_KEY, PASSWORD_KEY, HOST_KEY,

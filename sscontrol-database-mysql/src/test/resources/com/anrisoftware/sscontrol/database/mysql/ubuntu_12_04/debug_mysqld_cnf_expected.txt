@@ -1,0 +1,8 @@
+## RoboBee Auto Generated
+[mysqld]
+bind-address = 127.0.0.1
+port = 3306
+general_log = 1
+general_log_file = /var/log/mysql/mysql.log
+log_error = /var/log/mysql/error.log
+log_slow_queries = /var/log/mysql/mysql-slow.log

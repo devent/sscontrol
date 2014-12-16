@@ -30,13 +30,13 @@ SET SQL_MODE=@OLD_SQL_MODE;
 
 createUser(user, args) ::= <<
 
-# user <user.name>@<userServer(user, args)>
+# user <user.name>@<user.server>
 SELECT COUNT(*) INTO userexists FROM mysql.user
-    WHERE User='<user.name>' and  Host='<userServer(user, args)>';
+    WHERE User='<user.name>' and  Host='<user.server>';
 IF userexists=0 THEN
-    CREATE USER '<user.name>'@'<userServer(user, args)>' IDENTIFIED BY '<user.password>';
+    CREATE USER '<user.name>'@'<user.server>' IDENTIFIED BY '<user.password>';
 ELSEIF userexists=1 THEN
-    SET PASSWORD FOR '<user.name>'@'<userServer(user, args)>' = PASSWORD('<user.password>');
+    SET PASSWORD FOR '<user.name>'@'<user.server>' = PASSWORD('<user.password>');
 END IF;
 >>
 
@@ -46,11 +46,6 @@ grandDatabaseToUsers(user, args) ::= <<
 
 
 grandDatabase(access, user, args) ::= <<
-# grand access "<user.name>@<userServer(user, args)>" to "<access.database>.*"
-GRANT ALL ON <access.database>.* TO '<user.name>'@'<userServer(user, args)>';
+# grand access "<user.name>@<user.server>" to "<access>.*"
+GRANT ALL ON <access>.* TO '<user.name>'@'<user.server>';
 >>
-
-userServer(user, args) ::= <%
-<if(user.server)><user.server><else><args.defaultUserServer><endif>
-%>
-

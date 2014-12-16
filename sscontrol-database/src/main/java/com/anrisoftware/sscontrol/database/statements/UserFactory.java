@@ -18,21 +18,23 @@
  */
 package com.anrisoftware.sscontrol.database.statements;
 
+import java.util.Map;
+
 /**
  * Factory to create a new {@link User}.
- * 
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
 public interface UserFactory {
 
-	/**
-	 * Creates a new database user.
-	 * 
-	 * @param name
-	 *            the name of the user.
-	 * 
-	 * @return the {@link User}.
-	 */
-	User create(String name);
+    /**
+     * Creates a new database user.
+     *
+     * @param args
+     *            the {@link Map} arguments of the database.
+     *
+     * @return the {@link User}.
+     */
+    User create(Map<String, Object> args);
 }

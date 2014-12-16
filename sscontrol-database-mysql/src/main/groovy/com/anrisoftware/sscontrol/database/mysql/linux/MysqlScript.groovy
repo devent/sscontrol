@@ -22,6 +22,7 @@ import javax.inject.Inject
 
 import com.anrisoftware.sscontrol.core.debuglogging.DebugLoggingProperty
 import com.anrisoftware.sscontrol.core.service.LinuxScript
+import com.anrisoftware.sscontrol.database.service.DatabaseService
 
 /**
  * <i>MySQL</i> service script.
@@ -34,24 +35,55 @@ abstract class MysqlScript extends LinuxScript {
     @Inject
     private DebugLoggingProperty debugLoggingProperty
 
-    @Override
-    def run() {
-        setupDefaultDebug()
-        beforeConfiguration()
+    /**
+     * Setups the default debug logging.
+     *
+     * @param service
+     *            the {@link DatabaseService} database service.
+     */
+    void setupDefaultDebug(DatabaseService service) {
+        if (service.debugLevels == null) {
+            service.debug "general", level: defaultDebugGeneralLevel
+            service.debug "error", level: defaultDebugErrorLevel
+            service.debug "slow-queries", level: defaultDebugSlowQueriesLevel
+        }
+        if (service.debugFiles == null) {
+            service.debug "general", file: defaultDebugGeneralFile
+            service.debug "error", file: defaultDebugErrorFile
+            service.debug "slow-queries", file: defaultDebugSlowQueriesFile
+        }
+        if (service.debugLevels["general"] == null) {
+            service.debug "general", level: defaultDebugGeneralLevel
+        }
+        if (service.debugFiles["general"] == null) {
+            service.debug "general", file: defaultDebugGeneralFile
+        }
+        if (service.debugLevels["error"] == null) {
+            service.debug "error", level: defaultDebugErrorLevel
+        }
+        if (service.debugFiles["error"] == null) {
+            service.debug "error", file: defaultDebugErrorFile
+        }
+        if (service.debugLevels["slow-queries"] == null) {
+            service.debug "slow-queries", level: defaultDebugSlowQueriesLevel
+        }
+        if (service.debugFiles["slow-queries"] == null) {
+            service.debug "slow-queries", file: defaultDebugSlowQueriesFile
+        }
     }
 
     /**
-     * Runs distribution specific configuration before
-     * the <i>MySQL</i> configuration.
+     * Setups the default binding address and port.
+     *
+     * @param service
+     *            the {@link DatabaseService} database service.
      */
-    abstract void beforeConfiguration()
-
-    /**
-     * Setups the default debug logging.
-     */
-    void setupDefaultDebug() {
-        if (service.debug == null) {
-            service.debug = debugLoggingProperty.defaultDebug this
+    void setupDefaultBinding(DatabaseService service) {
+        if (service.bindingAddress == null) {
+            service.bind defaultBindAddress
+        }
+        if (service.bindingPort == null) {
+            service.bind service.bindingAddress, port: defaultBindPort
         }
     }
 
@@ -84,17 +116,87 @@ abstract class MysqlScript extends LinuxScript {
     }
 
     /**
-     * Returns the default debug logging level,
+     * Returns the default debug general logging level,
      * for example: {@code "0"}.
      *
      * <ul>
-     * <li>profile property key {@code default_collate}</li>
+     * <li>profile property key {@code default_debug_general_level}</li>
      * </ul>
      *
      * @see #getDefaultProperties()
      */
-    int getDefaultDebugLogging() {
-        profileNumberProperty "debug_logging", defaultProperties
+    int getDefaultDebugGeneralLevel() {
+        profileNumberProperty "default_debug_general_level", defaultProperties
+    }
+
+    /**
+     * Returns the default debug general logging file,
+     * for example: {@code "/var/log/mysql/mysql.log"}.
+     *
+     * <ul>
+     * <li>profile property key {@code default_debug_general_file}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    String getDefaultDebugGeneralFile() {
+        profileProperty "default_debug_general_file", defaultProperties
+    }
+
+    /**
+     * Returns the default debug error logging level,
+     * for example: {@code "1"}.
+     *
+     * <ul>
+     * <li>profile property key {@code default_debug_error_level}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    int getDefaultDebugErrorLevel() {
+        profileNumberProperty "default_debug_error_level", defaultProperties
+    }
+
+    /**
+     * Returns the default debug error logging file,
+     * for example: {@code "/var/log/mysql/error.log"}.
+     *
+     * <ul>
+     * <li>profile property key {@code default_debug_error_file}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    String getDefaultDebugErrorFile() {
+        profileProperty "default_debug_error_file", defaultProperties
+    }
+
+    /**
+     * Returns the default debug slow queries logging level,
+     * for example: {@code "0"}.
+     *
+     * <ul>
+     * <li>profile property key {@code default_debug_slow_queries_level}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    int getDefaultDebugSlowQueriesLevel() {
+        profileNumberProperty "default_debug_slow_queries_level", defaultProperties
+    }
+
+    /**
+     * Returns the default debug slow queries logging file,
+     * for example: {@code "/var/log/mysql/mysql-slow.log"}.
+     *
+     * <ul>
+     * <li>profile property key {@code default_debug_slow_queries_file}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    String getDefaultDebugSlowQueriesFile() {
+        profileProperty "default_debug_slow_queries_file", defaultProperties
     }
 
     /**
@@ -109,6 +211,20 @@ abstract class MysqlScript extends LinuxScript {
      */
     String getDefaultBindAddress() {
         profileProperty "default_bind_address", defaultProperties
+    }
+
+    /**
+     * Returns the default server bind address,
+     * for example {@code 3306}.
+     *
+     * <ul>
+     * <li>profile property key {@code default_bind_port}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    int getDefaultBindPort() {
+        profileNumberProperty "default_bind_port", defaultProperties
     }
 
     /**

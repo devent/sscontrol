@@ -1,0 +1,13 @@
+createDatabases(args) ::= <<
+# creates the databases
+<args.mysqlCommand> --password=<args.password> -t \<\<"STOP"
+<args.databases:createDatabase(args)>
+\q
+STOP
+>>
+
+createDatabase(database, args) ::= <<
+# create database "<database.name>"
+CREATE DATABASE IF NOT EXISTS `<database.name>` CHARACTER SET `<database.characterSet>` COLLATE `<database.collate>`;
+
+>>

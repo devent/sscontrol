@@ -41,45 +41,45 @@ import com.google.inject.Injector
  */
 class DatabaseServiceBase {
 
-	static ubuntu1004Profile = DatabaseServiceBase.class.getResource("Ubuntu_10_04Profile.groovy")
+    static ubuntu1004Profile = DatabaseServiceBase.class.getResource("Ubuntu_10_04Profile.groovy")
 
-	static databaseScript = DatabaseServiceBase.class.getResource("Database.groovy")
+    static databaseScript = DatabaseServiceBase.class.getResource("Database.groovy")
 
-	static databaseScriptWithDefaults = DatabaseServiceBase.class.getResource("DatabaseWithDefaults.groovy")
+    static databaseBindLocalScript = DatabaseServiceBase.class.getResource("DatabaseBindLocal.groovy")
 
-	static Injector injector
+    static Injector injector
 
-	static ServiceLoaderFactory loaderFactory
+    static ServiceLoaderFactory loaderFactory
 
-	@Rule
-	public TemporaryFolder tmp = new TemporaryFolder()
+    @Rule
+    public TemporaryFolder tmp = new TemporaryFolder()
 
-	Map variables
+    Map variables
 
-	ServicesRegistry registry
+    ServicesRegistry registry
 
-	SscontrolServiceLoader loader
+    SscontrolServiceLoader loader
 
-	@Before
-	void createRegistry() {
-		variables = [tmp: tmp.newFolder()]
-		registry = injector.getInstance ServicesRegistry
-		loader = loaderFactory.create registry, variables
-		loader.setParent injector
-	}
+    @Before
+    void createRegistry() {
+        variables = [tmp: tmp.newFolder()]
+        registry = injector.getInstance ServicesRegistry
+        loader = loaderFactory.create registry, variables
+        loader.setParent injector
+    }
 
-	@BeforeClass
-	static void createFactories() {
-		injector = createInjector()
-		loaderFactory = injector.getInstance ServiceLoaderFactory
-	}
+    @BeforeClass
+    static void createFactories() {
+        injector = createInjector()
+        loaderFactory = injector.getInstance ServiceLoaderFactory
+    }
 
-	static Injector createInjector() {
-		Guice.createInjector(new CoreModule(), new CoreResourcesModule())
-	}
+    static Injector createInjector() {
+        Guice.createInjector(new CoreModule(), new CoreResourcesModule())
+    }
 
-	@BeforeClass
-	static void setupToStringStyle() {
-		toStringStyle
-	}
+    @BeforeClass
+    static void setupToStringStyle() {
+        toStringStyle
+    }
 }

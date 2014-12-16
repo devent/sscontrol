@@ -23,7 +23,7 @@ import com.google.inject.assistedinject.FactoryModuleBuilder;
 
 /**
  * Binds the database statements factories.
- * 
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
@@ -31,13 +31,9 @@ public class StatementsModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        install(new FactoryModuleBuilder().implement(Admin.class, Admin.class)
-                .build(AdminFactory.class));
         install(new FactoryModuleBuilder().implement(Database.class,
                 Database.class).build(DatabaseFactory.class));
         install(new FactoryModuleBuilder().implement(User.class, User.class)
                 .build(UserFactory.class));
-        install(new FactoryModuleBuilder().implement(UserAccess.class,
-                UserAccess.class).build(UserAccessFactory.class));
     }
 }

@@ -34,6 +34,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.codehaus.groovy.runtime.InvokerHelper;
 
 import com.anrisoftware.globalpom.resources.ConvertException;
+import com.anrisoftware.globalpom.resources.ToURI;
 import com.anrisoftware.globalpom.resources.ToURIFactory;
 import com.anrisoftware.sscontrol.core.list.StringToListFactory;
 import com.google.inject.assistedinject.Assisted;
@@ -464,12 +465,46 @@ public class StatementsMap implements Serializable {
      * @param key
      *            the {@link String} key.
      *
-     * @return the {@link Object} value.
+     * @return the {@link List} values or {@code null}.
      */
     @SuppressWarnings("unchecked")
     public <T> List<T> mapMultiValue(String name, String key) {
         Map<String, Object> map = args.get(name);
         return map == null ? null : (List<T>) map.get(key);
+    }
+
+    /**
+     * Returns the statement multi-value with the specified name.
+     * <p>
+     *
+     * The following statements returns [URI("/foo.txt"), URI("/bar.txt")]:
+     *
+     * <pre>
+     * statement key: "file:///foo.txt"
+     * statement key: "file:///bar.txt"
+     * </pre>
+     *
+     * @param name
+     *            the {@link String} name.
+     *
+     * @param key
+     *            the {@link String} key.
+     *
+     * @return the {@link List} of {@link URI} resources or {@code null}.
+     */
+    @SuppressWarnings("unchecked")
+    public List<URI> mapMultiValueAsURI(String name, String key) {
+        Map<String, Object> map = args.get(name);
+        if (map == null) {
+            return null;
+        }
+        List<URI> res = new ArrayList<URI>();
+        List<Object> list = (List<Object>) map.get(key);
+        ToURI touri = toURIFactory.create();
+        for (Object object : list) {
+            res.add(touri.convert(object));
+        }
+        return res;
     }
 
     /**

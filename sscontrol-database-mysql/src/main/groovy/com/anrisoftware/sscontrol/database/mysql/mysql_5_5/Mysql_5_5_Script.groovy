@@ -16,38 +16,39 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-database-mysql. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.database.mysql.mysql_5_1
+package com.anrisoftware.sscontrol.database.mysql.mysql_5_5
 
 import static org.apache.commons.io.FileUtils.*
 import groovy.util.logging.Slf4j
 
 import javax.inject.Inject
 
+import org.apache.commons.io.FileUtils
 import org.apache.commons.io.FilenameUtils
 import org.apache.commons.io.IOUtils
+import org.apache.commons.lang3.StringUtils
 
 import com.anrisoftware.globalpom.exec.api.ProcessTask
-import com.anrisoftware.globalpom.textmatch.tokentemplate.TokenTemplate
 import com.anrisoftware.resources.templates.api.TemplateResource
-import com.anrisoftware.resources.templates.api.Templates
 import com.anrisoftware.resources.templates.api.TemplatesFactory
 import com.anrisoftware.sscontrol.database.mysql.linux.MysqlScript
+import com.anrisoftware.sscontrol.database.service.DatabaseService
 import com.anrisoftware.sscontrol.database.statements.Database
 import com.anrisoftware.sscontrol.database.statements.User
 import com.anrisoftware.sscontrol.scripts.unix.RestartServicesFactory
 import com.anrisoftware.sscontrol.scripts.unix.ScriptExecFactory
 
 /**
- * <i>MySQL 5.1</i> service script.
+ * <i>MySQL 5.5</i> service script.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
 @Slf4j
-abstract class Mysql51Script extends MysqlScript {
+abstract class Mysql_5_5_Script extends MysqlScript {
 
     @Inject
-    Mysql51ScriptLogger logg
+    Mysql_5_5_ScriptLogger logg
 
     @Inject
     ScriptExecFactory scriptExecFactory
@@ -65,20 +66,9 @@ abstract class Mysql51Script extends MysqlScript {
 
     TemplateResource importScriptTemplate
 
-    @Override
-    def run() {
-        super.run()
-        deployMysqldConfiguration()
-        restartService()
-        setupAdministratorPassword()
-        createDatabases()
-        createUsers()
-        importScripts()
-    }
-
     @Inject
     final void setTemplatesFactory(TemplatesFactory factory) {
-        def templates = factory.create("Mysql51")
+        def templates = factory.create("Mysql_5_5")
         mysqldConfTemplates = templates.getResource("mysqld_configuration")
         adminPasswordTemplate = templates.getResource("admin_password")
         createDatabasesTemplate = templates.getResource("create_databases")
@@ -88,13 +78,38 @@ abstract class Mysql51Script extends MysqlScript {
 
     /**
      * Deploys the <i>mysqld</i> configuration.
+     *
+     * @param service
+     *            the {@link DatabaseService} database service.
      */
-    void deployMysqldConfiguration() {
-        def replace = mysqldConfTemplates.getText(true, "mysqldConfig", "script", this)
-        deployConfiguration configurationTokens(), currentMysqldConfiguration, [
-            new TokenTemplate("(?s).*", replace)
-        ], mysqldFile
-        logg.mysqldConfigurationDeployed this
+    void deployMysqldConfiguration(DatabaseService service) {
+        def config = []
+        config << mysqldConfTemplates.getText(true, "configHeader")
+        config << mysqldConfTemplates.getText(true, "mysqldConfigHeader")
+        config << mysqldConfTemplates.getText(true, "bindAddressConfig", "address", service.bindingAddress)
+        config << mysqldConfTemplates.getText(true, "bindPortConfig", "port", service.bindingPort)
+        if (service.debugLevels["general"] > 0) {
+            config << mysqldConfTemplates.getText(true, "generalLogConfig", "level", service.debugLevels["general"])
+        }
+        if (service.debugLevels["general"] > 0) {
+            config << mysqldConfTemplates.getText(true, "generalLogFileConfig", "file", service.debugFiles["general"])
+        }
+        if (service.debugLevels["error"] > 0) {
+            if (StringUtils.isBlank(service.debugFiles["error"])) {
+                config << mysqldConfTemplates.getText(true, "logErrorConfig", "level", service?.debugLevels["error"])
+            } else {
+                config << mysqldConfTemplates.getText(true, "logErrorFileConfig", "file", service?.debugFiles["error"])
+            }
+        }
+        if (service.debugLevels["slow-queries"] > 0) {
+            if (StringUtils.isBlank(service.debugFiles["slow-queries"])) {
+                config << mysqldConfTemplates.getText(true, "logSlowQueriesConfig", "level", service?.debugLevels["slow-queries"])
+            } else {
+                config << mysqldConfTemplates.getText(true, "logSlowQueriesFileConfig", "file", service?.debugFiles["slow-queries"])
+            }
+        }
+        FileUtils.writeLines mysqldFile, charset.name(), config
+        logg.mysqldConfigurationDeployed this, mysqldFile
     }
 
     /**
@@ -109,21 +124,19 @@ abstract class Mysql51Script extends MysqlScript {
     }
 
     /**
-     * Returns the current <i>mysqld</i> configuration.
-     */
-    String getCurrentMysqldConfiguration() {
-        currentConfiguration mysqldFile
-    }
-
-    /**
      * Sets the administrator password if none is set.
+     *
+     * @param service
+     *            the {@link DatabaseService} database service.
      */
-    void setupAdministratorPassword() {
-        logg.checkAdministratorPassword this, service.admin
+    void setupAdministratorPassword(DatabaseService service) {
+        if (service.adminPassword == null) {
+            return
+        }
         ProcessTask worker = scriptExecFactory.create(
                 log: log,
                 mysqladminCommand: mysqladminCommand,
-                password: service.admin.password,
+                password: service.adminPassword,
                 checkExitCodes: false,
                 this, threads,
                 adminPasswordTemplate, "checkAdminPassword")()
@@ -131,7 +144,7 @@ abstract class Mysql51Script extends MysqlScript {
             worker = scriptExecFactory.create(
                     log: log,
                     mysqladminCommand: mysqladminCommand,
-                    password: service.admin.password,
+                    password: service.adminPassword,
                     this, threads,
                     adminPasswordTemplate, "setupAdminPassword")()
             logg.adminPasswordSet this, worker
@@ -140,15 +153,20 @@ abstract class Mysql51Script extends MysqlScript {
 
     /**
      * Creates the databases from the service.
+     *
+     * @param service
+     *            the {@link DatabaseService} database service.
      */
-    void createDatabases() {
+    void createDatabases(DatabaseService service) {
+        service.databases.each { Database db ->
+            db.characterSet == null ? db.database(db.name, charset: defaultCharacterSet) : db.characterSet
+            db.collate == null ? db.database(db.name, collate: defaultCollate) : db.collate
+        }
         def worker = scriptExecFactory.create(
                 log: log,
                 mysqlCommand: mysqlCommand,
-                password: service.admin.password,
+                password: service.adminPassword,
                 databases: service.databases,
-                defaultCharacterSet: defaultCharacterSet,
-                defaultCollate: defaultCollate,
                 this, threads,
                 createDatabasesTemplate, "createDatabases")()
         logg.databasesCreated this, worker
@@ -156,15 +174,20 @@ abstract class Mysql51Script extends MysqlScript {
 
     /**
      * Creates the users from the service.
+     *
+     * @param service
+     *            the {@link DatabaseService} database service.
      */
-    void createUsers() {
+    void createUsers(DatabaseService service) {
         checkUsers service.users
+        service.users.each { User user ->
+            user.server == null ? user.user(user.name, server: defaultUserServer) : user.server
+        }
         def worker = scriptExecFactory.create(
                 log: log,
                 mysqlCommand: mysqlCommand,
-                password: service.admin.password,
+                password: service.adminPassword,
                 users: service.users,
-                defaultUserServer: defaultUserServer,
                 this, threads,
                 createUsersTemplate, "createUsers")()
         logg.usersCreated this, worker
@@ -182,16 +205,19 @@ abstract class Mysql51Script extends MysqlScript {
 
     /**
      * Execute database scripts.
+     *
+     * @param service
+     *            the {@link DatabaseService} database service.
      */
-    void importScripts() {
+    void importScripts(DatabaseService service) {
         service.databases.each { Database database ->
-            database.importingScripts.each { URI it ->
-                importScript database, it
+            database.scriptImportings.each { URI it ->
+                importScript service, database, it
             }
         }
     }
 
-    final void importScript(Database database, URI uri) {
+    final void importScript(DatabaseService service, Database database, URI uri) {
         def unpackCommand = unpackCommand(uri.path)
         def file = new File(tmpDirectory, FilenameUtils.getBaseName(uri.path))
         def input = uri.toURL().openStream()
@@ -199,14 +225,14 @@ abstract class Mysql51Script extends MysqlScript {
         def worker = scriptExecFactory.create(
                 log: log,
                 mysqlCommand: mysqlCommand,
-                password: service.admin.password,
+                password: service.adminPassword,
                 database: database,
                 file: file,
                 unpackCommand: unpackCommand,
                 archiveType: archiveType(uri.path),
                 this, threads, importScriptTemplate, "importScript")()
         file.delete()
-        logg.scriptExecuted this, worker
+        logg.scriptExecuted this, worker, uri
     }
 
     /**

@@ -48,4 +48,5 @@ grandDatabaseToUsers(user, args) ::= <<
 grandDatabase(access, user, args) ::= <<
 # grand access "<user.name>@<user.server>" to "<access>.*"
 GRANT ALL ON <access>.* TO '<user.name>'@'<user.server>';
+
 >>

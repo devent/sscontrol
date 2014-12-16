@@ -76,7 +76,7 @@ class DnsServiceTest extends DnsServiceBase {
         loader.loadService ubuntu1004Profile, null
         def profile = registry.getService("profile")[0]
         loader.loadService bindOneAddress, profile
-        assertService registry.getService("dns")[0], binding: ["127.0.0.1"]
+        assertService registry.getService("dns")[0], binding: ["127.0.0.1"], port: 53
     }
 
     @Test

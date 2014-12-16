@@ -6,7 +6,7 @@ csv_hash_search() ::= <%
 #?csv2\s*=\s*\{\}
 %>
 
-bind_address(service) ::= <%
+bind_address() ::= <%
 #bind_address = "127.0.0.1"
 %>
 
@@ -14,20 +14,20 @@ bind_address_search() ::= <%
 #?bind_address.*
 %>
 
-ip4_bind_address(service, properties) ::= <%
-ipv4_bind_addresses = "<bindAddress(service, properties)>"
-%>
-
-bindAddress(service, properties) ::= <%
-<if(strip(service.binding.addresses))>
-<service.binding.addresses; separator=",">
-<else>
-<properties.defaultBinding; separator=",">
-<endif>
+ip4_bind_address(addresses) ::= <%
+ipv4_bind_addresses = "<addresses;separator=",">"
 %>
 
 ip4_bind_address_search() ::= <%
 #?\s*ipv4_bind_addresses\s*=\s*.*
+%>
+
+dns_port(port) ::= <%
+dns_port = <port>
+%>
+
+dns_port_search() ::= <%
+#?\s*dns_port\s*=\s*.*
 %>
 
 ip4_aliases_search() ::= <%

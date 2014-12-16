@@ -38,11 +38,7 @@ import org.joda.time.DateTime;
 import com.anrisoftware.sscontrol.core.api.Service;
 import com.anrisoftware.sscontrol.core.api.ServiceException;
 import com.anrisoftware.sscontrol.core.api.ServiceScriptFactory;
-import com.anrisoftware.sscontrol.core.bindings.Address;
-import com.anrisoftware.sscontrol.core.bindings.Binding;
 import com.anrisoftware.sscontrol.core.bindings.BindingAddress;
-import com.anrisoftware.sscontrol.core.bindings.BindingArgs;
-import com.anrisoftware.sscontrol.core.bindings.BindingFactory;
 import com.anrisoftware.sscontrol.core.groovy.StatementsException;
 import com.anrisoftware.sscontrol.core.groovy.StatementsMap;
 import com.anrisoftware.sscontrol.core.groovy.StatementsMapFactory;
@@ -62,7 +58,11 @@ import com.anrisoftware.sscontrol.dns.zone.ZoneRecord;
  * @since 1.0
  */
 @SuppressWarnings("serial")
-class DnsServiceImpl extends AbstractService {
+class DnsServiceImpl extends AbstractService implements DnsService {
+
+    private static final String PORT_KEY = "port";
+
+    private static final String BIND_KEY = "bind";
 
     private static final String ALIAS_KEY = "alias";
 
@@ -101,12 +101,6 @@ class DnsServiceImpl extends AbstractService {
     @Inject
     private DnsZoneFactory zoneFactory;
 
-    @Inject
-    private Binding binding;
-
-    @Inject
-    private BindingArgs bindingArgs;
-
     private StatementsMap statementsMap;
 
     private StatementsTable statementsTable;
@@ -119,10 +113,11 @@ class DnsServiceImpl extends AbstractService {
     public void setStatementsMapFactory(StatementsMapFactory factory) {
         StatementsMap map = factory.create(this, SERVICE_NAME);
         this.statementsMap = map;
-        map.addAllowed(SERIAL_KEY, SERVERS_KEY, ACLS_KEY);
-        map.setAllowValue(true, SERIAL_KEY);
+        map.addAllowed(SERIAL_KEY, BIND_KEY, SERVERS_KEY, ACLS_KEY);
+        map.setAllowValue(true, SERIAL_KEY, BIND_KEY);
         map.setAllowMultiValue(true, ACLS_KEY);
         map.addAllowedKeys(SERIAL_KEY, GENERATE_KEY);
+        map.addAllowedKeys(BIND_KEY, PORT_KEY);
         map.addAllowedKeys(SERVERS_KEY, UPSTREAM_KEY, ROOT_KEY);
         map.putValue(SERIAL_KEY, 0);
         map.putMapValue(SERIAL_KEY, GENERATE_KEY, true);
@@ -171,72 +166,28 @@ class DnsServiceImpl extends AbstractService {
         return this;
     }
 
-    /**
-     * Returns the serial number.
-     * <p>
-     * The serial number can be any number, it is added to the automatically
-     * generated serial. The DNS service needs the serial number to be updated
-     * for all records that have been changed. The service can create serial
-     * numbers based on the current date but the user needs to update this
-     * serial number if the records are changed more then once in a day.
-     */
+    @Override
     public int getSerialNumber() {
         int serial = statementsMap.value(SERIAL_KEY);
         return isSerialGenerate() ? generateSerial(serial) : serial;
     }
 
-    /**
-     * Returns whether the serial is generated.
-     * <p>
-     * If returns {@code true} then the serial number is added to the
-     * automatically generated serial. The DNS service needs the serial number
-     * to be updated for all records that have been changed. The service can
-     * create serial numbers based on the current date but the user needs to
-     * update this serial number if the records are changed more then once in a
-     * day. If set to {@code false} then the serial number is used as
-     * specified.</dd>
-     *
-     * @return {@code true} if the serial number is generated.
-     */
+    @Override
     public boolean isSerialGenerate() {
         return statementsMap.mapValue(SERIAL_KEY, GENERATE_KEY);
     }
 
-    /**
-     * Sets the IP addresses or host names to where to bind the DNS service.
-     *
-     * @see BindingFactory#create(Map, String...)
-     */
-    public void bind(Map<String, Object> args) throws ServiceException {
-        List<Address> addresses = bindingArgs.createAddress(this, args);
-        binding.addAddress(addresses);
-        log.bindingSet(this, binding);
+    @Override
+    public List<String> getBindingAddresses() {
+        return statementsMap.valueAsList(BIND_KEY);
     }
 
-    /**
-     * Sets the IP addresses or host names to where to bind the DNS service.
-     *
-     * @see BindingFactory#create(BindingAddress)
-     */
-    public void bind(BindingAddress address) throws ServiceException {
-        binding.addAddress(address);
-        log.bindingSet(this, binding);
+    @Override
+    public Integer getBindingPort() {
+        return statementsMap.mapValue(BIND_KEY, PORT_KEY);
     }
 
-    /**
-     * Returns a list of the IP addresses where to bind the DNS service.
-     *
-     * @return the {@link Binding}.
-     */
-    public Binding getBinding() {
-        return binding;
-    }
-
-    /**
-     * Returns the list of upstream servers.
-     *
-     * @return the {@link List} of {@link String} addresses or {@code null}.
-     */
+    @Override
     public List<String> getUpstreamServers() {
         List<String> list;
         list = statementsMap.mapValueAsList(SERVERS_KEY, UPSTREAM_KEY);
@@ -246,12 +197,7 @@ class DnsServiceImpl extends AbstractService {
         return list;
     }
 
-    /**
-     * Returns the list of root servers.
-     *
-     * @return the {@link List} of {@link String} addresses or names of the root
-     *         servers, or {@code null}.
-     */
+    @Override
     public List<String> getRootServers() {
         List<String> list;
         list = statementsMap.mapValueAsList(SERVERS_KEY, ROOT_KEY);
@@ -261,12 +207,7 @@ class DnsServiceImpl extends AbstractService {
         return list;
     }
 
-    /**
-     * Returns the list of root servers.
-     *
-     * @return the {@link Map} of named root servers and the address, or
-     *         {@code null}.
-     */
+    @Override
     public Map<String, String> getServers() {
         Map<String, String> map;
         map = statementsTable.tableKeys(SERVER_KEY, ADDRESS_KEY);
@@ -276,11 +217,7 @@ class DnsServiceImpl extends AbstractService {
         return map;
     }
 
-    /**
-     * Returns the list of aliases.
-     *
-     * @return the {@link Map} of aliases and the addresses, or {@code null}.
-     */
+    @Override
     public Map<String, List<String>> getAliases() {
         Map<String, List<String>> amap = new HashMap<String, List<String>>();
         List<String> alist;
@@ -311,12 +248,7 @@ class DnsServiceImpl extends AbstractService {
         return amap;
     }
 
-    /**
-     * Returns the list of the ACLs servers.
-     *
-     * @return the {@link List} of {@link String} addresses or names of the ACLs
-     *         servers, or {@code null}.
-     */
+    @Override
     public List<String> getAcls() {
         List<Object> list = statementsMap.value(ACLS_KEY);
         if (list == null) {
@@ -389,11 +321,7 @@ class DnsServiceImpl extends AbstractService {
         return Integer.parseInt(string);
     }
 
-    /**
-     * Returns a list of the DNS zones.
-     *
-     * @return an unmodifiable {@link List} of {@link DnsZone} DNS zones.
-     */
+    @Override
     public List<DnsZone> getZones() {
         return unmodifiableList(zones);
     }

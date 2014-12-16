@@ -83,7 +83,7 @@ abstract class DeadwoodScript extends LinuxScript {
      *
      * <ul>
      * <li>profile property {@code "deadwood_restart_command"}</li>
-     * <li>property key {@code restart_command}</li>
+     * <li>profile property {@code restart_command}</li>
      * </ul>
      *
      * @see #getDefaultProperties()
@@ -166,6 +166,19 @@ abstract class DeadwoodScript extends LinuxScript {
      */
     List getDefaultBindingAddresses() {
         profileListProperty "default_binding_addresses", defaultProperties
+    }
+
+    /**
+     * Returns the default binding port, for example {@code 53}.
+     *
+     * <ul>
+     * <li>profile property key {@code default_binding_port}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    int getDefaultBindingPort() {
+        profileNumberProperty "default_binding_port", defaultProperties
     }
 
     /**

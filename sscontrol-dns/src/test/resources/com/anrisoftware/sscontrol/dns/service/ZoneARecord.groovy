@@ -17,6 +17,7 @@
  * along with sscontrol-dns. If not, see <http://www.gnu.org/licenses/>.
  */
 package com.anrisoftware.sscontrol.dns.service
+
 dns {
 	zone "testa.com", primary: "ns1.testa.com", email: "hostmaster@testa.com", address: "192.168.0.49"
 	zone "testb.com", primary: "ns1.testb.com", email: "hostmaster@testb.com", address: "192.168.0.50", serial: 1, ttl: "PT1S"

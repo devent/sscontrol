@@ -21,7 +21,7 @@ dns {
 	serial 1, generate: false
 
 	// bind the dns server to address only
-	bind address: "127.0.0.1"
+	bind "127.0.0.1"
 
     // adds IPv4 address alias
     alias "localhost", address: "127.0.0.1"

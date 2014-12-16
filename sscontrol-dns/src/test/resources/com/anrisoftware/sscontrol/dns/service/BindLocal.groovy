@@ -17,4 +17,6 @@
  * along with sscontrol-dns. If not, see <http://www.gnu.org/licenses/>.
  */
 package com.anrisoftware.sscontrol.dns.service
-dns { bind local }
+dns {
+    bind local, port: 53
+}

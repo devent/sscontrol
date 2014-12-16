@@ -27,6 +27,7 @@ import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.Templates
 import com.anrisoftware.resources.templates.api.TemplatesFactory
 import com.anrisoftware.sscontrol.dns.deadwood.linux.DeadwoodScript
+import com.anrisoftware.sscontrol.dns.service.DnsService
 import com.anrisoftware.sscontrol.scripts.changefilemod.ChangeFileModFactory
 import com.anrisoftware.sscontrol.scripts.changefileowner.ChangeFileOwnerFactory
 
@@ -49,37 +50,58 @@ abstract class Deadwood_3_2_Script extends DeadwoodScript {
     TemplateResource deadwoodConfiguration
 
     @Inject
-    void setTemplatesFactory(TemplatesFactory factory) {
+    final void setTemplatesFactory(TemplatesFactory factory) {
         this.deadwoodTemplates = factory.create("Deadwood_3_2")
         this.deadwoodConfiguration = deadwoodTemplates.getResource("configuration")
     }
 
     /**
-     * Deploys the <i>Deadwood</i> configuration.
+     * Setups the default binding addresses and port.
+     *
+     * @param service
+     *            the {@link DnsService} DNS service.
      */
-    void deployDeadwoodConfiguration() {
+    void setupDefaultBinding(DnsService service) {
+        if (service.bindingAddresses == null) {
+            service.bind defaultBindingAddresses.join(",")
+        }
+        if (service.bindingPort == null) {
+            service.bind service.bindingAddresses.join(","), port: defaultBindingPort
+        }
+    }
+
+    /**
+     * Deploys the <i>Deadwood</i> configuration.
+     *
+     * @param service
+     *            the {@link DnsService} DNS service.
+     */
+    void deployDeadwoodConfiguration(DnsService service) {
         configurationDir.mkdirs()
-        deployConfiguration configurationTokens(), currentDeadwoodConfiguration, deadwoodConfigurations, deadwoodrcFile
+        deployConfiguration configurationTokens(), currentDeadwoodConfiguration, deadwoodConfigurations(service), deadwoodrcFile
     }
 
     /**
      * Returns the <i>Deadwood</i> configurations.
+     *
+     * @param service
+     *            the {@link DnsService} DNS service.
      */
-    List getDeadwoodConfigurations() {
+    List deadwoodConfigurations(DnsService service) {
         [
-            bindAddressConfiguration,
-            ipv4BindAddressConfiguration,
-            chrootConfiguration,
-            upstreamServersConfiguration,
-            rootServersConfiguration,
-            namedRootServersConfiguration,
-            aclsConfiguration,
-            maxprocsConfiguration,
-            handleOverloadConfiguration,
-            maximumCacheElementsConfiguration,
-            cacheFileConfiguration,
-            resurrectionsConfiguration,
-            filterRfc1918Configuration,
+            bindAddressConfiguration(service),
+            ipv4BindAddressConfiguration(service),
+            chrootConfiguration(service),
+            upstreamServersConfiguration(service),
+            rootServersConfiguration(service),
+            namedRootServersConfiguration(service),
+            aclsConfiguration(service),
+            maxprocsConfiguration(service),
+            handleOverloadConfiguration(service),
+            maximumCacheElementsConfiguration(service),
+            cacheFileConfiguration(service),
+            resurrectionsConfiguration(service),
+            filterRfc1918Configuration(service),
         ]
     }
 
@@ -124,19 +146,19 @@ abstract class Deadwood_3_2_Script extends DeadwoodScript {
                 this, threads)()
     }
 
-    def getBindAddressConfiguration() {
+    def bindAddressConfiguration(DnsService service) {
         def search = deadwoodConfiguration.getText(true, "bind_address_search")
         def replace = deadwoodConfiguration.getText(true, "bind_address", "service", service)
         new TokenTemplate(search, replace)
     }
 
-    def getIpv4BindAddressConfiguration() {
+    def ipv4BindAddressConfiguration(DnsService service) {
         def search = deadwoodConfiguration.getText(true, "ip4_bind_address_search")
-        def replace = deadwoodConfiguration.getText(true, "ip4_bind_address", "service", service, "properties", this)
+        def replace = deadwoodConfiguration.getText(true, "ip4_bind_address", "addresses", service.bindingAddresses)
         new TokenTemplate(search, replace)
     }
 
-    def getChrootConfiguration() {
+    def chrootConfiguration(DnsService service) {
         def search = deadwoodConfiguration.getText(true, "chroot_search")
         def replace = deadwoodConfiguration.getText(true, "chroot", "directory", configurationDir)
         new TokenTemplate(search, replace)
@@ -145,7 +167,7 @@ abstract class Deadwood_3_2_Script extends DeadwoodScript {
     /**
      * Activates and sets the upstream servers.
      */
-    def getUpstreamServersConfiguration() {
+    def upstreamServersConfiguration(DnsService service) {
         if (service.upstreamServers.empty) {
             return []
         }
@@ -153,13 +175,13 @@ abstract class Deadwood_3_2_Script extends DeadwoodScript {
         def search = deadwoodConfiguration.getText(true, "upstream_servers_search")
         def replace = deadwoodConfiguration.getText(true, "upstream_servers")
         list << new TokenTemplate(search, replace)
-        list << getUpstreamServerConfiguration(service.upstreamServers)
+        list << upstreamServerConfiguration(service.upstreamServers)
     }
 
     /**
      * Sets the upstream servers.
      */
-    def getUpstreamServerConfiguration(List servers) {
+    def upstreamServerConfiguration(List servers) {
         def search = deadwoodConfiguration.getText(true, "upstream_servers_list_search", "servers", servers)
         def replace = deadwoodConfiguration.getText(true, "upstream_servers_list", "servers", servers)
         new TokenTemplate(search, replace)
@@ -168,7 +190,7 @@ abstract class Deadwood_3_2_Script extends DeadwoodScript {
     /**
      * Activates and sets the root servers.
      */
-    def getRootServersConfiguration() {
+    def rootServersConfiguration(DnsService service) {
         if (service.rootServers.empty) {
             return []
         }
@@ -176,13 +198,13 @@ abstract class Deadwood_3_2_Script extends DeadwoodScript {
         def search = deadwoodConfiguration.getText(true, "root_servers_search")
         def replace = deadwoodConfiguration.getText(true, "root_servers")
         list << new TokenTemplate(search, replace)
-        list << getRootServerConfiguration(service.rootServers)
+        list << rootServerConfiguration(service.rootServers)
     }
 
     /**
      * Sets the root servers.
      */
-    def getRootServerConfiguration(List roots) {
+    def rootServerConfiguration(List roots) {
         roots.inject([]) { l, root ->
             def servers = lookupServersGroup(root)
             def search = deadwoodConfiguration.getText(true, "root_servers_list_search", "roots", servers)
@@ -194,7 +216,7 @@ abstract class Deadwood_3_2_Script extends DeadwoodScript {
     /**
      * Activates and sets the named root servers.
      */
-    def getNamedRootServersConfiguration() {
+    def namedRootServersConfiguration(DnsService service) {
         if (service.servers.empty) {
             return []
         }
@@ -202,13 +224,13 @@ abstract class Deadwood_3_2_Script extends DeadwoodScript {
         def search = deadwoodConfiguration.getText(true, "root_servers_search")
         def replace = deadwoodConfiguration.getText(true, "root_servers")
         list << new TokenTemplate(search, replace)
-        list << getNamedRootServerConfiguration(service.servers)
+        list << namedRootServerConfiguration(service.servers)
     }
 
     /**
      * Sets the named root servers.
      */
-    def getNamedRootServerConfiguration(Map servers) {
+    def namedRootServerConfiguration(Map servers) {
         def list = []
         servers.each { name, address ->
             def search = deadwoodConfiguration.getText(true, "named_root_servers_list_search", "name", name, "address", address)
@@ -221,7 +243,7 @@ abstract class Deadwood_3_2_Script extends DeadwoodScript {
     /**
      * Sets ACLs.
      */
-    def getAclsConfiguration() {
+    def aclsConfiguration(DnsService service) {
         if (service.acls.empty) {
             return []
         }
@@ -234,7 +256,7 @@ abstract class Deadwood_3_2_Script extends DeadwoodScript {
     /**
      * Sets maximum requests.
      */
-    def getMaxprocsConfiguration() {
+    def maxprocsConfiguration(DnsService service) {
         def search = deadwoodConfiguration.getText(true, "maxprocs_search")
         def replace = deadwoodConfiguration.getText(true, "maxprocs", "requests", maxRequests)
         new TokenTemplate(search, replace)
@@ -243,7 +265,7 @@ abstract class Deadwood_3_2_Script extends DeadwoodScript {
     /**
      * Sets handle overload.
      */
-    def getHandleOverloadConfiguration() {
+    def handleOverloadConfiguration(DnsService service) {
         def search = deadwoodConfiguration.getText(true, "handle_overload_search")
         def replace = deadwoodConfiguration.getText(true, "handle_overload", "enabled", handleOverload)
         new TokenTemplate(search, replace)
@@ -252,7 +274,7 @@ abstract class Deadwood_3_2_Script extends DeadwoodScript {
     /**
      * Sets maximum cache elements.
      */
-    def getMaximumCacheElementsConfiguration() {
+    def maximumCacheElementsConfiguration(DnsService service) {
         def search = deadwoodConfiguration.getText(true, "maximum_cache_elements_search")
         def replace = deadwoodConfiguration.getText(true, "maximum_cache_elements", "max", maxCache)
         new TokenTemplate(search, replace)
@@ -261,7 +283,7 @@ abstract class Deadwood_3_2_Script extends DeadwoodScript {
     /**
      * Sets the cache file.
      */
-    def getCacheFileConfiguration() {
+    def cacheFileConfiguration(DnsService service) {
         def search = deadwoodConfiguration.getText(true, "cache_file_search")
         def replace = deadwoodConfiguration.getText(true, "cache_file", "file", cacheFile)
         new TokenTemplate(search, replace)
@@ -270,7 +292,7 @@ abstract class Deadwood_3_2_Script extends DeadwoodScript {
     /**
      * Sets the resurrections.
      */
-    def getResurrectionsConfiguration() {
+    def resurrectionsConfiguration(DnsService service) {
         def search = deadwoodConfiguration.getText(true, "resurrections_search")
         def replace = deadwoodConfiguration.getText(true, "resurrections", "enabled", resurrection)
         new TokenTemplate(search, replace)
@@ -279,7 +301,7 @@ abstract class Deadwood_3_2_Script extends DeadwoodScript {
     /**
      * Sets the filter rfc1918.
      */
-    def getFilterRfc1918Configuration() {
+    def filterRfc1918Configuration(DnsService service) {
         def search = deadwoodConfiguration.getText(true, "filter_rfc1918_search")
         def replace = deadwoodConfiguration.getText(true, "filter_rfc1918", "enabled", filterRfc1918)
         new TokenTemplate(search, replace)

@@ -54,7 +54,7 @@ abstract class MaradnsScript extends LinuxScript {
      *
      * <ul>
      * <li>profile property {@code "maradns_restart_command"}</li>
-     * <li>property key {@code restart_command}</li>
+     * <li>profile property {@code restart_command}</li>
      * </ul>
      *
      * @see #getDefaultProperties()
@@ -88,7 +88,7 @@ abstract class MaradnsScript extends LinuxScript {
     }
 
     /**
-     * Returns the default bindings.
+     * Returns the default bindings addresses.
      *
      * <ul>
      * <li>profile property key {@code default_binding_addresses}</li>
@@ -96,8 +96,21 @@ abstract class MaradnsScript extends LinuxScript {
      *
      * @see #getDefaultProperties()
      */
-    List getDefaultBinding() {
+    List getDefaultBindingAddresses() {
         profileListProperty "default_binding_addresses", defaultProperties
+    }
+
+    /**
+     * Returns the default binding port, for example {@code 53}.
+     *
+     * <ul>
+     * <li>profile property key {@code default_binding_port}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    int getDefaultBindingPort() {
+        profileNumberProperty "default_binding_port", defaultProperties
     }
 
     /**

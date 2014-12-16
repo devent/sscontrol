@@ -17,4 +17,6 @@
  * along with sscontrol-dns. If not, see <http://www.gnu.org/licenses/>.
  */
 package com.anrisoftware.sscontrol.dns.service
-dns { bind addresses: "127.0.0.1, 127.0.0.2, 127.0.0.3, 127.0.0.4" }
+dns {
+    bind "127.0.0.1, 127.0.0.2, 127.0.0.3, 127.0.0.4"
+}

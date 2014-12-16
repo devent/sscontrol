@@ -74,8 +74,9 @@ class UbuntuScript extends Deadwood_3_2_Script {
     TemplateResource activateService
 
     def run() {
+        setupDefaultBinding service
         installPackages()
-        deployDeadwoodConfiguration()
+        deployDeadwoodConfiguration service
         createDeadwoodDirectories()
         createDeadwoodUser()
         createDeadwoodCacheFile()

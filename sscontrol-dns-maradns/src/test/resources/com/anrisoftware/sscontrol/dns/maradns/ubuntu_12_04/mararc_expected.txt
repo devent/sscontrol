@@ -232,6 +232,9 @@ ipv4_alias["opennic"] = "131.161.247.226,209.151.84.102,64.247.218.140,64.247.21
 ipv4_bind_addresses = "127.0.0.1"
 # SSCONTROL-dns-END
 # SSCONTROL-dns
+dns_port = 53
+# SSCONTROL-dns-END
+# SSCONTROL-dns
 csv2 = {}
 # SSCONTROL-dns-END
 # SSCONTROL-dns

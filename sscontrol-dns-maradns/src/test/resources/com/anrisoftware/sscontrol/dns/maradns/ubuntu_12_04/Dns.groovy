@@ -21,7 +21,7 @@ dns {
 	serial 1, generate: false
 
 	// bind the dns server to address only
-	bind address: "127.0.0.1"
+	bind "127.0.0.1"
 
 	// soa entry, default timers
 	zone "example1.com", primary: "ns.example1.com", email: "hostmaster@example1.com"

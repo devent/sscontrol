@@ -21,7 +21,7 @@ gss = "anrisoftware.com"
 gssprojects = "anrisoftware-projects.com"
 
 dns {
-	bind address: "127.0.0.1"
+	bind "127.0.0.1"
 
 	zone "$gss", primary: "ns1.$gss", email: "hostmaster@$gss", {
 		ns_record "ns1.$gss", "127.0.0.1"

@@ -17,11 +17,9 @@
  * along with sscontrol-dns. If not, see <http://www.gnu.org/licenses/>.
  */
 package com.anrisoftware.sscontrol.dns.service
+
 dns {
 	serial 1
-
-	// bind the dns server to localhost only
-	bind address: "127.0.0.1"
 
     // adds IPv4 address alias
     alias "localhost", address: "127.0.0.1"

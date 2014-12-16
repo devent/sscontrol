@@ -46,9 +46,10 @@ class UbuntuScript extends Maradns_1_2_Script {
     RestartServicesFactory restartServicesFactory
 
     def run() {
+        setupDefaultBinding service
         installPackages()
-        deployMaraDnsConfiguration()
-        deployZoneDbConfigurations()
+        deployMaraDnsConfiguration service
+        deployZoneDbConfigurations service
         restartService()
     }
 

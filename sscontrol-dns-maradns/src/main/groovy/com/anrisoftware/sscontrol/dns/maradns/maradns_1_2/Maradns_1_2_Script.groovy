@@ -27,6 +27,7 @@ import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.Templates
 import com.anrisoftware.resources.templates.api.TemplatesFactory
 import com.anrisoftware.sscontrol.dns.maradns.linux.MaradnsScript
+import com.anrisoftware.sscontrol.dns.service.DnsService
 import com.anrisoftware.sscontrol.dns.zone.DnsZone
 
 /**
@@ -44,62 +45,90 @@ abstract class Maradns_1_2_Script extends MaradnsScript {
     TemplateResource zoneConfiguration
 
     @Inject
-    void setTemplatesFactory(TemplatesFactory factory) {
+    final void setTemplatesFactory(TemplatesFactory factory) {
         this.maradnsTemplates = factory.create("Maradns_1_2")
         this.maradnsConfiguration = maradnsTemplates.getResource("configuration")
         this.zoneConfiguration = maradnsTemplates.getResource("zonedb")
     }
 
     /**
-     * Deploys the MaraDNS configuration.
+     * Setups the default binding addresses and port.
+     *
+     * @param service
+     *            the {@link DnsService} DNS service.
      */
-    void deployMaraDnsConfiguration() {
-        deployConfiguration configurationTokens(), mararcCurrentConfiguration, mararcConfigurations, mararcFile
+    void setupDefaultBinding(DnsService service) {
+        if (service.bindingAddresses == null) {
+            service.bind defaultBindingAddresses.join(",")
+        }
+        if (service.bindingPort == null) {
+            service.bind service.bindingAddresses.join(","), port: defaultBindingPort
+        }
+    }
+
+    /**
+     * Deploys the MaraDNS configuration.
+     *
+     * @param service
+     *            the {@link DnsService} DNS service.
+     */
+    void deployMaraDnsConfiguration(DnsService service) {
+        deployConfiguration configurationTokens(), mararcCurrentConfiguration, mararcConfigurations(service), mararcFile
     }
 
     /**
      * Returns the MaraDNS configurations.
+     *
+     * @param service
+     *            the {@link DnsService} DNS service.
      */
-    List getMararcConfigurations() {
+    List mararcConfigurations(DnsService service) {
         [
-            bindAddressConfiguration,
-            ipv4BindAddressConfiguration,
-            ipv4AliasesConfiguration,
-            rootServersConfiguration,
-            aclsConfiguration,
-            csvHashConfiguration,
-            zonesConfiguration
+            bindAddressConfiguration(service),
+            ipv4BindAddressConfiguration(service),
+            ipv4BindPortConfiguration(service),
+            ipv4AliasesConfiguration(service),
+            rootServersConfiguration(service),
+            aclsConfiguration(service),
+            csvHashConfiguration(service),
+            zonesConfiguration(service)
         ]
     }
 
-    def getCsvHashConfiguration() {
+    def csvHashConfiguration(DnsService service) {
         def search = maradnsConfiguration.getText(true, "csv_hash_search")
         def replace = maradnsConfiguration.getText(true, "csv_hash")
         new TokenTemplate(search, replace)
     }
 
-    def getBindAddressConfiguration() {
+    def bindAddressConfiguration(DnsService service) {
         def search = maradnsConfiguration.getText(true, "bind_address_search")
-        def replace = maradnsConfiguration.getText(true, "bind_address", "service", service)
+        def replace = maradnsConfiguration.getText(true, "bind_address")
         new TokenTemplate(search, replace)
     }
 
-    def getIpv4BindAddressConfiguration() {
+    def ipv4BindAddressConfiguration(DnsService service) {
         def search = maradnsConfiguration.getText(true, "ip4_bind_address_search")
-        def replace = maradnsConfiguration.getText(true, "ip4_bind_address", "service", service, "properties", this)
+        def replace = maradnsConfiguration.getText(true, "ip4_bind_address", "addresses", service.bindingAddresses)
+        new TokenTemplate(search, replace)
+    }
+
+    def ipv4BindPortConfiguration(DnsService service) {
+        def search = maradnsConfiguration.getText(true, "dns_port_search")
+        def replace = maradnsConfiguration.getText(true, "dns_port", "port", service.bindingPort)
         new TokenTemplate(search, replace)
     }
 
     /**
      * Sets the IP aliases.
      */
-    def getIpv4AliasesConfiguration() {
+    def ipv4AliasesConfiguration(DnsService service) {
         def list = []
         def search = maradnsConfiguration.getText(true, "ip4_aliases_search")
         def replace = maradnsConfiguration.getText(true, "ip4_aliases")
         list << new TokenTemplate(search, replace)
         service.aliases.each { k, v ->
-            list << getIpv4AliasConfiguration(k, v)
+            list << ipv4AliasConfiguration(service, k, v)
         }
         return list
     }
@@ -107,7 +136,7 @@ abstract class Maradns_1_2_Script extends MaradnsScript {
     /**
      * Adds the IP alias to the configuration.
      */
-    def getIpv4AliasConfiguration(String name, List addresses) {
+    def ipv4AliasConfiguration(DnsService service, String name, List addresses) {
         def search = maradnsConfiguration.getText(true, "ip4_alias_search", "name", name, "addresses", addresses)
         def replace = maradnsConfiguration.getText(true, "ip4_alias", "name", name, "addresses", addresses)
         new TokenTemplate(search, replace)
@@ -116,7 +145,7 @@ abstract class Maradns_1_2_Script extends MaradnsScript {
     /**
      * Activates and sets the root servers.
      */
-    def getRootServersConfiguration() {
+    def rootServersConfiguration(DnsService service) {
         if (service.rootServers.empty) {
             return []
         }
@@ -124,13 +153,13 @@ abstract class Maradns_1_2_Script extends MaradnsScript {
         def search = maradnsConfiguration.getText(true, "root_servers_search")
         def replace = maradnsConfiguration.getText(true, "root_servers")
         list << new TokenTemplate(search, replace)
-        list << getRootServerConfiguration(service.rootServers)
+        list << rootServerConfiguration(service.rootServers)
     }
 
     /**
      * Sets the root servers.
      */
-    def getRootServerConfiguration(List roots) {
+    def rootServerConfiguration(List roots) {
         def search = maradnsConfiguration.getText(true, "root_servers_list_search", "roots", roots)
         def replace = maradnsConfiguration.getText(true, "root_servers_list", "roots", roots)
         new TokenTemplate(search, replace)
@@ -139,7 +168,7 @@ abstract class Maradns_1_2_Script extends MaradnsScript {
     /**
      * Sets ACLs.
      */
-    def getAclsConfiguration() {
+    def aclsConfiguration(DnsService service) {
         if (service.acls.empty) {
             return []
         }
@@ -149,7 +178,7 @@ abstract class Maradns_1_2_Script extends MaradnsScript {
         new TokenTemplate(search, replace)
     }
 
-    def getZonesConfiguration() {
+    def zonesConfiguration(DnsService service) {
         service.zones.inject([]) { list, DnsZone zone ->
             list << zoneHashConfiguration(zone)
         }
@@ -163,8 +192,11 @@ abstract class Maradns_1_2_Script extends MaradnsScript {
 
     /**
      * Deploys the zone database files.
+     *
+     * @param service
+     *            the {@link DnsService} DNS service.
      */
-    void deployZoneDbConfigurations() {
+    void deployZoneDbConfigurations(DnsService service) {
         service.zones.each { DnsZone zone ->
             def zoneconfig = zoneConfiguration.getText(true, "properties", this, "zone", zone)
             write zoneFile(zone), zoneconfig, charset

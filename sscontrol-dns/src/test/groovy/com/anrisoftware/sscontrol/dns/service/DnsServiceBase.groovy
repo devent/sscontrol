@@ -28,7 +28,6 @@ import org.junit.rules.TemporaryFolder
 import com.anrisoftware.sscontrol.core.api.ServiceLoader as SscontrolServiceLoader
 import com.anrisoftware.sscontrol.core.api.ServiceLoaderFactory
 import com.anrisoftware.sscontrol.core.api.ServicesRegistry
-import com.anrisoftware.sscontrol.core.bindings.Address
 import com.anrisoftware.sscontrol.core.modules.CoreModule
 import com.anrisoftware.sscontrol.core.modules.CoreResourcesModule
 import com.anrisoftware.sscontrol.core.service.ServiceModule
@@ -94,6 +93,7 @@ class DnsServiceBase {
      * 			  <li>{@code generate}, optional.
      * 			  <li>{@code serial}, optional.
      * 			  <li>{@code binding}, optional.
+     *            <li>{@code port}, optional.
      * 			  </ul>
      *
      * @param service
@@ -111,12 +111,13 @@ class DnsServiceBase {
         }
         if (args.containsKey("binding")) {
             def bindings = args["binding"]
-            def found = service.binding.addresses.find { Address address ->
-                bindings.any { String bind ->
-                    address.toString() == bind
-                }
+            def found = service.bindingAddresses.find { String address ->
+                bindings.any { String bind -> address == bind }
             }
             assert found != null
+        }
+        if (args.containsKey("port")) {
+            assert service.bindingPort == args.port
         }
         service
     }

@@ -22,5 +22,5 @@ dns {
     refservice "idzones"
 
     // bind the dns server to address only
-    bind address: "127.0.0.2"
+    bind "127.0.0.2"
 }

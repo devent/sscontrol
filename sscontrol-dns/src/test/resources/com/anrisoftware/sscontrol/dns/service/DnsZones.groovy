@@ -17,6 +17,7 @@
  * along with sscontrol-dns. If not, see <http://www.gnu.org/licenses/>.
  */
 package com.anrisoftware.sscontrol.dns.service
+
 dns {
 	zone "example1.com", primary: "ns.example1.com", email: "hostmaster@example1.com"
 	zone "example2.com", primary: "ns.example2.com", email: "hostmaster@example2.com", {

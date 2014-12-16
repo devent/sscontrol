@@ -22,7 +22,7 @@ dns {
     refservice "idrecursive"
 
     // bind the dns server to address only
-    bind address: "127.0.0.1"
+    bind "127.0.0.1"
 
     // sets the upstream servers
     servers upstream: "8.8.8.8, 8.8.4.4"

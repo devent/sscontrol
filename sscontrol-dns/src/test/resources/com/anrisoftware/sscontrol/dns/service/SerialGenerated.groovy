@@ -17,4 +17,7 @@
  * along with sscontrol-dns. If not, see <http://www.gnu.org/licenses/>.
  */
 package com.anrisoftware.sscontrol.dns.service
-dns { serial 99 }
+
+dns {
+    serial 99
+}

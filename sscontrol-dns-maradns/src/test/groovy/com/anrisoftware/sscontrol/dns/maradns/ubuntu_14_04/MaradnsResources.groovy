@@ -35,10 +35,7 @@ enum MaradnsResources {
     maradnsScript("Dns.groovy", MaradnsResources.class.getResource("Dns.groovy")),
     aptitudeCommand("/usr/bin/aptitude", MaradnsResources.class.getResource("echo_command.txt")),
     restartCommand("/etc/init.d/maradns", MaradnsResources.class.getResource("echo_command.txt")),
-    addRepositoryCommand("/usr/bin/add-apt-repository", MaradnsResources.class.getResource("echo_command.txt")),
     confDir("/etc/maradns", null),
-    sourcesListFile("/etc/apt/sources.list", MaradnsResources.class.getResource("sources_list.txt")),
-    sourcesListExpected("/etc/apt/sources.list", MaradnsResources.class.getResource("sources_list_expected.txt")),
     mararc("/etc/maradns/mararc", MaradnsResources.class.getResource("mararc.txt")),
     mararcExpected("/etc/maradns/mararc", MaradnsResources.class.getResource("mararc_expected.txt")),
     mararcRecursiveExpected("/etc/maradns/mararc", MaradnsResources.class.getResource("mararc_recursive_expected.txt")),
@@ -51,9 +48,7 @@ enum MaradnsResources {
     static copyUbuntuFiles(File parent) {
         aptitudeCommand.createCommand parent
         restartCommand.createCommand parent
-        addRepositoryCommand.createCommand parent
         confDir.asFile parent mkdirs()
-        sourcesListFile.createFile parent
         mararc.createFile parent
     }
 

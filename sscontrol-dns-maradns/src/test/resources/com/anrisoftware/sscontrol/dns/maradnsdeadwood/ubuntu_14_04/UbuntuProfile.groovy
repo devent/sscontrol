@@ -32,7 +32,6 @@ def groupsFile = MaradnsDeadwoodResources.groupsFile.asFile(tmp)
 def usersFile = MaradnsDeadwoodResources.usersFile.asFile(tmp)
 def deadwoodConfDir = MaradnsDeadwoodResources.deadwoodConfDir.asFile(tmp)
 def maradnsConfDir = MaradnsDeadwoodResources.maradnsConfDir.asFile(tmp)
-def sourcesListFile = MaradnsDeadwoodResources.sourcesListFile.asFile(tmp)
 def scriptFile = MaradnsDeadwoodResources.scriptFile.asFile(tmp)
 
 profile "ubuntu_14_04", {
@@ -57,7 +56,6 @@ profile "ubuntu_14_04", {
         maradns_configuration_directory maradnsConfDir
         deadwood_configuration_file "dwood3rc"
         maradns_configuration_file "mararc"
-        packages_sources_file sourcesListFile
         deadwood_script_file scriptFile
     }
 }

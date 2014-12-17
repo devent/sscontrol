@@ -105,7 +105,7 @@ public interface DnsService {
     List<String> getRootServers();
 
     /**
-     * Returns the list of root servers.
+     * Returns the list of named root servers.
      *
      * <pre>
      * dns {

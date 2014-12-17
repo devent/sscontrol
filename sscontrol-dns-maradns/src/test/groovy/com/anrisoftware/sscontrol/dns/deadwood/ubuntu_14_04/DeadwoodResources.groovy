@@ -46,8 +46,6 @@ enum DeadwoodResources {
     usersFile("/etc/passwd", DeadwoodResources.class.getResource("passwd.txt")),
     confDir("/etc/maradns/deadwood", null),
     duendeLoggingDir("/etc/maradns/logger", null),
-    sourcesListFile("/etc/apt/sources.list", DeadwoodResources.class.getResource("sources_list.txt")),
-    sourcesListExpected("/etc/apt/sources.list", DeadwoodResources.class.getResource("sources_list_expected.txt")),
     deadwoodrc("/etc/maradns/deadwood/dwood3rc", DeadwoodResources.class.getResource("dwood3rc.txt")),
     scriptFile("/etc/init.d/deadwood", null),
     // expected
@@ -75,7 +73,6 @@ enum DeadwoodResources {
         usersFile.createFile parent
         confDir.asFile parent mkdirs()
         duendeLoggingDir.asFile parent mkdirs()
-        sourcesListFile.createFile parent
         deadwoodrc.createFile parent
     }
 

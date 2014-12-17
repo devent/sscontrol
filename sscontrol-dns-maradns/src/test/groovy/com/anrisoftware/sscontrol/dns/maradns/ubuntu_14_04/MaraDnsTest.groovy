@@ -49,7 +49,6 @@ class MaraDnsTest extends UbuntuTestUtil {
         registry.allServices.each { it.call() }
 
         assertFileContent restartOutExpected.asFile(tmpdir), restartOutExpected
-        assertFileContent sourcesListExpected.asFile(tmpdir), sourcesListExpected
         assertFileContent aptitudeOutExpected.asFile(tmpdir), aptitudeOutExpected
         assertFileContent mararcExpected.asFile(tmpdir), mararcExpected
         assertFileContent dbAnrisoftwareExpected.asFile(tmpdir), dbAnrisoftwareExpected

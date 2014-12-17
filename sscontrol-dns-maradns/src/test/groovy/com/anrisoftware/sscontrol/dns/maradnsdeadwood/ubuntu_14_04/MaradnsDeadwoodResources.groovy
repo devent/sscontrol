@@ -43,8 +43,6 @@ enum MaradnsDeadwoodResources {
     updateRcCommand("/usr/sbin/update-rc.d", MaradnsDeadwoodResources.class.getResource("echo_command.txt")),
     groupsFile("/etc/group", MaradnsDeadwoodResources.class.getResource("group.txt")),
     usersFile("/etc/passwd", MaradnsDeadwoodResources.class.getResource("passwd.txt")),
-    sourcesListFile("/etc/apt/sources.list", MaradnsDeadwoodResources.class.getResource("sources_list.txt")),
-    sourcesListExpected("/etc/apt/sources.list", MaradnsDeadwoodResources.class.getResource("sources_list_expected.txt")),
     scriptFile("/etc/init.d/deadwood", null),
     // Deadwood
     deadwoodRestartCommand("/etc/init.d/deadwood", MaradnsDeadwoodResources.class.getResource("echo_command.txt")),
@@ -77,7 +75,6 @@ enum MaradnsDeadwoodResources {
         updateRcCommand.createCommand parent
         groupsFile.createFile parent
         usersFile.createFile parent
-        sourcesListFile.createFile parent
         // Deadwood
         deadwoodRestartCommand.createCommand parent
         deadwoodCommand.createCommand parent

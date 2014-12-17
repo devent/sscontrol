@@ -20,17 +20,13 @@ package com.anrisoftware.sscontrol.dns.maradns.ubuntu_12_04
 
 def aptitudeCommand = MaradnsResources.aptitudeCommand.asFile(tmp)
 def restartCommand = MaradnsResources.restartCommand.asFile(tmp)
-def addRepositoryCommand = MaradnsResources.addRepositoryCommand.asFile(tmp)
 def confDir = MaradnsResources.confDir.asFile(tmp)
-def sourcesListFile = MaradnsResources.sourcesListFile.asFile(tmp)
 
 profile "ubuntu_12_04", {
     dns {
         service "maradns"
         install_command aptitudeCommand
         restart_command "$restartCommand restart"
-        enable_repository_command addRepositoryCommand
         configuration_directory confDir
-        packages_sources_file sourcesListFile
     }
 }

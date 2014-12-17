@@ -51,7 +51,6 @@ class MaradnsDeadwoodTest extends UbuntuTestUtil {
 
         assertStringContent deadwoodrcExpected.replaced(tmpdir, tmpdir, "/tmp"), deadwoodrcExpected.toString()
         assertStringContent mararcExpected.replaced(tmpdir, tmpdir, "/tmp"), mararcExpected.toString()
-        assertFileContent sourcesListExpected.asFile(tmpdir), sourcesListExpected
         assertFileContent aptitudeOutExpected.asFile(tmpdir), aptitudeOutExpected
         assertFileContent groupAddOutExpected.asFile(tmpdir), groupAddOutExpected
         assertFileContent userAddOutExpected.asFile(tmpdir), userAddOutExpected

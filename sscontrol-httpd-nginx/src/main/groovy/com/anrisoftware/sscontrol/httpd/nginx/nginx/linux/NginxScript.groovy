@@ -98,8 +98,8 @@ abstract class NginxScript extends LinuxScript {
      *            the {@link HttpdService} httpd service.
      */
     void setupDefaultBinding(HttpdService service) {
-        if (service.binding.size() == 0) {
-            defaultBinding.each { service.binding.addAddress(it) }
+        if (service.bindingAddresses == null) {
+            service.bind defaultBindingAddress, ports: defaultBindingPorts
         }
     }
 
@@ -400,16 +400,29 @@ abstract class NginxScript extends LinuxScript {
     }
 
     /**
-     * Returns the default bind addresses.
+     * Returns the default bind ports, for example {@code "80, 443"}.
      *
      * <ul>
-     * <li>profile property {@code "default_binding"}</li>
+     * <li>profile property {@code "default_binding_ports"}</li>
      * </ul>
      *
      * @see #getDefaultProperties()
      */
-    List getDefaultBinding() {
-        profileListProperty "default_binding", defaultProperties
+    List getDefaultBindingPorts() {
+        profileListProperty "default_binding_ports", defaultProperties
+    }
+
+    /**
+     * Returns the default bind address, for example {@code "0.0.0.0"}.
+     *
+     * <ul>
+     * <li>profile property {@code "default_binding_address"}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    String getDefaultBindingAddress() {
+        profileProperty "default_binding_address", defaultProperties
     }
 
     /**

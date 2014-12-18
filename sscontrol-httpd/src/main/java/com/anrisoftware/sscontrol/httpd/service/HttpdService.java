@@ -62,30 +62,22 @@ public interface HttpdService extends Service {
     /**
      * Returns the binding addresses.
      * <p>
+     * The example returns the following map for the key "storage":
+     *
+     * <pre>
+     * {["0.0.0.0": [80], "192.168.0.2"]: [8082, 8084]}
+     * </pre>
      *
      * <pre>
      * database {
-     *     bind "192.168.0.1"
+     *     bind all, port: 80
+     *     bind "192.168.0.2", ports: [8082, 8084]
      * }
      * </pre>
      *
      * @return the {@link List} of the {@link String} addresses or {@code null}.
      */
-    List<String> getBindingAddresses();
-
-    /**
-     * Returns the binding ports.
-     * <p>
-     *
-     * <pre>
-     * database {
-     *     bind port: 8082
-     * }
-     * </pre>
-     *
-     * @return the {@link List} of the {@link Integer} ports or {@code null}.
-     */
-    List<Integer> getBindingPorts();
+    Map<String, List<Integer>> getBindingAddresses();
 
     /**
      * Returns all domains of the service.

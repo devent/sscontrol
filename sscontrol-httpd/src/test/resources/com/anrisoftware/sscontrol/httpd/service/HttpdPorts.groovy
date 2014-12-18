@@ -19,6 +19,6 @@
 package com.anrisoftware.sscontrol.httpd.service
 
 httpd {
-    bind ports: [8082, 8084]
-    bind ports: [8092, 8094]
+    bind all, port: 80
+    bind "192.168.0.1", ports: [8092, 8094]
 }

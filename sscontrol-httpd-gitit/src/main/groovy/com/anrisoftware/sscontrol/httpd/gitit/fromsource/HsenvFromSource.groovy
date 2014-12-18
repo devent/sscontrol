@@ -504,7 +504,7 @@ abstract class HsenvFromSource {
 
     @Inject
     final void setTemplatesFactory(TemplatesFactory factory) {
-        def templates = templatesFactory.create "HsenvFromSource"
+        def templates = factory.create "HsenvFromSource"
         this.hsenvCommandTemplate = templates.getResource "hsenvcommands"
     }
 

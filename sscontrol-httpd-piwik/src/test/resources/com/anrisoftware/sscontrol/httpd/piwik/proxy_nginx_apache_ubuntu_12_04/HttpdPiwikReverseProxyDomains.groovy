@@ -20,19 +20,20 @@ package com.anrisoftware.sscontrol.httpd.piwik.proxy_nginx_apache_ubuntu_12_04
 
 import com.anrisoftware.sscontrol.httpd.piwik.apache_ubuntu_12_04.UbuntuResources
 
+def http = 8080
+def https = 8082
+
 httpd {
     // reference service with id "idapache2"
     refservice "idapache2"
-    // http
-    bind port: 8080
-    // https
-    bind port: 8082
+    // ports
+    bind "192.168.0.51", ports: [http, https]
     // domain test1.com
-    domain "test1.com", address: "192.168.0.51", port: 8080, {
+    domain "test1.com", address: "192.168.0.51", port: http, {
         setup "piwik", id: "piwikid" //.
     }
     // SSL/domain test1.com
-    ssl_domain "test1.com", address: "192.168.0.51", port: 8082, {
+    ssl_domain "test1.com", address: "192.168.0.51", port: https, {
         certificate file: UbuntuResources.certCrt.resource, key: UbuntuResources.certKey.resource
         setup "piwik", ref: "piwikid"
     }

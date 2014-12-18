@@ -1,8 +1,8 @@
-# Robobee Ports - Auto-generated
+# RoboBee Auto Generated
 #
 # To add custom ports add a new include directive to the Apache configuration
 # file: "Include /etc/apache2/custom-ports.conf".
 #
 
-Listen 80
-Listen 443
+Listen 0.0.0.0:80
+Listen 0.0.0.0:443

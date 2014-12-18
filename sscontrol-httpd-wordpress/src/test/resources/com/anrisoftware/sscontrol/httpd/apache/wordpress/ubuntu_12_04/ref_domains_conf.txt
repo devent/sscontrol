@@ -1,5 +1,4 @@
-# Robobee Virtual Hosts - Auto-generated
-#
+# RoboBee Auto Generated
 
 NameVirtualHost 192.168.0.51:443
 NameVirtualHost 192.168.0.51:80

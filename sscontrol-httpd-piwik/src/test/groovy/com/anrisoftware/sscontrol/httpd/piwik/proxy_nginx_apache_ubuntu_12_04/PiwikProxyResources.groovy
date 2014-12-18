@@ -50,6 +50,7 @@ enum PiwikProxyResources {
     apache2ctlCommand("/usr/sbin/apache2ctl", PiwikProxyResources.class.getResource("httpd_status_command.txt")),
     htpasswdCommand("/usr/bin/htpasswd", PiwikProxyResources.class.getResource("echo_command.txt")),
     htdigestCommand("/usr/bin/htdigest", PiwikProxyResources.class.getResource("echo_command.txt")),
+    netstatCommand("/bin/netstat", PiwikProxyResources.class.getResource("echo_command.txt")),
     apacheConfDir("/etc/apache2", null),
     apacheSitesAvailableDir("/etc/apache2/sites-available", null),
     apacheSitesEnabledDir("/etc/apache2/sites-enabled", null),
@@ -79,6 +80,8 @@ enum PiwikProxyResources {
     nginxSigningKeyFile("/tmp/web-nginx_signing.key", PiwikProxyResources.class.getResource("nginx_signing_key.txt")),
 
     static void copyPiwikProxyFiles(File parent) {
+        // ubuntu
+        netstatCommand.createFile parent
         // piwik
         piwikArchive.createFile parent
         phpConfDir.asFile parent mkdirs()
@@ -106,7 +109,8 @@ enum PiwikProxyResources {
     static void setupPiwikProxyProperties(def profile, File parent) {
         def entry = profile.getEntry("httpd")
         entry.service(["idapache2": "apache", "idproxy": "nginx"])
-        entry.additional_mods "rpaf"
+        // ubuntu
+        entry.netstat_command netstatCommand.asFile(parent)
         // apache
         entry.apache_restart_command "${apacheRestartCommand.asFile(parent)} restart"
         entry.apache_configuration_directory apacheConfDir.asFile(parent)
@@ -121,6 +125,7 @@ enum PiwikProxyResources {
         entry.apache_control_command apache2ctlCommand.asFile(parent)
         entry.htpasswd_command htpasswdCommand.asFile(parent)
         entry.sites_directory sitesDir.asFile(parent)
+        entry.additional_mods "rpaf"
         // nginx
         entry.nginx_restart_command "${nginxRestartCommand.asFile(parent)} restart"
         entry.nginx_configuration_directory nginxConfigurationDir.asFile(parent)

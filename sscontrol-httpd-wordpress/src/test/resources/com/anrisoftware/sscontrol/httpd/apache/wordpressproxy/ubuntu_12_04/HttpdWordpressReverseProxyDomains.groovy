@@ -20,22 +20,25 @@ package com.anrisoftware.sscontrol.httpd.apache.wordpressproxy.ubuntu_12_04
 
 import com.anrisoftware.sscontrol.httpd.apache.wordpress.ubuntu.UbuntuResources;
 
+def http = 8080
+def https = 8082
+
 httpd {
     // reference service with id "idapache2"
     refservice "idapache2"
     // http
-    bind port: 8080
+    bind "192.168.0.51", ports: [http, https]
     // https
     bind port: 8082
     // domain www.test1.com
-    domain "www.test1.com", address: "192.168.0.51", port: 8080, {
+    domain "www.test1.com", address: "192.168.0.51", port: http, {
         user "web_002", uid: 2002, group: "web_002", gid: 2002
         setup "wordpress", id: "test1wordpress", alias: "wordpress3", {
             database "wordpress3", user: "user", password: "userpass", host: "localhost"
         }
     }
     // SSL/domain www.test1.com
-    ssl_domain "www.test1.com", address: "192.168.0.51", port: 8082, {
+    ssl_domain "www.test1.com", address: "192.168.0.51", port: https, {
         user "web_002", uid: 2002, group: "web_002", gid: 2002
         certificate file: UbuntuResources.certCrt.resource, key: UbuntuResources.certKey.resource
         setup "wordpress", ref: "test1wordpress"

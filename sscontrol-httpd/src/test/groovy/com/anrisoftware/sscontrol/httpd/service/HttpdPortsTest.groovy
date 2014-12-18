@@ -43,7 +43,8 @@ class HttpdPortsTest extends HttpdTestUtil {
         loader.loadService httpdPortsScript.resource, profile
         HttpdService service = registry.getService("httpd")[0]
 
-        assert service.bindingPorts.size() == 4
-        assert service.bindingPorts.containsAll([8082, 8084, 8092, 8094])
+        assert service.bindingAddresses.size() == 2
+        assert service.bindingAddresses["0.0.0.0"].containsAll([80])
+        assert service.bindingAddresses["192.168.0.1"].containsAll([8092, 8094])
     }
 }

@@ -133,7 +133,12 @@ abstract class Apache_2_2_Script extends ApacheScript {
      * @see #getPortsConfigFile()
      */
     void deployPortsConfig(HttpdService service) {
-        def string = portsConfigTemplate.getText true, "portsConfiguration", "service", service
+        def bindingAddresses = service.bindingAddresses
+        def addresses = bindingAddresses.inject([]) { list, address, ports ->
+            ports.each { port -> list << "$address:$port" }
+            list
+        }
+        def string = portsConfigTemplate.getText true, "portsConfiguration", "addresses", addresses
         FileUtils.write portsConfigFile, string
     }
 

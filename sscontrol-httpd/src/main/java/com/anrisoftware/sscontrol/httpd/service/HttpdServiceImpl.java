@@ -22,6 +22,7 @@ import static com.anrisoftware.sscontrol.httpd.service.HttpdFactory.NAME;
 import groovy.lang.Script;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -34,9 +35,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import com.anrisoftware.sscontrol.core.api.Service;
 import com.anrisoftware.sscontrol.core.api.ServiceException;
 import com.anrisoftware.sscontrol.core.api.ServiceScriptFactory;
-import com.anrisoftware.sscontrol.core.groovy.StatementsException;
-import com.anrisoftware.sscontrol.core.groovy.StatementsMap;
-import com.anrisoftware.sscontrol.core.groovy.StatementsMapFactory;
+import com.anrisoftware.sscontrol.core.bindings.BindingAddress;
 import com.anrisoftware.sscontrol.core.groovy.StatementsTable;
 import com.anrisoftware.sscontrol.core.groovy.StatementsTableFactory;
 import com.anrisoftware.sscontrol.core.service.AbstractService;
@@ -76,8 +75,6 @@ class HttpdServiceImpl extends AbstractService implements HttpdService {
 
     private StatementsTable statementsTable;
 
-    private StatementsMap statementsMap;
-
     HttpdServiceImpl() {
         this.domains = new ArrayList<Domain>();
         this.virtualDomains = new HashSet<Domain>();
@@ -98,20 +95,11 @@ class HttpdServiceImpl extends AbstractService implements HttpdService {
     }
 
     @Inject
-    public final void setStatementsMap(StatementsMapFactory factory) {
-        StatementsMap map = factory.create(factory, NAME);
-        map.addAllowed(BIND_KEY);
-        map.setAllowValue(true, BIND_KEY);
-        map.addAllowedKeys(BIND_KEY, PORT_KEY, PORTS_KEY);
-        map.addAllowedMultiKeys(BIND_KEY, PORT_KEY, PORTS_KEY);
-        this.statementsMap = map;
-    }
-
-    @Inject
     public final void setStatementsTable(StatementsTableFactory factory) {
         StatementsTable table = factory.create(factory, NAME);
-        table.addAllowed(DEBUG_KEY);
+        table.addAllowed(DEBUG_KEY, BIND_KEY);
         table.setAllowArbitraryKeys(true, DEBUG_KEY);
+        table.addAllowedKeys(BIND_KEY, PORT_KEY, PORTS_KEY);
         this.statementsTable = table;
     }
 
@@ -138,24 +126,30 @@ class HttpdServiceImpl extends AbstractService implements HttpdService {
     }
 
     @Override
-    public List<String> getBindingAddresses() {
-        return statementsMap.valueAsStringList(BIND_KEY);
-    }
-
-    @Override
-    public List<Integer> getBindingPorts() {
-        List<Integer> ports = new ArrayList<Integer>();
-        Integer port = statementsMap.mapValue(BIND_KEY, PORT_KEY);
+    public Map<String, List<Integer>> getBindingAddresses() {
+        Map<String, List<Integer>> map = new HashMap<String, List<Integer>>();
+        StatementsTable table = statementsTable;
+        Map<String, Integer> port = table.tableKeys(BIND_KEY, PORT_KEY);
         if (port != null) {
-            ports.add(port);
-        }
-        List<Object> str = statementsMap.mapValueAsList(BIND_KEY, PORTS_KEY);
-        if (str != null) {
-            for (Object s : str) {
-                ports.add(Integer.valueOf(s.toString()));
+            for (String key : port.keySet()) {
+                List<Integer> list = new ArrayList<Integer>();
+                list.add(port.get(key));
+                map.put(key, list);
             }
         }
-        return ports.size() == 0 ? null : ports;
+        Map<String, List<Integer>> portsmap;
+        portsmap = table.tableKeysAsList(BIND_KEY, PORTS_KEY);
+        if (portsmap != null) {
+            for (Map.Entry<String, List<Integer>> ports : portsmap.entrySet()) {
+                List<Integer> list = map.get(ports.getKey());
+                if (list == null) {
+                    list = new ArrayList<Integer>();
+                }
+                list.addAll(ports.getValue());
+                map.put(ports.getKey(), list);
+            }
+        }
+        return map.size() == 0 ? null : map;
     }
 
     /**
@@ -204,12 +198,22 @@ class HttpdServiceImpl extends AbstractService implements HttpdService {
         return virtualDomains;
     }
 
+    /**
+     * @see BindingAddress#local
+     */
+    public BindingAddress getLocal() {
+        return BindingAddress.local;
+    }
+
+    /**
+     * @see BindingAddress#all
+     */
+    public BindingAddress getAll() {
+        return BindingAddress.all;
+    }
+
     public Object methodMissing(String name, Object args) {
-        try {
-            return statementsMap.methodMissing(name, args);
-        } catch (StatementsException e) {
-            return statementsTable.methodMissing(name, args);
-        }
+        return statementsTable.methodMissing(name, args);
     }
 
     @Override

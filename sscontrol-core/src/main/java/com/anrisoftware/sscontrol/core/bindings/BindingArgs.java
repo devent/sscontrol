@@ -29,7 +29,7 @@ import com.anrisoftware.sscontrol.core.list.StringToListFactory;
 
 /**
  * Parses binding arguments.
- * 
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
@@ -59,8 +59,8 @@ public class BindingArgs {
             return list;
         }
         if (haveAddresses(args)) {
-            for (String address : addresses(service, args)) {
-                list.add(addressFactory.create(address));
+            for (Object address : addresses(service, args)) {
+                list.add(addressFactory.create(address.toString()));
             }
             return list;
         }
@@ -119,7 +119,7 @@ public class BindingArgs {
         return args.containsKey(ADDRESSES);
     }
 
-    public Collection<String> addresses(Object service, Map<String, Object> args) {
+    public Collection<Object> addresses(Object service, Map<String, Object> args) {
         Object object = args.get(ADDRESSES);
         log.checkAddress(service, object);
         return listFactory.create(object).getList();

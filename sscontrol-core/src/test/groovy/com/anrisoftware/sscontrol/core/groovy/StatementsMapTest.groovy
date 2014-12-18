@@ -117,6 +117,22 @@ class StatementsMapTest {
     }
 
     @Test
+    void "statements multi, array"() {
+        Bean bean = injector.getInstance Bean
+        bean.map.addAllowed "beanMap"
+        bean.map.addAllowedMultiKeys "beanMap", "aaa", "bbb"
+        bean.beanMap aaa: ["foo1", "foo2"]
+        bean.beanMap aaa: ["foo3", "foo4"]
+        bean.beanMap aaa: ["bar2", "value2"]
+        assert bean.map.mapValue("beanMap", "aaa").containsAll([
+            "foo1",
+            "foo2",
+            "foo3",
+            "foo4"
+        ])
+    }
+
+    @Test
     void "set statement map"() {
         Bean bean = injector.getInstance Bean
         bean.map.addAllowed "beanMap"

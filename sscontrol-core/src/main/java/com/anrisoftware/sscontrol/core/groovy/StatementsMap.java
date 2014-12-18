@@ -335,10 +335,39 @@ public class StatementsMap implements Serializable {
      *
      * @return the {@link List} list or {@code null}.
      */
-    public List<String> valueAsList(String name) {
+    public List<Object> valueAsList(String name) {
         Object value = value(name);
         if (value != null) {
             return toListFactory.create(value).getList();
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Returns the statement value with the specified name as a list.
+     * <p>
+     *
+     * The following statement returns ["value1", "value2"]:
+     *
+     * <pre>
+     * statement "value1, value2"
+     * </pre>
+     *
+     * @param name
+     *            the {@link String} name.
+     *
+     * @return the {@link List} list or {@code null}.
+     */
+    public List<String> valueAsStringList(String name) {
+        Object value = value(name);
+        if (value != null) {
+            List<Object> list = toListFactory.create(value).getList();
+            List<String> res = new ArrayList<String>(list.size());
+            for (Object object : list) {
+                res.add(object.toString());
+            }
+            return res;
         } else {
             return null;
         }
@@ -439,10 +468,42 @@ public class StatementsMap implements Serializable {
      *
      * @return the {@link List} values.
      */
-    public List<String> mapValueAsList(String name, String key) {
+    public List<Object> mapValueAsList(String name, String key) {
         Object value = mapValue(name, key);
         if (value != null) {
             return toListFactory.create(value).getList();
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Returns the statement values with the specified name.
+     * <p>
+     *
+     * The following statement returns {@code ["value1", "value2"]}
+     *
+     * <pre>
+     * statement key: "value1, value2"
+     * </pre>
+     *
+     * @param name
+     *            the {@link String} name.
+     *
+     * @param key
+     *            the {@link String} key.
+     *
+     * @return the {@link List} values.
+     */
+    public List<String> mapValueAsStringList(String name, String key) {
+        Object value = mapValue(name, key);
+        if (value != null) {
+            List<Object> list = toListFactory.create(value).getList();
+            List<String> res = new ArrayList<String>(list.size());
+            for (Object object : list) {
+                res.add(object.toString());
+            }
+            return res;
         } else {
             return null;
         }
@@ -538,7 +599,11 @@ public class StatementsMap implements Serializable {
             }
             if (oldValue instanceof List) {
                 List list = (List) oldValue;
-                list.add(value);
+                if (value instanceof List) {
+                    list.addAll((List) value);
+                } else {
+                    list.add(value);
+                }
             }
         } else {
             map.put(key, value);
@@ -571,7 +636,8 @@ public class StatementsMap implements Serializable {
                 @SuppressWarnings("unchecked")
                 Map<String, Object> map = (Map<String, Object>) list.get(0);
                 for (Map.Entry<String, Object> entry : map.entrySet()) {
-                    putMapValue(name, entry.getKey(), entry.getValue());
+                    Object value = entry.getValue();
+                    putMapValue(name, entry.getKey(), value);
                 }
             } else {
                 putValue(name, list.get(0));

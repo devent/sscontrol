@@ -125,7 +125,7 @@ class RepoServiceImpl extends AbstractService implements RepoService {
 
     @Override
     public List<String> getEnableComponents() {
-        return statementsMap.mapValueAsList(ENABLE_KEY, COMPONENTS_KEY);
+        return statementsMap.mapValueAsStringList(ENABLE_KEY, COMPONENTS_KEY);
     }
 
     @Override

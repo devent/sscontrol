@@ -18,6 +18,7 @@
  */
 package com.anrisoftware.sscontrol.hosts.host;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -28,7 +29,7 @@ import com.anrisoftware.sscontrol.hosts.api.HostsService;
 
 /**
  * Parses host arguments.
- * 
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
@@ -63,7 +64,12 @@ class HostArgs {
     List<String> aliases(HostsService service, Map<String, Object> args) {
         Object alias = args.get(ALIAS);
         log.checkAlias(service, alias);
-        return toListFactory.create(alias).getList();
+        List<Object> list = toListFactory.create(alias).getList();
+        List<String> res = new ArrayList<String>(list.size());
+        for (Object o : list) {
+            res.add(o.toString());
+        }
+        return res;
     }
 
 }

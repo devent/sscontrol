@@ -23,7 +23,6 @@ import java.util.Map;
 import java.util.Set;
 
 import com.anrisoftware.sscontrol.core.api.Service;
-import com.anrisoftware.sscontrol.core.bindings.Binding;
 import com.anrisoftware.sscontrol.httpd.domain.Domain;
 
 /**
@@ -61,11 +60,32 @@ public interface HttpdService extends Service {
     Map<String, Object> debugLogging(String key);
 
     /**
-     * Returns a list of the IP addresses where to bind the DNS service.
+     * Returns the binding addresses.
+     * <p>
      *
-     * @return the {@link Binding}.
+     * <pre>
+     * database {
+     *     bind "192.168.0.1"
+     * }
+     * </pre>
+     *
+     * @return the {@link List} of the {@link String} addresses or {@code null}.
      */
-    Binding getBinding();
+    List<String> getBindingAddresses();
+
+    /**
+     * Returns the binding ports.
+     * <p>
+     *
+     * <pre>
+     * database {
+     *     bind port: 8082
+     * }
+     * </pre>
+     *
+     * @return the {@link List} of the {@link Integer} ports or {@code null}.
+     */
+    List<Integer> getBindingPorts();
 
     /**
      * Returns all domains of the service.

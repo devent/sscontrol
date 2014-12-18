@@ -146,7 +146,7 @@ abstract class Maradns_1_2_Script extends MaradnsScript {
      * Activates and sets the root servers.
      */
     def rootServersConfiguration(DnsService service) {
-        if (service.rootServers.empty) {
+        if (service.rootServers == null) {
             return []
         }
         def list = []
@@ -169,7 +169,7 @@ abstract class Maradns_1_2_Script extends MaradnsScript {
      * Sets ACLs.
      */
     def aclsConfiguration(DnsService service) {
-        if (service.acls.empty) {
+        if (service.acls == null) {
             return []
         }
         def list = []

@@ -28,8 +28,7 @@ import com.anrisoftware.sscontrol.core.api.ServiceLoader as SscontrolServiceLoad
 import com.anrisoftware.sscontrol.core.api.ServicesRegistry
 
 /**
- * @see HttpdServiceImpl
- * @see Httpd
+ * @see HttpdService
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
@@ -44,10 +43,7 @@ class HttpdPortsTest extends HttpdTestUtil {
         loader.loadService httpdPortsScript.resource, profile
         HttpdService service = registry.getService("httpd")[0]
 
-        assert service.binding.size() == 4
-        assert service.binding.addresses[0].port == 8082
-        assert service.binding.addresses[1].port == 8084
-        assert service.binding.addresses[2].port == 8092
-        assert service.binding.addresses[3].port == 8094
+        assert service.bindingPorts.size() == 4
+        assert service.bindingPorts.containsAll([8082, 8084, 8092, 8094])
     }
 }

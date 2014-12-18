@@ -34,11 +34,9 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import com.anrisoftware.sscontrol.core.api.Service;
 import com.anrisoftware.sscontrol.core.api.ServiceException;
 import com.anrisoftware.sscontrol.core.api.ServiceScriptFactory;
-import com.anrisoftware.sscontrol.core.bindings.Address;
-import com.anrisoftware.sscontrol.core.bindings.Binding;
-import com.anrisoftware.sscontrol.core.bindings.BindingAddress;
-import com.anrisoftware.sscontrol.core.bindings.BindingArgs;
-import com.anrisoftware.sscontrol.core.bindings.BindingFactory;
+import com.anrisoftware.sscontrol.core.groovy.StatementsException;
+import com.anrisoftware.sscontrol.core.groovy.StatementsMap;
+import com.anrisoftware.sscontrol.core.groovy.StatementsMapFactory;
 import com.anrisoftware.sscontrol.core.groovy.StatementsTable;
 import com.anrisoftware.sscontrol.core.groovy.StatementsTableFactory;
 import com.anrisoftware.sscontrol.core.service.AbstractService;
@@ -55,6 +53,12 @@ import com.anrisoftware.sscontrol.httpd.domain.SslDomainFactory;
 @SuppressWarnings("serial")
 class HttpdServiceImpl extends AbstractService implements HttpdService {
 
+    private static final String PORTS_KEY = "ports";
+
+    private static final String PORT_KEY = "port";
+
+    private static final String BIND_KEY = "bind";
+
     private static final String DEBUG_KEY = "debug";
 
     private final List<Domain> domains;
@@ -70,13 +74,9 @@ class HttpdServiceImpl extends AbstractService implements HttpdService {
     @Inject
     private SslDomainFactory sslDomainFactory;
 
-    @Inject
-    private Binding binding;
-
-    @Inject
-    private BindingArgs bindingArgs;
-
     private StatementsTable statementsTable;
+
+    private StatementsMap statementsMap;
 
     HttpdServiceImpl() {
         this.domains = new ArrayList<Domain>();
@@ -95,6 +95,16 @@ class HttpdServiceImpl extends AbstractService implements HttpdService {
      */
     @Override
     protected void injectScript(Script script) {
+    }
+
+    @Inject
+    public final void setStatementsMap(StatementsMapFactory factory) {
+        StatementsMap map = factory.create(factory, NAME);
+        map.addAllowed(BIND_KEY);
+        map.setAllowValue(true, BIND_KEY);
+        map.addAllowedKeys(BIND_KEY, PORT_KEY, PORTS_KEY);
+        map.addAllowedMultiKeys(BIND_KEY, PORT_KEY, PORTS_KEY);
+        this.statementsMap = map;
     }
 
     @Inject
@@ -127,30 +137,25 @@ class HttpdServiceImpl extends AbstractService implements HttpdService {
         return statementsTable.tableKeys(DEBUG_KEY, key);
     }
 
-    /**
-     * Sets the IP addresses or host names to where to bind the DNS service.
-     *
-     * @see BindingFactory#create(Map, String...)
-     */
-    public void bind(Map<String, Object> args) throws ServiceException {
-        List<Address> addresses = bindingArgs.createAddress(this, args);
-        binding.addAddress(addresses);
-        log.bindingSet(this, binding);
-    }
-
-    /**
-     * Sets the IP addresses or host names to where to bind the DNS service.
-     *
-     * @see BindingFactory#create(BindingAddress)
-     */
-    public void bind(BindingAddress address) throws ServiceException {
-        binding.addAddress(address);
-        log.bindingSet(this, binding);
+    @Override
+    public List<String> getBindingAddresses() {
+        return statementsMap.valueAsStringList(BIND_KEY);
     }
 
     @Override
-    public Binding getBinding() {
-        return binding;
+    public List<Integer> getBindingPorts() {
+        List<Integer> ports = new ArrayList<Integer>();
+        Integer port = statementsMap.mapValue(BIND_KEY, PORT_KEY);
+        if (port != null) {
+            ports.add(port);
+        }
+        List<Object> str = statementsMap.mapValueAsList(BIND_KEY, PORTS_KEY);
+        if (str != null) {
+            for (Object s : str) {
+                ports.add(Integer.valueOf(s.toString()));
+            }
+        }
+        return ports.size() == 0 ? null : ports;
     }
 
     /**
@@ -200,7 +205,11 @@ class HttpdServiceImpl extends AbstractService implements HttpdService {
     }
 
     public Object methodMissing(String name, Object args) {
-        return statementsTable.methodMissing(name, args);
+        try {
+            return statementsMap.methodMissing(name, args);
+        } catch (StatementsException e) {
+            return statementsTable.methodMissing(name, args);
+        }
     }
 
     @Override

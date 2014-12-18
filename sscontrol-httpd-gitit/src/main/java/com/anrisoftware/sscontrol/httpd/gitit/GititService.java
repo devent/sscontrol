@@ -47,9 +47,9 @@ import com.google.inject.assistedinject.Assisted;
 
 /**
  * <i>Gitit</i> service.
- * 
+ *
  * @see <a href="http://gitit.net">http://gitit.net</a>
- * 
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
@@ -223,7 +223,7 @@ public class GititService implements WebService {
     /**
      * Sets the IP addresses or host names to where to bind the <i>Gitit</i>
      * service.
-     * 
+     *
      * @see BindingFactory#create(Map, String...)
      */
     public void bind(Map<String, Object> args) throws ServiceException {
@@ -235,7 +235,7 @@ public class GititService implements WebService {
     /**
      * Sets the IP addresses or host names to where to bind the <i>Gitit</i>
      * service.
-     * 
+     *
      * @see BindingFactory#create(BindingAddress)
      */
     public void bind(BindingAddress address) throws ServiceException {
@@ -246,7 +246,7 @@ public class GititService implements WebService {
     /**
      * Returns a list of the IP addresses where to bind the <i>Gitit</i>
      * service.
-     * 
+     *
      * @return the {@link Binding}.
      */
     public Binding getBinding() {
@@ -360,7 +360,7 @@ public class GititService implements WebService {
     }
 
     public List<String> getNoDeletePages() {
-        return statementsMap.valueAsList(NODELETE);
+        return statementsMap.valueAsStringList(NODELETE);
     }
 
     public void setNoEditPages(List<String> pages) throws ServiceException {
@@ -368,7 +368,7 @@ public class GititService implements WebService {
     }
 
     public List<String> getNoEditPages() {
-        return statementsMap.valueAsList(NOEDIT);
+        return statementsMap.valueAsStringList(NOEDIT);
     }
 
     public void setDefaultSummary(String summary) throws ServiceException {

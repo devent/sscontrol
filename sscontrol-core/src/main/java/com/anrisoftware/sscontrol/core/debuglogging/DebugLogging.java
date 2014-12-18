@@ -30,7 +30,7 @@ import com.google.inject.assistedinject.AssistedInject;
 
 /**
  * Debug logging level.
- * 
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
@@ -92,12 +92,12 @@ public class DebugLogging extends Number {
     }
 
     public void setModule(String module) {
-        List<String> modules = new ArrayList<String>();
+        List<Object> modules = new ArrayList<Object>();
         modules.add(module);
         setModules(modules);
     }
 
-    public void setModules(List<String> modules) {
+    public void setModules(List<Object> modules) {
         args.put(MODULES, modules);
     }
 

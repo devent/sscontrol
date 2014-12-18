@@ -31,7 +31,7 @@ import com.google.inject.assistedinject.Assisted;
 
 /**
  * Returns a list of items.
- * 
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
@@ -42,19 +42,19 @@ public class StringToList {
 
 	private final Object property;
 
-	private List<String> list;
+    private List<Object> list;
 
 	@Inject
 	StringToList(@Assisted Object property) {
 		this.property = property;
 	}
 
-	/**
-	 * Returns the list of the items.
-	 * 
-	 * @return the items of the property as {@link List}.
-	 */
-	public List<String> getList() {
+	    /**
+     * Returns the list of the items.
+     *
+     * @return the items of the property as {@link List}.
+     */
+    public List<Object> getList() {
 		if (list == null) {
 			synchronized (this) {
 				list = createList0();
@@ -63,11 +63,10 @@ public class StringToList {
 		return list;
 	}
 
-	@SuppressWarnings("unchecked")
-	private List<String> createList0() {
-		List<String> list = new ArrayList<String>();
+    private List<Object> createList0() {
+        List<Object> list = new ArrayList<Object>();
 		if (property instanceof Collection) {
-			list.addAll((Collection<? extends String>) property);
+            list.addAll((Collection<?>) property);
 		} else {
 			String[] str = split(property.toString(), getSeparators());
 			for (String string : str) {

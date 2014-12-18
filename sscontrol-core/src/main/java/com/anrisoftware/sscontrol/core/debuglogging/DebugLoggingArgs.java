@@ -27,7 +27,7 @@ import com.anrisoftware.sscontrol.core.list.StringToListFactory;
 
 /**
  * Parses arguments for debug logging.
- * 
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
@@ -59,7 +59,7 @@ class DebugLoggingArgs {
         return args.containsKey(MODULES);
     }
 
-    List<String> modules(Map<String, Object> args) {
+    List<Object> modules(Map<String, Object> args) {
         Object modules = args.get(MODULES);
         log.checkModules(modules);
         return toListFactory.create(modules.toString()).getList();

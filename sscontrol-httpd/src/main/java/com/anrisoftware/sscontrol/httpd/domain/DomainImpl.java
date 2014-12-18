@@ -374,7 +374,7 @@ class DomainImpl implements Domain {
      * @return the error {@link List} codes or {@code null}.
      */
     public List<String> getErrorCodes() {
-        return statementsMap.mapValueAsList(ERROR_KEY, CODES_KEY);
+        return statementsMap.mapValueAsStringList(ERROR_KEY, CODES_KEY);
     }
 
     /**

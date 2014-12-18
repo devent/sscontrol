@@ -179,7 +179,7 @@ class DnsServiceImpl extends AbstractService implements DnsService {
 
     @Override
     public List<String> getBindingAddresses() {
-        return statementsMap.valueAsList(BIND_KEY);
+        return statementsMap.valueAsStringList(BIND_KEY);
     }
 
     @Override
@@ -189,32 +189,17 @@ class DnsServiceImpl extends AbstractService implements DnsService {
 
     @Override
     public List<String> getUpstreamServers() {
-        List<String> list;
-        list = statementsMap.mapValueAsList(SERVERS_KEY, UPSTREAM_KEY);
-        if (list == null) {
-            list = new ArrayList<String>();
-        }
-        return list;
+        return statementsMap.mapValueAsStringList(SERVERS_KEY, UPSTREAM_KEY);
     }
 
     @Override
     public List<String> getRootServers() {
-        List<String> list;
-        list = statementsMap.mapValueAsList(SERVERS_KEY, ROOT_KEY);
-        if (list == null) {
-            list = new ArrayList<String>();
-        }
-        return list;
+        return statementsMap.mapValueAsStringList(SERVERS_KEY, ROOT_KEY);
     }
 
     @Override
     public Map<String, String> getServers() {
-        Map<String, String> map;
-        map = statementsTable.tableKeys(SERVER_KEY, ADDRESS_KEY);
-        if (map == null) {
-            map = new HashMap<String, String>();
-        }
-        return map;
+        return statementsTable.tableKeys(SERVER_KEY, ADDRESS_KEY);
     }
 
     @Override
@@ -245,18 +230,21 @@ class DnsServiceImpl extends AbstractService implements DnsService {
                 alist.addAll(entry.getValue());
             }
         }
-        return amap;
+        return amap.size() == 0 ? null : amap;
     }
 
     @Override
     public List<String> getAcls() {
-        List<Object> list = statementsMap.value(ACLS_KEY);
-        if (list == null) {
-            return new ArrayList<String>();
+        List<Object> value = statementsMap.value(ACLS_KEY);
+        if (value == null) {
+            return null;
         }
         List<String> result = new ArrayList<String>();
-        for (Object object : list) {
-            result.addAll(toListFactory.create(object).getList());
+        for (Object object : value) {
+            List<Object> list = toListFactory.create(object).getList();
+            for (Object o : list) {
+                result.add(o.toString());
+            }
         }
         return result;
     }

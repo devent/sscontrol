@@ -255,7 +255,7 @@ public class WordpressService implements WebService {
     }
 
     public List<String> getThemes() {
-        return statementsMap.valueAsList(THEMES_KEY);
+        return statementsMap.valueAsStringList(THEMES_KEY);
     }
 
     public void setPlugins(List<String> plugins) throws ServiceException {
@@ -263,7 +263,7 @@ public class WordpressService implements WebService {
     }
 
     public List<String> getPlugins() {
-        return statementsMap.valueAsList(PLUGINS_KEY);
+        return statementsMap.valueAsStringList(PLUGINS_KEY);
     }
 
     public void force(Map<String, Object> args) {

@@ -18,6 +18,7 @@
  */
 package com.anrisoftware.sscontrol.security.ignoring;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -28,7 +29,7 @@ import com.anrisoftware.sscontrol.core.list.StringToListFactory;
 
 /**
  * Parses arguments for ignoring addresses.
- * 
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
@@ -60,7 +61,12 @@ class IgnoringArgs {
 
     List<String> addresses(Service service, Map<String, Object> args) {
         Object addresses = args.get(ADDRESSES);
-        return toListFactory.create(addresses).getList();
+        List<Object> list = toListFactory.create(addresses).getList();
+        List<String> res = new ArrayList<String>(list.size());
+        for (Object o : list) {
+            res.add(o.toString());
+        }
+        return res;
     }
 
 }

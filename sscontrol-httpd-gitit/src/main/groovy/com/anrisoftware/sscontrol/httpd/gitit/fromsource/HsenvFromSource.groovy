@@ -53,9 +53,6 @@ abstract class HsenvFromSource {
     private HsenvFromSourceLogger logg
 
     @Inject
-    TemplatesFactory templatesFactory
-
-    @Inject
     UnpackFactory unpackFactory
 
     @Inject
@@ -130,8 +127,12 @@ abstract class HsenvFromSource {
         forceRemoveOldArchiveDirectory ? FileUtils.forceDelete(dir) : false
         dir.isDirectory() ? false : dir.mkdirs()
         unpackFactory.create(
-                log: log, file: archive, output: dir, override: true, strip: true,
-                commands: script.unpackCommands,
+                log: log,
+                file: archive,
+                output: dir,
+                override: true,
+                strip: true,
+                commands: unpackCommands,
                 this, threads)()
         logg.unpackArchiveDone this, gititArchive
     }
@@ -169,11 +170,17 @@ abstract class HsenvFromSource {
         def activateCommand = hsenvActivateCommand domain, service
         def packages = hsenvGititPackages
         def task = scriptExecFactory.create(
-                log: log, gititDir: gititDir, bashCommand: bashCommand,
-                hsenvCommand: hsenvCommand, activateCommand: activateCommand,
-                cabalCommand: cabalCommand, deactivateCommand: hsenvDeactivateCommand,
-                packages: packages, timeout: cabalInstallTimeout,
-                this, threads, hsenvCommandTemplate, "hsenvInstallCommand")()
+                log: log,
+                gititDir: gititDir,
+                bashCommand: bashCommand,
+                hsenvCommand: hsenvCommand,
+                activateCommand: activateCommand,
+                cabalCommand: cabalCommand,
+                deactivateCommand: hsenvDeactivateCommand,
+                packages: packages,
+                timeout: cabalInstallTimeout,
+                this, threads,
+                hsenvCommandTemplate, "hsenvInstallCommand")()
         logg.installHsenvCabalPackagesDone this, task, packages
     }
 
@@ -199,11 +206,17 @@ abstract class HsenvFromSource {
         def activateCommand = hsenvActivateCommand domain, service
         def gititSourceDir = gititSourceDir domain, service
         def task = scriptExecFactory.create(
-                log: log, gititDir: gititDir, bashCommand: bashCommand,
-                hsenvCommand: hsenvCommand, activateCommand: activateCommand,
-                cabalCommand: cabalCommand, deactivateCommand: hsenvDeactivateCommand,
-                gititSourceDir: gititSourceDir, timeout: cabalInstallTimeout,
-                this, threads, hsenvCommandTemplate, "hsenvCompileCommand")()
+                log: log,
+                gititDir: gititDir,
+                bashCommand: bashCommand,
+                hsenvCommand: hsenvCommand,
+                activateCommand: activateCommand,
+                cabalCommand: cabalCommand,
+                deactivateCommand: hsenvDeactivateCommand,
+                gititSourceDir: gititSourceDir,
+                timeout: cabalInstallTimeout,
+                this, threads,
+                hsenvCommandTemplate, "hsenvCompileCommand")()
         logg.installGititDone this, task
     }
 
@@ -434,7 +447,7 @@ abstract class HsenvFromSource {
 
     /**
      * Returns the <i>Gitit</i> source directory inside the <i>hsenv</i>
-     * environment, for example {@code "<gititDir>/gitit-0.10.3.1".}
+     * environment, for example {@code "<gititDir>/gitit-0.10"}
      * The placeholder {@code "<gititDir>"} is replaced by the <i>Gitit</i>
      * service domain directory.
      *
@@ -461,7 +474,7 @@ abstract class HsenvFromSource {
 
     /**
      * Returns if the <i>Gitit</i> version limit, for example
-     * {@code "0.10"}
+     * {@code "0.10.5"}
      *
      * <ul>
      * <li>profile property {@code "hsenv_gitit_version_limit"}</li>
@@ -489,6 +502,12 @@ abstract class HsenvFromSource {
         versionFormatFactory.create().parse p
     }
 
+    @Inject
+    final void setTemplatesFactory(TemplatesFactory factory) {
+        def templates = templatesFactory.create "HsenvFromSource"
+        this.hsenvCommandTemplate = templates.getResource "hsenvcommands"
+    }
+
     /**
      * Returns the default <i>hsenv</i> <i>Gitit</i> properties.
      *
@@ -501,8 +520,6 @@ abstract class HsenvFromSource {
      */
     void setScript(Object script) {
         this.script = script
-        this.hsenvTemplates = templatesFactory.create "HsenvFromSource"
-        this.hsenvCommandTemplate = hsenvTemplates.getResource "hsenvcommands"
     }
 
     /**

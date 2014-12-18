@@ -50,6 +50,18 @@ class StatementsTableTest {
     }
 
     @Test
+    void "statement table, arbitrary"() {
+        BeanTable bean = injector.getInstance BeanTable
+        bean.map.addAllowed "statement"
+        bean.map.setAllowArbitraryKeys true, "statement"
+        bean.statement "aaa", keyFoo: "foo"
+        bean.statement "bbb", keyFoo: "foo", keyBar: "bar"
+        assert bean.map.tableKeys("statement", "keyFoo") == [aaa: "foo", bbb: "foo"]
+        assert bean.map.tableKeys("statement", "keyBar") == [bbb: "bar"]
+        assert bean.map.tableValues("statement").containsAll(["aaa", "bbb"])
+    }
+
+    @Test
     void "statement table with just table value"() {
         BeanTable bean = injector.getInstance BeanTable
         bean.map.addAllowed "statement"

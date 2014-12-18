@@ -54,6 +54,8 @@ import com.google.inject.assistedinject.Assisted;
 @SuppressWarnings("serial")
 public class StatementsTable implements Serializable {
 
+    private static final String ARBITRARY_KEY = "_arbitrary";
+
     static final String NAME_KEY = "name";
 
     private static final String SERVICE = "service";
@@ -117,6 +119,30 @@ public class StatementsTable implements Serializable {
     public void addAllowedKeys(String name, String... keys) {
         Set<String> set = allowed.get(name);
         set.addAll(Arrays.asList(keys));
+    }
+
+    /**
+     * Set allow arbitrary keys for the statements.
+     *
+     * <pre>
+     * statement "name", foo: "value"
+     * statement "name", bar: "value"
+     * </pre>
+     *
+     * @param allow
+     *            set to {@code true} to allow arbitrary keys.
+     *
+     * @param names
+     *            the array with statement {@link String} names.
+     *
+     * @see #mapValue(String, String)
+     */
+    public void setAllowArbitraryKeys(boolean allow, String... names) {
+        if (allow) {
+            for (String name : names) {
+                addAllowedKeys(name, ARBITRARY_KEY);
+            }
+        }
     }
 
     /**
@@ -241,7 +267,9 @@ public class StatementsTable implements Serializable {
             throws StatementsException {
         log.checkName(allowed, name);
         Set<String> allowedKeys = allowed.get(name);
-        log.checkKey(this, allowedKeys, name, key);
+        if (!allowedKeys.contains(ARBITRARY_KEY)) {
+            log.checkKey(this, allowedKeys, name, key);
+        }
         Map<String, Map<String, Object>> map = getArgsMap(name);
         map.get(table).put(key, value);
         log.statementValueAdded(this, name, table, key, value);

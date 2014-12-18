@@ -106,7 +106,7 @@ abstract class ApacheScript extends LinuxScript {
      *            the {@link HttpdService} httpd service.
      */
     void setupDefaultDebug(HttpdService service) {
-        if (service.debugLevels == null) {
+        if (service.debugLogging("level") == null) {
             service.debug "error", level: defaultDebugErrorLevel
         }
     }

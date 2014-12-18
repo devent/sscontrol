@@ -56,7 +56,6 @@ import com.anrisoftware.sscontrol.httpd.domain.SslDomainFactory;
 class HttpdServiceImpl extends AbstractService implements HttpdService {
 
     private static final String DEBUG_KEY = "debug";
-    private static final String LEVEL_KEY = "level";
 
     private final List<Domain> domains;
 
@@ -102,7 +101,7 @@ class HttpdServiceImpl extends AbstractService implements HttpdService {
     public final void setStatementsTable(StatementsTableFactory factory) {
         StatementsTable table = factory.create(factory, NAME);
         table.addAllowed(DEBUG_KEY);
-        table.addAllowedKeys(DEBUG_KEY, LEVEL_KEY);
+        table.setAllowArbitraryKeys(true, DEBUG_KEY);
         this.statementsTable = table;
     }
 
@@ -124,8 +123,8 @@ class HttpdServiceImpl extends AbstractService implements HttpdService {
     }
 
     @Override
-    public Map<String, Object> getDebugLevels() {
-        return statementsTable.tableKeys(DEBUG_KEY, LEVEL_KEY);
+    public Map<String, Object> debugLogging(String key) {
+        return statementsTable.tableKeys(DEBUG_KEY, key);
     }
 
     /**

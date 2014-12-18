@@ -149,7 +149,7 @@ abstract class Apache_2_2_Script extends ApacheScript {
     void deployDefaultConfig(HttpdService service) {
         def configs = []
         configs << defaultsConfigTemplate.getText(true, "defaultSettingsHeader")
-        configs << defaultsConfigTemplate.getText(true, "logLevelConfig", "level", service.debugLevels["error"])
+        configs << defaultsConfigTemplate.getText(true, "logLevelConfig", "level", service.debugLogging("level")["error"])
         configs << defaultsConfigTemplate.getText(true, "defaultDirectories")
         FileUtils.writeLines defaultConfigFile, charset.name(), configs
     }

@@ -41,23 +41,24 @@ public interface HttpdService extends Service {
     String getName();
 
     /**
-     * Returns the debug logging levels.
+     * Returns the debug logging for the specified key.
      * <p>
-     * The example returns the map
+     * The example returns the following map for the key "storage":
      *
      * <pre>
-     * {["error": 1]}
+     * {["error": "foo"]}
      * </pre>
      *
      * <pre>
      * database {
-     *     debug "error", level: 1
+     *     debug "error", level: 4
+     *     debug "error", storage: "foo"
      * }
      * </pre>
      *
      * @return the {@link Map} of the debug levels or {@code null}.
      */
-    Map<String, Object> getDebugLevels();
+    Map<String, Object> debugLogging(String key);
 
     /**
      * Returns a list of the IP addresses where to bind the DNS service.

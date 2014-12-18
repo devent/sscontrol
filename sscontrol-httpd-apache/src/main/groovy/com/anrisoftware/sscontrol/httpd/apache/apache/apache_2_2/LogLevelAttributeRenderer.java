@@ -18,8 +18,9 @@
  */
 package com.anrisoftware.sscontrol.httpd.apache.apache.apache_2_2;
 
-import java.net.URI;
 import java.util.Locale;
+
+import org.apache.commons.lang3.StringUtils;
 
 import com.anrisoftware.resources.templates.api.AttributeRenderer;
 
@@ -34,8 +35,11 @@ public class LogLevelAttributeRenderer implements AttributeRenderer {
 
     @Override
     public String toString(Object o, String formatString, Locale locale) {
-        int level = ((Number) o).intValue();
-        switch (level) {
+        if (!StringUtils.equals(formatString, "loglevel")) {
+            return String.valueOf(o);
+        }
+        int number = ((Number) o).intValue();
+        switch (number) {
         case 0:
             return "emerg";
         case 1:
@@ -57,7 +61,7 @@ public class LogLevelAttributeRenderer implements AttributeRenderer {
 
     @Override
     public Class<?> getAttributeType() {
-        return URI.class;
+        return Integer.class;
     }
 
 }

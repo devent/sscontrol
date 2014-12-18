@@ -1,6 +1,6 @@
 # RoboBee Auto Generated
 
-LogLevel 4
+LogLevel warn
 
 <Directory />
     AllowOverride None

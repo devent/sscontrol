@@ -21,12 +21,16 @@ package com.anrisoftware.sscontrol.httpd.apache.core.ubuntu_12_04
 import com.anrisoftware.sscontrol.httpd.apache.ubuntu.UbuntuResources
 
 httpd {
-    domain "test1.com", address: "192.168.0.50", port: 80, { redirect to: "https://www.%" }
+    domain "test1.com", address: "192.168.0.50", port: 80, {
+        redirect to: "https://www.%"
+    }
     ssl_domain "test1.com", address: "192.168.0.50", {
         certificate file: UbuntuResources.certCrt.resource, key: UbuntuResources.certKey.resource
         redirect to: "www.%"
     }
-    domain "test2.com", address: "192.168.0.51", root: "test2", { redirect to: "https://www.%" }
+    domain "test2.com", address: "192.168.0.51", root: "test2", {
+        redirect to: "https://www.%"
+    }
     ssl_domain "test2.com", address: "192.168.0.51", use: "test2", {
         redirect to: "www.%"
         certificate file: UbuntuResources.certCrt.resource, key: UbuntuResources.certKey.resource, ca: UbuntuResources.certCa.resource

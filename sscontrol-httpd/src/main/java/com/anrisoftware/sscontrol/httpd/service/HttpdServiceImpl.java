@@ -39,8 +39,8 @@ import com.anrisoftware.sscontrol.core.bindings.Binding;
 import com.anrisoftware.sscontrol.core.bindings.BindingAddress;
 import com.anrisoftware.sscontrol.core.bindings.BindingArgs;
 import com.anrisoftware.sscontrol.core.bindings.BindingFactory;
-import com.anrisoftware.sscontrol.core.debuglogging.DebugLogging;
-import com.anrisoftware.sscontrol.core.debuglogging.DebugLoggingFactory;
+import com.anrisoftware.sscontrol.core.groovy.StatementsTable;
+import com.anrisoftware.sscontrol.core.groovy.StatementsTableFactory;
 import com.anrisoftware.sscontrol.core.service.AbstractService;
 import com.anrisoftware.sscontrol.httpd.domain.Domain;
 import com.anrisoftware.sscontrol.httpd.domain.DomainFactory;
@@ -48,12 +48,15 @@ import com.anrisoftware.sscontrol.httpd.domain.SslDomainFactory;
 
 /**
  * Httpd service.
- * 
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
 @SuppressWarnings("serial")
 class HttpdServiceImpl extends AbstractService implements HttpdService {
+
+    private static final String DEBUG_KEY = "debug";
+    private static final String LEVEL_KEY = "level";
 
     private final List<Domain> domains;
 
@@ -74,10 +77,7 @@ class HttpdServiceImpl extends AbstractService implements HttpdService {
     @Inject
     private BindingArgs bindingArgs;
 
-    @Inject
-    private DebugLoggingFactory debugFactory;
-
-    private DebugLogging debug;
+    private StatementsTable statementsTable;
 
     HttpdServiceImpl() {
         this.domains = new ArrayList<Domain>();
@@ -98,6 +98,14 @@ class HttpdServiceImpl extends AbstractService implements HttpdService {
     protected void injectScript(Script script) {
     }
 
+    @Inject
+    public final void setStatementsTable(StatementsTableFactory factory) {
+        StatementsTable table = factory.create(factory, NAME);
+        table.addAllowed(DEBUG_KEY);
+        table.addAllowedKeys(DEBUG_KEY, LEVEL_KEY);
+        this.statementsTable = table;
+    }
+
     @Override
     public String getName() {
         return NAME;
@@ -105,19 +113,24 @@ class HttpdServiceImpl extends AbstractService implements HttpdService {
 
     /**
      * Entry point for the httpd service script.
-     * 
+     *
      * @param statements
      *            the httpd statements.
-     * 
+     *
      * @return this {@link Service}.
      */
     public Service httpd(Object statements) {
         return this;
     }
 
+    @Override
+    public Map<String, Object> getDebugLevels() {
+        return statementsTable.tableKeys(DEBUG_KEY, LEVEL_KEY);
+    }
+
     /**
      * Sets the IP addresses or host names to where to bind the DNS service.
-     * 
+     *
      * @see BindingFactory#create(Map, String...)
      */
     public void bind(Map<String, Object> args) throws ServiceException {
@@ -128,7 +141,7 @@ class HttpdServiceImpl extends AbstractService implements HttpdService {
 
     /**
      * Sets the IP addresses or host names to where to bind the DNS service.
-     * 
+     *
      * @see BindingFactory#create(BindingAddress)
      */
     public void bind(BindingAddress address) throws ServiceException {
@@ -187,24 +200,8 @@ class HttpdServiceImpl extends AbstractService implements HttpdService {
         return virtualDomains;
     }
 
-    /**
-     * Sets the debug logging for the database server.
-     * 
-     * @see DebugLoggingFactory#create(Map)
-     */
-    public void debug(Map<String, Object> args) {
-        this.debug = debugFactory.create(args);
-        log.debugSet(this, debug);
-    }
-
-    @Override
-    public void setDebug(DebugLogging debug) {
-        this.debug = debug;
-    }
-
-    @Override
-    public DebugLogging getDebug() {
-        return debug;
+    public Object methodMissing(String name, Object args) {
+        return statementsTable.methodMissing(name, args);
     }
 
     @Override

@@ -127,6 +127,9 @@ abstract class Apache_2_2_Script extends ApacheScript {
         FileUtils.write defaultConfigFile, string
     }
 
+    /**
+     * Deployes 
+     */
     void deployDomainsConfig() {
         def string = domainsConfiguration.getText true, "domainsConfiguration", "service", service
         FileUtils.write domainsConfigFile, string

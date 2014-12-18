@@ -24,7 +24,6 @@ import groovy.util.logging.Slf4j
 import javax.inject.Inject
 
 import com.anrisoftware.resources.templates.api.TemplateResource
-import com.anrisoftware.sscontrol.core.debuglogging.DebugLoggingProperty
 import com.anrisoftware.sscontrol.core.service.LinuxScript
 import com.anrisoftware.sscontrol.httpd.domain.Domain
 import com.anrisoftware.sscontrol.httpd.domain.DomainImpl
@@ -51,9 +50,6 @@ abstract class ApacheScript extends LinuxScript {
     private ApacheScriptLogger logg
 
     @Inject
-    private DebugLoggingProperty debugLoggingProperty
-
-    @Inject
     Injector injector
 
     @Inject
@@ -71,8 +67,8 @@ abstract class ApacheScript extends LinuxScript {
     @Override
     def run() {
         serviceConfigs.each { it.value.script = this }
-        setupDefaultBinding()
-        setupDefaultDebug()
+        setupDefaultBinding service
+        setupDefaultDebug service
         distributionSpecificConfiguration()
     }
 
@@ -93,8 +89,11 @@ abstract class ApacheScript extends LinuxScript {
 
     /**
      * Setups the default binding addresses.
+     *
+     * @param service
+     *            the {@link HttpdService} httpd service.
      */
-    void setupDefaultBinding() {
+    void setupDefaultBinding(HttpdService service) {
         if (service.binding.size() == 0) {
             defaultBinding.each { service.binding.addAddress(it) }
         }
@@ -102,10 +101,13 @@ abstract class ApacheScript extends LinuxScript {
 
     /**
      * Setups the default debug logging.
+     *
+     * @param service
+     *            the {@link HttpdService} httpd service.
      */
-    void setupDefaultDebug() {
-        if (service.debug == null) {
-            service.debug = debugLoggingProperty.defaultDebug this
+    void setupDefaultDebug(HttpdService service) {
+        if (service.debugLevels == null) {
+            service.debug "error", level: defaultDebugErrorLevel
         }
     }
 
@@ -521,6 +523,19 @@ abstract class ApacheScript extends LinuxScript {
     }
 
     /**
+     * Returns the default debug error level, for example {@code 4}.
+     *
+     * <ul>
+     * <li>profile property {@code "default_debug_error_level"}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    Integer getDefaultDebugErrorLevel() {
+        profileNumberProperty "default_debug_error_level", defaultProperties
+    }
+
+    /**
      * Returns additional Apache/mpds to enable.
      *
      * <ul>
@@ -577,8 +592,11 @@ abstract class ApacheScript extends LinuxScript {
             }
         }
         def task = scriptExecFactory.create(
-                log: log, command: enableModCommand, mods: mods,
-                this, threads, apacheCommandsTemplate, "enableMods")()
+                log: log,
+                command: enableModCommand,
+                mods: mods,
+                this, threads,
+                apacheCommandsTemplate, "enableMods")()
         logg.enabledMods this, task, mods
     }
 
@@ -587,8 +605,11 @@ abstract class ApacheScript extends LinuxScript {
      */
     def enableSites(def sites) {
         def task = scriptExecFactory.create(
-                log: log, command: enableSiteCommand, sites: sites,
-                this, threads, apacheCommandsTemplate, "enableSites")()
+                log: log,
+                command: enableSiteCommand,
+                sites: sites,
+                this, threads,
+                apacheCommandsTemplate, "enableSites")()
         logg.enabledSites this, task, sites
     }
 

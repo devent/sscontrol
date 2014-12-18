@@ -19,15 +19,15 @@
 package com.anrisoftware.sscontrol.httpd.service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import com.anrisoftware.sscontrol.core.api.Service;
 import com.anrisoftware.sscontrol.core.bindings.Binding;
-import com.anrisoftware.sscontrol.core.debuglogging.DebugLogging;
 import com.anrisoftware.sscontrol.httpd.domain.Domain;
 
 /**
- * Httpd service.
+ * <i>Httpd</i> service.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
@@ -41,39 +41,43 @@ public interface HttpdService extends Service {
     String getName();
 
     /**
+     * Returns the debug logging levels.
+     * <p>
+     * The example returns the map
+     *
+     * <pre>
+     * {["error": 1]}
+     * </pre>
+     *
+     * <pre>
+     * database {
+     *     debug "error", level: 1
+     * }
+     * </pre>
+     *
+     * @return the {@link Map} of the debug levels or {@code null}.
+     */
+    Map<String, Object> getDebugLevels();
+
+    /**
      * Returns a list of the IP addresses where to bind the DNS service.
-     * 
+     *
      * @return the {@link Binding}.
      */
     Binding getBinding();
 
     /**
      * Returns all domains of the service.
-     * 
+     *
      * @return the {@link List} of the {@link Domain} domains.
      */
     List<Domain> getDomains();
 
     /**
      * Returns a set of the virtual domains of the service.
-     * 
+     *
      * @return the {@link Set} of the virtual {@link Domain} domains.
      */
     Set<Domain> getVirtualDomains();
-
-    /**
-     * Sets the debug logging.
-     * 
-     * @param debug
-     *            the {@link DebugLogging}.
-     */
-    void setDebug(DebugLogging debug);
-
-    /**
-     * Returns debug logging.
-     * 
-     * @return the {@link DebugLogging} or {@code null}.
-     */
-    DebugLogging getDebug();
 
 }

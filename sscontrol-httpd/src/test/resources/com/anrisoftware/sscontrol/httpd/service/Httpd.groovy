@@ -23,7 +23,7 @@ def certKeyFile = ServicesResources.class.getResource "cert_key.txt"
 def certCaFile = ServicesResources.class.getResource "cert_ca.txt"
 
 httpd {
-    debug level: 1
+    debug "error", level: 1
     domain "test1.com", address: "192.168.0.50", port: 80, {
         redirect to: "www.%"
         memory limit: "32 MB", upload: "32 MB"
@@ -35,7 +35,9 @@ httpd {
         redirect to: "www.%"
         certificate file: certFile, key: certKeyFile
     }
-    domain "test2.com", address: "192.168.0.51", root: "test2", { redirect to: "https://%" }
+    domain "test2.com", address: "192.168.0.51", root: "test2", {
+        redirect to: "https://%"
+    }
     ssl_domain "test2.com", address: "192.168.0.51", use: "test2", {
         redirect to: "www.%"
         certificate file: certFile, key: certKeyFile, ca: certCaFile

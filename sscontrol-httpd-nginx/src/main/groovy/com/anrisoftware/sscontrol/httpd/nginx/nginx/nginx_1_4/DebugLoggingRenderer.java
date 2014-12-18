@@ -18,37 +18,27 @@
  */
 package com.anrisoftware.sscontrol.httpd.nginx.nginx.nginx_1_4;
 
-import java.util.Locale;
-
-import com.anrisoftware.resources.templates.api.AttributeRenderer;
-import com.anrisoftware.sscontrol.core.debuglogging.DebugLogging;
+import com.anrisoftware.sscontrol.httpd.service.HttpdService;
 
 /**
  * Debug logging renderer.
- * 
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-@SuppressWarnings("serial")
-public class DebugLoggingRenderer implements AttributeRenderer {
+public class DebugLoggingRenderer {
 
-    @Override
-    public String toString(Object o, String formatString, Locale locale) {
-        if (o instanceof DebugLogging) {
-            return toString((DebugLogging) o);
-        }
-        return null;
-    }
-
-    private String toString(DebugLogging debug) {
+    public String toString(HttpdService service) {
+        Object storage = service.debugLogging("storage").get("error");
+        int level = (Integer) service.debugLogging("level").get("error");
         StringBuilder builder = new StringBuilder();
-        builder.append(debug.getArgs().get("storage"));
-        builder.append(" ").append(loggingLevel(debug));
+        builder.append(storage);
+        builder.append(" ").append(loggingLevel(level));
         return builder.toString();
     }
 
-    private Object loggingLevel(DebugLogging debug) {
-        switch (debug.getLevel()) {
+    private Object loggingLevel(int level) {
+        switch (level) {
         case 0:
             return "emerg";
         case 1:
@@ -69,10 +59,4 @@ public class DebugLoggingRenderer implements AttributeRenderer {
             return "debug";
         }
     }
-
-    @Override
-    public Class<?> getAttributeType() {
-        return DebugLogging.class;
-    }
-
 }

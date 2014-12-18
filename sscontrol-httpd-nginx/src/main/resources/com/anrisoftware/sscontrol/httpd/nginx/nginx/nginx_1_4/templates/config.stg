@@ -66,7 +66,7 @@ error_log\s+.*?;
 %>
 
 errorLog(debug) ::= <%
-error_log <debug>;
+error_log <debug;format="errorlog">;
 %>
 
 workerProcesses_search() ::= <%

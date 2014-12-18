@@ -33,7 +33,6 @@ import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.Templates
 import com.anrisoftware.resources.templates.api.TemplatesFactory
 import com.anrisoftware.sscontrol.core.bindings.BindingFactory
-import com.anrisoftware.sscontrol.core.debuglogging.DebugLoggingProperty
 import com.anrisoftware.sscontrol.core.service.LinuxScript
 import com.anrisoftware.sscontrol.httpd.domain.Domain
 import com.anrisoftware.sscontrol.httpd.domain.DomainImpl
@@ -64,9 +63,6 @@ abstract class NginxScript extends LinuxScript {
     private BindingFactory bindingFactory
 
     @Inject
-    private DebugLoggingProperty debugLoggingProperty
-
-    @Inject
     Injector injector
 
     @Inject
@@ -87,20 +83,21 @@ abstract class NginxScript extends LinuxScript {
     @Inject
     WebServicesConfigProvider webServicesConfigProvider
 
-    Templates nginxTemplates
-
     TemplateResource stopServiceTemplate
 
     @Override
     def run() {
-        setupDefaultBinding()
-        setupDefaultLogging()
+        setupDefaultBinding service
+        setupDefaultLogging service
     }
 
     /**
      * Setups the default binding addresses.
+     *
+     * @param service
+     *            the {@link HttpdService} httpd service.
      */
-    void setupDefaultBinding() {
+    void setupDefaultBinding(HttpdService service) {
         if (service.binding.size() == 0) {
             defaultBinding.each { service.binding.addAddress(it) }
         }
@@ -108,13 +105,20 @@ abstract class NginxScript extends LinuxScript {
 
     /**
      * Setups the default debug logging.
+     *
+     * @param service
+     *            the {@link HttpdService} httpd service.
      */
-    void setupDefaultLogging() {
-        if (service.debug == null) {
-            service.debug = debugLoggingProperty.defaultDebug this
+    void setupDefaultLogging(HttpdService service) {
+        if (service.debugLogging("error") == null) {
+            service.debug "error", level: defaultDebugErrorLevel
+            service.debug "error", storage: defaultDebugStorage
         }
-        if (!service.debug.args.containsKey("storage")) {
-            service.debug.args.storage = loggingStorage
+        if (service.debugLogging("error")["level"] == null) {
+            service.debug "error", level: defaultDebugErrorLevel
+        }
+        if (service.debugLogging("error")["storage"] == null) {
+            service.debug "error", storage: defaultDebugStorage
         }
     }
 
@@ -409,6 +413,33 @@ abstract class NginxScript extends LinuxScript {
     }
 
     /**
+     * Returns the default debug error level, for example {@code 3}.
+     *
+     * <ul>
+     * <li>profile property {@code "default_debug_error_level"}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    Integer getDefaultDebugErrorLevel() {
+        profileNumberProperty "default_debug_error_level", defaultProperties
+    }
+
+    /**
+     * Returns the default debug logging storage, for
+     * example {@code "/var/log/nginx/error.log".}
+     *
+     * <ul>
+     * <li>profile property {@code "default_debug_storage"}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    String getDefaultDebugStorage() {
+        profileProperty "default_debug_storage", defaultProperties
+    }
+
+    /**
      * Returns the number of <i>Nginx</i> worker processes, for
      * example {@code "2".}
      *
@@ -476,20 +507,6 @@ abstract class NginxScript extends LinuxScript {
      */
     String getSslSessionTimeout() {
         profileProperty "ssl_session_timeout", defaultProperties
-    }
-
-    /**
-     * Returns the logging storage, for
-     * example {@code "/var/log/nginx/error.log".}
-     *
-     * <ul>
-     * <li>profile property {@code "logging_storage"}</li>
-     * </ul>
-     *
-     * @see #getDefaultProperties()
-     */
-    String getLoggingStorage() {
-        profileProperty "logging_storage", defaultProperties
     }
 
     /**

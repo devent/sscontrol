@@ -48,6 +48,9 @@ abstract class Nginx_1_4_Script extends NginxScript {
     private Nginx_1_4_ScriptLogger log
 
     @Inject
+    DebugLoggingRenderer debugLoggingRenderer
+
+    @Inject
     DomainConfig domainConfig
 
     @Inject
@@ -74,7 +77,7 @@ abstract class Nginx_1_4_Script extends NginxScript {
         serviceConfigs.values().each { it.script = this }
         beforeConfiguration()
         createSitesDirectories()
-        deployNginxConfig()
+        deployNginxConfig service
         deployIncludedConfig()
         deploySitesConfig()
         deployConfig()
@@ -83,11 +86,9 @@ abstract class Nginx_1_4_Script extends NginxScript {
     @Inject
     final void setNginx14ScriptTemplates(
             TemplatesFactory factory,
-            DebugLoggingRenderer debugLoggingRenderer,
-            ResourceURIAttributeRenderer resourceURIAttributeRenderer) {
+            ResourceURIAttributeRenderer resourceURIRenderer) {
         def templates = factory.create "Nginx_1_4", ["renderers": [
-                debugLoggingRenderer,
-                resourceURIAttributeRenderer
+                resourceURIRenderer
             ]]
         this.nginxConfigTemplate = templates.getResource "config"
     }
@@ -111,9 +112,12 @@ abstract class Nginx_1_4_Script extends NginxScript {
     }
 
     /**
-     * Deploys the configuration of the Nginx service.
+     * Deploys the configuration of the <i>Nginx</i> service.
+     *
+     * @param service
+     *            the {@link HttpdService} httpd service.
      */
-    void deployNginxConfig() {
+    void deployNginxConfig(HttpdService service) {
         def file = nginxConfigFile
         def conf = currentConfiguration file
         deployConfiguration configurationTokens(), conf, mainConfigurations(service), file
@@ -131,7 +135,7 @@ abstract class Nginx_1_4_Script extends NginxScript {
 
     def configErrorLog(HttpdService service) {
         def search = nginxConfigTemplate.getText(true, "errorLog_search")
-        def replace = nginxConfigTemplate.getText(true, "errorLog", "debug", service.debug)
+        def replace = nginxConfigTemplate.getText(true, "errorLog", "debug", debugLoggingRenderer.toString(service))
         new TokenTemplate(search, replace)
     }
 

@@ -1,7 +1,14 @@
-defaultsConfiguration() ::= <<
-# Robobee Defaults - Auto-generated
-#
+defaultSettingsHeader() ::= <<
+# RoboBee Auto Generated
 
+>>
+
+logLevelConfig(level) ::= <<
+LogLevel <level; format="loglevel">
+
+>>
+
+defaultDirectories() ::= <<
 \<Directory />
     AllowOverride None
     Order Deny,Allow

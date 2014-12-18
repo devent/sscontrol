@@ -26,13 +26,13 @@ import javax.inject.Inject
 import org.apache.commons.io.FileUtils
 
 import com.anrisoftware.resources.templates.api.TemplateResource
-import com.anrisoftware.resources.templates.api.Templates
 import com.anrisoftware.resources.templates.api.TemplatesFactory
 import com.anrisoftware.sscontrol.httpd.apache.apache.linux.ApacheScript
 import com.anrisoftware.sscontrol.httpd.domain.Domain
 import com.anrisoftware.sscontrol.httpd.domain.SslDomainImpl
 import com.anrisoftware.sscontrol.httpd.domain.linux.DomainConfig
 import com.anrisoftware.sscontrol.httpd.domain.linux.SslDomainConfig
+import com.anrisoftware.sscontrol.httpd.service.HttpdService
 import com.anrisoftware.sscontrol.httpd.webservice.WebService
 import com.anrisoftware.sscontrol.scripts.unix.RestartServicesFactory
 import com.anrisoftware.sscontrol.scripts.unix.StopServicesFactory
@@ -65,7 +65,10 @@ abstract class Apache_2_2_Script extends ApacheScript {
     StopServicesFactory stopServicesFactory
 
     @Inject
-    ResourceURIAttributeRenderer resourceURIAttributeRenderer
+    ResourceURIAttributeRenderer resourceURIRenderer
+
+    @Inject
+    LogLevelAttributeRenderer logLevelRenderer
 
     /**
      * Resource containing the Apache ports configuration templates.
@@ -99,9 +102,9 @@ abstract class Apache_2_2_Script extends ApacheScript {
         redirectConfig.script = this
         stopServices()
         super.run()
-        deployPortsConfig()
-        deployDefaultConfig()
-        deployDomainsConfig()
+        deployPortsConfig service
+        deployDefaultConfig service
+        deployDomainsConfig service
         enableDefaultMods()
         deployConfig()
         restartServices()
@@ -109,7 +112,10 @@ abstract class Apache_2_2_Script extends ApacheScript {
 
     @Inject
     final void setTemplatesFactory(TemplatesFactory factory) {
-        def templates = factory.create "Apache_2_2", [renderers: [resourceURIAttributeRenderer]]
+        def templates = factory.create "Apache_2_2", [renderers: [
+                logLevelRenderer,
+                resourceURIRenderer
+            ]]
         portsConfigTemplate = templates.getResource "portsconf"
         defaultsConfigTemplate = templates.getResource "defaultsconf"
         domainsConfiguration = templates.getResource "domainsconf"
@@ -117,26 +123,53 @@ abstract class Apache_2_2_Script extends ApacheScript {
         apacheCommandsTemplate = templates.getResource "commands"
     }
 
-    void deployPortsConfig() {
+    /**
+     * Deploys the ports {@code Listen} configuration to
+     * the {@code "/etc/apache2/ports.conf"} file.
+     *
+     * @param service
+     *            the {@link HttpdService} httpd service.
+     *
+     * @see #getPortsConfigFile()
+     */
+    void deployPortsConfig(HttpdService service) {
         def string = portsConfigTemplate.getText true, "portsConfiguration", "service", service
         FileUtils.write portsConfigFile, string
     }
 
-    void deployDefaultConfig() {
-        def string = defaultsConfigTemplate.getText true, "defaultsConfiguration"
-        FileUtils.write defaultConfigFile, string
+    /**
+     * Deploys the default settings configuration to
+     * the {@code "/etc/apache2/conf.d/000-robobee-default.conf"} file.
+     *
+     * @param service
+     *            the {@link HttpdService} httpd service.
+     *
+     * @see #getDefaultConfigFile()
+     */
+    void deployDefaultConfig(HttpdService service) {
+        def configs = []
+        configs << defaultsConfigTemplate.getText(true, "defaultSettingsHeader")
+        configs << defaultsConfigTemplate.getText(true, "logLevelConfig", "level", service.debugLevels["error"])
+        configs << defaultsConfigTemplate.getText(true, "defaultDirectories")
+        FileUtils.writeLines defaultConfigFile, charset.name(), configs
     }
 
     /**
-     * Deployes 
+     * Deploys the domains configuration to
+     * the {@code "/etc/apache2/conf.d/000-robobee-domains.conf"} file.
+     *
+     * @param service
+     *            the {@link HttpdService} httpd service.
+     *
+     * @see #getDefaultConfigFile()
      */
-    void deployDomainsConfig() {
+    void deployDomainsConfig(HttpdService service) {
         def string = domainsConfiguration.getText true, "domainsConfiguration", "service", service
         FileUtils.write domainsConfigFile, string
     }
 
     /**
-     * Enables default <i>Apache/mods.</i>
+     * Enables default <i>Apache</i> mods.
      */
     void enableDefaultMods() {
         enableMod "suexec"

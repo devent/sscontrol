@@ -1,5 +1,6 @@
-# Robobee Defaults - Auto-generated
-#
+# RoboBee Auto Generated
+
+LogLevel 4
 
 <Directory />
     AllowOverride None
@@ -12,3 +13,4 @@
     Order Deny,Allow
     Deny from all
 </Directory>
+

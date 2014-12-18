@@ -1,5 +1,4 @@
-# Robobee Virtual Hosts - Auto-generated
-#
+# RoboBee Auto Generated
 
 NameVirtualHost 127.0.0.1:8080
 NameVirtualHost 127.0.0.1:8092

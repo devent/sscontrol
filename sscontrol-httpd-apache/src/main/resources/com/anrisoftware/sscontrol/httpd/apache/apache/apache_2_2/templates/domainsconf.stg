@@ -1,6 +1,5 @@
 domainsConfiguration(service) ::= <<
-# Robobee Virtual Hosts - Auto-generated
-#
+# RoboBee Auto Generated
 
 <trunc(service.virtualDomains):{domain | <nameVirtualHost(domain)><\n>}><last(service.virtualDomains):{domain | <nameVirtualHost(domain)>}>
 

@@ -18,7 +18,9 @@
  */
 package com.anrisoftware.sscontrol.httpd.wordpress.apache_ubuntu_12_04;
 
+import com.anrisoftware.globalpom.version.VersionModule;
 import com.anrisoftware.sscontrol.httpd.wordpress.WordpressModule;
+import com.anrisoftware.sscontrol.scripts.versionlimits.VersionLimitsModule;
 import com.google.inject.AbstractModule;
 
 /**
@@ -32,5 +34,7 @@ public class ApacheModule extends AbstractModule {
     @Override
     protected void configure() {
         install(new WordpressModule());
+        install(new VersionLimitsModule());
+        install(new VersionModule());
     }
 }

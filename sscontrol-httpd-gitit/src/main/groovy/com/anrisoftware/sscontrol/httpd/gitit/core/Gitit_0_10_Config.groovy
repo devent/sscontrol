@@ -31,12 +31,12 @@ import org.joda.time.Duration
 import org.stringtemplate.v4.ST
 
 import com.anrisoftware.globalpom.textmatch.tokentemplate.TokenTemplate
+import com.anrisoftware.globalpom.version.Version
+import com.anrisoftware.globalpom.version.VersionFormatFactory
 import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.sscontrol.core.debuglogging.DebugLoggingFactory
 import com.anrisoftware.sscontrol.core.service.LinuxScript
-import com.anrisoftware.sscontrol.core.version.Version
-import com.anrisoftware.sscontrol.core.version.VersionFormatFactory
 import com.anrisoftware.sscontrol.httpd.domain.Domain
 import com.anrisoftware.sscontrol.httpd.gitit.AuthMethod
 import com.anrisoftware.sscontrol.httpd.gitit.GititService

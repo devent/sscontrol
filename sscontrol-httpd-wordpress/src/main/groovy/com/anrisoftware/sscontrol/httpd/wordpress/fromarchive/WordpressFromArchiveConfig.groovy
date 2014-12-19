@@ -23,7 +23,12 @@ import groovy.util.logging.Slf4j
 
 import javax.inject.Inject
 
-import com.anrisoftware.sscontrol.core.checkfilehash.CheckFileHashFactory
+import org.apache.commons.io.FileUtils
+import org.stringtemplate.v4.ST
+
+import com.anrisoftware.globalpom.checkfilehash.CheckFileHashFactory
+import com.anrisoftware.globalpom.version.Version
+import com.anrisoftware.globalpom.version.VersionFormatFactory
 import com.anrisoftware.sscontrol.httpd.domain.Domain
 import com.anrisoftware.sscontrol.httpd.webservice.OverrideMode
 import com.anrisoftware.sscontrol.httpd.webservice.WebService
@@ -31,6 +36,8 @@ import com.anrisoftware.sscontrol.httpd.wordpress.WordpressService
 import com.anrisoftware.sscontrol.scripts.changefilemod.ChangeFileModFactory
 import com.anrisoftware.sscontrol.scripts.changefileowner.ChangeFileOwnerFactory
 import com.anrisoftware.sscontrol.scripts.unpack.UnpackFactory
+import com.anrisoftware.sscontrol.scripts.versionlimits.CheckVersionLimitFactory
+import com.anrisoftware.sscontrol.scripts.versionlimits.ReadVersionFactory
 
 /**
  * Installs <i>Wordpress</i> from archive.
@@ -44,10 +51,10 @@ abstract class WordpressFromArchiveConfig {
     @Inject
     private WordpressFromArchiveConfigLogger logg
 
-    @Inject
-    private CheckFileHashFactory checkFileHashFactory
-
     private Object script
+
+    @Inject
+    CheckFileHashFactory checkFileHashFactory
 
     @Inject
     ChangeFileModFactory changeFileModFactory
@@ -58,27 +65,63 @@ abstract class WordpressFromArchiveConfig {
     @Inject
     UnpackFactory unpackFactory
 
+    @Inject
+    VersionFormatFactory versionFormatFactory
+
+    @Inject
+    CheckVersionLimitFactory checkVersionLimitFactory
+
+    @Inject
+    ReadVersionFactory readVersionFactory
+
     /**
      * Downloads and unpacks the <i>Wordpress</i> archive.
      *
      * @param domain
-     *            the {@link Domain} of the <i>Wordpress</i> service.
+     *            the {@link Domain} domain of the service.
      *
      * @param service
-     *            the {@link WebService} <i>Wordpress</i> service.
+     *            the {@link WebService} service.
      */
     void downloadArchive(Domain domain, WebService service) {
-        if (!needUnpackArchive(domain, service)) {
+        def currentVersion = wordpressCurrentVersion domain, service
+        if (!checkWordpressVersion(domain, service, currentVersion)) {
+            return
+        }
+        if (!canUnpackArchive(domain, service)) {
             return
         }
         def name = new File(wordpressArchive.path).name
-        def dest = new File(tmpDirectory, "wordpress-3-$name")
-        needDownloadArchive(dest) ? downloadArchive(dest) : false
+        def dest = new File(tmpDirectory, "wordpress-$name")
+        if (needDownloadArchive(dest)) {
+            downloadArchive dest
+        }
         unpackArchive domain, service, dest
+        FileUtils.write wordpressVersionFile(domain, service), versionFormatFactory.create().format(currentVersion), charset
     }
 
     /**
-     * Returns if it needed to unpack the <i>Wordpress</i> archive.
+     * @see CheckVersionLimit
+     *
+     * @param domain
+     *            the {@link Domain} domain of the service.
+     *
+     * @param service
+     *            the {@link WebService} service.
+     *
+     * @param currentVersion
+     *            the current {@link Version} version.
+     */
+    boolean checkWordpressVersion(Domain domain, WebService service, Version currentVersion) {
+        if (currentVersion != null) {
+            return checkVersionLimitFactory.create(currentVersion, wordpressArchiveVersion, wordpressVersionLimit).checkVersion()
+        } else {
+            return true
+        }
+    }
+
+    /**
+     * Returns the current <i>Wordpress</i> version.
      *
      * @param domain
      *            the {@link Domain} of the service.
@@ -86,11 +129,33 @@ abstract class WordpressFromArchiveConfig {
      * @param service
      *            the {@link WebService} service.
      *
-     * @return {@code true} if it is needed.
+     * @return the {@link Version} or {@code null}.
+     */
+    Version wordpressCurrentVersion(Domain domain, WebService service) {
+        def versionFile = wordpressVersionFile(domain, service)
+        if (versionFile.exists()) {
+            return readVersionFactory.create(versionFile.toURI(), charset).readVersion()
+        } else {
+            return null
+        }
+    }
+
+    /**
+     * Allowed to unpack the archive if the <i>Roundcube</i> is already
+     * installed and the override mode is not {@link OverrideMode#no}.
+     *
+     * @param domain
+     *            the {@link Domain} of the service.
+     *
+     * @param service
+     *            the {@link WebService} service.
+     *
+     * @return {@code true} if it is allowed to unpack and therefore to
+     * override an already existing installation.
      *
      * @see WordpressService#getOverrideMode()
      */
-    boolean needUnpackArchive(Domain domain, WordpressService service) {
+    boolean canUnpackArchive(Domain domain, WordpressService service) {
         service.overrideMode != OverrideMode.no || !configurationDistFile(domain, service).isFile()
     }
 
@@ -124,6 +189,10 @@ abstract class WordpressFromArchiveConfig {
     void downloadArchive(File dest) {
         logg.startDownload script.script, wordpressArchive, dest
         copyURLToFile(wordpressArchive.toURL(), dest)
+        if (wordpressArchiveHash != null) {
+            def check = checkFileHashFactory.create(this, file: dest, hash: wordpressArchiveHash)()
+            logg.checkHashArchive script.script, wordpressArchive, wordpressArchiveHash, check.matching
+        }
         logg.finishDownload script.script, wordpressArchive, dest
     }
 
@@ -146,8 +215,12 @@ abstract class WordpressFromArchiveConfig {
         }
         def strip = stripArchive
         unpackFactory.create(
-                log: log, file: archive, output: dir, override: true, strip: strip,
-                commands: script.unpackCommands,
+                log: log,
+                file: archive,
+                output: dir,
+                override: true,
+                strip: strip,
+                commands: unpackCommands,
                 this, threads)()
         logg.downloadArchive script.script, wordpressArchive
     }
@@ -185,16 +258,24 @@ abstract class WordpressFromArchiveConfig {
         def themesdir = wordpressContentThemesDir domain, service
         def uploadsdir = wordpressContentUploadsDir domain, service
         changeFileOwnerFactory.create(
-                log: log, command: script.chownCommand,
-                owner: "root", ownerGroup: user.group, files: conffile,
+                log: log,
+                command: chownCommand,
+                owner: "root",
+                ownerGroup: user.group,
+                files: conffile,
                 this, threads)()
         changeFileModFactory.create(
-                log: log, command: script.chmodCommand,
-                mod: "0440", files: conffile,
+                log: log,
+                command: chmodCommand,
+                mod: "0440",
+                files: conffile,
                 this, threads)()
         changeFileOwnerFactory.create(
-                log: log, command: script.chownCommand,
-                owner: user.name, ownerGroup: user.group, files: [
+                log: log,
+                command: chownCommand,
+                owner: user.name,
+                ownerGroup: user.group,
+                files: [
                     cachedir,
                     pluginsdir,
                     themesdir,
@@ -202,15 +283,21 @@ abstract class WordpressFromArchiveConfig {
                 ],
                 this, threads)()
         changeFileOwnerFactory.create(
-                log: log, command: script.chownCommand, recursive: true,
-                owner: user.name, ownerGroup: user.group, files: [
+                log: log,
+                command: chownCommand,
+                recursive: true,
+                owner: user.name,
+                ownerGroup: user.group,
+                files: [
                     cachedir,
                     uploadsdir,
                 ],
                 this, threads)()
         changeFileModFactory.create(
-                log: log, command: script.chmodCommand,
-                mod: "0775", files: [
+                log: log,
+                command: chmodCommand,
+                mod: "0775",
+                files: [
                     cachedir,
                     pluginsdir,
                     themesdir,
@@ -219,6 +306,76 @@ abstract class WordpressFromArchiveConfig {
                 this, threads)()
     }
 
+
+    /**
+     * Returns if the <i>Wordpress</i> version limit, for example {@code "3"}.
+     *
+     * <ul>
+     * <li>profile property {@code "wordpress_version_limit"}</li>
+     * </ul>
+     *
+     * @see #getWordpressProperties()
+     */
+    Version getWordpressVersionLimit() {
+        def p = profileProperty "wordpress_version_limit", wordpressProperties
+        versionFormatFactory.create().parse p
+    }
+
+    /**
+     * Returns if the <i>Wordpress</i> version of the archive, for example
+     * {@code "3.9.2"}
+     *
+     * <ul>
+     * <li>profile property {@code "wordpress_archive_version"}</li>
+     * </ul>
+     *
+     * @see #getWordpressProperties()
+     */
+    Version getWordpressArchiveVersion() {
+        def p = profileProperty "wordpress_archive_version", wordpressProperties
+        versionFormatFactory.create().parse p
+    }
+
+    /**
+     * Returns the <i>Wordpress</i> version file.
+     * The placeholder variable are replaced:
+     * <ul>
+     * <li>"&lt;domainDir>" with the directory of the domain;</li>
+     * <li>"&lt;prefix>" with the directory of the service prefix;</li>
+     * </ul>
+     *
+     * @param domain
+     *            the {@link Domain} domain.
+     *
+     * @param service
+     *            the {@link WebService} service.
+     *
+     * @return the version {@link File} file.
+     *
+     * @see #domainDir(Domain)
+     * @see WebService#getPrefix()
+     */
+    File wordpressVersionFile(Domain domain, WebService service) {
+        def name = new ST(wordpressVersionFilePath).
+                add("domainDir", domainDir(domain)).
+                add("prefix", service.prefix).
+                render()
+        new File(name)
+    }
+
+    /**
+     * Returns <i>Wordpress</i> configuration file, for
+     * example {@code "<domainDir>/<prefix>/version.txt"}.
+     *
+     * <ul>
+     * <li>profile property {@code "wordpress_version_file"}</li>
+     * </ul>
+     *
+     * @see #getWordpressProperties()
+     */
+    String getWordpressVersionFilePath() {
+        profileProperty "wordpress_version_file", wordpressProperties
+    }
 
     void setScript(Object script) {
         this.script = script

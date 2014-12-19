@@ -22,7 +22,12 @@ import static com.anrisoftware.sscontrol.httpd.wordpress.fromarchive.WordpressFr
 import static com.anrisoftware.sscontrol.httpd.wordpress.fromarchive.WordpressFromArchiveConfigLogger._.download_archive_info;
 import static com.anrisoftware.sscontrol.httpd.wordpress.fromarchive.WordpressFromArchiveConfigLogger._.download_archive_trace;
 import static com.anrisoftware.sscontrol.httpd.wordpress.fromarchive.WordpressFromArchiveConfigLogger._.finish_download;
+import static com.anrisoftware.sscontrol.httpd.wordpress.fromarchive.WordpressFromArchiveConfigLogger._.hash_archive_mismatch;
+import static com.anrisoftware.sscontrol.httpd.wordpress.fromarchive.WordpressFromArchiveConfigLogger._.hash_archive_mismatch_message;
 import static com.anrisoftware.sscontrol.httpd.wordpress.fromarchive.WordpressFromArchiveConfigLogger._.start_download;
+import static com.anrisoftware.sscontrol.httpd.wordpress.fromarchive.WordpressFromArchiveConfigLogger._.the_archive;
+import static com.anrisoftware.sscontrol.httpd.wordpress.fromarchive.WordpressFromArchiveConfigLogger._.the_hash;
+import static com.anrisoftware.sscontrol.httpd.wordpress.fromarchive.WordpressFromArchiveConfigLogger._.the_script;
 
 import java.io.File;
 import java.net.URI;
@@ -30,11 +35,12 @@ import java.net.URI;
 import javax.inject.Singleton;
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
+import com.anrisoftware.sscontrol.core.api.ServiceException;
 import com.anrisoftware.sscontrol.core.service.LinuxScript;
 
 /**
  * Logging messages for {@link WordpressFromArchiveConfig}.
- * 
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
@@ -52,7 +58,18 @@ class WordpressFromArchiveConfigLogger extends AbstractLogger {
 
         start_download("Downloading of archive '{}' to '{}' for {}..."),
 
-        finish_download("Finish download of archive '{}' to '{}' for {}.");
+        finish_download("Finish download of archive '{}' to '{}' for {}."),
+
+        hash_archive_mismatch("Archive hash mismatch"),
+
+        hash_archive_mismatch_message(
+                "Archive hash mismatch for archive '{}' for script '{}'."),
+
+        the_script("script"),
+
+        the_archive("archive"),
+
+        the_hash("hash");
 
         private String name;
 
@@ -78,6 +95,17 @@ class WordpressFromArchiveConfigLogger extends AbstractLogger {
             debug(download_archive_trace, archive, script);
         } else {
             info(download_archive_info, archive, script.getName());
+        }
+    }
+
+    void checkHashArchive(LinuxScript script, URI source, URI hash,
+            boolean check) {
+        if (!check) {
+            logException(
+                    new ServiceException(hash_archive_mismatch)
+                            .add(the_script, script).add(the_archive, source)
+                            .add(the_hash, hash),
+                    hash_archive_mismatch_message, source, script.getName());
         }
     }
 

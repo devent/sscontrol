@@ -18,9 +18,10 @@
  */
 package com.anrisoftware.sscontrol.httpd.roundcube.apache_ubuntu_12_04;
 
-import com.anrisoftware.sscontrol.core.version.VersionModule;
+import com.anrisoftware.globalpom.version.VersionModule;
 import com.anrisoftware.sscontrol.httpd.roundcube.RoundcubeModule;
 import com.anrisoftware.sscontrol.scripts.importdb.ImportDatabaseModule;
+import com.anrisoftware.sscontrol.scripts.versionlimits.VersionLimitsModule;
 import com.google.inject.AbstractModule;
 
 /**
@@ -35,6 +36,7 @@ public class ApacheModule extends AbstractModule {
     protected void configure() {
         install(new RoundcubeModule());
         install(new VersionModule());
+        install(new VersionLimitsModule());
         install(new ImportDatabaseModule());
     }
 }

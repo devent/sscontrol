@@ -33,6 +33,10 @@
 			<groupId>com.anrisoftware.resources</groupId>
 			<artifactId>resources-templates</artifactId>
 		</dependency>
+        <dependency>
+            <groupId>com.anrisoftware.globalpom</groupId>
+            <artifactId>globalpomutils-core</artifactId>
+        </dependency>
 		<dependency>
 			<groupId>com.anrisoftware.globalpom</groupId>
 			<artifactId>globalpomutils-exec</artifactId>

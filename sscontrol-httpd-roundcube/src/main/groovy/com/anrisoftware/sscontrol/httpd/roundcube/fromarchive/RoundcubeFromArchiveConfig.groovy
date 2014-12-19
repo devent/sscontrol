@@ -23,18 +23,20 @@ import groovy.util.logging.Slf4j
 
 import javax.inject.Inject
 
-import org.apache.commons.io.FileUtils
 import org.stringtemplate.v4.ST
 
-import com.anrisoftware.sscontrol.core.checkfilehash.CheckFileHashFactory
-import com.anrisoftware.sscontrol.core.version.Version
-import com.anrisoftware.sscontrol.core.version.VersionFormatFactory
+import com.anrisoftware.globalpom.checkfilehash.CheckFileHashFactory
+import com.anrisoftware.globalpom.version.Version
+import com.anrisoftware.globalpom.version.VersionFormatFactory
 import com.anrisoftware.sscontrol.httpd.domain.Domain
 import com.anrisoftware.sscontrol.httpd.roundcube.RoundcubeService
 import com.anrisoftware.sscontrol.httpd.webservice.OverrideMode
+import com.anrisoftware.sscontrol.httpd.webservice.WebService
 import com.anrisoftware.sscontrol.scripts.changefilemod.ChangeFileModFactory
 import com.anrisoftware.sscontrol.scripts.changefileowner.ChangeFileOwnerFactory
 import com.anrisoftware.sscontrol.scripts.unpack.UnpackFactory
+import com.anrisoftware.sscontrol.scripts.versionlimits.CheckVersionLimitFactory
+import com.anrisoftware.sscontrol.scripts.versionlimits.ReadVersionFactory
 
 /**
  * Installs <i>Roundcube</i> from archive.
@@ -54,9 +56,6 @@ abstract class RoundcubeFromArchiveConfig {
     private Object script
 
     @Inject
-    VersionFormatFactory versionFormatFactory
-
-    @Inject
     ChangeFileModFactory changeFileModFactory
 
     @Inject
@@ -65,7 +64,14 @@ abstract class RoundcubeFromArchiveConfig {
     @Inject
     UnpackFactory unpackFactory
 
-    Version currentRoudcubeVersion
+    @Inject
+    VersionFormatFactory versionFormatFactory
+
+    @Inject
+    CheckVersionLimitFactory checkVersionLimitFactory
+
+    @Inject
+    ReadVersionFactory readVersionFactory
 
     /**
      * Downloads and unpacks the <i>Roundcube</i> archive.
@@ -77,20 +83,24 @@ abstract class RoundcubeFromArchiveConfig {
      *            the {@link RoundcubeService} service.
      */
     void downloadArchive(Domain domain, RoundcubeService service) {
-        if (!canUnpackArchive(domain, service)) {
+        def currentVersion = currentRoudcubeVersion domain, service
+        if (!checkRoundcubeVersion(domain, service, currentVersion)) {
             return
         }
-        if (!checkRoundcubeVersion(domain, service)) {
+        if (!canUnpackArchive(domain, service)) {
             return
         }
         def name = new File(roundcubeArchive.path).name
         def dest = new File(tmpDirectory, "roundcube_1_0_$name")
-        needDownloadArchive(dest) ? downloadArchive(dest) : false
+        if (needDownloadArchive(dest)) {
+            downloadArchive(dest)
+        }
         unpackArchive domain, service, dest
     }
 
     /**
-     * Returns if it is allowed to unpack the <i>Roundcube</i> archive.
+     * Allowed to unpack the archive if the <i>Roundcube</i> is already
+     * installed and the override mode is not {@link OverrideMode#no}.
      *
      * @param domain
      *            the {@link Domain} of the service.
@@ -98,7 +108,8 @@ abstract class RoundcubeFromArchiveConfig {
      * @param service
      *            the {@link WebService} service.
      *
-     * @return {@code true} if it is needed.
+     * @return {@code true} if it is allowed to unpack and therefore to
+     * override an already existing installation.
      *
      * @see RoundcubeService#getOverrideMode()
      */
@@ -133,33 +144,31 @@ abstract class RoundcubeFromArchiveConfig {
     void downloadArchive(File dest) {
         logg.startDownload script.script, roundcubeArchive, dest
         copyURLToFile(roundcubeArchive.toURL(), dest)
+        if (roundcubeArchiveHash != null) {
+            def check = checkFileHashFactory.create(this, file: dest, hash: roundcubeArchiveHash)()
+            logg.checkHashArchive script.script, roundcubeArchive, roundcubeArchiveHash, check.matching
+        }
         logg.finishDownload script.script, roundcubeArchive, dest
     }
 
     /**
-     * Checks that the installed <i>Roundcube</i> service version is smaller then
-     * the archive version, and that the archive version is in bounds the
-     * version limit.
+     * @see CheckVersionLimit
      *
      * @param domain
      *            the {@link Domain} domain of the service.
      *
      * @param service
-     *            the {@link RoundcubeService} service.
+     *            the {@link WebService} service.
      *
-     * @return {@code true} if all of those conditions are true.
+     * @param currentVersion
+     *            the current {@link Version} version.
      */
-    boolean checkRoundcubeVersion(Domain domain, RoundcubeService service) {
-        def archiveVersion = roundcubeArchiveVersion
-        def versionLimit = roundcubeVersionLimit
-        def currentVersion = currentRoudcubeVersion domain, service
-        if (currentVersion == null) {
+    boolean checkRoundcubeVersion(Domain domain, WebService service, Version currentVersion) {
+        if (currentVersion != null) {
+            return checkVersionLimitFactory.create(currentVersion, roundcubeArchiveVersion, roundcubeVersionLimit).checkVersion()
+        } else {
             return true
         }
-        logg.checkVersion this, currentVersion, archiveVersion, versionLimit
-        boolean different = currentVersion == null ? true : currentVersion.compareTo(archiveVersion) > 0
-        boolean bounds = archiveVersion.compareTo(versionLimit) <= 0
-        return different && bounds
     }
 
     /**
@@ -295,14 +304,16 @@ abstract class RoundcubeFromArchiveConfig {
      *            the {@link Domain} of the service.
      *
      * @param service
-     *            the {@link RoundcubeService} service.
+     *            the {@link WebService} service.
      *
-     * @return the {@link Version}.
+     * @return the {@link Version} or {@code null}.
      */
-    Version currentRoudcubeVersion(Domain domain, RoundcubeService service) {
-        def file = versionFile domain, service
-        if (file.isFile()) {
-            versionFormatFactory.create().parse FileUtils.readFileToString(file)
+    Version currentRoudcubeVersion(Domain domain, WebService service) {
+        def versionFile = roundcubeVersionFile(domain, service)
+        if (versionFile.exists()) {
+            return readVersionFactory.create(versionFile.toURI(), charset).readVersion()
+        } else {
+            return null
         }
     }
 
@@ -318,16 +329,15 @@ abstract class RoundcubeFromArchiveConfig {
      *            the {@link Domain} domain.
      *
      * @param service
-     *            the {@link RoundcubeService} service.
+     *            the {@link WebService} service.
      *
      * @return the version {@link File} file.
      *
-     * @see #getRoundcubeConfigFile()
      * @see #domainDir(Domain)
-     * @see RoundcubeService#getPrefix()
+     * @see WebService#getPrefix()
      */
-    File versionFile(Domain domain, RoundcubeService service) {
-        def name = new ST(roundcubeVersionFile).
+    File roundcubeVersionFile(Domain domain, WebService service) {
+        def name = new ST(roundcubeVersionFilePath).
                 add("domainDir", domainDir(domain)).
                 add("prefix", service.prefix).
                 render()
@@ -344,7 +354,7 @@ abstract class RoundcubeFromArchiveConfig {
      *
      * @see #getRoundcubeProperties()
      */
-    String getRoundcubeVersionFile() {
+    String getRoundcubeVersionFilePath() {
         profileProperty "roundcube_version_file", roundcubeProperties
     }
 

@@ -18,7 +18,7 @@
  */
 package com.anrisoftware.sscontrol.httpd.gitit.nginx_ubuntu_12_04;
 
-import com.anrisoftware.sscontrol.core.version.VersionModule;
+import com.anrisoftware.globalpom.version.VersionModule;
 import com.anrisoftware.sscontrol.scripts.unpack.UnpackModule;
 import com.google.inject.AbstractModule;
 

@@ -24,7 +24,7 @@ import static com.google.inject.multibindings.MapBinder.newMapBinder;
 import static java.lang.String.format;
 import groovy.lang.Script;
 
-import com.anrisoftware.sscontrol.core.checkfilehash.CheckFileHashModule;
+import com.anrisoftware.globalpom.checkfilehash.CheckFileHashModule;
 import com.anrisoftware.sscontrol.httpd.apache.apache.linux.ApacheFcgiConfig;
 import com.anrisoftware.sscontrol.httpd.apache.authfile.ubuntu_12_04.Ubuntu_12_04_AuthFileModule;
 import com.anrisoftware.sscontrol.httpd.apache.authldap.ubuntu_12_04.Ubuntu_12_04_AuthLdapModule;

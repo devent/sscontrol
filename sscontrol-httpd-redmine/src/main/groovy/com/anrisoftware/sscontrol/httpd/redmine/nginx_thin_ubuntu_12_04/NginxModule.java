@@ -18,7 +18,7 @@
  */
 package com.anrisoftware.sscontrol.httpd.redmine.nginx_thin_ubuntu_12_04;
 
-import com.anrisoftware.sscontrol.core.checkfilehash.CheckFileHashModule;
+import com.anrisoftware.globalpom.checkfilehash.CheckFileHashModule;
 import com.anrisoftware.sscontrol.scripts.unpack.UnpackModule;
 import com.google.inject.AbstractModule;
 

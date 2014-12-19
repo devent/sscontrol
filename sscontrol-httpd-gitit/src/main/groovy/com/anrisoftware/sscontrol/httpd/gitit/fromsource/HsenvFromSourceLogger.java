@@ -38,9 +38,9 @@ import javax.inject.Inject;
 
 import com.anrisoftware.globalpom.exec.api.ProcessTask;
 import com.anrisoftware.globalpom.log.AbstractLogger;
-import com.anrisoftware.sscontrol.core.version.Version;
-import com.anrisoftware.sscontrol.core.version.VersionFormat;
-import com.anrisoftware.sscontrol.core.version.VersionFormatFactory;
+import com.anrisoftware.globalpom.version.Version;
+import com.anrisoftware.globalpom.version.VersionFormat;
+import com.anrisoftware.globalpom.version.VersionFormatFactory;
 
 /**
  * Logging for {@link HsenvFromSource}.

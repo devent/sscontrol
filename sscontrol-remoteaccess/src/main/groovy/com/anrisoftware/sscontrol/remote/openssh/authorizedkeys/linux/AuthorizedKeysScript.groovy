@@ -22,13 +22,11 @@ import static org.apache.commons.io.FileUtils.*
 
 import javax.inject.Inject
 
-import org.apache.commons.io.FileUtils
 import org.apache.commons.io.IOUtils
 
 import com.anrisoftware.sscontrol.core.service.LinuxScript
 import com.anrisoftware.sscontrol.remote.api.RemoteScript
 import com.anrisoftware.sscontrol.remote.service.RemoteService
-import com.anrisoftware.sscontrol.remote.user.Key
 import com.anrisoftware.sscontrol.remote.user.Require
 import com.anrisoftware.sscontrol.remote.user.User
 import com.anrisoftware.sscontrol.remote.user.UserFactory
@@ -66,7 +64,7 @@ abstract class AuthorizedKeysScript implements RemoteScript {
         if (!file.isFile()) {
             return
         }
-        if (user.requires.contains(Require.accesskeys)) {
+        if (user.requires.contains(Require.access)) {
             file.delete()
         }
     }
@@ -76,13 +74,13 @@ abstract class AuthorizedKeysScript implements RemoteScript {
             return
         }
         def log = log
-        def oldkeys = file.isFile() ? FileUtils.lineIterator(file, charset.name()) : []
-        user.keys.each { Key key ->
-            def res = key.resource.toURL()
+        def oldkeys = file.isFile() ? lineIterator(file, charset.name()) : []
+        user.accessKeys.each { URI key ->
+            def res = key.toURL()
             def str = IOUtils.toString res
             def found = oldkeys.find { it == str.trim() }
             if (!found) {
-                FileUtils.writeStringToFile file, str, charset, true
+                writeStringToFile file, str, charset, true
                 log.deployAuthorizedKey script, key, user
             }
         }

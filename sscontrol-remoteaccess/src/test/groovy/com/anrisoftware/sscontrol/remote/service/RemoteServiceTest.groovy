@@ -25,7 +25,7 @@ import groovy.util.logging.Slf4j
 import org.junit.Test
 
 import com.anrisoftware.sscontrol.remote.resources.RemoteTestUtil
-import com.anrisoftware.sscontrol.remote.user.Key
+import com.anrisoftware.sscontrol.remote.user.Require
 import com.anrisoftware.sscontrol.remote.user.User
 
 /**
@@ -44,42 +44,45 @@ class RemoteServiceTest extends RemoteTestUtil {
         loader.loadService remoteScript.resource, profile
 
         RemoteService service = registry.getService("remote")[0]
-        assert service.users.size() == 4
+
+        assert service.debugLogging("facility").size() == 1
+        assert service.debugLogging("facility")["openssh"] == "AUTH"
+        assert service.debugLogging("level").size() == 1
+        assert service.debugLogging("level")["openssh"] == 4
+
+        assert service.binding == "0.0.0.0"
+        assert service.bindingPort == 22
+
+        assert service.users.size() == 3
 
         User user = service.users[0]
         assert user.name == "bar"
         assert user.password == "barpass"
         assert user.uid == 2001
-        assert user.group.name == "bar"
-        assert user.group.gid == null
+        assert user.group == null
+        assert user.groupId == null
 
         user = service.users[1]
         assert user.name == "baz"
         assert user.password == "bazpass"
         assert user.uid == null
-        assert user.keys.size() == 0
+        assert user.group == "bazgroup"
+        assert user.groupId == 2001
+        assert user.login == "/bin/sh"
+        assert user.comment == "Baz User"
         assert user.passphrase == "somepass"
-        assert user.home == new File("/var/home/baz")
-        assert user.group.name == "baz"
-        assert user.group.gid == null
+        assert user.requires.size() == 2
+        assert user.requires.containsAll([
+            Require.password,
+            Require.passphrase
+        ])
 
         user = service.users[2]
         assert user.name == "foo"
         assert user.password == "foopass"
         assert user.passphrase == "somepass"
-        assert user.keys.size() == 2
-        assert user.group.name == "foo"
-        assert user.group.gid == null
-
-        Key key = user.keys[0]
-        assert key.resource.toString().endsWith("fooremote_pub.txt");
-
-        user = service.users[3]
-        assert user.name == "foobar"
-        assert user.password == "foopass"
-        assert user.passphrase == "somepass"
-        assert user.keys.size() == 2
-        assert user.group.name == "foob"
-        assert user.group.gid == 2001
+        assert user.accessKeys.size() == 2
+        assert user.accessKeys.find { it.toString() =~ /.*fooremote_pub\.txt/ }
+        assert user.accessKeys.find { it.toString() =~ /.*barremote_pub\.txt/ }
     }
 }

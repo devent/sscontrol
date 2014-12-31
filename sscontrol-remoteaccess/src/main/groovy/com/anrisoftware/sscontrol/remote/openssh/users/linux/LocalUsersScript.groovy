@@ -21,6 +21,8 @@ package com.anrisoftware.sscontrol.remote.openssh.users.linux
 import static org.apache.commons.io.FileUtils.*
 import groovy.util.logging.Slf4j
 
+import java.security.acl.Group
+
 import javax.inject.Inject
 
 import org.apache.commons.lang3.StringUtils
@@ -28,8 +30,6 @@ import org.apache.commons.lang3.StringUtils
 import com.anrisoftware.sscontrol.core.service.LinuxScript
 import com.anrisoftware.sscontrol.remote.api.RemoteScript
 import com.anrisoftware.sscontrol.remote.service.RemoteService
-import com.anrisoftware.sscontrol.remote.user.Group
-import com.anrisoftware.sscontrol.remote.user.GroupFactory
 import com.anrisoftware.sscontrol.remote.user.Require
 import com.anrisoftware.sscontrol.remote.user.User
 import com.anrisoftware.sscontrol.remote.user.UserFactory
@@ -48,9 +48,6 @@ abstract class LocalUsersScript implements RemoteScript {
 
     @Inject
     UserFactory userFactory
-
-    @Inject
-    GroupFactory groupFactory
 
     @Inject
     LocalGroupAddFactory localGroupAddFactory
@@ -77,7 +74,7 @@ abstract class LocalUsersScript implements RemoteScript {
         def groups = loadGroups()
         int id = minimumGid
         service.users.each { User user ->
-            Group found = groups.find { Group it -> it.name == user.group.name }
+            def found = groups.find { it.name == user.group.name }
             if (found) {
                 groupHaveId found, id, { id++ }
                 user.group.gid = found.gid
@@ -166,8 +163,11 @@ abstract class LocalUsersScript implements RemoteScript {
             return
         }
         localChangePasswordFactory.create(
-                log: log, command: script.changePasswordCommand,
-                name: distributionName, userName: user.name, password: user.password,
+                log: log,
+                command: changePasswordCommand,
+                name: distributionName,
+                userName: user.name,
+                password: user.password,
                 this, threads)()
     }
 
@@ -265,6 +265,8 @@ abstract class LocalUsersScript implements RemoteScript {
     /**
      * Returns the current local user groups.
      *
+     * @returns {@code name:=<name>, gid:=<gid>}
+     *
      * @see #getGroupsFile()
      */
     List loadGroups() {
@@ -274,8 +276,7 @@ abstract class LocalUsersScript implements RemoteScript {
             String[] str = StringUtils.splitPreserveAllTokens it, ":"
             String name = str[0]
             int gid = Integer.valueOf str[2]
-            def group = groupFactory.create service, ["name": name, "gid": gid]
-            acc << group
+            acc << ["name": name, "gid": gid]
         }
     }
 

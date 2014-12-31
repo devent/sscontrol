@@ -21,14 +21,15 @@ package com.anrisoftware.sscontrol.remote.openssh.authorizedkeys.linux;
 import static com.anrisoftware.sscontrol.remote.openssh.authorizedkeys.linux.AuthorizedKeysScriptLogger._.authorized_key_debug;
 import static com.anrisoftware.sscontrol.remote.openssh.authorizedkeys.linux.AuthorizedKeysScriptLogger._.authorized_key_info;
 
+import java.net.URI;
+
 import com.anrisoftware.globalpom.log.AbstractLogger;
 import com.anrisoftware.sscontrol.core.service.LinuxScript;
-import com.anrisoftware.sscontrol.remote.user.Key;
 import com.anrisoftware.sscontrol.remote.user.User;
 
 /**
  * Logging for {@link AuthorizedKeysScript}.
- * 
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
@@ -59,12 +60,11 @@ class AuthorizedKeysScriptLogger extends AbstractLogger {
         super(AuthorizedKeysScript.class);
     }
 
-    void deployAuthorizedKey(LinuxScript script, Key key, User user) {
+    void deployAuthorizedKey(LinuxScript script, URI key, User user) {
         if (isDebugEnabled()) {
             debug(authorized_key_debug, key, user, script);
         } else {
-            info(authorized_key_info, key.getResource(), user.getName(),
-                    script.getName());
+            info(authorized_key_info, key, user.getName(), script.getName());
         }
     }
 }

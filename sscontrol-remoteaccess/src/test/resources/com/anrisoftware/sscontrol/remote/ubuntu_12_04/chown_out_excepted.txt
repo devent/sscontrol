@@ -1,5 +1,0 @@
-1000.1000 /tmp/home/devent/.ssh
-1001.1002 /tmp/home/baz/.ssh
-1002.1003 /tmp/home/foo/.ssh
-1003.2001 /tmp/home/foobar/.ssh
-1004.1004 /tmp/home/foobaz/.ssh

@@ -18,7 +18,7 @@
  */
 package com.anrisoftware.sscontrol.remote.user;
 
-import java.io.File;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -28,181 +28,274 @@ import javax.inject.Inject;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.anrisoftware.sscontrol.core.api.Service;
-import com.anrisoftware.sscontrol.core.api.ServiceException;
+import com.anrisoftware.sscontrol.core.groovy.StatementsMap;
+import com.anrisoftware.sscontrol.core.groovy.StatementsMapFactory;
 import com.google.inject.assistedinject.Assisted;
 
 /**
  * Local user.
- * 
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
 public class User {
 
-    private static final String GROUP_NAME = "name";
+    private static final String SERVICE = "service";
+    private static final String LOGIN_KEY = "login";
+    private static final String COMMENT_KEY = "comment";
+    private static final String GID_KEY = "gid";
+    private static final String GROUP_KEY = "group";
+    private static final String KEY_KEY = "key";
+    private static final String ACCESS_KEY = "access";
+    private static final String REQUIRE_KEY = "require";
+    private static final String HOME_KEY = "home";
+    private static final String PASSPHRASE_KEY = "passphrase";
+    private static final String UID_KEY = "uid";
+    private static final String PASSWORD_KEY = "password";
+    private static final String USER_KEY = "user";
 
     private final Service service;
 
-    private final String name;
-
-    private final List<Key> keys;
-
-    private final List<Require> requires;
-
-    @Inject
-    private UserArgsLogger log;
-
-    @Inject
-    private KeyFactory keyFactory;
-
-    @Inject
-    private GroupFactory groupFactory;
-
-    private String password;
-
-    private String passphrase;
-
-    private Group group;
-
-    private String comment;
-
-    private Integer uid;
-
-    private File home;
-
-    private String login;
+    private final StatementsMap statementsMap;
 
     /**
      * @see UserFactory#create(Service, Map)
      */
     @Inject
-    User(UserArgs aargs, GroupFactory groupFactory, @Assisted Service service,
+    User(StatementsMapFactory statementsMapFactory, @Assisted Service service,
             @Assisted Map<String, Object> args) {
         this.service = service;
-        this.keys = new ArrayList<Key>();
-        this.requires = new ArrayList<Require>();
-        this.name = aargs.name(service, args);
-        this.group = groupFactory.create(service, name);
-        if (aargs.havePassword(args)) {
-            this.password = aargs.password(service, args);
-        }
-        if (aargs.haveUid(args)) {
-            this.uid = aargs.uid(service, args);
-        }
+        this.statementsMap = setupStatemetsMap(args, statementsMapFactory);
     }
 
+    private StatementsMap setupStatemetsMap(Map<String, Object> args,
+            StatementsMapFactory factory) {
+        StatementsMap map = factory.create(factory, USER_KEY);
+        map.addAllowed(USER_KEY, PASSWORD_KEY, UID_KEY, PASSPHRASE_KEY,
+                HOME_KEY, REQUIRE_KEY, ACCESS_KEY, GROUP_KEY, COMMENT_KEY,
+                LOGIN_KEY);
+        map.setAllowValue(true, USER_KEY,
+                PASSPHRASE_KEY, HOME_KEY, REQUIRE_KEY, GROUP_KEY, COMMENT_KEY,
+                LOGIN_KEY);
+        map.setAllowMultiValue(true, REQUIRE_KEY);
+        map.addAllowedKeys(USER_KEY, PASSWORD_KEY, UID_KEY);
+        map.addAllowedKeys(ACCESS_KEY, KEY_KEY);
+        map.addAllowedKeys(GROUP_KEY, GID_KEY);
+        map.addAllowedMultiKeys(ACCESS_KEY, KEY_KEY);
+        map.putValue(USER_KEY, args.get(USER_KEY));
+        if (args.containsKey(PASSWORD_KEY)) {
+            map.putMapValue(USER_KEY, PASSWORD_KEY, args.get(PASSWORD_KEY));
+        }
+        if (args.containsKey(UID_KEY)) {
+            map.putMapValue(USER_KEY, UID_KEY, args.get(UID_KEY));
+        }
+        return map;
+    }
+
+    /**
+     * Returns the user name.
+     *
+     * <pre>
+     * user "foo", password: "foopass", {
+     * }
+     * </pre>
+     *
+     * @return the user {@link String} name.
+     */
     public String getName() {
-        return name;
+        return statementsMap.value(USER_KEY);
     }
 
+    /**
+     * Returns the user password.
+     *
+     * <pre>
+     * user "foo", password: "foopass", {
+     * }
+     * </pre>
+     *
+     * @return the user {@link String} password.
+     */
     public String getPassword() {
-        return password;
+        return statementsMap.mapValue(USER_KEY, PASSWORD_KEY);
     }
 
+    /**
+     * Returns the user ID.
+     *
+     * <pre>
+     * user "foo", password: "foopass", uid: 99, {
+     * }
+     * </pre>
+     *
+     * @return the user {@link Integer} ID or {@code null}.
+     */
     public Integer getUid() {
-        return uid;
+        return statementsMap.mapValue(USER_KEY, UID_KEY);
     }
 
-    public void group(String name) {
-        Group group = groupFactory.create(service, name);
-        log.groupSet(this, service, group);
-        this.group = group;
+    /**
+     * Returns the user group name.
+     *
+     * <pre>
+     * user "foo", password: "foopass", {
+     *      group "foogroup"
+     * }
+     * </pre>
+     *
+     * @return the user group {@link String} name or {@code null}.
+     */
+    public String getGroup() {
+        return statementsMap.value(GROUP_KEY);
     }
 
-    public void group(Map<String, Object> args, String name) {
-        args.put(GROUP_NAME, name);
-        group(args);
+    /**
+     * Returns the user group ID.
+     *
+     * <pre>
+     * user "foo", password: "foopass", {
+     *      group "foogroup", gid: 99
+     * }
+     * </pre>
+     *
+     * @return the user group {@link Integer} ID or {@code null}.
+     */
+    public Integer getGroupId() {
+        return statementsMap.mapValue(GROUP_KEY, GID_KEY);
     }
 
-    public void group(Map<String, Object> args) {
-        if (!args.containsKey(GROUP_NAME)) {
-            args.put(GROUP_NAME, name);
-        }
-        Group group = groupFactory.create(service, args);
-        log.groupSet(this, service, group);
-        this.group = group;
-    }
-
-    public Group getGroup() {
-        return group;
-    }
-
-    public void comment(String comment) {
-        log.checkComment(this, service, comment);
-        this.comment = comment;
-    }
-
-    public void setComment(String comment) {
-        this.comment = comment;
-    }
-
+    /**
+     * Returns the user comment.
+     *
+     * <pre>
+     * user "foo", password: "foopass", {
+     *      comment "Foo User"
+     * }
+     * </pre>
+     *
+     * @return the user {@link String} comment or {@code null}.
+     */
     public String getComment() {
-        return comment;
+        return statementsMap.value(COMMENT_KEY);
     }
 
-    public void home(String home) {
-        log.checkHome(this, service, home);
-        this.home = new File(home);
+    /**
+     * Returns the user home directory.
+     *
+     * <pre>
+     * user "foo", password: "foopass", {
+     *      home "/var/foo"
+     * }
+     * </pre>
+     *
+     * @return the user home {@link String} directory or {@code null}.
+     */
+    public String getHome() {
+        return statementsMap.value(HOME_KEY);
     }
 
-    public void setHome(File home) {
-        this.home = home;
-    }
-
-    public File getHome() {
-        return home;
-    }
-
-    public void setLogin(String login) {
-        this.login = login;
-    }
-
+    /**
+     * Returns the user log-in.
+     *
+     * <pre>
+     * user "foo", password: "foopass", {
+     *      login "/bin/sh"
+     * }
+     * </pre>
+     *
+     * @return the user {@link String} log-in or {@code null}.
+     */
     public String getLogin() {
-        return login;
+        return statementsMap.value(LOGIN_KEY);
     }
 
-    public void passphrase(String passphrase) {
-        log.checkPassphrase(service, passphrase);
-        this.passphrase = passphrase;
-    }
-
+    /**
+     * Returns the user passphrase.
+     *
+     * <pre>
+     * user "foo", password: "foopass", {
+     *      passphrase "passphrase"
+     * }
+     * </pre>
+     *
+     * @return the user {@link String} passphrase or {@code null}.
+     */
     public String getPassphrase() {
-        return passphrase;
+        return statementsMap.value(PASSPHRASE_KEY);
     }
 
-    public void access(Map<String, Object> args) throws ServiceException {
-        Key key = keyFactory.create(service, args);
-        log.keyAdded(this, service, key);
-        keys.add(key);
+    /**
+     * Returns the user requires statements.
+     *
+     * <pre>
+     * user "foo", password: "foopass", {
+     *      require password, passphrase
+     * }
+     * </pre>
+     *
+     * @return the user {@link List} {@link Require} requires or {@code null}.
+     */
+    public List<Require> getRequires() {
+        List<Require> list = new ArrayList<Require>();
+        List<Object> values = statementsMap.valueAsList(REQUIRE_KEY);
+        if (values == null) {
+            return null;
+        }
+        for (Object obj : values) {
+            if (obj instanceof Require) {
+                list.add((Require) obj);
+            } else {
+                list.add(Require.valueOf(obj.toString()));
+            }
+        }
+        return list.size() == 0 ? null : list;
+    }
+
+    /**
+     * Returns the user access keys.
+     *
+     * <pre>
+     * user "foo", password: "foopass", {
+     *      access key: "file:///foo.pub"
+     * }
+     * </pre>
+     *
+     * @return the user {@link List} {@link URI} keys or {@code null}.
+     */
+    public List<URI> getAccessKeys() {
+        return statementsMap.mapMultiValueAsURI(ACCESS_KEY, KEY_KEY);
     }
 
     public void require(Object... s) {
     }
 
     public void password() {
-        Require require = Require.password;
-        requires.add(require);
-        log.addRequire(this, service, require);
+        statementsMap.putValue(REQUIRE_KEY, Require.password);
     }
 
     public void passphrase() {
-        Require require = Require.passphrase;
-        requires.add(require);
-        log.addRequire(this, service, require);
+        statementsMap.putValue(REQUIRE_KEY, Require.passphrase);
     }
 
-    public void accesskeys() {
-        Require require = Require.accesskeys;
-        requires.add(require);
-        log.addRequire(this, service, require);
+    public void access() {
+        statementsMap.putValue(REQUIRE_KEY, Require.access);
     }
 
-    public List<Key> getKeys() {
-        return keys;
+    public void uid() {
+        statementsMap.putValue(REQUIRE_KEY, Require.uid);
+    }
+
+    public void group() {
+        statementsMap.putValue(REQUIRE_KEY, Require.group);
+    }
+
+    public Object methodMissing(String name, Object args) {
+        return statementsMap.methodMissing(name, args);
     }
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this).append(name).toString();
+        return new ToStringBuilder(this).append(SERVICE, service)
+                .append(statementsMap.toString()).toString();
     }
 }

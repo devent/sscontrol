@@ -1,0 +1,4 @@
+-s /bin/bash -d /tmp/home/baz -m -u 1000 -g baz baz
+-s /bin/bash -d /tmp/home/foo -m -u 1001 -g foo foo
+-s /bin/bash -d /tmp/home/baz -m -u 1000 -g baz baz
+-s /bin/bash -d /tmp/home/foo -m -u 1001 -g foo foo

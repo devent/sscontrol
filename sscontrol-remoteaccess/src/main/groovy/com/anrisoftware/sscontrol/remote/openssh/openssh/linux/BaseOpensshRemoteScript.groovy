@@ -34,7 +34,7 @@ import com.anrisoftware.sscontrol.remote.service.RemoteService
 import com.anrisoftware.sscontrol.remote.user.User
 
 /**
- * Base OpenSSH remote script.
+ * <i>OpenSSH</i> script.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0

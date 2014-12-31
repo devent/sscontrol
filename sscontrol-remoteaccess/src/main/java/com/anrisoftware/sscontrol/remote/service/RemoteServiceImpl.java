@@ -32,13 +32,12 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import com.anrisoftware.sscontrol.core.api.Service;
 import com.anrisoftware.sscontrol.core.api.ServiceException;
 import com.anrisoftware.sscontrol.core.api.ServiceScriptFactory;
-import com.anrisoftware.sscontrol.core.bindings.Address;
-import com.anrisoftware.sscontrol.core.bindings.Binding;
 import com.anrisoftware.sscontrol.core.bindings.BindingAddress;
-import com.anrisoftware.sscontrol.core.bindings.BindingArgs;
-import com.anrisoftware.sscontrol.core.bindings.BindingFactory;
-import com.anrisoftware.sscontrol.core.debuglogging.DebugLogging;
-import com.anrisoftware.sscontrol.core.debuglogging.DebugLoggingFactory;
+import com.anrisoftware.sscontrol.core.groovy.StatementsException;
+import com.anrisoftware.sscontrol.core.groovy.StatementsMap;
+import com.anrisoftware.sscontrol.core.groovy.StatementsMapFactory;
+import com.anrisoftware.sscontrol.core.groovy.StatementsTable;
+import com.anrisoftware.sscontrol.core.groovy.StatementsTableFactory;
 import com.anrisoftware.sscontrol.core.service.AbstractService;
 import com.anrisoftware.sscontrol.remote.user.User;
 import com.anrisoftware.sscontrol.remote.user.UserFactory;
@@ -52,7 +51,10 @@ import com.anrisoftware.sscontrol.remote.user.UserFactory;
 @SuppressWarnings("serial")
 public class RemoteServiceImpl extends AbstractService implements RemoteService {
 
-    private static final String USER_NAME = "name";
+    private static final String PORT_KEY = "port";
+    private static final String BIND_KEY = "bind";
+    private static final String USER_NAME = "user";
+    private static final String DEBUG_KEY = "debug";
 
     private final List<User> users;
 
@@ -62,16 +64,9 @@ public class RemoteServiceImpl extends AbstractService implements RemoteService 
     @Inject
     private UserFactory userFactory;
 
-    @Inject
-    private Binding binding;
+    private StatementsTable statementsTable;
 
-    @Inject
-    private BindingArgs bindingArgs;
-
-    @Inject
-    private DebugLoggingFactory debugFactory;
-
-    private DebugLogging debug;
+    private StatementsMap statementsMap;
 
     RemoteServiceImpl() {
         this.users = new ArrayList<User>();
@@ -91,6 +86,22 @@ public class RemoteServiceImpl extends AbstractService implements RemoteService 
     protected void injectScript(Script script) {
     }
 
+    @Inject
+    public final void setStatementsMap(StatementsMapFactory factory) {
+        StatementsMap map = factory.create(factory, NAME);
+        map.addAllowed(BIND_KEY);
+        map.setAllowValue(true, BIND_KEY);
+        map.addAllowedKeys(BIND_KEY, PORT_KEY);
+        this.statementsMap = map;
+    }
+
+    @Inject
+    public final void setStatementsTable(StatementsTableFactory factory) {
+        StatementsTable table = factory.create(factory, NAME);
+        table.addAllowed(DEBUG_KEY);
+        table.setAllowArbitraryKeys(true, DEBUG_KEY);
+        this.statementsTable = table;
+    }
 
     /**
      * Returns the remote access service name.
@@ -98,32 +109,6 @@ public class RemoteServiceImpl extends AbstractService implements RemoteService 
     @Override
     public String getName() {
         return NAME;
-    }
-
-    /**
-     * Sets the IP addresses or host names to where to bind the remote service.
-     *
-     * @see BindingFactory#create(Map, String...)
-     */
-    public void bind(Map<String, Object> args) throws ServiceException {
-        List<Address> addresses = bindingArgs.createAddress(this, args);
-        binding.addAddress(addresses);
-        log.bindingSet(this, binding);
-    }
-
-    /**
-     * Sets the IP addresses or host names to where to bind the remote service.
-     *
-     * @see BindingFactory#create(BindingAddress)
-     */
-    public void bind(BindingAddress address) throws ServiceException {
-        binding.addAddress(address);
-        log.bindingSet(this, binding);
-    }
-
-    @Override
-    public Binding getBinding() {
-        return binding;
     }
 
     /**
@@ -136,6 +121,29 @@ public class RemoteServiceImpl extends AbstractService implements RemoteService 
      */
     public Service remote(Object statements) {
         return this;
+    }
+
+    @Override
+    public Map<String, Object> debugLogging(String key) {
+        return statementsTable.tableKeys(DEBUG_KEY, key);
+    }
+
+    @Override
+    public String getBinding() {
+        Object value = statementsMap.value(BIND_KEY);
+        if (value == null) {
+            return null;
+        }
+        if (value instanceof BindingAddress) {
+            return ((BindingAddress) value).getAddress();
+        } else {
+            return value.toString();
+        }
+    }
+
+    @Override
+    public Integer getBindingPort() {
+        return statementsMap.mapValue(BIND_KEY, PORT_KEY);
     }
 
     public void user(Map<String, Object> args, String name) {
@@ -156,13 +164,6 @@ public class RemoteServiceImpl extends AbstractService implements RemoteService 
     }
 
     /**
-     * @see BindingAddress#local
-     */
-    public BindingAddress getLocal() {
-        return BindingAddress.local;
-    }
-
-    /**
      * @see BindingAddress#all
      */
     public BindingAddress getAll() {
@@ -170,23 +171,18 @@ public class RemoteServiceImpl extends AbstractService implements RemoteService 
     }
 
     /**
-     * Sets the debug logging for the database server.
-     *
-     * @see DebugLoggingFactory#create(Map)
+     * @see BindingAddress#local
      */
-    public void debug(Map<String, Object> args) {
-        this.debug = debugFactory.create(args);
-        log.debugSet(this, debug);
+    public BindingAddress getLocal() {
+        return BindingAddress.local;
     }
 
-    @Override
-    public void setDebug(DebugLogging debug) {
-        this.debug = debug;
-    }
-
-    @Override
-    public DebugLogging getDebug() {
-        return debug;
+    public Object methodMissing(String name, Object args) {
+        try {
+            return statementsMap.methodMissing(name, args);
+        } catch (StatementsException e) {
+            return statementsTable.methodMissing(name, args);
+        }
     }
 
     @Override

@@ -29,7 +29,7 @@ import org.junit.Test
 import com.anrisoftware.sscontrol.remote.resources.RemoteTestUtil
 
 /**
- * Remote Access/Ubuntu 12.04
+ * <i>Remote Access Ubuntu 12.04</i> service test.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
@@ -51,21 +51,48 @@ class RemoteTest extends RemoteTestUtil {
         log.info "Run service again to ensure that configuration is not set double."
         registry.allServices.each { it.call() }
 
-        assertFileContent aptitudeOutExpected.asFile(tmpdir), aptitudeOutExpected
-        assertFileContent restartOutExpected.asFile(tmpdir), restartOutExpected
-        assertFileContent groupaddOutExpected.asFile(tmpdir), groupaddOutExpected
-        assertStringContent useraddOutExpected.replaced(tmpdir, tmpdir, "/tmp"), useraddOutExpected.toString()
-        assertStringContent chownOutExpected.replaced(tmpdir, tmpdir, "/tmp"), chownOutExpected.toString()
-        assertStringContent chmodOutExpected.replaced(tmpdir, tmpdir, "/tmp"), chmodOutExpected.toString()
-        assertFileContent chpasswdOutExpected.asFile(tmpdir), chpasswdOutExpected
-        assertStringContent sshkeygenOutExpected.replaced(tmpdir, tmpdir, "/tmp"), sshkeygenOutExpected.toString()
-        assertFileContent sshdconfigExpected.asFile(tmpdir), sshdconfigExpected
-        //assertFileContent deventAuthorizedkeysExpected.asFile(tmpdir), deventAuthorizedkeysExpected
-        assertFileContent fooAuthorizedkeysExpected.asFile(tmpdir), fooAuthorizedkeysExpected
-        assertFileContent foobarAuthorizedkeysExpected.asFile(tmpdir), foobarAuthorizedkeysExpected
+        assertFileContent remoteAptitudeOutExpected.asFile(tmpdir), remoteAptitudeOutExpected
+        assertFileContent remoteRestartOutExpected.asFile(tmpdir), remoteRestartOutExpected
+        assertFileContent remoteGroupaddOutExpected.asFile(tmpdir), remoteGroupaddOutExpected
+        assertStringContent remoteUseraddOutExpected.replaced(tmpdir, tmpdir, "/tmp"), remoteUseraddOutExpected.toString()
+        assertStringContent remoteChownOutExpected.replaced(tmpdir, tmpdir, "/tmp"), remoteChownOutExpected.toString()
+        assertStringContent remoteChmodOutExpected.replaced(tmpdir, tmpdir, "/tmp"), remoteChmodOutExpected.toString()
+        assertStringContent remoteSshkeygenOutExpected.replaced(tmpdir, tmpdir, "/tmp"), remoteSshkeygenOutExpected.toString()
+        assertFileContent remoteSshdconfigExpected.asFile(tmpdir), remoteSshdconfigExpected
+        assertFileContent remoteFooAuthorizedkeysExpected.asFile(tmpdir), remoteFooAuthorizedkeysExpected
         // screen
-        assertFileContent autoScreenExpected.asFile(tmpdir), autoScreenExpected
-        assertStringContent autoScreenSessionExpected.replaced(tmpdir, tmpdir, "/tmp"), autoScreenSessionExpected.toString()
-        assertFileContent screenrcExpected.asFile(tmpdir), screenrcExpected
+        assertFileContent remoteAutoScreenExpected.asFile(tmpdir), remoteAutoScreenExpected
+        assertStringContent remoteAutoScreenSessionExpected.replaced(tmpdir, tmpdir, "/tmp"), remoteAutoScreenSessionExpected.toString()
+        assertFileContent remoteScreenrcExpected.asFile(tmpdir), remoteScreenrcExpected
+    }
+
+    @Test
+    void "remote require script"() {
+        copyUbuntuFiles tmpdir
+        copyUbuntu_12_04_Files tmpdir
+        remoteRequireGroupsFile.createFile tmpdir
+        remoteRequirePasswdFile.createFile tmpdir
+
+        loader.loadService profile.resource, null
+        def profile = registry.getService("profile")[0]
+        setupUbuntuProperties profile, tmpdir
+        loader.loadService remoteRequireService.resource, profile
+
+        registry.allServices.each { it.call() }
+        log.info "Run service again to ensure that configuration is not set double."
+        registry.allServices.each { it.call() }
+
+        assertFileContent remoteRequireGroupaddOutExpected.asFile(tmpdir), remoteRequireGroupaddOutExpected
+        assertStringContent remoteRequireUseraddOutExpected.replaced(tmpdir, tmpdir, "/tmp"), remoteRequireUseraddOutExpected.toString()
+        assertStringContent remoteRequireChownOutExpected.replaced(tmpdir, tmpdir, "/tmp"), remoteRequireChownOutExpected.toString()
+        assertStringContent remoteChmodOutExpected.replaced(tmpdir, tmpdir, "/tmp"), remoteChmodOutExpected.toString()
+        assertFileContent remoteRequireChpasswdOutExpected.asFile(tmpdir), remoteRequireChpasswdOutExpected
+        assertStringContent remoteRequireSshkeygenOutExpected.replaced(tmpdir, tmpdir, "/tmp"), remoteRequireSshkeygenOutExpected.toString()
+        assertFileContent remoteSshdconfigExpected.asFile(tmpdir), remoteSshdconfigExpected
+        assertFileContent remoteRequireFooAuthorizedkeysExpected.asFile(tmpdir), remoteRequireFooAuthorizedkeysExpected
+        // screen
+        assertFileContent remoteAutoScreenExpected.asFile(tmpdir), remoteAutoScreenExpected
+        assertStringContent remoteAutoScreenSessionExpected.replaced(tmpdir, tmpdir, "/tmp"), remoteAutoScreenSessionExpected.toString()
+        assertFileContent remoteScreenrcExpected.asFile(tmpdir), remoteScreenrcExpected
     }
 }

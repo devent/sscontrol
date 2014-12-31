@@ -1,0 +1,6 @@
+-N somepass -f /tmp/home/foo/.ssh/id_rsa
+-N somepass -f /tmp/home/bar/.ssh/id_rsa
+-N somepass -f /tmp/home/baz/.ssh/id_rsa
+-N somepass -f /tmp/home/foo/.ssh/id_rsa
+-N somepass -f /tmp/home/bar/.ssh/id_rsa
+-N somepass -f /tmp/home/baz/.ssh/id_rsa

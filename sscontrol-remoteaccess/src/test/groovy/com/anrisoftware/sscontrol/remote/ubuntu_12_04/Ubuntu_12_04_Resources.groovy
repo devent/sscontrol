@@ -24,7 +24,7 @@ import static org.apache.commons.io.FileUtils.*
 import com.anrisoftware.sscontrol.remote.resources.ResourcesUtils
 
 /**
- * Remote Access/Ubuntu 12.04 resources.
+ * <i>Remote Access Ubuntu 12.04</i> resources.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
@@ -33,27 +33,39 @@ enum Ubuntu_12_04_Resources {
 
     profile("UbuntuProfile.groovy", Ubuntu_12_04_Resources.class.getResource("UbuntuProfile.groovy")),
     remoteService("Remote.groovy", Ubuntu_12_04_Resources.class.getResource("Remote.groovy")),
+    remoteRequireService("Remote.groovy", Ubuntu_12_04_Resources.class.getResource("RemoteRequire.groovy")),
+    // commands
     sshkeygenCommand("/usr/bin/ssh-keygen", Ubuntu_12_04_Resources.class.getResource("echo_command.txt")),
+    // files
     groupsFile("/etc/group", Ubuntu_12_04_Resources.class.getResource("group.txt")),
     passwdFile("/etc/passwd", Ubuntu_12_04_Resources.class.getResource("passwd.txt")),
     sshdconfigFile("/etc/ssh/sshd_config", Ubuntu_12_04_Resources.class.getResource("sshd_config.txt")),
-    fooRemotePub("fooremote.pub", Ubuntu_12_04_Resources.class.getResource("fooremote_pub.txt")),
-    barRemotePub("barremote.pub", Ubuntu_12_04_Resources.class.getResource("barremote_pub.txt")),
-    aptitudeOutExpected("/usr/bin/aptitude.out", Ubuntu_12_04_Resources.class.getResource("aptitude_out_excepted.txt")),
-    restartOutExpected("/sbin/restart.out", Ubuntu_12_04_Resources.class.getResource("restart_out_excepted.txt")),
-    useraddOutExpected("/usr/sbin/useradd.out", Ubuntu_12_04_Resources.class.getResource("useradd_out_excepted.txt")),
-    groupaddOutExpected("/usr/sbin/groupadd.out", Ubuntu_12_04_Resources.class.getResource("groupadd_out_excepted.txt")),
-    chownOutExpected("/bin/chown.out", Ubuntu_12_04_Resources.class.getResource("chown_out_excepted.txt")),
-    chmodOutExpected("/bin/chmod.out", Ubuntu_12_04_Resources.class.getResource("chmod_out_excepted.txt")),
-    chpasswdOutExpected("/usr/sbin/chpasswd.out", Ubuntu_12_04_Resources.class.getResource("chpasswd_out_excepted.txt")),
-    sshkeygenOutExpected("/usr/bin/ssh-keygen.out", Ubuntu_12_04_Resources.class.getResource("sshkeygen_out_expected.txt")),
-    sshdconfigExpected("/etc/ssh/sshd_config", Ubuntu_12_04_Resources.class.getResource("sshd_config_expected.txt")),
-    deventAuthorizedkeysExpected("/tmp/home/devent/.ssh/authorized_keys", Ubuntu_12_04_Resources.class.getResource("devent_authorizedkeys_expected.txt")),
-    fooAuthorizedkeysExpected("/home/foo/.ssh/authorized_keys", Ubuntu_12_04_Resources.class.getResource("foo_authorizedkeys_expected.txt")),
+    fooPub("foo.pub", Ubuntu_12_04_Resources.class.getResource("foo_pub.txt")),
+    barPub("bar.pub", Ubuntu_12_04_Resources.class.getResource("bar_pub.txt")),
+    bazPub("baz.pub", Ubuntu_12_04_Resources.class.getResource("baz_pub.txt")),
+    // remote expected
+    remoteAptitudeOutExpected("/usr/bin/aptitude.out", Ubuntu_12_04_Resources.class.getResource("remote_aptitude_out_excepted.txt")),
+    remoteRestartOutExpected("/sbin/restart.out", Ubuntu_12_04_Resources.class.getResource("remote_restart_out_excepted.txt")),
+    remoteUseraddOutExpected("/usr/sbin/useradd.out", Ubuntu_12_04_Resources.class.getResource("remote_useradd_out_excepted.txt")),
+    remoteGroupaddOutExpected("/usr/sbin/groupadd.out", Ubuntu_12_04_Resources.class.getResource("remote_groupadd_out_excepted.txt")),
+    remoteChownOutExpected("/bin/chown.out", Ubuntu_12_04_Resources.class.getResource("remote_chown_out_excepted.txt")),
+    remoteChmodOutExpected("/bin/chmod.out", Ubuntu_12_04_Resources.class.getResource("remote_chmod_out_excepted.txt")),
+    remoteSshkeygenOutExpected("/usr/bin/ssh-keygen.out", Ubuntu_12_04_Resources.class.getResource("remote_sshkeygen_out_expected.txt")),
+    remoteSshdconfigExpected("/etc/ssh/sshd_config", Ubuntu_12_04_Resources.class.getResource("remote_sshd_config_expected.txt")),
+    remoteFooAuthorizedkeysExpected("/home/foo/.ssh/authorized_keys", Ubuntu_12_04_Resources.class.getResource("remote_foo_authorizedkeys_expected.txt")),
+    remoteAutoScreenExpected("/usr/local/bin/auto_screen.sh", Ubuntu_12_04_Resources.class.getResource("remote_auto_screen_expected.txt")),
+    remoteAutoScreenSessionExpected("/home/foo/.bashrc", Ubuntu_12_04_Resources.class.getResource("remote_auto_screen_session_expected.txt")),
+    remoteScreenrcExpected("/home/foo/.screenrc", Ubuntu_12_04_Resources.class.getResource("remote_screenrc_expected.txt")),
+    // remote required expected
+    remoteRequireGroupsFile("/etc/group", Ubuntu_12_04_Resources.class.getResource("remoterequire_group.txt")),
+    remoteRequirePasswdFile("/etc/passwd", Ubuntu_12_04_Resources.class.getResource("remoterequire_passwd.txt")),
+    remoteRequireGroupaddOutExpected("/usr/sbin/groupadd.out", Ubuntu_12_04_Resources.class.getResource("remoterequire_groupadd_out_excepted.txt")),
+    remoteRequireUseraddOutExpected("/usr/sbin/useradd.out", Ubuntu_12_04_Resources.class.getResource("remoterequire_useradd_out_excepted.txt")),
+    remoteRequireChownOutExpected("/bin/chown.out", Ubuntu_12_04_Resources.class.getResource("remoterequire_chown_out_excepted.txt")),
+    remoteRequireChpasswdOutExpected("/usr/sbin/chpasswd.out", Ubuntu_12_04_Resources.class.getResource("remoterequire_chpasswd_out_excepted.txt")),
+    remoteRequireSshkeygenOutExpected("/usr/bin/ssh-keygen.out", Ubuntu_12_04_Resources.class.getResource("remoterequire_sshkeygen_out_expected.txt")),
+    remoteRequireFooAuthorizedkeysExpected("/home/foo/.ssh/authorized_keys", Ubuntu_12_04_Resources.class.getResource("remoterequire_foo_authorizedkeys_expected.txt")),
     foobarAuthorizedkeysExpected("/home/foobar/.ssh/authorized_keys", Ubuntu_12_04_Resources.class.getResource("foobar_authorizedkeys_expected.txt")),
-    autoScreenExpected("/usr/local/bin/auto_screen.sh", Ubuntu_12_04_Resources.class.getResource("auto_screen_expected.txt")),
-    autoScreenSessionExpected("/home/foo/.bashrc", Ubuntu_12_04_Resources.class.getResource("auto_screen_session_expected.txt")),
-    screenrcExpected("/home/foo/.screenrc", Ubuntu_12_04_Resources.class.getResource("screenrc_expected.txt")),
 
     static void copyUbuntu_12_04_Files(File parent) {
         sshkeygenCommand.createCommand parent

@@ -25,15 +25,12 @@ import javax.inject.Inject
 
 import com.anrisoftware.globalpom.textmatch.tokentemplate.TokenTemplate
 import com.anrisoftware.resources.templates.api.TemplateResource
-import com.anrisoftware.resources.templates.api.Templates
 import com.anrisoftware.resources.templates.api.TemplatesFactory
 import com.anrisoftware.sscontrol.core.service.LinuxScript
 import com.anrisoftware.sscontrol.remote.api.RemoteScript
 import com.anrisoftware.sscontrol.remote.service.RemoteService
-import com.anrisoftware.sscontrol.remote.user.GroupFactory
 import com.anrisoftware.sscontrol.remote.user.Require
 import com.anrisoftware.sscontrol.remote.user.User
-import com.anrisoftware.sscontrol.remote.user.UserFactory
 import com.anrisoftware.sscontrol.scripts.changefileowner.ChangeFileOwnerFactory
 import com.anrisoftware.sscontrol.scripts.unix.ScriptExecFactory
 
@@ -50,24 +47,10 @@ abstract class UserKeyScript implements RemoteScript {
     private UserKeyScriptLogger logg
 
     @Inject
-    UserFactory userFactory
-
-    @Inject
-    GroupFactory groupFactory
-
-    @Inject
     ScriptExecFactory scriptExecFactory
 
     @Inject
     ChangeFileOwnerFactory changeFileOwnerFactory
-
-    @Inject
-    TemplatesFactory templatesFactory
-
-    /**
-     * The {@link Templates} for the script.
-     */
-    Templates scriptTemplates
 
     /**
      * Resource create SSH/keys.
@@ -80,6 +63,13 @@ abstract class UserKeyScript implements RemoteScript {
     TemplateResource configTemplate
 
     LinuxScript script
+
+    @Inject
+    final void setTemplatesFactory(TemplatesFactory factory) {
+        def templates = factory.create "UserKeyScript"
+        this.createKeyTemplate = templates.getResource "createkey"
+        this.configTemplate = templates.getResource "config"
+    }
 
     @Override
     void deployRemoteScript(RemoteService service) {
@@ -291,9 +281,6 @@ abstract class UserKeyScript implements RemoteScript {
     @Override
     void setScript(LinuxScript script) {
         this.script = script
-        this.scriptTemplates = templatesFactory.create "UserKeyScript"
-        this.createKeyTemplate = scriptTemplates.getResource "createkey"
-        this.configTemplate = scriptTemplates.getResource "config"
     }
 
     @Override

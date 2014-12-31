@@ -18,15 +18,15 @@
  */
 package com.anrisoftware.sscontrol.remote.service;
 
-import com.anrisoftware.sscontrol.core.bindings.BindingsModule;
-import com.anrisoftware.sscontrol.core.debuglogging.DebugLoggingModule;
+import com.anrisoftware.globalpom.resources.ResourcesModule;
+import com.anrisoftware.sscontrol.core.groovy.StatementsMapModule;
 import com.anrisoftware.sscontrol.core.list.ListModule;
 import com.anrisoftware.sscontrol.remote.user.UserModule;
 import com.google.inject.AbstractModule;
 
 /**
  * Binds the remote access service.
- * 
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
@@ -35,8 +35,8 @@ class RemoteModule extends AbstractModule {
     @Override
     protected void configure() {
         install(new UserModule());
-        install(new DebugLoggingModule());
-        install(new BindingsModule());
         install(new ListModule());
+        install(new StatementsMapModule());
+        install(new ResourcesModule());
     }
 }

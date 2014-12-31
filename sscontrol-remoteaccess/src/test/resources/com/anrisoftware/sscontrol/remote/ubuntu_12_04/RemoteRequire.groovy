@@ -16,23 +16,24 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-remoteaccess. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.remote.service
+package com.anrisoftware.sscontrol.remote.ubuntu_12_04
 
 remote {
-    debug "openssh", facility: "AUTH", level: 4
-    bind all, port: 22
-    user "bar", password: "barpass", uid: 2001
-    user "baz", password: "bazpass", {
-        group "bazgroup", gid: 2001
-        home "/var/home/baz"
-        login "/bin/sh"
-        comment "Baz User"
-        passphrase "somepass"
-        require password, passphrase
-    }
     user "foo", password: "foopass", {
         passphrase "somepass"
-        access key: UbuntuResources.fooRemotePub.resource
-        access key: UbuntuResources.barRemotePub.resource
+        access key: Ubuntu_12_04_Resources.fooPub.resource
+        require password, passphrase
+    }
+    user "bar", password: "barpass", uid: 99, {
+        home "$tmp/home/bar"
+        group "bargroup", gid: 99
+        passphrase "somepass"
+        access key: Ubuntu_12_04_Resources.barPub.resource
+        require uid, group
+    }
+    user "baz", password: "bazpass", {
+        passphrase "somepass"
+        access key: Ubuntu_12_04_Resources.bazPub.resource
+        require access
     }
 }

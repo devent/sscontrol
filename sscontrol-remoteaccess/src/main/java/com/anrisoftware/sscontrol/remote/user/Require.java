@@ -20,7 +20,7 @@ package com.anrisoftware.sscontrol.remote.user;
 
 /**
  * Require user properties.
- * 
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
@@ -39,5 +39,15 @@ public enum Require {
     /**
      * Require user authorized keys.
      */
-    accesskeys;
+    access,
+
+    /**
+     * Require user ID.
+     */
+    uid,
+
+    /**
+     * Require user group ID.
+     */
+    group;
 }

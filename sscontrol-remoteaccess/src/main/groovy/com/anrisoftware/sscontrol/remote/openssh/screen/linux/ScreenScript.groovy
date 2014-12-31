@@ -27,18 +27,16 @@ import org.apache.commons.io.FileUtils
 
 import com.anrisoftware.globalpom.textmatch.tokentemplate.TokenTemplate
 import com.anrisoftware.resources.templates.api.TemplateResource
-import com.anrisoftware.resources.templates.api.Templates
 import com.anrisoftware.resources.templates.api.TemplatesFactory
 import com.anrisoftware.sscontrol.core.service.LinuxScript
 import com.anrisoftware.sscontrol.remote.api.RemoteScript
 import com.anrisoftware.sscontrol.remote.service.RemoteService
-import com.anrisoftware.sscontrol.remote.user.GroupFactory
 import com.anrisoftware.sscontrol.remote.user.User
 import com.anrisoftware.sscontrol.remote.user.UserFactory
 import com.anrisoftware.sscontrol.scripts.changefilemod.ChangeFileModFactory
 
 /**
- * screen script for local users.
+ * <i>Screen</i> script.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
@@ -50,20 +48,9 @@ abstract class ScreenScript implements RemoteScript {
     UserFactory userFactory
 
     @Inject
-    GroupFactory groupFactory
-
-    @Inject
-    TemplatesFactory templatesFactory
-
-    @Inject
     ChangeFileModFactory changeFileModFactory
 
     LinuxScript script
-
-    /**
-     * The {@link Templates} for the script.
-     */
-    Templates scriptTemplates
 
     /**
      * Resource create auto-screen script.
@@ -79,6 +66,14 @@ abstract class ScreenScript implements RemoteScript {
      * Resource create screen configuration.
      */
     TemplateResource screenConfigTemplate
+
+    @Inject
+    final void setTemplatesFactory(TemplatesFactory factory) {
+        def templates = factory.create "ScreenScript"
+        this.autoScreenTemplate = templates.getResource "autoscreen"
+        this.screenSessionTemplate = templates.getResource "screensession"
+        this.screenConfigTemplate = templates.getResource "screenconfig"
+    }
 
     @Override
     final void deployRemoteScript(RemoteService service) {
@@ -141,24 +136,21 @@ abstract class ScreenScript implements RemoteScript {
      * Returns the screen configurations.
      */
     List screenConfigurations(RemoteService service) {
+        def template = screenConfigTemplate
         [
-            new TokenTemplate(screenConfigTemplate.getText(true, "shelltitleConfig_search"), screenConfigTemplate.getText(true, "shelltitleConfig")),
-            new TokenTemplate(screenConfigTemplate.getText(true, "vbellConfig_search"), screenConfigTemplate.getText(true, "vbellConfig")),
-            new TokenTemplate(screenConfigTemplate.getText(true, "autodetachConfig_search"), screenConfigTemplate.getText(true, "autodetachConfig")),
-            new TokenTemplate(screenConfigTemplate.getText(true, "startupMessageConfig_search"), screenConfigTemplate.getText(true, "startupMessageConfig")),
-            new TokenTemplate(screenConfigTemplate.getText(true, "defScrollbackConfig_search"), screenConfigTemplate.getText(true, "defScrollbackConfig")),
-            new TokenTemplate(screenConfigTemplate.getText(true, "hardstatusAlwaysLastlineConfig_search"), screenConfigTemplate.getText(true, "hardstatusAlwaysLastlineConfig")),
-            new TokenTemplate(screenConfigTemplate.getText(true, "hardstatusStringConfig_search"), screenConfigTemplate.getText(true, "hardstatusStringConfig")),
+            new TokenTemplate(template.getText(true, "shelltitleConfig_search"), template.getText(true, "shelltitleConfig")),
+            new TokenTemplate(template.getText(true, "vbellConfig_search"), template.getText(true, "vbellConfig")),
+            new TokenTemplate(template.getText(true, "autodetachConfig_search"), template.getText(true, "autodetachConfig")),
+            new TokenTemplate(template.getText(true, "startupMessageConfig_search"), template.getText(true, "startupMessageConfig")),
+            new TokenTemplate(template.getText(true, "defScrollbackConfig_search"), template.getText(true, "defScrollbackConfig")),
+            new TokenTemplate(template.getText(true, "hardstatusAlwaysLastlineConfig_search"), template.getText(true, "hardstatusAlwaysLastlineConfig")),
+            new TokenTemplate(template.getText(true, "hardstatusStringConfig_search"), template.getText(true, "hardstatusStringConfig")),
         ]
     }
 
     @Override
     void setScript(LinuxScript script) {
         this.script = script
-        this.scriptTemplates = templatesFactory.create "ScreenScript"
-        this.autoScreenTemplate = scriptTemplates.getResource "autoscreen"
-        this.screenSessionTemplate = scriptTemplates.getResource "screensession"
-        this.screenConfigTemplate = scriptTemplates.getResource "screenconfig"
     }
 
     @Override

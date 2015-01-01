@@ -62,6 +62,7 @@ enum Ubuntu_12_04_Resources {
     remoteRequireGroupaddOutExpected("/usr/sbin/groupadd.out", Ubuntu_12_04_Resources.class.getResource("remoterequire_groupadd_out_excepted.txt")),
     remoteRequireUseraddOutExpected("/usr/sbin/useradd.out", Ubuntu_12_04_Resources.class.getResource("remoterequire_useradd_out_excepted.txt")),
     remoteRequireChownOutExpected("/bin/chown.out", Ubuntu_12_04_Resources.class.getResource("remoterequire_chown_out_excepted.txt")),
+    remoteRequireUsermodOutExpected("/usr/sbin/usermod.out", Ubuntu_12_04_Resources.class.getResource("remoterequire_usermod_out_excepted.txt")),
     remoteRequireChpasswdOutExpected("/usr/sbin/chpasswd.out", Ubuntu_12_04_Resources.class.getResource("remoterequire_chpasswd_out_excepted.txt")),
     remoteRequireSshkeygenOutExpected("/usr/bin/ssh-keygen.out", Ubuntu_12_04_Resources.class.getResource("remoterequire_sshkeygen_out_expected.txt")),
     remoteRequireFooAuthorizedkeysExpected("/home/foo/.ssh/authorized_keys", Ubuntu_12_04_Resources.class.getResource("remoterequire_foo_authorizedkeys_expected.txt")),

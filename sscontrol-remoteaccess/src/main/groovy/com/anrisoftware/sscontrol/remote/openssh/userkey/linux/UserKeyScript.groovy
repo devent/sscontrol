@@ -146,7 +146,7 @@ abstract class UserKeyScript implements RemoteScript {
                 command: script.chownCommand,
                 owner: user.uid,
                 ownerGroup:
-                user.group.gid,
+                user.groupId,
                 files: dir,
                 this, threads)()
     }
@@ -174,14 +174,15 @@ abstract class UserKeyScript implements RemoteScript {
             configAuthorizedKeysFile(authorizedKeysFile),
             configPasswordAuthenticationFile(passwordAuthentication),
             configXForwardingConfig(XForwarding),
-            syslogFacilityConfig(service.debug.args.facility),
-            logLevelConfig(service.debug.level),
+            syslogFacilityConfig(service.debugLogging("facility")["openssh"]),
+            logLevelConfig(service.debugLogging("level")["openssh"]),
         ]
     }
 
     List configPorts(RemoteService service) {
-        service.binding.addresses.inject([]) { acc, val ->
-            val.port ? acc << configPort(val.port) : acc
+        service.bindingAddresses.inject([]) { acc, address, ports ->
+            ports.each { acc << configPort(it) }
+            acc
         }
     }
 
@@ -192,8 +193,8 @@ abstract class UserKeyScript implements RemoteScript {
     }
 
     List configAddresses(RemoteService service) {
-        service.binding.addresses.inject([]) { acc, val ->
-            val.address ? acc << configAddress(val.address) : acc
+        service.bindingAddresses.inject([]) { acc, address, ports ->
+            acc << configAddress(address)
         }
     }
 

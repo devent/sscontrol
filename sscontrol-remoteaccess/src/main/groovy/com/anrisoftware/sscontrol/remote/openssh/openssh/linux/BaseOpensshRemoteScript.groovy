@@ -75,11 +75,14 @@ abstract class BaseOpensshRemoteScript extends LinuxScript {
     void setupDefaultBinding(RemoteService service) {
         def bindingAddress = profileProperty "default_binding_address", defaultProperties
         int bindingPort = profileNumberProperty "default_binding_port", defaultProperties
-        if (service.binding == null) {
+        if (service.bindingAddresses == null) {
             service.bind bindingAddress
         }
-        if (service.bindingPort == null) {
-            service.bind service.binding, port: bindingPort
+        def addresses = new HashMap(service.bindingAddresses)
+        addresses.each { address, ports ->
+            if (ports == null) {
+                service.bind address, port: bindingPort
+            }
         }
     }
 
@@ -91,7 +94,7 @@ abstract class BaseOpensshRemoteScript extends LinuxScript {
      */
     void setupDefaultDebug(RemoteService service) {
         def opensshFacility = profileProperty "default_debug_openssh_facility", defaultProperties
-        def opensshLevel = profileProperty "default_debug_openssh_level", defaultProperties
+        int opensshLevel = profileNumberProperty "default_debug_openssh_level", defaultProperties
         if (!service.debugLogging("facility") || !service.debugLogging("facility")["openssh"]) {
             service.debug "openssh", facility: opensshFacility
         }

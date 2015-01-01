@@ -20,16 +20,19 @@ package com.anrisoftware.sscontrol.remote.ubuntu_12_04
 
 remote {
     user "foo", password: "foopass", {
+        home "$tmp/home/foo"
         passphrase "somepass"
         access key: Ubuntu_12_04_Resources.fooPub.resource
-        require password, passphrase
+        require home, password, passphrase
     }
     user "bar", password: "barpass", uid: 99, {
         home "$tmp/home/bar"
+        login "/bin/sh"
+        comment "User Bar"
         group "bargroup", gid: 99
         passphrase "somepass"
         access key: Ubuntu_12_04_Resources.barPub.resource
-        require uid, group
+        require home, login, comment, uid, group
     }
     user "baz", password: "bazpass", {
         passphrase "somepass"

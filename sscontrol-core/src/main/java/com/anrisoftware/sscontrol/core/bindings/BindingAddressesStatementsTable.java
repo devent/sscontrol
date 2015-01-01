@@ -1,9 +1,28 @@
+/*
+ * Copyright 2013-2014 Erwin Müller <erwin.mueller@deventm.org>
+ *
+ * This file is part of sscontrol-core.
+ *
+ * sscontrol-core is free software: you can redistribute it and/or modify it
+ * under the terms of the GNU Affero General Public License as published by the
+ * Free Software Foundation, either version 3 of the License, or (at your
+ * option) any later version.
+ *
+ * sscontrol-core is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
+ * for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with sscontrol-core. If not, see <http://www.gnu.org/licenses/>.
+ */
 package com.anrisoftware.sscontrol.core.bindings;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.inject.Inject;
 
@@ -64,10 +83,10 @@ public class BindingAddressesStatementsTable {
         StatementsTable table = statementsTable;
         Map<String, Integer> port = table.tableKeys(BIND_KEY, PORT_KEY);
         if (port != null) {
-            for (String key : port.keySet()) {
+            for (String address : port.keySet()) {
                 List<Integer> list = new ArrayList<Integer>();
-                list.add(port.get(key));
-                map.put(key, list);
+                list.add(port.get(address));
+                map.put(address, list);
             }
         }
         Map<String, List<Integer>> portsmap;
@@ -80,6 +99,14 @@ public class BindingAddressesStatementsTable {
                 }
                 list.addAll(ports.getValue());
                 map.put(ports.getKey(), list);
+            }
+        }
+        if (map.size() == 0) {
+            Set<String> values = table.tableValues(BIND_KEY);
+            if (values != null) {
+                for (String address : values) {
+                    map.put(address, null);
+                }
             }
         }
         return map.size() == 0 ? null : map;

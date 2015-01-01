@@ -1,0 +1,10 @@
+-d /tmp/home/foo foo
+-d /tmp/home/bar bar
+-u 99 bar
+-s /bin/sh bar
+-C User Bar bar
+-d /tmp/home/foo foo
+-d /tmp/home/bar bar
+-u 99 bar
+-s /bin/sh bar
+-C User Bar bar

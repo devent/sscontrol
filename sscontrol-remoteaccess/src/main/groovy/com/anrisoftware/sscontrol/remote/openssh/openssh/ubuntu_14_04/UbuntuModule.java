@@ -25,13 +25,14 @@ import com.anrisoftware.sscontrol.remote.openssh.users.ubuntu_14_04.UsersUbuntu_
 import com.anrisoftware.sscontrol.scripts.changefilemod.ChangeFileModModule;
 import com.anrisoftware.sscontrol.scripts.changefileowner.ChangeFileOwnerModule;
 import com.anrisoftware.sscontrol.scripts.localchangepassword.LocalChangePasswordModule;
+import com.anrisoftware.sscontrol.scripts.localchangeuser.LocalChangeUserModule;
 import com.anrisoftware.sscontrol.scripts.localgroupadd.LocalGroupAddModule;
 import com.anrisoftware.sscontrol.scripts.localuseradd.LocalUserAddModule;
 import com.anrisoftware.sscontrol.scripts.unix.UnixScriptsModule;
 import com.google.inject.AbstractModule;
 
 /**
- * Installs the Remote Access/Ubuntu 14.04 script.
+ * <i>OpenSSH Ubuntu 14.04</i> script module.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
@@ -45,6 +46,7 @@ public class UbuntuModule extends AbstractModule {
         install(new LocalUserAddModule());
         install(new ChangeFileOwnerModule());
         install(new ChangeFileModModule());
+        install(new LocalChangeUserModule());
         install(new UnixScriptsModule());
         install(new UnixScriptsModule.ExecCommandModule());
         install(new UsersUbuntu_14_04_Module());

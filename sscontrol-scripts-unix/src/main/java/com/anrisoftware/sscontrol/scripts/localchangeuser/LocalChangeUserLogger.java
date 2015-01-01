@@ -37,10 +37,7 @@ import com.anrisoftware.globalpom.log.AbstractLogger;
  */
 class LocalChangeUserLogger extends AbstractLogger {
 
-    private static final String GROUPS_KEY = "groups";
-    private static final String SHELL_KEY = "shell";
     private static final String COMMAND_KEY = "command";
-    private static final String APPEND_KEY = "append";
     private static final String USER_NAME_KEY = "userName";
 
     enum _ {
@@ -84,24 +81,6 @@ class LocalChangeUserLogger extends AbstractLogger {
     void userName(Map<String, Object> args, Object parent) {
         Object object = args.get(USER_NAME_KEY);
         notNull(object, argument_null.toString(), USER_NAME_KEY);
-    }
-
-    void append(Map<String, Object> args, Object parent) {
-        Object object = args.get(APPEND_KEY);
-        if (object != null) {
-        }
-    }
-
-    void shell(Map<String, Object> args, Object parent) {
-        Object object = args.get(SHELL_KEY);
-        if (object != null) {
-        }
-    }
-
-    void groups(Map<String, Object> args, Object parent) {
-        Object object = args.get(GROUPS_KEY);
-        if (object != null) {
-        }
     }
 
     void userModified(Object parent, ProcessTask task, Map<String, Object> args) {

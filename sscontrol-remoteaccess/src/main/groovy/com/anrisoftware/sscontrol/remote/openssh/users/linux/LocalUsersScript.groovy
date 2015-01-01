@@ -32,6 +32,7 @@ import com.anrisoftware.sscontrol.remote.user.Require
 import com.anrisoftware.sscontrol.remote.user.User
 import com.anrisoftware.sscontrol.remote.user.UserFactory
 import com.anrisoftware.sscontrol.scripts.localchangepassword.LocalChangePasswordFactory
+import com.anrisoftware.sscontrol.scripts.localchangeuser.LocalChangeUserFactory
 import com.anrisoftware.sscontrol.scripts.localgroupadd.LocalGroupAddFactory
 import com.anrisoftware.sscontrol.scripts.localuseradd.LocalUserAddFactory
 
@@ -56,21 +57,47 @@ abstract class LocalUsersScript implements RemoteScript {
     @Inject
     LocalUserAddFactory localUserAddFactory
 
+    @Inject
+    LocalChangeUserFactory localChangeUserFactory
+
     LinuxScript script
 
     @Override
     void deployRemoteScript(RemoteService service) {
-        createLocalGroups()
-        createLocalUsers()
+        def groups = loadGroups()
+        def users = loadUsers()
+        int gidOffset = gidOffset(groups)
+        int uidOffset = uidOffset(users)
+        createLocalGroups groups, gidOffset
+        createLocalUsers users, uidOffset
+    }
+
+    int gidOffset(List groups) {
+        int lastgid = minimumGid
+        groups.each {
+            if (it.gid == lastgid) {
+                lastgid++
+            }
+        }
+        return lastgid
+    }
+
+    int uidOffset(List users) {
+        int lastuid = minimumUid
+        users.each {
+            if (it.uid == lastuid) {
+                lastuid++
+            }
+        }
+        return lastuid
     }
 
     /**
      * Create local user group.
      */
-    void createLocalGroups() {
+    void createLocalGroups(List groups, int gidOffset) {
         def service = getService()
-        def groups = loadGroups()
-        int id = minimumGid
+        int id = gidOffset
         service.users.each { User user ->
             if (user.group == null) {
                 user.group user.name
@@ -78,7 +105,7 @@ abstract class LocalUsersScript implements RemoteScript {
             def found = groups.find { it.name == user.group }
             if (found) {
                 groupHaveId found, id, { id++ }
-                user.groupId = found.gid
+                user.group user.group, gid: found.gid
             }
             if (!found) {
                 updateGroupId user, id, { id++ }
@@ -109,16 +136,17 @@ abstract class LocalUsersScript implements RemoteScript {
     /**
      * Create local users.
      */
-    void createLocalUsers() {
+    void createLocalUsers(List users, int uidOffset) {
         def service = getService()
-        def users = loadUsers()
-        int id = minimumUid
+        int id = uidOffset
         service.users.each { User user ->
             Map found = users.find { it.name == user.name }
             if (found) {
-                user.home = found.home
+                updateUserHome user, found.home
                 userHaveId found, id, { id++ }
-                user.uid = found.uid
+                updateUserId user, found.uid
+                updateUserLogin user, found.login
+                updateUserComment user, found.comment
                 updateUserPassword user
             }
             if (!found) {
@@ -155,13 +183,117 @@ abstract class LocalUsersScript implements RemoteScript {
     }
 
     /**
+     * Updates the user home directory.
+     *
+     * @param user
+     *            the {@link User}.
+     *
+     * @param foundHome
+     *            the existing user home directory.
+     */
+    void updateUserHome(User user, String foundHome) {
+        if (user.home == null) {
+            user.home foundHome
+            return
+        }
+        if (!user.requires?.contains(Require.home)) {
+            return
+        }
+        localChangeUserFactory.create(
+                log: log,
+                command: userModCommand,
+                name: distributionName,
+                userName: user.name,
+                home: user.home,
+                this, threads)()
+    }
+
+    /**
+     * Updates the user ID.
+     *
+     * @param user
+     *            the {@link User}.
+     *
+     * @param foundId
+     *            the existing user ID.
+     */
+    void updateUserId(User user, int foundId) {
+        if (user.uid == null) {
+            user.user uid: foundId
+            return
+        }
+        if (!user.requires?.contains(Require.uid)) {
+            return
+        }
+        localChangeUserFactory.create(
+                log: log,
+                command: userModCommand,
+                name: distributionName,
+                userName: user.name,
+                userId: user.uid,
+                this, threads)()
+    }
+
+    /**
+     * Updates the user log-in shell.
+     *
+     * @param user
+     *            the {@link User}.
+     *
+     * @param foundLogin
+     *            the existing user log-in shell.
+     */
+    void updateUserLogin(User user, String foundLogin) {
+        if (user.login == null) {
+            user.login foundLogin
+            return
+        }
+        if (!user.requires?.contains(Require.login)) {
+            return
+        }
+        localChangeUserFactory.create(
+                log: log,
+                command: userModCommand,
+                name: distributionName,
+                userName: user.name,
+                shell: user.login,
+                this, threads)()
+    }
+
+    /**
+     * Updates the user comment.
+     *
+     * @param user
+     *            the {@link User}.
+     *
+     * @param foundComment
+     *            the existing user comment.
+     */
+    void updateUserComment(User user, String foundComment) {
+        if (user.comment == null) {
+            user.comment foundComment
+            return
+        }
+        if (!user.requires?.contains(Require.comment)) {
+            return
+        }
+        localChangeUserFactory.create(
+                log: log,
+                command: userModCommand,
+                name: distributionName,
+                userName: user.name,
+                comment: user.comment,
+                this, threads)()
+    }
+
+    /**
      * Updates the user password.
      *
      * @param user
      *            the {@link User}.
      */
     void updateUserPassword(User user) {
-        if (!user.requires.contains(Require.password)) {
+        if (!user.requires?.contains(Require.password)) {
             return
         }
         localChangePasswordFactory.create(

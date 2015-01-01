@@ -70,7 +70,7 @@ public class User {
 
     private StatementsMap setupStatemetsMap(Map<String, Object> args,
             StatementsMapFactory factory) {
-        StatementsMap map = factory.create(factory, USER_KEY);
+        StatementsMap map = factory.create(this, USER_KEY);
         map.addAllowed(USER_KEY, PASSWORD_KEY, UID_KEY, PASSPHRASE_KEY,
                 HOME_KEY, REQUIRE_KEY, ACCESS_KEY, GROUP_KEY, COMMENT_KEY,
                 LOGIN_KEY);
@@ -284,6 +284,18 @@ public class User {
         statementsMap.putValue(REQUIRE_KEY, Require.access);
     }
 
+    public void home() {
+        statementsMap.putValue(REQUIRE_KEY, Require.home);
+    }
+
+    public void login() {
+        statementsMap.putValue(REQUIRE_KEY, Require.login);
+    }
+
+    public void comment() {
+        statementsMap.putValue(REQUIRE_KEY, Require.comment);
+    }
+
     public void uid() {
         statementsMap.putValue(REQUIRE_KEY, Require.uid);
     }
@@ -298,7 +310,6 @@ public class User {
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this).append(SERVICE, service)
-                .append(statementsMap.toString()).toString();
+        return new ToStringBuilder(this).append(SERVICE, service).toString();
     }
 }

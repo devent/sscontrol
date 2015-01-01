@@ -37,6 +37,7 @@ enum UbuntuResources {
     groupaddCommand("/usr/sbin/groupadd", UbuntuResources.class.getResource("echo_command.txt")),
     chownCommand("/bin/chown", UbuntuResources.class.getResource("echo_command.txt")),
     chmodCommand("/bin/chmod", UbuntuResources.class.getResource("echo_command.txt")),
+    usermodCommand("/usr/sbin/usermod", UbuntuResources.class.getResource("echo_command.txt")),
     chpasswdCommand("/usr/sbin/chpasswd", UbuntuResources.class.getResource("echo_command.txt")),
     localBinDirectory("/usr/local/bin", null),
     fooRemotePub("fooremote.pub", UbuntuResources.class.getResource("fooremote_pub.txt")),
@@ -49,6 +50,7 @@ enum UbuntuResources {
         groupaddCommand.createCommand parent
         chownCommand.createCommand parent
         chmodCommand.createCommand parent
+        usermodCommand.createCommand parent
         chpasswdCommand.createCommand parent
         localBinDirectory.asFile(parent).mkdirs()
     }
@@ -61,6 +63,7 @@ enum UbuntuResources {
         entry.user_add_command useraddCommand.asFile(parent)
         entry.chmod_command chmodCommand.asFile(parent)
         entry.chown_command chownCommand.asFile(parent)
+        entry.user_mod_command usermodCommand.asFile(parent)
         entry.change_password_command chpasswdCommand.asFile(parent)
         entry.local_bin_directory localBinDirectory.asFile(parent)
     }

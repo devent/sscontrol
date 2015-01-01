@@ -86,6 +86,7 @@ class RemoteTest extends RemoteTestUtil {
         assertStringContent remoteRequireUseraddOutExpected.replaced(tmpdir, tmpdir, "/tmp"), remoteRequireUseraddOutExpected.toString()
         assertStringContent remoteRequireChownOutExpected.replaced(tmpdir, tmpdir, "/tmp"), remoteRequireChownOutExpected.toString()
         assertStringContent remoteChmodOutExpected.replaced(tmpdir, tmpdir, "/tmp"), remoteChmodOutExpected.toString()
+        assertStringContent remoteRequireUsermodOutExpected.replaced(tmpdir, tmpdir, "/tmp"), remoteRequireUsermodOutExpected.toString()
         assertFileContent remoteRequireChpasswdOutExpected.asFile(tmpdir), remoteRequireChpasswdOutExpected
         assertStringContent remoteRequireSshkeygenOutExpected.replaced(tmpdir, tmpdir, "/tmp"), remoteRequireSshkeygenOutExpected.toString()
         assertFileContent remoteSshdconfigExpected.asFile(tmpdir), remoteSshdconfigExpected

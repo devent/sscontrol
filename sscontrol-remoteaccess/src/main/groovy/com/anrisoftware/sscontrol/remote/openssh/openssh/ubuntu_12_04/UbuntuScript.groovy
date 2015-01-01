@@ -28,7 +28,7 @@ import com.anrisoftware.sscontrol.scripts.unix.InstallPackagesFactory
 import com.anrisoftware.sscontrol.scripts.unix.RestartServicesFactory
 
 /**
- * Remote script for OpenSSH/Ubuntu 12.04.
+ * <i>OpenSSH Ubuntu 12.04</i> script.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0

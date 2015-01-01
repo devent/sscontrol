@@ -16,53 +16,27 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-remoteaccess. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.remote.user;
+package com.anrisoftware.sscontrol.remote.ubuntu_14_04
 
-/**
- * Require user properties.
- *
- * @author Erwin Mueller, erwin.mueller@deventm.org
- * @since 1.0
- */
-public enum Require {
-
-    /**
-     * Require user password.
-     */
-    password,
-
-    /**
-     * Require user key passphrase.
-     */
-    passphrase,
-
-    /**
-     * Require user authorized keys.
-     */
-    access,
-
-    /**
-     * Require user ID.
-     */
-    uid,
-
-    /**
-     * Require user home directory.
-     */
-    home,
-
-    /**
-     * Require user log-in shell.
-     */
-    login,
-
-    /**
-     * Require user comment.
-     */
-    comment,
-
-    /**
-     * Require user group.
-     */
-    group;
+remote {
+    user "foo", password: "foopass", {
+        home "$tmp/home/foo"
+        passphrase "somepass"
+        access key: Ubuntu_14_04_Resources.fooPub.resource
+        require home, password, passphrase
+    }
+    user "bar", password: "barpass", uid: 99, {
+        home "$tmp/home/bar"
+        login "/bin/sh"
+        comment "User Bar"
+        group "bargroup", gid: 99
+        passphrase "somepass"
+        access key: Ubuntu_14_04_Resources.barPub.resource
+        require home, login, comment, uid, group
+    }
+    user "baz", password: "bazpass", {
+        passphrase "somepass"
+        access key: Ubuntu_14_04_Resources.bazPub.resource
+        require access
+    }
 }

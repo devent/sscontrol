@@ -35,7 +35,7 @@ import com.google.inject.assistedinject.Assisted;
 
 /**
  * Modifies the local user.
- * 
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
@@ -73,9 +73,6 @@ public class LocalChangeUser implements Callable<LocalChangeUser> {
         this.threads = threads;
         log.command(args, parent);
         log.userName(args, parent);
-        log.groups(args, parent);
-        log.append(args, parent);
-        log.shell(args, parent);
     }
 
     @Override

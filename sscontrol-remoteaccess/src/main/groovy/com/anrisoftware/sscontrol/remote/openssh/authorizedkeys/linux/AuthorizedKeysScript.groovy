@@ -64,13 +64,13 @@ abstract class AuthorizedKeysScript implements RemoteScript {
         if (!file.isFile()) {
             return
         }
-        if (user.requires.contains(Require.access)) {
+        if (user.requires?.contains(Require.access)) {
             file.delete()
         }
     }
 
     void copyAuthorizedKeys(User user, File file) {
-        if (user.keys.size() == 0) {
+        if (!user.accessKeys) {
             return
         }
         def log = log

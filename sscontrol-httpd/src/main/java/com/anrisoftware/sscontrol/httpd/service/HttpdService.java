@@ -62,7 +62,6 @@ public interface HttpdService extends Service {
     /**
      * Returns the binding addresses.
      * <p>
-     * The example returns the following map for the key "storage":
      *
      * <pre>
      * {["0.0.0.0": [80], "192.168.0.2"]: [8082, 8084]}

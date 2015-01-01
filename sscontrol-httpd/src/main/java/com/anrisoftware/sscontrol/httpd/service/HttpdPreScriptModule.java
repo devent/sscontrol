@@ -29,7 +29,7 @@ import com.google.inject.multibindings.Multibinder;
 
 /**
  * Installs the <i>httpd</i> pre-script modules.
- * 
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */

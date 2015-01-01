@@ -74,9 +74,8 @@ public class User {
         map.addAllowed(USER_KEY, PASSWORD_KEY, UID_KEY, PASSPHRASE_KEY,
                 HOME_KEY, REQUIRE_KEY, ACCESS_KEY, GROUP_KEY, COMMENT_KEY,
                 LOGIN_KEY);
-        map.setAllowValue(true, USER_KEY,
-                PASSPHRASE_KEY, HOME_KEY, REQUIRE_KEY, GROUP_KEY, COMMENT_KEY,
-                LOGIN_KEY);
+        map.setAllowValue(true, USER_KEY, PASSPHRASE_KEY, HOME_KEY,
+                REQUIRE_KEY, GROUP_KEY, COMMENT_KEY, LOGIN_KEY);
         map.setAllowMultiValue(true, REQUIRE_KEY);
         map.addAllowedKeys(USER_KEY, PASSWORD_KEY, UID_KEY);
         map.addAllowedKeys(ACCESS_KEY, KEY_KEY);
@@ -191,7 +190,11 @@ public class User {
      * @return the user home {@link String} directory or {@code null}.
      */
     public String getHome() {
-        return statementsMap.value(HOME_KEY);
+        Object value = statementsMap.value(HOME_KEY);
+        if (value == null) {
+            return null;
+        }
+        return value.toString();
     }
 
     /**

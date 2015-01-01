@@ -25,9 +25,6 @@ import javax.inject.Inject
 import org.joda.time.Duration
 import org.stringtemplate.v4.ST
 
-import com.anrisoftware.sscontrol.core.bindings.BindingFactory
-import com.anrisoftware.sscontrol.core.debuglogging.DebugLogging
-import com.anrisoftware.sscontrol.core.debuglogging.DebugLoggingProperty
 import com.anrisoftware.sscontrol.core.service.LinuxScript
 import com.anrisoftware.sscontrol.remote.api.RemoteScript
 import com.anrisoftware.sscontrol.remote.service.RemoteService
@@ -44,23 +41,23 @@ abstract class BaseOpensshRemoteScript extends LinuxScript {
     @Inject
     Map<String, RemoteScript> remoteScript
 
-    @Inject
-    private BindingFactory bindingFactory
-
-    @Inject
-    private DebugLoggingProperty debugLoggingProperty
-
     @Override
     def run() {
         setupParentScript()
-        setupDefaultDebug()
-        setupDefaultBinding()
+        setupDefaultDebug service
+        setupDefaultBinding service
         beforeConfiguration()
         remoteScript.users?.deployRemoteScript service
         remoteScript.userkey?.deployRemoteScript service
         remoteScript.authorizedkeys?.deployRemoteScript service
         remoteScript.screen?.deployRemoteScript service
         remoteScript.fail2ban?.deployRemoteScript service
+    }
+
+    /**
+     * Deploys the configuration before the script configuration.
+     */
+    void beforeConfiguration() {
     }
 
     void setupParentScript() {
@@ -70,41 +67,37 @@ abstract class BaseOpensshRemoteScript extends LinuxScript {
     }
 
     /**
-     * Deploys the configuration before the script configuration.
+     * Setups the default binding addresses and ports.
+     *
+     * @param service
+     *            the {@link RemoteService} service.
      */
-    void beforeConfiguration() {
-    }
-
-    /**
-     * Returns the default bind addresses and ports.
-     *
-     * <ul>
-     * <li>profile property {@code "default_binding"}</li>
-     * </ul>
-     *
-     * @see #getDefaultProperties()
-     */
-    List getDefaultBinding() {
-        profileListProperty "default_binding", defaultProperties
-    }
-
-    /**
-     * Returns the default debug logging.
-     *
-     * <ul>
-     * <li>profile property {@code "default_debug"}</li>
-     * </ul>
-     *
-     * @see #getDefaultProperties()
-     */
-    DebugLogging getDefaultDebug() {
-        def str = profileProperty "default_debug", defaultProperties
-        def args = str.split(",").inject([:]) { acc, val ->
-            def nameAndValue = val.split(":")
-            acc[nameAndValue[0].trim()] = nameAndValue[1].trim()
-            acc
+    void setupDefaultBinding(RemoteService service) {
+        def bindingAddress = profileProperty "default_binding_address", defaultProperties
+        int bindingPort = profileNumberProperty "default_binding_port", defaultProperties
+        if (service.binding == null) {
+            service.bind bindingAddress
         }
-        debugLoggingFactory.create args
+        if (service.bindingPort == null) {
+            service.bind service.binding, port: bindingPort
+        }
+    }
+
+    /**
+     * Setups the default debug logging.
+     *
+     * @param service
+     *            the {@link RemoteService} service.
+     */
+    void setupDefaultDebug(RemoteService service) {
+        def opensshFacility = profileProperty "default_debug_openssh_facility", defaultProperties
+        def opensshLevel = profileProperty "default_debug_openssh_level", defaultProperties
+        if (!service.debugLogging("facility") || !service.debugLogging("facility")["openssh"]) {
+            service.debug "openssh", facility: opensshFacility
+        }
+        if (!service.debugLogging("level") || !service.debugLogging("level")["openssh"]) {
+            service.debug "openssh", level: opensshLevel
+        }
     }
 
     /**
@@ -409,24 +402,6 @@ abstract class BaseOpensshRemoteScript extends LinuxScript {
      */
     boolean getDeployFail2ban() {
         profileBooleanProperty "deploy_fail2ban", defaultProperties
-    }
-
-    /**
-     * Setups the default binding addresses and ports.
-     */
-    void setupDefaultBinding() {
-        if (service.binding.size() == 0) {
-            defaultBinding.each { service.binding.addAddress(it) }
-        }
-    }
-
-    /**
-     * Setups the default debug logging.
-     */
-    void setupDefaultDebug() {
-        if (service.debug == null) {
-            service.debug = debugLoggingProperty.defaultDebug this
-        }
     }
 
     @Override

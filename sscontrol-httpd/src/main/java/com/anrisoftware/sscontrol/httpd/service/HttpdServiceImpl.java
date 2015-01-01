@@ -22,7 +22,6 @@ import static com.anrisoftware.sscontrol.httpd.service.HttpdFactory.NAME;
 import groovy.lang.Script;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -36,6 +35,9 @@ import com.anrisoftware.sscontrol.core.api.Service;
 import com.anrisoftware.sscontrol.core.api.ServiceException;
 import com.anrisoftware.sscontrol.core.api.ServiceScriptFactory;
 import com.anrisoftware.sscontrol.core.bindings.BindingAddress;
+import com.anrisoftware.sscontrol.core.bindings.BindingAddressesStatementsTable;
+import com.anrisoftware.sscontrol.core.bindings.BindingAddressesStatementsTableFactory;
+import com.anrisoftware.sscontrol.core.groovy.StatementsException;
 import com.anrisoftware.sscontrol.core.groovy.StatementsTable;
 import com.anrisoftware.sscontrol.core.groovy.StatementsTableFactory;
 import com.anrisoftware.sscontrol.core.service.AbstractService;
@@ -51,12 +53,6 @@ import com.anrisoftware.sscontrol.httpd.domain.SslDomainFactory;
  */
 @SuppressWarnings("serial")
 class HttpdServiceImpl extends AbstractService implements HttpdService {
-
-    private static final String PORTS_KEY = "ports";
-
-    private static final String PORT_KEY = "port";
-
-    private static final String BIND_KEY = "bind";
 
     private static final String DEBUG_KEY = "debug";
 
@@ -74,6 +70,8 @@ class HttpdServiceImpl extends AbstractService implements HttpdService {
     private SslDomainFactory sslDomainFactory;
 
     private StatementsTable statementsTable;
+
+    private BindingAddressesStatementsTable bindingAddresses;
 
     HttpdServiceImpl() {
         this.domains = new ArrayList<Domain>();
@@ -97,10 +95,15 @@ class HttpdServiceImpl extends AbstractService implements HttpdService {
     @Inject
     public final void setStatementsTable(StatementsTableFactory factory) {
         StatementsTable table = factory.create(factory, NAME);
-        table.addAllowed(DEBUG_KEY, BIND_KEY);
+        table.addAllowed(DEBUG_KEY);
         table.setAllowArbitraryKeys(true, DEBUG_KEY);
-        table.addAllowedKeys(BIND_KEY, PORT_KEY, PORTS_KEY);
         this.statementsTable = table;
+    }
+
+    @Inject
+    public final void setBindingAddressesStatementsTable(
+            BindingAddressesStatementsTableFactory factory) {
+        this.bindingAddresses = factory.create(this, NAME);
     }
 
     @Override
@@ -127,29 +130,7 @@ class HttpdServiceImpl extends AbstractService implements HttpdService {
 
     @Override
     public Map<String, List<Integer>> getBindingAddresses() {
-        Map<String, List<Integer>> map = new HashMap<String, List<Integer>>();
-        StatementsTable table = statementsTable;
-        Map<String, Integer> port = table.tableKeys(BIND_KEY, PORT_KEY);
-        if (port != null) {
-            for (String key : port.keySet()) {
-                List<Integer> list = new ArrayList<Integer>();
-                list.add(port.get(key));
-                map.put(key, list);
-            }
-        }
-        Map<String, List<Integer>> portsmap;
-        portsmap = table.tableKeysAsList(BIND_KEY, PORTS_KEY);
-        if (portsmap != null) {
-            for (Map.Entry<String, List<Integer>> ports : portsmap.entrySet()) {
-                List<Integer> list = map.get(ports.getKey());
-                if (list == null) {
-                    list = new ArrayList<Integer>();
-                }
-                list.addAll(ports.getValue());
-                map.put(ports.getKey(), list);
-            }
-        }
-        return map.size() == 0 ? null : map;
+        return bindingAddresses.getBindingAddresses();
     }
 
     /**
@@ -213,7 +194,11 @@ class HttpdServiceImpl extends AbstractService implements HttpdService {
     }
 
     public Object methodMissing(String name, Object args) {
-        return statementsTable.methodMissing(name, args);
+        try {
+            return statementsTable.methodMissing(name, args);
+        } catch (StatementsException e) {
+            return bindingAddresses.methodMissing(name, args);
+        }
     }
 
     @Override

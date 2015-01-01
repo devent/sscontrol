@@ -19,6 +19,7 @@
 package com.anrisoftware.sscontrol.remote.service;
 
 import com.anrisoftware.globalpom.resources.ResourcesModule;
+import com.anrisoftware.sscontrol.core.bindings.BindingAddressesStatementsTableModule;
 import com.anrisoftware.sscontrol.core.groovy.StatementsMapModule;
 import com.anrisoftware.sscontrol.core.list.ListModule;
 import com.anrisoftware.sscontrol.remote.user.UserModule;
@@ -37,6 +38,7 @@ class RemoteModule extends AbstractModule {
         install(new UserModule());
         install(new ListModule());
         install(new StatementsMapModule());
+        install(new BindingAddressesStatementsTableModule());
         install(new ResourcesModule());
     }
 }

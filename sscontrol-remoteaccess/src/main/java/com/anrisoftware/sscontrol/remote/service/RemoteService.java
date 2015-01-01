@@ -58,30 +58,24 @@ public interface RemoteService extends Service {
     Map<String, Object> debugLogging(String key);
 
     /**
-     * Returns the binding address.
+     * Returns the binding addresses.
+     * <p>
+     * The example returns the following map for the key "storage":
      *
      * <pre>
-     * remote {
-     *      bind "192.168.0.1"
+     * {["0.0.0.0": [22], "192.168.0.2"]: [23, 24]}
+     * </pre>
+     *
+     * <pre>
+     * database {
+     *     bind all, port: 22
+     *     bind "192.168.0.2", ports: [23, 24]
      * }
      * </pre>
      *
-     * @return the {@link String} address or {@code null}.
+     * @return the {@link List} of the {@link String} addresses or {@code null}.
      */
-    String getBinding();
-
-    /**
-     * Returns the binding port.
-     *
-     * <pre>
-     * remote {
-     *      bind "192.168.0.1", port: 22
-     * }
-     * </pre>
-     *
-     * @return the {@link Integer} port or {@code null}.
-     */
-    Integer getBindingPort();
+    Map<String, List<Integer>> getBindingAddresses();
 
     /**
      * Returns the local users.

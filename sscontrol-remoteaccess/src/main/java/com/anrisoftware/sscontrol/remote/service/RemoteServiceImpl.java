@@ -33,9 +33,9 @@ import com.anrisoftware.sscontrol.core.api.Service;
 import com.anrisoftware.sscontrol.core.api.ServiceException;
 import com.anrisoftware.sscontrol.core.api.ServiceScriptFactory;
 import com.anrisoftware.sscontrol.core.bindings.BindingAddress;
+import com.anrisoftware.sscontrol.core.bindings.BindingAddressesStatementsTable;
+import com.anrisoftware.sscontrol.core.bindings.BindingAddressesStatementsTableFactory;
 import com.anrisoftware.sscontrol.core.groovy.StatementsException;
-import com.anrisoftware.sscontrol.core.groovy.StatementsMap;
-import com.anrisoftware.sscontrol.core.groovy.StatementsMapFactory;
 import com.anrisoftware.sscontrol.core.groovy.StatementsTable;
 import com.anrisoftware.sscontrol.core.groovy.StatementsTableFactory;
 import com.anrisoftware.sscontrol.core.service.AbstractService;
@@ -51,8 +51,6 @@ import com.anrisoftware.sscontrol.remote.user.UserFactory;
 @SuppressWarnings("serial")
 public class RemoteServiceImpl extends AbstractService implements RemoteService {
 
-    private static final String PORT_KEY = "port";
-    private static final String BIND_KEY = "bind";
     private static final String USER_NAME = "user";
     private static final String DEBUG_KEY = "debug";
 
@@ -66,7 +64,7 @@ public class RemoteServiceImpl extends AbstractService implements RemoteService 
 
     private StatementsTable statementsTable;
 
-    private StatementsMap statementsMap;
+    private BindingAddressesStatementsTable bindingAddresses;
 
     RemoteServiceImpl() {
         this.users = new ArrayList<User>();
@@ -87,20 +85,17 @@ public class RemoteServiceImpl extends AbstractService implements RemoteService 
     }
 
     @Inject
-    public final void setStatementsMap(StatementsMapFactory factory) {
-        StatementsMap map = factory.create(factory, NAME);
-        map.addAllowed(BIND_KEY);
-        map.setAllowValue(true, BIND_KEY);
-        map.addAllowedKeys(BIND_KEY, PORT_KEY);
-        this.statementsMap = map;
-    }
-
-    @Inject
     public final void setStatementsTable(StatementsTableFactory factory) {
-        StatementsTable table = factory.create(factory, NAME);
+        StatementsTable table = factory.create(this, NAME);
         table.addAllowed(DEBUG_KEY);
         table.setAllowArbitraryKeys(true, DEBUG_KEY);
         this.statementsTable = table;
+    }
+
+    @Inject
+    public final void setBindingAddressesStatementsTable(
+            BindingAddressesStatementsTableFactory factory) {
+        this.bindingAddresses = factory.create(this, NAME);
     }
 
     /**
@@ -129,21 +124,8 @@ public class RemoteServiceImpl extends AbstractService implements RemoteService 
     }
 
     @Override
-    public String getBinding() {
-        Object value = statementsMap.value(BIND_KEY);
-        if (value == null) {
-            return null;
-        }
-        if (value instanceof BindingAddress) {
-            return ((BindingAddress) value).getAddress();
-        } else {
-            return value.toString();
-        }
-    }
-
-    @Override
-    public Integer getBindingPort() {
-        return statementsMap.mapValue(BIND_KEY, PORT_KEY);
+    public Map<String, List<Integer>> getBindingAddresses() {
+        return bindingAddresses.getBindingAddresses();
     }
 
     public void user(Map<String, Object> args, String name) {
@@ -179,9 +161,9 @@ public class RemoteServiceImpl extends AbstractService implements RemoteService 
 
     public Object methodMissing(String name, Object args) {
         try {
-            return statementsMap.methodMissing(name, args);
-        } catch (StatementsException e) {
             return statementsTable.methodMissing(name, args);
+        } catch (StatementsException e) {
+            return bindingAddresses.methodMissing(name, args);
         }
     }
 

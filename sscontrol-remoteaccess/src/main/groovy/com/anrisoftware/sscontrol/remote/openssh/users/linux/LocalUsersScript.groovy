@@ -21,8 +21,6 @@ package com.anrisoftware.sscontrol.remote.openssh.users.linux
 import static org.apache.commons.io.FileUtils.*
 import groovy.util.logging.Slf4j
 
-import java.security.acl.Group
-
 import javax.inject.Inject
 
 import org.apache.commons.lang3.StringUtils
@@ -74,33 +72,36 @@ abstract class LocalUsersScript implements RemoteScript {
         def groups = loadGroups()
         int id = minimumGid
         service.users.each { User user ->
-            def found = groups.find { it.name == user.group.name }
+            if (user.group == null) {
+                user.group user.name
+            }
+            def found = groups.find { it.name == user.group }
             if (found) {
                 groupHaveId found, id, { id++ }
-                user.group.gid = found.gid
+                user.groupId = found.gid
             }
             if (!found) {
-                updateGroupId user.group, id, { id++ }
+                updateGroupId user, id, { id++ }
                 localGroupAddFactory.create(
                         log: log,
                         command: script.groupAddCommand,
                         groupsFile: script.groupsFile,
-                        groupId: user.group.gid,
-                        groupName: user.group.name,
+                        groupId: user.groupId,
+                        groupName: user.group,
                         this, threads)()
             }
         }
     }
 
-    void groupHaveId(Group group, int id, def callback) {
+    void groupHaveId(Map group, int id, def callback) {
         if (group.gid == id) {
             callback()
         }
     }
 
-    void updateGroupId(Group group, int id, def callback) {
-        if (group.gid == null) {
-            group.gid = id
+    void updateGroupId(User user, int id, def callback) {
+        if (user.groupId == null) {
+            user.group user.group, gid: id
             callback()
         }
     }
@@ -113,7 +114,7 @@ abstract class LocalUsersScript implements RemoteScript {
         def users = loadUsers()
         int id = minimumUid
         service.users.each { User user ->
-            User found = users.find { User it -> it.name == user.name }
+            Map found = users.find { it.name == user.name }
             if (found) {
                 user.home = found.home
                 userHaveId found, id, { id++ }
@@ -122,24 +123,25 @@ abstract class LocalUsersScript implements RemoteScript {
             }
             if (!found) {
                 updateUserId user, id, { id++ }
-                user.home = homeDir user
-                def shell = user.login == null ? defaultLoginShell : user.login
-                def group = user.group.name
+                user.home homeDir(user)
+                if (user.login == null) {
+                    user.login defaultLoginShell
+                }
                 localUserAddFactory.create(
                         log: log,
                         command: script.userAddCommand,
                         usersFile: script.usersFile,
                         userName: user.name,
                         homeDir: user.home,
-                        shell: shell,
-                        groupName: group,
+                        shell: user.login,
+                        groupName: user.group,
                         userId: user.uid,
                         this, threads)()
             }
         }
     }
 
-    void userHaveId(User user, int id, def callback) {
+    void userHaveId(Map user, int id, def callback) {
         if (user.uid == id) {
             callback()
         }
@@ -147,7 +149,7 @@ abstract class LocalUsersScript implements RemoteScript {
 
     void updateUserId(User user, int id, def callback) {
         if (user.uid == null) {
-            user.uid = id
+            user.user uid: id
             callback()
         }
     }
@@ -241,10 +243,12 @@ abstract class LocalUsersScript implements RemoteScript {
     /**
      * Returns the current local users.
      *
+     * @returns {@link List} of
+     * the {@link Map} {@code name:=<name>, password:=<password>, uid:=<uid>, gid:=<gid>, comment:=<comment>, home:=<home>, login:=<login>}
+     *
      * @see #getUsersFile()
      */
     List loadUsers() {
-        def users = []
         def file = usersFile
         lineIterator(file, charset.name()).inject([]) { acc, it ->
             String[] str = StringUtils.splitPreserveAllTokens it, ":"
@@ -254,9 +258,9 @@ abstract class LocalUsersScript implements RemoteScript {
             String comment = str[4]
             String home = str[5]
             String login = str[6]
-            def user = userFactory.create service, ["name": name, "password": "", "uid": uid, "gid": gid]
+            def user = [name: name, password: "", uid: uid, gid: gid]
             user.comment = comment
-            user.home = new File(home)
+            user.home = home
             user.login = login
             acc << user
         }
@@ -265,18 +269,18 @@ abstract class LocalUsersScript implements RemoteScript {
     /**
      * Returns the current local user groups.
      *
-     * @returns {@code name:=<name>, gid:=<gid>}
+     * @returns {@link List} of
+     * the {@link Map} {@code name:=<name>, gid:=<gid>}
      *
      * @see #getGroupsFile()
      */
     List loadGroups() {
-        def groups = []
         def file = groupsFile
         lineIterator(file, charset.name()).inject([]) { acc, it ->
             String[] str = StringUtils.splitPreserveAllTokens it, ":"
             String name = str[0]
             int gid = Integer.valueOf str[2]
-            acc << ["name": name, "gid": gid]
+            acc << [name: name, gid: gid]
         }
     }
 

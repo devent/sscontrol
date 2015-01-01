@@ -20,6 +20,7 @@ package com.anrisoftware.sscontrol.httpd.service;
 
 import com.anrisoftware.globalpom.format.byteformat.ByteFormatModule;
 import com.anrisoftware.globalpom.resources.ResourcesModule;
+import com.anrisoftware.sscontrol.core.bindings.BindingAddressesStatementsTableModule;
 import com.anrisoftware.sscontrol.core.bindings.BindingsModule;
 import com.anrisoftware.sscontrol.core.database.DatabaseModule;
 import com.anrisoftware.sscontrol.core.debuglogging.DebugLoggingModule;
@@ -50,6 +51,7 @@ class HttpdModule extends AbstractModule {
 	protected void configure() {
         install(new WebServiceArgsModule());
         install(new StatementsMapModule());
+        install(new BindingAddressesStatementsTableModule());
         install(new ResourcesModule());
         install(new ByteFormatModule());
 		install(new DomainModule());

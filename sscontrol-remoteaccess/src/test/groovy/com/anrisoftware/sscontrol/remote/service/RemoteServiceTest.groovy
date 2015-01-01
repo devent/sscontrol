@@ -50,8 +50,9 @@ class RemoteServiceTest extends RemoteTestUtil {
         assert service.debugLogging("level").size() == 1
         assert service.debugLogging("level")["openssh"] == 4
 
-        assert service.binding == "0.0.0.0"
-        assert service.bindingPort == 22
+        assert service.bindingAddresses.size() == 1
+        assert service.bindingAddresses["0.0.0.0"].size() == 1
+        assert service.bindingAddresses["0.0.0.0"].containsAll([22])
 
         assert service.users.size() == 3
 

@@ -36,7 +36,6 @@ enum ServicesResources {
     httpdPortsScript("Httpd.groovy", ServicesResources.class.getResource("HttpdPorts.groovy")),
     authFileScript("Httpd.groovy", ServicesResources.class.getResource("HttpdAuthFile.groovy")),
     authLdapScript("Httpd.groovy", ServicesResources.class.getResource("HttpdAuthLdap.groovy")),
-    phpmyadminScript("Httpd.groovy", ServicesResources.class.getResource("HttpdPhpmyadmin.groovy")),
     phpldapadminScript("Httpd.groovy", ServicesResources.class.getResource("HttpdPhpldapadmin.groovy")),
     roundcubeScript("Httpd.groovy", ServicesResources.class.getResource("HttpdRoundcube.groovy")),
     wordpressScript("Httpd.groovy", ServicesResources.class.getResource("HttpdWordpress.groovy")),

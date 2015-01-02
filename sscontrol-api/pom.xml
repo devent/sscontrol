@@ -14,6 +14,7 @@
 	<name>RoboBee :: API</name>
 	<url>https://www.anr-institute.com/projects/projects/sscontrol-api</url>
 	<inceptionYear>2012</inceptionYear>
+	<description>Core library public interface.</description>
 
 	<issueManagement>
 		<system>Redmine</system>

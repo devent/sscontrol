@@ -1,0 +1,16 @@
+reconfigure(args) ::= <<
+<! - args.command - !>
+<args.command> phpmyadmin
+
+>>
+
+importTables(args) ::= <<
+<! - args.zcatCommand - !>
+<! - args.mysqlCommand - !>
+<! - args.controlUser - !>
+<! - args.controlPassword - !>
+<! - args.controlDatabase - !>
+<! - args.script - !>
+<args.zcatCommand> <args.script> | <args.mysqlCommand> --user=<args.controlUser> --password=<args.controlPassword> <args.controlDatabase>
+
+>>

@@ -1,0 +1,2 @@
+755 /tmp/var/www/php-fcgi-scripts/ubuntutest.com/php-fcgi-starter
+755 /tmp/var/www/php-fcgi-scripts/ubuntutest.com/php-fcgi-starter

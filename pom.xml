@@ -25,6 +25,7 @@
         <module>sscontrol-httpd-apache</module>
         <module>sscontrol-httpd-gitit</module>
         <module>sscontrol-httpd-nginx</module>
+        <module>sscontrol-httpd-phpmyadmin</module>
         <module>sscontrol-httpd-piwik</module>
         <module>sscontrol-httpd-redmine</module>
         <module>sscontrol-httpd-roundcube</module>

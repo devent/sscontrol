@@ -14,6 +14,7 @@
 	<name>RoboBee :: Core</name>
 	<url>https://www.anr-institute.com/projects/projects/sscontrol-core</url>
 	<inceptionYear>2013</inceptionYear>
+    <description>Core parser.</description>
 
 	<issueManagement>
 		<system>Redmine</system>

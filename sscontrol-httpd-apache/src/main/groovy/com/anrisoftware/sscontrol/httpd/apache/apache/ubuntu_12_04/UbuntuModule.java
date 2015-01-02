@@ -28,7 +28,6 @@ import com.anrisoftware.globalpom.checkfilehash.CheckFileHashModule;
 import com.anrisoftware.sscontrol.httpd.apache.apache.linux.ApacheFcgiConfig;
 import com.anrisoftware.sscontrol.httpd.apache.authfile.ubuntu_12_04.Ubuntu_12_04_AuthFileModule;
 import com.anrisoftware.sscontrol.httpd.apache.authldap.ubuntu_12_04.Ubuntu_12_04_AuthLdapModule;
-import com.anrisoftware.sscontrol.httpd.apache.phpmyadmin.ubuntu_12_04.Ubuntu_12_04_PhpmyadminModule;
 import com.anrisoftware.sscontrol.httpd.fcgi.FcgiConfig;
 import com.anrisoftware.sscontrol.httpd.webservice.ServiceConfig;
 import com.anrisoftware.sscontrol.scripts.changefilemod.ChangeFileModModule;
@@ -47,8 +46,8 @@ import com.google.inject.AbstractModule;
 import com.google.inject.multibindings.MapBinder;
 
 /**
- * Binds the Apache/Ubuntu 12.04 services.
- * 
+ * <i>Apache Ubuntu 12.04</i> services module.
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
@@ -72,7 +71,6 @@ class UbuntuModule extends AbstractModule {
         install(new KillProcessModule());
         install(new Ubuntu_12_04_AuthFileModule());
         install(new Ubuntu_12_04_AuthLdapModule());
-        install(new Ubuntu_12_04_PhpmyadminModule());
         bind(FcgiConfig.class).to(ApacheFcgiConfig.class);
         bindScripts();
         bindEmptyServiceConfig();

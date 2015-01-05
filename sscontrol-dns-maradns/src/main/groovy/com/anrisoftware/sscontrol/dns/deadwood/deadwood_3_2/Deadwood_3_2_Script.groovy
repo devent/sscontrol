@@ -233,7 +233,7 @@ abstract class Deadwood_3_2_Script extends DeadwoodScript {
     def namedRootServerConfiguration(Map servers) {
         def list = []
         servers.each { name, address ->
-            def search = deadwoodConfiguration.getText(true, "named_root_servers_list_search", "name", name, "address", address)
+            def search = deadwoodConfiguration.getText(true, "named_root_servers_list_search", "name", name)
             def replace = deadwoodConfiguration.getText(true, "named_root_servers_list", "name", name, "address", address)
             list << new TokenTemplate(search, replace)
         }

@@ -55,8 +55,8 @@ root_servers_list(roots) ::= <%
 root_servers["."] = "<roots;separator=",">"
 %>
 
-named_root_servers_list_search(name, address) ::= <%
-(?m)^#?\s*root_servers\["<name>\."\]\s*=\s*"<address>".*
+named_root_servers_list_search(name) ::= <%
+(?m)^#?\s*root_servers\["<name>\."\]\s*=\s*.*
 %>
 
 named_root_servers_list(name, address) ::= <%

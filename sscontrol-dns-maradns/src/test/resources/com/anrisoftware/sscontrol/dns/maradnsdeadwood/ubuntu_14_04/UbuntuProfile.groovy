@@ -21,12 +21,14 @@ package com.anrisoftware.sscontrol.dns.maradnsdeadwood.ubuntu_14_04
 def aptitudeCommand = MaradnsDeadwoodResources.aptitudeCommand.asFile(tmp)
 def deadwoodRestartCommand = MaradnsDeadwoodResources.deadwoodRestartCommand.asFile(tmp)
 def maradnsRestartCommand = MaradnsDeadwoodResources.maradnsRestartCommand.asFile(tmp)
+def deadwoodStatusCommand = MaradnsDeadwoodResources.deadwoodStatusCommand.asFile(tmp)
 def groupAddCommand = MaradnsDeadwoodResources.groupAddCommand.asFile(tmp)
 def userAddCommand = MaradnsDeadwoodResources.userAddCommand.asFile(tmp)
 def userIdCommand = MaradnsDeadwoodResources.userIdCommand.asFile(tmp)
 def chmodCommand = MaradnsDeadwoodResources.chmodCommand.asFile(tmp)
 def chownCommand = MaradnsDeadwoodResources.chownCommand.asFile(tmp)
 def updateRcCommand = MaradnsDeadwoodResources.updateRcCommand.asFile(tmp)
+def startStopCommandCommand = MaradnsDeadwoodResources.startStopCommandCommand.asFile(tmp)
 def deadwoodCommand = MaradnsDeadwoodResources.deadwoodCommand.asFile(tmp)
 def groupsFile = MaradnsDeadwoodResources.groupsFile.asFile(tmp)
 def usersFile = MaradnsDeadwoodResources.usersFile.asFile(tmp)
@@ -43,12 +45,14 @@ profile "ubuntu_14_04", {
         install_command aptitudeCommand
         deadwood_restart_command "$deadwoodRestartCommand recache"
         maradns_restart_command "$maradnsRestartCommand restart"
+        deadwood_status_command "$deadwoodStatusCommand status"
         group_add_command groupAddCommand
         user_add_command userAddCommand
         user_id_command userIdCommand
         chmod_command chmodCommand
         chown_command chownCommand
         update_rc_command updateRcCommand
+        start_stop_daemon_command startStopCommandCommand
         deadwood_command deadwoodCommand
         groups_file groupsFile
         users_file usersFile

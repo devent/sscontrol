@@ -69,9 +69,11 @@ class UbuntuScript extends Deadwood_3_2_Script {
     @Inject
     ScriptExecFactory scriptExecFactory
 
-    TemplateResource deadwoodRun
+    TemplateResource deadwoodRunTemplate
 
-    TemplateResource activateService
+    TemplateResource activateServiceTemplate
+
+    TemplateResource statusServiceTemplate
 
     def run() {
         setupDefaultBinding service
@@ -83,13 +85,15 @@ class UbuntuScript extends Deadwood_3_2_Script {
         deployDeadwoodRunScript()
         activateDeadwoodService()
         restartService()
+        checkService()
     }
 
     @Inject
     final void setUbuntuScriptTemplatesFactory(TemplatesFactory factory) {
         def templates = factory.create("Deadwood_Ubuntu_14_04")
-        this.deadwoodRun = templates.getResource("deadwoodrun")
-        this.activateService = templates.getResource("activate_service")
+        this.deadwoodRunTemplate = templates.getResource("deadwoodrun")
+        this.activateServiceTemplate = templates.getResource("activate_service")
+        this.statusServiceTemplate = templates.getResource("status_service")
     }
 
     /**
@@ -145,6 +149,17 @@ class UbuntuScript extends Deadwood_3_2_Script {
     }
 
     /**
+     * Checks the status of the <i>Deadwood</i> service.
+     */
+    void checkService() {
+        scriptExecFactory.create(
+                log: log,
+                command: statusCommand,
+                this, threads,
+                statusServiceTemplate, "statusService")()
+    }
+
+    /**
      * Creates the <i>Deadwood</i> service directories.
      */
     void createDeadwoodDirectories() {
@@ -154,7 +169,7 @@ class UbuntuScript extends Deadwood_3_2_Script {
      * Deploys the <i>Deadwood</i> run script.
      */
     void deployDeadwoodRunScript() {
-        def configuration = deadwoodRun.getText("deadwoodrun", "args", this)
+        def configuration = deadwoodRunTemplate.getText("deadwoodrun", "args", this)
         FileUtils.write deadwoodScriptFile, configuration, charset
         deadwoodScriptFile.setExecutable(true)
         logg.deployRunScriptDone this, deadwoodScriptFile, configuration
@@ -170,7 +185,7 @@ class UbuntuScript extends Deadwood_3_2_Script {
                 command: updateRcCommand,
                 service: name,
                 this, threads,
-                activateService, "activateService")()
+                activateServiceTemplate, "activateService")()
     }
 
     /**
@@ -185,6 +200,39 @@ class UbuntuScript extends Deadwood_3_2_Script {
      */
     String getUpdateRcCommand() {
         profileProperty "update_rc_command", defaultProperties
+    }
+
+    /**
+     * Returns path of the <i>status</i> command, for
+     * example {@code /etc/init.d/deadwood status}.
+     *
+     * <ul>
+     * <li>profile property key {@code status_command}</li>
+     * <li>profile property key {@code deadwood_status_command}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    String getStatusCommand() {
+        if (containsKey("deadwood_status_command", defaultProperties)) {
+            profileProperty "deadwood_status_command", defaultProperties
+        } else {
+            profileProperty "status_command", defaultProperties
+        }
+    }
+
+    /**
+     * Returns path of the <i>start-stop-daemon</i> command, for
+     * example {@code /sbin/start-stop-daemon}.
+     *
+     * <ul>
+     * <li>profile property key {@code start_stop_daemon_command}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    String getStartStopDaemonCommand() {
+        profileProperty "start_stop_daemon_command", defaultProperties
     }
 
     ContextProperties getDefaultProperties() {

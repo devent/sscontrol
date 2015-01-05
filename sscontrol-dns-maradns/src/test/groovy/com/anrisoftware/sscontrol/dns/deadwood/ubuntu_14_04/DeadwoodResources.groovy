@@ -35,12 +35,14 @@ enum DeadwoodResources {
     deadwoodScript("Dns.groovy", DeadwoodResources.class.getResource("Dns.groovy")),
     aptitudeCommand("/usr/bin/aptitude", DeadwoodResources.class.getResource("echo_command.txt")),
     restartCommand("/etc/init.d/deadwood", DeadwoodResources.class.getResource("echo_command.txt")),
+    statusCommand("/etc/init.d/deadwood", DeadwoodResources.class.getResource("echo_command.txt")),
     groupAddCommand("/usr/sbin/groupadd", DeadwoodResources.class.getResource("echo_command.txt")),
     userAddCommand("/usr/sbin/useradd", DeadwoodResources.class.getResource("echo_command.txt")),
     userIdCommand("/usr/bin/id", DeadwoodResources.class.getResource("id_command.txt")),
     chmodCommand("/bin/chmod", DeadwoodResources.class.getResource("echo_command.txt")),
     chownCommand("/bin/chown", DeadwoodResources.class.getResource("echo_command.txt")),
     updateRcCommand("/usr/sbin/update-rc.d", DeadwoodResources.class.getResource("echo_command.txt")),
+    startStopCommandCommand("/sbin/start-stop-daemon", DeadwoodResources.class.getResource("echo_command.txt")),
     deadwoodCommand("/usr/sbin/deadwood", DeadwoodResources.class.getResource("echo_command.txt")),
     groupsFile("/etc/group", DeadwoodResources.class.getResource("group.txt")),
     usersFile("/etc/passwd", DeadwoodResources.class.getResource("passwd.txt")),
@@ -68,6 +70,7 @@ enum DeadwoodResources {
         chmodCommand.createCommand parent
         chownCommand.createCommand parent
         updateRcCommand.createCommand parent
+        startStopCommandCommand.createCommand parent
         deadwoodCommand.createCommand parent
         groupsFile.createFile parent
         usersFile.createFile parent

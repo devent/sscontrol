@@ -1,5 +1,11 @@
 
 deadwoodrun(args) ::= <<
+<! - args.startStopDaemonCommand - !>
+<! - args.deadwoodCommand - !>
+<! - args.deadwoodUser - !>
+<! - args.deadwoodGroup - !>
+<! - args.configurationDir - !>
+<! - args.cacheFile - !>
 #!/bin/bash
 # chkconfig: 2345 55 45
 # description: Deadwood is MaraDNS' recursive name server
@@ -33,25 +39,26 @@ USER=<args.deadwoodUser>
 GROUP=<args.deadwoodGroup>
 CHROOT=<args.configurationDir>
 CACHE_FILE="<args.cacheFile>"
+START_STOP_DAEMON="<args.startStopDaemonCommand>"
 START_STOP_ARGS="--quiet -m -b --chdir $CHROOT --pidfile $PIDFILE --exec $DAEMON -- $DAEMON_OPTS"
 
 export PATH="${PATH:+$PATH:}/usr/sbin:/sbin"
 
 function startDaemon() {
-    start-stop-daemon --start $START_STOP_ARGS
+    $START_STOP_DAEMON --start $START_STOP_ARGS
 }
 
 function stopDaemon() {
-    start-stop-daemon --stop --oknodo --retry 30 --quiet --pidfile $PIDFILE --exec $DAEMON
+    $START_STOP_DAEMON --stop --oknodo --retry 30 --quiet --pidfile $PIDFILE --exec $DAEMON
 }
 
 function statusDaemon() {
-    start-stop-daemon --status --pidfile $PIDFILE --exec $DAEMON
+    $START_STOP_DAEMON --status --pidfile $PIDFILE --exec $DAEMON
     ret=$?
-    if [ $ret -ge 0 ] && [ $ret -lt 5 ]; then
+    if [ $ret -gt 0 ]; then
         echo -n "Daemon: $NAME is not running"
     else
-        echo -n "Daemon: $NAME not running"
+        echo -n "Daemon: $NAME is running"
         fi
     echo ", LSB return $ret."
     exit $ret

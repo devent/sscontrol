@@ -41,11 +41,13 @@ enum MaradnsDeadwoodResources {
     chmodCommand("/bin/chmod", MaradnsDeadwoodResources.class.getResource("echo_command.txt")),
     chownCommand("/bin/chown", MaradnsDeadwoodResources.class.getResource("echo_command.txt")),
     updateRcCommand("/usr/sbin/update-rc.d", MaradnsDeadwoodResources.class.getResource("echo_command.txt")),
+    startStopCommandCommand("/sbin/start-stop-daemon", MaradnsDeadwoodResources.class.getResource("echo_command.txt")),
     groupsFile("/etc/group", MaradnsDeadwoodResources.class.getResource("group.txt")),
     usersFile("/etc/passwd", MaradnsDeadwoodResources.class.getResource("passwd.txt")),
     scriptFile("/etc/init.d/deadwood", null),
     // Deadwood
     deadwoodRestartCommand("/etc/init.d/deadwood", MaradnsDeadwoodResources.class.getResource("echo_command.txt")),
+    deadwoodStatusCommand("/etc/init.d/deadwood", MaradnsDeadwoodResources.class.getResource("echo_command.txt")),
     deadwoodCommand("/usr/sbin/deadwood", MaradnsDeadwoodResources.class.getResource("echo_command.txt")),
     deadwoodConfDir("/etc/maradns/deadwood", null),
     deadwoodrc("/etc/maradns/deadwood/dwood3rc", MaradnsDeadwoodResources.class.getResource("dwood3rc.txt")),
@@ -73,6 +75,7 @@ enum MaradnsDeadwoodResources {
         chmodCommand.createCommand parent
         chownCommand.createCommand parent
         updateRcCommand.createCommand parent
+        startStopCommandCommand.createCommand parent
         groupsFile.createFile parent
         usersFile.createFile parent
         // Deadwood

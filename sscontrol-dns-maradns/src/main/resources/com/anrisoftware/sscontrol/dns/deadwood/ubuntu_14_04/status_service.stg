@@ -1,0 +1,5 @@
+statusService(args) ::= <<
+<! - args.command - !>
+<args.command>
+
+>>

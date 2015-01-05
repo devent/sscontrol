@@ -168,7 +168,7 @@ abstract class Deadwood_3_2_Script extends DeadwoodScript {
      * Activates and sets the upstream servers.
      */
     def upstreamServersConfiguration(DnsService service) {
-        if (service.upstreamServers.empty) {
+        if (service.upstreamServers == null) {
             return []
         }
         def list = []
@@ -191,7 +191,7 @@ abstract class Deadwood_3_2_Script extends DeadwoodScript {
      * Activates and sets the root servers.
      */
     def rootServersConfiguration(DnsService service) {
-        if (service.rootServers.empty) {
+        if (service.rootServers == null) {
             return []
         }
         def list = []
@@ -217,7 +217,7 @@ abstract class Deadwood_3_2_Script extends DeadwoodScript {
      * Activates and sets the named root servers.
      */
     def namedRootServersConfiguration(DnsService service) {
-        if (service.servers.empty) {
+        if (service.servers == null) {
             return []
         }
         def list = []
@@ -244,7 +244,7 @@ abstract class Deadwood_3_2_Script extends DeadwoodScript {
      * Sets ACLs.
      */
     def aclsConfiguration(DnsService service) {
-        if (service.acls.empty) {
+        if (service.acls == null) {
             return []
         }
         def list = []

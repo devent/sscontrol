@@ -38,7 +38,6 @@ class UbuntuScript extends RepoScript {
 
     @Override
     def run() {
-        updatePackages()
         installPackages()
         aptConfig.signRepositories service
         def sources = aptConfig.readSources service

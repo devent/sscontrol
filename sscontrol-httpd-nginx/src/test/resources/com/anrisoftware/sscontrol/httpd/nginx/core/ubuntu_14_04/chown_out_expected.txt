@@ -1,0 +1,4 @@
+web_001.web_001 /tmp/var/www/test1.com/web
+root.root /tmp/var/www/test1.com/ssl/cert_crt.txt /tmp/var/www/test1.com/ssl/cert_key.txt
+web_001.web_001 /tmp/var/www/test1.com/web
+root.root /tmp/var/www/test1.com/ssl/cert_crt.txt /tmp/var/www/test1.com/ssl/cert_key.txt

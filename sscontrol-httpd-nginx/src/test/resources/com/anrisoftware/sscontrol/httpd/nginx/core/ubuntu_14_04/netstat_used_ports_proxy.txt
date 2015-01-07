@@ -1,0 +1,23 @@
+cat <<EOF
+Active Internet connections (only servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name
+tcp        0      0 127.0.0.1:3306          0.0.0.0:*               LISTEN      1033/mysqld
+tcp        0      0 0.0.0.0:587             0.0.0.0:*               LISTEN      1469/master
+tcp        0      0 0.0.0.0:8080            0.0.0.0:*               LISTEN      6082/apache2
+tcp        0      0 0.0.0.0:80              0.0.0.0:*               LISTEN      5233/nginx.conf
+tcp        0      0 0.0.0.0:465             0.0.0.0:*               LISTEN      1469/master
+tcp        0      0 127.0.0.1:53            0.0.0.0:*               LISTEN      1174/zoneserver
+tcp        0      0 0.0.0.0:22              0.0.0.0:*               LISTEN      863/sshd
+tcp        0      0 0.0.0.0:25              0.0.0.0:*               LISTEN      1469/master
+tcp        0      0 0.0.0.0:8090            0.0.0.0:*               LISTEN      6082/apache2
+tcp        0      0 0.0.0.0:8091            0.0.0.0:*               LISTEN      6082/apache2
+tcp        0      0 192.168.0.110:443       0.0.0.0:*               LISTEN      5233/nginx.conf
+tcp        0      0 192.168.0.100:443       0.0.0.0:*               LISTEN      5233/nginx.conf
+tcp6       0      0 :::993                  :::*                    LISTEN      1073/couriertcpd
+tcp6       0      0 :::587                  :::*                    LISTEN      1469/master
+tcp6       0      0 :::143                  :::*                    LISTEN      1037/couriertcpd
+tcp6       0      0 :::465                  :::*                    LISTEN      1469/master
+tcp6       0      0 :::25                   :::*                    LISTEN      1469/master
+udp        0      0 127.0.0.1:53            0.0.0.0:*                           1105/maradns
+udp        0      0 0.0.0.0:68              0.0.0.0:*                           803/dhclient3
+EOF

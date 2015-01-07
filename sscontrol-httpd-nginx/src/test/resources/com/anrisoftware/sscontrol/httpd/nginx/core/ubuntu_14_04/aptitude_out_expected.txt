@@ -1,0 +1,2 @@
+-q -y install nginx net-tools
+-q -y install nginx net-tools

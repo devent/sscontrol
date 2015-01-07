@@ -1,0 +1,25 @@
+server {
+    # SSL/domain test2.com
+    listen 192.168.0.50:443;
+    root /tmp/var/www/test2.com/web;
+    index index.php index.html index.htm;
+    server_name test2.com;
+    client_max_body_size 2M;
+
+    ssl on;
+    ssl_certificate /tmp/var/www/test2.com/ssl/cert_crt.txt;
+    ssl_certificate_key /tmp/var/www/test2.com/ssl/cert_key.txt;
+    ssl_session_timeout 5m;
+    ssl_protocols SSLv3 TLSv1;
+    ssl_ciphers ALL:!ADH:!EXPORT56:RC4+RSA:+HIGH:+MEDIUM:+EXP;
+    ssl_prefer_server_ciphers on;
+
+    # error page
+    error_page 500 502 503 504 /50x.html;
+
+    # error page location
+    location = /50x.html {
+        root /usr/share/nginx/html;
+    }
+
+}

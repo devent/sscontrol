@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd-nginx. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.nginx.ubuntu_12_04
+package com.anrisoftware.sscontrol.httpd.nginx.redirect.ubuntu_14_04
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static org.apache.commons.io.FileUtils.*
@@ -24,46 +24,26 @@ import static org.apache.commons.io.FileUtils.*
 import com.anrisoftware.sscontrol.httpd.nginx.resources.ResourcesUtils
 
 /**
- * Loads Ubuntu resources.
+ * Redirect <i>Nginx</i> resources.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-enum Ubuntu_12_04_Resources {
+enum RedirectResources {
 
-    groupsFile("/etc/group", Ubuntu_12_04_Resources.class.getResource("group.txt")),
-    usersFile("/etc/passwd", Ubuntu_12_04_Resources.class.getResource("passwd.txt")),
-    restartCommand("/etc/init.d/nginx", Ubuntu_12_04_Resources.class.getResource("echo_command.txt")),
-    sitesDir("/var/www", null),
-    confDir("/etc/nginx", null),
-    sitesAvailableDir("/etc/nginx/sites-available", null),
-    sitesEnabledDir("/etc/nginx/sites-enabled", null),
-    configIncludeDir("/etc/nginx/conf.d", null),
-    nginxConfFile("/etc/nginx/nginx.conf", Ubuntu_12_04_Resources.class.getResource("nginx_conf.txt")),
-
-    static copyUbuntu_12_04_Files(File parent) {
-        confDir.asFile parent mkdirs()
-        restartCommand.createCommand parent
-        groupsFile.createFile parent
-        usersFile.createFile parent
-        nginxConfFile.createFile parent
-    }
-
-    static void setupUbuntu_12_04_Properties(def profile, File parent) {
-        def entry = profile.getEntry("httpd")
-        entry.restart_command "${restartCommand.asFile(parent)} restart"
-        entry.configuration_directory confDir.asFile(parent)
-        entry.groups_file groupsFile.asFile(parent)
-        entry.users_file usersFile.asFile(parent)
-        entry.sites_available_directory sitesAvailableDir.asFile(parent)
-        entry.sites_enabled_directory sitesEnabledDir.asFile(parent)
-        entry.config_include_directory configIncludeDir.asFile(parent)
-        entry.sites_directory sitesDir.asFile(parent)
-    }
+    profile("UbuntuProfile.groovy", RedirectResources.class.getResource("UbuntuProfile.groovy")),
+    httpdScript("Httpd.groovy", RedirectResources.class.getResource("Httpd.groovy")),
+    certCrt("cert.crt", RedirectResources.class.getResource("cert_crt.txt")),
+    certKey("cert.key", RedirectResources.class.getResource("cert_key.txt")),
+    test1comConf("/etc/nginx/sites-available/100-robobee-test1.com.conf", RedirectResources.class.getResource("test1_com_conf.txt")),
+    test1comSslConf("/etc/nginx/sites-available/100-robobee-test1.com-ssl.conf", RedirectResources.class.getResource("test1_com_ssl_conf.txt")),
+    wwwtest1comConf("/etc/nginx/sites-available/100-robobee-www.test1.com.conf", RedirectResources.class.getResource("www_test1_com_conf.txt")),
+    wwwtest1comSslConf("/etc/nginx/sites-available/100-robobee-www.test1.com-ssl.conf", RedirectResources.class.getResource("www_test1_com_ssl_conf.txt")),
+    lnOutExpected("/bin/ln.out", RedirectResources.class.getResource("ln_out_expected.txt")),
 
     ResourcesUtils resources
 
-    Ubuntu_12_04_Resources(String path, URL resource) {
+    RedirectResources(String path, URL resource) {
         this.resources = new ResourcesUtils(path: path, resource: resource)
     }
 

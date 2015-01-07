@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd-nginx. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.nginx.ubuntu_12_04
+package com.anrisoftware.sscontrol.httpd.nginx.ubuntu_14_04
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static org.apache.commons.io.FileUtils.*
@@ -24,24 +24,24 @@ import static org.apache.commons.io.FileUtils.*
 import com.anrisoftware.sscontrol.httpd.nginx.resources.ResourcesUtils
 
 /**
- * Loads Ubuntu resources.
+ * <i>Ubuntu 14.04</i> resources.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-enum Ubuntu_12_04_Resources {
+enum Ubuntu_14_04_Resources {
 
-    groupsFile("/etc/group", Ubuntu_12_04_Resources.class.getResource("group.txt")),
-    usersFile("/etc/passwd", Ubuntu_12_04_Resources.class.getResource("passwd.txt")),
-    restartCommand("/etc/init.d/nginx", Ubuntu_12_04_Resources.class.getResource("echo_command.txt")),
+    groupsFile("/etc/group", Ubuntu_14_04_Resources.class.getResource("group.txt")),
+    usersFile("/etc/passwd", Ubuntu_14_04_Resources.class.getResource("passwd.txt")),
+    restartCommand("/etc/init.d/nginx", Ubuntu_14_04_Resources.class.getResource("echo_command.txt")),
     sitesDir("/var/www", null),
     confDir("/etc/nginx", null),
     sitesAvailableDir("/etc/nginx/sites-available", null),
     sitesEnabledDir("/etc/nginx/sites-enabled", null),
     configIncludeDir("/etc/nginx/conf.d", null),
-    nginxConfFile("/etc/nginx/nginx.conf", Ubuntu_12_04_Resources.class.getResource("nginx_conf.txt")),
+    nginxConfFile("/etc/nginx/nginx.conf", Ubuntu_14_04_Resources.class.getResource("nginx_conf.txt")),
 
-    static copyUbuntu_12_04_Files(File parent) {
+    static copyUbuntu_14_04_Files(File parent) {
         confDir.asFile parent mkdirs()
         restartCommand.createCommand parent
         groupsFile.createFile parent
@@ -49,7 +49,7 @@ enum Ubuntu_12_04_Resources {
         nginxConfFile.createFile parent
     }
 
-    static void setupUbuntu_12_04_Properties(def profile, File parent) {
+    static void setupUbuntu_14_04_Properties(def profile, File parent) {
         def entry = profile.getEntry("httpd")
         entry.restart_command "${restartCommand.asFile(parent)} restart"
         entry.configuration_directory confDir.asFile(parent)
@@ -63,7 +63,7 @@ enum Ubuntu_12_04_Resources {
 
     ResourcesUtils resources
 
-    Ubuntu_12_04_Resources(String path, URL resource) {
+    Ubuntu_14_04_Resources(String path, URL resource) {
         this.resources = new ResourcesUtils(path: path, resource: resource)
     }
 

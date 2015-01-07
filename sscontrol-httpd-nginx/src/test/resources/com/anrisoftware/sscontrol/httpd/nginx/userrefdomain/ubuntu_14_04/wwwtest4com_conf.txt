@@ -1,0 +1,17 @@
+server {
+    # domain www.test4.com
+    listen 192.168.0.50:80;
+    root /tmp/var/www/www.test4.com/web;
+    index index.php index.html index.htm;
+    server_name www.test4.com;
+    client_max_body_size 2M;
+
+    # error page
+    error_page 500 502 503 504 /50x.html;
+
+    # error page location
+    location = /50x.html {
+        root /usr/share/nginx/html;
+    }
+
+}

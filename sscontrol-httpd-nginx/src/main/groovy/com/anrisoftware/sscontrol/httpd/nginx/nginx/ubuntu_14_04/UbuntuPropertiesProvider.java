@@ -16,43 +16,30 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd-nginx. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.nginx.resources
+package com.anrisoftware.sscontrol.httpd.nginx.nginx.ubuntu_14_04;
 
-import static com.anrisoftware.globalpom.utils.TestUtils.*
-import static org.apache.commons.io.FileUtils.*
+import java.net.URL;
+
+import javax.inject.Singleton;
+
+import com.anrisoftware.propertiesutils.AbstractContextPropertiesProvider;
 
 /**
- * Loads resources.
+ * <i>Nginx Ubuntu 14.04</i> properties provider from
+ * {@code /"nginx_ubuntu_14_04.properties"}.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class ResourcesUtils {
+@Singleton
+@SuppressWarnings("serial")
+public class UbuntuPropertiesProvider extends AbstractContextPropertiesProvider {
 
-    String path
+    private static final URL RESOURCE = UbuntuPropertiesProvider.class
+            .getResource("/nginx_ubuntu_14_04.properties");
 
-    URL resource
-
-    File asFile(File parent) {
-        new File(parent, path)
+    UbuntuPropertiesProvider() {
+        super(UbuntuPropertiesProvider.class, RESOURCE);
     }
 
-    void createFile(File parent) {
-        assert resource : "Resource cannot be null for ${path}"
-        copyURLToFile resource, new File(parent, path)
-    }
-
-    void createCommand(File parent) {
-        assert resource : "Resource cannot be null for ${path}"
-        copyResourceToCommand resource, new File(parent, path)
-    }
-
-    String replaced(File parent, def search, def replace) {
-        String text = readFileToString(this.asFile(parent))
-        text.replaceAll(search.toString(), replace)
-    }
-
-    String toString() {
-        resource == null ? path : resourceToString(resource)
-    }
 }

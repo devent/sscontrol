@@ -1,0 +1,5 @@
+# - Robobee Proxy for "sitebar" -
+# - Auto-generated -
+#
+
+proxy_cache_path /var/cache/nginx/sitebar levels=1:2 keys_zone=sitebar:128m max_size=512m;

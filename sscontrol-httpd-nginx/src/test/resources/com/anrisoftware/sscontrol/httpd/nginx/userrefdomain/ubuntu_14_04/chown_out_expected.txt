@@ -1,0 +1,18 @@
+web_001.web_001 /tmp/var/www/test1.com/web
+web_002.web_002 /tmp/var/www/www.test1.com/web
+web_003.web_003 /tmp/var/www/test2.com/web
+web_004.web_004 /tmp/var/www/test3.com/web
+web_004.web_004 /tmp/var/www/www.test3.com/web
+web_004.web_004 /tmp/var/www/test4.com/web
+web_004.web_004 /tmp/var/www/www.test4.com/web
+root.root /tmp/var/www/test1.com/ssl/cert_crt.txt /tmp/var/www/test1.com/ssl/cert_key.txt
+root.root /tmp/var/www/test2.com/ssl/cert_crt.txt /tmp/var/www/test2.com/ssl/cert_key.txt
+web_001.web_001 /tmp/var/www/test1.com/web
+web_002.web_002 /tmp/var/www/www.test1.com/web
+web_003.web_003 /tmp/var/www/test2.com/web
+web_004.web_004 /tmp/var/www/test3.com/web
+web_004.web_004 /tmp/var/www/www.test3.com/web
+web_004.web_004 /tmp/var/www/test4.com/web
+web_004.web_004 /tmp/var/www/www.test4.com/web
+root.root /tmp/var/www/test1.com/ssl/cert_crt.txt /tmp/var/www/test1.com/ssl/cert_key.txt
+root.root /tmp/var/www/test2.com/ssl/cert_crt.txt /tmp/var/www/test2.com/ssl/cert_key.txt

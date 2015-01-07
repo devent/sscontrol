@@ -1,0 +1,2 @@
+-s /bin/false -d /tmp/var/www/test2.com -m -u 2002 -g web_002 web_002
+-s /bin/false -d /tmp/var/www/test2.com -m -u 2002 -g web_002 web_002

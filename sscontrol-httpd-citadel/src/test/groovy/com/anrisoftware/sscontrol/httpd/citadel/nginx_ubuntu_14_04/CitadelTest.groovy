@@ -53,7 +53,8 @@ class CitadelTest extends UbuntuTestUtil {
         registry.allServices.each { it.call() }
 
         assertStringContent test1comConfExpected.replaced(tmpdir, tmpdir, "/tmp"), test1comConfExpected.toString()
+        assertFileContent webcitDefaultsFileExpected.asFile(tmpdir), webcitDefaultsFileExpected
+        assertStringContent setupCitadelScriptFileExpected.replaced(tmpdir, tmpdir, "/tmp"), setupCitadelScriptFileExpected.toString()
         assertFileContent aptitudeOutExpected.asFile(tmpdir), aptitudeOutExpected
-        assertFileContent reconfigureOutExpected.asFile(tmpdir), reconfigureOutExpected
     }
 }

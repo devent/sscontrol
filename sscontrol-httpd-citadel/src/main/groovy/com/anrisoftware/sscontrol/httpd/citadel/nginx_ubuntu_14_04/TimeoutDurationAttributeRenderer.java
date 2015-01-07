@@ -24,7 +24,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.joda.time.Duration;
 
 import com.anrisoftware.resources.templates.api.AttributeRenderer;
-import com.anrisoftware.sscontrol.httpd.citadel.AuthMethod;
 
 /**
  * Renders the timeout duration in seconds.
@@ -53,7 +52,7 @@ public class TimeoutDurationAttributeRenderer implements AttributeRenderer {
 
     @Override
     public Class<?> getAttributeType() {
-        return AuthMethod.class;
+        return Duration.class;
     }
 
 }

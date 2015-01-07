@@ -11,7 +11,7 @@ export WEBCIT_CITADEL_PORT='\d+'
 %>
 
 citadelPortConfig(addresses) ::= <%
-export WEBCIT_CITADEL_PORT='<addresses[first(addresses)]>'
+export WEBCIT_CITADEL_PORT='<addresses.(first(addresses))>'
 %>
 
 httpPortConfigSearch() ::= <%

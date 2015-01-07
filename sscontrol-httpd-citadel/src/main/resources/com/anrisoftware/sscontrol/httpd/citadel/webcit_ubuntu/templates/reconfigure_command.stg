@@ -1,6 +1,0 @@
-reconfigureCommand(args) ::= <<
-<! - args.reconfigureCommand - !>
-<! - args.webcitService - !>
-<args.reconfigureCommand> <args.webcitService>
-
->>

@@ -72,7 +72,7 @@ class UbuntuTestUtil {
 
     @Before
     void createTemp() {
-        tmpdir = tmp.newFolder("gitit")
+        tmpdir = tmp.newFolder("citadel")
         variables = [tmp: tmpdir.absoluteFile]
     }
 

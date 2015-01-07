@@ -58,7 +58,6 @@ location <args.listsubLocation> {
     proxy_busy_buffers_size    64k;
     proxy_temp_file_write_size 64k;
 }
-
 <endif>
 >>
 
@@ -82,7 +81,6 @@ location <args.groupdavLocation> {
     proxy_busy_buffers_size    64k;
     proxy_temp_file_write_size 64k;
 }
-
 <endif>
 >>
 
@@ -106,6 +104,5 @@ location <args.freebusyLocation> {
     proxy_busy_buffers_size    64k;
     proxy_temp_file_write_size 64k;
 }
-
 <endif>
 >>

@@ -36,19 +36,18 @@ enum CitadelResources {
     // commands
     citadelSetupCommand("/usr/lib/citadel-server/setup", CitadelResources.class.getResource("echo_command.txt")),
     webcitRestartCommand("/etc/init.d/webcit", CitadelResources.class.getResource("echo_command.txt")),
-    reconfigureCommand("/usr/sbin/dpkg-reconfigure", CitadelResources.class.getResource("echo_command.txt")),
     // files
     webcitDefaultsFile("/etc/default/webcit", CitadelResources.class.getResource("default_webcit.txt")),
+    setupCitadelScriptFile("/tmp/setupcitadel.expect", null),
     // expected
     webcitDefaultsFileExpected("/etc/default/webcit", CitadelResources.class.getResource("default_webcit_expected.txt")),
+    setupCitadelScriptFileExpected("/tmp/setupcitadel.expect", CitadelResources.class.getResource("setupcitadelexpect_expected.txt")),
     test1comConfExpected("/etc/nginx/sites-available/100-robobee-test1.com.conf", CitadelResources.class.getResource("test1com_conf_expected.txt")),
     aptitudeOutExpected("/usr/bin/aptitude.out", CitadelResources.class.getResource("aptitude_out_expected.txt")),
-    reconfigureOutExpected("/usr/sbin/dpkg-reconfigure.out", CitadelResources.class.getResource("reconfigure_out_expected.txt")),
 
     static copyCitadelFiles(File parent) {
         citadelSetupCommand.createCommand parent
         webcitRestartCommand.createCommand parent
-        reconfigureCommand.createCommand parent
         webcitDefaultsFile.createFile parent
     }
 
@@ -56,8 +55,8 @@ enum CitadelResources {
         def entry = profile.getEntry("httpd")
         entry.citadel_setup_command citadelSetupCommand.asFile(parent)
         entry.webcit_restart_command webcitRestartCommand.asFile(parent)
-        entry.reconfigure_command reconfigureCommand.asFile(parent)
         entry.webcit_defaults_file webcitDefaultsFile.asFile(parent)
+        entry.setup_citadel_script_file setupCitadelScriptFile.asFile(parent)
     }
 
     ResourcesUtils resources

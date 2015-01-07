@@ -59,13 +59,10 @@ abstract class Webcit_8_Ubuntu_Config {
 
     TemplateResource webcitDefaultsConfigTemplate
 
-    TemplateResource webcitReconfigureCommandTemplate
-
     @Inject
     final void setTemplatesFactory(TemplatesFactory templatesFactory) {
-        def templates = templatesFactory.create "Citadel_8_Ubuntu_Config"
+        def templates = templatesFactory.create "Webcit_8_Ubuntu_Config"
         this.webcitDefaultsConfigTemplate = templates.getResource "defaults_config"
-        this.webcitReconfigureCommandTemplate = templates.getResource "reconfigure_command"
     }
 
     /**
@@ -100,24 +97,6 @@ abstract class Webcit_8_Ubuntu_Config {
     }
 
     /**
-     * Reconfigures the <i>Webcit</i> service.
-     *
-     * @param service
-     *            the {@link CitadelService}.
-     *
-     * @see #getCitadelProperties()
-     */
-    void reconfigureWebcit(CitadelService service) {
-        def task = scriptExecFactory.create(
-                log: log,
-                reconfigureCommand: reconfigureCommand,
-                webcitService: webcitService,
-                this, threads,
-                webcitReconfigureCommandTemplate, "reconfigureCommand")()
-        logg.reconfigureWebcitDone this, task
-    }
-
-    /**
      * Restarts the <i>Webcit</i> service.
      *
      * @param service
@@ -130,6 +109,7 @@ abstract class Webcit_8_Ubuntu_Config {
                 log: log,
                 command: webcitRestartCommand,
                 services: [],
+                flags: webcitRestartFlags,
                 this, threads)()
     }
 
@@ -162,17 +142,17 @@ abstract class Webcit_8_Ubuntu_Config {
     }
 
     /**
-     * Returns the service reconfigure command, for
-     * example {@code "/usr/sbin/dpkg-reconfigure"}
+     * Returns the <i>Webcit</i> restart flags, for
+     * example {@code "restart"}
      *
      * <ul>
-     * <li>profile property {@code "reconfigure_command"}</li>
+     * <li>profile property {@code "webcit_restart_flags"}</li>
      * </ul>
      *
      * @see #getCitadelProperties()
      */
-    String getReconfigureCommand() {
-        profileProperty "reconfigure_command", citadelProperties
+    String getWebcitRestartFlags() {
+        profileProperty "webcit_restart_flags", citadelProperties
     }
 
     /**
@@ -215,20 +195,6 @@ abstract class Webcit_8_Ubuntu_Config {
      */
     String getWebcitAddress() {
         profileProperty "webcit_address", citadelProperties
-    }
-
-    /**
-     * Returns the <i>Webcit</i> service name, for
-     * example {@code "citadel-webcit"}
-     *
-     * <ul>
-     * <li>profile property {@code "webcit_service"}</li>
-     * </ul>
-     *
-     * @see #getCitadelProperties()
-     */
-    String getWebcitService() {
-        profileProperty "webcit_service", citadelProperties
     }
 
     /**

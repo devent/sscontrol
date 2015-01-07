@@ -24,7 +24,6 @@ import org.apache.commons.lang3.builder.ToStringBuilder
 import org.joda.time.Duration
 
 import com.anrisoftware.propertiesutils.ContextProperties
-import com.anrisoftware.sscontrol.core.service.LinuxScript
 import com.anrisoftware.sscontrol.httpd.citadel.AuthMethod
 import com.anrisoftware.sscontrol.httpd.citadel.CitadelService
 
@@ -40,7 +39,7 @@ abstract class Citadel_8_Config {
     /**
      * @see ServiceConfig#getScript()
      */
-    private LinuxScript script
+    private Object script
 
     /**
      * Setups default options.
@@ -100,17 +99,31 @@ abstract class Citadel_8_Config {
     }
 
     /**
-     * Returns the timeout duration to setup process, for
-     * example {@code "PT60S".}
+     * Returns the <i>expect</i> command path, for
+     * example {@code "/usr/bin/expect"}
      *
      * <ul>
-     * <li>profile property {@code "cabal_setup_timeout"}</li>
+     * <li>profile property {@code "expect_command"}</li>
      * </ul>
      *
      * @see #getCitadelProperties()
      */
-    Duration getCabalSetupTimeout() {
-        profileDurationProperty "cabal_setup_timeout", citadelProperties
+    String getExpectCommand() {
+        profileProperty "expect_command", citadelProperties
+    }
+
+    /**
+     * Returns the timeout duration to setup process, for
+     * example {@code "PT60S".}
+     *
+     * <ul>
+     * <li>profile property {@code "citadel_setup_timeout"}</li>
+     * </ul>
+     *
+     * @see #getCitadelProperties()
+     */
+    Duration getCitadelSetupTimeout() {
+        profileDurationProperty "citadel_setup_timeout", citadelProperties
     }
 
     /**
@@ -125,34 +138,6 @@ abstract class Citadel_8_Config {
      */
     String getCitadelUser() {
         profileProperty "citadel_user", citadelProperties
-    }
-
-    /**
-     * Returns the binding address of the <i>Citadel</i> service, for
-     * example {@code "127.0.0.1".}
-     *
-     * <ul>
-     * <li>profile property {@code "citadel_address"}</li>
-     * </ul>
-     *
-     * @see #getCitadelProperties()
-     */
-    String getCitadelAddress() {
-        profileProperty "citadel_address", citadelProperties
-    }
-
-    /**
-     * Returns the binding port of the <i>Citadel</i> service, for
-     * example {@code "504".}
-     *
-     * <ul>
-     * <li>profile property {@code "citadel_port"}</li>
-     * </ul>
-     *
-     * @see #getCitadelProperties()
-     */
-    int getCitadelPort() {
-        profileNumberProperty "citadel_port", citadelProperties
     }
 
     /**
@@ -232,7 +217,7 @@ abstract class Citadel_8_Config {
     /**
      * @see ServiceConfig#setScript(LinuxScript)
      */
-    void setScript(LinuxScript script) {
+    void setScript(Object script) {
         this.script = script
     }
 

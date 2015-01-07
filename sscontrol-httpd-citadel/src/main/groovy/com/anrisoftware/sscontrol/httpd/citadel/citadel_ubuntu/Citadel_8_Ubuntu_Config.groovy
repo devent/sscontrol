@@ -22,9 +22,10 @@ import groovy.util.logging.Slf4j
 
 import javax.inject.Inject
 
+import org.apache.commons.io.FileUtils
+
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.TemplatesFactory
-import com.anrisoftware.sscontrol.core.service.LinuxScript
 import com.anrisoftware.sscontrol.httpd.citadel.CitadelService
 import com.anrisoftware.sscontrol.httpd.citadel.core.Citadel_8_Config
 import com.anrisoftware.sscontrol.scripts.unix.ScriptExecFactory
@@ -64,18 +65,46 @@ abstract class Citadel_8_Ubuntu_Config extends Citadel_8_Config {
      * @see #getCitadelProperties()
      */
     void setupCitadel(CitadelService service) {
+        def citadelAddress = service.bindingAddresses.keySet().first()
+        def citadelPort = service.bindingAddresses[citadelAddress].first()
+        def args = [:]
+        args.citadelSetupCommand = citadelSetupCommand
+        args.adminUser = service.adminUser
+        args.adminPassword = service.adminPassword
+        args.citadelUser = citadelUser
+        args.citadelAddress = citadelAddress
+        args.citadelPort = citadelPort
+        args.authMethod = service.authMethod
+        args.nsswitchDbDisabled = nsswitchDbDisable
+        args.setupTimeout = citadelSetupTimeout.getStandardSeconds()
+        def script = citadelSetupTemplate.getText(true, "citadelSetupScript", "args", args)
+        def file = createSetupCitadelScriptFile()
+        FileUtils.writeStringToFile file, script, charset
+        file.setExecutable true
         def task = scriptExecFactory.create(
                 log: log,
-                citadelServerSetupCommand: citadelSetupCommand,
-                adminUser: service.adminUser,
-                adminPassword: service.adminPassword,
-                citadelUser: citadelUser,
-                citadelAddress: citadelAddress,
-                citadelPort: citadelPort,
-                authMethod: service.authMethod,
-                nsswitchDbDisabled: nsswitchDbDisable,
-                setupTimeout: cabalSetupTimeout.getStandardSeconds(),
-                this, threads, citadelSetupTemplate, "citadelSetup")()
+                expectCommand: expectCommand,
+                expectScript: file.absolutePath,
+                this, threads, citadelSetupTemplate, "citadelSetupWrapper")()
         logg.setupCitadelDone this, task
+    }
+
+    /**
+     * Creates the <i>expect</i> setup script file. The file is either created
+     * from the property file path or as a temporary file.
+     *
+     * <ul>
+     * <li>profile property {@code "setup_citadel_script_file"}</li>
+     * </ul>
+     *
+     * @see #getCitadelProperties()
+     */
+    File createSetupCitadelScriptFile() {
+        String path = profileProperty "setup_citadel_script_file", citadelProperties
+        if (path.isEmpty()) {
+            File.createTempFile "setupcitadel", "expect", tmpDirectory
+        } else {
+            new File(path)
+        }
     }
 }

@@ -18,8 +18,6 @@
  */
 package com.anrisoftware.sscontrol.httpd.citadel;
 
-import static com.anrisoftware.sscontrol.httpd.service.HttpdFactory.NAME;
-
 import java.util.List;
 import java.util.Map;
 
@@ -85,7 +83,7 @@ class CitadelServiceImpl implements CitadelService {
     @Inject
     public final void setBindingAddressesStatementsTable(
             BindingAddressesStatementsTableFactory factory) {
-        this.bindingAddresses = factory.create(this, NAME);
+        this.bindingAddresses = factory.create(this, SERVICE_NAME);
     }
 
     @Override

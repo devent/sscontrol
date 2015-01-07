@@ -21,14 +21,11 @@ package com.anrisoftware.sscontrol.httpd.citadel.webcit_ubuntu;
 import static com.anrisoftware.sscontrol.httpd.citadel.webcit_ubuntu.Webcit_8_Ubuntu_ConfigLogger._.default_config_created_debug;
 import static com.anrisoftware.sscontrol.httpd.citadel.webcit_ubuntu.Webcit_8_Ubuntu_ConfigLogger._.default_config_created_info;
 import static com.anrisoftware.sscontrol.httpd.citadel.webcit_ubuntu.Webcit_8_Ubuntu_ConfigLogger._.default_config_created_trace;
-import static com.anrisoftware.sscontrol.httpd.citadel.webcit_ubuntu.Webcit_8_Ubuntu_ConfigLogger._.reconfigure_webcit_done_debug;
-import static com.anrisoftware.sscontrol.httpd.citadel.webcit_ubuntu.Webcit_8_Ubuntu_ConfigLogger._.reconfigure_webcit_done_info;
 
 import java.io.File;
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
 import com.anrisoftware.sscontrol.httpd.citadel.citadel_ubuntu.Citadel_8_Ubuntu_Config;
-import com.anrisoftware.sscontrol.scripts.unix.ScriptExec;
 
 /**
  * Logging for {@link Citadel_8_Ubuntu_Config}.
@@ -47,13 +44,7 @@ class Webcit_8_Ubuntu_ConfigLogger extends AbstractLogger {
                 "Default configuration '{}' created for {}."),
 
         default_config_created_info(
-                "Default configuration '{}' created for service '{}'."),
-
-        reconfigure_webcit_done_debug(
-                "Reconfigure Webcit service done {} for {}."),
-
-        reconfigure_webcit_done_info(
-                "Reconfigure Webcit service done for service '{}'.");
+                "Default configuration '{}' created for service '{}'.");
 
         private String name;
 
@@ -82,14 +73,6 @@ class Webcit_8_Ubuntu_ConfigLogger extends AbstractLogger {
             debug(default_config_created_debug, file, config);
         } else {
             info(default_config_created_info, file, config.getServiceName());
-        }
-    }
-
-    void reconfigureWebcitDone(Webcit_8_Ubuntu_Config config, ScriptExec task) {
-        if (isDebugEnabled()) {
-            debug(reconfigure_webcit_done_debug, task, config);
-        } else {
-            info(reconfigure_webcit_done_info, config.getServiceName());
         }
     }
 

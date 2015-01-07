@@ -21,8 +21,8 @@ package com.anrisoftware.sscontrol.httpd.citadel.citadel_ubuntu;
 import static com.anrisoftware.sscontrol.httpd.citadel.citadel_ubuntu.Citadel_8_Ubuntu_ConfigLogger._.setup_citadel_done_debug;
 import static com.anrisoftware.sscontrol.httpd.citadel.citadel_ubuntu.Citadel_8_Ubuntu_ConfigLogger._.setup_citadel_done_info;
 
+import com.anrisoftware.globalpom.exec.api.ProcessTask;
 import com.anrisoftware.globalpom.log.AbstractLogger;
-import com.anrisoftware.sscontrol.scripts.unix.ScriptExec;
 
 /**
  * Logging for {@link Citadel_8_Ubuntu_Config}.
@@ -57,9 +57,9 @@ class Citadel_8_Ubuntu_ConfigLogger extends AbstractLogger {
         super(Citadel_8_Ubuntu_Config.class);
     }
 
-    void setupCitadelDone(Citadel_8_Ubuntu_Config config, ScriptExec script) {
+    void setupCitadelDone(Citadel_8_Ubuntu_Config config, ProcessTask task) {
         if (isDebugEnabled()) {
-            debug(setup_citadel_done_debug, config, script);
+            debug(setup_citadel_done_debug, config, task);
         } else {
             info(setup_citadel_done_info, config.getServiceName());
         }

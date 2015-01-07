@@ -58,7 +58,7 @@ class Citadel_Nginx_Ubuntu_14_04_Config implements ServiceConfig {
 
     @Inject
     final void setNginxTemplatesFactory(TemplatesFactory factory) {
-        def templates = factory.create "Gitit_Nginx_Ubuntu_12_04", ["renderers": [
+        def templates = factory.create "Citadel_Nginx_Ubuntu_14_04_Config", ["renderers": [
                 timeoutDurationAttributeRenderer
             ]]
         this.citadelDomainTemplate = templates.getResource "domain_config"
@@ -76,7 +76,6 @@ class Citadel_Nginx_Ubuntu_14_04_Config implements ServiceConfig {
         citadelConfig.setupDefaults service
         citadelConfig.setupCitadel service
         webcitConfig.deployWebcitDefaultConfig domain, service
-        webcitConfig.reconfigureWebcit service
         webcitConfig.restartWebcit service
         createDomainConfig domain, null, service, config
     }
@@ -109,14 +108,14 @@ class Citadel_Nginx_Ubuntu_14_04_Config implements ServiceConfig {
      *            the {@link List} configuration.
      */
     void createDomainConfig(Domain domain, Domain refDomain, CitadelService service, List config) {
-        def serviceAliasDir = serviceAliasDir domain, refDomain, service
+        def serviceLocation = serviceLocation service
         def args = [:]
         args.webcitAddress = webcitConfig.webcitAddress
         args.webcitHttpPort = webcitConfig.webcitHttpPort
-        args.webcitLocation = serviceAliasDir
-        args.listsubLocation = "$serviceAliasDir/${webcitConfig.listsubLocation}"
-        args.groupdavLocation = "$serviceAliasDir/${webcitConfig.groupdavLocation}"
-        args.freebusyLocation = "$serviceAliasDir/${webcitConfig.freebusyLocation}"
+        args.webcitLocation = serviceLocation
+        args.listsubLocation = "$serviceLocation${webcitConfig.listsubLocation}"
+        args.groupdavLocation = "$serviceLocation${webcitConfig.groupdavLocation}"
+        args.freebusyLocation = "$serviceLocation${webcitConfig.freebusyLocation}"
         args.webcitprops = webcitConfig
         def configStr = citadelDomainTemplate.getText(true, "domainConfig", "args", args)
         config << configStr
@@ -136,25 +135,6 @@ class Citadel_Nginx_Ubuntu_14_04_Config implements ServiceConfig {
             location = "/$location"
         }
         return location
-    }
-
-    /**
-     * Returns the service alias directory path.
-     *
-     * @param domain
-     *            the {@link Domain} for which the path is returned.
-     *
-     * @param refDomain
-     *            the references {@link Domain} or {@code null}.
-     *
-     * @param service
-     *            the {@link CitadelService} service.
-     *
-     * @see #serviceDir(Domain, Domain, GititService)
-     */
-    String serviceAliasDir(Domain domain, Domain refDomain, CitadelService service) {
-        def serviceDir = serviceDir domain, refDomain, service
-        service.alias.empty ? "/" : serviceDir
     }
 
     /**
@@ -183,6 +163,7 @@ class Citadel_Nginx_Ubuntu_14_04_Config implements ServiceConfig {
     void setScript(LinuxScript script) {
         this.script = script
         webcitConfig.setScript this
+        citadelConfig.setScript this
     }
 
     @Override

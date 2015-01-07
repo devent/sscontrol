@@ -43,18 +43,18 @@ enum UbuntuResources {
     unzipCommand("/usr/bin/unzip", UbuntuResources.class.getResource("echo_command.txt")),
     lnCommand("/bin/ln", UbuntuResources.class.getResource("echo_command.txt")),
     netstatCommand("/bin/netstat", UbuntuResources.class.getResource("echo_command.txt")),
-    reconfigureCommand("/usr/sbin/dpkg-reconfigure", UbuntuResources.class.getResource("echo_command.txt")),
     updateRcCommand("/usr/sbin/update-rc.d", UbuntuResources.class.getResource("echo_command.txt")),
     mysqlCommand("/usr/bin/mysql", UbuntuResources.class.getResource("echo_command.txt")),
+    expectCommand("/usr/bin/expect", UbuntuResources.class.getResource("echo_command.txt")),
     tmpDir("/tmp", null),
     certCrt("cert.crt", UbuntuResources.class.getResource("cert_crt.txt")),
     certKey("cert.key", UbuntuResources.class.getResource("cert_key.txt")),
     groupsFile("/etc/group", UbuntuResources.class.getResource("group.txt")),
     usersFile("/etc/passwd", UbuntuResources.class.getResource("passwd.txt")),
-    confDir("/etc/apache2", null),
-    sitesAvailableDir("/etc/apache2/sites-available", null),
-    sitesEnabledDir("/etc/apache2/sites-enabled", null),
-    configIncludeDir("/etc/apache2/conf.d", null),
+    confDir("/etc/nginx", null),
+    sitesAvailableDir("/etc/nginx/sites-available", null),
+    sitesEnabledDir("/etc/nginx/sites-enabled", null),
+    configIncludeDir("/etc/nginx/conf.d", null),
     sitesDir("/var/www", null),
 
     static copyUbuntuFiles(File parent) {
@@ -69,8 +69,8 @@ enum UbuntuResources {
         unzipCommand.createCommand parent
         lnCommand.createCommand parent
         netstatCommand.createCommand parent
-        reconfigureCommand.createCommand parent
         updateRcCommand.createCommand parent
+        expectCommand.createCommand parent
         tmpDir.asFile(parent).mkdirs()
         restartCommand.createCommand parent
         confDir.asFile(parent).mkdirs()
@@ -80,8 +80,17 @@ enum UbuntuResources {
 
     static void setupUbuntuProperties(def profile, File parent) {
         def entry = profile.getEntry("httpd")
+        entry.install_command aptitudeCommand.asFile(parent)
         entry.restart_command "${restartCommand.asFile(parent)} restart"
+        entry.netstat_command netstatCommand.asFile(parent)
+        entry.group_add_command groupaddCommand.asFile(parent)
+        entry.user_add_command useraddCommand.asFile(parent)
+        entry.chown_command chownCommand.asFile(parent)
+        entry.chmod_command chmodCommand.asFile(parent)
+        entry.link_command lnCommand.asFile(parent)
+        entry.expect_command expectCommand.asFile(parent)
         entry.configuration_directory confDir.asFile(parent)
+        entry.temp_directory tmpDir.asFile(parent)
         entry.groups_file groupsFile.asFile(parent)
         entry.users_file usersFile.asFile(parent)
         entry.sites_available_directory sitesAvailableDir.asFile(parent)

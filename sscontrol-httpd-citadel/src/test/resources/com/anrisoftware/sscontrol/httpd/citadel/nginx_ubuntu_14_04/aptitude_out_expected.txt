@@ -1,0 +1,10 @@
+-q -y install nginx net-tools
+-q -y install ghc cabal-install libghc-pcre-light-dev alex zlib1g-dev happy libssl-dev
+-q -y install git
+-q -y install ghc cabal-install libghc-pcre-light-dev alex zlib1g-dev happy libssl-dev
+-q -y install git
+-q -y install nginx net-tools
+-q -y install ghc cabal-install libghc-pcre-light-dev alex zlib1g-dev happy libssl-dev
+-q -y install git
+-q -y install ghc cabal-install libghc-pcre-light-dev alex zlib1g-dev happy libssl-dev
+-q -y install git

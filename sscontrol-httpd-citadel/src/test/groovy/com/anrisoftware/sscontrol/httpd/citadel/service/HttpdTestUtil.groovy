@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd-citadel. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.citadel
+package com.anrisoftware.sscontrol.httpd.citadel.service
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 

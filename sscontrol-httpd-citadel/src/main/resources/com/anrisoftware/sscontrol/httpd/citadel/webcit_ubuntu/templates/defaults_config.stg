@@ -1,0 +1,39 @@
+citadelAddressConfigSearch() ::= <%
+export WEBCIT_CITADEL_IP='.*'
+%>
+
+citadelAddressConfig(addresses) ::= <%
+export WEBCIT_CITADEL_IP='<first(addresses)>'
+%>
+
+citadelPortConfigSearch() ::= <%
+export WEBCIT_CITADEL_PORT='\d+'
+%>
+
+citadelPortConfig(addresses) ::= <%
+export WEBCIT_CITADEL_PORT='<addresses[first(addresses)]>'
+%>
+
+httpPortConfigSearch() ::= <%
+export WEBCIT_HTTP_PORT='\d+'
+%>
+
+httpPortConfig(port) ::= <%
+export WEBCIT_HTTP_PORT='<port>'
+%>
+
+httpsPortConfigSearch() ::= <%
+export WEBCIT_HTTPS_PORT='\d+'
+%>
+
+httpsPortConfig(port) ::= <%
+export WEBCIT_HTTPS_PORT='<port>'
+%>
+
+webcitAddressConfigSearch() ::= <%
+export WEBCIT_LISTEN_IP='.*'
+%>
+
+webcitAddressConfig(address) ::= <%
+export WEBCIT_LISTEN_IP='<address>'
+%>

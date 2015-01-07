@@ -20,7 +20,6 @@
 		<project.custom.year>${project.inceptionYear}</project.custom.year>
 	</properties>
 
-
     <issueManagement>
         <system>Redmine</system>
         <url>https://anrisoftware.com/projects/projects/sscontrol-httpd-citadel</url>

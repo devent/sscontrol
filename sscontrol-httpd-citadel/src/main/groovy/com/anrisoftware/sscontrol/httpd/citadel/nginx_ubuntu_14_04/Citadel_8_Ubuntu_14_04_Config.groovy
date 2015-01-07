@@ -16,8 +16,33 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd-citadel. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.citadel
+package com.anrisoftware.sscontrol.httpd.citadel.nginx_ubuntu_14_04
 
-profile "ubuntu_14_04", {
-    httpd { service "apache" }
+import javax.inject.Inject
+
+import com.anrisoftware.propertiesutils.ContextProperties
+import com.anrisoftware.sscontrol.httpd.citadel.citadel_ubuntu.Citadel_8_Ubuntu_Config
+
+/**
+ * <i>Citadel 8 Ubuntu 14.04</i> configuration.
+ *
+ * @author Erwin Mueller, erwin.mueller@deventm.org
+ * @since 1.0
+ */
+class Citadel_8_Ubuntu_14_04_Config extends Citadel_8_Ubuntu_Config {
+
+    @Inject
+    Citadel_ubuntu_14_04_PropertyProvider citadelPropertyProvider
+
+    ContextProperties getCitadelProperties() {
+        citadelPropertyProvider.get()
+    }
+
+    String getServiceName() {
+        Citadel_Nginx_Ubuntu_14_04_ConfigFactory.WEB_NAME
+    }
+
+    String getProfile() {
+        Citadel_Nginx_Ubuntu_14_04_ConfigFactory.PROFILE_NAME
+    }
 }

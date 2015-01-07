@@ -16,14 +16,8 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd-citadel. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.citadel
+package com.anrisoftware.sscontrol.httpd.citadel.nginx_ubuntu_14_04
 
-httpd {
-    domain "test1.com", address: "192.168.0.51", {
-        setup "citadel", alias: "/", {
-            bind "0.0.0.0", port: 504
-            auth method: AuthMethod.selfContained
-            admin "admin", password: "adminpass"
-        }
-    }
+profile "ubuntu_14_04", {
+    httpd { service "nginx" }
 }

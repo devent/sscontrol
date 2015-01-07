@@ -1,0 +1,111 @@
+domainConfig(args) ::= <<
+<! - args.webcitAddress - !>
+<! - args.webcitHttpPort - !>
+<! - args.webcitLocation - !>
+<! - args.listsubLocation - !>
+<! - args.groupdavLocation - !>
+<! - args.freebusyLocation - !>
+<! - args.webcitprops.webcitProxyConnectTimeout - !>
+<! - args.webcitprops.webcitProxySendTimeout - !>
+<! - args.webcitprops.webcitProxyReadTimeout - !>
+# Citadel Webcit
+<webcitMainLocation(args)>
+<webcitListsubLocation(args)>
+<webcitGroupdavLocation(args)>
+<webcitFreebusyLocation(args)>
+
+>>
+
+webcitMainLocation(args) ::= <<
+# Main location
+location <args.webcitLocation> {
+    proxy_pass         http://<args.webcitAddress>:<args.webcitHttpPort>/;
+    proxy_redirect     off;
+
+    proxy_set_header   Host             $host;
+    proxy_set_header   X-Real-IP        $remote_addr;
+    proxy_set_header   X-Forwarded-For  $proxy_add_x_forwarded_for;
+
+    proxy_connect_timeout      <args.webcitprops.webcitProxyConnectTimeout;format="seconds">;
+    proxy_send_timeout         <args.webcitprops.webcitProxySendTimeout;format="seconds">;
+    proxy_read_timeout         <args.webcitprops.webcitProxyReadTimeout;format="seconds">;
+
+    proxy_buffer_size          4k;
+    proxy_buffers              4 32k;
+    proxy_busy_buffers_size    64k;
+    proxy_temp_file_write_size 64k;
+}
+
+>>
+
+webcitListsubLocation(args) ::= <<
+<if(args.listsubLocation)>
+# List-Subscription location
+location <args.listsubLocation> {
+    proxy_pass         http://<args.webcitAddress>:<args.webcitHttpPort>/;
+    proxy_redirect     off;
+
+    proxy_set_header   Host             $host;
+    proxy_set_header   X-Real-IP        $remote_addr;
+    proxy_set_header   X-Forwarded-For  $proxy_add_x_forwarded_for;
+
+    proxy_connect_timeout      <args.webcitprops.webcitProxyConnectTimeout;format="seconds">;
+    proxy_send_timeout         <args.webcitprops.webcitProxySendTimeout;format="seconds">;
+    proxy_read_timeout         <args.webcitprops.webcitProxyReadTimeout;format="seconds">;
+
+    proxy_buffer_size          4k;
+    proxy_buffers              4 32k;
+    proxy_busy_buffers_size    64k;
+    proxy_temp_file_write_size 64k;
+}
+
+<endif>
+>>
+
+webcitGroupdavLocation(args) ::= <<
+<if(args.groupdavLocation)>
+# Groupdav location
+location <args.groupdavLocation> {
+    proxy_pass         http://<args.webcitAddress>:<args.webcitHttpPort>/;
+    proxy_redirect     off;
+
+    proxy_set_header   Host             $host;
+    proxy_set_header   X-Real-IP        $remote_addr;
+    proxy_set_header   X-Forwarded-For  $proxy_add_x_forwarded_for;
+
+    proxy_connect_timeout      <args.webcitprops.webcitProxyConnectTimeout;format="seconds">;
+    proxy_send_timeout         <args.webcitprops.webcitProxySendTimeout;format="seconds">;
+    proxy_read_timeout         <args.webcitprops.webcitProxyReadTimeout;format="seconds">;
+
+    proxy_buffer_size          4k;
+    proxy_buffers              4 32k;
+    proxy_busy_buffers_size    64k;
+    proxy_temp_file_write_size 64k;
+}
+
+<endif>
+>>
+
+webcitFreebusyLocation(args) ::= <<
+<if(args.freebusyLocation)>
+# Freebusy location
+location <args.freebusyLocation> {
+    proxy_pass         http://<args.webcitAddress>:<args.webcitHttpPort>/;
+    proxy_redirect     off;
+
+    proxy_set_header   Host             $host;
+    proxy_set_header   X-Real-IP        $remote_addr;
+    proxy_set_header   X-Forwarded-For  $proxy_add_x_forwarded_for;
+
+    proxy_connect_timeout      <args.webcitprops.webcitProxyConnectTimeout;format="seconds">;
+    proxy_send_timeout         <args.webcitprops.webcitProxySendTimeout;format="seconds">;
+    proxy_read_timeout         <args.webcitprops.webcitProxyReadTimeout;format="seconds">;
+
+    proxy_buffer_size          4k;
+    proxy_buffers              4 32k;
+    proxy_busy_buffers_size    64k;
+    proxy_temp_file_write_size 64k;
+}
+
+<endif>
+>>

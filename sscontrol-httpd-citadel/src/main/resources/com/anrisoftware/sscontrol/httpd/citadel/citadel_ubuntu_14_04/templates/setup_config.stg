@@ -1,0 +1,52 @@
+citadelSetup(args) ::= <<
+<! - args.adminUser - !>
+<! - args.adminPassword - !>
+<! - args.citadelUser - !>
+<! - args.citadelAddress - !>
+<! - args.citadelPort - !>
+<! - args.authMethod - !>
+<! - args.nsswitchDbDisabled - !>
+<! - args.citadelSetupCommand - !>
+<! - args.setupTimeout - !>
+#!/usr/bin/expect
+
+set timeout <args.setupTimeout>
+
+set adminUser "<args.adminUser>"
+set adminPass "<args.adminPassword>"
+set citadelUser "<args.citadelUser>"
+set citadelAddress "<args.citadelAddress>"
+set citadelPort "<args.citadelPort>"
+set authMethod "<args.authMethod>"
+set nsswitchDbDisabled "<args.nsswitchDbDisabled>"
+
+spawn "<args.citadelSetupCommand>"
+match_max 100000
+
+expect -re "(?s)<Citadel administrator username:>.*Enter new value or press return to leave unchanged:"
+send "$adminUser\r"
+
+expect -re "(?s)<Administrator password:>.*Enter new value or press return to leave unchanged:"
+send "$adminPass\r"
+
+expect -re "(?s)<Citadel User ID:>.*Enter new value or press return to leave unchanged:"
+send "$citadelUser\r"
+
+expect -re "(?s)<Listening address for the Citadel server:>.*Enter new value or press return to leave unchanged:"
+send "$citadelAddress\r"
+
+expect -re "(?s)<Server port number:>.*Enter new value or press return to leave unchanged:"
+send "$citadelPort\r"
+
+expect -re "(?s)<Authentication method to use:>.*Enter new value or press return to leave unchanged:"
+send "$authMethod\r"
+
+expect {
+    -re "(?s)/etc/nsswitch.conf is configured to use the 'db' module for.*Yes/No" {
+        send "$nsswitchDbDisabled\r"
+    }
+}
+
+expect eof
+
+>>

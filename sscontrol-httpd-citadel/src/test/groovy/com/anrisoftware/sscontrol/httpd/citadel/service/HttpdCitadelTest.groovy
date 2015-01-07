@@ -16,16 +16,18 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd-citadel. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.citadel
+package com.anrisoftware.sscontrol.httpd.citadel.service
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
-import static com.anrisoftware.sscontrol.httpd.citadel.ServicesResources.*
+import static com.anrisoftware.sscontrol.httpd.citadel.service.ServicesResources.*
 import groovy.util.logging.Slf4j
 
 import org.junit.Test
 
 import com.anrisoftware.sscontrol.core.api.ServiceLoader as SscontrolServiceLoader
 import com.anrisoftware.sscontrol.core.api.ServicesRegistry
+import com.anrisoftware.sscontrol.httpd.citadel.AuthMethod
+import com.anrisoftware.sscontrol.httpd.citadel.CitadelService
 import com.anrisoftware.sscontrol.httpd.domain.Domain
 import com.anrisoftware.sscontrol.httpd.service.HttpdService
 

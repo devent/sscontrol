@@ -34,7 +34,7 @@ http {
 	##
 
 	access_log /var/log/nginx/access.log;
-	# SSCONTROL-httpd
+# SSCONTROL-httpd
 error_log /var/log/nginx/error.log error;
 # SSCONTROL-httpd-END
 
@@ -42,9 +42,13 @@ error_log /var/log/nginx/error.log error;
 	##
 	# Gzip Settings
 	##
+# SSCONTROL-httpd
+# gzip on;
+# SSCONTROL-httpd-END
+# SSCONTROL-httpd
+# gzip_disable "msie6";
+# SSCONTROL-httpd-END
 
-	gzip on;
-	gzip_disable "msie6";
 
 	# gzip_vary on;
 	# gzip_proxied any;

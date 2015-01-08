@@ -62,7 +62,7 @@ include <properties.sitesEnabledDir>/*.conf;
 >>
 
 errorLog_search() ::= <%
-error_log\s+.*?;
+(?m)^#?\s*error_log\s+.*?;
 %>
 
 errorLog(debug) ::= <%
@@ -70,10 +70,25 @@ error_log <debug;format="errorlog">;
 %>
 
 workerProcesses_search() ::= <%
-worker_processes\s+\d+;
+(?m)^#?\s*worker_processes\s+\d+;
 %>
 
 workerProcesses(processes) ::= <%
 worker_processes <processes>;
 %>
 
+gzipOnConfigSearch() ::= <%
+(?m)^#?\s*gzip .*?;
+%>
+
+gzipOnConfig() ::= <%
+# gzip on;
+%>
+
+gzipDisableConfigSearch() ::= <%
+(?m)^#?\s*gzip_disable .*?;
+%>
+
+gzipDisableConfig() ::= <%
+# gzip_disable "msie6";
+%>

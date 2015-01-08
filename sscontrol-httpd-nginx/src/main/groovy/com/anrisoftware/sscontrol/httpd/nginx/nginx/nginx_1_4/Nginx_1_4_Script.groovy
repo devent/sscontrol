@@ -130,6 +130,8 @@ abstract class Nginx_1_4_Script extends NginxScript {
         [
             configErrorLog(service),
             configWorkerProcesses(service),
+            configGzipOn(service),
+            configGzipDisable(service),
         ]
     }
 
@@ -142,6 +144,18 @@ abstract class Nginx_1_4_Script extends NginxScript {
     def configWorkerProcesses(HttpdService service) {
         def search = nginxConfigTemplate.getText(true, "workerProcesses_search")
         def replace = nginxConfigTemplate.getText(true, "workerProcesses", "processes", workerProcesses)
+        new TokenTemplate(search, replace)
+    }
+
+    def configGzipOn(HttpdService service) {
+        def search = nginxConfigTemplate.getText(true, "gzipOnConfigSearch")
+        def replace = nginxConfigTemplate.getText(true, "gzipOnConfig")
+        new TokenTemplate(search, replace)
+    }
+
+    def configGzipDisable(HttpdService service) {
+        def search = nginxConfigTemplate.getText(true, "gzipDisableConfigSearch")
+        def replace = nginxConfigTemplate.getText(true, "gzipDisableConfig")
         new TokenTemplate(search, replace)
     }
 

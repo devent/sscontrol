@@ -119,6 +119,14 @@ filter_rfc1918(enabled) ::= <%
 filter_rfc1918 = <if(enabled)>1<else>0<endif>
 %>
 
+reject_mx_search() ::= <%
+(?m)^#?\s*reject_mx\s*=\s*\d*.*
+%>
+
+reject_mx(reject) ::= <%
+reject_mx = <if(reject)>1<else>0<endif>
+%>
+
 maradns_uid_search() ::= <%
 (?m)^#?\s*maradns_uid\s*=\s*\d*.*
 %>

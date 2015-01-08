@@ -109,3 +109,6 @@ root_servers["example1.com."] = "127.0.0.2"
 # SSCONTROL-dns
 root_servers["example2.com."] = "127.0.0.3"
 # SSCONTROL-dns-END
+# SSCONTROL-dns
+reject_mx = 0
+# SSCONTROL-dns-END

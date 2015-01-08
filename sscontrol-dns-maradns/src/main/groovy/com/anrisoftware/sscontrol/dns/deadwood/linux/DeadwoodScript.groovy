@@ -260,6 +260,19 @@ abstract class DeadwoodScript extends LinuxScript {
     }
 
     /**
+     * Returns reject MX lookup, for example {@code false}.
+     *
+     * <ul>
+     * <li>profile property key {@code deadwood_reject_mx}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    boolean getRejectMx() {
+        profileBooleanProperty "deadwood_reject_mx", defaultProperties
+    }
+
+    /**
      * Returns the IPv4 match pattern.
      *
      * <ul>

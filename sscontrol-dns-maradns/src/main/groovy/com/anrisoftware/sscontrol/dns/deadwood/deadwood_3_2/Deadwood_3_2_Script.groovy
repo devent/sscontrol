@@ -102,6 +102,7 @@ abstract class Deadwood_3_2_Script extends DeadwoodScript {
             cacheFileConfiguration(service),
             resurrectionsConfiguration(service),
             filterRfc1918Configuration(service),
+            rejectMxConfiguration(service),
         ]
     }
 
@@ -304,6 +305,15 @@ abstract class Deadwood_3_2_Script extends DeadwoodScript {
     def filterRfc1918Configuration(DnsService service) {
         def search = deadwoodConfiguration.getText(true, "filter_rfc1918_search")
         def replace = deadwoodConfiguration.getText(true, "filter_rfc1918", "enabled", filterRfc1918)
+        new TokenTemplate(search, replace)
+    }
+
+    /**
+     * Sets the reject MX lookup.
+     */
+    def rejectMxConfiguration(DnsService service) {
+        def search = deadwoodConfiguration.getText(true, "reject_mx_search")
+        def replace = deadwoodConfiguration.getText(true, "reject_mx", "reject", rejectMx)
         new TokenTemplate(search, replace)
     }
 

@@ -38,8 +38,11 @@ enum CitadelResources {
     citadelSetupCommand("/usr/lib/citadel-server/setup", CitadelResources.class.getResource("echo_command.txt")),
     citadelRestartCommand("/etc/init.d/citadel", CitadelResources.class.getResource("echo_command.txt")),
     webcitRestartCommand("/etc/init.d/webcit", CitadelResources.class.getResource("echo_command.txt")),
+    spamassassinRestartCommand("/etc/init.d/spamassassin", CitadelResources.class.getResource("echo_command.txt")),
     // files
     webcitDefaultsFile("/etc/default/webcit", CitadelResources.class.getResource("default_webcit.txt")),
+    spamassassinDefaultsFile("/etc/default/spamassassin", CitadelResources.class.getResource("default_spamassassin.txt")),
+    spamassassinLocalConfFile("/etc/spamassassin/local.cf", CitadelResources.class.getResource("spamassassin_localcf.txt")),
     setupCitadelScriptFile("/tmp/setupcitadel.expect", null),
     citadelCertCaFile("/etc/ssl/citadel/citadel.csr", null),
     citadelCertFile("/etc/ssl/citadel/citadel.cer", null),
@@ -54,6 +57,8 @@ enum CitadelResources {
     citadelKeyFileExpected("/etc/ssl/citadel/citadel.key", CitadelResources.class.getResource("citadelkey_expected.txt")),
     citadelChmodOutExpected("/bin/chmod.out", CitadelResources.class.getResource("citadel_chmod_out_expected.txt")),
     citadelChownOutExpected("/bin/chown.out", CitadelResources.class.getResource("citadel_chown_out_expected.txt")),
+    citadelSpamassassinDefaultsFileExpected("/etc/default/spamassassin", CitadelResources.class.getResource("citadel_spamassassin_default_expected.txt")),
+    citadelSpamassassinLocalConfFileExpected("/etc/spamassassin/local.cf", CitadelResources.class.getResource("citadel_spamassassin_localcf_expected.txt")),
     // minimal expected
     minimalWebcitDefaultsFileExpected("/etc/default/webcit", CitadelResources.class.getResource("minimal_default_webcit_expected.txt")),
     minimalSetupCitadelScriptFileExpected("/tmp/setupcitadel.expect", CitadelResources.class.getResource("minimal_setupcitadelexpect_expected.txt")),
@@ -64,7 +69,10 @@ enum CitadelResources {
         citadelSetupCommand.createCommand parent
         citadelRestartCommand.createCommand parent
         webcitRestartCommand.createCommand parent
+        spamassassinRestartCommand.createCommand parent
         webcitDefaultsFile.createFile parent
+        spamassassinDefaultsFile.createFile parent
+        spamassassinLocalConfFile.createFile parent
     }
 
     static void setupCitadelProperties(def profile, File parent) {
@@ -77,6 +85,9 @@ enum CitadelResources {
         entry.citadel_cert_ca_file citadelCertCaFile.asFile(parent)
         entry.citadel_cert_file citadelCertFile.asFile(parent)
         entry.citadel_cert_key_file citadelCertKeyFile.asFile(parent)
+        entry.spamassassin_restart_command spamassassinRestartCommand.asFile(parent)
+        entry.spamassassin_defaults_file spamassassinDefaultsFile.asFile(parent)
+        entry.spamassassin_local_conf_file spamassassinLocalConfFile.asFile(parent)
     }
 
     ResourcesUtils resources

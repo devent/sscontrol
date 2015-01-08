@@ -47,6 +47,7 @@ enum UbuntuResources {
     mysqlCommand("/usr/bin/mysql", UbuntuResources.class.getResource("echo_command.txt")),
     expectCommand("/usr/bin/expect", UbuntuResources.class.getResource("echo_command.txt")),
     tmpDir("/tmp", null),
+    certCa("cert.csr", UbuntuResources.class.getResource("cert_ca.txt")),
     certCrt("cert.crt", UbuntuResources.class.getResource("cert_crt.txt")),
     certKey("cert.key", UbuntuResources.class.getResource("cert_key.txt")),
     groupsFile("/etc/group", UbuntuResources.class.getResource("group.txt")),

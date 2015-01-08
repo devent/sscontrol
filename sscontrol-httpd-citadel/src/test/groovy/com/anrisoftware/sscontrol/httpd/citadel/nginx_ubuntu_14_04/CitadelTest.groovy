@@ -56,6 +56,11 @@ class CitadelTest extends UbuntuTestUtil {
         assertFileContent citadelWebcitDefaultsFileExpected.asFile(tmpdir), citadelWebcitDefaultsFileExpected
         assertStringContent citadelSetupCitadelScriptFileExpected.replaced(tmpdir, tmpdir, "/tmp"), citadelSetupCitadelScriptFileExpected.toString()
         assertFileContent citadelAptitudeOutExpected.asFile(tmpdir), citadelAptitudeOutExpected
+        assertFileContent citadelCaFileExpected.asFile(tmpdir), citadelCaFileExpected
+        assertFileContent citadelCertFileExpected.asFile(tmpdir), citadelCertFileExpected
+        assertFileContent citadelKeyFileExpected.asFile(tmpdir), citadelKeyFileExpected
+        assertStringContent citadelChmodOutExpected.replaced(tmpdir, tmpdir, "/tmp"), citadelChmodOutExpected.toString()
+        assertStringContent citadelChownOutExpected.replaced(tmpdir, tmpdir, "/tmp"), citadelChownOutExpected.toString()
     }
 
     @Test

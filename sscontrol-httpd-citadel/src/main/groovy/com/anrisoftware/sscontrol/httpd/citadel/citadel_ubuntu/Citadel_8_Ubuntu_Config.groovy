@@ -28,6 +28,7 @@ import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.TemplatesFactory
 import com.anrisoftware.sscontrol.httpd.citadel.CitadelService
 import com.anrisoftware.sscontrol.httpd.citadel.core.Citadel_8_Config
+import com.anrisoftware.sscontrol.scripts.unix.RestartServicesFactory
 import com.anrisoftware.sscontrol.scripts.unix.ScriptExecFactory
 
 /**
@@ -47,6 +48,9 @@ abstract class Citadel_8_Ubuntu_Config extends Citadel_8_Config {
 
     @Inject
     AuthMethodAttributeRenderer authMethodAttributeRenderer
+
+    @Inject
+    RestartServicesFactory restartServicesFactory
 
     TemplateResource citadelSetupTemplate
 
@@ -105,6 +109,23 @@ abstract class Citadel_8_Ubuntu_Config extends Citadel_8_Config {
         } else {
             new File(path)
         }
+    }
+
+    /**
+     * Restarts the <i>Citadel</i> service.
+     *
+     * @param service
+     *            the {@link CitadelService}.
+     *
+     * @see #getCitadelProperties()
+     */
+    void restartCitadel(CitadelService service) {
+        def task = restartServicesFactory.create(
+                log: log,
+                command: citadelRestartCommand,
+                services: [],
+                flags: citadelRestartFlags,
+                this, threads)()
     }
 
     /**

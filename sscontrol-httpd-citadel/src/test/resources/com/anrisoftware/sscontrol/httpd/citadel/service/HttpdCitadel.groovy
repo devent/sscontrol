@@ -18,7 +18,8 @@
  */
 package com.anrisoftware.sscontrol.httpd.citadel.service
 
-import com.anrisoftware.sscontrol.httpd.citadel.AuthMethod;
+import com.anrisoftware.sscontrol.httpd.citadel.AuthMethod
+import com.anrisoftware.sscontrol.httpd.citadel.ubuntu_14_04.UbuntuResources
 
 httpd {
     domain "test1.com", address: "192.168.0.51", {
@@ -26,6 +27,7 @@ httpd {
             bind "0.0.0.0", port: 504
             auth method: AuthMethod.selfContained
             admin "admin", password: "adminpass"
+            certificate ca: UbuntuResources.certCa.resource, file: UbuntuResources.certCrt.resource, key: UbuntuResources.certKey.resource
         }
     }
 }

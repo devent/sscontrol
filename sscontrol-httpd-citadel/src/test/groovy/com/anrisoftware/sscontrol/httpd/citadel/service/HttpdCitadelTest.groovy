@@ -62,5 +62,8 @@ class HttpdCitadelTest extends HttpdTestUtil {
         assert webservice.authMethod == AuthMethod.selfContained
         assert webservice.adminUser == "admin"
         assert webservice.adminPassword == "adminpass"
+        assert webservice.certCa.toString() =~ /.*cert_ca\.txt/
+        assert webservice.certFile.toString() =~ /.*cert_crt\.txt/
+        assert webservice.certKey.toString() =~ /.*cert_key\.txt/
     }
 }

@@ -18,6 +18,7 @@
  */
 package com.anrisoftware.sscontrol.httpd.citadel;
 
+import java.net.URI;
 import java.util.List;
 import java.util.Map;
 
@@ -110,5 +111,59 @@ public interface CitadelService extends WebService {
      * @return the authentication {@link AuthMethod} method or {@code null}.
      */
     AuthMethod getAuthMethod();
+
+    /**
+     * Returns the certificate authority resource.
+     * <p>
+     *
+     * <pre>
+     * httpd {
+     *     domain "test1.com", address: "192.168.0.51", {
+     *         setup "citadel", alias: "/", {
+     *             certificate ca: "cert.csr", file: "cert.crt", key: "cert.key"
+     *         }
+     *     }
+     * }
+     * </pre>
+     *
+     * @return the certificate authority {@link URI} resource or {@code null}.
+     */
+    URI getCertCa();
+
+    /**
+     * Returns the certificate file resource.
+     * <p>
+     *
+     * <pre>
+     * httpd {
+     *     domain "test1.com", address: "192.168.0.51", {
+     *         setup "citadel", alias: "/", {
+     *             certificate ca: "cert.csr", file: "cert.crt", key: "cert.key"
+     *         }
+     *     }
+     * }
+     * </pre>
+     *
+     * @return the certificate file {@link URI} resource or {@code null}.
+     */
+    URI getCertFile();
+
+    /**
+     * Returns the certificate key resource.
+     * <p>
+     *
+     * <pre>
+     * httpd {
+     *     domain "test1.com", address: "192.168.0.51", {
+     *         setup "citadel", alias: "/", {
+     *             certificate ca: "cert.csr", file: "cert.crt", key: "cert.key"
+     *         }
+     *     }
+     * }
+     * </pre>
+     *
+     * @return the certificate key {@link URI} resource or {@code null}.
+     */
+    URI getCertKey();
 
 }

@@ -1,0 +1,8 @@
+web_001.web_001 /tmp/var/www/test1.com/web
+root.root /tmp/etc/ssl/citadel/citadel.csr
+root.root /tmp/etc/ssl/citadel/citadel.cer
+root.root /tmp/etc/ssl/citadel/citadel.key
+web_001.web_001 /tmp/var/www/test1.com/web
+root.root /tmp/etc/ssl/citadel/citadel.csr
+root.root /tmp/etc/ssl/citadel/citadel.cer
+root.root /tmp/etc/ssl/citadel/citadel.key

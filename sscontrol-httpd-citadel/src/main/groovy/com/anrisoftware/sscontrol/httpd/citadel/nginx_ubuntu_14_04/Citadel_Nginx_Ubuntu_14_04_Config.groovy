@@ -75,6 +75,8 @@ class Citadel_Nginx_Ubuntu_14_04_Config implements ServiceConfig {
         installPackages()
         citadelConfig.setupDefaults service
         citadelConfig.setupCitadel service
+        citadelConfig.deployCerts service
+        citadelConfig.restartCitadel service
         webcitConfig.deployWebcitDefaultConfig domain, service
         webcitConfig.restartWebcit service
         createDomainConfig domain, null, service, config

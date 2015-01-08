@@ -20,12 +20,17 @@ package com.anrisoftware.sscontrol.httpd.citadel.core
 
 import groovy.util.logging.Slf4j
 
+import javax.inject.Inject
+
+import org.apache.commons.io.IOUtils
 import org.apache.commons.lang3.builder.ToStringBuilder
 import org.joda.time.Duration
 
 import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.sscontrol.httpd.citadel.AuthMethod
 import com.anrisoftware.sscontrol.httpd.citadel.CitadelService
+import com.anrisoftware.sscontrol.scripts.changefilemod.ChangeFileModFactory
+import com.anrisoftware.sscontrol.scripts.changefileowner.ChangeFileOwnerFactory
 
 /**
  * <i>Citadel 8</i> configuration.
@@ -41,6 +46,12 @@ abstract class Citadel_8_Config {
      */
     private Object script
 
+    @Inject
+    ChangeFileModFactory changeFileModFactory
+
+    @Inject
+    ChangeFileOwnerFactory changeFileOwnerFactory
+
     /**
      * Setups default options.
      *
@@ -54,6 +65,57 @@ abstract class Citadel_8_Config {
         if (service.bindingAddresses == null) {
             service.bind defaultBindingAddress, port: defaultBindingPort
         }
+    }
+
+    /**
+     * Deploys the server certificates.
+     *
+     * @param service
+     *            the {@link CitadelService}.
+     */
+    void deployCerts(CitadelService service) {
+        def ca = service.certCa
+        def file = service.certFile
+        def key = service.certKey
+        def cafile = certCaFile
+        def cafilefile = certFileFile
+        def cakeyfile = certKeyFile
+        def files = []
+        if (ca != null) {
+            cafile.parentFile.mkdirs()
+            cafile.createNewFile()
+            files << cafile
+            IOUtils.copy ca.toURL().openStream(), new FileOutputStream(cafile)
+        }
+        if (file != null) {
+            cafilefile.parentFile.mkdirs()
+            cafilefile.createNewFile()
+            files << cafilefile
+            IOUtils.copy file.toURL().openStream(), new FileOutputStream(cafilefile)
+        }
+        if (key != null) {
+            cakeyfile.parentFile.mkdirs()
+            cakeyfile.createNewFile()
+            files << cakeyfile
+            IOUtils.copy key.toURL().openStream(), new FileOutputStream(cakeyfile)
+        }
+        if (files.empty) {
+            return
+        }
+        changeFileOwnerFactory.create(
+                log: log,
+                command: chownCommand,
+                files: files,
+                owner: "root",
+                ownerGroup: "root",
+                this, threads)()
+        changeFileModFactory.create(
+                log: log,
+                command: chmodCommand,
+                files: files,
+                mod: "600",
+                ownerGroup: "root",
+                this, threads)()
     }
 
     /**
@@ -96,6 +158,20 @@ abstract class Citadel_8_Config {
      */
     String getCitadelRestartCommand() {
         profileProperty "citadel_restart_command", citadelProperties
+    }
+
+    /**
+     * Returns the <i>Citadel</i> restart flags, for
+     * example {@code "restart"}
+     *
+     * <ul>
+     * <li>profile property {@code "citadel_restart_flags"}</li>
+     * </ul>
+     *
+     * @see #getCitadelProperties()
+     */
+    String getCitadelRestartFlags() {
+        profileProperty "citadel_restart_flags", citadelProperties
     }
 
     /**
@@ -195,6 +271,48 @@ abstract class Citadel_8_Config {
      */
     int getDefaultBindingPort() {
         profileNumberProperty "citadel_default_binding_port", citadelProperties
+    }
+
+    /**
+     * Returns the <i>Citadel</i> certificate authority file, for
+     * example {@code "/etc/ssl/citadel/citadel.csr"}
+     *
+     * <ul>
+     * <li>profile property {@code "citadel_cert_ca_file"}</li>
+     * </ul>
+     *
+     * @see #getCitadelProperties()
+     */
+    File getCertCaFile() {
+        profileProperty("citadel_cert_ca_file", citadelProperties) as File
+    }
+
+    /**
+     * Returns the <i>Citadel</i> certificate file, for
+     * example {@code "/etc/ssl/citadel/citadel.cer"}
+     *
+     * <ul>
+     * <li>profile property {@code "citadel_cert_file"}</li>
+     * </ul>
+     *
+     * @see #getCitadelProperties()
+     */
+    File getCertFileFile() {
+        profileProperty("citadel_cert_file", citadelProperties) as File
+    }
+
+    /**
+     * Returns the <i>Citadel</i> certificate key file, for
+     * example {@code "/etc/ssl/citadel/citadel.key"}
+     *
+     * <ul>
+     * <li>profile property {@code "citadel_cert_key_file"}</li>
+     * </ul>
+     *
+     * @see #getCitadelProperties()
+     */
+    File getCertKeyFile() {
+        profileProperty("citadel_cert_key_file", citadelProperties) as File
     }
 
     /**

@@ -1,0 +1,6 @@
+600 /tmp/etc/ssl/citadel/citadel.csr
+600 /tmp/etc/ssl/citadel/citadel.cer
+600 /tmp/etc/ssl/citadel/citadel.key
+600 /tmp/etc/ssl/citadel/citadel.csr
+600 /tmp/etc/ssl/citadel/citadel.cer
+600 /tmp/etc/ssl/citadel/citadel.key

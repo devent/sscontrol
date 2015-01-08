@@ -18,6 +18,7 @@
  */
 package com.anrisoftware.sscontrol.httpd.citadel;
 
+import java.net.URI;
 import java.util.List;
 import java.util.Map;
 
@@ -42,6 +43,14 @@ import com.google.inject.assistedinject.Assisted;
  * @since 1.0
  */
 class CitadelServiceImpl implements CitadelService {
+
+    private static final String KEY_KEY = "key";
+
+    private static final String FILE_KEY = "file";
+
+    private static final String CA_KEY = "ca";
+
+    private static final String CERTIFICATE_KEY = "certificate";
 
     private static final String PASSWORD_KEY = "password";
 
@@ -74,10 +83,11 @@ class CitadelServiceImpl implements CitadelService {
     }
 
     private void setupStatements(StatementsMap map) {
-        map.addAllowed(AUTH_KEY, ADMIN_KEY);
+        map.addAllowed(AUTH_KEY, ADMIN_KEY, CERTIFICATE_KEY);
         map.setAllowValue(true, ADMIN_KEY);
         map.addAllowedKeys(AUTH_KEY, METHOD_KEY);
         map.addAllowedKeys(ADMIN_KEY, PASSWORD_KEY);
+        map.addAllowedKeys(CERTIFICATE_KEY, CA_KEY, FILE_KEY, KEY_KEY);
     }
 
     @Inject
@@ -159,6 +169,21 @@ class CitadelServiceImpl implements CitadelService {
     @Override
     public AuthMethod getAuthMethod() {
         return statementsMap.mapValue(AUTH_KEY, METHOD_KEY);
+    }
+
+    @Override
+    public URI getCertCa() {
+        return statementsMap.mapValueAsURI(CERTIFICATE_KEY, CA_KEY);
+    }
+
+    @Override
+    public URI getCertFile() {
+        return statementsMap.mapValueAsURI(CERTIFICATE_KEY, FILE_KEY);
+    }
+
+    @Override
+    public URI getCertKey() {
+        return statementsMap.mapValueAsURI(CERTIFICATE_KEY, KEY_KEY);
     }
 
     public Object methodMissing(String name, Object args) {

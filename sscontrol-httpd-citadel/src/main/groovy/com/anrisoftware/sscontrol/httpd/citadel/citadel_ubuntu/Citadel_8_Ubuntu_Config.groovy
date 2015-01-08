@@ -86,6 +86,9 @@ abstract class Citadel_8_Ubuntu_Config extends Citadel_8_Config {
                 expectCommand: expectCommand,
                 expectScript: file.absolutePath,
                 this, threads, citadelSetupTemplate, "citadelSetupWrapper")()
+        if (setupCitadelScriptFile.isEmpty()) {
+            file.delete()
+        }
         logg.setupCitadelDone this, task
     }
 
@@ -93,18 +96,28 @@ abstract class Citadel_8_Ubuntu_Config extends Citadel_8_Config {
      * Creates the <i>expect</i> setup script file. The file is either created
      * from the property file path or as a temporary file.
      *
+     * @see #getCitadelProperties()
+     */
+    File createSetupCitadelScriptFile() {
+        String path = setupCitadelScriptFile
+        if (path.isEmpty()) {
+            File.createTempFile "setupcitadel", "expect", tmpDirectory
+        } else {
+            new File(path)
+        }
+    }
+
+    /**
+     * Returns the setup <i>Citadel</i> script file path, for
+     * example {@code ""}
+     *
      * <ul>
      * <li>profile property {@code "setup_citadel_script_file"}</li>
      * </ul>
      *
      * @see #getCitadelProperties()
      */
-    File createSetupCitadelScriptFile() {
-        String path = profileProperty "setup_citadel_script_file", citadelProperties
-        if (path.isEmpty()) {
-            File.createTempFile "setupcitadel", "expect", tmpDirectory
-        } else {
-            new File(path)
-        }
+    String getSetupCitadelScriptFile() {
+        profileProperty "setup_citadel_script_file", citadelProperties
     }
 }

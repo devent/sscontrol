@@ -32,18 +32,24 @@ import com.anrisoftware.sscontrol.httpd.resources.ResourcesUtils
 enum CitadelResources {
 
     profile("UbuntuProfile.groovy", CitadelResources.class.getResource("UbuntuProfile.groovy")),
-    httpdScript("Httpd.groovy", CitadelResources.class.getResource("HttpdCitadel.groovy")),
+    citadelHttpdScript("Httpd.groovy", CitadelResources.class.getResource("HttpdCitadel.groovy")),
+    minimalHttpdScript("Httpd.groovy", CitadelResources.class.getResource("HttpdMinimal.groovy")),
     // commands
     citadelSetupCommand("/usr/lib/citadel-server/setup", CitadelResources.class.getResource("echo_command.txt")),
     webcitRestartCommand("/etc/init.d/webcit", CitadelResources.class.getResource("echo_command.txt")),
     // files
     webcitDefaultsFile("/etc/default/webcit", CitadelResources.class.getResource("default_webcit.txt")),
     setupCitadelScriptFile("/tmp/setupcitadel.expect", null),
-    // expected
-    webcitDefaultsFileExpected("/etc/default/webcit", CitadelResources.class.getResource("default_webcit_expected.txt")),
-    setupCitadelScriptFileExpected("/tmp/setupcitadel.expect", CitadelResources.class.getResource("setupcitadelexpect_expected.txt")),
-    test1comConfExpected("/etc/nginx/sites-available/100-robobee-test1.com.conf", CitadelResources.class.getResource("test1com_conf_expected.txt")),
-    aptitudeOutExpected("/usr/bin/aptitude.out", CitadelResources.class.getResource("aptitude_out_expected.txt")),
+    // citadel expected
+    citadelWebcitDefaultsFileExpected("/etc/default/webcit", CitadelResources.class.getResource("citadel_default_webcit_expected.txt")),
+    citadelSetupCitadelScriptFileExpected("/tmp/setupcitadel.expect", CitadelResources.class.getResource("citadel_setupcitadelexpect_expected.txt")),
+    citadelTest1comConfExpected("/etc/nginx/sites-available/100-robobee-test1.com.conf", CitadelResources.class.getResource("citadel_test1com_conf_expected.txt")),
+    citadelAptitudeOutExpected("/usr/bin/aptitude.out", CitadelResources.class.getResource("citadel_aptitude_out_expected.txt")),
+    // minimal expected
+    minimalWebcitDefaultsFileExpected("/etc/default/webcit", CitadelResources.class.getResource("minimal_default_webcit_expected.txt")),
+    minimalSetupCitadelScriptFileExpected("/tmp/setupcitadel.expect", CitadelResources.class.getResource("minimal_setupcitadelexpect_expected.txt")),
+    minimalTest1comConfExpected("/etc/nginx/sites-available/100-robobee-test1.com.conf", CitadelResources.class.getResource("minimal_test1com_conf_expected.txt")),
+    minimalAptitudeOutExpected("/usr/bin/aptitude.out", CitadelResources.class.getResource("minimal_aptitude_out_expected.txt")),
 
     static copyCitadelFiles(File parent) {
         citadelSetupCommand.createCommand parent

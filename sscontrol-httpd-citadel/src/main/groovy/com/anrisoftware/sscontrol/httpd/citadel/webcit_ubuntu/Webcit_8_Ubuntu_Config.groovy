@@ -79,7 +79,7 @@ abstract class Webcit_8_Ubuntu_Config {
      */
     void deployWebcitDefaultConfig(Domain domain, CitadelService service) {
         def configs = [
-            configToken("citadelAddressConfig", "addresses", service.bindingAddresses),
+            configToken("citadelAddressConfig", "addresses", webcitCitadelAddress),
             configToken("citadelPortConfig", "addresses", service.bindingAddresses),
             configToken("httpPortConfig", "port", webcitHttpPort),
             configToken("httpsPortConfig", "port", webcitHttpsPort),
@@ -153,6 +153,20 @@ abstract class Webcit_8_Ubuntu_Config {
      */
     String getWebcitRestartFlags() {
         profileProperty "webcit_restart_flags", citadelProperties
+    }
+
+    /**
+     * Returns the <i>Webcit Citadel</i> address, for
+     * example {@code "127.0.0.1"}
+     *
+     * <ul>
+     * <li>profile property {@code "webcit_citadel_address"}</li>
+     * </ul>
+     *
+     * @see #getCitadelProperties()
+     */
+    String getWebcitCitadelAddress() {
+        profileProperty "webcit_citadel_address", citadelProperties
     }
 
     /**

@@ -1,6 +1,6 @@
 export WEBCIT_APACHEFLAG=' '
 # SSCONTROL-httpd
-export WEBCIT_CITADEL_IP='0.0.0.0'
+export WEBCIT_CITADEL_IP='127.0.0.1'
 # SSCONTROL-httpd-END
 
 # SSCONTROL-httpd

@@ -46,15 +46,36 @@ class CitadelTest extends UbuntuTestUtil {
         def profile = registry.getService("profile")[0]
         setupUbuntuProperties profile, tmpdir
         setupCitadelProperties profile, tmpdir
-        loader.loadService httpdScript.resource, profile, preScript
+        loader.loadService citadelHttpdScript.resource, profile, preScript
 
         registry.allServices.each { it.call() }
         log.info "Run service again to ensure that configuration is not set double."
         registry.allServices.each { it.call() }
 
-        assertStringContent test1comConfExpected.replaced(tmpdir, tmpdir, "/tmp"), test1comConfExpected.toString()
-        assertFileContent webcitDefaultsFileExpected.asFile(tmpdir), webcitDefaultsFileExpected
-        assertStringContent setupCitadelScriptFileExpected.replaced(tmpdir, tmpdir, "/tmp"), setupCitadelScriptFileExpected.toString()
-        assertFileContent aptitudeOutExpected.asFile(tmpdir), aptitudeOutExpected
+        assertStringContent citadelTest1comConfExpected.replaced(tmpdir, tmpdir, "/tmp"), citadelTest1comConfExpected.toString()
+        assertFileContent citadelWebcitDefaultsFileExpected.asFile(tmpdir), citadelWebcitDefaultsFileExpected
+        assertStringContent citadelSetupCitadelScriptFileExpected.replaced(tmpdir, tmpdir, "/tmp"), citadelSetupCitadelScriptFileExpected.toString()
+        assertFileContent citadelAptitudeOutExpected.asFile(tmpdir), citadelAptitudeOutExpected
+    }
+
+    @Test
+    void "minimal"() {
+        copyUbuntuFiles tmpdir
+        copyCitadelFiles tmpdir
+
+        loader.loadService profile.resource, null
+        def profile = registry.getService("profile")[0]
+        setupUbuntuProperties profile, tmpdir
+        setupCitadelProperties profile, tmpdir
+        loader.loadService minimalHttpdScript.resource, profile, preScript
+
+        registry.allServices.each { it.call() }
+        log.info "Run service again to ensure that configuration is not set double."
+        registry.allServices.each { it.call() }
+
+        assertStringContent minimalTest1comConfExpected.replaced(tmpdir, tmpdir, "/tmp"), minimalTest1comConfExpected.toString()
+        assertFileContent minimalWebcitDefaultsFileExpected.asFile(tmpdir), minimalWebcitDefaultsFileExpected
+        assertStringContent minimalSetupCitadelScriptFileExpected.replaced(tmpdir, tmpdir, "/tmp"), minimalSetupCitadelScriptFileExpected.toString()
+        assertFileContent minimalAptitudeOutExpected.asFile(tmpdir), minimalAptitudeOutExpected
     }
 }

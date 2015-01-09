@@ -18,4 +18,23 @@
  */
 package com.anrisoftware.sscontrol.security.service
 
-profile "ubuntu_12_04", { security { } }
+import com.anrisoftware.sscontrol.security.fail2ban.Backend
+import com.anrisoftware.sscontrol.security.fail2ban.Type
+
+security {
+    service "fail2ban", {
+        debug "service", level: 1
+        jail "apache"
+        jail "ssh", notify: "root@localhost", {
+            ignore address: "192.0.0.1"
+            banning retries: 3, time: "PT10M", backend: Backend.polling, type: Type.deny, app: "OpenSSH"
+        }
+        jail "ssh-ddos", notify: "root@localhost", {
+            banning retries: 3, time: "PT10M", app: "OpenSSH"
+        }
+        jail "postfix", notify: "root@localhost", {
+            ignore addresses: "192.0.0.1, 192.0.0.2"
+            banning retries: 3, time: "PT10M", backend: Backend.auto, type: Type.reject
+        }
+    }
+}

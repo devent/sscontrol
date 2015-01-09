@@ -18,16 +18,16 @@
  */
 package com.anrisoftware.sscontrol.security.service;
 
-import com.anrisoftware.sscontrol.core.debuglogging.DebugLoggingModule;
-import com.anrisoftware.sscontrol.core.list.ListModule;
-import com.anrisoftware.sscontrol.security.banning.BanningModule;
-import com.anrisoftware.sscontrol.security.ignoring.IgnoringModule;
-import com.anrisoftware.sscontrol.security.services.ServiceModule;
+import static com.google.inject.multibindings.MapBinder.newMapBinder;
+
+import java.util.Map;
+
 import com.google.inject.AbstractModule;
+import com.google.inject.multibindings.MapBinder;
 
 /**
  * Binds the security service.
- * 
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
@@ -35,10 +35,19 @@ class SecurityModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        install(new DebugLoggingModule());
-        install(new ListModule());
-        install(new ServiceModule());
-        install(new IgnoringModule());
-        install(new BanningModule());
+        bindEmptyService();
+    }
+
+    private void bindEmptyService() {
+        MapBinder<String, SecServiceFactory> mapbinder;
+        mapbinder = newMapBinder(binder(), String.class,
+                SecServiceFactory.class);
+        mapbinder.addBinding("empty").toInstance(new SecServiceFactory() {
+
+            @Override
+            public SecService create(Map<String, Object> args) {
+                return null;
+            }
+        });
     }
 }

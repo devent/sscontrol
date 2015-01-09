@@ -10,15 +10,19 @@
 		<relativePath>../sscontrol-parent</relativePath>
 	</parent>
 
-	<artifactId>sscontrol-security</artifactId>
-	<name>RoboBee :: Security</name>
-	<description>Intrusion prevention.</description>
-	<url>https://anrisoftware.com/projects/projects/sscontrol-security</url>
-	<inceptionYear>2013</inceptionYear>
+	<artifactId>sscontrol-security-fail2ban</artifactId>
+	<name>RoboBee :: Security :: Fail2ban</name>
+	<description>Fail2ban scans log files and bans IPs that show the malicious signs. - http://www.fail2ban.org</description>
+	<url>https://anrisoftware.com/projects/projects/sscontrol-security-fail2ban</url>
+	<inceptionYear>2014</inceptionYear>
+
+	<properties>
+		<project.custom.year>${project.inceptionYear}</project.custom.year>
+	</properties>
 
 	<issueManagement>
 		<system>Redmine</system>
-		<url>https://anrisoftware.com/projects/projects/sscontrol-security</url>
+		<url>https://anrisoftware.com/projects/projects/sscontrol-security-fail2ban</url>
 	</issueManagement>
 
 	<scm>
@@ -41,6 +45,12 @@
 			<artifactId>globalpom-groovytestutils</artifactId>
 			<scope>test</scope>
 		</dependency>
+        <dependency>
+            <groupId>com.anrisoftware.sscontrol</groupId>
+            <artifactId>sscontrol-security</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <scope>test</scope>
+        </dependency>
 
 		<!-- own modules dependencies -->
 		<dependency>
@@ -53,11 +63,11 @@
 			<artifactId>sscontrol-scripts-unix</artifactId>
 			<version>1.0-SNAPSHOT</version>
 		</dependency>
-        <dependency>
-            <groupId>com.anrisoftware.sscontrol</groupId>
-            <artifactId>sscontrol-security-service</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
+		<dependency>
+			<groupId>com.anrisoftware.sscontrol</groupId>
+			<artifactId>sscontrol-security-service</artifactId>
+			<version>1.0-SNAPSHOT</version>
+		</dependency>
 
 		<!-- compile dependencies -->
 		<dependency>

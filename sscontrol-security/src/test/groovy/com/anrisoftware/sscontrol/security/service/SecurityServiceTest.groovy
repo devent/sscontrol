@@ -24,11 +24,7 @@ import groovy.util.logging.Slf4j
 
 import org.junit.Test
 
-import com.anrisoftware.sscontrol.core.debuglogging.DebugLogging
-import com.anrisoftware.sscontrol.security.banning.Backend
-import com.anrisoftware.sscontrol.security.banning.Type
 import com.anrisoftware.sscontrol.security.resources.SecurityTestUtil
-import com.anrisoftware.sscontrol.security.services.Service
 
 /**
  * Test the security service statements.
@@ -40,36 +36,16 @@ import com.anrisoftware.sscontrol.security.services.Service
 class SecurityServiceTest extends SecurityTestUtil {
 
     @Test
-    void "security script"() {
+    void "fail2ban script"() {
         loader.loadService profile.resource, null
         def profile = registry.getService("profile")[0]
-        loader.loadService securityScript.resource, profile
+        loader.loadService fail2banScript.resource, profile
 
         SecurityService service = registry.getService("security")[0]
-
-        DebugLogging user = service.debug
-        assert user.level == 1
-
         def services = service.services
-        assert services.size() == 3
+        assert services.size() == 1
 
-        Service s = services[1]
-        assert s.name == "ssh"
-        assert s.notifyAddress == "root@localhost"
-        assert s.ignoring.addresses.contains("192.0.0.1")
-        assert s.banning.maxRetries == 3
-        assert s.banning.banningTime.standardMinutes == 10
-        assert s.banning.backend == Backend.polling
-        assert s.banning.type == Type.deny
-
-        s = services[2]
-        assert s.name == "postfix"
-        assert s.notifyAddress == "root@localhost"
-        assert s.ignoring.addresses.contains("192.0.0.1")
-        assert s.ignoring.addresses.contains("192.0.0.2")
-        assert s.banning.maxRetries == 3
-        assert s.banning.banningTime.standardMinutes == 10
-        assert s.banning.backend == Backend.auto
-        assert s.banning.type == Type.reject
+        SecService s = services[0]
+        assert s.name == "fail2ban"
     }
 }

@@ -16,6 +16,17 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-security. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.security.service
+package com.anrisoftware.sscontrol.security.fail2ban;
 
-profile "ubuntu_12_04", { security { } }
+/**
+ * Back-end type.
+ * 
+ * @author Erwin Mueller, erwin.mueller@deventm.org
+ * @since 1.0
+ */
+public enum Backend {
+
+    polling,
+
+    auto
+}

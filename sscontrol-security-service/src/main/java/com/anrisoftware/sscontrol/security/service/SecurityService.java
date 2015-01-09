@@ -16,6 +16,38 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-security. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.security.service
+package com.anrisoftware.sscontrol.security.service;
 
-profile "ubuntu_12_04", { security { } }
+import java.util.List;
+
+import com.anrisoftware.sscontrol.core.api.Service;
+
+/**
+ * Security service.
+ *
+ * @author Erwin Mueller, erwin.mueller@deventm.org
+ * @since 1.0
+ */
+public interface SecurityService extends Service {
+
+    /**
+     * Returns the security service name.
+     */
+    @Override
+    String getName();
+
+    /**
+     * Returns the security services.
+     * <p>
+     *
+     * <pre>
+     * security {
+     *     service "fail2ban", {
+     *     }
+     * }
+     * </pre>
+     *
+     * @return
+     */
+    List<SecService> getServices();
+}

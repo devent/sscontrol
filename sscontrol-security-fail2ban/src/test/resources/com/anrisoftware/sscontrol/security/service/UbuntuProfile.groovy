@@ -18,4 +18,6 @@
  */
 package com.anrisoftware.sscontrol.security.service
 
-profile "ubuntu_12_04", { security { } }
+profile "ubuntu_12_04", {
+    security { firewall "ufw" }
+}

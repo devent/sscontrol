@@ -22,6 +22,7 @@ import static com.anrisoftware.sscontrol.security.service.SecurityFactory.NAME;
 import groovy.lang.Script;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -31,15 +32,12 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.anrisoftware.sscontrol.core.api.ServiceException;
 import com.anrisoftware.sscontrol.core.api.ServiceScriptFactory;
-import com.anrisoftware.sscontrol.core.debuglogging.DebugLogging;
-import com.anrisoftware.sscontrol.core.debuglogging.DebugLoggingFactory;
 import com.anrisoftware.sscontrol.core.service.AbstractService;
-import com.anrisoftware.sscontrol.security.services.Service;
-import com.anrisoftware.sscontrol.security.services.ServiceFactory;
+import com.google.inject.Injector;
 
 /**
  * Security service.
- * 
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
@@ -47,21 +45,22 @@ import com.anrisoftware.sscontrol.security.services.ServiceFactory;
 public class SecurityServiceImpl extends AbstractService implements
         SecurityService {
 
-    private final List<Service> services;
+    private final List<SecService> services;
 
     @Inject
     private SecurityServiceImplLogger log;
 
     @Inject
-    private DebugLoggingFactory debugFactory;
+    private Injector injector;
 
     @Inject
-    private ServiceFactory serviceFactory;
+    private Map<String, SecServiceFactory> serviceFactories;
 
-    private DebugLogging debug;
+    @Inject
+    private SecServicesProvider servicesProvider;
 
     SecurityServiceImpl() {
-        this.services = new ArrayList<Service>();
+        this.services = new ArrayList<SecService>();
     }
 
     @Override
@@ -80,51 +79,58 @@ public class SecurityServiceImpl extends AbstractService implements
 
     /**
      * Entry point for the security service script.
-     * 
+     *
      * @param statements
      *            the security statements.
-     * 
+     *
      * @return this {@link SecurityService}.
      */
     public SecurityService security(Object statements) {
         return this;
     }
 
-    @Override
-    public String getName() {
-        return NAME;
+    public SecService service(String name, Object s) throws ServiceException {
+        return service(new HashMap<String, Object>(), name, s);
     }
 
-    public Service service(Map<String, Object> args, Object s) {
-        Service service = serviceFactory.create(this, args);
+    public SecService service(Map<String, Object> map, String name, Object s)
+            throws ServiceException {
+        SecServiceFactory factory = serviceFactories.get(name);
+        factory = findService(name, factory);
+        log.checkService(this, factory, name);
+        SecService service = factory.create(map);
         services.add(service);
-        log.serviceAdded(this, service);
+        log.servicesAdded(this, service);
         return service;
     }
 
+    private SecServiceFactory findService(final String name,
+            SecServiceFactory factory) throws ServiceException {
+        return factory != null ? factory : findService(name).getFactory();
+    }
+
+    private SecServiceFactoryFactory findService(final String name)
+            throws ServiceException {
+        SecServiceFactoryFactory find = servicesProvider
+                .find(new SecServiceInfo() {
+
+                    @Override
+                    public String getServiceName() {
+                        return name;
+                    }
+                });
+        find.setParent(injector.getParent());
+        return find;
+    }
+
     @Override
-    public List<Service> getServices() {
+    public List<SecService> getServices() {
         return services;
     }
 
-    /**
-     * Sets the debug logging for the database server.
-     *
-     * @see DebugLoggingFactory#create(Map)
-     */
-    public void debug(Map<String, Object> args) {
-        this.debug = debugFactory.create(args);
-        log.debugSet(this, debug);
-    }
-
     @Override
-    public void setDebug(DebugLogging debug) {
-        this.debug = debug;
-    }
-
-    @Override
-    public DebugLogging getDebug() {
-        return debug;
+    public String getName() {
+        return NAME;
     }
 
     @Override

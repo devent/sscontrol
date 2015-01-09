@@ -18,18 +18,16 @@
  */
 package com.anrisoftware.sscontrol.security.service;
 
-import static com.anrisoftware.sscontrol.security.service.SecurityServiceImplLogger._.debug_set_debug;
-import static com.anrisoftware.sscontrol.security.service.SecurityServiceImplLogger._.debug_set_info;
-import static com.anrisoftware.sscontrol.security.service.SecurityServiceImplLogger._.services_set_debug;
-import static com.anrisoftware.sscontrol.security.service.SecurityServiceImplLogger._.services_set_info;
+import static com.anrisoftware.sscontrol.security.service.SecurityServiceImplLogger._.service_added_debug;
+import static com.anrisoftware.sscontrol.security.service.SecurityServiceImplLogger._.service_added_info;
+import static com.anrisoftware.sscontrol.security.service.SecurityServiceImplLogger._.service_not_found;
+import static org.apache.commons.lang3.Validate.notNull;
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
-import com.anrisoftware.sscontrol.core.debuglogging.DebugLogging;
-import com.anrisoftware.sscontrol.security.services.Service;
 
 /**
  * Logging messages for {@link SecurityServiceImpl}.
- * 
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
@@ -37,13 +35,11 @@ class SecurityServiceImplLogger extends AbstractLogger {
 
     enum _ {
 
-        services_set_debug("Service {} added for {}."),
+        service_not_found("Service '%s' not found for %s."),
 
-        services_set_info("Service name '{}' added for security '{}'."),
+        service_added_debug("Service {} added for {}."),
 
-        debug_set_debug("Debug logging {} set for {}."),
-
-        debug_set_info("Debug level {} set for service '{}'.");
+        service_added_info("Service '{}' added for domain '{}'.");
 
         private String name;
 
@@ -64,20 +60,17 @@ class SecurityServiceImplLogger extends AbstractLogger {
         super(SecurityServiceImpl.class);
     }
 
-    void debugSet(SecurityService service, DebugLogging debug) {
+    void checkService(SecurityServiceImpl service, SecServiceFactory factory,
+            String name) {
+        notNull(factory, service_not_found.toString(), name, service);
+    }
+
+    void servicesAdded(SecurityServiceImpl service, SecService secservice) {
         if (isDebugEnabled()) {
-            debug(debug_set_debug, debug, service);
+            debug(service_added_debug, secservice, service);
         } else {
-            info(debug_set_info, debug.getLevel(), service.getName());
+            info(service_added_info, secservice.getName(), service.getName());
         }
     }
 
-    void serviceAdded(SecurityServiceImpl securityService, Service service) {
-        if (isDebugEnabled()) {
-            debug(services_set_debug, service, securityService);
-        } else {
-            info(services_set_info, service.getName(),
-                    securityService.getName());
-        }
-    }
 }

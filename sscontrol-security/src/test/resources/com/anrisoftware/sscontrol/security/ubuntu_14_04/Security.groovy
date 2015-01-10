@@ -16,6 +16,6 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-security. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.security.service
+package com.anrisoftware.sscontrol.security.ubuntu_14_04
 
-profile "ubuntu_12_04", { security { } }
+security { service "0", { } }

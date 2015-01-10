@@ -22,6 +22,8 @@ import static com.google.inject.multibindings.MapBinder.newMapBinder;
 
 import java.util.Map;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
 import com.google.inject.AbstractModule;
 import com.google.inject.multibindings.MapBinder;
 
@@ -33,6 +35,9 @@ import com.google.inject.multibindings.MapBinder;
  */
 class SecurityModule extends AbstractModule {
 
+    private static final String SERVICE_NAME = "service name";
+    private static final String EMPTY_NAME = "0";
+
     @Override
     protected void configure() {
         bindEmptyService();
@@ -42,11 +47,23 @@ class SecurityModule extends AbstractModule {
         MapBinder<String, SecServiceFactory> mapbinder;
         mapbinder = newMapBinder(binder(), String.class,
                 SecServiceFactory.class);
-        mapbinder.addBinding("empty").toInstance(new SecServiceFactory() {
+        mapbinder.addBinding(EMPTY_NAME).toInstance(new SecServiceFactory() {
 
             @Override
             public SecService create(Map<String, Object> args) {
-                return null;
+                return new SecService() {
+
+                    @Override
+                    public String getName() {
+                        return EMPTY_NAME;
+                    }
+
+                    @Override
+                    public String toString() {
+                        return new ToStringBuilder(this).append(SERVICE_NAME,
+                                getName()).toString();
+                    }
+                };
             }
         });
     }

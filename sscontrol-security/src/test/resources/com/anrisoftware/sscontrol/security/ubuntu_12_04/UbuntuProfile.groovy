@@ -16,21 +16,6 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-security. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.security.service
+package com.anrisoftware.sscontrol.security.ubuntu_12_04
 
-security {
-    service "fail2ban", {
-        debug level: 1
-        jail "apache", notify: "root@localhost", {
-            banning retries: 3, time: "PT10M"
-        }
-        jail "ssh", notify: "root@localhost", {
-            ignore address: "192.0.0.1"
-            banning retries: 3, time: "PT10M", backend: polling, type: deny
-        }
-        jail "postfix", notify: "root@localhost", {
-            ignore addresses: "192.0.0.1, 192.0.0.2"
-            banning retries: 3, time: "PT10M", backend: auto, type: reject
-        }
-    }
-}
+profile "ubuntu_12_04", { security { } }

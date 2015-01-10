@@ -34,14 +34,22 @@ public abstract class ServiceConfigInfo implements Serializable {
 
     private static final String PROFILE = "profile";
     private static final String SERVICE = "service";
+    private static final String SEC = "security";
+
+    /**
+     * Returns the security service name, for example <i>security</i>.
+     *
+     * @return the service name.
+     */
+    public abstract String getServiceName();
 
     /**
      * Returns the service name for the security service, for example
      * <i>fail2ban, spamassasin</i>.
      *
-     * @return the service name.
+     * @return the security service name.
      */
-    public abstract String getServiceName();
+    public abstract String getSecName();
 
     /**
      * Returns the profile name.
@@ -52,6 +60,13 @@ public abstract class ServiceConfigInfo implements Serializable {
      * @return the profile name.
      */
     public abstract String getProfileName();
+
+    /**
+     * Returns the security service.
+     *
+     * @return the {@link SecService} service.
+     */
+    public abstract SecService getSecService();
 
     @Override
     public boolean equals(Object obj) {
@@ -67,6 +82,7 @@ public abstract class ServiceConfigInfo implements Serializable {
         ServiceConfigInfo rhs = (ServiceConfigInfo) obj;
         return new EqualsBuilder()
                 .append(getServiceName(), rhs.getServiceName())
+                .append(getSecName(), rhs.getSecName())
                 .append(getProfileName(), rhs.getProfileName()).isEquals();
     }
 
@@ -74,6 +90,7 @@ public abstract class ServiceConfigInfo implements Serializable {
     public String toString() {
         ToStringBuilder builder = new ToStringBuilder(this);
         builder.append(SERVICE, getServiceName());
+        builder.append(SEC, getSecName());
         builder.append(PROFILE, getProfileName());
         return builder.toString();
     }

@@ -16,7 +16,7 @@
 # Values:  NUM  Default:  3
 #
 # SSCONTROL-security
-loglevel = 1
+loglevel = 2
 # SSCONTROL-security-END
 
 

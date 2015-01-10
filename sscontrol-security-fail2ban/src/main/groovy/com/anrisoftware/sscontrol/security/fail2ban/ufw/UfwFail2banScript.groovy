@@ -1,20 +1,20 @@
 /*
- * Copyright 2013-2014 Erwin Müller <erwin.mueller@deventm.org>
+ * Copyright 2014 Erwin Müller <erwin.mueller@deventm.org>
  *
- * This file is part of sscontrol-security.
+ * This file is part of sscontrol-security-fail2ban.
  *
- * sscontrol-security is free software: you can redistribute it and/or modify it
+ * sscontrol-security-fail2ban is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published by the
  * Free Software Foundation, either version 3 of the License, or (at your
  * option) any later version.
  *
- * sscontrol-security is distributed in the hope that it will be useful, but
+ * sscontrol-security-fail2ban is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
  * for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with sscontrol-security. If not, see <http://www.gnu.org/licenses/>.
+ * along with sscontrol-security-fail2ban. If not, see <http://www.gnu.org/licenses/>.
  */
 package com.anrisoftware.sscontrol.security.fail2ban.ufw
 
@@ -36,22 +36,21 @@ import com.anrisoftware.globalpom.initfileparser.SectionFormatterFactory
 import com.anrisoftware.globalpom.textmatch.tokentemplate.TokenTemplate
 import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.resources.templates.api.TemplateResource
-import com.anrisoftware.resources.templates.api.Templates
 import com.anrisoftware.resources.templates.api.TemplatesFactory
-import com.anrisoftware.sscontrol.core.service.LinuxScript
 import com.anrisoftware.sscontrol.scripts.unix.RestartServicesFactory
 import com.anrisoftware.sscontrol.scripts.unix.ScriptExecFactory
-import com.anrisoftware.sscontrol.security.fail2ban.linux.Fail2BanFirewall
-import com.anrisoftware.sscontrol.security.services.Service
+import com.anrisoftware.sscontrol.security.fail2ban.Fail2banService
+import com.anrisoftware.sscontrol.security.fail2ban.Jail
+import com.anrisoftware.sscontrol.security.fail2ban.linux.Fail2BanFirewallConfig
 
 /**
- * Ufw firewall fail2ban script.
+ * <i>Ufw Fail2ban</i> firewall script.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
 @Slf4j
-abstract class UfwFail2BanScript implements Fail2BanFirewall {
+abstract class UfwFail2banScript implements Fail2BanFirewallConfig {
 
     @Inject
     private UfwFail2BanScriptLogger logg
@@ -72,15 +71,7 @@ abstract class UfwFail2BanScript implements Fail2BanFirewall {
     ScriptExecFactory scriptExecFactory
 
     @Inject
-    TemplatesFactory templatesFactory
-
-    @Inject
     RestartServicesFactory restartServicesFactory
-
-    /**
-     * The {@link Templates} for the script.
-     */
-    Templates scriptTemplates
 
     /**
      * Resource enable the firewall.
@@ -100,100 +91,135 @@ abstract class UfwFail2BanScript implements Fail2BanFirewall {
     /**
      * Parent script.
      */
-    LinuxScript script
+    Object script
 
     @Override
-    void beforeConfiguration() {
+    void beforeConfiguration(Fail2banService service) {
         enableFirewall()
         deployRsyslogConfiguration()
         restartRsyslog()
     }
 
     @Override
-    void deployFirewallScript(Service service) {
-        createActionFile service
-        createUfwSection service
+    void deployFirewallScript(Fail2banService service, Jail jail) {
+        createActionFile jail
+        createUfwSection jail
+    }
+
+    @Inject
+    final void setTemplatesFactory(TemplatesFactory factory) {
+        def templates = factory.create "UfwFail2BanScript"
+        this.rsyslogTemplate = templates.getResource "rsyslog"
+        this.ufwactionTemplate = templates.getResource "ufwaction"
+        this.ufwenableTemplate = templates.getResource "ufwenable"
     }
 
     /**
-     * Enables the Firewall.
+     * Enables the firewall.
      */
     void enableFirewall() {
         def task = scriptExecFactory.create(
                 log: log,
                 command: ufwCommand,
                 this, threads, ufwenableTemplate, "ufwenable")()
-        logg.enabledFirewall script, task
+        logg.enabledFirewall this, task
     }
 
     /**
-     * Creates the UFW action file.
+     * Creates the <i>Ufw</i> action file.
+     *
+     * @param jail
+     *            the {@link Jail} jail.
      *
      * @see #getUfwActionFile()
      */
-    void createActionFile(Service service) {
-        def file = ufwActionFile service
-        def str = ufwactionTemplate.getText(true, "properties", script, "service", service)
+    void createActionFile(Jail jail) {
+        def file = ufwActionFile jail
+        def str = ufwactionTemplate.getText(true, "properties", script, "jail", jail)
         FileUtils.write file, str, charset
-        logg.actionFileCreated script, service, file, str
+        logg.actionFileCreated this, jail, file, str
     }
 
     /**
-     * Returns the fail2ban UFW action file, for
-     * example {@code "action.d/ufw-<service.name>.conf".} If the file path is not absolute
-     * then the file is assumed to be under the fail2ban configuration
-     * directory.
+     * Returns the <i>Ufw</i> action file, for
+     * example {@code "action.d/ufw-<service>.conf"} If the file path is
+     * not absolute then the file is assumed to be under
+     * the <i>Fail2ban</i> configuration directory.
      *
      * <ul>
-     * <li>profile property {@code "action_file_pattern"}</li>
+     * <li>profile property {@code "fail2ban_action_file_pattern"}</li>
      * </ul>
      *
-     * @param service
-     *            the {@link Service} service.
+     * @param jail
+     *            the {@link Jail} jail.
      *
-     * @see #getDefaultProperties()
+     * @see #getFail2banProperties()
      */
-    File ufwActionFile(Service service) {
-        def pattern = profileProperty "action_file_pattern", defaultProperties
-        def st = new ST(pattern).add("service", service).render()
+    File ufwActionFile(Jail jail) {
+        def pattern = profileProperty "fail2ban_action_file_pattern", fail2banProperties
+        def st = new ST(pattern).add("service", jail.service).render()
         new File(configurationDir, st)
     }
 
     /**
      * Create UFW section in jail-local file.
      *
-     * @param service
-     *            the {@link Service} service.
+     * @param jail
+     *            the {@link Jail} jail.
+     *
+     * @see #getJailLocalConfigFile()
      */
-    void createUfwSection(Service service) {
+    void createUfwSection(Jail jail) {
         def attributes = initFileAttributesFactory.create()
         def parser = initFileParserFactory.create(jailLocalConfigFile, attributes)()
         def sections = parser.inject([]) { acc, val -> acc << val }
-        def section = sections.find { Section section -> section.name == service.name }
-        sections = setupsSection(section, service, sections)
+        def section = sections.find { Section section -> section.name == jail.service }
+        sections = setupsSection(section, jail, sections)
         def builder = formatSection(attributes, sections)
         FileUtils.write jailLocalConfigFile, builder.toString(), charset
     }
 
-    private setupsSection(Section section, Service service, sections) {
+    private setupsSection(Section section, Jail jail, List sections) {
         if (section == null) {
-            section = sectionFactory.create(service.name, new Properties())
+            section = sectionFactory.create(jail.service, new Properties())
             sections << section
         }
         section.with {
             properties.setProperty "enabled", "true"
-            service.ignoring.addresses.size() > 0 ? properties.setProperty("ignoreip", service.ignoring.addresses.join(" ")) : false
-            service.banning.banningTime != null ? properties.setProperty("bantime", Long.toString(service.banning.banningTime.standardSeconds)) : false
-            service.banning.maxRetries != null ? properties.setProperty("maxretry", Integer.toString(service.banning.maxRetries)) : false
-            service.banning.backend != null ? properties.setProperty("backend", service.banning.backend.toString()) : false
-            service.notifyAddress != null ? properties.setProperty("destemail", service.notifyAddress) : false
-            properties.setProperty "banaction", "ufw-${service.name}"
-            properties.containsKey("filter") ? false : properties.setProperty("filter", filterFor(service.name))
-            properties.containsKey("port") ? false : properties.setProperty("port", portsFor(service.name))
-            properties.containsKey("logpath") ? false : properties.setProperty("logpath", logpathFor(service.name))
-            haveFilter(service.name) ? properties.setProperty("filter", filterFor(service.name)) : false
-            havePorts(service.name) ? properties.setProperty("port", portsFor(service.name)) : false
-            haveLogpath(service.name) ? properties.setProperty("logpath", logpathFor(service.name)) : false
+            properties.setProperty "banaction", "ufw-${jail.service}"
+            if (jail.ignoreAddresses && jail.ignoreAddresses.size() > 0) {
+                properties.setProperty "ignoreip", jail.ignoreAddresses.join(" ")
+            }
+            if (jail.banningTime) {
+                properties.setProperty "bantime", Long.toString(jail.banningTime.getStandardSeconds())
+            }
+            if (jail.banningRetries) {
+                properties.setProperty "maxretry", Integer.toString(jail.banningRetries)
+            }
+            if (jail.banningBackend) {
+                properties.setProperty "backend", jail.banningBackend.toString()
+            }
+            if (jail.notify) {
+                properties.setProperty "destemail", jail.notify
+            }
+            if (!properties.containsKey("filter")) {
+                properties.setProperty "filter", filterFor(jail.service)
+            }
+            if (!properties.containsKey("port")) {
+                properties.setProperty "port", portsFor(jail.service)
+            }
+            if (!properties.containsKey("logpath")) {
+                properties.setProperty "logpath", logpathFor(jail.service)
+            }
+            if (haveFilter(jail.service)) {
+                properties.setProperty "filter", filterFor(jail.service)
+            }
+            if (havePorts(jail.service)) {
+                properties.setProperty "port", portsFor(jail.service)
+            }
+            if (haveLogpath(jail.service)) {
+                properties.setProperty "logpath", logpathFor(jail.service)
+            }
         }
         return sections
     }
@@ -356,18 +382,23 @@ abstract class UfwFail2BanScript implements Fail2BanFirewall {
 
     /**
      * Restart the <i>rsyslog</i> service.
+     *
+     * @see #getRsyslogRestartCommand()
+     * @see #getRsyslogRestartServices()
+     * @see #getRsyslogRestartFlags()
      */
     void restartRsyslog() {
         restartServicesFactory.create(
                 log: log,
                 command: rsyslogRestartCommand,
-                services: [],
+                services: rsyslogRestartServices,
+                flags: rsyslogRestartFlags,
                 this, threads)()
     }
 
     /**
      * Returns the {@code rsyslog} service restart command, for
-     * example {@code "/sbin/restart rsyslog".}
+     * example {@code "/sbin/restart"}
      *
      * <ul>
      * <li>profile property {@code "rsyslog_restart_command"}</li>
@@ -379,17 +410,41 @@ abstract class UfwFail2BanScript implements Fail2BanFirewall {
         profileDirProperty "rsyslog_restart_command", firewallProperties
     }
 
-    @Override
-    void setScript(LinuxScript script) {
-        this.script = script
-        this.scriptTemplates = templatesFactory.create "UfwFail2BanScript"
-        this.rsyslogTemplate = scriptTemplates.getResource "rsyslog"
-        this.ufwactionTemplate = scriptTemplates.getResource "ufwaction"
-        this.ufwenableTemplate = scriptTemplates.getResource "ufwenable"
+    /**
+     * Returns the {@code rsyslog} services to restart, for
+     * example {@code "rsyslog"}
+     *
+     * <ul>
+     * <li>profile property {@code "rsyslog_restart_services"}</li>
+     * </ul>
+     *
+     * @see #getFirewallProperties()
+     */
+    List getRsyslogRestartServices() {
+        profileListProperty "rsyslog_restart_services", firewallProperties
+    }
+
+    /**
+     * Returns the {@code rsyslog} services to restart, for
+     * example {@code ""}
+     *
+     * <ul>
+     * <li>profile property {@code "rsyslog_restart_flags"}</li>
+     * </ul>
+     *
+     * @see #getFirewallProperties()
+     */
+    String getRsyslogRestartFlags() {
+        profileProperty "rsyslog_restart_flags", firewallProperties
     }
 
     @Override
-    LinuxScript getScript() {
+    void setScript(Object script) {
+        this.script = script
+    }
+
+    @Override
+    Object getScript() {
         script
     }
 

@@ -20,7 +20,7 @@
 # Values: [ NUM ]  Default: 1
 #
 # SSCONTROL-security
-loglevel = 1
+loglevel = 2
 # SSCONTROL-security-END
 
 

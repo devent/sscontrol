@@ -41,6 +41,8 @@
         <module>sscontrol-repo</module>
         <module>sscontrol-scripts-unix</module>
         <module>sscontrol-security</module>
+        <module>sscontrol-security-fail2ban</module>
+        <module>sscontrol-security-service</module>
     </modules>
 
 </project>

@@ -42,12 +42,14 @@ public interface RestartServicesFactory {
      *            <ul>
      *            <li>{@code log} the logger that logs the command output;
      *
-     *            <li>{@code command} the restart service command;
+     *            <li>{@code command} the restart service {@link String}
+     *            command;
      *
-     *            <li>{@code services} the services to restart;
+     *            <li>{@code services} the {@link List} of services to restart;
      *
-     *            <li>{@code flags} optionally, set the extra flags for the
-     *            restart command that is attached after the list of services.
+     *            <li>{@code flags} optionally, set the extra {@link String}
+     *            flags for the restart command that is attached after the list
+     *            of services.
      *
      *            <li>{@code outString} optionally, set to {@code true} to save
      *            the output in a {@link String} for later parsing, see

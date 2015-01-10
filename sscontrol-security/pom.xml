@@ -73,14 +73,6 @@
 			<groupId>org.antlr</groupId>
 			<artifactId>ST4</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>joda-time</groupId>
-			<artifactId>joda-time</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.anrisoftware.globalpom</groupId>
-			<artifactId>globalpomutils-initfileparser</artifactId>
-		</dependency>
 	</dependencies>
 
 </project>

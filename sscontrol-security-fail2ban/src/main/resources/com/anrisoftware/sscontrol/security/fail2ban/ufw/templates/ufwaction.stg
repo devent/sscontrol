@@ -1,5 +1,5 @@
-ufwaction(properties, service) ::= <<
-# Fail2Ban action configuration file for ufw-<service.name>
+ufwaction(properties, jail) ::= <<
+# Fail2Ban action configuration file for ufw-<jail.service>
 #
 # You are required to run "ufw enable" before this will have an effect.
 #
@@ -14,9 +14,9 @@ actionstop =
 
 actioncheck =
 
-actionban = ufw insert \<insertpos> \<blocktype> from \<ip> to \<destination> <if(service.banning.application)>app \<application><endif>
+actionban = ufw insert \<insertpos> \<blocktype> from \<ip> to \<destination> <if(jail.banningApp)>app \<application><endif>
 
-actionunban = ufw delete \<blocktype> from \<ip> to \<destination> <if(service.banning.application)>app \<application><endif>
+actionunban = ufw delete \<blocktype> from \<ip> to \<destination> <if(jail.banningApp)>app \<application><endif>
 
 [Init]
 # Option: insertpos
@@ -25,7 +25,7 @@ insertpos = 1
 
 # Option: blocktype
 # Notes.: reject or deny
-blocktype = <service.banning.type>
+blocktype = <jail.banningType>
 
 # Option: destination
 # Notes.: The destination address to block in the ufw rule
@@ -33,7 +33,7 @@ destination = any
 
 # Option: application
 # Notes.: application from sudo ufw app list
-application = <service.banning.application>
+application = <jail.banningApp>
 
 # DEV NOTES:
 #

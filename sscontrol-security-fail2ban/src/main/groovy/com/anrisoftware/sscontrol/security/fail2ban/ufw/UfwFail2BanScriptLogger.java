@@ -1,20 +1,20 @@
 /*
- * Copyright 2013-2014 Erwin Müller <erwin.mueller@deventm.org>
+ * Copyright 2014 Erwin Müller <erwin.mueller@deventm.org>
  *
- * This file is part of sscontrol-security.
+ * This file is part of sscontrol-security-fail2ban.
  *
- * sscontrol-security is free software: you can redistribute it and/or modify it
+ * sscontrol-security-fail2ban is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published by the
  * Free Software Foundation, either version 3 of the License, or (at your
  * option) any later version.
  *
- * sscontrol-security is distributed in the hope that it will be useful, but
+ * sscontrol-security-fail2ban is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
  * for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with sscontrol-security. If not, see <http://www.gnu.org/licenses/>.
+ * along with sscontrol-security-fail2ban. If not, see <http://www.gnu.org/licenses/>.
  */
 package com.anrisoftware.sscontrol.security.fail2ban.ufw;
 
@@ -29,12 +29,11 @@ import java.io.File;
 
 import com.anrisoftware.globalpom.exec.api.ProcessTask;
 import com.anrisoftware.globalpom.log.AbstractLogger;
-import com.anrisoftware.sscontrol.core.service.LinuxScript;
-import com.anrisoftware.sscontrol.security.services.Service;
+import com.anrisoftware.sscontrol.security.fail2ban.Jail;
 
 /**
- * Logging for {@link UfwFail2BanScript}.
- * 
+ * Logging for {@link UfwFail2banScript}.
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
@@ -49,7 +48,7 @@ class UfwFail2BanScriptLogger extends AbstractLogger {
         enabled_firewall_info("Enable firewall for service '{}'."),
 
         action_file_created_trace(
-                "Action file '{}' created for {} for {}:\n>>>\n{}<<<"),
+                "Action file '{}' created for {} for {}:>>>\n{}<<<"),
 
         action_file_created_debug("Action file '{}' created for {} for {}."),
 
@@ -69,31 +68,30 @@ class UfwFail2BanScriptLogger extends AbstractLogger {
     }
 
     /**
-     * Sets the context of the logger to {@link UfwFail2BanScript}.
+     * Sets the context of the logger to {@link UfwFail2banScript}.
      */
     public UfwFail2BanScriptLogger() {
-        super(UfwFail2BanScript.class);
+        super(UfwFail2banScript.class);
     }
 
-    void enabledFirewall(LinuxScript script, ProcessTask task) {
+    void enabledFirewall(UfwFail2banScript script, ProcessTask task) {
         if (isTraceEnabled()) {
             trace(enabled_firewall_trace, script, task);
         } else if (isDebugEnabled()) {
             debug(enabled_firewall_debug, script);
         } else {
-            info(enabled_firewall_info, script.getName());
+            info(enabled_firewall_info, "ufw");
         }
     }
 
-    void actionFileCreated(LinuxScript script, Service service, File file,
+    void actionFileCreated(UfwFail2banScript script, Jail jail, File file,
             String str) {
         if (isTraceEnabled()) {
-            trace(action_file_created_trace, file, service, script, str);
+            trace(action_file_created_trace, file, jail, script, str);
         } else if (isDebugEnabled()) {
-            debug(action_file_created_debug, file, service, script);
+            debug(action_file_created_debug, file, jail, script);
         } else {
-            info(action_file_created_info, file, service.getName(),
-                    script.getName());
+            info(action_file_created_info, file, jail.getService(), "ufw");
         }
     }
 }

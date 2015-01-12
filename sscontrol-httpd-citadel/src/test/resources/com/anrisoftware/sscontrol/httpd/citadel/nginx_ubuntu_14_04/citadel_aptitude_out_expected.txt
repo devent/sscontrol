@@ -1,6 +1,4 @@
 -q -y install nginx net-tools
 -q -y install citadel-suite expect
--q -y install spamassassin
 -q -y install nginx net-tools
 -q -y install citadel-suite expect
--q -y install spamassassin

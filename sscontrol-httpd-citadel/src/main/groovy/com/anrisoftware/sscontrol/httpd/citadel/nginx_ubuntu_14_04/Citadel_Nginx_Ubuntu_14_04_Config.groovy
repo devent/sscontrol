@@ -49,9 +49,6 @@ class Citadel_Nginx_Ubuntu_14_04_Config implements ServiceConfig {
     Citadel_8_Ubuntu_14_04_Config citadelConfig
 
     @Inject
-    Spamassassin_Ubuntu_14_04_Config spamassassinConfig
-
-    @Inject
     TimeoutDurationAttributeRenderer timeoutDurationAttributeRenderer
 
     @Inject
@@ -82,7 +79,6 @@ class Citadel_Nginx_Ubuntu_14_04_Config implements ServiceConfig {
         citadelConfig.restartCitadel service
         webcitConfig.deployWebcitDefaultConfig domain, service
         webcitConfig.restartWebcit service
-        spamassassinConfig.deploySpamassassin service
         createDomainConfig domain, null, service, config
     }
 
@@ -170,7 +166,6 @@ class Citadel_Nginx_Ubuntu_14_04_Config implements ServiceConfig {
         this.script = script
         webcitConfig.setScript this
         citadelConfig.setScript this
-        spamassassinConfig.setScript this
     }
 
     @Override

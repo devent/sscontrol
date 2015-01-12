@@ -1,0 +1,7 @@
+# RoboBee Auto Generated
+
+# clear_headers
+rewrite_header subject *SPAM*
+report_safe 0
+# trusted_networks 212.17.35.
+required_score 5.0

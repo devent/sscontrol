@@ -43,6 +43,7 @@
         <module>sscontrol-security</module>
         <module>sscontrol-security-fail2ban</module>
         <module>sscontrol-security-service</module>
+        <module>sscontrol-security-spamassassin</module>
     </modules>
 
 </project>

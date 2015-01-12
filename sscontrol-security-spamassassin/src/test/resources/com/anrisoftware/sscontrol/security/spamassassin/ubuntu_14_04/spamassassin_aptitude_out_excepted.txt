@@ -1,0 +1,2 @@
+-q -y install spamassassin
+-q -y install spamassassin

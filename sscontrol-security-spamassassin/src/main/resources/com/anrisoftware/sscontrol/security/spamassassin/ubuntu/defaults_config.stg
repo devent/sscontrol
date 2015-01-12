@@ -1,0 +1,23 @@
+enabledConfigSearch() ::= <%
+(?m)^#?\s*ENABLED=\d
+%>
+
+enabledConfig(enabled) ::= <%
+ENABLED=<if(enabled)>1<else>0<endif>
+%>
+
+cronEnabledConfigSearch() ::= <%
+(?m)^#?\s*CRON=\d
+%>
+
+cronEnabledConfig(enabled) ::= <%
+CRON=<if(enabled)>1<else>0<endif>
+%>
+
+optionsConfigSearch() ::= <%
+(?m)^#?\s*OPTIONS=".*?"
+%>
+
+optionsConfig(options) ::= <%
+OPTIONS="<options;separator=" ">"
+%>

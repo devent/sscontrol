@@ -1,0 +1,29 @@
+
+configHeader() ::= <<
+# RoboBee Auto Generated
+
+>>
+
+clearHeadersConfig(clear) ::= <%
+<if(clear)>clear_headers<else># clear_headers<endif>
+%>
+
+rewriteHeaderSubjectConfig(rewrite) ::= <%
+<if(rewrite)>rewrite_header subject <rewrite><else># rewrite_header subject *****SPAM*****<endif>
+%>
+
+addHeaderConfig(header) ::= <%
+<if(!header.enabled)># <endif>add_header <header.messageType> <header.name> "<header.text>"
+%>
+
+reportSafeConfig(mode) ::= <%
+report_safe <mode>
+%>
+
+trustedNetworksConfig(networks) ::= <%
+<if(networks)>trusted_networks <networks;separator=" "><else># trusted_networks 212.17.35.<endif>
+%>
+
+requiredScoreConfig(score) ::= <%
+required_score <score>
+%>

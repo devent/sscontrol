@@ -1,0 +1,10 @@
+# RoboBee Auto Generated
+
+clear_headers
+rewrite_header subject *SPAM*
+add_header spam Flag "_YESNOCAPS_"
+add_header all Level "_STARS(*)_"
+add_header all Status "_YESNO_, score=_SCORE_"
+report_safe 0
+trusted_networks 192.168.0.40
+required_score 5.0

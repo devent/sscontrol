@@ -1,0 +1,2 @@
+-q -y install clamav-daemon
+-q -y install clamav-daemon

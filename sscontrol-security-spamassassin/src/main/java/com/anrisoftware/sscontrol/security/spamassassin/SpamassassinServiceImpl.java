@@ -63,7 +63,7 @@ class SpamassassinServiceImpl implements SpamassassinService {
     private static final String NAME = "service name";
 
     /**
-     * The <i>Fail2ban</i> service name.
+     * The <i>Spamassassin</i> service name.
      */
     public static final String SERVICE_NAME = "spamassassin";
 

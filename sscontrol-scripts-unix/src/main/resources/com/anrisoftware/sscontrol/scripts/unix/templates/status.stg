@@ -1,0 +1,4 @@
+statusUnix(args) ::= <<
+<args.command> <args.service> <args.flags>
+
+>>

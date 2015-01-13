@@ -1,0 +1,311 @@
+tcpSocketConfigSearch() ::= <%
+(?m)^#?\s*TCPSocket.*
+%>
+
+tcpSocketConfig(binding) ::= <%
+<if(binding)>TCPSocket <binding.(first(binding))><else>#TCPSocket<endif>
+%>
+
+tcpAddrConfigSearch() ::= <%
+(?m)^#?\s*TCPAddr.*
+%>
+
+tcpAddrConfig(binding) ::= <%
+<if(binding)>TCPAddr <first(binding)><else>#TCPAddr<endif>
+%>
+
+localSocketConfigSearch() ::= <%
+(?m)^#?\s*LocalSocket.*
+%>
+
+localSocketConfig(binding, socket) ::= <%
+<if(!binding)>LocalSocket <socket><else>#LocalSocket<endif>
+%>
+
+fixStaleSocketConfigSearch() ::= <%
+(?m)^#?\s*FixStaleSocket.*
+%>
+
+fixStaleSocketConfig(binding, enabled) ::= <%
+<if(!binding)>FixStaleSocket <if(enabled)>true<else>false<endif><else>#FixStaleSocket<endif>
+%>
+
+localSocketGroupConfigSearch() ::= <%
+(?m)^#?\s*LocalSocketGroup.*
+%>
+
+localSocketGroupConfig(binding, socketGroup) ::= <%
+<if(!binding)>LocalSocketGroup <socketGroup><else>#LocalSocketGroup<endif>
+%>
+
+localSocketModeConfigSearch() ::= <%
+(?m)^#?\s*LocalSocketMode.*
+%>
+
+localSocketModeConfig(binding, mode) ::= <%
+<if(!binding)>LocalSocketMode <mode><else>#LocalSocketMode<endif>
+%>
+
+scanMailConfigSearch() ::= <%
+(?m)^#?\s*ScanMail.*
+%>
+
+scanMailConfig(enabled) ::= <%
+ScanMail <if(enabled)>true<else>false<endif>
+%>
+
+scanArchiveConfigSearch() ::= <%
+(?m)^#?\s*ScanArchive.*
+%>
+
+scanArchiveConfig(enabled) ::= <%
+ScanArchive <if(enabled)>true<else>false<endif>
+%>
+
+archiveBlockEncryptedConfigSearch() ::= <%
+(?m)^#?\s*ArchiveBlockEncrypted.*
+%>
+
+archiveBlockEncryptedConfig(enabled) ::= <%
+ArchiveBlockEncrypted <if(enabled)>true<else>false<endif>
+%>
+
+maxDirectoryRecursionConfigSearch() ::= <%
+(?m)^#?\s*MaxDirectoryRecursion.*
+%>
+
+maxDirectoryRecursionConfig(max) ::= <%
+MaxDirectoryRecursion <max>
+%>
+
+followDirectorySymlinksConfigSearch() ::= <%
+(?m)^#?\s*FollowDirectorySymlinks.*
+%>
+
+followDirectorySymlinksConfig(enabled) ::= <%
+FollowDirectorySymlinks <if(enabled)>true<else>false<endif>
+%>
+
+followFileSymlinksConfigSearch() ::= <%
+(?m)^#?\s*FollowFileSymlinks.*
+%>
+
+followFileSymlinksConfig(enabled) ::= <%
+FollowFileSymlinks <if(enabled)>true<else>false<endif>
+%>
+
+readTimeoutConfigSearch() ::= <%
+(?m)^#?\s*ReadTimeout.*
+%>
+
+readTimeoutConfig(timeout) ::= <%
+ReadTimeout <timeout;format="seconds">
+%>
+
+maxThreadsConfigSearch() ::= <%
+(?m)^#?\s*MaxThreads.*
+%>
+
+maxThreadsConfig(max) ::= <%
+MaxThreads <max>
+%>
+
+logSyslogConfigSearch() ::= <%
+(?m)^#?\s*LogSyslog.*
+%>
+
+logSyslogConfig(enabled) ::= <%
+LogSyslog <if(enabled)>true<else>false<endif>
+%>
+
+logRotateConfigSearch() ::= <%
+(?m)^#?\s*LogRotate.*
+%>
+
+logRotateConfig(enabled) ::= <%
+LogRotate <if(enabled)>true<else>false<endif>
+%>
+
+logFacilityConfigSearch() ::= <%
+(?m)^#?\s*LogFacility.*
+%>
+
+logFacilityConfig(facility) ::= <%
+LogFacility <facility>
+%>
+
+logCleanConfigSearch() ::= <%
+(?m)^#?\s*LogClean.*
+%>
+
+logCleanConfig(enabled) ::= <%
+LogClean <if(enabled)>true<else>false<endif>
+%>
+
+logVerboseConfigSearch() ::= <%
+(?m)^#?\s*LogVerbose.*
+%>
+
+logVerboseConfig(enabled) ::= <%
+LogVerbose <if(enabled)>true<else>false<endif>
+%>
+
+selfCheckConfigSearch() ::= <%
+(?m)^#?\s*SelfCheck.*
+%>
+
+selfCheckConfig(duration) ::= <%
+SelfCheck <duration;format="seconds">
+%>
+
+scanPEConfigSearch() ::= <%
+(?m)^#?\s*ScanPE.*
+%>
+
+scanPEConfig(enabled) ::= <%
+ScanPE <if(enabled)>true<else>false<endif>
+%>
+
+maxEmbeddedPEConfigSearch() ::= <%
+(?m)^#?\s*MaxEmbeddedPE.*
+%>
+
+maxEmbeddedPEConfig(size) ::= <%
+MaxEmbeddedPE <size;format="seconds">
+%>
+
+scanOLE2ConfigSearch() ::= <%
+(?m)^#?\s*ScanOLE2.*
+%>
+
+scanOLE2Config(enabled) ::= <%
+ScanOLE2 <if(enabled)>true<else>false<endif>
+%>
+
+scanPDFConfigSearch() ::= <%
+(?m)^#?\s*ScanPDF.*
+%>
+
+scanPDFConfig(enabled) ::= <%
+ScanPDF <if(enabled)>true<else>false<endif>
+%>
+
+scanHTMLConfigSearch() ::= <%
+(?m)^#?\s*ScanHTML.*
+%>
+
+scanHTMLConfig(enabled) ::= <%
+ScanHTML <if(enabled)>true<else>false<endif>
+%>
+
+scanSWFConfigSearch() ::= <%
+(?m)^#?\s*ScanSWF.*
+%>
+
+scanSWFConfig(enabled) ::= <%
+ScanSWF <if(enabled)>true<else>false<endif>
+%>
+
+detectBrokenExecutablesConfigSearch() ::= <%
+(?m)^#?\s*DetectBrokenExecutables.*
+%>
+
+detectBrokenExecutablesConfig(enabled) ::= <%
+DetectBrokenExecutables <if(enabled)>true<else>false<endif>
+%>
+
+exitOnOOMConfigSearch() ::= <%
+(?m)^#?\s*ExitOnOOM.*
+%>
+
+exitOnOOMConfig(enabled) ::= <%
+ExitOnOOM <if(enabled)>true<else>false<endif>
+%>
+
+algorithmicDetectionConfigSearch() ::= <%
+(?m)^#?\s*AlgorithmicDetection.*
+%>
+
+algorithmicDetectionConfig(enabled) ::= <%
+AlgorithmicDetection <if(enabled)>true<else>false<endif>
+%>
+
+scanELFConfigSearch() ::= <%
+(?m)^#?\s*ScanELF.*
+%>
+
+scanELFConfig(enabled) ::= <%
+ScanELF <if(enabled)>true<else>false<endif>
+%>
+
+phishingSignaturesConfigSearch() ::= <%
+(?m)^#?\s*PhishingSignatures.*
+%>
+
+phishingSignaturesConfig(enabled) ::= <%
+PhishingSignatures <if(enabled)>true<else>false<endif>
+%>
+
+phishingScanURLsConfigSearch() ::= <%
+(?m)^#?\s*PhishingScanURLs.*
+%>
+
+phishingScanURLsConfig(enabled) ::= <%
+PhishingScanURLs <if(enabled)>true<else>false<endif>
+%>
+
+maxQueueConfigSearch() ::= <%
+(?m)^#?\s*MaxQueue.*
+%>
+
+maxQueueConfig(max) ::= <%
+MaxQueue <max>
+%>
+
+maxScanSizeConfigSearch() ::= <%
+(?m)^#?\s*MaxScanSize.*
+%>
+
+maxScanSizeConfig(size) ::= <%
+MaxScanSize <size>
+%>
+
+maxFileSizeConfigSearch() ::= <%
+(?m)^#?\s*MaxFileSize.*
+%>
+
+maxFileSizeConfig(size) ::= <%
+MaxFileSize <size>
+%>
+
+maxFilesConfigSearch() ::= <%
+(?m)^#?\s*MaxRecursion.*
+%>
+
+maxFilesConfig(max) ::= <%
+MaxRecursion <max>
+%>
+
+bytecodeConfigSearch() ::= <%
+(?m)^#?\s*Bytecode.*
+%>
+
+bytecodeConfig(enabled) ::= <%
+Bytecode <if(enabled)>true<else>false<endif>
+%>
+
+bytecodeSecurityConfigSearch() ::= <%
+(?m)^#?\s*BytecodeSecurity.*
+%>
+
+bytecodeSecurityConfig(level) ::= <%
+BytecodeSecurity <level>
+%>
+
+crossFilesystemsConfigSearch() ::= <%
+(?m)^#?\s*CrossFilesystems.*
+%>
+
+crossFilesystemsConfig(enabled) ::= <%
+CrossFilesystems <if(enabled)>true<else>false<endif>
+%>

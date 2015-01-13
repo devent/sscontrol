@@ -30,6 +30,7 @@ import com.google.inject.assistedinject.FactoryModuleBuilder;
  * @see InstallPackagesFactory
  * @see UpdatePackagesFactory
  * @see RestartServicesFactory
+ * @see StatusServiceFactory
  * @see StopServicesFactory
  * @see ScriptExecFactory
  *
@@ -69,6 +70,8 @@ public class UnixScriptsModule extends AbstractModule {
                 StopServices.class).build(StopServicesFactory.class));
         install(new FactoryModuleBuilder().implement(UpdatePackages.class,
                 UpdatePackages.class).build(UpdatePackagesFactory.class));
+        install(new FactoryModuleBuilder().implement(StatusService.class,
+                StatusService.class).build(StatusServiceFactory.class));
     }
 
 }

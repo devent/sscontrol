@@ -1,0 +1,4 @@
+updateFreshclam(args) ::= <<
+<args.freshclamCommand>
+
+>>

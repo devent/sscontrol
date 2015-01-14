@@ -12,7 +12,7 @@
 
 	<groupId>com.anrisoftware.sscontrol</groupId>
 	<artifactId>sscontrol-parent</artifactId>
-	<version>1.0-SNAPSHOT</version>
+	<version>1.0-alpha-1</version>
 	<packaging>pom</packaging>
 	<name>RoboBee :: Parent POM</name>
 	<description>Manages the core libraries dependencies.</description>
@@ -88,7 +88,7 @@
 			<dependency>
 				<groupId>com.anrisoftware.globalpom</groupId>
 				<artifactId>globalpomutils-core</artifactId>
-				<version>2.3-SNAPSHOT</version>
+				<version>2.3</version>
 			</dependency>
 			<dependency>
 				<groupId>com.anrisoftware.globalpom</groupId>

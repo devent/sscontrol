@@ -19,9 +19,7 @@
 package com.anrisoftware.sscontrol.dns.deadwood.ubuntu_14_04;
 
 import com.anrisoftware.sscontrol.scripts.changefile.ChangeFileModule;
-import com.anrisoftware.sscontrol.scripts.localgroupadd.LocalGroupAddModule;
-import com.anrisoftware.sscontrol.scripts.localuseradd.LocalUserAddModule;
-import com.anrisoftware.sscontrol.scripts.localuserinfo.LocalUserInfoModule;
+import com.anrisoftware.sscontrol.scripts.localuser.LocalUserModule;
 import com.anrisoftware.sscontrol.scripts.unix.UnixScriptsModule;
 import com.google.inject.AbstractModule;
 
@@ -35,9 +33,7 @@ class UbuntuModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        install(new LocalUserAddModule());
-        install(new LocalGroupAddModule());
-        install(new LocalUserInfoModule());
+        install(new LocalUserModule());
         install(new ChangeFileModule());
         install(new UnixScriptsModule());
         install(new UnixScriptsModule.UnixScriptsDefaultsModule());

@@ -30,10 +30,10 @@ import com.anrisoftware.sscontrol.httpd.domain.Domain
 import com.anrisoftware.sscontrol.httpd.user.DomainUser
 import com.anrisoftware.sscontrol.scripts.changefile.ChangeFileOwnerFactory;
 import com.anrisoftware.sscontrol.scripts.killprocess.KillProcessFactory
-import com.anrisoftware.sscontrol.scripts.localchangegroup.LocalChangeGroupFactory
-import com.anrisoftware.sscontrol.scripts.localchangeuser.LocalChangeUserFactory
-import com.anrisoftware.sscontrol.scripts.localgroupadd.LocalGroupAddFactory
-import com.anrisoftware.sscontrol.scripts.localuseradd.LocalUserAddFactory
+import com.anrisoftware.sscontrol.scripts.localuser.LocalChangeGroupFactory;
+import com.anrisoftware.sscontrol.scripts.localuser.LocalChangeUserFactory;
+import com.anrisoftware.sscontrol.scripts.localuser.LocalGroupAddFactory;
+import com.anrisoftware.sscontrol.scripts.localuser.LocalUserAddFactory;
 import com.anrisoftware.sscontrol.scripts.processinfo.ProcessInfoFactory
 
 /**

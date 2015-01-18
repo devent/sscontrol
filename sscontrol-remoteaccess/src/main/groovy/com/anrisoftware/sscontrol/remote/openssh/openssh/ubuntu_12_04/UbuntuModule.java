@@ -23,10 +23,7 @@ import com.anrisoftware.sscontrol.remote.openssh.screen.ubuntu_12_04.ScreenUbunt
 import com.anrisoftware.sscontrol.remote.openssh.userkey.ubuntu_12_04.UserKeyUbuntu_12_04_Module;
 import com.anrisoftware.sscontrol.remote.openssh.users.ubuntu_12_04.UsersUbuntu_12_04_Module;
 import com.anrisoftware.sscontrol.scripts.changefile.ChangeFileModule;
-import com.anrisoftware.sscontrol.scripts.localchangepassword.LocalChangePasswordModule;
-import com.anrisoftware.sscontrol.scripts.localchangeuser.LocalChangeUserModule;
-import com.anrisoftware.sscontrol.scripts.localgroupadd.LocalGroupAddModule;
-import com.anrisoftware.sscontrol.scripts.localuseradd.LocalUserAddModule;
+import com.anrisoftware.sscontrol.scripts.localuser.LocalUserModule;
 import com.anrisoftware.sscontrol.scripts.unix.UnixScriptsModule;
 import com.google.inject.AbstractModule;
 
@@ -40,11 +37,8 @@ public class UbuntuModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        install(new LocalGroupAddModule());
-        install(new LocalChangePasswordModule());
-        install(new LocalUserAddModule());
+        install(new LocalUserModule());
         install(new ChangeFileModule());
-        install(new LocalChangeUserModule());
         install(new UnixScriptsModule());
         install(new UnixScriptsModule.UnixScriptsDefaultsModule());
         install(new UsersUbuntu_12_04_Module());

@@ -31,8 +31,8 @@ import com.anrisoftware.sscontrol.httpd.domain.Domain
 import com.anrisoftware.sscontrol.httpd.redmine.RedmineService
 import com.anrisoftware.sscontrol.httpd.webservice.WebService
 import com.anrisoftware.sscontrol.scripts.changefile.ChangeFileModFactory;
-import com.anrisoftware.sscontrol.scripts.localgroupadd.LocalGroupAddFactory
-import com.anrisoftware.sscontrol.scripts.localuseradd.LocalUserAddFactory
+import com.anrisoftware.sscontrol.scripts.localuser.LocalGroupAddFactory;
+import com.anrisoftware.sscontrol.scripts.localuser.LocalUserAddFactory;
 import com.anrisoftware.sscontrol.scripts.unix.RestartServicesFactory
 
 /**

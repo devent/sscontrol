@@ -31,10 +31,10 @@ import com.anrisoftware.sscontrol.remote.service.RemoteService
 import com.anrisoftware.sscontrol.remote.user.Require
 import com.anrisoftware.sscontrol.remote.user.User
 import com.anrisoftware.sscontrol.remote.user.UserFactory
-import com.anrisoftware.sscontrol.scripts.localchangepassword.LocalChangePasswordFactory
-import com.anrisoftware.sscontrol.scripts.localchangeuser.LocalChangeUserFactory
-import com.anrisoftware.sscontrol.scripts.localgroupadd.LocalGroupAddFactory
-import com.anrisoftware.sscontrol.scripts.localuseradd.LocalUserAddFactory
+import com.anrisoftware.sscontrol.scripts.localuser.LocalChangePasswordFactory;
+import com.anrisoftware.sscontrol.scripts.localuser.LocalChangeUserFactory;
+import com.anrisoftware.sscontrol.scripts.localuser.LocalGroupAddFactory;
+import com.anrisoftware.sscontrol.scripts.localuser.LocalUserAddFactory;
 
 /**
  * Local users script.

@@ -31,7 +31,7 @@ import com.anrisoftware.resources.templates.api.Templates
 import com.anrisoftware.resources.templates.api.TemplatesFactory
 import com.anrisoftware.sscontrol.mail.postfix.linux.AuthConfig
 import com.anrisoftware.sscontrol.mail.postfix.script.linux.BaseAuth
-import com.anrisoftware.sscontrol.scripts.localchangeuser.LocalChangeUserFactory
+import com.anrisoftware.sscontrol.scripts.localuser.LocalChangeUserFactory;
 
 /**
  * SASL/authentication.

@@ -30,9 +30,9 @@ import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.Templates
 import com.anrisoftware.resources.templates.api.TemplatesFactory
 import com.anrisoftware.sscontrol.dns.deadwood.deadwood_3_2.Deadwood_3_2_Script
-import com.anrisoftware.sscontrol.scripts.localgroupadd.LocalGroupAddFactory
-import com.anrisoftware.sscontrol.scripts.localuseradd.LocalUserAddFactory
-import com.anrisoftware.sscontrol.scripts.localuserinfo.LocalUserInfoFactory
+import com.anrisoftware.sscontrol.scripts.localuser.LocalGroupAddFactory;
+import com.anrisoftware.sscontrol.scripts.localuser.LocalUserAddFactory;
+import com.anrisoftware.sscontrol.scripts.localuser.LocalUserInfoFactory;
 import com.anrisoftware.sscontrol.scripts.unix.InstallPackagesFactory
 import com.anrisoftware.sscontrol.scripts.unix.RestartServicesFactory
 

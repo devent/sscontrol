@@ -24,11 +24,11 @@ import javax.inject.Inject
 
 import org.joda.time.Duration
 
+import com.anrisoftware.globalpom.exec.scriptprocess.ScriptExecFactory;
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.TemplatesFactory
 import com.anrisoftware.sscontrol.scripts.unix.InstallPackagesFactory
 import com.anrisoftware.sscontrol.scripts.unix.RestartServicesFactory
-import com.anrisoftware.sscontrol.scripts.unix.ScriptExecFactory
 import com.anrisoftware.sscontrol.scripts.unix.StatusServiceFactory
 import com.anrisoftware.sscontrol.security.clamav.ClamavService
 import com.anrisoftware.sscontrol.security.clamav.linux.Clamav_0_98_Config

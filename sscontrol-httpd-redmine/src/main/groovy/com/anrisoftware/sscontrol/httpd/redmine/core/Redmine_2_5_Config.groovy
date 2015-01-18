@@ -29,6 +29,7 @@ import org.apache.commons.lang3.StringUtils
 import org.apache.commons.lang3.builder.ToStringBuilder
 import org.joda.time.Duration
 
+import com.anrisoftware.globalpom.exec.scriptprocess.ScriptExecFactory;
 import com.anrisoftware.globalpom.textmatch.tokentemplate.TokenTemplate
 import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.resources.templates.api.TemplateResource
@@ -44,10 +45,9 @@ import com.anrisoftware.sscontrol.httpd.redmine.ScmInstall
 import com.anrisoftware.sscontrol.httpd.redmine.nginx_thin_ubuntu_12_04.RedmineConfigFactory
 import com.anrisoftware.sscontrol.httpd.webservice.OverrideMode
 import com.anrisoftware.sscontrol.httpd.webservice.WebService
-import com.anrisoftware.sscontrol.scripts.changefilemod.ChangeFileModFactory
-import com.anrisoftware.sscontrol.scripts.changefileowner.ChangeFileOwnerFactory
+import com.anrisoftware.sscontrol.scripts.changefile.ChangeFileModFactory;
+import com.anrisoftware.sscontrol.scripts.changefile.ChangeFileOwnerFactory;
 import com.anrisoftware.sscontrol.scripts.unix.InstallPackagesFactory
-import com.anrisoftware.sscontrol.scripts.unix.ScriptExecFactory
 
 /**
  * Configures <i>Redmine 2.5</i>

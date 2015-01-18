@@ -25,7 +25,7 @@
 		<target>System.err</target>
 		<encoder>
 			<pattern>[%level] %-4relative [%thread] %logger{0} - %msg%n%rEx{short}</pattern>
-			<immediateFlush>false</immediateFlush>
+			<immediateFlush>true</immediateFlush>
 		</encoder>
 	</appender>
 
@@ -33,10 +33,10 @@
 		<appender-ref ref="TESTING_STYLE" />
 	</root>
 
-	<logger name="com.anrisoftware" level="INFO" />
-	<logger name="com.anrisoftware.globalpom.exec" level="DEBUG" />
-	<logger name="com.anrisoftware.sscontrol" level="DEBUG" />
-	<logger name="com.anrisoftware.sscontrol.scripts.unix" level="TRACE" />
-	<logger name="com.anrisoftware.sscontrol.database" level="ALL" />
+    <logger name="com.anrisoftware" level="INFO" />
+    <logger name="com.anrisoftware.globalpom.exec.scriptprocess" level="TRACE" />
+    <logger name="com.anrisoftware.sscontrol" level="DEBUG" />
+    <logger name="com.anrisoftware.sscontrol.scripts" level="TRACE" />
+    <logger name="com.anrisoftware.sscontrol.database" level="TRACE" />
 
 </configuration>

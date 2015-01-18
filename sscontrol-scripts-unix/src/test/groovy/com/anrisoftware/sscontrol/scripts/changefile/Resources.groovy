@@ -16,34 +16,42 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-scripts-unix. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.scripts.changefilemod
+package com.anrisoftware.sscontrol.scripts.changefile
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static org.apache.commons.io.FileUtils.*
 
+import com.anrisoftware.sscontrol.scripts.resources.ResourcesUtils
+
 /**
- * <i>Ubuntu 10.04</i> resources.
+ * Test resources.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-enum Ubuntu_10_04_Resources {
+enum Resources {
 
-    chmodCommand("/bin/chmod", Ubuntu_10_04_Resources.class.getResource("echo_command.txt")),
-    fileFooCommand("/tmp/foo", Ubuntu_10_04_Resources.class.getResource("echo_command.txt")),
-    fileBarCommand("/tmp/bar", Ubuntu_10_04_Resources.class.getResource("echo_command.txt")),
-    chmodOutExpected("/bin/chmod.out", Ubuntu_10_04_Resources.class.getResource("chmod_out_expected.txt")),
-    chmodRecursiveOutExpected("/bin/chmod.out", Ubuntu_10_04_Resources.class.getResource("chmod_recursive_out_expected.txt")),
+    fileFooCommand("/tmp/foo", Resources.class.getResource("echo_command.txt")),
+    fileBarCommand("/tmp/bar", Resources.class.getResource("echo_command.txt")),
+    // change file mode
+    chmodCommand("/bin/chmod", Resources.class.getResource("echo_command.txt")),
+    chmodOutExpected("/bin/chmod.out", Resources.class.getResource("chmod_out_expected.txt")),
+    chmodRecursiveOutExpected("/bin/chmod.out", Resources.class.getResource("chmod_recursive_out_expected.txt")),
+    // change file owner
+    chownCommand("/bin/chown", Resources.class.getResource("echo_command.txt")),
+    chownOutExpected("/bin/chown.out", Resources.class.getResource("chown_out_expected.txt")),
+    chownRecursiveOutExpected("/bin/chown.out", Resources.class.getResource("chown_recursive_out_expected.txt")),
 
-    static void copyUbuntu_10_04_Files(File parent) {
+    static void copyTestFiles(File parent) {
         chmodCommand.createCommand parent
+        chownCommand.createCommand parent
         fileFooCommand.createFile parent
         fileBarCommand.createFile parent
     }
 
     ResourcesUtils resources
 
-    Ubuntu_10_04_Resources(String path, URL resource) {
+    Resources(String path, URL resource) {
         this.resources = new ResourcesUtils(path: path, resource: resource)
     }
 

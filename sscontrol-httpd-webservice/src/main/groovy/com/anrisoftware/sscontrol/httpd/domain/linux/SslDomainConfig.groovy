@@ -25,8 +25,8 @@ import javax.inject.Inject
 
 import com.anrisoftware.sscontrol.core.service.LinuxScript
 import com.anrisoftware.sscontrol.httpd.domain.SslDomain
-import com.anrisoftware.sscontrol.scripts.changefilemod.ChangeFileModFactory
-import com.anrisoftware.sscontrol.scripts.changefileowner.ChangeFileOwnerFactory
+import com.anrisoftware.sscontrol.scripts.changefile.ChangeFileModFactory;
+import com.anrisoftware.sscontrol.scripts.changefile.ChangeFileOwnerFactory;
 
 /**
  * Deploys the SSL/domain configuration.

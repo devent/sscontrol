@@ -28,6 +28,7 @@ import javax.inject.Inject;
 import com.anrisoftware.globalpom.exec.api.CommandLine;
 import com.anrisoftware.globalpom.exec.api.ProcessTask;
 import com.anrisoftware.globalpom.exec.script.ScriptCommandLineFactory;
+import com.anrisoftware.globalpom.exec.scriptprocess.AbstractProcessExec;
 import com.anrisoftware.globalpom.threads.api.Threads;
 import com.anrisoftware.resources.templates.api.TemplateResource;
 import com.google.inject.assistedinject.Assisted;

@@ -26,11 +26,11 @@ import javax.inject.Inject;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import com.anrisoftware.globalpom.exec.scriptprocess.ScriptExecFactory;
 import com.anrisoftware.globalpom.threads.api.Threads;
 import com.anrisoftware.resources.templates.api.TemplateResource;
 import com.anrisoftware.resources.templates.api.Templates;
 import com.anrisoftware.resources.templates.api.TemplatesFactory;
-import com.anrisoftware.sscontrol.scripts.unix.ScriptExecFactory;
 import com.google.inject.assistedinject.Assisted;
 
 /**

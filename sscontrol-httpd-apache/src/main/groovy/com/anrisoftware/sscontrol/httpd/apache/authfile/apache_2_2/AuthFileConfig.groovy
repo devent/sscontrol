@@ -39,8 +39,8 @@ import com.anrisoftware.sscontrol.httpd.auth.RequireGroup
 import com.anrisoftware.sscontrol.httpd.auth.RequireUpdate
 import com.anrisoftware.sscontrol.httpd.domain.Domain
 import com.anrisoftware.sscontrol.httpd.webservice.WebService
-import com.anrisoftware.sscontrol.scripts.changefilemod.ChangeFileModFactory
-import com.anrisoftware.sscontrol.scripts.changefileowner.ChangeFileOwnerFactory
+import com.anrisoftware.sscontrol.scripts.changefile.ChangeFileModFactory;
+import com.anrisoftware.sscontrol.scripts.changefile.ChangeFileOwnerFactory;
 
 /**
  * Auth/file configuration.

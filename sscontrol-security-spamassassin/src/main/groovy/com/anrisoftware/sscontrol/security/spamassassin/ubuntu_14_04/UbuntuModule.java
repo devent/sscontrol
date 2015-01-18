@@ -32,6 +32,6 @@ public class UbuntuModule extends AbstractModule {
     @Override
     protected void configure() {
         install(new UnixScriptsModule());
-        install(new UnixScriptsModule.ExecCommandModule());
+        install(new UnixScriptsModule.UnixScriptsDefaultsModule());
     }
 }

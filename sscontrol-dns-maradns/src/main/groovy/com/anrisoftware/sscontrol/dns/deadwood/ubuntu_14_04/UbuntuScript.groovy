@@ -24,6 +24,7 @@ import javax.inject.Inject
 
 import org.apache.commons.io.FileUtils
 
+import com.anrisoftware.globalpom.exec.scriptprocess.ScriptExecFactory;
 import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.Templates
@@ -34,7 +35,6 @@ import com.anrisoftware.sscontrol.scripts.localuseradd.LocalUserAddFactory
 import com.anrisoftware.sscontrol.scripts.localuserinfo.LocalUserInfoFactory
 import com.anrisoftware.sscontrol.scripts.unix.InstallPackagesFactory
 import com.anrisoftware.sscontrol.scripts.unix.RestartServicesFactory
-import com.anrisoftware.sscontrol.scripts.unix.ScriptExecFactory
 
 /**
  * <i>Deadwood 3.2.x Ubuntu 14.04</i> service script.

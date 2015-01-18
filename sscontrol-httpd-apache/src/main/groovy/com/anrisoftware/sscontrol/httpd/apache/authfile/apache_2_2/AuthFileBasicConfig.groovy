@@ -28,13 +28,13 @@ import org.apache.commons.io.FileUtils
 import org.apache.commons.io.FilenameUtils
 
 import com.anrisoftware.globalpom.exec.api.ProcessTask
+import com.anrisoftware.globalpom.exec.scriptprocess.ScriptExecFactory;
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.TemplatesFactory
 import com.anrisoftware.sscontrol.httpd.auth.AbstractAuthService
 import com.anrisoftware.sscontrol.httpd.auth.RequireUpdate
 import com.anrisoftware.sscontrol.httpd.auth.RequireUser
 import com.anrisoftware.sscontrol.httpd.domain.Domain
-import com.anrisoftware.sscontrol.scripts.unix.ScriptExecFactory
 
 /**
  * <i>Auth/file-basic</i> configuration.

@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-scripts-unix. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.scripts.localuseradd
+package com.anrisoftware.sscontrol.scripts.resources
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static org.apache.commons.io.FileUtils.*
@@ -38,12 +38,12 @@ class ResourcesUtils {
     }
 
     void createFile(File parent) {
-        assert resource : "Resource cannot be null for ${resource}"
+        assert resource : "Resource cannot be null for ${path}"
         copyURLToFile resource, new File(parent, path)
     }
 
     void createCommand(File parent) {
-        assert resource : "Resource cannot be null for ${resource}"
+        assert resource : "Resource cannot be null for ${path}"
         copyResourceToCommand resource, new File(parent, path)
     }
 

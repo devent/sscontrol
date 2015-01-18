@@ -16,12 +16,12 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-scripts-unix. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.scripts.changefileowner;
+package com.anrisoftware.sscontrol.scripts.changefile;
 
-import static com.anrisoftware.sscontrol.scripts.changefileowner.ChangeFileOwnerLogger._.argument_null;
-import static com.anrisoftware.sscontrol.scripts.changefileowner.ChangeFileOwnerLogger._.owner_changed_debug;
-import static com.anrisoftware.sscontrol.scripts.changefileowner.ChangeFileOwnerLogger._.owner_changed_info;
-import static com.anrisoftware.sscontrol.scripts.changefileowner.ChangeFileOwnerLogger._.owner_changed_trace;
+import static com.anrisoftware.sscontrol.scripts.changefile.ChangeFileModLogger._.argument_null;
+import static com.anrisoftware.sscontrol.scripts.changefile.ChangeFileModLogger._.mod_changed_debug;
+import static com.anrisoftware.sscontrol.scripts.changefile.ChangeFileModLogger._.mod_changed_info;
+import static com.anrisoftware.sscontrol.scripts.changefile.ChangeFileModLogger._.mod_changed_trace;
 import static org.apache.commons.lang3.Validate.notNull;
 
 import java.util.Map;
@@ -30,32 +30,27 @@ import com.anrisoftware.globalpom.exec.api.ProcessTask;
 import com.anrisoftware.globalpom.log.AbstractLogger;
 
 /**
- * Logging for {@link ChangeFileOwner}.
+ * Logging for {@link ChangeFileMod}.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class ChangeFileOwnerLogger extends AbstractLogger {
+class ChangeFileModLogger extends AbstractLogger {
 
-    private static final String OWNER_GROUP_KEY = "ownerGroup";
     private static final String RECURSIVE_KEY = "recursive";
     private static final String COMMAND_KEY = "command";
     private static final String FILES_KEY = "files";
-    private static final String OWNER_KEY = "owner";
+    private static final String MOD_KEY = "mod";
 
     enum _ {
 
         argument_null("Argument '%s' cannot be null."),
 
-        system_group_boolean("Argument '%s' must be boolean."),
+        mod_changed_trace("Mode changed for '{}' for {}, {}."),
 
-        repository_enabled("Repository '{}' enabled for {}."),
+        mod_changed_debug("Mode changed for '{}' for {}."),
 
-        owner_changed_trace("Owner changed for '{}' for {}, {}."),
-
-        owner_changed_debug("Owner changed for '{}' for {}."),
-
-        owner_changed_info("Owner changed for '{}'.");
+        mod_changed_info("Mode changed for '{}'.");
 
         private String name;
 
@@ -70,15 +65,15 @@ class ChangeFileOwnerLogger extends AbstractLogger {
     }
 
     /**
-     * Sets the context of the logger to {@link ChangeFileOwner}.
+     * Sets the context of the logger to {@link ChangeFileMod}.
      */
-    public ChangeFileOwnerLogger() {
-        super(ChangeFileOwner.class);
+    public ChangeFileModLogger() {
+        super(ChangeFileMod.class);
     }
 
-    void owner(Map<String, Object> args, Object parent) {
-        Object object = args.get(OWNER_KEY);
-        notNull(object, argument_null.toString(), OWNER_KEY);
+    void mod(Map<String, Object> args, Object parent) {
+        Object object = args.get(MOD_KEY);
+        notNull(object, argument_null.toString(), MOD_KEY);
     }
 
     void files(Map<String, Object> args, Object parent) {
@@ -97,19 +92,14 @@ class ChangeFileOwnerLogger extends AbstractLogger {
         notNull(object, argument_null.toString(), COMMAND_KEY);
     }
 
-    void ownerGroup(Map<String, Object> args, Object parent) {
-        Object object = args.get(OWNER_GROUP_KEY);
-        notNull(object, argument_null.toString(), OWNER_GROUP_KEY);
-    }
-
-    void userAdded(Object parent, ProcessTask task, Map<String, Object> args) {
+    void modChanged(Object parent, ProcessTask task, Map<String, Object> args) {
         Object files = args.get(FILES_KEY);
         if (isTraceEnabled()) {
-            trace(owner_changed_trace, files, parent, task);
+            trace(mod_changed_trace, files, parent, task);
         } else if (isDebugEnabled()) {
-            debug(owner_changed_debug, files, parent);
+            debug(mod_changed_debug, files, parent);
         } else {
-            info(owner_changed_info, files);
+            info(mod_changed_info, files);
         }
     }
 

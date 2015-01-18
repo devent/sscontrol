@@ -28,10 +28,10 @@ import javax.inject.Inject
 import org.joda.time.Duration
 import org.stringtemplate.v4.ST
 
+import com.anrisoftware.globalpom.exec.scriptprocess.ScriptExecFactory;
 import com.anrisoftware.sscontrol.httpd.domain.Domain
 import com.anrisoftware.sscontrol.httpd.webservice.WebService
 import com.anrisoftware.sscontrol.scripts.pack.PackFactory
-import com.anrisoftware.sscontrol.scripts.unix.ScriptExecFactory
 
 /**
  * Backups the web service.

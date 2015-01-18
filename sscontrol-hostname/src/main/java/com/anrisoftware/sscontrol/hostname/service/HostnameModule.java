@@ -34,7 +34,7 @@ class HostnameModule extends AbstractModule {
 	@Override
 	protected void configure() {
         install(new UnixScriptsModule());
-        install(new UnixScriptsModule.ExecCommandModule());
+        install(new UnixScriptsModule.UnixScriptsDefaultsModule());
         install(new Ubuntu_12_04_Module());
         install(new Ubuntu_14_04_Module());
 	}

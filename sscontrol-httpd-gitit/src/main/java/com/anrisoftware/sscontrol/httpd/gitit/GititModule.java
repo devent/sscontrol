@@ -34,7 +34,7 @@ public class GititModule extends AbstractModule {
     @Override
     protected void configure() {
         install(new UnixScriptsModule());
-        install(new UnixScriptsModule.ExecCommandModule());
+        install(new UnixScriptsModule.UnixScriptsDefaultsModule());
         install(new FactoryModuleBuilder().implement(WebService.class,
                 GititService.class).build(GititServiceFactory.class));
         install(new FactoryModuleBuilder().implement(Force.class, Force.class)

@@ -25,6 +25,7 @@ import javax.inject.Inject
 
 import org.apache.commons.io.FileUtils
 
+import com.anrisoftware.globalpom.exec.scriptprocess.ScriptExecFactory;
 import com.anrisoftware.globalpom.textmatch.tokentemplate.TokenTemplate
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.Templates
@@ -33,12 +34,11 @@ import com.anrisoftware.sscontrol.mail.postfix.linux.BindAddressesRenderer
 import com.anrisoftware.sscontrol.mail.postfix.linux.StorageConfig
 import com.anrisoftware.sscontrol.mail.postfix.script.linux.BaseStorage
 import com.anrisoftware.sscontrol.mail.statements.Domain
-import com.anrisoftware.sscontrol.scripts.changefilemod.ChangeFileModFactory
-import com.anrisoftware.sscontrol.scripts.changefileowner.ChangeFileOwnerFactory
+import com.anrisoftware.sscontrol.scripts.changefile.ChangeFileModFactory;
+import com.anrisoftware.sscontrol.scripts.changefile.ChangeFileOwnerFactory;
 import com.anrisoftware.sscontrol.scripts.localgroupadd.LocalGroupAddFactory
 import com.anrisoftware.sscontrol.scripts.localuseradd.LocalUserAddFactory
 import com.anrisoftware.sscontrol.scripts.unix.InstallPackagesFactory
-import com.anrisoftware.sscontrol.scripts.unix.ScriptExecFactory
 
 /**
  * Mysql/storage.

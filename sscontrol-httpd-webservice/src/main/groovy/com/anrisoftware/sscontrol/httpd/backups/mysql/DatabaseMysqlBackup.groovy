@@ -27,11 +27,11 @@ import javax.inject.Inject
 
 import org.joda.time.Duration
 
+import com.anrisoftware.globalpom.exec.scriptprocess.ScriptExecFactory;
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.sscontrol.httpd.backups.database.DatabaseBackup
 import com.anrisoftware.sscontrol.httpd.domain.Domain
 import com.anrisoftware.sscontrol.httpd.webservice.WebService
-import com.anrisoftware.sscontrol.scripts.unix.ScriptExecFactory
 
 /**
  * Backups the <i>MySQL</i> database of a service.

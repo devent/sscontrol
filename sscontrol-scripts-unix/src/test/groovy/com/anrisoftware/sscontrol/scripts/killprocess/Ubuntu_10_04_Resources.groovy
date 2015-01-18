@@ -21,6 +21,8 @@ package com.anrisoftware.sscontrol.scripts.killprocess
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static org.apache.commons.io.FileUtils.*
 
+import com.anrisoftware.sscontrol.scripts.resources.ResourcesUtils
+
 /**
  * <i>Ubuntu 10.04</i> resources.
  *

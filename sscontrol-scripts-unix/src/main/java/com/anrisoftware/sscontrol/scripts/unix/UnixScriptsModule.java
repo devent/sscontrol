@@ -18,11 +18,12 @@
  */
 package com.anrisoftware.sscontrol.scripts.unix;
 
-import com.anrisoftware.globalpom.exec.command.DefaultCommandLineModule;
-import com.anrisoftware.globalpom.exec.core.DefaultProcessModule;
-import com.anrisoftware.globalpom.exec.logoutputs.LogOutputsModule;
-import com.anrisoftware.globalpom.exec.pipeoutputs.PipeOutputsModule;
-import com.anrisoftware.globalpom.exec.script.ScriptProcessModule;
+import com.anrisoftware.globalpom.exec.scriptprocess.ScriptProcessModule;
+import com.anrisoftware.globalpom.exec.scriptprocess.ScriptProcessModule.ScriptProcessDefaultsModule;
+import com.anrisoftware.resources.templates.maps.TemplatesDefaultMapsModule;
+import com.anrisoftware.resources.templates.templates.TemplatesResourcesModule;
+import com.anrisoftware.resources.templates.worker.STDefaultPropertiesModule;
+import com.anrisoftware.resources.templates.worker.STWorkerModule;
 import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 
@@ -32,7 +33,6 @@ import com.google.inject.assistedinject.FactoryModuleBuilder;
  * @see RestartServicesFactory
  * @see StatusServiceFactory
  * @see StopServicesFactory
- * @see ScriptExecFactory
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
@@ -40,20 +40,35 @@ import com.google.inject.assistedinject.FactoryModuleBuilder;
 public class UnixScriptsModule extends AbstractModule {
 
     /**
-     * Installs needed command exec modules.
+     * Installs needed script process modules.
      *
      * @author Erwin Mueller, erwin.mueller@deventm.org
      * @since 1.0
      */
-    public static class ExecCommandModule extends AbstractModule {
+    public static class UnixScriptsDefaultsModule extends AbstractModule {
 
         @Override
         protected void configure() {
-            install(new DefaultCommandLineModule());
-            install(new DefaultProcessModule());
-            install(new LogOutputsModule());
-            install(new PipeOutputsModule());
+            install(new ScriptProcessDefaultsModule());
             install(new ScriptProcessModule());
+        }
+
+    }
+
+    /**
+     * Installs needed script process and command modules.
+     *
+     * @author Erwin Mueller, erwin.mueller@deventm.org
+     * @since 1.0
+     */
+    public static class TemplatesResourcesDefaultsModule extends AbstractModule {
+
+        @Override
+        protected void configure() {
+            install(new TemplatesResourcesModule());
+            install(new TemplatesDefaultMapsModule());
+            install(new STWorkerModule());
+            install(new STDefaultPropertiesModule());
         }
 
     }
@@ -64,8 +79,6 @@ public class UnixScriptsModule extends AbstractModule {
                 InstallPackages.class).build(InstallPackagesFactory.class));
         install(new FactoryModuleBuilder().implement(RestartServices.class,
                 RestartServices.class).build(RestartServicesFactory.class));
-        install(new FactoryModuleBuilder().implement(ScriptExec.class,
-                ScriptExec.class).build(ScriptExecFactory.class));
         install(new FactoryModuleBuilder().implement(StopServices.class,
                 StopServices.class).build(StopServicesFactory.class));
         install(new FactoryModuleBuilder().implement(UpdatePackages.class,

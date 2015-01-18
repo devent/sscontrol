@@ -24,12 +24,12 @@ import javax.inject.Inject
 
 import org.apache.commons.io.FileUtils
 
+import com.anrisoftware.globalpom.exec.scriptprocess.ScriptExecFactory;
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.TemplatesFactory
 import com.anrisoftware.sscontrol.httpd.citadel.CitadelService
 import com.anrisoftware.sscontrol.httpd.citadel.core.Citadel_8_Config
 import com.anrisoftware.sscontrol.scripts.unix.RestartServicesFactory
-import com.anrisoftware.sscontrol.scripts.unix.ScriptExecFactory
 
 /**
  * <i>Citadel 8 Ubuntu</i> configuration.

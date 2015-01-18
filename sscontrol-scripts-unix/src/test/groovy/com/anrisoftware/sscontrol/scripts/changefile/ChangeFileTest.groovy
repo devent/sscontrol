@@ -16,10 +16,10 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-scripts-unix. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.scripts.changefileowner
+package com.anrisoftware.sscontrol.scripts.changefile
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
-import static com.anrisoftware.sscontrol.scripts.changefileowner.Ubuntu_10_04_Resources.*
+import static com.anrisoftware.sscontrol.scripts.changefile.Resources.*
 import groovy.util.logging.Slf4j
 
 import org.junit.Before
@@ -31,10 +31,6 @@ import org.junit.rules.TemporaryFolder
 import com.anrisoftware.globalpom.threads.api.Threads
 import com.anrisoftware.globalpom.threads.properties.PropertiesThreadsFactory
 import com.anrisoftware.globalpom.threads.properties.PropertiesThreadsModule
-import com.anrisoftware.resources.templates.maps.TemplatesDefaultMapsModule
-import com.anrisoftware.resources.templates.templates.TemplatesResourcesModule
-import com.anrisoftware.resources.templates.worker.STDefaultPropertiesModule
-import com.anrisoftware.resources.templates.worker.STWorkerModule
 import com.anrisoftware.sscontrol.scripts.unix.TestThreadsPropertiesProvider
 import com.anrisoftware.sscontrol.scripts.unix.UnixScriptsModule
 import com.google.inject.Guice
@@ -42,17 +38,51 @@ import com.google.inject.Injector
 
 /**
  * @see ChangeFileOwner
+ * @see ChangeFileModule
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
 @Slf4j
-class ChangeFileOwnerTest {
+class ChangeFileTest {
+
+    @Test
+    void "change mode"() {
+        def tmpdir = tmp.newFolder()
+        copyTestFiles tmpdir
+        def repositoryEnabled = changeFileModFactory.create(
+                log: log,
+                command: chmodCommand.asFile(tmpdir),
+                files: [
+                    fileFooCommand.asFile(tmpdir),
+                    fileBarCommand.asFile(tmpdir)
+                ],
+                mod: "+w",
+                this, threads)()
+        assertStringContent chmodOutExpected.replaced(tmpdir, tmpdir, "/tmp"), chmodOutExpected.toString()
+    }
+
+    @Test
+    void "change mode recursive"() {
+        def tmpdir = tmp.newFolder()
+        copyTestFiles tmpdir
+        def repositoryEnabled = changeFileModFactory.create(
+                log: log,
+                command: chmodCommand.asFile(tmpdir),
+                files: [
+                    fileFooCommand.asFile(tmpdir),
+                    fileBarCommand.asFile(tmpdir)
+                ],
+                mod: "+w",
+                recursive: true,
+                this, threads)()
+        assertStringContent chmodRecursiveOutExpected.replaced(tmpdir, tmpdir, "/tmp"), chmodRecursiveOutExpected.toString()
+    }
 
     @Test
     void "change owner"() {
         def tmpdir = tmp.newFolder()
-        copyUbuntu_10_04_Files tmpdir
+        copyTestFiles tmpdir
         def repositoryEnabled = changeFileOwnerFactory.create(
                 log: log,
                 command: chownCommand.asFile(tmpdir),
@@ -69,7 +99,7 @@ class ChangeFileOwnerTest {
     @Test
     void "change owner recursive"() {
         def tmpdir = tmp.newFolder()
-        copyUbuntu_10_04_Files tmpdir
+        copyTestFiles tmpdir
         def repositoryEnabled = changeFileOwnerFactory.create(
                 log: log,
                 command: chownCommand.asFile(tmpdir),
@@ -86,6 +116,8 @@ class ChangeFileOwnerTest {
 
     static Injector injector
 
+    static ChangeFileModFactory changeFileModFactory
+
     static ChangeFileOwnerFactory changeFileOwnerFactory
 
     static PropertiesThreadsFactory threadsFactory
@@ -100,14 +132,12 @@ class ChangeFileOwnerTest {
     @BeforeClass
     static void createFactory() {
         injector = Guice.createInjector(
-                new ChangeFileOwnerModule(),
+                new ChangeFileModule(),
                 new UnixScriptsModule(),
-                new UnixScriptsModule.ExecCommandModule(),
-                new PropertiesThreadsModule(),
-                new TemplatesResourcesModule(),
-                new TemplatesDefaultMapsModule(),
-                new STWorkerModule(),
-                new STDefaultPropertiesModule())
+                new UnixScriptsModule.UnixScriptsDefaultsModule(),
+                new UnixScriptsModule.TemplatesResourcesDefaultsModule(),
+                new PropertiesThreadsModule())
+        changeFileModFactory = injector.getInstance ChangeFileModFactory
         changeFileOwnerFactory = injector.getInstance ChangeFileOwnerFactory
         threadsFactory = injector.getInstance PropertiesThreadsFactory
         threadsPoolProvider = injector.getInstance TestThreadsPropertiesProvider

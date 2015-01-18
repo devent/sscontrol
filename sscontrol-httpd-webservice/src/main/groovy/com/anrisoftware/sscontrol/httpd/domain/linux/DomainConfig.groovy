@@ -28,7 +28,7 @@ import javax.inject.Inject
 import com.anrisoftware.sscontrol.core.service.LinuxScript
 import com.anrisoftware.sscontrol.httpd.domain.Domain
 import com.anrisoftware.sscontrol.httpd.user.DomainUser
-import com.anrisoftware.sscontrol.scripts.changefileowner.ChangeFileOwnerFactory
+import com.anrisoftware.sscontrol.scripts.changefile.ChangeFileOwnerFactory;
 import com.anrisoftware.sscontrol.scripts.killprocess.KillProcessFactory
 import com.anrisoftware.sscontrol.scripts.localchangegroup.LocalChangeGroupFactory
 import com.anrisoftware.sscontrol.scripts.localchangeuser.LocalChangeUserFactory

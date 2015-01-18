@@ -25,12 +25,12 @@ import javax.inject.Inject
 import org.apache.commons.io.FileUtils
 import org.apache.commons.lang3.builder.ToStringBuilder
 
+import com.anrisoftware.globalpom.exec.scriptprocess.ScriptExecFactory;
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.sscontrol.httpd.domain.Domain
 import com.anrisoftware.sscontrol.httpd.gitit.GititService
 import com.anrisoftware.sscontrol.httpd.gitit.nginx_ubuntu_12_04.GititConfigFactory
-import com.anrisoftware.sscontrol.scripts.changefilemod.ChangeFileModFactory
-import com.anrisoftware.sscontrol.scripts.unix.ScriptExecFactory
+import com.anrisoftware.sscontrol.scripts.changefile.ChangeFileModFactory;
 
 /**
  * <i>SystemV</i> <i>Gitit</i> service configuration.

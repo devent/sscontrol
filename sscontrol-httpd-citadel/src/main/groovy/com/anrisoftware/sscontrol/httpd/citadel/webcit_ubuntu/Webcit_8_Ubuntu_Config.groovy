@@ -25,6 +25,7 @@ import javax.inject.Inject
 import org.apache.commons.lang3.builder.ToStringBuilder
 import org.joda.time.Duration
 
+import com.anrisoftware.globalpom.exec.scriptprocess.ScriptExecFactory;
 import com.anrisoftware.globalpom.textmatch.tokentemplate.TokenTemplate
 import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.resources.templates.api.TemplateResource
@@ -32,7 +33,6 @@ import com.anrisoftware.resources.templates.api.TemplatesFactory
 import com.anrisoftware.sscontrol.httpd.citadel.CitadelService
 import com.anrisoftware.sscontrol.httpd.domain.Domain
 import com.anrisoftware.sscontrol.scripts.unix.RestartServicesFactory
-import com.anrisoftware.sscontrol.scripts.unix.ScriptExecFactory
 
 /**
  * <i>Webcit 8 Ubuntu</i> configuration.

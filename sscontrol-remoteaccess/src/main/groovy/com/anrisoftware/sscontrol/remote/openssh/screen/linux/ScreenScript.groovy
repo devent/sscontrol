@@ -33,7 +33,7 @@ import com.anrisoftware.sscontrol.remote.api.RemoteScript
 import com.anrisoftware.sscontrol.remote.service.RemoteService
 import com.anrisoftware.sscontrol.remote.user.User
 import com.anrisoftware.sscontrol.remote.user.UserFactory
-import com.anrisoftware.sscontrol.scripts.changefilemod.ChangeFileModFactory
+import com.anrisoftware.sscontrol.scripts.changefile.ChangeFileModFactory;
 
 /**
  * <i>Screen</i> script.

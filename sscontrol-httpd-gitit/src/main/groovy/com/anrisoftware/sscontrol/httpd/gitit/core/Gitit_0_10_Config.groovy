@@ -30,6 +30,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder
 import org.joda.time.Duration
 import org.stringtemplate.v4.ST
 
+import com.anrisoftware.globalpom.exec.scriptprocess.ScriptExecFactory;
 import com.anrisoftware.globalpom.textmatch.tokentemplate.TokenTemplate
 import com.anrisoftware.globalpom.version.Version
 import com.anrisoftware.globalpom.version.VersionFormatFactory
@@ -44,10 +45,9 @@ import com.anrisoftware.sscontrol.httpd.gitit.LoginRequired
 import com.anrisoftware.sscontrol.httpd.gitit.RepositoryType
 import com.anrisoftware.sscontrol.httpd.gitit.nginx_ubuntu_12_04.GititConfigFactory
 import com.anrisoftware.sscontrol.httpd.webservice.WebService
-import com.anrisoftware.sscontrol.scripts.changefilemod.ChangeFileModFactory
-import com.anrisoftware.sscontrol.scripts.changefileowner.ChangeFileOwnerFactory
+import com.anrisoftware.sscontrol.scripts.changefile.ChangeFileModFactory;
+import com.anrisoftware.sscontrol.scripts.changefile.ChangeFileOwnerFactory;
 import com.anrisoftware.sscontrol.scripts.unix.InstallPackagesFactory
-import com.anrisoftware.sscontrol.scripts.unix.ScriptExecFactory
 
 /**
  * Configures <i>Gitit 0.10.</i>

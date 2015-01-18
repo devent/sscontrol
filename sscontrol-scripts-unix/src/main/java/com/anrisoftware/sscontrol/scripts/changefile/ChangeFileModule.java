@@ -16,24 +16,26 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-scripts-unix. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.scripts.changefileowner;
+package com.anrisoftware.sscontrol.scripts.changefile;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 
 /**
+ * @see ChangeFileModFactory
  * @see ChangeFileOwnerFactory
- * 
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-public class ChangeFileOwnerModule extends AbstractModule {
+public class ChangeFileModule extends AbstractModule {
 
     @Override
     protected void configure() {
+        install(new FactoryModuleBuilder().implement(ChangeFileMod.class,
+                ChangeFileMod.class).build(ChangeFileModFactory.class));
         install(new FactoryModuleBuilder().implement(ChangeFileOwner.class,
-                ChangeFileOwner.class).build(
-                ChangeFileOwnerFactory.class));
+                ChangeFileOwner.class).build(ChangeFileOwnerFactory.class));
     }
 
 }

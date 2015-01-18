@@ -23,11 +23,11 @@ import groovy.util.logging.Slf4j
 
 import javax.inject.Inject
 
+import com.anrisoftware.globalpom.exec.scriptprocess.ScriptExecFactory;
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.Templates
 import com.anrisoftware.resources.templates.api.TemplatesFactory
 import com.anrisoftware.sscontrol.core.service.LinuxScript
-import com.anrisoftware.sscontrol.scripts.unix.ScriptExecFactory
 
 /**
  * <i>UFW</i> service on a general Linux system.

@@ -27,7 +27,7 @@ import com.google.inject.AbstractModule;
 
 /**
  * Installs the core text resources.
- * 
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
@@ -35,10 +35,6 @@ public class CoreResourcesModule extends AbstractModule {
 
 	@Override
 	protected void configure() {
-		installResources();
-	}
-
-	private void installResources() {
 		install(new TextsResourcesDefaultModule());
 		install(new TemplatesResourcesModule());
 		install(new TemplatesDefaultMapsModule());

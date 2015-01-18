@@ -18,8 +18,7 @@
  */
 package com.anrisoftware.sscontrol.httpd.nginx.nginx.linux;
 
-import com.anrisoftware.sscontrol.scripts.changefilemod.ChangeFileModModule;
-import com.anrisoftware.sscontrol.scripts.changefileowner.ChangeFileOwnerModule;
+import com.anrisoftware.sscontrol.scripts.changefile.ChangeFileModule;
 import com.anrisoftware.sscontrol.scripts.findusedport.FindUsedPortModule;
 import com.anrisoftware.sscontrol.scripts.killprocess.KillProcessModule;
 import com.anrisoftware.sscontrol.scripts.localchangegroup.LocalChangeGroupModule;
@@ -42,9 +41,8 @@ public class NginxScriptModule extends AbstractModule {
     @Override
     protected void configure() {
         install(new UnixScriptsModule());
-        install(new UnixScriptsModule.ExecCommandModule());
-        install(new ChangeFileOwnerModule());
-        install(new ChangeFileModModule());
+        install(new UnixScriptsModule.UnixScriptsDefaultsModule());
+        install(new ChangeFileModule());
         install(new LocalGroupAddModule());
         install(new LocalUserAddModule());
         install(new LocalChangeGroupModule());

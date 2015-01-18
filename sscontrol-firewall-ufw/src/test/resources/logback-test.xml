@@ -34,6 +34,7 @@
 	</root>
 
 	<logger name="com.anrisoftware" level="INFO" />
+    <logger name="com.anrisoftware.globalpom.exec.scriptprocess" level="TRACE" />
 	<logger name="com.anrisoftware.sscontrol" level="DEBUG" />
 	<logger name="com.anrisoftware.sscontrol.firewall" level="ALL" />
 

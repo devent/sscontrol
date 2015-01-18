@@ -29,6 +29,7 @@ import org.apache.commons.io.IOUtils
 import org.apache.commons.lang3.StringUtils
 
 import com.anrisoftware.globalpom.exec.api.ProcessTask
+import com.anrisoftware.globalpom.exec.scriptprocess.ScriptExecFactory;
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.TemplatesFactory
 import com.anrisoftware.sscontrol.database.mysql.linux.MysqlScript
@@ -36,7 +37,6 @@ import com.anrisoftware.sscontrol.database.service.DatabaseService
 import com.anrisoftware.sscontrol.database.statements.Database
 import com.anrisoftware.sscontrol.database.statements.User
 import com.anrisoftware.sscontrol.scripts.unix.RestartServicesFactory
-import com.anrisoftware.sscontrol.scripts.unix.ScriptExecFactory
 
 /**
  * <i>MySQL 5.5</i> service script.

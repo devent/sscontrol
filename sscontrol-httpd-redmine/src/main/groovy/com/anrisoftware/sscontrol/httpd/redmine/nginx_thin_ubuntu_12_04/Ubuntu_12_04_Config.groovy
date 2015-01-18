@@ -33,8 +33,8 @@ import com.anrisoftware.sscontrol.httpd.redmine.ScmInstall
 import com.anrisoftware.sscontrol.httpd.redmine.core.Redmine_2_5_Config
 import com.anrisoftware.sscontrol.httpd.webservice.ServiceConfig
 import com.anrisoftware.sscontrol.httpd.webservice.WebService
-import com.anrisoftware.sscontrol.scripts.changefilemod.ChangeFileModFactory
-import com.anrisoftware.sscontrol.scripts.changefileowner.ChangeFileOwnerFactory
+import com.anrisoftware.sscontrol.scripts.changefile.ChangeFileModFactory;
+import com.anrisoftware.sscontrol.scripts.changefile.ChangeFileOwnerFactory;
 import com.anrisoftware.sscontrol.scripts.unix.InstallPackagesFactory
 
 /**

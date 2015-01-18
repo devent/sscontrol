@@ -28,8 +28,8 @@ import com.anrisoftware.resources.templates.api.Templates
 import com.anrisoftware.resources.templates.api.TemplatesFactory
 import com.anrisoftware.sscontrol.dns.deadwood.linux.DeadwoodScript
 import com.anrisoftware.sscontrol.dns.service.DnsService
-import com.anrisoftware.sscontrol.scripts.changefilemod.ChangeFileModFactory
-import com.anrisoftware.sscontrol.scripts.changefileowner.ChangeFileOwnerFactory
+import com.anrisoftware.sscontrol.scripts.changefile.ChangeFileModFactory
+import com.anrisoftware.sscontrol.scripts.changefile.ChangeFileOwnerFactory
 
 /**
  * <i>MaraDNS-Deadwood 3.2.x</i> service script.

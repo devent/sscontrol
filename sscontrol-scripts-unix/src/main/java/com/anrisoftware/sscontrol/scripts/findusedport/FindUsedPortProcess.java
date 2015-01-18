@@ -26,10 +26,10 @@ import com.anrisoftware.globalpom.exec.api.CommandLine;
 import com.anrisoftware.globalpom.exec.api.ProcessTask;
 import com.anrisoftware.globalpom.exec.script.ScriptCommandExec;
 import com.anrisoftware.globalpom.exec.script.ScriptCommandLineFactory;
+import com.anrisoftware.globalpom.exec.scriptprocess.AbstractProcessExec;
 import com.anrisoftware.globalpom.threads.api.Threads;
 import com.anrisoftware.resources.templates.api.TemplateResource;
 import com.anrisoftware.resources.templates.api.TemplatesFactory;
-import com.anrisoftware.sscontrol.scripts.unix.AbstractProcessExec;
 import com.google.inject.assistedinject.Assisted;
 
 /**

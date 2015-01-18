@@ -23,6 +23,7 @@ import groovy.util.logging.Slf4j
 
 import javax.inject.Inject
 
+import com.anrisoftware.globalpom.exec.scriptprocess.ScriptExecFactory;
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.sscontrol.core.service.LinuxScript
 import com.anrisoftware.sscontrol.httpd.domain.Domain
@@ -32,7 +33,6 @@ import com.anrisoftware.sscontrol.httpd.webservice.ServiceConfig
 import com.anrisoftware.sscontrol.httpd.webservice.ServiceConfigInfo
 import com.anrisoftware.sscontrol.httpd.webservice.WebService
 import com.anrisoftware.sscontrol.scripts.unix.InstallPackagesFactory
-import com.anrisoftware.sscontrol.scripts.unix.ScriptExecFactory
 import com.google.inject.Injector
 
 /**

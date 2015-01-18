@@ -19,17 +19,7 @@
     along with sscontrol-remoteaccess. If not, see <http://www.gnu.org/licenses/>.
 
 -->
-<configuration scan="true">
-
-	<property resource="logback.properties"/>
-
-	<appender name="MAVEN_STYLE" class="ch.qos.logback.core.ConsoleAppender">
-		<target>System.err</target>
-		<encoder>
-			<pattern>[%level] %-4relative [%thread] %logger{20} - %msg %n%rEx{short}</pattern>
-			<immediateFlush>false</immediateFlush>
-		</encoder>
-	</appender>
+<configuration scan="false">
 
 	<appender name="TESTING_STYLE" class="ch.qos.logback.core.ConsoleAppender">
 		<target>System.err</target>
@@ -39,25 +29,13 @@
 		</encoder>
 	</appender>
 
-	<appender name="FILE_DAILY"
-		class="ch.qos.logback.core.rolling.RollingFileAppender">
-		<file>${java.io.tmpdir}/${project.artifactId}.log</file>
-		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-			<fileNamePattern>logFile.%d{yyyy-MM-dd}.log</fileNamePattern>
-			<maxHistory>30</maxHistory>
-		</rollingPolicy>
-		<encoder>
-			<pattern>[%level] %date{ISO8601} [%thread] %logger - %msg %n%rEx</pattern>
-			<immediateFlush>true</immediateFlush>
-		</encoder>
-	</appender>
-
 	<root level="ERROR">
 		<appender-ref ref="TESTING_STYLE" />
 	</root>
 
 	<logger name="com.anrisoftware" level="INFO" />
 	<logger name="com.anrisoftware.globalpom.exec" level="DEBUG" />
+    <logger name="com.anrisoftware.globalpom.exec.scriptprocess" level="TRACE" />
 	<logger name="com.anrisoftware.sscontrol" level="DEBUG" />
 	<logger name="com.anrisoftware.sscontrol.scripts" level="TRACE" />
 	<logger name="com.anrisoftware.sscontrol.firewall" level="ALL" />

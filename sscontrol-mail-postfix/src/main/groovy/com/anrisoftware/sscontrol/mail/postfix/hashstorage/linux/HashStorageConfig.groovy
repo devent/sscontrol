@@ -32,7 +32,7 @@ import com.anrisoftware.sscontrol.mail.postfix.script.linux.BaseStorage
 import com.anrisoftware.sscontrol.mail.statements.Alias
 import com.anrisoftware.sscontrol.mail.statements.Domain
 import com.anrisoftware.sscontrol.mail.statements.User
-import com.anrisoftware.sscontrol.scripts.changefileowner.ChangeFileOwnerFactory
+import com.anrisoftware.sscontrol.scripts.changefile.ChangeFileOwnerFactory;
 import com.anrisoftware.sscontrol.scripts.localgroupadd.LocalGroupAddFactory
 import com.anrisoftware.sscontrol.scripts.localuseradd.LocalUserAddFactory
 

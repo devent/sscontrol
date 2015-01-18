@@ -34,6 +34,6 @@ class UbuntuModule extends AbstractModule {
 	protected void configure() {
         install(new RepoAptModule());
         install(new UnixScriptsModule());
-        install(new UnixScriptsModule.ExecCommandModule());
+        install(new UnixScriptsModule.UnixScriptsDefaultsModule());
 	}
 }

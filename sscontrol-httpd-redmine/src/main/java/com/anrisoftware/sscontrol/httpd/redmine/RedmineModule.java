@@ -34,7 +34,7 @@ public class RedmineModule extends AbstractModule {
     @Override
     protected void configure() {
         install(new UnixScriptsModule());
-        install(new UnixScriptsModule.ExecCommandModule());
+        install(new UnixScriptsModule.UnixScriptsDefaultsModule());
         install(new FactoryModuleBuilder().implement(WebService.class,
                 RedmineService.class).build(RedmineServiceFactory.class));
     }

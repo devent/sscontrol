@@ -28,6 +28,7 @@ import org.apache.commons.io.FilenameUtils
 import org.joda.time.Duration
 import org.stringtemplate.v4.ST
 
+import com.anrisoftware.globalpom.exec.scriptprocess.ScriptExecFactory;
 import com.anrisoftware.globalpom.textmatch.tokentemplate.TokenTemplate
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.Templates
@@ -45,9 +46,8 @@ import com.anrisoftware.sscontrol.mail.postfix.linux.DurationRenderer
 import com.anrisoftware.sscontrol.mail.postfix.linux.PostfixPropertiesProvider
 import com.anrisoftware.sscontrol.mail.postfix.linux.StorageConfig
 import com.anrisoftware.sscontrol.mail.statements.User
-import com.anrisoftware.sscontrol.scripts.changefilemod.ChangeFileModFactory
-import com.anrisoftware.sscontrol.scripts.changefileowner.ChangeFileOwnerFactory
-import com.anrisoftware.sscontrol.scripts.unix.ScriptExecFactory
+import com.anrisoftware.sscontrol.scripts.changefile.ChangeFileModFactory;
+import com.anrisoftware.sscontrol.scripts.changefile.ChangeFileOwnerFactory;
 import com.google.inject.Provider
 
 /**

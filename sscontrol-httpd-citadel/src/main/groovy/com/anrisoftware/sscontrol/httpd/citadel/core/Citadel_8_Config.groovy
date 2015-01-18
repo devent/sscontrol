@@ -29,8 +29,8 @@ import org.joda.time.Duration
 import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.sscontrol.httpd.citadel.AuthMethod
 import com.anrisoftware.sscontrol.httpd.citadel.CitadelService
-import com.anrisoftware.sscontrol.scripts.changefilemod.ChangeFileModFactory
-import com.anrisoftware.sscontrol.scripts.changefileowner.ChangeFileOwnerFactory
+import com.anrisoftware.sscontrol.scripts.changefile.ChangeFileModFactory;
+import com.anrisoftware.sscontrol.scripts.changefile.ChangeFileOwnerFactory;
 
 /**
  * <i>Citadel 8</i> configuration.

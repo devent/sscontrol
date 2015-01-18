@@ -34,7 +34,7 @@ public class UbuntuModule extends AbstractModule {
     @Override
     protected void configure() {
         install(new UnixScriptsModule());
-        install(new UnixScriptsModule.ExecCommandModule());
+        install(new UnixScriptsModule.UnixScriptsDefaultsModule());
         install(new InitFileParserModule());
         install(new Ufw_Ubuntu_12_04_Module());
     }

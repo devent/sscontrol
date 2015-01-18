@@ -22,8 +22,7 @@ import com.anrisoftware.sscontrol.remote.openssh.authorizedkeys.ubuntu_12_04.Aut
 import com.anrisoftware.sscontrol.remote.openssh.screen.ubuntu_12_04.ScreenUbuntu_12_04_Module;
 import com.anrisoftware.sscontrol.remote.openssh.userkey.ubuntu_12_04.UserKeyUbuntu_12_04_Module;
 import com.anrisoftware.sscontrol.remote.openssh.users.ubuntu_12_04.UsersUbuntu_12_04_Module;
-import com.anrisoftware.sscontrol.scripts.changefilemod.ChangeFileModModule;
-import com.anrisoftware.sscontrol.scripts.changefileowner.ChangeFileOwnerModule;
+import com.anrisoftware.sscontrol.scripts.changefile.ChangeFileModule;
 import com.anrisoftware.sscontrol.scripts.localchangepassword.LocalChangePasswordModule;
 import com.anrisoftware.sscontrol.scripts.localchangeuser.LocalChangeUserModule;
 import com.anrisoftware.sscontrol.scripts.localgroupadd.LocalGroupAddModule;
@@ -33,7 +32,7 @@ import com.google.inject.AbstractModule;
 
 /**
  * <i>OpenSSH Ubuntu 12.04</i> script module.
- * 
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
@@ -44,11 +43,10 @@ public class UbuntuModule extends AbstractModule {
         install(new LocalGroupAddModule());
         install(new LocalChangePasswordModule());
         install(new LocalUserAddModule());
-        install(new ChangeFileOwnerModule());
-        install(new ChangeFileModModule());
+        install(new ChangeFileModule());
         install(new LocalChangeUserModule());
         install(new UnixScriptsModule());
-        install(new UnixScriptsModule.ExecCommandModule());
+        install(new UnixScriptsModule.UnixScriptsDefaultsModule());
         install(new UsersUbuntu_12_04_Module());
         install(new UserKeyUbuntu_12_04_Module());
         install(new AuthorizedKeysUbuntu_12_04_Module());

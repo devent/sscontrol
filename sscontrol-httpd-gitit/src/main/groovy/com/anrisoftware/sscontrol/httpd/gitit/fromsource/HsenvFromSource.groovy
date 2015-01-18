@@ -27,6 +27,7 @@ import org.apache.commons.io.FileUtils
 import org.apache.commons.lang3.builder.ToStringBuilder
 import org.stringtemplate.v4.ST
 
+import com.anrisoftware.globalpom.exec.scriptprocess.ScriptExecFactory;
 import com.anrisoftware.globalpom.version.Version;
 import com.anrisoftware.globalpom.version.VersionFormatFactory;
 import com.anrisoftware.propertiesutils.ContextProperties
@@ -36,7 +37,6 @@ import com.anrisoftware.resources.templates.api.TemplatesFactory
 import com.anrisoftware.sscontrol.httpd.domain.Domain
 import com.anrisoftware.sscontrol.httpd.gitit.GititService
 import com.anrisoftware.sscontrol.httpd.webservice.WebService
-import com.anrisoftware.sscontrol.scripts.unix.ScriptExecFactory
 import com.anrisoftware.sscontrol.scripts.unpack.UnpackFactory
 
 /**

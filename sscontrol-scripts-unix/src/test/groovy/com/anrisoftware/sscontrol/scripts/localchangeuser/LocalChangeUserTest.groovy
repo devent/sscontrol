@@ -31,10 +31,6 @@ import org.junit.rules.TemporaryFolder
 import com.anrisoftware.globalpom.threads.api.Threads
 import com.anrisoftware.globalpom.threads.properties.PropertiesThreadsFactory
 import com.anrisoftware.globalpom.threads.properties.PropertiesThreadsModule
-import com.anrisoftware.resources.templates.maps.TemplatesDefaultMapsModule
-import com.anrisoftware.resources.templates.templates.TemplatesResourcesModule
-import com.anrisoftware.resources.templates.worker.STDefaultPropertiesModule
-import com.anrisoftware.resources.templates.worker.STWorkerModule
 import com.anrisoftware.sscontrol.scripts.unix.TestThreadsPropertiesProvider
 import com.anrisoftware.sscontrol.scripts.unix.UnixScriptsModule
 import com.google.inject.Guice
@@ -107,12 +103,9 @@ class LocalChangeUserTest {
         injector = Guice.createInjector(
                 new LocalChangeUserModule(),
                 new UnixScriptsModule(),
-                new UnixScriptsModule.ExecCommandModule(),
-                new PropertiesThreadsModule(),
-                new TemplatesResourcesModule(),
-                new TemplatesDefaultMapsModule(),
-                new STWorkerModule(),
-                new STDefaultPropertiesModule())
+                new UnixScriptsModule.UnixScriptsDefaultsModule(),
+                new UnixScriptsModule.TemplatesResourcesDefaultsModule(),
+                new PropertiesThreadsModule())
         localChangeUserFactory = injector.getInstance LocalChangeUserFactory
         threadsFactory = injector.getInstance PropertiesThreadsFactory
         threadsPoolProvider = injector.getInstance TestThreadsPropertiesProvider

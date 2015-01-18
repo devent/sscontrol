@@ -16,36 +16,33 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-scripts-unix. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.scripts.changefileowner;
+package com.anrisoftware.sscontrol.scripts.changefile;
 
 import java.util.Map;
 
 import com.anrisoftware.globalpom.threads.api.Threads;
 
 /**
- * Factory to create to change the owner.
+ * Factory to create to change the mode.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-public interface ChangeFileOwnerFactory {
+public interface ChangeFileModFactory {
 
     /**
-     * Create to change the owner.
+     * Creates to change the mode.
      * 
      * @param args
      *            the {@link Map} arguments:
      *            <ul>
      *            <li>{@code command} the change file owner command, for example
-     *            {@code "/bin/chown".}
+     *            {@code "/bin/chmod".}
      * 
      *            <li>{@code files} the list of files.
      * 
-     *            <li>{@code owner} the user name of the owner, for example
-     *            {@code "foo".}
-     * 
-     *            <li>{@code ownerGroup} the group name of the owner, for
-     *            example {@code "foo".}
+     *            <li>{@code mod} the mode of the file, for example
+     *            {@code "+w".}
      * 
      *            <li>{@code recursive} optionally, set to {@code true} to
      *            change files recursive.
@@ -57,8 +54,8 @@ public interface ChangeFileOwnerFactory {
      * @param threads
      *            the {@link Threads} pool.
      * 
-     * @return the {@link ChangeFileOwner}.
+     * @return the {@link ChangeFileMod}.
      */
-    ChangeFileOwner create(Map<String, Object> args, Object parent,
+    ChangeFileMod create(Map<String, Object> args, Object parent,
             Threads threads);
 }

@@ -27,6 +27,7 @@ import javax.measure.MeasureFormat
 import javax.measure.unit.NonSI
 
 import com.anrisoftware.globalpom.exec.api.ProcessTask
+import com.anrisoftware.globalpom.exec.scriptprocess.ScriptExecFactory;
 import com.anrisoftware.globalpom.format.byteformat.ByteFormatFactory
 import com.anrisoftware.globalpom.format.byteformat.UnitMultiplier
 import com.anrisoftware.resources.templates.api.TemplateResource
@@ -42,7 +43,6 @@ import com.anrisoftware.sscontrol.httpd.webservice.ServiceConfigInfo
 import com.anrisoftware.sscontrol.httpd.webservice.WebService
 import com.anrisoftware.sscontrol.scripts.findusedport.FindUsedPortFactory
 import com.anrisoftware.sscontrol.scripts.mklink.MkLinkFactory
-import com.anrisoftware.sscontrol.scripts.unix.ScriptExecFactory
 import com.google.inject.Injector
 
 /**

@@ -30,8 +30,7 @@ import com.anrisoftware.sscontrol.httpd.apache.authfile.ubuntu_12_04.Ubuntu_12_0
 import com.anrisoftware.sscontrol.httpd.apache.authldap.ubuntu_12_04.Ubuntu_12_04_AuthLdapModule;
 import com.anrisoftware.sscontrol.httpd.fcgi.FcgiConfig;
 import com.anrisoftware.sscontrol.httpd.webservice.ServiceConfig;
-import com.anrisoftware.sscontrol.scripts.changefilemod.ChangeFileModModule;
-import com.anrisoftware.sscontrol.scripts.changefileowner.ChangeFileOwnerModule;
+import com.anrisoftware.sscontrol.scripts.changefile.ChangeFileModule;
 import com.anrisoftware.sscontrol.scripts.killprocess.KillProcessModule;
 import com.anrisoftware.sscontrol.scripts.localchangegroup.LocalChangeGroupModule;
 import com.anrisoftware.sscontrol.scripts.localchangeuser.LocalChangeUserModule;
@@ -56,9 +55,8 @@ class UbuntuModule extends AbstractModule {
     @Override
     protected void configure() {
         install(new UnixScriptsModule());
-        install(new UnixScriptsModule.ExecCommandModule());
-        install(new ChangeFileOwnerModule());
-        install(new ChangeFileModModule());
+        install(new UnixScriptsModule.UnixScriptsDefaultsModule());
+        install(new ChangeFileModule());
         install(new LocalGroupAddModule());
         install(new LocalUserAddModule());
         install(new LocalChangeGroupModule());

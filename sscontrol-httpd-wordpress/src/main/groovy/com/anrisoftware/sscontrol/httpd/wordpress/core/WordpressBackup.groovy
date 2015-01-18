@@ -28,13 +28,13 @@ import org.joda.time.Duration
 import org.joda.time.format.ISODateTimeFormat
 import org.stringtemplate.v4.ST
 
+import com.anrisoftware.globalpom.exec.scriptprocess.ScriptExecFactory;
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.Templates
 import com.anrisoftware.resources.templates.api.TemplatesFactory
 import com.anrisoftware.sscontrol.httpd.domain.Domain
 import com.anrisoftware.sscontrol.httpd.wordpress.WordpressService
 import com.anrisoftware.sscontrol.scripts.pack.PackFactory
-import com.anrisoftware.sscontrol.scripts.unix.ScriptExecFactory
 
 /**
  * Backups the <i>Wordpress</i> service.

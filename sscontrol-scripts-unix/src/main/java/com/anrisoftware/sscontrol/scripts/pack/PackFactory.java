@@ -25,8 +25,8 @@ import java.util.Map;
 import org.joda.time.Duration;
 
 import com.anrisoftware.globalpom.exec.api.ProcessTask;
+import com.anrisoftware.globalpom.exec.scriptprocess.AbstractProcessExec;
 import com.anrisoftware.globalpom.threads.api.Threads;
-import com.anrisoftware.sscontrol.scripts.unix.AbstractProcessExec;
 import com.anrisoftware.sscontrol.scripts.unix.InstallPackages;
 
 /**

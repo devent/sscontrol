@@ -27,6 +27,7 @@ import org.apache.commons.io.FileUtils
 import org.apache.commons.lang3.StringUtils
 import org.stringtemplate.v4.ST
 
+import com.anrisoftware.globalpom.exec.scriptprocess.ScriptExecFactory;
 import com.anrisoftware.globalpom.initfileparser.DefaultInitFileAttributes
 import com.anrisoftware.globalpom.initfileparser.DefaultInitFileAttributesFactory
 import com.anrisoftware.globalpom.initfileparser.InitFileParserFactory
@@ -38,7 +39,6 @@ import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.TemplatesFactory
 import com.anrisoftware.sscontrol.scripts.unix.RestartServicesFactory
-import com.anrisoftware.sscontrol.scripts.unix.ScriptExecFactory
 import com.anrisoftware.sscontrol.security.fail2ban.Fail2banService
 import com.anrisoftware.sscontrol.security.fail2ban.Jail
 import com.anrisoftware.sscontrol.security.fail2ban.linux.Fail2BanFirewallConfig

@@ -25,7 +25,7 @@ import com.anrisoftware.propertiesutils.AbstractContextPropertiesProvider;
 
 /**
  * Returns properties for test threads pool.
- * 
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */

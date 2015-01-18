@@ -23,6 +23,7 @@ import groovy.util.logging.Slf4j
 
 import javax.inject.Inject
 
+import com.anrisoftware.globalpom.exec.scriptprocess.ScriptExecFactory;
 import com.anrisoftware.globalpom.textmatch.tokentemplate.TokenTemplate
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.TemplatesFactory
@@ -31,8 +32,7 @@ import com.anrisoftware.sscontrol.remote.api.RemoteScript
 import com.anrisoftware.sscontrol.remote.service.RemoteService
 import com.anrisoftware.sscontrol.remote.user.Require
 import com.anrisoftware.sscontrol.remote.user.User
-import com.anrisoftware.sscontrol.scripts.changefileowner.ChangeFileOwnerFactory
-import com.anrisoftware.sscontrol.scripts.unix.ScriptExecFactory
+import com.anrisoftware.sscontrol.scripts.changefile.ChangeFileOwnerFactory;
 
 /**
  * Local users SSH/keys script.

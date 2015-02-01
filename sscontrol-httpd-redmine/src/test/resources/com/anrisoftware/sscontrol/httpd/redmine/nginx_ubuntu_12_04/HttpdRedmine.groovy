@@ -25,24 +25,25 @@ import com.anrisoftware.sscontrol.httpd.webservice.OverrideMode;
 
 httpd {
     domain "test1.com", address: "192.168.0.51", {
-        setup "redmine", id: "redmineid", backend: "thin", {
+        setup "redmine", backend: "thin", id: "redmineid", {
+            debug "thin", level: 1, file: "/var/log/redmine_thin.log"
+            debug "redmine", level: 1, file: "/var/log/redmine.log"
+            override mode: OverrideMode.update
             database "redmine2", user: "user", password: "userpass", host: "localhost"
-            mail host: "smtp.test1.com", port: 25, method: DeliveryMethod.smtp, domain: "example.net", auth: AuthenticationMethod.login, user: "redmine@example.net", password: "redminepass"
+            mail "smtp.test1.com", port: 25, method: DeliveryMethod.smtp, domain: "example.net", auth: AuthenticationMethod.login, user: "redmine@example.net", password: "redminepass"
             language name: "de"
             scm install: [
                 ScmInstall.subversion,
                 ScmInstall.mercurial
             ]
-            debug level: 4
-            override mode: OverrideMode.update
         }
     }
     ssl_domain "test1.com", address: "192.168.0.51", {
         certificate file: UbuntuResources.certCrt.resource, key: UbuntuResources.certKey.resource
-        setup "redmine", ref: "redmineid", backend: "thin"
+        setup "redmine", backend: "thin", ref: "redmineid"
     }
     domain "test2.com", address: "192.168.0.52", {
-        setup "redmine", id: "redmineid", backend: "thin", alias: "/projects", prefix: "test2redmine", {
+        setup "redmine", backend: "thin", id: "test2comRedmineid", alias: "/projects", prefix: "test2redmine", {
             database "redmine2", user: "user", password: "userpass", host: "localhost"
             mail user: "redmine@example.net", password: "redminepass"
         }

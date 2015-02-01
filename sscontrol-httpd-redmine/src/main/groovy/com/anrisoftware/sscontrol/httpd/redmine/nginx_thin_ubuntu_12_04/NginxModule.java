@@ -19,12 +19,13 @@
 package com.anrisoftware.sscontrol.httpd.redmine.nginx_thin_ubuntu_12_04;
 
 import com.anrisoftware.globalpom.checkfilehash.CheckFileHashModule;
+import com.anrisoftware.globalpom.version.VersionModule;
 import com.anrisoftware.sscontrol.scripts.unpack.UnpackModule;
 import com.google.inject.AbstractModule;
 
 /**
  * Binds <i>Redmine</i> configuration for <i>Ubuntu 12.04</i>.
- * 
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
@@ -34,6 +35,7 @@ class NginxModule extends AbstractModule {
     protected void configure() {
         install(new UnpackModule());
         install(new CheckFileHashModule());
+        install(new VersionModule());
     }
 
 }

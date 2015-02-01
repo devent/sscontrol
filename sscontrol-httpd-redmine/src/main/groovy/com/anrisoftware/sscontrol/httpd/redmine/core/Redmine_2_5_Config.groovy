@@ -20,20 +20,15 @@ package com.anrisoftware.sscontrol.httpd.redmine.core
 
 import groovy.util.logging.Slf4j
 
-import java.util.regex.Pattern
-
 import javax.inject.Inject
 
-import org.apache.commons.io.FileUtils
-import org.apache.commons.lang3.StringUtils
 import org.apache.commons.lang3.builder.ToStringBuilder
 import org.joda.time.Duration
 
-import com.anrisoftware.globalpom.exec.scriptprocess.ScriptExecFactory;
+import com.anrisoftware.globalpom.exec.scriptprocess.ScriptExecFactory
 import com.anrisoftware.globalpom.textmatch.tokentemplate.TokenTemplate
 import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.resources.templates.api.TemplateResource
-import com.anrisoftware.resources.templates.api.Templates
 import com.anrisoftware.resources.templates.api.TemplatesFactory
 import com.anrisoftware.sscontrol.core.debuglogging.DebugLoggingFactory
 import com.anrisoftware.sscontrol.core.service.LinuxScript
@@ -44,13 +39,12 @@ import com.anrisoftware.sscontrol.httpd.redmine.RedmineService
 import com.anrisoftware.sscontrol.httpd.redmine.ScmInstall
 import com.anrisoftware.sscontrol.httpd.redmine.nginx_thin_ubuntu_12_04.RedmineConfigFactory
 import com.anrisoftware.sscontrol.httpd.webservice.OverrideMode
-import com.anrisoftware.sscontrol.httpd.webservice.WebService
-import com.anrisoftware.sscontrol.scripts.changefile.ChangeFileModFactory;
-import com.anrisoftware.sscontrol.scripts.changefile.ChangeFileOwnerFactory;
+import com.anrisoftware.sscontrol.scripts.changefile.ChangeFileModFactory
+import com.anrisoftware.sscontrol.scripts.changefile.ChangeFileOwnerFactory
 import com.anrisoftware.sscontrol.scripts.unix.InstallPackagesFactory
 
 /**
- * Configures <i>Redmine 2.5</i>
+ * <i>Redmine 2.5</i> configuration.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
@@ -60,6 +54,8 @@ abstract class Redmine_2_5_Config {
 
     @Inject
     private Redmine_2_5_ConfigLogger logg
+
+    private LinuxScript script
 
     @Inject
     AuthenticationMethodAttributeRenderer authenticationMethodAttributeRenderer
@@ -82,15 +78,6 @@ abstract class Redmine_2_5_Config {
     @Inject
     DebugLoggingFactory debugLoggingFactory
 
-    @Inject
-    TemplatesFactory templatesFactory
-
-    Templates configTemplates
-
-    TemplateResource databaseConfigTemplate
-
-    TemplateResource configTemplate
-
     TemplateResource gemInstallTemplate
 
     TemplateResource bundleInstallTemplate
@@ -100,74 +87,58 @@ abstract class Redmine_2_5_Config {
     TemplateResource environmentConfigTemplate
 
     /**
-     * @see ServiceConfig#getScript()
-     */
-    LinuxScript script
-
-    /**
-     * @see ServiceConfig#deployDomain(Domain, Domain, WebService, List)
-     */
-    void deployDomain(Domain domain, Domain refDomain, WebService service, List config) {
-    }
-
-    /**
-     * @see ServiceConfig#deployService(Domain, WebService, List)
-     */
-    void deployService(Domain domain, WebService service, List config) {
-        installGems domain, service
-        deployDatabase domain, service
-        deployConfig domain, service
-        setupPermissions domain, service
-        installBundle domain, service
-        generateSecretTokens domain, service
-        migrateDb domain, service
-        loadDefaultData domain, service
-        clearTemps domain, service
-    }
-
-    /**
      * Setups default options.
      *
+     * @param domain
+     *            the service {@link Domain} domain.
+     *
      * @param service
-     *            the {@link RedmineService}.
+     *            the {@link RedmineService} service.
      */
     void setupDefaults(Domain domain, RedmineService service) {
-        setupDefaultOverrideMode service, domain
-        setupDefaultDebug service, domain
-        setupDefaultDatabase service, domain
-        setupDefaultPrefix service, domain
-        setupDefaultAlias service, domain
-        setupDefaultMail service, domain
-        setupDefaultLanguage service, domain
+        setupDefaultOverrideMode domain, service
+        setupDefaultDebug domain, service
+        setupDefaultDatabase domain, service
+        setupDefaultPrefix domain, service
+        setupDefaultAlias domain, service
+        setupDefaultMail domain, service
+        setupDefaultLanguage domain, service
+        setupDefaultScms domain, service
     }
 
     /**
      * Setups the default debug.
      *
      * @param domain
-     *            the service {@link Domain}.
+     *            the service {@link Domain} domain.
      *
      * @param service
-     *            the {@link RedmineService}.
+     *            the {@link RedmineService} service.
+     *
+     * @see #getRedmineProperties()
      */
-    void setupDefaultDebug(RedmineService service, Domain domain) {
-        int level = profileNumberProperty "redmine_default_debug_level", redmineProperties
-        service.debug = service.debug == null ? debugLoggingFactory.create(level) : service.debug
+    void setupDefaultDebug(Domain domain, RedmineService service) {
+        if (!service.debugLogging("level") || !service.debugLogging("level")["redmine"]) {
+            int level = profileNumberProperty "redmine_default_debug_redmine_level", redmineProperties
+            service.debug "redmine", level: level
+        }
     }
 
     /**
      * Setups the default override mode.
      *
      * @param domain
-     *            the service {@link Domain}.
+     *            the service {@link Domain} domain.
      *
      * @param service
-     *            the {@link RedmineService}.
+     *            the {@link RedmineService} service.
+     *
+     * @see #getRedmineProperties()
      */
-    void setupDefaultOverrideMode(RedmineService service, Domain domain) {
-        if (service.overrideMode == null) {
+    void setupDefaultOverrideMode(Domain domain, RedmineService service) {
+        if (!service.overrideMode) {
             OverrideMode mode = OverrideMode.valueOf profileProperty("redmine_default_override_mode", redmineProperties)
-            service.overrideMode = mode
+            service.override mode: mode
         }
     }
 
@@ -175,42 +146,54 @@ abstract class Redmine_2_5_Config {
      * Setups the default database.
      *
      * @param domain
-     *            the service {@link Domain}.
+     *            the service {@link Domain} domain.
      *
      * @param service
-     *            the {@link RedmineService}.
+     *            the {@link RedmineService} service.
+     *
+     * @see #getRedmineProperties()
      */
-    void setupDefaultDatabase(RedmineService service, Domain domain) {
-        def provider = profileProperty "redmine_default_database_provider", redmineProperties
-        def encoding = profileProperty "redmine_default_database_encoding", redmineProperties
-        service.database.provider = service.database.provider == null ? provider : service.database.provider
-        service.database.encoding = service.database.encoding == null ? encoding : service.database.encoding
+    void setupDefaultDatabase(Domain domain, RedmineService service) {
+        if (!service.database || !service.database.provider) {
+            def provider = profileProperty "redmine_default_database_provider", redmineProperties
+            service.database provider: provider
+        }
+        if (!service.database || !service.database.encoding) {
+            def provider = profileProperty "redmine_default_database_encoding", redmineProperties
+            service.database encoding: provider
+        }
     }
 
     /**
      * Setups the default prefix.
      *
      * @param domain
-     *            the service {@link Domain}.
+     *            the service {@link Domain} domain.
      *
      * @param service
-     *            the {@link RedmineService}.
+     *            the {@link RedmineService} service.
+     *
+     * @see #getRedmineProperties()
      */
-    void setupDefaultPrefix(RedmineService service, Domain domain) {
-        def prefix = profileProperty "redmine_default_prefix", redmineProperties
-        service.prefix = service.prefix == null ? prefix : service.prefix
+    void setupDefaultPrefix(Domain domain, RedmineService service) {
+        if (!service.prefix) {
+            def prefix = profileProperty "redmine_default_prefix", redmineProperties
+            service.prefix = prefix
+        }
     }
 
     /**
      * Setups the default alias.
      *
      * @param domain
-     *            the service {@link Domain}.
+     *            the service {@link Domain} domain.
      *
      * @param service
-     *            the {@link RedmineService}.
+     *            the {@link RedmineService} service.
+     *
+     * @see #getRedmineProperties()
      */
-    void setupDefaultAlias(RedmineService service, Domain domain) {
+    void setupDefaultAlias(Domain domain, RedmineService service) {
         service.alias = service.alias == null ? "" : service.alias
     }
 
@@ -218,26 +201,28 @@ abstract class Redmine_2_5_Config {
      * Setups the default mail.
      *
      * @param domain
-     *            the service {@link Domain}.
+     *            the service {@link Domain} domain.
      *
      * @param service
-     *            the {@link RedmineService}.
+     *            the {@link RedmineService} service.
+     *
+     * @see #getRedmineProperties()
      */
-    void setupDefaultMail(RedmineService service, Domain domain) {
-        if (service.mailHost == null) {
-            service.mailHost = domain.name
+    void setupDefaultMail(Domain domain, RedmineService service) {
+        if (!service.mail || !service.mail.host) {
+            service.mail domain.name
         }
-        if (service.mailDomain == null) {
-            service.mailDomain = domain.name
+        if (!service.mail || !service.mail.port) {
+            def port = profileNumberProperty "redmine_default_mail_port", redmineProperties
+            service.mail port: port
         }
-        if (service.mailPort == null) {
-            service.mailPort = defaultMailPort
+        if (!service.mail || !service.mail.method) {
+            def method = DeliveryMethod.valueOf profileProperty("redmine_default_mail_delivery_method", redmineProperties)
+            service.mail method: method
         }
-        if (service.mailDeliveryMethod == null) {
-            service.mailDeliveryMethod = defaultMailDeliveryMethod
-        }
-        if (service.mailAuthMethod == null) {
-            service.mailAuthMethod = defaultMailAuthenticationMethod
+        if (!service.mail || !service.mail.auth) {
+            def method = AuthenticationMethod.valueOf profileProperty("redmine_default_mail_authentication_method", redmineProperties)
+            service.mail auth: method
         }
     }
 
@@ -245,14 +230,34 @@ abstract class Redmine_2_5_Config {
      * Setups the default language.
      *
      * @param domain
-     *            the service {@link Domain}.
+     *            the service {@link Domain} domain.
      *
      * @param service
-     *            the {@link RedmineService}.
+     *            the {@link RedmineService} service.
+     *
+     * @see #getRedmineProperties()
      */
-    void setupDefaultLanguage(RedmineService service, Domain domain) {
+    void setupDefaultLanguage(Domain domain, RedmineService service) {
         if (service.languageName == null) {
-            service.languageName = defaultLanguageName
+            def name = profileProperty "redmine_default_language_name", redmineProperties
+            service.language name: name
+        }
+    }
+
+    /**
+     * Setups the default SCMs to install.
+     *
+     * @param domain
+     *            the service {@link Domain} domain.
+     *
+     * @param service
+     *            the {@link RedmineService} service.
+     *
+     * @see #getRedmineProperties()
+     */
+    void setupDefaultScms(Domain domain, RedmineService service) {
+        if (service.scms == null) {
+            service.scm install: defaultScmInstall
         }
     }
 
@@ -260,10 +265,11 @@ abstract class Redmine_2_5_Config {
      * Installs the <i>Ruby</i> gems.
      *
      * @param domain
-     *            the service {@link Domain}.
+     *            the service {@link Domain} domain.
      *
      * @param service
-     *            the {@link RedmineService}.
+     *            the {@link RedmineService} service.
+     *
      */
     void installGems(Domain domain, RedmineService service) {
         scriptExecFactory.create(
@@ -275,52 +281,13 @@ abstract class Redmine_2_5_Config {
     }
 
     /**
-     * Deploys the <i>Redmine</i> database configuration.
-     *
-     * @param domain
-     *            the service {@link Domain}.
-     *
-     * @param service
-     *            the {@link RedmineService}.
-     *
-     * @see #getRedmineDatabaseConfigExampleFile()
-     * @see #getRedmineDatabaseConfigFile()
-     */
-    void deployDatabase(Domain domain, RedmineService service) {
-        def exampleFile = redmineConfigFile domain, service, redmineDatabaseConfigExampleFile
-        def file = redmineConfigFile domain, service, redmineDatabaseConfigFile
-        file.isFile() == false ? FileUtils.copyFile(exampleFile, file) : false
-        def conf = currentConfiguration file
-        def search = databaseConfigTemplate.getText(true, "productionDatabaseSearch")
-        def replace = databaseConfigTemplate.getText(true, "productionDatabase", "database", service.database)
-        def matcher = Pattern.compile(search).matcher(conf)
-        conf = matcher.replaceAll(replace)
-        FileUtils.writeStringToFile file, conf, charset
-        logg.databaseConfigCreated this, file, conf
-    }
-
-    /**
-     * Deploys the <i>Redmine</i> configuration.
-     *
-     * @param domain
-     *            the service {@link Domain}.
-     *
-     * @param service
-     *            the {@link RedmineService}.
-     */
-    void deployConfig(Domain domain, RedmineService service) {
-        deployProductionConfig domain, service
-        deployEnvironmentConfig domain, service
-    }
-
-    /**
      * Deploys the <i>Redmine</i> environment configuration.
      *
      * @param domain
-     *            the service {@link Domain}.
+     *            the service {@link Domain} domain.
      *
      * @param service
-     *            the {@link RedmineService}.
+     *            the {@link RedmineService} service.
      *
      * @see #getRedmineEnvironmentFile()
      */
@@ -345,99 +312,13 @@ abstract class Redmine_2_5_Config {
     }
 
     /**
-     * Deploys the <i>Redmine</i> production configuration.
-     *
-     * @param domain
-     *            the service {@link Domain}.
-     *
-     * @param service
-     *            the {@link RedmineService}.
-     *
-     * @see #getRedmineConfigExampleFile()
-     * @see #getRedmineConfigFile()
-     */
-    void deployProductionConfig(Domain domain, RedmineService service) {
-        def exampleFile = redmineConfigFile domain, service, redmineConfigExampleFile
-        def file = redmineConfigFile domain, service, redmineConfigFile
-        file.isFile() == false ? FileUtils.copyFile(exampleFile, file) : false
-        def conf = new ArrayList(StringUtils.splitPreserveAllTokens(currentConfiguration(file), '\n') as List)
-        int i = 0
-        def res
-        for (i; i < conf.size(); i++) {
-            if (conf[i].startsWith("production:")) {
-                res = parseConfig domain, service, conf, ++i
-                break
-            }
-        }
-        res = removeEmptyLastLines res
-        FileUtils.writeLines file, charset.name(), res
-        logg.configCreated this, file, conf
-    }
-
-    List removeEmptyLastLines(List list) {
-        def res = new ArrayList(list)
-        for (int i = list.size() - 1; i > 0; i--) {
-            if (list[i].trim().empty) {
-                res.remove(i)
-            } else {
-                break
-            }
-        }
-        return res
-    }
-
-    List parseConfig(Domain domain, RedmineService service, List conf, int i) {
-        def res = new LinkedList(conf)
-        for (i; i < conf.size(); i++) {
-            if (conf[i].empty) {
-                def str = StringUtils.splitPreserveAllTokens configTemplate.getText(true, "productionEmail", "service", service), '\n'
-                str.eachWithIndex { it, int k ->
-                    res.add i + k, it
-                }
-                return res
-            }
-            if (conf[i].startsWith("  email_delivery:")) {
-                return updateEmailDelivery(domain, service, conf, i)
-            }
-        }
-        return res
-    }
-
-    List updateEmailDelivery(Domain domain, RedmineService service, List conf, int i) {
-        for (i; i < conf.size(); i++) {
-            if (conf[i].startsWith("    delivery_method:")) {
-                conf[i] = configTemplate.getText(true, "emailDeliveryMethod", "service", service)
-            }
-            if (conf[i].startsWith("      address:")) {
-                conf[i] = configTemplate.getText(true, "emailAddress", "service", service)
-            }
-            if (conf[i].startsWith("      port:")) {
-                conf[i] = configTemplate.getText(true, "emailPort", "service", service)
-            }
-            if (conf[i].startsWith("      domain:")) {
-                conf[i] = configTemplate.getText(true, "emailDomain", "service", service)
-            }
-            if (conf[i].startsWith("      authentication:")) {
-                conf[i] = configTemplate.getText(true, "emailAuthentication", "service", service)
-            }
-            if (conf[i].startsWith("      user_name:")) {
-                conf[i] = configTemplate.getText(true, "emailUser", "service", service)
-            }
-            if (conf[i].startsWith("      password:")) {
-                conf[i] = configTemplate.getText(true, "emailPassword", "service", service)
-            }
-        }
-        return conf
-    }
-
-    /**
      * Sets the permissions of the <i>Redmine</i> directories.
      *
      * @param domain
-     *            the service {@link Domain}.
+     *            the service {@link Domain} domain.
      *
      * @param service
-     *            the {@link RedmineService}.
+     *            the {@link RedmineService} service.
      */
     void setupPermissions(Domain domain, RedmineService service) {
         def dir = redmineDir domain, service
@@ -469,10 +350,10 @@ abstract class Redmine_2_5_Config {
      * Installs the <i>Redmine</i> bundle.
      *
      * @param domain
-     *            the service {@link Domain}.
+     *            the service {@link Domain} domain.
      *
      * @param service
-     *            the {@link RedmineService}.
+     *            the {@link RedmineService} service.
      */
     void installBundle(Domain domain, RedmineService service) {
         def dir = redmineDir domain, service
@@ -489,10 +370,10 @@ abstract class Redmine_2_5_Config {
      * Generates the secret tokens.
      *
      * @param domain
-     *            the service {@link Domain}.
+     *            the service {@link Domain} domain.
      *
      * @param service
-     *            the {@link RedmineService}.
+     *            the {@link RedmineService} service.
      */
     void generateSecretTokens(Domain domain, RedmineService service) {
         def dir = redmineDir domain, service
@@ -507,10 +388,10 @@ abstract class Redmine_2_5_Config {
      * Create database schema objects.
      *
      * @param domain
-     *            the service {@link Domain}.
+     *            the service {@link Domain} domain.
      *
      * @param service
-     *            the {@link RedmineService}.
+     *            the {@link RedmineService} service.
      */
     void migrateDb(Domain domain, RedmineService service) {
         def dir = redmineDir domain, service
@@ -527,10 +408,10 @@ abstract class Redmine_2_5_Config {
      * Clears the temp data.
      *
      * @param domain
-     *            the service {@link Domain}.
+     *            the service {@link Domain} domain.
      *
      * @param service
-     *            the {@link RedmineService}.
+     *            the {@link RedmineService} service.
      */
     void clearTemps(Domain domain, RedmineService service) {
         def dir = redmineDir domain, service
@@ -545,10 +426,10 @@ abstract class Redmine_2_5_Config {
      * Load database default data set.
      *
      * @param domain
-     *            the service {@link Domain}.
+     *            the service {@link Domain} domain.
      *
      * @param service
-     *            the {@link RedmineService}.
+     *            the {@link RedmineService} service.
      */
     void loadDefaultData(Domain domain, RedmineService service) {
         def dir = redmineDir domain, service
@@ -566,7 +447,7 @@ abstract class Redmine_2_5_Config {
      * {@code /var/www/domain.com/redmineprefix}
      *
      * @param domain
-     *            the {@link Domain} domain of the service.
+     *            the service {@link Domain} domain.
      *
      * @param service
      *            the {@link RedmineService} service.
@@ -582,10 +463,11 @@ abstract class Redmine_2_5_Config {
 
     /**
      * Returns the <i>Redmine</i> public directory, for example
-     * {@code /var/www/domain.com/redmineprefix/public}
+     * {@code "/var/www/domain.com/redmineprefix/public".} If the path is not
+     * absolute, than the directory is assumed under the prefix directory.
      *
      * @param domain
-     *            the {@link Domain} domain of the service.
+     *            the service {@link Domain} domain.
      *
      * @param service
      *            the {@link RedmineService} service.
@@ -598,8 +480,12 @@ abstract class Redmine_2_5_Config {
      */
     File redminePublicDir(Domain domain, RedmineService service) {
         def dir = new File(domainDir(domain), service.prefix)
-        def publicDir = profileProperty "redmine_public_directory", redmineProperties
-        new File(dir, publicDir)
+        File publicDir = profileDirProperty "redmine_public_directory", redmineProperties
+        if (publicDir.absolute) {
+            return publicDir
+        } else {
+            return new File(dir, publicDir.path)
+        }
     }
 
     /**
@@ -618,7 +504,7 @@ abstract class Redmine_2_5_Config {
      * Returns the service location.
      *
      * @param service
-     *            the {@link RedmineService}.
+     *            the {@link RedmineService} service.
      *
      * @return the location.
      */
@@ -738,62 +624,6 @@ abstract class Redmine_2_5_Config {
     }
 
     /**
-     * Returns the <i>Redmine</i> database configuration file property, for
-     * example {@code "config/database.yml".}
-     *
-     * <ul>
-     * <li>profile property {@code "redmine_database_configuration_file"}</li>
-     * </ul>
-     *
-     * @see #getRedmineProperties()
-     */
-    String getRedmineDatabaseConfigFile() {
-        profileProperty "redmine_database_configuration_file", redmineProperties
-    }
-
-    /**
-     * Returns the <i>Redmine</i> database example configuration file
-     * property, for example {@code "config/database.yml.example".}
-     *
-     * <ul>
-     * <li>profile property {@code "redmine_database_configuration_example_file"}</li>
-     * </ul>
-     *
-     * @see #getRedmineProperties()
-     */
-    String getRedmineDatabaseConfigExampleFile() {
-        profileProperty "redmine_database_configuration_example_file", redmineProperties
-    }
-
-    /**
-     * Returns the <i>Redmine</i> configuration file property, for
-     * example {@code "config/configuration.yml".}
-     *
-     * <ul>
-     * <li>profile property {@code "redmine_configuration_file"}</li>
-     * </ul>
-     *
-     * @see #getRedmineProperties()
-     */
-    String getRedmineConfigFile() {
-        profileProperty "redmine_configuration_file", redmineProperties
-    }
-
-    /**
-     * Returns the <i>Redmine</i> example configuration file property, for
-     * example {@code "config/configuration.yml.example".}
-     *
-     * <ul>
-     * <li>profile property {@code "redmine_configuration_example_file"}</li>
-     * </ul>
-     *
-     * @see #getRedmineProperties()
-     */
-    String getRedmineConfigExampleFile() {
-        profileProperty "redmine_configuration_example_file", redmineProperties
-    }
-
-    /**
      * Returns the <i>Redmine</i> environment file, for
      * example {@code "config/environment.rb".}
      *
@@ -805,20 +635,6 @@ abstract class Redmine_2_5_Config {
      */
     String getRedmineEnvironmentFile() {
         profileProperty "redmine_environment_file", redmineProperties
-    }
-
-    /**
-     * Returns the <i>Redmine</i> packages, for
-     * example {@code "ruby, rake, rubygems, libopenssl-ruby, libmysql-ruby, ruby-dev, libmysqlclient-dev, libmagick-dev, curl, libmagickwand-dev".}
-     *
-     * <ul>
-     * <li>profile property {@code "redmine_packages"}</li>
-     * </ul>
-     *
-     * @see #getRedmineProperties()
-     */
-    List getRedminePackages() {
-        profileListProperty "redmine_packages", redmineProperties
     }
 
     /**
@@ -892,61 +708,17 @@ abstract class Redmine_2_5_Config {
     }
 
     /**
-     * Returns the default mail port, for
-     * example {@code "25".}
-     *
-     * <ul>
-     * <li>profile property {@code "redmine_default_mail_port"}</li>
-     * </ul>
-     *
-     * @see #getRedmineProperties()
-     */
-    int getDefaultMailPort() {
-        profileNumberProperty "redmine_default_mail_port", redmineProperties
-    }
-
-    /**
-     * Returns the default mail delivery method, for
-     * example {@code "smtp".}
-     *
-     * <ul>
-     * <li>profile property {@code "redmine_default_mail_delivery_method"}</li>
-     * </ul>
-     *
-     * @see #getRedmineProperties()
-     */
-    DeliveryMethod getDefaultMailDeliveryMethod() {
-        def p = profileProperty "redmine_default_mail_delivery_method", redmineProperties
-        DeliveryMethod.valueOf(p)
-    }
-
-    /**
-     * Returns the default mail authentication method, for
-     * example {@code "login".}
-     *
-     * <ul>
-     * <li>profile property {@code "redmine_default_mail_authentication_method"}</li>
-     * </ul>
-     *
-     * @see #getRedmineProperties()
-     */
-    AuthenticationMethod getDefaultMailAuthenticationMethod() {
-        def p = profileProperty "redmine_default_mail_authentication_method", redmineProperties
-        AuthenticationMethod.valueOf(p)
-    }
-
-    /**
-     * Returns the default mail authentication method, for
+     * Returns the default SCMs to install, for
      * example {@code "all".}
      *
      * <ul>
-     * <li>profile property {@code "redmine_default_scm_install"}</li>
+     * <li>profile property {@code "redmine_default_scms"}</li>
      * </ul>
      *
      * @see #getRedmineProperties()
      */
     List getDefaultScmInstall() {
-        def list = profileListProperty "redmine_default_scm_install", redmineProperties
+        def list = profileListProperty "redmine_default_scms", redmineProperties
         def res = []
         list.each {
             res << ScmInstall.valueOf(it)
@@ -954,38 +726,13 @@ abstract class Redmine_2_5_Config {
         return res
     }
 
-    /**
-     * Returns the packages for the specified <i>Scm</i>.
-     *
-     * <ul>
-     * <li>profile property {@code "redmine_scm_<scm-name>_packages"}</li>
-     * </ul>
-     *
-     * @see #getRedmineProperties()
-     */
-    List scmPackages(ScmInstall scm) {
-        profileListProperty "redmine_scm_${scm.name()}_packages", redmineProperties
-    }
-
-    /**
-     * Returns the default language, for
-     * example {@code "en".}
-     *
-     * <ul>
-     * <li>profile property {@code "redmine_default_language_name"}</li>
-     * </ul>
-     *
-     * @see #getRedmineProperties()
-     */
-    String getDefaultLanguageName() {
-        profileProperty "redmine_default_language_name", redmineProperties
-    }
-
-    /**
-     * Returns the <i>Redmine</i> service name.
-     */
-    String getServiceName() {
-        RedmineConfigFactory.WEB_NAME
+    @Inject
+    final void setTemplatesFactory(TemplatesFactory factory) {
+        def templates = factory.create "Redmine_2_5_Config"
+        this.gemInstallTemplate = templates.getResource("gem_install")
+        this.bundleInstallTemplate = templates.getResource("bundle_install")
+        this.rakeCommandsTemplate = templates.getResource("rake_commands")
+        this.environmentConfigTemplate = templates.getResource("environment_config")
     }
 
     /**
@@ -996,37 +743,40 @@ abstract class Redmine_2_5_Config {
     abstract ContextProperties getRedmineProperties()
 
     /**
+     * Returns the <i>Redmine</i> service name.
+     */
+    String getServiceName() {
+        RedmineConfigFactory.WEB_NAME
+    }
+
+    /**
      * Returns the profile name.
      */
     abstract String getProfile()
 
     /**
-     * @see ServiceConfig#setScript(LinuxScript)
+     * Sets the parent script.
      */
     void setScript(LinuxScript script) {
         this.script = script
-        this.configTemplates = templatesFactory.create("Redmine_2_5_Config",
-                [renderers: [
-                        deliveryMethodAttributeRenderer,
-                        authenticationMethodAttributeRenderer
-                    ]])
-        this.databaseConfigTemplate = configTemplates.getResource("database_config")
-        this.configTemplate = configTemplates.getResource("config")
-        this.gemInstallTemplate = configTemplates.getResource("gem_install")
-        this.bundleInstallTemplate = configTemplates.getResource("bundle_install")
-        this.rakeCommandsTemplate = configTemplates.getResource("rake_commands")
-        this.environmentConfigTemplate = configTemplates.getResource("environment_config")
     }
 
     /**
-     * Delegates missing properties to {@link LinuxScript}.
+     * Returns the parent script.
+     */
+    LinuxScript getScript() {
+        script
+    }
+
+    /**
+     * Delegates missing properties to the parent script.
      */
     def propertyMissing(String name) {
         script.getProperty name
     }
 
     /**
-     * Delegates missing methods to {@link LinuxScript}.
+     * Delegates missing methods to the parent script.
      */
     def methodMissing(String name, def args) {
         script.invokeMethod name, args

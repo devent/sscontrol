@@ -1,76 +1,8 @@
-productionEmailSearch() ::= <<
-^production:(.*?)
-(  email_delivery:
-    delivery_method: .*?
-    smtp_settings:
-      address:\s*.*?
-      port:\s*\d*?
-      domain:\s*.*?
-      authentication:\s*.*?
-      user_name:\s*.*?
-      password:\s*.*?)?
-(.*)
->>
 
-productionEmail(service) ::= <<
-  email_delivery:
-<emailDeliveryMethod(service)>
-    smtp_settings:
-<emailAddress(service)>
-<emailPort(service)>
-<emailDomain(service)>
-<emailAuthentication(service)>
-<emailAuthenticationUser(service)>
+configHead(service) ::= <<
+# RoboBee Auto Generated
+# Redmine Configuration
+# Author: Erwin Müller, \<erwin.mueller@deventm.org>
+
 
 >>
-
-emailDeliveryMethod(service) ::= <<
-    delivery_method: <service.mailDeliveryMethod>
->>
-
-emailAddress(service) ::= <<
-      address: <service.mailHost>
->>
-
-emailPort(service) ::= <<
-      port: <service.mailPort>
->>
-
-emailDomain(service) ::= <<
-      domain: <service.mailDomain>
->>
-
-emailAuthentication(service) ::= <<
-      authentication: <service.mailAuthMethod>
->>
-
-emailAuthenticationUser(service) ::= <<
-<({emailAuth_<service.mailAuthMethod.name>})(service)>
->>
-
-emailAuth_none(service) ::= <<
->>
-
-emailAuth_plain(service) ::= <<
-<emailUser(service)>
-<emailPassword(service)>
->>
-
-emailAuth_login(service) ::= <<
-<emailUser(service)>
-<emailPassword(service)>
->>
-
-emailAuth_cram_md5(service) ::= <<
-<emailUser(service)>
-<emailPassword(service)>
->>
-
-emailUser(service) ::= <<
-      user_name: "<service.mailUser>"
->>
-
-emailPassword(service) ::= <<
-      password: "<service.mailPassword>"
->>
-

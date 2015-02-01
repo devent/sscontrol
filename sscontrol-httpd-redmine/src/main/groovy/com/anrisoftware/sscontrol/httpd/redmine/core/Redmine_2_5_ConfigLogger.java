@@ -21,9 +21,6 @@ package com.anrisoftware.sscontrol.httpd.redmine.core;
 import static com.anrisoftware.sscontrol.httpd.redmine.core.Redmine_2_5_ConfigLogger._.config_debug;
 import static com.anrisoftware.sscontrol.httpd.redmine.core.Redmine_2_5_ConfigLogger._.config_info;
 import static com.anrisoftware.sscontrol.httpd.redmine.core.Redmine_2_5_ConfigLogger._.config_trace;
-import static com.anrisoftware.sscontrol.httpd.redmine.core.Redmine_2_5_ConfigLogger._.database_config_debug;
-import static com.anrisoftware.sscontrol.httpd.redmine.core.Redmine_2_5_ConfigLogger._.database_config_info;
-import static com.anrisoftware.sscontrol.httpd.redmine.core.Redmine_2_5_ConfigLogger._.database_config_trace;
 import static org.apache.commons.lang3.StringUtils.join;
 
 import java.io.File;
@@ -33,21 +30,13 @@ import com.anrisoftware.globalpom.log.AbstractLogger;
 
 /**
  * Logging for {@link Redmine_2_5_Config}.
- * 
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
 class Redmine_2_5_ConfigLogger extends AbstractLogger {
 
     enum _ {
-
-        database_config_trace(
-                "Database configuration '{}' created for {}: \n>>>\n{}<<<"),
-
-        database_config_debug("Database configuration '{}' created for {}."),
-
-        database_config_info(
-                "Database configuration '{}' created for service '{}'."),
 
         config_trace("Configuration '{}' created for {}: \n>>>\n{}<<<"),
 
@@ -72,17 +61,6 @@ class Redmine_2_5_ConfigLogger extends AbstractLogger {
      */
     public Redmine_2_5_ConfigLogger() {
         super(Redmine_2_5_Config.class);
-    }
-
-    void databaseConfigCreated(Redmine_2_5_Config config, File file,
-            String configstr) {
-        if (isTraceEnabled()) {
-            trace(database_config_trace, file, config, configstr);
-        } else if (isDebugEnabled()) {
-            debug(database_config_debug, file, config);
-        } else {
-            info(database_config_info, file, config.getServiceName());
-        }
     }
 
     void configCreated(Redmine_2_5_Config config, File file, List<?> configstr) {

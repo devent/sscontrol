@@ -1,0 +1,8 @@
+
+databaseHead(service) ::= <<
+# RoboBee Auto Generated
+# Redmine Database Configuration
+# Author: Erwin Müller, \<erwin.mueller@deventm.org>
+
+
+>>

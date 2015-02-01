@@ -32,7 +32,7 @@ import com.google.inject.Injector;
 import com.google.inject.Module;
 
 /**
- * <i>Redmine</i> configuration factory for <i>Nginx Ubuntu 12.04</i>.
+ * <i>Redmine Thin Nginx Ubuntu 12.04</i> configuration factory.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
@@ -118,7 +118,7 @@ public class RedmineConfigFactory implements ServiceConfigFactory {
 
     @Override
     public ServiceConfig getScript() throws ServiceException {
-        return injector.getInstance(NginxConfig.class);
+        return injector.getInstance(RedmineNginxThinConfig.class);
     }
 
     @Override

@@ -20,6 +20,8 @@ package com.anrisoftware.sscontrol.httpd.redmine.nginx_thin_ubuntu_12_04;
 
 import static com.anrisoftware.sscontrol.httpd.redmine.nginx_thin_ubuntu_12_04.NginxConfigLogger._.deploy_upstream_debug;
 import static com.anrisoftware.sscontrol.httpd.redmine.nginx_thin_ubuntu_12_04.NginxConfigLogger._.deploy_upstream_info;
+import static com.anrisoftware.sscontrol.httpd.redmine.nginx_thin_ubuntu_12_04.NginxConfigLogger._.enable_upstream_debug;
+import static com.anrisoftware.sscontrol.httpd.redmine.nginx_thin_ubuntu_12_04.NginxConfigLogger._.enable_upstream_info;
 
 import java.io.File;
 
@@ -27,8 +29,8 @@ import com.anrisoftware.globalpom.log.AbstractLogger;
 import com.anrisoftware.sscontrol.httpd.domain.Domain;
 
 /**
- * Logging for {@link NginxConfig}.
- * 
+ * Logging for {@link RedmineNginxThinConfig}.
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
@@ -40,7 +42,13 @@ class NginxConfigLogger extends AbstractLogger {
                 "Deploy domain {} upstream configuration to '{}' for {}."),
 
         deploy_upstream_info(
-                "Deploy domain '{}' upstream configuration to '{}' for script '{}'.");
+                "Deploy domain '{}' upstream configuration to '{}' for script '{}'."),
+
+        enable_upstream_debug(
+                "Enables domain {} upstream configuration to '{}' for {}."),
+
+        enable_upstream_info(
+                "Enables domain '{}' upstream configuration to '{}' for script '{}'.");
 
         private String name;
 
@@ -55,18 +63,29 @@ class NginxConfigLogger extends AbstractLogger {
     }
 
     /**
-     * Sets the context of the logger to {@link NginxConfig}.
+     * Sets the context of the logger to {@link RedmineNginxThinConfig}.
      */
     public NginxConfigLogger() {
-        super(NginxConfig.class);
+        super(RedmineNginxThinConfig.class);
     }
 
-    void deployDomainUpstreamConfig(NginxConfig script, Domain domain, File file) {
+    void deployDomainUpstreamConfig(RedmineNginxThinConfig script,
+            Domain domain, File file) {
         if (isDebugEnabled()) {
             debug(deploy_upstream_debug, domain, file, script);
         } else {
-            String name = script.getName();
+            String name = script.getServiceName();
             info(deploy_upstream_info, domain.getName(), file, name);
+        }
+    }
+
+    void enableDomainUpstreamConfig(RedmineNginxThinConfig script,
+            Domain domain, File file) {
+        if (isDebugEnabled()) {
+            debug(enable_upstream_debug, domain, file, script);
+        } else {
+            String name = script.getServiceName();
+            info(enable_upstream_info, domain.getName(), file, name);
         }
     }
 }

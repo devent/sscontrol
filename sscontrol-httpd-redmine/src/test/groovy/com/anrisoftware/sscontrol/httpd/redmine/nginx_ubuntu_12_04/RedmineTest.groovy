@@ -44,16 +44,9 @@ class RedmineTest extends UbuntuTestUtil {
 
         loader.loadService profile.resource, null
         def profile = registry.getService("profile")[0]
+        setupUbuntuProperties profile, tmpdir
+        setupRedmineProperties profile, tmpdir
         loader.loadService httpdScript.resource, profile, preScript
-
-        test1comRedmineDir.asFile(tmpdir).mkdirs()
-        test1comRedmineDatabaseYml.createFile(tmpdir)
-        test1comRedmineConfigurationYml.createFile(tmpdir)
-        test1comRedmineEnvironmentRb.createFile(tmpdir)
-        test2comRedmineDir.asFile(tmpdir).mkdirs()
-        test2comRedmineDatabaseYml.createFile(tmpdir)
-        test2comRedmineConfigurationYml.createFile(tmpdir)
-        test2comRedmineEnvironmentRb.createFile(tmpdir)
 
         registry.allServices.each { it.call() }
         log.info "Run service again to ensure that configuration is not set double."

@@ -19,13 +19,12 @@
 package com.anrisoftware.sscontrol.httpd.redmine;
 
 import com.anrisoftware.sscontrol.httpd.webservice.WebService;
-import com.anrisoftware.sscontrol.scripts.unix.UnixScriptsModule;
 import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 
 /**
  * Installs the <i>Redmine</i> service factory.
- * 
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
@@ -33,10 +32,8 @@ public class RedmineModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        install(new UnixScriptsModule());
-        install(new UnixScriptsModule.UnixScriptsDefaultsModule());
         install(new FactoryModuleBuilder().implement(WebService.class,
-                RedmineService.class).build(RedmineServiceFactory.class));
+                RedmineServiceImpl.class).build(RedmineServiceFactory.class));
     }
 
 }

@@ -31,9 +31,9 @@ import com.anrisoftware.sscontrol.httpd.webservice.WebServiceFactoryFactory;
 
 /**
  * Loads the web service configurations.
- * 
+ *
  * @see ServiceConfigFactory
- * 
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
@@ -57,12 +57,12 @@ public class WebServicesConfigProvider implements
 
     /**
      * Find the web service configuration for the specified info.
-     * 
+     *
      * @param info
      *            the {@link ServiceConfigInfo}.
-     * 
+     *
      * @return the {@link WebServiceFactoryFactory}
-     * 
+     *
      * @throws ServiceException
      *             if the service could not be found.
      */

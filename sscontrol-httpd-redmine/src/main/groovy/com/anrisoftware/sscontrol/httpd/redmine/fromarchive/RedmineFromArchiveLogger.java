@@ -19,7 +19,8 @@
 package com.anrisoftware.sscontrol.httpd.redmine.fromarchive;
 
 import static com.anrisoftware.sscontrol.httpd.redmine.fromarchive.RedmineFromArchiveLogger._.archive_name;
-import static com.anrisoftware.sscontrol.httpd.redmine.fromarchive.RedmineFromArchiveLogger._.compare_redmine_versions;
+import static com.anrisoftware.sscontrol.httpd.redmine.fromarchive.RedmineFromArchiveLogger._.compare_versions_debug;
+import static com.anrisoftware.sscontrol.httpd.redmine.fromarchive.RedmineFromArchiveLogger._.compare_versions_info;
 import static com.anrisoftware.sscontrol.httpd.redmine.fromarchive.RedmineFromArchiveLogger._.error_archive_hash;
 import static com.anrisoftware.sscontrol.httpd.redmine.fromarchive.RedmineFromArchiveLogger._.error_archive_hash_message;
 import static com.anrisoftware.sscontrol.httpd.redmine.fromarchive.RedmineFromArchiveLogger._.service_name;
@@ -29,12 +30,13 @@ import static com.anrisoftware.sscontrol.httpd.redmine.fromarchive.RedmineFromAr
 import java.net.URI;
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
+import com.anrisoftware.globalpom.version.Version;
 import com.anrisoftware.sscontrol.core.api.ServiceException;
 import com.anrisoftware.sscontrol.httpd.redmine.RedmineService;
 
 /**
- * Logging for {@link RedmineFromArchive}.
- * 
+ * Logging for {@link RedmineFromArchiveConfig}.
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
@@ -47,8 +49,10 @@ class RedmineFromArchiveLogger extends AbstractLogger {
         unpack_archive_info(
                 "Unpack Redmine archive '{}' done for service '{}'."),
 
-        compare_redmine_versions(
-                "Compare installed Redmine version '{}' to expected '{}' for {}."),
+        compare_versions_debug("Compare Redmine version {}<={} for {}."),
+
+        compare_versions_info(
+                "Compare Redmine version {}<={} for service '{}'."),
 
         error_archive_hash("Redmine archive hash not match"),
 
@@ -71,23 +75,27 @@ class RedmineFromArchiveLogger extends AbstractLogger {
     }
 
     /**
-     * Sets the context of the logger to {@link RedmineFromArchive}.
+     * Sets the context of the logger to {@link RedmineFromArchiveConfig}.
      */
     public RedmineFromArchiveLogger() {
-        super(RedmineFromArchive.class);
+        super(RedmineFromArchiveConfig.class);
     }
 
-    void unpackArchiveDone(RedmineFromArchive config, URI archive) {
+    void unpackArchiveDone(RedmineFromArchiveConfig config, URI archive) {
         if (isDebugEnabled()) {
             debug(unpack_archive_debug, archive, config);
         } else {
-            info(unpack_archive_info, archive, config.getName());
+            info(unpack_archive_info, archive, config.getServiceName());
         }
     }
 
-    void checkRedmineVersion(RedmineFromArchive config, String version,
-            String expectedVersion) {
-        debug(compare_redmine_versions, version, expectedVersion, config);
+    void checkRedmineVersion(RedmineFromArchiveConfig config, Version version,
+            Version upper) {
+        if (isDebugEnabled()) {
+            debug(compare_versions_debug, version, upper, config);
+        } else {
+            info(compare_versions_info, version, upper, config.getServiceName());
+        }
     }
 
     ServiceException errorArchiveHash(RedmineService service, URI archive) {

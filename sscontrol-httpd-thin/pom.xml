@@ -1,0 +1,88 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>com.anrisoftware.sscontrol</groupId>
+		<artifactId>sscontrol-parent</artifactId>
+		<version>1.0-alpha-2-SNAPSHOT</version>
+		<relativePath>../sscontrol-parent</relativePath>
+	</parent>
+
+	<artifactId>sscontrol-httpd-thin</artifactId>
+	<name>RoboBee :: Httpd :: Thin</name>
+	<description>Thin is a Ruby web server that glues together 3 of the best Ruby libraries in web history: - http://code.macournoyer.com/thin/</description>
+	<inceptionYear>2014</inceptionYear>
+    <url>https://anrisoftware.com/projects/projects/sscontrol-httpd-thin</url>
+
+    <properties>
+        <project.custom.year>${project.inceptionYear]</project.custom.year>
+    </properties>
+
+    <issueManagement>
+        <system>Redmine</system>
+        <url>https://anrisoftware.com/projects/projects/sscontrol-httpd-thin</url>
+    </issueManagement>
+
+    <scm>
+        <connection>scm:git:${custom.gitpublic.url}sscontrolnew.git</connection>
+        <developerConnection>scm:git:${custom.gitpublic.url}sscontrolnew.git</developerConnection>
+        <url>scm:git:${custom.gitpublic.url}sscontrolnew.git</url>
+    </scm>
+
+    <dependencies>
+
+        <!-- test dependencies -->
+        <dependency>
+            <groupId>com.anrisoftware.sscontrol</groupId>
+            <artifactId>sscontrol-profile</artifactId>
+            <version>1.0-alpha-2-SNAPSHOT</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.anrisoftware.sscontrol</groupId>
+            <artifactId>sscontrol-httpd</artifactId>
+            <version>1.0-alpha-2-SNAPSHOT</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.anrisoftware.globalpom</groupId>
+            <artifactId>globalpom-groovytestutils</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- own modules dependencies -->
+        <dependency>
+            <groupId>com.anrisoftware.sscontrol</groupId>
+            <artifactId>sscontrol-core</artifactId>
+            <version>1.0-alpha-2-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.anrisoftware.sscontrol</groupId>
+            <artifactId>sscontrol-httpd-webservice</artifactId>
+            <version>1.0-alpha-2-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.anrisoftware.sscontrol</groupId>
+            <artifactId>sscontrol-scripts-unix</artifactId>
+            <version>1.0-alpha-2-SNAPSHOT</version>
+        </dependency>
+
+        <!-- compile dependencies -->
+        <dependency>
+            <groupId>org.mangosdk.spi</groupId>
+            <artifactId>spi</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>com.google.inject.extensions</groupId>
+            <artifactId>guice-multibindings</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>joda-time</groupId>
+            <artifactId>joda-time</artifactId>
+        </dependency>
+    </dependencies>
+
+</project>

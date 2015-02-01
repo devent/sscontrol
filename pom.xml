@@ -30,10 +30,9 @@
         <module>sscontrol-httpd-piwik</module>
         <module>sscontrol-httpd-redmine</module>
         <module>sscontrol-httpd-roundcube</module>
+        <module>sscontrol-httpd-thin</module>
         <module>sscontrol-httpd-webservice</module>
         <module>sscontrol-httpd-wordpress</module>
-<!--         <module>sscontrol-ldap</module> -->
-<!--         <module>sscontrol-ldap-openldap</module> -->
         <module>sscontrol-mail</module>
         <module>sscontrol-mail-postfix</module>
         <module>sscontrol-profile</module>

@@ -63,24 +63,25 @@ class RedmineServiceTest extends HttpdTestUtil {
         assert webservice.prefix == null
         assert webservice.ref == null
         assert webservice.refDomain == null
-        assert webservice.debug.level == 4
+        assert webservice.debugLogging("level")["thin"] == 1
+        assert webservice.debugLogging("level")["redmine"] == 1
         assert webservice.overrideMode == OverrideMode.update
         assert webservice.database.database == "redmine2"
         assert webservice.database.user == "user"
         assert webservice.database.password == "userpass"
         assert webservice.database.host == "localhost"
-        assert webservice.mailHost == "smtp.test1.com"
-        assert webservice.mailPort == 25
-        assert webservice.mailDeliveryMethod == DeliveryMethod.smtp
-        assert webservice.mailDomain == "example.net"
-        assert webservice.mailAuthMethod == AuthenticationMethod.login
-        assert webservice.mailUser == "redmine@example.net"
-        assert webservice.mailPassword == "redminepass"
+        assert webservice.mail.host == "smtp.test1.com"
+        assert webservice.mail.port == 25
+        assert webservice.mail.method == DeliveryMethod.smtp
+        assert webservice.mail.domain == "example.net"
+        assert webservice.mail.auth == AuthenticationMethod.login
+        assert webservice.mail.user == "redmine@example.net"
+        assert webservice.mail.password == "redminepass"
         assert webservice.languageName == "de"
-        assert webservice.scmInstall == [
+        assert webservice.scms.containsAll([
             ScmInstall.subversion,
             ScmInstall.mercurial
-        ]
+        ])
 
         domain = service.domains[d++]
         assert domain.name == "test1.com"
@@ -94,16 +95,12 @@ class RedmineServiceTest extends HttpdTestUtil {
         assert webservice.prefix == null
         assert webservice.ref == "redmineid"
         assert webservice.refDomain == null
+        assert webservice.debugLogging("level") == null
         assert webservice.overrideMode == null
-        assert webservice.mailHost == null
-        assert webservice.mailPort == null
-        assert webservice.mailDeliveryMethod == null
-        assert webservice.mailDomain == null
-        assert webservice.mailAuthMethod == null
-        assert webservice.mailUser == null
-        assert webservice.mailPassword == null
+        assert webservice.database == null
+        assert webservice.mail == null
         assert webservice.languageName == null
-        assert webservice.scmInstall == null
+        assert webservice.scms == null
 
         domain = service.domains[d++]
         assert domain.name == "test2.com"
@@ -111,21 +108,26 @@ class RedmineServiceTest extends HttpdTestUtil {
 
         webservice = domain.services[0]
         assert webservice.name == "redmine"
-        assert webservice.id == "redmineid"
+        assert webservice.id == "test2comRedmineid"
         assert webservice.backend == "thin"
         assert webservice.alias == "projects"
         assert webservice.prefix == "test2redmine"
         assert webservice.ref == null
         assert webservice.refDomain == null
+        assert webservice.debugLogging("level") == null
         assert webservice.overrideMode == null
-        assert webservice.mailHost == null
-        assert webservice.mailPort == null
-        assert webservice.mailDeliveryMethod == null
-        assert webservice.mailDomain == null
-        assert webservice.mailAuthMethod == null
-        assert webservice.mailUser == "redmine@example.net"
-        assert webservice.mailPassword == "redminepass"
+        assert webservice.database.database == "redmine2"
+        assert webservice.database.user == "user"
+        assert webservice.database.password == "userpass"
+        assert webservice.database.host == "localhost"
+        assert webservice.mail.host == null
+        assert webservice.mail.port == null
+        assert webservice.mail.method == null
+        assert webservice.mail.domain == null
+        assert webservice.mail.auth == null
+        assert webservice.mail.user == "redmine@example.net"
+        assert webservice.mail.password == "redminepass"
         assert webservice.languageName == null
-        assert webservice.scmInstall == null
+        assert webservice.scms == null
     }
 }

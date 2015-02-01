@@ -1,14 +1,14 @@
 +x /tmp/etc/init.d/thin
--R 755 /tmp/var/www/test1.com/redmine2/files
--R 755 /tmp/var/www/test1.com/redmine2/log
--R 755 /tmp/var/www/test1.com/redmine2/tmp
--R 755 /tmp/var/www/test1.com/redmine2/tmp/pdf
--R 755 /tmp/var/www/test1.com/redmine2/public/plugin_assets
--R 755 /tmp/var/www/test1.com/redmine2/files
--R 755 /tmp/var/www/test1.com/redmine2/log
--R 755 /tmp/var/www/test1.com/redmine2/tmp
--R 755 /tmp/var/www/test1.com/redmine2/tmp/pdf
--R 755 /tmp/var/www/test1.com/redmine2/public/plugin_assets
+-R 755 /tmp/var/www/test1.com/redmine_2/files
+-R 755 /tmp/var/www/test1.com/redmine_2/log
+-R 755 /tmp/var/www/test1.com/redmine_2/tmp
+-R 755 /tmp/var/www/test1.com/redmine_2/tmp/pdf
+-R 755 /tmp/var/www/test1.com/redmine_2/public/plugin_assets
+-R 755 /tmp/var/www/test1.com/redmine_2/files
+-R 755 /tmp/var/www/test1.com/redmine_2/log
+-R 755 /tmp/var/www/test1.com/redmine_2/tmp
+-R 755 /tmp/var/www/test1.com/redmine_2/tmp/pdf
+-R 755 /tmp/var/www/test1.com/redmine_2/public/plugin_assets
 400 /tmp/var/www/test1.com/ssl/cert_crt.txt /tmp/var/www/test1.com/ssl/cert_key.txt
 +x /tmp/etc/init.d/thin
 -R 755 /tmp/var/www/test2.com/test2redmine/files
@@ -17,16 +17,16 @@
 -R 755 /tmp/var/www/test2.com/test2redmine/tmp/pdf
 -R 755 /tmp/var/www/test2.com/test2redmine/public/plugin_assets
 +x /tmp/etc/init.d/thin
--R 755 /tmp/var/www/test1.com/redmine2/files
--R 755 /tmp/var/www/test1.com/redmine2/log
--R 755 /tmp/var/www/test1.com/redmine2/tmp
--R 755 /tmp/var/www/test1.com/redmine2/tmp/pdf
--R 755 /tmp/var/www/test1.com/redmine2/public/plugin_assets
--R 755 /tmp/var/www/test1.com/redmine2/files
--R 755 /tmp/var/www/test1.com/redmine2/log
--R 755 /tmp/var/www/test1.com/redmine2/tmp
--R 755 /tmp/var/www/test1.com/redmine2/tmp/pdf
--R 755 /tmp/var/www/test1.com/redmine2/public/plugin_assets
+-R 755 /tmp/var/www/test1.com/redmine_2/files
+-R 755 /tmp/var/www/test1.com/redmine_2/log
+-R 755 /tmp/var/www/test1.com/redmine_2/tmp
+-R 755 /tmp/var/www/test1.com/redmine_2/tmp/pdf
+-R 755 /tmp/var/www/test1.com/redmine_2/public/plugin_assets
+-R 755 /tmp/var/www/test1.com/redmine_2/files
+-R 755 /tmp/var/www/test1.com/redmine_2/log
+-R 755 /tmp/var/www/test1.com/redmine_2/tmp
+-R 755 /tmp/var/www/test1.com/redmine_2/tmp/pdf
+-R 755 /tmp/var/www/test1.com/redmine_2/public/plugin_assets
 400 /tmp/var/www/test1.com/ssl/cert_crt.txt /tmp/var/www/test1.com/ssl/cert_key.txt
 +x /tmp/etc/init.d/thin
 -R 755 /tmp/var/www/test2.com/test2redmine/files

@@ -38,10 +38,10 @@ enum RedmineResources {
     gemCommand("/usr/bin/gem", UbuntuResources.class.getResource("echo_command.txt")),
     bundleCommand("/usr/local/bin/bundle", UbuntuResources.class.getResource("echo_command.txt")),
     rakeCommand("/usr/local/bin/rake", UbuntuResources.class.getResource("echo_command.txt")),
-    test1comRedmineDir("/var/www/test1.com/redmine2", null),
-    test1comRedmineDatabaseYml("/var/www/test1.com/redmine2/config/database.yml.example", RedmineResources.class.getResource("database_yml_example.txt")),
-    test1comRedmineConfigurationYml("/var/www/test1.com/redmine2/config/configuration.yml.example", RedmineResources.class.getResource("configuration_yml_example.txt")),
-    test1comRedmineEnvironmentRb("/var/www/test1.com/redmine2/config/environment.rb", RedmineResources.class.getResource("redmine_environment_rb.txt")),
+    test1comRedmineDir("/var/www/test1.com/redmine_2", null),
+    test1comRedmineDatabaseYml("/var/www/test1.com/redmine_2/config/database.yml.example", RedmineResources.class.getResource("database_yml_example.txt")),
+    test1comRedmineConfigurationYml("/var/www/test1.com/redmine_2/config/configuration.yml.example", RedmineResources.class.getResource("configuration_yml_example.txt")),
+    test1comRedmineEnvironmentRb("/var/www/test1.com/redmine_2/config/environment.rb", RedmineResources.class.getResource("redmine_environment_rb.txt")),
     test2comRedmineDir("/var/www/test2.com/test2redmine", null),
     test2comRedmineDatabaseYml("/var/www/test2.com/test2redmine/config/database.yml.example", RedmineResources.class.getResource("database_yml_example.txt")),
     test2comRedmineConfigurationYml("/var/www/test2.com/test2redmine/config/configuration.yml.example", RedmineResources.class.getResource("configuration_yml_example.txt")),
@@ -55,19 +55,19 @@ enum RedmineResources {
     thinLogDir("/var/log/thin", null),
     thinRunDir("/var/run/thin", null),
     // expected
-    test1comRedmine2UpstreamConfExpected("/etc/nginx/sites-available/100-robobee-test1.com_redmine2-upstream.conf", RedmineResources.class.getResource("test1com_redmine2_upstream_conf_expected.txt")),
-    test1comConfExpected("/etc/nginx/sites-available/100-robobee-test1.com.conf", RedmineResources.class.getResource("test1com_conf_expected.txt")),
-    test1comSslConfExpected("/etc/nginx/sites-available/100-robobee-test1.com-ssl.conf", RedmineResources.class.getResource("test1com_ssl_conf_expected.txt")),
-    test1comRedmineDatabaseYmlExpected("/var/www/test1.com/redmine2/config/database.yml", RedmineResources.class.getResource("test1com_database_yml_expected.txt")),
-    test1comRedmineConfigurationYmlExpected("/var/www/test1.com/redmine2/config/configuration.yml", RedmineResources.class.getResource("test1com_configuration_yml_expected.txt")),
-    test1comRedmineEnvironmentRbExpected("/var/www/test1.com/redmine2/config/environment.rb", RedmineResources.class.getResource("test1com_environment_rb_expected.txt")),
-    test1comThinRedmine2YmlExpected("/etc/thin1.8/test1_com_redmine2.yml", RedmineResources.class.getResource("test1_com_redmine2_yml_expected.txt")),
-    test2comTest2redmineUpstreamConfExpected("/etc/nginx/sites-available/100-robobee-test2.com_test2redmine-upstream.conf", RedmineResources.class.getResource("test2com_test2redmine_upstream_conf_expected.txt")),
-    test2comConfExpected("/etc/nginx/sites-available/100-robobee-test2.com.conf", RedmineResources.class.getResource("test2com_conf_expected.txt")),
-    test2comRedmineDatabaseYmlExpected("/var/www/test2.com/test2redmine/config/database.yml", RedmineResources.class.getResource("test2com_database_yml_expected.txt")),
-    test2comRedmineConfigurationYmlExpected("/var/www/test2.com/test2redmine/config/configuration.yml", RedmineResources.class.getResource("test2com_configuration_yml_expected.txt")),
-    test2comRedmineEnvironmentRbExpected("/var/www/test2.com/test2redmine/config/environment.rb", RedmineResources.class.getResource("test2com_environment_rb_expected.txt")),
-    test2comThinTest2redmineYmlExpected("/etc/thin1.8/test2_com_test2redmine.yml", RedmineResources.class.getResource("test2_com_test2redmine_yml_expected.txt")),
+    test1comRedmine2UpstreamConfExpected("/etc/nginx/sites-available/100-robobee-test1.com_redmine_2-upstream.conf", RedmineResources.class.getResource("test1com_redmine2_upstreamconf_expected.txt")),
+    test1comConfExpected("/etc/nginx/sites-available/100-robobee-test1.com.conf", RedmineResources.class.getResource("test1comconf_expected.txt")),
+    test1comSslConfExpected("/etc/nginx/sites-available/100-robobee-test1.com-ssl.conf", RedmineResources.class.getResource("test1comsslconf_expected.txt")),
+    test1comRedmineDatabaseYmlExpected("/var/www/test1.com/redmine_2/config/database.yml", RedmineResources.class.getResource("test1com_databaseyml_expected.txt")),
+    test1comRedmineConfigurationYmlExpected("/var/www/test1.com/redmine_2/config/configuration.yml", RedmineResources.class.getResource("test1com_configurationyml_expected.txt")),
+    test1comRedmineEnvironmentRbExpected("/var/www/test1.com/redmine_2/config/environment.rb", RedmineResources.class.getResource("test1com_environmentrb_expected.txt")),
+    test1comThinRedmine2YmlExpected("/etc/thin1.8/test1_com_redmine_2.yml", RedmineResources.class.getResource("test1com_redmine2yml_expected.txt")),
+    test2comTest2redmineUpstreamConfExpected("/etc/nginx/sites-available/100-robobee-test2.com_test2redmine-upstream.conf", RedmineResources.class.getResource("test2com_test2redmine_upstreamconf_expected.txt")),
+    test2comConfExpected("/etc/nginx/sites-available/100-robobee-test2.com.conf", RedmineResources.class.getResource("test2comconf_expected.txt")),
+    test2comRedmineDatabaseYmlExpected("/var/www/test2.com/test2redmine/config/database.yml", RedmineResources.class.getResource("test2com_databaseyml_expected.txt")),
+    test2comRedmineConfigurationYmlExpected("/var/www/test2.com/test2redmine/config/configuration.yml", RedmineResources.class.getResource("test2com_configurationyml_expected.txt")),
+    test2comRedmineEnvironmentRbExpected("/var/www/test2.com/test2redmine/config/environment.rb", RedmineResources.class.getResource("test2com_environmentrb_expected.txt")),
+    test2comThinTest2redmineYmlExpected("/etc/thin1.8/test2_com_test2redmine.yml", RedmineResources.class.getResource("test2com_test2redmineyml_expected.txt")),
     thinDefaultExpected("/etc/default/thin", RedmineResources.class.getResource("thin_default_expected.txt")),
     thinScriptExpected("/etc/init.d/thin", RedmineResources.class.getResource("thin_script_expected.txt")),
     gemOutExpected("/usr/bin/gem.out", RedmineResources.class.getResource("gem_out_expected.txt")),
@@ -92,6 +92,32 @@ enum RedmineResources {
         thinScriptFile.asFile(parent).parentFile.mkdirs()
         thinDefaultsFile.asFile(parent).parentFile.mkdirs()
         thinConfDir.asFile(parent).mkdirs()
+        test1comRedmineDir.asFile(parent).mkdirs()
+        test1comRedmineDatabaseYml.createFile(parent)
+        test1comRedmineConfigurationYml.createFile(parent)
+        test1comRedmineEnvironmentRb.createFile(parent)
+        test2comRedmineDir.asFile(parent).mkdirs()
+        test2comRedmineDatabaseYml.createFile(parent)
+        test2comRedmineConfigurationYml.createFile(parent)
+        test2comRedmineEnvironmentRb.createFile(parent)
+    }
+
+    static void setupRedmineProperties(def profile, File parent) {
+        def entry = profile.getEntry("httpd")
+        // redmine
+        entry.redmine_gem_command RedmineResources.gemCommand.asFile(parent)
+        entry.redmine_bundle_command RedmineResources.bundleCommand.asFile(parent)
+        entry.redmine_rake_command RedmineResources.rakeCommand.asFile(parent)
+        entry.redmine_archive RedmineResources.redmineArchive.asFile(parent)
+        entry.redmine_archive_hash "md5:6a2f5df554a287191580529be885cf53"
+        // thin
+        entry.thin_command RedmineResources.thinCommand.asFile(parent)
+        entry.thin_restart_command "${RedmineResources.thinRestartCommand.asFile(parent)} restart"
+        entry.thin_script_file RedmineResources.thinScriptFile.asFile(parent)
+        entry.thin_defaults_file RedmineResources.thinDefaultsFile.asFile(parent)
+        entry.thin_configuration_directory RedmineResources.thinConfDir.asFile(parent)
+        entry.thin_log_directory RedmineResources.thinLogDir.asFile(parent)
+        entry.thin_run_directory RedmineResources.thinRunDir.asFile(parent)
     }
 
     ResourcesUtils resources

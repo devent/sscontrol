@@ -49,7 +49,6 @@ enum UbuntuResources {
     mysqlCommand("/usr/bin/mysql", UbuntuResources.class.getResource("echo_command.txt")),
     // files and directory
     tmpDir("/tmp", null),
-    packagingConfigurationDirectory("/etc/apt", null),
     certCrt("cert.crt", UbuntuResources.class.getResource("cert_crt.txt")),
     certKey("cert.key", UbuntuResources.class.getResource("cert_key.txt")),
     groupsFile("/etc/group", UbuntuResources.class.getResource("group.txt")),
@@ -75,11 +74,32 @@ enum UbuntuResources {
         reconfigureCommand.createCommand parent
         updateRcCommand.createCommand parent
         tmpDir.asFile(parent).mkdirs()
-        packagingConfigurationDirectory.asFile(parent).mkdirs()
         restartCommand.createCommand parent
         confDir.asFile(parent).mkdirs()
         groupsFile.createFile parent
         usersFile.createFile parent
+    }
+
+    static void setupUbuntuProperties(def profile, File parent) {
+        def entry = profile.getEntry("httpd")
+        entry.install_command UbuntuResources.aptitudeCommand.asFile(parent)
+        entry.chmod_command UbuntuResources.chmodCommand.asFile(parent)
+        entry.chown_command UbuntuResources.chownCommand.asFile(parent)
+        entry.group_add_command UbuntuResources.groupaddCommand.asFile(parent)
+        entry.user_add_command UbuntuResources.useraddCommand.asFile(parent)
+        entry.tar_command UbuntuResources.tarCommand.asFile(parent)
+        entry.unzip_command UbuntuResources.unzipCommand.asFile(parent)
+        entry.link_command UbuntuResources.lnCommand.asFile(parent)
+        entry.netstat_command UbuntuResources.netstatCommand.asFile(parent)
+        entry.temp_directory UbuntuResources.tmpDir.asFile(parent)
+        entry.restart_command UbuntuResources.restartCommand.asFile(parent)
+        entry.configuration_directory UbuntuResources.confDir.asFile(parent)
+        entry.groups_file UbuntuResources.groupsFile.asFile(parent)
+        entry.users_file UbuntuResources.usersFile.asFile(parent)
+        entry.sites_available_directory UbuntuResources.sitesAvailableDir.asFile(parent)
+        entry.sites_enabled_directory UbuntuResources.sitesEnabledDir.asFile(parent)
+        entry.config_include_directory UbuntuResources.configIncludeDir.asFile(parent)
+        entry.sites_directory UbuntuResources.sitesDir.asFile(parent)
     }
 
     ResourcesUtils resources

@@ -40,7 +40,7 @@ import com.anrisoftware.sscontrol.httpd.webservice.OverrideMode;
 import com.anrisoftware.sscontrol.httpd.webservice.WebService;
 
 /**
- * Logging messages for {@link RedmineService}.
+ * Logging messages for {@link RedmineServiceImpl}.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
@@ -81,10 +81,10 @@ class RedmineServiceLogger extends AbstractLogger {
     }
 
     /**
-     * Creates a logger for {@link RedmineService}.
+     * Creates a logger for {@link RedmineServiceImpl}.
      */
     public RedmineServiceLogger() {
-        super(RedmineService.class);
+        super(RedmineServiceImpl.class);
     }
 
     void debugSet(WebService service, DebugLogging debug) {
@@ -105,7 +105,7 @@ class RedmineServiceLogger extends AbstractLogger {
         }
     }
 
-    void overrideModeSet(RedmineService service, OverrideMode mode) {
+    void overrideModeSet(RedmineServiceImpl service, OverrideMode mode) {
         if (isDebugEnabled()) {
             debug(override_mode_set_debug, mode, service);
         } else {
@@ -113,7 +113,7 @@ class RedmineServiceLogger extends AbstractLogger {
         }
     }
 
-    void databaseSet(RedmineService service, Database database) {
+    void databaseSet(RedmineServiceImpl service, Database database) {
         if (isDebugEnabled()) {
             debug(database_set_debug, database, service);
         } else {
@@ -121,7 +121,7 @@ class RedmineServiceLogger extends AbstractLogger {
         }
     }
 
-    String backend(RedmineService service, Map<String, Object> args) {
+    String backend(RedmineServiceImpl service, Map<String, Object> args) {
         Object v = args.get("backend");
         notNull(v, backend_null.toString(), service);
         String backend = v.toString();

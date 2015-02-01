@@ -18,288 +18,135 @@
  */
 package com.anrisoftware.sscontrol.httpd.redmine;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import javax.inject.Inject;
-
-import com.anrisoftware.sscontrol.core.api.ServiceException;
-import com.anrisoftware.sscontrol.core.database.Database;
-import com.anrisoftware.sscontrol.core.database.DatabaseArgs;
-import com.anrisoftware.sscontrol.core.database.DatabaseFactory;
-import com.anrisoftware.sscontrol.core.debuglogging.DebugLogging;
-import com.anrisoftware.sscontrol.core.debuglogging.DebugLoggingFactory;
-import com.anrisoftware.sscontrol.core.groovy.StatementsMap;
-import com.anrisoftware.sscontrol.httpd.domain.Domain;
 import com.anrisoftware.sscontrol.httpd.webservice.OverrideMode;
 import com.anrisoftware.sscontrol.httpd.webservice.WebService;
-import com.anrisoftware.sscontrol.httpd.webserviceargs.DefaultWebService;
-import com.anrisoftware.sscontrol.httpd.webserviceargs.DefaultWebServiceFactory;
-import com.google.inject.assistedinject.Assisted;
 
 /**
  * <i>Redmine</i> service.
- * 
+ *
  * @see <a href="http://www.redmine.org/">http://www.redmine.org/</a>
- * 
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-public class RedmineService implements WebService {
-
-    private static final String MODE_KEY = "mode";
-
-    private static final String OVERRIDE_KEY = "override";
-
-    private static final String INSTALL_KEY = "install";
-
-    private static final String SCM_KEY = "scm";
-
-    private static final String NAME_KEY = "name";
-
-    private static final String LANGUAGE_KEY = "language";
-
-    private static final String PASSWORD_KEY = "password";
-
-    private static final String USER_KEY = "user";
-
-    private static final String AUTH_KEY = "auth";
-
-    private static final String DOMAIN_KEY = "domain";
-
-    private static final String METHOD_KEY = "method";
-
-    private static final String PORT_KEY = "port";
-
-    private static final String HOST_KEY = "host";
-
-    private static final String MAIL_KEY = "mail";
+public interface RedmineService extends WebService {
 
     /**
-     * The <i>Redmine</i> service name.
+     * Returns the back-end name.
+     *
+     * <pre>
+     * setup "redmine", backend: "thin", {
+     * }
+     * </pre>
+     *
+     * @return the back-end {@link String} name.
      */
-    public static final String SERVICE_NAME = "redmine";
-
-    private final DefaultWebService service;
-
-    private final RedmineServiceLogger log;
-
-    private final String backend;
-
-    private final StatementsMap statementsMap;
-
-    @Inject
-    private DatabaseFactory databaseFactory;
-
-    @Inject
-    private DebugLoggingFactory debugFactory;
-
-    private DebugLogging debug;
-
-    private Database database;
+    String getBackend();
 
     /**
-     * @see RedmineServiceFactory#create(Map, Domain)
+     * Returns the debug logging for the specified key.
+     * <p>
+     * The example returns the following map for the key "level":
+     *
+     * <pre>
+     * {["thin": 1, "redmine": 1]}
+     * </pre>
+     *
+     * <pre>
+     * setup "redmine", {
+     *     debug "thin", level: 1, file: "/var/log/redmine_thin.log"
+     *     debug "redmine", level: 1, file: "/var/log/redmine.log"
+     * }
+     * </pre>
+     *
+     * @return the {@link Map} of the debug levels or {@code null}.
      */
-    @Inject
-    RedmineService(RedmineServiceLogger log,
-            DefaultWebServiceFactory webServiceFactory,
-            @Assisted Map<String, Object> args, @Assisted Domain domain) {
-        this.log = log;
-        this.backend = log.backend(this, args);
-        this.service = webServiceFactory.create(SERVICE_NAME, args, domain);
-        this.statementsMap = service.getStatementsMap();
-        setupStatements(statementsMap);
-    }
+    Map<String, Object> debugLogging(String key);
 
-    private void setupStatements(StatementsMap map) {
-        map.addAllowed(MAIL_KEY, LANGUAGE_KEY, SCM_KEY, OVERRIDE_KEY);
-        map.addAllowedKeys(MAIL_KEY, HOST_KEY, PORT_KEY, METHOD_KEY,
-                DOMAIN_KEY, AUTH_KEY, USER_KEY, PASSWORD_KEY);
-        map.addAllowedKeys(SCM_KEY, INSTALL_KEY);
-        map.addAllowedKeys(OVERRIDE_KEY, MODE_KEY);
-        map.addAllowedKeys(LANGUAGE_KEY, NAME_KEY);
-    }
+    /**
+     * Returns the database properties.
+     *
+     * <ul>
+     * <li>{@code database} the database name;</li>
+     * <li>{@code user} the database user name;</li>
+     * <li>{@code password} the user password;</li>
+     * <li>{@code host} the database host;</li>
+     * <li>{@code provider} the database provider;</li>
+     * <li>{@code encoding} the database encoding;</li>
+     * </ul>
+     *
+     * <pre>
+     * setup "redmine", {
+     *     database "redmine2", user: "user", password: "userpass", host: "localhost"
+     * }
+     * </pre>
+     *
+     * @return the {@link Map} of the database properties or {@code null}.
+     */
+    Map<String, Object> getDatabase();
 
-    @Override
-    public Domain getDomain() {
-        return service.getDomain();
-    }
+    /**
+     * Returns the mail properties.
+     *
+     * <ul>
+     * <li>{@code host} the mail host;</li>
+     * <li>{@code port} the host port;</li>
+     * <li>{@code method} the delivery {@link DeliveryMethod} method;</li>
+     * <li>{@code domain} the mail domain;</li>
+     * <li>{@code auth} the Authentication {@link AuthenticationMethod} method;</li>
+     * <li>{@code user} the mail user;</li>
+     * <li>{@code password} the mail user password;</li>
+     * </ul>
+     *
+     * <pre>
+     * setup "redmine", {
+     *     mail "smtp.test1.com", port: 25, method: smtp, domain: "example.net", auth: login, user: "redmine@example.net", password: "redminepass"
+     * }
+     * </pre>
+     *
+     * @return the {@link Map} of the mail properties or {@code null}.
+     */
+    Map<String, Object> getMail();
 
-    @Override
-    public String getName() {
-        return SERVICE_NAME;
-    }
+    /**
+     * Returns the data set language.
+     *
+     * <pre>
+     * setup "redmine", {
+     *     language name: "de"
+     * }
+     * </pre>
+     *
+     * @return the language {@link String} name or {@code null}.
+     */
+    String getLanguageName();
 
-    public void setAlias(String alias) throws ServiceException {
-        service.setAlias(alias);
-    }
+    /**
+     * Returns the SCMs to install.
+     *
+     * <pre>
+     * setup "redmine", {
+     *     scm install: [subversion, mercurial]
+     * }
+     * </pre>
+     *
+     * @return the {@link List} of the {@code ScmInstall} SCMs or {@code null}.
+     */
+    List<ScmInstall> getScms();
 
-    @Override
-    public String getAlias() {
-        return service.getAlias();
-    }
-
-    public void setId(String id) throws ServiceException {
-        service.setId(id);
-    }
-
-    @Override
-    public String getId() {
-        return service.getId();
-    }
-
-    public void setRef(String ref) throws ServiceException {
-        service.setRef(ref);
-    }
-
-    @Override
-    public String getRef() {
-        return service.getRef();
-    }
-
-    public void setRefDomain(String ref) throws ServiceException {
-        service.setRefDomain(ref);
-    }
-
-    @Override
-    public String getRefDomain() {
-        return service.getRefDomain();
-    }
-
-    public void setPrefix(String prefix) throws ServiceException {
-        service.setPrefix(prefix);
-    }
-
-    @Override
-    public String getPrefix() {
-        return service.getPrefix();
-    }
-
-    public String getBackend() {
-        return backend;
-    }
-
-    public void database(Map<String, Object> args, String name) {
-        args.put(DatabaseArgs.DATABASE, name);
-        Database database = databaseFactory.create(this, args);
-        log.databaseSet(this, database);
-        this.database = database;
-    }
-
-    public Database getDatabase() {
-        return database;
-    }
-
-    public void debug(boolean enabled) {
-        DebugLogging logging = debugFactory.create(enabled ? 1 : 0);
-        log.debugSet(this, logging);
-        this.debug = logging;
-    }
-
-    public void debug(Map<String, Object> args) {
-        DebugLogging logging = debugFactory.create(args);
-        log.debugSet(this, logging);
-        this.debug = logging;
-    }
-
-    public DebugLogging getDebugLogging() {
-        return debug;
-    }
-
-    public void setOverrideMode(OverrideMode mode) throws ServiceException {
-        statementsMap.putMapValue(OVERRIDE_KEY, MODE_KEY, mode);
-    }
-
-    public OverrideMode getOverrideMode() {
-        return statementsMap.mapValue(OVERRIDE_KEY, MODE_KEY);
-    }
-
-    public void setMailHost(String host) throws ServiceException {
-        statementsMap.putMapValue(MAIL_KEY, HOST_KEY, host);
-    }
-
-    public String getMailHost() {
-        return statementsMap.mapValue(MAIL_KEY, HOST_KEY);
-    }
-
-    public void setMailPort(int port) throws ServiceException {
-        statementsMap.putMapValue(MAIL_KEY, PORT_KEY, port);
-    }
-
-    public Integer getMailPort() {
-        return statementsMap.mapValue(MAIL_KEY, PORT_KEY);
-    }
-
-    public void setMailDeliveryMethod(DeliveryMethod method)
-            throws ServiceException {
-        statementsMap.putMapValue(MAIL_KEY, METHOD_KEY, method);
-    }
-
-    public DeliveryMethod getMailDeliveryMethod() {
-        return statementsMap.mapValue(MAIL_KEY, METHOD_KEY);
-    }
-
-    public void setMailDomain(String domain) throws ServiceException {
-        statementsMap.putMapValue(MAIL_KEY, DOMAIN_KEY, domain);
-    }
-
-    public String getMailDomain() {
-        return statementsMap.mapValue(MAIL_KEY, DOMAIN_KEY);
-    }
-
-    public void setMailAuthMethod(AuthenticationMethod method)
-            throws ServiceException {
-        statementsMap.putMapValue(MAIL_KEY, AUTH_KEY, method);
-    }
-
-    public AuthenticationMethod getMailAuthMethod() {
-        return statementsMap.mapValue(MAIL_KEY, AUTH_KEY);
-    }
-
-    public String getMailUser() {
-        return statementsMap.mapValue(MAIL_KEY, USER_KEY);
-    }
-
-    public String getMailPassword() {
-        return statementsMap.mapValue(MAIL_KEY, PASSWORD_KEY);
-    }
-
-    public void setLanguageName(String name) throws ServiceException {
-        statementsMap.putMapValue(LANGUAGE_KEY, NAME_KEY, name);
-    }
-
-    public String getLanguageName() {
-        return statementsMap.mapValue(LANGUAGE_KEY, NAME_KEY);
-    }
-
-    public void setScmInstall(List<ScmInstall> list) throws ServiceException {
-        statementsMap.putMapValue(SCM_KEY, INSTALL_KEY, list);
-    }
-
-    @SuppressWarnings("unchecked")
-    public List<ScmInstall> getScmInstall() {
-        Object v = statementsMap.mapValue(SCM_KEY, INSTALL_KEY);
-        if (v == null) {
-            return null;
-        }
-        if (v instanceof List) {
-            return (List<ScmInstall>) v;
-        } else {
-            List<ScmInstall> list = new ArrayList<ScmInstall>();
-            list.add((ScmInstall) v);
-            return list;
-        }
-    }
-
-    public Object methodMissing(String name, Object args)
-            throws ServiceException {
-        return service.methodMissing(name, args);
-    }
-
-    @Override
-    public String toString() {
-        return service.toString();
-    }
+    /**
+     * Returns the override mode.
+     *
+     * <pre>
+     * setup "redmine", {
+     *     override mode: update
+     * }
+     * </pre>
+     *
+     * @return the override {@link OverrideMode} mode or {@code null}.
+     */
+    OverrideMode getOverrideMode();
 }

@@ -21,21 +21,22 @@ package com.anrisoftware.sscontrol.httpd.redmine;
 import java.util.Map;
 
 import com.anrisoftware.sscontrol.httpd.domain.Domain;
+import com.anrisoftware.sscontrol.httpd.webservice.WebService;
 import com.anrisoftware.sscontrol.httpd.webservice.WebServiceFactory;
 
 /**
- * Factory to create the <i>gitit</i> service.
- * 
+ * Factory to create the <i>Redmine</i> service.
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
 public interface RedmineServiceFactory extends WebServiceFactory {
 
     /**
-     * Creates the <i>gitit</i> service.
-     * 
-     * @return the {@link RedmineService}.
+     * Creates the <i>Redmine</i> service.
+     *
+     * @return the {@link WebService}.
      */
     @Override
-    RedmineService create(Map<String, Object> map, Domain domain);
+    WebService create(Map<String, Object> map, Domain domain);
 }

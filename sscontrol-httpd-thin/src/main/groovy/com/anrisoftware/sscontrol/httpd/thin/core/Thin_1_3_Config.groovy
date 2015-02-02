@@ -88,6 +88,7 @@ abstract class Thin_1_3_Config extends AbstractThinConfig {
                 log: log,
                 command: thinRestartCommand,
                 services: thinRestartServices,
+                flags: thinRestartFlags,
                 this, threads)()
     }
 

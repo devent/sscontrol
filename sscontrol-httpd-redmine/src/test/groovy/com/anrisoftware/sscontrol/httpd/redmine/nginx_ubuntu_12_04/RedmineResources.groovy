@@ -118,7 +118,7 @@ enum RedmineResources {
         entry.redmine_archive_hash "md5:6a2f5df554a287191580529be885cf53"
         // thin
         entry.thin_command RedmineResources.thinCommand.asFile(parent)
-        entry.thin_restart_command "${RedmineResources.thinRestartCommand.asFile(parent)} restart"
+        entry.thin_restart_command RedmineResources.thinRestartCommand.asFile(parent)
         entry.thin_script_file RedmineResources.thinScriptFile.asFile(parent)
         entry.thin_defaults_file RedmineResources.thinDefaultsFile.asFile(parent)
         entry.thin_configuration_directory RedmineResources.thinConfDir.asFile(parent)

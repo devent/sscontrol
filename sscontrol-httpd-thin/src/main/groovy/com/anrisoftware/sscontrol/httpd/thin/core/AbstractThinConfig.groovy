@@ -224,7 +224,7 @@ abstract class AbstractThinConfig {
      * </ul>
      */
     String getThinRestartFlags() {
-        profileListProperty "thin_restart_flags", thinProperties
+        profileProperty "thin_restart_flags", thinProperties
     }
 
     /**

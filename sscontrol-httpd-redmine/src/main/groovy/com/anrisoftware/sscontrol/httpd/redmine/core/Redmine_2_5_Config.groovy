@@ -401,6 +401,7 @@ abstract class Redmine_2_5_Config {
                 workDir: dir,
                 rails: railsProduction,
                 language: service.languageName,
+                timeout: migrateDatabaseTimeout,
                 this, threads, rakeCommandsTemplate, "rakeMigrateDb")()
     }
 
@@ -705,6 +706,20 @@ abstract class Redmine_2_5_Config {
      */
     Duration getBundleInstallTimeout() {
         profileDurationProperty "redmine_bundle_install_timeout", redmineProperties
+    }
+
+    /**
+     * Returns the migrate database timeout duration, for
+     * example {@code "PT20M".}
+     *
+     * <ul>
+     * <li>profile property {@code "redmine_migrate_database_timeout"}</li>
+     * </ul>
+     *
+     * @see #getRedmineProperties()
+     */
+    Duration getMigrateDatabaseTimeout() {
+        profileDurationProperty "redmine_migrate_database_timeout", redmineProperties
     }
 
     /**

@@ -1,3 +1,5 @@
+
+
 /*
  * Copyright ${project.inceptionYear] Erwin Müller <erwin.mueller@deventm.org>
  *
@@ -21,6 +23,8 @@ package com.anrisoftware.sscontrol.httpd.redmine.nginx_thin_ubuntu_12_04
 import javax.inject.Inject
 
 import com.anrisoftware.propertiesutils.ContextProperties
+import com.anrisoftware.sscontrol.httpd.domain.Domain
+import com.anrisoftware.sscontrol.httpd.redmine.RedmineService
 import com.anrisoftware.sscontrol.httpd.redmine.core.Redmine_2_DatabaseConfig
 
 /**
@@ -41,6 +45,6 @@ class Ubuntu_12_04_Redmine_DatabaseConfig extends Redmine_2_DatabaseConfig {
 
     @Override
     String getProfile() {
-        RedmineConfigFactory.WEB_NAME
+        RedmineConfigFactory.PROFILE_NAME
     }
 }

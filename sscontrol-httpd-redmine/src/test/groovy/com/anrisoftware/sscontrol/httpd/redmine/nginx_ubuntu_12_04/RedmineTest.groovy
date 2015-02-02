@@ -58,12 +58,14 @@ class RedmineTest extends UbuntuTestUtil {
         assertStringContent test1comRedmineDatabaseYmlExpected.replaced(tmpdir, tmpdir, "/tmp"), test1comRedmineDatabaseYmlExpected.toString()
         assertStringContent test1comRedmineConfigurationYmlExpected.replaced(tmpdir, tmpdir, "/tmp"), test1comRedmineConfigurationYmlExpected.toString()
         assertFileContent test1comRedmineEnvironmentRbExpected.asFile(tmpdir), test1comRedmineEnvironmentRbExpected
+        assertFileContent test1comRedmineGemfileExpected.asFile(tmpdir), test1comRedmineGemfileExpected
         assertStringContent test1comThinRedmine2YmlExpected.replaced(tmpdir, tmpdir, "/tmp"), test1comThinRedmine2YmlExpected.toString()
         assertStringContent test2comTest2redmineUpstreamConfExpected.replaced(tmpdir, tmpdir, "/tmp"), test2comTest2redmineUpstreamConfExpected.toString()
         assertStringContent test2comConfExpected.replaced(tmpdir, tmpdir, "/tmp"), test2comConfExpected.toString()
         assertStringContent test2comRedmineDatabaseYmlExpected.replaced(tmpdir, tmpdir, "/tmp"), test2comRedmineDatabaseYmlExpected.toString()
         assertStringContent test2comRedmineConfigurationYmlExpected.replaced(tmpdir, tmpdir, "/tmp"), test2comRedmineConfigurationYmlExpected.toString()
         assertFileContent test2comRedmineEnvironmentRbExpected.asFile(tmpdir), test2comRedmineEnvironmentRbExpected
+        assertFileContent test2comRedmineGemfileExpected.asFile(tmpdir), test2comRedmineGemfileExpected
         assertStringContent test2comThinTest2redmineYmlExpected.replaced(tmpdir, tmpdir, "/tmp"), test2comThinTest2redmineYmlExpected.toString()
         assertStringContent thinDefaultExpected.replaced(tmpdir, tmpdir, "/tmp"), thinDefaultExpected.toString()
         assertStringContent thinScriptExpected.replaced(tmpdir, tmpdir, "/tmp"), thinScriptExpected.toString()

@@ -67,6 +67,9 @@ class RedmineNginxThinConfig extends UbuntuNginxThinConfig implements ServiceCon
     @Inject
     Ubuntu_12_04_RedmineFromArchiveConfig fromArchiveConfig
 
+    @Inject
+    Ubuntu_12_04_FixRedmineGemfileConfig fixRedmineGemfileConfig
+
     TemplateResource domainConfigTemplate
 
     @Override
@@ -89,6 +92,7 @@ class RedmineNginxThinConfig extends UbuntuNginxThinConfig implements ServiceCon
         installGems domain, service
         databaseConfig.deployDatabase domain, service
         configurationConfig.deployEmail domain, service
+        fixRedmineGemfileConfig.deployGemsFix domain, service
         deployEnvironmentConfig domain, service
         setupPermissions domain, service
         installBundle domain, service
@@ -252,5 +256,6 @@ class RedmineNginxThinConfig extends UbuntuNginxThinConfig implements ServiceCon
         fromArchiveConfig.setScript this
         databaseConfig.setScript this
         configurationConfig.setScript this
+        fixRedmineGemfileConfig.setScript this
     }
 }

@@ -1,0 +1,15 @@
+gemRmagickConfigSearch() ::= <%
+(?m)^\s*gem "rmagick",.*
+%>
+
+gemRmagickConfig(version) ::= <<
+    gem "rmagick", "= <version>"
+>>
+
+gemI18nConfigSearch() ::= <%
+(?m)^gem "i18n",.*
+%>
+
+gemI18nConfig(version) ::= <%
+gem "i18n", "<version>"
+%>

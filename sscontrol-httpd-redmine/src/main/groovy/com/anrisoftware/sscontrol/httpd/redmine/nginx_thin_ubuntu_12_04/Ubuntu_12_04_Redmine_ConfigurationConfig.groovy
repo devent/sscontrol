@@ -41,6 +41,6 @@ class Ubuntu_12_04_Redmine_ConfigurationConfig extends Redmine_2_ConfigurationCo
 
     @Override
     String getProfile() {
-        RedmineConfigFactory.WEB_NAME
+        RedmineConfigFactory.PROFILE_NAME
     }
 }

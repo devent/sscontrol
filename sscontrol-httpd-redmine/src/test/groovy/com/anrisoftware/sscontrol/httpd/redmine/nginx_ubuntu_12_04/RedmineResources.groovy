@@ -42,10 +42,12 @@ enum RedmineResources {
     test1comRedmineDatabaseYml("/var/www/test1.com/redmine_2/config/database.yml.example", RedmineResources.class.getResource("database_yml_example.txt")),
     test1comRedmineConfigurationYml("/var/www/test1.com/redmine_2/config/configuration.yml.example", RedmineResources.class.getResource("configuration_yml_example.txt")),
     test1comRedmineEnvironmentRb("/var/www/test1.com/redmine_2/config/environment.rb", RedmineResources.class.getResource("redmine_environment_rb.txt")),
+    test1comGemfileFile("/var/www/test1.com/redmine_2/Gemfile", UbuntuResources.class.getResource("redmine_gemfile.txt")),
     test2comRedmineDir("/var/www/test2.com/test2redmine", null),
     test2comRedmineDatabaseYml("/var/www/test2.com/test2redmine/config/database.yml.example", RedmineResources.class.getResource("database_yml_example.txt")),
     test2comRedmineConfigurationYml("/var/www/test2.com/test2redmine/config/configuration.yml.example", RedmineResources.class.getResource("configuration_yml_example.txt")),
     test2comRedmineEnvironmentRb("/var/www/test2.com/test2redmine/config/environment.rb", RedmineResources.class.getResource("redmine_environment_rb.txt")),
+    test2comGemfileFile("/var/www/test1.com/test2redmine/Gemfile", UbuntuResources.class.getResource("redmine_gemfile.txt")),
     // thin
     thinCommand("/usr/bin/thin", UbuntuResources.class.getResource("echo_command.txt")),
     thinRestartCommand("/etc/init.d/thinRestart", UbuntuResources.class.getResource("echo_command.txt")),
@@ -61,12 +63,14 @@ enum RedmineResources {
     test1comRedmineDatabaseYmlExpected("/var/www/test1.com/redmine_2/config/database.yml", RedmineResources.class.getResource("test1com_databaseyml_expected.txt")),
     test1comRedmineConfigurationYmlExpected("/var/www/test1.com/redmine_2/config/configuration.yml", RedmineResources.class.getResource("test1com_configurationyml_expected.txt")),
     test1comRedmineEnvironmentRbExpected("/var/www/test1.com/redmine_2/config/environment.rb", RedmineResources.class.getResource("test1com_environmentrb_expected.txt")),
+    test1comRedmineGemfileExpected("/var/www/test1.com/redmine_2/Gemfile", RedmineResources.class.getResource("redmine_gemfile_expected.txt")),
     test1comThinRedmine2YmlExpected("/etc/thin1.8/test1_com_redmine_2.yml", RedmineResources.class.getResource("test1com_redmine2yml_expected.txt")),
     test2comTest2redmineUpstreamConfExpected("/etc/nginx/sites-available/100-robobee-test2.com_test2redmine-upstream.conf", RedmineResources.class.getResource("test2com_test2redmine_upstreamconf_expected.txt")),
     test2comConfExpected("/etc/nginx/sites-available/100-robobee-test2.com.conf", RedmineResources.class.getResource("test2comconf_expected.txt")),
     test2comRedmineDatabaseYmlExpected("/var/www/test2.com/test2redmine/config/database.yml", RedmineResources.class.getResource("test2com_databaseyml_expected.txt")),
     test2comRedmineConfigurationYmlExpected("/var/www/test2.com/test2redmine/config/configuration.yml", RedmineResources.class.getResource("test2com_configurationyml_expected.txt")),
     test2comRedmineEnvironmentRbExpected("/var/www/test2.com/test2redmine/config/environment.rb", RedmineResources.class.getResource("test2com_environmentrb_expected.txt")),
+    test2comRedmineGemfileExpected("/var/www/test1.com/redmine_2/Gemfile", RedmineResources.class.getResource("redmine_gemfile_expected.txt")),
     test2comThinTest2redmineYmlExpected("/etc/thin1.8/test2_com_test2redmine.yml", RedmineResources.class.getResource("test2com_test2redmineyml_expected.txt")),
     thinDefaultExpected("/etc/default/thin", RedmineResources.class.getResource("thin_default_expected.txt")),
     thinScriptExpected("/etc/init.d/thin", RedmineResources.class.getResource("thin_script_expected.txt")),
@@ -96,10 +100,12 @@ enum RedmineResources {
         test1comRedmineDatabaseYml.createFile(parent)
         test1comRedmineConfigurationYml.createFile(parent)
         test1comRedmineEnvironmentRb.createFile(parent)
+        test1comGemfileFile.createFile(parent)
         test2comRedmineDir.asFile(parent).mkdirs()
         test2comRedmineDatabaseYml.createFile(parent)
         test2comRedmineConfigurationYml.createFile(parent)
         test2comRedmineEnvironmentRb.createFile(parent)
+        test2comGemfileFile.createFile(parent)
     }
 
     static void setupRedmineProperties(def profile, File parent) {

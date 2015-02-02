@@ -79,7 +79,6 @@ abstract class Nginx_1_4_Script extends NginxScript {
         createSitesDirectories()
         deployNginxConfig service
         deployIncludedConfig()
-        deploySitesConfig()
         deployConfig()
     }
 
@@ -165,15 +164,6 @@ abstract class Nginx_1_4_Script extends NginxScript {
     void deployIncludedConfig() {
         def file = configIncludeFile
         def confstr = nginxConfigTemplate.getText(true, "robobeeConfig", "properties", this)
-        FileUtils.write file, confstr, charset
-    }
-
-    /**
-     * Deploys the sites configuration.
-     */
-    void deploySitesConfig() {
-        def file = configSitesFile
-        def confstr = nginxConfigTemplate.getText(true, "sitesConfig", "properties", this)
         FileUtils.write file, confstr, charset
     }
 

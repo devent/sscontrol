@@ -27,7 +27,7 @@ import javax.measure.MeasureFormat
 import javax.measure.unit.NonSI
 
 import com.anrisoftware.globalpom.exec.api.ProcessTask
-import com.anrisoftware.globalpom.exec.scriptprocess.ScriptExecFactory;
+import com.anrisoftware.globalpom.exec.scriptprocess.ScriptExecFactory
 import com.anrisoftware.globalpom.format.byteformat.ByteFormatFactory
 import com.anrisoftware.globalpom.format.byteformat.UnitMultiplier
 import com.anrisoftware.resources.templates.api.TemplateResource
@@ -341,7 +341,7 @@ abstract class NginxScript extends LinuxScript {
      * @see #getDefaultProperties()
      */
     File getErrorPagesDir() {
-        profileProperty("error_pages_dir", defaultProperties) as File
+        profileDirProperty "error_pages_dir", defaultProperties
     }
 
     /**
@@ -619,6 +619,62 @@ abstract class NginxScript extends LinuxScript {
     }
 
     /**
+     * Returns the server names hash bucked size, for
+     * example {@code 128}.
+     *
+     * <ul>
+     * <li>profile property {@code "server_names_hash_bucket_size"}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    int getServerNamesHashBucketSize() {
+        profileNumberProperty "server_names_hash_bucket_size", defaultProperties
+    }
+
+    /**
+     * Returns the server names hash max size, for
+     * example {@code 128}.
+     *
+     * <ul>
+     * <li>profile property {@code "server_names_hash_max_size"}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    int getServerNamesHashMaxSize() {
+        profileNumberProperty "server_names_hash_max_size", defaultProperties
+    }
+
+    /**
+     * Returns the proxy headers hash max size, for
+     * example {@code 4096}.
+     *
+     * <ul>
+     * <li>profile property {@code "proxy_headers_hash_max_size"}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    int getProxyHeadersHashMaxSize() {
+        profileNumberProperty "proxy_headers_hash_max_size", defaultProperties
+    }
+
+    /**
+     * Returns the proxy headers hash bucket max size, for
+     * example {@code 128}.
+     *
+     * <ul>
+     * <li>profile property {@code "proxy_headers_hash_bucket_size"}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    int getProxyHeadersHashBucketSize() {
+        profileNumberProperty "proxy_headers_hash_bucket_size", defaultProperties
+    }
+
+    /**
      * Returns the group name pattern for site users.
      *
      * <ul>
@@ -628,7 +684,7 @@ abstract class NginxScript extends LinuxScript {
      * @see #getDefaultProperties()
      */
     String getGroupPattern() {
-        profileProperty("group_pattern", defaultProperties)
+        profileProperty "group_pattern", defaultProperties
     }
 
     /**

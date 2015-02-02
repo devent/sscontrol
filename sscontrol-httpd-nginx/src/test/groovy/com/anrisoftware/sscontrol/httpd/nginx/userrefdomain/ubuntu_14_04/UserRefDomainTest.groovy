@@ -54,7 +54,6 @@ class UserRefDomainTest extends UbuntuTestUtil {
 
         assertStringContent nginxConfExpected.replaced(tmpdir, tmpdir, "/tmp"), nginxConfExpected.toString()
         assertStringContent robobeeConfExpected.replaced(tmpdir, tmpdir, "/tmp"), robobeeConfExpected.toString()
-        assertStringContent robobeeSitesConfExpected.replaced(tmpdir, tmpdir, "/tmp"), robobeeSitesConfExpected.toString()
         assert sitesAvailableDir.asFile(tmpdir).isDirectory()
         assert sitesEnabledDir.asFile(tmpdir).isDirectory()
         assertStringContent test1comConf.replaced(tmpdir, tmpdir, "/tmp"), test1comConf.toString()

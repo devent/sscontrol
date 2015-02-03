@@ -80,6 +80,7 @@ abstract class Nginx_1_4_Script extends NginxScript {
         deployNginxConfig service
         deployIncludedConfig()
         deployConfig()
+        createCacheDirectory()
     }
 
     @Inject
@@ -108,6 +109,14 @@ abstract class Nginx_1_4_Script extends NginxScript {
         sitesDirectory.mkdirs()
         sitesAvailableDir.mkdirs()
         sitesEnabledDir.mkdirs()
+    }
+
+    /**
+     * Creates the cache directory.
+     *
+     */
+    void createCacheDirectory() {
+        proxyCacheDir.mkdirs()
     }
 
     /**

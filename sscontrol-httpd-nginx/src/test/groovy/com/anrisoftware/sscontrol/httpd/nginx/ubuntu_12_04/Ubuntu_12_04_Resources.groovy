@@ -39,6 +39,7 @@ enum Ubuntu_12_04_Resources {
     sitesAvailableDir("/etc/nginx/sites-available", null),
     sitesEnabledDir("/etc/nginx/sites-enabled", null),
     configIncludeDir("/etc/nginx/conf.d", null),
+    cacheDir("/var/cache/nginx", null),
     nginxConfFile("/etc/nginx/nginx.conf", Ubuntu_12_04_Resources.class.getResource("nginx_conf.txt")),
 
     static copyUbuntu_12_04_Files(File parent) {
@@ -59,6 +60,7 @@ enum Ubuntu_12_04_Resources {
         entry.sites_enabled_directory sitesEnabledDir.asFile(parent)
         entry.config_include_directory configIncludeDir.asFile(parent)
         entry.sites_directory sitesDir.asFile(parent)
+        entry.proxy_cache_directory cacheDir.asFile(parent)
     }
 
     ResourcesUtils resources

@@ -56,6 +56,7 @@ class DomainsTest extends UbuntuTestUtil {
         assertStringContent robobeeConfExpected.replaced(tmpdir, tmpdir, "/tmp"), robobeeConfExpected.toString()
         assert sitesAvailableDir.asFile(tmpdir).isDirectory()
         assert sitesEnabledDir.asFile(tmpdir).isDirectory()
+        assert cacheDir.asFile(tmpdir).isDirectory()
         assertStringContent test1comConf.replaced(tmpdir, tmpdir, "/tmp"), test1comConf.toString()
         assertStringContent test1comSslConf.replaced(tmpdir, tmpdir, "/tmp"), test1comSslConf.toString()
         assertStringContent lnOutExpected.replaced(tmpdir, tmpdir, "/tmp"), lnOutExpected.toString()

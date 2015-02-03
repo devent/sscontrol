@@ -371,6 +371,20 @@ abstract class NginxScript extends LinuxScript {
     }
 
     /**
+     * Returns the proxy cache directory,
+     * for example {@code "/var/cache/nginx".}
+     *
+     * <ul>
+     * <li>profile property {@code "proxy_cache_directory"}</li>
+     * </ul>
+     *
+     * @see #getProxyProperties()
+     */
+    File getProxyCacheDir() {
+        profileDirProperty "proxy_cache_directory", defaultProperties
+    }
+
+    /**
      * Returns the SSL/certificates directory for the domain.
      *
      * @see #domainDir(Domain)

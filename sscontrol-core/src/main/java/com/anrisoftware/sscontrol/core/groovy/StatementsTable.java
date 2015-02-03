@@ -189,7 +189,7 @@ public class StatementsTable implements Serializable {
      * @param key
      *            the {@link String} key.
      *
-     * @return the {@link Object} value.
+     * @return the {@link Object} value or {@code null}.
      */
     @SuppressWarnings("unchecked")
     public <T> Map<String, T> tableKeys(String name, String key) {
@@ -204,7 +204,7 @@ public class StatementsTable implements Serializable {
                 res.put(t.getKey(), (T) keyValue);
             }
         }
-        return res;
+        return res.size() == 0 ? null : res;
     }
 
     /**
@@ -225,7 +225,7 @@ public class StatementsTable implements Serializable {
      * @param key
      *            the {@link String} key.
      *
-     * @return the {@link Object} value.
+     * @return the {@link Object} value or {@code null}.
      */
     @SuppressWarnings("unchecked")
     public <T> Map<String, List<T>> tableKeysAsList(String name, String key) {
@@ -242,7 +242,7 @@ public class StatementsTable implements Serializable {
                 res.put(t.getKey(), list);
             }
         }
-        return res;
+        return res.size() == 0 ? null : res;
     }
 
     /**

@@ -22,9 +22,9 @@ httpd {
     // reference service with id "idapache2"
     refservice "idapache2"
     // http
-    bind port: 8080
+    bind local, port: 8080
     // https
-    bind port: 8082
+    bind local, port: 8082
     // domain "test1.com"
 	domain "test1.com", address: "192.168.0.50", port: 8080, {
 	}

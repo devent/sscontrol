@@ -110,14 +110,10 @@ abstract class NginxScript extends LinuxScript {
      *            the {@link HttpdService} httpd service.
      */
     void setupDefaultLogging(HttpdService service) {
-        if (service.debugLogging("error") == null) {
-            service.debug "error", level: defaultDebugErrorLevel
-            service.debug "error", storage: defaultDebugStorage
-        }
-        if (service.debugLogging("error")["level"] == null) {
+        if (!service.debugLogging("error") || !service.debugLogging("error")["level"]) {
             service.debug "error", level: defaultDebugErrorLevel
         }
-        if (service.debugLogging("error")["storage"] == null) {
+        if (!service.debugLogging("error") || !service.debugLogging("error")["storage"]) {
             service.debug "error", storage: defaultDebugStorage
         }
     }

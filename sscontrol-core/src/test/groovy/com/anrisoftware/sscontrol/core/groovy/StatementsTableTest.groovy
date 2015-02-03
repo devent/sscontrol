@@ -67,7 +67,7 @@ class StatementsTableTest {
         bean.map.addAllowed "statement"
         bean.map.addAllowedKeys "statement", "keyFoo", "keyBar"
         bean.statement "aaa"
-        assert bean.map.tableKeys("statement", "keyFoo") == [:]
+        assert bean.map.tableKeys("statement", "keyFoo") == null
         assert bean.map.tableValues("statement").containsAll(["aaa"])
     }
 

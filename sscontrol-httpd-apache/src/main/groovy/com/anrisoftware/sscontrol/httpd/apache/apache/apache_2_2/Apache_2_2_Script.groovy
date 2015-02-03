@@ -140,6 +140,7 @@ abstract class Apache_2_2_Script extends ApacheScript {
         }
         def string = portsConfigTemplate.getText true, "portsConfiguration", "addresses", addresses
         FileUtils.write portsConfigFile, string
+        logg.deployedPortsConfig this, portsConfigFile, string
     }
 
     /**
@@ -157,6 +158,7 @@ abstract class Apache_2_2_Script extends ApacheScript {
         configs << defaultsConfigTemplate.getText(true, "logLevelConfig", "level", service.debugLogging("level")["error"])
         configs << defaultsConfigTemplate.getText(true, "defaultDirectories")
         FileUtils.writeLines defaultConfigFile, charset.name(), configs
+        logg.deployedDefaultConfig this, defaultConfigFile, configs
     }
 
     /**
@@ -171,14 +173,18 @@ abstract class Apache_2_2_Script extends ApacheScript {
     void deployDomainsConfig(HttpdService service) {
         def string = domainsConfiguration.getText true, "domainsConfiguration", "service", service
         FileUtils.write domainsConfigFile, string
+        logg.deployedDomainsConfig this, domainsConfigFile, string
     }
 
     /**
      * Enables default <i>Apache</i> mods.
      */
     void enableDefaultMods() {
-        enableMod "suexec"
-        enableMods additionalMods
+        def mods = []
+        mods << "suexec"
+        mods.addAll additionalMods
+        enableMods mods
+        logg.enabledDefaultMods this, mods
     }
 
     /**
@@ -213,6 +219,7 @@ abstract class Apache_2_2_Script extends ApacheScript {
             deployDomainConfig domain, serviceConfig
             deploySslDomain domain
             enableSites domain.fileName
+            logg.deployedDomainConfiguration this, domain, serviceConfig
         }
     }
 

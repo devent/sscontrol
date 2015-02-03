@@ -26,6 +26,8 @@ import java.util.Set;
 
 import javax.inject.Inject;
 
+import org.codehaus.groovy.runtime.InvokerHelper;
+
 import com.anrisoftware.sscontrol.core.groovy.StatementsTable;
 import com.anrisoftware.sscontrol.core.groovy.StatementsTableFactory;
 import com.google.inject.assistedinject.Assisted;
@@ -44,6 +46,9 @@ public class BindingAddressesStatementsTable {
 
     private final StatementsTable statementsTable;
 
+    @Inject
+    private BindingAddressesStatementsTableLogger log;
+
     /**
      * @see BindingAddressesStatementsTableFactory#create(Object, String)
      */
@@ -55,7 +60,7 @@ public class BindingAddressesStatementsTable {
 
     private StatementsTable createStatementsTable(
             StatementsTableFactory factory, Object service, String name) {
-        StatementsTable table = factory.create(factory, name);
+        StatementsTable table = factory.create(service, name);
         table.addAllowed(BIND_KEY);
         table.addAllowedKeys(BIND_KEY, PORT_KEY, PORTS_KEY);
         return table;
@@ -112,7 +117,12 @@ public class BindingAddressesStatementsTable {
         return map.size() == 0 ? null : map;
     }
 
+    /**
+     * @throws IllegalArgumentException
+     *             if the statement is not a valid binding address statement.
+     */
     public Object methodMissing(String name, Object obj) {
+        log.checkBindings(InvokerHelper.asList(obj), statementsTable);
         return statementsTable.methodMissing(name, obj);
     }
 

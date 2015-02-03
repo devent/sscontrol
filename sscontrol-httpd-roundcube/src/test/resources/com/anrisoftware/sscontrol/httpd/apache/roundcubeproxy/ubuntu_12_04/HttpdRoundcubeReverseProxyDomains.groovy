@@ -24,9 +24,9 @@ httpd {
     // reference service with id "idapache2"
     refservice "idapache2"
     // http
-    bind port: 8080
+    bind local, port: 8080
     // https
-    bind port: 8082
+    bind local, port: 8082
     // domain www.test1.com
     domain "www.test1.com", address: "192.168.0.51", port: 8080, {
         user "web_002", uid: 2002, group: "web_002", gid: 2002

@@ -27,6 +27,7 @@ import groovy.util.logging.Slf4j
 
 import org.junit.Test
 
+import com.anrisoftware.sscontrol.core.api.ServiceException
 import com.anrisoftware.sscontrol.httpd.apache.ubuntu.UbuntuTestUtil
 
 /**
@@ -39,56 +40,87 @@ import com.anrisoftware.sscontrol.httpd.apache.ubuntu.UbuntuTestUtil
 class DomainsTest extends UbuntuTestUtil {
 
     @Test
-    void "apache domains"() {
+    void "simple script"() {
         copyUbuntuFiles tmpdir
         copyUbuntu_12_04_Files tmpdir
         loader.loadService profile.resource, null
         def profile = registry.getService("profile")[0]
         setupUbuntu_12_04_Properties profile, tmpdir
-        loader.loadService httpdScript.resource, profile
+        loader.loadService httpdSimpleScript.resource, profile
 
         registry.allServices.each { it.call() }
         log.info "Run service again to ensure that configuration is not set double."
         registry.allServices.each { it.call() }
 
-        assertFileContent apacheOutExpected.asFile(tmpdir), apacheOutExpected
-        assertFileContent robobeeDefaultConfExpected.asFile(tmpdir), robobeeDefaultConfExpected
-        assertFileContent domainsConfExpected.asFile(tmpdir), domainsConfExpected
-        assertFileContent portsConfExpected.asFile(tmpdir), portsConfExpected
-        assertStringContent test1comConfExpected.replaced(tmpdir, tmpdir, "/tmp"), test1comConfExpected.toString()
-        assertStringContent test1comSslConfExpected.replaced(tmpdir, tmpdir, "/tmp"), test1comSslConfExpected.toString()
-        assert test1comWeb.asFile(tmpdir).isDirectory()
-        assertFileContent test1comCrtExpected.asFile(tmpdir), test1comCrtExpected
-        assertFileContent test1comKeyExpected.asFile(tmpdir), test1comKeyExpected
-        assertFileContent test2comCrtExpected.asFile(tmpdir), test2comCrtExpected
-        assertFileContent test2comKeyExpected.asFile(tmpdir), test2comKeyExpected
-        assertFileContent test2comCaExpected.asFile(tmpdir), test2comCaExpected
-        assertFileContent ensiteOutExpected.asFile(tmpdir), ensiteOutExpected
-        assertFileContent enmodOutExpected.asFile(tmpdir), enmodOutExpected
-        assertStringContent useraddOutExpected.replaced(tmpdir, tmpdir, "/tmp"), useraddOutExpected.toString()
-        assertStringContent groupaddOutExpected.replaced(tmpdir, tmpdir, "/tmp"), groupaddOutExpected.toString()
-        assertStringContent chownOutExpected.replaced(tmpdir, tmpdir, "/tmp"), chownOutExpected.toString()
-        assertStringContent chmodOutExpected.replaced(tmpdir, tmpdir, "/tmp"), chmodOutExpected.toString()
-        assert psOutExpected.asFile(tmpdir).isFile() == false
-        assert killOutExpected.asFile(tmpdir).isFile() == false
+        assertFileContent simpleApacheOutExpected.asFile(tmpdir), simpleApacheOutExpected
+        assertFileContent simpleDefaultConfExpected.asFile(tmpdir), simpleDefaultConfExpected
+        assertFileContent simpleDomainsConfExpected.asFile(tmpdir), simpleDomainsConfExpected
+        assertFileContent simplePortsConfExpected.asFile(tmpdir), simplePortsConfExpected
+        assertStringContent simpleTest1comConfExpected.replaced(tmpdir, tmpdir, "/tmp"), simpleTest1comConfExpected.toString()
+        assertStringContent simpleTest1comSslConfExpected.replaced(tmpdir, tmpdir, "/tmp"), simpleTest1comSslConfExpected.toString()
+        assert simpleTest1comWeb.asFile(tmpdir).isDirectory()
+        assertFileContent simpleTest1comCrtExpected.asFile(tmpdir), simpleTest1comCrtExpected
+        assertFileContent simpleTest1comKeyExpected.asFile(tmpdir), simpleTest1comKeyExpected
+        assertFileContent simpleTest2comCrtExpected.asFile(tmpdir), simpleTest2comCrtExpected
+        assertFileContent simpleTest2comKeyExpected.asFile(tmpdir), simpleTest2comKeyExpected
+        assertFileContent simpleTest2comCaExpected.asFile(tmpdir), simpleTest2comCaExpected
+        assertFileContent simpleEnsiteOutExpected.asFile(tmpdir), simpleEnsiteOutExpected
+        assertFileContent simpleEnmodOutExpected.asFile(tmpdir), simpleEnmodOutExpected
+        assertStringContent simpleUseraddOutExpected.replaced(tmpdir, tmpdir, "/tmp"), simpleUseraddOutExpected.toString()
+        assertStringContent simpleGroupaddOutExpected.replaced(tmpdir, tmpdir, "/tmp"), simpleGroupaddOutExpected.toString()
+        assertStringContent simpleChownOutExpected.replaced(tmpdir, tmpdir, "/tmp"), simpleChownOutExpected.toString()
+        assertStringContent simpleChmodOutExpected.replaced(tmpdir, tmpdir, "/tmp"), simpleChmodOutExpected.toString()
+        assert simplePsOutExpected.asFile(tmpdir).isFile() == false
+        assert simpleKillOutExpected.asFile(tmpdir).isFile() == false
     }
 
     @Test
-    void "apache domains users"() {
+    void "invalid ports script"() {
+        copyUbuntuFiles tmpdir
+        copyUbuntu_12_04_Files tmpdir
+        loader.loadService profile.resource, null
+        def profile = registry.getService("profile")[0]
+        setupUbuntu_12_04_Properties profile, tmpdir
+        shouldFailWith(ServiceException) {
+            loader.loadService httpdInvalidPortsScript.resource, profile
+        }
+    }
+
+    @Test
+    void "ports script"() {
+        copyUbuntuFiles tmpdir
+        copyUbuntu_12_04_Files tmpdir
+        loader.loadService profile.resource, null
+        def profile = registry.getService("profile")[0]
+        setupUbuntu_12_04_Properties profile, tmpdir
+        loader.loadService httpdPortsScript.resource, profile
+
+        registry.allServices.each { it.call() }
+        log.info "Run service again to ensure that configuration is not set double."
+        registry.allServices.each { it.call() }
+
+        assertFileContent portsApacheOutExpected.asFile(tmpdir), portsApacheOutExpected
+        assertFileContent portsDefaultConfExpected.asFile(tmpdir), portsDefaultConfExpected
+        assertFileContent portsDomainsConfExpected.asFile(tmpdir), portsDomainsConfExpected
+        assertFileContent portsPortsConfExpected.asFile(tmpdir), portsPortsConfExpected
+    }
+
+    @Test
+    void "users script"() {
         copyUbuntuFiles tmpdir
         copyUbuntu_12_04_Files tmpdir
 
         loader.loadService profile.resource, null
         def profile = registry.getService("profile")[0]
         setupUbuntu_12_04_Properties profile, tmpdir
-        loader.loadService httpdDomainsScript.resource, profile
+        loader.loadService httpdUsersScript.resource, profile
 
         registry.allServices.each { it.call() }
         log.info "Run service again to ensure that configuration is not set double."
         registry.allServices.each { it.call() }
 
-        assertFileContent apacheOutExpected.asFile(tmpdir), apacheOutExpected
-        assertFileContent robobeeDefaultConfExpected.asFile(tmpdir), robobeeDefaultConfExpected
+        assertFileContent usersApacheOutExpected.asFile(tmpdir), usersApacheOutExpected
+        assertFileContent usersDefaultConfExpected.asFile(tmpdir), usersDefaultConfExpected
         try {
             assertFileContent usersDomainsConfExpected.asFile(tmpdir), usersDomainsConfExpected
         } catch (AssertionError e) {
@@ -99,7 +131,7 @@ class DomainsTest extends UbuntuTestUtil {
         assertStringContent usersUseraddOutExpected.replaced(tmpdir, tmpdir, "/tmp"), usersUseraddOutExpected.toString()
         assertStringContent usersGroupaddOutExpected.replaced(tmpdir, tmpdir, "/tmp"), usersGroupaddOutExpected.toString()
         assertStringContent usersChownOutExpected.replaced(tmpdir, tmpdir, "/tmp"), usersChownOutExpected.toString()
-        assert psOutExpected.asFile(tmpdir).isFile() == false
-        assert killOutExpected.asFile(tmpdir).isFile() == false
+        assert usersPsOutExpected.asFile(tmpdir).isFile() == false
+        assert usersKillOutExpected.asFile(tmpdir).isFile() == false
     }
 }

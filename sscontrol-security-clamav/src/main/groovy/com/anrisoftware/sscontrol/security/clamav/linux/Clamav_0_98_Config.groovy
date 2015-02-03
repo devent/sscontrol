@@ -126,7 +126,7 @@ abstract class Clamav_0_98_Config {
             configToken(clamavConfigTemplate, "logRotateConfig", "enabled", profileBooleanProperty("clamav_log_rotate", clamavProperties)),
             configToken(clamavConfigTemplate, "logFacilityConfig", "facility", profileProperty("clamav_log_facility", clamavProperties)),
             configToken(clamavConfigTemplate, "logCleanConfig", "enabled", profileBooleanProperty("clamav_log_clean_files", clamavProperties)),
-            configToken(clamavConfigTemplate, "logVerboseConfig", "enabled", isVerboseLog(service.debugLogging("log")["level"])),
+            configToken(clamavConfigTemplate, "logVerboseConfig", "enabled", isVerboseLog(service.debugLogging("level")["log"])),
             configToken(clamavConfigTemplate, "selfCheckConfig", "duration", profileDurationProperty("clamav_database_check_period", clamavProperties)),
             configToken(clamavConfigTemplate, "scanPEConfig", "enabled", profileBooleanProperty("clamav_scan_portable_executable", clamavProperties)),
             configToken(clamavConfigTemplate, "maxEmbeddedPEConfig", "size", ByteFormat.roundSizeSI(profileTypedProperty("clamav_max_embedded_portable_executable_size", byteFormatFactory.create(), clamavProperties))),

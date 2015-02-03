@@ -23,7 +23,7 @@ import groovy.util.logging.Slf4j
 
 import javax.inject.Inject
 
-import com.anrisoftware.globalpom.exec.scriptprocess.ScriptExecFactory;
+import com.anrisoftware.globalpom.exec.scriptprocess.ScriptExecFactory
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.sscontrol.core.service.LinuxScript
 import com.anrisoftware.sscontrol.httpd.domain.Domain
@@ -94,6 +94,7 @@ abstract class ApacheScript extends LinuxScript {
      *            the {@link HttpdService} httpd service.
      */
     void setupDefaultBinding(HttpdService service) {
+        println service.bindingAddresses
         if (service.bindingAddresses == null) {
             service.bind defaultBindingAddress, ports: defaultBindingPorts
         }

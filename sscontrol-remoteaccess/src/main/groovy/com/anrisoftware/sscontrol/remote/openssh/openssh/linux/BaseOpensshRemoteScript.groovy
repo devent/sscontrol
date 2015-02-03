@@ -75,8 +75,8 @@ abstract class BaseOpensshRemoteScript extends LinuxScript {
     void setupDefaultBinding(RemoteService service) {
         def bindingAddress = profileProperty "default_binding_address", defaultProperties
         int bindingPort = profileNumberProperty "default_binding_port", defaultProperties
-        if (service.bindingAddresses == null) {
-            service.bind bindingAddress
+        if (!service.bindingAddresses) {
+            service.bind bindingAddress, port: bindingPort
         }
         def addresses = new HashMap(service.bindingAddresses)
         addresses.each { address, ports ->

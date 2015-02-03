@@ -29,7 +29,7 @@ httpd {
     // http
     bind "192.168.0.51", ports: [http, https]
     // https
-    bind port: 8082
+    bind local, port: 8082
     // domain www.test1.com
     domain "www.test1.com", address: "192.168.0.51", port: http, {
         user "web_002", uid: 2002, group: "web_002", gid: 2002

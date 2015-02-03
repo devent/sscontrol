@@ -78,6 +78,7 @@ enum RedmineResources {
     bundleOutExpected("/usr/local/bin/bundle.out", RedmineResources.class.getResource("bundle_out_expected.txt")),
     rakeOutExpected("/usr/local/bin/rake.out", RedmineResources.class.getResource("rake_out_expected.txt")),
     tarOutExpected("/bin/tar.out", RedmineResources.class.getResource("tar_out_expected.txt")),
+    gzipOutExpected("/bin/gzip.out", RedmineResources.class.getResource("gzip_out_expected.txt")),
     useraddOutExpected("/usr/sbin/useradd.out", RedmineResources.class.getResource("useradd_out_expected.txt")),
     groupaddOutExpected("/usr/sbin/groupadd.out", RedmineResources.class.getResource("groupadd_out_expected.txt")),
     chmodOutExpected("/bin/chmod.out", RedmineResources.class.getResource("chmod_out_expected.txt")),
@@ -85,6 +86,7 @@ enum RedmineResources {
     aptitudeOutExpected("/usr/bin/aptitude.out", RedmineResources.class.getResource("aptitude_out_expected.txt")),
     lnOutExpected("/bin/ln.out", RedmineResources.class.getResource("ln_out_expected.txt")),
     thinRestartOutExpected("/etc/init.d/thinRestart.out", RedmineResources.class.getResource("thin_restart_out_expected.txt")),
+    mysqldumpOutExpected("/usr/bin/mysqldump.out", RedmineResources.class.getResource("mysqldump_out_expected.txt")),
 
     static copyRedmineFiles(File parent) {
         redmineArchive.createFile parent

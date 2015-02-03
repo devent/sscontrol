@@ -27,8 +27,9 @@ import javax.inject.Inject
 
 import org.joda.time.Duration
 
-import com.anrisoftware.globalpom.exec.scriptprocess.ScriptExecFactory;
+import com.anrisoftware.globalpom.exec.scriptprocess.ScriptExecFactory
 import com.anrisoftware.resources.templates.api.TemplateResource
+import com.anrisoftware.resources.templates.api.TemplatesFactory
 import com.anrisoftware.sscontrol.httpd.backups.database.DatabaseBackup
 import com.anrisoftware.sscontrol.httpd.domain.Domain
 import com.anrisoftware.sscontrol.httpd.webservice.WebService
@@ -40,10 +41,18 @@ import com.anrisoftware.sscontrol.httpd.webservice.WebService
  * @since 1.0
  */
 @Slf4j
-abstract class DatabaseMysqlBackup extends DatabaseBackup {
+abstract class Mysql_5_DatabaseBackup extends DatabaseBackup {
 
     @Inject
     ScriptExecFactory scriptExecFactory
+
+    TemplateResource backupTemplate
+
+    @Inject
+    final void setTemplatesFactory(TemplatesFactory factory) {
+        def templates = factory.create("Mysql_5_DatabaseBackup")
+        this.backupTemplate = templates.getResource("backup_mysql_5")
+    }
 
     @Override
     void execBackupScript(WebService service, File archiveFile) {
@@ -56,7 +65,7 @@ abstract class DatabaseMysqlBackup extends DatabaseBackup {
                 password: service.database.password,
                 database: service.database.database,
                 timeout: backupTimeout,
-                parent, threads, backupTemplate, "backupMysqlDatabase")()
+                script, threads, backupTemplate, "backupMysqlDatabase")()
     }
 
     /**

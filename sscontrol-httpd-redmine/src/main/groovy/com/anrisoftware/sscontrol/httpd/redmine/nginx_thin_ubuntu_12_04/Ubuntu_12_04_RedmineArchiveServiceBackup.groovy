@@ -21,17 +21,15 @@ package com.anrisoftware.sscontrol.httpd.redmine.nginx_thin_ubuntu_12_04
 import javax.inject.Inject
 
 import com.anrisoftware.propertiesutils.ContextProperties
-import com.anrisoftware.sscontrol.httpd.domain.Domain
-import com.anrisoftware.sscontrol.httpd.redmine.RedmineService
-import com.anrisoftware.sscontrol.httpd.redmine.core.Redmine_2_DatabaseConfig
+import com.anrisoftware.sscontrol.httpd.redmine.ubuntu.UbuntuRedmineArchiveServiceBackup
 
 /**
- * <i>Ubuntu 12.04 Redmine</i> database configuration.
+ * <i>Ubuntu 12.04 Redmine</i> service installation files backup.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class Ubuntu_12_04_Redmine_DatabaseConfig extends Redmine_2_DatabaseConfig {
+class Ubuntu_12_04_RedmineArchiveServiceBackup extends UbuntuRedmineArchiveServiceBackup {
 
     @Inject
     private RedminePropertiesProvider propertiesProvider

@@ -18,22 +18,21 @@
  */
 package com.anrisoftware.sscontrol.httpd.backups.mysql;
 
-import static com.anrisoftware.sscontrol.httpd.backups.mysql.DatabaseMysqlLogger._.database_backup_debug;
-import static com.anrisoftware.sscontrol.httpd.backups.mysql.DatabaseMysqlLogger._.database_backup_info;
+import static com.anrisoftware.sscontrol.httpd.backups.mysql.Mysql_5_DatabaseBackupLogger._.database_backup_debug;
+import static com.anrisoftware.sscontrol.httpd.backups.mysql.Mysql_5_DatabaseBackupLogger._.database_backup_info;
 
 import java.io.File;
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
-import com.anrisoftware.sscontrol.httpd.backups.archive.ArchiveServiceBackup;
 import com.anrisoftware.sscontrol.httpd.webservice.WebService;
 
 /**
- * Logging for {@link Php_5_Config}.
+ * Logging for {@link Mysql_5_DatabaseBackup}.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class DatabaseMysqlLogger extends AbstractLogger {
+class Mysql_5_DatabaseBackupLogger extends AbstractLogger {
 
     enum _ {
 
@@ -56,10 +55,10 @@ class DatabaseMysqlLogger extends AbstractLogger {
     }
 
     /**
-     * Sets the context of the logger to {@link Php_5_Config}.
+     * Sets the context of the logger to {@link Mysql_5_DatabaseBackup}.
      */
-    public DatabaseMysqlLogger() {
-        super(DatabaseMysqlBackup.class);
+    public Mysql_5_DatabaseBackupLogger() {
+        super(Mysql_5_DatabaseBackup.class);
     }
 
     void databaseBackup(WebService service, File source, File archiveFile) {

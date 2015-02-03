@@ -20,6 +20,7 @@ package com.anrisoftware.sscontrol.httpd.redmine.nginx_thin_ubuntu_12_04;
 
 import com.anrisoftware.globalpom.checkfilehash.CheckFileHashModule;
 import com.anrisoftware.globalpom.version.VersionModule;
+import com.anrisoftware.sscontrol.scripts.pack.PackModule;
 import com.anrisoftware.sscontrol.scripts.unpack.UnpackModule;
 import com.google.inject.AbstractModule;
 
@@ -34,6 +35,7 @@ class NginxModule extends AbstractModule {
     @Override
     protected void configure() {
         install(new UnpackModule());
+        install(new PackModule());
         install(new CheckFileHashModule());
         install(new VersionModule());
     }

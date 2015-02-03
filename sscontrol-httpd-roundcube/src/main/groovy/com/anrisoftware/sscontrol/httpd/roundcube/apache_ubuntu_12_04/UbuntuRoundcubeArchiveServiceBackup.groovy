@@ -18,17 +18,23 @@
  */
 package com.anrisoftware.sscontrol.httpd.roundcube.apache_ubuntu_12_04
 
+import javax.inject.Inject
+
 import org.joda.time.Duration
 
+import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.sscontrol.httpd.backups.archive.ArchiveServiceBackup
 
 /**
- * Backups the <i>Roundcube</i> service.
+ * <i>Roundcube</i> service backup.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
 class UbuntuRoundcubeArchiveServiceBackup extends ArchiveServiceBackup {
+
+    @Inject
+    UbuntuPropertiesProvider ubuntuPropertiesProvider
 
     /**
      * <ul>
@@ -50,5 +56,23 @@ class UbuntuRoundcubeArchiveServiceBackup extends ArchiveServiceBackup {
      */
     Duration getBackupTimeout() {
         profileDurationProperty "roundcube_backup_timeout", roundcubeProperties
+    }
+
+    /**
+     * Returns the <i>Roundcube</i> properties.
+     *
+     * @return the {@link ContextProperties} properties.
+     */
+    ContextProperties getRoundcubeProperties() {
+        ubuntuPropertiesProvider.get()
+    }
+
+    String getServiceName() {
+        Ubuntu_12_04_ApacheRoundcubeConfigFactory.WEB_NAME
+    }
+
+    @Override
+    String getProfile() {
+        Ubuntu_12_04_ApacheRoundcubeConfigFactory.PROFILE_NAME
     }
 }

@@ -20,25 +20,32 @@ package com.anrisoftware.sscontrol.httpd.redmine.nginx_thin_ubuntu_12_04
 
 import javax.inject.Inject
 
-import com.anrisoftware.propertiesutils.ContextProperties
-import com.anrisoftware.sscontrol.httpd.domain.Domain
-import com.anrisoftware.sscontrol.httpd.redmine.RedmineService
-import com.anrisoftware.sscontrol.httpd.redmine.core.Redmine_2_DatabaseConfig
+import com.anrisoftware.sscontrol.httpd.redmine.ubuntu.UbuntuRedmineArchiveServiceBackup
+import com.anrisoftware.sscontrol.httpd.redmine.ubuntu.UbuntuRedmineBackup
+import com.anrisoftware.sscontrol.httpd.redmine.ubuntu.UbuntuRedmineMysqlDatabaseBackup
 
 /**
- * <i>Ubuntu 12.04 Redmine</i> database configuration.
+ * <i>Ubuntu 12.04 Redmine</i> backup.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class Ubuntu_12_04_Redmine_DatabaseConfig extends Redmine_2_DatabaseConfig {
+class Ubuntu_12_04_RedmineBackup extends UbuntuRedmineBackup {
 
     @Inject
-    private RedminePropertiesProvider propertiesProvider
+    private Ubuntu_12_04_RedmineArchiveServiceBackup serviceBackup
+
+    @Inject
+    private Ubuntu_12_04_RedmineMysqlDatabaseBackup mysqlDatabaseBackup
 
     @Override
-    ContextProperties getRedmineProperties() {
-        propertiesProvider.get()
+    UbuntuRedmineArchiveServiceBackup getServiceBackup() {
+        serviceBackup
+    }
+
+    @Override
+    UbuntuRedmineMysqlDatabaseBackup getMysqlDatabaseBackup() {
+        mysqlDatabaseBackup
     }
 
     @Override

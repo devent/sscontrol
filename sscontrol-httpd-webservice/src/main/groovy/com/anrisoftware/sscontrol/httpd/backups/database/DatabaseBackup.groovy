@@ -25,6 +25,7 @@ import groovy.util.logging.Slf4j
 
 import javax.inject.Inject
 
+import org.apache.commons.lang3.builder.ToStringBuilder
 import org.joda.time.Duration
 import org.stringtemplate.v4.ST
 
@@ -44,7 +45,7 @@ abstract class DatabaseBackup {
     @Inject
     private DatabaseLogger logg
 
-    Object parent
+    private Object script
 
     /**
      * Backups the service database.
@@ -133,15 +134,48 @@ abstract class DatabaseBackup {
      */
     abstract TemplateResource getBackupTemplate()
 
-    void setScript(Object parent) {
-        this.parent = parent
+    /**
+     * Returns the service name.
+     */
+    abstract String getServiceName()
+
+    /**
+     * Returns the profile name.
+     */
+    abstract String getProfile()
+
+    /**
+     * Sets the parent script.
+     */
+    void setScript(Object script) {
+        this.script = script
     }
 
+    /**
+     * Returns the parent script.
+     */
+    Object getScript() {
+        script
+    }
+
+    /**
+     * Delegates missing properties to the parent script.
+     */
     def propertyMissing(String name) {
-        parent.getProperty name
+        script.getProperty name
     }
 
+    /**
+     * Delegates missing methods to the parent script.
+     */
     def methodMissing(String name, def args) {
-        parent.invokeMethod name, args
+        script.invokeMethod name, args
+    }
+
+    @Override
+    public String toString() {
+        new ToStringBuilder(this)
+                .append("service name", getServiceName())
+                .append("profile name", getProfile()).toString();
     }
 }

@@ -18,6 +18,7 @@
  */
 package com.anrisoftware.sscontrol.httpd.redmine;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -89,6 +90,10 @@ class RedmineServiceImpl implements RedmineService {
      */
     public static final String SERVICE_NAME = "redmine";
 
+    private static final String BACKUP_KEY = "backup";
+
+    private static final String TARGET_KEY = "target";
+
     private final DefaultWebService service;
 
     private final StatementsMap statementsMap;
@@ -108,7 +113,7 @@ class RedmineServiceImpl implements RedmineService {
 
     private void setupStatements(StatementsMap map, Map<String, Object> args) {
         map.addAllowed(BACKEND_KEY, DATABASE_KEY, MAIL_KEY, LANGUAGE_KEY,
-                SCM_KEY, OVERRIDE_KEY);
+                SCM_KEY, OVERRIDE_KEY, BACKUP_KEY);
         map.setAllowValue(true, BACKEND_KEY, DATABASE_KEY, MAIL_KEY);
         map.addAllowedKeys(DATABASE_KEY, USER_KEY, PASSWORD_KEY, HOST_KEY,
                 PROVIDER_KEY, ENCODING_KEY);
@@ -117,6 +122,7 @@ class RedmineServiceImpl implements RedmineService {
         map.addAllowedKeys(LANGUAGE_KEY, NAME_KEY);
         map.addAllowedKeys(SCM_KEY, INSTALL_KEY);
         map.addAllowedKeys(OVERRIDE_KEY, MODE_KEY);
+        map.addAllowedKeys(BACKUP_KEY, TARGET_KEY);
         map.putValue(BACKEND_KEY, args.get(BACKEND_KEY));
     }
 
@@ -264,6 +270,11 @@ class RedmineServiceImpl implements RedmineService {
     @Override
     public OverrideMode getOverrideMode() {
         return statementsMap.mapValue(OVERRIDE_KEY, MODE_KEY);
+    }
+
+    @Override
+    public URI getBackupTarget() {
+        return statementsMap.mapValueAsURI(BACKUP_KEY, TARGET_KEY);
     }
 
     public Object methodMissing(String name, Object args)

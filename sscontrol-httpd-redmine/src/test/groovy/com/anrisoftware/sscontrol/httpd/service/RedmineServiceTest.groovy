@@ -66,6 +66,7 @@ class RedmineServiceTest extends HttpdTestUtil {
         assert webservice.debugLogging("level")["thin"] == 1
         assert webservice.debugLogging("level")["redmine"] == 1
         assert webservice.overrideMode == OverrideMode.update
+        assert webservice.backupTarget.toString() =~ /.*\/var\/backups/
         assert webservice.database.database == "redmine2"
         assert webservice.database.user == "user"
         assert webservice.database.password == "userpass"

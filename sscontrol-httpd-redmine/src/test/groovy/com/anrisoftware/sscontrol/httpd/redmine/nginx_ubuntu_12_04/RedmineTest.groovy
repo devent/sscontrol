@@ -72,7 +72,8 @@ class RedmineTest extends UbuntuTestUtil {
         assertFileContent gemOutExpected.asFile(tmpdir), gemOutExpected
         assertFileContent bundleOutExpected.asFile(tmpdir), bundleOutExpected
         assertFileContent rakeOutExpected.asFile(tmpdir), rakeOutExpected
-        assertStringContent tarOutExpected.replaced(tmpdir, tmpdir, "/tmp"), tarOutExpected.toString()
+        assertStringContent tarOutExpected.replaced(tmpdir, tmpdir, "/tmp").replaceAll(/\d{4}.*\d{3}/, "time"), tarOutExpected.toString()
+        assertFileContent gzipOutExpected.asFile(tmpdir), gzipOutExpected
         assertFileContent groupaddOutExpected.asFile(tmpdir), groupaddOutExpected
         assertStringContent useraddOutExpected.replaced(tmpdir, tmpdir, "/tmp"), useraddOutExpected.toString()
         assertStringContent chmodOutExpected.replaced(tmpdir, tmpdir, "/tmp"), chmodOutExpected.toString()
@@ -80,5 +81,6 @@ class RedmineTest extends UbuntuTestUtil {
         assertFileContent aptitudeOutExpected.asFile(tmpdir), aptitudeOutExpected
         assertStringContent lnOutExpected.replaced(tmpdir, tmpdir, "/tmp"), lnOutExpected.toString()
         assertFileContent thinRestartOutExpected.asFile(tmpdir), thinRestartOutExpected
+        assertFileContent mysqldumpOutExpected.asFile(tmpdir), mysqldumpOutExpected
     }
 }

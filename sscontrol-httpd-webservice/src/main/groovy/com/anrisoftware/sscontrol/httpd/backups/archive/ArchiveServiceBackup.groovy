@@ -25,16 +25,17 @@ import groovy.util.logging.Slf4j
 
 import javax.inject.Inject
 
+import org.apache.commons.lang3.builder.ToStringBuilder
 import org.joda.time.Duration
 import org.stringtemplate.v4.ST
 
-import com.anrisoftware.globalpom.exec.scriptprocess.ScriptExecFactory;
+import com.anrisoftware.globalpom.exec.scriptprocess.ScriptExecFactory
 import com.anrisoftware.sscontrol.httpd.domain.Domain
 import com.anrisoftware.sscontrol.httpd.webservice.WebService
 import com.anrisoftware.sscontrol.scripts.pack.PackFactory
 
 /**
- * Backups the web service.
+ * Backups the service installation files.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
@@ -45,13 +46,13 @@ abstract class ArchiveServiceBackup {
     @Inject
     private ArchiveServiceLogger logg
 
+    private Object parent
+
     @Inject
     PackFactory packFactory
 
     @Inject
     ScriptExecFactory scriptExecFactory
-
-    Object parent
 
     /**
      * Backups the service files.
@@ -82,7 +83,7 @@ abstract class ArchiveServiceBackup {
     }
 
     /**
-     * Returns the backup archive file. The following placeholders
+     * Returns the backup archive file. The following place holders
      * are replaces accordingly;
      *
      * <ul>
@@ -125,15 +126,48 @@ abstract class ArchiveServiceBackup {
      */
     abstract Duration getBackupTimeout()
 
+    /**
+     * Returns the service name.
+     */
+    abstract String getServiceName()
+
+    /**
+     * Returns the profile name.
+     */
+    abstract String getProfile()
+
+    /**
+     * Sets the parent script.
+     */
     void setScript(Object parent) {
         this.parent = parent
     }
 
+    /**
+     * Returns the parent script.
+     */
+    Object getScript() {
+        parent
+    }
+
+    /**
+     * Delegates missing properties to the parent script.
+     */
     def propertyMissing(String name) {
         parent.getProperty name
     }
 
+    /**
+     * Delegates missing methods to the parent script.
+     */
     def methodMissing(String name, def args) {
         parent.invokeMethod name, args
+    }
+
+    @Override
+    public String toString() {
+        new ToStringBuilder(this)
+                .append("service name", getServiceName())
+                .append("profile name", getProfile()).toString();
     }
 }

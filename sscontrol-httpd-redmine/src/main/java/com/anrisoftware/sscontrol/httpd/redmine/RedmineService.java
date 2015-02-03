@@ -18,6 +18,7 @@
  */
 package com.anrisoftware.sscontrol.httpd.redmine;
 
+import java.net.URI;
 import java.util.List;
 import java.util.Map;
 
@@ -149,4 +150,17 @@ public interface RedmineService extends WebService {
      * @return the override {@link OverrideMode} mode or {@code null}.
      */
     OverrideMode getOverrideMode();
+
+    /**
+     * Returns the backup target.
+     *
+     * <pre>
+     * setup "redmine", {
+     *     backup target: "/var/backups"
+     * }
+     * </pre>
+     *
+     * @return the backup {@link URI} target or {@code null}.
+     */
+    URI getBackupTarget();
 }

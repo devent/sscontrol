@@ -24,11 +24,10 @@ import static com.anrisoftware.sscontrol.httpd.backups.database.DatabaseLogger._
 import java.io.File;
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
-import com.anrisoftware.sscontrol.httpd.backups.archive.ArchiveServiceBackup;
 import com.anrisoftware.sscontrol.httpd.webservice.WebService;
 
 /**
- * Logging for {@link Php_5_Config}.
+ * Logging for {@link DatabaseBackup}.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
@@ -56,7 +55,7 @@ class DatabaseLogger extends AbstractLogger {
     }
 
     /**
-     * Sets the context of the logger to {@link Php_5_Config}.
+     * Sets the context of the logger to {@link DatabaseBackup}.
      */
     public DatabaseLogger() {
         super(DatabaseBackup.class);

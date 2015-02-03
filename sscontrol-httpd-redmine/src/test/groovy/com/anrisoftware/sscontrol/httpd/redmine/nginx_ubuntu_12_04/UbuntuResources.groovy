@@ -41,12 +41,14 @@ enum UbuntuResources {
     groupaddCommand("/usr/sbin/groupadd", UbuntuResources.class.getResource("echo_command.txt")),
     zcatCommand("/bin/zcat", UbuntuResources.class.getResource("echo_command.txt")),
     tarCommand("/bin/tar", UbuntuResources.class.getResource("echo_command.txt")),
+    gzipCommand("/bin/gzip", UbuntuResources.class.getResource("echo_command.txt")),
     unzipCommand("/usr/bin/unzip", UbuntuResources.class.getResource("echo_command.txt")),
     lnCommand("/bin/ln", UbuntuResources.class.getResource("echo_command.txt")),
     netstatCommand("/bin/netstat", UbuntuResources.class.getResource("echo_command.txt")),
     reconfigureCommand("/usr/sbin/dpkg-reconfigure", UbuntuResources.class.getResource("echo_command.txt")),
     updateRcCommand("/usr/sbin/update-rc.d", UbuntuResources.class.getResource("echo_command.txt")),
     mysqlCommand("/usr/bin/mysql", UbuntuResources.class.getResource("echo_command.txt")),
+    mysqldumpCommand("/usr/bin/mysqldump", UbuntuResources.class.getResource("echo_command.txt")),
     // files and directory
     tmpDir("/tmp", null),
     certCrt("cert.crt", UbuntuResources.class.getResource("cert_crt.txt")),
@@ -68,11 +70,13 @@ enum UbuntuResources {
         useraddCommand.createCommand parent
         zcatCommand.createCommand parent
         tarCommand.createCommand parent
+        gzipCommand.createCommand parent
         unzipCommand.createCommand parent
         lnCommand.createCommand parent
         netstatCommand.createCommand parent
         reconfigureCommand.createCommand parent
         updateRcCommand.createCommand parent
+        mysqldumpCommand.createCommand parent
         tmpDir.asFile(parent).mkdirs()
         restartCommand.createCommand parent
         confDir.asFile(parent).mkdirs()
@@ -89,10 +93,12 @@ enum UbuntuResources {
         entry.user_add_command UbuntuResources.useraddCommand.asFile(parent)
         entry.tar_command UbuntuResources.tarCommand.asFile(parent)
         entry.unzip_command UbuntuResources.unzipCommand.asFile(parent)
+        entry.gzip_command UbuntuResources.gzipCommand.asFile(parent)
         entry.link_command UbuntuResources.lnCommand.asFile(parent)
         entry.netstat_command UbuntuResources.netstatCommand.asFile(parent)
         entry.temp_directory UbuntuResources.tmpDir.asFile(parent)
         entry.restart_command UbuntuResources.restartCommand.asFile(parent)
+        entry.mysqldump_command UbuntuResources.mysqldumpCommand.asFile(parent)
         entry.configuration_directory UbuntuResources.confDir.asFile(parent)
         entry.groups_file UbuntuResources.groupsFile.asFile(parent)
         entry.users_file UbuntuResources.usersFile.asFile(parent)

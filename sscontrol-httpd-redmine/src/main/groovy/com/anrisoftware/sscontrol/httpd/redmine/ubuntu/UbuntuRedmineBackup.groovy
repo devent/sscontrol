@@ -1,74 +1,77 @@
 /*
- * Copyright 2014 Erwin Müller <erwin.mueller@deventm.org>
+ * Copyright ${project.inceptionYear] Erwin Müller <erwin.mueller@deventm.org>
  *
- * This file is part of sscontrol-httpd-roundcube.
+ * This file is part of sscontrol-httpd-redmine.
  *
- * sscontrol-httpd-roundcube is free software: you can redistribute it and/or modify it
+ * sscontrol-httpd-redmine is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published by the
  * Free Software Foundation, either version 3 of the License, or (at your
  * option) any later version.
  *
- * sscontrol-httpd-roundcube is distributed in the hope that it will be useful, but
+ * sscontrol-httpd-redmine is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
  * for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with sscontrol-httpd-roundcube. If not, see <http://www.gnu.org/licenses/>.
+ * along with sscontrol-httpd-redmine. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.roundcube.apache_ubuntu_12_04
-
-import javax.inject.Inject
+package com.anrisoftware.sscontrol.httpd.redmine.ubuntu
 
 import org.apache.commons.lang3.builder.ToStringBuilder
 
 import com.anrisoftware.sscontrol.httpd.domain.Domain
-import com.anrisoftware.sscontrol.httpd.roundcube.RoundcubeService
+import com.anrisoftware.sscontrol.httpd.redmine.RedmineService
+import com.anrisoftware.sscontrol.httpd.redmine.nginx_thin_ubuntu_12_04.RedmineConfigFactory
 
 /**
- * <i>Roundcube Ubuntu 12.04</i> backup.
+ * <i>Ubuntu Redmine</i> backup.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class UbuntuRoundcubeBackup {
-
-    @Inject
-    UbuntuRoundcubeArchiveServiceBackup archiveServiceBackup
-
-    @Inject
-    UbuntuRoundcubeDatabaseMysqlBackup databaseMysqlBackup
+abstract class UbuntuRedmineBackup {
 
     private Object script
 
     /**
-     * Backups the <i>Roundcube</i> service.
+     * Backups the <i>Redmine</i> service.
      *
      * @param domain
      *            the service {@link Domain} domain.
      *
      * @param service
-     *            the {@link RoundcubeService} service.
+     *            the {@link RedmineService} service.
      */
-    void backupService(Domain domain, RoundcubeService service) {
+    void backupService(Domain domain, RedmineService service) {
         if (service.backupTarget != null) {
-            File source = roundcubeDir domain, service
-            archiveServiceBackup.backupService domain, service, source
-            switch (service.database.driver) {
-                case "mysql":
-                    databaseMysqlBackup.backupDatabase domain, service, source
+            File source = redmineDir domain, service
+            serviceBackup.backupService domain, service, source
+            switch (service.database.provider) {
+                case "mysql2":
+                    mysqlDatabaseBackup.backupDatabase domain, service, source
                     break
             }
         }
     }
 
     /**
+     * Returns the service backup.
+     */
+    abstract UbuntuRedmineArchiveServiceBackup getServiceBackup()
+
+    /**
+     * Returns the <i>MySQL</i> database backup.
+     */
+    abstract UbuntuRedmineMysqlDatabaseBackup getMysqlDatabaseBackup()
+
+    /**
      * Sets the parent script.
      */
-    void setScript(Object parent) {
-        this.script = parent
-        archiveServiceBackup.setScript parent
-        databaseMysqlBackup.setScript parent
+    void setScript(Object script) {
+        this.script = script
+        serviceBackup.setScript script
+        mysqlDatabaseBackup.setScript script
     }
 
     /**
@@ -82,15 +85,13 @@ class UbuntuRoundcubeBackup {
      * Returns the service name.
      */
     String getServiceName() {
-        Ubuntu_12_04_ApacheRoundcubeConfigFactory.WEB_NAME
+        RedmineConfigFactory.WEB_NAME
     }
 
     /**
      * Returns the profile name.
      */
-    String getProfile() {
-        Ubuntu_12_04_ApacheRoundcubeConfigFactory.PROFILE_NAME
-    }
+    abstract String getProfile()
 
     /**
      * Delegates missing properties to the parent script.

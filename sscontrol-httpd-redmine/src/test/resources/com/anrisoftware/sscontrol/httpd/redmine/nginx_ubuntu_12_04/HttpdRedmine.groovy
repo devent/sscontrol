@@ -29,6 +29,7 @@ httpd {
             debug "thin", level: 1, file: "/var/log/redmine_thin.log"
             debug "redmine", level: 1, file: "/var/log/redmine.log"
             override mode: OverrideMode.update
+            backup target: "$tmp/var/backups"
             database "redmine2", user: "user", password: "userpass", host: "localhost"
             mail "smtp.test1.com", port: 25, method: DeliveryMethod.smtp, domain: "example.net", auth: AuthenticationMethod.login, user: "redmine@example.net", password: "redminepass"
             language name: "de"

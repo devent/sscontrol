@@ -57,6 +57,7 @@ enum PhpmyadminResources {
     chmodOut("/bin/chmod.out", PhpmyadminResources.class.getResource("chmod_out_expected.txt")),
     useraddOut("/usr/sbin/useradd.out", PhpmyadminResources.class.getResource("useradd_out_expected.txt")),
     groupaddOut("/usr/sbin/groupadd.out", PhpmyadminResources.class.getResource("groupadd_out_expected.txt")),
+    lnOut("/bin/ln.out", PhpmyadminResources.class.getResource("ln_out_expected.txt")),
     configFile("/etc/dbconfig-common/phpmyadmin.conf", PhpmyadminResources.class.getResource("phpmyadmin_conf.txt")),
     configFileExpected("/etc/dbconfig-common/phpmyadmin.conf", PhpmyadminResources.class.getResource("phpmyadmin_conf_expecting.txt")),
     createTablesSql("/usr/share/doc/phpmyadmin/examples/create_tables.sql.gz", PhpmyadminResources.class.getResource("create_tables.sql.gz")),

@@ -57,9 +57,9 @@ class UbuntuConfig extends UbuntuPhpmyadminConfig implements ServiceConfig {
     void deployService(Domain domain, WebService service, List config) {
         fcgiPhpmyadminConfig.setScript script
         fcgiPhpmyadminConfig.deployService domain, service, config
-        fcgiPhpmyadminConfig.linkPhpconf domain
         setupDefaults service
         installPackages()
+        fcgiPhpmyadminConfig.linkPhpconf domain
         deployConfiguration service
         reconfigureService()
         changeOwnerConfiguration domain

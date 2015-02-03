@@ -64,6 +64,7 @@ class PhpmyadminTest extends UbuntuTestUtil {
         assertStringContent chmodOut.replaced(tmpdir, tmpdir, "/tmp"), chmodOut.toString()
         assertStringContent groupaddOut.replaced(tmpdir, tmpdir, "/tmp"), groupaddOut.toString()
         assertStringContent useraddOut.replaced(tmpdir, tmpdir, "/tmp"), useraddOut.toString()
+        assertStringContent lnOut.replaced(tmpdir, tmpdir, "/tmp"), lnOut.toString()
         assertFileContent aptitudeOut.asFile(tmpdir), aptitudeOut
         assertFileContent configFileExpected.asFile(tmpdir), configFileExpected
     }

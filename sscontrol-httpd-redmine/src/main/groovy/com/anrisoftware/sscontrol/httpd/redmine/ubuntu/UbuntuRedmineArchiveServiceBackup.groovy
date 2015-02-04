@@ -22,7 +22,7 @@ import org.joda.time.Duration
 
 import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.sscontrol.httpd.backups.archive.ArchiveServiceBackup
-import com.anrisoftware.sscontrol.httpd.redmine.nginx_thin_ubuntu_12_04.RedmineConfigFactory
+import com.anrisoftware.sscontrol.httpd.redmine.redmine_2_6_nginx_thin_ubuntu_12_04.RedmineConfigFactory;
 
 /**
  * <i>Redmine</i> service installation files backup.

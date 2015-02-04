@@ -16,10 +16,10 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd-redmine. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.redmine.nginx_ubuntu_12_04
+package com.anrisoftware.sscontrol.httpd.redmine.ubuntu_12_04_nginx_thin_redmine_2_6
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
-import static com.anrisoftware.sscontrol.httpd.redmine.nginx_ubuntu_12_04.RedmineResources.*
+import static com.anrisoftware.sscontrol.httpd.redmine.ubuntu_12_04_nginx_thin_redmine_2_6.RedmineResources.*
 import static com.anrisoftware.sscontrol.httpd.ubuntu_12_04.Ubuntu_12_04_Resources.*
 import static org.apache.commons.io.FileUtils.*
 import groovy.util.logging.Slf4j

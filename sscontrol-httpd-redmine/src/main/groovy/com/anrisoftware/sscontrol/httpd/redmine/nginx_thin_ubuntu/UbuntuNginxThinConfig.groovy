@@ -32,7 +32,7 @@ import com.anrisoftware.sscontrol.scripts.changefile.ChangeFileOwnerFactory
 import com.anrisoftware.sscontrol.scripts.unix.InstallPackagesFactory
 
 /**
- * <i>Nginx Thin Ubuntu Redmine</i> configuration.
+ * <i>Ubuntu Nginx Thin Redmine 2.6</i> configuration.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0

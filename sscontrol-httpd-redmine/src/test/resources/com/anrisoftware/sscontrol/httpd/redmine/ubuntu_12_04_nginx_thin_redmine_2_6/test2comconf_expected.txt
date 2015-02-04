@@ -1,0 +1,27 @@
+server {
+    # domain test2.com
+    listen 192.168.0.52:80;
+    root /tmp/var/www/test2.com/web;
+    index index.php index.html index.htm;
+    server_name test2.com;
+    client_max_body_size 2M;
+
+    # Redmine "test2redmine", Domain test2.com
+    location /projects {
+        alias /tmp/var/www/test2.com/test2redmine/public;
+        try_files $uri @cluster_test2_com_test2redmine;
+    }
+
+    location @cluster_test2_com_test2redmine {
+        proxy_pass http://thin_test2_com_test2redmine;
+    }
+
+    # error page
+    error_page 500 502 503 504 /50x.html;
+
+    # error page location
+    location = /50x.html {
+        root /usr/share/nginx/html;
+    }
+
+}

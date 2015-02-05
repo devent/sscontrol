@@ -25,7 +25,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 /**
  * Information that identifies the web service configuration.
- * 
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
@@ -39,7 +39,7 @@ public abstract class WebServiceInfo implements Serializable {
      * <p>
      * The service name is the name of the web service. For example
      * <i>gitit</i>, <i>Wordpress</i>, etc.
-     * 
+     *
      * @return the service name.
      */
     public abstract String getServiceName();
@@ -62,9 +62,8 @@ public abstract class WebServiceInfo implements Serializable {
 
     @Override
     public String toString() {
-        ToStringBuilder builder = new ToStringBuilder(this);
-        builder.append(SERVICE, getServiceName());
-        return builder.toString();
+        return new ToStringBuilder(this).append(SERVICE, getServiceName())
+                .toString();
     }
 
 }

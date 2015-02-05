@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd-redmine. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.service
+package com.anrisoftware.sscontrol.httpd.redmine_2_6_service
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 
@@ -30,6 +30,8 @@ import com.anrisoftware.sscontrol.core.api.ServicesRegistry
 import com.anrisoftware.sscontrol.core.modules.CoreModule
 import com.anrisoftware.sscontrol.core.modules.CoreResourcesModule
 import com.anrisoftware.sscontrol.core.service.ServiceModule
+import com.anrisoftware.sscontrol.httpd.service.HttpdPreScript;
+import com.anrisoftware.sscontrol.httpd.service.HttpdPreScriptModule;
 import com.google.inject.Guice
 import com.google.inject.Injector
 

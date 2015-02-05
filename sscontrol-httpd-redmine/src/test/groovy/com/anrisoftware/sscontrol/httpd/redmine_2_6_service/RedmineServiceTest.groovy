@@ -16,10 +16,10 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd-redmine. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.service
+package com.anrisoftware.sscontrol.httpd.redmine_2_6_service
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
-import static com.anrisoftware.sscontrol.httpd.service.ServicesResources.*
+import static com.anrisoftware.sscontrol.httpd.redmine.ubuntu_12_04_nginx_thin_redmine_2_6.RedmineResources.*
 import groovy.util.logging.Slf4j
 
 import org.junit.Test
@@ -31,6 +31,7 @@ import com.anrisoftware.sscontrol.httpd.redmine.AuthenticationMethod
 import com.anrisoftware.sscontrol.httpd.redmine.DeliveryMethod
 import com.anrisoftware.sscontrol.httpd.redmine.RedmineService
 import com.anrisoftware.sscontrol.httpd.redmine.ScmInstall
+import com.anrisoftware.sscontrol.httpd.service.HttpdService
 import com.anrisoftware.sscontrol.httpd.webservice.OverrideMode
 
 /**
@@ -46,7 +47,7 @@ class RedmineServiceTest extends HttpdTestUtil {
     void "redmine"() {
         loader.loadService profile.resource, null
         def profile = registry.getService("profile")[0]
-        loader.loadService redmineScript.resource, profile, preScript
+        loader.loadService httpdScript.resource, profile, preScript
         HttpdService service = registry.getService("httpd")[0]
 
         int d = 0
@@ -55,7 +56,7 @@ class RedmineServiceTest extends HttpdTestUtil {
         assert domain.address == "192.168.0.51"
 
         RedmineService webservice = domain.services[0]
-        assert webservice.name == "redmine"
+        assert webservice.name == "redmine_2_6"
         assert webservice.id == "redmineid"
         assert webservice.backend == "thin"
         assert webservice.ref == null
@@ -89,7 +90,7 @@ class RedmineServiceTest extends HttpdTestUtil {
         assert domain.address == "192.168.0.51"
 
         webservice = domain.services[0]
-        assert webservice.name == "redmine"
+        assert webservice.name == "redmine_2_6"
         assert webservice.id == null
         assert webservice.backend == "thin"
         assert webservice.alias == null
@@ -108,7 +109,7 @@ class RedmineServiceTest extends HttpdTestUtil {
         assert domain.address == "192.168.0.52"
 
         webservice = domain.services[0]
-        assert webservice.name == "redmine"
+        assert webservice.name == "redmine_2_6"
         assert webservice.id == "test2comRedmineid"
         assert webservice.backend == "thin"
         assert webservice.alias == "projects"

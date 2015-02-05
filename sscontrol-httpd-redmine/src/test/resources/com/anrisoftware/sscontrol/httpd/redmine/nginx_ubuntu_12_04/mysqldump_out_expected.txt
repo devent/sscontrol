@@ -1,2 +1,0 @@
--u user -puserpass redmine2
--u user -puserpass redmine2

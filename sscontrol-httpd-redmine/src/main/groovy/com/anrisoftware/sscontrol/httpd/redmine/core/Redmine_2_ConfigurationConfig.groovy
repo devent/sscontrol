@@ -30,7 +30,7 @@ import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.TemplatesFactory
 import com.anrisoftware.sscontrol.httpd.domain.Domain
 import com.anrisoftware.sscontrol.httpd.redmine.RedmineService
-import com.anrisoftware.sscontrol.httpd.redmine.redmine_2_6_nginx_thin_ubuntu_12_04.RedmineConfigFactory;
+import com.anrisoftware.sscontrol.httpd.redmine.redmine_2_6_nginx_thin_ubuntu_12_04.RedmineConfigFactory
 
 /**
  * <i>Redmine</i> main configuration.
@@ -72,6 +72,12 @@ abstract class Redmine_2_ConfigurationConfig {
         Yaml yaml = new Yaml(mailConfigRepresenter, options);
         Map map = yaml.load(conf)
         Map defaultMap = map["default"]
+        if (!defaultMap.email_delivery) {
+            defaultMap.email_delivery = [:]
+        }
+        if (!defaultMap.email_delivery.smtp_settings) {
+            defaultMap.email_delivery.smtp_settings = [:]
+        }
         if (service.mail.method) {
             defaultMap.email_delivery.delivery_method = service.mail.method
         } else {

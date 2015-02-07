@@ -4,13 +4,13 @@
 
 default:
   email_delivery:
-    delivery_method: :smtp
     smtp_settings:
       address: test2.com
       port: 25.0
       authentication: :login
       user_name: redmine@example.net
       password: redminepass
+    delivery_method: :smtp
   attachments_storage_path: null
   autologin_cookie_name: null
   autologin_cookie_path: null

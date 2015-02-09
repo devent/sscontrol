@@ -29,6 +29,11 @@
 
 	<dependencies>
 		<!-- test dependencies -->
+        <dependency>
+            <groupId>com.anrisoftware.globalpom</groupId>
+            <artifactId>globalpom-groovytestutils</artifactId>
+            <scope>test</scope>
+        </dependency>
 		<dependency>
 			<groupId>com.anrisoftware.sscontrol</groupId>
 			<artifactId>sscontrol-profile</artifactId>
@@ -41,11 +46,12 @@
             <version>1.0-alpha-2-SNAPSHOT</version>
             <scope>test</scope>
         </dependency>
-		<dependency>
-			<groupId>com.anrisoftware.globalpom</groupId>
-			<artifactId>globalpom-groovytestutils</artifactId>
-			<scope>test</scope>
-		</dependency>
+        <dependency>
+            <groupId>com.anrisoftware.sscontrol</groupId>
+            <artifactId>sscontrol-testutils</artifactId>
+            <version>1.0-alpha-2-SNAPSHOT</version>
+            <scope>test</scope>
+        </dependency>
 
 		<!-- own modules dependencies -->
 		<dependency>

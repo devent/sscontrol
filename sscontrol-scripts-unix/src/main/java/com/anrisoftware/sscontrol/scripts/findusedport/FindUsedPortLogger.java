@@ -19,11 +19,19 @@
 package com.anrisoftware.sscontrol.scripts.findusedport;
 
 import static com.anrisoftware.sscontrol.scripts.findusedport.FindUsedPortLogger._.argument_null;
+import static com.anrisoftware.sscontrol.scripts.findusedport.FindUsedPortLogger._.services_found_debug;
+import static com.anrisoftware.sscontrol.scripts.findusedport.FindUsedPortLogger._.services_found_info;
+import static com.anrisoftware.sscontrol.scripts.findusedport.FindUsedPortLogger._.services_found_trace;
 import static org.apache.commons.lang3.Validate.notNull;
 
 import java.util.Collection;
 import java.util.Map;
 
+import javax.inject.Inject;
+
+import com.anrisoftware.globalpom.exec.api.ProcessTask;
+import com.anrisoftware.globalpom.exec.runcommands.RunCommands;
+import com.anrisoftware.globalpom.exec.runcommands.RunCommandsArg;
 import com.anrisoftware.globalpom.log.AbstractLogger;
 
 /**
@@ -40,7 +48,13 @@ class FindUsedPortLogger extends AbstractLogger {
 
     enum _ {
 
-        argument_null("Argument '%s' cannot be null.");
+        argument_null("Argument '%s' cannot be null."),
+
+        services_found_trace("Services found {} for ports {} for {}, {}."),
+
+        services_found_debug("Services found {} for ports {} for {}."),
+
+        services_found_info("Services found {} for ports {}.");
 
         private String name;
 
@@ -53,6 +67,9 @@ class FindUsedPortLogger extends AbstractLogger {
             return name;
         }
     }
+
+    @Inject
+    private RunCommandsArg runCommandsArg;
 
     /**
      * Sets the context of the logger to {@link FindUsedPort}.
@@ -70,5 +87,24 @@ class FindUsedPortLogger extends AbstractLogger {
     Collection<Integer> ports(Map<String, Object> args, Object parent) {
         Object value = args.get(PORTS_KEY);
         return (Collection<Integer>) value;
+    }
+
+    void portsFound(Object parent, RunCommands runCommands, ProcessTask task,
+            Map<String, Object> args, Map<Integer, String> services) {
+        Object ports = args.get(PORTS_KEY);
+        if (isTraceEnabled()) {
+            trace(services_found_trace, services, ports, parent, task);
+        } else if (isDebugEnabled()) {
+            debug(services_found_debug, services, ports, parent);
+        } else {
+            info(services_found_info, services, ports);
+        }
+        if (runCommands != null) {
+            runCommands.add(args.get(COMMAND_KEY), args);
+        }
+    }
+
+    RunCommands runCommands(Map<String, Object> args, Object parent) {
+        return runCommandsArg.runCommands(args, parent);
     }
 }

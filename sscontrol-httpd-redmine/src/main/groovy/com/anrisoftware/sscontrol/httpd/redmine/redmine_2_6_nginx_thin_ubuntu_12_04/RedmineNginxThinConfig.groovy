@@ -79,7 +79,6 @@ class RedmineNginxThinConfig extends UbuntuNginxThinConfig implements ServiceCon
     void deployDomain(Domain domain, Domain refDomain, WebService service, List config) {
         setupDefaults domain, service
         thinConfig.deployDomain domain, refDomain, service, config
-        setupThinPermissions domain, service
         createDomainConfig domain, refDomain, service, config
         createDomainUpstreamConfig domain, refDomain, service
         enableDomainUpstreamConfig domain, refDomain, service
@@ -88,6 +87,7 @@ class RedmineNginxThinConfig extends UbuntuNginxThinConfig implements ServiceCon
     @Override
     void deployService(Domain domain, WebService service, List config) {
         setupDefaults domain, service
+        stopServices()
         thinConfig.thinScriptFile.delete()
         installPackages()
         installScmPackages service
@@ -110,6 +110,15 @@ class RedmineNginxThinConfig extends UbuntuNginxThinConfig implements ServiceCon
         createDomainUpstreamConfig domain, null, service
         enableDomainUpstreamConfig domain, null, service
         restartServices()
+    }
+
+    /**
+     * Stops services.
+     */
+    void stopServices() {
+        if (new File(thinConfig.thinStopCommand).exists()) {
+            thinConfig.stopServices()
+        }
     }
 
     /**
@@ -199,6 +208,7 @@ class RedmineNginxThinConfig extends UbuntuNginxThinConfig implements ServiceCon
         def target = new File(sitesEnabledDir, file.name)
         mkLinkFactory.create(
                 log: log,
+                runCommands: runCommands,
                 command: linkCommand,
                 files: src,
                 targets: target,

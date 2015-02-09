@@ -21,7 +21,7 @@ package com.anrisoftware.sscontrol.httpd.nginx.ubuntu_12_04
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static org.apache.commons.io.FileUtils.*
 
-import com.anrisoftware.sscontrol.httpd.nginx.resources.ResourcesUtils
+import com.anrisoftware.sscontrol.testutils.resources.ResourcesUtils;
 
 /**
  * Loads Ubuntu resources.
@@ -31,9 +31,13 @@ import com.anrisoftware.sscontrol.httpd.nginx.resources.ResourcesUtils
  */
 enum Ubuntu_12_04_Resources {
 
+    // commands
+    restartCommand("/etc/init.d/nginx", Ubuntu_12_04_Resources.class.getResource("echo_command.txt")),
+    stopCommand("/etc/init.d/nginx", Ubuntu_12_04_Resources.class.getResource("echo_command.txt")),
+    thinStopCommand("/etc/init.d/thin", Ubuntu_12_04_Resources.class.getResource("echo_command.txt")),
+    // files
     groupsFile("/etc/group", Ubuntu_12_04_Resources.class.getResource("group.txt")),
     usersFile("/etc/passwd", Ubuntu_12_04_Resources.class.getResource("passwd.txt")),
-    restartCommand("/etc/init.d/nginx", Ubuntu_12_04_Resources.class.getResource("echo_command.txt")),
     sitesDir("/var/www", null),
     confDir("/etc/nginx", null),
     sitesAvailableDir("/etc/nginx/sites-available", null),
@@ -45,6 +49,8 @@ enum Ubuntu_12_04_Resources {
     static copyUbuntu_12_04_Files(File parent) {
         confDir.asFile parent mkdirs()
         restartCommand.createCommand parent
+        stopCommand.createCommand parent
+        thinStopCommand.createCommand parent
         groupsFile.createFile parent
         usersFile.createFile parent
         nginxConfFile.createFile parent
@@ -52,7 +58,9 @@ enum Ubuntu_12_04_Resources {
 
     static void setupUbuntu_12_04_Properties(def profile, File parent) {
         def entry = profile.getEntry("httpd")
-        entry.restart_command "${restartCommand.asFile(parent)} restart"
+        entry.restart_command restartCommand.asFile(parent)
+        entry.stop_command stopCommand.asFile(parent)
+        entry.thin_stop_command thinStopCommand.asFile(parent)
         entry.configuration_directory confDir.asFile(parent)
         entry.groups_file groupsFile.asFile(parent)
         entry.users_file usersFile.asFile(parent)

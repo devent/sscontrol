@@ -21,7 +21,7 @@ package com.anrisoftware.sscontrol.httpd.nginx.core.ubuntu_12_04
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static org.apache.commons.io.FileUtils.*
 
-import com.anrisoftware.sscontrol.httpd.nginx.resources.ResourcesUtils
+import com.anrisoftware.sscontrol.testutils.resources.ResourcesUtils
 
 /**
  * Loads the resources.
@@ -33,32 +33,54 @@ enum DomainsResources {
 
     profile("UbuntuProfile.groovy", DomainsResources.class.getResource("UbuntuProfile.groovy")),
     httpdScript("Httpd.groovy", DomainsResources.class.getResource("Httpd.groovy")),
+    // files
     certCrt("cert.crt", DomainsResources.class.getResource("cert_crt.txt")),
     certKey("cert.key", DomainsResources.class.getResource("cert_key.txt")),
-    test1comConf("/etc/nginx/sites-available/100-robobee-test1.com.conf", DomainsResources.class.getResource("test1_com_conf.txt")),
-    test1comSslConf("/etc/nginx/sites-available/100-robobee-test1.com-ssl.conf", DomainsResources.class.getResource("test1_com_ssl_conf.txt")),
-    nginxConfExpected("/etc/nginx/nginx.conf", DomainsResources.class.getResource("nginx_conf_expected.txt")),
-    robobeeConfExpected("/etc/nginx/conf.d/000-robobee_defaults.conf", DomainsResources.class.getResource("robobee_conf_expected.txt")),
-    aptitudeOutExpected("/usr/bin/aptitude.out", DomainsResources.class.getResource("aptitude_out_expected.txt")),
-    restartOutExpected("/etc/init.d/nginx.out", DomainsResources.class.getResource("restart_out_expected.txt")),
-    lnOutExpected("/bin/ln.out", DomainsResources.class.getResource("ln_out_expected.txt")),
-    useraddOutExpected("/usr/sbin/useradd.out", DomainsResources.class.getResource("useradd_out_expected.txt")),
-    groupaddOutExpected("/usr/sbin/groupadd.out", DomainsResources.class.getResource("groupadd_out_expected.txt")),
-    chownOutExpected("/bin/chown.out", DomainsResources.class.getResource("chown_out_expected.txt")),
-    chmodOutExpected("/bin/chmod.out", DomainsResources.class.getResource("chmod_out_expected.txt")),
+    // domains expected
+    domainsTest1comConfExpected("/etc/nginx/sites-available/100-robobee-test1.com.conf", DomainsResources.class.getResource("domains_test1comconf_expected.txt")),
+    domainsTest1comSslConfExpected("/etc/nginx/sites-available/100-robobee-test1.com-ssl.conf", DomainsResources.class.getResource("domains_test1comsslconf_expected.txt")),
+    domainsRuncommandsLogExpected("/runcommands.log", DomainsResources.class.getResource("domains_runcommands_expected.txt")),
+    domainsNginxConfExpected("/etc/nginx/nginx.conf", DomainsResources.class.getResource("domains_nginxconf_expected.txt")),
+    domainsDefaultsConfExpected("/etc/nginx/conf.d/000-robobee_defaults.conf", DomainsResources.class.getResource("domains_defaultsconf_expected.txt")),
+    domainsAptitudeOutExpected("/usr/bin/aptitude.out", DomainsResources.class.getResource("domains_aptitude_out_expected.txt")),
+    domainsNginxOutExpected("/etc/init.d/nginx.out", DomainsResources.class.getResource("domains_nginx_out_expected.txt")),
+    domainsLnOutExpected("/bin/ln.out", DomainsResources.class.getResource("domains_ln_out_expected.txt")),
+    domainsUseraddOutExpected("/usr/sbin/useradd.out", DomainsResources.class.getResource("domains_useradd_out_expected.txt")),
+    domainsGroupaddOutExpected("/usr/sbin/groupadd.out", DomainsResources.class.getResource("domains_groupadd_out_expected.txt")),
+    domainsChownOutExpected("/bin/chown.out", DomainsResources.class.getResource("domains_chown_out_expected.txt")),
+    domainsChmodOutExpected("/bin/chmod.out", DomainsResources.class.getResource("domains_chmod_out_expected.txt")),
     // used ports
-    netstatPortsCommand("/bin/netstat", DomainsResources.class.getResource("netstat_used_ports.txt")),
+    usedportsNetstatCommand("/bin/netstat", DomainsResources.class.getResource("usedports_netstat.txt")),
+    usedportsRuncommandsLogExpected("/runcommands.log", DomainsResources.class.getResource("usedports_runcommands_expected.txt")),
     // used ports proxy
-    netstatPortsProxyCommand("/bin/netstat", DomainsResources.class.getResource("netstat_used_ports_proxy.txt")),
+    usedportsproxyNetstatPortsCommand("/bin/netstat", DomainsResources.class.getResource("usedportsproxy_netstat.txt")),
+    usedportsproxyRuncommandsLogExpected("/runcommands.log", DomainsResources.class.getResource("usedportsproxy_runcommands_expected.txt")),
     // users existing
+    usersExistingRuncommandsLogExpected("/runcommands.log", DomainsResources.class.getResource("usersexist_runcommands_expected.txt")),
     usersExistingGroupsFile("/etc/group", DomainsResources.class.getResource("usersexist_group.txt")),
     usersExistingUsersFile("/etc/passwd", DomainsResources.class.getResource("usersexist_passwd.txt")),
     usersExistingGroupModOutExpected("/usr/sbin/groupmod.out", DomainsResources.class.getResource("usersexist_groupmod_out_expected.txt")),
     usersExistingUserModOutExpected("/usr/sbin/usermod.out", DomainsResources.class.getResource("usersexist_usermod_out_expected.txt")),
     usersExistingUseraddOutExpected("/usr/sbin/useradd.out", DomainsResources.class.getResource("usersexist_useradd_out_expected.txt")),
     usersExistingGroupaddOutExpected("/usr/sbin/groupadd.out", DomainsResources.class.getResource("usersexist_groupadd_out_expected.txt")),
+    usersExistingChownOutExpected("/bin/chown.out", DomainsResources.class.getResource("usersexist_chown_out_expected.txt")),
+    usersExistingChmodOutExpected("/bin/chmod.out", DomainsResources.class.getResource("usersexist_chmod_out_expected.txt")),
     usersExistingPsOutExpected("/bin/ps.out", DomainsResources.class.getResource("usersexist_ps_out_expected.txt")),
     usersExistingKillOutExpected("/usr/bin/kill.out", DomainsResources.class.getResource("usersexist_kill_out_expected.txt")),
+    // thin user existing
+    thinUserExistingRuncommandsLogExpected("/runcommands.log", DomainsResources.class.getResource("thinuserexist_runcommands_expected.txt")),
+    thinUserExistingGroupsFile("/etc/group", DomainsResources.class.getResource("usersexist_group.txt")),
+    thinUserExistingUsersFile("/etc/passwd", DomainsResources.class.getResource("usersexist_passwd.txt")),
+    thinUserExistingPsCommand("/bin/ps", DomainsResources.class.getResource("thinuserexist_ps_command.txt")),
+    thinUserExistingGroupModOutExpected("/usr/sbin/groupmod.out", DomainsResources.class.getResource("usersexist_groupmod_out_expected.txt")),
+    thinUserExistingUserModOutExpected("/usr/sbin/usermod.out", DomainsResources.class.getResource("usersexist_usermod_out_expected.txt")),
+    thinUserExistingUseraddOutExpected("/usr/sbin/useradd.out", DomainsResources.class.getResource("usersexist_useradd_out_expected.txt")),
+    thinUserExistingGroupaddOutExpected("/usr/sbin/groupadd.out", DomainsResources.class.getResource("usersexist_groupadd_out_expected.txt")),
+    thinUserExistingChownOutExpected("/bin/chown.out", DomainsResources.class.getResource("usersexist_chown_out_expected.txt")),
+    thinUserExistingChmodOutExpected("/bin/chmod.out", DomainsResources.class.getResource("usersexist_chmod_out_expected.txt")),
+    thinUserExistingPsOutExpected("/bin/ps.out", DomainsResources.class.getResource("usersexist_ps_out_expected.txt")),
+    thinUserExistingKillOutExpected("/usr/bin/kill.out", DomainsResources.class.getResource("usersexist_kill_out_expected.txt")),
+    thinUserExistingThinOutExpected("/etc/init.d/thin.out", DomainsResources.class.getResource("thinuserexist_thin_out_expected.txt")),
 
     ResourcesUtils resources
 

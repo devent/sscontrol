@@ -20,11 +20,12 @@ package com.anrisoftware.sscontrol.scripts.localuser;
 
 import java.util.Map;
 
+import com.anrisoftware.globalpom.exec.runcommands.RunCommands;
 import com.anrisoftware.globalpom.threads.api.Threads;
 
 /**
  * Factory to create to add local group.
- * 
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
@@ -32,32 +33,35 @@ public interface LocalGroupAddFactory {
 
     /**
      * Create to add local group.
-     * 
+     *
      * @param args
      *            the {@link Map} arguments:
      *            <ul>
+     *            <li>{@code runCommands} optionally, set to the
+     *            {@link RunCommands} to record the command.
+     *
      *            <li>{@code command} the group add command, for example
      *            {@code "/usr/sbin/groupadd".}
-     * 
+     *
      *            <li>{@code groupsFile} the path to the groups file, for
      *            example {@code "/etc/group".}
-     * 
+     *
      *            <li>{@code groupName} the group name, for example
      *            {@code "test".}
-     * 
+     *
      *            <li>{@code systemGroup} optionally, set to {@code true} to add
      *            a new system group.
-     * 
+     *
      *            <li>{@code groupId} optionally, the group ID, for example
      *            {@code "100".}
      *            </ul>
-     * 
+     *
      * @param parent
      *            the {@link Object} parent script.
-     * 
+     *
      * @param threads
      *            the {@link Threads} pool.
-     * 
+     *
      * @return the {@link LocalGroupAdd}.
      */
     LocalGroupAdd create(Map<String, Object> args, Object parent,

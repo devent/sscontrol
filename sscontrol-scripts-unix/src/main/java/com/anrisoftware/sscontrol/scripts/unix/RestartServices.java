@@ -27,6 +27,7 @@ import javax.inject.Inject;
 
 import com.anrisoftware.globalpom.exec.api.CommandLine;
 import com.anrisoftware.globalpom.exec.api.ProcessTask;
+import com.anrisoftware.globalpom.exec.runcommands.RunCommands;
 import com.anrisoftware.globalpom.exec.script.ScriptCommandLineFactory;
 import com.anrisoftware.globalpom.exec.scriptprocess.AbstractProcessExec;
 import com.anrisoftware.globalpom.threads.api.Threads;
@@ -45,8 +46,9 @@ public class RestartServices extends AbstractProcessExec {
 
     private final Object parent;
 
-    @Inject
-    private RestartServicesLogger log;
+    private final RunCommands runCommands;
+
+    private final RestartServicesLogger log;
 
     @Inject
     private CommandTemplatesProvider commandTemplates;
@@ -57,12 +59,14 @@ public class RestartServices extends AbstractProcessExec {
      * @see RestartServicesFactory#create(Map, Object, Threads)
      */
     @Inject
-    RestartServices(@Assisted Object parent, @Assisted Threads threads,
-            @Assisted Map<String, Object> args) {
+    RestartServices(RestartServicesLogger log, @Assisted Object parent,
+            @Assisted Threads threads, @Assisted Map<String, Object> args) {
         super(threads, args);
+        this.log = log;
         this.parent = parent;
         this.args = args;
         this.system = "unix";
+        this.runCommands = log.runCommands(args, parent);
     }
 
     public void setSystem(String system) {
@@ -80,7 +84,7 @@ public class RestartServices extends AbstractProcessExec {
     public ProcessTask call() throws Exception {
         log.checkArgs(args);
         ProcessTask task = super.call();
-        log.restartedDone(parent, task, args);
+        log.restartedDone(parent, runCommands, task, args);
         return task;
     }
 

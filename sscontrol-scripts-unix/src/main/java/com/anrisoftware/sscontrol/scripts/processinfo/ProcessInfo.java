@@ -20,6 +20,7 @@ package com.anrisoftware.sscontrol.scripts.processinfo;
 
 import static com.anrisoftware.sscontrol.scripts.processinfo.ProcessInfoLogger.SEARCH;
 import static java.util.Collections.unmodifiableSet;
+import static org.apache.commons.lang3.StringUtils.join;
 import static org.apache.commons.lang3.StringUtils.split;
 
 import java.text.ParseException;
@@ -86,6 +87,8 @@ public class ProcessInfo implements Callable<ProcessInfo> {
 
     private boolean found;
 
+    private String commandArgs;
+
     /**
      * @see ProcessInfoFactory#create(Map, Object, Threads)
      */
@@ -145,6 +148,9 @@ public class ProcessInfo implements Callable<ProcessInfo> {
         this.groupId = Integer.valueOf(out[4]);
         this.processId = Integer.valueOf(out[5]);
         this.commandName = out[6];
+        if (out.length > 7) {
+            this.commandArgs = join(out, ' ', 7, out.length);
+        }
     }
 
     private void parseProcessStates(Set<ProcessState> states, String string)
@@ -186,6 +192,10 @@ public class ProcessInfo implements Callable<ProcessInfo> {
 
     public boolean isProcessFound() {
         return found;
+    }
+
+    public String getProcessCommandArgs() {
+        return commandArgs;
     }
 
     @Override

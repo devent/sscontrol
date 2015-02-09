@@ -33,6 +33,7 @@ import com.anrisoftware.sscontrol.httpd.redmine.RedmineService
 import com.anrisoftware.sscontrol.httpd.redmine.ScmInstall
 import com.anrisoftware.sscontrol.httpd.service.HttpdService
 import com.anrisoftware.sscontrol.httpd.webservice.OverrideMode
+import com.anrisoftware.sscontrol.testutils.resources.HttpdTestEnvironment;
 
 /**
  * @see RedmineService
@@ -41,7 +42,7 @@ import com.anrisoftware.sscontrol.httpd.webservice.OverrideMode
  * @since 1.0
  */
 @Slf4j
-class RedmineServiceTest extends HttpdTestUtil {
+class RedmineServiceTest extends HttpdTestEnvironment {
 
     @Test
     void "redmine"() {

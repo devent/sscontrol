@@ -21,7 +21,7 @@ package com.anrisoftware.sscontrol.httpd.apache.ubuntu_12_04
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static org.apache.commons.io.FileUtils.*
 
-import com.anrisoftware.sscontrol.httpd.apache.resources.ResourcesUtils
+import com.anrisoftware.sscontrol.testutils.resources.ResourcesUtils
 
 /**
  * Loads Ubuntu 12.04 resources.
@@ -31,8 +31,8 @@ import com.anrisoftware.sscontrol.httpd.apache.resources.ResourcesUtils
  */
 enum Ubuntu_12_04_Resources {
 
-    restartCommand("/etc/init.d/apache2", Ubuntu_12_04_Resources.class.getResource("echo_command.txt")),
-    stopCommand("/etc/init.d/apache2", Ubuntu_12_04_Resources.class.getResource("echo_command.txt")),
+    restartCommand("/etc/init.d/apache2Restart", Ubuntu_12_04_Resources.class.getResource("echo_command.txt")),
+    stopCommand("/etc/init.d/apache2Stop", Ubuntu_12_04_Resources.class.getResource("echo_command.txt")),
     a2enmodCommand("/usr/sbin/a2enmod", Ubuntu_12_04_Resources.class.getResource("echo_command.txt")),
     a2dismodCommand("/usr/sbin/a2dismod", Ubuntu_12_04_Resources.class.getResource("echo_command.txt")),
     a2ensiteCommand("/usr/sbin/a2ensite", Ubuntu_12_04_Resources.class.getResource("echo_command.txt")),
@@ -78,8 +78,8 @@ enum Ubuntu_12_04_Resources {
 
     static void setupUbuntu_12_04_Properties(def profile, File parent) {
         def entry = profile.getEntry("httpd")
-        entry.restart_command "${restartCommand.asFile(parent)} restart"
-        entry.stop_command "${stopCommand.asFile(parent)} stop"
+        entry.restart_command restartCommand.asFile(parent)
+        entry.stop_command stopCommand.asFile(parent)
         entry.enable_mod_command a2enmodCommand.asFile(parent)
         entry.disable_mod_command a2dismodCommand.asFile(parent)
         entry.enable_site_command a2ensiteCommand.asFile(parent)

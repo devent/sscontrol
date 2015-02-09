@@ -20,6 +20,7 @@ package com.anrisoftware.sscontrol.scripts.processinfo;
 
 import java.util.Map;
 
+import com.anrisoftware.globalpom.exec.runcommands.RunCommands;
 import com.anrisoftware.globalpom.threads.api.Threads;
 
 /**
@@ -38,6 +39,9 @@ public interface ProcessInfoFactory {
      * @param args
      *            the {@link Map} arguments:
      *            <ul>
+     *            <li>{@code runCommands} optionally, set to the
+     *            {@link RunCommands} to record the command.
+     *
      *            <li>{@code command} the {@code ps} command, for example
      *            {@code "/bin/ps".}
      *

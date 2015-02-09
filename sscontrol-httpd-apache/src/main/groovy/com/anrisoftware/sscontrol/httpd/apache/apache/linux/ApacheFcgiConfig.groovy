@@ -33,8 +33,8 @@ import com.anrisoftware.sscontrol.httpd.domain.Domain
 import com.anrisoftware.sscontrol.httpd.fcgi.FcgiConfig
 import com.anrisoftware.sscontrol.httpd.php.config.Php_5_Config
 import com.anrisoftware.sscontrol.httpd.webservice.WebService
-import com.anrisoftware.sscontrol.scripts.changefile.ChangeFileModFactory;
-import com.anrisoftware.sscontrol.scripts.changefile.ChangeFileOwnerFactory;
+import com.anrisoftware.sscontrol.scripts.changefile.ChangeFileModFactory
+import com.anrisoftware.sscontrol.scripts.changefile.ChangeFileOwnerFactory
 import com.anrisoftware.sscontrol.scripts.mklink.MkLinkFactory
 
 /**
@@ -106,6 +106,7 @@ class ApacheFcgiConfig extends Php_5_Config implements FcgiConfig {
         dir.mkdirs()
         changeFileOwnerFactory.create(
                 log: log,
+                runCommands: runCommands,
                 command: chownCommand,
                 owner: user.name,
                 ownerGroup: user.group,
@@ -124,6 +125,7 @@ class ApacheFcgiConfig extends Php_5_Config implements FcgiConfig {
         FileUtils.write file, string
         changeFileOwnerFactory.create(
                 log: log,
+                runCommands: runCommands,
                 command: chownCommand,
                 owner: user.name,
                 ownerGroup: user.group,
@@ -131,6 +133,7 @@ class ApacheFcgiConfig extends Php_5_Config implements FcgiConfig {
                 this, threads)()
         changeFileModFactory.create(
                 log: log,
+                runCommands: runCommands,
                 command: chmodCommand,
                 mod: "755",
                 files: file,
@@ -159,6 +162,7 @@ class ApacheFcgiConfig extends Php_5_Config implements FcgiConfig {
             def target = new File(targetdir, file.name)
             mkLinkFactory.create(
                     log: log,
+                    runCommands: runCommands,
                     files: file,
                     targets: target,
                     override: true,

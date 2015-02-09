@@ -27,7 +27,7 @@ import groovy.util.logging.Slf4j
 
 import org.junit.Test
 
-import com.anrisoftware.sscontrol.httpd.nginx.ubuntu.UbuntuTestUtil
+import com.anrisoftware.sscontrol.testutils.resources.ScriptTestEnvironment;
 
 /**
  * Proxy pass <i>Nginx</i> on a <i>Ubuntu 12.04</i> server.
@@ -36,7 +36,7 @@ import com.anrisoftware.sscontrol.httpd.nginx.ubuntu.UbuntuTestUtil
  * @since 1.0
  */
 @Slf4j
-class ProxyPassTest extends UbuntuTestUtil {
+class ProxyPassTest extends ScriptTestEnvironment {
 
     @Test
     void "proxy pass"() {

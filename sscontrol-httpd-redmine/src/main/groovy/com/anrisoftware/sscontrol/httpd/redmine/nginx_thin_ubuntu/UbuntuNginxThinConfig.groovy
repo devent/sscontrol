@@ -55,6 +55,7 @@ abstract class UbuntuNginxThinConfig extends Redmine_2_5_Config {
     void installPackages() {
         installPackagesFactory.create(
                 log: log,
+                runCommands: runCommands,
                 command: installCommand,
                 packages: redminePackages,
                 system: systemName,
@@ -87,6 +88,7 @@ abstract class UbuntuNginxThinConfig extends Redmine_2_5_Config {
         }
         installPackagesFactory.create(
                 log: log,
+                runCommands: runCommands,
                 command: installCommand,
                 packages: list,
                 system: systemName,
@@ -112,6 +114,7 @@ abstract class UbuntuNginxThinConfig extends Redmine_2_5_Config {
         def pluginAssetsDir = new File(dir, 'public/plugin_assets')
         changeFileOwnerFactory.create(
                 log: log,
+                runCommands: runCommands,
                 command: chownCommand,
                 files: [
                     filesDir,
@@ -126,6 +129,7 @@ abstract class UbuntuNginxThinConfig extends Redmine_2_5_Config {
                 this, threads)()
         changeFileModFactory.create(
                 log: log,
+                runCommands: runCommands,
                 command: chmodCommand,
                 files: [
                     filesDir,

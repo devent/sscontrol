@@ -32,6 +32,7 @@ import com.anrisoftware.sscontrol.scripts.changefile.ChangeFileModFactory
 import com.anrisoftware.sscontrol.scripts.localuser.LocalGroupAddFactory
 import com.anrisoftware.sscontrol.scripts.localuser.LocalUserAddFactory
 import com.anrisoftware.sscontrol.scripts.unix.RestartServicesFactory
+import com.anrisoftware.sscontrol.scripts.unix.StopServicesFactory
 
 /**
  * <i>Thin 1.3</i> service configuration.
@@ -60,6 +61,9 @@ abstract class Thin_1_3_Config extends AbstractThinConfig {
     @Inject
     RestartServicesFactory restartServicesFactory
 
+    @Inject
+    StopServicesFactory stopServicesFactory
+
     TemplateResource domainConfigTemplate
 
     TemplateResource thinConfigTemplate
@@ -81,11 +85,25 @@ abstract class Thin_1_3_Config extends AbstractThinConfig {
     }
 
     /**
-     * Restarts <i>Thin</i> services.
+     * Stops the <i>Thin</i> services.
+     */
+    void stopServices() {
+        stopServicesFactory.create(
+                log: log,
+                runCommands: runCommands,
+                command: thinStopCommand,
+                services: thinStopServices,
+                flags: thinStopFlags,
+                this, threads)()
+    }
+
+    /**
+     * Restarts the <i>Thin</i> services.
      */
     void restartServices() {
         restartServicesFactory.create(
                 log: log,
+                runCommands: runCommands,
                 command: thinRestartCommand,
                 services: thinRestartServices,
                 flags: thinRestartFlags,
@@ -104,6 +122,7 @@ abstract class Thin_1_3_Config extends AbstractThinConfig {
     void createThinUser(Domain domain, WebService service) {
         localGroupAddFactory.create(
                 log: log,
+                runCommands: runCommands,
                 command: groupAddCommand,
                 systemGroup: true,
                 groupsFile: groupsFile,
@@ -111,6 +130,7 @@ abstract class Thin_1_3_Config extends AbstractThinConfig {
                 this, threads)()
         localUserAddFactory.create(
                 log: log,
+                runCommands: runCommands,
                 userName: thinUser,
                 groupName: thinGroup,
                 command: userAddCommand,
@@ -182,6 +202,7 @@ abstract class Thin_1_3_Config extends AbstractThinConfig {
         logg.serviceFileCreated this, file, conf
         changeFileModFactory.create(
                 log: log,
+                runCommands: runCommands,
                 command: chmodCommand,
                 files: file,
                 mod: "+x",

@@ -20,11 +20,12 @@ package com.anrisoftware.sscontrol.scripts.changefile;
 
 import java.util.Map;
 
+import com.anrisoftware.globalpom.exec.runcommands.RunCommands;
 import com.anrisoftware.globalpom.threads.api.Threads;
 
 /**
  * Factory to create to change the mode.
- * 
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
@@ -32,28 +33,31 @@ public interface ChangeFileModFactory {
 
     /**
      * Creates to change the mode.
-     * 
+     *
      * @param args
      *            the {@link Map} arguments:
      *            <ul>
+     *            <li>{@code runCommands} optionally, set to the
+     *            {@link RunCommands} to record the command.
+     *
      *            <li>{@code command} the change file owner command, for example
      *            {@code "/bin/chmod".}
-     * 
+     *
      *            <li>{@code files} the list of files.
-     * 
+     *
      *            <li>{@code mod} the mode of the file, for example
      *            {@code "+w".}
-     * 
+     *
      *            <li>{@code recursive} optionally, set to {@code true} to
      *            change files recursive.
      *            </ul>
-     * 
+     *
      * @param parent
      *            the {@link Object} parent script.
-     * 
+     *
      * @param threads
      *            the {@link Threads} pool.
-     * 
+     *
      * @return the {@link ChangeFileMod}.
      */
     ChangeFileMod create(Map<String, Object> args, Object parent,

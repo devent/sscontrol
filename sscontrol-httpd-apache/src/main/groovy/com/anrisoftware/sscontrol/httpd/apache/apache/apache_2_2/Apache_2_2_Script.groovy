@@ -191,10 +191,15 @@ abstract class Apache_2_2_Script extends ApacheScript {
      * Stops the <i>Apache</i> services.
      */
     void stopServices() {
+        if (!new File(stopCommand).exists()) {
+            return
+        }
         stopServicesFactory.create(
                 log: log,
+                runCommands: runCommands,
                 command: stopCommand,
                 services: stopServices,
+                flags: stopFlags,
                 exitCode: null,
                 this, threads)()
     }
@@ -205,8 +210,10 @@ abstract class Apache_2_2_Script extends ApacheScript {
     void restartServices() {
         restartServicesFactory.create(
                 log: log,
+                runCommands: runCommands,
                 command: restartCommand,
                 services: restartServices,
+                flags: restartFlags,
                 this, threads)()
     }
 

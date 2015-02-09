@@ -58,6 +58,7 @@ abstract class Mysql_5_DatabaseBackup extends DatabaseBackup {
     void execBackupScript(WebService service, File archiveFile) {
         scriptExecFactory.create(
                 log: log,
+                runCommands: runCommands,
                 mysqldumpCommand: mysqldumpCommand,
                 gzipCommand: gzipCommand,
                 archiveFile: archiveFile,

@@ -21,8 +21,8 @@ package com.anrisoftware.sscontrol.httpd.apache.userrefdomain.ubuntu_12_04
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static org.apache.commons.io.FileUtils.*
 
-import com.anrisoftware.sscontrol.httpd.apache.resources.ResourcesUtils
 import com.anrisoftware.sscontrol.httpd.apache.ubuntu.UbuntuResources
+import com.anrisoftware.sscontrol.testutils.resources.ResourcesUtils
 
 /**
  * Loads the resources.

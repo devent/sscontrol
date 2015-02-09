@@ -21,7 +21,7 @@ package com.anrisoftware.sscontrol.httpd.nginx.ubuntu
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static org.apache.commons.io.FileUtils.*
 
-import com.anrisoftware.sscontrol.httpd.nginx.resources.ResourcesUtils
+import com.anrisoftware.sscontrol.testutils.resources.ResourcesUtils;
 
 /**
  * Loads Ubuntu resources.
@@ -61,6 +61,23 @@ enum UbuntuResources {
         usermodCommand.createCommand parent
         killCommand.createCommand parent
         psCommand.createCommand parent
+    }
+
+    static void setupUbuntuProperties(def profile, File parent) {
+        def entry = profile.getEntry("httpd")
+        entry.install_command UbuntuResources.aptitudeCommand.asFile(parent)
+        entry.apache2_stop_command UbuntuResources.apacheStopCommand.asFile(parent)
+        entry.chmod_command UbuntuResources.chmodCommand.asFile(parent)
+        entry.chown_command UbuntuResources.chownCommand.asFile(parent)
+        entry.group_add_command UbuntuResources.groupaddCommand.asFile(parent)
+        entry.group_mod_command UbuntuResources.groupmodCommand.asFile(parent)
+        entry.user_add_command UbuntuResources.useraddCommand.asFile(parent)
+        entry.user_mod_command UbuntuResources.usermodCommand.asFile(parent)
+        entry.ps_command UbuntuResources.psCommand.asFile(parent)
+        entry.kill_command UbuntuResources.killCommand.asFile(parent)
+        entry.netstat_command UbuntuResources.netstatCommand.asFile(parent)
+        entry.link_command UbuntuResources.lnCommand.asFile(parent)
+        entry.temp_directory UbuntuResources.tmpDir.asFile(parent)
     }
 
     ResourcesUtils resources

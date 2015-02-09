@@ -28,7 +28,7 @@ import groovy.util.logging.Slf4j
 import org.junit.Test
 
 import com.anrisoftware.sscontrol.core.api.ServiceException
-import com.anrisoftware.sscontrol.httpd.apache.ubuntu.UbuntuTestUtil
+import com.anrisoftware.sscontrol.testutils.resources.WebServiceTestEnvironment
 
 /**
  * Test Apache on a Ubuntu 12.04 server.
@@ -37,10 +37,11 @@ import com.anrisoftware.sscontrol.httpd.apache.ubuntu.UbuntuTestUtil
  * @since 1.0
  */
 @Slf4j
-class DomainsTest extends UbuntuTestUtil {
+class DomainsTest extends WebServiceTestEnvironment {
 
     @Test
     void "simple script"() {
+        attachRunCommandsLog tmpdir
         copyUbuntuFiles tmpdir
         copyUbuntu_12_04_Files tmpdir
         loader.loadService profile.resource, null
@@ -50,9 +51,12 @@ class DomainsTest extends UbuntuTestUtil {
 
         registry.allServices.each { it.call() }
         log.info "Run service again to ensure that configuration is not set double."
+        stopCommand.createCommand tmpdir
         registry.allServices.each { it.call() }
 
-        assertFileContent simpleApacheOutExpected.asFile(tmpdir), simpleApacheOutExpected
+        assertStringContent simpleRuncommandsLogExpected.replaced(tmpdir, tmpdir, "/tmp").replaceAll(/\d+/, 'time'), simpleRuncommandsLogExpected.toString()
+        assertFileContent simpleApacheRestartOutExpected.asFile(tmpdir), simpleApacheRestartOutExpected
+        assertFileContent simpleApacheStopOutExpected.asFile(tmpdir), simpleApacheStopOutExpected
         assertFileContent simpleDefaultConfExpected.asFile(tmpdir), simpleDefaultConfExpected
         assertFileContent simpleDomainsConfExpected.asFile(tmpdir), simpleDomainsConfExpected
         assertFileContent simplePortsConfExpected.asFile(tmpdir), simplePortsConfExpected
@@ -99,7 +103,7 @@ class DomainsTest extends UbuntuTestUtil {
         log.info "Run service again to ensure that configuration is not set double."
         registry.allServices.each { it.call() }
 
-        assertFileContent portsApacheOutExpected.asFile(tmpdir), portsApacheOutExpected
+        assertFileContent portsApacheRestartOutExpected.asFile(tmpdir), portsApacheRestartOutExpected
         assertFileContent portsDefaultConfExpected.asFile(tmpdir), portsDefaultConfExpected
         assertFileContent portsDomainsConfExpected.asFile(tmpdir), portsDomainsConfExpected
         assertFileContent portsPortsConfExpected.asFile(tmpdir), portsPortsConfExpected
@@ -119,7 +123,7 @@ class DomainsTest extends UbuntuTestUtil {
         log.info "Run service again to ensure that configuration is not set double."
         registry.allServices.each { it.call() }
 
-        assertFileContent usersApacheOutExpected.asFile(tmpdir), usersApacheOutExpected
+        assertFileContent usersApacheRestartOutExpected.asFile(tmpdir), usersApacheRestartOutExpected
         assertFileContent usersDefaultConfExpected.asFile(tmpdir), usersDefaultConfExpected
         try {
             assertFileContent usersDomainsConfExpected.asFile(tmpdir), usersDomainsConfExpected

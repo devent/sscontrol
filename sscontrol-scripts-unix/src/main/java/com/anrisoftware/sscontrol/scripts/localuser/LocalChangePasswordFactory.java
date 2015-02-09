@@ -20,11 +20,12 @@ package com.anrisoftware.sscontrol.scripts.localuser;
 
 import java.util.Map;
 
+import com.anrisoftware.globalpom.exec.runcommands.RunCommands;
 import com.anrisoftware.globalpom.threads.api.Threads;
 
 /**
  * Factory to create the change the password of the local user.
- * 
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
@@ -32,33 +33,36 @@ public interface LocalChangePasswordFactory {
 
     /**
      * Create the change the password of the local user.
-     * 
+     *
      * @param args
      *            the {@link Map} arguments:
      *            <ul>
+     *            <li>{@code runCommands} optionally, set to the
+     *            {@link RunCommands} to record the command.
+     *
      *            <li>{@code command} the command to change the local user
      *            password, for example {@code "/usr/sbin/chpasswd".}
-     * 
+     *
      *            <li>{@code name} the name of the distribution, options are:
      *            <ul>
      *            <li>{@code ubuntu}
      *            <li>{@code debian}
      *            <li>{@code redhat}
      *            </ul>
-     * 
+     *
      *            <li>{@code password} the new password, for example
      *            {@code "foopass".}
-     * 
+     *
      *            <li>{@code userName} the local user name, for example
      *            {@code "foo".}
      *            </ul>
-     * 
+     *
      * @param parent
      *            the {@link Object} parent script.
-     * 
+     *
      * @param threads
      *            the {@link Threads} pool.
-     * 
+     *
      * @return the {@link LocalChangePassword}.
      */
     LocalChangePassword create(Map<String, Object> args, Object parent,

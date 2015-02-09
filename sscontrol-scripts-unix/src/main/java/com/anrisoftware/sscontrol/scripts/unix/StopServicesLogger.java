@@ -27,12 +27,16 @@ import static org.apache.commons.lang3.Validate.notNull;
 
 import java.util.Map;
 
+import javax.inject.Inject;
+
 import com.anrisoftware.globalpom.exec.api.ProcessTask;
+import com.anrisoftware.globalpom.exec.runcommands.RunCommands;
+import com.anrisoftware.globalpom.exec.runcommands.RunCommandsArg;
 import com.anrisoftware.globalpom.log.AbstractLogger;
 
 /**
  * Logging for {@link StopServices}.
- * 
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
@@ -65,6 +69,9 @@ class StopServicesLogger extends AbstractLogger {
         }
     }
 
+    @Inject
+    private RunCommandsArg runCommandsArg;
+
     /**
      * Sets the context of the logger to {@link StopServices}.
      */
@@ -72,7 +79,8 @@ class StopServicesLogger extends AbstractLogger {
         super(StopServices.class);
     }
 
-    void stopDone(Object parent, ProcessTask task, Map<String, Object> args) {
+    void stopDone(Object parent, RunCommands runCommands, ProcessTask task,
+            Map<String, Object> args) {
         if (isTraceEnabled()) {
             trace(stopped_service_trace, args, parent, task);
         } else if (isDebugEnabled()) {
@@ -80,6 +88,13 @@ class StopServicesLogger extends AbstractLogger {
         } else {
             info(stopped_service_info, parent);
         }
+        if (runCommands != null) {
+            runCommands.add(args.get(COMMAND_ARG), args);
+        }
+    }
+
+    RunCommands runCommands(Map<String, Object> args, Object parent) {
+        return runCommandsArg.runCommands(args, parent);
     }
 
     void checkArgs(Map<String, Object> args) {

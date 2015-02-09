@@ -74,6 +74,7 @@ abstract class ArchiveServiceBackup {
         output.parentFile.mkdirs()
         packFactory.create(
                 log: log,
+                runCommands: runCommands,
                 files: source,
                 commands: unpackCommands,
                 output: output,

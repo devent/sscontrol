@@ -29,6 +29,7 @@ import org.joda.time.Duration;
 
 import com.anrisoftware.globalpom.exec.api.CommandLine;
 import com.anrisoftware.globalpom.exec.api.ProcessTask;
+import com.anrisoftware.globalpom.exec.runcommands.RunCommands;
 import com.anrisoftware.globalpom.exec.script.ScriptCommandLineFactory;
 import com.anrisoftware.globalpom.exec.scriptprocess.AbstractProcessExec;
 import com.anrisoftware.globalpom.threads.api.Threads;
@@ -52,8 +53,9 @@ public class InstallPackages extends AbstractProcessExec {
 
     private final Map<String, Object> args;
 
-    @Inject
-    private InstallPackagesLogger log;
+    private final RunCommands runCommands;
+
+    private final InstallPackagesLogger log;
 
     @Inject
     private CommandTemplatesProvider commandTemplates;
@@ -62,11 +64,13 @@ public class InstallPackages extends AbstractProcessExec {
      * @see InstallPackagesFactory#create(Map, Object, Threads)
      */
     @Inject
-    InstallPackages(@Assisted Object parent, @Assisted Threads threads,
-            @Assisted Map<String, Object> args) {
+    InstallPackages(InstallPackagesLogger log, @Assisted Object parent,
+            @Assisted Threads threads, @Assisted Map<String, Object> args) {
         super(threads, setupTimeout(args));
+        this.log = log;
         this.parent = parent;
         this.args = args;
+        this.runCommands = log.runCommands(args, parent);
     }
 
     private static Map<String, Object> setupTimeout(Map<String, Object> args) {
@@ -88,7 +92,7 @@ public class InstallPackages extends AbstractProcessExec {
     public ProcessTask call() throws Exception {
         log.checkArgs(args);
         ProcessTask task = super.call();
-        log.installPackagesDone(parent, task, args);
+        log.installPackagesDone(parent, runCommands, task, args);
         return task;
     }
 

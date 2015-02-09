@@ -39,8 +39,8 @@ import com.anrisoftware.sscontrol.httpd.auth.RequireGroup
 import com.anrisoftware.sscontrol.httpd.auth.RequireUpdate
 import com.anrisoftware.sscontrol.httpd.domain.Domain
 import com.anrisoftware.sscontrol.httpd.webservice.WebService
-import com.anrisoftware.sscontrol.scripts.changefile.ChangeFileModFactory;
-import com.anrisoftware.sscontrol.scripts.changefile.ChangeFileOwnerFactory;
+import com.anrisoftware.sscontrol.scripts.changefile.ChangeFileModFactory
+import com.anrisoftware.sscontrol.scripts.changefile.ChangeFileOwnerFactory
 
 /**
  * Auth/file configuration.
@@ -252,13 +252,19 @@ abstract class AuthFileConfig extends BasicAuth {
         def authdir = new File(authSubdirectory, domainDir(domain))
         changeFileOwnerFactory.create(
                 log: log,
-                command: script.chownCommand,
-                owner: owner, ownerGroup: group, files: authdir, recursive: true,
+                runCommands: runCommands,
+                command: chownCommand,
+                owner: owner,
+                ownerGroup: group,
+                files: authdir,
+                recursive: true,
                 this, threads)()
         changeFileModFactory.create(
                 log: log,
-                command: script.chmodCommand,
-                mod: "o-rw", files: [
+                runCommands: runCommands,
+                command: chmodCommand,
+                mod: "o-rw",
+                files: [
                     passwordFile(service, domain),
                     groupFile(domain, service)
                 ],

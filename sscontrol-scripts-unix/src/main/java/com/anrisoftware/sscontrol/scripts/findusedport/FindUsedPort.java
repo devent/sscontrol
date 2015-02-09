@@ -33,12 +33,13 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.anrisoftware.globalpom.exec.api.ProcessTask;
+import com.anrisoftware.globalpom.exec.runcommands.RunCommands;
 import com.anrisoftware.globalpom.threads.api.Threads;
 import com.google.inject.assistedinject.Assisted;
 
 /**
  * Find the services for the specified ports.
- * 
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
@@ -46,11 +47,17 @@ public class FindUsedPort implements Callable<FindUsedPort> {
 
     private static Pattern SERVICES_PATTERN = Pattern.compile("\\d+\\/.*");
 
+    private final FindUsedPortLogger log;
+
     private final Map<String, Object> args;
+
+    private final Object parent;
 
     private final Threads threads;
 
     private final Collection<Integer> ports;
+
+    private final RunCommands runCommands;
 
     @Inject
     private FindUsedPortProcessFactory findUsedPortProcessFactory;
@@ -63,9 +70,12 @@ public class FindUsedPort implements Callable<FindUsedPort> {
     @Inject
     FindUsedPort(FindUsedPortLogger log, @Assisted Map<String, Object> args,
             @Assisted Object parent, @Assisted Threads threads) {
+        this.log = log;
         this.args = args;
+        this.parent = parent;
         this.threads = threads;
         this.ports = log.ports(args, parent);
+        this.runCommands = log.runCommands(args, parent);
         log.command(args, parent);
     }
 
@@ -78,6 +88,7 @@ public class FindUsedPort implements Callable<FindUsedPort> {
         ProcessTask task;
         task = findUsedPortProcessFactory.create(threads, args).call();
         this.services = findServices(task);
+        log.portsFound(parent, runCommands, task, args, services);
         return this;
     }
 

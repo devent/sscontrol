@@ -21,7 +21,7 @@ package com.anrisoftware.sscontrol.httpd.nginx.ubuntu_14_04
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static org.apache.commons.io.FileUtils.*
 
-import com.anrisoftware.sscontrol.httpd.nginx.resources.ResourcesUtils
+import com.anrisoftware.sscontrol.testutils.resources.ResourcesUtils;
 
 /**
  * <i>Ubuntu 14.04</i> resources.
@@ -31,28 +31,36 @@ import com.anrisoftware.sscontrol.httpd.nginx.resources.ResourcesUtils
  */
 enum Ubuntu_14_04_Resources {
 
+    // commands
+    restartCommand("/etc/init.d/nginx", Ubuntu_14_04_Resources.class.getResource("echo_command.txt")),
+    stopCommand("/etc/init.d/nginx", Ubuntu_14_04_Resources.class.getResource("echo_command.txt")),
+    thinStopCommand("/etc/init.d/thin", Ubuntu_14_04_Resources.class.getResource("echo_command.txt")),
+    // files
     groupsFile("/etc/group", Ubuntu_14_04_Resources.class.getResource("group.txt")),
     usersFile("/etc/passwd", Ubuntu_14_04_Resources.class.getResource("passwd.txt")),
-    restartCommand("/etc/init.d/nginx", Ubuntu_14_04_Resources.class.getResource("echo_command.txt")),
+    nginxConfFile("/etc/nginx/nginx.conf", Ubuntu_14_04_Resources.class.getResource("nginx_conf.txt")),
     sitesDir("/var/www", null),
     confDir("/etc/nginx", null),
     sitesAvailableDir("/etc/nginx/sites-available", null),
     sitesEnabledDir("/etc/nginx/sites-enabled", null),
     configIncludeDir("/etc/nginx/conf.d", null),
     cacheDir("/var/cache/nginx", null),
-    nginxConfFile("/etc/nginx/nginx.conf", Ubuntu_14_04_Resources.class.getResource("nginx_conf.txt")),
 
     static copyUbuntu_14_04_Files(File parent) {
-        confDir.asFile parent mkdirs()
         restartCommand.createCommand parent
+        stopCommand.createCommand parent
+        thinStopCommand.createCommand parent
         groupsFile.createFile parent
         usersFile.createFile parent
         nginxConfFile.createFile parent
+        confDir.asFile parent mkdirs()
     }
 
     static void setupUbuntu_14_04_Properties(def profile, File parent) {
         def entry = profile.getEntry("httpd")
-        entry.restart_command "${restartCommand.asFile(parent)} restart"
+        entry.restart_command restartCommand.asFile(parent)
+        entry.stop_command stopCommand.asFile(parent)
+        entry.thin_stop_command thinStopCommand.asFile(parent)
         entry.configuration_directory confDir.asFile(parent)
         entry.groups_file groupsFile.asFile(parent)
         entry.users_file usersFile.asFile(parent)

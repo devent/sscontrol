@@ -27,7 +27,7 @@ import groovy.util.logging.Slf4j
 
 import org.junit.Test
 
-import com.anrisoftware.sscontrol.httpd.nginx.ubuntu.UbuntuTestUtil
+import com.anrisoftware.sscontrol.testutils.resources.ScriptTestEnvironment;
 
 /**
  * <i>Nginx Ubuntu 14.04</i> service test.
@@ -36,15 +36,17 @@ import com.anrisoftware.sscontrol.httpd.nginx.ubuntu.UbuntuTestUtil
  * @since 1.0
  */
 @Slf4j
-class DomainsTest extends UbuntuTestUtil {
+class DomainsTest extends ScriptTestEnvironment {
 
     @Test
     void "domains"() {
+        attachRunCommandsLog tmpdir
         copyUbuntuFiles tmpdir
         copyUbuntu_14_04_Files tmpdir
 
         loader.loadService profile.resource, null
         def profile = registry.getService("profile")[0]
+        setupUbuntuProperties profile, tmpdir
         setupUbuntu_14_04_Properties profile, tmpdir
         loader.loadService httpdScript.resource, profile
 
@@ -52,24 +54,26 @@ class DomainsTest extends UbuntuTestUtil {
         log.info "Run service again to ensure that configuration is not set double."
         registry.allServices.each { it.call() }
 
-        assertStringContent nginxConfExpected.replaced(tmpdir, tmpdir, "/tmp"), nginxConfExpected.toString()
-        assertStringContent robobeeConfExpected.replaced(tmpdir, tmpdir, "/tmp"), robobeeConfExpected.toString()
+        assertStringContent domainsRuncommandsLogExpected.replaced(tmpdir, tmpdir, "/tmp").replaceAll(/(\d+)(.*)/, '<time>$2'), domainsRuncommandsLogExpected.toString()
+        assertStringContent domainsNginxConfExpected.replaced(tmpdir, tmpdir, "/tmp"), domainsNginxConfExpected.toString()
+        assertStringContent domainsDefaultsConfExpected.replaced(tmpdir, tmpdir, "/tmp"), domainsDefaultsConfExpected.toString()
         assert sitesAvailableDir.asFile(tmpdir).isDirectory()
         assert sitesEnabledDir.asFile(tmpdir).isDirectory()
         assert cacheDir.asFile(tmpdir).isDirectory()
-        assertStringContent test1comConf.replaced(tmpdir, tmpdir, "/tmp"), test1comConf.toString()
-        assertStringContent test1comSslConf.replaced(tmpdir, tmpdir, "/tmp"), test1comSslConf.toString()
-        assertStringContent lnOutExpected.replaced(tmpdir, tmpdir, "/tmp"), lnOutExpected.toString()
-        assertFileContent restartOutExpected.asFile(tmpdir), restartOutExpected
-        assertFileContent aptitudeOutExpected.asFile(tmpdir), aptitudeOutExpected
-        assertStringContent useraddOutExpected.replaced(tmpdir, tmpdir, "/tmp"), useraddOutExpected.toString()
-        assertStringContent groupaddOutExpected.replaced(tmpdir, tmpdir, "/tmp"), groupaddOutExpected.toString()
-        assertStringContent chownOutExpected.replaced(tmpdir, tmpdir, "/tmp"), chownOutExpected.toString()
-        assertStringContent chmodOutExpected.replaced(tmpdir, tmpdir, "/tmp"), chmodOutExpected.toString()
+        assertStringContent domainsTest1comConfExpected.replaced(tmpdir, tmpdir, "/tmp"), domainsTest1comConfExpected.toString()
+        assertStringContent domainsTest1comSslConfExpected.replaced(tmpdir, tmpdir, "/tmp"), domainsTest1comSslConfExpected.toString()
+        assertStringContent domainsLnOutExpected.replaced(tmpdir, tmpdir, "/tmp"), domainsLnOutExpected.toString()
+        assertFileContent domainsNginxOutExpected.asFile(tmpdir), domainsNginxOutExpected
+        assertFileContent domainsAptitudeOutExpected.asFile(tmpdir), domainsAptitudeOutExpected
+        assertStringContent domainsUseraddOutExpected.replaced(tmpdir, tmpdir, "/tmp"), domainsUseraddOutExpected.toString()
+        assertStringContent domainsGroupaddOutExpected.replaced(tmpdir, tmpdir, "/tmp"), domainsGroupaddOutExpected.toString()
+        assertStringContent domainsChownOutExpected.replaced(tmpdir, tmpdir, "/tmp"), domainsChownOutExpected.toString()
+        assertStringContent domainsChmodOutExpected.replaced(tmpdir, tmpdir, "/tmp"), domainsChmodOutExpected.toString()
     }
 
     @Test
     void "users existing"() {
+        attachRunCommandsLog tmpdir
         copyUbuntuFiles tmpdir
         copyUbuntu_14_04_Files tmpdir
         usersExistingGroupsFile.createFile tmpdir
@@ -77,6 +81,7 @@ class DomainsTest extends UbuntuTestUtil {
 
         loader.loadService profile.resource, null
         def profile = registry.getService("profile")[0]
+        setupUbuntuProperties profile, tmpdir
         setupUbuntu_14_04_Properties profile, tmpdir
         loader.loadService httpdScript.resource, profile
 
@@ -84,54 +89,87 @@ class DomainsTest extends UbuntuTestUtil {
         log.info "Run service again to ensure that configuration is not set double."
         registry.allServices.each { it.call() }
 
-        assertStringContent nginxConfExpected.replaced(tmpdir, tmpdir, "/tmp"), nginxConfExpected.toString()
-        assertStringContent robobeeConfExpected.replaced(tmpdir, tmpdir, "/tmp"), robobeeConfExpected.toString()
-        assert sitesAvailableDir.asFile(tmpdir).isDirectory()
-        assert sitesEnabledDir.asFile(tmpdir).isDirectory()
-        assertStringContent test1comConf.replaced(tmpdir, tmpdir, "/tmp"), test1comConf.toString()
-        assertStringContent test1comSslConf.replaced(tmpdir, tmpdir, "/tmp"), test1comSslConf.toString()
-        assertStringContent lnOutExpected.replaced(tmpdir, tmpdir, "/tmp"), lnOutExpected.toString()
-        assertFileContent restartOutExpected.asFile(tmpdir), restartOutExpected
-        assertFileContent aptitudeOutExpected.asFile(tmpdir), aptitudeOutExpected
-
+        assertStringContent usersExistingRuncommandsLogExpected.replaced(tmpdir, tmpdir, "/tmp").replaceAll(/(\d+)(.*)/, '<time>$2'), usersExistingRuncommandsLogExpected.toString()
+        assertStringContent usersExistingNginxConfExpected.replaced(tmpdir, tmpdir, "/tmp"), usersExistingNginxConfExpected.toString()
+        assertStringContent usersExistingDefaultsConfExpected.replaced(tmpdir, tmpdir, "/tmp"), usersExistingDefaultsConfExpected.toString()
         assertStringContent usersExistingGroupModOutExpected.replaced(tmpdir, tmpdir, "/tmp"), usersExistingGroupModOutExpected.toString()
         assertStringContent usersExistingUserModOutExpected.replaced(tmpdir, tmpdir, "/tmp"), usersExistingUserModOutExpected.toString()
         assert usersExistingUseraddOutExpected.asFile(tmpdir).isFile() == false
         assert usersExistingGroupaddOutExpected.asFile(tmpdir).isFile() == false
-        assertStringContent chownOutExpected.replaced(tmpdir, tmpdir, "/tmp"), chownOutExpected.toString()
+        assertStringContent usersExistingChownOutExpected.replaced(tmpdir, tmpdir, "/tmp"), usersExistingChownOutExpected.toString()
+        assertStringContent usersExistingChmodOutExpected.replaced(tmpdir, tmpdir, "/tmp"), usersExistingChmodOutExpected.toString()
         assertFileContent usersExistingPsOutExpected.asFile(tmpdir), usersExistingPsOutExpected
         assert usersExistingKillOutExpected.asFile(tmpdir).isFile() == false
     }
 
     @Test
-    void "used ports"() {
+    void "thin user existing"() {
+        attachRunCommandsLog tmpdir
         copyUbuntuFiles tmpdir
         copyUbuntu_14_04_Files tmpdir
-        netstatPortsCommand.createCommand tmpdir
+        thinUserExistingGroupsFile.createFile tmpdir
+        thinUserExistingUsersFile.createFile tmpdir
+        thinUserExistingPsCommand.createCommand tmpdir
 
         loader.loadService profile.resource, null
         def profile = registry.getService("profile")[0]
+        setupUbuntuProperties profile, tmpdir
         setupUbuntu_14_04_Properties profile, tmpdir
         loader.loadService httpdScript.resource, profile
 
         registry.allServices.each { it.call() }
         log.info "Run service again to ensure that configuration is not set double."
         registry.allServices.each { it.call() }
+
+        assertStringContent thinUserExistingRuncommandsLogExpected.replaced(tmpdir, tmpdir, "/tmp").replaceAll(/(\d+)(.*)/, '<time>$2'), thinUserExistingRuncommandsLogExpected.toString()
+        assertStringContent thinUserExistingGroupModOutExpected.replaced(tmpdir, tmpdir, "/tmp"), thinUserExistingGroupModOutExpected.toString()
+        assertStringContent thinUserExistingUserModOutExpected.replaced(tmpdir, tmpdir, "/tmp"), thinUserExistingUserModOutExpected.toString()
+        assert thinUserExistingUseraddOutExpected.asFile(tmpdir).isFile() == false
+        assert thinUserExistingGroupaddOutExpected.asFile(tmpdir).isFile() == false
+        assertStringContent thinUserExistingChownOutExpected.replaced(tmpdir, tmpdir, "/tmp"), thinUserExistingChownOutExpected.toString()
+        assertStringContent thinUserExistingChmodOutExpected.replaced(tmpdir, tmpdir, "/tmp"), thinUserExistingChmodOutExpected.toString()
+        assertFileContent thinUserExistingPsOutExpected.asFile(tmpdir), thinUserExistingPsOutExpected
+        assert thinUserExistingKillOutExpected.asFile(tmpdir).isFile() == false
+        assertFileContent thinUserExistingThinOutExpected.asFile(tmpdir), thinUserExistingThinOutExpected
+    }
+
+    @Test
+    void "used ports"() {
+        attachRunCommandsLog tmpdir
+        copyUbuntuFiles tmpdir
+        copyUbuntu_14_04_Files tmpdir
+        usedportsNetstatCommand.createCommand tmpdir
+
+        loader.loadService profile.resource, null
+        def profile = registry.getService("profile")[0]
+        setupUbuntuProperties profile, tmpdir
+        setupUbuntu_14_04_Properties profile, tmpdir
+        loader.loadService httpdScript.resource, profile
+
+        registry.allServices.each { it.call() }
+        log.info "Run service again to ensure that configuration is not set double."
+        registry.allServices.each { it.call() }
+
+        assertStringContent usedportsRuncommandsLogExpected.replaced(tmpdir, tmpdir, "/tmp").replaceAll(/(\d+)(.*)/, '<time>$2'), usedportsRuncommandsLogExpected.toString()
     }
 
     @Test
     void "used ports proxy"() {
+        attachRunCommandsLog tmpdir
         copyUbuntuFiles tmpdir
         copyUbuntu_14_04_Files tmpdir
-        netstatPortsProxyCommand.createCommand tmpdir
+        usedportsproxyNetstatCommand.createCommand tmpdir
 
         loader.loadService profile.resource, null
         def profile = registry.getService("profile")[0]
+        setupUbuntuProperties profile, tmpdir
         setupUbuntu_14_04_Properties profile, tmpdir
         loader.loadService httpdScript.resource, profile
 
         registry.allServices.each { it.call() }
         log.info "Run service again to ensure that configuration is not set double."
         registry.allServices.each { it.call() }
+
+        assertStringContent usedportsproxyRuncommandsLogExpected.replaced(tmpdir, tmpdir, "/tmp").replaceAll(/(\d+)(.*)/, '<time>$2'), usedportsproxyRuncommandsLogExpected.toString()
     }
 }

@@ -21,7 +21,7 @@ package com.anrisoftware.sscontrol.httpd.apache.core.ubuntu_12_04
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static org.apache.commons.io.FileUtils.*
 
-import com.anrisoftware.sscontrol.httpd.apache.resources.ResourcesUtils
+import com.anrisoftware.sscontrol.testutils.resources.ResourcesUtils
 
 /**
  * Loads the resources.
@@ -37,7 +37,9 @@ enum CoreResources {
     httpdPortsScript("Httpd.groovy", CoreResources.class.getResource("HttpdPorts.groovy")),
     httpdInvalidPortsScript("Httpd.groovy", CoreResources.class.getResource("HttpdInvalidPorts.groovy")),
     // simple expected
-    simpleApacheOutExpected("/etc/init.d/apache2.out", CoreResources.class.getResource("simple_apache_out_expected.txt")),
+    simpleRuncommandsLogExpected("/runcommands.log", CoreResources.class.getResource("simple_runcommands_expected.txt")),
+    simpleApacheRestartOutExpected("/etc/init.d/apache2Restart.out", CoreResources.class.getResource("simple_apacherestart_out_expected.txt")),
+    simpleApacheStopOutExpected("/etc/init.d/apache2Stop.out", CoreResources.class.getResource("simple_apachestop_out_expected.txt")),
     simpleDefaultConfExpected("/etc/apache2/sites-available/000-robobee-default.conf", CoreResources.class.getResource("simple_defaultconf_expected.txt")),
     simpleDomainsConfExpected("/etc/apache2/conf.d/000-robobee-domains.conf", CoreResources.class.getResource("simple_domainsconf_expected.txt")),
     simplePortsConfExpected("/etc/apache2/ports.conf", CoreResources.class.getResource("simple_portsconf_expected.txt")),
@@ -58,12 +60,12 @@ enum CoreResources {
     simplePsOutExpected("/bin/ps.out", CoreResources.class.getResource("simple_ps_out_expected.txt")),
     simpleKillOutExpected("/usr/bin/kill.out", CoreResources.class.getResource("simple_kill_out_expected.txt")),
     // ports expected
-    portsApacheOutExpected("/etc/init.d/apache2.out", CoreResources.class.getResource("simple_apache_out_expected.txt")),
+    portsApacheRestartOutExpected("/etc/init.d/apache2Restart.out", CoreResources.class.getResource("simple_apacherestart_out_expected.txt")),
     portsDefaultConfExpected("/etc/apache2/sites-available/000-robobee-default.conf", CoreResources.class.getResource("simple_defaultconf_expected.txt")),
     portsDomainsConfExpected("/etc/apache2/conf.d/000-robobee-domains.conf", CoreResources.class.getResource("ports_domainsconf_expected.txt")),
     portsPortsConfExpected("/etc/apache2/ports.conf", CoreResources.class.getResource("ports_portsconf_expected.txt")),
     // users expected
-    usersApacheOutExpected("/etc/init.d/apache2.out", CoreResources.class.getResource("simple_apache_out_expected.txt")),
+    usersApacheRestartOutExpected("/etc/init.d/apache2Restart.out", CoreResources.class.getResource("simple_apacherestart_out_expected.txt")),
     usersDefaultConfExpected("/etc/apache2/sites-available/000-robobee-default.conf", CoreResources.class.getResource("simple_defaultconf_expected.txt")),
     usersDomainsConfExpected("/etc/apache2/conf.d/000-robobee-domains.conf", CoreResources.class.getResource("users_conf_expected.txt")),
     usersDomainsConfExpected2("/etc/apache2/conf.d/000-robobee-domains.conf", CoreResources.class.getResource("users_conf_expected2.txt")),

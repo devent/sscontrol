@@ -21,7 +21,7 @@ package com.anrisoftware.sscontrol.httpd.nginx.userrefdomain.ubuntu_14_04
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static org.apache.commons.io.FileUtils.*
 
-import com.anrisoftware.sscontrol.httpd.nginx.resources.ResourcesUtils
+import com.anrisoftware.sscontrol.testutils.resources.ResourcesUtils;
 
 /**
  * Loads the resources.
@@ -35,6 +35,7 @@ enum UserRefDomainResources {
     httpdScript("Httpd.groovy", UserRefDomainResources.class.getResource("HttpdUserRefDomain.groovy")),
     certCrt("cert.crt", UserRefDomainResources.class.getResource("cert_crt.txt")),
     certKey("cert.key", UserRefDomainResources.class.getResource("cert_key.txt")),
+    // expected
     test1comConf("/etc/nginx/sites-available/100-robobee-test1.com.conf", UserRefDomainResources.class.getResource("test1com_conf.txt")),
     test1comSslConf("/etc/nginx/sites-available/100-robobee-test1.com-ssl.conf", UserRefDomainResources.class.getResource("test1com_ssl_conf.txt")),
     test2comSslConf("/etc/nginx/sites-available/100-robobee-test2.com-ssl.conf", UserRefDomainResources.class.getResource("test2com_ssl_conf.txt")),
@@ -42,10 +43,11 @@ enum UserRefDomainResources {
     wwwtest3comConf("/etc/nginx/sites-available/100-robobee-www.test3.com.conf", UserRefDomainResources.class.getResource("wwwtest3com_conf.txt")),
     test4comConf("/etc/nginx/sites-available/100-robobee-test4.com.conf", UserRefDomainResources.class.getResource("test4com_conf.txt")),
     wwwtest4comConf("/etc/nginx/sites-available/100-robobee-www.test4.com.conf", UserRefDomainResources.class.getResource("wwwtest4com_conf.txt")),
+    runcommandsLogExpected("/runcommands.log", UserRefDomainResources.class.getResource("runcommands_expected.txt")),
     nginxConfExpected("/etc/nginx/nginx.conf", UserRefDomainResources.class.getResource("nginx_conf_expected.txt")),
     robobeeConfExpected("/etc/nginx/conf.d/000-robobee_defaults.conf", UserRefDomainResources.class.getResource("robobee_conf_expected.txt")),
     aptitudeOutExpected("/usr/bin/aptitude.out", UserRefDomainResources.class.getResource("aptitude_out_expected.txt")),
-    restartOutExpected("/etc/init.d/nginx.out", UserRefDomainResources.class.getResource("restart_out_expected.txt")),
+    nginxOutExpected("/etc/init.d/nginx.out", UserRefDomainResources.class.getResource("nginx_out_expected.txt")),
     lnOutExpected("/bin/ln.out", UserRefDomainResources.class.getResource("ln_out_expected.txt")),
     useraddOutExpected("/usr/sbin/useradd.out", UserRefDomainResources.class.getResource("useradd_out_expected.txt")),
     groupaddOutExpected("/usr/sbin/groupadd.out", UserRefDomainResources.class.getResource("groupadd_out_expected.txt")),

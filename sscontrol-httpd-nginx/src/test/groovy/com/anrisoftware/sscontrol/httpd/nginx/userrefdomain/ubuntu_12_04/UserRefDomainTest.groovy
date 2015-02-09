@@ -27,7 +27,7 @@ import groovy.util.logging.Slf4j
 
 import org.junit.Test
 
-import com.anrisoftware.sscontrol.httpd.nginx.ubuntu.UbuntuTestUtil
+import com.anrisoftware.sscontrol.testutils.resources.ScriptTestEnvironment;
 
 /**
  * Nginx on a Ubuntu 12.04 server.
@@ -36,15 +36,17 @@ import com.anrisoftware.sscontrol.httpd.nginx.ubuntu.UbuntuTestUtil
  * @since 1.0
  */
 @Slf4j
-class UserRefDomainTest extends UbuntuTestUtil {
+class UserRefDomainTest extends ScriptTestEnvironment {
 
     @Test
     void "user referenced domain"() {
+        attachRunCommandsLog tmpdir
         copyUbuntuFiles tmpdir
         copyUbuntu_12_04_Files tmpdir
 
         loader.loadService profile.resource, null
         def profile = registry.getService("profile")[0]
+        setupUbuntuProperties profile, tmpdir
         setupUbuntu_12_04_Properties profile, tmpdir
         loader.loadService httpdScript.resource, profile
 
@@ -52,6 +54,7 @@ class UserRefDomainTest extends UbuntuTestUtil {
         log.info "Run service again to ensure that configuration is not set double."
         registry.allServices.each { it.call() }
 
+        assertStringContent runcommandsLogExpected.replaced(tmpdir, tmpdir, "/tmp").replaceAll(/(\d+)(.*)/, '<time>$2'), runcommandsLogExpected.toString()
         assertStringContent nginxConfExpected.replaced(tmpdir, tmpdir, "/tmp"), nginxConfExpected.toString()
         assertStringContent robobeeConfExpected.replaced(tmpdir, tmpdir, "/tmp"), robobeeConfExpected.toString()
         assert sitesAvailableDir.asFile(tmpdir).isDirectory()
@@ -64,7 +67,7 @@ class UserRefDomainTest extends UbuntuTestUtil {
         assertStringContent test4comConf.replaced(tmpdir, tmpdir, "/tmp"), test4comConf.toString()
         assertStringContent wwwtest4comConf.replaced(tmpdir, tmpdir, "/tmp"), wwwtest4comConf.toString()
         assertStringContent lnOutExpected.replaced(tmpdir, tmpdir, "/tmp"), lnOutExpected.toString()
-        assertFileContent restartOutExpected.asFile(tmpdir), restartOutExpected
+        assertFileContent nginxOutExpected.asFile(tmpdir), nginxOutExpected
         assertFileContent aptitudeOutExpected.asFile(tmpdir), aptitudeOutExpected
         assertStringContent useraddOutExpected.replaced(tmpdir, tmpdir, "/tmp"), useraddOutExpected.toString()
         assertStringContent groupaddOutExpected.replaced(tmpdir, tmpdir, "/tmp"), groupaddOutExpected.toString()

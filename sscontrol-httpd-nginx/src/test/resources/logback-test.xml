@@ -21,16 +21,16 @@
 -->
 <configuration>
 
-	<appender name="TESTING_STYLE" class="ch.qos.logback.core.ConsoleAppender">
+	<appender name="TESTING-CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
 		<target>System.err</target>
 		<encoder>
 			<pattern>[%level] %-4relative [%thread] %logger{0} - %msg%n%rEx{short}</pattern>
-			<immediateFlush>false</immediateFlush>
+			<immediateFlush>true</immediateFlush>
 		</encoder>
 	</appender>
 
 	<root level="ERROR">
-		<appender-ref ref="TESTING_STYLE" />
+		<appender-ref ref="TESTING-CONSOLE" />
 	</root>
 
 	<logger name="com.anrisoftware" level="INFO" />

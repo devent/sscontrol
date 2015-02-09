@@ -20,11 +20,12 @@ package com.anrisoftware.sscontrol.scripts.localuser;
 
 import java.util.Map;
 
+import com.anrisoftware.globalpom.exec.runcommands.RunCommands;
 import com.anrisoftware.globalpom.threads.api.Threads;
 
 /**
  * Factory to create to add local group.
- * 
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
@@ -32,38 +33,41 @@ public interface LocalUserAddFactory {
 
     /**
      * Create to add local group.
-     * 
+     *
      * @param args
      *            the {@link Map} arguments:
      *            <ul>
+     *            <li>{@code runCommands} optionally, set to the
+     *            {@link RunCommands} to record the command.
+     *
      *            <li>{@code command} the group add command, for example
      *            {@code "/usr/sbin/useradd".}
-     * 
+     *
      *            <li>{@code usersFile} the path to the users file, for example
      *            {@code "/etc/passwd".}
-     * 
+     *
      *            <li>{@code userId} the user ID, for example {@code "100".}
-     * 
+     *
      *            <li>{@code userName} the user name, for example
      *            {@code "test".}
-     * 
+     *
      *            <li>{@code groupName} optionally, the user group name, for
      *            example {@code "test".}
-     * 
+     *
      *            <li>{@code systemUser} optionally, set to {@code true} to add
      *            a new system user.
-     * 
+     *
      *            <li>{@code shell} optionally, set to the login shell.
-     * 
+     *
      *            <li>{@code homeDir} optionally, set to the home directories.
      *            </ul>
-     * 
+     *
      * @param parent
      *            the {@link Object} parent script.
-     * 
+     *
      * @param threads
      *            the {@link Threads} pool.
-     * 
+     *
      * @return the {@link LocalUserAdd}.
      */
     LocalUserAdd create(Map<String, Object> args, Object parent, Threads threads);

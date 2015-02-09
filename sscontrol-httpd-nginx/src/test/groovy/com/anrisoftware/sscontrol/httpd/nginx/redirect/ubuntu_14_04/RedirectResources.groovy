@@ -21,7 +21,7 @@ package com.anrisoftware.sscontrol.httpd.nginx.redirect.ubuntu_14_04
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static org.apache.commons.io.FileUtils.*
 
-import com.anrisoftware.sscontrol.httpd.nginx.resources.ResourcesUtils
+import com.anrisoftware.sscontrol.testutils.resources.ResourcesUtils;
 
 /**
  * Redirect <i>Nginx</i> resources.

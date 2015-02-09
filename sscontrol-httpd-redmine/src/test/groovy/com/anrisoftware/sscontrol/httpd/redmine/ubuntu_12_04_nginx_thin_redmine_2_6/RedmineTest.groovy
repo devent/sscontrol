@@ -26,7 +26,7 @@ import groovy.util.logging.Slf4j
 
 import org.junit.Test
 
-import com.anrisoftware.sscontrol.httpd.resources.UbuntuTestUtil
+import com.anrisoftware.sscontrol.testutils.resources.WebServiceTestEnvironment
 
 /**
  * <i>Ubuntu 12.04 Nginx Thin Redmine 2.6</i> test.
@@ -35,10 +35,11 @@ import com.anrisoftware.sscontrol.httpd.resources.UbuntuTestUtil
  * @since 1.0
  */
 @Slf4j
-class RedmineTest extends UbuntuTestUtil {
+class RedmineTest extends WebServiceTestEnvironment {
 
     @Test
     void "redmine"() {
+        attachRunCommandsLog tmpdir
         copyUbuntuFiles tmpdir
         copyRedmineFiles tmpdir
 
@@ -50,6 +51,7 @@ class RedmineTest extends UbuntuTestUtil {
 
         registry.allServices.each { it.call() }
         log.info "Run service again to ensure that configuration is not set double."
+        thinStopCommand.createCommand(tmpdir)
         registry.allServices.each { it.call() }
 
         assertStringContent test1comRedmine2UpstreamConfExpected.replaced(tmpdir, tmpdir, "/tmp"), test1comRedmine2UpstreamConfExpected.toString()
@@ -67,6 +69,7 @@ class RedmineTest extends UbuntuTestUtil {
         assertFileContent test2comRedmineEnvironmentRbExpected.asFile(tmpdir), test2comRedmineEnvironmentRbExpected
         assertFileContent test2comRedmineGemfileExpected.asFile(tmpdir), test2comRedmineGemfileExpected
         assertStringContent test2comThinTest2redmineYmlExpected.replaced(tmpdir, tmpdir, "/tmp"), test2comThinTest2redmineYmlExpected.toString()
+        assertStringContent runcommandsLogExpected.replaced(tmpdir, tmpdir, "/tmp").replaceAll(/\d+/, 'time'), runcommandsLogExpected.toString()
         assertStringContent thinDefaultExpected.replaced(tmpdir, tmpdir, "/tmp"), thinDefaultExpected.toString()
         assertStringContent thinScriptExpected.replaced(tmpdir, tmpdir, "/tmp"), thinScriptExpected.toString()
         assertFileContent gemOutExpected.asFile(tmpdir), gemOutExpected
@@ -81,6 +84,7 @@ class RedmineTest extends UbuntuTestUtil {
         assertFileContent aptitudeOutExpected.asFile(tmpdir), aptitudeOutExpected
         assertStringContent lnOutExpected.replaced(tmpdir, tmpdir, "/tmp"), lnOutExpected.toString()
         assertFileContent thinRestartOutExpected.asFile(tmpdir), thinRestartOutExpected
+        assertFileContent thinStopOutExpected.asFile(tmpdir), thinStopOutExpected
         assertFileContent mysqldumpOutExpected.asFile(tmpdir), mysqldumpOutExpected
     }
 }

@@ -27,7 +27,11 @@ import static org.apache.commons.lang3.Validate.notNull;
 
 import java.util.Map;
 
+import javax.inject.Inject;
+
 import com.anrisoftware.globalpom.exec.api.ProcessTask;
+import com.anrisoftware.globalpom.exec.runcommands.RunCommands;
+import com.anrisoftware.globalpom.exec.runcommands.RunCommandsArg;
 import com.anrisoftware.globalpom.log.AbstractLogger;
 
 /**
@@ -65,6 +69,9 @@ class RestartServicesLogger extends AbstractLogger {
         }
     }
 
+    @Inject
+    private RunCommandsArg runCommandsArg;
+
     /**
      * Sets the context of the logger to {@link RestartServices}.
      */
@@ -72,7 +79,8 @@ class RestartServicesLogger extends AbstractLogger {
         super(RestartServices.class);
     }
 
-    void restartedDone(Object parent, ProcessTask task, Map<String, Object> args) {
+    void restartedDone(Object parent, RunCommands runCommands,
+            ProcessTask task, Map<String, Object> args) {
         if (isTraceEnabled()) {
             trace(restarted_service_trace, args, parent, task);
         } else if (isDebugEnabled()) {
@@ -80,10 +88,18 @@ class RestartServicesLogger extends AbstractLogger {
         } else {
             info(restarted_service_info, parent);
         }
+        if (runCommands != null) {
+            runCommands.add(args.get(COMMAND_ARG), args);
+        }
     }
 
     void checkArgs(Map<String, Object> args) {
         notNull(args.get(COMMAND_ARG), command_null.toString(), COMMAND_ARG);
         notNull(args.get(SERVICES_ARG), services_null.toString(), SERVICES_ARG);
     }
+
+    RunCommands runCommands(Map<String, Object> args, Object parent) {
+        return runCommandsArg.runCommands(args, parent);
+    }
+
 }

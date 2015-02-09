@@ -44,6 +44,7 @@
         <module>sscontrol-security-fail2ban</module>
         <module>sscontrol-security-service</module>
         <module>sscontrol-security-spamassassin</module>
+        <module>sscontrol-testutils</module>
     </modules>
 
 </project>

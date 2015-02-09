@@ -37,7 +37,7 @@ import com.anrisoftware.sscontrol.httpd.redmine.AuthenticationMethod
 import com.anrisoftware.sscontrol.httpd.redmine.DeliveryMethod
 import com.anrisoftware.sscontrol.httpd.redmine.RedmineService
 import com.anrisoftware.sscontrol.httpd.redmine.ScmInstall
-import com.anrisoftware.sscontrol.httpd.redmine.redmine_2_6_nginx_thin_ubuntu_12_04.RedmineConfigFactory;
+import com.anrisoftware.sscontrol.httpd.redmine.redmine_2_6_nginx_thin_ubuntu_12_04.RedmineConfigFactory
 import com.anrisoftware.sscontrol.httpd.webservice.OverrideMode
 import com.anrisoftware.sscontrol.scripts.changefile.ChangeFileModFactory
 import com.anrisoftware.sscontrol.scripts.changefile.ChangeFileOwnerFactory
@@ -274,6 +274,7 @@ abstract class Redmine_2_5_Config {
     void installGems(Domain domain, RedmineService service) {
         scriptExecFactory.create(
                 log: log,
+                runCommands: runCommands,
                 gemCommand: gemCommand,
                 gems: redmineGems,
                 timeout: gemInstallTimeout,
@@ -333,6 +334,7 @@ abstract class Redmine_2_5_Config {
         pluginAssetsDir.mkdirs()
         changeFileOwnerFactory.create(
                 log: log,
+                runCommands: runCommands,
                 files: [
                     filesDir,
                     logDir,
@@ -359,6 +361,7 @@ abstract class Redmine_2_5_Config {
         def dir = redmineDir domain, service
         scriptExecFactory.create(
                 log: log,
+                runCommands: runCommands,
                 bundleCommand: bundleCommand,
                 workDir: dir,
                 excludedBundles: productionExcludedBundles,
@@ -379,6 +382,7 @@ abstract class Redmine_2_5_Config {
         def dir = redmineDir domain, service
         scriptExecFactory.create(
                 log: log,
+                runCommands: runCommands,
                 rakeCommand: rakeCommand,
                 workDir: dir,
                 this, threads, rakeCommandsTemplate, "rakeGenerateSecretTokens")()
@@ -397,6 +401,7 @@ abstract class Redmine_2_5_Config {
         def dir = redmineDir domain, service
         scriptExecFactory.create(
                 log: log,
+                runCommands: runCommands,
                 rakeCommand: rakeCommand,
                 workDir: dir,
                 rails: railsProduction,
@@ -418,6 +423,7 @@ abstract class Redmine_2_5_Config {
         def dir = redmineDir domain, service
         scriptExecFactory.create(
                 log: log,
+                runCommands: runCommands,
                 rakeCommand: rakeCommand,
                 workDir: dir,
                 this, threads, rakeCommandsTemplate, "rakeClearTemps")()
@@ -436,6 +442,7 @@ abstract class Redmine_2_5_Config {
         def dir = redmineDir domain, service
         scriptExecFactory.create(
                 log: log,
+                runCommands: runCommands,
                 rakeCommand: rakeCommand,
                 workDir: dir,
                 language: service.languageName,

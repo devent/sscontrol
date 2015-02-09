@@ -25,8 +25,8 @@ import javax.inject.Inject
 
 import com.anrisoftware.sscontrol.core.service.LinuxScript
 import com.anrisoftware.sscontrol.httpd.domain.SslDomain
-import com.anrisoftware.sscontrol.scripts.changefile.ChangeFileModFactory;
-import com.anrisoftware.sscontrol.scripts.changefile.ChangeFileOwnerFactory;
+import com.anrisoftware.sscontrol.scripts.changefile.ChangeFileModFactory
+import com.anrisoftware.sscontrol.scripts.changefile.ChangeFileOwnerFactory
 
 /**
  * Deploys the SSL/domain configuration.
@@ -67,11 +67,13 @@ class SslDomainConfig {
         def dir = script.sslDir(domain)
         changeFileOwnerFactory.create(
                 log: log,
+                runCommands: runCommands,
                 command: script.chownCommand,
                 owner: "root", ownerGroup: "root", files: "${dir.absolutePath}/*",
                 this, threads)()
         changeFileModFactory.create(
                 log: log,
+                runCommands: runCommands,
                 command: script.chmodCommand,
                 mod: "400", files: "${dir.absolutePath}/*",
                 this, threads)()

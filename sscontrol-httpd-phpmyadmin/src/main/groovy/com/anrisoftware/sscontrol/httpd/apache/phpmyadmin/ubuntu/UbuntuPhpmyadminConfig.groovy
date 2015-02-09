@@ -22,14 +22,14 @@ import groovy.util.logging.Slf4j
 
 import javax.inject.Inject
 
-import com.anrisoftware.globalpom.exec.scriptprocess.ScriptExecFactory;
+import com.anrisoftware.globalpom.exec.scriptprocess.ScriptExecFactory
 import com.anrisoftware.globalpom.textmatch.tokentemplate.TokenTemplate
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.TemplatesFactory
 import com.anrisoftware.sscontrol.httpd.apache.phpmyadmin.linux.PhpmyadminConfig
 import com.anrisoftware.sscontrol.httpd.domain.Domain
 import com.anrisoftware.sscontrol.httpd.phpmyadmin.PhpmyadminService
-import com.anrisoftware.sscontrol.scripts.changefile.ChangeFileOwnerFactory;
+import com.anrisoftware.sscontrol.scripts.changefile.ChangeFileOwnerFactory
 import com.anrisoftware.sscontrol.scripts.unix.InstallPackagesFactory
 
 /**
@@ -82,6 +82,7 @@ abstract class UbuntuPhpmyadminConfig extends PhpmyadminConfig {
     void installPackages() {
         installPackagesFactory.create(
                 log: log,
+                runCommands: runCommands,
                 command: installCommand,
                 packages: phpmyadminPackages,
                 system: systemName,
@@ -97,6 +98,7 @@ abstract class UbuntuPhpmyadminConfig extends PhpmyadminConfig {
     void importTables(PhpmyadminService service) {
         def task = scriptExecFactory.create(
                 log: log,
+                runCommands: runCommands,
                 zcatCommand: script.zcatCommand,
                 mysqlCommand: mysqlCommand,
                 controlUser: service.controlUser,
@@ -114,6 +116,7 @@ abstract class UbuntuPhpmyadminConfig extends PhpmyadminConfig {
     void reconfigureService() {
         def task = scriptExecFactory.create(
                 log: log,
+                runCommands: runCommands,
                 command: reconfigureCommand,
                 this, threads,
                 phpmyadminCommandsTemplate, "reconfigure")()
@@ -199,6 +202,7 @@ abstract class UbuntuPhpmyadminConfig extends PhpmyadminConfig {
         def user = domain.domainUser
         changeFileOwnerFactory.create(
                 log: log,
+                runCommands: runCommands,
                 owner: "root",
                 ownerGroup: user.group,
                 files: [

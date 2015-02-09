@@ -21,11 +21,12 @@ package com.anrisoftware.sscontrol.scripts.findusedport;
 import java.util.List;
 import java.util.Map;
 
+import com.anrisoftware.globalpom.exec.runcommands.RunCommands;
 import com.anrisoftware.globalpom.threads.api.Threads;
 
 /**
  * Factory to create to change the mode.
- * 
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
@@ -33,23 +34,26 @@ public interface FindUsedPortFactory {
 
     /**
      * Creates to change the mode.
-     * 
+     *
      * @param args
      *            the {@link Map} arguments:
      *            <ul>
      *            <li>{@code command} the <i>netstat</i>, for example
      *            {@code "/usr/bin/netstat".}
-     * 
+     *
      *            <li>{@code ports} the {@link List} of ports to find, for
      *            example {@code [53, 446]}.
+     *
+     *            <li>{@code runCommands} optionally, set to the
+     *            {@link RunCommands} to record the command.
      *            </ul>
-     * 
+     *
      * @param parent
      *            the {@link Object} parent script.
-     * 
+     *
      * @param threads
      *            the {@link Threads} pool.
-     * 
+     *
      * @return the {@link FindUsedPort}.
      */
     FindUsedPort create(Map<String, Object> args, Object parent, Threads threads);

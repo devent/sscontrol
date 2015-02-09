@@ -21,7 +21,7 @@ package com.anrisoftware.sscontrol.httpd.redmine.ubuntu_12_04_nginx_thin_redmine
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static org.apache.commons.io.FileUtils.*
 
-import com.anrisoftware.sscontrol.httpd.resources.ResourcesUtils
+import com.anrisoftware.sscontrol.testutils.resources.ResourcesUtils
 
 /**
  * <i>Ubuntu 12.04 Redmine 2.6</i> resources.
@@ -51,6 +51,7 @@ enum RedmineResources {
     // thin
     thinCommand("/usr/bin/thin", RedmineResources.class.getResource("echo_command.txt")),
     thinRestartCommand("/etc/init.d/thinRestart", RedmineResources.class.getResource("echo_command.txt")),
+    thinStopCommand("/etc/init.d/thinStop", RedmineResources.class.getResource("echo_command.txt")),
     thinScriptFile("/etc/init.d/thin", null),
     thinDefaultsFile("/etc/default/thin", null),
     thinConfDir("/etc/thin1.8", null),
@@ -72,6 +73,7 @@ enum RedmineResources {
     test2comRedmineEnvironmentRbExpected("/var/www/test2.com/test2redmine/config/environment.rb", RedmineResources.class.getResource("test2com_environmentrb_expected.txt")),
     test2comRedmineGemfileExpected("/var/www/test1.com/test2redmine/Gemfile", RedmineResources.class.getResource("redmine_gemfile_expected.txt")),
     test2comThinTest2redmineYmlExpected("/etc/thin1.8/test2_com_test2redmine.yml", RedmineResources.class.getResource("test2com_test2redmineyml_expected.txt")),
+    runcommandsLogExpected("/runcommands.log", RedmineResources.class.getResource("runcommands_expected.txt")),
     thinDefaultExpected("/etc/default/thin", RedmineResources.class.getResource("thin_default_expected.txt")),
     thinScriptExpected("/etc/init.d/thin", RedmineResources.class.getResource("thin_script_expected.txt")),
     gemOutExpected("/usr/bin/gem.out", RedmineResources.class.getResource("gem_out_expected.txt")),
@@ -86,6 +88,7 @@ enum RedmineResources {
     aptitudeOutExpected("/usr/bin/aptitude.out", RedmineResources.class.getResource("aptitude_out_expected.txt")),
     lnOutExpected("/bin/ln.out", RedmineResources.class.getResource("ln_out_expected.txt")),
     thinRestartOutExpected("/etc/init.d/thinRestart.out", RedmineResources.class.getResource("thin_restart_out_expected.txt")),
+    thinStopOutExpected("/etc/init.d/thinStop.out", RedmineResources.class.getResource("thin_stop_out_expected.txt")),
     mysqldumpOutExpected("/usr/bin/mysqldump.out", RedmineResources.class.getResource("mysqldump_out_expected.txt")),
 
     static copyRedmineFiles(File parent) {
@@ -121,6 +124,7 @@ enum RedmineResources {
         // thin
         entry.thin_command RedmineResources.thinCommand.asFile(parent)
         entry.thin_restart_command RedmineResources.thinRestartCommand.asFile(parent)
+        entry.thin_stop_command RedmineResources.thinStopCommand.asFile(parent)
         entry.thin_script_file RedmineResources.thinScriptFile.asFile(parent)
         entry.thin_defaults_file RedmineResources.thinDefaultsFile.asFile(parent)
         entry.thin_configuration_directory RedmineResources.thinConfDir.asFile(parent)

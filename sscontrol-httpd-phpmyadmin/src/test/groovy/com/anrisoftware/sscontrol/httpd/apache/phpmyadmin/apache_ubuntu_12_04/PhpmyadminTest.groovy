@@ -27,7 +27,7 @@ import groovy.util.logging.Slf4j
 
 import org.junit.Test
 
-import com.anrisoftware.sscontrol.httpd.apache.ubuntu.UbuntuTestUtil
+import com.anrisoftware.sscontrol.testutils.resources.WebServiceTestEnvironment
 
 /**
  * <i>phpMyAdmin Apache Ubuntu 12.04</i> service test.
@@ -36,10 +36,11 @@ import com.anrisoftware.sscontrol.httpd.apache.ubuntu.UbuntuTestUtil
  * @since 1.0
  */
 @Slf4j
-class PhpmyadminTest extends UbuntuTestUtil {
+class PhpmyadminTest extends WebServiceTestEnvironment {
 
     @Test
     void "phpmyadmin"() {
+        attachRunCommandsLog tmpdir
         copyUbuntuFiles tmpdir
         copyUbuntu_12_04_Files tmpdir
         copyPhpmyadminFiles tmpdir
@@ -60,6 +61,7 @@ class PhpmyadminTest extends UbuntuTestUtil {
         assertStringContent ubuntutestcomConfExpected.replaced(tmpdir, tmpdir, "/tmp"), ubuntutestcomConfExpected.toString()
         assertStringContent ubuntutestcomFcgiScriptExpected.replaced(tmpdir, tmpdir, "/tmp"), ubuntutestcomFcgiScriptExpected.toString()
         assertFileContent ubuntutestcomPhpiniExpected.asFile(tmpdir), ubuntutestcomPhpiniExpected
+        assertStringContent runcommandsLogExpected.replaced(tmpdir, tmpdir, "/tmp").replaceAll(/\d+/, 'time'), runcommandsLogExpected.toString()
         assertStringContent chownOut.replaced(tmpdir, tmpdir, "/tmp"), chownOut.toString()
         assertStringContent chmodOut.replaced(tmpdir, tmpdir, "/tmp"), chmodOut.toString()
         assertStringContent groupaddOut.replaced(tmpdir, tmpdir, "/tmp"), groupaddOut.toString()

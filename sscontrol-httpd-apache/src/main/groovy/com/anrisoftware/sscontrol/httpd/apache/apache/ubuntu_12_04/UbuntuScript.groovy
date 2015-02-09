@@ -49,6 +49,7 @@ class UbuntuScript extends Apache_2_2_Script {
     void installPackages() {
         installPackagesFactory.create(
                 log: log,
+                runCommands: runCommands,
                 command: installCommand,
                 packages: packages,
                 system: systemName,

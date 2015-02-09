@@ -1,0 +1,4 @@
+theCommand="$0"
+echo "$@" >> $theCommand.out
+echo "S    thin     web_001    999  2001  9982 ruby            thin server (/var/run/thin/ubuntutest_com_redmine.0.sock)            "
+echo "S    thin     web_001    999  2001  9987 ruby            thin server (/var/run/thin/ubuntutest_com_redmine.1.sock)            "

@@ -27,7 +27,7 @@ import groovy.util.logging.Slf4j
 
 import org.junit.Test
 
-import com.anrisoftware.sscontrol.httpd.nginx.ubuntu.UbuntuTestUtil
+import com.anrisoftware.sscontrol.testutils.resources.ScriptTestEnvironment;
 
 /**
  * <i>Redirect Nginx Ubuntu 14.04</i> test.
@@ -36,7 +36,7 @@ import com.anrisoftware.sscontrol.httpd.nginx.ubuntu.UbuntuTestUtil
  * @since 1.0
  */
 @Slf4j
-class RedirectTest extends UbuntuTestUtil {
+class RedirectTest extends ScriptTestEnvironment {
 
     @Test
     void "redirect"() {

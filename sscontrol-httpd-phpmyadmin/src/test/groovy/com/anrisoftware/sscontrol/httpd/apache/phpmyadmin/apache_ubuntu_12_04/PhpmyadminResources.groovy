@@ -21,7 +21,7 @@ package com.anrisoftware.sscontrol.httpd.apache.phpmyadmin.apache_ubuntu_12_04
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static org.apache.commons.io.FileUtils.*
 
-import com.anrisoftware.sscontrol.httpd.apache.resources.ResourcesUtils
+import com.anrisoftware.sscontrol.testutils.resources.ResourcesUtils
 
 /**
  * Loads the resources.
@@ -53,6 +53,7 @@ enum PhpmyadminResources {
     ubuntutestcomFcgiScriptExpected("/var/www/php-fcgi-scripts/ubuntutest.com/php-fcgi-starter", PhpmyadminResources.class.getResource("phpfcgistarter_expected.txt")),
     ubuntutestcomPhpiniExpected("/var/www/php-fcgi-scripts/ubuntutest.com/domain_php.ini", PhpmyadminResources.class.getResource("php_ini_expected.txt")),
     // expected
+    runcommandsLogExpected("/runcommands.log", PhpmyadminResources.class.getResource("runcommands_expected.txt")),
     chownOut("/bin/chown.out", PhpmyadminResources.class.getResource("chown_out_expected.txt")),
     chmodOut("/bin/chmod.out", PhpmyadminResources.class.getResource("chmod_out_expected.txt")),
     useraddOut("/usr/sbin/useradd.out", PhpmyadminResources.class.getResource("useradd_out_expected.txt")),

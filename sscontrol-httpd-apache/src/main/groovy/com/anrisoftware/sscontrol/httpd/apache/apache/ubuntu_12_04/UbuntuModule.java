@@ -25,6 +25,7 @@ import static java.lang.String.format;
 import groovy.lang.Script;
 
 import com.anrisoftware.globalpom.checkfilehash.CheckFileHashModule;
+import com.anrisoftware.globalpom.exec.runcommands.RunCommandsModule;
 import com.anrisoftware.sscontrol.httpd.apache.apache.linux.ApacheFcgiConfig;
 import com.anrisoftware.sscontrol.httpd.apache.authfile.ubuntu_12_04.Ubuntu_12_04_AuthFileModule;
 import com.anrisoftware.sscontrol.httpd.apache.authldap.ubuntu_12_04.Ubuntu_12_04_AuthLdapModule;
@@ -53,6 +54,7 @@ class UbuntuModule extends AbstractModule {
     protected void configure() {
         install(new UnixScriptsModule());
         install(new UnixScriptsModule.UnixScriptsDefaultsModule());
+        install(new RunCommandsModule());
         install(new ChangeFileModule());
         install(new LocalUserModule());
         install(new MkLinkModule());

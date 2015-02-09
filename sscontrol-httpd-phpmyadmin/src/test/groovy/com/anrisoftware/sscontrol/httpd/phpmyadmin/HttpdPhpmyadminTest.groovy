@@ -24,10 +24,9 @@ import groovy.util.logging.Slf4j
 
 import org.junit.Test
 
-import com.anrisoftware.sscontrol.core.api.ServiceLoader as SscontrolServiceLoader
-import com.anrisoftware.sscontrol.core.api.ServicesRegistry
 import com.anrisoftware.sscontrol.httpd.domain.Domain
 import com.anrisoftware.sscontrol.httpd.service.HttpdService
+import com.anrisoftware.sscontrol.testutils.resources.HttpdTestEnvironment
 
 /**
  * @see PhpmyadminService
@@ -36,7 +35,7 @@ import com.anrisoftware.sscontrol.httpd.service.HttpdService
  * @since 1.0
  */
 @Slf4j
-class HttpdPhpmyadminTest extends HttpdTestUtil {
+class HttpdPhpmyadminTest extends HttpdTestEnvironment {
 
     @Test
     void "phpmyadmin"() {

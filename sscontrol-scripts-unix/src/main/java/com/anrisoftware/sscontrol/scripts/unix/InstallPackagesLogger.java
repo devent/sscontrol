@@ -25,7 +25,11 @@ import static org.apache.commons.lang3.Validate.notNull;
 
 import java.util.Map;
 
+import javax.inject.Inject;
+
 import com.anrisoftware.globalpom.exec.api.ProcessTask;
+import com.anrisoftware.globalpom.exec.runcommands.RunCommands;
+import com.anrisoftware.globalpom.exec.runcommands.RunCommandsArg;
 import com.anrisoftware.globalpom.log.AbstractLogger;
 
 /**
@@ -60,6 +64,9 @@ class InstallPackagesLogger extends AbstractLogger {
         }
     }
 
+    @Inject
+    private RunCommandsArg runCommandsArg;
+
     /**
      * Sets the context of the logger to {@link InstallPackages}.
      */
@@ -67,9 +74,16 @@ class InstallPackagesLogger extends AbstractLogger {
         super(InstallPackages.class);
     }
 
-    void installPackagesDone(Object parent, ProcessTask task,
-            Map<String, Object> args) {
+    void installPackagesDone(Object parent, RunCommands runCommands,
+            ProcessTask task, Map<String, Object> args) {
         debug(install_packages_done, args, parent, task);
+        if (runCommands != null) {
+            runCommands.add(args.get(COMMAND_ARG), args);
+        }
+    }
+
+    RunCommands runCommands(Map<String, Object> args, Object parent) {
+        return runCommandsArg.runCommands(args, parent);
     }
 
     void checkArgs(Map<String, Object> args) {

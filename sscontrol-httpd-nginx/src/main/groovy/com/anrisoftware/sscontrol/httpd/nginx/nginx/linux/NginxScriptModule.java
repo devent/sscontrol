@@ -18,6 +18,7 @@
  */
 package com.anrisoftware.sscontrol.httpd.nginx.nginx.linux;
 
+import com.anrisoftware.globalpom.exec.runcommands.RunCommandsModule;
 import com.anrisoftware.sscontrol.scripts.changefile.ChangeFileModule;
 import com.anrisoftware.sscontrol.scripts.findusedport.FindUsedPortModule;
 import com.anrisoftware.sscontrol.scripts.killprocess.KillProcessModule;
@@ -45,5 +46,6 @@ public class NginxScriptModule extends AbstractModule {
         install(new MkLinkModule());
         install(new ProcessInfoModule());
         install(new KillProcessModule());
+        install(new RunCommandsModule());
     }
 }

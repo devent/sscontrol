@@ -43,12 +43,13 @@ class ProcessInfoTest extends ProcessInfoDependencies {
         info()
 
         assert info.processFound == true
-        assert info.commandName == "gitit"
+        assert info.processCommandName == "gitit"
         assert info.processUser == "web_004"
         assert info.processGroup == "web_004"
         assert info.processUserId == 2004
         assert info.processGroupId == 2004
         assert info.processId == 3795
+        assert info.processCommandArgs =~ /.*thin server.*/
         assert info.processStates.containsAll([INT_SLEEP])
     }
 

@@ -32,7 +32,7 @@ import com.anrisoftware.globalpom.version.VersionFormatFactory
 import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.sscontrol.httpd.domain.Domain
 import com.anrisoftware.sscontrol.httpd.redmine.RedmineService
-import com.anrisoftware.sscontrol.httpd.redmine.redmine_2_6_nginx_thin_ubuntu_12_04.RedmineConfigFactory;
+import com.anrisoftware.sscontrol.httpd.redmine.redmine_2_6_nginx_thin_ubuntu_12_04.RedmineConfigFactory
 import com.anrisoftware.sscontrol.httpd.webservice.OverrideMode
 import com.anrisoftware.sscontrol.scripts.changefile.ChangeFileOwnerFactory
 import com.anrisoftware.sscontrol.scripts.unpack.UnpackFactory
@@ -113,6 +113,7 @@ abstract class RedmineFromArchiveConfig {
         def dir = redmineDir domain, service
         changeFileOwnerFactory.create(
                 log: log,
+                runCommands: runCommands,
                 files: dir,
                 recursive: true,
                 command: script.chownCommand,
@@ -218,6 +219,7 @@ abstract class RedmineFromArchiveConfig {
         dir.isDirectory() ? false : dir.mkdirs()
         unpackFactory.create(
                 log: log,
+                runCommands: runCommands,
                 file: archive,
                 output: dir,
                 override: true,

@@ -1,4 +1,4 @@
 unix(args) ::= <<
-<args.command> axo stat,euser,egroup,euid,egid,pid,comm
+<args.command> axo stat,euser,egroup,euid,egid,pid,comm,args
 
 >>

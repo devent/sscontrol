@@ -24,6 +24,7 @@ import java.util.Map;
 import org.joda.time.Duration;
 
 import com.anrisoftware.globalpom.exec.api.ProcessTask;
+import com.anrisoftware.globalpom.exec.runcommands.RunCommands;
 import com.anrisoftware.globalpom.exec.scriptprocess.AbstractProcessExec;
 import com.anrisoftware.globalpom.threads.api.Threads;
 
@@ -51,6 +52,9 @@ public interface RestartServicesFactory {
      *            <li>{@code flags} optionally, set the extra {@link String}
      *            flags for the restart command that is attached after the list
      *            of services.
+     *
+     *            <li>{@code runCommands} optionally, set to the
+     *            {@link RunCommands} to record the command.
      *
      *            <li>{@code outString} optionally, set to {@code true} to save
      *            the output in a {@link String} for later parsing, see

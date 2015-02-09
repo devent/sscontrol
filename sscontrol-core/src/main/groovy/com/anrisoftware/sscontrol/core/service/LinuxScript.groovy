@@ -420,6 +420,19 @@ abstract class LinuxScript extends Script {
     }
 
     /**
+     * Returns the restart flags.
+     *
+     * <ul>
+     * <li>profile property {@code restart_flags}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    String getRestartFlags() {
+        profileProperty "restart_flags", defaultProperties
+    }
+
+    /**
      * Returns the restart command flags.
      *
      * <ul>
@@ -450,6 +463,19 @@ abstract class LinuxScript extends Script {
     }
 
     /**
+     * Returns the flags to stop the service.
+     *
+     * <ul>
+     * <li>property key {@code stop_flags}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    String getStopFlags() {
+        profileProperty "stop_flags", defaultProperties
+    }
+
+    /**
      * Returns the services to stop.
      *
      * <ul>
@@ -460,6 +486,71 @@ abstract class LinuxScript extends Script {
      */
     List getStopServices() {
         profileListProperty "stop_services", defaultProperties
+    }
+
+    /**
+     * Returns if the profile contains the stop command for the specified
+     * service.
+     *
+     * <ul>
+     * <li>profile property {@code <service>_stop_command}</li>
+     * </ul>
+     *
+     * @param name
+     *            the service {@link String} name.
+     *
+     * @return {@code true} if the profile contains the stop command.
+     */
+    boolean haveServiceStopCommand(String name) {
+        containsKey "${name}_stop_command", defaultProperties
+    }
+
+    /**
+     * Returns the stop command for the specified service.
+     *
+     * <ul>
+     * <li>profile property {@code <service>_stop_command}</li>
+     * </ul>
+     *
+     * @param name
+     *            the service {@link String} name.
+     *
+     * @return the service stop {@link String} command.
+     */
+    String serviceStopCommand(String name) {
+        profileProperty "${name}_stop_command", defaultProperties
+    }
+
+    /**
+     * Returns the services to stop for the specified service.
+     *
+     * <ul>
+     * <li>profile property {@code <service>_stop_services}</li>
+     * </ul>
+     *
+     * @param name
+     *            the service {@link String} name.
+     *
+     * @return the {@link List} of {@link String} services.
+     */
+    List serviceStopServices(String name) {
+        profileListProperty "${name}_stop_services", defaultProperties
+    }
+
+    /**
+     * Returns the stop flags for the specified service.
+     *
+     * <ul>
+     * <li>profile property {@code <service>_stop_flags}</li>
+     * </ul>
+     *
+     * @param name
+     *            the service {@link String} name.
+     *
+     * @return the {@link String} flags.
+     */
+    String serviceStopFlags(String name) {
+        profileProperty "${name}_stop_flags", defaultProperties
     }
 
     /**

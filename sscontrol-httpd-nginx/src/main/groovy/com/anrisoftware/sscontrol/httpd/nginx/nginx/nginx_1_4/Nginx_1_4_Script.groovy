@@ -26,7 +26,6 @@ import org.apache.commons.io.FileUtils
 
 import com.anrisoftware.globalpom.textmatch.tokentemplate.TokenTemplate
 import com.anrisoftware.resources.templates.api.TemplateResource
-import com.anrisoftware.resources.templates.api.Templates
 import com.anrisoftware.resources.templates.api.TemplatesFactory
 import com.anrisoftware.sscontrol.httpd.domain.Domain
 import com.anrisoftware.sscontrol.httpd.domain.SslDomainImpl
@@ -35,6 +34,7 @@ import com.anrisoftware.sscontrol.httpd.domain.linux.SslDomainConfig
 import com.anrisoftware.sscontrol.httpd.nginx.nginx.linux.NginxScript
 import com.anrisoftware.sscontrol.httpd.service.HttpdService
 import com.anrisoftware.sscontrol.httpd.webservice.WebService
+import com.anrisoftware.sscontrol.scripts.unix.StopServicesFactory
 
 /**
  * Configures <i>Nginx 1.4</i> service.
@@ -62,6 +62,9 @@ abstract class Nginx_1_4_Script extends NginxScript {
     @Inject
     ErrorPageConfig errorPageConfig
 
+    @Inject
+    StopServicesFactory stopServicesFactory
+
     /**
      * Resource containing the <i>Nginx</i> configuration templates.
      */
@@ -75,6 +78,7 @@ abstract class Nginx_1_4_Script extends NginxScript {
         redirectConfig.script = this
         errorPageConfig.script = this
         serviceConfigs.values().each { it.script = this }
+        stopServices()
         beforeConfiguration()
         createSitesDirectories()
         deployNginxConfig service
@@ -91,6 +95,21 @@ abstract class Nginx_1_4_Script extends NginxScript {
                 resourceURIRenderer
             ]]
         this.nginxConfigTemplate = templates.getResource "config"
+    }
+
+    /**
+     * Stop <i>Nginx</i> services.
+     */
+    void stopServices() {
+        if (new File(stopCommand).exists()) {
+            stopServicesFactory.create(
+                    log: log.log,
+                    runCommands: runCommands,
+                    command: stopCommand,
+                    services: stopServices,
+                    flags: stopFlags,
+                    this, threads)()
+        }
     }
 
     /**

@@ -23,6 +23,8 @@ import groovy.util.logging.Slf4j
 
 import javax.inject.Inject
 
+import com.anrisoftware.globalpom.exec.runcommands.RunCommands
+import com.anrisoftware.globalpom.exec.runcommands.RunCommandsFactory
 import com.anrisoftware.globalpom.exec.scriptprocess.ScriptExecFactory
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.sscontrol.core.service.LinuxScript
@@ -64,6 +66,8 @@ abstract class ApacheScript extends LinuxScript {
     @Inject
     WebServicesConfigProvider webServicesConfigProvider
 
+    RunCommands runCommands
+
     @Override
     def run() {
         serviceConfigs.each { it.value.script = this }
@@ -86,6 +90,11 @@ abstract class ApacheScript extends LinuxScript {
      * Returns the template resource containing Apache commands.
      */
     abstract TemplateResource getApacheCommandsTemplate()
+
+    @Inject
+    final void setRunCommands(RunCommandsFactory factory) {
+        this.runCommands = factory.create this, ApacheScript.APACHE_NAME
+    }
 
     /**
      * Setups the default binding addresses.
@@ -599,6 +608,7 @@ abstract class ApacheScript extends LinuxScript {
             if (packages.size() > 0) {
                 installPackagesFactory.create(
                         log: log,
+                        runCommands: runCommands,
                         command: installCommand,
                         packages: packages,
                         system: systemName,
@@ -607,6 +617,7 @@ abstract class ApacheScript extends LinuxScript {
         }
         def task = scriptExecFactory.create(
                 log: log,
+                runCommands: runCommands,
                 command: enableModCommand,
                 mods: mods,
                 this, threads,
@@ -620,6 +631,7 @@ abstract class ApacheScript extends LinuxScript {
     def enableSites(def sites) {
         def task = scriptExecFactory.create(
                 log: log,
+                runCommands: runCommands,
                 command: enableSiteCommand,
                 sites: sites,
                 this, threads,

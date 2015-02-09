@@ -18,20 +18,8 @@
  */
 package com.anrisoftware.sscontrol.httpd.nginx.userrefdomain.ubuntu_12_04
 
-import com.anrisoftware.sscontrol.httpd.nginx.ubuntu.UbuntuResources
-
-
 profile "ubuntu_12_04", {
     httpd {
         service "nginx"
-        install_command UbuntuResources.aptitudeCommand.asFile(tmp)
-        chmod_command UbuntuResources.chmodCommand.asFile(tmp)
-        chown_command UbuntuResources.chownCommand.asFile(tmp)
-        group_add_command UbuntuResources.groupaddCommand.asFile(tmp)
-        user_add_command UbuntuResources.useraddCommand.asFile(tmp)
-        netstat_command UbuntuResources.netstatCommand.asFile(tmp)
-        link_command UbuntuResources.lnCommand.asFile(tmp)
-        temp_directory UbuntuResources.tmpDir.asFile(tmp)
-        apache2_stop_command UbuntuResources.apacheStopCommand.asFile(tmp)
     }
 }

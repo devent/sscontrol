@@ -28,7 +28,7 @@ import org.apache.commons.io.FileUtils
 import org.apache.commons.io.FilenameUtils
 
 import com.anrisoftware.globalpom.exec.api.ProcessTask
-import com.anrisoftware.globalpom.exec.scriptprocess.ScriptExecFactory;
+import com.anrisoftware.globalpom.exec.scriptprocess.ScriptExecFactory
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.TemplatesFactory
 import com.anrisoftware.sscontrol.httpd.auth.AbstractAuthService
@@ -137,6 +137,7 @@ class AuthFileDigestConfig {
     ProcessTask digestPassword(AbstractAuthService auth, RequireUser user) {
         scriptExecFactory.create(
                 log: log,
+                runCommands: runCommands,
                 auth: auth,
                 user: user,
                 outString: true,

@@ -27,11 +27,11 @@ import javax.measure.MeasureFormat
 import javax.measure.unit.NonSI
 
 import com.anrisoftware.globalpom.exec.api.ProcessTask
-import com.anrisoftware.globalpom.exec.scriptprocess.ScriptExecFactory
+import com.anrisoftware.globalpom.exec.runcommands.RunCommands
+import com.anrisoftware.globalpom.exec.runcommands.RunCommandsFactory
 import com.anrisoftware.globalpom.format.byteformat.ByteFormatFactory
 import com.anrisoftware.globalpom.format.byteformat.UnitMultiplier
 import com.anrisoftware.resources.templates.api.TemplateResource
-import com.anrisoftware.resources.templates.api.Templates
 import com.anrisoftware.resources.templates.api.TemplatesFactory
 import com.anrisoftware.sscontrol.core.bindings.BindingFactory
 import com.anrisoftware.sscontrol.core.service.LinuxScript
@@ -43,6 +43,7 @@ import com.anrisoftware.sscontrol.httpd.webservice.ServiceConfigInfo
 import com.anrisoftware.sscontrol.httpd.webservice.WebService
 import com.anrisoftware.sscontrol.scripts.findusedport.FindUsedPortFactory
 import com.anrisoftware.sscontrol.scripts.mklink.MkLinkFactory
+import com.anrisoftware.sscontrol.scripts.unix.StopServicesFactory
 import com.google.inject.Injector
 
 /**
@@ -72,9 +73,6 @@ abstract class NginxScript extends LinuxScript {
     FindUsedPortFactory findUsedPortFactory
 
     @Inject
-    ScriptExecFactory scriptExecFactory
-
-    @Inject
     MkLinkFactory mkLinkFactory
 
     @Inject
@@ -83,7 +81,12 @@ abstract class NginxScript extends LinuxScript {
     @Inject
     WebServicesConfigProvider webServicesConfigProvider
 
+    @Inject
+    StopServicesFactory stopServicesFactory
+
     TemplateResource stopServiceTemplate
+
+    RunCommands runCommands
 
     @Override
     def run() {
@@ -122,6 +125,11 @@ abstract class NginxScript extends LinuxScript {
     final void setNginxScriptTemplates(TemplatesFactory factory) {
         def templates = factory.create "NginxScript"
         this.stopServiceTemplate = templates.getResource "stop_service"
+    }
+
+    @Inject
+    final void setRunCommands(RunCommandsFactory factory) {
+        this.runCommands = factory.create this, NginxScript.NGINX_NAME
     }
 
     @Override
@@ -775,10 +783,13 @@ abstract class NginxScript extends LinuxScript {
         def targets = sites.inject([]) { acc, val ->
             acc << new File(sitesEnabledDir, val)
         }
-        mkLinkFactory.create(
+        def process = mkLinkFactory.create(
                 log: log,
+                runCommands: runCommands,
                 command: linkCommand,
-                files: files, targets: targets, override: true,
+                files: files,
+                targets: targets,
+                override: true,
                 this, threads)()
         logg.enabledSites this, sites
     }
@@ -796,7 +807,9 @@ abstract class NginxScript extends LinuxScript {
         logg.checkingPorts this, ports
         findUsedPortFactory.create(
                 log: log,
-                command: netstatCommand, ports: ports,
+                runCommands: runCommands,
+                command: netstatCommand,
+                ports: ports,
                 this, threads)().services
     }
 
@@ -809,32 +822,13 @@ abstract class NginxScript extends LinuxScript {
      * @return the {@link ProcessTask}.
      */
     ProcessTask stopService(String service) {
-        def command = serviceStopCommand service
-        def task = scriptExecFactory.create(
+        stopServicesFactory.create(
                 log: log,
-                command: command,
-                this, threads, stopServiceTemplate, "stopService")()
-        logg.stopService this, service, task
-        return task
-    }
-
-    /**
-     * Returns the command to stop the specified service.
-     *
-     * <ul>
-     * <li>profile property {@code "<service>_stop_command"}</li>
-     * </ul>
-     *
-     * @param service
-     *            the service name.
-     *
-     * @see #getDefaultProperties()
-     */
-    String serviceStopCommand(String service) {
-        def property = "${service}_stop_command"
-        def command = profileProperty property, defaultProperties
-        logg.checkServiceRestartCommand this, command, service
-        return command
+                runCommands: runCommands,
+                command: serviceStopCommand(service),
+                services: serviceStopServices(service),
+                flags: serviceStopFlags(service),
+                this, threads)()
     }
 
     /**

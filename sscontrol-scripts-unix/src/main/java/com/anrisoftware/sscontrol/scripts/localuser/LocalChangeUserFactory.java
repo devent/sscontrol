@@ -21,6 +21,7 @@ package com.anrisoftware.sscontrol.scripts.localuser;
 import java.util.List;
 import java.util.Map;
 
+import com.anrisoftware.globalpom.exec.runcommands.RunCommands;
 import com.anrisoftware.globalpom.threads.api.Threads;
 
 /**
@@ -37,6 +38,9 @@ public interface LocalChangeUserFactory {
      * @param args
      *            the {@link Map} arguments:
      *            <ul>
+     *            <li>{@code runCommands} optionally, set to the
+     *            {@link RunCommands} to record the command.
+     *
      *            <li>{@code command} the change file owner command, for example
      *            {@code "/usr/sbin/usermod".}
      *

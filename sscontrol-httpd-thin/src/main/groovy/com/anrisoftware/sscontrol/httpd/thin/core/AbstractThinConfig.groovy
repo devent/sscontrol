@@ -185,31 +185,35 @@ abstract class AbstractThinConfig {
      * <li>profile property {@code "thin_command"}</li>
      * </ul>
      *
-     * @see #getth
+     * @see #getThinProperties()
      */
     String getThinCommand() {
         profileProperty "thin_command", thinProperties
     }
 
     /**
-     * Returns the <i>Thin</i> command, for
+     * Returns the <i>Thin</i> restart command, for
      * example {@code "/etc/init.d/thin".}
      *
      * <ul>
      * <li>profile property {@code "thin_restart_command"}</li>
      * </ul>
+     *
+     * @see #getThinProperties()
      */
     String getThinRestartCommand() {
         profileProperty "thin_restart_command", thinProperties
     }
 
     /**
-     * Returns the <i>Thin</i> command, for
+     * Returns the <i>Thin</i> services to restart, for
      * example {@code "".}
      *
      * <ul>
      * <li>profile property {@code "thin_restart_services"}</li>
      * </ul>
+     *
+     * @see #getThinProperties()
      */
     List getThinRestartServices() {
         profileListProperty "thin_restart_services", thinProperties
@@ -222,9 +226,53 @@ abstract class AbstractThinConfig {
      * <ul>
      * <li>profile property {@code "thin_restart_flags"}</li>
      * </ul>
+     *
+     * @see #getThinProperties()
      */
     String getThinRestartFlags() {
         profileProperty "thin_restart_flags", thinProperties
+    }
+
+    /**
+     * Returns the <i>Thin</i> stop command, for
+     * example {@code "/etc/init.d/thin".}
+     *
+     * <ul>
+     * <li>profile property {@code "thin_stop_command"}</li>
+     * </ul>
+     *
+     * @see #getThinProperties()
+     */
+    String getThinStopCommand() {
+        profileProperty "thin_stop_command", thinProperties
+    }
+
+    /**
+     * Returns the <i>Thin</i> services to stop, for
+     * example {@code "".}
+     *
+     * <ul>
+     * <li>profile property {@code "thin_stop_services"}</li>
+     * </ul>
+     *
+     * @see #getThinProperties()
+     */
+    List getThinStopServices() {
+        profileListProperty "thin_stop_services", thinProperties
+    }
+
+    /**
+     * Returns the <i>Thin</i> stop flags, for
+     * example {@code "stop".}
+     *
+     * <ul>
+     * <li>profile property {@code "thin_stop_flags"}</li>
+     * </ul>
+     *
+     * @see #getThinProperties()
+     */
+    String getThinStopFlags() {
+        profileProperty "thin_stop_flags", thinProperties
     }
 
     /**
@@ -233,6 +281,8 @@ abstract class AbstractThinConfig {
      * <ul>
      * <li>profile property {@code "thin_script_file"}</li>
      * </ul>
+     *
+     * @see #getThinProperties()
      */
     File getThinScriptFile() {
         profileDirProperty "thin_script_file", thinProperties
@@ -245,6 +295,8 @@ abstract class AbstractThinConfig {
      * <ul>
      * <li>profile property {@code "thin_defaults_file"}</li>
      * </ul>
+     *
+     * @see #getThinProperties()
      */
     File getThinDefaultsFile() {
         profileDirProperty "thin_defaults_file", thinProperties
@@ -257,6 +309,8 @@ abstract class AbstractThinConfig {
      * <ul>
      * <li>profile property {@code "thin_configuration_directory"}</li>
      * </ul>
+     *
+     * @see #getThinProperties()
      */
     File getConfDir() {
         profileDirProperty "thin_configuration_directory", thinProperties
@@ -269,6 +323,8 @@ abstract class AbstractThinConfig {
      * <ul>
      * <li>profile property {@code "thin_log_directory"}</li>
      * </ul>
+     *
+     * @see #getThinProperties()
      */
     File getLogDir() {
         profileDirProperty "thin_log_directory", thinProperties
@@ -281,6 +337,8 @@ abstract class AbstractThinConfig {
      * <ul>
      * <li>profile property {@code "thin_run_directory"}</li>
      * </ul>
+     *
+     * @see #getThinProperties()
      */
     File getRunDir() {
         profileDirProperty "thin_run_directory", thinProperties
@@ -293,6 +351,8 @@ abstract class AbstractThinConfig {
      * <ul>
      * <li>profile property {@code "thin_user"}</li>
      * </ul>
+     *
+     * @see #getThinProperties()
      */
     String getThinUser() {
         profileProperty "thin_user", thinProperties
@@ -305,6 +365,8 @@ abstract class AbstractThinConfig {
      * <ul>
      * <li>profile property {@code "thin_group"}</li>
      * </ul>
+     *
+     * @see #getThinProperties()
      */
     String getThinGroup() {
         profileProperty "thin_group", thinProperties
@@ -317,6 +379,8 @@ abstract class AbstractThinConfig {
      * <ul>
      * <li>profile property {@code "thin_timeout_duration"}</li>
      * </ul>
+     *
+     * @see #getThinProperties()
      */
     Duration getTimeoutDuration() {
         profileDurationProperty "thin_timeout_duration", thinProperties
@@ -329,6 +393,8 @@ abstract class AbstractThinConfig {
      * <ul>
      * <li>profile property {@code "thin_max_connections"}</li>
      * </ul>
+     *
+     * @see #getThinProperties()
      */
     int getMaxConnections() {
         profileNumberProperty "thin_max_connections", thinProperties
@@ -341,6 +407,8 @@ abstract class AbstractThinConfig {
      * <ul>
      * <li>profile property {@code "thin_max_persistent_connections"}</li>
      * </ul>
+     *
+     * @see #getThinProperties()
      */
     int getMaxPersistentConnections() {
         profileNumberProperty "thin_max_persistent_connections", thinProperties
@@ -353,6 +421,8 @@ abstract class AbstractThinConfig {
      * <ul>
      * <li>profile property {@code "thin_wait_duration"}</li>
      * </ul>
+     *
+     * @see #getThinProperties()
      */
     Duration getWaitDuration() {
         profileDurationProperty "thin_wait_duration", thinProperties
@@ -365,6 +435,8 @@ abstract class AbstractThinConfig {
      * <ul>
      * <li>profile property {@code "thin_servers_count"}</li>
      * </ul>
+     *
+     * @see #getThinProperties()
      */
     int getServersCount() {
         profileNumberProperty "thin_servers_count", thinProperties

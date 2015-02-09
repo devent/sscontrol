@@ -1,2 +1,4 @@
-axo stat,euser,egroup,euid,egid,pid,comm
-axo stat,euser,egroup,euid,egid,pid,comm
+axo stat,euser,egroup,euid,egid,pid,comm,args
+axo stat,euser,egroup,euid,egid,pid,comm,args
+axo stat,euser,egroup,euid,egid,pid,comm,args
+axo stat,euser,egroup,euid,egid,pid,comm,args

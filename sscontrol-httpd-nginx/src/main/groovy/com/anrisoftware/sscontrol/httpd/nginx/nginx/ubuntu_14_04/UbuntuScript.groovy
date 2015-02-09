@@ -62,6 +62,7 @@ class UbuntuScript extends Nginx_1_4_Script {
     void installPackages() {
         installPackagesFactory.create(
                 log: log,
+                runCommands: runCommands,
                 command: installCommand,
                 packages: packages,
                 system: systemName,
@@ -83,8 +84,10 @@ class UbuntuScript extends Nginx_1_4_Script {
     void restartServices() {
         restartServicesFactory.create(
                 log: log,
+                runCommands: runCommands,
                 command: restartCommand,
                 services: restartServices,
+                flags: restartFlags,
                 this, threads)()
     }
 

@@ -62,6 +62,7 @@ class UbuntuScript extends Nginx_1_4_Script {
     void installPackages() {
         installPackagesFactory.create(
                 log: log,
+                runCommands: runCommands,
                 command: installCommand,
                 packages: packages,
                 system: systemName,
@@ -74,17 +75,19 @@ class UbuntuScript extends Nginx_1_4_Script {
     void restartService() {
         def services = findPortsServices uniqueDomains
         services.findAll { port, service -> service != nginxService }.each { port, service -> stopService service }
-        restartServices()
+        restartNginxService()
     }
 
     /**
-     * Restarts the <i>nginx</i> services.
+     * Restarts the <i>Nginx</i> services.
      */
-    void restartServices() {
+    void restartNginxService() {
         restartServicesFactory.create(
                 log: log,
+                runCommands: runCommands,
                 command: restartCommand,
                 services: restartServices,
+                flags: restartFlags,
                 this, threads)()
     }
 

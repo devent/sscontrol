@@ -25,16 +25,19 @@ import java.text.DecimalFormat
 
 import javax.inject.Inject
 
+import org.apache.commons.lang3.StringUtils
+
 import com.anrisoftware.sscontrol.core.service.LinuxScript
 import com.anrisoftware.sscontrol.httpd.domain.Domain
 import com.anrisoftware.sscontrol.httpd.user.DomainUser
-import com.anrisoftware.sscontrol.scripts.changefile.ChangeFileOwnerFactory;
+import com.anrisoftware.sscontrol.scripts.changefile.ChangeFileOwnerFactory
 import com.anrisoftware.sscontrol.scripts.killprocess.KillProcessFactory
-import com.anrisoftware.sscontrol.scripts.localuser.LocalChangeGroupFactory;
-import com.anrisoftware.sscontrol.scripts.localuser.LocalChangeUserFactory;
-import com.anrisoftware.sscontrol.scripts.localuser.LocalGroupAddFactory;
-import com.anrisoftware.sscontrol.scripts.localuser.LocalUserAddFactory;
+import com.anrisoftware.sscontrol.scripts.localuser.LocalChangeGroupFactory
+import com.anrisoftware.sscontrol.scripts.localuser.LocalChangeUserFactory
+import com.anrisoftware.sscontrol.scripts.localuser.LocalGroupAddFactory
+import com.anrisoftware.sscontrol.scripts.localuser.LocalUserAddFactory
 import com.anrisoftware.sscontrol.scripts.processinfo.ProcessInfoFactory
+import com.anrisoftware.sscontrol.scripts.unix.StopServicesFactory
 
 /**
  * Domain configuration.
@@ -68,6 +71,9 @@ class DomainConfig {
 
     @Inject
     KillProcessFactory killProcessFactory
+
+    @Inject
+    StopServicesFactory stopServicesFactory
 
     int domainNumber
 
@@ -136,8 +142,11 @@ class DomainConfig {
         webDir(domain).mkdirs()
         changeFileOwnerFactory.create(
                 log: log,
-                command: script.chownCommand,
-                owner: user.name, ownerGroup: user.group, files: webDir(domain),
+                runCommands: runCommands,
+                command: chownCommand,
+                owner: user.name,
+                ownerGroup: user.group,
+                files: webDir(domain),
                 this, threads)()
     }
 
@@ -147,6 +156,7 @@ class DomainConfig {
         def shell = "/bin/false"
         def userAdded = localUserAddFactory.create(
                 log: log,
+                runCommands: runCommands,
                 command: script.userAddCommand,
                 usersFile: script.usersFile,
                 userName: user.name,
@@ -159,6 +169,7 @@ class DomainConfig {
             terminateUserProcesses user
             localChangeUserFactory.create(
                     log: log,
+                    runCommands: runCommands,
                     command: script.userModCommand,
                     userName: user.name,
                     userId: user.uid,
@@ -171,21 +182,38 @@ class DomainConfig {
 
     void terminateUserProcesses(DomainUser user) {
         def process
-        while (true) {
+        (0..1).each {
             process = processInfoFactory.create(
                     log: log,
+                    runCommands: runCommands,
                     command: script.psCommand,
                     search: /.*${user.name}.*/,
                     this, threads)()
             if (!process.processFound) {
-                break
+                return
             }
-            killProcessFactory.create(
-                    log: log,
-                    command: script.killCommand,
-                    process: process.processId,
-                    search: user,
-                    this, threads)()
+            def name = process.processCommandName
+            if (!haveServiceStopCommand(name)) {
+                name = process.processCommandArgs
+                name = StringUtils.split(name, " ")[0]
+            }
+            if (haveServiceStopCommand(name)) {
+                stopServicesFactory.create(
+                        log: log,
+                        runCommands: runCommands,
+                        command: serviceStopCommand(name),
+                        services: serviceStopServices(name),
+                        flags: serviceStopFlags(name),
+                        this, threads)()
+            } else {
+                killProcessFactory.create(
+                        log: log,
+                        runCommands: runCommands,
+                        command: killCommand,
+                        process: process.processId,
+                        search: user,
+                        this, threads)()
+            }
         }
     }
 
@@ -193,6 +221,7 @@ class DomainConfig {
         def user = domain.domainUser
         def groupAdded = localGroupAddFactory.create(
                 log: log,
+                runCommands: runCommands,
                 command: script.groupAddCommand,
                 groupsFile: script.groupsFile,
                 groupName: user.group,
@@ -201,6 +230,7 @@ class DomainConfig {
         if (!groupAdded) {
             localChangeGroupFactory.create(
                     log: log,
+                    runCommands: runCommands,
                     command: script.groupModCommand,
                     groupName: user.group,
                     groupId: user.gid,

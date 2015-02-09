@@ -27,7 +27,7 @@ import groovy.util.logging.Slf4j
 
 import org.junit.Test
 
-import com.anrisoftware.sscontrol.httpd.apache.ubuntu.UbuntuTestUtil
+import com.anrisoftware.sscontrol.testutils.resources.WebServiceTestEnvironment
 
 /**
  * <i>Auth-LDAP Ubuntu 12.04</i> service test.
@@ -36,7 +36,7 @@ import com.anrisoftware.sscontrol.httpd.apache.ubuntu.UbuntuTestUtil
  * @since 1.0
  */
 @Slf4j
-class AuthLdapTest extends UbuntuTestUtil {
+class AuthLdapTest extends WebServiceTestEnvironment {
 
     @Test
     void "auth ldap"() {

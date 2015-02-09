@@ -20,6 +20,7 @@ package com.anrisoftware.sscontrol.scripts.killprocess;
 
 import java.util.Map;
 
+import com.anrisoftware.globalpom.exec.runcommands.RunCommands;
 import com.anrisoftware.globalpom.threads.api.Threads;
 
 /**
@@ -36,6 +37,9 @@ public interface KillProcessFactory {
      * @param args
      *            the {@link Map} arguments:
      *            <ul>
+     *            <li>{@code runCommands} optionally, set to the
+     *            {@link RunCommands} to record the command.
+     *
      *            <li>{@code command} path to the {@code kill} command, for
      *            example {@code "/usr/bin/kill".}
      *

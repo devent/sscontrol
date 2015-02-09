@@ -20,11 +20,12 @@ package com.anrisoftware.sscontrol.scripts.localuser;
 
 import java.util.Map;
 
+import com.anrisoftware.globalpom.exec.runcommands.RunCommands;
 import com.anrisoftware.globalpom.threads.api.Threads;
 
 /**
  * Factory to create to modify the group user.
- * 
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
@@ -32,25 +33,28 @@ public interface LocalChangeGroupFactory {
 
     /**
      * Create to modify the local group.
-     * 
+     *
      * @param args
      *            the {@link Map} arguments:
      *            <ul>
+     *            <li>{@code runCommands} optionally, set to the
+     *            {@link RunCommands} to record the command.
+     *
      *            <li>{@code command} the change file owner command, for example
      *            {@code "/usr/sbin/groupmod".}
-     * 
+     *
      *            <li>{@code groupName} the local group name.
-     * 
+     *
      *            <li>{@code groupId} optionally, the new group ID, for example
      *            {@code 100}.
      *            </ul>
-     * 
+     *
      * @param parent
      *            the {@link Object} parent script.
-     * 
+     *
      * @param threads
      *            the {@link Threads} pool.
-     * 
+     *
      * @return the {@link LocalChangeGroup}.
      */
     LocalChangeGroup create(Map<String, Object> args, Object parent,

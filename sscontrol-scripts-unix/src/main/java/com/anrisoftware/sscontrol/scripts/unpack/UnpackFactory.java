@@ -21,11 +21,12 @@ package com.anrisoftware.sscontrol.scripts.unpack;
 import java.io.File;
 import java.util.Map;
 
+import com.anrisoftware.globalpom.exec.runcommands.RunCommands;
 import com.anrisoftware.globalpom.threads.api.Threads;
 
 /**
  * Factory to create unpack archives.
- * 
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
@@ -33,20 +34,23 @@ public interface UnpackFactory {
 
     /**
      * Creates to unpack archives.
-     * 
+     *
      * @param args
      *            the {@link Map} arguments:
      *            <ul>
+     *            <li>{@code runCommands} optionally, set to the
+     *            {@link RunCommands} to record the command.
+     *
      *            <li>{@code file} the {@link File} to unpack;
-     * 
+     *
      *            <li>{@code output} the output {@link File} directory;
-     * 
+     *
      *            <li>{@code override} optionally, set to {@code true} to
      *            override existing files;
-     * 
+     *
      *            <li>{@code strip} optionally, set to {@code true} to strip the
      *            first level directory from the archive;
-     * 
+     *
      *            <li>{@code commands} set the {@link Map} of command to unpack
      *            the archive for each archive type.
      *            <ul>
@@ -54,13 +58,13 @@ public interface UnpackFactory {
      *            <li>{@code zip} Zip archive for extension {@code .zip}
      *            </ul>
      *            </ul>
-     * 
+     *
      * @param parent
      *            the {@link Object} parent script.
-     * 
+     *
      * @param threads
      *            the {@link Threads} pool.
-     * 
+     *
      * @return the {@link Unpack}.
      */
     Unpack create(Map<String, Object> args, Object parent, Threads threads);

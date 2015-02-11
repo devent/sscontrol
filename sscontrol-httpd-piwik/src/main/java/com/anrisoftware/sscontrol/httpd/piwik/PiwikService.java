@@ -18,156 +18,91 @@
  */
 package com.anrisoftware.sscontrol.httpd.piwik;
 
+import java.net.URI;
 import java.util.Map;
 
-import javax.inject.Inject;
-
-import com.anrisoftware.sscontrol.core.api.ServiceException;
-import com.anrisoftware.sscontrol.core.debuglogging.DebugLogging;
-import com.anrisoftware.sscontrol.core.debuglogging.DebugLoggingFactory;
-import com.anrisoftware.sscontrol.httpd.domain.Domain;
 import com.anrisoftware.sscontrol.httpd.webservice.OverrideMode;
 import com.anrisoftware.sscontrol.httpd.webservice.WebService;
-import com.anrisoftware.sscontrol.httpd.webserviceargs.DefaultWebService;
-import com.anrisoftware.sscontrol.httpd.webserviceargs.DefaultWebServiceFactory;
-import com.google.inject.assistedinject.Assisted;
 
 /**
  * <i>Piwik</i> service.
- * 
+ *
  * @see <a href="http://piwik.org/">http://piwik.org/</a>
- * 
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-public class PiwikService implements WebService {
+public interface PiwikService extends WebService {
 
     /**
-     * The <i>Piwik</i> service name.
+     * Returns the debug logging for the specified key.
+     * <p>
+     * The example returns the following map for the key "level":
+     *
+     * <pre>
+     * {["php": 1, "piwik": 1]}
+     * </pre>
+     *
+     * <pre>
+     * setup "piwik", {
+     *     debug "php", level: 1
+     *     debug "piwik", level: 4, file: "tmp/logs/piwik.log", writer: "file"
+     * }
+     * </pre>
+     *
+     * @return the {@link Map} of the debug levels or {@code null}.
      */
-    public static final String SERVICE_NAME = "piwik";
-
-    private final DefaultWebService service;
-
-    @Inject
-    private PiwikServiceLogger log;
-
-    private DebugLoggingFactory debugFactory;
-
-    private DebugLogging debug;
-
-    private OverrideMode overrideMode;
+    Map<String, Object> debugLogging(String key);
 
     /**
-     * @see PiwikServiceFactory#create(Map, Domain)
+     * Returns the database properties.
+     *
+     * <ul>
+     * <li>{@code database} the database name;</li>
+     * <li>{@code user} the database user name;</li>
+     * <li>{@code password} the user password;</li>
+     * <li>{@code host} the database host;</li>
+     * <li>{@code port} the database host port;</li>
+     * <li>{@code prefix} the table prefix;</li>
+     * <li>{@code adapter} the database adapter, for example {@code "PDO\MYSQL"}
+     * </li>
+     * <li>{@code type} the database type, for example {@code "InnoDB"};</li>
+     * <li>{@code schema} the database schema, for example {@code "Mysql"};</li>
+     * </ul>
+     *
+     * <pre>
+     * setup "piwik", {
+     *     database "redmine2", user: "user", password: "userpass", host: "localhost"
+     * }
+     * </pre>
+     *
+     * @return the {@link Map} of the database properties or {@code null}.
      */
-    @Inject
-    PiwikService(DefaultWebServiceFactory webServiceFactory,
-            @Assisted Map<String, Object> args, @Assisted Domain domain) {
-        this.service = webServiceFactory.create(SERVICE_NAME, args, domain);
-    }
+    Map<String, Object> getDatabase();
 
-    @Inject
-    void setDebugLoggingFactory(DebugLoggingFactory factory) {
-        this.debugFactory = factory;
-        this.debug = factory.create(-1);
-    }
+    /**
+     * Returns the override mode.
+     *
+     * <pre>
+     * setup "piwik", {
+     *     override mode: update
+     * }
+     * </pre>
+     *
+     * @return the override {@link OverrideMode} mode or {@code null}.
+     */
+    OverrideMode getOverrideMode();
 
-    @Override
-    public Domain getDomain() {
-        return service.getDomain();
-    }
-
-    @Override
-    public String getName() {
-        return SERVICE_NAME;
-    }
-
-    public void setAlias(String alias) throws ServiceException {
-        service.setAlias(alias);
-    }
-
-    @Override
-    public String getAlias() {
-        return service.getAlias();
-    }
-
-    public void setId(String id) throws ServiceException {
-        service.setId(id);
-    }
-
-    @Override
-    public String getId() {
-        return service.getId();
-    }
-
-    public void setRef(String ref) throws ServiceException {
-        service.setRef(ref);
-    }
-
-    @Override
-    public String getRef() {
-        return service.getRef();
-    }
-
-    public void setRefDomain(String ref) throws ServiceException {
-        service.setRefDomain(ref);
-    }
-
-    @Override
-    public String getRefDomain() {
-        return service.getRefDomain();
-    }
-
-    public void setPrefix(String prefix) throws ServiceException {
-        service.setPrefix(prefix);
-    }
-
-    @Override
-    public String getPrefix() {
-        return service.getPrefix();
-    }
-
-    public void debug(boolean enabled) {
-        DebugLogging logging = debugFactory.create(enabled ? 1 : 0);
-        log.debugSet(this, logging);
-        this.debug = logging;
-    }
-
-    public void debug(Map<String, Object> args) {
-        DebugLogging logging = debugFactory.create(args);
-        log.debugSet(this, logging);
-        this.debug = logging;
-    }
-
-    public DebugLogging getDebugLogging() {
-        if (debug == null) {
-            this.debug = debugFactory.createOff();
-        }
-        return debug;
-    }
-
-    public void override(Map<String, Object> args) {
-        OverrideMode mode = log.override(this, args);
-        log.overrideModeSet(this, mode);
-        this.overrideMode = mode;
-    }
-
-    public void setOverrideMode(OverrideMode mode) {
-        this.overrideMode = mode;
-    }
-
-    public OverrideMode getOverrideMode() {
-        return overrideMode;
-    }
-
-    public Object methodMissing(String name, Object args)
-            throws ServiceException {
-        return service.methodMissing(name, args);
-    }
-
-    @Override
-    public String toString() {
-        return service.toString();
-    }
+    /**
+     * Returns the backup target.
+     *
+     * <pre>
+     * setup "piwik", {
+     *     backup target: "/var/backups"
+     * }
+     * </pre>
+     *
+     * @return the backup {@link URI} target or {@code null}.
+     */
+    URI getBackupTarget();
 }

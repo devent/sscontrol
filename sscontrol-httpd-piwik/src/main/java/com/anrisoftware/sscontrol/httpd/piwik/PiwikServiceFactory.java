@@ -21,11 +21,12 @@ package com.anrisoftware.sscontrol.httpd.piwik;
 import java.util.Map;
 
 import com.anrisoftware.sscontrol.httpd.domain.Domain;
+import com.anrisoftware.sscontrol.httpd.webservice.WebService;
 import com.anrisoftware.sscontrol.httpd.webservice.WebServiceFactory;
 
 /**
  * Factory to create the <i>Piwik</i> service.
- * 
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
@@ -33,9 +34,9 @@ public interface PiwikServiceFactory extends WebServiceFactory {
 
     /**
      * Creates the <i>Piwik</i> service.
-     * 
-     * @return the {@link PiwikService}.
+     *
+     * @return the {@link WebService}.
      */
     @Override
-    PiwikService create(Map<String, Object> map, Domain domain);
+    WebService create(Map<String, Object> map, Domain domain);
 }

@@ -21,7 +21,7 @@ package com.anrisoftware.sscontrol.httpd.piwik.apache_ubuntu_12_04
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static org.apache.commons.io.FileUtils.*
 
-import com.anrisoftware.sscontrol.httpd.piwik.resources.ResourcesUtils
+import com.anrisoftware.sscontrol.testutils.resources.ResourcesUtils
 
 /**
  * <i>Apache Ubuntu 12.04</i> resources.
@@ -44,8 +44,6 @@ enum ApacheUbuntuResources {
     htdigestCommand("/usr/bin/htdigest", ApacheUbuntuResources.class.getResource("echo_command.txt")),
     mysqldumpCommand("/usr/bin/mysqldump", ApacheUbuntuResources.class.getResource("echo_command.txt")),
     gzipCommand("/bin/gzip", ApacheUbuntuResources.class.getResource("echo_command.txt")),
-    groupsFile("/etc/group", ApacheUbuntuResources.class.getResource("group.txt")),
-    usersFile("/etc/passwd", ApacheUbuntuResources.class.getResource("passwd.txt")),
     // files and directory
     confDir("/etc/apache2", null),
     sitesAvailableDir("/etc/apache2/sites-available", null),
@@ -68,16 +66,14 @@ enum ApacheUbuntuResources {
         mysqldumpCommand.createCommand parent
         gzipCommand.createCommand parent
         confDir.asFile(parent).mkdirs()
-        groupsFile.createFile parent
-        usersFile.createFile parent
         defaultConf.createFile parent
         defaultSslConf.createFile parent
     }
 
     static void setupApacheUbuntuProperties(def profile, File parent) {
         def entry = profile.getEntry("httpd")
-        entry.restart_command "${restartCommand.asFile(parent)} restart"
-        entry.stop_command "${stopCommand.asFile(parent)} stop"
+        entry.restart_command restartCommand.asFile(parent)
+        entry.stop_command stopCommand.asFile(parent)
         entry.enable_mod_command a2enmodCommand.asFile(parent)
         entry.disable_mod_command a2dismodCommand.asFile(parent)
         entry.enable_site_command a2ensiteCommand.asFile(parent)
@@ -88,8 +84,6 @@ enum ApacheUbuntuResources {
         entry.wordpress_mysqldump_command mysqldumpCommand.asFile(parent)
         entry.wordpress_gzip_command gzipCommand.asFile(parent)
         entry.configuration_directory confDir.asFile(parent)
-        entry.groups_file groupsFile.asFile(parent)
-        entry.users_file usersFile.asFile(parent)
         entry.sites_available_directory sitesAvailableDir.asFile(parent)
         entry.sites_enabled_directory sitesEnabledDir.asFile(parent)
         entry.config_include_directory configIncludeDir.asFile(parent)

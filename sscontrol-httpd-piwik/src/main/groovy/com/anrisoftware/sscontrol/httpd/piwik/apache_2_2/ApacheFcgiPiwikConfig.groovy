@@ -18,10 +18,14 @@
  */
 package com.anrisoftware.sscontrol.httpd.piwik.apache_2_2
 
+import javax.inject.Inject
+
+import org.apache.commons.lang3.builder.ToStringBuilder
+
 import com.anrisoftware.resources.templates.api.TemplateResource
-import com.anrisoftware.sscontrol.core.service.LinuxScript
 import com.anrisoftware.sscontrol.httpd.domain.Domain
 import com.anrisoftware.sscontrol.httpd.piwik.PiwikService
+import com.anrisoftware.sscontrol.httpd.piwik.PiwikServiceImpl
 import com.anrisoftware.sscontrol.httpd.webservice.WebService
 
 /**
@@ -32,7 +36,10 @@ import com.anrisoftware.sscontrol.httpd.webservice.WebService
  */
 abstract class ApacheFcgiPiwikConfig extends FcgiPiwikConfig {
 
-    LinuxScript script
+    @Inject
+    private ApacheFcgiPiwikConfigLogger log
+
+    private Object script
 
     @Override
     void deployDomain(Domain domain, Domain refDomain, WebService service, List config) {
@@ -50,18 +57,18 @@ abstract class ApacheFcgiPiwikConfig extends FcgiPiwikConfig {
      * Creates the domain configuration.
      *
      * @param domain
-     *            the {@link Domain}.
+     *            the {@link Domain} domain.
      *
      * @param refDomain
-     *            the referenced {@link Domain}.
+     *            the referenced {@link Domain} domain.
      *
      * @param service
-     *            the <i>Piwik</i> {@link WebService}.
+     *            the {@link PiwikService} service.
      *
      * @param config
      *            the {@link List} configuration.
      */
-    void createDomainConfig(Domain domain, Domain refDomain, WebService service, List config) {
+    void createDomainConfig(Domain domain, Domain refDomain, PiwikService service, List config) {
         def serviceAliasDir = serviceAliasDir domain, refDomain, service
         def serviceDir = serviceDir domain, refDomain, service
         def properties = [:]
@@ -74,6 +81,7 @@ abstract class ApacheFcgiPiwikConfig extends FcgiPiwikConfig {
         properties.namePattern = namePattern(domain)
         def configStr = domainConfigTemplate.getText(true, "domainConfig", "properties", properties)
         config << configStr
+        log.createdDomainConfig this, domain, configStr
     }
 
     String namePattern(Domain domain) {
@@ -94,7 +102,7 @@ abstract class ApacheFcgiPiwikConfig extends FcgiPiwikConfig {
      *
      * @see #wordpressDir(def)
      */
-    String serviceAliasDir(Domain domain, Domain refDomain, PiwikService service) {
+    String serviceAliasDir(Domain domain, Domain refDomain, PiwikServiceImpl service) {
         def serviceDir = serviceDir domain, refDomain, service
         service.alias.empty ? "$serviceDir/" : serviceDir
     }
@@ -113,7 +121,7 @@ abstract class ApacheFcgiPiwikConfig extends FcgiPiwikConfig {
      *
      * @see #wordpressDir(Domain, PiwikService)
      */
-    String serviceDir(Domain domain, Domain refDomain, PiwikService service) {
+    String serviceDir(Domain domain, Domain refDomain, PiwikServiceImpl service) {
         refDomain == null ? piwikDir(domain, service).absolutePath :
                 piwikDir(refDomain, service).absolutePath
     }
@@ -132,7 +140,7 @@ abstract class ApacheFcgiPiwikConfig extends FcgiPiwikConfig {
      * @see #domainDir(Domain)
      * @see PiwikService#getPrefix()
      */
-    File piwikDir(Domain domain, PiwikService service) {
+    File piwikDir(Domain domain, PiwikServiceImpl service) {
         new File(domainDir(domain), service.prefix)
     }
 
@@ -144,17 +152,29 @@ abstract class ApacheFcgiPiwikConfig extends FcgiPiwikConfig {
     abstract TemplateResource getDomainConfigTemplate()
 
     /**
-     * @see ServiceConfig#setScript(LinuxScript)
+     * Sets the parent script.
      */
-    void setScript(LinuxScript script) {
+    void setScript(Object script) {
         this.script = script
     }
 
     /**
-     * @see ServiceConfig#getScript()
+     * Returns the parent script.
      */
-    LinuxScript getScript() {
+    Object getScript() {
         script
+    }
+
+    /**
+     * Returns the service name.
+     */
+    abstract String getServiceName()
+
+    /**
+     * Returns the service profile name.
+     */
+    String getProfile() {
+        script.getProfile()
     }
 
     def propertyMissing(String name) {
@@ -163,5 +183,12 @@ abstract class ApacheFcgiPiwikConfig extends FcgiPiwikConfig {
 
     def methodMissing(String name, def args) {
         script.invokeMethod name, args
+    }
+
+    @Override
+    String toString() {
+        new ToStringBuilder(this)
+                .append("service name", getServiceName())
+                .append("profile name", getProfile()).toString();
     }
 }

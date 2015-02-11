@@ -18,22 +18,26 @@
  */
 package com.anrisoftware.sscontrol.httpd.piwik.apache_ubuntu_12_04
 
-import com.anrisoftware.sscontrol.httpd.webservice.OverrideMode;
+import com.anrisoftware.sscontrol.httpd.piwik.ubuntu_12_04.Ubuntu_12_04_Resources
+import com.anrisoftware.sscontrol.httpd.webservice.OverrideMode
 
 httpd {
     domain "test1.com", address: "192.168.0.51", {
-        setup "piwik", id: "piwikid", {
-            debug level: 4
+        setup "piwik", id: "piwikid", alias: "/piwik", prefix: "test1piwik", {
+            debug "php", level: 1
+            debug "piwik", level: 4
             override mode: OverrideMode.update
+            backup target: "$tmp/var/backups"
+            database "piwik", user: "user", password: "userpass", host: "localhost", port: 3306, prefix: "piwik_", adapter: "PDO\\MYSQL", type: "InnoDB", schema: "Mysql"
         }
     }
     ssl_domain "test1.com", address: "192.168.0.51", {
-        certificate file: UbuntuResources.certCrt.resource, key: UbuntuResources.certKey.resource
+        certificate file: Ubuntu_12_04_Resources.certCrt.resource, key: Ubuntu_12_04_Resources.certKey.resource
         setup "piwik", ref: "piwikid"
     }
-    domain "test2.com", address: "192.168.0.52", {
-        setup "piwik", id: "piwikid", alias: "/piwik", prefix: "test2piwik", {
-            //.
+    domain "test2.com", address: "192.168.0.51", {
+        setup "piwik", {
+            database "piwik", user: "user", password: "userpass"
         }
     }
 }

@@ -103,7 +103,6 @@ abstract class ApacheScript extends LinuxScript {
      *            the {@link HttpdService} httpd service.
      */
     void setupDefaultBinding(HttpdService service) {
-        println service.bindingAddresses
         if (service.bindingAddresses == null) {
             service.bind defaultBindingAddress, ports: defaultBindingPorts
         }

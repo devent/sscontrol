@@ -47,4 +47,9 @@ class UbuntuApacheFcgiPiwikConfig extends ApacheFcgiPiwikConfig {
     TemplateResource getDomainConfigTemplate() {
         domainConfigTemplate
     }
+
+    @Override
+    String getServiceName() {
+        Ubuntu_12_04_ApachePiwikConfigFactory.WEB_NAME
+    }
 }

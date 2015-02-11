@@ -1,30 +1,30 @@
 web_001.web_001 /tmp/var/www/test1.com/web
 web_002.web_002 /tmp/var/www/test2.com/web
--R root.root /tmp/var/www/test1.com/piwik_2
--R web_001.web_001 /tmp/var/www/test1.com/piwik_2/tmp
--R web_001.web_001 /tmp/var/www/test1.com/piwik_2/config
 -R web_001.web_001 /tmp/var/www/php-fcgi-scripts/test1.com
 web_001.web_001 /tmp/var/www/php-fcgi-scripts/test1.com/php-fcgi-starter
+-R root.root /tmp/var/www/test1.com/test1piwik
+-R web_001.web_001 /tmp/var/www/test1.com/test1piwik/tmp
+-R web_001.web_001 /tmp/var/www/test1.com/test1piwik/config
 -R web_001.web_001 /tmp/var/www/php-fcgi-scripts/test1.com
 web_001.web_001 /tmp/var/www/php-fcgi-scripts/test1.com/php-fcgi-starter
 root.root /tmp/var/www/test1.com/ssl/cert_crt.txt /tmp/var/www/test1.com/ssl/cert_key.txt
--R root.root /tmp/var/www/test2.com/test2piwik
--R web_002.web_002 /tmp/var/www/test2.com/test2piwik/tmp
--R web_002.web_002 /tmp/var/www/test2.com/test2piwik/config
 -R web_002.web_002 /tmp/var/www/php-fcgi-scripts/test2.com
 web_002.web_002 /tmp/var/www/php-fcgi-scripts/test2.com/php-fcgi-starter
+-R root.root /tmp/var/www/test2.com/piwik_2
+-R web_002.web_002 /tmp/var/www/test2.com/piwik_2/tmp
+-R web_002.web_002 /tmp/var/www/test2.com/piwik_2/config
 web_001.web_001 /tmp/var/www/test1.com/web
 web_002.web_002 /tmp/var/www/test2.com/web
--R root.root /tmp/var/www/test1.com/piwik_2
--R web_001.web_001 /tmp/var/www/test1.com/piwik_2/tmp
--R web_001.web_001 /tmp/var/www/test1.com/piwik_2/config
 -R web_001.web_001 /tmp/var/www/php-fcgi-scripts/test1.com
 web_001.web_001 /tmp/var/www/php-fcgi-scripts/test1.com/php-fcgi-starter
+-R root.root /tmp/var/www/test1.com/test1piwik
+-R web_001.web_001 /tmp/var/www/test1.com/test1piwik/tmp
+-R web_001.web_001 /tmp/var/www/test1.com/test1piwik/config
 -R web_001.web_001 /tmp/var/www/php-fcgi-scripts/test1.com
 web_001.web_001 /tmp/var/www/php-fcgi-scripts/test1.com/php-fcgi-starter
 root.root /tmp/var/www/test1.com/ssl/cert_crt.txt /tmp/var/www/test1.com/ssl/cert_key.txt
--R root.root /tmp/var/www/test2.com/test2piwik
--R web_002.web_002 /tmp/var/www/test2.com/test2piwik/tmp
--R web_002.web_002 /tmp/var/www/test2.com/test2piwik/config
 -R web_002.web_002 /tmp/var/www/php-fcgi-scripts/test2.com
 web_002.web_002 /tmp/var/www/php-fcgi-scripts/test2.com/php-fcgi-starter
+-R root.root /tmp/var/www/test2.com/piwik_2
+-R web_002.web_002 /tmp/var/www/test2.com/piwik_2/tmp
+-R web_002.web_002 /tmp/var/www/test2.com/piwik_2/config

@@ -1,0 +1,47 @@
+<VirtualHost 192.168.0.51:8082>
+
+    # domain test1.com
+    ServerName test1.com
+    DocumentRoot /tmp/var/www/test1.com/web
+    SuexecUserGroup web_001 web_001
+    <Directory /tmp/var/www/test1.com/web>
+        AllowOverride None
+        Order allow,deny
+        Allow from all
+    </Directory>
+
+    SSLEngine on
+    SSLCertificateFile /tmp/var/www/test1.com/ssl/cert_crt.txt
+    SSLCertificateKeyFile /tmp/var/www/test1.com/ssl/cert_key.txt
+
+    # /tmp/var/www/test1.com/piwik_2
+
+    Alias / /tmp/var/www/test1.com/piwik_2/
+
+    <Directory /tmp/var/www/test1.com/piwik_2>
+        AddHandler fcgid-script .php
+        FCGIWrapper /tmp/var/www/php-fcgi-scripts/test1.com/php-fcgi-starter .php
+        Options +ExecCGI +FollowSymLinks
+        DirectoryIndex index.php
+        AllowOverride All
+
+        Order allow,deny
+        Allow from all
+
+        <IfModule mod_mime.c>
+            <IfModule !mod_php5.c>
+                <IfModule mod_actions.c>
+                    <IfModule mod_cgi.c>
+                        AddType application/x-httpd-php .php
+                        Action application/x-httpd-php /cgi-bin/php5
+                    </IfModule>
+                    <IfModule mod_cgid.c>
+                        AddType application/x-httpd-php .php
+                        Action application/x-httpd-php /cgi-bin/php5
+                    </IfModule>
+                </IfModule>
+            </IfModule>
+        </IfModule>
+    </Directory>
+
+</VirtualHost>

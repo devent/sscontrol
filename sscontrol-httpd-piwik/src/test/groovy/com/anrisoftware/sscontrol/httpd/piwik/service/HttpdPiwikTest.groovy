@@ -24,12 +24,11 @@ import groovy.util.logging.Slf4j
 
 import org.junit.Test
 
-import com.anrisoftware.sscontrol.core.api.ServiceLoader as SscontrolServiceLoader
-import com.anrisoftware.sscontrol.core.api.ServicesRegistry
 import com.anrisoftware.sscontrol.httpd.domain.Domain
 import com.anrisoftware.sscontrol.httpd.piwik.PiwikService
 import com.anrisoftware.sscontrol.httpd.service.HttpdService
 import com.anrisoftware.sscontrol.httpd.webservice.OverrideMode
+import com.anrisoftware.sscontrol.testutils.resources.HttpdTestEnvironment
 
 /**
  * @see PiwikService
@@ -38,7 +37,7 @@ import com.anrisoftware.sscontrol.httpd.webservice.OverrideMode
  * @since 1.0
  */
 @Slf4j
-class HttpdPiwikTest extends HttpdTestUtil {
+class HttpdPiwikTest extends HttpdTestEnvironment {
 
     @Test
     void "piwik service"() {
@@ -55,30 +54,26 @@ class HttpdPiwikTest extends HttpdTestUtil {
         PiwikService webservice = domain.services[0]
         assert webservice.name == "piwik"
         assert webservice.id == "piwikid"
-        assert webservice.ref == null
-        assert webservice.alias == null
-        assert webservice.debug.level == 4
-        assert webservice.overrideMode == OverrideMode.update
-
-        domain = service.domains[d++]
-        assert domain.name == "test1.com"
-        assert domain.address == "192.168.0.51"
-
-        webservice = domain.services[0]
-        assert webservice.name == "piwik"
-        assert webservice.id == null
         assert webservice.ref == "piwikid"
-        assert webservice.refDomain == null
-
-        domain = service.domains[d++]
-        assert domain.name == "test2.com"
-        assert domain.address == "192.168.0.52"
-
-        webservice = domain.services[0]
-        assert webservice.name == "piwik"
-        assert webservice.id == "piwikid"
         assert webservice.alias == "piwik"
-        assert webservice.debug.level == -1
-        assert webservice.overrideMode == null
+        assert webservice.prefix == "test2piwik"
+        assert webservice.debugLogging("level").size() == 2
+        assert webservice.debugLogging("level")["php"] == 1
+        assert webservice.debugLogging("level")["piwik"] == 4
+        assert webservice.debugLogging("file").size() == 1
+        assert webservice.debugLogging("file")["piwik"] == "tmp/logs/piwik.log"
+        assert webservice.debugLogging("writer").size() == 1
+        assert webservice.debugLogging("writer")["piwik"] == "file"
+        assert webservice.overrideMode == OverrideMode.update
+        assert webservice.backupTarget.toString() =~ /.*\/var\/backups/
+        assert webservice.database.database == "piwik"
+        assert webservice.database.user == "user"
+        assert webservice.database.password == "userpass"
+        assert webservice.database.host == "localhost"
+        assert webservice.database.port == 3306
+        assert webservice.database.prefix == "piwik_"
+        assert webservice.database.adapter == "PDO\\MYSQL"
+        assert webservice.database.type == "InnoDB"
+        assert webservice.database.schema == "Mysql"
     }
 }

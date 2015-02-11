@@ -21,7 +21,7 @@ package com.anrisoftware.sscontrol.httpd.piwik.apache_ubuntu_12_04
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static org.apache.commons.io.FileUtils.*
 
-import com.anrisoftware.sscontrol.httpd.piwik.resources.ResourcesUtils
+import com.anrisoftware.sscontrol.testutils.resources.ResourcesUtils
 
 /**
  * <i>Ubuntu 12.04 Piwik</i> resources.
@@ -33,27 +33,30 @@ enum PiwikResources {
 
     profile("UbuntuProfile.groovy", PiwikResources.class.getResource("UbuntuProfile.groovy")),
     httpdScript("Httpd.groovy", PiwikResources.class.getResource("HttpdPiwik.groovy")),
-    phpConfDir("/etc/php5/cgi/conf.d", null),
     // piwik
-    piwikArchive("/tmp/piwik-2.3.0.tar.gz", UbuntuResources.class.getResource("piwik-2.3.0.tar.gz")),
-    test1comPiwikGlobalConf("/var/www/test1.com/piwik_2/config/global.ini.php", PiwikResources.class.getResource("piwik_global_conf.txt")),
-    test2comPiwikGlobalConf("/var/www/test2.com/test2piwik/config/global.ini.php", PiwikResources.class.getResource("piwik_global_conf.txt")),
+    test1comPiwikConf("/var/www/test1.com/test1piwik/config/config.ini.php", PiwikResources.class.getResource("piwik_configiniphp.txt")),
+    test2comPiwikConf("/var/www/test2.com/piwik_2/config/config.ini.php", PiwikResources.class.getResource("piwik_configiniphp.txt")),
     // expected
-    test1comConfExpected("/etc/apache2/sites-available/100-robobee-test1.com.conf", PiwikResources.class.getResource("test1com_conf_expected.txt")),
-    test1comSslConfExpected("/etc/apache2/sites-available/100-robobee-test1.com-ssl.conf", PiwikResources.class.getResource("test1com_ssl_conf_expected.txt")),
-    test2comConfExpected("/etc/apache2/sites-available/100-robobee-test2.com.conf", PiwikResources.class.getResource("test2com_conf_expected.txt")),
-    test1comPiwikGlobalConfExpected("/var/www/test1.com/piwik_2/config/global.ini.php", PiwikResources.class.getResource("test1com_piwik_global_conf_expected.txt")),
-    test2comPiwikGlobalConfExpected("/var/www/test2.com/test2piwik/config/global.ini.php", PiwikResources.class.getResource("test2com_piwik_global_conf_expected.txt")),
+    test1comConfExpected("/etc/apache2/sites-available/100-robobee-test1.com.conf", PiwikResources.class.getResource("test1comconf_expected.txt")),
+    test1comSslConfExpected("/etc/apache2/sites-available/100-robobee-test1.com-ssl.conf", PiwikResources.class.getResource("test1comsslconf_expected.txt")),
+    test2comConfExpected("/etc/apache2/sites-available/100-robobee-test2.com.conf", PiwikResources.class.getResource("test2comconf_expected.txt")),
+    test1comPiwikConfExpected("/var/www/test1.com/test1piwik/config/config.ini.php", PiwikResources.class.getResource("test1com_configiniphp_expected.txt")),
+    test2comPiwikConfExpected("/var/www/test2.com/piwik_2/config/config.ini.php", PiwikResources.class.getResource("test2com_configiniphp_expected.txt")),
+    test1comPhpIniConfExpected("/var/www/php-fcgi-scripts/test1.com/domain_php.ini", PiwikResources.class.getResource("test1com_phpini_expected.txt")),
+    test2comPhpIniConfExpected("/var/www/php-fcgi-scripts/test2.com/domain_php.ini", PiwikResources.class.getResource("test2com_phpini_expected.txt")),
+    test1comPhpFcgStarterExpected("/var/www/php-fcgi-scripts/test1.com/php-fcgi-starter", PiwikResources.class.getResource("test1com_phpfcgistarter_expected.txt")),
+    test2comPhpFcgStarterExpected("/var/www/php-fcgi-scripts/test2.com/php-fcgi-starter", PiwikResources.class.getResource("test2com_phpfcgistarter_expected.txt")),
+    runcommandsLogExpected("/runcommands.log", PiwikResources.class.getResource("runcommands_expected.txt")),
     tarOutExpected("/bin/tar.out", PiwikResources.class.getResource("tar_out_expected.txt")),
     chmodOutExpected("/bin/chmod.out", PiwikResources.class.getResource("chmod_out_expected.txt")),
     chownOutExpected("/bin/chown.out", PiwikResources.class.getResource("chown_out_expected.txt")),
     aptitudeOutExpected("/usr/bin/aptitude.out", PiwikResources.class.getResource("aptitude_out_expected.txt")),
 
     static copyPiwikFiles(File parent) {
-        phpConfDir.asFile(parent).mkdirs()
-        piwikArchive.createFile parent
-        test1comPiwikGlobalConf.createFile parent
-        test2comPiwikGlobalConf.createFile parent
+    }
+
+    static void setupPiwikProperties(def profile, File parent) {
+        def entry = profile.getEntry("httpd")
     }
 
     ResourcesUtils resources

@@ -80,6 +80,11 @@
 			<artifactId>sscontrol-scripts-unix</artifactId>
 			<version>1.0-alpha-2-SNAPSHOT</version>
 		</dependency>
+        <dependency>
+            <groupId>com.anrisoftware.sscontrol</groupId>
+            <artifactId>sscontrol-httpd-thin</artifactId>
+            <version>1.0-alpha-2-SNAPSHOT</version>
+        </dependency>
 
 		<!-- compile dependencies -->
 		<dependency>
@@ -96,14 +101,8 @@
 			<artifactId>joda-time</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>com.anrisoftware.sscontrol</groupId>
-			<artifactId>sscontrol-httpd-thin</artifactId>
-			<version>1.0-alpha-2-SNAPSHOT</version>
-		</dependency>
-		<dependency>
 			<groupId>org.yaml</groupId>
 			<artifactId>snakeyaml</artifactId>
-			<version>1.14</version>
 		</dependency>
 	</dependencies>
 

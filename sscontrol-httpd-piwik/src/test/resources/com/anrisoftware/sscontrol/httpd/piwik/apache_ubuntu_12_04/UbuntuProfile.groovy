@@ -21,20 +21,5 @@ package com.anrisoftware.sscontrol.httpd.piwik.apache_ubuntu_12_04
 profile "ubuntu_12_04", {
     httpd {
         service "apache"
-        // commands
-        install_command UbuntuResources.aptitudeCommand.asFile(tmp)
-        chmod_command UbuntuResources.chmodCommand.asFile(tmp)
-        chown_command UbuntuResources.chownCommand.asFile(tmp)
-        group_add_command UbuntuResources.groupaddCommand.asFile(tmp)
-        user_add_command UbuntuResources.useraddCommand.asFile(tmp)
-        zcat_command UbuntuResources.zcatCommand.asFile(tmp)
-        tar_command UbuntuResources.tarCommand.asFile(tmp)
-        unzip_command UbuntuResources.unzipCommand.asFile(tmp)
-        link_command UbuntuResources.lnCommand.asFile(tmp)
-        // files and directories
-        temp_directory UbuntuResources.tmpDir.asFile(tmp)
-        php_fcgi_php_conf_directory PiwikResources.phpConfDir.asFile(tmp)
-        // piwik
-        piwik_archive PiwikResources.piwikArchive.asFile(tmp)
     }
 }

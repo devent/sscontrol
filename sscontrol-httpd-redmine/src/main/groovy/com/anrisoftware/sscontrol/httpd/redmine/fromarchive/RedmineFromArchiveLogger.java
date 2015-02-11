@@ -44,7 +44,7 @@ class RedmineFromArchiveLogger extends AbstractLogger {
 
     enum _ {
 
-        unpack_archive_debug("Unpack archive '{}' done for {}."),
+        unpack_archive_debug("Unpack Redmine archive '{}' done for {}."),
 
         unpack_archive_info(
                 "Unpack Redmine archive '{}' done for service '{}'."),

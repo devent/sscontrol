@@ -102,6 +102,20 @@ public class StatementsTable implements Serializable {
     }
 
     /**
+     * Adds allowed script statements.
+     *
+     * <pre>
+     * statement "value", key: "value"
+     * </pre>
+     *
+     * @param names
+     *            the array with script statement {@link Enum} names.
+     */
+    public void addAllowed(Enum<?>... names) {
+        addAllowed(convert(names));
+    }
+
+    /**
      * Adds allowed statement keys.
      *
      * <pre>
@@ -119,6 +133,25 @@ public class StatementsTable implements Serializable {
     public void addAllowedKeys(String name, String... keys) {
         Set<String> set = allowed.get(name);
         set.addAll(Arrays.asList(keys));
+    }
+
+    /**
+     * Adds allowed statement keys.
+     *
+     * <pre>
+     * statement "name", key: "value"
+     * </pre>
+     *
+     * @param name
+     *            the statement {@link Enum} name.
+     *
+     * @param keys
+     *            the array with allowed {@link Enum} keys.
+     *
+     * @see #mapValue(String, String)
+     */
+    public void addAllowedKeys(Enum<?> name, Enum<?>... keys) {
+        addAllowedKeys(name.toString(), convert(keys));
     }
 
     /**
@@ -146,6 +179,26 @@ public class StatementsTable implements Serializable {
     }
 
     /**
+     * Set allow arbitrary keys for the statements.
+     *
+     * <pre>
+     * statement "name", foo: "value"
+     * statement "name", bar: "value"
+     * </pre>
+     *
+     * @param allow
+     *            set to {@code true} to allow arbitrary keys.
+     *
+     * @param names
+     *            the array with statement {@link Enum} names.
+     *
+     * @see #mapValue(String, String)
+     */
+    public void setAllowArbitraryKeys(boolean allow, Enum<?>... names) {
+        setAllowArbitraryKeys(allow, convert(names));
+    }
+
+    /**
      * Returns the statement value with the specified name.
      * <p>
      *
@@ -169,6 +222,26 @@ public class StatementsTable implements Serializable {
         } else {
             return null;
         }
+    }
+
+    /**
+     * Returns the statement value with the specified name.
+     * <p>
+     *
+     * The following statement returns ["foo", "bar"]:
+     *
+     * <pre>
+     * statement "foo"
+     * statement "bar"
+     * </pre>
+     *
+     * @param name
+     *            the {@link Enum} name.
+     *
+     * @return the {@link Set} of values or {@code null}.
+     */
+    public <T> Set<T> tableValues(Enum<?> name) {
+        return tableValues(name.toString());
     }
 
     /**
@@ -212,6 +285,54 @@ public class StatementsTable implements Serializable {
      * <p>
      *
      * The following statements returns the table for the key "keyFoo"
+     * {@code ["foo": "value1", "bar": "value2"]}
+     *
+     * <pre>
+     * statement "foo", keyFoo: "value1"
+     * statement "bar", keyFoo: "value2", keyBar: "value3"
+     * </pre>
+     *
+     * @param name
+     *            the {@link Enum} statement name.
+     *
+     * @param key
+     *            the {@link String} key.
+     *
+     * @return the {@link Object} value or {@code null}.
+     */
+    public <T> Map<String, T> tableKeys(Enum<?> name, String key) {
+        return tableKeys(name.toString(), key);
+    }
+
+    /**
+     * Returns the statement table values with the specified name.
+     * <p>
+     *
+     * The following statements returns the table for the key "keyFoo"
+     * {@code ["foo": "value1", "bar": "value2"]}
+     *
+     * <pre>
+     * statement "foo", keyFoo: "value1"
+     * statement "bar", keyFoo: "value2", keyBar: "value3"
+     * </pre>
+     *
+     * @param name
+     *            the {@link Enum} statement name.
+     *
+     * @param key
+     *            the {@link Enum} key.
+     *
+     * @return the {@link Object} value or {@code null}.
+     */
+    public <T> Map<String, T> tableKeys(Enum<?> name, Enum<?> key) {
+        return tableKeys(name.toString(), key.toString());
+    }
+
+    /**
+     * Returns the statement table values with the specified name.
+     * <p>
+     *
+     * The following statements returns the table for the key "keyFoo"
      * {@code ["foo": ["value1"], "bar": ["value2", "value3"]]}
      *
      * <pre>
@@ -243,6 +364,30 @@ public class StatementsTable implements Serializable {
             }
         }
         return res.size() == 0 ? null : res;
+    }
+
+    /**
+     * Returns the statement table values with the specified name.
+     * <p>
+     *
+     * The following statements returns the table for the key "keyFoo"
+     * {@code ["foo": ["value1"], "bar": ["value2", "value3"]]}
+     *
+     * <pre>
+     * statement "foo", keyFoo: "value1"
+     * statement "bar", keyFoo: "value2, value3", keyBar: "value4"
+     * </pre>
+     *
+     * @param name
+     *            the {@link Enum} statement name.
+     *
+     * @param key
+     *            the {@link Enum} key.
+     *
+     * @return the {@link Object} value or {@code null}.
+     */
+    public <T> Map<String, List<T>> tableKeysAsList(Enum<?> name, Enum<?> key) {
+        return tableKeysAsList(name.toString(), key.toString());
     }
 
     /**
@@ -330,6 +475,14 @@ public class StatementsTable implements Serializable {
 
     public Object getService() {
         return service;
+    }
+
+    private String[] convert(Enum<?>[] names) {
+        String[] snames = new String[names.length];
+        for (int i = 0; i < names.length; i++) {
+            snames[i] = names[i].toString();
+        }
+        return snames;
     }
 
     @Override

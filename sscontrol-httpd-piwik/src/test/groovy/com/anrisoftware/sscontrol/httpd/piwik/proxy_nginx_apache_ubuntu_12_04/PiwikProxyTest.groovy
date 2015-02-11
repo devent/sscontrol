@@ -19,14 +19,15 @@
 package com.anrisoftware.sscontrol.httpd.piwik.proxy_nginx_apache_ubuntu_12_04
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
-import static com.anrisoftware.sscontrol.httpd.piwik.apache_ubuntu_12_04.UbuntuResources.*
+import static com.anrisoftware.sscontrol.httpd.piwik.piwikarchive.PiwikArchiveResources.*
 import static com.anrisoftware.sscontrol.httpd.piwik.proxy_nginx_apache_ubuntu_12_04.PiwikProxyResources.*
+import static com.anrisoftware.sscontrol.httpd.piwik.ubuntu_12_04.Ubuntu_12_04_Resources.*
 import static org.apache.commons.io.FileUtils.*
 import groovy.util.logging.Slf4j
 
 import org.junit.Test
 
-import com.anrisoftware.sscontrol.httpd.piwik.resources.UbuntuTestUtil
+import com.anrisoftware.sscontrol.testutils.resources.WebServiceTestEnvironment
 
 /**
  * <i>Piwik Nginx proxy Ubuntu 12.04</i> test.
@@ -35,22 +36,27 @@ import com.anrisoftware.sscontrol.httpd.piwik.resources.UbuntuTestUtil
  * @since 1.0
  */
 @Slf4j
-class PiwikProxyTest extends UbuntuTestUtil {
+class PiwikProxyTest extends WebServiceTestEnvironment {
 
     @Test
     void "piwik reverse proxy"() {
+        attachRunCommandsLog tmpdir
         copyUbuntuFiles tmpdir
         copyPiwikProxyFiles tmpdir
+        copyPiwikArchiveFiles tmpdir
 
         loader.loadService profile.resource, null
         def profile = registry.getService("profile")[0]
+        setupUbuntuProperties profile, tmpdir
         setupPiwikProxyProperties profile, tmpdir
+        setupPiwikArchiveProperties profile, tmpdir
         loader.loadService httpdProxyDomainsScript.resource, profile
         loader.loadService httpdProxyScript.resource, profile
 
         registry.allServices.each { it.call() }
         log.info "Run service again to ensure that configuration is not set double."
         registry.allServices.each { it.call() }
+        assertStringContent runcommandsLogExpected.replaced(tmpdir, tmpdir, "/tmp").replaceAll(/\d+/, 'time'), runcommandsLogExpected.toString()
         assertFileContent aptitudeOutExpected.asFile(tmpdir), aptitudeOutExpected
         assertFileContent apachePortsConfExpected.asFile(tmpdir), apachePortsConfExpected
         assertStringContent test1comProxyConfExpected.replaced(tmpdir, tmpdir, "/tmp"), test1comProxyConfExpected.toString()

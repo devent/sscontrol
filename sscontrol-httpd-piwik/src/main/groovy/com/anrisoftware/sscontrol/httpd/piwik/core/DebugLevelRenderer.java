@@ -20,12 +20,13 @@ package com.anrisoftware.sscontrol.httpd.piwik.core;
 
 import java.util.Locale;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.anrisoftware.resources.templates.api.AttributeRenderer;
-import com.anrisoftware.sscontrol.core.debuglogging.DebugLogging;
 
 /**
  * Attribute renderer for the debug logging levels.
- * 
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
@@ -34,11 +35,14 @@ public class DebugLevelRenderer implements AttributeRenderer {
 
     @Override
     public String toString(Object o, String formatString, Locale locale) {
-        return toString(o);
+        if (StringUtils.equals(formatString, "debug")) {
+            return toString(((Number) o).intValue());
+        } else {
+            return o.toString();
+        }
     }
 
-    public String toString(Object o) {
-        Integer level = ((Number) o).intValue();
+    public String toString(int level) {
         switch (level) {
         case 0:
             return "NONE";
@@ -57,7 +61,7 @@ public class DebugLevelRenderer implements AttributeRenderer {
 
     @Override
     public Class<?> getAttributeType() {
-        return DebugLogging.class;
+        return Integer.class;
     }
 
 }

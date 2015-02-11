@@ -93,7 +93,7 @@
 			<dependency>
 				<groupId>com.anrisoftware.globalpom</groupId>
 				<artifactId>globalpomutils-exec</artifactId>
-				<version>2.3-SNAPSHOT</version>
+				<version>2.3</version>
 			</dependency>
 			<dependency>
 				<groupId>com.anrisoftware.globalpom</groupId>
@@ -103,7 +103,7 @@
 			<dependency>
 				<groupId>com.anrisoftware.globalpom</groupId>
 				<artifactId>globalpomutils-initfileparser</artifactId>
-				<version>2.2</version>
+				<version>2.4</version>
 			</dependency>
 
 			<!-- resources -->
@@ -136,6 +136,11 @@
 				<groupId>commons-validator</groupId>
 				<artifactId>commons-validator</artifactId>
 				<version>1.4.1</version>
+			</dependency>
+			<dependency>
+				<groupId>org.yaml</groupId>
+				<artifactId>snakeyaml</artifactId>
+				<version>1.14</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>

@@ -18,11 +18,13 @@
  */
 package com.anrisoftware.sscontrol.httpd.piwik.apache_ubuntu_12_04;
 
+import com.anrisoftware.globalpom.initfileparser.InitFileParserModule;
+import com.anrisoftware.globalpom.version.VersionModule;
 import com.google.inject.AbstractModule;
 
 /**
  * Binds <i>Piwik</i> configuration for <i>Ubuntu 12.04</i>.
- * 
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
@@ -30,6 +32,8 @@ class ApacheModule extends AbstractModule {
 
     @Override
     protected void configure() {
+        install(new VersionModule());
+        install(new InitFileParserModule());
     }
 
 }

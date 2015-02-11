@@ -3,6 +3,8 @@
 400 /tmp/var/www/test1.com/ssl/cert_crt.txt /tmp/var/www/test1.com/ssl/cert_key.txt
 755 /tmp/var/www/php-fcgi-scripts/test2.com/php-fcgi-starter
 755 /tmp/var/www/php-fcgi-scripts/test1.com/php-fcgi-starter
+o-rw /tmp/var/www/test1.com/test1piwik/config/config.ini.php
 755 /tmp/var/www/php-fcgi-scripts/test1.com/php-fcgi-starter
 400 /tmp/var/www/test1.com/ssl/cert_crt.txt /tmp/var/www/test1.com/ssl/cert_key.txt
 755 /tmp/var/www/php-fcgi-scripts/test2.com/php-fcgi-starter
+o-rw /tmp/var/www/test2.com/piwik_2/config/config.ini.php

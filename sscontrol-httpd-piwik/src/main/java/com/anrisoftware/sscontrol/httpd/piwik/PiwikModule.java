@@ -36,7 +36,7 @@ public class PiwikModule extends AbstractModule {
         install(new UnixScriptsModule());
         install(new UnixScriptsModule.UnixScriptsDefaultsModule());
         install(new FactoryModuleBuilder().implement(WebService.class,
-                PiwikService.class).build(PiwikServiceFactory.class));
+                PiwikServiceImpl.class).build(PiwikServiceFactory.class));
     }
 
 }

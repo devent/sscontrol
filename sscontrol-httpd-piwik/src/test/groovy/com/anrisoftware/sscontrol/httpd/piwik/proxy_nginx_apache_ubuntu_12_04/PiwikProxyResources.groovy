@@ -21,7 +21,7 @@ package com.anrisoftware.sscontrol.httpd.piwik.proxy_nginx_apache_ubuntu_12_04
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static org.apache.commons.io.FileUtils.*
 
-import com.anrisoftware.sscontrol.httpd.piwik.resources.ResourcesUtils
+import com.anrisoftware.sscontrol.testutils.resources.ResourcesUtils
 
 /**
  * <i>Piwik</i> with <i>Nginx</i> proxy resources.
@@ -36,10 +36,8 @@ enum PiwikProxyResources {
     httpdProxyDomainsScript("Httpd.groovy", PiwikProxyResources.class.getResource("HttpdPiwikReverseProxyDomains.groovy")),
     httpdProxyScript("Httpd.groovy", PiwikProxyResources.class.getResource("HttpdPiwikReverseProxy.groovy")),
     // piwik
-    piwikArchive("/tmp/piwik-2.3.0.tar.gz", PiwikProxyResources.class.getResource("piwik-2.3.0.tar.gz")),
-    test1comPiwikGlobalConf("/var/www/test1.com/piwik_2/config/global.ini.php", PiwikProxyResources.class.getResource("piwik_global_conf.txt")),
-    test2comPiwikGlobalConf("/var/www/test2.com/test2piwik/config/global.ini.php", PiwikProxyResources.class.getResource("piwik_global_conf.txt")),
     // apache
+    runcommandsLogExpected("/runcommands.log", PiwikProxyResources.class.getResource("runcommands_expected.txt")),
     apacheRestartCommand("/etc/init.d/apache2", PiwikProxyResources.class.getResource("echo_command.txt")),
     apacheStopCommand("/etc/init.d/apache2", PiwikProxyResources.class.getResource("echo_command.txt")),
     a2enmodCommand("/usr/sbin/a2enmod", PiwikProxyResources.class.getResource("echo_command.txt")),
@@ -63,30 +61,26 @@ enum PiwikProxyResources {
     // expected
     aptitudeOutExpected("/usr/bin/aptitude.out", PiwikProxyResources.class.getResource("aptitude_out_expected.txt")),
     apachePortsConfExpected("/etc/apache2/ports.conf", PiwikProxyResources.class.getResource("apache_ports_conf_expected.txt")),
-    test1comProxyConfExpected("/etc/nginx/sites-available/100-robobee-test1.com.conf", PiwikProxyResources.class.getResource("test1com_reverseproxy_conf_expected.txt")),
-    test1comSslProxyConfExpected("/etc/nginx/sites-available/100-robobee-test1.com-ssl.conf", PiwikProxyResources.class.getResource("test1com_ssl_reverseproxy_conf_expected.txt")),
-    test1comDomainProxyConfExpected("/etc/apache2/sites-available/100-robobee-test1.com.conf", PiwikProxyResources.class.getResource("test1com_reverseproxydomain_conf_expected.txt")),
-    test1comSslDomainProxyConfExpected("/etc/apache2/sites-available/100-robobee-test1.com-ssl.conf", PiwikProxyResources.class.getResource("test1com_ssl_reverseproxydomain_conf_expected.txt")),
-    chownProxyOutExpected("/bin/chown.out", PiwikProxyResources.class.getResource("chown_reverseproxy_out_expected.txt")),
-    chmodProxyOutExpected("/bin/chmod.out", PiwikProxyResources.class.getResource("chmod_reverseproxy_out_expected.txt")),
-    useraddProxyOutExpected("/usr/sbin/useradd.out", PiwikProxyResources.class.getResource("useradd_reverseproxy_out_expected.txt")),
-    groupaddProxyOutExpected("/usr/sbin/groupadd.out", PiwikProxyResources.class.getResource("groupadd_reverseproxy_out_expected.txt")),
+    test1comProxyConfExpected("/etc/nginx/sites-available/100-robobee-test1.com.conf", PiwikProxyResources.class.getResource("test1comconf_proxy_expected.txt")),
+    test1comSslProxyConfExpected("/etc/nginx/sites-available/100-robobee-test1.com-ssl.conf", PiwikProxyResources.class.getResource("test1comsslconf_proxy_expected.txt")),
+    test1comDomainProxyConfExpected("/etc/apache2/sites-available/100-robobee-test1.com.conf", PiwikProxyResources.class.getResource("test1comconf_domain_expected.txt")),
+    test1comSslDomainProxyConfExpected("/etc/apache2/sites-available/100-robobee-test1.com-ssl.conf", PiwikProxyResources.class.getResource("test1comsslconf_domain_expected.txt")),
+    chownProxyOutExpected("/bin/chown.out", PiwikProxyResources.class.getResource("chown_out_expected.txt")),
+    chmodProxyOutExpected("/bin/chmod.out", PiwikProxyResources.class.getResource("chmod_out_expected.txt")),
+    useraddProxyOutExpected("/usr/sbin/useradd.out", PiwikProxyResources.class.getResource("useradd_out_expected.txt")),
+    groupaddProxyOutExpected("/usr/sbin/groupadd.out", PiwikProxyResources.class.getResource("groupadd_out_expected.txt")),
     // nginx
     nginxConfigurationDir("/etc/nginx", null),
     nginxSitesAvailableDir("/etc/nginx/sites-available", null),
     nginxSitesEnabledDir("/etc/nginx/sites-enabled", null),
     nginxConfigIncludeDir("/etc/nginx/conf.d", null),
     nginxRestartCommand("/etc/init.d/nginx", PiwikProxyResources.class.getResource("echo_command.txt")),
-    nginxSigningKeyFile("/tmp/web-nginx_signing.key", PiwikProxyResources.class.getResource("nginx_signing_key.txt")),
 
     static void copyPiwikProxyFiles(File parent) {
         // ubuntu
         netstatCommand.createFile parent
         // piwik
-        piwikArchive.createFile parent
         phpConfDir.asFile parent mkdirs()
-        test1comPiwikGlobalConf.createFile parent
-        test2comPiwikGlobalConf.createFile parent
         // apache
         sitesDir.asFile parent mkdirs()
         apacheRestartCommand.createCommand parent
@@ -103,7 +97,6 @@ enum PiwikProxyResources {
         apacheDefaultConf.createFile parent
         apacheDefaultSslConf.createFile parent
         nginxRestartCommand.createCommand parent
-        nginxSigningKeyFile.createFile parent
     }
 
     static void setupPiwikProxyProperties(def profile, File parent) {
@@ -111,8 +104,9 @@ enum PiwikProxyResources {
         entry.service(["idapache2": "apache", "idproxy": "nginx"])
         // ubuntu
         entry.netstat_command netstatCommand.asFile(parent)
+        // piwik
         // apache
-        entry.apache_restart_command "${apacheRestartCommand.asFile(parent)} restart"
+        entry.apache_restart_command apacheRestartCommand.asFile(parent)
         entry.apache_configuration_directory apacheConfDir.asFile(parent)
         entry.apache_sites_available_directory apacheSitesAvailableDir.asFile(parent)
         entry.apache_sites_enabled_directory apacheSitesEnabledDir.asFile(parent)
@@ -127,12 +121,11 @@ enum PiwikProxyResources {
         entry.sites_directory sitesDir.asFile(parent)
         entry.additional_mods "rpaf"
         // nginx
-        entry.nginx_restart_command "${nginxRestartCommand.asFile(parent)} restart"
+        entry.nginx_restart_command nginxRestartCommand.asFile(parent)
         entry.nginx_configuration_directory nginxConfigurationDir.asFile(parent)
         entry.nginx_sites_available_directory nginxSitesAvailableDir.asFile(parent)
         entry.nginx_sites_enabled_directory nginxSitesEnabledDir.asFile(parent)
         entry.nginx_config_include_directory nginxConfigIncludeDir.asFile(parent)
-        entry.nginx_signing_key nginxSigningKeyFile.asFile(parent)
     }
 
     ResourcesUtils resources

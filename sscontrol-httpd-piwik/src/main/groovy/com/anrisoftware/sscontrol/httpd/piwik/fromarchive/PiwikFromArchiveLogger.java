@@ -18,16 +18,25 @@
  */
 package com.anrisoftware.sscontrol.httpd.piwik.fromarchive;
 
-import static com.anrisoftware.sscontrol.httpd.piwik.fromarchive.PiwikFromArchiveLogger._.compare_gitit_versions;
-import static com.anrisoftware.sscontrol.httpd.piwik.fromarchive.PiwikFromArchiveLogger._.unpack_archive;
+import static com.anrisoftware.sscontrol.httpd.piwik.fromarchive.PiwikFromArchiveLogger._.archive_name;
+import static com.anrisoftware.sscontrol.httpd.piwik.fromarchive.PiwikFromArchiveLogger._.compare_versions_debug;
+import static com.anrisoftware.sscontrol.httpd.piwik.fromarchive.PiwikFromArchiveLogger._.compare_versions_info;
+import static com.anrisoftware.sscontrol.httpd.piwik.fromarchive.PiwikFromArchiveLogger._.error_archive_hash;
+import static com.anrisoftware.sscontrol.httpd.piwik.fromarchive.PiwikFromArchiveLogger._.error_archive_hash_message;
+import static com.anrisoftware.sscontrol.httpd.piwik.fromarchive.PiwikFromArchiveLogger._.service_name;
+import static com.anrisoftware.sscontrol.httpd.piwik.fromarchive.PiwikFromArchiveLogger._.unpack_archive_debug;
+import static com.anrisoftware.sscontrol.httpd.piwik.fromarchive.PiwikFromArchiveLogger._.unpack_archive_info;
 
 import java.net.URI;
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
+import com.anrisoftware.globalpom.version.Version;
+import com.anrisoftware.sscontrol.core.api.ServiceException;
+import com.anrisoftware.sscontrol.httpd.piwik.PiwikService;
 
 /**
  * Logging for {@link PiwikFromArchive}.
- * 
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
@@ -35,10 +44,23 @@ class PiwikFromArchiveLogger extends AbstractLogger {
 
     enum _ {
 
-        compare_gitit_versions(
-                "Compare installed Gitit version '{}' to expected '{}' for {}."),
+        unpack_archive_debug("Unpack Piwik archive '{}' done for {}."),
 
-        unpack_archive("Unpacked Piwik archive '{}' for {}.");
+        unpack_archive_info("Unpack Piwik archive '{}' done for service '{}'."),
+
+        compare_versions_debug("Compare Piwik version {}<={} for {}."),
+
+        compare_versions_info("Compare Piwik version {}<={} for service '{}'."),
+
+        unpack_archive("Unpacked Piwik archive '{}' for {}."),
+
+        error_archive_hash("Piwik archive hash not match"),
+
+        error_archive_hash_message("Piwik archive '{}' hash not match for {}"),
+
+        service_name("service"),
+
+        archive_name("archive");
 
         private String name;
 
@@ -60,11 +82,26 @@ class PiwikFromArchiveLogger extends AbstractLogger {
     }
 
     void unpackArchiveDone(PiwikFromArchive config, URI archive) {
-        debug(unpack_archive, archive, config);
+        if (isDebugEnabled()) {
+            debug(unpack_archive_debug, archive, config);
+        } else {
+            info(unpack_archive_info, archive, config.getServiceName());
+        }
     }
 
-    void checkPiwikVersion(PiwikFromArchive config, String version,
-            String gititVersion) {
-        debug(compare_gitit_versions, version, gititVersion, config);
+    void checkPiwikVersion(PiwikFromArchive config, Version version,
+            Version upper) {
+        if (isDebugEnabled()) {
+            debug(compare_versions_debug, version, upper, config);
+        } else {
+            info(compare_versions_info, version, upper, config.getServiceName());
+        }
+    }
+
+    ServiceException errorArchiveHash(PiwikService service, URI archive) {
+        return logException(
+                new ServiceException(error_archive_hash).add(service_name,
+                        service).add(archive_name, archive),
+                error_archive_hash_message, archive, service);
     }
 }

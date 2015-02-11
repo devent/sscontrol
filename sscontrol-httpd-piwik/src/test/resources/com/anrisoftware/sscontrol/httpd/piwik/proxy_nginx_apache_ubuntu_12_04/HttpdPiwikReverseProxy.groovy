@@ -18,7 +18,7 @@
  */
 package com.anrisoftware.sscontrol.httpd.piwik.proxy_nginx_apache_ubuntu_12_04
 
-import com.anrisoftware.sscontrol.httpd.piwik.apache_ubuntu_12_04.UbuntuResources
+import com.anrisoftware.sscontrol.httpd.piwik.ubuntu_12_04.Ubuntu_12_04_Resources
 
 httpd {
     // reference service with id "idproxy"
@@ -28,7 +28,9 @@ httpd {
     }
     // SSL/domain test1.com
     ssl_domain "test1.com", address: "192.168.0.50", {
-        certificate file: UbuntuResources.certCrt.resource, key: UbuntuResources.certKey.resource
-        setup "proxy", service: "piwik", alias: "piwik", address: "https://127.0.0.1:8082"
+        certificate file: Ubuntu_12_04_Resources.certCrt.resource, key: Ubuntu_12_04_Resources.certKey.resource
+        setup "proxy", service: "general", alias: "piwik", proxyname: "piwik", address: "https://127.0.0.1:8082", {
+            cache staticFiles: true
+        }
     }
 }

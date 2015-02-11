@@ -21,7 +21,7 @@ package com.anrisoftware.sscontrol.httpd.piwik.service
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static org.apache.commons.io.FileUtils.*
 
-import com.anrisoftware.sscontrol.httpd.piwik.resources.ResourcesUtils;
+import com.anrisoftware.sscontrol.testutils.resources.ResourcesUtils
 
 /**
  * Loads the resources.
@@ -31,8 +31,8 @@ import com.anrisoftware.sscontrol.httpd.piwik.resources.ResourcesUtils;
  */
 enum ServicesResources {
 
-    profile("UbuntuProfile.groovy", ServicesResources.class.getResource("/com/anrisoftware/sscontrol/httpd/piwik/apache_ubuntu_12_04/UbuntuProfile.groovy")),
-    piwikScript("Httpd.groovy", ServicesResources.class.getResource("/com/anrisoftware/sscontrol/httpd/piwik/apache_ubuntu_12_04/HttpdPiwik.groovy")),
+    profile("UbuntuProfile.groovy", ServicesResources.class.getResource("UbuntuProfile.groovy")),
+    piwikScript("Httpd.groovy", ServicesResources.class.getResource("HttpdPiwik.groovy")),
 
     ResourcesUtils resources
 

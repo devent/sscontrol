@@ -27,7 +27,7 @@ import org.apache.commons.io.FileUtils
 import org.apache.commons.lang3.StringUtils
 import org.stringtemplate.v4.ST
 
-import com.anrisoftware.globalpom.exec.scriptprocess.ScriptExecFactory;
+import com.anrisoftware.globalpom.exec.scriptprocess.ScriptExecFactory
 import com.anrisoftware.globalpom.initfileparser.DefaultInitFileAttributes
 import com.anrisoftware.globalpom.initfileparser.DefaultInitFileAttributesFactory
 import com.anrisoftware.globalpom.initfileparser.InitFileParserFactory
@@ -171,6 +171,7 @@ abstract class UfwFail2banScript implements Fail2BanFirewallConfig {
      */
     void createUfwSection(Jail jail) {
         def attributes = initFileAttributesFactory.create()
+        attributes.stringQuoteEnabled = false
         def parser = initFileParserFactory.create(jailLocalConfigFile, attributes)()
         def sections = parser.inject([]) { acc, val -> acc << val }
         def section = sections.find { Section section -> section.name == jail.service }

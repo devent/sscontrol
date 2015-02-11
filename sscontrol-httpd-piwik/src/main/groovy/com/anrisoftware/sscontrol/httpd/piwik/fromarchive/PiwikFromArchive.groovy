@@ -24,25 +24,29 @@ import groovy.util.logging.Slf4j
 import javax.inject.Inject
 
 import org.apache.commons.io.FileUtils
-import org.apache.commons.lang3.StringUtils
 import org.apache.commons.lang3.builder.ToStringBuilder
 
+import com.anrisoftware.globalpom.checkfilehash.CheckFileHashFactory
+import com.anrisoftware.globalpom.version.Version
+import com.anrisoftware.globalpom.version.VersionFormatFactory
 import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.sscontrol.httpd.domain.Domain
 import com.anrisoftware.sscontrol.httpd.piwik.PiwikService
 import com.anrisoftware.sscontrol.httpd.webservice.OverrideMode
 import com.anrisoftware.sscontrol.httpd.webservice.WebService
-import com.anrisoftware.sscontrol.scripts.changefile.ChangeFileOwnerFactory;
+import com.anrisoftware.sscontrol.scripts.changefile.ChangeFileOwnerFactory
 import com.anrisoftware.sscontrol.scripts.unpack.UnpackFactory
 
 /**
- * Installs and configures <i>Piwik</i> from an archive.
+ * <i>Piwik</i> from an archive configuration.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
 @Slf4j
 abstract class PiwikFromArchive {
+
+    private Object script
 
     @Inject
     private PiwikFromArchiveLogger logg
@@ -53,18 +57,22 @@ abstract class PiwikFromArchive {
     @Inject
     ChangeFileOwnerFactory changeFileOwnerFactory
 
-    Object script
+    @Inject
+    CheckFileHashFactory checkFileHashFactory
+
+    @Inject
+    VersionFormatFactory versionFormatFactory
 
     /**
-     * @see ServiceConfig#deployDomain(Domain, Domain, WebService, List)
+     * Deploys the configuration.
+     *
+     * @param domain
+     *            the service {@link Domain} domain.
+     *
+     * @param service
+     *            the {@link PiwikService} service.
      */
-    void deployDomain(Domain domain, Domain refDomain, WebService service, List config) {
-    }
-
-    /**
-     * @see ServiceConfig#deployService(Domain, WebService, List)
-     */
-    void deployService(Domain domain, WebService service, List config) {
+    void deployService(Domain domain, PiwikService service) {
         unpackPiwikArchive domain, service
         savePiwikVersion domain, service
         setupPermissions domain, service
@@ -74,13 +82,12 @@ abstract class PiwikFromArchive {
      * Downloads and unpacks the <i>Piwik</i> source archive.
      *
      * @param domain
-     *            the {@link Domain} domain of the service.
+     *            the service {@link Domain} domain.
      *
      * @param service
      *            the {@link PiwikService} service.
      *
      * @see #getPiwikArchive()
-     * @see LinuxScript#getTmpDirectory()
      */
     void unpackPiwikArchive(Domain domain, PiwikService service) {
         if (!needUnpackArchive(domain, service)) {
@@ -88,7 +95,7 @@ abstract class PiwikFromArchive {
         }
         def name = new File(piwikArchive.path).name
         def dest = new File(tmpDirectory, "piwik-$name")
-        copyURLToFile piwikArchive.toURL(), dest
+        downloadArchive piwikArchive, dest, service
         unpackArchive domain, service, dest
     }
 
@@ -96,7 +103,7 @@ abstract class PiwikFromArchive {
      * Returns if it needed to download and unpack the <i>Piwik</i> archive.
      *
      * @param domain
-     *            the {@link Domain} of the service.
+     *            the service {@link Domain} domain.
      *
      * @param service
      *            the {@link PiwikService} service.
@@ -106,19 +113,65 @@ abstract class PiwikFromArchive {
      * @see PiwikService#getOverrideMode()
      */
     boolean needUnpackArchive(Domain domain, PiwikService service) {
-        def override = service.overrideMode != OverrideMode.no || !piwikConfigExist(domain, service)
-        def update = service.overrideMode != OverrideMode.update || !checkPiwikVersion(domain, service)
-        override && update
+        switch (service.overrideMode) {
+            case OverrideMode.no:
+                return piwikConfigFile(domain, service).exists()
+            case OverrideMode.override:
+                return true
+            case OverrideMode.update:
+                return checkPiwikVersion(domain, service) == false
+        }
+    }
+
+    /**
+     * Downloads the <i>Piwik</i> archive.
+     *
+     * @param archive
+     *            the archive {@link URI} domain of the service.
+     *
+     * @param dest
+     *            the destination {@link File} file.
+     *
+     * @param service
+     *            the {@link PiwikService} service.
+     *
+     * @see #getPiwikArchive()
+     */
+    void downloadArchive(URI archive, File dest, PiwikService service) {
+        if (dest.isFile() && !checkArchiveHash(dest, service)) {
+            copyURLToFile archive.toURL(), dest
+        } else if (!dest.isFile()) {
+            copyURLToFile archive.toURL(), dest
+        }
+        if (!checkArchiveHash(dest, service)) {
+            throw logg.errorArchiveHash(service, piwikArchive)
+        }
+    }
+
+    /**
+     * Checks the <i>Piwik</i> archive hash.
+     *
+     * @param archive
+     *            the archive {@link File} file.
+     *
+     * @param service
+     *            the {@link PiwikService} service.
+     *
+     * @see #getPiwikArchiveHash()
+     */
+    boolean checkArchiveHash(File archive, PiwikService service) {
+        def check = checkFileHashFactory.create(this, file: archive, hash: piwikArchiveHash)()
+        return check.matching
     }
 
     /**
      * Unpacks the <i>Piwik</i> archive.
      *
      * @param domain
-     *            the {@link Domain} domain of the service.
+     *            the service {@link Domain} domain.
      *
      * @param service
-     *            the {@link WebService} service.
+     *            the {@link PiwikService} service.
      *
      * @param archive
      *            the archive {@link File} file.
@@ -128,11 +181,12 @@ abstract class PiwikFromArchive {
         dir.isDirectory() ? false : dir.mkdirs()
         unpackFactory.create(
                 log: log,
+                runCommands: runCommands,
                 file: archive,
                 output: dir,
                 override: true,
                 strip: true,
-                commands: script.unpackCommands,
+                commands: unpackCommands,
                 this, threads)()
 
         logg.unpackArchiveDone this, piwikArchive
@@ -142,7 +196,7 @@ abstract class PiwikFromArchive {
      * Checks the installed <i>Piwik</i> service version.
      *
      * @param domain
-     *            the {@link Domain} domain of the service.
+     *            the service {@link Domain} domain.
      *
      * @param service
      *            the {@link PiwikService} service.
@@ -150,20 +204,20 @@ abstract class PiwikFromArchive {
      * @return {@code true} if the version matches the set version.
      */
     boolean checkPiwikVersion(Domain domain, PiwikService service) {
-        def file = piwikVersionFile domain, service
-        if (!file.isFile()) {
+        def versionFile = piwikVersionFile domain, service
+        if (!versionFile.isFile()) {
             return false
         }
-        def version = FileUtils.readFileToString file
-        logg.checkPiwikVersion this, version, piwikExpectedVersion
-        return StringUtils.startsWith(version, piwikExpectedVersion)
+        def version = versionFormatFactory.create().parse FileUtils.readFileToString(versionFile)
+        logg.checkPiwikVersion this, version, piwikUpperVersion
+        version.compareTo(piwikUpperVersion) <= 0
     }
 
     /**
      * Saves the installed <i>Piwik</i> version.
      *
      * @param domain
-     *            the {@link Domain} domain of the service.
+     *            the service {@link Domain} domain.
      *
      * @param service
      *            the {@link PiwikService} service.
@@ -172,89 +226,90 @@ abstract class PiwikFromArchive {
      */
     void savePiwikVersion(Domain domain, PiwikService service) {
         def file = piwikVersionFile domain, service
-        FileUtils.writeStringToFile file, "${piwikArchiveVersion}\n", charset
-    }
-
-    /**
-     * Returns the <i>Piwik</i> version file.
-     *
-     * <ul>
-     * <li>profile property {@code "piwik_version_file_name"}</li>
-     * </ul>
-     *
-     * @see #getPiwikProperties()
-     *
-     * @param domain
-     *            the {@link Domain} domain of the service.
-     *
-     * @param service
-     *            the {@link PiwikService} service.
-     *
-     * @return the version {@code File} file.
-     */
-    File piwikVersionFile(Domain domain, PiwikService service) {
-        def str = profileProperty "piwik_version_file_name", piwikProperties
-        def dir = piwikDir domain, service
-        new File(dir, str)
+        FileUtils.writeStringToFile file, piwikVersion, charset
     }
 
     /**
      * Sets the owner of <i>Piwik</i> directory.
      *
      * @param domain
-     *            the service {@link Domain}.
+     *            the service {@link Domain} domain.
      *
      * @param service
-     *            the {@link PiwikService}.
+     *            the {@link PiwikService} service.
      */
     void setupPermissions(Domain domain, PiwikService service) {
-        def dir = piwikDir domain, service
         def user = domain.domainUser
-        def tmpDir = new File(dir, piwikTempDirName)
-        def configDir = new File(dir, piwikConfigDirName)
+        def dir = piwikDir(domain, service)
+        def tmpDir = piwikTempDirectory domain, service
+        def configDir = piwikConfigDirectory domain, service
+        tmpDir.mkdirs()
+        configDir.mkdirs()
         changeFileOwnerFactory.create(
-                log: log, command: script.chownCommand,
-                owner: "root", ownerGroup: "root", recursive: true,
+                log: log,
+                runCommands: runCommands,
+                command: chownCommand,
+                owner: "root",
+                ownerGroup: "root",
+                recursive: true,
                 files: dir,
                 this, threads)()
         changeFileOwnerFactory.create(
-                log: log, command: script.chownCommand,
-                owner: user.name, ownerGroup: user.group, recursive: true,
+                log: log,
+                runCommands: runCommands,
+                command: chownCommand,
+                owner: user.name,
+                ownerGroup: user.group,
+                recursive: true,
                 files: [tmpDir, configDir],
                 this, threads)()
     }
 
     /**
-     * Returns the <i>Piwik</i> temp directory name property, for
-     * example {@code "tmp".}
+     * Returns the <i>Piwik</i> temp directory, for
+     * example {@code "tmp".} If the path is not absolute, the path is
+     * assumed to be under the service installation directory.
      *
      * <ul>
-     * <li>profile property {@code "piwik_temp_directory_name"}</li>
+     * <li>profile property {@code "piwik_temp_directory"}</li>
      * </ul>
      *
-     * @see #gititDir(Domain, PiwikService)
+     * @param domain
+     *            the service {@link Domain} domain.
+     *
+     * @param service
+     *            the {@link PiwikService} service.
+     *
+     * @see #piwikDir(Domain, PiwikService)
      */
-    String getPiwikTempDirName() {
-        profileProperty "piwik_temp_directory_name", piwikProperties
+    File piwikTempDirectory(Domain domain, PiwikService service) {
+        profileFileProperty "piwik_temp_directory", piwikDir(domain, service), piwikArchiveProperties
     }
 
     /**
-     * Returns the <i>Piwik</i> configuration directory name property, for
-     * example {@code "config".}
+     * Returns the <i>Piwik</i> configuration directory, for
+     * example {@code "config".} If the path is not absolute, the path is
+     * assumed to be under the service installation directory.
      *
      * <ul>
-     * <li>profile property {@code "piwik_config_directory_name"}</li>
+     * <li>profile property {@code "piwik_config_directory"}</li>
      * </ul>
      *
-     * @see #gititDir(Domain, PiwikService)
+     * @param domain
+     *            the service {@link Domain} domain.
+     *
+     * @param service
+     *            the {@link PiwikService} service.
+     *
+     * @see #piwikDir(Domain, PiwikService)
      */
-    String getPiwikConfigDirName() {
-        profileProperty "piwik_config_directory_name", piwikProperties
+    File piwikConfigDirectory(Domain domain, PiwikService service) {
+        profileFileProperty "piwik_config_directory", piwikDir(domain, service), piwikArchiveProperties
     }
 
     /**
      * Returns the <i>Piwik</i> archive, for example
-     * {@code http://builds.piwik.org/piwik-2.3.0.tar.gz}
+     * {@code "http://builds.piwik.org/piwik-2.10.0.tar.gz"}
      *
      * <ul>
      * <li>profile property {@code "piwik_archive"}</li>
@@ -263,67 +318,119 @@ abstract class PiwikFromArchive {
      * @see #getPiwikProperties()
      */
     URI getPiwikArchive() {
-        profileURIProperty "piwik_archive", piwikProperties
+        profileURIProperty "piwik_archive", piwikArchiveProperties
     }
 
     /**
-     * Returns the expected <i>Piwik</i> version, for
-     * example {@code "2.3"}
+     * Returns the <i>Piwik</i> version, for
+     * example {@code "2.10.0"}
      *
      * <ul>
-     * <li>profile property {@code "piwik_expected_version"}</li>
+     * <li>profile property {@code "piwik_version"}</li>
      * </ul>
      *
      * @see #getPiwikProperties()
      */
-    String getPiwikExpectedVersion() {
-        profileProperty "piwik_expected_version", piwikProperties
+    String getPiwikVersion() {
+        profileProperty "piwik_version", piwikArchiveProperties
     }
 
     /**
-     * Returns the <i>Piwik</i> version from the archive, for
-     * example {@code "2.3.0"}
+     * Returns the upper <i>Piwik</i> version, for
+     * example {@code "2.10"}
      *
      * <ul>
-     * <li>profile property {@code "piwik_archive_version"}</li>
+     * <li>profile property {@code "piwik_upper_version"}</li>
      * </ul>
      *
      * @see #getPiwikProperties()
      */
-    String getPiwikArchiveVersion() {
-        profileProperty "piwik_archive_version", piwikProperties
+    Version getPiwikUpperVersion() {
+        profileTypedProperty "piwik_upper_version", versionFormatFactory.create(), piwikArchiveProperties
     }
 
     /**
-     * Returns the default <i>hsenv</i> <i>Piwik</i> properties.
+     * Returns the <i>Piwik</i> archive hash, for
+     * example {@code "md5:aa92904a7bca24fe20b3fd000e99291b"}
+     *
+     * <ul>
+     * <li>profile property {@code "piwik_archive_hash"}</li>
+     * </ul>
+     *
+     * @see #getPiwikProperties()
+     */
+    URI getPiwikArchiveHash() {
+        profileURIProperty "piwik_archive_hash", piwikArchiveProperties
+    }
+
+    /**
+     * Returns the <i>Piwik</i> version file, for example
+     * {@code "/var/www/domain.com/piwikprefix/version.txt".}
+     * If the path is not absolute, the path is assumed to be under the
+     * service installation directory.
+     *
+     * <ul>
+     * <li>profile property {@code "piwik_version_file"}</li>
+     * </ul>
+     *
+     * @param domain
+     *            the service {@link Domain} domain.
+     *
+     * @param service
+     *            the {@link PiwikService} service.
+     *
+     * @return the version {@code File} file.
+     *
+     * @see #getPiwikProperties()
+     */
+    File piwikVersionFile(Domain domain, PiwikService service) {
+        profileFileProperty "piwik_version_file", piwikDir(domain, service), piwikArchiveProperties
+    }
+
+    /**
+     * Returns the <i>Piwik</i> archive properties.
      *
      * @return the {@link ContextProperties} properties.
      */
-    abstract ContextProperties getPiwikProperties()
+    abstract ContextProperties getPiwikArchiveProperties()
 
     /**
-     * @see ServiceConfig#setScript(LinuxScript)
+     * Sets the parent script.
      */
     void setScript(Object script) {
         this.script = script
     }
 
     /**
-     * @see ServiceConfig#getName()
+     * Returns the parent script.
      */
-    String getName() {
-        script.getName()
+    Object getScript() {
+        script
     }
 
     /**
-     * Delegates missing properties to {@link LinuxScript}.
+     * Returns the service name.
+     */
+    String getServiceName() {
+        script.getServiceName()
+    }
+
+    /**
+     * Returns the service profile name.
+     */
+    String getProfile() {
+        script.getProfile()
+    }
+
+    /**
+     * Delegates missing properties to the parent script.
      */
     def propertyMissing(String name) {
         script.getProperty name
     }
 
     /**
-     * Delegates missing methods to {@link LinuxScript}.
+     * Delegates missing methods to the parent script.
      */
     def methodMissing(String name, def args) {
         script.invokeMethod name, args

@@ -111,6 +111,20 @@ public class StatementsMap implements Serializable {
     }
 
     /**
+     * Adds allowed script statements.
+     *
+     * <pre>
+     * statement "value", key: "value"
+     * </pre>
+     *
+     * @param names
+     *            the array with script statement {@link Enum} names.
+     */
+    public void addAllowed(Enum<?>... names) {
+        addAllowed(convert(names));
+    }
+
+    /**
      * Sets the statement have a value as the first argument.
      *
      * <pre>
@@ -131,6 +145,27 @@ public class StatementsMap implements Serializable {
         for (String name : names) {
             setAllowValue(name, haveName);
         }
+    }
+
+    /**
+     * Sets the statement have a value as the first argument.
+     *
+     * <pre>
+     * statement "value"
+     * </pre>
+     *
+     * @param haveName
+     *            set to {@code true} if the statement have a value as the first
+     *            argument.
+     *
+     * @param names
+     *            the statement {@link Enum} names.
+     *
+     * @see #value(String)
+     * @see #valueAsList(String)
+     */
+    public void setAllowValue(boolean haveName, Enum<?>... names) {
+        setAllowValue(haveName, convert(names));
     }
 
     /**
@@ -155,6 +190,28 @@ public class StatementsMap implements Serializable {
         for (String name : names) {
             setAllowMultiValue(name, haveName);
         }
+    }
+
+    /**
+     * Sets the statement have a multi-value as the first argument.
+     *
+     * <pre>
+     * statement "value1"
+     * statement "value2"
+     * </pre>
+     *
+     * @param haveName
+     *            set to {@code true} if the statement have a value as the first
+     *            argument.
+     *
+     * @param names
+     *            the statement {@link Enum} names.
+     *
+     * @see #value(String)
+     * @see #valueAsList(String)
+     */
+    public void setAllowMultiValue(boolean haveName, Enum<?>... names) {
+        setAllowMultiValue(haveName, convert(names));
     }
 
     /**
@@ -190,6 +247,27 @@ public class StatementsMap implements Serializable {
      * Sets the statement have a value as the first argument.
      *
      * <pre>
+     * statement "value"
+     * </pre>
+     *
+     * @param name
+     *            the statement {@link Enum} name.
+     *
+     * @param haveName
+     *            set to {@code true} if the statement have a value as the first
+     *            argument.
+     *
+     * @see #value(String)
+     * @see #valueAsList(String)
+     */
+    public void setAllowValue(Enum<?> name, boolean haveName) {
+        setAllowValue(name.toString(), haveName);
+    }
+
+    /**
+     * Sets the statement have a value as the first argument.
+     *
+     * <pre>
      * statement "value1"
      * statement "value2"
      * </pre>
@@ -217,6 +295,28 @@ public class StatementsMap implements Serializable {
     }
 
     /**
+     * Sets the statement have a value as the first argument.
+     *
+     * <pre>
+     * statement "value1"
+     * statement "value2"
+     * </pre>
+     *
+     * @param name
+     *            the statement {@link Enum} name.
+     *
+     * @param haveName
+     *            set to {@code true} if the statement have a value as the first
+     *            argument.
+     *
+     * @see #value(String)
+     * @see #valueAsList(String)
+     */
+    public void setAllowMultiValue(Enum<?> name, boolean haveName) {
+        setAllowMultiValue(name.toString(), haveName);
+    }
+
+    /**
      * Adds allowed statement keys.
      *
      * <pre>
@@ -233,6 +333,25 @@ public class StatementsMap implements Serializable {
      */
     public void addAllowedKeys(String name, String... keys) {
         addAllowedKeys(name, false, keys);
+    }
+
+    /**
+     * Adds allowed statement keys.
+     *
+     * <pre>
+     * statement key: "value"
+     * </pre>
+     *
+     * @param name
+     *            the statement {@link Enum} name.
+     *
+     * @param keys
+     *            the array with allowed {@link Enum} keys.
+     *
+     * @see #mapValue(String, String)
+     */
+    public void addAllowedKeys(Enum<?> name, Enum<?>... keys) {
+        addAllowedKeys(name.toString(), convert(keys));
     }
 
     /**
@@ -253,6 +372,26 @@ public class StatementsMap implements Serializable {
      */
     public void addAllowedMultiKeys(String name, String... keys) {
         addAllowedKeys(name, true, keys);
+    }
+
+    /**
+     * Adds allowed statement keys with multi-values.
+     *
+     * <pre>
+     * statement key: "value1"
+     * statement key: "value2"
+     * </pre>
+     *
+     * @param name
+     *            the statement {@link Enum} name.
+     *
+     * @param keys
+     *            the array with allowed {@link Enum} keys.
+     *
+     * @see #mapValue(String, String)
+     */
+    public void addAllowedMultiKeys(Enum<?> name, Enum<?>... keys) {
+        addAllowedMultiKeys(name.toString(), convert(keys));
     }
 
     /**
@@ -284,6 +423,29 @@ public class StatementsMap implements Serializable {
     }
 
     /**
+     * Adds allowed statement keys.
+     *
+     * <pre>
+     * statement key: "value1"
+     * statement key: "value2"
+     * </pre>
+     *
+     * @param name
+     *            the statement {@link Enum} name.
+     *
+     * @param isMulti
+     *            set to {@code true} for multi-values.
+     *
+     * @param keys
+     *            the array with allowed {@link Enum} keys.
+     *
+     * @see #mapValue(String, String)
+     */
+    public void addAllowedKeys(Enum<?> name, boolean isMulti, Enum<?>... keys) {
+        addAllowedKeys(name.toString(), isMulti, convert(keys));
+    }
+
+    /**
      * Checks if the key is allowed statement.
      *
      * @param name
@@ -293,6 +455,18 @@ public class StatementsMap implements Serializable {
      */
     public boolean isAllowedKey(String name) {
         return allowed.containsKey(name);
+    }
+
+    /**
+     * Checks if the key is allowed statement.
+     *
+     * @param name
+     *            the {@link Enum} name of the key.
+     *
+     * @return {@code true} if the key is allowed.
+     */
+    public boolean isAllowedKey(Enum<?> name) {
+        return isAllowedKey(name.toString());
     }
 
     /**
@@ -318,6 +492,25 @@ public class StatementsMap implements Serializable {
         } else {
             return null;
         }
+    }
+
+    /**
+     * Returns the statement value with the specified name.
+     * <p>
+     *
+     * The following statement returns "value":
+     *
+     * <pre>
+     * statement "value"
+     * </pre>
+     *
+     * @param name
+     *            the {@link Enum} name.
+     *
+     * @return the {@link Object} value or {@code null}.
+     */
+    public <T> T value(Enum<?> name) {
+        return value(name.toString());
     }
 
     /**
@@ -355,6 +548,25 @@ public class StatementsMap implements Serializable {
      * </pre>
      *
      * @param name
+     *            the {@link Enum} name.
+     *
+     * @return the {@link List} list or {@code null}.
+     */
+    public List<Object> valueAsList(Enum<?> name) {
+        return valueAsList(name.toString());
+    }
+
+    /**
+     * Returns the statement value with the specified name as a list.
+     * <p>
+     *
+     * The following statement returns ["value1", "value2"]:
+     *
+     * <pre>
+     * statement "value1, value2"
+     * </pre>
+     *
+     * @param name
      *            the {@link String} name.
      *
      * @return the {@link List} list or {@code null}.
@@ -371,6 +583,25 @@ public class StatementsMap implements Serializable {
         } else {
             return null;
         }
+    }
+
+    /**
+     * Returns the statement value with the specified name as a list.
+     * <p>
+     *
+     * The following statement returns ["value1", "value2"]:
+     *
+     * <pre>
+     * statement "value1, value2"
+     * </pre>
+     *
+     * @param name
+     *            the {@link Enum} name.
+     *
+     * @return the {@link List} list or {@code null}.
+     */
+    public List<String> valueAsStringList(Enum<?> name) {
+        return valueAsStringList(name.toString());
     }
 
     /**
@@ -400,6 +631,26 @@ public class StatementsMap implements Serializable {
     }
 
     /**
+     * Returns the statement multi-value with the specified name.
+     * <p>
+     *
+     * The following statements returns ["value1", "value2"]:
+     *
+     * <pre>
+     * statement "value1"
+     * statement "value2"
+     * </pre>
+     *
+     * @param name
+     *            the {@link Enum} name.
+     *
+     * @return the {@link List} values.
+     */
+    public <T> List<T> multiValue(Enum<?> name) {
+        return multiValue(name.toString());
+    }
+
+    /**
      * Returns the statement value with the specified name.
      * <p>
      *
@@ -421,6 +672,28 @@ public class StatementsMap implements Serializable {
     public <T> T mapValue(String name, String key) {
         Map<String, Object> map = args.get(name);
         return map == null ? null : (T) map.get(key);
+    }
+
+    /**
+     * Returns the statement value with the specified name.
+     * <p>
+     *
+     * The following statement returns "value":
+     *
+     * <pre>
+     * statement key: "value"
+     * </pre>
+     *
+     * @param name
+     *            the {@link Enum} name.
+     *
+     * @param key
+     *            the {@link Enum} key.
+     *
+     * @return the {@link Object} value or {@code null}.
+     */
+    public <T> T mapValue(Enum<?> name, Enum<?> key) {
+        return mapValue(name.toString(), key.toString());
     }
 
     /**
@@ -448,6 +721,31 @@ public class StatementsMap implements Serializable {
         Map<String, Object> map = args.get(name);
         return map == null ? null : toURIFactory.create().convert(
                 map.get(key).toString());
+    }
+
+    /**
+     * Returns the statement value with the specified name as URI.
+     * <p>
+     *
+     * The following statement returns "value":
+     *
+     * <pre>
+     * statement key: "http://address.com/file"
+     * </pre>
+     *
+     * @param name
+     *            the {@link Enum} name.
+     *
+     * @param key
+     *            the {@link Enum} key.
+     *
+     * @return the {@link URI} or {@code null}.
+     *
+     * @throws ConvertException
+     *             if there were errors converting the path to the URI.
+     */
+    public URI mapValueAsURI(Enum<?> name, Enum<?> key) {
+        return mapValueAsURI(name.toString(), key.toString());
     }
 
     /**
@@ -488,6 +786,28 @@ public class StatementsMap implements Serializable {
      * </pre>
      *
      * @param name
+     *            the {@link Enum} name.
+     *
+     * @param key
+     *            the {@link Enum} key.
+     *
+     * @return the {@link List} values.
+     */
+    public List<Object> mapValueAsList(Enum<?> name, Enum<?> key) {
+        return mapValueAsList(name.toString(), key.toString());
+    }
+
+    /**
+     * Returns the statement values with the specified name.
+     * <p>
+     *
+     * The following statement returns {@code ["value1", "value2"]}
+     *
+     * <pre>
+     * statement key: "value1, value2"
+     * </pre>
+     *
+     * @param name
      *            the {@link String} name.
      *
      * @param key
@@ -507,6 +827,28 @@ public class StatementsMap implements Serializable {
         } else {
             return null;
         }
+    }
+
+    /**
+     * Returns the statement values with the specified name.
+     * <p>
+     *
+     * The following statement returns {@code ["value1", "value2"]}
+     *
+     * <pre>
+     * statement key: "value1, value2"
+     * </pre>
+     *
+     * @param name
+     *            the {@link Enum} name.
+     *
+     * @param key
+     *            the {@link Enum} key.
+     *
+     * @return the {@link List} values.
+     */
+    public List<String> mapValueAsStringList(Enum<?> name, Enum<?> key) {
+        return mapValueAsStringList(name.toString(), key.toString());
     }
 
     /**
@@ -532,6 +874,29 @@ public class StatementsMap implements Serializable {
     public <T> List<T> mapMultiValue(String name, String key) {
         Map<String, Object> map = args.get(name);
         return map == null ? null : (List<T>) map.get(key);
+    }
+
+    /**
+     * Returns the statement multi-value with the specified name.
+     * <p>
+     *
+     * The following statements returns ["value1", "value2"]:
+     *
+     * <pre>
+     * statement key: "value1"
+     * statement key: "value2"
+     * </pre>
+     *
+     * @param name
+     *            the {@link Enum} name.
+     *
+     * @param key
+     *            the {@link Enum} key.
+     *
+     * @return the {@link List} values or {@code null}.
+     */
+    public <T> List<T> mapMultiValue(Enum<?> name, Enum<?> key) {
+        return mapMultiValue(name.toString(), key.toString());
     }
 
     /**
@@ -566,6 +931,29 @@ public class StatementsMap implements Serializable {
             res.add(touri.convert(object));
         }
         return res;
+    }
+
+    /**
+     * Returns the statement multi-value with the specified name.
+     * <p>
+     *
+     * The following statements returns [URI("/foo.txt"), URI("/bar.txt")]:
+     *
+     * <pre>
+     * statement key: "file:///foo.txt"
+     * statement key: "file:///bar.txt"
+     * </pre>
+     *
+     * @param name
+     *            the {@link Enum} name.
+     *
+     * @param key
+     *            the {@link Enum} key.
+     *
+     * @return the {@link List} of {@link URI} resources or {@code null}.
+     */
+    public List<URI> mapMultiValueAsURI(Enum<?> name, Enum<?> key) {
+        return mapMultiValueAsURI(name.toString(), key.toString());
     }
 
     /**
@@ -669,6 +1057,14 @@ public class StatementsMap implements Serializable {
 
     public Object getService() {
         return service;
+    }
+
+    private String[] convert(Enum<?>[] names) {
+        String[] snames = new String[names.length];
+        for (int i = 0; i < names.length; i++) {
+            snames[i] = names[i].toString();
+        }
+        return snames;
     }
 
     @Override

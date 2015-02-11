@@ -20,14 +20,13 @@ package com.anrisoftware.sscontrol.httpd.piwik.apache_ubuntu_12_04;
 
 import javax.inject.Inject
 
-import com.anrisoftware.resources.templates.api.TemplateResource
-import com.anrisoftware.resources.templates.api.TemplatesFactory
+import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.sscontrol.core.service.LinuxScript
 import com.anrisoftware.sscontrol.httpd.domain.Domain
-import com.anrisoftware.sscontrol.httpd.piwik.PiwikService
-import com.anrisoftware.sscontrol.httpd.piwik.ubuntu_12_04.Ubuntu_12_04_Config
+import com.anrisoftware.sscontrol.httpd.piwik.core.Piwik_2_Config
 import com.anrisoftware.sscontrol.httpd.webservice.ServiceConfig
 import com.anrisoftware.sscontrol.httpd.webservice.WebService
+import com.anrisoftware.sscontrol.scripts.unix.InstallPackagesFactory
 
 /**
  * <i>Piwik</i> configuration for <i>Apache Ubuntu 12.04</i>
@@ -35,26 +34,62 @@ import com.anrisoftware.sscontrol.httpd.webservice.WebService
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class UbuntuApachePiwikConfig extends Ubuntu_12_04_Config implements ServiceConfig {
+class UbuntuApachePiwikConfig extends Piwik_2_Config implements ServiceConfig {
+
+    @Inject
+    PiwikPropertiesProvider piwikPropertiesProvider
+
+    @Inject
+    UbuntuPiwikFromArchive ubuntuPiwikFromArchive
+
+    @Inject
+    InstallPackagesFactory installPackagesFactory
 
     @Inject
     UbuntuApacheFcgiPiwikConfig apacheFcgiPiwikConfig
 
     @Override
     void deployDomain(Domain domain, Domain refDomain, WebService service, List config) {
-        super.deployDomain domain, refDomain, service, config
+        setupDefaults domain, service
         apacheFcgiPiwikConfig.deployDomain domain, refDomain, service, config
     }
 
     @Override
     void deployService(Domain domain, WebService service, List config) {
-        super.deployService domain, service, config
+        setupDefaults domain, service
+        installPackages()
         apacheFcgiPiwikConfig.deployService domain, service, config
+        ubuntuPiwikFromArchive.deployService domain, service
+        deployConfig domain, service
+    }
+
+    /**
+     * Installs the <i>Piwik</i> packages.
+     */
+    void installPackages() {
+        installPackagesFactory.create(
+                log: log,
+                runCommands: runCommands,
+                command: installCommand,
+                packages: piwikPackages,
+                system: systemName,
+                this, threads)()
+    }
+
+    @Override
+    ContextProperties getPiwikProperties() {
+        piwikPropertiesProvider.get()
+    }
+
+    @Override
+    String getProfile() {
+        Ubuntu_12_04_ApachePiwikConfigFactory.PROFILE_NAME
     }
 
     @Override
     void setScript(LinuxScript script) {
         super.setScript(script)
         apacheFcgiPiwikConfig.setScript script
+        ubuntuPiwikFromArchive.setScript this
     }
 }

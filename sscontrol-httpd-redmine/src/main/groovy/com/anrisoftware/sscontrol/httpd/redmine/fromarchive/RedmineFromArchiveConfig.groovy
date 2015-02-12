@@ -245,7 +245,7 @@ abstract class RedmineFromArchiveConfig {
         if (!versionFile.isFile()) {
             return false
         }
-        def version = versionFormatFactory.create().parse FileUtils.readFileToString(versionFile)
+        def version = versionFormatFactory.create().parse FileUtils.readFileToString(versionFile).trim()
         logg.checkRedmineVersion this, version, redmineUpperVersion
         version.compareTo(redmineUpperVersion) <= 0
     }

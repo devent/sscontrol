@@ -208,7 +208,7 @@ abstract class PiwikFromArchive {
         if (!versionFile.isFile()) {
             return false
         }
-        def version = versionFormatFactory.create().parse FileUtils.readFileToString(versionFile)
+        def version = versionFormatFactory.create().parse FileUtils.readFileToString(versionFile).trim()
         logg.checkPiwikVersion this, version, piwikUpperVersion
         version.compareTo(piwikUpperVersion) <= 0
     }

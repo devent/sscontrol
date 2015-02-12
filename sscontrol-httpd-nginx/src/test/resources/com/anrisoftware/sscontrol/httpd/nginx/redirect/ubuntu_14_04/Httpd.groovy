@@ -20,17 +20,25 @@ package com.anrisoftware.sscontrol.httpd.nginx.redirect.ubuntu_12_04
 
 httpd {
     // domain test1.com
-    domain "test1.com", address: "192.168.0.50", { redirect to: "www.%" }
+    domain "test1.com", address: "192.168.0.50", {
+        redirect to: "www.%"
+    }
     // SSL/domain test1.com
     ssl_domain "test1.com", address: "192.168.0.50", {
         redirect to: "www.%"
         certificate file: RedirectResources.certCrt.resource, key: RedirectResources.certKey.resource
     }
     // domain www.test1.com
-    domain "www.test1.com", address: "192.168.0.51", { redirect to: "https://%" }
+    domain "www.test1.com", address: "192.168.0.51", {
+        redirect to: "https://%"
+    }
     // SSL/domain www.test1.com
     ssl_domain "www.test1.com", address: "192.168.0.51", {
         redirect to: "https://%"
         certificate file: RedirectResources.certCrt.resource, key: RedirectResources.certKey.resource
+    }
+    // domain test2.com
+    domain "test2.com", address: "192.168.0.50", {
+        redirect from: "/", to: "%/piwik"
     }
 }

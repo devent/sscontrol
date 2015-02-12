@@ -56,12 +56,12 @@ class RedirectConfig {
     }
 
     void deployDomainConfig(Domain domain, Redirect redirect, List config) {
-        def properties = [:]
-        properties.destination = redirect.destination
-        properties.proto = domainProto domain, redirect
+        def args = [:]
+        args.redirect = redirect
+        args.proto = domainProto domain, redirect
         def configStr = redirectConfigTemplate.getText(
                 true, "domainRedirects",
-                "properties", properties)
+                "args", args)
         config << configStr
     }
 

@@ -29,7 +29,7 @@ import com.google.inject.assistedinject.Assisted;
 
 /**
  * Redirect statement.
- * 
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
@@ -38,6 +38,8 @@ public class Redirect {
     private static final String DESTINATION = "destination";
 
     private final Domain domain;
+
+    private final String source;
 
     private final String destination;
 
@@ -48,6 +50,7 @@ public class Redirect {
     Redirect(RedirectArgs aargs, @Assisted Domain domain,
             @Assisted Map<String, Object> args) {
         this.domain = domain;
+        this.source = aargs.from(domain, args);
         this.destination = aargs.to(domain, args);
     }
 
@@ -57,6 +60,10 @@ public class Redirect {
 
     public String getDestination() {
         return destination;
+    }
+
+    public String getSource() {
+        return source;
     }
 
     @Override

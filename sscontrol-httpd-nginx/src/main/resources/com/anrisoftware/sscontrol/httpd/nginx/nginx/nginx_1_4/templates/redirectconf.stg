@@ -1,5 +1,19 @@
-domainRedirects(properties) ::= <<
-# redirect to '<properties.destination>'
-return 301 <if(properties.proto)><properties.proto><endif><properties.destination>$request_uri;
+domainRedirects(args) ::= <<
+<! args.redirect !>
+<! args.proto !>
+<if(args.redirect.source)><redirectLocation(args)><else><redirectReturn(args)><endif>
 
+>>
+
+redirectLocation(args) ::= <<
+# redirect from '<args.redirect.source>' to '<args.redirect.destination>'
+location <args.redirect.source> {
+    rewrite ^/.* <if(args.proto)><args.proto><endif><args.redirect.destination>$request_uri;
+}
+>>
+
+
+redirectReturn(args) ::= <<
+# redirect to '<args.redirect.destination>'
+return 301 <if(args.proto)><args.proto><endif><args.redirect.destination>$request_uri;
 >>

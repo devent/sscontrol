@@ -21,7 +21,7 @@ package com.anrisoftware.sscontrol.httpd.nginx.redirect.ubuntu_12_04
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static org.apache.commons.io.FileUtils.*
 
-import com.anrisoftware.sscontrol.testutils.resources.ResourcesUtils;
+import com.anrisoftware.sscontrol.testutils.resources.ResourcesUtils
 
 /**
  * Redirect Nginx resources.
@@ -35,10 +35,11 @@ enum RedirectResources {
     httpdScript("Httpd.groovy", RedirectResources.class.getResource("Httpd.groovy")),
     certCrt("cert.crt", RedirectResources.class.getResource("cert_crt.txt")),
     certKey("cert.key", RedirectResources.class.getResource("cert_key.txt")),
-    test1comConf("/etc/nginx/sites-available/100-robobee-test1.com.conf", RedirectResources.class.getResource("test1_com_conf.txt")),
-    test1comSslConf("/etc/nginx/sites-available/100-robobee-test1.com-ssl.conf", RedirectResources.class.getResource("test1_com_ssl_conf.txt")),
-    wwwtest1comConf("/etc/nginx/sites-available/100-robobee-www.test1.com.conf", RedirectResources.class.getResource("www_test1_com_conf.txt")),
-    wwwtest1comSslConf("/etc/nginx/sites-available/100-robobee-www.test1.com-ssl.conf", RedirectResources.class.getResource("www_test1_com_ssl_conf.txt")),
+    test1comConfExpected("/etc/nginx/sites-available/100-robobee-test1.com.conf", RedirectResources.class.getResource("test1comconf_expected.txt")),
+    test1comSslConfExpected("/etc/nginx/sites-available/100-robobee-test1.com-ssl.conf", RedirectResources.class.getResource("test1comsslconf_expected.txt")),
+    wwwtest1comConfExpected("/etc/nginx/sites-available/100-robobee-www.test1.com.conf", RedirectResources.class.getResource("wwwtest1comconf_expected.txt")),
+    wwwtest1comSslConfExpected("/etc/nginx/sites-available/100-robobee-www.test1.com-ssl.conf", RedirectResources.class.getResource("wwwtest1comsslconf_expected.txt")),
+    test2comConfExpected("/etc/nginx/sites-available/100-robobee-test2.com.conf", RedirectResources.class.getResource("test2comconf_expected.txt")),
     lnOutExpected("/bin/ln.out", RedirectResources.class.getResource("ln_out_expected.txt")),
 
     ResourcesUtils resources

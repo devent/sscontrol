@@ -29,7 +29,7 @@ import com.anrisoftware.sscontrol.httpd.domain.Domain;
 
 /**
  * Parses redirect arguments.
- * 
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
@@ -42,6 +42,17 @@ class RedirectArgs {
         Object to = args.get("to");
         log.checkTo(domain, to);
         return replace(to.toString(), DOMAIN_PLACEHOLDER, domain.getName());
+    }
+
+    String from(Domain domain, Map<String, Object> args) {
+        Object from = args.get("from");
+        if (from != null) {
+            log.checkTo(domain, from);
+            return replace(from.toString(), DOMAIN_PLACEHOLDER,
+                    domain.getName());
+        } else {
+            return null;
+        }
     }
 
 }

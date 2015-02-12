@@ -18,6 +18,9 @@
  */
 package com.anrisoftware.sscontrol.httpd.redmine.core;
 
+import groovy.lang.GString;
+
+import org.codehaus.groovy.runtime.GStringImpl;
 import org.yaml.snakeyaml.nodes.Node;
 import org.yaml.snakeyaml.representer.Represent;
 import org.yaml.snakeyaml.representer.Representer;
@@ -50,6 +53,26 @@ public class MailConfigRepresenter extends Representer {
             }
 
         });
+        representers.put(GString.class, new Represent() {
+
+            @Override
+            public Node representData(Object data) {
+                return representGString((GString) data);
+            }
+
+        });
+        representers.put(GStringImpl.class, new Represent() {
+
+            @Override
+            public Node representData(Object data) {
+                return representGString((GString) data);
+            }
+
+        });
+    }
+
+    private Node representGString(GString data) {
+        return representData(data.toString());
     }
 
     private Node representDeliveryMethod(DeliveryMethod data) {

@@ -33,7 +33,7 @@ server {
         proxy_pass https://127.0.0.1:8082;
     }
 
-    location ~* /phpmyadmin/.*\.(jpg|png|gif|jpeg|css|js|mp3|wav|swf|mov|doc|pdf|xls|ppt|docx|pptx|xlsx)$ {
+    location ~* /phpmyadmin/.*\.(jpg|png|gif|jpeg|svg|css|js|mp3|wav|swf|mov|doc|pdf|xls|ppt|docx|pptx|xlsx)$ {
         proxy_cache_valid 200 7200;
         expires 864000;
         proxy_pass https://127.0.0.1:8082;
@@ -47,7 +47,7 @@ server {
         proxy_pass https://127.0.0.1:8082;
     }
 
-    location ~* /piwik/.*\.(jpg|png|gif|jpeg|css|js|mp3|wav|swf|mov|doc|pdf|xls|ppt|docx|pptx|xlsx)$ {
+    location ~* /piwik/.*\.(jpg|png|gif|jpeg|svg|css|js|mp3|wav|swf|mov|doc|pdf|xls|ppt|docx|pptx|xlsx)$ {
         proxy_cache_valid 200 7200;
         expires 864000;
         proxy_pass https://127.0.0.1:8082;

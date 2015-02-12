@@ -1,2 +1,3 @@
---overwrite --strip 1 -xf /tmp/tmp/piwik-piwik-2.10.0.tar.gz
---overwrite --strip 1 -xf /tmp/tmp/piwik-piwik-2.10.0.tar.gz
+--overwrite --strip time -xf /tmp/tmp/piwik-piwik-time.time.time.tar.gz
+--overwrite --strip time -xf /tmp/tmp/piwik-piwik-time.time.time.tar.gz
+-czf /tmp/var/backups/testtime.com/piwik_testtime.com_time-time-timeTtime-time-time-time.tar.gz /tmp/var/www/testtime.com/testtimepiwik

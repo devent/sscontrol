@@ -48,6 +48,9 @@ class UbuntuApachePiwikConfig extends Piwik_2_Config implements ServiceConfig {
     @Inject
     UbuntuApacheFcgiPiwikConfig apacheFcgiPiwikConfig
 
+    @Inject
+    Ubuntu_12_04_PiwikBackup piwikBackup
+
     @Override
     void deployDomain(Domain domain, Domain refDomain, WebService service, List config) {
         setupDefaults domain, service
@@ -58,6 +61,7 @@ class UbuntuApachePiwikConfig extends Piwik_2_Config implements ServiceConfig {
     void deployService(Domain domain, WebService service, List config) {
         setupDefaults domain, service
         installPackages()
+        piwikBackup.backupService domain, service
         apacheFcgiPiwikConfig.deployService domain, service, config
         ubuntuPiwikFromArchive.deployService domain, service
         deployConfig domain, service
@@ -91,5 +95,6 @@ class UbuntuApachePiwikConfig extends Piwik_2_Config implements ServiceConfig {
         super.setScript(script)
         apacheFcgiPiwikConfig.setScript script
         ubuntuPiwikFromArchive.setScript this
+        piwikBackup.setScript this
     }
 }

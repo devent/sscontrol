@@ -3,13 +3,16 @@
 
 
 [database]
+tables_prefix = "piwik_"
+port = 3306
+dbname = piwik
+charset = utf8
+schema = Mysql
+username = user
+type = InnoDB
 adapter = "PDO\MYSQL"
 password = userpass
 host = localhost
-tables_prefix = "piwik_"
-dbname = piwik
-charset = utf8
-username = user
 
 [General]
 trusted_hosts[] = "anrisoftware.com"

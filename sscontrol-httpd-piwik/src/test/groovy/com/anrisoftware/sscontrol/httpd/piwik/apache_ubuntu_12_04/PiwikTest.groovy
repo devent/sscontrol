@@ -71,7 +71,7 @@ class PiwikTest extends WebServiceTestEnvironment {
         assertStringContent test2comPhpFcgStarterExpected.replaced(tmpdir, tmpdir, "/tmp"), test2comPhpFcgStarterExpected.toString()
         assertFileContent test2comPhpIniConfExpected.asFile(tmpdir), test2comPhpIniConfExpected
         assertStringContent runcommandsLogExpected.replaced(tmpdir, tmpdir, "/tmp").replaceAll(/\d+/, 'time'), runcommandsLogExpected.toString()
-        assertStringContent tarOutExpected.replaced(tmpdir, tmpdir, "/tmp"), tarOutExpected.toString()
+        assertStringContent tarOutExpected.replaced(tmpdir, tmpdir, "/tmp").replaceAll(/\d+/, 'time'), tarOutExpected.toString()
         assertStringContent chmodOutExpected.replaced(tmpdir, tmpdir, "/tmp"), chmodOutExpected.toString()
         assertStringContent chownOutExpected.replaced(tmpdir, tmpdir, "/tmp"), chownOutExpected.toString()
         assertFileContent aptitudeOutExpected.asFile(tmpdir), aptitudeOutExpected

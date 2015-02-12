@@ -18,9 +18,12 @@
  */
 package com.anrisoftware.sscontrol.httpd.piwik.core;
 
+import static com.anrisoftware.sscontrol.httpd.piwik.core.Piwik_2_ConfigLogger._.setup_default_database;
 import static com.anrisoftware.sscontrol.httpd.piwik.core.Piwik_2_ConfigLogger._.setup_default_debug;
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
+import com.anrisoftware.sscontrol.httpd.domain.Domain;
+import com.anrisoftware.sscontrol.httpd.piwik.PiwikService;
 
 /**
  * Logging for {@link Piwik_2_Config}.
@@ -32,7 +35,11 @@ class Piwik_2_ConfigLogger extends AbstractLogger {
 
     enum _ {
 
-        setup_default_debug("Setup default debug for {}.");
+        setup_default_debug(
+                "Setup default debug for domain {} service {} for {}."),
+
+        setup_default_database(
+                "Setup default database for domain {} service {} for {}.");
 
         private String name;
 
@@ -53,8 +60,14 @@ class Piwik_2_ConfigLogger extends AbstractLogger {
         super(Piwik_2_Config.class);
     }
 
-    void setupDefaultDebug(Piwik_2_Config config) {
-        debug(setup_default_debug, config);
+    void setupDefaultDebug(Piwik_2_Config config, Domain domain,
+            PiwikService service) {
+        debug(setup_default_debug, domain, service, config);
+    }
+
+    void setupDefaultDatabase(Piwik_2_Config config, Domain domain,
+            PiwikService service) {
+        debug(setup_default_database, domain, service, config);
     }
 
 }

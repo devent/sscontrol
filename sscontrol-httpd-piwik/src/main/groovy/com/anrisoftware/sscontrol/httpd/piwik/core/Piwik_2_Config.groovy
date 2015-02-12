@@ -60,19 +60,20 @@ abstract class Piwik_2_Config {
         setupDefaultAlias service
         setupDefaultPrefix service
         setupDefaultOverrideMode service
-        setupDefaultDebug service, domain
+        setupDefaultDebug domain, service
+        setupDefaultDatabase domain, service
     }
 
     /**
      * Setups the default debug.
      *
      * @param domain
-     *            the service {@link Domain}.
+     *            the service {@link Domain} domain.
      *
      * @param service
-     *            the {@link PiwikService}.
+     *            the {@link PiwikService} service.
      */
-    void setupDefaultDebug(PiwikService service, Domain domain) {
+    void setupDefaultDebug(Domain domain, PiwikService service) {
         if (!service.debugLogging("level") || !service.debugLogging("level")["piwik"]) {
             service.debug "piwik", level: piwikDefaultDebugLevel
         }
@@ -82,7 +83,39 @@ abstract class Piwik_2_Config {
         if (!service.debugLogging("writer") || !service.debugLogging("writer")["piwik"]) {
             service.debug "piwik", writer: piwikDefaultDebugWriter
         }
-        logg.setupDefaultDebug this
+        logg.setupDefaultDebug this, domain, service
+    }
+
+    /**
+     * Setups the default database.
+     *
+     * @param domain
+     *            the service {@link Domain} domain.
+     *
+     * @param service
+     *            the {@link PiwikService} service.
+     */
+    void setupDefaultDatabase(Domain domain, PiwikService service) {
+        def db = service.database.database
+        if (!service.database.host) {
+            service.database db, host: piwikDefaultDatabaseHost
+        }
+        if (!service.database.port) {
+            service.database db, port: piwikDefaultDatabasePort
+        }
+        if (!service.database.prefix) {
+            service.database db, prefix: piwikDefaultDatabaseTablePrefix
+        }
+        if (!service.database.adapter) {
+            service.database db, adapter: piwikDefaultDatabaseAdapter
+        }
+        if (!service.database.type) {
+            service.database db, type: piwikDefaultDatabaseType
+        }
+        if (!service.database.schema) {
+            service.database db, schema: piwikDefaultDatabaseSchema
+        }
+        logg.setupDefaultDatabase this, domain, service
     }
 
     /**
@@ -173,6 +206,90 @@ abstract class Piwik_2_Config {
      */
     String getPiwikDefaultDebugWriter() {
         profileProperty "piwik_default_debug_writer", piwikProperties
+    }
+
+    /**
+     * Returns the default database host, for
+     * example {@code "localhost"}.
+     *
+     * <ul>
+     * <li>profile property {@code "piwik_default_database_host"}</li>
+     * </ul>
+     *
+     * @see #getPiwikProperties()
+     */
+    String getPiwikDefaultDatabaseHost() {
+        profileProperty "piwik_default_database_host", piwikProperties
+    }
+
+    /**
+     * Returns the default database host port, for
+     * example {@code "3306"}.
+     *
+     * <ul>
+     * <li>profile property {@code "piwik_default_database_port"}</li>
+     * </ul>
+     *
+     * @see #getPiwikProperties()
+     */
+    int getPiwikDefaultDatabasePort() {
+        profileNumberProperty "piwik_default_database_port", piwikProperties
+    }
+
+    /**
+     * Returns the default database table prefix, for
+     * example {@code "piwik_"}.
+     *
+     * <ul>
+     * <li>profile property {@code "piwik_default_database_table_prefix"}</li>
+     * </ul>
+     *
+     * @see #getPiwikProperties()
+     */
+    String getPiwikDefaultDatabaseTablePrefix() {
+        profileProperty "piwik_default_database_table_prefix", piwikProperties
+    }
+
+    /**
+     * Returns the default database adapter, for
+     * example {@code "PDO\MYSQL"}.
+     *
+     * <ul>
+     * <li>profile property {@code "piwik_default_database_adapter"}</li>
+     * </ul>
+     *
+     * @see #getPiwikProperties()
+     */
+    String getPiwikDefaultDatabaseAdapter() {
+        profileProperty "piwik_default_database_adapter", piwikProperties
+    }
+
+    /**
+     * Returns the default database type, for
+     * example {@code "InnoDB"}.
+     *
+     * <ul>
+     * <li>profile property {@code "piwik_default_database_type"}</li>
+     * </ul>
+     *
+     * @see #getPiwikProperties()
+     */
+    String getPiwikDefaultDatabaseType() {
+        profileProperty "piwik_default_database_type", piwikProperties
+    }
+
+    /**
+     * Returns the default database schema, for
+     * example {@code "Mysql"}.
+     *
+     * <ul>
+     * <li>profile property {@code "piwik_default_database_schema"}</li>
+     * </ul>
+     *
+     * @see #getPiwikProperties()
+     */
+    String getPiwikDefaultDatabaseSchema() {
+        profileProperty "piwik_default_database_schema", piwikProperties
     }
 
     /**

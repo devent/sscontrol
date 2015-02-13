@@ -1,0 +1,6 @@
+install --without development test
+update
+install --without development test
+install --without development test
+update
+install --without development test

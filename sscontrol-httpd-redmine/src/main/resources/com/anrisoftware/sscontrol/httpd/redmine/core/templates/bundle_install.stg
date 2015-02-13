@@ -6,3 +6,11 @@ cd <args.workDir>
 <args.bundleCommand> install <if(args.excludedBundles)>--without <args.excludedBundles;separator=" "><endif>
 
 >>
+
+updateGems(args) ::= <<
+<! - args.bundleCommand - !>
+<! - args.workDir - !>
+cd <args.workDir>
+<args.bundleCommand> update
+
+>>

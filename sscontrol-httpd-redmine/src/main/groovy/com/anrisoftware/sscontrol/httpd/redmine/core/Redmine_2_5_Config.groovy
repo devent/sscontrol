@@ -272,13 +272,14 @@ abstract class Redmine_2_5_Config {
      *
      */
     void installGems(Domain domain, RedmineService service) {
-        scriptExecFactory.create(
+        def task = scriptExecFactory.create(
                 log: log,
                 runCommands: runCommands,
                 gemCommand: gemCommand,
                 gems: redmineGems,
                 timeout: gemInstallTimeout,
                 this, threads, gemInstallTemplate, "gemInstall")()
+        logg.gemsInstalled this, task, redmineGems
     }
 
     /**
@@ -359,6 +360,24 @@ abstract class Redmine_2_5_Config {
      */
     void installBundle(Domain domain, RedmineService service) {
         def dir = redmineDir domain, service
+        def gemsUpdated = []
+        def task = installBundle domain, service, dir
+        if (task.exitValue == 7) {
+            updateGems domain, service, dir
+            installBundle domain, service, dir
+        }
+    }
+
+    /**
+     * Updates any locked <i>Ruby</i> gems.
+     *
+     * @param domain
+     *            the service {@link Domain} domain.
+     *
+     * @param service
+     *            the {@link RedmineService} service.
+     */
+    def installBundle(Domain domain, RedmineService service, File dir) {
         scriptExecFactory.create(
                 log: log,
                 runCommands: runCommands,
@@ -366,7 +385,28 @@ abstract class Redmine_2_5_Config {
                 workDir: dir,
                 excludedBundles: productionExcludedBundles,
                 timeout: bundleInstallTimeout,
+                checkExitCodes: false,
                 this, threads, bundleInstallTemplate, "bundleInstall")()
+    }
+
+    /**
+     * Updates any locked <i>Ruby</i> gems.
+     *
+     * @param domain
+     *            the service {@link Domain} domain.
+     *
+     * @param service
+     *            the {@link RedmineService} service.
+     */
+    void updateGems(Domain domain, RedmineService service, File dir) {
+        def task = scriptExecFactory.create(
+                log: log,
+                runCommands: runCommands,
+                bundleCommand: bundleCommand,
+                workDir: dir,
+                timeout: bundleInstallTimeout,
+                this, threads, bundleInstallTemplate, "updateGems")()
+        logg.gemsUpdated this, task
     }
 
     /**

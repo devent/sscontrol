@@ -1,0 +1,50 @@
+web_001.web_001 /tmp/var/www/test1.com/web
+web_002.web_002 /tmp/var/www/test2.com/web
+-R root.root /tmp/var/www/test1.com/redmine_2_6
+-R web_001.web_001 /tmp/var/www/test1.com/redmine_2_6/files
+-R web_001.web_001 /tmp/var/www/test1.com/redmine_2_6/log
+-R web_001.web_001 /tmp/var/www/test1.com/redmine_2_6/tmp
+-R web_001.web_001 /tmp/var/www/test1.com/redmine_2_6/tmp/pdf
+-R web_001.web_001 /tmp/var/www/test1.com/redmine_2_6/public/plugin_assets
+-R thin.web_001 /tmp/var/www/test1.com/redmine_2_6/files
+-R thin.web_001 /tmp/var/www/test1.com/redmine_2_6/log
+-R thin.web_001 /tmp/var/www/test1.com/redmine_2_6/tmp
+-R thin.web_001 /tmp/var/www/test1.com/redmine_2_6/tmp/pdf
+-R thin.web_001 /tmp/var/www/test1.com/redmine_2_6/public/plugin_assets
+root.root /tmp/var/www/test1.com/ssl/cert_crt.txt /tmp/var/www/test1.com/ssl/cert_key.txt
+-R root.root /tmp/var/www/test2.com/test2redmine
+-R web_002.web_002 /tmp/var/www/test2.com/test2redmine/files
+-R web_002.web_002 /tmp/var/www/test2.com/test2redmine/log
+-R web_002.web_002 /tmp/var/www/test2.com/test2redmine/tmp
+-R web_002.web_002 /tmp/var/www/test2.com/test2redmine/tmp/pdf
+-R web_002.web_002 /tmp/var/www/test2.com/test2redmine/public/plugin_assets
+-R thin.web_002 /tmp/var/www/test2.com/test2redmine/files
+-R thin.web_002 /tmp/var/www/test2.com/test2redmine/log
+-R thin.web_002 /tmp/var/www/test2.com/test2redmine/tmp
+-R thin.web_002 /tmp/var/www/test2.com/test2redmine/tmp/pdf
+-R thin.web_002 /tmp/var/www/test2.com/test2redmine/public/plugin_assets
+web_001.web_001 /tmp/var/www/test1.com/web
+web_002.web_002 /tmp/var/www/test2.com/web
+-R root.root /tmp/var/www/test1.com/redmine_2_6
+-R web_001.web_001 /tmp/var/www/test1.com/redmine_2_6/files
+-R web_001.web_001 /tmp/var/www/test1.com/redmine_2_6/log
+-R web_001.web_001 /tmp/var/www/test1.com/redmine_2_6/tmp
+-R web_001.web_001 /tmp/var/www/test1.com/redmine_2_6/tmp/pdf
+-R web_001.web_001 /tmp/var/www/test1.com/redmine_2_6/public/plugin_assets
+-R thin.web_001 /tmp/var/www/test1.com/redmine_2_6/files
+-R thin.web_001 /tmp/var/www/test1.com/redmine_2_6/log
+-R thin.web_001 /tmp/var/www/test1.com/redmine_2_6/tmp
+-R thin.web_001 /tmp/var/www/test1.com/redmine_2_6/tmp/pdf
+-R thin.web_001 /tmp/var/www/test1.com/redmine_2_6/public/plugin_assets
+root.root /tmp/var/www/test1.com/ssl/cert_crt.txt /tmp/var/www/test1.com/ssl/cert_key.txt
+-R root.root /tmp/var/www/test2.com/test2redmine
+-R web_002.web_002 /tmp/var/www/test2.com/test2redmine/files
+-R web_002.web_002 /tmp/var/www/test2.com/test2redmine/log
+-R web_002.web_002 /tmp/var/www/test2.com/test2redmine/tmp
+-R web_002.web_002 /tmp/var/www/test2.com/test2redmine/tmp/pdf
+-R web_002.web_002 /tmp/var/www/test2.com/test2redmine/public/plugin_assets
+-R thin.web_002 /tmp/var/www/test2.com/test2redmine/files
+-R thin.web_002 /tmp/var/www/test2.com/test2redmine/log
+-R thin.web_002 /tmp/var/www/test2.com/test2redmine/tmp
+-R thin.web_002 /tmp/var/www/test2.com/test2redmine/tmp/pdf
+-R thin.web_002 /tmp/var/www/test2.com/test2redmine/public/plugin_assets

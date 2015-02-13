@@ -21,11 +21,18 @@ package com.anrisoftware.sscontrol.httpd.redmine.core;
 import static com.anrisoftware.sscontrol.httpd.redmine.core.Redmine_2_5_ConfigLogger._.config_debug;
 import static com.anrisoftware.sscontrol.httpd.redmine.core.Redmine_2_5_ConfigLogger._.config_info;
 import static com.anrisoftware.sscontrol.httpd.redmine.core.Redmine_2_5_ConfigLogger._.config_trace;
+import static com.anrisoftware.sscontrol.httpd.redmine.core.Redmine_2_5_ConfigLogger._.gems_installed_debug;
+import static com.anrisoftware.sscontrol.httpd.redmine.core.Redmine_2_5_ConfigLogger._.gems_installed_info;
+import static com.anrisoftware.sscontrol.httpd.redmine.core.Redmine_2_5_ConfigLogger._.gems_installed_trace;
+import static com.anrisoftware.sscontrol.httpd.redmine.core.Redmine_2_5_ConfigLogger._.gems_updated_debug;
+import static com.anrisoftware.sscontrol.httpd.redmine.core.Redmine_2_5_ConfigLogger._.gems_updated_info;
+import static com.anrisoftware.sscontrol.httpd.redmine.core.Redmine_2_5_ConfigLogger._.gems_updated_trace;
 import static org.apache.commons.lang3.StringUtils.join;
 
 import java.io.File;
 import java.util.List;
 
+import com.anrisoftware.globalpom.exec.api.ProcessTask;
 import com.anrisoftware.globalpom.log.AbstractLogger;
 
 /**
@@ -42,7 +49,19 @@ class Redmine_2_5_ConfigLogger extends AbstractLogger {
 
         config_debug("Configuration '{}' created for {}."),
 
-        config_info("Configuration '{}' created for service '{}'.");
+        config_info("Configuration '{}' created for service '{}'."),
+
+        gems_installed_trace("Gems '{}' installed for {}: {}"),
+
+        gems_installed_debug("Gems '{}' installed for {}."),
+
+        gems_installed_info("Gems '{}' installed for service '{}'."),
+
+        gems_updated_trace("Gems updated for {}: {}"),
+
+        gems_updated_debug("Gems updated for {}."),
+
+        gems_updated_info("Gems updated for service '{}'.");
 
         private String name;
 
@@ -61,6 +80,26 @@ class Redmine_2_5_ConfigLogger extends AbstractLogger {
      */
     public Redmine_2_5_ConfigLogger() {
         super(Redmine_2_5_Config.class);
+    }
+
+    void gemsInstalled(Redmine_2_5_Config config, ProcessTask task, List<?> gems) {
+        if (isTraceEnabled()) {
+            trace(gems_installed_trace, gems, config, task);
+        } else if (isDebugEnabled()) {
+            debug(gems_installed_debug, gems, config);
+        } else {
+            info(gems_installed_info, gems, config.getServiceName());
+        }
+    }
+
+    void gemsUpdated(Redmine_2_5_Config config, ProcessTask task) {
+        if (isTraceEnabled()) {
+            trace(gems_updated_trace, config, task);
+        } else if (isDebugEnabled()) {
+            debug(gems_updated_debug, config);
+        } else {
+            info(gems_updated_info, config.getServiceName());
+        }
     }
 
     void configCreated(Redmine_2_5_Config config, File file, List<?> configstr) {

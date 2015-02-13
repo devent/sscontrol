@@ -1,0 +1,15 @@
+theCommand="$0"
+echo "$@" >> $theCommand.out
+if [ "$1" == "install" ]; then
+    cat <<EOF
+Resolving dependencies...
+You have requested:
+  i18n ~> 0.6.11
+
+The bundle currently has i18n locked at 0.6.9.
+Try running \`bundle update i18n\`
+EOF
+    exit 7
+else
+    exit 0
+fi

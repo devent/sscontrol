@@ -198,7 +198,7 @@ abstract class RedmineFromArchiveConfig {
             case OverrideMode.override:
                 return true
             case OverrideMode.update:
-                return checkRedmineVersion(domain, service) == false
+                return checkRedmineVersion(domain, service)
         }
     }
 
@@ -243,7 +243,7 @@ abstract class RedmineFromArchiveConfig {
     boolean checkRedmineVersion(Domain domain, RedmineService service) {
         def versionFile = redmineVersionFile domain, service
         if (!versionFile.isFile()) {
-            return false
+            return true
         }
         def version = versionFormatFactory.create().parse FileUtils.readFileToString(versionFile).trim()
         logg.checkRedmineVersion this, version, redmineUpperVersion

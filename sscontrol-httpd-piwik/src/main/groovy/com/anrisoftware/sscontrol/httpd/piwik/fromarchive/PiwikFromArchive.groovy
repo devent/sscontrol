@@ -119,7 +119,7 @@ abstract class PiwikFromArchive {
             case OverrideMode.override:
                 return true
             case OverrideMode.update:
-                return checkPiwikVersion(domain, service) == false
+                return checkPiwikVersion(domain, service)
         }
     }
 
@@ -178,7 +178,7 @@ abstract class PiwikFromArchive {
      */
     void unpackArchive(Domain domain, WebService service, File archive) {
         def dir = piwikDir domain, service
-        dir.isDirectory() ? false : dir.mkdirs()
+        dir.mkdirs()
         unpackFactory.create(
                 log: log,
                 runCommands: runCommands,
@@ -206,7 +206,7 @@ abstract class PiwikFromArchive {
     boolean checkPiwikVersion(Domain domain, PiwikService service) {
         def versionFile = piwikVersionFile domain, service
         if (!versionFile.isFile()) {
-            return false
+            return true
         }
         def version = versionFormatFactory.create().parse FileUtils.readFileToString(versionFile).trim()
         logg.checkPiwikVersion this, version, piwikUpperVersion

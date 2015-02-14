@@ -3,15 +3,7 @@
 # Author: Erwin Müller, <erwin.mueller@deventm.org>
 
 default:
-  email_delivery:
-    smtp_settings:
-      address: smtp.test1.com
-      port: 25
-      domain: example.net
-      authentication: :login
-      user_name: redmine@example.net
-      password: redminepass
-    delivery_method: :smtp
+  email_delivery: null
   attachments_storage_path: null
   autologin_cookie_name: null
   autologin_cookie_path: null
@@ -25,5 +17,17 @@ default:
   scm_stderr_log_file: null
   database_cipher_key: null
   rmagick_font_path: null
-production: null
+production:
+  email_delivery:
+    smtp_settings:
+      address: smtp.test1.com
+      port: 25
+      delivery_method: :smtp
+      domain: example.net
+      authentication: :login
+      user_name: redmine@example.net
+      password: redminepass
+      ssl: false
+      enable_starttls_auto: false
+      openssl_verify_mode: OpenSSL::SSL::VERIFY_NONE
 development: null

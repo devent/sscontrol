@@ -18,8 +18,11 @@
  */
 package com.anrisoftware.sscontrol.httpd.redmine;
 
+import static org.apache.commons.lang3.StringUtils.join;
 import static org.apache.commons.lang3.StringUtils.lowerCase;
 import static org.apache.commons.lang3.StringUtils.split;
+
+import org.apache.commons.lang3.text.WordUtils;
 
 /**
  * <i>Redmine</i> service statement key.
@@ -53,6 +56,12 @@ enum RedmineServiceStatement {
 
     PASSWORD_KEY,
 
+    SSL_KEY,
+
+    START_TLS_AUTO_KEY,
+
+    OPENSSL_VERIFY_MODE_KEY,
+
     USER_KEY,
 
     AUTH_KEY,
@@ -77,7 +86,11 @@ enum RedmineServiceStatement {
 
     @Override
     public String toString() {
-        return split(lowerCase(name()), "_")[0];
+        String[] split = split(lowerCase(name()), "_");
+        for (int i = 1; i < split.length - 1; i++) {
+            split[i] = WordUtils.capitalize(split[i]);
+        }
+        String name = join(split, "", 0, split.length - 1);
+        return name;
     }
-
 }

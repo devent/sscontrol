@@ -20,6 +20,7 @@ package com.anrisoftware.sscontrol.httpd.redmine.redmine_2_6_nginx_thin_ubuntu_1
 
 import com.anrisoftware.globalpom.checkfilehash.CheckFileHashModule;
 import com.anrisoftware.globalpom.version.VersionModule;
+import com.anrisoftware.sscontrol.httpd.redmine.core.RedmineCoreModule;
 import com.anrisoftware.sscontrol.scripts.pack.PackModule;
 import com.anrisoftware.sscontrol.scripts.unpack.UnpackModule;
 import com.google.inject.AbstractModule;
@@ -38,6 +39,7 @@ class NginxModule extends AbstractModule {
         install(new PackModule());
         install(new CheckFileHashModule());
         install(new VersionModule());
+        install(new RedmineCoreModule());
     }
 
 }

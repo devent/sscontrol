@@ -100,6 +100,10 @@ public interface RedmineService extends WebService {
      * <li>{@code auth} the Authentication {@link AuthenticationMethod} method;</li>
      * <li>{@code user} the mail user;</li>
      * <li>{@code password} the mail user password;</li>
+     * <li>{@code ssl} set to {@code true} to enable SSL;</li>
+     * <li>{@code startTlsAuto} set to {@code true} to enable START/TLS auto;</li>
+     * <li>{@code opensslVerifyMode} set to the OpenSSL verify mode;</li>
+     * <li>{@code arguments} set to the <i>sendmail</i> arguments;</li>
      * </ul>
      *
      * <pre>

@@ -32,12 +32,15 @@ import static com.anrisoftware.sscontrol.httpd.redmine.RedmineServiceStatement.M
 import static com.anrisoftware.sscontrol.httpd.redmine.RedmineServiceStatement.METHOD_KEY;
 import static com.anrisoftware.sscontrol.httpd.redmine.RedmineServiceStatement.MODE_KEY;
 import static com.anrisoftware.sscontrol.httpd.redmine.RedmineServiceStatement.NAME_KEY;
+import static com.anrisoftware.sscontrol.httpd.redmine.RedmineServiceStatement.OPENSSL_VERIFY_MODE_KEY;
 import static com.anrisoftware.sscontrol.httpd.redmine.RedmineServiceStatement.OVERRIDE_KEY;
 import static com.anrisoftware.sscontrol.httpd.redmine.RedmineServiceStatement.PASSWORD_KEY;
 import static com.anrisoftware.sscontrol.httpd.redmine.RedmineServiceStatement.PORT_KEY;
 import static com.anrisoftware.sscontrol.httpd.redmine.RedmineServiceStatement.PROVIDER_KEY;
 import static com.anrisoftware.sscontrol.httpd.redmine.RedmineServiceStatement.SCM_KEY;
 import static com.anrisoftware.sscontrol.httpd.redmine.RedmineServiceStatement.SCRIPT_KEY;
+import static com.anrisoftware.sscontrol.httpd.redmine.RedmineServiceStatement.SSL_KEY;
+import static com.anrisoftware.sscontrol.httpd.redmine.RedmineServiceStatement.START_TLS_AUTO_KEY;
 import static com.anrisoftware.sscontrol.httpd.redmine.RedmineServiceStatement.TARGET_KEY;
 import static com.anrisoftware.sscontrol.httpd.redmine.RedmineServiceStatement.TRACKING_KEY;
 import static com.anrisoftware.sscontrol.httpd.redmine.RedmineServiceStatement.USER_KEY;
@@ -93,7 +96,8 @@ public abstract class DefaultRedmineService implements RedmineService {
         map.addAllowedKeys(DATABASE_KEY, USER_KEY, PASSWORD_KEY, HOST_KEY,
                 PROVIDER_KEY, ENCODING_KEY);
         map.addAllowedKeys(MAIL_KEY, PORT_KEY, METHOD_KEY, DOMAIN_KEY,
-                AUTH_KEY, USER_KEY, PASSWORD_KEY);
+                AUTH_KEY, USER_KEY, PASSWORD_KEY, SSL_KEY, START_TLS_AUTO_KEY,
+                OPENSSL_VERIFY_MODE_KEY);
         map.addAllowedKeys(LANGUAGE_KEY, NAME_KEY);
         map.addAllowedKeys(SCM_KEY, INSTALL_KEY);
         map.addAllowedKeys(OVERRIDE_KEY, MODE_KEY);
@@ -219,6 +223,11 @@ public abstract class DefaultRedmineService implements RedmineService {
         map.put(AUTH_KEY.toString(), m.mapValue(MAIL_KEY, AUTH_KEY));
         map.put(USER_KEY.toString(), m.mapValue(MAIL_KEY, USER_KEY));
         map.put(PASSWORD_KEY.toString(), m.mapValue(MAIL_KEY, PASSWORD_KEY));
+        map.put(SSL_KEY.toString(), m.mapValue(MAIL_KEY, SSL_KEY));
+        map.put(START_TLS_AUTO_KEY.toString(),
+                m.mapValue(MAIL_KEY, START_TLS_AUTO_KEY));
+        map.put(OPENSSL_VERIFY_MODE_KEY.toString(),
+                m.mapValue(MAIL_KEY, OPENSSL_VERIFY_MODE_KEY));
         return map.size() == 0 ? null : map;
     }
 

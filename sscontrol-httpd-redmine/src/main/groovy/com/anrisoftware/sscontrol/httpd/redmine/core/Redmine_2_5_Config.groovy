@@ -213,16 +213,28 @@ abstract class Redmine_2_5_Config {
             service.mail domain.name
         }
         if (!service.mail || !service.mail.port) {
-            def port = profileNumberProperty "redmine_default_mail_port", redmineProperties
-            service.mail port: port
+            int value = profileNumberProperty "redmine_default_mail_port", redmineProperties
+            service.mail port: value
         }
         if (!service.mail || !service.mail.method) {
-            def method = DeliveryMethod.valueOf profileProperty("redmine_default_mail_delivery_method", redmineProperties)
-            service.mail method: method
+            def value = DeliveryMethod.valueOf profileProperty("redmine_default_mail_delivery_method", redmineProperties)
+            service.mail method: value
         }
         if (!service.mail || !service.mail.auth) {
-            def method = AuthenticationMethod.valueOf profileProperty("redmine_default_mail_authentication_method", redmineProperties)
-            service.mail auth: method
+            def value = AuthenticationMethod.valueOf profileProperty("redmine_default_mail_authentication_method", redmineProperties)
+            service.mail auth: value
+        }
+        if (!service.mail || !service.mail.ssl) {
+            def value = profileBooleanProperty "redmine_default_mail_ssl_enabled", redmineProperties
+            service.mail ssl: value
+        }
+        if (!service.mail || !service.mail.startTlsAuto) {
+            def value = profileBooleanProperty "redmine_default_mail_enable_starttls_auto", redmineProperties
+            service.mail startTlsAuto: value
+        }
+        if (!service.mail || !service.mail.opensslVerifyMode) {
+            def value = profileProperty "redmine_default_mail_openssl_verify_mode", redmineProperties
+            service.mail opensslVerifyMode: value
         }
     }
 

@@ -29,6 +29,7 @@ import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.TemplatesFactory
 import com.anrisoftware.sscontrol.httpd.domain.Domain
+import com.anrisoftware.sscontrol.httpd.redmine.DeliveryMethod
 import com.anrisoftware.sscontrol.httpd.redmine.RedmineService
 import com.anrisoftware.sscontrol.httpd.redmine.redmine_2_6_nginx_thin_ubuntu_12_04.RedmineConfigFactory
 
@@ -48,6 +49,9 @@ abstract class Redmine_2_ConfigurationConfig {
     @Inject
     MailConfigRepresenter mailConfigRepresenter
 
+    @Inject
+    Map<DeliveryMethod, SetupEmailSettingsMap> setupEmailSettingsMap
+
     TemplateResource configTemplate
 
     /**
@@ -63,60 +67,35 @@ abstract class Redmine_2_ConfigurationConfig {
      * @see #getRedmineConfigFile()
      */
     void deployEmail(Domain domain, RedmineService service) {
-        def exampleFile = redmineConfigFile domain, service, redmineConfigExampleFile
-        def file = redmineConfigFile domain, service, redmineConfigFile
-        file.isFile() == false ? FileUtils.copyFile(exampleFile, file) : false
+        def file = configFile domain, service
         def conf = currentConfiguration file
-        DumperOptions options = new DumperOptions();
-        options.setDefaultFlowStyle DumperOptions.FlowStyle.BLOCK
-        Yaml yaml = new Yaml(mailConfigRepresenter, options);
-        Map map = yaml.load(conf)
-        Map defaultMap = map["default"]
-        if (!defaultMap.email_delivery) {
-            defaultMap.email_delivery = [:]
-        }
-        if (!defaultMap.email_delivery.smtp_settings) {
-            defaultMap.email_delivery.smtp_settings = [:]
-        }
-        if (service.mail.method) {
-            defaultMap.email_delivery.delivery_method = service.mail.method
-        } else {
-            defaultMap.email_delivery.remove "delivery_method"
-        }
-        if (service.mail.host) {
-            defaultMap.email_delivery.smtp_settings.address = service.mail.host
-        } else {
-            defaultMap.email_delivery.smtp_settings.remove "address"
-        }
-        if (service.mail.port) {
-            defaultMap.email_delivery.smtp_settings.port = service.mail.port
-        } else {
-            defaultMap.email_delivery.smtp_settings.remove "port"
-        }
-        if (service.mail.domain) {
-            defaultMap.email_delivery.smtp_settings.domain = service.mail.domain
-        } else {
-            defaultMap.email_delivery.smtp_settings.remove "domain"
-        }
-        if (service.mail.auth) {
-            defaultMap.email_delivery.smtp_settings.authentication = service.mail.auth
-        } else {
-            defaultMap.email_delivery.smtp_settings.remove "authentication"
-        }
-        if (service.mail.user) {
-            defaultMap.email_delivery.smtp_settings.user_name = service.mail.user
-        } else {
-            defaultMap.email_delivery.smtp_settings.remove "user_name"
-        }
-        if (service.mail.password) {
-            defaultMap.email_delivery.smtp_settings.password = service.mail.password
-        } else {
-            defaultMap.email_delivery.smtp_settings.remove "password"
-        }
+        def yaml = createParser()
+        Map map = yaml.load conf
+        Map pmap = SetupEmailSettingsMap.lazyGetMap map, "production"
+        Map emaildeliveryMap = SetupEmailSettingsMap.lazyGetMap pmap, "email_delivery"
+        setupEmailSettingsMap[service.mail.method].setup service, emaildeliveryMap
+        conf = writeConfig service, yaml, map, file, conf
+        logg.configDeployed this, file, conf
+    }
+
+    private String writeConfig(RedmineService service, Yaml yaml, Map map, File file, String conf) {
         conf = configTemplate.getText "configHead", "service", service
         conf += yaml.dump map
         FileUtils.writeStringToFile file, conf, charset
-        logg.configDeployed this, file, conf
+        return conf
+    }
+
+    private Yaml createParser() {
+        DumperOptions options = new DumperOptions();
+        options.setDefaultFlowStyle DumperOptions.FlowStyle.BLOCK
+        new Yaml(mailConfigRepresenter, options)
+    }
+
+    private File configFile(Domain domain, RedmineService service) {
+        File exampleFile = redmineConfigFile domain, service, redmineConfigExampleFile
+        File file = redmineConfigFile domain, service, redmineConfigFile
+        file.isFile() == false ? FileUtils.copyFile(exampleFile, file) : false
+        return file
     }
 
     /**

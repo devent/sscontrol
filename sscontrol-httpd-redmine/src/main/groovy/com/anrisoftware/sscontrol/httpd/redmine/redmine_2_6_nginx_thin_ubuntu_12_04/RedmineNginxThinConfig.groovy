@@ -1,5 +1,5 @@
 /*
- * Copyright ${project.inceptionYear] Erwin Müller <erwin.mueller@deventm.org>
+ * Copyright 2014 Erwin Müller <erwin.mueller@deventm.org>
  *
  * This file is part of sscontrol-httpd-redmine.
  *
@@ -73,6 +73,9 @@ class RedmineNginxThinConfig extends UbuntuNginxThinConfig implements ServiceCon
     @Inject
     Ubuntu_12_04_RedmineBackup backupConfig
 
+    @Inject
+    Ubuntu_12_04_TrackingScriptConfig trackingScriptConfig
+
     TemplateResource domainConfigTemplate
 
     @Override
@@ -98,6 +101,7 @@ class RedmineNginxThinConfig extends UbuntuNginxThinConfig implements ServiceCon
         configurationConfig.deployEmail domain, service
         fixRedmineGemfileConfig.deployGemsFix domain, service
         deployEnvironmentConfig domain, service
+        trackingScriptConfig.deployTracking domain, service
         setupPermissions domain, service
         installBundle domain, service
         generateSecretTokens domain, service
@@ -272,5 +276,6 @@ class RedmineNginxThinConfig extends UbuntuNginxThinConfig implements ServiceCon
         configurationConfig.setScript this
         fixRedmineGemfileConfig.setScript this
         backupConfig.setScript this
+        trackingScriptConfig.setScript this
     }
 }

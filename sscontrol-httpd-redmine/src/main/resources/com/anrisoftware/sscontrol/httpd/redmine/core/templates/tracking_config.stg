@@ -1,0 +1,10 @@
+trackingConfigSearch() ::= <%
+(?ms)^(\<!-- SSCONTROL -->.*\<!-- SSCONTROL-END -->\n)?\<%= call_hook :view_layouts_base_body_bottom %\>
+%>
+
+trackingConfig(script) ::= <<
+\<!-- SSCONTROL -->
+<script>
+\<!-- SSCONTROL-END -->
+\<%= call_hook :view_layouts_base_body_bottom %>
+>>

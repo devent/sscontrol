@@ -1,5 +1,5 @@
 /*
- * Copyright ${project.inceptionYear] Erwin Müller <erwin.mueller@deventm.org>
+ * Copyright 2014 Erwin Müller <erwin.mueller@deventm.org>
  *
  * This file is part of sscontrol-httpd-redmine.
  *
@@ -17,6 +17,30 @@
  * along with sscontrol-httpd-redmine. If not, see <http://www.gnu.org/licenses/>.
  */
 package com.anrisoftware.sscontrol.httpd.redmine;
+
+import static com.anrisoftware.sscontrol.httpd.redmine.RedmineServiceStatement.AUTH_KEY;
+import static com.anrisoftware.sscontrol.httpd.redmine.RedmineServiceStatement.BACKEND_KEY;
+import static com.anrisoftware.sscontrol.httpd.redmine.RedmineServiceStatement.BACKUP_KEY;
+import static com.anrisoftware.sscontrol.httpd.redmine.RedmineServiceStatement.DATABASE_KEY;
+import static com.anrisoftware.sscontrol.httpd.redmine.RedmineServiceStatement.DEBUG_KEY;
+import static com.anrisoftware.sscontrol.httpd.redmine.RedmineServiceStatement.DOMAIN_KEY;
+import static com.anrisoftware.sscontrol.httpd.redmine.RedmineServiceStatement.ENCODING_KEY;
+import static com.anrisoftware.sscontrol.httpd.redmine.RedmineServiceStatement.HOST_KEY;
+import static com.anrisoftware.sscontrol.httpd.redmine.RedmineServiceStatement.INSTALL_KEY;
+import static com.anrisoftware.sscontrol.httpd.redmine.RedmineServiceStatement.LANGUAGE_KEY;
+import static com.anrisoftware.sscontrol.httpd.redmine.RedmineServiceStatement.MAIL_KEY;
+import static com.anrisoftware.sscontrol.httpd.redmine.RedmineServiceStatement.METHOD_KEY;
+import static com.anrisoftware.sscontrol.httpd.redmine.RedmineServiceStatement.MODE_KEY;
+import static com.anrisoftware.sscontrol.httpd.redmine.RedmineServiceStatement.NAME_KEY;
+import static com.anrisoftware.sscontrol.httpd.redmine.RedmineServiceStatement.OVERRIDE_KEY;
+import static com.anrisoftware.sscontrol.httpd.redmine.RedmineServiceStatement.PASSWORD_KEY;
+import static com.anrisoftware.sscontrol.httpd.redmine.RedmineServiceStatement.PORT_KEY;
+import static com.anrisoftware.sscontrol.httpd.redmine.RedmineServiceStatement.PROVIDER_KEY;
+import static com.anrisoftware.sscontrol.httpd.redmine.RedmineServiceStatement.SCM_KEY;
+import static com.anrisoftware.sscontrol.httpd.redmine.RedmineServiceStatement.SCRIPT_KEY;
+import static com.anrisoftware.sscontrol.httpd.redmine.RedmineServiceStatement.TARGET_KEY;
+import static com.anrisoftware.sscontrol.httpd.redmine.RedmineServiceStatement.TRACKING_KEY;
+import static com.anrisoftware.sscontrol.httpd.redmine.RedmineServiceStatement.USER_KEY;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -46,48 +70,6 @@ import com.anrisoftware.sscontrol.httpd.webserviceargs.DefaultWebServiceFactory;
  */
 public abstract class DefaultRedmineService implements RedmineService {
 
-    private static final String ENCODING_KEY = "encoding";
-
-    private static final String PROVIDER_KEY = "provider";
-
-    private static final String DEBUG_KEY = "debug";
-
-    private static final String DATABASE_KEY = "database";
-
-    private static final String BACKEND_KEY = "backend";
-
-    private static final String MODE_KEY = "mode";
-
-    private static final String OVERRIDE_KEY = "override";
-
-    private static final String INSTALL_KEY = "install";
-
-    private static final String SCM_KEY = "scm";
-
-    private static final String NAME_KEY = "name";
-
-    private static final String LANGUAGE_KEY = "language";
-
-    private static final String PASSWORD_KEY = "password";
-
-    private static final String USER_KEY = "user";
-
-    private static final String AUTH_KEY = "auth";
-
-    private static final String DOMAIN_KEY = "domain";
-
-    private static final String METHOD_KEY = "method";
-
-    private static final String PORT_KEY = "port";
-
-    private static final String HOST_KEY = "host";
-
-    private static final String MAIL_KEY = "mail";
-
-    private static final String BACKUP_KEY = "backup";
-
-    private static final String TARGET_KEY = "target";
-
     private final DefaultWebService service;
 
     private final StatementsMap statementsMap;
@@ -106,7 +88,7 @@ public abstract class DefaultRedmineService implements RedmineService {
 
     private void setupStatements(StatementsMap map, Map<String, Object> args) {
         map.addAllowed(BACKEND_KEY, DATABASE_KEY, MAIL_KEY, LANGUAGE_KEY,
-                SCM_KEY, OVERRIDE_KEY, BACKUP_KEY);
+                SCM_KEY, OVERRIDE_KEY, BACKUP_KEY, TRACKING_KEY);
         map.setAllowValue(true, BACKEND_KEY, DATABASE_KEY, MAIL_KEY);
         map.addAllowedKeys(DATABASE_KEY, USER_KEY, PASSWORD_KEY, HOST_KEY,
                 PROVIDER_KEY, ENCODING_KEY);
@@ -116,7 +98,8 @@ public abstract class DefaultRedmineService implements RedmineService {
         map.addAllowedKeys(SCM_KEY, INSTALL_KEY);
         map.addAllowedKeys(OVERRIDE_KEY, MODE_KEY);
         map.addAllowedKeys(BACKUP_KEY, TARGET_KEY);
-        map.putValue(BACKEND_KEY, args.get(BACKEND_KEY));
+        map.addAllowedKeys(TRACKING_KEY, SCRIPT_KEY);
+        map.putValue(BACKEND_KEY.toString(), args.get(BACKEND_KEY.toString()));
     }
 
     @Inject
@@ -206,12 +189,12 @@ public abstract class DefaultRedmineService implements RedmineService {
             }
         };
         StatementsMap m = statementsMap;
-        map.put(DATABASE_KEY, m.value(DATABASE_KEY));
-        map.put(USER_KEY, m.mapValue(DATABASE_KEY, USER_KEY));
-        map.put(PASSWORD_KEY, m.mapValue(DATABASE_KEY, PASSWORD_KEY));
-        map.put(HOST_KEY, m.mapValue(DATABASE_KEY, HOST_KEY));
-        map.put(PROVIDER_KEY, m.mapValue(DATABASE_KEY, PROVIDER_KEY));
-        map.put(ENCODING_KEY, m.mapValue(DATABASE_KEY, ENCODING_KEY));
+        map.put(DATABASE_KEY.toString(), m.value(DATABASE_KEY));
+        map.put(USER_KEY.toString(), m.mapValue(DATABASE_KEY, USER_KEY));
+        map.put(PASSWORD_KEY.toString(), m.mapValue(DATABASE_KEY, PASSWORD_KEY));
+        map.put(HOST_KEY.toString(), m.mapValue(DATABASE_KEY, HOST_KEY));
+        map.put(PROVIDER_KEY.toString(), m.mapValue(DATABASE_KEY, PROVIDER_KEY));
+        map.put(ENCODING_KEY.toString(), m.mapValue(DATABASE_KEY, ENCODING_KEY));
         return map.size() == 0 ? null : map;
     }
 
@@ -229,13 +212,13 @@ public abstract class DefaultRedmineService implements RedmineService {
             }
         };
         StatementsMap m = statementsMap;
-        map.put(HOST_KEY, m.value(MAIL_KEY));
-        map.put(PORT_KEY, m.mapValue(MAIL_KEY, PORT_KEY));
-        map.put(METHOD_KEY, m.mapValue(MAIL_KEY, METHOD_KEY));
-        map.put(DOMAIN_KEY, m.mapValue(MAIL_KEY, DOMAIN_KEY));
-        map.put(AUTH_KEY, m.mapValue(MAIL_KEY, AUTH_KEY));
-        map.put(USER_KEY, m.mapValue(MAIL_KEY, USER_KEY));
-        map.put(PASSWORD_KEY, m.mapValue(MAIL_KEY, PASSWORD_KEY));
+        map.put(HOST_KEY.toString(), m.value(MAIL_KEY));
+        map.put(PORT_KEY.toString(), m.mapValue(MAIL_KEY, PORT_KEY));
+        map.put(METHOD_KEY.toString(), m.mapValue(MAIL_KEY, METHOD_KEY));
+        map.put(DOMAIN_KEY.toString(), m.mapValue(MAIL_KEY, DOMAIN_KEY));
+        map.put(AUTH_KEY.toString(), m.mapValue(MAIL_KEY, AUTH_KEY));
+        map.put(USER_KEY.toString(), m.mapValue(MAIL_KEY, USER_KEY));
+        map.put(PASSWORD_KEY.toString(), m.mapValue(MAIL_KEY, PASSWORD_KEY));
         return map.size() == 0 ? null : map;
     }
 
@@ -268,6 +251,11 @@ public abstract class DefaultRedmineService implements RedmineService {
     @Override
     public URI getBackupTarget() {
         return statementsMap.mapValueAsURI(BACKUP_KEY, TARGET_KEY);
+    }
+
+    @Override
+    public URI getTrackingScript() {
+        return statementsMap.mapValueAsURI(TRACKING_KEY, SCRIPT_KEY);
     }
 
     public Object methodMissing(String name, Object args)

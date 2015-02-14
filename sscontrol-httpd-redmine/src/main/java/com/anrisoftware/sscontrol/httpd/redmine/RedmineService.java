@@ -1,5 +1,5 @@
 /*
- * Copyright ${project.inceptionYear] Erwin Müller <erwin.mueller@deventm.org>
+ * Copyright 2014 Erwin Müller <erwin.mueller@deventm.org>
  *
  * This file is part of sscontrol-httpd-redmine.
  *
@@ -163,4 +163,17 @@ public interface RedmineService extends WebService {
      * @return the backup {@link URI} target or {@code null}.
      */
     URI getBackupTarget();
+
+    /**
+     * Returns the tracking script resource.
+     *
+     * <pre>
+     * setup "redmine", {
+     *     tracking script: "tracking.js"
+     * }
+     * </pre>
+     *
+     * @return the tracking script {@link URI} resource or {@code null}.
+     */
+    URI getTrackingScript();
 }

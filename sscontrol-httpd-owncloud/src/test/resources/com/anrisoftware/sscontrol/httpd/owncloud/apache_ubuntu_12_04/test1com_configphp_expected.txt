@@ -1,0 +1,49 @@
+<?php
+$CONFIG = array (
+  'instanceid' => 'oc758fda093c',
+  'passwordsalt' => 'fdfe30a0ca9b670b67b87997e1f59b',
+  'secret' => 'af23cc7ba43405b2ea02676fbfeaa457b24d81d7a9bd2749e48cc12fbb96b28142b11dc032b859c83bd724bcccf0aeb2',
+  'trusted_domains' =>
+  array (
+    0 => 'ubuntutest.com',
+  ),
+// SSCONTROL-httpd
+  'datadirectory' => '/tmp/var/www/test1.com/test1owncloud/data',
+// SSCONTROL-httpd-END
+
+// SSCONTROL-httpd
+  'overwrite.cli.url' => 'https://test1.com/owncloud',
+// SSCONTROL-httpd-END
+
+// SSCONTROL-httpd
+  'dbtype' => 'mysql',
+// SSCONTROL-httpd-END
+
+  'version' => '7.0.4.2',
+// SSCONTROL-httpd
+  'dbname' => 'owncloud',
+// SSCONTROL-httpd-END
+
+// SSCONTROL-httpd
+  'dbhost' => 'localhost:3306',
+// SSCONTROL-httpd-END
+
+// SSCONTROL-httpd
+  'dbtableprefix' => 'owncloud_',
+// SSCONTROL-httpd-END
+
+// SSCONTROL-httpd
+  'dbuser' => 'user',
+// SSCONTROL-httpd-END
+
+// SSCONTROL-httpd
+  'dbpassword' => 'userpass',
+// SSCONTROL-httpd-END
+
+  'installed' => true,
+// SSCONTROL-httpd
+  'forcessl' => true,
+// SSCONTROL-httpd-END
+
+  'mail_smtpmode' => 'smtp',
+);

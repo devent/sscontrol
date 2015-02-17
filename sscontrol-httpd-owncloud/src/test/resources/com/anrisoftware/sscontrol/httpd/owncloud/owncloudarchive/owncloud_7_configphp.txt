@@ -1,0 +1,22 @@
+<?php
+$CONFIG = array (
+  'instanceid' => 'oc758fda093c',
+  'passwordsalt' => 'fdfe30a0ca9b670b67b87997e1f59b',
+  'secret' => 'af23cc7ba43405b2ea02676fbfeaa457b24d81d7a9bd2749e48cc12fbb96b28142b11dc032b859c83bd724bcccf0aeb2',
+  'trusted_domains' =>
+  array (
+    0 => 'ubuntutest.com',
+  ),
+  'datadirectory' => '/var/www/ubuntutest.com/owncloud7/data',
+  'overwrite.cli.url' => 'https://ubuntutest.com',
+  'dbtype' => 'mysql',
+  'version' => '7.0.4.2',
+  'dbname' => 'owncloud',
+  'dbhost' => 'localhost',
+  'dbtableprefix' => 'oc_',
+  'dbuser' => 'owncloud',
+  'dbpassword' => 'owncloudpass',
+  'installed' => true,
+  'forcessl' => true,
+  'mail_smtpmode' => 'smtp',
+);

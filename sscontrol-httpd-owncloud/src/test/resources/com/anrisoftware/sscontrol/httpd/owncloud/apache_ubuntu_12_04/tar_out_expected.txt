@@ -1,0 +1,5 @@
+--overwrite --strip time -xf /tmp/tmp/owncloud-owncloud-time.time.time.tar.bztime
+--overwrite --strip time -xf /tmp/tmp/owncloud-owncloud-time.time.time.tar.bztime
+-czf /tmp/var/backups/testtime.com/owncloud_testtime.com_time-time-timeTtime-time-time-time.tar.gz /tmp/var/www/testtime.com/testtimeowncloud
+--overwrite --strip time -xf /tmp/tmp/owncloud-owncloud-time.time.time.tar.bztime
+--overwrite --strip time -xf /tmp/tmp/owncloud-owncloud-time.time.time.tar.bztime

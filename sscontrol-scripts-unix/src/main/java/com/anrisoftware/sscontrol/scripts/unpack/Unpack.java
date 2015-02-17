@@ -35,7 +35,7 @@ import com.google.inject.assistedinject.Assisted;
 
 /**
  * Unpacks the archive.
- * 
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
@@ -66,6 +66,8 @@ public class Unpack implements Callable<Unpack> {
     private static final String BASH_COMMAND_KEY = "bashCommand";
 
     private static final String BASH_COMMAND_DEFAULT = "bash";
+
+    private static final String TAR_BZ2_EXTENSION = ".tar.bz2";
 
     private final Map<String, Object> args;
 
@@ -120,6 +122,9 @@ public class Unpack implements Callable<Unpack> {
             return TGZ_TYPE;
         }
         if (haveExtension(file, TAR_GZ_EXTENSION)) {
+            return TGZ_TYPE;
+        }
+        if (haveExtension(file, TAR_BZ2_EXTENSION)) {
             return TGZ_TYPE;
         }
         if (haveExtension(file, ZIP_EXTENSION)) {

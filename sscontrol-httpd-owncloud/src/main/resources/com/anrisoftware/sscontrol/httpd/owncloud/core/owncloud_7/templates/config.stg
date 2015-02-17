@@ -1,0 +1,72 @@
+configDatadirectorySearch() ::= <%
+(?m)^  'datadirectory' =>.*
+%>
+
+configDatadirectory(dir) ::= <<
+  'datadirectory' => '<dir>',
+>>
+
+configOverwritecliurlSearch() ::= <%
+(?m)^  'overwrite\.cli\.url' =>.*
+%>
+
+configOverwritecliurl(url) ::= <<
+  'overwrite.cli.url' => '<url>',
+>>
+
+configDbtypeSearch() ::= <%
+(?m)^  'dbtype' =>.*
+%>
+
+configDbtype(type) ::= <<
+  'dbtype' => '<type>',
+>>
+
+configDbnameSearch() ::= <%
+(?m)^  'dbname' =>.*
+%>
+
+configDbname(name) ::= <<
+  'dbname' => '<name>',
+>>
+
+configDbhostSearch() ::= <%
+(?m)^  'dbhost' =>.*
+%>
+
+configDbhost(host, port) ::= <<
+  'dbhost' => '<host>:<port>',
+>>
+
+configDbtableprefixSearch() ::= <%
+(?m)^  'dbtableprefix'.*
+%>
+
+configDbtableprefix(tableprefix) ::= <<
+  'dbtableprefix' => '<tableprefix>',
+>>
+
+configDbuserSearch() ::= <%
+(?m)^  'dbuser' =>.*
+%>
+
+configDbuser(user) ::= <<
+  'dbuser' => '<user>',
+>>
+
+configDbpasswordSearch() ::= <%
+(?m)^  'dbpassword' =>.*
+%>
+
+configDbpassword(password) ::= <<
+  'dbpassword' => '<password>',
+>>
+
+configForcesslSearch() ::= <%
+(?m)^  'forcessl' =>.*
+%>
+
+configForcessl(enabled) ::= <<
+  'forcessl' => <if(enabled)>true<else>false<endif>,
+>>
+

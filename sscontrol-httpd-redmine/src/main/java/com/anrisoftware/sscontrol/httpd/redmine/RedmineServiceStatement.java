@@ -18,11 +18,7 @@
  */
 package com.anrisoftware.sscontrol.httpd.redmine;
 
-import static org.apache.commons.lang3.StringUtils.join;
-import static org.apache.commons.lang3.StringUtils.lowerCase;
-import static org.apache.commons.lang3.StringUtils.split;
-
-import org.apache.commons.lang3.text.WordUtils;
+import com.anrisoftware.sscontrol.core.groovy.StatementsEnumToString;
 
 /**
  * <i>Redmine</i> service statement key.
@@ -86,11 +82,6 @@ enum RedmineServiceStatement {
 
     @Override
     public String toString() {
-        String[] split = split(lowerCase(name()), "_");
-        for (int i = 1; i < split.length - 1; i++) {
-            split[i] = WordUtils.capitalize(split[i]);
-        }
-        String name = join(split, "", 0, split.length - 1);
-        return name;
+        return StatementsEnumToString.toString(this);
     }
 }

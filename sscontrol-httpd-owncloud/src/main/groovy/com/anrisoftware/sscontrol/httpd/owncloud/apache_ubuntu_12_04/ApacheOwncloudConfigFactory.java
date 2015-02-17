@@ -89,7 +89,7 @@ public class ApacheOwncloudConfigFactory implements ServiceConfigFactory {
 
     @Override
     public ServiceConfig getScript() throws ServiceException {
-        return injector.getInstance(UbuntuApacheOwncloudConfig.class);
+        return injector.getInstance(UbuntuOwncloudConfig.class);
     }
 
     @Override

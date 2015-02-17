@@ -16,89 +16,26 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd-owncloud. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.owncloud.apache_ubuntu_12_04;
-
-import groovy.util.logging.Slf4j
+package com.anrisoftware.sscontrol.httpd.owncloud.apache_ubuntu_12_04
 
 import javax.inject.Inject
 
 import com.anrisoftware.propertiesutils.ContextProperties
-import com.anrisoftware.sscontrol.core.service.LinuxScript
-import com.anrisoftware.sscontrol.httpd.domain.Domain
-import com.anrisoftware.sscontrol.httpd.owncloud.core.Owncloud_7_Config
-import com.anrisoftware.sscontrol.httpd.webservice.ServiceConfig
-import com.anrisoftware.sscontrol.httpd.webservice.WebService
-import com.anrisoftware.sscontrol.scripts.unix.InstallPackagesFactory
+import com.anrisoftware.sscontrol.httpd.owncloud.apache_2_2.Apache_2_2_OwncloudConfig
 
 /**
- * <i>ownCloud</i> configuration for <i>Apache Ubuntu 12.04</i>
+ * <i>ownCloud Apache Ubuntu 12.04</i> configuration.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-@Slf4j
-class UbuntuApacheOwncloudConfig extends Owncloud_7_Config implements ServiceConfig {
+class UbuntuApacheOwncloudConfig extends Apache_2_2_OwncloudConfig {
 
     @Inject
-    OwncloudPropertiesProvider owncloudPropertiesProvider
-
-    @Inject
-    UbuntuOwncloudFromArchive owncloudFromArchive
-
-    @Inject
-    InstallPackagesFactory installPackagesFactory
-
-    @Inject
-    UbuntuApacheFcgiOwncloudConfig fcgiConfig
-
-    @Inject
-    OwncloudBackup owncloudBackup
-
-    @Override
-    void deployDomain(Domain domain, Domain refDomain, WebService service, List config) {
-        setupDefaults domain, service
-        fcgiConfig.deployDomain domain, refDomain, service, config
-    }
-
-    @Override
-    void deployService(Domain domain, WebService service, List config) {
-        setupDefaults domain, service
-        installPackages()
-        owncloudBackup.backupService domain, service
-        fcgiConfig.deployService domain, service, config
-        owncloudFromArchive.deployService domain, service
-        deployConfig domain, service
-        setupPermissions domain, service
-    }
-
-    /**
-     * Installs the <i>ownCloud</i> packages.
-     */
-    void installPackages() {
-        installPackagesFactory.create(
-                log: log,
-                runCommands: runCommands,
-                command: installCommand,
-                packages: owncloudPackages,
-                system: systemName,
-                this, threads)()
-    }
+    private OwncloudPropertiesProvider propertiesProvider
 
     @Override
     ContextProperties getOwncloudProperties() {
-        owncloudPropertiesProvider.get()
-    }
-
-    @Override
-    String getProfile() {
-        ApacheOwncloudConfigFactory.PROFILE_NAME
-    }
-
-    @Override
-    void setScript(LinuxScript script) {
-        super.setScript(script)
-        fcgiConfig.setScript script
-        owncloudFromArchive.setScript this
-        owncloudBackup.setScript this
+        propertiesProvider.get()
     }
 }

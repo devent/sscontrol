@@ -23,6 +23,7 @@ import javax.inject.Inject
 import org.apache.commons.lang3.builder.ToStringBuilder
 
 import com.anrisoftware.resources.templates.api.TemplateResource
+import com.anrisoftware.resources.templates.api.TemplatesFactory
 import com.anrisoftware.sscontrol.httpd.domain.Domain
 import com.anrisoftware.sscontrol.httpd.owncloud.OwncloudService
 import com.anrisoftware.sscontrol.httpd.webservice.WebService
@@ -33,12 +34,14 @@ import com.anrisoftware.sscontrol.httpd.webservice.WebService
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-abstract class ApacheFcgiOwncloudConfig extends FcgiOwncloudConfig {
+class Apache_2_2_FcgiOwncloudConfig extends FcgiOwncloudConfig {
 
     @Inject
-    private ApacheFcgiOwncloudConfigLogger log
+    private Apache_2_2_FcgiOwncloudConfigLogger log
 
     private Object script
+
+    TemplateResource domainConfigTemplate
 
     @Override
     void deployDomain(Domain domain, Domain refDomain, WebService service, List config) {
@@ -50,6 +53,12 @@ abstract class ApacheFcgiOwncloudConfig extends FcgiOwncloudConfig {
     void deployService(Domain domain, WebService service, List config) {
         super.deployService domain, service, config
         createDomainConfig domain, null, service, config
+    }
+
+    @Inject
+    final void setTemplatesFactory(TemplatesFactory factory) {
+        def templates = factory.create "Apache_2_2_FcgiOwncloudConfig"
+        domainConfigTemplate = templates.getResource "domain_config"
     }
 
     /**
@@ -69,16 +78,16 @@ abstract class ApacheFcgiOwncloudConfig extends FcgiOwncloudConfig {
      */
     void createDomainConfig(Domain domain, Domain refDomain, OwncloudService service, List config) {
         def serviceAliasDir = serviceAliasDir domain, refDomain, service
-        def serviceDir = serviceDir domain, refDomain, service
-        def properties = [:]
-        properties.domain = domain
-        properties.service = service
-        properties.script = script
-        properties.config = this
-        properties.serviceAliasDir = serviceAliasDir
-        properties.serviceDir = serviceDir
-        properties.namePattern = namePattern(domain)
-        def configStr = domainConfigTemplate.getText(true, "domainConfig", "properties", properties)
+        def serviceDirectory = serviceDir domain, refDomain, service
+        def args = [:]
+        args.domain = domain
+        args.service = service
+        args.serviceDirectory = serviceDirectory
+        args.sitesDirectory = sitesDirectory
+        args.scriptsSubdirectory = scriptsSubdirectory
+        args.scriptStarterFileName = scriptStarterFileName
+        args.serviceAliasDir = serviceAliasDir
+        def configStr = domainConfigTemplate.getText(true, "domainConfig", "args", args)
         config << configStr
         log.createdDomainConfig this, domain, configStr
     }
@@ -121,34 +130,9 @@ abstract class ApacheFcgiOwncloudConfig extends FcgiOwncloudConfig {
      * @see #wordpressDir(Domain, OwncloudService)
      */
     String serviceDir(Domain domain, Domain refDomain, OwncloudService service) {
-        refDomain == null ? piwikDir(domain, service).absolutePath :
-                piwikDir(refDomain, service).absolutePath
+        refDomain == null ? owncloudDir(domain, service).absolutePath :
+                owncloudDir(refDomain, service).absolutePath
     }
-
-    /**
-     * Returns the <i>ownCloud</i> installation directory.
-     *
-     * @param domain
-     *            the {@link Domain} domain.
-     *
-     * @param service
-     *            the {@link OwncloudService} service.
-     *
-     * @return the installation {@link File} directory.
-     *
-     * @see #domainDir(Domain)
-     * @see OwncloudService#getPrefix()
-     */
-    File piwikDir(Domain domain, OwncloudService service) {
-        new File(domainDir(domain), service.prefix)
-    }
-
-    /**
-     * Returns the domain configuration template.
-     *
-     * @return the {@link TemplateResource}.
-     */
-    abstract TemplateResource getDomainConfigTemplate()
 
     /**
      * Sets the parent script.
@@ -167,7 +151,9 @@ abstract class ApacheFcgiOwncloudConfig extends FcgiOwncloudConfig {
     /**
      * Returns the service name.
      */
-    abstract String getServiceName()
+    String getServiceName() {
+        script.getServiceName()
+    }
 
     /**
      * Returns the service profile name.
@@ -176,10 +162,16 @@ abstract class ApacheFcgiOwncloudConfig extends FcgiOwncloudConfig {
         script.getProfile()
     }
 
+    /**
+     * Delegates missing properties to the parent script.
+     */
     def propertyMissing(String name) {
         script.getProperty name
     }
 
+    /**
+     * Delegates missing methods to the parent script.
+     */
     def methodMissing(String name, def args) {
         script.invokeMethod name, args
     }

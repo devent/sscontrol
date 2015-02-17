@@ -18,20 +18,20 @@
  */
 package com.anrisoftware.sscontrol.httpd.owncloud.apache_2_2;
 
-import static com.anrisoftware.sscontrol.httpd.owncloud.apache_2_2.ApacheFcgiOwncloudConfigLogger._.config_created_debug;
-import static com.anrisoftware.sscontrol.httpd.owncloud.apache_2_2.ApacheFcgiOwncloudConfigLogger._.config_created_info;
-import static com.anrisoftware.sscontrol.httpd.owncloud.apache_2_2.ApacheFcgiOwncloudConfigLogger._.config_created_trace;
+import static com.anrisoftware.sscontrol.httpd.owncloud.apache_2_2.Apache_2_2_FcgiOwncloudConfigLogger._.config_created_debug;
+import static com.anrisoftware.sscontrol.httpd.owncloud.apache_2_2.Apache_2_2_FcgiOwncloudConfigLogger._.config_created_info;
+import static com.anrisoftware.sscontrol.httpd.owncloud.apache_2_2.Apache_2_2_FcgiOwncloudConfigLogger._.config_created_trace;
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
 import com.anrisoftware.sscontrol.httpd.domain.Domain;
 
 /**
- * Logging for {@link ApacheFcgiOwncloudConfig}.
+ * Logging for {@link Apache_2_2_FcgiOwncloudConfig}.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class ApacheFcgiOwncloudConfigLogger extends AbstractLogger {
+class Apache_2_2_FcgiOwncloudConfigLogger extends AbstractLogger {
 
     enum _ {
 
@@ -56,13 +56,13 @@ class ApacheFcgiOwncloudConfigLogger extends AbstractLogger {
     }
 
     /**
-     * Sets the context of the logger to {@link ApacheFcgiOwncloudConfig}.
+     * Sets the context of the logger to {@link Apache_2_2_FcgiOwncloudConfig}.
      */
-    public ApacheFcgiOwncloudConfigLogger() {
-        super(ApacheFcgiOwncloudConfig.class);
+    public Apache_2_2_FcgiOwncloudConfigLogger() {
+        super(Apache_2_2_FcgiOwncloudConfig.class);
     }
 
-    void createdDomainConfig(ApacheFcgiOwncloudConfig config, Domain domain,
+    void createdDomainConfig(Apache_2_2_FcgiOwncloudConfig config, Domain domain,
             String configs) {
         if (isTraceEnabled()) {
             trace(config_created_trace, domain, config, configs);

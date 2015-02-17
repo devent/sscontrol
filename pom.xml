@@ -26,6 +26,7 @@
         <module>sscontrol-httpd-citadel</module>
         <module>sscontrol-httpd-gitit</module>
         <module>sscontrol-httpd-nginx</module>
+        <module>sscontrol-httpd-owncloud</module>
         <module>sscontrol-httpd-phpmyadmin</module>
         <module>sscontrol-httpd-piwik</module>
         <module>sscontrol-httpd-redmine</module>

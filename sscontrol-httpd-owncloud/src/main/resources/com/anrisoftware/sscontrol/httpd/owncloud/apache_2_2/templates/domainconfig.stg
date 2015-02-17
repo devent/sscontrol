@@ -1,11 +1,17 @@
-domainConfig(properties) ::= <<
-# <properties.serviceDir>
+domainConfig(args) ::= <<
+<!- args.domain -!>
+<!- args.alias -!>
+<!- args.serviceDirectory -!>
+<!- args.sitesDirectory -!>
+<!- args.scriptsSubdirectory -!>
+<!- args.scriptStarterFileName -!>
+# <args.serviceDirectory>
 
-<serviceAlias(properties)>
+<serviceAlias(args)>
 
-\<Directory <properties.serviceDir>\>
+\<Directory <args.serviceDirectory>\>
     AddHandler fcgid-script .php
-    <fcgiWrapper(properties)>
+    <fcgiWrapper(args)>
     Options +ExecCGI +FollowSymLinks
     DirectoryIndex index.php
     AllowOverride All
@@ -31,11 +37,11 @@ domainConfig(properties) ::= <<
 
 >>
 
-fcgiWrapper(properties) ::= <%
-FCGIWrapper <properties.script.sitesDirectory>/<properties.config.scriptsSubdirectory>/<properties.domain.name>/<properties.config.scriptStarterFileName> .php
+fcgiWrapper(args) ::= <%
+FCGIWrapper <args.sitesDirectory>/<args.scriptsSubdirectory>/<args.domain.name>/<args.scriptStarterFileName> .php
 %>
 
-serviceAlias(properties) ::= <<
-<if(properties.service.alias)>Alias /<properties.service.alias> <properties.serviceAliasDir><endif>
+serviceAlias(args) ::= <<
+<if(args.service.alias)>Alias /<args.service.alias> <args.serviceAliasDir><endif>
 >>
 

@@ -178,6 +178,7 @@ abstract class Owncloud_7_Config {
     void setupPermissions(Domain domain, OwncloudService service) {
         def user = domain.domainUser
         def dir = owncloudDir domain, service
+        def appsDir = owncloudAppsDirectory domain, service
         def configDir = owncloudConfigDirectory domain, service
         def dataDir = owncloudDataDirectory domain, service
         configDir.mkdirs()
@@ -198,7 +199,7 @@ abstract class Owncloud_7_Config {
                 owner: user.name,
                 ownerGroup: user.group,
                 recursive: true,
-                files: [configDir, dataDir],
+                files: [appsDir, configDir, dataDir],
                 this, threads)()
         changeFileModFactory.create(
                 log: log,
@@ -344,6 +345,30 @@ abstract class Owncloud_7_Config {
      */
     File owncloudConfigFile(Domain domain, OwncloudService service) {
         profileFileProperty "owncloud_config_file", owncloudDir(domain, service), owncloudProperties
+    }
+
+    /**
+     * Returns the <i>ownCloud</i> apps directory, for
+     * example {@code "apps"}. If the path is not absolute, the
+     * path is assumed under the service installation directory.
+     *
+     * <ul>
+     * <li>profile property {@code "owncloud_apps_directory"}</li>
+     * </ul>
+     *
+     * @param domain
+     *            the {@link Domain} domain of the service.
+     *
+     * @param service
+     *            the {@link OwncloudService} service.
+     *
+     * @return the configuration {@link File} file.
+     *
+     * @see #owncloudDir(Domain, OwncloudService)
+     * @see #getOwncloudProperties()
+     */
+    File owncloudAppsDirectory(Domain domain, OwncloudService service) {
+        profileFileProperty "owncloud_apps_directory", owncloudDir(domain, service), owncloudProperties
     }
 
     /**

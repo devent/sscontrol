@@ -176,37 +176,80 @@ abstract class Owncloud_7_Config {
      *            the {@link PiwikService} service.
      */
     void setupPermissions(Domain domain, OwncloudService service) {
+        setupOwncloudPermissions domain, service
+        setupPublicPermissions domain, service
+        setupPrivatePermissions domain, service
+    }
+
+    void setupOwncloudPermissions(Domain domain, OwncloudService service) {
         def user = domain.domainUser
         def dir = owncloudDir domain, service
+        changeFileOwnerFactory.create(
+                log: log,
+                runCommands: runCommands,
+                command: chownCommand,
+                owner: "root",
+                ownerGroup: user.group,
+                files: dir,
+                recursive: true,
+                this, threads)()
+        changeFileModFactory.create(
+                log: log,
+                runCommands: runCommands,
+                command: chmodCommand,
+                mod: "u=rwX,g=rX,o=rX",
+                files: dir,
+                recursive: true,
+                this, threads)()
+    }
+
+    void setupPublicPermissions(Domain domain, OwncloudService service) {
+        def user = domain.domainUser
         def appsDir = owncloudAppsDirectory domain, service
         def configDir = owncloudConfigDirectory domain, service
         def dataDir = owncloudDataDirectory domain, service
+        appsDir.mkdirs()
         configDir.mkdirs()
         dataDir.mkdirs()
         changeFileOwnerFactory.create(
                 log: log,
                 runCommands: runCommands,
                 command: chownCommand,
-                owner: "root",
-                ownerGroup: "root",
+                owner: user.name,
+                ownerGroup: user.group,
+                files: [appsDir, configDir, dataDir],
                 recursive: true,
-                files: dir,
                 this, threads)()
+        changeFileModFactory.create(
+                log: log,
+                runCommands: runCommands,
+                command: chmodCommand,
+                mod: "u=rwX,g=rwX,o-rwX",
+                files: [appsDir, configDir, dataDir],
+                recursive: true,
+                this, threads)()
+    }
+
+    void setupPrivatePermissions(Domain domain, OwncloudService service) {
+        def user = domain.domainUser
+        def configFile = owncloudConfigFile domain, service
+        if (!configFile.exists()) {
+            return
+        }
         changeFileOwnerFactory.create(
                 log: log,
                 runCommands: runCommands,
                 command: chownCommand,
                 owner: user.name,
                 ownerGroup: user.group,
-                recursive: true,
-                files: [appsDir, configDir, dataDir],
+                files: configFile,
                 this, threads)()
         changeFileModFactory.create(
                 log: log,
                 runCommands: runCommands,
                 command: chmodCommand,
-                mod: "o-rX",
-                files: [dataDir],
+                mod: "u=rw,g=r,o-rwx",
+                files: configFile,
                 this, threads)()
     }
 

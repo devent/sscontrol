@@ -307,9 +307,8 @@ abstract class RedmineFromArchiveConfig {
 
     /**
      * Returns the <i>Redmine</i> version file, for example
-     * {@code "/var/www/domain.com/redmineprefix/version.txt".}
-     * If the path is not absolute, the path is assumed to be under the
-     * service installation directory.
+     * {@code "version.txt".} If the path is not absolute, the path is
+     * assumed to be under the service installation directory.
      *
      * <ul>
      * <li>profile property {@code "redmine_version_file"}</li>

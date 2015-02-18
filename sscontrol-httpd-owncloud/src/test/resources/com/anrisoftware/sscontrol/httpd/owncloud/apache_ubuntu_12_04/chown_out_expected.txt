@@ -2,7 +2,7 @@ web_001.web_001 /tmp/var/www/test1.com/web
 web_002.web_002 /tmp/var/www/test2.com/web
 -R web_001.web_001 /tmp/var/www/php-fcgi-scripts/test1.com
 web_001.web_001 /tmp/var/www/php-fcgi-scripts/test1.com/php-fcgi-starter
--R root.root /tmp/var/www/test1.com/test1owncloud
+-R root.web_001 /tmp/var/www/test1.com/test1owncloud
 -R web_001.web_001 /tmp/var/www/test1.com/test1owncloud/apps
 -R web_001.web_001 /tmp/var/www/test1.com/test1owncloud/config
 -R web_001.web_001 /tmp/var/www/test1.com/test1owncloud/data
@@ -11,7 +11,7 @@ web_001.web_001 /tmp/var/www/php-fcgi-scripts/test1.com/php-fcgi-starter
 root.root /tmp/var/www/test1.com/ssl/cert_crt.txt /tmp/var/www/test1.com/ssl/cert_key.txt
 -R web_002.web_002 /tmp/var/www/php-fcgi-scripts/test2.com
 web_002.web_002 /tmp/var/www/php-fcgi-scripts/test2.com/php-fcgi-starter
--R root.root /tmp/var/www/test2.com/owncloud_7
+-R root.web_002 /tmp/var/www/test2.com/owncloud_7
 -R web_002.web_002 /tmp/var/www/test2.com/owncloud_7/apps
 -R web_002.web_002 /tmp/var/www/test2.com/owncloud_7/config
 -R web_002.web_002 /tmp/var/www/test2.com/owncloud_7/data
@@ -19,16 +19,18 @@ web_001.web_001 /tmp/var/www/test1.com/web
 web_002.web_002 /tmp/var/www/test2.com/web
 -R web_001.web_001 /tmp/var/www/php-fcgi-scripts/test1.com
 web_001.web_001 /tmp/var/www/php-fcgi-scripts/test1.com/php-fcgi-starter
--R root.root /tmp/var/www/test1.com/test1owncloud
+-R root.web_001 /tmp/var/www/test1.com/test1owncloud
 -R web_001.web_001 /tmp/var/www/test1.com/test1owncloud/apps
 -R web_001.web_001 /tmp/var/www/test1.com/test1owncloud/config
 -R web_001.web_001 /tmp/var/www/test1.com/test1owncloud/data
+web_001.web_001 /tmp/var/www/test1.com/test1owncloud/config/config.php
 -R web_001.web_001 /tmp/var/www/php-fcgi-scripts/test1.com
 web_001.web_001 /tmp/var/www/php-fcgi-scripts/test1.com/php-fcgi-starter
 root.root /tmp/var/www/test1.com/ssl/cert_crt.txt /tmp/var/www/test1.com/ssl/cert_key.txt
 -R web_002.web_002 /tmp/var/www/php-fcgi-scripts/test2.com
 web_002.web_002 /tmp/var/www/php-fcgi-scripts/test2.com/php-fcgi-starter
--R root.root /tmp/var/www/test2.com/owncloud_7
+-R root.web_002 /tmp/var/www/test2.com/owncloud_7
 -R web_002.web_002 /tmp/var/www/test2.com/owncloud_7/apps
 -R web_002.web_002 /tmp/var/www/test2.com/owncloud_7/config
 -R web_002.web_002 /tmp/var/www/test2.com/owncloud_7/data
+web_002.web_002 /tmp/var/www/test2.com/owncloud_7/config/config.php

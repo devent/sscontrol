@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Erwin Müller <erwin.mueller@deventm.org>
+ * Copyright 2014-2015 Erwin Müller <erwin.mueller@deventm.org>
  *
  * This file is part of sscontrol-httpd-wordpress.
  *
@@ -19,7 +19,6 @@
 package com.anrisoftware.sscontrol.httpd.apache.wordpress.ubuntu_12_04
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
-import static com.anrisoftware.sscontrol.httpd.apache.wordpress.ubuntu.UbuntuResources.*
 import static com.anrisoftware.sscontrol.httpd.apache.wordpress.ubuntu_12_04.Ubuntu_12_04_Resources.*
 import static com.anrisoftware.sscontrol.httpd.apache.wordpress.ubuntu_12_04.WordpressResources.*
 import static org.apache.commons.io.FileUtils.*
@@ -27,27 +26,27 @@ import groovy.util.logging.Slf4j
 
 import org.junit.Test
 
-import com.anrisoftware.sscontrol.httpd.apache.wordpress.ubuntu.UbuntuTestUtil
+import com.anrisoftware.sscontrol.testutils.resources.WebServiceTestEnvironment
 
 /**
- * Ubuntu 12.04 Wordpress.
+ * <i>Ubuntu 12.04 Wordpress</i> test.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
 @Slf4j
-class WordpressTest extends UbuntuTestUtil {
+class WordpressTest extends WebServiceTestEnvironment {
 
     @Test
     void "wordpress"() {
         copyUbuntuFiles tmpdir
-        copyUbuntu_12_04_Files tmpdir
         copyWordpressFiles tmpdir
         basicWordpressConfigSample.createFile tmpdir
 
         loader.loadService profile.resource, null
         def profile = registry.getService("profile")[0]
-        setupUbuntu_12_04_Properties profile, tmpdir
+        setupUbuntuProperties profile, tmpdir
+        setupWordpressProperties profile, tmpdir
         loader.loadService httpdScript.resource, profile, preScript
 
         registry.allServices.each { it.call() }
@@ -77,7 +76,6 @@ class WordpressTest extends UbuntuTestUtil {
     @Test
     void "wordpress backup"() {
         copyUbuntuFiles tmpdir
-        copyUbuntu_12_04_Files tmpdir
         copyWordpressFiles tmpdir
         basicWordpressConfigSample.createFile tmpdir
         test1WordpressDir.asFile tmpdir mkdirs()
@@ -85,27 +83,28 @@ class WordpressTest extends UbuntuTestUtil {
 
         loader.loadService profile.resource, null
         def profile = registry.getService("profile")[0]
-        setupUbuntu_12_04_Properties profile, tmpdir
+        setupUbuntuProperties profile, tmpdir
+        setupWordpressProperties profile, tmpdir
         loader.loadService httpdBackupScript.resource, profile, preScript
 
         registry.allServices.each { it.call() }
         log.info "Run service again to ensure that configuration is not set double."
         registry.allServices.each { it.call() }
 
-        assertStringContent backupTarOutExpected.replaced(tmpdir, tmpdir, "/tmp").replaceAll(/\d{4}-\d{2}-\d{2}T\d{2}-\d{2}-\d{2}-\d{3}/, "000T00"), backupTarOutExpected.toString()
-        assertStringContent mysqldumpOutExpected.replaced(tmpdir, tmpdir, "/tmp").replaceAll(/\d{4}-\d{2}-\d{2}T\d{2}-\d{2}-\d{2}-\d{3}/, "000T00"), mysqldumpOutExpected.toString()
+        assertStringContent backupTarOutExpected.replaced(tmpdir, tmpdir, "/tmp").replaceAll(/\d+/, "time"), backupTarOutExpected.toString()
+        assertStringContent mysqldumpOutExpected.replaced(tmpdir, tmpdir, "/tmp").replaceAll(/\d+/, "time"), mysqldumpOutExpected.toString()
     }
 
     @Test
     void "wordpress ref"() {
         copyUbuntuFiles tmpdir
-        copyUbuntu_12_04_Files tmpdir
         copyWordpressFiles tmpdir
         refWordpressConfigSample.createFile tmpdir
 
         loader.loadService profile.resource, null
         def profile = registry.getService("profile")[0]
-        setupUbuntu_12_04_Properties profile, tmpdir
+        setupUbuntuProperties profile, tmpdir
+        setupWordpressProperties profile, tmpdir
         loader.loadService httpdRefScript.resource, profile, preScript
 
         registry.allServices.each { it.call() }
@@ -126,13 +125,13 @@ class WordpressTest extends UbuntuTestUtil {
     @Test
     void "wordpress de_DE"() {
         copyUbuntuFiles tmpdir
-        copyUbuntu_12_04_Files tmpdir
         copyWordpressFiles tmpdir
         basicdeWordpressConfigSample.createFile tmpdir
 
         loader.loadService profile.resource, null
         def profile = registry.getService("profile")[0]
-        setupUbuntu_12_04_Properties profile, tmpdir
+        setupUbuntuProperties profile, tmpdir
+        setupWordpressProperties profile, tmpdir
         profile.getEntry("httpd").wordpress_language Locale.GERMANY
         loader.loadService httpdScript.resource, profile, preScript
 
@@ -147,13 +146,13 @@ class WordpressTest extends UbuntuTestUtil {
     @Test
     void "wordpress debug"() {
         copyUbuntuFiles tmpdir
-        copyUbuntu_12_04_Files tmpdir
         copyWordpressFiles tmpdir
         debugWordpressConfigSample.createFile tmpdir
 
         loader.loadService profile.resource, null
         def profile = registry.getService("profile")[0]
-        setupUbuntu_12_04_Properties profile, tmpdir
+        setupUbuntuProperties profile, tmpdir
+        setupWordpressProperties profile, tmpdir
         loader.loadService httpdDebugScript.resource, profile, preScript
 
         registry.allServices.each { it.call() }
@@ -166,13 +165,13 @@ class WordpressTest extends UbuntuTestUtil {
     @Test
     void "wordpress root alias"() {
         copyUbuntuFiles tmpdir
-        copyUbuntu_12_04_Files tmpdir
         copyWordpressFiles tmpdir
         rootWordpressConfigSample.createFile tmpdir
 
         loader.loadService profile.resource, null
         def profile = registry.getService("profile")[0]
-        setupUbuntu_12_04_Properties profile, tmpdir
+        setupUbuntuProperties profile, tmpdir
+        setupWordpressProperties profile, tmpdir
         loader.loadService httpdRootScript.resource, profile, preScript
 
         registry.allServices.each { it.call() }
@@ -185,13 +184,13 @@ class WordpressTest extends UbuntuTestUtil {
     @Test
     void "wordpress ms subdomain"() {
         copyUbuntuFiles tmpdir
-        copyUbuntu_12_04_Files tmpdir
         copyWordpressFiles tmpdir
         subdomainWordpressConfigSample.createFile tmpdir
 
         loader.loadService profile.resource, null
         def profile = registry.getService("profile")[0]
-        setupUbuntu_12_04_Properties profile, tmpdir
+        setupUbuntuProperties profile, tmpdir
+        setupWordpressProperties profile, tmpdir
         loader.loadService httpdMsSubdomainScript.resource, profile, preScript
 
         registry.allServices.each { it.call() }
@@ -211,13 +210,13 @@ class WordpressTest extends UbuntuTestUtil {
     @Test
     void "wordpress themes, plugins"() {
         copyUbuntuFiles tmpdir
-        copyUbuntu_12_04_Files tmpdir
         copyWordpressFiles tmpdir
         plguinsWordpressConfigSample.createFile tmpdir
 
         loader.loadService profile.resource, null
         def profile = registry.getService("profile")[0]
-        setupUbuntu_12_04_Properties profile, tmpdir
+        setupUbuntuProperties profile, tmpdir
+        setupWordpressProperties profile, tmpdir
         loader.loadService httpdPluginsScript.resource, profile, preScript
 
         registry.allServices.each { it.call() }
@@ -229,13 +228,13 @@ class WordpressTest extends UbuntuTestUtil {
     @Test
     void "wordpress prefix, no override"() {
         copyUbuntuFiles tmpdir
-        copyUbuntu_12_04_Files tmpdir
         copyWordpressFiles tmpdir
         nooverrideWordpressConfig.createFile tmpdir
 
         loader.loadService profile.resource, null
         def profile = registry.getService("profile")[0]
-        setupUbuntu_12_04_Properties profile, tmpdir
+        setupUbuntuProperties profile, tmpdir
+        setupWordpressProperties profile, tmpdir
         loader.loadService httpdScriptNoOverride.resource, profile, preScript
 
         registry.allServices.each { it.call() }
@@ -253,13 +252,13 @@ class WordpressTest extends UbuntuTestUtil {
     @Test
     void "wordpress hyper-cache"() {
         copyUbuntuFiles tmpdir
-        copyUbuntu_12_04_Files tmpdir
         copyWordpressFiles tmpdir
         hypercacheWordpressConfig.createFile tmpdir
 
         loader.loadService profile.resource, null
         def profile = registry.getService("profile")[0]
-        setupUbuntu_12_04_Properties profile, tmpdir
+        setupUbuntuProperties profile, tmpdir
+        setupWordpressProperties profile, tmpdir
         loader.loadService hypercacheHttpdScript.resource, profile, preScript
 
         registry.allServices.each { it.call() }

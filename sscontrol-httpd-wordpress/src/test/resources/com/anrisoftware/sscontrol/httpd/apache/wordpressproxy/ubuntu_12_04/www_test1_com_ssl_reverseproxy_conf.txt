@@ -27,13 +27,13 @@ server {
     proxy_set_header  X-Forwarded-Proto https;
     proxy_redirect off;
 
-    location /wordpress3 {
+    location /wordpress4 {
         # No cache for logged-in users
         if ($http_cookie ~* "comment_author_|wordpress_(?!test_cookie)|wp-postpass_" ) {
             set $do_not_cache 1;
         }
         proxy_cache_key "$scheme://$host$request_uri $do_not_cache";
-        proxy_cache wordpress_wordpress3;
+        proxy_cache wordpress_wordpress4;
         proxy_pass https://127.0.0.1:8082;
     }
 
@@ -46,7 +46,7 @@ server {
         proxy_cache_valid 200 7200;
         expires 864000;
         proxy_pass https://127.0.0.1:8082;
-        proxy_cache wordpress_wordpress3;
+        proxy_cache wordpress_wordpress4;
     }
 
     location ~* \/[^\/]+\/(feed|\.xml)\/? {
@@ -56,7 +56,7 @@ server {
         }
         proxy_cache_key "$scheme://$host$request_uri $do_not_cache";
         proxy_cache_valid 200 2700;
-        proxy_cache wordpress_wordpress3;
+        proxy_cache wordpress_wordpress4;
         proxy_pass https://127.0.0.1:8082;
     }
 

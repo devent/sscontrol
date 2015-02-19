@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Erwin Müller <erwin.mueller@deventm.org>
+ * Copyright 2014-2015 Erwin Müller <erwin.mueller@deventm.org>
  *
  * This file is part of sscontrol-httpd-wordpress.
  *
@@ -22,311 +22,179 @@ import java.net.URI;
 import java.util.List;
 import java.util.Map;
 
-import javax.inject.Inject;
-
-import org.apache.commons.lang3.builder.ToStringBuilder;
-
-import com.anrisoftware.globalpom.resources.ToURIFactory;
-import com.anrisoftware.sscontrol.core.api.ServiceException;
-import com.anrisoftware.sscontrol.core.database.Database;
-import com.anrisoftware.sscontrol.core.database.DatabaseArgs;
-import com.anrisoftware.sscontrol.core.database.DatabaseFactory;
-import com.anrisoftware.sscontrol.core.debuglogging.DebugLogging;
-import com.anrisoftware.sscontrol.core.debuglogging.DebugLoggingFactory;
-import com.anrisoftware.sscontrol.core.groovy.StatementsMap;
-import com.anrisoftware.sscontrol.core.yesno.YesNoFlag;
-import com.anrisoftware.sscontrol.httpd.domain.Domain;
 import com.anrisoftware.sscontrol.httpd.webservice.OverrideMode;
 import com.anrisoftware.sscontrol.httpd.webservice.WebService;
-import com.anrisoftware.sscontrol.httpd.webserviceargs.DefaultWebService;
-import com.anrisoftware.sscontrol.httpd.webserviceargs.DefaultWebServiceFactory;
-import com.anrisoftware.sscontrol.httpd.webserviceargs.OverrideModeArgs;
-import com.google.inject.assistedinject.Assisted;
 
 /**
- * Wordpress service.
+ * <i>Wordpress</i> service.
  *
  * @see <a href='http://wordpress.org/">http://wordpress.org/</a>
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-public class WordpressService implements WebService {
-
-    private static final String PLUGIN_KEY = "plugin";
-
-    private static final String ENABLED_KEY = "enabled";
-
-    private static final String CACHE_KEY = "cache";
-
-    private static final String SETUP_KEY = "setup";
-
-    private static final String MULTISITE_KEY = "multisite";
-
-    private static final String ADMIN_KEY = "admin";
-
-    private static final String LOGIN_KEY = "login";
-
-    private static final String HOST_KEY = "host";
-
-    private static final String PASSWORD_KEY = "password";
-
-    private static final String USER_KEY = "user";
-
-    private static final String THEMES_KEY = "themes";
-
-    private static final String PLUGINS_KEY = "plugins";
-
-    private static final String FORCE_KEY = "force";
-
-    private static final String DATABASE_KEY = "database";
-
-    private static final String TARGET_KEY = "target";
-
-    private static final String BACKUP_KEY = "backup";
-
-    private static final String NAME = "name";
-
-    public static final String SERVICE_NAME = "wordpress";
-
-    private static final String ALIAS_KEY = "alias";
-
-    private final Domain domain;
-
-    private final StatementsMap statementsMap;
-
-    private final DefaultWebService service;
-
-    @Inject
-    private WordpressServiceLogger log;
-
-    @Inject
-    private ForceFactory forceFactory;
-
-    @Inject
-    private OverrideModeArgs overrideModeArgs;
-
-    @Inject
-    private ToURIFactory toURIFactory;
-
-    @Inject
-    private DatabaseFactory databaseFactory;
-
-    private DebugLoggingFactory debugFactory;
-
-    private DebugLogging debug;
-
-    private Force force;
-
-    private OverrideMode overrideMode;
-
-    private Database database;
+public interface WordpressService extends WebService {
 
     /**
-     * @see WordpressServiceFactory#create(Map, Domain)
+     * Returns the override mode.
+     *
+     * <pre>
+     * setup "wordpress", {
+     *     override mode: OverrideMode.update
+     * }
+     * </pre>
+     *
+     * @return the override {@link OverrideMode} mode or {@code null}.
      */
-    @Inject
-    WordpressService(DefaultWebServiceFactory webServiceFactory,
-            @Assisted Map<String, Object> args, @Assisted Domain domain)
-            throws ServiceException {
-        this.service = webServiceFactory.create(SERVICE_NAME, args, domain);
-        this.statementsMap = service.getStatementsMap();
-        this.domain = domain;
-        setupStatements(statementsMap, args);
-    }
+    OverrideMode getOverrideMode();
 
-    private void setupStatements(StatementsMap map, Map<String, Object> args)
-            throws ServiceException {
-        map.addAllowed(BACKUP_KEY, DATABASE_KEY, FORCE_KEY, PLUGINS_KEY,
-                THEMES_KEY, MULTISITE_KEY, CACHE_KEY);
-        map.addAllowedKeys(DATABASE_KEY, USER_KEY, PASSWORD_KEY, HOST_KEY);
-        map.addAllowedKeys(BACKUP_KEY, TARGET_KEY);
-        map.addAllowedKeys(FORCE_KEY, LOGIN_KEY, ADMIN_KEY);
-        map.addAllowedKeys(MULTISITE_KEY, SETUP_KEY);
-        map.addAllowedKeys(CACHE_KEY, ENABLED_KEY, PLUGIN_KEY);
-        map.setAllowValue(DATABASE_KEY, true);
-        map.setAllowValue(PLUGINS_KEY, true);
-        map.setAllowValue(THEMES_KEY, true);
-    }
+    /**
+     * Returns the backup target.
+     *
+     * <pre>
+     * setup "wordpress", {
+     *     backup target: "/var/backups"
+     * }
+     * </pre>
+     *
+     * @return the backup {@link URI} target or {@code null}.
+     */
+    URI getBackupTarget();
 
-    @Inject
-    void setDebugLoggingFactory(DebugLoggingFactory factory) {
-        this.debugFactory = factory;
-        this.debug = factory.createOff();
-    }
+    /**
+     * Returns the debug logging for the specified key.
+     * <p>
+     * The example returns the following map for the key "level":
+     *
+     * <pre>
+     * {["php": 1, "wordpress": 1]}
+     * </pre>
+     *
+     * <pre>
+     * setup "wordpress", {
+     *     debug "php", level: 1
+     *     debug "wordpress", level: 1
+     * }
+     * </pre>
+     *
+     * @return the {@link Map} of the debug levels or {@code null}.
+     */
+    Map<String, Object> debugLogging(String key);
 
-    @Override
-    public Domain getDomain() {
-        return domain;
-    }
+    /**
+     * Returns the database properties.
+     *
+     * <ul>
+     * <li>{@code database} the database name;</li>
+     * <li>{@code user} the database user name;</li>
+     * <li>{@code password} the user password;</li>
+     * <li>{@code host} the database host;</li>
+     * <li>{@code port} the database host port;</li>
+     * <li>{@code prefix} the database host port;</li>
+     * <li>{@code schema} the database schema;</li>
+     * <li>{@code charset} the database schema;</li>
+     * <li>{@code collate} the database schema;</li>
+     * </ul>
+     *
+     * <pre>
+     * setup "wordpress", {
+     *     database "wordpress", user: "user", password: "userpass", host: "localhost", port: 3306, schema: "mysql"
+     * }
+     * </pre>
+     *
+     * @return the {@link Map} of the database properties or {@code null}.
+     */
+    Map<String, Object> getDatabase();
 
-    @Override
-    public String getName() {
-        return SERVICE_NAME;
-    }
+    /**
+     * Returns the type of multi-site setup.
+     *
+     * <pre>
+     * setup "wordpress", {
+     *     multisite setup: MultiSite.subdir
+     * }
+     * </pre>
+     *
+     * @return the {@link MultiSite} type or {@code null}.
+     */
+    MultiSite getMultiSite();
 
-    public StatementsMap getStatementsMap() {
-        return service.getStatementsMap();
-    }
+    /**
+     * Returns the themes.
+     *
+     * <pre>
+     * setup "wordpress", {
+     *     themes "picochic, tagebuch"
+     * }
+     * </pre>
+     *
+     * @return the themes {@link List} of {@link String} names or {@code null}.
+     */
+    List<String> getThemes();
 
-    public void setAlias(String alias) throws ServiceException {
-        service.setAlias(alias);
-    }
+    /**
+     * Returns the plugins.
+     *
+     * <pre>
+     * setup "wordpress", {
+     *     plugins "wp-typography, link-indication, broken-link-checker"
+     * }
+     * </pre>
+     *
+     * @return the plugins {@link List} of {@link String} names or {@code null}.
+     */
+    List<String> getPlugins();
 
-    @Override
-    public String getAlias() {
-        return service.getAlias();
-    }
+    /**
+     * Returns enable force SSL for log-in.
+     *
+     * <pre>
+     * setup "wordpress", {
+     *     force login: true
+     * }
+     * </pre>
+     *
+     * @return {@code true} to force SSL or {@code null}.
+     */
+    Boolean getForceSslLogin();
 
-    public void setId(String id) throws ServiceException {
-        service.setId(id);
-    }
+    /**
+     * Returns enable force SSL for the admin user.
+     *
+     * <pre>
+     * setup "wordpress", {
+     *     force admin: true
+     * }
+     * </pre>
+     *
+     * @return {@code true} to force SSL or {@code null}.
+     */
+    Boolean getForceSslAdmin();
 
-    @Override
-    public String getId() {
-        return service.getId();
-    }
+    /**
+     * Returns enable caching.
+     *
+     * <pre>
+     * setup "wordpress", {
+     *     cache enabled: yes, plugin: "hyper-cache"
+     * }
+     * </pre>
+     *
+     * @return {@code true} to enable caching or {@code null}.
+     */
+    Boolean getCacheEnabled();
 
-    public void setRef(String ref) throws ServiceException {
-        service.setRef(ref);
-    }
+    /**
+     * Returns the caching plug-in.
+     *
+     * <pre>
+     * setup "wordpress", {
+     *     cache enabled: yes, plugin: "hyper-cache"
+     * }
+     * </pre>
+     *
+     * @return the cache plug-in {@code String} name or {@code null}.
+     */
+    String getCachePlugin();
 
-    @Override
-    public String getRef() {
-        return service.getRef();
-    }
-
-    public void setRefDomain(String ref) throws ServiceException {
-        service.setRefDomain(ref);
-    }
-
-    @Override
-    public String getRefDomain() {
-        return service.getRefDomain();
-    }
-
-    public void setPrefix(String prefix) throws ServiceException {
-        service.setPrefix(prefix);
-    }
-
-    @Override
-    public String getPrefix() {
-        return service.getPrefix();
-    }
-
-    public void database(Map<String, Object> args, String name) {
-        args.put(DatabaseArgs.DATABASE, name);
-        this.database = databaseFactory.create(this, args);
-    }
-
-    public Database getDatabase() {
-        return database;
-    }
-
-    public void debug(boolean enabled) {
-        DebugLogging logging = debugFactory.create(enabled ? 1 : 0);
-        log.debugSet(this, logging);
-        this.debug = logging;
-    }
-
-    public DebugLogging getDebugLogging() {
-        if (debug == null) {
-            this.debug = debugFactory.createOff();
-        }
-        return debug;
-    }
-
-    public void setMultiSite(MultiSite multiSite) throws ServiceException {
-        statementsMap.putMapValue(MULTISITE_KEY, SETUP_KEY, multiSite);
-    }
-
-    public MultiSite getMultiSite() {
-        Object o = statementsMap.mapValue(MULTISITE_KEY, SETUP_KEY);
-        if (o instanceof MultiSite) {
-            return (MultiSite) o;
-        } else {
-            String name = statementsMap.mapValue(MULTISITE_KEY, SETUP_KEY);
-            return name == null ? null : MultiSite.parse(name);
-        }
-    }
-
-    public void setThemes(List<String> themes) throws ServiceException {
-        statementsMap.putValue(THEMES_KEY, themes);
-    }
-
-    public List<String> getThemes() {
-        return statementsMap.valueAsStringList(THEMES_KEY);
-    }
-
-    public void setPlugins(List<String> plugins) throws ServiceException {
-        statementsMap.putValue(PLUGINS_KEY, plugins);
-    }
-
-    public List<String> getPlugins() {
-        return statementsMap.valueAsStringList(PLUGINS_KEY);
-    }
-
-    public void force(Map<String, Object> args) {
-        Force force = forceFactory.create(args);
-        log.forceSet(this, force);
-        this.force = force;
-    }
-
-    public void setForce(Force force) {
-        this.force = force;
-    }
-
-    public Force getForce() {
-        return force;
-    }
-
-    public void override(Map<String, Object> args) {
-        setOverrideMode(overrideModeArgs.override(this, args));
-    }
-
-    public void setOverrideMode(OverrideMode mode) {
-        this.overrideMode = mode;
-    }
-
-    public OverrideMode getOverrideMode() {
-        return overrideMode;
-    }
-
-    public boolean getCacheEnabled() {
-        YesNoFlag flag = statementsMap.mapValue(CACHE_KEY, ENABLED_KEY);
-        if (flag != null) {
-            return flag.asBoolean();
-        } else {
-            return false;
-        }
-    }
-
-    public String getCachePlugin() {
-        return statementsMap.mapValue(CACHE_KEY, PLUGIN_KEY);
-    }
-
-    public void setBackupTarget(URI uri) throws ServiceException {
-        statementsMap.putMapValue(BACKUP_KEY, TARGET_KEY, uri);
-    }
-
-    public URI getBackupTarget() {
-        Object path = statementsMap.mapValue(BACKUP_KEY, TARGET_KEY);
-        if (path == null) {
-            return null;
-        } else {
-            return toURIFactory.create().convert(path);
-        }
-    }
-
-    public Object methodMissing(String name, Object args)
-            throws ServiceException {
-        service.methodMissing(name, args);
-        return null;
-    }
-
-    @Override
-    public String toString() {
-        return new ToStringBuilder(this).append(NAME, SERVICE_NAME)
-                .append(ALIAS_KEY, getAlias()).toString();
-    }
 }

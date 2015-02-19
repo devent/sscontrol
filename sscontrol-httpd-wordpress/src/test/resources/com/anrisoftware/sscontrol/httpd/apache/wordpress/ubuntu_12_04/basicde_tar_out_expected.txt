@@ -1,2 +1,2 @@
---overwrite --strip 1 -xf /tmp/tmp/wordpress-wordpress-3.8_de_DE.tar.gz
---overwrite --strip 1 -xf /tmp/tmp/wordpress-wordpress-3.8_de_DE.tar.gz
+--overwrite --strip 1 -xf /tmp/tmp/wordpress-web-wordpress-4.1.1-de_DE.tar.gz
+--overwrite --strip 1 -xf /tmp/tmp/wordpress-web-wordpress-4.1.1-de_DE.tar.gz

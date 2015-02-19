@@ -1,4 +1,4 @@
--czf /tmp/var/backups/wordpress_www.test1.com/wordpress_www.test1.com_000T00.tar.gz /tmp/var/www/www.test1.com/wordpress_3_8
---overwrite --strip 1 -xf /tmp/tmp/wordpress-wordpress-3.8.tar.gz
--czf /tmp/var/backups/wordpress_www.test1.com/wordpress_www.test1.com_000T00.tar.gz /tmp/var/www/www.test1.com/wordpress_3_8
---overwrite --strip 1 -xf /tmp/tmp/wordpress-wordpress-3.8.tar.gz
+-czf /tmp/var/backups/wordpress_/wordpress__.tar.gz /tmp/var/www/www.testtime.com/wordpress_time
+--overwrite --strip time -xf /tmp/tmp/wordpress-web-wordpress-time.time.time.tar.gz
+-czf /tmp/var/backups/wordpress_/wordpress__.tar.gz /tmp/var/www/www.testtime.com/wordpress_time
+--overwrite --strip time -xf /tmp/tmp/wordpress-web-wordpress-time.time.time.tar.gz

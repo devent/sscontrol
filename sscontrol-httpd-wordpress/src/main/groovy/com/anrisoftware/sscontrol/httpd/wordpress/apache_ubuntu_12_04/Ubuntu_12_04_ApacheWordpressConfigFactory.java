@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Erwin Müller <erwin.mueller@deventm.org>
+ * Copyright 2014-2015 Erwin Müller <erwin.mueller@deventm.org>
  *
  * This file is part of sscontrol-httpd-wordpress.
  *
@@ -30,8 +30,8 @@ import com.google.inject.Injector;
 import com.google.inject.Module;
 
 /**
- * <i>Wordpress</i> configuration factory for <i>Apache Ubuntu 12.04</i>.
- * 
+ * <i>Wordpress 4.x</i> configuration factory for <i>Apache Ubuntu 12.04</i>.
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
@@ -44,9 +44,9 @@ public class Ubuntu_12_04_ApacheWordpressConfigFactory implements ServiceConfigF
     public static final String PROFILE_NAME = "ubuntu_12_04";
 
     /**
-     * <i>Wordpress</i> service name.
+     * <i>Wordpress 4.x</i> service name.
      */
-    public static final String WEB_NAME = "wordpress";
+    public static final String WEB_NAME = "wordpress_4";
 
     /**
      * <i>Apache</i> service name.
@@ -89,7 +89,7 @@ public class Ubuntu_12_04_ApacheWordpressConfigFactory implements ServiceConfigF
 
     @Override
     public ServiceConfig getScript() throws ServiceException {
-        return injector.getInstance(UbuntuApacheWordpressConfig.class);
+        return injector.getInstance(UbuntuWordpressConfig.class);
     }
 
     @Override

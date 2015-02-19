@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Erwin Müller <erwin.mueller@deventm.org>
+ * Copyright 2014-2015 Erwin Müller <erwin.mueller@deventm.org>
  *
  * This file is part of sscontrol-httpd-wordpress.
  *
@@ -18,7 +18,7 @@
  */
 package com.anrisoftware.sscontrol.httpd.apache.wordpressproxy.ubuntu_12_04
 
-import com.anrisoftware.sscontrol.httpd.apache.wordpress.ubuntu.UbuntuResources
+import com.anrisoftware.sscontrol.httpd.apache.wordpress.ubuntu_12_04.Ubuntu_12_04_Resources
 
 httpd {
     // reference service with id "idproxy"
@@ -32,17 +32,17 @@ httpd {
     ssl_domain "test1.com", address: "192.168.0.50", {
         user "web_001", uid: 2001, group: "web_001", gid: 2001
         redirect to: "www.%"
-        certificate file: UbuntuResources.certCrt.resource, key: UbuntuResources.certKey.resource
+        certificate file: Ubuntu_12_04_Resources.certCrt.resource, key: Ubuntu_12_04_Resources.certKey.resource
     }
     // domain www.test1.com
     domain "www.test1.com", address: "192.168.0.51", {
         user "web_002", uid: 2002, group: "web_002", gid: 2002
-        setup "proxy", service: "wordpress", alias: "wordpress3", address: "http://127.0.0.1:8080" //.
+        setup "proxy", service: "wordpress", alias: "wordpress4", address: "http://127.0.0.1:8080" //.
     }
     // SSL/domain www.test1.com
     ssl_domain "www.test1.com", address: "192.168.0.51", {
         user "web_002", uid: 2002, group: "web_002", gid: 2002
-        setup "proxy", service: "wordpress", alias: "wordpress3", address: "https://127.0.0.1:8082" //.
-        certificate file: UbuntuResources.certCrt.resource, key: UbuntuResources.certKey.resource
+        setup "proxy", service: "wordpress", alias: "wordpress4", address: "https://127.0.0.1:8082" //.
+        certificate file: Ubuntu_12_04_Resources.certCrt.resource, key: Ubuntu_12_04_Resources.certKey.resource
     }
 }

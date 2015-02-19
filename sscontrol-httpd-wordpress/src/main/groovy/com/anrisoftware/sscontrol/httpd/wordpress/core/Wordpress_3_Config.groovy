@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Erwin Müller <erwin.mueller@deventm.org>
+ * Copyright 2014-2015 Erwin Müller <erwin.mueller@deventm.org>
  *
  * This file is part of sscontrol-httpd-wordpress.
  *
@@ -19,7 +19,6 @@
 package com.anrisoftware.sscontrol.httpd.wordpress.core
 
 import static org.apache.commons.io.FileUtils.*
-import groovy.util.logging.Slf4j
 
 import javax.inject.Inject
 
@@ -27,14 +26,13 @@ import org.apache.commons.io.FilenameUtils
 
 import com.anrisoftware.globalpom.textmatch.tokentemplate.TokenTemplate
 import com.anrisoftware.resources.templates.api.TemplateResource
-import com.anrisoftware.resources.templates.api.Templates
 import com.anrisoftware.resources.templates.api.TemplatesFactory
 import com.anrisoftware.sscontrol.core.service.LinuxScript
 import com.anrisoftware.sscontrol.httpd.domain.Domain
 import com.anrisoftware.sscontrol.httpd.wordpress.MultiSite
 import com.anrisoftware.sscontrol.httpd.wordpress.WordpressService
-import com.anrisoftware.sscontrol.scripts.changefile.ChangeFileModFactory;
-import com.anrisoftware.sscontrol.scripts.changefile.ChangeFileOwnerFactory;
+import com.anrisoftware.sscontrol.scripts.changefile.ChangeFileModFactory
+import com.anrisoftware.sscontrol.scripts.changefile.ChangeFileOwnerFactory
 import com.anrisoftware.sscontrol.scripts.unpack.UnpackFactory
 
 /**
@@ -43,11 +41,10 @@ import com.anrisoftware.sscontrol.scripts.unpack.UnpackFactory
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-@Slf4j
 abstract class Wordpress_3_Config extends WordpressConfig {
 
     @Inject
-    TemplatesFactory templatesFactory
+    private Wordpress_3_ConfigLogger log
 
     @Inject
     UnpackFactory unpackFactory
@@ -58,11 +55,16 @@ abstract class Wordpress_3_Config extends WordpressConfig {
     @Inject
     ChangeFileOwnerFactory changeFileOwnerFactory
 
-    Templates wordpressTemplates
+    @Inject
+    Wordpress_4_Permissions wordpressPermissions
 
     TemplateResource wordpressConfigTemplate
 
-    private LinuxScript script
+    @Inject
+    void setTemplatesFactory(TemplatesFactory factory) {
+        def templates = factory.create "Wordpress_4_Config"
+        this.wordpressConfigTemplate = templates.getResource "config"
+    }
 
     /**
      * Deploys the main configuration.
@@ -83,7 +85,9 @@ abstract class Wordpress_3_Config extends WordpressConfig {
             copyFile file, tmp
         }
         List lines = readLines(tmp, configFileCharset)
-        writeLines file, configFileCharset.toString(), lines[0..-10]
+        lines = lines[0..-10]
+        writeLines file, configFileCharset.toString(), lines
+        log.mainConfigDeployed this, domain, file, lines
     }
 
     /**
@@ -104,6 +108,7 @@ abstract class Wordpress_3_Config extends WordpressConfig {
         def conf = mainConfiguration domain, service
         def file = configurationFile domain, service
         deployConfiguration configurationTokens(), conf, configs, file
+        log.mainConfigEndingDeployed this, domain, file
     }
 
     /**
@@ -119,6 +124,33 @@ abstract class Wordpress_3_Config extends WordpressConfig {
         def conf = mainConfiguration domain, service
         def file = configurationFile domain, service
         deployConfiguration configurationTokens(), conf, databaseConfigurations(service), file
+        log.databaseConfigDeployed this, domain, file
+    }
+
+    /**
+     * Creates the <i>Wordpress</i> service directories.
+     *
+     * @param domain
+     *            the {@link Domain} domain.
+     *
+     * @param service
+     *            the {@link WordpressService} service.
+     */
+    void createDirectories(Domain domain, WordpressService service) {
+        wordpressPermissions.createDirectories domain, service
+    }
+
+    /**
+     * Sets the owner and permissions of the <i>Wordpress</i> service.
+     *
+     * @param domain
+     *            the {@link Domain} domain.
+     *
+     * @param service
+     *            the {@link WordpressService} service.
+     */
+    void setupPermissions(Domain domain, WordpressService service) {
+        wordpressPermissions.setupPermissions domain, service
     }
 
     /**
@@ -138,43 +170,43 @@ abstract class Wordpress_3_Config extends WordpressConfig {
 
     def configDatabaseName(WordpressService service) {
         def search = wordpressConfigTemplate.getText(true, "configDatabaseName_search")
-        def replace = wordpressConfigTemplate.getText(true, "configDatabaseName", "database", service.database)
+        def replace = wordpressConfigTemplate.getText(true, "configDatabaseName", "database", service.database.database)
         new TokenTemplate(search, replace)
     }
 
     def configDatabaseUser(WordpressService service) {
         def search = wordpressConfigTemplate.getText(true, "configDatabaseUser_search")
-        def replace = wordpressConfigTemplate.getText(true, "configDatabaseUser", "database", service.database)
+        def replace = wordpressConfigTemplate.getText(true, "configDatabaseUser", "user", service.database.user)
         new TokenTemplate(search, replace)
     }
 
     def configDatabasePassword(WordpressService service) {
         def search = wordpressConfigTemplate.getText(true, "configDatabasePassword_search")
-        def replace = wordpressConfigTemplate.getText(true, "configDatabasePassword", "database", service.database)
+        def replace = wordpressConfigTemplate.getText(true, "configDatabasePassword", "password", service.database.password)
         new TokenTemplate(search, replace)
     }
 
     def configDatabaseHost(WordpressService service) {
         def search = wordpressConfigTemplate.getText(true, "configDatabaseHost_search")
-        def replace = wordpressConfigTemplate.getText(true, "configDatabaseHost", "database", service.database)
+        def replace = wordpressConfigTemplate.getText(true, "configDatabaseHost", "host", service.database.host)
         new TokenTemplate(search, replace)
     }
 
     def configDatabaseCharset(WordpressService service) {
         def search = wordpressConfigTemplate.getText(true, "configDatabaseCharset_search")
-        def replace = wordpressConfigTemplate.getText(true, "configDatabaseCharset", "charset", databaseDefaultCharset)
+        def replace = wordpressConfigTemplate.getText(true, "configDatabaseCharset", "charset", service.database.charset)
         new TokenTemplate(search, replace)
     }
 
     def configDatabaseCollate(WordpressService service) {
         def search = wordpressConfigTemplate.getText(true, "configDatabaseCollate_search")
-        def replace = wordpressConfigTemplate.getText(true, "configDatabaseCollate", "collate", databaseDefaultCollate)
+        def replace = wordpressConfigTemplate.getText(true, "configDatabaseCollate", "collate", service.database.collate)
         new TokenTemplate(search, replace)
     }
 
     def configDatabaseTablePrefix(WordpressService service) {
         def search = wordpressConfigTemplate.getText(true, "configTablePrefix_search")
-        def replace = wordpressConfigTemplate.getText(true, "configTablePrefix", "prefix", databaseDefaultTablePrefix)
+        def replace = wordpressConfigTemplate.getText(true, "configTablePrefix", "prefix", service.database.prefix)
         new TokenTemplate(search, replace)
     }
 
@@ -283,7 +315,7 @@ abstract class Wordpress_3_Config extends WordpressConfig {
 
     def configLanguage() {
         def search = wordpressConfigTemplate.getText(true, "configLanguage_search")
-        def replace = wordpressConfigTemplate.getText(true, "configLanguage", "language", language)
+        def replace = wordpressConfigTemplate.getText(true, "configLanguage", "language", wordpressLanguage)
         new TokenTemplate(search, replace)
     }
 
@@ -314,13 +346,13 @@ abstract class Wordpress_3_Config extends WordpressConfig {
 
     def configForceSecureLogin(WordpressService service) {
         def search = wordpressConfigTemplate.getText(true, "configForceSecureLogin_search")
-        def replace = wordpressConfigTemplate.getText(true, "configForceSecureLogin", "enabled", service.force.login)
+        def replace = wordpressConfigTemplate.getText(true, "configForceSecureLogin", "enabled", service.forceSslLogin)
         new TokenTemplate(search, replace)
     }
 
     def configForceSecureAdmin(WordpressService service) {
         def search = wordpressConfigTemplate.getText(true, "configForceSecureAdmin_search")
-        def replace = wordpressConfigTemplate.getText(true, "configForceSecureAdmin", "enabled", service.force.admin)
+        def replace = wordpressConfigTemplate.getText(true, "configForceSecureAdmin", "enabled", service.forceSslAdmin)
         new TokenTemplate(search, replace)
     }
 
@@ -349,8 +381,12 @@ abstract class Wordpress_3_Config extends WordpressConfig {
     }
 
     def configDebug(WordpressService service) {
+        if (service.debugLogging("level") == null || service.debugLogging("level")["wordpress"] == null) {
+            return []
+        }
+        def debugEnabled = service.debugLogging("level")["wordpress"] > 0
         def search = wordpressConfigTemplate.getText(true, "configDebug_search")
-        def replace = wordpressConfigTemplate.getText(true, "configDebug", "enabled", service.debug.level == 1)
+        def replace = wordpressConfigTemplate.getText(true, "configDebug", "enabled", debugEnabled)
         new TokenTemplate(search, replace)
     }
 
@@ -423,18 +459,24 @@ abstract class Wordpress_3_Config extends WordpressConfig {
      * @param service
      *            the {@link WordpressService} service.
      *
-     * @see #wordpressContentThemesDir(Object)
+     * @see #wordpressThemesDirectory(Domain, WordpressService)
      */
     void deployThemes(Domain domain, WordpressService service) {
-        def dir = wordpressContentThemesDir domain, service
+        def dir = wordpressThemesDirectory domain, service
+        def log = this.log
         service.themes.each { String theme ->
             def archive = themeArchive theme
             def name = new File(archive.path).name
             def dest = new File(tmpDirectory, name)
             copyURLToFile archive.toURL(), dest
             unpackFactory.create(
-                    log: log, file: dest, output: dir, override: true, strip: false,
-                    commands: script.unpackCommands,
+                    log: log.log,
+                    runCommands: runCommands,
+                    file: dest,
+                    output: dir,
+                    override: true,
+                    strip: false,
+                    commands: unpackCommands,
                     this, threads)()
         }
     }
@@ -448,10 +490,10 @@ abstract class Wordpress_3_Config extends WordpressConfig {
      * @param service
      *            the {@link WordpressService} service.
      *
-     * @see #wordpressContentPluginsDir(Object)
+     * @see #wordpressPluginsDirectory(Domain, WordpressService)
      */
     void deployPlugins(Domain domain, WordpressService service) {
-        def dir = wordpressContentPluginsDir domain, service
+        def dir = wordpressPluginsDirectory domain, service
         service.plugins.each { String plugin ->
             installPlugin plugin, dir
         }
@@ -466,26 +508,28 @@ abstract class Wordpress_3_Config extends WordpressConfig {
      * @param service
      *            the {@link WordpressService} service.
      *
-     * @see #wordpressContentPluginsDir(Object)
+     * @see #wordpressPluginsDirectory(Domain, WordpressService)
      */
     void deployCache(Domain domain, WordpressService service) {
         if (!service.cacheEnabled) {
             return
         }
-        def dir = wordpressContentPluginsDir domain, service
+        def dir = wordpressPluginsDirectory domain, service
         installPlugin service.cachePlugin, dir
         def advancedCacheConfigFile = advancedCacheConfigFile wordpressDir(domain, service)
         if (advancedCacheConfigFile) {
             advancedCacheConfigFile.createNewFile()
             changeFileModFactory.create(
-                    log: log,
-                    command: script.chmodCommand,
+                    log: log.log,
+                    runCommands: runCommands,
+                    command: chmodCommand,
                     files: advancedCacheConfigFile,
-                    mod: "644",
+                    mod: "u=rwX,g=rX,o-rwX",
                     this, threads)()
             changeFileOwnerFactory.create(
-                    log: log,
-                    command: script.chownCommand,
+                    log: log.log,
+                    runCommands: runCommands,
+                    command: chownCommand,
                     files: advancedCacheConfigFile,
                     owner: domain.domainUser.name,
                     ownerGroup: domain.domainUser.group,
@@ -508,25 +552,29 @@ abstract class Wordpress_3_Config extends WordpressConfig {
         def dest = new File(tmpDirectory, name)
         copyURLToFile archive.toURL(), dest
         unpackFactory.create(
-                log: log, file: dest, output: directory, override: true, strip: false,
-                commands: script.unpackCommands,
+                log: log.log,
+                file: dest,
+                output: directory,
+                override: true,
+                strip: false,
+                commands: unpackCommands,
                 this, threads)()
     }
 
     /**
-     * Wordpress main configuration file, for
+     * Returns the <i>Wordpress</i> main configuration file, for
      * example {@code "config/wp-config.php"}. If the path is relative then
-     * the file will be under the Wordpress installation directory.
+     * the file will be under the service installation directory.
      *
      * <ul>
      * <li>profile property {@code "wordpress_main_file"}</li>
      * </ul>
      *
      * @param domain
-     *            the {@link Domain} of the Wordpress service.
+     *            the {@link Domain} domain.
      *
      * @param service
-     *            the {@link WordpressService} Wordpress service.
+     *            the {@link WordpressService} service.
      *
      * @see #getWordpressProperties()
      * @see #wordpressDir(Domain, WordpressService)
@@ -536,19 +584,19 @@ abstract class Wordpress_3_Config extends WordpressConfig {
     }
 
     /**
-     * Wordpress main distribution configuration file, for
-     * example {@code "config/wp-config-sample.php"}. If the path is relative then
-     * the file will be under the Wordpress installation directory.
+     * Returns the <i>Wordpress</i> main distribution configuration file, for
+     * example {@code "config/wp-config-sample.php"}. If the path is relative
+     * then the file will be under the service installation directory.
      *
      * <ul>
      * <li>profile property {@code "wordpress_main_dist_file"}</li>
      * </ul>
      *
      * @param domain
-     *            the domain for which the configuration is returned.
+     *            the {@link Domain} domain.
      *
      * @param service
-     *            the {@link WordpressService}.
+     *            the {@link WordpressService} service.
      *
      * @see WordpressService#getPrefix()
      * @see #getWordpressProperties()
@@ -575,27 +623,8 @@ abstract class Wordpress_3_Config extends WordpressConfig {
         currentConfiguration configurationFile(domain, service)
     }
 
-    /**
-     * @see ServiceConfig#setScript(LinuxScript)
-     */
     void setScript(LinuxScript script) {
-        this.script = script
-        this.wordpressTemplates = templatesFactory.create "Wordpress_3"
-        this.wordpressConfigTemplate = wordpressTemplates.getResource "config"
-    }
-
-    /**
-     * @see ServiceConfig#getScript()
-     */
-    LinuxScript getScript() {
-        script
-    }
-
-    def propertyMissing(String name) {
-        script.getProperty name
-    }
-
-    def methodMissing(String name, def args) {
-        script.invokeMethod name, args
+        super.setScript script
+        wordpressPermissions.setScript this
     }
 }

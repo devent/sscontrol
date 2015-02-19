@@ -1,2 +1,2 @@
--u user -puserpass wordpress3
--u user -puserpass wordpress3
+-u user -puserpass wordpressdb
+-u user -puserpass wordpressdb

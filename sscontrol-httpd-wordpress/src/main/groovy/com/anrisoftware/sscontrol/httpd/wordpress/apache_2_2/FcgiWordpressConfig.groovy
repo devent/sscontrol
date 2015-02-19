@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Erwin Müller <erwin.mueller@deventm.org>
+ * Copyright 2014-2015 Erwin Müller <erwin.mueller@deventm.org>
  *
  * This file is part of sscontrol-httpd-wordpress.
  *
@@ -25,25 +25,23 @@ import com.anrisoftware.sscontrol.httpd.fcgi.FcgiConfig
 import com.anrisoftware.sscontrol.httpd.webservice.WebService
 
 /**
- * <i>Wordpress php-fcgi</i> configuration.
+ * <i>php-fcgi ownCloud</i> configuration.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-abstract class FcgiWordpressConfig {
-
-    private Object script
+class FcgiWordpressConfig {
 
     @Inject
     FcgiConfig fcgiConfig
 
     void deployDomain(Domain domain, Domain refDomain, WebService service, List config) {
-        fcgiConfig.script = script.script
+        fcgiConfig.script = script
         fcgiConfig.deployConfig domain
     }
 
     void deployService(Domain domain, WebService service, List config) {
-        fcgiConfig.script = script.script
+        fcgiConfig.script = script
         fcgiConfig.enableFcgi()
         fcgiConfig.deployConfig domain
         fcgiConfig.deployService domain, service, config
@@ -64,21 +62,9 @@ abstract class FcgiWordpressConfig {
     }
 
     /**
-     * @see FcgiConfig#setScript(LinuxScript)
+     * Links PHP configurations to the domain directory.
      */
-    void setScript(Object script) {
-        this.script = script
-    }
-
-    Object getScript() {
-        script
-    }
-
-    def propertyMissing(String name) {
-        script.getProperty name
-    }
-
-    def methodMissing(String name, def args) {
-        script.invokeMethod name, args
+    void linkPhpconf(Domain domain) {
+        fcgiConfig.linkPhpconf domain
     }
 }

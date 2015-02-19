@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Erwin Müller <erwin.mueller@deventm.org>
+ * Copyright 2014-2015 Erwin Müller <erwin.mueller@deventm.org>
  *
  * This file is part of sscontrol-httpd-wordpress.
  *
@@ -25,17 +25,17 @@ import java.nio.charset.Charset
 import javax.inject.Inject
 
 import org.apache.commons.lang3.RandomStringUtils
+import org.apache.commons.lang3.builder.ToStringBuilder
 
 import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.sscontrol.core.service.LinuxScript
 import com.anrisoftware.sscontrol.httpd.domain.Domain
 import com.anrisoftware.sscontrol.httpd.webservice.OverrideMode
-import com.anrisoftware.sscontrol.httpd.wordpress.ForceFactory
 import com.anrisoftware.sscontrol.httpd.wordpress.MultiSite
 import com.anrisoftware.sscontrol.httpd.wordpress.WordpressService
 
 /**
- * <i>Wordpress</i>.
+ * <i>Wordpress</i> configuration.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
@@ -47,141 +47,276 @@ abstract class WordpressConfig {
     @Inject
     private WordpressConfigLogger log
 
-    @Inject
-    private ForceFactory forceFactory
-
     private LinuxScript script
 
     /**
-     * Sets default prefix.
+     * Sets the default prefix.
      *
      * @param service
-     *            the {@link WordpressService} Wordpress service.
+     *            the {@link WordpressService} service.
+     *
+     * @see #getDefaultWordpressPrefix()
      */
     void setupDefaultPrefix(WordpressService service) {
         if (service.prefix == null) {
-            service.prefix = wordpressDefaultPrefix
+            service.prefix = defaultWordpressPrefix
         }
     }
 
     /**
-     * Sets default override mode.
+     * Sets the default override mode.
      *
      * @param service
-     *            the {@link WordpressService} Wordpress service.
+     *            the {@link WordpressService} service.
+     *
+     * @see #getDefaultOverrideMode()
      */
     void setupDefaultOverrideMode(WordpressService service) {
         if (service.overrideMode == null) {
-            service.overrideMode = wordpressDefaultOverrideMode
+            service.overrideMode = defaultOverrideMode
         }
     }
 
     /**
-     * Sets default force SSL login and admin.
+     * Sets the default force SSL login and admin.
      *
      * @param service
-     *            the {@link WordpressService} Wordpress service.
+     *            the {@link WordpressService} service.
+     *
+     * @see #getDefaultForceSecureLogin()
+     * @see #getDefaultForceSecureAdmin()
      */
     void setupDefaultForce(WordpressService service) {
-        if (service.force == null) {
-            def force = forceFactory.create(["login": forceSecureLogin, "admin": forceSecureAdmin])
-            service.force = force
+        if (service.forceSslLogin == null) {
+            service.forceSslLogin = wordpressDefaultForceSecureLogin
+        }
+        if (service.forceSslAdmin == null) {
+            service.forceSslAdmin = wordpressDefaultForceSecureAdmin
         }
     }
 
     /**
-     * Sets default multi-site mode.
+     * Sets the default multi-site mode.
      *
      * @param service
-     *            the {@link WordpressService} Wordpress service.
+     *            the {@link WordpressService} service.
+     *
+     * @see #getDefaultMultisiteMode()
      */
     void setupDefaultMultisite(WordpressService service) {
         if (service.multiSite == null) {
-            service.multiSite = wordpressDefaultMultisiteMode
+            service.multiSite = defaultMultisiteMode
         }
     }
 
     /**
-     * Returns the Wordpress archive.
+     * Sets the default database.
      *
-     * <ul>
-     * <li>profile property {@code "wordpress_archive[_<language>]"}</li>
-     * </ul>
+     * @param service
+     *            the {@link WordpressService} service.
      *
-     * @see #getWordpressProperties()
+     * @see #getDefaultDatabaseHost()
+     * @see #getDefaultDatabasePort()
+     * @see #getDefaultDatabaseCharset()
+     * @see #getDefaultDatabaseCollate()
+     * @see #getDefaultDatabaseTablePrefix()
      */
-    URI getWordpressArchive() {
-        String lang = language.toString()
-        String property
-        URI uri
-        switch (lang) {
-            case "":
-                property = "wordpress_archive"
-                break
-            default:
-                property = "wordpress_archive_$lang"
-                if (!containsKey(property, wordpressProperties)) {
-                    property = "wordpress_archive"
-                }
+    void setupDefaultDatabase(WordpressService service) {
+        def database = service.database
+        def db = service.database.database
+        if (database == null || database.host == null) {
+            service.database db, host: defaultDatabaseHost
         }
-        uri = profileURIProperty property, wordpressProperties
-        log.returnsWordpressArchive script, lang, uri
-        return uri
-    }
-
-    /**
-     * Returns the Wordpress archive hash.
-     *
-     * <ul>
-     * <li>profile property {@code "wordpress_archive_hash[_<language>]"}</li>
-     * </ul>
-     *
-     * @see #getWordpressProperties()
-     */
-    URI getWordpressArchiveHash() {
-        String lang = language.toString()
-        String property
-        URI uri
-        switch (lang) {
-            case "":
-                property = "wordpress_archive_hash"
-                break
-            default:
-                property = "wordpress_archive_hash_$lang"
+        if (database == null || database.port == null) {
+            service.database db, port: defaultDatabasePort
         }
-        if (containsKey(property, wordpressProperties)) {
-            uri = profileURIProperty property, wordpressProperties
-            log.returnsWordpressArchiveHash script, lang, uri
-            return uri
+        if (database == null || database.charset == null) {
+            service.database db, schema: defaultDatabaseSchema
+        }
+        if (database == null || database.charset == null) {
+            service.database db, charset: defaultDatabaseCharset
+        }
+        if (database == null || database.collate == null) {
+            service.database db, collate: defaultDatabaseCollate
+        }
+        if (database == null || database.prefix == null) {
+            service.database db, prefix: defaultDatabasePrefix
         }
     }
 
     /**
-     * Returns to strip the Wordpress archive from the container directory.
+     * Sets the default debug.
+     *
+     * @param service
+     *            the {@link WordpressService} service.
+     *
+     * @see #getDefaultWordpressDebugLevel()
+     */
+    void setupDefaultDebug(WordpressService service) {
+        if (service.debugLogging("level") == null || service.debugLogging("level")["wordpress"] == null) {
+            service.debug "wordpress", level: defaultWordpressDebugLevel
+        }
+    }
+
+    /**
+     * Returns the <i>Wordpress</i> installation directory.
+     *
+     * @param domain
+     *            the {@link Domain} domain.
+     *
+     * @param service
+     *            the {@link WordpressService} service.
+     *
+     * @return the installation {@link File} directory.
+     *
+     * @see #domainDir(Domain)
+     * @see WordpressService#getPrefix()
+     */
+    File wordpressDir(Domain domain, WordpressService service) {
+        new File(domainDir(domain), service.prefix)
+    }
+
+    /**
+     * Returns the <i>Wordpress</i> cache directory, for
+     * example {@code "wp-content/cache"}. If the path is relative then
+     * the file will be under the service installation directory.
      *
      * <ul>
-     * <li>profile property {@code "wordpress_strip_archive[_<language>]"}</li>
+     * <li>profile property {@code "wordpress_cache_directory"}</li>
+     * </ul>
+     *
+     * @param domain
+     *            the {@link Domain} domain.
+     *
+     * @param service
+     *            the {@link WordpressService} service.
+     *
+     * @see #getWordpressProperties()
+     * @see #wordpressDir(Domain, WordpressService)
+     */
+    File wordpressCacheDirectory(Domain domain, WordpressService service) {
+        def dir = wordpressDir(domain, service)
+        profileFileProperty "wordpress_cache_directory", dir, wordpressProperties
+    }
+
+    /**
+     * Returns the <i>Wordpress</i> plug-ins directory, for
+     * example {@code "wp-content/plugins"}. If the path is relative then
+     * the file will be under the service installation directory.
+     *
+     * <ul>
+     * <li>profile property {@code "wordpress_plugins_directory"}</li>
+     * </ul>
+     *
+     * @param domain
+     *            the {@link Domain} domain.
+     *
+     * @param service
+     *            the {@link WordpressService} service.
+     *
+     * @see #getWordpressProperties()
+     * @see #wordpressDir(Domain, WordpressService)
+     */
+    File wordpressPluginsDirectory(Domain domain, WordpressService service) {
+        def dir = wordpressDir(domain, service)
+        profileFileProperty "wordpress_plugins_directory", dir, wordpressProperties
+    }
+
+    /**
+     * Returns the <i>Wordpress</i> themes directory, for
+     * example {@code "wp-content/themes"}. If the path is relative then
+     * the file will be under the service installation directory.
+     *
+     * <ul>
+     * <li>profile property {@code "wordpress_themes_directory"}</li>
+     * </ul>
+     *
+     * @param domain
+     *            the {@link Domain} domain.
+     *
+     * @param service
+     *            the {@link WordpressService} service.
+     *
+     * @see #getWordpressProperties()
+     * @see #wordpressDir(Domain, WordpressService)
+     */
+    File wordpressThemesDirectory(Domain domain, WordpressService service) {
+        def dir = wordpressDir(domain, service)
+        profileFileProperty "wordpress_themes_directory", dir, wordpressProperties
+    }
+
+    /**
+     * Returns the <i>Wordpress</i> uploads directory, for
+     * example {@code "wp-content/uploads"}. If the path is relative then
+     * the file will be under the service installation directory.
+     *
+     * <ul>
+     * <li>profile property {@code "wordpress_uploads_directory"}</li>
+     * </ul>
+     *
+     * @param domain
+     *            the {@link Domain} domain.
+     *
+     * @param service
+     *            the {@link WordpressService} service.
+     *
+     * @see #getWordpressProperties()
+     * @see #wordpressDir(Domain, WordpressService)
+     */
+    File wordpressUploadsDirectory(Domain domain, WordpressService service) {
+        def dir = wordpressDir(domain, service)
+        profileFileProperty "wordpress_uploads_directory", dir, wordpressProperties
+    }
+
+    /**
+     * Returns the service alias directory path.
+     *
+     * @param domain
+     *            the {@link Domain} domain.
+     *
+     * @param refDomain
+     *            the references {@link Domain} domain or {@code null}.
+     *
+     * @param service
+     *            the {@link WordpressService} service.
+     *
+     * @see #wordpressDir(def)
+     */
+    String serviceAliasDir(Domain domain, Domain refDomain, WordpressService service) {
+        def serviceDir = serviceDir domain, refDomain, service
+        service.alias.empty ? "$serviceDir/" : serviceDir
+    }
+
+    /**
+     * Returns the service directory path.
+     *
+     * @param domain
+     *            the {@link Domain} domain.
+     *
+     * @param refDomain
+     *            the references {@link Domain} domain or {@code null}.
+     *
+     * @param service
+     *            the {@link WordpressService} service.
+     *
+     * @see #wordpressDir(Domain, WordpressService)
+     */
+    String serviceDir(Domain domain, Domain refDomain, WordpressService service) {
+        refDomain == null ? wordpressDir(domain, service).absolutePath :
+                wordpressDir(refDomain, service).absolutePath
+    }
+
+    /**
+     * Returns to block no-referrer requests, for example {@code "true"}.
+     *
+     * <ul>
+     * <li>profile property {@code "wordpress_block_no_referrer_requests"}</li>
      * </ul>
      *
      * @see #getWordpressProperties()
      */
-    boolean getStripArchive() {
-        String lang = language.toString()
-        String property
-        boolean strip
-        switch (lang) {
-            case "":
-                property = "wordpress_strip_archive"
-                break
-            default:
-                property = "wordpress_strip_archive_$lang"
-                if (!containsKey(property, wordpressProperties)) {
-                    property = "wordpress_strip_archive"
-                }
-        }
-        strip = profileBooleanProperty property, wordpressProperties
-        log.returnsStripArchive script, lang, strip
-        return strip
+    boolean getBlockNoReferrerRequests() {
+        profileBooleanProperty "wordpress_block_no_referrer_requests", wordpressProperties
     }
 
     /**
@@ -220,7 +355,7 @@ abstract class WordpressConfig {
      *
      * @see #getWordpressProperties()
      */
-    String getWordpressDefaultPrefix() {
+    String getDefaultWordpressPrefix() {
         profileProperty "wordpress_default_prefix", wordpressProperties
     }
 
@@ -234,7 +369,7 @@ abstract class WordpressConfig {
      *
      * @see #getWordpressProperties()
      */
-    OverrideMode getWordpressDefaultOverrideMode() {
+    OverrideMode getDefaultOverrideMode() {
         def mode = profileProperty "wordpress_default_override_mode", wordpressProperties
         OverrideMode.valueOf mode
     }
@@ -249,235 +384,128 @@ abstract class WordpressConfig {
      *
      * @see #getWordpressProperties()
      */
-    MultiSite getWordpressDefaultMultisiteMode() {
+    MultiSite getDefaultMultisiteMode() {
         def mode = profileProperty "wordpress_default_multisite_mode", wordpressProperties
         MultiSite.valueOf mode
     }
 
     /**
-     * Returns the Wordpress installation directory.
-     *
-     * @param domain
-     *            the {@link Domain} domain of the service.
-     *
-     * @param service
-     *            the {@link WordpressService} Wordpress service.
-     *
-     * @return the installation {@link File} directory.
-     *
-     * @see #domainDir(Domain)
-     * @see WordpressService#getPrefix()
-     */
-    File wordpressDir(Domain domain, WordpressService service) {
-        new File(domainDir(domain), service.prefix)
-    }
-
-    /**
-     * Wordpress content cache directory, for
-     * example {@code "wp-content/cache/"}. If the path is relative then
-     * the file will be under the Wordpress installation directory.
+     * Returns the default <i>Wordpress</i> debug level, for example {@code "0"}.
      *
      * <ul>
-     * <li>profile property {@code "wordpress_content_cache_directory"}</li>
-     * </ul>
-     *
-     * @param domain
-     *            the {@link Domain} of the Wordpress service.
-     *
-     * @param service
-     *            the {@link WordpressService} Wordpress service.
-     *
-     * @see #getWordpressProperties()
-     * @see #wordpressDir(Domain, WordpressService)
-     */
-    File wordpressContentCacheDir(Domain domain, WordpressService service) {
-        def dir = wordpressDir(domain, service)
-        profileFileProperty "wordpress_content_cache_directory", dir, wordpressProperties
-    }
-
-    /**
-     * Wordpress content plugins directory, for
-     * example {@code "wp-content/plugins/"}. If the path is relative then
-     * the file will be under the Wordpress installation directory.
-     *
-     * <ul>
-     * <li>profile property {@code "wordpress_content_plugins_directory"}</li>
-     * </ul>
-     *
-     * @param domain
-     *            the {@link Domain} of the Wordpress service.
-     *
-     * @param service
-     *            the {@link WordpressService} Wordpress service.
-     *
-     * @see #getWordpressProperties()
-     * @see #wordpressDir(Domain, WordpressService)
-     */
-    File wordpressContentPluginsDir(Domain domain, WordpressService service) {
-        def dir = wordpressDir(domain, service)
-        profileFileProperty "wordpress_content_plugins_directory", dir, wordpressProperties
-    }
-
-    /**
-     * Wordpress content themes directory, for
-     * example {@code "wp-content/themes/"}. If the path is relative then
-     * the file will be under the Wordpress installation directory.
-     *
-     * <ul>
-     * <li>profile property {@code "wordpress_content_themes_directory"}</li>
-     * </ul>
-     *
-     * @param domain
-     *            the {@link Domain} of the Wordpress service.
-     *
-     * @param service
-     *            the {@link WordpressService} Wordpress service.
-     *
-     * @see #getWordpressProperties()
-     * @see #wordpressDir(Domain, WordpressService)
-     */
-    File wordpressContentThemesDir(Domain domain, WordpressService service) {
-        def dir = wordpressDir(domain, service)
-        profileFileProperty "wordpress_content_themes_directory", dir, wordpressProperties
-    }
-
-    /**
-     * Wordpress content uploads directory, for
-     * example {@code "wp-content/uploads/"}. If the path is relative then
-     * the file will be under the Wordpress installation directory.
-     *
-     * <ul>
-     * <li>profile property {@code "wordpress_content_uploads_directory"}</li>
-     * </ul>
-     *
-     * @param domain
-     *            the {@link Domain} of the Wordpress service.
-     *
-     * @param service
-     *            the {@link WordpressService} Wordpress service.
-     *
-     * @see #getWordpressProperties()
-     * @see #wordpressDir(Domain, WordpressService)
-     */
-    File wordpressContentUploadsDir(Domain domain, WordpressService service) {
-        def dir = wordpressDir(domain, service)
-        profileFileProperty "wordpress_content_uploads_directory", dir, wordpressProperties
-    }
-
-    /**
-     * Returns the service alias directory path.
-     *
-     * @param domain
-     *            the {@link Domain} for which the path is returned.
-     *
-     * @param refDomain
-     *            the references {@link Domain} or {@code null}.
-     *
-     * @param service
-     *            the {@link WordpressService} Wordpress service.
-     *
-     * @see #wordpressDir(def)
-     */
-    String serviceAliasDir(Domain domain, Domain refDomain, WordpressService service) {
-        def serviceDir = serviceDir domain, refDomain, service
-        service.alias.empty ? "$serviceDir/" : serviceDir
-    }
-
-    /**
-     * Returns the service directory path.
-     *
-     * @param domain
-     *            the {@link Domain} for which the path is returned.
-     *
-     * @param refDomain
-     *            the references {@link Domain} or {@code null}.
-     *
-     * @param service
-     *            the {@link WordpressService} Wordpress service.
-     *
-     * @see #wordpressDir(Domain, WordpressService)
-     */
-    String serviceDir(Domain domain, Domain refDomain, WordpressService service) {
-        refDomain == null ? wordpressDir(domain, service).absolutePath :
-                wordpressDir(refDomain, service).absolutePath
-    }
-
-    /**
-     * Returns to block no-referrer requests, for example {@code "true"}.
-     *
-     * <ul>
-     * <li>profile property {@code "wordpress_block_no_referrer_requests"}</li>
+     * <li>profile property {@code "wordpress_default_debug_level"}</li>
      * </ul>
      *
      * @see #getWordpressProperties()
      */
-    boolean getBlockNoReferrerRequests() {
-        profileBooleanProperty "wordpress_block_no_referrer_requests", wordpressProperties
+    int getDefaultWordpressDebugLevel() {
+        profileNumberProperty "wordpress_default_debug_level", wordpressProperties
     }
 
     /**
-     * Returns the database default character set, for example {@code "utf8"}.
+     * Returns the default database character set, for example {@code "utf8"}.
      *
      * <ul>
-     * <li>profile property {@code "wordpress_database_default_charset"}</li>
+     * <li>profile property {@code "wordpress_default_database_charset"}</li>
      * </ul>
      *
      * @see #getWordpressProperties()
      */
-    String getDatabaseDefaultCharset() {
-        profileProperty "wordpress_database_default_charset", wordpressProperties
+    String getDefaultDatabaseCharset() {
+        profileProperty "wordpress_default_database_charset", wordpressProperties
     }
 
     /**
-     * Returns the database default collate, for example {@code ""}.
+     * Returns the default database collate, for example {@code ""}.
      *
      * <ul>
-     * <li>profile property {@code "wordpress_database_default_collate"}</li>
+     * <li>profile property {@code "wordpress_default_database_collate"}</li>
      * </ul>
      *
      * @see #getWordpressProperties()
      */
-    String getDatabaseDefaultCollate() {
-        profileProperty "wordpress_database_default_collate", wordpressProperties
+    String getDefaultDatabaseCollate() {
+        profileProperty "wordpress_default_database_collate", wordpressProperties
     }
 
     /**
-     * Returns the database default table prefix, for example {@code "wp_"}.
+     * Returns the default database table prefix, for example {@code "wp_"}.
      *
      * <ul>
-     * <li>profile property {@code "wordpress_database_default_table_prefix"}</li>
+     * <li>profile property {@code "wordpress_default_database_prefix"}</li>
      * </ul>
      *
      * @see #getWordpressProperties()
      */
-    String getDatabaseDefaultTablePrefix() {
-        profileProperty "wordpress_database_default_table_prefix", wordpressProperties
+    String getDefaultDatabasePrefix() {
+        profileProperty "wordpress_default_database_prefix", wordpressProperties
     }
 
     /**
-     * Returns to force secure log-in, for example {@code "true"}.
+     * Returns the default database host, for example {@code "localhost"}.
      *
      * <ul>
-     * <li>profile property {@code "wordpress_force_secure_login"}</li>
+     * <li>profile property {@code "wordpress_default_database_host"}</li>
      * </ul>
      *
      * @see #getWordpressProperties()
      */
-    boolean getForceSecureLogin() {
-        profileBooleanProperty "wordpress_force_secure_login", wordpressProperties
+    String getDefaultDatabaseHost() {
+        profileProperty "wordpress_default_database_host", wordpressProperties
     }
 
     /**
-     * Returns to force secure administrator, for example {@code "true"}.
+     * Returns the default database port, for example {@code "3306"}.
      *
      * <ul>
-     * <li>profile property {@code "wordpress_force_secure_admin"}</li>
+     * <li>profile property {@code "wordpress_default_database_port"}</li>
      * </ul>
      *
      * @see #getWordpressProperties()
      */
-    boolean getForceSecureAdmin() {
-        profileBooleanProperty "wordpress_force_secure_admin", wordpressProperties
+    int getDefaultDatabasePort() {
+        profileNumberProperty "wordpress_default_database_port", wordpressProperties
+    }
+
+    /**
+     * Returns the default database schema, for example {@code "mysql"}.
+     *
+     * <ul>
+     * <li>profile property {@code "wordpress_default_database_schema"}</li>
+     * </ul>
+     *
+     * @see #getWordpressProperties()
+     */
+    String getDefaultDatabaseSchema() {
+        profileProperty "wordpress_default_database_schema", wordpressProperties
+    }
+
+    /**
+     * Returns the default enable force secure log-in, for
+     * example {@code "true"}.
+     *
+     * <ul>
+     * <li>profile property {@code "wordpress_default_force_secure_login"}</li>
+     * </ul>
+     *
+     * @see #getWordpressProperties()
+     */
+    boolean getWordpressDefaultForceSecureLogin() {
+        profileBooleanProperty "wordpress_default_force_secure_login", wordpressProperties
+    }
+
+    /**
+     * Returns the default enable force secure administrator, for
+     * example {@code "true"}.
+     *
+     * <ul>
+     * <li>profile property {@code "wordpress_default_force_secure_admin"}</li>
+     * </ul>
+     *
+     * @see #getWordpressProperties()
+     */
+    boolean getWordpressDefaultForceSecureAdmin() {
+        profileBooleanProperty "wordpress_default_force_secure_admin", wordpressProperties
     }
 
     /**
@@ -503,7 +531,7 @@ abstract class WordpressConfig {
      *
      * @see #getWordpressProperties()
      */
-    Locale getLanguage() {
+    Locale getWordpressLanguage() {
         profileLocaleProperty "wordpress_language", wordpressProperties
     }
 
@@ -677,41 +705,52 @@ abstract class WordpressConfig {
     }
 
     /**
-     * Returns the default Wordpress properties.
+     * Returns the default <i>Wordpress</i> properties.
      */
     abstract ContextProperties getWordpressProperties()
 
     /**
-     * Returns the service name {@code "wordpress".}
+     * Returns the <i>Wordpress</i> service name.
      */
-    String getServiceName() {
-        NAME
-    }
+    abstract String getServiceName()
 
     /**
-     * Returns the profile name for the configuration.
+     * Returns the profile name.
      */
     abstract String getProfile()
 
     /**
-     * @see ServiceConfig#setScript(LinuxScript)
+     * Sets the parent script.
      */
     void setScript(LinuxScript script) {
         this.script = script
     }
 
     /**
-     * @see ServiceConfig#getScript()
+     * Returns the parent script.
      */
     LinuxScript getScript() {
         script
     }
 
+    /**
+     * Delegates missing properties to the parent script.
+     */
     def propertyMissing(String name) {
         script.getProperty name
     }
 
+    /**
+     * Delegates missing methods to the parent script.
+     */
     def methodMissing(String name, def args) {
         script.invokeMethod name, args
+    }
+
+    @Override
+    public String toString() {
+        new ToStringBuilder(this)
+                .append("service name", getServiceName())
+                .append("profile name", getProfile()).toString();
     }
 }

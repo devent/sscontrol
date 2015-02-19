@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Erwin Müller <erwin.mueller@deventm.org>
+ * Copyright 2014-2015 Erwin Müller <erwin.mueller@deventm.org>
  *
  * This file is part of sscontrol-httpd-wordpress.
  *
@@ -19,12 +19,11 @@
 package com.anrisoftware.sscontrol.httpd.wordpress.apache_ubuntu_12_04;
 
 import com.anrisoftware.globalpom.version.VersionModule;
-import com.anrisoftware.sscontrol.httpd.wordpress.WordpressModule;
 import com.anrisoftware.sscontrol.scripts.versionlimits.VersionLimitsModule;
 import com.google.inject.AbstractModule;
 
 /**
- * Installs Ubuntu 12.04 Wordpress.
+ * <i>Wordpress 4 Ubuntu 12.04</i> modules.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
@@ -33,7 +32,6 @@ public class ApacheModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        install(new WordpressModule());
         install(new VersionLimitsModule());
         install(new VersionModule());
     }

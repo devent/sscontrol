@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Erwin Müller <erwin.mueller@deventm.org>
+ * Copyright 2014-2015 Erwin Müller <erwin.mueller@deventm.org>
  *
  * This file is part of sscontrol-httpd-wordpress.
  *
@@ -18,25 +18,29 @@
  */
 package com.anrisoftware.sscontrol.httpd.wordpress.fromarchive;
 
-import static com.anrisoftware.sscontrol.httpd.wordpress.fromarchive.WordpressFromArchiveConfigLogger._.check_need_download;
-import static com.anrisoftware.sscontrol.httpd.wordpress.fromarchive.WordpressFromArchiveConfigLogger._.download_archive_info;
-import static com.anrisoftware.sscontrol.httpd.wordpress.fromarchive.WordpressFromArchiveConfigLogger._.download_archive_trace;
-import static com.anrisoftware.sscontrol.httpd.wordpress.fromarchive.WordpressFromArchiveConfigLogger._.finish_download;
-import static com.anrisoftware.sscontrol.httpd.wordpress.fromarchive.WordpressFromArchiveConfigLogger._.hash_archive_mismatch;
-import static com.anrisoftware.sscontrol.httpd.wordpress.fromarchive.WordpressFromArchiveConfigLogger._.hash_archive_mismatch_message;
-import static com.anrisoftware.sscontrol.httpd.wordpress.fromarchive.WordpressFromArchiveConfigLogger._.start_download;
-import static com.anrisoftware.sscontrol.httpd.wordpress.fromarchive.WordpressFromArchiveConfigLogger._.the_archive;
-import static com.anrisoftware.sscontrol.httpd.wordpress.fromarchive.WordpressFromArchiveConfigLogger._.the_hash;
-import static com.anrisoftware.sscontrol.httpd.wordpress.fromarchive.WordpressFromArchiveConfigLogger._.the_script;
+import static com.anrisoftware.sscontrol.httpd.wordpress.fromarchive.WordpressFromArchiveConfigLogger._.archive_name;
+import static com.anrisoftware.sscontrol.httpd.wordpress.fromarchive.WordpressFromArchiveConfigLogger._.compare_versions_debug;
+import static com.anrisoftware.sscontrol.httpd.wordpress.fromarchive.WordpressFromArchiveConfigLogger._.compare_versions_info;
+import static com.anrisoftware.sscontrol.httpd.wordpress.fromarchive.WordpressFromArchiveConfigLogger._.error_archive_hash;
+import static com.anrisoftware.sscontrol.httpd.wordpress.fromarchive.WordpressFromArchiveConfigLogger._.error_archive_hash_message;
+import static com.anrisoftware.sscontrol.httpd.wordpress.fromarchive.WordpressFromArchiveConfigLogger._.service_name;
+import static com.anrisoftware.sscontrol.httpd.wordpress.fromarchive.WordpressFromArchiveConfigLogger._.unpack_archive_debug;
+import static com.anrisoftware.sscontrol.httpd.wordpress.fromarchive.WordpressFromArchiveConfigLogger._.unpack_archive_info;
+import static com.anrisoftware.sscontrol.httpd.wordpress.fromarchive.WordpressFromArchiveConfigLogger._.wordpress_archive_debug;
+import static com.anrisoftware.sscontrol.httpd.wordpress.fromarchive.WordpressFromArchiveConfigLogger._.wordpress_archive_hash_debug;
+import static com.anrisoftware.sscontrol.httpd.wordpress.fromarchive.WordpressFromArchiveConfigLogger._.wordpress_archive_hash_info;
+import static com.anrisoftware.sscontrol.httpd.wordpress.fromarchive.WordpressFromArchiveConfigLogger._.wordpress_archive_info;
+import static com.anrisoftware.sscontrol.httpd.wordpress.fromarchive.WordpressFromArchiveConfigLogger._.wordpress_archive_strip_debug;
+import static com.anrisoftware.sscontrol.httpd.wordpress.fromarchive.WordpressFromArchiveConfigLogger._.wordpress_archive_strip_info;
 
-import java.io.File;
 import java.net.URI;
 
 import javax.inject.Singleton;
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
+import com.anrisoftware.globalpom.version.Version;
 import com.anrisoftware.sscontrol.core.api.ServiceException;
-import com.anrisoftware.sscontrol.core.service.LinuxScript;
+import com.anrisoftware.sscontrol.httpd.wordpress.WordpressService;
 
 /**
  * Logging messages for {@link WordpressFromArchiveConfig}.
@@ -49,27 +53,44 @@ class WordpressFromArchiveConfigLogger extends AbstractLogger {
 
     enum _ {
 
-        download_archive_trace("Downloaded and unpack archive '{}' for {}."),
+        unpack_archive_debug("Unpack Wordpress archive '{}' done for {}."),
 
-        download_archive_info(
-                "Downloaded and unpack archive '{}' for service '{}'."),
+        unpack_archive_info(
+                "Unpack Wordpress archive '{}' done for service '{}'."),
 
-        check_need_download("Check archive file '{}' for hash '{}' for {}."),
+        compare_versions_debug("Compare Wordpress version {}<={} for {}."),
 
-        start_download("Downloading of archive '{}' to '{}' for {}..."),
+        compare_versions_info(
+                "Compare Wordpress version {}<={} for service '{}'."),
 
-        finish_download("Finish download of archive '{}' to '{}' for {}."),
+        unpack_archive("Unpacked Wordpress archive '{}' for {}."),
 
-        hash_archive_mismatch("Archive hash mismatch"),
+        error_archive_hash("Wordpress archive hash not match"),
 
-        hash_archive_mismatch_message(
-                "Archive hash mismatch for archive '{}' for script '{}'."),
+        error_archive_hash_message(
+                "Wordpress archive '{}' hash not match for {}"),
 
-        the_script("script"),
+        service_name("service"),
 
-        the_archive("archive"),
+        archive_name("archive"),
 
-        the_hash("hash");
+        wordpress_archive_debug(
+                "Returns Wordpress archive for language '{}': '{}' for {}"),
+
+        wordpress_archive_info(
+                "Returns Wordpress archive for language '{}': '{}' for service '{}'."),
+
+        wordpress_archive_hash_debug(
+                "Returns Wordpress archive hash for language '{}': '{}' for {}"),
+
+        wordpress_archive_hash_info(
+                "Returns Wordpress archive hash for language '{}': '{}' for service '{}'."),
+
+        wordpress_archive_strip_debug(
+                "Returns Wordpress strip archive for language '{}': '{}' for {}"),
+
+        wordpress_archive_strip_info(
+                "Returns Wordpress strip archive for language '{}': '{}' for service '{}'.");
 
         private String name;
 
@@ -90,34 +111,56 @@ class WordpressFromArchiveConfigLogger extends AbstractLogger {
         super(WordpressFromArchiveConfig.class);
     }
 
-    void downloadArchive(LinuxScript script, URI archive) {
+    void unpackArchiveDone(WordpressFromArchiveConfig config, URI archive) {
         if (isDebugEnabled()) {
-            debug(download_archive_trace, archive, script);
+            debug(unpack_archive_debug, archive, config);
         } else {
-            info(download_archive_info, archive, script.getName());
+            info(unpack_archive_info, archive, config.getServiceName());
         }
     }
 
-    void checkHashArchive(LinuxScript script, URI source, URI hash,
-            boolean check) {
-        if (!check) {
-            logException(
-                    new ServiceException(hash_archive_mismatch)
-                            .add(the_script, script).add(the_archive, source)
-                            .add(the_hash, hash),
-                    hash_archive_mismatch_message, source, script.getName());
+    void checkVersion(WordpressFromArchiveConfig config, Version version,
+            Version upper) {
+        if (isDebugEnabled()) {
+            debug(compare_versions_debug, version, upper, config);
+        } else {
+            info(compare_versions_info, version, upper, config.getServiceName());
         }
     }
 
-    void checkNeedDownloadArchive(LinuxScript script, File dest, URI hash) {
-        debug(check_need_download, dest, hash, script);
+    ServiceException errorArchiveHash(WordpressService service, URI archive) {
+        return logException(
+                new ServiceException(error_archive_hash).add(service_name,
+                        service).add(archive_name, archive),
+                error_archive_hash_message, archive, service);
     }
 
-    void startDownload(LinuxScript script, URI source, File dest) {
-        debug(start_download, source, dest, script);
+    void returnsWordpressArchive(WordpressFromArchiveConfig script,
+            String lang, URI uri) {
+        if (isDebugEnabled()) {
+            debug(wordpress_archive_debug, lang, uri, script);
+        } else {
+            info(wordpress_archive_info, lang, uri, script.getServiceName());
+        }
     }
 
-    void finishDownload(LinuxScript script, URI source, File dest) {
-        debug(finish_download, source, dest, script);
+    void returnsWordpressArchiveHash(WordpressFromArchiveConfig script,
+            String lang, URI uri) {
+        if (isDebugEnabled()) {
+            debug(wordpress_archive_hash_debug, lang, uri, script);
+        } else {
+            info(wordpress_archive_hash_info, lang, uri,
+                    script.getServiceName());
+        }
+    }
+
+    void returnsStripArchive(WordpressFromArchiveConfig script, String lang,
+            boolean strip) {
+        if (isDebugEnabled()) {
+            debug(wordpress_archive_strip_debug, lang, strip, script);
+        } else {
+            info(wordpress_archive_strip_info, lang, strip,
+                    script.getServiceName());
+        }
     }
 }

@@ -16,10 +16,6 @@
 	<inceptionYear>2014</inceptionYear>
 	<url>https://anrisoftware.com/projects/projects/sscontrol-httpd-wordpress</url>
 
-	<properties>
-		<project.custom.year>${project.inceptionYear}</project.custom.year>
-	</properties>
-
 	<issueManagement>
 		<system>Redmine</system>
 		<url>https://anrisoftware.com/projects/projects/sscontrol-httpd-wordpress</url>
@@ -34,6 +30,12 @@
 	<dependencies>
 
 		<!-- test dependencies -->
+        <dependency>
+            <groupId>com.anrisoftware.sscontrol</groupId>
+            <artifactId>sscontrol-testutils</artifactId>
+            <version>1.0-alpha-3-SNAPSHOT</version>
+            <scope>test</scope>
+        </dependency>
 		<dependency>
 			<groupId>com.anrisoftware.sscontrol</groupId>
 			<artifactId>sscontrol-profile</artifactId>

@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Erwin Müller <erwin.mueller@deventm.org>
+ * Copyright 2014-2015 Erwin Müller <erwin.mueller@deventm.org>
  *
  * This file is part of sscontrol-httpd-wordpress.
  *
@@ -26,17 +26,17 @@ def groupid = "web_001"
 httpd {
     domain "www.test1.com", id: domainid, address: "192.168.0.51", {
         user userid, group: groupid
-        setup "wordpress", id: wordpressid, alias: "/", {
-            database "wordpress3", user: "user", password: "userpass", host: "localhost"
+        setup "wordpress_4", id: wordpressid, alias: "/", {
+            database "wordpressdb", user: "user", password: "userpass"
             multisite setup: "subdir"
         }
     }
     domain "www.blogfoo.com", address: "192.168.0.51", {
         user userid, group: groupid
-        setup "wordpress", ref: wordpressid, refdomain: domainid
+        setup "wordpress_4", ref: wordpressid, refdomain: domainid
     }
     domain "www.blogbar.com", address: "192.168.0.51", {
         user userid, group: groupid
-        setup "wordpress", ref: wordpressid, refdomain: domainid
+        setup "wordpress_4", ref: wordpressid, refdomain: domainid
     }
 }

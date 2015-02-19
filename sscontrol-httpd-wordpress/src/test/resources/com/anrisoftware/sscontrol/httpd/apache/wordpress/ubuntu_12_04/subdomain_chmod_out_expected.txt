@@ -1,16 +1,18 @@
 755 /tmp/var/www/php-fcgi-scripts/www.test1.com/php-fcgi-starter
-0440 /tmp/var/www/www.test1.com/wordpress_3_8/wp-config.php
-0775 /tmp/var/www/www.test1.com/wordpress_3_8/wp-content/cache
-0775 /tmp/var/www/www.test1.com/wordpress_3_8/wp-content/plugins
-0775 /tmp/var/www/www.test1.com/wordpress_3_8/wp-content/themes
-0775 /tmp/var/www/www.test1.com/wordpress_3_8/wp-content/uploads
+-R u=rwX,g=rX,o=rX /tmp/var/www/www.test1.com/wordpress_4
+-R u=rwX,g=rX,o-rwX /tmp/var/www/www.test1.com/wordpress_4/wp-content/cache
+-R u=rwX,g=rX,o-rwX /tmp/var/www/www.test1.com/wordpress_4/wp-content/plugins
+-R u=rwX,g=rX,o-rwX /tmp/var/www/www.test1.com/wordpress_4/wp-content/themes
+-R u=rwX,g=rX,o-rwX /tmp/var/www/www.test1.com/wordpress_4/wp-content/uploads
+u=r,g=r,o-rwx /tmp/var/www/www.test1.com/wordpress_4/wp-config.php
 755 /tmp/var/www/php-fcgi-scripts/www.blogfoo.com/php-fcgi-starter
 755 /tmp/var/www/php-fcgi-scripts/www.blogbar.com/php-fcgi-starter
 755 /tmp/var/www/php-fcgi-scripts/www.test1.com/php-fcgi-starter
-0440 /tmp/var/www/www.test1.com/wordpress_3_8/wp-config.php
-0775 /tmp/var/www/www.test1.com/wordpress_3_8/wp-content/cache
-0775 /tmp/var/www/www.test1.com/wordpress_3_8/wp-content/plugins
-0775 /tmp/var/www/www.test1.com/wordpress_3_8/wp-content/themes
-0775 /tmp/var/www/www.test1.com/wordpress_3_8/wp-content/uploads
+-R u=rwX,g=rX,o=rX /tmp/var/www/www.test1.com/wordpress_4
+-R u=rwX,g=rX,o-rwX /tmp/var/www/www.test1.com/wordpress_4/wp-content/cache
+-R u=rwX,g=rX,o-rwX /tmp/var/www/www.test1.com/wordpress_4/wp-content/plugins
+-R u=rwX,g=rX,o-rwX /tmp/var/www/www.test1.com/wordpress_4/wp-content/themes
+-R u=rwX,g=rX,o-rwX /tmp/var/www/www.test1.com/wordpress_4/wp-content/uploads
+u=r,g=r,o-rwx /tmp/var/www/www.test1.com/wordpress_4/wp-config.php
 755 /tmp/var/www/php-fcgi-scripts/www.blogfoo.com/php-fcgi-starter
 755 /tmp/var/www/php-fcgi-scripts/www.blogbar.com/php-fcgi-starter

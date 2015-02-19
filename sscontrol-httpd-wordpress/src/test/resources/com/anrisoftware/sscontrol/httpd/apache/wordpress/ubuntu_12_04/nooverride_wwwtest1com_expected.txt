@@ -38,15 +38,17 @@
             RewriteRule ^(.*)$ ^http://%{REMOTE_ADDR}/$ [R=301,L]
         </IfModule>
 
-        <IfModule !mod_php5.c>
-            <IfModule mod_actions.c>
-                <IfModule mod_cgi.c>
-                    AddType application/x-httpd-php .php
-                    Action application/x-httpd-php /cgi-bin/php5
-                </IfModule>
-                <IfModule mod_cgid.c>
-                    AddType application/x-httpd-php .php
-                    Action application/x-httpd-php /cgi-bin/php5
+        <IfModule mod_mime.c>
+            <IfModule !mod_php5.c>
+                <IfModule mod_actions.c>
+                    <IfModule mod_cgi.c>
+                        AddType application/x-httpd-php .php
+                        Action application/x-httpd-php /cgi-bin/php5
+                    </IfModule>
+                    <IfModule mod_cgid.c>
+                        AddType application/x-httpd-php .php
+                        Action application/x-httpd-php /cgi-bin/php5
+                    </IfModule>
                 </IfModule>
             </IfModule>
         </IfModule>

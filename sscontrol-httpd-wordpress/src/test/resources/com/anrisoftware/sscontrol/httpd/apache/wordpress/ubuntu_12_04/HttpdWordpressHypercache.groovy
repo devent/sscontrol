@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Erwin Müller <erwin.mueller@deventm.org>
+ * Copyright 2014-2015 Erwin Müller <erwin.mueller@deventm.org>
  *
  * This file is part of sscontrol-httpd-wordpress.
  *
@@ -18,11 +18,13 @@
  */
 package com.anrisoftware.sscontrol.httpd.apache.wordpress.ubuntu_12_04
 
+import com.anrisoftware.sscontrol.core.yesno.YesNoFlag;
+
 httpd {
     domain "www.test1.com", address: "192.168.0.51", {
-        setup "wordpress", alias: "wordpress3", {
-            database "wordpress3", user: "user", password: "userpass", host: "localhost"
-            cache enabled: yes, plugin: "hyper-cache"
+        setup "wordpress_4", alias: "wordpress3", {
+            database "wordpressdb", user: "user", password: "userpass"
+            cache enabled: YesNoFlag.yes, plugin: "hyper-cache"
         }
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Erwin Müller <erwin.mueller@deventm.org>
+ * Copyright 2014-2015 Erwin Müller <erwin.mueller@deventm.org>
  *
  * This file is part of sscontrol-httpd-wordpress.
  *
@@ -18,19 +18,16 @@
  */
 package com.anrisoftware.sscontrol.httpd.apache.wordpress.ubuntu_12_04
 
-import com.anrisoftware.sscontrol.httpd.apache.wordpress.ubuntu.UbuntuResources
-
-
 def wordpressid = "wordpress3"
 
 httpd {
     domain "www.test1.com", address: "192.168.0.51", {
-        setup "wordpress", id: wordpressid, alias: "wordpress3", {
-            database "wordpress3", user: "user", password: "userpass", host: "localhost"
+        setup "wordpress_4", id: wordpressid, alias: "wordpress3", {
+            database "wordpressdb", user: "user", password: "userpass", host: "localhost"
         }
     }
     ssl_domain "www.test1.com", address: "192.168.0.51", {
-        certificate file: UbuntuResources.certCrt.resource, key: UbuntuResources.certKey.resource
-        setup "wordpress", ref: wordpressid
+        certificate file: Ubuntu_12_04_Resources.certCrt.resource, key: Ubuntu_12_04_Resources.certKey.resource
+        setup "wordpress_4", ref: wordpressid
     }
 }

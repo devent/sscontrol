@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Erwin Müller <erwin.mueller@deventm.org>
+ * Copyright 2014-2015 Erwin Müller <erwin.mueller@deventm.org>
  *
  * This file is part of sscontrol-httpd-wordpress.
  *
@@ -22,7 +22,8 @@ import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static org.apache.commons.io.FileUtils.*
 
 import com.anrisoftware.sscontrol.httpd.apache.wordpress.ubuntu_12_04.Ubuntu_12_04_Resources
-import com.anrisoftware.sscontrol.httpd.wordpress.resources.ResourcesUtils
+import com.anrisoftware.sscontrol.httpd.apache.wordpress.ubuntu_12_04.WordpressResources
+import com.anrisoftware.sscontrol.testutils.resources.ResourcesUtils
 
 /**
  * Wordpress with Nginx proxy resources.
@@ -33,14 +34,11 @@ import com.anrisoftware.sscontrol.httpd.wordpress.resources.ResourcesUtils
 enum WordpressProxyResources {
 
     profile("UbuntuProfile.groovy", WordpressProxyResources.class.getResource("UbuntuProfile.groovy")),
-    phpConfDir("/etc/php5/cgi/conf.d", null),
-    wordpressArchive("/tmp/web-wordpress-3.8.tar.gz", WordpressProxyResources.class.getResource("wordpress-3.8.tar.gz")),
-    wordpressArchiveHash("/tmp/web-wordpress-3.8.tar.gz.sha1", WordpressProxyResources.class.getResource("wordpress-3.8.tar.gz.sha1")),
-    wordpress_3_8_config("/var/www/www.test1.com/wordpress_3_8/wp-config-sample.php", WordpressProxyResources.class.getResource("wordpress_3_8_config_sample_php.txt")),
-    wordpress_3_8_config_expected("/var/www/www.test1.com/wordpress_3_8/wp-config.php", WordpressProxyResources.class.getResource("wordpress_3_8_config_php_expected.txt")),
-    aptitudeExpectedConf("/usr/bin/aptitude.out", WordpressProxyResources.class.getResource("aptitude_out_expected.txt")),
     httpdProxyDomainsScript("Httpd.groovy", WordpressProxyResources.class.getResource("HttpdWordpressReverseProxyDomains.groovy")),
     httpdProxyScript("Httpd.groovy", WordpressProxyResources.class.getResource("HttpdWordpressReverseProxy.groovy")),
+    wordpressConfig("/var/www/www.test1.com/wordpress_4/wp-config-sample.php", WordpressResources.class.getResource("wordpress_config_sample_php.txt")),
+    wordpressConfig_expected("/var/www/www.test1.com/wordpress_4/wp-config.php", WordpressProxyResources.class.getResource("wordpress_config_php_expected.txt")),
+    aptitudeExpectedConf("/usr/bin/aptitude.out", WordpressProxyResources.class.getResource("aptitude_out_expected.txt")),
     portsProxyExpectedConf("/etc/apache2/ports.conf", WordpressProxyResources.class.getResource("ports_reverseproxy_expected_conf.txt")),
     test1comProxyConf("/etc/nginx/sites-available/100-robobee-test1.com.conf", WordpressProxyResources.class.getResource("test1_com_reverseproxy_conf.txt")),
     test1comSslProxyConf("/etc/nginx/sites-available/100-robobee-test1.com-ssl.conf", WordpressProxyResources.class.getResource("test1_com_ssl_reverseproxy_conf.txt")),
@@ -60,9 +58,6 @@ enum WordpressProxyResources {
     nginxRestartCommand("/etc/init.d/nginx", WordpressProxyResources.class.getResource("echo_command.txt")),
 
     static void copyWordpressProxyFiles(File parent) {
-        phpConfDir.asFile parent mkdirs()
-        wordpressArchive.createFile parent
-        wordpress_3_8_config.createFile parent
         nginxRestartCommand.createCommand parent
     }
 
@@ -70,8 +65,8 @@ enum WordpressProxyResources {
         def entry = profile.getEntry("httpd")
         entry.service(["idapache2": "apache", "idproxy": "nginx"])
         entry.additional_mods "rpaf"
-        entry.apache_restart_command "${Ubuntu_12_04_Resources.restartCommand.asFile(parent)} restart"
-        entry.nginx_restart_command "${nginxRestartCommand.asFile(parent)} restart"
+        entry.apache_restart_command Ubuntu_12_04_Resources.apache2Command.asFile(parent)
+        entry.nginx_restart_command nginxRestartCommand.asFile(parent)
         entry.apache_configuration_directory Ubuntu_12_04_Resources.confDir.asFile(parent)
         entry.nginx_configuration_directory nginxConfigurationDir.asFile(parent)
         entry.apache_sites_available_directory Ubuntu_12_04_Resources.sitesAvailableDir.asFile(parent)

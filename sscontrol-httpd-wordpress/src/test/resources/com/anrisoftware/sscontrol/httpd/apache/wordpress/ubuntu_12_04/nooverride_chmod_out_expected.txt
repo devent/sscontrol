@@ -1,16 +1,18 @@
 755 /tmp/var/www/php-fcgi-scripts/www.test1.com/php-fcgi-starter
-0440 /tmp/var/www/www.test1.com/myprefix/wp-config.php
-0775 /tmp/var/www/www.test1.com/myprefix/wp-content/cache
-0775 /tmp/var/www/www.test1.com/myprefix/wp-content/plugins
-0775 /tmp/var/www/www.test1.com/myprefix/wp-content/themes
-0775 /tmp/var/www/www.test1.com/myprefix/wp-content/uploads
+-R u=rwX,g=rX,o=rX /tmp/var/www/www.test1.com/myprefix
+-R u=rwX,g=rX,o-rwX /tmp/var/www/www.test1.com/myprefix/wp-content/cache
+-R u=rwX,g=rX,o-rwX /tmp/var/www/www.test1.com/myprefix/wp-content/plugins
+-R u=rwX,g=rX,o-rwX /tmp/var/www/www.test1.com/myprefix/wp-content/themes
+-R u=rwX,g=rX,o-rwX /tmp/var/www/www.test1.com/myprefix/wp-content/uploads
+u=r,g=r,o-rwx /tmp/var/www/www.test1.com/myprefix/wp-config.php
 755 /tmp/var/www/php-fcgi-scripts/www.test1.com/php-fcgi-starter
 400 /tmp/var/www/www.test1.com/ssl/cert_crt.txt /tmp/var/www/www.test1.com/ssl/cert_key.txt
 755 /tmp/var/www/php-fcgi-scripts/www.test1.com/php-fcgi-starter
-0440 /tmp/var/www/www.test1.com/myprefix/wp-config.php
-0775 /tmp/var/www/www.test1.com/myprefix/wp-content/cache
-0775 /tmp/var/www/www.test1.com/myprefix/wp-content/plugins
-0775 /tmp/var/www/www.test1.com/myprefix/wp-content/themes
-0775 /tmp/var/www/www.test1.com/myprefix/wp-content/uploads
+-R u=rwX,g=rX,o=rX /tmp/var/www/www.test1.com/myprefix
+-R u=rwX,g=rX,o-rwX /tmp/var/www/www.test1.com/myprefix/wp-content/cache
+-R u=rwX,g=rX,o-rwX /tmp/var/www/www.test1.com/myprefix/wp-content/plugins
+-R u=rwX,g=rX,o-rwX /tmp/var/www/www.test1.com/myprefix/wp-content/themes
+-R u=rwX,g=rX,o-rwX /tmp/var/www/www.test1.com/myprefix/wp-content/uploads
+u=r,g=r,o-rwx /tmp/var/www/www.test1.com/myprefix/wp-config.php
 755 /tmp/var/www/php-fcgi-scripts/www.test1.com/php-fcgi-starter
 400 /tmp/var/www/www.test1.com/ssl/cert_crt.txt /tmp/var/www/www.test1.com/ssl/cert_key.txt

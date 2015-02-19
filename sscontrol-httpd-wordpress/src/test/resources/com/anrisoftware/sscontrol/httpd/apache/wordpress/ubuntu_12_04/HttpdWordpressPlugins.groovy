@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Erwin Müller <erwin.mueller@deventm.org>
+ * Copyright 2014-2015 Erwin Müller <erwin.mueller@deventm.org>
  *
  * This file is part of sscontrol-httpd-wordpress.
  *
@@ -20,8 +20,8 @@ package com.anrisoftware.sscontrol.httpd.apache.wordpress.ubuntu_12_04
 
 httpd {
     domain "www.test1.com", address: "192.168.0.51", {
-        setup "wordpress", alias: "wordpress3", {
-            database "wordpress3", user: "user", password: "userpass", host: "localhost"
+        setup "wordpress_4", alias: "wordpress3", {
+            database "wordpressdb", user: "user", password: "userpass"
             plugins "hyphenator, broken-link-checker"
             themes "picochic, tagebuch"
         }

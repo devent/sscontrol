@@ -63,7 +63,8 @@ enum WordpressProxyResources {
 
     static void setupWordpressProxyProperties(def profile, File parent) {
         def entry = profile.getEntry("httpd")
-        entry.service(["idapache2": "apache", "idproxy": "nginx"])
+        def gs = ""
+        entry.service(["idapache2${gs}": "apache", "idproxy": "nginx"])
         entry.additional_mods "rpaf"
         entry.apache_restart_command Ubuntu_12_04_Resources.apache2Command.asFile(parent)
         entry.nginx_restart_command nginxRestartCommand.asFile(parent)

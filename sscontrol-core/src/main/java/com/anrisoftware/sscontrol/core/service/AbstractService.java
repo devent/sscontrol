@@ -21,6 +21,7 @@ package com.anrisoftware.sscontrol.core.service;
 import static java.util.ServiceLoader.load;
 import groovy.lang.Script;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.ServiceLoader;
@@ -41,7 +42,7 @@ import com.google.inject.Injector;
 
 /**
  * Sets globally available variables for the Groovy script.
- * 
+ *
  * <ul>
  * <li>{@code system:} the system profile properties;
  * <li>{@code profile:} the profile properties of the script;
@@ -49,7 +50,7 @@ import com.google.inject.Injector;
  * <li>{@code name:} the name of the service.
  * <li>{@code threads:} the threads pool.
  * </ul>
- * 
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
@@ -86,17 +87,18 @@ public abstract class AbstractService implements Service {
 
     /**
      * Sets the threads pool.
-     * 
+     *
      * @param threads
      *            the {@link Threads}.
      */
+    @Override
     public void setThreads(ExecutorService threads) {
         this.threads = (Threads) threads;
     }
 
     /**
      * Sets the profile for the service.
-     * 
+     *
      * @param profile
      *            the {@link ProfileService}.
      */
@@ -107,7 +109,7 @@ public abstract class AbstractService implements Service {
 
     /**
      * Returns the profile of the service.
-     * 
+     *
      * @return the {@link ProfileService}.
      */
     public ProfileService getProfile() {
@@ -116,7 +118,7 @@ public abstract class AbstractService implements Service {
 
     /**
      * Returns the threads pool for the service script.
-     * 
+     *
      * @return the {@link Threads}.
      */
     public Threads getThreads() {
@@ -137,7 +139,7 @@ public abstract class AbstractService implements Service {
 
     /**
      * Injects the dependencies of the script.
-     * 
+     *
      * @param script
      *            the {@link Script}.
      */
@@ -147,12 +149,12 @@ public abstract class AbstractService implements Service {
 
     /**
      * Returns the script to the specified profile.
-     * 
+     *
      * @param profileName
      *            the name of the profile.
-     * 
+     *
      * @return the {@link Script}.
-     * 
+     *
      * @throws ServiceException
      *             if there were some error returning the script.
      */
@@ -161,12 +163,12 @@ public abstract class AbstractService implements Service {
 
     /**
      * Finds the script factory with the specified service name.
-     * 
+     *
      * @param name
      *            the service name {@link String}.
-     * 
+     *
      * @return the {@link List} of {@link ServiceScriptFactory}.
-     * 
+     *
      * @throws ServiceException
      *             if no script factory with the specified name was found.
      */
@@ -188,16 +190,16 @@ public abstract class AbstractService implements Service {
 
     /**
      * Compares the service script name to the specified service information.
-     * 
+     *
      * @param info
      *            the {@link ServiceScriptInfo}.
-     * 
+     *
      * @param serviceName
      *            the name of the service.
-     * 
+     *
      * @param profile
      *            the service {@link ProfileService}.
-     * 
+     *
      * @return {@code true} if the service script that is specified by the
      *         service script information is the correct one for the service.
      */
@@ -220,16 +222,16 @@ public abstract class AbstractService implements Service {
 
     /**
      * Compares the service script name to the specified service information.
-     * 
+     *
      * @param info
      *            the {@link ServiceScriptInfo}.
-     * 
+     *
      * @param profile
      *            the service {@link ProfileService}.
-     * 
+     *
      * @param service
      *            the service.
-     * 
+     *
      * @return {@code true} if the service script that is specified by the
      *         service script information is the correct one for the service.
      */
@@ -239,10 +241,13 @@ public abstract class AbstractService implements Service {
                 && info.getServiceName().equals(service);
     }
 
-    @SuppressWarnings({ "unchecked" })
-    private Map<String, String> asServicesMap(ProfileProperties entry) {
-        Object obj = entry.get(SERVICE);
-        return (Map<String, String>) obj;
+    private Map<String, String> asServicesMap(ProfileProperties properties) {
+        Map<?, ?> map = (Map<?, ?>) properties.get(SERVICE);
+        Map<String, String> result = new HashMap<String, String>();
+        for (Map.Entry<?, ?> entry : map.entrySet()) {
+            result.put(entry.getKey().toString(), entry.getValue().toString());
+        }
+        return result;
     }
 
     public void refservice(String refservice) {

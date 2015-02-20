@@ -1,20 +1,20 @@
 web_001.web_001 /tmp/var/www/www.test1.com/web
 -R web_001.web_001 /tmp/var/www/php-fcgi-scripts/www.test1.com
 web_001.web_001 /tmp/var/www/php-fcgi-scripts/www.test1.com/php-fcgi-starter
-web_001.web_001 /tmp/var/www/www.test1.com/wordpress_4/wp-content/advanced-cache.php
 -R root.web_001 /tmp/var/www/www.test1.com/wordpress_4
 -R web_001.web_001 /tmp/var/www/www.test1.com/wordpress_4/wp-content/cache
 -R web_001.web_001 /tmp/var/www/www.test1.com/wordpress_4/wp-content/plugins
 -R web_001.web_001 /tmp/var/www/www.test1.com/wordpress_4/wp-content/themes
 -R web_001.web_001 /tmp/var/www/www.test1.com/wordpress_4/wp-content/uploads
 web_001.web_001 /tmp/var/www/www.test1.com/wordpress_4/wp-config.php
+web_001.web_001 /tmp/var/www/www.test1.com/wordpress_4/wp-content/advanced-cache.php
 web_001.web_001 /tmp/var/www/www.test1.com/web
 -R web_001.web_001 /tmp/var/www/php-fcgi-scripts/www.test1.com
 web_001.web_001 /tmp/var/www/php-fcgi-scripts/www.test1.com/php-fcgi-starter
-web_001.web_001 /tmp/var/www/www.test1.com/wordpress_4/wp-content/advanced-cache.php
 -R root.web_001 /tmp/var/www/www.test1.com/wordpress_4
 -R web_001.web_001 /tmp/var/www/www.test1.com/wordpress_4/wp-content/cache
 -R web_001.web_001 /tmp/var/www/www.test1.com/wordpress_4/wp-content/plugins
 -R web_001.web_001 /tmp/var/www/www.test1.com/wordpress_4/wp-content/themes
 -R web_001.web_001 /tmp/var/www/www.test1.com/wordpress_4/wp-content/uploads
 web_001.web_001 /tmp/var/www/www.test1.com/wordpress_4/wp-config.php
+web_001.web_001 /tmp/var/www/www.test1.com/wordpress_4/wp-content/advanced-cache.php

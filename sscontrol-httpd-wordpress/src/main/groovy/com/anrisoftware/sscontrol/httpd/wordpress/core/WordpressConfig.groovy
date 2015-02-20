@@ -25,6 +25,7 @@ import java.nio.charset.Charset
 import javax.inject.Inject
 
 import org.apache.commons.lang3.RandomStringUtils
+import org.apache.commons.lang3.StringUtils
 import org.apache.commons.lang3.builder.ToStringBuilder
 
 import com.anrisoftware.propertiesutils.ContextProperties
@@ -657,19 +658,30 @@ abstract class WordpressConfig {
 
     /**
      * Returns the advanced cache configuration file path, for example
-     * {@code "wp-content/advanced-cache.php"}
+     * {@code "wp-content/advanced-cache.php"}. If the path is relative then
+     * the file will be under the service installation directory.
      *
      * <ul>
      * <li>profile property {@code "wordpress_advanced_cache_config_file"}</li>
      * </ul>
      *
-     * @param parent
-     *                the {@link File} parent directory.
+     * @param domain
+     *            the {@link Domain} where the plug-ins are unpacked.
+     *
+     * @param service
+     *            the {@link WordpressService} service.
      *
      * @see #getWordpressProperties()
      */
-    File advancedCacheConfigFile(File parent) {
-        profileFileProperty "wordpress_advanced_cache_config_file", parent, wordpressProperties
+    File advancedCacheConfigFile(Domain domain, WordpressService service) {
+        def dir = wordpressDir domain, service
+        def value = profileProperty "wordpress_advanced_cache_config_file", wordpressProperties
+        if (!StringUtils.isEmpty(value)) {
+            def file = new File(value)
+            return file.absolute ? file : new File(dir, value)
+        } else {
+            null
+        }
     }
 
     /**

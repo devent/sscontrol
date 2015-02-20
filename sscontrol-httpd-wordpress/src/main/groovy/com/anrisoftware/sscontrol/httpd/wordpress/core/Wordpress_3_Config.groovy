@@ -516,24 +516,9 @@ abstract class Wordpress_3_Config extends WordpressConfig {
         }
         def dir = wordpressPluginsDirectory domain, service
         installPlugin service.cachePlugin, dir
-        def advancedCacheConfigFile = advancedCacheConfigFile wordpressDir(domain, service)
-        if (advancedCacheConfigFile) {
+        def advancedCacheConfigFile = advancedCacheConfigFile domain, service
+        if (advancedCacheConfigFile != null) {
             advancedCacheConfigFile.createNewFile()
-            changeFileModFactory.create(
-                    log: log.log,
-                    runCommands: runCommands,
-                    command: chmodCommand,
-                    files: advancedCacheConfigFile,
-                    mod: "u=rwX,g=rX,o-rwX",
-                    this, threads)()
-            changeFileOwnerFactory.create(
-                    log: log.log,
-                    runCommands: runCommands,
-                    command: chownCommand,
-                    files: advancedCacheConfigFile,
-                    owner: domain.domainUser.name,
-                    ownerGroup: domain.domainUser.group,
-                    this, threads)()
         }
     }
 

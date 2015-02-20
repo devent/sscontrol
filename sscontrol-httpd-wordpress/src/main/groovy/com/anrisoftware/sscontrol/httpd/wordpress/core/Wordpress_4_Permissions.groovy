@@ -79,6 +79,7 @@ class Wordpress_4_Permissions {
         setupWordpressPermissions domain, service
         setupPublicPermissions domain, service
         setupPrivatePermissions domain, service
+        setupCachePermissions domain, service
     }
 
     void setupWordpressPermissions(Domain domain, WordpressService service) {
@@ -131,7 +132,7 @@ class Wordpress_4_Permissions {
                 log: log,
                 runCommands: runCommands,
                 command: chmodCommand,
-                mod: "u=rwX,g=rX,o-rwX",
+                mod: "u=rwX,g=rX,o=rX",
                 files: [
                     cachedir,
                     pluginsdir,
@@ -159,6 +160,29 @@ class Wordpress_4_Permissions {
                 command: chmodCommand,
                 mod: "u=r,g=r,o-rwx",
                 files: conffile,
+                this, threads)()
+    }
+
+    void setupCachePermissions(Domain domain, WordpressService service) {
+        def user = domain.domainUser
+        File advancedCacheConfigFile = advancedCacheConfigFile domain, service
+        if (advancedCacheConfigFile == null || !advancedCacheConfigFile.exists()) {
+            return
+        }
+        changeFileOwnerFactory.create(
+                log: log,
+                runCommands: runCommands,
+                command: chownCommand,
+                files: advancedCacheConfigFile,
+                owner: domain.domainUser.name,
+                ownerGroup: domain.domainUser.group,
+                this, threads)()
+        changeFileModFactory.create(
+                log: log,
+                runCommands: runCommands,
+                command: chmodCommand,
+                files: advancedCacheConfigFile,
+                mod: "u=rw,g=r,o-rw",
                 this, threads)()
     }
 

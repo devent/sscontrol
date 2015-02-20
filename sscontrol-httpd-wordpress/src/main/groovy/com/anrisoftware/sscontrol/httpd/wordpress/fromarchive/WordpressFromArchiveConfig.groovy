@@ -152,12 +152,27 @@ abstract class WordpressFromArchiveConfig {
     boolean needUnpackArchive(Domain domain, WordpressService service) {
         switch (service.overrideMode) {
             case OverrideMode.no:
-                return false
+                return !serviceInstalled(domain, service)
             case OverrideMode.override:
                 return true
             case OverrideMode.update:
                 return checkWordpressVersion(domain, service)
         }
+    }
+
+    /**
+     * Returns if the <i>Wordpress</i> service is already installed.
+     *
+     * @param domain
+     *            the {@link Domain} of the service.
+     *
+     * @param service
+     *            the {@link WordpressService} service.
+     *
+     * @return {@code true} if the service is already installed.
+     */
+    boolean serviceInstalled(Domain domain, WordpressService service) {
+        configurationFile(domain, service).exists()
     }
 
     /**

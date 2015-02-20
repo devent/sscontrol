@@ -229,6 +229,7 @@ class WordpressTest extends WebServiceTestEnvironment {
     void "wordpress prefix, no override"() {
         copyUbuntuFiles tmpdir
         copyWordpressFiles tmpdir
+        nooverrideWordpressConfigSample.createFile tmpdir
         nooverrideWordpressConfig.createFile tmpdir
 
         loader.loadService profile.resource, null

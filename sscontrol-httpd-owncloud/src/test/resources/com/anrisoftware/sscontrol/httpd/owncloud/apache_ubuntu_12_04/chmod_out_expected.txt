@@ -1,20 +1,20 @@
 755 /tmp/var/www/php-fcgi-scripts/test1.com/php-fcgi-starter
 -R u=rwX,g=rX,o=rX /tmp/var/www/test1.com/test1owncloud
--R u=rwX,g=rwX,o-rwX /tmp/var/www/test1.com/test1owncloud/apps
--R u=rwX,g=rwX,o-rwX /tmp/var/www/test1.com/test1owncloud/config
+-R u=rwX,g=rwX,o=rX /tmp/var/www/test1.com/test1owncloud/apps
+-R u=rwX,g=rwX,o=rX /tmp/var/www/test1.com/test1owncloud/config
 -R u=rwX,g=rwX,o-rwX /tmp/var/www/test1.com/test1owncloud/data
 755 /tmp/var/www/php-fcgi-scripts/test1.com/php-fcgi-starter
 400 /tmp/var/www/test1.com/ssl/cert_crt.txt /tmp/var/www/test1.com/ssl/cert_key.txt
 755 /tmp/var/www/php-fcgi-scripts/test2.com/php-fcgi-starter
 -R u=rwX,g=rX,o=rX /tmp/var/www/test2.com/owncloud_7
--R u=rwX,g=rwX,o-rwX /tmp/var/www/test2.com/owncloud_7/apps
--R u=rwX,g=rwX,o-rwX /tmp/var/www/test2.com/owncloud_7/config
+-R u=rwX,g=rwX,o=rX /tmp/var/www/test2.com/owncloud_7/apps
+-R u=rwX,g=rwX,o=rX /tmp/var/www/test2.com/owncloud_7/config
 -R u=rwX,g=rwX,o-rwX /tmp/var/www/test2.com/owncloud_7/data
 755 /tmp/var/www/php-fcgi-scripts/test1.com/php-fcgi-starter
 o-rw /tmp/var/www/test1.com/test1owncloud/config/config.php
 -R u=rwX,g=rX,o=rX /tmp/var/www/test1.com/test1owncloud
--R u=rwX,g=rwX,o-rwX /tmp/var/www/test1.com/test1owncloud/apps
--R u=rwX,g=rwX,o-rwX /tmp/var/www/test1.com/test1owncloud/config
+-R u=rwX,g=rwX,o=rX /tmp/var/www/test1.com/test1owncloud/apps
+-R u=rwX,g=rwX,o=rX /tmp/var/www/test1.com/test1owncloud/config
 -R u=rwX,g=rwX,o-rwX /tmp/var/www/test1.com/test1owncloud/data
 u=rw,g=r,o-rwx /tmp/var/www/test1.com/test1owncloud/config/config.php
 755 /tmp/var/www/php-fcgi-scripts/test1.com/php-fcgi-starter
@@ -22,7 +22,7 @@ u=rw,g=r,o-rwx /tmp/var/www/test1.com/test1owncloud/config/config.php
 755 /tmp/var/www/php-fcgi-scripts/test2.com/php-fcgi-starter
 o-rw /tmp/var/www/test2.com/owncloud_7/config/config.php
 -R u=rwX,g=rX,o=rX /tmp/var/www/test2.com/owncloud_7
--R u=rwX,g=rwX,o-rwX /tmp/var/www/test2.com/owncloud_7/apps
--R u=rwX,g=rwX,o-rwX /tmp/var/www/test2.com/owncloud_7/config
+-R u=rwX,g=rwX,o=rX /tmp/var/www/test2.com/owncloud_7/apps
+-R u=rwX,g=rwX,o=rX /tmp/var/www/test2.com/owncloud_7/config
 -R u=rwX,g=rwX,o-rwX /tmp/var/www/test2.com/owncloud_7/data
 u=rw,g=r,o-rwx /tmp/var/www/test2.com/owncloud_7/config/config.php

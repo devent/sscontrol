@@ -207,17 +207,37 @@ abstract class Owncloud_7_Config {
         def user = domain.domainUser
         def appsDir = owncloudAppsDirectory domain, service
         def configDir = owncloudConfigDirectory domain, service
-        def dataDir = owncloudDataDirectory domain, service
         appsDir.mkdirs()
         configDir.mkdirs()
-        dataDir.mkdirs()
         changeFileOwnerFactory.create(
                 log: log,
                 runCommands: runCommands,
                 command: chownCommand,
                 owner: user.name,
                 ownerGroup: user.group,
-                files: [appsDir, configDir, dataDir],
+                files: [appsDir, configDir],
+                recursive: true,
+                this, threads)()
+        changeFileModFactory.create(
+                log: log,
+                runCommands: runCommands,
+                command: chmodCommand,
+                mod: "u=rwX,g=rwX,o=rX",
+                files: [appsDir, configDir],
+                recursive: true,
+                this, threads)()
+    }
+
+    void setupPrivatePermissions(Domain domain, OwncloudService service) {
+        def user = domain.domainUser
+        def dataDir = owncloudDataDirectory domain, service
+        changeFileOwnerFactory.create(
+                log: log,
+                runCommands: runCommands,
+                command: chownCommand,
+                owner: user.name,
+                ownerGroup: user.group,
+                files: [dataDir],
                 recursive: true,
                 this, threads)()
         changeFileModFactory.create(
@@ -225,32 +245,27 @@ abstract class Owncloud_7_Config {
                 runCommands: runCommands,
                 command: chmodCommand,
                 mod: "u=rwX,g=rwX,o-rwX",
-                files: [appsDir, configDir, dataDir],
+                files: [dataDir],
                 recursive: true,
                 this, threads)()
-    }
-
-    void setupPrivatePermissions(Domain domain, OwncloudService service) {
-        def user = domain.domainUser
         def configFile = owncloudConfigFile domain, service
-        if (!configFile.exists()) {
-            return
+        if (configFile.exists()) {
+            changeFileOwnerFactory.create(
+                    log: log,
+                    runCommands: runCommands,
+                    command: chownCommand,
+                    owner: user.name,
+                    ownerGroup: user.group,
+                    files: configFile,
+                    this, threads)()
+            changeFileModFactory.create(
+                    log: log,
+                    runCommands: runCommands,
+                    command: chmodCommand,
+                    mod: "u=rw,g=r,o-rwx",
+                    files: configFile,
+                    this, threads)()
         }
-        changeFileOwnerFactory.create(
-                log: log,
-                runCommands: runCommands,
-                command: chownCommand,
-                owner: user.name,
-                ownerGroup: user.group,
-                files: configFile,
-                this, threads)()
-        changeFileModFactory.create(
-                log: log,
-                runCommands: runCommands,
-                command: chmodCommand,
-                mod: "u=rw,g=r,o-rwx",
-                files: configFile,
-                this, threads)()
     }
 
     /**

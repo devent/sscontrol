@@ -16,31 +16,29 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.auth;
+package com.anrisoftware.sscontrol.httpd.authfile;
 
-import static com.anrisoftware.sscontrol.httpd.auth.RequireDomainLogger._.domain_null;
-import static org.apache.commons.lang3.StringUtils.replace;
-import static org.apache.commons.lang3.Validate.notBlank;
-import static org.apache.commons.lang3.Validate.notNull;
-
-import java.util.Map;
+import static com.anrisoftware.sscontrol.httpd.authfile.AuthFileServiceLogger._.domain_added_debug;
+import static com.anrisoftware.sscontrol.httpd.authfile.AuthFileServiceLogger._.domain_added_info;
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
+import com.anrisoftware.sscontrol.httpd.auth.AbstractAuthService;
 
 /**
- * Logging for {@link RequireDomain}.
- * 
+ * Logging for {@link AuthFileService}.
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class RequireDomainLogger extends AbstractLogger {
-
-    private static final String DOMAIN_PLACEHOLDER = "%";
-    private static final String DOMAIN = "domain";
+class AuthFileServiceLogger extends AbstractLogger {
 
     enum _ {
 
-        domain_null("Domain cannot be null or blank for %s.");
+        type_null("Authentication type cannot be null for %s."),
+
+        domain_added_debug("Required domain {} added for {}."),
+
+        domain_added_info("Required domain '{}' added for service '{}'.");
 
         private String name;
 
@@ -55,17 +53,18 @@ class RequireDomainLogger extends AbstractLogger {
     }
 
     /**
-     * Sets the context of the logger to {@link RequireDomain}.
+     * Sets the context of the logger to {@link AuthFileService}.
      */
-    public RequireDomainLogger() {
-        super(RequireDomain.class);
+    public AuthFileServiceLogger() {
+        super(AuthFileService.class);
     }
 
-    String domain(AbstractAuthService service, Map<String, Object> args) {
-        Object domain = args.get(DOMAIN);
-        notNull(domain, domain_null.toString(), service);
-        notBlank(domain.toString(), domain_null.toString(), service);
-        String str = domain.toString();
-        return replace(str, DOMAIN_PLACEHOLDER, service.getDomain().getName());
+    void requireDomainAdded(AbstractAuthService service, RequireDomain domain) {
+        if (isDebugEnabled()) {
+            debug(domain_added_debug, domain, service);
+        } else {
+            info(domain_added_info, domain.getDomain(), service.getName());
+        }
     }
+
 }

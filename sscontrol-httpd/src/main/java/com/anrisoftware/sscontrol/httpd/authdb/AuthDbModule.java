@@ -16,26 +16,36 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.authldap;
+package com.anrisoftware.sscontrol.httpd.authdb;
 
-import java.util.Map;
+import static com.google.inject.multibindings.MapBinder.newMapBinder;
 
-import com.anrisoftware.sscontrol.httpd.domain.Domain;
+import com.anrisoftware.sscontrol.httpd.webservice.WebService;
 import com.anrisoftware.sscontrol.httpd.webservice.WebServiceFactory;
+import com.google.inject.AbstractModule;
+import com.google.inject.assistedinject.FactoryModuleBuilder;
+import com.google.inject.multibindings.MapBinder;
 
 /**
- * Factory to create the LDAP authentication service.
+ * <i>Auth-Mysql</i> module.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-public interface AuthLdapServiceFactory extends WebServiceFactory {
+public class AuthDbModule extends AbstractModule {
 
-    /**
-     * Creates the LDAP authentication service.
-     *
-     * @return the {@link AuthLdapService}.
-     */
     @Override
-    AuthLdapService create(Map<String, Object> map, Domain domain);
+    protected void configure() {
+        install(new FactoryModuleBuilder().implement(WebService.class,
+                AuthDbService.class).build(AuthDbServiceFactory.class));
+        bindService();
+    }
+
+    private void bindService() {
+        MapBinder<String, WebServiceFactory> mapbinder;
+        mapbinder = newMapBinder(binder(), String.class,
+                WebServiceFactory.class);
+        mapbinder.addBinding(AuthDbService.AUTH_DB_NAME).toProvider(
+                AuthDbServiceProvider.class);
+    }
 }

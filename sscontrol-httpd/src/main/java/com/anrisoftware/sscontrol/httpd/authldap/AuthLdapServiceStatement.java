@@ -16,18 +16,42 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.auth;
+package com.anrisoftware.sscontrol.httpd.authldap;
+
+import com.anrisoftware.sscontrol.core.groovy.StatementsEnumToString;
 
 /**
- * Require mode.
- * 
+ * File authentication service statements.
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-public enum RequireValidMode {
+enum AuthLdapServiceStatement {
 
-    /**
-     * Require valid user.
-     */
-    valid_user
+    TYPE_KEY,
+
+    SATISFY_KEY,
+
+    AUTHORITATIVE_KEY,
+
+    HOST_KEY,
+
+    URL_KEY,
+
+    CREDENTIALS_KEY,
+
+    PASSWORD_KEY,
+
+    REQUIRE_KEY,
+
+    ATTRIBUTE_KEY,
+
+    GROUP_KEY,
+
+    DN_KEY;
+
+    @Override
+    public String toString() {
+        return StatementsEnumToString.toString(this);
+    }
 }

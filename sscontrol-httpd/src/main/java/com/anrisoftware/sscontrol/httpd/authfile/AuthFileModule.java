@@ -18,6 +18,7 @@
  */
 package com.anrisoftware.sscontrol.httpd.authfile;
 
+import static com.anrisoftware.sscontrol.httpd.authfile.AuthFileService.AUTH_FILE_NAME;
 import static com.google.inject.multibindings.MapBinder.newMapBinder;
 
 import com.anrisoftware.sscontrol.httpd.webservice.WebService;
@@ -27,8 +28,8 @@ import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.google.inject.multibindings.MapBinder;
 
 /**
- * Installs the HTTP/authentication file factories.
- * 
+ * File authentication service module.
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
@@ -38,6 +39,8 @@ public class AuthFileModule extends AbstractModule {
     protected void configure() {
         install(new FactoryModuleBuilder().implement(WebService.class,
                 AuthFileService.class).build(AuthFileServiceFactory.class));
+        install(new FactoryModuleBuilder().implement(RequireDomain.class,
+                RequireDomain.class).build(RequireDomainFactory.class));
         bindService();
     }
 
@@ -45,7 +48,7 @@ public class AuthFileModule extends AbstractModule {
         MapBinder<String, WebServiceFactory> mapbinder;
         mapbinder = newMapBinder(binder(), String.class,
                 WebServiceFactory.class);
-        mapbinder.addBinding(AuthFileService.AUTH_FILE_NAME).toProvider(
+        mapbinder.addBinding(AUTH_FILE_NAME).toProvider(
                 AuthFileServiceProvider.class);
     }
 }

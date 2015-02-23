@@ -40,6 +40,7 @@ enum AuthFileBasicResources {
     wwwtest1comConfExpected("/etc/apache2/sites-available/100-robobee-www.test1.com.conf", AuthFileBasicResources.class.getResource("wwwtest1com_conf_expected.txt")),
     privatepasswdExpected("/var/www/test1.com/auth/private.passwd", AuthFileBasicResources.class.getResource("privatepasswd_expected.txt")),
     privategroupExpected("/var/www/test1.com/auth/private.group", AuthFileBasicResources.class.getResource("privategroup_expected.txt")),
+    runcommandsLogExpected("/runcommands.log", AuthFileBasicResources.class.getResource("runcommands_expected.txt")),
     enmodOutExpected("/usr/sbin/a2enmod.out", AuthFileBasicResources.class.getResource("enmod_out_expected.txt")),
     chmodOutExpected("/bin/chmod.out", AuthFileBasicResources.class.getResource("chmod_out_expected.txt")),
     chownOutExpected("/bin/chown.out", AuthFileBasicResources.class.getResource("chown_out_expected.txt")),

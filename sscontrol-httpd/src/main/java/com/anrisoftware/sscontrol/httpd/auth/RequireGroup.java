@@ -30,7 +30,7 @@ import com.google.inject.assistedinject.Assisted;
 
 /**
  * Required group for authentication.
- * 
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
@@ -46,7 +46,7 @@ public class RequireGroup {
 
     private final String name;
 
-    private final AbstractAuthService service;
+    private final AuthService service;
 
     private final RequireGroupLogger log;
 
@@ -56,10 +56,10 @@ public class RequireGroup {
     private RequireUpdate updateMode;
 
     /**
-     * @see RequireGroupFactory#create(AbstractAuthService, Map)
+     * @see RequireGroupFactory#create(AuthService, Map)
      */
     @Inject
-    RequireGroup(RequireGroupLogger log, @Assisted AbstractAuthService service,
+    RequireGroup(RequireGroupLogger log, @Assisted AuthService service,
             @Assisted Map<String, Object> args) {
         this.log = log;
         this.service = service;

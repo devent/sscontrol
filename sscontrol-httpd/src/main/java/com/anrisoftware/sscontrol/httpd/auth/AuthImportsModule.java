@@ -27,17 +27,12 @@ import com.google.inject.AbstractModule;
 import com.google.inject.multibindings.Multibinder;
 
 /**
- * Imports HTTP/authentication types.
- * 
+ * Authentication types import module.
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
 public class AuthImportsModule extends AbstractModule {
-
-    private static final String SatisfyType = "com.anrisoftware.sscontrol.httpd.auth.SatisfyType";
-    private static final String AuthType = "com.anrisoftware.sscontrol.httpd.auth.AuthType";
-    private static final String RequireUpdate = "com.anrisoftware.sscontrol.httpd.auth.RequireUpdate";
-    private static final String RequireValidMode = "com.anrisoftware.sscontrol.httpd.auth.RequireValidMode";
 
     @Override
     protected void configure() {
@@ -47,15 +42,9 @@ public class AuthImportsModule extends AbstractModule {
 
             @Override
             public void importClass(ImportCustomizer customizer) {
-                customizer.addStaticImport(AuthType, "digest");
-                customizer.addStaticImport(AuthType, "basic");
-                customizer.addStaticImport(SatisfyType, "all");
-                customizer.addStaticImport(SatisfyType, "any");
-                customizer.addStaticImport(RequireUpdate, "nop");
-                customizer.addStaticImport(RequireUpdate, "password");
-                customizer.addStaticImport(RequireUpdate, "rewrite");
-                customizer.addStaticImport(RequireUpdate, "append");
-                customizer.addStaticImport(RequireValidMode, "valid_user");
+                customizer.addImports(SatisfyType.class.getName());
+                customizer.addImports(AuthType.class.getName());
+                customizer.addImports(RequireUpdate.class.getName());
             }
         });
     }

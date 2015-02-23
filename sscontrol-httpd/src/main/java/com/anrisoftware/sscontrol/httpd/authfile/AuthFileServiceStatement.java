@@ -16,28 +16,28 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.auth;
+package com.anrisoftware.sscontrol.httpd.authfile;
 
-import java.util.Map;
+import com.anrisoftware.sscontrol.core.groovy.StatementsEnumToString;
 
 /**
- * Factory to create authentication credentials.
- * 
+ * File authentication service statements.
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-public interface AuthCredentialsFactory {
+enum AuthFileServiceStatement {
 
-    /**
-     * Creates the authentication credentials.
-     * 
-     * @param service
-     *            the {@link AbstractAuthService} service.
-     * 
-     * @param args
-     *            the {@link Map} arguments.
-     * 
-     * @return the {@link AuthCredentials}.
-     */
-    AuthCredentials create(AbstractAuthService service, Map<String, Object> args);
+    TYPE_KEY,
+
+    SATISFY_KEY,
+
+    REQUIRE_KEY,
+
+    DOMAIN_KEY;
+
+    @Override
+    public String toString() {
+        return StatementsEnumToString.toString(this);
+    }
 }

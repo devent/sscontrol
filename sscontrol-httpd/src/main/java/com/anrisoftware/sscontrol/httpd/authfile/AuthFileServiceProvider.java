@@ -24,8 +24,8 @@ import javax.inject.Provider;
 import com.anrisoftware.sscontrol.httpd.webservice.WebServiceFactory;
 
 /**
- * Provides the HTTP/authentication file service factory.
- * 
+ * File authentication service factory provider.
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */

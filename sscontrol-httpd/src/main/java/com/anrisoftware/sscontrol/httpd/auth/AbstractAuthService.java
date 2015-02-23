@@ -18,6 +18,12 @@
  */
 package com.anrisoftware.sscontrol.httpd.auth;
 
+import static com.anrisoftware.sscontrol.httpd.auth.AuthServiceStatement.AUTH_KEY;
+import static com.anrisoftware.sscontrol.httpd.auth.AuthServiceStatement.GROUP_KEY;
+import static com.anrisoftware.sscontrol.httpd.auth.AuthServiceStatement.LOCATION_KEY;
+import static com.anrisoftware.sscontrol.httpd.auth.AuthServiceStatement.USER_KEY;
+import static com.anrisoftware.sscontrol.httpd.auth.AuthServiceStatement.VALID_KEY;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -25,40 +31,25 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
-
-import com.anrisoftware.sscontrol.core.yesno.YesNoFlag;
+import com.anrisoftware.sscontrol.core.api.ServiceException;
+import com.anrisoftware.sscontrol.core.groovy.StatementsMap;
 import com.anrisoftware.sscontrol.httpd.domain.Domain;
-import com.anrisoftware.sscontrol.httpd.webservice.WebService;
-import com.anrisoftware.sscontrol.httpd.webserviceargs.WebServiceLogger;
+import com.anrisoftware.sscontrol.httpd.webserviceargs.DefaultWebService;
+import com.anrisoftware.sscontrol.httpd.webserviceargs.DefaultWebServiceFactory;
 
 /**
- * HTTP/authentication service.
+ * Authentication service.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-public abstract class AbstractAuthService implements WebService {
-
-    private static final String DOMAIN = "domain";
-
-    private static final String ATTRIBUTE_ARG = "attribute";
-
-    private static final String HOST = "host";
-
-    private static final String USER_ARG = "user";
-
-    private static final String GROUP_ARG = "group";
-
-    private static final String DOMAIN_ARG = DOMAIN;
-
-    private static final String VALID_ARGS = "valid";
-
-    private static final String NAME_ARG = "name";
+public abstract class AbstractAuthService implements AuthService {
 
     private final Domain domain;
 
-    private final List<RequireDomain> requireDomains;
+    private final Map<String, Object> args;
+
+    private final String serviceName;
 
     private final List<RequireGroup> requireGroups;
 
@@ -66,53 +57,17 @@ public abstract class AbstractAuthService implements WebService {
 
     private final List<RequireValid> requireValids;
 
-    private final Map<String, Object> attributes;
-
-    private final AuthServiceLogger log;
-
-    private final WebServiceLogger serviceLog;
-
-    @Inject
-    private RequireDomainFactory requireDomainFactory;
-
-    @Inject
-    private RequireUserFactory requireUserFactory;
+    private AuthServiceLogger log;
 
     @Inject
     private RequireGroupFactory requireGroupFactory;
 
     @Inject
-    private AuthHostFactory authHostFactory;
+    private RequireUserFactory requireUserFactory;
 
-    @Inject
-    private AuthCredentialsFactory authCredentialsFactory;
+    private DefaultWebService service;
 
-    @Inject
-    private RequireValidFactory requireValidFactory;
-
-    private String id;
-
-    private String ref;
-
-    private String refDomain;
-
-    private String authName;
-
-    private String location;
-
-    private AuthType type;
-
-    private SatisfyType satisfy;
-
-    private Boolean authoritative;
-
-    private AuthHost host;
-
-    private AuthCredentials credentials;
-
-    private String alias;
-
-    private String prefix;
+    private StatementsMap statementsMap;
 
     /**
      * Sets the domain for the authentication.
@@ -121,172 +76,126 @@ public abstract class AbstractAuthService implements WebService {
      *            the {@link Map} arguments.
      *
      * @param domain
-     *            the {@link DomainImpl}.
-     *
-     * @param serviceLog
-     *            the {@link WebServiceArgs}.
-     *
-     * @param log
-     *            the {@link AuthServiceLogger}.
+     *            the {@link Domain}.
      */
-    protected AbstractAuthService(Map<String, Object> args, Domain domain,
-            WebServiceLogger serviceLog, AuthServiceLogger log) {
+    protected AbstractAuthService(String serviceName, Map<String, Object> args,
+            Domain domain) {
+        this.serviceName = serviceName;
         this.domain = domain;
-        this.serviceLog = serviceLog;
-        this.log = log;
-        this.requireDomains = new ArrayList<RequireDomain>();
+        this.args = new HashMap<String, Object>(args);
         this.requireGroups = new ArrayList<RequireGroup>();
         this.requireUsers = new ArrayList<RequireUser>();
         this.requireValids = new ArrayList<RequireValid>();
-        this.attributes = new HashMap<String, Object>();
-        if (serviceLog.haveId(args)) {
-            this.id = serviceLog.id(this, args);
-        }
-        if (serviceLog.haveAlias(args)) {
-            this.alias = serviceLog.alias(this, args);
-        }
-        if (serviceLog.havePrefix(args)) {
-            this.prefix = serviceLog.prefix(this, args);
-        }
-        if (serviceLog.haveRef(args)) {
-            this.ref = serviceLog.ref(this, args);
-        }
-        if (serviceLog.haveRefDomain(args)) {
-            this.refDomain = serviceLog.refDomain(this, args);
-        }
-        if (log.haveAuth(args)) {
-            this.authName = log.auth(this, args);
-        }
-        if (log.haveLocation(args)) {
-            this.location = log.location(this, args);
-        }
     }
 
-    public void setId(String id) {
-        this.id = id;
-        serviceLog.idSet(this, id);
+    @Inject
+    public final void setDefaultWebServiceFactory(AuthServiceLogger log,
+            DefaultWebServiceFactory factory) {
+        DefaultWebService service = factory.create(serviceName, args, domain);
+        setupStatements(service.getStatementsMap());
+        this.log = log;
+        this.statementsMap = service.getStatementsMap();
+        this.service = service;
     }
 
-    @Override
-    public String getId() {
-        return id;
-    }
-
-    public void setRef(String ref) {
-        this.ref = ref;
-        serviceLog.refSet(this, ref);
-    }
-
-    @Override
-    public String getRef() {
-        return ref;
+    private void setupStatements(StatementsMap map) {
+        map.addAllowed(AUTH_KEY, LOCATION_KEY);
+        map.setAllowValue(true, AUTH_KEY, LOCATION_KEY);
+        map.putValue(AUTH_KEY.toString(), args.get(AUTH_KEY.toString()));
+        if (args.containsKey(LOCATION_KEY.toString())) {
+            map.putValue(LOCATION_KEY.toString(),
+                    args.get(LOCATION_KEY.toString()));
+        }
     }
 
     @Override
     public Domain getDomain() {
-        return domain;
-    }
-
-    public void setRefDomain(String domain) {
-        this.refDomain = domain;
-        serviceLog.refDomainSet(this, domain);
+        return service.getDomain();
     }
 
     @Override
-    public String getRefDomain() {
-        return refDomain;
+    public String getName() {
+        return service.getName();
     }
 
-    public String getAuthName() {
-        return authName;
-    }
-
-    public String getLocation() {
-        return location;
+    public void setAlias(String alias) throws ServiceException {
+        service.setAlias(alias);
     }
 
     @Override
     public String getAlias() {
-        return alias;
+        return service.getAlias();
+    }
+
+    public void setId(String id) throws ServiceException {
+        service.setId(id);
+    }
+
+    @Override
+    public String getId() {
+        return service.getId();
+    }
+
+    public void setRef(String ref) throws ServiceException {
+        service.setRef(ref);
+    }
+
+    @Override
+    public String getRef() {
+        return service.getRef();
+    }
+
+    public void setRefDomain(String ref) throws ServiceException {
+        service.setRefDomain(ref);
+    }
+
+    @Override
+    public String getRefDomain() {
+        return service.getRefDomain();
+    }
+
+    public void setPrefix(String prefix) throws ServiceException {
+        service.setPrefix(prefix);
     }
 
     @Override
     public String getPrefix() {
-        return prefix;
+        return service.getPrefix();
     }
 
-    public void type(Map<String, Object> args, AuthType type) {
-        log.checkType(this, type);
-        this.type = type;
-        if (log.haveSatisfy(args)) {
-            this.satisfy = log.satisfy(this, args);
-        }
-        if (log.haveAuthoritative(args)) {
-            this.authoritative = log.authoritative(this, args);
-        }
+    @Override
+    public String getAuth() {
+        return statementsMap.value(AUTH_KEY);
     }
 
-    public void setType(AuthType type) {
-        this.type = type;
-    }
-
-    public AuthType getType() {
-        return type;
-    }
-
-    public SatisfyType getSatisfy() {
-        return satisfy;
+    @Override
+    public String getLocation() {
+        return statementsMap.value(LOCATION_KEY);
     }
 
     public void require(Map<String, Object> args) {
-        if (args.containsKey(DOMAIN_ARG)) {
-            RequireDomain domain = requireDomainFactory.create(this, args);
-            requireDomains.add(domain);
-            log.requireDomainSet(this, domain);
-            return;
-        }
-        if (args.containsKey(GROUP_ARG)) {
+        if (args.containsKey(GROUP_KEY.toString())) {
             RequireGroup group = requireGroupFactory.create(this, args);
             requireGroups.add(group);
             log.groupAdded(this, group);
             return;
         }
-        if (args.containsKey(USER_ARG)) {
+        if (args.containsKey(USER_KEY.toString())) {
             RequireUser user = requireUserFactory.create(this, args);
             requireUsers.add(user);
             log.userAdded(this, user);
             return;
         }
-        if (args.containsKey(VALID_ARGS)) {
-            RequireValid valid = requireValidFactory.create(this, args);
+        if (args.containsKey(VALID_KEY.toString())) {
+            RequireValid valid = (RequireValid) args.get(VALID_KEY.toString());
             requireValids.add(valid);
             log.validAdded(this, valid);
             return;
         }
-        if (args.containsKey(ATTRIBUTE_ARG)) {
-            @SuppressWarnings("unchecked")
-            Map<String, Object> attr = (Map<String, Object>) args
-                    .get(ATTRIBUTE_ARG);
-            attr = convertYesNo(attr);
-            attributes.putAll(attr);
-            log.attributeAdded(this, attr);
-            return;
-        }
-    }
-
-    private Map<String, Object> convertYesNo(Map<String, Object> attr) {
-        Map<String, Object> copyattr = new HashMap<String, Object>(attr);
-        for (Map.Entry<String, Object> entry : attr.entrySet()) {
-            if (entry.getValue() instanceof YesNoFlag) {
-                copyattr.put(entry.getKey(),
-                        ((YesNoFlag) entry.getValue()).asBoolean());
-            }
-        }
-        return copyattr;
     }
 
     public Object require(Map<String, Object> args, Object s) {
-        if (args.containsKey(GROUP_ARG)) {
+        if (args.containsKey(GROUP_KEY.toString())) {
             RequireGroup group = requireGroupFactory.create(this, args);
             requireGroups.add(group);
             log.groupAdded(this, group);
@@ -295,59 +204,27 @@ public abstract class AbstractAuthService implements WebService {
         return null;
     }
 
+    @Override
     public List<RequireGroup> getRequireGroups() {
         return requireGroups;
     }
 
+    @Override
     public List<RequireUser> getRequireUsers() {
         return requireUsers;
     }
 
+    @Override
     public List<RequireValid> getRequireValids() {
         return requireValids;
     }
 
-    public List<RequireDomain> getRequireDomains() {
-        return requireDomains;
-    }
-
-    public void setAuthoritative(boolean auth) {
-        this.authoritative = auth;
-        log.authoritativeSet(this, auth);
-    }
-
-    public Boolean getAuthoritative() {
-        return authoritative;
-    }
-
-    public void host(Map<String, Object> args, String name) {
-        args.put(HOST, name);
-        AuthHost host = authHostFactory.create(this, args);
-        log.hostSet(this, host);
-        this.host = host;
-    }
-
-    public AuthHost getHost() {
-        return host;
-    }
-
-    public AuthCredentials getCredentials() {
-        return credentials;
-    }
-
-    public void credentials(Map<String, Object> args, String name) {
-        args.put(NAME_ARG, name);
-        AuthCredentials cred = authCredentialsFactory.create(this, args);
-        log.credentialsSet(this, cred);
-        this.credentials = cred;
-    }
-
-    public Map<String, Object> getAttributes() {
-        return attributes;
+    public Object methodMissing(String name, Object args) {
+        return service.methodMissing(name, args);
     }
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this).append(DOMAIN, domain).toString();
+        return service.toString();
     }
 }

@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.auth;
+package com.anrisoftware.sscontrol.httpd.authfile;
 
 import java.util.Map;
 
@@ -24,11 +24,13 @@ import javax.inject.Inject;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import com.anrisoftware.sscontrol.httpd.auth.AbstractAuthService;
+import com.anrisoftware.sscontrol.httpd.auth.AuthService;
 import com.google.inject.assistedinject.Assisted;
 
 /**
  * Required domain for digest authentication.
- * 
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
@@ -38,7 +40,7 @@ public class RequireDomain {
 
     private static final String SERVICE = "service";
 
-    private final AbstractAuthService service;
+    private final AuthService service;
 
     private final String domain;
 
@@ -46,13 +48,13 @@ public class RequireDomain {
      * @see RequireDomainFactory#create(AbstractAuthService, Map)
      */
     @Inject
-    RequireDomain(RequireDomainLogger log, @Assisted AbstractAuthService service,
+    RequireDomain(RequireDomainLogger log, @Assisted AuthService service,
             @Assisted Map<String, Object> args) {
         this.service = service;
         this.domain = log.domain(service, args);
     }
 
-    public AbstractAuthService getService() {
+    public AuthService getService() {
         return service;
     }
 

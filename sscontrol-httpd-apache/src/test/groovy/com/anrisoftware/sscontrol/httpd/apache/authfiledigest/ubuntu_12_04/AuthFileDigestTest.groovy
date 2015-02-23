@@ -40,6 +40,7 @@ class AuthFileDigestTest extends WebServiceTestEnvironment {
 
     @Test
     void "auth file digest"() {
+        attachRunCommandsLog tmpdir
         copyUbuntuFiles tmpdir
         copyUbuntu_12_04_Files tmpdir
 
@@ -58,6 +59,7 @@ class AuthFileDigestTest extends WebServiceTestEnvironment {
         assertStringContent wwwtest1comConfExpected.replaced(tmpdir, tmpdir, "/tmp"), wwwtest1comConfExpected.toString()
         assertFileContent privatePasswdExpected.asFile(tmpdir), privatePasswdExpected
         assertFileContent privateGroupExpected.asFile(tmpdir), privateGroupExpected
+        assertStringContent runcommandsLogExpected.replaced(tmpdir, tmpdir, "/tmp").replaceAll(/\d+/, 'time'), runcommandsLogExpected.toString()
         assertFileContent enmodOutExpected.asFile(tmpdir), enmodOutExpected
         assertStringContent chmodOutExpected.replaced(tmpdir, tmpdir, "/tmp"), chmodOutExpected.toString()
         assertStringContent chownOutExpected.replaced(tmpdir, tmpdir, "/tmp"), chownOutExpected.toString()

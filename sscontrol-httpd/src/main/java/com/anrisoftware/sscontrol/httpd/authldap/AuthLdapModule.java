@@ -18,6 +18,7 @@
  */
 package com.anrisoftware.sscontrol.httpd.authldap;
 
+import static com.anrisoftware.sscontrol.httpd.authldap.AuthLdapService.AUTH_LDAP_NAME;
 import static com.google.inject.multibindings.MapBinder.newMapBinder;
 
 import com.anrisoftware.sscontrol.httpd.webservice.WebService;
@@ -27,8 +28,8 @@ import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.google.inject.multibindings.MapBinder;
 
 /**
- * Installs the HTTP/authentication LDAP factories.
- * 
+ * LDAP authentication service module.
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
@@ -45,7 +46,7 @@ public class AuthLdapModule extends AbstractModule {
         MapBinder<String, WebServiceFactory> mapbinder;
         mapbinder = newMapBinder(binder(), String.class,
                 WebServiceFactory.class);
-        mapbinder.addBinding(AuthLdapService.AUTH_LDAP_NAME).toProvider(
+        mapbinder.addBinding(AUTH_LDAP_NAME).toProvider(
                 AuthLdapServiceProvider.class);
     }
 }

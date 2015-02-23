@@ -16,35 +16,32 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.auth;
+package com.anrisoftware.sscontrol.httpd.authfile;
 
-import static com.anrisoftware.sscontrol.httpd.auth.AuthCredentialsLogger._.name_null;
-import static com.anrisoftware.sscontrol.httpd.auth.AuthCredentialsLogger._.password_null;
+import static com.anrisoftware.sscontrol.httpd.authfile.AuthFileServiceStatement.DOMAIN_KEY;
+import static com.anrisoftware.sscontrol.httpd.authfile.RequireDomainLogger._.domain_null;
+import static org.apache.commons.lang3.StringUtils.replace;
 import static org.apache.commons.lang3.Validate.notBlank;
 import static org.apache.commons.lang3.Validate.notNull;
 
 import java.util.Map;
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
+import com.anrisoftware.sscontrol.httpd.auth.AuthService;
 
 /**
- * Logging for {@link AuthHost}.
- * 
+ * Logging for {@link RequireDomain}.
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class AuthCredentialsLogger extends AbstractLogger {
+class RequireDomainLogger extends AbstractLogger {
 
-    private static final String PASSWORD = "password";
-    private static final String NAME = "name";
+    private static final String DOMAIN_PLACEHOLDER = "%";
 
     enum _ {
 
-        message("message"),
-
-        name_null("Credentials name cannot be null or blank for %s."),
-
-        password_null("Credentials password cannot be null for %s.");
+        domain_null("Domain cannot be null or blank for %s.");
 
         private String name;
 
@@ -59,25 +56,17 @@ class AuthCredentialsLogger extends AbstractLogger {
     }
 
     /**
-     * Sets the context of the logger to {@link AuthHost}.
+     * Sets the context of the logger to {@link RequireDomain}.
      */
-    public AuthCredentialsLogger() {
-        super(AuthHost.class);
+    public RequireDomainLogger() {
+        super(RequireDomain.class);
     }
 
-    String name(AbstractAuthService service, Map<String, Object> args) {
-        Object name = args.get(NAME);
-        notNull(name, name_null.toString(), service);
-        return notBlank(name.toString(), name_null.toString(), service);
-    }
-
-    boolean havePassword(Map<String, Object> args) {
-        return args.containsKey(PASSWORD);
-    }
-
-    String password(AbstractAuthService service, Map<String, Object> args) {
-        Object password = args.get(PASSWORD);
-        notNull(password, password_null.toString(), service);
-        return password.toString();
+    String domain(AuthService service, Map<String, Object> args) {
+        Object domain = args.get(DOMAIN_KEY.toString());
+        notNull(domain, domain_null.toString(), service);
+        notBlank(domain.toString(), domain_null.toString(), service);
+        String str = domain.toString();
+        return replace(str, DOMAIN_PLACEHOLDER, service.getDomain().getName());
     }
 }

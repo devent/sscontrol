@@ -38,6 +38,7 @@ enum AuthFileDigestResources {
     wwwtest1comConfExpected("/etc/apache2/sites-available/100-robobee-www.test1.com.conf", AuthFileDigestResources.class.getResource("wwwtest1com_conf_expected.txt")),
     privatePasswdExpected("/var/www/test1.com/auth/private-digest.passwd", AuthFileDigestResources.class.getResource("privatepasswd_expected.txt")),
     privateGroupExpected("/var/www/test1.com/auth/private.group", AuthFileDigestResources.class.getResource("privategroup_expected.txt")),
+    runcommandsLogExpected("/runcommands.log", AuthFileDigestResources.class.getResource("runcommands_expected.txt")),
     enmodOutExpected("/usr/sbin/a2enmod.out", AuthFileDigestResources.class.getResource("enmod_out_expected.txt")),
     chmodOutExpected("/bin/chmod.out", AuthFileDigestResources.class.getResource("chmod_out_expected.txt")),
     chownOutExpected("/bin/chown.out", AuthFileDigestResources.class.getResource("chown_out_expected.txt")),

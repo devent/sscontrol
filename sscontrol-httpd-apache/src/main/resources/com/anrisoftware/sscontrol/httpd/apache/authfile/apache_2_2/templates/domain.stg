@@ -1,8 +1,8 @@
 domainAuth(domain, auth, args) ::= <<
-# auth "<auth.authName>"
+# auth "<auth.auth>"
 \<Location <auth.location>\>
     AuthType <auth.type>
-    AuthName "<auth.authName>"
+    AuthName "<auth.auth>"
     <(auth.type)(auth)>
     <auth.requireDomains:requireDomains();separator="\n">
     <auth.requireValids:requireValids();separator="\n">
@@ -33,7 +33,7 @@ AuthDigestDomain <domains:{domain | <domain.domain>};separator=" ">
 >>
 
 requireValids(valids) ::= <<
-<valids:{ valid | <(valid.validMode)()>}>
+<valids:{ valid | <(valid)()>}>
 >>
 
 requireValidUser() ::= <<

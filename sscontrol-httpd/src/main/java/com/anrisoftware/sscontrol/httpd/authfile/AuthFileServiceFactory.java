@@ -24,18 +24,18 @@ import com.anrisoftware.sscontrol.httpd.domain.Domain;
 import com.anrisoftware.sscontrol.httpd.webservice.WebServiceFactory;
 
 /**
- * Factory to create the HTTP/authentication file service.
- * 
+ * Factory to create the authentication file service.
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
 public interface AuthFileServiceFactory extends WebServiceFactory {
 
     /**
-     * Creates the HTTP/authentication file service.
-     * 
+     * Creates the authentication file service.
+     *
      * @return the {@link AuthFileService}.
      */
     @Override
-    AuthFileService create(Map<String, Object> map, Domain domain);
+    AuthFileService create(Map<String, Object> args, Domain domain);
 }

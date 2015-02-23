@@ -24,10 +24,9 @@ import groovy.util.logging.Slf4j
 
 import org.junit.Test
 
-import com.anrisoftware.sscontrol.core.api.ServiceLoader as SscontrolServiceLoader
-import com.anrisoftware.sscontrol.core.api.ServicesRegistry
 import com.anrisoftware.sscontrol.httpd.domain.Domain
 import com.anrisoftware.sscontrol.httpd.proxy.ProxyService
+import com.anrisoftware.sscontrol.testutils.resources.HttpdTestEnvironment
 
 /**
  * @see WordpressService
@@ -36,7 +35,7 @@ import com.anrisoftware.sscontrol.httpd.proxy.ProxyService
  * @since 1.0
  */
 @Slf4j
-class HttpdProxyTest extends HttpdTestUtil {
+class HttpdProxyTest extends HttpdTestEnvironment {
 
     @Test
     void "proxy"() {

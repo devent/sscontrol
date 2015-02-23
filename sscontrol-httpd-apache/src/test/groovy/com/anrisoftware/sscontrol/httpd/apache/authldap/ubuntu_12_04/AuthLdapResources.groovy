@@ -38,6 +38,7 @@ enum AuthLdapResources {
     test1comConfExpected("/etc/apache2/sites-available/100-robobee-test1.com.conf", AuthLdapResources.class.getResource("test1com_conf_expected.txt")),
     wwwtest1comConfExpected("/etc/apache2/sites-available/100-robobee-www.test1.com.conf", AuthLdapResources.class.getResource("wwwtest1com_conf_expected.txt")),
     enmodOutExpected("/usr/sbin/a2enmod.out", AuthLdapResources.class.getResource("enmod_out_expected.txt")),
+    runcommandsLogExpected("/runcommands.log", AuthLdapResources.class.getResource("runcommands_expected.txt")),
     // Auth file/ldap
     fileldapScript("Httpd.groovy", AuthLdapResources.class.getResource("HttpdAuthFileLdap.groovy")),
     authFileLdaptest1comConfExpected("/etc/apache2/sites-available/100-robobee-test1.com.conf", AuthLdapResources.class.getResource("authfileldap_test1com_conf_expected.txt")),

@@ -28,7 +28,7 @@ import com.google.inject.assistedinject.Assisted;
 
 /**
  * Required user for authentication.
- * 
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
@@ -45,10 +45,10 @@ public class RequireUser {
     private RequireUpdate updateMode;
 
     /**
-     * @see RequireUserFactory#create(AbstractAuthService, Map)
+     * @see RequireUserFactory#create(AuthService, Map)
      */
     @Inject
-    RequireUser(RequireUserLogger log, @Assisted AbstractAuthService service,
+    RequireUser(RequireUserLogger log, @Assisted AuthService service,
             @Assisted Map<String, Object> args) {
         this.name = log.name(service, args);
         this.password = log.password(service, args);

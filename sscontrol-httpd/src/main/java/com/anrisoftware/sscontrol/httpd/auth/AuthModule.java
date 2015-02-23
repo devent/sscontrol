@@ -22,8 +22,8 @@ import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 
 /**
- * Installs the HTTP/authentication factories.
- * 
+ * Authentication service module.
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
@@ -31,17 +31,11 @@ public class AuthModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        install(new FactoryModuleBuilder().implement(RequireDomain.class,
-                RequireDomain.class).build(RequireDomainFactory.class));
         install(new FactoryModuleBuilder().implement(RequireUser.class,
                 RequireUser.class).build(RequireUserFactory.class));
         install(new FactoryModuleBuilder().implement(RequireGroup.class,
                 RequireGroup.class).build(RequireGroupFactory.class));
         install(new FactoryModuleBuilder().implement(AuthHost.class,
                 AuthHost.class).build(AuthHostFactory.class));
-        install(new FactoryModuleBuilder().implement(AuthCredentials.class,
-                AuthCredentials.class).build(AuthCredentialsFactory.class));
-        install(new FactoryModuleBuilder().implement(RequireValid.class,
-                RequireValid.class).build(RequireValidFactory.class));
     }
 }

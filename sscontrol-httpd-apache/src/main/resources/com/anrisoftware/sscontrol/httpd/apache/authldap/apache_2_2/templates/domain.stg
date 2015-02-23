@@ -1,17 +1,17 @@
 domainAuth(domain, auth, args) ::= <<
-# auth "<auth.authName>"
+# auth "<auth.auth>"
 \<Location <auth.location>\>
     AuthType <auth.type>
-    AuthName "<auth.authName>"
+    AuthName "<auth.auth>"
     <(auth.type)(auth)>
     <auth.requireValids:requireValids();separator="\n">
     AuthLDAPGroupAttribute <auth.attributes.group>
     AuthLDAPGroupAttributeIsDN <if(auth.attributes.dn)>on<else>off<endif>
     <requireGroups(auth.requireGroups)>
     AuthzLDAPAuthoritative <if(auth.authoritative)>on<else>off<endif>
-    AuthLDAPURL <auth.host.host>/<auth.host.url>
-    AuthLDAPBindDN "<auth.credentials.name>"
-    AuthLDAPBindPassword "<auth.credentials.password>"
+    AuthLDAPURL <auth.host>/<auth.hostUrl>
+    AuthLDAPBindDN "<auth.credentials>"
+    AuthLDAPBindPassword "<auth.credentialsPassword>"
     <if(auth.satisfy)>Satisfy <auth.satisfy><endif>
 \</Location>
 
@@ -26,7 +26,7 @@ AuthBasicProvider ldap
 >>
 
 requireValids(valids) ::= <<
-<valids:{ valid | <(valid.validMode)()>}>
+<valids:{ valid | <(valid)()>}>
 >>
 
 requireValidUser() ::= <<

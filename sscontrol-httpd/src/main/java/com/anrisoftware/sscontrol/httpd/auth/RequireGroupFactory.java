@@ -22,7 +22,7 @@ import java.util.Map;
 
 /**
  * Factory to create the required group.
- * 
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
@@ -30,14 +30,14 @@ public interface RequireGroupFactory {
 
     /**
      * Creates the required group
-     * 
+     *
      * @param service
-     *            the {@link AbstractAuthService} service.
-     * 
+     *            the {@link AuthService} service.
+     *
      * @param args
      *            the {@link Map} arguments.
-     * 
+     *
      * @return the {@link RequireGroup}.
      */
-    RequireGroup create(AbstractAuthService service, Map<String, Object> map);
+    RequireGroup create(AuthService service, Map<String, Object> map);
 }

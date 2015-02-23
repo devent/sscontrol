@@ -24,25 +24,24 @@ import groovy.util.logging.Slf4j
 
 import org.junit.Test
 
-import com.anrisoftware.sscontrol.core.api.ServiceLoader as SscontrolServiceLoader
-import com.anrisoftware.sscontrol.core.api.ServicesRegistry
+import com.anrisoftware.sscontrol.testutils.resources.HttpdTestEnvironment
 
 /**
- * @see HttpdServiceImpl
+ * @see HttpdService
  * @see Httpd
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
 @Slf4j
-class HttpdUserMapTest extends HttpdTestUtil {
+class HttpdUserMapTest extends HttpdTestEnvironment {
 
     @Test
     void "domain user map"() {
         loader.loadService profile.resource, null
         def profile = registry.getService("profile")[0]
         loader.loadService httpdUserMapScript.resource, profile
-        HttpdServiceImpl service = registry.getService("httpd")[0]
+        HttpdService service = registry.getService("httpd")[0]
 
         assert service.domains.size() == 1
         assert service.virtualDomains.size() == 1

@@ -8,6 +8,6 @@ basicPassword(args) ::= <<
 digestPassword(args) ::= <<
 <! - args.auth - !>
 <! - args.user - !>
-(echo -n "<args.user.name>:<args.auth.authName>:" && echo -n "<args.user.name>:<args.auth.authName>:<args.user.password>" | md5sum) | cut -d '-' -f 1
+(echo -n "<args.user.name>:<args.auth.auth>:" && echo -n "<args.user.name>:<args.auth.auth>:<args.user.password>" | md5sum) | cut -d '-' -f 1
 
 >>

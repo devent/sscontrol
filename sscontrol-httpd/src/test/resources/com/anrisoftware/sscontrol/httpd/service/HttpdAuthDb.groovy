@@ -25,10 +25,12 @@ import com.anrisoftware.sscontrol.httpd.auth.SatisfyType
 
 httpd {
 	ssl_domain "test1.com", address: "192.168.0.50", {
-		setup "auth-file", auth: "Private Directory", location: "/private", {
-            type AuthType.digest, satisfy: SatisfyType.any
+		setup "auth-db", auth: "Private Directory", location: "/private", {
+            database "authdb", user: "userdb", password: "userpassdb", host: "localhost", driver: "mysql", encryption: "PHP_MD5, Crypt"
+            users table: "users"
+            field userName: "username", password: "passwd"
+            allow emptyPasswords: no
             require valid: RequireValid.user
-			require domain: "https://%"
             require user: "foo", password: "foopassword"
 			require user: "bar", password: "barpassword", update: RequireUpdate.password
             require group: "foogroup"

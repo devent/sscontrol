@@ -21,7 +21,7 @@ package com.anrisoftware.sscontrol.httpd.service
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static org.apache.commons.io.FileUtils.*
 
-import com.anrisoftware.sscontrol.httpd.resources.ResourcesUtils
+import com.anrisoftware.sscontrol.testutils.resources.ResourcesUtils
 
 /**
  * Loads the resources.
@@ -36,6 +36,7 @@ enum ServicesResources {
     httpdPortsScript("Httpd.groovy", ServicesResources.class.getResource("HttpdPorts.groovy")),
     authFileScript("Httpd.groovy", ServicesResources.class.getResource("HttpdAuthFile.groovy")),
     authLdapScript("Httpd.groovy", ServicesResources.class.getResource("HttpdAuthLdap.groovy")),
+    authDbScript("Httpd.groovy", ServicesResources.class.getResource("HttpdAuthDb.groovy")),
     phpldapadminScript("Httpd.groovy", ServicesResources.class.getResource("HttpdPhpldapadmin.groovy")),
     roundcubeScript("Httpd.groovy", ServicesResources.class.getResource("HttpdRoundcube.groovy")),
     wordpressScript("Httpd.groovy", ServicesResources.class.getResource("HttpdWordpress.groovy")),

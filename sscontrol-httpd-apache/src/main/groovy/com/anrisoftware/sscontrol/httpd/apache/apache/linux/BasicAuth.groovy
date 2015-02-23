@@ -20,8 +20,7 @@ package com.anrisoftware.sscontrol.httpd.apache.apache.linux
 
 import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.sscontrol.core.service.LinuxScript
-import com.anrisoftware.sscontrol.httpd.domain.DomainImpl
-import com.anrisoftware.sscontrol.httpd.domain.Domain;
+import com.anrisoftware.sscontrol.httpd.domain.Domain
 import com.anrisoftware.sscontrol.httpd.webservice.WebService
 
 /**
@@ -33,18 +32,13 @@ import com.anrisoftware.sscontrol.httpd.webservice.WebService
 abstract class BasicAuth {
 
     /**
-     * @see ServiceConfig#getScript()
-     */
-    LinuxScript script
-
-    /**
      * Creates the domain configuration and configures the service.
      *
      * @param domain
-     *            the {@link Domain}.
+     *            the {@link Domain} domain.
      *
      * @param service
-     *            the {@link WebService}.
+     *            the {@link WebService} service.
      *
      * @param config
      *            the {@link List} of the domain configuration.
@@ -55,13 +49,13 @@ abstract class BasicAuth {
      * Creates the domain configuration.
      *
      * @param domain
-     *            the {@link Domain}.
+     *            the {@link Domain} domain.
      *
      * @param refDomain
-     *            the referenced {@link Domain} or {@code null}.
+     *            the referenced {@link Domain} domain or {@code null}.
      *
      * @param service
-     *            the {@link WebService}.
+     *            the {@link WebService} service.
      *
      * @param config
      *            the {@link List} of the domain configuration.
@@ -88,16 +82,27 @@ abstract class BasicAuth {
     abstract String getServiceName()
 
     /**
-     * @see ServiceConfig#setScript(LinuxScript)
+     * Sets the parent script.
      */
     void setScript(LinuxScript script) {
         this.script = script
     }
 
+    /**
+     * Returns the parent script.
+     */
+    LinuxScript script
+
+    /**
+     * Delegates the missing properties to the parent script.
+     */
     def propertyMissing(String name) {
         script.getProperty name
     }
 
+    /**
+     * Delegates the missing methods to the parent script.
+     */
     def methodMissing(String name, def args) {
         script.invokeMethod name, args
     }

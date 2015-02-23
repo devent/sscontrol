@@ -30,6 +30,12 @@
 	<dependencies>
 
 		<!-- test dependencies -->
+        <dependency>
+            <groupId>com.anrisoftware.sscontrol</groupId>
+            <artifactId>sscontrol-testutils</artifactId>
+            <version>1.0-alpha-2</version>
+            <scope>test</scope>
+        </dependency>
 		<dependency>
 			<groupId>com.anrisoftware.sscontrol</groupId>
 			<artifactId>sscontrol-profile</artifactId>

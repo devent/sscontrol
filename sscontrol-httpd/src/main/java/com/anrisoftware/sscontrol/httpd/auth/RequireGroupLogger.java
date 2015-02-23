@@ -33,7 +33,7 @@ import com.anrisoftware.globalpom.log.AbstractLogger;
 
 /**
  * Logging messages for {@link RequireGroup}.
- * 
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
@@ -72,13 +72,13 @@ class RequireGroupLogger extends AbstractLogger {
         super(RequireGroup.class);
     }
 
-    String name(AbstractAuthService service, Map<String, Object> args) {
+    String name(AuthService service, Map<String, Object> args) {
         Object name = args.get(NAME);
         notNull(name, name_null.toString(), service);
         return notBlank(name.toString(), name_null.toString(), service);
     }
 
-    void userAdded(RequireGroup group, AbstractAuthService service, RequireUser user) {
+    void userAdded(RequireGroup group, AuthService service, RequireUser user) {
         if (isDebugEnabled()) {
             debug(user_added_debug, user, group, service);
         } else {
@@ -91,7 +91,7 @@ class RequireGroupLogger extends AbstractLogger {
         return args.containsKey(UPDATE);
     }
 
-    RequireUpdate update(AbstractAuthService service, Map<String, Object> args) {
+    RequireUpdate update(AuthService service, Map<String, Object> args) {
         Object mode = args.get(UPDATE);
         notNull(mode, update_mode_null.toString(), service);
         if (mode instanceof RequireUpdate) {

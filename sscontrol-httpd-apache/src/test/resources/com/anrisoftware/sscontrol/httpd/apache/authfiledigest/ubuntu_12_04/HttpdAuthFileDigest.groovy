@@ -18,23 +18,28 @@
  */
 package com.anrisoftware.sscontrol.httpd.apache.authfiledigest.ubuntu_12_04
 
+import com.anrisoftware.sscontrol.httpd.auth.AuthType
+import com.anrisoftware.sscontrol.httpd.auth.RequireUpdate
+import com.anrisoftware.sscontrol.httpd.auth.RequireValid
+import com.anrisoftware.sscontrol.httpd.auth.SatisfyType
+
 httpd {
     domain "test1.com", address: "192.168.0.50", {
         setup "auth-file", id: "test1authid", auth: "Private Directory", location: "/private", {
-            type digest, satisfy: any
-            require valid: valid_user
+            type AuthType.digest, satisfy: SatisfyType.any
+            require valid: RequireValid.user
             require user: "foo", password: "foopassword"
-            require user: "bar", password: "barpassword", update: password
+            require user: "bar", password: "barpassword", update: RequireUpdate.password
             require group: "foogroup"
             require group: "admin1", {
                 user "adminfoo1", password: "adminfoopassword"
                 user "adminbar1", password: "adminbarpassword"
             }
-            require group: "admin2", update: rewrite, {
+            require group: "admin2", update: RequireUpdate.rewrite, {
                 user "adminfoo2", password: "adminfoopassword"
                 user "adminbar2", password: "adminbarpassword"
             }
-            require group: "admin3", update: append, {
+            require group: "admin3", update: RequireUpdate.append, {
                 user "adminfoo3", password: "adminfoopassword"
                 user "adminbar3", password: "adminbarpassword"
             }

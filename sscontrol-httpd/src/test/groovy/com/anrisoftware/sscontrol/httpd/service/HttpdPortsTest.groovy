@@ -24,8 +24,7 @@ import groovy.util.logging.Slf4j
 
 import org.junit.Test
 
-import com.anrisoftware.sscontrol.core.api.ServiceLoader as SscontrolServiceLoader
-import com.anrisoftware.sscontrol.core.api.ServicesRegistry
+import com.anrisoftware.sscontrol.testutils.resources.HttpdTestEnvironment
 
 /**
  * @see HttpdService
@@ -34,7 +33,7 @@ import com.anrisoftware.sscontrol.core.api.ServicesRegistry
  * @since 1.0
  */
 @Slf4j
-class HttpdPortsTest extends HttpdTestUtil {
+class HttpdPortsTest extends HttpdTestEnvironment {
 
     @Test
     void "httpd ports script"() {

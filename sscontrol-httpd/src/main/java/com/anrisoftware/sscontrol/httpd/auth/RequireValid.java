@@ -18,48 +18,16 @@
  */
 package com.anrisoftware.sscontrol.httpd.auth;
 
-import java.util.Map;
-
-import javax.inject.Inject;
-
-import org.apache.commons.lang3.builder.ToStringBuilder;
-
-import com.google.inject.assistedinject.Assisted;
-
 /**
- * Required valid for authentication.
+ * Require mode.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-public class RequireValid {
-
-    private static final String VALID = "valid";
-
-    private final AbstractAuthService service;
-
-    private final RequireValidMode validMode;
+public enum RequireValid {
 
     /**
-     * @see RequireValidFactory#create(AbstractAuthService, Map)
+     * Require valid user.
      */
-    @Inject
-    RequireValid(RequireValidLogger log, @Assisted AbstractAuthService service,
-            @Assisted Map<String, Object> args) {
-        this.service = service;
-        this.validMode = log.valid(service, args);
-    }
-
-    public AbstractAuthService getService() {
-        return service;
-    }
-
-    public RequireValidMode getValidMode() {
-        return validMode;
-    }
-
-    @Override
-    public String toString() {
-        return new ToStringBuilder(this).append(VALID, validMode).toString();
-    }
+    user
 }

@@ -40,6 +40,7 @@ class AuthLdapTest extends WebServiceTestEnvironment {
 
     @Test
     void "auth ldap"() {
+        attachRunCommandsLog tmpdir
         copyUbuntuFiles tmpdir
         copyUbuntu_12_04_Files tmpdir
 
@@ -56,6 +57,7 @@ class AuthLdapTest extends WebServiceTestEnvironment {
         assertFileContent domainsConfExpected.asFile(tmpdir), domainsConfExpected
         assertStringContent test1comConfExpected.replaced(tmpdir, tmpdir, "/tmp"), test1comConfExpected.toString()
         assertStringContent wwwtest1comConfExpected.replaced(tmpdir, tmpdir, "/tmp"), wwwtest1comConfExpected.toString()
+        assertStringContent runcommandsLogExpected.replaced(tmpdir, tmpdir, "/tmp").replaceAll(/\d+/, 'time'), runcommandsLogExpected.toString()
         assertFileContent enmodOutExpected.asFile(tmpdir), enmodOutExpected
     }
 }

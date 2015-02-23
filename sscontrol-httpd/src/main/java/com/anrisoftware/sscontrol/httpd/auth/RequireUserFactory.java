@@ -22,7 +22,7 @@ import java.util.Map;
 
 /**
  * Factory to create required user.
- * 
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
@@ -30,14 +30,14 @@ public interface RequireUserFactory {
 
     /**
      * Creates the required user.
-     * 
+     *
      * @param service
-     *            the {@link AbstractAuthService} service.
-     * 
+     *            the {@link AuthService} service.
+     *
      * @param args
      *            the {@link Map} arguments.
-     * 
+     *
      * @return the {@link RequireUser}.
      */
-    RequireUser create(AbstractAuthService service, Map<String, Object> args);
+    RequireUser create(AuthService service, Map<String, Object> args);
 }

@@ -24,6 +24,7 @@ import javax.inject.Inject;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import com.anrisoftware.sscontrol.httpd.authfile.RequireDomainFactory;
 import com.google.inject.assistedinject.Assisted;
 
 /**

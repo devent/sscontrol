@@ -16,44 +16,30 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.resources
+package com.anrisoftware.sscontrol.httpd.authfile;
 
-import static com.anrisoftware.globalpom.utils.TestUtils.*
-import static org.apache.commons.io.FileUtils.*
+import java.util.Map;
+
+import com.anrisoftware.sscontrol.httpd.auth.AuthService;
 
 /**
- * Loads resources.
+ * Factory to create required domain.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class ResourcesUtils {
+public interface RequireDomainFactory {
 
-	String path
-
-	URL resource
-
-	File asFile(File parent) {
-		new File(parent, path)
-	}
-
-	void createFile(File parent) {
-		assert resource : "Resource cannot be null for ${resource}"
-		copyURLToFile resource, new File(parent, path)
-	}
-
-	void createCommand(File parent) {
-		assert resource : "Resource cannot be null for ${resource}"
-		copyResourceToCommand resource, new File(parent, path)
-	}
-
-	String replaced(File parent, def search, def replace) {
-		String text = readFileToString(this.asFile(parent))
-		text.replaceAll(search.toString(), replace)
-	}
-
-	String toString() {
-		assert resource : "Resource cannot be null for ${resource}"
-		resourceToString resource
-	}
+    /**
+     * Creates the required domain.
+     *
+     * @param service
+     *            the {@link AuthService} service.
+     *
+     * @param args
+     *            the {@link Map} arguments.
+     *
+     * @return the {@link RequireDomain}.
+     */
+    RequireDomain create(AuthService service, Map<String, Object> args);
 }

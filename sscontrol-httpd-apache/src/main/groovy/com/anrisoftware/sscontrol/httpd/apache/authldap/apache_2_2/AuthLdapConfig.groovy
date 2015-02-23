@@ -24,8 +24,8 @@ import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.TemplatesFactory
 import com.anrisoftware.sscontrol.core.service.LinuxScript
 import com.anrisoftware.sscontrol.httpd.apache.apache.linux.BasicAuth
-import com.anrisoftware.sscontrol.httpd.auth.AbstractAuthService
 import com.anrisoftware.sscontrol.httpd.auth.AuthType
+import com.anrisoftware.sscontrol.httpd.authldap.AuthLdapService
 import com.anrisoftware.sscontrol.httpd.domain.Domain
 import com.anrisoftware.sscontrol.httpd.webservice.WebService
 
@@ -80,11 +80,14 @@ abstract class AuthLdapConfig extends BasicAuth {
      * Sets the default properties for the service.
      *
      * @param service
-     *            the {@link AuthService}.
+     *            the {@link AuthLdapService}.
      */
-    void setupDefaultProperties(AbstractAuthService service) {
-        service.type = AuthType.basic
-        service.authoritative ? service.authoritative : defaultAuthoritative
+    void setupDefaultProperties(AuthLdapService service) {
+        def type = AuthType.basic
+        service.type AuthType.basic
+        if (service.authoritative == null) {
+            service.type type, authoritative: defaultAuthoritative
+        }
     }
 
     /**
@@ -94,12 +97,12 @@ abstract class AuthLdapConfig extends BasicAuth {
      *            the {@link Domain}.
      *
      * @param service
-     *            the {@link AuthService}.
+     *            the {@link AuthLdapService}.
      *
      * @param serviceConfig
      *            the {@link List} of the configuration.
      */
-    void createDomainConfig(Domain domain, AbstractAuthService service, List serviceConfig) {
+    void createDomainConfig(Domain domain, AuthLdapService service, List serviceConfig) {
         def config = authDomainTemplate.getText true,
                 "domainAuth",
                 "domain", domain,
@@ -113,9 +116,9 @@ abstract class AuthLdapConfig extends BasicAuth {
      * Enables the Apache mods.
      *
      * @param service
-     *            the {@link AuthService}.
+     *            the {@link AuthLdapService} service.
      */
-    void enableMods(AbstractAuthService service) {
+    void enableMods(AuthLdapService service) {
         switch (service.type) {
             case AuthType.basic:
                 enableMods(["authnz_ldap", "auth_basic"])

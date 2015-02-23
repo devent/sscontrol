@@ -16,34 +16,36 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.service
+package com.anrisoftware.sscontrol.httpd.auth;
 
-import static com.anrisoftware.globalpom.utils.TestUtils.*
-import static com.anrisoftware.sscontrol.httpd.service.ServicesResources.*
-import groovy.util.logging.Slf4j
-
-import org.junit.Test
-
-import com.anrisoftware.sscontrol.core.api.ServiceLoader as SscontrolServiceLoader
-import com.anrisoftware.sscontrol.core.api.ServicesRegistry
-import com.anrisoftware.sscontrol.httpd.domain.DomainImpl;
+import com.anrisoftware.sscontrol.core.groovy.StatementsEnumToString;
 
 /**
- * @see PhpldapadminService
+ * Authentication service statements.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-@Slf4j
-class HttpdPhpldapadminTest extends HttpdTestUtil {
+enum AuthServiceStatement {
 
-    @Test
-    void "phpldapadmin"() {
-        loader.loadService profile.resource, null
-        def profile = registry.getService("profile")[0]
-        loader.loadService phpldapadminScript.resource, profile
-        HttpdServiceImpl service = registry.getService("httpd")[0]
+    AUTH_KEY,
 
-        DomainImpl domain = service.domains[2]
+    LOCATION_KEY,
+
+    REQUIRE_KEY,
+
+    VALID_KEY,
+
+    USER_KEY,
+
+    PASSWORD_KEY,
+
+    UPDATE_KEY,
+
+    GROUP_KEY;
+
+    @Override
+    public String toString() {
+        return StatementsEnumToString.toString(this);
     }
 }

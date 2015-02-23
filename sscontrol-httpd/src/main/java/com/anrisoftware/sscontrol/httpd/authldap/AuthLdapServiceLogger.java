@@ -16,31 +16,29 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.auth;
+package com.anrisoftware.sscontrol.httpd.authldap;
 
-import static com.anrisoftware.sscontrol.httpd.auth.RequireValidLogger._.valid_mode_null;
-import static org.apache.commons.lang3.Validate.notNull;
+import static com.anrisoftware.sscontrol.httpd.authldap.AuthLdapServiceLogger._.required_attributes_added_debug;
+import static com.anrisoftware.sscontrol.httpd.authldap.AuthLdapServiceLogger._.required_attributes_added_info;
 
 import java.util.Map;
-
-import javax.inject.Singleton;
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
 
 /**
- * Logging messages for {@link RequireValid}.
- * 
+ * Logging for {@link AuthLdapService}.
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-@Singleton
-class RequireValidLogger extends AbstractLogger {
-
-    private static final String VALID = "valid";
+class AuthLdapServiceLogger extends AbstractLogger {
 
     enum _ {
 
-        valid_mode_null("Valid mode cannot be null for %s.");
+        required_attributes_added_debug("Required attrbutes {} added for {}."),
+
+        required_attributes_added_info(
+                "Required attrbutes {} added for service '{}'.");
 
         private String name;
 
@@ -55,20 +53,17 @@ class RequireValidLogger extends AbstractLogger {
     }
 
     /**
-     * Creates a logger for {@link RequireValid}.
+     * Sets the context of the logger to {@link AuthLdapService}.
      */
-    public RequireValidLogger() {
-        super(RequireValid.class);
+    public AuthLdapServiceLogger() {
+        super(AuthLdapService.class);
     }
 
-    RequireValidMode valid(AbstractAuthService service, Map<String, Object> args) {
-        Object valid = args.get(VALID);
-        notNull(valid, valid_mode_null.toString(), service);
-        if (valid instanceof RequireValidMode) {
-            return (RequireValidMode) valid;
+    void requiredAttributesAdded(AuthLdapService auth, Map<String, Object> map) {
+        if (isDebugEnabled()) {
+            debug(required_attributes_added_debug, map, auth);
         } else {
-            return RequireValidMode.valueOf(valid.toString());
+            info(required_attributes_added_info, map, auth);
         }
     }
-
 }

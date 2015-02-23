@@ -16,28 +16,54 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.auth;
+package com.anrisoftware.sscontrol.httpd.authdb;
 
-import java.util.Map;
+import com.anrisoftware.sscontrol.core.groovy.StatementsEnumToString;
 
 /**
- * Factory to create required domain.
- * 
+ * Database authentication service statements.
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-public interface RequireDomainFactory {
+enum AuthDbServiceStatement {
 
-    /**
-     * Creates the required domain.
-     * 
-     * @param service
-     *            the {@link AbstractAuthService} service.
-     * 
-     * @param args
-     *            the {@link Map} arguments.
-     * 
-     * @return the {@link RequireDomain}.
-     */
-    RequireDomain create(AbstractAuthService service, Map<String, Object> args);
+    DATABASE_KEY,
+
+    USER_KEY,
+
+    PASSWORD_KEY,
+
+    HOST_KEY,
+
+    PORT_KEY,
+
+    SOCKET_KEY,
+
+    CHARSET_KEY,
+
+    DRIVER_KEY,
+
+    ENCRYPTION_KEY,
+
+    USERS_KEY,
+
+    TABLE_KEY,
+
+    FIELD_KEY,
+
+    USER_NAME_KEY,
+
+    ALLOW_KEY,
+
+    EMPTY_PASSWORDS_KEY,
+
+    TYPE_KEY,
+
+    AUTHORITATIVE_KEY;
+
+    @Override
+    public String toString() {
+        return StatementsEnumToString.toString(this);
+    }
 }

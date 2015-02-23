@@ -16,28 +16,26 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.auth;
+package com.anrisoftware.sscontrol.httpd.authdb;
 
 import java.util.Map;
 
+import com.anrisoftware.sscontrol.httpd.domain.Domain;
+import com.anrisoftware.sscontrol.httpd.webservice.WebServiceFactory;
+
 /**
- * Factory to create the required valid.
+ * Factory to create the HTTP/authentication LDAP service.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-public interface RequireValidFactory {
+public interface AuthDbServiceFactory extends WebServiceFactory {
 
     /**
-     * Creates the required valid.
+     * Creates the HTTP/authentication LDAP service.
      * 
-     * @param service
-     *            the {@link AbstractAuthService} service.
-     * 
-     * @param args
-     *            the {@link Map} arguments.
-     * 
-     * @return the {@link RequireValid}.
+     * @return the {@link AuthDbService}.
      */
-    RequireValid create(AbstractAuthService service, Map<String, Object> map);
+    @Override
+    AuthDbService create(Map<String, Object> map, Domain domain);
 }

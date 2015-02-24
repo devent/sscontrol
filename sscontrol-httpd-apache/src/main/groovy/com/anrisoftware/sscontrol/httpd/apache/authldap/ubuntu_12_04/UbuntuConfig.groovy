@@ -37,7 +37,6 @@ class UbuntuConfig extends AuthLdapConfig implements ServiceConfig {
     @Inject
     UbuntuPropertiesProvider authProperties
 
-    @Override
     ContextProperties getAuthProperties() {
         authProperties.get()
     }

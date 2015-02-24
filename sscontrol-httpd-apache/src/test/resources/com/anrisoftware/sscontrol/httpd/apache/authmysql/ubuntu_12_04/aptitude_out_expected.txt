@@ -1,0 +1,6 @@
+-q -y install apache2 apache2-suexec
+-q -y install libapache2-mod-auth-mysql
+-q -y install libapache2-mod-auth-mysql
+-q -y install apache2 apache2-suexec
+-q -y install libapache2-mod-auth-mysql
+-q -y install libapache2-mod-auth-mysql

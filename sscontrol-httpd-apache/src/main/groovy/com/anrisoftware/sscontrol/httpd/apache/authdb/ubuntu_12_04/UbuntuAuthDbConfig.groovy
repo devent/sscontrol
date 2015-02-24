@@ -16,33 +16,25 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd-apache. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.apache.authfile.ubuntu_12_04
+package com.anrisoftware.sscontrol.httpd.apache.authdb.ubuntu_12_04
 
-import static com.anrisoftware.sscontrol.httpd.apache.apache.ubuntu_12_04.Ubuntu_12_04_ScriptFactory.PROFILE
+import static org.apache.commons.io.FileUtils.writeLines
+import static org.apache.commons.lang3.StringUtils.split
 
-import javax.inject.Inject
-
-import com.anrisoftware.propertiesutils.ContextProperties
-import com.anrisoftware.sscontrol.httpd.apache.authfile.apache_2_2.AuthFileConfig
+import com.anrisoftware.sscontrol.httpd.apache.apache.ubuntu_12_04.Ubuntu_12_04_ScriptFactory
+import com.anrisoftware.sscontrol.httpd.apache.authdb.apache_2_2.AuthDbConfig
 import com.anrisoftware.sscontrol.httpd.webservice.ServiceConfig
 
 /**
- * <i>Auth-file Ubuntu 12.04</i> configuration.
+ * <i>Ubuntu 12.04 Auth-Database</i> configuration.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class UbuntuConfig extends AuthFileConfig implements ServiceConfig {
-
-    @Inject
-    UbuntuPropertiesProvider authProperties
-
-    ContextProperties getAuthProperties() {
-        authProperties.get()
-    }
+class UbuntuAuthDbConfig extends AuthDbConfig implements ServiceConfig {
 
     @Override
     String getProfile() {
-        PROFILE
+        Ubuntu_12_04_ScriptFactory.PROFILE
     }
 }

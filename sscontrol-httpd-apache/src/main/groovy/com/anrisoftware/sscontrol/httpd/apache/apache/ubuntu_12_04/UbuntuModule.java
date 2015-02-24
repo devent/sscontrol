@@ -27,6 +27,7 @@ import groovy.lang.Script;
 import com.anrisoftware.globalpom.checkfilehash.CheckFileHashModule;
 import com.anrisoftware.globalpom.exec.runcommands.RunCommandsModule;
 import com.anrisoftware.sscontrol.httpd.apache.apache.linux.ApacheFcgiConfig;
+import com.anrisoftware.sscontrol.httpd.apache.authdb.ubuntu_12_04.Ubuntu_12_04_AuthDbModule;
 import com.anrisoftware.sscontrol.httpd.apache.authfile.ubuntu_12_04.Ubuntu_12_04_AuthFileModule;
 import com.anrisoftware.sscontrol.httpd.apache.authldap.ubuntu_12_04.Ubuntu_12_04_AuthLdapModule;
 import com.anrisoftware.sscontrol.httpd.fcgi.FcgiConfig;
@@ -65,6 +66,7 @@ class UbuntuModule extends AbstractModule {
         install(new KillProcessModule());
         install(new Ubuntu_12_04_AuthFileModule());
         install(new Ubuntu_12_04_AuthLdapModule());
+        install(new Ubuntu_12_04_AuthDbModule());
         bind(FcgiConfig.class).to(ApacheFcgiConfig.class);
         bindScripts();
         bindEmptyServiceConfig();

@@ -16,23 +16,22 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd-apache. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.apache.apache.linux
+package com.anrisoftware.sscontrol.httpd.apache.authdb.core
 
 import org.apache.commons.lang3.builder.ToStringBuilder
 
-import com.anrisoftware.sscontrol.core.service.LinuxScript
 import com.anrisoftware.sscontrol.httpd.domain.Domain
 import com.anrisoftware.sscontrol.httpd.webservice.WebService
 
 /**
- * Sets the parent script http/auth.
+ * Database driver configuration.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-abstract class BasicAuth {
+abstract class DbDriverConfig {
 
-    private LinuxScript script
+    private Object script
 
     /**
      * Creates the domain configuration and configures the service.
@@ -80,14 +79,14 @@ abstract class BasicAuth {
     /**
      * Sets the parent script.
      */
-    void setScript(LinuxScript script) {
+    void setScript(Object script) {
         this.script = script
     }
 
     /**
      * Returns the parent script.
      */
-    LinuxScript getScript() {
+    Object getScript() {
         script
     }
 

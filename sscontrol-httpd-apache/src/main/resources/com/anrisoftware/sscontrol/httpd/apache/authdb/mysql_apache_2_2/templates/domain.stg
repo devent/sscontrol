@@ -1,0 +1,33 @@
+domainAuth(domain, auth, args) ::= <<
+# auth "<auth.auth>"
+\<Location <auth.location>\>
+    AuthBasicAuthoritative Off
+    AuthUserFile /dev/null
+    AuthMySQL On
+    AuthName "<auth.auth>"
+    AuthType Basic
+    <if(auth.database.host)>Auth_MySQL_Host "<auth.database.host>"<endif>
+    <if(auth.database.port)>Auth_MySQL_Port <auth.database.port><endif>
+    <if(auth.database.socket)>Auth_MySQL_Socket "<auth.database.socket>"<endif>
+    <if(auth.database.charset)>Auth_MySQL_CharacterSet "<auth.database.charset>"<endif>
+    Auth_MySQL_User "<auth.database.user>"
+    Auth_MySQL_Password "<auth.database.password>"
+    Auth_MySQL_DB "<auth.database.database>"
+    Auth_MySQL_Password_Table "<auth.usersTable>"
+    Auth_MySQL_Username_Field "<auth.userNameField>"
+    Auth_MySQL_Password_Field "<auth.passwordField>"
+    Auth_MySQL_Empty_Passwords <if(auth.allowEmptyPasswords)>On<else>Off<endif>
+    Auth_MySQL_Authoritative <if(auth.authoritative)>On<else>Off<endif>
+    Auth_MySQL_Encryption_Types <auth.database.encryption;separator=" ">
+    <requireValids(auth.requireValids)>
+\</Location>
+
+>>
+
+requireValids(valids) ::= <<
+<valids:{valid|<(valid)()>}>
+>>
+
+requireValidUser() ::= <<
+Require valid-user
+>>

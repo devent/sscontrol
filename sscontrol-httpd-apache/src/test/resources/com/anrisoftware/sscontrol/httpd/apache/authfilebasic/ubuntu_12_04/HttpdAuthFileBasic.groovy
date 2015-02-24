@@ -18,11 +18,6 @@
  */
 package com.anrisoftware.sscontrol.httpd.apache.authfilebasic.ubuntu_12_04
 
-import com.anrisoftware.sscontrol.httpd.auth.AuthType
-import com.anrisoftware.sscontrol.httpd.auth.RequireUpdate
-import com.anrisoftware.sscontrol.httpd.auth.RequireValid
-import com.anrisoftware.sscontrol.httpd.auth.SatisfyType
-
 httpd {
     domain "test1.com", address: "192.168.0.50", {
         setup "auth-file", id: "test1authid", auth: "Private Directory", location: "/private", {

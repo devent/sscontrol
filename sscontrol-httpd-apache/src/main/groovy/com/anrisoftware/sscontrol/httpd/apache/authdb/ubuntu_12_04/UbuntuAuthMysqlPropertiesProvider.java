@@ -16,33 +16,27 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd-apache. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.apache.authfile.ubuntu_12_04
+package com.anrisoftware.sscontrol.httpd.apache.authdb.ubuntu_12_04;
 
-import static com.anrisoftware.sscontrol.httpd.apache.apache.ubuntu_12_04.Ubuntu_12_04_ScriptFactory.PROFILE
+import java.net.URL;
 
-import javax.inject.Inject
-
-import com.anrisoftware.propertiesutils.ContextProperties
-import com.anrisoftware.sscontrol.httpd.apache.authfile.apache_2_2.AuthFileConfig
-import com.anrisoftware.sscontrol.httpd.webservice.ServiceConfig
+import com.anrisoftware.propertiesutils.AbstractContextPropertiesProvider;
 
 /**
- * <i>Auth-file Ubuntu 12.04</i> configuration.
+ * <i>Auth-Database Mysql Ubuntu 12.04</i> properties provider from
+ * {@code "/apache_authdb_mysql_ubuntu_12_04.properties"}.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class UbuntuConfig extends AuthFileConfig implements ServiceConfig {
+@SuppressWarnings("serial")
+class UbuntuAuthMysqlPropertiesProvider extends AbstractContextPropertiesProvider {
 
-    @Inject
-    UbuntuPropertiesProvider authProperties
+    private static final URL RESOURCE = UbuntuAuthMysqlPropertiesProvider.class
+            .getResource("/apache_authdb_mysql_ubuntu_12_04.properties");
 
-    ContextProperties getAuthProperties() {
-        authProperties.get()
+    UbuntuAuthMysqlPropertiesProvider() {
+        super(UbuntuAuthMysqlPropertiesProvider.class, RESOURCE);
     }
 
-    @Override
-    String getProfile() {
-        PROFILE
-    }
 }

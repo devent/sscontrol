@@ -16,29 +16,31 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd-apache. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.apache.authfile.ubuntu_12_04
+package com.anrisoftware.sscontrol.httpd.apache.authdb.ubuntu_12_04
 
 import static com.anrisoftware.sscontrol.httpd.apache.apache.ubuntu_12_04.Ubuntu_12_04_ScriptFactory.PROFILE
 
 import javax.inject.Inject
 
 import com.anrisoftware.propertiesutils.ContextProperties
-import com.anrisoftware.sscontrol.httpd.apache.authfile.apache_2_2.AuthFileConfig
-import com.anrisoftware.sscontrol.httpd.webservice.ServiceConfig
+import com.anrisoftware.sscontrol.httpd.apache.authdb.mysql_apache_2_2.AuthMysqlConfig
+import com.anrisoftware.sscontrol.httpd.domain.Domain
+import com.anrisoftware.sscontrol.httpd.webservice.WebService
 
 /**
- * <i>Auth-file Ubuntu 12.04</i> configuration.
+ * <i>Auth-Database Mysql Ubuntu 12.04</i> configuration.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class UbuntuConfig extends AuthFileConfig implements ServiceConfig {
+class UbuntuAuthMysqlConfig extends AuthMysqlConfig {
 
     @Inject
-    UbuntuPropertiesProvider authProperties
+    UbuntuAuthMysqlPropertiesProvider authPropertiesProvider
 
+    @Override
     ContextProperties getAuthProperties() {
-        authProperties.get()
+        authPropertiesProvider.get()
     }
 
     @Override

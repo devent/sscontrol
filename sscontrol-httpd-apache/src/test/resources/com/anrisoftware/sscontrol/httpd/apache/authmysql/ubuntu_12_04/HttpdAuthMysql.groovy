@@ -16,12 +16,12 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd-apache. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.apache.authfiledigest.ubuntu_12_04
+package com.anrisoftware.sscontrol.httpd.apache.authmysql.ubuntu_12_04
 
 httpd {
     domain "test1.com", address: "192.168.0.50", {
-        setup "auth-file", id: "test1authid", auth: "Private Directory", location: "/private", {
-            type AuthType.digest, satisfy: SatisfyType.any
+        setup "auth-db", id: "test1id", auth: "Private Directory", location: "/private", {
+            database "authdb", user: "userdb", password: "userpassdb", host: "localhost", driver: "mysql", encryption: "php_md5"
             require valid: RequireValid.user
             require user: "foo", password: "foopassword"
             require user: "bar", password: "barpassword", update: RequireUpdate.password
@@ -41,6 +41,12 @@ httpd {
         }
     }
     domain "www.test1.com", address: "192.168.0.50", {
-        setup "auth-file", ref: "test1authid" //
+        setup "auth-db", ref: "test1id"
+    }
+    domain "test2.com", address: "192.168.0.50", {
+        setup "auth-db", id: "test2id", auth: "Private Directory", location: "/private", {
+            database "authdb", user: "userdb", password: "userpassdb", driver: "mysql"
+            require valid: RequireValid.user
+        }
     }
 }

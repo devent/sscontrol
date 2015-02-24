@@ -1,0 +1,34 @@
+<VirtualHost 192.168.0.50:80>
+
+    # domain www.test1.com
+    ServerName www.test1.com
+    DocumentRoot /tmp/var/www/www.test1.com/web
+    SuexecUserGroup web_002 web_002
+    <Directory /tmp/var/www/www.test1.com/web>
+        AllowOverride None
+        Order allow,deny
+        Allow from all
+    </Directory>
+
+    # auth "Private Directory"
+    <Location /private>
+        AuthBasicAuthoritative Off
+        AuthUserFile /dev/null
+        AuthMySQL On
+        AuthName "Private Directory"
+        AuthType Basic
+        Auth_MySQL_Host "localhost"
+        Auth_MySQL_Port 3306
+        Auth_MySQL_User "userdb"
+        Auth_MySQL_Password "userpassdb"
+        Auth_MySQL_DB "authdb"
+        Auth_MySQL_Password_Table "mysql_auth"
+        Auth_MySQL_Username_Field "username"
+        Auth_MySQL_Password_Field "password"
+        Auth_MySQL_Empty_Passwords Off
+        Auth_MySQL_Authoritative On
+        Auth_MySQL_Encryption_Types php_md5
+        Require valid-user
+    </Location>
+
+</VirtualHost>

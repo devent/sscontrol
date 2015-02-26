@@ -6,12 +6,12 @@ mysqldConfigHeader() ::= <<
 [mysqld]
 >>
 
-bindAddressConfig(address) ::= <<
-<if(address)>bind-address = <address><endif>
+bindAddressConfig(addresses) ::= <<
+bind-address = <first(addresses)>
 >>
 
-bindPortConfig(port) ::= <<
-<if(port)>port = <port><endif>
+bindPortConfig(addresses) ::= <<
+port = <addresses.(first(addresses))>
 >>
 
 generalLogConfig(level) ::= <<

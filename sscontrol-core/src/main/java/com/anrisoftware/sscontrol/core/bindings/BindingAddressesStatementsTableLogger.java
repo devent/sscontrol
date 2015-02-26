@@ -66,10 +66,12 @@ class BindingAddressesStatementsTableLogger extends AbstractLogger {
         super(BindingAddressesStatementsTable.class);
     }
 
-    void checkBindings(List<?> list, StatementsTable table) {
-        isTrue(list.size() > 1,
+    void checkBindings(List<?> list, boolean requirePort, StatementsTable table) {
+        int listMin = requirePort ? 1 : 0;
+        isTrue(list.size() > listMin,
                 format(binding_address_null.toString(), table.getService()));
-        String address = list.get(1).toString();
+        int addressIndex = list.size() > 1 ? 1 : 0;
+        String address = list.get(addressIndex).toString();
         isTrue(InetAddressValidator.getInstance().isValid(address)
                 || StringUtils.equals(list.get(1).toString(), "*"),
                 format(binding_address_invalid.toString(), table.getService()));

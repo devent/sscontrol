@@ -1,0 +1,5 @@
+## RoboBee Auto Generated
+[mysqld]
+bind-address = 127.0.0.1
+port = 3306
+log_error = /var/log/mysql/error.log

@@ -50,7 +50,7 @@ class MysqlUbuntuTest extends UbuntuTestUtil {
         registry.allServices.each { it.call() }
         log.info "Run service again to ensure that configuration is not set double."
         registry.allServices.each { it.call() }
-        assertFileContent mysqldCnfMinimalExpected.asFile(tmpdir), mysqldCnfMinimalExpected
+        assertFileContent minimalMysqldcnfExpected.asFile(tmpdir), minimalMysqldcnfExpected
         assertFileContent restartOutExpected.asFile(tmpdir), restartOutExpected
         assertFileContent aptitudeOutExpected.asFile(tmpdir), aptitudeOutExpected
         assertFileContent mysqlOutExpected.asFile(tmpdir), mysqlOutExpected
@@ -67,7 +67,7 @@ class MysqlUbuntuTest extends UbuntuTestUtil {
         registry.allServices.each { it.call() }
         log.info "Run service again to ensure that configuration is not set double."
         registry.allServices.each { it.call() }
-        assertFileContent mysqldCnfDebugExpected.asFile(tmpdir), mysqldCnfDebugExpected
+        assertFileContent debugMysqldcnfExpected.asFile(tmpdir), debugMysqldcnfExpected
     }
 
     @Test
@@ -81,7 +81,21 @@ class MysqlUbuntuTest extends UbuntuTestUtil {
         registry.allServices.each { it.call() }
         log.info "Run service again to ensure that configuration is not set double."
         registry.allServices.each { it.call() }
-        assertFileContent mysqldCnfBindExpected.asFile(tmpdir), mysqldCnfBindExpected
+        assertFileContent bindMysqldcnfExpected.asFile(tmpdir), bindMysqldcnfExpected
+    }
+
+    @Test
+    void "database bind local script"() {
+        copyMysqlFiles tmpdir
+        postfixtables.createFile tmpdir
+        loader.loadService profile.resource, null
+        def profile = registry.getService("profile")[0]
+        loader.loadService databaseBindLocalScript.resource, profile
+
+        registry.allServices.each { it.call() }
+        log.info "Run service again to ensure that configuration is not set double."
+        registry.allServices.each { it.call() }
+        assertFileContent localMysqldcnfExpected.asFile(tmpdir), localMysqldcnfExpected
     }
 
     @Test(expected=ServiceException)

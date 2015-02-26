@@ -54,7 +54,8 @@ public interface CitadelService extends WebService {
      * }
      * </pre>
      *
-     * @return the {@link List} of the {@link String} addresses or {@code null}.
+     * @return the {@link Map} of the {@link String} addresses and the
+     *         {@link List} of {@link Integer} ports or {@code null}.
      */
     Map<String, List<Integer>> getBindingAddresses();
 

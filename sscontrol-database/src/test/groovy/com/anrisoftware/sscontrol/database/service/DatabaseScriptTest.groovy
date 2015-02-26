@@ -48,8 +48,8 @@ class DatabaseScriptTest extends DatabaseServiceBase {
         assert database.debugFiles.size() == 2
         assert database.debugFiles["error"] == "/var/log/mysql/error.log"
         assert database.debugFiles["slow-queries"] == "/var/log/mysql/mysql-slow.log"
-        assert database.bindingAddress == "192.168.0.1"
-        assert database.bindingPort == 3306
+        assert database.bindingAddresses.size() == 1
+        assert database.bindingAddresses["192.168.0.1"].containsAll([3306])
         assert database.adminPassword == "mysqladminpassword"
         assert database.databases.size() == 4
         assert database.users.size() == 2
@@ -100,6 +100,7 @@ class DatabaseScriptTest extends DatabaseServiceBase {
         loader.loadService databaseBindLocalScript, profile
         DatabaseService database = registry.getService("database")[0]
 
-        assert database.bindingAddress == "127.0.0.1"
+        assert database.bindingAddresses.size() == 1
+        assert database.bindingAddresses["127.0.0.1"] == null
     }
 }

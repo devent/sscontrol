@@ -29,7 +29,7 @@ import org.apache.commons.io.IOUtils
 import org.apache.commons.lang3.StringUtils
 
 import com.anrisoftware.globalpom.exec.api.ProcessTask
-import com.anrisoftware.globalpom.exec.scriptprocess.ScriptExecFactory;
+import com.anrisoftware.globalpom.exec.scriptprocess.ScriptExecFactory
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.TemplatesFactory
 import com.anrisoftware.sscontrol.database.mysql.linux.MysqlScript
@@ -86,8 +86,8 @@ abstract class Mysql_5_5_Script extends MysqlScript {
         def config = []
         config << mysqldConfTemplates.getText(true, "configHeader")
         config << mysqldConfTemplates.getText(true, "mysqldConfigHeader")
-        config << mysqldConfTemplates.getText(true, "bindAddressConfig", "address", service.bindingAddress)
-        config << mysqldConfTemplates.getText(true, "bindPortConfig", "port", service.bindingPort)
+        config << mysqldConfTemplates.getText(true, "bindAddressConfig", "addresses", service.bindingAddresses)
+        config << mysqldConfTemplates.getText(true, "bindPortConfig", "addresses", service.bindingAddresses)
         if (service.debugLevels["general"] > 0) {
             config << mysqldConfTemplates.getText(true, "generalLogConfig", "level", service.debugLevels["general"])
         }

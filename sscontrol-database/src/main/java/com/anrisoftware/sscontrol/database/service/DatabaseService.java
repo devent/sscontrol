@@ -74,30 +74,25 @@ public interface DatabaseService {
     Map<String, Object> getDebugFiles();
 
     /**
-     * Returns the binding address.
+     * Returns the binding addresses.
+     * <p>
+     *
+     * <pre>
+     * {["0.0.0.0": [504], "192.168.0.2"]: [504]}
+     * </pre>
      *
      * <pre>
      * database {
-     *     bind "192.168.0.1"
+     *     bind "0.0.0.0", port: 504
+     *     bind all, port: 504
+     *     bind "192.168.0.2", ports: [504]
      * }
      * </pre>
      *
-     * @return the {@link String} address or {@code null}.
+     * @return the {@link Map} of the {@link String} addresses and the
+     *         {@link List} of {@link Integer} ports or {@code null}.
      */
-    String getBindingAddress();
-
-    /**
-     * Returns the binding port.
-     *
-     * <pre>
-     * database {
-     *     bind "192.168.0.1", port: 3306
-     * }
-     * </pre>
-     *
-     * @return the {@link Integer} port or {@code null}.
-     */
-    Integer getBindingPort();
+    Map<String, List<Integer>> getBindingAddresses();
 
     /**
      * The administrator password for the database server.

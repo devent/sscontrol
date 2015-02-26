@@ -18,6 +18,8 @@
  */
 package com.anrisoftware.sscontrol.core.bindings;
 
+import static org.codehaus.groovy.runtime.InvokerHelper.asList;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -25,8 +27,6 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.inject.Inject;
-
-import org.codehaus.groovy.runtime.InvokerHelper;
 
 import com.anrisoftware.sscontrol.core.groovy.StatementsTable;
 import com.anrisoftware.sscontrol.core.groovy.StatementsTableFactory;
@@ -49,6 +49,8 @@ public class BindingAddressesStatementsTable {
     @Inject
     private BindingAddressesStatementsTableLogger log;
 
+    private boolean requirePort;
+
     /**
      * @see BindingAddressesStatementsTableFactory#create(Object, String)
      */
@@ -56,6 +58,7 @@ public class BindingAddressesStatementsTable {
     BindingAddressesStatementsTable(StatementsTableFactory factory,
             @Assisted Object service, @Assisted String name) {
         this.statementsTable = createStatementsTable(factory, service, name);
+        this.requirePort = true;
     }
 
     private StatementsTable createStatementsTable(
@@ -67,63 +70,93 @@ public class BindingAddressesStatementsTable {
     }
 
     /**
+     * Sets if the port number is required.
+     *
+     * @param requirePort
+     *            set to {@code true} if the port number is required.
+     */
+    public void setRequirePort(boolean requirePort) {
+        this.requirePort = requirePort;
+    }
+
+    /**
      * Returns the binding addresses.
      * <p>
      *
      * <pre>
-     * {["0.0.0.0": [80], "192.168.0.2"]: [8082, 8084]}
+     * {["0.0.0.0": [504], "192.168.0.2"]: [504]}
      * </pre>
      *
      * <pre>
-     * database {
-     *     bind all, port: 80
-     *     bind "192.168.0.2", ports: [8082, 8084]
+     * service {
+     *     bind "0.0.0.0", port: 504
+     *     bind all, port: 504
+     *     bind "192.168.0.2", ports: [504]
      * }
      * </pre>
      *
-     * @return the {@link List} of the {@link String} addresses or {@code null}.
+     * @return the {@link Map} of the {@link String} addresses and the
+     *         {@link List} of {@link Integer} ports or {@code null}.
      */
     public Map<String, List<Integer>> getBindingAddresses() {
         Map<String, List<Integer>> map = new HashMap<String, List<Integer>>();
         StatementsTable table = statementsTable;
         Map<String, Integer> port = table.tableKeys(BIND_KEY, PORT_KEY);
         if (port != null) {
-            for (String address : port.keySet()) {
-                List<Integer> list = new ArrayList<Integer>();
-                list.add(port.get(address));
-                map.put(address, list);
-            }
+            map = putPort(map, port);
         }
         Map<String, List<Integer>> portsmap;
         portsmap = table.tableKeysAsList(BIND_KEY, PORTS_KEY);
         if (portsmap != null) {
-            for (Map.Entry<String, List<Integer>> ports : portsmap.entrySet()) {
-                List<Integer> list = map.get(ports.getKey());
-                if (list == null) {
-                    list = new ArrayList<Integer>();
-                }
-                list.addAll(ports.getValue());
-                map.put(ports.getKey(), list);
-            }
+            map = putPorts(map, portsmap);
         }
         if (map.size() == 0) {
-            Set<String> values = table.tableValues(BIND_KEY);
-            if (values != null) {
-                for (String address : values) {
-                    map.put(address, null);
-                }
-            }
+            map = putAddress(map, table);
         }
         return map.size() == 0 ? null : map;
+    }
+
+    private Map<String, List<Integer>> putPort(Map<String, List<Integer>> map,
+            Map<String, Integer> port) {
+        for (String address : port.keySet()) {
+            List<Integer> list = new ArrayList<Integer>();
+            list.add(port.get(address));
+            map.put(address, list);
+        }
+        return map;
+    }
+
+    private Map<String, List<Integer>> putPorts(Map<String, List<Integer>> map,
+            Map<String, List<Integer>> portsmap) {
+        for (Map.Entry<String, List<Integer>> ports : portsmap.entrySet()) {
+            List<Integer> list = map.get(ports.getKey());
+            if (list == null) {
+                list = new ArrayList<Integer>();
+            }
+            list.addAll(ports.getValue());
+            map.put(ports.getKey(), list);
+        }
+        return map;
+    }
+
+    private Map<String, List<Integer>> putAddress(
+            Map<String, List<Integer>> map, StatementsTable table) {
+        Set<String> values = table.tableValues(BIND_KEY);
+        if (values != null) {
+            for (String address : values) {
+                map.put(address, null);
+            }
+        }
+        return map;
     }
 
     /**
      * @throws IllegalArgumentException
      *             if the statement is not a valid binding address statement.
      */
-    public Object methodMissing(String name, Object obj) {
-        log.checkBindings(InvokerHelper.asList(obj), statementsTable);
-        return statementsTable.methodMissing(name, obj);
+    public Object methodMissing(String name, Object args) {
+        log.checkBindings(asList(args), requirePort, statementsTable);
+        return statementsTable.methodMissing(name, args);
     }
 
 }

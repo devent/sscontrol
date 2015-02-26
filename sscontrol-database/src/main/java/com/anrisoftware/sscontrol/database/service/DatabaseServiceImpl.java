@@ -35,6 +35,8 @@ import com.anrisoftware.sscontrol.core.api.Service;
 import com.anrisoftware.sscontrol.core.api.ServiceException;
 import com.anrisoftware.sscontrol.core.api.ServiceScriptFactory;
 import com.anrisoftware.sscontrol.core.bindings.BindingAddress;
+import com.anrisoftware.sscontrol.core.bindings.BindingAddressesStatementsTable;
+import com.anrisoftware.sscontrol.core.bindings.BindingAddressesStatementsTableFactory;
 import com.anrisoftware.sscontrol.core.groovy.StatementsException;
 import com.anrisoftware.sscontrol.core.groovy.StatementsMap;
 import com.anrisoftware.sscontrol.core.groovy.StatementsMapFactory;
@@ -59,11 +61,7 @@ class DatabaseServiceImpl extends AbstractService implements DatabaseService {
 
     private static final String PASSWORD_KEY = "password";
 
-    private static final String PORT_KEY = "port";
-
     private static final String ADMIN_KEY = "admin";
-
-    private static final String BIND_KEY = "bind";
 
     private static final String FILE_KEY = "file";
 
@@ -90,6 +88,8 @@ class DatabaseServiceImpl extends AbstractService implements DatabaseService {
 
     private StatementsMap statementsMap;
 
+    private BindingAddressesStatementsTable bindingAddressesStatementsTable;
+
     @Inject
     DatabaseServiceImpl() {
         this.databases = new ArrayList<Database>();
@@ -113,9 +113,7 @@ class DatabaseServiceImpl extends AbstractService implements DatabaseService {
     @Inject
     public final void setStatementsMap(StatementsMapFactory factory) {
         StatementsMap map = factory.create(factory, SERVICE_NAME);
-        map.addAllowed(BIND_KEY, ADMIN_KEY);
-        map.setAllowValue(true, BIND_KEY);
-        map.addAllowedKeys(BIND_KEY, PORT_KEY);
+        map.addAllowed(ADMIN_KEY);
         map.addAllowedKeys(ADMIN_KEY, PASSWORD_KEY);
         this.statementsMap = map;
     }
@@ -126,6 +124,15 @@ class DatabaseServiceImpl extends AbstractService implements DatabaseService {
         table.addAllowed(DEBUG_KEY);
         table.addAllowedKeys(DEBUG_KEY, LEVEL_KEY, FILE_KEY);
         this.statementsTable = table;
+    }
+
+    @Inject
+    public final void setBindingAddressesStatementsTable(
+            BindingAddressesStatementsTableFactory factory) {
+        BindingAddressesStatementsTable table;
+        table = factory.create(this, SERVICE_NAME);
+        table.setRequirePort(false);
+        this.bindingAddressesStatementsTable = table;
     }
 
     /**
@@ -159,20 +166,8 @@ class DatabaseServiceImpl extends AbstractService implements DatabaseService {
     }
 
     @Override
-    public String getBindingAddress() {
-        Object value = statementsMap.value(BIND_KEY);
-        if (value instanceof BindingAddress) {
-            return ((BindingAddress) value).getAddress();
-        } else if (value != null) {
-            return value.toString();
-        } else {
-            return null;
-        }
-    }
-
-    @Override
-    public Integer getBindingPort() {
-        return statementsMap.mapValue(BIND_KEY, PORT_KEY);
+    public Map<String, List<Integer>> getBindingAddresses() {
+        return bindingAddressesStatementsTable.getBindingAddresses();
     }
 
     @Override
@@ -283,7 +278,12 @@ class DatabaseServiceImpl extends AbstractService implements DatabaseService {
         try {
             return statementsMap.methodMissing(name, args);
         } catch (StatementsException e) {
-            return statementsTable.methodMissing(name, args);
+            try {
+                return statementsTable.methodMissing(name, args);
+            } catch (StatementsException e1) {
+                return bindingAddressesStatementsTable
+                        .methodMissing(name, args);
+            }
         }
     }
 

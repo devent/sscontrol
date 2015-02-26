@@ -79,11 +79,13 @@ abstract class MysqlScript extends LinuxScript {
      *            the {@link DatabaseService} database service.
      */
     void setupDefaultBinding(DatabaseService service) {
-        if (service.bindingAddress == null) {
-            service.bind defaultBindAddress
+        if (service.bindingAddresses == null) {
+            service.bind defaultBindAddress, port: defaultBindPort
         }
-        if (service.bindingPort == null) {
-            service.bind service.bindingAddress, port: defaultBindPort
+        service.bindingAddresses.each { address, ports ->
+            if (ports == null) {
+                service.bind address, port: defaultBindPort
+            }
         }
     }
 

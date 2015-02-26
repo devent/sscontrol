@@ -42,13 +42,15 @@ class BindingAddressesStatementsTableTest {
         def service = this
         def name = "foo"
         def cases = [
-            [statement: { it.bind "192.168.0.1", port: 80 }, expected: "", expectedException: null],
-            [statement: { it.bind "*", port: 80 }, expected: "", expectedException: null],
-            [statement: { it.bind "192.168.0.1", ports: [8092, 8094]}, expected: "", expectedException: null],
-            [statement: { it.bind "bla", ports: [8092, 8094]}, expected: "", expectedException: IllegalArgumentException]
+            [statement: { it.bind "192.168.0.1", port: 80 }, requirePort: true, expected: "", expectedException: null],
+            [statement: { it.bind "192.168.0.1" }, requirePort: false, expected: "", expectedException: null],
+            [statement: { it.bind "*", port: 80 }, expected: "", requirePort: true, expectedException: null],
+            [statement: { it.bind "192.168.0.1", ports: [8092, 8094]}, requirePort: true, expected: "", expectedException: null],
+            [statement: { it.bind "bla", ports: [8092, 8094]}, requirePort: true, expected: "", expectedException: IllegalArgumentException]
         ]
         cases.each { usecase ->
             def binding = bindingAddressesFactory.create(service, name)
+            binding.requirePort = usecase.requirePort
             if (!usecase.expectedException) {
                 usecase.statement binding
             } else {

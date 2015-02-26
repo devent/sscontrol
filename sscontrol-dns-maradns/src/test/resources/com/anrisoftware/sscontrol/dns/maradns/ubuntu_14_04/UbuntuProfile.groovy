@@ -18,15 +18,8 @@
  */
 package com.anrisoftware.sscontrol.dns.maradns.ubuntu_14_04
 
-def aptitudeCommand = MaradnsResources.aptitudeCommand.asFile(tmp)
-def restartCommand = MaradnsResources.restartCommand.asFile(tmp)
-def confDir = MaradnsResources.confDir.asFile(tmp)
-
 profile "ubuntu_14_04", {
     dns {
         service "maradns"
-        install_command aptitudeCommand
-        restart_command "$restartCommand restart"
-        configuration_directory confDir
     }
 }

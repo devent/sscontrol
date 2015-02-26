@@ -20,8 +20,12 @@ package com.anrisoftware.sscontrol.dns.deadwood.linux
 
 import java.util.regex.Pattern
 
+import javax.inject.Inject
+
 import org.apache.commons.lang3.StringUtils
 
+import com.anrisoftware.globalpom.exec.runcommands.RunCommands
+import com.anrisoftware.globalpom.exec.runcommands.RunCommandsFactory
 import com.anrisoftware.resources.templates.api.Templates
 import com.anrisoftware.sscontrol.core.api.Service
 import com.anrisoftware.sscontrol.core.service.LinuxScript
@@ -33,6 +37,22 @@ import com.anrisoftware.sscontrol.core.service.LinuxScript
  * @since 1.0
  */
 abstract class DeadwoodScript extends LinuxScript {
+
+    /**
+     * The name of the <i>Deadwood</i> script service.
+     */
+    public static final String NAME = "deadwood";
+
+    private RunCommands runCommands
+
+    @Inject
+    final void setRunCommands(RunCommandsFactory factory) {
+        this.runCommands = factory.create this, NAME
+    }
+
+    final RunCommands getRunCommands() {
+        runCommands
+    }
 
     /**
      * Returns the current <i>Deadwood</i> configuration.
@@ -63,8 +83,8 @@ abstract class DeadwoodScript extends LinuxScript {
      * Returns the path of the configuration directory.
      *
      * <ul>
-     * <li>profile property {@code "deadwood_configuration_directory"}</li>
-     * <li>profile property {@code "configuration_directory"}</li>
+     * <li>profile property {@code deadwood_configuration_directory}</li>
+     * <li>profile property {@code configuration_directory}</li>
      * </ul>
      *
      * @see #getDefaultProperties()
@@ -82,7 +102,7 @@ abstract class DeadwoodScript extends LinuxScript {
      * Returns the restart command for the service.
      *
      * <ul>
-     * <li>profile property {@code "deadwood_restart_command"}</li>
+     * <li>profile property {@code deadwood_restart_command}</li>
      * <li>profile property {@code restart_command}</li>
      * </ul>
      *
@@ -94,6 +114,44 @@ abstract class DeadwoodScript extends LinuxScript {
             profileProperty "deadwood_restart_command", defaultProperties
         } else {
             profileProperty "restart_command", defaultProperties
+        }
+    }
+
+    /**
+     * Returns the services to restart.
+     *
+     * <ul>
+     * <li>profile property {@code deadwood_restart_services}</li>
+     * <li>profile property {@code restart_services}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    @Override
+    List getRestartServices() {
+        if (containsKey("deadwood_restart_services", defaultProperties)) {
+            profileListProperty "deadwood_restart_servicesd", defaultProperties
+        } else {
+            profileListProperty "restart_services", defaultProperties
+        }
+    }
+
+    /**
+     * Returns the restart command flags.
+     *
+     * <ul>
+     * <li>profile property {@code deadwood_restart_flags}</li>
+     * <li>profile property {@code restart_flags}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    @Override
+    String getRestartFlags() {
+        if (containsKey("deadwood_restart_flags", defaultProperties)) {
+            profileProperty "deadwood_restart_flags", defaultProperties
+        } else {
+            profileProperty "restart_flags", defaultProperties
         }
     }
 

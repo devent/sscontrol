@@ -18,11 +18,12 @@
  */
 package com.anrisoftware.sscontrol.dns.maradns.ubuntu_14_04;
 
+import com.anrisoftware.globalpom.exec.runcommands.RunCommandsModule;
 import com.anrisoftware.sscontrol.scripts.unix.UnixScriptsModule;
 import com.google.inject.AbstractModule;
 
 /**
- * <i>MaraDNS Ubuntu 14.04</i> service script module.
+ * <i>Ubuntu 14.04 MaraDNS</i> service script module.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
@@ -31,6 +32,7 @@ class UbuntuModule extends AbstractModule {
 
     @Override
     protected void configure() {
+        install(new RunCommandsModule());
         install(new UnixScriptsModule());
         install(new UnixScriptsModule.UnixScriptsDefaultsModule());
     }

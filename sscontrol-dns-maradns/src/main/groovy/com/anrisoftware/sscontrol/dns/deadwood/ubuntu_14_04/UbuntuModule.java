@@ -18,6 +18,7 @@
  */
 package com.anrisoftware.sscontrol.dns.deadwood.ubuntu_14_04;
 
+import com.anrisoftware.globalpom.exec.runcommands.RunCommandsModule;
 import com.anrisoftware.sscontrol.scripts.changefile.ChangeFileModule;
 import com.anrisoftware.sscontrol.scripts.localuser.LocalUserModule;
 import com.anrisoftware.sscontrol.scripts.unix.UnixScriptsModule;
@@ -35,6 +36,7 @@ class UbuntuModule extends AbstractModule {
     protected void configure() {
         install(new LocalUserModule());
         install(new ChangeFileModule());
+        install(new RunCommandsModule());
         install(new UnixScriptsModule());
         install(new UnixScriptsModule.UnixScriptsDefaultsModule());
     }

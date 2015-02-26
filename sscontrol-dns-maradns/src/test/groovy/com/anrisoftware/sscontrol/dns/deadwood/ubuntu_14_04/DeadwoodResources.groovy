@@ -33,6 +33,7 @@ enum DeadwoodResources {
 
     profile("UbuntuProfile.groovy", DeadwoodResources.class.getResource("UbuntuProfile.groovy")),
     deadwoodScript("Dns.groovy", DeadwoodResources.class.getResource("Dns.groovy")),
+    // commands
     aptitudeCommand("/usr/bin/aptitude", DeadwoodResources.class.getResource("echo_command.txt")),
     restartCommand("/etc/init.d/deadwood", DeadwoodResources.class.getResource("echo_command.txt")),
     statusCommand("/etc/init.d/deadwood", DeadwoodResources.class.getResource("echo_command.txt")),
@@ -44,6 +45,7 @@ enum DeadwoodResources {
     updateRcCommand("/usr/sbin/update-rc.d", DeadwoodResources.class.getResource("echo_command.txt")),
     startStopCommandCommand("/sbin/start-stop-daemon", DeadwoodResources.class.getResource("echo_command.txt")),
     deadwoodCommand("/usr/sbin/deadwood", DeadwoodResources.class.getResource("echo_command.txt")),
+    // files
     groupsFile("/etc/group", DeadwoodResources.class.getResource("group.txt")),
     usersFile("/etc/passwd", DeadwoodResources.class.getResource("passwd.txt")),
     confDir("/etc/maradns/deadwood", null),
@@ -53,6 +55,7 @@ enum DeadwoodResources {
     // expected
     deadwoodrcExpected("/etc/maradns/deadwood/dwood3rc", DeadwoodResources.class.getResource("dwood3rc_expected.txt")),
     deadwoodRunScriptExpected("/etc/init.d/deadwood", DeadwoodResources.class.getResource("deadwood_run_script_expected.txt")),
+    runcommandsLogExpected("/runcommands.log", DeadwoodResources.class.getResource("runcommands_expected.txt")),
     updateRcOutExpected("/usr/sbin/update-rc.d.out", DeadwoodResources.class.getResource("updaterc_out_expected.txt")),
     aptitudeOutExpected("/usr/bin/aptitude.out", DeadwoodResources.class.getResource("aptitude_out_expected.txt")),
     deadwoodOutExpected("/etc/init.d/deadwood.out", DeadwoodResources.class.getResource("deadwood_out_expected.txt")),
@@ -77,6 +80,27 @@ enum DeadwoodResources {
         confDir.asFile parent mkdirs()
         duendeLoggingDir.asFile parent mkdirs()
         deadwoodrc.createFile parent
+    }
+
+    static void setupDeadwoodProperties(def profile, File parent) {
+        def entry = profile.getEntry("dns")
+        // commands
+        entry.install_command aptitudeCommand.asFile(parent)
+        entry.restart_command restartCommand.asFile(parent)
+        entry.status_command statusCommand.asFile(parent)
+        entry.group_add_command groupAddCommand.asFile(parent)
+        entry.user_add_command userAddCommand.asFile(parent)
+        entry.user_id_command userIdCommand.asFile(parent)
+        entry.chmod_command chmodCommand.asFile(parent)
+        entry.chown_command chownCommand.asFile(parent)
+        entry.update_rc_command updateRcCommand.asFile(parent)
+        entry.start_stop_daemon_command startStopCommandCommand.asFile(parent)
+        entry.deadwood_command deadwoodCommand.asFile(parent)
+        // files
+        entry.groups_file groupsFile.asFile(parent)
+        entry.users_file usersFile.asFile(parent)
+        entry.configuration_directory confDir.asFile(parent)
+        entry.deadwood_script_file scriptFile.asFile(parent)
     }
 
     ResourcesUtils resources

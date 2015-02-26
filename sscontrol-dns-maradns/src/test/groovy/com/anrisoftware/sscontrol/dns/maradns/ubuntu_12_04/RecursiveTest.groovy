@@ -25,7 +25,7 @@ import groovy.util.logging.Slf4j
 
 import org.junit.Test
 
-import com.anrisoftware.sscontrol.dns.core.ubuntu.UbuntuTestUtil
+import com.anrisoftware.sscontrol.testutils.resources.ScriptTestEnvironment
 
 /**
  * <i>MaraDNS Ubuntu 12.04</i> recursive service test.
@@ -34,14 +34,14 @@ import com.anrisoftware.sscontrol.dns.core.ubuntu.UbuntuTestUtil
  * @since 1.0
  */
 @Slf4j
-class RecursiveTest extends UbuntuTestUtil {
+class RecursiveTest extends ScriptTestEnvironment {
 
     @Test
     void "maradns recursive"() {
         copyUbuntuFiles tmpdir
-
         loader.loadService profile.resource, null
         def profile = registry.getService("profile")[0]
+        setupMaradnsProperties profile, tmpdir
         loader.loadService maradnsRecursiveScript.resource, profile
 
         registry.allServices.each { it.call() }

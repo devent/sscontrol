@@ -25,7 +25,7 @@ import groovy.util.logging.Slf4j
 
 import org.junit.Test
 
-import com.anrisoftware.sscontrol.dns.core.ubuntu.UbuntuTestUtil
+import com.anrisoftware.sscontrol.testutils.resources.ScriptTestEnvironment
 
 /**
  * <i>MaraDNS/Deadwood Ubuntu 14.04</i> recursive service test.
@@ -34,7 +34,7 @@ import com.anrisoftware.sscontrol.dns.core.ubuntu.UbuntuTestUtil
  * @since 1.0
  */
 @Slf4j
-class MaradnsDeadwoodTest extends UbuntuTestUtil {
+class MaradnsDeadwoodTest extends ScriptTestEnvironment {
 
     @Test
     void "deadwood service"() {

@@ -136,6 +136,7 @@ abstract class Deadwood_3_2_Script extends DeadwoodScript {
         cacheFile.isFile() == false ? cacheFile.createNewFile() : false
         changeFileOwnerFactory.create(
                 log: log,
+                runCommands: runCommands,
                 command: chownCommand,
                 files: cacheFile,
                 owner: deadwoodUser,
@@ -143,6 +144,7 @@ abstract class Deadwood_3_2_Script extends DeadwoodScript {
                 this, threads)()
         changeFileModFactory.create(
                 log: log,
+                runCommands: runCommands,
                 command: chmodCommand,
                 files: cacheFile,
                 mod: "o-rw",

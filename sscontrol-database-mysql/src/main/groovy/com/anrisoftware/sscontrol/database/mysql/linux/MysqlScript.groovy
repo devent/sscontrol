@@ -35,7 +35,7 @@ import com.anrisoftware.sscontrol.database.service.DatabaseService
 abstract class MysqlScript extends LinuxScript {
 
     /**
-     * The name of the MySQL script service.
+     * The name of the <i>MySQL</i> script service.
      */
     public static final String NAME = "mysql";
 

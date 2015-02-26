@@ -25,7 +25,7 @@ import groovy.util.logging.Slf4j
 
 import org.junit.Test
 
-import com.anrisoftware.sscontrol.dns.core.ubuntu.UbuntuTestUtil
+import com.anrisoftware.sscontrol.testutils.resources.ScriptTestEnvironment
 
 /**
  * <i>Deadwood Ubuntu 14.04</i> recursive service test.
@@ -34,14 +34,15 @@ import com.anrisoftware.sscontrol.dns.core.ubuntu.UbuntuTestUtil
  * @since 1.0
  */
 @Slf4j
-class DeadwoodTest extends UbuntuTestUtil {
+class DeadwoodTest extends ScriptTestEnvironment {
 
     @Test
     void "deadwood service"() {
+        attachRunCommandsLog tmpdir
         copyUbuntuFiles tmpdir
-
         loader.loadService profile.resource, null
         def profile = registry.getService("profile")[0]
+        setupDeadwoodProperties profile, tmpdir
         loader.loadService deadwoodScript.resource, profile
 
         registry.allServices.each { it.call() }
@@ -49,6 +50,7 @@ class DeadwoodTest extends UbuntuTestUtil {
         registry.allServices.each { it.call() }
 
         assert duendeLoggingDir.asFile(tmpdir).isDirectory()
+        assertStringContent runcommandsLogExpected.replaced(tmpdir, tmpdir, "/tmp").replaceAll(/exitCodes=\[I@.*}/, "id").replaceAll(/\d+/, 'time'), runcommandsLogExpected.toString()
         assertFileContent aptitudeOutExpected.asFile(tmpdir), aptitudeOutExpected
         assertStringContent deadwoodrcExpected.replaced(tmpdir, tmpdir, "/tmp"), deadwoodrcExpected.toString()
         assertFileContent groupAddOutExpected.asFile(tmpdir), groupAddOutExpected

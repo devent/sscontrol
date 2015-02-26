@@ -31,7 +31,7 @@ import com.anrisoftware.sscontrol.dns.service.DnsService
 import com.anrisoftware.sscontrol.dns.zone.DnsZone
 
 /**
- * MaraDNS 1.2 service script.
+ * <i>MaraDNS 1.2</i> service script.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0

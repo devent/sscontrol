@@ -33,10 +33,13 @@ enum MaradnsResources {
 
     profile("UbuntuProfile.groovy", MaradnsResources.class.getResource("UbuntuProfile.groovy")),
     maradnsScript("Dns.groovy", MaradnsResources.class.getResource("Dns.groovy")),
+    // commands
     aptitudeCommand("/usr/bin/aptitude", MaradnsResources.class.getResource("echo_command.txt")),
     restartCommand("/etc/init.d/maradns", MaradnsResources.class.getResource("echo_command.txt")),
+    // files
     confDir("/etc/maradns", null),
     mararc("/etc/maradns/mararc", MaradnsResources.class.getResource("mararc.txt")),
+    // expected
     mararcExpected("/etc/maradns/mararc", MaradnsResources.class.getResource("mararc_expected.txt")),
     mararcRecursiveExpected("/etc/maradns/mararc", MaradnsResources.class.getResource("mararc_recursive_expected.txt")),
     dbAnrisoftwareExpected("/etc/maradns/db.anrisoftware.com", MaradnsResources.class.getResource("db_anrisoftware_com_expected.txt")),
@@ -50,6 +53,15 @@ enum MaradnsResources {
         restartCommand.createCommand parent
         confDir.asFile parent mkdirs()
         mararc.createFile parent
+    }
+
+    static void setupMaradnsProperties(def profile, File parent) {
+        def entry = profile.getEntry("dns")
+        // commands
+        entry.install_command aptitudeCommand.asFile(parent)
+        entry.restart_command restartCommand.asFile(parent)
+        // files
+        entry.configuration_directory confDir.asFile(parent)
     }
 
     ResourcesUtils resources

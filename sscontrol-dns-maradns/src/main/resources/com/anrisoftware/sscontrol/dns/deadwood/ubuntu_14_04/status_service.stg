@@ -1,5 +1,6 @@
 statusService(args) ::= <<
 <! - args.command - !>
-<args.command>
+<! - args.flags - !>
+<args.command> <if(args.flags)><args.flags><endif>
 
 >>

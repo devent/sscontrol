@@ -24,15 +24,15 @@ import javax.inject.Inject
 
 import org.apache.commons.io.FileUtils
 
-import com.anrisoftware.globalpom.exec.scriptprocess.ScriptExecFactory;
+import com.anrisoftware.globalpom.exec.scriptprocess.ScriptExecFactory
 import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.Templates
 import com.anrisoftware.resources.templates.api.TemplatesFactory
 import com.anrisoftware.sscontrol.dns.deadwood.deadwood_3_2.Deadwood_3_2_Script
-import com.anrisoftware.sscontrol.scripts.localuser.LocalGroupAddFactory;
-import com.anrisoftware.sscontrol.scripts.localuser.LocalUserAddFactory;
-import com.anrisoftware.sscontrol.scripts.localuser.LocalUserInfoFactory;
+import com.anrisoftware.sscontrol.scripts.localuser.LocalGroupAddFactory
+import com.anrisoftware.sscontrol.scripts.localuser.LocalUserAddFactory
+import com.anrisoftware.sscontrol.scripts.localuser.LocalUserInfoFactory
 import com.anrisoftware.sscontrol.scripts.unix.InstallPackagesFactory
 import com.anrisoftware.sscontrol.scripts.unix.RestartServicesFactory
 
@@ -102,6 +102,7 @@ class UbuntuScript extends Deadwood_3_2_Script {
     void createDeadwoodUser() {
         localGroupAddFactory.create(
                 log: log,
+                runCommands: runCommands,
                 command: groupAddCommand,
                 groupsFile: groupsFile,
                 groupName: deadwoodGroup,
@@ -109,6 +110,7 @@ class UbuntuScript extends Deadwood_3_2_Script {
                 this, threads)()
         localUserAddFactory.create(
                 log: log,
+                runCommands: runCommands,
                 command: userAddCommand,
                 usersFile: usersFile,
                 userName: deadwoodUser,
@@ -117,6 +119,7 @@ class UbuntuScript extends Deadwood_3_2_Script {
                 this, threads)()
         def info = localUserInfoFactory.create(
                 log: log,
+                runCommands: runCommands,
                 command: userIdCommand,
                 userName: deadwoodUser,
                 this, threads)()
@@ -131,6 +134,7 @@ class UbuntuScript extends Deadwood_3_2_Script {
     void installPackages() {
         installPackagesFactory.create(
                 log: log,
+                runCommands: runCommands,
                 command: installCommand,
                 packages: packages,
                 system: systemName,
@@ -143,8 +147,10 @@ class UbuntuScript extends Deadwood_3_2_Script {
     void restartService() {
         restartServicesFactory.create(
                 log: log,
+                runCommands: runCommands,
                 command: restartCommand,
                 services: restartServices,
+                flags: restartFlags,
                 this, threads)()
     }
 
@@ -154,7 +160,9 @@ class UbuntuScript extends Deadwood_3_2_Script {
     void checkService() {
         scriptExecFactory.create(
                 log: log,
+                runCommands: runCommands,
                 command: statusCommand,
+                flags: statusFlags,
                 this, threads,
                 statusServiceTemplate, "statusService")()
     }
@@ -204,7 +212,7 @@ class UbuntuScript extends Deadwood_3_2_Script {
 
     /**
      * Returns path of the <i>status</i> command, for
-     * example {@code /etc/init.d/deadwood status}.
+     * example {@code /etc/init.d/deadwood}.
      *
      * <ul>
      * <li>profile property key {@code status_command}</li>
@@ -233,6 +241,25 @@ class UbuntuScript extends Deadwood_3_2_Script {
      */
     String getStartStopDaemonCommand() {
         profileProperty "start_stop_daemon_command", defaultProperties
+    }
+
+    /**
+     * Returns the <i>status</i> command flags, for
+     * example {@code status}.
+     *
+     * <ul>
+     * <li>profile property key {@code status_flags}</li>
+     * <li>profile property key {@code deadwood_status_flags}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    String getStatusFlags() {
+        if (containsKey("deadwood_status_flags", defaultProperties)) {
+            profileProperty "deadwood_status_flags", defaultProperties
+        } else {
+            profileProperty "status_flags", defaultProperties
+        }
     }
 
     ContextProperties getDefaultProperties() {

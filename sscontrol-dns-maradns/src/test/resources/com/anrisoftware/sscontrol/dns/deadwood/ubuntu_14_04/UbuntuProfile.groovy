@@ -18,40 +18,8 @@
  */
 package com.anrisoftware.sscontrol.dns.deadwood.ubuntu_14_04
 
-def aptitudeCommand = DeadwoodResources.aptitudeCommand.asFile(tmp)
-def restartCommand = DeadwoodResources.restartCommand.asFile(tmp)
-def statusCommand = DeadwoodResources.statusCommand.asFile(tmp)
-def groupAddCommand = DeadwoodResources.groupAddCommand.asFile(tmp)
-def userAddCommand = DeadwoodResources.userAddCommand.asFile(tmp)
-def userIdCommand = DeadwoodResources.userIdCommand.asFile(tmp)
-def chmodCommand = DeadwoodResources.chmodCommand.asFile(tmp)
-def chownCommand = DeadwoodResources.chownCommand.asFile(tmp)
-def updateRcCommand = DeadwoodResources.updateRcCommand.asFile(tmp)
-def startStopCommandCommand = DeadwoodResources.startStopCommandCommand.asFile(tmp)
-def deadwoodCommand = DeadwoodResources.deadwoodCommand.asFile(tmp)
-def groupsFile = DeadwoodResources.groupsFile.asFile(tmp)
-def usersFile = DeadwoodResources.usersFile.asFile(tmp)
-def confDir = DeadwoodResources.confDir.asFile(tmp)
-def duendeLoggingDir = DeadwoodResources.duendeLoggingDir.asFile(tmp)
-def scriptFile = DeadwoodResources.scriptFile.asFile(tmp)
-
 profile "ubuntu_14_04", {
     dns {
         service "deadwood"
-        install_command aptitudeCommand
-        restart_command "$restartCommand recache"
-        status_command "$statusCommand status"
-        group_add_command groupAddCommand
-        user_add_command userAddCommand
-        user_id_command userIdCommand
-        chmod_command chmodCommand
-        chown_command chownCommand
-        update_rc_command updateRcCommand
-        start_stop_daemon_command startStopCommandCommand
-        deadwood_command deadwoodCommand
-        groups_file groupsFile
-        users_file usersFile
-        configuration_directory confDir
-        deadwood_script_file scriptFile
     }
 }

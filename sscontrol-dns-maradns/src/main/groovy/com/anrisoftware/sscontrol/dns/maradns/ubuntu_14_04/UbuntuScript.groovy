@@ -28,7 +28,7 @@ import com.anrisoftware.sscontrol.scripts.unix.InstallPackagesFactory
 import com.anrisoftware.sscontrol.scripts.unix.RestartServicesFactory
 
 /**
- * <i>MaraDNS Ubuntu 14.04</i> service script.
+ * <i>Ubuntu 14.04 MaraDNS</i> service script.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
@@ -59,6 +59,7 @@ class UbuntuScript extends Maradns_1_2_Script {
     void installPackages() {
         installPackagesFactory.create(
                 log: log,
+                runCommands: runCommands,
                 command: installCommand,
                 packages: packages,
                 system: systemName,
@@ -71,8 +72,10 @@ class UbuntuScript extends Maradns_1_2_Script {
     void restartService() {
         restartServicesFactory.create(
                 log: log,
+                runCommands: runCommands,
                 command: restartCommand,
                 services: restartServices,
+                flags: restartFlags,
                 this, threads)()
     }
 

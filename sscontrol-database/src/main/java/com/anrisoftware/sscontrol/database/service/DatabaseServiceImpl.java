@@ -19,6 +19,10 @@
 package com.anrisoftware.sscontrol.database.service;
 
 import static com.anrisoftware.sscontrol.database.service.DatabaseServiceFactory.SERVICE_NAME;
+import static com.anrisoftware.sscontrol.database.service.DatabaseServiceStatement.ADMIN_KEY;
+import static com.anrisoftware.sscontrol.database.service.DatabaseServiceStatement.DEBUG_KEY;
+import static com.anrisoftware.sscontrol.database.service.DatabaseServiceStatement.NAME_KEY;
+import static com.anrisoftware.sscontrol.database.service.DatabaseServiceStatement.PASSWORD_KEY;
 import static java.util.Collections.unmodifiableList;
 import groovy.lang.Script;
 
@@ -56,20 +60,6 @@ import com.anrisoftware.sscontrol.database.statements.UserFactory;
  */
 @SuppressWarnings("serial")
 class DatabaseServiceImpl extends AbstractService implements DatabaseService {
-
-    private static final String USER_KEY = "name";
-
-    private static final String PASSWORD_KEY = "password";
-
-    private static final String ADMIN_KEY = "admin";
-
-    private static final String FILE_KEY = "file";
-
-    private static final String LEVEL_KEY = "level";
-
-    private static final String DEBUG_KEY = "debug";
-
-    private static final String DATABASE_KEY = "name";
 
     private final List<Database> databases;
 
@@ -120,9 +110,9 @@ class DatabaseServiceImpl extends AbstractService implements DatabaseService {
 
     @Inject
     public final void setStatementsTable(StatementsTableFactory factory) {
-        StatementsTable table = factory.create(factory, SERVICE_NAME);
+        StatementsTable table = factory.create(this, SERVICE_NAME);
         table.addAllowed(DEBUG_KEY);
-        table.addAllowedKeys(DEBUG_KEY, LEVEL_KEY, FILE_KEY);
+        table.setAllowArbitraryKeys(true, DEBUG_KEY);
         this.statementsTable = table;
     }
 
@@ -156,13 +146,8 @@ class DatabaseServiceImpl extends AbstractService implements DatabaseService {
     }
 
     @Override
-    public Map<String, Object> getDebugLevels() {
-        return statementsTable.tableKeys(DEBUG_KEY, LEVEL_KEY);
-    }
-
-    @Override
-    public Map<String, Object> getDebugFiles() {
-        return statementsTable.tableKeys(DEBUG_KEY, FILE_KEY);
+    public Map<String, Object> debugLogging(String key) {
+        return statementsTable.tableKeys(DEBUG_KEY, key);
     }
 
     @Override
@@ -206,7 +191,7 @@ class DatabaseServiceImpl extends AbstractService implements DatabaseService {
      */
     public Database database(Map<String, Object> args, String name,
             Object statements) {
-        args.put(DATABASE_KEY, name);
+        args.put(NAME_KEY.toString(), name);
         Database database = databaseFactory.create(args);
         databases.add(database);
         log.databaseAdd(this, database);
@@ -248,7 +233,7 @@ class DatabaseServiceImpl extends AbstractService implements DatabaseService {
      *             if the specified name is empty.
      */
     public User user(Map<String, Object> args, String name, Object statements) {
-        args.put(USER_KEY, name);
+        args.put(NAME_KEY.toString(), name);
         User user = userFactory.create(args);
         users.add(user);
         log.userAdd(this, user);

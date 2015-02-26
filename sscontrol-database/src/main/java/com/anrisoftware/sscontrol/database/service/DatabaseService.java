@@ -33,45 +33,28 @@ import com.anrisoftware.sscontrol.database.statements.User;
 public interface DatabaseService {
 
     /**
-     * Returns the debug logging levels.
+     * Returns the debug logging for the specified key.
      * <p>
-     * The example returns the map
+     * <ul>
+     * <li>example returns the following map for the key "level":<br />
+     * <code>{["general": 1, "error": 1, "slow-queries": 1]}</code></li>
      *
-     * <pre>
-     * {["general": 1], ["error": 1], ["slow-queries": 1]}
-     * </pre>
+     * <li>and for the key "file":<br />
+     * <code>{["error": "/var/log/mysql/error.log", "slow-queries": "/var/log/mysql/mysql-slow.log"]}</code>
+     * </li>
+     * </ul>
      *
      * <pre>
      * database {
      *     debug "general", level: 1
-     *     debug "error", level: 1
-     *     debug "slow-queries", level: 1
+     *     debug "error", level: 1, file: "/var/log/mysql/error.log"
+     *     debug "slow-queries", level: 1, file: "/var/log/mysql/mysql-slow.log"
      * }
      * </pre>
      *
      * @return the {@link Map} of the debug levels or {@code null}.
      */
-    Map<String, Object> getDebugLevels();
-
-    /**
-     * Returns the debug logging files.
-     * <p>
-     * The example returns the map
-     *
-     * <pre>
-     * {["error": "/var/log/mysql/error.log"], ["slow-queries": "/var/log/mysql/mysql-slow.log"]}
-     * </pre>
-     *
-     * <pre>
-     * database {
-     *     debug "error", file: "/var/log/mysql/error.log"
-     *     debug "slow-queries", file: "/var/log/mysql/mysql-slow.log"
-     * }
-     * </pre>
-     *
-     * @return the {@link Map} of the debug levels or {@code null}.
-     */
-    Map<String, Object> getDebugFiles();
+    Map<String, Object> debugLogging(String key);
 
     /**
      * Returns the binding addresses.

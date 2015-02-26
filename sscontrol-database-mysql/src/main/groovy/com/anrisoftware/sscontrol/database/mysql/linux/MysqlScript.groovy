@@ -60,32 +60,32 @@ abstract class MysqlScript extends LinuxScript {
      *            the {@link DatabaseService} database service.
      */
     void setupDefaultDebug(DatabaseService service) {
-        if (service.debugLevels == null) {
+        if (service.debugLogging("level") == null) {
             service.debug "general", level: defaultDebugGeneralLevel
             service.debug "error", level: defaultDebugErrorLevel
             service.debug "slow-queries", level: defaultDebugSlowQueriesLevel
         }
-        if (service.debugFiles == null) {
+        if (service.debugLogging("file") == null) {
             service.debug "general", file: defaultDebugGeneralFile
             service.debug "error", file: defaultDebugErrorFile
             service.debug "slow-queries", file: defaultDebugSlowQueriesFile
         }
-        if (service.debugLevels["general"] == null) {
+        if (service.debugLogging("level")["general"] == null) {
             service.debug "general", level: defaultDebugGeneralLevel
         }
-        if (service.debugFiles["general"] == null) {
+        if (service.debugLogging("file")["general"] == null) {
             service.debug "general", file: defaultDebugGeneralFile
         }
-        if (service.debugLevels["error"] == null) {
+        if (service.debugLogging("level")["error"] == null) {
             service.debug "error", level: defaultDebugErrorLevel
         }
-        if (service.debugFiles["error"] == null) {
+        if (service.debugLogging("file")["error"] == null) {
             service.debug "error", file: defaultDebugErrorFile
         }
-        if (service.debugLevels["slow-queries"] == null) {
+        if (service.debugLogging("level")["slow-queries"] == null) {
             service.debug "slow-queries", level: defaultDebugSlowQueriesLevel
         }
-        if (service.debugFiles["slow-queries"] == null) {
+        if (service.debugLogging("level")["slow-queries"] == null) {
             service.debug "slow-queries", file: defaultDebugSlowQueriesFile
         }
     }

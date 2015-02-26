@@ -41,13 +41,14 @@ class DatabaseScriptTest extends DatabaseServiceBase {
         loader.loadService databaseScript, profile
         DatabaseService database = registry.getService("database")[0]
 
-        assert database.debugLevels.size() == 3
-        assert database.debugLevels["general"] == 1
-        assert database.debugLevels["error"] == 1
-        assert database.debugLevels["slow-queries"] == 1
-        assert database.debugFiles.size() == 2
-        assert database.debugFiles["error"] == "/var/log/mysql/error.log"
-        assert database.debugFiles["slow-queries"] == "/var/log/mysql/mysql-slow.log"
+        assert database.debugLogging("level").size() == 3
+        assert database.debugLogging("level")["general"] == 1
+        assert database.debugLogging("level")["error"] == 1
+        assert database.debugLogging("level")["slow-queries"] == 1
+        assert database.debugLogging("file").size() == 2
+        assert database.debugLogging("file")["general"] == null
+        assert database.debugLogging("file")["error"] == "/var/log/mysql/error.log"
+        assert database.debugLogging("file")["slow-queries"] == "/var/log/mysql/mysql-slow.log"
         assert database.bindingAddresses.size() == 1
         assert database.bindingAddresses["192.168.0.1"].containsAll([3306])
         assert database.adminPassword == "mysqladminpassword"

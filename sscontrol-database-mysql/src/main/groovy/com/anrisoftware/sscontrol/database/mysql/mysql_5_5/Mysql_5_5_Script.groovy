@@ -88,24 +88,24 @@ abstract class Mysql_5_5_Script extends MysqlScript {
         config << mysqldConfTemplates.getText(true, "mysqldConfigHeader")
         config << mysqldConfTemplates.getText(true, "bindAddressConfig", "addresses", service.bindingAddresses)
         config << mysqldConfTemplates.getText(true, "bindPortConfig", "addresses", service.bindingAddresses)
-        if (service.debugLevels["general"] > 0) {
-            config << mysqldConfTemplates.getText(true, "generalLogConfig", "level", service.debugLevels["general"])
+        def levels = service.debugLogging("level")
+        def files = service.debugLogging("file")
+        if (levels["general"] > 0) {
+            config << mysqldConfTemplates.getText(true, "generalLogConfig", "level", levels["general"])
+            config << mysqldConfTemplates.getText(true, "generalLogFileConfig", "file", files["general"])
         }
-        if (service.debugLevels["general"] > 0) {
-            config << mysqldConfTemplates.getText(true, "generalLogFileConfig", "file", service.debugFiles["general"])
-        }
-        if (service.debugLevels["error"] > 0) {
-            if (StringUtils.isBlank(service.debugFiles["error"])) {
-                config << mysqldConfTemplates.getText(true, "logErrorConfig", "level", service?.debugLevels["error"])
+        if (levels["error"] > 0) {
+            if (StringUtils.isBlank(files["error"])) {
+                config << mysqldConfTemplates.getText(true, "logErrorConfig", "level", levels["error"])
             } else {
-                config << mysqldConfTemplates.getText(true, "logErrorFileConfig", "file", service?.debugFiles["error"])
+                config << mysqldConfTemplates.getText(true, "logErrorFileConfig", "file", files["error"])
             }
         }
-        if (service.debugLevels["slow-queries"] > 0) {
-            if (StringUtils.isBlank(service.debugFiles["slow-queries"])) {
-                config << mysqldConfTemplates.getText(true, "logSlowQueriesConfig", "level", service?.debugLevels["slow-queries"])
+        if (levels["slow-queries"] > 0) {
+            if (StringUtils.isBlank(files["slow-queries"])) {
+                config << mysqldConfTemplates.getText(true, "logSlowQueriesConfig", "level", levels["slow-queries"])
             } else {
-                config << mysqldConfTemplates.getText(true, "logSlowQueriesFileConfig", "file", service?.debugFiles["slow-queries"])
+                config << mysqldConfTemplates.getText(true, "logSlowQueriesFileConfig", "file", files["slow-queries"])
             }
         }
         FileUtils.writeLines mysqldFile, charset.name(), config

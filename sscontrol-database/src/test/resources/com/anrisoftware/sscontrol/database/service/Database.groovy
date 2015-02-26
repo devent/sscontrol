@@ -19,12 +19,12 @@
 package com.anrisoftware.sscontrol.database.service
 database {
 
-    // enable debugging logging
+    // optionally, enable debugging logging
     debug "general", level: 1
     debug "error", level: 1, file: "/var/log/mysql/error.log"
     debug "slow-queries", level: 1, file: "/var/log/mysql/mysql-slow.log"
 
-    // database server binding address
+    // optionally, database server binding address
     bind "192.168.0.1", port: 3306
 
     // set the administrator password
@@ -37,8 +37,8 @@ database {
     database "drupal6db", charset: "latin1", collate: "latin1_swedish_ci"
 
     // add new database and import tables
-    database "maildb", { //.
-        script importing: "postfixtables.sql" //.
+    database "maildb", {
+        script importing: "postfixtables.sql"
     }
 
     // add new database and import tables
@@ -51,7 +51,7 @@ database {
     user "test1", password: "test1password", server: "srv1"
 
     // add a new user, grand all privileges on database
-    user "drupal6", password: "drupal6password", server: "srv2", { //.
+    user "drupal6", password: "drupal6password", server: "srv2", {
         access database: "drupal6db" //.
     }
 }

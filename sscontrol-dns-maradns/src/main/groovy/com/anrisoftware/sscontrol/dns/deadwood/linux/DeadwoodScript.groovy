@@ -156,16 +156,16 @@ abstract class DeadwoodScript extends LinuxScript {
     }
 
     /**
-     * Returns the default binding addresses, for example {@code "127.0.0.1"}.
+     * Returns the default binding address, for example {@code "127.0.0.1"}.
      *
      * <ul>
-     * <li>profile property key {@code default_binding_addresses}</li>
+     * <li>profile property key {@code default_binding_address}</li>
      * </ul>
      *
      * @see #getDefaultProperties()
      */
-    List getDefaultBindingAddresses() {
-        profileListProperty "default_binding_addresses", defaultProperties
+    String getDefaultBindingAddress() {
+        profileProperty "default_binding_address", defaultProperties
     }
 
     /**

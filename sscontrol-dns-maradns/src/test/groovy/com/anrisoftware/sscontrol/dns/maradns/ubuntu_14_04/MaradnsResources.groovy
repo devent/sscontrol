@@ -21,7 +21,7 @@ package com.anrisoftware.sscontrol.dns.maradns.ubuntu_14_04
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static org.apache.commons.io.FileUtils.*
 
-import com.anrisoftware.sscontrol.dns.core.resources.ResourcesUtils
+import com.anrisoftware.sscontrol.testutils.resources.ResourcesUtils
 
 /**
  * <i>MaraDNS Ubuntu 14.04</i> resources.

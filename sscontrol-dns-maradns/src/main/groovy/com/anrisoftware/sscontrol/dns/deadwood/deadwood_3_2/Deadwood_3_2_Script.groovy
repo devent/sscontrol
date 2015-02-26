@@ -63,10 +63,12 @@ abstract class Deadwood_3_2_Script extends DeadwoodScript {
      */
     void setupDefaultBinding(DnsService service) {
         if (service.bindingAddresses == null) {
-            service.bind defaultBindingAddresses.join(",")
+            service.bind defaultBindingAddress, port: defaultBindingPort
         }
-        if (service.bindingPort == null) {
-            service.bind service.bindingAddresses.join(","), port: defaultBindingPort
+        service.bindingAddresses.each { address, ports ->
+            if (ports == null || ports.size() == 0) {
+                service.bind address, port: defaultBindingPort
+            }
         }
     }
 

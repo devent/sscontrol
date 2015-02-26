@@ -59,15 +59,17 @@ abstract class Maradns_1_2_Script extends MaradnsScript {
      */
     void setupDefaultBinding(DnsService service) {
         if (service.bindingAddresses == null) {
-            service.bind defaultBindingAddresses.join(",")
+            service.bind defaultBindingAddress, port: defaultBindingPort
         }
-        if (service.bindingPort == null) {
-            service.bind service.bindingAddresses.join(","), port: defaultBindingPort
+        service.bindingAddresses.each { address, ports ->
+            if (ports == null || ports.size() == 0) {
+                service.bind address, port: defaultBindingPort
+            }
         }
     }
 
     /**
-     * Deploys the MaraDNS configuration.
+     * Deploys the <i>MaraDNS</i> configuration.
      *
      * @param service
      *            the {@link DnsService} DNS service.
@@ -115,7 +117,7 @@ abstract class Maradns_1_2_Script extends MaradnsScript {
 
     def ipv4BindPortConfiguration(DnsService service) {
         def search = maradnsConfiguration.getText(true, "dns_port_search")
-        def replace = maradnsConfiguration.getText(true, "dns_port", "port", service.bindingPort)
+        def replace = maradnsConfiguration.getText(true, "dns_port", "addresses", service.bindingAddresses)
         new TokenTemplate(search, replace)
     }
 

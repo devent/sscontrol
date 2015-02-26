@@ -39,8 +39,6 @@ class DnsResources {
     static zoneARecord = DnsResources.class.getResource("ZoneARecord.groovy")
     static originShortcutScript = DnsResources.class.getResource("OriginShortcut.groovy")
     static bindOneAddress = DnsResources.class.getResource("BindOneAddress.groovy")
-    static bindMultipleAddressString = DnsResources.class.getResource("BindMultipleAddressString.groovy")
-    static bindMultipleAddressArray = DnsResources.class.getResource("BindMultipleAddressArray.groovy")
     static bindLocal = DnsResources.class.getResource("BindLocal.groovy")
     static bindAll = DnsResources.class.getResource("BindAll.groovy")
     static recursive = DnsResources.class.getResource("Recursive.groovy")

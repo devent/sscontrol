@@ -20,24 +20,12 @@ package com.anrisoftware.sscontrol.dns.service
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 
-import org.junit.Before
-import org.junit.BeforeClass
-import org.junit.Rule
-import org.junit.rules.TemporaryFolder
-
-import com.anrisoftware.sscontrol.core.api.ServiceLoader as SscontrolServiceLoader
-import com.anrisoftware.sscontrol.core.api.ServiceLoaderFactory
-import com.anrisoftware.sscontrol.core.api.ServicesRegistry
-import com.anrisoftware.sscontrol.core.modules.CoreModule
-import com.anrisoftware.sscontrol.core.modules.CoreResourcesModule
-import com.anrisoftware.sscontrol.core.service.ServiceModule
 import com.anrisoftware.sscontrol.dns.arecord.ARecord
 import com.anrisoftware.sscontrol.dns.cnamerecord.CnameRecord
 import com.anrisoftware.sscontrol.dns.mxrecord.MxRecord
 import com.anrisoftware.sscontrol.dns.nsrecord.NsRecord
 import com.anrisoftware.sscontrol.dns.zone.DnsZone
-import com.google.inject.Guice
-import com.google.inject.Injector
+import com.anrisoftware.sscontrol.testutils.resources.ScriptTestEnvironment
 
 /**
  * DNS/service base.
@@ -45,44 +33,7 @@ import com.google.inject.Injector
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class DnsServiceBase {
-
-    static Injector injector
-
-    static ServiceLoaderFactory loaderFactory
-
-    Map variables
-
-    ServicesRegistry registry
-
-    SscontrolServiceLoader loader
-
-    @Rule
-    public TemporaryFolder tmp = new TemporaryFolder()
-
-    @Before
-    void createRegistry() {
-        variables = [tmp: tmp.newFolder()]
-        registry = injector.getInstance ServicesRegistry
-        loader = loaderFactory.create registry, variables
-        loader.setParent injector
-    }
-
-    @BeforeClass
-    static void createFactories() {
-        injector = createInjector()
-        loaderFactory = injector.getInstance ServiceLoaderFactory
-    }
-
-    static Injector createInjector() {
-        Guice.createInjector(
-                new CoreModule(), new CoreResourcesModule(), new ServiceModule())
-    }
-
-    @BeforeClass
-    static void setupToStringStyle() {
-        toStringStyle
-    }
+class DnsServiceBase extends ScriptTestEnvironment {
 
     /**
      * Compares the attributes of the DNS/service.
@@ -97,11 +48,11 @@ class DnsServiceBase {
      * 			  </ul>
      *
      * @param service
-     * 			  the {@link DnsServiceImpl}.
+     * 			  the {@link DnsService}.
      *
-     * @return the {@link DnsServiceImpl}.
+     * @return the {@link DnsService}.
      */
-    DnsServiceImpl assertService(Map args, DnsServiceImpl service) {
+    DnsService assertService(Map args, DnsService service) {
         assert service != null
         if (args.containsKey("generate")) {
             assert service.serialGenerate == args.generate
@@ -110,14 +61,11 @@ class DnsServiceBase {
             assert service.serialNumber == args.serialNumber
         }
         if (args.containsKey("binding")) {
-            def bindings = args["binding"]
-            def found = service.bindingAddresses.find { String address ->
-                bindings.any { String bind -> address == bind }
+            assert service.bindingAddresses.size() == args.binding.size()
+            args.binding.each { address, ports ->
+                assert service.bindingAddresses.containsKey(address)
+                assert service.bindingAddresses[address].containsAll(ports)
             }
-            assert found != null
-        }
-        if (args.containsKey("port")) {
-            assert service.bindingPort == args.port
         }
         service
     }
@@ -135,11 +83,11 @@ class DnsServiceBase {
      * 			  </ul>
      *
      * @param service
-     * 			  the {@link DnsServiceImpl}.
+     * 			  the {@link DnsService}.
      *
-     * @return the {@link DnsServiceImpl}.
+     * @return the {@link DnsService}.
      */
-    def DnsServiceImpl assertServiceGeneratedSerial(Map args, DnsServiceImpl service) {
+    def DnsService assertServiceGeneratedSerial(Map args, DnsService service) {
         assert service != null
         if (args.containsKey("generate")) {
             assert service.serialGenerate == args.generate
@@ -148,7 +96,11 @@ class DnsServiceBase {
             assert service.serialNumber > args.serial
         }
         if (args.containsKey("binding")) {
-            assert service.binding.addresses.containsAll(args.binding)
+            assert service.bindingAddresses.size() == args.binding.size()
+            args.binding.each { address, ports ->
+                assert service.bindingAddresses.containsKey(address)
+                assert service.bindingAddresses[address].containsAll(ports)
+            }
         }
         service
     }

@@ -22,8 +22,8 @@ ip4_bind_address_search() ::= <%
 #?\s*ipv4_bind_addresses\s*=\s*.*
 %>
 
-dns_port(port) ::= <%
-dns_port = <port>
+dns_port(addresses) ::= <%
+dns_port = <addresses.(first(addresses))>
 %>
 
 dns_port_search() ::= <%

@@ -88,16 +88,16 @@ abstract class MaradnsScript extends LinuxScript {
     }
 
     /**
-     * Returns the default bindings addresses.
+     * Returns the default bindings address.
      *
      * <ul>
-     * <li>profile property key {@code default_binding_addresses}</li>
+     * <li>profile property key {@code default_binding_address}</li>
      * </ul>
      *
      * @see #getDefaultProperties()
      */
-    List getDefaultBindingAddresses() {
-        profileListProperty "default_binding_addresses", defaultProperties
+    String getDefaultBindingAddress() {
+        profileProperty "default_binding_address", defaultProperties
     }
 
     /**

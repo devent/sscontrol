@@ -84,14 +84,16 @@ public class BindingAddressesStatementsTable {
      * <p>
      *
      * <pre>
-     * {["0.0.0.0": [504], "192.168.0.2"]: [504]}
+     * {["0.0.0.0": [3306], "127.0.0.1": [3306], "192.168.0.2": [3306, 3307]]}
      * </pre>
      *
      * <pre>
      * service {
-     *     bind "0.0.0.0", port: 504
-     *     bind all, port: 504
-     *     bind "192.168.0.2", ports: [504]
+     *     bind "0.0.0.0", port: 3306
+     *     bind "127.0.0.1", port: 3306
+     *     bind "192.168.0.2", ports: [3306, 3307]
+     *     bind all, port: 3306
+     *     bind local, port: 3306
      * }
      * </pre>
      *

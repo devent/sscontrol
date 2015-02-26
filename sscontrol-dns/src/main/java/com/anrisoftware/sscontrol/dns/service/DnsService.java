@@ -70,30 +70,27 @@ public interface DnsService {
     boolean isSerialGenerate();
 
     /**
-     * Returns a list of the IP addresses where to bind the DNS service.
+     * Returns the binding addresses.
+     * <p>
      *
      * <pre>
-     * dns {
-     *     bind "127.0.0.1"
-     * }
+     * {["0.0.0.0": [53], "127.0.0.1": [53], "192.168.0.2": [53, 54]]}
      * </pre>
      *
-     * @return the {@link List} of {@link String} addresses or {@code null}.
-     */
-    List<String> getBindingAddresses();
-
-    /**
-     * Returns the binding port.
-     *
      * <pre>
      * dns {
+     *     bind "0.0.0.0", port: 53
      *     bind "127.0.0.1", port: 53
+     *     bind "192.168.0.2", ports: [53, 54]
+     *     bind all, port: 53
+     *     bind local, port: 53
      * }
      * </pre>
      *
-     * @return the {@link Integer} port or {@code null}.
+     * @return the {@link Map} of the {@link String} addresses and the
+     *         {@link List} of {@link Integer} ports or {@code null}.
      */
-    Integer getBindingPort();
+    Map<String, List<Integer>> getBindingAddresses();
 
     /**
      * Returns the list of upstream servers.

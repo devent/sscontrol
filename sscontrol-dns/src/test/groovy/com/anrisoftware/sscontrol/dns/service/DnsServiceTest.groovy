@@ -76,33 +76,7 @@ class DnsServiceTest extends DnsServiceBase {
         loader.loadService ubuntu1004Profile, null
         def profile = registry.getService("profile")[0]
         loader.loadService bindOneAddress, profile
-        assertService registry.getService("dns")[0], binding: ["127.0.0.1"], port: 53
-    }
-
-    @Test
-    void "bind multiple address string"() {
-        loader.loadService ubuntu1004Profile, null
-        def profile = registry.getService("profile")[0]
-        loader.loadService bindMultipleAddressString, profile
-        assertService registry.getService("dns")[0], binding: [
-            "127.0.0.3",
-            "127.0.0.2",
-            "127.0.0.4",
-            "127.0.0.1"
-        ]
-    }
-
-    @Test
-    void "bind multiple address array"() {
-        loader.loadService ubuntu1004Profile, null
-        def profile = registry.getService("profile")[0]
-        loader.loadService bindMultipleAddressArray, profile
-        assertService registry.getService("dns")[0], binding: [
-            "127.0.0.3",
-            "127.0.0.2",
-            "127.0.0.4",
-            "127.0.0.1"
-        ]
+        assertService registry.getService("dns")[0], binding: ["127.0.0.1": [53]]
     }
 
     @Test
@@ -110,7 +84,7 @@ class DnsServiceTest extends DnsServiceBase {
         loader.loadService ubuntu1004Profile, null
         def profile = registry.getService("profile")[0]
         loader.loadService bindLocal, profile
-        assertService registry.getService("dns")[0], binding: ["127.0.0.1"]
+        assertService registry.getService("dns")[0], binding: ["127.0.0.1": []]
     }
 
     @Test
@@ -118,7 +92,7 @@ class DnsServiceTest extends DnsServiceBase {
         loader.loadService ubuntu1004Profile, null
         def profile = registry.getService("profile")[0]
         loader.loadService bindAll, profile
-        assertService registry.getService("dns")[0], binding: ["0.0.0.0"]
+        assertService registry.getService("dns")[0], binding: ["0.0.0.0": []]
     }
 
     @Test

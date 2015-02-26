@@ -19,6 +19,19 @@
 package com.anrisoftware.sscontrol.dns.service;
 
 import static com.anrisoftware.sscontrol.dns.service.DnsServiceFactory.SERVICE_NAME;
+import static com.anrisoftware.sscontrol.dns.service.DnsServiceStatement.ACLS_KEY;
+import static com.anrisoftware.sscontrol.dns.service.DnsServiceStatement.ADDRESSES_KEY;
+import static com.anrisoftware.sscontrol.dns.service.DnsServiceStatement.ADDRESS_KEY;
+import static com.anrisoftware.sscontrol.dns.service.DnsServiceStatement.ALIAS_KEY;
+import static com.anrisoftware.sscontrol.dns.service.DnsServiceStatement.DURATION_KEY;
+import static com.anrisoftware.sscontrol.dns.service.DnsServiceStatement.GENERATE_KEY;
+import static com.anrisoftware.sscontrol.dns.service.DnsServiceStatement.NAME_KEY;
+import static com.anrisoftware.sscontrol.dns.service.DnsServiceStatement.ROOT_KEY;
+import static com.anrisoftware.sscontrol.dns.service.DnsServiceStatement.SERIAL_KEY;
+import static com.anrisoftware.sscontrol.dns.service.DnsServiceStatement.SERVERS_KEY;
+import static com.anrisoftware.sscontrol.dns.service.DnsServiceStatement.SERVER_KEY;
+import static com.anrisoftware.sscontrol.dns.service.DnsServiceStatement.TTL_KEY;
+import static com.anrisoftware.sscontrol.dns.service.DnsServiceStatement.UPSTREAM_KEY;
 import static java.lang.String.format;
 import static java.util.Collections.unmodifiableList;
 import groovy.lang.Script;
@@ -39,6 +52,8 @@ import com.anrisoftware.sscontrol.core.api.Service;
 import com.anrisoftware.sscontrol.core.api.ServiceException;
 import com.anrisoftware.sscontrol.core.api.ServiceScriptFactory;
 import com.anrisoftware.sscontrol.core.bindings.BindingAddress;
+import com.anrisoftware.sscontrol.core.bindings.BindingAddressesStatementsTable;
+import com.anrisoftware.sscontrol.core.bindings.BindingAddressesStatementsTableFactory;
 import com.anrisoftware.sscontrol.core.groovy.StatementsException;
 import com.anrisoftware.sscontrol.core.groovy.StatementsMap;
 import com.anrisoftware.sscontrol.core.groovy.StatementsMapFactory;
@@ -60,36 +75,6 @@ import com.anrisoftware.sscontrol.dns.zone.ZoneRecord;
 @SuppressWarnings("serial")
 class DnsServiceImpl extends AbstractService implements DnsService {
 
-    private static final String PORT_KEY = "port";
-
-    private static final String BIND_KEY = "bind";
-
-    private static final String ALIAS_KEY = "alias";
-
-    private static final String ADDRESS_KEY = "address";
-
-    private static final String ADDRESSES_KEY = "addresses";
-
-    private static final String ROOT_KEY = "root";
-
-    private static final String UPSTREAM_KEY = "upstream";
-
-    private static final String ACLS_KEY = "acls";
-
-    private static final String SERVER_KEY = "server";
-
-    private static final String SERVERS_KEY = "servers";
-
-    private static final String GENERATE_KEY = "generate";
-
-    private static final String SERIAL_KEY = "serial";
-
-    private static final String DURATION = "duration";
-
-    private static final String TTL = "ttl";
-
-    private static final String NAME = "name";
-
     private final List<DnsZone> zones;
 
     @Inject
@@ -105,6 +90,8 @@ class DnsServiceImpl extends AbstractService implements DnsService {
 
     private StatementsTable statementsTable;
 
+    private BindingAddressesStatementsTable bindingAddressesStatementsTable;
+
     DnsServiceImpl() {
         this.zones = new ArrayList<DnsZone>();
     }
@@ -113,14 +100,13 @@ class DnsServiceImpl extends AbstractService implements DnsService {
     public void setStatementsMapFactory(StatementsMapFactory factory) {
         StatementsMap map = factory.create(this, SERVICE_NAME);
         this.statementsMap = map;
-        map.addAllowed(SERIAL_KEY, BIND_KEY, SERVERS_KEY, ACLS_KEY);
-        map.setAllowValue(true, SERIAL_KEY, BIND_KEY);
+        map.addAllowed(SERIAL_KEY, SERVERS_KEY, ACLS_KEY);
+        map.setAllowValue(true, SERIAL_KEY);
         map.setAllowMultiValue(true, ACLS_KEY);
         map.addAllowedKeys(SERIAL_KEY, GENERATE_KEY);
-        map.addAllowedKeys(BIND_KEY, PORT_KEY);
         map.addAllowedKeys(SERVERS_KEY, UPSTREAM_KEY, ROOT_KEY);
-        map.putValue(SERIAL_KEY, 0);
-        map.putMapValue(SERIAL_KEY, GENERATE_KEY, true);
+        map.putValue(SERIAL_KEY.toString(), 0);
+        map.putMapValue(SERIAL_KEY.toString(), GENERATE_KEY.toString(), true);
     }
 
     @Inject
@@ -130,6 +116,15 @@ class DnsServiceImpl extends AbstractService implements DnsService {
         table.addAllowed(SERVER_KEY, ALIAS_KEY);
         table.addAllowedKeys(SERVER_KEY, ADDRESS_KEY);
         table.addAllowedKeys(ALIAS_KEY, ADDRESS_KEY, ADDRESSES_KEY);
+    }
+
+    @Inject
+    public final void setBindingAddressesStatementsTable(
+            BindingAddressesStatementsTableFactory factory) {
+        BindingAddressesStatementsTable table;
+        table = factory.create(this, SERVICE_NAME);
+        table.setRequirePort(false);
+        this.bindingAddressesStatementsTable = table;
     }
 
     @Override
@@ -178,13 +173,8 @@ class DnsServiceImpl extends AbstractService implements DnsService {
     }
 
     @Override
-    public List<String> getBindingAddresses() {
-        return statementsMap.valueAsStringList(BIND_KEY);
-    }
-
-    @Override
-    public Integer getBindingPort() {
-        return statementsMap.mapValue(BIND_KEY, PORT_KEY);
+    public Map<String, List<Integer>> getBindingAddresses() {
+        return bindingAddressesStatementsTable.getBindingAddresses();
     }
 
     @Override
@@ -278,12 +268,12 @@ class DnsServiceImpl extends AbstractService implements DnsService {
      */
     public DnsZone zone(Map<String, Object> args, String name, Object statements)
             throws ParseException {
-        if (!args.containsKey(SERIAL_KEY)) {
-            args.put(SERIAL_KEY, getSerialNumber());
+        if (!args.containsKey(SERIAL_KEY.toString())) {
+            args.put(SERIAL_KEY.toString(), getSerialNumber());
         }
         DnsZone zone = zoneFactory.create(args, name);
         zones.add(zone);
-        if (args.containsKey(ADDRESS_KEY)) {
+        if (args.containsKey(ADDRESS_KEY.toString())) {
             automaticARecord(args, name, zone);
         }
         log.zoneAdded(this, zone);
@@ -293,11 +283,11 @@ class DnsServiceImpl extends AbstractService implements DnsService {
     private void automaticARecord(Map<String, Object> args, String name,
             DnsZone zone) throws ParseException {
         Map<String, Object> aargs = new HashMap<String, Object>();
-        aargs.put(NAME, name);
-        aargs.put(ADDRESS_KEY, args.get(ADDRESS_KEY));
+        aargs.put(NAME_KEY.toString(), name);
+        aargs.put(ADDRESS_KEY.toString(), args.get(ADDRESS_KEY.toString()));
         ZoneRecord record = zone.record(aargs, Record.a, (Object) null);
-        if (args.containsKey(TTL)) {
-            aargs.put(DURATION, args.get(TTL));
+        if (args.containsKey(TTL_KEY.toString())) {
+            aargs.put(DURATION_KEY.toString(), args.get(TTL_KEY.toString()));
             record.ttl(aargs);
         }
     }
@@ -359,11 +349,15 @@ class DnsServiceImpl extends AbstractService implements DnsService {
     public Object methodMissing(String name, Object args)
             throws ServiceException {
         try {
-            statementsMap.methodMissing(name, args);
+            return statementsMap.methodMissing(name, args);
         } catch (StatementsException e) {
-            statementsTable.methodMissing(name, args);
+            try {
+                return statementsTable.methodMissing(name, args);
+            } catch (StatementsException e1) {
+                return bindingAddressesStatementsTable
+                        .methodMissing(name, args);
+            }
         }
-        return null;
     }
 
     @Override

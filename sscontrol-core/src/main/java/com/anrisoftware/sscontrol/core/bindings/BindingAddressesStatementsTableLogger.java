@@ -73,7 +73,7 @@ class BindingAddressesStatementsTableLogger extends AbstractLogger {
         int addressIndex = list.size() > 1 ? 1 : 0;
         String address = list.get(addressIndex).toString();
         isTrue(InetAddressValidator.getInstance().isValid(address)
-                || StringUtils.equals(list.get(1).toString(), "*"),
+                || StringUtils.equals(address, "*"),
                 format(binding_address_invalid.toString(), table.getService()));
     }
 }

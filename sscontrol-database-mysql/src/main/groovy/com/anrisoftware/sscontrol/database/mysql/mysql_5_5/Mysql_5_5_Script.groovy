@@ -118,6 +118,7 @@ abstract class Mysql_5_5_Script extends MysqlScript {
     void restartService() {
         restartServicesFactory.create(
                 log: log,
+                runCommands: runCommands,
                 command: restartCommand,
                 services: restartServices,
                 this, threads)()
@@ -135,6 +136,7 @@ abstract class Mysql_5_5_Script extends MysqlScript {
         }
         ProcessTask worker = scriptExecFactory.create(
                 log: log,
+                runCommands: runCommands,
                 mysqladminCommand: mysqladminCommand,
                 password: service.adminPassword,
                 checkExitCodes: false,
@@ -143,6 +145,7 @@ abstract class Mysql_5_5_Script extends MysqlScript {
         if (worker.exitValue != 0) {
             worker = scriptExecFactory.create(
                     log: log,
+                    runCommands: runCommands,
                     mysqladminCommand: mysqladminCommand,
                     password: service.adminPassword,
                     this, threads,
@@ -164,6 +167,7 @@ abstract class Mysql_5_5_Script extends MysqlScript {
         }
         def worker = scriptExecFactory.create(
                 log: log,
+                runCommands: runCommands,
                 mysqlCommand: mysqlCommand,
                 password: service.adminPassword,
                 databases: service.databases,
@@ -185,6 +189,7 @@ abstract class Mysql_5_5_Script extends MysqlScript {
         }
         def worker = scriptExecFactory.create(
                 log: log,
+                runCommands: runCommands,
                 mysqlCommand: mysqlCommand,
                 password: service.adminPassword,
                 users: service.users,
@@ -224,6 +229,7 @@ abstract class Mysql_5_5_Script extends MysqlScript {
         IOUtils.copy input, new FileOutputStream(file)
         def worker = scriptExecFactory.create(
                 log: log,
+                runCommands: runCommands,
                 mysqlCommand: mysqlCommand,
                 password: service.adminPassword,
                 database: database,

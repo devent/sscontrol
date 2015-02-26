@@ -26,7 +26,7 @@ import groovy.util.logging.Slf4j
 import org.junit.Test
 
 import com.anrisoftware.sscontrol.core.api.ServiceException
-import com.anrisoftware.sscontrol.database.mysql.ubuntu.UbuntuTestUtil
+import com.anrisoftware.sscontrol.testutils.resources.ScriptTestEnvironment
 
 /**
  * MySQL/Ubuntu 12.04.
@@ -35,11 +35,12 @@ import com.anrisoftware.sscontrol.database.mysql.ubuntu.UbuntuTestUtil
  * @since 1.0
  */
 @Slf4j
-class MysqlUbuntuTest extends UbuntuTestUtil {
+class MysqlUbuntuTest extends ScriptTestEnvironment {
 
     @Test
     void "minimal database script"() {
         copyMysqlFiles tmpdir
+        attachRunCommandsLog tmpdir
         postfixtables.createFile tmpdir
         postfixtablesGz.createFile tmpdir
         postfixtablesZip.createFile tmpdir
@@ -51,6 +52,7 @@ class MysqlUbuntuTest extends UbuntuTestUtil {
         log.info "Run service again to ensure that configuration is not set double."
         registry.allServices.each { it.call() }
         assertFileContent minimalMysqldcnfExpected.asFile(tmpdir), minimalMysqldcnfExpected
+        assertStringContent runcommandsLogExpected.replaced(tmpdir, tmpdir, "/tmp").replaceAll(/\d{2,}/, 'time'), runcommandsLogExpected.toString()
         assertFileContent restartOutExpected.asFile(tmpdir), restartOutExpected
         assertFileContent aptitudeOutExpected.asFile(tmpdir), aptitudeOutExpected
         assertFileContent mysqlOutExpected.asFile(tmpdir), mysqlOutExpected
@@ -105,6 +107,15 @@ class MysqlUbuntuTest extends UbuntuTestUtil {
         loader.loadService profile.resource, null
         def profile = registry.getService("profile")[0]
         loader.loadService databaseMaxUserNameLengthScript.resource, profile
+        registry.allServices.each { it.call() }
+    }
+
+    void "database no admin set"() {
+        copyMysqlFiles tmpdir
+        postfixtables.createFile tmpdir
+        loader.loadService profile.resource, null
+        def profile = registry.getService("profile")[0]
+        loader.loadService databaseNoAdminScript.resource, profile
         registry.allServices.each { it.call() }
     }
 }

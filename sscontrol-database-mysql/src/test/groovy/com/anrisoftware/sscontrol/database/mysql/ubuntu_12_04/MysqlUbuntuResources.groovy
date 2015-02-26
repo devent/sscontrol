@@ -21,7 +21,7 @@ package com.anrisoftware.sscontrol.database.mysql.ubuntu_12_04
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static org.apache.commons.io.FileUtils.*
 
-import com.anrisoftware.sscontrol.database.mysql.resource.ResourcesUtils
+import com.anrisoftware.sscontrol.testutils.resources.ResourcesUtils
 
 /**
  * MySQL/Ubuntu 12.04 resources.
@@ -37,12 +37,14 @@ enum MysqlUbuntuResources {
     databaseBindScript("Database.groovy", MysqlUbuntuResources.class.getResource("DatabaseBind.groovy")),
     databaseBindLocalScript("Database.groovy", MysqlUbuntuResources.class.getResource("DatabaseLocal.groovy")),
     databaseMaxUserNameLengthScript("Database.groovy", MysqlUbuntuResources.class.getResource("DatabaseMaxUserNameLength.groovy")),
+    databaseNoAdminScript("Database.groovy", MysqlUbuntuResources.class.getResource("DatabaseNoAdmin.groovy")),
     // commands
     aptitudeCommand("/usr/bin/aptitude", MysqlUbuntuResources.class.getResource("echo_command.txt")),
     restartCommand("/sbin/restart", MysqlUbuntuResources.class.getResource("echo_command.txt")),
     mysqlCommand("/usr/bin/mysql", MysqlUbuntuResources.class.getResource("echo_command.txt")),
     mysqladminCommand("/usr/bin/mysqladmin", MysqlUbuntuResources.class.getResource("echo_command.txt")),
     // expected
+    runcommandsLogExpected("/runcommands.log", MysqlUbuntuResources.class.getResource("runcommands_expected.txt")),
     minimalMysqldcnfExpected("/etc/mysql/conf.d/sscontrol_mysqld.cnf", MysqlUbuntuResources.class.getResource("minimal_mysqldcnf_expected.txt")),
     debugMysqldcnfExpected("/etc/mysql/conf.d/sscontrol_mysqld.cnf", MysqlUbuntuResources.class.getResource("debug_mysqldcnf_expected.txt")),
     bindMysqldcnfExpected("/etc/mysql/conf.d/sscontrol_mysqld.cnf", MysqlUbuntuResources.class.getResource("bind_mysqldcnf_expected.txt")),

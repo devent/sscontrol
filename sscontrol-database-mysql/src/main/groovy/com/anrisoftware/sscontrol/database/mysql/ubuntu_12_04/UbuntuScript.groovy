@@ -60,6 +60,7 @@ class UbuntuScript extends Mysql_5_5_Script {
     void installPackages() {
         installPackagesFactory.create(
                 log: log,
+                runCommands: runCommands,
                 command: installCommand,
                 packages: packages,
                 system: systemName,

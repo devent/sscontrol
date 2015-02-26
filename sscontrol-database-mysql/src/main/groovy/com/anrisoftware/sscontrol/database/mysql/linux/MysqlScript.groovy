@@ -20,6 +20,8 @@ package com.anrisoftware.sscontrol.database.mysql.linux
 
 import javax.inject.Inject
 
+import com.anrisoftware.globalpom.exec.runcommands.RunCommands
+import com.anrisoftware.globalpom.exec.runcommands.RunCommandsFactory
 import com.anrisoftware.sscontrol.core.debuglogging.DebugLoggingProperty
 import com.anrisoftware.sscontrol.core.service.LinuxScript
 import com.anrisoftware.sscontrol.database.service.DatabaseService
@@ -32,8 +34,24 @@ import com.anrisoftware.sscontrol.database.service.DatabaseService
  */
 abstract class MysqlScript extends LinuxScript {
 
+    /**
+     * The name of the MySQL script service.
+     */
+    public static final String NAME = "mysql";
+
     @Inject
     private DebugLoggingProperty debugLoggingProperty
+
+    private RunCommands runCommands
+
+    @Inject
+    final void setRunCommands(RunCommandsFactory factory) {
+        this.runCommands = factory.create this, NAME
+    }
+
+    final RunCommands getRunCommands() {
+        runCommands
+    }
 
     /**
      * Setups the default debug logging.

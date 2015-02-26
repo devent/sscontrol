@@ -16,24 +16,8 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-database-mysql. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.database.mysql.linux;
+package com.anrisoftware.sscontrol.database.mysql.ubuntu_12_04
 
-import com.anrisoftware.globalpom.exec.runcommands.RunCommandsModule;
-import com.anrisoftware.sscontrol.scripts.unix.UnixScriptsModule;
-import com.google.inject.AbstractModule;
+database {
 
-/**
- * <i>MySQL</i> database service module.
- * 
- * @author Erwin Mueller, erwin.mueller@deventm.org
- * @since 1.0
- */
-public class MysqlScriptModule extends AbstractModule {
-
-    @Override
-    protected void configure() {
-        install(new RunCommandsModule());
-        install(new UnixScriptsModule());
-        install(new UnixScriptsModule.UnixScriptsDefaultsModule());
-    }
 }

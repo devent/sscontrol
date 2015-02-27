@@ -64,6 +64,9 @@ abstract class Php_5_Config {
         if (domain.memory.upload == null) {
             domain.memory.upload = defaultMemoryUpload
         }
+        if (domain.memory.post == null) {
+            domain.memory.post = defaultMemoryPost
+        }
     }
 
     /**

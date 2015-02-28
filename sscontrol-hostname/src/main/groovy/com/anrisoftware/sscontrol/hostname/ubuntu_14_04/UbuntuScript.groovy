@@ -52,6 +52,7 @@ class UbuntuScript extends BaseHostnameScript {
     void installPackages() {
         installPackagesFactory.create(
                 log: log,
+                runCommands: runCommands,
                 command: installCommand,
                 packages: packages,
                 system: systemName,

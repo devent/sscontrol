@@ -25,7 +25,7 @@ import com.google.inject.AbstractModule;
 import com.google.inject.multibindings.MapBinder;
 
 /**
- * <i>Hostname Ubuntu 12.04</i> module.
+ * <i>Hostname Ubuntu 14.04</i> module.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0

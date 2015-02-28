@@ -41,9 +41,9 @@ class HostnameServiceTest extends UbuntuTestUtil {
     @Test
     void "hostname set"() {
         copyUbuntuFiles tmpdir
-
         loader.loadService profile.resource, null
         def profile = registry.getService("profile")[0]
+        setupUbuntuProperties profile, tmpdir
         loader.loadService hostnameService.resource, profile
 
         registry.allServices.each { it.call() }

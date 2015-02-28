@@ -18,15 +18,7 @@
  */
 package com.anrisoftware.sscontrol.hostname.ubuntu_14_04
 
-import com.anrisoftware.sscontrol.hostname.ubuntu_14_04.UbuntuResources
-
-def aptitudeCommand = UbuntuResources.aptitudeCommand.asFile tmp
-def restartCommand = UbuntuResources.restartCommand.asFile tmp
-
 profile "ubuntu_14_04", {
     hostname {
-        install_command aptitudeCommand
-        restart_command "${tmp}/usr/bin/service"
-        configuration_directory "${tmp}/etc"
     }
 }

@@ -18,6 +18,7 @@
  */
 package com.anrisoftware.sscontrol.hostname.service;
 
+import com.anrisoftware.globalpom.exec.runcommands.RunCommandsModule;
 import com.anrisoftware.sscontrol.hostname.ubuntu_12_04.Ubuntu_12_04_Module;
 import com.anrisoftware.sscontrol.hostname.ubuntu_14_04.Ubuntu_14_04_Module;
 import com.anrisoftware.sscontrol.scripts.unix.UnixScriptsModule;
@@ -33,6 +34,7 @@ class HostnameModule extends AbstractModule {
 
 	@Override
 	protected void configure() {
+        install(new RunCommandsModule());
         install(new UnixScriptsModule());
         install(new UnixScriptsModule.UnixScriptsDefaultsModule());
         install(new Ubuntu_12_04_Module());

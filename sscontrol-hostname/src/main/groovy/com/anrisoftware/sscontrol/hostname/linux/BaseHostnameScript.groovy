@@ -20,6 +20,8 @@ package com.anrisoftware.sscontrol.hostname.linux
 
 import javax.inject.Inject
 
+import com.anrisoftware.globalpom.exec.runcommands.RunCommands
+import com.anrisoftware.globalpom.exec.runcommands.RunCommandsFactory
 import com.anrisoftware.globalpom.textmatch.tokentemplate.TokenTemplate
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.Templates
@@ -35,10 +37,23 @@ import com.anrisoftware.sscontrol.scripts.unix.RestartServicesFactory
  */
 abstract class BaseHostnameScript extends LinuxScript {
 
+    private final String HOSTNAME_NAME = "hostname"
+
+    private RunCommands runCommands
+
     @Inject
     RestartServicesFactory restartServicesFactory
 
     TemplateResource hostnameConfigTemplate
+
+    @Inject
+    final void setRunCommands(RunCommandsFactory factory) {
+        this.runCommands = factory.create this, HOSTNAME_NAME
+    }
+
+    RunCommands getRunCommands() {
+        runCommands
+    }
 
     @Override
     def run() {
@@ -71,9 +86,10 @@ abstract class BaseHostnameScript extends LinuxScript {
     void restartService() {
         restartServicesFactory.create(
                 log: log,
+                runCommands: runCommands,
                 command: restartCommand,
                 services: restartServices,
-                flags: restartCommandFlags,
+                flags: restartFlags,
                 this, threads)()
     }
 

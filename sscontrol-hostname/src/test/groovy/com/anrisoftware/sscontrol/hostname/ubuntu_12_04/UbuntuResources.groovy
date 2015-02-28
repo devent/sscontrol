@@ -33,10 +33,13 @@ enum UbuntuResources {
 
     profile("UbuntuProfile.groovy", UbuntuResources.class.getResource("UbuntuProfile.groovy")),
     hostnameService("Hostname.groovy", UbuntuResources.class.getResource("HostnameService.groovy")),
+    // commands
     restartCommand("/etc/init.d/hostname", UbuntuResources.class.getResource("echo_command.txt")),
     aptitudeCommand("/usr/bin/aptitude", UbuntuResources.class.getResource("echo_command.txt")),
+    // files
     configDir("/etc", null),
     hostname("/etc/hostname", UbuntuResources.class.getResource("hostname.txt")),
+    // expected
     hostnameExpected("/etc/hostname", UbuntuResources.class.getResource("hostname_expected.txt")),
     restartOutExpected("/etc/init.d/hostname.out", UbuntuResources.class.getResource("hostname_out_expected.txt")),
 
@@ -45,6 +48,13 @@ enum UbuntuResources {
         aptitudeCommand.createCommand parent
         restartCommand.createCommand parent
         hostnameExpected.createFile parent
+    }
+
+    static void setupUbuntuProperties(def profile, File parent) {
+        def entry = profile.getEntry("hostname")
+        entry.install_command aptitudeCommand.asFile(parent)
+        entry.restart_command restartCommand.asFile(parent)
+        entry.configuration_directory configDir.asFile(parent)
     }
 
     ResourcesUtils resources

@@ -33,12 +33,83 @@ public interface Domain {
     /**
      * Returns the domain name.
      *
+     * <pre>
+     * domain "test1.com", address: "192.168.0.50", {
+     * }
+     * </pre>
+     *
      * @return the domain {@link String} name.
      */
     String getName();
 
     /**
+     * Returns the domain address.
+     *
+     * <pre>
+     * domain "test1.com", address: "192.168.0.50", {
+     * }
+     * </pre>
+     *
+     * @return the domain {@link String} address.
+     */
+    String getAddress();
+
+    /**
+     * Returns the domain unique identifier.
+     *
+     * <pre>
+     * domain "test1.com", address: "192.168.0.50", id: "test1id", {
+     * }
+     * </pre>
+     *
+     * @return the domain {@link String} identifier or {@code null}.
+     */
+    String getId();
+
+    /**
+     * Returns the domain port.
+     *
+     * <pre>
+     * domain "test1.com", address: "192.168.0.50", port: 8080, {
+     * }
+     * </pre>
+     *
+     * @return the domain {@link Integer} port.
+     */
+    int getPort();
+
+    /**
+     * Returns the identifier of the domain which parameters should be used.
+     *
+     * <pre>
+     * domain "test1.com", address: "192.168.0.50", use: "domainid", {
+     * }
+     * </pre>
+     *
+     * @return the domain {@link String} identifier or {@code null}.
+     */
+    String getUseDomain();
+
+    /**
+     * Returns the domain root directory.
+     *
+     * <pre>
+     * domain "test1.com", address: "192.168.0.50", root: "/root", {
+     * }
+     * </pre>
+     *
+     * @return the domain root directory {@link String} path.
+     */
+    String getDocumentRoot();
+
+    /**
      * Returns the domain local user.
+     *
+     * <pre>
+     * domain "test1.com", address: "192.168.0.50", {
+     * 
+     * }
+     * </pre>
      *
      * @param user
      *            the {@link DomainUser}.

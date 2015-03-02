@@ -131,7 +131,7 @@ public class AuthFileService extends AbstractAuthService {
     }
 
     /**
-     * Returns the required users.
+     * Returns the required domains.
      * <p>
      *
      * <pre>

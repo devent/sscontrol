@@ -19,8 +19,8 @@
 package com.anrisoftware.sscontrol.httpd.auth;
 
 /**
- * How to set the criteria that must be to allow access to a resource.
- * 
+ * The criteria that must be satisfied to allow access to a resource.
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */

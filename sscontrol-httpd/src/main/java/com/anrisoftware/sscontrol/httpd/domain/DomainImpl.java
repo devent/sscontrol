@@ -174,6 +174,7 @@ class DomainImpl implements Domain {
         return name;
     }
 
+    @Override
     public String getId() {
         return id;
     }
@@ -218,6 +219,7 @@ class DomainImpl implements Domain {
         log.addressSet(this, address);
     }
 
+    @Override
     public String getAddress() {
         return address;
     }
@@ -227,6 +229,7 @@ class DomainImpl implements Domain {
         log.portSet(this, port);
     }
 
+    @Override
     public int getPort() {
         return port;
     }
@@ -236,6 +239,7 @@ class DomainImpl implements Domain {
         log.documentRootSet(this, root);
     }
 
+    @Override
     public String getDocumentRoot() {
         return documentRoot;
     }
@@ -245,6 +249,7 @@ class DomainImpl implements Domain {
         log.useDomainSet(this, use);
     }
 
+    @Override
     public String getUseDomain() {
         return useDomain;
     }
@@ -317,6 +322,17 @@ class DomainImpl implements Domain {
         this.memory = memory;
     }
 
+    /**
+     * Returns the memory limits.
+     *
+     * <pre>
+     * domain "test1.com", address: "192.168.0.50", {
+     *     memory limit: "32 MB", upload: "32 MB", post: "32 MB"
+     * }
+     * </pre>
+     *
+     * @return the memory {@link Memory} limits.
+     */
     public Memory getMemory() {
         return memory;
     }

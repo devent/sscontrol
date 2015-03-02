@@ -41,18 +41,21 @@ class RedirectArgs {
     String to(Domain domain, Map<String, Object> args) {
         Object to = args.get("to");
         log.checkTo(domain, to);
-        return replace(to.toString(), DOMAIN_PLACEHOLDER, domain.getName());
+        return replacePlaceholder(to, domain);
     }
 
     String from(Domain domain, Map<String, Object> args) {
         Object from = args.get("from");
         if (from != null) {
             log.checkTo(domain, from);
-            return replace(from.toString(), DOMAIN_PLACEHOLDER,
-                    domain.getName());
+            return replacePlaceholder(from, domain);
         } else {
             return null;
         }
+    }
+
+    private String replacePlaceholder(Object obj, Domain domain) {
+        return replace(obj.toString(), DOMAIN_PLACEHOLDER, domain.getName());
     }
 
 }

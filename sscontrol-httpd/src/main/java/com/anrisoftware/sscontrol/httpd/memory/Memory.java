@@ -31,7 +31,7 @@ import com.google.inject.assistedinject.Assisted;
 
 /**
  * Memory directives.
- * 
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
@@ -70,14 +70,48 @@ public class Memory {
         }
     }
 
+    /**
+     * Returns the memory limit. If no other limit is set then the limit set is
+     * used for other limits.
+     *
+     * <pre>
+     * domain "test1.com", address: "192.168.0.50", {
+     *     memory limit: "32 MB"
+     * }
+     * </pre>
+     *
+     * @return the memory limit {@link Measure} size.
+     */
     public Measure<Long, DataAmount> getLimit() {
         return limit;
     }
 
+    /**
+     * Returns the upload limit.
+     *
+     * <pre>
+     * domain "test1.com", address: "192.168.0.50", {
+     *     memory upload: "32 MB"
+     * }
+     * </pre>
+     *
+     * @return the memory limit {@link Measure} size.
+     */
     public Measure<Long, DataAmount> getUpload() {
         return upload;
     }
 
+    /**
+     * Returns the post limit.
+     *
+     * <pre>
+     * domain "test1.com", address: "192.168.0.50", {
+     *     memory post: "32 MB"
+     * }
+     * </pre>
+     *
+     * @return the memory limit {@link Measure} size.
+     */
     public Measure<Long, DataAmount> getPost() {
         return post;
     }

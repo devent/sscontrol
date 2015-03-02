@@ -104,7 +104,7 @@ public interface AuthService extends WebService {
     List<RequireUser> getRequireUsers();
 
     /**
-     * Returns the required valid mode.
+     * Returns the required valid modes.
      * <p>
      *
      * <pre>

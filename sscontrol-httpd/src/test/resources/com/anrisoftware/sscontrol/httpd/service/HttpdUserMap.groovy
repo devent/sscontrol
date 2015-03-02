@@ -18,7 +18,7 @@
  */
 package com.anrisoftware.sscontrol.httpd.service
 
-def domainUser = [user: "foouser", uid: 2005, group: "foogroup", gid: 2005]
+domainUser = [user: "foouser", uid: 2005, group: "foogroup", gid: 2005]
 
 httpd {
 	domain "test1.com", address: "192.168.0.50", port: 80, {

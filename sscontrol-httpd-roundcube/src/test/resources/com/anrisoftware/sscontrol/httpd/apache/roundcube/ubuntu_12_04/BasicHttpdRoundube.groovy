@@ -18,17 +18,14 @@
  */
 package com.anrisoftware.sscontrol.httpd.roundcube.service
 
-import com.anrisoftware.sscontrol.core.yesno.YesNoFlag;
-import com.anrisoftware.sscontrol.httpd.webservice.OverrideMode;
-
 def certFile = ServicesResources.class.getResource "cert_crt.txt"
 def certKeyFile = ServicesResources.class.getResource "cert_key.txt"
 
 httpd {
-    domain "www.test1.com", address: "192.168.0.51", {
+    domain "test1.com", address: "192.168.0.51", {
         setup "roundcube", id: "idroundcube", alias: "roundcube", {
-            database "roundcubedb", user: "userdb", password: "userpassdb", host: "localhost", driver: "mysql"
-            smtp "tls://%h", user: "usersmtp", password: "passwordsmtp"
+            database "roundcubedb", driver: "mysql", user: "userdb", password: "userpassdb", host: "localhost"
+            mail "tls://%h", user: "usersmtp", password: "passwordsmtp"
             backup target: "$tmp/var/backups"
             server "default", port: 981
             server "Default Server", host: "mail.example.com"
@@ -37,13 +34,13 @@ httpd {
             host "otherdomain.com", domain: "othermail.example.com"
         }
     }
-    ssl_domain "www.test1.com", address: "192.168.0.51", {
+    ssl_domain "test1.com", address: "192.168.0.51", {
         certificate file: certFile, key: certKeyFile
         setup "roundcube", ref: "idroundcube"
     }
-    domain "www.test2.com", address: "192.168.0.51", {
+    domain "test2.com", address: "192.168.0.51", {
         setup "roundcube", id: "idroundcube", alias: "roundcubemin", {
-            database "roundcubedb", user: "userdb", password: "userpassdb"
+            database "roundcubedb", driver: "mysql", user: "userdb", password: "userpassdb"
             server "Default Server", host: "mail.example.com"
             server "Webmail Server", host: "webmail.example.com"
             host "example.com", domain: "mail.example.com"

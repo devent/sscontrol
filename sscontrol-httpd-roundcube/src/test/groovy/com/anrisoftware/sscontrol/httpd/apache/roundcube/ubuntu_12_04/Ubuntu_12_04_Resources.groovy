@@ -21,7 +21,7 @@ package com.anrisoftware.sscontrol.httpd.apache.roundcube.ubuntu_12_04
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static org.apache.commons.io.FileUtils.*
 
-import com.anrisoftware.sscontrol.httpd.roundcube.resources.ResourcesUtils
+import com.anrisoftware.sscontrol.testutils.resources.ResourcesUtils
 
 /**
  * Loads Ubuntu 12.04 resources.
@@ -32,6 +32,20 @@ import com.anrisoftware.sscontrol.httpd.roundcube.resources.ResourcesUtils
 enum Ubuntu_12_04_Resources {
 
     // commands
+    aptitudeCommand("/usr/bin/aptitude", Ubuntu_12_04_Resources.class.getResource("echo_command.txt")),
+    chmodCommand("/bin/chmod", Ubuntu_12_04_Resources.class.getResource("echo_command.txt")),
+    chownCommand("/bin/chown", Ubuntu_12_04_Resources.class.getResource("echo_command.txt")),
+    useraddCommand("/usr/sbin/useradd", Ubuntu_12_04_Resources.class.getResource("echo_command.txt")),
+    usermodCommand("/usr/sbin/usermod", Ubuntu_12_04_Resources.class.getResource("echo_command.txt")),
+    groupaddCommand("/usr/sbin/groupadd", Ubuntu_12_04_Resources.class.getResource("echo_command.txt")),
+    groupmodCommand("/usr/sbin/groupmod", Ubuntu_12_04_Resources.class.getResource("echo_command.txt")),
+    zcatCommand("/bin/zcat", Ubuntu_12_04_Resources.class.getResource("echo_command.txt")),
+    tarCommand("/bin/tar", Ubuntu_12_04_Resources.class.getResource("echo_command.txt")),
+    unzipCommand("/usr/bin/unzip", Ubuntu_12_04_Resources.class.getResource("echo_command.txt")),
+    lnCommand("/bin/ln", Ubuntu_12_04_Resources.class.getResource("echo_command.txt")),
+    mysqldumpCommand("/usr/bin/mysqldump", Ubuntu_12_04_Resources.class.getResource("echo_command.txt")),
+    mysqlCommand("/usr/bin/mysql", Ubuntu_12_04_Resources.class.getResource("echo_command.txt")),
+    gzipCommand("/bin/gzip", Ubuntu_12_04_Resources.class.getResource("echo_command.txt")),
     restartCommand("/etc/init.d/apache2", Ubuntu_12_04_Resources.class.getResource("echo_command.txt")),
     stopCommand("/etc/init.d/apache2", Ubuntu_12_04_Resources.class.getResource("echo_command.txt")),
     a2enmodCommand("/usr/sbin/a2enmod", Ubuntu_12_04_Resources.class.getResource("echo_command.txt")),
@@ -46,17 +60,33 @@ enum Ubuntu_12_04_Resources {
     groupsFile("/etc/group", Ubuntu_12_04_Resources.class.getResource("group.txt")),
     usersFile("/etc/passwd", Ubuntu_12_04_Resources.class.getResource("passwd.txt")),
     // files
+    tmpDir("/tmp", null),
     confDir("/etc/apache2", null),
     sitesAvailableDir("/etc/apache2/sites-available", null),
     sitesEnabledDir("/etc/apache2/sites-enabled", null),
     configIncludeDir("/etc/apache2/conf.d", null),
     sitesDir("/var/www", null),
     phpConfDir("/etc/php5/cgi/conf.d", null),
-    defaultConf("/etc/apache2/sites-available/default", Ubuntu_12_04_Resources.class.getResource("default.txt")),
-    defaultSslConf("/etc/apache2/sites-available/default-ssl", Ubuntu_12_04_Resources.class.getResource("default_ssl.txt")),
-    apacheConf("/etc/apache2/apache2.conf", Ubuntu_12_04_Resources.class.getResource("apache2_conf.txt")),
+    certCrt("cert.crt", Ubuntu_12_04_Resources.class.getResource("cert_crt.txt")),
+    certKey("cert.key", Ubuntu_12_04_Resources.class.getResource("cert_key.txt")),
+    certCa("cert.ca", Ubuntu_12_04_Resources.class.getResource("cert_ca.txt")),
 
     static copyUbuntu_12_04_Files(File parent) {
+        // ubuntu commands
+        aptitudeCommand.createCommand parent
+        chmodCommand.createCommand parent
+        chownCommand.createCommand parent
+        groupaddCommand.createCommand parent
+        groupmodCommand.createCommand parent
+        useraddCommand.createCommand parent
+        usermodCommand.createCommand parent
+        zcatCommand.createCommand parent
+        tarCommand.createCommand parent
+        lnCommand.createCommand parent
+        mysqldumpCommand.createCommand parent
+        mysqlCommand.createCommand parent
+        gzipCommand.createCommand parent
+        netstatCommand.createCommand parent
         // apache commands
         restartCommand.createCommand parent
         a2enmodCommand.createCommand parent
@@ -66,23 +96,39 @@ enum Ubuntu_12_04_Resources {
         apache2Command.createCommand parent
         apache2ctlCommand.createCommand parent
         htpasswdCommand.createCommand parent
-        // ubuntu commands
-        netstatCommand.createCommand parent
-        // apache files
-        confDir.asFile(parent).mkdirs()
-        defaultConf.createFile parent
-        defaultSslConf.createFile parent
-        phpConfDir.asFile parent mkdirs()
         // ubuntu files
+        tmpDir.asFile(parent).mkdirs()
         groupsFile.createFile parent
         usersFile.createFile parent
+        // apache files
+        confDir.asFile(parent).mkdirs()
+        phpConfDir.asFile parent mkdirs()
     }
 
     static void setupUbuntu_12_04_Properties(def profile, File parent) {
         def entry = profile.getEntry("httpd")
+        // ubuntu commands
+        entry.install_command aptitudeCommand.asFile(parent)
+        entry.chmod_command chmodCommand.asFile(parent)
+        entry.chown_command chownCommand.asFile(parent)
+        entry.group_add_command groupaddCommand.asFile(parent)
+        entry.group_mod_command groupmodCommand.asFile(parent)
+        entry.user_add_command useraddCommand.asFile(parent)
+        entry.user_mod_command usermodCommand.asFile(parent)
+        entry.zcat_command zcatCommand.asFile(parent)
+        entry.tar_command tarCommand.asFile(parent)
+        entry.link_command lnCommand.asFile(parent)
+        entry.mysqldump_command mysqldumpCommand.asFile(parent)
+        entry.mysql_command mysqlCommand.asFile(parent)
+        entry.gzip_command gzipCommand.asFile(parent)
+        entry.php_fcgi_php_conf_directory phpConfDir.asFile(parent)
+        entry.netstat_command netstatCommand.asFile(parent)
+        // ubuntu files
+        entry.groups_file groupsFile.asFile(parent)
+        entry.users_file usersFile.asFile(parent)
         // apache commands
-        entry.restart_command "${restartCommand.asFile(parent)} restart"
-        entry.stop_command "${stopCommand.asFile(parent)} stop"
+        entry.restart_command restartCommand.asFile(parent)
+        entry.stop_command stopCommand.asFile(parent)
         entry.enable_mod_command a2enmodCommand.asFile(parent)
         entry.disable_mod_command a2dismodCommand.asFile(parent)
         entry.enable_site_command a2ensiteCommand.asFile(parent)
@@ -90,18 +136,12 @@ enum Ubuntu_12_04_Resources {
         entry.apache_command apache2Command.asFile(parent)
         entry.apache_control_command apache2ctlCommand.asFile(parent)
         entry.htpasswd_command htpasswdCommand.asFile(parent)
-        // ubuntu commands
-        entry.php_fcgi_php_conf_directory phpConfDir.asFile(parent)
-        entry.netstat_command netstatCommand.asFile(parent)
         // apache files
         entry.configuration_directory confDir.asFile(parent)
         entry.sites_available_directory sitesAvailableDir.asFile(parent)
         entry.sites_enabled_directory sitesEnabledDir.asFile(parent)
         entry.config_include_directory configIncludeDir.asFile(parent)
         entry.sites_directory sitesDir.asFile(parent)
-        // ubuntu files
-        entry.groups_file groupsFile.asFile(parent)
-        entry.users_file usersFile.asFile(parent)
     }
 
     ResourcesUtils resources

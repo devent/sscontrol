@@ -18,31 +18,23 @@
  */
 package com.anrisoftware.sscontrol.httpd.roundcube.fromarchive;
 
-import static com.anrisoftware.sscontrol.httpd.roundcube.fromarchive.RoundcubeFromArchiveConfigLogger._.check_need_download;
-import static com.anrisoftware.sscontrol.httpd.roundcube.fromarchive.RoundcubeFromArchiveConfigLogger._.check_version_debug;
-import static com.anrisoftware.sscontrol.httpd.roundcube.fromarchive.RoundcubeFromArchiveConfigLogger._.check_version_info;
-import static com.anrisoftware.sscontrol.httpd.roundcube.fromarchive.RoundcubeFromArchiveConfigLogger._.download_archive_info;
-import static com.anrisoftware.sscontrol.httpd.roundcube.fromarchive.RoundcubeFromArchiveConfigLogger._.download_archive_trace;
-import static com.anrisoftware.sscontrol.httpd.roundcube.fromarchive.RoundcubeFromArchiveConfigLogger._.finish_download;
-import static com.anrisoftware.sscontrol.httpd.roundcube.fromarchive.RoundcubeFromArchiveConfigLogger._.hash_archive_mismatch;
-import static com.anrisoftware.sscontrol.httpd.roundcube.fromarchive.RoundcubeFromArchiveConfigLogger._.hash_archive_mismatch_message;
-import static com.anrisoftware.sscontrol.httpd.roundcube.fromarchive.RoundcubeFromArchiveConfigLogger._.start_download;
-import static com.anrisoftware.sscontrol.httpd.roundcube.fromarchive.RoundcubeFromArchiveConfigLogger._.the_archive;
-import static com.anrisoftware.sscontrol.httpd.roundcube.fromarchive.RoundcubeFromArchiveConfigLogger._.the_hash;
-import static com.anrisoftware.sscontrol.httpd.roundcube.fromarchive.RoundcubeFromArchiveConfigLogger._.the_script;
+import static com.anrisoftware.sscontrol.httpd.roundcube.fromarchive.RoundcubeFromArchiveConfigLogger._.archive_name;
+import static com.anrisoftware.sscontrol.httpd.roundcube.fromarchive.RoundcubeFromArchiveConfigLogger._.compare_versions_debug;
+import static com.anrisoftware.sscontrol.httpd.roundcube.fromarchive.RoundcubeFromArchiveConfigLogger._.compare_versions_info;
+import static com.anrisoftware.sscontrol.httpd.roundcube.fromarchive.RoundcubeFromArchiveConfigLogger._.error_archive_hash;
+import static com.anrisoftware.sscontrol.httpd.roundcube.fromarchive.RoundcubeFromArchiveConfigLogger._.error_archive_hash_message;
+import static com.anrisoftware.sscontrol.httpd.roundcube.fromarchive.RoundcubeFromArchiveConfigLogger._.service_name;
+import static com.anrisoftware.sscontrol.httpd.roundcube.fromarchive.RoundcubeFromArchiveConfigLogger._.unpack_archive_debug;
+import static com.anrisoftware.sscontrol.httpd.roundcube.fromarchive.RoundcubeFromArchiveConfigLogger._.unpack_archive_info;
 
-import java.io.File;
 import java.net.URI;
 
-import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
 import com.anrisoftware.globalpom.version.Version;
-import com.anrisoftware.globalpom.version.VersionFormat;
-import com.anrisoftware.globalpom.version.VersionFormatFactory;
 import com.anrisoftware.sscontrol.core.api.ServiceException;
-import com.anrisoftware.sscontrol.core.service.LinuxScript;
+import com.anrisoftware.sscontrol.httpd.roundcube.RoundcubeService;
 
 /**
  * Logging messages for {@link RoundcubeFromArchiveConfig}.
@@ -55,32 +47,26 @@ class RoundcubeFromArchiveConfigLogger extends AbstractLogger {
 
     enum _ {
 
-        download_archive_trace("Downloaded and unpack archive '{}' for {}."),
+        unpack_archive_debug("Unpack Roundcube archive '{}' done for {}."),
 
-        download_archive_info(
-                "Downloaded and unpack archive '{}' for service '{}'."),
+        unpack_archive_info(
+                "Unpack Roundcube archive '{}' done for service '{}'."),
 
-        check_need_download("Check archive file '{}' for hash '{}' for {}."),
+        compare_versions_debug("Compare Roundcube version {}<={} for {}."),
 
-        start_download("Downloading of archive '{}' to '{}' for {}..."),
+        compare_versions_info(
+                "Compare Roundcube version {}<={} for service '{}'."),
 
-        finish_download("Finish download of archive '{}' to '{}' for {}."),
+        unpack_archive("Unpacked Roundcube archive '{}' for {}."),
 
-        check_version_debug("Compare current {} != {} <= {} for {}."),
+        error_archive_hash("Roundcube archive hash not match"),
 
-        check_version_info(
-                "Compare Roundcube versions current {} != {} <= {} for script '{}'."),
+        error_archive_hash_message(
+                "Roundcube archive '{}' hash not match for {}"),
 
-        hash_archive_mismatch("Archive hash mismatch"),
+        service_name("service"),
 
-        hash_archive_mismatch_message(
-                "Archive hash mismatch for archive '{}' for script '{}'."),
-
-        the_script("script"),
-
-        the_archive("archive"),
-
-        the_hash("hash");
+        archive_name("archive");
 
         private String name;
 
@@ -94,9 +80,6 @@ class RoundcubeFromArchiveConfigLogger extends AbstractLogger {
         }
     }
 
-    @Inject
-    private VersionFormatFactory versionFormatFactory;
-
     /**
      * Creates a logger for {@link RoundcubeFromArchiveConfig}.
      */
@@ -104,47 +87,28 @@ class RoundcubeFromArchiveConfigLogger extends AbstractLogger {
         super(RoundcubeFromArchiveConfig.class);
     }
 
-    void downloadArchive(LinuxScript script, URI archive) {
+    void unpackArchiveDone(RoundcubeFromArchiveConfig config, URI archive) {
         if (isDebugEnabled()) {
-            debug(download_archive_trace, archive, script);
+            debug(unpack_archive_debug, archive, config);
         } else {
-            info(download_archive_info, archive, script.getName());
+            info(unpack_archive_info, archive, config.getServiceName());
         }
     }
 
-    void checkNeedDownloadArchive(LinuxScript script, File dest, URI hash) {
-        debug(check_need_download, dest, hash, script);
-    }
-
-    void startDownload(LinuxScript script, URI source, File dest) {
-        debug(start_download, source, dest, script);
-    }
-
-    void finishDownload(LinuxScript script, URI source, File dest) {
-        debug(finish_download, source, dest, script);
-    }
-
-    void checkHashArchive(LinuxScript script, URI source, URI hash,
-            boolean check) {
-        if (!check) {
-            logException(
-                    new ServiceException(hash_archive_mismatch)
-                            .add(the_script, script).add(the_archive, source)
-                            .add(the_hash, hash),
-                    hash_archive_mismatch_message, source, script.getName());
-        }
-    }
-
-    void checkVersion(LinuxScript script, Version currentVersion,
-            Version archiveVersion, Version versionLimit) {
+    void checkVersion(RoundcubeFromArchiveConfig config, Version version,
+            Version upper) {
         if (isDebugEnabled()) {
-            debug(check_version_debug, currentVersion, archiveVersion,
-                    versionLimit, script);
+            debug(compare_versions_debug, version, upper, config);
         } else {
-            VersionFormat format = versionFormatFactory.create();
-            info(check_version_info, format.format(currentVersion),
-                    format.format(archiveVersion), format.format(versionLimit),
-                    script.getName());
+            info(compare_versions_info, version, upper, config.getServiceName());
         }
     }
+
+    ServiceException errorArchiveHash(RoundcubeService service, URI archive) {
+        return logException(
+                new ServiceException(error_archive_hash).add(service_name,
+                        service).add(archive_name, archive),
+                error_archive_hash_message, archive, service);
+    }
+
 }

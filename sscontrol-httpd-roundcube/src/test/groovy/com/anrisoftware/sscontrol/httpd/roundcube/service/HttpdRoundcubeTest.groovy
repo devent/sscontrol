@@ -24,14 +24,12 @@ import groovy.util.logging.Slf4j
 
 import org.junit.Test
 
-import com.anrisoftware.sscontrol.core.api.ServiceLoader as SscontrolServiceLoader
-import com.anrisoftware.sscontrol.core.api.ServicesRegistry
-import com.anrisoftware.sscontrol.core.yesno.YesNoFlag
 import com.anrisoftware.sscontrol.httpd.domain.Domain
 import com.anrisoftware.sscontrol.httpd.domain.SslDomain
 import com.anrisoftware.sscontrol.httpd.roundcube.RoundcubeService
 import com.anrisoftware.sscontrol.httpd.service.HttpdService
 import com.anrisoftware.sscontrol.httpd.webservice.OverrideMode
+import com.anrisoftware.sscontrol.testutils.resources.WebServiceTestEnvironment
 
 /**
  * @see RoundcubeService
@@ -40,7 +38,7 @@ import com.anrisoftware.sscontrol.httpd.webservice.OverrideMode
  * @since 1.0
  */
 @Slf4j
-class HttpdRoundcubeTest extends HttpdTestUtil {
+class HttpdRoundcubeTest extends WebServiceTestEnvironment {
 
     @Test
     void "roundcube"() {
@@ -68,10 +66,10 @@ class HttpdRoundcubeTest extends HttpdTestUtil {
         assert webservice.database.password == "userpassdb"
         assert webservice.database.host == "localhost"
         assert webservice.database.driver == "mysql"
-        assert webservice.debug == null
-        assert webservice.smtpServer.server == "tls://%h"
-        assert webservice.smtpServer.user == "usersmtp"
-        assert webservice.smtpServer.password == "passwordsmtp"
+        assert webservice.debugLogging("level") == null
+        assert webservice.mailServer.mail == "tls://%h"
+        assert webservice.mailServer.user == "usersmtp"
+        assert webservice.mailServer.password == "passwordsmtp"
         assert webservice.backupTarget.toString() == "file:///var/backups"
         assert webservice.imapServers["Default Server"] == "mail.example.com"
         assert webservice.imapServers["Webmail Server"] == "webmail.example.com"
@@ -92,7 +90,7 @@ class HttpdRoundcubeTest extends HttpdTestUtil {
         assert webservice.id == null
         assert webservice.ref == "idroundcube"
         assert webservice.database == null
-        assert webservice.smtpServer == null
+        assert webservice.mailServer == null
         assert webservice.backupTarget == null
         assert webservice.imapServers == null
         assert webservice.imapServer == null
@@ -122,8 +120,8 @@ class HttpdRoundcubeTest extends HttpdTestUtil {
         assert webservice.ref == null
         assert webservice.alias == "roundcube"
         assert webservice.prefix == "roundcubedebug"
-        assert webservice.debug["php"] == 1
-        assert webservice.debug["roundcube"] == 1
+        assert webservice.debugLogging("level")["php"] == 1
+        assert webservice.debugLogging("level")["roundcube"] == 1
 
         domain = service.domains[d++]
         assert domain.name == "www.testold.com"
@@ -135,7 +133,7 @@ class HttpdRoundcubeTest extends HttpdTestUtil {
         assert webservice.ref == null
         assert webservice.alias == "roundcube"
         assert webservice.prefix == "roundcubeold"
-        assert webservice.overrideMode == YesNoFlag.no
+        assert webservice.overrideMode == OverrideMode.no
 
         domain = service.domains[d++]
         assert domain.name == "www.testupdate.com"

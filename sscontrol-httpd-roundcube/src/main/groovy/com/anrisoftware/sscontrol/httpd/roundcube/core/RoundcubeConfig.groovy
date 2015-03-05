@@ -22,6 +22,8 @@ import static org.apache.commons.lang3.StringUtils.*
 
 import javax.inject.Inject
 
+import org.apache.commons.lang3.builder.ToStringBuilder
+
 import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.sscontrol.core.service.LinuxScript
 import com.anrisoftware.sscontrol.httpd.domain.Domain
@@ -44,7 +46,24 @@ abstract class RoundcubeConfig {
     private LinuxScript script
 
     /**
+     * Sets default arguments.
+     *
+     * @param service
+     *            the {@link RoundcubeService} service.
+     */
+    void setupDefaults(RoundcubeService service) {
+        setupDefaultPrefix service
+        setupDefaultOverrideMode service
+        setupDefaultDebugLevels service
+        setupDefaultDatabase service
+        setupDefaultSmtp service
+        setupDefaultImap service
+    }
+
+    /**
      * Sets default prefix.
+     *
+     * @see #getRoundcubeDefaultPrefix()
      *
      * @param service
      *            the {@link RoundcubeService} service.
@@ -58,6 +77,8 @@ abstract class RoundcubeConfig {
     /**
      * Sets default override mode.
      *
+     * @see #getRoundcubeDefaultOverrideMode()
+     *
      * @param service
      *            the {@link RoundcubeService} service.
      */
@@ -70,84 +91,112 @@ abstract class RoundcubeConfig {
     /**
      * Sets default debug levels.
      *
+     * <ul>
+     * <li>profile property {@code "roundcube_default_debug_level_roundcube"}</li>
+     * <li>profile property {@code "roundcube_default_debug_level_smtplog"}</li>
+     * <li>profile property {@code "roundcube_default_debug_level_logins"}</li>
+     * <li>profile property {@code "roundcube_default_debug_level_session"}</li>
+     * <li>profile property {@code "roundcube_default_debug_level_sql"}</li>
+     * <li>profile property {@code "roundcube_default_debug_level_imap"}</li>
+     * <li>profile property {@code "roundcube_default_debug_level_ldap"}</li>
+     * <li>profile property {@code "roundcube_default_debug_level_smtp"}</li>
+     * <li>profile property {@code "roundcube_default_debug_level_php"}</li>
+     * </ul>
+     *
      * @param service
      *            the {@link RoundcubeService} service.
      */
     void setupDefaultDebugLevels(RoundcubeService service) {
-        int roundcubeLevel = profileNumberProperty "roundcube_default_debug_level_roundcube", roundcubeProperties
-        int smtplogLevel = profileNumberProperty "roundcube_default_debug_level_smtplog", roundcubeProperties
-        int loginsLevel = profileNumberProperty "roundcube_default_debug_level_logins", roundcubeProperties
-        int sessionLevel = profileNumberProperty "roundcube_default_debug_level_session", roundcubeProperties
-        int sqlLevel = profileNumberProperty "roundcube_default_debug_level_sql", roundcubeProperties
-        int imapLevel = profileNumberProperty "roundcube_default_debug_level_imap", roundcubeProperties
-        int ldapLevel = profileNumberProperty "roundcube_default_debug_level_ldap", roundcubeProperties
-        int smtpLevel = profileNumberProperty "roundcube_default_debug_level_smtp", roundcubeProperties
-        int phpLevel = profileNumberProperty "roundcube_default_debug_level_php", roundcubeProperties
-        if (service.debug == null) {
-            service.debug "roundcube", level: roundcubeLevel
-            service.debug "smtplog", level: smtplogLevel
-            service.debug "logins", level: loginsLevel
-            service.debug "session", level: sessionLevel
-            service.debug "sql", level: sqlLevel
-            service.debug "imap", level: imapLevel
-            service.debug "ldap", level: ldapLevel
-            service.debug "smtp", level: smtpLevel
-            service.debug "php", level: phpLevel
+        if (service.debugLogging("level") == null || service.debugLogging("level").roundcube == null) {
+            service.debug "roundcube", level: (int) profileNumberProperty("roundcube_default_debug_level_roundcube", roundcubeProperties)
         }
-        service.debug.roundcube == null ? service.debug("roundcube", level: roundcubeLevel) : false
-        service.debug.smtplog == null ? service.debug("smtplog", level: smtplogLevel) : false
-        service.debug.logins == null ? service.debug("logins", level: loginsLevel) : false
-        service.debug.session == null ? service.debug("session", level: sessionLevel) : false
-        service.debug.sql == null ? service.debug("sql", level: sqlLevel) : false
-        service.debug.imap == null ? service.debug("imap", level: imapLevel) : false
-        service.debug.ldap == null ? service.debug("ldap", level: ldapLevel) : false
-        service.debug.smtp == null ? service.debug("smtp", level: smtpLevel) : false
-        service.debug.php == null ? service.debug("php", level: phpLevel) : false
+        if (service.debugLogging("level") == null || service.debugLogging("level").roundcube == null) {
+            service.debug "smtplog", level: (int) profileNumberProperty("roundcube_default_debug_level_smtplog", roundcubeProperties)
+        }
+        if (service.debugLogging("level") == null || service.debugLogging("level").roundcube == null) {
+            service.debug "logins", level: (int) profileNumberProperty("roundcube_default_debug_level_logins", roundcubeProperties)
+        }
+        if (service.debugLogging("level") == null || service.debugLogging("level").roundcube == null) {
+            service.debug "session", level: (int) profileNumberProperty("roundcube_default_debug_level_session", roundcubeProperties)
+        }
+        if (service.debugLogging("level") == null || service.debugLogging("level").roundcube == null) {
+            service.debug "sql", level: (int) profileNumberProperty("roundcube_default_debug_level_sql", roundcubeProperties)
+        }
+        if (service.debugLogging("level") == null || service.debugLogging("level").roundcube == null) {
+            service.debug "imap", level: (int) profileNumberProperty("roundcube_default_debug_level_imap", roundcubeProperties)
+        }
+        if (service.debugLogging("level") == null || service.debugLogging("level").roundcube == null) {
+            service.debug "ldap", level: (int) profileNumberProperty("roundcube_default_debug_level_ldap", roundcubeProperties)
+        }
+        if (service.debugLogging("level") == null || service.debugLogging("level").roundcube == null) {
+            service.debug "smtp", level: (int) profileNumberProperty("roundcube_default_debug_level_smtp", roundcubeProperties)
+        }
+        if (service.debugLogging("level") == null || service.debugLogging("level").roundcube == null) {
+            service.debug "php", level: (int) profileNumberProperty("roundcube_default_debug_level_php", roundcubeProperties)
+        }
     }
 
     /**
      * Sets default database settings.
+     *
+     * <ul>
+     * <li>profile property {@code "roundcube_default_database_host"}</li>
+     * <li>profile property {@code "roundcube_default_database_port"}</li>
+     * </ul>
      *
      * @param service
      *            the {@link RoundcubeService} service.
      */
     void setupDefaultDatabase(RoundcubeService service) {
         def databaseName = service.database.database
-        def databaseHost = profileProperty "roundcube_default_database_host", roundcubeProperties
-        def databaseDriver = profileProperty "roundcube_default_database_driver", roundcubeProperties
-        // database "roundcubedb", user: "userdb", password: "userpassdb", host: "localhost", driver: "mysql"
-        service.database.host == null ? service.database(databaseName, host: databaseHost) : false
-        service.database.driver == null ? service.database(databaseName, driver: databaseDriver) : false
+        if (service.database.host == null) {
+            service.database databaseName, host: profileProperty("roundcube_default_database_host", roundcubeProperties)
+        }
+        if (service.database.port == null) {
+            service.database databaseName, port: profileProperty("roundcube_default_database_port", roundcubeProperties)
+        }
     }
 
     /**
      * Sets default SMTP settings.
      *
+     * <ul>
+     * <li>profile property {@code "roundcube_default_smtp_host"}</li>
+     * <li>profile property {@code "roundcube_default_smtp_user"}</li>
+     * <li>profile property {@code "roundcube_default_smtp_password"}</li>
+     * </ul>
+     *
      * @param service
      *            the {@link RoundcubeService} service.
      */
     void setupDefaultSmtp(RoundcubeService service) {
-        def smtpHost = profileProperty "roundcube_default_smtp_host", roundcubeProperties
-        def smtpUser = profileProperty "roundcube_default_smtp_user", roundcubeProperties
-        def smtpPassword = profileProperty "roundcube_default_smtp_password", roundcubeProperties
-        // smtp "tls://%h", user: "usersmtp", password: "passwordsmtp"
-        service.smtpServer == null ? service.smtp(smtpHost) : false
-        service.smtpServer.server == null ? service.smtp(smtpHost) : false
-        def smtpServer = service.smtpServer.server
-        service.smtpServer.user == null ? service.smtp(smtpServer, user: smtpUser) : false
-        service.smtpServer.password == null ? service.smtp(smtpServer, password: smtpPassword) : false
+        if (service.mailServer == null || service.mailServer.mail == null) {
+            service.mail profileProperty("roundcube_default_smtp_host", roundcubeProperties)
+        }
+        def mail = service.mailServer.mail
+        if (service.mailServer.user == null) {
+            service.mail mail, user: profileProperty("roundcube_default_smtp_user", roundcubeProperties)
+        }
+        if (service.mailServer.password == null) {
+            service.mail mail, password: profileProperty("roundcube_default_smtp_password", roundcubeProperties)
+        }
     }
 
     /**
      * Sets default IMAP settings.
      *
+     * <ul>
+     * <li>profile property {@code "roundcube_default_imap_port"}</li>
+     * </ul>
+     *
      * @param service
      *            the {@link RoundcubeService} service.
      */
     void setupDefaultImap(RoundcubeService service) {
-        int imapPort = profileNumberProperty "roundcube_default_imap_port", roundcubeProperties
         // server "default", port: 143
-        service.imapPort == null ? service.server("default", port: imapPort) : false
+        if (service.imapPort == null) {
+            service.server "default", port: profileNumberProperty("roundcube_default_imap_port", roundcubeProperties)
+        }
     }
 
     /**
@@ -164,21 +213,8 @@ abstract class RoundcubeConfig {
     }
 
     /**
-     * Returns the list of needed <i>Apache</i> mods.
-     *
-     * <ul>
-     * <li>profile property {@code "roundcube_mods"}</li>
-     * </ul>
-     *
-     * @see #getRoundcubeProperties()
-     */
-    List getRoundcubeMods() {
-        profileListProperty "roundcube_mods", roundcubeProperties
-    }
-
-    /**
      * Returns default <i>Roundcube</i> service prefix, for
-     * example {@code "roundcube_1_0"}.
+     * example {@code "roundcube_1"}.
      *
      * <ul>
      * <li>profile property {@code "roundcube_default_prefix"}</li>
@@ -290,6 +326,7 @@ abstract class RoundcubeConfig {
      * @see #getDefaultProperties()
      */
     String roundcubeDatabaseCommand(String driver) {
+        log.checkDatabaseDriver this, driver
         profileProperty "${driver}_command", defaultProperties
     }
 
@@ -415,24 +452,37 @@ abstract class RoundcubeConfig {
     abstract String getProfile()
 
     /**
-     * @see ServiceConfig#setScript(LinuxScript)
+     * Sets the parent script.
      */
     void setScript(LinuxScript script) {
         this.script = script
     }
 
     /**
-     * @see ServiceConfig#getScript()
+     * Returns the parent script.
      */
     LinuxScript getScript() {
         script
     }
 
+    /**
+     * Delegates the missing property to the parent script.
+     */
     def propertyMissing(String name) {
         script.getProperty name
     }
 
+    /**
+     * Delegates the missing method to the parent script.
+     */
     def methodMissing(String name, def args) {
         script.invokeMethod name, args
+    }
+
+    @Override
+    public String toString() {
+        new ToStringBuilder(this)
+                .append("service name", getServiceName())
+                .append("profile name", getProfile()).toString();
     }
 }

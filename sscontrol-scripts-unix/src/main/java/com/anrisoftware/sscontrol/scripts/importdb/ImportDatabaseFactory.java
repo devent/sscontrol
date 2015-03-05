@@ -22,11 +22,12 @@ import java.io.File;
 import java.util.List;
 import java.util.Map;
 
+import com.anrisoftware.globalpom.exec.runcommands.RunCommands;
 import com.anrisoftware.globalpom.threads.api.Threads;
 
 /**
  * Factory to create links to files.
- * 
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
@@ -34,29 +35,32 @@ public interface ImportDatabaseFactory {
 
     /**
      * Creates to links to files.
-     * 
+     *
      * @param args
      *            the {@link Map} arguments:
      *            <ul>
+     *            <li>{@code runCommands} optionally, set to the
+     *            {@link RunCommands} to record the command.
+     *
      *            <li>{@code command} the create link command, for example
      *            {@code "/usr/bin/ln".}
-     * 
+     *
      *            <li>{@code files} the source {@link File} or {@link List} of
      *            files, each source file must have a corresponding target.
-     * 
+     *
      *            <li>{@code targets} the target {@link File} or {@link List} of
      *            files.
-     * 
+     *
      *            <li>{@code override} optionally, set to {@code true} to
      *            override the targets.
      *            </ul>
-     * 
+     *
      * @param parent
      *            the {@link Object} parent script.
-     * 
+     *
      * @param threads
      *            the {@link Threads} pool.
-     * 
+     *
      * @return the {@link ImportDatabase}.
      */
     ImportDatabase create(Map<String, Object> args, Object parent, Threads threads);

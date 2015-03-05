@@ -23,7 +23,7 @@ import javax.inject.Singleton;
 import com.anrisoftware.globalpom.log.AbstractLogger;
 
 /**
- * Logging messages for {@link RoundcubeService}.
+ * Logging messages for {@link RoundcubeServiceImpl}.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
@@ -48,10 +48,10 @@ class RoundcubeServiceLogger extends AbstractLogger {
     }
 
     /**
-     * Creates a logger for {@link RoundcubeService}.
+     * Creates a logger for {@link RoundcubeServiceImpl}.
      */
     public RoundcubeServiceLogger() {
-        super(RoundcubeService.class);
+        super(RoundcubeServiceImpl.class);
     }
 
 }

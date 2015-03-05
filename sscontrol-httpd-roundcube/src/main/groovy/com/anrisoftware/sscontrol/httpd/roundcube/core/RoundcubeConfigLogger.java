@@ -18,21 +18,22 @@
  */
 package com.anrisoftware.sscontrol.httpd.roundcube.core;
 
+import static com.anrisoftware.sscontrol.httpd.roundcube.core.RoundcubeConfigLogger._.database_driver_null;
 import static com.anrisoftware.sscontrol.httpd.roundcube.core.RoundcubeConfigLogger._.returns_strip_archive_debug;
 import static com.anrisoftware.sscontrol.httpd.roundcube.core.RoundcubeConfigLogger._.returns_strip_archive_info;
 import static com.anrisoftware.sscontrol.httpd.roundcube.core.RoundcubeConfigLogger._.returns_wordpress_archive_debug;
 import static com.anrisoftware.sscontrol.httpd.roundcube.core.RoundcubeConfigLogger._.returns_wordpress_archive_info;
 import static com.anrisoftware.sscontrol.httpd.roundcube.core.RoundcubeConfigLogger._.returns_wordpress_hash_debug;
 import static com.anrisoftware.sscontrol.httpd.roundcube.core.RoundcubeConfigLogger._.returns_wordpress_hash_info;
+import static org.apache.commons.lang3.Validate.notBlank;
 
 import java.net.URI;
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
-import com.anrisoftware.sscontrol.core.service.LinuxScript;
 
 /**
  * Logging for {@link RoundcubeConfig}.
- * 
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
@@ -53,7 +54,9 @@ class RoundcubeConfigLogger extends AbstractLogger {
         returns_wordpress_hash_debug("Returns for '{}' the '{}' for {}."),
 
         returns_wordpress_hash_info(
-                "Returns for language '{}' archive hash file '{}' for service '{}'.");
+                "Returns for language '{}' archive hash file '{}' for service '{}'."),
+
+        database_driver_null("Database driver cannot be null or empty for %s");
 
         private String name;
 
@@ -74,27 +77,35 @@ class RoundcubeConfigLogger extends AbstractLogger {
         super(RoundcubeConfig.class);
     }
 
-    void returnsWordpressArchive(LinuxScript script, String lang, URI uri) {
+    void returnsWordpressArchive(RoundcubeConfig script, String lang, URI uri) {
         if (isDebugEnabled()) {
             debug(returns_wordpress_archive_debug, lang, uri, script);
         } else {
-            info(returns_wordpress_archive_info, lang, uri, script.getName());
+            info(returns_wordpress_archive_info, lang, uri,
+                    script.getServiceName());
         }
     }
 
-    void returnsWordpressArchiveHash(LinuxScript script, String lang, URI uri) {
+    void returnsWordpressArchiveHash(RoundcubeConfig script, String lang,
+            URI uri) {
         if (isDebugEnabled()) {
             debug(returns_wordpress_hash_debug, lang, uri, script);
         } else {
-            info(returns_wordpress_hash_info, lang, uri, script.getName());
+            info(returns_wordpress_hash_info, lang, uri,
+                    script.getServiceName());
         }
     }
 
-    void returnsStripArchive(LinuxScript script, String lang, boolean strip) {
+    void returnsStripArchive(RoundcubeConfig script, String lang, boolean strip) {
         if (isDebugEnabled()) {
             debug(returns_strip_archive_debug, lang, strip, script);
         } else {
-            info(returns_strip_archive_info, lang, strip, script.getName());
+            info(returns_strip_archive_info, lang, strip,
+                    script.getServiceName());
         }
+    }
+
+    void checkDatabaseDriver(RoundcubeConfig script, String driver) {
+        notBlank(driver, database_driver_null.toString(), script);
     }
 }

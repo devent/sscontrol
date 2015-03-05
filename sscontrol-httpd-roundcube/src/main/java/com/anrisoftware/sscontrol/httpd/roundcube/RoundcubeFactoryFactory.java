@@ -18,9 +18,12 @@
  */
 package com.anrisoftware.sscontrol.httpd.roundcube;
 
+import org.codehaus.groovy.control.CompilerConfiguration;
+import org.codehaus.groovy.control.customizers.ImportCustomizer;
 import org.mangosdk.spi.ProviderFor;
 
 import com.anrisoftware.sscontrol.core.api.ServiceException;
+import com.anrisoftware.sscontrol.httpd.webservice.OverrideMode;
 import com.anrisoftware.sscontrol.httpd.webservice.WebServiceFactory;
 import com.anrisoftware.sscontrol.httpd.webservice.WebServiceFactoryFactory;
 import com.anrisoftware.sscontrol.httpd.webservice.WebServiceInfo;
@@ -78,5 +81,13 @@ public class RoundcubeFactoryFactory implements WebServiceFactoryFactory {
 
     @Override
     public void configureCompiler(Object compiler) throws Exception {
+        CompilerConfiguration c = (CompilerConfiguration) compiler;
+        importClasses(c);
+    }
+
+    private void importClasses(CompilerConfiguration c) {
+        ImportCustomizer customizer = new ImportCustomizer();
+        customizer.addImports(OverrideMode.class.getName());
+        c.addCompilationCustomizers(customizer);
     }
 }

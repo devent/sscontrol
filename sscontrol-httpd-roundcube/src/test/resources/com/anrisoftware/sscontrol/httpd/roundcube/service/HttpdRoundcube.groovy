@@ -18,47 +18,50 @@
  */
 package com.anrisoftware.sscontrol.httpd.roundcube.service
 
-import com.anrisoftware.sscontrol.core.yesno.YesNoFlag;
-import com.anrisoftware.sscontrol.httpd.webservice.OverrideMode;
-
 def certFile = ServicesResources.class.getResource "cert_crt.txt"
 def certKeyFile = ServicesResources.class.getResource "cert_key.txt"
 
 httpd {
+    // complete example
     domain "www.test1.com", address: "192.168.0.51", {
         user "www-data", group: "www-data"
         setup "roundcube", id: "idroundcube", alias: "roundcube", {
-            database "roundcubedb", user: "userdb", password: "userpassdb", host: "localhost", driver: "mysql"
-            smtp "tls://%h", user: "usersmtp", password: "passwordsmtp"
             backup target: "/var/backups"
+            database "roundcubedb", driver: "mysql", user: "userdb", password: "userpassdb", host: "localhost"
+            mail "tls://%h", user: "usersmtp", password: "passwordsmtp"
             server "Default Server", host: "mail.example.com"
             server "Webmail Server", host: "webmail.example.com"
             host "example.com", domain: "mail.example.com"
             host "otherdomain.com", domain: "othermail.example.com"
         }
     }
+    // reference previous service
     ssl_domain "www.test1.com", address: "192.168.0.51", {
         user "www-data", group: "www-data"
         certificate file: certFile, key: certKeyFile
         setup "roundcube", ref: "idroundcube"
     }
+    // set default host
     domain "www.testone.com", address: "192.168.0.51", {
         setup "roundcube", alias: "roundcube", prefix: "roundcubeone", {
             server "default", host: "localhost", port: 99
             host "example.com"
         }
     }
+    // set debug
     domain "www.testdebug.com", address: "192.168.0.51", {
         setup "roundcube", alias: "roundcube", prefix: "roundcubedebug", {
             debug "php", level: 1
             debug "roundcube", level: 1
         }
     }
+    // set override mode
     domain "www.testold.com", address: "192.168.0.51", {
         setup "roundcube", alias: "roundcube", prefix: "roundcubeold", {
-            override mode: YesNoFlag.no
+            override mode: no
         }
     }
+    // set override mode
     domain "www.testupdate.com", address: "192.168.0.51", {
         setup "roundcube", alias: "roundcube", prefix: "roundcubeold", {
             override mode: OverrideMode.update

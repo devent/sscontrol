@@ -1,0 +1,67 @@
+domainConfig(args) ::= <<
+<!- args.domain -!>
+<!- args.alias -!>
+<!- args.serviceDirectory -!>
+<!- args.sitesDirectory -!>
+<!- args.scriptsSubdirectory -!>
+<!- args.scriptStarterFileName -!>
+# <args.serviceDirectory>
+
+<serviceAlias(args)>
+
+\<Directory <args.serviceDirectory>\>
+    AddHandler fcgid-script .php
+    <fcgiWrapper(args)>
+    Options +ExecCGI +FollowSymLinks
+    DirectoryIndex index.php
+    AllowOverride All
+
+    Order allow,deny
+    Allow from all
+
+    <phpConfig(args)>
+    <secureDirectoriesConfig(args)>
+\</Directory>
+
+>>
+
+fcgiWrapper(args) ::= <%
+FCGIWrapper <args.sitesDirectory>/<args.scriptsSubdirectory>/<args.domain.name>/<args.scriptStarterFileName> .php
+%>
+
+serviceAlias(args) ::= <<
+<if(args.service.alias)>Alias /<args.service.alias> <args.serviceAliasDir><endif>
+>>
+
+phpConfig(args) ::= <<
+\<IfModule mod_mime.c>
+    \<IfModule !mod_php5.c>
+        \<IfModule mod_actions.c>
+            \<IfModule mod_cgi.c>
+                AddType application/x-httpd-php .php
+                Action application/x-httpd-php /cgi-bin/php5
+            \</IfModule>
+            \<IfModule mod_cgid.c>
+                AddType application/x-httpd-php .php
+                Action application/x-httpd-php /cgi-bin/php5
+            \</IfModule>
+        \</IfModule>
+    \</IfModule>
+\</IfModule>
+
+>>
+
+secureDirectoriesConfig(args) ::= <<
+\<IfModule mod_rewrite.c>
+    RewriteEngine On
+    # security rules:
+    # - deny access to files not containing a dot or starting with a dot
+    #   in all locations except installer directory
+    RewriteRule ^(?!installer)(\.?[^\.]+)$ - [F]
+    # - deny access to some locations
+    RewriteRule ^/?(\.git|\.tx|SQL|bin|config|logs|temp|tests|program\/(include|lib|localization|steps)) - [F]
+    # - deny access to some documentation files
+    RewriteRule /?(README\.md|composer\.json-dist|composer\.json|package\.xml)$ - [F]
+\</IfModule>
+
+>>

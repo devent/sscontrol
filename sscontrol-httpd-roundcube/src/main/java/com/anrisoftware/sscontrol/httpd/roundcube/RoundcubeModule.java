@@ -28,11 +28,11 @@ import com.google.inject.assistedinject.FactoryModuleBuilder;
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-public class RoundcubeModule extends AbstractModule {
+class RoundcubeModule extends AbstractModule {
 
     @Override
     protected void configure() {
         install(new FactoryModuleBuilder().implement(WebService.class,
-                RoundcubeService.class).build(RoundcubeServiceFactory.class));
+                RoundcubeServiceImpl.class).build(RoundcubeServiceFactory.class));
     }
 }

@@ -1,0 +1,60 @@
+<VirtualHost 192.168.0.51:80>
+
+    # domain test1.com
+    ServerName test1.com
+    DocumentRoot /tmp/var/www/test1.com/web
+    SuexecUserGroup web_001 web_001
+    <Directory /tmp/var/www/test1.com/web>
+        AllowOverride None
+        Order allow,deny
+        Allow from all
+    </Directory>
+
+    # fcgi
+
+    FcgidMaxRequestLen 2000000
+
+    # /tmp/var/www/test1.com/roundcube_1
+
+    Alias /roundcube /tmp/var/www/test1.com/roundcube_1
+
+    <Directory /tmp/var/www/test1.com/roundcube_1>
+        AddHandler fcgid-script .php
+        FCGIWrapper /tmp/var/www/php-fcgi-scripts/test1.com/php-fcgi-starter .php
+        Options +ExecCGI +FollowSymLinks
+        DirectoryIndex index.php
+        AllowOverride All
+
+        Order allow,deny
+        Allow from all
+
+        <IfModule mod_mime.c>
+            <IfModule !mod_php5.c>
+                <IfModule mod_actions.c>
+                    <IfModule mod_cgi.c>
+                        AddType application/x-httpd-php .php
+                        Action application/x-httpd-php /cgi-bin/php5
+                    </IfModule>
+                    <IfModule mod_cgid.c>
+                        AddType application/x-httpd-php .php
+                        Action application/x-httpd-php /cgi-bin/php5
+                    </IfModule>
+                </IfModule>
+            </IfModule>
+        </IfModule>
+
+        <IfModule mod_rewrite.c>
+            RewriteEngine On
+            # security rules:
+            # - deny access to files not containing a dot or starting with a dot
+            #   in all locations except installer directory
+            RewriteRule ^(?!installer)(\.?[^\.]+)$ - [F]
+            # - deny access to some locations
+            RewriteRule ^/?(\.git|\.tx|SQL|bin|config|logs|temp|tests|program\/(include|lib|localization|steps)) - [F]
+            # - deny access to some documentation files
+            RewriteRule /?(README\.md|composer\.json-dist|composer\.json|package\.xml)$ - [F]
+        </IfModule>
+
+    </Directory>
+
+</VirtualHost>

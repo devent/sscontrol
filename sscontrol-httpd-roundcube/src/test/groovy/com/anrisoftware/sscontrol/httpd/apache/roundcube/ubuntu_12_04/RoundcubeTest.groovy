@@ -19,7 +19,6 @@
 package com.anrisoftware.sscontrol.httpd.apache.roundcube.ubuntu_12_04
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
-import static com.anrisoftware.sscontrol.httpd.apache.roundcube.ubuntu.UbuntuResources.*
 import static com.anrisoftware.sscontrol.httpd.apache.roundcube.ubuntu_12_04.RoundcubeResources.*
 import static com.anrisoftware.sscontrol.httpd.apache.roundcube.ubuntu_12_04.Ubuntu_12_04_Resources.*
 import static org.apache.commons.io.FileUtils.*
@@ -27,7 +26,7 @@ import groovy.util.logging.Slf4j
 
 import org.junit.Test
 
-import com.anrisoftware.sscontrol.httpd.roundcube.resources.UbuntuTestUtil
+import com.anrisoftware.sscontrol.testutils.resources.WebServiceTestEnvironment
 
 /**
  * <i>Roundcube Ubuntu 12.04</i>
@@ -36,35 +35,38 @@ import com.anrisoftware.sscontrol.httpd.roundcube.resources.UbuntuTestUtil
  * @since 1.0
  */
 @Slf4j
-class RoundcubeTest extends UbuntuTestUtil {
+class RoundcubeTest extends WebServiceTestEnvironment {
 
     @Test
     void "roundcube"() {
-        copyUbuntuFiles tmpdir
+        attachRunCommandsLog tmpdir
         copyUbuntu_12_04_Files tmpdir
         copyBasicRoundcubeFiles tmpdir
-
         loader.loadService profile.resource, null
         def profile = registry.getService("profile")[0]
-        setupUbuntuProperties profile, tmpdir
         setupUbuntu_12_04_Properties profile, tmpdir
+        setupRoundcubeProperties profile, tmpdir
         loader.loadService basicHttpdScript.resource, profile, preScript
 
         registry.allServices.each { it.call() }
         log.info "Run service again to ensure that configuration is not set double."
         registry.allServices.each { it.call() }
 
-        assertFileContent defaultConf.asFile(tmpdir), defaultConf
         assertFileContent basicPortsConfExpected.asFile(tmpdir), basicPortsConfExpected
         assertFileContent basicDomainsConfExpected.asFile(tmpdir), basicDomainsConfExpected
-        assertStringContent basicWwwtest1comConfExpected.replaced(tmpdir, tmpdir, "/tmp"), basicWwwtest1comConfExpected.toString()
-        assertStringContent basicWwwtest1comFcgiScriptExpected.replaced(tmpdir, tmpdir, "/tmp"), basicWwwtest1comFcgiScriptExpected.toString()
-        assertStringContent basicWwwtest1comPhpiniExpected.replaced(tmpdir, tmpdir, "/tmp"), basicWwwtest1comPhpiniExpected.toString()
-        assertFileContent basicWwwtest1comConfigIncExpected.asFile(tmpdir), basicWwwtest1comConfigIncExpected
-        assertStringContent basicWwwtest2comConfExpected.replaced(tmpdir, tmpdir, "/tmp"), basicWwwtest2comConfExpected.toString()
-        assertStringContent basicWwwtest2comFcgiScriptExpected.replaced(tmpdir, tmpdir, "/tmp"), basicWwwtest2comFcgiScriptExpected.toString()
-        assertStringContent basicWwwtest2comPhpiniExpected.replaced(tmpdir, tmpdir, "/tmp"), basicWwwtest2comPhpiniExpected.toString()
-        assertFileContent basicWwwtest2comConfigIncExpected.asFile(tmpdir), basicWwwtest2comConfigIncExpected
+        assertStringContent basicTest1comConfExpected.replaced(tmpdir, tmpdir, "/tmp"), basicTest1comConfExpected.toString()
+        assertStringContent basicTest1comFcgiScriptExpected.replaced(tmpdir, tmpdir, "/tmp"), basicTest1comFcgiScriptExpected.toString()
+        assertStringContent basicTest1comPhpiniExpected.replaced(tmpdir, tmpdir, "/tmp"), basicTest1comPhpiniExpected.toString()
+        assertFileContent basicTest1comConfigIncExpected.asFile(tmpdir), basicTest1comConfigIncExpected
+        assert basicTest1comLogsDir.asFile(tmpdir).isDirectory()
+        assert basicTest1comTempDir.asFile(tmpdir).isDirectory()
+        assertStringContent basicTest2comConfExpected.replaced(tmpdir, tmpdir, "/tmp"), basicTest2comConfExpected.toString()
+        assertStringContent basicTest2comFcgiScriptExpected.replaced(tmpdir, tmpdir, "/tmp"), basicTest2comFcgiScriptExpected.toString()
+        assertStringContent basicTest2comPhpiniExpected.replaced(tmpdir, tmpdir, "/tmp"), basicTest2comPhpiniExpected.toString()
+        assertFileContent basicTest2comConfigIncExpected.asFile(tmpdir), basicTest2comConfigIncExpected
+        assert basicTest2comLogsDir.asFile(tmpdir).isDirectory()
+        assert basicTest2comTempDir.asFile(tmpdir).isDirectory()
+        assertStringContent basicRuncommandsLogExpected.replaced(tmpdir, tmpdir, "/tmp").replaceAll(/\d+/, 'time'), basicRuncommandsLogExpected.toString()
         assertFileContent basicAptitudeOutExpected.asFile(tmpdir), basicAptitudeOutExpected
         assertFileContent basicA2enmodOutExpected.asFile(tmpdir), basicA2enmodOutExpected
         assertStringContent basicChownOutExpected.replaced(tmpdir, tmpdir, "/tmp"), basicChownOutExpected.toString()
@@ -75,7 +77,5 @@ class RoundcubeTest extends UbuntuTestUtil {
         assertFileContent basicGzipOutExpected.asFile(tmpdir), basicGzipOutExpected
         assertStringContent basicMysqlOutExpected.replaced(tmpdir, tmpdir, "/tmp"), basicMysqlOutExpected.toString()
         assertFileContent basicMysqldumpOutExpected.asFile(tmpdir), basicMysqldumpOutExpected
-        assert basicLogsDir.asFile(tmpdir).isDirectory()
-        assert basicTempDir.asFile(tmpdir).isDirectory()
     }
 }

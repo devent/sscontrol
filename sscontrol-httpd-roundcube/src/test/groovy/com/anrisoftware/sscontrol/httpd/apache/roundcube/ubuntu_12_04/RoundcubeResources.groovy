@@ -21,7 +21,7 @@ package com.anrisoftware.sscontrol.httpd.apache.roundcube.ubuntu_12_04
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static org.apache.commons.io.FileUtils.*
 
-import com.anrisoftware.sscontrol.httpd.roundcube.resources.ResourcesUtils
+import com.anrisoftware.sscontrol.testutils.resources.ResourcesUtils
 
 /**
  * <i>Roundcube Ubuntu 12.04</i> resources.
@@ -32,23 +32,31 @@ import com.anrisoftware.sscontrol.httpd.roundcube.resources.ResourcesUtils
 enum RoundcubeResources {
 
     profile("UbuntuProfile.groovy", RoundcubeResources.class.getResource("UbuntuProfile.groovy")),
-    roundcubeArchive("/tmp/web-roundcubemail-1.0.3.tar.gz", RoundcubeResources.class.getResource("roundcubemail-1.0.3.tar.gz")),
+    roundcubeArchive("/tmp/web-roundcubemail-1.1.0.tar.gz", RoundcubeResources.class.getResource("roundcubemail-1.1.0.tar.gz")),
     // basic
     basicHttpdScript("Httpd.groovy", RoundcubeResources.class.getResource("BasicHttpdRoundube.groovy")),
-    basicWwwtest1comSampleConf("/var/www/www.test1.com/roundcube_1_0/config/config.inc.php.sample", RoundcubeResources.class.getResource("config_inc_php_sample.txt")),
-    basicWwwtest1comMysqlinitialsql("/var/www/www.test1.com/roundcube_1_0/SQL/mysql.initial.sql", RoundcubeResources.class.getResource("mysql_initial_sql.txt")),
-    basicWwwtest2comSampleConf("/var/www/www.test2.com/roundcube_1_0/config/config.inc.php.sample", RoundcubeResources.class.getResource("config_inc_php_sample.txt")),
-    basicWwwtest2comMysqlinitialsql("/var/www/www.test2.com/roundcube_1_0/SQL/mysql.initial.sql", RoundcubeResources.class.getResource("mysql_initial_sql.txt")),
     basicPortsConfExpected("/etc/apache2/ports.conf", RoundcubeResources.class.getResource("basic_ports_conf_expected.txt")),
-    basicDomainsConfExpected("/etc/apache2/conf.d/000-robobee-domains.conf", RoundcubeResources.class.getResource("basic_domains_conf.txt")),
-    basicWwwtest1comConfExpected("/etc/apache2/sites-available/100-robobee-www.test1.com.conf", RoundcubeResources.class.getResource("basic_wwwtest1com_conf_expected.txt")),
-    basicWwwtest1comFcgiScriptExpected("/var/www/php-fcgi-scripts/www.test1.com/php-fcgi-starter", RoundcubeResources.class.getResource("basic_wwwtest1com_phpfcgistarter_expected.txt")),
-    basicWwwtest1comPhpiniExpected("/var/www/php-fcgi-scripts/www.test1.com/domain_php.ini", RoundcubeResources.class.getResource("basic_wwwtest1com_phpini_expected.txt")),
-    basicWwwtest1comConfigIncExpected("/var/www/www.test1.com/roundcube_1_0/config/config.inc.php", RoundcubeResources.class.getResource("basic_wwwtest1com_configincphp_expected.txt")),
-    basicWwwtest2comConfExpected("/etc/apache2/sites-available/100-robobee-www.test2.com.conf", RoundcubeResources.class.getResource("basic_wwwtest2com_conf_expected.txt")),
-    basicWwwtest2comFcgiScriptExpected("/var/www/php-fcgi-scripts/www.test2.com/php-fcgi-starter", RoundcubeResources.class.getResource("basic_wwwtest2com_phpfcgistarter_expected.txt")),
-    basicWwwtest2comPhpiniExpected("/var/www/php-fcgi-scripts/www.test2.com/domain_php.ini", RoundcubeResources.class.getResource("basic_wwwtest2com_phpini_expected.txt")),
-    basicWwwtest2comConfigIncExpected("/var/www/www.test2.com/roundcube_1_0/config/config.inc.php", RoundcubeResources.class.getResource("basic_wwwtest2com_configincphp_expected.txt")),
+    basicTest1comDefaultsIncPhp("/var/www/test1.com/roundcube_1/config/defaults.inc.php", RoundcubeResources.class.getResource("defaultsincphp.txt")),
+    basicTest1comConfigSamplePhp("/var/www/test1.com/roundcube_1/config/config.inc.php.sample", RoundcubeResources.class.getResource("configincphpsample.txt")),
+    basicTest1comMysqlinitialSql("/var/www/test1.com/roundcube_1/SQL/mysql.initial.sql", RoundcubeResources.class.getResource("mysqlinitialsql.txt")),
+    basicTest2comDefaultsIncPhp("/var/www/test2.com/roundcube_1/config/defaults.inc.php", RoundcubeResources.class.getResource("defaultsincphp.txt")),
+    basicTest2comConfigSamplePhp("/var/www/test2.com/roundcube_1/config/config.inc.php.sample", RoundcubeResources.class.getResource("configincphpsample.txt")),
+    basicTest2comMysqlinitialSql("/var/www/test2.com/roundcube_1/SQL/mysql.initial.sql", RoundcubeResources.class.getResource("mysqlinitialsql.txt")),
+    // basic expected
+    basicDomainsConfExpected("/etc/apache2/conf.d/000-robobee-domains.conf", RoundcubeResources.class.getResource("basic_domainsconf.txt")),
+    basicTest1comConfExpected("/etc/apache2/sites-available/100-robobee-test1.com.conf", RoundcubeResources.class.getResource("basic_test1comconf_expected.txt")),
+    basicTest1comFcgiScriptExpected("/var/www/php-fcgi-scripts/test1.com/php-fcgi-starter", RoundcubeResources.class.getResource("basic_test1com_phpfcgistarter_expected.txt")),
+    basicTest1comPhpiniExpected("/var/www/php-fcgi-scripts/test1.com/domain_php.ini", RoundcubeResources.class.getResource("basic_test1com_phpini_expected.txt")),
+    basicTest1comConfigIncExpected("/var/www/test1.com/roundcube_1/config/config.inc.php", RoundcubeResources.class.getResource("basic_test1com_configincphp_expected.txt")),
+    basicTest1comLogsDir("/var/www/test1.com/roundcube_1/logs", new URL("file://")),
+    basicTest1comTempDir("/var/www/test1.com/roundcube_1/temp", new URL("file://")),
+    basicTest2comConfExpected("/etc/apache2/sites-available/100-robobee-test2.com.conf", RoundcubeResources.class.getResource("basic_test2comconf_expected.txt")),
+    basicTest2comFcgiScriptExpected("/var/www/php-fcgi-scripts/test2.com/php-fcgi-starter", RoundcubeResources.class.getResource("basic_test2com_phpfcgistarter_expected.txt")),
+    basicTest2comPhpiniExpected("/var/www/php-fcgi-scripts/test2.com/domain_php.ini", RoundcubeResources.class.getResource("basic_test2com_phpini_expected.txt")),
+    basicTest2comConfigIncExpected("/var/www/test2.com/roundcube_1/config/config.inc.php", RoundcubeResources.class.getResource("basic_test2com_configincphp_expected.txt")),
+    basicTest2comLogsDir("/var/www/test2.com/roundcube_1/logs", new URL("file://")),
+    basicTest2comTempDir("/var/www/test2.com/roundcube_1/temp", new URL("file://")),
+    basicRuncommandsLogExpected("/runcommands.log", RoundcubeResources.class.getResource("basic_runcommands_expected.txt")),
     basicAptitudeOutExpected("/usr/bin/aptitude.out", RoundcubeResources.class.getResource("basic_aptitude_out_expected.txt")),
     basicA2enmodOutExpected("/usr/sbin/a2enmod.out", RoundcubeResources.class.getResource("basic_a2enmod_out_expected.txt")),
     basicChownOutExpected("/bin/chown.out", RoundcubeResources.class.getResource("basic_chown_out_expected.txt")),
@@ -59,15 +67,21 @@ enum RoundcubeResources {
     basicGzipOutExpected("/bin/gzip.out", RoundcubeResources.class.getResource("basic_gzip_out_expected.txt")),
     basicMysqldumpOutExpected("/usr/bin/mysqldump.out", RoundcubeResources.class.getResource("basic_mysqldump_out_expected.txt")),
     basicMysqlOutExpected("/usr/bin/mysql.out", RoundcubeResources.class.getResource("basic_mysql_out_expected.txt")),
-    basicLogsDir("/var/www/www.test1.com/roundcube_1_0/logs", new URL("file://")),
-    basicTempDir("/var/www/www.test1.com/roundcube_1_0/temp", new URL("file://")),
 
     static copyBasicRoundcubeFiles(File parent) {
         roundcubeArchive.createFile parent
-        basicWwwtest1comSampleConf.createFile parent
-        basicWwwtest1comMysqlinitialsql.createFile parent
-        basicWwwtest2comSampleConf.createFile parent
-        basicWwwtest2comMysqlinitialsql.createFile parent
+        basicTest1comDefaultsIncPhp.createFile parent
+        basicTest1comConfigSamplePhp.createFile parent
+        basicTest1comMysqlinitialSql.createFile parent
+        basicTest2comDefaultsIncPhp.createFile parent
+        basicTest2comConfigSamplePhp.createFile parent
+        basicTest2comMysqlinitialSql.createFile parent
+    }
+
+    static void setupRoundcubeProperties(def profile, File parent) {
+        def entry = profile.getEntry("httpd")
+        entry.roundcube_archive roundcubeArchive.asFile(parent)
+        entry.roundcube_archive_hash "md5:5118080eae72952891baca444d8954b1"
     }
 
     ResourcesUtils resources

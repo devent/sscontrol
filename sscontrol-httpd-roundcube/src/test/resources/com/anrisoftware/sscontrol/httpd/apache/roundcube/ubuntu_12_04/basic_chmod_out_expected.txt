@@ -1,28 +1,24 @@
-755 /tmp/var/www/php-fcgi-scripts/www.test1.com/php-fcgi-starter
--R u=rwX /tmp/var/www/www.test1.com/roundcube_1_0
--R g=rX /tmp/var/www/www.test1.com/roundcube_1_0
--R o=rX /tmp/var/www/www.test1.com/roundcube_1_0
-0775 /tmp/var/www/www.test1.com/roundcube_1_0/logs
-0775 /tmp/var/www/www.test1.com/roundcube_1_0/temp
-755 /tmp/var/www/php-fcgi-scripts/www.test1.com/php-fcgi-starter
-400 /tmp/var/www/www.test1.com/ssl/cert_crt.txt /tmp/var/www/www.test1.com/ssl/cert_key.txt
-755 /tmp/var/www/php-fcgi-scripts/www.test2.com/php-fcgi-starter
--R u=rwX /tmp/var/www/www.test2.com/roundcube_1_0
--R g=rX /tmp/var/www/www.test2.com/roundcube_1_0
--R o=rX /tmp/var/www/www.test2.com/roundcube_1_0
-0775 /tmp/var/www/www.test2.com/roundcube_1_0/logs
-0775 /tmp/var/www/www.test2.com/roundcube_1_0/temp
-755 /tmp/var/www/php-fcgi-scripts/www.test1.com/php-fcgi-starter
--R u=rwX /tmp/var/www/www.test1.com/roundcube_1_0
--R g=rX /tmp/var/www/www.test1.com/roundcube_1_0
--R o=rX /tmp/var/www/www.test1.com/roundcube_1_0
-0775 /tmp/var/www/www.test1.com/roundcube_1_0/logs
-0775 /tmp/var/www/www.test1.com/roundcube_1_0/temp
-755 /tmp/var/www/php-fcgi-scripts/www.test1.com/php-fcgi-starter
-400 /tmp/var/www/www.test1.com/ssl/cert_crt.txt /tmp/var/www/www.test1.com/ssl/cert_key.txt
-755 /tmp/var/www/php-fcgi-scripts/www.test2.com/php-fcgi-starter
--R u=rwX /tmp/var/www/www.test2.com/roundcube_1_0
--R g=rX /tmp/var/www/www.test2.com/roundcube_1_0
--R o=rX /tmp/var/www/www.test2.com/roundcube_1_0
-0775 /tmp/var/www/www.test2.com/roundcube_1_0/logs
-0775 /tmp/var/www/www.test2.com/roundcube_1_0/temp
+755 /tmp/var/www/php-fcgi-scripts/test1.com/php-fcgi-starter
+-R u=rwX,g=rX,o=rX /tmp/var/www/test1.com/roundcube_1
+-R u=rwX,g=rX,o=rX /tmp/var/www/test1.com/roundcube_1/logs
+-R u=rwX,g=rX,o=rX /tmp/var/www/test1.com/roundcube_1/temp
+u=r,g=r,o-rwx /tmp/var/www/test1.com/roundcube_1/config/config.inc.php
+755 /tmp/var/www/php-fcgi-scripts/test1.com/php-fcgi-starter
+400 /tmp/var/www/test1.com/ssl/cert_crt.txt /tmp/var/www/test1.com/ssl/cert_key.txt
+755 /tmp/var/www/php-fcgi-scripts/test2.com/php-fcgi-starter
+-R u=rwX,g=rX,o=rX /tmp/var/www/test2.com/roundcube_1
+-R u=rwX,g=rX,o=rX /tmp/var/www/test2.com/roundcube_1/logs
+-R u=rwX,g=rX,o=rX /tmp/var/www/test2.com/roundcube_1/temp
+u=r,g=r,o-rwx /tmp/var/www/test2.com/roundcube_1/config/config.inc.php
+755 /tmp/var/www/php-fcgi-scripts/test1.com/php-fcgi-starter
+-R u=rwX,g=rX,o=rX /tmp/var/www/test1.com/roundcube_1
+-R u=rwX,g=rX,o=rX /tmp/var/www/test1.com/roundcube_1/logs
+-R u=rwX,g=rX,o=rX /tmp/var/www/test1.com/roundcube_1/temp
+u=r,g=r,o-rwx /tmp/var/www/test1.com/roundcube_1/config/config.inc.php
+755 /tmp/var/www/php-fcgi-scripts/test1.com/php-fcgi-starter
+400 /tmp/var/www/test1.com/ssl/cert_crt.txt /tmp/var/www/test1.com/ssl/cert_key.txt
+755 /tmp/var/www/php-fcgi-scripts/test2.com/php-fcgi-starter
+-R u=rwX,g=rX,o=rX /tmp/var/www/test2.com/roundcube_1
+-R u=rwX,g=rX,o=rX /tmp/var/www/test2.com/roundcube_1/logs
+-R u=rwX,g=rX,o=rX /tmp/var/www/test2.com/roundcube_1/temp
+u=r,g=r,o-rwx /tmp/var/www/test2.com/roundcube_1/config/config.inc.php

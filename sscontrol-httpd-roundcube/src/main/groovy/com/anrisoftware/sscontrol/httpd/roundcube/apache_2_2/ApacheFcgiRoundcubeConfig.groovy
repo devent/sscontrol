@@ -20,7 +20,7 @@ package com.anrisoftware.sscontrol.httpd.roundcube.apache_2_2
 
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.sscontrol.httpd.domain.Domain
-import com.anrisoftware.sscontrol.httpd.roundcube.RoundcubeService
+import com.anrisoftware.sscontrol.httpd.roundcube.RoundcubeServiceImpl
 import com.anrisoftware.sscontrol.httpd.webservice.WebService
 
 /**
@@ -88,11 +88,11 @@ abstract class ApacheFcgiRoundcubeConfig extends FcgiRoundcubeConfig {
      *            the references {@link Domain} or {@code null}.
      *
      * @param service
-     *            the {@link RoundcubeService} <i>Roundcube</i> service.
+     *            the {@link RoundcubeServiceImpl} <i>Roundcube</i> service.
      *
      * @see #serviceDir
      */
-    String serviceAliasDir(Domain domain, Domain refDomain, RoundcubeService service) {
+    String serviceAliasDir(Domain domain, Domain refDomain, RoundcubeServiceImpl service) {
         def serviceDir = serviceDir domain, refDomain, service
         service.alias.empty ? "$serviceDir/" : serviceDir
     }
@@ -107,11 +107,11 @@ abstract class ApacheFcgiRoundcubeConfig extends FcgiRoundcubeConfig {
      *            the references {@link Domain} or {@code null}.
      *
      * @param service
-     *            the {@link RoundcubeService} <i>Roundcube</i> service.
+     *            the {@link RoundcubeServiceImpl} <i>Roundcube</i> service.
      *
-     * @see #roundcubeDir(Domain, RoundcubeService)
+     * @see #roundcubeDir(Domain, RoundcubeServiceImpl)
      */
-    String serviceDir(Domain domain, Domain refDomain, RoundcubeService service) {
+    String serviceDir(Domain domain, Domain refDomain, RoundcubeServiceImpl service) {
         refDomain == null ? roundcubeDir(domain, service).absolutePath :
                 roundcubeDir(refDomain, service).absolutePath
     }
@@ -123,14 +123,14 @@ abstract class ApacheFcgiRoundcubeConfig extends FcgiRoundcubeConfig {
      *            the {@link Domain} domain of the service.
      *
      * @param service
-     *            the {@link RoundcubeService} <i>Roundcube</i> service.
+     *            the {@link RoundcubeServiceImpl} <i>Roundcube</i> service.
      *
      * @return the installation {@link File} directory.
      *
      * @see #domainDir(Domain)
-     * @see RoundcubeService#getPrefix()
+     * @see RoundcubeServiceImpl#getPrefix()
      */
-    File roundcubeDir(Domain domain, RoundcubeService service) {
+    File roundcubeDir(Domain domain, RoundcubeServiceImpl service) {
         new File(domainDir(domain), service.prefix)
     }
 

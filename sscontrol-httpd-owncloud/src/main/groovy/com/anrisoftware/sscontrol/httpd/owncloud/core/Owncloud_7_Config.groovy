@@ -231,6 +231,7 @@ abstract class Owncloud_7_Config {
     void setupPrivatePermissions(Domain domain, OwncloudService service) {
         def user = domain.domainUser
         def dataDir = owncloudDataDirectory domain, service
+        dataDir.mkdirs()
         changeFileOwnerFactory.create(
                 log: log,
                 runCommands: runCommands,

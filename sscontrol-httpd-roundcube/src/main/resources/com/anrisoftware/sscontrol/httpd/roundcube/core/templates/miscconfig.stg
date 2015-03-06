@@ -8,3 +8,11 @@ $config['plugins'] = array(
 <plugins:{p|'<p>'};separator=",\n">
 );
 >>
+
+configDesKey_search() ::= <%
+(?m)^\$config\['des_key'\]\s+=\s+.*
+%>
+
+configDesKey(key) ::= <%
+$config['des_key'] = '<key>';
+%>

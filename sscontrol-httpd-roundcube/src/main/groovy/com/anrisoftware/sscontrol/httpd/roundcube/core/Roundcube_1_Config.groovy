@@ -97,6 +97,7 @@ abstract class Roundcube_1_Config extends RoundcubeConfig {
         def current = currentConfiguration config
         def configs = [
             configPlugins(service),
+            configDesKey(service),
         ]
         deployConfiguration configurationTokens(), current, configs, config
     }
@@ -104,6 +105,12 @@ abstract class Roundcube_1_Config extends RoundcubeConfig {
     def configPlugins(RoundcubeService service) {
         def search = miscConfigTemplate.getText(true, "configPlugins_search")
         def replace = miscConfigTemplate.getText(true, "configPlugins", "plugins", service.plugins)
+        new TokenTemplate(search, replace)
+    }
+
+    def configDesKey(RoundcubeService service) {
+        def search = miscConfigTemplate.getText(true, "configDesKey_search")
+        def replace = miscConfigTemplate.getText(true, "configDesKey", "key", redmineDesKey)
         new TokenTemplate(search, replace)
     }
 

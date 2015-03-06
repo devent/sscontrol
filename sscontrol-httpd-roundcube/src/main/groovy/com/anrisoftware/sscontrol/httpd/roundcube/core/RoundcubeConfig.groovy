@@ -22,6 +22,8 @@ import static org.apache.commons.lang3.StringUtils.*
 
 import javax.inject.Inject
 
+import org.apache.commons.lang3.RandomStringUtils
+import org.apache.commons.lang3.StringUtils
 import org.apache.commons.lang3.builder.ToStringBuilder
 
 import com.anrisoftware.propertiesutils.ContextProperties
@@ -359,6 +361,25 @@ abstract class RoundcubeConfig {
      */
     String getRoundcubeDatabaseTablePrefix() {
         profileProperty "roundcube_database_table_prefix", roundcubeProperties
+    }
+
+    /**
+     * Returns the DES key. If the property is empty then the key is
+     * auto-generated.
+     *
+     * <ul>
+     * <li>profile property {@code "roundcube_des_key"}</li>
+     * </ul>
+     *
+     * @see #getRoundcubeProperties()
+     */
+    String getRedmineDesKey() {
+        def value = profileProperty "roundcube_des_key", roundcubeProperties
+        if (StringUtils.isBlank(value)) {
+            return RandomStringUtils.random(24, true, true)
+        } else {
+            return value
+        }
     }
 
     /**

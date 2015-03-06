@@ -94,6 +94,7 @@ enum RoundcubeResources {
         def entry = profile.getEntry("httpd")
         entry.roundcube_archive roundcubeArchive.asFile(parent)
         entry.roundcube_archive_hash "md5:5118080eae72952891baca444d8954b1"
+        entry.roundcube_des_key "des-key-0123456789012345"
     }
 
     ResourcesUtils resources

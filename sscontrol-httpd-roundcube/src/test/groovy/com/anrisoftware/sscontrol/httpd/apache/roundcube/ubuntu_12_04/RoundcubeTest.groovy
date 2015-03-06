@@ -66,6 +66,12 @@ class RoundcubeTest extends WebServiceTestEnvironment {
         assertFileContent basicTest2comConfigIncExpected.asFile(tmpdir), basicTest2comConfigIncExpected
         assert basicTest2comLogsDir.asFile(tmpdir).isDirectory()
         assert basicTest2comTempDir.asFile(tmpdir).isDirectory()
+        assertStringContent basicTest3comConfExpected.replaced(tmpdir, tmpdir, "/tmp"), basicTest3comConfExpected.toString()
+        assertStringContent basicTest3comFcgiScriptExpected.replaced(tmpdir, tmpdir, "/tmp"), basicTest3comFcgiScriptExpected.toString()
+        assertStringContent basicTest3comPhpiniExpected.replaced(tmpdir, tmpdir, "/tmp"), basicTest3comPhpiniExpected.toString()
+        assertFileContent basicTest3comConfigIncExpected.asFile(tmpdir), basicTest3comConfigIncExpected
+        assert basicTest3comLogsDir.asFile(tmpdir).isDirectory()
+        assert basicTest3comTempDir.asFile(tmpdir).isDirectory()
         assertStringContent basicRuncommandsLogExpected.replaced(tmpdir, tmpdir, "/tmp").replaceAll(/\d+/, 'time'), basicRuncommandsLogExpected.toString()
         assertFileContent basicAptitudeOutExpected.asFile(tmpdir), basicAptitudeOutExpected
         assertFileContent basicA2enmodOutExpected.asFile(tmpdir), basicA2enmodOutExpected

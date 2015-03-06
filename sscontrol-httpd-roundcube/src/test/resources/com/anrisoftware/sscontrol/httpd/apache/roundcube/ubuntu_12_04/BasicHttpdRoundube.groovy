@@ -48,4 +48,9 @@ httpd {
             host "otherdomain.com", domain: "othermail.example.com"
         }
     }
+    domain "test3.com", address: "192.168.0.51", {
+        setup "roundcube", id: "idroundcube", alias: "roundcubemin", {
+            database "roundcubedb", driver: "mysql", user: "userdb", password: "userpassdb"
+        }
+    }
 }

@@ -1,0 +1,33 @@
+; SSCONTROL-httpd
+memory_limit = 16M
+; SSCONTROL-httpd-END
+; SSCONTROL-httpd
+upload_max_filesize = 2M
+; SSCONTROL-httpd-END
+; SSCONTROL-httpd
+post_max_size = 2M
+; SSCONTROL-httpd-END
+; SSCONTROL-httpd
+magic_quotes_gpc = Off
+; SSCONTROL-httpd-END
+; SSCONTROL-httpd
+magic_quotes_runtime = Off
+; SSCONTROL-httpd-END
+; SSCONTROL-httpd
+magic_quotes_sybase = Off
+; SSCONTROL-httpd-END
+; SSCONTROL-httpd
+file_uploads = On
+; SSCONTROL-httpd-END
+; SSCONTROL-httpd
+session.auto_start = Off
+; SSCONTROL-httpd-END
+; SSCONTROL-httpd
+zend.ze1_compatibility_mode = Off
+; SSCONTROL-httpd-END
+; SSCONTROL-httpd
+suhosin.session.encrypt = Off
+; SSCONTROL-httpd-END
+; SSCONTROL-httpd
+mbstring.func_overload = 0
+; SSCONTROL-httpd-END

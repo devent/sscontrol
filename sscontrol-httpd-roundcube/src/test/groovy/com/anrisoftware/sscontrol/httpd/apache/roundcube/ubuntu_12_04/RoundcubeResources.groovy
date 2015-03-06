@@ -42,6 +42,9 @@ enum RoundcubeResources {
     basicTest2comDefaultsIncPhp("/var/www/test2.com/roundcube_1/config/defaults.inc.php", RoundcubeResources.class.getResource("defaultsincphp.txt")),
     basicTest2comConfigSamplePhp("/var/www/test2.com/roundcube_1/config/config.inc.php.sample", RoundcubeResources.class.getResource("configincphpsample.txt")),
     basicTest2comMysqlinitialSql("/var/www/test2.com/roundcube_1/SQL/mysql.initial.sql", RoundcubeResources.class.getResource("mysqlinitialsql.txt")),
+    basicTest3comDefaultsIncPhp("/var/www/test3.com/roundcube_1/config/defaults.inc.php", RoundcubeResources.class.getResource("defaultsincphp.txt")),
+    basicTest3comConfigSamplePhp("/var/www/test3.com/roundcube_1/config/config.inc.php.sample", RoundcubeResources.class.getResource("configincphpsample.txt")),
+    basicTest3comMysqlinitialSql("/var/www/test3.com/roundcube_1/SQL/mysql.initial.sql", RoundcubeResources.class.getResource("mysqlinitialsql.txt")),
     // basic expected
     basicDomainsConfExpected("/etc/apache2/conf.d/000-robobee-domains.conf", RoundcubeResources.class.getResource("basic_domainsconf.txt")),
     basicTest1comConfExpected("/etc/apache2/sites-available/100-robobee-test1.com.conf", RoundcubeResources.class.getResource("basic_test1comconf_expected.txt")),
@@ -56,6 +59,12 @@ enum RoundcubeResources {
     basicTest2comConfigIncExpected("/var/www/test2.com/roundcube_1/config/config.inc.php", RoundcubeResources.class.getResource("basic_test2com_configincphp_expected.txt")),
     basicTest2comLogsDir("/var/www/test2.com/roundcube_1/logs", new URL("file://")),
     basicTest2comTempDir("/var/www/test2.com/roundcube_1/temp", new URL("file://")),
+    basicTest3comConfExpected("/etc/apache2/sites-available/100-robobee-test3.com.conf", RoundcubeResources.class.getResource("basic_test3comconf_expected.txt")),
+    basicTest3comFcgiScriptExpected("/var/www/php-fcgi-scripts/test3.com/php-fcgi-starter", RoundcubeResources.class.getResource("basic_test3com_phpfcgistarter_expected.txt")),
+    basicTest3comPhpiniExpected("/var/www/php-fcgi-scripts/test3.com/domain_php.ini", RoundcubeResources.class.getResource("basic_test3com_phpini_expected.txt")),
+    basicTest3comConfigIncExpected("/var/www/test3.com/roundcube_1/config/config.inc.php", RoundcubeResources.class.getResource("basic_test3com_configincphp_expected.txt")),
+    basicTest3comLogsDir("/var/www/test3.com/roundcube_1/logs", new URL("file://")),
+    basicTest3comTempDir("/var/www/test3.com/roundcube_1/temp", new URL("file://")),
     basicRuncommandsLogExpected("/runcommands.log", RoundcubeResources.class.getResource("basic_runcommands_expected.txt")),
     basicAptitudeOutExpected("/usr/bin/aptitude.out", RoundcubeResources.class.getResource("basic_aptitude_out_expected.txt")),
     basicA2enmodOutExpected("/usr/sbin/a2enmod.out", RoundcubeResources.class.getResource("basic_a2enmod_out_expected.txt")),
@@ -76,6 +85,9 @@ enum RoundcubeResources {
         basicTest2comDefaultsIncPhp.createFile parent
         basicTest2comConfigSamplePhp.createFile parent
         basicTest2comMysqlinitialSql.createFile parent
+        basicTest3comDefaultsIncPhp.createFile parent
+        basicTest3comConfigSamplePhp.createFile parent
+        basicTest3comMysqlinitialSql.createFile parent
     }
 
     static void setupRoundcubeProperties(def profile, File parent) {

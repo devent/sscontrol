@@ -10,6 +10,11 @@ u=r,g=r,o-rwx /tmp/var/www/test1.com/roundcube_1/config/config.inc.php
 -R u=rwX,g=rX,o=rX /tmp/var/www/test2.com/roundcube_1/logs
 -R u=rwX,g=rX,o=rX /tmp/var/www/test2.com/roundcube_1/temp
 u=r,g=r,o-rwx /tmp/var/www/test2.com/roundcube_1/config/config.inc.php
+755 /tmp/var/www/php-fcgi-scripts/test3.com/php-fcgi-starter
+-R u=rwX,g=rX,o=rX /tmp/var/www/test3.com/roundcube_1
+-R u=rwX,g=rX,o=rX /tmp/var/www/test3.com/roundcube_1/logs
+-R u=rwX,g=rX,o=rX /tmp/var/www/test3.com/roundcube_1/temp
+u=r,g=r,o-rwx /tmp/var/www/test3.com/roundcube_1/config/config.inc.php
 755 /tmp/var/www/php-fcgi-scripts/test1.com/php-fcgi-starter
 -R u=rwX,g=rX,o=rX /tmp/var/www/test1.com/roundcube_1
 -R u=rwX,g=rX,o=rX /tmp/var/www/test1.com/roundcube_1/logs
@@ -22,3 +27,8 @@ u=r,g=r,o-rwx /tmp/var/www/test1.com/roundcube_1/config/config.inc.php
 -R u=rwX,g=rX,o=rX /tmp/var/www/test2.com/roundcube_1/logs
 -R u=rwX,g=rX,o=rX /tmp/var/www/test2.com/roundcube_1/temp
 u=r,g=r,o-rwx /tmp/var/www/test2.com/roundcube_1/config/config.inc.php
+755 /tmp/var/www/php-fcgi-scripts/test3.com/php-fcgi-starter
+-R u=rwX,g=rX,o=rX /tmp/var/www/test3.com/roundcube_1
+-R u=rwX,g=rX,o=rX /tmp/var/www/test3.com/roundcube_1/logs
+-R u=rwX,g=rX,o=rX /tmp/var/www/test3.com/roundcube_1/temp
+u=r,g=r,o-rwx /tmp/var/www/test3.com/roundcube_1/config/config.inc.php

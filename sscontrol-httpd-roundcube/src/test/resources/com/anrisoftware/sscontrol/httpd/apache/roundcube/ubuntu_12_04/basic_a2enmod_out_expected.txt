@@ -4,9 +4,13 @@ fcgid
 ssl
 rewrite
 fcgid
+rewrite
+fcgid
 suexec
 rewrite
 fcgid
 ssl
+rewrite
+fcgid
 rewrite
 fcgid

@@ -19,6 +19,7 @@
 package com.anrisoftware.sscontrol.httpd.roundcube;
 
 import java.net.URI;
+import java.util.List;
 import java.util.Map;
 
 import com.anrisoftware.sscontrol.httpd.webservice.OverrideMode;
@@ -216,5 +217,20 @@ public interface RoundcubeService extends WebService {
      * @return the {@link String} the default domain or {@code null}.
      */
     String getImapDomain();
+
+    /**
+     * Returns the plug-ins.
+     *
+     * Example:
+     *
+     * <pre>
+     * setup "roundcube", {
+     *      plugins "archive, zipdownload"
+     * }
+     * </pre>
+     *
+     * @return the {@link List} of the {@link String} plug-ins or {@code null}.
+     */
+    List<String> getPlugins();
 
 }

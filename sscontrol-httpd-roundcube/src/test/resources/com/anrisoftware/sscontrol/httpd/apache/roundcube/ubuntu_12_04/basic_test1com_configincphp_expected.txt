@@ -97,10 +97,14 @@ $config['product_name'] = 'Roundcube Webmail';
 $config['des_key'] = 'rcmail-!24ByteDESkey*Str';
 
 // List of active plugins (in plugins/ directory)
+# SSCONTROL-httpd
 $config['plugins'] = array(
-    'archive',
-    'zipdownload',
+'archive',
+'zipdownload',
+'managesieve'
 );
+# SSCONTROL-httpd-END
+
 
 // skin name: folder from skins/
 $config['skin'] = 'larry';

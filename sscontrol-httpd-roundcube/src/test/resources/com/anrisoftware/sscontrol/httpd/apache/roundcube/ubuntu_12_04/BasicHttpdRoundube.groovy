@@ -32,6 +32,7 @@ httpd {
             server "Webmail Server", host: "webmail.example.com"
             host "example.com", domain: "mail.example.com"
             host "otherdomain.com", domain: "othermail.example.com"
+            plugins "archive, zipdownload, managesieve"
         }
     }
     ssl_domain "test1.com", address: "192.168.0.51", {

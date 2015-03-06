@@ -58,6 +58,7 @@ abstract class RoundcubeConfig {
         setupDefaultDatabase service
         setupDefaultSmtp service
         setupDefaultImap service
+        setupDefaultPlugins service
     }
 
     /**
@@ -196,6 +197,23 @@ abstract class RoundcubeConfig {
         // server "default", port: 143
         if (service.imapPort == null) {
             service.server "default", port: profileNumberProperty("roundcube_default_imap_port", roundcubeProperties)
+        }
+    }
+
+    /**
+     * Sets default plug-ins.
+     *
+     * <ul>
+     * <li>profile property {@code "roundcube_default_plugins"}</li>
+     * </ul>
+     *
+     * @param service
+     *            the {@link RoundcubeService} service.
+     */
+    void setupDefaultPlugins(RoundcubeService service) {
+        // plugins: plugins
+        if (service.plugins == null) {
+            service.plugins profileListProperty("roundcube_default_plugins", roundcubeProperties)
         }
     }
 

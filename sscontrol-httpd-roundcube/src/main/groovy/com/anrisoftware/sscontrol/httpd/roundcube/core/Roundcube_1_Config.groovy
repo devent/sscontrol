@@ -56,6 +56,8 @@ abstract class Roundcube_1_Config extends RoundcubeConfig {
 
     TemplateResource debugConfigTemplate
 
+    TemplateResource miscConfigTemplate
+
     @Inject
     final void setTemplatesFactory(TemplatesFactory factory) {
         def templates = factory.create "Roundcube_1"
@@ -63,6 +65,7 @@ abstract class Roundcube_1_Config extends RoundcubeConfig {
         this.databaseConfigTemplate = templates.getResource "databaseconfig"
         this.smtpConfigTemplate = templates.getResource "smtpconfig"
         this.debugConfigTemplate = templates.getResource "debugconfig"
+        this.miscConfigTemplate = templates.getResource "miscconfig"
     }
 
     /**
@@ -76,6 +79,32 @@ abstract class Roundcube_1_Config extends RoundcubeConfig {
      */
     void setupPermissions(Domain domain, RoundcubeService service) {
         roundcubePermissions.setupPermissions domain, service
+    }
+
+    /**
+     * Deploys the misc configuration.
+     *
+     * @param domain
+     *            the {@link Domain} domain.
+     *
+     * @param service
+     *            the {@link RoundcubeService} service.
+     */
+    void deployMiscConfig(Domain domain, RoundcubeService service) {
+        def sampleConfig = roundcubeSampleConfigFile domain, service
+        def config = roundcubeConfigFile domain, service
+        config.isFile() == false ? FileUtils.copyFile(sampleConfig, config) : false
+        def current = currentConfiguration config
+        def configs = [
+            configPlugins(service),
+        ]
+        deployConfiguration configurationTokens(), current, configs, config
+    }
+
+    def configPlugins(RoundcubeService service) {
+        def search = miscConfigTemplate.getText(true, "configPlugins_search")
+        def replace = miscConfigTemplate.getText(true, "configPlugins", "plugins", service.plugins)
+        new TokenTemplate(search, replace)
     }
 
     /**

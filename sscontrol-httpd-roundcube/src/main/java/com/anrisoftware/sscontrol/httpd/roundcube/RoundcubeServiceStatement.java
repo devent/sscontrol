@@ -54,7 +54,9 @@ enum RoundcubeServiceStatement {
 
     TARGET_KEY,
 
-    BACKUP_KEY;
+    BACKUP_KEY,
+
+    PLUGINS_KEY;
 
     @Override
     public String toString() {

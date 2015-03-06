@@ -78,6 +78,7 @@ class UbuntuRoundcubeConfig extends Roundcube_1_Config implements ServiceConfig 
         deployDatabaseConfig domain, service
         deploySmtpConfig domain, service
         deployDebugConfig domain, service
+        deployMiscConfig domain, service
         setupPermissions domain, service
     }
 

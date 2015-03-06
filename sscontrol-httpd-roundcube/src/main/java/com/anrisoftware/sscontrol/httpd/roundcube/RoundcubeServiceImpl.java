@@ -28,6 +28,7 @@ import static com.anrisoftware.sscontrol.httpd.roundcube.RoundcubeServiceStateme
 import static com.anrisoftware.sscontrol.httpd.roundcube.RoundcubeServiceStatement.MODE_KEY;
 import static com.anrisoftware.sscontrol.httpd.roundcube.RoundcubeServiceStatement.OVERRIDE_KEY;
 import static com.anrisoftware.sscontrol.httpd.roundcube.RoundcubeServiceStatement.PASSWORD_KEY;
+import static com.anrisoftware.sscontrol.httpd.roundcube.RoundcubeServiceStatement.PLUGINS_KEY;
 import static com.anrisoftware.sscontrol.httpd.roundcube.RoundcubeServiceStatement.PORT_KEY;
 import static com.anrisoftware.sscontrol.httpd.roundcube.RoundcubeServiceStatement.SERVER_KEY;
 import static com.anrisoftware.sscontrol.httpd.roundcube.RoundcubeServiceStatement.TARGET_KEY;
@@ -38,6 +39,7 @@ import static com.anrisoftware.sscontrol.httpd.webservice.OverrideMode.override;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -94,13 +96,14 @@ class RoundcubeServiceImpl implements RoundcubeService {
     }
 
     private void setupStatements(StatementsMap map, Map<String, Object> args) {
-        map.addAllowed(OVERRIDE_KEY, BACKUP_KEY, DATABASE_KEY, MAIL_KEY);
+        map.addAllowed(OVERRIDE_KEY, BACKUP_KEY, DATABASE_KEY, MAIL_KEY,
+                PLUGINS_KEY);
         map.addAllowedKeys(OVERRIDE_KEY, MODE_KEY);
         map.addAllowedKeys(DATABASE_KEY, USER_KEY, PASSWORD_KEY, HOST_KEY,
                 PORT_KEY, DRIVER_KEY);
         map.addAllowedKeys(BACKUP_KEY, TARGET_KEY);
         map.addAllowedKeys(MAIL_KEY, USER_KEY, PASSWORD_KEY);
-        map.setAllowValue(true, DATABASE_KEY, MAIL_KEY);
+        map.setAllowValue(true, DATABASE_KEY, MAIL_KEY, PLUGINS_KEY);
     }
 
     @Inject
@@ -279,6 +282,11 @@ class RoundcubeServiceImpl implements RoundcubeService {
         } else {
             return null;
         }
+    }
+
+    @Override
+    public List<String> getPlugins() {
+        return statementsMap.valueAsStringList(PLUGINS_KEY);
     }
 
     public Object methodMissing(String name, Object args)

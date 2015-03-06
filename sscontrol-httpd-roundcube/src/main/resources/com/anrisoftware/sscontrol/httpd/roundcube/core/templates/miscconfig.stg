@@ -1,0 +1,10 @@
+
+configPlugins_search() ::= <%
+(?ms)^\$config\['plugins'\] = array\(.*\);
+%>
+
+configPlugins(plugins) ::= <<
+$config['plugins'] = array(
+<plugins:{p|'<p>'};separator=",\n">
+);
+>>

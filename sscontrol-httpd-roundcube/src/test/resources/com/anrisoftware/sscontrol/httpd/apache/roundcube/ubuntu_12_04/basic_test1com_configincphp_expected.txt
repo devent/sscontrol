@@ -132,7 +132,7 @@ $config['smtp_auth_type'] = 'PLAIN';
 $config['debug_level'] = 1;
 # SSCONTROL-httpd-END
 # SSCONTROL-httpd
-$config['smtp_port'] = false;
+$config['smtp_log'] = false;
 # SSCONTROL-httpd-END
 # SSCONTROL-httpd
 $config['log_logins'] = false;
@@ -166,7 +166,4 @@ $config['syslog_facility'] = LOG_USER;
 # SSCONTROL-httpd-END
 # SSCONTROL-httpd
 $config['per_user_logging'] = true;
-# SSCONTROL-httpd-END
-# SSCONTROL-httpd
-$config['smtp_port'] = false;
 # SSCONTROL-httpd-END

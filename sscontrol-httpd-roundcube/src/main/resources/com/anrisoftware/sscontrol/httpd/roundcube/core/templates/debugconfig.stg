@@ -12,7 +12,7 @@ configSmtpLog_search() ::= <%
 %>
 
 configSmtpLog(enabled) ::= <%
-$config['smtp_port'] = <if(enabled)>true<else>false<endif>;
+$config['smtp_log'] = <if(enabled)>true<else>false<endif>;
 %>
 
 configLogLogins_search() ::= <%

@@ -116,8 +116,14 @@ abstract class DatabaseBackup {
     }
 
     /**
-     * Returns the backup database archive template, for
+     * Returns the backup database archive file template, for
      * example {@code "service_database_<domainName>_<timestamp>.gz"}.
+     * The placeholder are replaced with the following values:
+     *
+     * <ul>
+     * <li>{@code "<domainName>"} with the current domain name;</li>
+     * <li>{@code "<timestamp>"} with the current time stamp;</li>
+     * </ul>
      */
     abstract String getBackupDatabaseArchive()
 

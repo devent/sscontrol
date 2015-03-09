@@ -50,8 +50,8 @@ abstract class Apache_2_2_RoundcubeConfig {
     }
 
     /**
-     * Returns the <i>Apache</i> mods, for
-     * example {@code "rewrite"}.
+     * Returns the list of <i>Apache</i> mods that are needed to be enabled
+     * for the service, for example {@code "rewrite"}.
      *
      * <ul>
      * <li>profile property {@code "roundcube_apache_mods"}</li>

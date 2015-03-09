@@ -52,10 +52,10 @@ class RoundcubeFromArchiveConfigLogger extends AbstractLogger {
         unpack_archive_info(
                 "Unpack Roundcube archive '{}' done for service '{}'."),
 
-        compare_versions_debug("Compare Roundcube version {}<={} for {}."),
+        compare_versions_debug("Compare Roundcube version {}>={}<={} for {}."),
 
         compare_versions_info(
-                "Compare Roundcube version {}<={} for service '{}'."),
+                "Compare Roundcube version {}>={}<={} for service '{}'."),
 
         unpack_archive("Unpacked Roundcube archive '{}' for {}."),
 
@@ -96,11 +96,13 @@ class RoundcubeFromArchiveConfigLogger extends AbstractLogger {
     }
 
     void checkVersion(RoundcubeFromArchiveConfig config, Version version,
-            Version upper) {
+            Version currentVersion, Version upperVersion) {
         if (isDebugEnabled()) {
-            debug(compare_versions_debug, version, upper, config);
+            debug(compare_versions_debug, version, currentVersion,
+                    upperVersion, config);
         } else {
-            info(compare_versions_info, version, upper, config.getServiceName());
+            info(compare_versions_info, version, currentVersion, upperVersion,
+                    config.getServiceName());
         }
     }
 

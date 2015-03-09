@@ -45,6 +45,11 @@ enum RoundcubeResources {
     basicTest3comDefaultsIncPhp("/var/www/test3.com/roundcube_1/config/defaults.inc.php", RoundcubeResources.class.getResource("defaultsincphp.txt")),
     basicTest3comConfigSamplePhp("/var/www/test3.com/roundcube_1/config/config.inc.php.sample", RoundcubeResources.class.getResource("configincphpsample.txt")),
     basicTest3comMysqlinitialSql("/var/www/test3.com/roundcube_1/SQL/mysql.initial.sql", RoundcubeResources.class.getResource("mysqlinitialsql.txt")),
+    // not update files
+    notupdateHttpdScript("Httpd.groovy", RoundcubeResources.class.getResource("NotUpdateHttpdRoundube.groovy")),
+    notupdateTest1comVersionFile("/var/www/test1.com/roundcube_1/version.txt", RoundcubeResources.class.getResource("notupdate_test1com_version.txt")),
+    notupdateTest1comConfigSamplePhp("/var/www/test1.com/roundcube_1/config/config.inc.php.sample", RoundcubeResources.class.getResource("configincphpsample.txt")),
+    notupdateTest1comMysqlinitialSql("/var/www/test1.com/roundcube_1/SQL/mysql.initial.sql", RoundcubeResources.class.getResource("mysqlinitialsql.txt")),
     // basic expected
     basicDomainsConfExpected("/etc/apache2/conf.d/000-robobee-domains.conf", RoundcubeResources.class.getResource("basic_domainsconf.txt")),
     basicTest1comConfExpected("/etc/apache2/sites-available/100-robobee-test1.com.conf", RoundcubeResources.class.getResource("basic_test1comconf_expected.txt")),
@@ -76,6 +81,8 @@ enum RoundcubeResources {
     basicGzipOutExpected("/bin/gzip.out", RoundcubeResources.class.getResource("basic_gzip_out_expected.txt")),
     basicMysqldumpOutExpected("/usr/bin/mysqldump.out", RoundcubeResources.class.getResource("basic_mysqldump_out_expected.txt")),
     basicMysqlOutExpected("/usr/bin/mysql.out", RoundcubeResources.class.getResource("basic_mysql_out_expected.txt")),
+    // not update expected
+    notupdateRuncommandsLogExpected("/runcommands.log", RoundcubeResources.class.getResource("notupdate_runcommands_expected.txt")),
 
     static copyBasicRoundcubeFiles(File parent) {
         roundcubeArchive.createFile parent
@@ -90,11 +97,23 @@ enum RoundcubeResources {
         basicTest3comMysqlinitialSql.createFile parent
     }
 
+    static copyNotUpdateRoundcubeFiles(File parent) {
+        roundcubeArchive.createFile parent
+        notupdateTest1comConfigSamplePhp.createFile parent
+        notupdateTest1comMysqlinitialSql.createFile parent
+        notupdateTest1comVersionFile.createFile parent
+    }
+
     static void setupRoundcubeProperties(def profile, File parent) {
         def entry = profile.getEntry("httpd")
         entry.roundcube_archive roundcubeArchive.asFile(parent)
         entry.roundcube_archive_hash "md5:5118080eae72952891baca444d8954b1"
         entry.roundcube_des_key "des-key-0123456789012345"
+    }
+
+    static void setupNotUpdateRoundcubeProperties(def profile, File parent) {
+        def entry = profile.getEntry("httpd")
+        entry.roundcube_version "1.1.0"
     }
 
     ResourcesUtils resources

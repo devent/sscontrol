@@ -19,7 +19,6 @@
 package com.anrisoftware.sscontrol.httpd.roundcube.core
 
 import static org.apache.commons.io.FileUtils.*
-import groovy.util.logging.Slf4j
 
 import javax.inject.Inject
 
@@ -39,8 +38,10 @@ import com.anrisoftware.sscontrol.scripts.importdb.ImportDatabaseFactory
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-@Slf4j
 abstract class Roundcube_1_Config extends RoundcubeConfig {
+
+    @Inject
+    private Roundcube_1_ConfigLogger log
 
     @Inject
     Roundcube_1_Permissions roundcubePermissions
@@ -413,7 +414,7 @@ abstract class Roundcube_1_Config extends RoundcubeConfig {
         def command = roundcubeDatabaseCommand driver
         def script = roundcubeDatabaseInitialFile driver, domain, service
         importDatabaseFactory.create(
-                log: log,
+                log: log.log,
                 runCommands: runCommands,
                 driver: driver,
                 command: command,
@@ -468,7 +469,9 @@ abstract class Roundcube_1_Config extends RoundcubeConfig {
      */
     File roundcubeSampleConfigFile(Domain domain, RoundcubeService service) {
         def dir = roundcubeDir domain, service
-        profileFileProperty "roundcube_sample_config_file", dir, roundcubeProperties
+        def file = profileFileProperty "roundcube_sample_config_file", dir, roundcubeProperties
+        log.checkRoundcubeSampleConfigFile this, file
+        return file
     }
 
     /**

@@ -118,6 +118,12 @@ abstract class ArchiveServiceBackup {
     /**
      * Backup archive file template, for
      * example {@code "service_<domainName>_<timestamp>.tar.gz"}.
+     * The placeholder are replaced with the following values:
+     *
+     * <ul>
+     * <li>{@code "<domainName>"} with the current domain name;</li>
+     * <li>{@code "<timestamp>"} with the current time stamp;</li>
+     * </ul>
      */
     abstract String getBackupArchive()
 

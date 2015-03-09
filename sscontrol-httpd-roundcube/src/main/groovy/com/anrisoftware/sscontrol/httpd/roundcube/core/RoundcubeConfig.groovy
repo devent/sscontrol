@@ -220,7 +220,7 @@ abstract class RoundcubeConfig {
     }
 
     /**
-     * Returns the list of needed packages for the <i>Roundcube</i> service.
+     * Returns the list of needed packages for the service.
      *
      * <ul>
      * <li>profile property {@code "roundcube_packages"}</li>

@@ -72,7 +72,7 @@ class RoundcubeTest extends WebServiceTestEnvironment {
         assertFileContent basicTest3comConfigIncExpected.asFile(tmpdir), basicTest3comConfigIncExpected
         assert basicTest3comLogsDir.asFile(tmpdir).isDirectory()
         assert basicTest3comTempDir.asFile(tmpdir).isDirectory()
-        assertStringContent basicRuncommandsLogExpected.replaced(tmpdir, tmpdir, "/tmp").replaceAll(/\d+/, 'time'), basicRuncommandsLogExpected.toString()
+        assertStringContent basicRuncommandsLogExpected.replaced(tmpdir, tmpdir, "/tmp").replaceAll(/\d{2,}/, 'time'), basicRuncommandsLogExpected.toString()
         assertFileContent basicAptitudeOutExpected.asFile(tmpdir), basicAptitudeOutExpected
         assertFileContent basicA2enmodOutExpected.asFile(tmpdir), basicA2enmodOutExpected
         assertStringContent basicChownOutExpected.replaced(tmpdir, tmpdir, "/tmp"), basicChownOutExpected.toString()
@@ -83,5 +83,21 @@ class RoundcubeTest extends WebServiceTestEnvironment {
         assertFileContent basicGzipOutExpected.asFile(tmpdir), basicGzipOutExpected
         assertStringContent basicMysqlOutExpected.replaced(tmpdir, tmpdir, "/tmp"), basicMysqlOutExpected.toString()
         assertFileContent basicMysqldumpOutExpected.asFile(tmpdir), basicMysqldumpOutExpected
+    }
+
+    @Test
+    void "not update roundcube"() {
+        attachRunCommandsLog tmpdir
+        copyUbuntu_12_04_Files tmpdir
+        copyNotUpdateRoundcubeFiles tmpdir
+        loader.loadService profile.resource, null
+        def profile = registry.getService("profile")[0]
+        setupUbuntu_12_04_Properties profile, tmpdir
+        setupRoundcubeProperties profile, tmpdir
+        setupNotUpdateRoundcubeProperties profile, tmpdir
+        loader.loadService notupdateHttpdScript.resource, profile, preScript
+        registry.allServices.each { it.call() }
+
+        assertStringContent notupdateRuncommandsLogExpected.replaced(tmpdir, tmpdir, "/tmp").replaceAll(/\d{2,}/, 'time'), notupdateRuncommandsLogExpected.toString()
     }
 }

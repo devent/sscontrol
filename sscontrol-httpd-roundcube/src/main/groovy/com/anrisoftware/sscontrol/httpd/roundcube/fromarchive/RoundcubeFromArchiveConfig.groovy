@@ -121,7 +121,8 @@ abstract class RoundcubeFromArchiveConfig {
      */
     void saveVersionFile(Domain domain, RoundcubeService service) {
         def file = roundcubeVersionFile domain, service
-        FileUtils.writeStringToFile file, roundcubeVersion, charset
+        def version = versionFormatFactory.create().format(roundcubeVersion)
+        FileUtils.writeStringToFile file, version, charset
     }
 
     /**
@@ -216,7 +217,9 @@ abstract class RoundcubeFromArchiveConfig {
     }
 
     /**
-     * Checks the installed <i>Roundcube</i> version.
+     * Checks that the installed <i>Roundcube</i> version is older than the
+     * archive version, that is, check
+     * if currentVersion >= archiveVersion <= upperLimit.
      *
      * @param domain
      *            the {@link Domain} domain of the service.
@@ -232,8 +235,8 @@ abstract class RoundcubeFromArchiveConfig {
             return true
         }
         def version = versionFormatFactory.create().parse FileUtils.readFileToString(versionFile).trim()
-        log.checkVersion this, version, roundcubeUpperVersion
-        version.compareTo(roundcubeUpperVersion) <= 0
+        log.checkVersion this, version, roundcubeVersion, roundcubeUpperVersion
+        roundcubeVersion.compareTo(version) >= 0 && version.compareTo(roundcubeUpperVersion) <= 0
     }
 
     /**
@@ -253,7 +256,7 @@ abstract class RoundcubeFromArchiveConfig {
     }
 
     /**
-     * Returns the <i>Roundcube</i> archive based.
+     * Returns the <i>Roundcube</i> archive resource.
      *
      * <ul>
      * <li>profile property {@code "roundcube_archive"}</li>
@@ -302,8 +305,8 @@ abstract class RoundcubeFromArchiveConfig {
      *
      * @see #getRoundcubeFromArchiveProperties()
      */
-    String getRoundcubeVersion() {
-        profileProperty "roundcube_version", roundcubeFromArchiveProperties
+    Version getRoundcubeVersion() {
+        profileTypedProperty "roundcube_version", versionFormatFactory.create(), roundcubeFromArchiveProperties
     }
 
     /**

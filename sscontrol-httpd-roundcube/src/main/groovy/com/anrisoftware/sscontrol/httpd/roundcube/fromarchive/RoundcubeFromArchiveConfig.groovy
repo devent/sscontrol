@@ -145,7 +145,9 @@ abstract class RoundcubeFromArchiveConfig {
             case OverrideMode.override:
                 return true
             case OverrideMode.update:
-                return checkRoundcubeVersion(domain, service)
+                return checkRoundcubeVersion(domain, service, true)
+            case OverrideMode.upgrade:
+                return checkRoundcubeVersion(domain, service, false)
         }
     }
 
@@ -219,7 +221,8 @@ abstract class RoundcubeFromArchiveConfig {
     /**
      * Checks that the installed <i>Roundcube</i> version is older than the
      * archive version, that is, check
-     * if currentVersion >= archiveVersion <= upperLimit.
+     * if {@code currentVersion >= archiveVersion <= upperLimit} if equals is set to true and
+     * if {@code currentVersion > archiveVersion <= upperLimit} if equals is set to false.
      *
      * @param domain
      *            the {@link Domain} domain of the service.
@@ -229,14 +232,19 @@ abstract class RoundcubeFromArchiveConfig {
      *
      * @return {@code true} if the version matches the set version.
      */
-    boolean checkRoundcubeVersion(Domain domain, RoundcubeService service) {
+    boolean checkRoundcubeVersion(Domain domain, RoundcubeService service, boolean equals) {
         def versionFile = roundcubeVersionFile domain, service
         if (!versionFile.isFile()) {
             return true
         }
         def version = versionFormatFactory.create().parse FileUtils.readFileToString(versionFile).trim()
-        log.checkVersion this, version, roundcubeVersion, roundcubeUpperVersion
-        roundcubeVersion.compareTo(version) >= 0 && version.compareTo(roundcubeUpperVersion) <= 0
+        if (equals) {
+            log.checkVersionGreaterEquals this, version, roundcubeVersion, roundcubeUpperVersion
+            return roundcubeVersion.compareTo(version) >= 0 && version.compareTo(roundcubeUpperVersion) <= 0
+        } else {
+            log.checkVersionGreater this, version, roundcubeVersion, roundcubeUpperVersion
+            return roundcubeVersion.compareTo(version) > 0 && version.compareTo(roundcubeUpperVersion) <= 0
+        }
     }
 
     /**

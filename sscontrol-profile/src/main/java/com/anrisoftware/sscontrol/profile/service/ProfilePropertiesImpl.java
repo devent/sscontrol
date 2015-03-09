@@ -53,7 +53,7 @@ import com.anrisoftware.sscontrol.core.api.ServiceException;
 
 /**
  * @see ProfileProperties
- * 
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
@@ -79,10 +79,10 @@ class ProfilePropertiesImpl implements ProfileProperties {
 
     /**
      * Returns the profile property with the specified name.
-     * 
+     *
      * @param name
      *            the {@link String} name.
-     * 
+     *
      * @return the property value.
      */
     public Object propertyMissing(String name) {
@@ -91,10 +91,10 @@ class ProfilePropertiesImpl implements ProfileProperties {
 
     /**
      * Adds the profile property with the specified name and value.
-     * 
+     *
      * @param name
      *            the profile {@link String} name.
-     * 
+     *
      * @param args
      *            the profile value.
      */
@@ -156,13 +156,13 @@ class ProfilePropertiesImpl implements ProfileProperties {
 
     /**
      * Checks that the specified profile key is known for the profile.
-     * 
+     *
      * @param key
      *            the property {@link String} key.
-     * 
+     *
      * @param defaults
      *            default {@link ContextProperties} properties.
-     * 
+     *
      * @return {@code true} if the profile key is known in the profile or the
      *         default properties.
      */
@@ -176,12 +176,12 @@ class ProfilePropertiesImpl implements ProfileProperties {
 
     /**
      * Returns a profile property.
-     * 
+     *
      * @param key
      *            the property {@link String} key.
-     * 
+     *
      * @return the value of the profile property.
-     * 
+     *
      * @throws ServiceException
      *             if the profile property was not found.
      */
@@ -196,15 +196,15 @@ class ProfilePropertiesImpl implements ProfileProperties {
     /**
      * Returns a profile property. If the profile property was not set return
      * the default value from the default properties.
-     * 
+     *
      * @param key
      *            the property {@link String} key.
-     * 
+     *
      * @param defaults
      *            default {@link ContextProperties} properties.
-     * 
+     *
      * @return the value of the profile property.
-     * 
+     *
      * @throws ServiceException
      *             if the profile property was not found.
      */
@@ -224,35 +224,36 @@ class ProfilePropertiesImpl implements ProfileProperties {
     /**
      * Returns a typed profile property. If the profile property was not set
      * return the default value from the default properties.
-     * 
+     *
      * @param key
      *            the property {@link String} key.
-     * 
+     *
      * @param format
      *            the {@link Format} to parse the type.
-     * 
+     *
      * @param defaults
      *            default {@link ContextProperties} properties.
-     * 
+     *
      * @return the value of the profile property.
-     * 
+     *
      * @throws ServiceException
      *             if the profile property was not found.
-     * 
+     *
      * @throws ParseException
      *             if the property cannot be parsed to the type.
-     * 
+     *
      */
+    @SuppressWarnings("unchecked")
     public <T> T profileTypedProperty(String key, Format format,
             ContextProperties defaults) throws ServiceException, ParseException {
-        @SuppressWarnings("unchecked")
-        T property = (T) get(key);
+        Object property = get(key);
         if (property != null) {
-            return property;
+            String string = property.toString();
+            return (T) format.parseObject(string.toString());
         }
         property = defaults.getTypedProperty(key, format);
         if (property != null) {
-            return property;
+            return (T) property;
         }
         throw log.noProfileProperty(this, key);
     }
@@ -260,18 +261,18 @@ class ProfilePropertiesImpl implements ProfileProperties {
     /**
      * Returns a duration profile property. If the profile property was not set
      * return the default value from the default properties.
-     * 
+     *
      * @param key
      *            the property {@link String} key.
-     * 
+     *
      * @param defaults
      *            default {@link ContextProperties} properties.
-     * 
+     *
      * @return the {@link Duration} value of the profile property.
-     * 
+     *
      * @throws ServiceException
      *             if the profile property was not found.
-     * 
+     *
      * @throws ParseException
      *             if the profile property could not be parsed to a duration.
      */
@@ -291,18 +292,18 @@ class ProfilePropertiesImpl implements ProfileProperties {
     /**
      * Returns a profile number property. If the profile property was not set
      * return the default value from the default properties.
-     * 
+     *
      * @param key
      *            the property {@link String} key.
-     * 
+     *
      * @param defaults
      *            default {@link ContextProperties} properties.
-     * 
+     *
      * @return the {@link Number} value of the profile property.
-     * 
+     *
      * @throws ServiceException
      *             if the profile property was not found.
-     * 
+     *
      * @throws ClassCastException
      *             if the profile property is not a number.
      */
@@ -322,18 +323,18 @@ class ProfilePropertiesImpl implements ProfileProperties {
     /**
      * Returns a profile boolean property. If the profile property was not set
      * return the default value from the default properties.
-     * 
+     *
      * @param key
      *            the property {@link String} key.
-     * 
+     *
      * @param defaults
      *            default {@link ContextProperties} properties.
-     * 
+     *
      * @return the {@link Boolean} value of the profile property.
-     * 
+     *
      * @throws ServiceException
      *             if the profile property was not found.
-     * 
+     *
      * @throws ClassCastException
      *             if the profile property is not a number.
      */
@@ -353,15 +354,15 @@ class ProfilePropertiesImpl implements ProfileProperties {
     /**
      * Returns a list profile property. If the profile property was not set
      * return the default value from the default properties.
-     * 
+     *
      * @param key
      *            the property {@link String} key.
-     * 
+     *
      * @param defaults
      *            default {@link ContextProperties} properties.
-     * 
+     *
      * @return the {@link List} value of the profile property.
-     * 
+     *
      * @throws ServiceException
      *             if the profile property was not found.
      */
@@ -381,19 +382,19 @@ class ProfilePropertiesImpl implements ProfileProperties {
     /**
      * Returns a list profile property. If the profile property was not set
      * return the default value from the default properties.
-     * 
+     *
      * @param key
      *            the property {@link String} key.
-     * 
+     *
      * @param separatorChars
      *            the characters used as the delimiters, {@code null} splits on
      *            whitespace.
-     * 
+     *
      * @param defaults
      *            default {@link ContextProperties} properties.
-     * 
+     *
      * @return the {@link List} value of the profile property.
-     * 
+     *
      * @throws ServiceException
      *             if the profile property was not found.
      */
@@ -414,22 +415,22 @@ class ProfilePropertiesImpl implements ProfileProperties {
      * Returns a list profile property. If the profile property was not set
      * return the default value from the default properties. The specified
      * format is used to create the list items.
-     * 
+     *
      * @param key
      *            the property {@link String} key.
-     * 
+     *
      * @param format
      *            the {@link Format} that is used to parse the string properties
      *            and create the list items.
-     * 
+     *
      * @param defaults
      *            default {@link ContextProperties} properties.
-     * 
+     *
      * @return the {@link List} value of the profile property.
-     * 
+     *
      * @throws ServiceException
      *             if the profile property was not found.
-     * 
+     *
      * @throws ParseException
      *             if the profile property could not be parsed.
      */
@@ -459,15 +460,15 @@ class ProfilePropertiesImpl implements ProfileProperties {
     /**
      * Returns the profile directory path property. If the profile property was
      * not set return the default value from the default properties.
-     * 
+     *
      * @param key
      *            the key of the profile property.
-     * 
+     *
      * @param p
      *            default {@link ContextProperties} properties.
-     * 
+     *
      * @return the profile directory {@link File} path.
-     * 
+     *
      * @throws ServiceException
      *             if the profile property was not found.
      */
@@ -485,18 +486,18 @@ class ProfilePropertiesImpl implements ProfileProperties {
      * Returns the profile path property. If the profile property was not set
      * return the default value from the default properties. If the path is not
      * absolute then it is assume to be under the specified parent directory.
-     * 
+     *
      * @param key
      *            the key of the profile property.
-     * 
+     *
      * @param parent
      *            the parent {@link File} directory.
-     * 
+     *
      * @param p
      *            default {@link ContextProperties} properties.
-     * 
+     *
      * @return the profile file {@link File} path.
-     * 
+     *
      * @throws ServiceException
      *             if the profile property was not found.
      */
@@ -514,15 +515,15 @@ class ProfilePropertiesImpl implements ProfileProperties {
     /**
      * Returns the profile resource URI property. If the profile property was
      * not set return the default value from the default properties.
-     * 
+     *
      * @param key
      *            the key of the profile property.
-     * 
+     *
      * @param p
      *            default {@link ContextProperties} properties.
-     * 
+     *
      * @return the profile resource {@link URI}.
-     * 
+     *
      * @throws ServiceException
      *             if the profile property was not found.
      */
@@ -545,18 +546,18 @@ class ProfilePropertiesImpl implements ProfileProperties {
     /**
      * Returns the profile resource locale property. If the profile property was
      * not set return the default value from the default properties.
-     * 
+     *
      * @param key
      *            the key of the profile property.
-     * 
+     *
      * @param p
      *            default {@link ContextProperties} properties.
-     * 
+     *
      * @return the profile resource {@link Locale}.
-     * 
+     *
      * @throws ServiceException
      *             if the profile property was not found.
-     * 
+     *
      * @throws ParseException
      *             if the locale could not be parsed.
      */
@@ -577,15 +578,15 @@ class ProfilePropertiesImpl implements ProfileProperties {
      * Returns the profile resource character set property. If the profile
      * property was not set return the default value from the default
      * properties.
-     * 
+     *
      * @param key
      *            the key of the profile property.
-     * 
+     *
      * @param p
      *            default {@link ContextProperties} properties.
-     * 
+     *
      * @return the profile resource {@link Charset}.
-     * 
+     *
      * @throws ServiceException
      *             if the profile property was not found.
      */

@@ -32,12 +32,19 @@ public enum OverrideMode {
     no,
 
     /**
-     * Update the existing service.
+     * Override the existing service.
      */
     override,
 
     /**
-     * Update the existing service, only if the version limits allow it.
+     * Update the existing service, only if the new version is greater or equals
+     * to the current installed version, skip installation otherwise.
      */
-    update;
+    update,
+
+    /**
+     * Update the existing service, only if the new version is greater to the
+     * current installed version, skip installation otherwise.
+     */
+    upgrade;
 }

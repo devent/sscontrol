@@ -3,6 +3,3 @@
 --overwrite --strip 1 -xf /tmp/roundcube-web-roundcubemail-1.1.0.tar.gz
 --overwrite --strip 1 -xf /tmp/roundcube-web-roundcubemail-1.1.0.tar.gz
 -czf /tmp/var/backups/test1.com/roundcube_test1.com_timestamp.tar.gz /tmp/var/www/test1.com/roundcube_1
---overwrite --strip 1 -xf /tmp/roundcube-web-roundcubemail-1.1.0.tar.gz
---overwrite --strip 1 -xf /tmp/roundcube-web-roundcubemail-1.1.0.tar.gz
---overwrite --strip 1 -xf /tmp/roundcube-web-roundcubemail-1.1.0.tar.gz

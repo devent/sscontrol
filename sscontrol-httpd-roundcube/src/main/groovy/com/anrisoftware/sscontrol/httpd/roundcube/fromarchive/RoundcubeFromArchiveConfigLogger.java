@@ -19,8 +19,10 @@
 package com.anrisoftware.sscontrol.httpd.roundcube.fromarchive;
 
 import static com.anrisoftware.sscontrol.httpd.roundcube.fromarchive.RoundcubeFromArchiveConfigLogger._.archive_name;
-import static com.anrisoftware.sscontrol.httpd.roundcube.fromarchive.RoundcubeFromArchiveConfigLogger._.compare_versions_debug;
-import static com.anrisoftware.sscontrol.httpd.roundcube.fromarchive.RoundcubeFromArchiveConfigLogger._.compare_versions_info;
+import static com.anrisoftware.sscontrol.httpd.roundcube.fromarchive.RoundcubeFromArchiveConfigLogger._.compare_gequals_versions_debug;
+import static com.anrisoftware.sscontrol.httpd.roundcube.fromarchive.RoundcubeFromArchiveConfigLogger._.compare_gequals_versions_info;
+import static com.anrisoftware.sscontrol.httpd.roundcube.fromarchive.RoundcubeFromArchiveConfigLogger._.compare_greater_versions_debug;
+import static com.anrisoftware.sscontrol.httpd.roundcube.fromarchive.RoundcubeFromArchiveConfigLogger._.compare_greater_versions_info;
 import static com.anrisoftware.sscontrol.httpd.roundcube.fromarchive.RoundcubeFromArchiveConfigLogger._.error_archive_hash;
 import static com.anrisoftware.sscontrol.httpd.roundcube.fromarchive.RoundcubeFromArchiveConfigLogger._.error_archive_hash_message;
 import static com.anrisoftware.sscontrol.httpd.roundcube.fromarchive.RoundcubeFromArchiveConfigLogger._.service_name;
@@ -52,9 +54,10 @@ class RoundcubeFromArchiveConfigLogger extends AbstractLogger {
         unpack_archive_info(
                 "Unpack Roundcube archive '{}' done for service '{}'."),
 
-        compare_versions_debug("Compare Roundcube version {}>={}<={} for {}."),
+        compare_gequals_versions_debug(
+                "Compare Roundcube version {}>={}<={} for {}."),
 
-        compare_versions_info(
+        compare_gequals_versions_info(
                 "Compare Roundcube version {}>={}<={} for service '{}'."),
 
         unpack_archive("Unpacked Roundcube archive '{}' for {}."),
@@ -66,7 +69,13 @@ class RoundcubeFromArchiveConfigLogger extends AbstractLogger {
 
         service_name("service"),
 
-        archive_name("archive");
+        archive_name("archive"),
+
+        compare_greater_versions_debug(
+                "Compare Roundcube version {}>{}<={} for {}."),
+
+        compare_greater_versions_info(
+                "Compare Roundcube version {}>{}<={} for service '{}'.");
 
         private String name;
 
@@ -95,14 +104,25 @@ class RoundcubeFromArchiveConfigLogger extends AbstractLogger {
         }
     }
 
-    void checkVersion(RoundcubeFromArchiveConfig config, Version version,
-            Version currentVersion, Version upperVersion) {
+    void checkVersionGreaterEquals(RoundcubeFromArchiveConfig config,
+            Version version, Version currentVersion, Version upperVersion) {
         if (isDebugEnabled()) {
-            debug(compare_versions_debug, version, currentVersion,
+            debug(compare_gequals_versions_debug, version, currentVersion,
                     upperVersion, config);
         } else {
-            info(compare_versions_info, version, currentVersion, upperVersion,
-                    config.getServiceName());
+            info(compare_gequals_versions_info, version, currentVersion,
+                    upperVersion, config.getServiceName());
+        }
+    }
+
+    void checkVersionGreater(RoundcubeFromArchiveConfig config,
+            Version version, Version currentVersion, Version upperVersion) {
+        if (isDebugEnabled()) {
+            debug(compare_greater_versions_debug, version, currentVersion,
+                    upperVersion, config);
+        } else {
+            info(compare_greater_versions_info, version, currentVersion,
+                    upperVersion, config.getServiceName());
         }
     }
 

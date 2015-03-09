@@ -21,7 +21,6 @@ package com.anrisoftware.sscontrol.httpd.roundcube.service
 httpd {
     domain "test1.com", address: "192.168.0.51", {
         setup "roundcube", id: "idroundcube", alias: "roundcubemin", {
-            override mode: OverrideMode.update
             database "roundcubedb", driver: "mysql", user: "userdb", password: "userpassdb"
         }
     }

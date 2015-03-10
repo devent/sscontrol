@@ -46,10 +46,4 @@ httpd {
         certificate file: Ubuntu_12_04_Resources.certCrt.resource, key: Ubuntu_12_04_Resources.certKey.resource
         setup "redmine_2_6", backend: "thin", ref: "redmineid"
     }
-    domain "test2.com", address: "192.168.0.52", {
-        setup "redmine_2_6", backend: "thin", id: "test2comRedmineid", alias: "/projects", prefix: "test2redmine", {
-            database "redmine2", user: "user", password: "userpass", host: "localhost"
-            mail user: "redmine@${domainname}", password: "redminepass"
-        }
-    }
 }

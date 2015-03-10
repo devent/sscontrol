@@ -19,7 +19,6 @@
 package com.anrisoftware.sscontrol.httpd.redmine.fromarchive
 
 import static org.apache.commons.io.FileUtils.*
-import groovy.util.logging.Slf4j
 
 import javax.inject.Inject
 
@@ -43,11 +42,10 @@ import com.anrisoftware.sscontrol.scripts.unpack.UnpackFactory
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-@Slf4j
 abstract class RedmineFromArchiveConfig {
 
     @Inject
-    private RedmineFromArchiveLogger logg
+    private RedmineFromArchiveLogger log
 
     private Object script
 
@@ -75,7 +73,19 @@ abstract class RedmineFromArchiveConfig {
     void deployService(Domain domain, RedmineService service) {
         unpackRedmineArchive domain, service
         setupPermissions domain, service
-        saveVersionFile domain, service
+    }
+
+    /**
+     * Returns whether the <i>Redmine</i> service needs to be updated.
+     *
+     * @param domain
+     *            the service {@link Domain} domain.
+     *
+     * @param service
+     *            the {@link RedmineService} service.
+     */
+    boolean isUpdateService(Domain domain, RedmineService service) {
+        needUnpackArchive domain, service
     }
 
     /**
@@ -112,7 +122,7 @@ abstract class RedmineFromArchiveConfig {
     void setupPermissions(Domain domain, RedmineService service) {
         def dir = redmineDir domain, service
         changeFileOwnerFactory.create(
-                log: log,
+                log: log.log,
                 runCommands: runCommands,
                 files: dir,
                 recursive: true,
@@ -134,7 +144,8 @@ abstract class RedmineFromArchiveConfig {
      */
     void saveVersionFile(Domain domain, RedmineService service) {
         def file = redmineVersionFile domain, service
-        FileUtils.writeStringToFile file, redmineVersion, charset
+        def string = versionFormatFactory.create().format redmineVersion
+        FileUtils.writeStringToFile file, string, charset
     }
 
     /**
@@ -158,7 +169,7 @@ abstract class RedmineFromArchiveConfig {
             copyURLToFile archive.toURL(), dest
         }
         if (!checkArchiveHash(dest, service)) {
-            throw logg.errorArchiveHash(service, redmineArchive)
+            throw log.errorArchiveHash(service, redmineArchive)
         }
     }
 
@@ -194,12 +205,29 @@ abstract class RedmineFromArchiveConfig {
     boolean needUnpackArchive(Domain domain, RedmineService service) {
         switch (service.overrideMode) {
             case OverrideMode.no:
-                return false
+                return !serviceInstalled(domain, service)
             case OverrideMode.override:
                 return true
             case OverrideMode.update:
-                return checkRedmineVersion(domain, service)
+                return checkRedmineVersion(domain, service, true)
+            case OverrideMode.upgrade:
+                return checkRedmineVersion(domain, service, false)
         }
+    }
+
+    /**
+     * Returns if the <i>Redmine</i> service is already installed.
+     *
+     * @param domain
+     *            the {@link Domain} of the service.
+     *
+     * @param service
+     *            the {@link RedmineService} service.
+     *
+     * @return {@code true} if the service is already installed.
+     */
+    boolean serviceInstalled(Domain domain, RedmineService service) {
+        roundcubeConfigFile(domain, service).exists()
     }
 
     /**
@@ -218,7 +246,7 @@ abstract class RedmineFromArchiveConfig {
         def dir = redmineDir domain, service
         dir.isDirectory() ? false : dir.mkdirs()
         unpackFactory.create(
-                log: log,
+                log: log.log,
                 runCommands: runCommands,
                 file: archive,
                 output: dir,
@@ -226,7 +254,7 @@ abstract class RedmineFromArchiveConfig {
                 strip: true,
                 commands: unpackCommands,
                 this, threads)()
-        logg.unpackArchiveDone this, redmineArchive
+        log.unpackArchiveDone this, redmineArchive
     }
 
     /**
@@ -238,16 +266,25 @@ abstract class RedmineFromArchiveConfig {
      * @param service
      *            the {@link RedmineService} service.
      *
+     * @param equals
+     *            set to {@code true} if the version should be greater
+     *            or equals.
+     *
      * @return {@code true} if the version matches the set version.
      */
-    boolean checkRedmineVersion(Domain domain, RedmineService service) {
+    boolean checkRedmineVersion(Domain domain, RedmineService service, boolean equals) {
         def versionFile = redmineVersionFile domain, service
         if (!versionFile.isFile()) {
             return true
         }
         def version = versionFormatFactory.create().parse FileUtils.readFileToString(versionFile).trim()
-        logg.checkRedmineVersion this, version, redmineUpperVersion
-        version.compareTo(redmineUpperVersion) <= 0
+        if (equals) {
+            log.checkVersionGreaterEquals this, version, redmineVersion, redmineUpperVersion
+            return redmineVersion.compareTo(version) >= 0 && version.compareTo(redmineUpperVersion) <= 0
+        } else {
+            log.checkVersionGreater this, version, redmineVersion, redmineUpperVersion
+            return redmineVersion.compareTo(version) > 0 && version.compareTo(redmineUpperVersion) <= 0
+        }
     }
 
     /**
@@ -287,8 +324,8 @@ abstract class RedmineFromArchiveConfig {
      *
      * @see #getRedmineFromArchiveProperties()
      */
-    String getRedmineVersion() {
-        profileProperty "redmine_version", redmineFromArchiveProperties
+    Version getRedmineVersion() {
+        profileTypedProperty "redmine_version", versionFormatFactory.create(), redmineFromArchiveProperties
     }
 
     /**

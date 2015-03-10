@@ -33,7 +33,7 @@ import com.anrisoftware.sscontrol.httpd.redmine.RedmineService
 import com.anrisoftware.sscontrol.httpd.redmine.ScmInstall
 import com.anrisoftware.sscontrol.httpd.service.HttpdService
 import com.anrisoftware.sscontrol.httpd.webservice.OverrideMode
-import com.anrisoftware.sscontrol.testutils.resources.HttpdTestEnvironment;
+import com.anrisoftware.sscontrol.testutils.resources.HttpdTestEnvironment
 
 /**
  * @see RedmineService
@@ -45,10 +45,10 @@ import com.anrisoftware.sscontrol.testutils.resources.HttpdTestEnvironment;
 class RedmineServiceTest extends HttpdTestEnvironment {
 
     @Test
-    void "redmine"() {
+    void "base redmine service"() {
         loader.loadService profile.resource, null
         def profile = registry.getService("profile")[0]
-        loader.loadService httpdScript.resource, profile, preScript
+        loader.loadService baseHttpdScript.resource, profile, preScript
         HttpdService service = registry.getService("httpd")[0]
 
         int d = 0
@@ -104,17 +104,26 @@ class RedmineServiceTest extends HttpdTestEnvironment {
         assert webservice.mail == null
         assert webservice.languageName == null
         assert webservice.scms == null
+    }
 
-        domain = service.domains[d++]
-        assert domain.name == "test2.com"
+    @Test
+    void "minimal redmine service"() {
+        loader.loadService profile.resource, null
+        def profile = registry.getService("profile")[0]
+        loader.loadService minimalHttpdScript.resource, profile, preScript
+        HttpdService service = registry.getService("httpd")[0]
+
+        int d = 0
+        Domain domain = service.domains[d++]
+        assert domain.name == "test1.com"
         assert domain.address == "192.168.0.52"
 
-        webservice = domain.services[0]
+        RedmineService webservice = domain.services[0]
         assert webservice.name == "redmine_2_6"
-        assert webservice.id == "test2comRedmineid"
+        assert webservice.id == "test1comRedmineid"
         assert webservice.backend == "thin"
         assert webservice.alias == "projects"
-        assert webservice.prefix == "test2redmine"
+        assert webservice.prefix == "test1redmine"
         assert webservice.ref == null
         assert webservice.refDomain == null
         assert webservice.debugLogging("level") == null

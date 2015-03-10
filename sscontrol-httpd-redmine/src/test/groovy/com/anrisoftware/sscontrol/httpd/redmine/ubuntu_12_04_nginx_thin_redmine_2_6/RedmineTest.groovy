@@ -38,53 +38,73 @@ import com.anrisoftware.sscontrol.testutils.resources.WebServiceTestEnvironment
 class RedmineTest extends WebServiceTestEnvironment {
 
     @Test
-    void "redmine"() {
+    void "base redmine"() {
         attachRunCommandsLog tmpdir
         copyUbuntuFiles tmpdir
         copyRedmineFiles tmpdir
-
+        copyBaseFiles tmpdir
         loader.loadService profile.resource, null
         def profile = registry.getService("profile")[0]
         setupUbuntuProperties profile, tmpdir
         setupRedmineProperties profile, tmpdir
-        loader.loadService httpdScript.resource, profile, preScript
+        loader.loadService baseHttpdScript.resource, profile, preScript
 
         registry.allServices.each { it.call() }
         log.info "Run service again to ensure that configuration is not set double."
         thinStopCommand.createCommand(tmpdir)
         registry.allServices.each { it.call() }
 
-        assertStringContent test1comRedmine2UpstreamConfExpected.replaced(tmpdir, tmpdir, "/tmp"), test1comRedmine2UpstreamConfExpected.toString()
-        assertStringContent test1comConfExpected.replaced(tmpdir, tmpdir, "/tmp"), test1comConfExpected.toString()
-        assertStringContent test1comSslConfExpected.replaced(tmpdir, tmpdir, "/tmp"), test1comSslConfExpected.toString()
-        assertStringContent test1comRedmineDatabaseYmlExpected.replaced(tmpdir, tmpdir, "/tmp"), test1comRedmineDatabaseYmlExpected.toString()
-        assertStringContent test1comRedmineConfigurationYmlExpected.replaced(tmpdir, tmpdir, "/tmp"), test1comRedmineConfigurationYmlExpected.toString()
-        assertFileContent test1comRedmineEnvironmentRbExpected.asFile(tmpdir), test1comRedmineEnvironmentRbExpected
-        assertFileContent test1comRedmineGemfileExpected.asFile(tmpdir), test1comRedmineGemfileExpected
-        assertStringContent test1comThinRedmine2YmlExpected.replaced(tmpdir, tmpdir, "/tmp"), test1comThinRedmine2YmlExpected.toString()
-        assertStringContent test2comTest2redmineUpstreamConfExpected.replaced(tmpdir, tmpdir, "/tmp"), test2comTest2redmineUpstreamConfExpected.toString()
-        assertStringContent test2comConfExpected.replaced(tmpdir, tmpdir, "/tmp"), test2comConfExpected.toString()
-        assertStringContent test2comRedmineDatabaseYmlExpected.replaced(tmpdir, tmpdir, "/tmp"), test2comRedmineDatabaseYmlExpected.toString()
-        assertStringContent test2comRedmineConfigurationYmlExpected.replaced(tmpdir, tmpdir, "/tmp"), test2comRedmineConfigurationYmlExpected.toString()
-        assertFileContent test2comRedmineEnvironmentRbExpected.asFile(tmpdir), test2comRedmineEnvironmentRbExpected
-        assertFileContent test2comRedmineGemfileExpected.asFile(tmpdir), test2comRedmineGemfileExpected
-        assertStringContent test2comThinTest2redmineYmlExpected.replaced(tmpdir, tmpdir, "/tmp"), test2comThinTest2redmineYmlExpected.toString()
-        assertStringContent runcommandsLogExpected.replaced(tmpdir, tmpdir, "/tmp").replaceAll(/\d+/, 'time'), runcommandsLogExpected.toString()
-        assertStringContent thinDefaultExpected.replaced(tmpdir, tmpdir, "/tmp"), thinDefaultExpected.toString()
-        assertStringContent thinScriptExpected.replaced(tmpdir, tmpdir, "/tmp"), thinScriptExpected.toString()
-        assertFileContent gemOutExpected.asFile(tmpdir), gemOutExpected
-        assertFileContent bundleOutExpected.asFile(tmpdir), bundleOutExpected
-        assertFileContent rakeOutExpected.asFile(tmpdir), rakeOutExpected
-        assertStringContent tarOutExpected.replaced(tmpdir, tmpdir, "/tmp").replaceAll(/\d{4}.*\d{3}/, "time"), tarOutExpected.toString()
-        assertFileContent gzipOutExpected.asFile(tmpdir), gzipOutExpected
-        assertFileContent groupaddOutExpected.asFile(tmpdir), groupaddOutExpected
-        assertStringContent useraddOutExpected.replaced(tmpdir, tmpdir, "/tmp"), useraddOutExpected.toString()
-        assertStringContent chmodOutExpected.replaced(tmpdir, tmpdir, "/tmp"), chmodOutExpected.toString()
-        assertStringContent chownOutExpected.replaced(tmpdir, tmpdir, "/tmp"), chownOutExpected.toString()
-        assertFileContent aptitudeOutExpected.asFile(tmpdir), aptitudeOutExpected
-        assertStringContent lnOutExpected.replaced(tmpdir, tmpdir, "/tmp"), lnOutExpected.toString()
-        assertFileContent thinRestartOutExpected.asFile(tmpdir), thinRestartOutExpected
-        assertFileContent thinStopOutExpected.asFile(tmpdir), thinStopOutExpected
-        assertFileContent mysqldumpOutExpected.asFile(tmpdir), mysqldumpOutExpected
+        assertStringContent baseTest1comRedmine2UpstreamConfExpected.replaced(tmpdir, tmpdir, "/tmp"), baseTest1comRedmine2UpstreamConfExpected.toString()
+        assertStringContent baseTest1comConfExpected.replaced(tmpdir, tmpdir, "/tmp"), baseTest1comConfExpected.toString()
+        assertStringContent baseTest1comSslConfExpected.replaced(tmpdir, tmpdir, "/tmp"), baseTest1comSslConfExpected.toString()
+        assertStringContent baseTest1comRedmineDatabaseYmlExpected.replaced(tmpdir, tmpdir, "/tmp"), baseTest1comRedmineDatabaseYmlExpected.toString()
+        assertStringContent baseTest1comRedmineConfigurationYmlExpected.replaced(tmpdir, tmpdir, "/tmp"), baseTest1comRedmineConfigurationYmlExpected.toString()
+        assertFileContent baseTest1comRedmineEnvironmentRbExpected.asFile(tmpdir), baseTest1comRedmineEnvironmentRbExpected
+        assertFileContent baseTest1comRedmineGemfileExpected.asFile(tmpdir), baseTest1comRedmineGemfileExpected
+        assertStringContent baseTest1comThinRedmine2YmlExpected.replaced(tmpdir, tmpdir, "/tmp"), baseTest1comThinRedmine2YmlExpected.toString()
+        assertStringContent baseRuncommandsLogExpected.replaced(tmpdir, tmpdir, "/tmp").replaceAll(/\d{2,}/, 'time'), baseRuncommandsLogExpected.toString()
+        assertStringContent baseThinDefaultExpected.replaced(tmpdir, tmpdir, "/tmp"), baseThinDefaultExpected.toString()
+        assertStringContent baseThinScriptExpected.replaced(tmpdir, tmpdir, "/tmp"), baseThinScriptExpected.toString()
+        assertFileContent baseGemOutExpected.asFile(tmpdir), baseGemOutExpected
+        assertFileContent baseBundleOutExpected.asFile(tmpdir), baseBundleOutExpected
+        assertFileContent baseRakeOutExpected.asFile(tmpdir), baseRakeOutExpected
+        assertStringContent baseTarOutExpected.replaced(tmpdir, tmpdir, "/tmp").replaceAll(/\d{2,}/, "time"), baseTarOutExpected.toString()
+        assertFileContent baseGzipOutExpected.asFile(tmpdir), baseGzipOutExpected
+        assertFileContent baseGroupaddOutExpected.asFile(tmpdir), baseGroupaddOutExpected
+        assertStringContent baseUseraddOutExpected.replaced(tmpdir, tmpdir, "/tmp"), baseUseraddOutExpected.toString()
+        assertStringContent baseChmodOutExpected.replaced(tmpdir, tmpdir, "/tmp"), baseChmodOutExpected.toString()
+        assertStringContent baseChownOutExpected.replaced(tmpdir, tmpdir, "/tmp"), baseChownOutExpected.toString()
+        assertFileContent baseAptitudeOutExpected.asFile(tmpdir), baseAptitudeOutExpected
+        assertStringContent baseLnOutExpected.replaced(tmpdir, tmpdir, "/tmp"), baseLnOutExpected.toString()
+        assertFileContent baseThinRestartOutExpected.asFile(tmpdir), baseThinRestartOutExpected
+        assertFileContent baseThinStopOutExpected.asFile(tmpdir), baseThinStopOutExpected
+        assertFileContent baseMysqldumpOutExpected.asFile(tmpdir), baseMysqldumpOutExpected
+    }
+
+    @Test
+    void "minimal redmine"() {
+        attachRunCommandsLog tmpdir
+        copyUbuntuFiles tmpdir
+        copyRedmineFiles tmpdir
+        copyMinimalFiles tmpdir
+        loader.loadService profile.resource, null
+        def profile = registry.getService("profile")[0]
+        setupUbuntuProperties profile, tmpdir
+        setupRedmineProperties profile, tmpdir
+        loader.loadService minimalHttpdScript.resource, profile, preScript
+
+        registry.allServices.each { it.call() }
+        log.info "Run service again to ensure that configuration is not set double."
+        thinStopCommand.createCommand(tmpdir)
+        registry.allServices.each { it.call() }
+
+        assertStringContent minimalTest1comTest1redmineUpstreamConfExpected.replaced(tmpdir, tmpdir, "/tmp"), minimalTest1comTest1redmineUpstreamConfExpected.toString()
+        assertStringContent minimalTest1comConfExpected.replaced(tmpdir, tmpdir, "/tmp"), minimalTest1comConfExpected.toString()
+        assertStringContent minimalTest1comRedmineDatabaseYmlExpected.replaced(tmpdir, tmpdir, "/tmp"), minimalTest1comRedmineDatabaseYmlExpected.toString()
+        assertStringContent minimalTest1comRedmineConfigurationYmlExpected.replaced(tmpdir, tmpdir, "/tmp"), minimalTest1comRedmineConfigurationYmlExpected.toString()
+        assertFileContent minimalTest1comRedmineEnvironmentRbExpected.asFile(tmpdir), minimalTest1comRedmineEnvironmentRbExpected
+        assertStringContent minimalTest1comThinTest1redmineYmlExpected.replaced(tmpdir, tmpdir, "/tmp"), minimalTest1comThinTest1redmineYmlExpected.toString()
+        assertStringContent minimalTarOutExpected.replaced(tmpdir, tmpdir, "/tmp").replaceAll(/\d{2,}/, "time"), minimalTarOutExpected.toString()
+        assertStringContent minimalRuncommandsLogExpected.replaced(tmpdir, tmpdir, "/tmp").replaceAll(/\d{2,}/, 'time'), minimalRuncommandsLogExpected.toString()
     }
 }

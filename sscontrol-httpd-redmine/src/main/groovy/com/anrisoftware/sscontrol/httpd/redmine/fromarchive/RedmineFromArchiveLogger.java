@@ -19,8 +19,10 @@
 package com.anrisoftware.sscontrol.httpd.redmine.fromarchive;
 
 import static com.anrisoftware.sscontrol.httpd.redmine.fromarchive.RedmineFromArchiveLogger._.archive_name;
-import static com.anrisoftware.sscontrol.httpd.redmine.fromarchive.RedmineFromArchiveLogger._.compare_versions_debug;
-import static com.anrisoftware.sscontrol.httpd.redmine.fromarchive.RedmineFromArchiveLogger._.compare_versions_info;
+import static com.anrisoftware.sscontrol.httpd.redmine.fromarchive.RedmineFromArchiveLogger._.compare_gequals_versions_debug;
+import static com.anrisoftware.sscontrol.httpd.redmine.fromarchive.RedmineFromArchiveLogger._.compare_gequals_versions_info;
+import static com.anrisoftware.sscontrol.httpd.redmine.fromarchive.RedmineFromArchiveLogger._.compare_greater_versions_debug;
+import static com.anrisoftware.sscontrol.httpd.redmine.fromarchive.RedmineFromArchiveLogger._.compare_greater_versions_info;
 import static com.anrisoftware.sscontrol.httpd.redmine.fromarchive.RedmineFromArchiveLogger._.error_archive_hash;
 import static com.anrisoftware.sscontrol.httpd.redmine.fromarchive.RedmineFromArchiveLogger._.error_archive_hash_message;
 import static com.anrisoftware.sscontrol.httpd.redmine.fromarchive.RedmineFromArchiveLogger._.service_name;
@@ -49,10 +51,11 @@ class RedmineFromArchiveLogger extends AbstractLogger {
         unpack_archive_info(
                 "Unpack Redmine archive '{}' done for service '{}'."),
 
-        compare_versions_debug("Compare Redmine version {}<={} for {}."),
+        compare_gequals_versions_debug(
+                "Compare Redmine version {}>={}<={} for {}."),
 
-        compare_versions_info(
-                "Compare Redmine version {}<={} for service '{}'."),
+        compare_gequals_versions_info(
+                "Compare Redmine version {}>={}<={} for service '{}'."),
 
         error_archive_hash("Redmine archive hash not match"),
 
@@ -60,7 +63,13 @@ class RedmineFromArchiveLogger extends AbstractLogger {
 
         service_name("service"),
 
-        archive_name("archive");
+        archive_name("archive"),
+
+        compare_greater_versions_debug(
+                "Compare Redmine version {}>{}<={} for {}."),
+
+        compare_greater_versions_info(
+                "Compare Redmine version {}>{}<={} for service '{}'.");
 
         private String name;
 
@@ -89,12 +98,25 @@ class RedmineFromArchiveLogger extends AbstractLogger {
         }
     }
 
-    void checkRedmineVersion(RedmineFromArchiveConfig config, Version version,
-            Version upper) {
+    void checkVersionGreaterEquals(RedmineFromArchiveConfig config,
+            Version version, Version currentVersion, Version upperVersion) {
         if (isDebugEnabled()) {
-            debug(compare_versions_debug, version, upper, config);
+            debug(compare_gequals_versions_debug, version, currentVersion,
+                    upperVersion, config);
         } else {
-            info(compare_versions_info, version, upper, config.getServiceName());
+            info(compare_gequals_versions_info, version, currentVersion,
+                    upperVersion, config.getServiceName());
+        }
+    }
+
+    void checkVersionGreater(RedmineFromArchiveConfig config, Version version,
+            Version currentVersion, Version upperVersion) {
+        if (isDebugEnabled()) {
+            debug(compare_greater_versions_debug, version, currentVersion,
+                    upperVersion, config);
+        } else {
+            info(compare_greater_versions_info, version, currentVersion,
+                    upperVersion, config.getServiceName());
         }
     }
 

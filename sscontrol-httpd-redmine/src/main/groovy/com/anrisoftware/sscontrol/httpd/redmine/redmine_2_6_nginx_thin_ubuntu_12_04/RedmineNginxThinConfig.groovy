@@ -96,24 +96,31 @@ class RedmineNginxThinConfig extends UbuntuNginxThinConfig implements ServiceCon
         installScmPackages service
         backupConfig.backupService domain, service
         fromArchiveConfig.deployService domain, service
-        installGems domain, service
         databaseConfig.deployDatabase domain, service
         configurationConfig.deployEmail domain, service
-        fixRedmineGemfileConfig.deployGemsFix domain, service
         deployEnvironmentConfig domain, service
-        trackingScriptConfig.deployTracking domain, service
-        setupPermissions domain, service
-        installBundle domain, service
-        generateSecretTokens domain, service
-        migrateDb domain, service
-        loadDefaultData domain, service
-        clearTemps domain, service
+        updateService domain, service, config
+        fromArchiveConfig.saveVersionFile domain, service
         thinConfig.deployService domain, service, config
         setupThinPermissions domain, service
         createDomainConfig domain, null, service, config
         createDomainUpstreamConfig domain, null, service
         enableDomainUpstreamConfig domain, null, service
         restartServices()
+    }
+
+    void updateService(Domain domain, WebService service, List config) {
+        if (fromArchiveConfig.isUpdateService(domain, service)) {
+            installGems domain, service
+            fixRedmineGemfileConfig.deployGemsFix domain, service
+            trackingScriptConfig.deployTracking domain, service
+            setupPermissions domain, service
+            installBundle domain, service
+            generateSecretTokens domain, service
+            migrateDb domain, service
+            loadDefaultData domain, service
+            clearTemps domain, service
+        }
     }
 
     /**

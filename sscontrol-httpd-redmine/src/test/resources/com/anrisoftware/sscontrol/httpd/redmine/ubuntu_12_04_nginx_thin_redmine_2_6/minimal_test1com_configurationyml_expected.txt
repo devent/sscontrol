@@ -20,7 +20,7 @@ default:
 production:
   email_delivery:
     async_smtp_settings:
-      address: test2.com
+      address: test1.com
       port: 25
       delivery_method: :async_smtp
       authentication: :login

@@ -1,6 +1,0 @@
--czf /tmp/var/backups/test1.com/redmine_test1.com_time.tar.gz /tmp/var/www/test1.com/redmine_2_6
---overwrite --strip 1 -xf /tmp/tmp/redmine-redmine-2.6.1.tar.gz
---overwrite --strip 1 -xf /tmp/tmp/redmine-redmine-2.6.1.tar.gz
--czf /tmp/var/backups/test1.com/redmine_test1.com_time.tar.gz /tmp/var/www/test1.com/redmine_2_6
---overwrite --strip 1 -xf /tmp/tmp/redmine-redmine-2.6.1.tar.gz
---overwrite --strip 1 -xf /tmp/tmp/redmine-redmine-2.6.1.tar.gz

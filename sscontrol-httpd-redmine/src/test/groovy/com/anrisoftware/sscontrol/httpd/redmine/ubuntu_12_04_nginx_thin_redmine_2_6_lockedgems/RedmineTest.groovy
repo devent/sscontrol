@@ -54,7 +54,7 @@ class RedmineTest extends WebServiceTestEnvironment {
         thinStopCommand.createCommand(tmpdir)
         registry.allServices.each { it.call() }
 
-        assertStringContent runcommandsLogExpected.replaced(tmpdir, tmpdir, "/tmp").replaceAll(/\d+/, 'time'), runcommandsLogExpected.toString()
+        assertStringContent runcommandsLogExpected.replaced(tmpdir, tmpdir, "/tmp").replaceAll(/\d{2,}/, 'time'), runcommandsLogExpected.toString()
         assertFileContent bundleOutExpected.asFile(tmpdir), bundleOutExpected
     }
 }

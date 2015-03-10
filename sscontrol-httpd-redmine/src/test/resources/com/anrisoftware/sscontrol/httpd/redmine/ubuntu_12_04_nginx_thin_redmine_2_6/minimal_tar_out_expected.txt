@@ -1,0 +1,1 @@
+--overwrite --strip 1 -xf /tmp/tmp/redmine-redmine-2.6.1.tar.gz

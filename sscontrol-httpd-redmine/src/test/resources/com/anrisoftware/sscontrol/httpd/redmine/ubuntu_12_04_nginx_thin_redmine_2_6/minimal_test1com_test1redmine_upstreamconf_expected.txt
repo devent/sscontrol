@@ -1,0 +1,5 @@
+# Thin "test1redmine", Domain test1.com
+upstream thin_test1_com_test1redmine {
+    server unix:/tmp/var/run/thin/test1_com_test1redmine.0.sock;
+    server unix:/tmp/var/run/thin/test1_com_test1redmine.1.sock;
+}

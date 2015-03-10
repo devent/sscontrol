@@ -16,3 +16,76 @@ configDesKey_search() ::= <%
 configDesKey(key) ::= <%
 $config['des_key'] = '<key>';
 %>
+
+configEnableInstaller_search() ::= <%
+(?m)^\$config\['enable_installer'\]\s+=\s+.*
+%>
+
+configEnableInstaller(enabled) ::= <%
+$config['enable_installer'] = <enabled>;
+%>
+
+configForceHttps_search() ::= <%
+(?m)^\$config\['force_https'\]\s+=\s+.*
+%>
+
+configForceHttps(enabled) ::= <%
+$config['force_https'] = <enabled>;
+%>
+
+configLoginAutocomplete_search() ::= <%
+(?m)^\$config\['login_autocomplete'\]\s+=\s+.*
+%>
+
+configLoginAutocomplete(value) ::= <%
+$config['login_autocomplete'] = <value>;
+%>
+
+configIpCheck_search() ::= <%
+(?m)^\$config\['ip_check'\]\s+=\s+.*
+%>
+
+configIpCheck(enabled) ::= <%
+$config['ip_check'] = <enabled>;
+%>
+
+configLoginCaseSensitive_search() ::= <%
+(?m)^\$config\['login_lc'\]\s+=\s+.*
+%>
+
+configLoginCaseSensitive(value) ::= <%
+$config['login_lc'] = <value>;
+%>
+
+configAutoCreateUser_search() ::= <%
+(?m)^\$config\['auto_create_user'\]\s+=\s+.*
+%>
+
+configAutoCreateUser(enabled) ::= <%
+$config['auto_create_user'] = <enabled>;
+%>
+
+configProductName_search() ::= <%
+(?m)^\$config\['product_name'\]\s+=\s+.*
+%>
+
+configProductName(value) ::= <%
+$config['product_name'] = '<value>';
+%>
+
+configIdentitiesLevel_search() ::= <%
+(?m)^\$config\['identities_level'\]\s+=\s+.*
+%>
+
+configIdentitiesLevel(value) ::= <%
+$config['identities_level'] = <value>;
+%>
+
+configEnableSpellcheck_search() ::= <%
+(?m)^\$config\['enable_spellcheck'\]\s+=\s+.*
+%>
+
+configEnableSpellcheck(enabled) ::= <%
+$config['enable_spellcheck'] = <enabled>;
+%>
+

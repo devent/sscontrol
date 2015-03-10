@@ -26,10 +26,12 @@ import static com.anrisoftware.sscontrol.httpd.roundcube.RoundcubeServiceStateme
 import static com.anrisoftware.sscontrol.httpd.roundcube.RoundcubeServiceStatement.HOST_KEY;
 import static com.anrisoftware.sscontrol.httpd.roundcube.RoundcubeServiceStatement.MAIL_KEY;
 import static com.anrisoftware.sscontrol.httpd.roundcube.RoundcubeServiceStatement.MODE_KEY;
+import static com.anrisoftware.sscontrol.httpd.roundcube.RoundcubeServiceStatement.NAME_KEY;
 import static com.anrisoftware.sscontrol.httpd.roundcube.RoundcubeServiceStatement.OVERRIDE_KEY;
 import static com.anrisoftware.sscontrol.httpd.roundcube.RoundcubeServiceStatement.PASSWORD_KEY;
 import static com.anrisoftware.sscontrol.httpd.roundcube.RoundcubeServiceStatement.PLUGINS_KEY;
 import static com.anrisoftware.sscontrol.httpd.roundcube.RoundcubeServiceStatement.PORT_KEY;
+import static com.anrisoftware.sscontrol.httpd.roundcube.RoundcubeServiceStatement.PRODUCT_KEY;
 import static com.anrisoftware.sscontrol.httpd.roundcube.RoundcubeServiceStatement.SERVER_KEY;
 import static com.anrisoftware.sscontrol.httpd.roundcube.RoundcubeServiceStatement.TARGET_KEY;
 import static com.anrisoftware.sscontrol.httpd.roundcube.RoundcubeServiceStatement.USER_KEY;
@@ -97,12 +99,13 @@ class RoundcubeServiceImpl implements RoundcubeService {
 
     private void setupStatements(StatementsMap map, Map<String, Object> args) {
         map.addAllowed(OVERRIDE_KEY, BACKUP_KEY, DATABASE_KEY, MAIL_KEY,
-                PLUGINS_KEY);
+                PLUGINS_KEY, PRODUCT_KEY);
         map.addAllowedKeys(OVERRIDE_KEY, MODE_KEY);
         map.addAllowedKeys(DATABASE_KEY, USER_KEY, PASSWORD_KEY, HOST_KEY,
                 PORT_KEY, DRIVER_KEY);
         map.addAllowedKeys(BACKUP_KEY, TARGET_KEY);
         map.addAllowedKeys(MAIL_KEY, USER_KEY, PASSWORD_KEY);
+        map.addAllowedKeys(PRODUCT_KEY, NAME_KEY);
         map.setAllowValue(true, DATABASE_KEY, MAIL_KEY, PLUGINS_KEY);
     }
 
@@ -198,6 +201,11 @@ class RoundcubeServiceImpl implements RoundcubeService {
     @Override
     public URI getBackupTarget() {
         return statementsMap.mapValueAsURI(BACKUP_KEY, TARGET_KEY);
+    }
+
+    @Override
+    public String getProductName() {
+        return statementsMap.mapValue(PRODUCT_KEY, NAME_KEY);
     }
 
     @Override

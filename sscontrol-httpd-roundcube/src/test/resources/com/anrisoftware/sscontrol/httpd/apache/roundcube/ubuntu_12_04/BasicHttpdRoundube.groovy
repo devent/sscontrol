@@ -24,6 +24,7 @@ def certKeyFile = ServicesResources.class.getResource "cert_key.txt"
 httpd {
     domain "test1.com", address: "192.168.0.51", {
         setup "roundcube", id: "idroundcube", alias: "roundcube", {
+            product name: "test1.com mail"
             database "roundcubedb", driver: "mysql", user: "userdb", password: "userpassdb", host: "localhost"
             mail "tls://%h", user: "usersmtp", password: "passwordsmtp"
             backup target: "$tmp/var/backups"

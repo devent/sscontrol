@@ -61,6 +61,7 @@ abstract class RoundcubeConfig {
         setupDefaultSmtp service
         setupDefaultImap service
         setupDefaultPlugins service
+        setupDefaultMisc service
     }
 
     /**
@@ -216,6 +217,23 @@ abstract class RoundcubeConfig {
         // plugins: plugins
         if (service.plugins == null) {
             service.plugins profileListProperty("roundcube_default_plugins", roundcubeProperties)
+        }
+    }
+
+    /**
+     * Sets default misc.
+     *
+     * <ul>
+     * <li>profile property {@code "roundcube_product_name"}</li>
+     * </ul>
+     *
+     * @param service
+     *            the {@link RoundcubeService} service.
+     */
+    void setupDefaultMisc(RoundcubeService service) {
+        // product name: name
+        if (service.productName == null) {
+            service.product name: profileProperty("roundcube_product_name", roundcubeProperties)
         }
     }
 

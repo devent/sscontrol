@@ -61,6 +61,7 @@ class HttpdRoundcubeTest extends WebServiceTestEnvironment {
         assert webservice.ref == null
         assert webservice.alias == "roundcube"
         assert webservice.prefix == null
+        assert webservice.productName == "test1.com mail"
         assert webservice.database.database == "roundcubedb"
         assert webservice.database.user == "userdb"
         assert webservice.database.password == "userpassdb"

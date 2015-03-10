@@ -230,6 +230,10 @@ abstract class RoundcubeFromArchiveConfig {
      * @param service
      *            the {@link RoundcubeService} service.
      *
+     * @param equals
+     *            set to {@code true} if the version should be greater
+     *            or equals.
+     *
      * @return {@code true} if the version matches the set version.
      */
     boolean checkRoundcubeVersion(Domain domain, RoundcubeService service, boolean equals) {

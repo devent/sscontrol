@@ -99,6 +99,15 @@ abstract class Roundcube_1_Config extends RoundcubeConfig {
         def configs = [
             configPlugins(service),
             configDesKey(service),
+            configEnableInstaller(service),
+            configForceHttps(service),
+            configLoginAutocomplete(service),
+            configIpCheck(service),
+            configLoginCaseSensitive(service),
+            configAutoCreateUser(service),
+            configProductName(service),
+            configIdentitiesLevel(service),
+            configEnableSpellcheck(service),
         ]
         deployConfiguration configurationTokens(), current, configs, config
     }
@@ -112,6 +121,68 @@ abstract class Roundcube_1_Config extends RoundcubeConfig {
     def configDesKey(RoundcubeService service) {
         def search = miscConfigTemplate.getText(true, "configDesKey_search")
         def replace = miscConfigTemplate.getText(true, "configDesKey", "key", redmineDesKey)
+        new TokenTemplate(search, replace)
+    }
+
+    def configEnableInstaller(RoundcubeService service) {
+        def enabled = profileBooleanProperty "roundcube_enable_installer", roundcubeProperties
+        def search = miscConfigTemplate.getText(true, "configEnableInstaller_search")
+        def replace = miscConfigTemplate.getText(true, "configEnableInstaller", "enabled", enabled)
+        new TokenTemplate(search, replace)
+    }
+
+    def configForceHttps(RoundcubeService service) {
+        def enabled = profileBooleanProperty "roundcube_force_https", roundcubeProperties
+        def search = miscConfigTemplate.getText(true, "configForceHttps_search")
+        def replace = miscConfigTemplate.getText(true, "configForceHttps", "enabled", enabled)
+        new TokenTemplate(search, replace)
+    }
+
+    def configLoginAutocomplete(RoundcubeService service) {
+        int value = profileNumberProperty "roundcube_login_autocomplete", roundcubeProperties
+        def search = miscConfigTemplate.getText(true, "configLoginAutocomplete_search")
+        def replace = miscConfigTemplate.getText(true, "configLoginAutocomplete", "value", value)
+        new TokenTemplate(search, replace)
+    }
+
+    def configIpCheck(RoundcubeService service) {
+        def enabled = profileBooleanProperty "roundcube_ip_check", roundcubeProperties
+        def search = miscConfigTemplate.getText(true, "configIpCheck_search")
+        def replace = miscConfigTemplate.getText(true, "configIpCheck", "enabled", enabled)
+        new TokenTemplate(search, replace)
+    }
+
+    def configLoginCaseSensitive(RoundcubeService service) {
+        int value = profileNumberProperty "roundcube_login_case_sensitive", roundcubeProperties
+        def search = miscConfigTemplate.getText(true, "configLoginCaseSensitive_search")
+        def replace = miscConfigTemplate.getText(true, "configLoginCaseSensitive", "value", value)
+        new TokenTemplate(search, replace)
+    }
+
+    def configAutoCreateUser(RoundcubeService service) {
+        def enabled = profileBooleanProperty "roundcube_auto_create_user", roundcubeProperties
+        def search = miscConfigTemplate.getText(true, "configAutoCreateUser_search")
+        def replace = miscConfigTemplate.getText(true, "configAutoCreateUser", "enabled", enabled)
+        new TokenTemplate(search, replace)
+    }
+
+    def configProductName(RoundcubeService service) {
+        def search = miscConfigTemplate.getText(true, "configProductName_search")
+        def replace = miscConfigTemplate.getText(true, "configProductName", "value", service.productName)
+        new TokenTemplate(search, replace)
+    }
+
+    def configIdentitiesLevel(RoundcubeService service) {
+        int value = profileNumberProperty "roundcube_identities_level", roundcubeProperties
+        def search = miscConfigTemplate.getText(true, "configIdentitiesLevel_search")
+        def replace = miscConfigTemplate.getText(true, "configIdentitiesLevel", "value", value)
+        new TokenTemplate(search, replace)
+    }
+
+    def configEnableSpellcheck(RoundcubeService service) {
+        def enabled = profileBooleanProperty "roundcube_enable_spellcheck", roundcubeProperties
+        def search = miscConfigTemplate.getText(true, "configEnableSpellcheck_search")
+        def replace = miscConfigTemplate.getText(true, "configEnableSpellcheck", "enabled", enabled)
         new TokenTemplate(search, replace)
     }
 

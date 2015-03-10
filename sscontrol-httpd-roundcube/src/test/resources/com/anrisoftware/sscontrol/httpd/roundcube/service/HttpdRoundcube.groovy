@@ -26,6 +26,7 @@ httpd {
     domain "www.test1.com", address: "192.168.0.51", {
         user "www-data", group: "www-data"
         setup "roundcube", id: "idroundcube", alias: "roundcube", {
+            product name: "test1.com mail"
             backup target: "/var/backups"
             database "roundcubedb", driver: "mysql", user: "userdb", password: "userpassdb", host: "localhost"
             mail "tls://%h", user: "usersmtp", password: "passwordsmtp"

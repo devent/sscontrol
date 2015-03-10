@@ -94,6 +94,21 @@ public interface RoundcubeService extends WebService {
     Map<String, Object> debugLogging(String key);
 
     /**
+     * Returns the product name.
+     *
+     * Example:
+     *
+     * <pre>
+     * setup "roundcube", {
+     *      product name: "test1.com mail"
+     * }
+     * </pre>
+     *
+     * @return the {@link String} name or {@code null}.
+     */
+    String getProductName();
+
+    /**
      * Returns the database settings.
      * <ul>
      * <li>"database" the database name;</li>

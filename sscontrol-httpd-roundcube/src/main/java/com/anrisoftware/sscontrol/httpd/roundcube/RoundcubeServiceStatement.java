@@ -56,7 +56,11 @@ enum RoundcubeServiceStatement {
 
     BACKUP_KEY,
 
-    PLUGINS_KEY;
+    PLUGINS_KEY,
+
+    PRODUCT_KEY,
+
+    NAME_KEY;
 
     @Override
     public String toString() {

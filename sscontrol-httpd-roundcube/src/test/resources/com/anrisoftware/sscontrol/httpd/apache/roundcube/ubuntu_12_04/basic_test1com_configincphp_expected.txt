@@ -88,7 +88,10 @@ $config['smtp_pass'] = 'passwordsmtp';
 $config['support_url'] = '';
 
 // Name your service. This is displayed on the login screen and in the window title
-$config['product_name'] = 'Roundcube Webmail';
+# SSCONTROL-httpd
+$config['product_name'] = 'test1.com mail';
+# SSCONTROL-httpd-END
+
 
 // this key is used to encrypt the users imap password which is stored
 // in the session record (and the client cookie if remember password is enabled).
@@ -173,4 +176,28 @@ $config['syslog_facility'] = LOG_USER;
 # SSCONTROL-httpd-END
 # SSCONTROL-httpd
 $config['per_user_logging'] = true;
+# SSCONTROL-httpd-END
+# SSCONTROL-httpd
+$config['enable_installer'] = false;
+# SSCONTROL-httpd-END
+# SSCONTROL-httpd
+$config['force_https'] = false;
+# SSCONTROL-httpd-END
+# SSCONTROL-httpd
+$config['login_autocomplete'] = 2;
+# SSCONTROL-httpd-END
+# SSCONTROL-httpd
+$config['ip_check'] = true;
+# SSCONTROL-httpd-END
+# SSCONTROL-httpd
+$config['login_lc'] = 2;
+# SSCONTROL-httpd-END
+# SSCONTROL-httpd
+$config['auto_create_user'] = true;
+# SSCONTROL-httpd-END
+# SSCONTROL-httpd
+$config['identities_level'] = 0;
+# SSCONTROL-httpd-END
+# SSCONTROL-httpd
+$config['enable_spellcheck'] = true;
 # SSCONTROL-httpd-END

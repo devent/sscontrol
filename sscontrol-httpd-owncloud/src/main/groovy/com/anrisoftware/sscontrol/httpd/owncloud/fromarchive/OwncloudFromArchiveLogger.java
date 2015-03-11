@@ -19,8 +19,10 @@
 package com.anrisoftware.sscontrol.httpd.owncloud.fromarchive;
 
 import static com.anrisoftware.sscontrol.httpd.owncloud.fromarchive.OwncloudFromArchiveLogger._.archive_name;
-import static com.anrisoftware.sscontrol.httpd.owncloud.fromarchive.OwncloudFromArchiveLogger._.compare_versions_debug;
-import static com.anrisoftware.sscontrol.httpd.owncloud.fromarchive.OwncloudFromArchiveLogger._.compare_versions_info;
+import static com.anrisoftware.sscontrol.httpd.owncloud.fromarchive.OwncloudFromArchiveLogger._.compare_gequals_versions_debug;
+import static com.anrisoftware.sscontrol.httpd.owncloud.fromarchive.OwncloudFromArchiveLogger._.compare_gequals_versions_info;
+import static com.anrisoftware.sscontrol.httpd.owncloud.fromarchive.OwncloudFromArchiveLogger._.compare_greater_versions_debug;
+import static com.anrisoftware.sscontrol.httpd.owncloud.fromarchive.OwncloudFromArchiveLogger._.compare_greater_versions_info;
 import static com.anrisoftware.sscontrol.httpd.owncloud.fromarchive.OwncloudFromArchiveLogger._.error_archive_hash;
 import static com.anrisoftware.sscontrol.httpd.owncloud.fromarchive.OwncloudFromArchiveLogger._.error_archive_hash_message;
 import static com.anrisoftware.sscontrol.httpd.owncloud.fromarchive.OwncloudFromArchiveLogger._.service_name;
@@ -49,11 +51,6 @@ class OwncloudFromArchiveLogger extends AbstractLogger {
         unpack_archive_info(
                 "Unpack ownCloud archive '{}' done for service '{}'."),
 
-        compare_versions_debug("Compare ownCloud version {}<={} for {}."),
-
-        compare_versions_info(
-                "Compare ownCloud version {}<={} for service '{}'."),
-
         unpack_archive("Unpacked ownCloud archive '{}' for {}."),
 
         error_archive_hash("ownCloud archive hash not match"),
@@ -63,7 +60,19 @@ class OwncloudFromArchiveLogger extends AbstractLogger {
 
         service_name("service"),
 
-        archive_name("archive");
+        archive_name("archive"),
+
+        compare_gequals_versions_debug(
+                "Compare ownCloud version {}>={}<={} for {}."),
+
+        compare_gequals_versions_info(
+                "Compare ownCloud version {}>={}<={} for service '{}'."),
+
+        compare_greater_versions_debug(
+                "Compare ownCloud version {}>{}<={} for {}."),
+
+        compare_greater_versions_info(
+                "Compare ownCloud version {}>{}<={} for service '{}'.");
 
         private String name;
 
@@ -92,11 +101,25 @@ class OwncloudFromArchiveLogger extends AbstractLogger {
         }
     }
 
-    void checkVersion(OwncloudFromArchive config, Version version, Version upper) {
+    void checkVersionGreaterEquals(OwncloudFromArchive config, Version version,
+            Version currentVersion, Version upperVersion) {
         if (isDebugEnabled()) {
-            debug(compare_versions_debug, version, upper, config);
+            debug(compare_gequals_versions_debug, version, currentVersion,
+                    upperVersion, config);
         } else {
-            info(compare_versions_info, version, upper, config.getServiceName());
+            info(compare_gequals_versions_info, version, currentVersion,
+                    upperVersion, config.getServiceName());
+        }
+    }
+
+    void checkVersionGreater(OwncloudFromArchive config, Version version,
+            Version currentVersion, Version upperVersion) {
+        if (isDebugEnabled()) {
+            debug(compare_greater_versions_debug, version, currentVersion,
+                    upperVersion, config);
+        } else {
+            info(compare_greater_versions_info, version, currentVersion,
+                    upperVersion, config.getServiceName());
         }
     }
 

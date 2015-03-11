@@ -19,7 +19,6 @@
 package com.anrisoftware.sscontrol.httpd.owncloud.fromarchive
 
 import static org.apache.commons.io.FileUtils.*
-import groovy.util.logging.Slf4j
 
 import javax.inject.Inject
 
@@ -42,13 +41,12 @@ import com.anrisoftware.sscontrol.scripts.unpack.UnpackFactory
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-@Slf4j
 abstract class OwncloudFromArchive {
 
     private Object script
 
     @Inject
-    private OwncloudFromArchiveLogger logg
+    private OwncloudFromArchiveLogger log
 
     @Inject
     UnpackFactory unpackFactory
@@ -66,11 +64,11 @@ abstract class OwncloudFromArchive {
      *            the service {@link Domain} domain.
      *
      * @param service
-     *            the {@link PiwikService} service.
+     *            the {@link OwncloudService} service.
      */
     void deployService(Domain domain, OwncloudService service) {
-        unpackPiwikArchive domain, service
-        savePiwikVersion domain, service
+        unpackOwncloudArchive domain, service
+        saveOwncloudVersion domain, service
     }
 
     /**
@@ -80,11 +78,11 @@ abstract class OwncloudFromArchive {
      *            the service {@link Domain} domain.
      *
      * @param service
-     *            the {@link PiwikService} service.
+     *            the {@link OwncloudService} service.
      *
      * @see #getPiwikArchive()
      */
-    void unpackPiwikArchive(Domain domain, OwncloudService service) {
+    void unpackOwncloudArchive(Domain domain, OwncloudService service) {
         if (!needUnpackArchive(domain, service)) {
             return
         }
@@ -101,21 +99,38 @@ abstract class OwncloudFromArchive {
      *            the service {@link Domain} domain.
      *
      * @param service
-     *            the {@link PiwikService} service.
+     *            the {@link OwncloudService} service.
      *
      * @return {@code true} if it is needed.
      *
-     * @see PiwikService#getOverrideMode()
+     * @see OwncloudService#getOverrideMode()
      */
     boolean needUnpackArchive(Domain domain, OwncloudService service) {
         switch (service.overrideMode) {
             case OverrideMode.no:
-                return piwikConfigFile(domain, service).exists()
+                return !serviceInstalled(domain, service)
             case OverrideMode.override:
                 return true
             case OverrideMode.update:
-                return checkPiwikVersion(domain, service)
+                return checkOwncloudVersion(domain, service, true)
+            case OverrideMode.upgrade:
+                return checkOwncloudVersion(domain, service, false)
         }
+    }
+
+    /**
+     * Returns if the <i>ownCloud</i> service is already installed.
+     *
+     * @param domain
+     *            the {@link Domain} of the service.
+     *
+     * @param service
+     *            the {@link OwncloudService} service.
+     *
+     * @return {@code true} if the service is already installed.
+     */
+    boolean serviceInstalled(Domain domain, OwncloudService service) {
+        owncloudConfigFile(domain, service).exists()
     }
 
     /**
@@ -128,7 +143,7 @@ abstract class OwncloudFromArchive {
      *            the destination {@link File} file.
      *
      * @param service
-     *            the {@link PiwikService} service.
+     *            the {@link OwncloudService} service.
      *
      * @see #getPiwikArchive()
      */
@@ -139,7 +154,7 @@ abstract class OwncloudFromArchive {
             copyURLToFile archive.toURL(), dest
         }
         if (!checkArchiveHash(dest, service)) {
-            throw logg.errorArchiveHash(service, owncloudArchive)
+            throw log.errorArchiveHash(service, owncloudArchive)
         }
     }
 
@@ -150,7 +165,7 @@ abstract class OwncloudFromArchive {
      *            the archive {@link File} file.
      *
      * @param service
-     *            the {@link PiwikService} service.
+     *            the {@link OwncloudService} service.
      *
      * @see #getPiwikArchiveHash()
      */
@@ -166,7 +181,7 @@ abstract class OwncloudFromArchive {
      *            the service {@link Domain} domain.
      *
      * @param service
-     *            the {@link PiwikService} service.
+     *            the {@link OwncloudService} service.
      *
      * @param archive
      *            the archive {@link File} file.
@@ -175,7 +190,7 @@ abstract class OwncloudFromArchive {
         def dir = owncloudDir domain, service
         dir.mkdirs()
         unpackFactory.create(
-                log: log,
+                log: log.log,
                 runCommands: runCommands,
                 file: archive,
                 output: dir,
@@ -184,7 +199,7 @@ abstract class OwncloudFromArchive {
                 commands: unpackCommands,
                 this, threads)()
 
-        logg.unpackArchiveDone this, owncloudArchive
+        log.unpackArchiveDone this, owncloudArchive
     }
 
     /**
@@ -194,18 +209,27 @@ abstract class OwncloudFromArchive {
      *            the service {@link Domain} domain.
      *
      * @param service
-     *            the {@link PiwikService} service.
+     *            the {@link OwncloudService} service.
+     *
+     * @param equals
+     *            set to {@code true} if the version should be greater
+     *            or equals.
      *
      * @return {@code true} if the version matches the set version.
      */
-    boolean checkPiwikVersion(Domain domain, OwncloudService service) {
+    boolean checkOwncloudVersion(Domain domain, OwncloudService service, boolean equals) {
         def versionFile = owncloudVersionFile domain, service
         if (!versionFile.isFile()) {
             return true
         }
         def version = versionFormatFactory.create().parse FileUtils.readFileToString(versionFile).trim()
-        logg.checkVersion this, version, owncloudUpperVersion
-        version.compareTo(owncloudUpperVersion) <= 0
+        if (equals) {
+            log.checkVersionGreaterEquals this, version, owncloudVersion, owncloudUpperVersion
+            return owncloudVersion.compareTo(version) >= 0 && version.compareTo(owncloudUpperVersion) <= 0
+        } else {
+            log.checkVersionGreater this, version, owncloudVersion, owncloudUpperVersion
+            return owncloudVersion.compareTo(version) > 0 && version.compareTo(owncloudUpperVersion) <= 0
+        }
     }
 
     /**
@@ -215,13 +239,14 @@ abstract class OwncloudFromArchive {
      *            the service {@link Domain} domain.
      *
      * @param service
-     *            the {@link PiwikService} service.
+     *            the {@link OwncloudService} service.
      *
-     * @see #piwikVersionFile(Domain, PiwikService)
+     * @see #piwikVersionFile(Domain, OwncloudService)
      */
-    void savePiwikVersion(Domain domain, OwncloudService service) {
+    void saveOwncloudVersion(Domain domain, OwncloudService service) {
         def file = owncloudVersionFile domain, service
-        FileUtils.writeStringToFile file, owncloudVersion, charset
+        def string = versionFormatFactory.create().format owncloudVersion
+        FileUtils.writeStringToFile file, string, charset
     }
 
     /**
@@ -248,8 +273,8 @@ abstract class OwncloudFromArchive {
      *
      * @see #getOwncloudProperties()
      */
-    String getOwncloudVersion() {
-        profileProperty "owncloud_version", owncloudArchiveProperties
+    Version getOwncloudVersion() {
+        profileTypedProperty "owncloud_version", versionFormatFactory.create(), owncloudArchiveProperties
     }
 
     /**
@@ -294,7 +319,7 @@ abstract class OwncloudFromArchive {
      *            the service {@link Domain} domain.
      *
      * @param service
-     *            the {@link PiwikService} service.
+     *            the {@link OwncloudService} service.
      *
      * @return the version {@code File} file.
      *

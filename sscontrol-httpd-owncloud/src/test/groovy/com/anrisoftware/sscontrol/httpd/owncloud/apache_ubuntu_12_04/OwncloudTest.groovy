@@ -66,10 +66,12 @@ class OwncloudTest extends WebServiceTestEnvironment {
         assertStringContent test1comOwncloudConfigExpected.replaced(tmpdir, tmpdir, "/tmp"), test1comOwncloudConfigExpected.toString()
         assertStringContent test1comPhpFcgStarterExpected.replaced(tmpdir, tmpdir, "/tmp"), test1comPhpFcgStarterExpected.toString()
         assertFileContent test1comPhpIniConfExpected.asFile(tmpdir), test1comPhpIniConfExpected
+        assertStringContent test1comCronjobFileExpected.replaced(tmpdir, tmpdir, "/tmp"), test1comCronjobFileExpected.toString()
         assertStringContent test2comConfExpected.replaced(tmpdir, tmpdir, "/tmp"), test2comConfExpected.toString()
         assertStringContent test2comOwncloudConfigExpected.replaced(tmpdir, tmpdir, "/tmp"), test2comOwncloudConfigExpected.toString()
         assertStringContent test2comPhpFcgStarterExpected.replaced(tmpdir, tmpdir, "/tmp"), test2comPhpFcgStarterExpected.toString()
         assertFileContent test2comPhpIniConfExpected.asFile(tmpdir), test2comPhpIniConfExpected
+        assertStringContent test2comCronjobFileExpected.replaced(tmpdir, tmpdir, "/tmp"), test2comCronjobFileExpected.toString()
         assertStringContent runcommandsLogExpected.replaced(tmpdir, tmpdir, "/tmp").replaceAll(/\d{2,}/, 'time'), runcommandsLogExpected.toString()
         assertStringContent tarOutExpected.replaced(tmpdir, tmpdir, "/tmp").replaceAll(/\d{2,}/, 'time'), tarOutExpected.toString()
         assertStringContent chmodOutExpected.replaced(tmpdir, tmpdir, "/tmp"), chmodOutExpected.toString()

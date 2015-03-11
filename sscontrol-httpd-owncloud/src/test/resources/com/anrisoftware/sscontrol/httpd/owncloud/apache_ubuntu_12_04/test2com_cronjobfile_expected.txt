@@ -1,0 +1,4 @@
+# RoboBee Auto-Generated
+# Background job for test2.com owncloud_7
+
+*/15  *  *  *  * web_002 /usr/bin/php-cgi -f /tmp/var/www/test2.com/owncloud_7/cron.php > /dev/null 2>&1

@@ -503,13 +503,14 @@ class ProfilePropertiesImpl implements ProfileProperties {
      */
     public File profileFileProperty(String key, File parent,
             ContextProperties defaults) throws ServiceException {
-        Object path = profileProperty(key, defaults);
-        if (path instanceof File) {
-            return (File) path;
+        Object value = profileProperty(key, defaults);
+        File path;
+        if (value instanceof File) {
+            path = (File) value;
         } else {
-            File file = new File(path.toString());
-            return file.isAbsolute() ? file : new File(parent, path.toString());
+            path = new File(value.toString());
         }
+        return path.isAbsolute() ? path : new File(parent, path.getPath());
     }
 
     /**

@@ -54,6 +54,9 @@ class UbuntuOwncloudConfig extends Owncloud_7_Config implements ServiceConfig {
     @Inject
     OwncloudBackup owncloudBackup
 
+    @Inject
+    UbuntuCronjobOwncloudConfig cronjobConfig
+
     @Override
     void deployDomain(Domain domain, Domain refDomain, WebService service, List config) {
         setupDefaults domain, service
@@ -68,6 +71,7 @@ class UbuntuOwncloudConfig extends Owncloud_7_Config implements ServiceConfig {
         apacheConfig.deployService domain, service, config
         owncloudFromArchive.deployService domain, service
         deployConfig domain, service
+        cronjobConfig.deployConfig domain, service
         setupPermissions domain, service
     }
 
@@ -100,5 +104,6 @@ class UbuntuOwncloudConfig extends Owncloud_7_Config implements ServiceConfig {
         apacheConfig.setScript this
         owncloudFromArchive.setScript this
         owncloudBackup.setScript this
+        cronjobConfig.setScript this
     }
 }

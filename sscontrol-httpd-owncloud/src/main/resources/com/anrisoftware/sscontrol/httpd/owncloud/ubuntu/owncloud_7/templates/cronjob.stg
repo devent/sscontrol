@@ -1,0 +1,12 @@
+cronjobConfig(args) ::= <<
+<!- args.domain -!>
+<!- args.service -!>
+<!- args.user -!>
+<!- args.script -!>
+<!- args.phpcommand -!>
+# RoboBee Auto-Generated
+# Background job for <args.domain.name> <args.service.name>
+
+*/15  *  *  *  * <args.user.name> <args.phpcommand> -f <args.script> > /dev/null 2>&1
+
+>>

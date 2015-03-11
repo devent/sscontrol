@@ -70,3 +70,11 @@ configForcessl(enabled) ::= <<
   'forcessl' => <if(enabled)>true<else>false<endif>,
 >>
 
+configOverwritewebrootSearch() ::= <%
+(?m)^\s*'overwritewebroot'\s*=>.*
+%>
+
+configOverwritewebroot(root) ::= <%
+  'overwritewebroot' => '<root>',
+%>
+

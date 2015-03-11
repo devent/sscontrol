@@ -45,5 +45,8 @@ $CONFIG = array (
   'forcessl' => true,
 // SSCONTROL-httpd-END
 
-  'mail_smtpmode' => 'smtp',
+  'mail_smtpmode' => 'smtp',// SSCONTROL-httpd
+'overwritewebroot' => '',
+// SSCONTROL-httpd-END
+
 );

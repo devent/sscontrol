@@ -100,6 +100,7 @@ class ConfigParser {
             dbuserConfig(domain, service),
             dbpasswordConfig(domain, service),
             forcesslConfig(domain, service),
+            overwritewebrootConfig(domain, service),
         ]
         deployConfiguration configurationTokens('//'), current, configs, file
         appendArrayEnd file
@@ -170,6 +171,16 @@ class ConfigParser {
     def forcesslConfig(Domain domain, OwncloudService service) {
         def search = owncloudConfigTemplate.getText(true, "configForcesslSearch")
         def replace = owncloudConfigTemplate.getText(true, "configForcessl", "enabled", owncloudForcesslEnabled)
+        new TokenTemplate(search, replace)
+    }
+
+    def overwritewebrootConfig(Domain domain, OwncloudService service) {
+        def alias = service.alias
+        if (!alias.empty && !alias.startsWith("/")) {
+            alias = "/" + alias
+        }
+        def search = owncloudConfigTemplate.getText(true, "configOverwritewebrootSearch")
+        def replace = owncloudConfigTemplate.getText(true, "configOverwritewebroot", "root", alias)
         new TokenTemplate(search, replace)
     }
 

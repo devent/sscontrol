@@ -34,6 +34,7 @@ enum OwncloudResources {
 
     profile("UbuntuProfile.groovy", OwncloudResources.class.getResource("UbuntuProfile.groovy")),
     httpdScript("Httpd.groovy", OwncloudResources.class.getResource("HttpdOwncloud.groovy")),
+    owncloudCronjobsDirectory("/etc/cron.d", null),
     // owncloud
     test1comOwncloudConfigConf("/var/www/test1.com/test1owncloud/config/config.php", OwncloudArchiveResources.class.getResource("owncloud_7_configphp.txt")),
     test2comOwncloudConfigConf("/var/www/test2.com/owncloud_7/config/config.php", OwncloudArchiveResources.class.getResource("owncloud_7_configphp.txt")),
@@ -41,12 +42,14 @@ enum OwncloudResources {
     test1comConfExpected("/etc/apache2/sites-available/100-robobee-test1.com.conf", OwncloudResources.class.getResource("test1comconf_expected.txt")),
     test1comSslConfExpected("/etc/apache2/sites-available/100-robobee-test1.com-ssl.conf", OwncloudResources.class.getResource("test1comsslconf_expected.txt")),
     test1comOwncloudConfigExpected("/var/www/test1.com/test1owncloud/config/config.php", OwncloudResources.class.getResource("test1com_configphp_expected.txt")),
+    test1comPhpIniConfExpected("/var/www/php-fcgi-scripts/test1.com/domain_php.ini", OwncloudResources.class.getResource("test1com_phpini_expected.txt")),
+    test1comPhpFcgStarterExpected("/var/www/php-fcgi-scripts/test1.com/php-fcgi-starter", OwncloudResources.class.getResource("test1com_phpfcgistarter_expected.txt")),
+    test1comCronjobFileExpected("/etc/cron.d/test1_com-test1owncloud-owncloud-background", OwncloudResources.class.getResource("test1com_cronjobfile_expected.txt")),
     test2comConfExpected("/etc/apache2/sites-available/100-robobee-test2.com.conf", OwncloudResources.class.getResource("test2comconf_expected.txt")),
     test2comOwncloudConfigExpected("/var/www/test2.com/owncloud_7/config/config.php", OwncloudResources.class.getResource("test2com_configphp_expected.txt")),
-    test1comPhpIniConfExpected("/var/www/php-fcgi-scripts/test1.com/domain_php.ini", OwncloudResources.class.getResource("test1com_phpini_expected.txt")),
     test2comPhpIniConfExpected("/var/www/php-fcgi-scripts/test2.com/domain_php.ini", OwncloudResources.class.getResource("test2com_phpini_expected.txt")),
-    test1comPhpFcgStarterExpected("/var/www/php-fcgi-scripts/test1.com/php-fcgi-starter", OwncloudResources.class.getResource("test1com_phpfcgistarter_expected.txt")),
     test2comPhpFcgStarterExpected("/var/www/php-fcgi-scripts/test2.com/php-fcgi-starter", OwncloudResources.class.getResource("test2com_phpfcgistarter_expected.txt")),
+    test2comCronjobFileExpected("/etc/cron.d/test2_com-owncloud_7-owncloud-background", OwncloudResources.class.getResource("test2com_cronjobfile_expected.txt")),
     runcommandsLogExpected("/runcommands.log", OwncloudResources.class.getResource("runcommands_expected.txt")),
     tarOutExpected("/bin/tar.out", OwncloudResources.class.getResource("tar_out_expected.txt")),
     chmodOutExpected("/bin/chmod.out", OwncloudResources.class.getResource("chmod_out_expected.txt")),
@@ -54,10 +57,12 @@ enum OwncloudResources {
     aptitudeOutExpected("/usr/bin/aptitude.out", OwncloudResources.class.getResource("aptitude_out_expected.txt")),
 
     static copyOwncloudFiles(File parent) {
+        owncloudCronjobsDirectory.asFile parent mkdirs()
     }
 
     static void setupOwncloudProperties(def profile, File parent) {
         def entry = profile.getEntry("httpd")
+        entry.owncloud_cronjobs_directory owncloudCronjobsDirectory.asFile(parent)
     }
 
     ResourcesUtils resources

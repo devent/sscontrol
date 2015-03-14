@@ -128,7 +128,7 @@ abstract class UbuntuCronjobOwncloud_7_Config {
 
     /**
      * Returns is <i>cronjob</i> background task file, for
-     * example {@code "<domain.name>-<service.prefix>-owncloud-background"}.
+     * example {@code "<domainName>-<servicePrefix>-owncloud-background"}.
      * If the path is not absolute it is assumed to be under
      * the <i>cronjobs</i> configuration directory.
      *
@@ -146,7 +146,7 @@ abstract class UbuntuCronjobOwncloud_7_Config {
      */
     File owncloudCronjobFile(Domain domain, OwncloudService service) {
         def value = profileProperty "owncloud_cronjob_file", owncloudProperties
-        def name = new ST(value).add("domain", domain).add("service", service).render()
+        def name = new ST(value).add("domainName", domain.name).add("servicePrefix", service.prefix).render()
         name = StringUtils.replaceChars name, ".", "_"
         def file = new File(name)
         if (!file.absolute) {

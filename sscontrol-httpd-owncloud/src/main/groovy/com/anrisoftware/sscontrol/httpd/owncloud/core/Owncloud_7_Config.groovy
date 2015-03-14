@@ -84,7 +84,7 @@ abstract class Owncloud_7_Config {
      */
     void setupDefaultDebug(Domain domain, OwncloudService service) {
         if (!service.debugLogging("level") || !service.debugLogging("level")["owncloud"]) {
-            service.debug "owncloud", level: owncloudDefaultDebugLevel
+            service.debug "owncloud", level: owncloudDefaultDebugOwncloudLevel
         }
         logg.setupDefaultDebug this, domain, service
     }
@@ -270,16 +270,17 @@ abstract class Owncloud_7_Config {
     }
 
     /**
-     * Returns the default logging level, for example {@code "1"}.
+     * Returns the default <i>ownCloud</i> logging level, for
+     * example {@code "1"}.
      *
      * <ul>
-     * <li>profile property {@code "owncloud_default_debug_level"}</li>
+     * <li>profile property {@code "owncloud_default_debug_owncloud_level"}</li>
      * </ul>
      *
      * @see #getOwncloudProperties()
      */
-    int getOwncloudDefaultDebugLevel() {
-        profileNumberProperty "owncloud_default_debug_level", owncloudProperties
+    int getOwncloudDefaultDebugOwncloudLevel() {
+        profileNumberProperty "owncloud_default_debug_owncloud_level", owncloudProperties
     }
 
     /**
@@ -478,7 +479,7 @@ abstract class Owncloud_7_Config {
 
     /**
      * Returns the <i>ownCloud</i> base URL, for
-     * example {@code "<proto><domain.name><if(service.alias)>/<service.alias><endif>"}.
+     * example {@code "<domainProto><domainName><if(serviceAlias)>/<serviceAlias><endif>"}.
      *
      * <ul>
      * <li>profile property {@code "owncloud_overwrite_cli"}</li>
@@ -495,7 +496,7 @@ abstract class Owncloud_7_Config {
     String owncloudOverwriteCliUrl(Domain domain, OwncloudService service) {
         def value = profileProperty "owncloud_overwrite_cli", owncloudProperties
         def proto = owncloudForcesslEnabled ? "https://" : domain.proto
-        new ST(value).add("proto", proto).add("domain", domain).add("service", service).render()
+        new ST(value).add("domainProto", proto).add("domainName", domain.name).add("serviceAlias", service.alias).render()
     }
 
     /**

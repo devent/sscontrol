@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>com.anrisoftware.sscontrol</groupId>
 		<artifactId>sscontrol-parent</artifactId>
-		<version>1.0-alpha-3-SNAPSHOT</version>
+		<version>1.0-alpha-3</version>
 		<relativePath>../sscontrol-parent</relativePath>
 	</parent>
 
@@ -37,31 +37,31 @@
 		<dependency>
 			<groupId>com.anrisoftware.sscontrol</groupId>
 			<artifactId>sscontrol-profile</artifactId>
-			<version>1.0-alpha-3-SNAPSHOT</version>
+			<version>1.0-alpha-3</version>
 			<scope>test</scope>
 		</dependency>
         <dependency>
             <groupId>com.anrisoftware.sscontrol</groupId>
             <artifactId>sscontrol-testutils</artifactId>
-            <version>1.0-alpha-3-SNAPSHOT</version>
+            <version>1.0-alpha-3</version>
             <scope>test</scope>
         </dependency>
 		<dependency>
 			<groupId>com.anrisoftware.sscontrol</groupId>
 			<artifactId>sscontrol-httpd</artifactId>
-			<version>1.0-alpha-3-SNAPSHOT</version>
+			<version>1.0-alpha-3</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.anrisoftware.sscontrol</groupId>
 			<artifactId>sscontrol-httpd-nginx</artifactId>
-			<version>1.0-alpha-3-SNAPSHOT</version>
+			<version>1.0-alpha-3</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.anrisoftware.sscontrol</groupId>
 			<artifactId>sscontrol-httpd-apache</artifactId>
-			<version>1.0-alpha-3-SNAPSHOT</version>
+			<version>1.0-alpha-3</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
@@ -74,17 +74,17 @@
 		<dependency>
 			<groupId>com.anrisoftware.sscontrol</groupId>
 			<artifactId>sscontrol-core</artifactId>
-			<version>1.0-alpha-3-SNAPSHOT</version>
+			<version>1.0-alpha-3</version>
 		</dependency>
 		<dependency>
 			<groupId>com.anrisoftware.sscontrol</groupId>
 			<artifactId>sscontrol-httpd-webservice</artifactId>
-			<version>1.0-alpha-3-SNAPSHOT</version>
+			<version>1.0-alpha-3</version>
 		</dependency>
 		<dependency>
 			<groupId>com.anrisoftware.sscontrol</groupId>
 			<artifactId>sscontrol-scripts-unix</artifactId>
-			<version>1.0-alpha-3-SNAPSHOT</version>
+			<version>1.0-alpha-3</version>
 		</dependency>
 
 		<!-- compile dependencies -->

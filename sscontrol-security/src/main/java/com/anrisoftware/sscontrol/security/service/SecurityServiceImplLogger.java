@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2015 Erwin Müller <erwin.mueller@deventm.org>
+ * Copyright 2014-2015 Erwin Müller <erwin.mueller@deventm.org>
  *
  * This file is part of sscontrol-security.
  *
@@ -39,7 +39,7 @@ class SecurityServiceImplLogger extends AbstractLogger {
 
         service_added_debug("Service {} added for {}."),
 
-        service_added_info("Service '{}' added for domain '{}'.");
+        service_added_info("Service '{}' added for service '{}'.");
 
         private String name;
 

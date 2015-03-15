@@ -14,7 +14,7 @@
 	<name>RoboBee :: Security :: ClamAV</name>
 	<description>ClamAV is an open source antivirus engine for detecting trojans, viruses, malware adnd other malicious threats. - http://www.clamav.net</description>
 	<url>https://anrisoftware.com/projects/projects/sscontrol-security-clamav</url>
-	<inceptionYear>2014</inceptionYear>
+	<inceptionYear>2015</inceptionYear>
 
 	<properties>
 		<project.custom.year>${project.inceptionYear}</project.custom.year>

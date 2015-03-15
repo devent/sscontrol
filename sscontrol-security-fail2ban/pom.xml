@@ -14,7 +14,7 @@
 	<name>RoboBee :: Security :: Fail2ban</name>
 	<description>Fail2ban scans log files and bans IPs that show the malicious signs. - http://www.fail2ban.org</description>
 	<url>https://anrisoftware.com/projects/projects/sscontrol-security-fail2ban</url>
-	<inceptionYear>2014</inceptionYear>
+	<inceptionYear>2015</inceptionYear>
 
 	<properties>
 		<project.custom.year>${project.inceptionYear}</project.custom.year>

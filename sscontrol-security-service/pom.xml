@@ -13,7 +13,7 @@
 	<artifactId>sscontrol-security-service</artifactId>
 	<name>RoboBee :: Security :: Service</name>
 	<url>https://anrisoftware.com/projects/projects/sscontrol-security-service</url>
-	<inceptionYear>2014</inceptionYear>
+	<inceptionYear>2015</inceptionYear>
 	<description>Server security service public interface.</description>
 
 	<properties>
@@ -51,20 +51,6 @@
 			<groupId>com.anrisoftware.sscontrol</groupId>
 			<artifactId>sscontrol-core</artifactId>
 			<version>1.0-alpha-4-SNAPSHOT</version>
-		</dependency>
-
-		<!-- compile dependencies -->
-		<dependency>
-			<groupId>com.google.inject.extensions</groupId>
-			<artifactId>guice-multibindings</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.antlr</groupId>
-			<artifactId>ST4</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>joda-time</groupId>
-			<artifactId>joda-time</artifactId>
 		</dependency>
 	</dependencies>
 

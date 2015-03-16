@@ -1,0 +1,80 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>com.anrisoftware.sscontrol</groupId>
+		<artifactId>sscontrol-parent</artifactId>
+		<version>1.0-alpha-4-SNAPSHOT</version>
+		<relativePath>../sscontrol-parent</relativePath>
+	</parent>
+
+	<artifactId>sscontrol-source</artifactId>
+	<name>RoboBee :: Source</name>
+	<description>Setups source control management server.</description>
+	<url>https://anrisoftware.com/projects/projects/sscontrol-source</url>
+	<inceptionYear>2015</inceptionYear>
+
+	<issueManagement>
+		<system>Redmine</system>
+		<url>https://anrisoftware.com/projects/projects/sscontrol-source</url>
+	</issueManagement>
+
+	<scm>
+		<connection>scm:git:${custom.gitpublic.url}sscontrolnew.git</connection>
+		<developerConnection>scm:git:${custom.gitpublic.url}sscontrolnew.git</developerConnection>
+		<url>scm:git:${custom.gitpublic.url}sscontrolnew.git</url>
+	</scm>
+
+	<dependencies>
+
+		<!-- test dependencies -->
+		<dependency>
+			<groupId>com.anrisoftware.sscontrol</groupId>
+			<artifactId>sscontrol-profile</artifactId>
+			<version>1.0-alpha-4-SNAPSHOT</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.anrisoftware.globalpom</groupId>
+			<artifactId>globalpom-groovytestutils</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- own modules dependencies -->
+		<dependency>
+			<groupId>com.anrisoftware.sscontrol</groupId>
+			<artifactId>sscontrol-core</artifactId>
+			<version>1.0-alpha-4-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>com.anrisoftware.sscontrol</groupId>
+			<artifactId>sscontrol-scripts-unix</artifactId>
+			<version>1.0-alpha-4-SNAPSHOT</version>
+		</dependency>
+        <dependency>
+            <groupId>com.anrisoftware.sscontrol</groupId>
+            <artifactId>sscontrol-source-service</artifactId>
+            <version>1.0-alpha-4-SNAPSHOT</version>
+        </dependency>
+
+		<!-- compile dependencies -->
+		<dependency>
+			<groupId>org.mangosdk.spi</groupId>
+			<artifactId>spi</artifactId>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>com.google.inject.extensions</groupId>
+			<artifactId>guice-multibindings</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.anrisoftware.sscontrol</groupId>
+			<artifactId>sscontrol-testutils</artifactId>
+			<version>1.0-alpha-4-SNAPSHOT</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+</project>

@@ -26,10 +26,10 @@ import org.apache.commons.lang3.builder.ToStringBuilder
 import org.stringtemplate.v4.ST
 
 import com.anrisoftware.propertiesutils.ContextProperties
+import com.anrisoftware.sscontrol.core.overridemode.OverrideMode;
 import com.anrisoftware.sscontrol.core.service.LinuxScript
 import com.anrisoftware.sscontrol.httpd.domain.Domain
 import com.anrisoftware.sscontrol.httpd.owncloud.OwncloudService
-import com.anrisoftware.sscontrol.httpd.webservice.OverrideMode
 import com.anrisoftware.sscontrol.scripts.changefile.ChangeFileModFactory
 import com.anrisoftware.sscontrol.scripts.changefile.ChangeFileOwnerFactory
 

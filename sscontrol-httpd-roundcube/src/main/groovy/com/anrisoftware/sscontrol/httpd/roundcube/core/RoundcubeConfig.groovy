@@ -27,10 +27,10 @@ import org.apache.commons.lang3.StringUtils
 import org.apache.commons.lang3.builder.ToStringBuilder
 
 import com.anrisoftware.propertiesutils.ContextProperties
+import com.anrisoftware.sscontrol.core.overridemode.OverrideMode;
 import com.anrisoftware.sscontrol.core.service.LinuxScript
 import com.anrisoftware.sscontrol.httpd.domain.Domain
 import com.anrisoftware.sscontrol.httpd.roundcube.RoundcubeService
-import com.anrisoftware.sscontrol.httpd.webservice.OverrideMode
 
 /**
  * <i>Roundcube</i> configuration.

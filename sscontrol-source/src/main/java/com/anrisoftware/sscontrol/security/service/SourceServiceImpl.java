@@ -33,6 +33,11 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import com.anrisoftware.sscontrol.core.api.ServiceException;
 import com.anrisoftware.sscontrol.core.api.ServiceScriptFactory;
 import com.anrisoftware.sscontrol.core.service.AbstractService;
+import com.anrisoftware.sscontrol.source.service.SourceService;
+import com.anrisoftware.sscontrol.source.service.SourceServiceFactory;
+import com.anrisoftware.sscontrol.source.service.SourceServiceFactoryFactory;
+import com.anrisoftware.sscontrol.source.service.SourceServiceInfo;
+import com.anrisoftware.sscontrol.source.service.SourceSetupService;
 import com.google.inject.Injector;
 
 /**

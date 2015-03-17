@@ -26,7 +26,7 @@ import org.junit.Test
 
 import com.anrisoftware.sscontrol.httpd.domain.Domain
 import com.anrisoftware.sscontrol.httpd.service.HttpdService
-import com.anrisoftware.sscontrol.testutils.resources.HttpdTestEnvironment
+import com.anrisoftware.sscontrol.testutils.resources.HttpdPreScriptTestEnvironment
 
 /**
  * @see PhpmyadminService
@@ -35,7 +35,7 @@ import com.anrisoftware.sscontrol.testutils.resources.HttpdTestEnvironment
  * @since 1.0
  */
 @Slf4j
-class HttpdPhpmyadminTest extends HttpdTestEnvironment {
+class HttpdPhpmyadminTest extends HttpdPreScriptTestEnvironment {
 
     @Test
     void "phpmyadmin"() {

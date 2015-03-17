@@ -18,8 +18,8 @@
  */
 package com.anrisoftware.sscontrol.httpd.wordpress;
 
-import static com.anrisoftware.sscontrol.httpd.webservice.OverrideMode.no;
-import static com.anrisoftware.sscontrol.httpd.webservice.OverrideMode.override;
+import static com.anrisoftware.sscontrol.core.overridemode.OverrideMode.no;
+import static com.anrisoftware.sscontrol.core.overridemode.OverrideMode.override;
 import static com.anrisoftware.sscontrol.httpd.wordpress.WordpressServiceStatement.ADMIN_KEY;
 import static com.anrisoftware.sscontrol.httpd.wordpress.WordpressServiceStatement.BACKUP_KEY;
 import static com.anrisoftware.sscontrol.httpd.wordpress.WordpressServiceStatement.CACHE_KEY;
@@ -57,9 +57,9 @@ import com.anrisoftware.sscontrol.core.groovy.StatementsException;
 import com.anrisoftware.sscontrol.core.groovy.StatementsMap;
 import com.anrisoftware.sscontrol.core.groovy.StatementsTable;
 import com.anrisoftware.sscontrol.core.groovy.StatementsTableFactory;
+import com.anrisoftware.sscontrol.core.overridemode.OverrideMode;
 import com.anrisoftware.sscontrol.core.yesno.YesNoFlag;
 import com.anrisoftware.sscontrol.httpd.domain.Domain;
-import com.anrisoftware.sscontrol.httpd.webservice.OverrideMode;
 import com.anrisoftware.sscontrol.httpd.webserviceargs.DefaultWebService;
 import com.anrisoftware.sscontrol.httpd.webserviceargs.DefaultWebServiceFactory;
 

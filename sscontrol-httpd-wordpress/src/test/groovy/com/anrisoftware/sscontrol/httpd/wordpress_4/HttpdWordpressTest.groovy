@@ -24,13 +24,13 @@ import groovy.util.logging.Slf4j
 
 import org.junit.Test
 
+import com.anrisoftware.sscontrol.core.overridemode.OverrideMode;
 import com.anrisoftware.sscontrol.httpd.domain.Domain
 import com.anrisoftware.sscontrol.httpd.domain.SslDomain
 import com.anrisoftware.sscontrol.httpd.service.HttpdService
-import com.anrisoftware.sscontrol.httpd.webservice.OverrideMode
 import com.anrisoftware.sscontrol.httpd.wordpress.MultiSite
 import com.anrisoftware.sscontrol.httpd.wordpress.WordpressService
-import com.anrisoftware.sscontrol.testutils.resources.HttpdTestEnvironment
+import com.anrisoftware.sscontrol.testutils.resources.HttpdPreScriptTestEnvironment
 
 /**
  * @see WordpressService
@@ -39,7 +39,7 @@ import com.anrisoftware.sscontrol.testutils.resources.HttpdTestEnvironment
  * @since 1.0
  */
 @Slf4j
-class HttpdWordpressTest extends HttpdTestEnvironment {
+class HttpdWordpressTest extends HttpdPreScriptTestEnvironment {
 
     @Test
     void "wordpress service"() {

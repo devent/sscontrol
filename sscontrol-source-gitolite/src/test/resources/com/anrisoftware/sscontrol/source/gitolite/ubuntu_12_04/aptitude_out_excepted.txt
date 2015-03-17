@@ -1,0 +1,2 @@
+-q -y install git openssh-server perl
+-q -y install git openssh-server perl

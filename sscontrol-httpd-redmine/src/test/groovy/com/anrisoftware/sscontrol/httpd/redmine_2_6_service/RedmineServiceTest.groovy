@@ -26,14 +26,14 @@ import org.junit.Test
 
 import com.anrisoftware.sscontrol.core.api.ServiceLoader as SscontrolServiceLoader
 import com.anrisoftware.sscontrol.core.api.ServicesRegistry
+import com.anrisoftware.sscontrol.core.overridemode.OverrideMode;
 import com.anrisoftware.sscontrol.httpd.domain.Domain
 import com.anrisoftware.sscontrol.httpd.redmine.AuthenticationMethod
 import com.anrisoftware.sscontrol.httpd.redmine.DeliveryMethod
 import com.anrisoftware.sscontrol.httpd.redmine.RedmineService
 import com.anrisoftware.sscontrol.httpd.redmine.ScmInstall
 import com.anrisoftware.sscontrol.httpd.service.HttpdService
-import com.anrisoftware.sscontrol.httpd.webservice.OverrideMode
-import com.anrisoftware.sscontrol.testutils.resources.HttpdTestEnvironment
+import com.anrisoftware.sscontrol.testutils.resources.HttpdPreScriptTestEnvironment
 
 /**
  * @see RedmineService
@@ -42,7 +42,7 @@ import com.anrisoftware.sscontrol.testutils.resources.HttpdTestEnvironment
  * @since 1.0
  */
 @Slf4j
-class RedmineServiceTest extends HttpdTestEnvironment {
+class RedmineServiceTest extends HttpdPreScriptTestEnvironment {
 
     @Test
     void "base redmine service"() {

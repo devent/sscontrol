@@ -25,10 +25,10 @@ import javax.inject.Inject
 import org.apache.commons.lang3.builder.ToStringBuilder
 
 import com.anrisoftware.propertiesutils.ContextProperties
+import com.anrisoftware.sscontrol.core.overridemode.OverrideMode;
 import com.anrisoftware.sscontrol.core.service.LinuxScript
 import com.anrisoftware.sscontrol.httpd.domain.Domain
 import com.anrisoftware.sscontrol.httpd.piwik.PiwikService
-import com.anrisoftware.sscontrol.httpd.webservice.OverrideMode
 
 /**
  * <i>Piwik 2.x</i> configuration.

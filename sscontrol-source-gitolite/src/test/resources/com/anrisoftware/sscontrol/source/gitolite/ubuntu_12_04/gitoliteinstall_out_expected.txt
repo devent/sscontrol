@@ -1,0 +1,2 @@
+-ln /tmp/usr/local/bin
+-ln /tmp/usr/local/bin

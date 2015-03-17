@@ -26,8 +26,8 @@ import static org.apache.commons.lang3.Validate.notNull;
 import javax.inject.Singleton;
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
-import com.anrisoftware.sscontrol.security.service.SourceSetupService;
-import com.anrisoftware.sscontrol.security.service.SourceServiceConfig;
+import com.anrisoftware.sscontrol.source.service.SourceServiceConfig;
+import com.anrisoftware.sscontrol.source.service.SourceSetupService;
 
 /**
  * Logging messages for {@link SourceScript}.

@@ -23,6 +23,7 @@ import org.codehaus.groovy.control.customizers.ImportCustomizer;
 import org.mangosdk.spi.ProviderFor;
 
 import com.anrisoftware.sscontrol.core.api.ServiceException;
+import com.anrisoftware.sscontrol.core.overridemode.OverrideMode;
 import com.anrisoftware.sscontrol.httpd.webservice.WebServiceFactory;
 import com.anrisoftware.sscontrol.httpd.webservice.WebServiceFactoryFactory;
 import com.anrisoftware.sscontrol.httpd.webservice.WebServiceInfo;
@@ -31,20 +32,12 @@ import com.google.inject.Module;
 
 /**
  * Web service factory.
- * 
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
 @ProviderFor(WebServiceFactoryFactory.class)
 public class GititFactoryFactory implements WebServiceFactoryFactory {
-
-    private static final String AUTH_METHOD = "com.anrisoftware.sscontrol.httpd.gitit.AuthMethod";
-
-    private static final String LOGIN_REQUIRED = "com.anrisoftware.sscontrol.httpd.gitit.LoginRequired";
-
-    private static final String REPOSITORY_TYPE = "com.anrisoftware.sscontrol.httpd.gitit.RepositoryType";
-
-    private static final String OVERRIDE_MODE = "com.anrisoftware.sscontrol.httpd.webservice.OverrideMode";
 
     /**
      * <i>Gitit</i> service name.
@@ -94,8 +87,9 @@ public class GititFactoryFactory implements WebServiceFactoryFactory {
 
     private void importClasses(CompilerConfiguration c) {
         ImportCustomizer customizer = new ImportCustomizer();
-        customizer.addImports(LOGIN_REQUIRED, AUTH_METHOD, REPOSITORY_TYPE,
-                OVERRIDE_MODE);
+        customizer.addImports(LoginRequired.class.getName(),
+                AuthMethod.class.getName(), RepositoryType.class.getName(),
+                OverrideMode.class.getName());
         c.addCompilationCustomizers(customizer);
     }
 }

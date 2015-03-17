@@ -23,6 +23,7 @@ import org.codehaus.groovy.control.customizers.ImportCustomizer;
 import org.mangosdk.spi.ProviderFor;
 
 import com.anrisoftware.sscontrol.core.api.ServiceException;
+import com.anrisoftware.sscontrol.core.overridemode.OverrideMode;
 import com.anrisoftware.sscontrol.httpd.webservice.WebServiceFactory;
 import com.anrisoftware.sscontrol.httpd.webservice.WebServiceFactoryFactory;
 import com.anrisoftware.sscontrol.httpd.webservice.WebServiceInfo;
@@ -31,7 +32,7 @@ import com.google.inject.Module;
 
 /**
  * <i>Piwik</i> web service factory.
- * 
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
@@ -42,8 +43,6 @@ public class PiwikFactoryFactory implements WebServiceFactoryFactory {
      * <i>Piwik</i> service name.
      */
     public static final String SERVICE_NAME = "piwik";
-
-    private static final String OVERRIDE_MODE = "com.anrisoftware.sscontrol.httpd.webservice.OverrideMode";
 
     /**
      * <i>Piwik</i> service information.
@@ -88,7 +87,7 @@ public class PiwikFactoryFactory implements WebServiceFactoryFactory {
 
     private void importClasses(CompilerConfiguration c) {
         ImportCustomizer customizer = new ImportCustomizer();
-        customizer.addImports(OVERRIDE_MODE);
+        customizer.addImports(OverrideMode.class.getName());
         c.addCompilationCustomizers(customizer);
     }
 }

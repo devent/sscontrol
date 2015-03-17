@@ -18,11 +18,7 @@
  */
 package com.anrisoftware.sscontrol.httpd.redmine.nginx_ubuntu_12_04
 
-import com.anrisoftware.sscontrol.httpd.redmine.AuthenticationMethod
-import com.anrisoftware.sscontrol.httpd.redmine.DeliveryMethod
-import com.anrisoftware.sscontrol.httpd.redmine.ScmInstall
 import com.anrisoftware.sscontrol.httpd.ubuntu_12_04.Ubuntu_12_04_Resources
-import com.anrisoftware.sscontrol.httpd.webservice.OverrideMode
 
 domainname = "example.net"
 

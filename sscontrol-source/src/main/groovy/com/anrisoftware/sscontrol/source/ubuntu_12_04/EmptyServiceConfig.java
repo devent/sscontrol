@@ -21,8 +21,8 @@ package com.anrisoftware.sscontrol.source.ubuntu_12_04;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.anrisoftware.sscontrol.core.service.LinuxScript;
-import com.anrisoftware.sscontrol.security.service.SourceSetupService;
-import com.anrisoftware.sscontrol.security.service.SourceServiceConfig;
+import com.anrisoftware.sscontrol.source.service.SourceServiceConfig;
+import com.anrisoftware.sscontrol.source.service.SourceSetupService;
 
 /**
  * Empty service configuration.

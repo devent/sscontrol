@@ -45,6 +45,9 @@
         <module>sscontrol-security-fail2ban</module>
         <module>sscontrol-security-service</module>
         <module>sscontrol-security-spamassassin</module>
+        <module>sscontrol-source</module>
+        <module>sscontrol-source-gitolite</module>
+        <module>sscontrol-source-service</module>
         <module>sscontrol-testutils</module>
     </modules>
 

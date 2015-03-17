@@ -24,11 +24,11 @@ import groovy.util.logging.Slf4j
 
 import org.junit.Test
 
+import com.anrisoftware.sscontrol.core.overridemode.OverrideMode;
 import com.anrisoftware.sscontrol.httpd.domain.Domain
 import com.anrisoftware.sscontrol.httpd.domain.SslDomain
 import com.anrisoftware.sscontrol.httpd.roundcube.RoundcubeService
 import com.anrisoftware.sscontrol.httpd.service.HttpdService
-import com.anrisoftware.sscontrol.httpd.webservice.OverrideMode
 import com.anrisoftware.sscontrol.testutils.resources.WebServiceTestEnvironment
 
 /**

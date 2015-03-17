@@ -23,8 +23,8 @@ import org.codehaus.groovy.control.customizers.ImportCustomizer;
 import org.mangosdk.spi.ProviderFor;
 
 import com.anrisoftware.sscontrol.core.api.ServiceException;
+import com.anrisoftware.sscontrol.core.overridemode.OverrideMode;
 import com.anrisoftware.sscontrol.core.yesno.YesNoFlag;
-import com.anrisoftware.sscontrol.httpd.webservice.OverrideMode;
 import com.anrisoftware.sscontrol.httpd.webservice.WebServiceFactory;
 import com.anrisoftware.sscontrol.httpd.webservice.WebServiceFactoryFactory;
 import com.anrisoftware.sscontrol.httpd.webservice.WebServiceInfo;

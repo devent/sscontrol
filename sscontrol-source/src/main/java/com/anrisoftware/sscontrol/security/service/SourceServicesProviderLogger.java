@@ -24,6 +24,7 @@ import static com.anrisoftware.sscontrol.security.service.SourceServicesProvider
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
 import com.anrisoftware.sscontrol.core.api.ServiceException;
+import com.anrisoftware.sscontrol.source.service.SourceServiceInfo;
 
 /**
  * Logging for {@link SourceServicesProvider}.

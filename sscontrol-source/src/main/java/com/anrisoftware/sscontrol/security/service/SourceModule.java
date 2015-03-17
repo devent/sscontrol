@@ -24,6 +24,8 @@ import java.util.Map;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import com.anrisoftware.sscontrol.source.service.SourceServiceFactory;
+import com.anrisoftware.sscontrol.source.service.SourceSetupService;
 import com.google.inject.AbstractModule;
 import com.google.inject.multibindings.MapBinder;
 

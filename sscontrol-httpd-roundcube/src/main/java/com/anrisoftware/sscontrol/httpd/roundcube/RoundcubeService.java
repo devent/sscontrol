@@ -22,7 +22,7 @@ import java.net.URI;
 import java.util.List;
 import java.util.Map;
 
-import com.anrisoftware.sscontrol.httpd.webservice.OverrideMode;
+import com.anrisoftware.sscontrol.core.overridemode.OverrideMode;
 import com.anrisoftware.sscontrol.httpd.webservice.WebService;
 
 /**

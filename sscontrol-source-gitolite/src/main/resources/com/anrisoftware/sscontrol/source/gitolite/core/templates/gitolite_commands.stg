@@ -1,0 +1,19 @@
+installGitolite(args) ::= <<
+<!- args.installCommand -!>
+<!- args.prefix -!>
+<args.installCommand> -ln <args.prefix>
+
+>>
+
+upgradeGitolite(args) ::= <<
+<!- args.gitoliteCommand -!>
+<args.gitoliteCommand> setup
+
+>>
+
+installAdminKey(args) ::= <<
+<!- args.gitoliteCommand -!>
+<!- args.key -!>
+<args.gitoliteCommand> setup -pk <args.key>
+
+>>

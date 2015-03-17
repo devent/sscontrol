@@ -18,6 +18,8 @@
  */
 package com.anrisoftware.sscontrol.httpd.roundcube;
 
+import static com.anrisoftware.sscontrol.core.overridemode.OverrideMode.no;
+import static com.anrisoftware.sscontrol.core.overridemode.OverrideMode.override;
 import static com.anrisoftware.sscontrol.httpd.roundcube.RoundcubeServiceStatement.BACKUP_KEY;
 import static com.anrisoftware.sscontrol.httpd.roundcube.RoundcubeServiceStatement.DATABASE_KEY;
 import static com.anrisoftware.sscontrol.httpd.roundcube.RoundcubeServiceStatement.DEBUG_KEY;
@@ -35,8 +37,6 @@ import static com.anrisoftware.sscontrol.httpd.roundcube.RoundcubeServiceStateme
 import static com.anrisoftware.sscontrol.httpd.roundcube.RoundcubeServiceStatement.SERVER_KEY;
 import static com.anrisoftware.sscontrol.httpd.roundcube.RoundcubeServiceStatement.TARGET_KEY;
 import static com.anrisoftware.sscontrol.httpd.roundcube.RoundcubeServiceStatement.USER_KEY;
-import static com.anrisoftware.sscontrol.httpd.webservice.OverrideMode.no;
-import static com.anrisoftware.sscontrol.httpd.webservice.OverrideMode.override;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -54,9 +54,9 @@ import com.anrisoftware.sscontrol.core.groovy.StatementsException;
 import com.anrisoftware.sscontrol.core.groovy.StatementsMap;
 import com.anrisoftware.sscontrol.core.groovy.StatementsTable;
 import com.anrisoftware.sscontrol.core.groovy.StatementsTableFactory;
+import com.anrisoftware.sscontrol.core.overridemode.OverrideMode;
 import com.anrisoftware.sscontrol.core.yesno.YesNoFlag;
 import com.anrisoftware.sscontrol.httpd.domain.Domain;
-import com.anrisoftware.sscontrol.httpd.webservice.OverrideMode;
 import com.anrisoftware.sscontrol.httpd.webserviceargs.DefaultWebService;
 import com.anrisoftware.sscontrol.httpd.webserviceargs.DefaultWebServiceFactory;
 import com.google.inject.assistedinject.Assisted;

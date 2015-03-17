@@ -25,11 +25,13 @@ import javax.inject.Inject
 
 import org.apache.commons.lang3.builder.ToStringBuilder
 
+import com.anrisoftware.globalpom.exec.runcommands.RunCommands
+import com.anrisoftware.globalpom.exec.runcommands.RunCommandsFactory
 import com.anrisoftware.sscontrol.core.service.LinuxScript
-import com.anrisoftware.sscontrol.security.service.SourceService
-import com.anrisoftware.sscontrol.security.service.SourceServiceConfig
-import com.anrisoftware.sscontrol.security.service.SourceServiceConfigInfo
-import com.anrisoftware.sscontrol.security.service.SourceSetupService
+import com.anrisoftware.sscontrol.source.service.SourceService;
+import com.anrisoftware.sscontrol.source.service.SourceServiceConfig;
+import com.anrisoftware.sscontrol.source.service.SourceServiceConfigInfo;
+import com.anrisoftware.sscontrol.source.service.SourceSetupService;
 import com.google.inject.Injector
 
 /**
@@ -46,6 +48,8 @@ abstract class SourceScript extends LinuxScript {
     @Inject
     private SourceScriptLogger logg
 
+    private RunCommands runCommands
+
     @Inject
     Injector injector
 
@@ -54,6 +58,11 @@ abstract class SourceScript extends LinuxScript {
 
     @Inject
     SourceServicesConfigProvider servicesConfigProvider
+
+    @Inject
+    final void setRunCommands(RunCommandsFactory factory) {
+        this.runCommands = factory.create this, SERVICE_NAME
+    }
 
     @Override
     def run() {
@@ -75,6 +84,13 @@ abstract class SourceScript extends LinuxScript {
             config.deployService sec
             logg.securityServiceDeployed this, config
         }
+    }
+
+    /**
+     * Returns the run commands.
+     */
+    final RunCommands getRunCommands() {
+        runCommands
     }
 
     /**
@@ -110,9 +126,9 @@ abstract class SourceScript extends LinuxScript {
     private SourceServiceConfig findServicesConfigProvider(String profile, SourceSetupService service) {
         def factory = servicesConfigProvider.find(
                 [
-                    getSecName: { service.name },
+                    getSourceName: { service.name },
                     getProfileName: { profile },
-                    getSecService: { service }
+                    getSourceService: { service }
                 ] as SourceServiceConfigInfo)
         factory.setParent injector
         def script = factory.getScript()

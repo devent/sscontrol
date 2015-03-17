@@ -19,7 +19,6 @@
 package com.anrisoftware.sscontrol.httpd.piwik.apache_ubuntu_12_04
 
 import com.anrisoftware.sscontrol.httpd.piwik.ubuntu_12_04.Ubuntu_12_04_Resources
-import com.anrisoftware.sscontrol.httpd.webservice.OverrideMode
 
 httpd {
     domain "test1.com", address: "192.168.0.51", {

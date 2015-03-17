@@ -23,6 +23,10 @@ import org.codehaus.groovy.control.customizers.ImportCustomizer;
 import org.mangosdk.spi.ProviderFor;
 
 import com.anrisoftware.sscontrol.core.api.ServiceException;
+import com.anrisoftware.sscontrol.core.overridemode.OverrideMode;
+import com.anrisoftware.sscontrol.httpd.redmine.AuthenticationMethod;
+import com.anrisoftware.sscontrol.httpd.redmine.DeliveryMethod;
+import com.anrisoftware.sscontrol.httpd.redmine.ScmInstall;
 import com.anrisoftware.sscontrol.httpd.webservice.WebServiceFactory;
 import com.anrisoftware.sscontrol.httpd.webservice.WebServiceFactoryFactory;
 import com.anrisoftware.sscontrol.httpd.webservice.WebServiceInfo;
@@ -37,12 +41,6 @@ import com.google.inject.Module;
  */
 @ProviderFor(WebServiceFactoryFactory.class)
 public class RedmineFactoryFactory implements WebServiceFactoryFactory {
-
-    private static final String AUTHENTICATION_METHOD = "com.anrisoftware.sscontrol.httpd.redmine.AuthenticationMethod";
-
-    private static final String DELIVERY_METHOD = "com.anrisoftware.sscontrol.httpd.redmine.DeliveryMethod";
-
-    private static final String SCM_INSTALL = "com.anrisoftware.sscontrol.httpd.redmine.ScmInstall";
 
     /**
      * <i>Redmine 2.6</i> service name.
@@ -92,8 +90,10 @@ public class RedmineFactoryFactory implements WebServiceFactoryFactory {
 
     private void importClasses(CompilerConfiguration c) {
         ImportCustomizer customizer = new ImportCustomizer();
-        customizer.addImports(DELIVERY_METHOD, AUTHENTICATION_METHOD,
-                SCM_INSTALL);
+        customizer.addImports(OverrideMode.class.getName(),
+                DeliveryMethod.class.getName(),
+                AuthenticationMethod.class.getName(),
+                ScmInstall.class.getName());
         c.addCompilationCustomizers(customizer);
     }
 }

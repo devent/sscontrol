@@ -18,10 +18,10 @@
  */
 package com.anrisoftware.sscontrol.httpd.gitit.nginx_ubuntu_12_04
 
+import com.anrisoftware.sscontrol.core.overridemode.OverrideMode
 import com.anrisoftware.sscontrol.httpd.gitit.AuthMethod
 import com.anrisoftware.sscontrol.httpd.gitit.LoginRequired
 import com.anrisoftware.sscontrol.httpd.gitit.RepositoryType
-import com.anrisoftware.sscontrol.httpd.webservice.OverrideMode
 
 httpd {
     domain "test1.com", address: "192.168.0.51", {

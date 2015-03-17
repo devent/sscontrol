@@ -24,11 +24,11 @@ import groovy.util.logging.Slf4j
 
 import org.junit.Test
 
+import com.anrisoftware.sscontrol.core.overridemode.OverrideMode;
 import com.anrisoftware.sscontrol.httpd.domain.Domain
 import com.anrisoftware.sscontrol.httpd.owncloud.OwncloudService
 import com.anrisoftware.sscontrol.httpd.service.HttpdService
-import com.anrisoftware.sscontrol.httpd.webservice.OverrideMode
-import com.anrisoftware.sscontrol.testutils.resources.HttpdTestEnvironment
+import com.anrisoftware.sscontrol.testutils.resources.HttpdPreScriptTestEnvironment
 
 /**
  * @see PiwikService
@@ -37,7 +37,7 @@ import com.anrisoftware.sscontrol.testutils.resources.HttpdTestEnvironment
  * @since 1.0
  */
 @Slf4j
-class HttpdOwncloudTest extends HttpdTestEnvironment {
+class HttpdOwncloudTest extends HttpdPreScriptTestEnvironment {
 
     @Test
     void "owncloud service"() {

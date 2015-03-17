@@ -21,7 +21,7 @@ package com.anrisoftware.sscontrol.httpd.piwik;
 import java.net.URI;
 import java.util.Map;
 
-import com.anrisoftware.sscontrol.httpd.webservice.OverrideMode;
+import com.anrisoftware.sscontrol.core.overridemode.OverrideMode;
 import com.anrisoftware.sscontrol.httpd.webservice.WebService;
 
 /**

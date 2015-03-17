@@ -36,6 +36,12 @@
 			<version>1.0-alpha-4-SNAPSHOT</version>
 			<scope>test</scope>
 		</dependency>
+        <dependency>
+            <groupId>com.anrisoftware.sscontrol</groupId>
+            <artifactId>sscontrol-testutils</artifactId>
+            <version>1.0-alpha-4-SNAPSHOT</version>
+            <scope>test</scope>
+        </dependency>
 		<dependency>
 			<groupId>com.anrisoftware.globalpom</groupId>
 			<artifactId>globalpom-groovytestutils</artifactId>
@@ -46,11 +52,6 @@
 		<dependency>
 			<groupId>com.anrisoftware.sscontrol</groupId>
 			<artifactId>sscontrol-core</artifactId>
-			<version>1.0-alpha-4-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>com.anrisoftware.sscontrol</groupId>
-			<artifactId>sscontrol-scripts-unix</artifactId>
 			<version>1.0-alpha-4-SNAPSHOT</version>
 		</dependency>
         <dependency>
@@ -69,12 +70,10 @@
 			<groupId>com.google.inject.extensions</groupId>
 			<artifactId>guice-multibindings</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>com.anrisoftware.sscontrol</groupId>
-			<artifactId>sscontrol-testutils</artifactId>
-			<version>1.0-alpha-4-SNAPSHOT</version>
-			<scope>test</scope>
-		</dependency>
+        <dependency>
+            <groupId>com.anrisoftware.globalpom</groupId>
+            <artifactId>globalpomutils-exec</artifactId>
+        </dependency>
 	</dependencies>
 
 </project>

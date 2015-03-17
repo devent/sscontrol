@@ -25,8 +25,8 @@ import javax.inject.Provider;
 import javax.inject.Singleton;
 
 import com.anrisoftware.sscontrol.core.api.ServiceException;
-import com.anrisoftware.sscontrol.security.service.ServiceConfigFactory;
-import com.anrisoftware.sscontrol.security.service.SourceServiceConfigInfo;
+import com.anrisoftware.sscontrol.source.service.ServiceConfigFactory;
+import com.anrisoftware.sscontrol.source.service.SourceServiceConfigInfo;
 
 /**
  * Loads the source code management service configurations.

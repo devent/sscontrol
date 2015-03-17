@@ -23,6 +23,7 @@ import org.codehaus.groovy.control.customizers.ImportCustomizer;
 import org.mangosdk.spi.ProviderFor;
 
 import com.anrisoftware.sscontrol.core.api.ServiceException;
+import com.anrisoftware.sscontrol.core.overridemode.OverrideMode;
 import com.anrisoftware.sscontrol.httpd.webservice.WebServiceFactory;
 import com.anrisoftware.sscontrol.httpd.webservice.WebServiceFactoryFactory;
 import com.anrisoftware.sscontrol.httpd.webservice.WebServiceInfo;
@@ -42,8 +43,6 @@ public class Owncloud_7_FactoryFactory implements WebServiceFactoryFactory {
      * <i>ownCloud 7.x</i> service name.
      */
     public static final String SERVICE_NAME = "owncloud_7";
-
-    private static final String OVERRIDE_MODE = "com.anrisoftware.sscontrol.httpd.webservice.OverrideMode";
 
     /**
      * <i>ownCloud 7.x</i> service information.
@@ -88,7 +87,7 @@ public class Owncloud_7_FactoryFactory implements WebServiceFactoryFactory {
 
     private void importClasses(CompilerConfiguration c) {
         ImportCustomizer customizer = new ImportCustomizer();
-        customizer.addImports(OVERRIDE_MODE);
+        customizer.addImports(OverrideMode.class.getName());
         c.addCompilationCustomizers(customizer);
     }
 }

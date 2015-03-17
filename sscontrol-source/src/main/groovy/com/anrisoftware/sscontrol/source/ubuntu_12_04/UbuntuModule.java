@@ -24,7 +24,8 @@ import static com.google.inject.multibindings.MapBinder.newMapBinder;
 import static java.lang.String.format;
 import groovy.lang.Script;
 
-import com.anrisoftware.sscontrol.security.service.SourceServiceConfig;
+import com.anrisoftware.globalpom.exec.runcommands.RunCommandsModule;
+import com.anrisoftware.sscontrol.source.service.SourceServiceConfig;
 import com.google.inject.AbstractModule;
 import com.google.inject.multibindings.MapBinder;
 
@@ -38,6 +39,7 @@ class UbuntuModule extends AbstractModule {
 
     @Override
     protected void configure() {
+        install(new RunCommandsModule());
         bindScripts();
         bindEmptyServiceConfig();
     }

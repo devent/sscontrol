@@ -1,0 +1,2 @@
+setup -pk /tmp/tmp/adminxxkey
+setup -pk /tmp/tmp/adminxxkey

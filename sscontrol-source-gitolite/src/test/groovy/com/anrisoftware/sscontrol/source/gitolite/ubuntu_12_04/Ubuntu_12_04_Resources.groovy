@@ -46,6 +46,8 @@ enum Ubuntu_12_04_Resources {
     aptitudeOutExpected("/usr/bin/aptitude.out", Ubuntu_12_04_Resources.class.getResource("aptitude_out_excepted.txt")),
     gitoliteInstallOutExpected("/usr/local/gitolite/install.out", Ubuntu_12_04_Resources.class.getResource("gitoliteinstall_out_expected.txt")),
     gitoliteOutExpected("/usr/local/bin/gitolite.out", Ubuntu_12_04_Resources.class.getResource("gitolite_out_expected.txt")),
+    suOutExpected("/bin/su.out", Ubuntu_12_04_Resources.class.getResource("su_out_expected.txt")),
+    tarOutExpected("/bin/tar.out", Ubuntu_12_04_Resources.class.getResource("tar_out_expected.txt")),
 
     static void copyUbuntu_12_04_Files(File parent) {
         // commands

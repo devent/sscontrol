@@ -33,8 +33,10 @@ enum UbuntuResources {
 
     // commands
     aptitudeCommand("/usr/bin/aptitude", UbuntuResources.class.getResource("echo_command.txt")),
+    suCommand("/bin/su", UbuntuResources.class.getResource("echo_command.txt")),
     useraddCommand("/usr/sbin/useradd", UbuntuResources.class.getResource("echo_command.txt")),
     groupaddCommand("/usr/sbin/groupadd", UbuntuResources.class.getResource("echo_command.txt")),
+    chownCommand("/bin/chown", UbuntuResources.class.getResource("echo_command.txt")),
     tarCommand("/bin/tar", UbuntuResources.class.getResource("echo_command.txt")),
     // files
     tmpDir("/tmp", null),
@@ -42,8 +44,10 @@ enum UbuntuResources {
     static void copyUbuntuFiles(File parent) {
         // commands
         aptitudeCommand.createCommand parent
+        suCommand.createCommand parent
         useraddCommand.createCommand parent
         groupaddCommand.createCommand parent
+        chownCommand.createCommand parent
         tarCommand.createCommand parent
         // files
         tmpDir.asFile(parent).mkdirs()
@@ -53,9 +57,11 @@ enum UbuntuResources {
         def entry = profile.getEntry("source")
         // commands
         entry.install_command aptitudeCommand.asFile(parent)
+        entry.su_command suCommand.asFile(parent)
         entry.group_add_command groupaddCommand.asFile(parent)
+        entry.chown_command chownCommand.asFile(parent)
         entry.user_add_command useraddCommand.asFile(parent)
-        entry.tar_command useraddCommand.asFile(parent)
+        entry.tar_command tarCommand.asFile(parent)
         // files
         entry.temp_directory tmpDir.asFile(parent)
     }

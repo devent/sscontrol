@@ -19,6 +19,7 @@
 package com.anrisoftware.sscontrol.source.gitolite;
 
 import static com.anrisoftware.sscontrol.source.gitolite.GitoliteServiceStatement.ADMIN_KEY;
+import static com.anrisoftware.sscontrol.source.gitolite.GitoliteServiceStatement.DATA_KEY;
 import static com.anrisoftware.sscontrol.source.gitolite.GitoliteServiceStatement.GID_KEY;
 import static com.anrisoftware.sscontrol.source.gitolite.GitoliteServiceStatement.GROUP_KEY;
 import static com.anrisoftware.sscontrol.source.gitolite.GitoliteServiceStatement.KEY_KEY;
@@ -63,12 +64,13 @@ class GitoliteServiceImpl implements GitoliteService {
     @Inject
     public final void setStatementsMap(StatementsMapFactory factory) {
         StatementsMap map = factory.create(this, SERVICE_NAME);
-        map.addAllowed(ADMIN_KEY, USER_KEY, OVERRIDE_KEY, PREFIX_KEY);
+        map.addAllowed(ADMIN_KEY, USER_KEY, OVERRIDE_KEY, PREFIX_KEY, DATA_KEY);
         map.addAllowedKeys(ADMIN_KEY, KEY_KEY);
         map.setAllowValue(true, USER_KEY);
         map.addAllowedKeys(USER_KEY, GROUP_KEY, UID_KEY, GID_KEY);
         map.addAllowedKeys(OVERRIDE_KEY, MODE_KEY);
         map.addAllowedKeys(PREFIX_KEY, PATH_KEY);
+        map.addAllowedKeys(DATA_KEY, PATH_KEY);
         this.statementsMap = map;
     }
 
@@ -90,6 +92,11 @@ class GitoliteServiceImpl implements GitoliteService {
     @Override
     public String getPrefix() {
         return statementsMap.mapValue(PREFIX_KEY, PATH_KEY);
+    }
+
+    @Override
+    public String getDataPath() {
+        return statementsMap.mapValue(DATA_KEY, PATH_KEY);
     }
 
     @Override

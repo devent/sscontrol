@@ -21,6 +21,7 @@ package com.anrisoftware.sscontrol.source.gitolite.ubuntu_12_04;
 import com.anrisoftware.globalpom.checkfilehash.CheckFileHashModule;
 import com.anrisoftware.globalpom.resources.ResourcesModule;
 import com.anrisoftware.globalpom.version.VersionModule;
+import com.anrisoftware.sscontrol.scripts.changefile.ChangeFileModule;
 import com.anrisoftware.sscontrol.scripts.localuser.LocalUserModule;
 import com.anrisoftware.sscontrol.scripts.unix.UnixScriptsModule;
 import com.anrisoftware.sscontrol.scripts.unpack.UnpackModule;
@@ -43,5 +44,6 @@ public class UbuntuModule extends AbstractModule {
         install(new CheckFileHashModule());
         install(new ResourcesModule());
         install(new UnpackModule());
+        install(new ChangeFileModule());
     }
 }

@@ -23,6 +23,8 @@ import javax.inject.Inject
 import org.apache.commons.lang3.builder.ToStringBuilder
 
 import com.anrisoftware.propertiesutils.ContextProperties
+import com.anrisoftware.sscontrol.scripts.changefile.ChangeFileOwnerFactory
+import com.anrisoftware.sscontrol.scripts.localuser.LocalChangeUserFactory
 import com.anrisoftware.sscontrol.scripts.localuser.LocalGroupAddFactory
 import com.anrisoftware.sscontrol.scripts.localuser.LocalUserAddFactory
 import com.anrisoftware.sscontrol.scripts.unix.InstallPackagesFactory
@@ -50,6 +52,12 @@ abstract class UbuntuConfig {
     @Inject
     LocalUserAddFactory localUserAddFactory
 
+    @Inject
+    LocalChangeUserFactory localChangeUserFactory
+
+    @Inject
+    ChangeFileOwnerFactory changeFileOwnerFactory
+
     /**
      * Creates the local user and group.
      *
@@ -57,28 +65,50 @@ abstract class UbuntuConfig {
      *            the {@link GitoliteService} service.
      */
     void createGitoliteUser(GitoliteService service) {
-        def home = service.prefix
-        def shell = "/bin/false"
+        def user = service.user
+        def home = new File(service.dataPath)
+        home.mkdirs()
+        def shell = "/bin/bash"
         localGroupAddFactory.create(
                 log: log.log,
                 runCommands: runCommands,
                 command: groupAddCommand,
                 groupsFile: groupsFile,
-                groupName: service.user.group,
-                groupId: service.user.gid,
+                groupName: user.group,
+                groupId: user.gid,
                 systemGroup: true,
                 this, threads)()
-        localUserAddFactory.create(
+        boolean userAdded = localUserAddFactory.create(
                 log: log.log,
                 runCommands: runCommands,
                 command: userAddCommand,
                 usersFile: usersFile,
-                userName: service.user.user,
-                groupName: service.user.group,
-                userId: service.user.uid,
+                userName: user.user,
+                groupName: user.group,
+                userId: user.uid,
                 homeDir: home,
                 shell: shell,
                 systemUser: true,
+                this, threads)().userAdded
+        if(!userAdded) {
+            localChangeUserFactory.create(
+                    log: log.log,
+                    runCommands: runCommands,
+                    command: userModCommand,
+                    userName: user.user,
+                    userId: user.uid,
+                    groupId: user.gid,
+                    home: home,
+                    shell: shell,
+                    this, threads)()
+        }
+        changeFileOwnerFactory.create(
+                log: log.log,
+                runCommands: runCommands,
+                command: chownCommand,
+                owner: user.user,
+                ownerGroup: user.group,
+                files: home,
                 this, threads)()
         log.createdGitoliteUser this, service
     }

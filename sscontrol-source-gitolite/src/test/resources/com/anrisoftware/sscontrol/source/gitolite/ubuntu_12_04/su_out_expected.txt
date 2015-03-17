@@ -1,0 +1,2 @@
+git -c /tmp/usr/local/gitolite/../bin/gitolite setup -pk /tmp/tmp/adminpub.pub
+git -c /tmp/usr/local/gitolite/../bin/gitolite setup -pk /tmp/tmp/adminpub.pub

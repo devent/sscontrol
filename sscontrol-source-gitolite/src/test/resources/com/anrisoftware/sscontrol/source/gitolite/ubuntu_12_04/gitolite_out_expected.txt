@@ -1,2 +1,2 @@
-setup -pk /tmp/tmp/adminxxkey
-setup -pk /tmp/tmp/adminxxkey
+setup -pk /tmp/tmp/adminxxkey.pub
+setup -pk /tmp/tmp/adminxxkey.pub

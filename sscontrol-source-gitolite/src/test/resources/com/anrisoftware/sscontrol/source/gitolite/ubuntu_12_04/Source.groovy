@@ -20,8 +20,6 @@ package com.anrisoftware.sscontrol.source.gitolite.ubuntu_12_04
 
 source {
     setup "gitolite", {
-        override mode: OverrideMode.override
-        user "git", group: "git", uid: 99, gid: 99
         admin key: Ubuntu_12_04_Resources.adminKey.resource.toURI()
     }
 }

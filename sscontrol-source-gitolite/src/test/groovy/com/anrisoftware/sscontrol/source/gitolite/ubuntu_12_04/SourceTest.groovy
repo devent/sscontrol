@@ -26,7 +26,7 @@ import groovy.util.logging.Slf4j
 
 import org.junit.Test
 
-import com.anrisoftware.sscontrol.source.gitolite.test.PreScriptTestEnvironment;
+import com.anrisoftware.sscontrol.source.gitolite.test.PreScriptTestEnvironment
 
 /**
  * <i>Ubuntu 12.04 Gitolite</i> security script test.
@@ -52,6 +52,7 @@ class SourceTest extends PreScriptTestEnvironment {
 
         assertFileContent aptitudeOutExpected.asFile(tmpdir), aptitudeOutExpected
         assertStringContent gitoliteInstallOutExpected.replaced(tmpdir, tmpdir, "/tmp"), gitoliteInstallOutExpected.toString()
-        assertStringContent gitoliteOutExpected.replaced(tmpdir, tmpdir, "/tmp").replaceAll(/\d{2,}/, "xx"), gitoliteOutExpected.toString()
+        assertStringContent suOutExpected.replaced(tmpdir, tmpdir, "/tmp").replaceAll(/\d{2,}/, "xx"), suOutExpected.toString()
+        assertStringContent tarOutExpected.replaced(tmpdir, tmpdir, "/tmp"), tarOutExpected.toString()
     }
 }

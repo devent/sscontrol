@@ -21,12 +21,14 @@ package com.anrisoftware.sscontrol.source.gitolite.core
 import javax.inject.Inject
 
 import org.apache.commons.io.FileUtils
+import org.apache.commons.io.FilenameUtils
 import org.apache.commons.lang3.builder.ToStringBuilder
 
 import com.anrisoftware.globalpom.exec.scriptprocess.ScriptExecFactory
 import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.TemplatesFactory
+import com.anrisoftware.sscontrol.core.overridemode.OverrideMode
 import com.anrisoftware.sscontrol.core.service.LinuxScript
 import com.anrisoftware.sscontrol.source.gitolite.GitoliteService
 
@@ -62,6 +64,8 @@ abstract class Gitolite_3_Config {
      */
     void setupDefaults(GitoliteService service) {
         setupDefaultPrefix service
+        setupDefaultData service
+        setupDefaultOverrideMode service
         setupDefaultUser service
     }
 
@@ -74,6 +78,30 @@ abstract class Gitolite_3_Config {
     void setupDefaultPrefix(GitoliteService service) {
         if (service.prefix == null) {
             service.prefix path: defaultPrefix
+        }
+    }
+
+    /**
+     * Setups the default service data path.
+     *
+     * @param service
+     *            the {@link GitoliteService} service.
+     */
+    void setupDefaultData(GitoliteService service) {
+        if (service.dataPath == null) {
+            service.data path: defaultData
+        }
+    }
+
+    /**
+     * Setups the default override mode.
+     *
+     * @param service
+     *            the {@link GitoliteService} service.
+     */
+    void setupDefaultOverrideMode(GitoliteService service) {
+        if (service.overrideMode == null) {
+            service.override mode: defaultOverrideMode
         }
     }
 
@@ -122,15 +150,18 @@ abstract class Gitolite_3_Config {
         def key = copyAdminKey service
         def task = scriptExecFactory.create(
                 log: log.log,
+                suCommand: suCommand,
                 gitoliteCommand: gitoliteCommand(service),
+                gitoliteUser: service.user.user,
                 key: key,
                 this, threads, gitoliteCommandsTemplate, "installAdminKey")()
+        key.delete()
         log.installedAdminKey this, task, service.adminKey
     }
 
     File copyAdminKey(GitoliteService service) {
-        def target = File.createTempFile "admin", "key", tmpDirectory
-        target.delete()
+        def name = FilenameUtils.getBaseName(service.adminKey.path)
+        def target = new File(tmpDirectory, "${name}.pub")
         FileUtils.copyURLToFile service.adminKey.toURL(), target
         target
     }
@@ -145,7 +176,9 @@ abstract class Gitolite_3_Config {
         def key = copyAdminKey service
         def task = scriptExecFactory.create(
                 log: log.log,
+                suCommand: suCommand,
                 gitoliteCommand: gitoliteCommand(service),
+                gitoliteUser: service.user.user,
                 this, threads, gitoliteCommandsTemplate, "upgradeGitolite")()
         log.upgradedGitolite this, task, service.prefix
     }
@@ -196,6 +229,36 @@ abstract class Gitolite_3_Config {
     }
 
     /**
+     * Returns the default service data path, for
+     * example {@code "/var/git"}. That is the path where the
+     * source code repositories are located.
+     *
+     * <ul>
+     * <li>profile property {@code "gitolite_default_data"}</li>
+     * </ul>
+     *
+     * @see #getGitoliteProperties()
+     */
+    String getDefaultData() {
+        profileProperty "gitolite_default_data", gitoliteProperties
+    }
+
+    /**
+     * Returns the default service override mode, for
+     * example {@code "upgrade"}.
+     *
+     * <ul>
+     * <li>profile property {@code "gitolite_default_override_mode"}</li>
+     * </ul>
+     *
+     * @see #getGitoliteProperties()
+     */
+    OverrideMode getDefaultOverrideMode() {
+        def value = profileProperty "gitolite_default_override_mode", gitoliteProperties
+        OverrideMode.valueOf(value)
+    }
+
+    /**
      * Returns the default service local user name, for
      * example {@code "git"}
      *
@@ -219,7 +282,7 @@ abstract class Gitolite_3_Config {
      *
      * @see #getGitoliteProperties()
      */
-    File getDefaultGroup() {
+    String getDefaultGroup() {
         profileProperty "gitolite_default_group", gitoliteProperties
     }
 

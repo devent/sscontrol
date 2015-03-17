@@ -1,0 +1,1 @@
+--overwrite --strip 1 -xf /tmp/tmp/gitolite-gitolite-3.6.2.tar.gz

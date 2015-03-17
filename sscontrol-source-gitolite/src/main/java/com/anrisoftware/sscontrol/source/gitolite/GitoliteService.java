@@ -55,7 +55,7 @@ public interface GitoliteService extends SourceSetupService {
      * <pre>
      * source {
      *     setup "gitolite", {
-     *         prefix path: "~/bin"
+     *         prefix path: "/usr/local/gitosis"
      *     }
      * }
      * </pre>
@@ -63,6 +63,21 @@ public interface GitoliteService extends SourceSetupService {
      * @return the prefix {@link String} path or {@code null}.
      */
     String getPrefix();
+
+    /**
+     * Returns the service data path.
+     *
+     * <pre>
+     * source {
+     *     setup "gitolite", {
+     *         data path: "/var/git"
+     *     }
+     * }
+     * </pre>
+     *
+     * @return the data {@link String} path or {@code null}.
+     */
+    String getDataPath();
 
     /**
      * Returns the service local user.

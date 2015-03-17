@@ -624,6 +624,19 @@ abstract class LinuxScript extends Script {
     }
 
     /**
+     * Returns the command to change local user.
+     *
+     * <ul>
+     * <li>property key {@code su_command}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    String getSuCommand() {
+        profileProperty "su_command", defaultProperties
+    }
+
+    /**
      * Returns the change permissions command.
      *
      * <ul>

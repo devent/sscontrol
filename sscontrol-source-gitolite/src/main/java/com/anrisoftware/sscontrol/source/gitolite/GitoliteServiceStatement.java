@@ -42,6 +42,8 @@ enum GitoliteServiceStatement {
 
     PREFIX_KEY,
 
+    DATA_KEY,
+
     PATH_KEY,
 
     ADMIN_KEY,

@@ -29,6 +29,7 @@ import com.anrisoftware.resources.templates.api.TemplatesFactory
 import com.anrisoftware.sscontrol.httpd.domain.Domain
 import com.anrisoftware.sscontrol.httpd.webservice.WebService
 import com.anrisoftware.sscontrol.scripts.changefile.ChangeFileModFactory
+import com.anrisoftware.sscontrol.scripts.localuser.LocalChangeUserFactory
 import com.anrisoftware.sscontrol.scripts.localuser.LocalGroupAddFactory
 import com.anrisoftware.sscontrol.scripts.localuser.LocalUserAddFactory
 import com.anrisoftware.sscontrol.scripts.unix.RestartServicesFactory
@@ -51,6 +52,9 @@ abstract class Thin_1_3_Config extends AbstractThinConfig {
 
     @Inject
     LocalGroupAddFactory localGroupAddFactory
+
+    @Inject
+    LocalChangeUserFactory localChangeUserFactory
 
     @Inject
     ChangeFileModFactory changeFileModFactory
@@ -128,16 +132,28 @@ abstract class Thin_1_3_Config extends AbstractThinConfig {
                 groupsFile: groupsFile,
                 groupName: thinGroup,
                 this, threads)()
-        localUserAddFactory.create(
+        boolean added = localUserAddFactory.create(
                 log: log,
                 runCommands: runCommands,
                 userName: thinUser,
                 groupName: thinGroup,
+                groups: thinAdditionalGroups,
                 command: userAddCommand,
                 systemUser: true,
                 usersFile: usersFile,
                 shell: "/bin/false",
-                this, threads)()
+                this, threads)().userAdded
+        if (!added) {
+            localChangeUserFactory.create(
+                    log: log,
+                    runCommands: runCommands,
+                    command: userModCommand,
+                    userName: thinUser,
+                    groupName: thinGroup,
+                    groups: thinAdditionalGroups,
+                    shell: "/bin/false",
+                    this, threads)()
+        }
     }
 
     /**

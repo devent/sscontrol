@@ -31,11 +31,12 @@ import com.anrisoftware.globalpom.threads.api.Threads;
 import com.anrisoftware.resources.templates.api.TemplateResource;
 import com.anrisoftware.resources.templates.api.Templates;
 import com.anrisoftware.resources.templates.api.TemplatesFactory;
+import com.anrisoftware.sscontrol.scripts.scriptsexceptions.ScriptException;
 import com.google.inject.assistedinject.Assisted;
 
 /**
  * Adds the local user.
- * 
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
@@ -68,7 +69,8 @@ public class LocalUserAdd implements Callable<LocalUserAdd> {
      */
     @Inject
     LocalUserAdd(LocalUserAddLogger log, @Assisted Map<String, Object> args,
-            @Assisted Object parent, @Assisted Threads threads) {
+            @Assisted Object parent, @Assisted Threads threads)
+            throws ScriptException {
         this.log = log;
         this.args = args;
         this.parent = parent;
@@ -82,6 +84,7 @@ public class LocalUserAdd implements Callable<LocalUserAdd> {
         log.homeDir(args, parent);
         log.shell(args, parent);
         log.command(args, parent);
+        log.groups(args, parent);
     }
 
     @Override

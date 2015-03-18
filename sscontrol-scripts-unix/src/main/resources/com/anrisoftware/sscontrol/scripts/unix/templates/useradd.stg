@@ -14,7 +14,7 @@ fi
 >>
 
 unixUserAdd(args) ::= <%
-<args.command> <unixUserAddSystem(args)> <unixUserAddShell(args)> <unixUserAddHomeDir(args)> <unixUserAddUid(args)> <unixGroupName(args)> <args.userName>
+<args.command> <unixUserAddSystem(args)> <unixUserAddShell(args)> <unixUserAddHomeDir(args)> <unixUserAddUid(args)> <unixGroupName(args)> <unixAdditionalGroups(args)> <args.userName>
 %>
 
 unixGroupName(args) ::= <%
@@ -35,4 +35,8 @@ unixUserAddHomeDir(args) ::= <%
 
 unixUserAddUid(args) ::= <%
 <if(args.userId)>-u <args.userId><endif>
+%>
+
+unixAdditionalGroups(args) ::= <%
+<if(args.groups)>-G <args.groups;separator=","><endif>
 %>

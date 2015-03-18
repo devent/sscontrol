@@ -38,8 +38,6 @@ public interface LocalChangeUserFactory {
      * @param args
      *            the {@link Map} arguments:
      *            <ul>
-     *            <li>{@code runCommands} optionally, set to the
-     *            {@link RunCommands} to record the command.
      *
      *            <li>{@code command} the change file owner command, for example
      *            {@code "/usr/sbin/usermod".}
@@ -68,6 +66,10 @@ public interface LocalChangeUserFactory {
      *
      *            <li>{@code append} optionally, set to {@code true} to append
      *            the listed groups instead of replacing them.
+     *
+     *            <li>{@code runCommands} optionally, set to the
+     *            {@link RunCommands} to record the command.
+     *
      *            </ul>
      *
      * @param parent

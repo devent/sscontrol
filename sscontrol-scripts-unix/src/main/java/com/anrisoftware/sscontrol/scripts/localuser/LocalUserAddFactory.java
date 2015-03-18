@@ -18,6 +18,7 @@
  */
 package com.anrisoftware.sscontrol.scripts.localuser;
 
+import java.util.List;
 import java.util.Map;
 
 import com.anrisoftware.globalpom.exec.runcommands.RunCommands;
@@ -56,6 +57,9 @@ public interface LocalUserAddFactory {
      *
      *            <li>{@code systemUser} optionally, set to {@code true} to add
      *            a new system user.
+     *
+     *            <li>{@code groups} optionally, {@link List} of the local user
+     *            groups, for example {@code "[foo, bar]".}
      *
      *            <li>{@code shell} optionally, set to the login shell.
      *

@@ -373,6 +373,20 @@ abstract class AbstractThinConfig {
     }
 
     /**
+     * Returns the additional <i>Thin</i> user groups, for
+     * example {@code "foo, bar"}
+     *
+     * <ul>
+     * <li>profile property {@code "thin_additional_groups"}</li>
+     * </ul>
+     *
+     * @see #getThinProperties()
+     */
+    List getThinAdditionalGroups() {
+        profileListProperty "thin_additional_groups", thinProperties
+    }
+
+    /**
      * Returns the <i>Thin</i> timeout duration, for
      * example {@code "PT30S".}
      *

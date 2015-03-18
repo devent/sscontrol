@@ -19,6 +19,9 @@
 package com.anrisoftware.sscontrol.scripts.localuser;
 
 import static com.anrisoftware.sscontrol.scripts.localuser.LocalUserAddLogger._.argument_null;
+import static com.anrisoftware.sscontrol.scripts.localuser.LocalUserAddLogger._.groups_iterable;
+import static com.anrisoftware.sscontrol.scripts.localuser.LocalUserAddLogger._.groups_iterable_message;
+import static com.anrisoftware.sscontrol.scripts.localuser.LocalUserAddLogger._.parent_the;
 import static com.anrisoftware.sscontrol.scripts.localuser.LocalUserAddLogger._.system_group_boolean;
 import static com.anrisoftware.sscontrol.scripts.localuser.LocalUserAddLogger._.user_added_debug;
 import static com.anrisoftware.sscontrol.scripts.localuser.LocalUserAddLogger._.user_added_info;
@@ -34,6 +37,7 @@ import java.util.Map;
 
 import com.anrisoftware.globalpom.exec.api.ProcessTask;
 import com.anrisoftware.globalpom.log.AbstractLogger;
+import com.anrisoftware.sscontrol.scripts.scriptsexceptions.ScriptException;
 
 /**
  * Logging for {@link LocalUserAdd}.
@@ -51,6 +55,7 @@ class LocalUserAddLogger extends AbstractLogger {
     private static final String SYSTEM_GROUP_KEY = "systemGroup";
     private static final String USER_ID_KEY = "userId";
     private static final String USER_NAME_KEY = "userName";
+    private static final String GROUPS_KEY = "groups";
 
     enum _ {
 
@@ -70,7 +75,13 @@ class LocalUserAddLogger extends AbstractLogger {
 
         user_already_exist_debug("User already exist '{}' for {}."),
 
-        user_already_exist_info("User already exist '{}' for script {}.");
+        user_already_exist_info("User already exist '{}' for script {}."),
+
+        groups_iterable("User groups must be iterable"),
+
+        groups_iterable_message("User groups must be iterable."),
+
+        parent_the("parent");
 
         private String name;
 
@@ -138,6 +149,16 @@ class LocalUserAddLogger extends AbstractLogger {
     void shell(Map<String, Object> args, Object parent) {
         Object object = args.get(SHELL_KEY);
         if (object != null) {
+        }
+    }
+
+    void groups(Map<String, Object> args, Object parent) throws ScriptException {
+        Object object = args.get(GROUPS_KEY);
+        if (object != null) {
+            if (!(object instanceof Iterable)) {
+                throw logException(new ScriptException(groups_iterable).add(
+                        parent_the, parent), groups_iterable_message);
+            }
         }
     }
 

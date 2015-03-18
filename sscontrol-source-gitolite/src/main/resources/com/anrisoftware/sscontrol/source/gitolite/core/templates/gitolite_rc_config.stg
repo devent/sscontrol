@@ -1,0 +1,7 @@
+configUmaskSearch() ::= <%
+(?m)\s*UMASK\s*=>.*,
+%>
+
+configUmask(umask) ::= <<
+    UMASK                           =>  <umask>,
+>>

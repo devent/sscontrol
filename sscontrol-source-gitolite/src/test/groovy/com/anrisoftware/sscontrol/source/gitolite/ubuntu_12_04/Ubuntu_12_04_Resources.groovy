@@ -40,9 +40,12 @@ enum Ubuntu_12_04_Resources {
     groupsFile("/etc/group", Ubuntu_12_04_Resources.class.getResource("group.txt")),
     usersFile("/etc/passwd", Ubuntu_12_04_Resources.class.getResource("passwd.txt")),
     gitoliteArchive("/tmp/gitolite-3.6.2.tar.gz", Ubuntu_12_04_Resources.class.getResource("/com/anrisoftware/sscontrol/source/gitolite/archive/gitolite-3.6.2.tar.gz")),
+    gitoliteRcFile("/var/git/.gitolite.rc", Ubuntu_12_04_Resources.class.getResource("/com/anrisoftware/sscontrol/source/gitolite/archive/gitoliterc.txt")),
     adminKey("/tmp/admin.pub", Ubuntu_12_04_Resources.class.getResource("adminpub.txt")),
     prefixDirectory("/usr/local/gitolite", null),
+    gitoliteDataDirectory("/var/git", null),
     // expected
+    gitolitercExpected("/var/git/.gitolite.rc", Ubuntu_12_04_Resources.class.getResource("gitoliterc_expected.txt")),
     aptitudeOutExpected("/usr/bin/aptitude.out", Ubuntu_12_04_Resources.class.getResource("aptitude_out_excepted.txt")),
     gitoliteInstallOutExpected("/usr/local/gitolite/install.out", Ubuntu_12_04_Resources.class.getResource("gitoliteinstall_out_expected.txt")),
     gitoliteOutExpected("/usr/local/bin/gitolite.out", Ubuntu_12_04_Resources.class.getResource("gitolite_out_expected.txt")),
@@ -57,7 +60,8 @@ enum Ubuntu_12_04_Resources {
         groupsFile.createFile parent
         usersFile.createFile parent
         gitoliteArchive.createFile parent
-        prefixDirectory.asFile parent mkdirs()
+        gitoliteRcFile.createFile parent
+        gitoliteDataDirectory.asFile parent mkdirs()
     }
 
     static void setupUbuntu_12_04_Properties(def profile, File parent) {
@@ -65,6 +69,7 @@ enum Ubuntu_12_04_Resources {
         // files
         entry.groups_file groupsFile.asFile(parent)
         entry.users_file usersFile.asFile(parent)
+        entry.gitolite_default_data gitoliteDataDirectory.asFile(parent)
         entry.gitolite_default_prefix prefixDirectory.asFile(parent)
         entry.gitolite_archive gitoliteArchive.asFile(parent)
         entry.gitolite_archive_hash "md5:dcf2bc265e5c9ec19918abe5920d0fc8"

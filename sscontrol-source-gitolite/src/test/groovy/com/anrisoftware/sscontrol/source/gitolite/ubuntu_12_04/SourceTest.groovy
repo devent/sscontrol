@@ -50,6 +50,7 @@ class SourceTest extends PreScriptTestEnvironment {
         log.info "Run service again to ensure that configuration is not set double."
         registry.allServices.each { it.call() }
 
+        assertFileContent gitolitercExpected.asFile(tmpdir), gitolitercExpected
         assertFileContent aptitudeOutExpected.asFile(tmpdir), aptitudeOutExpected
         assertStringContent gitoliteInstallOutExpected.replaced(tmpdir, tmpdir, "/tmp"), gitoliteInstallOutExpected.toString()
         assertStringContent suOutExpected.replaced(tmpdir, tmpdir, "/tmp").replaceAll(/\d{2,}/, "xx"), suOutExpected.toString()

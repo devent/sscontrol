@@ -48,6 +48,9 @@ abstract class Gitolite_3_Config {
     private Gitolite_3_ConfigLogger log
 
     @Inject
+    private GitolitercConfig gitolitercConfig
+
+    @Inject
     private ScriptExecFactory scriptExecFactory
 
     @Inject
@@ -184,6 +187,16 @@ abstract class Gitolite_3_Config {
     }
 
     /**
+     * Deploys the <i>Gitolite Rc</i> configuration.
+     *
+     * @param service
+     *            the {@link GitoliteService}.
+     */
+    void deployGitolitercConfig(GitoliteService service) {
+        gitolitercConfig.deployGitolitercConfig service
+    }
+
+    /**
      * Returns the path of the <i>Gitolite</i> install command, for
      * example {@code "install"}. If the path is not absolute it
      * is assumed to be located under the service installation directory.
@@ -211,6 +224,35 @@ abstract class Gitolite_3_Config {
      */
     File gitoliteCommand(GitoliteService service) {
         profileFileProperty "gitolite_command", new File(service.prefix), gitoliteProperties
+    }
+
+    /**
+     * Returns the path of the <i>.gitolite.rc</i> file. If the path is not
+     * absolute it is assumed to be located under the service
+     * data directory.
+     *
+     * <ul>
+     * <li>profile property {@code "gitolite_rc_file"}</li>
+     * </ul>
+     *
+     * @see #getGitoliteProperties()
+     */
+    File gitolitercFile(GitoliteService service) {
+        def dir = new File(service.dataPath)
+        profileFileProperty "gitolite_rc_file", dir, gitoliteProperties
+    }
+
+    /**
+     * Returns the umask, for example {@code "0077"}.
+     *
+     * <ul>
+     * <li>profile property {@code "gitolite_umask"}</li>
+     * </ul>
+     *
+     * @see #getGitoliteProperties()
+     */
+    String getUmask() {
+        profileProperty "gitolite_umask", gitoliteProperties
     }
 
     /**
@@ -308,6 +350,7 @@ abstract class Gitolite_3_Config {
      */
     void setScript(LinuxScript script) {
         this.script = script
+        gitolitercConfig.setScript this
     }
 
     /**

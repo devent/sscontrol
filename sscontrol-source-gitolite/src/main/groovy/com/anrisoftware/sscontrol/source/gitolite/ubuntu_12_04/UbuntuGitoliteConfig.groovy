@@ -23,8 +23,8 @@ import javax.inject.Inject
 import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.sscontrol.core.service.LinuxScript
 import com.anrisoftware.sscontrol.source.gitolite.core.Gitolite_3_Config
-import com.anrisoftware.sscontrol.source.service.SourceServiceConfig;
-import com.anrisoftware.sscontrol.source.service.SourceSetupService;
+import com.anrisoftware.sscontrol.source.service.SourceServiceConfig
+import com.anrisoftware.sscontrol.source.service.SourceSetupService
 
 /**
  * <i>Gitolite Ubuntu 12.04</i> configuration.
@@ -51,6 +51,7 @@ class UbuntuGitoliteConfig extends Gitolite_3_Config implements SourceServiceCon
         fromArchive.deployService service
         installGitolite service
         deployAdminKey service
+        deployGitolitercConfig service
     }
 
     ContextProperties getGitoliteProperties() {

@@ -21,6 +21,8 @@ package com.anrisoftware.sscontrol.security.service
 source {
     setup "gitolite", {
         override mode: OverrideMode.override
+        prefix path: "/usr/local/gitosis"
+        data path: "/var/git"
         user "git", group: "git", uid: 99, gid: 99
         admin key: "yourname.pub"
     }

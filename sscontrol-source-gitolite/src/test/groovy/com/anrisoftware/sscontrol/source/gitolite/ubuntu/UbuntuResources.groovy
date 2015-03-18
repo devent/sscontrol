@@ -37,6 +37,7 @@ enum UbuntuResources {
     useraddCommand("/usr/sbin/useradd", UbuntuResources.class.getResource("echo_command.txt")),
     groupaddCommand("/usr/sbin/groupadd", UbuntuResources.class.getResource("echo_command.txt")),
     chownCommand("/bin/chown", UbuntuResources.class.getResource("echo_command.txt")),
+    chmodCommand("/bin/chmod", UbuntuResources.class.getResource("echo_command.txt")),
     tarCommand("/bin/tar", UbuntuResources.class.getResource("echo_command.txt")),
     // files
     tmpDir("/tmp", null),
@@ -48,6 +49,7 @@ enum UbuntuResources {
         useraddCommand.createCommand parent
         groupaddCommand.createCommand parent
         chownCommand.createCommand parent
+        chmodCommand.createCommand parent
         tarCommand.createCommand parent
         // files
         tmpDir.asFile(parent).mkdirs()
@@ -60,6 +62,7 @@ enum UbuntuResources {
         entry.su_command suCommand.asFile(parent)
         entry.group_add_command groupaddCommand.asFile(parent)
         entry.chown_command chownCommand.asFile(parent)
+        entry.chmod_command chmodCommand.asFile(parent)
         entry.user_add_command useraddCommand.asFile(parent)
         entry.tar_command tarCommand.asFile(parent)
         // files

@@ -30,6 +30,7 @@ import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.TemplatesFactory
 import com.anrisoftware.sscontrol.core.overridemode.OverrideMode
 import com.anrisoftware.sscontrol.core.service.LinuxScript
+import com.anrisoftware.sscontrol.scripts.changefile.ChangeFileModFactory
 import com.anrisoftware.sscontrol.source.gitolite.GitoliteService
 
 /**
@@ -52,6 +53,9 @@ abstract class Gitolite_3_Config {
 
     @Inject
     private ScriptExecFactory scriptExecFactory
+
+    @Inject
+    private ChangeFileModFactory changeFileModFactory
 
     @Inject
     final void setTemplatesFactory(TemplatesFactory templatesFactory) {
@@ -137,6 +141,7 @@ abstract class Gitolite_3_Config {
         path.mkdirs()
         def task = scriptExecFactory.create(
                 log: log.log,
+                runCommands: runCommands,
                 installCommand: gitoliteInstallCommand(service),
                 prefix: path,
                 this, threads, gitoliteCommandsTemplate, "installGitolite")()
@@ -153,6 +158,7 @@ abstract class Gitolite_3_Config {
         def key = copyAdminKey service
         def task = scriptExecFactory.create(
                 log: log.log,
+                runCommands: runCommands,
                 suCommand: suCommand,
                 gitoliteCommand: gitoliteCommand(service),
                 gitoliteUser: service.user.user,
@@ -179,6 +185,7 @@ abstract class Gitolite_3_Config {
         def key = copyAdminKey service
         def task = scriptExecFactory.create(
                 log: log.log,
+                runCommands: runCommands,
                 suCommand: suCommand,
                 gitoliteCommand: gitoliteCommand(service),
                 gitoliteUser: service.user.user,
@@ -194,6 +201,30 @@ abstract class Gitolite_3_Config {
      */
     void deployGitolitercConfig(GitoliteService service) {
         gitolitercConfig.deployGitolitercConfig service
+    }
+
+    /**
+     * Updates the permissions for the repository directory.
+     *
+     * @param service
+     *            the {@link GitoliteService}.
+     */
+    void updateRepositoriesPermissions(GitoliteService service) {
+        List mods = [0, 7, 7, 7]
+        int[] mask = umask.chars.inject([]) { list, it ->
+            list << Integer.valueOf("$it")
+        }
+        int off = mods.size() - mask.length
+        mask.eachWithIndex { int it, int k ->
+            mods[k + off] = mods[k + off] - it
+        }
+        changeFileModFactory.create(
+                log: log.log,
+                runCommands: runCommands,
+                command: chmodCommand,
+                files: gitoliteRepositoriesDirectory(service),
+                mod: mods.join(),
+                this, threads)()
     }
 
     /**
@@ -224,6 +255,22 @@ abstract class Gitolite_3_Config {
      */
     File gitoliteCommand(GitoliteService service) {
         profileFileProperty "gitolite_command", new File(service.prefix), gitoliteProperties
+    }
+
+    /**
+     * Returns the path of the repositories directory. If the path is not
+     * absolute it is assumed to be located under the service
+     * data directory.
+     *
+     * <ul>
+     * <li>profile property {@code "gitolite_repositories_directory"}</li>
+     * </ul>
+     *
+     * @see #getGitoliteProperties()
+     */
+    File gitoliteRepositoriesDirectory(GitoliteService service) {
+        def dir = new File(service.dataPath)
+        profileFileProperty "gitolite_repositories_directory", dir, gitoliteProperties
     }
 
     /**

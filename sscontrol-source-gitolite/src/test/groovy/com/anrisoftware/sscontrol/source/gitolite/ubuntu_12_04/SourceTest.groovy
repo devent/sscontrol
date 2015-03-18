@@ -39,6 +39,7 @@ class SourceTest extends PreScriptTestEnvironment {
 
     @Test
     void "gitolite script"() {
+        attachRunCommandsLog tmpdir
         copyUbuntuFiles tmpdir
         copyUbuntu_12_04_Files tmpdir
         loader.loadService profile.resource, null
@@ -51,9 +52,12 @@ class SourceTest extends PreScriptTestEnvironment {
         registry.allServices.each { it.call() }
 
         assertFileContent gitolitercExpected.asFile(tmpdir), gitolitercExpected
+        assertStringContent runcommandsLogExpected.replaced(tmpdir, tmpdir, "/tmp").replaceAll(/\d{2,}/, 'time'), runcommandsLogExpected.toString()
         assertFileContent aptitudeOutExpected.asFile(tmpdir), aptitudeOutExpected
         assertStringContent gitoliteInstallOutExpected.replaced(tmpdir, tmpdir, "/tmp"), gitoliteInstallOutExpected.toString()
         assertStringContent suOutExpected.replaced(tmpdir, tmpdir, "/tmp").replaceAll(/\d{2,}/, "xx"), suOutExpected.toString()
         assertStringContent tarOutExpected.replaced(tmpdir, tmpdir, "/tmp"), tarOutExpected.toString()
+        assertStringContent chmodOutExpected.replaced(tmpdir, tmpdir, "/tmp"), chmodOutExpected.toString()
+        assertStringContent chownOutExpected.replaced(tmpdir, tmpdir, "/tmp"), chownOutExpected.toString()
     }
 }

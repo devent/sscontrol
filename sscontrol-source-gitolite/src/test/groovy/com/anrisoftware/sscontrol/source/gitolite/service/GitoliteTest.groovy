@@ -26,11 +26,11 @@ import org.junit.Test
 
 import com.anrisoftware.sscontrol.core.overridemode.OverrideMode
 import com.anrisoftware.sscontrol.source.gitolite.GitoliteService
-import com.anrisoftware.sscontrol.source.gitolite.test.PreScriptTestEnvironment;
-import com.anrisoftware.sscontrol.source.service.SourceService;
+import com.anrisoftware.sscontrol.source.gitolite.test.PreScriptTestEnvironment
+import com.anrisoftware.sscontrol.source.service.SourceService
 
 /**
- * @see ClamavService
+ * @see GitoliteService
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
@@ -49,6 +49,8 @@ class GitoliteTest extends PreScriptTestEnvironment {
         GitoliteService gitolite = service.services[0]
         assert gitolite.name == "gitolite"
         assert gitolite.overrideMode == OverrideMode.override
+        assert gitolite.prefix == "/usr/local/gitosis"
+        assert gitolite.dataPath == "/var/git"
         assert gitolite.user.size() == 4
         assert gitolite.user["user"] == "git"
         assert gitolite.user["group"] == "git"

@@ -52,6 +52,7 @@ class UbuntuGitoliteConfig extends Gitolite_3_Config implements SourceServiceCon
         installGitolite service
         deployAdminKey service
         deployGitolitercConfig service
+        updateRepositoriesPermissions service
     }
 
     ContextProperties getGitoliteProperties() {

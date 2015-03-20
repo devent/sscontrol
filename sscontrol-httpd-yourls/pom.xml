@@ -10,15 +10,19 @@
 		<relativePath>../sscontrol-parent</relativePath>
 	</parent>
 
-	<artifactId>sscontrol-httpd-wordpress</artifactId>
-	<name>RoboBee :: Httpd :: Wordpress</name>
-	<description>Wordpress web software to create websites or blogs. - http://wordpress.org/</description>
-	<inceptionYear>2014</inceptionYear>
-	<url>https://anrisoftware.com/projects/projects/sscontrol-httpd-wordpress</url>
+	<artifactId>sscontrol-httpd-yourls</artifactId>
+	<name>RoboBee :: Httpd :: Yourls</name>
+	<description>PHP URL shortening service Yourls - http://yourls.org/</description>
+	<inceptionYear>2015</inceptionYear>
+	<url>https://anrisoftware.com/projects/projects/sscontrol-httpd-yourls</url>
+
+	<properties>
+		<project.custom.year>${project.inceptionYear}</project.custom.year>
+	</properties>
 
 	<issueManagement>
 		<system>Redmine</system>
-		<url>https://anrisoftware.com/projects/projects/sscontrol-httpd-wordpress</url>
+		<url>https://anrisoftware.com/projects/projects/sscontrol-httpd-yourls</url>
 	</issueManagement>
 
 	<scm>
@@ -88,14 +92,6 @@
 			<groupId>org.mangosdk.spi</groupId>
 			<artifactId>spi</artifactId>
 			<optional>true</optional>
-		</dependency>
-		<dependency>
-			<groupId>com.google.inject.extensions</groupId>
-			<artifactId>guice-multibindings</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>joda-time</groupId>
-			<artifactId>joda-time</artifactId>
 		</dependency>
 	</dependencies>
 

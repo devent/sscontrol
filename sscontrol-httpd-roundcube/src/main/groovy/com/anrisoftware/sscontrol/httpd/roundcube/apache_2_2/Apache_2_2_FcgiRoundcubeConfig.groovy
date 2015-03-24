@@ -81,7 +81,7 @@ class Apache_2_2_FcgiRoundcubeConfig extends FcgiRoundcubeConfig {
         def serviceDirectory = serviceDir domain, refDomain, service
         def args = [:]
         args.domain = domain
-        args.service = service
+        args.serviceAlias = service.alias
         args.serviceDirectory = serviceDirectory
         args.sitesDirectory = sitesDirectory
         args.scriptsSubdirectory = scriptsSubdirectory

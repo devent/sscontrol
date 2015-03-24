@@ -38,15 +38,15 @@ abstract class Apache_2_2_RoundcubeConfig {
     private Object script
 
     @Inject
-    Apache_2_2_FcgiRoundcubeConfig fcgiOwncloudConfig
+    Apache_2_2_FcgiRoundcubeConfig roundcubeFcgiConfig
 
     void deployDomain(Domain domain, Domain refDomain, WebService service, List config) {
-        fcgiOwncloudConfig.deployDomain domain, refDomain, service, config
+        roundcubeFcgiConfig.deployDomain domain, refDomain, service, config
     }
 
     void deployService(Domain domain, WebService service, List config) {
         enableMods roundcubeApacheMods
-        fcgiOwncloudConfig.deployService domain, service, config
+        roundcubeFcgiConfig.deployService domain, service, config
     }
 
     /**
@@ -93,7 +93,7 @@ abstract class Apache_2_2_RoundcubeConfig {
      */
     void setScript(Object script) {
         this.script = script
-        fcgiOwncloudConfig.setScript this
+        roundcubeFcgiConfig.setScript this
     }
 
     /**

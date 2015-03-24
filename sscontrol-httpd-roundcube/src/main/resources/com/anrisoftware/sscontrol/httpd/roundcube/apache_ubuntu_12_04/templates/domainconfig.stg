@@ -1,6 +1,6 @@
 domainConfig(args) ::= <<
 <!- args.domain -!>
-<!- args.alias -!>
+<!- args.serviceAlias -!>
 <!- args.serviceDirectory -!>
 <!- args.sitesDirectory -!>
 <!- args.scriptsSubdirectory -!>
@@ -30,7 +30,7 @@ FCGIWrapper <args.sitesDirectory>/<args.scriptsSubdirectory>/<args.domain.name>/
 %>
 
 serviceAlias(args) ::= <<
-<if(args.service.alias)>Alias /<args.service.alias> <args.serviceAliasDir><endif>
+<if(args.serviceAlias)>Alias /<args.serviceAlias> <args.serviceAliasDir><endif>
 >>
 
 phpConfig(args) ::= <<

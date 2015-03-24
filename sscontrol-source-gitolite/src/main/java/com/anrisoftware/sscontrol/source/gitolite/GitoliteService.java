@@ -35,7 +35,8 @@ import com.anrisoftware.sscontrol.source.service.SourceSetupService;
 public interface GitoliteService extends SourceSetupService {
 
     /**
-     * Returns the override mode.
+     * Returns the override mode that determines what should be done if the
+     * service was already installed inside the prefix path.
      *
      * <pre>
      * source {
@@ -50,7 +51,8 @@ public interface GitoliteService extends SourceSetupService {
     OverrideMode getOverrideMode();
 
     /**
-     * Returns the service prefix path.
+     * Returns the service prefix path, that is, the path to where the service
+     * will be installed.
      *
      * <pre>
      * source {
@@ -65,7 +67,8 @@ public interface GitoliteService extends SourceSetupService {
     String getPrefix();
 
     /**
-     * Returns the service data path.
+     * Returns the service data path, that is, the path where the repositories
+     * are located.
      *
      * <pre>
      * source {
@@ -80,7 +83,8 @@ public interface GitoliteService extends SourceSetupService {
     String getDataPath();
 
     /**
-     * Returns the service local user.
+     * Returns the service local user, that is the owner of new created
+     * repositories.
      *
      * <ul>
      * <li>{@code "user"}, the user {@link String} name;</li>

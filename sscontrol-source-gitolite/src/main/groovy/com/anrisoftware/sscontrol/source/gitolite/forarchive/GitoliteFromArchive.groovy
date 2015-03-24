@@ -270,7 +270,7 @@ abstract class GitoliteFromArchive {
 
     /**
      * Returns the <i>Gitolite</i> archive hash, for
-     * example {@code "https://download.owncloud.org/community/owncloud-7.0.4.tar.bz2.md5"}
+     * example {@code "md5:72b70ed378a775b5cd496ee02b81c467"}
      *
      * <ul>
      * <li>profile property {@code "gitolite_archive_hash"}</li>

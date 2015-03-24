@@ -27,7 +27,7 @@ package com.anrisoftware.sscontrol.core.overridemode;
 public enum OverrideMode {
 
     /**
-     * No update the existing service.
+     * No update of the existing service.
      */
     no,
 

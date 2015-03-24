@@ -316,7 +316,9 @@ abstract class LinuxScript extends Script {
     }
 
     /**
-     * Returns the {@code tar} command.
+     * Returns the command of the {@code tar} utility.
+     * Can be a full path or just the command name that can be found in
+     * the current search path.
      *
      * <ul>
      * <li>property key {@code tar_command}</li>
@@ -330,6 +332,8 @@ abstract class LinuxScript extends Script {
 
     /**
      * Returns the {@code unzip} command.
+     * Can be a full path or just the command name that can be found in
+     * the current search path.
      *
      * <ul>
      * <li>property key {@code unzip_command}</li>
@@ -343,6 +347,8 @@ abstract class LinuxScript extends Script {
 
     /**
      * Returns the {@code gunzip} command.
+     * Can be a full path or just the command name that can be found in
+     * the current search path.
      *
      * <ul>
      * <li>property key {@code gunzip_command}</li>
@@ -356,6 +362,8 @@ abstract class LinuxScript extends Script {
 
     /**
      * Returns the file link command.
+     * Can be a full path or just the command name that can be found in
+     * the current search path.
      *
      * <ul>
      * <li>property key {@code link_command}</li>
@@ -368,7 +376,9 @@ abstract class LinuxScript extends Script {
     }
 
     /**
-     * Returns the file link command.
+     * Returns the command to change the password of local users.
+     * Can be a full path or just the command name that can be found in
+     * the current search path.
      *
      * <ul>
      * <li>property key {@code "change_password_command"}</li>
@@ -594,14 +604,15 @@ abstract class LinuxScript extends Script {
     }
 
     /**
-     * Returns the path of the temporary directory, defaults to
-     * {@link System#getProperties()}.
+     * Returns the path of the temporary directory, if empty, the path
+     * of the system temporary directory is used.
      *
      * <ul>
      * <li>profile property {@code "temp_directory"}</li>
      * </ul>
      *
      * @see #getDefaultProperties()
+     * @see System#getProperties()
      */
     File getTmpDirectory() {
         if (containsKey("temp_directory")) {
@@ -624,7 +635,9 @@ abstract class LinuxScript extends Script {
     }
 
     /**
-     * Returns the command to change local user.
+     * Returns the command to change local user under which a script is run.
+     * Can be a full path or just the command name that can be found in
+     * the current search path.
      *
      * <ul>
      * <li>property key {@code su_command}</li>
@@ -638,6 +651,8 @@ abstract class LinuxScript extends Script {
 
     /**
      * Returns the change permissions command.
+     * Can be a full path or just the command name that can be found in
+     * the current search path.
      *
      * <ul>
      * <li>property key {@code chmod_command}</li>
@@ -651,6 +666,8 @@ abstract class LinuxScript extends Script {
 
     /**
      * Returns the command to create a new local group.
+     * Can be a full path or just the command name that can be found in
+     * the current search path.
      *
      * <ul>
      * <li>property key {@code group_add_command}</li>
@@ -663,20 +680,9 @@ abstract class LinuxScript extends Script {
     }
 
     /**
-     * Returns the local groups file.
-     *
-     * <ul>
-     * <li>property key {@code groups_file}</li>
-     * </ul>
-     *
-     * @see #getDefaultProperties()
-     */
-    File getGroupsFile() {
-        profileProperty("groups_file", defaultProperties) as File
-    }
-
-    /**
      * Returns the command to create a new local user.
+     * Can be a full path or just the command name that can be found in
+     * the current search path.
      *
      * <ul>
      * <li>property key {@code user_add_command}</li>
@@ -689,21 +695,10 @@ abstract class LinuxScript extends Script {
     }
 
     /**
-     * Returns the local users file.
-     *
-     * <ul>
-     * <li>property key {@code users_file}</li>
-     * </ul>
-     *
-     * @see #getDefaultProperties()
-     */
-    File getUsersFile() {
-        profileProperty("users_file", defaultProperties) as File
-    }
-
-    /**
      * Returns the command to modify a local user, for
      * example {@code "/usr/sbin/usermod"}.
+     * Can be a full path or just the command name that can be found in
+     * the current search path.
      *
      * <ul>
      * <li>property key {@code user_mod_command}</li>
@@ -718,6 +713,8 @@ abstract class LinuxScript extends Script {
     /**
      * Returns the command to modify a local group, for
      * example {@code "/usr/sbin/groupmod"}.
+     * Can be a full path or just the command name that can be found in
+     * the current search path.
      *
      * <ul>
      * <li>property key {@code group_mod_command}</li>
@@ -732,6 +729,8 @@ abstract class LinuxScript extends Script {
     /**
      * Returns the command to returns information about local users, for
      * example {@code "/usr/bin/id"}.
+     * Can be a full path or just the command name that can be found in
+     * the current search path.
      *
      * <ul>
      * <li>property key {@code user_id_command}</li>
@@ -741,6 +740,32 @@ abstract class LinuxScript extends Script {
      */
     String getUserIdCommand() {
         profileProperty "user_id_command", defaultProperties
+    }
+
+    /**
+     * Returns the path of the local groups file.
+     *
+     * <ul>
+     * <li>property key {@code groups_file}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    File getGroupsFile() {
+        profileProperty("groups_file", defaultProperties) as File
+    }
+
+    /**
+     * Returns the path of the local users file.
+     *
+     * <ul>
+     * <li>property key {@code users_file}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    File getUsersFile() {
+        profileProperty("users_file", defaultProperties) as File
     }
 
     /**

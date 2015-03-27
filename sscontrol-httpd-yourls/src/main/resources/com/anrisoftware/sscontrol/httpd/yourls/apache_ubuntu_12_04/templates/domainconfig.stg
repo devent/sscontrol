@@ -72,9 +72,9 @@ rewriteConfig(args) ::= <<
 >>
 
 secureConfig(args) ::= <<
-\<files config.php>
+\<Files config.php>
    order allow,deny
    deny from all
-\</files>
+\</Files>
 
 >>

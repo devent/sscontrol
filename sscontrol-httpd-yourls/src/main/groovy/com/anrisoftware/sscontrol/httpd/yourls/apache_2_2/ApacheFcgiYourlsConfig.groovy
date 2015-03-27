@@ -74,11 +74,12 @@ abstract class ApacheFcgiYourlsConfig extends FcgiYourlsConfig {
         args.domainName = domain.name
         args.serviceAlias = service.alias
         args.haveAlias = !service.alias.empty
-        args.script = script
-        args.config = this
         args.serviceAliasDir = serviceAliasDir
         args.serviceDirectory = serviceDir
         args.namePattern = namePattern(domain)
+        args.sitesDirectory = sitesDirectory
+        args.scriptsSubdirectory = scriptsSubdirectory
+        args.scriptStarterFileName = scriptStarterFileName
         def configStr = domainConfigTemplate.getText(true, "domainConfig", "args", args)
         config << configStr
         log.createdDomainConfig this, domain, configStr

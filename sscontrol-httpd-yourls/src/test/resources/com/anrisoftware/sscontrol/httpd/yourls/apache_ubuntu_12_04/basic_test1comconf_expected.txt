@@ -20,7 +20,7 @@
 
     <Directory /tmp/var/www/test1.com/yourls_1>
         AddHandler fcgid-script .php
-        FCGIWrapper //test1.com/ .php
+        FCGIWrapper /tmp/var/www/php-fcgi-scripts/test1.com/php-fcgi-starter .php
         Options +ExecCGI +FollowSymLinks -Indexes
         DirectoryIndex index.php
         AllowOverride All
@@ -51,10 +51,10 @@
             RewriteRule ^.*$ /yourls-loader.php [L]
         </IfModule>
 
-        <files config.php>
+        <Files config.php>
            order allow,deny
            deny from all
-        </files>
+        </Files>
 
     </Directory>
 

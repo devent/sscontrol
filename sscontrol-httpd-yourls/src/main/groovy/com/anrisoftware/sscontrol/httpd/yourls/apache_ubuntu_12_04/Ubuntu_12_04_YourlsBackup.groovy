@@ -20,8 +20,10 @@ package com.anrisoftware.sscontrol.httpd.yourls.apache_ubuntu_12_04
 
 import javax.inject.Inject
 
+import com.anrisoftware.sscontrol.httpd.backups.core.ServiceBackup
+import com.anrisoftware.sscontrol.httpd.domain.Domain
+import com.anrisoftware.sscontrol.httpd.webservice.WebService
 import com.anrisoftware.sscontrol.httpd.yourls.ubuntu.UbuntuYourlsArchiveServiceBackup
-import com.anrisoftware.sscontrol.httpd.yourls.ubuntu.UbuntuYourlsBackup
 import com.anrisoftware.sscontrol.httpd.yourls.ubuntu.UbuntuYourlsMysqlDatabaseBackup
 
 /**
@@ -30,7 +32,7 @@ import com.anrisoftware.sscontrol.httpd.yourls.ubuntu.UbuntuYourlsMysqlDatabaseB
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class Ubuntu_12_04_YourlsBackup extends UbuntuYourlsBackup {
+class Ubuntu_12_04_YourlsBackup extends ServiceBackup {
 
     @Inject
     private Ubuntu_12_04_YourlsArchiveServiceBackup serviceBackup
@@ -46,6 +48,16 @@ class Ubuntu_12_04_YourlsBackup extends UbuntuYourlsBackup {
     @Override
     UbuntuYourlsMysqlDatabaseBackup getMysqlDatabaseBackup() {
         mysqlDatabaseBackup
+    }
+
+    @Override
+    File serviceDir(Domain domain, WebService service) {
+        yourlsDir domain, service
+    }
+
+    @Override
+    String getServiceName() {
+        Ubuntu_12_04_ApacheYourlsConfigFactory.WEB_NAME
     }
 
     @Override

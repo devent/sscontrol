@@ -3,6 +3,7 @@ web_002.web_002 /tmp/var/www/test2.com/web
 web_003.web_003 /tmp/var/www/test3.com/web
 -R web_001.web_001 /tmp/var/www/php-fcgi-scripts/test1.com
 web_001.web_001 /tmp/var/www/php-fcgi-scripts/test1.com/php-fcgi-starter
+-R root.root /tmp/var/backups/test1.com
 -R root.web_001 /tmp/var/www/test1.com/roundcube_1
 -R web_001.web_001 /tmp/var/www/test1.com/roundcube_1/logs
 -R web_001.web_001 /tmp/var/www/test1.com/roundcube_1/temp
@@ -27,6 +28,7 @@ web_002.web_002 /tmp/var/www/test2.com/web
 web_003.web_003 /tmp/var/www/test3.com/web
 -R web_001.web_001 /tmp/var/www/php-fcgi-scripts/test1.com
 web_001.web_001 /tmp/var/www/php-fcgi-scripts/test1.com/php-fcgi-starter
+-R root.root /tmp/var/backups/test1.com
 -R root.web_001 /tmp/var/www/test1.com/roundcube_1
 -R web_001.web_001 /tmp/var/www/test1.com/roundcube_1/logs
 -R web_001.web_001 /tmp/var/www/test1.com/roundcube_1/temp

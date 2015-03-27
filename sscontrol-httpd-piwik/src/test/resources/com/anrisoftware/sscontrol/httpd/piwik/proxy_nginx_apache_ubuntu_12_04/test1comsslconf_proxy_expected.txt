@@ -27,7 +27,7 @@ server {
     proxy_set_header  X-Forwarded-Proto https;
     proxy_redirect off;
 
-    location /piwik {
+    location /piwik/ {
         proxy_cache_key "$scheme://$host$request_uri";
         proxy_cache piwik;
         proxy_pass https://127.0.0.1:8082;

@@ -96,4 +96,28 @@ class YourlsTest extends WebServiceTestEnvironment {
         assertStringContent basicChownOutExpected.replaced(tmpdir, tmpdir, "/tmp"), basicChownOutExpected.toString()
         assertFileContent basicAptitudeOutExpected.asFile(tmpdir), basicAptitudeOutExpected
     }
+
+    @Test
+    void "yourls backup"() {
+        attachRunCommandsLog tmpdir
+        copyUbuntuFiles tmpdir
+        copyApacheUbuntuFiles tmpdir
+        copyYourlsArchiveFiles tmpdir
+        copyYourlsFiles tmpdir
+        loader.loadService profile.resource, null
+        def profile = registry.getService("profile")[0]
+        setupApacheUbuntuProperties profile, tmpdir
+        setupUbuntuProperties profile, tmpdir
+        setupYourlsProperties profile, tmpdir
+        setupYourlsArchiveProperties profile, tmpdir
+        loader.loadService httpdBackupScript.resource, profile, preScript
+        registry.allServices.each { it.call() }
+        log.info "Run service again to ensure that configuration is not set double."
+        registry.allServices.each { it.call() }
+
+        assertStringContent backupRuncommandsLogExpected.replaced(tmpdir, tmpdir, "/tmp").replaceAll(/\d{2,}/, 'time'), backupRuncommandsLogExpected.toString()
+        assertStringContent backupTarOutExpected.replaced(tmpdir, tmpdir, "/tmp").replaceAll(/\d{2,}/, 'time'), backupTarOutExpected.toString()
+        assertStringContent backupChmodOutExpected.replaced(tmpdir, tmpdir, "/tmp"), backupChmodOutExpected.toString()
+        assertStringContent backupChownOutExpected.replaced(tmpdir, tmpdir, "/tmp"), backupChownOutExpected.toString()
+    }
 }

@@ -48,6 +48,10 @@ class Ubuntu_12_04_PiwikBackup extends UbuntuPiwikBackup {
         mysqlDatabaseBackup
     }
 
+    String getServiceName() {
+        Ubuntu_12_04_ApachePiwikConfigFactory.WEB_NAME
+    }
+
     @Override
     String getProfile() {
         Ubuntu_12_04_ApachePiwikConfigFactory.PROFILE_NAME

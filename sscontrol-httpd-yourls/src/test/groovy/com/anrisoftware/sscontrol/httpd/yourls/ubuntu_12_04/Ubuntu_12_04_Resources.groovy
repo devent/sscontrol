@@ -33,6 +33,8 @@ enum Ubuntu_12_04_Resources {
 
     // commands
     aptitudeCommand("/usr/bin/aptitude", Ubuntu_12_04_Resources.class.getResource("echo_command.txt")),
+    mysqldumpCommand("/usr/bin/mysqldump", Ubuntu_12_04_Resources.class.getResource("echo_command.txt")),
+    gzipCommand("/bin/gzip", Ubuntu_12_04_Resources.class.getResource("echo_command.txt")),
     bashCommand("/bin/bash", Ubuntu_12_04_Resources.class.getResource("echo_command.txt")),
     chmodCommand("/bin/chmod", Ubuntu_12_04_Resources.class.getResource("echo_command.txt")),
     chownCommand("/bin/chown", Ubuntu_12_04_Resources.class.getResource("echo_command.txt")),
@@ -58,6 +60,8 @@ enum Ubuntu_12_04_Resources {
     static copyUbuntuFiles(File parent) {
         // commands
         aptitudeCommand.createCommand parent
+        mysqldumpCommand.createCommand parent
+        gzipCommand.createCommand parent
         bashCommand.createCommand parent
         chmodCommand.createCommand parent
         chownCommand.createCommand parent
@@ -82,11 +86,12 @@ enum Ubuntu_12_04_Resources {
     static void setupUbuntuProperties(def profile, File parent) {
         def entry = profile.getEntry("httpd")
         entry.install_command aptitudeCommand.asFile(parent)
+        entry.mysqldump_command mysqldumpCommand.asFile(parent)
+        entry.gzip_command gzipCommand.asFile(parent)
         entry.chmod_command chmodCommand.asFile(parent)
         entry.chown_command chownCommand.asFile(parent)
         entry.group_add_command groupaddCommand.asFile(parent)
         entry.user_add_command useraddCommand.asFile(parent)
-        entry.zcat_command zcatCommand.asFile(parent)
         entry.tar_command tarCommand.asFile(parent)
         entry.unzip_command unzipCommand.asFile(parent)
         entry.link_command lnCommand.asFile(parent)

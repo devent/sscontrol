@@ -34,6 +34,7 @@
         <module>sscontrol-httpd-thin</module>
         <module>sscontrol-httpd-webservice</module>
         <module>sscontrol-httpd-wordpress</module>
+        <module>sscontrol-httpd-yourls</module>
         <module>sscontrol-mail</module>
         <module>sscontrol-mail-postfix</module>
         <module>sscontrol-profile</module>

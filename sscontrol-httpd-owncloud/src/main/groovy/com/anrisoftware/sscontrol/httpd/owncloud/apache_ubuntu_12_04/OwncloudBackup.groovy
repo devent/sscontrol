@@ -20,9 +20,11 @@ package com.anrisoftware.sscontrol.httpd.owncloud.apache_ubuntu_12_04
 
 import javax.inject.Inject
 
+import com.anrisoftware.sscontrol.httpd.domain.Domain
 import com.anrisoftware.sscontrol.httpd.owncloud.ubuntu.UbuntuOwncloudArchiveServiceBackup
 import com.anrisoftware.sscontrol.httpd.owncloud.ubuntu.UbuntuOwncloudBackup
 import com.anrisoftware.sscontrol.httpd.owncloud.ubuntu.UbuntuOwncloudMysqlDatabaseBackup
+import com.anrisoftware.sscontrol.httpd.webservice.WebService
 
 /**
  * <i>Ubuntu 12.04 ownCloud</i> backup.

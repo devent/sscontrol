@@ -35,6 +35,7 @@ enum YourlsResources {
     profile("UbuntuProfile.groovy", YourlsResources.class.getResource("UbuntuProfile.groovy")),
     httpdBasicScript("Httpd.groovy", YourlsResources.class.getResource("HttpdBasic.groovy")),
     httpdAliasScript("Httpd.groovy", YourlsResources.class.getResource("HttpdAlias.groovy")),
+    httpdBackupScript("Httpd.groovy", YourlsResources.class.getResource("HttpdBackup.groovy")),
     // yourls
     test1comYourlsConfigSampleFile("/var/www/test1.com/yourls_1/user/config-sample.php", YourlsArchiveResources.yourlsConfigSample.resource),
     // basic expected
@@ -50,6 +51,11 @@ enum YourlsResources {
     // alias expected
     aliasTest1comConfExpected("/etc/apache2/sites-available/100-robobee-test1.com.conf", YourlsResources.class.getResource("alias_test1comconf_expected.txt")),
     aliasTest1comYourlsConfExpected("/var/www/test1.com/yourls_1/user/config.php", YourlsResources.class.getResource("alias_test1com_configphp_expected.txt")),
+    // backup expected
+    backupRuncommandsLogExpected("/runcommands.log", YourlsResources.class.getResource("backup_runcommands_expected.txt")),
+    backupTarOutExpected("/bin/tar.out", YourlsResources.class.getResource("backup_tar_out_expected.txt")),
+    backupChmodOutExpected("/bin/chmod.out", YourlsResources.class.getResource("backup_chmod_out_expected.txt")),
+    backupChownOutExpected("/bin/chown.out", YourlsResources.class.getResource("backup_chown_out_expected.txt")),
 
     static copyYourlsFiles(File parent) {
         test1comYourlsConfigSampleFile.createFile parent

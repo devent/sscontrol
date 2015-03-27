@@ -18,11 +18,9 @@
  */
 package com.anrisoftware.sscontrol.httpd.redmine.ubuntu
 
-import org.apache.commons.lang3.builder.ToStringBuilder
-
+import com.anrisoftware.sscontrol.httpd.backups.core.ServiceBackup
 import com.anrisoftware.sscontrol.httpd.domain.Domain
-import com.anrisoftware.sscontrol.httpd.redmine.RedmineService
-import com.anrisoftware.sscontrol.httpd.redmine.redmine_2_6_nginx_thin_ubuntu_12_04.RedmineConfigFactory;
+import com.anrisoftware.sscontrol.httpd.webservice.WebService
 
 /**
  * <i>Ubuntu Redmine</i> backup.
@@ -30,9 +28,7 @@ import com.anrisoftware.sscontrol.httpd.redmine.redmine_2_6_nginx_thin_ubuntu_12
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-abstract class UbuntuRedmineBackup {
-
-    private Object script
+abstract class UbuntuRedmineBackup extends ServiceBackup {
 
     /**
      * Backups the <i>Redmine</i> service.
@@ -41,76 +37,28 @@ abstract class UbuntuRedmineBackup {
      *            the service {@link Domain} domain.
      *
      * @param service
-     *            the {@link RedmineService} service.
+     *            the {@link WebService} service.
      */
-    void backupService(Domain domain, RedmineService service) {
-        if (service.backupTarget != null) {
-            File source = redmineDir domain, service
-            serviceBackup.backupService domain, service, source
-            switch (service.database.provider) {
-                case "mysql2":
-                    mysqlDatabaseBackup.backupDatabase domain, service, source
-                    break
-            }
+    void backupService(Domain domain, WebService service) {
+        if (service.backupTarget == null) {
+            return
+        }
+        File source = serviceDir domain, service
+        serviceBackup.backupService domain, service, source
+        backupDatabase domain, service, source
+        setupPermissions domain, service
+    }
+
+    void backupDatabase(Domain domain, WebService service, File source) {
+        switch (service.database.provider) {
+            case "mysql2":
+                mysqlDatabaseBackup.backupDatabase domain, service, source
+                break
         }
     }
 
-    /**
-     * Returns the service backup.
-     */
-    abstract UbuntuRedmineArchiveServiceBackup getServiceBackup()
-
-    /**
-     * Returns the <i>MySQL</i> database backup.
-     */
-    abstract UbuntuRedmineMysqlDatabaseBackup getMysqlDatabaseBackup()
-
-    /**
-     * Sets the parent script.
-     */
-    void setScript(Object script) {
-        this.script = script
-        serviceBackup.setScript script
-        mysqlDatabaseBackup.setScript script
-    }
-
-    /**
-     * Returns the parent script.
-     */
-    Object getScript() {
-        script
-    }
-
-    /**
-     * Returns the service name.
-     */
-    String getServiceName() {
-        RedmineConfigFactory.WEB_NAME
-    }
-
-    /**
-     * Returns the profile name.
-     */
-    abstract String getProfile()
-
-    /**
-     * Delegates missing properties to the parent script.
-     */
-    def propertyMissing(String name) {
-        script.getProperty name
-    }
-
-    /**
-     * Delegates missing methods to the parent script.
-     */
-    def methodMissing(String name, def args) {
-        script.invokeMethod name, args
-    }
-
     @Override
-    public String toString() {
-        new ToStringBuilder(this)
-                .append("service name", getServiceName())
-                .append("profile name", getProfile()).toString();
+    File serviceDir(Domain domain, WebService service) {
+        redmineDir domain, service
     }
 }

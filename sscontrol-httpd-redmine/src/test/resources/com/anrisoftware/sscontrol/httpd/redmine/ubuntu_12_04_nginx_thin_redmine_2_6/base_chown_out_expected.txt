@@ -1,4 +1,5 @@
 web_001.web_001 /tmp/var/www/test1.com/web
+-R root.root /tmp/var/backups/test1.com
 -R root.root /tmp/var/www/test1.com/redmine_2_6
 -R web_001.web_001 /tmp/var/www/test1.com/redmine_2_6/files
 -R web_001.web_001 /tmp/var/www/test1.com/redmine_2_6/log
@@ -12,6 +13,7 @@ web_001.web_001 /tmp/var/www/test1.com/web
 -R thin.web_001 /tmp/var/www/test1.com/redmine_2_6/public/plugin_assets
 root.root /tmp/var/www/test1.com/ssl/cert_crt.txt /tmp/var/www/test1.com/ssl/cert_key.txt
 web_001.web_001 /tmp/var/www/test1.com/web
+-R root.root /tmp/var/backups/test1.com
 -R root.root /tmp/var/www/test1.com/redmine_2_6
 -R web_001.web_001 /tmp/var/www/test1.com/redmine_2_6/files
 -R web_001.web_001 /tmp/var/www/test1.com/redmine_2_6/log

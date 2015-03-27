@@ -94,7 +94,7 @@ class HttpdServiceImpl extends AbstractService implements HttpdService {
 
     @Inject
     public final void setStatementsTable(StatementsTableFactory factory) {
-        StatementsTable table = factory.create(factory, NAME);
+        StatementsTable table = factory.create(this, NAME);
         table.addAllowed(DEBUG_KEY);
         table.setAllowArbitraryKeys(true, DEBUG_KEY);
         this.statementsTable = table;

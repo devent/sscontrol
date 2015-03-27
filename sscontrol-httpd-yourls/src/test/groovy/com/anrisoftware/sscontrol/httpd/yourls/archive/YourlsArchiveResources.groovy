@@ -42,7 +42,6 @@ enum YourlsArchiveResources {
 
     static void setupYourlsArchiveProperties(def profile, File parent) {
         def entry = profile.getEntry("httpd")
-        // piwik
         entry.yourls_archive yourlsArchive.asFile(parent)
         entry.yourls_archive_hash "md5:bc63a84659356d66488458253510b195"
     }

@@ -82,7 +82,11 @@ abstract class Yourls_1_7_Config {
             service.prefix = yourlsDefaultPrefix
         }
         if (service.site == null) {
-            service.site "${domain.proto}${domain.name}"
+            def site = "${domain.proto}${domain.name}"
+            if (service.alias != null && !service.alias.empty) {
+                site += "/${service.alias}"
+            }
+            service.site site
         }
         if (service.language == null) {
             service.language yourlsDefaultLanguage
@@ -99,8 +103,8 @@ abstract class Yourls_1_7_Config {
         if (service.apiAccess == null) {
             service.access api: yourlsDefaultApiAccess
         }
-        if (service.gmtOffset == null && yourlsDefaultGmtOffset != null) {
-            service.gmt offset: yourlsDefaultOverrideMode
+        if (service.gmtOffset == null) {
+            service.gmt offset: yourlsDefaultGmtOffset
         }
         if (service.uniqueUrls == null) {
             service.unique urls: yourlsDefaultUniqueUrls
@@ -259,9 +263,9 @@ abstract class Yourls_1_7_Config {
      * @see #getYourlsProperties()
      */
     String getYourlsCookieKey() {
-        String value = profileStringProperty "yourls_cookie_key", yourlsProperties
+        String value = profileProperty "yourls_cookie_key", yourlsProperties
         if (value == null || value.empty) {
-            return RandomStringUtils.random(41)
+            return RandomStringUtils.random(41, true, true)
         } else {
             return value
         }
@@ -436,7 +440,7 @@ abstract class Yourls_1_7_Config {
 
     /**
      * Returns the default timezone GMT offset, for
-     * example {@code ""}, empty.
+     * example {@code "0"}.
      *
      * <ul>
      * <li>profile property {@code "yourls_default_gmt_offset"}</li>
@@ -445,12 +449,7 @@ abstract class Yourls_1_7_Config {
      * @see #getYourlsProperties()
      */
     Integer getYourlsDefaultGmtOffset() {
-        String value = profileProperty "yourls_default_gmt_offset", yourlsProperties
-        if (!value.empty) {
-            return Integer.valueOf(value)
-        } else {
-            return null
-        }
+        profileNumberProperty "yourls_default_gmt_offset", yourlsProperties
     }
 
     /**

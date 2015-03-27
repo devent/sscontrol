@@ -49,6 +49,7 @@ enum YourlsResources {
     basicAptitudeOutExpected("/usr/bin/aptitude.out", YourlsResources.class.getResource("basic_aptitude_out_expected.txt")),
     // alias expected
     aliasTest1comConfExpected("/etc/apache2/sites-available/100-robobee-test1.com.conf", YourlsResources.class.getResource("alias_test1comconf_expected.txt")),
+    aliasTest1comYourlsConfExpected("/var/www/test1.com/yourls_1/user/config.php", YourlsResources.class.getResource("alias_test1com_configphp_expected.txt")),
 
     static copyYourlsFiles(File parent) {
         test1comYourlsConfigSampleFile.createFile parent
@@ -56,6 +57,7 @@ enum YourlsResources {
 
     static void setupYourlsProperties(def profile, File parent) {
         def entry = profile.getEntry("httpd")
+        entry.yourls_cookie_key "cookie-key"
     }
 
     ResourcesUtils resources

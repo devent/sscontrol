@@ -40,7 +40,7 @@ define( 'YOURLS_DB_PREFIX', 'yourls_' );
 /** YOURLS installation URL -- all lowercase and with no trailing slash.
  ** If you define it to "http://site.com", don't use "http://www.site.com" in your browser (and vice-versa) */
 # SSCONTROL-httpd
-define( 'YOURLS_SITE', 'http://test1.com' );
+define( 'YOURLS_SITE', 'http://test1.com/yls' );
 # SSCONTROL-httpd-END
 
 /** Timezone GMT offset */

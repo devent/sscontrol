@@ -60,7 +60,7 @@ class YourlsTest extends WebServiceTestEnvironment {
         assertStringContent basicTest1comConfExpected.replaced(tmpdir, tmpdir, "/tmp"), basicTest1comConfExpected.toString()
         assertFileContent basicTest1comPhpIniConfExpected.asFile(tmpdir), basicTest1comPhpIniConfExpected
         assertStringContent basicTest1comPhpFcgStarterExpected.replaced(tmpdir, tmpdir, "/tmp"), basicTest1comPhpFcgStarterExpected.toString()
-        assertFileContent basicTest1comPhpIniConfExpected.asFile(tmpdir), basicTest1comPhpIniConfExpected
+        assertFileContent basicTest1comYourlsConfExpected.asFile(tmpdir), basicTest1comYourlsConfExpected
         assertStringContent basicRuncommandsLogExpected.replaced(tmpdir, tmpdir, "/tmp").replaceAll(/\d{2,}/, 'time'), basicRuncommandsLogExpected.toString()
         assertStringContent basicTarOutExpected.replaced(tmpdir, tmpdir, "/tmp").replaceAll(/\d{2,}/, 'time'), basicTarOutExpected.toString()
         assertStringContent basicChmodOutExpected.replaced(tmpdir, tmpdir, "/tmp"), basicChmodOutExpected.toString()
@@ -89,7 +89,7 @@ class YourlsTest extends WebServiceTestEnvironment {
         assertStringContent aliasTest1comConfExpected.replaced(tmpdir, tmpdir, "/tmp"), aliasTest1comConfExpected.toString()
         assertFileContent basicTest1comPhpIniConfExpected.asFile(tmpdir), basicTest1comPhpIniConfExpected
         assertStringContent basicTest1comPhpFcgStarterExpected.replaced(tmpdir, tmpdir, "/tmp"), basicTest1comPhpFcgStarterExpected.toString()
-        assertFileContent basicTest1comPhpIniConfExpected.asFile(tmpdir), basicTest1comPhpIniConfExpected
+        assertFileContent aliasTest1comYourlsConfExpected.asFile(tmpdir), aliasTest1comYourlsConfExpected
         assertStringContent basicRuncommandsLogExpected.replaced(tmpdir, tmpdir, "/tmp").replaceAll(/\d{2,}/, 'time'), basicRuncommandsLogExpected.toString()
         assertStringContent basicTarOutExpected.replaced(tmpdir, tmpdir, "/tmp").replaceAll(/\d{2,}/, 'time'), basicTarOutExpected.toString()
         assertStringContent basicChmodOutExpected.replaced(tmpdir, tmpdir, "/tmp"), basicChmodOutExpected.toString()

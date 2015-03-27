@@ -21,20 +21,30 @@ package com.anrisoftware.sscontrol.httpd.yourls;
 import static com.anrisoftware.sscontrol.httpd.yourls.YourlsServiceStatement.ACCESS_KEY;
 import static com.anrisoftware.sscontrol.httpd.yourls.YourlsServiceStatement.API_KEY;
 import static com.anrisoftware.sscontrol.httpd.yourls.YourlsServiceStatement.BACKUP_KEY;
+import static com.anrisoftware.sscontrol.httpd.yourls.YourlsServiceStatement.CONVERT_KEY;
 import static com.anrisoftware.sscontrol.httpd.yourls.YourlsServiceStatement.DATABASE_KEY;
 import static com.anrisoftware.sscontrol.httpd.yourls.YourlsServiceStatement.DEBUG_KEY;
+import static com.anrisoftware.sscontrol.httpd.yourls.YourlsServiceStatement.DRIVER_KEY;
+import static com.anrisoftware.sscontrol.httpd.yourls.YourlsServiceStatement.GMT_KEY;
 import static com.anrisoftware.sscontrol.httpd.yourls.YourlsServiceStatement.HOST_KEY;
+import static com.anrisoftware.sscontrol.httpd.yourls.YourlsServiceStatement.LANGUAGE_KEY;
 import static com.anrisoftware.sscontrol.httpd.yourls.YourlsServiceStatement.MODE_KEY;
+import static com.anrisoftware.sscontrol.httpd.yourls.YourlsServiceStatement.OFFSET_KEY;
 import static com.anrisoftware.sscontrol.httpd.yourls.YourlsServiceStatement.OVERRIDE_KEY;
 import static com.anrisoftware.sscontrol.httpd.yourls.YourlsServiceStatement.PASSWORD_KEY;
 import static com.anrisoftware.sscontrol.httpd.yourls.YourlsServiceStatement.PORT_KEY;
 import static com.anrisoftware.sscontrol.httpd.yourls.YourlsServiceStatement.PREFIX_KEY;
+import static com.anrisoftware.sscontrol.httpd.yourls.YourlsServiceStatement.RESERVED_KEY;
+import static com.anrisoftware.sscontrol.httpd.yourls.YourlsServiceStatement.SITE_KEY;
 import static com.anrisoftware.sscontrol.httpd.yourls.YourlsServiceStatement.STATS_KEY;
 import static com.anrisoftware.sscontrol.httpd.yourls.YourlsServiceStatement.TARGET_KEY;
+import static com.anrisoftware.sscontrol.httpd.yourls.YourlsServiceStatement.UNIQUE_KEY;
+import static com.anrisoftware.sscontrol.httpd.yourls.YourlsServiceStatement.URLS_KEY;
 import static com.anrisoftware.sscontrol.httpd.yourls.YourlsServiceStatement.USER_KEY;
 
 import java.net.URI;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -45,6 +55,7 @@ import com.anrisoftware.sscontrol.core.groovy.StatementsMap;
 import com.anrisoftware.sscontrol.core.groovy.StatementsTable;
 import com.anrisoftware.sscontrol.core.groovy.StatementsTableFactory;
 import com.anrisoftware.sscontrol.core.overridemode.OverrideMode;
+import com.anrisoftware.sscontrol.core.yesno.YesNoFlag;
 import com.anrisoftware.sscontrol.httpd.domain.Domain;
 import com.anrisoftware.sscontrol.httpd.webserviceargs.DefaultWebService;
 import com.anrisoftware.sscontrol.httpd.webserviceargs.DefaultWebServiceFactory;
@@ -84,13 +95,18 @@ class YourlsServiceImpl implements YourlsService {
 
     private void setupStatements(StatementsMap map, Map<String, Object> args) {
         map.addAllowed(DATABASE_KEY, OVERRIDE_KEY, BACKUP_KEY, ACCESS_KEY,
-                USER_KEY);
-        map.setAllowValue(true, DATABASE_KEY, ACCESS_KEY);
+                USER_KEY, GMT_KEY, UNIQUE_KEY, CONVERT_KEY, RESERVED_KEY,
+                SITE_KEY, LANGUAGE_KEY);
+        map.setAllowValue(true, DATABASE_KEY, ACCESS_KEY, RESERVED_KEY,
+                SITE_KEY, LANGUAGE_KEY);
         map.addAllowedKeys(DATABASE_KEY, USER_KEY, PASSWORD_KEY, HOST_KEY,
-                PORT_KEY, PREFIX_KEY);
+                PORT_KEY, PREFIX_KEY, DRIVER_KEY);
         map.addAllowedKeys(OVERRIDE_KEY, MODE_KEY);
         map.addAllowedKeys(BACKUP_KEY, TARGET_KEY);
         map.addAllowedKeys(ACCESS_KEY, STATS_KEY, API_KEY);
+        map.addAllowedKeys(GMT_KEY, OFFSET_KEY);
+        map.addAllowedKeys(UNIQUE_KEY, URLS_KEY);
+        map.addAllowedKeys(CONVERT_KEY, MODE_KEY);
     }
 
     @Inject
@@ -182,6 +198,7 @@ class YourlsServiceImpl implements YourlsService {
         map.put(HOST_KEY.toString(), m.mapValue(DATABASE_KEY, HOST_KEY));
         map.put(PORT_KEY.toString(), m.mapValue(DATABASE_KEY, PORT_KEY));
         map.put(PREFIX_KEY.toString(), m.mapValue(DATABASE_KEY, PREFIX_KEY));
+        map.put(DRIVER_KEY.toString(), m.mapValue(DATABASE_KEY, DRIVER_KEY));
         return map.size() == 0 ? null : map;
     }
 
@@ -211,8 +228,43 @@ class YourlsServiceImpl implements YourlsService {
     }
 
     @Override
+    public Integer getGmtOffset() {
+        return statementsMap.mapValue(GMT_KEY, OFFSET_KEY);
+    }
+
+    @Override
+    public Boolean getUniqueUrls() {
+        Object value = statementsMap.mapValue(UNIQUE_KEY, URLS_KEY);
+        if (value instanceof YesNoFlag) {
+            return ((YesNoFlag) value).asBoolean();
+        } else {
+            return (Boolean) value;
+        }
+    }
+
+    @Override
+    public Convert getUrlConvertMode() {
+        return statementsMap.mapValue(CONVERT_KEY, MODE_KEY);
+    }
+
+    @Override
+    public List<String> getReserved() {
+        return statementsMap.valueAsStringList(RESERVED_KEY);
+    }
+
+    @Override
+    public String getLanguage() {
+        return statementsMap.value(LANGUAGE_KEY);
+    }
+
+    @Override
     public Map<String, String> getUsers() {
         return statementsTable.tableKeys(USER_KEY, PASSWORD_KEY);
+    }
+
+    @Override
+    public String getSite() {
+        return statementsMap.value(SITE_KEY);
     }
 
     public Object methodMissing(String name, Object args) {

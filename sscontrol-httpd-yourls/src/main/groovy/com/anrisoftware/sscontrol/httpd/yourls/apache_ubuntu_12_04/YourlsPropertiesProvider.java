@@ -16,68 +16,26 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd-yourls. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.yourls;
+package com.anrisoftware.sscontrol.httpd.yourls.apache_ubuntu_12_04;
 
-import static org.apache.commons.lang3.StringUtils.lowerCase;
-import static org.apache.commons.lang3.StringUtils.split;
+import java.net.URL;
+
+import com.anrisoftware.propertiesutils.AbstractContextPropertiesProvider;
 
 /**
- * <i>Yourls</i> service statement key.
+ * Returns <i>Yourls</i> properties for <i>Ubuntu 12.04</i> from
+ * {@code /yourls_ubuntu_12_04.properties}
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-enum YourlsServiceStatement {
+@SuppressWarnings("serial")
+class YourlsPropertiesProvider extends AbstractContextPropertiesProvider {
 
-    DATABASE_KEY,
+    private static final URL URL = YourlsPropertiesProvider.class
+            .getResource("/yourls_ubuntu_12_04.properties");
 
-    USER_KEY,
-
-    PASSWORD_KEY,
-
-    HOST_KEY,
-
-    PORT_KEY,
-
-    PREFIX_KEY,
-
-    DRIVER_KEY,
-
-    OVERRIDE_KEY,
-
-    MODE_KEY,
-
-    BACKUP_KEY,
-
-    TARGET_KEY,
-
-    DEBUG_KEY,
-
-    ACCESS_KEY,
-
-    STATS_KEY,
-
-    API_KEY,
-
-    GMT_KEY,
-
-    OFFSET_KEY,
-
-    UNIQUE_KEY,
-
-    URLS_KEY,
-
-    CONVERT_KEY,
-
-    RESERVED_KEY,
-
-    SITE_KEY,
-
-    LANGUAGE_KEY;
-
-    @Override
-    public String toString() {
-        return split(lowerCase(name()), "_")[0];
+    YourlsPropertiesProvider() {
+        super(YourlsPropertiesProvider.class, URL);
     }
-
 }

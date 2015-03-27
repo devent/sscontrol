@@ -16,68 +16,10 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd-yourls. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.yourls;
+package com.anrisoftware.sscontrol.httpd.piwik.apache_ubuntu_12_04
 
-import static org.apache.commons.lang3.StringUtils.lowerCase;
-import static org.apache.commons.lang3.StringUtils.split;
-
-/**
- * <i>Yourls</i> service statement key.
- *
- * @author Erwin Mueller, erwin.mueller@deventm.org
- * @since 1.0
- */
-enum YourlsServiceStatement {
-
-    DATABASE_KEY,
-
-    USER_KEY,
-
-    PASSWORD_KEY,
-
-    HOST_KEY,
-
-    PORT_KEY,
-
-    PREFIX_KEY,
-
-    DRIVER_KEY,
-
-    OVERRIDE_KEY,
-
-    MODE_KEY,
-
-    BACKUP_KEY,
-
-    TARGET_KEY,
-
-    DEBUG_KEY,
-
-    ACCESS_KEY,
-
-    STATS_KEY,
-
-    API_KEY,
-
-    GMT_KEY,
-
-    OFFSET_KEY,
-
-    UNIQUE_KEY,
-
-    URLS_KEY,
-
-    CONVERT_KEY,
-
-    RESERVED_KEY,
-
-    SITE_KEY,
-
-    LANGUAGE_KEY;
-
-    @Override
-    public String toString() {
-        return split(lowerCase(name()), "_")[0];
+profile "ubuntu_12_04", {
+    httpd {
+        service "apache"
     }
-
 }

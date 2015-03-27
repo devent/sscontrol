@@ -19,6 +19,7 @@
 package com.anrisoftware.sscontrol.httpd.yourls;
 
 import java.net.URI;
+import java.util.List;
 import java.util.Map;
 
 import com.anrisoftware.sscontrol.core.overridemode.OverrideMode;
@@ -40,12 +41,13 @@ public interface YourlsService extends WebService {
      * The example returns the following map for the key "level":
      *
      * <pre>
-     * {["php": 1]}
+     * {["php": 1, "yourls": 1]}
      * </pre>
      *
      * <pre>
      * setup "yourls", {
      *     debug "php", level: 1
+     *     debug "yourls", level: 1
      * }
      * </pre>
      *
@@ -63,11 +65,12 @@ public interface YourlsService extends WebService {
      * <li>{@code host} the database host;</li>
      * <li>{@code port} the database host port;</li>
      * <li>{@code prefix} the table prefix;</li>
+     * <li>{@code driver} the table prefix;</li>
      * </ul>
      *
      * <pre>
      * setup "yourls", {
-     *     database "redmine2", user: "user", password: "userpass", host: "localhost"
+     *     database "yourlsdb", user: "user", password: "userpass", host: "localhost"
      * }
      * </pre>
      *
@@ -141,6 +144,72 @@ public interface YourlsService extends WebService {
     Access getApiAccess();
 
     /**
+     * Returns the timezone GMT offset.
+     *
+     * <pre>
+     * setup "yourls", {
+     *     gmt offset: 1
+     * }
+     * </pre>
+     *
+     * @return the timezone {@link Integer} offset or {@code null}.
+     */
+    Integer getGmtOffset();
+
+    /**
+     * Returns that the URLs are unique.
+     *
+     * <pre>
+     * setup "yourls", {
+     *     unique urls: yes
+     * }
+     * </pre>
+     *
+     * @return {@code true} if the URLs should be unique, or {@code null}.
+     */
+    Boolean getUniqueUrls();
+
+    /**
+     * Returns the convert mode.
+     *
+     * <pre>
+     * setup "yourls", {
+     *     convert mode: Convert.base36
+     * }
+     * </pre>
+     *
+     * @return the convert {@link Convert} mode or {@code null}.
+     */
+    Convert getUrlConvertMode();
+
+    /**
+     * Returns the reserved URL keywords.
+     *
+     * <pre>
+     * setup "yourls", {
+     *     reserved "porn, sex"
+     * }
+     * </pre>
+     *
+     * @return the {@link List} of reserved {@link String} words or
+     *         {@code null.}
+     */
+    List<String> getReserved();
+
+    /**
+     * Returns the language.
+     *
+     * <pre>
+     * setup "yourls", {
+     *     language "de_DE"
+     * }
+     * </pre>
+     *
+     * @return the language {@link String} name or {@code null}.
+     */
+    String getLanguage();
+
+    /**
      * Returns the users that have access to the site.
      *
      * <pre>
@@ -154,4 +223,18 @@ public interface YourlsService extends WebService {
      * @return the {@link Map} users or {@code null}.
      */
     Map<String, String> getUsers();
+
+    /**
+     * Returns the site URL.
+     *
+     * <pre>
+     * setup "yourls", {
+     *     site "http://yoursite.com"
+     * }
+     * </pre>
+     *
+     * @return the site {@link String} URL or {@code null}.
+     */
+    String getSite();
+
 }

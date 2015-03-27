@@ -1,0 +1,151 @@
+databaseUserConfigSearch() ::= <%
+(?m)^define\( 'YOURLS_DB_USER', '.*?' \);\s*
+%>
+
+databaseUserConfig(user) ::= <%
+define( 'YOURLS_DB_USER', '<user>' );
+%>
+
+databasePasswordConfigSearch() ::= <%
+(?m)^define\( 'YOURLS_DB_PASS', '.*?' \);\s*
+%>
+
+databasePasswordConfig(password) ::= <%
+define( 'YOURLS_DB_PASS', '<password>' );
+%>
+
+databaseDbConfigSearch() ::= <%
+(?m)^define\( 'YOURLS_DB_NAME', '.*?' \);\s*
+%>
+
+databaseDbConfig(db) ::= <%
+define( 'YOURLS_DB_NAME', '<db>' );
+%>
+
+databaseHostConfigSearch() ::= <%
+(?m)^define\( 'YOURLS_DB_HOST', '.*?' \);\s*
+%>
+
+databaseHostConfig(host, port) ::= <%
+define( 'YOURLS_DB_HOST', '<host>:<port>' );
+%>
+
+databasePrefixConfigSearch() ::= <%
+(?m)^define\( 'YOURLS_DB_PREFIX', '.*?' \);\s*
+%>
+
+databasePrefixConfig(prefix) ::= <%
+define( 'YOURLS_DB_PREFIX', '<prefix>' );
+%>
+
+databaseDriverConfigSearch() ::= <%
+(?m)^define\( 'YOURLS_DB_DRIVER', '.*?' \);\s*
+%>
+
+databaseDriverConfig(driver) ::= <%
+define( 'YOURLS_DB_DRIVER', '<driver>' );
+%>
+
+siteConfigSearch() ::= <%
+(?m)^define\( 'YOURLS_SITE', '.*' \);\s*
+%>
+
+siteConfig(site) ::= <%
+define( 'YOURLS_SITE', '<site>' );
+%>
+
+timezoneConfigSearch() ::= <%
+(?m)^define\( 'YOURLS_HOURS_OFFSET', \d* \);\s*
+%>
+
+timezoneConfig(offset) ::= <%
+define( 'YOURLS_HOURS_OFFSET', <offset> );
+%>
+
+langConfigSearch() ::= <%
+(?m)^define\( 'YOURLS_LANG', '.*?' \);\s*
+%>
+
+langConfig(lang) ::= <%
+define( 'YOURLS_LANG', '<lang>' );
+%>
+
+uniqueConfigSearch() ::= <%
+(?m)^define\( 'YOURLS_UNIQUE_URLS', .*? \);\s*
+%>
+
+uniqueConfig(enabled) ::= <%
+define( 'YOURLS_UNIQUE_URLS', <if(enabled)>true<else>false<endif> );
+%>
+
+privateSiteConfigSearch() ::= <%
+(?m)^define\( 'YOURLS_PRIVATE', .*? \);\s*
+%>
+
+privateSiteConfig(enabled) ::= <%
+define( 'YOURLS_PRIVATE', <if(enabled)>true<else>false<endif> );
+%>
+
+privateStatsConfigSearch() ::= <%
+(?m)^define\( 'YOURLS_PRIVATE_INFOS', .*? \);\s*
+%>
+
+privateStatsConfig(enabled) ::= <%
+define( 'YOURLS_PRIVATE_INFOS', <if(enabled)>true<else>false<endif> );
+%>
+
+privateApiConfigSearch() ::= <%
+(?m)^define\( 'YOURLS_PRIVATE_INFOS', .*? \);\s*
+%>
+
+privateApiConfig(enabled) ::= <%
+define( 'YOURLS_PRIVATE_API', <if(enabled)>true<else>false<endif> );
+%>
+
+cookieConfigSearch() ::= <%
+(?m)^define\( 'YOURLS_COOKIEKEY', '.*?' \);\s*
+%>
+
+cookieConfig(cookie) ::= <%
+define( 'YOURLS_COOKIEKEY', '<cookie>' );
+%>
+
+userConfigSearch() ::= <%
+(?ms)^\$yourls_user_passwords = array\(.*?\);
+%>
+
+userConfig(users) ::= <<
+$yourls_user_passwords = array(
+<users:userPassword(users);separator=",\n">
+    );
+>>
+
+userPassword(user, users) ::= <%
+'<user>' => '<users.(user)>'
+%>
+
+debugConfigSearch() ::= <%
+(?m)^define\( 'YOURLS_DEBUG', .*? \);\s*
+%>
+
+debugConfig(enabled) ::= <%
+define( 'YOURLS_DEBUG', <if(enabled)>true<else>false<endif> );
+%>
+
+convertConfigSearch() ::= <%
+(?m)^define\( 'YOURLS_URL_CONVERT', \d* \);\s*
+%>
+
+convertConfig(convert) ::= <%
+define( 'YOURLS_URL_CONVERT', <convert> );
+%>
+
+reservedConfigSearch() ::= <%
+(?ms)^\$yourls_reserved_URL = array\(.*?\);
+%>
+
+reservedConfig(reserved) ::= <<
+$yourls_reserved_URL = array(
+<reserved;separator=",\n">
+    );
+>>

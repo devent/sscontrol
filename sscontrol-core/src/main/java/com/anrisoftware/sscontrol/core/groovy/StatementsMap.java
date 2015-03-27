@@ -18,6 +18,8 @@
  */
 package com.anrisoftware.sscontrol.core.groovy;
 
+import groovy.lang.GString;
+
 import java.io.Serializable;
 import java.net.URI;
 import java.util.ArrayList;
@@ -979,6 +981,9 @@ public class StatementsMap implements Serializable {
         Map<String, Boolean> multi = multiValued.get(name);
         log.checkKey(this, allowedKeys, name, key);
         Map<String, Object> map = getArgsMap(name);
+        if (value instanceof GString) {
+            value = value.toString();
+        }
         if (multi.get(key) == true) {
             Object oldValue = map.get(key);
             if (oldValue == null) {

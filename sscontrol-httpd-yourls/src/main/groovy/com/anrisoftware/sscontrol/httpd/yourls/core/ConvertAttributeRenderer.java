@@ -16,68 +16,38 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd-yourls. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.yourls;
+package com.anrisoftware.sscontrol.httpd.yourls.core;
 
-import static org.apache.commons.lang3.StringUtils.lowerCase;
-import static org.apache.commons.lang3.StringUtils.split;
+import java.util.Locale;
+
+import com.anrisoftware.resources.templates.api.AttributeRenderer;
+import com.anrisoftware.sscontrol.httpd.yourls.Convert;
 
 /**
- * <i>Yourls</i> service statement key.
+ * @see Convert
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-enum YourlsServiceStatement {
-
-    DATABASE_KEY,
-
-    USER_KEY,
-
-    PASSWORD_KEY,
-
-    HOST_KEY,
-
-    PORT_KEY,
-
-    PREFIX_KEY,
-
-    DRIVER_KEY,
-
-    OVERRIDE_KEY,
-
-    MODE_KEY,
-
-    BACKUP_KEY,
-
-    TARGET_KEY,
-
-    DEBUG_KEY,
-
-    ACCESS_KEY,
-
-    STATS_KEY,
-
-    API_KEY,
-
-    GMT_KEY,
-
-    OFFSET_KEY,
-
-    UNIQUE_KEY,
-
-    URLS_KEY,
-
-    CONVERT_KEY,
-
-    RESERVED_KEY,
-
-    SITE_KEY,
-
-    LANGUAGE_KEY;
+@SuppressWarnings("serial")
+public class ConvertAttributeRenderer implements AttributeRenderer {
 
     @Override
-    public String toString() {
-        return split(lowerCase(name()), "_")[0];
+    public String toString(Object o, String formatString, Locale locale) {
+        Convert method = (Convert) o;
+        switch (method) {
+        case base36:
+            return "36";
+        case base62:
+            return "62";
+        default:
+            throw new IllegalArgumentException();
+        }
+    }
+
+    @Override
+    public Class<?> getAttributeType() {
+        return Convert.class;
     }
 
 }

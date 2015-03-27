@@ -9,7 +9,7 @@ domainConfig(args) ::= <<
 <! - args.setupProxyHeaders - !>
 <if(args.setupProxyTimeouts)><proxyTimeouts(args)><endif>
 <if(args.setupProxyHeaders)><proxyHeaders(args)><endif>
-location <args.location> {
+location <args.location>/ {
     proxy_pass <args.proxy.address>;
     <aliasTarget(args)>
 }

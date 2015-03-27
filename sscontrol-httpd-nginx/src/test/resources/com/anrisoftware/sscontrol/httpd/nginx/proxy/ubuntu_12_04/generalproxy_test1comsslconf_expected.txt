@@ -27,20 +27,20 @@ server {
     proxy_set_header  X-Forwarded-Proto https;
     proxy_redirect off;
 
-    location /sitefoo {
+    location / {
         proxy_cache_key "$scheme://$host$request_uri";
         proxy_cache sitefoo;
         proxy_pass https://127.0.0.1:8082;
     }
 
-    location ~* /sitefoo/.*\.(jpg|png|gif|jpeg|svg|css|js|mp3|wav|swf|mov|doc|pdf|xls|ppt|docx|pptx|xlsx)$ {
+    location ~* /.*\.(jpg|png|gif|jpeg|svg|css|js|mp3|wav|swf|mov|doc|pdf|xls|ppt|docx|pptx|xlsx)$ {
         proxy_cache_valid 200 7200;
         expires 864000;
         proxy_pass https://127.0.0.1:8082;
         proxy_cache sitefoo;
     }
 
-    location ~* /sitefoo/.*\/[^\/]+\/(feed|\.xml)\/? {
+    location ~* /.*\/[^\/]+\/(feed|\.xml)\/? {
         # Cache RSS looking feeds
         proxy_cache_key "$scheme://$host$request_uri";
         proxy_cache_valid 200 2700;

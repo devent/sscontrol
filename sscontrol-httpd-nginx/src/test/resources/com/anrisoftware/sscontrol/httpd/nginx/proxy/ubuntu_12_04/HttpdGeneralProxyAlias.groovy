@@ -21,18 +21,18 @@ package com.anrisoftware.sscontrol.httpd.nginx.proxy.ubuntu_12_04
 httpd {
     // domain test1.com
     domain "test1.com", address: "192.168.0.50", {
-        setup "proxy", service: "general", proxyname: "sitefoo", address: "http://127.0.0.1:8080"
+        setup "proxy", service: "general", alias: "sitefoo", proxyname: "sitefoo", address: "http://127.0.0.1:8080"
     }
     // SSL/domain test1.com
     ssl_domain "test1.com", address: "192.168.0.50", {
         certificate file: ProxyResources.certCrt.resource, key: ProxyResources.certKey.resource
-        setup "proxy", service: "general", proxyname: "sitefoo", address: "https://127.0.0.1:8082", {
+        setup "proxy", service: "general", alias: "sitefoo", proxyname: "sitefoo", address: "https://127.0.0.1:8082", {
             cache staticFiles: true, feeds: true
         }
     }
     // domain test2.com
     domain "test2.com", address: "192.168.0.52", {
-        setup "proxy", service: "pass", proxyname: "sitefoo", address: "http://127.0.0.1:8080"
-        setup "proxy", service: "general", proxyname: "sitefoo", address: "http://127.0.0.1:8080"
+        setup "proxy", service: "pass", alias: "sitefoo", proxyname: "sitefoo", address: "http://127.0.0.1:8080"
+        setup "proxy", service: "general", alias: "sitefoo", proxyname: "sitefoo", address: "http://127.0.0.1:8080"
     }
 }

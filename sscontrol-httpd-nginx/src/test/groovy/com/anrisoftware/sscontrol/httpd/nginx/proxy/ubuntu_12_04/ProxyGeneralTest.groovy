@@ -27,7 +27,7 @@ import groovy.util.logging.Slf4j
 
 import org.junit.Test
 
-import com.anrisoftware.sscontrol.testutils.resources.ScriptTestEnvironment;
+import com.anrisoftware.sscontrol.testutils.resources.ScriptTestEnvironment
 
 /**
  * General proxy <i>Nginx</i> on a <i>Ubuntu 12.04</i> server.
@@ -37,6 +37,26 @@ import com.anrisoftware.sscontrol.testutils.resources.ScriptTestEnvironment;
  */
 @Slf4j
 class ProxyGeneralTest extends ScriptTestEnvironment {
+
+    @Test
+    void "general proxy alias"() {
+        copyUbuntuFiles tmpdir
+        copyUbuntu_12_04_Files tmpdir
+
+        loader.loadService profile.resource, null
+        def profile = registry.getService("profile")[0]
+        setupUbuntu_12_04_Properties profile, tmpdir
+        loader.loadService httpdGeneralProxyAliasScript.resource, profile
+
+        registry.allServices.each { it.call() }
+        log.info "Run service again to ensure that configuration is not set double."
+        registry.allServices.each { it.call() }
+
+        assertStringContent generalProxyAliasTest1comConf.replaced(tmpdir, tmpdir, "/tmp"), generalProxyAliasTest1comConf.toString()
+        assertStringContent generalProxyAliasTest1comSslConf.replaced(tmpdir, tmpdir, "/tmp"), generalProxyAliasTest1comSslConf.toString()
+        assertStringContent generalProxyAliasTest2comConf.replaced(tmpdir, tmpdir, "/tmp"), generalProxyAliasTest2comConf.toString()
+        assertStringContent generalProxyAliasSitefooProxyConf.replaced(tmpdir, tmpdir, "/tmp"), generalProxyAliasSitefooProxyConf.toString()
+    }
 
     @Test
     void "general proxy"() {

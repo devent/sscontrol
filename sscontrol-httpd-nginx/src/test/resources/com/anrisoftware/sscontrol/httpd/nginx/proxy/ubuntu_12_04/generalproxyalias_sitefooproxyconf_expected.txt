@@ -1,0 +1,5 @@
+# - Robobee Proxy for "sitefoo" -
+# - Auto-generated -
+#
+
+proxy_cache_path /tmp/var/cache/nginx/sitefoo levels=1:2 keys_zone=sitefoo:128m max_size=512m;

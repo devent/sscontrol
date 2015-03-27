@@ -21,7 +21,7 @@ package com.anrisoftware.sscontrol.httpd.nginx.proxy.ubuntu_12_04
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static org.apache.commons.io.FileUtils.*
 
-import com.anrisoftware.sscontrol.testutils.resources.ResourcesUtils;
+import com.anrisoftware.sscontrol.testutils.resources.ResourcesUtils
 
 /**
  * Proxy Nginx resources.
@@ -36,10 +36,16 @@ enum ProxyResources {
     certKey("cert.key", ProxyResources.class.getResource("cert_key.txt")),
     // general proxy
     httpdGeneralProxyScript("Httpd.groovy", ProxyResources.class.getResource("HttpdGeneralProxy.groovy")),
-    generalProxyTest1comConf("/etc/nginx/sites-available/100-robobee-test1.com.conf", ProxyResources.class.getResource("generalproxy_test1com_conf_expected.txt")),
-    generalProxyTest1comSslConf("/etc/nginx/sites-available/100-robobee-test1.com-ssl.conf", ProxyResources.class.getResource("generalproxy_test1com_ssl_conf_expected.txt")),
-    generalProxyTest2comConf("/etc/nginx/sites-available/100-robobee-test2.com.conf", ProxyResources.class.getResource("generalproxy_test2com_conf_expected.txt")),
-    generalProxySitefooProxyConf("/etc/nginx/conf.d/020-robobee-sitefoo-proxy.conf", ProxyResources.class.getResource("generalproxy_sitefoo_proxy_conf_expected.txt")),
+    generalProxyTest1comConf("/etc/nginx/sites-available/100-robobee-test1.com.conf", ProxyResources.class.getResource("generalproxy_test1comconf_expected.txt")),
+    generalProxyTest1comSslConf("/etc/nginx/sites-available/100-robobee-test1.com-ssl.conf", ProxyResources.class.getResource("generalproxy_test1comsslconf_expected.txt")),
+    generalProxyTest2comConf("/etc/nginx/sites-available/100-robobee-test2.com.conf", ProxyResources.class.getResource("generalproxy_test2comconf_expected.txt")),
+    generalProxySitefooProxyConf("/etc/nginx/conf.d/020-robobee-sitefoo-proxy.conf", ProxyResources.class.getResource("generalproxy_sitefooproxyconf_expected.txt")),
+    // general proxy alias
+    httpdGeneralProxyAliasScript("Httpd.groovy", ProxyResources.class.getResource("HttpdGeneralProxyAlias.groovy")),
+    generalProxyAliasTest1comConf("/etc/nginx/sites-available/100-robobee-test1.com.conf", ProxyResources.class.getResource("generalproxyalias_test1comconf_expected.txt")),
+    generalProxyAliasTest1comSslConf("/etc/nginx/sites-available/100-robobee-test1.com-ssl.conf", ProxyResources.class.getResource("generalproxyalias_test1comsslconf_expected.txt")),
+    generalProxyAliasTest2comConf("/etc/nginx/sites-available/100-robobee-test2.com.conf", ProxyResources.class.getResource("generalproxyalias_test2comconf_expected.txt")),
+    generalProxyAliasSitefooProxyConf("/etc/nginx/conf.d/020-robobee-sitefoo-proxy.conf", ProxyResources.class.getResource("generalproxyalias_sitefooproxyconf_expected.txt")),
     // general two proxies
     httpdGeneralTwoProxiesScript("Httpd.groovy", ProxyResources.class.getResource("HttpdGeneralTwoProxies.groovy")),
     generalTwoProxiesTest1comConf("/etc/nginx/sites-available/100-robobee-test1.com.conf", ProxyResources.class.getResource("generaltwoproxies_test1com_conf_expected.txt")),

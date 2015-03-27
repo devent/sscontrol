@@ -8,7 +8,7 @@ domainConfig(args) ::= <<
 <! - args.setupProxyHeaders - !>
 <if(args.setupProxyTimeouts)><proxyTimeouts(args)><endif>
 <if(args.setupProxyHeaders)><proxyHeaders(args)><endif>
-location <args.location> {
+location <args.location>/ {
     proxy_cache_key "$scheme://$host$request_uri";
     proxy_cache <args.proxy.proxyName>;
     proxy_pass <args.proxy.address>;

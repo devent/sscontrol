@@ -27,7 +27,7 @@ server {
     proxy_set_header  X-Forwarded-Proto https;
     proxy_redirect off;
 
-    location /sitefoo {
+    location /sitefoo/ {
         proxy_pass https://127.0.0.1:8082;
     }
 

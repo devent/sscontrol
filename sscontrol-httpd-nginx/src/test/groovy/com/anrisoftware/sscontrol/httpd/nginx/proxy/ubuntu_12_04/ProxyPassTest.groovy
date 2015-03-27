@@ -27,10 +27,10 @@ import groovy.util.logging.Slf4j
 
 import org.junit.Test
 
-import com.anrisoftware.sscontrol.testutils.resources.ScriptTestEnvironment;
+import com.anrisoftware.sscontrol.testutils.resources.ScriptTestEnvironment
 
 /**
- * Proxy pass <i>Nginx</i> on a <i>Ubuntu 12.04</i> server.
+ * <i>Nginx Ubuntu 12.04</i> proxy pass.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0

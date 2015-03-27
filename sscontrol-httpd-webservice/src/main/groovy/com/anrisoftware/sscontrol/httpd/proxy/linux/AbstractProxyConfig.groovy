@@ -304,7 +304,7 @@ abstract class AbstractProxyConfig {
      */
     String proxyLocation(ProxyService service) {
         String location = service.alias == null ? "" : service.alias
-        if (!location.startsWith("/")) {
+        if (!location.empty && !location.startsWith("/")) {
             location = "/$location"
         }
         return location

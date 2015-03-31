@@ -19,6 +19,7 @@
 package com.anrisoftware.sscontrol.httpd.nginx.nginx.linux;
 
 import com.anrisoftware.globalpom.exec.runcommands.RunCommandsModule;
+import com.anrisoftware.sscontrol.httpd.nginx.nginxconfig.NginxConfigListModule;
 import com.anrisoftware.sscontrol.scripts.changefile.ChangeFileModule;
 import com.anrisoftware.sscontrol.scripts.findusedport.FindUsedPortModule;
 import com.anrisoftware.sscontrol.scripts.killprocess.KillProcessModule;
@@ -38,6 +39,7 @@ public class NginxScriptModule extends AbstractModule {
 
     @Override
     protected void configure() {
+        install(new NginxConfigListModule());
         install(new UnixScriptsModule());
         install(new UnixScriptsModule.UnixScriptsDefaultsModule());
         install(new ChangeFileModule());

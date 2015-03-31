@@ -4,26 +4,34 @@ domainConfig(args) ::= <<
 <! - args.proxy - !>
 <! - args.location - !>
 <! - args.errorPagesDir - !>
-<! - args.setupProxyTimeouts - !>
-<! - args.setupProxyHeaders - !>
-<if(args.setupProxyTimeouts)><proxyTimeouts(args)><endif>
-<if(args.setupProxyHeaders)><proxyHeaders(args)><endif>
 location <args.location>/ {
-    proxy_cache_key "$scheme://$host$request_uri";
-    proxy_cache <args.proxy.proxyName>;
-    proxy_pass <args.proxy.address>;
+    <domainLocationConfig(args)>
 }
 
-<if(args.proxy.cacheStaticFiles)>
+>>
+
+domainLocationConfig(args) ::= <<
+<! - args.properties - !>
+<! - args.domain - !>
+<! - args.proxy - !>
+<! - args.location - !>
+<! - args.errorPagesDir - !>
+proxy_cache_key "$scheme://$host$request_uri";
+proxy_cache <args.proxy.proxyName>;
+proxy_pass <args.proxy.address>;
+>>
+
+domainCacheStaticFiles(args) ::= <<
 location ~* <args.location>/.*\.(<args.properties.staticFiles;separator="|">)$ {
     proxy_cache_valid 200 <args.properties.proxyStaticCacheTime>;
     expires <args.properties.proxyExpireTime>;
     proxy_pass <args.proxy.address>;
     proxy_cache <args.proxy.proxyName>;
 }
-<endif>
 
-<if(args.proxy.cacheFeeds)>
+>>
+
+domainCacheFeeds(args) ::= <<
 location ~* <args.location>/.*\/[^\/]+\/(feed|\.xml)\/? {
     # Cache RSS looking feeds
     proxy_cache_key "$scheme://$host$request_uri";
@@ -31,7 +39,6 @@ location ~* <args.location>/.*\/[^\/]+\/(feed|\.xml)\/? {
     proxy_cache <args.proxy.proxyName>;
     proxy_pass <args.proxy.address>;
 }
-<endif>
 
 >>
 

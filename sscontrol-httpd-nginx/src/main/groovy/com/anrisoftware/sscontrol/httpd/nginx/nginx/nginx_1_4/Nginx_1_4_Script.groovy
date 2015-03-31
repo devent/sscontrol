@@ -32,6 +32,7 @@ import com.anrisoftware.sscontrol.httpd.domain.SslDomainImpl
 import com.anrisoftware.sscontrol.httpd.domain.linux.DomainConfig
 import com.anrisoftware.sscontrol.httpd.domain.linux.SslDomainConfig
 import com.anrisoftware.sscontrol.httpd.nginx.nginx.linux.NginxScript
+import com.anrisoftware.sscontrol.httpd.nginx.nginxconfig.NginxConfigListFactory
 import com.anrisoftware.sscontrol.httpd.service.HttpdService
 import com.anrisoftware.sscontrol.httpd.webservice.WebService
 import com.anrisoftware.sscontrol.scripts.unix.StopServicesFactory
@@ -46,6 +47,9 @@ abstract class Nginx_1_4_Script extends NginxScript {
 
     @Inject
     private Nginx_1_4_ScriptLogger log
+
+    @Inject
+    NginxConfigListFactory nginxConfigListFactory
 
     @Inject
     DebugLoggingRenderer debugLoggingRenderer
@@ -198,7 +202,7 @@ abstract class Nginx_1_4_Script extends NginxScript {
     void deployConfig() {
         uniqueDomains.each { deployDomain it }
         service.domains.each { Domain domain ->
-            List serviceConfig = []
+            List serviceConfig = nginxConfigListFactory.create()
             setupDefaults domain
             deployRedirect domain, serviceConfig
             deployService domain, serviceConfig

@@ -76,21 +76,33 @@ abstract class GeneralProxyConfig extends AbstractNginxProxyConfig {
         def setupProxyHeaders = config.find { String it ->
             it.contains("# proxy headers\n")
         }
-        def configstr = proxyConfigTemplate.getText(
-                true,
-                "domainConfig",
-                "args",
-                [
-                    properties: this,
-                    domain: domain,
-                    proxy: service,
-                    location: proxyLocation(service),
-                    errorPagesDir: errorPagesDir,
-                    setupProxyTimeouts: setupProxyTimeouts == null,
-                    setupProxyHeaders: setupProxyHeaders == null,
-                ])
-        log.domainConfigCreated script, domain, configstr
+        def args = [:]
+        args.properties = this
+        args.domain = domain
+        args.proxy = service
+        args.location = proxyLocation(service)
+        args.errorPagesDir = errorPagesDir
+        if (setupProxyTimeouts == null) {
+            createConfig config, "proxyTimeouts", domain, args
+        }
+        if (setupProxyHeaders == null) {
+            createConfig config, "proxyHeaders", domain, args
+        }
+        createConfig config, "domainConfig", domain, args
+        if (service.cacheStaticFiles) {
+            createConfig config, "domainCacheStaticFiles", domain, args
+        }
+        if (service.cacheFeeds) {
+            createConfig config, "domainCacheFeeds", domain, args
+        }
+        config
+    }
+
+    List createConfig(List config, String name, def domain, def args) {
+        def configstr = proxyConfigTemplate.getText(true, name, "args", args)
         config << configstr
+        log.domainConfigCreated script, domain, configstr
+        config
     }
 
     /**

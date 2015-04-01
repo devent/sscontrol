@@ -19,10 +19,7 @@
 package com.anrisoftware.sscontrol.httpd.auth;
 
 import static com.anrisoftware.sscontrol.httpd.auth.AuthServiceStatement.AUTH_KEY;
-import static com.anrisoftware.sscontrol.httpd.auth.AuthServiceStatement.GROUP_KEY;
 import static com.anrisoftware.sscontrol.httpd.auth.AuthServiceStatement.LOCATION_KEY;
-import static com.anrisoftware.sscontrol.httpd.auth.AuthServiceStatement.USER_KEY;
-import static com.anrisoftware.sscontrol.httpd.auth.AuthServiceStatement.VALID_KEY;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -32,6 +29,7 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import com.anrisoftware.sscontrol.core.api.ServiceException;
+import com.anrisoftware.sscontrol.core.groovy.StatementsException;
 import com.anrisoftware.sscontrol.core.groovy.StatementsMap;
 import com.anrisoftware.sscontrol.httpd.domain.Domain;
 import com.anrisoftware.sscontrol.httpd.webserviceargs.DefaultWebService;
@@ -51,19 +49,12 @@ public abstract class AbstractAuthService implements AuthService {
 
     private final String serviceName;
 
-    private final List<RequireGroup> requireGroups;
-
-    private final List<RequireUser> requireUsers;
-
-    private final List<RequireValid> requireValids;
+    private final List<AuthGroup> groups;
 
     private AuthServiceLogger log;
 
     @Inject
-    private RequireGroupFactory requireGroupFactory;
-
-    @Inject
-    private RequireUserFactory requireUserFactory;
+    private AuthGroupFactory groupFactory;
 
     private DefaultWebService service;
 
@@ -83,9 +74,7 @@ public abstract class AbstractAuthService implements AuthService {
         this.serviceName = serviceName;
         this.domain = domain;
         this.args = new HashMap<String, Object>(args);
-        this.requireGroups = new ArrayList<RequireGroup>();
-        this.requireUsers = new ArrayList<RequireUser>();
-        this.requireValids = new ArrayList<RequireValid>();
+        this.groups = new ArrayList<AuthGroup>();
     }
 
     @Inject
@@ -173,54 +162,40 @@ public abstract class AbstractAuthService implements AuthService {
         return statementsMap.value(LOCATION_KEY);
     }
 
-    public void require(Map<String, Object> args) {
-        if (args.containsKey(GROUP_KEY.toString())) {
-            RequireGroup group = requireGroupFactory.create(this, args);
-            requireGroups.add(group);
-            log.groupAdded(this, group);
-            return;
-        }
-        if (args.containsKey(USER_KEY.toString())) {
-            RequireUser user = requireUserFactory.create(this, args);
-            requireUsers.add(user);
-            log.userAdded(this, user);
-            return;
-        }
-        if (args.containsKey(VALID_KEY.toString())) {
-            RequireValid valid = (RequireValid) args.get(VALID_KEY.toString());
-            requireValids.add(valid);
-            log.validAdded(this, valid);
-            return;
-        }
+    public Object group(Object s) {
+        return group(new HashMap<String, Object>(), s);
     }
 
-    public Object require(Map<String, Object> args, Object s) {
-        if (args.containsKey(GROUP_KEY.toString())) {
-            RequireGroup group = requireGroupFactory.create(this, args);
-            requireGroups.add(group);
-            log.groupAdded(this, group);
-            return group;
-        }
+    public Object group(String name, Object s) {
+        HashMap<String, Object> args = new HashMap<String, Object>();
+        args.put("name", name);
+        return group(args, s);
+    }
+
+    public Object group(Map<String, Object> args, String name, Object s) {
+        args.put("name", name);
+        return group(args, s);
+    }
+
+    public Object group(Map<String, Object> args, Object s) {
+        AuthGroup group = groupFactory.create(this, args);
+        groups.add(group);
+        log.groupAdded(this, group);
+        return group;
+    }
+
+    @Override
+    public List<AuthGroup> getGroups() {
+        return groups;
+    }
+
+    /**
+     * Redirects to the statements map and table.
+     */
+    public Object methodMissing(String name, Object args)
+            throws StatementsException {
+        service.methodMissing(name, args);
         return null;
-    }
-
-    @Override
-    public List<RequireGroup> getRequireGroups() {
-        return requireGroups;
-    }
-
-    @Override
-    public List<RequireUser> getRequireUsers() {
-        return requireUsers;
-    }
-
-    @Override
-    public List<RequireValid> getRequireValids() {
-        return requireValids;
-    }
-
-    public Object methodMissing(String name, Object args) {
-        return service.methodMissing(name, args);
     }
 
     @Override

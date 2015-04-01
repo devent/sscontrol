@@ -249,9 +249,7 @@ public class AuthLdapService extends AbstractAuthService {
         return attributes;
     }
 
-    @Override
     public void require(Map<String, Object> args) {
-        super.require(args);
         if (args.containsKey(ATTRIBUTE_KEY.toString())) {
             @SuppressWarnings("unchecked")
             Map<String, Object> map = convertYesno((Map<String, Object>) args

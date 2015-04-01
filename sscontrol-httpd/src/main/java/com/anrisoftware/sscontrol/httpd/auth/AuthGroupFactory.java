@@ -21,15 +21,15 @@ package com.anrisoftware.sscontrol.httpd.auth;
 import java.util.Map;
 
 /**
- * Factory to create required user.
+ * Factory to create the authentication group.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-public interface RequireUserFactory {
+public interface AuthGroupFactory {
 
     /**
-     * Creates the required user.
+     * Creates the authentication group.
      *
      * @param service
      *            the {@link AuthService} service.
@@ -37,7 +37,7 @@ public interface RequireUserFactory {
      * @param args
      *            the {@link Map} arguments.
      *
-     * @return the {@link RequireUser}.
+     * @return the {@link AuthGroup}.
      */
-    RequireUser create(AuthService service, Map<String, Object> args);
+    AuthGroup create(AuthService service, Map<String, Object> map);
 }

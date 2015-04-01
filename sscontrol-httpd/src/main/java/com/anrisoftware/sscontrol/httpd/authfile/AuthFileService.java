@@ -19,10 +19,10 @@
 package com.anrisoftware.sscontrol.httpd.authfile;
 
 import static com.anrisoftware.sscontrol.httpd.authfile.AuthFileServiceStatement.DOMAIN_KEY;
+import static com.anrisoftware.sscontrol.httpd.authfile.AuthFileServiceStatement.REQUIRE_KEY;
 import static com.anrisoftware.sscontrol.httpd.authfile.AuthFileServiceStatement.SATISFY_KEY;
 import static com.anrisoftware.sscontrol.httpd.authfile.AuthFileServiceStatement.TYPE_KEY;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -33,7 +33,6 @@ import com.anrisoftware.sscontrol.core.groovy.StatementsMap;
 import com.anrisoftware.sscontrol.core.groovy.StatementsMapFactory;
 import com.anrisoftware.sscontrol.httpd.auth.AbstractAuthService;
 import com.anrisoftware.sscontrol.httpd.auth.AuthType;
-import com.anrisoftware.sscontrol.httpd.auth.RequireUser;
 import com.anrisoftware.sscontrol.httpd.auth.SatisfyType;
 import com.anrisoftware.sscontrol.httpd.domain.Domain;
 import com.google.inject.assistedinject.Assisted;
@@ -51,14 +50,6 @@ public class AuthFileService extends AbstractAuthService {
      */
     public static final String AUTH_FILE_NAME = "auth-file";
 
-    private final List<RequireDomain> requireDomains;
-
-    @Inject
-    private AuthFileServiceLogger log;
-
-    @Inject
-    private RequireDomainFactory requireDomainFactory;
-
     private StatementsMap statementsMap;
 
     /**
@@ -67,15 +58,15 @@ public class AuthFileService extends AbstractAuthService {
     @Inject
     AuthFileService(@Assisted Map<String, Object> args, @Assisted Domain domain) {
         super(AUTH_FILE_NAME, args, domain);
-        this.requireDomains = new ArrayList<RequireDomain>();
     }
 
     @Inject
     public final void setStatementsMap(StatementsMapFactory factory) {
         StatementsMap map = factory.create(this, AUTH_FILE_NAME);
-        map.addAllowed(TYPE_KEY);
+        map.addAllowed(TYPE_KEY, REQUIRE_KEY);
         map.setAllowValue(true, TYPE_KEY);
         map.addAllowedKeys(TYPE_KEY, SATISFY_KEY);
+        map.addAllowedKeys(REQUIRE_KEY, DOMAIN_KEY);
         this.statementsMap = map;
     }
 
@@ -119,17 +110,6 @@ public class AuthFileService extends AbstractAuthService {
         return statementsMap.mapValue(TYPE_KEY, SATISFY_KEY);
     }
 
-    @Override
-    public void require(Map<String, Object> args) {
-        super.require(args);
-        if (args.containsKey(DOMAIN_KEY.toString())) {
-            RequireDomain domain = requireDomainFactory.create(this, args);
-            requireDomains.add(domain);
-            log.requireDomainAdded(this, domain);
-            return;
-        }
-    }
-
     /**
      * Returns the required domains.
      * <p>
@@ -144,11 +124,10 @@ public class AuthFileService extends AbstractAuthService {
      * }
      * </pre>
      *
-     * @return the {@link List} list of {@link RequireUser} users or
-     *         {@code null}.
+     * @return the {@link List} list of {@link String} domains or {@code null}.
      */
-    public List<RequireDomain> getRequireDomains() {
-        return requireDomains;
+    public List<String> getRequireDomains() {
+        return statementsMap.mapValueAsStringList(REQUIRE_KEY, DOMAIN_KEY);
     }
 
     @Override

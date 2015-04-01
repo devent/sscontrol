@@ -20,10 +20,6 @@ package com.anrisoftware.sscontrol.httpd.auth;
 
 import static com.anrisoftware.sscontrol.httpd.auth.AuthServiceLogger._.group_added_debug;
 import static com.anrisoftware.sscontrol.httpd.auth.AuthServiceLogger._.group_added_info;
-import static com.anrisoftware.sscontrol.httpd.auth.AuthServiceLogger._.user_added_debug;
-import static com.anrisoftware.sscontrol.httpd.auth.AuthServiceLogger._.user_added_info;
-import static com.anrisoftware.sscontrol.httpd.auth.AuthServiceLogger._.valid_added_debug;
-import static com.anrisoftware.sscontrol.httpd.auth.AuthServiceLogger._.valid_added_info;
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
 
@@ -39,21 +35,7 @@ public class AuthServiceLogger extends AbstractLogger {
 
         group_added_debug("Required group {} added for {}."),
 
-        group_added_info("Required group '{}' added for service '{}'."),
-
-        user_added_debug("Required user {} added for {}."),
-
-        user_added_info("Required user '{}' added for service '{}'."),
-
-        valid_added_debug("Required valid {} added for {}."),
-
-        valid_added_info("Required valid {} added for service '{}'."),
-
-        attribute_added_debug("Required attribute {} added for {}."),
-
-        attribute_added_info("Required attribute '{}' added for service '{}'."),
-
-        auth_null("Authentication name cannot be null or blank.");
+        group_added_info("Required group '{}' added for service '{}'.");
 
         private String name;
 
@@ -74,27 +56,11 @@ public class AuthServiceLogger extends AbstractLogger {
         super(AbstractAuthService.class);
     }
 
-    void groupAdded(AbstractAuthService service, RequireGroup group) {
+    void groupAdded(AbstractAuthService service, AuthGroup group) {
         if (isDebugEnabled()) {
             debug(group_added_debug, group, service);
         } else {
             info(group_added_info, group.getName(), service.getName());
-        }
-    }
-
-    void userAdded(AbstractAuthService service, RequireUser user) {
-        if (isDebugEnabled()) {
-            debug(user_added_debug, user, service);
-        } else {
-            info(user_added_info, user.getName(), service.getName());
-        }
-    }
-
-    void validAdded(AbstractAuthService service, RequireValid valid) {
-        if (isDebugEnabled()) {
-            debug(valid_added_debug, valid, service);
-        } else {
-            info(valid_added_info, valid, service.getName());
         }
     }
 

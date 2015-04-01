@@ -20,20 +20,20 @@ package com.anrisoftware.sscontrol.httpd.apache.authfile.apache_2_2
 
 import static org.apache.commons.lang3.StringUtils.replaceChars
 import static org.apache.commons.lang3.StringUtils.split
-import groovy.util.logging.Slf4j
 
 import javax.inject.Inject
 
 import org.apache.commons.io.FileUtils
 import org.apache.commons.io.FilenameUtils
+import org.apache.commons.lang3.builder.ToStringBuilder
 
 import com.anrisoftware.globalpom.exec.api.ProcessTask
 import com.anrisoftware.globalpom.exec.scriptprocess.ScriptExecFactory
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.TemplatesFactory
-import com.anrisoftware.sscontrol.httpd.auth.AbstractAuthService
-import com.anrisoftware.sscontrol.httpd.auth.RequireUpdate
-import com.anrisoftware.sscontrol.httpd.auth.RequireUser
+import com.anrisoftware.sscontrol.httpd.auth.AuthGroup
+import com.anrisoftware.sscontrol.httpd.auth.AuthService
+import com.anrisoftware.sscontrol.httpd.auth.UpdateMode
 import com.anrisoftware.sscontrol.httpd.domain.Domain
 
 /**
@@ -42,11 +42,10 @@ import com.anrisoftware.sscontrol.httpd.domain.Domain
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-@Slf4j
 class AuthFileBasicConfig {
 
     @Inject
-    AuthFileBasicConfigLogger logg
+    AuthFileBasicConfigLogger log
 
     @Inject
     ScriptExecFactory scriptExecFactory
@@ -59,40 +58,46 @@ class AuthFileBasicConfig {
     /**
      * @see ServiceConfig#getScript()
      */
-    Object script
+    Object parent
 
     /**
      * Creates the required users for basic/auth.
      *
      * @param domain
-     *            the {@link Domain}.
+     *            the {@link Domain} domain.
      *
      * @param service
-     *            the {@link AuthService}.
+     *            the {@link AuthService} service.
      *
-     * @param users
-     *            the {@link List} of {@link RequireUser} users.
+     * @param group
+     *            the {@link AuthGroup} group.
      *
      * @return the {@link List} of the user configuration.
      */
-    List createUsers(Domain domain, AbstractAuthService service, List users) {
+    List createUsers(Domain domain, AuthService service, AuthGroup group) {
         def file = passwordFile(domain, service)
         def oldusers = file.exists() ? FileUtils.readLines(file, charset) : []
-        users.each { RequireUser user ->
-            def found = findUser(oldusers, user)
-            found.found ? updateUser(domain, service, found, oldusers) : insertUser(domain, service, user, oldusers)
+        group.userPasswords.each { String userName, String userPassword ->
+            def found = findUser(oldusers, userName)
+            if (found.found != null) {
+                updateUser(domain, service, group, found, oldusers)
+            } else {
+                insertUser(domain, service, group, userName, oldusers)
+            }
         }
         return oldusers
     }
 
-    Map findUser(List users, RequireUser user) {
+    Map findUser(List users, String userName) {
         def found = null
         def index = -1
         for (int i = 0; i < users.size(); i++) {
             String str = users[i]
             String[] s = split(str, ":")
-            if (user.name == s[0]) {
-                found = user
+            String name = s[0]
+            String pass = s[1]
+            if (name == userName) {
+                found = userName
                 index = i
                 break
             }
@@ -100,26 +105,28 @@ class AuthFileBasicConfig {
         return [found: found, index: index]
     }
 
-    void updateUser(Domain domain, AbstractAuthService service, Map found, List users) {
-        RequireUser userfound = found.found
+    void updateUser(Domain domain, AuthService service, AuthGroup group, Map found, List users) {
         int index = found.index
-        switch (userfound.updateMode) {
-            case RequireUpdate.password:
-                users[index] = updatePassword domain, service, userfound
+        if (group.userUpdates == null) {
+            return
+        }
+        switch (group.userUpdates[found.found]) {
+            case UpdateMode.password:
+                users[index] = updatePassword domain, service, group, found
                 break
             default:
                 break
         }
     }
 
-    void insertUser(Domain domain, AbstractAuthService service, RequireUser user, List users) {
-        def task = htpasswd user
+    void insertUser(Domain domain, AuthService service, AuthGroup group, String userName, List users) {
+        def task = htpasswd userName, group.userPasswords[userName]
         def out = replaceChars task.out, '\n', ''
         users << out
     }
 
-    String updatePassword(Domain domain, AbstractAuthService service, RequireUser user) {
-        def worker = htpasswd user
+    String updatePassword(Domain domain, AuthService service, AuthGroup group, Map found) {
+        def worker = htpasswd found.found, group.userPasswords[found.found]
         replaceChars worker.out, '\n', ''
     }
 
@@ -127,18 +134,22 @@ class AuthFileBasicConfig {
      * Executes the <i>htpasswd</i> command to create the password
      * for the user.
      *
-     * @param user
-     *            the {@link RequireUser} user.
+     * @param userName
+     *            the user {@link String} name.
+     *
+     * @param password
+     *            the user {@link String} password.
      *
      * @return the {@link ProcessTask}.
      */
-    ProcessTask htpasswd(RequireUser user) {
-        logg.checkHtpasswdArgs this, user
+    ProcessTask htpasswd(String userName, String password) {
+        log.checkHtpasswdArgs this, userName, password
         scriptExecFactory.create(
-                log: log,
+                log: log.log,
                 runCommands: runCommands,
                 command: htpasswdCommand,
-                user: user,
+                user: userName,
+                password: password,
                 outString: true,
                 this, threads,
                 authCommandsTemplate, "basicPassword")()
@@ -153,7 +164,7 @@ class AuthFileBasicConfig {
      * @param service
      *            the {@link AuthService}.
      */
-    File passwordFile(Domain domain, AbstractAuthService service) {
+    File passwordFile(Domain domain, AuthService service) {
         def location = FilenameUtils.getBaseName(service.location)
         def dir = new File(authSubdirectory, domainDir(domain))
         new File("${location}.passwd", dir)
@@ -166,17 +177,51 @@ class AuthFileBasicConfig {
     }
 
     /**
-     * @see ServiceConfig#setScript(LinuxScript)
+     * Returns the service name.
      */
-    void setScript(Object script) {
-        this.script = script
+    String getServiceName() {
+        parent.getServiceName()
     }
 
+    /**
+     * Returns the profile name.
+     */
+    String getProfile() {
+        parent.getProfile()
+    }
+
+    /**
+     * Sets the parent script.
+     */
+    void setScript(Object parent) {
+        this.parent = parent
+    }
+
+    /**
+     * Returns the parent script.
+     */
+    Object getScript() {
+        parent
+    }
+
+    /**
+     * Delegates missing properties to the parent script.
+     */
     def propertyMissing(String name) {
-        script.getProperty name
+        parent.getProperty name
     }
 
+    /**
+     * Delegates missing methods to the parent script.
+     */
     def methodMissing(String name, def args) {
-        script.invokeMethod name, args
+        parent.invokeMethod name, args
+    }
+
+    @Override
+    public String toString() {
+        new ToStringBuilder(this)
+                .append("service name", getServiceName())
+                .append("profile name", getProfile()).toString();
     }
 }

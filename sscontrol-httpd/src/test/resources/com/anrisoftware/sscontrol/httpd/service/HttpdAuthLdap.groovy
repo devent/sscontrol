@@ -18,18 +18,23 @@
  */
 package com.anrisoftware.sscontrol.httpd.service
 
-import com.anrisoftware.sscontrol.httpd.auth.AuthType
-import com.anrisoftware.sscontrol.httpd.auth.RequireValid
-import com.anrisoftware.sscontrol.httpd.auth.SatisfyType;
-
 httpd {
     ssl_domain "test1.com", address: "192.168.0.50", {
         setup "auth-ldap", auth: "Private Directory", location: "/private", {
+
             type AuthType.basic, satisfy: SatisfyType.any, authoritative: no
+
             host "ldap://127.0.0.1:389", url: "o=deventorg,dc=ubuntutest,dc=com?cn"
+
             credentials "cn=admin,dc=ubuntutest,dc=com", password: "adminpass"
-            require valid: RequireValid.user
-            require group: "cn=ldapadminGroup,o=deventorg,dc=ubuntutest,dc=com"
+
+            group "cn=ldapadminGroup,o=deventorg,dc=ubuntutest,dc=com", {
+                require valid: RequireValid.user
+                require except: "GET, OPTIONS"
+                user "foo", password: "foopass"
+                user "bar", password: "barpass"
+            }
+
             require attribute: [group: "uniqueMember"]
             require attribute: [dn: no]
         }

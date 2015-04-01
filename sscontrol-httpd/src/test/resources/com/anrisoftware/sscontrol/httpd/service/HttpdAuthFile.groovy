@@ -18,32 +18,43 @@
  */
 package com.anrisoftware.sscontrol.httpd.service
 
-import com.anrisoftware.sscontrol.httpd.auth.AuthType
-import com.anrisoftware.sscontrol.httpd.auth.RequireUpdate
-import com.anrisoftware.sscontrol.httpd.auth.RequireValid
-import com.anrisoftware.sscontrol.httpd.auth.SatisfyType
-
 httpd {
 	ssl_domain "test1.com", address: "192.168.0.50", {
 		setup "auth-file", auth: "Private Directory", location: "/private", {
+
             type AuthType.digest, satisfy: SatisfyType.any
-            require valid: RequireValid.user
-			require domain: "https://%"
-            require user: "foo", password: "foopassword"
-			require user: "bar", password: "barpassword", update: RequireUpdate.password
-            require group: "foogroup"
-            require group: "admin1", {
-                user "adminfoo1", password: "adminfoopassword"
-                user "adminbar1", password: "adminbarpassword"
+
+            group {
+                user "foo", password: "foopass", update: UpdateMode.password
+                user "bar", password: "barpass"
             }
-            require group: "admin2", update: RequireUpdate.rewrite, {
-                user "adminfoo2", password: "adminfoopassword"
-                user "adminbar2", password: "adminbarpassword"
+
+            group "foogroup", {
+                user "foo", password: "foopass", update: UpdateMode.password
+                user "bar", password: "barpass"
             }
-			require group: "admin3", update: RequireUpdate.append, {
-				user "adminfoo3", password: "adminfoopassword"
-				user "adminbar3", password: "adminbarpassword"
-			}
+
+            group "foogroupappend", update: UpdateMode.append, {
+                user "foo", password: "foopass"
+                user "bar", password: "barpass"
+            }
+
+            group "foogrouprewrite", update: UpdateMode.rewrite, {
+                user "foo", password: "foopass"
+                user "bar", password: "barpass"
+            }
+
+            group {
+                require valid: RequireValid.user
+                user "foo", password: "foopass"
+                user "bar", password: "barpass"
+            }
+
+            group "foolimit", {
+                require except: "GET, OPTIONS"
+                user "foo", password: "foopass"
+                user "bar", password: "barpass"
+            }
 		}
 	}
 }

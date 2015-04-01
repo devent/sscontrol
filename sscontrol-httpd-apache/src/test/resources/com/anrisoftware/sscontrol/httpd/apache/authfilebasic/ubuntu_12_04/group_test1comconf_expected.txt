@@ -15,8 +15,7 @@
         AuthType basic
         AuthName "Private Directory"
         AuthBasicProvider file
-        Require valid-user
-        Require group foogroup admin1 admin2 admin3
+        Require group foogroup
         AuthUserFile /tmp/var/www/test1.com/auth/private.passwd
         AuthGroupFile /tmp/var/www/test1.com/auth/private.group
         Satisfy any

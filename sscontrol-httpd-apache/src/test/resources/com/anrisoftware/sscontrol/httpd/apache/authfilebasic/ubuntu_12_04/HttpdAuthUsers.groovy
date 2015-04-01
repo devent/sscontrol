@@ -22,25 +22,14 @@ httpd {
     domain "test1.com", address: "192.168.0.50", {
         setup "auth-file", id: "test1authid", auth: "Private Directory", location: "/private", {
             type AuthType.basic, satisfy: SatisfyType.any
-            require valid: RequireValid.user
-            require user: "foo", password: "foopassword"
-            require user: "bar", password: "barpassword", update: RequireUpdate.password
-            require group: "foogroup"
-            require group: "admin1", {
-                user "adminfoo1", password: "adminfoopassword"
-                user "adminbar1", password: "adminbarpassword"
-            }
-            require group: "admin2", update: RequireUpdate.rewrite, {
-                user "adminfoo2", password: "adminfoopassword"
-                user "adminbar2", password: "adminbarpassword"
-            }
-            require group: "admin3", update: RequireUpdate.append, {
-                user "adminfoo3", password: "adminfoopassword"
-                user "adminbar3", password: "adminbarpassword"
+            group {
+                require valid: RequireValid.user
+                user "foo", password: "foopass"
+                user "bar", password: "barpass"
             }
         }
     }
-    domain "www.test1.com", address: "192.168.0.50", {
-        setup "auth-file", ref: "test1authid" //
+    domain "test2.com", address: "192.168.0.50", {
+        setup "auth-file", ref: "test1authid"
     }
 }

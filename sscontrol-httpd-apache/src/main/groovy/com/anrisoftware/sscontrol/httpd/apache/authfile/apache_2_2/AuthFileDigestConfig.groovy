@@ -31,9 +31,9 @@ import com.anrisoftware.globalpom.exec.api.ProcessTask
 import com.anrisoftware.globalpom.exec.scriptprocess.ScriptExecFactory
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.TemplatesFactory
-import com.anrisoftware.sscontrol.httpd.auth.AbstractAuthService
-import com.anrisoftware.sscontrol.httpd.auth.RequireUpdate
-import com.anrisoftware.sscontrol.httpd.auth.RequireUser
+import com.anrisoftware.sscontrol.httpd.auth.AuthGroup
+import com.anrisoftware.sscontrol.httpd.auth.AuthService
+import com.anrisoftware.sscontrol.httpd.auth.UpdateMode
 import com.anrisoftware.sscontrol.httpd.domain.Domain
 
 /**
@@ -65,34 +65,40 @@ class AuthFileDigestConfig {
      * Creates the required users for auth-digest.
      *
      * @param domain
-     *            the {@link Domain}.
+     *            the {@link Domain} domain.
      *
      * @param service
-     *            the {@link AuthService}.
+     *            the {@link AuthService} service.
      *
-     * @param users
-     *            the {@link List} of {@link RequireUser} users.
+     * @param group
+     *            the {@link AuthGroup} group.
      *
      * @return the {@link List} of the user configuration.
      */
-    List createUsers(Domain domain, AbstractAuthService service, List users) {
+    List createUsers(Domain domain, AuthService service, AuthGroup group) {
         def file = passwordFile(domain, service)
         def oldusers = file.exists() ? FileUtils.readLines(file, charset) : []
-        users.each { RequireUser user ->
-            def found = findUser(oldusers, user)
-            found.found ? updateUser(domain, service, found, oldusers) : insertUser(domain, service, user, oldusers)
+        group.userPasswords.each { String userName, String userPassword ->
+            def found = findUser(oldusers, userName)
+            if (found.found != null) {
+                updateUser(domain, service, group, found, oldusers)
+            } else {
+                insertUser(domain, service, group, userName, oldusers)
+            }
         }
         return oldusers
     }
 
-    Map findUser(List users, RequireUser user) {
+    Map findUser(List users, String userName) {
         def found = null
         def index = -1
         for (int i = 0; i < users.size(); i++) {
             String str = users[i]
             String[] s = split(str, ":")
-            if (user.name == s[0]) {
-                found = user
+            String name = s[0]
+            String pass = s[2]
+            if (name == userName) {
+                found = userName
                 index = i
                 break
             }
@@ -100,26 +106,25 @@ class AuthFileDigestConfig {
         return [found: found, index: index]
     }
 
-    void updateUser(Domain domain, AbstractAuthService service, Map found, List users) {
-        RequireUser userfound = found.found
+    void updateUser(Domain domain, AuthService service, AuthGroup group, Map found, List users) {
         int index = found.index
-        switch (userfound.updateMode) {
-            case RequireUpdate.password:
-                users[index] = updatePassword domain, service, userfound
+        switch (group.userUpdates[found.found]) {
+            case UpdateMode.password:
+                users[index] = updatePassword domain, service, group, found
                 break
             default:
                 break
         }
     }
 
-    void insertUser(Domain domain, AbstractAuthService service, RequireUser user, List users) {
-        def worker = digestPassword service, user
+    void insertUser(Domain domain, AuthService service, AuthGroup group, String userName, List users) {
+        def worker = digestPassword service, userName, group.userPasswords[userName]
         def out = replaceChars worker.out, '\n', ''
         users << out
     }
 
-    String updatePassword(Domain domain, AbstractAuthService service, RequireUser user) {
-        def worker = digestPassword service, user
+    String updatePassword(Domain domain, AuthService service, AuthGroup group, Map found) {
+        def worker = digestPassword service, found.found, group.userPasswords[found.found]
         replaceChars worker.out, '\n', ''
     }
 
@@ -127,19 +132,23 @@ class AuthFileDigestConfig {
      * Executes the command to create the password for the user.
      *
      * @param auth
-     *            the {@link AbstractAuthService} auth service.
+     *            the {@link AuthService} service.
      *
-     * @param user
-     *            the {@link RequireUser} user.
+     * @param userName
+     *            the user {@link String} name.
+     *
+     * @param password
+     *            the user {@link String} password.
      *
      * @return the {@link ProcessTask}.
      */
-    ProcessTask digestPassword(AbstractAuthService auth, RequireUser user) {
+    ProcessTask digestPassword(AuthService service, String userName, String password) {
         scriptExecFactory.create(
                 log: log,
                 runCommands: runCommands,
-                auth: auth,
-                user: user,
+                auth: service.auth,
+                user: userName,
+                password: password,
                 outString: true,
                 this, threads,
                 authCommandsTemplate, "digestPassword")()
@@ -154,7 +163,7 @@ class AuthFileDigestConfig {
      * @param service
      *            the {@link AuthService}.
      */
-    File passwordFile(Domain domain, AbstractAuthService service) {
+    File passwordFile(Domain domain, AuthService service) {
         def location = FilenameUtils.getBaseName(service.location)
         def dir = new File(authSubdirectory, domainDir(domain))
         new File("${location}-digest.passwd", dir)

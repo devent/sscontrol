@@ -44,7 +44,7 @@ public class AuthImportsModule extends AbstractModule {
             public void importClass(ImportCustomizer customizer) {
                 customizer.addImports(SatisfyType.class.getName());
                 customizer.addImports(AuthType.class.getName());
-                customizer.addImports(RequireUpdate.class.getName());
+                customizer.addImports(UpdateMode.class.getName());
                 customizer.addImports(RequireValid.class.getName());
             }
         });

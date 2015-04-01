@@ -20,7 +20,6 @@ package com.anrisoftware.sscontrol.httpd.apache.authfile.apache_2_2
 
 import static org.apache.commons.io.FileUtils.writeLines
 import static org.apache.commons.lang3.StringUtils.split
-import groovy.util.logging.Slf4j
 
 import javax.inject.Inject
 
@@ -28,15 +27,15 @@ import org.apache.commons.io.FileUtils
 import org.apache.commons.io.FilenameUtils
 import org.stringtemplate.v4.ST
 
-import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.TemplatesFactory
 import com.anrisoftware.sscontrol.core.service.LinuxScript
 import com.anrisoftware.sscontrol.httpd.apache.apache.linux.BasicAuth
-import com.anrisoftware.sscontrol.httpd.auth.AbstractAuthService
+import com.anrisoftware.sscontrol.httpd.auth.AuthGroup
+import com.anrisoftware.sscontrol.httpd.auth.AuthService
 import com.anrisoftware.sscontrol.httpd.auth.AuthType
-import com.anrisoftware.sscontrol.httpd.auth.RequireGroup
-import com.anrisoftware.sscontrol.httpd.auth.RequireUpdate
+import com.anrisoftware.sscontrol.httpd.auth.UpdateMode
+import com.anrisoftware.sscontrol.httpd.authfile.AuthFileService
 import com.anrisoftware.sscontrol.httpd.domain.Domain
 import com.anrisoftware.sscontrol.httpd.webservice.WebService
 import com.anrisoftware.sscontrol.scripts.changefile.ChangeFileModFactory
@@ -48,7 +47,6 @@ import com.anrisoftware.sscontrol.scripts.changefile.ChangeFileOwnerFactory
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-@Slf4j
 abstract class AuthFileConfig extends BasicAuth {
 
     /**
@@ -57,7 +55,7 @@ abstract class AuthFileConfig extends BasicAuth {
     public static final String SERVICE_NAME = "auth-file"
 
     @Inject
-    AuthFileConfigLogger logg
+    AuthFileConfigLogger log
 
     @Inject
     ChangeFileModFactory changeFileModFactory
@@ -85,7 +83,6 @@ abstract class AuthFileConfig extends BasicAuth {
         enableMods service
         makeAuthDirectory domain
         deployGroups domain, service
-        deployUsers domain, service, service.requireUsers
         updatePermissions domain, service
     }
 
@@ -101,22 +98,45 @@ abstract class AuthFileConfig extends BasicAuth {
      *            the {@link Domain}.
      *
      * @param service
-     *            the {@link AuthService}.
+     *            the {@link AuthFileService}.
      *
      * @param serviceConfig
      *            the {@link List} of the configuration.
      */
-    void createDomainConfig(Domain domain, AbstractAuthService service, List serviceConfig) {
-        def file = passwordFile(service, domain)
-        def config = authDomainConfigTemplate.getText true,
-                "domainAuth",
-                "domain", domain,
-                "auth", service,
-                "args", [
-                    passwordFile: file,
-                    groupFile: groupFile(domain, service)
-                ]
+    void createDomainConfig(Domain domain, AuthFileService service, List serviceConfig) {
+        def args = [:]
+        args.auth = service.auth
+        args.location = service.location
+        args.type = service.type
+        args.satisfy = service.satisfy
+        args.requireDomains = service.requireDomains
+        args.requireValids = findRequireValids service
+        args.requireGroups = service.groups
+        args.groupNames = findGroupNames service
+        args.passwordFile = passwordFile service, domain
+        args.groupFile = groupFile domain, service
+        def config = authDomainConfigTemplate.getText true, "domainAuth", "args", args
         serviceConfig << config
+    }
+
+    List findGroupNames(AuthFileService service) {
+        service.groups.inject([]) { list, AuthGroup group ->
+            if (group.name != null) {
+                list << group.name
+            } else {
+                list
+            }
+        }
+    }
+
+    List findRequireValids(AuthFileService service) {
+        service.groups.inject([]) { list, AuthGroup group ->
+            if (group.requireValid != null) {
+                list << group.requireValid
+            } else {
+                list
+            }
+        }
     }
 
     /**
@@ -125,7 +145,7 @@ abstract class AuthFileConfig extends BasicAuth {
      * @param service
      *            the {@link AuthService}.
      */
-    void enableMods(AbstractAuthService service) {
+    void enableMods(AuthService service) {
         switch (service.type) {
             case AuthType.basic:
                 enableMods(["authn_file", "auth_basic"])
@@ -156,23 +176,30 @@ abstract class AuthFileConfig extends BasicAuth {
      * @param service
      *            the {@link AuthService}.
      */
-    void deployGroups(Domain domain, AbstractAuthService service) {
+    void deployGroups(Domain domain, AuthService service) {
         def file = groupFile(domain, service)
         def oldgroups = file.exists() ? FileUtils.readLines(file, charset) : []
-        service.requireGroups.each { RequireGroup group ->
+        service.groups.each { AuthGroup group ->
             def found = findGroup(oldgroups, group)
-            found.found ? updateGroup(domain, service, found, oldgroups) : insertGroup(domain, service, group, oldgroups)
-            deployUsers domain, service, group.users
+            if (found.found != null) {
+                updateGroup(domain, service, found, oldgroups)
+            } else {
+                insertGroup(domain, service, group, oldgroups)
+            }
+            deployUsers domain, service, group
         }
         writeLines file, charset.name(), oldgroups
     }
 
-    Map findGroup(List oldgroups, RequireGroup group) {
+    Map findGroup(List oldgroups, AuthGroup group) {
         def found = null
         def index = -1
         for (int i = 0; i < oldgroups.size(); i++) {
             String str = oldgroups[i]
             String[] s = split(str, ":")
+            if (s.length == 0) {
+                break
+            }
             if (group.name == s[0]) {
                 found = group
                 index = i
@@ -182,14 +209,14 @@ abstract class AuthFileConfig extends BasicAuth {
         return [found: found, index: index]
     }
 
-    void updateGroup(Domain domain, AbstractAuthService service, Map found, List groups) {
-        RequireGroup groupfound = found.found
+    void updateGroup(Domain domain, AuthService service, Map found, List groups) {
+        AuthGroup groupfound = found.found
         int index = found.index
-        switch (groupfound.updateMode) {
-            case RequireUpdate.rewrite:
+        switch (groupfound.update) {
+            case UpdateMode.rewrite:
                 groups[index] = createGroup groupfound
                 break
-            case RequireUpdate.append:
+            case UpdateMode.append:
                 groups[index] = appendGroup groupfound, split(groups[index], ':')[1]
                 break
             default:
@@ -197,18 +224,24 @@ abstract class AuthFileConfig extends BasicAuth {
         }
     }
 
-    void insertGroup(Domain domain, AbstractAuthService service, RequireGroup group, List groups) {
+    void insertGroup(Domain domain, AuthService service, AuthGroup group, List groups) {
         groups << createGroup(group)
     }
 
-    String appendGroup(RequireGroup group, String oldusers) {
+    String appendGroup(AuthGroup group, String oldusers) {
         oldusers = oldusers.trim()
-        def st = new ST('<group.name>: <oldusers> <group.users:{user | <user.name>};separator=" ">')
+        if (group.name == null) {
+            return oldusers
+        }
+        def st = new ST('<group.name>: <oldusers> <group.userPasswords;separator=" ">')
         st.add("group", group).add("oldusers", oldusers).render()
     }
 
-    String createGroup(RequireGroup group) {
-        def st = new ST('<group.name>: <group.users:{user | <user.name>};separator=" ">')
+    String createGroup(AuthGroup group) {
+        if (group.name == null) {
+            return ""
+        }
+        def st = new ST('<group.name>: <group.userPasswords;separator=" ">')
         st.add("group", group).render()
     }
 
@@ -221,17 +254,17 @@ abstract class AuthFileConfig extends BasicAuth {
      * @param service
      *            the {@link AuthService}.
      *
-     * @param users
-     *            the {@link List} of {@link RequireUser} users.
+     * @param group
+     *            the {@link AuthGroup} group.
      */
-    void deployUsers(Domain domain, AbstractAuthService service, List users) {
+    void deployUsers(Domain domain, AuthService service, AuthGroup group) {
         def oldusers
         switch (service.type) {
             case AuthType.basic:
-                oldusers = authFileBasicConfig.createUsers domain, service, users
+                oldusers = authFileBasicConfig.createUsers domain, service, group
                 break
             case AuthType.digest:
-                oldusers = authFileDigestConfig.createUsers domain, service, users
+                oldusers = authFileDigestConfig.createUsers domain, service, group
                 break
         }
         writeLines passwordFile(service, domain), charset.name(), oldusers
@@ -246,12 +279,12 @@ abstract class AuthFileConfig extends BasicAuth {
      * @param service
      *            the {@link AuthService}.
      */
-    void updatePermissions(Domain domain, AbstractAuthService service) {
+    void updatePermissions(Domain domain, AuthService service) {
         def owner = "root"
         def group = "root"
         def authdir = new File(authSubdirectory, domainDir(domain))
         changeFileOwnerFactory.create(
-                log: log,
+                log: log.log,
                 runCommands: runCommands,
                 command: chownCommand,
                 owner: owner,
@@ -260,7 +293,7 @@ abstract class AuthFileConfig extends BasicAuth {
                 recursive: true,
                 this, threads)()
         changeFileModFactory.create(
-                log: log,
+                log: log.log,
                 runCommands: runCommands,
                 command: chmodCommand,
                 mod: "o-rw",
@@ -282,7 +315,7 @@ abstract class AuthFileConfig extends BasicAuth {
      *
      * @return the password {@link File}.
      */
-    File passwordFile(AbstractAuthService service, Domain domain) {
+    File passwordFile(AuthService service, Domain domain) {
         switch (service.type) {
             case AuthType.basic:
                 return authFileBasicConfig.passwordFile(domain, service)
@@ -300,7 +333,7 @@ abstract class AuthFileConfig extends BasicAuth {
      * @param service
      *            the {@link AuthService}.
      */
-    File groupFile(Domain domain, AbstractAuthService service) {
+    File groupFile(Domain domain, AuthService service) {
         def location = FilenameUtils.getBaseName(service.location)
         def dir = new File(authSubdirectory, domainDir(domain))
         return new File("${location}.group", dir)

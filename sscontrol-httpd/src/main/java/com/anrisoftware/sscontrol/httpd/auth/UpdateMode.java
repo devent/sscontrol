@@ -18,26 +18,31 @@
  */
 package com.anrisoftware.sscontrol.httpd.auth;
 
-import java.util.Map;
-
 /**
- * Factory to create authentication host.
+ * Require update mode.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-public interface AuthHostFactory {
+public enum UpdateMode {
 
     /**
-     * Creates the authentication host.
-     * 
-     * @param service
-     *            the {@link AbstractAuthService} service.
-     * 
-     * @param args
-     *            the {@link Map} arguments.
-     * 
-     * @return the {@link AuthHost}.
+     * Do nothing on update.
      */
-    AuthHost create(AbstractAuthService service, Map<String, Object> args);
+    nop,
+
+    /**
+     * Update password of the required user.
+     */
+    password,
+
+    /**
+     * Rewrites required groups or users.
+     */
+    rewrite,
+
+    /**
+     * Appends required groups or users.
+     */
+    append
 }

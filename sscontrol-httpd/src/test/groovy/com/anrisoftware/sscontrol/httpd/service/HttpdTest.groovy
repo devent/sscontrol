@@ -25,14 +25,11 @@ import groovy.util.logging.Slf4j
 import org.junit.Test
 
 import com.anrisoftware.sscontrol.httpd.auth.AuthType
-import com.anrisoftware.sscontrol.httpd.auth.RequireGroup
-import com.anrisoftware.sscontrol.httpd.auth.RequireUpdate
-import com.anrisoftware.sscontrol.httpd.auth.RequireUser
 import com.anrisoftware.sscontrol.httpd.auth.RequireValid
 import com.anrisoftware.sscontrol.httpd.auth.SatisfyType
+import com.anrisoftware.sscontrol.httpd.auth.UpdateMode
 import com.anrisoftware.sscontrol.httpd.authdb.AuthDbService
 import com.anrisoftware.sscontrol.httpd.authfile.AuthFileService
-import com.anrisoftware.sscontrol.httpd.authfile.RequireDomain
 import com.anrisoftware.sscontrol.httpd.authldap.AuthLdapService
 import com.anrisoftware.sscontrol.testutils.resources.HttpdTestEnvironment
 
@@ -107,42 +104,52 @@ class HttpdTest extends HttpdTestEnvironment {
         assert auth.type == AuthType.digest
         assert auth.satisfy == SatisfyType.any
 
-        assert auth.requireValids.size() == 1
-        assert auth.requireValids.containsAll([RequireValid.user])
-
-        assert auth.requireDomains.size() == 1
-        RequireDomain domain = auth.requireDomains[0]
-        assert domain.domain == "https://test1.com"
-
-        assert auth.requireUsers.size() == 2
-        RequireUser user = auth.requireUsers[0]
-        assert user.name == "foo"
-        assert user.password == "foopassword"
-        assert user.updateMode == null
-
-        user = auth.requireUsers[1]
-        assert user.name == "bar"
-        assert user.password == "barpassword"
-        assert user.updateMode == RequireUpdate.password
-
-        assert auth.requireGroups.size() == 4
-        RequireGroup group = auth.requireGroups[0]
-        assert group.name == "foogroup"
-        assert group.users.size() == 0
-
-        group = auth.requireGroups[1]
-        assert group.name == "admin1"
-        assert group.users.size() == 2
-
-        group = auth.requireGroups[2]
-        assert group.name == "admin2"
-        assert group.updateMode == RequireUpdate.rewrite
-        assert group.users.size() == 2
-
-        group = auth.requireGroups[3]
-        assert group.name == "admin3"
-        assert group.updateMode == RequireUpdate.append
-        assert group.users.size() == 2
+        int i = 0
+        assert auth.groups.size() == 6
+        assert auth.groups[i].name == null
+        assert auth.groups[i].userPasswords.size() == 2
+        assert auth.groups[i].userPasswords["foo"] == "foopass"
+        assert auth.groups[i].userUpdates.size() == 1
+        assert auth.groups[i].userUpdates["foo"] == UpdateMode.password
+        assert auth.groups[i].userPasswords["bar"] == "barpass"
+        i++
+        assert auth.groups[i].name == "foogroup"
+        assert auth.groups[i].userPasswords.size() == 2
+        assert auth.groups[i].userPasswords["foo"] == "foopass"
+        assert auth.groups[i].userUpdates.size() == 1
+        assert auth.groups[i].userUpdates["foo"] == UpdateMode.password
+        assert auth.groups[i].userPasswords["bar"] == "barpass"
+        i++
+        assert auth.groups[i].name == "foogroupappend"
+        assert auth.groups[i].update == UpdateMode.append
+        assert auth.groups[i].userPasswords.size() == 2
+        assert auth.groups[i].userPasswords["foo"] == "foopass"
+        assert auth.groups[i].userUpdates == null
+        assert auth.groups[i].userPasswords["bar"] == "barpass"
+        i++
+        assert auth.groups[i].name == "foogrouprewrite"
+        assert auth.groups[i].update == UpdateMode.rewrite
+        assert auth.groups[i].userPasswords.size() == 2
+        assert auth.groups[i].userPasswords["foo"] == "foopass"
+        assert auth.groups[i].userUpdates == null
+        assert auth.groups[i].userPasswords["bar"] == "barpass"
+        i++
+        assert auth.groups[i].name == null
+        assert auth.groups[i].update == null
+        assert auth.groups[i].requireValid == RequireValid.user
+        assert auth.groups[i].userPasswords.size() == 2
+        assert auth.groups[i].userPasswords["foo"] == "foopass"
+        assert auth.groups[i].userUpdates == null
+        assert auth.groups[i].userPasswords["bar"] == "barpass"
+        i++
+        assert auth.groups[i].name == "foolimit"
+        assert auth.groups[i].update == null
+        assert auth.groups[i].requireValid == null
+        assert auth.groups[i].requireExcept.containsAll(["GET", "OPTIONS"])
+        assert auth.groups[i].userPasswords.size() == 2
+        assert auth.groups[i].userPasswords["foo"] == "foopass"
+        assert auth.groups[i].userUpdates == null
+        assert auth.groups[i].userPasswords["bar"] == "barpass"
     }
 
     @Test
@@ -166,12 +173,13 @@ class HttpdTest extends HttpdTestEnvironment {
         assert auth.credentials == "cn=admin,dc=ubuntutest,dc=com"
         assert auth.credentialsPassword == "adminpass"
 
-        assert auth.requireValids.size() == 1
-        assert auth.requireValids.containsAll([RequireValid.user])
-
-        assert auth.requireGroups.size() == 1
-        RequireGroup group = auth.requireGroups[0]
-        assert group.name == "cn=ldapadminGroup,o=deventorg,dc=ubuntutest,dc=com"
+        int i = 0
+        assert auth.groups.size() == 1
+        assert auth.groups[i].name == "cn=ldapadminGroup,o=deventorg,dc=ubuntutest,dc=com"
+        assert auth.groups[i].userPasswords.size() == 2
+        assert auth.groups[i].userUpdates == null
+        assert auth.groups[i].requireValid == RequireValid.user
+        assert auth.groups[i].requireExcept.containsAll(["GET", "OPTIONS"])
 
         def attr = auth.attributes
         assert attr.size() == 2
@@ -204,36 +212,6 @@ class HttpdTest extends HttpdTestEnvironment {
         assert auth.passwordField == "passwd"
         assert auth.allowEmptyPasswords == false
 
-        assert auth.requireValids.size() == 1
-        assert auth.requireValids.containsAll([RequireValid.user])
-
-        RequireUser user = auth.requireUsers[0]
-        assert user.name == "foo"
-        assert user.password == "foopassword"
-        assert user.updateMode == null
-
-        user = auth.requireUsers[1]
-        assert user.name == "bar"
-        assert user.password == "barpassword"
-        assert user.updateMode == RequireUpdate.password
-
-        assert auth.requireGroups.size() == 4
-        RequireGroup group = auth.requireGroups[0]
-        assert group.name == "foogroup"
-        assert group.users.size() == 0
-
-        group = auth.requireGroups[1]
-        assert group.name == "admin1"
-        assert group.users.size() == 2
-
-        group = auth.requireGroups[2]
-        assert group.name == "admin2"
-        assert group.updateMode == RequireUpdate.rewrite
-        assert group.users.size() == 2
-
-        group = auth.requireGroups[3]
-        assert group.name == "admin3"
-        assert group.updateMode == RequireUpdate.append
-        assert group.users.size() == 2
+        assert auth.groups.size() == 6
     }
 }

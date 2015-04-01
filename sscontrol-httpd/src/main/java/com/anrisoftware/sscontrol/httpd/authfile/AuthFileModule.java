@@ -39,8 +39,6 @@ public class AuthFileModule extends AbstractModule {
     protected void configure() {
         install(new FactoryModuleBuilder().implement(WebService.class,
                 AuthFileService.class).build(AuthFileServiceFactory.class));
-        install(new FactoryModuleBuilder().implement(RequireDomain.class,
-                RequireDomain.class).build(RequireDomainFactory.class));
         bindService();
     }
 

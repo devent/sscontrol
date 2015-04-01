@@ -1,30 +1,40 @@
-domainAuth(domain, auth, args) ::= <<
-# auth "<auth.auth>"
-\<Location <auth.location>\>
-    AuthType <auth.type>
-    AuthName "<auth.auth>"
-    <(auth.type)(auth)>
-    <auth.requireDomains:requireDomains();separator="\n">
-    <auth.requireValids:requireValids();separator="\n">
-    <requireGroups(auth.requireGroups)>
+domainAuth(args) ::= <<
+<!- args.auth -!>
+<!- args.location -!>
+<!- args.type -!>
+<!- args.satisfy -!>
+<!- args.requireDomains -!>
+<!- args.requireValids -!>
+<!- args.requireGroups -!>
+<!- args.groupNames -!>
+<!- args.passwordFile -!>
+<!- args.groupFile -!>
+# auth "<args.auth>"
+\<Location <args.location>\>
+    AuthType <args.type>
+    AuthName "<args.auth>"
+    <(args.type)(args)>
+    <args.requireDomains:requireDomains();separator="\n">
+    <args.requireValids:requireValids();separator="\n">
+    <requireGroups(args.groupNames)>
     AuthUserFile <args.passwordFile>
-    <authGroupFile(args.requireGroups, args.groupFile)>
-    <if(auth.satisfy)>Satisfy <auth.satisfy><endif>
+    <authGroupFile(args)>
+    <if(args.satisfy)>Satisfy <args.satisfy><endif>
 \</Location>
 
 >>
 
-digest(auth) ::= <<
+digest(args) ::= <<
 AuthDigestProvider file
 >>
 
-basic(auth) ::= <<
+basic(args) ::= <<
 AuthBasicProvider file
 >>
 
-authGroupFile(requireGroups, groupFile) ::= <%
-<if(length(requireGroups))>
-AuthGroupFile <groupFile>
+authGroupFile(args) ::= <%
+<if(args.groupNames)>
+AuthGroupFile <args.groupFile>
 <endif>
 %>
 
@@ -40,6 +50,8 @@ requireValidUser() ::= <<
 Require valid-user
 >>
 
-requireGroups(groups) ::= <<
-Require group <groups:{ group | <group.name>};separator=" ">
->>
+requireGroups(groups) ::= <%
+<if(groups)>
+Require group <groups;separator=" ">
+<endif>
+%>

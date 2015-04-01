@@ -72,54 +72,16 @@ public interface AuthService extends WebService {
      * httpd {
      *     domain "test1.com", address: "192.168.0.51", {
      *         setup "auth-service", auth: "Private Directory", location: "/private", {
-     *             require group: "admin1", {
+     *             group "foogroupappend", update: RequireUpdate.append, {
      *             }
      *         }
      *     }
      * }
      * </pre>
      *
-     * @return the {@link List} list of {@link RequireGroup} groups or
-     *         {@code null}.
+     * @return the {@link List} list of {@link AuthGroup} groups or
+     *         {@code null.}
      */
-    List<RequireGroup> getRequireGroups();
-
-    /**
-     * Returns the required users.
-     * <p>
-     *
-     * <pre>
-     * httpd {
-     *     domain "test1.com", address: "192.168.0.51", {
-     *         setup "auth-service", auth: "Private Directory", location: "/private", {
-     *             require user: "foo", password: "foopass", update: RequireUpdate.password
-     *         }
-     *     }
-     * }
-     * </pre>
-     *
-     * @return the {@link List} list of {@link RequireUser} users or
-     *         {@code null}.
-     */
-    List<RequireUser> getRequireUsers();
-
-    /**
-     * Returns the required valid modes.
-     * <p>
-     *
-     * <pre>
-     * httpd {
-     *     domain "test1.com", address: "192.168.0.51", {
-     *         setup "auth-service", auth: "Private Directory", location: "/private", {
-     *             require valid: RequireValid.user
-     *         }
-     *     }
-     * }
-     * </pre>
-     *
-     * @return the {@link List} list of {@link RequireValid} users or
-     *         {@code null}.
-     */
-    List<RequireValid> getRequireValids();
+    List<AuthGroup> getGroups();
 
 }

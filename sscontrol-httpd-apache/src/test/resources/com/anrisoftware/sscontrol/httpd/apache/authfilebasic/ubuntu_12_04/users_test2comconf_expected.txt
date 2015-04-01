@@ -1,10 +1,10 @@
 <VirtualHost 192.168.0.50:80>
 
-    # domain www.test1.com
-    ServerName www.test1.com
-    DocumentRoot /tmp/var/www/www.test1.com/web
+    # domain test2.com
+    ServerName test2.com
+    DocumentRoot /tmp/var/www/test2.com/web
     SuexecUserGroup web_002 web_002
-    <Directory /tmp/var/www/www.test1.com/web>
+    <Directory /tmp/var/www/test2.com/web>
         AllowOverride None
         Order allow,deny
         Allow from all
@@ -16,9 +16,7 @@
         AuthName "Private Directory"
         AuthBasicProvider file
         Require valid-user
-        Require group foogroup admin1 admin2 admin3
-        AuthUserFile /tmp/var/www/www.test1.com/auth/private.passwd
-        AuthGroupFile /tmp/var/www/www.test1.com/auth/private.group
+        AuthUserFile /tmp/var/www/test2.com/auth/private.passwd
         Satisfy any
     </Location>
 

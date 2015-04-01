@@ -18,24 +18,34 @@
  */
 package com.anrisoftware.sscontrol.httpd.apache.authfile.apache_2_2;
 
-import static com.anrisoftware.sscontrol.httpd.apache.authfile.apache_2_2.AuthFileBasicConfigLogger._.htpasswd_args_missing;
-import static org.apache.commons.lang3.Validate.notNull;
+import static com.anrisoftware.sscontrol.httpd.apache.authfile.apache_2_2.AuthFileBasicConfigLogger._.htpasswd_password_blank;
+import static com.anrisoftware.sscontrol.httpd.apache.authfile.apache_2_2.AuthFileBasicConfigLogger._.htpasswd_password_blank_message;
+import static com.anrisoftware.sscontrol.httpd.apache.authfile.apache_2_2.AuthFileBasicConfigLogger._.htpasswd_username_blank;
+import static com.anrisoftware.sscontrol.httpd.apache.authfile.apache_2_2.AuthFileBasicConfigLogger._.htpasswd_username_blank_message;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
+import com.anrisoftware.sscontrol.core.api.ServiceException;
 
 /**
  * Logging for {@link AuthFileBasicConfig}.
- * 
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
 class AuthFileBasicConfigLogger extends AbstractLogger {
 
-    private static final String USER = "user";
-
     enum _ {
 
-        htpasswd_args_missing("Htpasswd argument '%s' missing for %s.");
+        htpasswd_username_blank("Htpasswd user name must be set"),
+
+        htpasswd_username_blank_message(
+                "Htpasswd user name must be set for script '{}'."),
+
+        htpasswd_password_blank("Htpasswd password name must be set"),
+
+        htpasswd_password_blank_message(
+                "Htpasswd password name must be set for script '{}'.");
 
         private String name;
 
@@ -56,8 +66,16 @@ class AuthFileBasicConfigLogger extends AbstractLogger {
         super(AuthFileBasicConfig.class);
     }
 
-    void checkHtpasswdArgs(Object script, Object arg) {
-        notNull(arg, htpasswd_args_missing.toString(), USER, script);
+    void checkHtpasswdArgs(AuthFileBasicConfig config, String userName,
+            String password) throws ServiceException {
+        if (isBlank(userName)) {
+            throw logException(new ServiceException(htpasswd_username_blank),
+                    htpasswd_username_blank_message, config.getServiceName());
+        }
+        if (isBlank(password)) {
+            throw logException(new ServiceException(htpasswd_password_blank),
+                    htpasswd_password_blank_message, config.getServiceName());
+        }
     }
 
 }

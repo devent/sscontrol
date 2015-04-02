@@ -34,15 +34,15 @@ enum AuthServiceStatement {
 
     REQUIRE_KEY,
 
-    VALID_KEY,
+    GROUP_KEY,
 
     USER_KEY,
 
-    PASSWORD_KEY,
+    VALID_KEY,
 
-    UPDATE_KEY,
+    EXCEPT_KEY,
 
-    GROUP_KEY;
+    DOMAIN_KEY;
 
     @Override
     public String toString() {

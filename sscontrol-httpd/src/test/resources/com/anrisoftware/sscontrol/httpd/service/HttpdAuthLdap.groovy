@@ -28,14 +28,14 @@ httpd {
 
             credentials "cn=admin,dc=ubuntutest,dc=com", password: "adminpass"
 
-            group "cn=ldapadminGroup,o=deventorg,dc=ubuntutest,dc=com", {
-                require valid: RequireValid.user
-                require except: "GET, OPTIONS"
-                user "foo", password: "foopass"
-                user "bar", password: "barpass"
-            }
+            require valid: RequireValid.user
+
+            require except: "GET, OPTIONS"
+
+            require groupdn: "cn=ldapadminGroup,o=deventorg,dc=ubuntutest,dc=com"
 
             require attribute: [group: "uniqueMember"]
+
             require attribute: [dn: no]
         }
     }

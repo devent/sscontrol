@@ -21,8 +21,10 @@ package com.anrisoftware.sscontrol.httpd.authldap;
 import static com.anrisoftware.sscontrol.httpd.authldap.AuthLdapServiceStatement.ATTRIBUTE_KEY;
 import static com.anrisoftware.sscontrol.httpd.authldap.AuthLdapServiceStatement.AUTHORITATIVE_KEY;
 import static com.anrisoftware.sscontrol.httpd.authldap.AuthLdapServiceStatement.CREDENTIALS_KEY;
+import static com.anrisoftware.sscontrol.httpd.authldap.AuthLdapServiceStatement.GROUPDN_KEY;
 import static com.anrisoftware.sscontrol.httpd.authldap.AuthLdapServiceStatement.HOST_KEY;
 import static com.anrisoftware.sscontrol.httpd.authldap.AuthLdapServiceStatement.PASSWORD_KEY;
+import static com.anrisoftware.sscontrol.httpd.authldap.AuthLdapServiceStatement.REQUIRE_KEY;
 import static com.anrisoftware.sscontrol.httpd.authldap.AuthLdapServiceStatement.SATISFY_KEY;
 import static com.anrisoftware.sscontrol.httpd.authldap.AuthLdapServiceStatement.TYPE_KEY;
 import static com.anrisoftware.sscontrol.httpd.authldap.AuthLdapServiceStatement.URL_KEY;
@@ -74,11 +76,12 @@ public class AuthLdapService extends AbstractAuthService {
     @Inject
     public final void setStatementsMap(StatementsMapFactory factory) {
         StatementsMap map = factory.create(this, AUTH_LDAP_NAME);
-        map.addAllowed(TYPE_KEY, HOST_KEY, CREDENTIALS_KEY);
+        map.addAllowed(TYPE_KEY, HOST_KEY, CREDENTIALS_KEY, REQUIRE_KEY);
         map.setAllowValue(true, TYPE_KEY, HOST_KEY, CREDENTIALS_KEY);
         map.addAllowedKeys(TYPE_KEY, SATISFY_KEY, AUTHORITATIVE_KEY);
         map.addAllowedKeys(HOST_KEY, URL_KEY);
         map.addAllowedKeys(CREDENTIALS_KEY, PASSWORD_KEY);
+        map.addAllowedKeys(REQUIRE_KEY, GROUPDN_KEY);
         this.statementsMap = map;
     }
 
@@ -249,6 +252,26 @@ public class AuthLdapService extends AbstractAuthService {
         return attributes;
     }
 
+    /**
+     * Returns the required group DN.
+     * <p>
+     *
+     * <pre>
+     * httpd {
+     *     domain "test1.com", address: "192.168.0.51", {
+     *         setup "auth-ldap", auth: "Private Directory", location: "/private", {
+     *             require groupdn: "cn=ldapadminGroup,o=deventorg,dc=ubuntutest,dc=com"
+     *         }
+     *     }
+     * }
+     * </pre>
+     *
+     * @return the required group {@link String} DN or {@code null}.
+     */
+    public String getRequireGroupDn() {
+        return statementsMap.mapValue(REQUIRE_KEY, GROUPDN_KEY);
+    }
+
     public void require(Map<String, Object> args) {
         if (args.containsKey(ATTRIBUTE_KEY.toString())) {
             @SuppressWarnings("unchecked")
@@ -257,6 +280,8 @@ public class AuthLdapService extends AbstractAuthService {
             attributes.putAll(map);
             log.requiredAttributesAdded(this, map);
             return;
+        } else {
+            methodMissing("require", args);
         }
     }
 

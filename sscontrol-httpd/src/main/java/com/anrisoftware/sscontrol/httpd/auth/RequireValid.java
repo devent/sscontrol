@@ -20,7 +20,7 @@ package com.anrisoftware.sscontrol.httpd.auth;
 
 /**
  * Require mode.
- * 
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
@@ -29,5 +29,10 @@ public enum RequireValid {
     /**
      * Require valid user.
      */
-    user
+    user,
+
+    /**
+     * Require valid groups.
+     */
+    group
 }

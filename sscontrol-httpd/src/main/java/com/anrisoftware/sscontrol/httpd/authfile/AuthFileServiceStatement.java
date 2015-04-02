@@ -32,6 +32,12 @@ enum AuthFileServiceStatement {
 
     SATISFY_KEY,
 
+    PASSWORD_KEY,
+
+    GROUP_KEY,
+
+    USERS_KEY,
+
     REQUIRE_KEY,
 
     DOMAIN_KEY;

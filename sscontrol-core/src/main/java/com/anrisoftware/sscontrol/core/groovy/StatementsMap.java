@@ -721,8 +721,12 @@ public class StatementsMap implements Serializable {
      */
     public URI mapValueAsURI(String name, String key) {
         Map<String, Object> map = args.get(name);
-        return map == null ? null : toURIFactory.create().convert(
-                map.get(key).toString());
+        if (map == null) {
+            return null;
+        }
+        Object value = map.get(key);
+        return value == null ? null : toURIFactory.create().convert(
+                value.toString());
     }
 
     /**

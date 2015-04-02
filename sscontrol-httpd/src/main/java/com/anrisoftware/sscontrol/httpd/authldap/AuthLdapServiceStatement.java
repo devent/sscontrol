@@ -46,7 +46,7 @@ enum AuthLdapServiceStatement {
 
     ATTRIBUTE_KEY,
 
-    GROUP_KEY,
+    GROUPDN_KEY,
 
     DN_KEY;
 

@@ -19,9 +19,13 @@
 package com.anrisoftware.sscontrol.httpd.auth;
 
 import static com.anrisoftware.sscontrol.httpd.auth.AuthServiceStatement.AUTH_KEY;
+import static com.anrisoftware.sscontrol.httpd.auth.AuthServiceStatement.EXCEPT_KEY;
+import static com.anrisoftware.sscontrol.httpd.auth.AuthServiceStatement.GROUP_KEY;
 import static com.anrisoftware.sscontrol.httpd.auth.AuthServiceStatement.LOCATION_KEY;
+import static com.anrisoftware.sscontrol.httpd.auth.AuthServiceStatement.REQUIRE_KEY;
+import static com.anrisoftware.sscontrol.httpd.auth.AuthServiceStatement.USER_KEY;
+import static com.anrisoftware.sscontrol.httpd.auth.AuthServiceStatement.VALID_KEY;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -49,13 +53,6 @@ public abstract class AbstractAuthService implements AuthService {
 
     private final String serviceName;
 
-    private final List<AuthGroup> groups;
-
-    private AuthServiceLogger log;
-
-    @Inject
-    private AuthGroupFactory groupFactory;
-
     private DefaultWebService service;
 
     private StatementsMap statementsMap;
@@ -74,22 +71,25 @@ public abstract class AbstractAuthService implements AuthService {
         this.serviceName = serviceName;
         this.domain = domain;
         this.args = new HashMap<String, Object>(args);
-        this.groups = new ArrayList<AuthGroup>();
     }
 
     @Inject
-    public final void setDefaultWebServiceFactory(AuthServiceLogger log,
+    public final void setDefaultWebServiceFactory(
             DefaultWebServiceFactory factory) {
         DefaultWebService service = factory.create(serviceName, args, domain);
         setupStatements(service.getStatementsMap());
-        this.log = log;
         this.statementsMap = service.getStatementsMap();
         this.service = service;
     }
 
     private void setupStatements(StatementsMap map) {
-        map.addAllowed(AUTH_KEY, LOCATION_KEY);
+        map.addAllowed(AUTH_KEY, LOCATION_KEY, REQUIRE_KEY);
         map.setAllowValue(true, AUTH_KEY, LOCATION_KEY);
+        map.addAllowedKeys(REQUIRE_KEY, GROUP_KEY);
+        map.addAllowedKeys(REQUIRE_KEY, USER_KEY);
+        map.addAllowedKeys(REQUIRE_KEY, VALID_KEY);
+        map.addAllowedKeys(REQUIRE_KEY, EXCEPT_KEY, VALID_KEY, GROUP_KEY,
+                USER_KEY);
         map.putValue(AUTH_KEY.toString(), args.get(AUTH_KEY.toString()));
         if (args.containsKey(LOCATION_KEY.toString())) {
             map.putValue(LOCATION_KEY.toString(),
@@ -162,31 +162,24 @@ public abstract class AbstractAuthService implements AuthService {
         return statementsMap.value(LOCATION_KEY);
     }
 
-    public Object group(Object s) {
-        return group(new HashMap<String, Object>(), s);
-    }
-
-    public Object group(String name, Object s) {
-        HashMap<String, Object> args = new HashMap<String, Object>();
-        args.put("name", name);
-        return group(args, s);
-    }
-
-    public Object group(Map<String, Object> args, String name, Object s) {
-        args.put("name", name);
-        return group(args, s);
-    }
-
-    public Object group(Map<String, Object> args, Object s) {
-        AuthGroup group = groupFactory.create(this, args);
-        groups.add(group);
-        log.groupAdded(this, group);
-        return group;
+    @Override
+    public List<String> getRequireGroups() {
+        return statementsMap.mapValueAsStringList(REQUIRE_KEY, GROUP_KEY);
     }
 
     @Override
-    public List<AuthGroup> getGroups() {
-        return groups;
+    public List<String> getRequireUsers() {
+        return statementsMap.mapValueAsStringList(REQUIRE_KEY, USER_KEY);
+    }
+
+    @Override
+    public RequireValid getRequireValid() {
+        return statementsMap.mapValue(REQUIRE_KEY, VALID_KEY);
+    }
+
+    @Override
+    public List<String> getRequireExcept() {
+        return statementsMap.mapValueAsStringList(REQUIRE_KEY, EXCEPT_KEY);
     }
 
     /**

@@ -19,8 +19,8 @@
 package com.anrisoftware.sscontrol.httpd.service
 
 httpd {
-	ssl_domain "test1.com", address: "192.168.0.50", {
-		setup "auth-db", auth: "Private Directory", location: "/private", {
+    ssl_domain "test1.com", address: "192.168.0.50", {
+        setup "auth-db", auth: "Private Directory", location: "/private", {
 
             database "authdb", user: "userdb", password: "userpassdb", host: "localhost", driver: "mysql", encryption: "PHP_MD5, Crypt"
 
@@ -30,37 +30,9 @@ httpd {
 
             allow emptyPasswords: no
 
-            group {
-                user "foo", password: "foopass", update: UpdateMode.password
-                user "bar", password: "barpass"
-            }
+            require valid: RequireValid.user
 
-            group "foogroup", {
-                user "foo", password: "foopass", update: UpdateMode.password
-                user "bar", password: "barpass"
-            }
-
-            group "foogroupappend", update: UpdateMode.append, {
-                user "foo", password: "foopass"
-                user "bar", password: "barpass"
-            }
-
-            group "foogrouprewrite", update: UpdateMode.rewrite, {
-                user "foo", password: "foopass"
-                user "bar", password: "barpass"
-            }
-
-            group {
-                require valid: RequireValid.user
-                user "foo", password: "foopass"
-                user "bar", password: "barpass"
-            }
-
-            group "foolimit", {
-                require except: "GET, OPTIONS"
-                user "foo", password: "foopass"
-                user "bar", password: "barpass"
-            }
-		}
-	}
+            require except: "GET, OPTIONS"
+        }
+    }
 }

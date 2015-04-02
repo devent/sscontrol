@@ -27,7 +27,6 @@ import org.junit.Test
 import com.anrisoftware.sscontrol.httpd.auth.AuthType
 import com.anrisoftware.sscontrol.httpd.auth.RequireValid
 import com.anrisoftware.sscontrol.httpd.auth.SatisfyType
-import com.anrisoftware.sscontrol.httpd.auth.UpdateMode
 import com.anrisoftware.sscontrol.httpd.authdb.AuthDbService
 import com.anrisoftware.sscontrol.httpd.authfile.AuthFileService
 import com.anrisoftware.sscontrol.httpd.authldap.AuthLdapService
@@ -103,53 +102,12 @@ class HttpdTest extends HttpdTestEnvironment {
         assert auth.location == "/private"
         assert auth.type == AuthType.digest
         assert auth.satisfy == SatisfyType.any
-
-        int i = 0
-        assert auth.groups.size() == 6
-        assert auth.groups[i].name == null
-        assert auth.groups[i].userPasswords.size() == 2
-        assert auth.groups[i].userPasswords["foo"] == "foopass"
-        assert auth.groups[i].userUpdates.size() == 1
-        assert auth.groups[i].userUpdates["foo"] == UpdateMode.password
-        assert auth.groups[i].userPasswords["bar"] == "barpass"
-        i++
-        assert auth.groups[i].name == "foogroup"
-        assert auth.groups[i].userPasswords.size() == 2
-        assert auth.groups[i].userPasswords["foo"] == "foopass"
-        assert auth.groups[i].userUpdates.size() == 1
-        assert auth.groups[i].userUpdates["foo"] == UpdateMode.password
-        assert auth.groups[i].userPasswords["bar"] == "barpass"
-        i++
-        assert auth.groups[i].name == "foogroupappend"
-        assert auth.groups[i].update == UpdateMode.append
-        assert auth.groups[i].userPasswords.size() == 2
-        assert auth.groups[i].userPasswords["foo"] == "foopass"
-        assert auth.groups[i].userUpdates == null
-        assert auth.groups[i].userPasswords["bar"] == "barpass"
-        i++
-        assert auth.groups[i].name == "foogrouprewrite"
-        assert auth.groups[i].update == UpdateMode.rewrite
-        assert auth.groups[i].userPasswords.size() == 2
-        assert auth.groups[i].userPasswords["foo"] == "foopass"
-        assert auth.groups[i].userUpdates == null
-        assert auth.groups[i].userPasswords["bar"] == "barpass"
-        i++
-        assert auth.groups[i].name == null
-        assert auth.groups[i].update == null
-        assert auth.groups[i].requireValid == RequireValid.user
-        assert auth.groups[i].userPasswords.size() == 2
-        assert auth.groups[i].userPasswords["foo"] == "foopass"
-        assert auth.groups[i].userUpdates == null
-        assert auth.groups[i].userPasswords["bar"] == "barpass"
-        i++
-        assert auth.groups[i].name == "foolimit"
-        assert auth.groups[i].update == null
-        assert auth.groups[i].requireValid == null
-        assert auth.groups[i].requireExcept.containsAll(["GET", "OPTIONS"])
-        assert auth.groups[i].userPasswords.size() == 2
-        assert auth.groups[i].userPasswords["foo"] == "foopass"
-        assert auth.groups[i].userUpdates == null
-        assert auth.groups[i].userPasswords["bar"] == "barpass"
+        assert auth.groupFile.toString() =~ /.*private\.group/
+        assert auth.usersFile.toString() =~ /.*private\.passwd/
+        assert auth.requireDomains.containsAll(["https://%"])
+        assert auth.requireGroups.containsAll(["foogroup", "bargroup"])
+        assert auth.requireValid == RequireValid.user
+        assert auth.requireExcept.containsAll(["GET", "OPTIONS"])
     }
 
     @Test
@@ -172,14 +130,10 @@ class HttpdTest extends HttpdTestEnvironment {
         assert auth.hostUrl == "o=deventorg,dc=ubuntutest,dc=com?cn"
         assert auth.credentials == "cn=admin,dc=ubuntutest,dc=com"
         assert auth.credentialsPassword == "adminpass"
-
-        int i = 0
-        assert auth.groups.size() == 1
-        assert auth.groups[i].name == "cn=ldapadminGroup,o=deventorg,dc=ubuntutest,dc=com"
-        assert auth.groups[i].userPasswords.size() == 2
-        assert auth.groups[i].userUpdates == null
-        assert auth.groups[i].requireValid == RequireValid.user
-        assert auth.groups[i].requireExcept.containsAll(["GET", "OPTIONS"])
+        assert auth.requireGroups == null
+        assert auth.requireGroupDn == "cn=ldapadminGroup,o=deventorg,dc=ubuntutest,dc=com"
+        assert auth.requireValid == RequireValid.user
+        assert auth.requireExcept.containsAll(["GET", "OPTIONS"])
 
         def attr = auth.attributes
         assert attr.size() == 2
@@ -211,7 +165,7 @@ class HttpdTest extends HttpdTestEnvironment {
         assert auth.userNameField == "username"
         assert auth.passwordField == "passwd"
         assert auth.allowEmptyPasswords == false
-
-        assert auth.groups.size() == 6
+        assert auth.requireValid == RequireValid.user
+        assert auth.requireExcept.containsAll(["GET", "OPTIONS"])
     }
 }

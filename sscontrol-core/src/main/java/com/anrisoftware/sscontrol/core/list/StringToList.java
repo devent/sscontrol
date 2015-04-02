@@ -37,46 +37,49 @@ import com.google.inject.assistedinject.Assisted;
  */
 public class StringToList {
 
-	@Inject
-	private StringToListPropertiesProvider properties;
+    @Inject
+    private StringToListPropertiesProvider properties;
 
-	private final Object property;
+    private final Object property;
 
     private List<Object> list;
 
-	@Inject
-	StringToList(@Assisted Object property) {
-		this.property = property;
-	}
+    /**
+     * @see StringToListFactory#create(Object)
+     */
+    @Inject
+    StringToList(@Assisted Object property) {
+        this.property = property;
+    }
 
-	    /**
+    /**
      * Returns the list of the items.
      *
      * @return the items of the property as {@link List}.
      */
     public List<Object> getList() {
-		if (list == null) {
-			synchronized (this) {
-				list = createList0();
-			}
-		}
-		return list;
-	}
+        if (list == null) {
+            synchronized (this) {
+                list = createList0();
+            }
+        }
+        return list;
+    }
 
     private List<Object> createList0() {
         List<Object> list = new ArrayList<Object>();
-		if (property instanceof Collection) {
+        if (property instanceof Collection) {
             list.addAll((Collection<?>) property);
-		} else {
-			String[] str = split(property.toString(), getSeparators());
-			for (String string : str) {
-				list.add(strip(string));
-			}
-		}
-		return list;
-	}
+        } else {
+            String[] str = split(property.toString(), getSeparators());
+            for (String string : str) {
+                list.add(strip(string));
+            }
+        }
+        return list;
+    }
 
-	private String getSeparators() {
-		return properties.get().getProperty("list_separators");
-	}
+    private String getSeparators() {
+        return properties.get().getProperty("list_separators");
+    }
 }

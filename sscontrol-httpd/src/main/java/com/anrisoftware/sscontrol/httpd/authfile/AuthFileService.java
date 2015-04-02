@@ -19,10 +19,14 @@
 package com.anrisoftware.sscontrol.httpd.authfile;
 
 import static com.anrisoftware.sscontrol.httpd.authfile.AuthFileServiceStatement.DOMAIN_KEY;
+import static com.anrisoftware.sscontrol.httpd.authfile.AuthFileServiceStatement.GROUP_KEY;
+import static com.anrisoftware.sscontrol.httpd.authfile.AuthFileServiceStatement.PASSWORD_KEY;
 import static com.anrisoftware.sscontrol.httpd.authfile.AuthFileServiceStatement.REQUIRE_KEY;
 import static com.anrisoftware.sscontrol.httpd.authfile.AuthFileServiceStatement.SATISFY_KEY;
 import static com.anrisoftware.sscontrol.httpd.authfile.AuthFileServiceStatement.TYPE_KEY;
+import static com.anrisoftware.sscontrol.httpd.authfile.AuthFileServiceStatement.USERS_KEY;
 
+import java.net.URI;
 import java.util.List;
 import java.util.Map;
 
@@ -63,9 +67,10 @@ public class AuthFileService extends AbstractAuthService {
     @Inject
     public final void setStatementsMap(StatementsMapFactory factory) {
         StatementsMap map = factory.create(this, AUTH_FILE_NAME);
-        map.addAllowed(TYPE_KEY, REQUIRE_KEY);
+        map.addAllowed(TYPE_KEY, PASSWORD_KEY, REQUIRE_KEY);
         map.setAllowValue(true, TYPE_KEY);
         map.addAllowedKeys(TYPE_KEY, SATISFY_KEY);
+        map.addAllowedKeys(PASSWORD_KEY, GROUP_KEY, USERS_KEY);
         map.addAllowedKeys(REQUIRE_KEY, DOMAIN_KEY);
         this.statementsMap = map;
     }
@@ -108,6 +113,46 @@ public class AuthFileService extends AbstractAuthService {
      */
     public SatisfyType getSatisfy() {
         return statementsMap.mapValue(TYPE_KEY, SATISFY_KEY);
+    }
+
+    /**
+     * Returns the password group file resource.
+     * <p>
+     *
+     * <pre>
+     * httpd {
+     *     domain "test1.com", address: "192.168.0.51", {
+     *         setup "auth-service", location: "/private", {
+     *             password group: "private.group", users: "private.passwd"
+     *         }
+     *     }
+     * }
+     * </pre>
+     *
+     * @return the password group file {@link URI} resource.
+     */
+    public URI getGroupFile() {
+        return statementsMap.mapValueAsURI(PASSWORD_KEY, GROUP_KEY);
+    }
+
+    /**
+     * Returns the password users file resource.
+     * <p>
+     *
+     * <pre>
+     * httpd {
+     *     domain "test1.com", address: "192.168.0.51", {
+     *         setup "auth-service", location: "/private", {
+     *             password group: "private.group", users: "private.passwd"
+     *         }
+     *     }
+     * }
+     * </pre>
+     *
+     * @return the password users file {@link URI} resource.
+     */
+    public URI getUsersFile() {
+        return statementsMap.mapValueAsURI(PASSWORD_KEY, USERS_KEY);
     }
 
     /**

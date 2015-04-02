@@ -24,37 +24,17 @@ httpd {
 
             type AuthType.digest, satisfy: SatisfyType.any
 
-            group {
-                user "foo", password: "foopass", update: UpdateMode.password
-                user "bar", password: "barpass"
-            }
+            password group: "$tmp/private.group", users: "$tmp/private.passwd"
 
-            group "foogroup", {
-                user "foo", password: "foopass", update: UpdateMode.password
-                user "bar", password: "barpass"
-            }
+            require domain: "https://%"
 
-            group "foogroupappend", update: UpdateMode.append, {
-                user "foo", password: "foopass"
-                user "bar", password: "barpass"
-            }
+            require group: "foogroup, bargroup"
 
-            group "foogrouprewrite", update: UpdateMode.rewrite, {
-                user "foo", password: "foopass"
-                user "bar", password: "barpass"
-            }
+            require user: "foo, bar"
 
-            group {
-                require valid: RequireValid.user
-                user "foo", password: "foopass"
-                user "bar", password: "barpass"
-            }
+            require valid: RequireValid.user
 
-            group "foolimit", {
-                require except: "GET, OPTIONS"
-                user "foo", password: "foopass"
-                user "bar", password: "barpass"
-            }
+            require except: "GET, OPTIONS", valid: RequireValid.user, group: "foogroup, bargroup", user: "foo, bar"
 		}
 	}
 }

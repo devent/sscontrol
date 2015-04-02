@@ -26,7 +26,6 @@ import com.anrisoftware.sscontrol.core.database.DatabaseModule;
 import com.anrisoftware.sscontrol.core.debuglogging.DebugLoggingModule;
 import com.anrisoftware.sscontrol.core.groovy.StatementsMapModule;
 import com.anrisoftware.sscontrol.core.list.ListModule;
-import com.anrisoftware.sscontrol.httpd.auth.AuthModule;
 import com.anrisoftware.sscontrol.httpd.authdb.AuthDbModule;
 import com.anrisoftware.sscontrol.httpd.authfile.AuthFileModule;
 import com.anrisoftware.sscontrol.httpd.authldap.AuthLdapModule;
@@ -56,7 +55,6 @@ class HttpdModule extends AbstractModule {
         install(new ByteFormatModule());
 		install(new DomainModule());
 		install(new RedirectModule());
-        install(new AuthModule());
         install(new AuthFileModule());
         install(new AuthLdapModule());
         install(new AuthDbModule());

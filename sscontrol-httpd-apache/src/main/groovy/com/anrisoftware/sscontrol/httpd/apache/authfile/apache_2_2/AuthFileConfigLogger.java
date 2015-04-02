@@ -18,13 +18,24 @@
  */
 package com.anrisoftware.sscontrol.httpd.apache.authfile.apache_2_2;
 
+import static com.anrisoftware.sscontrol.httpd.apache.authfile.apache_2_2.AuthFileConfigLogger._.copy_group_file_debug;
+import static com.anrisoftware.sscontrol.httpd.apache.authfile.apache_2_2.AuthFileConfigLogger._.copy_group_file_info;
+import static com.anrisoftware.sscontrol.httpd.apache.authfile.apache_2_2.AuthFileConfigLogger._.copy_users_file_debug;
+import static com.anrisoftware.sscontrol.httpd.apache.authfile.apache_2_2.AuthFileConfigLogger._.copy_users_file_info;
+import static com.anrisoftware.sscontrol.httpd.apache.authfile.apache_2_2.AuthFileConfigLogger._.users_file_null;
+import static com.anrisoftware.sscontrol.httpd.apache.authfile.apache_2_2.AuthFileConfigLogger._.users_file_null_message;
+
+import java.io.File;
+
 import javax.inject.Singleton;
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
+import com.anrisoftware.sscontrol.core.api.ServiceException;
+import com.anrisoftware.sscontrol.httpd.authfile.AuthFileService;
 
 /**
  * Logging messages for {@link AuthFileConfig}.
- * 
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
@@ -33,11 +44,17 @@ class AuthFileConfigLogger extends AbstractLogger {
 
     enum _ {
 
-        auth_users_deploy1("Deploy auth users {} in {}, worker {}."),
+        users_file_null("Users file resource not set"),
 
-        auth_users_deploy2("Deploy auth users {} in {}."),
+        users_file_null_message("Users file resource not set for service '{}'."),
 
-        auth_users_deploy3("Deploy auth users for auth '{}'.");
+        copy_users_file_debug("Copied users file '{}' to '{}' for {}"),
+
+        copy_users_file_info("Copied users file '{}' for service '{}'."),
+
+        copy_group_file_debug("Copied group file '{}' to '{}' for {}"),
+
+        copy_group_file_info("Copied group file '{}' for service '{}'.");
 
         private String name;
 
@@ -58,4 +75,29 @@ class AuthFileConfigLogger extends AbstractLogger {
         super(AuthFileConfig.class);
     }
 
+    void checkUsersFile(AuthFileConfig config, AuthFileService service)
+            throws ServiceException {
+        if (service.getUsersFile() == null) {
+            throw logException(new ServiceException(users_file_null),
+                    users_file_null_message, service.getName());
+        }
+    }
+
+    void copyUsersFile(AuthFileConfig config, AuthFileService service, File file) {
+        if (isDebugEnabled()) {
+            debug(copy_users_file_debug, service.getUsersFile(), file, service);
+        } else {
+            info(copy_users_file_info, service.getUsersFile(),
+                    service.getName());
+        }
+    }
+
+    void copyGroupFile(AuthFileConfig config, AuthFileService service, File file) {
+        if (isDebugEnabled()) {
+            debug(copy_group_file_debug, service.getGroupFile(), file, service);
+        } else {
+            info(copy_group_file_info, service.getGroupFile(),
+                    service.getName());
+        }
+    }
 }

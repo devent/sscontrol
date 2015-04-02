@@ -25,7 +25,6 @@ profile "ubuntu_12_04", {
     httpd {
         service "apache"
         install_command UbuntuResources.aptitudeCommand.asFile(tmp)
-        apt_key_command UbuntuResources.aptKeyCommand.asFile(tmp)
         chmod_command UbuntuResources.chmodCommand.asFile(tmp)
         chown_command UbuntuResources.chownCommand.asFile(tmp)
         group_add_command UbuntuResources.groupaddCommand.asFile(tmp)
@@ -37,8 +36,6 @@ profile "ubuntu_12_04", {
         tar_command UbuntuResources.tarCommand.asFile(tmp)
         unzip_command UbuntuResources.unzipCommand.asFile(tmp)
         link_command UbuntuResources.lnCommand.asFile(tmp)
-        htpasswd_command AuthFileBasicResources.htpasswdCommand.asFile(tmp)
         temp_directory UbuntuResources.tmpDir.asFile(tmp)
-        packaging_configuration_directory UbuntuResources.packagingConfigurationDirectory.asFile(tmp)
     }
 }

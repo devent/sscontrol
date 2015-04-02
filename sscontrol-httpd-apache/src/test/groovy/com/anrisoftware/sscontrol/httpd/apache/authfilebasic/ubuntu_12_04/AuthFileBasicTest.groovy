@@ -43,7 +43,6 @@ class AuthFileBasicTest extends WebServiceTestEnvironment {
         attachRunCommandsLog tmpdir
         copyUbuntuFiles tmpdir
         copyUbuntu_12_04_Files tmpdir
-        htpasswdCommand.createCommand tmpdir
 
         loader.loadService profile.resource, null
         def profile = registry.getService("profile")[0]
@@ -56,8 +55,6 @@ class AuthFileBasicTest extends WebServiceTestEnvironment {
 
         assertStringContent groupTest1comConfExpected.replaced(tmpdir, tmpdir, "/tmp"), groupTest1comConfExpected.toString()
         assertStringContent groupTest2comConfExpected.replaced(tmpdir, tmpdir, "/tmp"), groupTest2comConfExpected.toString()
-        assertFileContent groupPrivatepasswdExpected.asFile(tmpdir), groupPrivatepasswdExpected
-        assertFileContent groupPrivategroupExpected.asFile(tmpdir), groupPrivategroupExpected
         assertStringContent groupRuncommandsLogExpected.replaced(tmpdir, tmpdir, "/tmp").replaceAll(/\d{2,}/, 'time'), groupRuncommandsLogExpected.toString()
         assertFileContent groupEnmodOutExpected.asFile(tmpdir), groupEnmodOutExpected
         assertStringContent groupChmodOutExpected.replaced(tmpdir, tmpdir, "/tmp"), groupChmodOutExpected.toString()
@@ -65,47 +62,22 @@ class AuthFileBasicTest extends WebServiceTestEnvironment {
     }
 
     @Test
-    void "auth file basic append group"() {
+    void "auth file basic valid user"() {
         attachRunCommandsLog tmpdir
         copyUbuntuFiles tmpdir
         copyUbuntu_12_04_Files tmpdir
-        htpasswdCommand.createCommand tmpdir
-        appendgroupPrivatepasswdFile.createFile tmpdir
-        appendgroupPrivategroupFile.createFile tmpdir
 
         loader.loadService profile.resource, null
         def profile = registry.getService("profile")[0]
         setupUbuntu_12_04_Properties profile, tmpdir
-        loader.loadService httpdScriptAppendGroup.resource, profile, preScript
+        loader.loadService httpdScriptValidUser.resource, profile, preScript
 
         registry.allServices.each { it.call() }
         log.info "Run service again to ensure that configuration is not set double."
         registry.allServices.each { it.call() }
 
-        assertFileContent appendgroupPrivatepasswdExpected.asFile(tmpdir), appendgroupPrivatepasswdExpected
-        assertFileContent appendgroupPrivategroupExpected.asFile(tmpdir), appendgroupPrivategroupExpected
-    }
-
-    @Test
-    void "auth file basic rewrite group"() {
-        attachRunCommandsLog tmpdir
-        copyUbuntuFiles tmpdir
-        copyUbuntu_12_04_Files tmpdir
-        htpasswdCommand.createCommand tmpdir
-        rewritePrivatepasswdFile.createFile tmpdir
-        rewritePrivategroupFile.createFile tmpdir
-
-        loader.loadService profile.resource, null
-        def profile = registry.getService("profile")[0]
-        setupUbuntu_12_04_Properties profile, tmpdir
-        loader.loadService httpdScriptRewriteGroup.resource, profile, preScript
-
-        registry.allServices.each { it.call() }
-        log.info "Run service again to ensure that configuration is not set double."
-        registry.allServices.each { it.call() }
-
-        assertFileContent rewritePrivatepasswdExpected.asFile(tmpdir), rewritePrivatepasswdExpected
-        assertFileContent rewritePrivategroupExpected.asFile(tmpdir), rewritePrivategroupExpected
+        assertStringContent validuserTest1comConfExpected.replaced(tmpdir, tmpdir, "/tmp"), validuserTest1comConfExpected.toString()
+        assertStringContent validuserTest2comConfExpected.replaced(tmpdir, tmpdir, "/tmp"), validuserTest2comConfExpected.toString()
     }
 
     @Test
@@ -113,7 +85,6 @@ class AuthFileBasicTest extends WebServiceTestEnvironment {
         attachRunCommandsLog tmpdir
         copyUbuntuFiles tmpdir
         copyUbuntu_12_04_Files tmpdir
-        htpasswdCommand.createCommand tmpdir
 
         loader.loadService profile.resource, null
         def profile = registry.getService("profile")[0]
@@ -126,30 +97,6 @@ class AuthFileBasicTest extends WebServiceTestEnvironment {
 
         assertStringContent usersTest1comConfExpected.replaced(tmpdir, tmpdir, "/tmp"), usersTest1comConfExpected.toString()
         assertStringContent usersTest2comConfExpected.replaced(tmpdir, tmpdir, "/tmp"), usersTest2comConfExpected.toString()
-        assertFileContent usersPrivatepasswdExpected.asFile(tmpdir), usersPrivatepasswdExpected
-        assertFileContent usersPrivategroupExpected.asFile(tmpdir), usersPrivategroupExpected
-    }
-
-    @Test
-    void "auth file basic update user password"() {
-        attachRunCommandsLog tmpdir
-        copyUbuntuFiles tmpdir
-        copyUbuntu_12_04_Files tmpdir
-        htpasswdCommand.createCommand tmpdir
-        updatePasswordPrivatepasswdFile.createFile tmpdir
-        updatePasswordPrivategroupFile.createFile tmpdir
-
-        loader.loadService profile.resource, null
-        def profile = registry.getService("profile")[0]
-        setupUbuntu_12_04_Properties profile, tmpdir
-        loader.loadService httpdScriptUpdatePassword.resource, profile, preScript
-
-        registry.allServices.each { it.call() }
-        log.info "Run service again to ensure that configuration is not set double."
-        registry.allServices.each { it.call() }
-
-        assertFileContent updatePasswordPrivatepasswdExpected.asFile(tmpdir), updatePasswordPrivatepasswdExpected
-        assertFileContent updatePasswordPrivategroupExpected.asFile(tmpdir), updatePasswordPrivategroupExpected
     }
 
     @Test
@@ -157,7 +104,6 @@ class AuthFileBasicTest extends WebServiceTestEnvironment {
         attachRunCommandsLog tmpdir
         copyUbuntuFiles tmpdir
         copyUbuntu_12_04_Files tmpdir
-        htpasswdCommand.createCommand tmpdir
 
         loader.loadService profile.resource, null
         def profile = registry.getService("profile")[0]

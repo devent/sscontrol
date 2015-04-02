@@ -1,2 +1,0 @@
-oldgroup: oldfoo oldbar
-foogroupappend: foo bar foo bar

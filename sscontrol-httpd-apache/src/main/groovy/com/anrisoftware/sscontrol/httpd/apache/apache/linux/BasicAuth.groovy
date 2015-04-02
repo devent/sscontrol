@@ -68,14 +68,18 @@ abstract class BasicAuth {
     /**
      * @see ServiceConfig#getProfile
      */
-    abstract String getProfile()
+    String getProfile() {
+        script.getProfile()
+    }
 
     /**
      * Returns authentication service name.
      *
      * @return the service {@link String} name.
      */
-    abstract String getServiceName()
+    String getServiceName() {
+        script.getServiceName()
+    }
 
     /**
      * Sets the parent script.

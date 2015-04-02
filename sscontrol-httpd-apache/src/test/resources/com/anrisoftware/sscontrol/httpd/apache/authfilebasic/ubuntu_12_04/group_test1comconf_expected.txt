@@ -16,6 +16,7 @@
         AuthName "Private Directory"
         AuthBasicProvider file
         Require group foogroup
+
         AuthUserFile /tmp/var/www/test1.com/auth/private.passwd
         AuthGroupFile /tmp/var/www/test1.com/auth/private.group
         Satisfy any

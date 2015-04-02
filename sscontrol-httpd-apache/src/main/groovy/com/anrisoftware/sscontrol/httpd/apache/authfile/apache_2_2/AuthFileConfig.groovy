@@ -25,16 +25,14 @@ import javax.inject.Inject
 
 import org.apache.commons.io.FileUtils
 import org.apache.commons.io.FilenameUtils
-import org.stringtemplate.v4.ST
 
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.TemplatesFactory
 import com.anrisoftware.sscontrol.core.service.LinuxScript
 import com.anrisoftware.sscontrol.httpd.apache.apache.linux.BasicAuth
-import com.anrisoftware.sscontrol.httpd.auth.AuthGroup
 import com.anrisoftware.sscontrol.httpd.auth.AuthService
 import com.anrisoftware.sscontrol.httpd.auth.AuthType
-import com.anrisoftware.sscontrol.httpd.auth.UpdateMode
+import com.anrisoftware.sscontrol.httpd.auth.SatisfyType
 import com.anrisoftware.sscontrol.httpd.authfile.AuthFileService
 import com.anrisoftware.sscontrol.httpd.domain.Domain
 import com.anrisoftware.sscontrol.httpd.webservice.WebService
@@ -66,12 +64,6 @@ abstract class AuthFileConfig extends BasicAuth {
     @Inject
     RequireValidModeRenderer requireValidModeRenderer
 
-    @Inject
-    AuthFileBasicConfig authFileBasicConfig
-
-    @Inject
-    AuthFileDigestConfig authFileDigestConfig
-
     /**
      * Domain configuration template.
      */
@@ -81,14 +73,28 @@ abstract class AuthFileConfig extends BasicAuth {
     void deployService(Domain domain, WebService service, List config) {
         deployDomain domain, null, service, config
         enableMods service
-        makeAuthDirectory domain
-        deployGroups domain, service
+        copyUsersFile domain, service
+        copyGroupsFile domain, service
         updatePermissions domain, service
     }
 
     @Override
     void deployDomain(Domain domain, Domain refDomain, WebService service, List config) {
+        setupDefaults service
         createDomainConfig domain, service, config
+    }
+
+    /**
+     * Setups the default properties.
+     *
+     * @param service
+     *            the {@link AuthFileService} service.
+     *
+     */
+    void setupDefaults(AuthFileService service) {
+        if (service.satisfy == null) {
+            service.type satisfy: defaultSatifsy
+        }
     }
 
     /**
@@ -110,33 +116,14 @@ abstract class AuthFileConfig extends BasicAuth {
         args.type = service.type
         args.satisfy = service.satisfy
         args.requireDomains = service.requireDomains
-        args.requireValids = findRequireValids service
-        args.requireGroups = service.groups
-        args.groupNames = findGroupNames service
-        args.passwordFile = passwordFile service, domain
+        args.requireValids = service.requireValid
+        args.requireGroups = service.requireGroups
+        args.requireUsers = service.requireUsers
+        args.passwordFile = passwordFile domain, service
         args.groupFile = groupFile domain, service
+        args.exceptLimits = service.requireExcept
         def config = authDomainConfigTemplate.getText true, "domainAuth", "args", args
         serviceConfig << config
-    }
-
-    List findGroupNames(AuthFileService service) {
-        service.groups.inject([]) { list, AuthGroup group ->
-            if (group.name != null) {
-                list << group.name
-            } else {
-                list
-            }
-        }
-    }
-
-    List findRequireValids(AuthFileService service) {
-        service.groups.inject([]) { list, AuthGroup group ->
-            if (group.requireValid != null) {
-                list << group.requireValid
-            } else {
-                list
-            }
-        }
     }
 
     /**
@@ -157,117 +144,39 @@ abstract class AuthFileConfig extends BasicAuth {
     }
 
     /**
-     * Creates the directory where to store the auth files for the
-     * specified domain.
+     * Copies the users file.
      *
      * @param domain
-     *            the {@link Domain}.
+     *            the {@link Domain} domain.
+     *
+     * @param service
+     *            the {@link AuthFileService} service.
      */
-    void makeAuthDirectory(Domain domain) {
+    void copyUsersFile(Domain domain, AuthFileService service) {
         new File(domainDir(domain), authSubdirectory).mkdirs()
+        log.checkUsersFile this, service
+        def file = passwordFile domain, service
+        FileUtils.copyURLToFile service.usersFile.toURL(), file
+        log.copyUsersFile this, service, file
     }
 
     /**
-     * Deploys the required groups for the specified service.
+     * Copies the users file.
      *
      * @param domain
-     *            the {@link Domain}.
+     *            the {@link Domain} domain.
      *
      * @param service
-     *            the {@link AuthService}.
+     *            the {@link AuthFileService} service.
      */
-    void deployGroups(Domain domain, AuthService service) {
-        def file = groupFile(domain, service)
-        def oldgroups = file.exists() ? FileUtils.readLines(file, charset) : []
-        service.groups.each { AuthGroup group ->
-            def found = findGroup(oldgroups, group)
-            if (found.found != null) {
-                updateGroup(domain, service, found, oldgroups)
-            } else {
-                insertGroup(domain, service, group, oldgroups)
-            }
-            deployUsers domain, service, group
+    void copyGroupsFile(Domain domain, AuthFileService service) {
+        if (service.groupFile == null) {
+            return
         }
-        writeLines file, charset.name(), oldgroups
-    }
-
-    Map findGroup(List oldgroups, AuthGroup group) {
-        def found = null
-        def index = -1
-        for (int i = 0; i < oldgroups.size(); i++) {
-            String str = oldgroups[i]
-            String[] s = split(str, ":")
-            if (s.length == 0) {
-                break
-            }
-            if (group.name == s[0]) {
-                found = group
-                index = i
-                break
-            }
-        }
-        return [found: found, index: index]
-    }
-
-    void updateGroup(Domain domain, AuthService service, Map found, List groups) {
-        AuthGroup groupfound = found.found
-        int index = found.index
-        switch (groupfound.update) {
-            case UpdateMode.rewrite:
-                groups[index] = createGroup groupfound
-                break
-            case UpdateMode.append:
-                groups[index] = appendGroup groupfound, split(groups[index], ':')[1]
-                break
-            default:
-                break
-        }
-    }
-
-    void insertGroup(Domain domain, AuthService service, AuthGroup group, List groups) {
-        groups << createGroup(group)
-    }
-
-    String appendGroup(AuthGroup group, String oldusers) {
-        oldusers = oldusers.trim()
-        if (group.name == null) {
-            return oldusers
-        }
-        def st = new ST('<group.name>: <oldusers> <group.userPasswords;separator=" ">')
-        st.add("group", group).add("oldusers", oldusers).render()
-    }
-
-    String createGroup(AuthGroup group) {
-        if (group.name == null) {
-            return ""
-        }
-        def st = new ST('<group.name>: <group.userPasswords;separator=" ">')
-        st.add("group", group).render()
-    }
-
-    /**
-     * Deploys the required users for the specified service.
-     *
-     * @param domain
-     *            the {@link Domain}.
-     *
-     * @param service
-     *            the {@link AuthService}.
-     *
-     * @param group
-     *            the {@link AuthGroup} group.
-     */
-    void deployUsers(Domain domain, AuthService service, AuthGroup group) {
-        def oldusers
-        switch (service.type) {
-            case AuthType.basic:
-                oldusers = authFileBasicConfig.createUsers domain, service, group
-                break
-            case AuthType.digest:
-                oldusers = authFileDigestConfig.createUsers domain, service, group
-                break
-        }
-        writeLines passwordFile(service, domain), charset.name(), oldusers
+        new File(domainDir(domain), authSubdirectory).mkdirs()
+        def file = groupFile domain, service
+        FileUtils.copyURLToFile service.groupFile.toURL(), file
+        log.copyGroupFile this, service, file
     }
 
     /**
@@ -298,7 +207,7 @@ abstract class AuthFileConfig extends BasicAuth {
                 command: chmodCommand,
                 mod: "o-rw",
                 files: [
-                    passwordFile(service, domain),
+                    passwordFile(domain, service),
                     groupFile(domain, service)
                 ],
                 this, threads)()
@@ -307,21 +216,18 @@ abstract class AuthFileConfig extends BasicAuth {
     /**
      * Returns the password file for the specified service.
      *
-     * @param service
-     *            the {@link AuthService}.
-     *
      * @param domain
      *            the {@link Domain}.
      *
+     * @param service
+     *            the {@link AuthService}.
+     *
      * @return the password {@link File}.
      */
-    File passwordFile(AuthService service, Domain domain) {
-        switch (service.type) {
-            case AuthType.basic:
-                return authFileBasicConfig.passwordFile(domain, service)
-            case AuthType.digest:
-                return authFileDigestConfig.passwordFile(domain, service)
-        }
+    File passwordFile(Domain domain, AuthService service) {
+        def location = FilenameUtils.getBaseName(service.location)
+        def dir = new File(authSubdirectory, domainDir(domain))
+        return new File("${location}.passwd", dir)
     }
 
     /**
@@ -340,20 +246,6 @@ abstract class AuthFileConfig extends BasicAuth {
     }
 
     /**
-     * Returns {@code htpasswd} command.
-     * For example {@code "/usr/bin/htpasswd"}.
-     *
-     * <ul>
-     * <li>profile property {@code "htpasswd_command"}</li>
-     * </ul>
-     *
-     * @see #getAuthProperties()
-     */
-    String getHtpasswdCommand() {
-        profileProperty "htpasswd_command", authProperties
-    }
-
-    /**
      * Returns the sub-directory where to store the authentication files.
      * The directory is created under the domain directory.
      * For example {@code "auth"}.
@@ -368,6 +260,21 @@ abstract class AuthFileConfig extends BasicAuth {
         profileProperty "auth_subdirectory", authProperties
     }
 
+    /**
+     * Returns default satisfy type.
+     * For example {@code "any"}.
+     *
+     * <ul>
+     * <li>profile property {@code "default_satisfy"}</li>
+     * </ul>
+     *
+     * @see #getAuthProperties()
+     */
+    SatisfyType getDefaultSatifsy() {
+        def value = profileProperty "default_satisfy", authProperties
+        SatisfyType.valueOf value
+    }
+
     @Inject
     final void TemplatesFactory(TemplatesFactory factory) {
         def templates = factory.create "Apache_2_2_AuthFile", ["renderers": [requireValidModeRenderer]]
@@ -377,8 +284,6 @@ abstract class AuthFileConfig extends BasicAuth {
     @Override
     void setScript(LinuxScript script) {
         super.setScript script
-        authFileBasicConfig.setScript this
-        authFileDigestConfig.setScript this
     }
 
     /**

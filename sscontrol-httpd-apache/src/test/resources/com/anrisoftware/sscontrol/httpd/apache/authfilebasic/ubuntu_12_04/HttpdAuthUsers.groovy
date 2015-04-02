@@ -21,12 +21,9 @@ package com.anrisoftware.sscontrol.httpd.apache.authfilebasic.ubuntu_12_04
 httpd {
     domain "test1.com", address: "192.168.0.50", {
         setup "auth-file", id: "test1authid", auth: "Private Directory", location: "/private", {
-            type AuthType.basic, satisfy: SatisfyType.any
-            group {
-                require valid: RequireValid.user
-                user "foo", password: "foopass"
-                user "bar", password: "barpass"
-            }
+            type AuthType.basic
+            password users: AuthFileBasicResources.privatePasswdFile.resource
+            require user: "foo, bar"
         }
     }
     domain "test2.com", address: "192.168.0.50", {

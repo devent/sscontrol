@@ -15,11 +15,9 @@
         AuthType basic
         AuthName "Private Directory"
         AuthBasicProvider file
-        <LimitExcept GET OPTIONS>
-        Require group foogroup
-        </LimitExcept>
+        Require valid-user
+
         AuthUserFile /tmp/var/www/test2.com/auth/private.passwd
-        AuthGroupFile /tmp/var/www/test2.com/auth/private.group
         Satisfy any
     </Location>
 

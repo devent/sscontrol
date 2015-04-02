@@ -6,17 +6,17 @@ domainAuth(args) ::= <<
 <!- args.requireDomains -!>
 <!- args.requireValids -!>
 <!- args.requireGroups -!>
-<!- args.groupNames -!>
+<!- args.requireUsers -!>
 <!- args.passwordFile -!>
 <!- args.groupFile -!>
+<!- args.exceptLimits -!>
 # auth "<args.auth>"
 \<Location <args.location>\>
     AuthType <args.type>
     AuthName "<args.auth>"
     <(args.type)(args)>
     <args.requireDomains:requireDomains();separator="\n">
-    <args.requireValids:requireValids();separator="\n">
-    <requireGroups(args.groupNames)>
+    <requireStatements(args)>
     AuthUserFile <args.passwordFile>
     <authGroupFile(args)>
     <if(args.satisfy)>Satisfy <args.satisfy><endif>
@@ -24,34 +24,63 @@ domainAuth(args) ::= <<
 
 >>
 
-digest(args) ::= <<
-AuthDigestProvider file
+requireStatements(args) ::= <<
+<limitExceptStart(args)>
+<requireValids(args)>
+<requireGroups(args)>
+<requireUsers(args)>
+<limitExceptEnd(args)>
 >>
 
-basic(args) ::= <<
+limitExceptStart(args) ::= <%
+<if(args.exceptLimits)>
+\<LimitExcept <args.exceptLimits;separator=" ">>
+<endif>
+%>
+
+limitExceptEnd(args) ::= <%
+<if(args.exceptLimits)>
+\</LimitExcept>
+<endif>
+%>
+
+requireValids(args) ::= <%
+<if(args.requireValids)>
+<args.requireValids:{valid|<(valid)()>};separator="\n">
+<endif>
+%>
+
+digest(args) ::= <%
+AuthDigestProvider file
+%>
+
+basic(args) ::= <%
 AuthBasicProvider file
->>
+%>
 
 authGroupFile(args) ::= <%
-<if(args.groupNames)>
+<if(args.requireGroups)>
 AuthGroupFile <args.groupFile>
 <endif>
 %>
 
-requireDomains(domains) ::= <<
+requireDomains(domains) ::= <%
 AuthDigestDomain <domains:{domain | <domain.domain>};separator=" ">
->>
+%>
 
-requireValids(valids) ::= <<
-<valids:{ valid | <(valid)()>}>
->>
-
-requireValidUser() ::= <<
+requireValidUser() ::= <%
 Require valid-user
->>
+%>
 
-requireGroups(groups) ::= <%
-<if(groups)>
-Require group <groups;separator=" ">
+requireGroups(args) ::= <%
+<if(args.requireGroups)>
+Require group <args.requireGroups;separator=" ">
 <endif>
 %>
+
+requireUsers(args) ::= <%
+<if(args.requireUsers)>
+Require user <args.requireUsers;separator=" ">
+<endif>
+%>
+

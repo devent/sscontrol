@@ -1,4 +1,0 @@
-oldfoo:foopass
-oldbar:barpass
-foo:foopass
-bar:barpass

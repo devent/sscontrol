@@ -39,8 +39,6 @@ enum Ubuntu_12_04_Resources {
     a2dissiteCommand("/usr/sbin/a2dissite", Ubuntu_12_04_Resources.class.getResource("echo_command.txt")),
     apache2Command("/usr/sbin/apache2", Ubuntu_12_04_Resources.class.getResource("echo_command.txt")),
     apache2ctlCommand("/usr/sbin/apache2ctl", Ubuntu_12_04_Resources.class.getResource("httpd_status_command.txt")),
-    htpasswdCommand("/usr/bin/htpasswd", Ubuntu_12_04_Resources.class.getResource("echo_command.txt")),
-    htdigestCommand("/usr/bin/htdigest", Ubuntu_12_04_Resources.class.getResource("echo_command.txt")),
     mysqldumpCommand("/usr/bin/mysqldump", Ubuntu_12_04_Resources.class.getResource("echo_command.txt")),
     netstatCommand("/bin/netstat", Ubuntu_12_04_Resources.class.getResource("netstat_command.txt")),
     gzipCommand("/bin/gzip", Ubuntu_12_04_Resources.class.getResource("echo_command.txt")),
@@ -64,7 +62,6 @@ enum Ubuntu_12_04_Resources {
         a2ensiteCommand.createCommand parent
         apache2Command.createCommand parent
         apache2ctlCommand.createCommand parent
-        htpasswdCommand.createCommand parent
         mysqldumpCommand.createCommand parent
         netstatCommand.createCommand parent
         gzipCommand.createCommand parent
@@ -86,7 +83,6 @@ enum Ubuntu_12_04_Resources {
         entry.disable_site_command a2dissiteCommand.asFile(parent)
         entry.apache_command apache2Command.asFile(parent)
         entry.apache_control_command apache2ctlCommand.asFile(parent)
-        entry.htpasswd_command htpasswdCommand.asFile(parent)
         entry.netstat_command netstatCommand.asFile(parent)
         entry.mysqldump_command mysqldumpCommand.asFile(parent)
         entry.gzip_command gzipCommand.asFile(parent)

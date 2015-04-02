@@ -15,7 +15,8 @@
         AuthType basic
         AuthName "Private Directory"
         AuthBasicProvider file
-        Require valid-user
+        Require user foo bar
+
         AuthUserFile /tmp/var/www/test2.com/auth/private.passwd
         Satisfy any
     </Location>

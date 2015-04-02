@@ -31,17 +31,18 @@ import com.anrisoftware.sscontrol.testutils.resources.ResourcesUtils
  */
 enum AuthFileDigestResources {
 
+    // files
     profile("UbuntuProfile.groovy", AuthFileDigestResources.class.getResource("UbuntuProfile.groovy")),
-    httpdScript("Httpd.groovy", AuthFileDigestResources.class.getResource("HttpdAuthFileDigest.groovy")),
-    domainsConfExpected("/etc/apache2/conf.d/000-robobee-domains.conf", AuthFileDigestResources.class.getResource("domains_conf_expected.txt")),
-    test1comConfExpected("/etc/apache2/sites-available/100-robobee-test1.com.conf", AuthFileDigestResources.class.getResource("test1com_conf_expected.txt")),
-    wwwtest1comConfExpected("/etc/apache2/sites-available/100-robobee-www.test1.com.conf", AuthFileDigestResources.class.getResource("wwwtest1com_conf_expected.txt")),
-    privatePasswdExpected("/var/www/test1.com/auth/private-digest.passwd", AuthFileDigestResources.class.getResource("privatepasswd_expected.txt")),
-    privateGroupExpected("/var/www/test1.com/auth/private.group", AuthFileDigestResources.class.getResource("privategroup_expected.txt")),
-    runcommandsLogExpected("/runcommands.log", AuthFileDigestResources.class.getResource("runcommands_expected.txt")),
-    enmodOutExpected("/usr/sbin/a2enmod.out", AuthFileDigestResources.class.getResource("enmod_out_expected.txt")),
-    chmodOutExpected("/bin/chmod.out", AuthFileDigestResources.class.getResource("chmod_out_expected.txt")),
-    chownOutExpected("/bin/chown.out", AuthFileDigestResources.class.getResource("chown_out_expected.txt")),
+    privateGroupFile("private.group", AuthFileDigestResources.class.getResource("privategroup.txt")),
+    privatePasswdFile("private.passwd", AuthFileDigestResources.class.getResource("privatepasswd.txt")),
+    // auth group
+    httpdScriptGroup("Httpd.groovy", AuthFileDigestResources.class.getResource("HttpdAuthGroup.groovy")),
+    groupTest1comConfExpected("/etc/apache2/sites-available/100-robobee-test1.com.conf", AuthFileDigestResources.class.getResource("group_test1comconf_expected.txt")),
+    groupTest2comConfExpected("/etc/apache2/sites-available/100-robobee-test2.com.conf", AuthFileDigestResources.class.getResource("group_test2comconf_expected.txt")),
+    groupRuncommandsLogExpected("/runcommands.log", AuthFileDigestResources.class.getResource("group_runcommands_expected.txt")),
+    groupEnmodOutExpected("/usr/sbin/a2enmod.out", AuthFileDigestResources.class.getResource("group_enmod_out_expected.txt")),
+    groupChmodOutExpected("/bin/chmod.out", AuthFileDigestResources.class.getResource("group_chmod_out_expected.txt")),
+    groupChownOutExpected("/bin/chown.out", AuthFileDigestResources.class.getResource("group_chown_out_expected.txt")),
 
     ResourcesUtils resources
 

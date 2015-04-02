@@ -15,9 +15,9 @@
         AuthType digest
         AuthName "Private Directory"
         AuthDigestProvider file
-        Require valid-user
-        Require group foogroup admin1 admin2 admin3
-        AuthUserFile /tmp/var/www/test1.com/auth/private-digest.passwd
+        Require group foogroup
+
+        AuthUserFile /tmp/var/www/test1.com/auth/private.passwd
         AuthGroupFile /tmp/var/www/test1.com/auth/private.group
         Satisfy any
     </Location>

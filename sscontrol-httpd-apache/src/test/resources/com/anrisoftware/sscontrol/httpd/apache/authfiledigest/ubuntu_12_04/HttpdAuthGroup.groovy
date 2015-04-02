@@ -21,26 +21,12 @@ package com.anrisoftware.sscontrol.httpd.apache.authfiledigest.ubuntu_12_04
 httpd {
     domain "test1.com", address: "192.168.0.50", {
         setup "auth-file", id: "test1authid", auth: "Private Directory", location: "/private", {
-            type AuthType.digest, satisfy: SatisfyType.any
-            require valid: RequireValid.user
-            require user: "foo", password: "foopassword"
-            require user: "bar", password: "barpassword", update: RequireUpdate.password
+            type AuthType.digest
+            password group: AuthFileDigestResources.privateGroupFile.resource, users: AuthFileDigestResources.privatePasswdFile.resource
             require group: "foogroup"
-            require group: "admin1", {
-                user "adminfoo1", password: "adminfoopassword"
-                user "adminbar1", password: "adminbarpassword"
-            }
-            require group: "admin2", update: RequireUpdate.rewrite, {
-                user "adminfoo2", password: "adminfoopassword"
-                user "adminbar2", password: "adminbarpassword"
-            }
-            require group: "admin3", update: RequireUpdate.append, {
-                user "adminfoo3", password: "adminfoopassword"
-                user "adminbar3", password: "adminbarpassword"
-            }
         }
     }
-    domain "www.test1.com", address: "192.168.0.50", {
-        setup "auth-file", ref: "test1authid" //
+    domain "test2.com", address: "192.168.0.50", {
+        setup "auth-file", ref: "test1authid"
     }
 }

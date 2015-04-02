@@ -1,0 +1,25 @@
+<VirtualHost 192.168.0.50:80>
+
+    # domain test2.com
+    ServerName test2.com
+    DocumentRoot /tmp/var/www/test2.com/web
+    SuexecUserGroup web_002 web_002
+    <Directory /tmp/var/www/test2.com/web>
+        AllowOverride None
+        Order allow,deny
+        Allow from all
+    </Directory>
+
+    # auth "Private Directory"
+    <Location /private>
+        AuthType digest
+        AuthName "Private Directory"
+        AuthDigestProvider file
+        Require group foogroup
+
+        AuthUserFile /tmp/var/www/test2.com/auth/private.passwd
+        AuthGroupFile /tmp/var/www/test2.com/auth/private.group
+        Satisfy any
+    </Location>
+
+</VirtualHost>

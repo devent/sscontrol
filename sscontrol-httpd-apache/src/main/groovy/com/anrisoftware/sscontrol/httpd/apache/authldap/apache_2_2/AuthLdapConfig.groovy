@@ -103,11 +103,18 @@ abstract class AuthLdapConfig extends BasicAuth {
      *            the {@link List} of the configuration.
      */
     void createDomainConfig(Domain domain, AuthLdapService service, List serviceConfig) {
-        def config = authDomainTemplate.getText true,
-                "domainAuth",
-                "domain", domain,
-                "auth", service,
-                "args", []
+        def args = [:]
+        args.auth = service.auth
+        args.location = service.location
+        args.type = service.type
+        args.satisfy = service.satisfy
+        args.groupDn = service.requireGroupDn
+        args.attributes = service.attributes
+        args.host = service.host
+        args.hostUrl = service.hostUrl
+        args.credentials = service.credentials
+        args.credentialsPassword = service.credentialsPassword
+        def config = authDomainTemplate.getText true, "domainAuth", "args", args
         log.domainConfigCreated script, service, config
         serviceConfig << config
     }

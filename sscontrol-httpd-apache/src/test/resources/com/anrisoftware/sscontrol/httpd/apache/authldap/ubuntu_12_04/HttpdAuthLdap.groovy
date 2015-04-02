@@ -25,12 +25,12 @@ httpd {
             host "ldap://127.0.0.1:389", url: "o=deventorg,dc=ubuntutest,dc=com?cn"
             credentials "cn=admin,dc=ubuntutest,dc=com", password: "adminpass"
             require valid: RequireValid.user
-            require group: "cn=ldapadminGroup,o=deventorg,dc=ubuntutest,dc=com"
+            require groupdn: "cn=ldapadminGroup,o=deventorg,dc=ubuntutest,dc=com"
             require attribute: [group: "uniqueMember"]
             require attribute: [dn: no]
         }
     }
     domain "www.test1.com", address: "192.168.0.50", {
-        setup "auth-ldap", ref: "test1authid" //
+        setup "auth-ldap", ref: "test1authid"
     }
 }

@@ -19,7 +19,6 @@
 package com.anrisoftware.sscontrol.httpd.apache.userrefdomain.ubuntu_12_04
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
-import static com.anrisoftware.sscontrol.httpd.apache.ubuntu.UbuntuResources.*
 import static com.anrisoftware.sscontrol.httpd.apache.ubuntu_12_04.Ubuntu_12_04_Resources.*
 import static com.anrisoftware.sscontrol.httpd.apache.userrefdomain.ubuntu_12_04.UserRefDomainResources.*
 import static org.apache.commons.io.FileUtils.*
@@ -40,7 +39,6 @@ class UserRefDomainTest extends WebServiceTestEnvironment {
 
     @Test
     void "user ref domain"() {
-        copyUbuntuFiles tmpdir
         copyUbuntu_12_04_Files tmpdir
         loader.loadService profile.resource, null
         def profile = registry.getService("profile")[0]

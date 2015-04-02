@@ -18,7 +18,7 @@
  */
 package com.anrisoftware.sscontrol.httpd.apache.core.ubuntu_12_04
 
-import com.anrisoftware.sscontrol.httpd.apache.ubuntu.UbuntuResources
+import com.anrisoftware.sscontrol.httpd.apache.ubuntu_12_04.Ubuntu_12_04_Resources
 
 def ip1 = "127.0.0.1"
 def http = 8080
@@ -33,12 +33,12 @@ httpd {
     domain "anr-institute.com", address: ip1, port: http, {
     }
     ssl_domain "anr-institute.com", id: anrinstituteId, address: ip1, port: https1, {
-        certificate file: UbuntuResources.certCrt.resource, key: UbuntuResources.certKey.resource
+        certificate file: Ubuntu_12_04_Resources.certCrt.resource, key: Ubuntu_12_04_Resources.certKey.resource
     }
     domain "www.anr-institute.com", address: ip1, port: http, {
     }
     ssl_domain "anrisoftware.com", address: ip1, port: https2, {
-        certificate file: UbuntuResources.certCrt.resource, key: UbuntuResources.certKey.resource, ca: UbuntuResources.certCa.resource
+        certificate file: Ubuntu_12_04_Resources.certCrt.resource, key: Ubuntu_12_04_Resources.certKey.resource, ca: Ubuntu_12_04_Resources.certCa.resource
     }
     domain "www.mueller-public.de", address: ip1, port: http, {
     }

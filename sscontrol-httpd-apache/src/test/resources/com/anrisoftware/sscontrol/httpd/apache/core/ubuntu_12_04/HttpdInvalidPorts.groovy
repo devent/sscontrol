@@ -18,8 +18,6 @@
  */
 package com.anrisoftware.sscontrol.httpd.apache.core.ubuntu_12_04
 
-import com.anrisoftware.sscontrol.httpd.apache.ubuntu.UbuntuResources
-
 httpd {
     bind ports: [8080, 8090]
     domain "test1.com", address: "192.168.0.50", port: 80, {

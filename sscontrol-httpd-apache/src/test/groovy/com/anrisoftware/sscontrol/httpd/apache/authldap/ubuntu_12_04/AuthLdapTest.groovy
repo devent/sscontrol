@@ -20,7 +20,6 @@ package com.anrisoftware.sscontrol.httpd.apache.authldap.ubuntu_12_04
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.httpd.apache.authldap.ubuntu_12_04.AuthLdapResources.*
-import static com.anrisoftware.sscontrol.httpd.apache.ubuntu.UbuntuResources.*
 import static com.anrisoftware.sscontrol.httpd.apache.ubuntu_12_04.Ubuntu_12_04_Resources.*
 import static org.apache.commons.io.FileUtils.*
 import groovy.util.logging.Slf4j
@@ -41,9 +40,7 @@ class AuthLdapTest extends WebServiceTestEnvironment {
     @Test
     void "auth ldap"() {
         attachRunCommandsLog tmpdir
-        copyUbuntuFiles tmpdir
         copyUbuntu_12_04_Files tmpdir
-
         loader.loadService profile.resource, null
         def profile = registry.getService("profile")[0]
         setupUbuntu_12_04_Properties profile, tmpdir
@@ -57,7 +54,7 @@ class AuthLdapTest extends WebServiceTestEnvironment {
         assertFileContent domainsConfExpected.asFile(tmpdir), domainsConfExpected
         assertStringContent test1comConfExpected.replaced(tmpdir, tmpdir, "/tmp"), test1comConfExpected.toString()
         assertStringContent wwwtest1comConfExpected.replaced(tmpdir, tmpdir, "/tmp"), wwwtest1comConfExpected.toString()
-        assertStringContent runcommandsLogExpected.replaced(tmpdir, tmpdir, "/tmp").replaceAll(/\d+/, 'time'), runcommandsLogExpected.toString()
+        assertStringContent runcommandsLogExpected.replaced(tmpdir, tmpdir, "/tmp").replaceAll(/\d{2,}/, 'time'), runcommandsLogExpected.toString()
         assertFileContent enmodOutExpected.asFile(tmpdir), enmodOutExpected
     }
 }

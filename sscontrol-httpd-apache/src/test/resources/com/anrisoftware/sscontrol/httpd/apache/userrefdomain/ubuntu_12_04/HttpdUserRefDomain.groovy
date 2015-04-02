@@ -18,7 +18,7 @@
  */
 package com.anrisoftware.sscontrol.httpd.apache.userrefdomain.ubuntu_12_04
 
-import com.anrisoftware.sscontrol.httpd.apache.ubuntu.UbuntuResources
+import com.anrisoftware.sscontrol.httpd.apache.ubuntu_12_04.Ubuntu_12_04_Resources
 
 def domain3id = "test3"
 
@@ -28,14 +28,14 @@ httpd {
     }
     ssl_domain "test1.com", address: "192.168.0.50", {
         // web_001
-        certificate file: UbuntuResources.certCrt.resource, key: UbuntuResources.certKey.resource
+        certificate file: Ubuntu_12_04_Resources.certCrt.resource, key: Ubuntu_12_04_Resources.certKey.resource
     }
     domain "www.test1.com", address: "192.168.0.50", {
         // web_002
     }
     ssl_domain "test2.com", address: "192.168.0.50", {
         // web_003
-        certificate file: UbuntuResources.certCrt.resource, key: UbuntuResources.certKey.resource
+        certificate file: Ubuntu_12_04_Resources.certCrt.resource, key: Ubuntu_12_04_Resources.certKey.resource
     }
     domain "test3.com", id: domain3id, address: "192.168.0.50", {
         // web_004

@@ -21,7 +21,6 @@ package com.anrisoftware.sscontrol.httpd.apache.userrefdomain.ubuntu_12_04
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static org.apache.commons.io.FileUtils.*
 
-import com.anrisoftware.sscontrol.httpd.apache.ubuntu.UbuntuResources
 import com.anrisoftware.sscontrol.testutils.resources.ResourcesUtils
 
 /**
@@ -38,11 +37,11 @@ enum UserRefDomainResources {
     domainsConfExpected("/etc/apache2/conf.d/000-robobee-domains.conf", UserRefDomainResources.class.getResource("domains_conf_expected.txt")),
     test1comConfExpected("/etc/apache2/sites-available/100-robobee-test1.com.conf", UserRefDomainResources.class.getResource("test1com_conf_expected.txt")),
     test1comSslConfExpected("/etc/apache2/sites-available/100-robobee-test1.com-ssl.conf", UserRefDomainResources.class.getResource("test1com_ssl_conf_expected.txt")),
-    test1comCrtExpected("/var/www/test1.com/ssl/cert_crt.txt", UbuntuResources.class.getResource("cert_crt.txt")),
-    test1comKeyExpected("/var/www/test1.com/ssl/cert_key.txt", UbuntuResources.class.getResource("cert_key.txt")),
+    test1comCrtExpected("/var/www/test1.com/ssl/cert_crt.txt", UserRefDomainResources.class.getResource("cert_crt.txt")),
+    test1comKeyExpected("/var/www/test1.com/ssl/cert_key.txt", UserRefDomainResources.class.getResource("cert_key.txt")),
     test2comSslConfExpected("/etc/apache2/sites-available/100-robobee-test2.com-ssl.conf", UserRefDomainResources.class.getResource("test2com_ssl_conf_expected.txt")),
-    test2comCrtExpected("/var/www/test1.com/ssl/cert_crt.txt", UbuntuResources.class.getResource("cert_crt.txt")),
-    test2comKeyExpected("/var/www/test1.com/ssl/cert_key.txt", UbuntuResources.class.getResource("cert_key.txt")),
+    test2comCrtExpected("/var/www/test1.com/ssl/cert_crt.txt", UserRefDomainResources.class.getResource("cert_crt.txt")),
+    test2comKeyExpected("/var/www/test1.com/ssl/cert_key.txt", UserRefDomainResources.class.getResource("cert_key.txt")),
     wwwtest1comConfExpected("/etc/apache2/sites-available/100-robobee-www.test1.com.conf", UserRefDomainResources.class.getResource("wwwtest1com_conf_expected.txt")),
     test3comConfExpected("/etc/apache2/sites-available/100-robobee-test3.com.conf", UserRefDomainResources.class.getResource("test3com_conf_expected.txt")),
     wwwtest3comConfExpected("/etc/apache2/sites-available/100-robobee-www.test3.com.conf", UserRefDomainResources.class.getResource("wwwtest3com_conf_expected.txt")),

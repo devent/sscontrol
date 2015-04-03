@@ -151,7 +151,7 @@ abstract class AuthFileConfig extends BasicAuth {
      */
     void updatePermissions(Domain domain, AuthService service) {
         def owner = "root"
-        def group = "root"
+        def group = nginxGroup
         def authdir = new File(authSubdirectory, domainDir(domain))
         changeFileOwnerFactory.create(
                 log: log.log,
@@ -166,7 +166,7 @@ abstract class AuthFileConfig extends BasicAuth {
                 log: log.log,
                 runCommands: runCommands,
                 command: chmodCommand,
-                mod: "o-rw",
+                mod: "o=r,g=r,o-rw",
                 files: [
                     passwordFile(domain, service),
                 ],

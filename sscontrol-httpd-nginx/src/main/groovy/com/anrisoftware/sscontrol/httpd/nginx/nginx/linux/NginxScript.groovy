@@ -418,6 +418,30 @@ abstract class NginxScript extends LinuxScript {
     }
 
     /**
+     * Returns the <i>Nginx</i> local user name,
+     * for example {@code "www-data".}
+     *
+     * <ul>
+     * <li>profile property {@code "nginx_user"}</li>
+     * </ul>
+     */
+    String getNginxUser() {
+        profileProperty "nginx_user", defaultProperties
+    }
+
+    /**
+     * Returns the <i>Nginx</i> local group name,
+     * for example {@code "www-data".}
+     *
+     * <ul>
+     * <li>profile property {@code "nginx_group"}</li>
+     * </ul>
+     */
+    String getNginxGroup() {
+        profileProperty "nginx_group", defaultProperties
+    }
+
+    /**
      * Returns the default bind ports, for example {@code "80, 443"}.
      *
      * <ul>

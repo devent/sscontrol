@@ -51,6 +51,7 @@ class WebdavTest extends ScriptTestEnvironment {
 
         assertStringContent coreTest1comConf.replaced(tmpdir, tmpdir, "/tmp"), coreTest1comConf.toString()
         assertStringContent coreTest2comConf.replaced(tmpdir, tmpdir, "/tmp"), coreTest2comConf.toString()
+        assertStringContent coreChownOutExpected.replaced(tmpdir, tmpdir, "/tmp"), coreChownOutExpected.toString()
     }
 
     @Test
@@ -66,6 +67,8 @@ class WebdavTest extends ScriptTestEnvironment {
         registry.allServices.each { it.call() }
 
         assertStringContent argsTest1comConf.replaced(tmpdir, tmpdir, "/tmp"), argsTest1comConf.toString()
+        assertStringContent argsChownOutExpected.replaced(tmpdir, tmpdir, "/tmp"), argsChownOutExpected.toString()
+        assertStringContent argsChmodOutExpected.replaced(tmpdir, tmpdir, "/tmp"), argsChmodOutExpected.toString()
     }
 
     @Test

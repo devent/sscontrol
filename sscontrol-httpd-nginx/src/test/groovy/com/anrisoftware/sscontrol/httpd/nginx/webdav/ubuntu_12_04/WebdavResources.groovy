@@ -36,9 +36,12 @@ enum WebdavResources {
     httpdWebdavCoreScript("Httpd.groovy", WebdavResources.class.getResource("HttpdWebdavCore.groovy")),
     coreTest1comConf("/etc/nginx/sites-available/100-robobee-test1.com.conf", WebdavResources.class.getResource("core_test1comconf_expected.txt")),
     coreTest2comConf("/etc/nginx/sites-available/100-robobee-test2.com.conf", WebdavResources.class.getResource("core_test2comconf_expected.txt")),
+    coreChownOutExpected("/bin/chown.out", WebdavResources.class.getResource("core_chown_out_expected.txt")),
     // args expected
     httpdWebdavArgsScript("Httpd.groovy", WebdavResources.class.getResource("HttpdWebdavArgs.groovy")),
     argsTest1comConf("/etc/nginx/sites-available/100-robobee-test1.com.conf", WebdavResources.class.getResource("args_test1comconf_expected.txt")),
+    argsChownOutExpected("/bin/chown.out", WebdavResources.class.getResource("args_chown_out_expected.txt")),
+    argsChmodOutExpected("/bin/chmod.out", WebdavResources.class.getResource("args_chmod_out_expected.txt")),
     // limit expected
     httpdWebdavLimitScript("Httpd.groovy", WebdavResources.class.getResource("HttpdWebdavLimit.groovy")),
     privateGroupFile("private.group", WebdavResources.class.getResource("privategroup.txt")),

@@ -131,12 +131,12 @@ abstract class WebdavConfig {
      *            the {@link WebdavService}.
      */
     void updatePermissions(Domain domain, WebdavService service) {
-        def owner = domain.domainUser.name
-        def group = domain.domainUser.group
+        def owner = nginxUser
+        def group = nginxGroup
         if (service.location == null) {
             return
         }
-        def dir = new File(domainDir(domain), service.location)
+        def dir = new File(webDir(domain), service.location)
         dir.mkdirs()
         changeFileOwnerFactory.create(
                 log: log.log,
@@ -151,9 +151,8 @@ abstract class WebdavConfig {
                 log: log.log,
                 runCommands: runCommands,
                 command: chmodCommand,
-                mod: "u=${service.userAccess},g=${service.groupAccess},o=${service.allAccess}",
+                mod: "u=rwx,g=rwx,o=rx",
                 files: dir,
-                recursive: true,
                 this, threads)()
     }
 

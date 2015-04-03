@@ -1,0 +1,2 @@
+u=rwx,g=rwx,o=rx /tmp/var/www/test1.com/web/webdav
+u=rwx,g=rwx,o=rx /tmp/var/www/test1.com/web/webdav

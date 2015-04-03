@@ -16,17 +16,16 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd-nginx. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.nginx.nginxconfig;
+package com.anrisoftware.sscontrol.httpd.nginx.core.ubuntu_12_04
 
-import com.google.inject.AbstractModule;
-import com.google.inject.assistedinject.FactoryModuleBuilder;
-
-public class NginxConfigListModule extends AbstractModule {
-
-    @Override
-    protected void configure() {
-        install(new FactoryModuleBuilder().implement(NginxConfigList.class,
-                NginxConfigList.class).build(NginxConfigListFactory.class));
+httpd {
+    domain "test1.com", address: "192.168.0.50", {
+        setup "auth-file", id: "test1authid", auth: "Private Directory", {
+            password group: DomainsResources.authbasicprivateGroupFile.resource, users: DomainsResources.authbasicprivatePasswdFile.resource
+            require group: "foogroup"
+        }
     }
-
+    domain "test2.com", address: "192.168.0.50", {
+        setup "auth-file", ref: "test1authid"
+    }
 }

@@ -81,6 +81,17 @@ enum DomainsResources {
     thinUserExistingPsOutExpected("/bin/ps.out", DomainsResources.class.getResource("usersexist_ps_out_expected.txt")),
     thinUserExistingKillOutExpected("/usr/bin/kill.out", DomainsResources.class.getResource("usersexist_kill_out_expected.txt")),
     thinUserExistingThinOutExpected("/etc/init.d/thin.out", DomainsResources.class.getResource("thinuserexist_thin_out_expected.txt")),
+    // auth basic expected
+    httpdScriptAuthBasic("Httpd.groovy", DomainsResources.class.getResource("HttpdAuthBasic.groovy")),
+    authbasicprivateGroupFile("private.group", DomainsResources.class.getResource("privategroup.txt")),
+    authbasicprivatePasswdFile("private.passwd", DomainsResources.class.getResource("privatepasswd.txt")),
+    authbasicTest1comConfExpected("/etc/nginx/sites-available/100-robobee-test1.com.conf", DomainsResources.class.getResource("authbasic_test1comconf_expected.txt")),
+    authbasicTest2comConfExpected("/etc/nginx/sites-available/100-robobee-test2.com.conf", DomainsResources.class.getResource("authbasic_test2comconf_expected.txt")),
+    authbasicRuncommandsLogExpected("/runcommands.log", DomainsResources.class.getResource("authbasic_runcommands_expected.txt")),
+    // auth basic proxy expected
+    httpdScriptAuthBasicProxy("Httpd.groovy", DomainsResources.class.getResource("HttpdAuthBasicProxy.groovy")),
+    authbasicproxyTest1comConfExpected("/etc/nginx/sites-available/100-robobee-test1.com.conf", DomainsResources.class.getResource("authbasicproxy_test1comconf_expected.txt")),
+    authbasicproxyTest2comConfExpected("/etc/nginx/sites-available/100-robobee-test2.com.conf", DomainsResources.class.getResource("authbasicproxy_test2comconf_expected.txt")),
 
     ResourcesUtils resources
 

@@ -24,6 +24,7 @@ import static com.google.inject.multibindings.MapBinder.newMapBinder;
 import static java.lang.String.format;
 import groovy.lang.Script;
 
+import com.anrisoftware.sscontrol.httpd.nginx.authfile.ubuntu_14_04.Ubuntu_14_04_AuthFileModule;
 import com.anrisoftware.sscontrol.httpd.nginx.generalproxy.ubuntu_14_04.Ubuntu_14_04_GeneralProxyModule;
 import com.anrisoftware.sscontrol.httpd.nginx.nginx.linux.NginxScriptModule;
 import com.anrisoftware.sscontrol.httpd.nginx.proxypass.ubuntu_14_04.Ubuntu_14_04_ProxyPassModule;
@@ -43,6 +44,7 @@ class UbuntuModule extends AbstractModule {
         install(new NginxScriptModule());
         install(new Ubuntu_14_04_GeneralProxyModule());
         install(new Ubuntu_14_04_ProxyPassModule());
+        install(new Ubuntu_14_04_AuthFileModule());
         bindScripts();
     }
 

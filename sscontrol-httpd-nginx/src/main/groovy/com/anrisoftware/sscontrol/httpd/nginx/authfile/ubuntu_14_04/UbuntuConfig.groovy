@@ -16,17 +16,31 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd-nginx. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.nginx.nginxconfig;
+package com.anrisoftware.sscontrol.httpd.nginx.authfile.ubuntu_14_04
 
-import com.google.inject.AbstractModule;
-import com.google.inject.assistedinject.FactoryModuleBuilder;
+import javax.inject.Inject
 
-public class NginxConfigListModule extends AbstractModule {
+import com.anrisoftware.propertiesutils.ContextProperties
+import com.anrisoftware.sscontrol.httpd.nginx.authfile.nginx_1_4.AuthFileConfig
+import com.anrisoftware.sscontrol.httpd.webservice.ServiceConfig
 
-    @Override
-    protected void configure() {
-        install(new FactoryModuleBuilder().implement(NginxConfigList.class,
-                NginxConfigList.class).build(NginxConfigListFactory.class));
+/**
+ * <i>Auth-file Ubuntu 14.04</i> configuration.
+ *
+ * @author Erwin Mueller, erwin.mueller@deventm.org
+ * @since 1.0
+ */
+class UbuntuConfig extends AuthFileConfig implements ServiceConfig {
+
+    @Inject
+    UbuntuPropertiesProvider authProperties
+
+    ContextProperties getAuthProperties() {
+        authProperties.get()
     }
 
+    @Override
+    String getProfile() {
+        Ubuntu_14_04_AuthFileModule.PROFILE
+    }
 }

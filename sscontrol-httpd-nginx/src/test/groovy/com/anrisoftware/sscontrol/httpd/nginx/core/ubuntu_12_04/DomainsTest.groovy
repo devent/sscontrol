@@ -72,6 +72,45 @@ class DomainsTest extends ScriptTestEnvironment {
     }
 
     @Test
+    void "auth basic"() {
+        attachRunCommandsLog tmpdir
+        copyUbuntuFiles tmpdir
+        copyUbuntu_12_04_Files tmpdir
+        loader.loadService profile.resource, null
+        def profile = registry.getService("profile")[0]
+        setupUbuntuProperties profile, tmpdir
+        setupUbuntu_12_04_Properties profile, tmpdir
+        loader.loadService httpdScriptAuthBasic.resource, profile
+
+        registry.allServices.each { it.call() }
+        log.info "Run service again to ensure that configuration is not set double."
+        registry.allServices.each { it.call() }
+
+        assertStringContent authbasicTest1comConfExpected.replaced(tmpdir, tmpdir, "/tmp"), authbasicTest1comConfExpected.toString()
+        assertStringContent authbasicTest2comConfExpected.replaced(tmpdir, tmpdir, "/tmp"), authbasicTest2comConfExpected.toString()
+        assertStringContent authbasicRuncommandsLogExpected.replaced(tmpdir, tmpdir, "/tmp").replaceAll(/\d+/, 'time'), authbasicRuncommandsLogExpected.toString()
+    }
+
+    @Test
+    void "auth basic proxy"() {
+        attachRunCommandsLog tmpdir
+        copyUbuntuFiles tmpdir
+        copyUbuntu_12_04_Files tmpdir
+        loader.loadService profile.resource, null
+        def profile = registry.getService("profile")[0]
+        setupUbuntuProperties profile, tmpdir
+        setupUbuntu_12_04_Properties profile, tmpdir
+        loader.loadService httpdScriptAuthBasicProxy.resource, profile
+
+        registry.allServices.each { it.call() }
+        log.info "Run service again to ensure that configuration is not set double."
+        registry.allServices.each { it.call() }
+
+        assertStringContent authbasicproxyTest1comConfExpected.replaced(tmpdir, tmpdir, "/tmp"), authbasicproxyTest1comConfExpected.toString()
+        assertStringContent authbasicproxyTest2comConfExpected.replaced(tmpdir, tmpdir, "/tmp"), authbasicproxyTest2comConfExpected.toString()
+    }
+
+    @Test
     void "users existing"() {
         attachRunCommandsLog tmpdir
         copyUbuntuFiles tmpdir

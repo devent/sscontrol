@@ -16,17 +16,36 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd-nginx. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.nginx.nginxconfig;
+package com.anrisoftware.sscontrol.httpd.nginx.authfile.nginx_1_4;
 
-import com.google.inject.AbstractModule;
-import com.google.inject.assistedinject.FactoryModuleBuilder;
+import java.util.Locale;
 
-public class NginxConfigListModule extends AbstractModule {
+import com.anrisoftware.resources.templates.api.AttributeRenderer;
+import com.anrisoftware.sscontrol.httpd.auth.RequireValid;
+
+/**
+ * Attribute renderer for {@link RequireValid}.
+ *
+ * @author Erwin Mueller, erwin.mueller@deventm.org
+ * @since 1.0
+ */
+@SuppressWarnings("serial")
+class RequireValidModeRenderer implements AttributeRenderer {
 
     @Override
-    protected void configure() {
-        install(new FactoryModuleBuilder().implement(NginxConfigList.class,
-                NginxConfigList.class).build(NginxConfigListFactory.class));
+    public String toString(Object o, String formatString, Locale locale) {
+        RequireValid mode = (RequireValid) o;
+        switch (mode) {
+        case user:
+            return "requireValidUser";
+        default:
+            return null;
+        }
+    }
+
+    @Override
+    public Class<?> getAttributeType() {
+        return RequireValid.class;
     }
 
 }

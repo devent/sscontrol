@@ -24,6 +24,7 @@ import static com.google.inject.multibindings.MapBinder.newMapBinder;
 import static java.lang.String.format;
 import groovy.lang.Script;
 
+import com.anrisoftware.sscontrol.httpd.nginx.authfile.ubuntu_12_04.Ubuntu_12_04_AuthFileModule;
 import com.anrisoftware.sscontrol.httpd.nginx.generalproxy.ubuntu_12_04.Ubuntu_12_04_GeneralProxyModule;
 import com.anrisoftware.sscontrol.httpd.nginx.nginx.linux.NginxScriptModule;
 import com.anrisoftware.sscontrol.httpd.nginx.proxypass.ubuntu_12_04.Ubuntu_12_04_ProxyPassModule;
@@ -33,7 +34,7 @@ import com.google.inject.multibindings.MapBinder;
 
 /**
  * Binds the Nginx/Ubuntu 12.04 services.
- * 
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
@@ -45,6 +46,7 @@ class UbuntuModule extends AbstractModule {
         install(new Ubuntu_12_04_GeneralProxyModule());
         install(new Ubuntu_12_04_ProxyPassModule());
         install(new Ubuntu_12_04_WordpressProxyModule());
+        install(new Ubuntu_12_04_AuthFileModule());
         bindScripts();
     }
 

@@ -1,0 +1,29 @@
+domainAuth(args) ::= <<
+<!- args.auth -!>
+<!- args.location -!>
+<!- args.type -!>
+<!- args.satisfy -!>
+<!- args.passwordFile -!>
+<!- args.exceptLimits -!>
+# auth "<args.auth>"
+location <args.location>/ {
+    <limitExceptStart(args)>
+    auth_basic "<args.auth>"
+    auth_basic_user_file <args.passwordFile>
+    <if(args.satisfy)>satisfy <args.satisfy><endif>
+    <limitExceptEnd(args)>
+}
+
+>>
+
+limitExceptStart(args) ::= <%
+<if(args.exceptLimits)>
+limit_except <args.exceptLimits;separator=" ">> {
+<endif>
+%>
+
+limitExceptEnd(args) ::= <%
+<if(args.exceptLimits)>
+}
+<endif>
+%>

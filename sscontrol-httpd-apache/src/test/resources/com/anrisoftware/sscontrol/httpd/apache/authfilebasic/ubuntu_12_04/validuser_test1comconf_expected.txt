@@ -17,7 +17,7 @@
         AuthBasicProvider file
         Require valid-user
 
-        AuthUserFile /tmp/var/www/test1.com/auth/private.passwd
+        AuthUserFile /tmp/var/www/test1.com/auth/privatepasswd.passwd
         Satisfy any
     </Location>
 

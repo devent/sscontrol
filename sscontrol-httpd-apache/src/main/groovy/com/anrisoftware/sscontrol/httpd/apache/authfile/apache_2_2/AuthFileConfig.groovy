@@ -220,14 +220,14 @@ abstract class AuthFileConfig extends BasicAuth {
      *            the {@link Domain}.
      *
      * @param service
-     *            the {@link AuthService}.
+     *            the {@link AuthFileService}.
      *
      * @return the password {@link File}.
      */
-    File passwordFile(Domain domain, AuthService service) {
-        def location = FilenameUtils.getBaseName(service.location)
+    File passwordFile(Domain domain, AuthFileService service) {
+        def name = FilenameUtils.getBaseName service.usersFile.path
         def dir = new File(authSubdirectory, domainDir(domain))
-        return new File("${location}.passwd", dir)
+        return new File("${name}.passwd", dir)
     }
 
     /**
@@ -237,12 +237,12 @@ abstract class AuthFileConfig extends BasicAuth {
      *            the {@link Domain}.
      *
      * @param service
-     *            the {@link AuthService}.
+     *            the {@link AuthFileService}.
      */
-    File groupFile(Domain domain, AuthService service) {
-        def location = FilenameUtils.getBaseName(service.location)
+    File groupFile(Domain domain, AuthFileService service) {
+        def name = FilenameUtils.getBaseName service.usersFile.path
         def dir = new File(authSubdirectory, domainDir(domain))
-        return new File("${location}.group", dir)
+        return new File("${name}.group", dir)
     }
 
     /**

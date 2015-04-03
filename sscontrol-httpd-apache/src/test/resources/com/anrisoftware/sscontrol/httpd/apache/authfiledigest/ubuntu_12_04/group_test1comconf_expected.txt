@@ -17,8 +17,8 @@
         AuthDigestProvider file
         Require group foogroup
 
-        AuthUserFile /tmp/var/www/test1.com/auth/private.passwd
-        AuthGroupFile /tmp/var/www/test1.com/auth/private.group
+        AuthUserFile /tmp/var/www/test1.com/auth/privatepasswd.passwd
+        AuthGroupFile /tmp/var/www/test1.com/auth/privatepasswd.group
         Satisfy any
     </Location>
 

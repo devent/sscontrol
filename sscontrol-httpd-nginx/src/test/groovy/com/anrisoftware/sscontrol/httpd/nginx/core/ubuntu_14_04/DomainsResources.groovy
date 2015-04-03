@@ -93,6 +93,10 @@ enum DomainsResources {
     httpdScriptAuthBasicProxy("Httpd.groovy", DomainsResources.class.getResource("HttpdAuthBasicProxy.groovy")),
     authbasicproxyTest1comConfExpected("/etc/nginx/sites-available/100-robobee-test1.com.conf", DomainsResources.class.getResource("authbasicproxy_test1comconf_expected.txt")),
     authbasicproxyTest2comConfExpected("/etc/nginx/sites-available/100-robobee-test2.com.conf", DomainsResources.class.getResource("authbasicproxy_test2comconf_expected.txt")),
+    // auth basic limit expected
+    httpdScriptAuthBasicLimit("Httpd.groovy", DomainsResources.class.getResource("HttpdAuthBasicLimit.groovy")),
+    authbasiclimitTest1comConfExpected("/etc/nginx/sites-available/100-robobee-test1.com.conf", DomainsResources.class.getResource("authbasiclimit_test1comconf_expected.txt")),
+    authbasiclimitTest2comConfExpected("/etc/nginx/sites-available/100-robobee-test2.com.conf", DomainsResources.class.getResource("authbasiclimit_test2comconf_expected.txt")),
 
     ResourcesUtils resources
 

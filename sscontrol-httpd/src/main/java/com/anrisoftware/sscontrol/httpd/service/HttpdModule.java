@@ -35,6 +35,7 @@ import com.anrisoftware.sscontrol.httpd.phpldapadmin.PhpldapadminModule;
 import com.anrisoftware.sscontrol.httpd.proxy.ProxyServiceModule;
 import com.anrisoftware.sscontrol.httpd.redirect.RedirectModule;
 import com.anrisoftware.sscontrol.httpd.user.DomainUserModule;
+import com.anrisoftware.sscontrol.httpd.webdav.WebdavModule;
 import com.anrisoftware.sscontrol.httpd.webserviceargs.WebServiceArgsModule;
 import com.google.inject.AbstractModule;
 
@@ -66,5 +67,6 @@ class HttpdModule extends AbstractModule {
         install(new BindingsModule());
         install(new DomainUserModule());
         install(new MemoryModule());
+        install(new WebdavModule());
 	}
 }

@@ -23,7 +23,6 @@ httpd {
         setup "proxy", service: "general", proxyname: "sitefoo", address: "http://127.0.0.1:8080"
         setup "auth-file", id: "test1authid", auth: "Private Directory", {
             password group: DomainsResources.authbasicprivateGroupFile.resource, users: DomainsResources.authbasicprivatePasswdFile.resource
-            require group: "foogroup"
         }
     }
     domain "test2.com", address: "192.168.0.50", {

@@ -19,7 +19,6 @@
 package com.anrisoftware.sscontrol.httpd.nginx.userrefdomain.ubuntu_12_04
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
-import static com.anrisoftware.sscontrol.httpd.nginx.ubuntu.UbuntuResources.*
 import static com.anrisoftware.sscontrol.httpd.nginx.ubuntu_12_04.Ubuntu_12_04_Resources.*
 import static com.anrisoftware.sscontrol.httpd.nginx.userrefdomain.ubuntu_12_04.UserRefDomainResources.*
 import static org.apache.commons.io.FileUtils.*
@@ -27,7 +26,7 @@ import groovy.util.logging.Slf4j
 
 import org.junit.Test
 
-import com.anrisoftware.sscontrol.testutils.resources.ScriptTestEnvironment;
+import com.anrisoftware.sscontrol.testutils.resources.ScriptTestEnvironment
 
 /**
  * Nginx on a Ubuntu 12.04 server.
@@ -41,12 +40,9 @@ class UserRefDomainTest extends ScriptTestEnvironment {
     @Test
     void "user referenced domain"() {
         attachRunCommandsLog tmpdir
-        copyUbuntuFiles tmpdir
         copyUbuntu_12_04_Files tmpdir
-
         loader.loadService profile.resource, null
         def profile = registry.getService("profile")[0]
-        setupUbuntuProperties profile, tmpdir
         setupUbuntu_12_04_Properties profile, tmpdir
         loader.loadService httpdScript.resource, profile
 

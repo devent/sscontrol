@@ -1,0 +1,15 @@
+domainWebdav(args) ::= <<
+<!- args.location -!>
+<!- args.userAccess -!>
+<!- args.groupAccess -!>
+<!- args.allAccess -!>
+<!- args.methods -!>
+<!- args.createFullPutPath -!>
+# webdav
+location <args.location>/ {
+    dav_methods <args.methods;separator=" ">;
+    create_full_put_path <if(args.createFullPutPath)>on<else>off<endif>;
+    dav_access user:<args.userAccess> group:<args.groupAccess> all:<args.allAccess>;
+}
+
+>>

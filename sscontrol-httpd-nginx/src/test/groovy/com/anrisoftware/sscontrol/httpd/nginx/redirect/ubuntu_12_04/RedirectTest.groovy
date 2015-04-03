@@ -20,7 +20,6 @@ package com.anrisoftware.sscontrol.httpd.nginx.redirect.ubuntu_12_04
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.httpd.nginx.redirect.ubuntu_12_04.RedirectResources.*
-import static com.anrisoftware.sscontrol.httpd.nginx.ubuntu.UbuntuResources.*
 import static com.anrisoftware.sscontrol.httpd.nginx.ubuntu_12_04.Ubuntu_12_04_Resources.*
 import static org.apache.commons.io.FileUtils.*
 import groovy.util.logging.Slf4j
@@ -40,9 +39,7 @@ class RedirectTest extends ScriptTestEnvironment {
 
     @Test
     void "redirect"() {
-        copyUbuntuFiles tmpdir
         copyUbuntu_12_04_Files tmpdir
-
         loader.loadService profile.resource, null
         def profile = registry.getService("profile")[0]
         setupUbuntu_12_04_Properties profile, tmpdir

@@ -20,7 +20,6 @@ package com.anrisoftware.sscontrol.httpd.nginx.core.ubuntu_12_04
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.httpd.nginx.core.ubuntu_12_04.DomainsResources.*
-import static com.anrisoftware.sscontrol.httpd.nginx.ubuntu.UbuntuResources.*
 import static com.anrisoftware.sscontrol.httpd.nginx.ubuntu_12_04.Ubuntu_12_04_Resources.*
 import static org.apache.commons.io.FileUtils.*
 import groovy.util.logging.Slf4j
@@ -41,12 +40,10 @@ class DomainsTest extends ScriptTestEnvironment {
     @Test
     void "domains"() {
         attachRunCommandsLog tmpdir
-        copyUbuntuFiles tmpdir
         copyUbuntu_12_04_Files tmpdir
 
         loader.loadService profile.resource, null
         def profile = registry.getService("profile")[0]
-        setupUbuntuProperties profile, tmpdir
         setupUbuntu_12_04_Properties profile, tmpdir
         loader.loadService httpdScript.resource, profile
 
@@ -74,11 +71,9 @@ class DomainsTest extends ScriptTestEnvironment {
     @Test
     void "auth basic"() {
         attachRunCommandsLog tmpdir
-        copyUbuntuFiles tmpdir
         copyUbuntu_12_04_Files tmpdir
         loader.loadService profile.resource, null
         def profile = registry.getService("profile")[0]
-        setupUbuntuProperties profile, tmpdir
         setupUbuntu_12_04_Properties profile, tmpdir
         loader.loadService httpdScriptAuthBasic.resource, profile
 
@@ -94,11 +89,9 @@ class DomainsTest extends ScriptTestEnvironment {
     @Test
     void "auth basic proxy"() {
         attachRunCommandsLog tmpdir
-        copyUbuntuFiles tmpdir
         copyUbuntu_12_04_Files tmpdir
         loader.loadService profile.resource, null
         def profile = registry.getService("profile")[0]
-        setupUbuntuProperties profile, tmpdir
         setupUbuntu_12_04_Properties profile, tmpdir
         loader.loadService httpdScriptAuthBasicProxy.resource, profile
 
@@ -111,16 +104,30 @@ class DomainsTest extends ScriptTestEnvironment {
     }
 
     @Test
+    void "auth basic limit"() {
+        attachRunCommandsLog tmpdir
+        copyUbuntu_12_04_Files tmpdir
+        loader.loadService profile.resource, null
+        def profile = registry.getService("profile")[0]
+        setupUbuntu_12_04_Properties profile, tmpdir
+        loader.loadService httpdScriptAuthBasicLimit.resource, profile
+
+        registry.allServices.each { it.call() }
+        log.info "Run service again to ensure that configuration is not set double."
+        registry.allServices.each { it.call() }
+
+        assertStringContent authbasiclimitTest1comConfExpected.replaced(tmpdir, tmpdir, "/tmp"), authbasiclimitTest1comConfExpected.toString()
+        assertStringContent authbasiclimitTest2comConfExpected.replaced(tmpdir, tmpdir, "/tmp"), authbasiclimitTest2comConfExpected.toString()
+    }
+
+    @Test
     void "users existing"() {
         attachRunCommandsLog tmpdir
-        copyUbuntuFiles tmpdir
         copyUbuntu_12_04_Files tmpdir
         usersExistingGroupsFile.createFile tmpdir
         usersExistingUsersFile.createFile tmpdir
-
         loader.loadService profile.resource, null
         def profile = registry.getService("profile")[0]
-        setupUbuntuProperties profile, tmpdir
         setupUbuntu_12_04_Properties profile, tmpdir
         loader.loadService httpdScript.resource, profile
 
@@ -144,15 +151,12 @@ class DomainsTest extends ScriptTestEnvironment {
     @Test
     void "thin user existing"() {
         attachRunCommandsLog tmpdir
-        copyUbuntuFiles tmpdir
         copyUbuntu_12_04_Files tmpdir
         thinUserExistingGroupsFile.createFile tmpdir
         thinUserExistingUsersFile.createFile tmpdir
         thinUserExistingPsCommand.createCommand tmpdir
-
         loader.loadService profile.resource, null
         def profile = registry.getService("profile")[0]
-        setupUbuntuProperties profile, tmpdir
         setupUbuntu_12_04_Properties profile, tmpdir
         loader.loadService httpdScript.resource, profile
 
@@ -175,13 +179,10 @@ class DomainsTest extends ScriptTestEnvironment {
     @Test
     void "used ports"() {
         attachRunCommandsLog tmpdir
-        copyUbuntuFiles tmpdir
         copyUbuntu_12_04_Files tmpdir
         usedportsNetstatCommand.createCommand tmpdir
-
         loader.loadService profile.resource, null
         def profile = registry.getService("profile")[0]
-        setupUbuntuProperties profile, tmpdir
         setupUbuntu_12_04_Properties profile, tmpdir
         loader.loadService httpdScript.resource, profile
 
@@ -195,13 +196,10 @@ class DomainsTest extends ScriptTestEnvironment {
     @Test
     void "used ports proxy"() {
         attachRunCommandsLog tmpdir
-        copyUbuntuFiles tmpdir
         copyUbuntu_12_04_Files tmpdir
         usedportsproxyNetstatPortsCommand.createCommand tmpdir
-
         loader.loadService profile.resource, null
         def profile = registry.getService("profile")[0]
-        setupUbuntuProperties profile, tmpdir
         setupUbuntu_12_04_Properties profile, tmpdir
         loader.loadService httpdScript.resource, profile
 

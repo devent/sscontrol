@@ -40,7 +40,6 @@ server {
         proxy_cache phpmyadmin;
     }
 
-
     location /piwik/ {
         proxy_cache_key "$scheme://$host$request_uri";
         proxy_cache piwik;
@@ -53,7 +52,6 @@ server {
         proxy_pass https://127.0.0.1:8082;
         proxy_cache piwik;
     }
-
 
     # error page
     error_page 500 502 503 504 /50x.html;

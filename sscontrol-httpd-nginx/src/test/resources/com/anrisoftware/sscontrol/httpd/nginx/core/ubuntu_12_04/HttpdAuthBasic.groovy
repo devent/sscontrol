@@ -22,7 +22,6 @@ httpd {
     domain "test1.com", address: "192.168.0.50", {
         setup "auth-file", id: "test1authid", auth: "Private Directory", {
             password group: DomainsResources.authbasicprivateGroupFile.resource, users: DomainsResources.authbasicprivatePasswdFile.resource
-            require group: "foogroup"
         }
     }
     domain "test2.com", address: "192.168.0.50", {

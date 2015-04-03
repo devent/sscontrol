@@ -20,14 +20,13 @@ package com.anrisoftware.sscontrol.httpd.nginx.proxy.ubuntu_14_04
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.httpd.nginx.proxy.ubuntu_14_04.ProxyResources.*
-import static com.anrisoftware.sscontrol.httpd.nginx.ubuntu.UbuntuResources.*
 import static com.anrisoftware.sscontrol.httpd.nginx.ubuntu_14_04.Ubuntu_14_04_Resources.*
 import static org.apache.commons.io.FileUtils.*
 import groovy.util.logging.Slf4j
 
 import org.junit.Test
 
-import com.anrisoftware.sscontrol.testutils.resources.ScriptTestEnvironment;
+import com.anrisoftware.sscontrol.testutils.resources.ScriptTestEnvironment
 
 /**
  * <i>General proxy Nginx Ubuntu 14.04</i> test.
@@ -40,9 +39,7 @@ class ProxyGeneralTest extends ScriptTestEnvironment {
 
     @Test
     void "general proxy"() {
-        copyUbuntuFiles tmpdir
         copyUbuntu_14_04_Files tmpdir
-
         loader.loadService profile.resource, null
         def profile = registry.getService("profile")[0]
         setupUbuntu_14_04_Properties profile, tmpdir
@@ -60,9 +57,7 @@ class ProxyGeneralTest extends ScriptTestEnvironment {
 
     @Test
     void "general two proxies"() {
-        copyUbuntuFiles tmpdir
         copyUbuntu_14_04_Files tmpdir
-
         loader.loadService profile.resource, null
         def profile = registry.getService("profile")[0]
         setupUbuntu_14_04_Properties profile, tmpdir

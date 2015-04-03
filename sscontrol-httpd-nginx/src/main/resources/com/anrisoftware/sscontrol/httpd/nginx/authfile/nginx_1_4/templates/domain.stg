@@ -18,7 +18,7 @@ location <args.location>/ {
 
 limitExceptStart(args) ::= <%
 <if(args.exceptLimits)>
-limit_except <args.exceptLimits;separator=" ">> {
+limit_except <args.exceptLimits;separator=" "> {
 <endif>
 %>
 

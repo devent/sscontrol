@@ -1,0 +1,24 @@
+server {
+    # domain test1.com
+    listen 192.168.0.50:80;
+    root /tmp/var/www/test1.com/web;
+    index index.php index.html index.htm;
+    server_name test1.com;
+    client_max_body_size 2M;
+
+    # webdav
+    location / {
+        dav_methods PUT DELETE MKCOL COPY MOVE;
+        create_full_put_path on;
+        dav_access user:rw group:rw all:r;
+    }
+
+    # error page
+    error_page 500 502 503 504 /50x.html;
+
+    # error page location
+    location = /50x.html {
+        root /usr/share/nginx/html;
+    }
+
+}

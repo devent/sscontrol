@@ -28,6 +28,7 @@ import com.anrisoftware.sscontrol.httpd.nginx.authfile.ubuntu_14_04.Ubuntu_14_04
 import com.anrisoftware.sscontrol.httpd.nginx.generalproxy.ubuntu_14_04.Ubuntu_14_04_GeneralProxyModule;
 import com.anrisoftware.sscontrol.httpd.nginx.nginx.linux.NginxScriptModule;
 import com.anrisoftware.sscontrol.httpd.nginx.proxypass.ubuntu_14_04.Ubuntu_14_04_ProxyPassModule;
+import com.anrisoftware.sscontrol.httpd.nginx.webdav.ubuntu_14_04.Ubuntu_14_04_WebdavModule;
 import com.google.inject.AbstractModule;
 import com.google.inject.multibindings.MapBinder;
 
@@ -45,6 +46,7 @@ class UbuntuModule extends AbstractModule {
         install(new Ubuntu_14_04_GeneralProxyModule());
         install(new Ubuntu_14_04_ProxyPassModule());
         install(new Ubuntu_14_04_AuthFileModule());
+        install(new Ubuntu_14_04_WebdavModule());
         bindScripts();
     }
 

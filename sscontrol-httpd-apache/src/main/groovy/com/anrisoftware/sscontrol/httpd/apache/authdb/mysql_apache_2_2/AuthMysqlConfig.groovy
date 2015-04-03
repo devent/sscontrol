@@ -74,8 +74,6 @@ abstract class AuthMysqlConfig extends DbDriverConfig {
     void deployService(Domain domain, WebService service, List config) {
         deployDomain domain, null, service, config
         enableAuthMods service
-        deployGroups domain, service
-        deployUsers domain, service
     }
 
     @Override
@@ -150,9 +148,20 @@ abstract class AuthMysqlConfig extends DbDriverConfig {
      *            the {@link List} of the configuration.
      */
     void createDomainConfig(Domain domain, AuthDbService service, List serviceConfig) {
-        def config = domainConfigTemplate.getText true, "domainAuth",
-                "domain", domain,
-                "auth", service
+        def args = [:]
+        args.auth = service.auth
+        args.location = service.location
+        args.database = service.database
+        args.usersTable = service.usersTable
+        args.userNameField = service.userNameField
+        args.passwordField = service.passwordField
+        args.allowEmptyPasswords = service.allowEmptyPasswords
+        args.authoritative = service.authoritative
+        args.requireValids = service.requireValid
+        args.requireGroups = service.requireGroups
+        args.requireUsers = service.requireUsers
+        args.exceptLimits = service.requireExcept
+        def config = domainConfigTemplate.getText true, "domainAuth", "args", args
         serviceConfig << config
     }
 
@@ -164,30 +173,6 @@ abstract class AuthMysqlConfig extends DbDriverConfig {
      */
     void enableAuthMods(AuthDbService service) {
         enableMods(["auth_mysql"])
-    }
-
-    /**
-     * Deploys the required groups for the specified service.
-     *
-     * @param domain
-     *            the {@link Domain} domain.
-     *
-     * @param service
-     *            the {@link AuthDbService} service.
-     */
-    void deployGroups(Domain domain, AuthDbService service) {
-    }
-
-    /**
-     * Deploys the required users for the specified service.
-     *
-     * @param domain
-     *            the {@link Domain} domain.
-     *
-     * @param service
-     *            the {@link AuthDbService} service.
-     */
-    void deployUsers(Domain domain, AuthDbService service) {
     }
 
     /**

@@ -32,16 +32,18 @@ import com.anrisoftware.sscontrol.testutils.resources.ResourcesUtils
 enum AuthMysqlResources {
 
     profile("UbuntuProfile.groovy", AuthMysqlResources.class.getResource("UbuntuProfile.groovy")),
-    httpdScript("Httpd.groovy", AuthMysqlResources.class.getResource("HttpdAuthMysql.groovy")),
     // commands
-    // expected
-    domainsConfExpected("/etc/apache2/conf.d/000-robobee-domains.conf", AuthMysqlResources.class.getResource("domains_conf_expected.txt")),
-    test1comConfExpected("/etc/apache2/sites-available/100-robobee-test1.com.conf", AuthMysqlResources.class.getResource("test1com_conf_expected.txt")),
-    wwwtest1comConfExpected("/etc/apache2/sites-available/100-robobee-www.test1.com.conf", AuthMysqlResources.class.getResource("wwwtest1com_conf_expected.txt")),
-    test2comConfExpected("/etc/apache2/sites-available/100-robobee-test2.com.conf", AuthMysqlResources.class.getResource("test2comconf_expected.txt")),
-    runcommandsLogExpected("/runcommands.log", AuthMysqlResources.class.getResource("runcommands_expected.txt")),
-    aptitudeOutExpected("/usr/bin/aptitude.out", AuthMysqlResources.class.getResource("aptitude_out_expected.txt")),
-    enmodOutExpected("/usr/sbin/a2enmod.out", AuthMysqlResources.class.getResource("enmod_out_expected.txt")),
+    // group expected
+    httpdScript("Httpd.groovy", AuthMysqlResources.class.getResource("HttpdAuthMysql.groovy")),
+    groupTest1comConfExpected("/etc/apache2/sites-available/100-robobee-test1.com.conf", AuthMysqlResources.class.getResource("group_test1comconf_expected.txt")),
+    groupTest2comConfExpected("/etc/apache2/sites-available/100-robobee-test2.com.conf", AuthMysqlResources.class.getResource("group_test2comconf_expected.txt")),
+    groupRuncommandsLogExpected("/runcommands.log", AuthMysqlResources.class.getResource("group_runcommands_expected.txt")),
+    groupAptitudeOutExpected("/usr/bin/aptitude.out", AuthMysqlResources.class.getResource("group_aptitude_out_expected.txt")),
+    groupEnmodOutExpected("/usr/sbin/a2enmod.out", AuthMysqlResources.class.getResource("group_enmod_out_expected.txt")),
+    // limit expected
+    httpdScriptLimit("Httpd.groovy", AuthMysqlResources.class.getResource("HttpdAuthMysqlLimit.groovy")),
+    limitTest1comConfExpected("/etc/apache2/sites-available/100-robobee-test1.com.conf", AuthMysqlResources.class.getResource("limit_test1comconf_expected.txt")),
+    limitTest2comConfExpected("/etc/apache2/sites-available/100-robobee-test2.com.conf", AuthMysqlResources.class.getResource("limit_test2comconf_expected.txt")),
 
     ResourcesUtils resources
 

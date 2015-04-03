@@ -27,8 +27,9 @@
         Auth_MySQL_Password_Field "password"
         Auth_MySQL_Empty_Passwords Off
         Auth_MySQL_Authoritative On
-        Auth_MySQL_Encryption_Types php_md5
+        Auth_MySQL_Encryption_Types PHP_MD5 Crypt
         Require valid-user
+
     </Location>
 
 </VirtualHost>

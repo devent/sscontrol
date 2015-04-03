@@ -3,7 +3,7 @@
     # domain test2.com
     ServerName test2.com
     DocumentRoot /tmp/var/www/test2.com/web
-    SuexecUserGroup web_003 web_003
+    SuexecUserGroup web_002 web_002
     <Directory /tmp/var/www/test2.com/web>
         AllowOverride None
         Order allow,deny
@@ -29,6 +29,7 @@
         Auth_MySQL_Authoritative On
         Auth_MySQL_Encryption_Types PHP_MD5 Crypt
         Require valid-user
+
     </Location>
 
 </VirtualHost>

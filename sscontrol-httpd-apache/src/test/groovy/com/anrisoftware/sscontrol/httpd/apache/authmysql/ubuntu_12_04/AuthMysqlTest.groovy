@@ -38,7 +38,7 @@ import com.anrisoftware.sscontrol.testutils.resources.WebServiceTestEnvironment
 class AuthMysqlTest extends WebServiceTestEnvironment {
 
     @Test
-    void "auth mysql"() {
+    void "auth mysql group"() {
         attachRunCommandsLog tmpdir
         copyUbuntu_12_04_Files tmpdir
         loader.loadService profile.resource, null
@@ -50,11 +50,27 @@ class AuthMysqlTest extends WebServiceTestEnvironment {
         log.info "Run service again to ensure that configuration is not set double."
         registry.allServices.each { it.call() }
 
-        assertStringContent test1comConfExpected.replaced(tmpdir, tmpdir, "/tmp"), test1comConfExpected.toString()
-        assertStringContent wwwtest1comConfExpected.replaced(tmpdir, tmpdir, "/tmp"), wwwtest1comConfExpected.toString()
-        assertStringContent test2comConfExpected.replaced(tmpdir, tmpdir, "/tmp"), test2comConfExpected.toString()
-        assertStringContent runcommandsLogExpected.replaced(tmpdir, tmpdir, "/tmp").replaceAll(/\d+/, 'time'), runcommandsLogExpected.toString()
-        assertFileContent aptitudeOutExpected.asFile(tmpdir), aptitudeOutExpected
-        assertFileContent enmodOutExpected.asFile(tmpdir), enmodOutExpected
+        assertStringContent groupTest1comConfExpected.replaced(tmpdir, tmpdir, "/tmp"), groupTest1comConfExpected.toString()
+        assertStringContent groupTest2comConfExpected.replaced(tmpdir, tmpdir, "/tmp"), groupTest2comConfExpected.toString()
+        assertStringContent groupRuncommandsLogExpected.replaced(tmpdir, tmpdir, "/tmp").replaceAll(/\d{2,}/, 'time'), groupRuncommandsLogExpected.toString()
+        assertFileContent groupAptitudeOutExpected.asFile(tmpdir), groupAptitudeOutExpected
+        assertFileContent groupEnmodOutExpected.asFile(tmpdir), groupEnmodOutExpected
+    }
+
+    @Test
+    void "auth mysql limit"() {
+        attachRunCommandsLog tmpdir
+        copyUbuntu_12_04_Files tmpdir
+        loader.loadService profile.resource, null
+        def profile = registry.getService("profile")[0]
+        setupUbuntu_12_04_Properties profile, tmpdir
+        loader.loadService httpdScriptLimit.resource, profile, preScript
+
+        registry.allServices.each { it.call() }
+        log.info "Run service again to ensure that configuration is not set double."
+        registry.allServices.each { it.call() }
+
+        assertStringContent limitTest1comConfExpected.replaced(tmpdir, tmpdir, "/tmp"), limitTest1comConfExpected.toString()
+        assertStringContent limitTest2comConfExpected.replaced(tmpdir, tmpdir, "/tmp"), limitTest2comConfExpected.toString()
     }
 }

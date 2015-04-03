@@ -16,10 +16,17 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd-apache. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.apache.authfilebasic.ubuntu_12_04
+package com.anrisoftware.sscontrol.httpd.apache.authmysql.ubuntu_12_04
 
-profile "ubuntu_12_04", {
-    httpd {
-        service "apache"
+httpd {
+    domain "test1.com", address: "192.168.0.50", {
+        setup "auth-db", id: "test1id", auth: "Private Directory", location: "/private", {
+            database "authdb", user: "userdb", password: "userpassdb", host: "localhost", driver: "mysql"
+            require valid: RequireValid.user
+            require except: "GET, OPTIONS"
+        }
+    }
+    domain "test2.com", address: "192.168.0.50", {
+        setup "auth-db", ref: "test1id"
     }
 }

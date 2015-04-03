@@ -22,7 +22,7 @@ httpd {
     domain "test1.com", address: "192.168.0.50", {
         setup "proxy", service: "general", proxyname: "sitefoo", address: "http://127.0.0.1:8080"
         setup "auth-file", id: "test1authid", auth: "Private Directory", {
-            password group: DomainsResources.authbasicprivateGroupFile.resource, users: DomainsResources.authbasicprivatePasswdFile.resource
+            password users: DomainsResources.authbasicprivatePasswdFile.resource
         }
     }
     domain "test2.com", address: "192.168.0.50", {

@@ -21,7 +21,7 @@ package com.anrisoftware.sscontrol.httpd.nginx.core.ubuntu_12_04
 httpd {
     domain "test1.com", address: "192.168.0.50", {
         setup "auth-file", id: "test1authid", auth: "Private Directory", {
-            password group: DomainsResources.authbasicprivateGroupFile.resource, users: DomainsResources.authbasicprivatePasswdFile.resource
+            password users: DomainsResources.authbasicprivatePasswdFile.resource
             require except: "GET, OPTIONS"
         }
     }

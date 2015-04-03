@@ -8,9 +8,9 @@ server {
 
     # auth "Private Directory"
     location / {
-        auth_basic "Private Directory"
-        auth_basic_user_file /tmp/var/www/test1.com/auth/privatepasswd.passwd
-        satisfy any
+        auth_basic "Private Directory";
+        auth_basic_user_file /tmp/var/www/test1.com/auth/privatepasswd.passwd;
+        satisfy any;
     }
 
     # error page

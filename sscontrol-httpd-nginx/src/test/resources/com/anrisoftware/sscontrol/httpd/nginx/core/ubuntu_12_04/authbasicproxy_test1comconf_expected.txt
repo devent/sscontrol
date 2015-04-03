@@ -21,9 +21,9 @@ server {
         proxy_cache_key "$scheme://$host$request_uri";
         proxy_cache sitefoo;
         proxy_pass http://127.0.0.1:8080;
-        auth_basic "Private Directory"
-        auth_basic_user_file /tmp/var/www/test1.com/auth/privatepasswd.passwd
-        satisfy any
+        auth_basic "Private Directory";
+        auth_basic_user_file /tmp/var/www/test1.com/auth/privatepasswd.passwd;
+        satisfy any;
     }
 
     # error page

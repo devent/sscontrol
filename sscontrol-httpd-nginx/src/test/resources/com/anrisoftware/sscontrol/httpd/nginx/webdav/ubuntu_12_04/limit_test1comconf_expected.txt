@@ -9,10 +9,10 @@ server {
     # auth "Private Directory"
     location / {
         limit_except GET OPTIONS {
-        auth_basic "Private Directory"
-        auth_basic_user_file /tmp/var/www/test1.com/auth/privatepasswd.passwd
-        satisfy any
+        auth_basic "Private Directory";
+        auth_basic_user_file /tmp/var/www/test1.com/auth/privatepasswd.passwd;
         }
+        satisfy any;
         dav_methods PUT DELETE MKCOL COPY MOVE;
         create_full_put_path on;
         dav_access user:rw group:rw all:r;

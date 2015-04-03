@@ -21,7 +21,7 @@ package com.anrisoftware.sscontrol.httpd.nginx.webdav.ubuntu_12_04
 httpd {
     domain "test1.com", address: "192.168.0.50", {
         setup "auth-file", id: "test1authid", auth: "Private Directory", {
-            password group: WebdavResources.privateGroupFile.resource, users: WebdavResources.privatePasswdFile.resource
+            password users: WebdavResources.privatePasswdFile.resource
             require except: "GET, OPTIONS"
         }
         setup "webdav", id: "webdav-test1.com"

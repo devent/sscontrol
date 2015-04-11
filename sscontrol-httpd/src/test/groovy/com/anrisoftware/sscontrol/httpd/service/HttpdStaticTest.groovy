@@ -25,6 +25,7 @@ import groovy.util.logging.Slf4j
 import org.junit.Test
 
 import com.anrisoftware.sscontrol.httpd.staticservice.IndexMode
+import com.anrisoftware.sscontrol.httpd.staticservice.StaticCacheService
 import com.anrisoftware.sscontrol.httpd.staticservice.StaticService
 import com.anrisoftware.sscontrol.testutils.resources.HttpdTestEnvironment
 
@@ -63,5 +64,37 @@ class HttpdStaticTest extends HttpdTestEnvironment {
             "webdav-test1.com",
             "auth-test1.com"
         ])
+    }
+
+    @Test
+    void "httpd static cache"() {
+        loader.loadService profile.resource, null
+        def profile = registry.getService("profile")[0]
+        loader.loadService staticCacheScript.resource, profile, preScript
+        HttpdService service = registry.getService("httpd")[0]
+
+        assert service.domains.size() == 1
+
+        StaticCacheService webservice = service.domains[0].services[0]
+        assert webservice.name == "static-cache"
+        assert webservice.id == "static-cache-test1.com"
+        assert webservice.location == "/static"
+        assert webservice.indexFiles.size() == 3
+        assert webservice.indexFiles.containsAll([
+            "index.\$geo.html",
+            "index.htm",
+            "index.html"
+        ])
+        assert webservice.indexMode == IndexMode.auto
+        assert webservice.includeRefs.size() == 2
+        assert webservice.includeRefs.containsAll([
+            "webdav-test1.com",
+            "auth-test1.com"
+        ])
+
+        assert webservice.expiresDuration.toString() == "PT86400S"
+        assert webservice.enabledAccessLog == true
+        assert webservice.headersValues.size() == 1
+        assert webservice.headersValues["Cache-Control"] == "public"
     }
 }

@@ -24,7 +24,7 @@ import javax.inject.Provider;
 import com.anrisoftware.sscontrol.httpd.webservice.WebServiceFactory;
 
 /**
- * <i>WebDAV</i> service factory provider.
+ * Static files service factory provider.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0

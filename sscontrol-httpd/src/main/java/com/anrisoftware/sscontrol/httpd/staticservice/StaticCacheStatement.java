@@ -16,31 +16,30 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.service
+package com.anrisoftware.sscontrol.httpd.staticservice;
 
-httpd {
-    domain "test1.com", address: "192.168.0.50", {
+import com.anrisoftware.sscontrol.core.groovy.StatementsEnumToString;
 
-        // add (jpg|png|gif|jpeg|...) cache
-        setup "static-cache", id: "static-cache-test1.com", location: "/static", {
+/**
+ * Static cache files service statements.
+ *
+ * @author Erwin Mueller, erwin.mueller@deventm.org
+ * @since 1.0
+ */
+enum StaticCacheStatement {
 
-            // set index files
-            index files: "index.\$geo.html, index.htm, index.html"
+    EXPIRES_KEY,
 
-            // set auto index
-            index mode: IndexMode.auto
+    ACCESS_KEY,
 
-            // include WebDAV and Auth configuration
-            include refs: "webdav-test1.com, auth-test1.com"
+    LOG_KEY,
 
-            // set expires duration
-            expires "P1D"
+    HEADERS_KEY,
 
-            // disable access log
-            access log: yes
+    VALUE_KEY;
 
-            // adds the headers
-            headers "Cache-Control", value: "public"
-        }
+    @Override
+    public String toString() {
+        return StatementsEnumToString.toString(this);
     }
 }

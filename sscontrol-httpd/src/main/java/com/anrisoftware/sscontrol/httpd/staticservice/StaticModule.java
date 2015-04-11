@@ -38,6 +38,9 @@ public class StaticModule extends AbstractModule {
     protected void configure() {
         install(new FactoryModuleBuilder().implement(WebService.class,
                 StaticServiceImpl.class).build(StaticServiceFactory.class));
+        install(new FactoryModuleBuilder().implement(WebService.class,
+                StaticCacheServiceImpl.class).build(
+                StaticCacheServiceFactory.class));
         bindService();
     }
 
@@ -47,5 +50,7 @@ public class StaticModule extends AbstractModule {
                 WebServiceFactory.class);
         mapbinder.addBinding(StaticServiceImpl.SERVICE_NAME).toProvider(
                 StaticServiceProvider.class);
+        mapbinder.addBinding(StaticCacheServiceImpl.SERVICE_NAME).toProvider(
+                StaticCacheServiceProvider.class);
     }
 }

@@ -25,7 +25,7 @@ import com.anrisoftware.sscontrol.httpd.webservice.WebService;
 import com.anrisoftware.sscontrol.httpd.webservice.WebServiceFactory;
 
 /**
- * Factory to create the <i>WebDAV</i> service.
+ * Factory to create the static files service.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
@@ -33,7 +33,7 @@ import com.anrisoftware.sscontrol.httpd.webservice.WebServiceFactory;
 public interface StaticServiceFactory extends WebServiceFactory {
 
     /**
-     * Creates the <i>WebDAV</i> service.
+     * Creates the static files service.
      *
      * @return the {@link WebService}.
      */

@@ -16,31 +16,27 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.service
+package com.anrisoftware.sscontrol.httpd.staticservice;
 
-httpd {
-    domain "test1.com", address: "192.168.0.50", {
+import java.util.Map;
 
-        // add (jpg|png|gif|jpeg|...) cache
-        setup "static-cache", id: "static-cache-test1.com", location: "/static", {
+import com.anrisoftware.sscontrol.httpd.domain.Domain;
+import com.anrisoftware.sscontrol.httpd.webservice.WebService;
+import com.anrisoftware.sscontrol.httpd.webservice.WebServiceFactory;
 
-            // set index files
-            index files: "index.\$geo.html, index.htm, index.html"
+/**
+ * Factory to create the static cache files service.
+ *
+ * @author Erwin Mueller, erwin.mueller@deventm.org
+ * @since 1.0
+ */
+public interface StaticCacheServiceFactory extends WebServiceFactory {
 
-            // set auto index
-            index mode: IndexMode.auto
-
-            // include WebDAV and Auth configuration
-            include refs: "webdav-test1.com, auth-test1.com"
-
-            // set expires duration
-            expires "P1D"
-
-            // disable access log
-            access log: yes
-
-            // adds the headers
-            headers "Cache-Control", value: "public"
-        }
-    }
+    /**
+     * Creates the static cache files service.
+     *
+     * @return the {@link WebService}.
+     */
+    @Override
+    WebService create(Map<String, Object> args, Domain domain);
 }

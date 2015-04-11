@@ -18,6 +18,11 @@
  */
 package com.anrisoftware.sscontrol.httpd.staticservice;
 
+import static com.anrisoftware.sscontrol.httpd.staticservice.StaticCacheStatement.ACCESS_KEY;
+import static com.anrisoftware.sscontrol.httpd.staticservice.StaticCacheStatement.EXPIRES_KEY;
+import static com.anrisoftware.sscontrol.httpd.staticservice.StaticCacheStatement.HEADERS_KEY;
+import static com.anrisoftware.sscontrol.httpd.staticservice.StaticCacheStatement.LOG_KEY;
+import static com.anrisoftware.sscontrol.httpd.staticservice.StaticCacheStatement.VALUE_KEY;
 import static com.anrisoftware.sscontrol.httpd.staticservice.StaticStatement.FILES_KEY;
 import static com.anrisoftware.sscontrol.httpd.staticservice.StaticStatement.INCLUDE_KEY;
 import static com.anrisoftware.sscontrol.httpd.staticservice.StaticStatement.INDEX_KEY;
@@ -25,41 +30,56 @@ import static com.anrisoftware.sscontrol.httpd.staticservice.StaticStatement.LOC
 import static com.anrisoftware.sscontrol.httpd.staticservice.StaticStatement.MODE_KEY;
 import static com.anrisoftware.sscontrol.httpd.staticservice.StaticStatement.REFS_KEY;
 
+import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
 
+import org.joda.time.Duration;
+
+import com.anrisoftware.globalpom.format.duration.DurationFormatFactory;
 import com.anrisoftware.sscontrol.core.api.ServiceException;
 import com.anrisoftware.sscontrol.core.groovy.StatementsException;
 import com.anrisoftware.sscontrol.core.groovy.StatementsMap;
+import com.anrisoftware.sscontrol.core.groovy.StatementsTable;
+import com.anrisoftware.sscontrol.core.groovy.StatementsTableFactory;
+import com.anrisoftware.sscontrol.core.yesno.YesNoFlag;
 import com.anrisoftware.sscontrol.httpd.domain.Domain;
 import com.anrisoftware.sscontrol.httpd.webserviceargs.DefaultWebService;
 import com.anrisoftware.sscontrol.httpd.webserviceargs.DefaultWebServiceFactory;
 import com.google.inject.assistedinject.Assisted;
 
 /**
- * Static files service.
+ * Static cache files service.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class StaticServiceImpl implements StaticService {
+class StaticCacheServiceImpl implements StaticCacheService {
 
     /**
-     * Static files service name.
+     * Static cache files service name.
      */
-    public static final String SERVICE_NAME = "static";
+    public static final String SERVICE_NAME = "static-cache";
 
     private final DefaultWebService service;
 
     private final StatementsMap statementsMap;
 
+    @Inject
+    private StaticCacheServiceImplLogger log;
+
+    @Inject
+    private DurationFormatFactory durationFormatFactory;
+
+    private StatementsTable statementsTable;
+
     /**
-     * @see StaticServiceFactory#create(Map, Domain)
+     * @see StaticCacheServiceFactory#create(Map, Domain)
      */
     @Inject
-    StaticServiceImpl(DefaultWebServiceFactory factory,
+    StaticCacheServiceImpl(DefaultWebServiceFactory factory,
             @Assisted Map<String, Object> args, @Assisted Domain domain) {
         this.service = factory.create(SERVICE_NAME, args, domain);
         setupStatements(service.getStatementsMap(), args);
@@ -67,14 +87,25 @@ class StaticServiceImpl implements StaticService {
     }
 
     private void setupStatements(StatementsMap map, Map<String, Object> args) {
-        map.addAllowed(LOCATION_KEY, INDEX_KEY, INCLUDE_KEY);
-        map.setAllowValue(true, LOCATION_KEY);
+        map.addAllowed(LOCATION_KEY, INDEX_KEY, INCLUDE_KEY, EXPIRES_KEY,
+                ACCESS_KEY, HEADERS_KEY);
+        map.setAllowValue(true, LOCATION_KEY, EXPIRES_KEY, HEADERS_KEY);
         map.addAllowedKeys(INDEX_KEY, FILES_KEY, MODE_KEY);
         map.addAllowedKeys(INCLUDE_KEY, REFS_KEY);
+        map.addAllowedKeys(ACCESS_KEY, LOG_KEY);
+        map.setAllowMultiValue(true, HEADERS_KEY);
         if (args.containsKey(LOCATION_KEY.toString())) {
             map.putValue(LOCATION_KEY.toString(),
                     args.get(LOCATION_KEY.toString()));
         }
+    }
+
+    @Inject
+    public void setStatementsTable(StatementsTableFactory factory) {
+        StatementsTable table = factory.create(this, SERVICE_NAME);
+        table.addAllowed(HEADERS_KEY);
+        table.addAllowedKeys(HEADERS_KEY, VALUE_KEY);
+        this.statementsTable = table;
     }
 
     @Override
@@ -152,13 +183,46 @@ class StaticServiceImpl implements StaticService {
         return statementsMap.mapValueAsStringList(INCLUDE_KEY, REFS_KEY);
     }
 
+    @Override
+    public Duration getExpiresDuration() throws ServiceException {
+        Object value = statementsMap.value(EXPIRES_KEY);
+        if (value instanceof Duration) {
+            return (Duration) value;
+        }
+        if (value != null) {
+            try {
+                return durationFormatFactory.create().parse(value.toString());
+            } catch (ParseException e) {
+                throw log.errorParseDuration(this, e);
+            }
+        } else {
+            return null;
+        }
+    }
+
+    @Override
+    public Boolean getEnabledAccessLog() {
+        Object value = statementsMap.mapValue(ACCESS_KEY, LOG_KEY);
+        if (value instanceof YesNoFlag) {
+            return ((YesNoFlag) value).asBoolean();
+        }
+        return (Boolean) value;
+    }
+
+    @Override
+    public Map<String, Object> getHeadersValues() {
+        return statementsTable.tableKeys(HEADERS_KEY, VALUE_KEY);
+    }
+
     /**
      * Redirects to the statements map and table.
      */
-    public Object methodMissing(String name, Object args)
-            throws StatementsException {
-        service.methodMissing(name, args);
-        return null;
+    public Object methodMissing(String name, Object args) {
+        try {
+            return service.methodMissing(name, args);
+        } catch (StatementsException e) {
+            return statementsTable.methodMissing(name, args);
+        }
     }
 
     @Override

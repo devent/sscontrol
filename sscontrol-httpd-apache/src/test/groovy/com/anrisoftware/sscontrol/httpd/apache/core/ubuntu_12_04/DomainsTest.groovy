@@ -52,7 +52,7 @@ class DomainsTest extends WebServiceTestEnvironment {
         stopCommand.createCommand tmpdir
         registry.allServices.each { it.call() }
 
-        assertStringContent simpleRuncommandsLogExpected.replaced(tmpdir, tmpdir, "/tmp").replaceAll(/\d+/, 'time'), simpleRuncommandsLogExpected.toString()
+        assertStringContent simpleRuncommandsLogExpected.replaced(tmpdir, tmpdir, "/tmp").replaceAll(/\d{2,}/, 'time'), simpleRuncommandsLogExpected.toString()
         assertFileContent simpleApacheRestartOutExpected.asFile(tmpdir), simpleApacheRestartOutExpected
         assertFileContent simpleApacheStopOutExpected.asFile(tmpdir), simpleApacheStopOutExpected
         assertFileContent simpleDefaultConfExpected.asFile(tmpdir), simpleDefaultConfExpected

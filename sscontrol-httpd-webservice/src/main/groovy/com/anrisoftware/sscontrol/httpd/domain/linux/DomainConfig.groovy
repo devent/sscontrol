@@ -30,6 +30,7 @@ import org.apache.commons.lang3.StringUtils
 import com.anrisoftware.sscontrol.core.service.LinuxScript
 import com.anrisoftware.sscontrol.httpd.domain.Domain
 import com.anrisoftware.sscontrol.httpd.user.DomainUser
+import com.anrisoftware.sscontrol.scripts.changefile.ChangeFileModFactory
 import com.anrisoftware.sscontrol.scripts.changefile.ChangeFileOwnerFactory
 import com.anrisoftware.sscontrol.scripts.killprocess.KillProcessFactory
 import com.anrisoftware.sscontrol.scripts.localuser.LocalChangeGroupFactory
@@ -53,6 +54,9 @@ class DomainConfig {
 
     @Inject
     ChangeFileOwnerFactory changeFileOwnerFactory
+
+    @Inject
+    ChangeFileModFactory changeFileModFactory
 
     @Inject
     LocalGroupAddFactory localGroupAddFactory
@@ -139,14 +143,22 @@ class DomainConfig {
 
     void createWebDir(Domain domain) {
         def user = domain.domainUser
-        webDir(domain).mkdirs()
+        def webDir = webDir(domain)
+        webDir.mkdirs()
         changeFileOwnerFactory.create(
                 log: log,
                 runCommands: runCommands,
                 command: chownCommand,
                 owner: user.name,
                 ownerGroup: user.group,
-                files: webDir(domain),
+                files: webDir,
+                this, threads)()
+        changeFileModFactory.create(
+                log: log,
+                runCommands: runCommands,
+                command: chmodCommand,
+                mod: "u=rwx,g=rwx,o=rx",
+                files: webDir,
                 this, threads)()
     }
 

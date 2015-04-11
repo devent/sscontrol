@@ -51,7 +51,7 @@ class DomainsTest extends ScriptTestEnvironment {
         log.info "Run service again to ensure that configuration is not set double."
         registry.allServices.each { it.call() }
 
-        assertStringContent domainsRuncommandsLogExpected.replaced(tmpdir, tmpdir, "/tmp").replaceAll(/\d+/, 'time'), domainsRuncommandsLogExpected.toString()
+        assertStringContent domainsRuncommandsLogExpected.replaced(tmpdir, tmpdir, "/tmp").replaceAll(/\d{2,}/, 'time'), domainsRuncommandsLogExpected.toString()
         assertStringContent domainsNginxConfExpected.replaced(tmpdir, tmpdir, "/tmp"), domainsNginxConfExpected.toString()
         assertStringContent domainsDefaultsConfExpected.replaced(tmpdir, tmpdir, "/tmp"), domainsDefaultsConfExpected.toString()
         assert sitesAvailableDir.asFile(tmpdir).isDirectory()
@@ -83,7 +83,7 @@ class DomainsTest extends ScriptTestEnvironment {
 
         assertStringContent authbasicTest1comConfExpected.replaced(tmpdir, tmpdir, "/tmp"), authbasicTest1comConfExpected.toString()
         assertStringContent authbasicTest2comConfExpected.replaced(tmpdir, tmpdir, "/tmp"), authbasicTest2comConfExpected.toString()
-        assertStringContent authbasicRuncommandsLogExpected.replaced(tmpdir, tmpdir, "/tmp").replaceAll(/\d+/, 'time'), authbasicRuncommandsLogExpected.toString()
+        assertStringContent authbasicRuncommandsLogExpected.replaced(tmpdir, tmpdir, "/tmp").replaceAll(/\d{2,}/, 'time'), authbasicRuncommandsLogExpected.toString()
     }
 
     @Test
@@ -135,7 +135,7 @@ class DomainsTest extends ScriptTestEnvironment {
         log.info "Run service again to ensure that configuration is not set double."
         registry.allServices.each { it.call() }
 
-        assertStringContent usersExistingRuncommandsLogExpected.replaced(tmpdir, tmpdir, "/tmp").replaceAll(/(\d+)(.*)/, '<time>$2'), usersExistingRuncommandsLogExpected.toString()
+        assertStringContent usersExistingRuncommandsLogExpected.replaced(tmpdir, tmpdir, "/tmp").replaceAll(/\d{2,}/, 'time'), usersExistingRuncommandsLogExpected.toString()
         assert sitesAvailableDir.asFile(tmpdir).isDirectory()
         assert sitesEnabledDir.asFile(tmpdir).isDirectory()
         assertStringContent usersExistingGroupModOutExpected.replaced(tmpdir, tmpdir, "/tmp"), usersExistingGroupModOutExpected.toString()
@@ -164,7 +164,7 @@ class DomainsTest extends ScriptTestEnvironment {
         log.info "Run service again to ensure that configuration is not set double."
         registry.allServices.each { it.call() }
 
-        assertStringContent thinUserExistingRuncommandsLogExpected.replaced(tmpdir, tmpdir, "/tmp").replaceAll(/(\d+)(.*)/, '<time>$2'), thinUserExistingRuncommandsLogExpected.toString()
+        assertStringContent thinUserExistingRuncommandsLogExpected.replaced(tmpdir, tmpdir, "/tmp").replaceAll(/\d{2,}/, 'time'), thinUserExistingRuncommandsLogExpected.toString()
         assertStringContent thinUserExistingGroupModOutExpected.replaced(tmpdir, tmpdir, "/tmp"), thinUserExistingGroupModOutExpected.toString()
         assertStringContent thinUserExistingUserModOutExpected.replaced(tmpdir, tmpdir, "/tmp"), thinUserExistingUserModOutExpected.toString()
         assert thinUserExistingUseraddOutExpected.asFile(tmpdir).isFile() == false
@@ -190,7 +190,7 @@ class DomainsTest extends ScriptTestEnvironment {
         log.info "Run service again to ensure that configuration is not set double."
         registry.allServices.each { it.call() }
 
-        assertStringContent usedportsRuncommandsLogExpected.replaced(tmpdir, tmpdir, "/tmp").replaceAll(/(\d+)(.*)/, '<time>$2'), usedportsRuncommandsLogExpected.toString()
+        assertStringContent usedportsRuncommandsLogExpected.replaced(tmpdir, tmpdir, "/tmp").replaceAll(/\d{2,}/, 'time'), usedportsRuncommandsLogExpected.toString()
     }
 
     @Test
@@ -207,6 +207,6 @@ class DomainsTest extends ScriptTestEnvironment {
         log.info "Run service again to ensure that configuration is not set double."
         registry.allServices.each { it.call() }
 
-        assertStringContent usedportsproxyRuncommandsLogExpected.replaced(tmpdir, tmpdir, "/tmp").replaceAll(/(\d+)(.*)/, '<time>$2'), usedportsproxyRuncommandsLogExpected.toString()
+        assertStringContent usedportsproxyRuncommandsLogExpected.replaced(tmpdir, tmpdir, "/tmp").replaceAll(/\d{2,}/, 'time'), usedportsproxyRuncommandsLogExpected.toString()
     }
 }

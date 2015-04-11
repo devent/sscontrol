@@ -50,7 +50,6 @@ class UserRefDomainTest extends ScriptTestEnvironment {
         log.info "Run service again to ensure that configuration is not set double."
         registry.allServices.each { it.call() }
 
-        assertStringContent runcommandsLogExpected.replaced(tmpdir, tmpdir, "/tmp").replaceAll(/(\d+)(.*)/, '<time>$2'), runcommandsLogExpected.toString()
         assertStringContent nginxConfExpected.replaced(tmpdir, tmpdir, "/tmp"), nginxConfExpected.toString()
         assertStringContent robobeeConfExpected.replaced(tmpdir, tmpdir, "/tmp"), robobeeConfExpected.toString()
         assert sitesAvailableDir.asFile(tmpdir).isDirectory()
@@ -62,6 +61,7 @@ class UserRefDomainTest extends ScriptTestEnvironment {
         assertStringContent wwwtest3comConf.replaced(tmpdir, tmpdir, "/tmp"), wwwtest3comConf.toString()
         assertStringContent test4comConf.replaced(tmpdir, tmpdir, "/tmp"), test4comConf.toString()
         assertStringContent wwwtest4comConf.replaced(tmpdir, tmpdir, "/tmp"), wwwtest4comConf.toString()
+        assertStringContent runcommandsLogExpected.replaced(tmpdir, tmpdir, "/tmp").replaceAll(/\d{2,}/, 'time'), runcommandsLogExpected.toString()
         assertStringContent lnOutExpected.replaced(tmpdir, tmpdir, "/tmp"), lnOutExpected.toString()
         assertFileContent nginxOutExpected.asFile(tmpdir), nginxOutExpected
         assertFileContent aptitudeOutExpected.asFile(tmpdir), aptitudeOutExpected

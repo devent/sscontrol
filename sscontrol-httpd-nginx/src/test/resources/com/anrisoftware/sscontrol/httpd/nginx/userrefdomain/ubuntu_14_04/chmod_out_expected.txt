@@ -1,4 +1,18 @@
+u=rwx,g=rwx,o=rx /tmp/var/www/test1.com/web
+u=rwx,g=rwx,o=rx /tmp/var/www/www.test1.com/web
+u=rwx,g=rwx,o=rx /tmp/var/www/test2.com/web
+u=rwx,g=rwx,o=rx /tmp/var/www/test3.com/web
+u=rwx,g=rwx,o=rx /tmp/var/www/www.test3.com/web
+u=rwx,g=rwx,o=rx /tmp/var/www/test4.com/web
+u=rwx,g=rwx,o=rx /tmp/var/www/www.test4.com/web
 400 /tmp/var/www/test1.com/ssl/cert_crt.txt /tmp/var/www/test1.com/ssl/cert_key.txt
 400 /tmp/var/www/test2.com/ssl/cert_crt.txt /tmp/var/www/test2.com/ssl/cert_key.txt
+u=rwx,g=rwx,o=rx /tmp/var/www/test1.com/web
+u=rwx,g=rwx,o=rx /tmp/var/www/www.test1.com/web
+u=rwx,g=rwx,o=rx /tmp/var/www/test2.com/web
+u=rwx,g=rwx,o=rx /tmp/var/www/test3.com/web
+u=rwx,g=rwx,o=rx /tmp/var/www/www.test3.com/web
+u=rwx,g=rwx,o=rx /tmp/var/www/test4.com/web
+u=rwx,g=rwx,o=rx /tmp/var/www/www.test4.com/web
 400 /tmp/var/www/test1.com/ssl/cert_crt.txt /tmp/var/www/test1.com/ssl/cert_key.txt
 400 /tmp/var/www/test2.com/ssl/cert_crt.txt /tmp/var/www/test2.com/ssl/cert_key.txt

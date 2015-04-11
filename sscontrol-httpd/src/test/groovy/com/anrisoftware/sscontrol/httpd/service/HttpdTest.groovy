@@ -98,6 +98,7 @@ class HttpdTest extends HttpdTestEnvironment {
 
         AuthFileService auth = service.domains[0].services[0]
         assert auth.name == "auth-file"
+        assert auth.id == "auth-test1.com"
         assert auth.auth == "Private Directory"
         assert auth.location == "/private"
         assert auth.type == AuthType.digest

@@ -45,7 +45,7 @@ public class StaticModule extends AbstractModule {
         MapBinder<String, WebServiceFactory> mapbinder;
         mapbinder = newMapBinder(binder(), String.class,
                 WebServiceFactory.class);
-        mapbinder.addBinding(SERVICE_NAME).toProvider(
+        mapbinder.addBinding(StaticServiceImpl.SERVICE_NAME).toProvider(
                 StaticServiceProvider.class);
     }
 }

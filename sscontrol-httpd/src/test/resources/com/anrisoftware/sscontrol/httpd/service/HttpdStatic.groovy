@@ -20,23 +20,18 @@ package com.anrisoftware.sscontrol.httpd.service
 
 httpd {
     domain "test1.com", address: "192.168.0.50", {
+
+        // service static files
         setup "static", id: "static-test1.com", location: "/static", {
 
-            // set index
+            // set index files
             index files: "index.\$geo.html, index.htm, index.html"
+
+            // set auto index
             index mode: IndexMode.auto
 
-            // set expires duration
-            expires "P1D"
-
-            // disable access log
-            access log: no
-
-            // adds the headers
-            headers "Cache-Control: public"
-
-            // add jpg|png|gif|jpeg|...| cache
-            cache staticFiles: true
+            // include WebDAV and Auth configuration
+            include refs: "webdav-test1.com, auth-test1.com"
         }
     }
 }

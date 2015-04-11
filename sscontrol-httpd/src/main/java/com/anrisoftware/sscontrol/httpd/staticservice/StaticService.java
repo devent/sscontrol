@@ -18,6 +18,8 @@
  */
 package com.anrisoftware.sscontrol.httpd.staticservice;
 
+import java.util.List;
+
 import com.anrisoftware.sscontrol.httpd.webservice.WebService;
 
 /**
@@ -30,52 +32,73 @@ public interface StaticService extends WebService {
 
     /**
      * Returns the location.
+     *
+     * <pre>
+     * httpd {
+     *     domain "test1.com", address: "192.168.0.51", {
+     *         setup "static", location: "/private", {
+     *         }
+     *     }
+     * }
+     * </pre>
+     *
+     * @return the {@link String} location.
+     */
+    String getLocation();
+
+    /**
+     * Returns the index file names.
+     *
+     * <pre>
+     * httpd {
+     *     domain "test1.com", address: "192.168.0.51", {
+     *         setup "static", location: "/private", {
+     *             index files: "index.\$geo.html, index.htm, index.html"
+     *         }
+     *     }
+     * }
+     * </pre>
+     *
+     * @return the {@link List} list of index file {@link String} names or
+     *         {@code null}.
+     */
+    List<String> getIndexFiles();
+
+    /**
+     * Returns the index mode.
      * <p>
      *
      * <pre>
      * httpd {
      *     domain "test1.com", address: "192.168.0.51", {
      *         setup "static", location: "/private", {
+     *             index mode: IndexMode.auto
      *         }
      *     }
      * }
      * </pre>
      *
-     * @return the {@link String} location;
+     * @return the index {@link IndexMode} mode or {@code null}.
      */
-    String getLocation();
+    IndexMode getIndexMode();
 
     /**
-     * Returns the static files user.
+     * Returns the references of the defined web services to include in this
+     * static files service.
+     * <p>
      *
      * <pre>
      * httpd {
      *     domain "test1.com", address: "192.168.0.51", {
      *         setup "static", location: "/private", {
-     *             user "www-data", group: "www-data"
+     *             include refs: "webdav-test1.com, auth-test1.com"
      *         }
      *     }
      * }
      * </pre>
      *
-     * @return the user {@link String} name or {@code null}.
+     * @return the {@link List} list of {@link String} references or
+     *         {@code null}.
      */
-    String getUser();
-
-    /**
-     * Returns the static files group.
-     *
-     * <pre>
-     * httpd {
-     *     domain "test1.com", address: "192.168.0.51", {
-     *         setup "static", location: "/private", {
-     *             user "www-data", group: "www-data"
-     *         }
-     *     }
-     * }
-     * </pre>
-     *
-     * @return the group {@link String} name or {@code null}.
-     */
-    String getGroup();
+    List<String> getIncludeRefs();
 }

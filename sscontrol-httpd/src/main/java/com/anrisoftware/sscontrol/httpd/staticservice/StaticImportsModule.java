@@ -18,30 +18,33 @@
  */
 package com.anrisoftware.sscontrol.httpd.staticservice;
 
-import com.anrisoftware.sscontrol.core.groovy.StatementsEnumToString;
+import static com.google.inject.multibindings.Multibinder.newSetBinder;
+
+import org.codehaus.groovy.control.customizers.ImportCustomizer;
+
+import com.anrisoftware.sscontrol.core.groovy.ClassImporter;
+import com.google.inject.AbstractModule;
+import com.google.inject.multibindings.Multibinder;
 
 /**
- * Static files service statements.
+ * Static files service types import module.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-enum StaticStatement {
-
-    LOCATION_KEY,
-
-    INDEX_KEY,
-
-    FILES_KEY,
-
-    MODE_KEY,
-
-    INCLUDE_KEY,
-
-    REFS_KEY;
+public class StaticImportsModule extends AbstractModule {
 
     @Override
-    public String toString() {
-        return StatementsEnumToString.toString(this);
+    protected void configure() {
+        Multibinder<ClassImporter> b = newSetBinder(binder(),
+                ClassImporter.class);
+        b.addBinding().toInstance(new ClassImporter() {
+
+            @Override
+            public void importClass(ImportCustomizer customizer) {
+                customizer.addImports(IndexMode.class.getName());
+            }
+        });
     }
+
 }

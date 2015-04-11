@@ -45,6 +45,8 @@ enum ServicesResources {
     httpdUserMapScript("Httpd.groovy", ServicesResources.class.getResource("HttpdUserMap.groovy")),
     httpdUserRefDomainScript("Httpd.groovy", ServicesResources.class.getResource("HttpdUserRefDomain.groovy")),
     webdavScript("Httpd.groovy", ServicesResources.class.getResource("HttpdWebdav.groovy")),
+    staticScript("Httpd.groovy", ServicesResources.class.getResource("HttpdStatic.groovy")),
+    staticCacheScript("Httpd.groovy", ServicesResources.class.getResource("HttpdStaticCache.groovy")),
 
     ResourcesUtils resources
 

@@ -18,12 +18,12 @@
  */
 package com.anrisoftware.sscontrol.httpd.staticservice;
 
-import static com.anrisoftware.sscontrol.httpd.webdav.WebdavStatement.ACCESS_KEY;
-import static com.anrisoftware.sscontrol.httpd.webdav.WebdavStatement.ALL_KEY;
-import static com.anrisoftware.sscontrol.httpd.webdav.WebdavStatement.GROUP_KEY;
-import static com.anrisoftware.sscontrol.httpd.webdav.WebdavStatement.LOCATION_KEY;
-import static com.anrisoftware.sscontrol.httpd.webdav.WebdavStatement.METHODS_KEY;
-import static com.anrisoftware.sscontrol.httpd.webdav.WebdavStatement.USER_KEY;
+import static com.anrisoftware.sscontrol.httpd.staticservice.StaticStatement.FILES_KEY;
+import static com.anrisoftware.sscontrol.httpd.staticservice.StaticStatement.INCLUDE_KEY;
+import static com.anrisoftware.sscontrol.httpd.staticservice.StaticStatement.INDEX_KEY;
+import static com.anrisoftware.sscontrol.httpd.staticservice.StaticStatement.LOCATION_KEY;
+import static com.anrisoftware.sscontrol.httpd.staticservice.StaticStatement.MODE_KEY;
+import static com.anrisoftware.sscontrol.httpd.staticservice.StaticStatement.REFS_KEY;
 
 import java.util.List;
 import java.util.Map;
@@ -39,7 +39,7 @@ import com.anrisoftware.sscontrol.httpd.webserviceargs.DefaultWebServiceFactory;
 import com.google.inject.assistedinject.Assisted;
 
 /**
- * <i>WebDAV</i> service.
+ * Static files service.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
@@ -47,9 +47,9 @@ import com.google.inject.assistedinject.Assisted;
 class StaticServiceImpl implements StaticService {
 
     /**
-     * <i>WebDAV</i> service name.
+     * Static files service name.
      */
-    public static final String SERVICE_NAME = "webdav";
+    public static final String SERVICE_NAME = "static";
 
     private final DefaultWebService service;
 
@@ -67,9 +67,10 @@ class StaticServiceImpl implements StaticService {
     }
 
     private void setupStatements(StatementsMap map, Map<String, Object> args) {
-        map.addAllowed(LOCATION_KEY, METHODS_KEY, ACCESS_KEY);
-        map.setAllowValue(true, LOCATION_KEY, METHODS_KEY);
-        map.addAllowedKeys(ACCESS_KEY, USER_KEY, GROUP_KEY, ALL_KEY);
+        map.addAllowed(LOCATION_KEY, INDEX_KEY, INCLUDE_KEY);
+        map.setAllowValue(true, LOCATION_KEY);
+        map.addAllowedKeys(INDEX_KEY, FILES_KEY, MODE_KEY);
+        map.addAllowedKeys(INCLUDE_KEY, REFS_KEY);
         if (args.containsKey(LOCATION_KEY.toString())) {
             map.putValue(LOCATION_KEY.toString(),
                     args.get(LOCATION_KEY.toString()));
@@ -137,23 +138,18 @@ class StaticServiceImpl implements StaticService {
     }
 
     @Override
-    public List<String> getMethods() {
-        return statementsMap.valueAsStringList(METHODS_KEY);
+    public List<String> getIndexFiles() {
+        return statementsMap.mapValueAsStringList(INDEX_KEY, FILES_KEY);
     }
 
     @Override
-    public String getUserAccess() {
-        return statementsMap.mapValue(ACCESS_KEY, USER_KEY);
+    public IndexMode getIndexMode() {
+        return statementsMap.mapValue(INDEX_KEY, MODE_KEY);
     }
 
     @Override
-    public String getGroupAccess() {
-        return statementsMap.mapValue(ACCESS_KEY, GROUP_KEY);
-    }
-
-    @Override
-    public String getAllAccess() {
-        return statementsMap.mapValue(ACCESS_KEY, ALL_KEY);
+    public List<String> getIncludeRefs() {
+        return statementsMap.mapValueAsStringList(INCLUDE_KEY, REFS_KEY);
     }
 
     /**

@@ -16,27 +16,27 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.service
+package com.anrisoftware.sscontrol.httpd.staticservice;
 
-httpd {
-    domain "test1.com", address: "192.168.0.50", {
-        setup "static", id: "static-test1.com", location: "/static", {
+import java.util.Map;
 
-            // set index
-            index files: "index.\$geo.html, index.htm, index.html"
-            index mode: IndexMode.auto
+import com.anrisoftware.sscontrol.httpd.domain.Domain;
+import com.anrisoftware.sscontrol.httpd.webservice.WebService;
+import com.anrisoftware.sscontrol.httpd.webservice.WebServiceFactory;
 
-            // set expires duration
-            expires "P1D"
+/**
+ * Factory to create the <i>WebDAV</i> service.
+ *
+ * @author Erwin Mueller, erwin.mueller@deventm.org
+ * @since 1.0
+ */
+public interface StaticServiceFactory extends WebServiceFactory {
 
-            // disable access log
-            access log: no
-
-            // adds the headers
-            headers "Cache-Control: public"
-
-            // add jpg|png|gif|jpeg|...| cache
-            cache staticFiles: true
-        }
-    }
+    /**
+     * Creates the <i>WebDAV</i> service.
+     *
+     * @return the {@link WebService}.
+     */
+    @Override
+    WebService create(Map<String, Object> args, Domain domain);
 }

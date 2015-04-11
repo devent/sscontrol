@@ -12,7 +12,7 @@
 
 	<artifactId>sscontrol-httpd-roundcube</artifactId>
 	<name>RoboBee :: Httpd :: Roundcube</name>
-	<description>is a browser-based multilingual IMAP client. - http://roundcube.net/</description>
+	<description>Roundcube is a browser-based multilingual IMAP client. - http://roundcube.net/</description>
 	<inceptionYear>2014</inceptionYear>
 	<url>https://anrisoftware.com/projects/projects/sscontrol-httpd-roundcube</url>
 

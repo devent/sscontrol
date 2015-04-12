@@ -20,8 +20,14 @@ package com.anrisoftware.sscontrol.httpd.service
 
 httpd {
     domain "test1.com", address: "192.168.0.50", {
-        setup "webdav", id: "webdav-test1.com", location: "/webdav", {
+
+        // setup WebDAV
+        setup "webdav", id: "webdav-test1.com", alias: "/webdav", {
+
+            // WebDAV methods to support
             methods "PUT, DELETE, MKCOL, COPY, MOVE"
+
+            // permissions of created files
             access user: "rw", group: "rw", all: "r"
         }
     }

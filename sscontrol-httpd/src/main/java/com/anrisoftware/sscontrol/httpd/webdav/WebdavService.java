@@ -31,23 +31,6 @@ import com.anrisoftware.sscontrol.httpd.webservice.WebService;
 public interface WebdavService extends WebService {
 
     /**
-     * Returns the location.
-     * <p>
-     *
-     * <pre>
-     * httpd {
-     *     domain "test1.com", address: "192.168.0.51", {
-     *         setup "webdav", location: "/private", {
-     *         }
-     *     }
-     * }
-     * </pre>
-     *
-     * @return the {@link String} location;
-     */
-    String getLocation();
-
-    /**
      * Returns the allowed methods.
      *
      * <pre>

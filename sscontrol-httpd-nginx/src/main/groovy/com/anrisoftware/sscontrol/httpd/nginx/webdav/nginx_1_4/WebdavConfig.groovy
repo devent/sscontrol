@@ -110,7 +110,7 @@ abstract class WebdavConfig {
      */
     void createDomainConfig(Domain domain, WebdavService service, List serviceConfig) {
         def args = [:]
-        args.location = service.location
+        args.location = webdavLocation service
         args.userAccess = service.userAccess
         args.groupAccess = service.groupAccess
         args.allAccess = service.allAccess
@@ -119,6 +119,22 @@ abstract class WebdavConfig {
         def config = configTemplate.getText true, "domainWebdav", "args", args
         log.domainConfigCreated this, domain, config
         serviceConfig << config
+    }
+
+    /**
+     * Returns the <i>WebDAV</i> service location.
+     *
+     * @param service
+     *            the {@link WebdavService}.
+     *
+     * @return the location.
+     */
+    String webdavLocation(WebdavService service) {
+        String location = service.alias == null ? "" : service.alias
+        if (!location.empty && !location.startsWith("/")) {
+            location = "/$location"
+        }
+        return location
     }
 
     /**
@@ -133,10 +149,10 @@ abstract class WebdavConfig {
     void updatePermissions(Domain domain, WebdavService service) {
         def owner = nginxUser
         def group = nginxGroup
-        if (service.location == null) {
+        if (service.alias == null) {
             return
         }
-        def dir = new File(webDir(domain), service.location)
+        def dir = new File(webDir(domain), service.alias)
         dir.mkdirs()
         changeFileOwnerFactory.create(
                 log: log.log,

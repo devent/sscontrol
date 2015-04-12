@@ -50,10 +50,9 @@ class HttpdWebdavTest extends HttpdTestEnvironment {
         WebdavService webservice = domain.services[0]
         assert webservice.name == "webdav"
         assert webservice.id == "webdav-test1.com"
-        assert webservice.alias == null
+        assert webservice.alias == "webdav"
         assert webservice.ref == null
         assert webservice.refDomain == null
-        assert webservice.location == "/webdav"
         assert webservice.methods.containsAll([
             "PUT",
             "DELETE",

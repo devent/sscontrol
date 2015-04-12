@@ -21,7 +21,6 @@ package com.anrisoftware.sscontrol.httpd.webdav;
 import static com.anrisoftware.sscontrol.httpd.webdav.WebdavStatement.ACCESS_KEY;
 import static com.anrisoftware.sscontrol.httpd.webdav.WebdavStatement.ALL_KEY;
 import static com.anrisoftware.sscontrol.httpd.webdav.WebdavStatement.GROUP_KEY;
-import static com.anrisoftware.sscontrol.httpd.webdav.WebdavStatement.LOCATION_KEY;
 import static com.anrisoftware.sscontrol.httpd.webdav.WebdavStatement.METHODS_KEY;
 import static com.anrisoftware.sscontrol.httpd.webdav.WebdavStatement.USER_KEY;
 
@@ -67,13 +66,9 @@ class WebdavServiceImpl implements WebdavService {
     }
 
     private void setupStatements(StatementsMap map, Map<String, Object> args) {
-        map.addAllowed(LOCATION_KEY, METHODS_KEY, ACCESS_KEY);
-        map.setAllowValue(true, LOCATION_KEY, METHODS_KEY);
+        map.addAllowed(METHODS_KEY, ACCESS_KEY);
+        map.setAllowValue(true, METHODS_KEY);
         map.addAllowedKeys(ACCESS_KEY, USER_KEY, GROUP_KEY, ALL_KEY);
-        if (args.containsKey(LOCATION_KEY.toString())) {
-            map.putValue(LOCATION_KEY.toString(),
-                    args.get(LOCATION_KEY.toString()));
-        }
     }
 
     @Override
@@ -129,11 +124,6 @@ class WebdavServiceImpl implements WebdavService {
     @Override
     public String getPrefix() {
         return service.getPrefix();
-    }
-
-    @Override
-    public String getLocation() {
-        return statementsMap.value(LOCATION_KEY);
     }
 
     @Override

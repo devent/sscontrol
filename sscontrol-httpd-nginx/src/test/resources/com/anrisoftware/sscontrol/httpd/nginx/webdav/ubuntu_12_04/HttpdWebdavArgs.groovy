@@ -20,7 +20,7 @@ package com.anrisoftware.sscontrol.httpd.nginx.proxy.ubuntu_12_04
 
 httpd {
     domain "test1.com", address: "192.168.0.50", {
-        setup "webdav", id: "webdav-test1.com", location: "/webdav", {
+        setup "webdav", id: "webdav-test1.com", alias: "/webdav", {
             methods "PUT, DELETE, MKCOL, COPY, MOVE"
             access user: "rw", group: "rw", all: "r"
         }

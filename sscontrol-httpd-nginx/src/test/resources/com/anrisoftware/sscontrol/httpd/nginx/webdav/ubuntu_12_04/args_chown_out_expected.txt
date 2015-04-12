@@ -1,4 +1,4 @@
 web_001.web_001 /tmp/var/www/test1.com/web
--R www-data.www-data /tmp/var/www/test1.com/web/webdav
+-R nginx.nginx /tmp/var/www/test1.com/web/webdav
 web_001.web_001 /tmp/var/www/test1.com/web
--R www-data.www-data /tmp/var/www/test1.com/web/webdav
+-R nginx.nginx /tmp/var/www/test1.com/web/webdav

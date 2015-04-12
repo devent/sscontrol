@@ -28,8 +28,6 @@ import com.anrisoftware.sscontrol.core.groovy.StatementsEnumToString;
  */
 enum WebdavStatement {
 
-    LOCATION_KEY,
-
     METHODS_KEY,
 
     ACCESS_KEY,

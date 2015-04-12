@@ -21,13 +21,13 @@ package com.anrisoftware.sscontrol.httpd.staticservice;
 import static com.anrisoftware.sscontrol.httpd.staticservice.StaticCacheStatement.ACCESS_KEY;
 import static com.anrisoftware.sscontrol.httpd.staticservice.StaticCacheStatement.EXPIRES_KEY;
 import static com.anrisoftware.sscontrol.httpd.staticservice.StaticCacheStatement.HEADERS_KEY;
+import static com.anrisoftware.sscontrol.httpd.staticservice.StaticCacheStatement.INCLUDE_KEY;
 import static com.anrisoftware.sscontrol.httpd.staticservice.StaticCacheStatement.LOG_KEY;
+import static com.anrisoftware.sscontrol.httpd.staticservice.StaticCacheStatement.REFS_KEY;
 import static com.anrisoftware.sscontrol.httpd.staticservice.StaticCacheStatement.VALUE_KEY;
 import static com.anrisoftware.sscontrol.httpd.staticservice.StaticStatement.FILES_KEY;
-import static com.anrisoftware.sscontrol.httpd.staticservice.StaticStatement.INCLUDE_KEY;
 import static com.anrisoftware.sscontrol.httpd.staticservice.StaticStatement.INDEX_KEY;
 import static com.anrisoftware.sscontrol.httpd.staticservice.StaticStatement.MODE_KEY;
-import static com.anrisoftware.sscontrol.httpd.staticservice.StaticStatement.REFS_KEY;
 
 import java.text.ParseException;
 import java.util.List;

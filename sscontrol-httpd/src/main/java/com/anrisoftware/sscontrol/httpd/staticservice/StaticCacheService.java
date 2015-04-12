@@ -18,6 +18,7 @@
  */
 package com.anrisoftware.sscontrol.httpd.staticservice;
 
+import java.util.List;
 import java.util.Map;
 
 import org.joda.time.Duration;
@@ -38,7 +39,7 @@ public interface StaticCacheService extends StaticService {
      * <pre>
      * httpd {
      *     domain "test1.com", address: "192.168.0.51", {
-     *         setup "static-cache", location: "/private", {
+     *         setup "static-cache", alias: "/private", {
      *             expires "P1D"
      *         }
      *     }
@@ -58,7 +59,7 @@ public interface StaticCacheService extends StaticService {
      * <pre>
      * httpd {
      *     domain "test1.com", address: "192.168.0.51", {
-     *         setup "static-cache", location: "/private", {
+     *         setup "static-cache", alias: "/private", {
      *             access log: yes
      *         }
      *     }
@@ -75,7 +76,7 @@ public interface StaticCacheService extends StaticService {
      * <pre>
      * httpd {
      *     domain "test1.com", address: "192.168.0.51", {
-     *         setup "static-cache", location: "/private", {
+     *         setup "static-cache", alias: "/private", {
      *             headers "Cache-Control", value: public"
      *         }
      *     }
@@ -85,4 +86,24 @@ public interface StaticCacheService extends StaticService {
      * @return the {@link Map} of {@link String} headers to add or {@code null.}
      */
     Map<String, Object> getHeadersValues();
+
+    /**
+     * Returns the references of the defined web services to include in this
+     * static files service.
+     * <p>
+     *
+     * <pre>
+     * httpd {
+     *     domain "test1.com", address: "192.168.0.51", {
+     *         setup "static-cache", alias: "/private", {
+     *             include refs: "webdav-test1.com, auth-test1.com"
+     *         }
+     *     }
+     * }
+     * </pre>
+     *
+     * @return the {@link List} list of {@link String} references or
+     *         {@code null}.
+     */
+    List<String> getIncludeRefs();
 }

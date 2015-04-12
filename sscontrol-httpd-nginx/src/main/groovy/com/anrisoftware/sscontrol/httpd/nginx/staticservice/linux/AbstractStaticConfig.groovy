@@ -46,7 +46,7 @@ abstract class AbstractStaticConfig {
      */
     void setupDefaults(StaticService service) {
         if (service.indexFiles == null) {
-            index files: defaultIndexFiles.join(",")
+            service.index files: defaultIndexFiles.join(",")
         }
     }
 

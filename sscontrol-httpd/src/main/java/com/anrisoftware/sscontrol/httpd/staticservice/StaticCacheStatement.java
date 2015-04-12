@@ -36,7 +36,11 @@ enum StaticCacheStatement {
 
     HEADERS_KEY,
 
-    VALUE_KEY;
+    VALUE_KEY,
+
+    INCLUDE_KEY,
+
+    REFS_KEY;
 
     @Override
     public String toString() {

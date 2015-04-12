@@ -19,10 +19,8 @@
 package com.anrisoftware.sscontrol.httpd.staticservice;
 
 import static com.anrisoftware.sscontrol.httpd.staticservice.StaticStatement.FILES_KEY;
-import static com.anrisoftware.sscontrol.httpd.staticservice.StaticStatement.INCLUDE_KEY;
 import static com.anrisoftware.sscontrol.httpd.staticservice.StaticStatement.INDEX_KEY;
 import static com.anrisoftware.sscontrol.httpd.staticservice.StaticStatement.MODE_KEY;
-import static com.anrisoftware.sscontrol.httpd.staticservice.StaticStatement.REFS_KEY;
 
 import java.util.List;
 import java.util.Map;
@@ -66,9 +64,8 @@ class StaticServiceImpl implements StaticService {
     }
 
     private void setupStatements(StatementsMap map, Map<String, Object> args) {
-        map.addAllowed(INDEX_KEY, INCLUDE_KEY);
+        map.addAllowed(INDEX_KEY);
         map.addAllowedKeys(INDEX_KEY, FILES_KEY, MODE_KEY);
-        map.addAllowedKeys(INCLUDE_KEY, REFS_KEY);
     }
 
     @Override
@@ -134,11 +131,6 @@ class StaticServiceImpl implements StaticService {
     @Override
     public IndexMode getIndexMode() {
         return statementsMap.mapValue(INDEX_KEY, MODE_KEY);
-    }
-
-    @Override
-    public List<String> getIncludeRefs() {
-        return statementsMap.mapValueAsStringList(INCLUDE_KEY, REFS_KEY);
     }
 
     /**

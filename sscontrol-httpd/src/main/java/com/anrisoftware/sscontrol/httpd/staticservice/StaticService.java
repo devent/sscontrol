@@ -36,7 +36,7 @@ public interface StaticService extends WebService {
      * <pre>
      * httpd {
      *     domain "test1.com", address: "192.168.0.51", {
-     *         setup "static", location: "/private", {
+     *         setup "static", alias: "/private", {
      *             index files: "index.\$geo.html, index.htm, index.html"
      *         }
      *     }
@@ -55,7 +55,7 @@ public interface StaticService extends WebService {
      * <pre>
      * httpd {
      *     domain "test1.com", address: "192.168.0.51", {
-     *         setup "static", location: "/private", {
+     *         setup "static", alias: "/private", {
      *             index mode: IndexMode.auto
      *         }
      *     }
@@ -66,23 +66,4 @@ public interface StaticService extends WebService {
      */
     IndexMode getIndexMode();
 
-    /**
-     * Returns the references of the defined web services to include in this
-     * static files service.
-     * <p>
-     *
-     * <pre>
-     * httpd {
-     *     domain "test1.com", address: "192.168.0.51", {
-     *         setup "static", location: "/private", {
-     *             include refs: "webdav-test1.com, auth-test1.com"
-     *         }
-     *     }
-     * }
-     * </pre>
-     *
-     * @return the {@link List} list of {@link String} references or
-     *         {@code null}.
-     */
-    List<String> getIncludeRefs();
 }

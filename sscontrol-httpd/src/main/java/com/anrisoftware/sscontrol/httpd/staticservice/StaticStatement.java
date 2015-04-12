@@ -32,11 +32,7 @@ enum StaticStatement {
 
     FILES_KEY,
 
-    MODE_KEY,
-
-    INCLUDE_KEY,
-
-    REFS_KEY;
+    MODE_KEY;
 
     @Override
     public String toString() {

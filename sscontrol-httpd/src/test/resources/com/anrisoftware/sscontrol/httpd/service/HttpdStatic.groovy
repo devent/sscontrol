@@ -29,9 +29,6 @@ httpd {
 
             // set auto index
             index mode: IndexMode.auto
-
-            // include WebDAV and Auth configuration
-            include refs: "webdav-test1.com, auth-test1.com"
         }
     }
 }

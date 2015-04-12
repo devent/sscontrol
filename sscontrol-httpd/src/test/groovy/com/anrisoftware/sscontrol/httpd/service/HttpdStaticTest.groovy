@@ -59,11 +59,6 @@ class HttpdStaticTest extends HttpdTestEnvironment {
             "index.html"
         ])
         assert webservice.indexMode == IndexMode.auto
-        assert webservice.includeRefs.size() == 2
-        assert webservice.includeRefs.containsAll([
-            "webdav-test1.com",
-            "auth-test1.com"
-        ])
     }
 
     @Test
@@ -96,5 +91,10 @@ class HttpdStaticTest extends HttpdTestEnvironment {
         assert webservice.enabledAccessLog == true
         assert webservice.headersValues.size() == 1
         assert webservice.headersValues["Cache-Control"] == "public"
+        assert webservice.includeRefs.size() == 2
+        assert webservice.includeRefs.containsAll([
+            "webdav-test1.com",
+            "auth-test1.com"
+        ])
     }
 }

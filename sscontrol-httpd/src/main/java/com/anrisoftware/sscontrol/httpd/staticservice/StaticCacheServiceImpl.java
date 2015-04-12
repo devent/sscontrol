@@ -26,7 +26,6 @@ import static com.anrisoftware.sscontrol.httpd.staticservice.StaticCacheStatemen
 import static com.anrisoftware.sscontrol.httpd.staticservice.StaticStatement.FILES_KEY;
 import static com.anrisoftware.sscontrol.httpd.staticservice.StaticStatement.INCLUDE_KEY;
 import static com.anrisoftware.sscontrol.httpd.staticservice.StaticStatement.INDEX_KEY;
-import static com.anrisoftware.sscontrol.httpd.staticservice.StaticStatement.LOCATION_KEY;
 import static com.anrisoftware.sscontrol.httpd.staticservice.StaticStatement.MODE_KEY;
 import static com.anrisoftware.sscontrol.httpd.staticservice.StaticStatement.REFS_KEY;
 
@@ -87,17 +86,13 @@ class StaticCacheServiceImpl implements StaticCacheService {
     }
 
     private void setupStatements(StatementsMap map, Map<String, Object> args) {
-        map.addAllowed(LOCATION_KEY, INDEX_KEY, INCLUDE_KEY, EXPIRES_KEY,
+        map.addAllowed(INDEX_KEY, INCLUDE_KEY, EXPIRES_KEY,
                 ACCESS_KEY, HEADERS_KEY);
-        map.setAllowValue(true, LOCATION_KEY, EXPIRES_KEY, HEADERS_KEY);
+        map.setAllowValue(true, EXPIRES_KEY, HEADERS_KEY);
         map.addAllowedKeys(INDEX_KEY, FILES_KEY, MODE_KEY);
         map.addAllowedKeys(INCLUDE_KEY, REFS_KEY);
         map.addAllowedKeys(ACCESS_KEY, LOG_KEY);
         map.setAllowMultiValue(true, HEADERS_KEY);
-        if (args.containsKey(LOCATION_KEY.toString())) {
-            map.putValue(LOCATION_KEY.toString(),
-                    args.get(LOCATION_KEY.toString()));
-        }
     }
 
     @Inject
@@ -161,11 +156,6 @@ class StaticCacheServiceImpl implements StaticCacheService {
     @Override
     public String getPrefix() {
         return service.getPrefix();
-    }
-
-    @Override
-    public String getLocation() {
-        return statementsMap.value(LOCATION_KEY);
     }
 
     @Override

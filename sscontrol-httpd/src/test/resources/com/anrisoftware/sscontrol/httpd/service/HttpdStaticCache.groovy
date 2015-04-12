@@ -22,7 +22,7 @@ httpd {
     domain "test1.com", address: "192.168.0.50", {
 
         // add (jpg|png|gif|jpeg|...) cache
-        setup "static-cache", id: "static-cache-test1.com", location: "/static", {
+        setup "static-cache", id: "static-cache-test1.com", alias: "/static", {
 
             // set index files
             index files: "index.\$geo.html, index.htm, index.html"

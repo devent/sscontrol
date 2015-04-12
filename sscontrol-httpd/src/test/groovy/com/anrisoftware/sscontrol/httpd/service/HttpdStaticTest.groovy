@@ -51,7 +51,7 @@ class HttpdStaticTest extends HttpdTestEnvironment {
         StaticService webservice = service.domains[0].services[0]
         assert webservice.name == "static"
         assert webservice.id == "static-test1.com"
-        assert webservice.location == "/static"
+        assert webservice.alias == "static"
         assert webservice.indexFiles.size() == 3
         assert webservice.indexFiles.containsAll([
             "index.\$geo.html",
@@ -78,7 +78,7 @@ class HttpdStaticTest extends HttpdTestEnvironment {
         StaticCacheService webservice = service.domains[0].services[0]
         assert webservice.name == "static-cache"
         assert webservice.id == "static-cache-test1.com"
-        assert webservice.location == "/static"
+        assert webservice.alias == "static"
         assert webservice.indexFiles.size() == 3
         assert webservice.indexFiles.containsAll([
             "index.\$geo.html",

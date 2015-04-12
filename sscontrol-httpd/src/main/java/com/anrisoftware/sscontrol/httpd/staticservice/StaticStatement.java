@@ -28,8 +28,6 @@ import com.anrisoftware.sscontrol.core.groovy.StatementsEnumToString;
  */
 enum StaticStatement {
 
-    LOCATION_KEY,
-
     INDEX_KEY,
 
     FILES_KEY,

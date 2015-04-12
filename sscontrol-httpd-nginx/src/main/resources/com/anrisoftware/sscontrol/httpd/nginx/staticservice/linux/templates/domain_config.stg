@@ -1,0 +1,10 @@
+domainConfig(args) ::= <<
+<! - args.location - !>
+<! - args.indexFiles - !>
+<! - args.autoIndex - !>
+location <args.location>/ {
+    index <args.indexFiles;separator=" ">;
+    autoindex <if(args.autoIndex)>on<else>off<endif>;
+}
+
+>>

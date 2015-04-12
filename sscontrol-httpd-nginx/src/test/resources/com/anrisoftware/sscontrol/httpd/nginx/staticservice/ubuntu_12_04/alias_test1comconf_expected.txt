@@ -1,0 +1,22 @@
+server {
+    # domain test1.com
+    listen 192.168.0.50:80;
+    root /tmp/var/www/test1.com/web;
+    index index.php index.html index.htm;
+    server_name test1.com;
+    client_max_body_size 2M;
+
+    location /static/ {
+        index index.$geo.html index.htm index.html;
+        autoindex on;
+    }
+
+    # error page
+    error_page 500 502 503 504 /50x.html;
+
+    # error page location
+    location = /50x.html {
+        root /usr/share/nginx/html;
+    }
+
+}

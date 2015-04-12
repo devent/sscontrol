@@ -31,22 +31,6 @@ import com.anrisoftware.sscontrol.httpd.webservice.WebService;
 public interface StaticService extends WebService {
 
     /**
-     * Returns the location.
-     *
-     * <pre>
-     * httpd {
-     *     domain "test1.com", address: "192.168.0.51", {
-     *         setup "static", location: "/private", {
-     *         }
-     *     }
-     * }
-     * </pre>
-     *
-     * @return the {@link String} location.
-     */
-    String getLocation();
-
-    /**
      * Returns the index file names.
      *
      * <pre>

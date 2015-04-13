@@ -1,5 +1,5 @@
 /*
- * Copyright ${project.inceptionYear] Erwin Müller <erwin.mueller@deventm.org>
+ * Copyright 2014-2015 Erwin Müller <erwin.mueller@deventm.org>
  *
  * This file is part of sscontrol-httpd-thin.
  *

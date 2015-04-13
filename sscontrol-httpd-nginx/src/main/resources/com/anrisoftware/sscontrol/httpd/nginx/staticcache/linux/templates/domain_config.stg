@@ -1,0 +1,20 @@
+domainConfig(args) ::= <<
+<! - args.location - !>
+<! - args.indexFiles - !>
+<! - args.autoIndex - !>
+<! - args.staticFiles - !>
+# static files cache for <args.location>/
+<locationConfig(args)>
+    index <args.indexFiles;separator=" ">;
+    autoindex <if(args.autoIndex)>on<else>off<endif>;
+    expires <args.expiresDuration;format="expires-s">;
+    <if(!args.enabledAccessLog)>access_log off;<endif>
+}
+
+>>
+
+locationConfig(args) ::= <%
+<! - args.location - !>
+<! - args.staticFiles - !>
+location ~* <args.location>/.*\.(<args.staticFiles;separator="|">)$ {
+%>

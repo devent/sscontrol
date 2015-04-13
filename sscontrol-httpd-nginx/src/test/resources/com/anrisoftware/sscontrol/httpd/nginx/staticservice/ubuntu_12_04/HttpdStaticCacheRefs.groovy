@@ -16,20 +16,22 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd-nginx. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.nginx.nginxconfig;
+package com.anrisoftware.sscontrol.httpd.nginx.staticservice.ubuntu_12_04
 
-/**
- * Factory to create the <i>Nginx</i> configurations list.
- *
- * @author Erwin Mueller, erwin.mueller@deventm.org
- * @since 1.0
- */
-public interface NginxConfigListFactory {
+httpd {
+    domain "test1.com", address: "192.168.0.50", {
 
-    /**
-     * Creates the <i>Nginx</i> configurations list.
-     *
-     * @return the {@link NginxConfigList}.
-     */
-    NginxConfigList create();
+        // static files cache
+        setup "static-cache", id: "static-test1.com", alias: "/static", {
+            // include WebDAV and Auth configuration
+            include refs: "webdav-test1.com, auth-test1.com"
+        }
+
+        setup "webdav", id: "webdav-test1.com", alias: "/static"
+
+        setup "auth-file", id: "auth-test1.com", location: "/static", auth: "Private Directory", {
+            password users: StaticResources.privatePasswdFile.resource
+            require except: "GET, OPTIONS"
+        }
+    }
 }

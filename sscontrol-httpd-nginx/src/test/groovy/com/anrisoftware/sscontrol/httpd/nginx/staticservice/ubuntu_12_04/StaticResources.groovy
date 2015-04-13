@@ -32,12 +32,22 @@ import com.anrisoftware.sscontrol.testutils.resources.ResourcesUtils
 enum StaticResources {
 
     profile("UbuntuProfile.groovy", StaticResources.class.getResource("UbuntuProfile.groovy")),
+    privatePasswdFile("private.passwd", StaticResources.class.getResource("privatepasswd.txt")),
     // static files
     staticScript("Httpd.groovy", StaticResources.class.getResource("HttpdStatic.groovy")),
     staticTest1comConf("/etc/nginx/sites-available/100-robobee-test1.com.conf", StaticResources.class.getResource("static_test1comconf_expected.txt")),
     // static files alias
-    aliasScript("Httpd.groovy", StaticResources.class.getResource("HttpdStaticAlias.groovy")),
-    aliasTest1comConf("/etc/nginx/sites-available/100-robobee-test1.com.conf", StaticResources.class.getResource("alias_test1comconf_expected.txt")),
+    staticaliasScript("Httpd.groovy", StaticResources.class.getResource("HttpdStaticAlias.groovy")),
+    staticaliasTest1comConf("/etc/nginx/sites-available/100-robobee-test1.com.conf", StaticResources.class.getResource("staticalias_test1comconf_expected.txt")),
+    // static files cache
+    cacheScript("Httpd.groovy", StaticResources.class.getResource("HttpdStaticCache.groovy")),
+    cacheTest1comConf("/etc/nginx/sites-available/100-robobee-test1.com.conf", StaticResources.class.getResource("cache_test1comconf_expected.txt")),
+    // static files cache alias
+    cachealiasScript("Httpd.groovy", StaticResources.class.getResource("HttpdStaticCacheAlias.groovy")),
+    cachealiasTest1comConf("/etc/nginx/sites-available/100-robobee-test1.com.conf", StaticResources.class.getResource("cachealias_test1comconf_expected.txt")),
+    // static files cache with references
+    cacherefsScript("Httpd.groovy", StaticResources.class.getResource("HttpdStaticCacheRefs.groovy")),
+    cacherefsTest1comConf("/etc/nginx/sites-available/100-robobee-test1.com.conf", StaticResources.class.getResource("cacherefs_test1comconf_expected.txt")),
 
     ResourcesUtils resources
 

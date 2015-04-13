@@ -6,9 +6,12 @@ server {
     server_name test1.com;
     client_max_body_size 2M;
 
-    location /static/ {
+    # static files cache for /static/
+    location ~* /static/.*\.(jpg|png|gif|jpeg|svg|html|htm|css|js|mp3|wav|swf|mov|doc|pdf|xls|ppt|docx|pptx|xlsx)$ {
         index index.$geo.html index.htm index.html;
         autoindex on;
+        expires 86400000s;
+        access_log off;
     }
 
     # error page

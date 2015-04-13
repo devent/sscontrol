@@ -16,20 +16,35 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd-nginx. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.nginx.nginxconfig;
+package com.anrisoftware.sscontrol.httpd.nginx.staticcache.ubuntu_12_04
+
+import static org.apache.commons.io.FileUtils.*
+
+import javax.inject.Inject
+
+import com.anrisoftware.propertiesutils.ContextProperties
+import com.anrisoftware.sscontrol.httpd.nginx.nginx.ubuntu_12_04.Ubuntu_12_04_ScriptFactory
+import com.anrisoftware.sscontrol.httpd.nginx.staticcache.linux.NginxStaticCacheConfig
+import com.anrisoftware.sscontrol.httpd.webservice.ServiceConfig
 
 /**
- * Factory to create the <i>Nginx</i> configurations list.
+ * <i>Ubuntu 12.04 Nginx</i> static file cache configuration.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-public interface NginxConfigListFactory {
+class UbuntuStaticCacheConfig extends NginxStaticCacheConfig implements ServiceConfig {
 
-    /**
-     * Creates the <i>Nginx</i> configurations list.
-     *
-     * @return the {@link NginxConfigList}.
-     */
-    NginxConfigList create();
+    @Inject
+    private UbuntuPropertiesProvider ubuntuPropertiesProvider
+
+    @Override
+    ContextProperties getStaticCacheProperties() {
+        ubuntuPropertiesProvider.get()
+    }
+
+    @Override
+    String getProfile() {
+        Ubuntu_12_04_ScriptFactory.PROFILE
+    }
 }

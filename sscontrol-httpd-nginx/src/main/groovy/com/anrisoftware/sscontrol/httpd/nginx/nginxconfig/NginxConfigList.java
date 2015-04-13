@@ -43,6 +43,9 @@ public class NginxConfigList extends ArrayList<String> {
 
     private final String newLine;
 
+    /**
+     * @see NginxConfigListFactory#create()
+     */
     NginxConfigList() {
         this.newLine = System.getProperty("line.separator");
     }

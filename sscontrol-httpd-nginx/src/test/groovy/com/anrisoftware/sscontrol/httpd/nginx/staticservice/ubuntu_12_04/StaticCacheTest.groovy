@@ -29,39 +29,53 @@ import org.junit.Test
 import com.anrisoftware.sscontrol.testutils.resources.WebServiceTestEnvironment
 
 /**
- * <i>Nginx Ubuntu 12.04</i> static files.
+ * <i>Nginx Ubuntu 12.04</i> static files cache.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
 @Slf4j
-class StaticTest extends WebServiceTestEnvironment {
+class StaticCacheTest extends WebServiceTestEnvironment {
 
     @Test
-    void "static files"() {
+    void "static files cache"() {
         copyUbuntu_12_04_Files tmpdir
         loader.loadService profile.resource, null
         def profile = registry.getService("profile")[0]
         setupUbuntu_12_04_Properties profile, tmpdir
-        loader.loadService staticScript.resource, profile, preScript
+        loader.loadService cacheScript.resource, profile, preScript
         registry.allServices.each { it.call() }
         log.info "Run service again to ensure that configuration is not set double."
         registry.allServices.each { it.call() }
 
-        assertStringContent staticTest1comConf.replaced(tmpdir, tmpdir, "/tmp"), staticTest1comConf.toString()
+        assertStringContent cacheTest1comConf.replaced(tmpdir, tmpdir, "/tmp"), cacheTest1comConf.toString()
     }
 
     @Test
-    void "static files alias"() {
+    void "static files cache alias"() {
         copyUbuntu_12_04_Files tmpdir
         loader.loadService profile.resource, null
         def profile = registry.getService("profile")[0]
         setupUbuntu_12_04_Properties profile, tmpdir
-        loader.loadService staticaliasScript.resource, profile, preScript
+        loader.loadService cachealiasScript.resource, profile, preScript
         registry.allServices.each { it.call() }
         log.info "Run service again to ensure that configuration is not set double."
         registry.allServices.each { it.call() }
 
-        assertStringContent staticaliasTest1comConf.replaced(tmpdir, tmpdir, "/tmp"), staticaliasTest1comConf.toString()
+        assertStringContent cachealiasTest1comConf.replaced(tmpdir, tmpdir, "/tmp"), cachealiasTest1comConf.toString()
+    }
+
+    @Test
+    void "static files cache refs"() {
+        copyUbuntu_12_04_Files tmpdir
+        loader.loadService profile.resource, null
+        def profile = registry.getService("profile")[0]
+        setupUbuntu_12_04_Properties profile, tmpdir
+        loader.loadService cacherefsScript.resource, profile, preScript
+        registry.allServices.each { it.call() }
+        log.info "Run service again to ensure that configuration is not set double."
+        registry.allServices.each { it.call() }
+
+        assertStringContent cacherefsTest1comConf.replaced(tmpdir, tmpdir, "/tmp"), cacherefsTest1comConf.toString()
     }
 }

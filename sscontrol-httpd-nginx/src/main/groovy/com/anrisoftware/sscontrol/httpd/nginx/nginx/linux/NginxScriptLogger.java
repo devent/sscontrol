@@ -22,7 +22,6 @@ import static com.anrisoftware.sscontrol.httpd.nginx.nginx.linux.NginxScriptLogg
 import static com.anrisoftware.sscontrol.httpd.nginx.nginx.linux.NginxScriptLogger._.enabled_sites_debug;
 import static com.anrisoftware.sscontrol.httpd.nginx.nginx.linux.NginxScriptLogger._.enabled_sites_info;
 import static com.anrisoftware.sscontrol.httpd.nginx.nginx.linux.NginxScriptLogger._.linux_script;
-import static com.anrisoftware.sscontrol.httpd.nginx.nginx.linux.NginxScriptLogger._.service_config_null;
 import static com.anrisoftware.sscontrol.httpd.nginx.nginx.linux.NginxScriptLogger._.service_name;
 import static com.anrisoftware.sscontrol.httpd.nginx.nginx.linux.NginxScriptLogger._.service_stop_command;
 import static com.anrisoftware.sscontrol.httpd.nginx.nginx.linux.NginxScriptLogger._.service_stop_command_message;
@@ -30,7 +29,6 @@ import static com.anrisoftware.sscontrol.httpd.nginx.nginx.linux.NginxScriptLogg
 import static com.anrisoftware.sscontrol.httpd.nginx.nginx.linux.NginxScriptLogger._.stopped_service_info;
 import static com.anrisoftware.sscontrol.httpd.nginx.nginx.linux.NginxScriptLogger._.stopped_service_trace;
 import static org.apache.commons.lang3.StringUtils.isBlank;
-import static org.apache.commons.lang3.Validate.notNull;
 
 import java.util.Set;
 
@@ -40,12 +38,10 @@ import com.anrisoftware.globalpom.exec.api.ProcessTask;
 import com.anrisoftware.globalpom.log.AbstractLogger;
 import com.anrisoftware.sscontrol.core.api.ServiceException;
 import com.anrisoftware.sscontrol.core.service.LinuxScript;
-import com.anrisoftware.sscontrol.httpd.webservice.ServiceConfig;
-import com.anrisoftware.sscontrol.httpd.webservice.WebService;
 
 /**
  * Logging messages for {@link LinuxScript}.
- * 
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
@@ -72,10 +68,7 @@ class NginxScriptLogger extends AbstractLogger {
 
         stopped_service_info("Stopped service '{}' for service '{}'."),
 
-        checking_ports("Checking ports {} for {}."),
-
-        service_config_null(
-                "Service configuration not found for '%s' profile '%s'.");
+        checking_ports("Checking ports {} for {}.");
 
         private String name;
 
@@ -94,12 +87,6 @@ class NginxScriptLogger extends AbstractLogger {
      */
     NginxScriptLogger() {
         super(NginxScript.class);
-    }
-
-    void checkServiceConfig(ServiceConfig config, WebService service,
-            String profile) {
-        String name = service.getName();
-        notNull(config, service_config_null.toString(), name, profile);
     }
 
     void enabledSites(NginxScript script, Object sites) {

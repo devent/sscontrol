@@ -2,6 +2,7 @@ domainConfig(args) ::= <<
 <! - args.location - !>
 <! - args.indexFiles - !>
 <! - args.autoIndex - !>
+# static files for <args.location>/
 location <args.location>/ {
     index <args.indexFiles;separator=" ">;
     autoindex <if(args.autoIndex)>on<else>off<endif>;

@@ -19,6 +19,7 @@
 package com.anrisoftware.sscontrol.httpd.nginx.nginx.linux;
 
 import com.anrisoftware.globalpom.exec.runcommands.RunCommandsModule;
+import com.anrisoftware.globalpom.format.durationsimpleformat.DurationSimpleFormatModule;
 import com.anrisoftware.sscontrol.httpd.nginx.nginxconfig.NginxConfigListModule;
 import com.anrisoftware.sscontrol.scripts.changefile.ChangeFileModule;
 import com.anrisoftware.sscontrol.scripts.findusedport.FindUsedPortModule;
@@ -28,6 +29,7 @@ import com.anrisoftware.sscontrol.scripts.mklink.MkLinkModule;
 import com.anrisoftware.sscontrol.scripts.processinfo.ProcessInfoModule;
 import com.anrisoftware.sscontrol.scripts.unix.UnixScriptsModule;
 import com.google.inject.AbstractModule;
+import com.google.inject.assistedinject.FactoryModuleBuilder;
 
 /**
  * <i>Nginx</i> service module.
@@ -49,5 +51,9 @@ public class NginxScriptModule extends AbstractModule {
         install(new ProcessInfoModule());
         install(new KillProcessModule());
         install(new RunCommandsModule());
+        install(new DurationSimpleFormatModule());
+        install(new FactoryModuleBuilder().implement(
+                FindServiceConfigWorker.class, FindServiceConfigWorker.class)
+                .build(FindServiceConfigWorkerFactory.class));
     }
 }

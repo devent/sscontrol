@@ -16,20 +16,19 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd-nginx. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.nginx.nginxconfig;
+package com.anrisoftware.sscontrol.httpd.nginx.staticservice.ubuntu_12_04
 
-/**
- * Factory to create the <i>Nginx</i> configurations list.
- *
- * @author Erwin Mueller, erwin.mueller@deventm.org
- * @since 1.0
- */
-public interface NginxConfigListFactory {
+httpd {
+    domain "test1.com", address: "192.168.0.50", {
 
-    /**
-     * Creates the <i>Nginx</i> configurations list.
-     *
-     * @return the {@link NginxConfigList}.
-     */
-    NginxConfigList create();
+        // static files cache
+        setup "static-cache", id: "static-cache-test1.com", {
+
+            // set index files
+            index files: "index.\$geo.html, index.htm, index.html"
+
+            // set auto index
+            index mode: IndexMode.auto
+        }
+    }
 }

@@ -6,8 +6,8 @@ server {
     server_name test1.com;
     client_max_body_size 2M;
 
-    # static files for /
-    location / {
+    # static files for /static/
+    location /static/ {
         index index.$geo.html index.htm index.html;
         autoindex on;
     }

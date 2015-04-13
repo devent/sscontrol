@@ -31,6 +31,7 @@ import com.anrisoftware.sscontrol.httpd.domain.Domain
 import com.anrisoftware.sscontrol.httpd.domain.SslDomainImpl
 import com.anrisoftware.sscontrol.httpd.domain.linux.DomainConfig
 import com.anrisoftware.sscontrol.httpd.domain.linux.SslDomainConfig
+import com.anrisoftware.sscontrol.httpd.nginx.nginx.linux.FindServiceConfigWorkerFactory
 import com.anrisoftware.sscontrol.httpd.nginx.nginx.linux.NginxScript
 import com.anrisoftware.sscontrol.httpd.nginx.nginxconfig.NginxConfigListFactory
 import com.anrisoftware.sscontrol.httpd.service.HttpdService
@@ -50,6 +51,9 @@ abstract class Nginx_1_4_Script extends NginxScript {
 
     @Inject
     NginxConfigListFactory nginxConfigListFactory
+
+    @Inject
+    FindServiceConfigWorkerFactory findServiceConfigWorkerFactory
 
     @Inject
     DebugLoggingRenderer debugLoggingRenderer
@@ -81,7 +85,6 @@ abstract class Nginx_1_4_Script extends NginxScript {
         sslDomainConfig.script = this
         redirectConfig.script = this
         errorPageConfig.script = this
-        serviceConfigs.values().each { it.script = this }
         stopServices()
         beforeConfiguration()
         createSitesDirectories()
@@ -224,7 +227,7 @@ abstract class Nginx_1_4_Script extends NginxScript {
     void deployWebService(Domain domain, WebService service, List serviceConfig) {
         def reftarget = findReferencedService service
         def profile = profileName
-        def config = findServiceConfig profile, service
+        def config = findServiceConfigWorkerFactory.create(this).findServiceConfig profile, service
         if (reftarget == null) {
             config.deployService domain, service, serviceConfig
         } else {

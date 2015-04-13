@@ -21,7 +21,6 @@ package com.anrisoftware.sscontrol.httpd.auth;
 import static com.anrisoftware.sscontrol.httpd.auth.AuthServiceStatement.AUTH_KEY;
 import static com.anrisoftware.sscontrol.httpd.auth.AuthServiceStatement.EXCEPT_KEY;
 import static com.anrisoftware.sscontrol.httpd.auth.AuthServiceStatement.GROUP_KEY;
-import static com.anrisoftware.sscontrol.httpd.auth.AuthServiceStatement.LOCATION_KEY;
 import static com.anrisoftware.sscontrol.httpd.auth.AuthServiceStatement.REQUIRE_KEY;
 import static com.anrisoftware.sscontrol.httpd.auth.AuthServiceStatement.USER_KEY;
 import static com.anrisoftware.sscontrol.httpd.auth.AuthServiceStatement.VALID_KEY;
@@ -83,18 +82,14 @@ public abstract class AbstractAuthService implements AuthService {
     }
 
     private void setupStatements(StatementsMap map) {
-        map.addAllowed(AUTH_KEY, LOCATION_KEY, REQUIRE_KEY);
-        map.setAllowValue(true, AUTH_KEY, LOCATION_KEY);
+        map.addAllowed(AUTH_KEY, REQUIRE_KEY);
+        map.setAllowValue(true, AUTH_KEY);
         map.addAllowedKeys(REQUIRE_KEY, GROUP_KEY);
         map.addAllowedKeys(REQUIRE_KEY, USER_KEY);
         map.addAllowedKeys(REQUIRE_KEY, VALID_KEY);
         map.addAllowedKeys(REQUIRE_KEY, EXCEPT_KEY, VALID_KEY, GROUP_KEY,
                 USER_KEY);
         map.putValue(AUTH_KEY.toString(), args.get(AUTH_KEY.toString()));
-        if (args.containsKey(LOCATION_KEY.toString())) {
-            map.putValue(LOCATION_KEY.toString(),
-                    args.get(LOCATION_KEY.toString()));
-        }
     }
 
     @Override
@@ -155,11 +150,6 @@ public abstract class AbstractAuthService implements AuthService {
     @Override
     public String getAuth() {
         return statementsMap.value(AUTH_KEY);
-    }
-
-    @Override
-    public String getLocation() {
-        return statementsMap.value(LOCATION_KEY);
     }
 
     @Override

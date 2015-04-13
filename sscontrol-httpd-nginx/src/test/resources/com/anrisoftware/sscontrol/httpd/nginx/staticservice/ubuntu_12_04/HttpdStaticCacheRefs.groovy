@@ -29,7 +29,7 @@ httpd {
 
         setup "webdav", id: "webdav-test1.com", alias: "/static"
 
-        setup "auth-file", id: "auth-test1.com", location: "/static", auth: "Private Directory", {
+        setup "auth-file", id: "auth-test1.com", alias: "/static", auth: "Private Directory", {
             password users: StaticResources.privatePasswdFile.resource
             require except: "GET, OPTIONS"
         }

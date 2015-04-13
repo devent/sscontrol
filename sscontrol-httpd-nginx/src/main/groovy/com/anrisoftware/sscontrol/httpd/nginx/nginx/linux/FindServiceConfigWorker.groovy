@@ -85,8 +85,8 @@ class FindServiceConfigWorker {
                     getWebService: { service }
                 ] as ServiceConfigInfo)
         factory.setParent injector
-        def script = factory.getScript()
-        script.setScript this
-        return script
+        def serviceScript = factory.getScript()
+        serviceScript.setScript script
+        return serviceScript
     }
 }

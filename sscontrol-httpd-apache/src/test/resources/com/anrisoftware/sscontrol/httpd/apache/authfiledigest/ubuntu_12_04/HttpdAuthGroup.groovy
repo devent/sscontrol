@@ -20,7 +20,7 @@ package com.anrisoftware.sscontrol.httpd.apache.authfiledigest.ubuntu_12_04
 
 httpd {
     domain "test1.com", address: "192.168.0.50", {
-        setup "auth-file", id: "test1authid", auth: "Private Directory", location: "/private", {
+        setup "auth-file", id: "test1authid", auth: "Private Directory", alias: "/private", {
             type AuthType.digest
             password group: AuthFileDigestResources.privateGroupFile.resource, users: AuthFileDigestResources.privatePasswdFile.resource
             require group: "foogroup"

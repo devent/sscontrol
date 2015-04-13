@@ -20,7 +20,7 @@ package com.anrisoftware.sscontrol.httpd.apache.authldap.ubuntu_12_04
 
 httpd {
     domain "test1.com", address: "192.168.0.50", {
-        setup "auth-ldap", id: "test1authid", auth: "Private Directory", location: "/private", {
+        setup "auth-ldap", id: "test1authid", auth: "Private Directory", alias: "/private", {
             type AuthType.basic, satisfy: SatisfyType.any, authoritative: no
             host "ldap://127.0.0.1:389", url: "o=deventorg,dc=ubuntutest,dc=com?cn"
             credentials "cn=admin,dc=ubuntutest,dc=com", password: "adminpass"

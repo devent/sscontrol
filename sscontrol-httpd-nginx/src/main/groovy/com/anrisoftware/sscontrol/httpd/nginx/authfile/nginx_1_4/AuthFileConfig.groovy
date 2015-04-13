@@ -113,7 +113,7 @@ abstract class AuthFileConfig extends BasicAuth {
     void createDomainConfig(Domain domain, AuthFileService service, List serviceConfig) {
         def args = [:]
         args.auth = service.auth
-        args.location = service.location
+        args.location = authLocation service
         args.type = service.type
         args.satisfy = service.satisfy
         args.passwordFile = passwordFile domain, service
@@ -121,6 +121,22 @@ abstract class AuthFileConfig extends BasicAuth {
         def config = authDomainConfigTemplate.getText true, "domainAuth", "args", args
         log.domainConfigCreated this, domain, config
         serviceConfig << config
+    }
+
+    /**
+     * Returns the auth location.
+     *
+     * @param service
+     *            the {@link AuthFileService}.
+     *
+     * @return the location.
+     */
+    String authLocation(AuthFileService service) {
+        String location = service.alias == null ? "" : service.alias
+        if (!location.empty && !location.startsWith("/")) {
+            location = "/$location"
+        }
+        return location
     }
 
     /**

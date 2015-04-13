@@ -150,7 +150,7 @@ abstract class AuthMysqlConfig extends DbDriverConfig {
     void createDomainConfig(Domain domain, AuthDbService service, List serviceConfig) {
         def args = [:]
         args.auth = service.auth
-        args.location = service.location
+        args.location = service.alias
         args.database = service.database
         args.usersTable = service.usersTable
         args.userNameField = service.userNameField

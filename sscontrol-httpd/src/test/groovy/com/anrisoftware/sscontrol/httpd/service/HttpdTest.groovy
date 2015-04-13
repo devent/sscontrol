@@ -100,7 +100,7 @@ class HttpdTest extends HttpdTestEnvironment {
         assert auth.name == "auth-file"
         assert auth.id == "auth-test1.com"
         assert auth.auth == "Private Directory"
-        assert auth.location == "/private"
+        assert auth.alias == "private"
         assert auth.type == AuthType.digest
         assert auth.satisfy == SatisfyType.any
         assert auth.groupFile.toString() =~ /.*private\.group/
@@ -123,7 +123,7 @@ class HttpdTest extends HttpdTestEnvironment {
         AuthLdapService auth = service.domains[0].services[0]
         assert auth.name == "auth-ldap"
         assert auth.auth == "Private Directory"
-        assert auth.location == "/private"
+        assert auth.alias == "private"
         assert auth.type == AuthType.basic
         assert auth.satisfy == SatisfyType.any
         assert auth.authoritative == false
@@ -154,7 +154,7 @@ class HttpdTest extends HttpdTestEnvironment {
         AuthDbService auth = service.domains[0].services[0]
         assert auth.name == "auth-db"
         assert auth.auth == "Private Directory"
-        assert auth.location == "/private"
+        assert auth.alias == "private"
         assert auth.database.database == "authdb"
         assert auth.database.user == "userdb"
         assert auth.database.password == "userpassdb"

@@ -112,7 +112,7 @@ abstract class AuthFileConfig extends BasicAuth {
     void createDomainConfig(Domain domain, AuthFileService service, List serviceConfig) {
         def args = [:]
         args.auth = service.auth
-        args.location = service.location
+        args.location = service.alias
         args.type = service.type
         args.satisfy = service.satisfy
         args.requireDomains = service.requireDomains

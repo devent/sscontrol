@@ -20,7 +20,8 @@ package com.anrisoftware.sscontrol.httpd.service
 
 httpd {
     ssl_domain "test1.com", address: "192.168.0.50", {
-        setup "auth-db", auth: "Private Directory", location: "/private", {
+
+        setup "auth-db", auth: "Private Directory", alias: "/private", {
 
             database "authdb", user: "userdb", password: "userpassdb", host: "localhost", driver: "mysql", encryption: "PHP_MD5, Crypt"
 

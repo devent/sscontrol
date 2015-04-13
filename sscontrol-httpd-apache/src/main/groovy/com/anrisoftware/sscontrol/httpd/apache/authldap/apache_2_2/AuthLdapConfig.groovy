@@ -105,7 +105,7 @@ abstract class AuthLdapConfig extends BasicAuth {
     void createDomainConfig(Domain domain, AuthLdapService service, List serviceConfig) {
         def args = [:]
         args.auth = service.auth
-        args.location = service.location
+        args.location = service.alias
         args.type = service.type
         args.satisfy = service.satisfy
         args.groupDn = service.requireGroupDn

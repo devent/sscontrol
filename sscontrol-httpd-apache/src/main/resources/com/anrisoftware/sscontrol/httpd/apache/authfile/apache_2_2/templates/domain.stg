@@ -11,7 +11,7 @@ domainAuth(args) ::= <<
 <!- args.groupFile -!>
 <!- args.exceptLimits -!>
 # auth "<args.auth>"
-\<Location <args.location>\>
+\<Location /<args.location>\>
     AuthType <args.type>
     AuthName "<args.auth>"
     <(args.type)(args)>

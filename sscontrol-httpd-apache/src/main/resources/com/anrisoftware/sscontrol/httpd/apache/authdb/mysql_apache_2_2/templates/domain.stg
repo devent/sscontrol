@@ -10,7 +10,7 @@ domainAuth(domain, auth, args) ::= <<
 <!- auth.requireValids -!>
 <!- auth.exceptLimits -!>
 # auth "<args.auth>"
-\<Location <args.location>\>
+\<Location /<args.location>\>
     AuthBasicAuthoritative Off
     AuthUserFile /dev/null
     AuthMySQL On

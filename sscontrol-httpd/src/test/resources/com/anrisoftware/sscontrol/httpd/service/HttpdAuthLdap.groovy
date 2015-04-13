@@ -20,7 +20,8 @@ package com.anrisoftware.sscontrol.httpd.service
 
 httpd {
     ssl_domain "test1.com", address: "192.168.0.50", {
-        setup "auth-ldap", auth: "Private Directory", location: "/private", {
+
+        setup "auth-ldap", auth: "Private Directory", alias: "/private", {
 
             type AuthType.basic, satisfy: SatisfyType.any, authoritative: no
 

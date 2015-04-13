@@ -21,7 +21,7 @@ package com.anrisoftware.sscontrol.httpd.service
 httpd {
 	ssl_domain "test1.com", address: "192.168.0.50", {
 
-		setup "auth-file", id: "auth-test1.com", auth: "Private Directory", location: "/private", {
+		setup "auth-file", id: "auth-test1.com", auth: "Private Directory", alias: "/private", {
 
             type AuthType.digest, satisfy: SatisfyType.any
 

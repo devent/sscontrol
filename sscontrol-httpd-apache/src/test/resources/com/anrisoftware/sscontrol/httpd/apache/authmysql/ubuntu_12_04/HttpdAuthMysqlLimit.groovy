@@ -20,7 +20,7 @@ package com.anrisoftware.sscontrol.httpd.apache.authmysql.ubuntu_12_04
 
 httpd {
     domain "test1.com", address: "192.168.0.50", {
-        setup "auth-db", id: "test1id", auth: "Private Directory", location: "/private", {
+        setup "auth-db", id: "test1id", auth: "Private Directory", alias: "/private", {
             database "authdb", user: "userdb", password: "userpassdb", host: "localhost", driver: "mysql"
             require valid: RequireValid.user
             require except: "GET, OPTIONS"

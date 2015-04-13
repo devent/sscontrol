@@ -1,6 +1,8 @@
+u=rwx,g=rwx,o=rx /tmp/var/www/test1.com/web
 600 /tmp/etc/ssl/citadel/citadel.csr
 600 /tmp/etc/ssl/citadel/citadel.cer
 600 /tmp/etc/ssl/citadel/citadel.key
+u=rwx,g=rwx,o=rx /tmp/var/www/test1.com/web
 600 /tmp/etc/ssl/citadel/citadel.csr
 600 /tmp/etc/ssl/citadel/citadel.cer
 600 /tmp/etc/ssl/citadel/citadel.key

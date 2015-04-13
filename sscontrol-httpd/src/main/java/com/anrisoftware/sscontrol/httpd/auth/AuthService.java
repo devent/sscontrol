@@ -48,29 +48,12 @@ public interface AuthService extends WebService {
     String getAuth();
 
     /**
-     * Returns the authentication location.
-     * <p>
-     *
-     * <pre>
-     * httpd {
-     *     domain "test1.com", address: "192.168.0.51", {
-     *         setup "auth-service", location: "/private", {
-     *         }
-     *     }
-     * }
-     * </pre>
-     *
-     * @return the authentication {@link String} location;
-     */
-    String getLocation();
-
-    /**
      * Returns the require group names.
      *
      * <pre>
      * httpd {
      *     domain "test1.com", address: "192.168.0.51", {
-     *         setup "auth-service", location: "/private", {
+     *         setup "auth-service", auth: "/private", {
      *             require group: "foogroup, bargroup"
      *         }
      *     }
@@ -87,7 +70,7 @@ public interface AuthService extends WebService {
      * <pre>
      * httpd {
      *     domain "test1.com", address: "192.168.0.51", {
-     *         setup "auth-service", location: "/private", {
+     *         setup "auth-service", auth: "/private", {
      *             require user: "foo, bar"
      *         }
      *     }
@@ -104,7 +87,7 @@ public interface AuthService extends WebService {
      * <pre>
      * httpd {
      *     domain "test1.com", address: "192.168.0.51", {
-     *         setup "auth-service", location: "/private", {
+     *         setup "auth-service", auth: "/private", {
      *             require valid: RequireValid.user
      *         }
      *     }
@@ -121,7 +104,7 @@ public interface AuthService extends WebService {
      * <pre>
      * httpd {
      *     domain "test1.com", address: "192.168.0.51", {
-     *         setup "auth-service", location: "/private", {
+     *         setup "auth-service", auth: "/private", {
      *             require except: "GET, OPTIONS"
      *         }
      *     }

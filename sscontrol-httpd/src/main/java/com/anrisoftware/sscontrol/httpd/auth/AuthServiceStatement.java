@@ -30,8 +30,6 @@ enum AuthServiceStatement {
 
     AUTH_KEY,
 
-    LOCATION_KEY,
-
     REQUIRE_KEY,
 
     GROUP_KEY,

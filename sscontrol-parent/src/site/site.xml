@@ -24,13 +24,11 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 xsi:schemaLocation="http://maven.apache.org/DECORATION/1.0.0 http://maven.apache.org/xsd/decoration-1.0.0.xsd">
     <bannerLeft>
         <name>${project.name}</name>
-        <title>${project.name}</title>
         <href>${project.url}</href>
         <src>images/em-logo-250x80.jpg</src>
     </bannerLeft>
     <bannerRight>
         <name>Advanced Natural Research Institute Projects</name>
-        <title>Advanced Natural Research Institute Projects</title>
         <src>images/anri_logo_48.png</src>
         <href>https://anrisoftware.com/projects</href>
     </bannerRight>
@@ -46,7 +44,6 @@ xsi:schemaLocation="http://maven.apache.org/DECORATION/1.0.0 http://maven.apache
 		<menu name="Overview">
 			<item name="Home" href="/index.html" />
 			<item name="Download" href="https://anrisoftware.com/l/2h" />
-			<item name="Javadoc" href="https://anrisoftware.com/javadoc/com.anrisoftware.sscontrol/sscontrol-parent/apidocs/index.html" />
 			<item name="Source code" href="https://anrisoftware.com/l/2j" />
             <item name="Source code (Github)" href="https://github.com/devent/sscontrol" />
 			<item name="Issues" href="https://anrisoftware.com/l/2k" />

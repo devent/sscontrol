@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Erwin Müller <erwin.mueller@deventm.org>
+ * Copyright 2013-2015 Erwin Müller <erwin.mueller@deventm.org>
  *
  * This file is part of sscontrol-database-mysql.
  *

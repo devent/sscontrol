@@ -1,3 +1,6 @@
+u=rwx,g=rwx,o=rx /tmp/var/www/test1.com/web
+u=rwx,g=rwx,o=rx /tmp/var/www/test2.com/web
+u=rwx,g=rwx,o=rx /tmp/var/www/test3.com/web
 755 /tmp/var/www/php-fcgi-scripts/test1.com/php-fcgi-starter
 -R u=rwX,g=rX,o-rwX /tmp/var/backups/test1.com
 -R u=rwX,g=rX,o=rX /tmp/var/www/test1.com/roundcube_1
@@ -16,6 +19,9 @@ u=r,g=r,o-rwx /tmp/var/www/test2.com/roundcube_1/config/config.inc.php
 -R u=rwX,g=rX,o=rX /tmp/var/www/test3.com/roundcube_1/logs
 -R u=rwX,g=rX,o=rX /tmp/var/www/test3.com/roundcube_1/temp
 u=r,g=r,o-rwx /tmp/var/www/test3.com/roundcube_1/config/config.inc.php
+u=rwx,g=rwx,o=rx /tmp/var/www/test1.com/web
+u=rwx,g=rwx,o=rx /tmp/var/www/test2.com/web
+u=rwx,g=rwx,o=rx /tmp/var/www/test3.com/web
 755 /tmp/var/www/php-fcgi-scripts/test1.com/php-fcgi-starter
 -R u=rwX,g=rX,o-rwX /tmp/var/backups/test1.com
 -R u=rwX,g=rX,o=rX /tmp/var/www/test1.com/roundcube_1

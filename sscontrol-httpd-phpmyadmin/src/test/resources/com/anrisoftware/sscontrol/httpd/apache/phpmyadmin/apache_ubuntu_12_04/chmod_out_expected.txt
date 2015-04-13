@@ -1,2 +1,4 @@
+u=rwx,g=rwx,o=rx /tmp/var/www/ubuntutest.com/web
 755 /tmp/var/www/php-fcgi-scripts/ubuntutest.com/php-fcgi-starter
+u=rwx,g=rwx,o=rx /tmp/var/www/ubuntutest.com/web
 755 /tmp/var/www/php-fcgi-scripts/ubuntutest.com/php-fcgi-starter

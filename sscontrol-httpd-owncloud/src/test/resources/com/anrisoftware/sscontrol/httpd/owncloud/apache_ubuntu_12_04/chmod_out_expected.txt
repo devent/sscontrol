@@ -1,3 +1,5 @@
+u=rwx,g=rwx,o=rx /tmp/var/www/test1.com/web
+u=rwx,g=rwx,o=rx /tmp/var/www/test2.com/web
 -R u=rwX,g=rX,o-rwX /tmp/var/backups/test1.com
 755 /tmp/var/www/php-fcgi-scripts/test1.com/php-fcgi-starter
 -R u=rwX,g=rX,o=rX /tmp/var/www/test1.com/test1owncloud
@@ -11,6 +13,8 @@
 -R u=rwX,g=rwX,o=rX /tmp/var/www/test2.com/owncloud_7/apps
 -R u=rwX,g=rwX,o=rX /tmp/var/www/test2.com/owncloud_7/config
 -R u=rwX,g=rwX,o-rwX /tmp/var/www/test2.com/owncloud_7/data
+u=rwx,g=rwx,o=rx /tmp/var/www/test1.com/web
+u=rwx,g=rwx,o=rx /tmp/var/www/test2.com/web
 -R u=rwX,g=rX,o-rwX /tmp/var/backups/test1.com
 755 /tmp/var/www/php-fcgi-scripts/test1.com/php-fcgi-starter
 o-rw /tmp/var/www/test1.com/test1owncloud/config/config.php

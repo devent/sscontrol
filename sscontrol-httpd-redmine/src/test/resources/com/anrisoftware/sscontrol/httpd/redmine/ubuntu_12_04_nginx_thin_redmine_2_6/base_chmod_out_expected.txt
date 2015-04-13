@@ -1,3 +1,4 @@
+u=rwx,g=rwx,o=rx /tmp/var/www/test1.com/web
 -R u=rwX,g=rX,o-rwX /tmp/var/backups/test1.com
 +x /tmp/etc/init.d/thin
 -R 755 /tmp/var/www/test1.com/redmine_2_6/files
@@ -6,6 +7,7 @@
 -R 755 /tmp/var/www/test1.com/redmine_2_6/tmp/pdf
 -R 755 /tmp/var/www/test1.com/redmine_2_6/public/plugin_assets
 400 /tmp/var/www/test1.com/ssl/cert_crt.txt /tmp/var/www/test1.com/ssl/cert_key.txt
+u=rwx,g=rwx,o=rx /tmp/var/www/test1.com/web
 -R u=rwX,g=rX,o-rwX /tmp/var/backups/test1.com
 +x /tmp/etc/init.d/thin
 -R 755 /tmp/var/www/test1.com/redmine_2_6/files

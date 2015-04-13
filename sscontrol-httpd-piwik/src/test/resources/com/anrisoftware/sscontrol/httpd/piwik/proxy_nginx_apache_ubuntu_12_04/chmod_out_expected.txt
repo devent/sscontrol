@@ -1,8 +1,12 @@
+u=rwx,g=rwx,o=rx /tmp/var/www/test1.com/web
 755 /tmp/var/www/php-fcgi-scripts/test1.com/php-fcgi-starter
 755 /tmp/var/www/php-fcgi-scripts/test1.com/php-fcgi-starter
 400 /tmp/var/www/test1.com/ssl/cert_crt.txt /tmp/var/www/test1.com/ssl/cert_key.txt
+u=rwx,g=rwx,o=rx /tmp/var/www/test1.com/web
 400 /tmp/var/www/test1.com/ssl/cert_crt.txt /tmp/var/www/test1.com/ssl/cert_key.txt
+u=rwx,g=rwx,o=rx /tmp/var/www/test1.com/web
 755 /tmp/var/www/php-fcgi-scripts/test1.com/php-fcgi-starter
 755 /tmp/var/www/php-fcgi-scripts/test1.com/php-fcgi-starter
 400 /tmp/var/www/test1.com/ssl/cert_crt.txt /tmp/var/www/test1.com/ssl/cert_key.txt
+u=rwx,g=rwx,o=rx /tmp/var/www/test1.com/web
 400 /tmp/var/www/test1.com/ssl/cert_crt.txt /tmp/var/www/test1.com/ssl/cert_key.txt

@@ -1,3 +1,4 @@
+u=rwx,g=rwx,o=rx /tmp/var/www/www.test1.com/web
 755 /tmp/var/www/php-fcgi-scripts/www.test1.com/php-fcgi-starter
 -R u=rwX,g=rX,o=rX /tmp/var/www/www.test1.com/wordpress_4
 -R u=rwX,g=rX,o=rX /tmp/var/www/www.test1.com/wordpress_4/wp-content/cache
@@ -6,6 +7,7 @@
 -R u=rwX,g=rX,o=rX /tmp/var/www/www.test1.com/wordpress_4/wp-content/uploads
 u=r,g=r,o-rwx /tmp/var/www/www.test1.com/wordpress_4/wp-config.php
 u=rw,g=r,o-rw /tmp/var/www/www.test1.com/wordpress_4/wp-content/advanced-cache.php
+u=rwx,g=rwx,o=rx /tmp/var/www/www.test1.com/web
 755 /tmp/var/www/php-fcgi-scripts/www.test1.com/php-fcgi-starter
 -R u=rwX,g=rX,o=rX /tmp/var/www/www.test1.com/wordpress_4
 -R u=rwX,g=rX,o=rX /tmp/var/www/www.test1.com/wordpress_4/wp-content/cache

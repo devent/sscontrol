@@ -16,20 +16,31 @@
 	<url>https://anrisoftware.com/projects/projects/sscontrol-security-spamassassin</url>
 	<inceptionYear>2014</inceptionYear>
 
-	<properties>
-		<project.custom.year>${project.inceptionYear}</project.custom.year>
-	</properties>
-
 	<issueManagement>
 		<system>Redmine</system>
 		<url>https://anrisoftware.com/projects/projects/sscontrol-security-spamassassin</url>
 	</issueManagement>
 
-	<scm>
-		<connection>scm:git:${custom.gitpublic.url}sscontrolnew.git</connection>
-		<developerConnection>scm:git:${custom.gitpublic.url}sscontrolnew.git</developerConnection>
-		<url>scm:git:${custom.gitpublic.url}sscontrolnew.git</url>
-	</scm>
+    <scm>
+        <connection>scm:git:git@anrisoftware.com:sscontrol.git</connection>
+        <developerConnection>scm:git:git@anrisoftware.com:sscontrol.git</developerConnection>
+        <url>https://anrisoftware.com/projects/projects/sscontrol-core-project/repository</url>
+    </scm>
+
+    <distributionManagement>
+        <site>
+          <id>anrisoftware</id>
+          <url>dav:https://anrisoftware.com/javadoc/${project.groupId}/${project.artifactId}</url>
+        </site>
+        <repository>
+            <id>osssonatype</id>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
+        </repository>
+        <snapshotRepository>
+            <id>osssonatype_snapshots</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+    </distributionManagement>
 
 	<dependencies>
 

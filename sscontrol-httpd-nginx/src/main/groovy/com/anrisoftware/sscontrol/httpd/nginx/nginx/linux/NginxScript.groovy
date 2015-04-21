@@ -104,7 +104,7 @@ abstract class NginxScript extends LinuxScript {
             service.debug "error", level: defaultDebugErrorLevel
         }
         if (!service.debugLogging("error") || !service.debugLogging("error")["storage"]) {
-            service.debug "error", storage: defaultDebugStorage
+            service.debug "error", storage: defaultDebugErrorStorage
         }
     }
 
@@ -241,7 +241,7 @@ abstract class NginxScript extends LinuxScript {
 
     /**
      * Returns the path for the Nginx configuration file,
-     * for example {@code "nginx.conf".}  If the path is
+     * for example {@code "nginx.conf".} If the path is
      * not absolute then it is assume to be under the configuration directory.
      *
      * <ul>
@@ -294,13 +294,13 @@ abstract class NginxScript extends LinuxScript {
      * for example {@code "/usr/share/nginx/html".}
      *
      * <ul>
-     * <li>profile property {@code "error_pages_dir"}</li>
+     * <li>profile property {@code "error_pages_directory"}</li>
      * </ul>
      *
      * @see #getDefaultProperties()
      */
     File getErrorPagesDir() {
-        profileDirProperty "error_pages_dir", defaultProperties
+        profileDirProperty "error_pages_directory", defaultProperties
     }
 
     /**
@@ -423,7 +423,7 @@ abstract class NginxScript extends LinuxScript {
     }
 
     /**
-     * Returns the default debug error level, for example {@code 3}.
+     * Returns the default debug error logging level, for example {@code 3}.
      *
      * <ul>
      * <li>profile property {@code "default_debug_error_level"}</li>
@@ -436,17 +436,17 @@ abstract class NginxScript extends LinuxScript {
     }
 
     /**
-     * Returns the default debug logging storage, for
+     * Returns the default debug error logging storage, for
      * example {@code "/var/log/nginx/error.log".}
      *
      * <ul>
-     * <li>profile property {@code "default_debug_storage"}</li>
+     * <li>profile property {@code "default_debug_error_storage"}</li>
      * </ul>
      *
      * @see #getDefaultProperties()
      */
-    String getDefaultDebugStorage() {
-        profileProperty "default_debug_storage", defaultProperties
+    String getDefaultDebugErrorStorage() {
+        profileProperty "default_debug_error_storage", defaultProperties
     }
 
     /**

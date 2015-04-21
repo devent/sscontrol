@@ -359,7 +359,10 @@ abstract class ApacheScript extends LinuxScript {
     }
 
     /**
-     * Returns the path for the Apache default configuration file.
+     * Returns the path for the Apache default configuration file, for
+     * example {@code "000-robobee-default.conf".}
+     * If the path is not absolute then it is assume to be under the
+     * sites available directory.
      *
      * <ul>
      * <li>profile property {@code "default_config_file"}</li>
@@ -372,7 +375,10 @@ abstract class ApacheScript extends LinuxScript {
     }
 
     /**
-     * Returns the path for the Apache virtual domains configuration file.
+     * Returns the path for the Apache virtual domains configuration file, for
+     * example {@code "000-robobee-domains.conf".}
+     * If the path is not absolute then it is assume to be under the
+     * configuration include directory.
      *
      * <ul>
      * <li>profile property {@code "domains_config_file"}</li>
@@ -385,7 +391,7 @@ abstract class ApacheScript extends LinuxScript {
     }
 
     /**
-     * Returns the path for the parent directory containing the sites.
+     * Returns the path of the parent directory containing the sites files.
      * For example {@code /var/www}.
      *
      * <ul>
@@ -395,11 +401,11 @@ abstract class ApacheScript extends LinuxScript {
      * @see #getDefaultProperties()
      */
     File getSitesDirectory() {
-        profileProperty("sites_directory", defaultProperties) as File
+        profileDirProperty "sites_directory", defaultProperties
     }
 
     /**
-     * Returns the name of the directory to store authentication files.
+     * Returns the path of the directory to store the authentication files.
      *
      * <ul>
      * <li>profile property {@code "auth_subdirectory"}</li>
@@ -412,7 +418,7 @@ abstract class ApacheScript extends LinuxScript {
     }
 
     /**
-     * Returns the name of the directory to store SSL/certificates files.
+     * Returns the path of the directory to store the SSL/certificates files.
      *
      * <ul>
      * <li>profile property {@code "ssl_subdirectory"}</li>
@@ -425,7 +431,7 @@ abstract class ApacheScript extends LinuxScript {
     }
 
     /**
-     * Returns the name of the directory to store the site web files.
+     * Returns the name of the directory to store the site public files.
      *
      * <ul>
      * <li>profile property {@code "web_subdirectory"}</li>
@@ -558,7 +564,7 @@ abstract class ApacheScript extends LinuxScript {
     }
 
     /**
-     * Returns additional Apache/mpds to enable.
+     * Returns additional Apache mods to enable.
      *
      * <ul>
      * <li>profile property {@code "additional_mods"}</li>

@@ -82,7 +82,7 @@ public class AuthFileService extends AbstractAuthService {
      * <pre>
      * httpd {
      *     domain "test1.com", address: "192.168.0.51", {
-     *         setup "auth-file", auth: "Private Directory", location: "/private", {
+     *         setup "auth-file", auth: "Private Directory", alias: "/private", {
      *             type AuthType.digest
      *         }
      *     }
@@ -96,13 +96,14 @@ public class AuthFileService extends AbstractAuthService {
     }
 
     /**
-     * Returns the criteria that must be to allow access to a resource.
+     * Returns the criteria that must be satisfied to allow access to a
+     * resource.
      * <p>
      *
      * <pre>
      * httpd {
      *     domain "test1.com", address: "192.168.0.51", {
-     *         setup "auth-file", auth: "Private Directory", location: "/private", {
+     *         setup "auth-file", auth: "Private Directory", alias: "/private", {
      *             type AuthType.digest, satisfy: SatisfyType.any
      *         }
      *     }
@@ -122,14 +123,14 @@ public class AuthFileService extends AbstractAuthService {
      * <pre>
      * httpd {
      *     domain "test1.com", address: "192.168.0.51", {
-     *         setup "auth-service", location: "/private", {
+     *         setup "auth-service", alias: "/private", {
      *             password group: "private.group", users: "private.passwd"
      *         }
      *     }
      * }
      * </pre>
      *
-     * @return the password group file {@link URI} resource.
+     * @return the password group file {@link URI} resource or {@code null}.
      */
     public URI getGroupFile() {
         return statementsMap.mapValueAsURI(PASSWORD_KEY, GROUP_KEY);
@@ -142,14 +143,14 @@ public class AuthFileService extends AbstractAuthService {
      * <pre>
      * httpd {
      *     domain "test1.com", address: "192.168.0.51", {
-     *         setup "auth-service", location: "/private", {
+     *         setup "auth-service", alias: "/private", {
      *             password group: "private.group", users: "private.passwd"
      *         }
      *     }
      * }
      * </pre>
      *
-     * @return the password users file {@link URI} resource.
+     * @return the password users file {@link URI} resource or {@code null}.
      */
     public URI getUsersFile() {
         return statementsMap.mapValueAsURI(PASSWORD_KEY, USERS_KEY);
@@ -162,7 +163,7 @@ public class AuthFileService extends AbstractAuthService {
      * <pre>
      * httpd {
      *     domain "test1.com", address: "192.168.0.51", {
-     *         setup "auth-file", auth: "Private Directory", location: "/private", {
+     *         setup "auth-file", auth: "Private Directory", alias: "/private", {
      *             require domain: "https://%"
      *         }
      *     }

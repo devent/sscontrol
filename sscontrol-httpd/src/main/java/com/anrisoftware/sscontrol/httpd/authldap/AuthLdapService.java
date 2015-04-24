@@ -92,7 +92,7 @@ public class AuthLdapService extends AbstractAuthService {
      * <pre>
      * httpd {
      *     domain "test1.com", address: "192.168.0.51", {
-     *         setup "auth-ldap", auth: "Private Directory", location: "/private", {
+     *         setup "auth-ldap", auth: "Private Directory", alias: "/private", {
      *             type AuthType.digest
      *         }
      *     }
@@ -112,7 +112,7 @@ public class AuthLdapService extends AbstractAuthService {
      * <pre>
      * httpd {
      *     domain "test1.com", address: "192.168.0.51", {
-     *         setup "auth-ldap", auth: "Private Directory", location: "/private", {
+     *         setup "auth-ldap", auth: "Private Directory", alias: "/private", {
      *             type AuthType.digest, satisfy: SatisfyType.any
      *         }
      *     }
@@ -134,7 +134,7 @@ public class AuthLdapService extends AbstractAuthService {
      * <pre>
      * httpd {
      *     domain "test1.com", address: "192.168.0.51", {
-     *         setup "auth-ldap", auth: "Private Directory", location: "/private", {
+     *         setup "auth-ldap", auth: "Private Directory", alias: "/private", {
      *             type AuthType.basic, satisfy: AuthType.any, authoritative: no
      *         }
      *     }
@@ -158,7 +158,7 @@ public class AuthLdapService extends AbstractAuthService {
      * <pre>
      * httpd {
      *     domain "test1.com", address: "192.168.0.51", {
-     *         setup "auth-ldap", auth: "Private Directory", location: "/private", {
+     *         setup "auth-ldap", auth: "Private Directory", alias: "/private", {
      *             host "ldap://127.0.0.1:389", url: "o=deventorg,dc=ubuntutest,dc=com?cn"
      *         }
      *     }
@@ -178,7 +178,7 @@ public class AuthLdapService extends AbstractAuthService {
      * <pre>
      * httpd {
      *     domain "test1.com", address: "192.168.0.51", {
-     *         setup "auth-ldap", auth: "Private Directory", location: "/private", {
+     *         setup "auth-ldap", auth: "Private Directory", alias: "/private", {
      *             host "ldap://127.0.0.1:389", url: "o=deventorg,dc=ubuntutest,dc=com?cn"
      *         }
      *     }
@@ -198,7 +198,7 @@ public class AuthLdapService extends AbstractAuthService {
      * <pre>
      * httpd {
      *     domain "test1.com", address: "192.168.0.51", {
-     *         setup "auth-ldap", auth: "Private Directory", location: "/private", {
+     *         setup "auth-ldap", auth: "Private Directory", alias: "/private", {
      *             credentials "cn=admin,dc=ubuntutest,dc=com", password: "adminpass"
      *         }
      *     }
@@ -218,7 +218,7 @@ public class AuthLdapService extends AbstractAuthService {
      * <pre>
      * httpd {
      *     domain "test1.com", address: "192.168.0.51", {
-     *         setup "auth-ldap", auth: "Private Directory", location: "/private", {
+     *         setup "auth-ldap", auth: "Private Directory", alias: "/private", {
      *             credentials "cn=admin,dc=ubuntutest,dc=com", password: "adminpass"
      *         }
      *     }
@@ -238,7 +238,7 @@ public class AuthLdapService extends AbstractAuthService {
      * <pre>
      * httpd {
      *     domain "test1.com", address: "192.168.0.51", {
-     *         setup "auth-ldap", auth: "Private Directory", location: "/private", {
+     *         setup "auth-ldap", auth: "Private Directory", alias: "/private", {
      *             require attribute: [group: "uniqueMember"]
      *             require attribute: [dn: no]
      *         }
@@ -259,7 +259,7 @@ public class AuthLdapService extends AbstractAuthService {
      * <pre>
      * httpd {
      *     domain "test1.com", address: "192.168.0.51", {
-     *         setup "auth-ldap", auth: "Private Directory", location: "/private", {
+     *         setup "auth-ldap", auth: "Private Directory", alias: "/private", {
      *             require groupdn: "cn=ldapadminGroup,o=deventorg,dc=ubuntutest,dc=com"
      *         }
      *     }

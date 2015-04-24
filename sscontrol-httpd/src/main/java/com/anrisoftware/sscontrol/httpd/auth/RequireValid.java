@@ -32,7 +32,7 @@ public enum RequireValid {
     user,
 
     /**
-     * Require valid groups.
+     * Require valid group.
      */
     group
 }

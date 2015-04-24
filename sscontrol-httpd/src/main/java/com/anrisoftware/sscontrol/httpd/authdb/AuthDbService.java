@@ -90,6 +90,16 @@ public class AuthDbService extends AbstractAuthService {
      * Returns whether authorization and authentication are passed to lower
      * level modules.
      *
+     * <pre>
+     * httpd {
+     *     domain "test1.com", address: "192.168.0.51", {
+     *         setup "auth-db", auth: "Private Directory", alias: "/private", {
+     *             type authoritative: yes
+     *         }
+     *     }
+     * }
+     * </pre>
+     *
      * @return {@code true} if enabled or {@code null}.
      */
     public Boolean getAuthoritative() {
@@ -118,7 +128,7 @@ public class AuthDbService extends AbstractAuthService {
      * <pre>
      * httpd {
      *     domain "test1.com", address: "192.168.0.51", {
-     *         setup "auth-db", auth: "Private Directory", location: "/private", {
+     *         setup "auth-db", auth: "Private Directory", alias: "/private", {
      *             database "authdb", user: "userdb", password: "userpassdb", host: "localhost", driver: "mysql"
      *         }
      *     }
@@ -160,7 +170,7 @@ public class AuthDbService extends AbstractAuthService {
      * <pre>
      * httpd {
      *     domain "test1.com", address: "192.168.0.51", {
-     *         setup "auth-db", auth: "Private Directory", location: "/private", {
+     *         setup "auth-db", auth: "Private Directory", alias: "/private", {
      *             users table: "users"
      *         }
      *     }
@@ -180,7 +190,7 @@ public class AuthDbService extends AbstractAuthService {
      * <pre>
      * httpd {
      *     domain "test1.com", address: "192.168.0.51", {
-     *         setup "auth-db", auth: "Private Directory", location: "/private", {
+     *         setup "auth-db", auth: "Private Directory", alias: "/private", {
      *             field userName: "username"
      *         }
      *     }
@@ -200,7 +210,7 @@ public class AuthDbService extends AbstractAuthService {
      * <pre>
      * httpd {
      *     domain "test1.com", address: "192.168.0.51", {
-     *         setup "auth-db", auth: "Private Directory", location: "/private", {
+     *         setup "auth-db", auth: "Private Directory", alias: "/private", {
      *             field password: "passwd"
      *         }
      *     }
@@ -220,7 +230,7 @@ public class AuthDbService extends AbstractAuthService {
      * <pre>
      * httpd {
      *     domain "test1.com", address: "192.168.0.51", {
-     *         setup "auth-db", auth: "Private Directory", location: "/private", {
+     *         setup "auth-db", auth: "Private Directory", alias: "/private", {
      *             allow emptyPasswords: no
      *         }
      *     }

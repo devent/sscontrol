@@ -27,6 +27,7 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -280,6 +281,7 @@ class DomainImpl implements Domain {
     public WebService setup(Map<String, Object> map, String name, Object s)
             throws ServiceException {
         WebServiceFactory factory = serviceFactories.get(name);
+        name = convertName(name);
         factory = findService(name, factory);
         log.checkService(this, factory, name);
         WebService service = factory.create(map, this);
@@ -306,6 +308,10 @@ class DomainImpl implements Domain {
                 });
         find.setParent(injector.getParent());
         return find;
+    }
+
+    private String convertName(String name) {
+        return StringUtils.replaceChars(name, " .", "__");
     }
 
     public List<WebService> getServices() {

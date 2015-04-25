@@ -10,15 +10,19 @@
 		<relativePath>../sscontrol-parent</relativePath>
 	</parent>
 
-	<artifactId>sscontrol-security</artifactId>
-	<name>RoboBee :: Security</name>
-	<description>Intrusion prevention.</description>
-	<url>https://anrisoftware.com/projects/projects/sscontrol-security</url>
-	<inceptionYear>2014</inceptionYear>
+	<artifactId>sscontrol-httpd-frontaccounting</artifactId>
+	<name>RoboBee :: Httpd :: Yourls</name>
+	<description>FrontAccounting ERP web service - http://frontaccounting.com/</description>
+	<inceptionYear>2015</inceptionYear>
+	<url>https://anrisoftware.com/projects/projects/sscontrol-httpd-frontaccounting</url>
+
+	<properties>
+		<project.custom.year>${project.inceptionYear}</project.custom.year>
+	</properties>
 
 	<issueManagement>
 		<system>Redmine</system>
-		<url>https://anrisoftware.com/projects/projects/sscontrol-security</url>
+		<url>https://anrisoftware.com/projects/projects/sscontrol-httpd-frontaccounting</url>
 	</issueManagement>
 
     <scm>
@@ -45,9 +49,33 @@
 	<dependencies>
 
 		<!-- test dependencies -->
+        <dependency>
+            <groupId>com.anrisoftware.sscontrol</groupId>
+            <artifactId>sscontrol-testutils</artifactId>
+            <version>1.0-alpha-5-SNAPSHOT</version>
+            <scope>test</scope>
+        </dependency>
 		<dependency>
 			<groupId>com.anrisoftware.sscontrol</groupId>
 			<artifactId>sscontrol-profile</artifactId>
+			<version>1.0-alpha-5-SNAPSHOT</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.anrisoftware.sscontrol</groupId>
+			<artifactId>sscontrol-httpd</artifactId>
+			<version>1.0-alpha-5-SNAPSHOT</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.anrisoftware.sscontrol</groupId>
+			<artifactId>sscontrol-httpd-nginx</artifactId>
+			<version>1.0-alpha-5-SNAPSHOT</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.anrisoftware.sscontrol</groupId>
+			<artifactId>sscontrol-httpd-apache</artifactId>
 			<version>1.0-alpha-5-SNAPSHOT</version>
 			<scope>test</scope>
 		</dependency>
@@ -65,28 +93,20 @@
 		</dependency>
 		<dependency>
 			<groupId>com.anrisoftware.sscontrol</groupId>
+			<artifactId>sscontrol-httpd-webservice</artifactId>
+			<version>1.0-alpha-5-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>com.anrisoftware.sscontrol</groupId>
 			<artifactId>sscontrol-scripts-unix</artifactId>
 			<version>1.0-alpha-5-SNAPSHOT</version>
 		</dependency>
-        <dependency>
-            <groupId>com.anrisoftware.sscontrol</groupId>
-            <artifactId>sscontrol-security-service</artifactId>
-            <version>1.0-alpha-5-SNAPSHOT</version>
-        </dependency>
 
 		<!-- compile dependencies -->
 		<dependency>
 			<groupId>org.mangosdk.spi</groupId>
 			<artifactId>spi</artifactId>
 			<optional>true</optional>
-		</dependency>
-		<dependency>
-			<groupId>com.google.inject.extensions</groupId>
-			<artifactId>guice-multibindings</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.antlr</groupId>
-			<artifactId>ST4</artifactId>
 		</dependency>
 	</dependencies>
 

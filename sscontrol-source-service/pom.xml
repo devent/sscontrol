@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>com.anrisoftware.sscontrol</groupId>
 		<artifactId>sscontrol-parent</artifactId>
-		<version>1.0-alpha-4</version>
+		<version>1.0-alpha-5-SNAPSHOT</version>
 		<relativePath>../sscontrol-parent</relativePath>
 	</parent>
 
@@ -52,7 +52,7 @@
 		<dependency>
 			<groupId>com.anrisoftware.sscontrol</groupId>
 			<artifactId>sscontrol-profile</artifactId>
-			<version>1.0-alpha-4</version>
+			<version>1.0-alpha-5-SNAPSHOT</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
@@ -65,7 +65,7 @@
 		<dependency>
 			<groupId>com.anrisoftware.sscontrol</groupId>
 			<artifactId>sscontrol-core</artifactId>
-			<version>1.0-alpha-4</version>
+			<version>1.0-alpha-5-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 

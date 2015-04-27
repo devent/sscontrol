@@ -1,20 +1,20 @@
 /*
  * Copyright 2015 Erwin Müller <erwin.mueller@deventm.org>
  *
- * This file is part of sscontrol-httpd-yourls.
+ * This file is part of sscontrol-httpd-frontaccounting.
  *
- * sscontrol-httpd-yourls is free software: you can redistribute it and/or modify it
+ * sscontrol-httpd-frontaccounting is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published by the
  * Free Software Foundation, either version 3 of the License, or (at your
  * option) any later version.
  *
- * sscontrol-httpd-yourls is distributed in the hope that it will be useful, but
+ * sscontrol-httpd-frontaccounting is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
  * for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with sscontrol-httpd-yourls. If not, see <http://www.gnu.org/licenses/>.
+ * along with sscontrol-httpd-frontaccounting. If not, see <http://www.gnu.org/licenses/>.
  */
 package com.anrisoftware.sscontrol.httpd.frontaccounting.service
 
@@ -57,11 +57,12 @@ class HttpdFrontaccountingTest extends HttpdPreScriptTestEnvironment {
         assert webservice.alias == "account"
         assert webservice.prefix == "frontaccounting_2_3"
         assert webservice.ref == "faccidref"
-        assert webservice.debugLogging("level").size() == 5
+        assert webservice.debugLogging("level").size() == 6
         assert webservice.debugLogging("level")["php"] == 1
         assert webservice.debugLogging("level")["sql"] == 1
         assert webservice.debugLogging("level")["go"] == 1
         assert webservice.debugLogging("level")["pdf"] == 1
+        assert webservice.debugLogging("level")["sqltrail"] == 1
         assert webservice.debugLogging("level")["select"] == 1
         assert webservice.overrideMode == OverrideMode.update
         assert webservice.backupTarget.toString() =~ /.*\/var\/backups/

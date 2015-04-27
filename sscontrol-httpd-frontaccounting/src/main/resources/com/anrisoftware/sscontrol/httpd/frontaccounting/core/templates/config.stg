@@ -1,0 +1,48 @@
+titleConfigSearch() ::= <%
+(?m)^\s*\$app_title\s*=\s*.*;.*$
+%>
+
+titleConfig(title) ::= <%
+$app_title = "<title>";
+%>
+
+debugSqlConfigSearch() ::= <%
+(?m)^\s*\$show_sql\s*=\s*\d;.*$
+%>
+
+debugSqlConfig(level) ::= <%
+$show_sql = <level>;
+%>
+
+debugGoConfigSearch() ::= <%
+(?m)^\s*\$go_debug\s*=\s*\d;.*$
+%>
+
+debugGoConfig(level) ::= <%
+$go_debug = <level>;
+%>
+
+debugPdfConfigSearch() ::= <%
+(?m)^\s*\$pdf_debug\s*=\s*\d;.*$
+%>
+
+debugPdfConfig(level) ::= <%
+$pdf_debug = <level>;
+%>
+
+debugSqlTrailConfigSearch() ::= <%
+(?m)^\s*\$sql_trail\s*=\s*\d;.*$
+%>
+
+debugSqlTrailConfig(level) ::= <%
+$sql_trail = <level>;
+%>
+
+debugSelectTrailConfigSearch() ::= <%
+(?m)^\s*\$select_trail\s*=\s*\d;.*$
+%>
+
+debugSelectTrailConfig(level) ::= <%
+$select_trail = <level>;
+%>
+

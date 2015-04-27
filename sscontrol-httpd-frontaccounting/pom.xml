@@ -11,7 +11,7 @@
 	</parent>
 
 	<artifactId>sscontrol-httpd-frontaccounting</artifactId>
-	<name>RoboBee :: Httpd :: Yourls</name>
+	<name>RoboBee :: Httpd :: FrontAccounting</name>
 	<description>FrontAccounting ERP web service - http://frontaccounting.com/</description>
 	<inceptionYear>2015</inceptionYear>
 	<url>https://anrisoftware.com/projects/projects/sscontrol-httpd-frontaccounting</url>

@@ -1,0 +1,19 @@
+web_001.web_001 /tmp/var/www/test1.com/web
+-R root.root /tmp/var/backups/test1.com
+-R web_001.web_001 /tmp/var/www/php-fcgi-scripts/test1.com
+web_001.web_001 /tmp/var/www/php-fcgi-scripts/test1.com/php-fcgi-starter
+-R root.web_001 /tmp/var/www/test1.com/frontaccounting_2
+web_001.web_001 /tmp/var/www/test1.com/frontaccounting_2
+-R web_001.web_001 /tmp/var/www/test1.com/frontaccounting_2/lang
+-R web_001.web_001 /tmp/var/www/test1.com/frontaccounting_2/modules
+-R web_001.web_001 /tmp/var/www/test1.com/frontaccounting_2/company
+web_001.web_001 /tmp/var/www/test1.com/web
+-R root.root /tmp/var/backups/test1.com
+-R web_001.web_001 /tmp/var/www/php-fcgi-scripts/test1.com
+web_001.web_001 /tmp/var/www/php-fcgi-scripts/test1.com/php-fcgi-starter
+-R root.web_001 /tmp/var/www/test1.com/frontaccounting_2
+-R web_001.web_001 /tmp/var/www/test1.com/frontaccounting_2/lang
+-R web_001.web_001 /tmp/var/www/test1.com/frontaccounting_2/modules
+-R web_001.web_001 /tmp/var/www/test1.com/frontaccounting_2/company
+web_001.web_001 /tmp/var/www/test1.com/frontaccounting_2/config.php
+web_001.web_001 /tmp/var/www/test1.com/frontaccounting_2/config_db.php

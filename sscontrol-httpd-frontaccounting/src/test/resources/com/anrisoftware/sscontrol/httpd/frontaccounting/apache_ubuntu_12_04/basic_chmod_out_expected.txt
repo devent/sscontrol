@@ -1,0 +1,15 @@
+u=rwx,g=rwx,o=rx /tmp/var/www/test1.com/web
+755 /tmp/var/www/php-fcgi-scripts/test1.com/php-fcgi-starter
+-R u=rwX,g=rX,o=rX /tmp/var/www/test1.com/frontaccounting_2
+u=rwx,g=rwx,o=rx /tmp/var/www/test1.com/frontaccounting_2
+-R u=rwX,g=rwX,o=rX /tmp/var/www/test1.com/frontaccounting_2/lang
+-R u=rwX,g=rwX,o=rX /tmp/var/www/test1.com/frontaccounting_2/modules
+-R u=rwX,g=rwX,o=rX /tmp/var/www/test1.com/frontaccounting_2/company
+u=rwx,g=rwx,o=rx /tmp/var/www/test1.com/web
+755 /tmp/var/www/php-fcgi-scripts/test1.com/php-fcgi-starter
+-R u=rwX,g=rX,o=rX /tmp/var/www/test1.com/frontaccounting_2
+-R u=rwX,g=rwX,o=rX /tmp/var/www/test1.com/frontaccounting_2/lang
+-R u=rwX,g=rwX,o=rX /tmp/var/www/test1.com/frontaccounting_2/modules
+-R u=rwX,g=rwX,o=rX /tmp/var/www/test1.com/frontaccounting_2/company
+u=r,g=r,o-rwx /tmp/var/www/test1.com/frontaccounting_2/config.php
+u=r,g=r,o-rwx /tmp/var/www/test1.com/frontaccounting_2/config_db.php

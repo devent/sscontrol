@@ -1,0 +1,58 @@
+<VirtualHost 192.168.0.51:80>
+
+    # domain test1.com
+    ServerName test1.com
+    DocumentRoot /tmp/var/www/test1.com/web
+    SuexecUserGroup web_001 web_001
+    <Directory /tmp/var/www/test1.com/web>
+        AllowOverride None
+        Order allow,deny
+        Allow from all
+    </Directory>
+
+    # fcgi
+
+    FcgidMaxRequestLen 2000000
+
+    # /tmp/var/www/test1.com/frontaccounting_2
+
+    Alias /account /tmp/var/www/test1.com/frontaccounting_2
+
+    <Directory /tmp/var/www/test1.com/frontaccounting_2>
+        AddHandler fcgid-script .php
+        FCGIWrapper /tmp/var/www/php-fcgi-scripts/test1.com/php-fcgi-starter .php
+        Options +ExecCGI +FollowSymLinks -Indexes
+        DirectoryIndex index.php
+        AllowOverride All
+
+        Order allow,deny
+        Allow from all
+
+        <IfModule mod_mime.c>
+            <IfModule !mod_php5.c>
+                <IfModule mod_actions.c>
+                    <IfModule mod_cgi.c>
+                        AddType application/x-httpd-php .php
+                        Action application/x-httpd-php /cgi-bin/php5
+                    </IfModule>
+                    <IfModule mod_cgid.c>
+                        AddType application/x-httpd-php .php
+                        Action application/x-httpd-php /cgi-bin/php5
+                    </IfModule>
+                </IfModule>
+            </IfModule>
+        </IfModule>
+
+        <Files "config.php">
+            order allow,deny
+            deny from all
+        </Files>
+
+        <Files "config_db.php">
+            order allow,deny
+            deny from all
+        </Files>
+
+    </Directory>
+
+</VirtualHost>

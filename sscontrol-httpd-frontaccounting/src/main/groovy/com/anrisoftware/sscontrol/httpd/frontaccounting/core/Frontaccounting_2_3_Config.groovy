@@ -451,6 +451,20 @@ abstract class Frontaccounting_2_3_Config {
     }
 
     /**
+     * Returns the temporary directory path, for
+     * example {@code "tmp"}.
+     *
+     * <ul>
+     * <li>profile property {@code "frontaccounting_temp_directory"}</li>
+     * </ul>
+     *
+     * @see #getFrontaccountingProperties()
+     */
+    String getFrontaccountingTempDirectory() {
+        profileProperty "frontaccounting_temp_directory", frontaccountingProperties
+    }
+
+    /**
      * Returns the language directory path, for
      * example {@code "lang"}.
      *

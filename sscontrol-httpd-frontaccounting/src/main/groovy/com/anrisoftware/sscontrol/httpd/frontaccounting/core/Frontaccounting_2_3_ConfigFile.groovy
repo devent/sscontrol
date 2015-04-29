@@ -20,7 +20,6 @@ package com.anrisoftware.sscontrol.httpd.frontaccounting.core
 
 import javax.inject.Inject
 
-import org.apache.commons.io.FileUtils
 import org.apache.commons.lang3.builder.ToStringBuilder
 
 import com.anrisoftware.globalpom.textmatch.tokentemplate.TokenTemplate
@@ -70,7 +69,7 @@ class Frontaccounting_2_3_ConfigFile {
     void deployConfig(Domain domain, FrontaccountingService service) {
         File file = frontaccountingConfigFile(domain, service)
         if (!file.exists()) {
-            FileUtils.copyFile frontaccountingConfigDefaultFile(domain, service), file
+            return
         }
         def conf = currentConfiguration file
         deployConfiguration configurationTokens(), conf, baseConfs(service), file

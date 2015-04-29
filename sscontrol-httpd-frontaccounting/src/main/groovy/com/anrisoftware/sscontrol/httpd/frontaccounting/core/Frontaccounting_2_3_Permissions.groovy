@@ -119,6 +119,7 @@ class Frontaccounting_2_3_Permissions {
     void setupPublicPermissions(Domain domain, FrontaccountingService service) {
         def user = domain.domainUser
         def dir = frontaccountingDir domain, service
+        def tempdir = new File(dir, frontaccountingTempDirectory)
         def langdir = new File(dir, frontaccountingLangDirectory)
         def modulesdir = new File(dir, frontaccountingModulesDirectory)
         def companydir = new File(dir, frontaccountingCompanyDirectory)
@@ -132,9 +133,12 @@ class Frontaccounting_2_3_Permissions {
                 ownerGroup: user.group,
                 recursive: true,
                 files: [
+                    tempdir,
                     langdir,
                     modulesdir,
-                    companydir
+                    companydir,
+                    themesdir,
+                    sqldir,
                 ],
                 this, threads)()
         changeFileModFactory.create(
@@ -144,9 +148,11 @@ class Frontaccounting_2_3_Permissions {
                 mod: "u=rwX,g=rwX,o=rX",
                 recursive: true,
                 files: [
+                    tempdir,
                     langdir,
                     modulesdir,
-                    companydir
+                    companydir,
+                    sqldir,
                 ],
                 this, threads)()
     }

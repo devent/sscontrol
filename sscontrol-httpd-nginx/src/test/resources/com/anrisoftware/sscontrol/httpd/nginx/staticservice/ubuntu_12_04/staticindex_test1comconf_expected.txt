@@ -9,7 +9,7 @@ server {
     # static files for /
     location / {
         index index.$geo.html index.htm index.html;
-        autoindex on;
+        autoindex off;
     }
 
     # error page

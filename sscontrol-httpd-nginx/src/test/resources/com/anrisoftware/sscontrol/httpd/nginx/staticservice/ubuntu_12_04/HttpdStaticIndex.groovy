@@ -26,9 +26,6 @@ httpd {
 
             // set index files
             index files: "index.\$geo.html, index.htm, index.html"
-
-            // set auto index
-            index mode: IndexMode.auto
         }
     }
 }

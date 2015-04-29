@@ -8,7 +8,7 @@ server {
 
     # static files cache for /static/
     location ~* /static/.*\.(jpg|png|gif|jpeg|svg|html|htm|css|js|mp3|wav|swf|mov|doc|pdf|xls|ppt|docx|pptx|xlsx)$ {
-        index index.$geo.html index.htm index.html;
+        index index.htm index.html;
         autoindex off;
         expires 86400000s;
         access_log off;

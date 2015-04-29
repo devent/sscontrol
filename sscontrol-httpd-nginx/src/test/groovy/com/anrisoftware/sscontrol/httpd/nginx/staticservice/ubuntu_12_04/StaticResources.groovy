@@ -33,12 +33,15 @@ enum StaticResources {
 
     profile("UbuntuProfile.groovy", StaticResources.class.getResource("UbuntuProfile.groovy")),
     privatePasswdFile("private.passwd", StaticResources.class.getResource("privatepasswd.txt")),
-    // static files
-    staticScript("Httpd.groovy", StaticResources.class.getResource("HttpdStatic.groovy")),
-    staticTest1comConf("/etc/nginx/sites-available/100-robobee-test1.com.conf", StaticResources.class.getResource("static_test1comconf_expected.txt")),
+    // static files basic
+    staticBasicScript("Httpd.groovy", StaticResources.class.getResource("HttpdStaticBasic.groovy")),
+    staticBasicTest1comConf("/etc/nginx/sites-available/100-robobee-test1.com.conf", StaticResources.class.getResource("staticbasic_test1comconf_expected.txt")),
+    // static index files
+    staticIndexScript("Httpd.groovy", StaticResources.class.getResource("HttpdStaticIndex.groovy")),
+    staticIndexTest1comConf("/etc/nginx/sites-available/100-robobee-test1.com.conf", StaticResources.class.getResource("staticindex_test1comconf_expected.txt")),
     // static files alias
-    staticaliasScript("Httpd.groovy", StaticResources.class.getResource("HttpdStaticAlias.groovy")),
-    staticaliasTest1comConf("/etc/nginx/sites-available/100-robobee-test1.com.conf", StaticResources.class.getResource("staticalias_test1comconf_expected.txt")),
+    staticAliasScript("Httpd.groovy", StaticResources.class.getResource("HttpdStaticAlias.groovy")),
+    staticAliasTest1comConf("/etc/nginx/sites-available/100-robobee-test1.com.conf", StaticResources.class.getResource("staticalias_test1comconf_expected.txt")),
     // static files cache
     cacheScript("Httpd.groovy", StaticResources.class.getResource("HttpdStaticCache.groovy")),
     cacheTest1comConf("/etc/nginx/sites-available/100-robobee-test1.com.conf", StaticResources.class.getResource("cache_test1comconf_expected.txt")),

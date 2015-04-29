@@ -38,17 +38,31 @@ import com.anrisoftware.sscontrol.testutils.resources.WebServiceTestEnvironment
 class StaticTest extends WebServiceTestEnvironment {
 
     @Test
-    void "static files"() {
+    void "static files basic"() {
         copyUbuntu_12_04_Files tmpdir
         loader.loadService profile.resource, null
         def profile = registry.getService("profile")[0]
         setupUbuntu_12_04_Properties profile, tmpdir
-        loader.loadService staticScript.resource, profile, preScript
+        loader.loadService staticBasicScript.resource, profile, preScript
         registry.allServices.each { it.call() }
         log.info "Run service again to ensure that configuration is not set double."
         registry.allServices.each { it.call() }
 
-        assertStringContent staticTest1comConf.replaced(tmpdir, tmpdir, "/tmp"), staticTest1comConf.toString()
+        assertStringContent staticBasicTest1comConf.replaced(tmpdir, tmpdir, "/tmp"), staticBasicTest1comConf.toString()
+    }
+
+    @Test
+    void "static index files"() {
+        copyUbuntu_12_04_Files tmpdir
+        loader.loadService profile.resource, null
+        def profile = registry.getService("profile")[0]
+        setupUbuntu_12_04_Properties profile, tmpdir
+        loader.loadService staticIndexScript.resource, profile, preScript
+        registry.allServices.each { it.call() }
+        log.info "Run service again to ensure that configuration is not set double."
+        registry.allServices.each { it.call() }
+
+        assertStringContent staticIndexTest1comConf.replaced(tmpdir, tmpdir, "/tmp"), staticIndexTest1comConf.toString()
     }
 
     @Test
@@ -57,11 +71,11 @@ class StaticTest extends WebServiceTestEnvironment {
         loader.loadService profile.resource, null
         def profile = registry.getService("profile")[0]
         setupUbuntu_12_04_Properties profile, tmpdir
-        loader.loadService staticaliasScript.resource, profile, preScript
+        loader.loadService staticAliasScript.resource, profile, preScript
         registry.allServices.each { it.call() }
         log.info "Run service again to ensure that configuration is not set double."
         registry.allServices.each { it.call() }
 
-        assertStringContent staticaliasTest1comConf.replaced(tmpdir, tmpdir, "/tmp"), staticaliasTest1comConf.toString()
+        assertStringContent staticAliasTest1comConf.replaced(tmpdir, tmpdir, "/tmp"), staticAliasTest1comConf.toString()
     }
 }

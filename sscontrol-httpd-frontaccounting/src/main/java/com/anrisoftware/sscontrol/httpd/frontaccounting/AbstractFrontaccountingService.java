@@ -23,6 +23,8 @@ import static com.anrisoftware.sscontrol.httpd.frontaccounting.FrontaccountingSe
 import static com.anrisoftware.sscontrol.httpd.frontaccounting.FrontaccountingServiceStatement.DEBUG_KEY;
 import static com.anrisoftware.sscontrol.httpd.frontaccounting.FrontaccountingServiceStatement.DRIVER_KEY;
 import static com.anrisoftware.sscontrol.httpd.frontaccounting.FrontaccountingServiceStatement.HOST_KEY;
+import static com.anrisoftware.sscontrol.httpd.frontaccounting.FrontaccountingServiceStatement.LANGUAGE_KEY;
+import static com.anrisoftware.sscontrol.httpd.frontaccounting.FrontaccountingServiceStatement.LOCALES_KEY;
 import static com.anrisoftware.sscontrol.httpd.frontaccounting.FrontaccountingServiceStatement.MODE_KEY;
 import static com.anrisoftware.sscontrol.httpd.frontaccounting.FrontaccountingServiceStatement.OVERRIDE_KEY;
 import static com.anrisoftware.sscontrol.httpd.frontaccounting.FrontaccountingServiceStatement.PASSWORD_KEY;
@@ -34,6 +36,7 @@ import static com.anrisoftware.sscontrol.httpd.frontaccounting.FrontaccountingSe
 
 import java.net.URI;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -87,12 +90,14 @@ public abstract class AbstractFrontaccountingService implements
     }
 
     private void setupStatements(StatementsMap map, Map<String, Object> args) {
-        map.addAllowed(DATABASE_KEY, OVERRIDE_KEY, BACKUP_KEY, TITLE_KEY);
+        map.addAllowed(DATABASE_KEY, OVERRIDE_KEY, BACKUP_KEY, TITLE_KEY,
+                LANGUAGE_KEY);
         map.setAllowValue(true, DATABASE_KEY, TITLE_KEY);
         map.addAllowedKeys(DATABASE_KEY, USER_KEY, PASSWORD_KEY, HOST_KEY,
                 PORT_KEY, PREFIX_KEY, DRIVER_KEY);
         map.addAllowedKeys(OVERRIDE_KEY, MODE_KEY);
         map.addAllowedKeys(BACKUP_KEY, TARGET_KEY);
+        map.addAllowedKeys(LANGUAGE_KEY, LOCALES_KEY);
     }
 
     @Inject
@@ -201,6 +206,11 @@ public abstract class AbstractFrontaccountingService implements
     @Override
     public String getSiteTitle() {
         return statementsMap.value(TITLE_KEY);
+    }
+
+    @Override
+    public List<String> getLocales() {
+        return statementsMap.mapValueAsStringList(LANGUAGE_KEY, LOCALES_KEY);
     }
 
     public Object methodMissing(String name, Object args) {

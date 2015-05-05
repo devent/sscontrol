@@ -31,6 +31,7 @@ httpd {
             backup target: "$tmp/var/backups"
             database "faccountingdb", user: "faccountinguser", password: "faccountingpass", host: "localhost", port: 3306
             title "My Company Pvt Ltd"
+            language locales: "de, pt"
         }
     }
 }

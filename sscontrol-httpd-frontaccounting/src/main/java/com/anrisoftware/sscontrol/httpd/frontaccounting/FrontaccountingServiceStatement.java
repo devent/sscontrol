@@ -53,7 +53,11 @@ enum FrontaccountingServiceStatement {
 
     DEBUG_KEY,
 
-    TITLE_KEY;
+    TITLE_KEY,
+
+    LANGUAGE_KEY,
+
+    LOCALES_KEY;
 
     @Override
     public String toString() {

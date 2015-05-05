@@ -19,6 +19,7 @@
 package com.anrisoftware.sscontrol.httpd.frontaccounting;
 
 import java.net.URI;
+import java.util.List;
 import java.util.Map;
 
 import com.anrisoftware.sscontrol.core.overridemode.OverrideMode;
@@ -117,4 +118,18 @@ public interface FrontaccountingService extends WebService {
      * @return the site {@link String} title or {@code null}.
      */
     String getSiteTitle();
+
+    /**
+     * Returns the locale for the site.
+     *
+     * <pre>
+     * setup "frontaccounting 2.3", {
+     *     language locales: "de, pt"
+     * }
+     * </pre>
+     *
+     * @return the {@link List} list of the site {@link String} locales or
+     *         {@code null}.
+     */
+    List<String> getLocales();
 }

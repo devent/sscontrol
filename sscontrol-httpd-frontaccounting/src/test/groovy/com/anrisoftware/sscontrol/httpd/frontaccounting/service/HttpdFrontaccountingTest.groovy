@@ -72,5 +72,7 @@ class HttpdFrontaccountingTest extends HttpdPreScriptTestEnvironment {
         assert webservice.database.host == "localhost"
         assert webservice.database.port == 3306
         assert webservice.siteTitle == "My Company Pvt Ltd"
+        assert webservice.locales.size() == 2
+        assert webservice.locales.containsAll(["de", "pt"])
     }
 }

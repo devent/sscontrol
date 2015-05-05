@@ -7,7 +7,7 @@ domainConfig(args) ::= <<
 <locationConfig(args)>
     index <args.indexFiles;separator=" ">;
     autoindex <if(args.autoIndex)>on<else>off<endif>;
-    expires <args.expiresDuration;format="expires-s">;
+    expires <args.expiresDuration;format="simple-s">;
     <if(!args.enabledAccessLog)>access_log off;<endif>
 }
 

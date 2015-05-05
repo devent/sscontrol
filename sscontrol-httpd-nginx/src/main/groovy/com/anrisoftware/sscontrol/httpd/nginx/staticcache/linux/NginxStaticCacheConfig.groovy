@@ -25,7 +25,7 @@ import javax.inject.Inject
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.TemplatesFactory
 import com.anrisoftware.sscontrol.httpd.domain.Domain
-import com.anrisoftware.sscontrol.httpd.nginx.nginx.linux.ExpiresDurationRenderer
+import com.anrisoftware.sscontrol.httpd.nginx.nginx.linux.SimpleDurationRenderer
 import com.anrisoftware.sscontrol.httpd.staticservice.IndexMode
 import com.anrisoftware.sscontrol.httpd.staticservice.StaticCacheService
 import com.anrisoftware.sscontrol.httpd.webservice.WebService
@@ -47,7 +47,7 @@ abstract class NginxStaticCacheConfig extends AbstractStaticCacheConfig {
     private NginxStaticCacheConfigLogger log
 
     @Inject
-    private ExpiresDurationRenderer expiresDurationRenderer
+    private SimpleDurationRenderer expiresDurationRenderer
 
     /**
      * Resource containing the static file domain configuration templates.

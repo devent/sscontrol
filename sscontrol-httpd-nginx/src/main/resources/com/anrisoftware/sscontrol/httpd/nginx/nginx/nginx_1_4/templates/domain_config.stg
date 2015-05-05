@@ -1,0 +1,55 @@
+DomainImpl(args) ::= <<
+<!-- servicesConfig --!>
+<!-- args.sitesDirectory --!>
+<!-- args.indexFiles --!>
+<!-- args.clientMaxBodySize --!>
+<!-- args.sslSubdirectory --!>
+<!-- args.sslSessionTimeout --!>
+<!-- args.sslProtocols --!>
+<!-- args.sslCiphers --!>
+<!-- args.sslSessionCache --!>
+<!-- args.sslPreferServerCiphers --!>
+<!-- args.domainName --!>
+<!-- args.domainAddress --!>
+<!-- args.domainPort --!>
+<!-- args.domainSiteDirectory --!>
+<!-- args.domainCertResource --!>
+<!-- args.domainKeyResource --!>
+server {
+    # domain <args.domainName>
+    <domainBody(args)>
+    <args.servicesConfig;separator="\n">
+}
+
+>>
+
+SslDomainImpl(args) ::= <<
+server {
+    # SSL/domain <args.domainName>
+    <domainBody(args)>
+    <domainCerts(args)>
+    <args.servicesConfig;separator="\n">
+}
+
+>>
+
+domainBody(args) ::= <<
+listen <args.domainAddress>:<args.domainPort>;
+root <args.sitesDirectory>/<args.domainSiteDirectory>;
+index <args.indexFiles;separator=" ">;
+server_name <args.domainName>;
+client_max_body_size <args.clientMaxBodySize>;
+
+>>
+
+domainCerts(args) ::= <<
+ssl on;
+ssl_certificate <args.sitesDirectory>/<args.domainName>/<args.sslSubdirectory>/<args.domainCertResource;format="fileName">;
+ssl_certificate_key <args.sitesDirectory>/<args.domainName>/<args.sslSubdirectory>/<args.domainKeyResource;format="fileName">;
+ssl_session_timeout <args.sslSessionTimeout;format="simpleround">;
+ssl_protocols <args.sslProtocols;separator=" ">;
+ssl_ciphers "<args.sslCiphers;separator=":">";
+ssl_session_cache <args.sslSessionCache>;
+ssl_prefer_server_ciphers <if(args.sslPreferServerCiphers)>on<else>off<endif>;
+
+>>

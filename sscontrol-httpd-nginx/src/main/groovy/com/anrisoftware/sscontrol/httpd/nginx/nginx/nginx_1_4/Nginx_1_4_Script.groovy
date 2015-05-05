@@ -28,11 +28,13 @@ import com.anrisoftware.globalpom.textmatch.tokentemplate.TokenTemplate
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.TemplatesFactory
 import com.anrisoftware.sscontrol.httpd.domain.Domain
+import com.anrisoftware.sscontrol.httpd.domain.SslDomain
 import com.anrisoftware.sscontrol.httpd.domain.SslDomainImpl
 import com.anrisoftware.sscontrol.httpd.domain.linux.DomainConfig
 import com.anrisoftware.sscontrol.httpd.domain.linux.SslDomainConfig
 import com.anrisoftware.sscontrol.httpd.nginx.nginx.linux.FindServiceConfigWorkerFactory
 import com.anrisoftware.sscontrol.httpd.nginx.nginx.linux.NginxScript
+import com.anrisoftware.sscontrol.httpd.nginx.nginx.linux.SimpleDurationRenderer
 import com.anrisoftware.sscontrol.httpd.nginx.nginxconfig.NginxConfigListFactory
 import com.anrisoftware.sscontrol.httpd.service.HttpdService
 import com.anrisoftware.sscontrol.httpd.webservice.WebService
@@ -74,9 +76,14 @@ abstract class Nginx_1_4_Script extends NginxScript {
     StopServicesFactory stopServicesFactory
 
     /**
-     * Resource containing the <i>Nginx</i> configuration templates.
+     * Resource containing the default configuration.
      */
-    TemplateResource nginxConfigTemplate
+    TemplateResource defaultConfigTemplate
+
+    /**
+     * Resource containing the domain configuration.
+     */
+    TemplateResource domainConfigTemplate
 
     @Override
     def run() {
@@ -95,13 +102,15 @@ abstract class Nginx_1_4_Script extends NginxScript {
     }
 
     @Inject
-    final void setNginx14ScriptTemplates(
-            TemplatesFactory factory,
-            ResourceURIAttributeRenderer resourceURIRenderer) {
+    final void setNginx14ScriptTemplates(TemplatesFactory factory,
+            ResourceURIAttributeRenderer resourceURIRenderer,
+            SimpleDurationRenderer simpleDurationRenderer) {
         def templates = factory.create "Nginx_1_4", ["renderers": [
-                resourceURIRenderer
+                resourceURIRenderer,
+                simpleDurationRenderer
             ]]
-        this.nginxConfigTemplate = templates.getResource "config"
+        this.defaultConfigTemplate = templates.getResource "default_config"
+        this.domainConfigTemplate = templates.getResource "domain_config"
     }
 
     /**
@@ -158,7 +167,7 @@ abstract class Nginx_1_4_Script extends NginxScript {
     }
 
     /**
-     * Returns the Nginx service configurations.
+     * Returns the <i>Nginx</i> service configurations.
      */
     List mainConfigurations(HttpdService service) {
         [
@@ -170,26 +179,26 @@ abstract class Nginx_1_4_Script extends NginxScript {
     }
 
     def configErrorLog(HttpdService service) {
-        def search = nginxConfigTemplate.getText(true, "errorLog_search")
-        def replace = nginxConfigTemplate.getText(true, "errorLog", "debug", debugLoggingRenderer.toString(service))
+        def search = defaultConfigTemplate.getText(true, "errorLog_search")
+        def replace = defaultConfigTemplate.getText(true, "errorLog", "debug", debugLoggingRenderer.toString(service))
         new TokenTemplate(search, replace)
     }
 
     def configWorkerProcesses(HttpdService service) {
-        def search = nginxConfigTemplate.getText(true, "workerProcesses_search")
-        def replace = nginxConfigTemplate.getText(true, "workerProcesses", "processes", workerProcesses)
+        def search = defaultConfigTemplate.getText(true, "workerProcesses_search")
+        def replace = defaultConfigTemplate.getText(true, "workerProcesses", "processes", workerProcesses)
         new TokenTemplate(search, replace)
     }
 
     def configGzipOn(HttpdService service) {
-        def search = nginxConfigTemplate.getText(true, "gzipOnConfigSearch")
-        def replace = nginxConfigTemplate.getText(true, "gzipOnConfig")
+        def search = defaultConfigTemplate.getText(true, "gzipOnConfigSearch")
+        def replace = defaultConfigTemplate.getText(true, "gzipOnConfig")
         new TokenTemplate(search, replace)
     }
 
     def configGzipDisable(HttpdService service) {
-        def search = nginxConfigTemplate.getText(true, "gzipDisableConfigSearch")
-        def replace = nginxConfigTemplate.getText(true, "gzipDisableConfig")
+        def search = defaultConfigTemplate.getText(true, "gzipDisableConfigSearch")
+        def replace = defaultConfigTemplate.getText(true, "gzipDisableConfig")
         new TokenTemplate(search, replace)
     }
 
@@ -198,7 +207,7 @@ abstract class Nginx_1_4_Script extends NginxScript {
      */
     void deployIncludedConfig() {
         def file = configIncludeFile
-        def confstr = nginxConfigTemplate.getText(true, "robobeeConfig", "properties", this)
+        def confstr = defaultConfigTemplate.getText(true, "defaultConfig", "properties", this)
         FileUtils.write file, confstr, charset
     }
 
@@ -276,13 +285,26 @@ abstract class Nginx_1_4_Script extends NginxScript {
     }
 
     def deployDomainConfig(Domain domain, List servicesConfig) {
-        def string = nginxConfigTemplate.getText(
-                true, domain.class.simpleName,
-                "properties", [
-                    script: this,
-                    domain: domain,
-                    servicesConfig: servicesConfig,
-                    upload: toMegabytes(domain.memory.upload)])
+        def args = [:]
+        args.servicesConfig = servicesConfig
+        args.sitesDirectory = sitesDirectory
+        args.indexFiles = indexFiles
+        args.clientMaxBodySize = toMegabytes(domain.memory.upload)
+        args.sslSubdirectory = sslSubdirectory
+        args.sslSessionTimeout = sslSessionTimeout
+        args.sslProtocols = sslProtocols
+        args.sslCiphers = sslCiphers
+        args.sslSessionCache = sslSessionCache
+        args.sslPreferServerCiphers = sslPreferServerCiphers
+        args.domainName = domain.name
+        args.domainAddress = domain.address
+        args.domainPort = domain.port
+        args.domainSiteDirectory = domain.siteDirectory
+        if (domain instanceof SslDomain) {
+            args.domainCertResource = domain.certResource
+            args.domainKeyResource = domain.keyResource
+        }
+        def string = domainConfigTemplate.getText(true, domain.class.simpleName, "args", args)
         def file = new File(sitesAvailableDir, domain.fileName)
         FileUtils.write file, string
         log.deployDomainConfig this, domain, file

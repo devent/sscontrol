@@ -1,0 +1,53 @@
+defaultConfig(properties) ::= <<
+# - Robobee Include Configuration -
+# - Auto-generated -
+#
+
+# gzip compression
+gzip <if(properties.domainCompression)>on<else>off<endif>;
+gzip_comp_level <properties.compressionLevel>;
+gzip_min_length <properties.compressionMinSize>;
+gzip_vary <if(properties.compressionVary)>on<else>off<endif>;
+gzip_types <properties.compressionTypes;separator=" ">;
+gzip_disable "<properties.compressionException>";
+gzip_http_version <properties.compressionHttpVersion>;
+
+# hash tables
+server_names_hash_max_size <properties.serverNamesHashMaxSize>;
+server_names_hash_bucket_size <properties.serverNamesHashBucketSize>;
+proxy_headers_hash_max_size <properties.proxyHeadersHashMaxSize>;
+proxy_headers_hash_bucket_size <properties.proxyHeadersHashBucketSize>;
+
+>>
+
+errorLog_search() ::= <%
+(?m)^#?\s*error_log\s+.*?;
+%>
+
+errorLog(debug) ::= <%
+error_log <debug;format="errorlog">;
+%>
+
+workerProcesses_search() ::= <%
+(?m)^#?\s*worker_processes\s+\d+;
+%>
+
+workerProcesses(processes) ::= <%
+worker_processes <processes>;
+%>
+
+gzipOnConfigSearch() ::= <%
+(?m)^#?\s*gzip .*?;
+%>
+
+gzipOnConfig() ::= <%
+# gzip on;
+%>
+
+gzipDisableConfigSearch() ::= <%
+(?m)^#?\s*gzip_disable .*?;
+%>
+
+gzipDisableConfig() ::= <%
+# gzip_disable "msie6";
+%>

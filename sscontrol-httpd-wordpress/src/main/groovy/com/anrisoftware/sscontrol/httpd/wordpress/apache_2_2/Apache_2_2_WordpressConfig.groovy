@@ -38,15 +38,15 @@ abstract class Apache_2_2_WordpressConfig {
     private Object script
 
     @Inject
-    Apache_2_2_FcgiWordpressConfig fcgiOwncloudConfig
+    Apache_2_2_FcgiWordpressConfig wordpressConfig
 
     void deployDomain(Domain domain, Domain refDomain, WebService service, List config) {
-        fcgiOwncloudConfig.deployDomain domain, refDomain, service, config
+        wordpressConfig.deployDomain domain, refDomain, service, config
     }
 
     void deployService(Domain domain, WebService service, List config) {
         enableMods wordpressApacheMods
-        fcgiOwncloudConfig.deployService domain, service, config
+        wordpressConfig.deployService domain, service, config
     }
 
     /**
@@ -93,7 +93,7 @@ abstract class Apache_2_2_WordpressConfig {
      */
     void setScript(Object script) {
         this.script = script
-        fcgiOwncloudConfig.setScript this
+        wordpressConfig.setScript this
     }
 
     /**

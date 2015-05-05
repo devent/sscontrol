@@ -26,6 +26,8 @@ import javax.measure.Measure
 import javax.measure.MeasureFormat
 import javax.measure.unit.NonSI
 
+import org.joda.time.Duration
+
 import com.anrisoftware.globalpom.exec.api.ProcessTask
 import com.anrisoftware.globalpom.exec.runcommands.RunCommands
 import com.anrisoftware.globalpom.exec.runcommands.RunCommandsFactory
@@ -478,8 +480,50 @@ abstract class NginxScript extends LinuxScript {
     }
 
     /**
+     * Returns enable to prefer the server ciphers, for
+     * example {@code "true".}
+     *
+     * <ul>
+     * <li>profile property {@code "ssl_prefer_server_ciphers"}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    boolean getSslPreferServerCiphers() {
+        profileBooleanProperty "ssl_prefer_server_ciphers", defaultProperties
+    }
+
+    /**
+     * Returns the SSL session timeout, for
+     * example {@code "PT5M".}
+     *
+     * <ul>
+     * <li>profile property {@code "ssl_session_timeout"}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    Duration getSslSessionTimeout() {
+        profileDurationProperty "ssl_session_timeout", defaultProperties
+    }
+
+    /**
+     * Returns the SSL session cache settings, for
+     * example {@code "shared:SSL:10m".}
+     *
+     * <ul>
+     * <li>profile property {@code "ssl_session_cache"}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    String getSslSessionCache() {
+        profileProperty "ssl_session_cache", defaultProperties
+    }
+
+    /**
      * Returns the SSL protocols, for
-     * example {@code "SSLv3,TLSv1".}
+     * example {@code "SSLv3, TLSv1".}
      *
      * <ul>
      * <li>profile property {@code "ssl_protocols"}</li>
@@ -503,20 +547,6 @@ abstract class NginxScript extends LinuxScript {
      */
     List getSslCiphers() {
         profileListProperty "ssl_ciphers", defaultProperties
-    }
-
-    /**
-     * Returns the SSL session timeout, for
-     * example {@code "5m".}
-     *
-     * <ul>
-     * <li>profile property {@code "ssl_session_timeout"}</li>
-     * </ul>
-     *
-     * @see #getDefaultProperties()
-     */
-    String getSslSessionTimeout() {
-        profileProperty "ssl_session_timeout", defaultProperties
     }
 
     /**

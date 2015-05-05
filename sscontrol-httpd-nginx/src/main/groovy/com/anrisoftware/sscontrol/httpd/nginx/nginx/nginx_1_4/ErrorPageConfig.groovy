@@ -34,12 +34,12 @@ import com.anrisoftware.sscontrol.httpd.nginx.nginx.linux.NginxScript
  */
 class ErrorPageConfig {
 
-    /**
-     * Template resource containing the error page configuration templates.
-     */
-    TemplateResource errorPageConfigTemplate
+    @Inject
+    private ErrorPageConfigLogger log
 
-    NginxScript script
+    private TemplateResource configTemplate
+
+    private NginxScript script
 
     /**
      * Creates the error page configuration.
@@ -54,18 +54,18 @@ class ErrorPageConfig {
         def args = [:]
         args.domain = domain
         args.properties = script
-        config << errorPageConfigTemplate.getText(
-                true, "errorPage",
-                "args", args)
-        config << errorPageConfigTemplate.getText(
-                true, "errorLocation",
-                "args", args)
+        def errorPage = configTemplate.getText(true, "errorPage", "args", args)
+        config << errorPage
+        log.createErrorPageConfig script, domain, errorPage
+        def errorLocation = configTemplate.getText(true, "errorLocation", "args", args)
+        config << errorLocation
+        log.createErrorLocationConfig script, domain, errorLocation
     }
 
     @Inject
     void setTemplatesFactory(TemplatesFactory factory) {
         def templates = factory.create "Nginx_1_4"
-        this.errorPageConfigTemplate = templates.getResource "error_page_config"
+        this.configTemplate = templates.getResource "error_page_config"
     }
 
     void setScript(LinuxScript script) {

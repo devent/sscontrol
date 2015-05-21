@@ -18,6 +18,8 @@
  */
 package com.anrisoftware.sscontrol.scripts.locale.ubuntu_12_04;
 
+import java.io.File;
+import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Map;
 
@@ -46,8 +48,17 @@ public interface Ubuntu_12_04_InstallLocaleFactory {
      *            <li>{@code locales} the List list of the locales String names,
      *            for example {@code ["de_DE-ISO-8859-1", "pt_BR.ISO-8859-1"]}.
      *
+     *            <li>{@code localesDirectory} the {@link File} path of the
+     *            locales directory, for example
+     *            {@code "/var/lib/locales/supported.d"}.
+     *
      *            <li>{@code installCommand} the install packages {@link String}
      *            command.
+     *
+     *            <li>{@code dpkgReconfigureCommand} the
+     *            {@code "dpkg-reconfigure"} {@link String} command.
+     *
+     *            <li>{@code charset} the {@link Charset} character set of file.
      *
      *            <li>{@code runCommands} optionally, set to the
      *            {@link RunCommands} to record the command.

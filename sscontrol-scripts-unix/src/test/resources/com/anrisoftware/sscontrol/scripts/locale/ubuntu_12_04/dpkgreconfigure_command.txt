@@ -1,0 +1,14 @@
+theCommand="$0"
+echo "$@" >> $theCommand.out
+cat <<EOF
+Generating locales...
+  de_AT.UTF-8... up-to-date
+  de_BE.UTF-8... up-to-date
+  de_CH.UTF-8... up-to-date
+  de_DE.ISO-8859-1... up-to-date
+  de_DE.UTF-8... up-to-date
+  de_LI.UTF-8... up-to-date
+  de_LU.UTF-8... up-to-date
+...
+Generation complete.
+EOF

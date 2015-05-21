@@ -24,7 +24,7 @@ import com.google.inject.assistedinject.FactoryModuleBuilder;
 /**
  * <i>Ubuntu</i> install locale module.
  *
- * @see UbuntuLocalePackagesFactory
+ * @see UbuntuLocaleSettingsFactory
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
@@ -34,8 +34,8 @@ public class UbuntuInstallLocaleModule extends AbstractModule {
     @Override
     protected void configure() {
         install(new FactoryModuleBuilder().implement(
-                UbuntuLocalePackages.class, UbuntuLocalePackages.class).build(
-                UbuntuLocalePackagesFactory.class));
+                UbuntuLocaleSettings.class, UbuntuLocaleSettings.class).build(
+                UbuntuLocaleSettingsFactory.class));
     }
 
 }

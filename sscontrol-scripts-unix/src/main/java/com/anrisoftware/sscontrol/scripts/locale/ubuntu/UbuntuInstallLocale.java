@@ -18,13 +18,16 @@
  */
 package com.anrisoftware.sscontrol.scripts.locale.ubuntu;
 
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
 
 import javax.inject.Inject;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.slf4j.Logger;
 
 import com.anrisoftware.globalpom.threads.api.Threads;
 
@@ -36,6 +39,10 @@ import com.anrisoftware.globalpom.threads.api.Threads;
  */
 public abstract class UbuntuInstallLocale implements
         Callable<UbuntuInstallLocale> {
+
+    private static final String LOG_KEY = "log";
+
+    private static final String LOCALES_KEY = "locales";
 
     private final Map<String, Object> args;
 
@@ -49,8 +56,9 @@ public abstract class UbuntuInstallLocale implements
      * @param args
      *            the {@link Map} arguments:
      *            <ul>
-     *            <li>{@code locales} the List list of the locales String names,
-     *            for example {@code ["de_DE-ISO-8859-1", "pt_BR.ISO-8859-1"]}.
+     *            <li>{@code locales} the {@link List} list of the locale
+     *            {@link String} names, for example
+     *            {@code ["de_DE-ISO-8859-1", "pt_BR.ISO-8859-1"]}.
      *            </ul>
      *
      */
@@ -61,6 +69,25 @@ public abstract class UbuntuInstallLocale implements
     @Inject
     public final void setUbuntuInstallLocaleLogger(UbuntuInstallLocaleLogger log) {
         log.locales(args, parent);
+    }
+
+    /**
+     * Returns the list of the locales.
+     *
+     * @return the {@link List} list of the locale {@link String} names,
+     */
+    @SuppressWarnings("unchecked")
+    public List<String> getLocales() {
+        return (List<String>) args.get(LOCALES_KEY);
+    }
+
+    /**
+     * Returns the logger.
+     *
+     * @return the {@link Logger} logger,
+     */
+    public Logger getLog() {
+        return (Logger) args.get(LOG_KEY);
     }
 
     public final void setThreads(Threads threads) {
@@ -77,6 +104,10 @@ public abstract class UbuntuInstallLocale implements
 
     public Object getParent() {
         return parent;
+    }
+
+    public Map<String, Object> getArgs() {
+        return Collections.unmodifiableMap(args);
     }
 
     @Override

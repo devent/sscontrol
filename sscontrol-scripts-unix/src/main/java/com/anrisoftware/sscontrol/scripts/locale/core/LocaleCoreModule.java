@@ -16,25 +16,26 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-scripts-unix. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.scripts.locale.ubuntu_12_04;
+package com.anrisoftware.sscontrol.scripts.locale.core;
 
-import com.anrisoftware.sscontrol.scripts.locale.ubuntu.UbuntuInstallLocale;
 import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 
 /**
- * @see Ubuntu_12_04_InstallLocaleFactory
+ * Binds locale info factory.
  *
- * @author Erwin Mueller, erwin.mueller@deventm.org
+ * @see LocaleInfoFactory
+ *
+ * @author Erwin Müller, erwin.mueller@deventm.de
+ *
  * @since 1.0
  */
-public class Ubuntu_12_04_InstallLocaleModule extends AbstractModule {
+public class LocaleCoreModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        install(new FactoryModuleBuilder().implement(UbuntuInstallLocale.class,
-                UbuntuInstallLocale.class).build(
-                Ubuntu_12_04_InstallLocaleFactory.class));
+        install(new FactoryModuleBuilder().implement(LocaleInfo.class,
+                LocaleInfo.class).build(LocaleInfoFactory.class));
     }
 
 }

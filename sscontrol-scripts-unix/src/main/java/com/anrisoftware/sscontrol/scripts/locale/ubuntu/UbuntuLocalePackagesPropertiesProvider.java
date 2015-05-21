@@ -16,25 +16,28 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-scripts-unix. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.scripts.locale.ubuntu_12_04;
+package com.anrisoftware.sscontrol.scripts.locale.ubuntu;
 
-import com.anrisoftware.sscontrol.scripts.locale.ubuntu.UbuntuInstallLocale;
-import com.google.inject.AbstractModule;
-import com.google.inject.assistedinject.FactoryModuleBuilder;
+import java.net.URL;
+
+import com.anrisoftware.propertiesutils.AbstractContextPropertiesProvider;
 
 /**
- * @see Ubuntu_12_04_InstallLocaleFactory
+ * <i>Ubuntu</i> locale packages properties provider from
+ * {@code "/ubuntu_locale_packages.properties"}.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-public class Ubuntu_12_04_InstallLocaleModule extends AbstractModule {
+@SuppressWarnings("serial")
+class UbuntuLocalePackagesPropertiesProvider extends
+        AbstractContextPropertiesProvider {
 
-    @Override
-    protected void configure() {
-        install(new FactoryModuleBuilder().implement(UbuntuInstallLocale.class,
-                UbuntuInstallLocale.class).build(
-                Ubuntu_12_04_InstallLocaleFactory.class));
+    private static final URL RES = UbuntuLocalePackagesPropertiesProvider.class
+            .getResource("/ubuntu_locale_packages.properties");
+
+    UbuntuLocalePackagesPropertiesProvider() {
+        super(UbuntuLocaleSettings.class, RES);
     }
 
 }

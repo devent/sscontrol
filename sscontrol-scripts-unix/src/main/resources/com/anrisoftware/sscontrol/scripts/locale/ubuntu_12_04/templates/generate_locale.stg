@@ -1,0 +1,10 @@
+generateLocale(args) ::= <<
+<args.command> <args.locales;separator=" ">
+
+>>
+
+dpkgReconfigureLocale(args) ::= <<
+export DEBIAN_FRONTEND=noninteractive
+<args.command> locales
+
+>>

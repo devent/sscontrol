@@ -25,9 +25,11 @@ import javax.inject.Inject
 import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.sscontrol.core.service.LinuxScript
 import com.anrisoftware.sscontrol.httpd.domain.Domain
+import com.anrisoftware.sscontrol.httpd.frontaccounting.FrontaccountingService
 import com.anrisoftware.sscontrol.httpd.frontaccounting.core.Frontaccounting_2_3_Config
 import com.anrisoftware.sscontrol.httpd.webservice.ServiceConfig
 import com.anrisoftware.sscontrol.httpd.webservice.WebService
+import com.anrisoftware.sscontrol.scripts.locale.ubuntu_12_04.Ubuntu_12_04_InstallLocaleFactory
 import com.anrisoftware.sscontrol.scripts.unix.InstallPackagesFactory
 
 /**
@@ -54,6 +56,9 @@ class Ubuntu_12_04_Apache_FrontaccountingConfig extends Frontaccounting_2_3_Conf
     @Inject
     InstallPackagesFactory installPackagesFactory
 
+    @Inject
+    Ubuntu_12_04_InstallLocaleFactory installLocaleFactory
+
     @Override
     void deployDomain(Domain domain, Domain refDomain, WebService service, List config) {
         setupDefaults domain, service
@@ -69,6 +74,7 @@ class Ubuntu_12_04_Apache_FrontaccountingConfig extends Frontaccounting_2_3_Conf
         frontaccountingFromArchive.deployService domain, service
         deployConfig domain, service
         setupPermissions domain, service
+        installLocales domain, service
     }
 
     /**
@@ -81,6 +87,32 @@ class Ubuntu_12_04_Apache_FrontaccountingConfig extends Frontaccounting_2_3_Conf
                 command: installCommand,
                 packages: frontaccountingPackages,
                 system: systemName,
+                this, threads)()
+    }
+
+    /**
+     * Installs specified locales.
+     *
+     * @param domain
+     *            the {@link Domain}.
+     *
+     * @param service
+     *            the {@link FrontaccountingService}.
+     *
+     */
+    void installLocales(Domain domain, FrontaccountingService service) {
+        if (service.locales == null || service.locales.size() == 0) {
+            return
+        }
+        installLocaleFactory.create(
+                log: log,
+                runCommands: runCommands,
+                locales: service.locales,
+                installCommand: installCommand,
+                dpkgReconfigureCommand: reconfigureCommand,
+                localesDirectory: localesDirectory,
+                system: systemName,
+                charset: charset,
                 this, threads)()
     }
 

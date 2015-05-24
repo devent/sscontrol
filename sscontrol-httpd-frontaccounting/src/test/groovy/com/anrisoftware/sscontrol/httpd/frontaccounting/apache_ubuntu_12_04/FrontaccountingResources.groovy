@@ -33,10 +33,8 @@ import com.anrisoftware.sscontrol.testutils.resources.ResourcesUtils
 enum FrontaccountingResources {
 
     profile("UbuntuProfile.groovy", FrontaccountingResources.class.getResource("UbuntuProfile.groovy")),
-    basicScript("Httpd.groovy", FrontaccountingResources.class.getResource("HttpdFrontaccountingBasic.groovy")),
-    aliasScript("Httpd.groovy", FrontaccountingResources.class.getResource("HttpdFrontaccountingAlias.groovy")),
-    backupScript("Httpd.groovy", FrontaccountingResources.class.getResource("HttpdFrontaccountingBackup.groovy")),
     // basic
+    basicScript("Httpd.groovy", FrontaccountingResources.class.getResource("HttpdFrontaccountingBasic.groovy")),
     basicTest1comConfigDefaultPhpFile("/var/www/test1.com/frontaccounting_2/config.php", Frontaccounting_2_3_ArchiveResources.frontaccountingDefaultSample.resource),
     basicTest1comConfigDbPhpFile("/var/www/test1.com/frontaccounting_2/config_db.php", Frontaccounting_2_3_ArchiveResources.frontaccountingDbConfig.resource),
     basicTest1comConfExpected("/etc/apache2/sites-available/100-robobee-test1.com.conf", FrontaccountingResources.class.getResource("basic_test1comconf_expected.txt")),
@@ -50,15 +48,29 @@ enum FrontaccountingResources {
     basicChownOutExpected("/bin/chown.out", FrontaccountingResources.class.getResource("basic_chown_out_expected.txt")),
     basicAptitudeOutExpected("/usr/bin/aptitude.out", FrontaccountingResources.class.getResource("basic_aptitude_out_expected.txt")),
     // alias expected
+    aliasScript("Httpd.groovy", FrontaccountingResources.class.getResource("HttpdFrontaccountingAlias.groovy")),
     aliasTest1comConfigDefaultPhpFile("/var/www/test1.com/frontaccounting_2/config.php", Frontaccounting_2_3_ArchiveResources.frontaccountingDefaultSample.resource),
     aliasTest1comConfigDbPhpFile("/var/www/test1.com/frontaccounting_2/config_db.php", Frontaccounting_2_3_ArchiveResources.frontaccountingDbConfig.resource),
     aliasTest1comConfExpected("/etc/apache2/sites-available/100-robobee-test1.com.conf", FrontaccountingResources.class.getResource("alias_test1comconf_expected.txt")),
     aliasTest1comYourlsConfExpected("/var/www/test1.com/frontaccounting_2/config.php", FrontaccountingResources.class.getResource("basic_test1com_configphp_expected.txt")),
     // backup expected
+    backupScript("Httpd.groovy", FrontaccountingResources.class.getResource("HttpdFrontaccountingBackup.groovy")),
     backupRuncommandsLogExpected("/runcommands.log", FrontaccountingResources.class.getResource("backup_runcommands_expected.txt")),
     backupTarOutExpected("/bin/tar.out", FrontaccountingResources.class.getResource("backup_tar_out_expected.txt")),
     backupChmodOutExpected("/bin/chmod.out", FrontaccountingResources.class.getResource("backup_chmod_out_expected.txt")),
     backupChownOutExpected("/bin/chown.out", FrontaccountingResources.class.getResource("backup_chown_out_expected.txt")),
+    // locales expected
+    localesScript("Httpd.groovy", FrontaccountingResources.class.getResource("HttpdFrontaccountingLocales.groovy")),
+    localesDe("/var/lib/locales/supported.d/de", FrontaccountingResources.class.getResource("locales_de.txt")),
+    localesPt("/var/lib/locales/supported.d/pt", FrontaccountingResources.class.getResource("locales_pt.txt")),
+    localesTest1comConfigDefaultPhpFile("/var/www/test1.com/frontaccounting_2/config.php", Frontaccounting_2_3_ArchiveResources.frontaccountingDefaultSample.resource),
+    localesRuncommandsLogExpected("/runcommands.log", FrontaccountingResources.class.getResource("locales_runcommands_expected.txt")),
+    localesReconfigureOutExpected("/usr/sbin/dpkg-reconfigure.out", FrontaccountingResources.class.getResource("locales_reconfigure_out_expected.txt")),
+    localesTarOutExpected("/bin/tar.out", FrontaccountingResources.class.getResource("locales_tar_out_expected.txt")),
+    localesChmodOutExpected("/bin/chmod.out", FrontaccountingResources.class.getResource("locales_chmod_out_expected.txt")),
+    localesChownOutExpected("/bin/chown.out", FrontaccountingResources.class.getResource("locales_chown_out_expected.txt")),
+    localesDeFileExpected("/var/lib/locales/supported.d/de", FrontaccountingResources.class.getResource("locales_de_expected.txt")),
+    localesPtFileExpected("/var/lib/locales/supported.d/pt", FrontaccountingResources.class.getResource("locales_pt_expected.txt")),
 
     static copyFrontaccountingFiles(File parent) {
     }

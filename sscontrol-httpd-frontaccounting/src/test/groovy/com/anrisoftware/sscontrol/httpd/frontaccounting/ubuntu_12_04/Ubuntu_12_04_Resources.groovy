@@ -33,6 +33,7 @@ enum Ubuntu_12_04_Resources {
 
     // commands
     aptitudeCommand("/usr/bin/aptitude", Ubuntu_12_04_Resources.class.getResource("echo_command.txt")),
+    reconfigureCommand("/usr/sbin/dpkg-reconfigure", Ubuntu_12_04_Resources.class.getResource("echo_command.txt")),
     mysqldumpCommand("/usr/bin/mysqldump", Ubuntu_12_04_Resources.class.getResource("echo_command.txt")),
     gzipCommand("/bin/gzip", Ubuntu_12_04_Resources.class.getResource("echo_command.txt")),
     bashCommand("/bin/bash", Ubuntu_12_04_Resources.class.getResource("echo_command.txt")),
@@ -46,6 +47,7 @@ enum Ubuntu_12_04_Resources {
     lnCommand("/bin/ln", Ubuntu_12_04_Resources.class.getResource("echo_command.txt")),
     // files
     tmpDir("/tmp", null),
+    localesDir("/var/lib/locales/supported.d", null),
     certCrt("cert.crt", Ubuntu_12_04_Resources.class.getResource("cert_crt.txt")),
     certKey("cert.key", Ubuntu_12_04_Resources.class.getResource("cert_key.txt")),
     groupsFile("/etc/group", Ubuntu_12_04_Resources.class.getResource("group.txt")),
@@ -60,6 +62,7 @@ enum Ubuntu_12_04_Resources {
     static copyUbuntuFiles(File parent) {
         // commands
         aptitudeCommand.createCommand parent
+        reconfigureCommand.createCommand parent
         mysqldumpCommand.createCommand parent
         gzipCommand.createCommand parent
         bashCommand.createCommand parent
@@ -73,6 +76,7 @@ enum Ubuntu_12_04_Resources {
         lnCommand.createCommand parent
         // files
         tmpDir.asFile(parent).mkdirs()
+        localesDir.asFile(parent).mkdirs()
         groupsFile.createFile parent
         usersFile.createFile parent
         gdIniFile.createFile parent
@@ -86,6 +90,7 @@ enum Ubuntu_12_04_Resources {
     static void setupUbuntuProperties(def profile, File parent) {
         def entry = profile.getEntry("httpd")
         entry.install_command aptitudeCommand.asFile(parent)
+        entry.reconfigure_command reconfigureCommand.asFile(parent)
         entry.mysqldump_command mysqldumpCommand.asFile(parent)
         entry.gzip_command gzipCommand.asFile(parent)
         entry.chmod_command chmodCommand.asFile(parent)
@@ -96,6 +101,7 @@ enum Ubuntu_12_04_Resources {
         entry.unzip_command unzipCommand.asFile(parent)
         entry.link_command lnCommand.asFile(parent)
         entry.temp_directory tmpDir.asFile(parent)
+        entry.locales_directory localesDir.asFile(parent)
         entry.groups_file groupsFile.asFile(parent)
         entry.users_file usersFile.asFile(parent)
     }

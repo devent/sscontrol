@@ -837,6 +837,30 @@ abstract class LinuxScript extends Script {
     }
 
     /**
+     * Returns the generate locale command, for
+     * example {@code "/usr/sbin/locale-gen"}.
+     *
+     * <ul>
+     * <li>property key {@code generate_locale_command}</li>
+     * </ul>
+     */
+    String getGenerateLocaleCommand() {
+        profileProperty "generate_locale_command", defaultProperties
+    }
+
+    /**
+     * Returns the locales directory, for
+     * example {@code "/var/lib/locales/supported.d"}.
+     *
+     * <ul>
+     * <li>property key {@code locales_directory}</li>
+     * </ul>
+     */
+    File getLocalesDirectory() {
+        profileDirProperty "locales_directory", defaultProperties
+    }
+
+    /**
      * Returns the default properties for the service, as in example:
      *
      * <pre>

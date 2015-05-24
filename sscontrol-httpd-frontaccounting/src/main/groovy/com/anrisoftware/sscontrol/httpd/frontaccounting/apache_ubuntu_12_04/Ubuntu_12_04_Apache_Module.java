@@ -19,6 +19,9 @@
 package com.anrisoftware.sscontrol.httpd.frontaccounting.apache_ubuntu_12_04;
 
 import com.anrisoftware.globalpom.version.VersionModule;
+import com.anrisoftware.sscontrol.scripts.locale.core.LocaleCoreModule;
+import com.anrisoftware.sscontrol.scripts.locale.ubuntu.UbuntuInstallLocaleModule;
+import com.anrisoftware.sscontrol.scripts.locale.ubuntu_12_04.Ubuntu_12_04_InstallLocaleModule;
 import com.anrisoftware.sscontrol.scripts.versionlimits.VersionLimitsModule;
 import com.google.inject.AbstractModule;
 
@@ -34,6 +37,9 @@ class Ubuntu_12_04_Apache_Module extends AbstractModule {
     protected void configure() {
         install(new VersionModule());
         install(new VersionLimitsModule());
+        install(new Ubuntu_12_04_InstallLocaleModule());
+        install(new UbuntuInstallLocaleModule());
+        install(new LocaleCoreModule());
     }
 
 }

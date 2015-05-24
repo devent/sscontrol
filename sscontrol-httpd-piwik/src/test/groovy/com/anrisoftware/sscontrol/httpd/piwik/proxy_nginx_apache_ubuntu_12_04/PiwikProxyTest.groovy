@@ -56,7 +56,7 @@ class PiwikProxyTest extends WebServiceTestEnvironment {
         registry.allServices.each { it.call() }
         log.info "Run service again to ensure that configuration is not set double."
         registry.allServices.each { it.call() }
-        assertStringContent runcommandsLogExpected.replaced(tmpdir, tmpdir, "/tmp").replaceAll(/\d+/, 'time'), runcommandsLogExpected.toString()
+        assertStringContent runcommandsLogExpected.replaced(tmpdir, tmpdir, "/tmp").replaceAll(/\d{2,}/, 'time'), runcommandsLogExpected.toString()
         assertFileContent aptitudeOutExpected.asFile(tmpdir), aptitudeOutExpected
         assertFileContent apachePortsConfExpected.asFile(tmpdir), apachePortsConfExpected
         assertStringContent test1comProxyConfExpected.replaced(tmpdir, tmpdir, "/tmp"), test1comProxyConfExpected.toString()

@@ -118,4 +118,35 @@ class FrontaccountingTest extends WebServiceTestEnvironment {
         assertStringContent backupChmodOutExpected.replaced(tmpdir, tmpdir, "/tmp"), backupChmodOutExpected.toString()
         assertStringContent backupChownOutExpected.replaced(tmpdir, tmpdir, "/tmp"), backupChownOutExpected.toString()
     }
+
+    @Test
+    void "frontaccounting locales"() {
+        attachRunCommandsLog tmpdir
+        copyUbuntuFiles tmpdir
+        copyApacheUbuntuFiles tmpdir
+        copyFrontaccountingArchiveFiles tmpdir
+        copyFrontaccountingFiles tmpdir
+        localesTest1comConfigDefaultPhpFile.createFile tmpdir
+        localesDe.createFile tmpdir
+        localesPt.createFile tmpdir
+        loader.loadService profile.resource, null
+        def profile = registry.getService("profile")[0]
+        setupApacheUbuntuProperties profile, tmpdir
+        setupUbuntuProperties profile, tmpdir
+        setupFrontaccountingProperties profile, tmpdir
+        setupFrontaccountingArchiveProperties profile, tmpdir
+        loader.loadService localesScript.resource, profile, preScript
+        registry.allServices.each { it.call() }
+        log.info "Run service again to ensure that configuration is not set double."
+        aliasTest1comConfigDbPhpFile.createFile tmpdir
+        registry.allServices.each { it.call() }
+
+        assertStringContent localesRuncommandsLogExpected.replaced(tmpdir, tmpdir, "/tmp").replaceAll(/\d{2,}/, 'time'), localesRuncommandsLogExpected.toString()
+        assertStringContent localesReconfigureOutExpected.replaced(tmpdir, tmpdir, "/tmp"), localesReconfigureOutExpected.toString()
+        assertStringContent localesTarOutExpected.replaced(tmpdir, tmpdir, "/tmp").replaceAll(/\d{2,}/, 'time'), localesTarOutExpected.toString()
+        assertStringContent localesChmodOutExpected.replaced(tmpdir, tmpdir, "/tmp"), localesChmodOutExpected.toString()
+        assertStringContent localesChownOutExpected.replaced(tmpdir, tmpdir, "/tmp"), localesChownOutExpected.toString()
+        assertStringContent localesDeFileExpected.replaced(tmpdir, tmpdir, "/tmp"), localesDeFileExpected.toString()
+        assertStringContent localesPtFileExpected.replaced(tmpdir, tmpdir, "/tmp"), localesPtFileExpected.toString()
+    }
 }

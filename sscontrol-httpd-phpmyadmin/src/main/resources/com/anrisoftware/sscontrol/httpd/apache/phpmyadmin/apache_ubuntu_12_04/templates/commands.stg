@@ -1,5 +1,6 @@
 reconfigure(args) ::= <<
 <! - args.command - !>
+export DEBIAN_FRONTEND=noninteractive
 <args.command> phpmyadmin
 
 >>

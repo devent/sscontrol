@@ -1,0 +1,10 @@
+u=rwx,g=rwx,o=rx /tmp/var/www/test1.com/web
+-R u=rwX,g=rX,o-rwX /tmp/var/backups/test1.com
+755 /tmp/var/www/php-fcgi-scripts/test1.com/php-fcgi-starter
+-R u=rwX,g=rX,o=rX /tmp/var/www/test1.com/yourls_1
+u=r,g=r,o-rwx /tmp/var/www/test1.com/yourls_1/user/config.php
+u=rwx,g=rwx,o=rx /tmp/var/www/test1.com/web
+-R u=rwX,g=rX,o-rwX /tmp/var/backups/test1.com
+755 /tmp/var/www/php-fcgi-scripts/test1.com/php-fcgi-starter
+-R u=rwX,g=rX,o=rX /tmp/var/www/test1.com/yourls_1
+u=r,g=r,o-rwx /tmp/var/www/test1.com/yourls_1/user/config.php

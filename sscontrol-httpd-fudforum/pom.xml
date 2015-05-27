@@ -1,0 +1,113 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>com.anrisoftware.sscontrol</groupId>
+		<artifactId>sscontrol-parent</artifactId>
+		<version>1.0-alpha-5-SNAPSHOT</version>
+		<relativePath>../sscontrol-parent</relativePath>
+	</parent>
+
+	<artifactId>sscontrol-httpd-fudforum</artifactId>
+	<name>RoboBee :: Httpd :: FUDForum</name>
+	<description>Web forum FUDForum - http://fudforum.org</description>
+	<inceptionYear>2015</inceptionYear>
+	<url>https://anrisoftware.com/projects/projects/sscontrol-httpd-fudforum</url>
+
+	<properties>
+		<project.custom.year>${project.inceptionYear}</project.custom.year>
+	</properties>
+
+	<issueManagement>
+		<system>Redmine</system>
+		<url>https://anrisoftware.com/projects/projects/sscontrol-httpd-fudforum</url>
+	</issueManagement>
+
+	<scm>
+		<connection>scm:git:git@anrisoftware.com:sscontrol.git</connection>
+		<developerConnection>scm:git:git@anrisoftware.com:sscontrol.git</developerConnection>
+		<url>https://anrisoftware.com/projects/projects/sscontrol-core-project/repository</url>
+	</scm>
+
+	<distributionManagement>
+		<site>
+			<id>anrisoftware</id>
+			<url>dav:https://anrisoftware.com/javadoc/${project.groupId}/${project.artifactId}</url>
+		</site>
+		<repository>
+			<id>osssonatype</id>
+			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
+		</repository>
+		<snapshotRepository>
+			<id>osssonatype_snapshots</id>
+			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
+		</snapshotRepository>
+	</distributionManagement>
+
+	<dependencies>
+
+		<!-- test dependencies -->
+		<dependency>
+			<groupId>com.anrisoftware.sscontrol</groupId>
+			<artifactId>sscontrol-testutils</artifactId>
+			<version>1.0-alpha-5-SNAPSHOT</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.anrisoftware.sscontrol</groupId>
+			<artifactId>sscontrol-profile</artifactId>
+			<version>1.0-alpha-5-SNAPSHOT</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.anrisoftware.sscontrol</groupId>
+			<artifactId>sscontrol-httpd</artifactId>
+			<version>1.0-alpha-5-SNAPSHOT</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.anrisoftware.sscontrol</groupId>
+			<artifactId>sscontrol-httpd-nginx</artifactId>
+			<version>1.0-alpha-5-SNAPSHOT</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.anrisoftware.sscontrol</groupId>
+			<artifactId>sscontrol-httpd-apache</artifactId>
+			<version>1.0-alpha-5-SNAPSHOT</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.anrisoftware.globalpom</groupId>
+			<artifactId>globalpom-groovytestutils</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- own modules dependencies -->
+		<dependency>
+			<groupId>com.anrisoftware.sscontrol</groupId>
+			<artifactId>sscontrol-core</artifactId>
+			<version>1.0-alpha-5-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>com.anrisoftware.sscontrol</groupId>
+			<artifactId>sscontrol-httpd-webservice</artifactId>
+			<version>1.0-alpha-5-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>com.anrisoftware.sscontrol</groupId>
+			<artifactId>sscontrol-scripts-unix</artifactId>
+			<version>1.0-alpha-5-SNAPSHOT</version>
+		</dependency>
+
+		<!-- compile dependencies -->
+		<dependency>
+			<groupId>org.mangosdk.spi</groupId>
+			<artifactId>spi</artifactId>
+			<optional>true</optional>
+		</dependency>
+	</dependencies>
+
+</project>

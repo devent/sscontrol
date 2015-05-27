@@ -25,6 +25,7 @@
         <module>sscontrol-httpd-apache</module>
         <module>sscontrol-httpd-citadel</module>
         <module>sscontrol-httpd-frontaccounting</module>
+        <module>sscontrol-httpd-fudforum</module>
         <module>sscontrol-httpd-nginx</module>
         <module>sscontrol-httpd-owncloud</module>
         <module>sscontrol-httpd-phpmyadmin</module>

@@ -1,0 +1,19 @@
+installIni(args) ::= <<
+; Settings for command line installer
+WWW_ROOT                = "<args.site>"
+SERVER_ROOT             = "<args.installDirectory>"
+SERVER_DATA_ROOT        = "<args.dataDirectory>"
+DBHOST                  = "<args.databaseHost>"
+DBHOST_USER             = <args.databaseUser>
+DBHOST_PASSWORD         = <args.databasePassword>
+DBHOST_DBNAME           = <args.databaseName>
+DBHOST_TBL_PREFIX       = <args.databaseTablePrefix>
+DBHOST_DBTYPE           = <args.databaseType>
+COOKIE_DOMAIN           = <args.domainName>
+LANGUAGE                = <args.language>
+TEMPLATE                = <args.template>
+ROOT_LOGIN              = <args.rootLogin>
+ROOT_PASS               = <args.rootPassword>
+ADMIN_EMAIL             = "<args.rootEmail>"
+
+>>

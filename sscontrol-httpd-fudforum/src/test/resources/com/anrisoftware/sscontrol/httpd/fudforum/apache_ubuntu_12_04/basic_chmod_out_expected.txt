@@ -1,0 +1,8 @@
+u=rwx,g=rwx,o=rx /tmp/var/www/test1.com/web
+755 /tmp/var/www/php-fcgi-scripts/test1.com/php-fcgi-starter
+-R u=rwX,g=rX,o=rX /tmp/var/www/test1.com/fudforum_3
+u=r,g=r,o-rwx /tmp/var/www/test1.com/fudforum_3/install.ini
+u=rwx,g=rwx,o=rx /tmp/var/www/test1.com/web
+755 /tmp/var/www/php-fcgi-scripts/test1.com/php-fcgi-starter
+-R u=rwX,g=rX,o=rX /tmp/var/www/test1.com/fudforum_3
+u=r,g=r,o-rwx /tmp/var/www/test1.com/fudforum_3/install.ini

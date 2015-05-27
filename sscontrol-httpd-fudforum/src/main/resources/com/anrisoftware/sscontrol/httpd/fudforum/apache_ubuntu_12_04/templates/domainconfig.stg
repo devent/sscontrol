@@ -1,0 +1,52 @@
+domainConfig(args) ::= <<
+<!- args.domainName -!>
+<!- args.serviceAlias -!>
+<!- args.haveAlias -!>
+<!- args.serviceDirectory -!>
+<!- args.sitesDirectory -!>
+<!- args.scriptsSubdirectory -!>
+<!- args.scriptStarterFileName -!>
+# <args.serviceDirectory>
+
+<serviceAlias(args)>
+
+\<Directory <args.serviceDirectory>\>
+    AddHandler fcgid-script .php
+    <fcgiWrapper(args)>
+    Options +ExecCGI +FollowSymLinks -Indexes
+    DirectoryIndex index.php
+    AllowOverride All
+
+    Order allow,deny
+    Allow from all
+
+    <phpConfig(args)>
+\</Directory>
+
+>>
+
+fcgiWrapper(args) ::= <%
+FCGIWrapper <args.sitesDirectory>/<args.scriptsSubdirectory>/<args.domainName>/<args.scriptStarterFileName> .php
+%>
+
+serviceAlias(args) ::= <<
+Alias /<args.serviceAlias> <args.serviceAliasDir>
+>>
+
+phpConfig(args) ::= <<
+\<IfModule mod_mime.c>
+    \<IfModule !mod_php5.c>
+        \<IfModule mod_actions.c>
+            \<IfModule mod_cgi.c>
+                AddType application/x-httpd-php .php
+                Action application/x-httpd-php /cgi-bin/php5
+            \</IfModule>
+            \<IfModule mod_cgid.c>
+                AddType application/x-httpd-php .php
+                Action application/x-httpd-php /cgi-bin/php5
+            \</IfModule>
+        \</IfModule>
+    \</IfModule>
+\</IfModule>
+
+>>

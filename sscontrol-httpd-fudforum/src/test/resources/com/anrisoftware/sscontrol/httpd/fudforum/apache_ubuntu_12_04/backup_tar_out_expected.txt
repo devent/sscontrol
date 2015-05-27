@@ -1,0 +1,3 @@
+-czf /tmp/var/backups/test1.com/yourls_test1.com_time-time-timeTtime-time-time-time.tar.gz /tmp/var/www/test1.com/yourls_1
+--overwrite --strip 1 -xf /tmp/tmp/yourls-YOURLS-1.7.tar.gz
+-czf /tmp/var/backups/test1.com/yourls_test1.com_time-time-timeTtime-time-time-time.tar.gz /tmp/var/www/test1.com/yourls_1

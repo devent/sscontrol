@@ -67,6 +67,7 @@ class FudforumTest extends WebServiceTestEnvironment {
         assertStringContent basicChmodOutExpected.replaced(tmpdir, tmpdir, "/tmp"), basicChmodOutExpected.toString()
         assertStringContent basicChownOutExpected.replaced(tmpdir, tmpdir, "/tmp"), basicChownOutExpected.toString()
         assertFileContent basicAptitudeOutExpected.asFile(tmpdir), basicAptitudeOutExpected
+        assertFileContent basicPhpOutExpected.asFile(tmpdir), basicPhpOutExpected
     }
 
     @Test
@@ -76,6 +77,7 @@ class FudforumTest extends WebServiceTestEnvironment {
         copyApacheUbuntuFiles tmpdir
         copyFudforumArchiveFiles tmpdir
         copyFudforumFiles tmpdir
+        basicTest1comFudforumArchiveFile.createFile tmpdir
         loader.loadService profile.resource, null
         def profile = registry.getService("profile")[0]
         setupApacheUbuntuProperties profile, tmpdir
@@ -90,9 +92,9 @@ class FudforumTest extends WebServiceTestEnvironment {
         assertStringContent aliasTest1comConfExpected.replaced(tmpdir, tmpdir, "/tmp"), aliasTest1comConfExpected.toString()
         assertFileContent basicTest1comPhpIniConfExpected.asFile(tmpdir), basicTest1comPhpIniConfExpected
         assertStringContent basicTest1comPhpFcgStarterExpected.replaced(tmpdir, tmpdir, "/tmp"), basicTest1comPhpFcgStarterExpected.toString()
-        assertFileContent aliasTest1comYourlsConfExpected.asFile(tmpdir), aliasTest1comYourlsConfExpected
+        assertStringContent aliasTest1comInstallIniExpected.replaced(tmpdir, tmpdir, "/tmp"), aliasTest1comInstallIniExpected.toString()
         assertStringContent basicRuncommandsLogExpected.replaced(tmpdir, tmpdir, "/tmp").replaceAll(/\d{2,}/, 'time'), basicRuncommandsLogExpected.toString()
-        assertStringContent basicTarOutExpected.replaced(tmpdir, tmpdir, "/tmp").replaceAll(/\d{2,}/, 'time'), basicTarOutExpected.toString()
+        assertStringContent basicUnzipOutExpected.replaced(tmpdir, tmpdir, "/tmp").replaceAll(/\d{2,}/, 'time'), basicUnzipOutExpected.toString()
         assertStringContent basicChmodOutExpected.replaced(tmpdir, tmpdir, "/tmp"), basicChmodOutExpected.toString()
         assertStringContent basicChownOutExpected.replaced(tmpdir, tmpdir, "/tmp"), basicChownOutExpected.toString()
         assertFileContent basicAptitudeOutExpected.asFile(tmpdir), basicAptitudeOutExpected
@@ -105,6 +107,7 @@ class FudforumTest extends WebServiceTestEnvironment {
         copyApacheUbuntuFiles tmpdir
         copyFudforumArchiveFiles tmpdir
         copyFudforumFiles tmpdir
+        basicTest1comFudforumArchiveFile.createFile tmpdir
         loader.loadService profile.resource, null
         def profile = registry.getService("profile")[0]
         setupApacheUbuntuProperties profile, tmpdir

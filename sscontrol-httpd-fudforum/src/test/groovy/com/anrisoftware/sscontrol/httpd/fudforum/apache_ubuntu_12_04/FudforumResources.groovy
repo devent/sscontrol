@@ -35,6 +35,7 @@ enum FudforumResources {
     httpdBasicScript("Httpd.groovy", FudforumResources.class.getResource("HttpdBasic.groovy")),
     httpdAliasScript("Httpd.groovy", FudforumResources.class.getResource("HttpdAlias.groovy")),
     httpdBackupScript("Httpd.groovy", FudforumResources.class.getResource("HttpdBackup.groovy")),
+    phpCommand("/usr/bin/php5", FudforumResources.class.getResource("echo_command.txt")),
     // basic
     basicTest1comFudforumArchiveFile("/var/www/test1.com/fudforum_3/fudforum/fudforum_archive", FudforumResources.class.getResource("basic_test1com_fudforumarchive.txt")),
     basicTest1comConfExpected("/etc/apache2/sites-available/100-robobee-test1.com.conf", FudforumResources.class.getResource("basic_test1comconf_expected.txt")),
@@ -46,9 +47,10 @@ enum FudforumResources {
     basicChmodOutExpected("/bin/chmod.out", FudforumResources.class.getResource("basic_chmod_out_expected.txt")),
     basicChownOutExpected("/bin/chown.out", FudforumResources.class.getResource("basic_chown_out_expected.txt")),
     basicAptitudeOutExpected("/usr/bin/aptitude.out", FudforumResources.class.getResource("basic_aptitude_out_expected.txt")),
+    basicPhpOutExpected("/usr/bin/php5.out", FudforumResources.class.getResource("basic_php_out_expected.txt")),
     // alias
     aliasTest1comConfExpected("/etc/apache2/sites-available/100-robobee-test1.com.conf", FudforumResources.class.getResource("alias_test1comconf_expected.txt")),
-    aliasTest1comYourlsConfExpected("/var/www/test1.com/yourls_1/user/config.php", FudforumResources.class.getResource("alias_test1com_configphp_expected.txt")),
+    aliasTest1comInstallIniExpected("/var/www/test1.com/fudforum_3/install.ini", FudforumResources.class.getResource("alias_test1com_installini_expected.txt")),
     // backup
     backupRuncommandsLogExpected("/runcommands.log", FudforumResources.class.getResource("backup_runcommands_expected.txt")),
     backupTarOutExpected("/bin/tar.out", FudforumResources.class.getResource("backup_tar_out_expected.txt")),
@@ -56,10 +58,12 @@ enum FudforumResources {
     backupChownOutExpected("/bin/chown.out", FudforumResources.class.getResource("backup_chown_out_expected.txt")),
 
     static copyFudforumFiles(File parent) {
+        phpCommand.createCommand parent
     }
 
     static void setupFudforumProperties(def profile, File parent) {
         def entry = profile.getEntry("httpd")
+        entry.fudforum_php_command phpCommand.asFile(parent)
     }
 
     ResourcesUtils resources

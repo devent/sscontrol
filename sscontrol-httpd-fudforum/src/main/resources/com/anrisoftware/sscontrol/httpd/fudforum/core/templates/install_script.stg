@@ -1,0 +1,13 @@
+installScript(args) ::= <<
+<! args.phpCommand !>
+<! args.installScript !>
+<args.phpCommand> <args.installScript>
+
+>>
+
+upgradeScript(args) ::= <<
+<! args.phpCommand !>
+<! args.upgradeScript !>
+<args.phpCommand> <args.upgradeScript>
+
+>>

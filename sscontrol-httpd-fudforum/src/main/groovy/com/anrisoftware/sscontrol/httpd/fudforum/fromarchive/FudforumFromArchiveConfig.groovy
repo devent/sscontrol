@@ -37,7 +37,7 @@ import com.anrisoftware.sscontrol.scripts.versionlimits.CheckVersionLimitFactory
 import com.anrisoftware.sscontrol.scripts.versionlimits.ReadVersionFactory
 
 /**
- * Installs <i>FUDForum</i> from archive.
+ * Downloads and deploys <i>FUDForum</i> from archive.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
@@ -155,7 +155,7 @@ abstract class FudforumFromArchiveConfig {
      * @return {@code true} if the service is already installed.
      */
     boolean serviceInstalled(Domain domain, FudforumService service) {
-        configurationFile(domain, service).exists()
+        fudforumInstallFile(domain, service).exists()
     }
 
     /**

@@ -16,37 +16,44 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd-fudforum. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.fudforum.apache_ubuntu_12_04
+package com.anrisoftware.sscontrol.httpd.fudforum.core
+
+import static org.apache.commons.io.FileUtils.*
 
 import javax.inject.Inject
 
+import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.resources.templates.api.TemplateResource
 import com.anrisoftware.resources.templates.api.TemplatesFactory
-import com.anrisoftware.sscontrol.httpd.fudforum.apache_2_2.ApacheFcgiFudforumConfig
+import com.anrisoftware.sscontrol.httpd.fudforum.apache_ubuntu_12_04.FudforumArchivePropertiesProvider
+import com.anrisoftware.sscontrol.httpd.fudforum.fromarchive.FudforumArchiveInstallConfig
 
 /**
- * <i>FUDForum Apache Ubuntu 12.04</i> configuration.
+ * Installs <i>FUDForum 3</i> from archive.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class UbuntuApacheFcgiFudforumConfig extends ApacheFcgiFudforumConfig {
+class Fudforum_3_ArchiveInstallConfig extends FudforumArchiveInstallConfig {
 
-    TemplateResource domainConfigTemplate
+    @Inject
+    FudforumArchivePropertiesProvider propertiesProvider
+
+    TemplateResource installScriptTemplate
 
     @Inject
     void setTemplatesFactory(TemplatesFactory factory) {
-        def templates = factory.create "Fudforum_Apache_Ubuntu_12_04"
-        this.domainConfigTemplate = templates.getResource "domain_config"
+        def templates = factory.create "Fudforum_3_ArchiveInstallConfig"
+        this.installScriptTemplate = templates.getResource "install_script"
     }
 
     @Override
-    TemplateResource getDomainConfigTemplate() {
-        domainConfigTemplate
+    ContextProperties getFudforumProperties() {
+        propertiesProvider.get()
     }
 
     @Override
-    String getServiceName() {
-        Ubuntu_12_04_ApacheFudforumConfigFactory.WEB_NAME
+    TemplateResource getInstallTemplate() {
+        installScriptTemplate
     }
 }

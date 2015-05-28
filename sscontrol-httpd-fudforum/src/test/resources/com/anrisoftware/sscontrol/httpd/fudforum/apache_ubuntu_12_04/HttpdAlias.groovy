@@ -20,9 +20,9 @@ package com.anrisoftware.sscontrol.httpd.yourls.apache_ubuntu_12_04
 
 httpd {
     domain "test1.com", address: "192.168.0.51", {
-        setup "yourls", alias: "yls", {
-            database "yourlsdb", user: "yourlsdbuser", password: "yourlsdbuserpass"
-            user "admin", password: "adminpass"
+        setup "fudforum", alias: "forum", {
+            database "fudforumdb", user: "fudforumuser", password: "fudforumpass", type: DatabaseType.mysql
+            root "admin", password: "admin", email: "admin@server.com"
         }
     }
 }

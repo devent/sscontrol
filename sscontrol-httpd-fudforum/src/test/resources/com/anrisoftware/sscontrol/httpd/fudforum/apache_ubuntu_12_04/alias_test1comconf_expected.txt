@@ -14,11 +14,11 @@
 
     FcgidMaxRequestLen 2000000
 
-    # /tmp/var/www/test1.com/yourls_1
+    # /tmp/var/www/test1.com/fudforum_3
 
-    Alias /yls /tmp/var/www/test1.com/yourls_1
+    Alias /forum /tmp/var/www/test1.com/fudforum_3
 
-    <Directory /tmp/var/www/test1.com/yourls_1>
+    <Directory /tmp/var/www/test1.com/fudforum_3>
         AddHandler fcgid-script .php
         FCGIWrapper /tmp/var/www/php-fcgi-scripts/test1.com/php-fcgi-starter .php
         Options +ExecCGI +FollowSymLinks -Indexes
@@ -42,19 +42,6 @@
                 </IfModule>
             </IfModule>
         </IfModule>
-
-        <IfModule mod_rewrite.c>
-            RewriteEngine On
-            RewriteBase /yls/
-            RewriteCond %{REQUEST_FILENAME} !-f
-            RewriteCond %{REQUEST_FILENAME} !-d
-            RewriteRule ^.*$ /yls/yourls-loader.php [L]
-        </IfModule>
-
-        <Files config.php>
-           order allow,deny
-           deny from all
-        </Files>
 
     </Directory>
 

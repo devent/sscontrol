@@ -20,10 +20,10 @@ package com.anrisoftware.sscontrol.httpd.yourls.apache_ubuntu_12_04
 
 httpd {
     domain "test1.com", address: "192.168.0.51", {
-        setup "yourls", {
+        setup "fudforum", {
             backup target: "$tmp/var/backups"
-            database "yourlsdb", user: "yourlsdbuser", password: "yourlsdbuserpass"
-            user "admin", password: "adminpass"
+            database "fudforumdb", user: "fudforumuser", password: "fudforumpass", type: DatabaseType.mysql
+            root "admin", password: "admin", email: "admin@server.com"
         }
     }
 }

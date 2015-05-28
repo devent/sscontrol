@@ -26,6 +26,7 @@ import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.sscontrol.core.service.LinuxScript
 import com.anrisoftware.sscontrol.httpd.domain.Domain
 import com.anrisoftware.sscontrol.httpd.fudforum.FudforumService
+import com.anrisoftware.sscontrol.httpd.fudforum.core.Fudforum_3_ArchiveInstallConfig
 import com.anrisoftware.sscontrol.httpd.fudforum.core.Fudforum_3_Config
 import com.anrisoftware.sscontrol.httpd.webservice.ServiceConfig
 import com.anrisoftware.sscontrol.httpd.webservice.WebService
@@ -53,6 +54,9 @@ class UbuntuApacheFudforumConfig extends Fudforum_3_Config implements ServiceCon
     Ubuntu_12_04_FudforumBackup fudforumBackup
 
     @Inject
+    Fudforum_3_ArchiveInstallConfig fudforumInstallConfig
+
+    @Inject
     InstallPackagesFactory installPackagesFactory
 
     @Override
@@ -67,8 +71,13 @@ class UbuntuApacheFudforumConfig extends Fudforum_3_Config implements ServiceCon
         installPackages service
         fudforumBackup.backupService domain, service
         fudforumFcgiConfig.deployService domain, service, config
-        fudforumFromArchive.deployService domain, service
-        deployInstall domain, service
+        if (fudforumFromArchive.serviceInstalled(domain, service) == false) {
+            fudforumFromArchive.deployService domain, service
+            deployInstall domain, service
+            fudforumInstallConfig.installService domain, service
+        } else {
+            fudforumInstallConfig.upgradeService domain, service
+        }
         setupPermissions domain, service
     }
 
@@ -105,5 +114,6 @@ class UbuntuApacheFudforumConfig extends Fudforum_3_Config implements ServiceCon
         fudforumFcgiConfig.setScript script
         fudforumFromArchive.setScript this
         fudforumBackup.setScript this
+        fudforumInstallConfig.setScript this
     }
 }

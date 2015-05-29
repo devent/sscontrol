@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd-wordpress. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.wordpress.apache_ubuntu_12_04
+package com.anrisoftware.sscontrol.httpd.wordpress.nginx.proxy.ubuntu_12_04
 
 profile "ubuntu_12_04", {
     httpd {

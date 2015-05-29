@@ -16,67 +16,12 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd-wordpress. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.service
-
-def certFile = ServicesResources.class.getResource "cert_crt.txt"
-def certKeyFile = ServicesResources.class.getResource "cert_key.txt"
+package com.anrisoftware.sscontrol.httpd.wordpress.apache_ubuntu_12_04
 
 httpd {
     domain "www.test1.com", address: "192.168.0.51", {
-        user "www-data", group: "www-data"
-        setup "wordpress", id: "wordpress3", alias: "wordpress3", {
-            database "wordpress3", user: "user", password: "userpass", host: "localhost"
-            backup target: "/var/backups"
-            force login: true, admin: true
-            plugins "wp-typography, link-indication, broken-link-checker"
-            themes "picochic, tagebuch"
-        }
-    }
-    ssl_domain "www.test1.com", address: "192.168.0.51", {
-        user "www-data", group: "www-data"
-        certificate file: certFile, key: certKeyFile
-        setup "wordpress", ref: "wordpress3"
-    }
-    domain "www.test2.com", address: "192.168.0.51", {
-        setup "wordpress", alias: "wordpress3", {
-            database "wordpress3", user: "user", password: "userpass", host: "localhost"
-            multisite setup: subdir
-        }
-    }
-    domain "www.test3.com", address: "192.168.0.51", {
-        setup "wordpress", alias: "wordpress3", {
-            database "wordpress3", user: "user", password: "userpass", host: "localhost"
-            multisite setup: "subdomain"
-        }
-    }
-    domain "www.testid.com", id: "testid", address: "192.168.0.51", {
-        user "www-data", group: "www-data"
-        setup "wordpress", id: "wordpress3", alias: "wordpress3", {
-            database "wordpress3", user: "user", password: "userpass", host: "localhost"
-        }
-    }
-    domain "www.testref.com", address: "192.168.0.51", {
-        user "www-data", group: "www-data"
-        setup "wordpress", ref: "wordpress3", refdomain: "testid"
-    }
-    domain "www.testold.com", address: "192.168.0.51", {
-        setup "wordpress", alias: "wordpress3", prefix: "wordpressold", {
-            database "wordpress3", user: "user", password: "userpass", host: "localhost"
-            override mode: no
-        }
-    }
-    domain "www.testupdate.com", address: "192.168.0.51", {
-        setup "wordpress", alias: "wordpress3", prefix: "wordpressold", {
-            database "wordpress3", user: "user", password: "userpass", host: "localhost"
-            override mode: update
-        }
-    }
-    domain "www.testhypercache.com", address: "192.168.0.51", {
-        setup "wordpress", id: "wordpress3", alias: "wordpress3", {
-            database "wordpress3", user: "user", password: "userpass", host: "localhost"
-            cache enabled: yes, plugin: "hyper-cache"
-            plugins "wp-typography, link-indication, broken-link-checker"
-            themes "picochic, tagebuch"
+        setup "wordpress_4", alias: "wordpress", {
+            database "wordpressdb", user: "user", password: "userpass"
         }
     }
 }

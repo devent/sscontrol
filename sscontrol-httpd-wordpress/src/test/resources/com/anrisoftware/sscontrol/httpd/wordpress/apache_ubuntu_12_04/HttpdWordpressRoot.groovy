@@ -18,8 +18,10 @@
  */
 package com.anrisoftware.sscontrol.httpd.wordpress.apache_ubuntu_12_04
 
-profile "ubuntu_12_04", {
-    httpd {
-        service "apache"
+httpd {
+    domain "www.test1.com", address: "192.168.0.51", {
+        setup "wordpress_4", alias: "/", {
+            database "wordpressdb", user: "user", password: "userpass"
+        }
     }
 }

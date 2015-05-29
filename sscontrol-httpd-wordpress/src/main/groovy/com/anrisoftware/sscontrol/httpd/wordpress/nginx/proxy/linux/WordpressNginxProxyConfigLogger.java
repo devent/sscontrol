@@ -16,10 +16,41 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd-wordpress. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.wordpress.apache_ubuntu_12_04
+package com.anrisoftware.sscontrol.httpd.wordpress.nginx.proxy.linux;
 
-profile "ubuntu_12_04", {
-    httpd {
-        service "apache"
+import javax.inject.Singleton;
+
+import com.anrisoftware.globalpom.log.AbstractLogger;
+
+/**
+ * Logging messages for {@link WordpressNginxProxyConfig}.
+ * 
+ * @author Erwin Mueller, erwin.mueller@deventm.org
+ * @since 1.0
+ */
+@Singleton
+class WordpressNginxProxyConfigLogger extends AbstractLogger {
+
+    enum _ {
+
+        message("");
+
+        private String name;
+
+        private _(String name) {
+            this.name = name;
+        }
+
+        @Override
+        public String toString() {
+            return name;
+        }
+    }
+
+    /**
+     * Creates a logger for {@link WordpressNginxProxyConfig}.
+     */
+    public WordpressNginxProxyConfigLogger() {
+        super(WordpressNginxProxyConfig.class);
     }
 }

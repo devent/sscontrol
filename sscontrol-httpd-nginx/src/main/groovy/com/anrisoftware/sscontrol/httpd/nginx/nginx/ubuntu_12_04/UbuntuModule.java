@@ -31,7 +31,6 @@ import com.anrisoftware.sscontrol.httpd.nginx.proxypass.ubuntu_12_04.Ubuntu_12_0
 import com.anrisoftware.sscontrol.httpd.nginx.staticcache.ubuntu_12_04.Ubuntu_12_04_StaticCacheModule;
 import com.anrisoftware.sscontrol.httpd.nginx.staticservice.ubuntu_12_04.Ubuntu_12_04_StaticModule;
 import com.anrisoftware.sscontrol.httpd.nginx.webdav.ubuntu_12_04.Ubuntu_12_04_WebdavModule;
-import com.anrisoftware.sscontrol.httpd.nginx.wordpressproxy.ubuntu_12_04.Ubuntu_12_04_WordpressProxyModule;
 import com.google.inject.AbstractModule;
 import com.google.inject.multibindings.MapBinder;
 
@@ -48,7 +47,6 @@ class UbuntuModule extends AbstractModule {
         install(new NginxScriptModule());
         install(new Ubuntu_12_04_GeneralProxyModule());
         install(new Ubuntu_12_04_ProxyPassModule());
-        install(new Ubuntu_12_04_WordpressProxyModule());
         install(new Ubuntu_12_04_AuthFileModule());
         install(new Ubuntu_12_04_WebdavModule());
         install(new Ubuntu_12_04_StaticModule());

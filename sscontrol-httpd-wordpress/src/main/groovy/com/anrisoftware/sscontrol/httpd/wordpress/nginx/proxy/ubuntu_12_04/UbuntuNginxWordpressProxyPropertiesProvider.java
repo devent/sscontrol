@@ -16,10 +16,27 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd-wordpress. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.wordpress.apache_ubuntu_12_04
+package com.anrisoftware.sscontrol.httpd.wordpress.nginx.proxy.ubuntu_12_04;
 
-profile "ubuntu_12_04", {
-    httpd {
-        service "apache"
+import java.net.URL;
+
+import com.anrisoftware.propertiesutils.AbstractContextPropertiesProvider;
+
+/**
+ * <i>Ubuntu 12.04 Nginx Wordpress</i> proxy properties provider from
+ * {@code /"nginx_wordpress_proxy_ubuntu_12_04.properties"}.
+ *
+ * @author Erwin Mueller, erwin.mueller@deventm.org
+ * @since 1.0
+ */
+@SuppressWarnings("serial")
+class UbuntuNginxWordpressProxyPropertiesProvider extends AbstractContextPropertiesProvider {
+
+    private static final URL RESOURCE = UbuntuNginxWordpressProxyPropertiesProvider.class
+            .getResource("/nginx_wordpress_proxy_ubuntu_12_04.properties");
+
+    UbuntuNginxWordpressProxyPropertiesProvider() {
+        super(UbuntuNginxWordpressProxyPropertiesProvider.class, RESOURCE);
     }
+
 }

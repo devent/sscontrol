@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd-wordpress. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.wordpress.apache_ubuntu_12_04;
+package com.anrisoftware.sscontrol.httpd.wordpress.nginx.proxy.ubuntu_12_04;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.mangosdk.spi.ProviderFor;
@@ -30,13 +30,13 @@ import com.google.inject.Injector;
 import com.google.inject.Module;
 
 /**
- * <i>Ubuntu 12.04 Apache Wordpress</i> configuration factory.
+ * <i>Ubuntu 12.04 Nginx Wordpress</i> proxy configuration factory.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
 @ProviderFor(ServiceConfigFactory.class)
-public class Ubuntu_12_04_ApacheWordpressConfigFactory implements ServiceConfigFactory {
+public class Ubuntu_12_04_WordpressProxyConfigFactory implements ServiceConfigFactory {
 
     /**
      * <i>Ubuntu 12.04</i> profile name.
@@ -44,24 +44,24 @@ public class Ubuntu_12_04_ApacheWordpressConfigFactory implements ServiceConfigF
     public static final String PROFILE_NAME = "ubuntu_12_04";
 
     /**
-     * <i>Wordpress 4.x</i> service name.
+     * Proxy service name.
      */
-    public static final String WEB_NAME = "wordpress_4";
+    public static final String WEB_NAME = "proxy.wordpress";
 
     /**
-     * <i>Apache</i> service name.
+     * <i>Nginx</i> service name.
      */
-    public static final String APACHE_NAME = "apache";
+    public static final String NGINX_NAME = "nginx";
 
     /**
-     * <i>Ubuntu 12.04 Apache Wordpress</i> service information.
+     * <i>Piwik</i> service information.
      */
     @SuppressWarnings("serial")
     public static final ServiceConfigInfo INFO = new ServiceConfigInfo() {
 
         @Override
         public String getServiceName() {
-            return APACHE_NAME;
+            return NGINX_NAME;
         }
 
         @Override
@@ -80,16 +80,16 @@ public class Ubuntu_12_04_ApacheWordpressConfigFactory implements ServiceConfigF
         }
     };
 
-    private static final Module[] MODULES = new Module[] { new ApacheModule() };
+    private static final Module[] MODULES = new Module[] { new UbuntuNginxWordpressProxyModule() };
 
     private Injector injector;
 
-    public Ubuntu_12_04_ApacheWordpressConfigFactory() {
+    public Ubuntu_12_04_WordpressProxyConfigFactory() {
     }
 
     @Override
     public ServiceConfig getScript() throws ServiceException {
-        return injector.getInstance(UbuntuWordpressConfig.class);
+        return injector.getInstance(UbuntuNginxWordpressProxyConfig.class);
     }
 
     @Override

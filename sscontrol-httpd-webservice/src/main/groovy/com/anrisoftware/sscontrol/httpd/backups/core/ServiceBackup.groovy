@@ -78,6 +78,9 @@ abstract class ServiceBackup {
     void setupPermissions(Domain domain, WebService service) {
         def user = domain.domainUser
         def dir = backupDir domain, service
+        if (!dir.isDirectory()) {
+            return
+        }
         changeFileOwnerFactory.create(
                 log: log,
                 runCommands: runCommands,

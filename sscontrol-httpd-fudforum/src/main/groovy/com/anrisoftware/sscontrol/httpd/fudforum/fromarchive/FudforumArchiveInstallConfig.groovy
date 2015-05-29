@@ -60,7 +60,8 @@ abstract class FudforumArchiveInstallConfig {
                 log: log.log,
                 runCommands: runCommands,
                 phpCommand: phpCommand,
-                installScript: installScript,
+                workDirectory: installScript(domain, service).parentFile,
+                installScript: installScriptFile.name,
                 this, threads, installTemplate, "installScript")()
         log.serviceInstalled this, domain, task
     }
@@ -79,9 +80,50 @@ abstract class FudforumArchiveInstallConfig {
                 log: log.log,
                 runCommands: runCommands,
                 phpCommand: phpCommand,
-                upgradeScript: upgradeScript,
+                workDirectory: upgradeScript(domain, service).parentFile,
+                upgradeScript: upgradeScriptFile.name,
                 this, threads, installTemplate, "upgradeScript")()
         log.serviceUpgraded this, domain, task
+    }
+
+    /**
+     * Returns the <i>install.php</i> script path.
+     *
+     * @param domain
+     *            the service {@link Domain} domain.
+     *
+     * @param service
+     *            the {@link FudforumService} service.
+     *
+     * @see #getInstallScriptFile()
+     */
+    File installScript(Domain domain, FudforumService service) {
+        def file = installScriptFile
+        if (file.absolute) {
+            return file
+        } else {
+            new File(fudforumDir(domain, service), file.name)
+        }
+    }
+
+    /**
+     * Returns the <i>upgrade.php</i> script path.
+     *
+     * @param domain
+     *            the service {@link Domain} domain.
+     *
+     * @param service
+     *            the {@link FudforumService} service.
+     *
+     * @see #getUpgradeScriptFile()
+     */
+    File upgradeScript(Domain domain, FudforumService service) {
+        def file = upgradeScriptFile
+        if (file.absolute) {
+            return file
+        } else {
+            new File(fudforumDir(domain, service), file.name)
+        }
     }
 
     /**
@@ -98,7 +140,8 @@ abstract class FudforumArchiveInstallConfig {
     }
 
     /**
-     * Returns the <i>install.php</i> script.
+     * Returns the <i>install.php</i> script. If the file is not absolute,
+     * then the file is assumed under the service installation directory.
      *
      * <ul>
      * <li>profile property {@code "fudforum_install_script"}</li>
@@ -106,12 +149,13 @@ abstract class FudforumArchiveInstallConfig {
      *
      * @see #getFudforumProperties()
      */
-    String getInstallScript() {
-        profileProperty "fudforum_install_script", fudforumProperties
+    File getInstallScriptFile() {
+        profileDirProperty "fudforum_install_script", fudforumProperties
     }
 
     /**
-     * Returns the <i>upgrade.php</i> script.
+     * Returns the <i>upgrade.php</i> script. If the file is not absolute,
+     * then the file is assumed under the service installation directory.
      *
      * <ul>
      * <li>profile property {@code "fudforum_upgrade_script"}</li>
@@ -119,8 +163,8 @@ abstract class FudforumArchiveInstallConfig {
      *
      * @see #getFudforumProperties()
      */
-    String getUpgradeScript() {
-        profileProperty "fudforum_upgrade_script", fudforumProperties
+    File getUpgradeScriptFile() {
+        profileDirProperty "fudforum_upgrade_script", fudforumProperties
     }
 
     /**

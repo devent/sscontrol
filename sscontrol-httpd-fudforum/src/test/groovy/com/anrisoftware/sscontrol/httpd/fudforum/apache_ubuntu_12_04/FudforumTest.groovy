@@ -67,7 +67,7 @@ class FudforumTest extends WebServiceTestEnvironment {
         assertStringContent basicChmodOutExpected.replaced(tmpdir, tmpdir, "/tmp"), basicChmodOutExpected.toString()
         assertStringContent basicChownOutExpected.replaced(tmpdir, tmpdir, "/tmp"), basicChownOutExpected.toString()
         assertFileContent basicAptitudeOutExpected.asFile(tmpdir), basicAptitudeOutExpected
-        assertFileContent basicPhpOutExpected.asFile(tmpdir), basicPhpOutExpected
+        assertStringContent basicPhpOutExpected.replaced(tmpdir, tmpdir, "/tmp"), basicPhpOutExpected.toString()
     }
 
     @Test

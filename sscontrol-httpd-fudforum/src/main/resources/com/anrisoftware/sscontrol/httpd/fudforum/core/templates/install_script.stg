@@ -1,13 +1,17 @@
 installScript(args) ::= <<
 <! args.phpCommand !>
+<! args.workDirectory !>
 <! args.installScript !>
+cd "<args.workDirectory>"
 <args.phpCommand> <args.installScript>
 
 >>
 
 upgradeScript(args) ::= <<
 <! args.phpCommand !>
+<! args.workDirectory !>
 <! args.upgradeScript !>
+cd "<args.workDirectory>"
 <args.phpCommand> <args.upgradeScript>
 
 >>

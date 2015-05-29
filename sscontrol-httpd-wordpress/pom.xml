@@ -65,12 +65,6 @@
 		</dependency>
 		<dependency>
 			<groupId>com.anrisoftware.sscontrol</groupId>
-			<artifactId>sscontrol-httpd-nginx</artifactId>
-			<version>1.0-alpha-5-SNAPSHOT</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.anrisoftware.sscontrol</groupId>
 			<artifactId>sscontrol-httpd-apache</artifactId>
 			<version>1.0-alpha-5-SNAPSHOT</version>
 			<scope>test</scope>
@@ -97,6 +91,12 @@
 			<artifactId>sscontrol-scripts-unix</artifactId>
 			<version>1.0-alpha-5-SNAPSHOT</version>
 		</dependency>
+        <dependency>
+            <groupId>com.anrisoftware.sscontrol</groupId>
+            <artifactId>sscontrol-httpd-nginx</artifactId>
+            <version>1.0-alpha-5-SNAPSHOT</version>
+            <optional>true</optional>
+        </dependency>
 
 		<!-- compile dependencies -->
 		<dependency>

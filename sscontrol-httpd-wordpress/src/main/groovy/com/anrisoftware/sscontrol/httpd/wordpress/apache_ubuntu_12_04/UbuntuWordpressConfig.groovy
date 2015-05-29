@@ -56,7 +56,7 @@ class UbuntuWordpressConfig extends Wordpress_3_Config implements ServiceConfig 
 
     @Override
     void deployDomain(Domain domain, Domain refDomain, WebService service, List config) {
-        setupDefaultPrefix service
+        setupDefaultService service
         setupDefaultOverrideMode service
         setupDefaultForce service
         setupDefaultMultisite service
@@ -67,7 +67,7 @@ class UbuntuWordpressConfig extends Wordpress_3_Config implements ServiceConfig 
 
     @Override
     void deployService(Domain domain, WebService service, List config) {
-        setupDefaultPrefix service
+        setupDefaultService service
         setupDefaultOverrideMode service
         setupDefaultForce service
         setupDefaultMultisite service

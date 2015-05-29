@@ -13,7 +13,7 @@ proxy_send_timeout <args.properties.proxySendTimeout>;
 <({proxySetHeaders<args.domain.class.simpleName>})(args.properties)>
 proxy_redirect <if(args.properties.proxyRedirect)>on<else>off<endif>;
 
-location <args.location> {
+location <args.location>/ {
     # No cache for logged-in users
     if ($http_cookie ~* "comment_author_|wordpress_(?!test_cookie)|wp-postpass_" ) {
         set $do_not_cache 1;

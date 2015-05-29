@@ -34,9 +34,23 @@ import com.anrisoftware.sscontrol.testutils.resources.ResourcesUtils
 enum WordpressProxyResources {
 
     profile("UbuntuProfile.groovy", WordpressProxyResources.class.getResource("UbuntuProfile.groovy")),
-    // base
     wordpressConfig("/var/www/www.test1.com/wordpress_4/wp-config-sample.php", WordpressResources.class.getResource("wordpress_config_sample_php.txt")),
-    wordpressConfigExpected("/var/www/www.test1.com/wordpress_4/wp-config.php", WordpressProxyResources.class.getResource("wordpress_config_php_expected.txt")),
+    // alias
+    // base
+    baseDomainsScript("Httpd.groovy", WordpressProxyResources.class.getResource("BaseWordpressDomains.groovy")),
+    baseProxyScript("HttpdProxy.groovy", WordpressProxyResources.class.getResource("BaseWordpressProxy.groovy")),
+    baseAptitudeOutExpected("/usr/bin/aptitude.out", WordpressProxyResources.class.getResource("base_aptitude_out_expected.txt")),
+    basePortsConfExpected("/etc/apache2/ports.conf", WordpressProxyResources.class.getResource("base_portsconf_expected.txt")),
+    baseTest1comConfProxyExpected("/etc/nginx/sites-available/100-robobee-test1.com.conf", WordpressProxyResources.class.getResource("base_test1comconf_proxy_expected.txt")),
+    baseTest1comSslConfProxyExpected("/etc/nginx/sites-available/100-robobee-test1.com-ssl.conf", WordpressProxyResources.class.getResource("base_test1comsslconf_proxy_expected.txt")),
+    baseWwwtest1comConfDomainExpected("/etc/apache2/sites-available/100-robobee-www.test1.com.conf", WordpressProxyResources.class.getResource("base_wwwtest1comconf_domain_expected.txt")),
+    baseWwwtest1comSslConfDomainExpected("/etc/apache2/sites-available/100-robobee-www.test1.com-ssl.conf", WordpressProxyResources.class.getResource("base_wwwtest1comsslconf_domain_expected.txt")),
+    baseWwwtest1comConfProxyExpected("/etc/nginx/sites-available/100-robobee-www.test1.com.conf", WordpressProxyResources.class.getResource("base_wwwtest1comconf_proxy_expected.txt")),
+    baseWwwtest1comSslConfProxyExpected("/etc/nginx/sites-available/100-robobee-www.test1.com-ssl.conf", WordpressProxyResources.class.getResource("base_wwwtest1comsslconf_proxy_expected.txt")),
+    baseChownOutExpected("/bin/chown.out", WordpressProxyResources.class.getResource("base_chown_out.txt")),
+    baseChmodOutExpected("/bin/chmod.out", WordpressProxyResources.class.getResource("base_chmod_out.txt")),
+    baseUseraddOutExpected("/usr/sbin/useradd.out", WordpressProxyResources.class.getResource("base_useradd_out.txt")),
+    baseGroupaddOutExpected("/usr/sbin/groupadd.out", WordpressProxyResources.class.getResource("base_groupadd_out.txt")),
     // alias
     aliasDomainsScript("Httpd.groovy", WordpressProxyResources.class.getResource("AliasWordpressDomains.groovy")),
     aliasProxyScript("HttpdProxy.groovy", WordpressProxyResources.class.getResource("AliasWordpressProxy.groovy")),

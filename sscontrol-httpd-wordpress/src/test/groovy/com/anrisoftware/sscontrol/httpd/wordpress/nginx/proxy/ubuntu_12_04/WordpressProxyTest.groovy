@@ -39,6 +39,39 @@ import com.anrisoftware.sscontrol.testutils.resources.WebServiceTestEnvironment
 class WordpressProxyTest extends WebServiceTestEnvironment {
 
     @Test
+    void "wordpress reverse proxy"() {
+        copyUbuntuFiles tmpdir
+        copyWordpressFiles tmpdir
+        copyWordpressProxyFiles tmpdir
+        wordpressConfig.createFile tmpdir
+
+        loader.loadService profile.resource, null
+        def profile = registry.getService("profile")[0]
+        setupUbuntuProperties profile, tmpdir
+        setupWordpressProperties profile, tmpdir
+        setupWordpressProxyProperties profile, tmpdir
+        loader.loadService baseDomainsScript.resource, profile
+        loader.loadService baseProxyScript.resource, profile
+
+        registry.allServices.each { it.call() }
+        log.info "Run service again to ensure that configuration is not set double."
+        registry.allServices.each { it.call() }
+
+        assertFileContent baseAptitudeOutExpected.asFile(tmpdir), baseAptitudeOutExpected
+        assertFileContent basePortsConfExpected.asFile(tmpdir), basePortsConfExpected
+        assertStringContent baseTest1comConfProxyExpected.replaced(tmpdir, tmpdir, "/tmp"), baseTest1comConfProxyExpected.toString()
+        assertStringContent baseTest1comSslConfProxyExpected.replaced(tmpdir, tmpdir, "/tmp"), baseTest1comSslConfProxyExpected.toString()
+        assertStringContent baseWwwtest1comConfDomainExpected.replaced(tmpdir, tmpdir, "/tmp"), baseWwwtest1comConfDomainExpected.toString()
+        assertStringContent baseWwwtest1comSslConfDomainExpected.replaced(tmpdir, tmpdir, "/tmp"), baseWwwtest1comSslConfDomainExpected.toString()
+        assertStringContent baseWwwtest1comConfProxyExpected.replaced(tmpdir, tmpdir, "/tmp"), baseWwwtest1comConfProxyExpected.toString()
+        assertStringContent baseWwwtest1comSslConfProxyExpected.replaced(tmpdir, tmpdir, "/tmp"), baseWwwtest1comSslConfProxyExpected.toString()
+        assertStringContent baseChownOutExpected.replaced(tmpdir, tmpdir, "/tmp"), baseChownOutExpected.toString()
+        assertStringContent baseChmodOutExpected.replaced(tmpdir, tmpdir, "/tmp"), baseChmodOutExpected.toString()
+        assertStringContent baseUseraddOutExpected.replaced(tmpdir, tmpdir, "/tmp"), baseUseraddOutExpected.toString()
+        assertStringContent baseGroupaddOutExpected.replaced(tmpdir, tmpdir, "/tmp"), baseGroupaddOutExpected.toString()
+    }
+
+    @Test
     void "wordpress reverse proxy, with alias"() {
         copyUbuntuFiles tmpdir
         copyWordpressFiles tmpdir

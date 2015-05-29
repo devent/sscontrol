@@ -29,7 +29,7 @@ import org.apache.commons.lang3.StringUtils
 import org.apache.commons.lang3.builder.ToStringBuilder
 
 import com.anrisoftware.propertiesutils.ContextProperties
-import com.anrisoftware.sscontrol.core.overridemode.OverrideMode;
+import com.anrisoftware.sscontrol.core.overridemode.OverrideMode
 import com.anrisoftware.sscontrol.core.service.LinuxScript
 import com.anrisoftware.sscontrol.httpd.domain.Domain
 import com.anrisoftware.sscontrol.httpd.wordpress.MultiSite
@@ -51,14 +51,18 @@ abstract class WordpressConfig {
     private LinuxScript script
 
     /**
-     * Sets the default prefix.
+     * Sets default service settings.
      *
      * @param service
      *            the {@link WordpressService} service.
      *
+     * @see #getDefaultWordpressAlias()
      * @see #getDefaultWordpressPrefix()
      */
-    void setupDefaultPrefix(WordpressService service) {
+    void setupDefaultService(WordpressService service) {
+        if (service.alias == null) {
+            service.alias = defaultWordpressAlias
+        }
         if (service.prefix == null) {
             service.prefix = defaultWordpressPrefix
         }
@@ -347,8 +351,22 @@ abstract class WordpressConfig {
     }
 
     /**
-     * Returns default Wordpress prefix, for
-     * example {@code "wordpress_3_8"}.
+     * Returns default <i>Wordpress</i> alias, for
+     * example {@code ""}, empty.
+     *
+     * <ul>
+     * <li>profile property {@code "wordpress_default_alias"}</li>
+     * </ul>
+     *
+     * @see #getWordpressProperties()
+     */
+    String getDefaultWordpressAlias() {
+        profileProperty "wordpress_default_alias", wordpressProperties
+    }
+
+    /**
+     * Returns default <i>Wordpress</i> prefix, for
+     * example {@code "wordpress_4"}.
      *
      * <ul>
      * <li>profile property {@code "wordpress_default_prefix"}</li>

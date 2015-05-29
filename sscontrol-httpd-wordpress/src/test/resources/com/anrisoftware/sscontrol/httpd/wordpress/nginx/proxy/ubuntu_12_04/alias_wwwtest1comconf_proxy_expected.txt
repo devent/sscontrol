@@ -17,7 +17,7 @@ server {
     proxy_set_header  Host $host;
     proxy_redirect off;
 
-    location /wordpress4 {
+    location /wordpress4/ {
         # No cache for logged-in users
         if ($http_cookie ~* "comment_author_|wordpress_(?!test_cookie)|wp-postpass_" ) {
             set $do_not_cache 1;

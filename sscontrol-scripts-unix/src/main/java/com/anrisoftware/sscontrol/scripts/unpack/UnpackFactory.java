@@ -51,6 +51,9 @@ public interface UnpackFactory {
      *            <li>{@code strip} optionally, set to {@code true} to strip the
      *            first level directory from the archive;
      *
+     *            <li>{@code stripDirectory} optionally, set to the directory
+     *            {@link String} name that should be stripped from the archive;
+     *
      *            <li>{@code commands} set the {@link Map} of command to unpack
      *            the archive for each archive type.
      *            <ul>

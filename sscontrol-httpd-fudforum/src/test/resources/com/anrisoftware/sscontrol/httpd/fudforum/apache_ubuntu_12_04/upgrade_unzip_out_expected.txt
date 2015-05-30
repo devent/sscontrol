@@ -1,0 +1,2 @@
+-uo -d /tmp/var/www/test1.com/fudforum_3 /tmp/tmp/fudforum-FUDforum_3.0.6.zip
+-uo -d /tmp/var/www/test1.com/fudforum_3 /tmp/tmp/fudforum-FUDforum_3.0.6.zip

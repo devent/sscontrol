@@ -4,6 +4,7 @@ unix(args) ::= <<
 <! - args.command - !>
 <! - args.override - !>
 <! - args.strip - !>
+<! - args.stripDirectory - !>
 <(args.type)(args)>
 
 >>
@@ -29,12 +30,20 @@ zip(args) ::= <<
 export dest="<args.output>"
 export zip="<args.file>"
 <if(args.strip)>
-<args.bashCommand> -c '\
-shopt -s dotglob; \
-<args.command> <overrideZip(args)> -d "$dest" "$zip" && f=("$dest"/*) && <args.mvCommand> "$dest"/*/* "$dest" && <args.rmdirCommand> "${f[@]}";'
+<zipStrip(args)>
 <else>
 <args.command> <overrideZip(args)> -d "$dest" "$zip"
 <endif>
+>>
+
+zipStrip(args) ::= <<
+<args.bashCommand> -c '\
+shopt -s dotglob; \
+<args.command> <overrideZip(args)> -d "$dest" "$zip";\
+result=$?;\
+if [ $result != 0 ]; then exit $result; fi;\
+<if(args.stripDirectory)>f="$dest/<args.stripDirectory>"<else>f=("$dest"/*)<endif> && <args.mvCommand> "$dest"/*/* "$dest" && <args.rmdirCommand> "${f[@]}";\
+exit 0;'
 >>
 
 overrideZip(args) ::= <%

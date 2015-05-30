@@ -68,10 +68,47 @@ class FudforumTest extends WebServiceTestEnvironment {
         assertStringContent basicChownOutExpected.replaced(tmpdir, tmpdir, "/tmp"), basicChownOutExpected.toString()
         assertFileContent basicAptitudeOutExpected.asFile(tmpdir), basicAptitudeOutExpected
         assertStringContent basicPhpOutExpected.replaced(tmpdir, tmpdir, "/tmp"), basicPhpOutExpected.toString()
-        assert basicTest1comFudforumArchiveFile.asFile(tmpdir).exists() == false
-        assert basicTest1comFudforumInstallphpFile.asFile(tmpdir).exists() == false
-        assert basicTest1comFudforumUninstallphpFile.asFile(tmpdir).exists() == false
-        assert basicTest1comFudforumUpgradephpFile.asFile(tmpdir).exists() == false
+        assert basicTest1comFudforumArchiveFileExpected.asFile(tmpdir).exists() == false
+        assert basicTest1comFudforumInstallphpFileExpected.asFile(tmpdir).exists() == false
+        assert basicTest1comFudforumUninstallphpFileExpected.asFile(tmpdir).exists() == false
+        assert basicTest1comFudforumUpgradephpFileExpected.asFile(tmpdir).exists() == false
+    }
+
+    @Test
+    void "fudforum basic, upgrade"() {
+        attachRunCommandsLog tmpdir
+        copyUbuntuFiles tmpdir
+        copyApacheUbuntuFiles tmpdir
+        copyFudforumArchiveFiles tmpdir
+        copyFudforumFiles tmpdir
+        copyBasicTest1comFiles tmpdir
+        loader.loadService profile.resource, null
+        def profile = registry.getService("profile")[0]
+        setupApacheUbuntuProperties profile, tmpdir
+        setupUbuntuProperties profile, tmpdir
+        setupFudforumProperties profile, tmpdir
+        setupFudforumArchiveProperties profile, tmpdir
+        loader.loadService httpdBasicScript.resource, profile, preScript
+        registry.allServices.each { it.call() }
+        log.info "Run service again to ensure that configuration is not set double."
+        copyBasicTest1comFiles tmpdir
+        upgradeTest1comFudforumVersionFile.createFile tmpdir
+        registry.allServices.each { it.call() }
+
+        assertStringContent basicTest1comConfExpected.replaced(tmpdir, tmpdir, "/tmp"), basicTest1comConfExpected.toString()
+        assertFileContent basicTest1comPhpIniConfExpected.asFile(tmpdir), basicTest1comPhpIniConfExpected
+        assertStringContent basicTest1comPhpFcgStarterExpected.replaced(tmpdir, tmpdir, "/tmp"), basicTest1comPhpFcgStarterExpected.toString()
+        assertStringContent basicTest1comInstallIniExpected.replaced(tmpdir, tmpdir, "/tmp"), basicTest1comInstallIniExpected.toString()
+        assertStringContent upgradeRuncommandsLogExpected.replaced(tmpdir, tmpdir, "/tmp").replaceAll(/\d{2,}/, 'time'), upgradeRuncommandsLogExpected.toString()
+        assertStringContent upgradeUnzipOutExpected.replaced(tmpdir, tmpdir, "/tmp").replaceAll(/\d{2,}/, 'time'), upgradeUnzipOutExpected.toString()
+        assertStringContent basicChmodOutExpected.replaced(tmpdir, tmpdir, "/tmp"), basicChmodOutExpected.toString()
+        assertStringContent basicChownOutExpected.replaced(tmpdir, tmpdir, "/tmp"), basicChownOutExpected.toString()
+        assertFileContent basicAptitudeOutExpected.asFile(tmpdir), basicAptitudeOutExpected
+        assertStringContent upgradePhpOutExpected.replaced(tmpdir, tmpdir, "/tmp"), upgradePhpOutExpected.toString()
+        assert basicTest1comFudforumArchiveFileExpected.asFile(tmpdir).exists() == false
+        assert basicTest1comFudforumInstallphpFileExpected.asFile(tmpdir).exists() == false
+        assert basicTest1comFudforumUninstallphpFileExpected.asFile(tmpdir).exists() == false
+        assert basicTest1comFudforumUpgradephpFileExpected.asFile(tmpdir).exists() == false
     }
 
     @Test

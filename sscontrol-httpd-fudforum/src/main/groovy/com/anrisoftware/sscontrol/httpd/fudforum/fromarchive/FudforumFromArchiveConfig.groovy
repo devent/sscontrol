@@ -23,6 +23,7 @@ import static org.apache.commons.io.FileUtils.*
 import javax.inject.Inject
 
 import org.apache.commons.io.FileUtils
+import org.apache.commons.lang3.StringUtils
 import org.apache.commons.lang3.builder.ToStringBuilder
 
 import com.anrisoftware.globalpom.checkfilehash.CheckFileHashFactory
@@ -154,8 +155,23 @@ abstract class FudforumFromArchiveConfig {
      *
      * @return {@code true} if the service is already installed.
      */
-    boolean serviceInstalled(Domain domain, FudforumService service) {
+    boolean isServiceInstalled(Domain domain, FudforumService service) {
         fudforumInstallFile(domain, service).exists()
+    }
+
+    /**
+     * Returns if the <i>FUDForum</i> service downloaded and unpackaged.
+     *
+     * @param domain
+     *            the {@link Domain} of the service.
+     *
+     * @param service
+     *            the {@link FudforumService} service.
+     *
+     * @return {@code true} if the service is deployed.
+     */
+    boolean isServiceDeployed(Domain domain, FudforumService service) {
+        fudforumArchiveFile(domain, service).isFile()
     }
 
     /**
@@ -205,6 +221,7 @@ abstract class FudforumFromArchiveConfig {
                 output: dir,
                 override: true,
                 strip: stripArchive,
+                stripDirectory: stripDirectory,
                 commands: unpackCommands,
                 this, threads)()
         log.unpackArchiveDone this, fudforumArchive
@@ -300,6 +317,21 @@ abstract class FudforumFromArchiveConfig {
     }
 
     /**
+     * Returns the directory name of the <i>FUDForum</i> archive that
+     * should be stripped.
+     *
+     * <ul>
+     * <li>profile property {@code "fudforum_strip_directory"}</li>
+     * </ul>
+     *
+     * @see #getFudforumFromArchiveProperties()
+     */
+    String getStripDirectory() {
+        def value = profileProperty "fudforum_strip_directory", fudforumFromArchiveProperties
+        return StringUtils.isBlank(value) ? null : value
+    }
+
+    /**
      * Returns the <i>FUDForum</i> version, for
      * example {@code "1.7"}
      *
@@ -351,6 +383,20 @@ abstract class FudforumFromArchiveConfig {
     File fudforumVersionFile(Domain domain, FudforumService service) {
         def dir = new File(domainDir(domain), service.prefix)
         profileFileProperty "fudforum_version_file", dir, fudforumFromArchiveProperties
+    }
+
+    /**
+     * Returns the <i>fudforum_archive</i> script. If the file is not absolute,
+     * then the file is assumed under the service installation directory.
+     *
+     * <ul>
+     * <li>profile property {@code "fudforum_archive_file"}</li>
+     * </ul>
+     *
+     * @see #getFudforumProperties()
+     */
+    File fudforumArchiveFile(Domain domain, FudforumService service) {
+        profileFileProperty "fudforum_archive_file", fudforumDir(domain, service), fudforumFromArchiveProperties
     }
 
     /**

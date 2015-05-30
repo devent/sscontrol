@@ -1,3 +1,7 @@
 -c \
 shopt -s dotglob; \
-/tmp/usr/bin/unzip -uo -d "$dest" "$zip" && f=("$dest"/*) && mv "$dest"/*/* "$dest" && rmdir "${f[@]}";
+/tmp/usr/bin/unzip -uo -d "$dest" "$zip";\
+result=$?;\
+if [ $result != 0 ]; then exit $result; fi;\
+f=("$dest"/*) && mv "$dest"/*/* "$dest" && rmdir "${f[@]}";\
+exit 0;

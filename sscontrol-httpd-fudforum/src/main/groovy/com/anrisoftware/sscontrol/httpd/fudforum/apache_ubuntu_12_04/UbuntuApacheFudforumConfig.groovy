@@ -73,15 +73,19 @@ class UbuntuApacheFudforumConfig extends Fudforum_3_Config implements ServiceCon
         installPackages service
         fudforumBackup.backupService domain, service
         fudforumFcgiConfig.deployService domain, service, config
-        if (fudforumFromArchive.serviceInstalled(domain, service) == false) {
-            fudforumFromArchive.deployService domain, service
-            deployInstall domain, service
-            fudforumInstallConfig.installService domain, service
-        } else {
-            fudforumInstallConfig.upgradeService domain, service
-        }
+        deployServiceFromArchive domain, service
         fudforumInstallConfig.removeServiceFiles domain, service
         setupPermissions domain, service
+    }
+
+    void deployServiceFromArchive(Domain domain, WebService service) {
+        fudforumFromArchive.deployService domain, service
+        if (!fudforumFromArchive.isServiceInstalled(domain, service)) {
+            deployInstall domain, service
+            fudforumInstallConfig.installService domain, service
+        } else if (fudforumFromArchive.isServiceDeployed(domain, service)) {
+            fudforumInstallConfig.upgradeService domain, service
+        }
     }
 
     /**

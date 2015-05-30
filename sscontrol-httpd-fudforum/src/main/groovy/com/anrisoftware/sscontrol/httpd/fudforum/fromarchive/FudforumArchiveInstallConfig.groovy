@@ -56,12 +56,13 @@ abstract class FudforumArchiveInstallConfig {
      *            the {@link FudforumService} service.
      */
     void installService(Domain domain, FudforumService service) {
+        def file = installScriptFile domain, service
         def task = scriptExecFactory.create(
                 log: log.log,
                 runCommands: runCommands,
                 phpCommand: phpCommand,
-                workDirectory: serviceFile(domain, service, installScriptFile).parentFile,
-                installScript: installScriptFile.name,
+                workDirectory: file.parentFile,
+                installScript: file.name,
                 this, threads, installTemplate, "installScript")()
         log.serviceInstalled this, domain, task
     }
@@ -76,12 +77,13 @@ abstract class FudforumArchiveInstallConfig {
      *            the {@link FudforumService} service.
      */
     void upgradeService(Domain domain, FudforumService service) {
+        def file = upgradeScriptFile domain, service
         def task = scriptExecFactory.create(
                 log: log.log,
                 runCommands: runCommands,
                 phpCommand: phpCommand,
-                workDirectory: serviceFile(domain, service, upgradeScriptFile).parentFile,
-                upgradeScript: upgradeScriptFile.name,
+                workDirectory: file.parentFile,
+                upgradeScript: file.name,
                 this, threads, installTemplate, "upgradeScript")()
         log.serviceUpgraded this, domain, task
     }
@@ -96,30 +98,10 @@ abstract class FudforumArchiveInstallConfig {
      *            the {@link FudforumService} service.
      */
     void removeServiceFiles(Domain domain, FudforumService service) {
-        serviceFile(domain, service, installScriptFile).delete()
-        serviceFile(domain, service, upgradeScriptFile).delete()
-        serviceFile(domain, service, uninstallScriptFile).delete()
-        serviceFile(domain, service, fudforumArchiveFile).delete()
-    }
-
-    /**
-     * Returns the path of the service file.
-     *
-     * @param domain
-     *            the service {@link Domain} domain.
-     *
-     * @param service
-     *            the {@link FudforumService} service.
-     *
-     * @param file
-     *            the {@link File} file.
-     */
-    File serviceFile(Domain domain, FudforumService service, File file) {
-        if (file.absolute) {
-            return file
-        } else {
-            new File(fudforumDir(domain, service), file.name)
-        }
+        installScriptFile(domain, service).delete()
+        upgradeScriptFile(domain, service).delete()
+        uninstallScriptFile(domain, service).delete()
+        fudforumArchiveFile(domain, service).delete()
     }
 
     /**
@@ -145,8 +127,8 @@ abstract class FudforumArchiveInstallConfig {
      *
      * @see #getFudforumProperties()
      */
-    File getInstallScriptFile() {
-        profileDirProperty "fudforum_install_script", fudforumProperties
+    File installScriptFile(Domain domain, FudforumService service) {
+        profileFileProperty "fudforum_install_script", fudforumDir(domain, service), fudforumProperties
     }
 
     /**
@@ -159,8 +141,8 @@ abstract class FudforumArchiveInstallConfig {
      *
      * @see #getFudforumProperties()
      */
-    File getUpgradeScriptFile() {
-        profileDirProperty "fudforum_upgrade_script", fudforumProperties
+    File upgradeScriptFile(Domain domain, FudforumService service) {
+        profileFileProperty "fudforum_upgrade_script", fudforumDir(domain, service), fudforumProperties
     }
 
     /**
@@ -173,8 +155,8 @@ abstract class FudforumArchiveInstallConfig {
      *
      * @see #getFudforumProperties()
      */
-    File getUninstallScriptFile() {
-        profileDirProperty "fudforum_uninstall_script", fudforumProperties
+    File uninstallScriptFile(Domain domain, FudforumService service) {
+        profileFileProperty "fudforum_uninstall_script", fudforumDir(domain, service), fudforumProperties
     }
 
     /**
@@ -187,8 +169,8 @@ abstract class FudforumArchiveInstallConfig {
      *
      * @see #getFudforumProperties()
      */
-    File getFudforumArchiveFile() {
-        profileDirProperty "fudforum_archive_file", fudforumProperties
+    File fudforumArchiveFile(Domain domain, FudforumService service) {
+        profileFileProperty "fudforum_archive_file", fudforumDir(domain, service), fudforumProperties
     }
 
     /**

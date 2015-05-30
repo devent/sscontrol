@@ -35,6 +35,7 @@ enum PiwikResources {
     httpdScript("Httpd.groovy", PiwikResources.class.getResource("HttpdPiwik.groovy")),
     // piwik
     test1comPiwikConf("/var/www/test1.com/test1piwik/config/config.ini.php", PiwikResources.class.getResource("piwik_configiniphp.txt")),
+    test1comBackupDir("/var/backups/test1.com", null),
     test2comPiwikConf("/var/www/test2.com/piwik_2/config/config.ini.php", PiwikResources.class.getResource("piwik_configiniphp.txt")),
     // expected
     test1comConfExpected("/etc/apache2/sites-available/100-robobee-test1.com.conf", PiwikResources.class.getResource("test1comconf_expected.txt")),
@@ -53,6 +54,7 @@ enum PiwikResources {
     aptitudeOutExpected("/usr/bin/aptitude.out", PiwikResources.class.getResource("aptitude_out_expected.txt")),
 
     static copyPiwikFiles(File parent) {
+        test1comBackupDir.asFile parent mkdirs()
     }
 
     static void setupPiwikProperties(def profile, File parent) {

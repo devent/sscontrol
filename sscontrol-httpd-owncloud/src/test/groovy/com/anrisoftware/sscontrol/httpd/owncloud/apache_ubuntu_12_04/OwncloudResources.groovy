@@ -37,6 +37,7 @@ enum OwncloudResources {
     owncloudCronjobsDirectory("/etc/cron.d", null),
     // owncloud
     test1comOwncloudConfigConf("/var/www/test1.com/test1owncloud/config/config.php", OwncloudArchiveResources.class.getResource("owncloud_7_configphp.txt")),
+    test1comBackupDir("/var/backups/test1.com", null),
     test2comOwncloudConfigConf("/var/www/test2.com/owncloud_7/config/config.php", OwncloudArchiveResources.class.getResource("owncloud_7_configphp.txt")),
     // expected
     test1comConfExpected("/etc/apache2/sites-available/100-robobee-test1.com.conf", OwncloudResources.class.getResource("test1comconf_expected.txt")),
@@ -58,6 +59,7 @@ enum OwncloudResources {
 
     static copyOwncloudFiles(File parent) {
         owncloudCronjobsDirectory.asFile parent mkdirs()
+        test1comBackupDir.asFile parent mkdirs()
     }
 
     static void setupOwncloudProperties(def profile, File parent) {

@@ -1,5 +1,5 @@
---overwrite --strip time -xf /tmp/tmp/piwik-piwik-time.time.time.tar.gz
---overwrite --strip time -xf /tmp/tmp/piwik-piwik-time.time.time.tar.gz
--czf /tmp/var/backups/testtime.com/piwik_testtime.com_time-time-timeTtime-time-time-time.tar.gz /tmp/var/www/testtime.com/testtimepiwik
---overwrite --strip time -xf /tmp/tmp/piwik-piwik-time.time.time.tar.gz
---overwrite --strip time -xf /tmp/tmp/piwik-piwik-time.time.time.tar.gz
+--overwrite --strip 1 -xf /tmp/tmp/piwik-piwik-2.time.0.tar.gz
+--overwrite --strip 1 -xf /tmp/tmp/piwik-piwik-2.time.0.tar.gz
+-czf /tmp/var/backups/test1.com/piwik_test1.com_time-time-timeTtime-time-time-time.tar.gz /tmp/var/www/test1.com/test1piwik
+--overwrite --strip 1 -xf /tmp/tmp/piwik-piwik-2.time.0.tar.gz
+--overwrite --strip 1 -xf /tmp/tmp/piwik-piwik-2.time.0.tar.gz

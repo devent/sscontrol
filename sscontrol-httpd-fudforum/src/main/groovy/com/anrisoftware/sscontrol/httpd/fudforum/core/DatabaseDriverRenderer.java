@@ -21,35 +21,37 @@ package com.anrisoftware.sscontrol.httpd.fudforum.core;
 import java.util.Locale;
 
 import com.anrisoftware.resources.templates.api.AttributeRenderer;
-import com.anrisoftware.sscontrol.httpd.fudforum.DatabaseType;
+import com.anrisoftware.sscontrol.core.database.DatabaseDriver;
 
 /**
- * Attribute renderer for the database type.
+ * Attribute renderer for the database driver.
  *
- * @see DatabaseType
+ * @see DatabaseDriver
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
 @SuppressWarnings("serial")
-public class DatabaseTypeRenderer implements AttributeRenderer {
+public class DatabaseDriverRenderer implements AttributeRenderer {
 
     @Override
     public String toString(Object o, String formatString, Locale locale) {
-        return toString((DatabaseType) o);
+        return toString((DatabaseDriver) o);
     }
 
-    private String toString(DatabaseType type) {
-        switch (type) {
-        case mysql:
-            return "mysql";
+    private String toString(DatabaseDriver driver) {
+        switch (driver) {
+        case mysqli:
+            return "mysqli";
+        case pdomysql:
+            return "pdo_mysql";
         }
         return null;
     }
 
     @Override
     public Class<?> getAttributeType() {
-        return DatabaseType.class;
+        return DatabaseDriver.class;
     }
 
 }

@@ -44,7 +44,7 @@ class Fudforum_3_InstallFile {
     private Fudforum_3_InstallFileLogger log
 
     @Inject
-    private DatabaseTypeRenderer databaseTypeRenderer
+    private DatabaseDriverRenderer databaseDriverRenderer
 
     @Inject
     private ChangeFileModFactory changeFileModFactory
@@ -56,7 +56,7 @@ class Fudforum_3_InstallFile {
 
     @Inject
     void setTemplatesFactory(TemplatesFactory factory) {
-        def templates = factory.create "Fudforum_3_Config", ["renderers": [databaseTypeRenderer]]
+        def templates = factory.create "Fudforum_3_Config", ["renderers": [databaseDriverRenderer]]
         this.configTemplate = templates.getResource "install_ini"
     }
 
@@ -80,7 +80,7 @@ class Fudforum_3_InstallFile {
         args.databasePassword = service.database["password"]
         args.databaseName = service.database["database"]
         args.databaseTablePrefix = service.database["prefix"]
-        args.databaseType = service.database["type"]
+        args.databaseType = service.database["driver"]
         args.domainName = domain.name
         args.language = service.language
         args.template = service.template

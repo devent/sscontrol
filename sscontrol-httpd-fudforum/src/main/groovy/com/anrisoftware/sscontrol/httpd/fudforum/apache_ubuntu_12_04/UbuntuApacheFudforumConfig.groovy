@@ -62,12 +62,14 @@ class UbuntuApacheFudforumConfig extends Fudforum_3_Config implements ServiceCon
     @Override
     void deployDomain(Domain domain, Domain refDomain, WebService service, List config) {
         setupDefaults domain, service
+        checkService domain, service
         fudforumFcgiConfig.deployDomain domain, refDomain, service, config
     }
 
     @Override
     void deployService(Domain domain, WebService service, List config) {
         setupDefaults domain, service
+        checkService domain, service
         installPackages service
         fudforumBackup.backupService domain, service
         fudforumFcgiConfig.deployService domain, service, config

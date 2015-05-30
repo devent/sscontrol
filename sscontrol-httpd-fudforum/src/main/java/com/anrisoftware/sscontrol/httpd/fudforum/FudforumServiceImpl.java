@@ -21,7 +21,7 @@ package com.anrisoftware.sscontrol.httpd.fudforum;
 import static com.anrisoftware.sscontrol.httpd.fudforum.FudforumServiceStatement.BACKUP_KEY;
 import static com.anrisoftware.sscontrol.httpd.fudforum.FudforumServiceStatement.DATABASE_KEY;
 import static com.anrisoftware.sscontrol.httpd.fudforum.FudforumServiceStatement.DEBUG_KEY;
-import static com.anrisoftware.sscontrol.httpd.fudforum.FudforumServiceStatement.TYPE_KEY;
+import static com.anrisoftware.sscontrol.httpd.fudforum.FudforumServiceStatement.DRIVER_KEY;
 import static com.anrisoftware.sscontrol.httpd.fudforum.FudforumServiceStatement.EMAIL_KEY;
 import static com.anrisoftware.sscontrol.httpd.fudforum.FudforumServiceStatement.HOST_KEY;
 import static com.anrisoftware.sscontrol.httpd.fudforum.FudforumServiceStatement.LANGUAGE_KEY;
@@ -34,6 +34,7 @@ import static com.anrisoftware.sscontrol.httpd.fudforum.FudforumServiceStatement
 import static com.anrisoftware.sscontrol.httpd.fudforum.FudforumServiceStatement.SITE_KEY;
 import static com.anrisoftware.sscontrol.httpd.fudforum.FudforumServiceStatement.TARGET_KEY;
 import static com.anrisoftware.sscontrol.httpd.fudforum.FudforumServiceStatement.TEMPLATE_KEY;
+import static com.anrisoftware.sscontrol.httpd.fudforum.FudforumServiceStatement.TYPE_KEY;
 import static com.anrisoftware.sscontrol.httpd.fudforum.FudforumServiceStatement.USER_KEY;
 
 import java.net.URI;
@@ -91,7 +92,7 @@ class FudforumServiceImpl implements FudforumService {
         map.setAllowValue(true, DATABASE_KEY, LANGUAGE_KEY, TEMPLATE_KEY,
                 ROOT_KEY, SITE_KEY);
         map.addAllowedKeys(DATABASE_KEY, USER_KEY, PASSWORD_KEY, HOST_KEY,
-                PORT_KEY, PREFIX_KEY, TYPE_KEY);
+                PORT_KEY, PREFIX_KEY, TYPE_KEY, DRIVER_KEY);
         map.addAllowedKeys(OVERRIDE_KEY, MODE_KEY);
         map.addAllowedKeys(BACKUP_KEY, TARGET_KEY);
         map.addAllowedKeys(ROOT_KEY, PASSWORD_KEY, EMAIL_KEY);
@@ -186,6 +187,7 @@ class FudforumServiceImpl implements FudforumService {
         map.put(PORT_KEY.toString(), m.mapValue(DATABASE_KEY, PORT_KEY));
         map.put(PREFIX_KEY.toString(), m.mapValue(DATABASE_KEY, PREFIX_KEY));
         map.put(TYPE_KEY.toString(), m.mapValue(DATABASE_KEY, TYPE_KEY));
+        map.put(DRIVER_KEY.toString(), m.mapValue(DATABASE_KEY, DRIVER_KEY));
         return map.size() == 0 ? null : map;
     }
 

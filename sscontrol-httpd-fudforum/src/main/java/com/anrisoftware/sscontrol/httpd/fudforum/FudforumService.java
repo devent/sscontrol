@@ -21,6 +21,8 @@ package com.anrisoftware.sscontrol.httpd.fudforum;
 import java.net.URI;
 import java.util.Map;
 
+import com.anrisoftware.sscontrol.core.database.DatabaseDriver;
+import com.anrisoftware.sscontrol.core.database.DatabaseType;
 import com.anrisoftware.sscontrol.core.overridemode.OverrideMode;
 import com.anrisoftware.sscontrol.httpd.webservice.WebService;
 
@@ -64,11 +66,12 @@ public interface FudforumService extends WebService {
      * <li>{@code port} the database host port;</li>
      * <li>{@code prefix} the table prefix;</li>
      * <li>{@code type} the database {@link DatabaseType} type;</li>
+     * <li>{@code driver} the database {@link DatabaseDriver} driver;</li>
      * </ul>
      *
      * <pre>
      * setup "fudforum", {
-     *     database "fudforumdb", user: "user", password: "userpass", host: "localhost", type: DatabaseType.mysql
+     *     database "fudforumdb", user: "user", password: "userpass", host: "localhost", type: DatabaseType.mysql, driver: DatabaseDriver.pdo_mysql
      * }
      * </pre>
      *

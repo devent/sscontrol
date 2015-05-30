@@ -42,6 +42,8 @@ enum FudforumServiceStatement {
 
     TYPE_KEY,
 
+    DRIVER_KEY,
+
     OVERRIDE_KEY,
 
     MODE_KEY,

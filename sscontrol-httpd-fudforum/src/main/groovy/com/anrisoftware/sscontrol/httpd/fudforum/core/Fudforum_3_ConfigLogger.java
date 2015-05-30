@@ -18,10 +18,19 @@
  */
 package com.anrisoftware.sscontrol.httpd.fudforum.core;
 
+import static com.anrisoftware.sscontrol.httpd.fudforum.core.Fudforum_3_ConfigLogger._.error_database;
+import static com.anrisoftware.sscontrol.httpd.fudforum.core.Fudforum_3_ConfigLogger._.error_database_message;
 import static com.anrisoftware.sscontrol.httpd.fudforum.core.Fudforum_3_ConfigLogger._.setup_default_database;
 import static com.anrisoftware.sscontrol.httpd.fudforum.core.Fudforum_3_ConfigLogger._.setup_default_debug;
+import static com.anrisoftware.sscontrol.httpd.fudforum.core.Fudforum_3_ConfigLogger._.the_config;
+import static com.anrisoftware.sscontrol.httpd.fudforum.core.Fudforum_3_ConfigLogger._.the_domain;
+import static com.anrisoftware.sscontrol.httpd.fudforum.core.Fudforum_3_ConfigLogger._.the_service;
+import static org.apache.commons.lang3.StringUtils.isBlank;
+
+import java.util.Map;
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
+import com.anrisoftware.sscontrol.core.api.ServiceException;
 import com.anrisoftware.sscontrol.httpd.domain.Domain;
 import com.anrisoftware.sscontrol.httpd.fudforum.FudforumService;
 
@@ -33,13 +42,27 @@ import com.anrisoftware.sscontrol.httpd.fudforum.FudforumService;
  */
 class Fudforum_3_ConfigLogger extends AbstractLogger {
 
+    private static final String TYPE_ARG = "type";
+    private static final String DATABASE_ARG = "database";
+
     enum _ {
 
         setup_default_debug(
                 "Setup default debug for domain {} service {} for {}."),
 
         setup_default_database(
-                "Setup default database for domain {} service {} for {}.");
+                "Setup default database for domain {} service {} for {}."),
+
+        error_database("Mandatory database argument was not set"),
+
+        error_database_message(
+                "Mandatory database argument '{}' was not set for domain '{}', service '{}'."),
+
+        the_config("config"),
+
+        the_domain("domain"),
+
+        the_service("service");
 
         private String name;
 
@@ -70,4 +93,22 @@ class Fudforum_3_ConfigLogger extends AbstractLogger {
         debug(setup_default_database, domain, service, config);
     }
 
+    void checkDatabase(Fudforum_3_Config config, Domain domain,
+            FudforumService service) throws ServiceException {
+        Map<String, Object> db = service.getDatabase();
+        if (isBlank(db.get(DATABASE_ARG).toString())) {
+            throw logException(
+                    new ServiceException(error_database)
+                            .add(the_config, config).add(the_domain, domain)
+                            .add(the_service, service), error_database_message,
+                    DATABASE_ARG, domain.getName(), service.getName());
+        }
+        if (isBlank(db.get(TYPE_ARG).toString())) {
+            throw logException(
+                    new ServiceException(error_database)
+                            .add(the_config, config).add(the_domain, domain)
+                            .add(the_service, service), error_database_message,
+                    TYPE_ARG, domain.getName(), service.getName());
+        }
+    }
 }

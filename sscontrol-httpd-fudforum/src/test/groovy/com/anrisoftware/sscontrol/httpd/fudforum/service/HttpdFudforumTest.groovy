@@ -24,9 +24,10 @@ import groovy.util.logging.Slf4j
 
 import org.junit.Test
 
+import com.anrisoftware.sscontrol.core.database.DatabaseDriver
+import com.anrisoftware.sscontrol.core.database.DatabaseType
 import com.anrisoftware.sscontrol.core.overridemode.OverrideMode
 import com.anrisoftware.sscontrol.httpd.domain.Domain
-import com.anrisoftware.sscontrol.httpd.fudforum.DatabaseType
 import com.anrisoftware.sscontrol.httpd.fudforum.FudforumService
 import com.anrisoftware.sscontrol.httpd.service.HttpdService
 import com.anrisoftware.sscontrol.testutils.resources.HttpdPreScriptTestEnvironment
@@ -69,6 +70,7 @@ class HttpdFudforumTest extends HttpdPreScriptTestEnvironment {
         assert webservice.database.port == 3306
         assert webservice.database.prefix == "fudforum_"
         assert webservice.database.type == DatabaseType.mysql
+        assert webservice.database.driver == DatabaseDriver.pdomysql
         assert webservice.rootLogin == "admin"
         assert webservice.rootPassword == "admin"
         assert webservice.rootEmail == "admin@server.com"

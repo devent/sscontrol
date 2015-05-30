@@ -23,10 +23,11 @@ import javax.inject.Inject
 import org.apache.commons.lang3.builder.ToStringBuilder
 
 import com.anrisoftware.propertiesutils.ContextProperties
+import com.anrisoftware.sscontrol.core.database.DatabaseDriver
+import com.anrisoftware.sscontrol.core.database.DatabaseType
 import com.anrisoftware.sscontrol.core.overridemode.OverrideMode
 import com.anrisoftware.sscontrol.core.service.LinuxScript
 import com.anrisoftware.sscontrol.httpd.domain.Domain
-import com.anrisoftware.sscontrol.httpd.fudforum.DatabaseType
 import com.anrisoftware.sscontrol.httpd.fudforum.FudforumService
 
 /**
@@ -133,7 +134,23 @@ abstract class Fudforum_3_Config {
         if (service.database.prefix == null) {
             service.database db, prefix: fudforumDefaultDatabaseTablePrefix
         }
+        if (service.database.driver == null) {
+            service.database db, driver: fudforumDefaultDatabaseDriver(service.database.type)
+        }
         log.setupDefaultDatabase this, domain, service
+    }
+
+    /**
+     * Checks that all mandatory arguments are set.
+     *
+     * @param domain
+     *            the service {@link Domain} domain.
+     *
+     * @param service
+     *            the {@link FudforumService} service.
+     */
+    void checkService(Domain domain, FudforumService service) {
+        log.checkDatabase this, domain, service
     }
 
     /**
@@ -345,6 +362,25 @@ abstract class Fudforum_3_Config {
      */
     String getFudforumDefaultLanguage() {
         profileProperty "fudforum_default_language", fudforumProperties
+    }
+
+    /**
+     * Returns the default database driver for the specified database type.
+     *
+     * @param type
+     *            the database {@link DatabaseType} type.
+     *
+     * <ul>
+     * <li>profile property {@code "fudforum_default_database_mysql_default_driver"}</li>
+     * </ul>
+     *
+     * @see #getFudforumProperties()
+     */
+    DatabaseDriver fudforumDefaultDatabaseDriver(DatabaseType type) {
+        switch (type) {
+            case DatabaseType.mysql:
+                return profileProperty("fudforum_default_database_mysql_default_driver", fudforumProperties)
+        }
     }
 
     /**

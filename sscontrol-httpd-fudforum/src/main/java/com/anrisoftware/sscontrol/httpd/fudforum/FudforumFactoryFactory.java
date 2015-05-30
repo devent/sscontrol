@@ -23,6 +23,8 @@ import org.codehaus.groovy.control.customizers.ImportCustomizer;
 import org.mangosdk.spi.ProviderFor;
 
 import com.anrisoftware.sscontrol.core.api.ServiceException;
+import com.anrisoftware.sscontrol.core.database.DatabaseDriver;
+import com.anrisoftware.sscontrol.core.database.DatabaseType;
 import com.anrisoftware.sscontrol.core.overridemode.OverrideMode;
 import com.anrisoftware.sscontrol.httpd.webservice.WebServiceFactory;
 import com.anrisoftware.sscontrol.httpd.webservice.WebServiceFactoryFactory;
@@ -89,6 +91,7 @@ public class FudforumFactoryFactory implements WebServiceFactoryFactory {
         ImportCustomizer customizer = new ImportCustomizer();
         customizer.addImports(OverrideMode.class.getName());
         customizer.addImports(DatabaseType.class.getName());
+        customizer.addImports(DatabaseDriver.class.getName());
         c.addCompilationCustomizers(customizer);
     }
 }

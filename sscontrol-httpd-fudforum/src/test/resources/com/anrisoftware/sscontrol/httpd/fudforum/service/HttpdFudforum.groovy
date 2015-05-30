@@ -24,7 +24,7 @@ httpd {
             debug "php", level: 1
             override mode: OverrideMode.update
             backup target: "$tmp/var/backups"
-            database "fudforumdb", user: "fudforumuser", password: "fudforumpass", host: "localhost", port: 3306, prefix: "fudforum_", type: DatabaseType.mysql
+            database "fudforumdb", user: "fudforumuser", password: "fudforumpass", host: "localhost", port: 3306, prefix: "fudforum_", type: DatabaseType.mysql, driver: DatabaseDriver.pdomysql
             root "admin", password: "admin", email: "admin@server.com"
             site "http://127.0.0.1:8080/forum/"
             language "de"

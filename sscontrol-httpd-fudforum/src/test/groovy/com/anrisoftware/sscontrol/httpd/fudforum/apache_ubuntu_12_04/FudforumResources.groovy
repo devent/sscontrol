@@ -21,6 +21,7 @@ package com.anrisoftware.sscontrol.httpd.fudforum.apache_ubuntu_12_04
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static org.apache.commons.io.FileUtils.*
 
+import com.anrisoftware.sscontrol.httpd.fudforum.archive.FudforumArchiveResources
 import com.anrisoftware.sscontrol.testutils.resources.ResourcesUtils
 
 /**
@@ -37,7 +38,10 @@ enum FudforumResources {
     httpdBackupScript("Httpd.groovy", FudforumResources.class.getResource("HttpdBackup.groovy")),
     phpCommand("/usr/bin/php5", FudforumResources.class.getResource("echo_command.txt")),
     // basic
-    basicTest1comFudforumArchiveFile("/var/www/test1.com/fudforum_3/fudforum/fudforum_archive", FudforumResources.class.getResource("basic_test1com_fudforumarchive.txt")),
+    basicTest1comFudforumArchiveFile("/var/www/test1.com/fudforum_3/fudforum/fudforum_archive", FudforumArchiveResources.class.getResource("fudforumarchive.txt")),
+    basicTest1comFudforumInstallphpFile("/var/www/test1.com/fudforum_3/fudforum/fudforum_archive", FudforumArchiveResources.class.getResource("fudforumarchive.txt")),
+    basicTest1comFudforumUninstallphpFile("/var/www/test1.com/fudforum_3/fudforum/fudforum_archive", FudforumArchiveResources.class.getResource("fudforumarchive.txt")),
+    basicTest1comFudforumUpgradephpFile("/var/www/test1.com/fudforum_3/fudforum/fudforum_archive", FudforumArchiveResources.class.getResource("fudforumarchive.txt")),
     basicTest1comConfExpected("/etc/apache2/sites-available/100-robobee-test1.com.conf", FudforumResources.class.getResource("basic_test1comconf_expected.txt")),
     basicTest1comInstallIniExpected("/var/www/test1.com/fudforum_3/install.ini", FudforumResources.class.getResource("basic_test1com_installini_expected.txt")),
     basicTest1comPhpIniConfExpected("/var/www/php-fcgi-scripts/test1.com/domain_php.ini", FudforumResources.class.getResource("basic_test1com_phpini_expected.txt")),
@@ -59,6 +63,13 @@ enum FudforumResources {
 
     static copyFudforumFiles(File parent) {
         phpCommand.createCommand parent
+    }
+
+    static copyBasicTest1comFiles(File parent) {
+        basicTest1comFudforumArchiveFile.createCommand parent
+        basicTest1comFudforumInstallphpFile.createCommand parent
+        basicTest1comFudforumUninstallphpFile.createCommand parent
+        basicTest1comFudforumUpgradephpFile.createCommand parent
     }
 
     static void setupFudforumProperties(def profile, File parent) {

@@ -80,6 +80,7 @@ class UbuntuApacheFudforumConfig extends Fudforum_3_Config implements ServiceCon
         } else {
             fudforumInstallConfig.upgradeService domain, service
         }
+        fudforumInstallConfig.removeServiceFiles domain, service
         setupPermissions domain, service
     }
 

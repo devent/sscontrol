@@ -46,7 +46,7 @@ class FudforumTest extends WebServiceTestEnvironment {
         copyApacheUbuntuFiles tmpdir
         copyFudforumArchiveFiles tmpdir
         copyFudforumFiles tmpdir
-        basicTest1comFudforumArchiveFile.createFile tmpdir
+        copyBasicTest1comFiles tmpdir
         loader.loadService profile.resource, null
         def profile = registry.getService("profile")[0]
         setupApacheUbuntuProperties profile, tmpdir
@@ -68,6 +68,10 @@ class FudforumTest extends WebServiceTestEnvironment {
         assertStringContent basicChownOutExpected.replaced(tmpdir, tmpdir, "/tmp"), basicChownOutExpected.toString()
         assertFileContent basicAptitudeOutExpected.asFile(tmpdir), basicAptitudeOutExpected
         assertStringContent basicPhpOutExpected.replaced(tmpdir, tmpdir, "/tmp"), basicPhpOutExpected.toString()
+        assert basicTest1comFudforumArchiveFile.asFile(tmpdir).exists() == false
+        assert basicTest1comFudforumInstallphpFile.asFile(tmpdir).exists() == false
+        assert basicTest1comFudforumUninstallphpFile.asFile(tmpdir).exists() == false
+        assert basicTest1comFudforumUpgradephpFile.asFile(tmpdir).exists() == false
     }
 
     @Test
@@ -77,7 +81,7 @@ class FudforumTest extends WebServiceTestEnvironment {
         copyApacheUbuntuFiles tmpdir
         copyFudforumArchiveFiles tmpdir
         copyFudforumFiles tmpdir
-        basicTest1comFudforumArchiveFile.createFile tmpdir
+        copyBasicTest1comFiles tmpdir
         loader.loadService profile.resource, null
         def profile = registry.getService("profile")[0]
         setupApacheUbuntuProperties profile, tmpdir
@@ -107,7 +111,7 @@ class FudforumTest extends WebServiceTestEnvironment {
         copyApacheUbuntuFiles tmpdir
         copyFudforumArchiveFiles tmpdir
         copyFudforumFiles tmpdir
-        basicTest1comFudforumArchiveFile.createFile tmpdir
+        copyBasicTest1comFiles tmpdir
         loader.loadService profile.resource, null
         def profile = registry.getService("profile")[0]
         setupApacheUbuntuProperties profile, tmpdir

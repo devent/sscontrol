@@ -60,7 +60,7 @@ abstract class FudforumArchiveInstallConfig {
                 log: log.log,
                 runCommands: runCommands,
                 phpCommand: phpCommand,
-                workDirectory: installScript(domain, service).parentFile,
+                workDirectory: serviceFile(domain, service, installScriptFile).parentFile,
                 installScript: installScriptFile.name,
                 this, threads, installTemplate, "installScript")()
         log.serviceInstalled this, domain, task
@@ -80,34 +80,30 @@ abstract class FudforumArchiveInstallConfig {
                 log: log.log,
                 runCommands: runCommands,
                 phpCommand: phpCommand,
-                workDirectory: upgradeScript(domain, service).parentFile,
+                workDirectory: serviceFile(domain, service, upgradeScriptFile).parentFile,
                 upgradeScript: upgradeScriptFile.name,
                 this, threads, installTemplate, "upgradeScript")()
         log.serviceUpgraded this, domain, task
     }
 
     /**
-     * Returns the <i>install.php</i> script path.
+     * Removes the <i>FUDForum</i> service files.
      *
      * @param domain
      *            the service {@link Domain} domain.
      *
      * @param service
      *            the {@link FudforumService} service.
-     *
-     * @see #getInstallScriptFile()
      */
-    File installScript(Domain domain, FudforumService service) {
-        def file = installScriptFile
-        if (file.absolute) {
-            return file
-        } else {
-            new File(fudforumDir(domain, service), file.name)
-        }
+    void removeServiceFiles(Domain domain, FudforumService service) {
+        serviceFile(domain, service, installScriptFile).delete()
+        serviceFile(domain, service, upgradeScriptFile).delete()
+        serviceFile(domain, service, uninstallScriptFile).delete()
+        serviceFile(domain, service, fudforumArchiveFile).delete()
     }
 
     /**
-     * Returns the <i>upgrade.php</i> script path.
+     * Returns the path of the service file.
      *
      * @param domain
      *            the service {@link Domain} domain.
@@ -115,10 +111,10 @@ abstract class FudforumArchiveInstallConfig {
      * @param service
      *            the {@link FudforumService} service.
      *
-     * @see #getUpgradeScriptFile()
+     * @param file
+     *            the {@link File} file.
      */
-    File upgradeScript(Domain domain, FudforumService service) {
-        def file = upgradeScriptFile
+    File serviceFile(Domain domain, FudforumService service, File file) {
         if (file.absolute) {
             return file
         } else {
@@ -165,6 +161,34 @@ abstract class FudforumArchiveInstallConfig {
      */
     File getUpgradeScriptFile() {
         profileDirProperty "fudforum_upgrade_script", fudforumProperties
+    }
+
+    /**
+     * Returns the <i>uninstall.php</i> script. If the file is not absolute,
+     * then the file is assumed under the service installation directory.
+     *
+     * <ul>
+     * <li>profile property {@code "fudforum_uninstall_script"}</li>
+     * </ul>
+     *
+     * @see #getFudforumProperties()
+     */
+    File getUninstallScriptFile() {
+        profileDirProperty "fudforum_uninstall_script", fudforumProperties
+    }
+
+    /**
+     * Returns the <i>fudforum_archive</i> script. If the file is not absolute,
+     * then the file is assumed under the service installation directory.
+     *
+     * <ul>
+     * <li>profile property {@code "fudforum_archive_file"}</li>
+     * </ul>
+     *
+     * @see #getFudforumProperties()
+     */
+    File getFudforumArchiveFile() {
+        profileDirProperty "fudforum_archive_file", fudforumProperties
     }
 
     /**

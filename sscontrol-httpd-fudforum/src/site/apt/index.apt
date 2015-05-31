@@ -19,7 +19,7 @@
 
 Description
 
-  PHP URL shortening service {{http://yourls.org/}Yourls}}.
+  Web forum {{http://fudforum.org}FUDForum}}.
 
 SCM
 
@@ -40,8 +40,8 @@ Maven
 ---
 <dependency>
     <groupId>com.anrisoftware.sscontrol</groupId>
-    <artifactId>sscontrol-httpd-yourls</artifactId>
-    <version>1.0-alpha-4</version>
+    <artifactId>sscontrol-httpd-fudforum</artifactId>
+    <version>1.0-alpha-5</version>
 </dependency>
 ---
 

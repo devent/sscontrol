@@ -43,9 +43,9 @@ xsi:schemaLocation="http://maven.apache.org/DECORATION/1.0.0 http://maven.apache
 		</links>
 		<menu name="Overview">
 			<item name="Home" href="/index.html" />
-			<item name="Yourls" href="http://yourls.org/" />
+			<item name="FUDForum" href="http://fudforum.org" />
 			<item name="Download" href="https://anrisoftware.com/l/2o" />
-			<item name="Javadoc" href="https://anrisoftware.com/javadoc/com.anrisoftware.sscontrol/sscontrol-httpd-yourls/apidocs/index.html" />
+			<item name="Javadoc" href="https://anrisoftware.com/javadoc/com.anrisoftware.sscontrol/sscontrol-httpd-fudforum/apidocs/index.html" />
 			<item name="Source code" href="https://anrisoftware.com/l/2p" />
             <item name="Source code (Github)" href="https://github.com/devent/sscontrol" />
             <item name="Roadmap" href="https://anrisoftware.com/l/2r" />

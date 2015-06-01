@@ -85,6 +85,7 @@ abstract class Wordpress_3_Config extends WordpressConfig {
             copyFile file, tmp
         }
         List lines = readLines(tmp, configFileCharset)
+        tmp.delete()
         lines = lines[0..-10]
         writeLines file, configFileCharset.toString(), lines
         log.mainConfigDeployed this, domain, file, lines

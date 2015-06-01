@@ -58,6 +58,7 @@ enum WordpressResources {
     basicWwwtest1comWordpressPluginsDir("/var/www/www.test1.com/wordpress_4/wp-content/plugins", null),
     basicWwwtest1comWordpressThemesDir("/var/www/www.test1.com/wordpress_4/wp-content/themes", null),
     basicWwwtest1comWordpressUploadsDir("/var/www/www.test1.com/wordpress_4/wp-content/uploads", null),
+    basicTmpWpconfigExpected("/tmp/wp-config.php", null),
     // de_DE
     basicdeWordpressConfigSample("/var/www/www.test1.com/wordpress_4/wp-config-sample.php", WordpressResources.class.getResource("wordpress_config_sample_php.txt")),
     basicdeWordpressConfigExpected("/var/www/www.test1.com/wordpress_4/wp-config.php", WordpressResources.class.getResource("basicde_wordpress_config_expected.txt")),

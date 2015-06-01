@@ -71,6 +71,7 @@ class WordpressTest extends WebServiceTestEnvironment {
         assert basicWwwtest1comWordpressPluginsDir.asFile(tmpdir).isDirectory()
         assert basicWwwtest1comWordpressThemesDir.asFile(tmpdir).isDirectory()
         assert basicWwwtest1comWordpressUploadsDir.asFile(tmpdir).isDirectory()
+        assert basicTmpWpconfigExpected.asFile(tmpdir).exists() == false
     }
 
     @Test

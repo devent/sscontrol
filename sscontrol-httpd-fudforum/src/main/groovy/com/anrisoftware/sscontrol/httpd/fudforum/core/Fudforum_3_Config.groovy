@@ -206,6 +206,30 @@ abstract class Fudforum_3_Config {
     }
 
     /**
+     * Returns the <i>FUDForum</i> globals file, for
+     * example {@code "include/GLOBALS.php"}. If the path is not absolute, the
+     * path is assumed under the service installation directory.
+     *
+     * <ul>
+     * <li>profile property {@code "fudforum_globals_file"}</li>
+     * </ul>
+     *
+     * @param domain
+     *            the {@link Domain} domain of the service.
+     *
+     * @param service
+     *            the {@link FudforumService} service.
+     *
+     * @return the globals {@link File} file.
+     *
+     * @see #fudforumDir(Domain, FudforumService)
+     * @see #getFudforumProperties()
+     */
+    File fudforumGlobalsFile(Domain domain, FudforumService service) {
+        profileFileProperty "fudforum_globals_file", fudforumDir(domain, service), fudforumProperties
+    }
+
+    /**
      * Returns the <i>FUDForum</i> packages, for
      * example {@code "php5"}.
      *

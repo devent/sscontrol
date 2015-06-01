@@ -56,19 +56,20 @@ class Fudforum_3_Permissions {
      *            the {@link FudforumService} service.
      */
     void setupPermissions(Domain domain, FudforumService service) {
-        setupfudforumPermissions domain, service
+        setupFudforumPermissions domain, service
         setupPublicPermissions domain, service
-        setupPrivatePermissions domain, service
+        setupPrivateReadonlyPermissions domain, service
+        setupPrivateWritablePermissions domain, service
     }
 
-    void setupfudforumPermissions(Domain domain, FudforumService service) {
+    void setupFudforumPermissions(Domain domain, FudforumService service) {
         def user = domain.domainUser
         def dir = fudforumDir domain, service
         changeFileOwnerFactory.create(
                 log: log,
                 runCommands: runCommands,
                 command: chownCommand,
-                owner: "root",
+                owner: user.name,
                 ownerGroup: user.group,
                 files: dir,
                 recursive: true,
@@ -86,23 +87,43 @@ class Fudforum_3_Permissions {
     void setupPublicPermissions(Domain domain, FudforumService service) {
     }
 
-    void setupPrivatePermissions(Domain domain, FudforumService service) {
+    void setupPrivateReadonlyPermissions(Domain domain, FudforumService service) {
         def user = domain.domainUser
-        def configfile = fudforumInstallFile domain, service
+        def installfile = fudforumInstallFile domain, service
         changeFileOwnerFactory.create(
                 log: log,
                 runCommands: runCommands,
                 command: chownCommand,
                 owner: user.name,
                 ownerGroup: user.group,
-                files: configfile,
+                files: installfile,
                 this, threads)()
         changeFileModFactory.create(
                 log: log,
                 runCommands: runCommands,
                 command: chmodCommand,
                 mod: "u=r,g=r,o-rwx",
-                files: configfile,
+                files: installfile,
+                this, threads)()
+    }
+
+    void setupPrivateWritablePermissions(Domain domain, FudforumService service) {
+        def user = domain.domainUser
+        def globalsfile = fudforumGlobalsFile domain, service
+        changeFileOwnerFactory.create(
+                log: log,
+                runCommands: runCommands,
+                command: chownCommand,
+                owner: user.name,
+                ownerGroup: user.group,
+                files: globalsfile,
+                this, threads)()
+        changeFileModFactory.create(
+                log: log,
+                runCommands: runCommands,
+                command: chmodCommand,
+                mod: "u=rw,g=r,o-rwx",
+                files: globalsfile,
                 this, threads)()
     }
 

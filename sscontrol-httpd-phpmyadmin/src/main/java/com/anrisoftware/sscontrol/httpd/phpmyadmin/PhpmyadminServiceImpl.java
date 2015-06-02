@@ -25,7 +25,7 @@ import javax.inject.Inject;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.anrisoftware.sscontrol.core.api.ServiceException;
-import com.anrisoftware.sscontrol.core.groovy.StatementsMap;
+import com.anrisoftware.sscontrol.core.groovy.statementsmap.StatementsMap;
 import com.anrisoftware.sscontrol.httpd.domain.Domain;
 import com.anrisoftware.sscontrol.httpd.webserviceargs.DefaultWebService;
 import com.anrisoftware.sscontrol.httpd.webserviceargs.DefaultWebServiceFactory;

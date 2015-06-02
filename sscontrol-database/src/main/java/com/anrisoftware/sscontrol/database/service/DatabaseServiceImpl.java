@@ -39,13 +39,13 @@ import com.anrisoftware.sscontrol.core.api.Service;
 import com.anrisoftware.sscontrol.core.api.ServiceException;
 import com.anrisoftware.sscontrol.core.api.ServiceScriptFactory;
 import com.anrisoftware.sscontrol.core.bindings.BindingAddress;
-import com.anrisoftware.sscontrol.core.bindings.BindingAddressesStatementsTable;
-import com.anrisoftware.sscontrol.core.bindings.BindingAddressesStatementsTableFactory;
-import com.anrisoftware.sscontrol.core.groovy.StatementsException;
-import com.anrisoftware.sscontrol.core.groovy.StatementsMap;
-import com.anrisoftware.sscontrol.core.groovy.StatementsMapFactory;
-import com.anrisoftware.sscontrol.core.groovy.StatementsTable;
-import com.anrisoftware.sscontrol.core.groovy.StatementsTableFactory;
+import com.anrisoftware.sscontrol.core.groovy.bindingaddressstatements.BindingAddressesStatements;
+import com.anrisoftware.sscontrol.core.groovy.bindingaddressstatements.BindingAddressesStatementsFactory;
+import com.anrisoftware.sscontrol.core.groovy.statementsmap.StatementsException;
+import com.anrisoftware.sscontrol.core.groovy.statementsmap.StatementsMap;
+import com.anrisoftware.sscontrol.core.groovy.statementsmap.StatementsMapFactory;
+import com.anrisoftware.sscontrol.core.groovy.statementstable.StatementsTable;
+import com.anrisoftware.sscontrol.core.groovy.statementstable.StatementsTableFactory;
 import com.anrisoftware.sscontrol.core.service.AbstractService;
 import com.anrisoftware.sscontrol.database.statements.Database;
 import com.anrisoftware.sscontrol.database.statements.DatabaseFactory;
@@ -78,7 +78,7 @@ class DatabaseServiceImpl extends AbstractService implements DatabaseService {
 
     private StatementsMap statementsMap;
 
-    private BindingAddressesStatementsTable bindingAddressesStatementsTable;
+    private BindingAddressesStatements bindingAddressesStatementsTable;
 
     @Inject
     DatabaseServiceImpl() {
@@ -118,8 +118,8 @@ class DatabaseServiceImpl extends AbstractService implements DatabaseService {
 
     @Inject
     public final void setBindingAddressesStatementsTable(
-            BindingAddressesStatementsTableFactory factory) {
-        BindingAddressesStatementsTable table;
+            BindingAddressesStatementsFactory factory) {
+        BindingAddressesStatements table;
         table = factory.create(this, SERVICE_NAME);
         table.setRequirePort(false);
         this.bindingAddressesStatementsTable = table;

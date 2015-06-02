@@ -18,7 +18,7 @@
  */
 package com.anrisoftware.sscontrol.hosts.service;
 
-import com.anrisoftware.sscontrol.core.list.ListModule;
+import com.anrisoftware.sscontrol.core.listproperty.ListPropertyModule;
 import com.anrisoftware.sscontrol.hosts.host.HostModule;
 import com.anrisoftware.sscontrol.hosts.utils.HostsUtilsModule;
 import com.google.inject.AbstractModule;
@@ -35,6 +35,6 @@ class HostsModule extends AbstractModule {
 	protected void configure() {
         install(new HostModule());
         install(new HostsUtilsModule());
-        install(new ListModule());
+        install(new ListPropertyModule());
 	}
 }

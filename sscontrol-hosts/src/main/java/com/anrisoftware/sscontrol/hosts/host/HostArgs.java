@@ -24,7 +24,7 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-import com.anrisoftware.sscontrol.core.list.StringToListFactory;
+import com.anrisoftware.sscontrol.core.listproperty.PropertyToListFactory;
 import com.anrisoftware.sscontrol.hosts.api.HostsService;
 
 /**
@@ -43,7 +43,7 @@ class HostArgs {
     private HostLogger log;
 
     @Inject
-    private StringToListFactory toListFactory;
+    private PropertyToListFactory toListFactory;
 
     String address(HostsService service, Map<String, Object> args) {
         Object address = args.get("address");

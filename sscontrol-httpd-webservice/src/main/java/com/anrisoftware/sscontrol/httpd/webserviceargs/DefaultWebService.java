@@ -32,9 +32,9 @@ import javax.inject.Inject;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.anrisoftware.sscontrol.core.api.ServiceException;
-import com.anrisoftware.sscontrol.core.groovy.StatementsException;
-import com.anrisoftware.sscontrol.core.groovy.StatementsMap;
-import com.anrisoftware.sscontrol.core.groovy.StatementsMapFactory;
+import com.anrisoftware.sscontrol.core.groovy.statementsmap.StatementsException;
+import com.anrisoftware.sscontrol.core.groovy.statementsmap.StatementsMap;
+import com.anrisoftware.sscontrol.core.groovy.statementsmap.StatementsMapFactory;
 import com.anrisoftware.sscontrol.httpd.domain.Domain;
 import com.anrisoftware.sscontrol.httpd.webservice.WebService;
 import com.google.inject.assistedinject.Assisted;

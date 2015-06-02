@@ -50,10 +50,10 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import com.anrisoftware.sscontrol.core.api.ServiceException;
-import com.anrisoftware.sscontrol.core.groovy.StatementsException;
-import com.anrisoftware.sscontrol.core.groovy.StatementsMap;
-import com.anrisoftware.sscontrol.core.groovy.StatementsTable;
-import com.anrisoftware.sscontrol.core.groovy.StatementsTableFactory;
+import com.anrisoftware.sscontrol.core.groovy.statementsmap.StatementsException;
+import com.anrisoftware.sscontrol.core.groovy.statementsmap.StatementsMap;
+import com.anrisoftware.sscontrol.core.groovy.statementstable.StatementsTable;
+import com.anrisoftware.sscontrol.core.groovy.statementstable.StatementsTableFactory;
 import com.anrisoftware.sscontrol.core.overridemode.OverrideMode;
 import com.anrisoftware.sscontrol.core.yesno.YesNoFlag;
 import com.anrisoftware.sscontrol.httpd.domain.Domain;

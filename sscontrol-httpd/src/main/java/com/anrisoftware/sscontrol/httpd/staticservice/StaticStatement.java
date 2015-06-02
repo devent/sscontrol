@@ -18,7 +18,7 @@
  */
 package com.anrisoftware.sscontrol.httpd.staticservice;
 
-import com.anrisoftware.sscontrol.core.groovy.StatementsEnumToString;
+import com.anrisoftware.sscontrol.core.groovy.statementsmap.StatementsEnumToString;
 
 /**
  * Static files service statements.

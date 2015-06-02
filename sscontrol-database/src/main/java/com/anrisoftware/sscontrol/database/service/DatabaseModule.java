@@ -19,10 +19,10 @@
 package com.anrisoftware.sscontrol.database.service;
 
 import com.anrisoftware.globalpom.resources.ResourcesModule;
-import com.anrisoftware.sscontrol.core.bindings.BindingAddressesStatementsTableModule;
 import com.anrisoftware.sscontrol.core.debuglogging.DebugLoggingModule;
-import com.anrisoftware.sscontrol.core.groovy.StatementsMapModule;
-import com.anrisoftware.sscontrol.core.list.ListModule;
+import com.anrisoftware.sscontrol.core.groovy.bindingaddressstatements.BindingAddressesStatementsModule;
+import com.anrisoftware.sscontrol.core.groovy.statementsmap.StatementsMapModule;
+import com.anrisoftware.sscontrol.core.listproperty.ListPropertyModule;
 import com.anrisoftware.sscontrol.database.statements.StatementsModule;
 import com.google.inject.AbstractModule;
 
@@ -37,10 +37,10 @@ class DatabaseModule extends AbstractModule {
 	@Override
 	protected void configure() {
 		install(new DebugLoggingModule());
-		install(new ListModule());
+		install(new ListPropertyModule());
         install(new ResourcesModule());
         install(new StatementsModule());
         install(new StatementsMapModule());
-        install(new BindingAddressesStatementsTableModule());
+        install(new BindingAddressesStatementsModule());
 	}
 }

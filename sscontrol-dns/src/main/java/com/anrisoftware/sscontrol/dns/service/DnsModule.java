@@ -19,10 +19,10 @@
 package com.anrisoftware.sscontrol.dns.service;
 
 import com.anrisoftware.globalpom.resources.ResourcesModule;
-import com.anrisoftware.sscontrol.core.bindings.BindingAddressesStatementsTableModule;
 import com.anrisoftware.sscontrol.core.bindings.BindingsModule;
-import com.anrisoftware.sscontrol.core.groovy.StatementsMapModule;
-import com.anrisoftware.sscontrol.core.list.ListModule;
+import com.anrisoftware.sscontrol.core.groovy.bindingaddressstatements.BindingAddressesStatementsModule;
+import com.anrisoftware.sscontrol.core.groovy.statementsmap.StatementsMapModule;
+import com.anrisoftware.sscontrol.core.listproperty.ListPropertyModule;
 import com.anrisoftware.sscontrol.dns.arecord.ARecordModule;
 import com.anrisoftware.sscontrol.dns.cnamerecord.CnameRecordModule;
 import com.anrisoftware.sscontrol.dns.mxrecord.MxRecordModule;
@@ -42,7 +42,7 @@ class DnsModule extends AbstractModule {
 	@Override
 	protected void configure() {
 		install(new ZoneModule());
-		install(new ListModule());
+		install(new ListPropertyModule());
 		install(new BindingsModule());
 		install(new ARecordModule());
 		install(new CnameRecordModule());
@@ -50,7 +50,7 @@ class DnsModule extends AbstractModule {
 		install(new MxRecordModule());
 		install(new TimeModule());
         install(new StatementsMapModule());
-        install(new BindingAddressesStatementsTableModule());
+        install(new BindingAddressesStatementsModule());
         install(new ResourcesModule());
 	}
 }

@@ -22,7 +22,7 @@ import static com.google.inject.multibindings.Multibinder.newSetBinder;
 
 import org.codehaus.groovy.control.customizers.ImportCustomizer;
 
-import com.anrisoftware.sscontrol.core.groovy.ClassImporter;
+import com.anrisoftware.sscontrol.core.groovy.groovyloader.ClassImporter;
 import com.anrisoftware.sscontrol.core.yesno.YesNoFlag;
 import com.google.inject.AbstractModule;
 import com.google.inject.multibindings.Multibinder;

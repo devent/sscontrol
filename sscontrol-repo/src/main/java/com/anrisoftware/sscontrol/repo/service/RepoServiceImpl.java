@@ -30,11 +30,11 @@ import javax.inject.Inject;
 import com.anrisoftware.sscontrol.core.api.Service;
 import com.anrisoftware.sscontrol.core.api.ServiceException;
 import com.anrisoftware.sscontrol.core.api.ServiceScriptFactory;
-import com.anrisoftware.sscontrol.core.groovy.StatementsException;
-import com.anrisoftware.sscontrol.core.groovy.StatementsMap;
-import com.anrisoftware.sscontrol.core.groovy.StatementsMapFactory;
-import com.anrisoftware.sscontrol.core.groovy.StatementsTable;
-import com.anrisoftware.sscontrol.core.groovy.StatementsTableFactory;
+import com.anrisoftware.sscontrol.core.groovy.statementsmap.StatementsException;
+import com.anrisoftware.sscontrol.core.groovy.statementsmap.StatementsMap;
+import com.anrisoftware.sscontrol.core.groovy.statementsmap.StatementsMapFactory;
+import com.anrisoftware.sscontrol.core.groovy.statementstable.StatementsTable;
+import com.anrisoftware.sscontrol.core.groovy.statementstable.StatementsTableFactory;
 import com.anrisoftware.sscontrol.core.service.AbstractService;
 
 /**

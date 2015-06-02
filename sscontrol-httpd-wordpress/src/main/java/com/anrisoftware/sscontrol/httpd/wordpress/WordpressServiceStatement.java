@@ -18,7 +18,7 @@
  */
 package com.anrisoftware.sscontrol.httpd.wordpress;
 
-import com.anrisoftware.sscontrol.core.groovy.StatementsEnumToString;
+import com.anrisoftware.sscontrol.core.groovy.statementsmap.StatementsEnumToString;
 
 /**
  * <i>Wordpress</i> service statement key.

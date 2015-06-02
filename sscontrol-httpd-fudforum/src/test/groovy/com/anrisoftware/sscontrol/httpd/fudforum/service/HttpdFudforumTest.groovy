@@ -22,6 +22,7 @@ import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.httpd.fudforum.service.ServicesResources.*
 import groovy.util.logging.Slf4j
 
+import org.apache.commons.io.Charsets
 import org.junit.Test
 
 import com.anrisoftware.sscontrol.core.database.DatabaseDriver
@@ -75,7 +76,37 @@ class HttpdFudforumTest extends HttpdPreScriptTestEnvironment {
         assert webservice.rootPassword == "admin"
         assert webservice.rootEmail == "admin@server.com"
         assert webservice.site == "http://127.0.0.1:8080/forum/"
-        assert webservice.language == "de"
+        assert webservice.language == Locale.GERMAN
+        assert webservice.locales.size() == 2
+        assert webservice.locales[0].language == "de"
+        assert webservice.locales[0].country == "DE"
+        assert webservice.locales[0].charset == Charsets.ISO_8859_1
+        assert webservice.locales[1].language == "pt"
+        assert webservice.locales[1].country == "BR"
+        assert webservice.locales[1].charset == Charsets.ISO_8859_1
         assert webservice.template == "default"
+    }
+
+    @Test
+    void "fudforum service locales array"() {
+        loader.loadService profile.resource, null
+        def profile = registry.getService("profile")[0]
+        loader.loadService fudforumLocalesScript.resource, profile, preScript
+        HttpdService service = registry.getService("httpd")[0]
+
+        int d = 0
+        Domain domain = service.domains[d++]
+        assert domain.name == "test1.com"
+        assert domain.address == "192.168.0.51"
+
+        FudforumService webservice = domain.services[0]
+        assert webservice.language == Locale.ENGLISH
+        assert webservice.locales.size() == 2
+        assert webservice.locales[0].language == "fr"
+        assert webservice.locales[0].country == "FR"
+        assert webservice.locales[0].charset == Charsets.UTF_8
+        assert webservice.locales[1].language == "de"
+        assert webservice.locales[1].country == "DE"
+        assert webservice.locales[1].charset == Charsets.UTF_8
     }
 }

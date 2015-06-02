@@ -29,8 +29,8 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.joda.time.Duration;
 
 import com.anrisoftware.globalpom.format.duration.DurationFormatFactory;
-import com.anrisoftware.sscontrol.core.groovy.StatementsMap;
-import com.anrisoftware.sscontrol.core.groovy.StatementsMapFactory;
+import com.anrisoftware.sscontrol.core.groovy.statementsmap.StatementsMap;
+import com.anrisoftware.sscontrol.core.groovy.statementsmap.StatementsMapFactory;
 import com.google.inject.assistedinject.Assisted;
 
 /**

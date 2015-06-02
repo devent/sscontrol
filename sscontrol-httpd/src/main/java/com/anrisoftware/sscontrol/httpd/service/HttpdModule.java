@@ -20,12 +20,12 @@ package com.anrisoftware.sscontrol.httpd.service;
 
 import com.anrisoftware.globalpom.format.byteformat.ByteFormatModule;
 import com.anrisoftware.globalpom.resources.ResourcesModule;
-import com.anrisoftware.sscontrol.core.bindings.BindingAddressesStatementsTableModule;
 import com.anrisoftware.sscontrol.core.bindings.BindingsModule;
 import com.anrisoftware.sscontrol.core.database.DatabaseModule;
 import com.anrisoftware.sscontrol.core.debuglogging.DebugLoggingModule;
-import com.anrisoftware.sscontrol.core.groovy.StatementsMapModule;
-import com.anrisoftware.sscontrol.core.list.ListModule;
+import com.anrisoftware.sscontrol.core.groovy.bindingaddressstatements.BindingAddressesStatementsModule;
+import com.anrisoftware.sscontrol.core.groovy.statementsmap.StatementsMapModule;
+import com.anrisoftware.sscontrol.core.listproperty.ListPropertyModule;
 import com.anrisoftware.sscontrol.httpd.authdb.AuthDbModule;
 import com.anrisoftware.sscontrol.httpd.authfile.AuthFileModule;
 import com.anrisoftware.sscontrol.httpd.authldap.AuthLdapModule;
@@ -52,7 +52,7 @@ class HttpdModule extends AbstractModule {
 	protected void configure() {
         install(new WebServiceArgsModule());
         install(new StatementsMapModule());
-        install(new BindingAddressesStatementsTableModule());
+        install(new BindingAddressesStatementsModule());
         install(new ResourcesModule());
         install(new ByteFormatModule());
 		install(new DomainModule());
@@ -63,7 +63,7 @@ class HttpdModule extends AbstractModule {
 		install(new PhpldapadminModule());
         install(new ProxyServiceModule());
         install(new DebugLoggingModule());
-        install(new ListModule());
+        install(new ListPropertyModule());
         install(new DatabaseModule());
         install(new BindingsModule());
         install(new DomainUserModule());

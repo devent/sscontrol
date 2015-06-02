@@ -19,8 +19,12 @@
 package com.anrisoftware.sscontrol.httpd.fudforum;
 
 import java.net.URI;
+import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
+import com.anrisoftware.globalpom.posixlocale.PosixLocale;
+import com.anrisoftware.sscontrol.core.api.ServiceException;
 import com.anrisoftware.sscontrol.core.database.DatabaseDriver;
 import com.anrisoftware.sscontrol.core.database.DatabaseType;
 import com.anrisoftware.sscontrol.core.overridemode.OverrideMode;
@@ -123,13 +127,35 @@ public interface FudforumService extends WebService {
      *
      * <pre>
      * setup "fudforum", {
-     *     language "de"
+     *     language "de" // or
+     *     language Locale.GERMAN
      * }
      * </pre>
      *
-     * @return the language {@link String} name or {@code null}.
+     * @return the language {@link Locale} locale or {@code null}.
+     *
+     * @throws ServiceException
+     *             if there was an error parse the language.
      */
-    String getLanguage();
+    Locale getLanguage() throws ServiceException;
+
+    /**
+     * Returns the locale for the site.
+     *
+     * <pre>
+     * setup "fudforum", {
+     *     language locales: "de, pt" // or
+     *     language "en", locales: [PosixLocale.FRANCE, PosixLocale.GERMANY]
+     * }
+     * </pre>
+     *
+     * @return the {@link List} list of the site {@link PosixLocale} locales or
+     *         {@code null}.
+     *
+     * @throws ServiceException
+     *             if there was an error parse the locale.
+     */
+    List<PosixLocale> getLocales() throws ServiceException;
 
     /**
      * Returns that the site template.

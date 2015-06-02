@@ -18,7 +18,7 @@
  */
 package com.anrisoftware.sscontrol.httpd.fudforum;
 
-import com.anrisoftware.sscontrol.core.groovy.StatementsEnumToString;
+import com.anrisoftware.sscontrol.core.groovy.statementsmap.StatementsEnumToString;
 
 /**
  * <i>FUDForum</i> service statement key.
@@ -55,8 +55,6 @@ enum FudforumServiceStatement {
     DEBUG_KEY,
 
     TEMPLATE_KEY,
-
-    LANGUAGE_KEY,
 
     ROOT_KEY,
 

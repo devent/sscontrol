@@ -41,9 +41,9 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-import com.anrisoftware.sscontrol.core.groovy.StatementsException;
-import com.anrisoftware.sscontrol.core.groovy.StatementsMap;
-import com.anrisoftware.sscontrol.core.groovy.StatementsMapFactory;
+import com.anrisoftware.sscontrol.core.groovy.statementsmap.StatementsException;
+import com.anrisoftware.sscontrol.core.groovy.statementsmap.StatementsMap;
+import com.anrisoftware.sscontrol.core.groovy.statementsmap.StatementsMapFactory;
 import com.anrisoftware.sscontrol.core.yesno.YesNoFlag;
 import com.anrisoftware.sscontrol.httpd.auth.AbstractAuthService;
 import com.anrisoftware.sscontrol.httpd.domain.Domain;

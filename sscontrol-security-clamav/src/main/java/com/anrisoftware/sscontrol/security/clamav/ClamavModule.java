@@ -19,9 +19,9 @@
 package com.anrisoftware.sscontrol.security.clamav;
 
 import com.anrisoftware.globalpom.resources.ResourcesModule;
-import com.anrisoftware.sscontrol.core.bindings.BindingAddressesStatementsTableModule;
-import com.anrisoftware.sscontrol.core.groovy.StatementsMapModule;
-import com.anrisoftware.sscontrol.core.list.ListModule;
+import com.anrisoftware.sscontrol.core.groovy.bindingaddressstatements.BindingAddressesStatementsModule;
+import com.anrisoftware.sscontrol.core.groovy.statementsmap.StatementsMapModule;
+import com.anrisoftware.sscontrol.core.listproperty.ListPropertyModule;
 import com.anrisoftware.sscontrol.security.service.SecService;
 import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
@@ -37,9 +37,9 @@ public class ClamavModule extends AbstractModule {
     @Override
     protected void configure() {
         install(new StatementsMapModule());
-        install(new ListModule());
+        install(new ListPropertyModule());
         install(new ResourcesModule());
-        install(new BindingAddressesStatementsTableModule());
+        install(new BindingAddressesStatementsModule());
         install(new FactoryModuleBuilder().implement(SecService.class,
                 ClamavServiceImpl.class).build(
                 ClamavServiceFactory.class));

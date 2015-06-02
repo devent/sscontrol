@@ -18,7 +18,7 @@
  */
 package com.anrisoftware.sscontrol.database.service;
 
-import com.anrisoftware.sscontrol.core.groovy.StatementsEnumToString;
+import com.anrisoftware.sscontrol.core.groovy.statementsmap.StatementsEnumToString;
 
 /**
  * <i>Database</i> service statement key.

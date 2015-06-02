@@ -18,7 +18,7 @@
  */
 package com.anrisoftware.sscontrol.httpd.owncloud;
 
-import com.anrisoftware.sscontrol.core.groovy.StatementsEnumToString;
+import com.anrisoftware.sscontrol.core.groovy.statementsmap.StatementsEnumToString;
 
 /**
  * <i>ownCloud</i> service statement key.

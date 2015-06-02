@@ -24,7 +24,6 @@ import static com.anrisoftware.sscontrol.httpd.fudforum.FudforumServiceStatement
 import static com.anrisoftware.sscontrol.httpd.fudforum.FudforumServiceStatement.DRIVER_KEY;
 import static com.anrisoftware.sscontrol.httpd.fudforum.FudforumServiceStatement.EMAIL_KEY;
 import static com.anrisoftware.sscontrol.httpd.fudforum.FudforumServiceStatement.HOST_KEY;
-import static com.anrisoftware.sscontrol.httpd.fudforum.FudforumServiceStatement.LANGUAGE_KEY;
 import static com.anrisoftware.sscontrol.httpd.fudforum.FudforumServiceStatement.MODE_KEY;
 import static com.anrisoftware.sscontrol.httpd.fudforum.FudforumServiceStatement.OVERRIDE_KEY;
 import static com.anrisoftware.sscontrol.httpd.fudforum.FudforumServiceStatement.PASSWORD_KEY;
@@ -38,16 +37,22 @@ import static com.anrisoftware.sscontrol.httpd.fudforum.FudforumServiceStatement
 import static com.anrisoftware.sscontrol.httpd.fudforum.FudforumServiceStatement.USER_KEY;
 
 import java.net.URI;
+import java.text.ParseException;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.inject.Inject;
 
+import com.anrisoftware.globalpom.posixlocale.PosixLocale;
 import com.anrisoftware.sscontrol.core.api.ServiceException;
-import com.anrisoftware.sscontrol.core.groovy.StatementsException;
-import com.anrisoftware.sscontrol.core.groovy.StatementsMap;
-import com.anrisoftware.sscontrol.core.groovy.StatementsTable;
-import com.anrisoftware.sscontrol.core.groovy.StatementsTableFactory;
+import com.anrisoftware.sscontrol.core.groovy.languagestatements.LanguageStatements;
+import com.anrisoftware.sscontrol.core.groovy.languagestatements.LanguageStatementsFactory;
+import com.anrisoftware.sscontrol.core.groovy.statementsmap.StatementsException;
+import com.anrisoftware.sscontrol.core.groovy.statementsmap.StatementsMap;
+import com.anrisoftware.sscontrol.core.groovy.statementstable.StatementsTable;
+import com.anrisoftware.sscontrol.core.groovy.statementstable.StatementsTableFactory;
 import com.anrisoftware.sscontrol.core.overridemode.OverrideMode;
 import com.anrisoftware.sscontrol.httpd.domain.Domain;
 import com.anrisoftware.sscontrol.httpd.webserviceargs.DefaultWebService;
@@ -73,7 +78,12 @@ class FudforumServiceImpl implements FudforumService {
 
     private final StatementsMap statementsMap;
 
+    @Inject
+    private FudforumServiceImplLogger log;
+
     private StatementsTable statementsTable;
+
+    private LanguageStatements languageStatements;
 
     /**
      * @see FudforumServiceFactory#create(Map, Domain)
@@ -87,10 +97,9 @@ class FudforumServiceImpl implements FudforumService {
     }
 
     private void setupStatements(StatementsMap map, Map<String, Object> args) {
-        map.addAllowed(DATABASE_KEY, OVERRIDE_KEY, BACKUP_KEY, LANGUAGE_KEY,
-                TEMPLATE_KEY, ROOT_KEY, SITE_KEY);
-        map.setAllowValue(true, DATABASE_KEY, LANGUAGE_KEY, TEMPLATE_KEY,
+        map.addAllowed(DATABASE_KEY, OVERRIDE_KEY, BACKUP_KEY, TEMPLATE_KEY,
                 ROOT_KEY, SITE_KEY);
+        map.setAllowValue(true, DATABASE_KEY, TEMPLATE_KEY, ROOT_KEY, SITE_KEY);
         map.addAllowedKeys(DATABASE_KEY, USER_KEY, PASSWORD_KEY, HOST_KEY,
                 PORT_KEY, PREFIX_KEY, TYPE_KEY, DRIVER_KEY);
         map.addAllowedKeys(OVERRIDE_KEY, MODE_KEY);
@@ -104,6 +113,12 @@ class FudforumServiceImpl implements FudforumService {
         table.addAllowed(DEBUG_KEY);
         table.setAllowArbitraryKeys(true, DEBUG_KEY);
         this.statementsTable = table;
+    }
+
+    @Inject
+    public final void setLanguageStatements(LanguageStatementsFactory factory) {
+        LanguageStatements language = factory.create(this, SERVICE_NAME);
+        this.languageStatements = language;
     }
 
     @Override
@@ -207,8 +222,21 @@ class FudforumServiceImpl implements FudforumService {
     }
 
     @Override
-    public String getLanguage() {
-        return statementsMap.value(LANGUAGE_KEY);
+    public Locale getLanguage() throws ServiceException {
+        try {
+            return languageStatements.getLanguage();
+        } catch (ParseException e) {
+            throw log.errorParseLanguage(this, e);
+        }
+    }
+
+    @Override
+    public List<PosixLocale> getLocales() throws ServiceException {
+        try {
+            return languageStatements.getLocales();
+        } catch (ParseException e) {
+            throw log.errorParseLocales(this, e);
+        }
     }
 
     @Override
@@ -234,8 +262,12 @@ class FudforumServiceImpl implements FudforumService {
     public Object methodMissing(String name, Object args) {
         try {
             return service.methodMissing(name, args);
-        } catch (StatementsException e) {
-            return statementsTable.methodMissing(name, args);
+        } catch (StatementsException e1) {
+            try {
+                return statementsTable.methodMissing(name, args);
+            } catch (StatementsException e2) {
+                return languageStatements.methodMissing(name, args);
+            }
         }
     }
 

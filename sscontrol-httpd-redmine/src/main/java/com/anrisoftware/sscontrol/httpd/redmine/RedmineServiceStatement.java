@@ -18,7 +18,7 @@
  */
 package com.anrisoftware.sscontrol.httpd.redmine;
 
-import com.anrisoftware.sscontrol.core.groovy.StatementsEnumToString;
+import com.anrisoftware.sscontrol.core.groovy.statementsmap.StatementsEnumToString;
 
 /**
  * <i>Redmine</i> service statement key.

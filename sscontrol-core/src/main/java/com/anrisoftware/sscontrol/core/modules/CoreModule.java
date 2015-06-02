@@ -19,7 +19,7 @@
 package com.anrisoftware.sscontrol.core.modules;
 
 import com.anrisoftware.globalpom.format.duration.DurationFormatModule;
-import com.anrisoftware.sscontrol.core.groovy.GroovyLoaderModule;
+import com.anrisoftware.sscontrol.core.groovy.groovyloader.GroovyLoaderModule;
 import com.anrisoftware.sscontrol.core.registry.ServicesRegistryModule;
 import com.google.inject.AbstractModule;
 

@@ -18,7 +18,7 @@
  */
 package com.anrisoftware.sscontrol.source.gitolite;
 
-import com.anrisoftware.sscontrol.core.groovy.StatementsEnumToString;
+import com.anrisoftware.sscontrol.core.groovy.statementsmap.StatementsEnumToString;
 
 /**
  * <i>Gitolite</i> service statement.

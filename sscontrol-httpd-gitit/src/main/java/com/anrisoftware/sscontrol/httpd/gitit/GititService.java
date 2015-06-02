@@ -36,7 +36,7 @@ import com.anrisoftware.sscontrol.core.bindings.BindingArgs;
 import com.anrisoftware.sscontrol.core.bindings.BindingFactory;
 import com.anrisoftware.sscontrol.core.debuglogging.DebugLogging;
 import com.anrisoftware.sscontrol.core.debuglogging.DebugLoggingFactory;
-import com.anrisoftware.sscontrol.core.groovy.StatementsMap;
+import com.anrisoftware.sscontrol.core.groovy.statementsmap.StatementsMap;
 import com.anrisoftware.sscontrol.core.overridemode.OverrideMode;
 import com.anrisoftware.sscontrol.core.yesno.YesNoFlag;
 import com.anrisoftware.sscontrol.httpd.domain.Domain;

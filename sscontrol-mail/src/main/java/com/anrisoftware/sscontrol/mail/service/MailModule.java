@@ -20,7 +20,7 @@ package com.anrisoftware.sscontrol.mail.service;
 
 import com.anrisoftware.sscontrol.core.bindings.BindingsModule;
 import com.anrisoftware.sscontrol.core.debuglogging.DebugLoggingModule;
-import com.anrisoftware.sscontrol.core.list.ListModule;
+import com.anrisoftware.sscontrol.core.listproperty.ListPropertyModule;
 import com.anrisoftware.sscontrol.mail.certificate.CertificateModule;
 import com.anrisoftware.sscontrol.mail.resetdomains.ResetDomainModule;
 import com.anrisoftware.sscontrol.mail.statements.StatementsModule;
@@ -40,7 +40,7 @@ class MailModule extends AbstractModule {
         install(new CertificateModule());
 		install(new ResetDomainModule());
         install(new DebugLoggingModule());
-        install(new ListModule());
+        install(new ListPropertyModule());
         install(new BindingsModule());
 	}
 }

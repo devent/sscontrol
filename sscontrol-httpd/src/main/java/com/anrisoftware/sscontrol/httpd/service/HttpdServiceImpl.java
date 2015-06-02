@@ -35,11 +35,11 @@ import com.anrisoftware.sscontrol.core.api.Service;
 import com.anrisoftware.sscontrol.core.api.ServiceException;
 import com.anrisoftware.sscontrol.core.api.ServiceScriptFactory;
 import com.anrisoftware.sscontrol.core.bindings.BindingAddress;
-import com.anrisoftware.sscontrol.core.bindings.BindingAddressesStatementsTable;
-import com.anrisoftware.sscontrol.core.bindings.BindingAddressesStatementsTableFactory;
-import com.anrisoftware.sscontrol.core.groovy.StatementsException;
-import com.anrisoftware.sscontrol.core.groovy.StatementsTable;
-import com.anrisoftware.sscontrol.core.groovy.StatementsTableFactory;
+import com.anrisoftware.sscontrol.core.groovy.bindingaddressstatements.BindingAddressesStatements;
+import com.anrisoftware.sscontrol.core.groovy.bindingaddressstatements.BindingAddressesStatementsFactory;
+import com.anrisoftware.sscontrol.core.groovy.statementsmap.StatementsException;
+import com.anrisoftware.sscontrol.core.groovy.statementstable.StatementsTable;
+import com.anrisoftware.sscontrol.core.groovy.statementstable.StatementsTableFactory;
 import com.anrisoftware.sscontrol.core.service.AbstractService;
 import com.anrisoftware.sscontrol.httpd.domain.Domain;
 import com.anrisoftware.sscontrol.httpd.domain.DomainFactory;
@@ -71,7 +71,7 @@ class HttpdServiceImpl extends AbstractService implements HttpdService {
 
     private StatementsTable statementsTable;
 
-    private BindingAddressesStatementsTable bindingAddresses;
+    private BindingAddressesStatements bindingAddresses;
 
     HttpdServiceImpl() {
         this.domains = new ArrayList<Domain>();
@@ -102,7 +102,7 @@ class HttpdServiceImpl extends AbstractService implements HttpdService {
 
     @Inject
     public final void setBindingAddressesStatementsTable(
-            BindingAddressesStatementsTableFactory factory) {
+            BindingAddressesStatementsFactory factory) {
         this.bindingAddresses = factory.create(this, NAME);
     }
 

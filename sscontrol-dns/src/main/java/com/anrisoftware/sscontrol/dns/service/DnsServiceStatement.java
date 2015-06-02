@@ -18,7 +18,7 @@
  */
 package com.anrisoftware.sscontrol.dns.service;
 
-import com.anrisoftware.sscontrol.core.groovy.StatementsEnumToString;
+import com.anrisoftware.sscontrol.core.groovy.statementsmap.StatementsEnumToString;
 
 /**
  * <i>DNS</i> service statement key.

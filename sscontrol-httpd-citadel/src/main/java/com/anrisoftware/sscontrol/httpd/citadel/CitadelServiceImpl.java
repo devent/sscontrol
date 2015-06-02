@@ -25,10 +25,10 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import com.anrisoftware.sscontrol.core.api.ServiceException;
-import com.anrisoftware.sscontrol.core.bindings.BindingAddressesStatementsTable;
-import com.anrisoftware.sscontrol.core.bindings.BindingAddressesStatementsTableFactory;
-import com.anrisoftware.sscontrol.core.groovy.StatementsException;
-import com.anrisoftware.sscontrol.core.groovy.StatementsMap;
+import com.anrisoftware.sscontrol.core.groovy.bindingaddressstatements.BindingAddressesStatements;
+import com.anrisoftware.sscontrol.core.groovy.bindingaddressstatements.BindingAddressesStatementsFactory;
+import com.anrisoftware.sscontrol.core.groovy.statementsmap.StatementsException;
+import com.anrisoftware.sscontrol.core.groovy.statementsmap.StatementsMap;
 import com.anrisoftware.sscontrol.httpd.domain.Domain;
 import com.anrisoftware.sscontrol.httpd.webserviceargs.DefaultWebService;
 import com.anrisoftware.sscontrol.httpd.webserviceargs.DefaultWebServiceFactory;
@@ -69,7 +69,7 @@ class CitadelServiceImpl implements CitadelService {
 
     private final StatementsMap statementsMap;
 
-    private BindingAddressesStatementsTable bindingAddresses;
+    private BindingAddressesStatements bindingAddresses;
 
     /**
      * @see CitadelServiceFactory#create(Map, Domain)
@@ -92,7 +92,7 @@ class CitadelServiceImpl implements CitadelService {
 
     @Inject
     public final void setBindingAddressesStatementsTable(
-            BindingAddressesStatementsTableFactory factory) {
+            BindingAddressesStatementsFactory factory) {
         this.bindingAddresses = factory.create(this, SERVICE_NAME);
     }
 

@@ -19,9 +19,9 @@
 package com.anrisoftware.sscontrol.remote.service;
 
 import com.anrisoftware.globalpom.resources.ResourcesModule;
-import com.anrisoftware.sscontrol.core.bindings.BindingAddressesStatementsTableModule;
-import com.anrisoftware.sscontrol.core.groovy.StatementsMapModule;
-import com.anrisoftware.sscontrol.core.list.ListModule;
+import com.anrisoftware.sscontrol.core.groovy.bindingaddressstatements.BindingAddressesStatementsModule;
+import com.anrisoftware.sscontrol.core.groovy.statementsmap.StatementsMapModule;
+import com.anrisoftware.sscontrol.core.listproperty.ListPropertyModule;
 import com.anrisoftware.sscontrol.remote.user.UserModule;
 import com.google.inject.AbstractModule;
 
@@ -36,9 +36,9 @@ class RemoteModule extends AbstractModule {
     @Override
     protected void configure() {
         install(new UserModule());
-        install(new ListModule());
+        install(new ListPropertyModule());
         install(new StatementsMapModule());
-        install(new BindingAddressesStatementsTableModule());
+        install(new BindingAddressesStatementsModule());
         install(new ResourcesModule());
     }
 }

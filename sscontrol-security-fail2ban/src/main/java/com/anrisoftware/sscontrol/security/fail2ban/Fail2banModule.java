@@ -19,8 +19,8 @@
 package com.anrisoftware.sscontrol.security.fail2ban;
 
 import com.anrisoftware.globalpom.resources.ResourcesModule;
-import com.anrisoftware.sscontrol.core.groovy.StatementsMapModule;
-import com.anrisoftware.sscontrol.core.list.ListModule;
+import com.anrisoftware.sscontrol.core.groovy.statementsmap.StatementsMapModule;
+import com.anrisoftware.sscontrol.core.listproperty.ListPropertyModule;
 import com.anrisoftware.sscontrol.security.service.SecService;
 import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
@@ -36,7 +36,7 @@ public class Fail2banModule extends AbstractModule {
     @Override
     protected void configure() {
         install(new StatementsMapModule());
-        install(new ListModule());
+        install(new ListPropertyModule());
         install(new ResourcesModule());
         install(new FactoryModuleBuilder().implement(SecService.class,
                 Fail2banServiceImpl.class).build(Fail2banServiceFactory.class));

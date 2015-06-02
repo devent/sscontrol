@@ -26,7 +26,7 @@ import org.codehaus.groovy.control.CompilerConfiguration;
 import org.codehaus.groovy.control.customizers.ImportCustomizer;
 
 import com.anrisoftware.sscontrol.core.api.ServicePreScript;
-import com.anrisoftware.sscontrol.core.groovy.ClassImporter;
+import com.anrisoftware.sscontrol.core.groovy.groovyloader.ClassImporter;
 import com.anrisoftware.sscontrol.source.service.SourceServiceFactoryFactory;
 
 /**

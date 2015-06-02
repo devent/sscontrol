@@ -19,8 +19,8 @@
 package com.anrisoftware.sscontrol.repo.service;
 
 import com.anrisoftware.globalpom.resources.ResourcesModule;
-import com.anrisoftware.sscontrol.core.groovy.StatementsMapModule;
-import com.anrisoftware.sscontrol.core.list.ListModule;
+import com.anrisoftware.sscontrol.core.groovy.statementsmap.StatementsMapModule;
+import com.anrisoftware.sscontrol.core.listproperty.ListPropertyModule;
 import com.google.inject.AbstractModule;
 
 /**
@@ -35,6 +35,6 @@ class RepoModule extends AbstractModule {
 	protected void configure() {
         install(new StatementsMapModule());
         install(new ResourcesModule());
-        install(new ListModule());
+        install(new ListPropertyModule());
 	}
 }

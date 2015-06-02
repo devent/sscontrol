@@ -18,7 +18,7 @@
  */
 package com.anrisoftware.sscontrol.httpd.authdb;
 
-import com.anrisoftware.sscontrol.core.groovy.StatementsEnumToString;
+import com.anrisoftware.sscontrol.core.groovy.statementsmap.StatementsEnumToString;
 
 /**
  * Database authentication service statements.

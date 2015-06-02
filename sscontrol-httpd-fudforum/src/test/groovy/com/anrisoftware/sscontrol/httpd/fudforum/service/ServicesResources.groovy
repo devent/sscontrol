@@ -33,6 +33,7 @@ enum ServicesResources {
 
     profile("UbuntuProfile.groovy", ServicesResources.class.getResource("UbuntuProfile.groovy")),
     fudforumScript("Httpd.groovy", ServicesResources.class.getResource("HttpdFudforum.groovy")),
+    fudforumLocalesScript("Httpd.groovy", ServicesResources.class.getResource("HttpdFudforumLocales.groovy")),
 
     ResourcesUtils resources
 

@@ -22,6 +22,7 @@ import org.codehaus.groovy.control.CompilerConfiguration;
 import org.codehaus.groovy.control.customizers.ImportCustomizer;
 import org.mangosdk.spi.ProviderFor;
 
+import com.anrisoftware.globalpom.posixlocale.PosixLocale;
 import com.anrisoftware.sscontrol.core.api.ServiceException;
 import com.anrisoftware.sscontrol.core.database.DatabaseDriver;
 import com.anrisoftware.sscontrol.core.database.DatabaseType;
@@ -89,6 +90,7 @@ public class FudforumFactoryFactory implements WebServiceFactoryFactory {
 
     private void importClasses(CompilerConfiguration c) {
         ImportCustomizer customizer = new ImportCustomizer();
+        customizer.addImports(PosixLocale.class.getName());
         customizer.addImports(OverrideMode.class.getName());
         customizer.addImports(DatabaseType.class.getName());
         customizer.addImports(DatabaseDriver.class.getName());

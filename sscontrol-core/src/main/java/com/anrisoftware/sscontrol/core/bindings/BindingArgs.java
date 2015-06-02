@@ -25,7 +25,7 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-import com.anrisoftware.sscontrol.core.list.StringToListFactory;
+import com.anrisoftware.sscontrol.core.listproperty.PropertyToListFactory;
 
 /**
  * Parses binding arguments.
@@ -47,7 +47,7 @@ public class BindingArgs {
     private BindingLogger log;
 
     @Inject
-    private StringToListFactory listFactory;
+    private PropertyToListFactory listFactory;
 
     @Inject
     private AddressFactory addressFactory;

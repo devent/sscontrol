@@ -18,7 +18,7 @@
  */
 package com.anrisoftware.sscontrol.httpd.webdav;
 
-import com.anrisoftware.sscontrol.core.groovy.StatementsEnumToString;
+import com.anrisoftware.sscontrol.core.groovy.statementsmap.StatementsEnumToString;
 
 /**
  * <i>WebDAV</i> service statements.

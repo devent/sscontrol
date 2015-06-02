@@ -52,14 +52,14 @@ import com.anrisoftware.sscontrol.core.api.Service;
 import com.anrisoftware.sscontrol.core.api.ServiceException;
 import com.anrisoftware.sscontrol.core.api.ServiceScriptFactory;
 import com.anrisoftware.sscontrol.core.bindings.BindingAddress;
-import com.anrisoftware.sscontrol.core.bindings.BindingAddressesStatementsTable;
-import com.anrisoftware.sscontrol.core.bindings.BindingAddressesStatementsTableFactory;
-import com.anrisoftware.sscontrol.core.groovy.StatementsException;
-import com.anrisoftware.sscontrol.core.groovy.StatementsMap;
-import com.anrisoftware.sscontrol.core.groovy.StatementsMapFactory;
-import com.anrisoftware.sscontrol.core.groovy.StatementsTable;
-import com.anrisoftware.sscontrol.core.groovy.StatementsTableFactory;
-import com.anrisoftware.sscontrol.core.list.StringToListFactory;
+import com.anrisoftware.sscontrol.core.groovy.bindingaddressstatements.BindingAddressesStatements;
+import com.anrisoftware.sscontrol.core.groovy.bindingaddressstatements.BindingAddressesStatementsFactory;
+import com.anrisoftware.sscontrol.core.groovy.statementsmap.StatementsException;
+import com.anrisoftware.sscontrol.core.groovy.statementsmap.StatementsMap;
+import com.anrisoftware.sscontrol.core.groovy.statementsmap.StatementsMapFactory;
+import com.anrisoftware.sscontrol.core.groovy.statementstable.StatementsTable;
+import com.anrisoftware.sscontrol.core.groovy.statementstable.StatementsTableFactory;
+import com.anrisoftware.sscontrol.core.listproperty.PropertyToListFactory;
 import com.anrisoftware.sscontrol.core.service.AbstractService;
 import com.anrisoftware.sscontrol.dns.zone.DnsZone;
 import com.anrisoftware.sscontrol.dns.zone.DnsZoneFactory;
@@ -81,7 +81,7 @@ class DnsServiceImpl extends AbstractService implements DnsService {
     private DnsServiceImplLogger log;
 
     @Inject
-    private StringToListFactory toListFactory;
+    private PropertyToListFactory toListFactory;
 
     @Inject
     private DnsZoneFactory zoneFactory;
@@ -90,7 +90,7 @@ class DnsServiceImpl extends AbstractService implements DnsService {
 
     private StatementsTable statementsTable;
 
-    private BindingAddressesStatementsTable bindingAddressesStatementsTable;
+    private BindingAddressesStatements bindingAddressesStatementsTable;
 
     DnsServiceImpl() {
         this.zones = new ArrayList<DnsZone>();
@@ -120,8 +120,8 @@ class DnsServiceImpl extends AbstractService implements DnsService {
 
     @Inject
     public final void setBindingAddressesStatementsTable(
-            BindingAddressesStatementsTableFactory factory) {
-        BindingAddressesStatementsTable table;
+            BindingAddressesStatementsFactory factory) {
+        BindingAddressesStatements table;
         table = factory.create(this, SERVICE_NAME);
         table.setRequirePort(false);
         this.bindingAddressesStatementsTable = table;

@@ -18,7 +18,7 @@
  */
 package com.anrisoftware.sscontrol.httpd.authfile;
 
-import com.anrisoftware.sscontrol.core.groovy.StatementsEnumToString;
+import com.anrisoftware.sscontrol.core.groovy.statementsmap.StatementsEnumToString;
 
 /**
  * File authentication service statements.

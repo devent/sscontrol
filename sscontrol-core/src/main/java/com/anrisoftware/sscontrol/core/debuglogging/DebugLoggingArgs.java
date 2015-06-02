@@ -23,7 +23,7 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-import com.anrisoftware.sscontrol.core.list.StringToListFactory;
+import com.anrisoftware.sscontrol.core.listproperty.PropertyToListFactory;
 
 /**
  * Parses arguments for debug logging.
@@ -43,7 +43,7 @@ class DebugLoggingArgs {
     private DebugLoggingLogger log;
 
     @Inject
-    private StringToListFactory toListFactory;
+    private PropertyToListFactory toListFactory;
 
     boolean haveModule(Map<String, Object> args) {
         return args.containsKey(MODULE);

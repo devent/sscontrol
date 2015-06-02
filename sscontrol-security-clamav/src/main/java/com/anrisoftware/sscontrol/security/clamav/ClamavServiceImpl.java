@@ -25,11 +25,11 @@ import javax.inject.Inject;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import com.anrisoftware.sscontrol.core.bindings.BindingAddressesStatementsTable;
-import com.anrisoftware.sscontrol.core.bindings.BindingAddressesStatementsTableFactory;
-import com.anrisoftware.sscontrol.core.groovy.StatementsException;
-import com.anrisoftware.sscontrol.core.groovy.StatementsTable;
-import com.anrisoftware.sscontrol.core.groovy.StatementsTableFactory;
+import com.anrisoftware.sscontrol.core.groovy.bindingaddressstatements.BindingAddressesStatements;
+import com.anrisoftware.sscontrol.core.groovy.bindingaddressstatements.BindingAddressesStatementsFactory;
+import com.anrisoftware.sscontrol.core.groovy.statementsmap.StatementsException;
+import com.anrisoftware.sscontrol.core.groovy.statementstable.StatementsTable;
+import com.anrisoftware.sscontrol.core.groovy.statementstable.StatementsTableFactory;
 
 /**
  * <i>ClamAV</i> service.
@@ -52,7 +52,7 @@ class ClamavServiceImpl implements ClamavService {
 
     private StatementsTable statementsTable;
 
-    private BindingAddressesStatementsTable bindingAddressesStatements;
+    private BindingAddressesStatements bindingAddressesStatements;
 
     @Inject
     public final void setStatementsTable(StatementsTableFactory factory) {
@@ -64,7 +64,7 @@ class ClamavServiceImpl implements ClamavService {
 
     @Inject
     public final void setBindingAddressesStatements(
-            BindingAddressesStatementsTableFactory factory) {
+            BindingAddressesStatementsFactory factory) {
         this.bindingAddressesStatements = factory.create(this, SERVICE_NAME);
     }
 

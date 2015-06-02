@@ -19,6 +19,7 @@
 package com.anrisoftware.sscontrol.scripts.locale.ubuntu;
 
 import static java.lang.String.format;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 
 import java.nio.charset.Charset;
 import java.util.ArrayList;
@@ -28,8 +29,7 @@ import javax.inject.Inject;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import com.anrisoftware.sscontrol.scripts.locale.core.LocaleInfo;
-import com.anrisoftware.sscontrol.scripts.locale.core.LocaleInfoFactory;
+import com.anrisoftware.globalpom.posixlocale.PosixLocale;
 import com.anrisoftware.sscontrol.scripts.scriptsexceptions.ScriptException;
 import com.google.inject.assistedinject.Assisted;
 
@@ -43,15 +43,10 @@ public class UbuntuLocaleSettings {
 
     private static final String PACKAGE_LANGUAGE_PACK_PATTERN_KEY = "package_language_pack_pattern";
 
-    private final String locale;
+    private final PosixLocale locale;
 
     @Inject
     private UbuntuLocalePackagesPropertiesProvider propertiesProvider;
-
-    @Inject
-    private LocaleInfoFactory infoFactory;
-
-    private LocaleInfo info;
 
     private List<String> packagesList;
 
@@ -62,24 +57,11 @@ public class UbuntuLocaleSettings {
     private String convertedCharset;
 
     /**
-     * @see UbuntuLocaleSettingsFactory#create(String)
+     * @see UbuntuLocaleSettingsFactory#create(PosixLocale)
      */
     @Inject
-    UbuntuLocaleSettings(@Assisted String locale) {
+    UbuntuLocaleSettings(@Assisted PosixLocale locale) {
         this.locale = locale;
-    }
-
-    /**
-     * Parses the locale and returns the locale information.
-     *
-     * @return the {@link LocaleInfo}.
-     *
-     * @throws ScriptException
-     *             the the locale does not match.
-     */
-    public UbuntuLocaleSettings parseLocale() throws ScriptException {
-        this.info = infoFactory.create(locale).parseLocale();
-        return this;
     }
 
     /**
@@ -137,20 +119,11 @@ public class UbuntuLocaleSettings {
     }
 
     /**
-     * Returns the locale information.
+     * Returns the POSIX locale.
      *
-     * @return the locale {@link LocaleInfo} information.
+     * @return the {@link PosixLocale} locale.
      */
-    public LocaleInfo getLocaleInfo() {
-        return info;
-    }
-
-    /**
-     * Returns the locale name.
-     *
-     * @return the locale {@link String} name.
-     */
-    public String getLocale() {
+    public PosixLocale getLocale() {
         return locale;
     }
 
@@ -169,22 +142,22 @@ public class UbuntuLocaleSettings {
         String languagePackPattern = propertiesProvider.get().getProperty(
                 PACKAGE_LANGUAGE_PACK_PATTERN_KEY);
         String languagePackPackage = format(languagePackPattern,
-                info.getLanguage());
+                locale.getLanguage());
         list.add(languagePackPackage);
     }
 
     private String createSupportedLocaleFileName() {
-        return info.getLanguage();
+        return locale.getLanguage();
     }
 
     private String createConvertName() {
-        String language = info.getLanguage();
-        String country = info.getCountry();
-        String charset = info.getCharset();
+        String language = locale.getLanguage();
+        String country = locale.getCountry();
+        String charset = locale.getCharsetName();
         StringBuilder builder = new StringBuilder();
         builder.append(language);
         builder.append("_");
-        if (country == null) {
+        if (isBlank(country)) {
             builder.append(language.toUpperCase());
         } else {
             builder.append(country.toUpperCase());
@@ -203,7 +176,7 @@ public class UbuntuLocaleSettings {
     }
 
     private String createConvertedCharset() {
-        String charset = info.getCharset();
+        String charset = locale.getCharsetName();
         return charset.toUpperCase();
     }
 

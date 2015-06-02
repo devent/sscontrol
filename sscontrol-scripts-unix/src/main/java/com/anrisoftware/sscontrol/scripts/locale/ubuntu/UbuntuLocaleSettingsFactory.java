@@ -18,6 +18,8 @@
  */
 package com.anrisoftware.sscontrol.scripts.locale.ubuntu;
 
+import com.anrisoftware.globalpom.posixlocale.PosixLocale;
+
 /**
  * <i>Ubuntu</i> packages factory.
  *
@@ -30,10 +32,9 @@ public interface UbuntuLocaleSettingsFactory {
      * Creates the <i>Ubuntu</i> packages.
      *
      * @param locale
-     *            the <i>String</i> locale name, for example
-     *            {@code "de_DE.ISO-8859-1"}.
+     *            the POSIX <i>PosixLocale</i> locale.
      *
      * @return the {@link UbuntuLocaleSettings}.
      */
-    UbuntuLocaleSettings create(String locale);
+    UbuntuLocaleSettings create(PosixLocale locale);
 }

@@ -26,7 +26,6 @@ import org.junit.BeforeClass
 import com.anrisoftware.globalpom.threads.api.Threads
 import com.anrisoftware.globalpom.threads.properties.PropertiesThreadsFactory
 import com.anrisoftware.globalpom.threads.properties.PropertiesThreadsModule
-import com.anrisoftware.sscontrol.scripts.locale.core.LocaleCoreModule
 import com.anrisoftware.sscontrol.scripts.locale.ubuntu.UbuntuInstallLocaleModule
 import com.anrisoftware.sscontrol.scripts.unix.TestThreadsPropertiesProvider
 import com.anrisoftware.sscontrol.scripts.unix.UnixScriptsModule
@@ -55,7 +54,6 @@ class UbuntuDependencies {
     static Injector injector = Guice.createInjector(
     new Ubuntu_12_04_InstallLocaleModule(),
     new UbuntuInstallLocaleModule(),
-    new LocaleCoreModule(),
     new UnixScriptsModule(),
     new UnixScriptsModule.UnixScriptsDefaultsModule(),
     new UnixScriptsModule.TemplatesResourcesDefaultsModule(),

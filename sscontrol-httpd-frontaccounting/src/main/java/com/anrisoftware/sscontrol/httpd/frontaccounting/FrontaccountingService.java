@@ -22,6 +22,8 @@ import java.net.URI;
 import java.util.List;
 import java.util.Map;
 
+import com.anrisoftware.globalpom.posixlocale.PosixLocale;
+import com.anrisoftware.sscontrol.core.api.ServiceException;
 import com.anrisoftware.sscontrol.core.overridemode.OverrideMode;
 import com.anrisoftware.sscontrol.httpd.webservice.WebService;
 
@@ -124,12 +126,17 @@ public interface FrontaccountingService extends WebService {
      *
      * <pre>
      * setup "frontaccounting 2.3", {
-     *     language locales: "de, pt"
+     *     language locales: "de, pt" // or
+     *     language locales: [PosixLocale.FRANCE, PosixLocale.GERMANY]
      * }
      * </pre>
      *
-     * @return the {@link List} list of the site {@link String} locales or
+     * @return the {@link List} list of the site {@link PosixLocale} locales or
      *         {@code null}.
+     *
+     * @throws ServiceException
+     *             if there was an error parse the locale.
      */
-    List<String> getLocales();
+    List<PosixLocale> getLocales() throws ServiceException;
+
 }

@@ -16,14 +16,12 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-httpd-frontaccounting. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.httpd.frontaccounting.apache_ubuntu_12_04
+package com.anrisoftware.sscontrol.httpd.frontaccounting.service
 
 httpd {
     domain "test1.com", address: "192.168.0.51", {
-        setup "frontaccounting 2.3", {
-            database "faccountingdb", user: "faccountinguser", password: "faccountingpass"
-            title "My Company Pvt Ltd"
-            language locales: "de_DE.ISO-8859-1, pt_BR.ISO-8859-1"
+        setup "frontaccounting 2.3", id: "faccid", alias: "/account", prefix: "frontaccounting_2_3", ref: "faccidref", {
+            language locales: [PosixLocale.GERMAN, PosixLocale.US]
         }
     }
 }

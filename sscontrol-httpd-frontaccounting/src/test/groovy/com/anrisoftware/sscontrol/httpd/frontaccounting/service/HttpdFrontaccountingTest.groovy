@@ -73,6 +73,27 @@ class HttpdFrontaccountingTest extends HttpdPreScriptTestEnvironment {
         assert webservice.database.port == 3306
         assert webservice.siteTitle == "My Company Pvt Ltd"
         assert webservice.locales.size() == 2
-        assert webservice.locales.containsAll(["de", "pt"])
+        assert webservice.locales[0].language == "de"
+        assert webservice.locales[1].language == "pt"
+    }
+
+    @Test
+    void "frontaccounting service, locales"() {
+        loader.loadService profile.resource, null
+        def profile = registry.getService("profile")[0]
+        loader.loadService frontaccountingLocalesScript.resource, profile, preScript
+        HttpdService service = registry.getService("httpd")[0]
+
+        int d = 0
+        Domain domain = service.domains[d++]
+        assert domain.name == "test1.com"
+        assert domain.address == "192.168.0.51"
+
+        FrontaccountingService webservice = domain.services[0]
+        assert webservice.locales.size() == 2
+        assert webservice.locales[0].language == "de"
+        assert webservice.locales[0].country == ""
+        assert webservice.locales[1].language == "en"
+        assert webservice.locales[1].country == "US"
     }
 }

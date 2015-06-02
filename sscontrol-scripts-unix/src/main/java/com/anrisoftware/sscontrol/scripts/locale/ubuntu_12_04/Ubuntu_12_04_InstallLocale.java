@@ -38,6 +38,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.anrisoftware.globalpom.exec.scriptprocess.ScriptExecFactory;
+import com.anrisoftware.globalpom.posixlocale.PosixLocale;
 import com.anrisoftware.globalpom.threads.api.Threads;
 import com.anrisoftware.resources.templates.api.TemplateResource;
 import com.anrisoftware.resources.templates.api.Templates;
@@ -105,9 +106,8 @@ public class Ubuntu_12_04_InstallLocale extends UbuntuInstallLocale {
     @Override
     public Ubuntu_12_04_InstallLocale call() throws Exception {
         UbuntuLocaleSettings localeSettings;
-        for (String name : getLocales()) {
-            localeSettings = ubuntuLocaleSettingsFactory.create(name)
-                    .parseLocale();
+        for (PosixLocale locale : getLocales()) {
+            localeSettings = ubuntuLocaleSettingsFactory.create(locale);
             installLocale(localeSettings);
             attachLocale(localeSettings);
             generateLocale(localeSettings);
@@ -188,15 +188,14 @@ public class Ubuntu_12_04_InstallLocale extends UbuntuInstallLocale {
 
     private void generateLocale(UbuntuLocaleSettings settings)
             throws ScriptException {
-        String locale = settings.getLocale();
         try {
-            generateLocale0(locale);
+            generateLocale0();
         } catch (Exception e) {
-            throw log.errorGenerateLocale(this, e, locale);
+            throw log.errorGenerateLocale(this, e, settings.getLocale());
         }
     }
 
-    private void generateLocale0(String locale) throws Exception {
+    private void generateLocale0() throws Exception {
         Map<String, Object> args = new HashMap<String, Object>(getArgs());
         args.put(COMMAND_KEY, getArgs().get(DPKG_RECONFIGURE_COMMAND_KEY));
         scriptExecFactory.create(args, parent, threads, generateLocaleResource,

@@ -18,8 +18,11 @@
  */
 package com.anrisoftware.sscontrol.httpd.frontaccounting_2_3;
 
+import com.anrisoftware.globalpom.format.locale.LocaleFormatModule;
+import com.anrisoftware.globalpom.posixlocale.PosixLocaleFormatModule;
+import com.anrisoftware.globalpom.posixlocale.PosixLocaleModule;
+import com.anrisoftware.sscontrol.core.groovy.languagestatements.LanguageStatementsModule;
 import com.anrisoftware.sscontrol.httpd.webservice.WebService;
-import com.anrisoftware.sscontrol.scripts.unix.UnixScriptsModule;
 import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 
@@ -33,8 +36,10 @@ public class Frontaccounting_2_3_Module extends AbstractModule {
 
     @Override
     protected void configure() {
-        install(new UnixScriptsModule());
-        install(new UnixScriptsModule.UnixScriptsDefaultsModule());
+        install(new LanguageStatementsModule());
+        install(new LocaleFormatModule());
+        install(new PosixLocaleFormatModule());
+        install(new PosixLocaleModule());
         install(new FactoryModuleBuilder().implement(WebService.class,
                 Frontaccounting_2_3_Service.class).build(
                 Frontaccounting_2_3_ServiceFactory.class));

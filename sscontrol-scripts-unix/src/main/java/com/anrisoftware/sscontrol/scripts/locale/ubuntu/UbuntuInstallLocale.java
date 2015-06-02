@@ -29,6 +29,7 @@ import javax.inject.Inject;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.slf4j.Logger;
 
+import com.anrisoftware.globalpom.posixlocale.PosixLocale;
 import com.anrisoftware.globalpom.threads.api.Threads;
 
 /**
@@ -56,9 +57,8 @@ public abstract class UbuntuInstallLocale implements
      * @param args
      *            the {@link Map} arguments:
      *            <ul>
-     *            <li>{@code locales} the {@link List} list of the locale
-     *            {@link String} names, for example
-     *            {@code ["de_DE-ISO-8859-1", "pt_BR.ISO-8859-1"]}.
+     *            <li>{@code locales} the {@link List} list of the POSIX
+     *            {@link PosixLocale} locales.
      *            </ul>
      *
      */
@@ -74,11 +74,11 @@ public abstract class UbuntuInstallLocale implements
     /**
      * Returns the list of the locales.
      *
-     * @return the {@link List} list of the locale {@link String} names,
+     * @return the {@link List} list of the POSIX {@link PosixLocale} locales,
      */
     @SuppressWarnings("unchecked")
-    public List<String> getLocales() {
-        return (List<String>) args.get(LOCALES_KEY);
+    public List<PosixLocale> getLocales() {
+        return (List<PosixLocale>) args.get(LOCALES_KEY);
     }
 
     /**

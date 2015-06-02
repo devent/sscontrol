@@ -22,6 +22,7 @@ import org.codehaus.groovy.control.CompilerConfiguration;
 import org.codehaus.groovy.control.customizers.ImportCustomizer;
 import org.mangosdk.spi.ProviderFor;
 
+import com.anrisoftware.globalpom.posixlocale.PosixLocale;
 import com.anrisoftware.sscontrol.core.api.ServiceException;
 import com.anrisoftware.sscontrol.core.overridemode.OverrideMode;
 import com.anrisoftware.sscontrol.httpd.webservice.WebServiceFactory;
@@ -87,6 +88,7 @@ public class Frontaccounting_2_3_FactoryFactory implements WebServiceFactoryFact
 
     private void importClasses(CompilerConfiguration c) {
         ImportCustomizer customizer = new ImportCustomizer();
+        customizer.addImports(PosixLocale.class.getName());
         customizer.addImports(OverrideMode.class.getName());
         c.addCompilationCustomizers(customizer);
     }

@@ -22,9 +22,12 @@ import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.scripts.locale.ubuntu_12_04.UbuntuResources.*
 import groovy.util.logging.Slf4j
 
+import org.apache.commons.io.Charsets
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TemporaryFolder
+
+import com.anrisoftware.globalpom.posixlocale.PosixLocale
 
 /**
  * @see Ubuntu_12_04_InstallLocale
@@ -42,7 +45,9 @@ class Ubuntu_12_04_InstallLocaleTest extends UbuntuDependencies {
         copyUbuntu_12_04_Files tmpdir
         def info = dep.installLocaleFactory.create(
                 log: log,
-                locales: ["de_DE.UTF-8"],
+                locales: [
+                    new PosixLocale(new Locale("de", "DE"), Charsets.UTF_8)
+                ],
                 localesDirectory: localesDir.asFile(tmpdir),
                 installCommand: installCommand.asFile(tmpdir),
                 dpkgReconfigureCommand: dpkgreconfigureCommand.asFile(tmpdir),
@@ -63,7 +68,9 @@ class Ubuntu_12_04_InstallLocaleTest extends UbuntuDependencies {
         alreadysetDeFile.createFile tmpdir
         def info = dep.installLocaleFactory.create(
                 log: log,
-                locales: ["de_DE.ISO-8859-1"],
+                locales: [
+                    new PosixLocale(new Locale("de", "DE"), Charsets.ISO_8859_1)
+                ],
                 localesDirectory: localesDir.asFile(tmpdir),
                 installCommand: installCommand.asFile(tmpdir),
                 dpkgReconfigureCommand: dpkgreconfigureCommand.asFile(tmpdir),
@@ -84,7 +91,9 @@ class Ubuntu_12_04_InstallLocaleTest extends UbuntuDependencies {
         duplicateDeFile.createFile tmpdir
         def info = dep.installLocaleFactory.create(
                 log: log,
-                locales: ["de_DE.ISO-8859-1"],
+                locales: [
+                    new PosixLocale(new Locale("de", "DE"), Charsets.ISO_8859_1)
+                ],
                 localesDirectory: localesDir.asFile(tmpdir),
                 installCommand: installCommand.asFile(tmpdir),
                 dpkgReconfigureCommand: dpkgreconfigureCommand.asFile(tmpdir),

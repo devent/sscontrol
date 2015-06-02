@@ -39,6 +39,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
+import com.anrisoftware.globalpom.posixlocale.PosixLocale;
 import com.anrisoftware.sscontrol.scripts.scriptsexceptions.ScriptException;
 
 /**
@@ -69,7 +70,7 @@ class Ubuntu_12_04_InstallLocaleLogger extends AbstractLogger {
 
         error_generate_locale("Error generate locale"),
 
-        error_generate_locale_message("Error generate locale '{}': {}"),
+        error_generate_locale_message("Error generate locale {}.{}: {}"),
 
         error_attach_locale("Error attach locale"),
 
@@ -142,10 +143,12 @@ class Ubuntu_12_04_InstallLocaleLogger extends AbstractLogger {
     }
 
     ScriptException errorGenerateLocale(
-            Ubuntu_12_04_InstallLocale installLocale, Exception e, String locale) {
+            Ubuntu_12_04_InstallLocale installLocale, Exception e,
+            PosixLocale locale) {
         return logException(new ScriptException(error_generate_locale, e).add(
                 the_locale, installLocale), error_generate_locale_message,
-                locale, e.getLocalizedMessage());
+                locale.getLocale(), locale.getCharset(),
+                e.getLocalizedMessage());
     }
 
     ScriptException errorAttachLocale(Ubuntu_12_04_InstallLocale installLocale,

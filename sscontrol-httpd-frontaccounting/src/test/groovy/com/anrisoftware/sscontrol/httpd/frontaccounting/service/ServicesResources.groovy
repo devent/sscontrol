@@ -33,6 +33,7 @@ enum ServicesResources {
 
     profile("UbuntuProfile.groovy", ServicesResources.class.getResource("UbuntuProfile.groovy")),
     frontaccountingScript("Httpd.groovy", ServicesResources.class.getResource("HttpdFrontaccounting.groovy")),
+    frontaccountingLocalesScript("Httpd.groovy", ServicesResources.class.getResource("HttpdFrontaccountingLocales.groovy")),
 
     ResourcesUtils resources
 

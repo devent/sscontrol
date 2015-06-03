@@ -36,6 +36,8 @@ enum FudforumResources {
     httpdBasicScript("Httpd.groovy", FudforumResources.class.getResource("HttpdBasic.groovy")),
     httpdAliasScript("Httpd.groovy", FudforumResources.class.getResource("HttpdAlias.groovy")),
     httpdBackupScript("Httpd.groovy", FudforumResources.class.getResource("HttpdBackup.groovy")),
+    httpdLanguageScript("Httpd.groovy", FudforumResources.class.getResource("HttpdLanguage.groovy")),
+    httpdLocalesScript("Httpd.groovy", FudforumResources.class.getResource("HttpdLocales.groovy")),
     phpCommand("/usr/bin/php5", FudforumResources.class.getResource("echo_command.txt")),
     // basic
     basicTest1comFudforumArchiveFile("/var/www/test1.com/fudforum_3/fudforum/fudforum_archive", FudforumArchiveResources.class.getResource("fudforumarchive.txt")),
@@ -69,6 +71,14 @@ enum FudforumResources {
     backupTarOutExpected("/bin/tar.out", FudforumResources.class.getResource("backup_tar_out_expected.txt")),
     backupChmodOutExpected("/bin/chmod.out", FudforumResources.class.getResource("backup_chmod_out_expected.txt")),
     backupChownOutExpected("/bin/chown.out", FudforumResources.class.getResource("backup_chown_out_expected.txt")),
+    // language
+    languageTest1comInstallIniExpected("/var/www/test1.com/fudforum_3/install.ini", FudforumResources.class.getResource("language_test1com_installini_expected.txt")),
+    // locales
+    localesDe("/var/lib/locales/supported.d/de", FudforumResources.class.getResource("locales_de.txt")),
+    localesRuncommandsLogExpected("/runcommands.log", FudforumResources.class.getResource("locales_runcommands_expected.txt")),
+    localesAptitudeOutExpected("/usr/bin/aptitude.out", FudforumResources.class.getResource("locales_aptitude_out_expected.txt")),
+    localesReconfigureOutExpected("/usr/sbin/dpkg-reconfigure.out", FudforumResources.class.getResource("locales_reconfigure_out_expected.txt")),
+    localesDeFileExpected("/var/lib/locales/supported.d/de", FudforumResources.class.getResource("locales_de_expected.txt")),
 
     static copyFudforumFiles(File parent) {
         phpCommand.createCommand parent

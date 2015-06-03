@@ -23,7 +23,7 @@ httpd {
         setup "fudforum", {
             database "fudforumdb", user: "fudforumuser", password: "fudforumpass", type: DatabaseType.mysql
             root "admin", password: "admin", email: "admin@server.com"
-            language "de", locales: "de_DE.UTF-8"
+            language "de", locales: "de_DE.ISO-8859-1"
         }
     }
 }

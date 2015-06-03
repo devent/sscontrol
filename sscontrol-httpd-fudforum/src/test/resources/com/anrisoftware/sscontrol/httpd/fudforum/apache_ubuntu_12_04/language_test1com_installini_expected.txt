@@ -1,0 +1,16 @@
+; Settings for command line installer
+WWW_ROOT                = "http://test1.com"
+SERVER_ROOT             = "/tmp/var/www/test1.com/fudforum_3"
+SERVER_DATA_ROOT        = "/tmp/var/www/test1.com/fudforum_3"
+DBHOST                  = "localhost"
+DBHOST_USER             = fudforumuser
+DBHOST_PASSWORD         = fudforumpass
+DBHOST_DBNAME           = fudforumdb
+DBHOST_TBL_PREFIX       = fud3_
+DBHOST_DBTYPE           = pdo_mysql
+COOKIE_DOMAIN           = test1.com
+LANGUAGE                = de
+TEMPLATE                = default
+ROOT_LOGIN              = admin
+ROOT_PASS               = admin
+ADMIN_EMAIL             = "admin@server.com"

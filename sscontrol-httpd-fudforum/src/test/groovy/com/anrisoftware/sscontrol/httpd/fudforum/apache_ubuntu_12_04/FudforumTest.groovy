@@ -165,4 +165,53 @@ class FudforumTest extends WebServiceTestEnvironment {
         assertStringContent backupChmodOutExpected.replaced(tmpdir, tmpdir, "/tmp"), backupChmodOutExpected.toString()
         assertStringContent backupChownOutExpected.replaced(tmpdir, tmpdir, "/tmp"), backupChownOutExpected.toString()
     }
+
+    @Test
+    void "fudforum language"() {
+        attachRunCommandsLog tmpdir
+        copyUbuntuFiles tmpdir
+        copyApacheUbuntuFiles tmpdir
+        copyFudforumArchiveFiles tmpdir
+        copyFudforumFiles tmpdir
+        copyBasicTest1comFiles tmpdir
+        loader.loadService profile.resource, null
+        def profile = registry.getService("profile")[0]
+        setupApacheUbuntuProperties profile, tmpdir
+        setupUbuntuProperties profile, tmpdir
+        setupFudforumProperties profile, tmpdir
+        setupFudforumArchiveProperties profile, tmpdir
+        loader.loadService httpdLanguageScript.resource, profile, preScript
+        registry.allServices.each { it.call() }
+        log.info "Run service again to ensure that configuration is not set double."
+        registry.allServices.each { it.call() }
+
+        assertStringContent languageTest1comInstallIniExpected.replaced(tmpdir, tmpdir, "/tmp"), languageTest1comInstallIniExpected.toString()
+    }
+
+    @Test
+    void "fudforum locales"() {
+        attachRunCommandsLog tmpdir
+        copyUbuntuFiles tmpdir
+        copyApacheUbuntuFiles tmpdir
+        copyFudforumArchiveFiles tmpdir
+        copyFudforumFiles tmpdir
+        copyBasicTest1comFiles tmpdir
+        localesDe.createFile tmpdir
+        loader.loadService profile.resource, null
+        def profile = registry.getService("profile")[0]
+        setupApacheUbuntuProperties profile, tmpdir
+        setupUbuntuProperties profile, tmpdir
+        setupFudforumProperties profile, tmpdir
+        setupFudforumArchiveProperties profile, tmpdir
+        loader.loadService httpdLocalesScript.resource, profile, preScript
+        registry.allServices.each { it.call() }
+        log.info "Run service again to ensure that configuration is not set double."
+        registry.allServices.each { it.call() }
+
+        assertStringContent localesRuncommandsLogExpected.replaced(tmpdir, tmpdir, "/tmp").replaceAll(/\d{2,}/, 'time'), localesRuncommandsLogExpected.toString()
+        assertFileContent localesAptitudeOutExpected.asFile(tmpdir), localesAptitudeOutExpected
+        assertStringContent localesReconfigureOutExpected.replaced(tmpdir, tmpdir, "/tmp"), localesReconfigureOutExpected.toString()
+        assertStringContent languageTest1comInstallIniExpected.replaced(tmpdir, tmpdir, "/tmp"), languageTest1comInstallIniExpected.toString()
+        assertStringContent localesDeFileExpected.replaced(tmpdir, tmpdir, "/tmp"), localesDeFileExpected.toString()
+    }
 }

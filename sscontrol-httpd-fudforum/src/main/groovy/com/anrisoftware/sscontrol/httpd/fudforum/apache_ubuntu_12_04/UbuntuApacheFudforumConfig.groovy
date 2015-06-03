@@ -75,6 +75,7 @@ class UbuntuApacheFudforumConfig extends Fudforum_3_Config implements ServiceCon
         setupDefaults domain, service
         checkService domain, service
         installPackages service
+        installLocales domain, service
         fudforumBackup.backupService domain, service
         fudforumFcgiConfig.deployService domain, service, config
         deployServiceFromArchive domain, service

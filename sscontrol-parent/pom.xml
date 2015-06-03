@@ -116,7 +116,7 @@
 			<dependency>
 				<groupId>com.anrisoftware.globalpom</groupId>
 				<artifactId>globalpomutils-core</artifactId>
-				<version>2.6-SNAPSHOT</version>
+				<version>2.6</version>
 			</dependency>
 			<dependency>
 				<groupId>com.anrisoftware.globalpom</groupId>

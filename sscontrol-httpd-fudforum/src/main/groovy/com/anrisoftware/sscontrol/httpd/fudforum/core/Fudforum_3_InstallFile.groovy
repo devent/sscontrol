@@ -47,6 +47,9 @@ class Fudforum_3_InstallFile {
     private DatabaseDriverRenderer databaseDriverRenderer
 
     @Inject
+    private LocaleRenderer localeRenderer;
+
+    @Inject
     private ChangeFileModFactory changeFileModFactory
 
     @Inject
@@ -56,7 +59,10 @@ class Fudforum_3_InstallFile {
 
     @Inject
     void setTemplatesFactory(TemplatesFactory factory) {
-        def templates = factory.create "Fudforum_3_Config", ["renderers": [databaseDriverRenderer]]
+        def templates = factory.create "Fudforum_3_Config", ["renderers": [
+                databaseDriverRenderer,
+                localeRenderer
+            ]]
         this.configTemplate = templates.getResource "install_ini"
     }
 

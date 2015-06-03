@@ -20,6 +20,7 @@ package com.anrisoftware.sscontrol.httpd.fudforum.core
 
 import javax.inject.Inject
 
+import org.apache.commons.lang3.StringUtils
 import org.apache.commons.lang3.builder.ToStringBuilder
 
 import com.anrisoftware.propertiesutils.ContextProperties
@@ -94,7 +95,12 @@ abstract class Fudforum_3_Config {
             service.template fudforumDefaultTemplate
         }
         if (service.language == null) {
-            service.language fudforumDefaultLanguage
+            def language = fudforumDefaultLanguage
+            if (StringUtils.isBlank(language)) {
+                service.language Locale.getDefault()
+            } else {
+                service.language fudforumDefaultLanguage
+            }
         }
     }
 

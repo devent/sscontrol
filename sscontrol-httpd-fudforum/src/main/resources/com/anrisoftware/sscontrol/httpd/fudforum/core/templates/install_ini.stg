@@ -10,7 +10,7 @@ DBHOST_DBNAME           = <args.databaseName>
 DBHOST_TBL_PREFIX       = <args.databaseTablePrefix>
 DBHOST_DBTYPE           = <args.databaseType>
 COOKIE_DOMAIN           = <args.domainName>
-LANGUAGE                = <args.language>
+LANGUAGE                = <args.language;format="language">
 TEMPLATE                = <args.template>
 ROOT_LOGIN              = <args.rootLogin>
 ROOT_PASS               = <args.rootPassword>

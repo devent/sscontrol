@@ -30,6 +30,7 @@ import com.anrisoftware.sscontrol.httpd.fudforum.core.Fudforum_3_ArchiveInstallC
 import com.anrisoftware.sscontrol.httpd.fudforum.core.Fudforum_3_Config
 import com.anrisoftware.sscontrol.httpd.webservice.ServiceConfig
 import com.anrisoftware.sscontrol.httpd.webservice.WebService
+import com.anrisoftware.sscontrol.scripts.locale.ubuntu_12_04.Ubuntu_12_04_InstallLocaleFactory
 import com.anrisoftware.sscontrol.scripts.unix.InstallPackagesFactory
 
 /**
@@ -58,6 +59,9 @@ class UbuntuApacheFudforumConfig extends Fudforum_3_Config implements ServiceCon
 
     @Inject
     InstallPackagesFactory installPackagesFactory
+
+    @Inject
+    Ubuntu_12_04_InstallLocaleFactory installLocaleFactory
 
     @Override
     void deployDomain(Domain domain, Domain refDomain, WebService service, List config) {
@@ -102,6 +106,32 @@ class UbuntuApacheFudforumConfig extends Fudforum_3_Config implements ServiceCon
                 command: installCommand,
                 packages: packages,
                 system: systemName,
+                this, threads)()
+    }
+
+    /**
+     * Installs specified locales.
+     *
+     * @param domain
+     *            the {@link Domain}.
+     *
+     * @param service
+     *            the {@link FudforumService}.
+     *
+     */
+    void installLocales(Domain domain, FudforumService service) {
+        if (service.locales == null || service.locales.size() == 0) {
+            return
+        }
+        installLocaleFactory.create(
+                log: log,
+                runCommands: runCommands,
+                locales: service.locales,
+                installCommand: installCommand,
+                dpkgReconfigureCommand: reconfigureCommand,
+                localesDirectory: localesDirectory,
+                system: systemName,
+                charset: charset,
                 this, threads)()
     }
 

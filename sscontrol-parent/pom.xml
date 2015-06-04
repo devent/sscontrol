@@ -12,7 +12,7 @@
 
 	<groupId>com.anrisoftware.sscontrol</groupId>
 	<artifactId>sscontrol-parent</artifactId>
-	<version>1.0-alpha-5-SNAPSHOT</version>
+	<version>1.0-alpha-5</version>
 	<packaging>pom</packaging>
 	<name>RoboBee :: Parent POM</name>
 	<description>Manages the core libraries dependencies for the RoboBee modules.</description>
